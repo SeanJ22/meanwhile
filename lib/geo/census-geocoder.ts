@@ -280,6 +280,30 @@ export function parseCensusPoint(
   return { lat, lng };
 }
 
+/**
+ * **THE ZIP THE CENSUS ACTUALLY MATCHED, out of the same response.**
+ * (Session B closure, BAL-38, 2026-08-31.)
+ *
+ * The response has always carried it — `addressMatches[0].addressComponents.zip`
+ * — and `parseCensusPoint` read the coordinates and dropped everything else. So
+ * an address that resolves cleanly to a neighbouring ZIP was indistinguishable
+ * from one that resolves nowhere: both came back null, and the reader was told
+ * we could not place it.
+ *
+ * Returns null rather than guessing when the field is absent or malformed. A
+ * ZIP we did not read is not a ZIP to offer a reader.
+ */
+export function parseCensusZip(payload: unknown): string | null {
+  const matches = (
+    payload as {
+      result?: { addressMatches?: { addressComponents?: { zip?: unknown } }[] };
+    }
+  )?.result?.addressMatches;
+  if (!Array.isArray(matches) || matches.length === 0) return null;
+  const zip = matches[0]?.addressComponents?.zip;
+  return typeof zip === "string" && /^\d{5}$/.test(zip.trim()) ? zip.trim() : null;
+}
+
 /** The midpoint and spread of sampled points, or null if they disagree. */
 export function coherentMidpoint(
   points: readonly { lat: number; lng: number }[],
@@ -531,6 +555,75 @@ export async function locateAddressInZip(
       samples: 1,
       spreadKm: 0,
     };
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+    options.signal?.removeEventListener("abort", onOuterAbort);
+  }
+}
+
+/**
+ * **WHERE DOES THIS ADDRESS ACTUALLY RESOLVE?** (BAL-38, 2026-08-31.)
+ *
+ * The owner: *"Out-of-zip address is rejected instead of redirected."* A reader
+ * on the 85701 ballot who types an address in 85641 was told *"We couldn't
+ * place that in 85701"* — true, unhelpful, and about us — when the honest and
+ * useful answer is that we placed it perfectly well somewhere else.
+ *
+ * `locateAddressInZip` puts the ZIP INTO the query, so the Census matches
+ * within it or not at all. That is the right behaviour for the happy path and
+ * it is why the out-of-zip case looked like a failure. This asks the same
+ * geocoder the same question WITHOUT the ZIP constraint, and reads back the
+ * ZIP it matched.
+ *
+ * It runs ONLY after an in-ZIP attempt has already failed. A reader whose
+ * address places correctly never reaches it, so the common path costs nothing
+ * and no additional address leaves this product on it.
+ *
+ * Returns null on anything but a clean, different, five-digit answer. A
+ * suggestion the reader cannot act on is worse than the honest failure it
+ * replaced.
+ */
+export async function zipThisAddressResolvesTo(
+  houseNumber: string,
+  street: string,
+  statedZip: string,
+  options: GeocodeOptions = {},
+): Promise<string | null> {
+  const number = houseNumber.trim().replace(/[^0-9a-z-]/gi, "");
+  const cleaned = streetOnly(street);
+  if (!number || cleaned.length < 3 || !/^\d{5}$/.test(statedZip)) return null;
+
+  const impl = options.fetchImpl ?? fetch;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), options.timeoutMs ?? 8000);
+  const onOuterAbort = () => controller.abort();
+  options.signal?.addEventListener("abort", onOuterAbort);
+  try {
+    /* No ZIP in the query — that is the entire difference from the call above. */
+    const address = `${number} ${cleaned}`;
+    const response =
+      typeof window === "undefined"
+        ? await impl(censusGeocodeUrl(address), {
+            headers: { accept: "application/json" },
+            signal: controller.signal,
+          })
+        : await impl(GEOCODE_PROXY_PATH, {
+            method: "POST",
+            headers: { "content-type": "application/json", accept: "application/json" },
+            body: JSON.stringify({ address }),
+            signal: controller.signal,
+          });
+    if (!response.ok) return null;
+    const payload = await response.json();
+    const matched = parseCensusZip(payload);
+    /*
+     * The SAME zip is not a redirect — it means the constrained attempt failed
+     * for some other reason and there is nothing to offer. A different one is
+     * the answer the reader needed.
+     */
+    return matched !== null && matched !== statedZip ? matched : null;
   } catch {
     return null;
   } finally {

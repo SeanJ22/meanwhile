@@ -73,6 +73,8 @@ export interface AddressPromptProps {
    * midpoint between two municipalities would put a pin in neither.
    */
   onPoint?: (point: { lat: number; lng: number }) => void;
+  /** BAL-38: the reader accepted the offer to view the ZIP it resolves in. */
+  onSwitchZip?: (zip: string) => void;
   /** The reader asked to go back to the whole zip. */
   onCleared?: () => void;
   /** Copy for the collapsed control. Each surface names its own affordance. */
@@ -115,6 +117,7 @@ export function AddressPrompt({
   onResolved,
   onPoint,
   onCleared,
+  onSwitchZip,
   trigger = "Add your address",
   startOpen = false,
   className,
@@ -129,6 +132,8 @@ export function AddressPrompt({
   const [houseNumber, setHouseNumber] = useState("");
   const [resolution, setResolution] = useState<AddressResolution | null>(null);
   const [error, setError] = useState<string | null>(null);
+  /** BAL-38: the ZIP this address DOES resolve in, when it resolves elsewhere. */
+  const [elsewhere, setElsewhere] = useState<string | null>(null);
   const streetRef = useRef<HTMLInputElement | null>(null);
   const numberRef = useRef<HTMLInputElement | null>(null);
 
@@ -194,8 +199,29 @@ export function AddressPrompt({
       setResolution(result);
 
       if (result.status === "FAILED") {
-        // Honest, and about US. Never about the reader's address being wrong.
-        setError(`We couldn't place ${street.trim()} in ${zip}. Everything stays listed.`);
+        /*
+         * ── BAL-38 ── **AN ADDRESS THAT RESOLVES SOMEWHERE ELSE IS NOT AN
+         * ADDRESS WE COULD NOT PLACE.** (2026-08-31.)
+         *
+         * The owner: out-of-zip addresses were rejected rather than redirected.
+         * The geocoder constrains its query to the ZIP on screen, so an address
+         * one ZIP over failed exactly like a bad one — and the reader was told
+         * we could not place it, which was true, about us, and concealed that
+         * we had placed it fine somewhere else.
+         *
+         * The sentence still reports OUR failure first, because that is what
+         * happened here: this ballot could not use the address. The offer sits
+         * after it, and nothing switches without a tap — a reader looking at
+         * one ZIP's ballot who is silently moved to another has had their
+         * question changed for them.
+         */
+        setError(
+          result.resolvesInZip
+            ? `${street.trim()} doesn't resolve in ${zip} — it resolves in ` +
+              `${result.resolvesInZip}. Everything here stays listed.`
+            : `We couldn't place ${street.trim()} in ${zip}. Everything stays listed.`,
+        );
+        setElsewhere(result.resolvesInZip ?? null);
         setPhase("FAILED");
         return;
       }
@@ -334,6 +360,24 @@ export function AddressPrompt({
           </button>
         </div>
         {error && <p className="address-prompt-error">{error}</p>}
+      {/*
+        ── BAL-38 ── The switch, offered and never taken automatically.
+
+        A reader looking at one ZIP's ballot who is silently moved to another
+        has had their question changed for them. `onSwitchZip` is the caller's,
+        because this component knows an address and not how the surface around
+        it navigates.
+      */}
+      {elsewhere && onSwitchZip && (
+        <button
+          type="button"
+          data-address-switch-zip={elsewhere}
+          className="address-prompt-ask"
+          onClick={() => onSwitchZip(elsewhere)}
+        >
+          Show the {elsewhere} ballot instead
+        </button>
+      )}
         <p className="address-prompt-promise">
           The number is used to find {split.length === 1 ? LEVEL_LABEL[split[0]] : "your districts"} and
           is not kept.
@@ -366,6 +410,24 @@ export function AddressPrompt({
         </button>
       </div>
       {error && <p className="address-prompt-error">{error}</p>}
+      {/*
+        ── BAL-38 ── The switch, offered and never taken automatically.
+
+        A reader looking at one ZIP's ballot who is silently moved to another
+        has had their question changed for them. `onSwitchZip` is the caller's,
+        because this component knows an address and not how the surface around
+        it navigates.
+      */}
+      {elsewhere && onSwitchZip && (
+        <button
+          type="button"
+          data-address-switch-zip={elsewhere}
+          className="address-prompt-ask"
+          onClick={() => onSwitchZip(elsewhere)}
+        >
+          Show the {elsewhere} ballot instead
+        </button>
+      )}
       {/*
         The rewritten promise (item 9.8). The old one was absolute — "never a
         house number" — on the same screen as a form asking for one. This says

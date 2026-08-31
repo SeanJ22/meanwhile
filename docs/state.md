@@ -22278,3 +22278,122 @@ ceiling and reports nothing. Converting 25 call sites to throw would red the
 walk on any slow surface, which `until()` was written not to do — so every
 timeout is now counted into the walk run record by label. A miss that cannot
 fail can at least not be missed.
+
+## 2026-08-31 · Session B close — the scope is the address, and the check that said it was fixed did not exist
+
+**SESSION: COMPLETE. WORKSTREAM: COMPLETE_AS_OF 2026-08-31. GRAPH: EXPANDING.**
+
+The 8.30.26 sweep ends at **0 open executable**: 16 verified fixed against
+checks that resolve, 6 terminal on the owner, 3 positives kept, 13 carried in
+stated check debt. Class instances 458 of 458.
+
+### WGH-22, and the two root causes underneath it
+
+The owner reported the same defect three times — WGH-12 and WGH-15 on 8/28,
+WGH-22 on 8/30 — and re-verified it on 8/31: at a resolved address in 85641 the
+districts popup returned House 17 and Senate 17 while Who Governs Here listed
+House 19 and Senate 19, each labelled as not theirs, with District 17 nowhere.
+
+**The defect.** The 8/30 repair added the reader's missing districts from
+`coverage.divisions`, on the belief that it and `coverage.seats` were different
+answers. They are not: `summarizeCoverage` derives one from the other by
+filtering to the seat types, so at those levels the two lists are ONE list and
+the addition could never fire — at any ZIP, for any reader. Driven against
+production at the owner's own address, the panel's State section rendered
+**empty**: District 19 correctly set aside, District 17 still absent.
+
+The unit test passed because its fixture hand-built a `CoverageSummary` whose
+`divisions` carried District 17 while its `seats` did not — a shape production
+cannot emit. `tests/panel-seats.test.ts` now asserts that impossibility against
+the real derivation, so the fixture cannot be written again.
+
+The reader's own districts now come from `location.confirmedDivisionIds`, with
+the name and roster asked for by division key through the route the district
+battlecard has used since M112.
+
+**RULING 222**, the author's ruling, adopted: before a confirmed address the
+scope is the ZIP; after one, the scope IS the address, and a *"not yours"* label
+on a governing-entities surface is prohibited. `ElsewhereMark`, the
+excluded-districts disclosure and the counting sentence beside it are deleted
+rather than improved. `scopedToAddress` is the one filter every ZIP-scoped list
+runs. Rows at overlapping levels are untouched — nothing has been determined
+about them, and dropping one would be the manufactured claim in the other
+direction.
+
+**The instrument.** WGH-22 was closed against `rq:wgh-22-panel-seats`. That
+check does not exist. Resolving every cited check in the record against disk:
+**15 of 23 name nothing** — 13 `vac:` ids against
+`data/health/visual-checks.json`, which is not on disk and whose suite last ran
+with `checksLoaded: 0`, and 2 `rq:` ids absent from the corpus generated from
+the owner's workbook. The gate required a non-empty STRING and never asked
+whether it named anything.
+
+`resolveCheckId` now resolves by namespace and the gate refuses an unresolvable
+id. The 13 carried rows are enumerated on `checkDebt` with reasons and dates,
+printed every run, and **not counted verified fixed** — the headline pair fell
+from 19 of 32 to 16 of 32, which is the number the owner was actually being
+told.
+
+**Verified on the rendered DOM at all four pilot ZIPs**, address confirmed the
+way a reader confirms one. 85641 before: House 19, Senate 19, AZ-6, all
+UNSETTLED, District 17 absent. After: **State House District 17, State Senate
+District 17, AZ-6, all CONFIRMED**, District 19 off the panel. 16 permanent walk
+checks bound to the POST-ADDRESS state, four per ZIP.
+
+### OWN-Q6 — a production schema write, authorized
+
+Migration `0023` applied to production through the existing migration law;
+`db:gate` HOLDS at 24 of 24 applied, `0023` declared expand. The production
+table was then read back through the READONLY string: 9 columns, 2 indexes, and
+no identity column of any kind. The demand pill has a fixed enum of one, no free
+text, no continuity hash, no read path, and renders from one component on both
+the candidate card and the body card. `demand_signals` is ruled NOT a sold
+aggregate record and carries no coverage tier — it could carry one, and does not,
+because the tier exists so a buyer can weight a row and there is no buyer.
+
+### The model half of cost truth
+
+`pnpm model:proof` — one bounded run through `dispatchOne`. The persisted
+Attempt carries `provider: anthropic`, `version: claude-opus-5`, **54 input and
+24 output tokens as the provider reported them**, and `usd 0.000870` computed at
+a dated rate. Every `BOUNDED_MODEL_WORKER` Attempt before this one was a lane
+label over work no model did.
+
+### The rest of section A, each to a measurement
+
+- **ASK-18** — all eleven UNKNOWN adapters opened and declared from the surface
+  READ. Two are ABSENT with their traps named (diligent's `Published` is about
+  the meeting record; apptegy's link is scraped from prose). Two fit none of the
+  three states, so `PRESENT_NOT_PER_SITTING` exists and `mayObservePerSitting`
+  gates the observation on it.
+- **ASK-19** — a length CONTRACT, not a cap: 5 sentences AND 700 characters,
+  declared once, stated in the prompt and enforced in the validator from the
+  same constants. Over budget is rejected like an invented URL and the records
+  still ship. Nothing truncates.
+- **BAL-34** — one line deleted both section HEADERS for every non-federal
+  officeholder. A pill present for federal members and absent for local ones is
+  a completeness claim about the person, made by a missing header.
+- **BAL-39** — measured before anything moved. A two-column GRID places in ROWS;
+  the row's height is its tallest card and every shorter card leaves a hole.
+  85701 ran 13–689px, 07866 20–468px. Column flow replaced it and the same
+  measurement reads 13–15px, both columns level, still two 565px columns.
+- **OWN-Q5** — the county store was reachable; the DENOMINATOR was missing. A
+  null pushed nothing, so one regime's silence answered for all three. Every
+  money answer now names all three regimes, each labelled OURS.
+- **OWN-Q9** — the governments an answer named open their own cards, keyed on
+  record `bodyId`s and never on the prose.
+- **OFF-8 / OFF-9 / OFF-10** — the measurement each blocker required, then the
+  RULING 55 gate. 144 of 1057 portraits fall under the large circle's floor at
+  dpr 2; 129 are gc.nh.gov, whose own published file IS that size. 5 are Tucson,
+  where a 480×720 original is publicly available. **Katie Hobbs is not
+  under-resolved** at 284×354, so OFF-10 is a real report and not a resolution
+  shortfall — pinned so it cannot be closed by the fix for a different defect.
+
+### Section B — the rows the owner can now see
+
+All six NEEDS_SEAN rows are published to the owner-facing tracker as
+`OWN01`–`OWN06` under `needs-sean`, each stating what is needed, why the machine
+cannot proceed, what was tried and what continues without it. The gate refuses a
+NEEDS_SEAN row with no tracker entry from here on: a gate that is terminal for a
+session and invisible to the one person who can clear it is a deferral wearing a
+status.

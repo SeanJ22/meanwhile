@@ -57,7 +57,9 @@
  * session creates against production is named in its report. No reaction is
  * ever tapped and no ask is ever submitted.
  */
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+// `mkdirSync`/`readdirSync` left with the hand-rolled run-record sequencer
+// they belonged to; `nextRunRecordPath` owns both now.
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import {
   outcomeFor,
   type QuarantineFile,
@@ -70,6 +72,7 @@ import { config as loadEnv } from "dotenv";
 import { type Page } from "playwright";
 
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
+import { nextRunRecordPath } from "../lib/health/run-records.ts";
 import { today as phoenixDay } from "./doc-dates.mjs";
 import { PRODUCT_NAME } from "../lib/brand.ts";
 import {
@@ -6300,24 +6303,25 @@ const SCOPE_READ = `(() => {
   };
 })()`;
 
-for (const target of SCOPE_ADDRESSES) {
-  const BLOCK: [string, string][] = [
-    [
-      "SB0831",
-      `${target.zip}: the districts a confirmed address settled are the districts the panel lists`,
-    ],
-    ["SB0831", `${target.zip}: no district the address ruled out is rendered, marked or disclosed`],
-    ["SB0831", `${target.zip}: confirming an address CHANGES the panel to the resolved scope`],
-    ["SB0831", `${target.zip}: no seat row renders an identifier or an unnamed district`],
-  ];
+interface ScopeExpectation {
+  divisionIds: string[];
+  splitLevels: string[];
+  contestIds: string[];
+}
 
-  /*
-   * The confirmed answer comes from the product's own resolver. A ZIP whose
-   * test street stops resolving DECLARES (RULING 24) rather than skipping — a
-   * silent skip is the failure mode this whole block exists to end.
-   */
-  let resolved: { divisionIds: string[]; splitLevels: string[]; contestIds: string[] } | null =
-    null;
+/**
+ * What the product's OWN resolver says this address settles.
+ *
+ * The EXPECTATION only. It is asked of the API because the API is the answer
+ * key — never so that a check can write the answer onto the page it is about
+ * to read. Both blocks below share this one implementation so the two cannot
+ * drift into disagreeing about what the right answer is.
+ */
+async function resolveAddressExpectation(target: {
+  zip: string;
+  street: string;
+  houseNumber: string;
+}): Promise<ScopeExpectation | null> {
   try {
     const response = await fetch(`${BASE}/api/address/resolve`, {
       method: "POST",
@@ -6336,16 +6340,34 @@ for (const target of SCOPE_ADDRESSES) {
       contestIds?: string[];
     };
     const levels = body.resolution.levels ?? [];
-    if (body.resolution.status !== "FAILED" && levels.length > 0) {
-      resolved = {
-        divisionIds: levels.filter((l) => l.certain).flatMap((l) => l.divisionIds),
-        splitLevels: levels.filter((l) => !l.certain).map((l) => l.level),
-        contestIds: body.contestIds ?? [],
-      };
-    }
+    if (body.resolution.status === "FAILED" || levels.length === 0) return null;
+    return {
+      divisionIds: levels.filter((l) => l.certain).flatMap((l) => l.divisionIds),
+      splitLevels: levels.filter((l) => !l.certain).map((l) => l.level),
+      contestIds: body.contestIds ?? [],
+    };
   } catch {
-    resolved = null;
+    return null;
   }
+}
+
+for (const target of SCOPE_ADDRESSES) {
+  const BLOCK: [string, string][] = [
+    [
+      "SB0831",
+      `${target.zip}: the districts a confirmed address settled are the districts the panel lists`,
+    ],
+    ["SB0831", `${target.zip}: no district the address ruled out is rendered, marked or disclosed`],
+    ["SB0831", `${target.zip}: confirming an address CHANGES the panel to the resolved scope`],
+    ["SB0831", `${target.zip}: no seat row renders an identifier or an unnamed district`],
+  ];
+
+  /*
+   * The confirmed answer comes from the product's own resolver. A ZIP whose
+   * test street stops resolving DECLARES (RULING 24) rather than skipping — a
+   * silent skip is the failure mode this whole block exists to end.
+   */
+  const resolved = await resolveAddressExpectation(target);
 
   if (!resolved) {
     for (const [session, name] of BLOCK) {
@@ -6475,6 +6497,207 @@ for (const target of SCOPE_ADDRESSES) {
         ),
       `ocd-division on screen: ${after.ocdIdOnScreen}; unnamed rows: ` +
         `${after.rows.filter((r) => r.label.length === 0).map((r) => r.sourcing).join(",") || "none"}`,
+    );
+  } finally {
+    await page.context().close();
+  }
+}
+
+/**
+ * **WGH-22 — THE READER'S OWN INTERACTION, IN ONE TAB, WITH NOTHING SUPPLIED.**
+ * (Session C, 2026-08-31.)
+ *
+ * The block above confirms an address by writing `sessionStorage` and then
+ * DISPATCHING A SYNTHETIC `storage` EVENT. That event is the one thing a real
+ * browser never produces for the tab that wrote — `sessionStorage` notifies
+ * every OTHER tab and never the writer. So the block measured the panel's
+ * derivation correctly and, in the same motion, supplied the notification the
+ * product was failing to send. It passed on 8/31 while the owner was watching
+ * the defect on production.
+ *
+ * That is the third instrument to certify this defect while it was live. The
+ * first was a unit test whose fixture hand-built a `CoverageSummary` shape the
+ * real derivation cannot emit; the second was a sweep row closed against a
+ * check id that names nothing on disk.
+ *
+ * So this block supplies NOTHING. It clicks the pill a reader clicks, types
+ * into the field a reader types into, presses the button a reader presses, and
+ * then reads the panel — same tab, no reload, no seeded storage, no dispatched
+ * event. The expectation still comes from the product's own resolver, because
+ * an answer key is not a supplied answer.
+ *
+ * `lib/geo/session-address.ts` now publishes to its own subscribers on write
+ * and on clear. Before that, the first check here fails at every ZIP.
+ */
+for (const target of SCOPE_ADDRESSES) {
+  const LIVE: [string, string][] = [
+    [
+      "SC0831",
+      `${target.zip}: typing an address into the prompt moves the panel in the same tab, no reload`,
+    ],
+    [
+      "SC0831",
+      `${target.zip}: the panel a reader sees after typing lists the districts the resolver settled`,
+    ],
+    ["SC0831", `${target.zip}: a device revisiting with a kept resolution lists the settled districts`],
+  ];
+
+  const expectation = await resolveAddressExpectation(target);
+  if (!expectation) {
+    for (const [session, name] of LIVE) {
+      cannotRun(
+        session,
+        name,
+        `the resolver did not place ${target.street} in ${target.zip}, so no address was confirmed`,
+      );
+    }
+    continue;
+  }
+  const ownDistricts = expectation.divisionIds.filter((id) =>
+    SCOPE_LEVELS.includes(scopeLevelOf(id)),
+  );
+
+  const page = await openAt(browser, target.zip);
+  try {
+    const wghPill = page.locator(".notice-fab").first();
+    if (await wghPill.isVisible().catch(() => false)) {
+      await wghPill.click();
+      await until(page, async () => (await page.locator(".coverage-notice").count()) > 0, 8_000);
+    }
+    if (!(await untilPresent(page, "[data-seat-standing]", 15_000))) {
+      for (const [session, name] of LIVE) {
+        cannotRun(session, name, "the who-governs card rendered no seat rows to read");
+      }
+      continue;
+    }
+    const before = (await page.evaluate(SCOPE_READ)) as ScopeRead;
+
+    /*
+     * The door a reader uses. `CouldGovernNotice` renders the pill only while
+     * rows carry the mark; if it is not there the reader had no door, and that
+     * is a DECLARED blocked check rather than a silent pass (RULING 24).
+     */
+    const pill = page.locator(".could-govern-notice-pill").first();
+    if (await pill.isVisible().catch(() => false)) await pill.click();
+
+    const street = page.locator('input[aria-label="Street"]').first();
+    if (!(await street.isVisible().catch(() => false))) {
+      for (const [session, name] of LIVE) {
+        cannotRun(session, name, "the address prompt offered no street field to type into");
+      }
+      continue;
+    }
+
+    await street.fill(target.street);
+    await page.locator(".address-prompt-fields button").first().click();
+
+    /*
+     * **WAIT FOR THE FIELD, NOT FOR THE PAGE TO GO QUIET.** The first version
+     * of this block used a settle timer here and read the panel before the
+     * resolver had answered, which made a timing race look exactly like the
+     * defect it was written to catch. A street that needs a number asks for
+     * one; that ASK is the thing to wait for, so it is waited for by name.
+     *
+     * An empty houseNumber in the table above is a reader who was never asked,
+     * and skipping is a legal reader path — so the wait is conditional on this
+     * walk having a number to give.
+     */
+    const houseNumber = page.locator('input[aria-label="House number"]').first();
+    if (target.houseNumber) {
+      const asked = await page
+        .waitForSelector('input[aria-label="House number"]', { timeout: 20_000 })
+        .then(() => true)
+        .catch(() => false);
+      if (asked) {
+        await houseNumber.fill(target.houseNumber);
+        await page.locator(".address-prompt-fields button").first().click();
+      }
+    }
+
+    /*
+     * Then wait for the CONDITION rather than for a duration: every row
+     * CONFIRMED is what a settled address looks like. If it never arrives the
+     * wait simply expires and the read below fails the check honestly, with
+     * the panel's actual state as the evidence.
+     */
+    await until(
+      page,
+      async () => {
+        const now = (await page.evaluate(SCOPE_READ)) as ScopeRead;
+        return now.rows.length > 0 && now.rows.every((r) => r.standing === "CONFIRMED");
+      },
+      20_000,
+    );
+
+    const after = (await page.evaluate(SCOPE_READ)) as ScopeRead;
+    const beforeState = before.rows.map((r) => `${r.label}:${r.standing}`).sort().join("|");
+    const afterState = after.rows.map((r) => `${r.label}:${r.standing}`).sort().join("|");
+
+    /*
+     * **THE DEFECT ITSELF.** The owner's screen: the control saying District 17
+     * above a panel still listing District 19. The panel MOVED is the whole
+     * claim — a panel that reads identically after the reader answered is the
+     * bug, whatever the banner above it says.
+     */
+    check(
+      "SC0831",
+      LIVE[0][1],
+      beforeState !== afterState && after.rows.every((r) => r.standing === "CONFIRMED"),
+      `before: ${beforeState || "no rows"} · after: ${afterState || "no rows"} — ` +
+        `${after.rows.filter((r) => r.standing === "CONFIRMED").length} of ${after.rows.length} CONFIRMED`,
+    );
+
+    const confirmed = after.rows.filter((r) => r.standing === "CONFIRMED");
+    check(
+      "SC0831",
+      LIVE[1][1],
+      confirmed.length === ownDistricts.length &&
+        confirmed.every((r) => r.label.length > 0) &&
+        after.exclusionMarks === 0 &&
+        !after.ocdIdOnScreen,
+      `the resolver settled ${ownDistricts.length} district(s) at these levels; the panel shows ` +
+        `${confirmed.length} CONFIRMED: ${confirmed.map((r) => r.label).join(" · ") || "none"}`,
+    );
+
+    /*
+     * **THE REVISIT.** A device coming back inside the same session holds the
+     * resolution already, so this one legitimately seeds and RELOADS — the
+     * claim is about what a fresh mount reads, not about a notification. The
+     * 8/28 failure was a banner that announced the address over a list that
+     * had not used it, so the assertion is on the LIST.
+     */
+    await page.reload({ waitUntil: "domcontentloaded" });
+    // The card is REACHED after a reload the same way it is reached on a cold
+    // open — the surface has to mount before the pill exists, and probing
+    // sooner reads an empty page and calls it a missing panel.
+    await untilPresent(page, ".notice-fab", 30_000);
+    if (await wghPill.isVisible().catch(() => false)) {
+      await wghPill.click();
+      await until(page, async () => (await page.locator(".coverage-notice").count()) > 0, 10_000);
+    }
+    const mounted = await untilPresent(page, "[data-seat-standing]", 20_000);
+    if (mounted) {
+      await until(
+        page,
+        async () => {
+          const now = (await page.evaluate(SCOPE_READ)) as ScopeRead;
+          return now.rows.length > 0 && now.rows.every((r) => r.standing === "CONFIRMED");
+        },
+        20_000,
+      );
+    }
+    const revisited = mounted ? ((await page.evaluate(SCOPE_READ)) as ScopeRead) : null;
+    const revisitConfirmed = revisited?.rows.filter((r) => r.standing === "CONFIRMED") ?? [];
+    check(
+      "SC0831",
+      LIVE[2][1],
+      revisited !== null &&
+        revisitConfirmed.length === ownDistricts.length &&
+        revisitConfirmed.every((r) => r.label.length > 0),
+      revisited === null
+        ? "the card rendered no seat rows after the revisit"
+        : `after reload the panel shows ${revisitConfirmed.length} of ${ownDistricts.length} ` +
+          `settled district(s): ${revisitConfirmed.map((r) => r.label).join(" · ") || "none"}`,
     );
   } finally {
     await page.context().close();
@@ -7029,15 +7252,30 @@ if (quarantined.length > 0) {
     console.log(`    ${String(i + 1).padStart(2)}. ${(d.ms / 1000).toFixed(2)}s  ${d.identity}`);
   }
 
+  /*
+   * **THE THIRD COPY OF THIS, AND THE ONE THAT DID NOT WORK.**
+   * (Session C, 2026-08-31. RULING 103.)
+   *
+   * This block used to build its own sequence number, and the regex it built
+   * it with was written inside a TEMPLATE LITERAL:
+   *
+   *     new RegExp(`^${day}-(\d+)\.json$`)
+   *
+   * The template consumes the backslashes before `RegExp` ever sees them, so
+   * the pattern was `^2026-08-31-(d+).json$` — it matches a literal `d`, never
+   * a digit. Nothing on disk ever matched, `seq` stayed 0, and EVERY walk
+   * after the first on a given day silently overwrote the previous run's
+   * record. That is how this session's first walk destroyed the record the
+   * previous session had committed, and nothing said so.
+   *
+   * `lib/health/run-records.ts` is the implementation `reader-suite` and
+   * `control-set` already share, and it escapes correctly. Using it removes
+   * the duplicate and the defect in one move — which is the whole argument of
+   * RULING 103: the second copy is where the rule drifts, and this one had
+   * drifted into not working at all.
+   */
   const runsDir = join(process.cwd(), "data", "health", "walk-runs");
-  mkdirSync(runsDir, { recursive: true });
-  const day = phoenixDay();
-  let seq = 0;
-  for (const name of readdirSync(runsDir)) {
-    const m = name.match(new RegExp(`^${day}-(\d+)\.json$`));
-    if (m) seq = Math.max(seq, Number(m[1]));
-  }
-  const recordPath = join(runsDir, `${day}-${String(seq + 1).padStart(2, "0")}.json`);
+  const recordPath = nextRunRecordPath(runsDir, phoenixDay());
   writeFileSync(
     recordPath,
     `${JSON.stringify(

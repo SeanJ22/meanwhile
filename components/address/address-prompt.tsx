@@ -53,9 +53,16 @@ import {
  * The old footer said the app never needs a house number, absolutely, on the
  * same screen as a form asking for one. A reader whose street genuinely splits
  * would have caught the app in that the first time it happened. It now says
- * what is accurate — street first, house number only when the street itself
- * crosses a line — which is more credible than the absolute version and has the
- * advantage of being keepable.
+ * what is accurate — street first, house number when the street crosses a line
+ * OR when the street name alone does not place — which is more credible than
+ * the absolute version and has the advantage of being keepable.
+ *
+ * That second reason was added in Session C (2026-08-31) because it was
+ * already TRUE and unsaid. The resolver probes a fixed ladder of sample house
+ * numbers when none is given, and a street whose range excludes them all came
+ * back FAILED — so the product told the owner it could not place his own road
+ * and offered him no field to correct it with. The promise now names both
+ * reasons a number is wanted, and the form asks in both cases.
  */
 
 export interface AddressPromptProps {
@@ -215,6 +222,33 @@ export function AddressPrompt({
          * one ZIP's ballot who is silently moved to another has had their
          * question changed for them.
          */
+        /*
+         * ── WGH-22 / OWN-address ── **A BLIND PROBE THAT MISSED IS NOT A
+         * STREET THAT DOES NOT EXIST.** (Session C, 2026-08-31.)
+         *
+         * With no house number the resolver probes a FIXED ladder of sample
+         * numbers — 1, 50, 200, 800 — against the Census range for the street.
+         * A street whose range excludes all four returns zero points and comes
+         * back FAILED. That is a fact about OUR four guesses, not about the
+         * street: the owner's own road is numbered 10701-10899, so every probe
+         * missed and the product told him it could not place a road the Census
+         * places on the first try with a real number.
+         *
+         * Telling a reader their street could not be placed is asserting an
+         * absence from our own empty result, which `CLAUDE.md` forbids by
+         * name. The honest move is the question we already have a field for.
+         * The promise below the form said a number is wanted only when the
+         * street crosses a boundary; it now says the other reason too, so the
+         * copy and the resolver agree.
+         *
+         * Only a number that was SUPPLIED and still failed is a real failure,
+         * and that path is unchanged.
+         */
+        if (!withNumber && !result.resolvesInZip) {
+          setError(null);
+          setPhase("NEEDS_NUMBER");
+          return;
+        }
         setError(
           result.resolvesInZip
             ? `${street.trim()} doesn't resolve in ${zip} — it resolves in ` +
@@ -330,7 +364,10 @@ export function AddressPrompt({
         <label htmlFor={`wtp-house-${zip}`} className="address-prompt-ask">
           {split.length > 0
             ? houseNumberReason(split)
-            : "Your street crosses a boundary. A house number settles it."}
+            : resolution?.status === "FAILED"
+              ? `We couldn't place ${street.trim()} from the street name on its own. ` +
+                "A house number will settle it."
+              : "Your street crosses a boundary. A house number settles it."}
         </label>
         <div className="address-prompt-fields">
           <input
@@ -355,7 +392,22 @@ export function AddressPrompt({
           </button>
           {/* Declining stays the effortless default — friction-rule exception 2.
               Skipping leaves every confirmed level confirmed. */}
-          <button type="button" className="address-prompt-skip" onClick={() => setPhase("SETTLED")}>
+          <button
+            type="button"
+            className="address-prompt-skip"
+            onClick={() => {
+              /* Nothing was settled when the street never placed, so skipping
+                 here returns the honest failure rather than a SETTLED card
+                 that would read "Set to <street>." about an address we do not
+                 have. */
+              if (resolution?.status === "FAILED") {
+                setError(`We couldn't place ${street.trim()} in ${zip}. Everything stays listed.`);
+                setPhase("FAILED");
+                return;
+              }
+              setPhase("SETTLED");
+            }}
+          >
             skip
           </button>
         </div>
@@ -435,9 +487,10 @@ export function AddressPrompt({
         it was told the truth in advance.
       */}
       <p className="address-prompt-promise">
-        We ask for your street, and for a house number only when the street itself crosses a
-        boundary. It passes through our server to the U.S. Census Bureau&apos;s free address lookup
-        and is not tied to an account. What comes back stays on this device for this visit.{" "}
+        We ask for your street, and for a house number when the street crosses a boundary or when
+        we can&apos;t place it from the name on its own. It passes through our server to the U.S.
+        Census Bureau&apos;s free address lookup and is not tied to an account. What comes back
+        stays on this device for this visit.{" "}
         <button type="button" className="address-prompt-skip" onClick={() => setPhase("IDLE")}>
           No thanks
         </button>

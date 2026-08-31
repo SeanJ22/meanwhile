@@ -1,22 +1,24 @@
 /**
- * **THE RECORDED EXECUTOR MUST BE THE ONE THAT RAN.**
- * (Session B closure, W3.E, 2026-08-31.)
+ * **THE PERSISTED ATTEMPT MUST CARRY THE IDENTITY OF THE THING THAT RAN.**
+ * (Session B closure, W3.E and its regression, 2026-08-31.)
  *
- * `chooseExecutor` DECIDES and the injected worker RUNS, and nothing connected
- * the two. The dispatcher recorded the decision as though it were the fact.
+ * ## Two bugs, one behind the other
  *
- * It was wrong on every cycle of the 2026-08-31 shadow runs, which recorded
- * **10 BOUNDED_MODEL_WORKER Attempts for work a deterministic HTTP walker
- * did** — because nothing in the method store joins a meetings publisher to a
- * graduated route, so every meetings obligation is classified ungraduated and
- * routed to the model lane, and the runner then injects the HTTP walker anyway.
+ * The first: `chooseExecutor` DECIDED and the injected worker RAN, and nothing
+ * connected them, so the dispatcher recorded the decision as the fact — **10
+ * `BOUNDED_MODEL_WORKER` Attempts on 2026-08-31 for work a deterministic HTTP
+ * walker did.**
  *
- * That is a cost and provenance defect. An Attempt labelled as a model worker
- * invites a reader of the ledger to attribute model spend and model variance to
- * a run that had neither.
+ * The second, which the first fix left standing: `ranAs` corrected the RETURNED
+ * result and the Attempt had already been persisted. `dispatchOne` chose a
+ * lane, built a `WorkerRef` from it, opened the Attempt with that WorkerRef,
+ * and only afterwards learned what ran. So the durable record still said
+ * `provider: "anthropic", version: "unspecified-model"` for a deterministic
+ * walk, and the cost ledger keyed on that Attempt inherited the same fiction.
  *
- * The arrangement itself is legitimate. What was not legitimate is that nothing
- * said so.
+ * **Every assertion below that matters reopens the PERSISTED Attempt.** A test
+ * that checked only the returned object is the test that let the second bug
+ * through.
  */
 
 import assert from "node:assert/strict";
@@ -27,12 +29,17 @@ import { join } from "node:path";
 
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import {
+  attemptsForRouteTask,
   registerRouteTask,
   registerWorkItem,
 } from "../lib/control-plane/repository/coordinator.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
-import { dispatchOne, type RunWork } from "../lib/control-plane/scheduler/dispatch.ts";
+import {
+  dispatchOne,
+  type DeclaredExecutor,
+  type RunWork,
+} from "../lib/control-plane/scheduler/dispatch.ts";
 import { scheduleObligation, isScheduled } from "../lib/control-plane/scheduler/obligation.ts";
 import type { FreshnessObligation } from "../lib/control-plane/scheduler/obligation.ts";
 
@@ -80,8 +87,7 @@ async function fixture() {
   return { repos, task };
 }
 
-/** A deterministic walker, whatever the dispatcher decided. */
-const deterministicWalker: RunWork = async () => ({
+const walk: RunWork = async () => ({
   ranAs: "DETERMINISTIC",
   kind: "DISPOSED",
   disposition: {
@@ -91,10 +97,30 @@ const deterministicWalker: RunWork = async () => ({
     transport: "REACHABLE",
     note: "reached, nothing there",
   },
+  cost: {
+    inputTokens: null,
+    outputTokens: null,
+    usd: null,
+    durationMs: 120,
+    bytesFetched: 4096,
+    requestCount: 1,
+  },
   detail: "walked",
 });
 
-test("SEEDED W3.E: an UNGRADUATED route routed to the model lane, walked deterministically, RECORDS deterministic", async () => {
+/** A deterministic walker that says so before it runs. */
+const deterministic: DeclaredExecutor = {
+  lane: "DETERMINISTIC",
+  workerFor: ({ holder }) => ({
+    role: "ACQUIRER",
+    provider: "we-the-people",
+    version: "http-executor/1.0",
+    instance: holder,
+  }),
+  run: walk,
+};
+
+test("SEEDED W3.E: the PERSISTED Attempt carries the deterministic worker, not the chosen lane's", async () => {
   const { repos, task } = await fixture();
 
   const result = await dispatchOne(repos, {
@@ -103,28 +129,45 @@ test("SEEDED W3.E: an UNGRADUATED route routed to the model lane, walked determi
     holder: "w",
     now: NOW,
     leaseTtlMs: 60_000,
-    /* Exactly the shadow runner's situation: nothing is graduated. */
+    /* Exactly the shadow runner's situation: nothing is graduated, so the
+       method store routes this to the bounded MODEL lane. */
     maturity: () => "UNGRADUATED",
-    run: deterministicWalker,
+    executor: deterministic,
   });
 
+  assert.equal(result.executorChosen, "BOUNDED_MODEL_WORKER", "the decision is unchanged");
+  assert.equal(result.executor, "DETERMINISTIC", "and the result says what ran");
+  assert.equal(result.executorMismatch, true, "the disagreement is recorded, not hidden");
+
+  /*
+   * THE ASSERTION THAT WOULD HAVE CAUGHT THE SECOND BUG. Reopened from the
+   * store, not read off the returned object.
+   */
+  const attempts = await attemptsForRouteTask(repos, task.id);
+  assert.equal(attempts.length, 1);
+  const persisted = attempts[0].value;
+
   assert.equal(
-    result.executorChosen,
-    "BOUNDED_MODEL_WORKER",
-    "the decision is unchanged — an ungraduated route still routes to the bounded lane",
+    persisted.worker.provider,
+    "we-the-people",
+    "the durable Attempt said `anthropic` for work no model touched",
   );
+  assert.equal(persisted.worker.version, "http-executor/1.0");
+  assert.notEqual(persisted.worker.version, "unspecified-model");
+  assert.equal(persisted.worker.role, "ACQUIRER");
+  assert.equal(persisted.outcome, "COMPLETED");
+
+  /* Cost attribution rides on that same Attempt, so it inherits the identity. */
+  const costs = await repos.costs.readAll();
+  const mine = costs.filter((c) => c.attemptId === persisted.id);
+  assert.equal(mine.length, 1, "the walk recorded a cost entry");
+  assert.equal(mine[0].role, "ACQUIRER", "cost is attributed to the role that actually ran");
   assert.equal(
-    result.executor,
-    "DETERMINISTIC",
-    "and the RECORD says what ran. Before this it said BOUNDED_MODEL_WORKER, which was the " +
-      "decision wearing the fact's name — 10 such Attempts on 2026-08-31 alone",
+    mine[0].cost.inputTokens,
+    null,
+    "no model ran, so model tokens are null — never zero, which would read as a measured model",
   );
-  assert.equal(
-    result.executorMismatch,
-    true,
-    "the disagreement is recorded rather than hidden; a seam that ignores the decision is a " +
-      "real arrangement and the defect was that nothing said so",
-  );
+  assert.equal(mine[0].cost.requestCount, 1);
 });
 
 test("W3.E: agreement is recorded as agreement, so a mismatch means something", async () => {
@@ -136,24 +179,27 @@ test("W3.E: agreement is recorded as agreement, so a mismatch means something", 
     now: NOW,
     leaseTtlMs: 60_000,
     maturity: () => "GRADUATED",
-    run: deterministicWalker,
+    executor: deterministic,
   });
   assert.equal(result.executorChosen, "DETERMINISTIC");
   assert.equal(result.executor, "DETERMINISTIC");
-  assert.equal(
-    result.executorMismatch,
-    false,
-    "a flag that were always true would carry no information",
-  );
+  assert.equal(result.executorMismatch, false, "a flag that were always true would say nothing");
 });
 
-test("SEEDED W3.E: a worker claiming the MODEL lane is recorded as the model lane", async () => {
+test("SEEDED W3.E: a worker CONTRADICTING its own declaration is REFUSED, not reconciled", async () => {
   /*
-   * The mirror case, and the one that matters for cost. If a model worker runs
-   * where a deterministic walker was chosen, the ledger must say a model ran —
-   * otherwise model spend is attributed to a deterministic Attempt.
+   * The Attempt is persisted on the executor's word. An outcome claiming a
+   * different lane means that durable record is already wrong on the
+   * executor's own account, and reconciling it would mean choosing which of
+   * two statements from the same party to believe.
    */
   const { repos, task } = await fixture();
+  const liar: DeclaredExecutor = {
+    lane: "DETERMINISTIC",
+    workerFor: deterministic.workerFor,
+    run: async () => ({ ...(await walk({} as never)), ranAs: "BOUNDED_MODEL_WORKER" }),
+  };
+
   const result = await dispatchOne(repos, {
     obligation: scheduled(),
     routeTaskId: task.id,
@@ -161,9 +207,47 @@ test("SEEDED W3.E: a worker claiming the MODEL lane is recorded as the model lan
     now: NOW,
     leaseTtlMs: 60_000,
     maturity: () => "GRADUATED",
-    run: async () => ({ ...(await deterministicWalker({} as never)), ranAs: "BOUNDED_MODEL_WORKER" }),
+    executor: liar,
   });
-  assert.equal(result.executorChosen, "DETERMINISTIC");
-  assert.equal(result.executor, "BOUNDED_MODEL_WORKER");
-  assert.equal(result.executorMismatch, true);
+
+  assert.equal(result.outcome, "FAILED");
+  assert.equal(result.dispositionCommitted, false, "no conclusion is written on a masquerade");
+  assert.match(result.detail, /masquerade is not a disagreement/);
+
+  const attempts = await attemptsForRouteTask(repos, task.id);
+  assert.equal(attempts[0].value.outcome, "DENIED_BY_POLICY");
+  const settled = await repos.routeTasks.mustRead(task.id);
+  assert.equal(settled.value.disposition, null, "and the route stays owed");
+});
+
+test("W3.E: a declared MODEL lane persists the model identity", async () => {
+  /* The mirror, and the one that matters for spend: if a model runs, the
+     durable Attempt must say so, or model cost lands on a deterministic row. */
+  const { repos, task } = await fixture();
+  const model: DeclaredExecutor = {
+    lane: "BOUNDED_MODEL_WORKER",
+    workerFor: ({ holder }) => ({
+      role: "SCOUT",
+      provider: "anthropic",
+      version: "claude-haiku-4-5-20251001",
+      instance: holder,
+    }),
+    run: async () => ({ ...(await walk({} as never)), ranAs: "BOUNDED_MODEL_WORKER" }),
+  };
+
+  await dispatchOne(repos, {
+    obligation: scheduled(),
+    routeTaskId: task.id,
+    holder: "w",
+    now: NOW,
+    leaseTtlMs: 60_000,
+    maturity: () => "UNGRADUATED",
+    executor: model,
+  });
+
+  const attempts = await attemptsForRouteTask(repos, task.id);
+  const persisted = attempts[0].value;
+  assert.equal(persisted.worker.provider, "anthropic");
+  assert.equal(persisted.worker.version, "claude-haiku-4-5-20251001");
+  assert.equal(persisted.worker.role, "SCOUT");
 });

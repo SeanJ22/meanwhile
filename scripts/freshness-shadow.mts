@@ -68,7 +68,7 @@ import {
   syncObligations,
 } from "../lib/control-plane/scheduler/durable.ts";
 import { hostSpacer, httpExecutor } from "../lib/control-plane/scheduler/http-executor.ts";
-import type { RunWork } from "../lib/control-plane/scheduler/dispatch.ts";
+import type { DeclaredExecutor, RunWork } from "../lib/control-plane/scheduler/dispatch.ts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { nextRunRecordPath } from "../lib/health/run-records.ts";
@@ -212,12 +212,29 @@ const simulated: RunWork = async ({ executor, routeTaskId }) => ({
   detail: `--dry: ${executor} decided route task ${routeTaskId.slice(0, 12)} — no retrieval ran`,
 });
 
-const run: RunWork = dry
-  ? simulated
-  : httpExecutor({
-      urlFor: (id) => urlByObligation.get(id) ?? null,
-      spaceOut: hostSpacer(),
-    });
+/*
+ * **THE LANE IS DECLARED, and both of these are deterministic.**
+ * (W3.E regression, 2026-08-31.)
+ *
+ * `chooseExecutor` routes every meetings obligation to the bounded model lane,
+ * because nothing in the method store joins a meetings publisher to a graduated
+ * route. Neither executor here is a model: the http one is an HTTP GET and the
+ * dry one performs no retrieval at all. Declaring it is what stops the Attempt
+ * being persisted under an anthropic worker identity for work no model touched.
+ */
+const executor: DeclaredExecutor = {
+  lane: "DETERMINISTIC",
+  workerFor: ({ holder }) => ({
+    role: "ACQUIRER",
+    provider: "we-the-people",
+    version: dry ? "shadow-decision/1.0" : "http-executor/1.0",
+    instance: holder,
+  }),
+  run: dry ? simulated : httpExecutor({
+    urlFor: (id) => urlByObligation.get(id) ?? null,
+    spaceOut: hostSpacer(),
+  }),
+};
 
 /* --------------------------------------------------------------- the cycle --- */
 
@@ -229,11 +246,7 @@ const cycle = await runCycle({
   /* Read from the method store — the project's own record of what it knows how
      to walk — rather than from a string prefix. */
   maturity: methodMaturityFrom(ROOT),
-  run,
-  workerFor: ({ executor, holder }) =>
-    executor === "DETERMINISTIC"
-      ? { role: "ACQUIRER", provider: "we-the-people", version: "http-executor/1.0", instance: holder }
-      : { role: "SCOUT", provider: "we-the-people", version: "http-executor/1.0", instance: holder },
+  executor,
   holder: `freshness-shadow@${process.pid}`,
   now: NOW,
   leaseTtlMs: 120_000,

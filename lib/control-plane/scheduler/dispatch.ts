@@ -312,6 +312,37 @@ export type RunWork = (input: {
  * A deterministic walker is not a model and says so in both fields rather than
  * borrowing a model's identity.
  */
+/**
+ * **AN EXECUTOR DECLARES ITS LANE BEFORE ANYTHING IS PERSISTED.**
+ * (Session B closure, W3.E regression, 2026-08-31.)
+ *
+ * `ranAs` on the outcome fixed the RETURNED result and left the PERSISTED one
+ * wrong. `dispatchOne` chose a lane, built a `WorkerRef` from it, opened the
+ * Attempt with that WorkerRef, and only afterwards learned what had actually
+ * run — so a deterministic HTTP walk was persisted under
+ * `provider: "anthropic", version: "unspecified-model"`, and the cost ledger
+ * keyed on that Attempt inherited the same fiction. The returned object said
+ * DETERMINISTIC while the durable record said a model ran.
+ *
+ * The fix is ordering, not reconciliation: the lane is DECLARED by the
+ * executor, the WorkerRef is built from the declaration, and the Attempt is
+ * opened with the truth. `chooseExecutor`'s decision is kept beside it and any
+ * disagreement is recorded — the shadow runner legitimately injects one
+ * deterministic walker for every obligation, and that is an arrangement to
+ * state rather than to forbid.
+ *
+ * A worker whose `ranAs` then contradicts its own declaration IS refused. That
+ * is not a disagreement between two honest parties; it is one party lying about
+ * itself after the record was written on its word.
+ */
+export interface DeclaredExecutor {
+  /** The lane this executor runs in. Known before any Attempt is opened. */
+  readonly lane: ExecutorKind;
+  /** The worker identity, when the executor knows its own. */
+  readonly workerFor?: WorkerFor;
+  readonly run: RunWork;
+}
+
 export type WorkerFor = (input: {
   readonly executor: ExecutorKind;
   readonly obligation: ScheduledObligation;
@@ -373,8 +404,8 @@ export async function dispatchOne(
     readonly leaseTtlMs: number;
     readonly bound?: WorkerBound;
     readonly maturity: MethodMaturity;
-    readonly run: RunWork;
-    readonly workerFor?: WorkerFor;
+    /** The executor, WITH its lane declared before anything is persisted. */
+    readonly executor: DeclaredExecutor;
     readonly methodVersion?: number;
     readonly policyVersion?: string;
   },
@@ -428,8 +459,17 @@ export async function dispatchOne(
   }
 
   const executor = chooseExecutor(input.obligation, input.maturity);
-  const worker = (input.workerFor ?? DEFAULT_WORKER_FOR)({
-    executor: executor.kind,
+  /*
+   * **THE DECLARED LANE, NOT THE CHOSEN ONE, BUILDS THE WORKER.**
+   *
+   * This is the whole of the ordering fix. `executor.kind` is what the method
+   * store's maturity implies; `input.executor.lane` is what is about to run.
+   * The Attempt is a durable record of an execution, so it is opened with the
+   * identity of the thing executing.
+   */
+  const lane = input.executor.lane;
+  const worker = (input.executor.workerFor ?? DEFAULT_WORKER_FOR)({
+    executor: lane,
     obligation: input.obligation,
     holder: input.holder,
   });
@@ -466,20 +506,27 @@ export async function dispatchOne(
     worker,
   };
 
-  /** The record of what ran, and whether it matched the decision. */
-  const ran = (outcome: WorkOutcome | null) => ({
-    executor: outcome?.ranAs ?? executor.kind,
-    executorMismatch: outcome !== null && outcome.ranAs !== executor.kind,
+  /**
+   * What ran, and whether it disagreed with the DECISION.
+   *
+   * The lane is the declaration, which is what the Attempt was opened under.
+   * `executorMismatch` compares it against `chooseExecutor` — a legitimate and
+   * common disagreement — and NOT against `ranAs`, which is checked separately
+   * and is a refusal rather than a note.
+   */
+  const ran = () => ({
+    executor: lane,
+    executorMismatch: lane !== executor.kind,
   });
 
   let outcome: WorkOutcome;
   try {
-    outcome = await input.run({
+    outcome = await input.executor.run({
       obligation: input.obligation,
       routeTaskId: input.routeTaskId,
       workItemId,
       attemptId,
-      executor: executor.kind,
+      executor: lane,
       bound: input.bound ?? DEFAULT_WORKER_BOUND,
       holder: input.holder,
     });
@@ -502,13 +549,47 @@ export async function dispatchOne(
       /* The worker threw before it could say what it was. The decision is the
          only thing known, and `executorMismatch` stays false because nothing
          disagreed with it — nothing reported at all. */
-      ...ran(null),
+      ...ran(),
       outcome: "FAILED",
       dispositionCommitted: false,
       disposition: null,
       artifactIds: [],
       cost: null,
       detail: `${executor.why}; the worker threw and the Attempt was abandoned: ${why}`,
+    };
+  }
+
+  /*
+   * **A WORKER THAT CONTRADICTS ITS OWN DECLARATION IS REFUSED.**
+   *
+   * The Attempt was persisted under the declared lane's worker identity, on
+   * this executor's word. An outcome claiming a different lane means that
+   * record is already wrong, and the honest response is to abandon the Attempt
+   * rather than to reconcile a contradiction after the fact — reconciling it
+   * would mean choosing which of two statements from the same party to trust.
+   */
+  if (outcome.ranAs !== lane) {
+    const why =
+      `the executor declared lane ${lane} and reported running as ${outcome.ranAs}. The Attempt ` +
+      `was already opened under ${lane}'s worker identity (${worker.provider}/${worker.version}), ` +
+      "so that durable record is wrong on the executor's own account. Refused rather than " +
+      "reconciled: a masquerade is not a disagreement.";
+    await abandonAttempt(repos, {
+      routeTaskId: input.routeTaskId,
+      attemptId,
+      outcome: "DENIED_BY_POLICY",
+      reason: why,
+      now: input.now,
+    }).catch(() => undefined);
+    return {
+      ...base,
+      ...ran(),
+      outcome: "FAILED",
+      dispositionCommitted: false,
+      disposition: null,
+      artifactIds: [],
+      cost: null,
+      detail: why,
     };
   }
 
@@ -551,7 +632,7 @@ export async function dispatchOne(
     });
     return {
       ...base,
-      ...ran(outcome),
+      ...ran(),
       outcome: simulated ? "SIMULATED" : "FAILED",
       dispositionCommitted: false,
       disposition: null,
@@ -606,7 +687,7 @@ export async function dispatchOne(
     }).catch(() => undefined);
     return {
       ...base,
-      ...ran(outcome),
+      ...ran(),
       outcome: "FAILED",
       dispositionCommitted: false,
       disposition: null,
@@ -637,7 +718,7 @@ export async function dispatchOne(
 
   return {
     ...base,
-    ...ran(outcome),
+    ...ran(),
     outcome: "WORKED",
     dispositionCommitted: true,
     disposition: disposition.disposition,

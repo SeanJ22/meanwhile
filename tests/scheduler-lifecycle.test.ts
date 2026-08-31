@@ -124,8 +124,14 @@ test("SEEDED W3.A: a no-op executor is SIMULATED — never WORKED, and it discha
     now: NOW,
     leaseTtlMs: 60_000,
     maturity: () => "GRADUATED",
-    run: async () => ({ ranAs: "DETERMINISTIC",
-  kind: "SIMULATED", detail: "decided, did not retrieve" }),
+    executor: {
+      lane: "DETERMINISTIC",
+      run: async () => ({
+        ranAs: "DETERMINISTIC",
+        kind: "SIMULATED",
+        detail: "decided, did not retrieve",
+      }),
+    },
   });
 
   assert.equal(result.outcome, "SIMULATED");
@@ -155,7 +161,7 @@ test("W3.A: a WORKED result carries an Attempt, a committed disposition and a re
     now: NOW,
     leaseTtlMs: 60_000,
     maturity: () => "GRADUATED",
-    run: READING,
+    executor: { lane: "DETERMINISTIC", run: READING },
   });
 
   assert.equal(result.outcome, "WORKED");
@@ -195,18 +201,21 @@ test("SEEDED W3.A: a BLOCKED_CURRENTLY disposition closes the route and discharg
     now: NOW,
     leaseTtlMs: 60_000,
     maturity: () => "GRADUATED",
-    run: async () => ({
-      ranAs: "DETERMINISTIC",
-  kind: "DISPOSED",
-      disposition: {
-        disposition: "BLOCKED_CURRENTLY",
-        observation: null,
-        permission: "CANNOT_TELL",
-        transport: "CHALLENGED",
-        note: "HTTP 403 to this client",
-      },
-      detail: "a wall",
-    }),
+    executor: {
+      lane: "DETERMINISTIC",
+      run: async () => ({
+        ranAs: "DETERMINISTIC",
+        kind: "DISPOSED",
+        disposition: {
+          disposition: "BLOCKED_CURRENTLY",
+          observation: null,
+          permission: "CANNOT_TELL",
+          transport: "CHALLENGED",
+          note: "HTTP 403 to this client",
+        },
+        detail: "a wall",
+      }),
+    },
   });
 
   assert.equal(result.outcome, "WORKED", "the dispatch did reach a terminal disposition");
@@ -230,8 +239,11 @@ test("W3.A: a worker that throws leaves NO disposition and the route stays owed"
     now: NOW,
     leaseTtlMs: 60_000,
     maturity: () => "GRADUATED",
-    run: async () => {
-      throw new Error("the parser exploded");
+    executor: {
+      lane: "DETERMINISTIC",
+      run: async () => {
+        throw new Error("the parser exploded");
+      },
     },
   });
 

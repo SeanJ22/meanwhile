@@ -83,6 +83,8 @@ import { failureTail } from "../lib/ops/job-watch-log.ts";
 import {
   auditWorkflow,
   cronsInWorkflowYaml,
+  STALENESS_INCIDENT_STATES,
+  newestScheduledRun,
   scheduleStaleness,
   type ScheduleStaleness,
   deriveEnvelope,
@@ -535,14 +537,31 @@ const staleness: ScheduleStaleness[] = [];
 for (const workflow of WATCHED) {
   const file = join(WORKFLOW_DIR, workflow);
   const crons = existsSync(file) ? cronsInWorkflowYaml(readFileSync(file, "utf8")) : [];
-  let lastRunAt: string | null = null;
+  let lastScheduledRunAt: string | null = null;
   try {
-    lastRunAt = recentRuns(workflow)[0]?.createdAt ?? null;
+    /*
+     * **THE SCHEDULE'S OWN RUNS, AND NOTHING ELSE.**
+     *
+     * This read `recentRuns(workflow)[0]` — the newest run of ANY trigger — so
+     * a cron that stopped on Monday followed by one human clicking Run
+     * workflow on Thursday read FRESH. That sequence is not a corner case: a
+     * person noticing and running it by hand is the single most likely thing
+     * to happen after a schedule breaks, which is exactly when the check would
+     * have fallen silent.
+     *
+     * `runsAsRead` holds the unfiltered observations `recentRuns` parsed,
+     * including runs this auditor's completed-only view drops — a scheduled run
+     * still in progress is evidence the cron fired.
+     */
+    recentRuns(workflow);
+    lastScheduledRunAt = newestScheduledRun(runsAsRead.get(workflow) ?? []);
   } catch {
     /* Unreadable is already reported above; nothing is claimed here. */
     continue;
   }
-  staleness.push(scheduleStaleness({ workflow, crons, lastRunAt, nowISO: AUDIT_AS_OF_ISO }));
+  staleness.push(
+    scheduleStaleness({ workflow, crons, lastScheduledRunAt, nowISO: AUDIT_AS_OF_ISO }),
+  );
 }
 
 console.log("\n  SCHEDULE STALENESS — a job that stopped produces no runs to grade");
@@ -551,7 +570,7 @@ for (const row of staleness) {
   if (row.state !== "FRESH") console.log(`${"".padEnd(38)}${row.detail}`);
 }
 
-for (const row of staleness.filter((r) => r.state === "STALE" || r.state === "NEVER_RAN")) {
+for (const row of staleness.filter((r) => STALENESS_INCIDENT_STATES.includes(r.state))) {
   rows.push({
     Section: "repo-ops",
     Title: `${row.workflow}: scheduled, and it has stopped running`,

@@ -48,9 +48,8 @@ import {
   type DispatchResult,
   type MethodMaturity,
   type ReclaimSweep,
-  type RunWork,
+  type DeclaredExecutor,
   type WorkerBound,
-  type WorkerFor,
 } from "./dispatch.ts";
 import {
   dueNow,
@@ -71,9 +70,14 @@ export interface CycleInput {
   /** Obligation id → the RouteTask that works it, where one is registered. */
   readonly routeTaskFor: (obligationId: string) => string | null;
   readonly maturity: MethodMaturity;
-  readonly run: RunWork;
-  /** Who the Attempt records as having run. Model identity lives here. */
-  readonly workerFor?: WorkerFor;
+  /**
+    * The executor, WITH its lane declared. (W3.E regression, 2026-08-31.)
+    *
+    * A bare `run` let the dispatcher open the persisted Attempt under the
+    * lane the method store IMPLIED rather than the one about to execute, so a
+    * deterministic walk was recorded as an anthropic model worker.
+    */
+  readonly executor: DeclaredExecutor;
   readonly methodVersion?: number;
   readonly policyVersion?: string;
   readonly holder: string;
@@ -178,8 +182,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
       leaseTtlMs: input.leaseTtlMs,
       bound: input.bound,
       maturity: input.maturity,
-      run: input.run,
-      ...(input.workerFor ? { workerFor: input.workerFor } : {}),
+      executor: input.executor,
       ...(input.methodVersion !== undefined ? { methodVersion: input.methodVersion } : {}),
       ...(input.policyVersion !== undefined ? { policyVersion: input.policyVersion } : {}),
     });

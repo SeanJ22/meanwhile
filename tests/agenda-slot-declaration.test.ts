@@ -16,8 +16,10 @@ import { join } from "node:path";
 
 import {
   AGENDA_SLOT_BY_ADAPTER,
+  AGENDA_SLOT_STATES,
   adaptersAwaitingInspection,
   agendaSlotFor,
+  mayObservePerSitting,
 } from "../lib/sources/agenda-slot.ts";
 import { observationFromMeetingRecord } from "../lib/ask/agenda-publication.ts";
 
@@ -105,4 +107,129 @@ test("MEASURED: every adapter in the live snapshot has a declaration", () => {
     [],
     `these adapters ship agenda-less meetings and declare nothing about their agenda slot: ${undeclared.join(", ")}`,
   );
+});
+
+/* ══════════════ ASK-18, 2026-08-31: THE ELEVEN UNKNOWNS, OPENED ══════════ */
+
+/**
+ * The row's blocker named the remaining work exactly: *open each UNKNOWN
+ * adapter's surface*. Eleven were open on 2026-08-31 and none is now, and the
+ * inspection changed the vocabulary as well as the rows — which is the finding
+ * worth guarding, not the count.
+ */
+
+test("ASK-18: no adapter is left UNKNOWN, and the count is asserted rather than eyeballed", () => {
+  const waiting = adaptersAwaitingInspection();
+  assert.deepEqual(
+    waiting,
+    [],
+    `these adapters are still undeclared: ${waiting.join(", ")}. UNKNOWN is work nobody has ` +
+      "done, and it renders to a reader as the same OURS gap an ABSENT route does — which is " +
+      "why the two must never be left indistinguishable.",
+  );
+});
+
+test("ASK-18: every declaration's basis names what was READ, not what a vendor sells", () => {
+  /*
+   * The rule this file opened with: *a vendor's product having an agenda
+   * feature somewhere is not evidence that the surface THIS adapter reads
+   * exposes one.* So each basis must point at a file — a fixture, or the
+   * adapter's own parse — rather than at a product.
+   */
+  for (const [adapter, decl] of Object.entries(AGENDA_SLOT_BY_ADAPTER)) {
+    if (adapter === "mock") continue;
+    assert.ok(
+      /lib\/sources\/|tests\/fixtures\/|iCalendar VEVENT/.test(decl.basis),
+      `${adapter}: the basis names no surface that was actually read — ${decl.basis.slice(0, 120)}`,
+    );
+  }
+});
+
+test("ASK-18: the two ABSENT routes say WHY a null is not the publisher's answer", () => {
+  /*
+   * `diligent` and `apptegy` are the two surfaces with no agenda field at all,
+   * and each has a trap a future session would fall into: diligent's
+   * `Published` boolean looks like an agenda flag and is about the meeting
+   * record, and apptegy's link is scraped out of free-text prose. Both are
+   * named in the basis so nobody re-reads them as observations.
+   */
+  for (const adapter of ["diligent", "apptegy"]) {
+    const decl = AGENDA_SLOT_BY_ADAPTER[adapter];
+    assert.equal(decl.state, "ABSENT", `${adapter} should be ABSENT`);
+    assert.match(
+      decl.basis,
+      /no agenda field/i,
+      `${adapter}: an ABSENT basis must say the field is not there`,
+    );
+  }
+  assert.match(
+    AGENDA_SLOT_BY_ADAPTER.diligent.basis,
+    /never about an agenda/i,
+    "the Published trap is named",
+  );
+  assert.match(
+    AGENDA_SLOT_BY_ADAPTER.apptegy.basis,
+    /SCRAPES free-text prose/,
+    "the scraped-link trap is named",
+  );
+});
+
+test("ASK-18: PRESENT_NOT_PER_SITTING exists, and is used where a slot is not per sitting", () => {
+  /*
+   * The vocabulary finding. Two surfaces have an agenda slot that is not
+   * attached to a sitting, so an empty one is not observable FOR A SITTING —
+   * and neither PRESENT nor ABSENT could say that without licensing a THEIRS
+   * sentence or retiring a route that does publish agendas.
+   */
+  assert.ok(
+    (AGENDA_SLOT_STATES as readonly string[]).includes("PRESENT_NOT_PER_SITTING"),
+    "the fourth state is gone — the two surfaces it describes have nowhere honest to sit",
+  );
+  for (const adapter of ["clerksboards", "civicplus"]) {
+    assert.equal(
+      AGENDA_SLOT_BY_ADAPTER[adapter].state,
+      "PRESENT_NOT_PER_SITTING",
+      `${adapter} carries a slot that is not per-sitting`,
+    );
+  }
+  assert.match(
+    AGENDA_SLOT_BY_ADAPTER.civicplus.basis,
+    /route portfolio/,
+    "civicplus states the RULING 207 reason: two routes, and the weaker one governs the row",
+  );
+});
+
+test("ASK-18: only a PRESENT adapter may ever reach a per-sitting observation", () => {
+  /*
+   * The whole point of the fourth state, held mechanically. A surface whose
+   * slot is not per-sitting must be treated exactly like one that has none
+   * when the question is *did the publisher leave THIS sitting's slot empty*.
+   */
+  const observable = Object.entries(AGENDA_SLOT_BY_ADAPTER)
+    .filter(([, d]) => d.state === "PRESENT")
+    .map(([a]) => a)
+    .sort();
+  assert.ok(observable.length > 0, "nothing is observable — the pipeline can never say THEIRS");
+  for (const adapter of ["clerksboards", "civicplus", "diligent", "apptegy", "ical", "mock"]) {
+    assert.ok(
+      !observable.includes(adapter),
+      `${adapter} must not be treated as per-sitting observable`,
+    );
+  }
+});
+
+test("ASK-18: the surface gate and the reading gate are separate walls", () => {
+  /*
+   * `observationFromMeetingRecord` refuses a reading the adapter did not make.
+   * `mayObservePerSitting` refuses a SURFACE that cannot answer per sitting,
+   * however carefully an adapter reads it. Both are needed: the first cannot
+   * see that clerksboards' one current agenda is not this sitting's, and the
+   * second cannot see that a particular row was carried forward.
+   */
+  assert.equal(mayObservePerSitting("civicclerk"), true);
+  assert.equal(mayObservePerSitting("legistar"), true);
+  assert.equal(mayObservePerSitting("clerksboards"), false, "a slot, and not per sitting");
+  assert.equal(mayObservePerSitting("civicplus"), false, "two routes, one of them blind");
+  assert.equal(mayObservePerSitting("ical"), false, "no slot at all");
+  assert.equal(mayObservePerSitting("nobody-declared-this"), false, "nobody has looked");
 });

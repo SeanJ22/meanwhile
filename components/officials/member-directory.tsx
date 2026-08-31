@@ -8,10 +8,23 @@ import {
   buildCommitteeTree,
   type CommitteeNode,
 } from "@/lib/officials/committee-tree";
+import {
+  BATTLECARD_SECTIONS,
+  battlecardSectionTitle,
+  type BattlecardSectionId,
+} from "@/lib/ballot/battlecard-sections";
 import { officeDirectionsUrl } from "@/lib/registry/links";
 import type { SeatHolder } from "@/lib/officials/lookup";
 
 import { CardSection } from "./card-section";
+
+/*
+ * BAL-34: the titles and the empty lines come from the SAME table the ballot
+ * battlecard reads, so the two surfaces cannot word one absence two ways.
+ */
+const sectionTitle = (id: BattlecardSectionId) => battlecardSectionTitle(id);
+const sectionEmptyLine = (id: BattlecardSectionId) =>
+  BATTLECARD_SECTIONS.find((s) => s.id === id)?.emptyLine ?? "";
 
 /**
  * **Committees, and the offices near the reader** — item 7's render
@@ -238,17 +251,58 @@ function useDirectoryCounts(holder: SeatHolder): {
   };
 }
 
+/**
+ * **BAL-34 (2026-08-31) — THE SECTIONS EXIST FOR EVERYONE, OR THEY ARE A
+ * SIGNAL ABOUT THE PERSON.**
+ *
+ * The owner reported the map battlecard missing its *Offices near you* pill.
+ * The cause was the line below this comment: `if (!holder.id.startsWith(
+ * "congress:")) return null` — the whole component, headers included, vanished
+ * for every state legislator, mayor and school-board member in the product.
+ *
+ * The ballot battlecard has not had this shape since BC-1: it renders the
+ * fixed SEVEN drop-downs on EVERY card, always, and fills an absent slot with
+ * the section's own honest empty line. Its reasoning is the equal-effort rule,
+ * and it applies here word for word — *a card class that answers the question
+ * differently is fine; a card class that cannot answer it at all was the
+ * defect.* A pill present for federal members and absent for local ones is a
+ * completeness claim about the PERSON, made by a missing header.
+ *
+ * So the sections are unconditional and the SCOPE fact moves inside them,
+ * where it is a sentence about our source rather than a hole in the card.
+ * `DirectoryContent` already returns null out of scope, and the empty lines
+ * come from `BATTLECARD_SECTIONS` — the same table the ballot card reads, so
+ * the two surfaces cannot word the same absence differently.
+ */
 function MemberDirectoryInner({ holder }: { holder: SeatHolder }) {
   const counts = useDirectoryCounts(holder);
-  if (!holder.id.startsWith("congress:")) return null;
+  const inScope = holder.id.startsWith("congress:");
   return (
     <>
-      <CardSection title="Committees" meta={counts.committees === null ? null : String(counts.committees)}>
-        <DirectoryContent holder={holder} only="committees" />
+      <CardSection
+        title={sectionTitle("committees")}
+        meta={inScope && counts.committees !== null ? String(counts.committees) : null}
+      >
+        {inScope ? (
+          <DirectoryContent holder={holder} only="committees" />
+        ) : (
+          <p className="text-[0.75rem] leading-relaxed text-muted">
+            {sectionEmptyLine("committees")}
+          </p>
+        )}
       </CardSection>
 
-      <CardSection title="Offices near you" meta={counts.offices === null ? null : String(counts.offices)}>
-        <DirectoryContent holder={holder} only="offices" />
+      <CardSection
+        title={sectionTitle("offices")}
+        meta={inScope && counts.offices !== null ? String(counts.offices) : null}
+      >
+        {inScope ? (
+          <DirectoryContent holder={holder} only="offices" />
+        ) : (
+          <p className="text-[0.75rem] leading-relaxed text-muted">
+            {sectionEmptyLine("offices")}
+          </p>
+        )}
       </CardSection>
     </>
   );

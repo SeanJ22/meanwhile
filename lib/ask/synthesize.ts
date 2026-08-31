@@ -1,3 +1,4 @@
+import { lengthRuleForPrompt } from "./length-contract.ts";
 import { packHasEvidence, type EvidencePack } from "./evidence.ts";
 
 /**
@@ -89,7 +90,15 @@ export function synthesisPrompt(pack: EvidencePack): string {
     "- Never state a candidate's or official's position, stance or vote unless a supplied record states it.",
     "- Do not announce your own failure or apologise. State what is known, name what is missing, stop.",
     "- Plain language. No identifiers, no codes, no internal state names.",
-    "- Be brief. Two to five sentences unless the records genuinely need more.",
+    /*
+     * ASK-19: the budget, generated from `lib/ask/length-contract.ts`, so the
+     * rule the model is given and the rule the validator enforces are one
+     * number. The old line said "two to five sentences unless the records
+     * genuinely need more" — advice, with an escape hatch the model could
+     * always satisfy by deciding the records needed more, and nothing
+     * measuring either half. That hatch is what the owner met.
+     */
+    lengthRuleForPrompt(),
     "",
     "Also report citedUrls: the sourceUrl of every record you actually relied on. Use the URLs exactly as given. Do not invent one.",
   ].join("\n");

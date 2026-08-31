@@ -76,7 +76,12 @@ import {
   type AskAnswerPayload,
 } from "@/lib/ask/answer";
 import { agendaTopicEvidence } from "@/lib/ask/agenda-topic";
-import { financeQuestionAsked, localFinanceEvidenceFor } from "@/lib/ask/local-finance";
+import {
+  financeQuestionAsked,
+  financeRegimeNotesFor,
+  financeScopeGapFor,
+  localFinanceEvidenceFor,
+} from "@/lib/ask/local-finance";
 import { statesOf, voteEvidenceFor } from "@/lib/ask/votes";
 
 /**
@@ -1509,13 +1514,36 @@ export async function POST(request: Request) {
    * recorded" — their finance records live in the FEC snapshot, not this
    * store.
    */
+  /*
+   * **OWN-Q5 (2026-08-31) — AND EVERY REGIME IS NAMED, ALWAYS.**
+   *
+   * The owner's amendment: *not just FEC filings, but state and local finances
+   * must be checked*, and *an FEC absence never stands in for "no records
+   * exist"*.
+   *
+   * The county store was already reachable. What was missing is the
+   * DENOMINATOR: `localFinanceEvidenceFor` returns null for a statewide
+   * executive, a federal candidate, a contest and an office, and a null pushed
+   * nothing — so one regime's silence answered for all three. That is
+   * ONE ROUTE SUCCESS != SOURCE UNIVERSE COMPLETE, mirrored: one route's
+   * ABSENCE is not the universe's either.
+   *
+   * Now a money question always carries all three regime statements, and a
+   * subject this pipeline holds nothing for gets a scope gap that says which
+   * store it would be in rather than a bare nothing.
+   */
   if (subject && financeQuestionAsked(question)) {
     const finance = localFinanceEvidenceFor(subject);
     if (finance) {
       records.push(...finance.records);
       gaps.push(...finance.gaps);
       Object.assign(denominators, finance.denominators);
+    } else {
+      gaps.push(financeScopeGapFor(subject));
     }
+    // Every regime, on every money answer, whether or not records were found.
+    for (const note of financeRegimeNotesFor(subject)) gaps.push(note.gap);
+    denominators.financeRegimesNamed = 3;
   }
 
   /*

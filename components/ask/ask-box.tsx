@@ -1191,6 +1191,36 @@ export function AskBox({
           )}
 
           {/*
+            ── OWN-Q9 ── **THE GOVERNMENTS AN ANSWER NAMED, EACH OPENING ITS
+            OWN CARD.** (The owner's amendment on Q9, 2026-08-31.)
+
+            *"the special districts in the answer must be clickable."* The
+            disclosure rows on the who-governs card have opened their cards
+            since WGH-18; the governments named inside an ASK answer were the
+            one place in the product where reading about a district was a
+            dead end.
+
+            **Keyed on ids, never on the prose.** The obvious implementation
+            is to scan the sentence for names we recognise, and it is the
+            wrong one twice over: nine Morris County governments answer to
+            "Township Council", so a name match is a door onto the wrong
+            government — the exact reason `BodyName` below exists — and
+            highlighting words inside generated prose would let the synthesis
+            rung decide what is clickable. These come off the RECORDS the
+            answer was built from, which carry `bodyId` precisely so the
+            identity check is mechanical (`lib/ask/evidence.ts`).
+
+            A body the coverage payload cannot resolve renders NOTHING rather
+            than an inert chip: an entry that looks like a door and is not is
+            worse than no entry.
+          */}
+          <AnswerBodies
+            grounded={grounded}
+            coverage={coverage}
+            onOpenBody={onOpenBody}
+          />
+
+          {/*
             ── ASK-20 / ASK-24 ── **THE SAME CONTROL THE MEETING CARD OFFERS.**
             (Session B closure, 2026-08-31.)
 
@@ -1805,6 +1835,79 @@ export function AskBox({
  * gaps; nothing here is written, and every row is a record the product already
  * holds. See `lib/routing/digest.ts` for why the blocks never share a count.
  */
+/**
+ * **OWN-Q9 — the governments an Ask answer named, as doors.** (2026-08-31.)
+ *
+ * The set is derived, in this order, and every step is an id join:
+ *
+ * 1. `grounded.subject` — what the question resolved to.
+ * 2. every `record.bodyId` — whose record each piece of evidence is.
+ *
+ * Then deduplicated, resolved against the SAME coverage payload the card
+ * behind it renders from, and dropped where it does not resolve. A district
+ * the reader's coverage does not carry is a district this surface has no card
+ * for, and offering one would be a door onto a page that cannot exist.
+ *
+ * It renders nothing at all when nothing resolves — no heading, no empty
+ * state. The answer above it already says what it says; a "no districts"
+ * line under a paragraph naming three would be a surface contradicting
+ * itself, which is the WGH-19 / WGH-21 / MAP-5 class.
+ */
+function AnswerBodies({
+  grounded,
+  coverage,
+  onOpenBody,
+}: {
+  grounded: AskAnswerPayload;
+  coverage: CoverageSummary;
+  onOpenBody?: (body: CoveredBody) => void;
+}) {
+  if (!onOpenBody) return null;
+
+  const wanted: string[] = [];
+  const subjectId = grounded.subject?.id;
+  if (typeof subjectId === "string" && subjectId) wanted.push(subjectId);
+  for (const record of grounded.records ?? []) {
+    if (typeof record.bodyId === "string" && record.bodyId) wanted.push(record.bodyId);
+  }
+
+  const seen = new Set<string>();
+  const rows: CoveredBody[] = [];
+  for (const id of wanted) {
+    if (seen.has(id)) continue;
+    seen.add(id);
+    /* Both id spaces a body card answers to: the registry body id, and a
+       division whose governing body the payload carries. Same join
+       `BodyName` performs, one level up. */
+    const body =
+      coverage.bodies.find((b) => b.bodyId === id) ??
+      coverage.bodies.find(
+        (b) => b.ocdId === id && (b.bodyId === `${id}#governing` || b.bodyId === `${id}#board`),
+      );
+    if (body) rows.push(body);
+  }
+
+  if (rows.length === 0) return null;
+
+  return (
+    <p data-ask-answer-bodies className="mt-2 text-[0.8125rem] leading-relaxed">
+      {rows.map((body, i) => (
+        <span key={body.bodyId}>
+          {i > 0 && <span className="text-muted"> · </span>}
+          <button
+            type="button"
+            data-ask-body-open={body.bodyId}
+            onClick={() => onOpenBody(body)}
+            className="text-left text-link underline decoration-dotted underline-offset-2 hover:text-paper"
+          >
+            {body.name ?? body.divisionLabel}
+          </button>
+        </span>
+      ))}
+    </p>
+  );
+}
+
 /**
  * **ASK-4 (2026-08-24) — one resolver, so every Ask template opens the same
  * body for the same name.**

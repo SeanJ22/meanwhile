@@ -6066,6 +6066,149 @@ for (const zip of ["85629", "07866"]) {
   }
 }
 
+/* ── BAL-39: the two-column ballot has no holes in it ───────────────────── */
+
+/**
+ * **THE GAPS BETWEEN CONSECUTIVE CARDS IN ONE COLUMN, MEASURED.**
+ * (Session B, 2026-08-31. The owner: *two-column desktop layout has gaps and
+ * misaligned boxes.*)
+ *
+ * ## Why this is DOM geometry and not an image evaluation
+ *
+ * The row's blocker asked for an image-evaluated measurement, and for the
+ * properties `visual-suite.mts` owns — clipping, prominence, overlap — that is
+ * right, because those are questions about PAINT and `getBoundingClientRect`
+ * cannot answer them.
+ *
+ * A GAP is not one of those. It is layout: the distance between one card's
+ * bottom edge and the next card's top edge in the same column, which the
+ * geometry answers exactly and a screenshot answers only by inference. The
+ * repository's own note on `measure-panels.mts` draws that line in the other
+ * direction — *the DOM was never wrong* there, so pixels were the instrument.
+ * Here the DOM is precisely what is wrong.
+ *
+ * ## What was measured before the fix, so the check has a baseline
+ *
+ * At 1280 on 2026-08-31, a two-column GRID placed cards in ROWS: each row's
+ * height was its tallest card and every shorter card left a hole. 85701 ran
+ * 13px to 689px within one column; 07866 ran 20px to 468px. Column flow
+ * replaced it, and the same measurement now reads 13-15px throughout.
+ *
+ * The check allows a generous ceiling rather than pinning today's number: a
+ * card gaining a section legitimately changes nothing about the gap BELOW it,
+ * and a ceiling that tracked the design would fail on every restyle. What it
+ * catches is the class — a hole an order of magnitude larger than the gap.
+ */
+const BALLOT_GAP_CEILING_PX = 60;
+
+const BALLOT_COLUMNS_READ = `(() => {
+  const out = [];
+  for (const grid of document.querySelectorAll('.ballot-card-grid')) {
+    const cards = [...grid.querySelectorAll('[data-contest-id]')].map((el) => {
+      const r = el.getBoundingClientRect();
+      return {
+        id: el.getAttribute('data-contest-id'),
+        x: Math.round(r.x),
+        y: Math.round(r.y + window.scrollY),
+        h: Math.round(r.height),
+        w: Math.round(r.width),
+      };
+    });
+    if (cards.length === 0) continue;
+    const byColumn = {};
+    for (const c of cards) {
+      byColumn[c.x] = byColumn[c.x] || [];
+      byColumn[c.x].push(c);
+    }
+    const columns = Object.keys(byColumn).map((x) => {
+      const col = byColumn[x].sort((a, b) => a.y - b.y);
+      const gaps = [];
+      for (let i = 1; i < col.length; i += 1) {
+        gaps.push(col[i].y - (col[i - 1].y + col[i - 1].h));
+      }
+      return { x: Number(x), count: col.length, top: col[0].y, widths: [...new Set(col.map((c) => c.w))], gaps };
+    });
+    out.push({ cards: cards.length, columns });
+  }
+  return out;
+})()`;
+
+interface BallotColumns {
+  cards: number;
+  columns: { x: number; count: number; top: number; widths: number[]; gaps: number[] }[];
+}
+
+for (const zip of ["85701", "07866"]) {
+  const BLOCK: [string, string][] = [
+    ["SB0831", `${zip}: the two-column ballot has no hole between consecutive cards`],
+    ["SB0831", `${zip}: both ballot columns start at the same height`],
+    ["SB0831", `${zip}: the ballot really is two columns of equal width at 1280`],
+  ];
+  const wide = await openWideAt(browser, zip);
+  try {
+    await wide.goto(`${BASE}/ballot?zip=${zip}`, {
+      waitUntil: "domcontentloaded",
+      timeout: 90_000,
+    });
+    const ready = await untilInteractive(wide, "[data-contest-id]", 20_000);
+    if (!ready) {
+      for (const [session, name] of BLOCK) {
+        cannotRun(session, name, "no contest cards rendered on this ballot");
+      }
+      continue;
+    }
+    const grids = (await wide.evaluate(BALLOT_COLUMNS_READ)) as BallotColumns[];
+    const multi = grids.filter((g) => g.columns.length > 1);
+    if (multi.length === 0) {
+      for (const [session, name] of BLOCK) {
+        cannotRun(
+          session,
+          name,
+          `no grid on this ballot laid out in more than one column at 1280 (${grids.length} grid(s) read)`,
+        );
+      }
+      continue;
+    }
+
+    /*
+     * THE DEFECT. A grid places in rows and a short card leaves a hole whose
+     * size is set by its row-mate's height. A ceiling on the gap is what
+     * distinguishes "these cards are spaced" from "this column has a hole".
+     */
+    const allGaps = multi.flatMap((g) => g.columns.flatMap((c) => c.gaps));
+    const worst = allGaps.length > 0 ? Math.max(...allGaps) : 0;
+    check(
+      "SB0831",
+      BLOCK[0][1],
+      allGaps.length > 0 && worst <= BALLOT_GAP_CEILING_PX,
+      `${allGaps.length} gap(s) across ${multi.length} multi-column grid(s); largest ${worst}px ` +
+        `(ceiling ${BALLOT_GAP_CEILING_PX}); distinct ${[...new Set(allGaps)].sort((a, b) => a - b).join(",")}`,
+    );
+
+    /* The "misaligned boxes" half: the columns of one grid start level. */
+    const tops = multi.map((g) => [...new Set(g.columns.map((c) => c.top))]);
+    check(
+      "SB0831",
+      BLOCK[1][1],
+      tops.every((t) => t.length === 1),
+      `column tops per grid: ${tops.map((t) => t.join("/")).join(" · ")}`,
+    );
+
+    /* And they are still two columns of one width — a fix that collapsed the
+       layout to one column would satisfy the gap check trivially. */
+    const widths = multi.flatMap((g) => g.columns.flatMap((c) => c.widths));
+    check(
+      "SB0831",
+      BLOCK[2][1],
+      multi.every((g) => g.columns.length === 2) && new Set(widths).size === 1,
+      `${multi.map((g) => g.columns.length).join("/")} column(s) per grid, ` +
+        `width(s) ${[...new Set(widths)].join(",")}`,
+    );
+  } finally {
+    await wide.context().close();
+  }
+}
+
 /* ── RULING 222 / WGH-22: the scope IS the address ─────────────────────── */
 
 /**

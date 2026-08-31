@@ -1,25 +1,25 @@
 {
-  "runId": "wgh22-walk-1788201413",
+  "runId": "sec-a-walk2-1788205594",
   "baseUrl": "http://localhost:3100",
-  "testedSha": "c2089a106349f1bd22a4230f2b2025e869a0b43a",
-  "startedAt": "2026-08-31T18:36:54.950Z",
-  "finishedAt": "2026-08-31T18:42:07.637Z",
-  "totalMs": 312687,
-  "checksRan": 406,
+  "testedSha": "c9f3179197073e7a18920bd7c9ab376995256ab4",
+  "startedAt": "2026-08-31T19:46:36.426Z",
+  "finishedAt": "2026-08-31T19:51:59.755Z",
+  "totalMs": 323329,
+  "checksRan": 412,
   "declaredCouldNotRun": 14,
   "quarantined": 0,
   "failures": 0,
-  "searchLogRows": 82,
-  "askRows": 55,
+  "searchLogRows": 84,
+  "askRows": 56,
   "durations": [
     {
       "identity": "[promptC] /api/build answers",
-      "ms": 136,
+      "ms": 153,
       "outcome": "PASS"
     },
     {
       "identity": "[0817] /about-area answers at 85701",
-      "ms": 13,
+      "ms": 19,
       "outcome": "PASS"
     },
     {
@@ -34,7 +34,7 @@
     },
     {
       "identity": "[0817] /ballot answers at 85701",
-      "ms": 52,
+      "ms": 76,
       "outcome": "PASS"
     },
     {
@@ -49,7 +49,7 @@
     },
     {
       "identity": "[promptB] /ballot renders no coverage note at 85701 (RULING 59)",
-      "ms": 1,
+      "ms": 0,
       "outcome": "PASS"
     },
     {
@@ -94,12 +94,12 @@
     },
     {
       "identity": "[0817] /about-area answers at 85641",
-      "ms": 18,
+      "ms": 21,
       "outcome": "PASS"
     },
     {
       "identity": "[0817] /about-area renders its facts at 85641",
-      "ms": 0,
+      "ms": 1,
       "outcome": "PASS"
     },
     {
@@ -109,7 +109,7 @@
     },
     {
       "identity": "[0817] /ballot answers at 85641",
-      "ms": 71,
+      "ms": 79,
       "outcome": "PASS"
     },
     {
@@ -124,12 +124,12 @@
     },
     {
       "identity": "[promptB] /ballot renders no coverage note at 85641 (RULING 59)",
-      "ms": 1,
+      "ms": 0,
       "outcome": "PASS"
     },
     {
       "identity": "[promptE] /ballot carries the page-level collection disclosure at 85641",
-      "ms": 0,
+      "ms": 1,
       "outcome": "PASS"
     },
     {
@@ -139,7 +139,7 @@
     },
     {
       "identity": "[F01] /ballot links the data-handling page instead of the retired sentence at 85641",
-      "ms": 1,
+      "ms": 0,
       "outcome": "PASS"
     },
     {
@@ -154,7 +154,7 @@
     },
     {
       "identity": "[g3] /ballot's picks disclosure quotes wording that is on the page at 85641",
-      "ms": 0,
+      "ms": 1,
       "outcome": "PASS"
     },
     {
@@ -169,7 +169,7 @@
     },
     {
       "identity": "[0817] /about-area answers at 07866",
-      "ms": 7,
+      "ms": 10,
       "outcome": "PASS"
     },
     {
@@ -184,7 +184,7 @@
     },
     {
       "identity": "[0817] /ballot answers at 07866",
-      "ms": 38,
+      "ms": 60,
       "outcome": "PASS"
     },
     {
@@ -214,7 +214,7 @@
     },
     {
       "identity": "[F01] /ballot links the data-handling page instead of the retired sentence at 07866",
-      "ms": 0,
+      "ms": 1,
       "outcome": "PASS"
     },
     {
@@ -224,7 +224,7 @@
     },
     {
       "identity": "[g3] /ballot names the pick as a ballot-building action at 07866",
-      "ms": 1,
+      "ms": 0,
       "outcome": "PASS"
     },
     {
@@ -234,7 +234,7 @@
     },
     {
       "identity": "[0817] /about-area answers at 03255",
-      "ms": 21,
+      "ms": 17,
       "outcome": "PASS"
     },
     {
@@ -249,7 +249,7 @@
     },
     {
       "identity": "[0817] /ballot answers at 03255",
-      "ms": 50,
+      "ms": 76,
       "outcome": "PASS"
     },
     {
@@ -299,7 +299,7 @@
     },
     {
       "identity": "[0815e] /transparency answers",
-      "ms": 7,
+      "ms": 16,
       "outcome": "PASS"
     },
     {
@@ -314,7 +314,7 @@
     },
     {
       "identity": "[0815c] 03255: the meeting count holds",
-      "ms": 17,
+      "ms": 16,
       "outcome": "PASS"
     },
     {
@@ -324,12 +324,12 @@
     },
     {
       "identity": "[f] 03255: Kearsarge Regional School District's sittings",
-      "ms": 1,
+      "ms": 0,
       "outcome": "PASS"
     },
     {
       "identity": "[0815f] 03255: Newbury's Zoning Board of Adjustment",
-      "ms": 0,
+      "ms": 1,
       "outcome": "PASS"
     },
     {
@@ -344,12 +344,12 @@
     },
     {
       "identity": "[0815c] 07866: Morris Hills Regional's board",
-      "ms": 1,
+      "ms": 0,
       "outcome": "PASS"
     },
     {
       "identity": "[0818] 85701: the meeting count holds",
-      "ms": 16,
+      "ms": 17,
       "outcome": "PASS"
     },
     {
@@ -359,7 +359,7 @@
     },
     {
       "identity": "[0818] 85641: the meeting count holds",
-      "ms": 13,
+      "ms": 12,
       "outcome": "PASS"
     },
     {
@@ -369,7 +369,7 @@
     },
     {
       "identity": "[0816] the key-votes surface still has its votes",
-      "ms": 18,
+      "ms": 20,
       "outcome": "PASS"
     },
     {
@@ -384,7 +384,7 @@
     },
     {
       "identity": "[0814c] 85701: the map answers with something about this place",
-      "ms": 2708,
+      "ms": 1766,
       "outcome": "PASS"
     },
     {
@@ -404,7 +404,7 @@
     },
     {
       "identity": "[0814c] 85701: who-governs is grouped Local / State / Federal",
-      "ms": 0,
+      "ms": 1,
       "outcome": "PASS"
     },
     {
@@ -444,7 +444,7 @@
     },
     {
       "identity": "[g3] 85701: the state focus holds when zoomed out",
-      "ms": 8043,
+      "ms": 8029,
       "outcome": "PASS"
     },
     {
@@ -459,17 +459,17 @@
     },
     {
       "identity": "[0814c] 85641: the map answers with something about this place",
-      "ms": 1403,
+      "ms": 1538,
       "outcome": "PASS"
     },
     {
       "identity": "[njhunt6] 85641: the reader is not told the basemap is unavailable",
-      "ms": 1,
+      "ms": 2,
       "outcome": "PASS"
     },
     {
       "identity": "[njhunt6] 85641: the basemap style has real layers",
-      "ms": 12,
+      "ms": 15,
       "outcome": "PASS"
     },
     {
@@ -509,7 +509,7 @@
     },
     {
       "identity": "[0819] 85641: the ask box is on the who-governs card",
-      "ms": 0,
+      "ms": 1,
       "outcome": "PASS"
     },
     {
@@ -519,12 +519,12 @@
     },
     {
       "identity": "[g3] 85641: the state focus holds when zoomed out",
-      "ms": 8128,
+      "ms": 8116,
       "outcome": "PASS"
     },
     {
       "identity": "[g3] 85641: zooming out never removes pins",
-      "ms": 1,
+      "ms": 0,
       "outcome": "PASS"
     },
     {
@@ -534,7 +534,7 @@
     },
     {
       "identity": "[0814c] 07866: the map answers with something about this place",
-      "ms": 1420,
+      "ms": 1595,
       "outcome": "PASS"
     },
     {
@@ -544,7 +544,7 @@
     },
     {
       "identity": "[njhunt6] 07866: the basemap style has real layers",
-      "ms": 12,
+      "ms": 17,
       "outcome": "PASS"
     },
     {
@@ -574,12 +574,12 @@
     },
     {
       "identity": "[g3] 07866: no footnote repeats in the who-governs panel",
-      "ms": 2,
+      "ms": 1,
       "outcome": "PASS"
     },
     {
       "identity": "[g6] 07866: who-governs states one number for one list",
-      "ms": 1,
+      "ms": 2,
       "outcome": "PASS"
     },
     {
@@ -599,7 +599,7 @@
     },
     {
       "identity": "[g3] 07866: the state focus holds when zoomed out",
-      "ms": 8126,
+      "ms": 8037,
       "outcome": "PASS"
     },
     {
@@ -614,17 +614,17 @@
     },
     {
       "identity": "[0814c] 03255: the map answers with something about this place",
-      "ms": 1506,
+      "ms": 1638,
       "outcome": "PASS"
     },
     {
       "identity": "[njhunt6] 03255: the reader is not told the basemap is unavailable",
-      "ms": 1,
+      "ms": 2,
       "outcome": "PASS"
     },
     {
       "identity": "[njhunt6] 03255: the basemap style has real layers",
-      "ms": 11,
+      "ms": 15,
       "outcome": "PASS"
     },
     {
@@ -654,17 +654,17 @@
     },
     {
       "identity": "[g3] 03255: no footnote repeats in the who-governs panel",
-      "ms": 1,
+      "ms": 2,
       "outcome": "PASS"
     },
     {
       "identity": "[g6] 03255: who-governs states one number for one list",
-      "ms": 0,
+      "ms": 1,
       "outcome": "PASS"
     },
     {
       "identity": "[0819] 03255: the ask box is on the who-governs card",
-      "ms": 1,
+      "ms": 0,
       "outcome": "PASS"
     },
     {
@@ -674,7 +674,7 @@
     },
     {
       "identity": "[0814e] 03255: zero Arizona references on the New Hampshire card",
-      "ms": 1,
+      "ms": 2,
       "outcome": "PASS"
     },
     {
@@ -689,7 +689,7 @@
     },
     {
       "identity": "[g3] 03255: the state focus holds when zoomed out",
-      "ms": 8045,
+      "ms": 8192,
       "outcome": "PASS"
     },
     {
@@ -704,22 +704,22 @@
     },
     {
       "identity": "[0814c] 85701: a pick raises the reader's running ballot",
-      "ms": 355,
+      "ms": 389,
       "outcome": "PASS"
     },
     {
       "identity": "[g3] 85701: candidate names open their large battlecards",
-      "ms": 8141,
+      "ms": 8193,
       "outcome": "PASS"
     },
     {
       "identity": "[g3] 85701: the five-point scale carries its group separators",
-      "ms": 61986,
+      "ms": 62165,
       "outcome": "PASS"
     },
     {
       "identity": "[g3] an official-source read never says 'Verified: not yet'",
-      "ms": 2261,
+      "ms": 2491,
       "outcome": "PASS"
     },
     {
@@ -729,12 +729,12 @@
     },
     {
       "identity": "[g4] 03255 (hop 1 of 4): the raised state is the state the reader is in",
-      "ms": 1413,
+      "ms": 1821,
       "outcome": "PASS"
     },
     {
       "identity": "[g4] 03255 (hop 1 of 4): only the active state draws district boundaries",
-      "ms": 0,
+      "ms": 1,
       "outcome": "PASS"
     },
     {
@@ -744,7 +744,7 @@
     },
     {
       "identity": "[g4] 85701 (hop 2 of 4): the raised state is the state the reader is in",
-      "ms": 1442,
+      "ms": 1845,
       "outcome": "PASS"
     },
     {
@@ -759,7 +759,7 @@
     },
     {
       "identity": "[g4] 07866 (hop 3 of 4): the raised state is the state the reader is in",
-      "ms": 1684,
+      "ms": 1564,
       "outcome": "PASS"
     },
     {
@@ -774,12 +774,12 @@
     },
     {
       "identity": "[g4] 03255 (hop 4 of 4, returning): the raised state is the state the reader is in",
-      "ms": 1419,
+      "ms": 1561,
       "outcome": "PASS"
     },
     {
       "identity": "[g4] 03255 (hop 4 of 4, returning): only the active state draws district boundaries",
-      "ms": 1,
+      "ms": 0,
       "outcome": "PASS"
     },
     {
@@ -789,17 +789,17 @@
     },
     {
       "identity": "[g4] 85701: the camera stays where the reader put it",
-      "ms": 7330,
+      "ms": 7608,
       "outcome": "PASS"
     },
     {
       "identity": "[g4] 85701: Filters renders collapsed",
-      "ms": 1285,
+      "ms": 1424,
       "outcome": "PASS"
     },
     {
       "identity": "[g4] 85701: Near me stays outside Filters",
-      "ms": 3,
+      "ms": 5,
       "outcome": "PASS"
     },
     {
@@ -809,32 +809,32 @@
     },
     {
       "identity": "[g4] 85701: opening Filters reveals radius and districts",
-      "ms": 41,
+      "ms": 91,
       "outcome": "PASS"
     },
     {
       "identity": "[g4] 85701: District types is collapsed inside Filters",
-      "ms": 1,
+      "ms": 2,
       "outcome": "PASS"
     },
     {
       "identity": "[g4] the moving-here line reads exactly",
-      "ms": 45,
+      "ms": 72,
       "outcome": "PASS"
     },
     {
       "identity": "[g4] 85701: the meetings panel opens with every group collapsed",
-      "ms": 1507,
+      "ms": 1527,
       "outcome": "PASS"
     },
     {
       "identity": "[g5] 85701: north Tucson renders crisp, not muted, at city zoom",
-      "ms": 2318,
+      "ms": 2299,
       "outcome": "PASS"
     },
     {
       "identity": "[g5] 85701: the meetings panel body paints on first render, no pointer",
-      "ms": 1966,
+      "ms": 2275,
       "outcome": "PASS"
     },
     {
@@ -844,52 +844,52 @@
     },
     {
       "identity": "[g6] 85701 (phone): the meetings count agrees with itself",
-      "ms": 1864,
+      "ms": 2064,
       "outcome": "PASS"
     },
     {
       "identity": "[g6] 85701 (desktop): the meetings count agrees with itself",
-      "ms": 1915,
+      "ms": 2295,
       "outcome": "PASS"
     },
     {
       "identity": "[g6] 85641 (phone): the meetings count agrees with itself",
-      "ms": 1810,
+      "ms": 1936,
       "outcome": "PASS"
     },
     {
       "identity": "[g6] 85641 (desktop): the meetings count agrees with itself",
-      "ms": 1688,
+      "ms": 2013,
       "outcome": "PASS"
     },
     {
       "identity": "[g6] 07866 (phone): the meetings count agrees with itself",
-      "ms": 1923,
+      "ms": 2024,
       "outcome": "PASS"
     },
     {
       "identity": "[g6] 07866 (desktop): the meetings count agrees with itself",
-      "ms": 1765,
+      "ms": 2380,
       "outcome": "PASS"
     },
     {
       "identity": "[g6] 03255 (phone): the meetings count agrees with itself",
-      "ms": 1867,
+      "ms": 2106,
       "outcome": "PASS"
     },
     {
       "identity": "[g6] 03255 (desktop): the meetings count agrees with itself",
-      "ms": 1796,
+      "ms": 1996,
       "outcome": "PASS"
     },
     {
       "identity": "[h] 03255: the governing count matches the frozen external denominator",
-      "ms": 19,
+      "ms": 24,
       "outcome": "PASS"
     },
     {
       "identity": "[hotfix-0817] 03255: only rows from a source that reported a gap carry a mark",
-      "ms": 1468,
+      "ms": 1663,
       "outcome": "PASS"
     },
     {
@@ -904,12 +904,12 @@
     },
     {
       "identity": "[hotfix-0817] 03255: the footer does not speak for the carried rows",
-      "ms": 1453,
+      "ms": 2254,
       "outcome": "PASS"
     },
     {
       "identity": "[g8] 85701: no internal source id on the map's server HTML",
-      "ms": 12,
+      "ms": 16,
       "outcome": "PASS"
     },
     {
@@ -919,7 +919,7 @@
     },
     {
       "identity": "[g8] 85701: no internal source id on /about-area",
-      "ms": 18,
+      "ms": 21,
       "outcome": "PASS"
     },
     {
@@ -929,37 +929,37 @@
     },
     {
       "identity": "[g8] 85701: no internal source id on /ballot",
-      "ms": 47,
+      "ms": 57,
       "outcome": "PASS"
     },
     {
       "identity": "[g8] 85701: /ballot carries the current product name, not the old one",
-      "ms": 1,
+      "ms": 0,
       "outcome": "PASS"
     },
     {
       "identity": "[g8] 85641: no internal source id on the map's server HTML",
-      "ms": 11,
+      "ms": 13,
       "outcome": "PASS"
     },
     {
       "identity": "[g8] 85641: the map's server HTML carries the current product name, not the old one",
-      "ms": 0,
+      "ms": 1,
       "outcome": "PASS"
     },
     {
       "identity": "[g8] 85641: no internal source id on /about-area",
-      "ms": 18,
+      "ms": 21,
       "outcome": "PASS"
     },
     {
       "identity": "[g8] 85641: /about-area carries the current product name, not the old one",
-      "ms": 0,
+      "ms": 1,
       "outcome": "PASS"
     },
     {
       "identity": "[g8] 85641: no internal source id on /ballot",
-      "ms": 51,
+      "ms": 63,
       "outcome": "PASS"
     },
     {
@@ -969,7 +969,7 @@
     },
     {
       "identity": "[g8] 07866: no internal source id on the map's server HTML",
-      "ms": 4,
+      "ms": 8,
       "outcome": "PASS"
     },
     {
@@ -979,7 +979,7 @@
     },
     {
       "identity": "[g8] 07866: no internal source id on /about-area",
-      "ms": 9,
+      "ms": 18,
       "outcome": "PASS"
     },
     {
@@ -989,7 +989,7 @@
     },
     {
       "identity": "[g8] 07866: no internal source id on /ballot",
-      "ms": 34,
+      "ms": 35,
       "outcome": "PASS"
     },
     {
@@ -999,7 +999,7 @@
     },
     {
       "identity": "[g8] 03255: no internal source id on the map's server HTML",
-      "ms": 7,
+      "ms": 9,
       "outcome": "PASS"
     },
     {
@@ -1009,22 +1009,22 @@
     },
     {
       "identity": "[g8] 03255: no internal source id on /about-area",
-      "ms": 19,
+      "ms": 21,
       "outcome": "PASS"
     },
     {
       "identity": "[g8] 03255: /about-area carries the current product name, not the old one",
-      "ms": 0,
+      "ms": 1,
       "outcome": "PASS"
     },
     {
       "identity": "[g8] 03255: no internal source id on /ballot",
-      "ms": 49,
+      "ms": 59,
       "outcome": "PASS"
     },
     {
       "identity": "[g8] 03255: /ballot carries the current product name, not the old one",
-      "ms": 0,
+      "ms": 1,
       "outcome": "PASS"
     },
     {
@@ -1034,12 +1034,12 @@
     },
     {
       "identity": "[g9] the map: carries no personal email address",
-      "ms": 1495,
+      "ms": 1679,
       "outcome": "PASS"
     },
     {
       "identity": "[g9] /transparency: carries no personal email address",
-      "ms": 15,
+      "ms": 16,
       "outcome": "PASS"
     },
     {
@@ -1049,7 +1049,7 @@
     },
     {
       "identity": "[g9] the sidebar offers the in-app feedback route",
-      "ms": 16,
+      "ms": 15,
       "outcome": "PASS"
     },
     {
@@ -1059,7 +1059,7 @@
     },
     {
       "identity": "[g9] /feedback serves the form and says what happens to it",
-      "ms": 13,
+      "ms": 15,
       "outcome": "PASS"
     },
     {
@@ -1069,7 +1069,7 @@
     },
     {
       "identity": "[g11] the reply field is labelled optional and required by nothing",
-      "ms": 1,
+      "ms": 0,
       "outcome": "PASS"
     },
     {
@@ -1084,17 +1084,17 @@
     },
     {
       "identity": "[g9] 85701: overlapping pins fan out when pressed",
-      "ms": 2373,
+      "ms": 2352,
       "outcome": "PASS"
     },
     {
       "identity": "[g9] 85701: dismissing the fan returns every pin",
-      "ms": 715,
+      "ms": 712,
       "outcome": "PASS"
     },
     {
       "identity": "[g10] 85701: meetings held online are reachable at all",
-      "ms": 20,
+      "ms": 15,
       "outcome": "PASS"
     },
     {
@@ -1109,7 +1109,7 @@
     },
     {
       "identity": "[g10] 85701: agenda attribution reaches the served payload",
-      "ms": 10,
+      "ms": 9,
       "outcome": "PASS"
     },
     {
@@ -1129,7 +1129,7 @@
     },
     {
       "identity": "[g12] 4e: exactly one pill cluster at 85701 390px, WGH open",
-      "ms": 1526,
+      "ms": 1645,
       "outcome": "PASS"
     },
     {
@@ -1149,7 +1149,7 @@
     },
     {
       "identity": "[g12] 4e: exactly one pill cluster at 85701 390px, sidebar open",
-      "ms": 32,
+      "ms": 34,
       "outcome": "PASS"
     },
     {
@@ -1159,17 +1159,17 @@
     },
     {
       "identity": "[g12] M119: exactly one text input in the shell at 85701 390px",
-      "ms": 139,
+      "ms": 103,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] 4f: the rail's top is on screen at 85701 390px, longest content",
-      "ms": 4569,
+      "ms": 4559,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] 4f: the rail's bottom is reachable at 85701 390px, longest content",
-      "ms": 1,
+      "ms": 0,
       "outcome": "PASS"
     },
     {
@@ -1189,32 +1189,32 @@
     },
     {
       "identity": "[g12] the matcher ruling: the weather question is not keyword-routed at 85701",
-      "ms": 4195,
+      "ms": 4750,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] the matcher ruling: a strong keyword question answers at 85701",
-      "ms": 4469,
+      "ms": 4687,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] the matcher ruling: an exact name navigates and asks nothing at 85701",
-      "ms": 2573,
+      "ms": 2569,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] the matcher ruling: a weak match is answered by the classifier or refused honestly at 85701",
-      "ms": 4305,
+      "ms": 4129,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] A07: an unroutable question refuses and offers the destinations at 85701",
-      "ms": 4476,
+      "ms": 4707,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] 4e: exactly one pill cluster at 85701 desktop, WGH open",
-      "ms": 1469,
+      "ms": 1605,
       "outcome": "PASS"
     },
     {
@@ -1234,22 +1234,22 @@
     },
     {
       "identity": "[g12] 4e: exactly one pill cluster at 85701 desktop, sidebar open",
-      "ms": 258,
+      "ms": 298,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] 4c: opening the rail closed the who-governs card at 85701 desktop",
-      "ms": 1,
+      "ms": 3,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] M119: exactly one text input in the shell at 85701 desktop",
-      "ms": 393,
+      "ms": 397,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] 4e: exactly one pill cluster at 85641 390px, WGH open",
-      "ms": 1819,
+      "ms": 1485,
       "outcome": "PASS"
     },
     {
@@ -1269,7 +1269,7 @@
     },
     {
       "identity": "[g12] 4e: exactly one pill cluster at 85641 390px, sidebar open",
-      "ms": 32,
+      "ms": 36,
       "outcome": "PASS"
     },
     {
@@ -1279,12 +1279,12 @@
     },
     {
       "identity": "[g12] M119: exactly one text input in the shell at 85641 390px",
-      "ms": 127,
+      "ms": 135,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] 4f: the rail's top is on screen at 85641 390px, longest content",
-      "ms": 4555,
+      "ms": 4557,
       "outcome": "PASS"
     },
     {
@@ -1309,32 +1309,32 @@
     },
     {
       "identity": "[g12] the matcher ruling: the weather question is not keyword-routed at 85641",
-      "ms": 3862,
+      "ms": 4571,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] the matcher ruling: a strong keyword question answers at 85641",
-      "ms": 4116,
+      "ms": 4573,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] the matcher ruling: an exact name navigates and asks nothing at 85641",
-      "ms": 2579,
+      "ms": 2580,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] the matcher ruling: a weak match is answered by the classifier or refused honestly at 85641",
-      "ms": 4117,
+      "ms": 4280,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] A07: an unroutable question refuses and offers the destinations at 85641",
-      "ms": 4638,
+      "ms": 4563,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] 4e: exactly one pill cluster at 85641 desktop, WGH open",
-      "ms": 1514,
+      "ms": 1568,
       "outcome": "PASS"
     },
     {
@@ -1354,7 +1354,7 @@
     },
     {
       "identity": "[g12] 4e: exactly one pill cluster at 85641 desktop, sidebar open",
-      "ms": 115,
+      "ms": 112,
       "outcome": "PASS"
     },
     {
@@ -1364,12 +1364,12 @@
     },
     {
       "identity": "[g12] M119: exactly one text input in the shell at 85641 desktop",
-      "ms": 433,
+      "ms": 502,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] 4e: exactly one pill cluster at 07866 390px, WGH open",
-      "ms": 1536,
+      "ms": 1567,
       "outcome": "PASS"
     },
     {
@@ -1389,7 +1389,7 @@
     },
     {
       "identity": "[g12] 4e: exactly one pill cluster at 07866 390px, sidebar open",
-      "ms": 36,
+      "ms": 37,
       "outcome": "PASS"
     },
     {
@@ -1399,12 +1399,12 @@
     },
     {
       "identity": "[g12] M119: exactly one text input in the shell at 07866 390px",
-      "ms": 127,
+      "ms": 132,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] 4f: the rail's top is on screen at 07866 390px, longest content",
-      "ms": 4551,
+      "ms": 4556,
       "outcome": "PASS"
     },
     {
@@ -1429,32 +1429,32 @@
     },
     {
       "identity": "[g12] the matcher ruling: the weather question is not keyword-routed at 07866",
-      "ms": 4283,
+      "ms": 4053,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] the matcher ruling: a strong keyword question answers at 07866",
-      "ms": 4289,
+      "ms": 4438,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] the matcher ruling: an exact name navigates and asks nothing at 07866",
-      "ms": 2570,
+      "ms": 2576,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] the matcher ruling: a weak match is answered by the classifier or refused honestly at 07866",
-      "ms": 3975,
+      "ms": 4100,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] A07: an unroutable question refuses and offers the destinations at 07866",
-      "ms": 4358,
+      "ms": 4415,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] 4e: exactly one pill cluster at 07866 desktop, WGH open",
-      "ms": 1454,
+      "ms": 1573,
       "outcome": "PASS"
     },
     {
@@ -1474,22 +1474,22 @@
     },
     {
       "identity": "[g12] 4e: exactly one pill cluster at 07866 desktop, sidebar open",
-      "ms": 522,
+      "ms": 467,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] 4c: opening the rail closed the who-governs card at 07866 desktop",
-      "ms": 68,
+      "ms": 65,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] M119: exactly one text input in the shell at 07866 desktop",
-      "ms": 149,
+      "ms": 220,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] 4e: exactly one pill cluster at 03255 390px, WGH open",
-      "ms": 1381,
+      "ms": 1532,
       "outcome": "PASS"
     },
     {
@@ -1514,17 +1514,17 @@
     },
     {
       "identity": "[g12] 4c: opening the rail closed the who-governs card at 03255 390px",
-      "ms": 1,
+      "ms": 2,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] M119: exactly one text input in the shell at 03255 390px",
-      "ms": 141,
+      "ms": 115,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] 4f: the rail's top is on screen at 03255 390px, longest content",
-      "ms": 4552,
+      "ms": 4574,
       "outcome": "PASS"
     },
     {
@@ -1544,37 +1544,37 @@
     },
     {
       "identity": "[g12] A02: every digest block states a count or a named gap at 03255",
-      "ms": 1,
+      "ms": 0,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] the matcher ruling: the weather question is not keyword-routed at 03255",
-      "ms": 4173,
+      "ms": 3867,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] the matcher ruling: a strong keyword question answers at 03255",
-      "ms": 4526,
+      "ms": 4681,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] the matcher ruling: an exact name navigates and asks nothing at 03255",
-      "ms": 2562,
+      "ms": 2579,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] the matcher ruling: a weak match is answered by the classifier or refused honestly at 03255",
-      "ms": 4414,
+      "ms": 4381,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] A07: an unroutable question refuses and offers the destinations at 03255",
-      "ms": 5840,
+      "ms": 5204,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] 4e: exactly one pill cluster at 03255 desktop, WGH open",
-      "ms": 1332,
+      "ms": 1440,
       "outcome": "PASS"
     },
     {
@@ -1594,7 +1594,7 @@
     },
     {
       "identity": "[g12] 4e: exactly one pill cluster at 03255 desktop, sidebar open",
-      "ms": 301,
+      "ms": 309,
       "outcome": "PASS"
     },
     {
@@ -1604,12 +1604,12 @@
     },
     {
       "identity": "[g12] M119: exactly one text input in the shell at 03255 desktop",
-      "ms": 359,
+      "ms": 390,
       "outcome": "PASS"
     },
     {
       "identity": "[g13] M136: Pima (county) renders every section",
-      "ms": 1828,
+      "ms": 1961,
       "outcome": "PASS"
     },
     {
@@ -1619,37 +1619,37 @@
     },
     {
       "identity": "[g13] M136: Tucson (municipal) renders every section",
-      "ms": 1914,
+      "ms": 1910,
       "outcome": "PASS"
     },
     {
       "identity": "[g13] M136: Tucson's card renders no internal identifier",
-      "ms": 0,
+      "ms": 1,
       "outcome": "PASS"
     },
     {
       "identity": "[g13] M136: Tucson Unified (school) renders every section",
-      "ms": 1828,
+      "ms": 1792,
       "outcome": "PASS"
     },
     {
       "identity": "[g13] M136: Tucson Unified's card renders no internal identifier",
-      "ms": 0,
+      "ms": 1,
       "outcome": "PASS"
     },
     {
       "identity": "[g15] M135: an autocomplete body row opens a card at 85701",
-      "ms": 2012,
+      "ms": 2036,
       "outcome": "PASS"
     },
     {
       "identity": "[g15] M135: an autocomplete body row opens a card at 85641",
-      "ms": 2030,
+      "ms": 2061,
       "outcome": "PASS"
     },
     {
       "identity": "[g21] B19: a Tucson address gets Pima's vote centers, and the model is VOTE_CENTER",
-      "ms": 443,
+      "ms": 470,
       "outcome": "PASS"
     },
     {
@@ -1659,17 +1659,17 @@
     },
     {
       "identity": "[g21] B19: a walled jurisdiction renders its RUNGS, never an emptiness",
-      "ms": 188,
+      "ms": 193,
       "outcome": "PASS"
     },
     {
       "identity": "[g21] M123: Wilmot AND New London are in 03255's own answer",
-      "ms": 20,
+      "ms": 17,
       "outcome": "PASS"
     },
     {
       "identity": "[g21] M81: the meetings route sends the reader's own division set",
-      "ms": 1,
+      "ms": 0,
       "outcome": "PASS"
     },
     {
@@ -1679,37 +1679,37 @@
     },
     {
       "identity": "[g21] D47: the side-by-side renders both states and says it does not rank",
-      "ms": 19,
+      "ms": 21,
       "outcome": "PASS"
     },
     {
       "identity": "[F01] 9.2: the districts tile states a number, never Off",
-      "ms": 1456,
+      "ms": 1499,
       "outcome": "PASS"
     },
     {
       "identity": "[F01] 9.6: selecting a district shades it, closing deselects",
-      "ms": 8784,
+      "ms": 8554,
       "outcome": "PASS"
     },
     {
       "identity": "[F01] 6.1: no \"gap in our\" phrasing on /",
-      "ms": 1523,
+      "ms": 1584,
       "outcome": "PASS"
     },
     {
       "identity": "[F01] 6.1: no \"gap in our\" phrasing on /ballot?zip=85701",
-      "ms": 45,
+      "ms": 47,
       "outcome": "PASS"
     },
     {
       "identity": "[F01] 6.1: no \"gap in our\" phrasing on /transparency",
-      "ms": 11,
+      "ms": 8,
       "outcome": "PASS"
     },
     {
       "identity": "[F01] 1e: the struck never-store promise is gone from the address copy",
-      "ms": 14,
+      "ms": 17,
       "outcome": "PASS"
     },
     {
@@ -1719,7 +1719,7 @@
     },
     {
       "identity": "[F01C] 85701: the picks tally's denominator equals the pick controls on the page",
-      "ms": 348,
+      "ms": 355,
       "outcome": "PASS"
     },
     {
@@ -1729,7 +1729,7 @@
     },
     {
       "identity": "[F01C] 85701: after a clear, no surface still reflects a pick",
-      "ms": 89,
+      "ms": 102,
       "outcome": "PASS"
     },
     {
@@ -1739,7 +1739,7 @@
     },
     {
       "identity": "[F01C] 03255: the picks tally's denominator equals the pick controls on the page",
-      "ms": 331,
+      "ms": 477,
       "outcome": "PASS"
     },
     {
@@ -1749,7 +1749,7 @@
     },
     {
       "identity": "[F01C] 03255: after a clear, no surface still reflects a pick",
-      "ms": 102,
+      "ms": 105,
       "outcome": "PASS"
     },
     {
@@ -1759,27 +1759,27 @@
     },
     {
       "identity": "[F01C2] 07866: every candidate row carries a battlecard pill",
-      "ms": 266,
+      "ms": 296,
       "outcome": "PASS"
     },
     {
       "identity": "[NHHUNT] 07866: no per-card completeness count or enumeration anywhere on the ballot",
-      "ms": 1,
+      "ms": 2,
       "outcome": "PASS"
     },
     {
       "identity": "[F01C2] 07866: every dated voting event can be calendared",
-      "ms": 14,
+      "ms": 17,
       "outcome": "PASS"
     },
     {
       "identity": "[F01C2] 07866: a multi-day window carries the affordance too",
-      "ms": 0,
+      "ms": 1,
       "outcome": "PASS"
     },
     {
       "identity": "[F01C2] 07866: the battlecard holds the sections the row gave up",
-      "ms": 472,
+      "ms": 521,
       "outcome": "PASS"
     },
     {
@@ -1794,7 +1794,7 @@
     },
     {
       "identity": "[F01C2] 07866: the in-app voting panel opens on the ballot",
-      "ms": 85,
+      "ms": 82,
       "outcome": "PASS"
     },
     {
@@ -1804,17 +1804,17 @@
     },
     {
       "identity": "[F01C2] 85701: every candidate row carries a battlecard pill",
-      "ms": 287,
+      "ms": 412,
       "outcome": "PASS"
     },
     {
       "identity": "[NHHUNT] 85701: no per-card completeness count or enumeration anywhere on the ballot",
-      "ms": 5,
+      "ms": 1,
       "outcome": "PASS"
     },
     {
       "identity": "[F01C2] 85701: every dated voting event can be calendared",
-      "ms": 2,
+      "ms": 1,
       "outcome": "PASS"
     },
     {
@@ -1824,7 +1824,7 @@
     },
     {
       "identity": "[F01C2] 85701: the battlecard holds the sections the row gave up",
-      "ms": 501,
+      "ms": 482,
       "outcome": "PASS"
     },
     {
@@ -1839,7 +1839,7 @@
     },
     {
       "identity": "[F01C2] 85701: the in-app voting panel opens on the ballot",
-      "ms": 82,
+      "ms": 84,
       "outcome": "PASS"
     },
     {
@@ -1849,7 +1849,7 @@
     },
     {
       "identity": "[BAL25] 85629: the ballot fills the desktop width rather than a 672px column",
-      "ms": 1860,
+      "ms": 1657,
       "outcome": "PASS"
     },
     {
@@ -1874,7 +1874,7 @@
     },
     {
       "identity": "[BAL26] 85629: the Ask panel opens from the pill at 1280, input and submit inside it",
-      "ms": 51,
+      "ms": 61,
       "outcome": "PASS"
     },
     {
@@ -1889,12 +1889,12 @@
     },
     {
       "identity": "[BAL30] 85629: no local measure renders under the statewide heading",
-      "ms": 1,
+      "ms": 0,
       "outcome": "PASS"
     },
     {
       "identity": "[BAL25] 85629: the ballot does not scroll sideways at 390",
-      "ms": 279,
+      "ms": 289,
       "outcome": "PASS"
     },
     {
@@ -1904,12 +1904,12 @@
     },
     {
       "identity": "[BAL26] 85629: the Ask panel opens at 390 without pushing the page sideways",
-      "ms": 55,
+      "ms": 59,
       "outcome": "PASS"
     },
     {
       "identity": "[BAL25] 07866: the ballot fills the desktop width rather than a 672px column",
-      "ms": 1731,
+      "ms": 1671,
       "outcome": "PASS"
     },
     {
@@ -1934,27 +1934,57 @@
     },
     {
       "identity": "[BAL26] 07866: the Ask panel opens from the pill at 1280, input and submit inside it",
-      "ms": 52,
+      "ms": 45,
       "outcome": "PASS"
     },
     {
       "identity": "[BAL25] 07866: the ballot does not scroll sideways at 390",
-      "ms": 294,
+      "ms": 282,
       "outcome": "PASS"
     },
     {
       "identity": "[BAL26] 07866: the Ask affordance sits ABOVE the contests at 390",
-      "ms": 0,
+      "ms": 6,
       "outcome": "PASS"
     },
     {
       "identity": "[BAL26] 07866: the Ask panel opens at 390 without pushing the page sideways",
-      "ms": 57,
+      "ms": 62,
+      "outcome": "PASS"
+    },
+    {
+      "identity": "[SB0831] 85701: the two-column ballot has no hole between consecutive cards",
+      "ms": 1616,
+      "outcome": "PASS"
+    },
+    {
+      "identity": "[SB0831] 85701: both ballot columns start at the same height",
+      "ms": 0,
+      "outcome": "PASS"
+    },
+    {
+      "identity": "[SB0831] 85701: the ballot really is two columns of equal width at 1280",
+      "ms": 0,
+      "outcome": "PASS"
+    },
+    {
+      "identity": "[SB0831] 07866: the two-column ballot has no hole between consecutive cards",
+      "ms": 1690,
+      "outcome": "PASS"
+    },
+    {
+      "identity": "[SB0831] 07866: both ballot columns start at the same height",
+      "ms": 0,
+      "outcome": "PASS"
+    },
+    {
+      "identity": "[SB0831] 07866: the ballot really is two columns of equal width at 1280",
+      "ms": 0,
       "outcome": "PASS"
     },
     {
       "identity": "[SB0831] 85641: the districts a confirmed address settled are the districts the panel lists",
-      "ms": 2762,
+      "ms": 2747,
       "outcome": "PASS"
     },
     {
@@ -1974,7 +2004,7 @@
     },
     {
       "identity": "[SB0831] 85701: the districts a confirmed address settled are the districts the panel lists",
-      "ms": 2982,
+      "ms": 2989,
       "outcome": "PASS"
     },
     {
@@ -1994,7 +2024,7 @@
     },
     {
       "identity": "[SB0831] 07866: the districts a confirmed address settled are the districts the panel lists",
-      "ms": 2750,
+      "ms": 2612,
       "outcome": "PASS"
     },
     {
@@ -2014,12 +2044,12 @@
     },
     {
       "identity": "[SB0831] 03255: the districts a confirmed address settled are the districts the panel lists",
-      "ms": 2739,
+      "ms": 2806,
       "outcome": "PASS"
     },
     {
       "identity": "[SB0831] 03255: no district the address ruled out is rendered, marked or disclosed",
-      "ms": 0,
+      "ms": 1,
       "outcome": "PASS"
     },
     {
@@ -2034,114 +2064,114 @@
     },
     {
       "identity": "[promptD] the deploy's database has the migrations the deploy was built from",
-      "ms": 1788,
+      "ms": 2006,
       "outcome": "PASS"
     },
     {
       "identity": "[promptD] no sold-store write raised an alarm in the last 24h",
-      "ms": 916,
+      "ms": 840,
       "outcome": "PASS"
     }
   ],
   "slowest": [
     {
       "identity": "[g3] 85701: the five-point scale carries its group separators",
-      "ms": 61986,
+      "ms": 62165,
       "outcome": "PASS"
     },
     {
       "identity": "[F01] 9.6: selecting a district shades it, closing deselects",
-      "ms": 8784,
+      "ms": 8554,
       "outcome": "PASS"
     },
     {
       "identity": "[g3] 85701: candidate names open their large battlecards",
-      "ms": 8141,
-      "outcome": "PASS"
-    },
-    {
-      "identity": "[g3] 85641: the state focus holds when zoomed out",
-      "ms": 8128,
-      "outcome": "PASS"
-    },
-    {
-      "identity": "[g3] 07866: the state focus holds when zoomed out",
-      "ms": 8126,
+      "ms": 8193,
       "outcome": "PASS"
     },
     {
       "identity": "[g3] 03255: the state focus holds when zoomed out",
-      "ms": 8045,
+      "ms": 8192,
+      "outcome": "PASS"
+    },
+    {
+      "identity": "[g3] 85641: the state focus holds when zoomed out",
+      "ms": 8116,
+      "outcome": "PASS"
+    },
+    {
+      "identity": "[g3] 07866: the state focus holds when zoomed out",
+      "ms": 8037,
       "outcome": "PASS"
     },
     {
       "identity": "[g3] 85701: the state focus holds when zoomed out",
-      "ms": 8043,
+      "ms": 8029,
       "outcome": "PASS"
     },
     {
       "identity": "[g4] 85701: the camera stays where the reader put it",
-      "ms": 7330,
+      "ms": 7608,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] A07: an unroutable question refuses and offers the destinations at 03255",
-      "ms": 5840,
+      "ms": 5204,
       "outcome": "PASS"
     },
     {
-      "identity": "[g12] A07: an unroutable question refuses and offers the destinations at 85641",
-      "ms": 4638,
-      "outcome": "PASS"
-    },
-    {
-      "identity": "[g12] 4f: the rail's top is on screen at 85701 390px, longest content",
-      "ms": 4569,
-      "outcome": "PASS"
-    },
-    {
-      "identity": "[g12] 4f: the rail's top is on screen at 85641 390px, longest content",
-      "ms": 4555,
-      "outcome": "PASS"
-    },
-    {
-      "identity": "[g12] 4f: the rail's top is on screen at 03255 390px, longest content",
-      "ms": 4552,
-      "outcome": "PASS"
-    },
-    {
-      "identity": "[g12] 4f: the rail's top is on screen at 07866 390px, longest content",
-      "ms": 4551,
-      "outcome": "PASS"
-    },
-    {
-      "identity": "[g12] the matcher ruling: a strong keyword question answers at 03255",
-      "ms": 4526,
+      "identity": "[g12] the matcher ruling: the weather question is not keyword-routed at 85701",
+      "ms": 4750,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] A07: an unroutable question refuses and offers the destinations at 85701",
-      "ms": 4476,
+      "ms": 4707,
       "outcome": "PASS"
     },
     {
       "identity": "[g12] the matcher ruling: a strong keyword question answers at 85701",
-      "ms": 4469,
+      "ms": 4687,
       "outcome": "PASS"
     },
     {
-      "identity": "[g12] the matcher ruling: a weak match is answered by the classifier or refused honestly at 03255",
-      "ms": 4414,
+      "identity": "[g12] the matcher ruling: a strong keyword question answers at 03255",
+      "ms": 4681,
       "outcome": "PASS"
     },
     {
-      "identity": "[g12] A07: an unroutable question refuses and offers the destinations at 07866",
-      "ms": 4358,
+      "identity": "[g12] 4f: the rail's top is on screen at 03255 390px, longest content",
+      "ms": 4574,
       "outcome": "PASS"
     },
     {
-      "identity": "[g12] the matcher ruling: a weak match is answered by the classifier or refused honestly at 85701",
-      "ms": 4305,
+      "identity": "[g12] the matcher ruling: a strong keyword question answers at 85641",
+      "ms": 4573,
+      "outcome": "PASS"
+    },
+    {
+      "identity": "[g12] the matcher ruling: the weather question is not keyword-routed at 85641",
+      "ms": 4571,
+      "outcome": "PASS"
+    },
+    {
+      "identity": "[g12] A07: an unroutable question refuses and offers the destinations at 85641",
+      "ms": 4563,
+      "outcome": "PASS"
+    },
+    {
+      "identity": "[g12] 4f: the rail's top is on screen at 85701 390px, longest content",
+      "ms": 4559,
+      "outcome": "PASS"
+    },
+    {
+      "identity": "[g12] 4f: the rail's top is on screen at 85641 390px, longest content",
+      "ms": 4557,
+      "outcome": "PASS"
+    },
+    {
+      "identity": "[g12] 4f: the rail's top is on screen at 07866 390px, longest content",
+      "ms": 4556,
       "outcome": "PASS"
     }
   ],

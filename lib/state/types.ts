@@ -149,6 +149,26 @@ export interface UiState {
    *  are large surfaces and follow the one-large-popup rule. */
   door: "bodies" | "districts" | "officials" | null;
   filtersPanelOpen: boolean;
+  /**
+   * **THE SUBJECT AN ANSWER OPENED THE LIST FOR.** (ASK-22, 2026-08-31.)
+   *
+   * The owner: *"Meetings near you sends the user hunting."* The pill
+   * dispatched `list/open` with no subject, so a reader who had just asked
+   * about one body got every meeting in the ZIP and had to find it again.
+   *
+   * It lives HERE and not in `filters`, and that is deliberate. `filters` is
+   * what the reader set; this is what one answer focused. Putting it in
+   * `filters` would make an answer's focus persist into every later view of
+   * the map — a filter the reader never chose, silently narrowing what they
+   * see. It is cleared when the overlay closes.
+   *
+   * It is also NEVER a silent narrowing while it is on: the overlay renders a
+   * dismissible chip naming the body, because this codebase's own rule is that
+   * a reader who cannot see that a filter is hiding places will read the gaps
+   * as "no government here".
+   */
+  listFocusBodyId: string | null;
+  listFocusBodyName: string | null;
 
   listSort: ListSort;
   listGroupBy: ListGroupBy;
@@ -206,7 +226,18 @@ export type UiAction =
   | { type: "nearMe/position"; lat: number; lng: number }
   | { type: "districts/show"; value: boolean }
   | { type: "list/toggle" }
-  | { type: "list/open"; open: boolean }
+  | {
+      type: "list/open";
+      open: boolean;
+      /**
+       * The body the reader's question was ABOUT, when the open came from an
+       * answer. (ASK-22.) Absent means an unfocused open, which is what every
+       * open used to be.
+       */
+      focusBodyId?: string | null;
+      /** That body's plain-language name, for the chip the reader can see. */
+      focusBodyName?: string | null;
+    }
   | { type: "door/open"; door: "bodies" | "districts" | "officials" }
   | { type: "door/close" }
   | { type: "list/sort"; sort: ListSort }

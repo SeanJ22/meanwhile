@@ -144,8 +144,36 @@ export function ListOverlay({
     return () => window.cancelAnimationFrame(frame);
   }, [meetings]);
 
-  const sorted = useMemo(() => {
-    const list = [...meetings];
+  /*
+    * ── ASK-22 ── **AN ANSWER'S SUBJECT REACHES THE LIST IT OPENS.**
+    * (2026-08-31.)
+    *
+    * The owner: *"Meetings near you sends the user hunting."* The pill on an
+    * answer about one body opened this overlay with no subject, so a reader who
+    * had just been told about the Mayor and Council got all 149 meetings in the
+    * ZIP and had to find it again.
+    *
+    * Applied BEFORE the sort so every sort mode honours it, and NEVER silently:
+    * the chip below names the body and clears the focus in one tap. A filter a
+    * reader cannot see is how the gaps it creates get read as "no government
+    * here" — this file's own `hideUncovered` note says exactly that.
+    *
+    * A focus that matches NOTHING falls back to the full list rather than
+    * rendering an empty overlay. An answer can name a body whose sittings are
+    * all outside the current window, and an empty list would tell the reader
+    * that body has no meetings — a claim about a government made out of a
+    * filter interaction.
+    */
+   const focused = useMemo(() => {
+     if (!ui.listFocusBodyId) return { list: meetings, applied: false, matched: 0 };
+     const hit = meetings.filter((m) => m.bodyId === ui.listFocusBodyId);
+     return hit.length > 0
+       ? { list: hit, applied: true, matched: hit.length }
+       : { list: meetings, applied: false, matched: 0 };
+   }, [meetings, ui.listFocusBodyId]);
+
+   const sorted = useMemo(() => {
+    const list = [...focused.list];
     const center = ui.nearMe ?? location;
 
     switch (ui.listSort) {
@@ -177,7 +205,7 @@ export function ListOverlay({
          */
         return orderByUpcomingFirst(list, now);
     }
-  }, [meetings, ui.listSort, ui.nearMe, location, now]);
+  }, [focused, ui.listSort, ui.nearMe, location, now]);
 
   const groups = useMemo(() => {
     if (ui.listGroupBy === "none") {
@@ -216,6 +244,30 @@ export function ListOverlay({
         <span className="al-overlay-count">
           {sorted.length} {sorted.length === 1 ? "meeting" : "meetings"}
         </span>
+        {/* ASK-22: the focus is stated and one tap clears it. */}
+        {focused.applied && ui.listFocusBodyName && (
+          <button
+            type="button"
+            data-list-focus-clear
+            className="al-focus-chip"
+            aria-label={`Showing only ${ui.listFocusBodyName}. Show every meeting.`}
+            onClick={() =>
+              dispatch({ type: "list/open", open: true, focusBodyId: null, focusBodyName: null })
+            }
+          >
+            Only {ui.listFocusBodyName} · show all ✕
+          </button>
+        )}
+        {ui.listFocusBodyId && !focused.applied && ui.listFocusBodyName && (
+          /*
+           * The answer named a body and this window holds none of its sittings.
+           * Said out loud, with the full list underneath, because an empty
+           * overlay here would read as "that body has no meetings".
+           */
+          <span className="al-focus-chip" data-list-focus-empty>
+            No {ui.listFocusBodyName} sittings in this window — showing every meeting
+          </span>
+        )}
         <button
           type="button"
           className="icon-btn al-overlay-close"

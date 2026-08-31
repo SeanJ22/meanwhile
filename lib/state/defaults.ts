@@ -90,6 +90,9 @@ export const INITIAL_STATE: UiState = {
    * always-open panel longer still.
    */
   filtersPanelOpen: false,
+  /* ASK-22: an unfocused list is the default; a focus arrives only from an answer. */
+  listFocusBodyId: null,
+  listFocusBodyName: null,
   listSort: "date",
   listGroupBy: "jurisdiction",
   // Every group starts CLOSED (g4 item 11). Empty means none is open.

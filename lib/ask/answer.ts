@@ -1,4 +1,5 @@
 import type { AskContact } from "./contacts.ts";
+import type { Meeting } from "../sources/types.ts";
 import type { EvidenceGap, EvidencePack, EvidenceRecord, EvidenceSubject } from "./evidence.ts";
 import { emptyTrace, type AnswerMode, type AskTrace } from "./trace.ts";
 
@@ -54,7 +55,52 @@ import { emptyTrace, type AnswerMode, type AskTrace } from "./trace.ts";
  * `candidates` are optional because they are meaningful on exactly two modes;
  * everything else is required precisely so a producer cannot omit it.
  */
+/**
+ * One sitting an answer resolved, structured for a CONTROL rather than prose.
+ *
+ * Declared here rather than reusing `Meeting` because the two differ on
+ * `bodyId` — `Meeting` has `string | undefined`, the Ask pipeline's own shape
+ * has `string | null` — and reconciling that with a cast at the boundary is
+ * how a null reaches something that declared it could not be one. The client
+ * adapts explicitly, in one place, where the difference is visible.
+ */
+export interface AskSitting {
+  id: string;
+  bodyId: string | null;
+  ocdId: string | null;
+  title: string;
+  bodyName: string;
+  startsAt: string;
+  timeZone?: string | null;
+  agendaUrl?: string | null;
+  location: Meeting["location"];
+  status: Meeting["status"];
+  jurisdiction: string;
+  online?: Meeting["online"];
+}
+
 export interface AskAnswerPayload {
+  /**
+   * **THE SITTINGS THIS ANSWER IS ABOUT, STRUCTURED.**
+   * (Session B closure, ASK-20 / ASK-23 / ASK-24, 2026-08-31.)
+   *
+   * The evidence `records` carry a MEETING as prose plus an id and a start
+   * time, which is everything a READER needs and not enough for a CONTROL. An
+   * Add-to-calendar entry needs the title, the venue or the join line, the
+   * body's own time zone and the status; a card that leads with "this body's
+   * next meeting" needs to know which sitting that is. Both were absent, so
+   * the Ask answer could describe a meeting and offer nothing to do with it
+   * while the map card beside it offered both.
+   *
+   * These are the SAME `Meeting` objects the route selected, not a reshaped
+   * copy — a second shape would be a second place for the calendar entry and
+   * the sentence to disagree about a start time.
+   *
+   * Empty on every mode that resolved no sitting, which is most of them. A
+   * client reads `meetings[0]` for "the one this answer is about" and the
+   * whole array for a day that holds more than one (ASK-24).
+   */
+  meetings: AskSitting[];
   /** How the reader's answer was produced. Never inferred — see `AnswerMode`. */
   mode: AnswerMode;
   /** What the question resolved to, or null. Never a substitute. */
@@ -121,6 +167,7 @@ function base(mode: AnswerMode, trace: AskTrace): AskAnswerPayload {
     gaps: [],
     contacts: [],
     denominators: {},
+    meetings: [],
     trace,
   };
 }
@@ -138,6 +185,8 @@ export function askAnswer(input: {
   pack: EvidencePack;
   answer: string | null;
   contacts: readonly AskContact[];
+  /** The sittings this answer resolved. Same objects the route selected. */
+  meetings?: readonly AskSitting[];
   trace: AskTrace;
 }): AskAnswerPayload {
   return {
@@ -148,6 +197,7 @@ export function askAnswer(input: {
     gaps: [...input.pack.gaps],
     contacts: [...input.contacts],
     denominators: input.pack.denominators,
+    meetings: [...(input.meetings ?? [])],
   };
 }
 
@@ -238,6 +288,10 @@ export function readAskAnswer(raw: unknown): AskAnswerPayload | null {
     records: arr<EvidenceRecord>(value.records),
     gaps: arr<EvidenceGap>(value.gaps),
     contacts: arr<AskContact>(value.contacts),
+    /* ASK-20: absent on an older reply is an EMPTY list, never undefined — the
+       client reads meetings[0] and a missing array would be a runtime throw on
+       a payload that is otherwise perfectly renderable. */
+    meetings: arr<AskSitting>(value.meetings),
     denominators:
       value.denominators && typeof value.denominators === "object"
         ? (value.denominators as Record<string, number>)

@@ -347,7 +347,8 @@
     "zip:universe": "tsx scripts/zip-universe.mts",
     "zipgov:build": "tsx scripts/build-zip-governments.mts",
     "control-plane:bootstrap": "node --env-file=.env.local --experimental-strip-types scripts/control-plane-bootstrap.mts",
-    "control-plane:proof": "node --env-file=.env.local --experimental-strip-types scripts/control-plane-proof.mts"
+    "control-plane:proof": "node --env-file=.env.local --experimental-strip-types scripts/control-plane-proof.mts",
+    "rollcall:walk": "tsx scripts/pima-rollcall-walk.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

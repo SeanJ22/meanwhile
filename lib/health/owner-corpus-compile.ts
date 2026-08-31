@@ -41,6 +41,7 @@
 
 import type { ReaderExpectation } from "./ask-evaluation.ts";
 import type { ApplicabilityRule } from "./reader-question.ts";
+import { assertCitableAsEvidence } from "./owner-corpus.ts";
 import type { KeptQuestion } from "./owner-corpus.ts";
 import type { ControlFact } from "./control-fact.ts";
 
@@ -196,7 +197,9 @@ export type ExpectationVerdict =
   | { readonly kind: "NEEDS_OWNER"; readonly needs: string };
 
 /** A confirmed control fact WITH its workbook Notes, looked up by row id. */
-export type FactLookup = (id: string) => { readonly value: ControlFact; readonly notes: string } | null;
+export type FactLookup = (
+  id: string,
+) => { readonly value: ControlFact; readonly notes: string; readonly status?: string } | null;
 
 /**
  * Compile one question's right-answer prose into a typed expectation.
@@ -287,6 +290,13 @@ export function compileExpectation(
   /* ---- a LIST whose members the owner enumerated in a CONFIRMED fact ---- */
   if (/\bper-member\b|\broll-call\b/i.test(right)) {
     const roster = facts("F5");
+    /*
+     * THE SECOND GUARD. `loadControlFacts` already filters to CONFIRMED, and
+     * this checks anyway — because the failure being prevented is a future
+     * widening of the loader silently making an unverified row citable, and a
+     * filter upstream is not a check at the point of use.
+     */
+    if (roster) assertCitableAsEvidence("F5", roster.status ?? "");
     const names = roster ? rosterNames(roster.value, roster.notes) : [];
     if (names.length === 0) {
       return {

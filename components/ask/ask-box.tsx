@@ -993,7 +993,32 @@ export function AskBox({
                 onClick={() => {
                   const action = asked.destination!.destination.action!;
                   if (action.kind === "LIST_OPEN") {
-                    dispatch({ type: "list/open", open: true });
+                    /*
+                     * ── ASK-22 ── **THE SUBJECT TRAVELS WITH THE OPEN.**
+                     * (2026-08-31.)
+                     *
+                     * This was `dispatch({ type: "list/open", open: true })` —
+                     * a generic open carrying nothing. The reader had just been
+                     * answered about ONE body and the pill handed them every
+                     * meeting in the ZIP, which is the hunting the owner
+                     * reported.
+                     *
+                     * The subject comes from the GROUNDED answer's bound
+                     * subject, which is the engine's own decision about what the
+                     * question resolved to — not from the question text, and not
+                     * from anything this component inferred. When nothing was
+                     * bound (a topic answer, a destination with no government in
+                     * it) both fields are null and the open is exactly the
+                     * unfocused one it always was.
+                     */
+                    const bound =
+                      grounded?.subject?.kind === "BODY" ? grounded.subject : null;
+                    dispatch({
+                      type: "list/open",
+                      open: true,
+                      focusBodyId: bound?.id ?? null,
+                      focusBodyName: bound?.name ?? null,
+                    });
                   } else {
                     dispatch({ type: "door/open", door: action.door });
                   }

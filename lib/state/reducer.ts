@@ -246,13 +246,25 @@ export function uiReducer(state: UiState, action: UiAction): UiState {
       return { ...state, showDistricts: action.value };
 
     case "list/toggle":
-      return { ...state, listOverlayOpen: !state.listOverlayOpen, door: null };
+      return {
+        ...state,
+        listOverlayOpen: !state.listOverlayOpen,
+        door: null,
+        /* A toggle is never a focused open. */
+        listFocusBodyId: null,
+        listFocusBodyName: null,
+      };
 
     case "list/open":
       return {
         ...state,
         listOverlayOpen: action.open,
         door: action.open ? null : state.door,
+        /* ASK-22: the focus belongs to ONE opening. Closing clears it, so a
+           later unfocused open cannot inherit a subject from an answer the
+           reader has moved on from. */
+        listFocusBodyId: action.open ? (action.focusBodyId ?? null) : null,
+        listFocusBodyName: action.open ? (action.focusBodyName ?? null) : null,
       };
 
     // 8a: the sidebar-count doors. One large surface at a time — opening a

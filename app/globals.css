@@ -5347,3 +5347,22 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   overflow-x: clip;
   overflow-wrap: break-word;
 }
+
+/* ASK-22 (2026-08-31): the list overlay's focus chip. An answer can open the
+   list scoped to the body it was about, and the scope is always visible and
+   always one tap from being cleared — a narrowing a reader cannot see is one
+   they will read as an absence. */
+.al-focus-chip {
+  margin-left: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0 0.6rem;
+  border: 1px solid color-mix(in srgb, var(--signal) 45%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--signal) 10%, transparent);
+  color: var(--paper);
+  font-size: 0.75rem;
+  line-height: 1;
+  white-space: nowrap;
+}

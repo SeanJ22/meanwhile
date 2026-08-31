@@ -182,8 +182,23 @@ export const GROUNDED_MODES: readonly string[] = ["GROUNDED_CLAUDE", "STRUCTURED
  *
  * - `CLARIFY` / `UNRESOLVED` — the mention did not bind to one thing. That is
  *   IDENTITY, not acquisition: we may well hold the record under another name.
- * - `NO_EVIDENCE` — the subject bound and we hold nothing that answers. That
- *   IS acquisition, and it is the only mode that earns the word.
+ * - `NO_EVIDENCE` — **only acquisition WHEN A SUBJECT ACTUALLY BOUND.** The
+ *   precondition is in this sentence and was not in the code, and that gap is
+ *   the defect corrected on 2026-08-31.
+ *
+ *   `NO_EVIDENCE` is returned both when the engine bound a government and
+ *   holds nothing about it, and when the engine bound NOTHING and therefore
+ *   searched for nothing. Only the first is a statement about our holdings.
+ *   Classing the second as `acquisition` asserts *we hold nothing that
+ *   answers* about a search that never ran — an absence claimed from our own
+ *   inaction, which is the substitution this product exists to refuse.
+ *
+ *   The case that found it: *"How did each supervisor vote at the August 25,
+ *   2026 meeting?"* returned `NO_EVIDENCE` with `subject: null` and was
+ *   reported as an acquisition gap. The same question with the body named
+ *   returns `GROUNDED_CLAUDE` with 60 member-vote records drawn from **285
+ *   person-vote rows held for that exact sitting**. Nothing was missing. The
+ *   mention did not bind, so nothing was looked for.
  * - `REJECTED_FELL_BACK` — prose was produced and the validator killed it.
  *   VALIDATION, and hunting more records would not touch it.
  * - `OFF` / `TRANSPORT_FAILED` — nothing was retrieved because nothing ran.
@@ -191,11 +206,29 @@ export const GROUNDED_MODES: readonly string[] = ["GROUNDED_CLAUDE", "STRUCTURED
 const MODE_FAILURE_CLASS: Readonly<Record<string, FailureClass>> = {
   CLARIFY: "identity",
   UNRESOLVED: "identity",
+  /* Only when a subject bound. `modeFailureClass` below applies the
+     precondition; this entry is the bound case. */
   NO_EVIDENCE: "acquisition",
   REJECTED_FELL_BACK: "validation",
   OFF: "retrieval",
   TRANSPORT_FAILED: "retrieval",
 };
+
+/**
+ * The failure class for a non-grounded mode, with NO_EVIDENCE's precondition
+ * actually applied.
+ *
+ * A `NO_EVIDENCE` with nothing bound is `identity`: the mention did not
+ * resolve to a government, which is the same failure `CLARIFY` and
+ * `UNRESOLVED` name and is emphatically not a claim about what we hold.
+ */
+export function modeFailureClass(
+  mode: string,
+  boundSubjectId: string | null,
+): FailureClass | undefined {
+  if (mode === "NO_EVIDENCE" && !boundSubjectId) return "identity";
+  return MODE_FAILURE_CLASS[mode];
+}
 
 /* -------------------------------------------------------- normalisation */
 
@@ -427,9 +460,14 @@ export function evaluateAnswer(
     return red("the rendered answer carries no mode; nothing states how it was produced", "rendering");
   }
   if (!GROUNDED_MODES.includes(mode)) {
-    const known = MODE_FAILURE_CLASS[mode];
+    const known = modeFailureClass(mode, answer.subjectId ?? null);
     return red(
-      `the engine answered in mode ${JSON.stringify(mode)}, which is not a grounded answer` +
+      `the engine answered in mode ${JSON.stringify(mode)}` +
+        (mode === "NO_EVIDENCE" && !answer.subjectId
+          ? " and bound NO subject, so nothing was searched — this is a binding failure and is " +
+            "NOT evidence that nothing is held"
+          : "") +
+        ", which is not a grounded answer" +
         (known ? "" : " and is not a mode this evaluator knows"),
       /* An unknown mode is a RENDERING question — something reached the reader
          that nothing here can classify — and never a silent green. */

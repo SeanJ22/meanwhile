@@ -147,6 +147,14 @@ export const NON_CONTROL_FIELDS: Partial<Record<keyof UiState, string>> = {
   listOverlayOpen: "view state, not a constraint on what is shown",
   door: "view state — an open sidebar-count door, constrains nothing (8a)",
   filtersPanelOpen: "view state",
+  /*
+   * ASK-22: the focus one ANSWER opened the list with. Not a reader-set
+   * constraint — it belongs to a single opening and the reducer clears it when
+   * the overlay closes, so a reset control would be a second owner of a
+   * lifetime that is already decided.
+   */
+  listFocusBodyId: "an answer-scoped focus, cleared by the reducer when the list closes",
+  listFocusBodyName: "an answer-scoped focus, cleared by the reducer when the list closes",
   listSort: "list presentation, constrains nothing",
   listGroupBy: "list presentation",
   expandedGroups: "list presentation",

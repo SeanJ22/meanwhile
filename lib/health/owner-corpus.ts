@@ -49,6 +49,62 @@ export const EXAMPLE_ROW_ID = "EX";
 /** The one Status value that makes a row an answer-key entry. */
 export const CONFIRMED = "CONFIRMED";
 
+/**
+ * **OWNER UNCERTAINTY IS NOT EVIDENCE, IN EITHER DIRECTION.**
+ * (Session B closure, 2026-08-31, the author's correction.)
+ *
+ * `COULD NOT TELL`, `SKIPPED` and a blank Status carry ZERO evidentiary
+ * weight. They are never corroboration of an absence and never corroboration
+ * of a presence. They record one thing: that the owner has not yet looked, or
+ * looked and could not answer.
+ *
+ * This is written down because it was got wrong. A Session B report said a
+ * reader-suite RED was *"corroborated by the owner's own F2 being COULD NOT
+ * TELL"* — reasoning from the owner's uncertainty to a conclusion about what a
+ * government publishes. That is the same substitution the whole product exists
+ * to refuse, arriving through the answer key rather than through a render: the
+ * absence of a reading became a reading.
+ *
+ * It was also, as it happens, false. Walking the routes afterwards found 417
+ * roll calls and 2,083 per-person vote rows held from that very tenant, 285 of
+ * them for the exact sitting the claim was about. An unverified row is not
+ * evidence, and reasoning from one had produced a statement that measurement
+ * contradicted outright.
+ *
+ * A `known_absence` row is evidence ONLY with authority, period and
+ * verified_through filled — `validateControlFact` enforces that half.
+ */
+export const NON_EVIDENTIARY_STATUSES: readonly string[] = [
+  "COULD NOT TELL",
+  "COULD_NOT_TELL",
+  "SKIPPED",
+  "WRONG",
+  "",
+];
+
+/** Is this row's status one that may be cited as evidence at all? */
+export function isCitableAsEvidence(status: string): boolean {
+  return String(status ?? "").trim().toUpperCase() === CONFIRMED;
+}
+
+/**
+ * Refuse to let a non-CONFIRMED row be used as evidence.
+ *
+ * Throws rather than returning false, because every caller of this is about to
+ * treat the row as an answer-key entry, and a boolean that a caller can ignore
+ * is the shape that let the original mistake through.
+ */
+export function assertCitableAsEvidence(id: string, status: string): void {
+  if (isCitableAsEvidence(status)) return;
+  throw new Error(
+    `Control facts row ${id} has Status ${JSON.stringify(String(status ?? "").trim() || "(blank)")} ` +
+      "and may not be cited as evidence. COULD NOT TELL, SKIPPED, WRONG and blank carry zero " +
+      "evidentiary weight in EITHER direction: they are never corroboration of an absence and " +
+      "never corroboration of a presence. Only CONFIRMED is evidence, and a known_absence row " +
+      "is evidence only with authority, period and verified_through filled.",
+  );
+}
+
 /** The Keep? values that make a question part of the corpus. */
 export const KEEP_VALUES: readonly string[] = ["KEEP", "EDIT"];
 
@@ -85,6 +141,8 @@ export type SheetRow = Readonly<Record<string, string>>;
 export interface LoadedRow<T> {
   readonly id: string;
   readonly notes: string;
+  /** The workbook Status this row carried. Only CONFIRMED is evidence. */
+  readonly status?: string;
   readonly value: T;
 }
 
@@ -158,7 +216,14 @@ export function loadControlFacts(rows: readonly SheetRow[]): CorpusLoad<ControlF
           }
         : {}),
     });
-    rows_.push({ id, notes: (row["Notes"] ?? "").trim(), value: loaded[loaded.length - 1] });
+    rows_.push({
+      id,
+      notes: (row["Notes"] ?? "").trim(),
+      /* Carried so a consumer can be CHECKED against it rather than trusting
+         that the loader filtered. The filter and the check are two guards. */
+      status,
+      value: loaded[loaded.length - 1],
+    });
   }
 
   return {

@@ -666,6 +666,17 @@ export interface InstanceResult {
   readonly instanceId: string;
   readonly questionText: string;
   readonly verdict: InstanceVerdict;
+  /**
+   * The diagnosed failure class on a RED, null otherwise. (2026-08-31.)
+   *
+   * It was recorded on the diagnostic WorkItem and NOT in the run record, so
+   * the durable evidence said a question failed and not what kind of failure
+   * it was. That is the field a later reader needs most: the class is the
+   * thing most likely to be wrong, and until 2026-08-31 every NO_EVIDENCE was
+   * classed `acquisition` — including the ones where nothing bound, nothing
+   * was searched, and the record was held all along.
+   */
+  readonly failureClass?: FailureClass | null;
 }
 
 /* ------------------------------------------------------- failure classes */

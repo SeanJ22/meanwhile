@@ -1,4 +1,6 @@
 import { readSnapshot } from "@/lib/meetings/snapshot";
+import type { Meeting } from "@/lib/sources/types";
+import type { AskSitting } from "@/lib/ask/answer";
 import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
 import { statewideExecutivesFor } from "@/lib/officials/statewide-executives";
 import {
@@ -188,6 +190,31 @@ interface MeetingLike {
   startsAt: string;
   timeZone?: string | null;
   agendaUrl?: string | null;
+  /**
+   * **WHERE IT IS, WHETHER IT IS STILL ON, AND WHOSE IT IS.**
+   * (Session B closure, ASK-20, 2026-08-31.)
+   *
+   * The third time this hand-narrowed shape has dropped fields the corpus
+   * carries. ASK-05 lost `sourceOrg` and `retrievedAt` and made a sourced
+   * claim unrenderable; ASK-18 lost `provenance` and made the THEIRS branch
+   * unreachable outside one adapter; this lost `location`, `status` and
+   * `jurisdiction` and made an Add-to-calendar control impossible to build
+   * from an Ask answer while the map card beside it built one from the same
+   * meeting.
+   *
+   * A calendar entry needs the venue or the join line, and the status decides
+   * whether the control renders at all — `CalendarLinks` returns null for
+   * anything but SCHEDULED, because offering to calendar a concluded meeting
+   * is offering to attend one that has happened.
+   *
+   * The pattern is worth naming rather than just fixing again: every one of
+   * these was a field that already existed on `Meeting`, already travelled on
+   * the wire, and was unreachable purely by declaration.
+   */
+  location: Meeting["location"];
+  status: Meeting["status"];
+  jurisdiction: string;
+  online?: Meeting["online"];
   /**
    * **WHO PUBLISHED THIS AND WHEN WE READ IT — and it was being dropped.**
    * (ASK-18, 2026-08-30.)
@@ -768,6 +795,8 @@ export async function POST(request: Request) {
     : null;
 
   const records: EvidenceRecord[] = [];
+  /** The sittings this request resolved, for the structured half of the payload. */
+  const resolvedSittings: AskSitting[] = [];
   const gaps: EvidenceGap[] = [];
   const denominators: Record<string, number> = {};
   const contacts: AskContact[] = [];
@@ -970,6 +999,10 @@ export async function POST(request: Request) {
        * sittings with different dockets, and one record describing two would be
        * the collapse that makes an agenda answer cite the wrong meeting.
        */
+      /* ASK-20 / ASK-23: the STRUCTURED sittings travel to the client beside
+         the prose, so an answer can offer the same Add-to-calendar control the
+         map card does and a jurisdiction card can lead with the right one. */
+      resolvedSittings.push(chosen);
       const sameDay = sittingsOnSameLocalDay(chosen, forBody).filter((m) => m.id !== chosen.id);
       denominators.sittingsThatLocalDay = sameDay.length + 1;
       for (const sibling of sameDay) {
@@ -977,6 +1010,7 @@ export async function POST(request: Request) {
           sibling.bodyName && sibling.bodyName !== sibling.title
             ? `${sibling.title} of ${sibling.bodyName}`
             : sibling.title;
+        resolvedSittings.push(sibling);
         records.push({
           kind: "MEETING",
           id: sibling.id,
@@ -1718,6 +1752,15 @@ export async function POST(request: Request) {
     pack,
     answer,
     contacts: contacts.slice(0, MAX_ASK_CONTACTS),
+    /*
+     * ASK-20 / ASK-23 / ASK-24. In start order and de-duplicated by id: the
+     * chosen sitting first, then any other sitting the body holds on the same
+     * local day. A client reads [0] for "the meeting this answer is about" and
+     * the whole list for a day that holds more than one.
+     */
+    meetings: resolvedSittings
+      .filter((m, i, all) => all.findIndex((x) => x.id === m.id) === i)
+      .sort((a, b) => (a.startsAt < b.startsAt ? -1 : a.startsAt > b.startsAt ? 1 : 0)),
     trace,
   });
   return Response.json(payload);

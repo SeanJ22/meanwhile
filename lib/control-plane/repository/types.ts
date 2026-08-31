@@ -79,6 +79,8 @@
  */
 
 import type { Attempt, ExecutionLease } from "../attempt.ts";
+import type { FreshnessDebt } from "../scheduler/debt.ts";
+import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { BudgetLedger } from "../budget.ts";
 import type { CostEntry } from "../cost.ts";
 import type { ArtifactTier } from "../evidence/artifact.ts";
@@ -503,6 +505,22 @@ export interface ControlPlaneRepositories {
   readonly workItems: AggregateRepository<WorkItem>;
   readonly routeTasks: AggregateRepository<RouteTask>;
   readonly attempts: AggregateRepository<Attempt>;
+  /**
+   * THE SCHEDULER'S OWN DURABLE STATE. (Session B resume, W3.C.)
+   *
+   * These three are what make a freshness failure survive the process that
+   * suffered it. Before them, `FreshnessDebt` existed in the domain and in the
+   * cycle's signature and in no store, so the runner passed `debts: []` on
+   * every start and a route that failed today was not retried tomorrow.
+   *
+   * They are AggregateRepositories like any other — same CAS, same revisions,
+   * same providers — because a second persistence mechanism beside the
+   * repositories is the second control plane RULING 220 forbids.
+   */
+  readonly obligations: AggregateRepository<StandingObligation>;
+  readonly occurrences: AggregateRepository<FreshnessOccurrence>;
+  /** Keyed by OBLIGATION id: one debt row per obligation, so the row is the state. */
+  readonly debts: AggregateRepository<FreshnessDebt>;
   /** Keyed by ROUTE TASK id: one lease slot per task, so the slot is the race. */
   readonly leases: AggregateRepository<ExecutionLease>;
   readonly transitions: AppendOnlyRepository<RecordedTransition>;

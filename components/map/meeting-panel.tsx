@@ -25,6 +25,7 @@ import type { Venue } from "@/lib/meetings/venues";
 import { commentAccessFor } from "@/lib/registry/comment-access";
 import { venueLink } from "@/lib/registry/links";
 import type { Meeting } from "@/lib/sources/types";
+import { agendaSentenceFor } from "@/lib/ask/agenda-sentence";
 
 import { CalendarLinks } from "./popup/calendar-links";
 
@@ -241,6 +242,15 @@ function MeetingEntry({
   bodyShown?: boolean;
 }) {
   const concluded = meeting.status === "CONCLUDED";
+  /*
+   * SWEEP-01 (2026-08-31). This row rendered "No agenda posted yet" whenever
+   * `meeting.agendaUrl` was null — a sentence about a GOVERNMENT derived from
+   * a measurement of US. `agendaSentenceFor` is the single decider, shared
+   * with the popup's agenda section so the two surfaces cannot disagree about
+   * what a null means, and it attributes the gap to the publisher ONLY where a
+   * fresh first-party observation measured the publisher's own empty slot.
+   */
+  const agendaState = agendaSentenceFor(meeting);
   const { governing, zipPartial, basis, location } = useShellData();
   const jurisdiction = badgeFor(meeting, governing, basis, zipPartial);
 
@@ -333,7 +343,7 @@ function MeetingEntry({
           </a>
         ) : (
           <p className="trailing-space-trimmed-14 font-mono text-[0.75rem] uppercase tracking-[0.14em] text-muted">
-            No agenda posted yet
+            {agendaState.sentence}
           </p>
         )}
       </div>

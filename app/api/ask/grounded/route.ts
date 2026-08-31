@@ -51,7 +51,7 @@ import {
 import { readLocationOrigin, stampResidency } from "@/lib/ask/residency";
 import { captureAskInteraction } from "@/lib/db/ask-signal";
 import { synthesizeAnswer } from "@/lib/ask/synthesize";
-import { selectSitting, type AgendaSelection } from "@/lib/ask/select";
+import { sittingsOnSameLocalDay, selectSitting, type AgendaSelection } from "@/lib/ask/select";
 import {
   classifyAgendaPublication,
   publisherAgendaObservationsFor,
@@ -950,6 +950,44 @@ export async function POST(request: Request) {
         occurredAt: chosen.startsAt,
         sourceUrl: chosen.agendaUrl ?? null,
       });
+
+      /*
+       * ── ASK-24 ── **A DAY WITH TWO SITTINGS IS A DAY WITH TWO SITTINGS.**
+       * (Session B resume, 2026-08-31.)
+       *
+       * The owner: Mayor & Council's study session is at 1 p.m. and "the actual
+       * meeting is later in the day at 5 p.m."; Ask named the first and stopped.
+       * That is `selectSitting` behaving correctly — it returns ONE sitting —
+       * and the answer being built as though one were all there was.
+       *
+       * A reader told "the meeting is at 1 p.m." who arrives for a study
+       * session that ends before the business meeting begins has been handed a
+       * true sentence and a wrong answer. The map card at 17-34-14 already
+       * renders both; this is Ask catching up to the surface beside it.
+       *
+       * Each sibling is its OWN record with its OWN id, agenda link and time —
+       * never a sentence appended to the chosen one's text. They are different
+       * sittings with different dockets, and one record describing two would be
+       * the collapse that makes an agenda answer cite the wrong meeting.
+       */
+      const sameDay = sittingsOnSameLocalDay(chosen, forBody).filter((m) => m.id !== chosen.id);
+      denominators.sittingsThatLocalDay = sameDay.length + 1;
+      for (const sibling of sameDay) {
+        const siblingLabel =
+          sibling.bodyName && sibling.bodyName !== sibling.title
+            ? `${sibling.title} of ${sibling.bodyName}`
+            : sibling.title;
+        records.push({
+          kind: "MEETING",
+          id: sibling.id,
+          bodyId: sibling.bodyId,
+          text:
+            `${subject.name}: ${siblingLabel}, ${readableSitting(sibling)} — the same day as ` +
+            `the ${label}.`,
+          occurredAt: sibling.startsAt,
+          sourceUrl: sibling.agendaUrl ?? null,
+        });
+      }
 
       const forMeeting = documents.filter((d) => d.meetingId === chosen.id);
       denominators.agendaDocumentsForThatMeeting = forMeeting.length;

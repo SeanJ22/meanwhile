@@ -1,3 +1,5 @@
+import { localDate } from "./meeting-time.ts";
+
 /**
  * **WHICH SITTING THE READER ASKED ABOUT — one implementation, two callers.**
  * (ASK02, 2026-08-27.)
@@ -47,6 +49,41 @@ export function selectSitting<T extends SittingLike>(
   if (selection === "NEXT") return upcoming[0] ?? null;
   if (selection === "LAST") return past[0] ?? null;
   return upcoming[0] ?? past[0] ?? null;
+}
+
+/**
+ * **EVERY SITTING THE BODY HOLDS ON THE CHOSEN ONE'S LOCAL DAY.**
+ * (Session B resume, W2 — ASK-24, 2026-08-31.)
+ *
+ * The owner reported it precisely: Mayor & Council sit at 1 p.m. and again at
+ * 5 p.m., the map card renders both, and Ask named only the first. That is
+ * `selectSitting` working as designed — it returns ONE sitting — and an answer
+ * built from its single return being read as the whole of the day.
+ *
+ * A reader who is told "the meeting is at 1 p.m." and turns up to a study
+ * session that ends before the business meeting starts has been given a true
+ * sentence and a wrong answer. Two sittings on one day is a normal shape for a
+ * council, not an edge case.
+ *
+ * ## The day is the body's LOCAL day, and that is load-bearing
+ *
+ * Grouping on the UTC date would split a 7 p.m. Arizona sitting from a 1 p.m.
+ * one on the same afternoon, because the evening meeting's UTC timestamp lands
+ * on the following day. Every Vail row in this corpus carries a UTC date one
+ * day after the meeting, and `localDate` is what `lib/map/format.ts` has
+ * resolved it with since BC-12.
+ *
+ * Returned in start order, chosen sitting included, so a caller can render
+ * "1 p.m. and again at 5 p.m." without deciding anything itself.
+ */
+export function sittingsOnSameLocalDay<T extends SittingLike & { timeZone?: string | null }>(
+  chosen: T,
+  sittings: readonly T[],
+): readonly T[] {
+  const day = localDate(chosen);
+  return sittings
+    .filter((m) => localDate(m) === day)
+    .sort((a, b) => (a.startsAt < b.startsAt ? -1 : a.startsAt > b.startsAt ? 1 : 0));
 }
 
 /**

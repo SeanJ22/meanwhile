@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { agendaSentenceFor } from "@/lib/ask/agenda-sentence";
 
 import { noticeSummaryFor } from "@/lib/meetings/notice-summaries";
 import { formatDateMDY } from "@/lib/map/format";
@@ -32,6 +33,23 @@ interface AgendaSectionProps {
   meetingId: string;
   /** The meeting's own agenda link, for the no-document and failed cases. */
   agendaUrl: string | null;
+  /**
+   * The meeting record's own publisher observation, passed straight through.
+   *
+   * SWEEP-01: this component took only `meetingId` and `agendaUrl`, so a null
+   * link was the ONLY thing it could reason from — and it reasoned "the body
+   * has not posted". These two fields are what let it tell an unmeasured gap
+   * from a measured one, and they travel together because
+   * `observationFromMeetingRecord` refuses an observation missing either.
+   */
+  agendaSlotObservedEmpty?: boolean;
+  provenance?: {
+    sourceUrl: string | null;
+    sourceOrg: string;
+    collectedAt: string;
+    secondHand?: boolean;
+  };
+  carried?: unknown;
 }
 
 /** Case-insensitive; the phrase boards actually print on notices. */
@@ -53,7 +71,22 @@ function sanitizeStoredText(text: string): string {
     .replace(/&amp;/g, "&");
 }
 
-export function AgendaSection({ meetingId, agendaUrl }: AgendaSectionProps) {
+export function AgendaSection({
+  meetingId,
+  agendaUrl,
+  agendaSlotObservedEmpty,
+  provenance,
+  carried,
+}: AgendaSectionProps) {
+  /*
+   * SWEEP-01 (2026-08-31): the same decider the meeting panel uses. Two
+   * components independently deciding what `agendaUrl === null` means is how
+   * one of them came to say a clerk had not posted a packet on the strength of
+   * our own empty record.
+   */
+  const agendaState = agendaSentenceFor(
+    { id: meetingId, agendaUrl, agendaSlotObservedEmpty, provenance, carried },
+  );
   const [documents, setDocuments] = useState<AgendaDocumentView[] | null>(null);
   const [failed, setFailed] = useState(false);
 
@@ -127,7 +160,7 @@ export function AgendaSection({ meetingId, agendaUrl }: AgendaSectionProps) {
             .
           </>
         ) : (
-          "No agenda posted yet."
+          `${agendaState.sentence}.`
         )}
       </p>
     );

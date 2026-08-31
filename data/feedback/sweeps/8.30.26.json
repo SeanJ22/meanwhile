@@ -24,7 +24,7 @@
     "Visual Feedback 8.30.26.docx",
     "we-the-people-feedback-2026-08-30.xlsx"
   ],
-  "sweptAtSha": "b7c4e4c15740af7b006e933855d8cc767d03ffa7",
+  "sweptAtSha": "68a70354f93378e813f44fdc70c5d1f293eddcdb",
   "sweptAt": "2026-08-30",
   "items": [
     {
@@ -88,11 +88,11 @@
       "failureClass": "acquisition",
       "disposition": "OPEN_BLOCKED",
       "workItemId": "wi:feedback:8.30.26:ASK-18",
-      "instancesFound": 1,
+      "instancesFound": 426,
       "instancesFixed": 0,
       "checkId": "rq:ask-18-agenda-attribution",
       "checkResult": "RED — the Pima answer still renders the OURS gap, correctly, because nothing has measured the publisher",
-      "blocker": "No ingest adapter records whether the source surface carries an agenda slot and whether it was empty. `agendaUrl === null` alone conflates three different facts — a Legistar grid printing a literal 'Not Available', an iCal feed with no agenda field at all, and a body that posts packets on a page its calendar never links — so deriving a publisher negative from it would ship a false claim about a government. The seam is built, wired into app/api/ask/grounded/route.ts and tested (`agendaSlotObservedEmpty`); what remains is per-adapter work in lib/sources/*/ to record the observation at the moment of the read."
+      "blocker": "THE SEAM AND THE ADAPTER ARE NOW DONE; what remains is a data refresh. lib/sources/legistar/index.ts sets `agendaSlotObservedEmpty` from the publisher's own API record — the key being PRESENT on the event object with a null value is the structural observation, and Object.hasOwn is used rather than a null test so a response shape that OMITS the field cannot be read as an empty slot. lib/sources/types.ts declares the field; lib/ask/agenda-sentence.ts consumes it; both surfaces render it. BUT the committed data/meetings-snapshot.json predates the adapter change: 0 of its 596 meetings carry the observation and 426 of them have no agenda link, so today every one of those renders the OURS gap. That is CORRECT and is an improvement — the false claim is gone — but the owner asked to see the gap attributed to the BODY where it is theirs, and that needs an ingest run (`pnpm ingest composite`, the path .github/workflows/refresh-meetings-snapshot.yml uses) to record observations. Adapters other than legistar are also still unmeasured, and each needs the same per-adapter judgement about whether its surface HAS an agenda slot."
     },
     {
       "id": "ASK-19",
@@ -692,13 +692,15 @@
       "reported": "An Ask meeting answer names only the first sitting of the day where the body holds more than one",
       "correctState": "Where a body holds two sittings on one day the answer names both, as the meeting card already does.",
       "failureClass": "evidence_selection",
-      "disposition": "OPEN_BLOCKED",
+      "disposition": "FIXED_VERIFIED",
       "workItemId": "wi:feedback:8.30.26:ASK-24",
-      "instancesFound": 0,
-      "instancesFixed": 0,
-      "checkId": null,
-      "checkResult": null,
-      "blocker": "In the dictation and absent from the spreadsheet, so it is added: the owner says the Mayor & Council answer should say the session is at 1 PM and 'the actual meeting is later in the day at 5 p.m.', and separately that no agenda was posted for either the Pima study session or 'the session at 5:00 in the afternoon later that same day'. The map card at 17-34-14 renders both sittings; Ask names one. Not reached this session."
+      "instancesFound": 1,
+      "instancesFixed": 1,
+      "checkId": "tests/ask-same-day-sittings.test.ts",
+      "checkResult": "PASS",
+      "blocker": null,
+      "resolution": "lib/ask/select.ts gains sittingsOnSameLocalDay, and app/api/ask/grounded/route.ts emits a MEETING evidence record for every sitting on the chosen one's LOCAL day rather than for the chosen sitting alone. Each sibling is its own record with its own id, agenda link and time — never a clause appended to the first meeting's text, because two sittings have two dockets and one record describing both is how an agenda answer comes to cite the wrong meeting. The day is the body's local day: grouping on UTC splits a 5 p.m. Arizona sitting from the 1 p.m. one it shares an afternoon with, which is the exact pair the owner reported.",
+      "verification": "4 tests, of which 3 are SEEDED against the reported shape (1 p.m. + 5 p.m. Tucson, where the second is 00:00Z the following day). Unit-level at the selection layer; the route wiring is type-checked and not separately exercised on a live answer this session."
     },
     {
       "id": "SWEEP-01",
@@ -713,13 +715,15 @@
       "reported": "The meeting card's NO AGENDA POSTED YET asserts an absence about a government from our own record being empty",
       "correctState": "A sentence about whether a body posted an agenda requires a first-party observation of the body's own surface; without one the render is a NAMED GAP attributed to us.",
       "failureClass": "rendering",
-      "disposition": "OPEN_BLOCKED",
+      "disposition": "FIXED_VERIFIED",
       "workItemId": "wi:feedback:8.30.26:SWEEP-01",
       "instancesFound": 2,
-      "instancesFixed": 0,
-      "checkId": null,
-      "checkResult": null,
-      "blocker": "FOUND BY THIS SWEEP, not reported by the owner, and it is the same mechanism ASK-18 refuses. components/map/meeting-panel.tsx and components/map/popup/agenda-section.tsx both render the sentence on `!meeting.agendaUrl`. It cannot simply be reworded: the owner explicitly praised this register (POS-2) and asked Ask to adopt it, so changing it to a named gap would make the product worse by his measure while making it more correct by the constitution's. It closes when ASK-18's adapter work lands and both surfaces read the same observation. Recorded rather than fixed unilaterally."
+      "instancesFixed": 2,
+      "checkId": "tests/agenda-claim-guard.test.ts::SWEEP-01: no reader surface asserts a publication state of its own",
+      "checkResult": "PASS",
+      "blocker": null,
+      "resolution": "Both render sites now ask ONE decider — lib/ask/agenda-sentence.ts — whose gap an absent agenda is. Without a fresh first-party observation of the publisher's own empty agenda slot the sentence is OURS (\"We haven't recorded an agenda for this meeting yet\"); with one it names the publisher and the day it was read. The owner's register (POS-2) is kept for the THEIRS case, which is where it was always true.",
+      "verification": "Class-wide and at the source, not by DOM sample. tests/agenda-claim-guard.test.ts sweeps every .ts/.tsx under components/ and app/ with comments stripped and refuses any publication claim outside the decider; it read 100+ files and was confirmed to FAIL when the sentence was reintroduced into meeting-panel.tsx. The built client bundle (.next/static) carries 0 occurrences of \"No agenda posted yet\" and 1 of the OURS sentence. 8 further tests in tests/agenda-sentence.test.ts pin the decider itself. A DOM walk (scripts/verify-agenda-sentence.mts) opened the meetings overlay at all four pilot ZIPs and expanded every group; it reached 149 rows but not the meeting-detail surface that carries the sentence, and it reports COULD NOT ASSERT rather than a pass — which is why the source-level guard is the check of record."
     },
     {
       "id": "OWN-Q5",
@@ -770,13 +774,15 @@
       "reported": "Owner amendment on Q8: a polling-place answer should show not only where they can vote but prioritise the closest",
       "correctState": "Voting locations order by distance from the reader's resolved point — a neutral criterion, and the one the reader asked for.",
       "failureClass": "rendering",
-      "disposition": "OPEN_BLOCKED",
+      "disposition": "FIXED_VERIFIED",
       "workItemId": "wi:feedback:8.30.26:OWN-Q8",
-      "instancesFound": 0,
-      "instancesFixed": 0,
-      "checkId": null,
-      "checkResult": null,
-      "blocker": "Not worked this session. Ordering voting sites by distance is neutral and permitted; it needs the resolved point threaded into the voting-sites panel."
+      "instancesFound": 1,
+      "instancesFixed": 1,
+      "checkId": "lib/ballot/voting-sites.ts::sitesNearestFirst",
+      "checkResult": "PASS",
+      "blocker": null,
+      "resolution": "ALREADY SHIPPED — the sweep's blocker was stale. sitesNearestFirst(sites, point) exists in lib/ballot/voting-sites.ts with the neutrality argument written out (distance from a point the reader typed is a fact about geography, expresses no judgement, and is not the candidate-ranking the never-rank rule governs), and an unplaced site keeps its published place rather than sinking, so a geocoding failure on OUR side cannot demote a location the authority genuinely published. components/map/voting-sites-panel.tsx calls it with the resolved point at line 284, and components/ballot/where-to-vote.tsx renders that same panel — so the ballot surface the owner was looking at is already ordered by distance.",
+      "verification": "Read at the call site and through the point's derivation in app/api/voting-sites/route.ts. NOT re-verified on the rendered DOM this session — recorded as a code-path verification so the distinction is not lost."
     },
     {
       "id": "OWN-Q9",
@@ -797,5 +803,8 @@
       "checkResult": null,
       "blocker": "Not worked this session. The disclosure rows added for WGH-18 are clickable; the districts named inside an Ask ANSWER are not."
     }
-  ]
+  ],
+  "resweptAt": "2026-08-31T15:03:59.751Z",
+  "resweptBy": "Session B (resume), 2026-08-31",
+  "reswepNote": "Session B resume. Four rows moved. The counts below are over the 35 rows this sweep originally recorded; nothing was added and nothing was removed."
 }

@@ -190,9 +190,18 @@ jobs:
             echo "the reading is byte-identical to the one on main — nothing to commit"
             exit 0
           fi
+          # GENERATED STATUS MAY NOT LAG ITS INPUTS. (Session B resume, W5.)
+          #
+          # docs/status-ledger.md renders a row FROM this reading, so committing
+          # the reading alone left the ledger describing the previous one — which
+          # is what it was doing at 68a70354, still stamped 6923cd91 and citing an
+          # observer run three commits back. Regenerated and committed in the SAME
+          # commit: two commits could interleave, and the whole point is that the
+          # record and its view cannot disagree.
+          pnpm status:ledger
           git config user.name "post-deploy-observer[bot]"
           git config user.email "noreply@github.com"
-          git add data/ops/production-integrity.json
+          git add data/ops/production-integrity.json docs/status-ledger.md
           git commit -m "Post-deploy integrity reading: $(date -u +%Y-%m-%dT%H:%MZ)"
           node scripts/push-main.mjs --workflow post-deploy-integrity
 

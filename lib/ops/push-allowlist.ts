@@ -215,6 +215,15 @@ export const PUSHER_PROFILES: readonly PusherProfile[] = [
         path: "data/ops/production-integrity.json",
         why: "the post-deploy integrity reading (NH273) — a non-shipping path, so the record costs no build",
       },
+      {
+        path: "docs/status-ledger.md",
+        why:
+          "the GENERATED status view of that same reading (Session B resume, W5). The observer " +
+          "commits a record the ledger renders a row from, so a commit of the record alone " +
+          "leaves the ledger describing the previous reading — generated status lagging its own " +
+          "input. It is regenerated and committed in the SAME commit, which is the only way the " +
+          "two cannot disagree. A generated artifact, never hand-edited (RULING 92)",
+      },
     ],
   },
 ] as const;

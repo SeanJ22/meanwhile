@@ -358,9 +358,24 @@ export function resolveCapability(
          * is knowable. It is stated explicitly rather than defaulted, because
          * a default that happens to be right is the shape this whole work item
          * is about.
+         *
+         * **AND THE CLASS IS `CI`, NOT `SCHEDULED`.** (Session B resume, W5.)
+         *
+         * The comment above said "runs in CI" while the field said SCHEDULED,
+         * and the field was wrong: `.github/workflows/post-deploy-integrity.yml`
+         * is triggered by `push` to main, and its own header explains at length
+         * why it is NOT on a schedule and NOT on `deployment_status`.
+         *
+         * It changes no proof class — `proofClassOf` only asks whether the run
+         * was LOCAL_SESSION — so nothing went green that should not have. What
+         * it corrupts is attribution: `lib/ops/schedule-audit.ts` assigns each
+         * SCHEDULED run to "the most recent slot at or before its creation", so
+         * every push-triggered observer run was being placed in a cron slot it
+         * has no relationship to. A record that misdescribes how it was invoked
+         * is a record that will be reasoned from wrongly later.
          */
         {
-          runClass: "SCHEDULED",
+          runClass: "CI",
           workingTreeClean: true,
           integratedAtRunTime:
             raw.deployedSha && raw.mainSha ? raw.deployedSha === raw.mainSha : null,

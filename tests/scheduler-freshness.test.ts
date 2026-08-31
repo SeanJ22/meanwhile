@@ -40,6 +40,7 @@ import {
   retryable,
 } from "../lib/control-plane/scheduler/debt.ts";
 import {
+  type RunWork,
   chooseExecutor,
   sweepExpiredLeases,
 } from "../lib/control-plane/scheduler/dispatch.ts";
@@ -56,6 +57,33 @@ import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import type { ContractReading } from "../lib/health/contracts.ts";
 
 const NOW = "2026-08-30T12:00:00.000Z";
+
+/**
+ * A stub that walks the route to a REAL terminal disposition.
+ *
+ * `WALKED_NO_YIELD` over a REACHABLE transport, which is the one disposition a
+ * stub can honestly claim without inventing evidence: it says the route was
+ * reached and returned nothing, and `disposeRoute` refuses it over any
+ * transport but REACHABLE. An `INGESTED` stub would need artifact ids, and a
+ * stub that manufactured artifact ids would be manufacturing evidence.
+ */
+const disposes: RunWork = async () => ({
+  kind: "DISPOSED",
+  disposition: {
+    disposition: "WALKED_NO_YIELD",
+    observation: { rawCount: 0, normalizedCount: 0, routeOnlyCount: 0, earliest: null, latest: null },
+    permission: "ALLOWED",
+    transport: "REACHABLE",
+    note: "stub walked the route and it returned nothing",
+  },
+  detail: "walked",
+});
+
+/** A stub that decides and deliberately does not retrieve. Never discharges. */
+const simulates: RunWork = async () => ({
+  kind: "SIMULATED",
+  detail: "shadow decision — no retrieval ran",
+});
 const NOW_MS = Date.parse(NOW);
 
 function obligation(over: Partial<FreshnessObligation> = {}): FreshnessObligation {
@@ -444,7 +472,7 @@ test("W3.5: a full cycle runs unattended and NEVER promotes to reader truth", as
     debts: [],
     routeTaskFor: (id) => (id === "ob-due" ? task.id : null),
     maturity: () => "GRADUATED",
-    run: async () => ({ ok: true, detail: "walked" }),
+    run: disposes,
     holder: "cycle-worker",
     now: NOW,
     leaseTtlMs: 60_000,
@@ -483,7 +511,7 @@ test("W3.5: an obligation with no RouteTask is COUNTED, not skipped", async () =
     debts: [],
     routeTaskFor: () => null,
     maturity: () => "GRADUATED",
-    run: async () => ({ ok: true, detail: "unreachable" }),
+    run: disposes,
     holder: "cycle-worker",
     now: NOW,
     leaseTtlMs: 60_000,
@@ -534,7 +562,7 @@ test("W3.5: a losing claim is normal concurrency, never debt", async () => {
     debts: [],
     routeTaskFor: () => task.id,
     maturity: () => "GRADUATED",
-    run: async () => ({ ok: true, detail: "should not run" }),
+    run: disposes,
     holder: "this-worker",
     now: NOW,
     leaseTtlMs: 60_000,
@@ -559,7 +587,7 @@ test("W3.5: work beyond the cycle's stated ceiling is DEFERRED with a reason", a
     debts: [],
     routeTaskFor: () => null,
     maturity: () => "GRADUATED",
-    run: async () => ({ ok: true, detail: "x" }),
+    run: disposes,
     holder: "w",
     now: NOW,
     leaseTtlMs: 60_000,

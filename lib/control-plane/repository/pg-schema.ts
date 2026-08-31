@@ -36,7 +36,7 @@
  */
 
 /** Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it. */
-export const BOOTSTRAP_VERSION = 1;
+export const BOOTSTRAP_VERSION = 2;
 
 /**
  * The tables, and the shape each one carries.
@@ -60,6 +60,10 @@ export const AGGREGATE_KINDS = [
   "attempts",
   "leases",
   "budget",
+  /* The scheduler's durable state. (Session B resume, W3.C — version 2.) */
+  "obligations",
+  "occurrences",
+  "debts",
 ] as const;
 
 export const APPEND_ONLY_LOGS = [
@@ -73,32 +77,84 @@ export const APPEND_ONLY_LOGS = [
 /** Every table this schema declares, for the drift check. */
 export const DECLARED_TABLES: readonly string[] = [
   "cp_schema_version",
+  "cp_log_heads",
   ...AGGREGATE_KINDS.map((k) => `cp_${k}`),
   ...APPEND_ONLY_LOGS.map((l) => `cp_log_${l}`),
 ];
 
-function aggregateTable(name: string): string {
-  return `
-    CREATE TABLE IF NOT EXISTS cp_${name} (
+/**
+ * **ONE STATEMENT PER ENTRY, AND THE DRIVER IS WHY.**
+ * (Session B resume, W3.D, 2026-08-31.)
+ *
+ * `BOOTSTRAP_DDL` documents itself as "a list rather than one blob because the
+ * driver executes one statement per call" — and then `appendOnlyTable` returned
+ * a CREATE TABLE and a CREATE INDEX in a single template string. Over
+ * `@neondatabase/serverless`'s HTTP client every query is a PREPARED statement,
+ * and Postgres refuses `cannot insert multiple commands into a prepared
+ * statement` (SQLSTATE 42601).
+ *
+ * So the bootstrap could never have run against a real Postgres database. That
+ * was invisible for as long as it was: `control-plane:gate` exits 0 on
+ * NOT_CONFIGURED, no control-plane database was provisioned, and the file and
+ * memory providers do not execute DDL. The first connection to a live database
+ * failed on the first log table.
+ *
+ * These builders return ARRAYS now, so a statement is a statement and the list
+ * cannot silently hold a blob again.
+ */
+function aggregateTable(name: string): readonly string[] {
+  return [
+    `CREATE TABLE IF NOT EXISTS cp_${name} (
       id          text PRIMARY KEY,
       revision    bigint NOT NULL,
       updated_at  timestamptz NOT NULL,
       value       jsonb NOT NULL
-    );`;
+    );`,
+  ];
 }
 
-function appendOnlyTable(name: string): string {
-  return `
-    CREATE TABLE IF NOT EXISTS cp_log_${name} (
+/**
+ * **THE POSITION IS UNIQUE PER LOG KEY, AND THE DATABASE ENFORCES IT.**
+ * (Session B resume, W3.D, 2026-08-31 — schema version 2.)
+ *
+ * This index was `CREATE INDEX` — NOT unique — while `pgAppendOnlyRepository`
+ * computed `position` as `COALESCE(MAX(position) + 1, 0)` over the same
+ * `log_key` inside the INSERT. Under READ COMMITTED, which is what Neon
+ * serves by default, two concurrent inserts carrying DIFFERENT `record_id`s
+ * each see the same committed maximum and each write that position. Neither
+ * violates `PRIMARY KEY (log_key, record_id)`, so both commit and the log
+ * holds two records at one position.
+ *
+ * That is not a hypothetical about a busy system. It is the ordinary result of
+ * the two-worker contention this control plane is FOR, and the log is the
+ * replay history — `reconcile()` walks dispositions in position order to
+ * finish writes a crash interrupted. Two records at one position make that
+ * order ambiguous, and an ambiguous replay order is a recovery that can apply
+ * commits in a sequence that never happened.
+ *
+ * The fix is two things, deliberately, and neither is sufficient alone:
+ *
+ * 1. **A UNIQUE index**, so the invariant is a property of the DATABASE. A
+ *    correctness rule enforced only by application discipline is enforced only
+ *    until the next caller.
+ * 2. **A transaction-scoped ADVISORY LOCK per log key** in the writer, so
+ *    concurrent appends to one log SERIALIZE instead of racing and then losing
+ *    one to a constraint violation. The unique index alone would be correct and
+ *    would turn ordinary contention into a failure rate.
+ */
+function appendOnlyTable(name: string): readonly string[] {
+  return [
+    `CREATE TABLE IF NOT EXISTS cp_log_${name} (
       log_key     text NOT NULL,
       record_id   text NOT NULL,
       position    bigint NOT NULL,
       recorded_at timestamptz NOT NULL,
       record      jsonb NOT NULL,
       PRIMARY KEY (log_key, record_id)
-    );
-    CREATE INDEX IF NOT EXISTS cp_log_${name}_order
-      ON cp_log_${name} (log_key, position);`;
+    );`,
+    `CREATE UNIQUE INDEX IF NOT EXISTS cp_log_${name}_order
+      ON cp_log_${name} (log_key, position);`,
+  ];
 }
 
 /**
@@ -114,8 +170,30 @@ export const BOOTSTRAP_DDL: readonly string[] = [
      version     integer NOT NULL,
      applied_at  timestamptz NOT NULL
    );`,
-  ...AGGREGATE_KINDS.map(aggregateTable),
-  ...APPEND_ONLY_LOGS.map(appendOnlyTable),
+  /*
+   * THE POSITION ALLOCATOR — one row per (log, key), holding the next position.
+   *
+   * A separate table rather than an advisory lock, and the reason is the
+   * driver. `@neondatabase/serverless`'s `neon()` client speaks HTTP: each
+   * query may land on a different backend connection, so there is no stable
+   * SESSION to hold a session-scoped advisory lock and no client-side
+   * transaction to scope a transaction-scoped one. A lock that silently is not
+   * held is worse than no lock, because the code reads as if it were.
+   *
+   * `INSERT ... ON CONFLICT DO UPDATE ... RETURNING` needs neither. It is one
+   * statement, so it is one implicit transaction; the conflict path takes a ROW
+   * LOCK on the head row, so concurrent allocators for one key serialize and
+   * each receives a distinct position. That is the "genuinely unique ordered
+   * sequence", and it is enforced by the database rather than by a convention.
+   */
+  `CREATE TABLE IF NOT EXISTS cp_log_heads (
+     log_table     text NOT NULL,
+     log_key       text NOT NULL,
+     next_position bigint NOT NULL,
+     PRIMARY KEY (log_table, log_key)
+   );`,
+  ...AGGREGATE_KINDS.flatMap(aggregateTable),
+  ...APPEND_ONLY_LOGS.flatMap(appendOnlyTable),
   /*
    * The due-work index. RULING 220 names indexed due-time queries as one of the
    * two things the filesystem provider cannot carry — a due-time query over a
@@ -125,7 +203,37 @@ export const BOOTSTRAP_DDL: readonly string[] = [
      ON cp_route_tasks ((value->>'state'));`,
   `CREATE INDEX IF NOT EXISTS cp_leases_expiry
      ON cp_leases ((value->>'expiresAt'));`,
+  /*
+   * THE DUE-TIME INDEX, which is the whole reason a standing obligation stores
+   * its next-due rather than only deriving it. RULING 220 names an indexed
+   * due-time query as one of the two things the filesystem provider cannot
+   * carry, and this is it: "which obligations are due?" is a range scan here
+   * and a full directory scan there.
+   */
+  `CREATE INDEX IF NOT EXISTS cp_obligations_next_due
+     ON cp_obligations ((value->>'nextDueAt'))
+     WHERE (value->>'active')::boolean;`,
+  `CREATE INDEX IF NOT EXISTS cp_debts_retry
+     ON cp_debts ((value->>'retryAt'));`,
+  `CREATE INDEX IF NOT EXISTS cp_occurrences_obligation
+     ON cp_occurrences ((value->>'obligationId'));`,
 ];
+
+/**
+ * Duplicate (log_key, position) pairs the version-1 schema could have admitted.
+ *
+ * Run BEFORE the unique index is created, because `CREATE UNIQUE INDEX` over a
+ * table that already holds a duplicate fails with a constraint error that names
+ * the index rather than the data. A database that never raced has nothing here
+ * and the query returns zero rows; one that did needs a person, and the gate
+ * says which log and which position rather than "the bootstrap failed".
+ */
+export function duplicatePositionQuery(log: string): string {
+  return `SELECT log_key, position, count(*) AS n
+          FROM cp_log_${log}
+          GROUP BY log_key, position
+          HAVING count(*) > 1`;
+}
 
 /** The statement that records which version the database is now at. */
 export function recordVersionStatement(version: number, nowIso: string): string {

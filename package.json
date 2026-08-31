@@ -345,7 +345,9 @@
     "zip:governing": "tsx scripts/zip-governing-universe.mts",
     "zip:intersect": "tsx scripts/zip-district-intersect.mts",
     "zip:universe": "tsx scripts/zip-universe.mts",
-    "zipgov:build": "tsx scripts/build-zip-governments.mts"
+    "zipgov:build": "tsx scripts/build-zip-governments.mts",
+    "control-plane:bootstrap": "node --env-file=.env.local --experimental-strip-types scripts/control-plane-bootstrap.mts",
+    "control-plane:proof": "node --env-file=.env.local --experimental-strip-types scripts/control-plane-proof.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

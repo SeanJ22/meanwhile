@@ -264,7 +264,20 @@ export interface ModalSubject {
    * overview (4c) — what the meeting is about, on the surface, not behind a
    * link.
    */
-  agenda?: { meetingId: string; agendaUrl: string | null } | null;
+  agenda?: {
+    meetingId: string;
+    agendaUrl: string | null;
+    /* SWEEP-01: the publisher observation travels to the surface that renders
+       the sentence. Without it the section can only reason from a null link. */
+    agendaSlotObservedEmpty?: boolean;
+    provenance?: {
+      sourceUrl: string | null;
+      sourceOrg: string;
+      collectedAt: string;
+      secondHand?: boolean;
+    };
+    carried?: unknown;
+  } | null;
   /** How to actually speak at it (D25), when the subject is a meeting. */
   commentAccess?: { ocdId: string | null; bodyName: string } | null;
   /**
@@ -836,6 +849,9 @@ export function EntityModal({
                   <AgendaSection
                     meetingId={subject.agenda.meetingId}
                     agendaUrl={subject.agenda.agendaUrl}
+                    agendaSlotObservedEmpty={subject.agenda.agendaSlotObservedEmpty}
+                    provenance={subject.agenda.provenance}
+                    carried={subject.agenda.carried}
                   />
                 </>
               )}

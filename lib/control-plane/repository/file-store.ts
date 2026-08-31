@@ -59,6 +59,8 @@
  */
 
 import { appendFile, link, mkdir, open, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
+import type { FreshnessDebt } from "../scheduler/debt.ts";
+import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import path from "node:path";
 
 import type { Attempt, ExecutionLease } from "../attempt.ts";
@@ -644,6 +646,17 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     workItems: fileAggregateRepository<WorkItem>(resolved, "WorkItem", "work-items"),
     routeTasks: fileAggregateRepository<RouteTask>(resolved, "RouteTask", "route-tasks"),
     attempts: fileAggregateRepository<Attempt>(resolved, "Attempt", "attempts"),
+    obligations: fileAggregateRepository<StandingObligation>(
+      resolved,
+      "StandingObligation",
+      "obligations",
+    ),
+    occurrences: fileAggregateRepository<FreshnessOccurrence>(
+      resolved,
+      "FreshnessOccurrence",
+      "occurrences",
+    ),
+    debts: fileAggregateRepository<FreshnessDebt>(resolved, "FreshnessDebt", "debts"),
     leases: fileAggregateRepository<ExecutionLease>(resolved, "ExecutionLease", "leases"),
     transitions: fileAppendOnlyRepository<RecordedTransition>(resolved, "transitions"),
     escalations: fileAppendOnlyRepository<Escalation>(resolved, "escalations"),

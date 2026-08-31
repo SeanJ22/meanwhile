@@ -15,8 +15,15 @@
  * the fabrication CLAUDE.md's sourcing rule exists to prevent, and it is worse
  * in a fixture than in application code because nothing surfaces it until a
  * reader clicks. These meetings were not read from anywhere, so no URL can
- * honestly cite them: null is the true value, and `meeting-panel.tsx` already
- * renders "No agenda posted yet" for it.
+ * honestly cite them: null is the true value, and the surfaces render a NAMED
+ * GAP for it.
+ *
+ * **And the gap they render is OURS.** (Session B resume, SWEEP-01, 2026-08-31.)
+ * This note used to say `meeting-panel.tsx` "renders 'No agenda posted yet'",
+ * which it did, and which was the defect: a fixture meeting nobody read is the
+ * clearest possible case of a gap that belongs to US. `agendaSentenceFor` now
+ * decides it, and a fixture carries no publisher observation, so it can only
+ * ever produce the OURS sentence — which is the true one.
  *
  * A real permalink may only appear here once someone has actually opened it and
  * added its host to FIXTURE_SOURCE_HOSTS below — which is what makes adding one

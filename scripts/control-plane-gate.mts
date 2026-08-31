@@ -99,9 +99,25 @@ if (!verdict.configured) {
     "  This is a legitimate state and it is NOT a pass on the schema: nothing was read, and " +
       "nothing is claimed. The gate turns hard the moment the variable is set.",
   );
+  /*
+   * WHAT THIS LINE MAY CLAIM CHANGED ON 2026-08-31, so the line changed with it.
+   *
+   * It used to read "RULING 220's cutover proof ... has not been performed",
+   * which was true while no control-plane database existed. It is now false:
+   * `pnpm control-plane:proof` performed all seven conditions against the live
+   * Postgres lane and recorded them. A gate that goes on asserting an
+   * out-of-date fact about our own evidence is doing the same thing this
+   * repository refuses everywhere else.
+   *
+   * What is still true, and is what this says now, is narrower: THIS MACHINE
+   * did not read anything on THIS run.
+   */
   console.log(
-    `  RULING 220's cutover proof — contention from both machines, crash/reclaim on Postgres, ` +
-      "a restore drill — has not been performed. Tracker NH300 carries that escalation.",
+    "  The proof conditions RULING 220 gates cutover on — two-process contention, a real " +
+      "crash and reclaim, a restore drill, the due-time index, and concurrent append-log " +
+      "correctness — WERE performed against the live lane and recorded under " +
+      "data/health/control-plane-proofs/. This run read none of it: an unconfigured machine " +
+      "reports what it can see, and it can see nothing.",
   );
   process.exit(0);
 }

@@ -57,6 +57,7 @@
  */
 
 import {
+  AttemptContract,
   beginAttempt,
   claim,
   endAttempt,
@@ -65,6 +66,7 @@ import {
   release as releaseLease,
   type Attempt,
   type AttemptCost,
+  type AttemptOutcome,
   type ExecutionLease,
   type WorkerRef,
 } from "../attempt.ts";
@@ -481,6 +483,87 @@ export async function reclaimRouteTask(
   }
 
   return { task: persistedTask, closed };
+}
+
+/**
+ * **A LIVING WORKER THAT GAVE UP, WHICH IS NOT A WORKER THAT DIED.**
+ * (Session B resume, W3.A, 2026-08-31.)
+ *
+ * `reclaimRouteTask` above refuses a lease that is still live, and that refusal
+ * is right: death is only ever observed from outside, and a process that can
+ * still tell us something has not died. But that leaves a real case with no
+ * path — a worker that is alive, holds a live lease, and reached no boundary:
+ * a bounded model worker that spent its ceiling, a route that returned nothing
+ * usable, a shadow executor that deliberately performed no retrieval.
+ *
+ * Without this, such a worker had exactly two options and both were wrong. It
+ * could write a terminal disposition it did not earn — which is how a failure
+ * of ours becomes a claim about a government — or it could walk away holding
+ * the lease until the TTL elapsed, so that the NEXT cycle diagnosed a live
+ * worker as a dead one. The second is the shape the resume audit found: WORKED
+ * with no Attempt, then an expired lease with nothing to reclaim.
+ *
+ * So the giving-up is recorded AS giving up. The Attempt closes under a
+ * NON-disposition-bearing outcome, which `mayWriteDisposition` already refuses
+ * to let carry a conclusion; its partial artifacts are preserved and stay
+ * attributed to it; the RouteTask returns to RECLAIMABLE; and the lease is
+ * released now rather than expiring later. The route is owed exactly as much
+ * after this call as before it, which is the property that matters.
+ */
+export async function abandonAttempt(
+  repos: ControlPlaneRepositories,
+  input: {
+    routeTaskId: string;
+    attemptId: string;
+    /** Any outcome except COMPLETED. A conclusion needs `disposeRouteTask`. */
+    outcome: Exclude<AttemptOutcome, "COMPLETED">;
+    /** Named, always. `endAttempt` refuses an unnamed one and so does this. */
+    reason: string;
+    now: string;
+  },
+): Promise<{ readonly task: Persisted<RouteTask>; readonly attempt: Persisted<Attempt> }> {
+  const attemptRow = await repos.attempts.mustRead(input.attemptId);
+  if (attemptRow.value.outcome !== null) {
+    throw new AttemptContract(
+      `Attempt ${input.attemptId} already ended as ${attemptRow.value.outcome}; abandoning it ` +
+        "again would rewrite a settled record.",
+    );
+  }
+
+  const artifacts = await artifactsForAttempt(
+    repos,
+    attemptRow.value.workItemId,
+    attemptRow.value.id,
+  );
+  const closedAttempt = endAttempt(attemptRow.value, input.outcome, input.now, {
+    abortReason: input.reason,
+    artifactIds: artifacts.map((a) => a.artifactId),
+  });
+  const attempt = await repos.attempts.compareAndSet(
+    attemptRow.id,
+    attemptRow.revision,
+    closedAttempt,
+    input.now,
+  );
+
+  const taskRow = await repos.routeTasks.mustRead(input.routeTaskId);
+  const next = reclaim(taskRow.value, closedAttempt);
+  const task =
+    canonicalJson(next) === canonicalJson(taskRow.value)
+      ? taskRow
+      : await repos.routeTasks.compareAndSet(taskRow.id, taskRow.revision, next, input.now);
+
+  const lease = await repos.leases.read(input.routeTaskId);
+  if (lease !== null && !lease.value.released) {
+    await repos.leases.compareAndSet(
+      input.routeTaskId,
+      lease.revision,
+      releaseLease(lease.value),
+      input.now,
+    );
+  }
+
+  return { task, attempt };
 }
 
 /** ---------------------------------------------------------- disposition */

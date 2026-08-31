@@ -1,20 +1,28 @@
 [
   {
-    "id": "Q1",
-    "questionClass": "HAND_AUTHORED_ADVERSARIAL",
-    "templateText": "What actions did the Pima County Board of Supervisors take at its [F3-date] study session?",
-    "placeholders": [],
-    "applicability": {
-      "kind": "PER_ZIP"
-    }
-  },
-  {
     "id": "Q2",
     "questionClass": "HAND_AUTHORED_ADVERSARIAL",
     "templateText": "How did each supervisor vote at the August 25, 2026 meeting?",
     "placeholders": [],
     "applicability": {
-      "kind": "PER_ZIP"
+      "kind": "SPECIFIC_BODY",
+      "zips": [
+        "85701"
+      ],
+      "subject": "Pima County Board of Supervisors"
+    },
+    "expectation": {
+      "kind": "LIST",
+      "subject": "Pima County Board of Supervisors",
+      "subjectId": null,
+      "members": [
+        "Rex Scott",
+        "Matt Heinz",
+        "Jennifer Allen",
+        "Steve Christy",
+        "Andrés Cano"
+      ],
+      "exhaustive": false
     }
   },
   {
@@ -23,7 +31,22 @@
     "templateText": "Who funded the Vail school-board candidate's campaign?",
     "placeholders": [],
     "applicability": {
-      "kind": "PER_ZIP"
+      "kind": "SPECIFIC_BODY",
+      "zips": [
+        "85641"
+      ],
+      "subject": "Vail school-board candidate committee"
+    },
+    "expectation": {
+      "kind": "VALUE",
+      "subject": "Vail school-board candidate committee",
+      "subjectId": null,
+      "value": "$297.86",
+      "acceptedForms": [
+        "297.86",
+        "$297.86",
+        "297.86"
+      ]
     }
   },
   {
@@ -32,7 +55,11 @@
     "templateText": "What outside groups spent money for or against candidates in the Vail school-board race?",
     "placeholders": [],
     "applicability": {
-      "kind": "PER_ZIP"
+      "kind": "SPECIFIC_BODY",
+      "zips": [
+        "85641"
+      ],
+      "subject": "Vail school-board candidate committee"
     }
   },
   {
@@ -41,16 +68,11 @@
     "templateText": "What campaign-finance records exist for the Vail candidate?",
     "placeholders": [],
     "applicability": {
-      "kind": "PER_ZIP"
-    }
-  },
-  {
-    "id": "Q6",
-    "questionClass": "HAND_AUTHORED_ADVERSARIAL",
-    "templateText": "When does the Mesa body (sourced-but-uningested name) meet next?",
-    "placeholders": [],
-    "applicability": {
-      "kind": "PER_ZIP"
+      "kind": "SPECIFIC_BODY",
+      "zips": [
+        "85641"
+      ],
+      "subject": "Vail school-board candidate committee"
     }
   },
   {
@@ -59,7 +81,11 @@
     "templateText": "When does the Morris Hills body (sourced-but-uningested name) meet next?",
     "placeholders": [],
     "applicability": {
-      "kind": "PER_ZIP"
+      "kind": "SPECIFIC_BODY",
+      "zips": [
+        "07866"
+      ],
+      "subject": "the Morris Hills body"
     }
   },
   {
@@ -68,7 +94,10 @@
     "templateText": "Where do I vote if I live in 85641?",
     "placeholders": [],
     "applicability": {
-      "kind": "PER_ZIP"
+      "kind": "SPECIFIC_ZIPS",
+      "zips": [
+        "85641"
+      ]
     }
   },
   {
@@ -77,7 +106,10 @@
     "templateText": "What special districts govern an address in 85641?",
     "placeholders": [],
     "applicability": {
-      "kind": "PER_ZIP"
+      "kind": "SPECIFIC_ZIPS",
+      "zips": [
+        "85641"
+      ]
     }
   }
 ]

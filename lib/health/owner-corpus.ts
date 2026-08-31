@@ -71,8 +71,27 @@ export function excelDay(value: string): string {
 /** One row of the Control facts tab, by header name. */
 export type SheetRow = Readonly<Record<string, string>>;
 
+/**
+ * One loaded row, WITH the workbook id and Notes it came from.
+ *
+ * (Session B resume, W4.) `loaded` alone lost two things the compiler needs.
+ * The ID, because a `ControlFact` carries a statement and not a row id, so
+ * nothing downstream could ask for "F5". And the NOTES, because the owner types
+ * material there that the typed fact has no field for — F5's Notes hold the
+ * five supervisors by name, which is the roster a per-member LIST expectation
+ * must cite rather than derive. Both were dropped on load, so the roster the
+ * owner supplied was invisible to everything that needed it.
+ */
+export interface LoadedRow<T> {
+  readonly id: string;
+  readonly notes: string;
+  readonly value: T;
+}
+
 /** What a load pass found, with every count derived from the rows themselves. */
 export interface CorpusLoad<T> {
+  /** The loaded rows with their workbook id and Notes. Parallel to `loaded`. */
+  readonly rows: readonly LoadedRow<T>[];
   /** Rows that met the stated criteria, before any exclusion. */
   readonly matched: readonly string[];
   /** Rows excluded after matching, with the reason. */
@@ -98,6 +117,7 @@ export function loadControlFacts(rows: readonly SheetRow[]): CorpusLoad<ControlF
   const matched: string[] = [];
   const excluded: { id: string; why: string }[] = [];
   const loaded: ControlFact[] = [];
+  const rows_: LoadedRow<ControlFact>[] = [];
 
   for (const row of rows) {
     const id = (row["ID"] ?? "").trim();
@@ -138,9 +158,16 @@ export function loadControlFacts(rows: readonly SheetRow[]): CorpusLoad<ControlF
           }
         : {}),
     });
+    rows_.push({ id, notes: (row["Notes"] ?? "").trim(), value: loaded[loaded.length - 1] });
   }
 
-  return { matched, excluded, loaded, seen: rows.filter((r) => (r["ID"] ?? "").trim()).length };
+  return {
+    rows: rows_,
+    matched,
+    excluded,
+    loaded,
+    seen: rows.filter((r) => (r["ID"] ?? "").trim()).length,
+  };
 }
 
 /** A question the owner kept, before it becomes a template. */
@@ -158,6 +185,8 @@ export interface KeptQuestion {
    * is an instruction the owner will have to give again.
    */
   readonly ownerAmendment: string | null;
+  /** The workbook's Notes column for this row, kept rather than dropped. */
+  readonly notes: string;
 }
 
 /**
@@ -228,8 +257,15 @@ export function loadKeptQuestions(rows: readonly SheetRow[]): CorpusLoad<KeptQue
       rightAnswer: (row["What the RIGHT answer looks like"] ?? "").trim(),
       ownerEdit: edit,
       ownerAmendment: edit && !replaces ? edit : null,
+      notes: (row["Notes"] ?? "").trim(),
     });
   }
 
-  return { matched, excluded: [], loaded, seen: rows.filter((r) => (r["ID"] ?? "").trim()).length };
+  return {
+    rows: loaded.map((q) => ({ id: q.id, notes: q.notes, value: q })),
+    matched,
+    excluded: [],
+    loaded,
+    seen: rows.filter((r) => (r["ID"] ?? "").trim()).length,
+  };
 }

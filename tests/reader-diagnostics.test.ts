@@ -42,7 +42,22 @@ function instance(over: Partial<ReaderQuestionInstance> = {}): ReaderQuestionIns
   return {
     id: "rq:0123456789abcdef",
     templateId: "Q1",
-    questionClass: "HAND_AUTHORED_ADVERSARIAL",
+    /*
+     * **GENERATED_FROM_REGISTRY, and the default was wrong.**
+     * (Session B resume, W4, 2026-08-31.)
+     *
+     * This factory stamped `HAND_AUTHORED_ADVERSARIAL` while the test below
+     * describes its own instances as "what the registry produced". The
+     * mislabel was invisible for as long as `checkInstanceUniverse` ignored
+     * the class — it compared every instance in the ZIP against the body
+     * denominator regardless of which class had promised one-per-body.
+     *
+     * Now that the check is scoped to the class whose contract that IS, the
+     * fixture has to say what it means. The coverage tests below are about the
+     * NH232 shape — a REGENERATION silently dropping bodies — which is a
+     * property of the generated class and of nothing else.
+     */
+    questionClass: "GENERATED_FROM_REGISTRY",
     zip: "85701",
     subjectBodyId: "wtp-body/pima#governing",
     questionText: "What actions did the board take at its study session?",

@@ -627,8 +627,36 @@ function writeGitState() {
   put("generated", generatedAtEastern());
   put("branch", branch);
 
-  const subject = (rev) => tryRun("git", ["log", "-1", "--format=%s", rev]);
+  const rawSubject = (rev) => tryRun("git", ["log", "-1", "--format=%s", rev]);
   const sha = (rev) => tryRun("git", ["rev-parse", rev]);
+
+  /**
+   * A commit subject is QUOTED, and a date inside one is not this file's claim.
+   *
+   * The post-deploy observer names its own UTC instant in its subject — *"Post
+   * deploy integrity reading: 2026-08-31T01:43Z"* — and after 5pm Phoenix that
+   * instant is tomorrow. The doc-dates hook then refuses the whole commit,
+   * correctly by its own rule and wrongly about this line: nothing here
+   * asserted a date, it repeated one somebody else wrote.
+   *
+   * So a subject carrying a future date gets the inline annotation the hook
+   * accepts, and the annotation says exactly what the line is. Emitted by the
+   * GENERATOR rather than hand-added to the output, because `context.md` and
+   * `git-state.txt` are generated artifacts and RULING 92 forbids editing one.
+   */
+  const FUTURE = /\b(20\d{2})-(\d{2})-(\d{2})\b/;
+  const subject = (rev) => {
+    const text = rawSubject(rev);
+    if (text === null) return null;
+    const found = FUTURE.exec(text);
+    if (!found) return text;
+    /* Only annotate when the date really IS ahead of the stamped day; an old
+       subject with a past date needs nothing and should not carry a comment
+       claiming it is expected-future. */
+    return found[0] > today()
+      ? `${text}   <!-- expected-future: a quoted commit subject, not a date this file asserts -->`
+      : text;
+  };
 
   put("head sha", sha("HEAD") ?? "unknown");
   put("head subject", subject("HEAD") ?? "unknown");

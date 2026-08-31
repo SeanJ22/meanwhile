@@ -78,7 +78,14 @@ for (const sweep of records) {
   const c = countSweep(sweep);
   console.log(
     `  ${sweep.folder} · ${c.filesInventoried} file(s) inventoried · ${c.itemsFound} item(s) — ` +
-      `${c.verifiedFixed} verified fixed, ${c.openBlocked} open with a named blocker, ` +
+      /*
+       * THREE COUNTS, NEVER TWO. (RULING 221.) `openExecutable` is work a
+       * session can finish; `needsSean` is a human gate no amount of session
+       * effort closes. Reporting them as one 'open' number makes a session
+       * read as unfinished for a reason nothing it could do would change.
+       */
+      `${c.verifiedFixed} verified fixed, ${c.openExecutable} open executable, ` +
+      `${c.needsSean} needs Sean (terminal), ` +
       `${c.positivesKept} positive kept, ${c.unidentifiable} unidentifiable`,
   );
   /*
@@ -155,7 +162,8 @@ if (!CHECK && existsSync(FEEDBACK) && records.length > 0) {
     out.push(
       `${c.filesInventoried} file(s) inventoried · ${c.itemsFound} item(s) found · ` +
         `${c.itemsProcessed} processed · ${c.unidentifiable} unidentifiable · ` +
-        `${c.openBlocked} open with a named blocker · ${c.positivesKept} positive kept.`,
+        `${c.openExecutable} open executable · ${c.needsSean} needs Sean (terminal for a ` +
+          `session, and the record obligation stays live) · ${c.positivesKept} positive kept.`,
     );
     out.push("");
     out.push("| Item | Surface | Zip | Class | Disposition | Instances found / fixed | Check |");

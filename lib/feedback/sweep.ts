@@ -56,6 +56,24 @@ export const ITEM_DISPOSITIONS = [
   "POSITIVE_KEPT",
   /** Read, and not identifiable. Carries a best guess and ONE owner question. */
   "UNIDENTIFIABLE",
+  /**
+   * **A HUMAN GATE, AND IT IS TERMINAL FOR A SESSION.** (RULING 221.)
+   *
+   * The row needs a decision, an account, a credential or an authorisation the
+   * machine may not grant. It is NOT open executable work: no amount of session
+   * effort changes it, and reporting it as merely "open" makes a session look
+   * unfinished for a reason nothing it could do would close.
+   *
+   * This does not weaken RULING 208. *NEEDS SEAN never closes, pauses or
+   * satisfies the obligation the row is about* — the record obligation stays
+   * live on the frontier. What terminates is the row's status WITHIN a
+   * session's denominator, and the obligation and the denominator are different
+   * objects.
+   *
+   * `needsOwner` below is required on it, because a gate nobody can act on is
+   * not a gate.
+   */
+  "NEEDS_SEAN",
 ] as const;
 export type ItemDisposition = (typeof ITEM_DISPOSITIONS)[number];
 
@@ -96,6 +114,26 @@ export interface SweptItem {
   readonly checkResult: string | null;
   /** Required on OPEN_BLOCKED and on UNIDENTIFIABLE. The exact blocker/question. */
   readonly blocker: string | null;
+  /**
+   * Required on NEEDS_SEAN, and every field of it is load-bearing. (RULING 221.)
+   *
+   * A human gate that does not say what was tried reads as work nobody
+   * attempted; one that does not name the authorisation cannot be acted on; one
+   * that does not say what continues without it invites the whole hunt to stop
+   * on a single lock, which the acquisition doctrine forbids by name.
+   */
+  readonly needsOwner?: {
+    /** What the machine actually did before concluding it could not proceed. */
+    readonly tried: string;
+    /** Why the machine may not take the next step itself. */
+    readonly whyMachineCannot: string;
+    /** Exactly what the owner must grant or decide. One sentence, actionable. */
+    readonly authorizationRequired: string;
+    /** What work continues meanwhile. One blocked row never freezes the rest. */
+    readonly continuesWithout: string;
+    /** How many other rows are waiting behind this one. */
+    readonly blockedDescendants: number;
+  } | null;
 }
 
 export interface SweepRecord {
@@ -126,6 +164,27 @@ export function validateSweep(sweep: SweepRecord): string[] {
     }
     /* A blocked item without a named blocker is a silent defer wearing a
        status. That is the shape this whole module exists to refuse. */
+    if (item.disposition === "NEEDS_SEAN") {
+      const n = item.needsOwner;
+      if (!n) {
+        problems.push(
+          `${item.id} is NEEDS_SEAN with no \`needsOwner\` block. RULING 221 makes this state ` +
+            "TERMINAL for a session, and a terminal state with no stated authorisation is a row " +
+            "that has been set aside rather than escalated.",
+        );
+      } else {
+        for (const [field, value] of [
+          ["tried", n.tried],
+          ["whyMachineCannot", n.whyMachineCannot],
+          ["authorizationRequired", n.authorizationRequired],
+          ["continuesWithout", n.continuesWithout],
+        ] as const) {
+          if (!String(value ?? "").trim()) {
+            problems.push(`${item.id} is NEEDS_SEAN with an empty \`needsOwner.${field}\`.`);
+          }
+        }
+      }
+    }
     if (
       (item.disposition === "OPEN_BLOCKED" || item.disposition === "UNIDENTIFIABLE") &&
       !item.blocker
@@ -214,6 +273,10 @@ export interface SweepCounts {
   readonly positivesKept: number;
   readonly instancesFound: number;
   readonly instancesFixed: number;
+  /** Rows the machine could still work. Only this reaching zero finishes a session. */
+  readonly openExecutable: number;
+  /** Rows terminal on a human gate. Never counted as open executable work. */
+  readonly needsSean: number;
 }
 
 export function countSweep(sweep: SweepRecord): SweepCounts {
@@ -226,6 +289,16 @@ export function countSweep(sweep: SweepRecord): SweepCounts {
     unidentifiable: by("UNIDENTIFIABLE"),
     reportedDefects: sweep.items.filter((i) => i.disposition !== "POSITIVE_KEPT").length,
     verifiedFixed: by("FIXED_VERIFIED"),
+    /*
+     * **OPEN_EXECUTABLE AND NEEDS_SEAN ARE COUNTED SEPARATELY.** (RULING 221.)
+     *
+     * A single "open" number collapses "the machine could do this and has not"
+     * with "a human must decide this", and only the first is work a session can
+     * finish. Reporting them together is the reporting defect RULING 180's own
+     * logic names: three independent statuses, and confusing them is a defect.
+     */
+    openExecutable: by("OPEN_BLOCKED"),
+    needsSean: by("NEEDS_SEAN"),
     openBlocked: by("OPEN_BLOCKED"),
     positivesKept: by("POSITIVE_KEPT"),
     instancesFound: sweep.items.reduce((n, i) => n + i.instancesFound, 0),

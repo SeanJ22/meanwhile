@@ -308,13 +308,20 @@
       "reported": "Body count mismatch — 7 reported, 6 listed",
       "correctState": "The Bodies here count and the Who Governs Here list state the same number of governing bodies for one zip.",
       "failureClass": "linkage",
-      "disposition": "OPEN_BLOCKED",
+      "disposition": "NEEDS_SEAN",
       "workItemId": "wi:feedback:8.30.26:WGH-20",
       "instancesFound": 0,
       "instancesFixed": 0,
       "checkId": null,
       "checkResult": null,
-      "blocker": "The owner's own sheet marks this row PENDING — the only row with no screenshot — and instructs reproducing at 85641 first. Reproduced at 85641 in this session the panel reports 9 governing bodies and renders 9 rows, so the 7-versus-6 state the owner saw did not reproduce on this build. Left open rather than closed: a defect that does not reproduce is not a defect that is absent, and the owner has not yet supplied the capture that would place it."
+      "blocker": null,
+      "needsOwner": {
+        "tried": "Reproduced at 85641 on this build. The panel reports 9 governing bodies and renders 9 rows — the 7-versus-6 mismatch the owner saw does not appear. Both numbers come from one derivation, so there is no second source to reconcile against.",
+        "whyMachineCannot": "A defect that does not reproduce cannot be fixed without knowing what it looked like. The owner's own sheet marks this row PENDING and it is the only row in the sweep with no screenshot. Changing the count logic on a guess would be editing working code against an unreproduced report — and a defect that does not reproduce is not a defect that is absent, so it is not closed either.",
+        "authorizationRequired": "The capture the owner saw, or the address/date that produced the 7-versus-6 state, so it can be placed against a build.",
+        "continuesWithout": "Every other Who Governs Here row is worked. A permanent check now pins the count and the rendered rows to one number, so a future divergence is caught rather than reported.",
+        "blockedDescendants": 0
+      }
     },
     {
       "id": "WGH-21",
@@ -534,13 +541,20 @@
       "reported": "No legislative record captured for the governor",
       "correctState": "Bills signed and vetoed by a sitting executive are held and rendered as their record in office.",
       "failureClass": "acquisition",
-      "disposition": "OPEN_BLOCKED",
+      "disposition": "NEEDS_SEAN",
       "workItemId": "wi:feedback:8.30.26:BAL-36",
       "instancesFound": 0,
       "instancesFixed": 0,
       "checkId": null,
       "checkResult": null,
-      "blocker": "An acquisition obligation: no source in lib/sources/ collects executive action records. Needs a source decision (an ask-before under CLAUDE.md) before an adapter is written. Second session reported."
+      "blocker": null,
+      "needsOwner": {
+        "tried": "Audited lib/sources/ for any adapter collecting executive action records — bills signed, vetoed, executive orders. There is none, and no held corpus carries the class: the Ask engine can only answer a question about a governor's record as a gap because there is nothing to answer it from.",
+        "whyMachineCannot": "Adding an external source is on CLAUDE.md's ask-before list by name. Choosing which publisher to take executive action records from is a source decision, and this product's sourcing rule reserves it to the author.",
+        "authorizationRequired": "Approval to add a source for state executive action records, and which publisher it should be — the Arizona Secretary of State's bill history, the Governor's own office, or another.",
+        "continuesWithout": "The governor renders with a NAMED GAP attributed to us rather than an invented record, which is the honest state. Every other ballot row proceeds.",
+        "blockedDescendants": 0
+      }
     },
     {
       "id": "BAL-37",
@@ -556,13 +570,20 @@
       "reported": "No address autocomplete",
       "correctState": "The address field suggests as the reader types.",
       "failureClass": "rendering",
-      "disposition": "OPEN_BLOCKED",
+      "disposition": "NEEDS_SEAN",
       "workItemId": "wi:feedback:8.30.26:BAL-37",
       "instancesFound": 0,
       "instancesFixed": 0,
       "checkId": null,
       "checkResult": null,
-      "blocker": "Autocomplete needs a suggestion source. The Census geocoder the app already uses has no typeahead endpoint, so this is a source decision rather than a wiring one, and it is an ask-before if it means adding an external source."
+      "blocker": null,
+      "needsOwner": {
+        "tried": "Checked what could serve typeahead from data already held. The Census geocoder the app uses has no typeahead endpoint; data/voting-sites.json and the ZCTA store hold points and polygons, not an address universe. Suggesting from our own partial data would offer a reader a list that silently excludes addresses we simply do not hold, which is a coverage gap wearing an autocomplete.",
+        "whyMachineCannot": "A real address typeahead needs an external suggestion source, which is an ask-before under CLAUDE.md. It also carries a privacy question the collection rules reserve to the author: a typeahead sends partial addresses to a third party as the reader types.",
+        "authorizationRequired": "Approval to add an address-suggestion source, and which one — with a decision about whether partial addresses may leave this product as the reader types.",
+        "continuesWithout": "The address field accepts and geocodes a typed address today. BAL-38, the out-of-zip redirect on that same field, is worked independently.",
+        "blockedDescendants": 0
+      }
     },
     {
       "id": "BAL-38",
@@ -804,7 +825,7 @@
       "blocker": "Not worked this session. The disclosure rows added for WGH-18 are clickable; the districts named inside an Ask ANSWER are not."
     }
   ],
-  "resweptAt": "2026-08-31T15:03:59.751Z",
+  "resweptAt": "2026-08-31T15:42:39.611Z",
   "resweptBy": "Session B (resume), 2026-08-31",
-  "reswepNote": "Session B resume. Four rows moved. The counts below are over the 35 rows this sweep originally recorded; nothing was added and nothing was removed."
+  "reswepNote": "Session B closure pass. Reconciled under RULING 221: every row ends FIXED_VERIFIED, OPEN_EXECUTABLE or NEEDS_SEAN, and the three are counted separately. NEEDS_SEAN is terminal for this session and is never reported as open executable work; the record obligation each one names stays live on the frontier."
 }

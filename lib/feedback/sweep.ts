@@ -309,6 +309,9 @@ const VISUAL_CHECKS_PATH = "data/health/visual-checks.json";
 const READER_QUESTIONS_PATH = "data/health/reader-questions.json";
 const WALK_CHECKS_PATH = "docs/walk-checks.txt";
 
+/** Both tracker stores. A row the owner already resolved is still a row they saw. */
+const TRACKER_STORES = ["docs/tracker-working.csv", "docs/tracker-resolved.csv"];
+
 export function resolveCheckId(checkId: string, world: CheckWorld): CheckResolution {
   const id = checkId.trim();
   if (!id) return { resolved: false, reason: "the check id is empty" };
@@ -455,6 +458,38 @@ export function checkSweepGate(
           );
         }
       }
+      /*
+       * **A NEEDS_SEAN ROW THE OWNER CANNOT SEE IS NOT AN ESCALATION.**
+       * (The author's directive, 2026-08-31.)
+       *
+       * The owner could not see a single NEEDS_SEAN row: they lived only in
+       * `data/feedback/sweeps/*.json` and `feedback/SWEPT.md`, neither of which
+       * is where they look. A gate that is terminal for a session and invisible
+       * to the one person who can clear it is a deferral wearing a status —
+       * which is the exact shape this whole module refuses everywhere else.
+       *
+       * So the row must exist where the owner already reads. The match is on
+       * the sweep id at the head of a tracker title, which is how
+       * `scripts/tracker.mjs add` was fed, and it reads BOTH stores: a row the
+       * owner has already resolved is still a row they saw.
+       */
+      for (const item of sweep.items) {
+        if (item.disposition !== "NEEDS_SEAN") continue;
+        const inTracker = TRACKER_STORES.some((store) => {
+          const csv = world.read(store);
+          return csv !== null && csv.includes(`"${item.id} —`);
+        });
+        if (!inTracker) {
+          problems.push(
+            `${item.id} is NEEDS_SEAN and has no row in the owner-facing tracker. It is ` +
+              "terminal for a session (RULING 221) and only the owner can clear it, so a row " +
+              "they cannot see is a deferral wearing a status. Add it with " +
+              "`node scripts/tracker.mjs add <rows.json>` under the `needs-sean` section, " +
+              `titled "${item.id} — <what the owner met>".`,
+          );
+        }
+      }
+
       for (const debt of sweep.checkDebt ?? []) {
         if (!seen.has(debt.itemId)) {
           problems.push(

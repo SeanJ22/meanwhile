@@ -299,3 +299,95 @@ test("THE REAL RECORD: every cited check either resolves or is named in the debt
   const verdict = checkSweepGate([], [record], real);
   assert.deepEqual(verdict.problems, []);
 });
+
+/* ==========================================================================
+ * A NEEDS_SEAN ROW THE OWNER CANNOT SEE (the author's directive, 2026-08-31)
+ * ======================================================================= */
+
+const TRACKER_WORLD = {
+  ...WORLD,
+  read: (p: string) => {
+    if (p === "docs/tracker-working.csv") {
+      return '"ID","Section","Title"\n"OWN01","needs-sean","X-1 — something the owner met"\n';
+    }
+    if (p === "docs/tracker-resolved.csv") return '"ID","Section","Title"\n';
+    return WORLD.read(p);
+  },
+};
+
+test("SEEDED: a NEEDS_SEAN row with no tracker entry FAILS the gate", () => {
+  /*
+   * The owner could not see a single NEEDS_SEAN row: they lived in the sweep
+   * JSON and in SWEPT.md, and in neither of the two places the owner reads. A
+   * gate that is terminal for a session and invisible to the one person who
+   * can clear it is a deferral wearing a status.
+   */
+  const orphan = sweep({
+    items: [
+      item({
+        id: "UNSEEN-9",
+        disposition: "NEEDS_SEAN",
+        checkId: null,
+        needsOwner: {
+          tried: "t",
+          whyMachineCannot: "w",
+          authorizationRequired: "a",
+          continuesWithout: "c",
+          blockedDescendants: 0,
+        },
+      }),
+    ],
+  });
+  const verdict = checkSweepGate(["8.30.26"], [orphan], TRACKER_WORLD);
+  assert.equal(verdict.passed, false);
+  assert.match(verdict.problems.join(" "), /UNSEEN-9 is NEEDS_SEAN and has no row/);
+  assert.match(verdict.problems.join(" "), /deferral wearing a status/);
+});
+
+test("a NEEDS_SEAN row the owner CAN see passes", () => {
+  const seen = sweep({
+    items: [
+      item({
+        id: "X-1",
+        disposition: "NEEDS_SEAN",
+        checkId: null,
+        needsOwner: {
+          tried: "t",
+          whyMachineCannot: "w",
+          authorizationRequired: "a",
+          continuesWithout: "c",
+          blockedDescendants: 0,
+        },
+      }),
+    ],
+  });
+  const verdict = checkSweepGate(["8.30.26"], [seen], TRACKER_WORLD);
+  assert.equal(verdict.passed, true, verdict.problems.join("; "));
+});
+
+test("THE REAL RECORD: every NEEDS_SEAN row is published where the owner reads", () => {
+  const path = "data/feedback/sweeps/8.30.26.json";
+  if (!existsSync(path)) return;
+  const record = JSON.parse(readFileSync(path, "utf8")) as SweepRecord;
+  const real = {
+    exists: (p: string) => existsSync(p),
+    read: (p: string) => {
+      try {
+        return readFileSync(p, "utf8");
+      } catch {
+        return null;
+      }
+    },
+    packageScripts: (
+      JSON.parse(readFileSync("package.json", "utf8")) as { scripts?: Record<string, string> }
+    ).scripts ?? {},
+  };
+  const verdict = checkSweepGate([], [record], real);
+  const unpublished = verdict.problems.filter((p) => /has no row in the owner-facing tracker/.test(p));
+  assert.deepEqual(unpublished, []);
+  // And there is at least one, so this cannot pass by there being none.
+  assert.ok(
+    record.items.some((i) => i.disposition === "NEEDS_SEAN"),
+    "no NEEDS_SEAN row in the record — the assertion above checked nothing",
+  );
+});

@@ -350,7 +350,8 @@
     "control-plane:proof": "node --env-file=.env.local --experimental-strip-types scripts/control-plane-proof.mts",
     "rollcall:walk": "tsx scripts/pima-rollcall-walk.mts",
     "verify:ask-controls": "tsx scripts/verify-ask-controls.mts",
-    "verify:agenda-sentence": "tsx scripts/verify-agenda-sentence.mts"
+    "verify:agenda-sentence": "tsx scripts/verify-agenda-sentence.mts",
+    "model:proof": "tsx scripts/model-worker-proof.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

@@ -1267,3 +1267,104 @@ session's own hypothesis.
 - **Generalises:** wherever two official publishers cover the same universe,
   which is common for legislative bodies and rare for special districts. Its
   reach is a property of the SUBJECT rather than of the state.
+
+## SB0831 · 2026-08-31
+
+Five routes that did not exist at session start, and two of them returned an
+answer about a GOVERNMENT rather than about us — which is the outcome this log
+exists to keep visible, because it is the one a session is tempted not to look
+for.
+
+### The New Hampshire General Court's own member photo, at its own resolution
+
+- **Conceived:** from OFF-8, the owner's *photo resolution too low for the
+  display*. The row's blocker required a measurement before any fix, and the
+  measurement produced a list of 144 under-resolved portraits — of which 129
+  came from one publisher. A list attributed to one publisher is a question
+  about that publisher, not about our pipeline, and asking it is the whole
+  rung.
+- **Query:** `https://gc.nh.gov/house/members/member.aspx?member=376521`, then
+  the `img#pageBody_imgMember` it names —
+  `https://gc.nh.gov/house/images/memberpics/376521.jpg`.
+- **Returned:** the page carries exactly one member image, at
+  `style="width:150px"`, and **the file behind it is 101×152 — byte-identical
+  in dimensions to the copy we already hold.** So we are not down-sampling
+  anything: the General Court publishes its members' portraits at that size,
+  and 129 of our 144 shortfalls are that fact.
+- **Generalises:** to any publisher whose thumbnail IS its original. The rung
+  is *fetch the publisher's own asset and compare it to yours before concluding
+  your pipeline lost resolution*, and it answered a question about THEM. Its
+  reach beyond gc.nh.gov is UNKNOWN — one publisher measured.
+
+### A CMS thumbnail whose original is four times larger, behind no parameter
+
+- **Conceived:** the same measurement, the other tail. Five of the 144 came
+  from `tucsonaz.gov` and the recorded source was a page rather than an asset,
+  which is the shape that usually means a page-rendered crop.
+- **Query:** the assets named on
+  `https://www.tucsonaz.gov/Government/Mayor-Council-and-City-Manager` — e.g.
+  `.../government/ward1/images/lane-santa-cruz_1.jpg` — fetched with the
+  page's own `?dimension=u`, and then with `?dimension=original`,
+  `?width=1200`, `?dimension=hero` and **with no query string at all**.
+- **Returned:** **480×720 and 39,622 bytes on every one of the six**,
+  including the bare URL. The dimension parameter does nothing; the origin
+  serves the original unconditionally. We hold 150×150, so this is a
+  down-sampled copy of a publicly available original — a real acquisition, and
+  the only one of the four publishers where a larger file exists to get.
+- **Generalises:** wherever a `sharedassets/public/v/N/` path appears with a
+  `dimension` query — the pattern is a CMS convention rather than a Tucson one.
+  Recorded UNKNOWN: one origin tested, six parameter forms, one result.
+
+### Two more publishers asked the same question, and answered it their way
+
+- **Conceived:** the same rung, applied to the remaining two of the four
+  publishers in the shortfall, so the finding is a census rather than two
+  anecdotes.
+- **Query:** `https://govboard.tusd1.org/` and
+  `https://www.njleg.state.nj.us/legislative-roster/423/assemblyman-bergen`,
+  each followed to the portraits they name.
+- **Returned:** TUSD serves `_theme/images/Board Members/*.jpg` at **117×160**,
+  which is what we hold. The NJ roster page carries **one image and it is an
+  OPRA banner** — `pub.njleg.gov/imgs/opra.png`, 166×45 — so the member
+  portrait is not an `<img src>` on that page at all and the four NJ shortfalls
+  cannot be re-fetched from the route we recorded. **That is a finding, not a
+  failure:** the recorded source page does not serve the asset, so the next
+  rung for those four is a different representation, and it is owed.
+- **Generalises:** to the general rule that a recorded SOURCE PAGE is not a
+  recorded ASSET ROUTE. Portable — it is about our own provenance shape, not
+  about New Jersey.
+
+### The address the owner typed does not resolve without its house number
+
+- **Conceived:** from WGH-22. Driving the owner's own scenario meant typing
+  their own address, and the product's street-only form refused it.
+- **Query:** `POST /api/address/resolve` at 85641 for
+  `South Bear Table Tank Drive` with and without `houseNumber: "10723"`, plus
+  four abbreviation variants (`S Bear Table Tank Dr`, `Bear Table Tank`, …).
+- **Returned:** every street-only form is `FAILED / NOT_FOUND` — including the
+  full one. **With the house number the same street resolves completely**:
+  `sldl:17`, `sldu:17`, `cd:6`, Vail, Vail Unified, Pima, and 23 contest ids.
+  So the Census geocoder does not know this street as a range and does know the
+  address, and the UI's ask-for-a-number-only-when-ambiguous rule never fires
+  for it — the reader is told we could not place their street while the
+  resolver would have placed their house.
+- **Generalises:** to any street the Census carries only at the address level,
+  which is common on rural and named-feature roads. Portable and recorded as a
+  reader-facing gap rather than closed here.
+
+### The model half of the cost ledger, walked once
+
+- **Conceived:** the owner authorized one bounded model-worker run to prove
+  provider identity, provider-reported usage and computed cost on a persisted
+  Attempt. Every `BOUNDED_MODEL_WORKER` Attempt in this repository's history
+  was a lane label over work no model did.
+- **Query:** `POST https://api.anthropic.com/v1/messages`, `claude-opus-5`,
+  `max_tokens: 256`, `effort: low`, one echo prompt, no tools — dispatched
+  through `dispatchOne` so the control plane opened, leased, closed and costed
+  the Attempt.
+- **Returned:** `WORKED`. The persisted Attempt carries
+  `provider: anthropic`, `version: claude-opus-5`, **54 input tokens and 24
+  output tokens as the provider reported them**, and `usd 0.000870` computed
+  from those counts at a dated rate. One run, $0.00087.
+- **Generalises:** to every future model lane, because the proof is of the
+  PATH rather than of the prompt. Portable.

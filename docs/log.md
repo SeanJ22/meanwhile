@@ -921,9 +921,157 @@ WHAT THE FAILING RUN PRINTED (run 32961466707). The last 14 of 257 line(s) the r
 
 ## job-watch · 2026-08-22
 
-**What it started.** 18 row(s) opened, 1 still open.
+**What it started.** 29 row(s) opened, 12 still open.
 
 - **JOB03** — The scheduled job refresh-meetings-snapshot.yml failed on two CONSECUTIVE runs (32372995194 and 32342602616), both at: Validate before committing, and has since gone green on its own. It is not broken right now. Nobody found out why it broke, so the next occurrence starts from the same nothing — which is why this is a row rather than a shrug. This watcher runs once a day and used to read only the two most recent runs, so a double failure that healed in between was invisible to it (NJ Hunt 3 item 1c). Over its last 40 completed runs it has failed 17 time(s). Two consecutive failures is evidence the cause is ours rather than a host refusing on a schedule — a wall would not usually repeat exactly. RULING 56 opens this automatically so a degrading data path is not a page nobody watches. [job-watch:refresh-meetings-snapshot.yml] *(open)*
+- **JOB19** — The scheduled job refresh-daily.yml failed on two CONSECUTIVE runs (32955499285 and 32833989579), both at: Commit, and has since gone green on its own. It is not broken right now. Nobody found out why it broke, so the next occurrence starts from the same nothing — which is why this is a row rather than a shrug. This watcher runs once a day and used to read only the two most recent runs, so a double failure that healed in between was invisible to it (NJ Hunt 3 item 1c). Over its last 15 completed runs it has failed 8 time(s). Two consecutive failures is evidence the cause is ours rather than a host refusing on a schedule — a wall would not usually repeat exactly. RULING 56 opens this automatically so a degrading data path is not a page nobody watches. 
+
+OPERATIONAL INCIDENT (RULING 218): this is engineering work, not an owner decision. The standing class incident is WorkItem incident-scheduled-run-failures in data/control-plane/incidents.
+
+WHAT THE FAILING RUN PRINTED (run 32955499285). The line(s) that NAME the failure:
+  !   agenda fetch failed for legistar:pima:1803: Error: HTTP 404 for https://legistar.granicus.com/pima/meetings/2026/6/1803_A_Board_of_Supervisors_26-06-09_Online_Agenda.pdf
+  !   agenda fetch failed for legistar:pima:1817: Error: HTTP 404 for https://legistar.granicus.com/pima/meetings/2026/6/1817_A_Board_of_Supervisors_26-06-23_Online_Agenda.pdf
+  !   agenda fetch failed for legistar:pima:1821: Error: HTTP 404 for https://legistar.granicus.com/pima/meetings/2026/7/1821_A_Board_of_Supervisors_26-07-14_Online_Agenda.pdf
+  !   REFUSED rows (no division)     0, across 0 named jurisdiction/office pair(s)
+  !   276 built + 0 refused = 276 vs 276 read  (accounted)
+
+The last 14 of 3208 line(s) the run printed:
+  |  ! [remote rejected] HEAD -> main (protected branch hook declined)
+  | error: failed to push some refs to 'https://github.com/SeanJ22/We-The-People'
+  | push-main: rebased onto origin/main, retrying
+  | push-main: FAILED — push to main still rejected after 5 attempts
+  | push-main: attempt 5 of 5 rejected — remote: error: GH006: Protected branch update failed for refs/heads/main.
+  | push-main: the commit made by this run has NOT landed on main. This run is red on purpose; it did not exit zero having lost its work.
+  | remote:
+  | remote: - Changes must be made through a pull request.
+  | remote:
+  | remote: - 3 of 3 required status checks are expected.
+  | To https://github.com/SeanJ22/We-The-People
+  |  ! [remote rejected] HEAD -> main (protected branch hook declined)
+  | error: failed to push some refs to 'https://github.com/SeanJ22/We-The-People'
+  | ##[error]Process completed with exit code 1.
+
+[job-watch:refresh-daily.yml] *(open)*
+- **JOB20** — The scheduled job intake-tripwire.yml failed on two CONSECUTIVE runs (32961466707 and 32840268606), both at: Commit the report if changed, and has since gone green on its own. It is not broken right now. Nobody found out why it broke, so the next occurrence starts from the same nothing — which is why this is a row rather than a shrug. This watcher runs once a day and used to read only the two most recent runs, so a double failure that healed in between was invisible to it (NJ Hunt 3 item 1c). Over its last 20 completed runs it has failed 5 time(s). Two consecutive failures is evidence the cause is ours rather than a host refusing on a schedule — a wall would not usually repeat exactly. RULING 56 opens this automatically so a degrading data path is not a page nobody watches. 
+
+OPERATIONAL INCIDENT (RULING 218): this is engineering work, not an owner decision. The standing class incident is WorkItem incident-scheduled-run-failures in data/control-plane/incidents.
+
+WHAT THE FAILING RUN PRINTED (run 32961466707). The last 14 of 257 line(s) the run printed:
+  |  ! [remote rejected] HEAD -> main (protected branch hook declined)
+  | error: failed to push some refs to 'https://github.com/SeanJ22/We-The-People'
+  | push-main: rebased onto origin/main, retrying
+  | push-main: FAILED — push to main still rejected after 5 attempts
+  | push-main: attempt 5 of 5 rejected — remote: error: GH006: Protected branch update failed for refs/heads/main.
+  | push-main: the commit made by this run has NOT landed on main. This run is red on purpose; it did not exit zero having lost its work.
+  | remote:
+  | remote: - Changes must be made through a pull request.
+  | remote:
+  | remote: - 3 of 3 required status checks are expected.
+  | To https://github.com/SeanJ22/We-The-People
+  |  ! [remote rejected] HEAD -> main (protected branch hook declined)
+  | error: failed to push some refs to 'https://github.com/SeanJ22/We-The-People'
+  | ##[error]Process completed with exit code 1.
+
+[job-watch:intake-tripwire.yml] *(open)*
+- **JOB21** — AUDITED SLOT: 2026-08-29T10:41:00.000Z (cron "41 10 * * *"). AS OF: 2026-08-31T21:02:35.110Z. Run 33259827640 was created 276.1 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
+
+WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_SUCCEEDED_UNCLASSIFIED — it succeeded, and this workflow has no "Unchanged" step, so landed-versus-no-op cannot be told apart from its step list. That is a limit of the observation, not a claim that nothing landed. 
+
+ENVELOPE USED: envelope 472 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (472 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
+
+THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-08-31T21:02:35.110Z, not as of when you are reading it.
+
+OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
+
+[job-watch:dispatch-delay:intake-tripwire.yml@2026-08-29T10:41:00.000Z] *(open)*
+- **JOB22** — AUDITED SLOT: 2026-08-30T10:41:00.000Z (cron "41 10 * * *"). AS OF: 2026-08-31T21:02:35.110Z. Run 33318287070 was created 256.6 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
+
+WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_SUCCEEDED_UNCLASSIFIED — it succeeded, and this workflow has no "Unchanged" step, so landed-versus-no-op cannot be told apart from its step list. That is a limit of the observation, not a claim that nothing landed. 
+
+ENVELOPE USED: envelope 472 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (472 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
+
+THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-08-31T21:02:35.110Z, not as of when you are reading it.
+
+OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
+
+[job-watch:dispatch-delay:intake-tripwire.yml@2026-08-30T10:41:00.000Z] *(open)*
+- **JOB23** — AUDITED SLOT: 2026-08-31T10:41:00.000Z (cron "41 10 * * *"). AS OF: 2026-08-31T21:02:35.110Z. Run 33420942908 was created 420.6 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
+
+WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_SUCCEEDED_UNCLASSIFIED — it succeeded, and this workflow has no "Unchanged" step, so landed-versus-no-op cannot be told apart from its step list. That is a limit of the observation, not a claim that nothing landed. 
+
+ENVELOPE USED: envelope 472 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (472 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
+
+THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-08-31T21:02:35.110Z, not as of when you are reading it.
+
+OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
+
+[job-watch:dispatch-delay:intake-tripwire.yml@2026-08-31T10:41:00.000Z] *(open)*
+- **JOB24** — AUDITED SLOT: 2026-08-29T15:40:00.000Z (cron "40 15 * * *"). AS OF: 2026-08-31T21:02:35.110Z. Run 33269223180 was created 187.9 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
+
+WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_SUCCEEDED_UNCLASSIFIED — it succeeded, and this workflow has no "Unchanged" step, so landed-versus-no-op cannot be told apart from its step list. That is a limit of the observation, not a claim that nothing landed. 
+
+ENVELOPE USED: envelope 472 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (472 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
+
+THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-08-31T21:02:35.110Z, not as of when you are reading it.
+
+OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
+
+[job-watch:dispatch-delay:job-watch.yml@2026-08-29T15:40:00.000Z] *(open)*
+- **JOB25** — AUDITED SLOT: 2026-08-30T15:40:00.000Z (cron "40 15 * * *"). AS OF: 2026-08-31T21:02:35.110Z. Run 33329026985 was created 186.5 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
+
+WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_SUCCEEDED_UNCLASSIFIED — it succeeded, and this workflow has no "Unchanged" step, so landed-versus-no-op cannot be told apart from its step list. That is a limit of the observation, not a claim that nothing landed. 
+
+ENVELOPE USED: envelope 472 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (472 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
+
+THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-08-31T21:02:35.110Z, not as of when you are reading it.
+
+OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
+
+[job-watch:dispatch-delay:job-watch.yml@2026-08-30T15:40:00.000Z] *(open)*
+- **JOB26** — AUDITED SLOT: 2026-08-31T15:40:00.000Z (cron "40 15 * * *"). AS OF: 2026-08-31T21:02:35.110Z. Run 33439204288 was created 322.1 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
+
+WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_IN_PROGRESS — status is "in_progress" — it has not concluded 
+
+ENVELOPE USED: envelope 472 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (472 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
+
+THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-08-31T21:02:35.110Z, not as of when you are reading it.
+
+OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
+
+[job-watch:dispatch-delay:job-watch.yml@2026-08-31T15:40:00.000Z] *(open)*
+- **JOB27** — AUDITED SLOT: 2026-08-29T09:11:00.000Z (cron "11 9 * * *"). AS OF: 2026-08-31T21:02:35.110Z. Run 33257619366 was created 315.7 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
+
+WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_SUCCEEDED_UNCLASSIFIED — it succeeded, and this workflow has no "Unchanged" step, so landed-versus-no-op cannot be told apart from its step list. That is a limit of the observation, not a claim that nothing landed. 
+
+ENVELOPE USED: envelope 472 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (472 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
+
+THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-08-31T21:02:35.110Z, not as of when you are reading it.
+
+OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
+
+[job-watch:dispatch-delay:refresh-daily.yml@2026-08-29T09:11:00.000Z] *(open)*
+- **JOB28** — AUDITED SLOT: 2026-08-30T09:11:00.000Z (cron "11 9 * * *"). AS OF: 2026-08-31T21:02:35.110Z. Run 33316760622 was created 313.1 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
+
+WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_SUCCEEDED_UNCLASSIFIED — it succeeded, and this workflow has no "Unchanged" step, so landed-versus-no-op cannot be told apart from its step list. That is a limit of the observation, not a claim that nothing landed. 
+
+ENVELOPE USED: envelope 472 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (472 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
+
+THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-08-31T21:02:35.110Z, not as of when you are reading it.
+
+OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
+
+[job-watch:dispatch-delay:refresh-daily.yml@2026-08-30T09:11:00.000Z] *(open)*
+- **JOB29** — AUDITED SLOT: 2026-08-31T09:11:00.000Z (cron "11 9 * * *"). AS OF: 2026-08-31T21:02:35.110Z. Run 33417346585 was created 471 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
+
+WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_SUCCEEDED_UNCLASSIFIED — it succeeded, and this workflow has no "Unchanged" step, so landed-versus-no-op cannot be told apart from its step list. That is a limit of the observation, not a claim that nothing landed. 
+
+ENVELOPE USED: envelope 472 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (472 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
+
+THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-08-31T21:02:35.110Z, not as of when you are reading it.
+
+OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
+
+[job-watch:dispatch-delay:refresh-daily.yml@2026-08-31T09:11:00.000Z] *(open)*
 
 **Needs Sean.** Nothing.
 

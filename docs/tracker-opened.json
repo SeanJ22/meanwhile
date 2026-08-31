@@ -2161,5 +2161,22 @@
       "OWN05",
       "OWN06"
     ]
+  },
+  {
+    "session": "job-watch",
+    "opened": "2026-08-31",
+    "ids": [
+      "JOB19",
+      "JOB20",
+      "JOB21",
+      "JOB22",
+      "JOB23",
+      "JOB24",
+      "JOB25",
+      "JOB26",
+      "JOB27",
+      "JOB28",
+      "JOB29"
+    ]
   }
 ]

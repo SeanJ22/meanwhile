@@ -18,7 +18,7 @@ One scheduled run a day, one commit at most, and nothing committed when nothing 
 
 ## Which days this run answered for
 
-Last landed refresh: docs/refresh-run.md, run date 2026-08-30. This run answered for 1 calendar day(s) — 2026-08-31 — capped at 8 days.
+Last landed refresh: docs/refresh-run.md, run date 2026-08-31. This run answered for 1 calendar day(s) — 2026-08-31 — capped at 8 days.
 
 A late run computes the right cadence on its own, because the cadence is a pure function of the run's calendar date. What it cannot do is recover a day that produced NO run at all: `fec` and `legiscan` are Monday-only, so a missed Monday would otherwise be a fourteen-day data gap. So this run unions what every uncovered day since the last landed refresh asks for. A quiet day commits nothing and is therefore indistinguishable from a missed one from `main`, which is why both are treated as uncovered and why the window is capped — an uncapped union would put every weekly source on a daily cadence during a quiet fortnight. It adds no runs, no commits and no builds: `refresh-daily.yml` still commits at most once, and nothing when nothing moved.
 

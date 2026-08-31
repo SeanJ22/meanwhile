@@ -20,7 +20,6 @@ import {
   evaluateAnswer,
   normaliseValue,
   type ReaderExpectation,
-  type RenderedAnswer,
 } from "../lib/health/ask-evaluation.ts";
 import { groundedAnswer as answer } from "./rendered-answer-fixture.ts";
 

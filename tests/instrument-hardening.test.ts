@@ -26,7 +26,6 @@ import {
   periodYears,
   claimedMembers,
   type ReaderExpectation,
-  type RenderedAnswer,
 } from "../lib/health/ask-evaluation.ts";
 import { observeControl } from "../lib/health/control-observation.ts";
 import { scoreControls, type ControlFact } from "../lib/health/control-fact.ts";

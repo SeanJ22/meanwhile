@@ -152,6 +152,8 @@ function snapshotFor(item: WorkItem, tasks: readonly RouteTask[]): CompletionSna
     contradictions: [],
     upstreamStates: new Map(),
     denominatorComplete: true,
+    /* No instrument-evidence contract here; the empty set is the refusing default. */
+    instrumentGreens: new Set<string>(),
     now: T1,
   };
 }

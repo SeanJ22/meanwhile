@@ -148,6 +148,58 @@ export interface CompletionContract {
    * A contract may only ever tighten what closes an obligation.
    */
   readonly acceptableDispositions: readonly Disposition[] | null;
+  /**
+   * A verdict this obligation must earn from a named instrument before it may
+   * reach a terminal state. `null` is the ordinary case and means the other
+   * clauses govern alone.
+   *
+   * Non-null, it is checked by `evaluateCompletion` against the satisfied set
+   * the caller supplies from CANONICAL RUN RECORDS — never from an assertion,
+   * and never from the item itself. See {@link InstrumentEvidenceRequirement}.
+   */
+  readonly instrumentEvidence: InstrumentEvidenceRequirement | null;
+}
+
+/**
+ * **A VERDICT AN OBLIGATION MUST EARN FROM A NAMED INSTRUMENT.**
+ * (A.1 WI3, 2026-08-30.)
+ *
+ * ## Why prose was not enough
+ *
+ * `diagnosticWorkItemFor` wrote the completion condition into `why`:
+ * *"The completion contract is that question turning green on a recorded
+ * evaluation run."* That sentence is correct and it is not a contract. Nothing
+ * read it, nothing could check it, and the item it described carried
+ * `{...DEFAULT_CONTRACT}` — which requires a validation record and nothing
+ * about the question at all. An item created because a reader could not learn
+ * a fact could therefore be closed by a validator that never asked the
+ * question again.
+ *
+ * A completion condition a machine cannot evaluate is a completion condition
+ * that closes on someone's judgement, and the whole point of the control plane
+ * is that obligations do not close on judgement.
+ *
+ * ## What this requires, and why each field is here
+ *
+ * `instanceId` is THAT question, not a question like it: the reader contract
+ * is per-instance, and a sibling instance turning green says nothing about
+ * this one. `createdAtSha` is the tree the failure was observed on, so a run
+ * recorded BEFORE the defect existed cannot close it — an older green is
+ * evidence about older code. `requiredVerdict` is stated rather than assumed
+ * so the field cannot quietly come to mean "any recorded verdict".
+ */
+export interface InstrumentEvidenceRequirement {
+  /** Which instrument's canonical run record may satisfy this. */
+  readonly instrument: "READER_SUITE" | "VISUAL_SUITE";
+  /** The exact instance or check id that must earn the verdict. */
+  readonly instanceId: string;
+  /**
+   * The SHA the failure was observed on. A qualifying run must have tested
+   * this commit or a later one; null means no SHA was resolvable, which is
+   * itself a fact and is refused as unsatisfiable rather than waved through.
+   */
+  readonly createdAtSha: string | null;
+  readonly requiredVerdict: "GREEN";
 }
 
 export const DEFAULT_CONTRACT: CompletionContract = {
@@ -156,6 +208,7 @@ export const DEFAULT_CONTRACT: CompletionContract = {
   requiresAudit: false,
   requiresCompleteDenominator: false,
   acceptableDispositions: null,
+  instrumentEvidence: null,
 };
 
 /** Why a human is needed, and since when. Escalations have a clock. */

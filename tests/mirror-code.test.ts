@@ -489,5 +489,12 @@ test("the manifest heads with what it is, and never hides a refusal", () => {
 });
 
 test("the expected mirror subdirectories are declared", () => {
-  assert.deepEqual(EXPECTED_DIRS, ["transcripts", "code"]);
+  /*
+   * `owner-intake` joined on 2026-08-30 (A.1 WI8, the author's decision): the
+   * folder the owner writes defects into, replacing `defects.md` as an owner
+   * surface. It is a DIRECTORY, so it is declared here rather than in the
+   * mirrored-document set — the same reasoning that put `transcripts/` and
+   * `code/` in this list.
+   */
+  assert.deepEqual(EXPECTED_DIRS, ["transcripts", "code", "owner-intake"]);
 });

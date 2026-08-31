@@ -75,6 +75,9 @@ export function completionSnapshot(
     contradictions: [],
     upstreamStates: new Map(),
     denominatorComplete: null,
+    /* No instrument-evidence contract in this fixture; the empty set is the
+       refusing default, stated rather than omitted. */
+    instrumentGreens: new Set<string>(),
     now: T2,
     ...over,
   };

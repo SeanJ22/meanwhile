@@ -1,41 +1,81 @@
 /**
  * `pnpm reader:suite` — the reader-contract evaluation harness (WS-CONTRACT).
  *
- * Loads the owner question corpus from `data/health/reader-questions.json`,
- * instantiates it against the registry for the four pilot ZIPs, and evaluates
- * every active instance against the RENDERED DOM in a real guarded browser —
- * never a source grep, never a database query: the contract is about what a
- * reader can learn from the surface, and only the surface can answer that.
+ * ## What this ran as before, and why it had to be rebuilt (A.1 WI1–WI3)
  *
- * With no corpus loaded the run still proves the harness: the browser opens,
- * the base URL is reached (or the wall is named), and the run record states
- * `0 questions loaded — awaiting owner corpus` — an explicit awaiting state,
- * exit 0, never a silent pass and never a manufactured failure.
+ * The Session A harness opened a browser, navigated to the base URL, read
+ * `document.body.innerText`, and tested `domText.includes(expectation.text)`.
+ * It never typed a question, never pressed a button, never waited for an
+ * answer, and never looked at one. A page carrying the expected words
+ * ANYWHERE went green while the Ask engine could have returned a fallback, the
+ * wrong government, or nothing at all.
  *
- * THE TARGET IS LOCAL — RULING 125, mirrored from `walk-all.mts`: a non-local
+ * It also never called the universe check that Session A wrote — and the only
+ * denominator vocabulary that could have reached it for the governing-body
+ * layer was the registry the instances are generated FROM, which agrees with
+ * itself over any universe. And it computed RED verdicts that created no
+ * obligation anywhere.
+ *
+ * Three instruments that looked enforced and were not. What runs now:
+ *
+ * ```
+ *   1. LOAD          the owner corpus; zero questions is an AWAITING state
+ *   2. GENERATE      instances against the registry, retiring expired ones
+ *   3. CHECK         the universe against an INDEPENDENT denominator —
+ *                    BEFORE any scoring, and a disagreement is a coverage
+ *                    defect that produces a typed diagnostic WorkItem
+ *   4. ASK           each active instance, through the product's own Ask
+ *                    interaction, exactly as a reader would
+ *   5. EVALUATE      the RENDERED ANSWER against a typed proposition
+ *   6. DIAGNOSE      every RED into a failure class and a persisted WorkItem
+ *   7. CLOSE         every diagnostic this run's greens actually satisfy
+ *   8. RECORD        one canonical run record, with every count derived
+ * ```
+ *
+ * THE TARGET IS LOCAL — RULING 125, mirrored from `walk-all.mts`. A non-local
  * `SHOOT_BASE_URL` is refused. `PRODUCTION_RENDER` exists in the run-record
- * type and is currently unreachable from this harness by construction; every
- * record this script writes says so.
+ * type and is unreachable from this harness by construction; every record this
+ * script writes says which it was.
  */
 
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
+import type { WorkItem } from "../lib/control-plane/work-item.ts";
+import { evaluateAnswer } from "../lib/health/ask-evaluation.ts";
+import { containsCommit, headSha } from "../lib/ops/git-facts.ts";
+import { loadJsonArray } from "../lib/health/json-store.ts";
+import {
+  bodyDenominatorFor,
+  divisionIndexFor,
+  loadBodyEnumerationEvidence,
+} from "../lib/health/body-denominator.ts";
+import {
+  closeSatisfiedDiagnostics,
+  persistDiagnostics,
+  readerDiagnostic,
+} from "../lib/health/diagnostics.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import { nextRunRecordPath } from "../lib/health/run-records.ts";
 import {
   activeInstances,
+  assertDenominatorIsIndependent,
+  checkInstanceUniverse,
   generateInstances,
   loadZipBodyUniverses,
   retireExpiredInstances,
+  type CoverageDefect,
   type EvaluationTarget,
+  type FailureClass,
   type InstanceResult,
   type ReaderQuestionInstance,
   type ReaderQuestionTemplate,
 } from "../lib/health/reader-question.ts";
 import { EVERYDAY_ZIPS } from "../lib/routing/everyday.ts";
 
-import { launchGuarded, seedZip } from "./browser.mts";
+import { askAndRead, openAskAt } from "./ask-harness.mts";
+import { launchGuarded } from "./browser.mts";
 import { today } from "./doc-dates.mjs";
 
 const AWAITING = "0 questions loaded — awaiting owner corpus";
@@ -77,83 +117,76 @@ const TARGET: EvaluationTarget = "LOCAL_RENDER";
 const ROOT = process.cwd();
 const CORPUS_PATH = join(ROOT, "data", "health", "reader-questions.json");
 const RUNS_DIR = join(ROOT, "data", "health", "reader-suite-runs");
+const CONTROL_PLANE_ROOT = join(ROOT, "data", "control-plane", "pilot-health");
+
+/** The tree this run measured, through the shared helper (RULING 103). */
+const TESTED_SHA = headSha();
 
 interface HarnessReach {
   readonly reached: boolean;
-  /** HTTP status of the base URL, when a response arrived. */
   readonly status: number | null;
   readonly title: string | null;
-  /** The wall, named, when the server was not reachable. */
   readonly wall: string | null;
 }
 
+/** The canonical run record. Every field the contracts and the ledger read. */
 interface RunRecord {
   readonly target: EvaluationTarget;
   readonly targetNote: string;
   readonly baseUrl: string;
   readonly runId: string;
+  readonly testedSha: string | null;
   readonly startedAt: string;
   readonly finishedAt: string;
-  readonly questionsLoaded: number;
+  readonly corpusTemplates: number;
   readonly instancesGenerated: number;
   readonly instancesActive: number;
   readonly instancesEvaluated: number;
+  readonly evaluatedGreen: number;
+  readonly evaluatedRed: number;
+  readonly notEvaluable: number;
+  readonly denominatorCheck: DenominatorCheck;
   readonly results: readonly InstanceResult[];
+  readonly greenInstanceIds: readonly string[];
+  readonly diagnostics: {
+    readonly created: readonly string[];
+    readonly existing: readonly string[];
+    readonly closed: readonly string[];
+  };
   readonly harness: HarnessReach;
   readonly corpusState: string | null;
 }
 
-/** The owner corpus, or null when the file is absent. Empty is loaded-empty. */
-function loadCorpus(): ReaderQuestionTemplate[] | null {
-  if (!existsSync(CORPUS_PATH)) return null;
-  const text = readFileSync(CORPUS_PATH, "utf8");
-  const parsed = JSON.parse(text) as unknown;
-  if (!Array.isArray(parsed)) {
-    // A file that exists but is not a template array is a wall, not an empty
-    // corpus: refuse loudly rather than reading it as zero questions.
-    throw new Error(`${CORPUS_PATH} exists but is not an array of question templates`);
-  }
-  return parsed as ReaderQuestionTemplate[];
+/** What the independent universe check found, per ZIP, before any scoring. */
+interface DenominatorCheck {
+  readonly ran: boolean;
+  /** Named when the check could not run. A missing denominator is never a pass. */
+  readonly missingEvidence: string | null;
+  readonly sources: readonly string[];
+  readonly defects: readonly CoverageDefect[];
+  /** ZIPs whose instances are NOT_EVALUABLE because no denominator exists. */
+  readonly notEvaluableZips: readonly string[];
 }
 
-/** Pure evaluation of one instance against extracted DOM text. */
-function evaluateAgainstDom(
-  instance: ReaderQuestionInstance,
-  template: ReaderQuestionTemplate | undefined,
-  domText: string,
-): InstanceResult {
-  if (!template?.expectation) {
-    return {
-      instanceId: instance.id,
-      questionText: instance.questionText,
-      verdict: {
-        kind: "NOT_EVALUABLE",
-        detail: "the owner corpus states no expectation for this template; recorded, never green",
-      },
-    };
-  }
-  const found = domText.includes(template.expectation.text);
-  return {
-    instanceId: instance.id,
-    questionText: instance.questionText,
-    verdict: found
-      ? { kind: "GREEN" }
-      : {
-          kind: "RED",
-          detail: `rendered DOM does not contain ${JSON.stringify(template.expectation.text)}`,
-        },
-  };
+/**
+ * The owner corpus, or null when the file is absent. Empty is loaded-empty.
+ *
+ * Through the shared reader (RULING 103): this and `control-set.mts` held the
+ * same eleven lines, and the interesting behaviour in them is a REFUSAL.
+ */
+function loadCorpus(): ReaderQuestionTemplate[] | null {
+  return loadJsonArray<ReaderQuestionTemplate>(CORPUS_PATH, "question templates");
 }
 
 async function main(): Promise<void> {
   const startedAt = new Date().toISOString();
   const templates = loadCorpus() ?? [];
-  const questionsLoaded = templates.length;
+  const corpusTemplates = templates.length;
 
-  // Instances exist only when questions do; the zero state still proves reach.
   let generated: ReaderQuestionInstance[] = [];
-  if (questionsLoaded > 0) {
-    const universes = await loadZipBodyUniverses(EVERYDAY_ZIPS, ROOT);
+  let universes: Awaited<ReturnType<typeof loadZipBodyUniverses>> = [];
+  if (corpusTemplates > 0) {
+    universes = await loadZipBodyUniverses(EVERYDAY_ZIPS, ROOT);
     generated = retireExpiredInstances(
       generateInstances(templates, universes, startedAt),
       startedAt,
@@ -161,9 +194,52 @@ async function main(): Promise<void> {
   }
   const active = activeInstances(generated);
 
+  /*
+   * ------------------------------------------------------------------
+   * THE UNIVERSE CHECK RUNS BEFORE ANY SCORING. (WI2.)
+   *
+   * Order is the whole point. A corpus scored first and checked second can
+   * report 100% green and then mention, underneath, that the universe was
+   * wrong — and the green is what gets read. Checking first means a coverage
+   * defect is a fact about the run rather than a footnote on it.
+   * ------------------------------------------------------------------
+   */
+  const evidence = loadBodyEnumerationEvidence(ROOT);
+  const defects: CoverageDefect[] = [];
+  const notEvaluableZips: string[] = [];
+  if (corpusTemplates > 0) {
+    const index = divisionIndexFor(ROOT);
+    for (const universe of universes) {
+      const denominator = bodyDenominatorFor(
+        universe.zip,
+        index[universe.zip] ?? universe.divisionIds,
+        evidence,
+      );
+      if (denominator === null) {
+        /* No independent denominator for this level at this ZIP. The instances
+           are NOT green and NOT scored — they are NOT_EVALUABLE with the
+           missing evidence NAMED, which is the honest third state. */
+        notEvaluableZips.push(universe.zip);
+        continue;
+      }
+      assertDenominatorIsIndependent(denominator);
+      const defect = checkInstanceUniverse(generated, denominator);
+      if (defect !== null) defects.push(defect);
+    }
+  }
+  const denominatorCheck: DenominatorCheck = {
+    ran: corpusTemplates > 0 && evidence.bodies !== null,
+    missingEvidence: evidence.missing,
+    sources: evidence.sources,
+    defects,
+    notEvaluableZips,
+  };
+
   const browser = await launchGuarded({ label: "reader-suite", headless: true });
   let harness: HarnessReach;
   const results: InstanceResult[] = [];
+  const diagnosticItems: WorkItem[] = [];
+
   try {
     const page = await browser.page();
     try {
@@ -175,11 +251,9 @@ async function main(): Promise<void> {
         wall: null,
       };
     } catch (error) {
-      // Playwright decorates its message with an ANSI-styled call log; the
-      // record keeps the words and drops the terminal styling.
       const message = (error instanceof Error ? error.message : String(error))
         // eslint-disable-next-line no-control-regex
-        .replace(/\u001b\[[0-9;]*m/g, "")
+        .replace(/\[[0-9;]*m/g, "")
         .trim();
       harness = {
         reached: false,
@@ -188,28 +262,113 @@ async function main(): Promise<void> {
         wall: `the harness could not reach ${BASE}: ${message}`,
       };
     }
+    await page.close();
 
     if (harness.reached && active.length > 0) {
       const templateById = new Map(templates.map((t) => [t.id, t]));
       const zips = [...new Set(active.map((i) => i.zip))];
       for (const zip of zips) {
-        // One seeded page per ZIP; every instance of the ZIP evaluates against
-        // the same rendered DOM extraction.
-        const zipPage = await browser.page();
-        await seedZip(zipPage, zip);
-        await zipPage.goto(BASE, { waitUntil: "networkidle", timeout: 60_000 });
-        // Expression-shaped: tsx's esbuild transform rewrites named functions
-        // through a __name helper the page does not have.
-        const domText = (await zipPage.evaluate("document.body.innerText")) as string;
-        await zipPage.close();
+        /* One seeded page per ZIP, and every question of that ZIP is asked on
+           it in turn. Grouping by page is the cost saving; the answers are
+           still one-per-submission because `askAndRead` will not accept the
+           previous answer as this question's settled result. */
+        const askPage = await openAskAt(browser, BASE, zip);
         for (const instance of active.filter((i) => i.zip === zip)) {
-          results.push(evaluateAgainstDom(instance, templateById.get(instance.templateId), domText));
+          if (notEvaluableZips.includes(zip)) {
+            results.push({
+              instanceId: instance.id,
+              questionText: instance.questionText,
+              verdict: {
+                kind: "NOT_EVALUABLE",
+                detail:
+                  `no independent governing-body denominator exists for zip ${zip}: ` +
+                  `${evidence.missing ?? "the enumeration evidence could not be established"}. ` +
+                  "Never green, never silently scored.",
+              },
+            });
+            continue;
+          }
+          const observation = await askAndRead(askPage, instance.questionText);
+          const evaluated = evaluateAnswer(
+            observation.answer,
+            templateById.get(instance.templateId)?.expectation ?? null,
+          );
+          /* A wall is reported as a wall. It rides on the detail so the run
+             record says the harness ran out of time rather than implying the
+             product answered wrongly. */
+          const verdict =
+            observation.wall !== null && evaluated.verdict.kind === "RED"
+              ? {
+                  kind: "RED" as const,
+                  detail: `${evaluated.verdict.detail} — ${observation.wall}`,
+                }
+              : evaluated.verdict;
+          results.push({
+            instanceId: instance.id,
+            questionText: instance.questionText,
+            verdict,
+          });
+          if (verdict.kind === "RED" && evaluated.failureClass !== null) {
+            diagnosticItems.push(
+              readerDiagnostic(
+                instance,
+                evaluated.failureClass as FailureClass,
+                verdict.detail,
+                TESTED_SHA,
+                startedAt,
+              ),
+            );
+          }
         }
+        await askPage.close();
       }
     }
   } finally {
     await browser.close();
   }
+
+  /*
+   * A coverage defect is a defect. It produces a typed diagnostic WorkItem of
+   * its own, against the ZIP, so that a universe disagreement cannot be a
+   * printed observation nobody owes anything about.
+   */
+  for (const defect of defects) {
+    diagnosticItems.push(
+      readerDiagnostic(
+        {
+          id: `coverage:${defect.zip}:${defect.layer}`,
+          templateId: "coverage-check",
+          questionClass: "HAND_AUTHORED_ADVERSARIAL",
+          zip: defect.zip,
+          subjectBodyId: null,
+          questionText: `Does the reader-question universe for ${defect.zip} cover every enumerated governing body?`,
+          window: { notBefore: null, notAfter: null },
+          status: { state: "ACTIVE" },
+        },
+        "linkage",
+        defect.detail,
+        TESTED_SHA,
+        startedAt,
+      ),
+    );
+  }
+
+  const greenInstanceIds = results
+    .filter((r) => r.verdict.kind === "GREEN")
+    .map((r) => r.instanceId);
+
+  const repos = await createFileRepositories(CONTROL_PLANE_ROOT);
+  const persisted = await persistDiagnostics(repos, diagnosticItems, startedAt);
+  const closure = await closeSatisfiedDiagnostics(
+    repos,
+    { instrument: "READER_SUITE", testedSha: TESTED_SHA, greenInstanceIds },
+    containsCommit,
+    startedAt,
+  );
+
+  const evaluatedGreen = greenInstanceIds.length;
+  const evaluatedRed = results.filter((r) => r.verdict.kind === "RED").length;
+  const notEvaluable = results.filter((r) => r.verdict.kind === "NOT_EVALUABLE").length;
 
   const record: RunRecord = {
     target: TARGET,
@@ -218,20 +377,36 @@ async function main(): Promise<void> {
       "PRODUCTION_RENDER is defined in the type and currently unreachable from this harness",
     baseUrl: BASE,
     runId: browser.runId,
+    testedSha: TESTED_SHA,
     startedAt,
     finishedAt: new Date().toISOString(),
-    questionsLoaded,
+    corpusTemplates,
     instancesGenerated: generated.length,
     instancesActive: active.length,
     instancesEvaluated: results.length,
+    evaluatedGreen,
+    evaluatedRed,
+    notEvaluable,
+    denominatorCheck,
     results,
+    greenInstanceIds,
+    diagnostics: {
+      created: persisted.created,
+      existing: persisted.existing,
+      closed: closure.closed,
+    },
     harness,
-    corpusState: questionsLoaded === 0 ? AWAITING : null,
+    corpusState: corpusTemplates === 0 ? AWAITING : null,
   };
   const recordPath = nextRunRecordPath(RUNS_DIR, today());
-  writeFileSync(recordPath, `${JSON.stringify(record, null, 2)}\n`);
+  writeFileSync(recordPath, `${JSON.stringify(record, null, 2)}\n`, "utf8");
 
-  console.log(`reader:suite · target ${record.target} · ${BASE} · run ${record.runId}`);
+  /* ------------------------------------------------------------ report --- */
+
+  console.log(
+    `reader:suite · target ${record.target} · ${BASE} · run ${record.runId} · ` +
+      `sha ${TESTED_SHA?.slice(0, 8) ?? "unknown"}`,
+  );
   if (harness.reached) {
     console.log(
       `  harness reached the base URL: status ${harness.status ?? "unknown"}, ` +
@@ -244,16 +419,31 @@ async function main(): Promise<void> {
         "Start the local build (pnpm build; pnpm start) and re-run.",
     );
   }
-  if (questionsLoaded === 0) {
-    console.log(`  ${AWAITING}`);
+
+  console.log(
+    `\n  DENOMINATOR CHECK (before scoring): ${
+      denominatorCheck.ran ? "ran" : "did not run"
+    } · evidence ${denominatorCheck.sources.join(", ") || "none"}`,
+  );
+  if (denominatorCheck.missingEvidence) {
+    console.log(`    MISSING EVIDENCE · ${denominatorCheck.missingEvidence}`);
+  }
+  console.log(`    ${defects.length} coverage defect(s)`);
+  for (const defect of defects) console.log(`      × ${defect.detail}`);
+  if (notEvaluableZips.length > 0) {
+    console.log(
+      `    ${notEvaluableZips.length} zip(s) NOT_EVALUABLE for want of a denominator: ` +
+        notEvaluableZips.join(", "),
+    );
+  }
+
+  if (corpusTemplates === 0) {
+    console.log(`\n  ${AWAITING}`);
   } else {
     console.log(
-      `  ${questionsLoaded} question template(s) loaded · ${generated.length} instance(s) ` +
+      `\n  ${corpusTemplates} question template(s) loaded · ${generated.length} instance(s) ` +
         `generated · ${active.length} active`,
     );
-    // RULING 159: the evaluated count is floored on the active universe — an
-    // empty population never prints as a measured zero, and a partial
-    // evaluation shows its denominator.
     const evaluated = floored(
       "instances evaluated",
       "the active reader-question universe",
@@ -264,12 +454,22 @@ async function main(): Promise<void> {
         : undefined,
     );
     console.log(`  ${floorLine(evaluated)}`);
-    // Stated N equals rendered rows: the matched count above is results.length
-    // and the rows below are results, one line each.
+    console.log(
+      `  ${evaluatedGreen} green · ${evaluatedRed} red · ${notEvaluable} not evaluable`,
+    );
     for (const result of results) {
       console.log(`    ${result.verdict.kind} · ${result.instanceId} · ${result.questionText}`);
+      if (result.verdict.kind !== "GREEN") console.log(`        ${result.verdict.detail}`);
     }
   }
+
+  console.log(
+    `\n  DIAGNOSTICS: ${persisted.created.length} created · ${persisted.existing.length} ` +
+      `already open · ${closure.closed.length} closed by this run's greens`,
+  );
+  for (const id of persisted.created) console.log(`    + ${id}`);
+  for (const id of closure.closed) console.log(`    - ${id} (closed)`);
+  console.log(`  control plane: ${repos.describe()}`);
   console.log(`  run record: ${recordPath}`);
 }
 

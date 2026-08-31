@@ -135,3 +135,15 @@ next-env.d.ts
 # deliverable; the state directory is the scratch space that produced them.
 /data/control-plane/shadow-runs/*/state/
 /data/control-plane/shadow-runs/*/evidence/
+
+# The owner's raw defect screenshots, dropped straight into the repo.
+#
+# RULING 20: portraits and document corpora do not go in git — git keeps every
+# version of every one of them forever. These are owner INTAKE, read by
+# `pnpm owner:intake` and converted into permanent VisualAcceptanceChecks; the
+# image itself belongs in the content-addressed store, never in a commit.
+#
+# Ignored rather than merely unstaged because a blanket `git add -A` in any
+# session would otherwise commit them, which is how 21 PNGs reached the index
+# on 2026-08-30 before RULING 20's sweep caught them.
+/feedback/

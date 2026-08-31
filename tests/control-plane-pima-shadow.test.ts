@@ -140,6 +140,8 @@ function snapshotFor(item: Parameters<typeof evaluateCompletion>[0]["item"], tas
     contradictions: [],
     upstreamStates: new Map(),
     denominatorComplete,
+    /* No instrument-evidence contract here; the empty set is the refusing default. */
+    instrumentGreens: new Set<string>(),
     now: T1,
   };
 }

@@ -48,6 +48,7 @@ import { createHash } from "node:crypto";
 import { join } from "node:path";
 
 import { createWorkItem, type WorkItem } from "../control-plane/work-item.ts";
+import type { ReaderExpectation } from "./ask-evaluation.ts";
 import type { Body, Registry } from "../registry/types.ts";
 
 /* ---------------------------------------------------------------- classes */
@@ -86,10 +87,22 @@ export interface ReaderQuestionTemplate {
   readonly placeholders: readonly TemplatePlaceholder[];
   readonly applicability: ApplicabilityRule;
   /**
-   * How an instance evaluates against the rendered DOM, when the owner has
-   * stated one. Absent, an instance is honestly NOT_EVALUABLE — never green.
+   * **THE TYPED PROPOSITION A CORRECT ANSWER ASSERTS.** (A.1 WI1, 2026-08-30.)
+   *
+   * This was `{ kind: "DOM_TEXT_INCLUDES"; text: string }`, and the harness
+   * that read it tested `document.body.innerText.includes(text)`. A page
+   * carrying the expected words anywhere — a nav label, an unrelated roster —
+   * went green while the Ask engine could have returned a fallback, the wrong
+   * government, or nothing at all. The check reported on a different question
+   * than the one it claimed to answer.
+   *
+   * A substring is not a proposition. This is: an entity, a value, a list, or
+   * a verified absence, evaluated against the ANSWER the reader actually got.
+   * `lib/health/ask-evaluation.ts` holds what each kind requires.
+   *
+   * Absent, an instance is honestly NOT_EVALUABLE — never green.
    */
-  readonly expectation?: { readonly kind: "DOM_TEXT_INCLUDES"; readonly text: string };
+  readonly expectation?: ReaderExpectation;
 }
 
 /* -------------------------------------------------------------- instances */
@@ -354,7 +367,22 @@ export const DENOMINATOR_LAYERS = [
 ] as const;
 export type DenominatorLayer = (typeof DENOMINATOR_LAYERS)[number];
 
-export const DENOMINATOR_SOURCES = ["CENSUS_TIGER", "NCES", "PROJECT_REGISTRY"] as const;
+export const DENOMINATOR_SOURCES = [
+  "CENSUS_TIGER",
+  "NCES",
+  /**
+   * The GENERATED registry. Valid law, and a MIRROR of the instance universe —
+   * the instances are generated from it, so it can never disagree with them.
+   */
+  "PROJECT_REGISTRY",
+  /**
+   * The Tier-2 body-enumeration EVIDENCE: the canonical inputs
+   * `curated-bodies.ts` and `promoted-bodies.json`, from which the registry is
+   * generated. The only body-layer source that CAN disagree with the instance
+   * universe, which is the only way a coverage defect is detectable at all.
+   */
+  "PROJECT_BODY_ENUMERATION_EVIDENCE",
+] as const;
 export type DenominatorSource = (typeof DENOMINATOR_SOURCES)[number];
 
 /** An independently established enumeration for one ZIP at one layer. */
@@ -371,12 +399,50 @@ export interface EnumerationDenominator {
  * BODIES. A Census/NCES-sourced denominator offered for the governing-body
  * layer is refused — no denominator may certify a layer it does not enumerate.
  */
+const BODY_LAYER_SOURCES: readonly DenominatorSource[] = [
+  "PROJECT_REGISTRY",
+  "PROJECT_BODY_ENUMERATION_EVIDENCE",
+];
+
 export function assertDenominatorMayCertify(denominator: EnumerationDenominator): void {
-  if (denominator.layer === "GOVERNING_BODY" && denominator.source !== "PROJECT_REGISTRY") {
+  if (
+    denominator.layer === "GOVERNING_BODY" &&
+    !BODY_LAYER_SOURCES.includes(denominator.source)
+  ) {
     throw new Error(
       `RULING 9: a ${denominator.source} denominator may not certify the GOVERNING_BODY ` +
         "layer. Census/NCES enumerate governments, not the bodies inside them; the body " +
         "denominator comes only from the project's own registry/enumeration evidence.",
+    );
+  }
+}
+
+/**
+ * **A DENOMINATOR MAY NOT BE THE THING IT MEASURES.** (A.1 WI2, 2026-08-30.)
+ *
+ * RULING 9 governs which SOURCE CLASS may certify a layer. This governs
+ * something RULING 9 does not reach and Session A missed: whether the
+ * denominator is INDEPENDENT of the population it is checking.
+ *
+ * Reader-question instances are generated from `registry.json`. A
+ * `PROJECT_REGISTRY` denominator for the governing-body layer is therefore
+ * that same file compared against itself. It agrees perfectly, always,
+ * including over a universe missing every body the registry forgot — which is
+ * precisely the failure the check exists to find. NH232 is the proof that the
+ * failure is real: a regeneration silently dropped 731 promoted bodies and
+ * every green stayed green.
+ *
+ * So a RUN may not score the body layer off the registry. It is still a legal
+ * denominator for anything generated from something else, which is why the
+ * refusal lives here rather than in `assertDenominatorMayCertify`.
+ */
+export function assertDenominatorIsIndependent(denominator: EnumerationDenominator): void {
+  if (denominator.layer === "GOVERNING_BODY" && denominator.source === "PROJECT_REGISTRY") {
+    throw new Error(
+      "a PROJECT_REGISTRY denominator cannot check a GOVERNING_BODY universe that was " +
+        "GENERATED from PROJECT_REGISTRY. Registry checking registry is a mirror: it agrees " +
+        "over any universe, including one missing every body the registry omitted. Use " +
+        "PROJECT_BODY_ENUMERATION_EVIDENCE — the canonical inputs the registry is built from.",
     );
   }
 }

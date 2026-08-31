@@ -1241,7 +1241,12 @@ export function AskBox({
             const links = sourceLinks(grounded.records ?? []);
             if (links.length === 0) return null;
             return (
-              <p className="mt-2 text-[0.6875rem] text-muted">
+              /* `data-ask-sources` carries the PUBLISHER count, not a reader
+                 string — the same convention `data-ask-contacts` already uses.
+                 The reader-contract evaluator requires a visible source record
+                 before any answer may be green (A.1 WI1), and counting anchors
+                 inside the panel would count contact `mailto:` links too. */
+              <p className="mt-2 text-[0.6875rem] text-muted" data-ask-sources={links.length}>
                 Source{links.length > 1 ? "s" : ""}:{" "}
                 {links.map((l, i) => (
                   <span key={l.label}>

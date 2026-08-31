@@ -37,7 +37,10 @@
  */
 
 import { execSync } from "node:child_process";
-import { rmSync } from "node:fs";
+import { mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+
+import { today } from "./doc-dates.mjs";
 
 /**
  * THE GATE SET. Each entry names the CI job it stands in for, so a failure
@@ -356,5 +359,67 @@ console.log(
   `\n${results.length - bad.length} of ${results.length} gates green` +
     (bad.length ? ` — FAILING: ${bad.map((b) => b.id).join(", ")}` : ""),
 );
+/*
+ * **THE GATE RUN RECORD.** (A.1 WI6, 2026-08-30.)
+ *
+ * The status ledger used to carry hand-typed strings — "suite green in the
+ * workstream run that generated this ledger" — as though they were results.
+ * They were sentences. Nothing produced them, nothing checked them, and
+ * `status:ledger --check` proved only that the Markdown matched the array
+ * that held them.
+ *
+ * A status surface may only be generated from a RECORD of a check actually
+ * running. This is that record for the gate set: which gate, which command,
+ * what it reported, how long it took, on which tree, at what time. The ledger
+ * reads it, and an entry whose check has no record here renders UNPROVEN.
+ *
+ * Written even when gates FAIL, and that is the point — a record that exists
+ * only on success is a record that can only ever say one thing.
+ */
+writeGateRunRecord(results);
+
 process.exitCode = bad.length ? 1 : 0;
+}
+
+function writeGateRunRecord(results) {
+  /* `today()`, not a UTC slice: a UTC slice reads a day ahead of
+     America/Phoenix after 5pm local, so a record stamped that way files
+     itself under tomorrow and the ledger reads the wrong newest run. */
+  const day = today();
+  const dir = join(process.cwd(), "data", "ops", "gate-runs");
+  mkdirSync(dir, { recursive: true });
+
+  /* Max existing suffix + 1, not a count: a count collides with — and would
+     silently overwrite — a surviving record after an earlier one is removed.
+     Same rule as `nextRunRecordPath` in lib/health/run-records.ts. */
+  let seq = 0;
+  const suffix = new RegExp("^" + day + "-(\\d+)\\.json$");
+  for (const name of readdirSync(dir)) {
+    const m = name.match(suffix);
+    if (m) seq = Math.max(seq, Number(m[1]));
+  }
+
+  let testedSha = null;
+  try {
+    testedSha = execSync("git rev-parse HEAD", { encoding: "utf8" }).trim();
+  } catch {
+    /* Not a checkout. Named as unknown, never invented — a fabricated SHA
+       would misattribute every reading later derived from this record. */
+  }
+
+  const recordPath = join(dir, `${day}-${String(seq + 1).padStart(2, "0")}.json`);
+  const record = {
+    runId: `gates@${new Date().toISOString()}`,
+    testedSha,
+    finishedAt: new Date().toISOString(),
+    gates: results.map((r) => ({
+      id: r.id,
+      ciJob: r.ciJob,
+      command: r.command,
+      status: r.status,
+      seconds: Number(r.secs),
+    })),
+  };
+  writeFileSync(recordPath, `${JSON.stringify(record, null, 2)}\n`, "utf8");
+  console.log(`  gate run record: ${recordPath}`);
 }

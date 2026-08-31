@@ -817,6 +817,14 @@ export async function loadCompletionSnapshot(
     contradictions?: readonly Contradiction[];
     upstreamStates?: ReadonlyMap<string, WorkItemState>;
     denominatorComplete?: boolean | null;
+    /**
+     * Instance/check ids a canonical instrument run has evaluated GREEN on a
+     * qualifying tree. Supplied by the caller for the same reason validations
+     * and audits are: the run records belong to `lib/health`, which this
+     * module does not own, and loading them here would make the control plane
+     * depend on the health harness rather than the other way round.
+     */
+    instrumentGreens?: ReadonlySet<string>;
   },
 ): Promise<CompletionSnapshot> {
   await reconcile(repos, input.now);
@@ -832,6 +840,10 @@ export async function loadCompletionSnapshot(
     contradictions: input.contradictions ?? [],
     upstreamStates: input.upstreamStates ?? new Map<string, WorkItemState>(),
     denominatorComplete: input.denominatorComplete ?? null,
+    /* Absent input is an EMPTY set, never a permissive one: a caller that did
+       not read the canonical run records has not proven a verdict, and the
+       contract clause refuses on exactly that. */
+    instrumentGreens: input.instrumentGreens ?? new Set<string>(),
     now: input.now,
   };
 }

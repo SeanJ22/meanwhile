@@ -2130,5 +2130,15 @@
       "NS22",
       "NS23"
     ]
+  },
+  {
+    "session": "A.1 contract instrumentation repair",
+    "opened": "2026-08-30",
+    "ids": [
+      "NH296",
+      "NH297",
+      "NH298",
+      "NH299"
+    ]
   }
 ]

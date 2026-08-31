@@ -375,6 +375,72 @@ export function applyResolvedLocation<T extends BodyLike>(
   }));
 }
 
+/* ════════════════ RULING 222 (2026-08-31): SCOPE IS THE ADDRESS ══════════ */
+
+/**
+ * **THE ONE SCOPE FILTER EVERY ZIP-SCOPED READER SURFACE RUNS.** (WGH-22,
+ * third recurrence, falsified on 2026-08-31.)
+ *
+ * ```
+ *   BEFORE a confirmed address   the scope is the ZIP: every governing entity
+ *                                intersecting it, complete and unpartitioned
+ *   AFTER  a confirmed address   the scope IS the address: only entities that
+ *                                govern that address
+ * ```
+ *
+ * **A "not yours" label on a governing-entities surface is prohibited.** An
+ * entity the system has DETERMINED does not govern the reader is out of scope,
+ * not annotated. The panel that carried that label is what the owner
+ * photographed three times, and each previous repair made the label better
+ * instead of removing the row.
+ *
+ * ## Why this does not weaken RULING 26 / RULING 27
+ *
+ * Show-everything forbids suppressing something because something ELSE is
+ * missing — collection state governing display. It guarantees COMPLETENESS
+ * WITHIN THE CORRECT SCOPE, and it never licensed displaying entities we have
+ * positively established do not govern this reader. The 2026-08-30 reading of
+ * it produced a disclosure that kept excluded districts on the panel; the
+ * owner's ruling settles that reading, and this function is where it is
+ * enforced once rather than per surface.
+ *
+ * ## What is and is not dropped
+ *
+ * ONLY `ELSEWHERE_IN_ZIP` — the state `standingOf` may reach only at a level
+ * measured to hold one division per point, where the address named a different
+ * one. `OVERLAP_NOT_RULED_OUT` rows STAY: nothing has been determined about
+ * them, and dropping a row we have not ruled out would be exactly the
+ * manufactured claim this product refuses, made in the other direction.
+ *
+ * Without a confirmed address nothing is dropped at all, because `standingOf`
+ * cannot reach `ELSEWHERE_IN_ZIP` from any certainty but `ADDRESS_RESOLVED`.
+ */
+export function scopedToAddress<T extends BodyLike>(
+  bodies: readonly T[],
+  location: ResolvedLocation,
+): (T & { standing: BodyStanding; couldGovern?: boolean })[] {
+  return applyResolvedLocation(bodies, location).filter(
+    (body) => body.standing !== "ELSEWHERE_IN_ZIP",
+  );
+}
+
+/**
+ * The rows the address positively excluded — never rendered, and returned so a
+ * check can assert they were dropped rather than never computed.
+ *
+ * A surface calling this to DISPLAY the rows is the defect RULING 222 names.
+ * It exists for tests, for counts a surface may need about its own filtering,
+ * and so that "we found these and set them aside" stays an inspectable fact.
+ */
+export function excludedByAddress<T extends BodyLike>(
+  bodies: readonly T[],
+  location: ResolvedLocation,
+): (T & { standing: BodyStanding; couldGovern?: boolean })[] {
+  return applyResolvedLocation(bodies, location).filter(
+    (body) => body.standing === "ELSEWHERE_IN_ZIP",
+  );
+}
+
 /* ══════════════════════════ WGH-15: the two questions ════════════════════ */
 
 /**

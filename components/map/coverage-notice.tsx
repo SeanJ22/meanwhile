@@ -18,22 +18,24 @@ import type { CoverageTier } from "@/lib/meetings/query";
 import type { CoverageSummary, CoveredBody, Seat } from "@/lib/registry/coverage";
 import { deriveWhoGoverns } from "@/lib/registry/who-governs";
 import {
-  applyResolvedLocation,
   homeSubject,
+  scopedToAddress,
   type BodyStanding,
   type LocationCertainty,
 } from "@/lib/state/resolved-location";
+import { useConfirmedDivisions } from "@/hooks/use-confirmed-divisions";
 import { bodyClassShort } from "@/lib/registry/body-class-labels";
 import { rosterHoldersForBody } from "@/lib/registry/body-rosters";
 import {
   hasRepresentation,
   leadKind,
+  noteStateFor,
   noticeLabel,
   representationForDivision,
+  representationNoteFor,
   shouldRenderNotice,
 } from "@/lib/registry/representation";
 import {
-  elsewhereDisclosureLabel,
   panelSeatsFor,
   FEDERAL_SEAT_TYPES,
   STATE_SEAT_TYPES,
@@ -233,67 +235,49 @@ function SubjectLine({
   );
 }
 
-/**
- * A row the reader's own address EXCLUDES.
+/*
+ * **RULING 222 (2026-08-31) — `ElsewhereMark` IS DELETED, NOT IMPROVED.**
  *
- * **It marks, it never removes** (RULING 26, RULING 27). We hold this
- * government in full and it governs real people in this zip; what the address
- * settled is that it is not the reader's. The old surface said nothing at all
- * here, which is what let District 19's members sit under a prompt reading
- * District 17 and read as the reader's own.
+ * A component named `ElsewhereMark` stood here and rendered *"not yours —
+ * covers another part of 85641"* beside a district the reader's address had
+ * positively excluded. Three sessions improved that sentence. The owner
+ * photographed it three times.
  *
- * The sentence names no district number it cannot source. `session-address`
- * stores the confirmed division IDS and not their labels, and a reader surface
- * may not print an OCD-ID — so the honest claim is the one the evidence
- * actually supports: *this covers another part of your zip*, which is a fact
- * about the boundary and not a guess about the reader.
+ * The ruling ends the class rather than the wording: **after a confirmed
+ * address the scope IS the address**, and an entity we have determined does
+ * not govern this reader is OUT OF SCOPE, not annotated. There is no row left
+ * for a mark to sit on — `scopedToAddress` drops it before it reaches any
+ * list — so a mark would have nothing to label and a surface that could
+ * re-introduce one would be re-introducing the defect.
  *
- * **WGH-16 (2026-08-28): and it now appears only where that is TRUE.** The
- * mark is driven by `ELSEWHERE_IN_ZIP`, which `standingOf` may reach only at
- * levels measured to hold one division per point. Rows at an overlapping level
- * get {@link OverlapMark} instead. Nothing about this component changed except
- * which rows qualify — which is the whole of the defect, because the sentence
- * was always right and was being said about rows it was not right about.
+ * `tests/address-scope.test.ts` refuses the copy and the standing by name, so
+ * this cannot come back as a fourth improvement.
  */
-function ElsewhereMark({ zip }: { zip: string }) {
-  return (
-    <span
-      data-standing="ELSEWHERE_IN_ZIP"
-      className="ml-1.5 shrink-0 text-[0.625rem] leading-none text-muted"
-    >
-      not yours — covers another part of {zip}
-    </span>
-  );
-}
-
-/** Only an EXCLUSION is marked. Confirmed and unsettled rows read as before. */
-function marksElsewhere(standing: BodyStanding | undefined): boolean {
-  return standing === "ELSEWHERE_IN_ZIP";
-}
 
 /**
- * **WGH-16 (2026-08-28) — THE ROW WHERE THE STRONG MARK WOULD BE A FALSE
- * CLAIM.**
+ * **WGH-16 (2026-08-28) — THE ROW THAT IS NOT RULED OUT, AND MUST NOT BE.**
  *
- * `ElsewhereMark` above says *not yours*. That is a claim about a government,
- * and `standingOf` may now only reach it at levels measured to hold ONE
- * division per point — `sldl`, `sldu`, `cd`, `county`, `state`.
+ * The deleted mark said *not yours*. That is a claim about a government, and
+ * `standingOf` may reach `ELSEWHERE_IN_ZIP` only at levels measured to hold
+ * ONE division per point — `sldl`, `sldu`, `cd`, `county`, `state`.
  *
  * The bodies on this card are not all at those levels. A school board and a
  * municipality sit at `school_district` and `place`, and both of those are
  * measured to OVERLAP: a reader is routinely inside an elementary district and
  * a regional high school district at once, and inside an incorporated place
  * and a county subdivision at once (`lib/state/division-levels.ts`). Before
- * WGH-16 those rows wore *"not yours — covers another part of 85641"* on the
- * strength of a shared bucket name, which is precisely the manufactured claim
- * `CLAUDE.md` forbids.
+ * WGH-16 those rows wore the deleted exclusion sentence on the strength of a
+ * shared bucket name, which is precisely the manufactured claim `CLAUDE.md`
+ * forbids.
  *
- * **The row is still marked, and it is still never removed.** What changes is
- * that the mark now says what was actually established: their address named a
- * different one, and these can overlap, so this one may be theirs too. That is
- * weaker than the sentence above it and stronger than silence — and silence is
- * not the safe option here, because an unmarked row on this card reads as
- * *this governs you*.
+ * **The row is still marked, and it is still never removed — and RULING 222
+ * does not reach it.** The ruling drops entities the system has DETERMINED do
+ * not govern the reader. Nothing has been determined about these: their
+ * address named a different one, and these can overlap, so this one may be
+ * theirs too. Dropping a row we have not ruled out would be the same
+ * manufactured claim in the other direction, and silence is not the safe
+ * option either, because an unmarked row on this card reads as *this governs
+ * you*.
  */
 function OverlapMark({ zip }: { zip: string }) {
   return (
@@ -312,6 +296,84 @@ function OverlapMark({ zip }: { zip: string }) {
  */
 function marksOverlap(standing: BodyStanding | undefined): boolean {
   return standing === "OVERLAP_NOT_RULED_OUT";
+}
+
+/**
+ * **ONE SEAT ROW, FOR THE STATE SECTION AND THE FEDERAL ONE.** (WGH-22,
+ * 2026-08-31.)
+ *
+ * The two sections carried copies of this markup and the copies drifted: the
+ * federal one silently lacked half the guards the state one had. They are one
+ * component now, so a rule applied here is applied to both by construction.
+ *
+ * **Two nulls, and they are different facts, so they get different sentences.**
+ *
+ * - **No LABEL yet.** The row is one of the reader's own districts, asked for
+ *   by key, and the name has not come back. A reader surface may never print
+ *   an OCD-ID (`CLAUDE.md`), and *"District"* alone would be a claim about
+ *   which district. It renders the named gap for the lookup's actual state.
+ * - **No PEOPLE.** `representationNoteFor` already words the three ways that
+ *   happens — still looking, we hold nobody, the lookup failed — and each is
+ *   about US. `no record yet` is the `unsourced` case and it stays exactly as
+ *   it was for every row that had it before.
+ */
+function SeatRow({
+  seat,
+  zip,
+  onOpenOfficial,
+}: {
+  seat: PanelSeat;
+  zip: string;
+  onOpenOfficial?: OpenOfficial;
+}) {
+  const noteState = noteStateFor(seat.sourcing);
+  return (
+    <li
+      /* WGH-15: the walk reads the standing off the row rather than inferring
+         it from a Tailwind class, so the next design pass cannot silently
+         disarm the guard. WGH-22 adds the sourcing for the same reason. */
+      data-seat-standing={seat.standing}
+      data-seat-sourcing={seat.sourcing}
+      className="text-[0.75rem] leading-snug"
+    >
+      <span className={TYPE_LABEL_CLASS}>
+        {seat.label ?? (
+          <span className="text-muted">
+            {seat.sourcing === "looking"
+              ? "Looking up your district…"
+              : "We couldn't name this district just now."}
+          </span>
+        )}
+      </span>
+      {/*
+        RULING 222: no exclusion mark. A district the address ruled out is not
+        on this list to be marked. The overlap mark stays where it can fire —
+        these three levels are all measured exclusive, so it cannot fire here,
+        and a branch that cannot fire is a branch a later reader must disprove.
+      */}
+      {marksOverlap(seat.standing) && <OverlapMark zip={zip} />}
+      <span className="block person-under-heading">
+        {seat.representatives.length > 0 ? (
+          <HolderList
+            holders={[...seat.representatives]}
+            seatLabel={seat.label ?? ""}
+            seatOcdId={seat.ocdId}
+            tier={seat.tier}
+            onOpenOfficial={onOpenOfficial}
+          />
+        ) : seat.sourcing === "unsourced" ? (
+          // Not "vacant" — we simply have no record. The two are completely
+          // different claims and only one is ours to make.
+          <span className="text-muted">no record yet</span>
+        ) : (
+          // Still asking, or the asking failed. Neither is an absence, and
+          // rendering either as one is the render-default rule broken by a
+          // timing gap instead of by a null.
+          <span className="text-muted">{representationNoteFor(seat.tier, noteState)}</span>
+        )}
+      </span>
+    </li>
+  );
 }
 
 function seatPhrase(seats: Seat[]): string | null {
@@ -537,20 +599,31 @@ function CoverageBody({
    * required — so this is the SAME function over the SAME location, not a
    * second implementation of the standing rule for a second row type.
    *
-   * **The row is annotated and never dropped.** A reader whose zip crosses a
-   * legislative line is still shown the whole zip's representation; what
-   * changes is that the card no longer presents another district's members as
-   * theirs by saying nothing.
+   * The 8/28 reading of that was *annotate, never drop*. RULING 222 settled it
+   * the other way on 2026-08-31 — see below.
    */
   /*
-   * WGH-22 (2026-08-30): the `seatsHere` binding that stood here is gone, and
-   * the annotation it did has MOVED rather than been dropped —
-   * `panelSeatsFor` calls the same `applyResolvedLocation` over the same
-   * `seats` and the same `subject.location`, and then does the thing this line
-   * could not: it also reaches `coverage.divisions` for the districts the
-   * reader is actually in. `tests/resolved-location.test.ts` asserts the new
-   * wiring, so the guard follows the code rather than pinning a line number.
+   * **WGH-22 (2026-08-31) — THE READER'S OWN DISTRICTS, ASKED FOR BY KEY.**
+   *
+   * The 8/30 cut tried to add the reader's missing districts from
+   * `coverage.divisions`. It could not: `summarizeCoverage` derives
+   * `coverage.seats` from `coverage.divisions` by filtering to the seat types,
+   * so at those levels the two lists are one list. Measured against production
+   * at 85641 with the owner's address confirmed, the State section rendered
+   * EMPTY — District 19 correctly set aside, District 17 still absent.
+   *
+   * The only list that carries District 17 is the reader's own confirmed
+   * divisions, on their device. It carries ids and nothing else, so the name
+   * and the roster are asked for by division key —
+   * `hooks/use-confirmed-divisions.ts`, the same route the district battlecard
+   * has used since M112 — and injected into the pure splitter as rows.
    */
+  const stateConfirmed = useConfirmedDivisions(coverage, subject.location, STATE_SEAT_TYPES);
+  const federalConfirmed = useConfirmedDivisions(
+    coverage,
+    subject.location,
+    FEDERAL_SEAT_TYPES,
+  );
 
   // Item 2c (2026-08-14 second session): officials group under three
   // headers, closest-first — Local, State, Federal. The state seats and
@@ -558,41 +631,26 @@ function CoverageBody({
   // match); the governor (2b) rides under STATE after the legislators —
   // order of scope, district before statewide.
   /*
-   * **WGH-22 (2026-08-30) — AND WGH-15 WAS ONLY HALF OF IT.**
-   *
-   * These were `seatsHere.filter(...)`, and `seatsHere` is the ZIP's seats
-   * annotated with a standing. That let the panel MARK District 19 as not the
-   * reader's. It could not let the panel SHOW District 17, because District 17
-   * was never in the list being marked — the reader's own divisions live in
-   * `coverage.divisions`, which the districts popup has read correctly all
-   * along and this panel had never joined to.
-   *
-   * So the owner, at a resolved address, met a state section listing two
-   * districts labelled *not yours* and not listing either of the two that
-   * were. Hiding the marked rows alone would have made the section emptier
-   * rather than righter.
-   *
-   * `panelSeatsFor` returns both halves: the reader's own, and the zip's
-   * others kept behind a disclosure. Without an address it returns exactly
-   * what this line used to — the whole zip, one list. `UNSETTLED` is not
-   * `ELSEWHERE_IN_ZIP`, and a reader who gave only a zip gets no partition
+   * `panelSeatsFor` returns the reader's own rows and — separately, never
+   * rendered — the ones the address ruled out. Without an address it returns
+   * exactly what this line used to: the whole zip, one list. `UNSETTLED` is
+   * not `ELSEWHERE_IN_ZIP`, and a reader who gave only a zip gets no partition
    * invented for them.
    */
   const statePanel = panelSeatsFor(
     coverage,
     subject.location,
     STATE_SEAT_TYPES,
-    (ocdId) => representationForDivision(coverage, ocdId),
+    stateConfirmed,
   );
   const federalPanel = panelSeatsFor(
     coverage,
     subject.location,
     FEDERAL_SEAT_TYPES,
-    (ocdId) => representationForDivision(coverage, ocdId),
+    federalConfirmed,
   );
   const stateSeats = statePanel.yours;
   const federalSeats = federalPanel.yours;
-  const elsewhereSeats = [...statePanel.elsewhere, ...federalPanel.elsewhere];
 
   /*
    * The reader's device-local narrowing (M26): where they picked their
@@ -603,9 +661,19 @@ function CoverageBody({
   const narrowing = useNarrowing(zip);
   const selected = new Set(narrowing.divisions);
 
-  // The same subject the seats above were annotated against. One location, one
-  // question, every list on this card.
-  const bodiesHere = applyResolvedLocation(bodies, subject.location);
+  /*
+   * The same subject the seats above were annotated against. One location, one
+   * question, every list on this card.
+   *
+   * **RULING 222**: `scopedToAddress`, not `applyResolvedLocation`. The LOCAL
+   * list is ZIP-scoped exactly as the seat lists are, and a municipality or a
+   * county the reader's own address has ruled out is out of scope here for the
+   * same reason District 19 is out of scope there. It drops only
+   * `ELSEWHERE_IN_ZIP`; the overlapping levels most of these rows sit at are
+   * untouched, and every count on this card is derived from THIS array, so the
+   * stated N and the rendered rows cannot disagree about it.
+   */
+  const bodiesHere = scopedToAddress(bodies, subject.location);
 
   /*
    * ITEM 1a (2026-08-17, the author's ruling): ONE DENOMINATOR.
@@ -770,35 +838,26 @@ function CoverageBody({
       <SubjectLine zip={zip} standing={subject.location.certainty} />
 
       {/*
-        WGH-15: and how many of the rows below their own address excludes.
-        Stated rather than left to be spotted — a reader who gave an address
-        and then sees a neighbouring district's board in the list needs to be
-        told which is which, not left to compare it against a prompt.
+        **RULING 222 (2026-08-31) — THE COUNTING SENTENCE IS GONE WITH THE
+        ROWS IT COUNTED.**
 
-        It is a SENTENCE, never a filter. Every row is still rendered and every
-        row is still openable (RULING 26, RULING 27).
+        A line stood here reading "N of these govern a different part of
+        85641 than your address, and they are marked below." It was written
+        for WGH-15 when those rows were rendered and annotated. They are not
+        rendered any more — scopedToAddress drops them before this list is
+        built — so the sentence would be describing rows that are not there,
+        which is a surface asserting something its own contents contradict:
+        the WGH-19 / WGH-21 / MAP-5 class, on a fourth surface.
 
-        WGH-16: `derived.elsewhere` counts `ELSEWHERE_IN_ZIP` and nothing else,
-        so this number now covers only the rows the address genuinely EXCLUDES
-        — the exclusive levels. It got smaller and it got true. The overlapping
-        rows are not folded in here on purpose: "governs a different part of
-        your zip" is the exact claim they have not earned, and a count that
-        mixed the two would restate it in aggregate.
+        Nothing replaces it. "We hold N more you cannot see" is a claim about
+        our collection dressed as a claim about the reader's government, and
+        the ZIP-scoped view is one tap away — clearing the address restores it
+        in full, which is where completeness is owed.
+
+        deriveWhoGoverns still COUNTS the excluded rows; it is a derivation
+        over an annotated list and tests/resolved-location.test.ts reads it.
+        What is gone is the render.
       */}
-      {derived.elsewhere > 0 && (
-        <p
-          data-elsewhere-count={derived.elsewhere}
-          className="mt-1 text-[0.75rem] leading-relaxed text-voice"
-        >
-          {derived.elsewhere === 1
-            ? "One of these governs a different part of "
-            : `${derived.elsewhere} of these govern a different part of `}
-          {zip} than your address, and{" "}
-          {derived.elsewhere === 1 ? "it is marked" : "they are marked"} below.
-          We hold {derived.elsewhere === 1 ? "it" : "them"} in full — nothing is
-          hidden from you.
-        </p>
-      )}
 
       {othersLine && (
         <p className="mt-1 text-[0.75rem] leading-relaxed text-voice">
@@ -1012,19 +1071,17 @@ function CoverageBody({
                   <CouldGovernMark jurisdiction={body.name ?? body.divisionLabel} />
                 )}
                 {/*
-                  WGH-15: the reader's own address settled this level and named
-                  a DIFFERENT division, so this government is not theirs. It
-                  keeps its `CouldGovernMark` too, deliberately —
-                  `keepsCouldGovernPill` explains why an unmarked row would read
-                  as "this governs you", and this sentence is the stronger copy
-                  that comment says the mark is waiting for.
+                  RULING 222: there is no exclusion mark here any more. A body
+                  the reader's own address settled AGAINST never reaches this
+                  list — `scopedToAddress` drops it upstream — so there is no
+                  row for a "not yours" sentence to sit on, which is the whole
+                  point of the ruling.
                 */}
-                {marksElsewhere(body.standing) && <ElsewhereMark zip={zip} />}
                 {/*
-                  WGH-16: and the weaker case, which is the COMMON one on this
+                  WGH-16: the weaker case, which is the COMMON one on this
                   list. Municipal and school-district rows sit at levels that
-                  overlap, so the exclusion above is unreachable for them and
-                  this is the mark they get instead. The seat lists further down
+                  overlap, so the exclusion is unreachable for them and this is
+                  the mark they get instead. The seat lists further down
                   carry only `sldl`, `sldu` and `cd` — all measured exclusive —
                   so this mark is deliberately not repeated there: it could never
                   fire, and a branch that cannot fire is a branch a later reader
@@ -1288,37 +1345,16 @@ function CoverageBody({
                 State
               </p>
               <ul className="mt-1 space-y-1">
+                {/* THE REPORTED ROWS. After a confirmed address this list is
+                    the reader's own districts — District 17 at 85641 — and
+                    the ones their address ruled out are not on it. */}
                 {stateSeats.map((seat) => (
-                  <li
+                  <SeatRow
                     key={seat.ocdId}
-                    /* WGH-15: the walk reads the standing off the row rather
-                       than inferring it from a Tailwind class, so the next
-                       design pass cannot silently disarm the guard. */
-                    data-seat-standing={seat.standing}
-                    className="text-[0.75rem] leading-snug"
-                  >
-                    <span className={TYPE_LABEL_CLASS}>{seat.label}</span>
-                    {/* THE REPORTED ROW. District 19's members under a prompt
-                        reading District 17 — both facts true, one of them not
-                        the reader's, and nothing on screen saying which. */}
-                    {marksElsewhere(seat.standing) && <ElsewhereMark zip={zip} />}
-                    <span className="block person-under-heading">
-                      {seat.representatives.length > 0 ? (
-                        <HolderList
-                          holders={[...seat.representatives]}
-                          seatLabel={seat.label}
-                          seatOcdId={seat.ocdId}
-                          tier={seat.tier}
-                          onOpenOfficial={onOpenOfficial}
-                        />
-                      ) : (
-                        // Not "vacant" — we simply have no record. The two
-                        // are completely different claims and only one is
-                        // ours to make.
-                        <span className="text-muted">no record yet</span>
-                      )}
-                    </span>
-                  </li>
+                    seat={seat}
+                    zip={zip}
+                    onOpenOfficial={onOpenOfficial}
+                  />
                 ))}
                 {statewideExecutives.map((holder) => (
                   <li
@@ -1389,30 +1425,16 @@ function CoverageBody({
                 Federal
               </p>
               <ul className="mt-1 space-y-1">
+                {/* Same rule at the federal level. A zip that crosses a
+                    congressional line is rarer, not different — and it is the
+                    same component, so it cannot be treated differently. */}
                 {federalSeats.map((seat) => (
-                  <li
+                  <SeatRow
                     key={seat.ocdId}
-                    data-seat-standing={seat.standing}
-                    className="text-[0.75rem] leading-snug"
-                  >
-                    <span className={TYPE_LABEL_CLASS}>{seat.label}</span>
-                    {/* Same rule at the federal level. A zip that crosses a
-                        congressional line is rarer, not different. */}
-                    {marksElsewhere(seat.standing) && <ElsewhereMark zip={zip} />}
-                    <span className="block person-under-heading">
-                      {seat.representatives.length > 0 ? (
-                        <HolderList
-                          holders={[...seat.representatives]}
-                          seatLabel={seat.label}
-                          seatOcdId={seat.ocdId}
-                          tier={seat.tier}
-                          onOpenOfficial={onOpenOfficial}
-                        />
-                      ) : (
-                        <span className="text-muted">no record yet</span>
-                      )}
-                    </span>
-                  </li>
+                    seat={seat}
+                    zip={zip}
+                    onOpenOfficial={onOpenOfficial}
+                  />
                 ))}
                 {/*
                   ALIGN-2 (2026-08-26, the author's 8/26 walkthrough). This
@@ -1459,56 +1481,21 @@ function CoverageBody({
           )}
 
           {/*
-            **WGH-22 — THE ROWS THE ADDRESS RULED OUT, KEPT AND MOVED.**
+            **RULING 222 (2026-08-31) — THE DISCLOSURE IS GONE.**
 
-            These are districts we hold in full, that govern real people in
-            this zip, and that the reader's own address has POSITIVELY
-            established are not theirs. They stay on the panel — RULING 26 and
-            RULING 27 forbid dropping what we have found — and they stop
-            sitting in the list a reader reads as *these are yours*, which is
-            the state the owner circled in red.
+            A collapsed <details> stood here listing the districts the
+            reader's address ruled out, under the reading that RULING 26/27
+            forbade dropping them. The author settled that reading: after a
+            confirmed address the scope IS the address, and an entity we have
+            determined does not govern this reader is out of scope rather than
+            disclosed. Show-everything guarantees completeness WITHIN the
+            correct scope; it never licensed carrying another district's
+            representatives on the panel a reader reads as theirs.
 
-            Collapsed by default, and the count is derived from the rows
-            behind it rather than written beside them, so the label and the
-            list cannot disagree the way WGH-21's did.
+            The rows are still computed — panelSeatsFor().excluded — so a
+            check can assert they were DROPPED rather than never found, and
+            tests/address-scope.test.ts asserts exactly that.
           */}
-          {elsewhereSeats.length > 0 && (
-            <details className="mt-3" data-elsewhere-disclosure="">
-              <summary className="cursor-pointer text-[0.6875rem] text-link">
-                {elsewhereDisclosureLabel(elsewhereSeats.length, zip)}
-              </summary>
-              <p className="mt-1 text-[0.625rem] leading-relaxed text-muted">
-                Your address settled which of these is yours. These cover other
-                parts of {zip} — they are here because they govern people in
-                this zip, not because they govern you.
-              </p>
-              <ul className="mt-1 space-y-1">
-                {elsewhereSeats.map((seat: PanelSeat) => (
-                  <li
-                    key={seat.ocdId}
-                    data-seat-standing={seat.standing}
-                    data-elsewhere-row=""
-                    className="text-[0.75rem] leading-snug"
-                  >
-                    <span className={TYPE_LABEL_CLASS}>{seat.label}</span>
-                    <span className="block person-under-heading">
-                      {seat.representatives.length > 0 ? (
-                        <HolderList
-                          holders={[...seat.representatives]}
-                          seatLabel={seat.label}
-                          seatOcdId={seat.ocdId}
-                          tier={seat.tier}
-                          onOpenOfficial={onOpenOfficial}
-                        />
-                      ) : (
-                        <span className="text-muted">no record yet</span>
-                      )}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </details>
-          )}
         </>
       )}
 

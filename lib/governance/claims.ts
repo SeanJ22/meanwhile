@@ -261,6 +261,17 @@ export const CLAIM_KEYS: readonly ClaimKeyDef[] = [
       "counted-as-open",
     ],
   },
+  {
+    key: "rendering.address_scope",
+    question: "Once a reader confirms an address, what scope do ZIP-scoped surfaces show?",
+    values: ["address-scope-replaces-zip-scope", "zip-scope-with-annotations"],
+  },
+  {
+    key: "rendering.excluded_entity_label",
+    question:
+      "May a governing-entities surface display an entity the address ruled out, labelled as not the reader's?",
+    values: ["prohibited-out-of-scope-not-annotated", "kept-and-labelled"],
+  },
 ] as const;
 
 const KEY_INDEX = new Map(CLAIM_KEYS.map((k) => [k.key, k]));

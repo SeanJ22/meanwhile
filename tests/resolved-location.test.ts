@@ -504,17 +504,19 @@ test("WGH-15 WIRING: the who-governs card routes its SEATS through the location"
   const card = codeOf("components", "map", "coverage-notice.tsx");
 
   /*
-   * **WGH-22 (2026-08-30) — the guard now asserts the STRONGER wiring.**
+   * **WGH-22 (2026-08-31) — the guard asserts the wiring that MEASURED right.**
    *
-   * WGH-15 got the seats annotated, which let the panel MARK District 19 as
-   * not the reader's. It could not let the panel SHOW District 17, because
-   * District 17 was never in the list being marked: `coverage.seats` is the
-   * ZIP's, and the reader's own divisions live in `coverage.divisions`.
+   * The 8/30 version of this guard asserted that `panel-seats.ts` mentioned
+   * `coverage.divisions`, which it did, and which changed nothing: at the seat
+   * levels `coverage.divisions` and `coverage.seats` are one list, so the
+   * derivation the guard was pinning could never add the reader's own district.
+   * The guard passed on a string. The panel rendered EMPTY at the owner's
+   * address.
    *
-   * `panelSeatsFor` does both — it calls the same `applyResolvedLocation`, and
-   * it reaches the division list for the districts the address settled. The
-   * assertions follow the derivation rather than the old line, so the guard
-   * cannot be satisfied by a binding nothing reads.
+   * These assertions follow the two things the surface actually needs — a
+   * scope filter that DROPS the excluded rows, and a source for the reader's
+   * own districts that is not the ZIP payload — so a repair that satisfies
+   * them has to have changed the rendered answer.
    */
   assert.match(
     card,
@@ -528,21 +530,27 @@ test("WGH-15 WIRING: the who-governs card routes its SEATS through the location"
   const derivation = codeOf("lib", "state", "panel-seats.ts");
   assert.match(
     derivation,
-    /applyResolvedLocation\(inScope, location\)/,
-    "the partition annotates through the same function the bodies use",
+    /scopedToAddress\(inScope, location\)/,
+    "the partition SCOPES through the shared filter rather than annotating in place",
   );
   assert.match(
     derivation,
+    /excludedByAddress\(inScope, location\)/,
+    "and the dropped rows are still computed, so a check can assert they were dropped",
+  );
+  assert.doesNotMatch(
+    derivation,
     /coverage\.divisions/,
-    "and it reads the divisions the ADDRESS settled, which is what the zip's seat list cannot supply",
+    "coverage.divisions IS coverage.seats at these levels — reading it adds nothing",
   );
 
-  // And the exclusion actually reaches the row rather than being computed and
-  // dropped a third time.
+  // The reader's own districts come from the confirmed list, asked for by key.
+  assert.match(card, /useConfirmedDivisions\(coverage, subject\.location, STATE_SEAT_TYPES\)/);
+  assert.match(card, /panelSeatsFor\([\s\S]{0,120}stateConfirmed/, "and they reach the splitter");
+
+  // The standing still reaches the row, so a walk reads it off the DOM.
   assert.match(card, /data-seat-standing=\{seat\.standing\}/);
-  assert.match(card, /marksElsewhere\(seat\.standing\)/);
-  // The excluded rows are KEPT (RULING 26/27) — disclosed, never dropped.
-  assert.match(card, /data-elsewhere-disclosure/, "the excluded districts stay on the panel");
+  assert.match(card, /data-seat-sourcing=\{seat\.sourcing\}/);
 });
 
 test("WGH-15 WIRING: the who-governs card NAMES the question it answers", () => {
@@ -901,6 +909,18 @@ test("WGH-16 WIRING: the browse copy has a branch for the weaker state", () => {
   const card = codeOf("components", "map", "coverage-notice.tsx");
   assert.match(card, /marksOverlap\(body\.standing\)/, "the card marks the weaker rows");
   assert.match(card, /data-standing="OVERLAP_NOT_RULED_OUT"/);
-  // The strong mark is still gated on the strong state alone.
-  assert.match(card, /standing === "ELSEWHERE_IN_ZIP"/);
+  /*
+   * **RULING 222 (2026-08-31) inverts the last assertion.**
+   *
+   * This used to require the card to carry a branch gated on
+   * `ELSEWHERE_IN_ZIP`, because the strong state earned the strong SENTENCE.
+   * The author's ruling ends that: after a confirmed address an excluded entity
+   * is out of scope, not annotated, so there is no row on this card for the
+   * strong mark to sit on and a branch for it would be the defect returning.
+   *
+   * The weak mark is untouched and must stay — `OVERLAP_NOT_RULED_OUT` is a row
+   * about which nothing has been determined, and dropping it would be the same
+   * manufactured claim in the other direction.
+   */
+  assert.doesNotMatch(card, /marksElsewhere/, "the exclusion mark is deleted, not improved");
 });

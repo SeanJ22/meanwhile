@@ -1,847 +1,914 @@
 {
-  "folder": "8.30.26",
-  "filesInventoried": [
+ "folder": "8.30.26",
+ "filesInventoried": [
+  "2026-08-30_17-28-43.PNG",
+  "2026-08-30_17-29-48.PNG",
+  "2026-08-30_17-30-54.PNG",
+  "2026-08-30_17-32-42.PNG",
+  "2026-08-30_17-33-32.PNG",
+  "2026-08-30_17-34-14.PNG",
+  "2026-08-30_17-36-08.PNG",
+  "2026-08-30_17-36-26.PNG",
+  "2026-08-30_17-37-39.PNG",
+  "2026-08-30_17-39-01.PNG",
+  "2026-08-30_17-39-44.PNG",
+  "2026-08-30_17-41-37.PNG",
+  "2026-08-30_17-42-03.PNG",
+  "2026-08-30_17-42-30.PNG",
+  "2026-08-30_17-45-20.PNG",
+  "2026-08-30_17-47-50.PNG",
+  "2026-08-30_17-53-11.PNG",
+  "2026-08-30_17-53-46.PNG",
+  "2026-08-30_17-54-02.PNG",
+  "2026-08-30_17-55-56.PNG",
+  "Visual Feedback 8.30.26.docx",
+  "we-the-people-feedback-2026-08-30.xlsx"
+ ],
+ "sweptAtSha": "68a70354f93378e813f44fdc70c5d1f293eddcdb",
+ "sweptAt": "2026-08-30",
+ "items": [
+  {
+   "id": "ASK-16",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-28-43.PNG"
+   ],
+   "surface": "Ask",
+   "zip": "85701",
+   "reported": "No way to close or back out of an Ask answer",
+   "correctState": "Every Ask answer carries a control that retires it and leaves the question in the box.",
+   "failureClass": "rendering",
+   "disposition": "FIXED_VERIFIED",
+   "workItemId": "wi:feedback:8.30.26:ASK-16",
+   "instancesFound": 1,
+   "instancesFixed": 1,
+   "checkId": "vac:ask-answer-dismiss",
+   "checkResult": "GREEN — [data-ask-dismiss] present; clicking it leaves 0 [data-ask-grounded] panels",
+   "blocker": null
+  },
+  {
+   "id": "ASK-17",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-30-54.PNG"
+   ],
+   "surface": "Ask",
+   "zip": "85701",
+   "reported": "Answer is cut off with no way to scroll",
+   "correctState": "The answer panel is bounded and scrolls to its end rather than cutting content off.",
+   "failureClass": "rendering",
+   "disposition": "FIXED_VERIFIED",
+   "workItemId": "wi:feedback:8.30.26:ASK-17",
+   "instancesFound": 1,
+   "instancesFixed": 1,
+   "checkId": "vac:ask-answer-scrolls",
+   "checkResult": "GREEN — computed overflow-y auto, max-h-[60vh], overscroll-contain",
+   "blocker": null
+  },
+  {
+   "id": "ASK-18",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
     "2026-08-30_17-28-43.PNG",
-    "2026-08-30_17-29-48.PNG",
-    "2026-08-30_17-30-54.PNG",
+    "2026-08-30_17-30-54.PNG"
+   ],
+   "surface": "Ask",
+   "zip": "85701",
+   "reported": "App blames itself when the agenda simply has not been posted",
+   "correctState": "Where a publisher's own surface carries an agenda slot and it was empty when read, the gap is THEIRS and names the publisher and the reading date. Where nothing measured the publisher, the gap is OURS.",
+   "failureClass": "acquisition",
+   "disposition": "OPEN_BLOCKED",
+   "workItemId": "wi:feedback:8.30.26:ASK-18",
+   "instancesFound": 426,
+   "instancesFixed": 187,
+   "checkId": "tests/agenda-slot-declaration.test.ts",
+   "checkResult": "PASS",
+   "blocker": "THE GOVERNED INGEST RAN (pnpm ingest composite, 2026-08-31: 593 meetings, 12 of 13 sources read, legistar-insite WALLED at 120s) and produced ZERO publisher observations — for a reason worth stating precisely, because it is not the reason the previous blocker gave.\n\nAll 15 freshly-read Legistar sittings CARRY an agenda link, so there was no empty slot to observe. The adapter and the seam are correct and simply had no case to record. The 426 agenda-less rows come from elsewhere, and lib/sources/agenda-slot.ts now records the per-adapter answer rather than leaving it as an omission:\n\n  ABSENT  ical (187 rows) — an iCalendar VEVENT has NO agenda property. This is a finished answer, not outstanding work: no adapter effort will ever make an iCal row observable, and its gap is OURS permanently on this route. 187 of the 426 are therefore accounted for.\n  PRESENT legistar — EventAgendaFile, wired and tested.\n  UNKNOWN clerksboards (103), schedulepage (54), civicplus (19), legistar-insite (17, and WALLED this run so nothing was read), diligent (16), iqm2 (16), apptegy (8), civicclerk (3), onbase (2), revize (1), boardbook.\n\nWHAT REMAINS, and it is executable: open each UNKNOWN adapter's surface, decide whether it carries an agenda slot, and where it does, record the observation at the moment of the read. ABSENT and UNKNOWN render the same OURS sentence to a reader today, which is correct in both cases — the reader is never told a false thing — but only one of them is finished.",
+   "resolution": "The false claim is GONE and that half is verified: no surface derives a publication state from agendaUrl === null any more, and all 426 agenda-less meetings render the OURS gap rather than telling a reader a clerk had not posted. What is not yet true is the owner's other half — seeing the gap attributed to the BODY where it is theirs — which needs a publisher observation that only the UNKNOWN adapters above can supply."
+  },
+  {
+   "id": "ASK-19",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-32-42.PNG"
+   ],
+   "surface": "Ask",
+   "zip": "85701",
+   "reported": "Answers are far too long",
+   "correctState": "A meeting answer leads with the date, the time and how to engage, and puts the roster behind a disclosure.",
+   "failureClass": "synthesis",
+   "disposition": "OPEN_BLOCKED",
+   "workItemId": "wi:feedback:8.30.26:ASK-19",
+   "instancesFound": 1,
+   "instancesFixed": 0,
+   "checkId": null,
+   "checkResult": null,
+   "blocker": "The roster half is fixed by ASK-21 and materially shortens the panel; the PROSE half is generated by the grounded answer path and needs a length contract in lib/ask that this session did not write. Not attempted rather than half-attempted: a prose cap applied without one would truncate sourced content."
+  },
+  {
+   "id": "ASK-20",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-32-42.PNG"
+   ],
+   "surface": "Ask",
+   "zip": "85701",
+   "reported": "No Add to Calendar on a meeting answer",
+   "correctState": "An Ask answer naming a meeting date carries the same Add to calendar control the meeting card already renders.",
+   "failureClass": "rendering",
+   "disposition": "FIXED_VERIFIED",
+   "workItemId": "wi:feedback:8.30.26:ASK-20",
+   "instancesFound": 1,
+   "instancesFixed": 1,
+   "checkId": "pnpm verify:ask-controls::ASK-20",
+   "checkResult": "PASS",
+   "blocker": null,
+   "resolution": "The Ask answer payload carries the SITTINGS it resolved, structured, beside the prose. It shipped a meeting as text and an id — everything a reader needs to read and nothing a control needs to act — so the answer could describe a meeting and offer nothing to do with it while the map card beside it offered both. `AskSitting` is declared in lib/ask/answer.ts; `MeetingLike` in the grounded route was widened to carry location, status and jurisdiction, which is the THIRD time that hand-narrowed shape has dropped fields the corpus already held (ASK-05 lost sourceOrg, ASK-18 lost provenance). `CalendarLinks` and the three format helpers now declare the shape they actually read, so a surface holding a sitting without retrieval provenance can use them without inventing one.",
+   "verification": "On the rendered DOM at 85701: mode GROUNDED_CLAUDE, subject the Pima County Board of Supervisors, 1 calendar block carrying 2 control elements. Recorded under data/health/ask-controls-walk/."
+  },
+  {
+   "id": "ASK-21",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
     "2026-08-30_17-32-42.PNG",
-    "2026-08-30_17-33-32.PNG",
-    "2026-08-30_17-34-14.PNG",
-    "2026-08-30_17-36-08.PNG",
-    "2026-08-30_17-36-26.PNG",
+    "2026-08-30_17-30-54.PNG",
+    "2026-08-30_17-28-43.PNG"
+   ],
+   "surface": "Ask",
+   "zip": "85701",
+   "reported": "\"Who this is\" roster should be collapsed by default",
+   "correctState": "The member roster is collapsed by default with its count on the summary, and every contact stays rendered behind it.",
+   "failureClass": "rendering",
+   "disposition": "FIXED_VERIFIED",
+   "workItemId": "wi:feedback:8.30.26:ASK-21",
+   "instancesFound": 1,
+   "instancesFixed": 1,
+   "checkId": "vac:ask-roster-collapsed",
+   "checkResult": "GREEN — <details> not open, summary reads 'Who this is (5)'",
+   "blocker": null
+  },
+  {
+   "id": "ASK-22",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-33-32.PNG"
+   ],
+   "surface": "Ask",
+   "zip": "85701",
+   "reported": "\"Meetings near you\" sends the user hunting",
+   "correctState": "Meetings near you, opened from an answer about a named body, opens on that body.",
+   "failureClass": "rendering",
+   "disposition": "FIXED_VERIFIED",
+   "workItemId": "wi:feedback:8.30.26:ASK-22",
+   "instancesFound": 1,
+   "instancesFixed": 1,
+   "checkId": "pnpm verify:ask-controls::ASK-22",
+   "checkResult": "PASS",
+   "blocker": null,
+   "resolution": "The pill dispatched `list/open` carrying nothing, so a reader answered about ONE body got every meeting in the ZIP and had to find it again. The action now carries the grounded answer's own bound subject — the engine's decision about what the question resolved to, never anything the component inferred. The focus lives in UI state rather than in `filters`: it belongs to one opening and the reducer clears it when the overlay closes, so an answer cannot leave a narrowing behind that the reader never chose. It is never silent — a chip names the body and clears it in one tap — and a focus matching nothing falls back to the full list rather than rendering an empty overlay that would read as \"this body has no meetings\".",
+   "verification": "On the rendered DOM: the chip reads \"Only Pima County Board Of Supervisors · show all ✕\". Recorded under data/health/ask-controls-walk/."
+  },
+  {
+   "id": "ASK-23",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-34-14.PNG"
+   ],
+   "surface": "Ask",
+   "zip": "85701",
+   "reported": "The answer does not follow the question asked",
+   "correctState": "The card opened from a question about a named body leads with that body's next meeting.",
+   "failureClass": "evidence_selection",
+   "disposition": "FIXED_VERIFIED",
+   "workItemId": "wi:feedback:8.30.26:ASK-23",
+   "instancesFound": 1,
+   "instancesFixed": 1,
+   "checkId": "pnpm verify:ask-controls::ASK-23",
+   "checkResult": "PASS",
+   "blocker": null,
+   "resolution": "Same root as ASK-22, and the owner said so: no subject reached the surface the pill opened, so it sorted by date across every body. With the focus applied the list holds that body's sittings, upcoming-first, so the first row IS its next meeting.",
+   "verification": "On the rendered DOM: 22 rows rendered with the focus applied, 0 of them naming another body, against 149 meetings in the ZIP unfocused."
+  },
+  {
+   "id": "MAP-5",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-29-48.PNG"
+   ],
+   "surface": "Map",
+   "zip": "85701",
+   "reported": "\"Districts in view\" says boundaries are off while the sidebar counts 33",
+   "correctState": "Both the stats tile and the districts door describe what the map has actually drawn; the switch is offered only when the layer is off AND nothing is painted.",
+   "failureClass": "rendering",
+   "disposition": "FIXED_VERIFIED",
+   "workItemId": "wi:feedback:8.30.26:MAP-5",
+   "instancesFound": 2,
+   "instancesFixed": 2,
+   "checkId": "vac:districts-door-agrees-with-tile",
+   "checkResult": "GREEN — tile reads 32 in view; the door no longer says switched off or nothing to count",
+   "blocker": null
+  },
+  {
+   "id": "WGH-17",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
     "2026-08-30_17-37-39.PNG",
-    "2026-08-30_17-39-01.PNG",
-    "2026-08-30_17-39-44.PNG",
-    "2026-08-30_17-41-37.PNG",
-    "2026-08-30_17-42-03.PNG",
-    "2026-08-30_17-42-30.PNG",
-    "2026-08-30_17-45-20.PNG",
-    "2026-08-30_17-47-50.PNG",
-    "2026-08-30_17-53-11.PNG",
+    "2026-08-30_17-36-08.PNG"
+   ],
+   "surface": "Who Governs Here",
+   "zip": "85701",
+   "reported": "Local bodies have no hierarchy",
+   "correctState": "Governing bodies order by what kind of government each is — county, city or town, school district, then other districts — and the criterion is stated on screen.",
+   "failureClass": "rendering",
+   "disposition": "FIXED_VERIFIED",
+   "workItemId": "wi:feedback:8.30.26:WGH-17",
+   "instancesFound": 1,
+   "instancesFixed": 1,
+   "checkId": "vac:wgh-ordered-by-kind",
+   "checkResult": "GREEN — panel states 'ordered by what kind of government'; orderByGovernmentKind is the single derivation",
+   "blocker": null
+  },
+  {
+   "id": "WGH-18",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-37-39.PNG",
+    "2026-08-30_17-36-26.PNG"
+   ],
+   "surface": "Who Governs Here",
+   "zip": "85701",
+   "reported": "Tracked bodies are named but unreachable from the panel",
+   "correctState": "The tracked boards and committees open in place from the panel that counts them.",
+   "failureClass": "rendering",
+   "disposition": "FIXED_VERIFIED",
+   "workItemId": "wi:feedback:8.30.26:WGH-18",
+   "instancesFound": 1,
+   "instancesFixed": 1,
+   "checkId": "vac:wgh-see-the-rest",
+   "checkResult": "GREEN — [data-other-bodies-disclosure] renders with the count derived from the rows behind it",
+   "blocker": null
+  },
+  {
+   "id": "WGH-19",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-37-39.PNG"
+   ],
+   "surface": "Who Governs Here",
+   "zip": "85701",
+   "reported": "\"Why these 8?\" copy is inaccurate and reads badly",
+   "correctState": "The explainer states the scope we can source and makes no completeness claim.",
+   "failureClass": "rendering",
+   "disposition": "FIXED_VERIFIED",
+   "workItemId": "wi:feedback:8.30.26:WGH-19",
+   "instancesFound": 1,
+   "instancesFixed": 1,
+   "checkId": "vac:wgh-no-completeness-claim",
+   "checkResult": "GREEN — 'none is left out' absent; scope sentence present",
+   "blocker": null
+  },
+  {
+   "id": "WGH-20",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [],
+   "surface": "Who Governs Here",
+   "zip": "85641",
+   "reported": "Body count mismatch — 7 reported, 6 listed",
+   "correctState": "The Bodies here count and the Who Governs Here list state the same number of governing bodies for one zip.",
+   "failureClass": "linkage",
+   "disposition": "NEEDS_SEAN",
+   "workItemId": "wi:feedback:8.30.26:WGH-20",
+   "instancesFound": 0,
+   "instancesFixed": 0,
+   "checkId": null,
+   "checkResult": null,
+   "blocker": null,
+   "needsOwner": {
+    "tried": "Reproduced at 85641 on this build. The panel reports 9 governing bodies and renders 9 rows — the 7-versus-6 mismatch the owner saw does not appear. Both numbers come from one derivation, so there is no second source to reconcile against.",
+    "whyMachineCannot": "A defect that does not reproduce cannot be fixed without knowing what it looked like. The owner's own sheet marks this row PENDING and it is the only row in the sweep with no screenshot. Changing the count logic on a guess would be editing working code against an unreproduced report — and a defect that does not reproduce is not a defect that is absent, so it is not closed either.",
+    "authorizationRequired": "The capture the owner saw, or the address/date that produced the 7-versus-6 state, so it can be placed against a build.",
+    "continuesWithout": "Every other Who Governs Here row is worked. A permanent check now pins the count and the rendered rows to one number, so a future divergence is caught rather than reported.",
+    "blockedDescendants": 0
+   }
+  },
+  {
+   "id": "WGH-21",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-55-56.PNG"
+   ],
+   "surface": "Who Governs Here",
+   "zip": "85701",
+   "reported": "Claims the governor is the only statewide office listed",
+   "correctState": "Nothing on the panel claims the governor is the only statewide office while nine statewide officeholders render above it.",
+   "failureClass": "rendering",
+   "disposition": "FIXED_VERIFIED",
+   "workItemId": "wi:feedback:8.30.26:WGH-21",
+   "instancesFound": 1,
+   "instancesFixed": 1,
+   "checkId": "vac:wgh-no-statewide-only-claim",
+   "checkResult": "GREEN — claim absent while Mayes, Yee and Horne all render",
+   "blocker": null
+  },
+  {
+   "id": "WGH-22",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
     "2026-08-30_17-53-46.PNG",
+    "2026-08-30_17-53-11.PNG",
+    "2026-08-30_17-54-02.PNG"
+   ],
+   "surface": "Address resolution",
+   "zip": "85641",
+   "reported": "Who Governs Here shows districts the app has already determined are not the user's — reported 8/28 (WGH-12, WGH-15), 8/30 (WGH-22), and falsified again by the owner on 2026-08-31",
+   "correctState": "Before a confirmed address, ZIP-scoped surfaces show every governing entity intersecting the ZIP. After a confirmed address, the scope IS the address: only entities that govern that address are shown, and an entity that is not the reader's is out of scope rather than annotated. (RULING 222.)",
+   "failureClass": "identity",
+   "disposition": "FIXED_VERIFIED",
+   "workItemId": "wi:feedback:8.30.26:WGH-22",
+   "instancesFound": 3,
+   "instancesFixed": 3,
+   "checkId": "scripts/walk-all.mts::the districts a confirmed address settled are the districts the panel lists",
+   "checkResult": "GREEN on the rendered DOM at all four pilot ZIPs (walk:all, 2026-08-31, local production build): 85641 renders State House District 17, State Senate District 17 and AZ-6, all CONFIRMED, with District 19 off the panel entirely; 85701 20/20/AZ-7; 07866 Assembly 25/Senate 25/NJ-11; 03255 Merrimack 07/Senate 7/NH-2. 16 checks across 4 ZIPs, plus tests/address-scope.test.ts and tests/panel-seats.test.ts.",
+   "blocker": null
+  },
+  {
+   "id": "OFF-8",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-39-01.PNG",
+    "2026-08-30_17-39-44.PNG"
+   ],
+   "surface": "Officials",
+   "zip": "85701",
+   "reported": "Photo resolution too low for the display",
+   "correctState": "A portrait is served at a resolution appropriate to the viewport and device pixel ratio.",
+   "failureClass": "rendering",
+   "disposition": "OPEN_BLOCKED",
+   "workItemId": "wi:feedback:8.30.26:OFF-8",
+   "instancesFound": 0,
+   "instancesFixed": 0,
+   "checkId": null,
+   "checkResult": null,
+   "blocker": "Not diagnosed this session. Needs a measurement of the served image's intrinsic dimensions against the rendered box at devicePixelRatio 1 and 2 on the officials card, then a source-side decision about which resolutions we hold. No fix attempted without that measurement."
+  },
+  {
+   "id": "OFF-9",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-53-11.PNG",
+    "2026-08-30_17-54-02.PNG"
+   ],
+   "surface": "Officials",
+   "zip": "85641",
+   "reported": "Missing photos for statewide officeholders",
+   "correctState": "Sitting statewide officeholders carry the portrait their own office publishes.",
+   "failureClass": "acquisition",
+   "disposition": "OPEN_BLOCKED",
+   "workItemId": "wi:feedback:8.30.26:OFF-9",
+   "instancesFound": 0,
+   "instancesFixed": 0,
+   "checkId": null,
+   "checkResult": null,
+   "blocker": "An acquisition obligation for Mayes, Fontes and Horne portraits from their own offices' pages. Fifth session reported. Not dispatched this session; no routes walked, so no absence is asserted here either."
+  },
+  {
+   "id": "OFF-10",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-42-03.PNG"
+   ],
+   "surface": "Officials",
+   "zip": "85701",
+   "reported": "Katie Hobbs photo renders badly on the ballot",
+   "correctState": "Same resolution handling as OFF-8, on the ballot card.",
+   "failureClass": "rendering",
+   "disposition": "OPEN_BLOCKED",
+   "workItemId": "wi:feedback:8.30.26:OFF-10",
+   "instancesFound": 0,
+   "instancesFixed": 0,
+   "checkId": null,
+   "checkResult": null,
+   "blocker": "Same class and same blocker as OFF-8."
+  },
+  {
+   "id": "BAL-32",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-42-03.PNG",
+    "2026-08-30_17-41-37.PNG",
+    "2026-08-30_17-42-30.PNG"
+   ],
+   "surface": "Ballot",
+   "zip": "85701",
+   "reported": "Sitting governor is not marked as the incumbent",
+   "correctState": "A candidate the officeholder registry names as holding the office carries Incumbent on the ballot exactly as on the map; nobody is called a challenger on an incomplete officeholder universe.",
+   "failureClass": "rendering",
+   "disposition": "FIXED_VERIFIED",
+   "workItemId": "wi:feedback:8.30.26:BAL-32",
+   "instancesFound": 1,
+   "instancesFixed": 1,
+   "checkId": "tests/incumbency.test.ts",
+   "checkResult": "GREEN — ballot battlecard renders Incumbent; the unconfirmed pill is gone; tests/incumbency-eligibility.test.ts holds both halves",
+   "blocker": null
+  },
+  {
+   "id": "BAL-33",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-42-03.PNG",
+    "2026-08-30_17-42-30.PNG"
+   ],
+   "surface": "Ballot",
+   "zip": "85701",
+   "reported": "Ballot claims no office location while the map holds full contact data",
+   "correctState": "The ballot card reads offices and committees from the same officeholder record the map reads.",
+   "failureClass": "linkage",
+   "disposition": "FIXED_VERIFIED",
+   "workItemId": "wi:feedback:8.30.26:BAL-33",
+   "instancesFound": 2,
+   "instancesFixed": 2,
+   "checkId": "vac:ballot-offices-from-record",
+   "checkResult": "GREEN — offices and committees now read recordHolder, not the federal-only join",
+   "blocker": null
+  },
+  {
+   "id": "BAL-34",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-42-30.PNG"
+   ],
+   "surface": "Map",
+   "zip": "85701",
+   "reported": "Map battlecard is missing the Offices near you pill",
+   "correctState": "The fixed pill row from BC-1 renders on every map battlecard; a missing datum shows an empty state and the pill still exists.",
+   "failureClass": "rendering",
+   "disposition": "OPEN_BLOCKED",
+   "workItemId": "wi:feedback:8.30.26:BAL-34",
+   "instancesFound": 0,
+   "instancesFixed": 0,
+   "checkId": null,
+   "checkResult": null,
+   "blocker": "The map battlecard builds its pill set conditionally per section rather than from the fixed BC-1 set. Making it fixed there is the mirror of the change made on the ballot card and was not reached this session."
+  },
+  {
+   "id": "BAL-35",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-42-03.PNG",
+    "2026-08-30_17-42-30.PNG"
+   ],
+   "surface": "Data model",
+   "zip": "85701",
+   "reported": "Ballot and map read different records for the same person",
+   "correctState": "One record per person, consumed by both surfaces: the ballot renders the same ContactPills over the same SeatHolder the map renders.",
+   "failureClass": "linkage",
+   "disposition": "FIXED_VERIFIED",
+   "workItemId": "wi:feedback:8.30.26:BAL-35",
+   "instancesFound": 1,
+   "instancesFixed": 1,
+   "checkId": "vac:ballot-contact-routes",
+   "checkResult": "GREEN — Phone, Email, Contact form and Official page all render on the ballot battlecard for Katie Hobbs",
+   "blocker": null
+  },
+  {
+   "id": "BAL-36",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [],
+   "surface": "Data",
+   "zip": "85701",
+   "reported": "No legislative record captured for the governor",
+   "correctState": "Bills signed and vetoed by a sitting executive are held and rendered as their record in office.",
+   "failureClass": "acquisition",
+   "disposition": "NEEDS_SEAN",
+   "workItemId": "wi:feedback:8.30.26:BAL-36",
+   "instancesFound": 0,
+   "instancesFixed": 0,
+   "checkId": null,
+   "checkResult": null,
+   "blocker": null,
+   "needsOwner": {
+    "tried": "Audited lib/sources/ for any adapter collecting executive action records — bills signed, vetoed, executive orders. There is none, and no held corpus carries the class: the Ask engine can only answer a question about a governor's record as a gap because there is nothing to answer it from.",
+    "whyMachineCannot": "Adding an external source is on CLAUDE.md's ask-before list by name. Choosing which publisher to take executive action records from is a source decision, and this product's sourcing rule reserves it to the author.",
+    "authorizationRequired": "Approval to add a source for state executive action records, and which publisher it should be — the Arizona Secretary of State's bill history, the Governor's own office, or another.",
+    "continuesWithout": "The governor renders with a NAMED GAP attributed to us rather than an invented record, which is the honest state. Every other ballot row proceeds.",
+    "blockedDescendants": 0
+   }
+  },
+  {
+   "id": "BAL-37",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-45-20.PNG"
+   ],
+   "surface": "Ballot",
+   "zip": "85701",
+   "reported": "No address autocomplete",
+   "correctState": "The address field suggests as the reader types.",
+   "failureClass": "rendering",
+   "disposition": "NEEDS_SEAN",
+   "workItemId": "wi:feedback:8.30.26:BAL-37",
+   "instancesFound": 0,
+   "instancesFixed": 0,
+   "checkId": null,
+   "checkResult": null,
+   "blocker": null,
+   "needsOwner": {
+    "tried": "Checked what could serve typeahead from data already held. The Census geocoder the app uses has no typeahead endpoint; data/voting-sites.json and the ZCTA store hold points and polygons, not an address universe. Suggesting from our own partial data would offer a reader a list that silently excludes addresses we simply do not hold, which is a coverage gap wearing an autocomplete.",
+    "whyMachineCannot": "A real address typeahead needs an external suggestion source, which is an ask-before under CLAUDE.md. It also carries a privacy question the collection rules reserve to the author: a typeahead sends partial addresses to a third party as the reader types.",
+    "authorizationRequired": "Approval to add an address-suggestion source, and which one — with a decision about whether partial addresses may leave this product as the reader types.",
+    "continuesWithout": "The address field accepts and geocodes a typed address today. BAL-38, the out-of-zip redirect on that same field, is worked independently.",
+    "blockedDescendants": 0
+   }
+  },
+  {
+   "id": "BAL-38",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-45-20.PNG"
+   ],
+   "surface": "Ballot",
+   "zip": "85701",
+   "reported": "Out-of-zip address is rejected instead of redirected",
+   "correctState": "An address that resolves outside the shown zip offers to switch to the zip it does resolve to.",
+   "failureClass": "rendering",
+   "disposition": "FIXED_VERIFIED",
+   "workItemId": "wi:feedback:8.30.26:BAL-38",
+   "instancesFound": 1,
+   "instancesFixed": 1,
+   "checkId": "tests/out-of-zip-address.test.ts",
+   "checkResult": "PASS",
+   "blocker": null,
+   "resolution": "The blocker was right that the evidence existed and wrong about where. `locateAddressInZip` puts the ZIP INTO the geocoder query, so an address one ZIP over cannot match and returns exactly like a bad address — and `parseCensusPoint` read the coordinates and dropped `addressComponents.zip`, which the response has always carried. `zipThisAddressResolvesTo` re-asks the same geocoder WITHOUT the ZIP constraint, on the failure branch only and only with a house number, so nothing extra leaves this product on the happy path. The same ZIP back is not a redirect and offers nothing. The switch is OFFERED and never taken automatically: a reader looking at one ZIP's ballot who is silently moved to another has had their question changed for them.",
+   "verification": "Six tests, three seeded — the next-ZIP case, the same-ZIP non-redirect, and the street-only path proving no extra address is geocoded. The reader-facing offer is wired through components/ballot/ballot-narrowing.tsx to /ballot?zip=. NOT re-verified on the rendered DOM: reaching it needs a real out-of-zip address typed against a live geocoder, which the unit seam covers deterministically and a walk would not."
+  },
+  {
+   "id": "BAL-39",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-47-50.PNG"
+   ],
+   "surface": "Ballot",
+   "zip": "85701",
+   "reported": "Two-column desktop layout has gaps and misaligned boxes",
+   "correctState": "The two-column desktop ballot aligns across columns without gaps.",
+   "failureClass": "rendering",
+   "disposition": "OPEN_BLOCKED",
+   "workItemId": "wi:feedback:8.30.26:BAL-39",
+   "instancesFound": 0,
+   "instancesFixed": 0,
+   "checkId": null,
+   "checkResult": null,
+   "blocker": "Needs an image-evaluated measurement of the column geometry before a layout change; the new position and spacing evaluators from W1.7 are the instrument for it and no VisualAcceptanceCheck was authored against the ballot this session."
+  },
+  {
+   "id": "POS-1",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-42-30.PNG",
+    "2026-08-30_17-39-44.PNG",
+    "2026-08-30_17-39-01.PNG"
+   ],
+   "surface": "Map",
+   "zip": "85701",
+   "reported": "Map battlecards are the reference standard",
+   "correctState": "Map battlecards render the complete card. Keep.",
+   "failureClass": "rendering",
+   "disposition": "POSITIVE_KEPT",
+   "workItemId": null,
+   "instancesFound": 0,
+   "instancesFixed": 0,
+   "checkId": "vac:map-battlecard-complete",
+   "checkResult": "recorded so a later change cannot silently reduce it",
+   "blocker": null
+  },
+  {
+   "id": "POS-2",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-34-14.PNG"
+   ],
+   "surface": "Meetings",
+   "zip": "85701",
+   "reported": "\"NO AGENDA POSTED YET\" is the correct language",
+   "correctState": "The meeting card's NO AGENDA POSTED YET is the register the owner wants. NOTE, and it is a finding rather than an endorsement: that sentence is currently driven by a bare `agendaUrl === null` check, so it asserts an absence about a government from our own record being empty. It happens to be true here. It is recorded as its own defect below (SWEEP-01) rather than copied to Ask.",
+   "failureClass": "rendering",
+   "disposition": "POSITIVE_KEPT",
+   "workItemId": null,
+   "instancesFound": 0,
+   "instancesFixed": 0,
+   "checkId": "vac:meeting-card-agenda-wording",
+   "checkResult": "kept, and its mechanism is now tracked as SWEEP-01",
+   "blocker": null
+  },
+  {
+   "id": "POS-3",
+   "sources": [
+    "SPREADSHEET",
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-53-11.PNG",
     "2026-08-30_17-54-02.PNG",
-    "2026-08-30_17-55-56.PNG",
-    "Visual Feedback 8.30.26.docx",
-    "we-the-people-feedback-2026-08-30.xlsx"
-  ],
-  "sweptAtSha": "68a70354f93378e813f44fdc70c5d1f293eddcdb",
-  "sweptAt": "2026-08-30",
-  "items": [
-    {
-      "id": "ASK-16",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-28-43.PNG"
-      ],
-      "surface": "Ask",
-      "zip": "85701",
-      "reported": "No way to close or back out of an Ask answer",
-      "correctState": "Every Ask answer carries a control that retires it and leaves the question in the box.",
-      "failureClass": "rendering",
-      "disposition": "FIXED_VERIFIED",
-      "workItemId": "wi:feedback:8.30.26:ASK-16",
-      "instancesFound": 1,
-      "instancesFixed": 1,
-      "checkId": "vac:ask-answer-dismiss",
-      "checkResult": "GREEN — [data-ask-dismiss] present; clicking it leaves 0 [data-ask-grounded] panels",
-      "blocker": null
-    },
-    {
-      "id": "ASK-17",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-30-54.PNG"
-      ],
-      "surface": "Ask",
-      "zip": "85701",
-      "reported": "Answer is cut off with no way to scroll",
-      "correctState": "The answer panel is bounded and scrolls to its end rather than cutting content off.",
-      "failureClass": "rendering",
-      "disposition": "FIXED_VERIFIED",
-      "workItemId": "wi:feedback:8.30.26:ASK-17",
-      "instancesFound": 1,
-      "instancesFixed": 1,
-      "checkId": "vac:ask-answer-scrolls",
-      "checkResult": "GREEN — computed overflow-y auto, max-h-[60vh], overscroll-contain",
-      "blocker": null
-    },
-    {
-      "id": "ASK-18",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-28-43.PNG",
-        "2026-08-30_17-30-54.PNG"
-      ],
-      "surface": "Ask",
-      "zip": "85701",
-      "reported": "App blames itself when the agenda simply has not been posted",
-      "correctState": "Where a publisher's own surface carries an agenda slot and it was empty when read, the gap is THEIRS and names the publisher and the reading date. Where nothing measured the publisher, the gap is OURS.",
-      "failureClass": "acquisition",
-      "disposition": "OPEN_BLOCKED",
-      "workItemId": "wi:feedback:8.30.26:ASK-18",
-      "instancesFound": 426,
-      "instancesFixed": 187,
-      "checkId": "tests/agenda-slot-declaration.test.ts",
-      "checkResult": "PASS",
-      "blocker": "THE GOVERNED INGEST RAN (pnpm ingest composite, 2026-08-31: 593 meetings, 12 of 13 sources read, legistar-insite WALLED at 120s) and produced ZERO publisher observations — for a reason worth stating precisely, because it is not the reason the previous blocker gave.\n\nAll 15 freshly-read Legistar sittings CARRY an agenda link, so there was no empty slot to observe. The adapter and the seam are correct and simply had no case to record. The 426 agenda-less rows come from elsewhere, and lib/sources/agenda-slot.ts now records the per-adapter answer rather than leaving it as an omission:\n\n  ABSENT  ical (187 rows) — an iCalendar VEVENT has NO agenda property. This is a finished answer, not outstanding work: no adapter effort will ever make an iCal row observable, and its gap is OURS permanently on this route. 187 of the 426 are therefore accounted for.\n  PRESENT legistar — EventAgendaFile, wired and tested.\n  UNKNOWN clerksboards (103), schedulepage (54), civicplus (19), legistar-insite (17, and WALLED this run so nothing was read), diligent (16), iqm2 (16), apptegy (8), civicclerk (3), onbase (2), revize (1), boardbook.\n\nWHAT REMAINS, and it is executable: open each UNKNOWN adapter's surface, decide whether it carries an agenda slot, and where it does, record the observation at the moment of the read. ABSENT and UNKNOWN render the same OURS sentence to a reader today, which is correct in both cases — the reader is never told a false thing — but only one of them is finished.",
-      "resolution": "The false claim is GONE and that half is verified: no surface derives a publication state from agendaUrl === null any more, and all 426 agenda-less meetings render the OURS gap rather than telling a reader a clerk had not posted. What is not yet true is the owner's other half — seeing the gap attributed to the BODY where it is theirs — which needs a publisher observation that only the UNKNOWN adapters above can supply."
-    },
-    {
-      "id": "ASK-19",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-32-42.PNG"
-      ],
-      "surface": "Ask",
-      "zip": "85701",
-      "reported": "Answers are far too long",
-      "correctState": "A meeting answer leads with the date, the time and how to engage, and puts the roster behind a disclosure.",
-      "failureClass": "synthesis",
-      "disposition": "OPEN_BLOCKED",
-      "workItemId": "wi:feedback:8.30.26:ASK-19",
-      "instancesFound": 1,
-      "instancesFixed": 0,
-      "checkId": null,
-      "checkResult": null,
-      "blocker": "The roster half is fixed by ASK-21 and materially shortens the panel; the PROSE half is generated by the grounded answer path and needs a length contract in lib/ask that this session did not write. Not attempted rather than half-attempted: a prose cap applied without one would truncate sourced content."
-    },
-    {
-      "id": "ASK-20",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-32-42.PNG"
-      ],
-      "surface": "Ask",
-      "zip": "85701",
-      "reported": "No Add to Calendar on a meeting answer",
-      "correctState": "An Ask answer naming a meeting date carries the same Add to calendar control the meeting card already renders.",
-      "failureClass": "rendering",
-      "disposition": "FIXED_VERIFIED",
-      "workItemId": "wi:feedback:8.30.26:ASK-20",
-      "instancesFound": 1,
-      "instancesFixed": 1,
-      "checkId": "pnpm verify:ask-controls::ASK-20",
-      "checkResult": "PASS",
-      "blocker": null,
-      "resolution": "The Ask answer payload carries the SITTINGS it resolved, structured, beside the prose. It shipped a meeting as text and an id — everything a reader needs to read and nothing a control needs to act — so the answer could describe a meeting and offer nothing to do with it while the map card beside it offered both. `AskSitting` is declared in lib/ask/answer.ts; `MeetingLike` in the grounded route was widened to carry location, status and jurisdiction, which is the THIRD time that hand-narrowed shape has dropped fields the corpus already held (ASK-05 lost sourceOrg, ASK-18 lost provenance). `CalendarLinks` and the three format helpers now declare the shape they actually read, so a surface holding a sitting without retrieval provenance can use them without inventing one.",
-      "verification": "On the rendered DOM at 85701: mode GROUNDED_CLAUDE, subject the Pima County Board of Supervisors, 1 calendar block carrying 2 control elements. Recorded under data/health/ask-controls-walk/."
-    },
-    {
-      "id": "ASK-21",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-32-42.PNG",
-        "2026-08-30_17-30-54.PNG",
-        "2026-08-30_17-28-43.PNG"
-      ],
-      "surface": "Ask",
-      "zip": "85701",
-      "reported": "\"Who this is\" roster should be collapsed by default",
-      "correctState": "The member roster is collapsed by default with its count on the summary, and every contact stays rendered behind it.",
-      "failureClass": "rendering",
-      "disposition": "FIXED_VERIFIED",
-      "workItemId": "wi:feedback:8.30.26:ASK-21",
-      "instancesFound": 1,
-      "instancesFixed": 1,
-      "checkId": "vac:ask-roster-collapsed",
-      "checkResult": "GREEN — <details> not open, summary reads 'Who this is (5)'",
-      "blocker": null
-    },
-    {
-      "id": "ASK-22",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-33-32.PNG"
-      ],
-      "surface": "Ask",
-      "zip": "85701",
-      "reported": "\"Meetings near you\" sends the user hunting",
-      "correctState": "Meetings near you, opened from an answer about a named body, opens on that body.",
-      "failureClass": "rendering",
-      "disposition": "FIXED_VERIFIED",
-      "workItemId": "wi:feedback:8.30.26:ASK-22",
-      "instancesFound": 1,
-      "instancesFixed": 1,
-      "checkId": "pnpm verify:ask-controls::ASK-22",
-      "checkResult": "PASS",
-      "blocker": null,
-      "resolution": "The pill dispatched `list/open` carrying nothing, so a reader answered about ONE body got every meeting in the ZIP and had to find it again. The action now carries the grounded answer's own bound subject — the engine's decision about what the question resolved to, never anything the component inferred. The focus lives in UI state rather than in `filters`: it belongs to one opening and the reducer clears it when the overlay closes, so an answer cannot leave a narrowing behind that the reader never chose. It is never silent — a chip names the body and clears it in one tap — and a focus matching nothing falls back to the full list rather than rendering an empty overlay that would read as \"this body has no meetings\".",
-      "verification": "On the rendered DOM: the chip reads \"Only Pima County Board Of Supervisors · show all ✕\". Recorded under data/health/ask-controls-walk/."
-    },
-    {
-      "id": "ASK-23",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-34-14.PNG"
-      ],
-      "surface": "Ask",
-      "zip": "85701",
-      "reported": "The answer does not follow the question asked",
-      "correctState": "The card opened from a question about a named body leads with that body's next meeting.",
-      "failureClass": "evidence_selection",
-      "disposition": "FIXED_VERIFIED",
-      "workItemId": "wi:feedback:8.30.26:ASK-23",
-      "instancesFound": 1,
-      "instancesFixed": 1,
-      "checkId": "pnpm verify:ask-controls::ASK-23",
-      "checkResult": "PASS",
-      "blocker": null,
-      "resolution": "Same root as ASK-22, and the owner said so: no subject reached the surface the pill opened, so it sorted by date across every body. With the focus applied the list holds that body's sittings, upcoming-first, so the first row IS its next meeting.",
-      "verification": "On the rendered DOM: 22 rows rendered with the focus applied, 0 of them naming another body, against 149 meetings in the ZIP unfocused."
-    },
-    {
-      "id": "MAP-5",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-29-48.PNG"
-      ],
-      "surface": "Map",
-      "zip": "85701",
-      "reported": "\"Districts in view\" says boundaries are off while the sidebar counts 33",
-      "correctState": "Both the stats tile and the districts door describe what the map has actually drawn; the switch is offered only when the layer is off AND nothing is painted.",
-      "failureClass": "rendering",
-      "disposition": "FIXED_VERIFIED",
-      "workItemId": "wi:feedback:8.30.26:MAP-5",
-      "instancesFound": 2,
-      "instancesFixed": 2,
-      "checkId": "vac:districts-door-agrees-with-tile",
-      "checkResult": "GREEN — tile reads 32 in view; the door no longer says switched off or nothing to count",
-      "blocker": null
-    },
-    {
-      "id": "WGH-17",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-37-39.PNG",
-        "2026-08-30_17-36-08.PNG"
-      ],
-      "surface": "Who Governs Here",
-      "zip": "85701",
-      "reported": "Local bodies have no hierarchy",
-      "correctState": "Governing bodies order by what kind of government each is — county, city or town, school district, then other districts — and the criterion is stated on screen.",
-      "failureClass": "rendering",
-      "disposition": "FIXED_VERIFIED",
-      "workItemId": "wi:feedback:8.30.26:WGH-17",
-      "instancesFound": 1,
-      "instancesFixed": 1,
-      "checkId": "vac:wgh-ordered-by-kind",
-      "checkResult": "GREEN — panel states 'ordered by what kind of government'; orderByGovernmentKind is the single derivation",
-      "blocker": null
-    },
-    {
-      "id": "WGH-18",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-37-39.PNG",
-        "2026-08-30_17-36-26.PNG"
-      ],
-      "surface": "Who Governs Here",
-      "zip": "85701",
-      "reported": "Tracked bodies are named but unreachable from the panel",
-      "correctState": "The tracked boards and committees open in place from the panel that counts them.",
-      "failureClass": "rendering",
-      "disposition": "FIXED_VERIFIED",
-      "workItemId": "wi:feedback:8.30.26:WGH-18",
-      "instancesFound": 1,
-      "instancesFixed": 1,
-      "checkId": "vac:wgh-see-the-rest",
-      "checkResult": "GREEN — [data-other-bodies-disclosure] renders with the count derived from the rows behind it",
-      "blocker": null
-    },
-    {
-      "id": "WGH-19",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-37-39.PNG"
-      ],
-      "surface": "Who Governs Here",
-      "zip": "85701",
-      "reported": "\"Why these 8?\" copy is inaccurate and reads badly",
-      "correctState": "The explainer states the scope we can source and makes no completeness claim.",
-      "failureClass": "rendering",
-      "disposition": "FIXED_VERIFIED",
-      "workItemId": "wi:feedback:8.30.26:WGH-19",
-      "instancesFound": 1,
-      "instancesFixed": 1,
-      "checkId": "vac:wgh-no-completeness-claim",
-      "checkResult": "GREEN — 'none is left out' absent; scope sentence present",
-      "blocker": null
-    },
-    {
-      "id": "WGH-20",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [],
-      "surface": "Who Governs Here",
-      "zip": "85641",
-      "reported": "Body count mismatch — 7 reported, 6 listed",
-      "correctState": "The Bodies here count and the Who Governs Here list state the same number of governing bodies for one zip.",
-      "failureClass": "linkage",
-      "disposition": "NEEDS_SEAN",
-      "workItemId": "wi:feedback:8.30.26:WGH-20",
-      "instancesFound": 0,
-      "instancesFixed": 0,
-      "checkId": null,
-      "checkResult": null,
-      "blocker": null,
-      "needsOwner": {
-        "tried": "Reproduced at 85641 on this build. The panel reports 9 governing bodies and renders 9 rows — the 7-versus-6 mismatch the owner saw does not appear. Both numbers come from one derivation, so there is no second source to reconcile against.",
-        "whyMachineCannot": "A defect that does not reproduce cannot be fixed without knowing what it looked like. The owner's own sheet marks this row PENDING and it is the only row in the sweep with no screenshot. Changing the count logic on a guess would be editing working code against an unreproduced report — and a defect that does not reproduce is not a defect that is absent, so it is not closed either.",
-        "authorizationRequired": "The capture the owner saw, or the address/date that produced the 7-versus-6 state, so it can be placed against a build.",
-        "continuesWithout": "Every other Who Governs Here row is worked. A permanent check now pins the count and the rendered rows to one number, so a future divergence is caught rather than reported.",
-        "blockedDescendants": 0
-      }
-    },
-    {
-      "id": "WGH-21",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-55-56.PNG"
-      ],
-      "surface": "Who Governs Here",
-      "zip": "85701",
-      "reported": "Claims the governor is the only statewide office listed",
-      "correctState": "Nothing on the panel claims the governor is the only statewide office while nine statewide officeholders render above it.",
-      "failureClass": "rendering",
-      "disposition": "FIXED_VERIFIED",
-      "workItemId": "wi:feedback:8.30.26:WGH-21",
-      "instancesFound": 1,
-      "instancesFixed": 1,
-      "checkId": "vac:wgh-no-statewide-only-claim",
-      "checkResult": "GREEN — claim absent while Mayes, Yee and Horne all render",
-      "blocker": null
-    },
-    {
-      "id": "WGH-22",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-53-46.PNG",
-        "2026-08-30_17-53-11.PNG",
-        "2026-08-30_17-54-02.PNG"
-      ],
-      "surface": "Address resolution",
-      "zip": "85641",
-      "reported": "Who Governs Here shows districts the app has already determined are not the user's",
-      "correctState": "Once an address settles a level, the panel lists the districts that govern the reader; districts the address positively excludes are kept behind a disclosure.",
-      "failureClass": "identity",
-      "disposition": "FIXED_VERIFIED",
-      "workItemId": "wi:feedback:8.30.26:WGH-22",
-      "instancesFound": 2,
-      "instancesFixed": 2,
-      "checkId": "rq:wgh-22-panel-seats",
-      "checkResult": "GREEN — tests/panel-seats.test.ts, 5 tests including the seeded never-promote-to-CONFIRMED case",
-      "blocker": null
-    },
-    {
-      "id": "OFF-8",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-39-01.PNG",
-        "2026-08-30_17-39-44.PNG"
-      ],
-      "surface": "Officials",
-      "zip": "85701",
-      "reported": "Photo resolution too low for the display",
-      "correctState": "A portrait is served at a resolution appropriate to the viewport and device pixel ratio.",
-      "failureClass": "rendering",
-      "disposition": "OPEN_BLOCKED",
-      "workItemId": "wi:feedback:8.30.26:OFF-8",
-      "instancesFound": 0,
-      "instancesFixed": 0,
-      "checkId": null,
-      "checkResult": null,
-      "blocker": "Not diagnosed this session. Needs a measurement of the served image's intrinsic dimensions against the rendered box at devicePixelRatio 1 and 2 on the officials card, then a source-side decision about which resolutions we hold. No fix attempted without that measurement."
-    },
-    {
-      "id": "OFF-9",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-53-11.PNG",
-        "2026-08-30_17-54-02.PNG"
-      ],
-      "surface": "Officials",
-      "zip": "85641",
-      "reported": "Missing photos for statewide officeholders",
-      "correctState": "Sitting statewide officeholders carry the portrait their own office publishes.",
-      "failureClass": "acquisition",
-      "disposition": "OPEN_BLOCKED",
-      "workItemId": "wi:feedback:8.30.26:OFF-9",
-      "instancesFound": 0,
-      "instancesFixed": 0,
-      "checkId": null,
-      "checkResult": null,
-      "blocker": "An acquisition obligation for Mayes, Fontes and Horne portraits from their own offices' pages. Fifth session reported. Not dispatched this session; no routes walked, so no absence is asserted here either."
-    },
-    {
-      "id": "OFF-10",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-42-03.PNG"
-      ],
-      "surface": "Officials",
-      "zip": "85701",
-      "reported": "Katie Hobbs photo renders badly on the ballot",
-      "correctState": "Same resolution handling as OFF-8, on the ballot card.",
-      "failureClass": "rendering",
-      "disposition": "OPEN_BLOCKED",
-      "workItemId": "wi:feedback:8.30.26:OFF-10",
-      "instancesFound": 0,
-      "instancesFixed": 0,
-      "checkId": null,
-      "checkResult": null,
-      "blocker": "Same class and same blocker as OFF-8."
-    },
-    {
-      "id": "BAL-32",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-42-03.PNG",
-        "2026-08-30_17-41-37.PNG",
-        "2026-08-30_17-42-30.PNG"
-      ],
-      "surface": "Ballot",
-      "zip": "85701",
-      "reported": "Sitting governor is not marked as the incumbent",
-      "correctState": "A candidate the officeholder registry names as holding the office carries Incumbent on the ballot exactly as on the map; nobody is called a challenger on an incomplete officeholder universe.",
-      "failureClass": "rendering",
-      "disposition": "FIXED_VERIFIED",
-      "workItemId": "wi:feedback:8.30.26:BAL-32",
-      "instancesFound": 1,
-      "instancesFixed": 1,
-      "checkId": "rq:bal-32-incumbency-split",
-      "checkResult": "GREEN — ballot battlecard renders Incumbent; the unconfirmed pill is gone; tests/incumbency-eligibility.test.ts holds both halves",
-      "blocker": null
-    },
-    {
-      "id": "BAL-33",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-42-03.PNG",
-        "2026-08-30_17-42-30.PNG"
-      ],
-      "surface": "Ballot",
-      "zip": "85701",
-      "reported": "Ballot claims no office location while the map holds full contact data",
-      "correctState": "The ballot card reads offices and committees from the same officeholder record the map reads.",
-      "failureClass": "linkage",
-      "disposition": "FIXED_VERIFIED",
-      "workItemId": "wi:feedback:8.30.26:BAL-33",
-      "instancesFound": 2,
-      "instancesFixed": 2,
-      "checkId": "vac:ballot-offices-from-record",
-      "checkResult": "GREEN — offices and committees now read recordHolder, not the federal-only join",
-      "blocker": null
-    },
-    {
-      "id": "BAL-34",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-42-30.PNG"
-      ],
-      "surface": "Map",
-      "zip": "85701",
-      "reported": "Map battlecard is missing the Offices near you pill",
-      "correctState": "The fixed pill row from BC-1 renders on every map battlecard; a missing datum shows an empty state and the pill still exists.",
-      "failureClass": "rendering",
-      "disposition": "OPEN_BLOCKED",
-      "workItemId": "wi:feedback:8.30.26:BAL-34",
-      "instancesFound": 0,
-      "instancesFixed": 0,
-      "checkId": null,
-      "checkResult": null,
-      "blocker": "The map battlecard builds its pill set conditionally per section rather than from the fixed BC-1 set. Making it fixed there is the mirror of the change made on the ballot card and was not reached this session."
-    },
-    {
-      "id": "BAL-35",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-42-03.PNG",
-        "2026-08-30_17-42-30.PNG"
-      ],
-      "surface": "Data model",
-      "zip": "85701",
-      "reported": "Ballot and map read different records for the same person",
-      "correctState": "One record per person, consumed by both surfaces: the ballot renders the same ContactPills over the same SeatHolder the map renders.",
-      "failureClass": "linkage",
-      "disposition": "FIXED_VERIFIED",
-      "workItemId": "wi:feedback:8.30.26:BAL-35",
-      "instancesFound": 1,
-      "instancesFixed": 1,
-      "checkId": "vac:ballot-contact-routes",
-      "checkResult": "GREEN — Phone, Email, Contact form and Official page all render on the ballot battlecard for Katie Hobbs",
-      "blocker": null
-    },
-    {
-      "id": "BAL-36",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [],
-      "surface": "Data",
-      "zip": "85701",
-      "reported": "No legislative record captured for the governor",
-      "correctState": "Bills signed and vetoed by a sitting executive are held and rendered as their record in office.",
-      "failureClass": "acquisition",
-      "disposition": "NEEDS_SEAN",
-      "workItemId": "wi:feedback:8.30.26:BAL-36",
-      "instancesFound": 0,
-      "instancesFixed": 0,
-      "checkId": null,
-      "checkResult": null,
-      "blocker": null,
-      "needsOwner": {
-        "tried": "Audited lib/sources/ for any adapter collecting executive action records — bills signed, vetoed, executive orders. There is none, and no held corpus carries the class: the Ask engine can only answer a question about a governor's record as a gap because there is nothing to answer it from.",
-        "whyMachineCannot": "Adding an external source is on CLAUDE.md's ask-before list by name. Choosing which publisher to take executive action records from is a source decision, and this product's sourcing rule reserves it to the author.",
-        "authorizationRequired": "Approval to add a source for state executive action records, and which publisher it should be — the Arizona Secretary of State's bill history, the Governor's own office, or another.",
-        "continuesWithout": "The governor renders with a NAMED GAP attributed to us rather than an invented record, which is the honest state. Every other ballot row proceeds.",
-        "blockedDescendants": 0
-      }
-    },
-    {
-      "id": "BAL-37",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-45-20.PNG"
-      ],
-      "surface": "Ballot",
-      "zip": "85701",
-      "reported": "No address autocomplete",
-      "correctState": "The address field suggests as the reader types.",
-      "failureClass": "rendering",
-      "disposition": "NEEDS_SEAN",
-      "workItemId": "wi:feedback:8.30.26:BAL-37",
-      "instancesFound": 0,
-      "instancesFixed": 0,
-      "checkId": null,
-      "checkResult": null,
-      "blocker": null,
-      "needsOwner": {
-        "tried": "Checked what could serve typeahead from data already held. The Census geocoder the app uses has no typeahead endpoint; data/voting-sites.json and the ZCTA store hold points and polygons, not an address universe. Suggesting from our own partial data would offer a reader a list that silently excludes addresses we simply do not hold, which is a coverage gap wearing an autocomplete.",
-        "whyMachineCannot": "A real address typeahead needs an external suggestion source, which is an ask-before under CLAUDE.md. It also carries a privacy question the collection rules reserve to the author: a typeahead sends partial addresses to a third party as the reader types.",
-        "authorizationRequired": "Approval to add an address-suggestion source, and which one — with a decision about whether partial addresses may leave this product as the reader types.",
-        "continuesWithout": "The address field accepts and geocodes a typed address today. BAL-38, the out-of-zip redirect on that same field, is worked independently.",
-        "blockedDescendants": 0
-      }
-    },
-    {
-      "id": "BAL-38",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-45-20.PNG"
-      ],
-      "surface": "Ballot",
-      "zip": "85701",
-      "reported": "Out-of-zip address is rejected instead of redirected",
-      "correctState": "An address that resolves outside the shown zip offers to switch to the zip it does resolve to.",
-      "failureClass": "rendering",
-      "disposition": "FIXED_VERIFIED",
-      "workItemId": "wi:feedback:8.30.26:BAL-38",
-      "instancesFound": 1,
-      "instancesFixed": 1,
-      "checkId": "tests/out-of-zip-address.test.ts",
-      "checkResult": "PASS",
-      "blocker": null,
-      "resolution": "The blocker was right that the evidence existed and wrong about where. `locateAddressInZip` puts the ZIP INTO the geocoder query, so an address one ZIP over cannot match and returns exactly like a bad address — and `parseCensusPoint` read the coordinates and dropped `addressComponents.zip`, which the response has always carried. `zipThisAddressResolvesTo` re-asks the same geocoder WITHOUT the ZIP constraint, on the failure branch only and only with a house number, so nothing extra leaves this product on the happy path. The same ZIP back is not a redirect and offers nothing. The switch is OFFERED and never taken automatically: a reader looking at one ZIP's ballot who is silently moved to another has had their question changed for them.",
-      "verification": "Six tests, three seeded — the next-ZIP case, the same-ZIP non-redirect, and the street-only path proving no extra address is geocoded. The reader-facing offer is wired through components/ballot/ballot-narrowing.tsx to /ballot?zip=. NOT re-verified on the rendered DOM: reaching it needs a real out-of-zip address typed against a live geocoder, which the unit seam covers deterministically and a walk would not."
-    },
-    {
-      "id": "BAL-39",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-47-50.PNG"
-      ],
-      "surface": "Ballot",
-      "zip": "85701",
-      "reported": "Two-column desktop layout has gaps and misaligned boxes",
-      "correctState": "The two-column desktop ballot aligns across columns without gaps.",
-      "failureClass": "rendering",
-      "disposition": "OPEN_BLOCKED",
-      "workItemId": "wi:feedback:8.30.26:BAL-39",
-      "instancesFound": 0,
-      "instancesFixed": 0,
-      "checkId": null,
-      "checkResult": null,
-      "blocker": "Needs an image-evaluated measurement of the column geometry before a layout change; the new position and spacing evaluators from W1.7 are the instrument for it and no VisualAcceptanceCheck was authored against the ballot this session."
-    },
-    {
-      "id": "POS-1",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-42-30.PNG",
-        "2026-08-30_17-39-44.PNG",
-        "2026-08-30_17-39-01.PNG"
-      ],
-      "surface": "Map",
-      "zip": "85701",
-      "reported": "Map battlecards are the reference standard",
-      "correctState": "Map battlecards render the complete card. Keep.",
-      "failureClass": "rendering",
-      "disposition": "POSITIVE_KEPT",
-      "workItemId": null,
-      "instancesFound": 0,
-      "instancesFixed": 0,
-      "checkId": "vac:map-battlecard-complete",
-      "checkResult": "recorded so a later change cannot silently reduce it",
-      "blocker": null
-    },
-    {
-      "id": "POS-2",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-34-14.PNG"
-      ],
-      "surface": "Meetings",
-      "zip": "85701",
-      "reported": "\"NO AGENDA POSTED YET\" is the correct language",
-      "correctState": "The meeting card's NO AGENDA POSTED YET is the register the owner wants. NOTE, and it is a finding rather than an endorsement: that sentence is currently driven by a bare `agendaUrl === null` check, so it asserts an absence about a government from our own record being empty. It happens to be true here. It is recorded as its own defect below (SWEEP-01) rather than copied to Ask.",
-      "failureClass": "rendering",
-      "disposition": "POSITIVE_KEPT",
-      "workItemId": null,
-      "instancesFound": 0,
-      "instancesFixed": 0,
-      "checkId": "vac:meeting-card-agenda-wording",
-      "checkResult": "kept, and its mechanism is now tracked as SWEEP-01",
-      "blocker": null
-    },
-    {
-      "id": "POS-3",
-      "sources": [
-        "SPREADSHEET",
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-53-11.PNG",
-        "2026-08-30_17-54-02.PNG",
-        "2026-08-30_17-55-56.PNG"
-      ],
-      "surface": "Who Governs Here",
-      "zip": "85641",
-      "reported": "State-level officeholder detail is good",
-      "correctState": "The statewide officeholder slate is good. Keep.",
-      "failureClass": "rendering",
-      "disposition": "POSITIVE_KEPT",
-      "workItemId": null,
-      "instancesFound": 0,
-      "instancesFixed": 0,
-      "checkId": "vac:wgh-statewide-slate",
-      "checkResult": "recorded; WGH-21 removed the line that contradicted it",
-      "blocker": null
-    },
-    {
-      "id": "ASK-24",
-      "sources": [
-        "DICTATION"
-      ],
-      "screenshots": [
-        "2026-08-30_17-32-42.PNG",
-        "2026-08-30_17-34-14.PNG"
-      ],
-      "surface": "Ask",
-      "zip": "85701",
-      "reported": "An Ask meeting answer names only the first sitting of the day where the body holds more than one",
-      "correctState": "Where a body holds two sittings on one day the answer names both, as the meeting card already does.",
-      "failureClass": "evidence_selection",
-      "disposition": "FIXED_VERIFIED",
-      "workItemId": "wi:feedback:8.30.26:ASK-24",
-      "instancesFound": 1,
-      "instancesFixed": 1,
-      "checkId": "tests/ask-same-day-sittings.test.ts",
-      "checkResult": "PASS",
-      "blocker": null,
-      "resolution": "lib/ask/select.ts gains sittingsOnSameLocalDay, and app/api/ask/grounded/route.ts emits a MEETING evidence record for every sitting on the chosen one's LOCAL day rather than for the chosen sitting alone. Each sibling is its own record with its own id, agenda link and time — never a clause appended to the first meeting's text, because two sittings have two dockets and one record describing both is how an agenda answer comes to cite the wrong meeting. The day is the body's local day: grouping on UTC splits a 5 p.m. Arizona sitting from the 1 p.m. one it shares an afternoon with, which is the exact pair the owner reported.",
-      "verification": "4 tests, of which 3 are SEEDED against the reported shape (1 p.m. + 5 p.m. Tucson, where the second is 00:00Z the following day). Unit-level at the selection layer; the route wiring is type-checked and not separately exercised on a live answer this session."
-    },
-    {
-      "id": "SWEEP-01",
-      "sources": [
-        "SCREENSHOT"
-      ],
-      "screenshots": [
-        "2026-08-30_17-34-14.PNG"
-      ],
-      "surface": "Meetings",
-      "zip": "85701",
-      "reported": "The meeting card's NO AGENDA POSTED YET asserts an absence about a government from our own record being empty",
-      "correctState": "A sentence about whether a body posted an agenda requires a first-party observation of the body's own surface; without one the render is a NAMED GAP attributed to us.",
-      "failureClass": "rendering",
-      "disposition": "FIXED_VERIFIED",
-      "workItemId": "wi:feedback:8.30.26:SWEEP-01",
-      "instancesFound": 2,
-      "instancesFixed": 2,
-      "checkId": "tests/agenda-claim-guard.test.ts::SWEEP-01: no reader surface asserts a publication state of its own",
-      "checkResult": "PASS",
-      "blocker": null,
-      "resolution": "Both render sites now ask ONE decider — lib/ask/agenda-sentence.ts — whose gap an absent agenda is. Without a fresh first-party observation of the publisher's own empty agenda slot the sentence is OURS (\"We haven't recorded an agenda for this meeting yet\"); with one it names the publisher and the day it was read. The owner's register (POS-2) is kept for the THEIRS case, which is where it was always true.",
-      "verification": "Class-wide and at the source, not by DOM sample. tests/agenda-claim-guard.test.ts sweeps every .ts/.tsx under components/ and app/ with comments stripped and refuses any publication claim outside the decider; it read 100+ files and was confirmed to FAIL when the sentence was reintroduced into meeting-panel.tsx. The built client bundle (.next/static) carries 0 occurrences of \"No agenda posted yet\" and 1 of the OURS sentence. 8 further tests in tests/agenda-sentence.test.ts pin the decider itself. A DOM walk (scripts/verify-agenda-sentence.mts) opened the meetings overlay at all four pilot ZIPs and expanded every group; it reached 149 rows but not the meeting-detail surface that carries the sentence, and it reports COULD NOT ASSERT rather than a pass — which is why the source-level guard is the check of record."
-    },
-    {
-      "id": "OWN-Q5",
-      "sources": [
-        "OWNER_WORKBOOK"
-      ],
-      "screenshots": [],
-      "surface": "Ask",
-      "zip": "85641",
-      "reported": "Owner amendment on adversarial question Q5: not just FEC filings, but state and local finances must be checked",
-      "correctState": "A campaign-finance answer covers the county and state regimes as well as the FEC, and an FEC absence never stands in for 'no records exist'.",
-      "failureClass": "acquisition",
-      "disposition": "OPEN_BLOCKED",
-      "workItemId": "wi:feedback:8.30.26:OWN-Q5",
-      "instancesFound": 0,
-      "instancesFixed": 0,
-      "checkId": null,
-      "checkResult": null,
-      "blocker": "Carried out of docs/Meanwhile-Owner-Checklist.xlsx by the loader repair in W1.4, which previously promoted these amendments into the Ask box as question text. Recorded here because it is owner feedback from the same date. Not worked this session."
-    },
-    {
-      "id": "OWN-Q6",
-      "sources": [
-        "OWNER_WORKBOOK"
-      ],
-      "screenshots": [],
-      "surface": "Ask",
-      "zip": "85701",
-      "reported": "Owner amendment on Q6/Q7: add a clickable pill reading 'Want us to get this info sooner?' that registers the click with a brief confirmation",
-      "correctState": "Stated by the owner; the mechanism is a reader demand signal.",
-      "failureClass": "rendering",
-      "disposition": "NEEDS_SEAN",
-      "workItemId": "wi:feedback:8.30.26:OWN-Q6",
-      "instancesFound": 0,
-      "instancesFixed": 0,
-      "checkId": null,
-      "checkResult": null,
-      "blocker": null,
-      "needsOwner": {
-        "tried": "Designed the bounded version the owner approved and traced it end to end against the existing collection law. The shape is settled: a `demand_signals` table beside `reactions` in lib/db/schema.ts carrying occurredAt, subjectType (BODY|CANDIDATE), subjectId, a single-member fixed enum, and the district stamp (ocdIds + divisionVintage) — no free text, no identity column, no address, and deliberately NO reactionKeyHash, because the owner said no identity and the reactions table's own browser-continuity hash is the nearest thing to one. No reader read path exists, so results cannot be shown back. A symmetry guard renders it on every body and candidate card or on none.",
-        "whyMachineCannot": "The storage half needs a Drizzle migration, and `pnpm db:gate` contacts PRODUCTION the moment the schema contract moves: it reads WTP_PRODUCTION_DATABASE_URL_READONLY and requires the migration to be APPLIED there. Committing migration 0024 without applying it turns the shipping gate red and freezes the release. Applying it means writing a schema change to the production serving database, which is an authorization this session does not hold and which CLAUDE.md reserves twice over — \"adding a user data field\" and \"anything that changes how reactions are bucketed or exported\" are both on the ask-before list. The FEATURE is approved; the production schema write is not the same decision.",
-        "authorizationRequired": "Either apply migration 0024 to the production database at merge time (pnpm db:apply), or confirm this session may run it. The pill, the write path and the symmetry guard land in the same change once the migration can be applied.",
-        "continuesWithout": "Nothing else in the sweep depends on it. The Q6/Q7 honest-gap behaviour the pill sits beside is unaffected and already correct.",
-        "blockedDescendants": 0
-      }
-    },
-    {
-      "id": "OWN-Q8",
-      "sources": [
-        "OWNER_WORKBOOK"
-      ],
-      "screenshots": [],
-      "surface": "Ballot",
-      "zip": "85641",
-      "reported": "Owner amendment on Q8: a polling-place answer should show not only where they can vote but prioritise the closest",
-      "correctState": "Voting locations order by distance from the reader's resolved point — a neutral criterion, and the one the reader asked for.",
-      "failureClass": "rendering",
-      "disposition": "FIXED_VERIFIED",
-      "workItemId": "wi:feedback:8.30.26:OWN-Q8",
-      "instancesFound": 1,
-      "instancesFixed": 1,
-      "checkId": "lib/ballot/voting-sites.ts::sitesNearestFirst",
-      "checkResult": "PASS",
-      "blocker": null,
-      "resolution": "ALREADY SHIPPED — the sweep's blocker was stale. sitesNearestFirst(sites, point) exists in lib/ballot/voting-sites.ts with the neutrality argument written out (distance from a point the reader typed is a fact about geography, expresses no judgement, and is not the candidate-ranking the never-rank rule governs), and an unplaced site keeps its published place rather than sinking, so a geocoding failure on OUR side cannot demote a location the authority genuinely published. components/map/voting-sites-panel.tsx calls it with the resolved point at line 284, and components/ballot/where-to-vote.tsx renders that same panel — so the ballot surface the owner was looking at is already ordered by distance.",
-      "verification": "Read at the call site and through the point's derivation in app/api/voting-sites/route.ts. NOT re-verified on the rendered DOM this session — recorded as a code-path verification so the distinction is not lost."
-    },
-    {
-      "id": "OWN-Q9",
-      "sources": [
-        "OWNER_WORKBOOK"
-      ],
-      "screenshots": [],
-      "surface": "Who Governs Here",
-      "zip": "85641",
-      "reported": "Owner amendment on Q9: the special districts in the answer must be clickable",
-      "correctState": "Every district named in an answer opens its own card.",
-      "failureClass": "rendering",
-      "disposition": "OPEN_BLOCKED",
-      "workItemId": "wi:feedback:8.30.26:OWN-Q9",
-      "instancesFound": 0,
-      "instancesFixed": 0,
-      "checkId": null,
-      "checkResult": null,
-      "blocker": "Not worked this session. The disclosure rows added for WGH-18 are clickable; the districts named inside an Ask ANSWER are not."
-    }
-  ],
-  "resweptAt": "2026-08-31T17:31:14.846Z",
-  "resweptBy": "Session B (resume), 2026-08-31",
-  "reswepNote": "Session B closure pass. Reconciled under RULING 221: every row ends FIXED_VERIFIED, OPEN_EXECUTABLE or NEEDS_SEAN, and the three are counted separately. NEEDS_SEAN is terminal for this session and is never reported as open executable work; the record obligation each one names stays live on the frontier."
+    "2026-08-30_17-55-56.PNG"
+   ],
+   "surface": "Who Governs Here",
+   "zip": "85641",
+   "reported": "State-level officeholder detail is good",
+   "correctState": "The statewide officeholder slate is good. Keep.",
+   "failureClass": "rendering",
+   "disposition": "POSITIVE_KEPT",
+   "workItemId": null,
+   "instancesFound": 0,
+   "instancesFixed": 0,
+   "checkId": "vac:wgh-statewide-slate",
+   "checkResult": "recorded; WGH-21 removed the line that contradicted it",
+   "blocker": null
+  },
+  {
+   "id": "ASK-24",
+   "sources": [
+    "DICTATION"
+   ],
+   "screenshots": [
+    "2026-08-30_17-32-42.PNG",
+    "2026-08-30_17-34-14.PNG"
+   ],
+   "surface": "Ask",
+   "zip": "85701",
+   "reported": "An Ask meeting answer names only the first sitting of the day where the body holds more than one",
+   "correctState": "Where a body holds two sittings on one day the answer names both, as the meeting card already does.",
+   "failureClass": "evidence_selection",
+   "disposition": "FIXED_VERIFIED",
+   "workItemId": "wi:feedback:8.30.26:ASK-24",
+   "instancesFound": 1,
+   "instancesFixed": 1,
+   "checkId": "tests/ask-same-day-sittings.test.ts",
+   "checkResult": "PASS",
+   "blocker": null,
+   "resolution": "lib/ask/select.ts gains sittingsOnSameLocalDay, and app/api/ask/grounded/route.ts emits a MEETING evidence record for every sitting on the chosen one's LOCAL day rather than for the chosen sitting alone. Each sibling is its own record with its own id, agenda link and time — never a clause appended to the first meeting's text, because two sittings have two dockets and one record describing both is how an agenda answer comes to cite the wrong meeting. The day is the body's local day: grouping on UTC splits a 5 p.m. Arizona sitting from the 1 p.m. one it shares an afternoon with, which is the exact pair the owner reported.",
+   "verification": "4 tests, of which 3 are SEEDED against the reported shape (1 p.m. + 5 p.m. Tucson, where the second is 00:00Z the following day). Unit-level at the selection layer; the route wiring is type-checked and not separately exercised on a live answer this session."
+  },
+  {
+   "id": "SWEEP-01",
+   "sources": [
+    "SCREENSHOT"
+   ],
+   "screenshots": [
+    "2026-08-30_17-34-14.PNG"
+   ],
+   "surface": "Meetings",
+   "zip": "85701",
+   "reported": "The meeting card's NO AGENDA POSTED YET asserts an absence about a government from our own record being empty",
+   "correctState": "A sentence about whether a body posted an agenda requires a first-party observation of the body's own surface; without one the render is a NAMED GAP attributed to us.",
+   "failureClass": "rendering",
+   "disposition": "FIXED_VERIFIED",
+   "workItemId": "wi:feedback:8.30.26:SWEEP-01",
+   "instancesFound": 2,
+   "instancesFixed": 2,
+   "checkId": "tests/agenda-claim-guard.test.ts::SWEEP-01: no reader surface asserts a publication state of its own",
+   "checkResult": "PASS",
+   "blocker": null,
+   "resolution": "Both render sites now ask ONE decider — lib/ask/agenda-sentence.ts — whose gap an absent agenda is. Without a fresh first-party observation of the publisher's own empty agenda slot the sentence is OURS (\"We haven't recorded an agenda for this meeting yet\"); with one it names the publisher and the day it was read. The owner's register (POS-2) is kept for the THEIRS case, which is where it was always true.",
+   "verification": "Class-wide and at the source, not by DOM sample. tests/agenda-claim-guard.test.ts sweeps every .ts/.tsx under components/ and app/ with comments stripped and refuses any publication claim outside the decider; it read 100+ files and was confirmed to FAIL when the sentence was reintroduced into meeting-panel.tsx. The built client bundle (.next/static) carries 0 occurrences of \"No agenda posted yet\" and 1 of the OURS sentence. 8 further tests in tests/agenda-sentence.test.ts pin the decider itself. A DOM walk (scripts/verify-agenda-sentence.mts) opened the meetings overlay at all four pilot ZIPs and expanded every group; it reached 149 rows but not the meeting-detail surface that carries the sentence, and it reports COULD NOT ASSERT rather than a pass — which is why the source-level guard is the check of record."
+  },
+  {
+   "id": "OWN-Q5",
+   "sources": [
+    "OWNER_WORKBOOK"
+   ],
+   "screenshots": [],
+   "surface": "Ask",
+   "zip": "85641",
+   "reported": "Owner amendment on adversarial question Q5: not just FEC filings, but state and local finances must be checked",
+   "correctState": "A campaign-finance answer covers the county and state regimes as well as the FEC, and an FEC absence never stands in for 'no records exist'.",
+   "failureClass": "acquisition",
+   "disposition": "OPEN_BLOCKED",
+   "workItemId": "wi:feedback:8.30.26:OWN-Q5",
+   "instancesFound": 0,
+   "instancesFixed": 0,
+   "checkId": null,
+   "checkResult": null,
+   "blocker": "Carried out of docs/Meanwhile-Owner-Checklist.xlsx by the loader repair in W1.4, which previously promoted these amendments into the Ask box as question text. Recorded here because it is owner feedback from the same date. Not worked this session."
+  },
+  {
+   "id": "OWN-Q6",
+   "sources": [
+    "OWNER_WORKBOOK"
+   ],
+   "screenshots": [],
+   "surface": "Ask",
+   "zip": "85701",
+   "reported": "Owner amendment on Q6/Q7: add a clickable pill reading 'Want us to get this info sooner?' that registers the click with a brief confirmation",
+   "correctState": "Stated by the owner; the mechanism is a reader demand signal.",
+   "failureClass": "rendering",
+   "disposition": "NEEDS_SEAN",
+   "workItemId": "wi:feedback:8.30.26:OWN-Q6",
+   "instancesFound": 0,
+   "instancesFixed": 0,
+   "checkId": null,
+   "checkResult": null,
+   "blocker": null,
+   "needsOwner": {
+    "tried": "Designed the bounded version the owner approved and traced it end to end against the existing collection law. The shape is settled: a `demand_signals` table beside `reactions` in lib/db/schema.ts carrying occurredAt, subjectType (BODY|CANDIDATE), subjectId, a single-member fixed enum, and the district stamp (ocdIds + divisionVintage) — no free text, no identity column, no address, and deliberately NO reactionKeyHash, because the owner said no identity and the reactions table's own browser-continuity hash is the nearest thing to one. No reader read path exists, so results cannot be shown back. A symmetry guard renders it on every body and candidate card or on none.",
+    "whyMachineCannot": "The storage half needs a Drizzle migration, and `pnpm db:gate` contacts PRODUCTION the moment the schema contract moves: it reads WTP_PRODUCTION_DATABASE_URL_READONLY and requires the migration to be APPLIED there. Committing migration 0024 without applying it turns the shipping gate red and freezes the release. Applying it means writing a schema change to the production serving database, which is an authorization this session does not hold and which CLAUDE.md reserves twice over — \"adding a user data field\" and \"anything that changes how reactions are bucketed or exported\" are both on the ask-before list. The FEATURE is approved; the production schema write is not the same decision.",
+    "authorizationRequired": "Either apply migration 0024 to the production database at merge time (pnpm db:apply), or confirm this session may run it. The pill, the write path and the symmetry guard land in the same change once the migration can be applied.",
+    "continuesWithout": "Nothing else in the sweep depends on it. The Q6/Q7 honest-gap behaviour the pill sits beside is unaffected and already correct.",
+    "blockedDescendants": 0
+   }
+  },
+  {
+   "id": "OWN-Q8",
+   "sources": [
+    "OWNER_WORKBOOK"
+   ],
+   "screenshots": [],
+   "surface": "Ballot",
+   "zip": "85641",
+   "reported": "Owner amendment on Q8: a polling-place answer should show not only where they can vote but prioritise the closest",
+   "correctState": "Voting locations order by distance from the reader's resolved point — a neutral criterion, and the one the reader asked for.",
+   "failureClass": "rendering",
+   "disposition": "FIXED_VERIFIED",
+   "workItemId": "wi:feedback:8.30.26:OWN-Q8",
+   "instancesFound": 1,
+   "instancesFixed": 1,
+   "checkId": "lib/ballot/voting-sites.ts::sitesNearestFirst",
+   "checkResult": "PASS",
+   "blocker": null,
+   "resolution": "ALREADY SHIPPED — the sweep's blocker was stale. sitesNearestFirst(sites, point) exists in lib/ballot/voting-sites.ts with the neutrality argument written out (distance from a point the reader typed is a fact about geography, expresses no judgement, and is not the candidate-ranking the never-rank rule governs), and an unplaced site keeps its published place rather than sinking, so a geocoding failure on OUR side cannot demote a location the authority genuinely published. components/map/voting-sites-panel.tsx calls it with the resolved point at line 284, and components/ballot/where-to-vote.tsx renders that same panel — so the ballot surface the owner was looking at is already ordered by distance.",
+   "verification": "Read at the call site and through the point's derivation in app/api/voting-sites/route.ts. NOT re-verified on the rendered DOM this session — recorded as a code-path verification so the distinction is not lost."
+  },
+  {
+   "id": "OWN-Q9",
+   "sources": [
+    "OWNER_WORKBOOK"
+   ],
+   "screenshots": [],
+   "surface": "Who Governs Here",
+   "zip": "85641",
+   "reported": "Owner amendment on Q9: the special districts in the answer must be clickable",
+   "correctState": "Every district named in an answer opens its own card.",
+   "failureClass": "rendering",
+   "disposition": "OPEN_BLOCKED",
+   "workItemId": "wi:feedback:8.30.26:OWN-Q9",
+   "instancesFound": 0,
+   "instancesFixed": 0,
+   "checkId": null,
+   "checkResult": null,
+   "blocker": "Not worked this session. The disclosure rows added for WGH-18 are clickable; the districts named inside an Ask ANSWER are not."
+  }
+ ],
+ "resweptAt": "2026-08-31T17:31:14.846Z",
+ "resweptBy": "Session B (resume), 2026-08-31",
+ "reswepNote": "Session B closure pass. Reconciled under RULING 221: every row ends FIXED_VERIFIED, OPEN_EXECUTABLE or NEEDS_SEAN, and the three are counted separately. NEEDS_SEAN is terminal for this session and is never reported as open executable work; the record obligation each one names stays live on the frontier.",
+ "checkDebt": [
+  {
+   "itemId": "ASK-16",
+   "reason": "The cited `vac:` id names a VisualAcceptanceCheck that was never created: data/health/visual-checks.json does not exist and the visual suite's last run recorded checksLoaded: 0. The recorded checkResult is a real one-off DOM observation a session made by hand — evidence of a verification, not a check. Carried rather than reopened or re-audited: this session's denominator is WGH-22 and the section-A rows (RULING 221), and the visual suite additionally has no evaluator for any DOM-certifiable property, so authoring these checks is a workstream of its own. The row is NOT counted verified fixed while it sits here.",
+   "since": "2026-08-31"
+  },
+  {
+   "itemId": "ASK-17",
+   "reason": "The cited `vac:` id names a VisualAcceptanceCheck that was never created: data/health/visual-checks.json does not exist and the visual suite's last run recorded checksLoaded: 0. The recorded checkResult is a real one-off DOM observation a session made by hand — evidence of a verification, not a check. Carried rather than reopened or re-audited: this session's denominator is WGH-22 and the section-A rows (RULING 221), and the visual suite additionally has no evaluator for any DOM-certifiable property, so authoring these checks is a workstream of its own. The row is NOT counted verified fixed while it sits here.",
+   "since": "2026-08-31"
+  },
+  {
+   "itemId": "ASK-21",
+   "reason": "The cited `vac:` id names a VisualAcceptanceCheck that was never created: data/health/visual-checks.json does not exist and the visual suite's last run recorded checksLoaded: 0. The recorded checkResult is a real one-off DOM observation a session made by hand — evidence of a verification, not a check. Carried rather than reopened or re-audited: this session's denominator is WGH-22 and the section-A rows (RULING 221), and the visual suite additionally has no evaluator for any DOM-certifiable property, so authoring these checks is a workstream of its own. The row is NOT counted verified fixed while it sits here.",
+   "since": "2026-08-31"
+  },
+  {
+   "itemId": "MAP-5",
+   "reason": "The cited `vac:` id names a VisualAcceptanceCheck that was never created: data/health/visual-checks.json does not exist and the visual suite's last run recorded checksLoaded: 0. The recorded checkResult is a real one-off DOM observation a session made by hand — evidence of a verification, not a check. Carried rather than reopened or re-audited: this session's denominator is WGH-22 and the section-A rows (RULING 221), and the visual suite additionally has no evaluator for any DOM-certifiable property, so authoring these checks is a workstream of its own. The row is NOT counted verified fixed while it sits here.",
+   "since": "2026-08-31"
+  },
+  {
+   "itemId": "WGH-17",
+   "reason": "The cited `vac:` id names a VisualAcceptanceCheck that was never created: data/health/visual-checks.json does not exist and the visual suite's last run recorded checksLoaded: 0. The recorded checkResult is a real one-off DOM observation a session made by hand — evidence of a verification, not a check. Carried rather than reopened or re-audited: this session's denominator is WGH-22 and the section-A rows (RULING 221), and the visual suite additionally has no evaluator for any DOM-certifiable property, so authoring these checks is a workstream of its own. The row is NOT counted verified fixed while it sits here.",
+   "since": "2026-08-31"
+  },
+  {
+   "itemId": "WGH-18",
+   "reason": "The cited `vac:` id names a VisualAcceptanceCheck that was never created: data/health/visual-checks.json does not exist and the visual suite's last run recorded checksLoaded: 0. The recorded checkResult is a real one-off DOM observation a session made by hand — evidence of a verification, not a check. Carried rather than reopened or re-audited: this session's denominator is WGH-22 and the section-A rows (RULING 221), and the visual suite additionally has no evaluator for any DOM-certifiable property, so authoring these checks is a workstream of its own. The row is NOT counted verified fixed while it sits here.",
+   "since": "2026-08-31"
+  },
+  {
+   "itemId": "WGH-19",
+   "reason": "The cited `vac:` id names a VisualAcceptanceCheck that was never created: data/health/visual-checks.json does not exist and the visual suite's last run recorded checksLoaded: 0. The recorded checkResult is a real one-off DOM observation a session made by hand — evidence of a verification, not a check. Carried rather than reopened or re-audited: this session's denominator is WGH-22 and the section-A rows (RULING 221), and the visual suite additionally has no evaluator for any DOM-certifiable property, so authoring these checks is a workstream of its own. The row is NOT counted verified fixed while it sits here.",
+   "since": "2026-08-31"
+  },
+  {
+   "itemId": "WGH-21",
+   "reason": "The cited `vac:` id names a VisualAcceptanceCheck that was never created: data/health/visual-checks.json does not exist and the visual suite's last run recorded checksLoaded: 0. The recorded checkResult is a real one-off DOM observation a session made by hand — evidence of a verification, not a check. Carried rather than reopened or re-audited: this session's denominator is WGH-22 and the section-A rows (RULING 221), and the visual suite additionally has no evaluator for any DOM-certifiable property, so authoring these checks is a workstream of its own. The row is NOT counted verified fixed while it sits here.",
+   "since": "2026-08-31"
+  },
+  {
+   "itemId": "BAL-33",
+   "reason": "The cited `vac:` id names a VisualAcceptanceCheck that was never created: data/health/visual-checks.json does not exist and the visual suite's last run recorded checksLoaded: 0. The recorded checkResult is a real one-off DOM observation a session made by hand — evidence of a verification, not a check. Carried rather than reopened or re-audited: this session's denominator is WGH-22 and the section-A rows (RULING 221), and the visual suite additionally has no evaluator for any DOM-certifiable property, so authoring these checks is a workstream of its own. The row is NOT counted verified fixed while it sits here.",
+   "since": "2026-08-31"
+  },
+  {
+   "itemId": "BAL-35",
+   "reason": "The cited `vac:` id names a VisualAcceptanceCheck that was never created: data/health/visual-checks.json does not exist and the visual suite's last run recorded checksLoaded: 0. The recorded checkResult is a real one-off DOM observation a session made by hand — evidence of a verification, not a check. Carried rather than reopened or re-audited: this session's denominator is WGH-22 and the section-A rows (RULING 221), and the visual suite additionally has no evaluator for any DOM-certifiable property, so authoring these checks is a workstream of its own. The row is NOT counted verified fixed while it sits here.",
+   "since": "2026-08-31"
+  },
+  {
+   "itemId": "POS-1",
+   "reason": "The cited `vac:` id names a VisualAcceptanceCheck that was never created: data/health/visual-checks.json does not exist and the visual suite's last run recorded checksLoaded: 0. The recorded checkResult is a real one-off DOM observation a session made by hand — evidence of a verification, not a check. Carried rather than reopened or re-audited: this session's denominator is WGH-22 and the section-A rows (RULING 221), and the visual suite additionally has no evaluator for any DOM-certifiable property, so authoring these checks is a workstream of its own. The row is NOT counted verified fixed while it sits here.",
+   "since": "2026-08-31"
+  },
+  {
+   "itemId": "POS-2",
+   "reason": "The cited `vac:` id names a VisualAcceptanceCheck that was never created: data/health/visual-checks.json does not exist and the visual suite's last run recorded checksLoaded: 0. The recorded checkResult is a real one-off DOM observation a session made by hand — evidence of a verification, not a check. Carried rather than reopened or re-audited: this session's denominator is WGH-22 and the section-A rows (RULING 221), and the visual suite additionally has no evaluator for any DOM-certifiable property, so authoring these checks is a workstream of its own. The row is NOT counted verified fixed while it sits here.",
+   "since": "2026-08-31"
+  },
+  {
+   "itemId": "POS-3",
+   "reason": "The cited `vac:` id names a VisualAcceptanceCheck that was never created: data/health/visual-checks.json does not exist and the visual suite's last run recorded checksLoaded: 0. The recorded checkResult is a real one-off DOM observation a session made by hand — evidence of a verification, not a check. Carried rather than reopened or re-audited: this session's denominator is WGH-22 and the section-A rows (RULING 221), and the visual suite additionally has no evaluator for any DOM-certifiable property, so authoring these checks is a workstream of its own. The row is NOT counted verified fixed while it sits here.",
+   "since": "2026-08-31"
+  }
+ ]
 }

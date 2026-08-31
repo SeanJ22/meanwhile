@@ -136,6 +136,32 @@ export interface SweptItem {
   } | null;
 }
 
+/**
+ * **A ROW WHOSE CITED CHECK DOES NOT EXIST, NAMED AND CARRIED.**
+ * (2026-08-31, WGH-22's root cause.)
+ *
+ * Modelled on `walk-all.mts`'s quarantine list, and for the same reason: a
+ * debt that is enumerated, dated and printed on every run is tracked and
+ * hunted; a debt that fails the build immediately gets deleted by whoever is
+ * shipping. What this list never does is let the row count as closed.
+ *
+ * **An item on this list is NOT counted in `verifiedFixed`.** That is the whole
+ * point. The sweep's headline pair drops to the rows that have an instrument
+ * behind them, which is the number the owner was actually being told.
+ *
+ * A row may only be added deliberately, in the committed record, with the
+ * reason written down. Any UNLISTED unresolvable check id fails the gate
+ * outright, so the class cannot recur silently even once.
+ */
+export interface CheckDebtEntry {
+  /** The `SweptItem.id` whose `checkId` names nothing. */
+  readonly itemId: string;
+  /** Why it is carried rather than fixed or reopened. */
+  readonly reason: string;
+  /** The date the debt was recorded, from `pnpm stamp`. */
+  readonly since: string;
+}
+
 export interface SweepRecord {
   /** The owner's folder name, exactly: `M.D.YY`. */
   readonly folder: string;
@@ -144,6 +170,8 @@ export interface SweepRecord {
   readonly sweptAtSha: string | null;
   readonly sweptAt: string;
   readonly items: readonly SweptItem[];
+  /** Rows whose cited check resolves to nothing. See {@link CheckDebtEntry}. */
+  readonly checkDebt?: readonly CheckDebtEntry[];
 }
 
 /** A problem with a sweep. Empty means the sweep is well-formed. */
@@ -227,6 +255,148 @@ export function validateSweep(sweep: SweepRecord): string[] {
   return problems;
 }
 
+/* ══════════ THE CHECK MUST EXIST, NOT MERELY BE NAMED (2026-08-31) ═══════ */
+
+/**
+ * **THE INSTRUMENT DEFECT BEHIND THREE RECURRENCES OF ONE DEFECT.**
+ *
+ * `validateSweep` refuses a `FIXED_VERIFIED` item with no `checkId`, and that
+ * is where the requirement stopped: it tested for a NON-EMPTY STRING. Nothing
+ * ever asked whether the string named anything.
+ *
+ * Measured on 2026-08-31, over the 8.30.26 sweep's own record:
+ *
+ * ```
+ *   23 items cite a check
+ *    9 resolve to a file, a test or a package script that exists
+ *   12 cite `vac:<name>` — and `data/health/visual-checks.json` DOES NOT
+ *      EXIST. The visual suite's last run recorded `checksLoaded: 0`.
+ *    2 cite `rq:<name>` — and neither is in `data/health/reader-questions.json`,
+ *      which is GENERATED from the owner's workbook and cannot hold a name a
+ *      session invented.
+ * ```
+ *
+ * So fourteen items were closed against instruments that do not exist. Their
+ * `checkResult` strings are real one-off observations a session made by hand —
+ * evidence of a verification, not a check — and a one-off observation cannot
+ * catch a regression, which is exactly how WGH-12, WGH-15 and WGH-22 were each
+ * marked fixed and each came back.
+ *
+ * **A check that cannot be run is not a check.** From here a `checkId` must
+ * RESOLVE, by namespace, against something on disk.
+ *
+ * The resolver is deliberately structural rather than clever: it answers "does
+ * this name something that exists", never "does that thing assert the right
+ * claim". The second question is what the check itself is for.
+ */
+export interface CheckResolution {
+  readonly resolved: boolean;
+  /** Why not, addressed to the session that wrote the id. Empty when resolved. */
+  readonly reason: string;
+}
+
+/** The filesystem facts the resolver needs. Injected so this stays pure. */
+export interface CheckWorld {
+  /** Does this repo-relative path exist? */
+  readonly exists: (path: string) => boolean;
+  /** A file's text, or null when it cannot be read. */
+  readonly read: (path: string) => string | null;
+  /** The `scripts` block of package.json. */
+  readonly packageScripts: Readonly<Record<string, string>>;
+}
+
+const VISUAL_CHECKS_PATH = "data/health/visual-checks.json";
+const READER_QUESTIONS_PATH = "data/health/reader-questions.json";
+const WALK_CHECKS_PATH = "docs/walk-checks.txt";
+
+export function resolveCheckId(checkId: string, world: CheckWorld): CheckResolution {
+  const id = checkId.trim();
+  if (!id) return { resolved: false, reason: "the check id is empty" };
+
+  /* `vac:<name>` — a VisualAcceptanceCheck in the committed visual suite. */
+  if (id.startsWith("vac:")) {
+    const raw = world.read(VISUAL_CHECKS_PATH);
+    if (raw === null) {
+      return {
+        resolved: false,
+        reason: `${VISUAL_CHECKS_PATH} does not exist, so no \`vac:\` id names anything. The visual suite loads zero checks`,
+      };
+    }
+    let ids: string[] = [];
+    try {
+      const parsed = JSON.parse(raw) as { check?: { id?: string } }[];
+      ids = parsed.map((b) => b?.check?.id ?? "").filter(Boolean);
+    } catch {
+      return { resolved: false, reason: `${VISUAL_CHECKS_PATH} is not readable JSON` };
+    }
+    return ids.includes(id)
+      ? { resolved: true, reason: "" }
+      : {
+          resolved: false,
+          reason: `no VisualAcceptanceCheck with id ${id} in ${VISUAL_CHECKS_PATH} (it holds ${ids.length})`,
+        };
+  }
+
+  /* `rq:<name>` — a template in the GENERATED owner corpus. */
+  if (id.startsWith("rq:")) {
+    const raw = world.read(READER_QUESTIONS_PATH);
+    if (raw === null) {
+      return { resolved: false, reason: `${READER_QUESTIONS_PATH} does not exist` };
+    }
+    const name = id.slice(3);
+    return raw.includes(name)
+      ? { resolved: true, reason: "" }
+      : {
+          resolved: false,
+          reason:
+            `no ReaderQuestion named ${name} in ${READER_QUESTIONS_PATH}. That corpus is ` +
+            "GENERATED from the owner's workbook — a session cannot author a question into it, " +
+            "so an `rq:` id a session invented can never resolve",
+        };
+  }
+
+  /* `[SESSION] name` — a check identity in the standing walk. */
+  if (id.startsWith("[")) {
+    const raw = world.read(WALK_CHECKS_PATH);
+    if (raw === null) return { resolved: false, reason: `${WALK_CHECKS_PATH} does not exist` };
+    return raw.includes(id)
+      ? { resolved: true, reason: "" }
+      : { resolved: false, reason: `no walk check with identity ${id} in ${WALK_CHECKS_PATH}` };
+  }
+
+  /* `pnpm <script>` or `pnpm <script>::<case>` — a package script. */
+  if (id.startsWith("pnpm ")) {
+    const script = id.slice(5).split("::")[0].trim();
+    return script in world.packageScripts
+      ? { resolved: true, reason: "" }
+      : { resolved: false, reason: `package.json has no script named ${JSON.stringify(script)}` };
+  }
+
+  /* A repo path, optionally `::<symbol or test name>` inside it. */
+  if (id.includes("/")) {
+    const [path, inner] = id.split("::");
+    if (!world.exists(path)) return { resolved: false, reason: `${path} does not exist` };
+    if (inner) {
+      const source = world.read(path);
+      if (source === null) return { resolved: false, reason: `${path} could not be read` };
+      if (!source.includes(inner)) {
+        return {
+          resolved: false,
+          reason: `${path} exists but contains nothing named ${JSON.stringify(inner)}`,
+        };
+      }
+    }
+    return { resolved: true, reason: "" };
+  }
+
+  return {
+    resolved: false,
+    reason:
+      `${JSON.stringify(id)} is in no known check namespace. Use \`vac:\`, \`rq:\`, a walk ` +
+      "identity `[SESSION] name`, `pnpm <script>`, or a repo path (optionally `path::symbol`)",
+  };
+}
+
 /**
  * The gate: is every owner date folder swept, and every item disposed?
  *
@@ -244,11 +414,60 @@ export interface SweepGateVerdict {
 export function checkSweepGate(
   folders: readonly string[],
   sweeps: readonly SweepRecord[],
+  /**
+   * The filesystem, for check-id resolution. Omitted, resolution is SKIPPED
+   * and the gate says so — a caller that cannot read the repo is not evidence
+   * that the checks exist, and silently passing would be the same defect this
+   * resolver was added to close.
+   */
+  world?: CheckWorld,
 ): SweepGateVerdict {
   const byFolder = new Map(sweeps.map((s) => [s.folder, s]));
   const unswept = folders.filter((f) => !byFolder.has(f));
   const problems: string[] = [];
   for (const sweep of sweeps) problems.push(...validateSweep(sweep));
+  if (world) {
+    for (const sweep of sweeps) {
+      const carried = new Map((sweep.checkDebt ?? []).map((d) => [d.itemId, d]));
+      const seen = new Set<string>();
+      for (const item of sweep.items) {
+        if (!item.checkId) continue;
+        const resolution = resolveCheckId(item.checkId, world);
+        if (resolution.resolved) {
+          /* A debt entry for a check that now resolves is stale bookkeeping,
+             and a stale debt list is how a fixed thing keeps reading broken. */
+          if (carried.has(item.id)) {
+            problems.push(
+              `${item.id} is on \`checkDebt\` but its check ${JSON.stringify(item.checkId)} now ` +
+                "resolves. Remove the debt entry — a carried row that is no longer in debt " +
+                "makes the debt list stop meaning anything.",
+            );
+          }
+          continue;
+        }
+        seen.add(item.id);
+        if (!carried.has(item.id)) {
+          problems.push(
+            `${item.id} cites check ${JSON.stringify(item.checkId)}, which does not exist: ` +
+              `${resolution.reason}. A check that cannot be run is not a check — this is the ` +
+              "gap that let one defect be marked fixed three times. Give it a check that runs, " +
+              "or record it on `checkDebt` with a reason, where it stops counting as fixed.",
+          );
+        }
+      }
+      for (const debt of sweep.checkDebt ?? []) {
+        if (!seen.has(debt.itemId)) {
+          problems.push(
+            `\`checkDebt\` names ${debt.itemId}, which is not a row with an unresolvable check. ` +
+              "The list may only carry real debt.",
+          );
+        }
+        if (!debt.reason.trim() || !debt.since.trim()) {
+          problems.push(`\`checkDebt\` entry ${debt.itemId} has an empty reason or date.`);
+        }
+      }
+    }
+  }
   for (const folder of unswept) {
     problems.push(
       `feedback/${folder}/ has no sweep record at data/feedback/sweeps/${folder}.json. An owner ` +
@@ -277,18 +496,33 @@ export interface SweepCounts {
   readonly openExecutable: number;
   /** Rows terminal on a human gate. Never counted as open executable work. */
   readonly needsSean: number;
+  /** Rows whose cited check resolves to nothing. Never counted verified fixed. */
+  readonly checkDebt: number;
 }
 
 export function countSweep(sweep: SweepRecord): SweepCounts {
   const by = (d: ItemDisposition): number =>
     sweep.items.filter((i) => i.disposition === d).length;
+  /*
+   * **A ROW IN CHECK DEBT IS NOT A ROW VERIFIED FIXED.** (2026-08-31.)
+   *
+   * The headline pair is what the owner reads, and it said 19 of 32 while
+   * fourteen of those nineteen rested on check ids that name nothing on disk.
+   * The fix may be real; the VERIFICATION is not, and only the second is what
+   * this number claims. Derived from the debt list rather than typed, so the
+   * count and the list cannot disagree.
+   */
+  const inDebt = new Set((sweep.checkDebt ?? []).map((d) => d.itemId));
   return {
     filesInventoried: sweep.filesInventoried.length,
     itemsFound: sweep.items.length,
     itemsProcessed: sweep.items.filter((i) => i.disposition !== "UNIDENTIFIABLE").length,
     unidentifiable: by("UNIDENTIFIABLE"),
     reportedDefects: sweep.items.filter((i) => i.disposition !== "POSITIVE_KEPT").length,
-    verifiedFixed: by("FIXED_VERIFIED"),
+    verifiedFixed: sweep.items.filter(
+      (i) => i.disposition === "FIXED_VERIFIED" && !inDebt.has(i.id),
+    ).length,
+    checkDebt: (sweep.checkDebt ?? []).length,
     /*
      * **OPEN_EXECUTABLE AND NEEDS_SEAN ARE COUNTED SEPARATELY.** (RULING 221.)
      *

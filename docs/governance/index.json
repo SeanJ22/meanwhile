@@ -1,11 +1,11 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "c22cb76e272eeb9f",
+  "snapshot": "8cff0c478da2cc11",
   "counts": {
-    "records": 258,
-    "current": 237,
-    "law": 206,
+    "records": 259,
+    "current": 238,
+    "law": 207,
     "decisions": 31,
     "historical": 21
   },
@@ -4706,6 +4706,47 @@
         {
           "kind": "related_to",
           "target": "R-0190"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0222",
+      "aliases": [
+        "RULING 222",
+        "R222",
+        "R-222"
+      ],
+      "title": "RULING 222 — before a confirmed address the scope is the ZIP; after one, the scope IS the address",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-31",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [
+        {
+          "key": "rendering.address_scope",
+          "value": "address-scope-replaces-zip-scope"
+        },
+        {
+          "key": "rendering.excluded_entity_label",
+          "value": "prohibited-out-of-scope-not-annotated"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "related_to",
+          "target": "R-0026"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0027"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0074"
         }
       ],
       "uncertain": [],

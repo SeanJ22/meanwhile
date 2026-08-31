@@ -43,7 +43,6 @@ import { containsCommit, headSha } from "../lib/ops/git-facts.ts";
 import { nextRunRecordPath } from "../lib/health/run-records.ts";
 import {
   assertValidVisualAcceptanceCheck,
-  requiredEvidenceKind,
   validateVisualAcceptanceCheck,
   type VisualAcceptanceCheck,
 } from "../lib/health/visual-acceptance.ts";

@@ -252,8 +252,7 @@ async function main(): Promise<void> {
       };
     } catch (error) {
       const message = (error instanceof Error ? error.message : String(error))
-        // eslint-disable-next-line no-control-regex
-        .replace(/\[[0-9;]*m/g, "")
+        .replace(/\u001b\[[0-9;]*m/g, "")
         .trim();
       harness = {
         reached: false,

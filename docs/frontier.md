@@ -168,6 +168,91 @@ Recorded rather than fixed: it falsifies no acceptance criterion of this session
 and is not a regression from its changes (RULING 221). The walk suite already
 does this correctly — `data/health/walk-runs/*.json` carries per-check evidence.
 
+### Session C — verified ground truth for the Parts it did not reach
+
+Session C was directed to deliver Parts A–J. It delivered **A** (and Part H item
+4, which turned out to be the same fix). Before starting it measured the ground
+each remaining Part stands on, and **several premises the directive carried are
+false**. They are recorded here so the next session resumes from measurement
+rather than from the brief. Every line below was checked against disk or against
+a running build.
+
+**Part B — the tracker.** 389 open rows, 72 `needs-sean`, confirmed by parsing
+`docs/tracker-working.csv`; the generated view agrees. The state column is
+`Section`, value `needs-sean` — not `Resolution`. **There is no opened-date
+column and never was**; the dates live in a sidecar, `docs/tracker-opened.json`,
+where **89 of 193 entries are `reconstructed: true`** with placeholder values, so
+only 42 of the 72 needs-sean rows can resolve to a real ISO date. Backfill has a
+ceiling, and UNKNOWN is the honest value for the rest. There is **no verification
+predicate concept anywhere in the tracker tooling** — `reconcileTracker`
+(`lib/ops/tracker-transaction.ts`) verifies the TRANSACTION, never the claim a
+row makes. **NH281's own session record already states its premise has cleared**
+and it stays open by policy (R-0079), not by evidence; NH300 shows no such
+evidence.
+
+**Part C — the check debt.** The 13 rows are real, but `CHECK_DEBT` is not a
+disposition: it is a parallel list, `SweepRecord.checkDebt`, and 10 of the 13 are
+`FIXED_VERIFIED` while 3 are `POSITIVE_KEPT`. All 13 fail for **one** cause —
+`data/health/visual-checks.json` does not exist, and the loader
+(`scripts/visual-suite.mts:134`) returns `[]` silently rather than failing.
+**The blocking fact the directive does not state: there is no DOM evaluator at
+all.** All eight implemented evaluators in `lib/health/visual-evaluation.ts` are
+pixel-based, and none of the five `DOM_CERTIFIABLE_PROPERTIES` has a dispatch
+case — so authoring the 13 checks is not enough; the evaluator half must be
+built first, or every one of them renders `NOT_EVALUABLE`.
+
+**Part D — the obligation registry.** Confirmed: the corpus is meetings-only,
+hardcoded at `lib/control-plane/scheduler/obligations-from-corpus.ts:101` and
+`:103`. `arizonaLocalObligation()` is reached only from
+`campaignFinanceObligations()`, **which itself has zero callers anywhere** — and
+it returns `CampaignFinanceObligation`, not `FreshnessObligation`, so it is not
+even the right type to hand to `syncObligations`. A second provider needs three
+concrete edits, not an abstraction: the import at `scripts/freshness-shadow.mts:60`,
+the record-class literal, and the URL map at `:145-153`. **Nothing schedules
+`pnpm freshness:shadow`** — no cron, no workflow. It runs one cycle when a human
+types it.
+
+**Part E — Arizona money.** The directive assumes the held corpus can be
+normalised to readers. **It cannot, and this was measured rather than reasoned
+about.** All 43 committee names in `az-pima-2026-transactions.json` are Pima
+County school-board and PAC committees; all 15 pilot contests that carry
+candidacies are statewide, federal or legislative — offices that file with the
+**AZ Secretary of State**, not the county. Comparing every committee name against
+every pilot candidacy gives **zero matches**, and `judgeMatch` requires name AND
+office AND year. Two facts that change the ask: the reader surface is a **missing
+file, not missing code** — `lib/funding/state-snapshot.ts:28-32` already names
+`state-money-az-2026.json`, "AZ" is already a legal `MoneyJurisdiction`, and
+`next.config.ts` traces `data/funding/*.json` by glob — and the held Arizona money
+**already reaches readers today** through Ask, for the Vail governing board, via
+a deliberately one-entry crosswalk at `lib/ask/local-finance.ts:145`. The bridge
+to the pilot ballot is the AZ SOS regime, which is unacquired.
+
+**Part F — New Hampshire money.** The directive says the higher rungs were never
+worked. **That is false.** Rung 7 WORKED on 2026-08-21 — visible browser, read the
+app's own JS bundles, called `cfsapi.sos.nh.gov/api`
+`PublicFilerDetails/GetFilingEntityDetails` from the page's own origin — and the
+harvested filer records are committed. The 8/26 403 is real but covers only
+`/public/cf/downloads` at rungs 2 and 3. **The debt is that the working route was
+never written to `data/method/knowledge.json`** (store is at v61; a new route now
+MUST carry a claim class). Rung 13, the Department's public-records path, has
+never been walked and was named as the next session's start on 2026-08-19. An
+untried lead is recorded and applies here: `identified-agent-refused` measured
+that 32 of 40 `*.nh.gov` hosts serve an anonymous request and refuse every client
+carrying this project's name.
+
+**Part H — W6.** No `cache_control` exists anywhere in any API path. Ask is
+`claude-opus-5` at two rungs (`lib/ask/interpret.ts:101`,
+`lib/ask/synthesize.ts:43`), called by raw `fetch` with no SDK. **Token usage is
+never read on the Ask path at all** — `body.usage` is ignored at both call sites,
+so there is no hit rate to report until that is added. Both rungs pass `system` as
+a plain string, so caching requires converting it to a block array first, and in
+`interpretPrompt` the per-ZIP inventory sits inside the would-be stable prefix, so
+ordering must change before anything is shareable across ZIPs. For the fly-in:
+`components/map/map-canvas.tsx:1446-1466` runs `queryRenderedFeatures` and a React
+`setState` on **`sourcedata`**, unthrottled and ungated by `moveend`, throughout
+the 2600ms flight. `pnpm measure:fly` already exists and deliberately asserts no
+frame budget.
+
 ### Still open from the sequence above
 
 W6's overnight proof and the activation gate are untouched by this session and

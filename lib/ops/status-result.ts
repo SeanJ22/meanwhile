@@ -34,16 +34,29 @@
  * ## Proof class is DERIVED, not declared
  *
  * `SESSION_MEASURED` versus `INDEPENDENTLY_REPRODUCED` used to be a field
- * someone typed. It is now a reading of the record: a canonical suite or walk
- * execution against a committed head is INDEPENDENTLY_REPRODUCED; a run whose
- * record is absent or which measured a different tree cannot be either, and
- * says so.
+ * someone typed. It is now a reading of the record — but for one release it
+ * was the WRONG reading: A.1 returned `INDEPENDENTLY_REPRODUCED` for every
+ * passing canonical result, which is the class the implementing session's own
+ * `pnpm gates` run earns by simply being canonical. RULING 216 excludes that
+ * observation by name.
+ *
+ * Session B derives it from the run's recorded PROVENANCE instead — a clean
+ * tree, already contained by the integration branch when the run began, and a
+ * runner that is not a local session. `run-provenance.ts` holds the rule.
+ * Every record written before that block existed reads `SESSION_MEASURED`,
+ * which is the honest reading of a record that says nothing about who ran it.
  */
 
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 import { CAPABILITY_REGISTRY, type CapabilityEntry } from "./capability-registry.ts";
+import {
+  proofClassOf,
+  proofClassReason,
+  type ProofClass,
+  type RunProvenance,
+} from "./run-provenance.ts";
 
 /* --------------------------------------------------------- run records */
 
@@ -52,6 +65,8 @@ interface GateRunRecord {
   testedSha: string | null;
   finishedAt: string;
   gates: { id: string; status: string; seconds: number }[];
+  /** Written since Session B. Absent on older records, and absent is the weak case. */
+  provenance?: RunProvenance;
 }
 
 interface WalkRunRecord {
@@ -59,6 +74,7 @@ interface WalkRunRecord {
   testedSha: string | null;
   finishedAt: string;
   durations: { identity: string; ms: number; outcome: string }[];
+  provenance?: RunProvenance;
 }
 
 /** Newest record in a directory of `<day>-<NN>.json` files, or null. */
@@ -107,7 +123,12 @@ export interface StatusResult {
   readonly ranAt: string | null;
   readonly recordPath: string | null;
   /** DERIVED, never declared. Null when nothing was proven. */
-  readonly proofClass: "SESSION_MEASURED" | "INDEPENDENTLY_REPRODUCED" | null;
+  readonly proofClass: ProofClass | null;
+  /**
+   * Why the proof class is what it is, read off the run's provenance.
+   * Null when nothing was proven. (Session B WI1.8.)
+   */
+  readonly proofClassReason: string | null;
 }
 
 function unproven(entry: CapabilityEntry, detail: string): StatusResult {
@@ -120,6 +141,7 @@ function unproven(entry: CapabilityEntry, detail: string): StatusResult {
     ranAt: null,
     recordPath: null,
     proofClass: null,
+    proofClassReason: null,
   };
 }
 
@@ -156,6 +178,7 @@ export function resolveCapability(
     path: string,
     passed: boolean,
     detail: string,
+    provenance: RunProvenance | null,
   ): StatusResult {
     const base = { entry, runId, testedSha, ranAt, recordPath: path };
     if (testedSha === null) {
@@ -164,6 +187,7 @@ export function resolveCapability(
         state: "STALE",
         detail: `${detail} — the record names no tested SHA, so it cannot be placed against the release`,
         proofClass: null,
+        proofClassReason: null,
       };
     }
     if (releaseSha !== null && !contains(testedSha, releaseSha)) {
@@ -174,20 +198,32 @@ export function resolveCapability(
           `${detail} — but that run tested ${testedSha.slice(0, 8)}, which the release ` +
           `${releaseSha.slice(0, 8)} does not contain`,
         proofClass: null,
+        proofClassReason: null,
       };
     }
-    if (!passed) return { ...base, state: "FAILING", detail, proofClass: null };
+    if (!passed) {
+      return { ...base, state: "FAILING", detail, proofClass: null, proofClassReason: null };
+    }
     return {
       ...base,
       state: "PROVEN",
       detail,
       /*
-       * A canonical suite or walk execution against a committed head is
-       * reproduction by an instrument, not by the implementing session's own
-       * one-off observation. That is what INDEPENDENTLY_REPRODUCED means, and
-       * it is now read off the record rather than typed beside the claim.
+       * **THE PROOF CLASS IS A FACT ABOUT WHO RAN IT.** (Session B WI1.8.)
+       *
+       * This returned `INDEPENDENTLY_REPRODUCED` for every passing canonical
+       * result, which awarded the activation-gating class to the implementing
+       * session running `pnpm gates` on its own unmerged branch — the exact
+       * observation RULING 216 excludes by name.
+       *
+       * It is now derived from the run's recorded provenance: a clean tree,
+       * already contained by the integration branch when the run started, and
+       * a runner that is not a local session. Everything else, including every
+       * record written before the provenance block existed, is
+       * `SESSION_MEASURED`. `run-provenance.ts` holds the rule and the reason.
        */
-      proofClass: "INDEPENDENTLY_REPRODUCED",
+      proofClass: proofClassOf(provenance),
+      proofClassReason: proofClassReason(provenance),
     };
   }
 
@@ -222,6 +258,7 @@ export function resolveCapability(
         records.gates.path,
         gate.status === "PASS",
         `gate \`${gateId}\` reported ${gate.status} in ${gate.seconds}s${named}`,
+        records.gates.provenance ?? null,
       );
     }
 
@@ -253,6 +290,7 @@ export function resolveCapability(
           ? `all ${source.checkIdentities.length} named walk identities passed`
           : `${failed.length} of ${source.checkIdentities.length} named walk identities did ` +
             `not pass: ${failed.join(" | ")}`,
+        records.walk.provenance ?? null,
       );
     }
 
@@ -268,20 +306,66 @@ export function resolveCapability(
       if (records.observer === null) {
         return unproven(entry, "no post-deploy observer record exists at data/ops/production-integrity.json.");
       }
+      /*
+       * **READ THE SCHEMA THE OBSERVER ACTUALLY WRITES.** (B WI1.5.)
+       *
+       * This adapter expected `sha` and `verdict: "HEALTHY" | "OK"`. The
+       * post-deploy observer writes `deployedSha`, `mainSha` and
+       * `observed: "HELD"`. So every field read came back undefined, the
+       * result was STALE, and the A.1 report explained the STALE by saying the
+       * observer record "names no SHA" — a claim about the DATA that was
+       * really a fact about the READER. The record names f762a72e in two
+       * fields.
+       *
+       * Failing closed was right and is kept: an unrecognised shape is STALE,
+       * never PROVEN. What changes is that the shape is now recognised.
+       *
+       * `deployedSha` is the tree the reading is ABOUT — what production was
+       * actually serving. `mainSha` is where the branch stood, and the two
+       * differing is exactly the drift the observer exists to catch, so the
+       * deployed tree is the one placed against the release.
+       */
       const raw = records.observer.raw as {
-        verdict?: string;
-        sha?: string;
+        observed?: string;
+        deployedSha?: string;
+        mainSha?: string;
         observedAt?: string;
         runId?: string;
+        detail?: string;
+        failureClass?: string | null;
+        /* The pre-B field names, still read so an archived record resolves. */
+        verdict?: string;
+        sha?: string;
       };
+      const observed = raw.observed ?? raw.verdict ?? null;
+      const held = observed === "HELD" || observed === "HEALTHY" || observed === "OK";
+      const drift =
+        raw.deployedSha && raw.mainSha && raw.deployedSha !== raw.mainSha
+          ? ` (main stood at ${raw.mainSha.slice(0, 8)} — the deployed tree is the one placed)`
+          : "";
       return place(
-        raw.sha ?? null,
+        raw.deployedSha ?? raw.sha ?? null,
         raw.observedAt ?? "unknown",
         raw.runId ?? "post-deploy-observer",
         records.observer.path,
-        raw.verdict === "HEALTHY" || raw.verdict === "OK",
-        `the post-deploy observer recorded verdict ${JSON.stringify(raw.verdict ?? "none")} ` +
-          `for claim \`${source.claim}\``,
+        held,
+        `the post-deploy observer recorded ${JSON.stringify(observed ?? "none")} ` +
+          `for claim \`${source.claim}\`${drift}` +
+          (raw.failureClass ? `, failure class ${JSON.stringify(raw.failureClass)}` : ""),
+        /*
+         * The observer runs in CI after a deploy, against a tree that is by
+         * construction already on main — so its provenance is not absent, it
+         * is knowable. It is stated explicitly rather than defaulted, because
+         * a default that happens to be right is the shape this whole work item
+         * is about.
+         */
+        {
+          runClass: "SCHEDULED",
+          workingTreeClean: true,
+          integratedAtRunTime:
+            raw.deployedSha && raw.mainSha ? raw.deployedSha === raw.mainSha : null,
+          integrationRef: "main",
+        },
       );
     }
   }

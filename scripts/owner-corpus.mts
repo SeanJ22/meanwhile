@@ -166,6 +166,43 @@ writeFileSync(
 );
 console.log(`    loaded: ${templates.length}`);
 
+/*
+ * **A CORPUS THAT LOADS N AND EVALUATES ZERO IS A SILENT ZERO.**
+ * (Session B WI1.4.)
+ *
+ * `0 questions loaded` is a defect the report makes obvious. `9 questions
+ * loaded, every one NOT_EVALUABLE` reads as a working corpus and is the same
+ * hole wearing a number: nothing about the product is measured either way.
+ * The count and the ids are stated here, at the loader, so the gap is a fact
+ * about the run rather than something a reader has to reconstruct from the
+ * suite's NOT_EVALUABLE tally.
+ *
+ * The expectations are NOT derived from the prose. That column is written for
+ * a human auditor, and turning it into a machine expectation would be this
+ * session authoring the answer key it is then graded against.
+ */
+const withoutExpectation = templates.filter((t) => t.expectation === undefined);
+if (withoutExpectation.length > 0) {
+  console.log(
+    `    NOT_EVALUABLE by construction: ${withoutExpectation.length} of ${templates.length} ` +
+      `template(s) carry no typed expectation — ${withoutExpectation.map((t) => t.id).join(", ")}. ` +
+      "These are LOADED and can never be GREEN. The owner's right-answer column is prose; " +
+      "deriving a machine expectation from it would be this loader writing its own answer key.",
+  );
+}
+
+/* The owner's edits that AMEND rather than replace. Product requirements, and
+   they are not questions — reported here because a loader that drops them
+   makes the owner state them twice. */
+const amendments = questions.loaded.filter((q) => q.ownerAmendment !== null);
+if (amendments.length > 0) {
+  console.log(
+    `    owner amendments kept beside the drafted question (not submitted as questions): ` +
+      amendments.map((q) => q.id).join(", "),
+  );
+  for (const q of amendments) console.log(`      ${q.id}: ${q.ownerAmendment}`);
+}
+
 console.log(
   `\n  wrote data/health/control-facts.json (${controls.loaded.length}) and ` +
     `data/health/reader-questions.json (${templates.length}).`,

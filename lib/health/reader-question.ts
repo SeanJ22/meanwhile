@@ -435,6 +435,17 @@ export function assertDenominatorMayCertify(denominator: EnumerationDenominator)
  * So a RUN may not score the body layer off the registry. It is still a legal
  * denominator for anything generated from something else, which is why the
  * refusal lives here rather than in `assertDenominatorMayCertify`.
+ *
+ * ## The bound on the word "independent" (Session B WI1.9)
+ *
+ * Independent OF THE GENERATED ARTIFACT, and of nothing further. The evidence
+ * stores are the project's own accumulated enumeration knowledge, so this
+ * refusal buys detection of a GENERATOR REGRESSION and buys nothing at all
+ * against a body the project never discovered — which is absent from the
+ * instances, absent from the evidence, and therefore invisible to any
+ * comparison between them. `lib/health/body-denominator.ts` states the same
+ * bound where the stores are read. The hand-authored adversarial questions are
+ * what covers the remainder.
  */
 export function assertDenominatorIsIndependent(denominator: EnumerationDenominator): void {
   if (denominator.layer === "GOVERNING_BODY" && denominator.source === "PROJECT_REGISTRY") {
@@ -445,6 +456,19 @@ export function assertDenominatorIsIndependent(denominator: EnumerationDenominat
         "PROJECT_BODY_ENUMERATION_EVIDENCE — the canonical inputs the registry is built from.",
     );
   }
+}
+
+/**
+ * The synthetic instance id a coverage defect is tracked under.
+ *
+ * One function, called by the runner that OPENS the diagnostic and by the
+ * runner that reports the clean pass that CLOSES it. (Session B WI1.6.) Two
+ * hand-written copies of this string is exactly how the diagnostic became
+ * unclosable in the first place: the opener wrote an id and the closer had no
+ * way to produce it, so the id existed in one direction only.
+ */
+export function coverageInstanceId(zip: string, layer: DenominatorLayer): string {
+  return `coverage:${zip}:${layer}`;
 }
 
 /** A layer where the generated instance universe and the denominator disagree. */

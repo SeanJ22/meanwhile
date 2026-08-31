@@ -1,1 +1,83 @@
-[]
+[
+  {
+    "id": "Q1",
+    "questionClass": "HAND_AUTHORED_ADVERSARIAL",
+    "templateText": "What actions did the Pima County Board of Supervisors take at its [F3-date] study session?",
+    "placeholders": [],
+    "applicability": {
+      "kind": "PER_ZIP"
+    }
+  },
+  {
+    "id": "Q2",
+    "questionClass": "HAND_AUTHORED_ADVERSARIAL",
+    "templateText": "How did each supervisor vote at the August 25, 2026 meeting?",
+    "placeholders": [],
+    "applicability": {
+      "kind": "PER_ZIP"
+    }
+  },
+  {
+    "id": "Q3",
+    "questionClass": "HAND_AUTHORED_ADVERSARIAL",
+    "templateText": "Who funded the Vail school-board candidate's campaign?",
+    "placeholders": [],
+    "applicability": {
+      "kind": "PER_ZIP"
+    }
+  },
+  {
+    "id": "Q4",
+    "questionClass": "HAND_AUTHORED_ADVERSARIAL",
+    "templateText": "What outside groups spent money for or against candidates in the Vail school-board race?",
+    "placeholders": [],
+    "applicability": {
+      "kind": "PER_ZIP"
+    }
+  },
+  {
+    "id": "Q5",
+    "questionClass": "HAND_AUTHORED_ADVERSARIAL",
+    "templateText": "What campaign-finance records exist for the Vail candidate?",
+    "placeholders": [],
+    "applicability": {
+      "kind": "PER_ZIP"
+    }
+  },
+  {
+    "id": "Q6",
+    "questionClass": "HAND_AUTHORED_ADVERSARIAL",
+    "templateText": "When does the Mesa body (sourced-but-uningested name) meet next?",
+    "placeholders": [],
+    "applicability": {
+      "kind": "PER_ZIP"
+    }
+  },
+  {
+    "id": "Q7",
+    "questionClass": "HAND_AUTHORED_ADVERSARIAL",
+    "templateText": "When does the Morris Hills body (sourced-but-uningested name) meet next?",
+    "placeholders": [],
+    "applicability": {
+      "kind": "PER_ZIP"
+    }
+  },
+  {
+    "id": "Q8",
+    "questionClass": "HAND_AUTHORED_ADVERSARIAL",
+    "templateText": "Where do I vote if I live in 85641?",
+    "placeholders": [],
+    "applicability": {
+      "kind": "PER_ZIP"
+    }
+  },
+  {
+    "id": "Q9",
+    "questionClass": "HAND_AUTHORED_ADVERSARIAL",
+    "templateText": "What special districts govern an address in 85641?",
+    "placeholders": [],
+    "applicability": {
+      "kind": "PER_ZIP"
+    }
+  }
+]

@@ -35,6 +35,10 @@ function cleanScore(): ControlScore {
     knownPresentCount: 3,
     knownAbsenceCount: 2,
     recalled: 3,
+    /* Both absence controls correctly reported the verified absence. A clean
+       score has to state that positively — "not a false presence" is also true
+       of a surface that said nothing at all. (Session B WI1.4.) */
+    absencesRecalled: 2,
     falseAbsences: 0,
     falsePresences: 0,
     unobserved: 0,

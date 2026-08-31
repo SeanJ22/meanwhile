@@ -79,6 +79,7 @@ import {
 import { internalSourceIds } from "../lib/meetings/source-labels.ts";
 import { ASK_PILL_EXAMPLES } from "../lib/routing/ask-pill-labels.ts";
 import { mojibakePattern } from "../lib/text/mojibake.ts";
+import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { decodePng, patchStats, regionChange } from "./png.mts";
 import { launchGuarded, type GuardedBrowser } from "./browser.mts";
 
@@ -6595,6 +6596,10 @@ if (quarantined.length > 0) {
         askRows,
         durations,
         slowest,
+        /* WHO RAN THIS. See lib/ops/run-provenance.ts — the proof class of
+           every walk-proven capability is derived from this and nothing
+           else, and its absence reads SESSION_MEASURED. (Session B WI1.8.) */
+        provenance: readRunProvenance(TESTED_SHA),
       },
       null,
       2,

@@ -40,6 +40,7 @@ import { execSync } from "node:child_process";
 import { mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { today } from "./doc-dates.mjs";
 
 /**
@@ -419,6 +420,18 @@ function writeGateRunRecord(results) {
       status: r.status,
       seconds: Number(r.secs),
     })),
+    /*
+     * WHO RAN THIS, recorded at run time. (Session B WI1.8.)
+     *
+     * `status-result.ts` derives SESSION_MEASURED vs INDEPENDENTLY_REPRODUCED
+     * from this block and from nothing else. Without it every passing gate
+     * claimed the stronger class, including this session running gates on its
+     * own unmerged branch — the observation RULING 216 excludes by name. A
+     * record with no provenance reads SESSION_MEASURED, so this is the field
+     * that lets an independent run be recognised, never the field that lets a
+     * dependent one claim independence.
+     */
+    provenance: readRunProvenance(testedSha),
   };
   writeFileSync(recordPath, `${JSON.stringify(record, null, 2)}\n`, "utf8");
   console.log(`  gate run record: ${recordPath}`);

@@ -21,9 +21,20 @@
  * ```
  *   1. LOAD          the owner corpus; zero questions is an AWAITING state
  *   2. GENERATE      instances against the registry, retiring expired ones
- *   3. CHECK         the universe against an INDEPENDENT denominator —
- *                    BEFORE any scoring, and a disagreement is a coverage
- *                    defect that produces a typed diagnostic WorkItem
+ *   3. CHECK         the universe against a denominator INDEPENDENT OF THE
+ *                    GENERATED REGISTRY — before any scoring, and a
+ *                    disagreement is a coverage defect that produces a typed
+ *                    diagnostic WorkItem
+ *
+ * The precision in step 3 is Session B's (WI1.9), and it is not pedantry. The
+ * denominator is independent of `registry.json`, so it catches a GENERATOR
+ * REGRESSION — NH232, where a rebuild silently dropped 731 promoted bodies. It
+ * is NOT independent of the project's accumulated enumeration knowledge, and
+ * therefore **cannot catch a body nobody ever discovered**: such a body is
+ * absent from the instances, absent from the evidence stores, and absent from
+ * every term of the comparison. The hand-authored adversarial questions are
+ * what covers that, which is why they are load-bearing rather than a
+ * supplement to this check.
  *   4. ASK           each active instance, through the product's own Ask
  *                    interaction, exactly as a reader would
  *   5. EVALUATE      the RENDERED ANSWER against a typed proposition
@@ -45,6 +56,7 @@ import { createFileRepositories } from "../lib/control-plane/repository/file-sto
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import { evaluateAnswer } from "../lib/health/ask-evaluation.ts";
 import { containsCommit, headSha } from "../lib/ops/git-facts.ts";
+import { readRunProvenance, type RunProvenance } from "../lib/ops/run-provenance.ts";
 import { loadJsonArray } from "../lib/health/json-store.ts";
 import {
   bodyDenominatorFor,
@@ -62,6 +74,7 @@ import {
   activeInstances,
   assertDenominatorIsIndependent,
   checkInstanceUniverse,
+  coverageInstanceId,
   generateInstances,
   loadZipBodyUniverses,
   retireExpiredInstances,
@@ -155,6 +168,7 @@ interface RunRecord {
   };
   readonly harness: HarnessReach;
   readonly corpusState: string | null;
+  readonly provenance: RunProvenance;
 }
 
 /** What the independent universe check found, per ZIP, before any scoring. */
@@ -207,6 +221,26 @@ async function main(): Promise<void> {
   const evidence = loadBodyEnumerationEvidence(ROOT);
   const defects: CoverageDefect[] = [];
   const notEvaluableZips: string[] = [];
+  /*
+   * **A DIAGNOSTIC THAT CANNOT BE CLOSED IS A DIAGNOSTIC THAT NEVER ENDS.**
+   * (Session B WI1.6.)
+   *
+   * A coverage defect creates a WorkItem under the synthetic instance id
+   * `coverage:<zip>:<layer>`, and `greenInstanceIds` was built from question
+   * results alone — where that id can never appear, because no question
+   * carries it. So a repaired denominator left the item open forever: the
+   * defect was gone, the run was clean, and nothing in the run could say so.
+   * An immortal diagnostic is worse than none, because a queue that only grows
+   * stops being read.
+   *
+   * The clean pass is therefore RECORDED as a green for that synthetic id,
+   * on the same terms as any other: only for a zip/layer whose denominator
+   * actually resolved and actually agreed on THIS run. A zip that went
+   * NOT_EVALUABLE for want of evidence produces no green — not knowing is not
+   * the same as checking and finding nothing wrong, and closing an obligation
+   * on the first is how an absence gets asserted.
+   */
+  const coverageGreenIds: string[] = [];
   if (corpusTemplates > 0) {
     const index = divisionIndexFor(ROOT);
     for (const universe of universes) {
@@ -225,6 +259,7 @@ async function main(): Promise<void> {
       assertDenominatorIsIndependent(denominator);
       const defect = checkInstanceUniverse(generated, denominator);
       if (defect !== null) defects.push(defect);
+      else coverageGreenIds.push(coverageInstanceId(universe.zip, denominator.layer));
     }
   }
   const denominatorCheck: DenominatorCheck = {
@@ -291,6 +326,11 @@ async function main(): Promise<void> {
           const evaluated = evaluateAnswer(
             observation.answer,
             templateById.get(instance.templateId)?.expectation ?? null,
+            /* The instance's own canonical subject, so a VALUE or LIST answer
+               about the wrong government is an identity failure rather than a
+               green. The generator already bound this id; nothing here
+               re-derives it. (Session B WI1.1.) */
+            { subjectBodyId: instance.subjectBodyId },
           );
           /* A wall is reported as a wall. It rides on the detail so the run
              record says the harness ran out of time rather than implying the
@@ -335,7 +375,7 @@ async function main(): Promise<void> {
     diagnosticItems.push(
       readerDiagnostic(
         {
-          id: `coverage:${defect.zip}:${defect.layer}`,
+          id: coverageInstanceId(defect.zip, defect.layer),
           templateId: "coverage-check",
           questionClass: "HAND_AUTHORED_ADVERSARIAL",
           zip: defect.zip,
@@ -352,9 +392,13 @@ async function main(): Promise<void> {
     );
   }
 
-  const greenInstanceIds = results
-    .filter((r) => r.verdict.kind === "GREEN")
-    .map((r) => r.instanceId);
+  const greenInstanceIds = [
+    ...results.filter((r) => r.verdict.kind === "GREEN").map((r) => r.instanceId),
+    /* The synthetic coverage ids whose denominator check passed on this run.
+       Without these the closer has no id to match a coverage diagnostic
+       against and the item is unclosable by construction. (WI1.6.) */
+    ...coverageGreenIds,
+  ];
 
   const repos = await createFileRepositories(CONTROL_PLANE_ROOT);
   const persisted = await persistDiagnostics(repos, diagnosticItems, startedAt);
@@ -365,7 +409,11 @@ async function main(): Promise<void> {
     startedAt,
   );
 
-  const evaluatedGreen = greenInstanceIds.length;
+  /* QUESTION greens only. `greenInstanceIds` also carries the synthetic
+     coverage ids, which are closure evidence and not answered questions —
+     counting them here would inflate the reader score with the instrument's
+     own bookkeeping. */
+  const evaluatedGreen = results.filter((r) => r.verdict.kind === "GREEN").length;
   const evaluatedRed = results.filter((r) => r.verdict.kind === "RED").length;
   const notEvaluable = results.filter((r) => r.verdict.kind === "NOT_EVALUABLE").length;
 
@@ -396,6 +444,9 @@ async function main(): Promise<void> {
     },
     harness,
     corpusState: corpusTemplates === 0 ? AWAITING : null,
+    /* WHO RAN THIS. The proof class of anything this run proves is derived
+       from here and nowhere else. (Session B WI1.8.) */
+    provenance: readRunProvenance(TESTED_SHA),
   };
   const recordPath = nextRunRecordPath(RUNS_DIR, today());
   writeFileSync(recordPath, `${JSON.stringify(record, null, 2)}\n`, "utf8");

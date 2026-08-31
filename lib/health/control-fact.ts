@@ -242,6 +242,16 @@ export interface ControlScore {
   /** Denominator for false-presence rate. */
   readonly knownAbsenceCount: number;
   readonly recalled: number;
+  /**
+   * `known_absence` facts the surface correctly reported as absent. (B WI1.4.)
+   *
+   * Counted, and not merely inferred from "not a false presence", because the
+   * two are different observations: a surface that names OUR gap on an absence
+   * fact is honest and has recalled nothing, and a surface that asserts the
+   * sourced absence has recalled the verified fact. A score that could not
+   * tell them apart reported a silent instrument as a correct one.
+   */
+  readonly absencesRecalled: number;
   readonly falseAbsences: number;
   readonly falsePresences: number;
   /** Facts loaded but never observed. Reported, never silently fine. */
@@ -258,7 +268,13 @@ export interface ControlScore {
  * - known_present + ABSENCE_ASSERTED → FALSE ABSENCE (denying a verified fact)
  * - known_present + GAP_NAMED        → not recalled, and honestly so
  * - known_absence + FACT_STATED      → FALSE PRESENCE (asserting where absence is verified)
- * - known_absence + otherwise        → correct
+ * - known_absence + ABSENCE_ASSERTED → recalled: the verified absence, correctly stated
+ * - known_absence + GAP_NAMED        → not recalled, and honestly so
+ *
+ * `observeControl` is the other half of this table and the two must agree
+ * clause for clause: it classifies a `known_absence` fact's absence BEFORE it
+ * tests the proposition, because an absence fact's proposition IS the absence
+ * and matching it would land the correct answer in the FALSE PRESENCE row.
  *
  * An observation naming a statement the key does not hold throws: a scorer
  * that ignores unknown observations is a scorer that can be fed green.
@@ -273,6 +289,7 @@ export function scoreControls(
   }
   const seen = new Set<string>();
   let recalled = 0;
+  let absencesRecalled = 0;
   let falseAbsences = 0;
   let falsePresences = 0;
   for (const observation of observations) {
@@ -291,6 +308,7 @@ export function scoreControls(
       if (observation.observed === "ABSENCE_ASSERTED") falseAbsences += 1;
     } else {
       if (observation.observed === "FACT_STATED") falsePresences += 1;
+      if (observation.observed === "ABSENCE_ASSERTED") absencesRecalled += 1;
     }
   }
   const knownPresentCount = facts.filter((f) => f.fact_class === "known_present").length;
@@ -299,6 +317,7 @@ export function scoreControls(
     knownPresentCount,
     knownAbsenceCount,
     recalled,
+    absencesRecalled,
     falseAbsences,
     falsePresences,
     unobserved: facts.length - seen.size,

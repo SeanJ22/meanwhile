@@ -1,7 +1,7 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-31 19:28:40 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-31 19:38:42 EDT.
 Session day 2026-08-31 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
@@ -1020,10 +1020,10 @@ _No status change recovered in the commits walked._
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-31 19:28:39 EDT
+generated: 2026-08-31 19:38:42 EDT
 branch: claude/session-c-wgh22
-head sha: 403bd7f59ae68f435371ca315d6e5c8abcb9e15a
-head subject: Regenerate the repo inventory and the status ledger for WGH-22
+head sha: 98c8e0d87bd5ea9b0d36ff016bc3c4ba57a3a39d
+head subject: Gate run records for the WGH-22 ship
 origin/main sha: ce1fe51bae41cbd99f67a3a43f148ba1511aec5b
 origin/main subject: Merge pull request #240 from SeanJ22/claude/frontier-walk-checks-baseline
 local main sha: ce1fe51bae41cbd99f67a3a43f148ba1511aec5b

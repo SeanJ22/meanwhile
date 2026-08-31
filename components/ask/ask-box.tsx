@@ -1026,16 +1026,65 @@ export function AskBox({
           data-ask-grounded
           data-ask-grounded-mode={grounded.mode}
           data-ask-grounded-subject={grounded.subject?.id ?? undefined}
-          className="mt-2.5 rounded-[8px] border border-[var(--panel-border)] p-3"
+          /*
+            **ASK-17 (2026-08-30) — THE ANSWER SCROLLS.**
+
+            The TUSD answer ran past the bottom of the panel and stopped, cut
+            mid-roster, with no way to reach the rest. The owner: *"the
+            information just scrolls. It gets cut off at the end and there's no
+            way for me to scroll down and see other information."*
+
+            An answer a reader cannot finish reading is an answer they did not
+            get, which makes this the reader contract and not a layout
+            preference. `max-h` with `overflow-y-auto` bounds the panel and
+            gives the overflow somewhere to go; ASK-21's collapsed roster
+            reduces how often it is needed and does not remove the need, which
+            is why both ship together rather than either alone.
+
+            `overscroll-contain` so reaching the end of the answer does not
+            then scroll the map underneath it.
+          */
+          className="mt-2.5 max-h-[60vh] overflow-y-auto overscroll-contain rounded-[8px] border border-[var(--panel-border)] p-3"
         >
-          {grounded.subject && (
-            <p className="text-[0.8125rem] font-semibold leading-snug text-paper">
-              {grounded.subject.name}
-              {grounded.subject.office ? (
-                <span className="font-normal text-muted"> · {grounded.subject.office}</span>
-              ) : null}
-            </p>
-          )}
+          {/*
+            **ASK-16 (2026-08-30) — A WAY OUT.**
+
+            Once a question was asked the answer had no close, no minimise and
+            no back. The owner: *"There's no way for me to minimize or back out
+            of this area once I asked that question. There's no way for me to
+            do anything."*
+
+            Reader friction is a defect with the same standing as a wrong
+            number, and being unable to leave a surface is the most basic form
+            of it. This dismisses the ANSWER and leaves the question in the box,
+            which is the state a reader who wants to rephrase is trying to
+            reach — clearing both would make "close" cost them their typing.
+
+            `setGrounded(null)` is the same reset the submit path already runs
+            when a new question arrives, so there is one way to retire an
+            answer rather than two that can diverge.
+          */}
+          <div className="flex items-start justify-between gap-2">
+            {grounded.subject ? (
+              <p className="min-w-0 flex-1 text-[0.8125rem] font-semibold leading-snug text-paper">
+                {grounded.subject.name}
+                {grounded.subject.office ? (
+                  <span className="font-normal text-muted"> · {grounded.subject.office}</span>
+                ) : null}
+              </p>
+            ) : (
+              <span className="min-w-0 flex-1" />
+            )}
+            <button
+              type="button"
+              data-ask-dismiss
+              aria-label="Close this answer"
+              onClick={() => setGrounded(null)}
+              className="shrink-0 cursor-pointer rounded px-1.5 py-0.5 text-[0.75rem] leading-none text-muted hover:text-paper"
+            >
+              Close
+            </button>
+          </div>
 
           {/* Named, and more than one thing fits. ASKED — never chosen. */}
           {grounded.mode === "CLARIFY" && (
@@ -1154,9 +1203,33 @@ export function AskBox({
             between that person and the thing the reader asked about, which is
             a fact, and stops.
           */}
+          {/*
+            **ASK-21 (2026-08-30) — COLLAPSED BY DEFAULT.**
+
+            This rendered every member expanded inside every answer: name,
+            role, body, ward email and the date we read it, five to eight rows
+            deep. The owner met it three times in one session and it is what
+            pushed the TUSD answer off the bottom of the panel (ASK-17). His
+            instruction, verbatim: *"This area should be collapsed by default.
+            We could change even the title to say 'Who this is' or whatever.
+            You could just simply say 'Members of this council' and have it
+            automatically collapse. There's too much information."*
+
+            The same collapse-by-default rule as MTG-5, BAL-8 and BAL-16 — this
+            is the surface it had not reached. **Nothing is removed** (RULING
+            26, RULING 27): every contact is still rendered, still sourced,
+            still one click away, and the COUNT is on the summary so a reader
+            knows what is behind it before they open it.
+
+            The title keeps the owner's own words. He offered two and the first
+            is the one already on the surface, so the label a reader has
+            learned does not move under them.
+          */}
           {(grounded.contacts?.length ?? 0) > 0 && (
-            <div className="mt-2" data-ask-contacts={grounded.contacts?.length}>
-              <p className="t-eyebrow text-muted">Who this is</p>
+            <details className="mt-2" data-ask-contacts={grounded.contacts?.length}>
+              <summary className="cursor-pointer text-[0.6875rem] text-link">
+                Who this is ({grounded.contacts?.length})
+              </summary>
               <ul className="mt-0.5 space-y-0.5">
                 {(grounded.contacts ?? []).map((c) => (
                   <li
@@ -1197,7 +1270,7 @@ export function AskBox({
                   </li>
                 ))}
               </ul>
-            </div>
+            </details>
           )}
 
           {/*

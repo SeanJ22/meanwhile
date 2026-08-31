@@ -71,6 +71,7 @@
     "fec:directories": "tsx scripts/fetch-fec-directories.mts",
     "fec:fetch": "tsx scripts/fetch-fec.mts",
     "feedback:read": "tsx scripts/read-feedback.mts",
+    "feedback:sweep": "tsx scripts/feedback-sweep.mts",
     "fix:official-pages": "tsx scripts/fix-stale-official-pages.mts",
     "fixtures:credentials": "tsx scripts/fixture-credential-sweep.mts",
     "flake:sweep": "tsx scripts/flake-sweep.mts",

@@ -266,7 +266,24 @@ test("GREEN: a fresh first-party reading of the publisher's own page IS allowed 
   assert.equal(body.denominators?.publisherPublicationObservationsForThatMeeting, 1);
   const theirs = (body.gaps ?? []).filter((g) => g.whose === "THEIRS");
   assert.equal(theirs.length, 1, "the observation earns exactly one THEIRS sentence");
-  assert.match(theirs[0].statement, /^As of \d{4}-\d{2}-\d{2}, /, "the day of the READING, printed");
+  /*
+   * ASK-18 (2026-08-30): the clauses are unchanged and their ORDER is not. It
+   * led with the date — *"As of <date>, <org> had not posted..."* — which
+   * buries the subject and reads as hedging. The owner asked that we *"very
+   * clearly say that this agenda is not posted"*.
+   *
+   * The publisher and the fact come first; the reading date follows as the
+   * scope it is. Both assertions below are what actually matters and both
+   * still hold: the day of the READING is printed, and the sentence is about
+   * what a named publisher's own page showed rather than about whether an
+   * agenda exists.
+   */
+  assert.match(theirs[0].statement, /when we read it on \d{4}-\d{2}-\d{2}/, "the day of the READING, printed");
+  assert.match(
+    theirs[0].statement,
+    /its own page showed none/,
+    "and it describes what THEIR page showed, never whether an agenda exists",
+  );
   assert.match(theirs[0].statement, new RegExp(emptyHandedName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   assert.match(
     theirs[0].statement,

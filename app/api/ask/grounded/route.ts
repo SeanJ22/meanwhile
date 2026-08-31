@@ -55,6 +55,7 @@ import { selectSitting, type AgendaSelection } from "@/lib/ask/select";
 import {
   classifyAgendaPublication,
   publisherAgendaObservationsFor,
+  observationFromMeetingRecord,
 } from "@/lib/ask/agenda-publication";
 import {
   outcomeEvidenceFor,
@@ -187,6 +188,33 @@ interface MeetingLike {
   startsAt: string;
   timeZone?: string | null;
   agendaUrl?: string | null;
+  /**
+   * **WHO PUBLISHED THIS AND WHEN WE READ IT — and it was being dropped.**
+   * (ASK-18, 2026-08-30.)
+   *
+   * `Meeting` has carried `provenance` throughout. This hand-narrowed shape
+   * did not declare it, so the fields travelled on the wire and were
+   * unreachable by declaration — which is the exact defect ASK-05 recorded one
+   * type over, where two hand-copied contact types dropped `sourceOrg` and
+   * `retrievedAt` and made a sourced claim unrenderable.
+   *
+   * Its absence is why the THEIRS branch in `agenda-publication.ts` was
+   * unreachable outside the Legistar lane: a first-party publication
+   * observation needs the page, the publisher and the read time, and all three
+   * were sitting one field away.
+   *
+   * Optional so a caller assembling a partial meeting is not forced to invent
+   * one — `observationFromMeetingRecord` refuses an incomplete provenance
+   * rather than downgrading it.
+   */
+  provenance?: {
+    sourceUrl: string | null;
+    sourceOrg: string;
+    collectedAt: string;
+    secondHand?: boolean;
+  };
+  /** Present exactly when the row came from a previous snapshot. */
+  carried?: unknown;
 }
 
 /**
@@ -980,9 +1008,31 @@ export async function POST(request: Request) {
        * The freshness window is what actually bounds the claim.
        */
       const reconciledPublication = publicationObservationsFor(chosen.id);
+      /*
+       * **ASK-18 (2026-08-30) — THE THIRD SOURCE, AND IT WAS ALREADY HELD.**
+       *
+       * The THEIRS branch has existed since ASK-05 and was unreachable outside
+       * the Legistar lane, so every other body's answer fell to the OURS gap:
+       * *we have not yet acquired the agenda... we are still looking for it*,
+       * about meetings whose bodies had simply not posted one. The owner
+       * checked at 8:30 that no agenda existed for either Pima sitting and
+       * reported the product blaming itself for someone else's timing.
+       *
+       * `observationFromMeetingRecord` reads what the MEETING RECORD already
+       * proves: we fetched this body's own calendar, from a named page, at a
+       * named time, and the listing carried no agenda link. First-party,
+       * scoped to one sitting, checkable by opening the URL.
+       *
+       * It refuses every case where that would not be true — an aggregator's
+       * copy, a page we cannot name, a carried-forward row whose timestamp is
+       * not when this listing was read. The freshness window still bounds it,
+       * so a stale negative expires rather than standing.
+       */
+      const derivedObservation = observationFromMeetingRecord(chosen);
       const publisherObservations = [
         ...publisherAgendaObservationsFor(chosen.id),
         ...(reconciledPublication.actionable ? [reconciledPublication.actionable] : []),
+        ...(derivedObservation ? [derivedObservation] : []),
       ];
       const publication = classifyAgendaPublication({
         bodyName: subject.name,

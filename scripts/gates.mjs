@@ -151,6 +151,12 @@ const GATES = [
     why: "the cumulative route knowledge is what every later jurisdiction inherits; a broken store reads as a project that knows nothing",
   },
   {
+    id: "feedback:sweep",
+    ciJob: "gates (test · lint · tsc)",
+    command: "pnpm feedback:sweep --check",
+    why: "an owner pass that a sweep neither processes nor lists as unidentifiable is dropped rather than deferred, and the difference is that a deferral names what it is deferring (Session B, WS2.5)",
+  },
+  {
     id: "assert:browser",
     ciJob: "gates (test · lint · tsc)",
     command: "pnpm run assert:browser",

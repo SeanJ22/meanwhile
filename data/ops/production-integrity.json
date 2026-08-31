@@ -1,11 +1,11 @@
 {
   "formatVersion": 1,
-  "deployedSha": "2e633e013da6781729f4219a67d9fea17dc6903b",
-  "mainSha": "2e633e013da6781729f4219a67d9fea17dc6903b",
+  "deployedSha": "0bd520f3eef1210b4e2033e51ef1d53cdd6acceb",
+  "mainSha": "0bd520f3eef1210b4e2033e51ef1d53cdd6acceb",
   "observed": "HELD",
   "failureClass": null,
-  "detail": "HOLDS — shipping invariant HOLDS at post-deploy: 23 of 23 committed migration(s) applied, head 0022_adorable_hemingway",
-  "observedAt": "2026-08-31T17:23:32.746Z",
+  "detail": "HOLDS — shipping invariant HOLDS at post-deploy: 24 of 24 committed migration(s) applied, head 0023_tricky_sister_grimm",
+  "observedAt": "2026-08-31T20:42:25.564Z",
   "moment": "post-deploy",
   "gateExit": 0
 }

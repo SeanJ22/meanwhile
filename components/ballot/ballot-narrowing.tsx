@@ -113,6 +113,15 @@ export function BallotNarrowing({
          * row. See the prop's own note in `address-prompt.tsx`.
          */
         triggerClassName={className}
+        /*
+         * BAL-38 (2026-08-31): an address that resolves in a DIFFERENT zip is
+         * offered, never taken. A reader looking at one zip's ballot who is
+         * silently moved to another has had their question changed for them,
+         * so this is a full navigation the reader asks for by tapping.
+         */
+        onSwitchZip={(other) => {
+          window.location.href = `/ballot?zip=${other}`;
+        }}
         onResolved={({ contestIds }) => {
           // An empty confirmed list is a real answer and must not read as a
           // failure: the reader's street resolved nothing we hold a ballot for,

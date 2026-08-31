@@ -7,6 +7,7 @@
  * presentation, not new plumbing.
  */
 
+import type { CalendarSafeMeeting } from "../map/format.ts";
 import {
   TIME_NOT_POSTED,
   locationLine,
@@ -144,7 +145,7 @@ export function icsFileName(event: CalendarEventInput): string {
  * the one place a wrong time does real damage.
  */
 export function meetingCalendarEvent(
-  meeting: Meeting,
+  meeting: CalendarSafeMeeting,
   options: { origin?: string } = {},
 ): CalendarEventInput {
   const timed = startTimeIsKnown(meeting);

@@ -122,6 +122,21 @@ export type AddressResolution =
       status: "FAILED";
       /** `NOT_FOUND` is about our lookup, never about the reader's address. */
       reason: "NOT_FOUND";
+      /**
+       * The ZIP this address DOES resolve to, when it resolves to a different
+       * one. (BAL-38, 2026-08-31.)
+       *
+       * Absent on an ordinary failure, which is most of them. Present only
+       * when an unconstrained geocode placed the same address cleanly in
+       * another five-digit ZIP — which turns *"we couldn't place that"*, a
+       * true and useless sentence about us, into an offer the reader can act
+       * on.
+       *
+       * It stays inside `FAILED` deliberately: the address did NOT resolve in
+       * the ZIP the reader is looking at, and nothing here silently moves them.
+       * A reader who wants the other ballot asks for it.
+       */
+      resolvesInZip?: string;
     };
 
 /** One sampled point's answer: every division containing it. */

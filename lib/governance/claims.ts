@@ -240,6 +240,38 @@ export const CLAIM_KEYS: readonly ClaimKeyDef[] = [
     question: "Which persistence provider holds Level-2 scheduling authority?",
     values: ["filesystem-provider", "postgres-provider-neutral-interfaces"],
   },
+  {
+    key: "session.completion_denominator",
+    question: "What decides when a session's scoped work is finished?",
+    values: ["finite-stated-at-start", "whatever-the-session-discovers"],
+  },
+  {
+    key: "session.discovered_defect_routing",
+    question: "Where does a defect discovered mid-session go?",
+    values: [
+      "frontier-unless-falsifies-or-regresses",
+      "into-the-current-session",
+    ],
+  },
+  {
+    key: "session.human_gated_status",
+    question: "Is a row awaiting a human decision open executable work?",
+    values: [
+      "needs-owner-terminal-not-open-executable",
+      "counted-as-open",
+    ],
+  },
+  {
+    key: "rendering.address_scope",
+    question: "Once a reader confirms an address, what scope do ZIP-scoped surfaces show?",
+    values: ["address-scope-replaces-zip-scope", "zip-scope-with-annotations"],
+  },
+  {
+    key: "rendering.excluded_entity_label",
+    question:
+      "May a governing-entities surface display an entity the address ruled out, labelled as not the reader's?",
+    values: ["prohibited-out-of-scope-not-annotated", "kept-and-labelled"],
+  },
 ] as const;
 
 const KEY_INDEX = new Map(CLAIM_KEYS.map((k) => [k.key, k]));

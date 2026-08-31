@@ -33,12 +33,33 @@
  * record renders UNPROVEN; one whose record measured a tree the release does
  * not contain renders STALE.
  *
- * ## The HEAD equality rule
+ * ## The HEAD rule, and why EQUALITY was the wrong one
  *
- * `--check` is red when the ledger's recorded HEAD is not the generating HEAD.
- * A ledger stamped with an older commit is a status surface describing a tree
- * that is not this one, and that is the exact defect the committed `e62c420`
- * stamp was.
+ * (Session B resume, W5, 2026-08-31.)
+ *
+ * This was: `--check` is red when the recorded HEAD is not the generating
+ * HEAD. That rule is UNSATISFIABLE by any commit that contains the ledger. The
+ * stamp records the HEAD the generator ran at, and the generator necessarily
+ * runs BEFORE the commit that carries its output — so the ledger inside commit
+ * C always names C's parent, and `--check` is red the instant it is committed.
+ * The ledger has been permanently, structurally stale ever since, which is why
+ * it sat at `6923cd91` while main was four commits further on.
+ *
+ * A rule nothing can satisfy does not get obeyed; it gets routed around. So it
+ * is now ANCESTRY: the recorded HEAD must be this HEAD or an ancestor of it.
+ * That still refuses the two things the equality rule was aiming at — a ledger
+ * generated on a divergent branch, and one stamped with a commit this tree does
+ * not contain — and it is satisfiable by the commit that carries it.
+ *
+ * **The real staleness check is, and always was, the BODY comparison.** The
+ * body embeds each run record's tested SHA and timestamp, so a source record
+ * that moves changes the body and `--check` goes red until the generator runs
+ * again. That is the check that makes generated status unable to lag its
+ * inputs; the stamp rule only ever guarded provenance.
+ *
+ * A shallow clone cannot answer the ancestry question. CI clones shallowly, so
+ * an unanswerable ancestry is accepted WITH THE REASON PRINTED rather than
+ * failed — the body check is unaffected and is the one that matters.
  *
  * ## Impurity, stated
  *
@@ -49,6 +70,7 @@
  * That is correct: the result changed.
  */
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -289,6 +311,31 @@ function recordedHead(document: string): string | null {
   return document.match(/HEAD `([0-9a-f]{7,40})`/)?.[1] ?? null;
 }
 
+/**
+ * Is the stamped commit part of this history?
+ *
+ * `CANNOT_TELL` is a real answer and it fails OPEN here, deliberately. CI
+ * clones shallowly, so the stamped commit may genuinely not be present in the
+ * local object database — and "I do not have that object" is not "that commit
+ * is not an ancestor". Failing closed on it would make every CI run red for a
+ * reason that has nothing to do with the ledger's currency, and the body
+ * comparison already answers the question this is only corroborating.
+ */
+function stampAncestry(stamped: string): "ANCESTOR" | "NOT_ANCESTOR" | "CANNOT_TELL" {
+  try {
+    execFileSync("git", ["merge-base", "--is-ancestor", stamped, "HEAD"], {
+      cwd: ROOT,
+      stdio: "ignore",
+    });
+    return "ANCESTOR";
+  } catch (error) {
+    /* Exit 1 is a clean "no". Anything else — a missing object, a shallow
+       clone, git absent — is unanswerable and says so. */
+    const status = (error as { status?: number }).status;
+    return status === 1 ? "NOT_ANCESTOR" : "CANNOT_TELL";
+  }
+}
+
 const invoked = process.argv[1]?.replace(/\\/g, "/").endsWith("status-ledger.mts");
 if (invoked) {
   const results = resolved();
@@ -304,12 +351,22 @@ if (invoked) {
     // --check NEVER writes. Stale is reported and left stale.
     const stampedHead = committed === null ? null : recordedHead(committed);
     if (committed !== null && HEAD !== null && stampedHead !== null && stampedHead !== HEAD) {
-      console.error(
-        `docs/status-ledger.md records HEAD ${stampedHead.slice(0, 12)} and the generating ` +
-          `HEAD is ${HEAD.slice(0, 12)}. A status surface stamped with a different commit ` +
-          "describes a tree that is not this one. Run: pnpm status:ledger",
-      );
-      process.exit(1);
+      const ancestry = stampAncestry(stampedHead);
+      if (ancestry === "NOT_ANCESTOR") {
+        console.error(
+          `docs/status-ledger.md records HEAD ${stampedHead.slice(0, 12)}, which this tree does ` +
+            `NOT contain (generating HEAD ${HEAD.slice(0, 12)}). A status surface stamped with a ` +
+            "commit off this history describes a tree that is not this one. Run: pnpm status:ledger",
+        );
+        process.exit(1);
+      }
+      if (ancestry === "CANNOT_TELL") {
+        console.log(
+          `  note: the stamp records ${stampedHead.slice(0, 12)} and ancestry against ` +
+            `${HEAD.slice(0, 12)} could not be determined — a shallow clone cannot answer it. ` +
+            "The BODY comparison below is unaffected and is the check that matters.",
+        );
+      }
     }
     if (committed === next) {
       console.log(

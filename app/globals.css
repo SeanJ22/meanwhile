@@ -5252,16 +5252,66 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
 }
 
 /* BAL-25 (2026-08-28) — the ballot's desktop second column — docs/globals-css-notes.md#bal-25-2026-08-28-the-ballot-s-desktop-second-column */
+/*
+ * BAL-39 (2026-08-31) — THE GAPS WERE THE GRID, MEASURED BEFORE ANYTHING MOVED.
+ *
+ * The owner: *two-column desktop layout has gaps and misaligned boxes.* The
+ * row's blocker required a measurement before a layout change, and here it is,
+ * from the rendered DOM at 1280 on 2026-08-31:
+ *
+ *   85701, 22 cards. Every pair shared a y — 981, 2466, 3472, 4439, 5301,
+ *   6826 — because a two-column GRID places in ROWS. The row's height is its
+ *   tallest card and every shorter card leaves a hole under it. Vertical gaps
+ *   ran 13px to 689px in one column; the 689 sits under a 836px card whose
+ *   row-mate (Corporation Commissioner) is 1332px.
+ *   07866, 9 cards: 20px to 468px, same cause.
+ *
+ * So this was never a spacing bug. `align-items: start` was already correct —
+ * the cards were not stretching, they were row-LOCKED — and no gap value fixes
+ * a hole whose size is set by another card's height.
+ *
+ * **CSS multi-column flows instead of placing.** Each card is laid down under
+ * the previous one in its column with a fixed gap, so a tall card pushes only
+ * what is below IT. `break-inside: avoid` keeps a card whole across the column
+ * boundary, which is the one thing columns will do wrong if not told.
+ *
+ * ## The reading order changes, and that is the deliberate part
+ *
+ * A grid reads left-right, left-right. Columns read down, then over. **The DOM
+ * order is untouched**, so a screen reader and every assistive path still get
+ * ballot order exactly as before; what changes is the visual path, and down-
+ * then-over is how a printed ballot reads. It is also the only order in which
+ * consecutive contests are visually adjacent, which is what the holes were
+ * destroying.
+ *
+ * `tests/ballot-two-column.test.ts` pins the mechanism; the walk measures the
+ * gaps on the rendered DOM, because this is a defect the DOM shows and a
+ * stylesheet reading cannot.
+ */
 .ballot-card-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  display: block;
 }
 
 @media (min-width: 1024px) {
   .ballot-card-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    columns: 2;
     column-gap: 22px;
-    align-items: start;
+    /* Without this a card can be split across the column boundary — the one
+       failure mode columns introduce, and a contest cut in half is worse than
+       the gaps this replaces. */
+    orphans: 1;
+    widows: 1;
+  }
+
+  .ballot-card-grid > [data-contest-id] {
+    break-inside: avoid;
+    /* Belt and braces for engines that honour the older property name. */
+    page-break-inside: avoid;
+    /* The card's own top margin is what separates it from the card above it in
+       the same column; a column's FIRST card must not inherit one, or the two
+       columns start at different heights — the "misaligned boxes" half. */
+    margin-top: 0;
+    margin-bottom: 14px;
   }
 }
 
@@ -5346,4 +5396,23 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
 .rail-floaters > .panel {
   overflow-x: clip;
   overflow-wrap: break-word;
+}
+
+/* ASK-22 (2026-08-31): the list overlay's focus chip. An answer can open the
+   list scoped to the body it was about, and the scope is always visible and
+   always one tap from being cleared — a narrowing a reader cannot see is one
+   they will read as an absence. */
+.al-focus-chip {
+  margin-left: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0 0.6rem;
+  border: 1px solid color-mix(in srgb, var(--signal) 45%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--signal) 10%, transparent);
+  color: var(--paper);
+  font-size: 0.75rem;
+  line-height: 1;
+  white-space: nowrap;
 }

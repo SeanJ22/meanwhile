@@ -71,16 +71,63 @@ const folders = ownerFolders();
  * absent is fine and expected — CI has no owner folders at all, and the record
  * is what survives.
  */
-const verdict = checkSweepGate(folders, records);
+/*
+ * **AND THE CITED CHECKS ARE RESOLVED, NOT TAKEN ON TRUST (2026-08-31).**
+ *
+ * The gate used to require a non-empty `checkId` string. Measured against the
+ * 8.30.26 record, fourteen of twenty-three cited checks named nothing that
+ * exists — twelve `vac:` ids against a visual-checks file that is not on disk,
+ * and two `rq:` ids absent from the generated owner corpus. That is how one
+ * defect was marked fixed three times.
+ */
+const world = {
+  exists: (p: string) => existsSync(join(ROOT, p)),
+  read: (p: string) => {
+    try {
+      return readFileSync(join(ROOT, p), "utf8");
+    } catch {
+      return null;
+    }
+  },
+  packageScripts: (
+    JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")) as {
+      scripts?: Record<string, string>;
+    }
+  ).scripts ?? {},
+};
+
+const verdict = checkSweepGate(folders, records, world);
 
 console.log(`feedback:sweep · ${records.length} recorded sweep(s), ${folders.length} owner folder(s) on disk`);
 for (const sweep of records) {
   const c = countSweep(sweep);
   console.log(
     `  ${sweep.folder} · ${c.filesInventoried} file(s) inventoried · ${c.itemsFound} item(s) — ` +
-      `${c.verifiedFixed} verified fixed, ${c.openBlocked} open with a named blocker, ` +
-      `${c.positivesKept} positive kept, ${c.unidentifiable} unidentifiable`,
+      /*
+       * THREE COUNTS, NEVER TWO. (RULING 221.) `openExecutable` is work a
+       * session can finish; `needsSean` is a human gate no amount of session
+       * effort closes. Reporting them as one 'open' number makes a session
+       * read as unfinished for a reason nothing it could do would change.
+       */
+      `${c.verifiedFixed} verified fixed, ${c.openExecutable} open executable, ` +
+      `${c.needsSean} needs Sean (terminal), ` +
+      `${c.positivesKept} positive kept, ${c.unidentifiable} unidentifiable` +
+      (c.checkDebt > 0 ? `, ${c.checkDebt} in CHECK DEBT (not counted fixed)` : ""),
   );
+  /*
+   * **THE DEBT IS PRINTED EVERY RUN, BY NAME.** (2026-08-31.)
+   *
+   * A carried debt that only lives in a JSON field is a debt nobody meets. The
+   * quarantine list in walk-all prints for the same reason: tracked and hunted,
+   * never deleted and never counted passing.
+   */
+  const debt = sweep.checkDebt ?? [];
+  if (debt.length > 0) {
+    console.log(
+      `      CHECK DEBT — ${debt.length} row(s) cite a check that does not exist, so they are ` +
+        `NOT counted verified fixed: ${debt.map((d) => d.itemId).join(", ")}`,
+    );
+  }
   /*
    * RULING 159: every count this prints states its own denominator, and an
    * empty population states WHY rather than rendering a bare zero. It matters
@@ -155,7 +202,8 @@ if (!CHECK && existsSync(FEEDBACK) && records.length > 0) {
     out.push(
       `${c.filesInventoried} file(s) inventoried · ${c.itemsFound} item(s) found · ` +
         `${c.itemsProcessed} processed · ${c.unidentifiable} unidentifiable · ` +
-        `${c.openBlocked} open with a named blocker · ${c.positivesKept} positive kept.`,
+        `${c.openExecutable} open executable · ${c.needsSean} needs Sean (terminal for a ` +
+          `session, and the record obligation stays live) · ${c.positivesKept} positive kept.`,
     );
     out.push("");
     out.push("| Item | Surface | Zip | Class | Disposition | Instances found / fixed | Check |");
@@ -174,6 +222,32 @@ if (!CHECK && existsSync(FEEDBACK) && records.length > 0) {
       for (const i of open) {
         out.push(`- **\`${i.id}\` — ${i.reported}**`);
         out.push(`  - ${i.blocker}`);
+      }
+      out.push("");
+    }
+    /*
+     * **THE CHECK DEBT, IN THE OWNER'S OWN VIEW.** (2026-08-31.)
+     *
+     * These rows are recorded FIXED and are NOT counted verified fixed,
+     * because the check each one cites resolves to nothing on disk. Printed
+     * here rather than only in the terminal, so the owner reads the same
+     * number the gate computes.
+     */
+    const debtRows = sweep.checkDebt ?? [];
+    if (debtRows.length > 0) {
+      out.push(`### Check debt — recorded fixed, NOT counted verified (${debtRows.length})`);
+      out.push("");
+      out.push(
+        "Each of these cites a permanent check that does not exist, so nothing would catch " +
+          "it regressing. They are not counted in the pair above.",
+      );
+      out.push("");
+      for (const d of debtRows) {
+        const item = sweep.items.find((i) => i.id === d.itemId);
+        out.push(
+          `- **\`${d.itemId}\`** — cites \`${item?.checkId ?? "—"}\`, recorded ${d.since}`,
+        );
+        out.push(`  - ${d.reason}`);
       }
       out.push("");
     }

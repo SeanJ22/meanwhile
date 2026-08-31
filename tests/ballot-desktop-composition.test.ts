@@ -103,13 +103,39 @@ test("BAL-25: the second column is a grid of CARDS, and it is one class", () => 
    * construction rather than by inspection. `1024px` is Tailwind's `lg`, which
    * is the breakpoint every utility above uses — two breakpoints for one
    * composition would tear at whichever width they disagreed on.
+   *
+   * **BAL-39 (2026-08-31) — THE MECHANISM CHANGED AND THE PROPERTY DID NOT.**
+   *
+   * This asserted a two-column GRID, which is what BAL-25 shipped and what
+   * BAL-39 measured as the cause of the owner's holes: a grid places in ROWS,
+   * a row's height is its tallest card, and every shorter card leaves a hole
+   * whose size is set by its row-mate. Gaps ran 13px to 689px at 85701.
+   *
+   * Column FLOW lays each card under the previous one in its own column, so a
+   * tall card pushes only what is below it. The properties this test actually
+   * cares about are unchanged and are asserted below: one column on a phone,
+   * two at `lg`, one class for both surfaces. What is gone is the assertion
+   * that the mechanism is `grid-template-columns`, because pinning a mechanism
+   * is how a test outlives the reason it was written.
+   *
+   * The GAPS themselves are measured on the rendered DOM by the SB0831 block
+   * in `walk-all.mts`; a stylesheet reading cannot see a hole.
    */
-  const rule = /\.ballot-card-grid \{[^}]*grid-template-columns:\s*minmax\(0, 1fr\)/;
-  assert.match(CSS, rule, "the base rule is one column");
+  assert.match(CSS, /\.ballot-card-grid \{[^}]*display:\s*block/, "the base rule is one column");
+  assert.doesNotMatch(
+    CSS,
+    /\.ballot-card-grid \{[^}]*grid-template-columns/,
+    "a row-placing grid is what put the holes in it (BAL-39)",
+  );
   assert.match(
     CSS,
-    /@media \(min-width: 1024px\) \{\s*\.ballot-card-grid \{[^}]*repeat\(2, minmax\(0, 1fr\)\)/,
+    /@media \(min-width: 1024px\) \{\s*\.ballot-card-grid \{[^}]*columns:\s*2/,
     "and two columns arrive at lg, the same breakpoint the container widens at",
+  );
+  assert.match(
+    CSS,
+    /\.ballot-card-grid > \[data-contest-id\] \{[^}]*break-inside:\s*avoid/,
+    "a card is never split across the column boundary — the one thing columns do wrong",
   );
 });
 

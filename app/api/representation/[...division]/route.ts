@@ -1,5 +1,5 @@
 import { governingRosterHoldersForDivision } from "@/lib/registry/body-rosters";
-import { seatHoldersForDivision } from "@/lib/registry/server";
+import { divisionsByOcdIds, seatHoldersForDivision } from "@/lib/registry/server";
 
 /**
  * GET /api/representation/ocd-division/country:us/state:az/sldl:21
@@ -23,6 +23,20 @@ import { seatHoldersForDivision } from "@/lib/registry/server";
  *
  * The body is committed data with no reader input in it, so it is publicly
  * cacheable; distinctness is guaranteed by the path, not by the header.
+ *
+ * ## WGH-22 (2026-08-31) — THE DIVISION'S OWN FACTS TRAVEL WITH ITS PEOPLE
+ *
+ * The answer now carries `label`, `divisionType` and `tier` beside `holders`.
+ * A reader who has confirmed an address is owed the districts that govern
+ * THEM, and the ZIP-scoped coverage payload provably cannot carry a district
+ * the ZIP centroid is not inside — so the panel has to ask for it by key. It
+ * cannot render what comes back without a name, and `CLAUDE.md` forbids an
+ * OCD-ID reaching a reader, so the name travels with the people rather than
+ * being reconstructed on the client from an identifier.
+ *
+ * The label comes off the same committed boundary registry every other
+ * surface reads. `null` where the registry does not hold the division — an
+ * honest absence, never a placeholder, and the caller renders its named gap.
  */
 
 export const runtime = "nodejs";
@@ -41,7 +55,7 @@ export async function GET(
     // Not an OCD-ID. An empty answer in the same shape, and the client
     // renders its named gap — never a failure dressed as an absence.
     return Response.json(
-      { ocdId: null, holders: [] },
+      { ocdId: null, label: null, divisionType: null, tier: null, holders: [] },
       { status: 400, headers: { "Cache-Control": "no-store" } },
     );
   }
@@ -52,8 +66,18 @@ export async function GET(
   const seats = await seatHoldersForDivision(ocdId);
   const holders = seats.length > 0 ? seats : governingRosterHoldersForDivision(ocdId);
 
+  // The division's own facts, off the same committed registry the map draws
+  // from. Absent rather than invented when the registry does not hold it.
+  const [known] = await divisionsByOcdIds([ocdId]);
+
   return Response.json(
-    { ocdId, holders },
+    {
+      ocdId,
+      label: known?.label ?? null,
+      divisionType: known?.divisionType ?? null,
+      tier: known?.tier ?? null,
+      holders,
+    },
     {
       headers: {
         "Cache-Control": "public, max-age=300, s-maxage=300",

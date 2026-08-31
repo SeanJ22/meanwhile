@@ -792,3 +792,245 @@ export function tally(audit: WorkflowAudit): { kind: SlotVerdictKind; count: num
   for (const v of audit.verdicts) counts.set(v.kind, (counts.get(v.kind) ?? 0) + 1);
   return SLOT_VERDICT_KINDS.filter((k) => counts.has(k)).map((k) => ({ kind: k, count: counts.get(k)! }));
 }
+
+/* ========================================================================== */
+/* A SCHEDULE THAT STOPPED, AND THE THREE STATES A HUMAN CANNOT TELL APART    */
+/* ========================================================================== */
+
+/**
+ * **WHY THIS EXISTS.** (Session B closure, 2026-08-31.)
+ *
+ * The owner opened the Actions tab, saw that five refresh workflows had
+ * produced no run since 2026-08-26, and reported five days of unrefreshed
+ * production civic data.
+ *
+ * The observation was exactly right and the conclusion was wrong, and NOTHING
+ * IN THE REPOSITORY COULD TELL THE DIFFERENCE. Those five had their crons
+ * deliberately consolidated into `refresh-daily.yml` on 2026-08-24 — that file
+ * says so in its own header — and each kept its `workflow_dispatch` so a single
+ * source could still be run by hand. A workflow with no cron produces no
+ * scheduled runs forever, by design, and looks in the Actions list exactly like
+ * one whose schedule broke.
+ *
+ * Three states, indistinguishable by eye:
+ *
+ * ```
+ *   NOT_SCHEDULED  no cron. Silence is correct and permanent.
+ *   FRESH          scheduled, and it has run within its window.
+ *   STALE          scheduled, and it has NOT. This is the incident.
+ * ```
+ *
+ * ## Why the window is twice the interval
+ *
+ * GitHub's scheduled dispatch is best-effort and late by design under load.
+ * This repository's own `refresh-daily` runs landed between 38 minutes and 11
+ * hours 38 minutes after their 09:11 UTC slot over the six days to 2026-08-30.
+ * A window of one interval would fire on ordinary lateness, and a check that
+ * cries wolf daily is a check that gets muted. Two intervals is the smallest
+ * window ordinary lateness cannot reach: a daily job gets 48 hours, which no
+ * observed delay here has approached, and a genuinely stopped schedule crosses
+ * it within a day.
+ */
+export const STALENESS_WINDOW_MULTIPLE = 2;
+
+export const SCHEDULE_STALENESS_STATES = [
+  "NOT_SCHEDULED",
+  "UNREADABLE_SCHEDULE",
+  "FRESH",
+  "STALE",
+  "NEVER_RAN",
+] as const;
+export type ScheduleStalenessState = (typeof SCHEDULE_STALENESS_STATES)[number];
+
+/** The states that are an operational incident. Two, and neither is silence. */
+export const STALENESS_INCIDENT_STATES: readonly ScheduleStalenessState[] = [
+  "STALE",
+  "NEVER_RAN",
+  "UNREADABLE_SCHEDULE",
+];
+
+export interface ScheduleStaleness {
+  readonly workflow: string;
+  readonly state: ScheduleStalenessState;
+  /** The shortest interval this workflow's crons imply, in hours. */
+  readonly intervalHours: number | null;
+  readonly windowHours: number | null;
+  readonly hoursSinceLastRun: number | null;
+  /**
+   * The newest run TRIGGERED BY THE SCHEDULE, and nothing else.
+   *
+   * Named for what it is, because the bug was feeding it something else.
+   */
+  readonly lastScheduledRunAt: string | null;
+  readonly detail: string;
+}
+
+/**
+ * The shortest interval a set of daily-cron expressions implies, in hours.
+ *
+ * Returns null for an expression this cannot parse. The CALLER must not read
+ * that as "no schedule" — `scheduleStaleness` distinguishes the two, and the
+ * distinction is the point.
+ */
+export function shortestIntervalHours(crons: readonly string[]): number | null {
+  if (crons.length === 0) return null;
+  let slots = 0;
+  for (const cron of crons) {
+    try {
+      parseDailyCron(cron);
+      slots += 1;
+    } catch {
+      return null;
+    }
+  }
+  return slots === 0 ? null : 24 / slots;
+}
+
+/**
+ * Judge one workflow.
+ *
+ * `crons` must come from the workflow file ON THE DEFAULT BRANCH — that is the
+ * only place GitHub reads schedules from, and reading a local working copy
+ * would let an uncommitted edit change the verdict.
+ *
+ * `lastScheduledRunAt` must be the newest run whose EVENT was `schedule`.
+ * `newestScheduledRun` below is the one way to obtain it; passing the newest
+ * run of any kind is the regression this signature is named to prevent.
+ */
+export function scheduleStaleness(input: {
+  readonly workflow: string;
+  readonly crons: readonly string[];
+  readonly lastScheduledRunAt: string | null;
+  readonly nowISO: string;
+}): ScheduleStaleness {
+  const base = {
+    workflow: input.workflow,
+    lastScheduledRunAt: input.lastScheduledRunAt,
+  };
+
+  if (input.crons.length === 0) {
+    return {
+      ...base,
+      state: "NOT_SCHEDULED",
+      intervalHours: null,
+      windowHours: null,
+      hoursSinceLastRun: null,
+      detail:
+        input.workflow +
+        " carries no cron on the default branch, so it produces no scheduled runs and never" +
+        " can be stale. Silence here is correct. If it USED to carry one, the schedule was" +
+        " moved or removed deliberately, and the file that took it over is what to watch.",
+    };
+  }
+
+  const intervalHours = shortestIntervalHours(input.crons);
+
+  if (intervalHours === null) {
+    /*
+     * **A CRON EXISTS AND THIS CANNOT READ IT.** That is not "no schedule".
+     *
+     * Folding it into NOT_SCHEDULED was a false negative with the worst
+     * possible shape: a workflow whose schedule is real, whose runs this
+     * auditor cannot judge, passing monitoring in silence. It opens an
+     * incident, because the thing that failed is the instrument.
+     */
+    return {
+      ...base,
+      state: "UNREADABLE_SCHEDULE",
+      intervalHours: null,
+      windowHours: null,
+      hoursSinceLastRun: null,
+      detail:
+        input.workflow +
+        " carries a cron this auditor cannot parse (" +
+        input.crons.join(", ") +
+        "). A schedule that EXISTS and cannot be read is not an absent schedule: nothing here" +
+        " can say whether its runs are late, so it may not pass monitoring quietly. Extend" +
+        " parseDailyCron, or this workflow is unwatched.",
+    };
+  }
+
+  const windowHours = intervalHours * STALENESS_WINDOW_MULTIPLE;
+
+  if (input.lastScheduledRunAt === null) {
+    return {
+      ...base,
+      state: "NEVER_RAN",
+      intervalHours,
+      windowHours,
+      hoursSinceLastRun: null,
+      detail:
+        input.workflow +
+        " is scheduled every " +
+        String(intervalHours) +
+        "h and has produced NO run the SCHEDULE triggered. Manual dispatches do not count and" +
+        " are the reason this is measured on the trigger: a hand-run job proves a human ran it," +
+        " never that the cron fired.",
+    };
+  }
+
+  const since =
+    (Date.parse(input.nowISO) - Date.parse(input.lastScheduledRunAt)) / 3_600_000;
+  if (!Number.isFinite(since)) {
+    return {
+      ...base,
+      state: "UNREADABLE_SCHEDULE",
+      intervalHours,
+      windowHours,
+      hoursSinceLastRun: null,
+      detail:
+        input.workflow +
+        " has an unreadable last-scheduled-run timestamp. Nothing is claimed about its" +
+        " freshness, and an unclaimable freshness is not a passing one.",
+    };
+  }
+
+  const stale = since > windowHours;
+  return {
+    ...base,
+    state: stale ? "STALE" : "FRESH",
+    intervalHours,
+    windowHours,
+    hoursSinceLastRun: since,
+    detail: stale
+      ? input.workflow +
+        " is scheduled every " +
+        String(intervalHours) +
+        "h and its newest SCHEDULED run was " +
+        since.toFixed(1) +
+        "h ago — past its " +
+        String(windowHours) +
+        "h window. Scheduled dispatch is best-effort and often late, which is why the window is" +
+        " twice the interval; this is past even that. RULING 218 operational incident."
+      : input.workflow +
+        " last ran on its schedule " +
+        since.toFixed(1) +
+        "h ago, inside its " +
+        String(windowHours) +
+        "h window.",
+  };
+}
+
+/**
+ * The newest run the SCHEDULE triggered, out of a run list.
+ *
+ * **THE REGRESSION THIS EXISTS TO PREVENT.** (Session B closure, 2026-08-31.)
+ *
+ * The first version of the staleness check took `recentRuns(workflow)[0]` — the
+ * newest run of ANY kind. So a cron that stopped on Monday, followed by one
+ * human clicking Run workflow on Thursday, read FRESH. The single most likely
+ * sequence of events after a schedule breaks is somebody noticing and running
+ * it by hand, which is precisely when the check would have gone quiet.
+ *
+ * A manual dispatch proves a human ran it. It says nothing whatsoever about
+ * whether the cron fired, which is the only thing this check measures.
+ */
+export function newestScheduledRun(
+  runs: readonly { readonly event?: string; readonly createdAt?: string }[],
+): string | null {
+  const scheduled = runs
+    .filter((r) => r.event === "schedule" && typeof r.createdAt === "string")
+    .map((r) => r.createdAt as string)
+    .sort();
+  return scheduled.length === 0 ? null : scheduled[scheduled.length - 1];
+}

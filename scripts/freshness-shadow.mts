@@ -1,40 +1,74 @@
 /**
  * `pnpm freshness:shadow` — ONE UNATTENDED CYCLE OF THE FRESHNESS SCHEDULER.
- * (Session B, W3.5, 2026-08-30.)
+ * (Session B, W3.5, 2026-08-30. Rewritten Session B resume, W3.B/C/E/F,
+ * 2026-08-31.)
  *
- * Runs against the DURABLE file provider and against real obligations derived
- * from the committed meeting corpus. It observes, acquires nothing it has not
- * been given a route for, records, and **promotes nothing to canonical reader
- * truth** — `runCycle` has no parameter that could.
+ * It observes, ACQUIRES for real, records, and **promotes nothing to canonical
+ * reader truth** — `runCycle` has no parameter that could.
  *
- * ## Why the file provider and not Postgres
+ * ## What changed, and why the previous version could not have been right
  *
- * RULING 220 puts Level-2 scheduling authority on a Postgres provider in a
- * dedicated database named by `WTP_CONTROL_PLANE_DATABASE_URL`. That variable
- * is not provisioned on this machine, so the live proof of that provider —
- * cross-machine contention, crash/reclaim on Postgres, a restore drill — is
- * escalated rather than faked. The shadow loop is provider-neutral by
- * construction: it takes `ControlPlaneRepositories` and never a connection, so
- * running it on the file provider proves the LOOP and proves nothing about the
- * provider, which is exactly what it is allowed to claim.
+ * Three things, and each was invisible while the others held:
  *
- * The run writes `data/health/freshness-shadow-runs/<day>-NN.json`.
+ * 1. **The executor did not fetch.** It was `async () => ({ ok: true })`, and
+ *    under the old seam that `ok: true` became WORKED and cleared the
+ *    obligation's freshness debt. Eight dispatches were reported as having
+ *    worked routes nothing opened. It is now `httpExecutor`, which opens the
+ *    publisher's own surface and maps what it got to an honest disposition.
+ *
+ * 2. **Debt was not durable.** `runCycle` accepted `debts` and this script
+ *    passed `debts: []` on every invocation, so a route that failed today was
+ *    not retried tomorrow by a fresh process. Debt now loads from and persists
+ *    to the control plane, and `pnpm control-plane:proof`'s P6 proves the
+ *    inheritance across two real processes.
+ *
+ * 3. **One RouteTask was reused for every occurrence.** That only appeared to
+ *    work because the fake executor never disposed of anything. A disposed
+ *    RouteTask is settled and cannot be the container for the next reading, so
+ *    fixing (1) breaks (3) immediately. Each due occurrence now opens its own
+ *    WorkItem and RouteTask through `openOccurrence`, and the standing
+ *    obligation survives them all.
+ *
+ * ## The provider
+ *
+ * `--provider=postgres` runs against the dedicated control-plane database named
+ * by `WTP_CONTROL_PLANE_DATABASE_URL`; the default is the durable file store.
+ * The loop is provider-neutral by construction — it takes
+ * `ControlPlaneRepositories` and never a connection — so the flag changes where
+ * state lives and nothing about what the cycle does.
+ *
+ * `--dry` uses a recorded executor instead of the network, for a cycle that
+ * exercises the lifecycle without opening a route. It is labelled SIMULATED in
+ * the digest and, by construction, discharges nothing.
+ *
+ * Env var names only, never values.
  */
 
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import {
-  registerRouteTask,
-  registerWorkItem,
-} from "../lib/control-plane/repository/coordinator.ts";
-import { createRouteTask } from "../lib/control-plane/route-task.ts";
-import { createWorkItem } from "../lib/control-plane/work-item.ts";
+  controlPlaneUrlFromEnv,
+  createPgRepositories,
+  CONTROL_PLANE_URL_VAR,
+} from "../lib/control-plane/repository/pg-store.ts";
+import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { digestLines, runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import type { FreshnessObligation } from "../lib/control-plane/scheduler/obligation.ts";
+import { scheduleObligation, isScheduled } from "../lib/control-plane/scheduler/obligation.ts";
 import { freshnessObligationsFromMeetings } from "../lib/control-plane/scheduler/obligations-from-corpus.ts";
 import { methodMaturityFrom } from "../lib/control-plane/scheduler/maturity.ts";
+import {
+  closeOccurrence,
+  loadDebts,
+  openOccurrence,
+  persistDebts,
+  recordNextDue,
+  syncObligations,
+} from "../lib/control-plane/scheduler/durable.ts";
+import { hostSpacer, httpExecutor } from "../lib/control-plane/scheduler/http-executor.ts";
+import type { DeclaredExecutor, RunWork } from "../lib/control-plane/scheduler/dispatch.ts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { nextRunRecordPath } from "../lib/health/run-records.ts";
@@ -46,115 +80,176 @@ const CONTROL_PLANE_ROOT = join(ROOT, "data", "control-plane", "freshness-shadow
 const RUNS_DIR = join(ROOT, "data", "health", "freshness-shadow-runs");
 const NOW = new Date().toISOString();
 
-const obligations: FreshnessObligation[] = freshnessObligationsFromMeetings(ROOT, NOW);
+const argv = process.argv.slice(2);
+const wantsPostgres = argv.includes("--provider=postgres");
+const dry = argv.includes("--dry");
+const ceilingArg = argv.find((a) => a.startsWith("--max="));
+const MAX_DISPATCHES = ceilingArg ? Number(ceilingArg.slice("--max=".length)) : 50;
+
+/* ------------------------------------------------------------- provider --- */
+
+let repos: ControlPlaneRepositories;
+if (wantsPostgres) {
+  const url = controlPlaneUrlFromEnv();
+  if (url === null) {
+    console.error(
+      `freshness:shadow · --provider=postgres was asked for and ${CONTROL_PLANE_URL_VAR} is not ` +
+        "set. Refusing to silently fall back to the file store: a run that changed provider " +
+        "without saying so would attribute this cycle's state to the wrong place.",
+    );
+    process.exit(1);
+  }
+  repos = await createPgRepositories(url, NOW);
+} else {
+  mkdirSync(CONTROL_PLANE_ROOT, { recursive: true });
+  repos = await createFileRepositories(CONTROL_PLANE_ROOT);
+}
+
+/* ---------------------------------------------------------- obligations --- */
+
+const corpus: FreshnessObligation[] = freshnessObligationsFromMeetings(ROOT, NOW);
 
 console.log(
-  `freshness:shadow · ${obligations.length} obligation(s) derived from the committed corpus · ` +
-    `provider: file store at data/control-plane/freshness-shadow`,
+  `freshness:shadow · ${corpus.length} obligation(s) derived from the committed corpus\n` +
+    `  provider: ${repos.describe()}\n` +
+    `  executor: ${dry ? "SIMULATED (--dry, no retrieval)" : "http (real retrieval)"}`,
 );
 
-mkdirSync(CONTROL_PLANE_ROOT, { recursive: true });
-const repos = await createFileRepositories(CONTROL_PLANE_ROOT);
-
-/*
- * Register a WorkItem and a RouteTask per obligation that names a route. An
- * obligation with no route is registered as an obligation anyway and reports
- * NO_ROUTE_TASK — a scheduling gap that is COUNTED rather than skipped.
- *
- * **READ BEFORE REGISTERING, and the reason is a defect this script had.**
- *
- * The first version registered unconditionally every cycle. `createWorkItem`
- * stamps `createdAt: now`, and the id is a pure function of (project, subject,
- * obligation) — so the SECOND cycle offered the same id carrying a different
- * `createdAt` and the store raised `IdentityCollision`, correctly. A standing
- * obligation is registered ONCE and scheduled forever after; re-registering it
- * every pass is re-creating it, and the store is right to refuse.
- *
- * `persistDiagnostics` in lib/health/diagnostics.ts carries the same rule for
- * the same reason and states it: an existing item is read first and left alone,
- * because the obligation has not changed — only the sentence describing the
- * latest observation of it, and rewriting history to hold the newest phrasing
- * is what append-only storage exists to prevent.
- */
-const routeTaskByObligation = new Map<string, string>();
-let registered = 0;
-let alreadyHeld = 0;
-for (const o of obligations) {
-  const item = createWorkItem({
-    project: "freshness",
-    subject: o.subjectId,
-    obligation: `refresh:${o.recordClass}`,
-    why:
-      `The freshness scheduler owes a fresh reading of ${o.recordClass} for ${o.subjectId}. ` +
-      "This item is the durable record of that obligation; the schedule decides when.",
-    priority: "P2",
-    now: NOW,
-  });
-  const existing = await repos.workItems.read(item.id);
-  if (existing === null) {
-    await registerWorkItem(repos, item, NOW);
-    registered += 1;
-  } else {
-    alreadyHeld += 1;
-  }
-  if (o.routeId === null) continue;
-  const task = createRouteTask({
-    workItemId: item.id,
-    routeId: o.routeId,
-    routeLabel: o.routeId,
-    target: o.subjectId,
-    inherited: true,
-    now: NOW,
-  });
-  if ((await repos.routeTasks.read(task.id)) === null) {
-    await registerRouteTask(repos, task, NOW);
-  }
-  routeTaskByObligation.set(o.id, task.id);
-}
-/*
- * RULING 159: both counts state their denominator. "0 registered" alone is the
- * same line whether the store already held everything or the corpus was empty,
- * and those are opposite facts about whether this loop is working.
- */
+const sync = await syncObligations(repos, corpus, NOW);
 console.log(
   `  ${floorLine(
     floored(
       "obligations already durable from an earlier cycle",
-      "the freshness control-plane store",
-      obligations.length,
-      alreadyHeld,
-      obligations.length === 0
+      "the freshness control plane",
+      corpus.length,
+      sync.alreadyDurable.length,
+      corpus.length === 0
         ? "the committed meetings corpus yielded no obligations to register"
         : undefined,
     ),
-  )} · ${registered} newly registered this cycle`,
+  )} · ${sync.registered.length} newly registered this cycle`,
 );
 
-/*
- * THE SHADOW EXECUTOR. It does not fetch. This cycle proves the LOOP —
- * scheduling, claiming, dispatch, recording, debt, next-due — and a real
- * retrieval here would be an acquisition run wearing a scheduler test's name,
- * against hosts nobody scheduled a walk of. It reports what it did, and what
- * it did was decide.
+/* ------------------------------------------------- the source URL lookup --- */
+
+/**
+ * The publisher surface each obligation is worked through.
+ *
+ * Built from the snapshot's own provenance rather than carried on the
+ * obligation, because an obligation names a SUBJECT and a route class. An
+ * obligation carrying a URL would be a route list with a clock attached, which
+ * is exactly what `VENDOR != RECORD` refuses.
  */
+const urlByObligation = new Map<string, string>();
+try {
+  const snapshot = JSON.parse(readFileSync(join(ROOT, "data", "meetings-snapshot.json"), "utf8")) as {
+    meetings?: { bodyId?: string; ocdId?: string; provenance?: { sourceUrl?: string } }[];
+  };
+  for (const m of snapshot.meetings ?? []) {
+    const subject = m.bodyId ?? m.ocdId;
+    const url = m.provenance?.sourceUrl;
+    if (!subject || !url) continue;
+    const id = `freshness:meetings:${subject}`;
+    if (!urlByObligation.has(id)) urlByObligation.set(id, url);
+  }
+} catch (error) {
+  console.error(
+    `  the meetings snapshot could not be read for source URLs: ${
+      error instanceof Error ? error.message : String(error)
+    }. Obligations will report a provenance gap rather than a publisher fact.`,
+  );
+}
+console.log(
+  `  ${floorLine(
+    floored(
+      "obligations with a held source URL to open",
+      "the committed meetings snapshot",
+      corpus.length,
+      corpus.filter((o) => urlByObligation.has(o.id)).length,
+      corpus.length === 0 ? "no obligations exist to look one up for" : undefined,
+    ),
+  )}`,
+);
+
+/* ------------------------------------------------------- the occurrences --- */
+
+/*
+ * Open an occurrence for every obligation that is DUE, and hand the cycle a
+ * lookup from obligation to THIS occurrence's RouteTask. The obligation that
+ * is not due gets no occurrence and no RouteTask, which is why the lookup
+ * returns null rather than a stale task id from a previous reading.
+ */
+const nowMs = Date.parse(NOW);
+const occurrenceByObligation = new Map<string, { id: string; routeTaskId: string }>();
+let opened = 0;
+
+const debtsIn = await loadDebts(repos);
+const debtIds = new Set(debtsIn.filter((d) => d.consecutiveFailures > 0).map((d) => d.obligationId));
+console.log(
+  `  freshness debt inherited from earlier processes: ${debtIds.size} open row(s)` +
+    (debtIds.size === 0 ? "" : ` — ${[...debtIds].slice(0, 3).join(", ")}${debtIds.size > 3 ? " …" : ""}`),
+);
+
+for (const o of sync.all) {
+  const row = scheduleObligation(o, nowMs);
+  if (!isScheduled(row)) continue;
+  await recordNextDue(repos, { obligationId: o.id, nextDueAt: row.nextDueAt, now: NOW });
+  const isDue = Date.parse(row.nextDueAt) <= nowMs || debtIds.has(o.id);
+  if (!isDue) continue;
+
+  const occ = await openOccurrence(repos, { obligation: o, dueAt: row.nextDueAt, now: NOW });
+  if (occ === null) continue;
+  occurrenceByObligation.set(o.id, { id: occ.occurrence.id, routeTaskId: occ.routeTask.id });
+  opened += 1;
+}
+console.log(`  occurrences opened this cycle: ${opened} (each with its OWN WorkItem and RouteTask)`);
+
+/* ----------------------------------------------------------- the executor --- */
+
+const simulated: RunWork = async ({ executor, routeTaskId }) => ({
+  ranAs: "DETERMINISTIC",
+  kind: "SIMULATED",
+  detail: `--dry: ${executor} decided route task ${routeTaskId.slice(0, 12)} — no retrieval ran`,
+});
+
+/*
+ * **THE LANE IS DECLARED, and both of these are deterministic.**
+ * (W3.E regression, 2026-08-31.)
+ *
+ * `chooseExecutor` routes every meetings obligation to the bounded model lane,
+ * because nothing in the method store joins a meetings publisher to a graduated
+ * route. Neither executor here is a model: the http one is an HTTP GET and the
+ * dry one performs no retrieval at all. Declaring it is what stops the Attempt
+ * being persisted under an anthropic worker identity for work no model touched.
+ */
+const executor: DeclaredExecutor = {
+  lane: "DETERMINISTIC",
+  workerFor: ({ holder }) => ({
+    role: "ACQUIRER",
+    provider: "we-the-people",
+    version: dry ? "shadow-decision/1.0" : "http-executor/1.0",
+    instance: holder,
+  }),
+  run: dry ? simulated : httpExecutor({
+    urlFor: (id) => urlByObligation.get(id) ?? null,
+    spaceOut: hostSpacer(),
+  }),
+};
+
+/* --------------------------------------------------------------- the cycle --- */
+
 const cycle = await runCycle({
   repos,
-  obligations,
-  debts: [],
-  routeTaskFor: (id) => routeTaskByObligation.get(id) ?? null,
+  obligations: sync.all,
+  debts: debtsIn,
+  routeTaskFor: (id) => occurrenceByObligation.get(id)?.routeTaskId ?? null,
   /* Read from the method store — the project's own record of what it knows how
-     to walk — rather than from a string prefix. See lib/.../maturity.ts for the
-     finding this exposes: nothing joins a meetings publisher to a method route
-     today, so the deterministic lane is currently unreachable for this record
-     class, and the digest's executor split is where that shows. */
+     to walk — rather than from a string prefix. */
   maturity: methodMaturityFrom(ROOT),
-  run: async ({ executor, routeTaskId }) => ({
-    ok: true,
-    detail: `shadow ${executor} decided route task ${routeTaskId.slice(0, 12)} — no retrieval ran`,
-  }),
+  executor,
   holder: `freshness-shadow@${process.pid}`,
   now: NOW,
-  leaseTtlMs: 60_000,
+  leaseTtlMs: 120_000,
   /* The canonical readings come from their own instruments. This script does
      not compute reader or truth health — a scheduler grading its own reader
      contract is the shape RULING 217's rollup exists to prevent. */
@@ -168,15 +263,38 @@ const cycle = await runCycle({
   truth: {
     contract: "TRUTH",
     state: "NOT_READY",
-    reason:
-      "not computed by this run; the truth contract is the control set's to state",
+    reason: "not computed by this run; the truth contract is the control set's to state",
   },
-  maxDispatches: 50,
+  maxDispatches: MAX_DISPATCHES,
 });
+
+/* ------------------------------------------------- close, and persist debt --- */
+
+for (const result of cycle.dispatched) {
+  const occ = occurrenceByObligation.get(result.obligationId);
+  if (!occ) continue;
+  const discharged =
+    result.outcome === "WORKED" &&
+    result.dispositionCommitted &&
+    (result.disposition === "INGESTED" || result.disposition === "WALKED_NO_YIELD");
+  await closeOccurrence(repos, {
+    occurrenceId: occ.id,
+    disposition: discharged ? result.disposition : null,
+    unresolvedReason: discharged ? null : result.detail,
+    now: NOW,
+  });
+}
+
+const persisted = await persistDebts(repos, cycle.debts, NOW);
+console.log(
+  `\n  debt persisted: ${persisted.written} row(s) written, ${persisted.cleared.length} cleared`,
+);
 
 const lines = digestLines(cycle);
 console.log();
 for (const line of lines) console.log(line);
+
+/* --------------------------------------------------------- the run record --- */
 
 mkdirSync(RUNS_DIR, { recursive: true });
 const path = nextRunRecordPath(RUNS_DIR, today());
@@ -189,7 +307,13 @@ writeFileSync(
       testedSha: headSha(ROOT),
       provider: repos.describe(),
       durable: repos.durable,
-      obligations: obligations.length,
+      executor: dry ? "SIMULATED" : "http",
+      obligations: sync.all.length,
+      obligationsWithUrl: corpus.filter((o) => urlByObligation.has(o.id)).length,
+      occurrencesOpened: opened,
+      debtInherited: debtIds.size,
+      debtPersisted: persisted.written,
+      debtCleared: persisted.cleared,
       scheduled: cycle.schedule.scheduled.length,
       unscheduled: cycle.schedule.unscheduled.map((u) => ({
         id: u.obligation.id,
@@ -203,6 +327,11 @@ writeFileSync(
       ),
       dueCount: cycle.dueCount,
       dispatched: cycle.dispatched.length,
+      worked: cycle.worked,
+      simulated: cycle.simulated,
+      dispositions: cycle.dispatched
+        .filter((d) => d.dispositionCommitted)
+        .map((d) => ({ obligationId: d.obligationId, disposition: d.disposition, artifacts: d.artifactIds.length })),
       deferred: cycle.deferred.length,
       reclaim: cycle.reclaim,
       debts: cycle.debts.length,

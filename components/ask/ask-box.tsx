@@ -44,6 +44,7 @@ import { useShellData } from "@/lib/state/data";
 import { useUi, useUiDispatch } from "@/lib/state/provider";
 import { isOnlineOnly } from "@/lib/meetings/online";
 import { MeetingStatusPill } from "@/components/map/meeting-status-pill";
+import { CalendarLinks } from "@/components/map/popup/calendar-links";
 import { useResolvedLocation } from "@/hooks/use-resolved-location";
 import { tierVars } from "@/components/shell/tier-style";
 
@@ -993,7 +994,32 @@ export function AskBox({
                 onClick={() => {
                   const action = asked.destination!.destination.action!;
                   if (action.kind === "LIST_OPEN") {
-                    dispatch({ type: "list/open", open: true });
+                    /*
+                     * ── ASK-22 ── **THE SUBJECT TRAVELS WITH THE OPEN.**
+                     * (2026-08-31.)
+                     *
+                     * This was `dispatch({ type: "list/open", open: true })` —
+                     * a generic open carrying nothing. The reader had just been
+                     * answered about ONE body and the pill handed them every
+                     * meeting in the ZIP, which is the hunting the owner
+                     * reported.
+                     *
+                     * The subject comes from the GROUNDED answer's bound
+                     * subject, which is the engine's own decision about what the
+                     * question resolved to — not from the question text, and not
+                     * from anything this component inferred. When nothing was
+                     * bound (a topic answer, a destination with no government in
+                     * it) both fields are null and the open is exactly the
+                     * unfocused one it always was.
+                     */
+                    const bound =
+                      grounded?.subject?.kind === "BODY" ? grounded.subject : null;
+                    dispatch({
+                      type: "list/open",
+                      open: true,
+                      focusBodyId: bound?.id ?? null,
+                      focusBodyName: bound?.name ?? null,
+                    });
                   } else {
                     dispatch({ type: "door/open", door: action.door });
                   }
@@ -1162,6 +1188,84 @@ export function AskBox({
             <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
               {grounded.answer}
             </p>
+          )}
+
+          {/*
+            ── OWN-Q9 ── **THE GOVERNMENTS AN ANSWER NAMED, EACH OPENING ITS
+            OWN CARD.** (The owner's amendment on Q9, 2026-08-31.)
+
+            *"the special districts in the answer must be clickable."* The
+            disclosure rows on the who-governs card have opened their cards
+            since WGH-18; the governments named inside an ASK answer were the
+            one place in the product where reading about a district was a
+            dead end.
+
+            **Keyed on ids, never on the prose.** The obvious implementation
+            is to scan the sentence for names we recognise, and it is the
+            wrong one twice over: nine Morris County governments answer to
+            "Township Council", so a name match is a door onto the wrong
+            government — the exact reason `BodyName` below exists — and
+            highlighting words inside generated prose would let the synthesis
+            rung decide what is clickable. These come off the RECORDS the
+            answer was built from, which carry `bodyId` precisely so the
+            identity check is mechanical (`lib/ask/evidence.ts`).
+
+            A body the coverage payload cannot resolve renders NOTHING rather
+            than an inert chip: an entry that looks like a door and is not is
+            worse than no entry.
+          */}
+          <AnswerBodies
+            grounded={grounded}
+            coverage={coverage}
+            onOpenBody={onOpenBody}
+          />
+
+          {/*
+            ── ASK-20 / ASK-24 ── **THE SAME CONTROL THE MEETING CARD OFFERS.**
+            (Session B closure, 2026-08-31.)
+
+            The owner: an Ask answer that names a meeting date carried no Add to
+            calendar, while the map card beside it carried one for the same
+            sitting. The reason was upstream — the answer payload shipped the
+            meeting as PROSE and an id, which is everything a reader needs to
+            read and nothing a control needs to act — so this is the render half
+            of the widened payload.
+
+            EVERY sitting the answer resolved, not just the first (ASK-24): a
+            body that sits at 1 p.m. and again at 5 p.m. gets two entries,
+            because a reader offered one calendar entry for a two-sitting day
+            has been handed the wrong afternoon half the time.
+
+            `CalendarLinks` renders nothing for a meeting that is not SCHEDULED,
+            so a concluded sitting produces no control rather than an offer to
+            attend something that has happened.
+          */}
+          {(grounded.meetings?.length ?? 0) > 0 && (
+            <div className="mt-2 space-y-1" data-ask-calendar>
+              {(grounded.meetings ?? [])
+                .filter((sitting) => typeof sitting.timeZone === "string" && sitting.timeZone)
+                .map((sitting) => (
+                <CalendarLinks
+                  key={sitting.id}
+                  meeting={{
+                    ...sitting,
+                    /* The one field the two shapes disagree on. Adapted HERE,
+                       explicitly, rather than cast at the boundary — a cast is
+                       how a null reaches something that declared it could not
+                       be one. */
+                    bodyId: sitting.bodyId ?? undefined,
+                    /* The body's own zone. Absent is not a zone, and a
+                       calendar entry with no zone lands an hour wrong for
+                       half the year - so a sitting with none renders no
+                       control rather than a guessed one (filtered above). */
+                    timeZone: sitting.timeZone as string,
+                    /* Absent and null are one fact to a calendar entry: there
+                       is no agenda link to put in the description. */
+                    agendaUrl: sitting.agendaUrl ?? null,
+                  }}
+                />
+                ))}
+            </div>
           )}
 
           {/* The structured half of the ladder: real records, no prose. */}
@@ -1731,6 +1835,79 @@ export function AskBox({
  * gaps; nothing here is written, and every row is a record the product already
  * holds. See `lib/routing/digest.ts` for why the blocks never share a count.
  */
+/**
+ * **OWN-Q9 — the governments an Ask answer named, as doors.** (2026-08-31.)
+ *
+ * The set is derived, in this order, and every step is an id join:
+ *
+ * 1. `grounded.subject` — what the question resolved to.
+ * 2. every `record.bodyId` — whose record each piece of evidence is.
+ *
+ * Then deduplicated, resolved against the SAME coverage payload the card
+ * behind it renders from, and dropped where it does not resolve. A district
+ * the reader's coverage does not carry is a district this surface has no card
+ * for, and offering one would be a door onto a page that cannot exist.
+ *
+ * It renders nothing at all when nothing resolves — no heading, no empty
+ * state. The answer above it already says what it says; a "no districts"
+ * line under a paragraph naming three would be a surface contradicting
+ * itself, which is the WGH-19 / WGH-21 / MAP-5 class.
+ */
+function AnswerBodies({
+  grounded,
+  coverage,
+  onOpenBody,
+}: {
+  grounded: AskAnswerPayload;
+  coverage: CoverageSummary;
+  onOpenBody?: (body: CoveredBody) => void;
+}) {
+  if (!onOpenBody) return null;
+
+  const wanted: string[] = [];
+  const subjectId = grounded.subject?.id;
+  if (typeof subjectId === "string" && subjectId) wanted.push(subjectId);
+  for (const record of grounded.records ?? []) {
+    if (typeof record.bodyId === "string" && record.bodyId) wanted.push(record.bodyId);
+  }
+
+  const seen = new Set<string>();
+  const rows: CoveredBody[] = [];
+  for (const id of wanted) {
+    if (seen.has(id)) continue;
+    seen.add(id);
+    /* Both id spaces a body card answers to: the registry body id, and a
+       division whose governing body the payload carries. Same join
+       `BodyName` performs, one level up. */
+    const body =
+      coverage.bodies.find((b) => b.bodyId === id) ??
+      coverage.bodies.find(
+        (b) => b.ocdId === id && (b.bodyId === `${id}#governing` || b.bodyId === `${id}#board`),
+      );
+    if (body) rows.push(body);
+  }
+
+  if (rows.length === 0) return null;
+
+  return (
+    <p data-ask-answer-bodies className="mt-2 text-[0.8125rem] leading-relaxed">
+      {rows.map((body, i) => (
+        <span key={body.bodyId}>
+          {i > 0 && <span className="text-muted"> · </span>}
+          <button
+            type="button"
+            data-ask-body-open={body.bodyId}
+            onClick={() => onOpenBody(body)}
+            className="text-left text-link underline decoration-dotted underline-offset-2 hover:text-paper"
+          >
+            {body.name ?? body.divisionLabel}
+          </button>
+        </span>
+      ))}
+    </p>
+  );
+}
+
 /**
  * **ASK-4 (2026-08-24) — one resolver, so every Ask template opens the same
  * body for the same name.**

@@ -75,8 +75,39 @@ export type TemplatePlaceholder = (typeof TEMPLATE_PLACEHOLDERS)[number];
 export type ApplicabilityRule =
   /** One instance per (pilot ZIP, enumerated body in that ZIP). */
   | { readonly kind: "EVERY_BODY_IN_ZIP" }
-  /** One instance per pilot ZIP; no body subject. */
-  | { readonly kind: "PER_ZIP" };
+  /**
+   * One instance per pilot ZIP; no body subject.
+   *
+   * A STRONG claim, and one that must be stated rather than defaulted to. It
+   * says this question is owed of every pilot ZIP equally. Session B's resume
+   * audit found all nine hand-authored adversarial questions carrying it,
+   * including one about the Pima County Board of Supervisors — which was
+   * therefore asked of a New Hampshire town and a New Jersey borough. Nine
+   * questions became thirty-six instances and twenty-seven were about the
+   * wrong government.
+   */
+  | { readonly kind: "PER_ZIP" }
+  /**
+   * One instance per NAMED ZIP. (Session B resume, W4.)
+   *
+   * For a question whose own text names where it applies — *"Where do I vote
+   * if I live in 85641?"* is a question about 85641 and about nowhere else.
+   */
+  | { readonly kind: "SPECIFIC_ZIPS"; readonly zips: readonly string[] }
+  /**
+   * One instance per named ZIP, ABOUT a named subject. (Session B resume, W4.)
+   *
+   * `subject` is the owner's own name for the government the question is
+   * about, carried through so an expectation can bind to it. It is not a
+   * registry id: the point of a hand-authored adversarial question is that it
+   * is written independent of the registry, so requiring a registry id here
+   * would make the corpus inherit the blind spot it exists to detect.
+   */
+  | {
+      readonly kind: "SPECIFIC_BODY";
+      readonly zips: readonly string[];
+      readonly subject: string;
+    };
 
 export interface ReaderQuestionTemplate {
   readonly id: string;
@@ -289,11 +320,47 @@ export function generateInstances(
 ): ReaderQuestionInstance[] {
   const out: ReaderQuestionInstance[] = [];
   for (const template of templates) {
+    const rule = template.applicability;
     for (const universe of universes) {
-      if (template.applicability.kind === "PER_ZIP") {
+      /*
+       * **A TEMPLATE THAT NAMES ITS ZIPS IS ASKED ONLY THERE.**
+       * (Session B resume, W4.)
+       *
+       * The two scoped kinds are skipped for every universe they do not name.
+       * Without them every hand-authored question fell to `PER_ZIP` and was
+       * asked of all four pilot ZIPs — so "Where do I vote if I live in
+       * 85641?" was also asked of a New Hampshire town, and a question about
+       * the Pima County Board of Supervisors was asked of a New Jersey
+       * borough. Nine questions became thirty-six instances and twenty-seven
+       * were about the wrong government.
+       */
+      if (
+        (rule.kind === "SPECIFIC_ZIPS" || rule.kind === "SPECIFIC_BODY") &&
+        !rule.zips.includes(universe.zip)
+      ) {
+        continue;
+      }
+
+      if (rule.kind === "PER_ZIP" || rule.kind === "SPECIFIC_ZIPS") {
         out.push(makeInstance(template, universe.zip, null, null, window, now));
         continue;
       }
+
+      if (rule.kind === "SPECIFIC_BODY") {
+        /*
+         * ONE instance for the named subject, with NO registry body id.
+         *
+         * `subjectBodyId` stays null deliberately. The subject is the owner's
+         * own name for a government, and binding it to a registry id here
+         * would make a hand-authored adversarial question inherit the registry
+         * — which is the one thing this class exists NOT to do. It also keeps
+         * these instances out of the per-body denominator, which is correct:
+         * they carry no one-per-body contract.
+         */
+        out.push(makeInstance(template, universe.zip, null, rule.subject, window, now));
+        continue;
+      }
+
       for (const body of universe.bodies) {
         const label = bodyPlainLabel(
           body,
@@ -480,6 +547,17 @@ export interface CoverageDefect {
   readonly missingSubjects: readonly string[];
   /** Instance subjects the denominator does not enumerate. */
   readonly unexpectedSubjects: readonly string[];
+  /**
+   * What kind of disagreement this is. (Session B resume, W4.)
+   *
+   * `NO_GENERATED_POPULATION` is the case where the corpus holds no
+   * `EVERY_BODY_IN_ZIP` template at all. It is still a defect — nobody is
+   * asking a per-body coverage question anywhere — but it is a DIFFERENT
+   * defect from "we ask per-body questions and 62 bodies are missing from
+   * them", and reporting the first as the second sends whoever reads it to
+   * look for a generator bug that is not there.
+   */
+  readonly kind: "SUBJECTS_DISAGREE" | "NO_GENERATED_POPULATION";
   readonly detail: string;
 }
 
@@ -494,14 +572,62 @@ export function checkInstanceUniverse(
   denominator: EnumerationDenominator,
 ): CoverageDefect | null {
   assertDenominatorMayCertify(denominator);
+  /*
+   * **ONLY THE GENERATED CLASS IS HELD TO A PER-BODY DENOMINATOR.**
+   * (Session B resume, W4.)
+   *
+   * This filtered on `subjectBodyId !== null` and on nothing else, so the
+   * population it compared against the denominator was every instance in the
+   * ZIP. The hand-authored adversarial instances carry no body subject — they
+   * are bespoke questions about named governments, not one-per-body coverage —
+   * so they contributed nothing to `subjects`, and every enumerated body came
+   * back as MISSING. The defect it reported, "62 enumerated bodies have no
+   * question instance for 85701", was a fact about which class was measured
+   * rather than about coverage.
+   *
+   * The contract "one instance per enumerated body" belongs to
+   * `EVERY_BODY_IN_ZIP`, which is the generated class. A hand-authored question
+   * makes no such promise and may not be failed for not keeping it. Holding it
+   * to one would also create pressure to write sixty-two bespoke questions per
+   * ZIP, which would destroy the one property that makes the adversarial class
+   * worth having: that a person chose each one.
+   */
+  const generated = instances.filter((i) => i.questionClass === "GENERATED_FROM_REGISTRY");
   const subjects = new Set(
-    instances
+    generated
       .filter((i) => i.zip === denominator.zip && i.subjectBodyId !== null)
       .map((i) => i.subjectBodyId as string),
   );
   const enumerated = new Set(denominator.memberIds);
   const missingSubjects = [...enumerated].filter((id) => !subjects.has(id)).sort();
   const unexpectedSubjects = [...subjects].filter((id) => !enumerated.has(id)).sort();
+
+  /*
+   * NO GENERATED POPULATION AT ALL is reported as its own thing rather than as
+   * "every enumerated body is missing". Both are defects and they need
+   * different fixes: this one is "write a per-body template", and the other is
+   * "find out why the generator dropped bodies". Collapsing them produced the
+   * line "62 enumerated bodies have no question instance for 85701" on a
+   * corpus that contained no per-body template to generate from, which points
+   * a reader at a generator regression that never happened.
+   */
+  if (generated.length === 0) {
+    return {
+      zip: denominator.zip,
+      layer: denominator.layer,
+      source: denominator.source,
+      missingSubjects: [],
+      unexpectedSubjects: [],
+      kind: "NO_GENERATED_POPULATION",
+      detail:
+        `zip ${denominator.zip}: the corpus holds NO GENERATED_FROM_REGISTRY template, so no ` +
+        `per-body coverage question is asked of any of the ${enumerated.size} enumerated ` +
+        `${denominator.layer} subject(s) here. This is a real gap and it is not a generator ` +
+        "regression: there is nothing to generate from. The hand-authored adversarial questions " +
+        "are not a substitute — they are bespoke and carry no one-per-body contract.",
+    };
+  }
+
   if (missingSubjects.length === 0 && unexpectedSubjects.length === 0) return null;
   return {
     zip: denominator.zip,
@@ -509,11 +635,14 @@ export function checkInstanceUniverse(
     source: denominator.source,
     missingSubjects,
     unexpectedSubjects,
+    kind: "SUBJECTS_DISAGREE",
     detail:
       `zip ${denominator.zip}: the generated instance universe and the ${denominator.source} ` +
       `${denominator.layer} denominator disagree — ${missingSubjects.length} enumerated ` +
-      `subject(s) have no instance, ${unexpectedSubjects.length} instance subject(s) are ` +
-      "not enumerated.",
+      `subject(s) have no GENERATED instance, ${unexpectedSubjects.length} generated instance ` +
+      `subject(s) are not enumerated. Measured over the ${generated.length} ` +
+      "GENERATED_FROM_REGISTRY instance(s) only; hand-authored adversarial questions carry no " +
+      "one-per-body contract and are not held to this denominator.",
   };
 }
 
@@ -537,6 +666,17 @@ export interface InstanceResult {
   readonly instanceId: string;
   readonly questionText: string;
   readonly verdict: InstanceVerdict;
+  /**
+   * The diagnosed failure class on a RED, null otherwise. (2026-08-31.)
+   *
+   * It was recorded on the diagnostic WorkItem and NOT in the run record, so
+   * the durable evidence said a question failed and not what kind of failure
+   * it was. That is the field a later reader needs most: the class is the
+   * thing most likely to be wrong, and until 2026-08-31 every NO_EVIDENCE was
+   * classed `acquisition` — including the ones where nothing bound, nothing
+   * was searched, and the record was held all along.
+   */
+  readonly failureClass?: FailureClass | null;
 }
 
 /* ------------------------------------------------------- failure classes */

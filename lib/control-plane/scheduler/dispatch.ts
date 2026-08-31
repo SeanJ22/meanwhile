@@ -48,13 +48,19 @@
  * `sweepExpiredLeases` below simply drives.
  */
 
-import { isExpired } from "../attempt.ts";
+import { isExpired, type AttemptCost, type WorkerRef } from "../attempt.ts";
 import {
+  abandonAttempt,
+  beginAttemptFor,
   claimRouteTask,
+  disposeRouteTask,
   reclaimRouteTask,
+  recordArtifactMetadata,
+  recordCost,
   type ClaimOutcome,
 } from "../repository/coordinator.ts";
-import type { ControlPlaneRepositories } from "../repository/types.ts";
+import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
+import type { RouteDisposition } from "../route-task.ts";
 
 import type { ScheduledObligation } from "./obligation.ts";
 
@@ -111,15 +117,172 @@ export function chooseExecutor(
   };
 }
 
+/**
+ * **WHAT A WORKER PRODUCED, AND WHETHER IT IS A CONCLUSION.**
+ * (Session B resume, W3.A, 2026-08-31.)
+ *
+ * The three kinds are not severity levels. They are three different things to
+ * have happened, and the reason they are separate is that the previous seam
+ * returned `{ ok: boolean }` — under which a no-op executor's `ok: true` was
+ * indistinguishable from a completed retrieval, and cleared the freshness debt
+ * on that basis. Eight dispatches read WORKED having fetched nothing.
+ *
+ * ```
+ *   DISPOSED    a route was walked to a terminal disposition. The ONLY kind
+ *               that may clear debt, and it must carry the disposition.
+ *   SIMULATED   a shadow decision. Work was chosen, and deliberately not done.
+ *   ABORTED     work was attempted and reached no boundary.
+ * ```
+ *
+ * SIMULATED and ABORTED differ in what they say about the world: the first is
+ * a statement about US (we declined to walk it), the second about the ATTEMPT
+ * (we walked and got nowhere). Neither is a statement about the publisher, and
+ * neither may become one.
+ */
+export const WORK_OUTCOME_KINDS = ["DISPOSED", "SIMULATED", "ABORTED"] as const;
+export type WorkOutcomeKind = (typeof WORK_OUTCOME_KINDS)[number];
+
+/**
+ * An artifact the worker actually retrieved, as the control plane records it.
+ *
+ * The bytes go to the evidence vault; this is the attribution. `attemptId` and
+ * `workItemId` are filled by the dispatcher, because a worker that chose its
+ * own attribution could attribute evidence to an Attempt that never ran.
+ */
+export type WorkArtifact = Omit<ArtifactRecord, "attemptId" | "workItemId" | "routeTaskId">;
+
+/**
+ * The terminal disposition, minus the three fields the dispatcher owns.
+ *
+ * `attemptId`, `at` and `artifactIds` are omitted deliberately: they are facts
+ * about the execution the dispatcher supervised, not findings the worker is
+ * entitled to assert. A worker that could set its own `artifactIds` could
+ * claim an INGESTED disposition over artifacts it never recorded.
+ */
+export type WorkDisposition = Omit<RouteDisposition, "attemptId" | "at" | "artifactIds">;
+
+export interface WorkOutcome {
+  readonly kind: WorkOutcomeKind;
+  /**
+   * **WHICH EXECUTOR ACTUALLY RAN.** (Session B closure, W3.E, 2026-08-31.)
+   *
+   * `chooseExecutor` DECIDES; the injected worker RUNS. Nothing connected the
+   * two, so the run record reported the decision as though it were the fact —
+   * and it was wrong on every cycle of the 2026-08-31 shadow runs, which
+   * recorded 10 BOUNDED_MODEL_WORKER Attempts for work a deterministic HTTP
+   * walker did.
+   *
+   * That is a cost and provenance defect, not a cosmetic one: an Attempt
+   * labelled as a model worker invites a reader of the ledger to attribute
+   * model spend and model variance to a run that had neither.
+   *
+   * Required, so a worker cannot decline to say. The dispatcher records THIS
+   * as the executor and reports a disagreement with the decision rather than
+   * quietly preferring either.
+   */
+  readonly ranAs: ExecutorKind;
+  /** Required when kind is DISPOSED, refused otherwise. */
+  readonly disposition?: WorkDisposition;
+  readonly artifacts?: readonly WorkArtifact[];
+  /** Measured. `ZERO_COST` is a measurement of nothing, not an absent one. */
+  readonly cost?: AttemptCost;
+  readonly detail: string;
+}
+
 /** What one dispatched unit of work did. Recorded whatever the outcome. */
 export interface DispatchResult {
   readonly obligationId: string;
   readonly routeTaskId: string | null;
+  /**
+   * What actually ran, as the worker reported it. The FACT.
+   *
+   * Named `executor` still, because that is what every consumer means by it —
+   * and it now holds the thing they were all assuming it held.
+   */
   readonly executor: ExecutorKind | null;
+  /** What `chooseExecutor` decided. The DECISION, kept for the disagreement. */
+  readonly executorChosen: ExecutorKind | null;
+  /**
+   * True when the worker ran something other than what was chosen.
+   *
+   * Recorded rather than refused. A seam whose implementation ignores the
+   * decision is a real and sometimes legitimate arrangement — the shadow
+   * runner injects one deterministic walker for every obligation — and the
+   * defect was never that it happened, but that nothing said so.
+   */
+  readonly executorMismatch: boolean;
   readonly claimed: boolean;
-  /** Null when nothing ran. Never a default outcome standing in for a run. */
-  readonly outcome: "WORKED" | "FAILED" | "NOT_CLAIMED" | "NO_ROUTE_TASK" | null;
+  /**
+   * Null when nothing ran. Never a default outcome standing in for a run.
+   *
+   * `WORKED` is issued by exactly one code path below — the one that committed
+   * a disposition through the coordinator — and `dispositionCommitted` beside
+   * it is what a test asserts against, so a WORKED with no committed
+   * disposition is not merely wrong but unrepresentable.
+   */
+  readonly outcome:
+    | "WORKED"
+    | "FAILED"
+    | "SIMULATED"
+    | "NOT_CLAIMED"
+    | "NO_ROUTE_TASK"
+    | null;
+  /** The Attempt this dispatch opened, when it opened one. */
+  readonly attemptId: string | null;
+  /** True only when `disposeRouteTask` committed a terminal disposition. */
+  readonly dispositionCommitted: boolean;
+  /** The disposition committed, for the digest. Null whenever none was. */
+  readonly disposition: string | null;
+  /** Artifact ids recorded against the Attempt. Never a count on its own. */
+  readonly artifactIds: readonly string[];
+  readonly cost: AttemptCost | null;
+  /** The worker that ran it — model and provider included. Null if none ran. */
+  readonly worker: WorkerRef | null;
   readonly detail: string;
+}
+
+/**
+ * **THE DISPOSITIONS THAT ARE A FRESH READING OF THE RECORD.**
+ *
+ * Exactly two, and the list is short for a reason that is the acquisition
+ * doctrine's rather than the scheduler's.
+ *
+ * ```
+ *   INGESTED          the route was walked and returned the record
+ *   WALKED_NO_YIELD   the route was REACHED and genuinely returned nothing
+ * ```
+ *
+ * Every other disposition is a fact about the ROUTE, not a reading of the
+ * record. `BLOCKED_CURRENTLY` says a wall stopped us; `REQUIRES_NEW_ADAPTER`
+ * says we lack the tooling; `RECORDS_REQUEST_PENDING` says we asked and are
+ * waiting; `RECHECK_DUE` says the answer has aged out. Each of those closes a
+ * RouteTask and NONE of them refreshes anything a reader is shown.
+ *
+ * "A route disposition closes a RouteTask and never closes the record
+ * obligation" is CLAUDE.md's, and this is where a freshness clock either
+ * honours it or quietly does not: a scheduler that treated a committed
+ * `BLOCKED_CURRENTLY` as discharge would clear the debt, recompute the
+ * next-due from a walk that hit a wall, and report the record as fresh. That
+ * is a blocked route becoming a blocked fact by arithmetic.
+ */
+export const DISCHARGING_DISPOSITIONS: readonly string[] = ["INGESTED", "WALKED_NO_YIELD"];
+
+/**
+ * **ONLY A COMMITTED READING DISCHARGES A FRESHNESS OBLIGATION.**
+ *
+ * One exported predicate rather than an `outcome === "WORKED"` comparison at
+ * each call site, because the rule it encodes is the one the resume audit
+ * found broken and the one most likely to be re-broken by a later edit that
+ * adds a fourth outcome. A new outcome is not discharging unless someone
+ * changes this function, and changing this function is a visible act.
+ */
+export function dischargesObligation(result: DispatchResult): boolean {
+  return (
+    result.outcome === "WORKED" &&
+    result.dispositionCommitted &&
+    result.disposition !== null &&
+    DISCHARGING_DISPOSITIONS.includes(result.disposition)
+  );
 }
 
 /**
@@ -133,13 +296,98 @@ export interface DispatchResult {
 export type RunWork = (input: {
   readonly obligation: ScheduledObligation;
   readonly routeTaskId: string;
+  readonly workItemId: string;
+  /** The Attempt this work runs inside. Artifacts attribute to it. */
+  readonly attemptId: string;
   readonly executor: ExecutorKind;
   readonly bound: WorkerBound;
   readonly holder: string;
-}) => Promise<{ readonly ok: boolean; readonly detail: string }>;
+}) => Promise<WorkOutcome>;
 
 /**
- * Claim and run one obligation's due work.
+ * Who the dispatcher says is running this, when the caller does not say.
+ *
+ * A `WorkerRef` is required to open an Attempt at all, and the version field
+ * is the one RULING-named threat this carries: "silent model/provider change".
+ * A deterministic walker is not a model and says so in both fields rather than
+ * borrowing a model's identity.
+ */
+/**
+ * **AN EXECUTOR DECLARES ITS LANE BEFORE ANYTHING IS PERSISTED.**
+ * (Session B closure, W3.E regression, 2026-08-31.)
+ *
+ * `ranAs` on the outcome fixed the RETURNED result and left the PERSISTED one
+ * wrong. `dispatchOne` chose a lane, built a `WorkerRef` from it, opened the
+ * Attempt with that WorkerRef, and only afterwards learned what had actually
+ * run — so a deterministic HTTP walk was persisted under
+ * `provider: "anthropic", version: "unspecified-model"`, and the cost ledger
+ * keyed on that Attempt inherited the same fiction. The returned object said
+ * DETERMINISTIC while the durable record said a model ran.
+ *
+ * The fix is ordering, not reconciliation: the lane is DECLARED by the
+ * executor, the WorkerRef is built from the declaration, and the Attempt is
+ * opened with the truth. `chooseExecutor`'s decision is kept beside it and any
+ * disagreement is recorded — the shadow runner legitimately injects one
+ * deterministic walker for every obligation, and that is an arrangement to
+ * state rather than to forbid.
+ *
+ * A worker whose `ranAs` then contradicts its own declaration IS refused. That
+ * is not a disagreement between two honest parties; it is one party lying about
+ * itself after the record was written on its word.
+ */
+export interface DeclaredExecutor {
+  /** The lane this executor runs in. Known before any Attempt is opened. */
+  readonly lane: ExecutorKind;
+  /** The worker identity, when the executor knows its own. */
+  readonly workerFor?: WorkerFor;
+  readonly run: RunWork;
+}
+
+export type WorkerFor = (input: {
+  readonly executor: ExecutorKind;
+  readonly obligation: ScheduledObligation;
+  readonly holder: string;
+}) => WorkerRef;
+
+export const DEFAULT_WORKER_FOR: WorkerFor = ({ executor, holder }) =>
+  executor === "DETERMINISTIC"
+    ? {
+        role: "ACQUIRER",
+        provider: "we-the-people",
+        version: "deterministic-walker",
+        instance: holder,
+      }
+    : {
+        role: "SCOUT",
+        provider: "anthropic",
+        version: "unspecified-model",
+        instance: holder,
+      };
+
+/**
+ * Claim one obligation's due work and run it through the CANONICAL LIFECYCLE.
+ *
+ * ```
+ *   claim  ->  begin Attempt  ->  run  ->  record artifacts  ->
+ *   dispose  ->  close Attempt  ->  release lease  ->  record cost
+ * ```
+ *
+ * ## Why every one of those steps is here rather than in the caller
+ *
+ * They were not here, and the resume audit is the reason they are now. This
+ * function used to claim the task, call `run()`, and return WORKED on
+ * `ok: true` — no Attempt opened, no artifact attributed, no disposition
+ * written, no lease released. The loop above then deleted the freshness debt
+ * on the strength of that WORKED, and the next cycle found an expired lease it
+ * could not reclaim because no Attempt existed to attribute the abandonment
+ * to. Every one of those is a step the coordinator already implemented; what
+ * was missing was anybody calling them.
+ *
+ * The steps after `run()` are NOT in a `finally`, and that is the same
+ * deliberate choice the module header describes: a killed process runs no
+ * `finally`. Death is observed from outside by `sweepExpiredLeases`. What a
+ * `finally` would buy is cleanup after a THROW, and a throw is handled
+ * explicitly below — as an abandonment, which is what it is.
  *
  * A losing claim is a NORMAL outcome and is recorded as one. Two workers
  * reaching for one route is the contention the lease exists to arbitrate, and
@@ -156,10 +404,24 @@ export async function dispatchOne(
     readonly leaseTtlMs: number;
     readonly bound?: WorkerBound;
     readonly maturity: MethodMaturity;
-    readonly run: RunWork;
+    /** The executor, WITH its lane declared before anything is persisted. */
+    readonly executor: DeclaredExecutor;
+    readonly methodVersion?: number;
+    readonly policyVersion?: string;
   },
 ): Promise<DispatchResult> {
   const obligationId = input.obligation.obligation.id;
+  const nothingRan = {
+    executorChosen: null,
+    executorMismatch: false,
+    attemptId: null,
+    dispositionCommitted: false,
+    disposition: null,
+    artifactIds: [] as readonly string[],
+    cost: null,
+    worker: null,
+  } as const;
+
   if (input.routeTaskId === null) {
     return {
       obligationId,
@@ -167,6 +429,7 @@ export async function dispatchOne(
       executor: null,
       claimed: false,
       outcome: "NO_ROUTE_TASK",
+      ...nothingRan,
       detail:
         "this obligation has no RouteTask registered, so there is nothing to claim. Recorded " +
         "rather than skipped: an obligation the dispatcher cannot reach is a scheduling gap, " +
@@ -190,26 +453,281 @@ export async function dispatchOne(
       executor: null,
       claimed: false,
       outcome: "NOT_CLAIMED",
+      ...nothingRan,
       detail: error instanceof Error ? error.message : String(error),
     };
   }
 
   const executor = chooseExecutor(input.obligation, input.maturity);
-  const result = await input.run({
+  /*
+   * **THE DECLARED LANE, NOT THE CHOSEN ONE, BUILDS THE WORKER.**
+   *
+   * This is the whole of the ordering fix. `executor.kind` is what the method
+   * store's maturity implies; `input.executor.lane` is what is about to run.
+   * The Attempt is a durable record of an execution, so it is opened with the
+   * identity of the thing executing.
+   */
+  const lane = input.executor.lane;
+  const worker = (input.executor.workerFor ?? DEFAULT_WORKER_FOR)({
+    executor: lane,
     obligation: input.obligation,
-    routeTaskId: input.routeTaskId,
-    executor: executor.kind,
-    bound: input.bound ?? DEFAULT_WORKER_BOUND,
     holder: input.holder,
   });
+  const workItemId = claimOutcome.task.value.workItemId;
 
-  return {
+  /*
+   * THE ATTEMPT OPENS BEFORE THE WORK RUNS, and it has to. An artifact is
+   * attributed to an Attempt at the moment it is recorded, so a worker that
+   * fetched first and opened an Attempt afterwards would have nothing to
+   * attribute its own evidence to for the duration of the fetch — which is
+   * precisely the window in which it might die.
+   */
+  const attempt = await beginAttemptFor(repos, {
+    routeTaskId: input.routeTaskId,
+    workItemId,
+    worker,
+    lease: claimOutcome.lease.value,
+    now: input.now,
+    methodVersion: input.methodVersion ?? 0,
+    policyVersion: input.policyVersion ?? "unversioned",
+  });
+  const attemptId = attempt.value.id;
+  /*
+   * `executor` is filled in per return with what the worker REPORTED, so the
+   * chosen kind cannot leak into the record as the fact. `base` deliberately
+   * does not carry it.
+   */
+  const base = {
     obligationId,
     routeTaskId: input.routeTaskId,
-    executor: executor.kind,
+    executorChosen: executor.kind,
     claimed: true,
-    outcome: result.ok ? "WORKED" : "FAILED",
-    detail: `${executor.why}; lease ${claimOutcome.lease.value.id}: ${result.detail}`,
+    attemptId,
+    worker,
+  };
+
+  /**
+   * What ran, and whether it disagreed with the DECISION.
+   *
+   * The lane is the declaration, which is what the Attempt was opened under.
+   * `executorMismatch` compares it against `chooseExecutor` — a legitimate and
+   * common disagreement — and NOT against `ranAs`, which is checked separately
+   * and is a refusal rather than a note.
+   */
+  const ran = () => ({
+    executor: lane,
+    executorMismatch: lane !== executor.kind,
+  });
+
+  let outcome: WorkOutcome;
+  try {
+    outcome = await input.executor.run({
+      obligation: input.obligation,
+      routeTaskId: input.routeTaskId,
+      workItemId,
+      attemptId,
+      executor: lane,
+      bound: input.bound ?? DEFAULT_WORKER_BOUND,
+      holder: input.holder,
+    });
+  } catch (error) {
+    /*
+     * A THROWN error is a defect in the worker, not a fact about the route.
+     * The Attempt closes as ABORTED — an outcome `mayWriteDisposition` refuses
+     * to let carry a conclusion — so nothing about the publisher is recorded.
+     */
+    const why = error instanceof Error ? error.message : String(error);
+    await abandonAttempt(repos, {
+      routeTaskId: input.routeTaskId,
+      attemptId,
+      outcome: "ABORTED",
+      reason: `the worker threw before reaching a boundary: ${why}`,
+      now: input.now,
+    });
+    return {
+      ...base,
+      /* The worker threw before it could say what it was. The decision is the
+         only thing known, and `executorMismatch` stays false because nothing
+         disagreed with it — nothing reported at all. */
+      ...ran(),
+      outcome: "FAILED",
+      dispositionCommitted: false,
+      disposition: null,
+      artifactIds: [],
+      cost: null,
+      detail: `${executor.why}; the worker threw and the Attempt was abandoned: ${why}`,
+    };
+  }
+
+  /*
+   * **A WORKER THAT CONTRADICTS ITS OWN DECLARATION IS REFUSED.**
+   *
+   * The Attempt was persisted under the declared lane's worker identity, on
+   * this executor's word. An outcome claiming a different lane means that
+   * record is already wrong, and the honest response is to abandon the Attempt
+   * rather than to reconcile a contradiction after the fact — reconciling it
+   * would mean choosing which of two statements from the same party to trust.
+   */
+  if (outcome.ranAs !== lane) {
+    const why =
+      `the executor declared lane ${lane} and reported running as ${outcome.ranAs}. The Attempt ` +
+      `was already opened under ${lane}'s worker identity (${worker.provider}/${worker.version}), ` +
+      "so that durable record is wrong on the executor's own account. Refused rather than " +
+      "reconciled: a masquerade is not a disagreement.";
+    await abandonAttempt(repos, {
+      routeTaskId: input.routeTaskId,
+      attemptId,
+      outcome: "DENIED_BY_POLICY",
+      reason: why,
+      now: input.now,
+    }).catch(() => undefined);
+    return {
+      ...base,
+      ...ran(),
+      outcome: "FAILED",
+      dispositionCommitted: false,
+      disposition: null,
+      artifactIds: [],
+      cost: null,
+      detail: why,
+    };
+  }
+
+  /* Artifacts are recorded FIRST, so a disposition can cite them. */
+  const artifactIds: string[] = [];
+  for (const artifact of outcome.artifacts ?? []) {
+    const record: ArtifactRecord = {
+      ...artifact,
+      workItemId,
+      routeTaskId: input.routeTaskId,
+      attemptId,
+    };
+    await recordArtifactMetadata(repos, record, input.now);
+    artifactIds.push(record.artifactId);
+  }
+
+  if (outcome.kind !== "DISPOSED" || outcome.disposition === undefined) {
+    /*
+     * **A NO-OP MAY NOT CLEAR DEBT, AND THIS IS WHERE THAT IS ENFORCED.**
+     *
+     * SIMULATED is returned as its own outcome rather than folded into FAILED,
+     * because they mean opposite things about whether anything is wrong. A
+     * shadow cycle in which every dispatch is SIMULATED is working exactly as
+     * designed; one in which every dispatch FAILED is not. What they share —
+     * and the only thing that matters to the obligation — is that neither
+     * discharges it.
+     */
+    const simulated = outcome.kind === "SIMULATED";
+    await abandonAttempt(repos, {
+      routeTaskId: input.routeTaskId,
+      attemptId,
+      /* Both close as ABORTED: neither reached a boundary, and `ABORTED` is
+         the outcome that says so without implying the worker died. The REASON
+         is what distinguishes them, and it is the field a later reader gets. */
+      outcome: "ABORTED",
+      reason: simulated
+        ? `SHADOW_DECISION: the executor deliberately performed no retrieval. ${outcome.detail}`
+        : `the worker reached no boundary. ${outcome.detail}`,
+      now: input.now,
+    });
+    return {
+      ...base,
+      ...ran(),
+      outcome: simulated ? "SIMULATED" : "FAILED",
+      dispositionCommitted: false,
+      disposition: null,
+      artifactIds,
+      cost: outcome.cost ?? null,
+      detail: `${executor.why}; ${
+        simulated
+          ? "no retrieval was performed, so nothing is discharged and the debt stands"
+          : "no terminal disposition was reached"
+      }: ${outcome.detail}`,
+    };
+  }
+
+  /*
+   * The CAS precondition is the revision the claim read. `disposeRouteTask`
+   * refuses on a mismatch, which is the stale-writer refusal: a worker that
+   * comes back from the dead cannot overwrite the finding of the worker that
+   * replaced it.
+   */
+  const taskRow = await repos.routeTasks.mustRead(input.routeTaskId);
+  const disposition: RouteDisposition = {
+    ...outcome.disposition,
+    attemptId,
+    at: input.now,
+    artifactIds,
+  };
+
+  try {
+    await disposeRouteTask(repos, {
+      routeTaskId: input.routeTaskId,
+      attemptId,
+      expectedTaskRevision: taskRow.revision,
+      disposition,
+      now: input.now,
+      artifactIds,
+      ...(outcome.cost ? { cost: outcome.cost } : {}),
+    });
+  } catch (error) {
+    /*
+     * The domain refused the conclusion — an INGESTED with no artifact, a
+     * WALKED_NO_YIELD over an unreachable transport, a task that moved. The
+     * refusal is the system working; what would not be working is recording
+     * WORKED anyway. The Attempt is abandoned so the route stays owed.
+     */
+    const why = error instanceof Error ? error.message : String(error);
+    await abandonAttempt(repos, {
+      routeTaskId: input.routeTaskId,
+      attemptId,
+      outcome: "ABORTED",
+      reason: `the control plane refused the proposed disposition: ${why}`,
+      now: input.now,
+    }).catch(() => undefined);
+    return {
+      ...base,
+      ...ran(),
+      outcome: "FAILED",
+      dispositionCommitted: false,
+      disposition: null,
+      artifactIds,
+      cost: outcome.cost ?? null,
+      detail: `${executor.why}; the disposition was refused and the route remains owed: ${why}`,
+    };
+  }
+
+  if (outcome.cost) {
+    await recordCost(
+      repos,
+      {
+        attemptId,
+        workItemId,
+        routeTaskId: input.routeTaskId,
+        routeId: input.obligation.obligation.routeId,
+        source: taskRow.value.target,
+        jurisdiction: input.obligation.obligation.subjectId,
+        project: "freshness",
+        role: worker.role,
+        cost: outcome.cost,
+        recordedAt: input.now,
+      },
+      input.now,
+    );
+  }
+
+  return {
+    ...base,
+    ...ran(),
+    outcome: "WORKED",
+    dispositionCommitted: true,
+    disposition: disposition.disposition,
+    artifactIds,
+    cost: outcome.cost ?? null,
+    detail:
+      `${executor.why}; lease ${claimOutcome.lease.value.id}; Attempt ${attemptId} closed ` +
+      `COMPLETED with disposition ${disposition.disposition} over ${artifactIds.length} ` +
+      `artifact(s): ${outcome.detail}`,
   };
 }
 

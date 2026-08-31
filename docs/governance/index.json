@@ -1,11 +1,11 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "1c3c4f675ef0d212",
+  "snapshot": "8cff0c478da2cc11",
   "counts": {
-    "records": 257,
-    "current": 236,
-    "law": 205,
+    "records": 259,
+    "current": 238,
+    "law": 207,
     "decisions": 31,
     "historical": 21
   },
@@ -4653,6 +4653,100 @@
         {
           "kind": "related_to",
           "target": "R-0126"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0221",
+      "aliases": [
+        "RULING 221",
+        "R221",
+        "R-221"
+      ],
+      "title": "RULING 221 — a session's completion denominator is finite and stated at its start; discovery does not enlarge it",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-31",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [
+        {
+          "key": "session.completion_denominator",
+          "value": "finite-stated-at-start"
+        },
+        {
+          "key": "session.discovered_defect_routing",
+          "value": "frontier-unless-falsifies-or-regresses"
+        },
+        {
+          "key": "session.human_gated_status",
+          "value": "needs-owner-terminal-not-open-executable"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0189"
+        },
+        {
+          "kind": "extends",
+          "target": "R-0180"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0208"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0181"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0190"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0222",
+      "aliases": [
+        "RULING 222",
+        "R222",
+        "R-222"
+      ],
+      "title": "RULING 222 — before a confirmed address the scope is the ZIP; after one, the scope IS the address",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-31",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [
+        {
+          "key": "rendering.address_scope",
+          "value": "address-scope-replaces-zip-scope"
+        },
+        {
+          "key": "rendering.excluded_entity_label",
+          "value": "prohibited-out-of-scope-not-annotated"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "related_to",
+          "target": "R-0026"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0027"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0074"
         }
       ],
       "uncertain": [],

@@ -401,6 +401,24 @@ export function normalizeWithDrops(
         : null,
       ...(online ? { online } : {}),
       agendaUrl: event.EventAgendaFile,
+      /*
+       * **THE API RECORD ITSELF IS THE OBSERVED SURFACE.** (ASK-18.)
+       *
+       * Legistar's Events resource returns an `EventAgendaFile` field on the
+       * event object — the publisher's own first-party record of where this
+       * exact sitting's agenda lives. The KEY BEING PRESENT and its value being
+       * null is the structural observation the seam requires: the surface has a
+       * place for the agenda and the place was empty when we read it.
+       *
+       * `Object.hasOwn` rather than a null test on the value, and the
+       * distinction is the whole point. A response shape that OMITS the field —
+       * a projection, an older API version, a different vendor's copy — tells us
+       * nothing about what the body posted, and reading its absence as an empty
+       * slot would manufacture exactly the claim this flag exists to prevent.
+       */
+      ...(Object.hasOwn(event, "EventAgendaFile") && event.EventAgendaFile == null
+        ? { agendaSlotObservedEmpty: true }
+        : {}),
       jurisdiction: client.jurisdiction,
       status: statusOf(event, startsAt, now),
       provenance: {

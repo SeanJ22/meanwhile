@@ -57,6 +57,8 @@
  */
 
 import { neon } from "@neondatabase/serverless";
+import type { FreshnessDebt } from "../scheduler/debt.ts";
+import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 
 import type { Attempt, ExecutionLease } from "../attempt.ts";
 import type { BudgetLedger } from "../budget.ts";
@@ -265,19 +267,67 @@ function pgAppendOnlyRepository<T>(sql: Sql, log: string): AppendOnlyRepository<
   return {
     async append(key, recordId, record, now): Promise<AppendOutcome<T>> {
       /*
-       * The position is computed inside the INSERT, from the log's own current
-       * length under the key, so two appenders cannot both compute the same
-       * position from a stale read. The PRIMARY KEY refuses a rewrite at the
-       * storage layer rather than by convention.
+       * **THE POSITION IS ALLOCATED, NOT COMPUTED.** (Session B resume, W3.D.)
+       *
+       * This read `COALESCE((SELECT MAX(position) + 1 FROM ... WHERE log_key = $1), 0)`
+       * inside the INSERT, under a comment asserting that computing it inside
+       * the statement meant "two appenders cannot both compute the same
+       * position from a stale read". That is not what it meant. A subquery in
+       * an INSERT still runs against the statement's READ COMMITTED snapshot,
+       * so two concurrent appenders with different `record_id`s each saw the
+       * same committed MAX and each wrote it. `PRIMARY KEY (log_key, record_id)`
+       * does not object — the record ids differ — so both committed, and the
+       * log held two records at one position.
+       *
+       * The log is the replay history: `reconcile()` walks dispositions in
+       * position order to finish aggregate writes a crash interrupted. Two
+       * records at one position make that order ambiguous.
+       *
+       * The idempotency check runs FIRST so a retried append returns the
+       * position it already has instead of allocating a fresh one. Positions
+       * may therefore contain GAPS under contention — an allocation whose
+       * insert then no-ops burns its number — and that is fine and is stated
+       * here so nobody later "fixes" it: position is an ORDER key, never a
+       * count, and `readAll` orders by it rather than counting it.
        */
+      const already = (await sql.query(
+        `SELECT position, record FROM ${table} WHERE log_key = $1 AND record_id = $2`,
+        [key, recordId],
+      )) as Record<string, unknown>[];
+      if (already.length > 0) {
+        const held = parseValue<T>(already[0].record, `${table} ${key}/${recordId}`);
+        if (canonicalJson(held) !== canonicalJson(record)) {
+          throw new AppendOnlyViolation(
+            `${table} (${key})`,
+            recordId,
+            canonicalJson(held),
+            canonicalJson(record),
+          );
+        }
+        return { appended: false, recordId, record: held, position: Number(already[0].position) };
+      }
+
+      const allocated = (await sql.query(
+        `INSERT INTO cp_log_heads (log_table, log_key, next_position)
+         VALUES ($1, $2, 1)
+         ON CONFLICT (log_table, log_key)
+           DO UPDATE SET next_position = cp_log_heads.next_position + 1
+         RETURNING next_position - 1 AS position`,
+        [table, key],
+      )) as Record<string, unknown>[];
+      if (allocated.length === 0) {
+        throw new CorruptPersistedState(
+          `cp_log_heads ${table}/${key}`,
+          "the position allocator returned no row, so no ordered position could be assigned",
+        );
+      }
+
       const inserted = (await sql.query(
         `INSERT INTO ${table} (log_key, record_id, position, recorded_at, record)
-         SELECT $1, $2,
-                COALESCE((SELECT MAX(position) + 1 FROM ${table} WHERE log_key = $1), 0),
-                $3, $4::jsonb
+         VALUES ($1, $2, $3, $4, $5::jsonb)
          ON CONFLICT (log_key, record_id) DO NOTHING
          RETURNING position`,
-        [key, recordId, now, JSON.stringify(record)],
+        [key, recordId, Number(allocated[0].position), now, JSON.stringify(record)],
       )) as Record<string, unknown>[];
 
       if (inserted.length > 0) {
@@ -408,6 +458,17 @@ export async function createPgRepositories(
     workItems: pgAggregateRepository<WorkItem>(sql, "WorkItem", "cp_work_items"),
     routeTasks: pgAggregateRepository<RouteTask>(sql, "RouteTask", "cp_route_tasks"),
     attempts: pgAggregateRepository<Attempt>(sql, "Attempt", "cp_attempts"),
+    obligations: pgAggregateRepository<StandingObligation>(
+      sql,
+      "StandingObligation",
+      "cp_obligations",
+    ),
+    occurrences: pgAggregateRepository<FreshnessOccurrence>(
+      sql,
+      "FreshnessOccurrence",
+      "cp_occurrences",
+    ),
+    debts: pgAggregateRepository<FreshnessDebt>(sql, "FreshnessDebt", "cp_debts"),
     leases: pgAggregateRepository<ExecutionLease>(sql, "ExecutionLease", "cp_leases"),
     transitions: pgAppendOnlyRepository<RecordedTransition>(sql, "transitions"),
     escalations: pgAppendOnlyRepository<Escalation>(sql, "escalations"),

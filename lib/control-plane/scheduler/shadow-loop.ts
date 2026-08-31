@@ -42,12 +42,13 @@ import {
   type StalenessRisk,
 } from "./debt.ts";
 import {
+  dischargesObligation,
   dispatchOne,
   sweepExpiredLeases,
   type DispatchResult,
   type MethodMaturity,
   type ReclaimSweep,
-  type RunWork,
+  type DeclaredExecutor,
   type WorkerBound,
 } from "./dispatch.ts";
 import {
@@ -69,7 +70,16 @@ export interface CycleInput {
   /** Obligation id → the RouteTask that works it, where one is registered. */
   readonly routeTaskFor: (obligationId: string) => string | null;
   readonly maturity: MethodMaturity;
-  readonly run: RunWork;
+  /**
+    * The executor, WITH its lane declared. (W3.E regression, 2026-08-31.)
+    *
+    * A bare `run` let the dispatcher open the persisted Attempt under the
+    * lane the method store IMPLIED rather than the one about to execute, so a
+    * deterministic walk was recorded as an anthropic model worker.
+    */
+  readonly executor: DeclaredExecutor;
+  readonly methodVersion?: number;
+  readonly policyVersion?: string;
   readonly holder: string;
   readonly now: string;
   readonly leaseTtlMs: number;
@@ -95,6 +105,10 @@ export interface CycleResult {
   readonly dispatched: readonly DispatchResult[];
   /** Due work this cycle did NOT reach, and the reason. Never silent. */
   readonly deferred: readonly { readonly obligationId: string; readonly why: string }[];
+  /** Obligations DISCHARGED this cycle — a committed disposition, each one. */
+  readonly worked: readonly string[];
+  /** Obligations whose executor deliberately did nothing. Still owed. */
+  readonly simulated: readonly string[];
   readonly debts: readonly FreshnessDebt[];
   readonly incidents: readonly Incident[];
   readonly risk: StalenessRisk;
@@ -143,6 +157,8 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         the same number whatever the backlog is. */
   const ceiling = input.maxDispatches ?? workNow.length;
   const dispatched: DispatchResult[] = [];
+  const worked: string[] = [];
+  const simulated: string[] = [];
   const deferred: { obligationId: string; why: string }[] = [];
   const debtsById = new Map(input.debts.map((d) => [d.obligationId, d]));
 
@@ -166,24 +182,61 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
       leaseTtlMs: input.leaseTtlMs,
       bound: input.bound,
       maturity: input.maturity,
-      run: input.run,
+      executor: input.executor,
+      ...(input.methodVersion !== undefined ? { methodVersion: input.methodVersion } : {}),
+      ...(input.policyVersion !== undefined ? { policyVersion: input.policyVersion } : {}),
     });
     dispatched.push(result);
 
     /*
      * 5 · RECORD. A failure becomes DEBT — durable, self-retrying, and nobody
-     * is notified (RULING 218). A success clears it: the obligation was worked,
-     * so what it owed is discharged and the next-due recomputes from this work.
+     * is notified (RULING 218).
+     *
+     * **DEBT IS CLEARED BY A COMMITTED DISPOSITION AND BY NOTHING ELSE.**
+     * (Session B resume, W3.A.) This read `result.outcome === "WORKED"`, and
+     * WORKED was issued on a seam that returned `ok: true` for a no-op. So a
+     * shadow executor that fetched nothing deleted the obligation's debt and
+     * the loop recomputed a next-due from work that never happened —
+     * freshness, asserted from our own inaction. `dischargesObligation`
+     * requires the disposition commit, and it is the ONLY thing that does.
      */
-    if (result.outcome === "WORKED") {
+    if (dischargesObligation(result)) {
       debtsById.delete(row.obligation.id);
-    } else if (result.outcome === "FAILED" || result.outcome === "NO_ROUTE_TASK") {
+      worked.push(row.obligation.id);
+    } else if (result.outcome === "SIMULATED") {
+      /*
+       * A SHADOW DECISION IS NOT A FAILURE AND IT IS NOT A SUCCESS.
+       *
+       * It does not become debt, because nothing about the publisher went
+       * wrong and an incident count that rose on our own decision not to walk
+       * would report a wall where there is none. It does not clear debt
+       * either. Any debt the obligation already carried stands untouched, and
+       * the obligation stays due — which is the honest state: still owed.
+       */
+      simulated.push(row.obligation.id);
+    } else if (result.outcome !== "NOT_CLAIMED") {
+      /*
+       * FAILED, NO_ROUTE_TASK, and — the case that is easy to miss — a WORKED
+       * result whose committed disposition is NOT a reading. A route disposed
+       * `BLOCKED_CURRENTLY` reached a legitimate terminal state and refreshed
+       * nothing, so the obligation is still owed and its debt still accrues.
+       * Letting that fall through to neither branch would leave a walled route
+       * with no debt row, which is an obligation that quietly stops retrying.
+       */
       debtsById.set(
         row.obligation.id,
         recordFailure(debtsById.get(row.obligation.id) ?? null, {
           obligationId: row.obligation.id,
-          cause: result.outcome === "NO_ROUTE_TASK" ? "NEVER_DISPATCHED" : "UPSTREAM_ERROR",
-          detail: result.detail,
+          cause:
+            result.outcome === "NO_ROUTE_TASK"
+              ? "NEVER_DISPATCHED"
+              : result.dispositionCommitted
+                ? "REFUSED_BY_HOST"
+                : "UPSTREAM_ERROR",
+          detail: result.dispositionCommitted
+            ? `the route was disposed ${result.disposition}, which closes the RouteTask and is ` +
+              `not a reading of the record: ${result.detail}`
+            : result.detail,
           target: row.obligation.routeId ?? row.obligation.subjectId,
           dueAt: row.nextDueAt,
           now: input.now,
@@ -199,7 +252,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
   const risk = stalenessRisk({
     scheduled: schedule.scheduled.length,
     unscheduled: schedule.unscheduled.length,
-    overdue: workNow.length - dispatched.filter((d) => d.outcome === "WORKED").length,
+    overdue: workNow.length - worked.length,
     debts,
     nowMs,
   });
@@ -211,6 +264,8 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
     schedule,
     dueCount: workNow.length,
     dispatched,
+    worked,
+    simulated,
     deferred,
     debts,
     incidents: aggregateIncidents(debts, nowMs),
@@ -252,11 +307,34 @@ export function digestLines(cycle: CycleResult): string[] {
   out.push(`  due this cycle     ${cycle.dueCount}`);
   out.push(
     `  dispatched         ${cycle.dispatched.length} — ` +
-      `${cycle.dispatched.filter((d) => d.outcome === "WORKED").length} worked, ` +
+      `${cycle.worked.length} DISCHARGED, ` +
+      `${cycle.simulated.length} simulated (no retrieval), ` +
       `${cycle.dispatched.filter((d) => d.outcome === "FAILED").length} failed, ` +
       `${cycle.dispatched.filter((d) => d.outcome === "NOT_CLAIMED").length} held by another worker, ` +
       `${cycle.dispatched.filter((d) => d.outcome === "NO_ROUTE_TASK").length} with no route task`,
   );
+  /*
+   * DISCHARGED is counted from the disposition commits, never from the WORKED
+   * label, and the line below states the artifact and disposition evidence
+   * beside it so the two cannot drift apart in a report.
+   */
+  const committed = cycle.dispatched.filter((d) => d.dispositionCommitted);
+  out.push(
+    `  dispositions       ${committed.length} committed — ` +
+      (committed.length === 0
+        ? "none, so nothing this cycle discharged an obligation"
+        : committed.map((d) => `${d.disposition}`).join(", ")),
+  );
+  out.push(
+    `  artifacts          ${committed.reduce((n, d) => n + d.artifactIds.length, 0)} recorded ` +
+      "against a closed Attempt",
+  );
+  if (cycle.simulated.length > 0) {
+    out.push(
+      `      SIMULATED ${cycle.simulated.length} obligation(s) had a shadow decision and NO ` +
+        "retrieval. They are still owed, their debt stands, and none of them is discharged.",
+    );
+  }
   const byExecutor = (kind: string): number =>
     cycle.dispatched.filter((d) => d.executor === kind).length;
   out.push(
@@ -264,6 +342,22 @@ export function digestLines(cycle: CycleResult): string[] {
       `${byExecutor("BOUNDED_MODEL_WORKER")} bounded model worker`,
   );
   out.push(`  deferred           ${cycle.deferred.length}`);
+  const withCost = cycle.dispatched.filter((d) => d.cost !== null);
+  const usd = withCost.reduce((n, d) => n + (d.cost?.usd ?? 0), 0);
+  out.push(
+    `  cost               ${usd.toFixed(4)} over ${withCost.length} measured Attempt(s) of ` +
+      `${cycle.dispatched.length} dispatched`,
+  );
+  for (const kind of ["DETERMINISTIC", "BOUNDED_MODEL_WORKER"] as const) {
+    const rows = cycle.dispatched.filter((d) => d.executor === kind);
+    const spent = rows.reduce((n, d) => n + (d.cost?.usd ?? 0), 0);
+    out.push(
+      `      ${kind.padEnd(21)} ${rows.length} Attempt(s), ${spent.toFixed(4)}` +
+        (rows.length === 0 ? "" : ` — models: ${
+          [...new Set(rows.map((d) => d.worker?.version ?? "unrecorded"))].join(", ")
+        }`),
+    );
+  }
   out.push(
     `  leases             ${cycle.reclaim.reclaimed.length} reclaimed · ` +
       `${cycle.reclaim.stillLive.length} still live · ${cycle.reclaim.refused.length} refused`,

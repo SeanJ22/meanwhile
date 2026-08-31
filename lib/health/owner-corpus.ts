@@ -49,6 +49,62 @@ export const EXAMPLE_ROW_ID = "EX";
 /** The one Status value that makes a row an answer-key entry. */
 export const CONFIRMED = "CONFIRMED";
 
+/**
+ * **OWNER UNCERTAINTY IS NOT EVIDENCE, IN EITHER DIRECTION.**
+ * (Session B closure, 2026-08-31, the author's correction.)
+ *
+ * `COULD NOT TELL`, `SKIPPED` and a blank Status carry ZERO evidentiary
+ * weight. They are never corroboration of an absence and never corroboration
+ * of a presence. They record one thing: that the owner has not yet looked, or
+ * looked and could not answer.
+ *
+ * This is written down because it was got wrong. A Session B report said a
+ * reader-suite RED was *"corroborated by the owner's own F2 being COULD NOT
+ * TELL"* — reasoning from the owner's uncertainty to a conclusion about what a
+ * government publishes. That is the same substitution the whole product exists
+ * to refuse, arriving through the answer key rather than through a render: the
+ * absence of a reading became a reading.
+ *
+ * It was also, as it happens, false. Walking the routes afterwards found 417
+ * roll calls and 2,083 per-person vote rows held from that very tenant, 285 of
+ * them for the exact sitting the claim was about. An unverified row is not
+ * evidence, and reasoning from one had produced a statement that measurement
+ * contradicted outright.
+ *
+ * A `known_absence` row is evidence ONLY with authority, period and
+ * verified_through filled — `validateControlFact` enforces that half.
+ */
+export const NON_EVIDENTIARY_STATUSES: readonly string[] = [
+  "COULD NOT TELL",
+  "COULD_NOT_TELL",
+  "SKIPPED",
+  "WRONG",
+  "",
+];
+
+/** Is this row's status one that may be cited as evidence at all? */
+export function isCitableAsEvidence(status: string): boolean {
+  return String(status ?? "").trim().toUpperCase() === CONFIRMED;
+}
+
+/**
+ * Refuse to let a non-CONFIRMED row be used as evidence.
+ *
+ * Throws rather than returning false, because every caller of this is about to
+ * treat the row as an answer-key entry, and a boolean that a caller can ignore
+ * is the shape that let the original mistake through.
+ */
+export function assertCitableAsEvidence(id: string, status: string): void {
+  if (isCitableAsEvidence(status)) return;
+  throw new Error(
+    `Control facts row ${id} has Status ${JSON.stringify(String(status ?? "").trim() || "(blank)")} ` +
+      "and may not be cited as evidence. COULD NOT TELL, SKIPPED, WRONG and blank carry zero " +
+      "evidentiary weight in EITHER direction: they are never corroboration of an absence and " +
+      "never corroboration of a presence. Only CONFIRMED is evidence, and a known_absence row " +
+      "is evidence only with authority, period and verified_through filled.",
+  );
+}
+
 /** The Keep? values that make a question part of the corpus. */
 export const KEEP_VALUES: readonly string[] = ["KEEP", "EDIT"];
 
@@ -71,8 +127,29 @@ export function excelDay(value: string): string {
 /** One row of the Control facts tab, by header name. */
 export type SheetRow = Readonly<Record<string, string>>;
 
+/**
+ * One loaded row, WITH the workbook id and Notes it came from.
+ *
+ * (Session B resume, W4.) `loaded` alone lost two things the compiler needs.
+ * The ID, because a `ControlFact` carries a statement and not a row id, so
+ * nothing downstream could ask for "F5". And the NOTES, because the owner types
+ * material there that the typed fact has no field for — F5's Notes hold the
+ * five supervisors by name, which is the roster a per-member LIST expectation
+ * must cite rather than derive. Both were dropped on load, so the roster the
+ * owner supplied was invisible to everything that needed it.
+ */
+export interface LoadedRow<T> {
+  readonly id: string;
+  readonly notes: string;
+  /** The workbook Status this row carried. Only CONFIRMED is evidence. */
+  readonly status?: string;
+  readonly value: T;
+}
+
 /** What a load pass found, with every count derived from the rows themselves. */
 export interface CorpusLoad<T> {
+  /** The loaded rows with their workbook id and Notes. Parallel to `loaded`. */
+  readonly rows: readonly LoadedRow<T>[];
   /** Rows that met the stated criteria, before any exclusion. */
   readonly matched: readonly string[];
   /** Rows excluded after matching, with the reason. */
@@ -98,6 +175,7 @@ export function loadControlFacts(rows: readonly SheetRow[]): CorpusLoad<ControlF
   const matched: string[] = [];
   const excluded: { id: string; why: string }[] = [];
   const loaded: ControlFact[] = [];
+  const rows_: LoadedRow<ControlFact>[] = [];
 
   for (const row of rows) {
     const id = (row["ID"] ?? "").trim();
@@ -138,9 +216,23 @@ export function loadControlFacts(rows: readonly SheetRow[]): CorpusLoad<ControlF
           }
         : {}),
     });
+    rows_.push({
+      id,
+      notes: (row["Notes"] ?? "").trim(),
+      /* Carried so a consumer can be CHECKED against it rather than trusting
+         that the loader filtered. The filter and the check are two guards. */
+      status,
+      value: loaded[loaded.length - 1],
+    });
   }
 
-  return { matched, excluded, loaded, seen: rows.filter((r) => (r["ID"] ?? "").trim()).length };
+  return {
+    rows: rows_,
+    matched,
+    excluded,
+    loaded,
+    seen: rows.filter((r) => (r["ID"] ?? "").trim()).length,
+  };
 }
 
 /** A question the owner kept, before it becomes a template. */
@@ -158,6 +250,8 @@ export interface KeptQuestion {
    * is an instruction the owner will have to give again.
    */
   readonly ownerAmendment: string | null;
+  /** The workbook's Notes column for this row, kept rather than dropped. */
+  readonly notes: string;
 }
 
 /**
@@ -228,8 +322,15 @@ export function loadKeptQuestions(rows: readonly SheetRow[]): CorpusLoad<KeptQue
       rightAnswer: (row["What the RIGHT answer looks like"] ?? "").trim(),
       ownerEdit: edit,
       ownerAmendment: edit && !replaces ? edit : null,
+      notes: (row["Notes"] ?? "").trim(),
     });
   }
 
-  return { matched, excluded: [], loaded, seen: rows.filter((r) => (r["ID"] ?? "").trim()).length };
+  return {
+    rows: loaded.map((q) => ({ id: q.id, notes: q.notes, value: q })),
+    matched,
+    excluded: [],
+    loaded,
+    seen: rows.filter((r) => (r["ID"] ?? "").trim()).length,
+  };
 }

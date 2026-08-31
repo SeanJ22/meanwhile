@@ -1,3 +1,4 @@
+import { overLengthBudget } from "./length-contract.ts";
 import { packSourceUrls, type EvidencePack } from "./evidence.ts";
 import { normalizeName } from "../routing/exact-name.ts";
 
@@ -199,6 +200,28 @@ export function validateAnswer(
 
   checked.push("no-internal-vocabulary");
   if (INTERNAL_VOCABULARY.some((p) => p.test(answer))) failed.push("internal-vocabulary");
+
+  /*
+   * **ASK-19 — THE LENGTH CONTRACT, ENFORCED WHERE EVERY OTHER CONTRACT IS.**
+   * (2026-08-31. The owner: *answers are far too long*.)
+   *
+   * A failure here is a REJECTION, never a truncation, and that is the row's
+   * own blocker made structural: *a prose cap applied without a contract would
+   * truncate sourced content*, and half a sentence about a government is a
+   * claim nobody made.
+   *
+   * Rejecting costs the reader the prose and nothing else. `lib/ask/answer.ts`
+   * ships every record whatever the synthesis did, so an over-budget answer
+   * degrades to the sourced records — the same ladder an invented URL falls
+   * down, for the same reason.
+   *
+   * The budget lives in `lib/ask/length-contract.ts` and the system prompt
+   * states it from the same constants, so the model is held to the rule it was
+   * given rather than to a second one nobody told it.
+   */
+  checked.push("within-length-budget");
+  const tooLong = overLengthBudget(answer);
+  if (tooLong) failed.push(tooLong);
 
   /*
    * A temporal cross-check, available only where the pack actually carries

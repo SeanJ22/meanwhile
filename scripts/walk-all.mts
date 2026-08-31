@@ -6066,6 +6066,420 @@ for (const zip of ["85629", "07866"]) {
   }
 }
 
+/* ── BAL-39: the two-column ballot has no holes in it ───────────────────── */
+
+/**
+ * **THE GAPS BETWEEN CONSECUTIVE CARDS IN ONE COLUMN, MEASURED.**
+ * (Session B, 2026-08-31. The owner: *two-column desktop layout has gaps and
+ * misaligned boxes.*)
+ *
+ * ## Why this is DOM geometry and not an image evaluation
+ *
+ * The row's blocker asked for an image-evaluated measurement, and for the
+ * properties `visual-suite.mts` owns — clipping, prominence, overlap — that is
+ * right, because those are questions about PAINT and `getBoundingClientRect`
+ * cannot answer them.
+ *
+ * A GAP is not one of those. It is layout: the distance between one card's
+ * bottom edge and the next card's top edge in the same column, which the
+ * geometry answers exactly and a screenshot answers only by inference. The
+ * repository's own note on `measure-panels.mts` draws that line in the other
+ * direction — *the DOM was never wrong* there, so pixels were the instrument.
+ * Here the DOM is precisely what is wrong.
+ *
+ * ## What was measured before the fix, so the check has a baseline
+ *
+ * At 1280 on 2026-08-31, a two-column GRID placed cards in ROWS: each row's
+ * height was its tallest card and every shorter card left a hole. 85701 ran
+ * 13px to 689px within one column; 07866 ran 20px to 468px. Column flow
+ * replaced it, and the same measurement now reads 13-15px throughout.
+ *
+ * The check allows a generous ceiling rather than pinning today's number: a
+ * card gaining a section legitimately changes nothing about the gap BELOW it,
+ * and a ceiling that tracked the design would fail on every restyle. What it
+ * catches is the class — a hole an order of magnitude larger than the gap.
+ */
+const BALLOT_GAP_CEILING_PX = 60;
+
+const BALLOT_COLUMNS_READ = `(() => {
+  const out = [];
+  for (const grid of document.querySelectorAll('.ballot-card-grid')) {
+    const cards = [...grid.querySelectorAll('[data-contest-id]')].map((el) => {
+      const r = el.getBoundingClientRect();
+      return {
+        id: el.getAttribute('data-contest-id'),
+        x: Math.round(r.x),
+        y: Math.round(r.y + window.scrollY),
+        h: Math.round(r.height),
+        w: Math.round(r.width),
+      };
+    });
+    if (cards.length === 0) continue;
+    const byColumn = {};
+    for (const c of cards) {
+      byColumn[c.x] = byColumn[c.x] || [];
+      byColumn[c.x].push(c);
+    }
+    const columns = Object.keys(byColumn).map((x) => {
+      const col = byColumn[x].sort((a, b) => a.y - b.y);
+      const gaps = [];
+      for (let i = 1; i < col.length; i += 1) {
+        gaps.push(col[i].y - (col[i - 1].y + col[i - 1].h));
+      }
+      return { x: Number(x), count: col.length, top: col[0].y, widths: [...new Set(col.map((c) => c.w))], gaps };
+    });
+    out.push({ cards: cards.length, columns });
+  }
+  return out;
+})()`;
+
+interface BallotColumns {
+  cards: number;
+  columns: { x: number; count: number; top: number; widths: number[]; gaps: number[] }[];
+}
+
+for (const zip of ["85701", "07866"]) {
+  const BLOCK: [string, string][] = [
+    ["SB0831", `${zip}: the two-column ballot has no hole between consecutive cards`],
+    ["SB0831", `${zip}: both ballot columns start at the same height`],
+    ["SB0831", `${zip}: the ballot really is two columns of equal width at 1280`],
+  ];
+  const wide = await openWideAt(browser, zip);
+  try {
+    await wide.goto(`${BASE}/ballot?zip=${zip}`, {
+      waitUntil: "domcontentloaded",
+      timeout: 90_000,
+    });
+    const ready = await untilInteractive(wide, "[data-contest-id]", 20_000);
+    if (!ready) {
+      for (const [session, name] of BLOCK) {
+        cannotRun(session, name, "no contest cards rendered on this ballot");
+      }
+      continue;
+    }
+    const grids = (await wide.evaluate(BALLOT_COLUMNS_READ)) as BallotColumns[];
+    const multi = grids.filter((g) => g.columns.length > 1);
+    if (multi.length === 0) {
+      for (const [session, name] of BLOCK) {
+        cannotRun(
+          session,
+          name,
+          `no grid on this ballot laid out in more than one column at 1280 (${grids.length} grid(s) read)`,
+        );
+      }
+      continue;
+    }
+
+    /*
+     * THE DEFECT. A grid places in rows and a short card leaves a hole whose
+     * size is set by its row-mate's height. A ceiling on the gap is what
+     * distinguishes "these cards are spaced" from "this column has a hole".
+     */
+    const allGaps = multi.flatMap((g) => g.columns.flatMap((c) => c.gaps));
+    const worst = allGaps.length > 0 ? Math.max(...allGaps) : 0;
+    check(
+      "SB0831",
+      BLOCK[0][1],
+      allGaps.length > 0 && worst <= BALLOT_GAP_CEILING_PX,
+      `${allGaps.length} gap(s) across ${multi.length} multi-column grid(s); largest ${worst}px ` +
+        `(ceiling ${BALLOT_GAP_CEILING_PX}); distinct ${[...new Set(allGaps)].sort((a, b) => a - b).join(",")}`,
+    );
+
+    /* The "misaligned boxes" half: the columns of one grid start level. */
+    const tops = multi.map((g) => [...new Set(g.columns.map((c) => c.top))]);
+    check(
+      "SB0831",
+      BLOCK[1][1],
+      tops.every((t) => t.length === 1),
+      `column tops per grid: ${tops.map((t) => t.join("/")).join(" · ")}`,
+    );
+
+    /* And they are still two columns of one width — a fix that collapsed the
+       layout to one column would satisfy the gap check trivially. */
+    const widths = multi.flatMap((g) => g.columns.flatMap((c) => c.widths));
+    check(
+      "SB0831",
+      BLOCK[2][1],
+      multi.every((g) => g.columns.length === 2) && new Set(widths).size === 1,
+      `${multi.map((g) => g.columns.length).join("/")} column(s) per grid, ` +
+        `width(s) ${[...new Set(widths)].join(",")}`,
+    );
+  } finally {
+    await wide.context().close();
+  }
+}
+
+/* ── RULING 222 / WGH-22: the scope IS the address ─────────────────────── */
+
+/**
+ * **THE POST-ADDRESS PANEL, ON THE RENDERED DOM, AT EVERY PILOT ZIP.**
+ * (Session B, 2026-08-31. Third recurrence: WGH-12 and WGH-15 on 8/28,
+ * WGH-22 on 8/30, falsified again by the owner on 8/31.)
+ *
+ * ## Why this exists, stated as the instrument failure it is
+ *
+ * WGH-22 was marked FIXED_VERIFIED in the 8.30.26 sweep against a check named
+ * `rq:wgh-22-panel-seats`. **That check does not exist.** There is no such row
+ * in `data/health/reader-questions.json` and never was; `rq:` names the
+ * ReaderQuestion corpus, which is generated from the owner's own workbook and
+ * cannot be authored by a session. What actually ran was
+ * `tests/panel-seats.test.ts` — unit tests over a pure function, against a
+ * hand-built `CoverageSummary` whose shape the production derivation cannot
+ * emit.
+ *
+ * So the acceptance measured the reasoning that produced the fix and agreed
+ * with it. It never measured the post-address panel. Driven against
+ * production on 2026-08-31 at the owner's own address, that panel rendered
+ * EMPTY at the state legislative levels — District 19 correctly set aside,
+ * District 17 still nowhere.
+ *
+ * **Every check here is bound to the state the report was about**: an address
+ * CONFIRMED, and the panel read afterwards. Nothing here can pass by
+ * measuring the resolver, the pre-address view, or a fixture.
+ *
+ * ## The reader's question, and where it is asked
+ *
+ * The first check is the reader's own question — *I live at this address; who
+ * is my state house representative?* — asked of the PANEL rather than of the
+ * Ask box, because the second half of the owner's requirement is a statement
+ * about what the panel LISTS. It is deliberately NOT added to
+ * `data/health/reader-questions.json`: that corpus is generated from the
+ * owner's workbook under stated criteria, and a session writing its own
+ * question into the answer key is the attack `lib/health/owner-corpus.ts`
+ * refuses by name.
+ *
+ * ## The address is confirmed the way a reader confirms one
+ *
+ * The walk POSTs the street to `/api/address/resolve` — the product's own one
+ * resolver, the same request the prompt component makes — and writes the
+ * result into `sessionStorage` in exactly the shape `writeSessionAddress`
+ * writes, then lets the surface's own storage subscription re-render. No
+ * reload, and nothing asserted from a value the walk invented.
+ */
+const SCOPE_ADDRESSES: { zip: string; street: string; houseNumber: string }[] = [
+  { zip: "85641", street: "South Bear Table Tank Drive", houseNumber: "10723" },
+  { zip: "85701", street: "E Congress St", houseNumber: "" },
+  { zip: "07866", street: "W Main St", houseNumber: "" },
+  { zip: "03255", street: "Bay Point Rd", houseNumber: "" },
+];
+
+/** The levels the panel's State and Federal sections own. */
+const SCOPE_LEVELS = ["sldl", "sldu", "cd"];
+
+/** The deepest OCD segment's key — `lib/state/resolved-location.ts`'s split. */
+function scopeLevelOf(ocdId: string): string {
+  const last = ocdId.split("/").pop() ?? "";
+  const colon = last.indexOf(":");
+  return colon === -1 ? "" : last.slice(0, colon);
+}
+
+interface ScopeRead {
+  rows: { standing: string; sourcing: string; label: string }[];
+  exclusionMarks: number;
+  disclosures: number;
+  excludedRows: number;
+  notYoursCopy: boolean;
+  ocdIdOnScreen: boolean;
+}
+
+/** What the panel is showing, read off the DOM and nothing else. */
+const SCOPE_READ = `(() => {
+  const rows = [...document.querySelectorAll('[data-seat-standing]')];
+  const text = document.body.innerText || "";
+  return {
+    rows: rows.map((el) => ({
+      standing: el.getAttribute('data-seat-standing') || "",
+      sourcing: el.getAttribute('data-seat-sourcing') || "",
+      label: (el.querySelector('.text-label') ? el.querySelector('.text-label').textContent : '').trim(),
+    })),
+    exclusionMarks: document.querySelectorAll('[data-standing="ELSEWHERE_IN_ZIP"]').length,
+    disclosures: document.querySelectorAll('[data-elsewhere-disclosure]').length,
+    excludedRows: document.querySelectorAll('[data-elsewhere-row]').length,
+    notYoursCopy: text.indexOf('not yours') !== -1 || text.indexOf('covers another part of') !== -1,
+    ocdIdOnScreen: text.indexOf('ocd-division') !== -1,
+  };
+})()`;
+
+for (const target of SCOPE_ADDRESSES) {
+  const BLOCK: [string, string][] = [
+    [
+      "SB0831",
+      `${target.zip}: the districts a confirmed address settled are the districts the panel lists`,
+    ],
+    ["SB0831", `${target.zip}: no district the address ruled out is rendered, marked or disclosed`],
+    ["SB0831", `${target.zip}: confirming an address CHANGES the panel to the resolved scope`],
+    ["SB0831", `${target.zip}: no seat row renders an identifier or an unnamed district`],
+  ];
+
+  /*
+   * The confirmed answer comes from the product's own resolver. A ZIP whose
+   * test street stops resolving DECLARES (RULING 24) rather than skipping — a
+   * silent skip is the failure mode this whole block exists to end.
+   */
+  let resolved: { divisionIds: string[]; splitLevels: string[]; contestIds: string[] } | null =
+    null;
+  try {
+    const response = await fetch(`${BASE}/api/address/resolve`, {
+      method: "POST",
+      headers: { "content-type": "application/json", ...RUN_HEADERS },
+      body: JSON.stringify({
+        zip: target.zip,
+        street: target.street,
+        houseNumber: target.houseNumber,
+      }),
+    });
+    const body = (await response.json()) as {
+      resolution: {
+        status: string;
+        levels?: { level: string; divisionIds: string[]; certain: boolean }[];
+      };
+      contestIds?: string[];
+    };
+    const levels = body.resolution.levels ?? [];
+    if (body.resolution.status !== "FAILED" && levels.length > 0) {
+      resolved = {
+        divisionIds: levels.filter((l) => l.certain).flatMap((l) => l.divisionIds),
+        splitLevels: levels.filter((l) => !l.certain).map((l) => l.level),
+        contestIds: body.contestIds ?? [],
+      };
+    }
+  } catch {
+    resolved = null;
+  }
+
+  if (!resolved) {
+    for (const [session, name] of BLOCK) {
+      cannotRun(
+        session,
+        name,
+        `the resolver did not place ${target.street} in ${target.zip}, so no address was confirmed`,
+      );
+    }
+    continue;
+  }
+
+  const ownDistricts = resolved.divisionIds.filter((id) => SCOPE_LEVELS.includes(scopeLevelOf(id)));
+  const scopeJson = JSON.stringify(
+    JSON.stringify({
+      zip: target.zip,
+      contestIds: resolved.contestIds,
+      divisionIds: resolved.divisionIds,
+      splitLevels: resolved.splitLevels,
+      streetLabel: target.street,
+      resolvedAt: new Date().toISOString(),
+    }),
+  );
+
+  const page = await openAt(browser, target.zip);
+  try {
+    // WGH-8: the card is REACHED the way a reader reaches it, never assumed.
+    const wghPill = page.locator(".notice-fab").first();
+    if (await wghPill.isVisible().catch(() => false)) {
+      await wghPill.click();
+      await until(page, async () => (await page.locator(".coverage-notice").count()) > 0, 8_000);
+    }
+    const opened = await untilPresent(page, "[data-seat-standing]", 15_000);
+    if (!opened) {
+      for (const [session, name] of BLOCK) {
+        cannotRun(session, name, "the who-governs card rendered no seat rows to read");
+      }
+      continue;
+    }
+    const before = (await page.evaluate(SCOPE_READ)) as ScopeRead;
+
+    await page.evaluate(
+      `(() => {
+        sessionStorage.setItem('wtp.session_address_scope', ${scopeJson});
+        window.dispatchEvent(new StorageEvent('storage', { key: 'wtp.session_address_scope' }));
+      })()`,
+    );
+    await untilSettled(page, "body", 400, 8_000);
+    const after = (await page.evaluate(SCOPE_READ)) as ScopeRead;
+
+    const confirmed = after.rows.filter((r) => r.standing === "CONFIRMED");
+    const rendered = after.rows.map((r) => r.label).filter(Boolean);
+
+    /*
+     * **THE READER'S QUESTION.** *I live at this address — who is my state
+     * house representative?* Answered only if every district the address
+     * confirmed at these levels is on the panel, CONFIRMED, and NAMED. The
+     * counts are compared, not a substring: a panel that renders one of two
+     * confirmed districts is the 8/30 failure with a smaller hole.
+     */
+    check(
+      "SB0831",
+      BLOCK[0][1],
+      confirmed.length === ownDistricts.length &&
+        confirmed.every((r) => r.label.length > 0) &&
+        after.rows.every((r) => r.standing === "CONFIRMED"),
+      `the address confirmed ${ownDistricts.length} district(s) at these levels; the panel ` +
+        `renders ${after.rows.length} row(s), ${confirmed.length} CONFIRMED: ` +
+        `${rendered.join(" · ") || "none"}`,
+    );
+
+    /*
+     * **RULING 222.** An entity the system determined does not govern this
+     * reader is OUT OF SCOPE, not annotated. All four artefacts of the old
+     * behaviour are refused together — the standing on a rendered row, the
+     * disclosure, its rows, and the copy itself — because three sessions
+     * running improved one of them and left the others.
+     */
+    check(
+      "SB0831",
+      BLOCK[1][1],
+      after.exclusionMarks === 0 &&
+        after.disclosures === 0 &&
+        after.excludedRows === 0 &&
+        !after.notYoursCopy &&
+        after.rows.every((r) => r.standing !== "ELSEWHERE_IN_ZIP"),
+      `${after.exclusionMarks} exclusion mark(s), ${after.disclosures} disclosure(s), ` +
+        `${after.excludedRows} disclosed row(s), exclusion copy on screen: ${after.notYoursCopy}, ` +
+        `rows carrying ELSEWHERE_IN_ZIP: ` +
+        `${after.rows.filter((r) => r.standing === "ELSEWHERE_IN_ZIP").length}`,
+    );
+
+    /*
+     * **THE STATE TRANSITION.** The owner's sentence: *if it stays stagnant
+     * when we put in an address, people are not going to put in addresses.*
+     *
+     * The transition is asserted on the PANEL'S OWN STATE, not only on its
+     * labels. At a ZIP whose centroid already sits inside the reader's
+     * districts the names are the same and the answer still moved: every row
+     * went from `UNSETTLED` — *we have not been told enough to say* — to
+     * `CONFIRMED`. Demanding a LABEL change there would be demanding the panel
+     * invent one, which is the opposite defect.
+     */
+    const beforeLabels = before.rows.map((r) => r.label).sort().join("|");
+    const afterLabels = after.rows.map((r) => r.label).sort().join("|");
+    const wasUnsettled = before.rows.some((r) => r.standing === "UNSETTLED");
+    check(
+      "SB0831",
+      BLOCK[2][1],
+      (beforeLabels !== afterLabels || wasUnsettled) &&
+        after.rows.every((r) => r.standing === "CONFIRMED"),
+      `before: ${beforeLabels || "no rows"} [${before.rows.map((r) => r.standing).join(",")}] · ` +
+        `after: ${afterLabels || "no rows"} [${after.rows.map((r) => r.standing).join(",")}]`,
+    );
+
+    /*
+     * A reader surface may never print an OCD-ID, and a district row with no
+     * name is not renderable as a district. The named gap is the honest answer
+     * while the lookup is in flight; an empty label never is.
+     */
+    check(
+      "SB0831",
+      BLOCK[3][1],
+      !after.ocdIdOnScreen &&
+        after.rows.every(
+          (r) => r.label.length > 0 || r.sourcing === "looking" || r.sourcing === "unavailable",
+        ),
+      `ocd-division on screen: ${after.ocdIdOnScreen}; unnamed rows: ` +
+        `${after.rows.filter((r) => r.label.length === 0).map((r) => r.sourcing).join(",") || "none"}`,
+    );
+  } finally {
+    await page.context().close();
+  }
+}
 await browser.close();
 
 const EXCLUDED = [

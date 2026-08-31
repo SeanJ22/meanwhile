@@ -1,4 +1,6 @@
 import { readSnapshot } from "@/lib/meetings/snapshot";
+import type { Meeting } from "@/lib/sources/types";
+import type { AskSitting } from "@/lib/ask/answer";
 import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
 import { statewideExecutivesFor } from "@/lib/officials/statewide-executives";
 import {
@@ -51,7 +53,7 @@ import {
 import { readLocationOrigin, stampResidency } from "@/lib/ask/residency";
 import { captureAskInteraction } from "@/lib/db/ask-signal";
 import { synthesizeAnswer } from "@/lib/ask/synthesize";
-import { selectSitting, type AgendaSelection } from "@/lib/ask/select";
+import { sittingsOnSameLocalDay, selectSitting, type AgendaSelection } from "@/lib/ask/select";
 import {
   classifyAgendaPublication,
   publisherAgendaObservationsFor,
@@ -74,7 +76,12 @@ import {
   type AskAnswerPayload,
 } from "@/lib/ask/answer";
 import { agendaTopicEvidence } from "@/lib/ask/agenda-topic";
-import { financeQuestionAsked, localFinanceEvidenceFor } from "@/lib/ask/local-finance";
+import {
+  financeQuestionAsked,
+  financeRegimeNotesFor,
+  financeScopeGapFor,
+  localFinanceEvidenceFor,
+} from "@/lib/ask/local-finance";
 import { statesOf, voteEvidenceFor } from "@/lib/ask/votes";
 
 /**
@@ -188,6 +195,31 @@ interface MeetingLike {
   startsAt: string;
   timeZone?: string | null;
   agendaUrl?: string | null;
+  /**
+   * **WHERE IT IS, WHETHER IT IS STILL ON, AND WHOSE IT IS.**
+   * (Session B closure, ASK-20, 2026-08-31.)
+   *
+   * The third time this hand-narrowed shape has dropped fields the corpus
+   * carries. ASK-05 lost `sourceOrg` and `retrievedAt` and made a sourced
+   * claim unrenderable; ASK-18 lost `provenance` and made the THEIRS branch
+   * unreachable outside one adapter; this lost `location`, `status` and
+   * `jurisdiction` and made an Add-to-calendar control impossible to build
+   * from an Ask answer while the map card beside it built one from the same
+   * meeting.
+   *
+   * A calendar entry needs the venue or the join line, and the status decides
+   * whether the control renders at all — `CalendarLinks` returns null for
+   * anything but SCHEDULED, because offering to calendar a concluded meeting
+   * is offering to attend one that has happened.
+   *
+   * The pattern is worth naming rather than just fixing again: every one of
+   * these was a field that already existed on `Meeting`, already travelled on
+   * the wire, and was unreachable purely by declaration.
+   */
+  location: Meeting["location"];
+  status: Meeting["status"];
+  jurisdiction: string;
+  online?: Meeting["online"];
   /**
    * **WHO PUBLISHED THIS AND WHEN WE READ IT — and it was being dropped.**
    * (ASK-18, 2026-08-30.)
@@ -768,6 +800,8 @@ export async function POST(request: Request) {
     : null;
 
   const records: EvidenceRecord[] = [];
+  /** The sittings this request resolved, for the structured half of the payload. */
+  const resolvedSittings: AskSitting[] = [];
   const gaps: EvidenceGap[] = [];
   const denominators: Record<string, number> = {};
   const contacts: AskContact[] = [];
@@ -950,6 +984,49 @@ export async function POST(request: Request) {
         occurredAt: chosen.startsAt,
         sourceUrl: chosen.agendaUrl ?? null,
       });
+
+      /*
+       * ── ASK-24 ── **A DAY WITH TWO SITTINGS IS A DAY WITH TWO SITTINGS.**
+       * (Session B resume, 2026-08-31.)
+       *
+       * The owner: Mayor & Council's study session is at 1 p.m. and "the actual
+       * meeting is later in the day at 5 p.m."; Ask named the first and stopped.
+       * That is `selectSitting` behaving correctly — it returns ONE sitting —
+       * and the answer being built as though one were all there was.
+       *
+       * A reader told "the meeting is at 1 p.m." who arrives for a study
+       * session that ends before the business meeting begins has been handed a
+       * true sentence and a wrong answer. The map card at 17-34-14 already
+       * renders both; this is Ask catching up to the surface beside it.
+       *
+       * Each sibling is its OWN record with its OWN id, agenda link and time —
+       * never a sentence appended to the chosen one's text. They are different
+       * sittings with different dockets, and one record describing two would be
+       * the collapse that makes an agenda answer cite the wrong meeting.
+       */
+      /* ASK-20 / ASK-23: the STRUCTURED sittings travel to the client beside
+         the prose, so an answer can offer the same Add-to-calendar control the
+         map card does and a jurisdiction card can lead with the right one. */
+      resolvedSittings.push(chosen);
+      const sameDay = sittingsOnSameLocalDay(chosen, forBody).filter((m) => m.id !== chosen.id);
+      denominators.sittingsThatLocalDay = sameDay.length + 1;
+      for (const sibling of sameDay) {
+        const siblingLabel =
+          sibling.bodyName && sibling.bodyName !== sibling.title
+            ? `${sibling.title} of ${sibling.bodyName}`
+            : sibling.title;
+        resolvedSittings.push(sibling);
+        records.push({
+          kind: "MEETING",
+          id: sibling.id,
+          bodyId: sibling.bodyId,
+          text:
+            `${subject.name}: ${siblingLabel}, ${readableSitting(sibling)} — the same day as ` +
+            `the ${label}.`,
+          occurredAt: sibling.startsAt,
+          sourceUrl: sibling.agendaUrl ?? null,
+        });
+      }
 
       const forMeeting = documents.filter((d) => d.meetingId === chosen.id);
       denominators.agendaDocumentsForThatMeeting = forMeeting.length;
@@ -1437,13 +1514,36 @@ export async function POST(request: Request) {
    * recorded" — their finance records live in the FEC snapshot, not this
    * store.
    */
+  /*
+   * **OWN-Q5 (2026-08-31) — AND EVERY REGIME IS NAMED, ALWAYS.**
+   *
+   * The owner's amendment: *not just FEC filings, but state and local finances
+   * must be checked*, and *an FEC absence never stands in for "no records
+   * exist"*.
+   *
+   * The county store was already reachable. What was missing is the
+   * DENOMINATOR: `localFinanceEvidenceFor` returns null for a statewide
+   * executive, a federal candidate, a contest and an office, and a null pushed
+   * nothing — so one regime's silence answered for all three. That is
+   * ONE ROUTE SUCCESS != SOURCE UNIVERSE COMPLETE, mirrored: one route's
+   * ABSENCE is not the universe's either.
+   *
+   * Now a money question always carries all three regime statements, and a
+   * subject this pipeline holds nothing for gets a scope gap that says which
+   * store it would be in rather than a bare nothing.
+   */
   if (subject && financeQuestionAsked(question)) {
     const finance = localFinanceEvidenceFor(subject);
     if (finance) {
       records.push(...finance.records);
       gaps.push(...finance.gaps);
       Object.assign(denominators, finance.denominators);
+    } else {
+      gaps.push(financeScopeGapFor(subject));
     }
+    // Every regime, on every money answer, whether or not records were found.
+    for (const note of financeRegimeNotesFor(subject)) gaps.push(note.gap);
+    denominators.financeRegimesNamed = 3;
   }
 
   /*
@@ -1680,6 +1780,15 @@ export async function POST(request: Request) {
     pack,
     answer,
     contacts: contacts.slice(0, MAX_ASK_CONTACTS),
+    /*
+     * ASK-20 / ASK-23 / ASK-24. In start order and de-duplicated by id: the
+     * chosen sitting first, then any other sitting the body holds on the same
+     * local day. A client reads [0] for "the meeting this answer is about" and
+     * the whole list for a day that holds more than one.
+     */
+    meetings: resolvedSittings
+      .filter((m, i, all) => all.findIndex((x) => x.id === m.id) === i)
+      .sort((a, b) => (a.startsAt < b.startsAt ? -1 : a.startsAt > b.startsAt ? 1 : 0)),
     trace,
   });
   return Response.json(payload);

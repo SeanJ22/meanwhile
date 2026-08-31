@@ -250,8 +250,35 @@ export interface Meeting {
    * a null `location`; see both notes.
    */
   online?: OnlineAccess;
-  /** Link to the published agenda. Null when the body hasn't posted one yet. */
+  /**
+   * Link to the published agenda, or null.
+   *
+   * **NULL IS A FACT ABOUT US, NOT ABOUT THE BODY.** The comment here used to
+   * read "null when the body hasn't posted one yet", and that sentence is the
+   * conflation ASK-18 and SWEEP-01 are about: a null here means only that this
+   * record carries no agenda link. It could be a clerk who has not posted, an
+   * adapter that never looked, a feed with no agenda field at all, or a body
+   * that posts packets on a page its calendar never links. Those are four
+   * different facts and `agendaUrl === null` cannot tell them apart.
+   */
   agendaUrl: string | null;
+  /**
+   * **THE PUBLISHER'S OWN SURFACE CARRIED AN AGENDA SLOT AND IT WAS EMPTY.**
+   * (Session B resume, W2 — ASK-18 / SWEEP-01, 2026-08-31.)
+   *
+   * Set by the ADAPTER, at the moment of the read, and only when the adapter
+   * can say both halves: that the surface it read HAS a place where this
+   * sitting's agenda would appear, and that the place was empty. Absent means
+   * the adapter did not measure it — which is never the same as the publisher
+   * having posted nothing.
+   *
+   * It is the ONLY thing `observationFromMeetingRecord` will accept as the
+   * basis for a `THEIRS` publication claim, and it is deliberately not
+   * derivable from anything else on this record. An adapter that cannot
+   * distinguish "no slot" from "empty slot" leaves it absent and the surface
+   * renders the gap as OURS, which is the honest reading.
+   */
+  agendaSlotObservedEmpty?: boolean;
   /** Display name of the jurisdiction: "Tucson, AZ". Display only — join on ocdId. */
   jurisdiction: string;
   status: MeetingStatus;

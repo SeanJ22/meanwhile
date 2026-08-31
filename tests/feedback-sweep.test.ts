@@ -179,3 +179,215 @@ test("the committed 8.30.26 sweep is well-formed, and its counts are derived", (
     "the owner's workbook amendments are owner feedback from the same date and are carried",
   );
 });
+
+/* ==========================================================================
+ * THE CHECK MUST EXIST, NOT MERELY BE NAMED (2026-08-31)
+ *
+ * The gate required a non-empty `checkId` and never asked whether the string
+ * named anything. Measured against the real 8.30.26 record, fifteen of
+ * twenty-three cited checks resolved to nothing on disk — twelve `vac:` ids
+ * against a visual-checks file that does not exist, and two `rq:` ids absent
+ * from the generated owner corpus. That is how WGH-12, WGH-15 and WGH-22 were
+ * each marked fixed and each came back.
+ * ======================================================================= */
+
+const WORLD = {
+  exists: (p: string) => p === "tests/real.test.ts" || p === "data/health/visual-checks.json",
+  read: (p: string) => {
+    if (p === "tests/real.test.ts") return "test('the claim', () => {})";
+    if (p === "data/health/visual-checks.json") {
+      return JSON.stringify([{ check: { id: "vac:real-one" } }]);
+    }
+    if (p === "data/health/reader-questions.json") return JSON.stringify([{ id: "Q8" }]);
+    if (p === "docs/walk-checks.txt") return "[SB0831] a real walk identity\n";
+    return null;
+  },
+  packageScripts: { "verify:ask-controls": "tsx scripts/verify-ask-controls.mts" },
+};
+
+test("SEEDED: a FIXED_VERIFIED row citing a check that does not exist FAILS the gate", () => {
+  const verdict = checkSweepGate(
+    ["8.30.26"],
+    [sweep({ items: [item({ checkId: "vac:not-a-real-check" })] })],
+    WORLD,
+  );
+  assert.equal(verdict.passed, false);
+  assert.match(verdict.problems.join(" "), /vac:not-a-real-check/);
+  assert.match(verdict.problems.join(" "), /marked fixed three times/);
+});
+
+test("a check id that resolves passes, in every namespace", () => {
+  for (const checkId of [
+    "vac:real-one",
+    "rq:Q8",
+    "[SB0831] a real walk identity",
+    "pnpm verify:ask-controls",
+    "tests/real.test.ts",
+    "tests/real.test.ts::the claim",
+  ]) {
+    const verdict = checkSweepGate(["8.30.26"], [sweep({ items: [item({ checkId })] })], WORLD);
+    assert.equal(verdict.passed, true, `${checkId} should resolve: ${verdict.problems.join("; ")}`);
+  }
+});
+
+test("a path that exists but does not contain the named case is REFUSED", () => {
+  // The half that matters most: `tests/foo.test.ts::a claim nobody wrote` is a
+  // file that exists cited for an assertion that does not.
+  const verdict = checkSweepGate(
+    ["8.30.26"],
+    [sweep({ items: [item({ checkId: "tests/real.test.ts::a claim nobody wrote" })] })],
+    WORLD,
+  );
+  assert.equal(verdict.passed, false);
+  assert.match(verdict.problems.join(" "), /contains nothing named/);
+});
+
+test("check debt CARRIES a row rather than failing, and stops it counting as fixed", () => {
+  const record = sweep({
+    items: [item({ id: "OLD-1", checkId: "vac:not-a-real-check" })],
+    checkDebt: [{ itemId: "OLD-1", reason: "the check was never created", since: "2026-08-31" }],
+  });
+  const verdict = checkSweepGate(["8.30.26"], [record], WORLD);
+  assert.equal(verdict.passed, true, verdict.problems.join("; "));
+  const counts = countSweep(record);
+  assert.equal(counts.checkDebt, 1);
+  assert.equal(
+    counts.verifiedFixed,
+    0,
+    "a row whose check does not exist is not a row verified fixed",
+  );
+});
+
+test("a STALE debt entry — for a check that now resolves — is refused", () => {
+  /* A debt list that keeps naming a repaired row makes the list stop meaning
+     anything, which is how a quarantine becomes a permanent excuse. */
+  const verdict = checkSweepGate(
+    ["8.30.26"],
+    [
+      sweep({
+        items: [item({ id: "OK-1", checkId: "vac:real-one" })],
+        checkDebt: [{ itemId: "OK-1", reason: "stale", since: "2026-08-31" }],
+      }),
+    ],
+    WORLD,
+  );
+  assert.equal(verdict.passed, false);
+  assert.match(verdict.problems.join(" "), /now\s+resolves/);
+});
+
+test("THE REAL RECORD: every cited check either resolves or is named in the debt", () => {
+  /*
+   * Against the committed sweep and the real filesystem — the assertion the
+   * old gate could not make, run over the record that needed it.
+   */
+  const path = "data/feedback/sweeps/8.30.26.json";
+  if (!existsSync(path)) return;
+  const record = JSON.parse(readFileSync(path, "utf8")) as SweepRecord;
+  const real = {
+    exists: (p: string) => existsSync(p),
+    read: (p: string) => {
+      try {
+        return readFileSync(p, "utf8");
+      } catch {
+        return null;
+      }
+    },
+    packageScripts: (
+      JSON.parse(readFileSync("package.json", "utf8")) as { scripts?: Record<string, string> }
+    ).scripts ?? {},
+  };
+  const verdict = checkSweepGate([], [record], real);
+  assert.deepEqual(verdict.problems, []);
+});
+
+/* ==========================================================================
+ * A NEEDS_SEAN ROW THE OWNER CANNOT SEE (the author's directive, 2026-08-31)
+ * ======================================================================= */
+
+const TRACKER_WORLD = {
+  ...WORLD,
+  read: (p: string) => {
+    if (p === "docs/tracker-working.csv") {
+      return '"ID","Section","Title"\n"OWN01","needs-sean","X-1 — something the owner met"\n';
+    }
+    if (p === "docs/tracker-resolved.csv") return '"ID","Section","Title"\n';
+    return WORLD.read(p);
+  },
+};
+
+test("SEEDED: a NEEDS_SEAN row with no tracker entry FAILS the gate", () => {
+  /*
+   * The owner could not see a single NEEDS_SEAN row: they lived in the sweep
+   * JSON and in SWEPT.md, and in neither of the two places the owner reads. A
+   * gate that is terminal for a session and invisible to the one person who
+   * can clear it is a deferral wearing a status.
+   */
+  const orphan = sweep({
+    items: [
+      item({
+        id: "UNSEEN-9",
+        disposition: "NEEDS_SEAN",
+        checkId: null,
+        needsOwner: {
+          tried: "t",
+          whyMachineCannot: "w",
+          authorizationRequired: "a",
+          continuesWithout: "c",
+          blockedDescendants: 0,
+        },
+      }),
+    ],
+  });
+  const verdict = checkSweepGate(["8.30.26"], [orphan], TRACKER_WORLD);
+  assert.equal(verdict.passed, false);
+  assert.match(verdict.problems.join(" "), /UNSEEN-9 is NEEDS_SEAN and has no row/);
+  assert.match(verdict.problems.join(" "), /deferral wearing a status/);
+});
+
+test("a NEEDS_SEAN row the owner CAN see passes", () => {
+  const seen = sweep({
+    items: [
+      item({
+        id: "X-1",
+        disposition: "NEEDS_SEAN",
+        checkId: null,
+        needsOwner: {
+          tried: "t",
+          whyMachineCannot: "w",
+          authorizationRequired: "a",
+          continuesWithout: "c",
+          blockedDescendants: 0,
+        },
+      }),
+    ],
+  });
+  const verdict = checkSweepGate(["8.30.26"], [seen], TRACKER_WORLD);
+  assert.equal(verdict.passed, true, verdict.problems.join("; "));
+});
+
+test("THE REAL RECORD: every NEEDS_SEAN row is published where the owner reads", () => {
+  const path = "data/feedback/sweeps/8.30.26.json";
+  if (!existsSync(path)) return;
+  const record = JSON.parse(readFileSync(path, "utf8")) as SweepRecord;
+  const real = {
+    exists: (p: string) => existsSync(p),
+    read: (p: string) => {
+      try {
+        return readFileSync(p, "utf8");
+      } catch {
+        return null;
+      }
+    },
+    packageScripts: (
+      JSON.parse(readFileSync("package.json", "utf8")) as { scripts?: Record<string, string> }
+    ).scripts ?? {},
+  };
+  const verdict = checkSweepGate([], [record], real);
+  const unpublished = verdict.problems.filter((p) => /has no row in the owner-facing tracker/.test(p));
+  assert.deepEqual(unpublished, []);
+  // And there is at least one, so this cannot pass by there being none.
+  assert.ok(
+    record.items.some((i) => i.disposition === "NEEDS_SEAN"),
+    "no NEEDS_SEAN row in the record — the assertion above checked nothing",
+  );
+});

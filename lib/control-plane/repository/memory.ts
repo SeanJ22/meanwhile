@@ -18,6 +18,8 @@
  */
 
 import type { Attempt, ExecutionLease } from "../attempt.ts";
+import type { FreshnessDebt } from "../scheduler/debt.ts";
+import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { BudgetLedger } from "../budget.ts";
 import type { CostEntry } from "../cost.ts";
 import type { RouteTask } from "../route-task.ts";
@@ -197,6 +199,9 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     workItems: memoryAggregateRepository<WorkItem>("WorkItem"),
     routeTasks: memoryAggregateRepository<RouteTask>("RouteTask"),
     attempts: memoryAggregateRepository<Attempt>("Attempt"),
+    obligations: memoryAggregateRepository<StandingObligation>("StandingObligation"),
+    occurrences: memoryAggregateRepository<FreshnessOccurrence>("FreshnessOccurrence"),
+    debts: memoryAggregateRepository<FreshnessDebt>("FreshnessDebt"),
     leases: memoryAggregateRepository<ExecutionLease>("ExecutionLease"),
     transitions: memoryAppendOnlyRepository<RecordedTransition>("transitions"),
     escalations: memoryAppendOnlyRepository<Escalation>("escalations"),

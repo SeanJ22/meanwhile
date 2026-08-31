@@ -1,4 +1,5 @@
 import {
+  zipThisAddressResolvesTo,
   locateAddressInZip,
   sampleStreetPoints,
 } from "@/lib/geo/census-geocoder";
@@ -115,7 +116,28 @@ export async function POST(request: Request) {
   }
 
   if (points.length === 0) {
-    const failed: AddressResolution = { status: "FAILED", reason: "NOT_FOUND" };
+    /*
+     * ── BAL-38 ── **ASK WHERE IT DOES RESOLVE, before saying we could not
+     * place it.** (2026-08-31.)
+     *
+     * `locateAddressInZip` puts the ZIP into the query, so an address in the
+     * next ZIP over cannot match and comes back exactly like a bad address.
+     * The reader was then told we could not place it — true, about us, and
+     * hiding the fact that we placed it perfectly well somewhere else.
+     *
+     * Only on the failure branch, and only with a house number: a street-only
+     * lookup samples several points and has no single address to re-ask about.
+     * No extra address leaves this product on the happy path.
+     */
+    const elsewhere =
+      houseNumber.length > 0
+        ? await zipThisAddressResolvesTo(houseNumber, street, zip)
+        : null;
+    const failed: AddressResolution = {
+      status: "FAILED",
+      reason: "NOT_FOUND",
+      ...(elsewhere ? { resolvesInZip: elsewhere } : {}),
+    };
     return Response.json({ ok: true, resolution: failed, contestIds: [] }, { headers: NO_STORE });
   }
 

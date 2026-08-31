@@ -189,10 +189,29 @@ test("the route answers by path, and distinct divisions get distinct answers", a
     ).length,
   );
 
-  // Not an identifier: refused in the same shape, never a guess.
+  // Not an identifier: refused in the same shape, never a guess. WGH-22 added
+  // the division's own facts to the answer; the refusal carries them as nulls
+  // so the shape is genuinely the same one and a caller needs no second branch.
   const junk = await ask("not-a-division");
   assert.equal(junk.status, 400);
-  assert.deepEqual(junk.body, { ocdId: null, holders: [] });
+  assert.deepEqual(junk.body, {
+    ocdId: null,
+    label: null,
+    divisionType: null,
+    tier: null,
+    holders: [],
+  });
+
+  /*
+   * WGH-22: the label travels with the people. The panel asks this route for a
+   * district the ZIP-scoped payload cannot carry, and it may not print an
+   * OCD-ID at a reader — so an answer with holders and no name would leave the
+   * row unrenderable.
+   */
+  assert.equal(typeof twentyOne.body.label, "string");
+  assert.ok(twentyOne.body.label.length > 0);
+  assert.equal(twentyOne.body.divisionType, "sldl");
+  assert.notEqual(twentyOne.body.label, twenty.body.label);
 });
 
 test("three different empties get three different sentences", async () => {

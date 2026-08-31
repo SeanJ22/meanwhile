@@ -33,6 +33,11 @@ import {
   type SheetRow,
 } from "../lib/health/owner-corpus.ts";
 import type { ReaderQuestionTemplate } from "../lib/health/reader-question.ts";
+import {
+  compileExpectation,
+  inferApplicability,
+  unresolvedTokens,
+} from "../lib/health/owner-corpus-compile.ts";
 
 import { readWorkbook } from "./xlsx.mjs";
 
@@ -144,52 +149,112 @@ console.log(
 );
 
 /*
- * A kept question becomes a HAND_AUTHORED_ADVERSARIAL template, which is the
- * class that exists precisely because it is NOT generated from the registry.
- * It carries no `expectation` unless the owner stated a typed one — the
- * "What the RIGHT answer looks like" column is prose for a human auditor and
- * turning it into a machine expectation would be this session inventing the
- * answer key it is supposed to be measured against.
+ * **A KEPT QUESTION IS COMPILED, NOT MERELY COPIED.** (Session B resume, W4.)
+ *
+ * This block used to write every template with `applicability: PER_ZIP`,
+ * `placeholders: []` and no expectation, under a comment arguing that
+ * compiling the owner's right-answer column "would be this loader writing its
+ * own answer key". The result was nine templates, thirty-six instances, and
+ * thirty-six NOT_EVALUABLE — a reader contract that measured nothing.
+ *
+ * The argument confused INVENTING a standard with TRANSCRIBING one. The owner
+ * wrote the standard; `lib/health/owner-corpus-compile.ts` turns it into a
+ * typed expectation and cites the row it came from, and where the prose does
+ * not determine a checkable proposition it says so FOR THAT ROW and compiles
+ * nothing. The owner's text stays the authority in every case.
  */
-const templates: ReaderQuestionTemplate[] = questions.loaded.map((q) => ({
-  id: q.id,
-  questionClass: "HAND_AUTHORED_ADVERSARIAL",
-  templateText: q.questionText,
-  placeholders: [],
-  applicability: { kind: "PER_ZIP" },
-}));
+/* Keyed by the workbook's own row id, which `loadControlFacts` now carries.
+   The previous version zipped `loaded` against a filtered `matched` by index,
+   which is a correspondence nothing enforced. */
+const factById = new Map(controls.rows.map((r) => [r.id, r]));
+
+interface Compilation {
+  readonly id: string;
+  readonly template: ReaderQuestionTemplate | null;
+  readonly applicability: string;
+  readonly expectation: string;
+  readonly needs: readonly string[];
+}
+
+const compilations: Compilation[] = questions.loaded.map((q) => {
+  const needs: string[] = [];
+
+  /* A template whose text still carries an unresolved token may not be built
+     at all: it would reach the Ask box with a literal bracket in it. */
+  const tokens = unresolvedTokens(q.questionText);
+  if (tokens.length > 0) {
+    needs.push(
+      `${q.id}'s question text still contains ${tokens.join(", ")}, which is not in the closed ` +
+        `template vocabulary ([BODY], [ZIP]). Nothing renders it, so the question would be ` +
+        `submitted with the bracket in it. Resolve it in the workbook.`,
+    );
+  }
+
+  const applicability = inferApplicability(q);
+  if (applicability.kind === "AMBIGUOUS") needs.push(applicability.needs);
+
+  const expectation = compileExpectation(q, (id) => factById.get(id) ?? null, applicability);
+  if (expectation.kind === "NEEDS_OWNER") needs.push(expectation.needs);
+
+  const buildable = tokens.length === 0 && applicability.kind === "RESOLVED";
+  return {
+    id: q.id,
+    template: buildable
+      ? {
+          id: q.id,
+          questionClass: "HAND_AUTHORED_ADVERSARIAL",
+          templateText: q.questionText,
+          placeholders: [],
+          applicability: applicability.rule,
+          ...(expectation.kind === "COMPILED"
+            ? { expectation: expectation.compiled.expectation }
+            : {}),
+        }
+      : null,
+    applicability:
+      applicability.kind === "RESOLVED"
+        ? `${applicability.rule.kind} — ${applicability.basis}`
+        : "AMBIGUOUS",
+    expectation:
+      expectation.kind === "COMPILED"
+        ? `${expectation.compiled.expectation.kind} — ${expectation.compiled.basis} (cites ${expectation.compiled.sourceRows.join(", ")})`
+        : "NONE",
+    needs,
+  };
+});
+
+const templates: ReaderQuestionTemplate[] = compilations
+  .map((c) => c.template)
+  .filter((t): t is ReaderQuestionTemplate => t !== null);
 
 writeFileSync(
   join(HEALTH, "reader-questions.json"),
   `${JSON.stringify(templates, null, 2)}\n`,
   "utf8",
 );
-console.log(`    loaded: ${templates.length}`);
+
+console.log(`\n  COMPILATION — ${templates.length} of ${questions.loaded.length} kept question(s) built into a template`);
+for (const c of compilations) {
+  console.log(`    ${c.id}  applicability: ${c.applicability}`);
+  console.log(`        expectation: ${c.expectation}`);
+  for (const n of c.needs) console.log(`        NEEDS OWNER: ${n}`);
+}
 
 /*
  * **A CORPUS THAT LOADS N AND EVALUATES ZERO IS A SILENT ZERO.**
- * (Session B WI1.4.)
+ * (Session B WI1.4, kept.)
  *
  * `0 questions loaded` is a defect the report makes obvious. `9 questions
  * loaded, every one NOT_EVALUABLE` reads as a working corpus and is the same
- * hole wearing a number: nothing about the product is measured either way.
- * The count and the ids are stated here, at the loader, so the gap is a fact
- * about the run rather than something a reader has to reconstruct from the
- * suite's NOT_EVALUABLE tally.
- *
- * The expectations are NOT derived from the prose. That column is written for
- * a human auditor, and turning it into a machine expectation would be this
- * session authoring the answer key it is then graded against.
+ * hole wearing a number. The difference now is that every gap has a NAMED
+ * cause on the line above it, addressed to the person who can close it.
  */
-const withoutExpectation = templates.filter((t) => t.expectation === undefined);
-if (withoutExpectation.length > 0) {
-  console.log(
-    `    NOT_EVALUABLE by construction: ${withoutExpectation.length} of ${templates.length} ` +
-      `template(s) carry no typed expectation — ${withoutExpectation.map((t) => t.id).join(", ")}. ` +
-      "These are LOADED and can never be GREEN. The owner's right-answer column is prose; " +
-      "deriving a machine expectation from it would be this loader writing its own answer key.",
-  );
-}
+const evaluable = templates.filter((t) => t.expectation !== undefined);
+console.log(
+  `\n  ${evaluable.length} of ${questions.loaded.length} kept question(s) carry a typed ` +
+    `expectation and can be GREEN or RED. ${questions.loaded.length - evaluable.length} cannot, ` +
+    "and each names what the owner must supply.",
+);
 
 /* The owner's edits that AMEND rather than replace. Product requirements, and
    they are not questions — reported here because a loader that drops them

@@ -2537,7 +2537,15 @@ function meetingSubject(
       })(),
       { label: "Status", value: STATUS_LABEL[meeting.status] },
     ],
-    agenda: { meetingId: meeting.id, agendaUrl: meeting.agendaUrl },
+    /* SWEEP-01: the whole observation, not just the link. The section decides
+       whose gap it is and cannot do that from a null. */
+    agenda: {
+      meetingId: meeting.id,
+      agendaUrl: meeting.agendaUrl,
+      agendaSlotObservedEmpty: meeting.agendaSlotObservedEmpty,
+      provenance: meeting.provenance,
+      carried: (meeting as { carried?: unknown }).carried,
+    },
     // 6a (2026-08-17): a concluded meeting drops the to-be-heard boilerplate
     // — there is nothing left to be heard at.
     commentAccess:

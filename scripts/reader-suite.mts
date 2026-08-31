@@ -346,6 +346,18 @@ async function main(): Promise<void> {
             instanceId: instance.id,
             questionText: instance.questionText,
             verdict,
+            /*
+             * THE DIAGNOSED CLASS TRAVELS WITH THE RESULT. (2026-08-31.)
+             *
+             * It was recorded on the diagnostic WorkItem and dropped from the
+             * run record, so the durable evidence said a question was RED and
+             * not what KIND of failure it was. A later reader could not check
+             * the diagnosis without opening the control plane — and a wrong
+             * class is exactly what needed checking: every NO_EVIDENCE was
+             * classed `acquisition` until 2026-08-31, including the ones where
+             * nothing bound and nothing was searched.
+             */
+            failureClass: evaluated.failureClass,
           });
           if (verdict.kind === "RED" && evaluated.failureClass !== null) {
             diagnosticItems.push(

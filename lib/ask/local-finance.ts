@@ -497,3 +497,130 @@ export function localFinanceEvidenceFor(subject: EvidenceSubject): LocalFinanceE
 
   return null;
 }
+
+/* ═════════════ OWN-Q5: EVERY REGIME, NAMED, ON EVERY MONEY ANSWER ════════ */
+
+/**
+ * **A CAMPAIGN-FINANCE ANSWER SAYS WHICH REGIMES IT LOOKED IN.**
+ * (The owner's amendment on Q5, worked 2026-08-31.)
+ *
+ * The owner's words: *not just FEC filings, but state and local finances must
+ * be checked* — and its operative half, *an FEC absence never stands in for
+ * "no records exist"*.
+ *
+ * ## What was actually wrong, measured rather than assumed
+ *
+ * The county store is reachable and has been since 2026-08-30. What is missing
+ * is the DENOMINATOR SENTENCE. `localFinanceEvidenceFor` returns **null** for
+ * a statewide executive, a federal candidate, a contest and an office, and a
+ * null pushes nothing — so the answer fell through to whatever generic
+ * finance-gap sentence the pack produced, and one regime's silence became a
+ * claim about all money everywhere.
+ *
+ * That is the same class as `NO_SOURCE_FOUND → COMPLETE`: one route's failure
+ * standing in for the record universe. The acquisition doctrine names it —
+ * **ONE ROUTE SUCCESS != SOURCE UNIVERSE COMPLETE**, and its mirror is that one
+ * route's absence is not the universe's.
+ *
+ * ## So every money answer carries every regime, always
+ *
+ * Three, and each says what it is and what we hold:
+ *
+ * ```
+ *   FEDERAL   the FEC, through the funding snapshot, which renders on the
+ *             ballot surface rather than through this pipeline
+ *   STATE     Arizona's own filing officer, whose reporting calendar we hold
+ *             and whose itemized filings we do not
+ *   COUNTY    the Pima County filing officer's portal — 900 contribution and
+ *             584 distribution rows, itemized, and the store this module reads
+ * ```
+ *
+ * These are gaps in the `EvidenceGap` sense — *statements about scope*, every
+ * one labelled `OURS`, because each says what THIS PRODUCT has and has not
+ * searched. None of them is a claim about whether a government holds a filing:
+ * that would be an absence asserted, and the registry's own note says it
+ * plainly — *absence from this file is a fact about this file.*
+ *
+ * **The regime list is data, not prose.** It is derived from
+ * `data/campaign-finance/filing-regimes.json`, which records that this project
+ * knows two jurisdictions out of fifty states plus tens of thousands of local
+ * filing jurisdictions. The sentence says that, so a reader is never told the
+ * search was wider than it was.
+ */
+export interface FinanceRegimeNote {
+  readonly regime: "FEDERAL" | "STATE" | "COUNTY";
+  readonly gap: EvidenceGap;
+}
+
+/**
+ * The regime statements for one subject. Never empty when a money question was
+ * asked, which is the whole point: silence is what let one regime answer for
+ * all of them.
+ */
+export function financeRegimeNotesFor(subject: EvidenceSubject): FinanceRegimeNote[] {
+  const about = subject.name;
+  const notes: FinanceRegimeNote[] = [];
+
+  notes.push({
+    regime: "COUNTY",
+    gap: {
+      whose: "OURS",
+      statement:
+        `County filings: we hold the Pima County filing officer's own itemized contribution and ` +
+        `distribution records, and they are what any county-level answer here is built from. We ` +
+        `hold no other county's filings.`,
+    },
+  });
+
+  notes.push({
+    regime: "STATE",
+    gap: {
+      whose: "OURS",
+      statement:
+        `State filings: we hold Arizona's reporting calendar, and we have NOT acquired the ` +
+        `state's itemized filings. So a state-level committee raising or spending money around ` +
+        `${about} would not appear above — that is our gap, not a statement that none exists.`,
+    },
+  });
+
+  notes.push({
+    regime: "FEDERAL",
+    gap: {
+      whose: "OURS",
+      statement:
+        `Federal filings: FEC totals are held for federal candidates and render on the ballot ` +
+        `card rather than through this answer. Nothing above is drawn from them, so their ` +
+        `absence here says nothing about what the FEC holds.`,
+    },
+  });
+
+  return notes;
+}
+
+/**
+ * The one sentence that must never be said, said correctly instead.
+ *
+ * A reader asking about money for a subject this module returns null for was
+ * previously answered from whatever generic gap the pack produced. This is
+ * what they get instead: the subject class, why this pipeline holds nothing
+ * for it, and — for a federal candidate — where the record actually is.
+ */
+export function financeScopeGapFor(subject: EvidenceSubject): EvidenceGap {
+  if (subject.kind === "CONTEST" || subject.kind === "OFFICE") {
+    return {
+      whose: "OURS",
+      statement:
+        `Money in a race belongs to the campaigns in it, and none of the filing records we hold ` +
+        `links a committee to an individual candidacy — so we cannot answer about ${subject.name} ` +
+        `as a whole. Ask about one of the candidates or about the body the office sits on.`,
+    };
+  }
+  return {
+    whose: "OURS",
+    statement:
+      `The campaign-finance records we hold are the county filing officer's, and they link a ` +
+      `committee to the OFFICE it filed for. ${subject.name} is not on a body that register ` +
+      `covers, so we have attached no committee here. That is the reach of what we have ` +
+      `acquired — not a finding that no filings exist.`,
+  };
+}

@@ -33,6 +33,7 @@ import {
 import { CardSourcesList } from "@/components/officials/card-sources-list";
 import { IdentityPortrait } from "@/components/officials/person-identity";
 import { SpeakYourMind } from "@/components/speak/speak-your-mind";
+import { DemandPill } from "@/components/demand/demand-pill";
 
 import { HowToBeHeard, MeetingSourceCredit } from "../meeting-panel";
 import { venueLink } from "@/lib/registry/links";
@@ -264,7 +265,20 @@ export interface ModalSubject {
    * overview (4c) — what the meeting is about, on the surface, not behind a
    * link.
    */
-  agenda?: { meetingId: string; agendaUrl: string | null } | null;
+  agenda?: {
+    meetingId: string;
+    agendaUrl: string | null;
+    /* SWEEP-01: the publisher observation travels to the surface that renders
+       the sentence. Without it the section can only reason from a null link. */
+    agendaSlotObservedEmpty?: boolean;
+    provenance?: {
+      sourceUrl: string | null;
+      sourceOrg: string;
+      collectedAt: string;
+      secondHand?: boolean;
+    };
+    carried?: unknown;
+  } | null;
   /** How to actually speak at it (D25), when the subject is a meeting. */
   commentAccess?: { ocdId: string | null; bodyName: string } | null;
   /**
@@ -836,6 +850,9 @@ export function EntityModal({
                   <AgendaSection
                     meetingId={subject.agenda.meetingId}
                     agendaUrl={subject.agenda.agendaUrl}
+                    agendaSlotObservedEmpty={subject.agenda.agendaSlotObservedEmpty}
+                    provenance={subject.agenda.provenance}
+                    carried={subject.agenda.carried}
                   />
                 </>
               )}
@@ -965,6 +982,27 @@ export function EntityModal({
               subjectId={subject.subjectId}
               subject={subject.title}
             />
+            {/*
+              **OWN-Q6 (2026-08-31) — the reader asking us to go get it.**
+
+              On the BODY card only, and that is the owner's scope rather than
+              a hedge: the row asks for the pill on every body and candidate
+              card. An OFFICIAL card is a person and a MEETING card is an
+              event; neither is a record class this pill's sentence is true
+              about, and rendering it there would be inventing a fourth
+              meaning for one enum value.
+
+              The SAME component as the candidate card, with the same props,
+              so the two cannot drift — a pill that appeared only where
+              coverage is good would itself be a coverage claim.
+            */}
+            {subject.subjectKind === "BODY" && (
+              <DemandPill
+                subjectType="BODY"
+                subjectId={subject.subjectId}
+                className="mt-3"
+              />
+            )}
           </div>
         )}
       </div>

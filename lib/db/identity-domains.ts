@@ -571,6 +571,55 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
       ),
     },
   },
+  /**
+   * **OWN-Q6 (2026-08-31) — THE DEMAND SIGNAL.**
+   *
+   * A reader tapping *"Want us to get this info sooner?"*. It is a
+   * READER_COLLECTION store by construction — a reader wrote it — and it is
+   * the thinnest one in the product: nine columns, no prose, and **no digest
+   * column at all**.
+   *
+   * The absent digest is the load-bearing part. Every other reader store
+   * carries a namespaced continuity hash so a browser's rows relate to each
+   * other; the owner's instruction on this feature was no identity, so there
+   * is nothing here to relate anything. A reader who taps twice writes two
+   * unrelated rows.
+   */
+  demand_signals: {
+    storeClass: "READER_COLLECTION",
+    columns: {
+      ...nonIdentifying(
+        "id",
+        "occurred_at",
+        "division_vintage",
+        "run_class",
+        // WHAT KIND of card the pill was on, and the single-member enum the
+        // pill can send. Two closed vocabularies, shared by every reader.
+        "subject_type",
+        "signal",
+      ),
+      subject_id: {
+        space: "CIVIC_IDENTIFIER",
+        why:
+          "The PUBLIC body or candidate the reader was looking at — a registry body id, a " +
+          "division OCD-ID, or a ballot candidate key. A fact about a government or a person " +
+          "standing for office, never about the reader.",
+      },
+      ocd_ids: {
+        space: "CIVIC_IDENTIFIER",
+        why: "The reader's map-resolved divisions. Districts, not a person and not an address.",
+      },
+      run_id: {
+        space: "OPAQUE_HANDLE",
+        why:
+          "Names a synthetic RUN, hashed as sha256('demand-run:' + id) in its own space, and " +
+          "null on every organic row. The prefix is the boundary: the search log holds the raw " +
+          "label and reactions hold sha256('reaction-run:' + id), so without a distinct prefix " +
+          "these stores would be equality-joinable on a value nobody would have to look up.",
+      },
+    },
+  },
+
 };
 
 /**

@@ -89,10 +89,11 @@
       "disposition": "OPEN_BLOCKED",
       "workItemId": "wi:feedback:8.30.26:ASK-18",
       "instancesFound": 426,
-      "instancesFixed": 0,
-      "checkId": "rq:ask-18-agenda-attribution",
-      "checkResult": "RED — the Pima answer still renders the OURS gap, correctly, because nothing has measured the publisher",
-      "blocker": "THE SEAM AND THE ADAPTER ARE NOW DONE; what remains is a data refresh. lib/sources/legistar/index.ts sets `agendaSlotObservedEmpty` from the publisher's own API record — the key being PRESENT on the event object with a null value is the structural observation, and Object.hasOwn is used rather than a null test so a response shape that OMITS the field cannot be read as an empty slot. lib/sources/types.ts declares the field; lib/ask/agenda-sentence.ts consumes it; both surfaces render it. BUT the committed data/meetings-snapshot.json predates the adapter change: 0 of its 596 meetings carry the observation and 426 of them have no agenda link, so today every one of those renders the OURS gap. That is CORRECT and is an improvement — the false claim is gone — but the owner asked to see the gap attributed to the BODY where it is theirs, and that needs an ingest run (`pnpm ingest composite`, the path .github/workflows/refresh-meetings-snapshot.yml uses) to record observations. Adapters other than legistar are also still unmeasured, and each needs the same per-adapter judgement about whether its surface HAS an agenda slot."
+      "instancesFixed": 187,
+      "checkId": "tests/agenda-slot-declaration.test.ts",
+      "checkResult": "PASS",
+      "blocker": "THE GOVERNED INGEST RAN (pnpm ingest composite, 2026-08-31: 593 meetings, 12 of 13 sources read, legistar-insite WALLED at 120s) and produced ZERO publisher observations — for a reason worth stating precisely, because it is not the reason the previous blocker gave.\n\nAll 15 freshly-read Legistar sittings CARRY an agenda link, so there was no empty slot to observe. The adapter and the seam are correct and simply had no case to record. The 426 agenda-less rows come from elsewhere, and lib/sources/agenda-slot.ts now records the per-adapter answer rather than leaving it as an omission:\n\n  ABSENT  ical (187 rows) — an iCalendar VEVENT has NO agenda property. This is a finished answer, not outstanding work: no adapter effort will ever make an iCal row observable, and its gap is OURS permanently on this route. 187 of the 426 are therefore accounted for.\n  PRESENT legistar — EventAgendaFile, wired and tested.\n  UNKNOWN clerksboards (103), schedulepage (54), civicplus (19), legistar-insite (17, and WALLED this run so nothing was read), diligent (16), iqm2 (16), apptegy (8), civicclerk (3), onbase (2), revize (1), boardbook.\n\nWHAT REMAINS, and it is executable: open each UNKNOWN adapter's surface, decide whether it carries an agenda slot, and where it does, record the observation at the moment of the read. ABSENT and UNKNOWN render the same OURS sentence to a reader today, which is correct in both cases — the reader is never told a false thing — but only one of them is finished.",
+      "resolution": "The false claim is GONE and that half is verified: no surface derives a publication state from agendaUrl === null any more, and all 426 agenda-less meetings render the OURS gap rather than telling a reader a clerk had not posted. What is not yet true is the owner's other half — seeing the gap attributed to the BODY where it is theirs — which needs a publisher observation that only the UNKNOWN adapters above can supply."
     },
     {
       "id": "ASK-19",
@@ -831,7 +832,7 @@
       "blocker": "Not worked this session. The disclosure rows added for WGH-18 are clickable; the districts named inside an Ask ANSWER are not."
     }
   ],
-  "resweptAt": "2026-08-31T16:26:01.077Z",
+  "resweptAt": "2026-08-31T16:32:51.328Z",
   "resweptBy": "Session B (resume), 2026-08-31",
   "reswepNote": "Session B closure pass. Reconciled under RULING 221: every row ends FIXED_VERIFIED, OPEN_EXECUTABLE or NEEDS_SEAN, and the three are counted separately. NEEDS_SEAN is terminal for this session and is never reported as open executable work; the record obligation each one names stays live on the frontier."
 }

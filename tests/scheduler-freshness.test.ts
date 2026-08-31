@@ -68,6 +68,7 @@ const NOW = "2026-08-30T12:00:00.000Z";
  * stub that manufactured artifact ids would be manufacturing evidence.
  */
 const disposes: RunWork = async () => ({
+  ranAs: "DETERMINISTIC",
   kind: "DISPOSED",
   disposition: {
     disposition: "WALKED_NO_YIELD",
@@ -81,6 +82,7 @@ const disposes: RunWork = async () => ({
 
 /** A stub that decides and deliberately does not retrieve. Never discharges. */
 const simulates: RunWork = async () => ({
+  ranAs: "DETERMINISTIC",
   kind: "SIMULATED",
   detail: "shadow decision — no retrieval ran",
 });

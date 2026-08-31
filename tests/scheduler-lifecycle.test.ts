@@ -101,6 +101,7 @@ async function fixture() {
 }
 
 const READING: RunWork = async () => ({
+  ranAs: "DETERMINISTIC",
   kind: "DISPOSED",
   disposition: {
     disposition: "WALKED_NO_YIELD",
@@ -123,7 +124,8 @@ test("SEEDED W3.A: a no-op executor is SIMULATED — never WORKED, and it discha
     now: NOW,
     leaseTtlMs: 60_000,
     maturity: () => "GRADUATED",
-    run: async () => ({ kind: "SIMULATED", detail: "decided, did not retrieve" }),
+    run: async () => ({ ranAs: "DETERMINISTIC",
+  kind: "SIMULATED", detail: "decided, did not retrieve" }),
   });
 
   assert.equal(result.outcome, "SIMULATED");
@@ -194,7 +196,8 @@ test("SEEDED W3.A: a BLOCKED_CURRENTLY disposition closes the route and discharg
     leaseTtlMs: 60_000,
     maturity: () => "GRADUATED",
     run: async () => ({
-      kind: "DISPOSED",
+      ranAs: "DETERMINISTIC",
+  kind: "DISPOSED",
       disposition: {
         disposition: "BLOCKED_CURRENTLY",
         observation: null,

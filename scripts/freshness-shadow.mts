@@ -207,6 +207,7 @@ console.log(`  occurrences opened this cycle: ${opened} (each with its OWN WorkI
 /* ----------------------------------------------------------- the executor --- */
 
 const simulated: RunWork = async ({ executor, routeTaskId }) => ({
+  ranAs: "DETERMINISTIC",
   kind: "SIMULATED",
   detail: `--dry: ${executor} decided route task ${routeTaskId.slice(0, 12)} — no retrieval ran`,
 });

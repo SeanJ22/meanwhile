@@ -83,6 +83,8 @@ import { failureTail } from "../lib/ops/job-watch-log.ts";
 import {
   auditWorkflow,
   cronsInWorkflowYaml,
+  scheduleStaleness,
+  type ScheduleStaleness,
   deriveEnvelope,
   expectedSlots,
   observedDispatchDelays,
@@ -262,6 +264,7 @@ const unreadable: string[] = [];
  * consecutive; the label is what stops a reader misreading the rate.
  */
 const ALARM_CHANNELS = new Set(["intake-tripwire.yml"]);
+
 
 for (const workflow of WATCHED) {
   let runs: Run[];
@@ -513,6 +516,61 @@ if (findings.length === 0 && scheduleFindings.length === 0) {
 }
 
 const rows: Record<string, string>[] = [];
+
+/* ========================================================================== */
+/* A SCHEDULE THAT STOPPED. (Session B closure, 2026-08-31.)                  */
+/*                                                                            */
+/* Every pass above grades runs that HAPPENED. None of them can see a workflow */
+/* that produced no runs at all, which is what a stopped schedule looks like — */
+/* and on 2026-08-31 an owner reading the Actions tab by eye diagnosed five    */
+/* days of unrefreshed production data from exactly that silence. He was       */
+/* reading five workflows whose crons had been deliberately consolidated into  */
+/* refresh-daily.yml, which had run on schedule and succeeded every day since. */
+/*                                                                            */
+/* NOT_SCHEDULED and STALE both look like silence and are opposite facts. The  */
+/* discriminator is the workflow file's own cron, read from disk.              */
+/* ========================================================================== */
+
+const staleness: ScheduleStaleness[] = [];
+for (const workflow of WATCHED) {
+  const file = join(WORKFLOW_DIR, workflow);
+  const crons = existsSync(file) ? cronsInWorkflowYaml(readFileSync(file, "utf8")) : [];
+  let lastRunAt: string | null = null;
+  try {
+    lastRunAt = recentRuns(workflow)[0]?.createdAt ?? null;
+  } catch {
+    /* Unreadable is already reported above; nothing is claimed here. */
+    continue;
+  }
+  staleness.push(scheduleStaleness({ workflow, crons, lastRunAt, nowISO: AUDIT_AS_OF_ISO }));
+}
+
+console.log("\n  SCHEDULE STALENESS — a job that stopped produces no runs to grade");
+for (const row of staleness) {
+  console.log(`    ${row.workflow.padEnd(34)} ${row.state}`);
+  if (row.state !== "FRESH") console.log(`${"".padEnd(38)}${row.detail}`);
+}
+
+for (const row of staleness.filter((r) => r.state === "STALE" || r.state === "NEVER_RAN")) {
+  rows.push({
+    Section: "repo-ops",
+    Title: `${row.workflow}: scheduled, and it has stopped running`,
+    "What this is":
+      `${row.detail}\n\nTHIS IS THE ONLY REFRESH PATH THAT REACHES READERS. The shadow ` +
+      "runner fetches and promotes nothing (W3.6), so a stopped legacy refresh is a live " +
+      "freshness exposure on the product rather than an internal scheduling annoyance.\n\n" +
+      "Diagnose in this order, recording each: does the file on the DEFAULT BRANCH still " +
+      "carry a valid on-schedule trigger; did a commit change it or a workflow it calls; does a " +
+      "new if-condition, concurrency group or path filter prevent run creation; does GitHub report " +
+      "the schedule disabled; were runs created and cancelled, or never created at all. " +
+      "A cron that was deliberately moved is NOT_SCHEDULED and never reaches this row.\n\n" +
+      `${MARKER(row.workflow)}`,
+    Priority: "P1",
+    prefix: "JOB",
+  });
+  console.log(`    -> repo-ops incident row queued for ${row.workflow} (RULING 218).`);
+}
+
 
 if (findings.length > 0) console.log(`  ${findings.length} workflow(s) failed TWICE CONSECUTIVELY:\n`);
 

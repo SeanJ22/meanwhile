@@ -792,3 +792,179 @@ export function tally(audit: WorkflowAudit): { kind: SlotVerdictKind; count: num
   for (const v of audit.verdicts) counts.set(v.kind, (counts.get(v.kind) ?? 0) + 1);
   return SLOT_VERDICT_KINDS.filter((k) => counts.has(k)).map((k) => ({ kind: k, count: counts.get(k)! }));
 }
+
+/* ========================================================================== */
+/* A SCHEDULE THAT STOPPED, AND THE THREE STATES A HUMAN CANNOT TELL APART    */
+/* ========================================================================== */
+
+/**
+ * **WHY THIS EXISTS.** (Session B closure, 2026-08-31.)
+ *
+ * The owner opened the Actions tab, saw that five refresh workflows had
+ * produced no run since 2026-08-26, and reported five days of unrefreshed
+ * production civic data.
+ *
+ * The observation was exactly right and the conclusion was wrong, and NOTHING
+ * IN THE REPOSITORY COULD TELL THE DIFFERENCE. Those five had their crons
+ * deliberately consolidated into `refresh-daily.yml` on 2026-08-24 — that file
+ * says so in its own header — and each kept its `workflow_dispatch` so a single
+ * source could still be run by hand. A workflow with no cron produces no
+ * scheduled runs forever, by design, and looks in the Actions list exactly like
+ * one whose schedule broke.
+ *
+ * Three states, indistinguishable by eye:
+ *
+ * ```
+ *   NOT_SCHEDULED  no cron. Silence is correct and permanent.
+ *   FRESH          scheduled, and it has run within its window.
+ *   STALE          scheduled, and it has NOT. This is the incident.
+ * ```
+ *
+ * ## Why the window is twice the interval
+ *
+ * GitHub's scheduled dispatch is best-effort and late by design under load.
+ * This repository's own `refresh-daily` runs landed between 38 minutes and 11
+ * hours 38 minutes after their 09:11 UTC slot over the six days to 2026-08-30.
+ * A window of one interval would fire on ordinary lateness, and a check that
+ * cries wolf daily is a check that gets muted. Two intervals is the smallest
+ * window ordinary lateness cannot reach: a daily job gets 48 hours, which no
+ * observed delay here has approached, and a genuinely stopped schedule crosses
+ * it within a day.
+ */
+export const STALENESS_WINDOW_MULTIPLE = 2;
+
+export const SCHEDULE_STALENESS_STATES = [
+  "NOT_SCHEDULED",
+  "FRESH",
+  "STALE",
+  "NEVER_RAN",
+] as const;
+export type ScheduleStalenessState = (typeof SCHEDULE_STALENESS_STATES)[number];
+
+export interface ScheduleStaleness {
+  readonly workflow: string;
+  readonly state: ScheduleStalenessState;
+  /** The shortest interval this workflow's crons imply, in hours. */
+  readonly intervalHours: number | null;
+  readonly windowHours: number | null;
+  readonly hoursSinceLastRun: number | null;
+  readonly lastRunAt: string | null;
+  /** One sentence a report can quote. Never a verdict on GitHub. */
+  readonly detail: string;
+}
+
+/**
+ * The shortest interval a set of daily-cron expressions implies, in hours.
+ *
+ * Only the daily form is understood, which is every cron this repository has.
+ * An expression this cannot parse returns null and the workflow is reported as
+ * unknown rather than silently given a made-up window — a guessed interval
+ * would produce a guessed incident.
+ */
+export function shortestIntervalHours(crons: readonly string[]): number | null {
+  if (crons.length === 0) return null;
+  let slots = 0;
+  for (const cron of crons) {
+    try {
+      parseDailyCron(cron);
+      slots += 1;
+    } catch {
+      return null;
+    }
+  }
+  return slots === 0 ? null : 24 / slots;
+}
+
+/**
+ * Judge one workflow.
+ *
+ * `crons` must come from the workflow file ON THE DEFAULT BRANCH — that is the
+ * only place GitHub reads schedules from, and reading a local working copy
+ * would let an uncommitted edit change the verdict.
+ */
+export function scheduleStaleness(input: {
+  readonly workflow: string;
+  readonly crons: readonly string[];
+  readonly lastRunAt: string | null;
+  readonly nowISO: string;
+}): ScheduleStaleness {
+  const base = { workflow: input.workflow, lastRunAt: input.lastRunAt };
+  const intervalHours = shortestIntervalHours(input.crons);
+
+  if (intervalHours === null) {
+    const why =
+      input.crons.length === 0
+        ? input.workflow +
+          " carries no cron on the default branch, so it produces no scheduled runs and never" +
+          " can be stale. Silence here is correct. If it USED to carry one, the schedule was" +
+          " moved or removed deliberately, and the file that took it over is what to watch."
+        : input.workflow +
+          " carries a cron this auditor cannot parse (" +
+          input.crons.join(", ") +
+          "), so no window is derived. An unparsed schedule is reported as unknown rather than" +
+          " given a guessed interval.";
+    return {
+      ...base,
+      state: "NOT_SCHEDULED",
+      intervalHours: null,
+      windowHours: null,
+      hoursSinceLastRun: null,
+      detail: why,
+    };
+  }
+
+  const windowHours = intervalHours * STALENESS_WINDOW_MULTIPLE;
+
+  if (input.lastRunAt === null) {
+    return {
+      ...base,
+      state: "NEVER_RAN",
+      intervalHours,
+      windowHours,
+      hoursSinceLastRun: null,
+      detail:
+        input.workflow +
+        " is scheduled every " +
+        String(intervalHours) +
+        "h and has produced NO run at all. A schedule that has never fired is not a young" +
+        " schedule; it is one nothing has ever executed.",
+    };
+  }
+
+  const since = (Date.parse(input.nowISO) - Date.parse(input.lastRunAt)) / 3_600_000;
+  if (!Number.isFinite(since)) {
+    return {
+      ...base,
+      state: "NOT_SCHEDULED",
+      intervalHours,
+      windowHours,
+      hoursSinceLastRun: null,
+      detail: input.workflow + " has an unreadable last-run timestamp, so nothing is claimed.",
+    };
+  }
+
+  const stale = since > windowHours;
+  return {
+    ...base,
+    state: stale ? "STALE" : "FRESH",
+    intervalHours,
+    windowHours,
+    hoursSinceLastRun: since,
+    detail: stale
+      ? input.workflow +
+        " is scheduled every " +
+        String(intervalHours) +
+        "h and last ran " +
+        since.toFixed(1) +
+        "h ago — past its " +
+        String(windowHours) +
+        "h window. Scheduled dispatch is best-effort and often late, which is why the window is" +
+        " twice the interval; this is past even that. RULING 218 operational incident."
+      : input.workflow +
+        " last ran " +
+        since.toFixed(1) +
+        "h ago, inside its " +
+        String(windowHours) +
+        "h window.",
+  };
+}

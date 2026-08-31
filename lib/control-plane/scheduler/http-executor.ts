@@ -111,6 +111,24 @@ export const realFetch: FetchOne = async (url, timeoutMs) => {
   }
 };
 
+/**
+ * **WHAT THIS MODULE ACTUALLY RUNS, on every path.**
+ * (Session B closure, W3.E, 2026-08-31.)
+ *
+ * A deterministic HTTP GET. No model runs here, whatever `chooseExecutor`
+ * decided — and it frequently decides otherwise, because nothing in the method
+ * store joins a meetings publisher to a graduated route, so every meetings
+ * obligation is classified ungraduated and routed to the bounded model lane.
+ * The shadow runner then injects THIS walker regardless.
+ *
+ * That arrangement is fine. What was not fine is that the run record reported
+ * the DECISION as the fact: the 2026-08-31 cycles recorded 10
+ * BOUNDED_MODEL_WORKER Attempts for work no model touched, which invites a
+ * reader of the cost ledger to attribute model spend and model variance to a
+ * run that had neither.
+ */
+const RAN_AS = "DETERMINISTIC" as const;
+
 function cost(outcome: FetchOutcome): AttemptCost {
   return {
     ...ZERO_COST,
@@ -143,7 +161,8 @@ export function httpExecutor(input: {
     const raw = input.urlFor(obligationId);
     if (raw === null) {
       return {
-        kind: "ABORTED",
+              ranAs: RAN_AS,
+              kind: "ABORTED",
         detail:
           `no source URL is held for ${obligationId}, so there is nothing to open. This is a ` +
           "gap in OUR provenance, not evidence about the publisher, and it stays owed.",
@@ -155,7 +174,8 @@ export function httpExecutor(input: {
       url = assertPublicUrl(raw);
     } catch (error) {
       return {
-        kind: "ABORTED",
+              ranAs: RAN_AS,
+              kind: "ABORTED",
         detail: `the held URL is not a public http(s) address: ${
           error instanceof Error ? error.message : String(error)
         }`,
@@ -167,7 +187,8 @@ export function httpExecutor(input: {
 
     if (got.transportError !== null) {
       return {
-        kind: "ABORTED",
+              ranAs: RAN_AS,
+              kind: "ABORTED",
         cost: cost(got),
         detail: `nothing was reached at ${url.host}: ${got.transportError}`,
       };
@@ -180,7 +201,8 @@ export function httpExecutor(input: {
         /* A 200 with no body is a FAILED read. It is emphatically not an empty
            document, and it may not become one by being recorded as a yield. */
         return {
-          kind: "ABORTED",
+                  ranAs: RAN_AS,
+                  kind: "ABORTED",
           cost: cost(got),
           detail:
             `${url} answered HTTP ${status} and ZERO BYTES. A zero-row extraction is a failed ` +
@@ -189,7 +211,8 @@ export function httpExecutor(input: {
       }
       const contentHash = `sha256-${createHash("sha256").update(got.body).digest("hex")}`;
       return {
-        kind: "DISPOSED",
+              ranAs: RAN_AS,
+              kind: "DISPOSED",
         disposition: {
           disposition: "INGESTED",
           observation: {
@@ -222,7 +245,8 @@ export function httpExecutor(input: {
 
     if (WALL_STATUSES.includes(status)) {
       return {
-        kind: "DISPOSED",
+              ranAs: RAN_AS,
+              kind: "DISPOSED",
         disposition: {
           disposition: "BLOCKED_CURRENTLY",
           observation: null,
@@ -246,7 +270,8 @@ export function httpExecutor(input: {
 
     if (status >= 400 && status < 500) {
       return {
-        kind: "DISPOSED",
+              ranAs: RAN_AS,
+              kind: "DISPOSED",
         disposition: {
           disposition: "BLOCKED_CURRENTLY",
           observation: null,
@@ -262,7 +287,10 @@ export function httpExecutor(input: {
     }
 
     return {
-      kind: "ABORTED",
+
+          ranAs: RAN_AS,
+
+          kind: "ABORTED",
       cost: cost(got),
       detail: `${url.host} answered HTTP ${status} — their side broke, and this retries.`,
     };

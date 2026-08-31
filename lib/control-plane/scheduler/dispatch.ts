@@ -163,6 +163,24 @@ export type WorkDisposition = Omit<RouteDisposition, "attemptId" | "at" | "artif
 
 export interface WorkOutcome {
   readonly kind: WorkOutcomeKind;
+  /**
+   * **WHICH EXECUTOR ACTUALLY RAN.** (Session B closure, W3.E, 2026-08-31.)
+   *
+   * `chooseExecutor` DECIDES; the injected worker RUNS. Nothing connected the
+   * two, so the run record reported the decision as though it were the fact —
+   * and it was wrong on every cycle of the 2026-08-31 shadow runs, which
+   * recorded 10 BOUNDED_MODEL_WORKER Attempts for work a deterministic HTTP
+   * walker did.
+   *
+   * That is a cost and provenance defect, not a cosmetic one: an Attempt
+   * labelled as a model worker invites a reader of the ledger to attribute
+   * model spend and model variance to a run that had neither.
+   *
+   * Required, so a worker cannot decline to say. The dispatcher records THIS
+   * as the executor and reports a disagreement with the decision rather than
+   * quietly preferring either.
+   */
+  readonly ranAs: ExecutorKind;
   /** Required when kind is DISPOSED, refused otherwise. */
   readonly disposition?: WorkDisposition;
   readonly artifacts?: readonly WorkArtifact[];
@@ -175,7 +193,24 @@ export interface WorkOutcome {
 export interface DispatchResult {
   readonly obligationId: string;
   readonly routeTaskId: string | null;
+  /**
+   * What actually ran, as the worker reported it. The FACT.
+   *
+   * Named `executor` still, because that is what every consumer means by it —
+   * and it now holds the thing they were all assuming it held.
+   */
   readonly executor: ExecutorKind | null;
+  /** What `chooseExecutor` decided. The DECISION, kept for the disagreement. */
+  readonly executorChosen: ExecutorKind | null;
+  /**
+   * True when the worker ran something other than what was chosen.
+   *
+   * Recorded rather than refused. A seam whose implementation ignores the
+   * decision is a real and sometimes legitimate arrangement — the shadow
+   * runner injects one deterministic walker for every obligation — and the
+   * defect was never that it happened, but that nothing said so.
+   */
+  readonly executorMismatch: boolean;
   readonly claimed: boolean;
   /**
    * Null when nothing ran. Never a default outcome standing in for a run.
@@ -346,6 +381,8 @@ export async function dispatchOne(
 ): Promise<DispatchResult> {
   const obligationId = input.obligation.obligation.id;
   const nothingRan = {
+    executorChosen: null,
+    executorMismatch: false,
     attemptId: null,
     dispositionCommitted: false,
     disposition: null,
@@ -415,14 +452,25 @@ export async function dispatchOne(
     policyVersion: input.policyVersion ?? "unversioned",
   });
   const attemptId = attempt.value.id;
+  /*
+   * `executor` is filled in per return with what the worker REPORTED, so the
+   * chosen kind cannot leak into the record as the fact. `base` deliberately
+   * does not carry it.
+   */
   const base = {
     obligationId,
     routeTaskId: input.routeTaskId,
-    executor: executor.kind,
+    executorChosen: executor.kind,
     claimed: true,
     attemptId,
     worker,
   };
+
+  /** The record of what ran, and whether it matched the decision. */
+  const ran = (outcome: WorkOutcome | null) => ({
+    executor: outcome?.ranAs ?? executor.kind,
+    executorMismatch: outcome !== null && outcome.ranAs !== executor.kind,
+  });
 
   let outcome: WorkOutcome;
   try {
@@ -451,6 +499,10 @@ export async function dispatchOne(
     });
     return {
       ...base,
+      /* The worker threw before it could say what it was. The decision is the
+         only thing known, and `executorMismatch` stays false because nothing
+         disagreed with it — nothing reported at all. */
+      ...ran(null),
       outcome: "FAILED",
       dispositionCommitted: false,
       disposition: null,
@@ -499,6 +551,7 @@ export async function dispatchOne(
     });
     return {
       ...base,
+      ...ran(outcome),
       outcome: simulated ? "SIMULATED" : "FAILED",
       dispositionCommitted: false,
       disposition: null,
@@ -553,6 +606,7 @@ export async function dispatchOne(
     }).catch(() => undefined);
     return {
       ...base,
+      ...ran(outcome),
       outcome: "FAILED",
       dispositionCommitted: false,
       disposition: null,
@@ -583,6 +637,7 @@ export async function dispatchOne(
 
   return {
     ...base,
+    ...ran(outcome),
     outcome: "WORKED",
     dispositionCommitted: true,
     disposition: disposition.disposition,

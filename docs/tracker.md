@@ -14,10 +14,10 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **369 open**, 464 resolved.
-- **65 waiting on Sean** — the first section below.
+- **372 open**, 464 resolved.
+- **66 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **4**
+  - Needs Sean — **5**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **1**
   - Arizona hunt — **2**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**65 open · 67 resolved.**
+**66 open · 67 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -46,6 +46,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH272** — The new migration shipping gate asks production whether it already holds the migrations a pull request is about to ship. To ask, the CI job needs a read-only production database URL. It is not currently a repository secret, and only the author can add one.
 
 **NH281** — Every application-bearing deploy since the fixture-credential hotfix has failed the same way, so the live site is serving an older build than main. The cause cannot be read from here: Netlify reports only "Build script returned non-zero exit code: 2" and the build log is not retrievable through the API with the token this repo holds.
+
+**NH300** — RULING 220 puts Level-2 scheduling authority on a Postgres/Neon provider behind the existing ControlPlaneRepositories interfaces, in a DEDICATED database separate from the reader-serving one, outside lib/db and invisible to pnpm db:gate. Session B built the freshness scheduler, the dispatch loop and the shadow cycle provider-neutrally and ran them against the durable file provider. What cannot be done without a credential is the ruling's own step 6: the scheduler running against Postgres from both machines with claim contention exercised (two workers, one route, exactly one wins, the loser observes the lease conflict), crash/reclaim reproduced on Postgres, and a backup/restore drill. ESCALATION, per RULING 208: provider Neon; mechanism a new project or branch dedicated to the control plane, not a schema inside the serving database; record class Level-2 scheduling state (due-work, freshness debt, leases); scopes a normal owner role on that database only; it unlocks cross-machine claiming and indexed due-time queries, which the filesystem provider cannot carry because its exclusiveCreate/link lock semantics are single-host and the Drive mirror is an eventually-consistent synced folder rather than a locking substrate. WHAT CONTINUES WITHOUT IT: everything shipped this session. The scheduler, the debt model, dispatch, reclaim and the shadow loop all take ControlPlaneRepositories and never a connection, so they run on the file provider today and move to Postgres by construction. No secret is ever pasted into chat, a prompt, a row, a commit, a fixture or a log; the variable NAME is the whole of what this row needs.
 
 **T05** — The abuse policy is written but the review path behind it does not exist. No free-text answer can be accepted until somebody can actually act on a threat.
 
@@ -537,7 +539,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**92 open · 111 resolved.**
+**93 open · 111 resolved.**
 
 ### P1
 
@@ -602,6 +604,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH29** — Springfield NH went from zero bodies in the registry to eight enumerated and the gap ledger is byte-identical at 22383 bytes before and after. The ledger measures special-district coverage against the Census of Governments, which is right and is not the whole of coverage: RULING 9 says the Census counts GOVERNMENTS and the product renders BODIES, and a New Hampshire town is one government and a dozen or more bodies. So the instrument that is supposed to say how covered a place is cannot see the unit the product actually renders. Six of Kearsarge seven member towns are dark at the body level and nothing measures that. This is a defect in the instrument rather than a gap in coverage, which is why it is a row and not a ledger entry.
 
 **NH293** — NH288's fix serves sourced body names from BODY_ROSTERS for 12 of the 14 division-label bodies. The two remaining — ocd-division/country:us/state:az/place:mesa#governing and ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board — have no roster read yet, so no sourced name is held and nothing was invented. Classified: source exists, not ingested.
+
+**NH301** — Found by running the shadow cycle over the real corpus. The meetings snapshot identifies a row's origin by provenance.sourceOrg - a PUBLISHER, such as Pima County - and the method store identifies a route by a method id, such as party-county-directory. There is no mapping between them, so methodMaturityFrom answers UNGRADUATED for every meetings obligation and all 78 dispatch to the bounded model worker. The digest's executor split is where this shows: 0 deterministic, 8 bounded. That reading is CORRECT and it is not the end state - it means the deterministic lane cannot currently be reached for this record class, not that no method exists. The fix is a join from a source adapter to the method route it implements.
 
 **NH46** — One of the three coverageNotes in data/ballot/nh-merrimack-2026.json ends with a paragraph of internal record-keeping that reaches a reader on the ballot page: 'CORRECTED 2026-08-21 under RULING 52: this note used to end ... That was true when it was written on 2026-08-14 and is FALSE now - re-walked 2026-08-21, gc.nh.gov answers a plain rung-2 fetch at HTTP 200. A wall is recorded with the date it was last tested...'
 
@@ -889,7 +893,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**28 open · 87 resolved.**
+**29 open · 87 resolved.**
 
 ### P1
 
@@ -916,6 +920,8 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **NH256** — The standing regression net's g8 check asserts no internal adapter id reaches a reader surface. It greps the raw response text for each id as a word, so it matched INSIDE source URLs: civicplus in content.civicplus.com asset links and legistar in a pima.legistar.com LegislationDetail link. Both are CITATIONS — Pima County's own document CDN and its legislative portal — carried because the ballot corpus's absences must cite the record that settled them, which is the Vail Unified and Empire Elementary election cancellations. The guard was reporting the transparency rules working. MEASURED: with URLs stripped, ZERO adapter ids remain anywhere in the served HTML at any of the four pilot zips, so there was no reader-visible leak at any point. ATTRIBUTION, established rather than assumed: git log -S puts the citation in 9e75bea, the merged handoff of PR #210 from the 85641-detective branch, and git merge-base --is-ancestor confirms that commit is an ancestor of this session's start SHA 1e02e2f. The ask-entity session made no commits touching the Pima ballot corpus. So it had been failing on main since #210 and was reported as 2 regressions on every walk in between. REPAIRED: the check strips http and https URLs before scanning and nothing else changed. Narrowing a check is exactly where a check quietly stops checking, so a PLANTED control runs on every walk and asserts BOTH halves — an adapter id in reader text is still caught, and the same id inside a source URL is not — and says THE GUARD IS BLIND if the first half ever stops firing. Walk after the repair: 369 passed, 0 regressions, 11 could not run.
 
 **NH298** — A.1 WI7 measured the walk, repaired the dead readiness wait, and took it from 1463.4s to 321.2s over the same 390 checks. Three of the named avenues are not done: running checks concurrently across Playwright contexts, making the walk hermetic with no live network, and reusing the production build when HEAD is unchanged.
+
+**NH302** — pnpm walk:wait-audit, added this session, reports 26 until()/untilPresent() call sites in scripts/walk-all.mts: 26 of 26 name a selector the product source can produce, so the A.1 dead-selector class is clear, and 25 of 26 DISCARD the boolean. A wait whose result nobody reads cannot fail - if its condition is never met the walk spends the ceiling and proceeds identically, which is exactly how A.1's dead .coverage-notice wait cost 1142 seconds without anything going red. Session B did not convert the 25 call sites to hard failures: until() returning false is deliberately not a failure (a slow surface must not red the walk), so making every miss throw would trade one instrument defect for another. What shipped instead is that every timeout is now COUNTED and written to the walk run record by label, so a wait that never settles appears as a number rather than as unattributed wall time. Converting individual call sites to consume their result is the remaining work, one at a time, each with a reason.
 
 **NH32** — The intake tripwire raised an alarm on 2026-08-21 at 00:28 UTC: a search_log insert was refused in production. The alarm is doing exactly what it was built for. The problem is that its output prints five dashes where the database's reason should be, so the one thing needed to diagnose it is the one thing not recorded. Production schema is in sync at 0015, so a missing column is ruled out.
 

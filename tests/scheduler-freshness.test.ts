@@ -1,0 +1,573 @@
+/**
+ * **THE FRESHNESS SCHEDULER AND ITS SHADOW LOOP.**
+ * (Session B, W3.3–W3.5, 2026-08-30. RULING 212, RULING 216, RULING 218.)
+ *
+ * The invariant every test here circles:
+ *
+ * > **No active obligation may have an unknown next-due.**
+ *
+ * A scheduler satisfies that trivially by scheduling everything it can and
+ * saying nothing about the rest, so the tests are written against the SECOND
+ * list — the obligations it could not schedule — because that list is the only
+ * evidence the invariant is real rather than definitional.
+ *
+ * The crash/reclaim case at the bottom is the seeded failure the brief names,
+ * and it is written to fail against the design mistake rather than against a
+ * bug: a worker killed mid-Attempt runs no cleanup, so anything that depended
+ * on a `finally` would pass a simulated death and lose a real one.
+ */
+
+import assert from "node:assert/strict";
+import test from "node:test";
+import { mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+
+import {
+  DEFAULT_CADENCE_HOURS,
+  MIN_CADENCE_HOURS,
+  dueNow,
+  scheduleAll,
+  scheduleObligation,
+  isScheduled,
+  type FreshnessObligation,
+} from "../lib/control-plane/scheduler/obligation.ts";
+import {
+  FIRST_BACKOFF_MINUTES,
+  MAX_BACKOFF_MINUTES,
+  aggregateIncidents,
+  recordFailure,
+  retryable,
+} from "../lib/control-plane/scheduler/debt.ts";
+import {
+  chooseExecutor,
+  sweepExpiredLeases,
+} from "../lib/control-plane/scheduler/dispatch.ts";
+import { digestLines, runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
+import {
+  beginAttemptFor,
+  claimRouteTask,
+  registerRouteTask,
+  registerWorkItem,
+} from "../lib/control-plane/repository/coordinator.ts";
+import { createWorkItem } from "../lib/control-plane/work-item.ts";
+import { createRouteTask } from "../lib/control-plane/route-task.ts";
+import type { ContractReading } from "../lib/health/contracts.ts";
+
+const NOW = "2026-08-30T12:00:00.000Z";
+const NOW_MS = Date.parse(NOW);
+
+function obligation(over: Partial<FreshnessObligation> = {}): FreshnessObligation {
+  return {
+    id: "ob-1",
+    recordClass: "meetings",
+    subjectId: "wtp-body/pima#governing",
+    routeId: "legistar:events",
+    active: true,
+    readerImpactAt: null,
+    observedChangeRateHours: null,
+    lastWorkedAt: null,
+    ...over,
+  };
+}
+
+/* ==========================================================================
+ * W3.3 — CADENCE IS DERIVED, AND THE DEFAULT SAYS IT IS A DEFAULT
+ * ======================================================================= */
+
+test("W3.3: an obligation with NO signal takes the daily default and SAYS so", () => {
+  /*
+   * RULING 212 retires the fixed daily floor as a REQUIREMENT and keeps it as
+   * a default. The distinction is only visible in `cadenceSource`: a scheduler
+   * whose rows all read DEFAULT_NO_SIGNAL is a daily cron wearing a
+   * derivation's name, and this field is what makes that arguable.
+   */
+  const row = scheduleObligation(obligation(), NOW_MS);
+  assert.ok(isScheduled(row));
+  assert.equal(row.cadenceHours, DEFAULT_CADENCE_HOURS);
+  assert.equal(row.cadenceSource, "DEFAULT_NO_SIGNAL");
+  assert.match(row.basis, /DEFAULT and not a derivation/);
+});
+
+test("W3.3: a reader deadline places the check BEFORE it, not on it", () => {
+  /* A check that lands at the deadline arrives after the staleness has already
+     reached a reader. Half the remaining time always lands before. */
+  const row = scheduleObligation(
+    obligation({ readerImpactAt: new Date(NOW_MS + 10 * 3_600_000).toISOString() }),
+    NOW_MS,
+  );
+  assert.ok(isScheduled(row));
+  assert.equal(row.cadenceSource, "READER_IMPACT");
+  assert.equal(row.cadenceHours, 5);
+});
+
+test("W3.3: where both signals exist the SHORTER binds", () => {
+  /* Late for either reason is late. */
+  const row = scheduleObligation(
+    obligation({
+      readerImpactAt: new Date(NOW_MS + 40 * 3_600_000).toISOString(),
+      observedChangeRateHours: 3,
+    }),
+    NOW_MS,
+  );
+  assert.ok(isScheduled(row));
+  assert.equal(row.cadenceHours, 3);
+  assert.equal(row.cadenceSource, "OBSERVED_CHANGE_RATE");
+});
+
+test("W3.3: a declared publisher cycle outranks a rate we inferred", () => {
+  const row = scheduleObligation(
+    obligation({ observedChangeRateHours: 2, declaredCycleHours: 168 }),
+    NOW_MS,
+  );
+  assert.ok(isScheduled(row));
+  assert.equal(row.cadenceSource, "DECLARED_CYCLE");
+  assert.equal(row.cadenceHours, 168);
+});
+
+test("W3.3: a passed deadline is due at the floor, never in the past forever", () => {
+  const row = scheduleObligation(
+    obligation({ readerImpactAt: new Date(NOW_MS - 5 * 3_600_000).toISOString() }),
+    NOW_MS,
+  );
+  assert.ok(isScheduled(row));
+  assert.equal(row.cadenceHours, MIN_CADENCE_HOURS);
+});
+
+test("W3.3: the next-due anchors on the last WORK, not on every glance", () => {
+  /*
+   * Scheduling from `now` on each pass restarts the interval every time the
+   * scheduler looks, so a row examined often is never due — the starvation
+   * shape a due-time scheduler exists to avoid.
+   */
+  const lastWorkedAt = new Date(NOW_MS - 20 * 3_600_000).toISOString();
+  const row = scheduleObligation(obligation({ lastWorkedAt }), NOW_MS);
+  assert.ok(isScheduled(row));
+  assert.equal(row.nextDueAt, new Date(Date.parse(lastWorkedAt) + 24 * 3_600_000).toISOString());
+});
+
+/* ==========================================================================
+ * W3.3 — THE INVARIANT: NO ACTIVE OBLIGATION WITH AN UNKNOWN NEXT-DUE
+ * ======================================================================= */
+
+test("SEEDED W3.3: an obligation with broken cadence data is NAMED, never defaulted", () => {
+  /*
+   * The whole invariant turns on this. "We have no signal, so daily" is a
+   * decision and is recorded as DEFAULT_NO_SIGNAL. "This row's data is broken"
+   * is a defect, and papering it over with a cadence would satisfy the
+   * invariant by construction while leaving a hole in the clock.
+   */
+  const pass = scheduleAll(
+    [
+      obligation({ id: "good" }),
+      obligation({ id: "bad-rate", observedChangeRateHours: Number.NaN }),
+      obligation({ id: "bad-date", readerImpactAt: "sometime next week" }),
+      obligation({ id: "bad-cycle", declaredCycleHours: -4 }),
+    ],
+    NOW_MS,
+  );
+  assert.deepEqual(pass.scheduled.map((s) => s.obligation.id), ["good"]);
+  assert.equal(pass.unscheduled.length, 3);
+  assert.match(pass.unscheduled.find((u) => u.obligation.id === "bad-date")!.reason, /does not parse/);
+  for (const u of pass.unscheduled) {
+    assert.ok(u.reason.length > 0, "every unscheduled row carries its reason");
+  }
+});
+
+test("W3.3: an INACTIVE obligation is not owed on a clock, and says that too", () => {
+  const pass = scheduleAll([obligation({ active: false })], NOW_MS);
+  assert.equal(pass.scheduled.length, 0);
+  assert.match(pass.unscheduled[0].reason, /not active/);
+});
+
+test("W3.3: due work comes back soonest-first, so nothing starves behind a priority", () => {
+  const pass = scheduleAll(
+    [
+      obligation({ id: "late", lastWorkedAt: new Date(NOW_MS - 96 * 3_600_000).toISOString() }),
+      obligation({ id: "later", lastWorkedAt: new Date(NOW_MS - 48 * 3_600_000).toISOString() }),
+      obligation({ id: "not-yet", lastWorkedAt: NOW }),
+    ],
+    NOW_MS,
+  );
+  assert.deepEqual(dueNow(pass, NOW_MS).map((r) => r.obligation.id), ["late", "later"]);
+});
+
+/* ==========================================================================
+ * W3.3 — DEBT: DURABLE, SELF-RETRYING, AGGREGATED BY ROOT CAUSE
+ * ======================================================================= */
+
+test("W3.3: a transient failure becomes DEBT with a backoff, never a notification", () => {
+  const first = recordFailure(null, {
+    obligationId: "ob-1",
+    cause: "RATE_LIMITED",
+    detail: "429 from the vendor",
+    target: "pima.legistar.com",
+    dueAt: NOW,
+    now: NOW,
+  });
+  assert.equal(first.consecutiveFailures, 1);
+  assert.equal(
+    first.retryAt,
+    new Date(NOW_MS + FIRST_BACKOFF_MINUTES * 60_000).toISOString(),
+  );
+
+  const second = recordFailure(first, {
+    obligationId: "ob-1",
+    cause: "RATE_LIMITED",
+    detail: "429 again",
+    target: "pima.legistar.com",
+    dueAt: NOW,
+    now: NOW,
+  });
+  assert.equal(second.consecutiveFailures, 2);
+  assert.equal(
+    second.firstFailedAt,
+    first.firstFailedAt,
+    "the age of the debt never resets, or a three-day outage reads as fifteen minutes old",
+  );
+});
+
+test("W3.3: backoff is CAPPED — uncapped doubling is abandonment on a schedule", () => {
+  let debt = recordFailure(null, {
+    obligationId: "ob-1",
+    cause: "UPSTREAM_ERROR",
+    detail: "503",
+    target: "host",
+    dueAt: NOW,
+    now: NOW,
+  });
+  for (let i = 0; i < 20; i += 1) {
+    debt = recordFailure(debt, {
+      obligationId: "ob-1",
+      cause: "UPSTREAM_ERROR",
+      detail: "503",
+      target: "host",
+      dueAt: NOW,
+      now: NOW,
+    });
+  }
+  const gapMinutes = (Date.parse(debt.retryAt) - NOW_MS) / 60_000;
+  assert.equal(gapMinutes, MAX_BACKOFF_MINUTES);
+  assert.ok(retryable([debt], NOW_MS + MAX_BACKOFF_MINUTES * 60_000).length === 1);
+});
+
+test("W3.3: one outage is ONE incident, whatever it is behind", () => {
+  /*
+   * RULING 218's aggregation by root cause. Three hundred incident rows
+   * describing one host being down is three hundred ways to not see the outage.
+   */
+  const debts = Array.from({ length: 312 }, (_, i) =>
+    recordFailure(null, {
+      obligationId: `ob-${i}`,
+      cause: "REFUSED_BY_HOST",
+      detail: "403 from the WAF",
+      target: "pima.legistar.com",
+      dueAt: new Date(NOW_MS - 2 * 3_600_000).toISOString(),
+      now: NOW,
+    }),
+  );
+  const incidents = aggregateIncidents(debts, NOW_MS);
+  assert.equal(incidents.length, 1);
+  assert.equal(incidents[0].obligationsAffected, 312);
+  assert.equal(incidents[0].cause, "REFUSED_BY_HOST");
+  assert.ok(incidents[0].oldestHours >= 2);
+});
+
+/* ==========================================================================
+ * W3.4 — THE EXECUTOR RULE
+ * ======================================================================= */
+
+test("W3.4: a graduated route runs deterministic code; anything else runs bounded", () => {
+  const graduated = chooseExecutor(
+    scheduleObligation(obligation({ routeId: "legistar:events" }), NOW_MS) as never,
+    () => "GRADUATED",
+  );
+  assert.equal(graduated.kind, "DETERMINISTIC");
+
+  const ungraduated = chooseExecutor(
+    scheduleObligation(obligation({ routeId: "unknown:thing" }), NOW_MS) as never,
+    () => "UNGRADUATED",
+  );
+  assert.equal(ungraduated.kind, "BOUNDED_MODEL_WORKER");
+
+  const noRoute = chooseExecutor(
+    scheduleObligation(obligation({ routeId: null }), NOW_MS) as never,
+    () => "GRADUATED",
+  );
+  assert.equal(noRoute.kind, "BOUNDED_MODEL_WORKER");
+  assert.match(noRoute.why, /names no route yet/);
+});
+
+/* ==========================================================================
+ * W3.4 — THE SEEDED CRASH/RECLAIM FAILURE
+ * ======================================================================= */
+
+test("SEEDED W3.4: a worker killed mid-Attempt leaves the RouteTask reclaimable", async () => {
+  /*
+   * The brief's seeded failure, verbatim: *a worker killed mid-Attempt leaves
+   * no terminal disposition and the RouteTask is reclaimed by the next worker.*
+   *
+   * "Killed" is modelled the only way it can be modelled honestly — the worker
+   * simply STOPS. No close, no release, no `finally`. A real kill runs no
+   * cleanup, so a design that recovered via cleanup would pass a simulated
+   * death and lose a real one. Death is observed from OUTSIDE, by a lease that
+   * stopped being renewed, which is exactly what `sweepExpiredLeases` reads.
+   *
+   * Against the DURABLE file store, because that is the one that proves the
+   * process may die.
+   */
+  const root = mkdtempSync(join(tmpdir(), "wtp-sched-"));
+  const repos = await createFileRepositories(root);
+
+  const item = createWorkItem({
+    project: "freshness",
+    subject: "wtp-body/pima#governing",
+    obligation: "refresh:meetings",
+    why: "the scheduler owes this body a fresh reading of its calendar",
+    priority: "P1",
+    now: NOW,
+  });
+  await registerWorkItem(repos, item, NOW);
+  const task = createRouteTask({
+    workItemId: item.id,
+    routeId: "legistar:events",
+    routeLabel: "Legistar /EventDates",
+    target: "pima.legistar.com",
+    inherited: true,
+    now: NOW,
+  });
+  await registerRouteTask(repos, task, NOW);
+
+  /* Worker A claims, opens an Attempt — and dies. Nothing else runs. */
+  const claimed = await claimRouteTask(repos, {
+    routeTaskId: task.id,
+    holder: "worker-a",
+    now: NOW,
+    ttlMs: 60_000,
+  });
+  await beginAttemptFor(repos, {
+    routeTaskId: task.id,
+    workItemId: item.id,
+    worker: {
+      role: "RETRIEVAL",
+      provider: "test",
+      version: "1",
+      instance: "worker-a",
+    } as never,
+    lease: claimed.lease.value,
+    now: NOW,
+    methodVersion: 61,
+    policyVersion: "p1",
+  });
+
+  /* Before the lease expires, the task is NOT reclaimable — "this process has
+     not heard from that worker" is not "that worker is dead". */
+  const early = await sweepExpiredLeases(repos, {
+    now: new Date(NOW_MS + 30_000).toISOString(),
+    observedBy: "worker-b",
+  });
+  assert.deepEqual(early.reclaimed, []);
+  assert.deepEqual(early.stillLive, [task.id]);
+
+  /* The lease stops being renewed and expires. The next worker reclaims it. */
+  const after = new Date(NOW_MS + 120_000).toISOString();
+  const sweep = await sweepExpiredLeases(repos, { now: after, observedBy: "worker-b" });
+  assert.deepEqual(sweep.reclaimed, [task.id], "the abandoned route is reclaimed");
+
+  const reclaimedTask = await repos.routeTasks.mustRead(task.id);
+  assert.equal(
+    reclaimedTask.value.state,
+    "RECLAIMABLE",
+    "the task leaves CLAIMED — it is free to re-claim rather than stuck in flight under a " +
+      "worker that no longer exists",
+  );
+  assert.equal(
+    reclaimedTask.value.disposition,
+    null,
+    "and it carries NO disposition: the route was never worked to a boundary, and inventing " +
+      "one for a worker that died would be a disposition nobody reached",
+  );
+
+  /* The dead worker's Attempt is closed, and the closure is attributed to the
+     worker that actually made it — never re-pointed at whoever finishes. */
+  const attempts = await repos.attempts.list();
+  assert.equal(attempts.length, 1);
+  assert.equal(attempts[0].value.worker.instance, "worker-a");
+
+  /* Worker B can now claim what worker A abandoned. */
+  const second = await claimRouteTask(repos, {
+    routeTaskId: task.id,
+    holder: "worker-b",
+    now: after,
+    ttlMs: 60_000,
+  });
+  assert.equal(second.lease.value.holder, "worker-b");
+});
+
+/* ==========================================================================
+ * W3.5 — ONE UNATTENDED CYCLE, AND WHAT IT MAY NOT DO
+ * ======================================================================= */
+
+const READER_GREEN: ContractReading = { contract: "READER", state: "GREEN", reason: "fixture" };
+const TRUTH_GREEN: ContractReading = { contract: "TRUTH", state: "GREEN", reason: "fixture" };
+
+test("W3.5: a full cycle runs unattended and NEVER promotes to reader truth", async () => {
+  const root = mkdtempSync(join(tmpdir(), "wtp-cycle-"));
+  const repos = await createFileRepositories(root);
+
+  const item = createWorkItem({
+    project: "freshness",
+    subject: "s",
+    obligation: "refresh:meetings",
+    why: "w",
+    priority: "P1",
+    now: NOW,
+  });
+  await registerWorkItem(repos, item, NOW);
+  const task = createRouteTask({
+    workItemId: item.id,
+    routeId: "legistar:events",
+    routeLabel: "l",
+    target: "t",
+    inherited: true,
+    now: NOW,
+  });
+  await registerRouteTask(repos, task, NOW);
+
+  const cycle = await runCycle({
+    repos,
+    obligations: [
+      obligation({ id: "ob-due", lastWorkedAt: new Date(NOW_MS - 48 * 3_600_000).toISOString() }),
+      obligation({ id: "ob-broken", observedChangeRateHours: Number.POSITIVE_INFINITY }),
+    ],
+    debts: [],
+    routeTaskFor: (id) => (id === "ob-due" ? task.id : null),
+    maturity: () => "GRADUATED",
+    run: async () => ({ ok: true, detail: "walked" }),
+    holder: "cycle-worker",
+    now: NOW,
+    leaseTtlMs: 60_000,
+    reader: READER_GREEN,
+    truth: TRUTH_GREEN,
+  });
+
+  assert.equal(cycle.promotedToReaderTruth, false);
+  assert.equal(cycle.dispatched.filter((d) => d.outcome === "WORKED").length, 1);
+  assert.equal(cycle.schedule.unscheduled.length, 1, "the broken row is named, not defaulted");
+
+  /* FRESHNESS carries a MEASUREMENT and still reports NOT_READY. */
+  const freshness = cycle.health.readings.find((r) => r.contract === "FRESHNESS")!;
+  assert.equal(freshness.state, "NOT_READY");
+  assert.match(freshness.reason, /SHADOW \/ NOT ACTIVATED/);
+  assert.match(freshness.reason, /could not be scheduled and are named/);
+  assert.equal(cycle.health.green, false, "and the rollup is blocked by it");
+
+  /* The digest leads with health, not with activity (RULING 217). */
+  const lines = digestLines(cycle);
+  assert.equal(lines[0], "PILOT HEALTH");
+  assert.ok(lines.findIndex((l) => l.startsWith("ACTIVITY")) > 0);
+  assert.ok(
+    lines.findIndex((l) => l.startsWith("ACTIVITY")) >
+      lines.findIndex((l) => l.includes("FRESHNESS")),
+    "activity sits UNDER health, which is the order RULING 217 requires",
+  );
+});
+
+test("W3.5: an obligation with no RouteTask is COUNTED, not skipped", async () => {
+  const root = mkdtempSync(join(tmpdir(), "wtp-cycle2-"));
+  const repos = await createFileRepositories(root);
+  const cycle = await runCycle({
+    repos,
+    obligations: [obligation({ id: "orphan", lastWorkedAt: new Date(NOW_MS - 48 * 3_600_000).toISOString() })],
+    debts: [],
+    routeTaskFor: () => null,
+    maturity: () => "GRADUATED",
+    run: async () => ({ ok: true, detail: "unreachable" }),
+    holder: "cycle-worker",
+    now: NOW,
+    leaseTtlMs: 60_000,
+    reader: READER_GREEN,
+    truth: TRUTH_GREEN,
+  });
+  assert.equal(cycle.dispatched[0].outcome, "NO_ROUTE_TASK");
+  assert.equal(cycle.debts.length, 1, "and it becomes debt that retries itself");
+  assert.equal(cycle.debts[0].cause, "NEVER_DISPATCHED");
+});
+
+test("W3.5: a losing claim is normal concurrency, never debt", async () => {
+  /*
+   * Two workers reaching for one route is the contention the lease arbitrates.
+   * Counting the loser as a failure would make ordinary concurrency read as a
+   * backlog, and a backlog that is not real is a number nobody can act on.
+   */
+  const root = mkdtempSync(join(tmpdir(), "wtp-cycle3-"));
+  const repos = await createFileRepositories(root);
+  const item = createWorkItem({
+    project: "freshness",
+    subject: "s",
+    obligation: "o",
+    why: "w",
+    priority: "P1",
+    now: NOW,
+  });
+  await registerWorkItem(repos, item, NOW);
+  const task = createRouteTask({
+    workItemId: item.id,
+    routeId: "r",
+    routeLabel: "l",
+    target: "t",
+    inherited: true,
+    now: NOW,
+  });
+  await registerRouteTask(repos, task, NOW);
+  await claimRouteTask(repos, {
+    routeTaskId: task.id,
+    holder: "the-other-worker",
+    now: NOW,
+    ttlMs: 600_000,
+  });
+
+  const cycle = await runCycle({
+    repos,
+    obligations: [obligation({ id: "contended", lastWorkedAt: new Date(NOW_MS - 48 * 3_600_000).toISOString() })],
+    debts: [],
+    routeTaskFor: () => task.id,
+    maturity: () => "GRADUATED",
+    run: async () => ({ ok: true, detail: "should not run" }),
+    holder: "this-worker",
+    now: NOW,
+    leaseTtlMs: 60_000,
+    reader: READER_GREEN,
+    truth: TRUTH_GREEN,
+  });
+  assert.equal(cycle.dispatched[0].outcome, "NOT_CLAIMED");
+  assert.equal(cycle.debts.length, 0, "a lease conflict is the lease working");
+});
+
+test("W3.5: work beyond the cycle's stated ceiling is DEFERRED with a reason", async () => {
+  const root = mkdtempSync(join(tmpdir(), "wtp-cycle4-"));
+  const repos = await createFileRepositories(root);
+  const overdue = new Date(NOW_MS - 48 * 3_600_000).toISOString();
+  const cycle = await runCycle({
+    repos,
+    obligations: [
+      obligation({ id: "a", lastWorkedAt: overdue }),
+      obligation({ id: "b", lastWorkedAt: overdue }),
+      obligation({ id: "c", lastWorkedAt: overdue }),
+    ],
+    debts: [],
+    routeTaskFor: () => null,
+    maturity: () => "GRADUATED",
+    run: async () => ({ ok: true, detail: "x" }),
+    holder: "w",
+    now: NOW,
+    leaseTtlMs: 60_000,
+    maxDispatches: 1,
+    reader: READER_GREEN,
+    truth: TRUTH_GREEN,
+  });
+  assert.equal(cycle.dispatched.length, 1);
+  assert.equal(cycle.deferred.length, 2);
+  assert.match(cycle.deferred[0].why, /stated ceiling/);
+});

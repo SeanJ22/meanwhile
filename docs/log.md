@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-30 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **166 sessions.**
+Newest first. **167 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -197,6 +197,16 @@ THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflow
 [job-watch:dispatch-delay:refresh-daily.yml@2026-08-30T09:11:00.000Z]
 
 **Needs Sean.** Nothing.
+
+## Session B — instrument hardening, owner sweep, autonomous freshness in shadow · 2026-08-30
+
+**What it started.** 3 row(s) opened, 3 still open.
+
+- **NH300** — RULING 220 puts Level-2 scheduling authority on a Postgres/Neon provider behind the existing ControlPlaneRepositories interfaces, in a DEDICATED database separate from the reader-serving one, outside lib/db and invisible to pnpm db:gate. Session B built the freshness scheduler, the dispatch loop and the shadow cycle provider-neutrally and ran them against the durable file provider. What cannot be done without a credential is the ruling's own step 6: the scheduler running against Postgres from both machines with claim contention exercised (two workers, one route, exactly one wins, the loser observes the lease conflict), crash/reclaim reproduced on Postgres, and a backup/restore drill. ESCALATION, per RULING 208: provider Neon; mechanism a new project or branch dedicated to the control plane, not a schema inside the serving database; record class Level-2 scheduling state (due-work, freshness debt, leases); scopes a normal owner role on that database only; it unlocks cross-machine claiming and indexed due-time queries, which the filesystem provider cannot carry because its exclusiveCreate/link lock semantics are single-host and the Drive mirror is an eventually-consistent synced folder rather than a locking substrate. WHAT CONTINUES WITHOUT IT: everything shipped this session. The scheduler, the debt model, dispatch, reclaim and the shadow loop all take ControlPlaneRepositories and never a connection, so they run on the file provider today and move to Postgres by construction. No secret is ever pasted into chat, a prompt, a row, a commit, a fixture or a log; the variable NAME is the whole of what this row needs. *(open)*
+- **NH301** — Found by running the shadow cycle over the real corpus. The meetings snapshot identifies a row's origin by provenance.sourceOrg - a PUBLISHER, such as Pima County - and the method store identifies a route by a method id, such as party-county-directory. There is no mapping between them, so methodMaturityFrom answers UNGRADUATED for every meetings obligation and all 78 dispatch to the bounded model worker. The digest's executor split is where this shows: 0 deterministic, 8 bounded. That reading is CORRECT and it is not the end state - it means the deterministic lane cannot currently be reached for this record class, not that no method exists. The fix is a join from a source adapter to the method route it implements. *(open)*
+- **NH302** — pnpm walk:wait-audit, added this session, reports 26 until()/untilPresent() call sites in scripts/walk-all.mts: 26 of 26 name a selector the product source can produce, so the A.1 dead-selector class is clear, and 25 of 26 DISCARD the boolean. A wait whose result nobody reads cannot fail - if its condition is never met the walk spends the ceiling and proceeds identically, which is exactly how A.1's dead .coverage-notice wait cost 1142 seconds without anything going red. Session B did not convert the 25 call sites to hard failures: until() returning false is deliberately not a failure (a slow surface must not red the walk), so making every miss throw would trade one instrument defect for another. What shipped instead is that every timeout is now COUNTED and written to the walk run record by label, so a wait that never settles appears as a number rather than as unattributed wall time. Converting individual call sites to consume their result is the remaining work, one at a time, each with a reason. *(open)*
+
+**Needs Sean.** NH300
 
 ## A.1 contract instrumentation repair · 2026-08-30
 

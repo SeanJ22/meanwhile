@@ -2140,5 +2140,14 @@
       "NH298",
       "NH299"
     ]
+  },
+  {
+    "session": "Session B — instrument hardening, owner sweep, autonomous freshness in shadow",
+    "opened": "2026-08-30",
+    "ids": [
+      "NH300",
+      "NH301",
+      "NH302"
+    ]
   }
 ]

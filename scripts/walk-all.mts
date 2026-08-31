@@ -404,11 +404,35 @@ function section(title: string): void {
  * file: it is how often the question gets asked, not how long the answer is
  * assumed to take.
  */
+/**
+ * **EVERY WAIT THAT RAN OUT, COUNTED.** (Session B, W3.7, 2026-08-30.)
+ *
+ * A.1's `appSettled` waited on a selector today's DOM never produces. The wait
+ * could not be satisfied, spent its full timeout every call, returned false —
+ * and **nothing read the false**. Removing it took the walk from 1463.4s to
+ * 321.2s at identical coverage.
+ *
+ * `pnpm walk:wait-audit` establishes that no wait now names a selector the
+ * product cannot produce. It also establishes the other half, which is not
+ * fixed by that: **25 of 26 call sites discard the boolean**, so an
+ * unsatisfiable wait would still be a silent nineteen minutes.
+ *
+ * Converting 25 call sites to hard failures would turn every slow surface into
+ * a red walk, which is the behaviour the ceiling was written to avoid — the
+ * doc block above is explicit that `until` returning false is not itself a
+ * failure. So the fix is not to make a miss FAIL; it is to make a miss
+ * IMPOSSIBLE TO MISS. Every timeout is counted here and reported in the run
+ * record, where a wait that never settles shows up as a number instead of as
+ * wall time nobody attributes.
+ */
+const waitTimeouts: { label: string; ms: number }[] = [];
+
 async function until(
   page: Page,
   settled: () => Promise<boolean>,
   ms = 15_000,
   step = 150,
+  label = "until",
 ): Promise<boolean> {
   const deadline = Date.now() + ms;
   for (;;) {
@@ -417,7 +441,10 @@ async function until(
     } catch {
       // A detached element or a navigation mid-poll is a NOT YET, not an answer.
     }
-    if (Date.now() >= deadline) return false;
+    if (Date.now() >= deadline) {
+      waitTimeouts.push({ label, ms });
+      return false;
+    }
     // R49 POLL INTERVAL — a duration by definition, and the only kind this
     // file keeps.
     await page.waitForTimeout(step);
@@ -426,7 +453,9 @@ async function until(
 
 /** `until` for a selector existing, which is most of what this suite waits on. */
 async function untilPresent(page: Page, selector: string, ms = 15_000): Promise<boolean> {
-  return until(page, async () => (await page.locator(selector).count()) > 0, ms);
+  /* The SELECTOR is the label, so a timeout in the run record names the thing
+     that never appeared rather than saying "a wait timed out somewhere". */
+  return until(page, async () => (await page.locator(selector).count()) > 0, ms, 150, selector);
 }
 
 /**
@@ -6596,6 +6625,26 @@ if (quarantined.length > 0) {
         askRows,
         durations,
         slowest,
+        /*
+         * **WAITS THAT RAN OUT.** (Session B, W3.7.) Every `until` that spent
+         * its full timeout, by label and by ceiling. 25 of 26 call sites
+         * discard the boolean, so without this a wait that can never settle is
+         * indistinguishable from a slow surface — which is exactly how A.1's
+         * dead `.coverage-notice` wait cost 1142 seconds without anything
+         * going red. A repeated label here is the signature.
+         */
+        waitTimeouts: {
+          total: waitTimeouts.length,
+          totalCeilingMs: waitTimeouts.reduce((n, w) => n + w.ms, 0),
+          byLabel: Object.fromEntries(
+            [...new Set(waitTimeouts.map((w) => w.label))]
+              .map(
+                (label) =>
+                  [label, waitTimeouts.filter((w) => w.label === label).length] as const,
+              )
+              .sort((a, b) => b[1] - a[1]),
+          ),
+        },
         /* WHO RAN THIS. See lib/ops/run-provenance.ts — the proof class of
            every walk-proven capability is derived from this and nothing
            else, and its absence reads SESSION_MEASURED. (Session B WI1.8.) */

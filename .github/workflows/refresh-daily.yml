@@ -1,3 +1,25 @@
+# ===========================================================================
+# LEGACY RUNTIME - NOT THE FRESHNESS CLOCK. (Session B, W3.6, 2026-08-30.)
+#
+# RULING 218: GitHub scheduled workflows are not the freshness clock. Measured
+# dispatch delays of 186-313 minutes typical and ~699 worst are recorded
+# evidence. This workflow remains as a coarse backup wakeup and as CI; it is
+# explicitly NON-AUTHORITATIVE about whether anything is fresh.
+#
+# REPLACEMENT: the runtime freshness scheduler, lib/control-plane/scheduler/.
+# Built and shadow-run in Session B. It takes authority when its results are
+# INDEPENDENTLY_REPRODUCED by a canonical run the implementing session did not
+# perform (RULING 212, RULING 216, RULING 218).
+#
+# IT IS NOT REMOVED, deliberately. The transition rule shared by RULING 212 and
+# RULING 218 keeps the legacy jobs running until the replacement is PROVED,
+# because the gap between deleting the old clock and trusting the new one is a
+# gap in which nothing refreshes at all.
+#
+# A late or failed dispatch here is an engineering and freshness defect - an
+# operational incident and a WorkItem - never a Needs-Owner escalation by
+# itself.
+# ===========================================================================
 # THE ONE DAILY REFRESH — RULING 124 items 3 and 4 (2026-08-24, Sean's
 # instruction that deploys be cut to the floor).
 #

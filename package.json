@@ -34,6 +34,7 @@
     "congress:fetch": "tsx scripts/fetch-congress-legislators.mts",
     "congress:migrate": "tsx scripts/migrate-congress-directory.mts",
     "contrast": "tsx scripts/contrast-audit.mts",
+    "control-plane:gate": "tsx scripts/control-plane-gate.mts",
     "corpus:check": "tsx scripts/corpus-check.mts",
     "corpus:fetch": "tsx scripts/fetch-corpus.mts",
     "coverage": "tsx scripts/coverage-four-layer.mts",

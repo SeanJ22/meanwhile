@@ -151,6 +151,12 @@ const GATES = [
     why: "the cumulative route knowledge is what every later jurisdiction inherits; a broken store reads as a project that knows nothing",
   },
   {
+    id: "control-plane:gate",
+    ciJob: "gates (test · lint · tsc)",
+    command: "pnpm control-plane:gate",
+    why: "RULING 220 puts Level-2 scheduling state in a dedicated database outside lib/db and invisible to db:gate; that exemption must not become ungoverned, so the schema has its own version, applied-version and drift check (Session B, W3.2)",
+  },
+  {
     id: "feedback:sweep",
     ciJob: "gates (test · lint · tsc)",
     command: "pnpm feedback:sweep --check",

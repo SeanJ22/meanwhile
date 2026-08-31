@@ -2,23 +2,23 @@
 
 **GENERATED — `pnpm refresh:daily` (`scripts/refresh-daily.mts`). Never hand-edited (RULING 92).**
 
-Run date: **2026-08-30** (UTC).
+Run date: **2026-08-31** (UTC).
 
 One scheduled run a day, one commit at most, and nothing committed when nothing moved — RULING 124. Cadence per source and the reason for each is `lib/ops/refresh-cadence.ts`.
 
-## 2 ran clean · 0 failed · 3 not due
+## 4 ran clean · 0 failed · 1 not due
 
 | Source | Cadence today | Ran | Why | Result | Governs |
 |---|---|:---:|---|---|---|
 | `meetings` | daily | yes | today's cadence | clean | `data/meetings-snapshot.json` |
 | `nj-filing` | daily | yes | today's cadence | clean | `data/ballot/`, `data/questionnaire/` |
-| `fec` | weekly | no | — | not due — weekly, not due on 2026-08-30 or on any uncovered day since the last landed refresh | `data/fec/fec-2026.json` |
-| `legiscan` | weekly | no | — | not due — weekly, not due on 2026-08-30 or on any uncovered day since the last landed refresh | `data/votes/state-votes-snapshot.json` |
-| `dotgov` | monthly | no | — | not due — monthly, not due on 2026-08-30 or on any uncovered day since the last landed refresh | `data/dotgov/snapshot.json` |
+| `fec` | weekly | yes | today's cadence | clean | `data/fec/fec-2026.json` |
+| `legiscan` | weekly | yes | today's cadence | clean | `data/votes/state-votes-snapshot.json` |
+| `dotgov` | monthly | no | — | not due — monthly, not due on 2026-08-31 or on any uncovered day since the last landed refresh | `data/dotgov/snapshot.json` |
 
 ## Which days this run answered for
 
-Last landed refresh: docs/refresh-run.md, run date 2026-08-29. This run answered for 1 calendar day(s) — 2026-08-30 — capped at 8 days.
+Last landed refresh: docs/refresh-run.md, run date 2026-08-30. This run answered for 1 calendar day(s) — 2026-08-31 — capped at 8 days.
 
 A late run computes the right cadence on its own, because the cadence is a pure function of the run's calendar date. What it cannot do is recover a day that produced NO run at all: `fec` and `legiscan` are Monday-only, so a missed Monday would otherwise be a fourteen-day data gap. So this run unions what every uncovered day since the last landed refresh asks for. A quiet day commits nothing and is therefore indistinguishable from a missed one from `main`, which is why both are treated as uncovered and why the window is capped — an uncapped union would put every weekly source on a daily cadence during a quiet fortnight. It adds no runs, no commits and no builds: `refresh-daily.yml` still commits at most once, and nothing when nothing moved.
 

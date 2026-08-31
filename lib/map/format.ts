@@ -10,7 +10,19 @@ import { formatDateLong, spellOutDates } from "@/lib/text/format-date";
  * jurisdiction, it stands alone; otherwise the jurisdiction leads, joined
  * with an em dash — "Vail Unified School District — Governing Board Meeting".
  */
-export function meetingHeadline(meeting: Meeting): string {
+/**
+ * A meeting MINUS the retrieval provenance.
+ *
+ * These three read the sitting only - its title, its start, its zone. None
+ * touches `provenance`, and declaring that lets a surface holding a sitting
+ * without one (an Ask answer, ASK-20) use them without inventing a retrieval
+ * record it does not have. The narrowing is the honest declaration of a
+ * dependency that was already this narrow.
+ */
+export type CalendarSafeMeeting = Omit<Meeting, "provenance"> &
+  Partial<Pick<Meeting, "provenance">>;
+
+export function meetingHeadline(meeting: CalendarSafeMeeting): string {
   const what = meeting.bodyName || meeting.title;
   const jurisdiction = meeting.jurisdiction?.trim();
   if (!jurisdiction) return what;
@@ -348,7 +360,7 @@ export function formatMeetingDate(
 export const TIME_NOT_POSTED = "Time not posted — check the agenda";
 
 /** True when the publisher gave a start time. See `Meeting.startPrecision`. */
-export function startTimeIsKnown(meeting: Meeting): boolean {
+export function startTimeIsKnown(meeting: CalendarSafeMeeting): boolean {
   return meeting.startPrecision !== "DAY";
 }
 
@@ -358,7 +370,7 @@ export function startTimeIsKnown(meeting: Meeting): boolean {
  * than sliced off the ISO string, because a slice reads the offset the string
  * happens to carry and a Tucson meeting written in UTC would land a day early.
  */
-export function meetingLocalDate(meeting: Meeting): string {
+export function meetingLocalDate(meeting: CalendarSafeMeeting): string {
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone: meeting.timeZone,
     year: "numeric",

@@ -44,6 +44,7 @@ import { useShellData } from "@/lib/state/data";
 import { useUi, useUiDispatch } from "@/lib/state/provider";
 import { isOnlineOnly } from "@/lib/meetings/online";
 import { MeetingStatusPill } from "@/components/map/meeting-status-pill";
+import { CalendarLinks } from "@/components/map/popup/calendar-links";
 import { useResolvedLocation } from "@/hooks/use-resolved-location";
 import { tierVars } from "@/components/shell/tier-style";
 
@@ -1187,6 +1188,54 @@ export function AskBox({
             <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
               {grounded.answer}
             </p>
+          )}
+
+          {/*
+            ── ASK-20 / ASK-24 ── **THE SAME CONTROL THE MEETING CARD OFFERS.**
+            (Session B closure, 2026-08-31.)
+
+            The owner: an Ask answer that names a meeting date carried no Add to
+            calendar, while the map card beside it carried one for the same
+            sitting. The reason was upstream — the answer payload shipped the
+            meeting as PROSE and an id, which is everything a reader needs to
+            read and nothing a control needs to act — so this is the render half
+            of the widened payload.
+
+            EVERY sitting the answer resolved, not just the first (ASK-24): a
+            body that sits at 1 p.m. and again at 5 p.m. gets two entries,
+            because a reader offered one calendar entry for a two-sitting day
+            has been handed the wrong afternoon half the time.
+
+            `CalendarLinks` renders nothing for a meeting that is not SCHEDULED,
+            so a concluded sitting produces no control rather than an offer to
+            attend something that has happened.
+          */}
+          {(grounded.meetings?.length ?? 0) > 0 && (
+            <div className="mt-2 space-y-1" data-ask-calendar>
+              {(grounded.meetings ?? [])
+                .filter((sitting) => typeof sitting.timeZone === "string" && sitting.timeZone)
+                .map((sitting) => (
+                <CalendarLinks
+                  key={sitting.id}
+                  meeting={{
+                    ...sitting,
+                    /* The one field the two shapes disagree on. Adapted HERE,
+                       explicitly, rather than cast at the boundary — a cast is
+                       how a null reaches something that declared it could not
+                       be one. */
+                    bodyId: sitting.bodyId ?? undefined,
+                    /* The body's own zone. Absent is not a zone, and a
+                       calendar entry with no zone lands an hour wrong for
+                       half the year - so a sitting with none renders no
+                       control rather than a guessed one (filtered above). */
+                    timeZone: sitting.timeZone as string,
+                    /* Absent and null are one fact to a calendar entry: there
+                       is no agenda link to put in the description. */
+                    agendaUrl: sitting.agendaUrl ?? null,
+                  }}
+                />
+                ))}
+            </div>
           )}
 
           {/* The structured half of the ladder: real records, no prose. */}

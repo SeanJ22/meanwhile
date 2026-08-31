@@ -130,13 +130,15 @@
       "reported": "No Add to Calendar on a meeting answer",
       "correctState": "An Ask answer naming a meeting date carries the same Add to calendar control the meeting card already renders.",
       "failureClass": "rendering",
-      "disposition": "OPEN_BLOCKED",
+      "disposition": "FIXED_VERIFIED",
       "workItemId": "wi:feedback:8.30.26:ASK-20",
       "instancesFound": 1,
-      "instancesFixed": 0,
-      "checkId": null,
-      "checkResult": null,
-      "blocker": "The control exists (components/map/meeting-panel.tsx renders it on every upcoming-meeting surface) and the Ask answer payload does not carry the meeting's structured date, venue and body through to the client — the same dropped-field class as ASK-18's provenance. Wiring it needs the AskAnswerPayload widened, which was not reached this session."
+      "instancesFixed": 1,
+      "checkId": "pnpm verify:ask-controls::ASK-20",
+      "checkResult": "PASS",
+      "blocker": null,
+      "resolution": "The Ask answer payload carries the SITTINGS it resolved, structured, beside the prose. It shipped a meeting as text and an id — everything a reader needs to read and nothing a control needs to act — so the answer could describe a meeting and offer nothing to do with it while the map card beside it offered both. `AskSitting` is declared in lib/ask/answer.ts; `MeetingLike` in the grounded route was widened to carry location, status and jurisdiction, which is the THIRD time that hand-narrowed shape has dropped fields the corpus already held (ASK-05 lost sourceOrg, ASK-18 lost provenance). `CalendarLinks` and the three format helpers now declare the shape they actually read, so a surface holding a sitting without retrieval provenance can use them without inventing one.",
+      "verification": "On the rendered DOM at 85701: mode GROUNDED_CLAUDE, subject the Pima County Board of Supervisors, 1 calendar block carrying 2 control elements. Recorded under data/health/ask-controls-walk/."
     },
     {
       "id": "ASK-21",
@@ -176,13 +178,15 @@
       "reported": "\"Meetings near you\" sends the user hunting",
       "correctState": "Meetings near you, opened from an answer about a named body, opens on that body.",
       "failureClass": "rendering",
-      "disposition": "OPEN_BLOCKED",
+      "disposition": "FIXED_VERIFIED",
       "workItemId": "wi:feedback:8.30.26:ASK-22",
       "instancesFound": 1,
-      "instancesFixed": 0,
-      "checkId": null,
-      "checkResult": null,
-      "blocker": "The pill dispatches a generic list-overlay open with no subject. Routing it needs the answer's bound subject carried into the overlay's filter, which is the same payload widening ASK-20 needs. Not reached."
+      "instancesFixed": 1,
+      "checkId": "pnpm verify:ask-controls::ASK-22",
+      "checkResult": "PASS",
+      "blocker": null,
+      "resolution": "The pill dispatched `list/open` carrying nothing, so a reader answered about ONE body got every meeting in the ZIP and had to find it again. The action now carries the grounded answer's own bound subject — the engine's decision about what the question resolved to, never anything the component inferred. The focus lives in UI state rather than in `filters`: it belongs to one opening and the reducer clears it when the overlay closes, so an answer cannot leave a narrowing behind that the reader never chose. It is never silent — a chip names the body and clears it in one tap — and a focus matching nothing falls back to the full list rather than rendering an empty overlay that would read as \"this body has no meetings\".",
+      "verification": "On the rendered DOM: the chip reads \"Only Pima County Board Of Supervisors · show all ✕\". Recorded under data/health/ask-controls-walk/."
     },
     {
       "id": "ASK-23",
@@ -198,13 +202,15 @@
       "reported": "The answer does not follow the question asked",
       "correctState": "The card opened from a question about a named body leads with that body's next meeting.",
       "failureClass": "evidence_selection",
-      "disposition": "OPEN_BLOCKED",
+      "disposition": "FIXED_VERIFIED",
       "workItemId": "wi:feedback:8.30.26:ASK-23",
       "instancesFound": 1,
-      "instancesFixed": 0,
-      "checkId": null,
-      "checkResult": null,
-      "blocker": "Same root as ASK-22: the jurisdiction card sorts by date across all bodies because no subject reaches it. One fix serves both and neither was reached."
+      "instancesFixed": 1,
+      "checkId": "pnpm verify:ask-controls::ASK-23",
+      "checkResult": "PASS",
+      "blocker": null,
+      "resolution": "Same root as ASK-22, and the owner said so: no subject reached the surface the pill opened, so it sorted by date across every body. With the focus applied the list holds that body's sittings, upcoming-first, so the first row IS its next meeting.",
+      "verification": "On the rendered DOM: 22 rows rendered with the focus applied, 0 of them naming another body, against 149 meetings in the ZIP unfocused."
     },
     {
       "id": "MAP-5",
@@ -825,7 +831,7 @@
       "blocker": "Not worked this session. The disclosure rows added for WGH-18 are clickable; the districts named inside an Ask ANSWER are not."
     }
   ],
-  "resweptAt": "2026-08-31T15:42:39.611Z",
+  "resweptAt": "2026-08-31T16:26:01.077Z",
   "resweptBy": "Session B (resume), 2026-08-31",
   "reswepNote": "Session B closure pass. Reconciled under RULING 221: every row ends FIXED_VERIFIED, OPEN_EXECUTABLE or NEEDS_SEAN, and the three are counted separately. NEEDS_SEAN is terminal for this session and is never reported as open executable work; the record obligation each one names stays live on the frontier."
 }

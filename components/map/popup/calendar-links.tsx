@@ -18,7 +18,19 @@ import { AddToCalendar } from "@/components/calendar/add-to-calendar";
  * "time not posted" line, and that rule needs a test that does not have to
  * render a component to reach it.
  */
-export function CalendarLinks({ meeting }: { meeting: Meeting }) {
+/**
+ * The shape this control actually reads.
+ *
+ * `provenance` is REQUIRED on `Meeting` and is never read here — a calendar
+ * entry cites the meeting, not the run that retrieved it. Declaring the real
+ * dependency lets an Ask answer offer the same control from its own sitting
+ * shape (ASK-20) without either inventing a provenance it does not have or
+ * casting one away at the boundary.
+ */
+export type CalendarMeeting = Omit<Meeting, "provenance"> &
+  Partial<Pick<Meeting, "provenance">>;
+
+export function CalendarLinks({ meeting }: { meeting: CalendarMeeting }) {
   if (meeting.status !== "SCHEDULED") return null;
   const origin = typeof window !== "undefined" ? window.location.origin : "";
   return (

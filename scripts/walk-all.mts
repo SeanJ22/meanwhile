@@ -4529,8 +4529,22 @@ section("M136. Body battlecards reach person-card depth (g13)");
         await pill.click();
         await until(page, async () => (await page.locator(".coverage-notice").count()) > 0, 8_000);
       }
-      const row = page
-        .locator(`.coverage-notice button:has-text("${body.label}")`)
+      /*
+       * **WGH-18 (2026-08-30) — SCOPED TO THE GOVERNING LIST.**
+       *
+       * This was `.coverage-notice button:has-text(...)`, which was unambiguous
+       * only because the panel had one button list. The See-the-rest disclosure
+       * added a second — collapsed, so its rows are NOT VISIBLE — and this
+       * selector started resolving to "Pima County/Tucson Women's Commission"
+       * and timing out on a click that could never land.
+       *
+       * The governing rows have carried `data-governing-row` since ITEM 1a,
+       * added for exactly this reason: a walk that finds a row by its text and
+       * its container is a walk that breaks the next time the container grows a
+       * second list. It is scoped now.
+       */
+const row = page
+        .locator(`.coverage-notice [data-governing-row] button:has-text("${body.label}")`)
         .first();
       if ((await row.count()) === 0) {
         /*
@@ -5005,8 +5019,11 @@ section("F01. The walkthrough fixes hold (F01, 2026-08-19)");
    */
   const page = await openAt(browser, "85701");
   try {
+    /* WGH-18: scoped to [data-governing-row] — see the note at the other
+       governing-row lookup. The See-the-rest disclosure added a second,
+       collapsed button list to this panel. */
     const row = page
-      .locator('.coverage-notice button:has-text("Tucson Unified")')
+      .locator('.coverage-notice [data-governing-row] button:has-text("Tucson Unified")')
       .first();
     if ((await row.count()) === 0) {
       cannotRun(

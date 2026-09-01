@@ -560,7 +560,14 @@ test("a PARTIAL index is labelled PARTIAL and never staged under the index's nam
   assert.equal(entry.complete, false);
   assert.equal(entry.rowCount, 1);
   assert.equal(entry.declaredTotal, 370);
-  assert.match(entry.readerSentence, /1 of 370/);
+  assert.match(entry.readerSentence, /1 of the 370 row\(s\)/);
+  /*
+   * And the sentence must say WHICH whole it is claiming. `complete` means the
+   * response we asked for arrived entire; it never means the index is entire.
+   * Arizona's `GetNEWTableData` declared 370 and returned 370, and Kevin Volk —
+   * on the 85701 ballot with $173,742 filed — is not among them. RULING 207.
+   */
+  assert.match(entry.readerSentence, /not a claim that the index is whole/);
   assert.ok(entry.unresolved.some((u) => u.startsWith("PARTIAL:")));
 });
 

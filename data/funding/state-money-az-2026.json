@@ -1,6 +1,6 @@
 {
  "formatVersion": 1,
- "collectedAt": "2026-08-31",
+ "collectedAt": "2026-09-01",
  "cycle": 2026,
  "split": {
   "candidaciesInScope": 49,
@@ -37,7 +37,7 @@
     "expenditures": 14355612.69,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:governor:hobbs-katie"
@@ -51,12 +51,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -75,7 +75,7 @@
     "expenditures": 48585.04,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:governor:hourihan-teri-ann"
@@ -89,12 +89,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -113,7 +113,7 @@
     "expenditures": 1141305.59,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:governor:lombardo-risa"
@@ -127,12 +127,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -151,7 +151,7 @@
     "expenditures": 1141903.58,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:governor:lytle-hugh"
@@ -165,12 +165,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -189,7 +189,7 @@
     "expenditures": 2752348.58,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:governor:biggs-andy"
@@ -203,12 +203,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -241,12 +241,12 @@
     "allThreeAgree": false,
     "note": "asked across all three of the portal's own filter settings AND against the Secretary of State's 8,829-row committee register; neither holds a live candidate committee under this name"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -265,7 +265,7 @@
     "expenditures": 1137367.99,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:governor:neely-scott"
@@ -279,12 +279,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -303,7 +303,7 @@
     "expenditures": 1227096.4,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:governor:schweikert-david"
@@ -317,12 +317,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -341,7 +341,7 @@
     "expenditures": 992036.78,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:secretary-of-state:fontes-adrian"
@@ -355,12 +355,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -379,7 +379,7 @@
     "expenditures": 295747.6,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:secretary-of-state:collier-duwayne"
@@ -393,12 +393,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -417,7 +417,7 @@
     "expenditures": null,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "registered for the Arizona 2026 election cycle, with no receipts or expenditures reported as of 2026-08-31"
+    "coveringPeriod": "registered for the Arizona 2026 election cycle, with no receipts or expenditures reported as of 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:secretary-of-state:collier-duwayne"
@@ -431,12 +431,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -455,7 +455,7 @@
     "expenditures": 134049.9,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:secretary-of-state:kolodin-alexander"
@@ -469,12 +469,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -493,7 +493,7 @@
     "expenditures": 222627.59,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:secretary-of-state:swoboda-gina"
@@ -507,12 +507,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -531,7 +531,7 @@
     "expenditures": 3422077.9,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:attorney-general:mayes-kris"
@@ -545,12 +545,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -569,7 +569,7 @@
     "expenditures": 3932955.22,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:attorney-general:glassman-rodney"
@@ -583,12 +583,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -607,7 +607,7 @@
     "expenditures": 1788513.17,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:attorney-general:petersen-warren"
@@ -621,12 +621,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -645,7 +645,7 @@
     "expenditures": 441692.26,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:state-treasurer:mansour-nick"
@@ -659,12 +659,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -683,7 +683,7 @@
     "expenditures": 3978.44,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:state-treasurer:zepeda-michael"
@@ -697,12 +697,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -721,7 +721,7 @@
     "expenditures": 281773.56,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:state-treasurer:haley-katherine"
@@ -735,12 +735,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -759,7 +759,7 @@
     "expenditures": 3098945.26,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:state-treasurer:norton-elijah"
@@ -773,12 +773,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -797,7 +797,7 @@
     "expenditures": 10471.55,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:superintendent:butts-michael-d-"
@@ -811,12 +811,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -835,7 +835,7 @@
     "expenditures": 171900.97,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:superintendent:leyba-ruiz-teresa"
@@ -849,12 +849,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -873,7 +873,7 @@
     "expenditures": 18458.65,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:superintendent:newby-brett-matthew"
@@ -887,12 +887,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -925,12 +925,12 @@
     "allThreeAgree": false,
     "note": "OURS GAP — Arizona's committee register holds 1 live candidate committee under this name, and we have not confirmed that any of them belongs to this candidacy."
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    },
    "ourGap": {
     "whatIsMissing": "Arizona's committee register holds 1 live candidate committee under this name, and we have not confirmed that any of them belongs to this candidacy.",
@@ -954,7 +954,7 @@
     "expenditures": 175576.84,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:superintendent:yee-kimberly"
@@ -968,12 +968,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -992,7 +992,7 @@
     "expenditures": 25907.17,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:mine-inspector:matlock-brian"
@@ -1006,12 +1006,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -1044,12 +1044,12 @@
     "allThreeAgree": false,
     "note": "OURS GAP — The agency holds a committee for this candidate, and the office it states is not the office on this ballot."
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    },
    "ourGap": {
     "whatIsMissing": "The agency holds a committee for this candidate, and the office it states is not the office on this ballot.",
@@ -1073,7 +1073,7 @@
     "expenditures": 0,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:state-senate-19:slawson-ryan"
@@ -1087,12 +1087,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -1111,7 +1111,7 @@
     "expenditures": 52174.81,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:state-senate-19:griffin-gail"
@@ -1125,12 +1125,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -1149,7 +1149,7 @@
     "expenditures": 262592.54,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:state-senate-20:hernandez-alma"
@@ -1163,12 +1163,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -1187,7 +1187,7 @@
     "expenditures": 47284.26,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:state-senate-20:perez-rocque"
@@ -1201,12 +1201,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -1221,11 +1221,11 @@
    "electionYear": 2026,
    "filingState": "FILED",
    "totals": {
-    "receipts": 60043,
+    "receipts": 60048,
     "expenditures": 25526.42,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:state-house-19:anderson-jackie-o-donnell"
@@ -1239,12 +1239,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -1263,7 +1263,7 @@
     "expenditures": 2728.37,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:state-house-19:swallow-aiden-nicholette"
@@ -1277,12 +1277,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -1301,7 +1301,7 @@
     "expenditures": 35648.13,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:state-house-19:caswell-cheryl"
@@ -1315,12 +1315,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -1339,7 +1339,7 @@
     "expenditures": 46798.23,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:state-house-19:diaz-lupe"
@@ -1353,12 +1353,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -1377,7 +1377,7 @@
     "expenditures": 111810.39,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:state-house-19:gowan-david"
@@ -1391,12 +1391,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -1429,12 +1429,12 @@
     "allThreeAgree": false,
     "note": "OURS GAP — The agency holds a committee for this candidate, and the office it states is not the office on this ballot."
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    },
    "ourGap": {
     "whatIsMissing": "The agency holds a committee for this candidate, and the office it states is not the office on this ballot.",
@@ -1472,12 +1472,12 @@
     "allThreeAgree": false,
     "note": "OURS GAP — The agency holds a committee for this candidate, and the office it states is not the office on this ballot."
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    },
    "ourGap": {
     "whatIsMissing": "The agency holds a committee for this candidate, and the office it states is not the office on this ballot.",
@@ -1501,7 +1501,7 @@
     "expenditures": 8454.72,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:state-house-20:koehler-ben"
@@ -1515,12 +1515,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -1539,7 +1539,7 @@
     "expenditures": 24481.39,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:state-house-20:villegas-betty"
@@ -1553,12 +1553,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -1577,7 +1577,7 @@
     "expenditures": 64712.49,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:state-senate-17:king"
@@ -1591,12 +1591,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -1615,7 +1615,7 @@
     "expenditures": 36525.9,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:state-senate-17:soto"
@@ -1629,12 +1629,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -1653,7 +1653,7 @@
     "expenditures": 21697.94,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:state-house-17:keshel"
@@ -1667,12 +1667,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -1691,7 +1691,7 @@
     "expenditures": 46810.95,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:state-house-17:winchester"
@@ -1705,12 +1705,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -1729,7 +1729,7 @@
     "expenditures": 33215.5,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:state-house-17:lyon"
@@ -1743,12 +1743,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -1767,7 +1767,7 @@
     "expenditures": 48362.82,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:state-house-17:volk"
@@ -1781,12 +1781,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -1805,7 +1805,7 @@
     "expenditures": 176765,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:corporation-commissioner:thompson"
@@ -1819,12 +1819,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -1843,7 +1843,7 @@
     "expenditures": 179104.75,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:corporation-commissioner:myers"
@@ -1857,12 +1857,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -1881,7 +1881,7 @@
     "expenditures": 164801.56,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:corporation-commissioner:pratte"
@@ -1895,12 +1895,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -1919,7 +1919,7 @@
     "expenditures": 166801.51,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-08-31"
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
     "ballot-az-pima:corporation-commissioner:hill"
@@ -1933,12 +1933,12 @@
     "allThreeAgree": true,
     "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
     "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   }
  ]

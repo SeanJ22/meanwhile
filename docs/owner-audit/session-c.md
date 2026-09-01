@@ -535,9 +535,21 @@ or not it is finished**, because a package that lists only the finished work
 tells you nothing about the rest.
 
 **How to read a result line.** `MET` means this package verified it and names
-where. `PENDING — <lane>` means it has NOT been verified here and the owning
-lane has not reported. **A `PENDING` line is not a pass.** `NOT MET` means it
-was checked and it failed.
+where. `NOT MET` means it was checked and it failed. **Neither `PENDING` is a
+pass**, and they are different facts:
+
+- **`PENDING — <lane>`** — not verified here, and the owning lane had not
+  reported when this was written. **Every one of these has since been filled
+  in; none remains.**
+- **`PENDING THE MERGE`** — verified as far as it can be before the code is
+  deployed, with the exact command to finish it and what a pass looks like.
+  Two remain, and they are the only two: the legacy-host redirect, and
+  production serving `claude-sonnet-5`. Both need the RULING-1 merge to have
+  deployed, and both are re-run by the integration owner afterwards. A
+  `PENDING THE MERGE` line that is never re-run is a failed acceptance.
+
+**`OPEN — owner decision`** is a third thing again: the work is done and a
+choice is yours. There is one, in Item J.
 
 *Lane attribution below is read from the branch names in `git worktree list`
 (`sc-final/l1-populations`, `l2-closeout`, `l3-domain-model`, `l4-brand`,
@@ -548,15 +560,26 @@ rather than a fact, it says so.*
 
 | | |
 | --- | --- |
-| **Where to verify** | `pnpm walk:all` — the lane's own named checks, which must resolve in `docs/walk-checks.txt`. **The exact check ids are owed by Lane 1 and must be pasted here; a check id that resolves to nothing is a failed acceptance, not a passing one.** |
-| **Result** | `PENDING — LANE 1 (sc-final/l1-populations)` |
+| **Arizona — ACQUIRED** | `data/candidates/az-2026-sos-candidate-filings.json` cites the Secretary of State's 2026 partisan filing list. Bytes committed at `tests/fixtures/az-sos-2026-candidate-filings.pdf`, sha256 `a13d2a82f83b…`, 183,097 B. Count: `node -e "const j=require('./data/candidates/az-2026-sos-candidate-filings.json'); console.log(j.candidacies.length)"` | **MET — 266 candidacies across 76 contests**, established TWICE by independent mechanisms (positional table recovery, and filing-date tokens counted out of the text layer); the adapter refuses to write on disagreement or on zero |
+| **The registry equals the corpus** | `node -e "const r=require('./data/identity/az-2026-candidate-registry.json'); console.log(r.candidates.length)"` | **MET — 268** = the 266 filed candidates **plus 2 write-in nominees the certified canvass stars and the filing list never carried.** Every filing-list row is in the registry; nothing was dropped. The candidate universe moved **55 → 266** |
+| **New Hampshire — NOT ACQUIRED** | `data/hunt/candidate-filing-authorities-2026.json`, the NH row | **NOT MET, and the wall is OURS.** The document is retrieved and hashed (sha256 `cd3d45a9db80…`, 77 pages, all with a text layer). The pages are **rotated**, so the generic table layer reads each COLUMN as a row and returns `ZERO_ROWS`; and this repository holds no sourced crosswalk from an NH State Representative district to an OCD division. A prototype recovered 1,268 rows whose segmentation could not be verified and **was not shipped**. `REQUIRES_NEW_ADAPTER` |
+| **New Jersey — NOT ACQUIRED, and could not be** | same file, the NJ rows | **NOT MET, structurally.** The Division of Elections files **federal office only**; NJ's universe is the union of that authority and **21 county clerks**. No acquisition of these documents alone could earn the word "statewide" |
+| **Both are relabelled rather than left overclaiming** | `lib/candidates/population-label.ts`; NH and NJ read `PILOT_DERIVED`, AZ reads `PARTIAL_AUTHORITY_ACQUIRED` | **MET** |
+| **The AZ SOS `DISCOVERY_OWED` row resolves** | `data/jurisdictions/az.json` — key `BALLOT_AND_CANDIDATES:STATEWIDE:az-sos-candidate-filings`, now `ADAPTED` | **MET.** Its recorded URL also moved: the old one answered **404** while the document answered 200 — RULING 206, the record is not the URL |
+| **Enrichment obligations, with denominators** | `pnpm readback:control-plane` | **MET — 1,087 → 1,720.** AZ 795 against a denominator of 266 corpus candidacies; NH 114 against 47 **pilot-derived**; NJ 811 against 276 **pilot-derived** |
+| **R-C9 labels corrected everywhere** | `git grep -n "statewide" -- lib scripts` | **MET — 9 sites found, 6 corrected by the lane, 3 corrected by the integration owner** (the lane correctly refused to reach outside its ownership and reported them with exact text). 925 of the 1,720 obligations those headers described stand over pilot-derived populations |
+| **Result** | **MET for Arizona. NOT MET for New Hampshire and New Jersey, with the wall named in each case and the population relabelled rather than left wearing a word it had not earned.** |
 
 ### Item B — the render test
 
 | | |
 | --- | --- |
-| **Where to verify** | The test file the lane ships, by path, plus its named cases; and its check in `pnpm walk:all` if it has one. **Owed by the lane. Not yet named here.** |
-| **Result** | `PENDING — lane not yet identified from branch names; integration owner to attribute` |
+| **Where to verify** | `tests/new-zip-render.test.ts` — case *"RULING 229: 85122 renders a held statewide record with ZERO outbound acquisition"*. Run it against a local production build: `pnpm build && pnpm start`, then `node --test --experimental-strip-types --import ./scripts/register-test-loader.mjs tests/new-zip-render.test.ts` |
+| **The unit test is kept** | `tests/new-zip-readiness.test.ts` is untouched and still passes. Both together are the check | **MET** |
+| **It renders the real application** | The test drives the Playwright route the walk uses, through `scripts/browser.mts` `launchGuarded` (so it cannot leak `x-wtp-synthetic-run`) | **MET** |
+| **Outbound acquisition is trapped at BOTH layers** | Browser: `context.route("**/*")` records then aborts every non-loopback host. Server: `scripts/trap-outbound.mjs`, preloaded with `node --import`, wraps `fetch`, `http.request/get` and `https.request/get`, **appends every attempt to a log and only then throws**. A browser-only trap would have reported ZERO over a render that hunted during SSR | **MET** |
+| **A held statewide record appears** | `[data-contest-id="ballot-az-pima:governor"]` containing a `.candidate-row` with **Katie Hobbs** — a statewide Arizona office, at a ZIP outside both pilots | **MET** |
+| **Result** | **MET — 18 contests, 19 candidate cards, 0 browser outbound, 0 server outbound.** With no local build or no trap log the test **SKIPS with the missing piece named** rather than passing |
 
 ### Item C — the closeout truth surfaces *(this lane)*
 
@@ -608,9 +631,12 @@ unmerged data and no conclusion stranded outside a governed artifact.
 
 | | |
 | --- | --- |
-| **Where to verify** | `lib/ops/run-provenance.ts` and the `provenance` block written into every record under `data/ops/gate-runs/` and `data/health/walk-runs/`; plus the lane's own named check. **The lane owes the specific claim and its anchor.** |
-| **Known, and it belongs here** | The autonomous runner is **not staying up** — see *"What required no operator"* above. Any worker-provenance claim that assumes a running worker has to reconcile against that. |
-| **Result** | `PENDING — lane not yet identified from branch names; integration owner to attribute` |
+| **Where to verify** | `data/health/control-plane-readback/2026-09-01-03.json`, produced by `pnpm readback:artifact`, which runs `pnpm readback:control-plane` **as a subprocess** and parses every number back out of its verbatim stdout — there is no path by which a count reaches the artifact without the reader having printed it |
+| **The counts, read back** | obligations **2,996** (candidate-enrichment 1,720, local-jurisdiction 1,177, meetings 83, campaign-finance 16); occurrences **1,346**, of which **55** carry a committed disposition; RouteTask dispositions **301**; debt rows 96 | **MET as a reading** |
+| **The proof class did NOT move** | `proofClassOf` in `lib/ops/run-provenance.ts` requires `runClass ≠ LOCAL_SESSION`, `workingTreeClean`, and `integratedAtRunTime`. This run records `LOCAL_SESSION / true / false` | **NOT MET — still `SESSION_MEASURED`, deliberately.** A session cannot award itself independence by running the same command twice. Moving it needs a CI or scheduled run on an already-merged SHA, and the artifact says so in its own `_note` |
+| **Two premises in the directive were wrong, and are corrected here** | The three figures 1,087 / 1,020 / 52 were never both in the repo and current: the durable store held **1,087 / 1,294 / 300**. And "the latest committed freshness run shows 94 obligations" is a **per-cycle** number, not a store total — the two were being compared as if they were the same quantity | Recorded |
+| **`verify:readonly` and `census:runs` cannot answer this** | Both are scoped to the four collection stores and have never been control-plane aware. The read-back uses `WTP_CONTROL_PLANE_DATABASE_URL`, which is not the production read-only role. No second instrument was built — `pnpm dupes` passes | Recorded |
+| **Result** | **PARTIALLY MET.** The read-back artifact is landed and the counts are regenerated after Item A. The proof class is **not** upgraded, and upgrading it from this session would have been the exact defect the class exists to prevent |
 
 ### Item F — the domain cutover
 
@@ -623,44 +649,99 @@ live in production is the owning lane's to report.**
 | Three named origins, one public site origin | `lib/ops/origins.ts` — `PUBLIC_SITE_ORIGIN`, `STAGING_RENDER_ORIGIN`, `ADMIN_ORIGIN`, plus `LEGACY_NETLIFY_ORIGIN` kept apart from `NETLIFY_SITE_ID_DEFAULT` | **MET in the tree** |
 | The production host is not hardcoded anywhere else | `tests/origins.test.ts`, *"the production host is not hardcoded outside the origins module"* | **MET in the tree** |
 | The legacy host 301s to the new one | `netlify.toml` lines 98–102, and `tests/origins.test.ts`, *"netlify.toml forwards the legacy host with a 301"* | **MET in the tree** |
-| The redirect actually serves from production | `curl -sI https://sparkwtp.netlify.app/` and read the `301` and the `location:` header | `PENDING — LANE 3 (sc-final/l3-domain-model)` |
+| The redirect actually serves from production | `curl -sI https://sparkwtp.netlify.app/` and read the `301` and the `location:` header | **PENDING THE MERGE.** `netlify.toml` ships with the RULING-1 merge, so the redirect cannot serve before it. Measured **before** the change, on 2026-09-01: `GET https://sparkwtp.netlify.app/` returned **200, not a redirect** — the old host was serving the whole application in parallel with the new one. Re-run the command after the merge; a `301` with `location: https://meanwhileusa.com/` is the pass |
+| The observer targets the new host | `scripts/post-deploy-observer.mts` — `PRODUCTION_BASE_URL = PUBLIC_SITE_ORIGIN`. One read-only cycle ran 30 probes against `https://meanwhileusa.com/api/build` and recorded nothing | **MET** |
+| Canonical / OG / sitemap / CORS references | There were **none to move**: no `metadataBase`, no sitemap machinery, and no CORS or allowed-host list existed anywhere in `next.config.ts`, `app/` or `netlify/`. Item J then added the OG image, which resolves absolute via `PUBLIC_SITE_ORIGIN` | **MET, and stated rather than implied** |
 
 ### Item G — the repository rename
 
 | | |
 | --- | --- |
-| **Where to verify** | `gh repo view SeanJ22/meanwhile --json name,nameWithOwner` and `git remote -v`; plus whatever the lane changes in `docs/` and CI workflow references. |
-| **Result** | `PENDING — LANE 3 (sc-final/l3-domain-model)` *(attribution inferred)* |
+| Claim | Where to verify | Result |
+| --- | --- | --- |
+| The origin remote addresses the new name | `git remote -v` — `https://github.com/SeanJ22/meanwhile.git`. The remote is shared by every worktree of this clone, which is intended | **MET** |
+| Netlify is re-linked, **read back from the provider** | `GET https://api.netlify.com/api/v1/sites/6b39b212-…` → `repo_url https://github.com/SeanJ22/meanwhile`, `repo_path SeanJ22/meanwhile`, `installation_id 123276790` | **MET.** Two things to know: the brief's premise was stale (the BEFORE read already showed the new name, so the PATCH was a re-assert), and the first PATCH **nulled `installation_id`** — the GitHub App link — by omitting it. It was re-PATCHed and the integration owner re-read it independently. **Netlify treats `build_settings` as a replacement; read back every field you care about, not only the one you changed** |
+| Live references changed, records left alone | Inclusion rule: *change a reference only if it is an ADDRESS used to reach the repository today; leave it if it is a RECORD of something that happened.* **8 changed** — `docs/deploy-key-setup.md`, `docs/refresh-unblock-runbook.md`, `lib/ops/required-checks.ts`, `scripts/extract.mts`, `scripts/protection-verify.mjs`, `scripts/stage-own03-portraits.mts`, `tests/deploy-key-ssh.test.ts`, `tests/push-main.test.ts`. **19 left** — captured logs, recorded fixtures, dated provenance, the governance ledger and history, generated views | **MET** |
+| Workflows needed nothing | `git grep -n "SeanJ22" -- .github` — zero hits; already name-independent | **MET** |
+| Nothing depended on the old literal | One observer cycle, run **read-only** with `WTP_RUN_ID` declared: 30 probes to `https://meanwhileusa.com/api/build`, exit 0, **nothing recorded** | **MET** |
+| Branch protection survived the rename | `gh api repos/SeanJ22/meanwhile/rulesets/21572280` — active, `pull_request`, `required_status_checks` strict with the three contexts, `deletion` and `non_fast_forward`. Note `branches/main/protection` returns **404**: protection is a RULESET, and the 404 is expected rather than alarming | **MET** |
+| **Result** | **MET.** Organization transfer to `meanwhileusa/meanwhile` is deferred to incorporation and recorded on `docs/frontier.md`; nothing is blocked on it |
 
 ### Item H — the admin control centre
 
 | | |
 | --- | --- |
-| **Where to verify** | The route the lane ships under `app/`, reached at `ADMIN_ORIGIN` (`https://admin.meanwhileusa.com`) — the action being: open it and confirm it requires authentication and renders. Plus the lane's named test file by path. |
-| **Result** | `PENDING — LANE 5 (sc-final/l5-admin-staging)` |
+| Claim | Where to verify | Result |
+| --- | --- | --- |
+| The alias exists and resolves over HTTPS | `GET /sites/6b39b212-…` → `domain_aliases ["admin.meanwhileusa.com"]` (was `[]`); DNS zone `6a96f46e…` holds `NETLIFY admin.meanwhileusa.com`, `managed: true`; `curl -sI https://admin.meanwhileusa.com/api/build` → **200, `ssl_verify_result=0`** | **MET, provider-confirmed** |
+| The certificate covers it, and did not re-issue | `GET /sites/…/ssl` → `issued`, `["*.meanwhileusa.com","meanwhileusa.com"]`, expires 2026-11-30 <!-- expected-future: the TLS certificate expiry read from the Netlify API GET /sites/6b39b212-.../ssl on 2026-09-01. A provider fact about a certificate, not a stamp on this document. -->, **re-read after both the alias and the branch-suffix change** | **MET** |
+| Admin routes 404 on the public host | `tests/admin-control-centre.test.ts`; and against a local production build with a `Host:` header — `/admin`, `/admin/login`, `/api/admin/session`, `/api/admin/decision` all **404** on the public host while `/api/build` still 200s | **MET (seeded failure 1)** |
+| Unauthenticated requests on the admin host are refused | admin host: `/admin` → 307 to `/admin/login?why=NOT_CONFIGURED`; `/api/admin/decision` → **401**; `/ballot` → 404 | **MET (seeded failure 2)** |
+| A number rendered without a denominator fails the page's own check | `tests/admin-control-centre.test.ts`, the render audit | **MET (seeded failure 3)** |
+| The session cookie is what it must be | wrong secret → 303 `?why=REFUSED`; cross-origin → 303 `?why=ORIGIN`; correct → `Set-Cookie: __Host-wtp-admin=…; Path=/; Max-Age=28800; HttpOnly; Secure; SameSite=Strict`, **no `Domain=`** | **MET** |
+| PILOT HEALTH matches `pnpm pilot:health` | Structurally — the publisher calls the same pure functions rather than parsing stdout. Both at `35afd378`: READER `NOT_READY`, TRUTH `NOT_READY`, FRESHNESS `NOT_READY`, PILOT **NOT GREEN** | **MET** |
+| Heartbeat and digest equal the runner's durable records | `pnpm owner:readback` → **READ-BACK HELD**; 1 digest, **47 lines stored exactly as the runner emitted them**; every number survived the round trip with its denominator; control plane at schema v3, 20 of 20 tables, no drift | **MET** |
+| One decision travels intent → canonicalization | Driven through the real route handler (three refusals first: 404 public host, 403 cross-origin, 401 no session), then `pnpm owner:canonicalize` → **`CANONICALIZED`**. To be exact: it resolved to an **existing** current ruling rather than creating one, and is recorded as a **mechanism proof, not an owner decision** | **MET, with the caveat stated in the record itself** |
+| Env vars on Netlify, by NAME | `WTP_CONTROL_PLANE_DATABASE_URL`, `WTP_ADMIN_SECRET`, `WTP_ADMIN_SESSION_KEY` — all `is_secret=true`, contexts `[production, branch-deploy]`. **No value was read or printed** | **MET** |
+| **Result** | **MET in the tree and at the provider; NOT YET LIVE.** `middleware.ts` ships with the RULING-1 merge, so until that merge `admin.meanwhileusa.com` serves the public app. Re-verify after the merge with the HTTPS probe above |
+| **You must do one thing** | `WTP_ADMIN_SECRET` was generated and set via the API **without ever being printed**. Read its value from the Netlify UI (Site configuration → Environment variables) to log in, or replace it with one of your own |
 
 ### Item I — staging
 
 | | |
 | --- | --- |
-| **Where to verify** | `STAGING_RENDER_ORIGIN` in `lib/ops/origins.ts` is `https://test.meanwhileusa.com`; the action being: open it, confirm it serves the staging build and is not indexed. Plus the deploy configuration the lane changes in `netlify.toml`. |
-| **Note** | RULING 233 (alias `R-C10`) — staging-first — is recorded as **adopted but NOT operative until the session after Session C closes**. An acceptance claim here must not read as though it were already binding. |
-| **Result** | `PENDING — LANE 5 (sc-final/l5-admin-staging)` |
+| **Note** | RULING 233 (alias `R-C10`) — staging-first — is recorded as **adopted but NOT operative until the session after Session C closes**. Nothing below reads as though it were already binding. |
+
+| Claim | Where to verify | Result |
+| --- | --- | --- |
+| DNS, TLS and host routing for the staging subdomain | `curl -sI https://test.meanwhileusa.com/api/build` → **404 with `ssl_verify_result=0`** before the branch exists, which is the correct pre-branch state: the host resolves on the wildcard and Netlify answers "no branch deploy by that name" | **MET** |
+| Netlify is configured for exactly one branch deploy | `allowed_branches ["main","test"]`, read back from the API; plus `scripts/netlify-staging-ignore.mjs`, which **derives** the branch from `hostOf(STAGING_RENDER_ORIGIN)` rather than hardcoding it | **MET** |
+| **The branch is named `test`, and RULING 233 says `staging`** | **RULING 235** records the measurement as a **FACT** — four ways against the live API, with a positive control — and deliberately does **not** amend the ruling. **NH304** carries the choice to you | **CONFLICT REPRESENTED, NOT RESOLVED.** The session shipped under `test` only because RULING 233 is not operative yet; nothing is decided that you cannot undo |
+| Database isolation | **NOT MET — NEEDS SEAN.** There is no Neon control-plane API key in this environment, so a database branch cannot be created. Nothing pretends isolation exists | **NOT MET, named** |
+| The isolation seeded failure works anyway | `pnpm staging:isolation` — branch-deploy context resolving the production `DATABASE_URL` → **`REFUSED`**, printing variable NAMES only; an `unknown` resolution also refuses (CANNOT_TELL fails safe) | **MET** |
+| `STAGING_RENDER` exists as a target without becoming an activation bypass | `EVALUATION_TARGETS`; the duplicate union in `capability-registry.ts` replaced by an import; `satisfiesActivationGate` requires target **and** proof class in one call. `scripts/reader-suite.mts`'s RULING-125 host refusal is untouched | **MET** |
+| Promotion proved in BOTH directions, without moving `main` | `pnpm promote:staging` — eligible run exits 0 `PROMOTION ELIGIBLE`; refused run collects **7 refusals by name** (`STALE_HEAD, SUITE_RED, VISUAL_RED, REQUIRED_CHECKS_NOT_GREEN, WRONG_DATABASE, FREEZE_NOT_CLEAR, NOT_FAST_FORWARD`) and exits 1; no flags exits 2 (could-not-tell) | **MET.** `--execute` needs `WTP_PROMOTION_ARMED=1` and opens a **PR**, because ruleset 21572280's `pull_request` rule makes a direct fast-forward unavailable and the exempt deploy key must never carry code |
+| The second observer | `pnpm staging:observe` run live → `OUTCOME: COULD_NOT_TELL`, `probe 1 NO ANSWER … HTTP 404`, **nothing recorded**. It opens no database and refuses structurally to write the production record path | **MET** |
+| Deploy Previews | The brief says they "remain available"; they have been **cancelled since g17**. Left cancelled, and the conflict is represented in `netlify.toml` rather than resolved — re-enabling amends a ruling | **CONFLICT REPRESENTED** |
+| **Result** | **PARTIALLY MET.** Everything that does not require a Neon branch or the integration head is built and proved. Database isolation is a named NEEDS_SEAN blocker |
 
 ### Item J — brand identity
 
 | | |
 | --- | --- |
-| **Where to verify** | The rendered site at `PUBLIC_SITE_ORIGIN`, plus `docs/DESIGN.md` and `app/globals.css` for the committed tokens. Tokens are verified with `getComputedStyle` in the browser, never by reading the stylesheet — a `@theme inline` entry can emit no CSS variable while the utility class still exists. |
 | **Open owner row** | `B01` — *settle the product's name* — has been in your queue 21 days and is listed below. A brand item shipped while that row is open is a decision this package cannot make. |
-| **Result** | `PENDING — LANE 4 (sc-final/l4-brand)` |
+
+| Claim | Where to verify | Result |
+| --- | --- | --- |
+| `--font-record` and `--mark` declared dark-first with the scoping comment | `app/globals.css`; verified in the **built chunk** with no `colorScheme` override: `--mark` → `#00b894` (no `data-theme`) and `#00896e` (`data-theme="light"`) | **MET** |
+| Contrast measured as NUMBERS, four surfaces, both themes | `--mark` vs `--bg` / `--panel` / `--panel-bg` / `--surface`: dark **7.44 / 6.86 / 6.41 / 6.11**; light **3.90 / 4.37 / 4.15 / 3.73**. `--mark` is a non-text graphic, so the applicable bar is 3:1 and the lowest reading is 3.73 | **MET — no applicable bar fails, and no exemption was written** |
+| EB Garamond self-hosted, no reader address reaches Google | `app/layout.tsx`, `next/font/google`, privacy reasoning in a comment. **Network capture: 344 requests, exactly two hosts** (`127.0.0.1:3000`, `api.maptiler.com`), **zero** to `fonts.googleapis.com` or `fonts.gstatic.com`. The count is floored (RULING 159), so a browser that never started cannot print the same reassuring zero | **MET** |
+| One Logo component, both variants, drawn not typed | `components/brand/logo.tsx` — `<circle>`×2 and `<rect>`, no `…` or `.` glyph; `role="img" aria-label="Meanwhile"`; the 18px floor is enforced **in the component** | **MET** |
+| No inline brand display text in the app shell | **8 call sites converted.** Three `PRODUCT_NAME` uses survive deliberately and are not display text: two share/calendar payload strings, and a `ctx.fillText` into a downloadable canvas PNG, which cannot consume a React component | **MET** |
+| Both pins removed, and `--link` is off every brand element | `.welcome-icon` deleted. **Two live defects, not one:** the overlay's pin wore `var(--link)`, the "tappable" accent; the sidebar's wore `var(--accent-local)`, a **tier** colour a reader learns from the map legend — so the brand was making a tier claim. The brief named only the first | **MET** |
+| Icons and OG present and serving | `app/icon.svg`, `app/apple-icon.png` (180×180), `app/opengraph-image.png` (1200×630), and `app/favicon.ico` **replaced** — it was the create-next-app default, listed by Next *ahead* of `icon.svg`. `og:image` resolves absolute via `PUBLIC_SITE_ORIGIN`, no literal | **MET** |
+| The undeclared-token class | **18 found, 18 fixed** — `--border` ×10, `--rule` ×4, `--destructive` ×2, `--paper` ×1, and one visible only in the built chunk. Verified in a browser before and after: `.voting-panel` went from `border-top-style: none` to `solid` | **MET — the brief said nine** |
+| **The eighteenth is worth reading** | Tailwind v4 scans every tracked file **including comments**, and the BAL-26 paragraph in `tests/ballot-ask-pill.test.ts` quoted the broken class literally — so **a fixed defect's own documentation was compiling a live `border-color: var(--line)` rule into production CSS.** Dead, but shipping | Recorded |
+| Hardcoded-hex sweep | **35 found, 3 fixed, 32 classified.** The fix that mattered: `components/ui/button.tsx` had an **amber** hover on a **cyan** button, left by the palette pass — the one loud control on the screen changed hue on hover | **MET** |
+| **The sidebar adjacency — YOUR DECISION** | Six captures at `docs/evidence/brand-2026-09-01/after/sidebar-{dark,light}-{local,state,national}.png`. **In dark theme the mark and the selected State tab are the same hex, `#00b894`.** The lane's read is that they do not collapse — a ~4px square terminating a serif wordmark against a ~130px filled pill, with two controls between — and light separates on lightness. But the dark identity is exact, including on Local and Federal screens where nothing teal is selected. **No adjustment was made; the brief said this is yours** | **OPEN — owner decision** |
+| **Result** | **MET**, with one open owner decision (the dark adjacency) and one open owner row (`B01`, the name) |
 
 ### Item K — the Ask model switch
 
 | Claim | Where to verify | Result |
 | --- | --- | --- |
 | Exactly one function emits a `SwitchVerdict` | `git grep -nE "\)\s*:\s*SwitchVerdict"` — one line, `lib/ask/model-economics.ts` | **MET** (also Item 2 above) |
-| The switch away from the incumbent is an OWNER override, not a measurement | **RULING 234** (alias `R-C11`) records the owner overriding the H2 `RETAIN` verdict, **for the Sonnet 5 switch only**. Verify with `pnpm governance:open --task shipping-ci` and read `model.switch_rule` and the adopted record | `PENDING — LANE 4 (sc-final/l4-brand)` *(attribution inferred)* |
+| The switch away from the incumbent is an OWNER override, not a measurement | **RULING 234** (alias `R-C11`) records the owner overriding the H2 `RETAIN` verdict, **for the Sonnet 5 switch only**. `model.switch_rule` is **untouched** | **MET** |
+| The model moved, in one constant | `lib/ask/model.ts` with the measurement-integrity comment; `WTP_ASK_MODEL` / `WTP_ASK_EFFORT` overrides default to it, and an invalid effort is **refused** rather than passed through to a 400 | **MET** |
+| Nothing had to be removed from the request | `temperature`, `top_p`, `top_k` and `budget_tokens` **appear nowhere in this repository**, and thinking was already `{type:"adaptive"}`. All four rung shapes verified against Sonnet 5 by **live request, HTTP 200 each**, before anything was switched | **MET** |
+| The suite was re-run per question, both arms | 7 canonical questions, 3 passes per arm, one pack proven identical by digest, caches cold. **Sonnet held every question Opus held, and strictly more on both contested ones** — Q3 1/3 vs 0/3, Q5 2/3 vs 0/3. **No question held on Opus and failed on Sonnet.** Cold cost `$0.34649` → `$0.13103`, a measured **2.64×** against a 2.5× rate card | **MET** |
+| Effort was measured, not reasoned | low 3/4, medium 3/4, high 3/4; **`xhigh` and `max` BREAK the output contract** at `max_tokens: 2048` — thinking counts against the ceiling and the JSON truncates mid-string. `medium` retained | **MET** |
+| Token budgets recounted | **2 found, 2 corrected.** The system prompt 478 → 471 — and **identical on both models**, so the brief's "counts run higher" **did not hold** and is reported as a disagreement. And the minimum cacheable prefix 512 → **1024**, measured by request | **MET** |
+| Every model-ID call site found; only Ask changed | 4 Ask files changed; `lib/control-plane/model-cost.ts` (workers) and `tests/executor-identity.test.ts` **deliberately untouched** | **MET** |
+| Local serves Sonnet 5, by live request | `synthesis.model claude-sonnet-5`, `synthesis.effort medium`; startup line `ask · model claude-sonnet-5 · effort medium` | **MET** |
+| **Production serves Sonnet 5** | Requires the deploy. After the merge: `POST https://meanwhileusa.com/api/ask/grounded` with `x-wtp-synthetic-run`, and read `trace.synthesis.model`. **Pass = `claude-sonnet-5 medium`**; anything else, or a null model, is a fail | **PENDING THE MERGE** |
+| A harness defect was found and fixed rather than reported | `derive()` FILTERED incomparable questions out instead of carrying them as unmeasured, so a sweep emitted `SWITCH` over **one row** and reported `questions: 1` as though that were the plan. Now carried as `held: null`, so RULING 230's own guard fires; the record states its denominator | **MET** |
+| A second defect, found by running the first fix | `--regenerate` read the arm names from **today's constants**, which the switch had swapped — so re-deriving a pre-switch record stamped a real measurement with **reversed roles**. Three such records were written and **deleted**; the path now refuses a mismatch with the correct command | **MET** |
 | The measured comparison record still says what it said | `data/health/ask-model-compare-runs/2026-09-01-1788271705266.json` — `verdict.kind` `HOLD`, `decision` `RETAIN:claude-opus-5` | **MET** |
 
 **The three rulings adopted this session**, for the record: **RULING 232**

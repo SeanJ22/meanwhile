@@ -84,6 +84,7 @@ import {
   type StateMoneyRecord,
   type StateMoneySnapshot,
 } from "../../funding/state-money.ts";
+import { OUTBOUND_CONTACT } from "../../geo/outbound-agent.ts";
 import type { Provenance } from "../types.ts";
 
 export const AGENCY = "Arizona Secretary of State — See The Money";
@@ -113,7 +114,14 @@ export const HEADERS: Readonly<Record<string, string>> = Object.freeze({
   "x-requested-with": "XMLHttpRequest",
   origin: BASE,
   referer: `${BASE}/Reporting/Explore`,
-  from: "seanj22@gmail.com",
+  /*
+   * COMPOSED FROM THE ONE HOME, NEVER COPIED. `tests/feedback.test.ts` (R40)
+   * caught this file writing the literal, which is the third time that guard
+   * has caught the same copy — and the fix each time has been to compose from
+   * `lib/geo/outbound-agent.ts` rather than to widen the exemption, so the
+   * address stays in one place and the guard stays as tight as it was.
+   */
+  from: OUTBOUND_CONTACT,
   "x-purpose": "civic campaign-finance index for a public-records product",
 });
 

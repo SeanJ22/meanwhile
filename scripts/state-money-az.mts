@@ -107,6 +107,7 @@ import {
   type SummaryRow,
 } from "../lib/sources/az-seethemoney/index.ts";
 import { computeSplit, type StateMoneySnapshot } from "../lib/funding/state-money.ts";
+import { OUTBOUND_CONTACT } from "../lib/geo/outbound-agent.ts";
 import { today } from "./doc-dates.mjs";
 
 const ROOT = process.cwd();
@@ -180,7 +181,10 @@ function ftpGet(path: string): Promise<string> {
         if (!m) continue;
         const code = Number(m[1]);
         if (stage === 0 && code === 220) ctl.write("USER anonymous\r\n"), (stage = 1);
-        else if (stage === 1 && code === 331) ctl.write("PASS seanj22@gmail.com\r\n"), (stage = 2);
+        // Anonymous FTP convention: the password IS a contact address, so the
+        // courteous-client rule is satisfied by the same string the rest of the
+        // product identifies with. Composed from its one home, never copied.
+        else if (stage === 1 && code === 331) ctl.write(`PASS ${OUTBOUND_CONTACT}\r\n`), (stage = 2);
         else if (stage === 2 && code === 230) ctl.write("TYPE I\r\n"), (stage = 3);
         else if (stage === 3 && code === 200) ctl.write("PASV\r\n"), (stage = 4);
         else if (stage === 4 && code === 227) {

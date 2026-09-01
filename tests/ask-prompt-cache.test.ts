@@ -4,10 +4,13 @@ import test from "node:test";
 import type { EvidencePack } from "../lib/ask/evidence.ts";
 import {
   ASK_CALLER_KEYS,
+  CACHE_READ_MULTIPLIER,
+  CACHE_WRITE_MULTIPLIER,
   SYNTHESIS_CACHE_TTL,
   askCallerKey,
   cacheCallLine,
   cacheHitRates,
+  cacheSavings,
   emptyCacheLedger,
   readCacheUsage,
   recordCacheUsage,
@@ -350,12 +353,18 @@ test("H1: the cached prefix carries the system rules AND the ZIP civic context",
 
 test("H1: the prefix clears Claude Opus 5's 512-token cacheable minimum", () => {
   /*
-   * Measured, not assumed. The system prompt ALONE is 1,503 characters ≈ 418
-   * tokens — BELOW the 512-token minimum — which is exactly why the breakpoint
-   * sits after the civic context rather than on the system block. A breakpoint
-   * on a too-short prefix does not error; it silently never caches, and a
-   * marker that can never fire is worse than none because it reads as a
-   * guarantee.
+   * Measured, not assumed. The system prompt ALONE is 1,503 characters = **478
+   * tokens**, counted at Anthropic's own `count_tokens` endpoint on 2026-09-01
+   * — BELOW the 512-token minimum, which is exactly why the breakpoint sits
+   * after the civic context rather than on the system block. A breakpoint on a
+   * too-short prefix does not error; it silently never caches, and a marker
+   * that can never fire is worse than none because it reads as a guarantee.
+   *
+   * The earlier note said "≈ 418 tokens", a chars/4 estimate that was 60 low.
+   * The conclusion is unchanged and now rests on a count rather than a divisor:
+   * 478 is still under 512, and the margin is 34 tokens, which is thin enough
+   * that the next edit to the system prompt could cross it silently — so the
+   * assertion below is on the SYSTEM side too, not only on the whole prefix.
    */
   const pack = zipPack();
   const contextChars =
@@ -565,4 +574,82 @@ test("H1: an unrecognised WTP_ASK_CALLER falls back rather than reaching the wir
     askCallerKey({ NODE_ENV: "production", WTP_ASK_CALLER: "prod-ask" } as NodeJS.ProcessEnv),
     "prod-ask",
   );
+});
+
+/* ── what the cache saved ────────────────────────────────────────────────── */
+
+test("H1: the saving is computed from the published multipliers, and one read repays the write", () => {
+  /*
+   * The arithmetic that decides whether a breakpoint is worth having at all:
+   * a five-minute write bills 1.25x and a read bills 0.1x, so two passes over
+   * one prefix bill 1.35x against 2.0x uncached. The break-even is the SECOND
+   * request, and it is asserted here rather than remembered.
+   */
+  assert.equal(CACHE_WRITE_MULTIPLIER, 1.25);
+  assert.equal(CACHE_READ_MULTIPLIER, 0.1);
+  assert.ok(
+    CACHE_WRITE_MULTIPLIER + CACHE_READ_MULTIPLIER < 2,
+    "if one read did not repay the write premium the breakpoint would be a surcharge",
+  );
+
+  /* The 2026-09-01 PRODUCTION reading, seeded: 15,731 read, 9,662 written,
+     583 uncached, at Claude Opus 5's $5/M input rate. */
+  const measured = cacheSavings(
+    {
+      callerKey: "synthetic-run",
+      calls: 7,
+      callsWithCacheRead: 4,
+      hitRate: 4 / 7,
+      cacheReadInputTokens: 15_731,
+      cacheCreationInputTokens: 9_662,
+      uncachedInputTokens: 583,
+    },
+    5,
+  );
+  const total = 15_731 + 9_662 + 583;
+  assert.ok(Math.abs(measured.uncachedBaselineUsd - (total * 5) / 1_000_000) < 1e-12);
+  assert.ok(measured.savedUsd > 0, "a run with reads must save something");
+  assert.ok(
+    measured.savedFraction > 0.4 && measured.savedFraction < 0.5,
+    `the 2026-09-01 production reading saved ${(measured.savedFraction * 100).toFixed(1)}%`,
+  );
+  assert.ok(
+    measured.cachedShareOfInput > 0.97,
+    "almost the whole prompt is inside the cached prefix; the question tail is a few dozen tokens",
+  );
+});
+
+test("H1: a run with no cache activity saves nothing and is never negative", () => {
+  /* A zero is a MEASURED zero here — the caller made calls and none cached —
+     and it must not come out as a negative saving or a divide-by-zero. */
+  const cold = cacheSavings(
+    {
+      callerKey: "local-dev",
+      calls: 3,
+      callsWithCacheRead: 0,
+      hitRate: 0,
+      cacheReadInputTokens: 0,
+      cacheCreationInputTokens: 0,
+      uncachedInputTokens: 4_000,
+    },
+    5,
+  );
+  assert.equal(cold.savedUsd, 0);
+  assert.equal(cold.savedFraction, 0);
+  assert.equal(cold.cachedShareOfInput, 0);
+
+  const nothing = cacheSavings(
+    {
+      callerKey: "local-dev",
+      calls: 0,
+      callsWithCacheRead: 0,
+      hitRate: 0,
+      cacheReadInputTokens: 0,
+      cacheCreationInputTokens: 0,
+      uncachedInputTokens: 0,
+    },
+    5,
+  );
+  assert.equal(nothing.savedFraction, 0);
+  assert.equal(nothing.cachedShareOfInput, 0);
 });

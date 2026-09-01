@@ -52,6 +52,7 @@ import {
 } from "@/lib/ask/ballot-inventory";
 import { readLocationOrigin, stampResidency } from "@/lib/ask/residency";
 import { captureAskInteraction } from "@/lib/db/ask-signal";
+import { askCallerKey, cacheCallLine } from "@/lib/ask/prompt-cache";
 import { synthesizeAnswer } from "@/lib/ask/synthesize";
 import { sittingsOnSameLocalDay, selectSitting, type AgendaSelection } from "@/lib/ask/select";
 import {
@@ -1703,14 +1704,43 @@ export async function POST(request: Request) {
   };
 
   // ── 4/5. SYNTHESIS AND VALIDATION ────────────────────────────────────
-  const synthesis = await synthesizeAnswer(pack, { allowCall });
+  /*
+   * H1. The caller key is derived from THIS REQUEST, not from the environment
+   * alone: a local production build (RULING 125's verification target) also
+   * reports NODE_ENV=production, so an env-only rule would file every harness
+   * run under `prod-ask` and pool the reader suite's repeated questions with
+   * real readers in the one number that exists to catch a regression.
+   */
+  const synthesis = await synthesizeAnswer(pack, {
+    allowCall,
+    callerKey: askCallerKey(process.env, markerFromRequest(request).runClass),
+  });
   let answer: string | null = null;
   let answerModel: string | null = null;
   let validationPassed: boolean | null = null;
   let mode: AnswerMode = records.length > 0 ? "STRUCTURED_GROUNDED" : "NO_EVIDENCE";
 
   if (synthesis.kind === "WROTE") {
-    trace.synthesis = { ran: true, model: synthesis.model, ms: synthesis.ms };
+    trace.synthesis = {
+      ran: true,
+      model: synthesis.model,
+      ms: synthesis.ms,
+      /*
+       * H1. The cache numbers travel with the answer, per caller key, so a
+       * regression in prompt assembly shows up as a collapsed hit rate in the
+       * trace rather than as a quietly larger bill nobody reads.
+       */
+      cache: {
+        callerKey: synthesis.callerKey,
+        cacheReadInputTokens: synthesis.usage.cacheReadInputTokens,
+        cacheCreationInputTokens: synthesis.usage.cacheCreationInputTokens,
+        uncachedInputTokens: synthesis.usage.inputTokens,
+      },
+    };
+    /* And into the server console, so a collapsed hit rate is visible in the
+       deployment log rather than only in a trace somebody has to go and read.
+       Caller key and token counts only — no reader fact reaches this line. */
+    console.log(cacheCallLine(synthesis.callerKey, synthesis.usage));
     /*
      * The body inventory rides along as the known-subject universe, so the
      * substitution check can refuse prose that NAMES a different government we

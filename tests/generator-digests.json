@@ -60,8 +60,8 @@
     "regeneratedOn": "2026-09-01"
   },
   "data/hunt/wikipedia-nj-morris.json": {
-    "digest": "b513cda0b4e77449c767695899a6c33ba931f7dfc6bf4a54448d16d5284c2c60",
-    "files": 5,
+    "digest": "26223d4c469b5b17c4c8f5677ed980bef05194e6ee05a2f29cd611b356bab017",
+    "files": 6,
     "entry": "scripts/wiki-municipality.mts",
     "regeneratedOn": "2026-09-01"
   },
@@ -96,8 +96,8 @@
     "regeneratedOn": "2026-09-01"
   },
   "docs/evidence/njhunt6-morris-rosters.jsonl": {
-    "digest": "4271702b1874aefe006c199f24c6d2611c09d17d24158de4a9906ccbb227dcf4",
-    "files": 11,
+    "digest": "60bdf10b7f2405bf6350df244f7c289ab150cbd096bc86057d6f917d5fda6d83",
+    "files": 12,
     "entry": "scripts/build-nj-rosters.mts",
     "regeneratedOn": "2026-09-01"
   },
@@ -210,8 +210,8 @@
     "regeneratedOn": "2026-09-01"
   },
   "lib/registry/rosters-nj-morris.ts": {
-    "digest": "4271702b1874aefe006c199f24c6d2611c09d17d24158de4a9906ccbb227dcf4",
-    "files": 11,
+    "digest": "60bdf10b7f2405bf6350df244f7c289ab150cbd096bc86057d6f917d5fda6d83",
+    "files": 12,
     "entry": "scripts/build-nj-rosters.mts",
     "regeneratedOn": "2026-09-01"
   },

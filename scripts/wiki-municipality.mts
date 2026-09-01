@@ -33,6 +33,12 @@
  */
 
 import { writeFileSync } from "node:fs";
+
+import {
+  mergeConfirmations,
+  readCitationLedger,
+  writeCitationLedger,
+} from "../lib/hunt/citation-ledger.ts";
 import { join } from "node:path";
 
 import {
@@ -312,6 +318,37 @@ const out = {
 };
 
 writeFileSync(outPath, JSON.stringify(out, null, 2) + "\n", "utf8");
+
+/*
+ * **THE CONFIRMATIONS OUTLIVE THIS ARTIFACT, BECAUSE A PROOF DOES.**
+ * (2026-09-01.)
+ *
+ * This file is overwritten on every walk, so a citation that was CONFIRMED last
+ * month and is UNREACHABLE today reads, to anything downstream, as though it was
+ * never proved. Re-walking on 2026-09-01 moved 8 citations that way and
+ * `pnpm nj:wire` then deleted a sitting mayor from the reader's page, because a
+ * borough had dropped a `www` from its own hostname.
+ *
+ * A CONFIRMED verdict is written to an append-only ledger, keyed by person AND
+ * by the URL that confirmed them. Nothing else writes it, it is never removed,
+ * and it never transfers to a different URL. See `lib/hunt/citation-ledger.ts`.
+ */
+if (confirm) {
+  const confirmations = checks
+    .filter((c) => c.verdict === "CONFIRMED" && c.confirmedBy)
+    .map((c) => ({ person: c.person, url: String(c.confirmedBy) }));
+  const merged = mergeConfirmations(
+    readCitationLedger(ROOT),
+    confirmations,
+    AS_OF,
+    "wiki:muni",
+  );
+  writeCitationLedger(ROOT, merged.ledger);
+  console.log(
+    `  citation ledger             ${merged.added} new · ${merged.refreshed} re-confirmed · ` +
+      `${merged.ledger.rows.length} held in total`,
+  );
+}
 
 console.log("");
 console.log(`  municipalities reached      ${reached.length} of ${titles.length}`);

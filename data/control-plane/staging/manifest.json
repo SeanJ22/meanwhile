@@ -1,0 +1,328 @@
+{
+  "stagedOn": "2026-08-31",
+  "promotionEnabled": false,
+  "entries": [
+    {
+      "obligationId": "freshness:campaign-finance:az-sos-cfs-2026#az-pima-easyvote-public-filings",
+      "providerId": "campaign-finance",
+      "recordClass": "campaign-finance",
+      "subjectId": "az-sos-cfs-2026",
+      "routeId": "az-pima-easyvote-public-filings",
+      "stagedOn": "2026-08-31",
+      "nextDueAt": "2026-09-01T02:31:32.147Z",
+      "disposition": "INGESTED",
+      "state": "STAGED_GAP",
+      "rowCount": 0,
+      "declaredTotal": null,
+      "complete": false,
+      "snapshotPath": null,
+      "readerSentence": "Pima County EasyVote public filings portal — PRIMARY records on a vendor platform: the record was ACQUIRED and is held, and this project has no reader yet for its shape.",
+      "unresolved": [
+        "NORMALIZER MISSING for route az-pima-easyvote-public-filings. The bytes are vaulted and cited; what is absent is code that turns them into rows. That is a gap in OUR tooling, not in their publication, and the artifact is not lost while it waits.",
+        "artifact(s): ar-bc479071502f543b4e0d2f61"
+      ]
+    },
+    {
+      "obligationId": "freshness:campaign-finance:az-sos-cfs-2026#az-sos-cfs-bulk-ftp",
+      "providerId": "campaign-finance",
+      "recordClass": "campaign-finance",
+      "subjectId": "az-sos-cfs-2026",
+      "routeId": "az-sos-cfs-bulk-ftp",
+      "stagedOn": "2026-08-31",
+      "nextDueAt": "2026-09-01T02:49:26.235Z",
+      "disposition": "REQUIRES_NEW_ADAPTER",
+      "state": "STAGED_GAP",
+      "rowCount": 0,
+      "declaredTotal": null,
+      "complete": false,
+      "snapshotPath": null,
+      "readerSentence": "ftp://ftp.azsos.gov/cfsdata2/ — Arizona's own bulk campaign-finance drop: the route closed REQUIRES_NEW_ADAPTER. THIS PROCESS HOLDS NO FTP CLIENT. The drop was walked 2026-08-26 and is anonymous, live, and carries 8,828 Arizona campaign committees and the state's 109 filing jurisdictions. That is RULING 166's rung ZERO and it outranks every page-by-page route below it. The missing piece is an adapter in this repository, which is a fact about OUR tooling and is never a fact about the record — REQUIRES_NEW_ADAPTER, and the obligation stays live.",
+      "unresolved": [
+        "an FTP client. Until one exists this route disposes REQUIRES_NEW_ADAPTER on a clock rather than being forgotten, which is the difference between a named next move and an absence.",
+        "still owed, and scheduled to be tried again at 2026-09-01T02:49:26.235Z"
+      ]
+    },
+    {
+      "obligationId": "freshness:campaign-finance:az-sos-cfs-2026#az-sos-seethemoney-datatables",
+      "providerId": "campaign-finance",
+      "recordClass": "campaign-finance",
+      "subjectId": "az-sos-cfs-2026",
+      "routeId": "az-sos-seethemoney-datatables",
+      "stagedOn": "2026-08-31",
+      "nextDueAt": "2026-09-01T02:31:32.147Z",
+      "disposition": "INGESTED",
+      "state": "STAGED_PROMOTION_READY",
+      "rowCount": 370,
+      "declaredTotal": 370,
+      "complete": true,
+      "snapshotPath": "data/control-plane/staging/freshness_campaign-finance_az-sos-cfs-2026_az-sos-seethemoney-datatables.staged.json",
+      "readerSentence": "seethemoney.az.gov /Reporting/GetNEWTableData — the statewide filer index: 370 of 370 row(s) the publisher itself declares, normalized and staged. Not yet shown to readers — a session carries the last mile.",
+      "unresolved": [
+        "`entityLastNameRaw` carries the publisher's own presentation markup — `\"Accalia, Jayme <br>(102162)\"` — verbatim. Splitting it into a name is a promotion-step decision that can be checked against the ballot; doing it here would edit a government's record on a guess.",
+        "NO PER-ENTITY CYCLE TOTAL IS DERIVED. Several rows share one EntityID with differing Income/Expense and an identical CashBalance. Tested over the population 2026-08-31: sum(Income) - sum(Expense) equals CashBalance for 134 of 255 entities and BREAKS for 121, including single-row entities where there is nothing to sum. Publishing either aggregation as a named person's campaign total would be a wrong figure on a card.",
+        "What would settle it: ExportEntityTransactions (itemized, summable), the filed reports, or the ftp://ftp.azsos.gov/cfsdata2/ bulk drop — 8,828 committees, reachable 2026-08-26, and unwalked for this purpose because this process holds no FTP client."
+      ]
+    },
+    {
+      "obligationId": "freshness:campaign-finance:ballot-az-pima:prop-423#AZ_PIMA_COUNTY_CAMPAIGN_FINANCE_PAGE",
+      "providerId": "campaign-finance",
+      "recordClass": "campaign-finance",
+      "subjectId": "ballot-az-pima:prop-423",
+      "routeId": "AZ_PIMA_COUNTY_CAMPAIGN_FINANCE_PAGE",
+      "stagedOn": "2026-08-31",
+      "nextDueAt": "2026-09-01T03:08:13.770Z",
+      "disposition": "REQUIRES_NEW_ADAPTER",
+      "state": "STAGED_GAP",
+      "rowCount": 0,
+      "declaredTotal": null,
+      "complete": false,
+      "snapshotPath": null,
+      "readerSentence": "Pima County campaign finance — the § 16-928 county filing officer's own page: the route closed REQUIRES_NEW_ADAPTER. HTTP 200, walked 2026-08-26 and classified PRIMARY (county filing officer). The page was reached; the FILINGS behind it were not extracted, and WHICH Pima County office holds the statutory role of 'officer in charge of elections' is not yet named. THIS ROUTE DECLARES A HOST, NOT AN ADDRESS, so nothing here can open it without guessing which page holds the record.",
+      "unresolved": [
+        "no next move is recorded on this route descriptor, which is itself a gap worth closing",
+        "still owed, and scheduled to be tried again at 2026-09-01T03:08:13.770Z"
+      ]
+    },
+    {
+      "obligationId": "freshness:campaign-finance:ballot-az-pima:prop-423#AZ_PIMA_EASYVOTE_PUBLIC_FILINGS",
+      "providerId": "campaign-finance",
+      "recordClass": "campaign-finance",
+      "subjectId": "ballot-az-pima:prop-423",
+      "routeId": "AZ_PIMA_EASYVOTE_PUBLIC_FILINGS",
+      "stagedOn": "2026-08-31",
+      "nextDueAt": "2026-09-01T02:52:48.640Z",
+      "disposition": "INGESTED",
+      "state": "STAGED_GAP",
+      "rowCount": 0,
+      "declaredTotal": null,
+      "complete": false,
+      "snapshotPath": null,
+      "readerSentence": "Pima County EasyVote public filings portal — PRIMARY records on a VENDOR platform: the record was ACQUIRED and is held, and this project has no reader yet for its shape.",
+      "unresolved": [
+        "NORMALIZER MISSING for route AZ_PIMA_EASYVOTE_PUBLIC_FILINGS. The bytes are vaulted and cited; what is absent is code that turns them into rows. That is a gap in OUR tooling, not in their publication, and the artifact is not lost while it waits.",
+        "artifact(s): ar-bc479071502f543b4e0d2f61"
+      ]
+    },
+    {
+      "obligationId": "freshness:campaign-finance:ballot-az-pima:prop-423#AZ_SEETHEMONEY_LIVE_BROWSER",
+      "providerId": "campaign-finance",
+      "recordClass": "campaign-finance",
+      "subjectId": "ballot-az-pima:prop-423",
+      "routeId": "AZ_SEETHEMONEY_LIVE_BROWSER",
+      "stagedOn": "2026-08-31",
+      "nextDueAt": "2026-09-01T03:08:13.770Z",
+      "disposition": "REQUIRES_NEW_ADAPTER",
+      "state": "STAGED_GAP",
+      "rowCount": 0,
+      "declaredTotal": null,
+      "complete": false,
+      "snapshotPath": null,
+      "readerSentence": "See The Money driven in a live browser, watching the app's own XHR calls: the route closed REQUIRES_NEW_ADAPTER. NOT YET WALKED — recorded as the named next rung, and the one that worked on New Hampshire's equivalent in the g20 session. A guessed report endpoint (/Reporting/GetNEWTableData) returned HTTP 404 at rung 7, and a guessed path is not a finding either way; the app's REAL endpoint is unknown until rung 6 observes it. THIS ROUTE DECLARES A HOST, NOT AN ADDRESS, so nothing here can open it without guessing which page holds the record. The SAME representation is already worked by registered route `az-sos-seethemoney-datatables`, so the record is not stuck — this row is the model's own entry for it and keeps its clock.",
+      "unresolved": [
+        "an address for this host, or retirement in favour of `az-sos-seethemoney-datatables`",
+        "still owed, and scheduled to be tried again at 2026-09-01T03:08:13.770Z"
+      ]
+    },
+    {
+      "obligationId": "freshness:campaign-finance:ballot-az-pima:prop-423#AZ_SEETHEMONEY_PLAIN_FETCH",
+      "providerId": "campaign-finance",
+      "recordClass": "campaign-finance",
+      "subjectId": "ballot-az-pima:prop-423",
+      "routeId": "AZ_SEETHEMONEY_PLAIN_FETCH",
+      "stagedOn": "2026-08-31",
+      "nextDueAt": "2026-09-01T03:08:13.770Z",
+      "disposition": "REQUIRES_NEW_ADAPTER",
+      "state": "STAGED_GAP",
+      "rowCount": 0,
+      "declaredTotal": null,
+      "complete": false,
+      "snapshotPath": null,
+      "readerSentence": "See The Money (Arizona Secretary of State), plain fetch: the route closed REQUIRES_NEW_ADAPTER. HTTP 200, 109 KB — an SPA shell. The filing vocabulary and the money are not in the served HTML. A 200 that carries no record is not a walked route; it is a wall wearing a success code. THIS ROUTE DECLARES A HOST, NOT AN ADDRESS, so nothing here can open it without guessing which page holds the record. The SAME representation is already worked by registered route `az-sos-seethemoney-datatables`, so the record is not stuck — this row is the model's own entry for it and keeps its clock.",
+      "unresolved": [
+        "an address for this host, or retirement in favour of `az-sos-seethemoney-datatables`",
+        "still owed, and scheduled to be tried again at 2026-09-01T03:08:13.770Z"
+      ]
+    },
+    {
+      "obligationId": "freshness:campaign-finance:ballot-az-pima:prop-423#AZ_SOS_FTP_CFSDATA2",
+      "providerId": "campaign-finance",
+      "recordClass": "campaign-finance",
+      "subjectId": "ballot-az-pima:prop-423",
+      "routeId": "AZ_SOS_FTP_CFSDATA2",
+      "stagedOn": "2026-08-31",
+      "nextDueAt": "2026-09-01T03:08:13.770Z",
+      "disposition": "REQUIRES_NEW_ADAPTER",
+      "state": "STAGED_GAP",
+      "rowCount": 0,
+      "declaredTotal": null,
+      "complete": false,
+      "snapshotPath": null,
+      "readerSentence": "ftp://ftp.azsos.gov/cfsdata2/ — the state's own campaign-finance reference tables: the route closed REQUIRES_NEW_ADAPTER. Anonymous FTP, no key, fourteen files listed 2026-08-26: Committees.txt (8,828 rows), Jurisdictions.txt (109 — 1 State, 15 County, 93 City/Town), Counties.txt (15), Elections.txt (37), BallotMeasures.txt and the transaction vocabulary. WALKED AND COUNTED, NOT YET WIRED — the wiring is tracker AZ19. It carries the committee REGISTER and the jurisdiction universe; the Bulk Filing Guide is an UPLOAD specification, so there is no documented bulk download of the transactions themselves. THIS ROUTE DECLARES A HOST, NOT AN ADDRESS, so nothing here can open it without guessing which page holds the record. The SAME representation is already worked by registered route `az-sos-cfs-bulk-ftp`, so the record is not stuck — this row is the model's own entry for it and keeps its clock.",
+      "unresolved": [
+        "an address for this host, or retirement in favour of `az-sos-cfs-bulk-ftp`",
+        "still owed, and scheduled to be tried again at 2026-09-01T03:08:13.770Z"
+      ]
+    },
+    {
+      "obligationId": "freshness:campaign-finance:ballot-az-pima:prop-423#EASYVOTE_TENANT_LIST",
+      "providerId": "campaign-finance",
+      "recordClass": "campaign-finance",
+      "subjectId": "ballot-az-pima:prop-423",
+      "routeId": "EASYVOTE_TENANT_LIST",
+      "stagedOn": "2026-08-31",
+      "nextDueAt": "2026-09-01T03:08:13.770Z",
+      "disposition": "REQUIRES_NEW_ADAPTER",
+      "state": "STAGED_GAP",
+      "rowCount": 0,
+      "declaredTotal": null,
+      "complete": false,
+      "snapshotPath": null,
+      "readerSentence": "Does an EasyVote tenant list exist? — the vendor question, asked once for all tenants: the route closed REQUIRES_NEW_ADAPTER. OPEN LEAD, UNANSWERED as of 2026-08-26, rowed as AZ21. A vendor serving one county serves others; local campaign-finance portals get the treatment agenda platforms already get — identify the vendor, then ask whether a tenant list exists. One county at a time does not scale to 109 Arizona filing jurisdictions, let alone nationally. THIS ROUTE DECLARES A HOST, NOT AN ADDRESS, so nothing here can open it without guessing which page holds the record.",
+      "unresolved": [
+        "no next move is recorded on this route descriptor, which is itself a gap worth closing",
+        "still owed, and scheduled to be tried again at 2026-09-01T03:08:13.770Z"
+      ]
+    },
+    {
+      "obligationId": "freshness:campaign-finance:ballot-az-pima:prop-423#PIMA_COUNTY_SCHOOL_SUPERINTENDENT",
+      "providerId": "campaign-finance",
+      "recordClass": "campaign-finance",
+      "subjectId": "ballot-az-pima:prop-423",
+      "routeId": "PIMA_COUNTY_SCHOOL_SUPERINTENDENT",
+      "stagedOn": "2026-08-31",
+      "nextDueAt": "2026-09-01T03:08:13.770Z",
+      "disposition": "REQUIRES_NEW_ADAPTER",
+      "state": "STAGED_GAP",
+      "rowCount": 0,
+      "declaredTotal": null,
+      "complete": false,
+      "snapshotPath": null,
+      "readerSentence": "Pima County School Superintendent — the office that numbered this proposition: the route closed REQUIRES_NEW_ADAPTER. The proposition NUMBER is the Pima County School Superintendent's and the question and fiscal terms are Vail USD No. 20's own Notice of Election. Arguments were due to the Superintendent by 5:00 p.m. on 2026-08-07. Whether that office publishes committee registrations or filings for school-district measure committees is UNASKED. It is not the § 16-928 filing officer; it is a route to knowing which committees exist. THIS ROUTE DECLARES A HOST, NOT AN ADDRESS, so nothing here can open it without guessing which page holds the record.",
+      "unresolved": [
+        "no next move is recorded on this route descriptor, which is itself a gap worth closing",
+        "still owed, and scheduled to be tried again at 2026-09-01T03:08:13.770Z"
+      ]
+    },
+    {
+      "obligationId": "freshness:campaign-finance:ballot-az-pima:us-house-6#FEC_REPORTING_CALENDAR",
+      "providerId": "campaign-finance",
+      "recordClass": "campaign-finance",
+      "subjectId": "ballot-az-pima:us-house-6",
+      "routeId": "FEC_REPORTING_CALENDAR",
+      "stagedOn": "2026-08-31",
+      "nextDueAt": "2026-09-01T03:08:13.770Z",
+      "disposition": "REQUIRES_NEW_ADAPTER",
+      "state": "STAGED_GAP",
+      "rowCount": 0,
+      "declaredTotal": null,
+      "complete": false,
+      "snapshotPath": null,
+      "readerSentence": "The FEC's own reporting calendar — which periods are DUE for this cycle: the route closed REQUIRES_NEW_ADAPTER. The expected-period DENOMINATOR. data/fec/fec-2026.json carries each filer's totals.coverageEndDate — how far its money is reported THROUGH — but not how many reports the cycle owes. Without the calendar, 'filings acquired' has no denominator, and a denominator that measures our own output is the coverage attack mode. THIS ROUTE DECLARES A HOST, NOT AN ADDRESS, so nothing here can open it without guessing which page holds the record.",
+      "unresolved": [
+        "no next move is recorded on this route descriptor, which is itself a gap worth closing",
+        "still owed, and scheduled to be tried again at 2026-09-01T03:08:13.770Z"
+      ]
+    },
+    {
+      "obligationId": "freshness:campaign-finance:ballot-az-pima:us-house-6#FEC_SCHEDULE_E_INDEPENDENT_EXPENDITURES",
+      "providerId": "campaign-finance",
+      "recordClass": "campaign-finance",
+      "subjectId": "ballot-az-pima:us-house-6",
+      "routeId": "FEC_SCHEDULE_E_INDEPENDENT_EXPENDITURES",
+      "stagedOn": "2026-08-31",
+      "nextDueAt": "2026-09-01T03:08:13.770Z",
+      "disposition": "REQUIRES_NEW_ADAPTER",
+      "state": "STAGED_GAP",
+      "rowCount": 0,
+      "declaredTotal": null,
+      "complete": false,
+      "snapshotPath": null,
+      "readerSentence": "FEC Schedule E — money spent ABOUT this race by groups that gave the campaigns nothing: the route closed REQUIRES_NEW_ADAPTER. NOT READ. docs/sources.md records OpenFEC as 'WIRED for committee TOTALS only'; tracker D51 holds the independent-expenditure surface and PB10/D23 is the BLOCKING PRECONDITION — election-law counsel must rule on the 52 U.S.C. § 30111(a)(4) sale-or-use restriction before any campaign-finance feature built on this ships. A blocked route is not a blocked fact: these expenditures exist or do not independently of our being allowed to read them. THIS ROUTE DECLARES A HOST, NOT AN ADDRESS, so nothing here can open it without guessing which page holds the record.",
+      "unresolved": [
+        "no next move is recorded on this route descriptor, which is itself a gap worth closing",
+        "still owed, and scheduled to be tried again at 2026-09-01T03:08:13.770Z"
+      ]
+    },
+    {
+      "obligationId": "freshness:campaign-finance:nh-sos-cfs-2026#nh-cfs-filing-entity-details",
+      "providerId": "campaign-finance",
+      "recordClass": "campaign-finance",
+      "subjectId": "nh-sos-cfs-2026",
+      "routeId": "nh-cfs-filing-entity-details",
+      "stagedOn": "2026-08-31",
+      "nextDueAt": "2026-09-01T02:31:32.147Z",
+      "disposition": "INGESTED",
+      "state": "STAGED_PROMOTION_READY",
+      "rowCount": 5738,
+      "declaredTotal": 5738,
+      "complete": true,
+      "snapshotPath": "data/control-plane/staging/freshness_campaign-finance_nh-sos-cfs-2026_nh-cfs-filing-entity-details.staged.json",
+      "readerSentence": "cfsapi.sos.nh.gov PublicFilerDetails/GetFilingEntityDetails — the filer index: 5738 of 5738 row(s) the publisher itself declares, normalized and staged. Not yet shown to readers — a session carries the last mile.",
+      "unresolved": [
+        "THE QUERY IS UNFILTERED BY CYCLE. `filerName: \"\"` asks the index for everything it holds, so rows carry election years across many cycles and each row states its own `electionYear`. Filtering to one cycle is the promotion step's decision, not a normalizer's — a normalizer that dropped rows would make the staged file smaller than what was acquired.",
+        "FILER-LEVEL TOTALS ONLY. The CFS holds contribution and expenditure DETAIL behind endpoints this project has not derived (route nh-cfs-transaction-detail, REQUIRES_NEW_ADAPTER), so these totals are what the filer reported and are not an itemized record of their money.",
+        "NO BALLOT JOIN IS PERFORMED HERE. Matching a filer to a candidacy needs name AND office AND year, plus the county and district guards `lib/funding/state-money.ts` states; that judgement belongs to the promotion step and not to a normalizer."
+      ]
+    },
+    {
+      "obligationId": "freshness:campaign-finance:nh-sos-cfs-2026#nh-cfs-transaction-detail",
+      "providerId": "campaign-finance",
+      "recordClass": "campaign-finance",
+      "subjectId": "nh-sos-cfs-2026",
+      "routeId": "nh-cfs-transaction-detail",
+      "stagedOn": "2026-08-31",
+      "nextDueAt": "2026-09-01T02:49:26.235Z",
+      "disposition": "REQUIRES_NEW_ADAPTER",
+      "state": "STAGED_GAP",
+      "rowCount": 0,
+      "declaredTotal": null,
+      "complete": false,
+      "snapshotPath": null,
+      "readerSentence": "NH CFS contribution and expenditure detail — the endpoints below filer totals: the route closed REQUIRES_NEW_ADAPTER. ONLY FILER-LEVEL TOTALS ARE TAKEN TODAY. The CFS holds contribution and expenditure detail behind endpoints nobody in this project has read, and no descriptor for them exists to replay. REQUIRES_NEW_ADAPTER: our tooling, not their publication.",
+      "unresolved": [
+        "one rung-7 observation of the CFS app calling its own detail endpoints, which is the same move that turned the filer index from a procedure into a script.",
+        "still owed, and scheduled to be tried again at 2026-09-01T02:49:26.235Z"
+      ]
+    },
+    {
+      "obligationId": "freshness:campaign-finance:nh-sos-cfs-2026#nh-sos-lobbyist-registry",
+      "providerId": "campaign-finance",
+      "recordClass": "campaign-finance",
+      "subjectId": "nh-sos-cfs-2026",
+      "routeId": "nh-sos-lobbyist-registry",
+      "stagedOn": "2026-08-31",
+      "nextDueAt": "2026-09-01T02:31:32.147Z",
+      "disposition": "INGESTED",
+      "state": "STAGED_GAP",
+      "rowCount": 0,
+      "declaredTotal": null,
+      "complete": false,
+      "snapshotPath": null,
+      "readerSentence": "www.sos.nh.gov/lobbyists — a source class this product holds nothing of: the record was ACQUIRED and is held, and this project has no reader yet for its shape.",
+      "unresolved": [
+        "NORMALIZER MISSING for route nh-sos-lobbyist-registry. The bytes are vaulted and cited; what is absent is code that turns them into rows. That is a gap in OUR tooling, not in their publication, and the artifact is not lost while it waits.",
+        "artifact(s): ar-ff58bdfbfecee188879830c6"
+      ]
+    },
+    {
+      "obligationId": "freshness:campaign-finance:nh-sos-cfs-2026#nh-sos-records-request",
+      "providerId": "campaign-finance",
+      "recordClass": "campaign-finance",
+      "subjectId": "nh-sos-cfs-2026",
+      "routeId": "nh-sos-records-request",
+      "stagedOn": "2026-08-31",
+      "nextDueAt": "2026-09-01T02:49:26.235Z",
+      "disposition": "REQUIRES_NEW_ADAPTER",
+      "state": "STAGED_GAP",
+      "rowCount": 0,
+      "declaredTotal": null,
+      "complete": false,
+      "snapshotPath": null,
+      "readerSentence": "NH Department of State public-records path — rung 13: the route closed REQUIRES_NEW_ADAPTER. PUBLIC RECORD STILL OWED — HUMAN/OFFLINE ACCESS REQUIRED. Every machine-executable public route above is worked independently; this one ends in a human or offline act, which under RULING 205 keeps the obligation LIVE rather than closing it. RULING 215 removes external workflow execution from this architecture, so no agent sends this request.",
+      "unresolved": [
+        "no next move is recorded on this route descriptor, which is itself a gap worth closing",
+        "still owed, and scheduled to be tried again at 2026-09-01T02:49:26.235Z"
+      ]
+    }
+  ]
+}

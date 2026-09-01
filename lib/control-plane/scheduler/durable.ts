@@ -135,13 +135,44 @@ export function standing(
 }
 
 /**
- * Register every obligation that is not already durable, and return the set.
+ * The fields a durable row owns because THIS PROCESS DID NOT PRODUCE THEM.
  *
- * Existing rows are READ, never overwritten: the durable row carries
- * `lastWorkedAt`, `occurrenceCount` and `nextDueAt` that this process did not
- * produce and must not reset. A registration pass that re-put the corpus
- * version of each row would silently reset the schedule on every start, which
- * is the same defect as having no durable state at all, wearing a store.
+ * Runtime state, every one: how many occurrences have opened, which is open,
+ * when the obligation was last actually worked to a disposition, and the
+ * next-due derived from that. A registration pass that re-put the corpus
+ * version of these would silently reset the schedule on every start, which is
+ * the same defect as having no durable state at all, wearing a store.
+ */
+const RUNTIME_OWNED = [
+  "nextDueAt",
+  "occurrenceCount",
+  "openOccurrenceId",
+  "lastWorkedAt",
+] as const;
+
+/**
+ * Register what is new, and REFRESH THE SIGNALS on what is not.
+ *
+ * ## The defect this closes, found by hitting it
+ * (Session C, PART D, 2026-08-31.)
+ *
+ * This function used to READ an existing row and return it untouched. That is
+ * right for the four runtime fields above and wrong for everything else, and
+ * the difference showed up the first time a provider CORRECTED a cadence
+ * signal: the campaign-finance records were registered with `readerImpactAt`
+ * set to the 2026 general election, that was diagnosed as a misreading of the
+ * field — campaign-finance staleness costs a reader today, not in November —
+ * and the corrected provider emitted `null`. **The correction could not reach
+ * the durable rows.** They kept deriving a thirty-day cadence from a signal the
+ * code no longer produces, and nothing anywhere reported a disagreement.
+ *
+ * A provider's signals are DERIVED FROM COMMITTED INPUTS on every pass, so the
+ * corpus is authoritative for them and the store is authoritative for runtime
+ * state. Splitting on that line is what makes a corrected derivation take
+ * effect without resetting a clock.
+ *
+ * `refreshed` names every row whose signals actually moved, so a cycle that
+ * silently re-cadenced 78 obligations is visible rather than inferred.
  */
 export async function syncObligations(
   repos: ControlPlaneRepositories,
@@ -151,24 +182,55 @@ export async function syncObligations(
   readonly all: readonly StandingObligation[];
   readonly registered: readonly string[];
   readonly alreadyDurable: readonly string[];
+  /** Durable rows whose provider-derived signals changed this pass. */
+  readonly refreshed: readonly { readonly id: string; readonly changed: readonly string[] }[];
 }> {
   const registered: string[] = [];
   const alreadyDurable: string[] = [];
+  const refreshed: { id: string; changed: string[] }[] = [];
   const all: StandingObligation[] = [];
 
   for (const o of corpus) {
     const existing = await repos.obligations.read(o.id);
-    if (existing !== null) {
-      alreadyDurable.push(o.id);
-      all.push(existing.value);
+    if (existing === null) {
+      const row = standing(o, now);
+      await repos.obligations.put(o.id, row, now);
+      registered.push(o.id);
+      all.push(row);
       continue;
     }
-    const row = standing(o, now);
-    await repos.obligations.put(o.id, row, now);
-    registered.push(o.id);
-    all.push(row);
+
+    alreadyDurable.push(o.id);
+    const held = existing.value;
+    const next: StandingObligation = {
+      ...o,
+      nextDueAt: held.nextDueAt,
+      occurrenceCount: held.occurrenceCount,
+      openOccurrenceId: held.openOccurrenceId,
+      lastWorkedAt: held.lastWorkedAt,
+      updatedAt: now,
+    };
+
+    const changed: string[] = [];
+    for (const key of Object.keys(o) as (keyof FreshnessObligation)[]) {
+      if ((RUNTIME_OWNED as readonly string[]).includes(key)) continue;
+      if (held[key] !== o[key]) changed.push(key);
+    }
+
+    if (changed.length === 0) {
+      all.push(held);
+      continue;
+    }
+    const written = await repos.obligations.compareAndSet(
+      existing.id,
+      existing.revision,
+      next,
+      now,
+    );
+    refreshed.push({ id: o.id, changed });
+    all.push(written.value);
   }
-  return { all, registered, alreadyDurable };
+  return { all, registered, alreadyDurable, refreshed };
 }
 
 /**

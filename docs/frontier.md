@@ -356,6 +356,35 @@ reasoning this repository has refused twice already.
 Owed: reproduce it under load with the new instrument, or wait for it to recur
 and read the name.
 
+### The runner: what is actually true about its cadence, and what is not (2026-09-01)
+
+A lane reported that *“a cycle now costs ~7m42s”* against 2,358 obligations
+and that **the runner's 5-minute interval no longer fits one cycle**. The
+second half is a misreading, and correcting it matters rather than passing it
+on: it would have reached the author as a scheduling emergency.
+
+`-RestartInterval (New-TimeSpan -Minutes 5)` in `scripts/pilot-task.ps1` is the
+**restart-after-crash delay**, not the cycle interval. The cycle interval is
+`--interval`, default **60 minutes** (`scripts/pilot-runner.mts`), and the task
+carries `-MultipleInstances IgnoreNew`. A 7m42s cycle fits inside 60 minutes
+with room to spare and cannot overlap itself.
+
+**What IS owed is smaller than it sounded, and it is real.** The cycle cost
+rose with the obligation count — Neon round trips in the reclaim sweep and in
+the list calls. Two of the worst offenders were fixed in the same lane
+(`syncObligations` from N reads to one `list()`, and skipping unchanged
+`next_due` writes); the remainder is not addressed.
+
+**Roughly 1,000 occurrences opened by that lane's first unbounded run are still
+open** in the control plane. `resumeOpenOccurrence` picks them up rather than
+stranding them, so they drain rather than leak — over many cycles.
+
+**And the runner is not running right now.** `pnpm pilot:status` on 2026-09-01
+reads *scheduled task Ready, last run 06:48:53, last result 3221225786*
+(`0xC000013A`, STATUS_CONTROL_C_EXIT) with **0 pilot-runner processes**. The
+task is installed and its at-logon trigger stands; what is not true is that a
+worker is turning right now.
+
 ### Instrument debt, and why each one matters
 
 - **The gate-run record identifier collides under parallel execution.** Records

@@ -1,11 +1,11 @@
 {
   "formatVersion": 1,
-  "deployedSha": "70471b7f6d5b950b567721e4fbc4b6b34efc1606",
-  "mainSha": "b2776bf340ee177fed35ef896d1398d0399c9e81",
+  "deployedSha": "bcd1fbeb85",
+  "mainSha": "bcd1fbeb853de73be38012660e61fa831cfcf376",
   "observed": "HELD",
   "failureClass": null,
   "detail": "HOLDS — shipping invariant HOLDS at post-deploy: 24 of 24 committed migration(s) applied, head 0023_tricky_sister_grimm",
-  "observedAt": "2026-09-01T04:23:49.389Z",
+  "observedAt": "2026-09-01T04:27:55.998Z",
   "moment": "post-deploy",
   "gateExit": 0
 }

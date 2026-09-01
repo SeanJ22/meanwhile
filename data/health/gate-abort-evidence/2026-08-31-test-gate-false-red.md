@@ -64,3 +64,42 @@ Load is the hypothesis with the evidence behind it. It is stated as a
 hypothesis and not as a finding, because what is PROVEN here is narrower and
 is enough on its own: **the gate can report FAIL on a tree whose suite
 passes, and it does so by aborting early.**
+
+---
+
+## A second finding, from running seven lanes at once
+
+**The gate-record numbering scheme collides under parallel execution.**
+
+`data/ops/gate-runs/` names records `<date>-<n>.json`, where `n` is the next
+free number *in the working tree that allocates it*. Four branches ran gates
+independently tonight and three of them allocated the same numbers:
+
+```
+claude/sc2-governance   42, 43, 44
+claude/sc2-parta        42
+claude/sc2-tracker      42, 43, 44
+claude/sc2-nh           none — this lane saw the collision coming and
+                        deliberately left its record uncommitted
+```
+
+Same filenames, different trees, different results. Every one is a truthful
+record of the tree it was taken on, and merging any two of them produces a
+conflict on a file whose whole purpose is to be an unambiguous record.
+
+This is not a defect in any lane. It is a **sequence allocated from local
+state under an execution model the repository now mandates** — RULING 190 and
+RULING 191 make safe parallel execution the DEFAULT, and a scheme that assumes
+one writer was correct only while that assumption held.
+
+The integration owner resolves it by renumbering on merge, deterministically
+and in merge order, so no record is lost and none is silently overwritten.
+That works and it does not scale: it is manual, and it puts the burden on the
+one reader who has to notice.
+
+**The durable fix is to make the identifier not require agreement** — derive it
+from the tested SHA plus the run's start instant, which two branches cannot
+collide on because they are not the same tree and not the same moment. Recorded
+here rather than fixed, because the naming scheme is a shared store and this
+session has seven lanes writing to it; changing it mid-flight is the thing the
+integration rule exists to refuse.

@@ -1,7 +1,7 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-01 12:37:11 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-01 12:45:48 EDT.
 Session day 2026-09-01 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
@@ -1029,14 +1029,14 @@ _No status change recovered in the commits walked._
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-09-01 12:37:11 EDT
+generated: 2026-09-01 12:45:48 EDT
 branch: main
-head sha: 816b90bbf7e9ec1d453aa08cab8fecec64f3cfc3
-head subject: Merge remote-tracking branch 'origin/main'
+head sha: a2427a85aebf968e5f5650e004f17eacf1c59ad0
+head subject: The Postgres conformance lane could pass exactly once
 origin/main sha: a0cebbc110086551f957f0c9f846488a8e00de78
 origin/main subject: Intake tripwire report: 2026-09-01T15:09Z
-local main sha: 816b90bbf7e9ec1d453aa08cab8fecec64f3cfc3
-local main matches origin/main: no — 0 commit(s) behind, 42 ahead
+local main sha: a2427a85aebf968e5f5650e004f17eacf1c59ad0
+local main matches origin/main: no — 0 commit(s) behind, 44 ahead
 working tree: clean
 open prs: none
 last recorded tests: 555 (recorded without a verdict)

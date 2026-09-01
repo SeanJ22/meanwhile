@@ -7893,6 +7893,15 @@ section(
         app: appGaps,
         bare: bareGaps,
       };
+      /*
+       * The closing brace of `measureArms`. **ITS BODY IS DELIBERATELY NOT
+       * RE-INDENTED**, and that is a reviewability decision rather than an
+       * oversight: this block became a function without one line of its logic
+       * changing, and re-indenting three hundred lines would have buried that
+       * fact under three hundred lines of whitespace diff. The change worth
+       * reading is the parameterised launch at the top and the two call sites
+       * below.
+       */
       };
 
       /**

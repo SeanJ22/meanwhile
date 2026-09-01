@@ -1626,6 +1626,27 @@ async function main(): Promise<void> {
             renderer,
             pairs: PAIRS,
             design: "interleaved app/bare, alternating within-pair order, fresh page per flight",
+            /*
+             * **THE CAVEAT TRAVELS WITH THE NUMBERS, RATHER THAN WITH WHOEVER
+             * HAPPENED TO RUN THEM.** (Session C, 2026-09-01.)
+             *
+             * This file is read months later by a session that was not here and
+             * cannot ask what the machine was doing. `hostBusyPct` is recorded
+             * per flight and always was; what was missing is the sentence that
+             * says what those percentages MEAN for the two kinds of number in
+             * this file — that the ratio survives contention by construction
+             * and the absolute rates do not. Without it a future session reads
+             * "49.9 fps" as a property of the build.
+             */
+            machineLoadCaveat:
+              "Other worktree lanes were building and testing on this host while these flights " +
+              "ran, and the per-flight hostBusyPct figures below record it. The interleaved " +
+              "design is what makes the RATIO readable anyway: a load burst spanning a pair " +
+              "lands on one flight of each arm, and the alternating within-pair order stops a " +
+              "second-position advantage accumulating on one arm. Variance is still elevated, " +
+              "so read medianFpsPerRun for the spread. THE ABSOLUTE fps FIGURES ARE FACTS ABOUT " +
+              "THIS HOST ON THIS DAY AND ARE NOT PORTABLE; only the ratio is a statement about " +
+              "the build.",
             app,
             bare,
             ratio: verdict.ratio,

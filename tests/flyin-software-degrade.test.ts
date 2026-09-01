@@ -35,6 +35,13 @@ import {
   SOFTWARE_RENDERER_NAMES,
   classifyRenderer,
 } from "../components/map/raster-capability.ts";
+import {
+  judgeSoftware,
+  SOFTWARE_JANK_CEILING,
+  SOFTWARE_NORMALIZED_FLOOR,
+  summariseArm,
+  type ArmSummary,
+} from "../lib/ops/flyin-normalized.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 const CSS = readFileSync(join(ROOT, "app", "globals.css"), "utf8");
@@ -214,6 +221,80 @@ test("the district layers are hidden by visibility, never removed", () => {
   assert.ok(
     !CANVAS.includes("removeLayer(id)"),
     "the motion degradation removes layers instead of hiding them",
+  );
+});
+
+/* ------------------------------------------- 4: the software verdict --- */
+
+/**
+ * An arm built from one repeated frame interval, so the fps and the jank share
+ * are both exactly what the caller asked for.
+ *
+ * Built through `summariseArm` rather than by hand: the verdict has to be
+ * tested against the same reduction the walk and the instrument both use, or
+ * this file would be asserting about a shape nothing produces.
+ */
+function armAt(fps: number, longFrames: number, frames: number): ArmSummary {
+  const fast = 1000 / fps;
+  /* The long frames sit at the front and are always a minority here, so they
+     never move the median — which is the whole property being demonstrated. */
+  const gaps = Array.from({ length: frames }, (_, i) => (i < longFrames ? 400 : fast));
+  return summariseArm("test", [{ gaps, hostBusyPct: null }]);
+}
+
+test("the software floor and the jank ceiling are the stated numbers", () => {
+  /*
+   * Asserted rather than merely used. A later session lowering the floor to
+   * turn a red run green would otherwise change the criterion silently, which
+   * is what the retired absolute 55 fps target was retired for.
+   */
+  assert.equal(SOFTWARE_NORMALIZED_FLOOR, 0.75);
+  assert.equal(SOFTWARE_JANK_CEILING, 0.2);
+});
+
+test("the software verdict requires BOTH the ratio and the jank share", () => {
+  const bare = armAt(60, 0, 200);
+
+  /* Roughly the shipped state: over the ratio, well under the jank ceiling. */
+  const good = judgeSoftware(armAt(50, 5, 200), bare);
+  assert.equal(good.ratioPass, true);
+  assert.equal(good.jankPass, true);
+  assert.equal(good.pass, true);
+
+  /*
+   * **THE CASE THE CEILING EXISTS FOR, AND IT IS NOT HYPOTHETICAL.** A build
+   * measured at 89% of bare with 57 of 231 frames past 33.4 ms — a ratio that
+   * clears the floor comfortably over a flight with a quarter of its frames
+   * visibly late. The ratio alone calls that finished.
+   */
+  const janky = judgeSoftware(armAt(53, 50, 200), bare);
+  assert.equal(janky.ratioPass, true);
+  assert.equal(janky.jankPass, false);
+  assert.equal(janky.pass, false, "a ratio that clears the floor must not carry a janky flight");
+
+  /* The mirror: smooth frames at a rate far below a bare map is still a
+     failure. Neither condition may stand in for the other. */
+  const slow = judgeSoftware(armAt(30, 0, 200), bare);
+  assert.equal(slow.ratioPass, false);
+  assert.equal(slow.jankPass, true);
+  assert.equal(slow.pass, false);
+});
+
+test("the software verdict refuses an arm that measured nothing", () => {
+  /*
+   * A ratio taken against a zero-rate bare arm is infinite, and an infinite
+   * ratio is a green check for a measurement that never happened — the worst
+   * result available here. `summariseArm` refuses an empty population first,
+   * which is the same rule one layer up.
+   */
+  assert.throws(() => summariseArm("empty", []), /completed ZERO runs/);
+  assert.throws(
+    () => judgeSoftware(armAt(50, 0, 200), { ...armAt(60, 0, 200), medianFps: 0 }),
+    /refusing/,
+  );
+  assert.throws(
+    () => judgeSoftware({ ...armAt(50, 0, 200), framesMeasured: 0 }, armAt(60, 0, 200)),
+    /ZERO frames/,
   );
 });
 

@@ -1,5 +1,11 @@
 "use client";
 
+import {
+  commitStorageWrite,
+  publishStorageEvent,
+  subscribeToStorageEvent,
+} from "@/lib/state/subscribe-to-storage";
+
 /**
  * Save-my-picks (4a, 2026-08-17) — DEVICE-LOCAL ONLY.
  *
@@ -85,14 +91,22 @@ function read(): PicksFile {
   }
 }
 
+/**
+ * **THE ANNOUNCEMENT USED TO SIT INSIDE THE `try`.** (`WGH-22` class audit,
+ * 2026-08-31.)
+ *
+ * `dispatchEvent` was the line after `setItem`, in the same `try`, so a store
+ * that refused the write skipped the announcement with it. Nothing had changed
+ * in that case and no reader was told anything false — but the ordering is the
+ * same ordering `WGH-22` was, and this is the file two ballot surfaces read
+ * through. `commitStorageWrite` owns the ordering now: the announcement is
+ * outside the write, always, and no call site here can put it back inside.
+ */
 function write(file: PicksFile) {
-  try {
-    window.localStorage.setItem(PICKS_STORAGE_KEY, JSON.stringify(file));
-    window.dispatchEvent(new Event(PICKS_EVENT));
-  } catch {
-    // No storage — picks silently unavailable; the control renders but
-    // cannot persist, and the reader sees their tap not stick. Survivable.
-  }
+  commitStorageWrite(
+    () => window.localStorage.setItem(PICKS_STORAGE_KEY, JSON.stringify(file)),
+    () => publishStorageEvent(PICKS_EVENT),
+  );
 }
 
 export function getPick(contestId: string): StoredPick | null {
@@ -179,12 +193,13 @@ export function clearAllPicks(derivedNow: Record<string, string[]> = {}) {
   write({ version: 2, picks: {}, suppressedDerived: derivedNow });
 }
 
-/** Subscribe helper for useSyncExternalStore. */
+/**
+ * Subscribe helper for `useSyncExternalStore`.
+ *
+ * Both halves are load-bearing: `PICKS_EVENT` carries same-tab writes and
+ * `storage` carries the other tabs, which is exactly what
+ * `subscribeToStorageEvent` wires — the shared half of the pair `write` calls.
+ */
 export function subscribePicks(callback: () => void): () => void {
-  window.addEventListener(PICKS_EVENT, callback);
-  window.addEventListener("storage", callback);
-  return () => {
-    window.removeEventListener(PICKS_EVENT, callback);
-    window.removeEventListener("storage", callback);
-  };
+  return subscribeToStorageEvent(PICKS_EVENT, callback);
 }

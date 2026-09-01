@@ -1,7 +1,11 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { subscribeToStorage } from "@/lib/state/subscribe-to-storage";
+import {
+  commitStorageWrite,
+  publishToListeners,
+  subscribeToStorage,
+} from "@/lib/state/subscribe-to-storage";
 
 /**
  * The zips this device has looked at, most recent first (item 3, 2026-08-15).
@@ -79,25 +83,27 @@ export function recordRecentZip(zip: string) {
     RECENT_ZIP_LIMIT,
   );
   const raw = JSON.stringify(next);
-  try {
-    window.localStorage.setItem(STORAGE_KEY, raw);
-  } catch {
-    // Private mode. Keep it for this page's life so the switcher still works.
-  }
-  cachedRaw = raw;
-  cachedList = next;
-  for (const listener of listeners) listener();
+  // Private mode refuses the write; the cache below keeps it for this page's
+  // life so the switcher still works, and the publish runs either way.
+  commitStorageWrite(
+    () => window.localStorage.setItem(STORAGE_KEY, raw),
+    () => {
+      cachedRaw = raw;
+      cachedList = next;
+      publishToListeners(listeners);
+    },
+  );
 }
 
 export function clearRecentZips() {
-  try {
-    window.localStorage.removeItem(STORAGE_KEY);
-  } catch {
-    // Nothing to do.
-  }
-  cachedRaw = null;
-  cachedList = EMPTY;
-  for (const listener of listeners) listener();
+  commitStorageWrite(
+    () => window.localStorage.removeItem(STORAGE_KEY),
+    () => {
+      cachedRaw = null;
+      cachedList = EMPTY;
+      publishToListeners(listeners);
+    },
+  );
 }
 
 export function useRecentZips(): string[] {

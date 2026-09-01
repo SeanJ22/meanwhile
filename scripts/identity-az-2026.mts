@@ -24,10 +24,12 @@
  * ## Three layers, and this script is the middle one (RULING 229)
  *
  * ```
- * ACQUISITION   scripts/state-money-az.mts — the STATEWIDE SeeTheMoney corpus,
- *               with no dependency on 85701 or 85641
- * IDENTITY      THIS SCRIPT — one statewide candidate/contest registry, and the
- *               certified-canvass reconciliation into it
+ * ACQUISITION   scripts/acquire-az-sos-candidate-filings.mts — the Secretary of
+ *               State's COMPLETE 2026 partisan candidate filing list, and
+ *               scripts/state-money-az.mts — the SeeTheMoney corpus. Neither
+ *               depends on 85701 or 85641
+ * IDENTITY      THIS SCRIPT — one candidate/contest registry over the acquired
+ *               source universe, and the certified-canvass reconciliation into it
  * PROJECTION    lib/funding/nominee-money.ts — a card asks the corpus about a
  *               candidacy the registry named
  * ```
@@ -94,9 +96,108 @@ interface LineupFile {
   contests: { contestId: string; nominees: { name: string; partyLabel: string | null }[] }[];
 }
 
-const ballot = JSON.parse(
+/**
+ * **THE POPULATION IS THE SECRETARY OF STATE'S FILING LIST, NOT PIMA COUNTY'S
+ * BALLOT.** (Session C final, lane 1, 2026-09-01. R-C9.)
+ *
+ * This registry called itself STATEWIDE from the day it was written and its
+ * population was `data/ballot/az-pima-2026.json` — 15 contests and 55
+ * candidacies from ONE COUNTY'S certified general-election ballot. The key had
+ * no ZIP in it, so it looked statewide; the population had one county in it, so
+ * it was not. R-C9 names that exactly: *"'No ZIP in the key' is a property of
+ * the key, not of the population."*
+ *
+ * The population is now `data/candidates/az-2026-sos-candidate-filings.json` —
+ * the Secretary of State's complete partisan candidate filing list for the 2026
+ * primary, 76 contests and 266 candidacies, acquired by
+ * `pnpm acquire:az-sos-candidates`. That is the authority's COMPLETE APPLICABLE
+ * UNIVERSE for the offices it is the filing officer for, which is what the word
+ * "statewide" now stands on.
+ *
+ * **The Pima ballot is still read, and it is read for exactly one thing.** Every
+ * campaign-finance record this project holds is keyed to `ballot-az-pima:*`
+ * candidacy ids, and a card asks the money corpus with that key. The corpus
+ * carries the join it made — `heldIdentityJoin.heldCandidacyId` — so
+ * `canonicalCandidacyId` stays the held id for all 55 people who have one, and
+ * the money a reader can see today does not move. Re-keying the registry
+ * without that would have taken working money off working cards.
+ */
+interface CorpusContest {
+  id: string;
+  ocdId: string;
+  title: string;
+  level: "FEDERAL" | "STATE";
+  publishedTitle: string;
+  provenance: { sourceUrl: string; sourceOrg: string; collectedAt: string };
+}
+interface CorpusCandidacy {
+  id: string;
+  contestId: string;
+  familyName: string;
+  givenName: string;
+  partyLabel: string;
+  publishedName: string;
+  heldIdentityJoin: { heldCandidacyId: string } | null;
+  provenance: { sourceUrl: string; sourceOrg: string; collectedAt: string };
+}
+interface CorpusDoc {
+  retrieval: { url: string; retrievedAt: string; sha256: string; byteLength: number };
+  applicableUniverse: { describes: string; contests: number; candidacies: number };
+  authority: { name: string; documentTitle: string };
+  contests: CorpusContest[];
+  candidacies: CorpusCandidacy[];
+}
+
+const corpusPath = join(ROOT, "data", "candidates", "az-2026-sos-candidate-filings.json");
+const corpus = JSON.parse(readFileSync(corpusPath, "utf8")) as CorpusDoc;
+if (corpus.candidacies.length === 0 || corpus.contests.length === 0) {
+  throw new Error(
+    `${corpusPath} parsed and holds zero contests or zero candidacies. That is a FAILED read of the ` +
+      "Secretary of State's corpus, never an election with no candidates. Nothing is written.",
+  );
+}
+
+const pima = JSON.parse(
   readFileSync(join(ROOT, "data", "ballot", "az-pima-2026.json"), "utf8"),
 ) as { contests: BallotContest[]; candidacies: BallotCandidacy[] };
+
+/*
+ * The corpus, expressed in the shape this script already reasons about. The
+ * contest id a candidacy points at is the CORPUS contest id; the pilot contest
+ * ids are attached below as additional `canonicalContestIds`, which is what the
+ * certified-lineup file (keyed `ballot-az-pima:*`) resolves through.
+ */
+const ballot = {
+  contests: corpus.contests.map((c) => ({
+    id: c.id,
+    title: c.title,
+    type: "CANDIDACY",
+    ocdId: c.ocdId,
+    provenance: c.provenance,
+  })) as BallotContest[],
+  candidacies: corpus.candidacies.map((c) => ({
+    id: c.id,
+    /* The held `ballot-az-pima:*` id, or null. This is the key the campaign-money
+       corpus is written against, and it is the ONLY thing that may be used as
+       `canonicalCandidacyId`. Minting one for a candidate no held ballot names
+       would hand the projection layer a key nothing can answer. */
+    heldId: c.heldIdentityJoin?.heldCandidacyId ?? null,
+    contestId: c.contestId,
+    familyName: c.familyName,
+    givenName: c.givenName,
+    partyLabel: c.partyLabel,
+    provenance: c.provenance,
+  })) as (BallotCandidacy & { heldId: string | null })[],
+};
+
+/** The pilot contest a corpus contest is the same office as, by division AND title. */
+const pilotContestIdByCorpusId = new Map<string, string>();
+for (const c of corpus.contests) {
+  const match = pima.contests.find(
+    (p) => p.type === "CANDIDACY" && p.ocdId === c.ocdId && p.title === c.title,
+  );
+  if (match) pilotContestIdByCorpusId.set(c.id, match.id);
+}
 const lineup = JSON.parse(
   readFileSync(join(ROOT, "data", "ballot", "az-general-lineup-2026.json"), "utf8"),
 ) as LineupFile;
@@ -125,16 +226,29 @@ function contestSlug(contestId: string): string {
 
 const candidacyContests = ballot.contests.filter((c) => c.type === "CANDIDACY");
 
-const contests: AzContestIdentity[] = candidacyContests.map((c) => ({
-  identityId: `az-${CYCLE}:contest:${contestSlug(c.id)}`,
-  office: c.title,
-  ocdId: c.ocdId,
-  level: isFederalContestId(c.id) ? "FEDERAL" : "STATE",
-  financeFilingAuthority: isFederalContestId(c.id)
-    ? FEDERAL_FINANCE_AUTHORITY
-    : STATE_FINANCE_AUTHORITY,
-  canonicalContestIds: [c.id],
-}));
+const contests: AzContestIdentity[] = candidacyContests.map((c) => {
+  const pilotId = pilotContestIdByCorpusId.get(c.id);
+  return {
+    identityId: `az-${CYCLE}:contest:${contestSlug(c.id)}`,
+    office: c.title,
+    ocdId: c.ocdId,
+    level: isFederalContestId(c.id) ? "FEDERAL" : "STATE",
+    financeFilingAuthority: isFederalContestId(c.id)
+      ? FEDERAL_FINANCE_AUTHORITY
+      : STATE_FINANCE_AUTHORITY,
+    /*
+     * The certified county ballot's id FIRST where one exists, then the
+     * Secretary's. Both are canonical names for one contest and every consumer
+     * that resolves a contest looks the id up in a map of all of them — but
+     * `scripts/state-money-az.mts:419` takes `canonicalContestIds[0]` as THE
+     * contest id for a projection candidacy, and every campaign-money record
+     * this project holds is written against the ballot ids. Putting the
+     * Secretary's id first would have silently re-keyed the money projection
+     * while every other number stayed the same.
+     */
+    canonicalContestIds: pilotId ? [pilotId, c.id] : [c.id],
+  };
+});
 const contestIdentityByCanonical = new Map(
   contests.flatMap((c) => c.canonicalContestIds.map((id) => [id, c])),
 );
@@ -161,6 +275,9 @@ for (const cand of ballot.candidacies) {
   const contest = contestIdentityByCanonical.get(cand.contestId);
   if (!contest) continue;
   const displayName = `${cand.givenName} ${cand.familyName}`.replace(/\s+/g, " ").trim();
+  /* The corpus candidacy id is `<contestId>:<person-slug>`. Taking the tail off
+     the CORPUS id keeps the identity key stable whether or not a held ballot
+     also names this person. */
   const tail = cand.id.slice(cand.contestId.length + 1);
   addCandidate({
     identityId: `az-${CYCLE}:${contestSlug(cand.contestId)}:${tail}`,
@@ -172,7 +289,15 @@ for (const cand of ballot.candidacies) {
     partyLabel: cand.partyLabel,
     candidacyAuthority: FILING_LIST_AUTHORITY,
     candidacySourceUrl: cand.provenance?.sourceUrl ?? null,
-    canonicalCandidacyId: cand.id,
+    /*
+     * NULL WHERE NO HELD BALLOT NAMES THIS PERSON, and that is deliberate.
+     * `canonicalCandidacyId` is the key `lib/funding/nominee-money.ts` asks the
+     * campaign-money corpus with, and that corpus is written against
+     * `ballot-az-pima:*`. 211 of the 266 candidates the Secretary lists are not
+     * on any ballot this project holds, so there is no such key for them. A
+     * fabricated one would report RECONCILED and answer nothing.
+     */
+    canonicalCandidacyId: cand.heldId,
     committees: [],
   });
 }
@@ -245,6 +370,22 @@ for (const record of money.records) {
 
 const collisions = nameFormCollisions(candidates);
 
+/**
+ * The two reasons a registry candidate has no held-ballot key, kept apart.
+ *
+ * They used to be one number printed as "canvass-only", which was true when the
+ * population was one county's ballot and every candidate without a key really
+ * had come from the canvass. Against the Secretary's filing list it is false
+ * for 211 of the 213, and a reader of the run would have concluded that 213
+ * write-in nominees exist.
+ */
+const canvassOnlyIdentityIds = new Set(
+  candidates.filter((c) => c.candidacyAuthority === CANVASS_AUTHORITY).map((c) => c.identityId),
+);
+const filingListWithoutHeldBallot = candidates.filter(
+  (c) => c.canonicalCandidacyId === null && !canvassOnlyIdentityIds.has(c.identityId),
+).length;
+
 /* -------------------------------------------------------------------------
  * THE RECONCILIATION, over the WHOLE lineup population.
  * ------------------------------------------------------------------------- */
@@ -290,9 +431,22 @@ const registry: AzIdentityRegistry = {
   sources: [
     {
       name: FILING_LIST_AUTHORITY,
-      url: ballot.candidacies[0]?.provenance?.sourceUrl ?? null,
-      readAt: ballot.candidacies[0]?.provenance?.collectedAt ?? AS_OF,
-      note: "Every candidate who filed for the 2026 primary, as the Secretary of State lists them. The candidacy rows this project keys campaign committees from.",
+      url: corpus.retrieval.url,
+      readAt: corpus.retrieval.retrievedAt,
+      note:
+        `${corpus.authority.documentTitle} — acquired as a corpus at ` +
+        `data/candidates/az-2026-sos-candidate-filings.json (${corpus.retrieval.byteLength} B, ` +
+        `sha256 ${corpus.retrieval.sha256}). THE REGISTRY'S POPULATION. ` +
+        corpus.applicableUniverse.describes,
+    },
+    {
+      name: "Pima County certified general-election ballot",
+      url: pima.candidacies[0]?.provenance?.sourceUrl ?? null,
+      readAt: pima.candidacies[0]?.provenance?.collectedAt ?? AS_OF,
+      note:
+        "NOT the population. Read for one thing only: the held `ballot-az-pima:*` candidacy keys the " +
+        "campaign-money corpus is written against, carried onto the 55 registry candidates the " +
+        "Secretary's list and this ballot both name.",
     },
     {
       name: CANVASS_AUTHORITY,
@@ -374,14 +528,14 @@ const bridge: LineupReconciliation & {
  * a bridge answering nothing, on cards that used to render money.
  */
 const registryFloor = floored(
-  "candidates with a canonical candidacy id",
-  "data/ballot/az-pima-2026.json, the Secretary of State's candidate filings",
+  "registry candidates carrying a held-ballot candidacy key",
+  "data/candidates/az-2026-sos-candidate-filings.json, the Secretary of State's 2026 partisan filing list",
   candidates.length,
   candidates.filter((c) => c.canonicalCandidacyId !== null).length,
 );
 const contestFloor = floored(
   "candidacy contests carried into the registry",
-  "the ballot set's contests",
+  "the Secretary of State's filing-list contests",
   ballot.contests.length,
   contests.length,
 );
@@ -403,11 +557,19 @@ console.log(`\n  FLOORED COUNTS (RULING 159 — both numbers, or a refusal)`);
 for (const line of [registryFloor, contestFloor, lineupFloor, applicableFloor]) {
   console.log(`    ${floorLine(line)}`);
 }
-console.log(`\n  REGISTRY (statewide, no ZIP anywhere in it)`);
+console.log(
+  `\n  REGISTRY — population acquired from ${corpus.authority.name}'s complete applicable universe` +
+    `\n  (${corpus.applicableUniverse.candidacies} candidacies, ${corpus.applicableUniverse.contests} contests, ` +
+    `no ZIP and no county in the derivation)`,
+);
 console.log(`    contests                              ${registry.denominators.contests}`);
 console.log(`    candidates known                      ${registry.denominators.candidates}`);
-console.log(`      with a canonical candidacy id       ${registry.denominators.candidatesWithCanonicalCandidacyId}`);
-console.log(`      without one (canvass-only)          ${registry.denominators.candidatesWithoutCanonicalCandidacyId}`);
+console.log(`      with a held-ballot candidacy key    ${registry.denominators.candidatesWithCanonicalCandidacyId}`);
+console.log(
+  `      without one                         ${registry.denominators.candidatesWithoutCanonicalCandidacyId}` +
+    `  (${filingListWithoutHeldBallot} on the filing list and on no ballot this project holds; ` +
+    `${canvassOnly} named only by the certified canvass)`,
+);
 console.log(`      with a committee identity           ${registry.denominators.candidatesWithCommitteeIdentity}`);
 console.log(`    non-federal / federal                 ${registry.denominators.nonFederalCandidates} / ${registry.denominators.federalCandidates}`);
 console.log(`    within-contest name-form collisions   ${collisions.length}`);

@@ -1,0 +1,60 @@
+Acquire the Arizona Secretary of State 2026 filing list; 55 pilot candidates become 266 statewide
+
+Every Arizona candidate artifact in this repository was derived from ONE
+COUNTY'S BALLOT and labelled statewide. data/ballot/az-pima-2026.json carries
+15 candidacy contests and 55 candidacies; the identity registry, the candidate
+universe and the candidate-enrichment obligations were all keyed off it. The
+keys had no ZIP in them, so they looked statewide. The population had one
+county in it, so it was not.
+
+The Secretary of State's own statewide filing list was already CITED on all 55
+of those rows and had been read for the Pima projection only.
+data/jurisdictions/az.json recorded that as DISCOVERY_OWED.
+
+This acquires it. lib/sources/az-sos-candidate-filings/ fetches the document,
+extracts it TWICE by mechanisms that share nothing -- positional table
+recovery, and filing-date tokens counted out of the text layer minus the page
+furniture -- and refuses to write anything if the two counts disagree or if
+either is zero. Both said 266 on 2026-09-01, across 76 contests. The bytes are
+committed with their sha256 and last-modified so the parse reproduces offline.
+
+What this makes impossible:
+
+  - A partial parse passing as a complete corpus. A table extractor that drops
+    a run of rows returns a SHORTER TABLE, not an error, and the shorter table
+    would have become the acquisition denominator with every printed count
+    looking plausible.
+
+  - One candidate becoming two identities. The Secretary prints
+    `Ruiz, Teresa Leyba`; the Pima ballot splits the same person given
+    `Teresa`, family `Leyba Ruiz`. The join is sharedNameForm -- exact string
+    equality over expanded forms, no edit distance and no token-subset test --
+    and a name resolving to more than one held candidacy refuses the write.
+    All 55 held candidacies joined; every enrichment finding this project holds
+    carried forward by identity, 0 lost and 0 regressed.
+
+  - Money disappearing off working cards. canonicalCandidacyId stays the held
+    `ballot-az-pima:*` key for the 55 people who have one and is NULL for the
+    211 who do not, because that key is what the campaign-money corpus is
+    written against and a minted one would report RECONCILED and answer
+    nothing. canonicalContestIds puts the held id FIRST for the same reason:
+    scripts/state-money-az.mts:419 takes element 0 as the contest id.
+    Committee identities 44 before and 44 after; the certified-lineup proof is
+    byte-identical at 27 of 30 reconciled, 22 of 24 applicable non-federal.
+
+  - `pdfjs` detaching a shared buffer. Handing one Uint8Array to both
+    extractors made the second read ZERO BYTES and report CANNOT_RUN, which is
+    a true statement about the buffer that reads as a document with no text
+    layer. Each extractor now gets its own copy.
+
+tests/az-identity-reconciliation.test.ts asserted that a null candidacy key
+implied the certified canvass. That held only while the population was one
+county's ballot; against the filing list it read 211 filed candidates as
+write-in nominees. It now asserts the invariant it was actually protecting --
+every non-null key appears in the held ballot document -- which the old shape
+could not have caught.
+
+Registry 15 contests / 57 candidates -> 76 contests / 268 candidates.
+Candidate universe AZ 55 -> 266.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>

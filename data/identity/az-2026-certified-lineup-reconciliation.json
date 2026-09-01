@@ -454,7 +454,7 @@
    "nomineeName": "Walter \"Les\" Presmyk",
    "nomineePartyLabel": "Republican",
    "outcome": "RECONCILED",
-   "candidateIdentityId": "az-2026:mine-inspector:presmyk-walter",
+   "candidateIdentityId": "az-2026:mine-inspector:presmyk-walter-les",
    "canonicalCandidacyId": "ballot-az-pima:mine-inspector:presmyk-walter",
    "sourceValues": {
     "canvassName": "Walter \"Les\" Presmyk",
@@ -462,7 +462,7 @@
     "registryName": "Walter \"Les\" Presmyk",
     "registryParty": "Republican",
     "registryCandidateIds": [
-     "az-2026:mine-inspector:presmyk-walter"
+     "az-2026:mine-inspector:presmyk-walter-les"
     ]
    },
    "basis": {
@@ -624,7 +624,7 @@
    "nomineeName": "Daniel Francis Butierez Sr.",
    "nomineePartyLabel": "Republican",
    "outcome": "RECONCILED",
-   "candidateIdentityId": "az-2026:us-house-7:butierez-sr--daniel-francis",
+   "candidateIdentityId": "az-2026:us-house-7:butierez-sr-daniel-francis",
    "canonicalCandidacyId": "ballot-az-pima:us-house-7:butierez-sr--daniel-francis",
    "sourceValues": {
     "canvassName": "Daniel Francis Butierez Sr.",
@@ -632,7 +632,7 @@
     "registryName": "Daniel Francis Butierez Sr.",
     "registryParty": "Republican",
     "registryCandidateIds": [
-     "az-2026:us-house-7:butierez-sr--daniel-francis"
+     "az-2026:us-house-7:butierez-sr-daniel-francis"
     ]
    },
    "basis": {

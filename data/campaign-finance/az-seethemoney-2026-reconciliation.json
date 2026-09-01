@@ -56,8 +56,8 @@
   "committeesTested": 716,
   "agreed": 716,
   "disagreed": 0,
-  "walkedThisRun": 60,
-  "carriedForward": 656,
+  "walkedThisRun": 0,
+  "carriedForward": 716,
   "routeGaps": [],
   "rows": [
    {
@@ -10096,6 +10096,86 @@
   },
   "perCandidacy": [
    {
+    "candidacyId": "ballot-az-pima:attorney-general:glassman-rodney",
+    "ballotName": "Rodney Glassman",
+    "contestTitle": "Attorney General",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101445
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:attorney-general:mayes-kris",
+    "ballotName": "Kris Mayes",
+    "contestTitle": "Attorney General",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     100626
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:attorney-general:petersen-warren",
+    "ballotName": "Warren Petersen",
+    "contestTitle": "Attorney General",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     201600171
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:corporation-commissioner:hill",
+    "ballotName": "Jonathon Hill",
+    "contestTitle": "Corporation Commissioner",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     100699
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:corporation-commissioner:myers",
+    "ballotName": "Nicholas \"Nick\" Myers",
+    "contestTitle": "Corporation Commissioner",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     100484
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:corporation-commissioner:pratte",
+    "ballotName": "Clara Pratte",
+    "contestTitle": "Corporation Commissioner",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101905
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:corporation-commissioner:thompson",
+    "ballotName": "Kevin Thompson",
+    "contestTitle": "Corporation Commissioner",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101859
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:governor:biggs-andy",
+    "ballotName": "Andy Biggs",
+    "contestTitle": "Governor",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101830
+    ]
+   },
+   {
     "candidacyId": "ballot-az-pima:governor:hobbs-katie",
     "ballotName": "Katie Hobbs",
     "contestTitle": "Governor",
@@ -10136,16 +10216,6 @@
     ]
    },
    {
-    "candidacyId": "ballot-az-pima:governor:biggs-andy",
-    "ballotName": "Andy Biggs",
-    "contestTitle": "Governor",
-    "state": "SOURCED_FILED",
-    "why": "1 committee agree on name, exact Arizona seat and cycle",
-    "entityIds": [
-     101830
-    ]
-   },
-   {
     "candidacyId": "ballot-az-pima:governor:miceli-ken",
     "ballotName": "Ken Miceli",
     "contestTitle": "Governor",
@@ -10174,13 +10244,23 @@
     ]
    },
    {
-    "candidacyId": "ballot-az-pima:secretary-of-state:fontes-adrian",
-    "ballotName": "Adrian Fontes",
-    "contestTitle": "Secretary of State",
+    "candidacyId": "ballot-az-pima:mine-inspector:matlock-brian",
+    "ballotName": "Brian Matlock",
+    "contestTitle": "State Mine Inspector",
     "state": "SOURCED_FILED",
     "why": "1 committee agree on name, exact Arizona seat and cycle",
     "entityIds": [
-     100622
+     101902
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:mine-inspector:presmyk-walter",
+    "ballotName": "Walter \"Les\" Presmyk",
+    "contestTitle": "State Mine Inspector",
+    "state": "OURS_GAP",
+    "why": "a committee for this person is on file and its filed seat does not agree: the agency states no office for this committee",
+    "entityIds": [
+     102016
     ]
    },
    {
@@ -10192,6 +10272,16 @@
     "entityIds": [
      102163,
      102164
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:secretary-of-state:fontes-adrian",
+    "ballotName": "Adrian Fontes",
+    "contestTitle": "Secretary of State",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     100622
     ]
    },
    {
@@ -10215,229 +10305,43 @@
     ]
    },
    {
-    "candidacyId": "ballot-az-pima:attorney-general:mayes-kris",
-    "ballotName": "Kris Mayes",
-    "contestTitle": "Attorney General",
+    "candidacyId": "ballot-az-pima:state-house-17:keshel",
+    "ballotName": "Rachel \"Jones\" Keshel",
+    "contestTitle": "State Representative, District 17",
     "state": "SOURCED_FILED",
     "why": "1 committee agree on name, exact Arizona seat and cycle",
     "entityIds": [
-     100626
+     100917
     ]
    },
    {
-    "candidacyId": "ballot-az-pima:attorney-general:glassman-rodney",
-    "ballotName": "Rodney Glassman",
-    "contestTitle": "Attorney General",
+    "candidacyId": "ballot-az-pima:state-house-17:lyon",
+    "ballotName": "Hollace \"Holly\" Lyon",
+    "contestTitle": "State Representative, District 17",
     "state": "SOURCED_FILED",
     "why": "1 committee agree on name, exact Arizona seat and cycle",
     "entityIds": [
-     101445
+     102112
     ]
    },
    {
-    "candidacyId": "ballot-az-pima:attorney-general:petersen-warren",
-    "ballotName": "Warren Petersen",
-    "contestTitle": "Attorney General",
+    "candidacyId": "ballot-az-pima:state-house-17:volk",
+    "ballotName": "Kevin Volk",
+    "contestTitle": "State Representative, District 17",
     "state": "SOURCED_FILED",
     "why": "1 committee agree on name, exact Arizona seat and cycle",
     "entityIds": [
-     201600171
+     101507
     ]
    },
    {
-    "candidacyId": "ballot-az-pima:state-treasurer:mansour-nick",
-    "ballotName": "Nick Mansour",
-    "contestTitle": "State Treasurer",
+    "candidacyId": "ballot-az-pima:state-house-17:winchester",
+    "ballotName": "John Winchester",
+    "contestTitle": "State Representative, District 17",
     "state": "SOURCED_FILED",
     "why": "1 committee agree on name, exact Arizona seat and cycle",
     "entityIds": [
-     101897
-    ]
-   },
-   {
-    "candidacyId": "ballot-az-pima:state-treasurer:zepeda-michael",
-    "ballotName": "Michael Zepeda",
-    "contestTitle": "State Treasurer",
-    "state": "SOURCED_FILED",
-    "why": "1 committee agree on name, exact Arizona seat and cycle",
-    "entityIds": [
-     102000
-    ]
-   },
-   {
-    "candidacyId": "ballot-az-pima:state-treasurer:haley-katherine",
-    "ballotName": "Katherine Haley",
-    "contestTitle": "State Treasurer",
-    "state": "SOURCED_FILED",
-    "why": "1 committee agree on name, exact Arizona seat and cycle",
-    "entityIds": [
-     102106
-    ]
-   },
-   {
-    "candidacyId": "ballot-az-pima:state-treasurer:norton-elijah",
-    "ballotName": "Elijah Norton",
-    "contestTitle": "State Treasurer",
-    "state": "SOURCED_FILED",
-    "why": "1 committee agree on name, exact Arizona seat and cycle",
-    "entityIds": [
-     101861
-    ]
-   },
-   {
-    "candidacyId": "ballot-az-pima:superintendent:butts-michael-d-",
-    "ballotName": "Michael D. Butts",
-    "contestTitle": "Superintendent of Public Instruction",
-    "state": "SOURCED_FILED",
-    "why": "1 committee agree on name, exact Arizona seat and cycle",
-    "entityIds": [
-     101877
-    ]
-   },
-   {
-    "candidacyId": "ballot-az-pima:superintendent:leyba-ruiz-teresa",
-    "ballotName": "Teresa Leyba Ruiz",
-    "contestTitle": "Superintendent of Public Instruction",
-    "state": "SOURCED_FILED",
-    "why": "1 committee agree on name, exact Arizona seat and cycle",
-    "entityIds": [
-     101821
-    ]
-   },
-   {
-    "candidacyId": "ballot-az-pima:superintendent:newby-brett-matthew",
-    "ballotName": "Brett Matthew Newby",
-    "contestTitle": "Superintendent of Public Instruction",
-    "state": "SOURCED_FILED",
-    "why": "1 committee agree on name, exact Arizona seat and cycle",
-    "entityIds": [
-     101922
-    ]
-   },
-   {
-    "candidacyId": "ballot-az-pima:superintendent:horne-tom",
-    "ballotName": "Tom Horne",
-    "contestTitle": "Superintendent of Public Instruction",
-    "state": "OURS_GAP",
-    "why": "the portal returned no committee we could match to this person, but the Secretary of State's own register holds 1 live candidate committee under this surname (100587 Thomas Horne for Superintendent of Public Instruction). Two representations disagree, so this is our gap and not an absence.",
-    "entityIds": []
-   },
-   {
-    "candidacyId": "ballot-az-pima:superintendent:yee-kimberly",
-    "ballotName": "Kimberly Yee",
-    "contestTitle": "Superintendent of Public Instruction",
-    "state": "SOURCED_FILED",
-    "why": "1 committee agree on name, exact Arizona seat and cycle",
-    "entityIds": [
-     101898
-    ]
-   },
-   {
-    "candidacyId": "ballot-az-pima:mine-inspector:matlock-brian",
-    "ballotName": "Brian Matlock",
-    "contestTitle": "State Mine Inspector",
-    "state": "SOURCED_FILED",
-    "why": "1 committee agree on name, exact Arizona seat and cycle",
-    "entityIds": [
-     101902
-    ]
-   },
-   {
-    "candidacyId": "ballot-az-pima:mine-inspector:presmyk-walter",
-    "ballotName": "Walter \"Les\" Presmyk",
-    "contestTitle": "State Mine Inspector",
-    "state": "OURS_GAP",
-    "why": "a committee for this person is on file and its filed seat does not agree: the agency states no office for this committee",
-    "entityIds": [
-     102016
-    ]
-   },
-   {
-    "candidacyId": "ballot-az-pima:us-house-6:mendoza-joanna",
-    "ballotName": "JoAnna Mendoza",
-    "contestTitle": "U.S. Representative, District 6",
-    "state": "FEDERAL_NOT_IN_SCOPE",
-    "why": "this seat does not key to an Arizona state office — it is not the Secretary of State's to hold",
-    "entityIds": []
-   },
-   {
-    "candidacyId": "ballot-az-pima:us-house-6:bah-iman",
-    "ballotName": "Iman Bah",
-    "contestTitle": "U.S. Representative, District 6",
-    "state": "FEDERAL_NOT_IN_SCOPE",
-    "why": "this seat does not key to an Arizona state office — it is not the Secretary of State's to hold",
-    "entityIds": []
-   },
-   {
-    "candidacyId": "ballot-az-pima:us-house-6:peters-jereme-lance",
-    "ballotName": "Jereme Lance Peters",
-    "contestTitle": "U.S. Representative, District 6",
-    "state": "FEDERAL_NOT_IN_SCOPE",
-    "why": "this seat does not key to an Arizona state office — it is not the Secretary of State's to hold",
-    "entityIds": []
-   },
-   {
-    "candidacyId": "ballot-az-pima:us-house-6:ciscomani-juan",
-    "ballotName": "Juan Ciscomani",
-    "contestTitle": "U.S. Representative, District 6",
-    "state": "FEDERAL_NOT_IN_SCOPE",
-    "why": "this seat does not key to an Arizona state office — it is not the Secretary of State's to hold",
-    "entityIds": []
-   },
-   {
-    "candidacyId": "ballot-az-pima:us-house-7:grijalva-adelita",
-    "ballotName": "Adelita Grijalva",
-    "contestTitle": "U.S. Representative, District 7",
-    "state": "FEDERAL_NOT_IN_SCOPE",
-    "why": "this seat does not key to an Arizona state office — it is not the Secretary of State's to hold",
-    "entityIds": []
-   },
-   {
-    "candidacyId": "ballot-az-pima:us-house-7:butierez-sr--daniel-francis",
-    "ballotName": "Daniel Francis Butierez Sr.",
-    "contestTitle": "U.S. Representative, District 7",
-    "state": "FEDERAL_NOT_IN_SCOPE",
-    "why": "this seat does not key to an Arizona state office — it is not the Secretary of State's to hold",
-    "entityIds": []
-   },
-   {
-    "candidacyId": "ballot-az-pima:state-senate-19:slawson-ryan",
-    "ballotName": "Ryan Slawson",
-    "contestTitle": "State Senator, District 19",
-    "state": "SOURCED_FILED",
-    "why": "1 committee agree on name, exact Arizona seat and cycle",
-    "entityIds": [
-     101965
-    ]
-   },
-   {
-    "candidacyId": "ballot-az-pima:state-senate-19:griffin-gail",
-    "ballotName": "Gail Griffin",
-    "contestTitle": "State Senator, District 19",
-    "state": "SOURCED_FILED",
-    "why": "1 committee agree on name, exact Arizona seat and cycle",
-    "entityIds": [
-     101867
-    ]
-   },
-   {
-    "candidacyId": "ballot-az-pima:state-senate-20:hernandez-alma",
-    "ballotName": "Alma Hernandez",
-    "contestTitle": "State Senator, District 20",
-    "state": "SOURCED_FILED",
-    "why": "1 committee agree on name, exact Arizona seat and cycle",
-    "entityIds": [
-     101952
-    ]
-   },
-   {
-    "candidacyId": "ballot-az-pima:state-senate-20:perez-rocque",
-    "ballotName": "Rocque Perez",
-    "contestTitle": "State Senator, District 20",
-    "state": "SOURCED_FILED",
-    "why": "1 committee agree on name, exact Arizona seat and cycle",
-    "entityIds": [
-     102067
+     102004
     ]
    },
    {
@@ -10448,16 +10352,6 @@
     "why": "1 committee agree on name, exact Arizona seat and cycle",
     "entityIds": [
      101953
-    ]
-   },
-   {
-    "candidacyId": "ballot-az-pima:state-house-19:swallow-aiden-nicholette",
-    "ballotName": "Aiden Nicholette Swallow",
-    "contestTitle": "State Representative, District 19",
-    "state": "SOURCED_FILED",
-    "why": "1 committee agree on name, exact Arizona seat and cycle",
-    "entityIds": [
-     101913
     ]
    },
    {
@@ -10488,6 +10382,16 @@
     "why": "1 committee agree on name, exact Arizona seat and cycle",
     "entityIds": [
      201800010
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-house-19:swallow-aiden-nicholette",
+    "ballotName": "Aiden Nicholette Swallow",
+    "contestTitle": "State Representative, District 19",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101913
     ]
    },
    {
@@ -10554,84 +10458,180 @@
     ]
    },
    {
-    "candidacyId": "ballot-az-pima:state-house-17:keshel",
-    "ballotName": "Rachel \"Jones\" Keshel",
-    "contestTitle": "State Representative, District 17",
+    "candidacyId": "ballot-az-pima:state-senate-19:griffin-gail",
+    "ballotName": "Gail Griffin",
+    "contestTitle": "State Senator, District 19",
     "state": "SOURCED_FILED",
     "why": "1 committee agree on name, exact Arizona seat and cycle",
     "entityIds": [
-     100917
+     101867
     ]
    },
    {
-    "candidacyId": "ballot-az-pima:state-house-17:winchester",
-    "ballotName": "John Winchester",
-    "contestTitle": "State Representative, District 17",
+    "candidacyId": "ballot-az-pima:state-senate-19:slawson-ryan",
+    "ballotName": "Ryan Slawson",
+    "contestTitle": "State Senator, District 19",
     "state": "SOURCED_FILED",
     "why": "1 committee agree on name, exact Arizona seat and cycle",
     "entityIds": [
-     102004
+     101965
     ]
    },
    {
-    "candidacyId": "ballot-az-pima:state-house-17:lyon",
-    "ballotName": "Hollace \"Holly\" Lyon",
-    "contestTitle": "State Representative, District 17",
+    "candidacyId": "ballot-az-pima:state-senate-20:hernandez-alma",
+    "ballotName": "Alma Hernandez",
+    "contestTitle": "State Senator, District 20",
     "state": "SOURCED_FILED",
     "why": "1 committee agree on name, exact Arizona seat and cycle",
     "entityIds": [
-     102112
+     101952
     ]
    },
    {
-    "candidacyId": "ballot-az-pima:state-house-17:volk",
-    "ballotName": "Kevin Volk",
-    "contestTitle": "State Representative, District 17",
+    "candidacyId": "ballot-az-pima:state-senate-20:perez-rocque",
+    "ballotName": "Rocque Perez",
+    "contestTitle": "State Senator, District 20",
     "state": "SOURCED_FILED",
     "why": "1 committee agree on name, exact Arizona seat and cycle",
     "entityIds": [
-     101507
+     102067
     ]
    },
    {
-    "candidacyId": "ballot-az-pima:corporation-commissioner:thompson",
-    "ballotName": "Kevin Thompson",
-    "contestTitle": "Corporation Commissioner",
+    "candidacyId": "ballot-az-pima:state-treasurer:haley-katherine",
+    "ballotName": "Katherine Haley",
+    "contestTitle": "State Treasurer",
     "state": "SOURCED_FILED",
     "why": "1 committee agree on name, exact Arizona seat and cycle",
     "entityIds": [
-     101859
+     102106
     ]
    },
    {
-    "candidacyId": "ballot-az-pima:corporation-commissioner:myers",
-    "ballotName": "Nicholas \"Nick\" Myers",
-    "contestTitle": "Corporation Commissioner",
+    "candidacyId": "ballot-az-pima:state-treasurer:mansour-nick",
+    "ballotName": "Nick Mansour",
+    "contestTitle": "State Treasurer",
     "state": "SOURCED_FILED",
     "why": "1 committee agree on name, exact Arizona seat and cycle",
     "entityIds": [
-     100484
+     101897
     ]
    },
    {
-    "candidacyId": "ballot-az-pima:corporation-commissioner:pratte",
-    "ballotName": "Clara Pratte",
-    "contestTitle": "Corporation Commissioner",
+    "candidacyId": "ballot-az-pima:state-treasurer:norton-elijah",
+    "ballotName": "Elijah Norton",
+    "contestTitle": "State Treasurer",
     "state": "SOURCED_FILED",
     "why": "1 committee agree on name, exact Arizona seat and cycle",
     "entityIds": [
-     101905
+     101861
     ]
    },
    {
-    "candidacyId": "ballot-az-pima:corporation-commissioner:hill",
-    "ballotName": "Jonathon Hill",
-    "contestTitle": "Corporation Commissioner",
+    "candidacyId": "ballot-az-pima:state-treasurer:zepeda-michael",
+    "ballotName": "Michael Zepeda",
+    "contestTitle": "State Treasurer",
     "state": "SOURCED_FILED",
     "why": "1 committee agree on name, exact Arizona seat and cycle",
     "entityIds": [
-     100699
+     102000
     ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:superintendent:butts-michael-d-",
+    "ballotName": "Michael D. Butts",
+    "contestTitle": "Superintendent of Public Instruction",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101877
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:superintendent:horne-tom",
+    "ballotName": "Tom Horne",
+    "contestTitle": "Superintendent of Public Instruction",
+    "state": "OURS_GAP",
+    "why": "the portal returned no committee we could match to this person, but the Secretary of State's own register holds 1 live candidate committee under this surname (100587 Thomas Horne for Superintendent of Public Instruction). Two representations disagree, so this is our gap and not an absence.",
+    "entityIds": []
+   },
+   {
+    "candidacyId": "ballot-az-pima:superintendent:leyba-ruiz-teresa",
+    "ballotName": "Teresa Leyba Ruiz",
+    "contestTitle": "Superintendent of Public Instruction",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101821
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:superintendent:newby-brett-matthew",
+    "ballotName": "Brett Matthew Newby",
+    "contestTitle": "Superintendent of Public Instruction",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101922
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:superintendent:yee-kimberly",
+    "ballotName": "Kimberly Yee",
+    "contestTitle": "Superintendent of Public Instruction",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101898
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:us-house-6:bah-iman",
+    "ballotName": "Iman Bah",
+    "contestTitle": "U.S. Representative, District 6",
+    "state": "FEDERAL_NOT_IN_SCOPE",
+    "why": "this seat does not key to an Arizona state office — it is not the Secretary of State's to hold",
+    "entityIds": []
+   },
+   {
+    "candidacyId": "ballot-az-pima:us-house-6:ciscomani-juan",
+    "ballotName": "Juan Ciscomani",
+    "contestTitle": "U.S. Representative, District 6",
+    "state": "FEDERAL_NOT_IN_SCOPE",
+    "why": "this seat does not key to an Arizona state office — it is not the Secretary of State's to hold",
+    "entityIds": []
+   },
+   {
+    "candidacyId": "ballot-az-pima:us-house-6:mendoza-joanna",
+    "ballotName": "JoAnna Mendoza",
+    "contestTitle": "U.S. Representative, District 6",
+    "state": "FEDERAL_NOT_IN_SCOPE",
+    "why": "this seat does not key to an Arizona state office — it is not the Secretary of State's to hold",
+    "entityIds": []
+   },
+   {
+    "candidacyId": "ballot-az-pima:us-house-6:peters-jereme-lance",
+    "ballotName": "Jereme Lance Peters",
+    "contestTitle": "U.S. Representative, District 6",
+    "state": "FEDERAL_NOT_IN_SCOPE",
+    "why": "this seat does not key to an Arizona state office — it is not the Secretary of State's to hold",
+    "entityIds": []
+   },
+   {
+    "candidacyId": "ballot-az-pima:us-house-7:butierez-sr--daniel-francis",
+    "ballotName": "Daniel Francis Butierez Sr.",
+    "contestTitle": "U.S. Representative, District 7",
+    "state": "FEDERAL_NOT_IN_SCOPE",
+    "why": "this seat does not key to an Arizona state office — it is not the Secretary of State's to hold",
+    "entityIds": []
+   },
+   {
+    "candidacyId": "ballot-az-pima:us-house-7:grijalva-adelita",
+    "ballotName": "Adelita Grijalva",
+    "contestTitle": "U.S. Representative, District 7",
+    "state": "FEDERAL_NOT_IN_SCOPE",
+    "why": "this seat does not key to an Arizona state office — it is not the Secretary of State's to hold",
+    "entityIds": []
    }
   ]
  },

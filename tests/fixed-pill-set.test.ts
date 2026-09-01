@@ -47,10 +47,30 @@ test("BAL-34: the map battlecard's sections do not depend on the person's office
     "MemberDirectoryInner returns null for a non-federal officeholder again — the pill row " +
       "disappears for every local official, which is BAL-34 exactly",
   );
+  /*
+   * **THE SCOPE FACT IS STILL KNOWN — AND IT IS NOW ONE PREDICATE.**
+   * (Amended Part C, 2026-08-31.)
+   *
+   * This pinned the literal `holder.id.startsWith("congress:")` and therefore
+   * pinned the DUPLICATION. There were three copies of that sentence:
+   * `DirectoryContent`, `MemberDirectoryInner`, and — MISSING — the ballot
+   * page. The missing copy is what a reader met: `app/ballot/page.tsx` gated
+   * the two slots on `recordHolder` alone, so the slot was a truthy React
+   * element that rendered null, the battlecard's `content ?? emptyLine` tested
+   * the slot rather than what it rendered, and *Committees* and *Offices near
+   * you* opened to `innerHTML === ""` — a blank box where a named gap belongs.
+   *
+   * So the assertion moved from the literal to the RULE, and got stricter
+   * rather than looser: the scope fact must be asked through the ONE shared
+   * predicate, and `filesAskingTheScope` below requires every surface that
+   * renders these sections to ask it. Keeping the literal here would have
+   * required keeping the duplication that caused the defect.
+   */
   assert.match(
     body,
-    /const inScope = holder\.id\.startsWith\("congress:"\)/,
-    "the scope fact is still known — it moved INSIDE the sections rather than being dropped",
+    /const inScope = memberDirectoryReaches\(holder\.id\)/,
+    "the scope fact is still known — it moved INSIDE the sections rather than being dropped, " +
+      "and it is asked through the shared predicate rather than a fourth copy of the string",
   );
   // Both sections are constructed unconditionally.
   assert.equal(
@@ -88,6 +108,97 @@ test("BAL-34: the two shared sections still exist in the fixed set, by id", () =
     assert.ok(spec.emptyLine.length > 0, `"${id}" has no empty line for the map card to render`);
   }
   assert.equal(battlecardSectionTitle("offices"), "Offices near you");
+});
+
+/**
+ * **AND EVERY SURFACE THAT RENDERS THESE SECTIONS ASKS THE SAME PREDICATE.**
+ * (Part C, 2026-08-31 — the guard that would have caught the blank box.)
+ *
+ * BAL-34 made the map card render both HEADERS for everyone. What nothing
+ * asked is whether the surfaces AGREE about when the source reaches a person,
+ * and they did not: `app/ballot/page.tsx` decided it from `recordHolder` alone
+ * — which answers "does a record exist", a different question — and handed the
+ * battlecard a slot that looked filled and rendered nothing.
+ *
+ * The completion condition is structural, like the rest of this file: the
+ * predicate exists in exactly one module, and every caller that decides
+ * whether to render these two sections imports it from there.
+ */
+test("BAL-34: every surface deciding these sections asks the ONE scope predicate", () => {
+  const BALLOT_PAGE = readFileSync("app/ballot/page.tsx", "utf8");
+  const PREDICATE = readFileSync("lib/officials/member-directory-scope.ts", "utf8");
+
+  assert.match(
+    PREDICATE,
+    /export function memberDirectoryReaches\(holderId: string\): boolean/,
+    "the shared predicate must exist as one exported function",
+  );
+  /*
+   * The DIRECTIVE, not the token. A client boundary is only a directive in the
+   * leading position of a module — anywhere else it is prose, and matching it
+   * anywhere makes this guard read a comment as the defect, which it did on
+   * the first run against a docstring explaining this very rule.
+   */
+  const leading = PREDICATE.split("\n")
+    .map((l) => l.trim())
+    .filter((l) => l.length > 0 && !l.startsWith("*") && !l.startsWith("/*") && !l.startsWith("//"))[0];
+  assert.doesNotMatch(
+    String(leading ?? ""),
+    /^["']use client["']/,
+    "the predicate is imported by a server component and by a client component, so it may " +
+      "not open with a client boundary directive — every export of such a module becomes a " +
+      "client reference and calling one on the server throws",
+  );
+
+  for (const [label, source] of [
+    ["components/officials/member-directory.tsx", DIRECTORY],
+    ["app/ballot/page.tsx", BALLOT_PAGE],
+  ] as const) {
+    assert.match(
+      source,
+      /memberDirectoryReaches/,
+      `${label} decides whether to render the committees and offices sections and must ask ` +
+        "the shared predicate; deciding it locally is how the two surfaces came to disagree",
+    );
+  }
+
+  /*
+   * The ballot slots specifically. `recordHolder ? <Content/> : null` is the
+   * exact shape that produced the blank box: truthy slot, null render, named
+   * gap suppressed.
+   */
+  for (const slot of ["MemberCommitteesContent", "MemberOfficesContent"] as const) {
+    const at = BALLOT_PAGE.indexOf(`<${slot}`);
+    assert.ok(at > 0, `app/ballot/page.tsx no longer renders ${slot}`);
+    const before = BALLOT_PAGE.slice(Math.max(0, at - 400), at);
+    assert.match(
+      before,
+      /memberDirectoryReaches\(recordHolder\.id\)/,
+      `${slot}'s slot must be null where the source does not reach the person, or the ` +
+        "battlecard's `content ?? emptyLine` fallback tests a slot that renders nothing and " +
+        "the reader gets an empty box instead of the named gap",
+    );
+  }
+
+  /*
+   * And the literal must not come back anywhere but the predicate. Three
+   * copies of one sentence is what left the fourth site unwritten.
+   */
+  for (const [label, source] of [
+    ["components/officials/member-directory.tsx", DIRECTORY],
+    ["app/ballot/page.tsx", BALLOT_PAGE],
+  ] as const) {
+    const inCode = source
+      .split("\n")
+      .filter((line) => /startsWith\(["']congress:["']\)/.test(line))
+      .filter((line) => !line.trimStart().startsWith("*") && !line.trimStart().startsWith("//"));
+    assert.deepEqual(
+      inCode,
+      [],
+      `${label} asks the scope question with its own copy of the string. There is one ` +
+        "predicate, in lib/officials/member-directory-scope.ts.",
+    );
+  }
 });
 
 test("BAL-34: the ballot card still renders the whole fixed set, unconditionally", () => {

@@ -32,6 +32,7 @@
 
 import assert from "node:assert/strict";
 import test from "node:test";
+import { randomUUID } from "node:crypto";
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -99,9 +100,37 @@ test("the conformance suite states WHICH providers it ran, and which it did not"
   assert.ok(names.length >= 2, "at least the double and the durable store always run");
 });
 
+/**
+ * **THE POSTGRES LANE SHARES ONE DATABASE WITH EVERY PREVIOUS RUN, AND THESE
+ * FIXTURES ARE DERIVED-ID.** (2026-09-01.)
+ *
+ * `memory` gets a fresh map and `file` gets a fresh `mkdtemp`. Postgres gets the
+ * live control plane, and the store is APPEND-ONLY BY DESIGN — `types.ts` says
+ * *"nothing is ever removed"* — so there is no teardown to write.
+ *
+ * With a constant `project`, `workItemId(project, subject, obligation)` is the
+ * same id on every run, so the Postgres lane could pass exactly ONCE and failed
+ * on every run afterwards: `first.created` came back `false` because the record
+ * from the previous run was still there. Three tests went red on the close-out
+ * ship for that reason and for no other.
+ *
+ * **It hid for as long as it did because the lane usually does not run.** The
+ * Postgres arm is skipped unless `WTP_CONTROL_PLANE_DATABASE_URL` is set, and a
+ * bare shell does not load `.env.local` — so running this file directly SKIPS
+ * the lane and prints a green 18 of 18, while `pnpm gates` under `handoff` loads
+ * the environment and runs it. A session re-running "isolated" to check would
+ * have been told everything was fine by a lane that never executed.
+ *
+ * The namespace is per RUN rather than per test, so the ids inside one run still
+ * collide exactly the way the assertions require — two `put`s of `item("a")`
+ * must still be the same record. It is only the NEXT run that gets out of the
+ * way of this one.
+ */
+const RUN_NAMESPACE = `conformance-${randomUUID().slice(0, 8)}`;
+
 function item(subject: string, now = NOW) {
   return createWorkItem({
-    project: "conformance",
+    project: RUN_NAMESPACE,
     subject,
     obligation: "prove:the-interface",
     why: "one sequence, every provider, identical answers",
@@ -180,17 +209,22 @@ for (const provider of providers) {
 
   test(`${provider.name}: an append-only log refuses a rewrite and accepts a retry`, async () => {
     const repos = await provider.open();
+    /* Namespaced for the same reason `item()` is: this log row persists in the
+       live Postgres control plane and an identical id next run is not a retry,
+       it is last run's row. */
+    const workItemId = `wi-${RUN_NAMESPACE}`;
+    const transitionId = `t-${RUN_NAMESPACE}`;
     const record = {
-      transitionId: "t-1",
-      workItemId: "wi-1",
+      transitionId,
+      workItemId,
       transition: { from: null, to: "OPEN", at: NOW, by: "test", why: "first" },
     };
-    const first = await repos.transitions.append("wi-1", "t-1", record as never, NOW);
+    const first = await repos.transitions.append(workItemId, transitionId, record as never, NOW);
     assert.equal(first.appended, true);
     assert.equal(first.position, 0, "order is the history");
 
     /* The identical record again: a retried append after a partial failure. */
-    const retried = await repos.transitions.append("wi-1", "t-1", record as never, LATER);
+    const retried = await repos.transitions.append(workItemId, transitionId, record as never, LATER);
     assert.equal(retried.appended, false, "a no-op success, never a duplicate entry");
     assert.equal(retried.position, 0);
 
@@ -199,8 +233,8 @@ for (const provider of providers) {
     await assert.rejects(
       () =>
         repos.transitions.append(
-          "wi-1",
-          "t-1",
+          workItemId,
+          transitionId,
           { ...record, transition: { ...record.transition, why: "rewritten" } } as never,
           LATER,
         ),

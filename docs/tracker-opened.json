@@ -2207,5 +2207,12 @@
       "JOB38",
       "JOB39"
     ]
+  },
+  {
+    "session": "session-c-final",
+    "opened": "2026-09-01",
+    "ids": [
+      "NH304"
+    ]
   }
 ]

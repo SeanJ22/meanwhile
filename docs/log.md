@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-09-01 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **172 sessions.**
+Newest first. **173 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -33,6 +33,14 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NS12** — RULING 125 moves every walk onto the local production build and leaves exactly one question that needs Netlify: which SHA is live. pnpm deploy:live reads it from Netlify's deploy API in one call with zero requests to the site. There is no NETLIFY_AUTH_TOKEN in .env.local and the Netlify CLI config on this machine holds no user, so the tool correctly reports CANNOT-TELL and exits 3 rather than passing. A Personal Access Token from Netlify (User settings, Applications, Personal access tokens) added to .env.local as NETLIFY_AUTH_TOKEN closes it.
 
 **Needs Sean.** Nothing.
+
+## session-c-final · 2026-09-01
+
+**What it started.** 1 row(s) opened, 1 still open.
+
+- **NH304** — WHAT IS NEEDED: your ruling on ONE word. RULING 233 (alias R-C10), in your verbatim text, says "staging is the integration branch and deploys to test.meanwhileusa.com". Netlify derives a branch deploy's hostname as <branch-name>.<suffix>, so the branch name IS the subdomain label, and the two halves cannot both be true. WHY NO MACHINE CAN DECIDE IT: both options work; which one you meant is a judgement about your own words, and a session may not amend your law. OPTION A - amend the BRANCH to 'test', keep the host test.meanwhileusa.com. Consequence: the host you named twice is preserved, STAGING_RENDER_ORIGIN in lib/ops/origins.ts is unchanged, and the git ref name (which appears on no reader-facing or owner-facing surface) moves. This is what the session shipped under, because RULING 233 is not operative until the session after Session C closes. OPTION B - keep the BRANCH 'staging', move the host to staging.meanwhileusa.com. Consequence: the ref name is preserved and the host you specified changes, along with STAGING_RENDER_ORIGIN and every reference to it. MEASURED, four ways, against the live API on 2026-09-01: branch_deploy_custom_domain is a SUFFIX not a per-branch map; GET /sites/<id>/domains and /branch_domains both 404; a managed NETLIFY DNS record pointing the subdomain at a branch deploy is refused 422 'invalid site'; a plain CNAME is accepted but reads back site_id null and managed false, so it is unregistered at the edge and uncovered by the certificate. Positive control: https://nosuchbranch.meanwhileusa.com/api/build resolves on the wildcard certificate and returns 404, which is the provider answering 'no branch deploy by that name'. RULING 235 records the measurement as a FACT and deliberately does NOT amend your ruling. *(open)*
+
+**Needs Sean.** NH304
 
 ## session-c-closeout · 2026-09-01
 

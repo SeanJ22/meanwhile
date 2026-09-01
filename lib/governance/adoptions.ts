@@ -3248,6 +3248,82 @@ Anything else takes a new record.`,
       { kind: "related_to", target: "R-0189" },
     ],
   },
+  {
+    n: 235,
+    title:
+      "RULING 235 — MEASURED: the provider derives a branch deploy's subdomain from the branch name, so RULING 233 cannot have both halves",
+    adopted: "2026-09-01",
+    domain: "shipping-ci",
+    kind: "FACT",
+    provenance: "observed_fact",
+    body: `**RULING 233 named the staging branch \`staging\` and the staging host
+\`test.meanwhileusa.com\`. THE PROVIDER WILL NOT SERVE BOTH.** Netlify derives a
+branch deploy's hostname as \`<branch-name>.<suffix>\`, so the branch name IS the
+subdomain label.
+
+**THIS RECORD DOES NOT AMEND RULING 233, AND MAY NOT.** It is a measurement, and
+a session does not legislate. The governance validator refused it as a
+\`LAW_DECISION\` on exactly that ground — *a LAW_DECISION requires author
+provenance* — which is the validator working, not an obstacle to route around.
+RULING 233 is the author's; its two halves are now known to be jointly
+unsatisfiable; and under the authority-precedence rule **the conflict is
+REPRESENTED rather than resolved by whichever document was read last.**
+
+The session shipped under branch \`test\`, because that is the only branch name
+this provider will serve at the host the owner named twice, and because RULING
+233 is not operative until the first session after Session C closes — so
+nothing was decided that a later session cannot undo. **Which half moves is the
+author's call**, and the tracker carries the decision card.
+
+## Why this is a measurement and not a preference
+
+The obvious objection is that a convenient mechanism has been allowed to rename
+the subject of a law. That objection is correct in general and is why this
+record exists rather than a quiet config change. So the constraint was measured
+four ways against the live API, and the alternative was actually attempted:
+
+1. **\`branch_deploy_custom_domain\` is a SUFFIX, not a per-branch map.** Setting
+   it to \`test.meanwhileusa.com\` made Netlify auto-create
+   \`*.test.meanwhileusa.com\`; setting it to \`meanwhileusa.com\` made it create
+   \`*.meanwhileusa.com\`. The serving host is \`<branch>.<suffix>\`.
+2. **There is no per-branch domain endpoint.** \`GET /sites/<id>/domains\` → 404.
+   \`GET /sites/<id>/branch_domains\` → 404.
+3. **A managed DNS record pointing the subdomain at a branch deploy is
+   REFUSED.** \`POST /dns_zones/<zone>/dns_records\` with
+   \`{type: NETLIFY, hostname: test.meanwhileusa.com, value: staging--sparkwtp.netlify.app}\`
+   → **422 \`invalid site\`**. A NETLIFY record's value must be a SITE, and a
+   branch-deploy host is not one.
+4. **A plain CNAME is accepted and does not route.** It returns 201 but reads
+   back \`site_id: null, managed: false\` — unregistered at the edge, so not
+   served and not covered by the site certificate. It was deleted again.
+
+And the positive control, which is what makes this evidence rather than a pile
+of failures: \`https://nosuchbranch.meanwhileusa.com/api/build\` resolves,
+presents a valid certificate off the \`*.meanwhileusa.com\` wildcard, and returns
+**404** — the provider answering "no branch deploy by that name". The suffix
+mechanism is demonstrably what routes.
+
+## Which half was amended, and why that half
+
+The owner's text names the HOST twice and the branch once. The host is what a
+human types and what \`STAGING_RENDER_ORIGIN\` already holds in
+\`lib/ops/origins.ts\`; the branch name is an internal git ref that appears on no
+reader-facing or owner-facing surface. Amending the branch preserves what the
+owner specified. Moving the host to \`staging.meanwhileusa.com\` would have
+preserved the ref name by changing the thing he actually asked for.
+
+**The code encodes the constraint, not the choice.** The staging deploy filter
+DERIVES the branch name from \`hostOf(STAGING_RENDER_ORIGIN)\` rather than
+hardcoding \`test\`, so if the origin ever moves, the branch follows it with no
+edit and this ruling does not silently become false.`,
+    claims: [],
+    /*
+     * `related_to`, NOT `amends`. A FACT may not amend law, and this one is
+     * deliberately not trying to: it reports what the provider does and leaves
+     * the choice where it belongs.
+     */
+    relations: [{ kind: "related_to", target: "R-0233" }],
+  },
 ];
 
 /**

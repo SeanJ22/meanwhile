@@ -21,7 +21,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 ## Decisions waiting on you
 
-**64 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
+**65 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
 
 ### P1
 
@@ -476,6 +476,19 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 - **Approve a suggester but require it be proxied through this product** — no partial address reaches the third party with the reader's identity attached; costs a server round-trip per keystroke and a rate-limiting design.
 - **Refuse — no autocomplete** — BAL-37 stays as reported. Readers type the whole address, which is the current behaviour and is a real friction on mobile.
 
+#### NH304 — RULING 233 names a branch and a host the provider will not serve together - choose which half moves
+
+*Opened 2026-09-01 · opened today · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+
+**What is needed.** Rule on ONE WORD in RULING 233: the branch is `staging` and the host is `test.meanwhileusa.com`, and this provider will not serve both. Option A — amend the BRANCH to `test`, preserving the host you named twice and `STAGING_RENDER_ORIGIN`; the git ref name moves, and it appears on no reader-facing or owner-facing surface. Option B — keep the branch `staging` and move the host to `staging.meanwhileusa.com`, preserving the ref name and changing the host you specified. The session shipped under Option A because RULING 233 is not operative until the session after Session C closes, so nothing is decided that you cannot undo.
+
+**Why no machine can decide it.** a session may not amend the author's law, and which of your own two words you meant is a judgement no measurement settles — the measurement (RULING 235, a FACT) only establishes that both cannot stand. No artifact can decide it: it needs a resource, a permission or a judgement that only the author can supply. Under RULING 208 the escalation is a parallel lane — this row does not close, pause or satisfy the obligation it is about, and every other executable path continues meanwhile.
+
+**Your options.**
+
+- **Supply it / rule on it** — the blocked route opens and the work behind this row continues on the machine.
+- **Decline or defer** — the obligation stays LIVE and visible — declining the escalation is never a disposition of the record it concerns (RULING 205, RULING 208) — and the other routes keep being worked.
+
 ### P3
 
 #### D70 — Agenda-platform tenant enumeration crawler (replaces the h2 enumeration approach)
@@ -890,7 +903,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 append-only ledger of every id any session has ever claimed. It is never typed and
 never guessed.
 
-- 396 row(s) carry a date the ledger stamped directly.
+- 397 row(s) carry a date the ledger stamped directly.
 - 243 row(s) take the date from the session the ledger names, where the entry was reconstructed on 2026-08-21 without a stamp.
 - 225 row(s) read **UNKNOWN**. Their ledger entries were reconstructed with no stamped day and name a session that carries no date. The ledger bound around them is a multi-day range, and a range is not a date; this clone is also shallow at 2026-08-25, so git cannot answer for rows older than that either. **UNKNOWN is the honest reading and is never replaced by a guess.**
 
@@ -900,4 +913,4 @@ committed artifacts on EVERY tracker generation — not when a session remembers
 and auto-resolves the moment its blocker stops being true.
 
 - 0 row(s) carry a machine-verifiable predicate.
-- 68 row(s) are marked NOT_MACHINE_VERIFIABLE with a card.
+- 69 row(s) are marked NOT_MACHINE_VERIFIABLE with a card.

@@ -1,10 +1,10 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "02758e3766628c73",
+  "snapshot": "e89946c84579c9ef",
   "counts": {
-    "records": 271,
-    "current": 250,
+    "records": 272,
+    "current": 251,
     "law": 219,
     "decisions": 31,
     "historical": 21
@@ -5255,6 +5255,30 @@
         {
           "kind": "related_to",
           "target": "R-0189"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0235",
+      "aliases": [
+        "RULING 235",
+        "R235",
+        "R-235"
+      ],
+      "title": "RULING 235 — MEASURED: the provider derives a branch deploy's subdomain from the branch name, so RULING 233 cannot have both halves",
+      "kind": "FACT",
+      "status": "ACTIVE",
+      "provenance": "observed_fact",
+      "domain": "shipping-ci",
+      "adopted": "2026-09-01",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [
+        {
+          "kind": "related_to",
+          "target": "R-0233"
         }
       ],
       "uncertain": [],

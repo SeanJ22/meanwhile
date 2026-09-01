@@ -14,8 +14,8 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **386 open**, 478 resolved.
-- **68 waiting on Sean** — the first section below.
+- **387 open**, 478 resolved.
+- **69 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **2**
   - New Hampshire hunt — **2**
@@ -35,7 +35,7 @@ and when. Nothing is ever deleted.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**68 open · 72 resolved.**
+**69 open · 72 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -80,6 +80,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH287** — 16 of the 20 speculative Pima routes carry a recorded outcome with jurisdiction 'az'. Several of those walks were actually against school districts and water districts, not the county. Promoting a route to REQUIRED on that evidence would let a school-district technique become a required county route on the strength of 'somewhere in Arizona'. The route-floor repair therefore deliberately did NOT implement an OBSERVED_HERE proof kind, and 0 method routes are currently REQUIRED for Pima.
 
 **NH299** — docs/Meanwhile-Owner-Checklist.xlsx holds three rows with Status CONFIRMED — EX, F1 and F5 — of which EX is the workbook's own documented example row. So the answer key is two facts, both known_present. The Adversarial questions tab has Keep? blank on all twelve rows, so zero questions load. The READER contract therefore reads AWAITING_OWNER_DATA and TRUTH cannot score a false-presence rate for want of a known_absence denominator.
+
+**NH304** — WHAT IS NEEDED: your ruling on ONE word. RULING 233 (alias R-C10), in your verbatim text, says "staging is the integration branch and deploys to test.meanwhileusa.com". Netlify derives a branch deploy's hostname as <branch-name>.<suffix>, so the branch name IS the subdomain label, and the two halves cannot both be true. WHY NO MACHINE CAN DECIDE IT: both options work; which one you meant is a judgement about your own words, and a session may not amend your law. OPTION A - amend the BRANCH to 'test', keep the host test.meanwhileusa.com. Consequence: the host you named twice is preserved, STAGING_RENDER_ORIGIN in lib/ops/origins.ts is unchanged, and the git ref name (which appears on no reader-facing or owner-facing surface) moves. This is what the session shipped under, because RULING 233 is not operative until the session after Session C closes. OPTION B - keep the BRANCH 'staging', move the host to staging.meanwhileusa.com. Consequence: the ref name is preserved and the host you specified changes, along with STAGING_RENDER_ORIGIN and every reference to it. MEASURED, four ways, against the live API on 2026-09-01: branch_deploy_custom_domain is a SUFFIX not a per-branch map; GET /sites/<id>/domains and /branch_domains both 404; a managed NETLIFY DNS record pointing the subdomain at a branch deploy is refused 422 'invalid site'; a plain CNAME is accepted but reads back site_id null and managed false, so it is unregistered at the edge and uncovered by the certificate. Positive control: https://nosuchbranch.meanwhileusa.com/api/build resolves on the wildcard certificate and returns 404, which is the provider answering 'no branch deploy by that name'. RULING 235 records the measurement as a FACT and deliberately does NOT amend your ruling.
 
 **NH43** — RULING 60's residual. NH Hunt 5 hand-worked every un-held unit at 03255 and holds 48 of 48. Three bodies inside those units were reached by nothing, and each is listed below with every branch already walked and what each returned. The ruling asks you to hunt one or two yourself and return the process, which then gets built as a branch the same way the six in zip-playbook.md section 8 were.
 

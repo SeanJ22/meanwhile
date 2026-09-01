@@ -283,3 +283,58 @@ export function callUsd(
     outputTokens * perOutput
   );
 }
+
+/* ========================================================================== */
+/* Comparability — and a question that could not be compared is NOT MEASURED  */
+/* ========================================================================== */
+
+/** What `comparabilityFailure` needs to know about one question's two arms. */
+export interface ComparabilityInput {
+  readonly packsIdentical: boolean;
+  readonly incumbentRanCount: number;
+  readonly challengerRanCount: number;
+  readonly incumbentModel: string;
+  readonly challengerModel: string;
+}
+
+/**
+ * Why this question could not be compared — or `null` when it can be.
+ *
+ * ## Why this is a named function rather than a filter predicate
+ *
+ * It used to be a `filter` inside the harness, and the filter was the defect.
+ * Rows it excluded did not become unmeasured questions; they stopped existing.
+ * `switchVerdict` refuses a run carrying `held: null` and refuses an empty set —
+ * both correct, and both blind to a question that never reached it — so the
+ * DENOMINATOR SHRANK IN SILENCE. ITEM K's effort sweep emitted `SWITCH` over
+ * three surviving rows at `xhigh` and over **one** at `max`, and the record
+ * reported `questions: 1` as though that had been the plan.
+ *
+ * A dropped row is the same failure this repository refuses everywhere else,
+ * wearing a filter's clothes: a zero-row extraction is a FAILED extraction and
+ * never an empty document (RULING 100), and our failure to measure is never
+ * evidence about the thing we failed to measure.
+ *
+ * So the reason is RETURNED rather than the row being discarded, the caller
+ * carries it into both arms as `held: null`, and the guard RULING 230 already
+ * put in `switchVerdict` fires on its own. No second rule, no threshold, and no
+ * new verdict emitter — which is the other half of RULING 230.
+ */
+export function comparabilityFailure(input: ComparabilityInput): string | null {
+  if (!input.packsIdentical) {
+    return (
+      "the two arms did not receive an identical evidence pack, so any " +
+      "difference between them is not attributable to the model"
+    );
+  }
+  const dead: string[] = [];
+  if (input.incumbentRanCount === 0) dead.push(input.incumbentModel);
+  if (input.challengerRanCount === 0) dead.push(input.challengerModel);
+  if (dead.length > 0) {
+    return (
+      `no pass completed on ${dead.join(" or ")}, so this question was never ` +
+      `put to ${dead.length === 2 ? "either arm" : "that arm"}`
+    );
+  }
+  return null;
+}

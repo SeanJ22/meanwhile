@@ -12,6 +12,7 @@ import {
   switchVerdict,
   type QuestionRun,
 } from "../lib/ask/model-economics.ts";
+import { comparabilityFailure } from "../lib/ask/model-comparison.ts";
 import { ASK_SYNTHESIS_MODEL } from "../lib/ask/synthesize.ts";
 
 /**
@@ -293,4 +294,112 @@ test("RULING 230: exactly ONE function in the repository returns a switch verdic
     ["lib/ask/model-economics.ts"],
     `a switch verdict is emitted from ${emitters.length} place(s); RULING 230 allows one`,
   );
+});
+
+/* ========================================================================== */
+/* The silent denominator — a question that could not be compared             */
+/* ========================================================================== */
+
+/*
+ * ITEM K's own effort sweep found this and reported it rather than working
+ * around it: the harness FILTERED incomparable rows out before deriving a
+ * verdict, so `xhigh` emitted SWITCH over three surviving rows and `max` over
+ * ONE, and the record said `questions: 1` as though a one-question sweep had
+ * been the plan. RULING 230's guard was in place and could not fire, because
+ * the questions never reached it.
+ *
+ * These are the assertions that would have caught it. They are written against
+ * the SHARED rule rather than against the harness's private copy, because a
+ * private copy is how the two drift back apart (RULING 103).
+ */
+
+test("a question that reached neither arm is NOT MEASURED, not absent", () => {
+  const why = comparabilityFailure({
+    packsIdentical: true,
+    incumbentRanCount: 0,
+    challengerRanCount: 0,
+    incumbentModel: "model-a",
+    challengerModel: "model-b",
+  });
+  assert.ok(why, "a question no pass completed on must give a reason, not null");
+  assert.match(why, /never put to either arm/);
+});
+
+test("a question that reached only one arm names THAT arm", () => {
+  const onlyChallenger = comparabilityFailure({
+    packsIdentical: true,
+    incumbentRanCount: 0,
+    challengerRanCount: 3,
+    incumbentModel: "model-a",
+    challengerModel: "model-b",
+  });
+  assert.ok(onlyChallenger);
+  assert.match(onlyChallenger, /model-a/);
+  assert.doesNotMatch(onlyChallenger, /model-b/);
+  assert.match(onlyChallenger, /never put to that arm/);
+});
+
+test("differing evidence packs void the comparison, and say why", () => {
+  const why = comparabilityFailure({
+    packsIdentical: false,
+    incumbentRanCount: 3,
+    challengerRanCount: 3,
+    incumbentModel: "model-a",
+    challengerModel: "model-b",
+  });
+  assert.ok(why);
+  assert.match(why, /not attributable to the model/);
+});
+
+test("a comparable question returns null — the rule refuses nothing it should not", () => {
+  assert.equal(
+    comparabilityFailure({
+      packsIdentical: true,
+      incumbentRanCount: 3,
+      challengerRanCount: 3,
+      incumbentModel: "model-a",
+      challengerModel: "model-b",
+    }),
+    null,
+  );
+});
+
+test("carrying an incomparable question as unmeasured REFUSES the vacuous switch", () => {
+  /*
+   * The defect, reproduced end to end. Six questions attempted; five reached
+   * neither arm; the one that ran held on the challenger.
+   *
+   * Under the filter, `switchVerdict` saw one run per arm, every challenger
+   * question held, and it returned SWITCH with `questions: 1`.
+   * Carried as unmeasured, the guard RULING 230 already put there fires.
+   */
+  const ids = ["q1", "q2", "q3", "q4", "q5", "q6"];
+  const ran = new Set(["q6"]);
+  const runs = (model: string): QuestionRun[] =>
+    ids.map((questionId) => ({
+      questionId,
+      model,
+      held: ran.has(questionId) ? true : null,
+      ms: 1,
+      usd: 1,
+    }));
+
+  const verdict = switchVerdict(runs("model-a"), runs("model-b"), "the sweep");
+  assert.equal(
+    verdict.kind,
+    "NOT_MEASURED",
+    "five of six questions never ran; a SWITCH over the sixth is a vacuous sweep",
+  );
+  assert.equal(
+    verdict.kind === "NOT_MEASURED" ? verdict.unmeasured.length : -1,
+    10,
+    "every unmeasured question is named, on BOTH arms — 5 questions x 2 arms",
+  );
+
+  // And the control: with all six measured and holding, SWITCH is still reachable.
+  const allHeld = (model: string): QuestionRun[] =>
+    ids.map((questionId) => ({ questionId, model, held: true, ms: 1, usd: 1 }));
+  const clean = switchVerdict(allHeld("model-a"), allHeld("model-b"), "the sweep");
+  assert.equal(clean.kind, "SWITCH");
+  assert.equal(clean.kind === "SWITCH" ? clean.questions : -1, 6);
 });

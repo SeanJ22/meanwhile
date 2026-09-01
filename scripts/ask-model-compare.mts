@@ -72,6 +72,7 @@ import { interpretWithoutModel } from "../lib/ask/interpret.ts";
 import { snapshotEntities } from "../lib/ask/inventory.ts";
 import {
   callUsd,
+  comparabilityFailure,
   shownPromptDigest,
   synthesizeForComparison,
   type ComparisonOutcome,
@@ -629,6 +630,8 @@ const CARRIED_DIAGNOSTICS = [
 
 interface Derived {
   readonly comparedRows: number;
+  /** Every row that could NOT be compared, each with the reason it could not. */
+  readonly droppedRows: readonly { questionId: string; why: string }[];
   readonly incumbentRuns: QuestionRun[];
   readonly challengerRuns: QuestionRun[];
   readonly verdict: SwitchVerdict;
@@ -636,6 +639,16 @@ interface Derived {
   readonly challengerQuestionsNotHolding: readonly string[];
   readonly relativeNonRegression: ReturnType<typeof relativeNonRegressionAnalysis>;
 }
+
+/** Why this row could not be compared, or null. Delegates to the shared rule. */
+const notComparable = (r: Row): string | null =>
+  comparabilityFailure({
+    packsIdentical: r.packsIdentical,
+    incumbentRanCount: r.incumbent.ranCount,
+    challengerRanCount: r.challenger.ranCount,
+    incumbentModel: INCUMBENT_ARM,
+    challengerModel: CHALLENGER_ARM,
+  });
 
 /**
  * Every derived field, from the rows and nothing else.
@@ -646,26 +659,55 @@ interface Derived {
  * second field is written from the first.
  */
 function derive(rows: readonly Row[], why: string): Derived {
-  const comparable = rows.filter(
-    (r) => r.packsIdentical && r.incumbent.ranCount > 0 && r.challenger.ranCount > 0,
-  );
-  const incumbentRuns: QuestionRun[] = comparable.map((r) => ({
+  /*
+   * **A ROW THAT COULD NOT BE COMPARED IS CARRIED AS UNMEASURED, NEVER
+   * DROPPED.** (Repaired 2026-09-01, found by ITEM K's own effort sweep and
+   * reported rather than worked around.)
+   *
+   * This used to `filter` the incomparable rows out and hand `switchVerdict`
+   * only what survived. `switchVerdict` refuses a verdict when a run carries
+   * `held: null` and refuses an empty set — both correct, and both blind to a
+   * question that never reached it at all. So the DENOMINATOR SHRANK IN
+   * SILENCE: the `xhigh` sweep emitted `SWITCH` over three surviving rows and
+   * `max` over ONE, and the record reported `questions: 1` as though a
+   * single-question sweep had been the plan.
+   *
+   * That is the shape this repository refuses everywhere else. A zero-row
+   * extraction is a FAILED extraction, not an empty document (RULING 100); a
+   * finite attempt count never earns an absence (RULING 170); and our failure
+   * to measure is never evidence about the thing we failed to measure. A
+   * filter turned all three into a clean sweep.
+   *
+   * The repair uses the guard that already exists rather than adding a second
+   * one: an incomparable row enters both arms with `held: null`, and
+   * `switchVerdict`'s `unmeasured` branch — the one RULING 230 put there —
+   * fires on its own. `droppedRows` then states the denominator in the record,
+   * so a reader of the artifact sees what was not compared and why, instead of
+   * inferring it from a count that looks complete.
+   */
+  const dropped = rows
+    .map((r) => ({ questionId: r.questionId, why: notComparable(r) }))
+    .filter((d): d is { questionId: string; why: string } => d.why !== null);
+  const droppedIds = new Set(dropped.map((d) => d.questionId));
+
+  const incumbentRuns: QuestionRun[] = rows.map((r) => ({
     questionId: r.questionId,
     model: INCUMBENT_ARM,
-    held: held(r.incumbent),
+    held: droppedIds.has(r.questionId) ? null : held(r.incumbent),
     ms: r.incumbent.msMean,
     usd: r.incumbent.usdTotal,
   }));
-  const challengerRuns: QuestionRun[] = comparable.map((r) => ({
+  const challengerRuns: QuestionRun[] = rows.map((r) => ({
     questionId: r.questionId,
     model: CHALLENGER_ARM,
-    held: held(r.challenger),
+    held: droppedIds.has(r.questionId) ? null : held(r.challenger),
     ms: r.challenger.msMean,
     usd: r.challenger.usdTotal,
   }));
   const verdict = switchVerdict(incumbentRuns, challengerRuns, why);
   return {
-    comparedRows: comparable.length,
+    comparedRows: rows.length - dropped.length,
+    droppedRows: dropped,
     incumbentRuns,
     challengerRuns,
     verdict,
@@ -701,6 +743,18 @@ function reportDecision(derived: Derived): void {
     );
   }
   console.log(`  DECISION: ${derived.decision}`);
+  /*
+   * THE DENOMINATOR IS PRINTED WHETHER OR NOT IT IS WHOLE. A sweep that
+   * compared three of seven questions and said nothing about the other four is
+   * how `SWITCH over one row` came to look like a result.
+   */
+  console.log(
+    `  DENOMINATOR: ${derived.comparedRows} of ${derived.comparedRows + derived.droppedRows.length} ` +
+      `question(s) were actually compared.`,
+  );
+  for (const d of derived.droppedRows) {
+    console.log(`    NOT COMPARED — ${d.questionId}: ${d.why}`);
+  }
 
   console.log("");
   console.log(`  DIAGNOSTIC — relative non-regression (NOT a switch verdict): ${rel.kind}`);
@@ -760,6 +814,9 @@ function writeRunRecord(meta: RecordMeta, rows: readonly Row[], derived: Derived
         corpusRows: meta.corpusRows,
         renderedRows: rows.length,
         comparedRows: derived.comparedRows,
+        /* The denominator, stated. A row that could not be compared is named
+           here with its reason, so no reader has to infer it from a count. */
+        droppedRows: derived.droppedRows,
         voided: meta.voided,
         challengerQuestionsNotHolding: derived.challengerQuestionsNotHolding,
         /* The canonical verdict, and the decision RENDERED from it. */
@@ -796,6 +853,52 @@ function regenerate(path: string): void {
   /* A zero-row regeneration is a FAILED regeneration, never an empty one. */
   if (rows.length === 0) {
     console.error(`ask:model-compare · FAILED — ${path} carries no rows to re-derive from.`);
+    process.exit(1);
+  }
+
+  /**
+   * **THE ARMS COME FROM THE ROWS, AND A DISAGREEMENT IS REFUSED.**
+   * (Found 2026-09-01 by running this path after the switch landed.)
+   *
+   * `INCUMBENT_ARM` and `CHALLENGER_ARM` default to the CURRENT constants, and
+   * ITEM K swapped those constants the moment Sonnet 5 became the incumbent.
+   * Regenerating a record written before the switch therefore re-labelled a
+   * real measurement with today's roles: a run whose rows say
+   * `incumbent: claude-opus-5` came back stamped
+   * `incumbentModel: claude-sonnet-5`, `challengerModel: claude-opus-5`, and
+   * `decision: RETAIN:claude-sonnet-5`. **The arms were swapped against the
+   * very rows the record was re-derived from** — an artifact asserting a
+   * comparison that never happened.
+   *
+   * Lane 3 fixed the same class of bug one field over: `SwitchVerdict.to` names
+   * the arm that was ACTUALLY MEASURED, read off the runs, precisely so a
+   * verdict cannot recommend a model nothing was measured about. `decision`,
+   * `incumbentModel` and `challengerModel` were still rendering from the
+   * constants.
+   *
+   * So the rows are the authority, and where they disagree with the arms this
+   * process is running under, the regeneration is REFUSED with the exact
+   * command that would be correct. It is not silently corrected either: the
+   * flags exist, and guessing which of two models the operator meant is how a
+   * false record gets written a second time.
+   */
+  const rowIncumbent = rows[0]?.incumbent?.model;
+  const rowChallenger = rows[0]?.challenger?.model;
+  if (
+    (rowIncumbent && rowIncumbent !== INCUMBENT_ARM) ||
+    (rowChallenger && rowChallenger !== CHALLENGER_ARM)
+  ) {
+    console.error(
+      `ask:model-compare · REFUSED — ${path} recorded ` +
+        `incumbent ${rowIncumbent} against challenger ${rowChallenger}, but this ` +
+        `process is running incumbent ${INCUMBENT_ARM} against challenger ` +
+        `${CHALLENGER_ARM}.\n` +
+        `  Re-deriving under swapped arms would stamp a real measurement with the ` +
+        `wrong roles and assert a comparison that never happened.\n` +
+        `  Name the arms the record actually holds:\n` +
+        `    pnpm ask:model-compare --regenerate ${path.replace(/\\/g, "/")} ` +
+        `--incumbent ${rowIncumbent} --challenger ${rowChallenger}`,
+    );
     process.exit(1);
   }
 

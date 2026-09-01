@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-31 19:38:42 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-31 21:22:38 EDT.
 Session day 2026-08-31 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1249 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1264 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -1020,18 +1020,18 @@ _No status change recovered in the commits walked._
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-31 19:38:42 EDT
-branch: claude/session-c-wgh22
-head sha: 98c8e0d87bd5ea9b0d36ff016bc3c4ba57a3a39d
-head subject: Gate run records for the WGH-22 ship
-origin/main sha: ce1fe51bae41cbd99f67a3a43f148ba1511aec5b
-origin/main subject: Merge pull request #240 from SeanJ22/claude/frontier-walk-checks-baseline
-local main sha: ce1fe51bae41cbd99f67a3a43f148ba1511aec5b
+generated: 2026-08-31 21:22:37 EDT
+branch: main
+head sha: c853abfc4e485f3252e3c71e79bddc52c3b9f89a
+head subject: Merge pull request #243 from SeanJ22/claude/session-c-close
+origin/main sha: c853abfc4e485f3252e3c71e79bddc52c3b9f89a
+origin/main subject: Merge pull request #243 from SeanJ22/claude/session-c-close
+local main sha: c853abfc4e485f3252e3c71e79bddc52c3b9f89a
 local main matches origin/main: yes
 working tree: clean
 open prs: none
 last recorded tests: 239 (recorded without a verdict)
 last recorded lint: not recorded
 last recorded build: not recorded
-last recorded status from: docs/state.md:20294
+last recorded status from: docs/state.md:20296
 ```

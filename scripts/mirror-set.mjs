@@ -251,6 +251,28 @@ export const DECLARED_EXTRA_DIRS = ["Screenshots from Feedback"];
  * delete these three lines; the check will go on being satisfied.
  */
 export const DECLARED_EXTRAS = [
+  /*
+   * **THE PILOT DIGEST (Session C, PART G2, 2026-08-31).** Ours, unlike
+   * everything else on this list, and declared here for a different reason.
+   *
+   * `scripts/pilot-runner.mts` writes these on every cycle so the owner can
+   * read what the machine did without opening the repository. They are
+   * standing documents with STABLE names — `pilot-digest.md` is overwritten
+   * each cycle and `pilot-digest-log.md` is appended — so they are not the
+   * dated-artifact drift the set check was built to catch.
+   *
+   * They are NOT in the canonical set because that set is drift-checked against
+   * a repo counterpart, and these have none: they are written straight to the
+   * mirror by a long-running process, and they change every cycle by design. A
+   * counterpart in the repository would be stale within the hour and would make
+   * the drift check permanently red — which is the failure mode this whole
+   * block exists to avoid.
+   *
+   * So they are reported rather than failed. If the runner is uninstalled and
+   * these stop being written, delete these two lines with it.
+   */
+  "pilot-digest.md",
+  "pilot-digest-log.md",
   // Written by the author 2026-08-15/16, 182 MB between them. Not mirror
   // documents, not produced by handoff, and not this script's to remove.
   "primary-rhetoric.csv",

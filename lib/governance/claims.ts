@@ -336,6 +336,22 @@ export const CLAIM_KEYS: readonly ClaimKeyDef[] = [
       "when-a-session-happens-to-look",
     ],
   },
+  {
+    key: "interface.definition_form",
+    question: "How is an interface between two lanes defined?",
+    values: [
+      "one-shared-typed-schema-both-sides-validate",
+      "a paragraph each side reads separately",
+    ],
+  },
+  {
+    key: "interface.compatibility_evidence",
+    question: "What proves two lanes' halves actually fit?",
+    values: [
+      "real-producer-output-into-real-consumer",
+      "a fixture each side agrees with",
+    ],
+  },
 ] as const;
 
 const KEY_INDEX = new Map(CLAIM_KEYS.map((k) => [k.key, k]));

@@ -4,284 +4,196 @@
  * ## What this is for, in one sentence
  *
  * So that *"the owner reported it"* and *"a machine owes it"* stop being two
- * records. A tracker row that LANE TRACKER's triage converts under its state
- * (b) becomes a scheduled obligation through THE SAME REGISTRY the meetings
- * corpus and the campaign-finance portfolios go through — same occurrence, same
- * RouteTask, same Attempt, same disposition, same debt, same persisted
- * next-due. There is no second control plane for owner-reported work.
+ * records. A tracker row that LANE TRACKER's triage converts becomes a
+ * scheduled obligation through THE SAME REGISTRY the meetings corpus and the
+ * campaign-finance portfolios go through — same occurrence, same RouteTask,
+ * same Attempt, same disposition, same debt, same persisted next-due. There is
+ * no second control plane for owner-reported work.
  *
- * ## THE CONTRACT, stated so a lane can satisfy it without a conversation
+ * ## THE CONTRACT IS A TYPE, AND IT IS NOT IN THIS FILE (RULING 228)
  *
- * One file, at `data/tracker/obligation-handoff.json`:
+ * `lib/contracts/tracker-handoff.ts` holds the shape, the path, the states and
+ * the validator. This module IMPORTS it; so does the producer,
+ * `lib/tracker/obligation-handoff.ts`. Neither side restates it.
  *
- * ```json
- * {
- *   "generatedAt": "2026-08-31",
- *   "generatedBy": "lane-tracker triage (b)",
- *   "rows": [
- *     {
- *       "trackerId": "AZ21",
- *       "recordClass": "campaign-finance",
- *       "subjectId": "az-easyvote-tenant-list",
- *       "readerImpactAt": null,
- *       "routes": [ { "routeId": "...", "label": "...",
- *                     "executorClass": "DETERMINISTIC",
- *                     "executorReason": "...",
- *                     "open": { "kind": "HTTP_GET", "url": "https://..." },
- *                     "citation": "docs/tracker.md — AZ21" } ]
- *     }
- *   ]
- * }
- * ```
+ * That is a repair of a defect this seam already shipped. The two halves were
+ * built in parallel from one paragraph and diverged on the path, the envelope
+ * key and three field names, and the consequence was this provider reporting
+ * **ABSENT** — *"the converting lane has not shipped one"* — over a file
+ * sitting in the repository carrying seven named rows. A false ABSENT about a
+ * colleague's work is the same defect class as a false absence about a
+ * government.
  *
- * `routes` is the same `RouteDescriptor` shape the campaign-finance descriptor
- * files use, unchanged and unabridged — one shape for every route this
- * scheduler works, so a lane that can write one can write the other.
+ * `tests/tracker-handoff-contract.test.ts` runs the REAL producer's output into
+ * the REAL consumer, which is the only evidence RULING 228 accepts. A fixture
+ * is a third reading of the paragraph and agrees with whoever wrote it — this
+ * seam HAD a fixture, the fixture matched the consumer, the consumer passed its
+ * tests, and the seam was still broken.
  *
- * The ingestion path is tested against
- * `tests/fixtures/tracker-obligation-handoff.json`, a fixture of exactly the
- * shape above, and this provider reports ABSENT rather than EMPTY when the real
- * file is not present. Those are different sentences and the digest prints the
- * one that is true.
- *
- * ## THE FILE HAS LANDED, AND THE TWO HALVES DID NOT MATCH (2026-08-31)
- *
- * The converting lane shipped it — seven rows — at `docs/tracker-obligation-
- * handoff.json`, under an `obligations` key, with `rowId` and `subject` where
- * this contract says `trackerId` and `subjectId`. Both lanes built to the same
- * paragraph and produced different shapes, which is what a prose contract buys.
- *
- * The result was worse than either half: this provider reported **ABSENT** —
- * *"the converting lane has not shipped one"* — over a file sitting in the
- * repository. The integration owner moved the file to the contract path and
- * taught this reader the other envelope.
- *
- * **None of the seven is schedulable yet**, and that is correct rather than
- * disappointing: every row carries `needsBeforeItCanCarryANextDue` naming what
- * it lacks — an adapter, a second observation, an owner decision. So the honest
- * reading is EMPTY with seven rejections quoting the converting lane's own
- * reasons, and NOT an absence. RULING 208: naming an obligation does not
- * discharge it, and none of these rows is closed by appearing here.
- *
- * ## Absent, unreadable and empty are THREE outcomes
+ * ## Six outcomes, and the middle ones are what got collapsed
  *
  * ```
- *   ABSENT      no handoff file. The lane has not shipped one. Zero units, and
- *               that zero is expected rather than alarming
- *   UNREADABLE  a file that does not parse, or parses without `rows`. A FAILED
- *               read, reported as a failure — never as an absence
- *   EMPTY       a file that parses and declares `rows: []`. A zero-row
- *               extraction is a FAILED extraction, so this is reported as a
- *               defect in the producing lane and NOT as "the owner reported
- *               nothing"
+ *   ABSENT                 no artifact. NEVER printable when a file is present
+ *   UNREADABLE             a file that exists and does not parse or validate
+ *   PRESENT_EMPTY          parses, zero rows. A zero-row extraction is a
+ *                          FAILED extraction — a defect in the producer, and
+ *                          not "the owner reported nothing"
+ *   PRESENT_UNSCHEDULABLE  rows exist, NONE qualifies. Work in progress, and
+ *                          not a failure of either side
+ *   PARTIALLY_REGISTERED   some qualify, some do not
+ *   REGISTERED             every qualifying row registered
  * ```
+ *
+ * The state is DERIVED from the counts (`intakeStateFor`), never asserted, so
+ * no caller can name a state its own numbers contradict. That is exactly how
+ * `INGESTED` came to be printed over zero usable rows.
  */
 
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
+import {
+  HANDOFF_PATH,
+  intakeStateFor,
+  intakeSummaryLine,
+  isSchedulable,
+  validateHandoff,
+  type DeferredRow,
+  type HandoffRow,
+  type IntakeState,
+  type TrackerHandoffArtifact,
+} from "../../../contracts/tracker-handoff.ts";
 import type {
   ObligationProvider,
   ProvidedObligation,
   ProviderContext,
   ProviderYield,
-  RouteDescriptor,
 } from "../registry.ts";
 
 export const TRACKER_PROVIDER_ID = "tracker-intake";
 
-/** The contract path. A lane writes here; nothing else reads it. */
-export const HANDOFF_PATH = ["data", "tracker", "obligation-handoff.json"] as const;
-
-/** One converted tracker row, as the handoff file carries it. */
-export interface TrackerHandoffRow {
-  readonly trackerId: string;
-  readonly recordClass: string;
-  readonly subjectId: string;
-  readonly readerImpactAt?: string | null;
-  readonly observedChangeRateHours?: number | null;
-  readonly declaredCycleHours?: number | null;
-  readonly lastWorkedAt?: string | null;
-  readonly routes: readonly RouteDescriptor[];
-}
-
-export interface TrackerHandoff {
-  readonly generatedAt?: string;
-  readonly generatedBy?: string;
-  readonly rows?: readonly TrackerHandoffRow[];
-}
-
-export type IntakeState = "ABSENT" | "UNREADABLE" | "EMPTY" | "INGESTED";
+export { HANDOFF_PATH };
+export type { HandoffRow, IntakeState };
 
 export interface IntakeResult {
   readonly state: IntakeState;
-  readonly rows: readonly TrackerHandoffRow[];
-  /** Rows the file carried that could not be used, each with the reason. */
-  readonly rejected: readonly { readonly trackerId: string; readonly why: string }[];
+  /** The rows that qualified and will be registered. */
+  readonly rows: readonly HandoffRow[];
+  /** Rows the artifact carried that do not yet qualify, each with the reason. */
+  readonly deferred: readonly DeferredRow[];
+  readonly inputRows: number;
   readonly detail: string;
   readonly path: string;
 }
 
 /**
- * Read one handoff file and say EXACTLY what came back.
+ * Read one handoff artifact and say EXACTLY what came back.
  *
- * Exported and tested directly against a fixture, because the three zero-shaped
- * outcomes are the whole of the honesty here and a provider that collapsed them
- * into "no rows" would report a broken lane as a quiet lane.
+ * Exported and tested directly, because the zero-shaped outcomes are the whole
+ * of the honesty here and a reader that collapsed them would report a broken
+ * lane as a quiet one.
  */
 export function readTrackerHandoff(path: string): IntakeResult {
   if (!existsSync(path)) {
     return {
       state: "ABSENT",
       rows: [],
-      rejected: [],
+      deferred: [],
+      inputRows: 0,
       path,
       detail:
-        "no tracker handoff file is present. The converting lane has not shipped one, which is an " +
-        "ABSENCE of input and not a statement that no owner-reported work exists.",
+        "no tracker handoff artifact is present. The converting lane has shipped nothing, which " +
+        "is an ABSENCE of input and not a statement that no owner-reported work exists.",
     };
   }
 
-  let parsed: TrackerHandoff;
+  let parsed: unknown;
   try {
-    parsed = JSON.parse(readFileSync(path, "utf8")) as TrackerHandoff;
+    parsed = JSON.parse(readFileSync(path, "utf8"));
   } catch (error) {
     return {
       state: "UNREADABLE",
       rows: [],
-      rejected: [],
+      deferred: [],
+      inputRows: 0,
       path,
       detail:
-        `the handoff file exists and did not parse (${
+        `the handoff artifact exists and did not parse (${
           error instanceof Error ? error.message : String(error)
         }). This is a FAILED read of a file that IS there, and no obligation may be dropped on it.`,
     };
   }
 
-  /*
-   * TWO ENVELOPES, BECAUSE TWO LANES BUILT THE TWO HALVES IN PARALLEL.
-   *
-   * This consumer was written expecting `rows`. The converting lane shipped
-   * `obligations`, at a different path, with its own field names — the two
-   * halves agreed on a contract in prose and implemented different shapes,
-   * which is what happens when a contract is a paragraph rather than a type.
-   *
-   * Accepting both is NOT leniency. The alternative was this provider reporting
-   * ABSENT — "the converting lane has not shipped one" — over a file that was
-   * sitting in the repository carrying seven named rows. **A false ABSENT about
-   * our own colleague's work is the same defect class as a false absence about
-   * a government**, and it is the one this session spent its length on.
-   *
-   * The rows still have to earn their way in below. Reading the file is not
-   * accepting its contents.
-   */
-  const carried: readonly unknown[] | null = Array.isArray(parsed.rows)
-    ? parsed.rows
-    : Array.isArray((parsed as { obligations?: unknown }).obligations)
-      ? ((parsed as { obligations: readonly unknown[] }).obligations)
-      : null;
-
-  if (!carried) {
+  const problems = validateHandoff(parsed);
+  if (problems.length > 0) {
     return {
       state: "UNREADABLE",
       rows: [],
-      rejected: [],
+      deferred: [],
+      inputRows: 0,
       path,
       detail:
-        "the handoff file parsed and carries neither a `rows` nor an `obligations` array. A file " +
-        "without the contract's one required key is unreadable against the contract, which is a " +
-        "failure and not a zero.",
-    };
-  }
-  const carriedRows = carried as readonly TrackerHandoffRow[];
-
-  if (carriedRows.length === 0) {
-    return {
-      state: "EMPTY",
-      rows: [],
-      rejected: [],
-      path,
-      detail:
-        "the handoff file parsed and declares rows: []. A zero-row extraction is a FAILED " +
-        "extraction, never an empty document — reported as a defect in the producing lane rather " +
-        "than as 'the owner reported nothing'.",
+        `the handoff artifact parsed and does NOT satisfy the contract: ${problems.join("; ")}. ` +
+        "Reported as a failed read against the contract, never as a zero.",
     };
   }
 
-  const rows: TrackerHandoffRow[] = [];
-  const rejected: { trackerId: string; why: string }[] = [];
-  for (const raw of carriedRows) {
-    const row = raw as TrackerHandoffRow & {
-      rowId?: string;
-      subject?: string;
-      needsBeforeItCanCarryANextDue?: readonly string[];
-    };
-    /* `rowId` is the converting lane's name for the same field. */
-    const id =
-      typeof row?.trackerId === "string"
-        ? row.trackerId
-        : typeof row?.rowId === "string"
-          ? row.rowId
-          : "<unnamed row>";
-    const subject =
-      typeof row?.subjectId === "string"
-        ? row.subjectId
-        : typeof row?.subject === "string"
-          ? row.subject
-          : null;
-    if (!subject) {
-      rejected.push({ trackerId: id, why: "no subjectId, so nothing names what is owed" });
+  const artifact = parsed as TrackerHandoffArtifact;
+  const rows: HandoffRow[] = [];
+  const deferred: DeferredRow[] = [];
+
+  for (const row of artifact.rows) {
+    if (isSchedulable(row)) {
+      rows.push(row);
       continue;
     }
-    if (!Array.isArray(row.routes) || row.routes.length === 0) {
-      /*
-       * The converting lane states, per row, what is missing before the row can
-       * carry a next due. Quote it rather than replacing it with our own
-       * sentence: the lane that converted the row knows why it is not ready,
-       * and a generic "no routes" would throw that away and make the next
-       * session rediscover it.
-       */
-      const stated = Array.isArray(row.needsBeforeItCanCarryANextDue)
-        ? row.needsBeforeItCanCarryANextDue.join("; ")
-        : null;
-      rejected.push({
-        trackerId: id,
-        why: stated
-          ? `not yet schedulable, and the converting lane says why: ${stated}`
-          : "no routes. A converted row with no representation to open would schedule an " +
-            "obligation whose only possible outcome is NO_ROUTE_TASK",
-      });
-      continue;
-    }
-    rows.push({ ...row, trackerId: id, subjectId: subject });
+    /*
+     * QUOTE THE PRODUCER'S OWN REASON.
+     *
+     * The converting lane states, per row, what is missing before the row can
+     * carry a next-due. Replacing that with a generic "no routes" throws away
+     * the only analysis anyone has done of why this row is not ready, and makes
+     * the next session rediscover it.
+     */
+    const stated = row.needsBeforeItCanCarryANextDue;
+    deferred.push({
+      trackerId: row.trackerId,
+      why:
+        Array.isArray(stated) && stated.length > 0
+          ? `not yet schedulable, and the converting lane says why: ${stated.join("; ")}`
+          : "no routes, and the producer stated no reason. A converted row with no representation " +
+            "to open would schedule an obligation whose only possible outcome is NO_ROUTE_TASK",
+    });
   }
 
-  /*
-   * INGESTED MUST NOT NAME A READ THAT YIELDED NOTHING.
-   *
-   * A file carrying seven rows of which none is schedulable is not an
-   * ingestion. Returning `INGESTED` with `rows: []` would put a success word on
-   * a zero, which is the exact shape this module's own header refuses three
-   * ways above — and the digest prints the state, so the word travels.
-   *
-   * `EMPTY` is already defined as "parsed, and nothing usable came out", and
-   * that is what this is. The `rejected` list carries WHY, per row, in the
-   * converting lane's own words.
-   */
-  const nothingUsable = rows.length === 0 && rejected.length > 0;
+  const state = intakeStateFor({
+    present: true,
+    readable: true,
+    inputRows: artifact.rows.length,
+    registered: rows.length,
+  });
 
   return {
-    state: nothingUsable ? "EMPTY" : "INGESTED",
+    state,
     rows,
-    rejected,
+    deferred,
+    inputRows: artifact.rows.length,
     path,
     detail:
-      `${rows.length} of ${carriedRows.length} converted row(s) carry a subject and at least one ` +
-      `route${parsed.generatedBy ? `; generated by ${parsed.generatedBy}` : ""}` +
-      `${parsed.generatedAt ? ` on ${parsed.generatedAt}` : ""}` +
-      (nothingUsable
-        ? ". NONE is schedulable yet, and each rejected row states what it needs first — this is " +
-          "the converting lane's work in progress, not an absence of owner-reported work"
+      `${intakeSummaryLine({
+        state,
+        inputRows: artifact.rows.length,
+        registered: rows.length,
+        deferred: deferred.length,
+      })}${artifact.generatedBy ? ` · generated by ${artifact.generatedBy}` : ""}` +
+      `${artifact.generatedAt ? ` on ${artifact.generatedAt}` : ""}` +
+      (state === "PRESENT_EMPTY"
+        ? ". A zero-row extraction is a FAILED extraction, never an empty document — reported as " +
+          "a defect in the PRODUCING lane rather than as 'the owner reported nothing'."
+        : "") +
+      (state === "PRESENT_UNSCHEDULABLE"
+        ? ". Every row states what it needs first — this is the converting lane's work in " +
+          "progress, and NOT an absence of owner-reported work."
         : ""),
   };
 }
@@ -290,12 +202,18 @@ export function trackerHandoffPath(root: string): string {
   return join(root, ...HANDOFF_PATH);
 }
 
+/** The digest lines for one read. Counts first, because counts are checkable. */
+export function intakeDigestLines(read: IntakeResult): readonly string[] {
+  const lines = [`tracker-intake — ${read.detail}`];
+  for (const d of read.deferred) lines.push(`  DEFERRED ${d.trackerId} — ${d.why}`);
+  return lines;
+}
+
 /**
  * The provider.
  *
- * `pathOverride` exists solely so the test can point it at the committed
- * fixture. Nothing in production passes it, and the default is the contract
- * path.
+ * `pathOverride` exists solely so a test can point it at another artifact.
+ * Nothing in production passes it, and the default is the contract path.
  */
 export function trackerIntakeProvider(pathOverride?: string): ObligationProvider {
   return {
@@ -310,11 +228,24 @@ export function trackerIntakeProvider(pathOverride?: string): ObligationProvider
       const path = pathOverride ?? trackerHandoffPath(ctx.root);
       const read = readTrackerHandoff(path);
 
+      /*
+       * A read FAILURE and an empty-of-usable-rows are different, and only the
+       * first is a failure. PRESENT_UNSCHEDULABLE is the honest state of a
+       * conversion in progress and must not be reported as a broken lane — but
+       * it must also never print as an absence, because the artifact is there.
+       */
       if (read.state === "ABSENT") {
         return { obligations: [], readFailure: null, emptyReason: read.detail };
       }
-      if (read.state === "UNREADABLE" || read.state === "EMPTY") {
+      if (read.state === "UNREADABLE" || read.state === "PRESENT_EMPTY") {
         return { obligations: [], readFailure: read.detail, emptyReason: null };
+      }
+      if (read.state === "PRESENT_UNSCHEDULABLE") {
+        return {
+          obligations: [],
+          readFailure: null,
+          emptyReason: intakeDigestLines(read).join(" | "),
+        };
       }
 
       const obligations: ProvidedObligation[] = read.rows.map((row) => ({
@@ -331,12 +262,13 @@ export function trackerIntakeProvider(pathOverride?: string): ObligationProvider
 
       return {
         obligations,
-        readFailure:
-          read.rejected.length === 0
-            ? null
-            : `${read.rejected.length} converted row(s) were unusable: ` +
-              read.rejected.map((r) => `${r.trackerId} (${r.why})`).join("; "),
-        emptyReason: null,
+        readFailure: null,
+        /*
+         * PARTIALLY_REGISTERED still carries deferrals, reported as a reason
+         * rather than a failure: some rows registering does not make the others
+         * broken.
+         */
+        emptyReason: read.deferred.length === 0 ? null : intakeDigestLines(read).join(" | "),
       };
     },
   };

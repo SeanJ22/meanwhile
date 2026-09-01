@@ -320,6 +320,7 @@
     "tracker:attribution": "node scripts/tracker-attribution.mjs",
     "tracker:audit": "node scripts/tracker-done-audit.mjs",
     "tracker:claim": "node scripts/tracker.mjs claim",
+    "tracker:handoff": "tsx scripts/tracker-handoff.mts",
     "tracker:move": "node scripts/tracker.mjs move",
     "tracker:note": "node scripts/tracker.mjs note",
     "tracker:open": "node scripts/tracker.mjs open",

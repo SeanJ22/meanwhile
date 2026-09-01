@@ -2638,6 +2638,96 @@ sits there.`,
       { kind: "related_to", target: "R-0055" },
     ],
   },
+  {
+    n: 228,
+    title:
+      "RULING 228 — an interface between independently built lanes is one shared typed schema, never prose",
+    adopted: "2026-08-31",
+    domain: "meta-governance",
+    kind: "LAW_DECISION",
+    provenance: "author_explicit",
+    body: `**Any interface between independently built lanes — producer and consumer
+of a file, queue, or handoff — is defined by ONE SHARED TYPED SCHEMA imported
+and validated by BOTH sides, never by prose. A compatibility test constructs
+output through the REAL PRODUCER and consumes that EXACT ARTIFACT through the
+REAL CONSUMER; any field or envelope divergence fails. A contract that is a
+paragraph rather than a type is a defect.**
+
+## The failure this is written from
+
+Two lanes built the two halves of one handoff in parallel, from the same
+paragraph, on the same day.
+
+\`\`\`
+  CONSUMER expected   data/tracker/obligation-handoff.json
+                      { rows: [ { trackerId, subjectId, routes } ] }
+
+  PRODUCER shipped    docs/tracker-obligation-handoff.json
+                      { obligations: [ { rowId, subject, routeId } ] }
+\`\`\`
+
+Different path, different envelope key, different field names for the same
+three fields. Both lanes read the same specification. Both implemented it
+correctly by their own reading. Neither could have discovered the other's
+reading without running the two halves together, and nothing made them run
+together.
+
+**The result was worse than either half alone.** The consumer reported
+\`ABSENT\` — *"the converting lane has not shipped one"* — over a file sitting
+in the repository carrying seven named rows. A false ABSENT about a
+colleague's work is the same defect class as a false absence about a
+government: a true statement about what one process could see, read as a false
+statement about what exists.
+
+## Why a paragraph cannot hold an interface
+
+A prose contract is checked by two humans reading it at different times with
+different assumptions, and it passes both readings. A typed contract is checked
+by the compiler, at both ends, every build. The difference is not rigour — both
+lanes were rigorous — it is that **prose has no failing state.** Two divergent
+implementations of one paragraph produce two green lanes and one broken seam,
+and the seam is the only place the defect exists.
+
+## The three requirements, and the third is the one that bites
+
+\`\`\`
+  1. ONE SCHEMA        a single typed definition, in one file
+  2. BOTH SIDES        producer and consumer IMPORT it and VALIDATE against it.
+                       A type the producer merely resembles is not a contract.
+  3. A COMPATIBILITY   the test constructs output through the REAL PRODUCER
+     TEST              and consumes THAT EXACT ARTIFACT through the REAL
+                       CONSUMER. Not two fixtures. Not a hand-written sample
+                       of the shape. The producer's actual output, into the
+                       consumer's actual reader.
+\`\`\`
+
+Requirement 3 is what a fixture cannot do. A fixture is a THIRD reading of the
+paragraph, written by whichever lane wrote the test, and it agrees with that
+lane. The tracker handoff had a fixture, the fixture matched the consumer, the
+consumer passed its tests, and the seam was still broken — because the
+producer had never been run into the consumer.
+
+## What this does NOT license
+
+It does not license inventing a producer to satisfy the test. Where a handoff
+artifact is currently hand-authored, the honest reading is that the interface
+has no producer yet, and building one is the work. It does not license
+loosening a consumer to accept anything a producer happens to emit: accepting a
+second envelope is a REPAIR of a divergence already shipped, not a standing
+permission to have two shapes. And it never licenses manufacturing
+schedulability, promotability, or any other readiness a row does not have, in
+order to make a seam look connected.`,
+    claims: [
+      { key: "interface.definition_form", value: "one-shared-typed-schema-both-sides-validate" },
+      { key: "interface.compatibility_evidence", value: "real-producer-output-into-real-consumer" },
+    ],
+    relations: [
+      { kind: "extends", target: "R-0103" },
+      { kind: "related_to", target: "R-0224" },
+      { kind: "related_to", target: "R-0190" },
+      { kind: "related_to", target: "R-0191" },
+    ],
+  },
 ];
 
 /**

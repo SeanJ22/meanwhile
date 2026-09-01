@@ -190,8 +190,30 @@ export async function syncObligations(
   const refreshed: { id: string; changed: string[] }[] = [];
   const all: StandingObligation[] = [];
 
+  /*
+   * ONE READ OF THE WHOLE TABLE, not one read per obligation.
+   * (Session C3, lane C, 2026-09-01.)
+   *
+   * This loop used to issue `repos.obligations.read(o.id)` per row, which is one
+   * network round trip per obligation against the Postgres control plane. That
+   * was invisible at 99 obligations and became the binding constraint the
+   * moment RULING 229 was taken seriously: acquiring to the AUTHORITATIVE
+   * SOURCE UNIVERSE means the corpus is thousands of rows, not dozens, and a
+   * scheduler whose registration cost is linear in round trips would have made
+   * "name every government" cost minutes per cycle.
+   *
+   * `list()` is on the same interface, is ordered by id, and both stores
+   * implement it. The semantics below are unchanged — same CAS, same revisions,
+   * same refusal to touch runtime-owned fields — because the only thing that
+   * moved is WHERE the existing row is found.
+   */
+  const existingById = new Map<string, { id: string; revision: number; value: StandingObligation }>();
+  for (const row of await repos.obligations.list()) {
+    existingById.set(row.id, { id: row.id, revision: row.revision, value: row.value });
+  }
+
   for (const o of corpus) {
-    const existing = await repos.obligations.read(o.id);
+    const existing = existingById.get(o.id) ?? null;
     if (existing === null) {
       const row = standing(o, now);
       await repos.obligations.put(o.id, row, now);

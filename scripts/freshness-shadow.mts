@@ -74,6 +74,8 @@ import { buildRegistry, registryLines } from "../lib/control-plane/scheduler/reg
 import { meetingsProvider } from "../lib/control-plane/scheduler/providers/meetings.ts";
 import { campaignFinanceProvider } from "../lib/control-plane/scheduler/providers/campaign-finance.ts";
 import { trackerIntakeProvider } from "../lib/control-plane/scheduler/providers/tracker-intake.ts";
+import { localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
+import { candidateEnrichmentProvider } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
 import { methodMaturityFrom } from "../lib/control-plane/scheduler/maturity.ts";
 import {
   closeOccurrence,
@@ -133,8 +135,24 @@ if (wantsPostgres) {
 
 /* ----------------------------------------------------------- the registry --- */
 
+/*
+ * FIVE PROVIDERS. (Session C3, lane C, 2026-09-01. RULING 229.)
+ *
+ * The fourth and fifth are what "acquire to the AUTHORITATIVE SOURCE UNIVERSE"
+ * looks like from the scheduler's side: `local-jurisdictions` gives every named
+ * filing officer and election custodian a clock, and `candidate-enrichment`
+ * makes campaign sites, positions, bios, photos and contact standing
+ * obligations against the CANONICAL STATEWIDE candidate universe rather than
+ * against whichever ZIPs happen to be enabled.
+ */
 const registry = buildRegistry(
-  [meetingsProvider(), campaignFinanceProvider(), trackerIntakeProvider()],
+  [
+    meetingsProvider(),
+    campaignFinanceProvider(),
+    trackerIntakeProvider(),
+    localJurisdictionsProvider(),
+    candidateEnrichmentProvider(),
+  ],
   { root: ROOT, nowIso: NOW },
 );
 
@@ -219,7 +237,21 @@ console.log(
 for (const o of sync.all) {
   const row = scheduleObligation(o, nowMs);
   if (!isScheduled(row)) continue;
-  await recordNextDue(repos, { obligationId: o.id, nextDueAt: row.nextDueAt, now: NOW });
+  /*
+   * DO NOT PAY A ROUND TRIP TO WRITE A VALUE THAT IS ALREADY THERE.
+   * (Session C3, lane C, 2026-09-01.)
+   *
+   * `recordNextDue` already no-ops when the stored value matches — but it
+   * discovers that by READING the row, which is one round trip per obligation
+   * per cycle. `sync.all` is the row, already in hand. Under RULING 229 the
+   * corpus is the authoritative source universe rather than one pilot ballot,
+   * so this loop runs over thousands of rows and the difference between "check
+   * in memory" and "ask the database" is the difference between a cycle that
+   * fits inside the runner's interval and one that does not.
+   */
+  if (o.nextDueAt !== row.nextDueAt) {
+    await recordNextDue(repos, { obligationId: o.id, nextDueAt: row.nextDueAt, now: NOW });
+  }
   nextDueByObligation.set(o.id, row.nextDueAt);
   if (backedOff.has(o.id)) continue;
   const isDue = Date.parse(row.nextDueAt) <= nowMs || retryNow.has(o.id);

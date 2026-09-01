@@ -21,6 +21,8 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
+import { PORTRAIT_ACCEPT } from "../lib/photos/decode.ts";
+
 const ROOT = resolve(import.meta.dirname, "..");
 const RECORD = join(ROOT, "data", "photos", "door2-statewide-executives-2026-08-28.json");
 const OUT_DIR = join(ROOT, "data", "photos", "staged", "own03-2026-08-31");
@@ -29,22 +31,12 @@ const OUT_DIR = join(ROOT, "data", "photos", "staged", "own03-2026-08-31");
 const UA = "we-the-people/1.0 (+https://github.com/SeanJ22/We-The-People)";
 
 /*
- * ASK ONLY FOR WHAT WE CAN READ.
- *
- * This header cost an hour and is the most transferable thing in this file.
- * The first version sent the browser-shaped `image/avif,image/webp,...`, and
- * `static.wixstatic.com` — which content-negotiates, and whose URL literally
- * ends `enc_avif` — duly returned a perfectly good AVIF portrait of the State
- * Treasurer. `lib/photos/decode.ts` knows png, jpeg, gif and webp. It does not
- * know AVIF. So a real portrait, served correctly at 200, decoded as
- * NOT_AN_IMAGE.
- *
- * That is a FALSE ABSENCE about a named public official's published photo,
- * manufactured entirely by us, on a host that did nothing wrong. Requesting a
- * format we cannot decode is asking a question whose answer we are guaranteed
- * to misread.
+ * `PORTRAIT_ACCEPT` is imported rather than written here, and that is the
+ * point: it is derived from the formats `decodeImage` can actually read, so
+ * this fetch cannot drift away from the decoder that judges its result. See
+ * the note on the constant — this script is where that defect was found.
  */
-const ACCEPT = "image/png,image/jpeg,image/gif,image/webp,*/*;q=0.5";
+const ACCEPT = PORTRAIT_ACCEPT;
 
 interface Row {
   subject: string;

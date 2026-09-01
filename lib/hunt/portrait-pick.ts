@@ -25,6 +25,7 @@
  * page, which is where a portrait actually is.
  */
 
+import { PORTRAIT_ACCEPT } from "../photos/decode.ts";
 import { sourceUserAgent } from "../sources/http.ts";
 
 /** One image on a page, resolved against the page's own URL. */
@@ -300,7 +301,7 @@ export async function verifyIsImage(
   let res: Response;
   try {
     res = await fetchImpl(decodeEntities(url), {
-      headers: { "user-agent": sourceUserAgent() },
+      headers: { "user-agent": sourceUserAgent(), accept: PORTRAIT_ACCEPT },
       redirect: "follow",
     });
   } catch (e) {

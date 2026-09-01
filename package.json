@@ -370,7 +370,8 @@
     "zip:universe": "tsx scripts/zip-universe.mts",
     "zipgov:build": "tsx scripts/build-zip-governments.mts",
     "money:az": "tsx scripts/state-money-az.mts",
-    "method:learn-az-seethemoney": "tsx scripts/learn-az-seethemoney.mts"
+    "method:learn-az-seethemoney": "tsx scripts/learn-az-seethemoney.mts",
+    "identity:az": "tsx scripts/identity-az-2026.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

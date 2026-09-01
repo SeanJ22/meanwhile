@@ -51,6 +51,37 @@
   --tier-fill-national: var(--accent-national);
   --tier-fill-on: #0f1117;
 
+  /*
+    THE BRAND MARK (ITEM J, 2026-09-01). One token, declared once, because it
+    is `--accent-state` on purpose and not a fourth teal.
+
+    WHY IT REUSES A TIER ACCENT RATHER THAN GETTING ITS OWN. A new hue near
+    `--accent-state` (#00b894 dark / #00896e light) and `--concluded`
+    (#6fa8a5 / #3a6a67) would put three almost-identical teals on one screen,
+    and two colours that are almost the same read as a rendering bug or an
+    unintended relationship — the reader cannot tell which. Deliberate reuse
+    is honest; a near-miss is not.
+
+    THE SCOPING RULE, AND IT IS LOAD-BEARING. `--mark` may be referenced ONLY
+    by the logo component (`components/brand/logo.tsx`, styles under
+    `.wtp-logo`). It may never appear as a fill, border, text colour, glow or
+    tint on any other element, at any time. The tier colours are learned from
+    the map legend; the logo never appears in the legend, so a small square
+    beside a serif wordmark does not read as "state government" — but that
+    holds ONLY while the token stays inside the lockup. The moment it tints
+    something else, the overlap stops being reuse and becomes ambiguity, and
+    a reader cannot tell a brand from a status claim. Same reasoning that
+    keeps `.jurisdiction-badge[data-badge="GOVERNS"]` on `--text` rather than
+    on a tier accent. `tests/brand-mark-scope.test.ts` refuses any other
+    reference.
+
+    Declared once, in the dark block, and deliberately NOT restated under
+    `[data-theme="light"]`: its value is a reference, and `--accent-state`
+    already carries its own light override, so the mark follows the theme
+    without a second declaration that could drift from the first.
+  */
+  --mark: var(--accent-state);
+
   /* Meeting status. Concluded is cool and quiet — present, clearly not — docs/globals-css-notes.md#meeting-status-concluded-is-cool-and-quiet-present-clearly-not-3 */
   --concluded: #6fa8a5;
   --canceled: #e17055;
@@ -249,6 +280,28 @@
      column-wise or copy. */
   --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  /*
+    THE THIRD REGISTER IS A CLAIM, NOT A STYLE (ITEM J, 2026-09-01).
+
+    EB Garamond means: this text is quoted from, or names, a public record.
+    Sans means the app is speaking in its own voice; mono carries numerals and
+    identifiers. So the serif face may only be applied by the components that
+    render SOURCED content — a ballot question word for word, an official
+    analysis, a candidate's own quoted passage. It is never set by hand at a
+    call site, and it is never worn by an app-authored summary: a serif face
+    on text this product wrote asserts a provenance that does not exist, which
+    is the same category of failure as rendering a position without a source
+    record. It just fails visually instead of structurally.
+
+    NAMED `--font-record` AND NOT `--font-voice`. `--voice` is already a
+    COLOUR in this file. A `--font-voice` sitting beside a `--voice` colour is
+    a collision waiting to be misread, and `--font-record` names the token's
+    job. `--font-display` above is DM Sans and stays that way.
+
+    `.t-record` in @layer components is the only thing that should apply it.
+  */
+  --font-record: var(--font-eb-garamond), ui-serif, Georgia, "Times New Roman", serif;
 }
 
 /* LEGACY ALIASES — delete as Phase 2/3 replaces the components that use them — docs/globals-css-notes.md#legacy-aliases-delete-as-phase-2-3-replaces-the-components-that-use-them-15 */
@@ -315,6 +368,32 @@
 
   .display-wide {
     letter-spacing: -0.3px;
+  }
+
+  /*
+    THE RECORD REGISTER (ITEM J, 2026-09-01) — the only thing that applies
+    `--font-record`.
+
+    Put this on text that is QUOTED FROM a public record: a ballot question
+    word for word, an official analysis reproduced whole, a candidate's own
+    passage. Do not put it on anything this product wrote. A serif face on an
+    app-authored summary asserts a provenance that does not exist, which is
+    the same category of failure as rendering a position without a source
+    record — it just fails visually instead of structurally. The plain-
+    language measure summary on the ballot is the sharpest example: it sits
+    directly above the official text it paraphrases, and the two must not
+    look like they came from the same place.
+
+    EB Garamond runs small and light next to DM Sans at the same nominal
+    size, so the class buys a little size and leading back. It does NOT set a
+    colour: the record already renders in the data register, and the register
+    a piece of text is in is not this class's business.
+  */
+  .t-record {
+    font-family: var(--font-record);
+    font-weight: 500;
+    font-size: 1.08em;
+    line-height: 1.55;
   }
 
   .panel {
@@ -525,6 +604,85 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   border-radius: 2px;
 }
 
+/* ==========================================================================
+   THE LOCKUP (ITEM J, 2026-09-01) — `components/brand/logo.tsx`
+
+   `meanwhile • • ▪` — a lowercase serif wordmark, two grey dots, one filled
+   square. The component's own header carries the reasoning; what lives here
+   is the geometry, and it is all relative so one type size drives everything.
+
+   THE BEAT is the unit: the dot diameter and the square's side are the same
+   length, and every gap and the clear space are measured in it. At the
+   wordmark's size the beat is 0.18em, which is roughly the optical weight of
+   a period in EB Garamond 500 — the marks have to read as an ELLIPSIS that
+   resolves, not as three bullets.
+
+   CLEAR SPACE is one beat on all sides, measured from the square, applied as
+   padding on the lockup itself so no call site has to remember it.
+
+   The square is `--mark` and the dots are `--text-muted`; both tokens already
+   swap per theme, so there is ONE code path for both themes and nothing to
+   drift. `--mark` appears in this file exactly here and in its own
+   declaration — see the token comment for why that matters.
+   ========================================================================== */
+.wtp-logo {
+  --wtp-logo-beat: 0.18em;
+  display: inline-flex;
+  align-items: baseline;
+  /* The word does not touch the beats: the trail-off needs a breath first. */
+  gap: 0.3em;
+  /* The wordmark NEVER wraps. Where it would, the caller asks for `mark`. */
+  white-space: nowrap;
+  font-size: var(--wtp-logo-size, 22px);
+  line-height: 1;
+  padding: var(--wtp-logo-beat);
+}
+
+.wtp-logo-word {
+  font-family: var(--font-record);
+  font-weight: 500;
+  /* Lowercase is the rendering's job, not the string's — the accessible name
+     stays the cased product name. */
+  text-transform: lowercase;
+  letter-spacing: 0.004em;
+  color: var(--text);
+  line-height: 1;
+}
+
+/* Tailwind's preflight makes every <svg> a block; the beats sit ON the text
+   baseline, so they are inline-level and the flex row aligns by baseline. */
+.wtp-logo-beats {
+  display: inline-block;
+  /* three beats + two gaps, in beats: 3×18 + 2×16 = 86 wide, 18 tall */
+  width: calc(var(--wtp-logo-beat) * 86 / 18);
+  height: var(--wtp-logo-beat);
+  flex: 0 0 auto;
+}
+
+.wtp-logo-dot {
+  fill: var(--text-muted);
+}
+
+/* FILLED. ALWAYS. A hollow square would read as "concluded" and a dashed one
+   as "unsourced" — both are shapes this product has already spent. */
+.wtp-logo-square {
+  fill: var(--mark);
+}
+
+/* The compressed mark: the square alone. Its side IS the requested size, so
+   its clear space is that same length — one beat, by the same rule. */
+.wtp-logo--mark {
+  --wtp-logo-beat: var(--wtp-logo-size, 16px);
+  font-size: var(--wtp-logo-size, 16px);
+}
+
+.wtp-logo-glyph {
+  display: block;
+  width: var(--wtp-logo-size, 16px);
+  height: var(--wtp-logo-size, 16px);
+  flex: 0 0 auto;
+}
+
 .brand {
   display: flex;
   align-items: center;
@@ -533,10 +691,15 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   position: relative;
 }
 
+/* F01/ITEM J: the sidebar header's brand is the LOCKUP now, and `.brand-name`
+   is the block that carries the lockup and the location line under it. The
+   16px/600/-0.3px sans treatment it used to wear is gone — the name renders
+   in the serif wordmark or not at all. */
 .brand-name {
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: -0.3px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
   color: var(--text);
 }
 
@@ -2855,10 +3018,11 @@ label:has(> input[type="checkbox"]) {
   gap: 10px;
 }
 
-.welcome-icon {
-  color: var(--link);
-  flex-shrink: 0;
-}
+/* `.welcome-icon` retired (ITEM J, 2026-09-01). It styled a map-pin SVG in
+   `var(--link)` — a pin, which contradicts the ZIP-is-orientation rule, in the
+   interactive accent, which made the brand read as a control. The lockup
+   replaced both; see welcome-overlay.tsx. Nothing carries this class now, and
+   the rule is gone rather than left dark. */
 
 /* The thin gray line the author asked for, directly under the lockup. It is
    the header's own rule, not a section divider — quieter than --panel-border
@@ -2871,9 +3035,13 @@ label:has(> input[type="checkbox"]) {
 
 /* 6e2 (2026-08-15, the author, on BOTH desktop and phone): "the overlay's — docs/globals-css-notes.md#6e2-2026-08-15-the-author-on-both-desktop-and-phone-the-overlay-s-64 */
 .welcome-title {
-  font-size: 1.75rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  /* ITEM J: the <h1> is now a HOLDER for the lockup, not a type treatment.
+     The 1.75rem/700/-0.02em sans it used to carry belonged to the app's own
+     voice, and the product's name is not something the app says. All of the
+     type lives in `.wtp-logo` and scales from the one size the component is
+     given. */
+  display: flex;
+  justify-content: center;
   /* F01 13.1: the gap below is the rule's now, not the title's. */
   margin-bottom: 0;
   color: var(--text);
@@ -3071,21 +3239,21 @@ label:has(> input[type="checkbox"]) {
 
 .jurisdiction-badge[data-badge="NEARBY"] {
   background: none;
-  border-color: var(--border);
+  border-color: var(--panel-border);
   color: var(--text-muted);
 }
 
 .jurisdiction-badge[data-badge="NO_BOUNDARY"] {
   background: none;
   border-style: dashed;
-  border-color: var(--border);
+  border-color: var(--panel-border);
   color: var(--text-muted);
 }
 
 /* JUR-2 (2026-08-23). The zip could not settle this, so the pill does not — docs/globals-css-notes.md#jur-2-2026-08-23-the-zip-could-not-settle-this-so-the-pill-does-not-68 */
 .jurisdiction-badge[data-badge="COULD_GOVERN"] {
   background: none;
-  border-color: var(--border);
+  border-color: var(--panel-border);
   color: var(--text-muted);
   white-space: normal;
 }
@@ -3187,7 +3355,7 @@ button.jurisdiction-badge-action:focus-visible {
   max-height: min(32rem, calc(100vh - 8rem));
   overflow-y: auto;
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--panel-border);
   border-radius: var(--radius);
   box-shadow: 0 10px 34px rgba(0, 0, 0, 0.28);
   padding: 0.9rem;
@@ -3236,7 +3404,7 @@ button.jurisdiction-badge-action:focus-visible {
 
 .voting-panel-input {
   width: 100%;
-  border: 1px solid var(--border);
+  border: 1px solid var(--panel-border);
   /* F01 1e: the entry inside the pill matches the pill. */
   border-radius: 999px;
   background: var(--bg);
@@ -3276,7 +3444,7 @@ button.jurisdiction-badge-action:focus-visible {
 .voting-jurisdiction {
   margin-top: 0.9rem;
   padding-top: 0.8rem;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--panel-border);
 }
 
 .voting-jurisdiction-name {
@@ -3308,7 +3476,7 @@ button.jurisdiction-badge-action:focus-visible {
    filled, because a colour is a claim too. */
 .voting-narrowing[data-kind="refused"] {
   padding: 0.4rem 0.5rem;
-  border: 1px dashed var(--border);
+  border: 1px dashed var(--panel-border);
   border-radius: var(--radius-sm);
   color: var(--text-muted);
 }
@@ -3326,7 +3494,7 @@ button.jurisdiction-badge-action:focus-visible {
 .voting-refusal {
   margin-top: 0.5rem;
   padding: 0.55rem 0.6rem;
-  border: 1px dashed var(--border);
+  border: 1px dashed var(--panel-border);
   border-radius: var(--radius-sm);
   font-size: 0.78rem;
   line-height: 1.45;
@@ -3370,7 +3538,7 @@ button.jurisdiction-badge-action:focus-visible {
 }
 
 .voting-site {
-  border: 1px solid var(--border);
+  border: 1px solid var(--panel-border);
   border-radius: var(--radius-sm);
   padding: 0.5rem 0.6rem;
 }
@@ -3418,7 +3586,7 @@ button.jurisdiction-badge-action:focus-visible {
 .voting-site-gap {
   margin-top: 0.35rem;
   padding: 0.25rem 0.4rem;
-  border: 1px dashed var(--border);
+  border: 1px dashed var(--panel-border);
   border-radius: var(--radius-sm);
   font-size: 0.74rem;
   line-height: 1.4;
@@ -5463,7 +5631,7 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   border: 1px solid color-mix(in srgb, var(--signal) 45%, transparent);
   border-radius: 999px;
   background: color-mix(in srgb, var(--signal) 10%, transparent);
-  color: var(--paper);
+  color: var(--text);
   font-size: 0.75rem;
   line-height: 1;
   white-space: nowrap;

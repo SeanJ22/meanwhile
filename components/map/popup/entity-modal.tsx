@@ -516,7 +516,7 @@ function BodySections({
                 is. Absent for every other body kind rather than rendered
                 empty, because a county has no superintendent to be missing. */}
             {card.isSchoolDistrict && (
-              <div className="mt-2 border-t border-[var(--rule)] pt-2">
+              <div className="mt-2 border-t border-[var(--panel-border)] pt-2">
                 <PopupSectionLabel>Runs the district day to day</PopupSectionLabel>
                 {card.superintendent ? (
                   // F01 2.2: this block IS the top office, so it must not print
@@ -1052,7 +1052,7 @@ function Representation({
         should not have to work the second out of the first.
       */}
       {leadsWorthShowing && (
-        <div className="mb-2.5 border-b border-[var(--rule)] pb-2.5">
+        <div className="mb-2.5 border-b border-[var(--panel-border)] pb-2.5">
           <PopupSectionLabel>Who runs it</PopupSectionLabel>
           {topOffices.map((office) => (
             <p
@@ -1079,7 +1079,7 @@ function Representation({
         </div>
       )}
       {showTopOffices && topOffices.length === 0 && (
-        <p className="mb-2.5 border-b border-[var(--rule)] pb-2.5 text-[0.6875rem] leading-relaxed text-muted">
+        <p className="mb-2.5 border-b border-[var(--panel-border)] pb-2.5 text-[0.6875rem] leading-relaxed text-muted">
           {TOP_OFFICES_GAP}
         </p>
       )}
@@ -1262,7 +1262,7 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
           footnote marker that used to sit on every row pointing at them. */}
       <MeetingSourceCredit
         credit={credit}
-        className="mt-3 border-t border-[var(--rule)] pt-2.5"
+        className="mt-3 border-t border-[var(--panel-border)] pt-2.5"
       />
     </>
   );

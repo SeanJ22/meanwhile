@@ -7,7 +7,8 @@ import {
   type ComparisonCell,
 } from "@/lib/area/comparison";
 import { COVERED } from "@/lib/coverage/artifacts";
-import { PRODUCT_NAME, titleFor } from "@/lib/brand";
+import { Logo } from "@/components/brand/logo";
+import { titleFor } from "@/lib/brand";
 
 /**
  * **Two states, side by side** — tracker **D47**, the author's disposition
@@ -169,9 +170,13 @@ export default async function CompareStatesPage({
           ← Back to the map
         </Link>
       </p>
-      <p className="mt-3 font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-muted">
-        {PRODUCT_NAME}
-      </p>
+      {/* ITEM J (2026-09-01): the page eyebrow was the product name typed as
+          display text in a 10px uppercase MONO treatment — the register this
+          system reserves for numerals and identifiers, worn by the one string
+          that is neither. It is the lockup now, at the 18px wordmark floor. */}
+      <div className="mt-3">
+        <Logo variant="wordmark" size={18} />
+      </div>
       <h1 className="mt-1 text-xl font-semibold">
         {comparison
           ? `${comparison.left.name} and ${comparison.right.name}, side by side`

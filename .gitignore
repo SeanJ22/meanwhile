@@ -172,3 +172,17 @@ data/photos/staged/
 # snapshots under `data/control-plane/staging/` ARE committed, and they are what
 # a later session reads.
 /data/control-plane/vault/
+
+# ITEM J (2026-09-01) — the brand identity's capture set.
+#
+# The PIXELS are ignored; the MEASUREMENTS are not. `probe.json` and
+# `assets.txt` beside them are text and stay in git, because they carry the
+# computed border colours, the resolved tokens and the list of hosts a real
+# page load contacted — the facts the report rests on.
+#
+# The captures themselves follow the convention every session capture directory
+# above already follows: a PNG is a binary, binaries do not go in git (RULING
+# 20), and the READING is what the report carries. They live in the worktree at
+# a stable path so the integration owner and the author can open them.
+/docs/evidence/brand-2026-09-01/*.png
+/docs/evidence/brand-2026-09-01/**/*.png

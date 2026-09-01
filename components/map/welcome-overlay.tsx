@@ -13,7 +13,7 @@ import { useRecentZips } from "@/hooks/use-recent-zips";
 import { recordLocationOrigin } from "@/lib/state/location-origin";
 import type { LocationOrigin } from "@/lib/ask/residency";
 import { ZipComb } from "./zip-comb";
-import { PRODUCT_NAME } from "@/lib/brand";
+import { Logo } from "@/components/brand/logo";
 
 /**
  * The entry overlay.
@@ -181,21 +181,31 @@ export function WelcomeOverlay({
           independently and the preflight rule stops mattering. The rule under
           it is what closes the header off from the mission.
         */}
+        {/*
+          ITEM J (2026-09-01) — THE PIN AND THE LINK COLOUR BOTH GO.
+
+          What stood here was a 30px map-pin SVG plus the product name in bold
+          sans, on one flex row. Three things wrong with it, and only one of
+          them was the redesign:
+
+          1. A PIN DROPS ONTO A HOUSE. The standing rule is that a ZIP and a
+             geolocation are ORIENTATION, not identity, and this overlay is
+             the surface where a reader is asked for a ZIP for the first time.
+             The first mark they meet may not contradict the sentence under it.
+          2. `.welcome-icon` WAS COLOURED `var(--link)` — the interactive
+             accent, the colour this app uses for "tappable". The brand was
+             wearing the affordance colour, so the identity read as a control.
+             That was a live defect independent of any redesign.
+          3. Bold sans is the app's OWN voice. The name is not a thing the app
+             says; it is what the thing is called.
+
+          `.welcome-rule` under the lockup is unchanged — it still closes the
+          header off from the mission.
+        */}
         <div className="welcome-lockup">
-          <svg
-            className="welcome-icon"
-            width="30"
-            height="30"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            aria-hidden="true"
-          >
-            <path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z" />
-            <circle cx="12" cy="10" r="3" />
-          </svg>
-          <h1 className="welcome-title">{PRODUCT_NAME}</h1>
+          <h1 className="welcome-title">
+            <Logo variant="wordmark" size={34} />
+          </h1>
         </div>
         <hr className="welcome-rule" />
 

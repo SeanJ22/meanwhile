@@ -389,6 +389,37 @@ in the bundle — and adopt whichever aggregation reproduces the publisher's own
 figure. That is one bounded experiment, and it is what stands between this route
 and `data/funding/state-money-az-2026.json`.
 
+#### That experiment was RUN, and it REFUTED the obvious answer
+
+Recorded so nobody spends the session repeating it.
+
+**The portal displays no per-candidate total at all.** Its own table renders the
+several rows exactly as the endpoint returns them — same candidate, same
+committee, same cash balance, different office/party and different amounts.
+There is no aggregate figure on that surface to reproduce.
+
+**The arithmetic that looked like proof does not survive the population.** On
+Jayme Accalia the numbers are seductive: incomes 686.91 + 205 + 1123.97 =
+2015.88, expenses 101 + 0 + 466.73 = 567.73, and 2015.88 − 567.73 = **1448.15**,
+which is exactly the `CashBalance` repeated on all three rows. That looks like a
+proof that the rows are parts and the totals are sums.
+
+Checked across all 370 rows grouped by `EntityID` (255 distinct entities), the
+identity `sum(Income) − sum(Expense) == CashBalance` **HOLDS for 134 and BREAKS
+for 121** — and it breaks for SINGLE-ROW entities too, where there is nothing to
+sum: Racquel Armstrong is one row, income 202,620.31, expense 37,590.06, cash
+balance 138,816.11, off by 26,214.14. So `CashBalance` carries something the
+2025–2026 window does not contain — a prior-cycle balance is the obvious
+candidate — and Accalia matched because she happened to start from nothing.
+
+**So the row semantics remain undetermined, and one candidate agreeing with a
+hypothesis is not evidence for it.** What would settle it is a source that
+states a cycle total independently: `ExportEntityTransactions` (itemised
+transactions, which can be summed and compared), the filed reports themselves,
+or the `ftp://ftp.azsos.gov/cfsdata2/` bulk drop already recorded as YES on
+2026-08-26 with 8,828 committees. The FTP is the most promising and is not yet
+walked for this purpose.
+
 The obligation is NOT closed by this note. Arizona statewide money remains owed;
 what changed is that the route is known to work and the remaining question is a
 named, single one.

@@ -252,11 +252,21 @@ Summing and taking the largest give different answers. Putting either on a named
 candidate's card, under their photograph, is the one mistake this product cannot
 make, and it is worse than showing nothing.
 
-**What settles it is one experiment, not more hunting:** read a single
-candidate's total as the portal itself displays it, and adopt whichever
-arithmetic reproduces the state's own figure. Written up in
-`docs/arizona-source-enumeration.md`. Arizona money is still owed; it is now
-owed against a working route and one specific question.
+**I ran that experiment, and it ruled out the obvious answer.** On one candidate
+the arithmetic looked conclusive — the amounts summed exactly to the closing
+balance shown beside them. Checked against all 370 filings it fails for nearly
+half, including candidates with a single row where there is nothing to add up.
+The closing balance evidently carries money from an earlier cycle, and that one
+candidate matched because she started from nothing.
+
+So Arizona money is still owed, against a working route and a sharper question.
+The most promising remaining lead is the state's own bulk file drop, already
+confirmed reachable and holding 8,828 committees, which has not been walked for
+this purpose. Written up in `docs/arizona-source-enumeration.md`.
+
+I am flagging this deliberately, because it is the same failure the rest of this
+session was about: **one candidate agreeing with a theory is not evidence for
+it, and I came close to shipping on that.**
 
 ---
 

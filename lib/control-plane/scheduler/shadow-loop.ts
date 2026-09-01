@@ -55,6 +55,7 @@ import {
   dueNow,
   scheduleAll,
   type FreshnessObligation,
+  type ScheduledObligation,
   type SchedulePass,
 } from "./obligation.ts";
 import type { ContractReading, PilotHealthRollup } from "../../health/contracts.ts";
@@ -77,7 +78,20 @@ export interface CycleInput {
     * lane the method store IMPLIED rather than the one about to execute, so a
     * deterministic walk was recorded as an anthropic model worker.
     */
-  readonly executor: DeclaredExecutor;
+  /**
+   * **A FUNCTION IS ACCEPTED, AND THAT IS PART D1's REQUIREMENT.**
+   * (Session C, 2026-08-31.)
+   *
+   * One `DeclaredExecutor` for a whole cycle was right while every obligation
+   * came from one corpus and was worked by one HTTP GET. It cannot express the
+   * registry: a campaign-finance portfolio carries a DataTables POST that is
+   * deterministic, an FTP drop no client here can open, and a records-request
+   * route that ends in a human act. Those are different lanes over one cycle,
+   * and the lane is DECLARED before the Attempt is persisted — so it has to be
+   * decidable per obligation or the Attempt is opened under the wrong worker
+   * identity, which is the exact W3.E defect wearing a registry.
+   */
+  readonly executor: DeclaredExecutor | ((obligation: ScheduledObligation) => DeclaredExecutor);
   readonly methodVersion?: number;
   readonly policyVersion?: string;
   readonly holder: string;
@@ -146,7 +160,32 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
   /* 3 · RETRY. Debt whose backoff has elapsed rejoins the due set. */
   const retryIds = new Set(retryable(input.debts, nowMs).map((d) => d.obligationId));
 
-  const due = dueNow(schedule, nowMs);
+  /*
+   * **DEBT BACKOFF GATES RE-DISPATCH, and without this it does not.**
+   * (Session C, 2026-08-31.)
+   *
+   * `dueNow` answers "has the clock passed?" and knows nothing about failure.
+   * An obligation that has never been discharged never advances its anchor, so
+   * its next-due sits permanently in the past and it was dispatched on EVERY
+   * cycle regardless of the backoff `recordFailure` computed. The retry
+   * schedule was therefore real, tested, and bypassed — the same shape as the
+   * debt that was durable in a store nothing loaded.
+   *
+   * It only became visible when a permanently-walled route was registered: the
+   * Arizona FTP drop this process holds no client for would have been opened,
+   * refused and re-opened once a cycle forever, and the incident aggregate
+   * would have reported an outage that is really a missing adapter.
+   *
+   * So an obligation carrying debt is due only when its backoff has ELAPSED.
+   * It is held out by name and counted in `deferred`, never dropped.
+   */
+  const backedOff = new Map(
+    input.debts
+      .filter((d) => d.consecutiveFailures > 0 && !retryIds.has(d.obligationId))
+      .map((d) => [d.obligationId, d]),
+  );
+
+  const due = dueNow(schedule, nowMs).filter((row) => !backedOff.has(row.obligation.id));
   const alsoDue = schedule.scheduled.filter(
     (row) => retryIds.has(row.obligation.id) && !due.includes(row),
   );
@@ -160,6 +199,15 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
   const worked: string[] = [];
   const simulated: string[] = [];
   const deferred: { obligationId: string; why: string }[] = [];
+  for (const [obligationId, debt] of backedOff) {
+    deferred.push({
+      obligationId,
+      why:
+        `its clock has passed and it is holding ${debt.consecutiveFailures} consecutive failure(s), ` +
+        `so the backoff computed for it stands until ${debt.retryAt}. Held out of this cycle ` +
+        "and counted here — a walled route re-opened every cycle is a hot loop reported as an outage.",
+    });
+  }
   const debtsById = new Map(input.debts.map((d) => [d.obligationId, d]));
 
   for (const [i, row] of workNow.entries()) {
@@ -182,7 +230,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
       leaseTtlMs: input.leaseTtlMs,
       bound: input.bound,
       maturity: input.maturity,
-      executor: input.executor,
+      executor: typeof input.executor === "function" ? input.executor(row) : input.executor,
       ...(input.methodVersion !== undefined ? { methodVersion: input.methodVersion } : {}),
       ...(input.policyVersion !== undefined ? { policyVersion: input.policyVersion } : {}),
     });

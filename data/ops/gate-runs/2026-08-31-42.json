@@ -1,28 +1,28 @@
 {
-  "runId": "gates@2026-09-01T02:45:47.083Z",
+  "runId": "gates@2026-09-01T02:20:19.452Z",
   "testedSha": "ac3cfced9d628f4745ce6304895a7a832d27539b",
-  "finishedAt": "2026-09-01T02:45:47.084Z",
+  "finishedAt": "2026-09-01T02:20:19.452Z",
   "gates": [
     {
       "id": "lint",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm lint",
       "status": "PASS",
-      "seconds": 35
+      "seconds": 34
     },
     {
       "id": "tsc",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm exec tsc --noEmit",
       "status": "PASS",
-      "seconds": 40
+      "seconds": 23
     },
     {
       "id": "governance:check",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm governance:check",
       "status": "PASS",
-      "seconds": 3
+      "seconds": 2
     },
     {
       "id": "orchestration:check",
@@ -57,14 +57,14 @@
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm run assert:browser",
       "status": "PASS",
-      "seconds": 2
+      "seconds": 1
     },
     {
       "id": "test",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm test",
-      "status": "PASS",
-      "seconds": 55
+      "status": "FAIL",
+      "seconds": 59
     },
     {
       "id": "db:gate",
@@ -78,28 +78,28 @@
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm exec tsx scripts/release-freeze-gate.mts",
       "status": "PASS",
-      "seconds": 2
+      "seconds": 1
     },
     {
       "id": "build",
       "ciJob": "build (default)",
       "command": "pnpm run build",
       "status": "PASS",
-      "seconds": 26
+      "seconds": 17
     },
     {
       "id": "test:bundle",
       "ciJob": "build (default)",
       "command": "pnpm run test:bundle",
       "status": "PASS",
-      "seconds": 17
+      "seconds": 1
     },
     {
       "id": "build:standalone",
       "ciJob": "build (standalone)",
       "command": "pnpm run build",
       "status": "PASS",
-      "seconds": 44
+      "seconds": 25
     }
   ],
   "provenance": {

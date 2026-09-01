@@ -118,6 +118,26 @@ const STAGING_FILES: readonly { path: string; door: string }[] = [
   },
   {
     /*
+     * 2026-09-01, straight out of the OWN03 promotion. The author approved nine
+     * portraits and four of them landed under the large card's 184px floor —
+     * every one an Arizona Corporation Commissioner, because the URLs the
+     * original pick took were Sitefinity RENDITIONS (`.tmb-thumb200.jpg`,
+     * `MaxWidth=165`) rather than files.
+     *
+     * Dropping the rendition parameters on the same host returns the same
+     * photographs at 2533–3275px wide. That is RULING 206 — the rendition is
+     * one representation, the portrait is the record — and it is why this is a
+     * REPLACEMENT obligation rather than a shortfall we live with.
+     *
+     * Registered here for the reason the block above gives: this list is
+     * DECLARED, so an artifact nobody adds to it is an artifact the author
+     * never sees.
+     */
+    path: "data/photos/door2-azcc-originals-2026-09-01.json",
+    door: "door 2 — the portrait a government body publishes of its own member",
+  },
+  {
+    /*
      * 2026-08-28. Door 3 over every filed candidate this repository holds no
      * portrait bytes for and records a link on the candidate's OWN domain —
      * 28 sites walked out of a 377-candidate cohort, which is the honest

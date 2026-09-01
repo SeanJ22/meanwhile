@@ -79,8 +79,37 @@ const SMALL_FLOOR = 104;
  * The census as measured on 2026-08-31. A CEILING, not a target: the number
  * may fall freely and may not rise without somebody changing this line and
  * saying why.
+ *
+ * **Raised 144 → 148 on 2026-09-01, and here is the why the line demands.**
+ *
+ * The author approved the nine OWN03 portraits (`RULING 55`,
+ * `docs/evidence/own03-promotion.json`). Four of them are under the large
+ * card's floor, and all four are Arizona Corporation Commissioners served from
+ * `azcc.gov`:
+ *
+ * ```
+ *   Nick Myers            133x200
+ *   Rachel Walden         133x200
+ *   Lea Márquez Peterson  165x206
+ *   René Lopez            137x206
+ * ```
+ *
+ * **They are THUMBNAIL RENDITIONS, and the full-size originals are published
+ * one path segment away.** The URLs the pick took carry `tmb-thumb200` and
+ * `MaxWidth=165`; dropping those parameters on the same host returns the same
+ * photographs at 3275×4913, 3138×4707, 2828×3600 and 2533×3800 — measured
+ * 2026-09-01, HTTP 200 on all four.
+ *
+ * That makes this RULING 206 rather than a resolution shortfall: one
+ * representation is not the record, and a better representation of the same
+ * record is available. It is NOT shipped here, for the same reason the five
+ * Tucson originals above are not — **a decision is about an IMAGE**, and a
+ * 3275px original is a different image from the 133px crop the author approved.
+ * The four originals are staged for his review instead
+ * (`data/photos/staged/`), and the ceiling records the honest interim state:
+ * four readers-see-a-face-today portraits that are softer than the card wants.
  */
-const LARGE_SHORTFALL_CEILING = 144;
+const LARGE_SHORTFALL_CEILING = 148;
 
 /** Intrinsic dimensions from the file header. No decoder, no dependency. */
 function intrinsic(buf: Buffer): { w: number; h: number } | null {

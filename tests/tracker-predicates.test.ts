@@ -11,10 +11,11 @@ import {
   RESOLVED_BY_EVIDENCE,
   auditCoverage,
   evaluateEntry,
+  resolvedByEvidence,
 } from "../lib/tracker/predicates.mjs";
 import { PREDICATES, REGISTRY } from "../lib/tracker/registry.mjs";
 import { UNKNOWN, firstClaimByLedger, readOpenedLedger, resolveOpenedDate } from "../lib/tracker/opened-dates.mjs";
-import { ageInDays, describeAge } from "../lib/tracker/reconcile.mjs";
+import { ageInDays, describeAge, reconcile } from "../lib/tracker/reconcile.mjs";
 import { isOpen, readStore, planMoves, readSections, WORKING_CSV, RESOLVED_CSV } from "../scripts/tracker-core.mjs";
 
 /**
@@ -161,6 +162,132 @@ test("RULING 227: the three rows are closed, and each carries its evidence in th
       /RULING 208/,
       `${id} must state that the obligation it concerned is NOT closed by the row closing`,
     );
+  }
+});
+
+/*
+ * **THE RECHECK RUNS EVERY GENERATION; THE APPEND HAPPENS ONCE.**
+ *
+ * Found 2026-09-01. An auto-resolved row STAYS IN THE WORKING STORE until
+ * `pnpm tracker:move` carries it across, so every generation in between found
+ * the same row, re-evaluated the same predicate to the same
+ * RESOLVED_BY_EVIDENCE, and appended the same evidence paragraph again.
+ *
+ * It reached the resolved store: `NH272`, `NH281` and `NH300` each carried
+ * their RULING 227 paragraph TWICE, verbatim. The verdict was right every
+ * time; the append had no memory.
+ *
+ * The paragraph is the AUTHOR'S CARD, and a card that repeats itself is a card
+ * that gets skimmed. These two tests hold both halves: the recheck still runs
+ * (Last verified moves), and the record does not grow.
+ */
+test("RULING 227: a second generation over an already auto-resolved row appends nothing", () => {
+  const registry = [
+    {
+      rowId: "TEST_APPEND_ONCE",
+      kind: "predicate",
+      blocker: "a blocker that has since cleared",
+      evaluate: () => resolvedByEvidence("it cleared.", { evidence: ["an artifact says so"] }),
+    },
+  ];
+  const row: Record<string, string> = {
+    ID: "TEST_APPEND_ONCE",
+    Section: "needs-sean",
+    Resolution: "",
+    "Session record": "",
+    "Last verified": "",
+  };
+
+  const first = reconcile({
+    working: [row],
+    registry,
+    stamp: "2026-09-01",
+    sessionLabel: "first-generation",
+    root: ROOT,
+  });
+  assert.equal(first.autoResolved.length, 1, "the first generation resolves it");
+  const afterFirst = row["Session record"];
+  assert.match(afterFirst, /AUTO-RESOLVED under RULING 227/);
+
+  const second = reconcile({
+    working: [row],
+    registry,
+    stamp: "2026-09-02",
+    sessionLabel: "second-generation",
+    root: ROOT,
+  });
+  assert.equal(second.autoResolved.length, 0, "the second generation resolves nothing new");
+  assert.equal(row["Session record"], afterFirst, "and it appends nothing to the record");
+  assert.equal(
+    row["Closed by"],
+    "first-generation (RULING 227 auto-reconciliation)",
+    "the close keeps the generation that actually earned it",
+  );
+  assert.equal(row["Resolved on"], "2026-09-01", "and the day it was actually earned");
+});
+
+test("RULING 227: the recheck still RUNS on an already-resolved row — only the append is suppressed", () => {
+  /*
+   * The cheap fix would have been to skip the whole entry once a row is
+   * resolved. That would stop the duplication and also stop the RECHECK, which
+   * is the mechanism RULING 227 exists to install. `Last verified` moving on
+   * the second generation is what proves the predicate was actually run again.
+   */
+  const registry = [
+    {
+      rowId: "TEST_STILL_RECHECKED",
+      kind: "predicate",
+      blocker: "a blocker that has since cleared",
+      evaluate: () => resolvedByEvidence("it cleared.", { evidence: ["an artifact says so"] }),
+    },
+  ];
+  const row: Record<string, string> = {
+    ID: "TEST_STILL_RECHECKED",
+    Section: "needs-sean",
+    Resolution: "Resolved",
+    "Session record": "closed by the author himself, in his own words",
+    "Last verified": "",
+  };
+
+  reconcile({
+    working: [row],
+    registry,
+    stamp: "2026-09-02",
+    sessionLabel: "later-generation",
+    root: ROOT,
+  });
+
+  assert.equal(
+    row["Last verified"],
+    `2026-09-02 · ${RESOLVED_BY_EVIDENCE}`,
+    "the predicate was re-evaluated and its verdict recorded",
+  );
+  assert.equal(
+    row["Session record"],
+    "closed by the author himself, in his own words",
+    "and a predicate never overwrites or extends an author's own close (RULING 37)",
+  );
+});
+
+/*
+ * And the same defect, asserted where it actually landed: the committed store.
+ * A generator fix is not finished until its output is regenerated and diffed
+ * (RULING 102), so the three repaired rows are held here by count.
+ */
+test("RULING 227: no row in either store carries its evidence paragraph more than once", () => {
+  const marker = "AUTO-RESOLVED under RULING 227";
+  for (const [label, store] of [
+    ["working", working],
+    ["resolved", resolved],
+  ] as const) {
+    for (const row of store) {
+      const record = (row as Record<string, string>)["Session record"] ?? "";
+      const occurrences = record.split(marker).length - 1;
+      assert.ok(
+        occurrences <= 1,
+        `${label} store row ${(row as Record<string, string>).ID} repeats its RULING 227 card ${occurrences} times`,
+      );
+    }
   }
 });
 

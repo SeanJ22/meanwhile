@@ -4,9 +4,9 @@
   "counts": {
     "rejected": 6,
     "approvedEnBlocBySean": 51,
-    "approvedBySeanPerAsset": 10,
-    "people": 65,
-    "decisions": 67
+    "approvedBySeanPerAsset": 28,
+    "people": 71,
+    "decisions": 85
   },
   "reviews": {
     "VICTOR ORLANDO": [
@@ -327,6 +327,18 @@
         "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
         "decidedAt": "2026-08-24",
         "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
+      },
+      {
+        "state": "APPROVED",
+        "url": "https://azsos.gov/sites/default/files/photo/AZ-SOS-Adrian-Fontes-Official-Photo-2025-sml.jpg",
+        "decidedAt": "2026-09-01",
+        "decidedBy": "sean"
+      },
+      {
+        "state": "APPROVED",
+        "url": "/officials/statewide-az-secretary-of-state.jpg",
+        "decidedAt": "2026-09-01",
+        "decidedBy": "sean"
       }
     ],
     "KRIS MAYES": [
@@ -336,6 +348,18 @@
         "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
         "decidedAt": "2026-08-24",
         "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
+      },
+      {
+        "state": "APPROVED",
+        "url": "https://www.azag.gov/sites/default/files/2024-10/KrisMayesHeadshot.png",
+        "decidedAt": "2026-09-01",
+        "decidedBy": "sean"
+      },
+      {
+        "state": "APPROVED",
+        "url": "/officials/statewide-az-attorney-general.png",
+        "decidedAt": "2026-09-01",
+        "decidedBy": "sean"
       }
     ],
     "GAIL GRIFFIN": [
@@ -426,6 +450,18 @@
         "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
         "decidedAt": "2026-08-24",
         "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
+      },
+      {
+        "state": "APPROVED",
+        "url": "https://static.wixstatic.com/media/8bb536_52985fafdda3411d8ce7ed2daabd13ef~mv2.jpg/v1/fill/w_326,h_468,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/KimberlyYee_2024_official.jpg",
+        "decidedAt": "2026-09-01",
+        "decidedBy": "sean"
+      },
+      {
+        "state": "APPROVED",
+        "url": "/officials/statewide-az-state-treasurer.jpg",
+        "decidedAt": "2026-09-01",
+        "decidedBy": "sean"
       }
     ],
     "ALEXANDER KOLODIN": [
@@ -606,6 +642,90 @@
         "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
         "decidedAt": "2026-08-24",
         "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
+      }
+    ],
+    "NICK MYERS": [
+      {
+        "state": "APPROVED",
+        "url": "https://www.azcc.gov/images/default-source/commissioners/2025-nick-myers.tmb-thumb200.jpg?Culture=en&sfvrsn=7963c1fe_1",
+        "decidedAt": "2026-09-01",
+        "decidedBy": "sean"
+      },
+      {
+        "state": "APPROVED",
+        "url": "/officials/statewide-az-corporation-commissioner-myers.jpg",
+        "decidedAt": "2026-09-01",
+        "decidedBy": "sean"
+      }
+    ],
+    "RACHEL WALDEN": [
+      {
+        "state": "APPROVED",
+        "url": "https://www.azcc.gov/images/default-source/commissioners/2025-rachel-walden.tmb-thumb200.jpg?Culture=en&sfvrsn=fbe9096a_1",
+        "decidedAt": "2026-09-01",
+        "decidedBy": "sean"
+      },
+      {
+        "state": "APPROVED",
+        "url": "/officials/statewide-az-corporation-commissioner-walden.jpg",
+        "decidedAt": "2026-09-01",
+        "decidedBy": "sean"
+      }
+    ],
+    "KEVIN THOMPSON": [
+      {
+        "state": "APPROVED",
+        "url": "https://www.azcc.gov/images/default-source/commissioners/2025-kevin-thompson.tmb-medium.jpg?Culture=en&sfvrsn=ee0ef0f6_1",
+        "decidedAt": "2026-09-01",
+        "decidedBy": "sean"
+      },
+      {
+        "state": "APPROVED",
+        "url": "/officials/statewide-az-corporation-commissioner-thompson.jpg",
+        "decidedAt": "2026-09-01",
+        "decidedBy": "sean"
+      }
+    ],
+    "LEA MARQUEZ PETERSON": [
+      {
+        "state": "APPROVED",
+        "url": "https://www.azcc.gov/images/default-source/commissioners/peterson-photo.jpg?sfvrsn=99511a81_9&Width=165&Height=206&ScaleUp=false&Quality=High&Method=CropCropArguments&Signature=3D4E77F443288A7D98FE48BA4D274C9FC2BC4102",
+        "decidedAt": "2026-09-01",
+        "decidedBy": "sean"
+      },
+      {
+        "state": "APPROVED",
+        "url": "/officials/statewide-az-corporation-commissioner-marquez-peterson.jpg",
+        "decidedAt": "2026-09-01",
+        "decidedBy": "sean"
+      }
+    ],
+    "RENE LOPEZ": [
+      {
+        "state": "APPROVED",
+        "url": "https://www.azcc.gov/images/default-source/commissioners/lopez-headshota40372b9-eb5d-4c79-83b5-a3f7800dbe90.jpg?sfvrsn=a6346954_2&MaxWidth=165&MaxHeight=206&ScaleUp=false&Quality=High&Method=ResizeFitToAreaArguments&Signature=0304E346B891B66CEF734D6539E29F3A07C59BAB",
+        "decidedAt": "2026-09-01",
+        "decidedBy": "sean"
+      },
+      {
+        "state": "APPROVED",
+        "url": "/officials/statewide-az-corporation-commissioner-lopez.jpg",
+        "decidedAt": "2026-09-01",
+        "decidedBy": "sean"
+      }
+    ],
+    "DALE G CALDWELL": [
+      {
+        "state": "APPROVED",
+        "url": "https://www.nj.gov/governor/library/secondary/ltgov_LGDaleCaldwell_new.jpg",
+        "decidedAt": "2026-09-01",
+        "decidedBy": "sean"
+      },
+      {
+        "state": "APPROVED",
+        "url": "/officials/statewide-nj-lieutenant-governor.jpg",
+        "decidedAt": "2026-09-01",
+        "decidedBy": "sean"
       }
     ]
   }

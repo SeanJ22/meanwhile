@@ -9991,6 +9991,105 @@
       "approvedBy": "Sean (his decision of 2026-08-24, NH78)",
       "approvedOn": "2026-08-24",
       "collectedAt": "2026-08-24T16:35:22.519Z"
+    },
+    {
+      "officeholderId": "statewide:az/secretary-of-state",
+      "name": "Adrian Fontes",
+      "url": "/officials/statewide-az-secretary-of-state.jpg",
+      "sourceUrl": "https://azsos.gov/about/about-secretary",
+      "license": "Official portrait published by Arizona Secretary of State (https://azsos.gov/about/about-secretary) — used under the official-government-portrait basis with attribution and remove-on-request; no licence claimed.",
+      "attribution": "Arizona Secretary of State",
+      "basis": "OFFICIAL_PORTRAIT",
+      "judgment": "approved by the author on the OWN03 contact sheet, 2026-09-01 (docs/photo-review/own03-nine.png)",
+      "collectedAt": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "officeholderId": "statewide:az/attorney-general",
+      "name": "Kris Mayes",
+      "url": "/officials/statewide-az-attorney-general.png",
+      "sourceUrl": "https://www.azag.gov/kris-mayes",
+      "license": "Official portrait published by Arizona Attorney General's Office (https://www.azag.gov/kris-mayes) — used under the official-government-portrait basis with attribution and remove-on-request; no licence claimed.",
+      "attribution": "Arizona Attorney General's Office",
+      "basis": "OFFICIAL_PORTRAIT",
+      "judgment": "approved by the author on the OWN03 contact sheet, 2026-09-01 (docs/photo-review/own03-nine.png)",
+      "collectedAt": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "officeholderId": "statewide:az/state-treasurer",
+      "name": "Kimberly Yee",
+      "url": "/officials/statewide-az-state-treasurer.jpg",
+      "sourceUrl": "https://www.aztreasury.gov/treasurer-kimberly-yee",
+      "license": "Official portrait published by Office of the Arizona State Treasurer (https://www.aztreasury.gov/treasurer-kimberly-yee) — used under the official-government-portrait basis with attribution and remove-on-request; no licence claimed.",
+      "attribution": "Office of the Arizona State Treasurer",
+      "basis": "OFFICIAL_PORTRAIT",
+      "judgment": "approved by the author on the OWN03 contact sheet, 2026-09-01 (docs/photo-review/own03-nine.png)",
+      "collectedAt": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "officeholderId": "statewide:az/corporation-commissioner/myers",
+      "name": "Nick Myers",
+      "url": "/officials/statewide-az-corporation-commissioner-myers.jpg",
+      "sourceUrl": "https://www.azcc.gov/nick-myers/biography",
+      "license": "Official portrait published by Arizona Corporation Commission (https://www.azcc.gov/nick-myers/biography) — used under the official-government-portrait basis with attribution and remove-on-request; no licence claimed.",
+      "attribution": "Arizona Corporation Commission",
+      "basis": "OFFICIAL_PORTRAIT",
+      "judgment": "approved by the author on the OWN03 contact sheet, 2026-09-01 (docs/photo-review/own03-nine.png)",
+      "collectedAt": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "officeholderId": "statewide:az/corporation-commissioner/walden",
+      "name": "Rachel Walden",
+      "url": "/officials/statewide-az-corporation-commissioner-walden.jpg",
+      "sourceUrl": "https://www.azcc.gov/Rachel-Walden/biography",
+      "license": "Official portrait published by Arizona Corporation Commission (https://www.azcc.gov/Rachel-Walden/biography) — used under the official-government-portrait basis with attribution and remove-on-request; no licence claimed.",
+      "attribution": "Arizona Corporation Commission",
+      "basis": "OFFICIAL_PORTRAIT",
+      "judgment": "approved by the author on the OWN03 contact sheet, 2026-09-01 (docs/photo-review/own03-nine.png)",
+      "collectedAt": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "officeholderId": "statewide:az/corporation-commissioner/thompson",
+      "name": "Kevin Thompson",
+      "url": "/officials/statewide-az-corporation-commissioner-thompson.jpg",
+      "sourceUrl": "https://www.azcc.gov/kevin-thompson/biography",
+      "license": "Official portrait published by Arizona Corporation Commission (https://www.azcc.gov/kevin-thompson/biography) — used under the official-government-portrait basis with attribution and remove-on-request; no licence claimed.",
+      "attribution": "Arizona Corporation Commission",
+      "basis": "OFFICIAL_PORTRAIT",
+      "judgment": "approved by the author on the OWN03 contact sheet, 2026-09-01 (docs/photo-review/own03-nine.png)",
+      "collectedAt": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "officeholderId": "statewide:az/corporation-commissioner/marquez-peterson",
+      "name": "Lea Márquez Peterson",
+      "url": "/officials/statewide-az-corporation-commissioner-marquez-peterson.jpg",
+      "sourceUrl": "https://www.azcc.gov/lmarquezpeterson/biography",
+      "license": "Official portrait published by Arizona Corporation Commission (https://www.azcc.gov/lmarquezpeterson/biography) — used under the official-government-portrait basis with attribution and remove-on-request; no licence claimed.",
+      "attribution": "Arizona Corporation Commission",
+      "basis": "OFFICIAL_PORTRAIT",
+      "judgment": "approved by the author on the OWN03 contact sheet, 2026-09-01 (docs/photo-review/own03-nine.png)",
+      "collectedAt": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "officeholderId": "statewide:az/corporation-commissioner/lopez",
+      "name": "René Lopez",
+      "url": "/officials/statewide-az-corporation-commissioner-lopez.jpg",
+      "sourceUrl": "https://www.azcc.gov/Rene-Lopez/biography",
+      "license": "Official portrait published by Arizona Corporation Commission (https://www.azcc.gov/Rene-Lopez/biography) — used under the official-government-portrait basis with attribution and remove-on-request; no licence claimed.",
+      "attribution": "Arizona Corporation Commission",
+      "basis": "OFFICIAL_PORTRAIT",
+      "judgment": "approved by the author on the OWN03 contact sheet, 2026-09-01 (docs/photo-review/own03-nine.png)",
+      "collectedAt": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "officeholderId": "statewide:nj/lieutenant-governor",
+      "name": "Dale G. Caldwell",
+      "url": "/officials/statewide-nj-lieutenant-governor.jpg",
+      "sourceUrl": "https://www.nj.gov/governor/admin/ltgovernor/",
+      "license": "Official portrait published by Office of the Governor of New Jersey (https://www.nj.gov/governor/admin/ltgovernor/) — used under the official-government-portrait basis with attribution and remove-on-request; no licence claimed.",
+      "attribution": "Office of the Governor of New Jersey",
+      "basis": "OFFICIAL_PORTRAIT",
+      "judgment": "approved by the author on the OWN03 contact sheet, 2026-09-01 (docs/photo-review/own03-nine.png)",
+      "collectedAt": "2026-09-01T00:00:00.000Z"
     }
   ],
   "missing": [

@@ -1420,3 +1420,52 @@ for.
   loudly; here it produces a perfectly readable DIFFERENT file and fails
   silently. The move is to narrow the ask to the format the record names, never
   to loosen the comparison.
+
+### The permitted Wikipedia route was one path segment away the whole time
+
+- **Conceived:** from a lane reading a host's `robots.txt` before shipping a NEW
+  route on the strength of `docs/sources.md`'s row — and discovering the row was
+  wrong about a path this repository had been using for weeks.
+- **Query:** `https://en.wikipedia.org/robots.txt`, then the same article on four
+  routes: `/w/api.php?action=query&…` (the one in use), `/wiki/<Title>`,
+  `/wiki/<Title>?action=raw`, and `/w/index.php?title=<Title>&action=raw`.
+- **Returned:** `robots.txt` under `User-agent: *` carries `Disallow: /w/` with
+  exactly two exceptions — `Allow: /w/api.php?action=mobileview&` and
+  `Allow: /w/load.php?` — so the API path and the `/w/index.php` raw path are
+  **both disallowed**, and `/wiki/<Title>?action=raw` is not. That route returns
+  `200 text/x-wiki`, **183,138 bytes on `Tucson, Arizona`**, and a redirect
+  answers with its own `#REDIRECT [[Target]]` wikitext, so the API's
+  `redirects=1` becomes an explicit one-hop follow. Re-walked and diffed: 39 of
+  39 municipalities reached, 908 official rows, 270 distinct officials —
+  identical.
+- **Generalises:** to **every MediaWiki installation**, which is a large class of
+  government and quasi-government wikis, and past it to a rule about this
+  repository rather than about a host: **a permission row is a claim about
+  someone else's file and expires the way any measurement does.** A wall
+  announces itself with a 403; a permission error announces nothing at all,
+  because the disallowed path answers 200 forever. Portable, and it says which
+  half of `docs/sources.md` can never be trusted without a re-read.
+
+### A borough dropped a `www` and a sitting mayor left the product
+
+- **Conceived:** from re-walking the Wikipedia corpus on the permitted route.
+  Every Wikipedia-derived number was identical and 8 CITATIONS moved from
+  `CONFIRMED` to `UNREACHABLE` — and regenerating the rosters then deleted a
+  named officeholder.
+- **Query:** the citation `http://www.lincolnpark.org/130/Mayors-Office`, then
+  `https://www.lincolnpark.org/`, then the apex `https://lincolnpark.org/` and
+  the same two paths under it.
+- **Returned:** every `www.lincolnpark.org` request fails to connect at all —
+  not a 404, not a 403, **no DNS**. The apex answers **200 on `/`, 200 on
+  `/129/Borough-Council` and 200 on `/130/Mayors-Office`**, and the Mayor's page
+  names `Runfeldt`. The record is fully published; only the hostname moved.
+- **Generalises:** two ways, and the second is the bigger one. **A `www`
+  subdomain retirement is a routine municipal-CMS migration** and every citation
+  URL in this corpus that carries one is a candidate — a `www`-to-apex fallback
+  at the citation fetcher is owed and is not built here. And more generally:
+  **a citation is a receipt for a proof taken on a date, not a promise that the
+  URL will answer forever.** A pipeline that re-derives eligibility from a live
+  re-fetch will delete officeholders every time a host moves, which is the
+  transparency mandate's own rule — a wall never renders as an emptiness —
+  applied to our own regeneration rather than to a hunt. Portable, and now
+  mechanical: `data/hunt/citation-confirmations.json`.

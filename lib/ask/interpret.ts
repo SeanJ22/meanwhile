@@ -1,4 +1,5 @@
 import { scrubFreeText } from "../log/scrub.ts";
+import { ASK_SYNTHESIS_MODEL } from "./model.ts";
 import { asksForBodyAgenda } from "../routing/named-entity.ts";
 
 import {
@@ -89,16 +90,19 @@ const MAX_QUESTION_CHARS = 400;
 const MAX_PRIOR_TURNS = 4;
 
 /**
- * The model. `claude-opus-5`, with adaptive thinking at `low` effort.
+ * The model, READ FROM `lib/ask/model.ts`, with adaptive thinking at `low`
+ * effort. (ITEM K, 2026-09-01 — the literal that used to sit below is gone so
+ * *one model for all Ask traffic* is structural rather than four-way agreement.)
  *
  * Thinking is deliberately ON here where the topic classifier disables it.
  * The classifier's job is one label and thinking-off is defensible for it;
  * this rung has to decide a tense, an entity and a referent together, and a
- * disabled-thinking Opus 5 has a documented failure mode where reasoning
+ * disabled-thinking model of this generation has a documented failure mode
+ * where reasoning
  * leaks into the visible output. Low effort with thinking on is both cheaper
  * to be wrong about and the shape the API is happiest with.
  */
-const MODEL = "claude-opus-5";
+const MODEL = ASK_SYNTHESIS_MODEL;
 const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
 
 export function interpretSchema(): Record<string, unknown> {

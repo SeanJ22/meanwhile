@@ -40,7 +40,7 @@ export const REQUIRED_CHECKS_WORKFLOW = ".github/workflows/build-check.yml";
  * The contexts branch protection on `main` actually requires.
  *
  * READ BACK FROM THE GITHUB API on 2026-08-25 —
- * `repos/SeanJ22/We-The-People/branches/main/protection`, whose
+ * `repos/SeanJ22/meanwhile/branches/main/protection`, whose
  * `required_status_checks.contexts` returned exactly these three. It is a
  * transcription of a server fact, not a wish: if the branch is changed, this
  * is updated to match what the branch says, and the test below then tells you

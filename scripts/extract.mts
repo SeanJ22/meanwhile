@@ -61,7 +61,7 @@ async function bytesOf(): Promise<Uint8Array> {
   const res = await fetch(target!, {
     headers: {
       "user-agent":
-        "we-the-people/extract (+https://github.com/SeanJ22/We-The-People; seanj22@gmail.com)",
+        "we-the-people/extract (+https://github.com/SeanJ22/meanwhile; seanj22@gmail.com)",
     },
   });
   if (!res.ok) {

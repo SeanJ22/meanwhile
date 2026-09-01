@@ -37,7 +37,7 @@ import { spawnSync } from "node:child_process";
 import { judgeProtection } from "../lib/ops/protection-state.ts";
 import { REQUIRED_CONTEXTS } from "../lib/ops/required-checks.ts";
 
-const REPO = "SeanJ22/We-The-People";
+const REPO = "SeanJ22/meanwhile";
 
 /**
  * One authenticated read. Returns `{ ok, body }` rather than throwing, so the

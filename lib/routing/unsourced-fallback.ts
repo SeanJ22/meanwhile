@@ -51,6 +51,7 @@
  */
 import { ripcordPulled } from "../ripcords.ts";
 import { scrubFreeText } from "../log/scrub.ts";
+import { ASK_SYNTHESIS_MODEL } from "../ask/model.ts";
 
 /**
  * The mark, in plain language, rendered ABOVE the answer.
@@ -121,7 +122,16 @@ export function shouldFallBack(input: {
 /* ------------------------------------------------------------------------- */
 
 const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
-const MODEL = "claude-opus-5";
+/**
+ * The model, READ FROM `lib/ask/model.ts` rather than declared here.
+ * (ITEM K, 2026-09-01.)
+ *
+ * An Ask call site, so *one model for all Ask traffic* binds it. The literal
+ * that used to sit on this line made the rule a matter of four files agreeing;
+ * the import makes it structural. Thinking off at `low` effort is unchanged
+ * and was verified against `claude-sonnet-5` by an actual request.
+ */
+const MODEL = ASK_SYNTHESIS_MODEL;
 
 /**
  * The system prompt, and every line of it is a constraint rather than a style.

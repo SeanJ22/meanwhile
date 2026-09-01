@@ -29,7 +29,7 @@ const RECORD = join(ROOT, "data", "photos", "door2-statewide-executives-2026-08-
 const OUT_DIR = join(ROOT, "data", "photos", "staged", "own03-2026-08-31");
 
 /** The identifier this product shows every public body. It does not change per host. */
-const UA = "we-the-people/1.0 (+https://github.com/SeanJ22/We-The-People)";
+const UA = "we-the-people/1.0 (+https://github.com/SeanJ22/meanwhile)";
 
 /*
  * `PORTRAIT_ACCEPT` is imported rather than written here, and that is the

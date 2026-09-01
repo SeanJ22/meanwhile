@@ -4,6 +4,7 @@ import type { ModelRate } from "../control-plane/model-cost.ts";
 
 import { packHasEvidence, type EvidencePack } from "./evidence.ts";
 import { ASK_MODEL_RATES } from "./model-economics.ts";
+import type { AskEffort } from "./model.ts";
 import { readCacheUsage, type CacheUsage } from "./prompt-cache.ts";
 import {
   SYNTHESIS_MESSAGES_URL,
@@ -135,6 +136,21 @@ export type ComparisonOutcome =
 export interface ComparisonOptions {
   fetchImpl?: typeof fetch;
   apiKey?: string;
+  /**
+   * **THE EFFORT SWEEP'S ONE VARIABLE.** (ITEM K §4, 2026-09-01.)
+   *
+   * Omitted, the request is built with the resolved production effort — so the
+   * default behaviour of this seam still measures the shape the product ships.
+   * Supplied, it varies effort and NOTHING ELSE: same prompt, same pack, same
+   * model, same cache policy, so the difference between two sweep rows is
+   * attributable to the effort level rather than to anything the harness did.
+   *
+   * It lives here, on the comparison seam, and NOT on `SynthesizeOptions` —
+   * for the same reason the model does not: a production entry point with an
+   * effort field is a per-request effort choice whether or not today's route
+   * passes one, and effort is part of the cached prefix's request shape.
+   */
+  effort?: AskEffort;
 }
 
 /**
@@ -174,7 +190,9 @@ export async function synthesizeForComparison(
       /* The product's own request, with the model named and the cache marker
          absent. Nothing else about it differs from what a reader's question
          sends. */
-      body: JSON.stringify(synthesisRequestBody(pack, { model, cached: false })),
+      body: JSON.stringify(
+        synthesisRequestBody(pack, { model, cached: false, effort: options.effort }),
+      ),
     });
     if (!response.ok) {
       /* The status is CARRIED. "It failed" is not a measurement, and a

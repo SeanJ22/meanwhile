@@ -86,6 +86,7 @@ import {
   type QuestionRun,
   type SwitchVerdict,
 } from "../lib/ask/model-economics.ts";
+import { ASK_EFFORT_LEVELS, resolveAskEffort, type AskEffort } from "../lib/ask/model.ts";
 import { validateAnswer, type KnownSubjectName } from "../lib/ask/validate.ts";
 import {
   evaluateAnswer,
@@ -135,6 +136,95 @@ const REGENERATE = (() => {
   }
   return path;
 })();
+
+/**
+ * **THE TWO ARMS, NAMEABLE.** (ITEM K §6, 2026-09-01.)
+ *
+ * They defaulted to `ASK_INCUMBENT_MODEL` and `ASK_CHALLENGER_MODEL` and still
+ * do. The flags exist because a comparison harness whose arms are compile-time
+ * constants can only ever measure one comparison, and the moment a switch
+ * LANDS those two constants stop naming two different models — the harness
+ * would then run the incumbent against itself and report a verdict on a
+ * degenerate run rather than refusing it.
+ *
+ * §6 requires the incumbent measured on the current request shape and the
+ * challenger measured on the same shape, in one run, per question. Naming the
+ * arms is what lets that run happen on either side of the switch landing.
+ *
+ *   pnpm ask:model-compare --incumbent claude-opus-5 --challenger claude-sonnet-5
+ *
+ * The chosen arms are written into the run record, so a later reader never has
+ * to infer which two models a record compared from what the constants say
+ * today.
+ */
+function argValue(flag: string): string | null {
+  const argv = process.argv.slice(2);
+  const at = argv.indexOf(flag);
+  if (at === -1) return null;
+  const value = argv[at + 1];
+  if (!value) {
+    console.error(`ask:model-compare · ${flag} needs a model id`);
+    process.exit(1);
+  }
+  return value;
+}
+
+const INCUMBENT_ARM = argValue("--incumbent") ?? ASK_INCUMBENT_MODEL;
+const CHALLENGER_ARM = argValue("--challenger") ?? ASK_CHALLENGER_MODEL;
+
+/**
+ * **`--effort <level>` — THE EFFORT SWEEP'S ONE VARIABLE.** (ITEM K §4.)
+ *
+ * Applied to BOTH arms, so a sweep row varies effort and nothing else. Absent,
+ * the request is built with the resolved production effort — which is what
+ * every ordinary run must measure, so the default behaviour is untouched.
+ *
+ * Effort defaults to `high` server-side when the field is omitted and thinking
+ * tokens bill at the OUTPUT rate, so the levels are not a quality dial with a
+ * free bottom end: each one has to be measured for what it costs as well as
+ * for what it answers. The brief's rule is the reason this flag exists rather
+ * than a chosen constant — *do not pick one on reasoning alone.*
+ */
+const SWEEP_EFFORT = (() => {
+  const raw = argValue("--effort");
+  if (raw === null) return undefined;
+  if (!(ASK_EFFORT_LEVELS as readonly string[]).includes(raw)) {
+    console.error(
+      `ask:model-compare · --effort ${raw} is not one of ${ASK_EFFORT_LEVELS.join(", ")}`,
+    );
+    process.exit(1);
+  }
+  return raw as AskEffort;
+})();
+
+/**
+ * **`--no-record` — measure without writing a run record.**
+ *
+ * A sweep is a diagnostic over one variable, not a switch decision, and every
+ * sweep level writing a `data/health/ask-model-compare-runs/` record would
+ * bury the one record that IS the decision under four that are not. The
+ * console output is the sweep's evidence; the switch record is written by the
+ * ordinary run.
+ */
+const NO_RECORD = process.argv.slice(2).includes("--no-record");
+
+/* A run whose arms are the same model measures nothing and would print a
+   verdict about a comparison that did not happen. Refused by name. */
+if (!REGENERATE && INCUMBENT_ARM === CHALLENGER_ARM) {
+  console.error(
+    [
+      "",
+      `ask:model-compare · REFUSED — both arms are ${INCUMBENT_ARM}.`,
+      "",
+      "  A model compared against itself is not a comparison, and a verdict derived from one",
+      "  would read as a result about two models. Name the arms:",
+      "",
+      "    pnpm ask:model-compare --incumbent <model> --challenger <model>",
+      "",
+    ].join("\n"),
+  );
+  process.exit(1);
+}
 
 /* ── refusal 1: the target must be local (RULING 125) ────────────────────── */
 
@@ -327,7 +417,9 @@ async function runArmOnce(
   expectation: ReaderExpectation | null,
 ): Promise<ArmResult> {
   const digest = shownPromptDigest(pack);
-  const outcome: ComparisonOutcome = await synthesizeForComparison(pack, model);
+  const outcome: ComparisonOutcome = await synthesizeForComparison(pack, model, {
+    effort: SWEEP_EFFORT,
+  });
   if (outcome.kind !== "WROTE") {
     return {
       model,
@@ -559,14 +651,14 @@ function derive(rows: readonly Row[], why: string): Derived {
   );
   const incumbentRuns: QuestionRun[] = comparable.map((r) => ({
     questionId: r.questionId,
-    model: ASK_INCUMBENT_MODEL,
+    model: INCUMBENT_ARM,
     held: held(r.incumbent),
     ms: r.incumbent.msMean,
     usd: r.incumbent.usdTotal,
   }));
   const challengerRuns: QuestionRun[] = comparable.map((r) => ({
     questionId: r.questionId,
-    model: ASK_CHALLENGER_MODEL,
+    model: CHALLENGER_ARM,
     held: held(r.challenger),
     ms: r.challenger.msMean,
     usd: r.challenger.usdTotal,
@@ -579,8 +671,8 @@ function derive(rows: readonly Row[], why: string): Derived {
     verdict,
     decision:
       verdict.kind === "SWITCH"
-        ? `SWITCH:${ASK_CHALLENGER_MODEL}`
-        : `RETAIN:${ASK_INCUMBENT_MODEL}`,
+        ? `SWITCH:${CHALLENGER_ARM}`
+        : `RETAIN:${INCUMBENT_ARM}`,
     challengerQuestionsNotHolding: challengerQuestionsNotHolding(challengerRuns),
     relativeNonRegression: relativeNonRegressionAnalysis(incumbentRuns, challengerRuns),
   };
@@ -633,6 +725,9 @@ interface RecordMeta {
 }
 
 function writeRunRecord(meta: RecordMeta, rows: readonly Row[], derived: Derived): string {
+  /* A sweep measures one variable and decides nothing; it does not get a
+     decision record. The console output is its evidence. */
+  if (NO_RECORD) return "(--no-record: no run record written)";
   mkdirSync(RUNS_DIR, { recursive: true });
   const recordPath = join(RUNS_DIR, `${today()}-${Date.now()}.json`);
   writeFileSync(
@@ -644,8 +739,13 @@ function writeRunRecord(meta: RecordMeta, rows: readonly Row[], derived: Derived
         startedAt: meta.startedAt,
         finishedAt: new Date().toISOString(),
         ...(meta.regeneratedFrom ? { regeneratedFrom: meta.regeneratedFrom } : {}),
-        incumbentModel: ASK_INCUMBENT_MODEL,
-        challengerModel: ASK_CHALLENGER_MODEL,
+        incumbentModel: INCUMBENT_ARM,
+        challengerModel: CHALLENGER_ARM,
+        /* ITEM K: the arms are nameable per run, so the record states the two it
+           actually measured rather than leaving a later reader to infer them
+           from what the constants say on the day they read it. */
+        armsNamedOnCommandLine: INCUMBENT_ARM !== ASK_INCUMBENT_MODEL || CHALLENGER_ARM !== ASK_CHALLENGER_MODEL,
+        effort: SWEEP_EFFORT ?? resolveAskEffort(),
         rates: ASK_MODEL_RATES,
         cachePolicy:
           "DISABLED on both arms: no cache_control marker is sent, so neither arm reads or " +
@@ -784,8 +884,8 @@ async function main(): Promise<void> {
      * reached the model, and a shared variable is an argument about the code
      * rather than a measurement of the request.
      */
-    const incumbent = await runArm(pack, ASK_INCUMBENT_MODEL, bodies, expectation);
-    const challenger = await runArm(pack, ASK_CHALLENGER_MODEL, bodies, expectation);
+    const incumbent = await runArm(pack, INCUMBENT_ARM, bodies, expectation);
+    const challenger = await runArm(pack, CHALLENGER_ARM, bodies, expectation);
     /* Every pass of both arms must have been shown ONE prompt. Two digests
        anywhere across the passes voids the question. */
     const digests = [...new Set([...incumbent.digests, ...challenger.digests])];
@@ -838,7 +938,7 @@ async function main(): Promise<void> {
 
   console.log(
     `ask:model-compare · ${BASE} · sha ${headSha()?.slice(0, 8) ?? "unknown"} · ` +
-      `${ASK_INCUMBENT_MODEL} vs ${ASK_CHALLENGER_MODEL}`,
+      `${INCUMBENT_ARM} vs ${CHALLENGER_ARM}`,
   );
   console.log(
     `  DENOMINATOR: ${templates.length} canonical question(s); ${rows.length} row(s) rendered; ` +
@@ -860,7 +960,7 @@ async function main(): Promise<void> {
     );
     console.log(`    same pack on both arms: ${row.packsIdentical ? "YES" : "NO — VOID"}`);
     for (const arm of [row.incumbent, row.challenger]) {
-      const label = arm.model === ASK_INCUMBENT_MODEL ? "incumbent " : "challenger";
+      const label = arm.model === INCUMBENT_ARM ? "incumbent " : "challenger";
       if (arm.ranCount === 0) {
         console.log(
           `    ${label} ${arm.model}: DID NOT RUN on any of ${arm.passes.length} pass(es) — ` +

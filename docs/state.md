@@ -4,7 +4,9 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-30 — **The served commit was not the application, and the reader finally heard how the Board voted.** The release-identity and reader-answerability session; its record is the LAST section of this file.
+Last updated: 2026-08-31 — **Three instruments certified a defect fixed while the owner was watching it happen, and the best of them supplied the notification the product was failing to send.** Session C, Part A; its record is the LAST section of this file.
+
+Previous: 2026-08-30 — **The served commit was not the application, and the reader finally heard how the Board voted.** The release-identity and reader-answerability session.
 
 Previous: 2026-08-29 — **Our own empty store was being read out to readers as a fact about a government, in the reader path and in the instrument that measures it.** The acquisition-doctrine session.
 
@@ -22397,3 +22399,117 @@ cannot proceed, what was tried and what continues without it. The gate refuses a
 NEEDS_SEAN row with no tracker entry from here on: a gate that is terminal for a
 session and invisible to the one person who can clear it is a deferral wearing a
 status.
+
+---
+
+## 2026-08-31 — Session C, Part A: the write that told nobody, and the street that could not be typed
+
+Session C was directed to deliver Parts A through J. **It delivered Part A**, and
+Part H item 4, which turned out to be the same fix. What it did not reach is
+listed in `docs/owner-audit/session-c.md` by Part and by item, and the ground it
+measured for those Parts is in `docs/frontier.md`.
+
+### The defect was reported four times and survived three fixes
+
+WGH-12 and WGH-15 on 8/28, WGH-22 on 8/30, falsified again by the owner on
+production on 8/31. Every previous pass corrected what the panel DERIVED from the
+session address. The derivation was right each time.
+
+**Measured first, on production, before anything was changed.** At `0bd520f3`,
+typing the owner's own address the way a reader does: the panel did not move at
+all. Before and after both `State House District 19`, `State Senate District 19`,
+`AZ-6`, every row `UNSETTLED`.
+
+### Two causes, and neither was the one that had been fixed three times
+
+**The write told nobody.** `sessionStorage` fires its change event in every OTHER
+tab and never in the tab that performed the write. `hooks/use-resolved-location.ts`
+owned a `Set<() => void>` and handed it to `subscribeToStorage`; the two writers
+live in `lib/geo/session-address.ts` and could not see it, so **nothing in the
+tree ever iterated that set**. The only notification the hook could receive was
+the cross-tab event, which by specification never arrives in the tab a reader is
+using. The address control re-rendered from its own state — which is why the
+banner read District 17 over a panel listing District 19. The listener set now
+lives at the store boundary and both writers publish, so a future third writer
+gets the notification by construction rather than by remembering.
+
+**The address could not be confirmed on that street at all.** With no house
+number the resolver probes a fixed ladder — 1, 50, 200, 800 — against the Census
+range. The owner's road is numbered 10701–10899, so every probe missed, the
+resolver returned `FAILED`, and the prompt told him it could not place his street
+while offering no house-number field and no route to recovery. Telling a reader
+their street could not be placed, on the strength of four guesses that missed, is
+asserting an absence out of our own empty result. The prompt now ASKS. Both had
+to be fixed: with the street unplaceable the panel could not have moved even with
+the notification repaired, which is why the frontier's deferral of this as a
+separate reader-facing gap could not have held.
+
+### Why the instruments passed while it was live — this is the part worth keeping
+
+1. A unit test whose fixture hand-built a `CoverageSummary` whose `divisions`
+   carried 17 while its `seats` did not — a shape `summarizeCoverage` cannot
+   emit, because it derives seats BY FILTERING divisions.
+2. A sweep row closed against `rq:wgh-22-panel-seats`, which names nothing on
+   disk.
+3. **The walk block — a real browser, a real build, the real DOM, and still
+   wrong.** It wrote the scope into `sessionStorage` and then DISPATCHED A
+   SYNTHETIC `storage` EVENT. It measured every step downstream of the
+   notification and manufactured the notification itself.
+
+The third is the one to remember: fidelity of the harness is not fidelity of the
+measurement. A test that supplies the missing signal proves everything except the
+thing that is broken.
+
+### What replaces them
+
+`tests/session-address-publish.test.ts` asserts the publication and **fails
+against the previous code** — checked by restoring the old files and running it,
+not assumed. Its second test sweeps `hooks/`, `components/` and `lib/` for a
+listener set nothing iterates, so the class is refused across the tree.
+
+**The class audit found exactly one instance.** Ten browser-storage subscribers:
+seven publish through a local listener set, `lib/ballot/picks.ts` publishes
+through its own window event, and `reaction-control` and `shuffled-facts` are
+deliberate non-subscribers that say so.
+
+`scripts/walk-all.mts` gains an `SC0831` block that supplies NOTHING: it clicks
+the pill a reader clicks, types into the field a reader types into, presses the
+button, and reads the panel — same tab, no reload, no seeded storage, no
+dispatched event. The expectation still comes from the product's own resolver,
+because an answer key is not a supplied answer.
+
+### Found while verifying, and fixed: the walk was destroying its own evidence
+
+`scripts/walk-all.mts` built its run-record filename with a regex written inside
+a TEMPLATE LITERAL, so the backslashes were consumed before `RegExp` saw them and
+the pattern was `^<day>-(d+).json$` — matching a literal `d` where it meant any
+digit. It matched nothing, the sequence stayed 0, and **every walk after the
+first on a given day silently overwrote the previous run's record.** This
+session's first walk destroyed the record the previous session had committed. It
+was a third copy of `lib/health/run-records.ts`, which escapes correctly, and now
+uses it (RULING 103). Proven by the repair: the verifying run wrote
+`2026-08-31-02.json` and left `-01` intact.
+
+### Verification
+
+Walk on a local production build: **418 checks ran, 0 failures, 0 named
+regressions, 0 silent check deaths.** At 85641 the panel moves from District 19
+UNSETTLED to District 17 CONFIRMED on the reader's own typing; 07866 moves to
+Assembly 25 / Senate 25 / NJ-11; both pass the revisit variant.
+
+### Recorded and not fixed
+
+**At 85701 and 03255 the who-governs card offers no way to settle what it says is
+unsettled** — three UNSETTLED rows and no address control at all. WGH-7 made the
+could-govern pill the single entry point, and it renders only where a row carries
+the mark. The `SC0831` checks DECLARE `COULD NOT RUN` there naming the missing
+field, so it is visible on every run rather than silent. Where that door belongs
+is the author's call.
+
+**A gate can fail without recording what failed.** Two gate runs recorded
+`test FAIL` on a tree whose standalone runs were green five times over; both
+failures were inside `handoff --ship`, which regenerates and commits the
+digest-registered artifacts and then gates behind its own commit.
+`data/ops/gate-runs/*.json` stores only `{id, command, status, seconds}`, so the
+failing output is printed and discarded. Both failing records are committed
+rather than dropped.

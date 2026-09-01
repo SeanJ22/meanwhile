@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-31 03:05:39 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-31 19:38:42 EDT.
 Session day 2026-08-31 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1242 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1249 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -612,7 +612,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 236 recorded
+## Rulings — 238 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -829,6 +829,8 @@ from. Each entry there names what it supersedes.
 - RULING 218 — GitHub scheduled workflows are not the freshness clock  [R-0218 · LAW_DECISION · ACTIVE]
 - RULING 219 — the autonomous-system constitution is a generated governance view  [R-0219 · LAW_DECISION · ACTIVE]
 - RULING 220 — Level-2 scheduling authority persists in a Postgres provider behind the existing control-plane interfaces  [R-0220 · DECISION · ACTIVE]
+- RULING 221 — a session's completion denominator is finite and stated at its start; discovery does not enlarge it  [R-0221 · LAW_DECISION · ACTIVE]
+- RULING 222 — before a confirmed address the scope is the ZIP; after one, the scope IS the address  [R-0222 · LAW_DECISION · ACTIVE]
 - `package.json`'s `scripts` block is the list.  [R-C-commands-package-json-s-scripts-block-is-the-list · LAW_DECISION · ACTIVE]
 - More principles will not fix this.  [R-C-discovery-conduct-more-principles-will-not-fix-this · LAW_DECISION · ACTIVE]
 - THE REPORT CONTRACT IS A FILE NOW, AND IT IS AMENDED RATHER THAN REINVENTED  [R-C-discovery-conduct-the-report-contract-is-a-file-now-and-it-is-am · LAW_DECISION · ACTIVE]
@@ -1007,35 +1009,24 @@ position; each flag can be flipped without a deploy via its environment variable
 - Open question: Product, not legal: does an unsourced general answer stay unmistakable from a sourced civic one in front of a real reader? The whole trust posture of this product is that it does not answer what it cannot source, and an answer a reader mistakes for sourced spends that.
 - Closer: The author — he is the one who looks at it; pulled the moment the separation reads as thin
 
-## Last 10 tracker status change(s), most recent first
+## Last 0 tracker status change(s), most recent first
 
-Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of 30 available. 96 row(s) first appeared in those commits and are not listed — a new row has no status to have changed.
+Source: git history of `docs/tracker.csv` (first-parent), 1 commit(s) walked of 1 available. 0 row(s) first appeared in those commits and are not listed — a new row has no status to have changed. 1 commit(s) could not be compared because this checkout is SHALLOW and does not carry their parent — that is a fact about the clone, not about the tracker.
 
-| Date | ID | From → To | Commit |
-|---|---|---|---|
-| 2026-08-20 | R58 | Not started → Done | `7cc7d4c` Merge pull request #120 from SeanJ22/claude/promptd-r… |
-| 2026-08-20 | F02 | Not started → In progress | `ae720a9` Merge pull request #119 from SeanJ22/claude/promptc-g… |
-| 2026-08-20 | D70 | Not started → Blocked on the author | `ae720a9` Merge pull request #119 from SeanJ22/claude/promptc-g… |
-| 2026-08-20 | PB14 | Blocked on the author → Done | `ae720a9` Merge pull request #119 from SeanJ22/claude/promptc-g… |
-| 2026-08-20 | F25 | Not started → Done | `3bc8834` Merge pull request #116 from SeanJ22/claude/promptb-d… |
-| 2026-08-20 | R48 | Open → Done | `3bc8834` Merge pull request #116 from SeanJ22/claude/promptb-d… |
-| 2026-08-20 | F21 | Not started → Done | `9028521` Merge pull request #115 from SeanJ22/claude/f22-refre… |
-| 2026-08-19 | F01 | Not started → In progress | `a119578` Merge pull request #108 from SeanJ22/claude/f01-walkt… |
-| 2026-08-19 | D47 | Not started → Done | `b6dc706` Merge pull request #104 from SeanJ22/claude/g21-final… |
-| 2026-08-19 | D52 | Not started → In progress | `b6dc706` Merge pull request #104 from SeanJ22/claude/g21-final… |
+_No status change recovered in the commits walked._
 
 ## Git
 
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-31 03:05:39 EDT
-branch: claude/b-w1-instruments
-head sha: 6923cd91ca7012a4b343cdab7daa6fddbc7ddaa0
-head subject: A quoted commit subject is not a date this file asserts
-origin/main sha: 886f3b3aee8858cbb7c31912f667a742b8b5d363
-origin/main subject: Post-deploy integrity reading: 2026-08-31T01:43Z
-local main sha: 886f3b3aee8858cbb7c31912f667a742b8b5d363
+generated: 2026-08-31 19:38:42 EDT
+branch: claude/session-c-wgh22
+head sha: 98c8e0d87bd5ea9b0d36ff016bc3c4ba57a3a39d
+head subject: Gate run records for the WGH-22 ship
+origin/main sha: ce1fe51bae41cbd99f67a3a43f148ba1511aec5b
+origin/main subject: Merge pull request #240 from SeanJ22/claude/frontier-walk-checks-baseline
+local main sha: ce1fe51bae41cbd99f67a3a43f148ba1511aec5b
 local main matches origin/main: yes
 working tree: clean
 open prs: none

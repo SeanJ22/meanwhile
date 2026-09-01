@@ -42,8 +42,52 @@
  * part; only the outcome is kept.
  */
 
+import { subscribeToStorage } from "@/lib/state/subscribe-to-storage";
+
 /** The one key. Named so it is greppable and so nothing else claims it. */
 export const SESSION_ADDRESS_KEY = "wtp.session_address_scope";
+
+/**
+ * **A WRITE THAT NOBODY IS TOLD ABOUT IS NOT A WRITE.** (WGH-22, 2026-08-31.)
+ *
+ * This is the fourth appearance of one defect (WGH-12 and WGH-15 on 8/28,
+ * WGH-22 on 8/30 and again on 8/31), and the first time the notification
+ * itself is the thing being fixed. Every previous pass corrected what the
+ * panel DERIVED from the scope. The scope was correct each time. It simply
+ * never arrived.
+ *
+ * The seam: `sessionStorage` fires a `storage` event in every OTHER tab and
+ * NEVER in the tab that performed the write. A surface reading this store
+ * through `useSyncExternalStore` therefore hears nothing when the reader
+ * confirms an address in that same tab — which is the only tab a reader ever
+ * uses. The address control re-rendered because it had just made the request
+ * and held the answer in its own state; the who-governs panel two components
+ * away was never told, and went on rendering the ZIP-level districts under a
+ * banner announcing the confirmed ones.
+ *
+ * So the local listener set lives HERE, at the store boundary, rather than in
+ * the hook that reads it. `writeSessionAddress` and `clearSessionAddress` are
+ * the only two writers, and both now publish. A future third writer gets the
+ * notification by construction instead of by remembering — which is the part
+ * `use-stored-zip` got right and this file did not.
+ */
+const listeners = new Set<() => void>();
+
+/**
+ * Subscribe to changes in the session address, for `useSyncExternalStore`.
+ *
+ * Both halves are load-bearing and neither is redundant: the local set carries
+ * same-tab writes (the reader confirming an address), and the `storage` event
+ * carries cross-tab ones. `subscribeToStorage` wires both.
+ */
+export function subscribeToSessionAddress(onStoreChange: () => void): () => void {
+  return subscribeToStorage(listeners, onStoreChange);
+}
+
+/** Tell every subscriber the scope moved. Called by the two writers, always. */
+function publish(): void {
+  for (const listener of listeners) listener();
+}
 
 export interface SessionAddressScope {
   /** The zip the address was resolved inside. */
@@ -134,6 +178,10 @@ export function writeSessionAddress(scope: Omit<SessionAddressScope, "resolvedAt
   } catch {
     /* A full or refused store costs the reader a second prompt, never an error. */
   }
+  // Outside the try: a refused write leaves the scope where it was, and a
+  // publish that finds nothing changed is a no-op re-read rather than a risk.
+  // The one thing that must never happen is a successful write with no publish.
+  publish();
 }
 
 /** Forget it. The reader asking to see the whole zip again is asking for this. */
@@ -145,6 +193,10 @@ export function clearSessionAddress(): void {
   } catch {
     /* Nothing to do and nothing to say. */
   }
+  // The reader asking to see the whole zip again is asking every surface to
+  // widen, not just the control they clicked. RULING 222's scope runs both
+  // directions: the panel narrows on a write and widens on a clear.
+  publish();
 }
 
 /**

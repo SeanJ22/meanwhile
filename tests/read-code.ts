@@ -53,12 +53,29 @@ export const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
  * does not depend on where the runner was invoked. Returns absolute paths.
  */
 export function tsFilesUnder(...parts: string[]): string[] {
+  return sourceFilesUnder([".ts"], ...parts);
+}
+
+/**
+ * **THE SAME SWEEP, FOR A CALLER THAT ALSO NEEDS `.tsx`.**
+ * (WGH-22, 2026-08-31.)
+ *
+ * `tsFilesUnder` matches `.ts` and therefore CANNOT see a component — a rule
+ * swept over `components/` through it would report green having looked at
+ * nothing, which is the denominator-drift failure its own doc comment names.
+ *
+ * The extension list is a parameter rather than a second walk for the reason
+ * RULING 103 exists: `tsFilesUnder` now delegates here, so there is still ONE
+ * implementation of "which files does this rule apply to" and the two entry
+ * points cannot drift apart.
+ */
+export function sourceFilesUnder(extensions: string[], ...parts: string[]): string[] {
   const walk = (dir: string): string[] => {
     const out: string[] = [];
     for (const name of readdirSync(dir)) {
       const path = join(dir, name);
       if (statSync(path).isDirectory()) out.push(...walk(path));
-      else if (name.endsWith(".ts")) out.push(path);
+      else if (extensions.some((ext) => name.endsWith(ext))) out.push(path);
     }
     return out;
   };

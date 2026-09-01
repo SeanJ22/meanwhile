@@ -3,6 +3,11 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
+// Comments stripped, so a guard cannot be satisfied by the prose beside the
+// code it is about. `ROOT` is deliberately not taken from here — this file
+// already has its own.
+import { codeOf } from "./read-code.ts";
+
 /**
  * M26 — the narrowing prompt, held to its spec: the author's verbatim
  * wording, the computed ambiguity trigger, and the device-locality claims.
@@ -36,17 +41,64 @@ test("the address prompt asks for a STREET by default, and says so", () => {
     source.includes("What street do you live on?"),
     "the default ask must be for a street",
   );
+  /*
+   * **THE PROMISE MOVED AGAIN, FOR THE SAME REASON IT MOVED THE FIRST TIME.**
+   * (Session C, 2026-08-31.)
+   *
+   * The version this guard used to pin — "a house number only when the street
+   * itself crosses a boundary" — was still not keepable. With no number the
+   * resolver probes a fixed ladder of sample house numbers, and a street whose
+   * Census range excludes them all comes back FAILED. The owner's own road is
+   * numbered 10701-10899, so all four probes missed and the product told him
+   * it could not place his street while promising it did not need a number.
+   *
+   * So the guard is REWRITTEN to the copy that replaced it rather than
+   * loosened, exactly as RULING 62 required the last time: both reasons a
+   * number is wanted are named, and the absolute promise still may not return.
+   */
   assert.ok(
     source.includes(
-      "We ask for your street, and for a house number only when the street itself crosses a",
+      "We ask for your street, and for a house number when the street crosses a boundary or when",
     ),
-    "the promise must be the keepable one, not the absolute one",
+    "the promise must name BOTH reasons a house number is wanted",
+  );
+  assert.ok(
+    !source.includes("house number only when the street itself crosses a"),
+    "the boundary-only promise is retired: it was false for any street the sample ladder misses",
   );
   // The absolute promise may never come back: it was false on the same screen
   // as a form asking for the thing it said was never needed.
   assert.ok(
     !source.includes("no house or apartment number needed"),
     "the absolute never-a-house-number promise is retired and must not return",
+  );
+});
+
+test("a street that did not place without a number is ASKED for one, not refused", () => {
+  /*
+   * The reader-facing half of WGH-22. A FAILED resolution with no house number
+   * supplied is a fact about our four sample probes, never about the street, so
+   * the prompt must ask rather than assert that the street could not be placed.
+   * Only a number that WAS supplied and still failed is a real failure.
+   *
+   * Asserted on the code with comments stripped, so the paragraph above the
+   * branch explaining it cannot satisfy the guard on its own.
+   */
+  const code = codeOf("components", "address", "address-prompt.tsx");
+  const failedBranch = code.indexOf('result.status === "FAILED"');
+  assert.ok(failedBranch > 0, "the FAILED branch must exist");
+
+  const ask = code.indexOf('setPhase("NEEDS_NUMBER")', failedBranch);
+  const declare = code.indexOf('setPhase("FAILED")', failedBranch);
+  assert.ok(ask > 0, "the FAILED branch must be able to ask for a house number");
+  assert.ok(
+    ask < declare,
+    "the ask must come BEFORE the refusal, or a street we simply could not probe " +
+      "is reported to the reader as a street we could not place",
+  );
+  assert.ok(
+    code.includes("!withNumber"),
+    "the ask must be conditional on no number having been supplied yet",
   );
 });
 

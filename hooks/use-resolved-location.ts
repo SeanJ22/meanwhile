@@ -2,12 +2,15 @@
 
 import { useSyncExternalStore } from "react";
 
-import { SESSION_ADDRESS_KEY, sessionAddressFor } from "@/lib/geo/session-address";
+import {
+  SESSION_ADDRESS_KEY,
+  sessionAddressFor,
+  subscribeToSessionAddress,
+} from "@/lib/geo/session-address";
 import {
   zipOnly,
   type ResolvedLocation,
 } from "@/lib/state/resolved-location";
-import { subscribeToStorage } from "@/lib/state/subscribe-to-storage";
 
 /**
  * **THE READER'S RESOLVED LOCATION, FOR ANY SURFACE THAT ASKS.**
@@ -31,15 +34,25 @@ import { subscribeToStorage } from "@/lib/state/subscribe-to-storage";
  * answers nothing about 03255, and treating the two as one would be the
  * product asserting a location the reader never gave it.
  */
-/** Same wrapper the other two storage hooks use — the shared helper takes the
- *  listener set as its first argument. */
-const listeners = new Set<() => void>();
-const subscribe = (onStoreChange: () => void) =>
-  subscribeToStorage(listeners, onStoreChange);
-
+/**
+ * The subscription belongs to the STORE, not to this hook. (WGH-22,
+ * 2026-08-31.)
+ *
+ * This file used to hold its own listener set and hand it to
+ * `subscribeToStorage`. Nothing ever iterated that set: the two writers live
+ * in `lib/geo/session-address.ts` and could not see it, so the only
+ * notification this hook could ever receive was the cross-tab `storage`
+ * event — which by specification never fires in the tab that wrote. A reader
+ * confirming their address in their own tab moved the store and told nobody,
+ * and this hook went on returning the ZIP-only snapshot it had read at mount.
+ *
+ * `subscribeToSessionAddress` is the store's own subscription, and it carries
+ * both halves. A hook cannot be given a stale answer by a writer it does not
+ * know about, because it no longer owns the set the writers must find.
+ */
 export function useResolvedLocation(zip: string | null): ResolvedLocation {
   const raw = useSyncExternalStore(
-    subscribe,
+    subscribeToSessionAddress,
     () => {
       try {
         return `${zip ?? ""}|${window.sessionStorage.getItem(SESSION_ADDRESS_KEY) ?? ""}`;

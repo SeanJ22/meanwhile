@@ -92,7 +92,7 @@ each is a workstream rather than a repair:
    about. The probe data for most of them is already measured — the
    who-governs disclosure, the statewide slate, the ballot contact routes.
 
-### A reader-facing gap the WGH-22 hunt turned up
+### A reader-facing gap the WGH-22 hunt turned up — FIXED 2026-08-31 (Session C)
 
 **A street the Census carries only at the address level is refused by the
 street-only form.** `South Bear Table Tank Drive` in 85641 — the owner's own
@@ -101,8 +101,157 @@ street-only spelling, and resolves completely the moment a house number is
 supplied. The prompt asks for a number only when a street is AMBIGUOUS, so that
 branch never fires: the reader is told we could not place their street while
 the resolver would have placed their house. Common on rural and named-feature
-roads. Recorded here rather than fixed — it is not in the 8.30.26 sweep and it
-falsifies none of this session's acceptance criteria (RULING 221).
+roads.
+
+**Session C fixed it, because it turned out to be half of WGH-22 rather than a
+gap beside it.** With no house number the resolver probes a fixed ladder — 1,
+50, 200, 800 — and the owner's road is numbered 10701-10899, so every probe
+missed. The prompt now ASKS for the number on a `FAILED` result where none was
+supplied, instead of asserting an absence out of our own empty result, and the
+promise under the form names both reasons a number is wanted. Only a number
+that was supplied and still failed is reported as a failure.
+
+This was load-bearing for WGH-22 and not merely adjacent: with the street
+unplaceable the reader could never confirm an address on it at all, so the
+who-governs panel could not have moved even after the notification defect was
+repaired. Both had to be fixed for the owner's screen to come right, which is
+why the deferral above could not have held.
+
+### At two pilot ZIPs the who-governs card offers no way to settle what it says is unsettled
+
+Found 2026-08-31 (Session C) while building the reader-interaction check for
+WGH-22, and **measured on the rendered DOM rather than reasoned about**.
+
+At 85701 and 03255 the who-governs card renders its three state and federal seat
+rows as `UNSETTLED` — *we have not been told enough to say* — and the card
+carries **no address control at all**: no `could-govern` pill, no
+`address-prompt`, no trigger. Measured on the local production build after
+opening the card at each ZIP. At 85641 and 07866 the pill is present and the new
+`SC0831` checks drive it.
+
+The cause is structural rather than accidental. WGH-7 (2026-08-24, the author's
+ruling) deleted the second address door on this card — *the pill is the single
+entry point* — and the pill is `CouldGovernNotice`, which returns `null` when no
+row carries the could-govern mark. Where nothing is marked, the single entry
+point does not render, and the unsettled rows have no door beside them.
+
+So the reader is shown a question and denied the answer on the surface that
+asked it. The address can still be given on the ballot page, which is a
+different surface and a different question.
+
+**Not fixed here, and deliberately.** Where that door belongs is a design
+decision on a surface the author has ruled on twice, and the ruling that removed
+the second door is the reason there is now none. It falsifies no acceptance
+criterion of this session and is not a regression from its changes (RULING 221).
+The three `SC0831` checks at each of these ZIPs DECLARE `COULD NOT RUN` naming
+the missing field, so the gap is visible in every walk rather than silent.
+
+### A gate can fail without recording what failed
+
+Observed 2026-08-31 (Session C). Gate run `2026-08-31-25` recorded
+`test … FAIL (42s)`; run `2026-08-31-26`, on a byte-identical working tree with
+no intervening edit, recorded `14 of 14 gates green`. `pnpm test` run directly
+either side passes at 4266/0.
+
+So one of the tests is flaky — and **it cannot be named**, because
+`data/ops/gate-runs/*.json` stores `{id, ciJob, command, status, seconds}` and
+nothing else. The failing output is printed to the console and then discarded,
+so a gate failure that is not watched live leaves no evidence of its cause.
+
+That matters more than the flake does. A gate set is the instrument the shipping
+law rests on, and this one can say NO without saying why — which on CI, where
+nobody is watching the console, is a red run with an unrecoverable reason. The
+run record should carry the failing gate's captured output, or at minimum the
+failing test names.
+
+Recorded rather than fixed: it falsifies no acceptance criterion of this session
+and is not a regression from its changes (RULING 221). The walk suite already
+does this correctly — `data/health/walk-runs/*.json` carries per-check evidence.
+
+### Session C — verified ground truth for the Parts it did not reach
+
+Session C was directed to deliver Parts A–J. It delivered **A** (and Part H item
+4, which turned out to be the same fix). Before starting it measured the ground
+each remaining Part stands on, and **several premises the directive carried are
+false**. They are recorded here so the next session resumes from measurement
+rather than from the brief. Every line below was checked against disk or against
+a running build.
+
+**Part B — the tracker.** 389 open rows, 72 `needs-sean`, confirmed by parsing
+`docs/tracker-working.csv`; the generated view agrees. The state column is
+`Section`, value `needs-sean` — not `Resolution`. **There is no opened-date
+column and never was**; the dates live in a sidecar, `docs/tracker-opened.json`,
+where **89 of 193 entries are `reconstructed: true`** with placeholder values, so
+only 42 of the 72 needs-sean rows can resolve to a real ISO date. Backfill has a
+ceiling, and UNKNOWN is the honest value for the rest. There is **no verification
+predicate concept anywhere in the tracker tooling** — `reconcileTracker`
+(`lib/ops/tracker-transaction.ts`) verifies the TRANSACTION, never the claim a
+row makes. **NH281's own session record already states its premise has cleared**
+and it stays open by policy (R-0079), not by evidence; NH300 shows no such
+evidence.
+
+**Part C — the check debt.** The 13 rows are real, but `CHECK_DEBT` is not a
+disposition: it is a parallel list, `SweepRecord.checkDebt`, and 10 of the 13 are
+`FIXED_VERIFIED` while 3 are `POSITIVE_KEPT`. All 13 fail for **one** cause —
+`data/health/visual-checks.json` does not exist, and the loader
+(`scripts/visual-suite.mts:134`) returns `[]` silently rather than failing.
+**The blocking fact the directive does not state: there is no DOM evaluator at
+all.** All eight implemented evaluators in `lib/health/visual-evaluation.ts` are
+pixel-based, and none of the five `DOM_CERTIFIABLE_PROPERTIES` has a dispatch
+case — so authoring the 13 checks is not enough; the evaluator half must be
+built first, or every one of them renders `NOT_EVALUABLE`.
+
+**Part D — the obligation registry.** Confirmed: the corpus is meetings-only,
+hardcoded at `lib/control-plane/scheduler/obligations-from-corpus.ts:101` and
+`:103`. `arizonaLocalObligation()` is reached only from
+`campaignFinanceObligations()`, **which itself has zero callers anywhere** — and
+it returns `CampaignFinanceObligation`, not `FreshnessObligation`, so it is not
+even the right type to hand to `syncObligations`. A second provider needs three
+concrete edits, not an abstraction: the import at `scripts/freshness-shadow.mts:60`,
+the record-class literal, and the URL map at `:145-153`. **Nothing schedules
+`pnpm freshness:shadow`** — no cron, no workflow. It runs one cycle when a human
+types it.
+
+**Part E — Arizona money.** The directive assumes the held corpus can be
+normalised to readers. **It cannot, and this was measured rather than reasoned
+about.** All 43 committee names in `az-pima-2026-transactions.json` are Pima
+County school-board and PAC committees; all 15 pilot contests that carry
+candidacies are statewide, federal or legislative — offices that file with the
+**AZ Secretary of State**, not the county. Comparing every committee name against
+every pilot candidacy gives **zero matches**, and `judgeMatch` requires name AND
+office AND year. Two facts that change the ask: the reader surface is a **missing
+file, not missing code** — `lib/funding/state-snapshot.ts:28-32` already names
+`state-money-az-2026.json`, "AZ" is already a legal `MoneyJurisdiction`, and
+`next.config.ts` traces `data/funding/*.json` by glob — and the held Arizona money
+**already reaches readers today** through Ask, for the Vail governing board, via
+a deliberately one-entry crosswalk at `lib/ask/local-finance.ts:145`. The bridge
+to the pilot ballot is the AZ SOS regime, which is unacquired.
+
+**Part F — New Hampshire money.** The directive says the higher rungs were never
+worked. **That is false.** Rung 7 WORKED on 2026-08-21 — visible browser, read the
+app's own JS bundles, called `cfsapi.sos.nh.gov/api`
+`PublicFilerDetails/GetFilingEntityDetails` from the page's own origin — and the
+harvested filer records are committed. The 8/26 403 is real but covers only
+`/public/cf/downloads` at rungs 2 and 3. **The debt is that the working route was
+never written to `data/method/knowledge.json`** (store is at v61; a new route now
+MUST carry a claim class). Rung 13, the Department's public-records path, has
+never been walked and was named as the next session's start on 2026-08-19. An
+untried lead is recorded and applies here: `identified-agent-refused` measured
+that 32 of 40 `*.nh.gov` hosts serve an anonymous request and refuse every client
+carrying this project's name.
+
+**Part H — W6.** No `cache_control` exists anywhere in any API path. Ask is
+`claude-opus-5` at two rungs (`lib/ask/interpret.ts:101`,
+`lib/ask/synthesize.ts:43`), called by raw `fetch` with no SDK. **Token usage is
+never read on the Ask path at all** — `body.usage` is ignored at both call sites,
+so there is no hit rate to report until that is added. Both rungs pass `system` as
+a plain string, so caching requires converting it to a block array first, and in
+`interpretPrompt` the per-ZIP inventory sits inside the would-be stable prefix, so
+ordering must change before anything is shareable across ZIPs. For the fly-in:
+`components/map/map-canvas.tsx:1446-1466` runs `queryRenderedFeatures` and a React
+`setState` on **`sourcedata`**, unthrottled and ungated by `moveend`, throughout
+the 2600ms flight. `pnpm measure:fly` already exists and deliberately asserts no
+frame budget.
 
 ### Still open from the sequence above
 

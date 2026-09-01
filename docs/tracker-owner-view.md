@@ -447,19 +447,6 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 - **Approve the 5 only** — 85701 looks right and the other 138 keep rendering soft.
 - **Refuse** — the 150x150 crops continue to render at display size.
 
-#### OWN03 — OFF-9 — Missing photos for statewide officeholders
-
-*Opened 2026-08-31 · 1 day old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
-
-**What is needed.** Approve or refuse the 9 statewide portraits queued by the 2026-08-28 door-2 walk: Fontes, Mayes, Yee, Myers, Walden, Thompson, Márquez Peterson, Lopez and Caldwell.
-
-**Why no machine can decide it.** RULING 55: every photo is reviewed by the author and only an approved photo renders. The acquisition is done and the review is the only remaining step — a session shipping it would be taking your decision. CORRECTION, and it is the reason to re-read this row: its own text says 'Mayes, Fontes and Horne among them'. TOM HORNE IS NOT ONE OF THE NINE. The acquisition record has him at decode ok:false, NOT_AN_IMAGE — the fetch returned a Cloudflare challenge page, so his image was never read and approving it was never possible. The count of 9 was right and that is what hid it. Horne is now hunt work under RULING 206 (another representation of the same record) and is off your queue entirely.
-
-**Your options.**
-
-- **Approve the nine named above** — those nine statewide officeholders render with portraits at 85641 and everywhere else they appear. A contact sheet staged by the governance lane (docs/photo-review/own03-nine.png, with data/photos/staged/own03-2026-08-31/ in the shape ship-staged-portraits.mts consumes) makes this one look rather than nine files — it lands with that lane's branch, not this one's.
-- **Refuse the nine named above** — the Officials surface keeps its named gap for those nine, which is honest and visibly empty.
-
 #### OWN04 — OFF-10 — Katie Hobbs photo renders badly on the ballot
 
 *Opened 2026-08-31 · 1 day old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
@@ -884,6 +871,19 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 - **Supply it / rule on it** — the blocked route opens and the work behind this row continues on the machine.
 - **Decline or defer** — the obligation stays LIVE and visible — declining the escalation is never a disposition of the record it concerns (RULING 205, RULING 208) — and the other routes keep being worked.
 
+#### NH303 — Approve or refuse the four full-resolution AZCC portraits, which are the same photographs you already approved
+
+*Opened 2026-09-01 · opened today · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+
+**What is needed.** Approve or refuse the four full-resolution AZCC originals — Myers, Walden, Márquez Peterson and Lopez — which are the same photographs you already approved, at 2533-3275px instead of 133-165px.
+
+**Why no machine can decide it.** RULING 55: a decision is about an IMAGE, not a person. A 3275px original is a different file from the 133px crop you approved on 2026-09-01, so shipping it would be your approval inherited by an image you have not seen — the exact hole the ruling closes. A machine can observe that you decided; it cannot decide for you, which is why this is a card where OWN03 is now a predicate.
+
+**Your options.**
+
+- **Approve the four full-resolution originals** — the four Corporation Commissioners rise above the large card's 184px floor and tests/portrait-resolution.test.ts's shortfall ceiling drops from 148 back toward 144.
+- **Refuse the four full-resolution originals** — the approved thumbnails keep rendering, which is honest and already live; the cards stay soft where a portrait is shown large, and the frontier keeps the note.
+
 ---
 
 ## For your information — no decision required
@@ -903,7 +903,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 append-only ledger of every id any session has ever claimed. It is never typed and
 never guessed.
 
-- 387 row(s) carry a date the ledger stamped directly.
+- 388 row(s) carry a date the ledger stamped directly.
 - 243 row(s) take the date from the session the ledger names, where the entry was reconstructed on 2026-08-21 without a stamp.
 - 225 row(s) read **UNKNOWN**. Their ledger entries were reconstructed with no stamped day and name a session that carries no date. The ledger bound around them is a multi-day range, and a range is not a date; this clone is also shallow at 2026-08-25, so git cannot answer for rows older than that either. **UNKNOWN is the honest reading and is never replaced by a guess.**
 

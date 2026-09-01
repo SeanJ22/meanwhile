@@ -1368,3 +1368,55 @@ for.
   from those counts at a dated rate. One run, $0.00087.
 - **Generalises:** to every future model lane, because the proof is of the
   PATH rather than of the prompt. Portable.
+
+## session-c-closeout · 2026-09-01
+
+### The Corporation Commission publishes those portraits large; a CMS rendition is what we recorded
+
+- **Conceived:** from the OWN03 promotion. The author approved nine portraits
+  and four of them landed under the large card's 184px floor — and all four were
+  Arizona Corporation Commissioners, which is one publisher, not four
+  coincidences. A whole class failing together is a fact about the route, never
+  about the photography.
+- **Query:** the same `azcc.gov` paths with the Sitefinity rendition parameters
+  removed — `…2025-nick-myers.jpg` for `…2025-nick-myers.tmb-thumb200.jpg`, and
+  `…peterson-photo.jpg?sfvrsn=…` for the same file carrying
+  `&Width=165&Height=206&Method=CropCropArguments&Signature=…`. Asked with
+  `PORTRAIT_ACCEPT` and the project user agent.
+- **Returned:** HTTP 200 on all four, with the SAME photographs at **3275×4913
+  (Myers), 3138×4707 (Walden), 2828×3600 (Márquez Peterson) and 2533×3800
+  (Lopez)** — against the 133×200, 133×200, 165×206 and 137×206 already held.
+  Nothing was blocked, no permission changed and no wall fell; one path segment
+  was the entire distance.
+- **Generalises:** to **every Sitefinity image URL**, and past it to every CMS
+  that serves renditions off the record's own path — `tmb-thumb`, `MaxWidth`,
+  `Method=…Arguments`, `Signature=…` are pipeline instructions rather than parts
+  of a filename. Portable, and it is RULING 206 in its plainest form: the
+  rendition is one representation and the portrait is the record, so a small
+  file at a rendition URL is a REPLACEMENT obligation and never the size the
+  government publishes.
+
+### The Accept header decides which file a host returns, so a re-fetch can silently be a different image
+
+- **Conceived:** while promoting the nine, from a rule this repository already
+  holds — a decision is about an IMAGE — turned into a check: re-fetch each
+  approved URL and refuse to write unless the bytes match the decode the author
+  reviewed.
+- **Query:** `https://static.wixstatic.com/media/…/KimberlyYee_2024_official.jpg`,
+  four times, varying only `Accept`:
+  `image/png,image/jpeg,image/gif,image/webp,*/*;q=0.5` (the project's
+  `PORTRAIT_ACCEPT`), the same list without `image/webp`, `image/jpeg`, and
+  `*/*`.
+- **Returned:** the first ask returns **`image/webp`, 22,544 bytes**; the other
+  three return **`image/jpeg`, 36,019 bytes** — identical 326×468 either way.
+  The URL's own path reads `enc_avif,quality_auto`, so the host is choosing the
+  encoding from the request. **The author approved the 36,019-byte JPEG**, and
+  the broad ask would have shipped a file no human had seen under his approval.
+- **Generalises:** to every content-negotiating image host — Wix, Cloudinary,
+  imgix, Sitefinity, any CDN with `f_auto` semantics — and to every re-fetch of
+  an already-decided artifact, not only portraits. Portable, and it extends the
+  existing "ask only for what the decoder can read" rule in a direction that rule
+  did not cover: there, a wrong `Accept` produced an UNREADABLE file and failed
+  loudly; here it produces a perfectly readable DIFFERENT file and fails
+  silently. The move is to narrow the ask to the format the record names, never
+  to loosen the comparison.

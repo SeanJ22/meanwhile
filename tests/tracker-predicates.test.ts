@@ -121,7 +121,7 @@ test("RULING 227: every NOT_MACHINE_VERIFIABLE entry carries a complete decision
 /* The three proof cases                                                      */
 /* ========================================================================== */
 
-test("RULING 227: each of the three proof-case predicates still reads its evidence and answers RESOLVED_BY_EVIDENCE", () => {
+test("RULING 227: every predicate still reads its evidence and answers RESOLVED_BY_EVIDENCE", () => {
   /*
    * NH272, NH281 and NH300 are the rows the mechanism was built from, and all
    * three are now in the resolved store. This is the assertion that keeps them
@@ -129,11 +129,16 @@ test("RULING 227: each of the three proof-case predicates still reads its eviden
    * or emptied, this goes red rather than the closes quietly becoming
    * unfounded.
    *
-   * It also proves the mechanism itself works, which nothing else can now do —
-   * the three rows are closed, so the live generation has no predicated open
-   * row left to exercise.
+   * **OWN03 joined them on 2026-09-01 and it is a different KIND of predicate**,
+   * which is why the count moved rather than the test being left at three. The
+   * other three read an operational artifact — a deploy observation, a proof
+   * record. This one reads the AUTHOR'S OWN DECISION out of
+   * `data/photos/review.json`. It cannot decide for him and does not try; it
+   * observes that he decided, which is the fact the row was blocked on. If any
+   * of the nine ever stops carrying his approval against that exact image, this
+   * goes red and the row goes back in front of him.
    */
-  assert.equal(PREDICATES.length, 3);
+  assert.equal(PREDICATES.length, 4);
   for (const p of PREDICATES as unknown as RegistryEntry[]) {
     const outcome = evaluateEntry(p, { root: ROOT });
     assert.equal(
@@ -149,6 +154,61 @@ test("RULING 227: each of the three proof-case predicates still reads its eviden
   }
 });
 
+/*
+ * **THE SECOND COPY OF A RULE, PAID FOR.**
+ *
+ * OWN03's predicate inlines the person-key normalisation from
+ * `lib/photos/person.ts` because `lib/tracker/registry.mjs` is loaded by
+ * `node scripts/tracker.mjs` with no build step and must not depend on type
+ * stripping to reach a `.ts`. RULING 103 says once and only once, so a second
+ * copy needs a reason AND a guard, and this is the guard.
+ *
+ * It is not theoretical. The first version of that inline copy lost its regex
+ * escapes in transit — `\\s+` became `s+`, which collapses no whitespace at
+ * all — and `Dale G. Caldwell` keyed to a double-spaced string that matched
+ * nothing. The predicate then reported six of nine portraits unapproved on the
+ * day the author approved all nine: a false blocker, put back in front of him
+ * by the very mechanism written to take blockers away.
+ */
+test("OWN03: the inlined person key agrees with lib/photos/person.ts on every queued subject", async () => {
+  const { personKey } = await import("../lib/photos/person.ts");
+
+  /* The same normalisation the predicate performs, read out of the module it
+     actually runs, so this cannot pass against a copy of the copy. */
+  const source = readFileSync(join(ROOT, "lib/tracker/registry.mjs"), "utf8");
+  const inlined = source.slice(
+    source.indexOf("    const key = (name) =>"),
+    source.indexOf("    const entityDecoded = (url) =>"),
+  );
+  assert.ok(inlined.includes("const key"), "the inlined key was not found in registry.mjs");
+  assert.ok(
+    !inlined.includes("\u0008"),
+    "the inlined key contains a literal backspace — a regex escape was lost in transit",
+  );
+
+  /* eslint-disable-next-line no-new-func -- the point is to run REGISTRY's own text */
+  const keyFn = new Function(`return ${inlined.slice(inlined.indexOf("(name) =>")).replace(/;\s*$/, "")}`)() as (
+    n: string,
+  ) => string;
+
+  const recordPath = join(ROOT, "data/photos/door2-statewide-executives-2026-08-28.json");
+  const record = JSON.parse(readFileSync(recordPath, "utf8")) as {
+    rows: { subject?: string }[];
+  };
+  const subjects = record.rows.map((r) => (r.subject ?? "").trim()).filter(Boolean);
+  assert.ok(subjects.length > 0, "no subjects to compare the two normalisations over");
+
+  const drift = subjects
+    .map((s) => ({ s, mine: keyFn(s), theirs: personKey(s) }))
+    .filter((d) => d.mine !== d.theirs)
+    .map((d) => `${d.s}: registry says "${d.mine}", person.ts says "${d.theirs}"`);
+
+  assert.deepEqual(
+    drift,
+    [],
+    "the tracker registry and the photo index disagree about who a person is, so an approval he made would read as an approval he did not make",
+  );
+});
 test("RULING 227: the three rows are closed, and each carries its evidence in the resolved store", () => {
   for (const id of ["NH272", "NH281", "NH300"]) {
     const row = resolved.find((r) => (r.ID ?? "").trim() === id);
@@ -506,11 +566,21 @@ test("a decision card naming subjects for approval names ONLY subjects the recor
       "decision. Correct the card; do not close the row.",
   );
 
-  // And the nine that ARE queued are all named, so the card is complete as well as correct.
-  const missing = queued
-    .map((full) => full.split(/\s+/).at(-1) ?? "")
-    .filter((surname) => !new RegExp(`\\b${surname}\\b`).test(cardText));
-  assert.deepEqual(missing, [], `OWN03's card omits queued subject(s): ${missing.join(", ")}`);
+  /*
+   * The completeness half — every queued subject NAMED — applies to a CARD,
+   * where the author is being asked to decide about specific people and an
+   * omitted name is somebody he never got to rule on. A PREDICATE names a
+   * population and derives its members from the acquisition record, so there is
+   * no list to be incomplete; requiring one would force a second copy of the
+   * population into the row's text, which is exactly how "Mayes, Fontes and
+   * Horne among them" came to be wrong in the first place.
+   */
+  if (own03.kind === NOT_MACHINE_VERIFIABLE) {
+    const missing = queued
+      .map((full) => full.split(/\s+/).at(-1) ?? "")
+      .filter((surname) => !new RegExp(`\\b${surname}\\b`).test(cardText));
+    assert.deepEqual(missing, [], `OWN03's card omits queued subject(s): ${missing.join(", ")}`);
+  }
 });
 
 test("the reconciliation record is written and reconciles with the registry", () => {

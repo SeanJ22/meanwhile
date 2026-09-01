@@ -2185,5 +2185,12 @@
     "ids": [
       "JOB30"
     ]
+  },
+  {
+    "session": "session-c-closeout",
+    "opened": "2026-09-01",
+    "ids": [
+      "NH303"
+    ]
   }
 ]

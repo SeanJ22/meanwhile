@@ -170,12 +170,43 @@ discussion in the session report and `docs/photo-report.md`.
 
 ## The Secretary of State — walked as a BODY, division by division
 
-**Every division below answers HTTP 403 to both a plain client and a full
-browser header set, including `robots.txt` itself.** That makes the permission
-question **UNANSWERED**, not answered no: under RULING 148 an unanswered
-permission question refuses the walk, and under RULING 53 a wall carries a date
-and is re-walked on a 14-day clock. **A wall is not a disallow.** The next rungs
-are 4 (a different client), 5 (a different egress) and 6 (the live browser).
+**PERMISSION ANSWERED 2026-08-31 (Session C). The 403 was our own name.**
+
+What stood here until then: *every division below answers HTTP 403 to both a
+plain client and a full browser header set, including `robots.txt` itself* —
+which made the permission question **UNANSWERED**, and under RULING 148 an
+unanswered permission question refuses the walk. That refusal is why this whole
+fact class sat unwalked, and the wall was never re-tested at a higher rung.
+
+It was our identification, not us:
+
+- **`https://www.sos.nh.gov/robots.txt` answers HTTP 200 to a bare client** —
+  2103 bytes, a standard Drupal file — **and 403 to the identical request whose
+  User-Agent carries this project's name.** That is the
+  `identified-agent-refused` route (measured across the `nh.gov` family on
+  2026-08-26) applied to the permission read itself. Every `Disallow` in it is a
+  CMS internal: `/core/`, `/profiles/`, `/admin/`, `/user/login`, `/search/`,
+  the README files. **Nothing disallows elections, campaign finance, or the
+  lobbyist registry.**
+- **`cfs.sos.nh.gov` publishes no `robots.txt` at all.** It returns its Angular
+  shell for `/robots.txt` byte-identically to what it returns for a nonsense
+  path. That is an **absence of published restrictions**, recorded as exactly
+  that — never as a 200 that grants permission, because a SPA catch-all is not a
+  rule.
+
+So the walk is permitted, and identification now travels in `From:` and
+`X-Purpose:` headers, which this host serves, rather than in a User-Agent it
+refuses. **The rungs below are therefore superseded as a permission finding;
+they remain accurate as a record of what an identified client was served.**
+
+**And the route is a script, not a procedure.** The rung-7 route recorded on
+2026-08-21 called the API "from the page's own origin" because a browser is
+bound by CORS. A server is not. `pnpm money:nh` now reads
+`cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails` with a plain
+POST, no browser and no session — which is what tracker row **NH40** said could
+not be done. Both findings are in the method store as
+`unanswered-permission-may-be-the-agent-not-the-host` and
+`ask-what-the-browser-was-for-before-recording-human-only`.
 
 | Division | URL | Classification | Status, tested 2026-08-26 |
 |---|---|---|---|

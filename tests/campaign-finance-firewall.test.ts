@@ -311,3 +311,71 @@ test("the split counts CANDIDACIES, and the record count is a separate number", 
   assert.equal(both.filed, 1);
   assert.equal(both.noReportsOnFile, 0, "one candidate may not be counted in two buckets");
 });
+
+/**
+ * **NEW HAMPSHIRE'S OFFICE VOCABULARY.** (Session C, 2026-08-31.)
+ *
+ * The classifier was written against New Jersey's filed categories and NH
+ * broke it in three ways at once. These are pinned because the first is a
+ * WRONG class rather than an absent one, and a wrong class is the failure
+ * `officesAgree` cannot catch — two wrong classes agree with each other, and
+ * the result is somebody else's money on a named person's card.
+ */
+test("NH: Executive Council is a STATE office, not a town council", () => {
+  // `council` sits in the MUNICIPAL pattern, so before STATE named this
+  // explicitly the state executive council classified as municipal.
+  assert.equal(officeClassOf("Executive Council"), "STATE");
+  assert.equal(officeClassOf("Executive Councilor, District 2"), "STATE");
+  assert.equal(
+    officesAgree("Executive Council", "Executive Councilor, District 2"),
+    true,
+    "the filing says Council and the ballot says Councilor; they are one office",
+  );
+  // And it must NOT agree with an actual municipal council.
+  assert.equal(officesAgree("Executive Council", "Town Council"), false);
+});
+
+test("NH: senate/senator and State Representative classify as STATE", () => {
+  // The word boundary after `senate` fails against `senator`, so the ballot's
+  // spelling matched nothing before both were named.
+  assert.equal(officeClassOf("State Senator, District 7"), "STATE");
+  assert.equal(officeClassOf("State Senate"), "STATE");
+  assert.equal(officeClassOf("State Representative"), "STATE");
+  assert.equal(
+    officeClassOf("State Representative, Merrimack County District 7"),
+    "STATE",
+    "a state seat whose district name contains the word County is still a state seat",
+  );
+  assert.equal(officesAgree("State Senate", "State Senator, District 7"), true);
+  assert.equal(officesAgree("State Representative", "State Representative, Merrimack County District 7"), true);
+  // A state house seat is not a county seat, however its district is named.
+  assert.equal(
+    officesAgree("State Representative", "Merrimack County Sheriff"),
+    false,
+    "STATE and COUNTY may never agree",
+  );
+});
+
+test("NH: the county row offices classify as COUNTY", () => {
+  for (const office of [
+    "County Attorney",
+    "County Treasurer",
+    "Register of Deeds",
+    "Register of Probate",
+    "Sheriff",
+  ]) {
+    assert.equal(officeClassOf(office), "COUNTY", `${office} is a county office`);
+  }
+  assert.equal(officesAgree("County Attorney", "Merrimack County Attorney"), true);
+  assert.equal(officesAgree("Register of Deeds", "Merrimack County Register of Deeds"), true);
+  // Two different county offices still agree on CLASS — the class is all this
+  // function claims, and the NAME is what separates two county candidates.
+  assert.equal(officesAgree("Sheriff", "Merrimack County Attorney"), true);
+});
+
+test("a federal seat is FEDERAL whether the ballot says Senate or Senator", () => {
+  assert.equal(officeClassOf("United States Senator"), "FEDERAL");
+  assert.equal(officeClassOf("Representative in Congress, District 2"), "FEDERAL");
+  // And it may never agree with the state chamber of the same name.
+  assert.equal(officesAgree("United States Senator", "State Senator, District 7"), false);
+});

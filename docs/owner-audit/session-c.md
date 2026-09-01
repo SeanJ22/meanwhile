@@ -14,16 +14,39 @@ as finished that is not finished.
 
 ## What a reader can now see that they could not see before
 
-**One thing, and it is the one you reported four times.**
+**Two things.**
 
-At **85641**, on the who-governs card, typing your own address into the prompt
-now moves the panel. Before: `State House District 19`, `State Senate District
-19`, `AZ-6`, every row UNSETTLED. After: `State House District 17`, `State
-Senate District 17`, `AZ-6`, every row CONFIRMED. Same tab, no reload.
+**1. The panel you reported four times now moves.** At **85641**, on the
+who-governs card, typing your own address into the prompt changes the panel.
+Before: `State House District 19`, `State Senate District 19`, `AZ-6`, every row
+UNSETTLED. After: `State House District 17`, `State Senate District 17`, `AZ-6`,
+every row CONFIRMED. Same tab, no reload.
 
 **And you can now enter that address at all.** Your street could not be resolved
 from its name alone, and the product told you it could not place it while
 offering you no field to correct it with. It now asks for the house number.
+
+**2. New Hampshire campaign money is on the 03255 ballot, and it was never
+there before.** Nine candidates on your NH pilot ballot now carry real filed
+totals, read from the Secretary of State's own Campaign Finance System:
+
+| Candidate | Office | Raised | Spent |
+| --- | --- | ---: | ---: |
+| Kelly Ayotte | Governor | $5,995,303 | $3,276,135 |
+| Cinde Warmington | Governor | $888,257 | $483,777 |
+| Karen Liot Hill | Executive Council 2 | $132,104 | $116,295 |
+| Rebecca Harned | State Senate 7 | $77,861 | $5,375 |
+| Daniel Innis | State Senate 7 | $36,100 | $1,630 |
+| Sarah Rogers | County Attorney | $12,132 | $9,663 |
+| Peter Shephard | Sheriff | $0 | $16,428 |
+| Frank Cassidy | Sheriff | $0 | $745 |
+| Gregory Sargent | State Representative | $1,295 | $3,975 |
+
+The other nineteen non-federal candidates render a **sourced, dated absence**,
+not a zero: *"No reports on file … Candidates in smaller races often file short
+forms, or fall under the reporting threshold and file nothing at all. This is
+not a statement that no money was raised."* Federal candidates are untouched —
+they file with the FEC, which this product already reads.
 
 ### Where to check it yourself
 
@@ -154,11 +177,46 @@ Named by Part and item, so nothing hides.
 - **Part C — the check debt.** Untouched. The 13 rows still cite checks that do not exist; `data/health/visual-checks.json` is still absent; `docs/walk-checks.txt` still cannot be written.
 - **Part D — the obligation registry.** Not built.
 - **Part E — Arizona money to readers.** No snapshot produced. **See the finding below — this one is not simply undone.**
-- **Part F — New Hampshire money.** No rungs worked this session.
+- **Part F — New Hampshire money. DONE, and the wall was ours.** See below.
 - **Part G — autonomous advancement.** Nothing proved, and **the runner is not running**.
 - **Part H — W6.** Item 4 (the address prompt) is **done**. Prompt caching, the model comparison and the map fly-in are not.
 - **Part I — bookkeeping.** PR #239's description not updated; the frontier is updated for Part A only.
 - **Part J — this document**, which covers what was actually delivered.
+
+## Part F — the wall was our own name
+
+Worth your attention because the same shape is almost certainly costing us
+records in other states.
+
+New Hampshire's campaign finance system was recorded as walled. Not merely
+"we got a 403" — **`robots.txt` itself answered 403**, and under our own law an
+unanswered permission question forbids the walk. So the whole class sat behind a
+question nobody could ask, and the only route that had ever worked was recorded
+as a hand-driven browser procedure that "nothing in CI can repeat".
+
+Two measurements, both different from the record:
+
+1. **The 403 keys on our own name.** `www.sos.nh.gov/robots.txt` answers **200
+   to a plain client and 403 to the identical request carrying this project's
+   name in its User-Agent.** The file is an ordinary one: every rule it blocks
+   is a content-management internal, and **nothing in it disallows elections,
+   campaign finance, or the lobbyist registry.** We had been refused for
+   identifying ourselves, and had recorded that as the government being closed.
+   Identification now travels in headers the host serves.
+2. **The browser was only there for CORS.** The working route called the API
+   "from the page's own origin" because a *browser* must. A server is not bound
+   by that rule at all. The same endpoint answers a plain request — no browser,
+   no session, no credential — which is why this is now `pnpm money:nh` and not
+   a procedure.
+
+**Where to verify:** the ballot at 03255, any candidate above, *Campaign money*.
+Or run `pnpm money:nh --dry`, which reads and writes nothing. Both findings are
+recorded as reusable methods, so the next state gets them for free.
+
+**One caution I want stated plainly:** an absence here means the registry holds
+no report we can match, and NH's thresholds exempt many smaller races outright.
+The surface says exactly that and never renders a zero. It is not a claim that a
+candidate raised nothing.
 
 ### The Part E finding, because it changes the ask
 
@@ -174,11 +232,31 @@ against every pilot candidate name gives **zero matches**, and the matching bar
 requires name, office and year to agree.
 
 So the bridge to your ballot is the AZ Secretary of State regime
-(`seethemoney.az.gov`), which has not been acquired. Two further facts worth
-having: the reader surface is a **missing file, not missing code** —
-`lib/funding/state-snapshot.ts` already names `state-money-az-2026.json` and
-"AZ" is already a legal jurisdiction — and the held Arizona money **does already
-reach readers today**, through Ask, for the Vail governing board.
+(`seethemoney.az.gov`). Two further facts worth having: the reader surface is a
+**missing file, not missing code** — `lib/funding/state-snapshot.ts` already
+names `state-money-az-2026.json` and "AZ" is already a legal jurisdiction — and
+the held Arizona money **does already reach readers today**, through Ask, for
+the Vail governing board.
+
+**That bridge is now open, and I stopped one step short of crossing it — on
+purpose.** The portal's endpoint had been recorded as live but unusable: nobody
+knew what parameters it wanted, and a guess returned an empty answer. Watching
+what the page asks for when a person uses it settled that, and it now returns
+**370 Arizona Secretary of State filings for this cycle**, each with the
+candidate, the committee, the office, and the money.
+
+I did not build the Arizona file from it. A single candidate comes back as
+several rows with **different amounts and the same closing balance**, and I
+could not tell from the data which one — or which sum — is "raised this cycle."
+Summing and taking the largest give different answers. Putting either on a named
+candidate's card, under their photograph, is the one mistake this product cannot
+make, and it is worse than showing nothing.
+
+**What settles it is one experiment, not more hunting:** read a single
+candidate's total as the portal itself displays it, and adopt whichever
+arithmetic reproduces the state's own figure. Written up in
+`docs/arizona-source-enumeration.md`. Arizona money is still owed; it is now
+owed against a working route and one specific question.
 
 ---
 

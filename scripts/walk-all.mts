@@ -6703,6 +6703,98 @@ for (const target of SCOPE_ADDRESSES) {
     await page.context().close();
   }
 }
+/**
+ * **NEW HAMPSHIRE MONEY REACHES THE 03255 READER.** (Session C, 2026-08-31.)
+ *
+ * `data/funding/state-money-nh-2026.json` is acquired data, and the whole
+ * failure mode this suite exists for applies to it: the file can go missing,
+ * be regenerated against the wrong year, or lose its deploy tracing, and every
+ * one of those renders as a clean card with no money on it. `tests/
+ * state-money-nh.test.ts` guards the FILE; this guards what a reader SEES.
+ *
+ * Two claims, and the second matters as much as the first: a candidate the
+ * registry holds nothing for must render the sourced absence and must never
+ * render a zero. NH's thresholds exempt most town-level candidates, so the
+ * absence is the COMMON case here, and a $0 in its place would be a false
+ * claim about a named person's campaign on the majority of the ballot.
+ */
+{
+  const NH_ZIP = "03255";
+  const FILED_CANDIDATE = "Warmington";
+  const ABSENT_CANDIDATE = "Strathdee";
+  const MONEY: [string, string][] = [
+    ["SC0831", `${NH_ZIP}: a candidate the state holds a filing for renders the filed totals`],
+    ["SC0831", `${NH_ZIP}: a candidate the state holds nothing for renders a sourced absence, never a zero`],
+  ];
+
+  const readMoney = async (page: Page, surname: string): Promise<string | null> => {
+    await page.goto(`${BASE}/ballot?zip=${NH_ZIP}`, {
+      waitUntil: "domcontentloaded",
+      timeout: 90_000,
+    });
+    if (!(await untilPresent(page, ".candidate-row", 40_000))) return null;
+    const row = page.locator(".candidate-row", { hasText: surname }).first();
+    const card = row.locator("button", { hasText: "View Battlecard" }).first();
+    if (!(await card.isVisible().catch(() => false))) return null;
+    await card.click();
+    const money = page.getByRole("button", { name: /Campaign money/i }).first();
+    if (!(await untilPresent(page, "button", 15_000))) return null;
+    if (!(await money.isVisible().catch(() => false))) return null;
+    await money.click();
+    await untilSettled(page, "body", 400, 8_000);
+    return (await page.evaluate(
+      `(() => {
+        var b = [...document.querySelectorAll('button')].filter(function (x) {
+          return /Campaign money/i.test(x.innerText || '');
+        })[0];
+        if (!b) return null;
+        var region = b.parentElement;
+        for (var i = 0; i < 4 && region; i++) {
+          if ((region.innerText || '').trim().length > 40) break;
+          region = region.parentElement;
+        }
+        return region ? region.innerText : null;
+      })()`,
+    )) as string | null;
+  };
+
+  const page = await browser.page({ viewport: PHONE, reducedMotion: "reduce" });
+  try {
+    const filed = await readMoney(page, FILED_CANDIDATE);
+    if (filed === null) {
+      cannotRun("SC0831", MONEY[0][1], `the ballot did not open a card for ${FILED_CANDIDATE}`);
+    } else {
+      check(
+        "SC0831",
+        MONEY[0][1],
+        /Raised/i.test(filed) && /\$[\d,]+/.test(filed) && /New Hampshire Secretary of State/i.test(filed),
+        `the money pane reads: ${filed.replace(/\s+/g, " ").slice(0, 200)}`,
+      );
+    }
+
+    const absent = await readMoney(page, ABSENT_CANDIDATE);
+    if (absent === null) {
+      cannotRun("SC0831", MONEY[1][1], `the ballot did not open a card for ${ABSENT_CANDIDATE}`);
+    } else {
+      /*
+       * The false-zero rule, read off the surface. The absence must SAY it is
+       * an absence, must name whose it is, and must not put a dollar figure on
+       * a campaign the registry told us nothing about.
+       */
+      check(
+        "SC0831",
+        MONEY[1][1],
+        /No reports on file/i.test(absent) &&
+          /not a statement that no money was raised/i.test(absent) &&
+          !/\$\s?0\b/.test(absent),
+        `the money pane reads: ${absent.replace(/\s+/g, " ").slice(0, 220)}`,
+      );
+    }
+  } finally {
+    await page.context().close();
+  }
+}
+
 await browser.close();
 
 const EXCLUDED = [

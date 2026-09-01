@@ -153,10 +153,28 @@ Observed 2026-08-31 (Session C). Gate run `2026-08-31-25` recorded
 no intervening edit, recorded `14 of 14 gates green`. `pnpm test` run directly
 either side passes at 4266/0.
 
-So one of the tests is flaky — and **it cannot be named**, because
-`data/ops/gate-runs/*.json` stores `{id, ciJob, command, status, seconds}` and
-nothing else. The failing output is printed to the console and then discarded,
-so a gate failure that is not watched live leaves no evidence of its cause.
+**CAUSE FOUND LATER THE SAME DAY, and it was not a flake.**
+`tests/tracker-transaction.test.ts` writes a synthetic row (`NH303`) into the
+LIVE tracker store and restores the store in a `finally`. **A run KILLED
+mid-test never reaches that `finally`**, so the synthetic row and its
+`tracker-opened.json` ledger entry survive into the working tree — and the next
+suite then fails two tests: the transaction test itself, and the expansion-log
+guard, because the leftover row makes `tracker-transaction-test` the newest
+session in `docs/log.md`.
+
+This session killed several long runs with a task-stop, which is what produced
+it. Removing the row and regenerating the views returned the suite to 4274/0.
+**So the failures were self-inflicted, and the test is not flaky** — though a
+test that mutates a canonical store and depends on its own `finally` for
+correctness is a hazard worth knowing about, because an interrupted run leaves
+the repository dirty in a way that looks like an unrelated failure.
+
+**The instrument gap is real and stands regardless.** It took a suite re-run to
+name the failing tests, because `data/ops/gate-runs/*.json` stores
+`{id, ciJob, command, status, seconds}` and nothing else. The failing output is
+printed to the console and then discarded, so a gate failure that is not watched
+live leaves no evidence of its cause — which is exactly why this took three
+runs and a guess to diagnose.
 
 That matters more than the flake does. A gate set is the instrument the shipping
 law rests on, and this one can say NO without saying why — which on CI, where
@@ -227,18 +245,92 @@ file, not missing code** — `lib/funding/state-snapshot.ts:28-32` already names
 a deliberately one-entry crosswalk at `lib/ask/local-finance.ts:145`. The bridge
 to the pilot ballot is the AZ SOS regime, which is unacquired.
 
-**Part F — New Hampshire money.** The directive says the higher rungs were never
-worked. **That is false.** Rung 7 WORKED on 2026-08-21 — visible browser, read the
-app's own JS bundles, called `cfsapi.sos.nh.gov/api`
-`PublicFilerDetails/GetFilingEntityDetails` from the page's own origin — and the
-harvested filer records are committed. The 8/26 403 is real but covers only
-`/public/cf/downloads` at rungs 2 and 3. **The debt is that the working route was
-never written to `data/method/knowledge.json`** (store is at v61; a new route now
-MUST carry a claim class). Rung 13, the Department's public-records path, has
-never been walked and was named as the next session's start on 2026-08-19. An
-untried lead is recorded and applies here: `identified-agent-refused` measured
-that 32 of 40 `*.nh.gov` hosts serve an anonymous request and refuse every client
-carrying this project's name.
+**Part E — Arizona money. The bridge route is now OPEN, and one named question
+stands between it and a snapshot.** The held Pima corpus cannot reach the pilot
+ballot (see below), so the bridge was always the AZ Secretary of State. That
+portal's endpoint was recorded on 2026-08-24 as live with its **parameter shape
+unknown** — a guessed body returned 200 and two bytes — and rung 7 was named as
+the next rung and never walked.
+
+Walked 2026-08-31. `POST seethemoney.az.gov/Reporting/GetNEWTableData/` is a
+server-side **DataTables** action: the filters ride in the query string and the
+body must be the DataTables form encoding INCLUDING its `columns[N][data]`
+array, because that array is the projection. The three missing filters were
+`IsLessActive`, `ShowOfficeHolder` and `ChartName`. With them it returns
+**`recordsTotal` 370 for the 2025–2026 cycle** at `JurisdictionId=0`, each row
+carrying `EntityID`, names, `CommitteeName`, `OfficeName`, `PartyName`,
+`Income`, `Expense` and `CashBalance` — and `EntityID` is the non-name join key
+the contract wants. Permission re-confirmed: no `robots.txt`, no terms, no
+challenge, no credential.
+
+**NO SNAPSHOT WAS BUILT, deliberately.** A single candidate returns SEVERAL rows
+sharing one `EntityID`, with differing `Income`/`Expense` and an IDENTICAL
+`CashBalance` — Jayme Accalia returns three. Which row, or which aggregation, is
+the cycle total is **undetermined**; summing and taking the largest disagree, and
+publishing either as a named person's campaign total is precisely the failure
+`lib/funding/state-money.ts` opens by naming.
+
+**The next step is a verification, not a guess:** read one candidate's total as
+the portal itself displays it — `/Reporting/ExportEntityOverview` and
+`/Reporting/ExportEntityTransactions` take the same parameter string plus
+`ExportOptions` — and adopt whichever aggregation reproduces the publisher's own
+figure. One bounded experiment. Full write-up in
+`docs/arizona-source-enumeration.md`; the route is in the method store as
+`datatables-endpoint-needs-its-column-array`. **The obligation is not closed.**
+
+**Part F — New Hampshire money. DELIVERED this session; what remains is named
+below.** The directive said the higher rungs were never worked, which was false —
+rung 7 worked on 2026-08-21 — but the blocking fact was underneath the rungs: the
+PERMISSION question was recorded UNANSWERED because `robots.txt` itself answered
+403, and RULING 148 refuses a walk on that.
+
+It was our own identification. `www.sos.nh.gov/robots.txt` answers 200 to a bare
+client and 403 to the identical request carrying this project's name; the file
+disallows only CMS internals and nothing civic. `cfs.sos.nh.gov` publishes no
+`robots.txt` at all. And the recorded browser-only route needed a browser solely
+for CORS, which does not bind a server — so `NH40`'s "a procedure and not a
+script" is retired. Both findings are in the method store
+(`unanswered-permission-may-be-the-agent-not-the-host`,
+`ask-what-the-browser-was-for-before-recording-human-only`, v61 → v63) and
+`states/nh/sources.md` carries the answered permission.
+
+`pnpm money:nh` writes `data/funding/state-money-nh-2026.json`: 28 non-federal
+candidacies, 9 filed with reported totals, 19 sourced dated absences, 0 leads.
+
+**Still open here.** Rung 13, the Department's public-records path, remains
+unwalked and was named as the next session's start on 2026-08-19. The CFS holds
+CONTRIBUTION and EXPENDITURE detail behind other endpoints; only filer-level
+totals are taken. The lobbyist registry — *a source class this product holds
+nothing of in any state except Arizona* — is on a host now known to be permitted
+and is unwalked.
+
+**AND THE GENERALISATION WAS TESTED AND DOES NOT HOLD — recorded because the
+obvious next move is to assume it does.** The NH finding invites the conclusion
+that every host recorded as refusing us was refusing our NAME. Eight hosts
+carrying a recorded wall or a `CANNOT_TELL` were re-read on 2026-08-31 with an
+identified client and with a bare one:
+
+| host | identified | bare |
+| --- | --- | --- |
+| `apps.arizona.vote` | 403 | 403 |
+| `www.pimajted.org` | 403 | 403 |
+| `services6.arcgis.com` | 403 | 403 |
+| `asmi.az.gov` | 403 | 403 |
+| `azed.gov` | 403 | 403 |
+| `azmineinspector.gov` | connection failed | connection failed |
+| `azdor.gov` | 200 (robots) | 200 (robots) |
+| `www.pima.gov` | 200 (robots) | 200 (robots) |
+
+**Not one shows New Hampshire's pattern.** The 403s refuse both clients equally,
+which is a transport wall — Cloudflare bot protection in the recorded cases —
+and remains `CANNOT_TELL` under RULING 182 rather than a disallow. Bypassing bot
+detection is prohibited and is not attempted.
+
+So the NH route is **agent discrimination on a `nh.gov` host family**, not a
+general property of civic hosts. The two-client `robots.txt` read is still worth
+running against any newly walled host — it costs two requests and it unlocked a
+state — but it should be run as a CHECK, never as an assumption that a wall is
+our fault.
 
 **Part H — W6.** No `cache_control` exists anywhere in any API path. Ask is
 `claude-opus-5` at two rungs (`lib/ask/interpret.ts:101`,

@@ -1,317 +1,190 @@
 {
-  "base": "http://127.0.0.1:3149",
+  "base": "http://127.0.0.1:3311",
   "zip": "85701",
-  "renderer": "ANGLE (Intel, Intel(R) Iris(R) Xe Graphics (0x0000A7A0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
-  "repeats": 5,
+  "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "repeats": 1,
   "controls": [
     {
-      "label": "CONTROL — camera standing still (run 1/5)",
+      "label": "CONTROL — camera standing still (run 1/1)",
       "frames": {
-        "frames": 170,
-        "windowMs": 2813.900000035763,
-        "meanFps": 60.058992856125705,
-        "sustainedFps": 55.55555555555556,
-        "medianFps": 60.24096376890021,
-        "worstFrameMs": 18.200000047683716,
-        "longFrames": 0
-      },
-      "commits": 0,
-      "records": 0,
-      "events": {
-        "sourcedata": 0,
-        "idle": 0,
-        "move": 0,
-        "render": 0
-      },
-      "qrf": {
-        "calls": 0,
-        "ms": 0
-      },
-      "longTasks": {
-        "count": 0,
-        "ms": 0
-      },
-      "requests": {
-        "tiles": 0,
-        "geometry": 0,
-        "other": 0,
-        "hosts": []
-      },
-      "vertices": {
-        "sources": [
-          {
-            "id": "district-congressional",
-            "features": 9,
-            "vertices": 1108
-          },
-          {
-            "id": "district-state-senate",
-            "features": 30,
-            "vertices": 1830
-          },
-          {
-            "id": "district-county",
-            "features": 22,
-            "vertices": 615
-          },
-          {
-            "id": "district-school-secondary",
-            "features": 13,
-            "vertices": 353
-          },
-          {
-            "id": "district-state-house",
-            "features": 30,
-            "vertices": 1830
-          },
-          {
-            "id": "district-school-elementary",
-            "features": 77,
-            "vertices": 1281
-          },
-          {
-            "id": "district-school-unified",
-            "features": 61,
-            "vertices": 1922
-          },
-          {
-            "id": "district-municipal",
-            "features": 56,
-            "vertices": 6900
-          }
-        ],
-        "svgPaths": [
-          {
-            "chars": 84,
-            "vertices": 5
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          }
-        ],
-        "svgVertices": 17,
-        "hasOverlay": true,
-        "markers": 12
-      }
-    },
-    {
-      "label": "CONTROL — camera standing still (run 2/5)",
-      "frames": {
-        "frames": 170,
-        "windowMs": 2811,
-        "meanFps": 60.12095339736749,
-        "sustainedFps": 55.24861871175526,
+        "frames": 169,
+        "windowMs": 2805.899999976158,
+        "meanFps": 59.87383727197245,
+        "sustainedFps": 55.24861889369307,
         "medianFps": 59.88023956370228,
-        "worstFrameMs": 22.80000001192093,
-        "longFrames": 0
+        "worstFrameMs": 42.299999952316284,
+        "longFrames": 1
       },
-      "commits": 0,
-      "records": 0,
-      "events": {
-        "sourcedata": 0,
-        "idle": 0,
-        "move": 0,
-        "render": 0
-      },
-      "qrf": {
-        "calls": 0,
-        "ms": 0
-      },
-      "longTasks": {
-        "count": 0,
-        "ms": 0
-      },
-      "requests": {
-        "tiles": 0,
-        "geometry": 0,
-        "other": 0,
-        "hosts": []
-      },
-      "vertices": {
-        "sources": [
-          {
-            "id": "district-congressional",
-            "features": 9,
-            "vertices": 1108
-          },
-          {
-            "id": "district-county",
-            "features": 22,
-            "vertices": 615
-          },
-          {
-            "id": "district-state-senate",
-            "features": 30,
-            "vertices": 1830
-          },
-          {
-            "id": "district-state-house",
-            "features": 30,
-            "vertices": 1830
-          },
-          {
-            "id": "district-school-unified",
-            "features": 61,
-            "vertices": 1922
-          },
-          {
-            "id": "district-school-secondary",
-            "features": 13,
-            "vertices": 353
-          },
-          {
-            "id": "district-school-elementary",
-            "features": 77,
-            "vertices": 1281
-          },
-          {
-            "id": "district-municipal",
-            "features": 56,
-            "vertices": 6900
-          }
-        ],
-        "svgPaths": [
-          {
-            "chars": 84,
-            "vertices": 5
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          }
-        ],
-        "svgVertices": 17,
-        "hasOverlay": true,
-        "markers": 12
-      }
-    },
-    {
-      "label": "CONTROL — camera standing still (run 3/5)",
-      "frames": {
-        "frames": 170,
-        "windowMs": 2812.400000035763,
-        "meanFps": 60.091025457918846,
-        "sustainedFps": 56.179775243274435,
-        "medianFps": 59.88023956370228,
-        "worstFrameMs": 18.69999998807907,
-        "longFrames": 0
-      },
-      "commits": 0,
-      "records": 0,
-      "events": {
-        "sourcedata": 0,
-        "idle": 0,
-        "move": 0,
-        "render": 0
-      },
-      "qrf": {
-        "calls": 0,
-        "ms": 0
-      },
-      "longTasks": {
-        "count": 0,
-        "ms": 0
-      },
-      "requests": {
-        "tiles": 0,
-        "geometry": 0,
-        "other": 0,
-        "hosts": []
-      },
-      "vertices": {
-        "sources": [
-          {
-            "id": "district-congressional",
-            "features": 9,
-            "vertices": 1108
-          },
-          {
-            "id": "district-state-senate",
-            "features": 30,
-            "vertices": 1830
-          },
-          {
-            "id": "district-county",
-            "features": 22,
-            "vertices": 615
-          },
-          {
-            "id": "district-state-house",
-            "features": 30,
-            "vertices": 1830
-          },
-          {
-            "id": "district-school-unified",
-            "features": 61,
-            "vertices": 1922
-          },
-          {
-            "id": "district-school-secondary",
-            "features": 13,
-            "vertices": 353
-          },
-          {
-            "id": "district-school-elementary",
-            "features": 77,
-            "vertices": 1281
-          },
-          {
-            "id": "district-municipal",
-            "features": 56,
-            "vertices": 6900
-          }
-        ],
-        "svgPaths": [
-          {
-            "chars": 84,
-            "vertices": 5
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          }
-        ],
-        "svgVertices": 17,
-        "hasOverlay": true,
-        "markers": 12
-      }
-    },
-    {
-      "label": "CONTROL — camera standing still (run 4/5)",
-      "frames": {
-        "frames": 170,
-        "windowMs": 2815.699999988079,
-        "meanFps": 60.020598785636075,
-        "sustainedFps": 56.49717498903982,
-        "medianFps": 59.88023956370228,
-        "worstFrameMs": 18.399999976158142,
-        "longFrames": 0
-      },
+      "gaps": [
+        6.099999964237213,
+        16.30000001192093,
+        16.69999998807907,
+        16,
+        17.900000035762787,
+        16.899999976158142,
+        15.5,
+        16.899999976158142,
+        18.900000035762787,
+        15.099999964237213,
+        15.900000035762787,
+        17.099999964237213,
+        16.80000001192093,
+        17,
+        16.5,
+        16.19999998807907,
+        16.200000047683716,
+        17,
+        18,
+        14.899999976158142,
+        17,
+        17.19999998807907,
+        16.400000035762787,
+        16.69999998807907,
+        15.800000011920929,
+        17.299999952316284,
+        17.700000047683716,
+        16.399999976158142,
+        15.699999988079071,
+        17.80000001192093,
+        16.19999998807907,
+        17,
+        16.600000023841858,
+        17,
+        15.699999988079071,
+        17,
+        16.100000023841858,
+        17,
+        16.19999998807907,
+        18.099999964237213,
+        15.700000047683716,
+        42.299999952316284,
+        7.5,
+        17.200000047683716,
+        16,
+        18.099999964237213,
+        15.400000035762787,
+        17.099999964237213,
+        16.400000035762787,
+        16.799999952316284,
+        16.30000001192093,
+        16.600000023841858,
+        17.69999998807907,
+        15.899999976158142,
+        17,
+        16.600000023841858,
+        16.899999976158142,
+        15.700000047683716,
+        17,
+        16.899999976158142,
+        16.100000023841858,
+        17,
+        16.299999952316284,
+        17.700000047683716,
+        15.899999976158142,
+        16.899999976158142,
+        16.200000047683716,
+        17,
+        17,
+        17,
+        17,
+        15.899999976158142,
+        16,
+        17.19999998807907,
+        16.19999998807907,
+        17.30000001192093,
+        16.100000023841858,
+        17,
+        16.399999976158142,
+        17.400000035762787,
+        16.099999964237213,
+        16.69999998807907,
+        16.400000035762787,
+        17,
+        17,
+        16.19999998807907,
+        16.899999976158142,
+        16.80000001192093,
+        16.19999998807907,
+        16.200000047683716,
+        19.099999964237213,
+        14.699999988079071,
+        16.30000001192093,
+        18,
+        15.699999988079071,
+        18,
+        15.900000035762787,
+        16.19999998807907,
+        16.899999976158142,
+        16.700000047683716,
+        16,
+        16.69999998807907,
+        17.899999976158142,
+        17,
+        15,
+        17.19999998807907,
+        16.30000001192093,
+        18,
+        17,
+        16,
+        16.900000035762787,
+        15.5,
+        16.899999976158142,
+        16.600000023841858,
+        16.299999952316284,
+        18.100000023841858,
+        16,
+        17.600000023841858,
+        15.699999988079071,
+        16.099999964237213,
+        17.100000023841858,
+        16.30000001192093,
+        16.69999998807907,
+        17.100000023841858,
+        16.099999964237213,
+        17.5,
+        17.400000035762787,
+        15.399999976158142,
+        16.600000023841858,
+        18.099999964237213,
+        15,
+        18,
+        15.5,
+        16.30000001192093,
+        18.5,
+        17.100000023841858,
+        15.399999976158142,
+        16.80000001192093,
+        16.19999998807907,
+        17.69999998807907,
+        15.100000023841858,
+        18,
+        16.30000001192093,
+        16.19999998807907,
+        16,
+        17.19999998807907,
+        16.399999976158142,
+        17,
+        16.900000035762787,
+        16.80000001192093,
+        17.099999964237213,
+        16.100000023841858,
+        17.099999964237213,
+        15.700000047683716,
+        17.399999976158142,
+        16,
+        16.899999976158142,
+        16.200000047683716,
+        18.099999964237213,
+        16,
+        16.900000035762787,
+        16.099999964237213,
+        16.5,
+        16.900000035762787,
+        16.399999976158142,
+        17.100000023841858,
+        16.299999952316284,
+        17.100000023841858
+      ],
       "commits": 0,
       "records": 0,
       "events": {
@@ -362,14 +235,14 @@
             "vertices": 353
           },
           {
-            "id": "district-school-unified",
-            "features": 61,
-            "vertices": 1922
-          },
-          {
             "id": "district-school-elementary",
             "features": 77,
             "vertices": 1281
+          },
+          {
+            "id": "district-school-unified",
+            "features": 61,
+            "vertices": 1922
           },
           {
             "id": "district-municipal",
@@ -398,531 +271,95 @@
         "svgVertices": 17,
         "hasOverlay": true,
         "markers": 12
-      }
-    },
-    {
-      "label": "CONTROL — camera standing still (run 5/5)",
-      "frames": {
-        "frames": 170,
-        "windowMs": 2815.699999988079,
-        "meanFps": 60.020598785636075,
-        "sustainedFps": 56.81818193363503,
-        "medianFps": 60.2409639852039,
-        "worstFrameMs": 18.30000001192093,
-        "longFrames": 0
       },
-      "commits": 0,
-      "records": 0,
-      "events": {
-        "sourcedata": 0,
-        "idle": 0,
-        "move": 0,
-        "render": 0
-      },
-      "qrf": {
-        "calls": 0,
-        "ms": 0
-      },
-      "longTasks": {
-        "count": 0,
-        "ms": 0
-      },
-      "requests": {
-        "tiles": 0,
-        "geometry": 0,
-        "other": 0,
-        "hosts": []
-      },
-      "vertices": {
-        "sources": [
-          {
-            "id": "district-congressional",
-            "features": 9,
-            "vertices": 1108
-          },
-          {
-            "id": "district-school-secondary",
-            "features": 13,
-            "vertices": 353
-          },
-          {
-            "id": "district-county",
-            "features": 22,
-            "vertices": 615
-          },
-          {
-            "id": "district-state-house",
-            "features": 30,
-            "vertices": 1830
-          },
-          {
-            "id": "district-school-elementary",
-            "features": 77,
-            "vertices": 1281
-          },
-          {
-            "id": "district-school-unified",
-            "features": 61,
-            "vertices": 1922
-          },
-          {
-            "id": "district-state-senate",
-            "features": 30,
-            "vertices": 1830
-          },
-          {
-            "id": "district-municipal",
-            "features": 56,
-            "vertices": 6900
-          }
-        ],
-        "svgPaths": [
-          {
-            "chars": 84,
-            "vertices": 5
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          }
-        ],
-        "svgVertices": 17,
-        "hasOverlay": true,
-        "markers": 12
+      "hostBusyPct": 10.635515261676236,
+      "landingState": {
+        "districtLayers": 24,
+        "districtSources": 8,
+        "markers": 12,
+        "scrimHidden": false
       }
     }
   ],
   "flights": [
     {
-      "label": "FLIGHT — the 2600ms fly-in (run 1/5)",
+      "label": "FLIGHT — the 2600ms fly-in (run 1/1)",
       "frames": {
-        "frames": 157,
-        "windowMs": 2828.600000023842,
-        "meanFps": 55.15095807066574,
-        "sustainedFps": 41.322314069942166,
-        "medianFps": 60.24096376890021,
-        "worstFrameMs": 112.10000002384186,
-        "longFrames": 4
+        "frames": 51,
+        "windowMs": 2768.2000000476837,
+        "meanFps": 18.06227873677434,
+        "sustainedFps": 15.649452260412081,
+        "medianFps": 17.636684307059006,
+        "worstFrameMs": 66.69999998807907,
+        "longFrames": 48
       },
-      "commits": 43,
-      "records": 288,
+      "gaps": [
+        6.300000011920929,
+        22.100000023841858,
+        53,
+        52.19999998807907,
+        52.60000002384186,
+        52,
+        47,
+        54.09999996423721,
+        55.40000003576279,
+        56.799999952316284,
+        54.700000047683716,
+        58.69999998807907,
+        56.59999996423721,
+        63.90000003576279,
+        62.69999998807907,
+        61,
+        58.80000001192093,
+        61,
+        62.59999996423721,
+        59.40000003576279,
+        62.5,
+        60.89999997615814,
+        66.69999998807907,
+        57.80000001192093,
+        59.30000001192093,
+        58.30000001192093,
+        60.09999996423721,
+        61.10000002384186,
+        55.80000001192093,
+        64,
+        58.39999997615814,
+        55.40000003576279,
+        56.19999998807907,
+        55,
+        53.80000001192093,
+        52.299999952316284,
+        53.80000001192093,
+        56.69999998807907,
+        61.80000001192093,
+        52.69999998807907,
+        48.10000002384186,
+        49.80000001192093,
+        56.09999996423721,
+        59.30000001192093,
+        57.30000001192093,
+        55,
+        55,
+        56.10000002384186,
+        57.5,
+        60.5
+      ],
+      "commits": 15,
+      "records": 96,
       "events": {
-        "sourcedata": 239,
+        "sourcedata": 164,
         "idle": 0,
-        "move": 146,
-        "render": 156
+        "move": 48,
+        "render": 50
       },
       "qrf": {
-        "calls": 8,
-        "ms": 46.400000154972076
+        "calls": 2,
+        "ms": 6.699999988079071
       },
       "longTasks": {
-        "count": 0,
-        "ms": 0
-      },
-      "requests": {
-        "tiles": 0,
-        "geometry": 0,
-        "other": 0,
-        "hosts": []
-      },
-      "vertices": {
-        "sources": [
-          {
-            "id": "district-state-senate",
-            "features": 30,
-            "vertices": 1830
-          },
-          {
-            "id": "district-county",
-            "features": 22,
-            "vertices": 615
-          },
-          {
-            "id": "district-state-house",
-            "features": 30,
-            "vertices": 1830
-          },
-          {
-            "id": "district-congressional",
-            "features": 9,
-            "vertices": 1108
-          },
-          {
-            "id": "district-school-unified",
-            "features": 61,
-            "vertices": 1922
-          },
-          {
-            "id": "district-school-elementary",
-            "features": 77,
-            "vertices": 1281
-          },
-          {
-            "id": "district-school-secondary",
-            "features": 13,
-            "vertices": 353
-          },
-          {
-            "id": "district-municipal",
-            "features": 56,
-            "vertices": 6900
-          }
-        ],
-        "svgPaths": [
-          {
-            "chars": 84,
-            "vertices": 5
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          }
-        ],
-        "svgVertices": 17,
-        "hasOverlay": true,
-        "markers": 12
-      }
-    },
-    {
-      "label": "FLIGHT — the 2600ms fly-in (run 2/5)",
-      "frames": {
-        "frames": 161,
-        "windowMs": 2851.800000011921,
-        "meanFps": 56.10491619304691,
-        "sustainedFps": 45.248868851503424,
-        "medianFps": 59.88023956370228,
-        "worstFrameMs": 101.39999997615814,
-        "longFrames": 3
-      },
-      "commits": 45,
-      "records": 296,
-      "events": {
-        "sourcedata": 228,
-        "idle": 0,
-        "move": 148,
-        "render": 160
-      },
-      "qrf": {
-        "calls": 10,
-        "ms": 57.199999928474426
-      },
-      "longTasks": {
-        "count": 0,
-        "ms": 0
-      },
-      "requests": {
-        "tiles": 0,
-        "geometry": 0,
-        "other": 0,
-        "hosts": []
-      },
-      "vertices": {
-        "sources": [
-          {
-            "id": "district-congressional",
-            "features": 9,
-            "vertices": 1108
-          },
-          {
-            "id": "district-county",
-            "features": 22,
-            "vertices": 615
-          },
-          {
-            "id": "district-state-senate",
-            "features": 30,
-            "vertices": 1830
-          },
-          {
-            "id": "district-state-house",
-            "features": 30,
-            "vertices": 1830
-          },
-          {
-            "id": "district-school-unified",
-            "features": 61,
-            "vertices": 1922
-          },
-          {
-            "id": "district-school-elementary",
-            "features": 77,
-            "vertices": 1281
-          },
-          {
-            "id": "district-school-secondary",
-            "features": 13,
-            "vertices": 353
-          },
-          {
-            "id": "district-municipal",
-            "features": 56,
-            "vertices": 6900
-          }
-        ],
-        "svgPaths": [
-          {
-            "chars": 84,
-            "vertices": 5
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          }
-        ],
-        "svgVertices": 17,
-        "hasOverlay": true,
-        "markers": 12
-      }
-    },
-    {
-      "label": "FLIGHT — the 2600ms fly-in (run 3/5)",
-      "frames": {
-        "frames": 132,
-        "windowMs": 2802.199999988079,
-        "meanFps": 46.74898294217304,
-        "sustainedFps": 27.548209357344344,
-        "medianFps": 59.52380969275693,
-        "worstFrameMs": 161.10000002384186,
-        "longFrames": 8
-      },
-      "commits": 34,
-      "records": 212,
-      "events": {
-        "sourcedata": 261,
-        "idle": 0,
-        "move": 123,
-        "render": 131
-      },
-      "qrf": {
-        "calls": 8,
-        "ms": 51.59999996423721
-      },
-      "longTasks": {
-        "count": 1,
-        "ms": 140
-      },
-      "requests": {
-        "tiles": 0,
-        "geometry": 0,
-        "other": 0,
-        "hosts": []
-      },
-      "vertices": {
-        "sources": [
-          {
-            "id": "district-congressional",
-            "features": 9,
-            "vertices": 1108
-          },
-          {
-            "id": "district-county",
-            "features": 22,
-            "vertices": 615
-          },
-          {
-            "id": "district-state-senate",
-            "features": 30,
-            "vertices": 1830
-          },
-          {
-            "id": "district-state-house",
-            "features": 30,
-            "vertices": 1830
-          },
-          {
-            "id": "district-school-unified",
-            "features": 61,
-            "vertices": 1922
-          },
-          {
-            "id": "district-school-elementary",
-            "features": 77,
-            "vertices": 1281
-          },
-          {
-            "id": "district-school-secondary",
-            "features": 13,
-            "vertices": 353
-          },
-          {
-            "id": "district-municipal",
-            "features": 56,
-            "vertices": 6900
-          }
-        ],
-        "svgPaths": [
-          {
-            "chars": 84,
-            "vertices": 5
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          }
-        ],
-        "svgVertices": 17,
-        "hasOverlay": true,
-        "markers": 12
-      }
-    },
-    {
-      "label": "FLIGHT — the 2600ms fly-in (run 4/5)",
-      "frames": {
-        "frames": 150,
-        "windowMs": 2782.5,
-        "meanFps": 53.54896675651393,
-        "sustainedFps": 35.84229393743895,
-        "medianFps": 59.88023956370228,
-        "worstFrameMs": 122.59999996423721,
-        "longFrames": 4
-      },
-      "commits": 41,
-      "records": 272,
-      "events": {
-        "sourcedata": 174,
-        "idle": 0,
-        "move": 141,
-        "render": 149
-      },
-      "qrf": {
-        "calls": 7,
-        "ms": 45.19999998807907
-      },
-      "longTasks": {
-        "count": 0,
-        "ms": 0
-      },
-      "requests": {
-        "tiles": 0,
-        "geometry": 0,
-        "other": 0,
-        "hosts": []
-      },
-      "vertices": {
-        "sources": [
-          {
-            "id": "district-congressional",
-            "features": 9,
-            "vertices": 1108
-          },
-          {
-            "id": "district-state-senate",
-            "features": 30,
-            "vertices": 1830
-          },
-          {
-            "id": "district-state-house",
-            "features": 30,
-            "vertices": 1830
-          },
-          {
-            "id": "district-county",
-            "features": 22,
-            "vertices": 615
-          },
-          {
-            "id": "district-school-elementary",
-            "features": 77,
-            "vertices": 1281
-          },
-          {
-            "id": "district-school-secondary",
-            "features": 13,
-            "vertices": 353
-          },
-          {
-            "id": "district-school-unified",
-            "features": 61,
-            "vertices": 1922
-          },
-          {
-            "id": "district-municipal",
-            "features": 56,
-            "vertices": 6900
-          }
-        ],
-        "svgPaths": [
-          {
-            "chars": 84,
-            "vertices": 5
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          }
-        ],
-        "svgVertices": 17,
-        "hasOverlay": true,
-        "markers": 12
-      }
-    },
-    {
-      "label": "FLIGHT — the 2600ms fly-in (run 5/5)",
-      "frames": {
-        "frames": 156,
-        "windowMs": 2806.899999976158,
-        "meanFps": 55.221062382456296,
-        "sustainedFps": 33.670033683548084,
-        "medianFps": 59.88023956370228,
-        "worstFrameMs": 66.10000002384186,
-        "longFrames": 6
-      },
-      "commits": 43,
-      "records": 280,
-      "events": {
-        "sourcedata": 204,
-        "idle": 0,
-        "move": 147,
-        "render": 154
-      },
-      "qrf": {
-        "calls": 6,
-        "ms": 31.69999998807907
-      },
-      "longTasks": {
-        "count": 0,
-        "ms": 0
+        "count": 2,
+        "ms": 120
       },
       "requests": {
         "tiles": 0,
@@ -953,11 +390,6 @@
             "vertices": 1830
           },
           {
-            "id": "district-school-elementary",
-            "features": 77,
-            "vertices": 1281
-          },
-          {
             "id": "district-school-unified",
             "features": 61,
             "vertices": 1922
@@ -966,6 +398,11 @@
             "id": "district-school-secondary",
             "features": 13,
             "vertices": 353
+          },
+          {
+            "id": "district-school-elementary",
+            "features": 77,
+            "vertices": 1281
           },
           {
             "id": "district-municipal",
@@ -994,108 +431,15 @@
         "svgVertices": 17,
         "hasOverlay": true,
         "markers": 12
+      },
+      "hostBusyPct": 64.4903310390036,
+      "landingState": {
+        "districtLayers": 24,
+        "districtSources": 8,
+        "markers": 12,
+        "scrimHidden": false
       }
     }
   ],
-  "ablated": [
-    {
-      "label": "FLIGHT with legacy-sourcedata (run 2/5)",
-      "frames": {
-        "frames": 127,
-        "windowMs": 2954.7000000476837,
-        "meanFps": 42.64392324024997,
-        "sustainedFps": 10.131712260595537,
-        "medianFps": 59.52380948157267,
-        "worstFrameMs": 115.40000003576279,
-        "longFrames": 15
-      },
-      "commits": 31,
-      "records": 192,
-      "events": {
-        "sourcedata": 168,
-        "idle": 0,
-        "move": 121,
-        "render": 126
-      },
-      "qrf": {
-        "calls": 173,
-        "ms": 868.0000000596046
-      },
-      "longTasks": {
-        "count": 0,
-        "ms": 0
-      },
-      "requests": {
-        "tiles": 0,
-        "geometry": 0,
-        "other": 0,
-        "hosts": []
-      },
-      "vertices": {
-        "sources": [
-          {
-            "id": "district-congressional",
-            "features": 9,
-            "vertices": 1108
-          },
-          {
-            "id": "district-state-senate",
-            "features": 30,
-            "vertices": 1830
-          },
-          {
-            "id": "district-county",
-            "features": 22,
-            "vertices": 615
-          },
-          {
-            "id": "district-school-secondary",
-            "features": 13,
-            "vertices": 353
-          },
-          {
-            "id": "district-state-house",
-            "features": 30,
-            "vertices": 1830
-          },
-          {
-            "id": "district-school-elementary",
-            "features": 77,
-            "vertices": 1281
-          },
-          {
-            "id": "district-school-unified",
-            "features": 61,
-            "vertices": 1922
-          },
-          {
-            "id": "district-municipal",
-            "features": 56,
-            "vertices": 6900
-          }
-        ],
-        "svgPaths": [
-          {
-            "chars": 84,
-            "vertices": 5
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          },
-          {
-            "chars": 57,
-            "vertices": 4
-          }
-        ],
-        "svgVertices": 17,
-        "hasOverlay": true,
-        "markers": 12
-      }
-    }
-  ]
+  "ablated": []
 }

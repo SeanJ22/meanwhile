@@ -22,6 +22,7 @@ import {
   StateFocusOverlay,
   type ProjectPoint,
 } from "@/components/map/state-focus-overlay";
+import { detectRaster } from "@/components/map/raster-capability";
 
 import {
   CONUS_BOUNDS,
@@ -394,6 +395,16 @@ export function MapCanvas({
   selectedVotingSiteId = null,
 }: MapCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  /**
+   * The wrapper the MapLibre container and the state-focus layer both sit in.
+   *
+   * It carries the two data attributes the software-rasteriser degradation is
+   * expressed through — `data-wtp-raster` and `data-camera-moving` — because
+   * both the CSS selector and the scrim it selects have to be inside one
+   * subtree, and this is the only element that contains both. Nothing else
+   * reads it.
+   */
+  const shellRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   // The style currently applied to the map. Seeded with the one the mount
   // effect builds with, so the restyle effect below never re-applies it — see
@@ -716,9 +727,127 @@ export function MapCanvas({
      * a new gesture inside the window cancels the pending settle, so nothing
      * ever fires mid-gesture.
      */
+    /* ═══════════════════════════════════════════════════════════════════════
+       THE SOFTWARE-RASTERISER DEGRADATION (Session C, 2026-09-01)
+       ═══════════════════════════════════════════════════════════════════════
+
+       ## The measurement, first, because the design change needs one
+
+       W6 H3's host-normalized criterion is PASS on hardware — 99.7% of a bare
+       MapLibre map — and that is not reopened by anything here. Pointed at the
+       SOFTWARE rasteriser, the identical instrument on the identical host in
+       the same minutes measured:
+
+       ```
+       application  17.2 fps median   189 of 194 frames over 33.4ms
+       bare map     59.9 fps median     0 of 672 frames over 33.4ms   = 28.8%
+       ```
+
+       **The bare map reaches 60 fps there.** SwiftShader is not too slow to fly
+       a map; it is too slow to fly THIS map, and that makes the deficit ours.
+
+       ## What costs it, from the rotated ablation table rather than from theory
+
+       Twenty-eight flights, every arm flown once per round with the rotation
+       order advanced each round so no arm sat under reliably worse host load
+       than another (`pnpm measure:flyin --rotate`, evidence in
+       `docs/evidence/flyin-rotation-software.json`):
+
+       ```
+       none (full application)   16.4 fps    —
+       no-scrim                  31.2 fps    +14.8    the whole state-focus layer
+       no-backdrop               30.4 fps    +13.9    its backdrop-filter ALONE
+       no-districts              22.8 fps     +6.3    24 district layers
+       no-svg-art                20.2 fps     +3.8    the silhouettes and masks
+       no-markers                17.1 fps     +0.6    inside the spread; nothing
+       bare                      59.8 fps    +43.3
+       ```
+
+       `backdrop-filter` alone is 13.9 of the 14.8 that removing the entire
+       state-focus layer buys — 94% of that layer's cost is one CSS property.
+       A CPU-side profile of the same flight agrees and names the same thing
+       from the other direction: 1762 ms of `(program)` self time inside a
+       2768 ms window, with every named JavaScript function under 40 ms. The
+       deficit is not our JavaScript. It is per-frame raster and composite work,
+       and a full-viewport backdrop readback plus blur plus saturate is the
+       single largest piece of it.
+
+       ## What this does about it, and what it deliberately does not
+
+       While the camera is MOVING, and only on a rasteriser that NAMES itself as
+       software, two things change:
+
+       1. The scrim's `backdrop-filter` is dropped (in CSS, keyed off the two
+          data attributes set below).
+       2. The district fill, line and label layers are set to
+          `visibility: none`.
+
+       Both come back on `moveend`. Nothing is removed and nothing is destroyed:
+       the SVG mute rect and both rise silhouettes keep drawing throughout, so
+       the state still reads as raised during the flight, and every district
+       SOURCE keeps its tiled geometry so the layers return without re-tiling.
+       `visibility` rather than `removeLayer` for exactly that reason, and
+       because removing a layer provokes `syncDistrictLayer` into re-adding it.
+
+       **A READER ON A GPU IS UNTOUCHED, BY CONSTRUCTION.** `detectRaster()`
+       returns `"unknown"` for a browser that will not identify its adapter and
+       `"unknown"` is treated as hardware, so the degradation requires a POSITIVE
+       identification of the CPU rasteriser. That is the same rule the product
+       applies to its own data: a failure to read something is a fact about the
+       read, never a fact about the thing.
+
+       Measured after wiring, on the same host, same instrument:
+       `docs/evidence/flyin-normalized-software.json` and
+       `docs/evidence/flyin-normalized.json`. */
+    const raster = detectRaster();
+    if (shellRef.current) shellRef.current.dataset.wtpRaster = raster.kind;
+    const degradeInMotion = raster.kind === "software";
+    /** Every district layer currently on the style — fill, line and label. */
+    const districtLayerIds = (): string[] =>
+      (map.getStyle()?.layers ?? [])
+        .map((layer) => layer.id)
+        .filter((id) => id.startsWith("district-"));
+    /*
+     * Guarded by its own flag rather than by reading the DOM back: `movestart`
+     * can fire again before `moveend` when one camera move interrupts another,
+     * and a second entry must not re-hide layers that are already hidden or
+     * leave the restore owing twice.
+     */
+    let motionDegraded = false;
+    const setDistrictVisibility = (visibility: "none" | "visible") => {
+      for (const id of districtLayerIds()) {
+        try {
+          map.setLayoutProperty(id, "visibility", visibility);
+        } catch {
+          /* A layer removed between the read and the write is not an error
+             worth failing a camera move over; the next pass covers it. */
+        }
+      }
+    };
+    const enterMotionDegrade = () => {
+      if (!degradeInMotion || motionDegraded) return;
+      motionDegraded = true;
+      shellRef.current?.setAttribute("data-camera-moving", "1");
+      setDistrictVisibility("none");
+    };
+    /*
+     * **THE RESTORE IS SYNCHRONOUS ON `moveend`, NOT ON THE SETTLE TIMER.**
+     * The settle below is debounced by 650 ms, and putting the restore in it
+     * would leave a reader looking at a landed map with no district boundaries
+     * on it for two thirds of a second — trading a slow fly-in for a map that
+     * arrives wrong.
+     */
+    const leaveMotionDegrade = () => {
+      if (!motionDegraded) return;
+      motionDegraded = false;
+      shellRef.current?.removeAttribute("data-camera-moving");
+      setDistrictVisibility("visible");
+    };
+
     let userMoved = false;
     let settleTimer: number | undefined;
     const onMoveStart = (event: { originalEvent?: unknown }) => {
+      enterMotionDegrade();
       if (event.originalEvent) {
         userMoved = true;
         // g4 item 5: the reader has taken the camera. It stays theirs until
@@ -755,6 +884,9 @@ export function MapCanvas({
        * one re-queries the server, and firing it on our own camera moves would
        * be a query loop.
        */
+      // FIRST, and synchronously: the districts and the blur come back the
+      // moment the camera stops. See the note on `leaveMotionDegrade`.
+      leaveMotionDegrade();
       const wasUserMove = userMoved;
       userMoved = false;
       window.clearTimeout(settleTimer);
@@ -1645,7 +1777,13 @@ export function MapCanvas({
   // with the same specificity as a Tailwind utility, and loads after it — so
   // positioning the container itself collapses it to zero height.
   return (
-    <div className="absolute inset-0">
+    /* `data-wtp-raster` and `data-camera-moving` are written onto this element
+       imperatively by the mount effect rather than rendered from state — see
+       the long note there. They must not go through React: they change on
+       every `movestart` and `moveend`, and re-rendering this subtree sixty
+       times through a fly-in to set an attribute would cost more than the
+       attribute saves. */
+    <div ref={shellRef} className="absolute inset-0">
       <div ref={containerRef} className="size-full" />
       {/* g3 item 10 (M91): the mute-and-blur half of the state extrusion.
           Inside the wrapper so it sits over the canvas; `pointer-events:

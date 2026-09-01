@@ -2192,5 +2192,20 @@
     "ids": [
       "NH303"
     ]
+  },
+  {
+    "session": "job-watch",
+    "opened": "2026-09-01",
+    "ids": [
+      "JOB31",
+      "JOB32",
+      "JOB33",
+      "JOB34",
+      "JOB35",
+      "JOB36",
+      "JOB37",
+      "JOB38",
+      "JOB39"
+    ]
   }
 ]

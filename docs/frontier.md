@@ -88,13 +88,37 @@ left, with what it is waiting on. Nothing here is a claim that it is finished.
   arrival order and whichever ran second would look up to 10× cheaper for a
   reason unrelated to the model — so the dollar figures are an UPPER BOUND on
   production cost, where H1's cache is live.
-- **Sustained ≥ 55 fps on the map fly-in is not achievable on this host.** The
-  flight went 12.1 → 35.8 fps and the per-frame causes are fixed
-  (`queryRenderedFeatures` 170 → 2, main thread 555–868 ms → 45 ms), but with
-  every district layer, every marker and the state-focus layer removed the bare
-  floor is **41.3 fps**. The permanent check gates the load-invariant count
-  instead. Either the target moves by ruling, or it is measured on hardware that
-  can reach it. It is recorded as UNMET rather than redefined.
+- **H3 is MEASURED and PASSES the host-normalized criterion — and the number
+  that argued the old one is WITHDRAWN.** The owner replaced the absolute 55 fps
+  target with *application median ≥ 90% of bare-map median on this host*.
+  Measured over 6 interleaved pairs: bare **60.06 fps** median, application
+  **59.88**, **ratio 99.7% — PASS**. The host reaches smooth motion, so the
+  host-limit clause did not fire.
+
+  **The `41.3 fps` "bare floor" cited everywhere before this is false and is
+  withdrawn.** The bare arm was never bare: the ablation removed 24 district
+  layers and 8 sources and `syncDistrictLayer` put every one back
+  synchronously, throwing nothing and logging nothing. Measured live — 24
+  layers / 8 sources before, 45 things removed, 24 layers / 8 sources
+  immediately after. Every number taken through that arm described a fully
+  loaded map with markers hidden. The fix blocks `addSource`/`addLayer` for
+  `district-*` BEFORE removing anything and reads back at landing, or discards
+  the flight; the bare arm now fires 0 `sourcedata` events and 0
+  `queryRenderedFeatures` calls against 303–536 before.
+
+- **The statistics disagree, and the disagreement is the finding.** Median ratio
+  99.7% passes; **p95-sustained ratio is 66.2% and would fail**. The median is
+  the criterion the owner set, and the tail is where the application's cost
+  actually lives — app p99 frame time 61.0 ms against bare 18.4 ms, jank 2.98%
+  against 0.31%. A median-only criterion is blind to concentrated jank, which is
+  why the call-count gate is RETAINED beside it: the pre-fix 170-query build had
+  a *perfect* 59.5 fps median.
+
+- **Without GPU acceleration the application holds 29.6% of bare** — 17.7 fps
+  against 60.0, with 193 of 201 frames janky under SwiftShader. Not a harness
+  artifact: the bare map hits 60 fps with zero jank on that same rasteriser. It
+  is a real statement about readers whose machines fall back to software, and it
+  is owed work rather than a measurement problem.
 - **Arizona's source universe is larger than any one query.** Three filters over
   `GetNEWTableData` union to 860 rows across 732 entities, 16 reachable from no
   other filter, and `ftp://ftp.azsos.gov/cfsdata2/` has **four** root

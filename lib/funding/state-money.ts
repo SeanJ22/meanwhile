@@ -286,11 +286,43 @@ export function namesAgree(a: string, b: string): boolean {
 export type OfficeClass = "COUNTY" | "SCHOOL" | "MUNICIPAL" | "STATE" | "FEDERAL";
 
 const OFFICE_CLASS_RULES: readonly { cls: OfficeClass; pattern: RegExp }[] = [
-  { cls: "FEDERAL", pattern: /\b(united states senate|house of representatives|congress(ional)?|president)\b/ },
-  { cls: "STATE", pattern: /\b(general assembly|state senate|governor|assembly)\b/ },
+  { cls: "FEDERAL", pattern: /\b(united states senat(e|or)|house of representatives|congress(ional)?|president)\b/ },
+  /*
+   * **NEW HAMPSHIRE'S VOCABULARY, ADDED 2026-08-31 (Session C).**
+   *
+   * Three of these were not additions but REPAIRS, and one of them was
+   * dangerous rather than merely absent:
+   *
+   * - `Executive Council` matched the MUNICIPAL rule's `council`, so New
+   *   Hampshire's statewide executive council classified as a town council.
+   *   That is a WRONG class, not a null — and a wrong class is the one thing
+   *   `officesAgree` cannot defend against, because two wrong classes can
+   *   agree with each other. STATE is tested before MUNICIPAL, so naming it
+   *   here fixes it.
+   * - `state senate` did not match `State Senator` and `State Senator,
+   *   District 7`: the word boundary after `senate` fails against the `r`.
+   *   The ballot says senator and the filing says senate, so BOTH spellings
+   *   are named rather than relying on one side's habit.
+   * - `State Representative` matched nothing at all, which is most of a New
+   *   Hampshire ballot.
+   *
+   * The county additions are NH's actual filed office names, read from the
+   * CFS filer records rather than guessed: `County Attorney`, `County
+   * Treasurer`, `Register of Deeds`, `Register of Probate`.
+   *
+   * This widens what can be RECOGNISED. It does not loosen agreement:
+   * `officesAgree` still demands two classes that are equal, and an office
+   * neither side can classify is still a LEAD.
+   */
+  {
+    cls: "STATE",
+    pattern:
+      /\b(general assembly|general court|state senate|state senator|state representative|executive council(l?or)?|governor|assembly)\b/,
+  },
   {
     cls: "COUNTY",
-    pattern: /\b(county commissioner|board of county commissioners|freeholder|county clerk|sheriff|surrogate|county office)\b/,
+    pattern:
+      /\b(county commissioner|board of county commissioners|freeholder|county clerk|county attorney|county treasurer|register of (deeds|probate)|sheriff|surrogate|county office)\b/,
   },
   { cls: "SCHOOL", pattern: /\b(school board|board of education|school district|board of school estimate)\b/ },
   {

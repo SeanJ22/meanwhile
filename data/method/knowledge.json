@@ -1,6 +1,6 @@
 {
-  "version": 61,
-  "updatedOn": "2026-08-30",
+  "version": 63,
+  "updatedOn": "2026-08-31",
   "routes": [
     {
       "id": "party-county-directory",
@@ -4077,6 +4077,116 @@
         }
       ],
       "learnedAtVersion": 61
+    },
+    {
+      "id": "unanswered-permission-may-be-the-agent-not-the-host",
+      "title": "robots.txt answered 403 to our identified client and 200 to a bare one, so the permission question was answerable all along",
+      "tier": "A0",
+      "fields": [
+        "permission",
+        "source",
+        "filing"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "THE MISTAKE THIS PREVENTS IS RECORDING A PERMISSION QUESTION AS UNANSWERABLE WHEN ONLY OUR CLIENT WAS REFUSED. Under RULING 148 an unanswered permission question refuses the walk, so a robots.txt that 403s does not merely delay a route — it closes the whole fact class behind it. cfs.sos.nh.gov and www.sos.nh.gov were both recorded that way on 2026-08-19 and 2026-08-26. MEASURED 2026-08-31: https://www.sos.nh.gov/robots.txt answers HTTP 200 (2103 bytes, a standard Drupal file) to a bare node fetch, and HTTP 403 to the identical request whose User-Agent carries this project's name. Every Disallow in it is a CMS internal (/core/, /profiles/, /admin/, /user/login, /search/, README files); NOTHING disallows elections, campaign finance or the lobbyist registry. THE PROCEDURE: before recording a permission question as UNANSWERED, re-read robots.txt with the identification REMOVED from the User-Agent and carried in From: and X-Purpose: instead. This is the identified-agent-refused finding applied to the permission read itself rather than to the data fetch, and it is the read that gates everything else. SECOND FINDING, recorded so it is not misread later: cfs.sos.nh.gov publishes no robots.txt — it returns its Angular shell for /robots.txt byte-identically to a nonsense path. That is an absence of published restrictions, NOT a 200 that grants permission; a SPA catch-all is not a rule."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "nh",
+          "walkedOn": "2026-08-31",
+          "rows": 2,
+          "outcome": "YIELDED",
+          "note": "Permission ANSWERED for both NH SOS hosts: www.sos.nh.gov publishes a robots.txt that forbids no civic path, and cfs.sos.nh.gov publishes none at all. The walk that RULING 148 had refused is permitted."
+        }
+      ],
+      "subBranches": [],
+      "origin": "walked 2026-08-31 (Session C) after the brief asserted that NH's higher rungs had never been worked. They had — rung 7 succeeded on 2026-08-21 — but the permission question underneath them was still recorded UNANSWERED, and that is what actually blocked the class.",
+      "learnedOn": "2026-08-31",
+      "effort": {
+        "repeats": "PER_VENDOR",
+        "execution": "MACHINE",
+        "discovery": "NEW_METHOD",
+        "note": "Two robots.txt reads per host — one identified, one bare — and the comparison IS the finding. Seconds, and it settles a question that had stood for twelve days."
+      },
+      "claims": [
+        {
+          "id": "unanswered-permission-may-be-the-agent-not-the-host#exists",
+          "class": "ROUTE_EXISTENCE",
+          "statement": "Re-reading robots.txt with the project's identification moved out of the User-Agent and into From:/X-Purpose: is a route that can answer a permission question previously recorded as unanswerable.",
+          "restsOn": [
+            "identified-agent-refused"
+          ]
+        },
+        {
+          "id": "unanswered-permission-may-be-the-agent-not-the-host#nh-outcome",
+          "class": "ROUTE_OUTCOME",
+          "statement": "On 2026-08-31 it answered the permission question for www.sos.nh.gov (a Drupal robots.txt disallowing only CMS internals) and established that cfs.sos.nh.gov publishes no robots.txt at all.",
+          "restsOn": [
+            "unanswered-permission-may-be-the-agent-not-the-host#exists"
+          ]
+        }
+      ],
+      "learnedAtVersion": 62
+    },
+    {
+      "id": "ask-what-the-browser-was-for-before-recording-human-only",
+      "title": "a live-browser procedure whose only browser-shaped part was CORS is a server-side script",
+      "tier": "A0",
+      "fields": [
+        "filing",
+        "document",
+        "source"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "THE MISTAKE THIS PREVENTS IS RECORDING A ROUTE AS HUMAN-ONLY BECAUSE IT WAS DISCOVERED IN A BROWSER. The NH CFS route was recorded on 2026-08-21 as: open the app in a VISIBLE browser, read its own JS bundles for endpoints, and call cfsapi.sos.nh.gov/api FROM THE PAGE'S OWN CONTEXT 'where CORS is already allowed'. Tracker NH40 concluded it was 'a procedure and not a script, so nothing in CI can repeat it'. MEASURED 2026-08-31: CORS is enforced by BROWSERS, not by servers. A plain server-side POST to https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails carrying Origin and Referer headers answers HTTP 200 with JSON, no browser and no session. THE PROCEDURE: when a working route requires a live browser, name WHAT THE BROWSER SUPPLIED. If it supplied CORS relief, an Origin/Referer header, or a same-origin context, a server can send those headers and the procedure becomes a script. If it supplied JavaScript rendering of the data, an authenticated session, or a challenge response, it cannot, and the human-only record stands. The distinction is worth making explicitly because the two look identical in a session report and only one of them can be put in CI."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "nh",
+          "walkedOn": "2026-08-31",
+          "rows": 28,
+          "outcome": "YIELDED",
+          "note": "28 candidacies on the 03255 ballot resolved against the CFS from a script: 9 filed with reported totals, 19 sourced dated absences, 0 leads. Produced data/funding/state-money-nh-2026.json, which the ballot page already knew how to load."
+        }
+      ],
+      "subBranches": [],
+      "origin": "walked 2026-08-31 (Session C) while trying to resume NH campaign finance from its recorded rung. The record said rung 7 worked by hand; asking why it needed a browser showed the answer was CORS, which does not apply off a browser.",
+      "learnedOn": "2026-08-31",
+      "effort": {
+        "repeats": "PER_VENDOR",
+        "execution": "MACHINE",
+        "discovery": "NEW_METHOD",
+        "note": "One request to test the hypothesis. The endpoint honours only its search field, so every other filter runs locally and the pacing cost is one query per surname."
+      },
+      "claims": [
+        {
+          "id": "ask-what-the-browser-was-for-before-recording-human-only#exists",
+          "class": "ROUTE_EXISTENCE",
+          "statement": "A server-side POST carrying Origin and Referer reaches cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails without a browser, because CORS binds browsers rather than servers.",
+          "restsOn": [
+            "unanswered-permission-may-be-the-agent-not-the-host#nh-outcome"
+          ]
+        },
+        {
+          "id": "ask-what-the-browser-was-for-before-recording-human-only#nh-outcome",
+          "class": "ROUTE_OUTCOME",
+          "statement": "On 2026-08-31 it returned 2026 filer records — committee name, candidate name, office, district, town, totals raised and spent, and a filer id — for every surname on the 03255 ballot that the CFS holds.",
+          "restsOn": [
+            "ask-what-the-browser-was-for-before-recording-human-only#exists"
+          ]
+        }
+      ],
+      "learnedAtVersion": 63
     }
   ]
 }

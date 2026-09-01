@@ -4,7 +4,7 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-31 — **Three instruments certified a defect fixed while the owner was watching it happen, and the best of them supplied the notification the product was failing to send.** Session C, Part A; its record is the LAST section of this file.
+Last updated: 2026-08-31 — **A defect three instruments called fixed while the owner watched it happen, and a state we had recorded as closed that was refusing us for saying our own name.** Session C, Parts A and F; its record is the LAST section of this file.
 
 Previous: 2026-08-30 — **The served commit was not the application, and the reader finally heard how the Board voted.** The release-identity and reader-answerability session.
 
@@ -22513,3 +22513,104 @@ digest-registered artifacts and then gates behind its own commit.
 `data/ops/gate-runs/*.json` stores only `{id, command, status, seconds}`, so the
 failing output is printed and discarded. Both failing records are committed
 rather than dropped.
+
+---
+
+## 2026-08-31 — Session C, Part F: the wall was our own name
+
+New Hampshire campaign finance now renders on the 03255 ballot. Nine candidates
+carry filed totals read from the Secretary of State's Campaign Finance System —
+Ayotte $5,995,303 raised, Warmington $888,257, Liot Hill $132,104, Harned
+$77,861, Innis $36,100, Rogers $12,132, Sargent $1,295, and two sheriffs
+reporting expenditures against no receipts. Nineteen more render a sourced,
+dated absence. No candidate renders a zero.
+
+### What the record said, and why it was load-bearing
+
+`states/nh/sources.md` recorded the class as walled: HTTP 403 at rungs 2 and 3,
+and — decisively — **`robots.txt` itself answered 403**, which left the
+permission question UNANSWERED. **RULING 148 refuses a walk on an unanswered
+permission question**, so the refusal was not a delay. It closed the fact class,
+correctly, on the law's own terms. Tracker `NH40` recorded the one route that
+had ever worked as "a procedure and not a script, so nothing in CI can repeat
+it."
+
+### Two measurements, and both were different
+
+**THE 403 KEYS ON OUR OWN IDENTIFICATION.**
+`https://www.sos.nh.gov/robots.txt` answers **HTTP 200 to a bare client and 403
+to the identical request whose User-Agent carries this project's name.** The
+file is an ordinary Drupal one: every `Disallow` is a CMS internal — `/core/`,
+`/profiles/`, `/admin/`, `/user/login`, `/search/`, README files — and
+**nothing in it disallows elections, campaign finance or the lobbyist
+registry.** `cfs.sos.nh.gov` publishes no `robots.txt` at all: it returns its
+Angular shell for that path byte-identically to a nonsense path, which is an
+ABSENCE of published restrictions and is recorded as that rather than as a 200
+that grants permission — a SPA catch-all is not a rule.
+
+The existing `identified-agent-refused` route had already measured this across
+the `nh.gov` family on 2026-08-26. What had not been done was applying it to the
+PERMISSION READ, which is the read that gates every other one.
+
+**CORS BINDS BROWSERS, NOT SERVERS.** The rung-7 route called the API "from the
+page's own origin" because a browser must. A server is not subject to CORS at
+all, and the same endpoint answers a plain POST with HTTP 200 and JSON. The
+visible browser was never the load-bearing part of that procedure — the `Origin`
+header was, and a server can simply send it.
+
+### The reusable shapes, which are the part that travels
+
+Both are in the method store (v61 → v63):
+
+- `unanswered-permission-may-be-the-agent-not-the-host`: before recording a
+  permission question as UNANSWERABLE, re-read `robots.txt` with the
+  identification removed from the User-Agent and carried in `From:` and
+  `X-Purpose:`. A 403 on `robots.txt` may be about our name, not the host.
+- `ask-what-the-browser-was-for-before-recording-human-only`: when a working
+  route requires a live browser, name what the browser SUPPLIED. CORS relief, an
+  `Origin` header or a same-origin context can all be sent by a server, and the
+  procedure becomes a script. JavaScript rendering, a session or a challenge
+  cannot, and the human-only record stands.
+
+**This is owed to every host whose `robots.txt` was recorded as refusing us.**
+That refusal may everywhere have been our User-Agent rather than the government,
+and each one of those is a fact class currently recorded as closed.
+
+### The join, and the guards on it
+
+The endpoint honours only `filerName`, so every other filter runs locally. Each
+row carries the COMMITTEE name and, separately, **the candidate's own name** —
+which is what makes it joinable at all. `docs/body-or-intermediary-audit.md`
+records NH's hazard exactly: candidates file under legal names and serve under
+working names, so a committee-name join fails every committee-style filer.
+Matching `Daniel Innis` against the ballot's `Daniel E. Innis` is a
+person-to-person comparison, and `judgeMatch` still demands name AND office AND
+year.
+
+`officeClassOf` needed New Hampshire's vocabulary, and one of the three gaps was
+not an absence but a WRONG ANSWER: **`Executive Council` matched the MUNICIPAL
+rule's `council`**, so a statewide executive council classified as a town
+council — and a wrong class is the one thing `officesAgree` cannot defend
+against, because two wrong classes agree with each other. `state senate` also
+did not match `State Senator` (the word boundary fails against the `r`), and
+`State Representative` matched nothing at all, which is most of a New Hampshire
+ballot. Widened, not loosened: agreement still demands two equal classes.
+
+Two guards were added ON TOP of the shared bar, because `judgeMatch` compares an
+office class and never a district: a filer whose `town` names a different county
+is refused, and where both sides state a district they must be equal. A row that
+is a different person is dropped; a row that IS this person and disagrees is a
+LEAD, which never renders; only when nothing survives is the candidate recorded
+as a sourced absence.
+
+### What is deliberately not here
+
+Federal contests. A candidate for the United States Senate or the House files
+with the FEC, which this product already reads. Asking a state regulator about a
+federal seat and recording the silence would manufacture a gap.
+
+Contribution and expenditure DETAIL. Only filer-level totals are taken; the
+itemised endpoints are unwalked. Rung 13, the Department's public-records path,
+remains unwalked and has been named as a next start since 2026-08-19. And the
+lobbyist registry — a source class this product holds nothing of in any state
+except Arizona — sits on a host now known to be permitted.

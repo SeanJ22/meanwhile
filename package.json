@@ -351,7 +351,9 @@
     "rollcall:walk": "tsx scripts/pima-rollcall-walk.mts",
     "verify:ask-controls": "tsx scripts/verify-ask-controls.mts",
     "verify:agenda-sentence": "tsx scripts/verify-agenda-sentence.mts",
-    "model:proof": "tsx scripts/model-worker-proof.mts"
+    "model:proof": "tsx scripts/model-worker-proof.mts",
+    "money:nh": "tsx scripts/state-money-nh.mts",
+    "method:learn-nh-cfs": "tsx scripts/learn-nh-cfs.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

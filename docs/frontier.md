@@ -227,18 +227,33 @@ file, not missing code** — `lib/funding/state-snapshot.ts:28-32` already names
 a deliberately one-entry crosswalk at `lib/ask/local-finance.ts:145`. The bridge
 to the pilot ballot is the AZ SOS regime, which is unacquired.
 
-**Part F — New Hampshire money.** The directive says the higher rungs were never
-worked. **That is false.** Rung 7 WORKED on 2026-08-21 — visible browser, read the
-app's own JS bundles, called `cfsapi.sos.nh.gov/api`
-`PublicFilerDetails/GetFilingEntityDetails` from the page's own origin — and the
-harvested filer records are committed. The 8/26 403 is real but covers only
-`/public/cf/downloads` at rungs 2 and 3. **The debt is that the working route was
-never written to `data/method/knowledge.json`** (store is at v61; a new route now
-MUST carry a claim class). Rung 13, the Department's public-records path, has
-never been walked and was named as the next session's start on 2026-08-19. An
-untried lead is recorded and applies here: `identified-agent-refused` measured
-that 32 of 40 `*.nh.gov` hosts serve an anonymous request and refuse every client
-carrying this project's name.
+**Part F — New Hampshire money. DELIVERED this session; what remains is named
+below.** The directive said the higher rungs were never worked, which was false —
+rung 7 worked on 2026-08-21 — but the blocking fact was underneath the rungs: the
+PERMISSION question was recorded UNANSWERED because `robots.txt` itself answered
+403, and RULING 148 refuses a walk on that.
+
+It was our own identification. `www.sos.nh.gov/robots.txt` answers 200 to a bare
+client and 403 to the identical request carrying this project's name; the file
+disallows only CMS internals and nothing civic. `cfs.sos.nh.gov` publishes no
+`robots.txt` at all. And the recorded browser-only route needed a browser solely
+for CORS, which does not bind a server — so `NH40`'s "a procedure and not a
+script" is retired. Both findings are in the method store
+(`unanswered-permission-may-be-the-agent-not-the-host`,
+`ask-what-the-browser-was-for-before-recording-human-only`, v61 → v63) and
+`states/nh/sources.md` carries the answered permission.
+
+`pnpm money:nh` writes `data/funding/state-money-nh-2026.json`: 28 non-federal
+candidacies, 9 filed with reported totals, 19 sourced dated absences, 0 leads.
+
+**Still open here.** Rung 13, the Department's public-records path, remains
+unwalked and was named as the next session's start on 2026-08-19. The CFS holds
+CONTRIBUTION and EXPENDITURE detail behind other endpoints; only filer-level
+totals are taken. The lobbyist registry — *a source class this product holds
+nothing of in any state except Arizona* — is on a host now known to be permitted
+and is unwalked. And the same permission re-read is owed to every host whose
+`robots.txt` was recorded as refusing us, because that refusal may everywhere
+have been our User-Agent rather than the government.
 
 **Part H — W6.** No `cache_control` exists anywhere in any API path. Ask is
 `claude-opus-5` at two rungs (`lib/ask/interpret.ts:101`,

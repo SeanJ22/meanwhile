@@ -98,7 +98,9 @@ export const COLUMNS = [
   "Resolution",
   "Condition",
   "Notes",
+  "Opened on",
   "Resolved on",
+  "Last verified",
   "Opened by",
   "Closed by",
   "Depends on",
@@ -106,6 +108,30 @@ export const COLUMNS = [
   "Detail",
   "Session record",
 ];
+
+/**
+ * **`Opened on` — DERIVED, IMMUTABLE, AND NEVER TYPED BY ANYBODY.**
+ * (Session C Part B, 2026-08-31.)
+ *
+ * The tracker could say what was left and who opened it. It could not say WHEN,
+ * for any row, anywhere — so nothing in the queue had an AGE, and a queue
+ * without ages cannot be triaged. What stood in for an age was prose inside a
+ * row's own text, written once by the session that opened it and never
+ * rechecked: `NH281` said "stuck since 7/13/2025" about a thing that had
+ * already cleared.
+ *
+ * The column is a projection of `docs/tracker-opened.json`, resolved on every
+ * generation by `lib/tracker/opened-dates.mjs`. That is what makes it immutable
+ * in the only way that holds: editing the cell changes nothing, because the
+ * next generation writes the derived value back over it. A date that cannot be
+ * recovered from history reads `UNKNOWN` and is never guessed.
+ *
+ * **`Last verified` — when a machine last checked whether the row is still
+ * true.** Written only by the RULING 227 reconciler (`lib/tracker/reconcile.mjs`) for
+ * rows carrying a predicate. Blank means no predicate has ever run against this
+ * row, which is itself the honest reading.
+ */
+export const DERIVED_COLUMNS = ["Opened on", "Last verified"];
 
 /** The three columns the author owns. A session never writes these. */
 export const SEAN_COLUMNS = ["Resolution", "Condition", "Notes"];
@@ -176,7 +202,16 @@ export function sectionOrder(sections) {
 export function readStore(path, root = ROOT) {
   const grid = parseCsv(readFileSync(join(root, path), "utf8"));
   const header = grid[0].map((h) => h.trim());
-  const missing = COLUMNS.filter((c) => !header.includes(c));
+  /*
+   * A DERIVED column may be absent from the file on disk and that is not a
+   * defect: it is recomputed from history on every generation, so a store
+   * written before the column existed still reads, and reads correctly — the
+   * value was never in the file in the first place. Only the columns somebody
+   * actually WRITES are required to be present, because a missing one of those
+   * is data loss.
+   */
+  const derived = new Set(DERIVED_COLUMNS);
+  const missing = COLUMNS.filter((c) => !derived.has(c) && !header.includes(c));
   if (missing.length) {
     throw new Error(`${path} is missing column(s): ${missing.join(", ")}`);
   }
@@ -304,7 +339,44 @@ export function planMoves({ working, sections, actor = "session", resolutionAuth
      * such close is reported individually so he can reverse any the session got
      * wrong. Ambiguity is not a licence: a row no ruling answers stays open.
      */
-    if (onlySean.has(section) && author !== "sean" && author !== "ruling") {
+    /*
+     * **RULING 227 (2026-08-31) — escalation without reconciliation is prohibited.**
+     *
+     * A FOURTH author, and like RULING 79's it is not a session wearing a
+     * disguise. RULING 79 handles the row the author has already ANSWERED.
+     * RULING 227 handles the row whose PREMISE HAS EXPIRED — the blocker it
+     * describes is measurably no longer there.
+     *
+     * The three rows that produced the rule: `NH272` asked for a secret that by
+     * then existed, `NH281` said production was stuck on a build it had long
+     * since moved off, and `NH300` asked for a proof that had already been run
+     * 7 of 7 against live Postgres. All three were P1, all three were named in
+     * a close-out as "what requires you", and all three were FALSE when that
+     * sentence was written. Nobody lied: a row records the wall at the moment a
+     * session hits it, and then nothing ever asks whether the wall is still
+     * standing. The author reads a queue and cannot tell which rows are
+     * photographs.
+     *
+     * So `"predicate"` closes a row only when a registered predicate in
+     * `lib/tracker/registry.mjs` has been RE-EVALUATED against committed
+     * artifacts on this run and returned `RESOLVED_BY_EVIDENCE`. The evidence
+     * that earned it is written onto the row, so every such close is as
+     * reversible and as auditable as a RULING 79 close.
+     *
+     * **This does not weaken RULING 37 and it does not weaken RULING 208.**
+     * RULING 37 stands entire for a row awaiting the author's JUDGEMENT, which
+     * is why the registry's other arm exists: a row no machine can decide is
+     * marked NOT_MACHINE_VERIFIABLE and carries a decision card, and no
+     * predicate may ever touch it. RULING 208 stands entire too: a predicate
+     * closes the ROW, which was a request for the author's attention, and never
+     * the record OBLIGATION the row was about.
+     */
+    if (
+      onlySean.has(section) &&
+      author !== "sean" &&
+      author !== "ruling" &&
+      author !== "predicate"
+    ) {
       refusals.push(
         `RULING 37 — ${id} is in "${section}" and only Sean closes a row there. ` +
           `A session may open one and may work it; it may never mark it ` +

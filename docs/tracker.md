@@ -14,10 +14,10 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **389 open**, 464 resolved.
-- **72 waiting on Sean** — the first section below.
+- **378 open**, 476 resolved.
+- **69 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **5**
+  - Needs Sean — **2**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **1**
   - Arizona hunt — **2**
@@ -35,19 +35,13 @@ and when. Nothing is ever deleted.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**72 open · 67 resolved.**
+**69 open · 70 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
 ### P1
 
 **NH108** — The questionnaire instrument is built and 272 invitations are generated, every one with invitedOn null, so nothing has been sent to anybody. The page a candidate types into is buildable and is NH104. SENDING is not a build, it is four decisions, and they are all yours: (1) the sending DOMAIN this goes out from, because a civic questionnaire arriving from a generic address is the one a campaign deletes; (2) an email PROVIDER CREDENTIAL, which this project does not hold and cannot obtain on your behalf; (3) DELIVERABILITY WARM-UP, because 272 near-simultaneous messages from a cold domain is the textbook shape of a spam classification, and being classified once is close to unrecoverable; and (4) WHETHER THE INVITATION GOES OUT BEFORE OR AFTER 3 NOVEMBER 2026, which is a judgement about the election and not a technical question at all. Raised as ONE row on purpose so you can rule once rather than in four pieces, and so a session cannot start building a send path on the strength of having answered one of them.
-
-**NH272** — The new migration shipping gate asks production whether it already holds the migrations a pull request is about to ship. To ask, the CI job needs a read-only production database URL. It is not currently a repository secret, and only the author can add one.
-
-**NH281** — Every application-bearing deploy since the fixture-credential hotfix has failed the same way, so the live site is serving an older build than main. The cause cannot be read from here: Netlify reports only "Build script returned non-zero exit code: 2" and the build log is not retrievable through the API with the token this repo holds.
-
-**NH300** — RULING 220 puts Level-2 scheduling authority on a Postgres/Neon provider behind the existing ControlPlaneRepositories interfaces, in a DEDICATED database separate from the reader-serving one, outside lib/db and invisible to pnpm db:gate. Session B built the freshness scheduler, the dispatch loop and the shadow cycle provider-neutrally and ran them against the durable file provider. What cannot be done without a credential is the ruling's own step 6: the scheduler running against Postgres from both machines with claim contention exercised (two workers, one route, exactly one wins, the loser observes the lease conflict), crash/reclaim reproduced on Postgres, and a backup/restore drill. ESCALATION, per RULING 208: provider Neon; mechanism a new project or branch dedicated to the control plane, not a schema inside the serving database; record class Level-2 scheduling state (due-work, freshness debt, leases); scopes a normal owner role on that database only; it unlocks cross-machine claiming and indexed due-time queries, which the filesystem provider cannot carry because its exclusiveCreate/link lock semantics are single-host and the Drive mirror is an eventually-consistent synced folder rather than a locking substrate. WHAT CONTINUES WITHOUT IT: everything shipped this session. The scheduler, the debt model, dispatch, reclaim and the shadow loop all take ControlPlaneRepositories and never a connection, so they run on the file provider today and move to Postgres by construction. No secret is ever pasted into chat, a prompt, a row, a commit, a fixture or a log; the variable NAME is the whole of what this row needs.
 
 **T05** — The abuse policy is written but the review path behind it does not exist. No free-text answer can be accepted until somebody can actually act on a threat.
 
@@ -905,7 +899,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**40 open · 87 resolved.**
+**32 open · 96 resolved.**
 
 ### P1
 
@@ -970,114 +964,6 @@ WHAT THE FAILING RUN PRINTED (run 32961466707). The last 14 of 257 line(s) the r
 
 ### P2
 
-**JOB21** — AUDITED SLOT: 2026-08-29T10:41:00.000Z (cron "41 10 * * *"). AS OF: 2026-08-31T21:02:35.110Z. Run 33259827640 was created 276.1 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
-
-WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_SUCCEEDED_UNCLASSIFIED — it succeeded, and this workflow has no "Unchanged" step, so landed-versus-no-op cannot be told apart from its step list. That is a limit of the observation, not a claim that nothing landed. 
-
-ENVELOPE USED: envelope 472 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (472 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
-
-THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-08-31T21:02:35.110Z, not as of when you are reading it.
-
-OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
-
-[job-watch:dispatch-delay:intake-tripwire.yml@2026-08-29T10:41:00.000Z]
-
-**JOB22** — AUDITED SLOT: 2026-08-30T10:41:00.000Z (cron "41 10 * * *"). AS OF: 2026-08-31T21:02:35.110Z. Run 33318287070 was created 256.6 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
-
-WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_SUCCEEDED_UNCLASSIFIED — it succeeded, and this workflow has no "Unchanged" step, so landed-versus-no-op cannot be told apart from its step list. That is a limit of the observation, not a claim that nothing landed. 
-
-ENVELOPE USED: envelope 472 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (472 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
-
-THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-08-31T21:02:35.110Z, not as of when you are reading it.
-
-OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
-
-[job-watch:dispatch-delay:intake-tripwire.yml@2026-08-30T10:41:00.000Z]
-
-**JOB23** — AUDITED SLOT: 2026-08-31T10:41:00.000Z (cron "41 10 * * *"). AS OF: 2026-08-31T21:02:35.110Z. Run 33420942908 was created 420.6 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
-
-WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_SUCCEEDED_UNCLASSIFIED — it succeeded, and this workflow has no "Unchanged" step, so landed-versus-no-op cannot be told apart from its step list. That is a limit of the observation, not a claim that nothing landed. 
-
-ENVELOPE USED: envelope 472 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (472 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
-
-THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-08-31T21:02:35.110Z, not as of when you are reading it.
-
-OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
-
-[job-watch:dispatch-delay:intake-tripwire.yml@2026-08-31T10:41:00.000Z]
-
-**JOB24** — AUDITED SLOT: 2026-08-29T15:40:00.000Z (cron "40 15 * * *"). AS OF: 2026-08-31T21:02:35.110Z. Run 33269223180 was created 187.9 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
-
-WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_SUCCEEDED_UNCLASSIFIED — it succeeded, and this workflow has no "Unchanged" step, so landed-versus-no-op cannot be told apart from its step list. That is a limit of the observation, not a claim that nothing landed. 
-
-ENVELOPE USED: envelope 472 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (472 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
-
-THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-08-31T21:02:35.110Z, not as of when you are reading it.
-
-OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
-
-[job-watch:dispatch-delay:job-watch.yml@2026-08-29T15:40:00.000Z]
-
-**JOB25** — AUDITED SLOT: 2026-08-30T15:40:00.000Z (cron "40 15 * * *"). AS OF: 2026-08-31T21:02:35.110Z. Run 33329026985 was created 186.5 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
-
-WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_SUCCEEDED_UNCLASSIFIED — it succeeded, and this workflow has no "Unchanged" step, so landed-versus-no-op cannot be told apart from its step list. That is a limit of the observation, not a claim that nothing landed. 
-
-ENVELOPE USED: envelope 472 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (472 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
-
-THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-08-31T21:02:35.110Z, not as of when you are reading it.
-
-OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
-
-[job-watch:dispatch-delay:job-watch.yml@2026-08-30T15:40:00.000Z]
-
-**JOB26** — AUDITED SLOT: 2026-08-31T15:40:00.000Z (cron "40 15 * * *"). AS OF: 2026-08-31T21:02:35.110Z. Run 33439204288 was created 322.1 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
-
-WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_IN_PROGRESS — status is "in_progress" — it has not concluded 
-
-ENVELOPE USED: envelope 472 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (472 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
-
-THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-08-31T21:02:35.110Z, not as of when you are reading it.
-
-OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
-
-[job-watch:dispatch-delay:job-watch.yml@2026-08-31T15:40:00.000Z]
-
-**JOB27** — AUDITED SLOT: 2026-08-29T09:11:00.000Z (cron "11 9 * * *"). AS OF: 2026-08-31T21:02:35.110Z. Run 33257619366 was created 315.7 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
-
-WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_SUCCEEDED_UNCLASSIFIED — it succeeded, and this workflow has no "Unchanged" step, so landed-versus-no-op cannot be told apart from its step list. That is a limit of the observation, not a claim that nothing landed. 
-
-ENVELOPE USED: envelope 472 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (472 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
-
-THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-08-31T21:02:35.110Z, not as of when you are reading it.
-
-OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
-
-[job-watch:dispatch-delay:refresh-daily.yml@2026-08-29T09:11:00.000Z]
-
-**JOB28** — AUDITED SLOT: 2026-08-30T09:11:00.000Z (cron "11 9 * * *"). AS OF: 2026-08-31T21:02:35.110Z. Run 33316760622 was created 313.1 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
-
-WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_SUCCEEDED_UNCLASSIFIED — it succeeded, and this workflow has no "Unchanged" step, so landed-versus-no-op cannot be told apart from its step list. That is a limit of the observation, not a claim that nothing landed. 
-
-ENVELOPE USED: envelope 472 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (472 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
-
-THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-08-31T21:02:35.110Z, not as of when you are reading it.
-
-OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
-
-[job-watch:dispatch-delay:refresh-daily.yml@2026-08-30T09:11:00.000Z]
-
-**JOB29** — AUDITED SLOT: 2026-08-31T09:11:00.000Z (cron "11 9 * * *"). AS OF: 2026-08-31T21:02:35.110Z. Run 33417346585 was created 471 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
-
-WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_SUCCEEDED_UNCLASSIFIED — it succeeded, and this workflow has no "Unchanged" step, so landed-versus-no-op cannot be told apart from its step list. That is a limit of the observation, not a claim that nothing landed. 
-
-ENVELOPE USED: envelope 472 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (472 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
-
-THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-08-31T21:02:35.110Z, not as of when you are reading it.
-
-OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
-
-[job-watch:dispatch-delay:refresh-daily.yml@2026-08-31T09:11:00.000Z]
-
 **NH103** — Found 2026-08-23 writing the first test that imports lib/officials/body-definitions.ts at RUNTIME rather than reading it as text. Two separate ESM defects were in the chain and both were invisible because nothing had ever imported that file under node --test. (1) body-definitions.ts and lib/registry/census-school-systems.ts used EXTENSIONLESS relative imports, which Next's bundler tolerates and Node's ESM loader refuses - FIXED this session, 3 sites. (2) school-dependency.ts still imports data/derived/school-district-dependency.json with no `with { type: json }` attribute, so ERR_IMPORT_ATTRIBUTE_MISSING. WORKED AROUND rather than fixed: lib/officials/body-form.ts takes the dependency as a PARAMETER instead of importing it. WHAT IS OWED: decide whether to add the import attribute (verify the Next build accepts it first) or to move the JSON read behind a function. Until then any new test importing that module transitively fails, and the failure names the JSON rather than the cause. THE CLASS, swept: 3 extensionless relative imports under lib/**/*.ts, all fixed; 10 more under components/**/*.tsx and lib/state/*.tsx are OUT OF SCOPE with the reason - they are React components reached only through the bundler and never imported by node --test.
 
 **NH139** — The external audit of ae5b178 read 50 files of an unestablished denominator and did not perform Phase 2, the Drive consistency check. Neither number is known. A second pass owes both: the denominator of files that exist and should have been read, and the Drive comparison that was never run.
@@ -1105,6 +991,10 @@ OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshn
 **NH96** — NH91 is closed: playwright is pinned to an exact version, EXPECTED_CHROMIUM_REVISION is committed in lib/ops/chromium-pin.ts and checked against playwright's own browsers.json, and scripts/browser.mts launches whatever complete Chromium the image has by explicit path while NAMING the substitution. Two of the three tests that could not run now run and pass on build 1194. THE THIRD CANNOT, and it is a real finding rather than a harness problem: the plant that proves the guard can fail asserts that an unload-time sendBeacon escapes extraHTTPHeaders, and on Chromium 1194 the headers DO reach it, so the beacon arrives declared. That is a measurement of build 1194 and says nothing about the pinned 1234, so the test reports CANNOT RUN with the substituted build named rather than asserting either way. WHAT WOULD CLOSE IT: the container image carrying the pinned build, at which point the plant runs against the browser it was written for. Nothing in the repo can fix it — this is a fact about the image.
 
 **PB07** — Four of the five scheduled jobs run the full test suite before they push. The fifth does not, so a broken document can reach the repository unchallenged.
+
+**JOB30** — THE CLASS ROW for scheduled-workflow lateness, absorbing JOB21 through JOB29. Nine rows were opened on 2026-08-31 recording nine individually-audited late slots across three workflows over three days: intake-tripwire.yml (276.1, 256.6 and 420.6 minutes late), job-watch.yml (187.9, 186.5 and 322.1) and refresh-daily.yml (315.7, 313.1 and 471). Every one of them records the SAME cause in its own text - the run was CREATED late rather than queued late, so the delay is GitHub's dispatch of the cron event and not this repository's runners, its concurrency or its jobs. Nine rows describing one phenomenon is a measurement wearing a task's clothes, which RULING 33 refuses: a measurement changes every time it is taken, and at three workflows a day this accumulates about three new rows daily forever while the thing they describe stays exactly the same. The nine are resolved into this row and remain permanently readable in the resolved store. WHAT IS ACTUALLY OWED, and it is a decision rather than an audit: the 60-minute tolerance was chosen when GitHub dispatch was assumed punctual, and every observation on record says it is not. Either the tolerance is re-derived from observed dispatch delay so it measures something real, or lateness stops being a per-slot row and becomes a rate on a dashboard, or the scheduler stops depending on cron punctuality altogether - which is what RULING 218's runtime-scheduler-derived clock and RULING 220's durable control plane exist to make possible. Until one of those lands, a late slot is a fact about GitHub and never a fact about this product's freshness.
+
+  Waiting on the daily refresh schedule fires late or not at all (NH264).
 
 ### P3
 

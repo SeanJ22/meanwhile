@@ -2,6 +2,11 @@
 
 import { FREE_TEXT_CLOSED_HEADER } from "@/lib/signal/reactions";
 import { getOrCreateBrowserKey } from "../state/browser-key.ts";
+import {
+  commitStorageWrite,
+  publishStorageEvent,
+  subscribeToStorageEvent,
+} from "@/lib/state/subscribe-to-storage";
 import type {
   ReactionTargetType,
   ReactionValue,
@@ -77,20 +82,20 @@ function rememberReaction(
   reaction: ReactionValue,
 ): void {
   const key = selectionKey(targetType, targetId);
-  try {
-    const all = readSelections();
-    all[key] = reaction;
-    window.localStorage.setItem(SELECTION_STORAGE, JSON.stringify(all));
-  } catch {
-    memorySelections.set(key, reaction);
-  }
-  // Guarded: the suite calls `submitReaction` in Node, where the write above
-  // falls to the memory map and there is no `window` to signal on. An
-  // unguarded dispatch here turned three passing reaction tests red — the
-  // signal is a browser convenience, never part of the contract.
-  if (typeof window !== "undefined") {
-    window.dispatchEvent(new Event(REACTIONS_EVENT));
-  }
+  // The dispatch is guarded on `window` inside `publishStorageEvent`: the suite
+  // calls `submitReaction` in Node, where the write falls to the memory map and
+  // there is nothing to signal on. An unguarded dispatch turned three passing
+  // reaction tests red — the signal is a browser convenience, and in Node there
+  // is no subscriber to miss it.
+  commitStorageWrite(
+    () => {
+      const all = readSelections();
+      all[key] = reaction;
+      window.localStorage.setItem(SELECTION_STORAGE, JSON.stringify(all));
+    },
+    () => publishStorageEvent(REACTIONS_EVENT),
+    () => memorySelections.set(key, reaction),
+  );
 }
 
 /**
@@ -99,12 +104,7 @@ function rememberReaction(
  * way to be told when it changes.
  */
 export function subscribeReactions(callback: () => void): () => void {
-  window.addEventListener(REACTIONS_EVENT, callback);
-  window.addEventListener("storage", callback);
-  return () => {
-    window.removeEventListener(REACTIONS_EVENT, callback);
-    window.removeEventListener("storage", callback);
-  };
+  return subscribeToStorageEvent(REACTIONS_EVENT, callback);
 }
 
 export interface ReactionViewContext {

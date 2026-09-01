@@ -42,7 +42,11 @@
  * part; only the outcome is kept.
  */
 
-import { subscribeToStorage } from "@/lib/state/subscribe-to-storage";
+import {
+  commitStorageWrite,
+  publishToListeners,
+  subscribeToStorage,
+} from "@/lib/state/subscribe-to-storage";
 
 /** The one key. Named so it is greppable and so nothing else claims it. */
 export const SESSION_ADDRESS_KEY = "wtp.session_address_scope";
@@ -84,9 +88,15 @@ export function subscribeToSessionAddress(onStoreChange: () => void): () => void
   return subscribeToStorage(listeners, onStoreChange);
 }
 
-/** Tell every subscriber the scope moved. Called by the two writers, always. */
+/**
+ * Tell every subscriber the scope moved. Called by the two writers, always.
+ *
+ * The loop moved to `publishToListeners` in the `WGH-22` class audit: seven
+ * stores held a byte-identical copy of it, and the copy is what let one store
+ * ship without one.
+ */
 function publish(): void {
-  for (const listener of listeners) listener();
+  publishToListeners(listeners);
 }
 
 export interface SessionAddressScope {
@@ -170,33 +180,28 @@ export function readSessionAddress(): SessionAddressScope | null {
 export function writeSessionAddress(scope: Omit<SessionAddressScope, "resolvedAt">): void {
   const store = storage();
   if (!store) return;
-  try {
-    store.setItem(
-      SESSION_ADDRESS_KEY,
-      JSON.stringify({ ...scope, resolvedAt: new Date().toISOString() }),
-    );
-  } catch {
-    /* A full or refused store costs the reader a second prompt, never an error. */
-  }
-  // Outside the try: a refused write leaves the scope where it was, and a
-  // publish that finds nothing changed is a no-op re-read rather than a risk.
-  // The one thing that must never happen is a successful write with no publish.
-  publish();
+  // The ordering — write, then publish, publish either way — is
+  // `commitStorageWrite`'s and not this file's. A full or refused store costs
+  // the reader a second prompt, never an error; the one thing that must never
+  // happen is a successful write with no publish.
+  commitStorageWrite(
+    () =>
+      store.setItem(
+        SESSION_ADDRESS_KEY,
+        JSON.stringify({ ...scope, resolvedAt: new Date().toISOString() }),
+      ),
+    publish,
+  );
 }
 
 /** Forget it. The reader asking to see the whole zip again is asking for this. */
 export function clearSessionAddress(): void {
   const store = storage();
   if (!store) return;
-  try {
-    store.removeItem(SESSION_ADDRESS_KEY);
-  } catch {
-    /* Nothing to do and nothing to say. */
-  }
   // The reader asking to see the whole zip again is asking every surface to
   // widen, not just the control they clicked. RULING 222's scope runs both
   // directions: the panel narrows on a write and widens on a clear.
-  publish();
+  commitStorageWrite(() => store.removeItem(SESSION_ADDRESS_KEY), publish);
 }
 
 /**

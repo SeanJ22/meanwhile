@@ -216,6 +216,21 @@ contest or a field is suppressed because something else is missing. Completeness
 is a property of the HUNT. The correct response to an incomplete hunt is more
 hunting. (RULING 26, RULING 27.)
 
+**Acquisition without promotion is inventory, not product** (RULING 224). An
+acquisition obligation does not close when evidence reaches the vault; it closes
+when the reader-facing surface reflects the acquired truth OR renders the honest
+gap state. While unattended promotion is OFF, the pipeline still runs
+AUTOMATICALLY through normalization and snapshot to a STAGED, promotion-ready
+state, and session shipping carries the last mile. **Held data with no live
+promotion tail is a defect** — retroactively, so every held corpus either flows
+to a surface, stages promotion-ready, or carries an argued reason it cannot.
+
+**Every session report leads in reader terms** (RULING 225), in this order: what
+a reader can now see that they could not before; what workers advanced
+unattended; what genuinely requires the owner. Infrastructure counts come
+afterward. If a reader loading the page would see what they saw yesterday, it
+does not go in the lead.
+
 **A render default may never manufacture a claim.** A null renders as its NAMED
 GAP, on every surface, always — and the name says WHOSE gap it is. "We haven't
 recorded this yet" is a fact about us; "not in this chamber for this vote" is a
@@ -242,6 +257,13 @@ SPACES, never column names (RULING 132).
 **No user-to-user surface.** Reactions are write-only from the reader's
 perspective — stored and aggregated, never rendered back to any user, including
 in aggregate.
+
+**Aggregate-only is a boundary, not a storage rule** (RULING 226). Anonymous
+event-level rows may exist AT REST exactly as
+implemented — no identity, no free text, no read API. Anything ever EXPOSED,
+RENDERED or LICENSED is aggregate-only, without exception. Changing any of those
+three at-rest properties reopens the question rather than inheriting the
+ratification.
 
 **Collect the minimum.** Zip or address for district resolution, an email for
 account identity. Adding a field to the user model is an ask-before.
@@ -319,6 +341,15 @@ the promoted-body count. (RULING 183.)
 (RULING 146). A decision that is genuinely the author's becomes a Needs Sean row
 and the session keeps going.
 
+**Escalation without reconciliation is prohibited** (RULING 227). A row may not
+ENTER Needs Sean without either a machine-verifiable predicate that is rechecked
+on EVERY tracker generation and AUTO-RESOLVES the row when it goes false, or an
+explicit `NOT_MACHINE_VERIFIABLE` marking carrying a decision card. Every card
+states what is needed, the options, the consequence of each, and the row's AGE.
+A queue with no mechanism capable of noticing that a blocker stopped being true
+will present the author with stale blockers as the current state of his own
+project, which is what it did.
+
 **Three independent statuses, and confusing them is a reporting defect**
 (RULING 180, amended by RULING 189):
 
@@ -360,6 +391,15 @@ to end.
 
 **PERSISTED RESUMABILITY IS NOT PERMISSION TO STOP VOLUNTARILY.** Canonical
 state exists so an interrupted session can resume, not so this one can end.
+
+**DISCRETION COVERS HOW, NEVER WHAT** (RULING 223). Implementation choices and
+lane ordering are the session's, entirely. Which Parts exist, which acceptance
+criteria count, and what "done" means are the author's, entirely. *"I chose
+depth over coverage"* is not a stop condition — it is an unrecorded amendment to
+the brief. When capacity actually ends, the only lawful output is **UNFINISHED
+SESSION** carrying the exact resume point and every unreached item BY NAME.
+RULING 221 forbids discovery INFLATING the denominator; this forbids discretion
+DEFLATING it. Same rule, both directions.
 
 **The model does not award itself a status. The state does**
 (`classifySessionStop` in `lib/workstate/types.ts`). Every non-`COMPLETE` close

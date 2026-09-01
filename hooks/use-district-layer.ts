@@ -1,7 +1,11 @@
 "use client";
 
 import { useCallback, useSyncExternalStore } from "react";
-import { subscribeToStorage } from "@/lib/state/subscribe-to-storage";
+import {
+  commitStorageWrite,
+  publishToListeners,
+  subscribeToStorage,
+} from "@/lib/state/subscribe-to-storage";
 
 /**
  * Whether the congressional district overlay is showing.
@@ -73,16 +77,16 @@ export function useDistrictLayer() {
   const snapshot = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   const setEnabled = useCallback((next: boolean) => {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, next ? "1" : "0");
-    } catch {
-      // Not being able to remember is survivable; failing the toggle is not.
-      // Publish the choice anyway so this session still works.
-      cachedRaw = next ? "1" : "0";
-      cachedSnapshot = next ? ON : OFF;
-    }
-
-    for (const listener of listeners) listener();
+    commitStorageWrite(
+      () => window.localStorage.setItem(STORAGE_KEY, next ? "1" : "0"),
+      () => publishToListeners(listeners),
+      () => {
+        // Not being able to remember is survivable; failing the toggle is not.
+        // Keep the choice for this session; the publish still runs.
+        cachedRaw = next ? "1" : "0";
+        cachedSnapshot = next ? ON : OFF;
+      },
+    );
   }, []);
 
   return { ...snapshot, setEnabled };

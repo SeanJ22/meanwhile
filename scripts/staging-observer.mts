@@ -78,7 +78,7 @@
  * measurements against it.
  *
  *   --expect=<sha>   the commit staging should be serving. Defaults to
- *                    `origin/staging`, then HEAD.
+ *                    `origin/<integration branch>`, then HEAD.
  *   --write          persist the reading. Without it nothing is recorded.
  *   --attempts=<n>   tighten the poll. It may never loosen it: POLL_BOUND is
  *                    the ceiling, and it is the production observer's own.
@@ -97,6 +97,7 @@ import { fileURLToPath } from "node:url";
 
 import type { IntegrityRecord } from "../lib/ops/production-integrity.ts";
 import { STAGING_RENDER_ORIGIN } from "../lib/ops/origins.ts";
+import { STAGING_BRANCH } from "../lib/ops/staging-promotion.ts";
 import {
   BRANCH_DEPLOY_CONTEXT,
   classifyDatabaseUrl,
@@ -241,13 +242,17 @@ async function main(): Promise<void> {
   /* ------------------------------------------------ what staging should serve */
 
   const expectArg = flag("expect");
-  const fromStagingRef = git("rev-parse", "origin/staging");
+  // DERIVED from the host this observer watches, never typed: on this
+  // provider a branch deploy is served at <branch>.<suffix>, so the branch
+  // name and the subdomain label are one fact (see STAGING_BRANCH).
+  const stagingRemoteRef = `origin/${STAGING_BRANCH}`;
+  const fromStagingRef = git("rev-parse", stagingRemoteRef);
   const expected = expectArg ?? fromStagingRef ?? git("rev-parse", "HEAD");
   const expectedFrom = expectArg
     ? "--expect="
     : fromStagingRef
-      ? "origin/staging"
-      : "HEAD (no origin/staging ref in this checkout)";
+      ? stagingRemoteRef
+      : `HEAD (no ${stagingRemoteRef} ref in this checkout)`;
 
   console.log(`  expecting      ${expected ?? "UNKNOWN"}  (from ${expectedFrom})`);
   console.log(

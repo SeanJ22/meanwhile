@@ -100,6 +100,7 @@ import { STAGING_RENDER_ORIGIN } from "../lib/ops/origins.ts";
 // to pass, because the ruleset matches these as literal strings.
 import { REQUIRED_CONTEXTS } from "../lib/ops/required-checks.ts";
 import {
+  STAGING_BRANCH,
   evaluatePromotion,
   explainPromotion,
   type AncestryVerdict,
@@ -183,7 +184,7 @@ function ancestryOf(mainSha: string | null, headSha: string | null): AncestryVer
 /**
  * Resolve a ref to a sha, trying the remote-tracking name first.
  *
- * `origin/staging` before `staging` because the remote is the shared truth and
+ * `origin/<branch>` before the local ref because the remote is the shared truth and
  * a local branch can be behind it without saying so. A caller-supplied ref is
  * used exactly as given — it is naming what to measure, and second-guessing it
  * would make the flag mean something other than what it says.
@@ -287,7 +288,12 @@ function main(): void {
   const gatePath = arg("gate") ? resolve(process.cwd(), arg("gate") as string) : GATE_RECORD_PATH;
   const gate = readGateRecord(gatePath);
 
-  const staging = resolveRef(arg("staging-ref"), ["origin/staging", "staging"]);
+  // DERIVED from the host, never typed. See STAGING_BRANCH in
+  // lib/ops/staging-promotion.ts for the four measurements behind it.
+  const staging = resolveRef(arg("staging-ref"), [
+    `origin/${STAGING_BRANCH}`,
+    STAGING_BRANCH,
+  ]);
   const mainRef = resolveRef(arg("main-ref"), ["origin/main", "main"]);
   const ancestry = ancestryOf(mainRef.sha, staging.sha);
 

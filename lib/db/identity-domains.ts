@@ -478,6 +478,13 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
         "location_confidence",
         // Which model wrote the answer, for audit. A fact about us.
         "answer_model",
+        // The reasoning EFFORT that model ran at. A fact about our own
+        // configuration, exactly like `answer_model` beside it: pinned per
+        // route in lib/ask/, identical for every reader who reaches that
+        // route, and null on the deterministic paths that call no model at
+        // all. It cannot vary with who asked, so it can carry nothing about
+        // them.
+        "answer_effort",
         // An enum list of WHICH KINDS of self-identifying content were found
         // and removed — never the content, for the same reason as Speak Your
         // Mind: storing what was redacted beside the redaction defeats it.

@@ -23,7 +23,7 @@
  * branch is still cancelled, by name, right here.
  *
  * **This is the second of two layers, and neither is sufficient alone.**
- * Netlify's own `allowed_branches` is set to `["main", "staging"]` on the site,
+ * Netlify's own `allowed_branches` is set to `["main", "test"]` (read back from the API 2026-09-01) on the site,
  * which is what actually stops a session branch from ever reaching a deploy.
  * This file is the half that lives in the repository, where it can be read,
  * diffed and reviewed without a Netlify login — and it is the half that keeps

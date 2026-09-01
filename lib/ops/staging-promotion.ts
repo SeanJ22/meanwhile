@@ -252,6 +252,41 @@ export type PromotionRefusal = (typeof PROMOTION_REFUSALS)[number];
 const STAGING_HOST = hostOf(STAGING_RENDER_ORIGIN);
 
 /**
+ * **THE INTEGRATION BRANCH'S NAME, DERIVED FROM THE HOST IT SERVES.**
+ * (ITEM I, 2026-09-01. One implementation — RULING 103.)
+ *
+ * Measured on the Netlify API on 2026-09-01, four ways:
+ *
+ * ```
+ *   branch_deploy_custom_domain is a SUFFIX, not a per-branch map. Set to the
+ *     staging host it created a wildcard one level BELOW it; set to the apex it
+ *     created the apex wildcard. Branch deploys are served at <branch>.<suffix>
+ *   GET /sites/<id>/domains          -> 404   (no such endpoint)
+ *   GET /sites/<id>/branch_domains   -> 404   (no such endpoint)
+ *   POST a NETLIFY dns record aimed at a branch deploy -> 422 "invalid site"
+ * ```
+ *
+ * Positive control, the same day: an unused `<label>.<apex>/api/build`
+ * resolves, presents a valid certificate off the apex wildcard, and returns
+ * 404 — Netlify answering "no branch deploy by that name". So the suffix
+ * mechanism is what ROUTES, rather than merely being what did not fail.
+ *
+ * **The branch name and the subdomain label are therefore ONE FACT on this
+ * provider**, and writing them down twice is how they come to disagree — which
+ * is the entire argument of `lib/ops/origins.ts`. Point the origin somewhere
+ * else and every consumer of this follows it, with no edit.
+ *
+ * **This is a CONSTRAINT, not a preference, and it is not law.** RULING 233
+ * names the integration branch `staging` and the host `test.…`; the provider
+ * will not serve both. RULING 235 records these measurements as a FACT and
+ * explicitly does NOT amend 233 — a session does not legislate — and NH304
+ * carries the choice to the owner. Session C ships under the derived name
+ * because RULING 233 is not operative until the session AFTER Session C
+ * closes, so nothing here decides anything the owner cannot undo.
+ */
+export const STAGING_BRANCH = STAGING_HOST.split(".")[0];
+
+/**
  * One sentence per refusal, naming the WRONG ANSWER it prevents rather than
  * restating the condition. The condition is already in the code; what a person
  * reading a red gate at speed needs is why it is not merely pedantry.

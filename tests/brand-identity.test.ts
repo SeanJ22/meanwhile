@@ -292,3 +292,40 @@ test("app/icon.svg carries the dark theme's --bg and --mark, and the square is f
     "the mark is a FILLED square — an outline would read as concluded",
   );
 });
+
+/**
+ * `app/favicon.ico` was the create-next-app DEFAULT — a black circle with a
+ * white triangle — and Next lists it AHEAD of `icon.svg` in `<head>`, so it
+ * was what a reader's browser tab actually showed. Shipping `icon.svg` alone
+ * would have left the scaffolding icon winning in every browser that prefers
+ * `.ico`, which is most of them.
+ *
+ * The ICO cannot be read for a colour here (its entries are PNG-encoded), so
+ * what is asserted is its SHAPE: the three sizes this repo generates, and not
+ * the four the scaffolding shipped.
+ */
+test("app/favicon.ico is the generated mark, not the create-next-app default", () => {
+  const ico = readFileSync(join(ROOT, "app", "favicon.ico"));
+  assert.equal(ico.readUInt16LE(0), 0, "byte 0-1 of an ICO is a zero reserved field");
+  assert.equal(ico.readUInt16LE(2), 1, "type 1 is an icon");
+
+  const count = ico.readUInt16LE(4);
+  const sizes = Array.from({ length: count }, (_, i) => ico[6 + i * 16] || 256);
+  assert.deepEqual(
+    sizes,
+    [16, 32, 48],
+    "the scaffolding default carried 16/32/48/256 and a Next.js glyph. " +
+      "Regenerate with `pnpm exec tsx scripts/brand-assets-0901.mts`.",
+  );
+
+  /* Every entry is a PNG (89 50 4E 47) at the offset its directory row names —
+     a directory that points at nothing would still satisfy the sizes above. */
+  for (let i = 0; i < count; i += 1) {
+    const at = ico.readUInt32LE(6 + i * 16 + 12);
+    assert.equal(
+      ico.subarray(at, at + 4).toString("hex"),
+      "89504e47",
+      `ICO entry ${i} does not point at a PNG`,
+    );
+  }
+});

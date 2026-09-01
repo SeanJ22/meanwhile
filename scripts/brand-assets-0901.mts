@@ -30,6 +30,7 @@
  */
 
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { deflateSync } from "node:zlib";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 
@@ -98,6 +99,83 @@ function garamondFaces(): { css: string; files: string[] } {
   return { css: faces.join("\n"), files };
 }
 
+/**
+ * The mark as a PNG, encoded by hand rather than screenshotted.
+ *
+ * **NEXT REFUSES THE WHOLE BUILD OVER THIS.** A `.ico` whose entries are
+ * PNG-encoded must carry RGBA entries: Turbopack decodes `app/favicon.ico` at
+ * build time and fails with *"Format error decoding Ico: The PNG is not in
+ * RGBA format!"*. Chromium encodes an opaque page as truecolour WITHOUT an
+ * alpha channel, and `omitBackground` does not change that when every pixel is
+ * painted, so a screenshot cannot satisfy it.
+ *
+ * The mark is two solid rectangles, so hand-encoding is both exact and small:
+ * colour type 6 (RGBA), one filter-0 scanline per row, deflated. It also
+ * removes a browser from the favicon's path entirely, which makes the file
+ * byte-identical on every machine that regenerates it.
+ */
+function markPng(size: number): Buffer {
+  const inset = Math.round((size * 3) / 16);
+  const rgb = (hex: string) => [
+    parseInt(hex.slice(1, 3), 16),
+    parseInt(hex.slice(3, 5), 16),
+    parseInt(hex.slice(5, 7), 16),
+  ];
+  const ground = rgb(BG);
+  const square = rgb(MARK);
+
+  /* One filter byte (0 = None) then width×RGBA per row. */
+  const raw = Buffer.alloc(size * (1 + size * 4));
+  for (let y = 0; y < size; y += 1) {
+    const rowStart = y * (1 + size * 4);
+    raw[rowStart] = 0;
+    for (let x = 0; x < size; x += 1) {
+      const inSquare = x >= inset && x < size - inset && y >= inset && y < size - inset;
+      const [r, g, b] = inSquare ? square : ground;
+      const at = rowStart + 1 + x * 4;
+      raw[at] = r;
+      raw[at + 1] = g;
+      raw[at + 2] = b;
+      raw[at + 3] = 255;
+    }
+  }
+
+  const crcTable = Array.from({ length: 256 }, (_, n) => {
+    let c = n;
+    for (let k = 0; k < 8; k += 1) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+    return c >>> 0;
+  });
+  const crc32 = (buf: Buffer) => {
+    let c = 0xffffffff;
+    for (const byte of buf) c = crcTable[(c ^ byte) & 0xff] ^ (c >>> 8);
+    return (c ^ 0xffffffff) >>> 0;
+  };
+  const chunk = (type: string, data: Buffer) => {
+    const len = Buffer.alloc(4);
+    len.writeUInt32BE(data.length, 0);
+    const body = Buffer.concat([Buffer.from(type, "ascii"), data]);
+    const crc = Buffer.alloc(4);
+    crc.writeUInt32BE(crc32(body), 0);
+    return Buffer.concat([len, body, crc]);
+  };
+
+  const ihdr = Buffer.alloc(13);
+  ihdr.writeUInt32BE(size, 0); // PNG integers are BIG-endian
+  ihdr.writeUInt32BE(size, 4);
+  ihdr.writeUInt8(8, 8); // bit depth
+  ihdr.writeUInt8(6, 9); // colour type 6 = RGBA — the whole point of this function
+  ihdr.writeUInt8(0, 10); // deflate
+  ihdr.writeUInt8(0, 11); // adaptive filtering
+  ihdr.writeUInt8(0, 12); // no interlace
+
+  return Buffer.concat([
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+    chunk("IHDR", ihdr),
+    chunk("IDAT", deflateSync(raw, { level: 9 })),
+    chunk("IEND", Buffer.alloc(0)),
+  ]);
+}
+
 /** The lockup, as markup, at whatever size the caller asks for. */
 function lockup(faceCss: string, sizePx: number): string {
   const beat = sizePx * 0.18;
@@ -158,6 +236,38 @@ async function main(): Promise<void> {
   await iconPage.screenshot({ path: applePath });
   await iconCtx.close();
   console.log(`  ok  app/apple-icon.png  180×180`);
+
+  /* ── favicon.ico ────────────────────────────────────────────────────────
+     `app/favicon.ico` was the CREATE-NEXT-APP DEFAULT — a black circle with a
+     white triangle — and Next lists it AHEAD of `icon.svg` in <head>, so it is
+     what a reader's tab actually showed in every browser that prefers .ico.
+     `app/icon.svg` alone does not fix that; the .ico has to carry the mark
+     too. Three sizes, PNG-encoded inside the container (read by every browser
+     since IE11), at the proportions `app/icon.svg` uses. */
+  const icoEntries = [16, 32, 48].map((size) => ({ size, png: markPng(size) }));
+
+  const header = Buffer.alloc(6);
+  header.writeUInt16LE(0, 0); // reserved
+  header.writeUInt16LE(1, 2); // type 1 = icon
+  header.writeUInt16LE(icoEntries.length, 4);
+  let offset = 6 + icoEntries.length * 16;
+  const dir: Buffer[] = [];
+  for (const e of icoEntries) {
+    const entry = Buffer.alloc(16);
+    entry.writeUInt8(e.size === 256 ? 0 : e.size, 0);
+    entry.writeUInt8(e.size === 256 ? 0 : e.size, 1);
+    entry.writeUInt8(0, 2); // palette size — 0 for true colour
+    entry.writeUInt8(0, 3); // reserved
+    entry.writeUInt16LE(1, 4); // colour planes
+    entry.writeUInt16LE(32, 6); // bits per pixel
+    entry.writeUInt32LE(e.png.length, 8);
+    entry.writeUInt32LE(offset, 12);
+    offset += e.png.length;
+    dir.push(entry);
+  }
+  const ico = Buffer.concat([header, ...dir, ...icoEntries.map((e) => e.png)]);
+  writeFileSync(join(ROOT, "app", "favicon.ico"), ico);
+  console.log(`  ok  app/favicon.ico  ${icoEntries.map((e) => e.size).join("/")}  ${ico.length} bytes`);
 
   /* ── the Open Graph card: the wordmark lockup, nothing else ───────────────
      No photograph and no map. A map behind a civic brand implies the product

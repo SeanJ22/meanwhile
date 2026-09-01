@@ -2,7 +2,7 @@
   "generated": "2026-09-01",
   "ruling": "RULING 227",
   "openedDateProvenance": {
-    "opened-ledger": 388,
+    "opened-ledger": 396,
     "session-label": 243,
     "unrecoverable": 225
   },
@@ -47,7 +47,6 @@
       "NH43",
       "NS01",
       "NS10",
-      "NS12",
       "NS13",
       "NS14",
       "NS16",
@@ -83,12 +82,13 @@
       "NH272",
       "NH281",
       "NH300",
+      "NS12",
       "OWN03"
     ]
   },
   "summary": {
     "predicates": 0,
-    "notMachineVerifiable": 69,
+    "notMachineVerifiable": 68,
     "holds": 0,
     "resolved": 0,
     "cannotTell": 0
@@ -483,14 +483,6 @@
       "kind": "NOT_MACHINE_VERIFIABLE",
       "verdict": "HOLDS",
       "why": "NS01 is marked NOT_MACHINE_VERIFIABLE and carries a decision card. It waits on the author's judgement, which no artifact can supply.",
-      "read": [],
-      "evidence": []
-    },
-    {
-      "rowId": "NS12",
-      "kind": "NOT_MACHINE_VERIFIABLE",
-      "verdict": "HOLDS",
-      "why": "NS12 is marked NOT_MACHINE_VERIFIABLE and carries a decision card. It waits on the author's judgement, which no artifact can supply.",
       "read": [],
       "evidence": []
     },

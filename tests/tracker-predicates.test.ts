@@ -137,8 +137,19 @@ test("RULING 227: every predicate still reads its evidence and answers RESOLVED_
    * observes that he decided, which is the fact the row was blocked on. If any
    * of the nine ever stops carrying his approval against that exact image, this
    * goes red and the row goes back in front of him.
+   *
+   * **NS12 joined on 2026-09-01, and it joined by being CAUGHT.** It was
+   * carded — `NOT_MACHINE_VERIFIABLE`, which HOLDS by construction because the
+   * machine never asks again — while its blocker was "no Netlify credential
+   * exists on this machine", which a machine can decide perfectly well. The
+   * credential arrived, `pnpm deploy:live` started answering in full, and the
+   * queue went on presenting the wall as current for days. That is precisely
+   * the failure RULING 227 was adopted over, surviving inside the mechanism
+   * built to prevent it: the card route is the OTHER HALF of the rule, not an
+   * alternative to it, and a blocker a machine can decide does not get to take
+   * the human route.
    */
-  assert.equal(PREDICATES.length, 4);
+  assert.equal(PREDICATES.length, 5);
   for (const p of PREDICATES as unknown as RegistryEntry[]) {
     const outcome = evaluateEntry(p, { root: ROOT });
     assert.equal(

@@ -39,6 +39,10 @@
  * people** — see `FilingState` below, which carries the amendment and the
  * audit that forced it.
  *
+ * **It is SIX as of 2026-08-31 (Session C2)**, and the sixth is the reader's
+ * half of RULING 224: `OURS_GAP` renders, and it renders no money. See
+ * `FilingState` below.
+ *
  * ## MATCHING IS THE DANGEROUS PART, AND THE BAR IS DELIBERATELY HIGH
  *
  * A candidate joined to the wrong committee renders someone else's money on
@@ -105,8 +109,31 @@ export type FilingState =
   | "REGISTERED_NO_ACTIVITY_REPORTED"
   | "NO_REPORTS_ON_FILE"
   | "LEAD"
-  | "ROUTE_UNREAD";
-
+  | "ROUTE_UNREAD"
+  /*
+   * **THE SIXTH, ADDED 2026-08-31 (Session C2) UNDER RULING 224.**
+   *
+   * A record for this person EXISTS at the agency, we have read it, and
+   * something WE have not resolved stands between it and a figure — the seat
+   * the agency states is not the seat on this ballot, or our name test cannot
+   * bridge a diminutive it must not guess at.
+   *
+   * It is NOT `LEAD` and it is NOT `ROUTE_UNREAD`. `LEAD` is silent because the
+   * money cannot be safely attributed, and silence was leaving a candidate we
+   * had actively investigated rendering the card's generic line — word for word
+   * what a candidate nobody had ever looked for renders. `ROUTE_UNREAD` is
+   * silent because the route did not answer and there is nothing to say; here
+   * the route ANSWERED and there is something to say.
+   *
+   * **It RENDERS and it carries no receipts, no expenditures, no committee
+   * attribution and no dollar figure of any kind.** The prohibition `LEAD`
+   * enforces is intact — what may never reach a reader is an unproven
+   * committee's FIGURES — and what reaches the reader is a sentence about US
+   * plus the agency's own next filing deadline. RULING 139 strikes a VERDICT on
+   * ourselves; the constitution separately REQUIRES that a gap name whose it is,
+   * and "we haven't matched this yet" is that attribution, not a verdict.
+   */
+  | "OURS_GAP";
 /** Which of the three matching criteria were satisfied, and by what. */
 export interface MatchBasis {
   /** The committee's registered name, exactly as the agency holds it. */
@@ -180,6 +207,21 @@ export interface StateMoneyRecord {
    * surface, and the read date is the whole of what a reader is owed.
    */
   retainedFrom?: { attemptedAt: string; reason: string } | null;
+  /**
+   * PRESENT ONLY ON `OURS_GAP`, AND IT IS WHAT MAKES THAT STATE HONEST.
+   *
+   * `whatIsMissing` is one plain sentence about US — what we could not settle —
+   * never a characterization of the candidate or their money. `nextDue` is the
+   * agency's OWN next filing deadline, read from the state's published filing
+   * calendar; a date this product invented would make the promise worse than no
+   * promise. `null` means the calendar states none after today, which is a fact
+   * about the calendar and renders as one.
+   */
+  ourGap?: {
+    whatIsMissing: string;
+    nextDue: string | null;
+    nextDueName: string | null;
+  };
 }
 
 export interface StateMoneySnapshot {
@@ -428,10 +470,31 @@ const OFFICE_CLASS_RULES: readonly { cls: OfficeClass; pattern: RegExp }[] = [
    * `officesAgree` still demands two classes that are equal, and an office
    * neither side can classify is still a LEAD.
    */
+  /*
+   * **ARIZONA'S STATEWIDE VOCABULARY, ADDED 2026-08-31 (Session C2).**
+   *
+   * Arizona elects six statewide executives besides the Governor, plus an
+   * elected Corporation Commission that has no New England or New Jersey
+   * analogue. NONE of them matched any rule: `Secretary of State`, `Attorney
+   * General`, `State Treasurer`, `Superintendent of Public Instruction`,
+   * `State Mine Inspector` and `Corporation Commissioner` all classified as
+   * `null`, and `null` is a LEAD. That is 22 of the 49 non-federal candidacies
+   * on the Arizona pilot ballot unable to match a filing that exists.
+   *
+   * Each addition is a full multi-word office title, and that is deliberate
+   * rather than terse. The dangerous direction here is a WRONG class, not a
+   * null: `officesAgree` defends against one side being unrecognised and
+   * cannot defend against two sides that are both wrong in the same way. A
+   * bare `\btreasurer\b` would swallow `County Treasurer`, and a bare
+   * `\bcommissioner\b` would swallow `County Commissioner` — which is a
+   * county candidate's money on a statewide candidate's card. The titles
+   * below cannot collide with a county or municipal office because no county
+   * or municipal office is called any of them.
+   */
   {
     cls: "STATE",
     pattern:
-      /\b(general assembly|general court|state senate|state senator|state representative|executive council(l?or)?|governor|assembly)\b/,
+      /\b(general assembly|general court|state senate|state senator|state representative|executive council(l?or)?|governor|assembly|secretary of state|attorney general|state treasurer|superintendent of public instruction|state mine inspector|corporation commissioner)\b/,
   },
   {
     cls: "COUNTY",
@@ -541,6 +604,13 @@ export function isRenderable(record: StateMoneyRecord): boolean {
   return (
     record.filingState === "FILED" ||
     record.filingState === "REGISTERED_NO_ACTIVITY_REPORTED" ||
-    record.filingState === "NO_REPORTS_ON_FILE"
+    record.filingState === "NO_REPORTS_ON_FILE" ||
+    /*
+     * `OURS_GAP` renders and carries no money (RULING 224). What may never
+     * reach a reader is an unproven committee's FIGURES, and this record has
+     * none: `totals` is null throughout and no committee is attributed. What
+     * reaches the reader is a sentence about us and a date.
+     */
+    record.filingState === "OURS_GAP"
   );
 }

@@ -46,6 +46,12 @@
  * row is visibly unresolvable.
  */
 
+// TYPE-ONLY: the render-target vocabulary is declared once, in
+// `lib/health/reader-question.ts`, and this file consumes it rather than
+// keeping a second copy. Erased at compile time, so nothing about the health
+// module is pulled into the status surface at runtime.
+import type { EvaluationTarget } from "../health/reader-question.ts";
+
 /** Where the evidence for a capability comes from, and what identity to find. */
 export type ProofSource =
   /**
@@ -77,8 +83,18 @@ export interface CapabilityEntry {
   readonly neededCheck?: string;
   /** Where a reader goes to read the claim's own basis. Never a result. */
   readonly evidence: string;
-  /** For reader-facing claims: what a proving run must render against. */
-  readonly target?: "LOCAL_RENDER" | "PRODUCTION_RENDER";
+  /**
+   * For reader-facing claims: what a proving run must render against.
+   *
+   * IMPORTED, NOT RESTATED (RULING 103). This was an inline union spelling out
+   * the same two members `EVALUATION_TARGETS` declares, and a second copy of a
+   * vocabulary is a drift waiting to happen: the day a third target was added
+   * to the real list — `STAGING_RENDER`, 2026-09-01 — this copy would have gone
+   * on typing rows against a two-member universe, and a row naming the new
+   * target would have failed to compile for a reason that says nothing about
+   * what is wrong.
+   */
+  readonly target?: EvaluationTarget;
 }
 
 /**

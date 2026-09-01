@@ -1,40 +1,40 @@
 {
-  "runId": "gates@2026-09-01T20:01:23.937Z",
-  "testedSha": "807e4e81b61d2b14eaeeb354b19452775aa502c7",
-  "finishedAt": "2026-09-01T20:01:23.937Z",
+  "runId": "gates@2026-09-01T19:44:59.068Z",
+  "testedSha": "44f8d4bdbf00ca95a14d7bf4123fdc8de4cf6a09",
+  "finishedAt": "2026-09-01T19:44:59.069Z",
   "gates": [
     {
       "id": "lint",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm lint",
       "status": "PASS",
-      "seconds": 29,
+      "seconds": 40,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 12
+      "nodeProcessesAtStart": 13
     },
     {
       "id": "tsc",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm exec tsc --noEmit",
       "status": "PASS",
-      "seconds": 28,
+      "seconds": 23,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 14
+      "nodeProcessesAtStart": 22
     },
     {
       "id": "governance:check",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm governance:check",
       "status": "PASS",
-      "seconds": 3,
+      "seconds": 2,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 14
+      "nodeProcessesAtStart": 19
     },
     {
       "id": "orchestration:check",
@@ -45,7 +45,7 @@
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 14
+      "nodeProcessesAtStart": 19
     },
     {
       "id": "method:check",
@@ -56,7 +56,7 @@
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 14
+      "nodeProcessesAtStart": 19
     },
     {
       "id": "control-plane:gate",
@@ -67,7 +67,7 @@
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 14
+      "nodeProcessesAtStart": 19
     },
     {
       "id": "feedback:sweep",
@@ -78,7 +78,7 @@
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 14
+      "nodeProcessesAtStart": 19
     },
     {
       "id": "assert:browser",
@@ -89,28 +89,25 @@
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 14
+      "nodeProcessesAtStart": 19
     },
     {
       "id": "test",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm test",
       "status": "FAIL",
-      "seconds": 56,
+      "seconds": 50,
       "failureKind": "ASSERTION_FAILURE",
       "failingTests": [
-        "the newest session in docs/log.md has an expansion-log entry, or claims the non-hunt marker"
+        "RULING 159 + RULING 116: every counting script is floored or on the baseline, and the list only shrinks",
+        "RULING 102: no generator has moved since its artifact was last regenerated"
       ],
       "suiteTotals": {
-        "tests": 4597,
-        "pass": 4595,
-        "fail": 1,
-        "suites": 32,
-        "skipped": 1,
-        "todo": 0,
-        "cancelled": 0
+        "tests": 4573,
+        "pass": 4570,
+        "fail": 2
       },
-      "nodeProcessesAtStart": 14
+      "nodeProcessesAtStart": 23
     },
     {
       "id": "db:gate",
@@ -121,7 +118,7 @@
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 14
+      "nodeProcessesAtStart": 21
     },
     {
       "id": "release:freeze",
@@ -132,48 +129,40 @@
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 14
+      "nodeProcessesAtStart": 21
     },
     {
       "id": "build",
       "ciJob": "build (default)",
       "command": "pnpm run build",
       "status": "PASS",
-      "seconds": 17,
+      "seconds": 14,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 14
+      "nodeProcessesAtStart": 21
     },
     {
       "id": "test:bundle",
       "ciJob": "build (default)",
       "command": "pnpm run test:bundle",
       "status": "PASS",
-      "seconds": 2,
+      "seconds": 1,
       "failureKind": null,
       "failingTests": [],
-      "suiteTotals": {
-        "tests": 16,
-        "pass": 16,
-        "fail": 0,
-        "suites": 0,
-        "skipped": 0,
-        "todo": 0,
-        "cancelled": 0
-      },
-      "nodeProcessesAtStart": 14
+      "suiteTotals": null,
+      "nodeProcessesAtStart": 21
     },
     {
       "id": "build:standalone",
       "ciJob": "build (standalone)",
       "command": "pnpm run build",
       "status": "PASS",
-      "seconds": 23,
+      "seconds": 20,
       "failureKind": null,
       "failingTests": [],
       "suiteTotals": null,
-      "nodeProcessesAtStart": 14
+      "nodeProcessesAtStart": 21
     }
   ],
   "provenance": {
@@ -181,22 +170,5 @@
     "workingTreeClean": false,
     "integratedAtRunTime": false,
     "integrationRef": "origin/main"
-  },
-  "suiteDenominator": {
-    "gate": "test",
-    "read": true,
-    "tests": 4597,
-    "pass": 4595,
-    "fail": 1,
-    "suites": 32,
-    "skipped": 1,
-    "todo": 0,
-    "cancelled": 0
-  },
-  "suiteLaneEnv": {
-    "WTP_CONTROL_PLANE_DATABASE_URL": {
-      "present": false,
-      "gates": "the postgres arm of tests/control-plane-conformance.test.ts — 7 tests"
-    }
   }
 }

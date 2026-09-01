@@ -69,6 +69,13 @@ import type { CostEntry } from "../cost.ts";
 import { fingerprint } from "../ids.ts";
 import type { RouteTask } from "../route-task.ts";
 import type { Escalation, WorkItem } from "../work-item.ts";
+import type {
+  CacheObservationRecord,
+  OwnerDecisionIntent,
+  OwnerDigestRecord,
+  OwnerSnapshot,
+  RunnerHeartbeat,
+} from "../owner-surface.ts";
 import { budgetRepositoryFrom } from "./shared.ts";
 import {
   AppendOnlyViolation,
@@ -663,6 +670,24 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     dispositions: fileAppendOnlyRepository<DispositionCommit>(resolved, "dispositions"),
     artifacts: fileAppendOnlyRepository<ArtifactRecord>(resolved, "artifacts"),
     costs: fileAppendOnlyRepository<CostEntry>(resolved, "costs"),
+    /* The owner control centre's data plane (ITEM H). */
+    ownerSnapshots: fileAggregateRepository<OwnerSnapshot>(
+      resolved,
+      "OwnerSnapshot",
+      "owner-snapshots",
+    ),
+    runnerHeartbeat: fileAggregateRepository<RunnerHeartbeat>(
+      resolved,
+      "RunnerHeartbeat",
+      "runner-heartbeat",
+    ),
+    cacheObservations: fileAggregateRepository<CacheObservationRecord>(
+      resolved,
+      "CacheObservationRecord",
+      "cache-observations",
+    ),
+    ownerDigests: fileAppendOnlyRepository<OwnerDigestRecord>(resolved, "owner-digests"),
+    ownerDecisions: fileAppendOnlyRepository<OwnerDecisionIntent>(resolved, "owner-decisions"),
     budget: budgetRepositoryFrom(
       fileAggregateRepository<BudgetLedger>(resolved, "BudgetLedger", "budget"),
       locks,

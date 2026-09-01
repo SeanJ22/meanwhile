@@ -32,6 +32,17 @@
  *                    Defaults to origin/main's tip.
  *   --write          persist the reading. Without it, the reading is printed
  *                    and nothing is written, so the script is safe to explore.
+ *   --record=<path>  write somewhere other than the production record.
+ *                    THE DEFAULT IS UNCHANGED and is the only path any existing
+ *                    caller reaches; the flag exists so a SECOND observer —
+ *                    `scripts/staging-observer.mts` — can take a reading through
+ *                    this one gate and record it in its own file. The
+ *                    alternative was a second implementation of "does the
+ *                    database hold the migrations this commit ships", which is
+ *                    a second verdict free to disagree with the one branch
+ *                    protection trusts, and which
+ *                    `tests/migration-shipping-invariant.test.ts` refuses by
+ *                    holding the set of files that may query that table closed.
  *
  * Exit codes mirror the gate's, because inventing new ones would make two
  * vocabularies for one answer:
@@ -150,6 +161,14 @@ function detailFrom(output: string): string {
 
 function main(): void {
   const write = process.argv.includes("--write");
+  /*
+   * The DEFAULT is the production record and nothing about it moved. `--record=`
+   * is resolved against the repository root so a relative path cannot depend on
+   * the caller's working directory — a reading landing in a different file
+   * depending on where it was invoked from would be worse than no flag at all.
+   */
+  const recordArg = arg("record");
+  const recordPath = recordArg ? resolve(ROOT, recordArg) : RECORD_PATH;
   const deployedSha = arg("sha") ?? git("rev-parse", "origin/main") ?? git("rev-parse", "HEAD");
   const mainSha = git("rev-parse", "origin/main");
   const observedAt = new Date().toISOString();
@@ -189,8 +208,8 @@ function main(): void {
   console.log(`         ${assessment.reason}`);
 
   if (write) {
-    writeRecord(record);
-    console.log(`\nrecorded: ${RECORD_PATH}`);
+    writeRecord(record, recordPath);
+    console.log(`\nrecorded: ${recordPath}`);
     if (observed === "REFUSED") {
       console.log(
         "\nPRODUCTION INTEGRITY IS NOW DEGRADED. The next production-changing release is frozen\n" +

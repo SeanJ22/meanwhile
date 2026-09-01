@@ -1178,6 +1178,26 @@ export const askInteractions = pgTable(
     answerText: text("answer_text"),
     /** Which model wrote it, for audit. Null where none did. */
     answerModel: text("answer_model"),
+    /**
+     * **The reasoning effort the answer was actually produced at.**
+     * (ITEM K, 2026-09-01 — the column Lane 3's resolved `effort` writes into.)
+     *
+     * Effort is pinned per route rather than chosen per request —
+     * `lib/ask/interpret.ts` runs at `low`, `lib/ask/synthesize.ts` at
+     * `medium` — and until now that pinning existed only in the source. A
+     * trace that records the MODEL but not the effort cannot answer the one
+     * question anybody asks of it later: *did the answers get worse when we
+     * turned the effort down?* Model plus effort is the setting; the model
+     * alone is half of it, and half a setting reads like a whole one.
+     *
+     * **Nullable, and the null is meaningful rather than lazy.** The
+     * deterministic paths — `STRUCTURED_GROUNDED`, `CLARIFY`, `UNRESOLVED`,
+     * `NO_EVIDENCE` — produce an answer with no model call at all, so there is
+     * no effort to record. A default of `"low"` would have written a
+     * measurement of something that never happened, which is precisely the
+     * fabrication the answer-mode column above exists to prevent.
+     */
+    answerEffort: text("answer_effort"),
     /** Did structural validation pass? Null where it did not run. */
     validationPassed: boolean("validation_passed"),
     /** How much evidence stood behind it — a denominator, not a score. */

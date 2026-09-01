@@ -1,0 +1,1 @@
+ALTER TABLE "ask_interactions" ADD COLUMN "answer_effort" text;

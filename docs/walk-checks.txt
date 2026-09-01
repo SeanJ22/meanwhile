@@ -204,6 +204,14 @@
 [SC0831] 85701: the narrowed ballot still renders candidate cards, never an empty list
 [SC0831] 85701: the panel a reader sees after typing lists the districts the resolver settled
 [SC0831] 85701: typing an address into the prompt moves the panel in the same tab, no reload
+[SC3] 85641: Katie Hobbs's filed total reaches her card
+[SC3] 85641: every candidate card carries a Campaign money section
+[SC3] 85641: no money section renders an unrecognised state
+[SC3] 85641: the identity layer still resolves most candidates to their filings
+[SC3] 85701: Katie Hobbs's filed total reaches her card
+[SC3] 85701: every candidate card carries a Campaign money section
+[SC3] 85701: no money section renders an unrecognised state
+[SC3] 85701: the identity layer still resolves most candidates to their filings
 [W6H3] the fly-in holds 90% of a bare MapLibre fly-in's median frame rate on this host
 [W6H3] the fly-in on a browser with NO GPU acceleration holds 75% of a bare MapLibre fly-in and stays under 20% long frames
 [W6H3] the zip fly-in does not re-query the whole viewport on every frame of itself

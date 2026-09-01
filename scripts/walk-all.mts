@@ -8077,6 +8077,140 @@ section(
   await context.close();
 }
 
+/* ────────────────────────────────────────────────────────────────────────────
+ * SC3 — ARIZONA MONEY REACHES THE READER, AND EVERY CARD ENDS IN ONE STATE
+ *
+ * The defect this pins was never acquisition. `data/funding/state-money-az-2026.json`
+ * held Katie Hobbs at $11,109,720 while her card showed nothing, because the
+ * certified-lineup cards key on `${contest.id}|${nominee.name}` and the money
+ * records key on candidacy ids. Two correct halves, one seam, and the seam is
+ * the only place it could fail.
+ *
+ * Measured before the fix, on production and on a local production build that
+ * agreed exactly: **4 money sections of 24 cards at 85701, 4 of 29 at 85641**.
+ * After: 24 of 24 and 29 of 29, every one in exactly one honest state.
+ *
+ * **This asserts the FLOOR, not the composition.** A candidate who genuinely
+ * files nothing must be free to move from FILED to a sourced absence without
+ * going red here. What may never happen again is a card with NO money state at
+ * all, which is the shape a broken join takes — silence that reads as "this
+ * person raised nothing" when what actually happened is that we asked the wrong
+ * question. And the OURS-gap count is CEILINGED rather than pinned, so an
+ * identity layer that quietly stops resolving fails here rather than degrading
+ * every card to an honest-looking shrug.
+ * ──────────────────────────────────────────────────────────────────────────── */
+
+section("SC3. Arizona money reaches the certified-lineup reader (Item 1, 2026-09-01)");
+
+for (const { zip, cards: cardFloor, oursCeiling } of [
+  { zip: "85701", cards: 24, oursCeiling: 6 },
+  { zip: "85641", cards: 29, oursCeiling: 6 },
+] as const) {
+  const context = await browser.context();
+  const page = await context.newPage();
+  try {
+    await page.goto(`${BASE}/ballot?zip=${zip}`, { waitUntil: "networkidle" });
+    await until(
+      page,
+      async () => (await page.locator(".candidate-row").count()) > 0,
+      15_000,
+      150,
+      `SC3 ${zip}: candidate cards`,
+    );
+
+    /* Open every battlecard, then every Campaign money section. The body is
+       `{open && …}` — not hidden, ABSENT — so it has to be clicked open. */
+    await page.evaluate(
+      "(() => { for (const b of Array.from(document.querySelectorAll('button'))) " +
+        "if ((b.textContent || '').trim() === 'View Battlecard') b.click(); })()",
+    );
+    await until(
+      page,
+      async () => (await page.locator(".card-section-title").count()) > 0,
+      15_000,
+      150,
+      `SC3 ${zip}: battlecards open`,
+    );
+    const opened = await page.evaluate(
+      "(() => { let n = 0; for (const t of Array.from(document.querySelectorAll('.card-section-title'))) " +
+        "{ if (!/^Campaign money/.test((t.textContent || '').trim())) continue; " +
+        "const b = t.closest('button'); if (b) { b.click(); n++; } } return n; })()",
+    );
+    await until(
+      page,
+      async () => (await page.locator(".card-section-body").count()) > 0,
+      15_000,
+      150,
+      `SC3 ${zip}: money bodies`,
+    );
+
+    const seen = (await page.evaluate(`(() => {
+      const titles = Array.from(document.querySelectorAll('.card-section-title'))
+        .filter((e) => /^Campaign money/.test((e.textContent || '').trim()));
+      const out = { cards: document.querySelectorAll('.candidate-row').length,
+                    sections: titles.length, filed: 0, registered: 0, absence: 0,
+                    oursGap: 0, federal: 0, silent: 0 };
+      for (const t of titles) {
+        const section = t.closest('section');
+        const el = section && section.querySelector('.card-section-body');
+        const body = ((el && el.textContent) || '').replace(/\\s+/g, ' ');
+        if (/Raised\\s*\\$/.test(body)) out.filed++;
+        else if (/Registered committee/.test(body)) out.registered++;
+        else if (/No reports on file/.test(body)) out.absence++;
+        else if (/haven\\u2019t matched|haven't matched|haven\\u2019t recorded|haven't recorded/i.test(body)) out.oursGap++;
+        else if (/(FEC|election cycle)/.test((t.textContent || '') + body)) out.federal++;
+        else out.silent++;
+      }
+      return out;
+    })()`)) as {
+      cards: number; sections: number; filed: number; registered: number;
+      absence: number; oursGap: number; federal: number; silent: number;
+    };
+
+    const detail =
+      `${seen.sections} money section(s) over ${seen.cards} card(s), ${opened} header(s) opened — ` +
+      `FILED ${seen.filed}, registered-no-activity ${seen.registered}, sourced absence ${seen.absence}, ` +
+      `OURS gap ${seen.oursGap}, federal FEC ${seen.federal}, UNCLASSIFIED ${seen.silent}`;
+
+    check(
+      "SC3",
+      `${zip}: every candidate card carries a Campaign money section`,
+      seen.cards >= cardFloor && seen.sections === seen.cards,
+      `${detail}. Before 2026-09-01 this was 4 of ${cardFloor}: the snapshot held the money and ` +
+        "the card asked for it by name, so it silently rendered nothing.",
+    );
+
+    check(
+      "SC3",
+      `${zip}: no money section renders an unrecognised state`,
+      seen.silent === 0 && seen.sections > 0,
+      `${detail}. A section whose text matches none of the four honest states is either a new ` +
+        "wording nobody taught this check, or the join failing quietly again — both are worth a look.",
+    );
+
+    check(
+      "SC3",
+      `${zip}: the identity layer still resolves most candidates to their filings`,
+      seen.filed > 0 && seen.oursGap <= oursCeiling,
+      `${detail}. The OURS gap is CEILINGED at ${oursCeiling} rather than pinned: a candidate may ` +
+        "honestly move between states, but an identity layer that stopped resolving would degrade " +
+        "every card to an honest-looking shrug and pass a floor that only counted sections.",
+    );
+
+    check(
+      "SC3",
+      `${zip}: Katie Hobbs's filed total reaches her card`,
+      await page.evaluate(
+        "document.body.innerText.replace(/\\s+/g, ' ').includes('11,109,7')",
+      ),
+      "the named control for the whole item — the figure that was in the snapshot and not on " +
+        "the page. A changed total is not a failure of this check; a MISSING one is.",
+    );
+  } finally {
+    await context.close();
+  }
+}
+
 await browser.close();
 
 const EXCLUDED = [

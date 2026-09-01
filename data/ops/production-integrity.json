@@ -5,7 +5,7 @@
   "observed": "HELD",
   "failureClass": null,
   "detail": "HOLDS — shipping invariant HOLDS at post-deploy: 24 of 24 committed migration(s) applied, head 0023_tricky_sister_grimm",
-  "observedAt": "2026-09-01T04:40:56.327Z",
+  "observedAt": "2026-09-01T05:15:18.250Z",
   "moment": "post-deploy",
   "gateExit": 0
 }

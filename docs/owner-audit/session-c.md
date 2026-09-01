@@ -232,11 +232,31 @@ against every pilot candidate name gives **zero matches**, and the matching bar
 requires name, office and year to agree.
 
 So the bridge to your ballot is the AZ Secretary of State regime
-(`seethemoney.az.gov`), which has not been acquired. Two further facts worth
-having: the reader surface is a **missing file, not missing code** —
-`lib/funding/state-snapshot.ts` already names `state-money-az-2026.json` and
-"AZ" is already a legal jurisdiction — and the held Arizona money **does already
-reach readers today**, through Ask, for the Vail governing board.
+(`seethemoney.az.gov`). Two further facts worth having: the reader surface is a
+**missing file, not missing code** — `lib/funding/state-snapshot.ts` already
+names `state-money-az-2026.json` and "AZ" is already a legal jurisdiction — and
+the held Arizona money **does already reach readers today**, through Ask, for
+the Vail governing board.
+
+**That bridge is now open, and I stopped one step short of crossing it — on
+purpose.** The portal's endpoint had been recorded as live but unusable: nobody
+knew what parameters it wanted, and a guess returned an empty answer. Watching
+what the page asks for when a person uses it settled that, and it now returns
+**370 Arizona Secretary of State filings for this cycle**, each with the
+candidate, the committee, the office, and the money.
+
+I did not build the Arizona file from it. A single candidate comes back as
+several rows with **different amounts and the same closing balance**, and I
+could not tell from the data which one — or which sum — is "raised this cycle."
+Summing and taking the largest give different answers. Putting either on a named
+candidate's card, under their photograph, is the one mistake this product cannot
+make, and it is worse than showing nothing.
+
+**What settles it is one experiment, not more hunting:** read a single
+candidate's total as the portal itself displays it, and adopt whichever
+arithmetic reproduces the state's own figure. Written up in
+`docs/arizona-source-enumeration.md`. Arizona money is still owed; it is now
+owed against a working route and one specific question.
 
 ---
 

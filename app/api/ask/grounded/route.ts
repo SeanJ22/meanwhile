@@ -1769,7 +1769,19 @@ export async function POST(request: Request) {
       mode = "REJECTED_FELL_BACK";
     }
   } else {
-    trace.synthesis = { ran: false, why: synthesis.why, ms: synthesis.ms };
+    /*
+     * H1, 2026-09-01. The failure DETAIL travels with the reason. A bare
+     * `error` was indistinguishable between a rate limit, an overload, a
+     * timeout and a malformed body, and a production cache reading on
+     * 2026-09-01 met three of them with no way to say which. The detail is a
+     * status code and an Anthropic error-type token — a fact about our
+     * machinery, which is the only thing the trace ever carries.
+     */
+    trace.synthesis = {
+      ran: false,
+      why: synthesis.detail ? `${synthesis.why}: ${synthesis.detail}` : synthesis.why,
+      ms: synthesis.ms,
+    };
   }
 
   trace.answerMode = mode;

@@ -76,7 +76,27 @@ export type SynthesisOutcome =
       usage: CacheUsage;
       callerKey: AskCallerKey;
     }
-  | { kind: "UNAVAILABLE"; why: "no-key" | "ceiling" | "no-evidence" | "error"; ms: number };
+  | {
+      kind: "UNAVAILABLE";
+      why: "no-key" | "ceiling" | "no-evidence" | "error";
+      ms: number;
+      /**
+       * **WHY IT FAILED, CARRIED RATHER THAN COLLAPSED.** (H1, 2026-09-01.)
+       *
+       * Every network failure used to arrive as the bare string `error`, and a
+       * production reading on 2026-09-01 hit three of them across two probe
+       * runs with nothing in the trace to say whether they were a 429, a 529, a
+       * function timeout or a malformed body. "It failed" is not a measurement,
+       * and an operator who cannot tell a rate limit from a broken prompt will
+       * eventually attribute one to the other.
+       *
+       * Deliberately narrow: an HTTP STATUS and Anthropic's own `error.type`
+       * token, or the name of the thrown error. Never a response body, never a
+       * header, never anything a reader typed. The trace's standing rule is
+       * facts about OUR machinery, and a status code is exactly that.
+       */
+      detail?: string;
+    };
 
 export function synthesisSchema(): Record<string, unknown> {
   return {
@@ -267,8 +287,9 @@ export function synthesisRequestBody(
    * questions about one government share a prefix at all.
    *
    * There is exactly ONE breakpoint. A second one on the system block
-   * would never fire — the system prompt renders 1,503 characters ≈ 418
-   * tokens, below Claude Opus 5's 512-token minimum cacheable prefix, and
+   * would never fire — the system prompt renders 1,503 characters = 478
+   * tokens, counted at Anthropic's `count_tokens` endpoint on 2026-09-01,
+   * below Claude Opus 5's 512-token minimum cacheable prefix, and
    * a prefix under the minimum caches silently and reports nothing. A
    * marker that cannot fire reads to the next session as a guarantee.
    *
@@ -363,16 +384,35 @@ export async function synthesizeAnswer(
        */
       body: JSON.stringify(synthesisRequestBody(pack, { model: MODEL, cached: true })),
     });
-    if (!response.ok) return { kind: "UNAVAILABLE", why: "error", ms: elapsed() };
+    if (!response.ok) {
+      /* The status, and Anthropic's own error TYPE token if it sent one. The
+         message is not read: the type is the diagnosable part and free text is
+         how a body ends up somewhere it was never meant to be. */
+      let kind = "";
+      try {
+        const failure = (await response.json()) as { error?: { type?: unknown } };
+        if (typeof failure?.error?.type === "string") kind = ` ${failure.error.type}`;
+      } catch {
+        /* A non-JSON error body tells us nothing more than the status did. */
+      }
+      return {
+        kind: "UNAVAILABLE",
+        why: "error",
+        ms: elapsed(),
+        detail: `HTTP ${response.status}${kind}`,
+      };
+    }
 
     const body = (await response.json()) as {
       content?: Array<{ type?: string; text?: string }>;
     };
     const text = body.content?.find((b) => b.type === "text")?.text ?? "";
-    if (!text) return { kind: "UNAVAILABLE", why: "error", ms: elapsed() };
+    if (!text) {
+      return { kind: "UNAVAILABLE", why: "error", ms: elapsed(), detail: "no text block" };
+    }
     const parsed = JSON.parse(text) as { answer?: unknown; citedUrls?: unknown };
     if (typeof parsed.answer !== "string" || parsed.answer.trim().length === 0) {
-      return { kind: "UNAVAILABLE", why: "error", ms: elapsed() };
+      return { kind: "UNAVAILABLE", why: "error", ms: elapsed(), detail: "no answer string" };
     }
     return {
       kind: "WROTE",
@@ -387,7 +427,14 @@ export async function synthesizeAnswer(
       usage: readCacheUsage(body),
       callerKey,
     };
-  } catch {
-    return { kind: "UNAVAILABLE", why: "error", ms: elapsed() };
+  } catch (error) {
+    /* The error's NAME only — `TypeError`, `AbortError`. Enough to separate a
+       transport failure from a timeout, and nothing a message could carry. */
+    return {
+      kind: "UNAVAILABLE",
+      why: "error",
+      ms: elapsed(),
+      detail: error instanceof Error ? error.name : "threw a non-Error",
+    };
   }
 }

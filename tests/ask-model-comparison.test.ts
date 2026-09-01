@@ -13,6 +13,7 @@ import {
   ASK_CHALLENGER_MODEL,
   ASK_INCUMBENT_MODEL,
   challengerQuestionsNotHolding,
+  switchVerdict,
 } from "../lib/ask/model-economics.ts";
 import {
   ASK_SYNTHESIS_MODEL,
@@ -214,18 +215,30 @@ test("the shown-prompt digest ignores the model and moves with the evidence", ()
   assert.notEqual(shownPromptDigest(p), shownPromptDigest(changed as EvidencePack));
 });
 
-test("the owner's criterion is absolute: a mutual failure still blocks the switch", () => {
+test("RULING 230: the criterion is absolute, and the ONE verdict derives it", () => {
   /*
-   * **THE CASE THE 2026-08-31 MEASUREMENT ACTUALLY LANDED IN**, and the one
-   * place the two rules disagree.
+   * **THE CASE THE 2026-08-31 MEASUREMENT ACTUALLY LANDED IN**, and the place
+   * the two rules USED to disagree.
    *
-   * Q3 and Q5 failed on BOTH models over the ASK-19 length budget. `switchVerdict`
-   * is relative and derives SWITCH from that, because nothing DEGRADED. The
-   * owner's instruction is absolute — *switch only if every required question
-   * holds* — and derives RETAIN. Both derivations are real; the decision is
-   * taken on the author's, at precedence 1, and this is the function that
-   * expresses it.
+   * Q3 and Q5 failed on BOTH models over the ASK-19 length budget. The
+   * superseded relative rule derived SWITCH from that, because nothing
+   * DEGRADED; the owner's absolute criterion derived RETAIN. This file used to
+   * assert the absolute one while `tests/ask-model-economics.test.ts` asserted
+   * the relative one, and the run record then wrote both down and contradicted
+   * itself.
+   *
+   * RULING 230 (2026-09-01) collapses them: `switchVerdict` IS the absolute
+   * rule, `challengerQuestionsNotHolding` is the helper it reads, and the two
+   * can no longer disagree because there is no longer a second rule. Asserted
+   * here BOTH ways — the helper's list, and the verdict derived over the same
+   * runs — because the defect was never in either function alone.
    */
+  const incumbent = [
+    { questionId: "Q3", model: ASK_INCUMBENT_MODEL, held: false, ms: 1, usd: 0.01 },
+    { questionId: "Q4", model: ASK_INCUMBENT_MODEL, held: true, ms: 1, usd: 0.01 },
+    { questionId: "Q5", model: ASK_INCUMBENT_MODEL, held: false, ms: 1, usd: 0.01 },
+    { questionId: "Q7", model: ASK_INCUMBENT_MODEL, held: true, ms: 1, usd: 0.01 },
+  ];
   const challenger = [
     { questionId: "Q3", model: ASK_CHALLENGER_MODEL, held: false, ms: 1, usd: 0.01 },
     { questionId: "Q4", model: ASK_CHALLENGER_MODEL, held: true, ms: 1, usd: 0.01 },
@@ -233,6 +246,13 @@ test("the owner's criterion is absolute: a mutual failure still blocks the switc
     { questionId: "Q7", model: ASK_CHALLENGER_MODEL, held: true, ms: 1, usd: 0.01 },
   ];
   assert.deepEqual([...challengerQuestionsNotHolding(challenger)], ["Q3", "Q5"]);
+
+  /* THE ONE VERDICT, over the same runs. Same answer, no second rule. */
+  const verdict = switchVerdict(incumbent, challenger, "the 2026-08-31 shape");
+  assert.equal(verdict.kind, "HOLD");
+  assert.notEqual(verdict.kind, "SWITCH");
+  assert.deepEqual(verdict.kind === "HOLD" ? [...verdict.notHolding] : [], ["Q3", "Q5"]);
+
   /* A never-ran question is not a hold either — an unmeasured question can
      never be counted toward "every question holds". */
   assert.deepEqual(

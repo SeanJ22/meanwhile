@@ -61,7 +61,7 @@
  * non-zero; it is never an empty success.
  */
 
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 import type { AskIntent, AskTemporal } from "../lib/ask/intent.ts";
@@ -81,8 +81,10 @@ import {
   ASK_INCUMBENT_MODEL,
   ASK_MODEL_RATES,
   challengerQuestionsNotHolding,
+  relativeNonRegressionAnalysis,
   switchVerdict,
   type QuestionRun,
+  type SwitchVerdict,
 } from "../lib/ask/model-economics.ts";
 import { validateAnswer, type KnownSubjectName } from "../lib/ask/validate.ts";
 import {
@@ -102,9 +104,41 @@ const BASE = (process.env.SHOOT_BASE_URL ?? DEFAULT_BASE).replace(/\/$/, "");
 const ROOT = process.cwd();
 const RUNS_DIR = join(ROOT, "data", "health", "ask-model-compare-runs");
 
+/**
+ * **`--regenerate <record>` — RE-DERIVE THE VERDICT FROM RECORDED RUNS.**
+ * (RULING 230, RULING 92, RULING 102, 2026-09-01.)
+ *
+ * The 2026-08-31 record was written by the generator this script used to be,
+ * and it carries a verdict RULING 230 supersedes. **A generated artifact is
+ * never hand-edited (RULING 92), and fixing a generator is not finished until
+ * its output is regenerated and diffed (RULING 102)** — so the fix is a second
+ * ENTRY POINT into the same derivation, not an editor.
+ *
+ * This mode reads an existing record's `rows` — the raw per-pass arm results,
+ * which are the MEASUREMENT and are not re-derived — and re-runs every derived
+ * field over them: the comparable set, the two `QuestionRun` lists, the
+ * canonical `switchVerdict`, the relative diagnostic, and the decision. It
+ * makes NO network call and grades nothing again, so it cannot invent a
+ * measurement; it can only recompute what the measurement implies under the
+ * current rule.
+ *
+ *   pnpm ask:model-compare --regenerate data/health/ask-model-compare-runs/<f>.json
+ */
+const REGENERATE = (() => {
+  const argv = process.argv.slice(2);
+  const at = argv.indexOf("--regenerate");
+  if (at === -1) return null;
+  const path = argv[at + 1];
+  if (!path) {
+    console.error("ask:model-compare · --regenerate needs the path of a run record");
+    process.exit(1);
+  }
+  return path;
+})();
+
 /* ── refusal 1: the target must be local (RULING 125) ────────────────────── */
 
-{
+if (!REGENERATE) {
   let host: string;
   try {
     host = new URL(BASE).hostname;
@@ -129,7 +163,7 @@ const RUNS_DIR = join(ROOT, "data", "health", "ask-model-compare-runs");
 
 /* ── refusal 2: no credential is a WALL, never a result ──────────────────── */
 
-if (!process.env.ANTHROPIC_API_KEY) {
+if (!REGENERATE && !process.env.ANTHROPIC_API_KEY) {
   console.error(
     [
       "",
@@ -473,6 +507,227 @@ interface Row {
   readonly challenger: ArmSummary;
 }
 
+/* ── the derivation, in ONE place, called by both entry points ───────────── */
+
+/**
+ * **THE DIAGNOSTICS THIS COMPARISON MEASURED THAT ARE NOT MODEL RESULTS.**
+ * (2026-08-31 run; carried forward under RULING 230 without re-measuring.)
+ *
+ * They are in the RECORD rather than only in a report because the record is
+ * what the next session reads. A question that fails identically on both arms
+ * is a fact about the PIPELINE, and filing it as a model result is how a
+ * budget defect gets mistaken for a model that cannot answer.
+ */
+const CARRIED_DIAGNOSTICS = [
+  {
+    id: "Q5-budget-defect",
+    finding:
+      "Q5 fails IDENTICALLY on both arms: an 18-record pack cannot fit the ASK-19 700-character " +
+      "budget. This is a BUDGET DEFECT and belongs on the frontier — it is not a model result, " +
+      "and under RULING 230 it still blocks the switch because the question does not hold.",
+  },
+  {
+    id: "Q3-challenger-advantage",
+    finding:
+      "Q3: the challenger was GREEN 3/3 where the incumbent was RED 3/3, at 2.5–3.2x cheaper. " +
+      "Recorded for a RE-RUN once Q5's budget defect is fixed; it does not by itself move the " +
+      "verdict, because RULING 230 is absolute over every required question.",
+  },
+] as const;
+
+interface Derived {
+  readonly comparedRows: number;
+  readonly incumbentRuns: QuestionRun[];
+  readonly challengerRuns: QuestionRun[];
+  readonly verdict: SwitchVerdict;
+  readonly decision: string;
+  readonly challengerQuestionsNotHolding: readonly string[];
+  readonly relativeNonRegression: ReturnType<typeof relativeNonRegressionAnalysis>;
+}
+
+/**
+ * Every derived field, from the rows and nothing else.
+ *
+ * **`decision` is a RENDERING of `verdict`, not a second rule.** That is the
+ * whole of RULING 230 expressed in code: the machine-readable verdict and the
+ * human decision cannot disagree because there is only one derivation and the
+ * second field is written from the first.
+ */
+function derive(rows: readonly Row[], why: string): Derived {
+  const comparable = rows.filter(
+    (r) => r.packsIdentical && r.incumbent.ranCount > 0 && r.challenger.ranCount > 0,
+  );
+  const incumbentRuns: QuestionRun[] = comparable.map((r) => ({
+    questionId: r.questionId,
+    model: ASK_INCUMBENT_MODEL,
+    held: held(r.incumbent),
+    ms: r.incumbent.msMean,
+    usd: r.incumbent.usdTotal,
+  }));
+  const challengerRuns: QuestionRun[] = comparable.map((r) => ({
+    questionId: r.questionId,
+    model: ASK_CHALLENGER_MODEL,
+    held: held(r.challenger),
+    ms: r.challenger.msMean,
+    usd: r.challenger.usdTotal,
+  }));
+  const verdict = switchVerdict(incumbentRuns, challengerRuns, why);
+  return {
+    comparedRows: comparable.length,
+    incumbentRuns,
+    challengerRuns,
+    verdict,
+    decision:
+      verdict.kind === "SWITCH"
+        ? `SWITCH:${ASK_CHALLENGER_MODEL}`
+        : `RETAIN:${ASK_INCUMBENT_MODEL}`,
+    challengerQuestionsNotHolding: challengerQuestionsNotHolding(challengerRuns),
+    relativeNonRegression: relativeNonRegressionAnalysis(incumbentRuns, challengerRuns),
+  };
+}
+
+/** The decision, printed from the ONE verdict. */
+function reportDecision(derived: Derived): void {
+  const { verdict, relativeNonRegression: rel } = derived;
+  console.log("");
+  console.log(
+    "  RULING 230 — SWITCH only if EVERY required question is measured and holds. " +
+      "ONE canonical verdict; no second function may emit one.",
+  );
+  console.log(`  VERDICT: ${verdict.kind}`);
+  if (verdict.kind === "HOLD") {
+    console.log(`    did not hold on the challenger: ${verdict.notHolding.join(", ")}`);
+  }
+  if (verdict.kind === "NOT_MEASURED") {
+    console.log(`    unmeasured: ${verdict.unmeasured.join(", ") || "(none named)"}`);
+    console.log(`    why: ${verdict.why}`);
+  }
+  if (verdict.kind === "SWITCH") {
+    console.log(
+      `    every one of the ${verdict.questions} required question(s) was measured and held ` +
+        `on ${verdict.to}.`,
+    );
+  }
+  console.log(`  DECISION: ${derived.decision}`);
+
+  console.log("");
+  console.log(`  DIAGNOSTIC — relative non-regression (NOT a switch verdict): ${rel.kind}`);
+  if (rel.degraded.length > 0) console.log(`    degraded vs the incumbent: ${rel.degraded.join(", ")}`);
+  if (rel.bothArmsFailed.length > 0) {
+    console.log(
+      `    failed on BOTH arms (a pipeline fact, not a model result): ${rel.bothArmsFailed.join(", ")}`,
+    );
+  }
+  if (rel.unmeasured.length > 0) console.log(`    unmeasured: ${rel.unmeasured.join(", ")}`);
+  for (const d of CARRIED_DIAGNOSTICS) console.log(`    ${d.id}: ${d.finding}`);
+}
+
+interface RecordMeta {
+  readonly baseUrl: string;
+  readonly testedSha: string | null;
+  readonly startedAt: string;
+  readonly passesPerArm: number;
+  readonly corpusRows: number;
+  readonly voided: readonly string[];
+  readonly regeneratedFrom?: string;
+}
+
+function writeRunRecord(meta: RecordMeta, rows: readonly Row[], derived: Derived): string {
+  mkdirSync(RUNS_DIR, { recursive: true });
+  const recordPath = join(RUNS_DIR, `${today()}-${Date.now()}.json`);
+  writeFileSync(
+    recordPath,
+    `${JSON.stringify(
+      {
+        baseUrl: meta.baseUrl,
+        testedSha: meta.testedSha,
+        startedAt: meta.startedAt,
+        finishedAt: new Date().toISOString(),
+        ...(meta.regeneratedFrom ? { regeneratedFrom: meta.regeneratedFrom } : {}),
+        incumbentModel: ASK_INCUMBENT_MODEL,
+        challengerModel: ASK_CHALLENGER_MODEL,
+        rates: ASK_MODEL_RATES,
+        cachePolicy:
+          "DISABLED on both arms: no cache_control marker is sent, so neither arm reads or " +
+          "writes a prefix. Cold input tokens are the only basis both models can share, and a " +
+          "comparison run may not write into production's prefixes.",
+        switchRule:
+          "RULING 230 (2026-09-01): SWITCH only if EVERY required challenger question is " +
+          "measured AND holds; any required question measured and not held -> HOLD; any " +
+          "required question unmeasured -> NOT_MEASURED. `decision` is rendered FROM `verdict` " +
+          "and cannot disagree with it.",
+        passesPerArm: meta.passesPerArm,
+        corpusRows: meta.corpusRows,
+        renderedRows: rows.length,
+        comparedRows: derived.comparedRows,
+        voided: meta.voided,
+        challengerQuestionsNotHolding: derived.challengerQuestionsNotHolding,
+        /* The canonical verdict, and the decision RENDERED from it. */
+        verdict: derived.verdict,
+        decision: derived.decision,
+        /* Diagnostics. Neither of these is a switching verdict. */
+        relativeNonRegression: derived.relativeNonRegression,
+        carriedDiagnostics: CARRIED_DIAGNOSTICS,
+        rows,
+      },
+      null,
+      2,
+    )}\n`,
+    "utf8",
+  );
+  return recordPath;
+}
+
+/* ── entry point 2: regenerate from a recorded run ───────────────────────── */
+
+function regenerate(path: string): void {
+  const prior = JSON.parse(readFileSync(path, "utf8")) as {
+    baseUrl?: string;
+    testedSha?: string | null;
+    startedAt?: string;
+    passesPerArm?: number;
+    corpusRows?: number;
+    voided?: string[];
+    rows?: Row[];
+    verdict?: { kind?: string };
+    decision?: string;
+  };
+  const rows = prior.rows ?? [];
+  /* A zero-row regeneration is a FAILED regeneration, never an empty one. */
+  if (rows.length === 0) {
+    console.error(`ask:model-compare · FAILED — ${path} carries no rows to re-derive from.`);
+    process.exit(1);
+  }
+
+  const derived = derive(
+    rows,
+    `${rows.length} row(s) recorded on the ${prior.startedAt ?? "unknown"} run`,
+  );
+  console.log(`ask:model-compare · REGENERATED from ${path}`);
+  console.log(
+    `  the measurement is unchanged — ${rows.length} row(s), ${derived.comparedRows} compared; ` +
+      "nothing was re-graded and no network call was made.",
+  );
+  console.log(
+    `  prior record said verdict ${prior.verdict?.kind ?? "?"} / decision ${prior.decision ?? "?"}`,
+  );
+  reportDecision(derived);
+  const written = writeRunRecord(
+    {
+      baseUrl: prior.baseUrl ?? "unknown",
+      testedSha: prior.testedSha ?? null,
+      startedAt: prior.startedAt ?? new Date().toISOString(),
+      passesPerArm: prior.passesPerArm ?? 0,
+      corpusRows: prior.corpusRows ?? rows.length,
+      voided: prior.voided ?? [],
+      regeneratedFrom: path.replace(/\\/g, "/"),
+    },
+    rows,
+    derived,
+  );
+  console.log(`\n  run record: ${written}`);
+}
+
 async function main(): Promise<void> {
   const startedAt = new Date().toISOString();
   const templates =
@@ -572,29 +827,12 @@ async function main(): Promise<void> {
 
   /* ------------------------------------------------------------ verdict -- */
 
-  const comparable = rows.filter(
-    (r) => r.packsIdentical && r.incumbent.ranCount > 0 && r.challenger.ranCount > 0,
+  const derived = derive(
+    rows,
+    `${rows.filter((r) => r.packsIdentical && r.incumbent.ranCount > 0 && r.challenger.ranCount > 0).length} of ` +
+      `${templates.length} canonical question(s) reached the synthesis contract on both arms`,
   );
-  const incumbentRuns: QuestionRun[] = comparable.map((r) => ({
-    questionId: r.questionId,
-    model: ASK_INCUMBENT_MODEL,
-    held: held(r.incumbent),
-    ms: r.incumbent.msMean,
-    usd: r.incumbent.usdTotal,
-  }));
-  const challengerRuns: QuestionRun[] = comparable.map((r) => ({
-    questionId: r.questionId,
-    model: ASK_CHALLENGER_MODEL,
-    held: held(r.challenger),
-    ms: r.challenger.msMean,
-    usd: r.challenger.usdTotal,
-  }));
-  const verdict = switchVerdict(
-    incumbentRuns,
-    challengerRuns,
-    `${comparable.length} of ${templates.length} canonical question(s) reached the synthesis ` +
-      "contract on both arms",
-  );
+  const comparable = derived.comparedRows;
 
   /* ------------------------------------------------------------- report -- */
 
@@ -604,7 +842,7 @@ async function main(): Promise<void> {
   );
   console.log(
     `  DENOMINATOR: ${templates.length} canonical question(s); ${rows.length} row(s) rendered; ` +
-      `${comparable.length} compared on both arms.`,
+      `${comparable} compared on both arms.`,
   );
   console.log("  Caches DISABLED on both arms — cold input tokens, one basis for both columns.");
   console.log(
@@ -660,91 +898,39 @@ async function main(): Promise<void> {
     for (const line of voided) console.log(`    ${line}`);
   }
 
-  /*
-   * **THE DECISION IS THE OWNER'S CRITERION, AND IT IS ABSOLUTE.**
-   *
-   * The derived `switchVerdict` is relative — it blocks a switch only on
-   * DEGRADATION — and on this data the two rules can disagree. Both are
-   * printed, the conflict is named rather than resolved by whichever ran last,
-   * and the DECISION line is taken on the author's directive (RULING 185,
-   * precedence 1). See `challengerQuestionsNotHolding`.
-   */
-  const notHolding = challengerQuestionsNotHolding(challengerRuns);
-  const criterionMet = comparable.length > 0 && notHolding.length === 0;
-  console.log("");
-  console.log(
-    `  THE OWNER'S CRITERION — every required question holds on ${ASK_CHALLENGER_MODEL}: ` +
-      (criterionMet ? "MET" : "NOT MET"),
-  );
-  if (!notHolding.length && comparable.length === 0) {
-    console.log("    nothing was compared, so nothing held; an empty sweep is never a switch.");
-  }
-  if (notHolding.length > 0) {
-    console.log(`    did not hold on the challenger: ${notHolding.join(", ")}`);
-  }
-  console.log(
-    `  DECISION: ${criterionMet ? `SWITCH to ${ASK_CHALLENGER_MODEL}` : `RETAIN ${ASK_INCUMBENT_MODEL}`}`,
-  );
-
-  console.log(`\n  DERIVED (relative, degradation-only) VERDICT: ${verdict.kind}`);
-  if (verdict.kind === "HOLD") {
-    console.log(`    degraded: ${verdict.degraded.join(", ")}`);
-    console.log(`    the incumbent ${ASK_INCUMBENT_MODEL} is retained.`);
-  }
-  if (verdict.kind === "NOT_MEASURED") {
-    console.log(`    unmeasured: ${verdict.unmeasured.join(", ") || "(none named)"}`);
-    console.log(`    why: ${verdict.why}`);
-  }
-  if (verdict.kind === "SWITCH") {
-    console.log(
-      `    every one of the ${verdict.questions} compared question(s) held on ` +
-        `${verdict.to}; the switch rule's condition is met over that denominator.`,
-    );
-  }
+  reportDecision(derived);
 
   /* ---------------------------------------------------------- the record - */
 
-  mkdirSync(RUNS_DIR, { recursive: true });
-  const recordPath = join(RUNS_DIR, `${today()}-${Date.now()}.json`);
-  writeFileSync(
-    recordPath,
-    `${JSON.stringify(
-      {
-        baseUrl: BASE,
-        testedSha: headSha(),
-        startedAt,
-        finishedAt: new Date().toISOString(),
-        incumbentModel: ASK_INCUMBENT_MODEL,
-        challengerModel: ASK_CHALLENGER_MODEL,
-        rates: ASK_MODEL_RATES,
-        cachePolicy:
-          "DISABLED on both arms: no cache_control marker is sent, so neither arm reads or " +
-          "writes a prefix. Cold input tokens are the only basis both models can share, and a " +
-          "comparison run may not write into production's prefixes.",
-        passesPerArm: PASSES,
-        corpusRows: templates.length,
-        renderedRows: rows.length,
-        comparedRows: comparable.length,
-        voided,
-        /* The author's criterion, absolute, and the decision taken on it. */
-        challengerQuestionsNotHolding: notHolding,
-        ownerCriterionMet: criterionMet,
-        decision: criterionMet ? `SWITCH:${ASK_CHALLENGER_MODEL}` : `RETAIN:${ASK_INCUMBENT_MODEL}`,
-        /* The relative derivation, reported beside it and never in place of it. */
-        verdict,
-        rows,
-      },
-      null,
-      2,
-    )}\n`,
-    "utf8",
+  const recordPath = writeRunRecord(
+    {
+      baseUrl: BASE,
+      testedSha: headSha(),
+      startedAt,
+      passesPerArm: PASSES,
+      corpusRows: templates.length,
+      voided,
+    },
+    rows,
+    derived,
   );
   console.log(`\n  run record: ${recordPath}`);
 }
 
-main().catch((error) => {
-  console.error(
-    `ask:model-compare · FAILED: ${error instanceof Error ? error.stack : String(error)}`,
-  );
-  process.exit(1);
-});
+if (REGENERATE) {
+  try {
+    regenerate(REGENERATE);
+  } catch (error) {
+    console.error(
+      `ask:model-compare · FAILED: ${error instanceof Error ? error.stack : String(error)}`,
+    );
+    process.exit(1);
+  }
+} else {
+  main().catch((error) => {
+    console.error(
+      `ask:model-compare · FAILED: ${error instanceof Error ? error.stack : String(error)}`,
+    );
+    process.exit(1);
+  });
+}

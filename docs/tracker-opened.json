@@ -2178,5 +2178,12 @@
       "JOB28",
       "JOB29"
     ]
+  },
+  {
+    "session": "SC2-tracker-nonhunt",
+    "opened": "2026-08-31",
+    "ids": [
+      "JOB30"
+    ]
   }
 ]

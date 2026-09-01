@@ -171,6 +171,43 @@ export const LONG_FRAME_MS = 33.4;
 export const NORMALIZED_FLOOR = 0.9;
 
 /**
+ * **THE SOFTWARE RASTERISER'S OWN FLOOR, AND WHY IT IS A DIFFERENT NUMBER.**
+ * (Session C, 2026-09-01.)
+ *
+ * The two rasterisers are SEPARATE POPULATIONS and are never averaged. A reader
+ * on a GPU and a reader whose browser paints WebGL on the CPU are looking at
+ * different machines, and one number covering both would be a number neither of
+ * them has.
+ *
+ * The hardware floor above stays at 90% — that is the author's criterion and it
+ * is unchanged. This is the minimum the CPU-rasterised path must clear, and it
+ * is lower for a stated reason rather than a convenient one: the degradation
+ * that gets it there deliberately stands treatments down mid-flight, so the
+ * software arm is not being asked to match a bare map as closely as the
+ * hardware arm, which changes nothing at all.
+ *
+ * Measured on 2026-09-01 after the repair: **92.0%** (application 49.9 fps
+ * median, bare 54.2), so the shipped state clears this floor with room and in
+ * fact clears the hardware floor too. The floor is the MINIMUM, not the target.
+ */
+export const SOFTWARE_NORMALIZED_FLOOR = 0.75;
+
+/**
+ * The share of frames over `LONG_FRAME_MS` the software path may not exceed.
+ *
+ * **THE MEDIAN IS NOT SUFFICIENT AND THIS IS THE PROOF, NOT THE THEORY.** With
+ * the blur and the district layers stood down and nothing else, the fly-in
+ * reached 89% of a bare map on the software rasteriser and still dropped 57 of
+ * 231 frames — 24.7% — past 33.4 ms, at a p95 frame time of 97.3 ms. A criterion
+ * that read only the median would have called that finished. It was not
+ * finished; it was a flight with a quarter of its frames visibly late.
+ *
+ * So the software verdict carries BOTH, and a build must clear both. Measured
+ * after the SVG art joined the degradation: 20 of 771 frames, 2.6%.
+ */
+export const SOFTWARE_JANK_CEILING = 0.2;
+
+/**
  * The rate below which the BARE map is reported as not reaching smooth motion.
  *
  * **THIS IS A REPORTING TRIGGER AND IT IS NEVER A PASS CONDITION.** The author
@@ -344,6 +381,51 @@ export function judgeNormalized(app: ArmSummary, bare: ArmSummary): NormalizedVe
     hostCeilingFps: bare.medianFps,
     hostBelowSmoothMotion: bare.medianFps < SMOOTH_MOTION_FPS,
   };
+}
+
+export interface SoftwareVerdict {
+  /** application median fps / bare-map median fps, on the CPU rasteriser. */
+  readonly ratio: number;
+  /** Frames over `LONG_FRAME_MS` as a share of the application arm's frames. */
+  readonly jankFraction: number;
+  /** Whether the ratio clears `SOFTWARE_NORMALIZED_FLOOR`. */
+  readonly ratioPass: boolean;
+  /** Whether the jank share is under `SOFTWARE_JANK_CEILING`. */
+  readonly jankPass: boolean;
+  /** BOTH, because either one alone has been measured to be insufficient. */
+  readonly pass: boolean;
+}
+
+/**
+ * The software-rasteriser verdict: the ratio AND the jank share, never one.
+ *
+ * Separate from `judgeNormalized` rather than a parameter on it, because the
+ * two verdicts are about two different populations and answer to two different
+ * numbers. Folding them into one function with a flag is how a later session
+ * ends up applying the software floor to a hardware run.
+ *
+ * It refuses an empty or zero-rate bare arm for the reason `judgeNormalized`
+ * does: a ratio taken against nothing is infinite, and an infinite ratio is a
+ * green check for a measurement that never happened.
+ */
+export function judgeSoftware(app: ArmSummary, bare: ArmSummary): SoftwareVerdict {
+  if (!(bare.medianFps > 0) || !Number.isFinite(bare.medianFps)) {
+    throw new Error(
+      `flyin-normalized: the software bare arm's median came back as ${bare.medianFps}. A ratio ` +
+        "against that would report a PASS for a measurement that never happened — refusing.",
+    );
+  }
+  if (app.framesMeasured <= 0) {
+    throw new Error(
+      "flyin-normalized: the software application arm measured ZERO frames, so its jank share " +
+        "has no denominator. That is a broken recorder, not a smooth flight (RULING 159).",
+    );
+  }
+  const ratio = app.medianFps / bare.medianFps;
+  const jankFraction = app.longFrames / app.framesMeasured;
+  const ratioPass = ratio >= SOFTWARE_NORMALIZED_FLOOR;
+  const jankPass = jankFraction < SOFTWARE_JANK_CEILING;
+  return { ratio, jankFraction, ratioPass, jankPass, pass: ratioPass && jankPass };
 }
 
 /**

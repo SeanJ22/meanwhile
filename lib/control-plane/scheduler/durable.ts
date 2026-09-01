@@ -190,8 +190,30 @@ export async function syncObligations(
   const refreshed: { id: string; changed: string[] }[] = [];
   const all: StandingObligation[] = [];
 
+  /*
+   * ONE READ OF THE WHOLE TABLE, not one read per obligation.
+   * (Session C3, lane C, 2026-09-01.)
+   *
+   * This loop used to issue `repos.obligations.read(o.id)` per row, which is one
+   * network round trip per obligation against the Postgres control plane. That
+   * was invisible at 99 obligations and became the binding constraint the
+   * moment RULING 229 was taken seriously: acquiring to the AUTHORITATIVE
+   * SOURCE UNIVERSE means the corpus is thousands of rows, not dozens, and a
+   * scheduler whose registration cost is linear in round trips would have made
+   * "name every government" cost minutes per cycle.
+   *
+   * `list()` is on the same interface, is ordered by id, and both stores
+   * implement it. The semantics below are unchanged — same CAS, same revisions,
+   * same refusal to touch runtime-owned fields — because the only thing that
+   * moved is WHERE the existing row is found.
+   */
+  const existingById = new Map<string, { id: string; revision: number; value: StandingObligation }>();
+  for (const row of await repos.obligations.list()) {
+    existingById.set(row.id, { id: row.id, revision: row.revision, value: row.value });
+  }
+
   for (const o of corpus) {
-    const existing = await repos.obligations.read(o.id);
+    const existing = existingById.get(o.id) ?? null;
     if (existing === null) {
       const row = standing(o, now);
       await repos.obligations.put(o.id, row, now);
@@ -231,6 +253,40 @@ export async function syncObligations(
     all.push(written.value);
   }
   return { all, registered, alreadyDurable, refreshed };
+}
+
+/**
+ * **RESUME THE OCCURRENCE THIS OBLIGATION ALREADY HAS OPEN.**
+ * (Session C3, lane C, 2026-09-01.)
+ *
+ * ## The state this exists to stop accumulating
+ *
+ * `openOccurrence` always opens sequence N+1. That was right while every due
+ * obligation was dispatched in the same cycle that opened it — the occurrence
+ * was opened, worked and closed before the next cycle looked.
+ *
+ * Under RULING 229 the corpus is the authoritative source universe and a cycle
+ * carries a stated dispatch ceiling, so an occurrence can now be opened and not
+ * reached. Opening a fresh one next cycle strands the first: an occurrence with
+ * an open WorkItem and an open RouteTask that nothing will ever dispatch, which
+ * **reads back as a worker that abandoned a route** — a false statement about a
+ * worker, produced by arithmetic in the runner.
+ *
+ * So a cycle RESUMES what is open before it opens anything. Returns null when
+ * there is nothing open, which is the normal case and the one that opens.
+ */
+export async function resumeOpenOccurrence(
+  repos: ControlPlaneRepositories,
+  obligation: StandingObligation,
+): Promise<{ readonly id: string; readonly routeTaskId: string } | null> {
+  if (obligation.openOccurrenceId === null) return null;
+  const held = await repos.occurrences.read(obligation.openOccurrenceId);
+  if (held === null) return null;
+  /* A CLOSED occurrence is finished work and is never re-dispatched: its
+     RouteTask carries a committed disposition, and re-opening it would attach a
+     second Attempt to a settled task. */
+  if (held.value.closedAt !== null) return null;
+  return { id: held.value.id, routeTaskId: held.value.routeTaskId };
 }
 
 /**

@@ -28,8 +28,11 @@
  *
  * ## Why the breakpoint is NOT on the system block
  *
- * Measured, not assumed: `synthesisPrompt()` renders 1,503 characters ≈ 418
- * tokens. **Claude Opus 5's minimum cacheable prefix is 512 tokens.** A
+ * Measured, not assumed, and measured at Anthropic's own `count_tokens`
+ * endpoint rather than estimated from characters: `synthesisPrompt()` renders
+ * 1,503 characters = **478 tokens** (2026-09-01; the earlier "≈ 418" was a
+ * chars/4 estimate and was 60 tokens low). **Claude Opus 5's minimum cacheable
+ * prefix is 512 tokens.** A
  * breakpoint on a prefix below the minimum does not error — it silently never
  * caches, reporting `cache_creation_input_tokens: 0` forever. A marker that
  * can never fire is worse than no marker, because it reads as a guarantee to
@@ -244,6 +247,70 @@ export function cacheHitRates(ledger: CacheLedger): CallerCacheStats[] {
   return ASK_CALLER_KEYS.map((key) => ledger[key]).filter(
     (stats): stats is CallerCacheStats => stats !== undefined,
   );
+}
+
+/* ── what the cache actually saved ───────────────────────────────────────── */
+
+/**
+ * The published multipliers, named once. A five-minute cache WRITE bills 1.25x
+ * the base input rate and a READ bills 0.1x, so **one later read more than
+ * repays the write premium**: 1.25 + 0.1 = 1.35 against 2.0 for two uncached
+ * passes. They are constants rather than literals sprinkled through a report,
+ * because a saving computed from a remembered multiplier is a saving nobody
+ * measured.
+ */
+export const CACHE_WRITE_MULTIPLIER = 1.25;
+export const CACHE_READ_MULTIPLIER = 0.1;
+
+export interface CacheSavings {
+  readonly callerKey: AskCallerKey;
+  /** What the input side of these calls actually billed. */
+  readonly billedUsd: number;
+  /** What the same tokens would have billed with no cache at all. */
+  readonly uncachedBaselineUsd: number;
+  readonly savedUsd: number;
+  /** Saved over the baseline. Zero when nothing was cached; never negative. */
+  readonly savedFraction: number;
+  /** Read + written, over the whole input side. How much of the prompt is reusable. */
+  readonly cachedShareOfInput: number;
+}
+
+/**
+ * What the cache saved on the INPUT side, for one caller key.
+ *
+ * **Input only, and that is stated rather than quietly assumed.** Output tokens
+ * are unaffected by caching, so folding them in would dilute the figure with a
+ * number the cache cannot move and make the saving look smaller than it is on
+ * the thing it acts on.
+ *
+ * The baseline is the same tokens at the base rate — which is what they WOULD
+ * have cost, because without a marker a cache-write token is an ordinary input
+ * token. It is not a counterfactual about traffic; it is the same traffic
+ * priced without the feature.
+ */
+export function cacheSavings(
+  stats: CallerCacheStats,
+  inputUsdPerMillion: number,
+): CacheSavings {
+  const per = inputUsdPerMillion / 1_000_000;
+  const total =
+    stats.cacheReadInputTokens + stats.cacheCreationInputTokens + stats.uncachedInputTokens;
+  const billed =
+    stats.cacheReadInputTokens * per * CACHE_READ_MULTIPLIER +
+    stats.cacheCreationInputTokens * per * CACHE_WRITE_MULTIPLIER +
+    stats.uncachedInputTokens * per;
+  const baseline = total * per;
+  return {
+    callerKey: stats.callerKey,
+    billedUsd: billed,
+    uncachedBaselineUsd: baseline,
+    savedUsd: baseline - billed,
+    savedFraction: baseline === 0 ? 0 : (baseline - billed) / baseline,
+    cachedShareOfInput:
+      total === 0
+        ? 0
+        : (stats.cacheReadInputTokens + stats.cacheCreationInputTokens) / total,
+  };
 }
 
 /**

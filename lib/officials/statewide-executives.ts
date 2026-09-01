@@ -256,12 +256,11 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
       // "Main: 602-542-4285", published in the page's own contact block.
       phone: "(602) 542-4285",
       contactFormUrl: "https://azsos.gov/about/contact-us",
-      // A portrait is PROPOSED, never shipped by a session (RULING 55). The
-      // office publishes one at
-      // /sites/default/files/photo/AZ-SOS-Adrian-Fontes-Official-Photo-2025-sml.jpg
-      // and it is staged for the author's review; until he approves it this
-      // row renders initials, which blocks nothing.
-      photoUrl: null,
+      // APPROVED BY THE AUTHOR 2026-09-01 (OWN03, RULING 55): he reviewed the
+      // nine at docs/photo-review/own03-nine.png and approved all nine. The
+      // bytes here were re-fetched and matched against the decode he saw before
+      // anything shipped — docs/evidence/own03-promotion.json.
+      photoUrl: "/officials/statewide-az-secretary-of-state.jpg",
       campaignUrl: null,
       termEnd: null,
       birthDate: null,
@@ -287,9 +286,11 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
       // "(602) 542-5025", published in the page's own footer contact block.
       phone: "(602) 542-5025",
       contactFormUrl: null,
-      // Proposed for review: /sites/default/files/2024-10/KrisMayesHeadshot.png,
-      // alt text "Headshot of Kris Mayes wearing a grey suit."
-      photoUrl: null,
+      // APPROVED BY THE AUTHOR 2026-09-01 (OWN03, RULING 55): he reviewed the
+      // nine at docs/photo-review/own03-nine.png and approved all nine. The
+      // bytes here were re-fetched and matched against the decode he saw before
+      // anything shipped — docs/evidence/own03-promotion.json.
+      photoUrl: "/officials/statewide-az-attorney-general.png",
       campaignUrl: null,
       termEnd: null,
       birthDate: null,
@@ -321,7 +322,14 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
       // "Main: (602) 542-7800", published on the page.
       phone: "(602) 542-7800",
       contactFormUrl: "https://www.aztreasury.gov/contact",
-      photoUrl: null,
+      // APPROVED BY THE AUTHOR 2026-09-01 (OWN03, RULING 55): he reviewed the
+      // nine at docs/photo-review/own03-nine.png and approved all nine. The
+      // bytes here were re-fetched and matched against the decode he saw before
+      // anything shipped — docs/evidence/own03-promotion.json.
+      // The office site content-negotiates on Accept: asking with image/webp
+      // returns a DIFFERENT 22,544-byte file at the same pixel size. The ask
+      // was narrowed to the reviewed format so these are his 36,019 bytes.
+      photoUrl: "/officials/statewide-az-state-treasurer.jpg",
       campaignUrl: null,
       termEnd: null,
       birthDate: null,
@@ -428,7 +436,11 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
       email: "Myers-Web@azcc.gov",
       phone: null,
       contactFormUrl: null,
-      photoUrl: null,
+      // APPROVED BY THE AUTHOR 2026-09-01 (OWN03, RULING 55): he reviewed the
+      // nine at docs/photo-review/own03-nine.png and approved all nine. The
+      // bytes here were re-fetched and matched against the decode he saw before
+      // anything shipped — docs/evidence/own03-promotion.json.
+      photoUrl: "/officials/statewide-az-corporation-commissioner-myers.jpg",
       campaignUrl: null,
       termEnd: null,
       birthDate: null,
@@ -452,7 +464,11 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
       email: "Walden-Web@azcc.gov",
       phone: null,
       contactFormUrl: null,
-      photoUrl: null,
+      // APPROVED BY THE AUTHOR 2026-09-01 (OWN03, RULING 55): he reviewed the
+      // nine at docs/photo-review/own03-nine.png and approved all nine. The
+      // bytes here were re-fetched and matched against the decode he saw before
+      // anything shipped — docs/evidence/own03-promotion.json.
+      photoUrl: "/officials/statewide-az-corporation-commissioner-walden.jpg",
       campaignUrl: null,
       termEnd: null,
       birthDate: null,
@@ -479,7 +495,11 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
       email: "Thompson-Web@azcc.gov",
       phone: null,
       contactFormUrl: null,
-      photoUrl: null,
+      // APPROVED BY THE AUTHOR 2026-09-01 (OWN03, RULING 55): he reviewed the
+      // nine at docs/photo-review/own03-nine.png and approved all nine. The
+      // bytes here were re-fetched and matched against the decode he saw before
+      // anything shipped — docs/evidence/own03-promotion.json.
+      photoUrl: "/officials/statewide-az-corporation-commissioner-thompson.jpg",
       campaignUrl: null,
       termEnd: null,
       birthDate: null,
@@ -503,7 +523,11 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
       email: "lmarquezpeterson-web@azcc.gov",
       phone: null,
       contactFormUrl: null,
-      photoUrl: null,
+      // APPROVED BY THE AUTHOR 2026-09-01 (OWN03, RULING 55): he reviewed the
+      // nine at docs/photo-review/own03-nine.png and approved all nine. The
+      // bytes here were re-fetched and matched against the decode he saw before
+      // anything shipped — docs/evidence/own03-promotion.json.
+      photoUrl: "/officials/statewide-az-corporation-commissioner-marquez-peterson.jpg",
       campaignUrl: null,
       termEnd: null,
       birthDate: null,
@@ -528,7 +552,11 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
       email: "Lopez-Web@azcc.gov",
       phone: null,
       contactFormUrl: null,
-      photoUrl: null,
+      // APPROVED BY THE AUTHOR 2026-09-01 (OWN03, RULING 55): he reviewed the
+      // nine at docs/photo-review/own03-nine.png and approved all nine. The
+      // bytes here were re-fetched and matched against the decode he saw before
+      // anything shipped — docs/evidence/own03-promotion.json.
+      photoUrl: "/officials/statewide-az-corporation-commissioner-lopez.jpg",
       campaignUrl: null,
       termEnd: null,
       birthDate: null,
@@ -575,11 +603,11 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
       email: null,
       phone: null,
       contactFormUrl: "https://www.nj.gov/governor/contact/",
-      // The office publishes a headshot at
-      // /governor/library/secondary/ltgov_LGDaleCaldwell_new.jpg, alt
-      // "Caldwell Dr. Dale Official Headshot" — proposed for review, not
-      // shipped by this session.
-      photoUrl: null,
+      // APPROVED BY THE AUTHOR 2026-09-01 (OWN03, RULING 55): he reviewed the
+      // nine at docs/photo-review/own03-nine.png and approved all nine. The
+      // bytes here were re-fetched and matched against the decode he saw before
+      // anything shipped — docs/evidence/own03-promotion.json.
+      photoUrl: "/officials/statewide-nj-lieutenant-governor.jpg",
       campaignUrl: null,
       termEnd: null,
       birthDate: null,

@@ -58,6 +58,7 @@ import {
   plain,
   section,
   urlsIn,
+  fetchWikitext,
 } from "./wikipedia.ts";
 
 /* ─────────────────────────── What counts as government ───────────────────── */
@@ -497,65 +498,60 @@ export interface GraphNode {
   fetchedAt: string;
 }
 
-/** Fetch a page WITH its categories, in one call. */
+/**
+ * **Fetch a page WITH its categories — off `/w/api.php`, which is disallowed.**
+ * (2026-09-01.)
+ *
+ * This composed `…/w/api.php?action=query&redirects=1&prop=revisions|categories…`
+ * and `en.wikipedia.org/robots.txt` says, under `User-agent: *`:
+ *
+ * ```
+ *   Allow: /w/api.php?action=mobileview&
+ *   Allow: /w/load.php?
+ *   Disallow: /w/
+ * ```
+ *
+ * Neither `Allow` is a content query, so this call was disallowed for as long as
+ * it existed. The reasoning and the measurement are in `lib/hunt/wikipedia.ts`
+ * beside `WIKI_API_DISALLOWED`; this is the second call site.
+ *
+ * ## What moved, and the one thing that NARROWED
+ *
+ * The wikitext is identical — same record, another representation (RULING 206),
+ * and `fetchWikitext` follows the redirect the API's `redirects=1` used to.
+ *
+ * **The categories are not identical, and pretending otherwise would be the
+ * defect.** `prop=categories` returned the categories a page ends up in AFTER
+ * template expansion; `[[Category:…]]` in the wikitext is only what the article
+ * DECLARES ITSELF. A page categorised entirely by an infobox returns fewer here.
+ *
+ * That is a NARROWING, it is stated rather than absorbed, and it is safe in the
+ * one direction that matters for this module: categories are used to CLASSIFY a
+ * discovered node, and a node whose category set comes back short is classified
+ * as less certain rather than as something it is not. A wider claim would need
+ * the wider source, and the wider source is disallowed.
+ */
 export async function fetchPageWithCategories(
   title: string,
   fetcher: WikiFetcher,
   now: string,
 ): Promise<WikiPage & { categories: string[] }> {
-  const url =
-    "https://en.wikipedia.org/w/api.php?action=query&redirects=1" +
-    "&prop=revisions|categories&rvprop=content&rvslots=main&cllimit=max" +
-    `&format=json&formatversion=2&titles=${encodeURIComponent(title)}`;
+  const page = await fetchWikitext(title, fetcher, now);
+  if (page.wikitext === null) return { ...page, categories: [] };
 
-  const base = {
-    requested: title,
-    title: null as string | null,
-    pageId: null as number | null,
-    wikitext: null as string | null,
-    missReason: null as string | null,
-    fetchedAt: now,
-    categories: [] as string[],
-  };
+  /*
+   * `[[Category:Foo]]` and `[[Category:Foo|sortkey]]`, and never a category LINK
+   * (`[[:Category:Foo]]`), which is a mention rather than a membership.
+   */
+  const categories = [
+    ...new Set(
+      [...page.wikitext.matchAll(/\[\[\s*Category\s*:\s*([^\]|]+?)\s*(?:\|[^\]]*)?\]\]/gi)].map(
+        (m) => m[1].trim(),
+      ),
+    ),
+  ];
 
-  let res: { status: number; body: string };
-  try {
-    res = await fetcher(url);
-  } catch (err) {
-    return { ...base, missReason: `fetch threw: ${(err as Error).message}` };
-  }
-  if (res.status !== 200) return { ...base, missReason: `HTTP ${res.status}` };
-
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(res.body);
-  } catch {
-    return { ...base, missReason: "the API did not answer with JSON" };
-  }
-  const pages = (parsed as { query?: { pages?: unknown[] } }).query?.pages;
-  if (!Array.isArray(pages) || pages.length === 0) {
-    return { ...base, missReason: "the API answered with no pages" };
-  }
-  const page = pages[0] as {
-    missing?: boolean;
-    title?: string;
-    pageid?: number;
-    categories?: { title: string }[];
-    revisions?: { slots?: { main?: { content?: string } } }[];
-  };
-  if (page.missing === true) return { ...base, missReason: "no such article" };
-
-  const content = page.revisions?.[0]?.slots?.main?.content;
-  if (typeof content !== "string" || content.length === 0) {
-    return { ...base, missReason: "the article exists and returned no wikitext" };
-  }
-  return {
-    ...base,
-    title: page.title ?? title,
-    pageId: page.pageid ?? null,
-    wikitext: content,
-    categories: (page.categories ?? []).map((c) => c.title.replace(/^Category:/, "")),
-  };
+  return { ...page, categories };
 }
 
 /** Build a node from a fetched page. Harvest happens here; the walk is outside. */

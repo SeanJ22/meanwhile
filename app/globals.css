@@ -4476,6 +4476,58 @@ main[data-sidebar="closed"] .map-top-row {
   }
 }
 
+/*
+ * NO GPU AND THE CAMERA IS MOVING: THE BACKDROP BLUR STANDS DOWN.
+ *
+ * Measured, 2026-09-01: on the software rasteriser this one property costs 13.9
+ * of the 14.8 fps that removing the ENTIRE state-focus layer buys back, and the
+ * fly-in ran at 17.2 fps median against a bare map's 59.9 on the same host.
+ * Both attributes are written by components/map/map-canvas.tsx, which carries
+ * the full measurement, the ablation table and the reason `unknown` is treated
+ * as hardware. Nothing changes for a reader on a GPU, and nothing changes for
+ * anyone once the camera stops: the SVG mute and both rise silhouettes keep
+ * drawing throughout, so the state still reads as raised while it flies.
+ */
+/*
+ * ONE DECLARATION, UNPREFIXED — and writing the second one BROKE THIS.
+ *
+ * The first version of this rule wrote `backdrop-filter: none` followed by
+ * `-webkit-backdrop-filter: none`, which is the usual belt-and-braces pair.
+ * Lightning CSS treats the two as one property and normalises prefix ORDER, so
+ * it emitted the `-webkit-` line ALONE and dropped the standard one — the built
+ * chunk carried `-webkit-backdrop-filter:none` and nothing else, Chromium
+ * honoured the unprefixed rule above it, and the blur stayed on through a
+ * measured flight while the source read as if it had been turned off.
+ *
+ * Every other rule in this file writes the unprefixed property and lets the
+ * build add the prefix; verified in the built chunk rather than in the source.
+ */
+[data-wtp-raster="software"][data-camera-moving="1"] .state-focus-scrim {
+  backdrop-filter: none;
+}
+
+/*
+ * AND THE SVG ART WITH IT — because the MEDIAN said this was finished and the
+ * JANK said it was not.
+ *
+ * With the blur and the district layers stood down, the fly-in reached 45.0 fps
+ * median against a bare map's 50.3 on the software rasteriser — 89% — and still
+ * dropped 57 of 231 frames past 33.4 ms, with a p95 frame time of 97.3 ms. The
+ * median was blind to it in exactly the way this project already has a ruling
+ * about. Hiding this one element in the same rotated pass took the jank to 12
+ * of 369 frames and 29.2 ms p95 while moving the median by 1.7 fps: three
+ * `feGaussianBlur` filter regions rasterised over a viewport-sized box on every
+ * frame of the animation, on a CPU.
+ *
+ * `display: none` on the drawing only. The `<defs>` inside it stay
+ * referenceable, and the scrim above has no background of its own — with its
+ * backdrop-filter already stood down it paints nothing during the motion and
+ * everything again the moment it stops.
+ */
+[data-wtp-raster="software"][data-camera-moving="1"] .state-focus-art {
+  display: none;
+}
+
 /* The border-crossing prompt (e's 6b2, built in g3 item 10) — docs/globals-css-notes.md#the-border-crossing-prompt-e-s-6b2-built-in-g3-item-10-98 */
 .state-crossing {
   position: fixed;

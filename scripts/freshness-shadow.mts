@@ -74,11 +74,14 @@ import { buildRegistry, registryLines } from "../lib/control-plane/scheduler/reg
 import { meetingsProvider } from "../lib/control-plane/scheduler/providers/meetings.ts";
 import { campaignFinanceProvider } from "../lib/control-plane/scheduler/providers/campaign-finance.ts";
 import { trackerIntakeProvider } from "../lib/control-plane/scheduler/providers/tracker-intake.ts";
+import { localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
+import { candidateEnrichmentProvider } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
 import { methodMaturityFrom } from "../lib/control-plane/scheduler/maturity.ts";
 import {
   closeOccurrence,
   loadDebts,
   openOccurrence,
+  resumeOpenOccurrence,
   persistDebts,
   recordNextDue,
   syncObligations,
@@ -133,8 +136,24 @@ if (wantsPostgres) {
 
 /* ----------------------------------------------------------- the registry --- */
 
+/*
+ * FIVE PROVIDERS. (Session C3, lane C, 2026-09-01. RULING 229.)
+ *
+ * The fourth and fifth are what "acquire to the AUTHORITATIVE SOURCE UNIVERSE"
+ * looks like from the scheduler's side: `local-jurisdictions` gives every named
+ * filing officer and election custodian a clock, and `candidate-enrichment`
+ * makes campaign sites, positions, bios, photos and contact standing
+ * obligations against the CANONICAL STATEWIDE candidate universe rather than
+ * against whichever ZIPs happen to be enabled.
+ */
 const registry = buildRegistry(
-  [meetingsProvider(), campaignFinanceProvider(), trackerIntakeProvider()],
+  [
+    meetingsProvider(),
+    campaignFinanceProvider(),
+    trackerIntakeProvider(),
+    localJurisdictionsProvider(),
+    candidateEnrichmentProvider(),
+  ],
   { root: ROOT, nowIso: NOW },
 );
 
@@ -200,6 +219,13 @@ const nowMs = Date.parse(NOW);
 const occurrenceByObligation = new Map<string, { id: string; routeTaskId: string }>();
 const nextDueByObligation = new Map<string, string>();
 let opened = 0;
+/** Due obligations this cycle deliberately did not START. Never silent. */
+let deferredForCeiling = 0;
+/** Occurrences a previous cycle opened and did not reach, picked back up. */
+let resumedCount = 0;
+/** Everything due, collected before any occurrence is opened, so it can be
+ *  sorted into the dispatcher's own oldest-first order. */
+const dueThisCycle: { obligation: (typeof sync.all)[number]; nextDueAt: string }[] = [];
 
 const debtsIn = await loadDebts(repos);
 const debtIds = new Set(debtsIn.filter((d) => d.consecutiveFailures > 0).map((d) => d.obligationId));
@@ -219,18 +245,94 @@ console.log(
 for (const o of sync.all) {
   const row = scheduleObligation(o, nowMs);
   if (!isScheduled(row)) continue;
-  await recordNextDue(repos, { obligationId: o.id, nextDueAt: row.nextDueAt, now: NOW });
+  /*
+   * DO NOT PAY A ROUND TRIP TO WRITE A VALUE THAT IS ALREADY THERE.
+   * (Session C3, lane C, 2026-09-01.)
+   *
+   * `recordNextDue` already no-ops when the stored value matches — but it
+   * discovers that by READING the row, which is one round trip per obligation
+   * per cycle. `sync.all` is the row, already in hand. Under RULING 229 the
+   * corpus is the authoritative source universe rather than one pilot ballot,
+   * so this loop runs over thousands of rows and the difference between "check
+   * in memory" and "ask the database" is the difference between a cycle that
+   * fits inside the runner's interval and one that does not.
+   */
+  if (o.nextDueAt !== row.nextDueAt) {
+    await recordNextDue(repos, { obligationId: o.id, nextDueAt: row.nextDueAt, now: NOW });
+  }
   nextDueByObligation.set(o.id, row.nextDueAt);
   if (backedOff.has(o.id)) continue;
   const isDue = Date.parse(row.nextDueAt) <= nowMs || retryNow.has(o.id);
   if (!isDue) continue;
+  dueThisCycle.push({ obligation: o, nextDueAt: row.nextDueAt });
+}
 
+/*
+ * OLDEST FIRST, which is the dispatcher's own order (`dueNow` sorts ascending
+ * by next-due). Opening occurrences in corpus order and dispatching in due
+ * order would start work on whatever sorted first by ID while the most overdue
+ * route waited — and the two orders only agree by accident.
+ */
+dueThisCycle.sort((a, b) => (a.nextDueAt < b.nextDueAt ? -1 : a.nextDueAt > b.nextDueAt ? 1 : 0));
+
+for (const { obligation: o, nextDueAt } of dueThisCycle) {
+  const row = { nextDueAt };
+  /*
+   * **DO NOT OPEN AN OCCURRENCE THIS CYCLE CANNOT DISPATCH.**
+   * (Session C3, lane C, 2026-09-01.)
+   *
+   * `runCycle` takes a STATED ceiling and defers the rest with a reason. This
+   * loop had no such ceiling, so it opened an occurrence — a WorkItem, a
+   * RouteTask and an occurrence row, three durable writes — for every due
+   * obligation before the dispatcher had looked at any of them.
+   *
+   * At 94 obligations that was invisible. Under RULING 229 the corpus is the
+   * authoritative source universe and it is 2,358 units, so the first cycle
+   * opened thousands of occurrences the ceiling then deferred, and each one is
+   * an OPEN occurrence a later cycle has to reconcile or abandon. An abandoned
+   * occurrence reads back as a worker that gave up on a route — which is a
+   * false statement about a worker, produced by arithmetic in the runner.
+   *
+   * The ceiling here is deliberately the SAME number the dispatcher uses, and
+   * the list was sorted into the dispatcher's own order above, so what is
+   * opened is what is oldest — not what happens to sort first by id.
+   */
+  if (opened >= MAX_DISPATCHES) {
+    deferredForCeiling += 1;
+    continue;
+  }
+  /*
+   * RESUME BEFORE OPENING. An occurrence a previous cycle opened and did not
+   * reach is real work with a real WorkItem and a real RouteTask; opening a
+   * second one beside it strands the first, and a stranded open occurrence
+   * reads back as a worker that abandoned a route.
+   */
+  const resumed = await resumeOpenOccurrence(repos, o);
+  if (resumed !== null) {
+    occurrenceByObligation.set(o.id, resumed);
+    resumedCount += 1;
+    opened += 1;
+    continue;
+  }
   const occ = await openOccurrence(repos, { obligation: o, dueAt: row.nextDueAt, now: NOW });
   if (occ === null) continue;
   occurrenceByObligation.set(o.id, { id: occ.occurrence.id, routeTaskId: occ.routeTask.id });
   opened += 1;
 }
-console.log(`  occurrences opened this cycle: ${opened} (each with its OWN WorkItem and RouteTask)`);
+console.log(
+  `  occurrences opened this cycle: ${opened} (each with its OWN WorkItem and RouteTask)` +
+    (resumedCount > 0
+      ? ` — ${resumedCount} of them RESUMED from an earlier cycle that opened them and did not reach them`
+      : ""),
+);
+if (deferredForCeiling > 0) {
+  console.log(
+    `  ${deferredForCeiling} due obligation(s) got NO occurrence this cycle: the stated ceiling is ` +
+      `${MAX_DISPATCHES} and opening a WorkItem the dispatcher will not reach leaves an occurrence ` +
+      "nothing works, which reads back as a worker that abandoned a route. They keep their next-due " +
+      "and are opened by a later cycle — the obligation is not discharged, only unstarted.",
+  );
+}
 
 /* ----------------------------------------------------------- the executor --- */
 

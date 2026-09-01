@@ -1,0 +1,118 @@
+{
+  "note": "AZCC full-resolution originals, walked 2026-09-01 after the OWN03 promotion found four approved portraits under the large card's 184px floor. The URLs already held are CMS renditions; these are the same files without the rendition parameters. Nothing ships from here — RULING 55, and a decision is about an IMAGE.",
+  "walkedAt": "2026-09-01",
+  "door": "door 2 — the portrait a government body publishes of its own member",
+  "shipped": 0,
+  "totals": {
+    "subjects": 4,
+    "portraitsQueued": 4,
+    "refused": 0
+  },
+  "accounting": {
+    "logicalInput": 4,
+    "produced": 4,
+    "outcome": "CONSERVED"
+  },
+  "rows": [
+    {
+      "subject": "Nick Myers",
+      "officeTitle": "Corporation Commissioner",
+      "stateOcdId": "ocd-division/country:us/state:az",
+      "page": "https://www.azcc.gov/nick-myers/biography",
+      "status": "HTTP 200",
+      "photoAlreadyHeld": false,
+      "heldRendition": "https://www.azcc.gov/images/default-source/commissioners/2025-nick-myers.tmb-thumb200.jpg?Culture=en&sfvrsn=7963c1fe_1",
+      "portrait": {
+        "src": "https://www.azcc.gov/images/default-source/commissioners/2025-nick-myers.jpg?Culture=en&sfvrsn=7963c1fe_1",
+        "alt": null,
+        "why": "the same file the biography page serves, with the CMS rendition parameters removed — same path, same host, same photograph at its published size"
+      },
+      "decode": {
+        "ok": true,
+        "format": "jpeg",
+        "width": 3275,
+        "height": 4913,
+        "bytes": 8665335,
+        "decodedAt": "2026-09-01"
+      },
+      "door": "door 2 — the portrait a government body publishes of its own member",
+      "attemptedAt": "2026-09-01",
+      "note": "RULING 206: the rendition we hold is one representation; this is another of the SAME record. Staged for the author, shipped by nobody (RULING 55)."
+    },
+    {
+      "subject": "Rachel Walden",
+      "officeTitle": "Corporation Commissioner",
+      "stateOcdId": "ocd-division/country:us/state:az",
+      "page": "https://www.azcc.gov/Rachel-Walden/biography",
+      "status": "HTTP 200",
+      "photoAlreadyHeld": false,
+      "heldRendition": "https://www.azcc.gov/images/default-source/commissioners/2025-rachel-walden.tmb-thumb200.jpg?Culture=en&sfvrsn=fbe9096a_1",
+      "portrait": {
+        "src": "https://www.azcc.gov/images/default-source/commissioners/2025-rachel-walden.jpg?Culture=en&sfvrsn=fbe9096a_1",
+        "alt": null,
+        "why": "the same file the biography page serves, with the CMS rendition parameters removed — same path, same host, same photograph at its published size"
+      },
+      "decode": {
+        "ok": true,
+        "format": "jpeg",
+        "width": 3138,
+        "height": 4707,
+        "bytes": 9074188,
+        "decodedAt": "2026-09-01"
+      },
+      "door": "door 2 — the portrait a government body publishes of its own member",
+      "attemptedAt": "2026-09-01",
+      "note": "RULING 206: the rendition we hold is one representation; this is another of the SAME record. Staged for the author, shipped by nobody (RULING 55)."
+    },
+    {
+      "subject": "Lea Márquez Peterson",
+      "officeTitle": "Corporation Commissioner",
+      "stateOcdId": "ocd-division/country:us/state:az",
+      "page": "https://www.azcc.gov/lmarquezpeterson/biography",
+      "status": "HTTP 200",
+      "photoAlreadyHeld": false,
+      "heldRendition": "https://www.azcc.gov/images/default-source/commissioners/peterson-photo.jpg?sfvrsn=99511a81_9&Width=165&Height=206&ScaleUp=false&Quality=High&Method=CropCropArguments",
+      "portrait": {
+        "src": "https://www.azcc.gov/images/default-source/commissioners/peterson-photo.jpg?sfvrsn=99511a81_9",
+        "alt": null,
+        "why": "the same file the biography page serves, with the CMS rendition parameters removed — same path, same host, same photograph at its published size"
+      },
+      "decode": {
+        "ok": true,
+        "format": "jpeg",
+        "width": 2828,
+        "height": 3600,
+        "bytes": 2602169,
+        "decodedAt": "2026-09-01"
+      },
+      "door": "door 2 — the portrait a government body publishes of its own member",
+      "attemptedAt": "2026-09-01",
+      "note": "RULING 206: the rendition we hold is one representation; this is another of the SAME record. Staged for the author, shipped by nobody (RULING 55)."
+    },
+    {
+      "subject": "René Lopez",
+      "officeTitle": "Corporation Commissioner",
+      "stateOcdId": "ocd-division/country:us/state:az",
+      "page": "https://www.azcc.gov/Rene-Lopez/biography",
+      "status": "HTTP 200",
+      "photoAlreadyHeld": false,
+      "heldRendition": "https://www.azcc.gov/images/default-source/commissioners/lopez-headshota40372b9-eb5d-4c79-83b5-a3f7800dbe90.jpg?sfvrsn=a6346954_2&MaxWidth=165&MaxHeight=206&ScaleUp=false&Quality=High&Method=ResizeFitToAreaArguments",
+      "portrait": {
+        "src": "https://www.azcc.gov/images/default-source/commissioners/lopez-headshota40372b9-eb5d-4c79-83b5-a3f7800dbe90.jpg?sfvrsn=a6346954_2",
+        "alt": null,
+        "why": "the same file the biography page serves, with the CMS rendition parameters removed — same path, same host, same photograph at its published size"
+      },
+      "decode": {
+        "ok": true,
+        "format": "jpeg",
+        "width": 2533,
+        "height": 3800,
+        "bytes": 4800277,
+        "decodedAt": "2026-09-01"
+      },
+      "door": "door 2 — the portrait a government body publishes of its own member",
+      "attemptedAt": "2026-09-01",
+      "note": "RULING 206: the rendition we hold is one representation; this is another of the SAME record. Staged for the author, shipped by nobody (RULING 55)."
+    }
+  ]
+}

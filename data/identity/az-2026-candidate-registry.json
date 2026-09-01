@@ -1,0 +1,1723 @@
+{
+ "formatVersion": 1,
+ "state": "AZ",
+ "cycle": 2026,
+ "generatedAt": "2026-09-01",
+ "generatedBy": "pnpm identity:az (scripts/identity-az-2026.mts)",
+ "sources": [
+  {
+   "name": "Arizona Secretary of State — candidate filings",
+   "url": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "readAt": "2026-08-14",
+   "note": "Every candidate who filed for the 2026 primary, as the Secretary of State lists them. The candidacy rows this project keys campaign committees from."
+  },
+  {
+   "name": "Arizona Secretary of State — certified primary canvass",
+   "url": "https://apps.azsos.gov/election/2026/canvass/20260806_Primary_Canvass.pdf",
+   "readAt": "2026-08-13",
+   "note": "State of Arizona Official Canvass, 2026 Primary Election — July 21, 2026"
+  },
+  {
+   "name": "Arizona Secretary of State — See The Money",
+   "url": "https://seethemoney.az.gov/",
+   "readAt": "2026-09-01",
+   "note": "Committee identities, attached by canonical candidacy id rather than by name."
+  }
+ ],
+ "denominators": {
+  "contests": 15,
+  "candidates": 57,
+  "candidatesWithCanonicalCandidacyId": 55,
+  "candidatesWithoutCanonicalCandidacyId": 2,
+  "candidatesWithCommitteeIdentity": 44,
+  "nonFederalCandidates": 50,
+  "federalCandidates": 7
+ },
+ "contests": [
+  {
+   "identityId": "az-2026:contest:governor",
+   "office": "Governor",
+   "ocdId": "ocd-division/country:us/state:az",
+   "level": "STATE",
+   "financeFilingAuthority": "Arizona Secretary of State — See The Money",
+   "canonicalContestIds": [
+    "ballot-az-pima:governor"
+   ]
+  },
+  {
+   "identityId": "az-2026:contest:secretary-of-state",
+   "office": "Secretary of State",
+   "ocdId": "ocd-division/country:us/state:az",
+   "level": "STATE",
+   "financeFilingAuthority": "Arizona Secretary of State — See The Money",
+   "canonicalContestIds": [
+    "ballot-az-pima:secretary-of-state"
+   ]
+  },
+  {
+   "identityId": "az-2026:contest:attorney-general",
+   "office": "Attorney General",
+   "ocdId": "ocd-division/country:us/state:az",
+   "level": "STATE",
+   "financeFilingAuthority": "Arizona Secretary of State — See The Money",
+   "canonicalContestIds": [
+    "ballot-az-pima:attorney-general"
+   ]
+  },
+  {
+   "identityId": "az-2026:contest:state-treasurer",
+   "office": "State Treasurer",
+   "ocdId": "ocd-division/country:us/state:az",
+   "level": "STATE",
+   "financeFilingAuthority": "Arizona Secretary of State — See The Money",
+   "canonicalContestIds": [
+    "ballot-az-pima:state-treasurer"
+   ]
+  },
+  {
+   "identityId": "az-2026:contest:superintendent",
+   "office": "Superintendent of Public Instruction",
+   "ocdId": "ocd-division/country:us/state:az",
+   "level": "STATE",
+   "financeFilingAuthority": "Arizona Secretary of State — See The Money",
+   "canonicalContestIds": [
+    "ballot-az-pima:superintendent"
+   ]
+  },
+  {
+   "identityId": "az-2026:contest:mine-inspector",
+   "office": "State Mine Inspector",
+   "ocdId": "ocd-division/country:us/state:az",
+   "level": "STATE",
+   "financeFilingAuthority": "Arizona Secretary of State — See The Money",
+   "canonicalContestIds": [
+    "ballot-az-pima:mine-inspector"
+   ]
+  },
+  {
+   "identityId": "az-2026:contest:us-house-6",
+   "office": "U.S. Representative, District 6",
+   "ocdId": "ocd-division/country:us/state:az/cd:6",
+   "level": "FEDERAL",
+   "financeFilingAuthority": "Federal Election Commission",
+   "canonicalContestIds": [
+    "ballot-az-pima:us-house-6"
+   ]
+  },
+  {
+   "identityId": "az-2026:contest:us-house-7",
+   "office": "U.S. Representative, District 7",
+   "ocdId": "ocd-division/country:us/state:az/cd:7",
+   "level": "FEDERAL",
+   "financeFilingAuthority": "Federal Election Commission",
+   "canonicalContestIds": [
+    "ballot-az-pima:us-house-7"
+   ]
+  },
+  {
+   "identityId": "az-2026:contest:state-senate-19",
+   "office": "State Senator, District 19",
+   "ocdId": "ocd-division/country:us/state:az/sldu:19",
+   "level": "STATE",
+   "financeFilingAuthority": "Arizona Secretary of State — See The Money",
+   "canonicalContestIds": [
+    "ballot-az-pima:state-senate-19"
+   ]
+  },
+  {
+   "identityId": "az-2026:contest:state-senate-20",
+   "office": "State Senator, District 20",
+   "ocdId": "ocd-division/country:us/state:az/sldu:20",
+   "level": "STATE",
+   "financeFilingAuthority": "Arizona Secretary of State — See The Money",
+   "canonicalContestIds": [
+    "ballot-az-pima:state-senate-20"
+   ]
+  },
+  {
+   "identityId": "az-2026:contest:state-house-19",
+   "office": "State Representative, District 19",
+   "ocdId": "ocd-division/country:us/state:az/sldl:19",
+   "level": "STATE",
+   "financeFilingAuthority": "Arizona Secretary of State — See The Money",
+   "canonicalContestIds": [
+    "ballot-az-pima:state-house-19"
+   ]
+  },
+  {
+   "identityId": "az-2026:contest:state-house-20",
+   "office": "State Representative, District 20",
+   "ocdId": "ocd-division/country:us/state:az/sldl:20",
+   "level": "STATE",
+   "financeFilingAuthority": "Arizona Secretary of State — See The Money",
+   "canonicalContestIds": [
+    "ballot-az-pima:state-house-20"
+   ]
+  },
+  {
+   "identityId": "az-2026:contest:state-senate-17",
+   "office": "State Senator, District 17",
+   "ocdId": "ocd-division/country:us/state:az/sldu:17",
+   "level": "STATE",
+   "financeFilingAuthority": "Arizona Secretary of State — See The Money",
+   "canonicalContestIds": [
+    "ballot-az-pima:state-senate-17"
+   ]
+  },
+  {
+   "identityId": "az-2026:contest:state-house-17",
+   "office": "State Representative, District 17",
+   "ocdId": "ocd-division/country:us/state:az/sldl:17",
+   "level": "STATE",
+   "financeFilingAuthority": "Arizona Secretary of State — See The Money",
+   "canonicalContestIds": [
+    "ballot-az-pima:state-house-17"
+   ]
+  },
+  {
+   "identityId": "az-2026:contest:corporation-commissioner",
+   "office": "Corporation Commissioner",
+   "ocdId": "ocd-division/country:us/state:az",
+   "level": "STATE",
+   "financeFilingAuthority": "Arizona Secretary of State — See The Money",
+   "canonicalContestIds": [
+    "ballot-az-pima:corporation-commissioner"
+   ]
+  }
+ ],
+ "candidates": [
+  {
+   "identityId": "az-2026:governor:hobbs-katie",
+   "contestIdentityId": "az-2026:contest:governor",
+   "displayName": "Katie Hobbs",
+   "givenName": "Katie",
+   "familyName": "Hobbs",
+   "nameForms": [
+    {
+     "form": "katie hobbs",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:governor:hobbs-katie",
+   "committees": [
+    {
+     "committeeId": "201800057",
+     "registeredName": "Elect Katie Hobbs",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:governor:hourihan-teri-ann",
+   "contestIdentityId": "az-2026:contest:governor",
+   "displayName": "Teri Ann Hourihan",
+   "givenName": "Teri Ann",
+   "familyName": "Hourihan",
+   "nameForms": [
+    {
+     "form": "teri ann hourihan",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Arizona Independent Party",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:governor:hourihan-teri-ann",
+   "committees": [
+    {
+     "committeeId": "102014",
+     "registeredName": "Teri Ann PhD for Governor",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:governor:lombardo-risa",
+   "contestIdentityId": "az-2026:contest:governor",
+   "displayName": "Risa Lombardo",
+   "givenName": "Risa",
+   "familyName": "Lombardo",
+   "nameForms": [
+    {
+     "form": "risa lombardo",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Green",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:governor:lombardo-risa",
+   "committees": [
+    {
+     "committeeId": "101840",
+     "registeredName": "Lombardo for AZ (Clean Elections)",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:governor:lytle-hugh",
+   "contestIdentityId": "az-2026:contest:governor",
+   "displayName": "Hugh Lytle",
+   "givenName": "Hugh",
+   "familyName": "Lytle",
+   "nameForms": [
+    {
+     "form": "hugh lytle",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Arizona Independent Party",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:governor:lytle-hugh",
+   "committees": [
+    {
+     "committeeId": "102108",
+     "registeredName": "Hugh Lytle for Governor",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:governor:biggs-andy",
+   "contestIdentityId": "az-2026:contest:governor",
+   "displayName": "Andy Biggs",
+   "givenName": "Andy",
+   "familyName": "Biggs",
+   "nameForms": [
+    {
+     "form": "andy biggs",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:governor:biggs-andy",
+   "committees": [
+    {
+     "committeeId": "101830",
+     "registeredName": "Biggs for Arizona",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:governor:miceli-ken",
+   "contestIdentityId": "az-2026:contest:governor",
+   "displayName": "Ken Miceli",
+   "givenName": "Ken",
+   "familyName": "Miceli",
+   "nameForms": [
+    {
+     "form": "ken miceli",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:governor:miceli-ken",
+   "committees": []
+  },
+  {
+   "identityId": "az-2026:governor:neely-scott",
+   "contestIdentityId": "az-2026:contest:governor",
+   "displayName": "Scott Neely",
+   "givenName": "Scott",
+   "familyName": "Neely",
+   "nameForms": [
+    {
+     "form": "scott neely",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:governor:neely-scott",
+   "committees": [
+    {
+     "committeeId": "100675",
+     "registeredName": "Neely for Arizona (Clean Elections)",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:governor:schweikert-david",
+   "contestIdentityId": "az-2026:contest:governor",
+   "displayName": "David Schweikert",
+   "givenName": "David",
+   "familyName": "Schweikert",
+   "nameForms": [
+    {
+     "form": "david schweikert",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:governor:schweikert-david",
+   "committees": [
+    {
+     "committeeId": "101980",
+     "registeredName": "David Schweikert for Governor",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:secretary-of-state:fontes-adrian",
+   "contestIdentityId": "az-2026:contest:secretary-of-state",
+   "displayName": "Adrian Fontes",
+   "givenName": "Adrian",
+   "familyName": "Fontes",
+   "nameForms": [
+    {
+     "form": "adrian fontes",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:secretary-of-state:fontes-adrian",
+   "committees": [
+    {
+     "committeeId": "100622",
+     "registeredName": "Fontes for AZ",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:secretary-of-state:collier-duwayne",
+   "contestIdentityId": "az-2026:contest:secretary-of-state",
+   "displayName": "Duwayne Collier",
+   "givenName": "Duwayne",
+   "familyName": "Collier",
+   "nameForms": [
+    {
+     "form": "duwayne collier",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Green",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:secretary-of-state:collier-duwayne",
+   "committees": [
+    {
+     "committeeId": "102163",
+     "registeredName": "Duwayne Collier for Secretary of State (Clean Elections)",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    },
+    {
+     "committeeId": "102164",
+     "registeredName": "Duwayne Collier for Secretary of State",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:secretary-of-state:kolodin-alexander",
+   "contestIdentityId": "az-2026:contest:secretary-of-state",
+   "displayName": "Alexander Kolodin",
+   "givenName": "Alexander",
+   "familyName": "Kolodin",
+   "nameForms": [
+    {
+     "form": "alexander kolodin",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:secretary-of-state:kolodin-alexander",
+   "committees": [
+    {
+     "committeeId": "100625",
+     "registeredName": "Alex For Arizona",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:secretary-of-state:swoboda-gina",
+   "contestIdentityId": "az-2026:contest:secretary-of-state",
+   "displayName": "Gina Swoboda",
+   "givenName": "Gina",
+   "familyName": "Swoboda",
+   "nameForms": [
+    {
+     "form": "gina swoboda",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:secretary-of-state:swoboda-gina",
+   "committees": [
+    {
+     "committeeId": "102117",
+     "registeredName": "Gina Swoboda for Arizona Secretary of State",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:attorney-general:mayes-kris",
+   "contestIdentityId": "az-2026:contest:attorney-general",
+   "displayName": "Kris Mayes",
+   "givenName": "Kris",
+   "familyName": "Mayes",
+   "nameForms": [
+    {
+     "form": "kris mayes",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:attorney-general:mayes-kris",
+   "committees": [
+    {
+     "committeeId": "100626",
+     "registeredName": "Kris Mayes for Arizona",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:attorney-general:glassman-rodney",
+   "contestIdentityId": "az-2026:contest:attorney-general",
+   "displayName": "Rodney Glassman",
+   "givenName": "Rodney",
+   "familyName": "Glassman",
+   "nameForms": [
+    {
+     "form": "rodney glassman",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:attorney-general:glassman-rodney",
+   "committees": [
+    {
+     "committeeId": "101445",
+     "registeredName": "Glassman for Attorney General",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:attorney-general:petersen-warren",
+   "contestIdentityId": "az-2026:contest:attorney-general",
+   "displayName": "Warren Petersen",
+   "givenName": "Warren",
+   "familyName": "Petersen",
+   "nameForms": [
+    {
+     "form": "warren petersen",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:attorney-general:petersen-warren",
+   "committees": [
+    {
+     "committeeId": "201600171",
+     "registeredName": "Friends of Warren Petersen",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:state-treasurer:mansour-nick",
+   "contestIdentityId": "az-2026:contest:state-treasurer",
+   "displayName": "Nick Mansour",
+   "givenName": "Nick",
+   "familyName": "Mansour",
+   "nameForms": [
+    {
+     "form": "nick mansour",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:state-treasurer:mansour-nick",
+   "committees": [
+    {
+     "committeeId": "101897",
+     "registeredName": "MANSOUR FOR ARIZONA",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:state-treasurer:zepeda-michael",
+   "contestIdentityId": "az-2026:contest:state-treasurer",
+   "displayName": "Michael Zepeda",
+   "givenName": "Michael",
+   "familyName": "Zepeda",
+   "nameForms": [
+    {
+     "form": "michael zepeda",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Arizona Independent Party",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:state-treasurer:zepeda-michael",
+   "committees": [
+    {
+     "committeeId": "102000",
+     "registeredName": "Zepeda4AZ",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:state-treasurer:haley-katherine",
+   "contestIdentityId": "az-2026:contest:state-treasurer",
+   "displayName": "Katherine Haley",
+   "givenName": "Katherine",
+   "familyName": "Haley",
+   "nameForms": [
+    {
+     "form": "katherine haley",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:state-treasurer:haley-katherine",
+   "committees": [
+    {
+     "committeeId": "102106",
+     "registeredName": "Katherine Haley for AZ",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:state-treasurer:norton-elijah",
+   "contestIdentityId": "az-2026:contest:state-treasurer",
+   "displayName": "Elijah Norton",
+   "givenName": "Elijah",
+   "familyName": "Norton",
+   "nameForms": [
+    {
+     "form": "elijah norton",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:state-treasurer:norton-elijah",
+   "committees": [
+    {
+     "committeeId": "101861",
+     "registeredName": "Friends of Elijah Norton",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:superintendent:butts-michael-d-",
+   "contestIdentityId": "az-2026:contest:superintendent",
+   "displayName": "Michael D. Butts",
+   "givenName": "Michael D.",
+   "familyName": "Butts",
+   "nameForms": [
+    {
+     "form": "michael d butts",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:superintendent:butts-michael-d-",
+   "committees": [
+    {
+     "committeeId": "101877",
+     "registeredName": "Elect Michael D. Butts",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:superintendent:leyba-ruiz-teresa",
+   "contestIdentityId": "az-2026:contest:superintendent",
+   "displayName": "Teresa Leyba Ruiz",
+   "givenName": "Teresa",
+   "familyName": "Leyba Ruiz",
+   "nameForms": [
+    {
+     "form": "teresa leyba ruiz",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:superintendent:leyba-ruiz-teresa",
+   "committees": [
+    {
+     "committeeId": "101821",
+     "registeredName": "Ruiz for AZ Education",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:superintendent:newby-brett-matthew",
+   "contestIdentityId": "az-2026:contest:superintendent",
+   "displayName": "Brett Matthew Newby",
+   "givenName": "Brett Matthew",
+   "familyName": "Newby",
+   "nameForms": [
+    {
+     "form": "brett matthew newby",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:superintendent:newby-brett-matthew",
+   "committees": [
+    {
+     "committeeId": "101922",
+     "registeredName": "Brett Newby for Superintendent of Public Instruction",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:superintendent:horne-tom",
+   "contestIdentityId": "az-2026:contest:superintendent",
+   "displayName": "Tom Horne",
+   "givenName": "Tom",
+   "familyName": "Horne",
+   "nameForms": [
+    {
+     "form": "tom horne",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:superintendent:horne-tom",
+   "committees": []
+  },
+  {
+   "identityId": "az-2026:superintendent:yee-kimberly",
+   "contestIdentityId": "az-2026:contest:superintendent",
+   "displayName": "Kimberly Yee",
+   "givenName": "Kimberly",
+   "familyName": "Yee",
+   "nameForms": [
+    {
+     "form": "kimberly yee",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:superintendent:yee-kimberly",
+   "committees": [
+    {
+     "committeeId": "101898",
+     "registeredName": "Kimberly Yee for Superintendent of Public Instruction",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:mine-inspector:matlock-brian",
+   "contestIdentityId": "az-2026:contest:mine-inspector",
+   "displayName": "Brian Matlock",
+   "givenName": "Brian",
+   "familyName": "Matlock",
+   "nameForms": [
+    {
+     "form": "brian matlock",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:mine-inspector:matlock-brian",
+   "committees": [
+    {
+     "committeeId": "101902",
+     "registeredName": "Brian Matlock for State Mine Inspector",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:mine-inspector:presmyk-walter",
+   "contestIdentityId": "az-2026:contest:mine-inspector",
+   "displayName": "Walter \"Les\" Presmyk",
+   "givenName": "Walter \"Les\"",
+   "familyName": "Presmyk",
+   "nameForms": [
+    {
+     "form": "walter \"les\" presmyk",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    },
+    {
+     "form": "walter presmyk",
+     "rules": [
+      "NICKNAME_REMOVED"
+     ]
+    },
+    {
+     "form": "les presmyk",
+     "rules": [
+      "NICKNAME_AS_GIVEN"
+     ]
+    },
+    {
+     "form": "walter les",
+     "rules": [
+      "NICKNAME_AS_FAMILY"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:mine-inspector:presmyk-walter",
+   "committees": []
+  },
+  {
+   "identityId": "az-2026:us-house-6:mendoza-joanna",
+   "contestIdentityId": "az-2026:contest:us-house-6",
+   "displayName": "JoAnna Mendoza",
+   "givenName": "JoAnna",
+   "familyName": "Mendoza",
+   "nameForms": [
+    {
+     "form": "joanna mendoza",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:us-house-6:mendoza-joanna",
+   "committees": []
+  },
+  {
+   "identityId": "az-2026:us-house-6:bah-iman",
+   "contestIdentityId": "az-2026:contest:us-house-6",
+   "displayName": "Iman Bah",
+   "givenName": "Iman",
+   "familyName": "Bah",
+   "nameForms": [
+    {
+     "form": "iman bah",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Arizona Independent Party",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:us-house-6:bah-iman",
+   "committees": []
+  },
+  {
+   "identityId": "az-2026:us-house-6:peters-jereme-lance",
+   "contestIdentityId": "az-2026:contest:us-house-6",
+   "displayName": "Jereme Lance Peters",
+   "givenName": "Jereme Lance",
+   "familyName": "Peters",
+   "nameForms": [
+    {
+     "form": "jereme lance peters",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Libertarian",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:us-house-6:peters-jereme-lance",
+   "committees": []
+  },
+  {
+   "identityId": "az-2026:us-house-6:ciscomani-juan",
+   "contestIdentityId": "az-2026:contest:us-house-6",
+   "displayName": "Juan Ciscomani",
+   "givenName": "Juan",
+   "familyName": "Ciscomani",
+   "nameForms": [
+    {
+     "form": "juan ciscomani",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:us-house-6:ciscomani-juan",
+   "committees": []
+  },
+  {
+   "identityId": "az-2026:us-house-7:grijalva-adelita",
+   "contestIdentityId": "az-2026:contest:us-house-7",
+   "displayName": "Adelita Grijalva",
+   "givenName": "Adelita",
+   "familyName": "Grijalva",
+   "nameForms": [
+    {
+     "form": "adelita grijalva",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:us-house-7:grijalva-adelita",
+   "committees": []
+  },
+  {
+   "identityId": "az-2026:us-house-7:butierez-sr--daniel-francis",
+   "contestIdentityId": "az-2026:contest:us-house-7",
+   "displayName": "Daniel Francis Butierez Sr.",
+   "givenName": "Daniel Francis",
+   "familyName": "Butierez Sr.",
+   "nameForms": [
+    {
+     "form": "daniel francis butierez sr",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    },
+    {
+     "form": "daniel francis butierez",
+     "rules": [
+      "AS_PUBLISHED",
+      "SUFFIX_REMOVED"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:us-house-7:butierez-sr--daniel-francis",
+   "committees": []
+  },
+  {
+   "identityId": "az-2026:state-senate-19:slawson-ryan",
+   "contestIdentityId": "az-2026:contest:state-senate-19",
+   "displayName": "Ryan Slawson",
+   "givenName": "Ryan",
+   "familyName": "Slawson",
+   "nameForms": [
+    {
+     "form": "ryan slawson",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:state-senate-19:slawson-ryan",
+   "committees": [
+    {
+     "committeeId": "101965",
+     "registeredName": "Fred Slawson for State Senator - District No. 19",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:state-senate-19:griffin-gail",
+   "contestIdentityId": "az-2026:contest:state-senate-19",
+   "displayName": "Gail Griffin",
+   "givenName": "Gail",
+   "familyName": "Griffin",
+   "nameForms": [
+    {
+     "form": "gail griffin",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:state-senate-19:griffin-gail",
+   "committees": [
+    {
+     "committeeId": "101867",
+     "registeredName": "Griffin for Arizona",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:state-senate-20:hernandez-alma",
+   "contestIdentityId": "az-2026:contest:state-senate-20",
+   "displayName": "Alma Hernandez",
+   "givenName": "Alma",
+   "familyName": "Hernandez",
+   "nameForms": [
+    {
+     "form": "alma hernandez",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:state-senate-20:hernandez-alma",
+   "committees": [
+    {
+     "committeeId": "101952",
+     "registeredName": "Alma for Arizona",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:state-senate-20:perez-rocque",
+   "contestIdentityId": "az-2026:contest:state-senate-20",
+   "displayName": "Rocque Perez",
+   "givenName": "Rocque",
+   "familyName": "Perez",
+   "nameForms": [
+    {
+     "form": "rocque perez",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:state-senate-20:perez-rocque",
+   "committees": [
+    {
+     "committeeId": "102067",
+     "registeredName": "Rocque for Arizona",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:state-house-19:anderson-jackie-o-donnell",
+   "contestIdentityId": "az-2026:contest:state-house-19",
+   "displayName": "Jackie O'Donnell Anderson",
+   "givenName": "Jackie O'Donnell",
+   "familyName": "Anderson",
+   "nameForms": [
+    {
+     "form": "jackie o'donnell anderson",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:state-house-19:anderson-jackie-o-donnell",
+   "committees": [
+    {
+     "committeeId": "101953",
+     "registeredName": "Jackie Anderson for AZ House (Clean Elections)",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:state-house-19:swallow-aiden-nicholette",
+   "contestIdentityId": "az-2026:contest:state-house-19",
+   "displayName": "Aiden Nicholette Swallow",
+   "givenName": "Aiden Nicholette",
+   "familyName": "Swallow",
+   "nameForms": [
+    {
+     "form": "aiden nicholette swallow",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:state-house-19:swallow-aiden-nicholette",
+   "committees": [
+    {
+     "committeeId": "101913",
+     "registeredName": "Aiden Swallow for Arizona (Clean Elections)",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:state-house-19:caswell-cheryl",
+   "contestIdentityId": "az-2026:contest:state-house-19",
+   "displayName": "Cheryl Caswell",
+   "givenName": "Cheryl",
+   "familyName": "Caswell",
+   "nameForms": [
+    {
+     "form": "cheryl caswell",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:state-house-19:caswell-cheryl",
+   "committees": [
+    {
+     "committeeId": "101836",
+     "registeredName": "Cheryl Caswell for Arizona State House Committee",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:state-house-19:diaz-lupe",
+   "contestIdentityId": "az-2026:contest:state-house-19",
+   "displayName": "Lupe Diaz",
+   "givenName": "Lupe",
+   "familyName": "Diaz",
+   "nameForms": [
+    {
+     "form": "lupe diaz",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:state-house-19:diaz-lupe",
+   "committees": [
+    {
+     "committeeId": "100805",
+     "registeredName": "Conservatives For Diaz",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:state-house-19:gowan-david",
+   "contestIdentityId": "az-2026:contest:state-house-19",
+   "displayName": "David Gowan",
+   "givenName": "David",
+   "familyName": "Gowan",
+   "nameForms": [
+    {
+     "form": "david gowan",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:state-house-19:gowan-david",
+   "committees": [
+    {
+     "committeeId": "201800010",
+     "registeredName": "Gowan for Arizona",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:state-house-20:diaz-genoveva",
+   "contestIdentityId": "az-2026:contest:state-house-20",
+   "displayName": "Genoveva Diaz",
+   "givenName": "Genoveva",
+   "familyName": "Diaz",
+   "nameForms": [
+    {
+     "form": "genoveva diaz",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:state-house-20:diaz-genoveva",
+   "committees": []
+  },
+  {
+   "identityId": "az-2026:state-house-20:gonzales-sally-ann",
+   "contestIdentityId": "az-2026:contest:state-house-20",
+   "displayName": "Sally Ann Gonzales",
+   "givenName": "Sally Ann",
+   "familyName": "Gonzales",
+   "nameForms": [
+    {
+     "form": "sally ann gonzales",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:state-house-20:gonzales-sally-ann",
+   "committees": []
+  },
+  {
+   "identityId": "az-2026:state-house-20:koehler-ben",
+   "contestIdentityId": "az-2026:contest:state-house-20",
+   "displayName": "Ben Koehler",
+   "givenName": "Ben",
+   "familyName": "Koehler",
+   "nameForms": [
+    {
+     "form": "ben koehler",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:state-house-20:koehler-ben",
+   "committees": [
+    {
+     "committeeId": "102047",
+     "registeredName": "Ben Koehler for State Representative - District 20",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:state-house-20:villegas-betty",
+   "contestIdentityId": "az-2026:contest:state-house-20",
+   "displayName": "Betty Villegas",
+   "givenName": "Betty",
+   "familyName": "Villegas",
+   "nameForms": [
+    {
+     "form": "betty villegas",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:state-house-20:villegas-betty",
+   "committees": [
+    {
+     "committeeId": "101451",
+     "registeredName": "Villegas for Arizona",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:state-senate-17:king",
+   "contestIdentityId": "az-2026:contest:state-senate-17",
+   "displayName": "Christopher King",
+   "givenName": "Christopher",
+   "familyName": "King",
+   "nameForms": [
+    {
+     "form": "christopher king",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:state-senate-17:king",
+   "committees": [
+    {
+     "committeeId": "101966",
+     "registeredName": "Christopher King for State Senator - District No. 17",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:state-senate-17:soto",
+   "contestIdentityId": "az-2026:contest:state-senate-17",
+   "displayName": "Edgar Soto",
+   "givenName": "Edgar",
+   "familyName": "Soto",
+   "nameForms": [
+    {
+     "form": "edgar soto",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:state-senate-17:soto",
+   "committees": [
+    {
+     "committeeId": "102081",
+     "registeredName": "Soto for Arizona",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:state-house-17:keshel",
+   "contestIdentityId": "az-2026:contest:state-house-17",
+   "displayName": "Rachel \"Jones\" Keshel",
+   "givenName": "Rachel \"Jones\"",
+   "familyName": "Keshel",
+   "nameForms": [
+    {
+     "form": "rachel \"jones\" keshel",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    },
+    {
+     "form": "rachel keshel",
+     "rules": [
+      "NICKNAME_REMOVED"
+     ]
+    },
+    {
+     "form": "jones keshel",
+     "rules": [
+      "NICKNAME_AS_GIVEN"
+     ]
+    },
+    {
+     "form": "rachel jones",
+     "rules": [
+      "NICKNAME_AS_FAMILY"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/e3efef88-46d4-421c-817b-50200031aef3",
+   "canonicalCandidacyId": "ballot-az-pima:state-house-17:keshel",
+   "committees": [
+    {
+     "committeeId": "100917",
+     "registeredName": "Jones for Arizona",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:state-house-17:winchester",
+   "contestIdentityId": "az-2026:contest:state-house-17",
+   "displayName": "John Winchester",
+   "givenName": "John",
+   "familyName": "Winchester",
+   "nameForms": [
+    {
+     "form": "john winchester",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/e3efef88-46d4-421c-817b-50200031aef3",
+   "canonicalCandidacyId": "ballot-az-pima:state-house-17:winchester",
+   "committees": [
+    {
+     "committeeId": "102004",
+     "registeredName": "Winchester for Arizona",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:state-house-17:lyon",
+   "contestIdentityId": "az-2026:contest:state-house-17",
+   "displayName": "Hollace \"Holly\" Lyon",
+   "givenName": "Hollace \"Holly\"",
+   "familyName": "Lyon",
+   "nameForms": [
+    {
+     "form": "hollace \"holly\" lyon",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    },
+    {
+     "form": "hollace lyon",
+     "rules": [
+      "NICKNAME_REMOVED"
+     ]
+    },
+    {
+     "form": "holly lyon",
+     "rules": [
+      "NICKNAME_AS_GIVEN"
+     ]
+    },
+    {
+     "form": "hollace holly",
+     "rules": [
+      "NICKNAME_AS_FAMILY"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/e3efef88-46d4-421c-817b-50200031aef3",
+   "canonicalCandidacyId": "ballot-az-pima:state-house-17:lyon",
+   "committees": [
+    {
+     "committeeId": "102112",
+     "registeredName": "Lyon for Arizona",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:state-house-17:volk",
+   "contestIdentityId": "az-2026:contest:state-house-17",
+   "displayName": "Kevin Volk",
+   "givenName": "Kevin",
+   "familyName": "Volk",
+   "nameForms": [
+    {
+     "form": "kevin volk",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/e3efef88-46d4-421c-817b-50200031aef3",
+   "canonicalCandidacyId": "ballot-az-pima:state-house-17:volk",
+   "committees": [
+    {
+     "committeeId": "101507",
+     "registeredName": "Kevin Volk for Arizona",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:corporation-commissioner:thompson",
+   "contestIdentityId": "az-2026:contest:corporation-commissioner",
+   "displayName": "Kevin Thompson",
+   "givenName": "Kevin",
+   "familyName": "Thompson",
+   "nameForms": [
+    {
+     "form": "kevin thompson",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:corporation-commissioner:thompson",
+   "committees": [
+    {
+     "committeeId": "101859",
+     "registeredName": "KEVIN THOMPSON for Corporation Commissioner (Clean Elections)",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:corporation-commissioner:myers",
+   "contestIdentityId": "az-2026:contest:corporation-commissioner",
+   "displayName": "Nicholas \"Nick\" Myers",
+   "givenName": "Nicholas \"Nick\"",
+   "familyName": "Myers",
+   "nameForms": [
+    {
+     "form": "nicholas \"nick\" myers",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    },
+    {
+     "form": "nicholas myers",
+     "rules": [
+      "NICKNAME_REMOVED"
+     ]
+    },
+    {
+     "form": "nick myers",
+     "rules": [
+      "NICKNAME_AS_GIVEN"
+     ]
+    },
+    {
+     "form": "nicholas nick",
+     "rules": [
+      "NICKNAME_AS_FAMILY"
+     ]
+    }
+   ],
+   "partyLabel": "Republican",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:corporation-commissioner:myers",
+   "committees": [
+    {
+     "committeeId": "100484",
+     "registeredName": "Nick Myers for Corporation Commissioner (Clean Elections)",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:corporation-commissioner:pratte",
+   "contestIdentityId": "az-2026:contest:corporation-commissioner",
+   "displayName": "Clara Pratte",
+   "givenName": "Clara",
+   "familyName": "Pratte",
+   "nameForms": [
+    {
+     "form": "clara pratte",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:corporation-commissioner:pratte",
+   "committees": [
+    {
+     "committeeId": "101905",
+     "registeredName": "Clara Pratte for Arizona (Clean Elections)",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:corporation-commissioner:hill",
+   "contestIdentityId": "az-2026:contest:corporation-commissioner",
+   "displayName": "Jonathon Hill",
+   "givenName": "Jonathon",
+   "familyName": "Hill",
+   "nameForms": [
+    {
+     "form": "jonathon hill",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — candidate filings",
+   "candidacySourceUrl": "https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf",
+   "canonicalCandidacyId": "ballot-az-pima:corporation-commissioner:hill",
+   "committees": [
+    {
+     "committeeId": "100699",
+     "registeredName": "Jonathon Hill for Arizona (Clean Elections)",
+     "agency": "Arizona Secretary of State — See The Money",
+     "basis": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+    }
+   ]
+  },
+  {
+   "identityId": "az-2026:us-house-6:canvass-gary-swing",
+   "contestIdentityId": "az-2026:contest:us-house-6",
+   "displayName": "Gary Swing",
+   "givenName": null,
+   "familyName": null,
+   "nameForms": [
+    {
+     "form": "gary swing",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Green",
+   "candidacyAuthority": "Arizona Secretary of State — certified primary canvass",
+   "candidacySourceUrl": "https://apps.azsos.gov/election/2026/canvass/20260806_Primary_Canvass.pdf",
+   "canonicalCandidacyId": null,
+   "committees": []
+  },
+  {
+   "identityId": "az-2026:state-senate-19:canvass-bob-karp",
+   "contestIdentityId": "az-2026:contest:state-senate-19",
+   "displayName": "Bob Karp",
+   "givenName": null,
+   "familyName": null,
+   "nameForms": [
+    {
+     "form": "bob karp",
+     "rules": [
+      "AS_PUBLISHED"
+     ]
+    }
+   ],
+   "partyLabel": "Democratic",
+   "candidacyAuthority": "Arizona Secretary of State — certified primary canvass",
+   "candidacySourceUrl": "https://apps.azsos.gov/election/2026/canvass/20260806_Primary_Canvass.pdf",
+   "canonicalCandidacyId": null,
+   "committees": []
+  }
+ ]
+}

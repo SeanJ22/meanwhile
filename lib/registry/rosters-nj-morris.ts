@@ -1022,7 +1022,7 @@ export const NJ_MORRIS_ROSTERS: BodyRoster[] = [
         "termNote": "Term ends 2026",
         "email": null,
         "phone": null,
-        "websiteUrl": "http://www.lincolnpark.org/130/Mayors-Office"
+        "websiteUrl": "https://www.lincolnpark.org/129/Borough-Council"
       },
       {
         "id": "roster:nj-morris-lincoln_park#1",

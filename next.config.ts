@@ -97,6 +97,17 @@ const nextConfig: NextConfig = {
        * missing data.
        */
       "./data/funding/*.json",
+      /*
+       * THE ARIZONA 2026 IDENTITY LAYER (RULING 229, Session C3, 2026-09-01).
+       *
+       * `lib/identity/az-2026.ts` reads the statewide candidate registry and
+       * the certified-lineup reconciliation through `process.cwd()`, so the
+       * tracer has no static reference to follow. Untraced, both reads return
+       * null, every certified nominee falls back to the unreconciled state, and
+       * the money that IS held stops reaching the reader — indistinguishable
+       * from honest missing data, which is the exact reason this list exists.
+       */
+      "./data/identity/*.json",
     ],
     /*
      * THE QUESTIONNAIRE PAGE RESOLVES AN ID TO A NAME, through `process.cwd()`.

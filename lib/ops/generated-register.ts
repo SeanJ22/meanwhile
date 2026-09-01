@@ -310,6 +310,53 @@ export const GENERATED: GeneratedArtifact[] = [
       "a retrieval ledger records the bytes a body sent on a DATE. Regenerating it from " +
       "today's artifacts is correct; demanding byte-equality with a past walk is not.",
   },
+  /*
+   * **THE ARIZONA ACQUISITION CHAIN, REGISTERED AS ONE.** (2026-09-01.)
+   *
+   * These four are generated in a fixed order — the identity registry, then
+   * the certified-lineup reconciliation that resolves into it, then the
+   * statewide finance corpus, then the reader snapshot projected from both.
+   * None was registered before, which is the state RULING 92 calls the one a
+   * hand edit becomes permanent in, and it was already load-bearing: the
+   * reconciliation is what puts $11,109,720 on Katie Hobbs's card.
+   *
+   * All four are IMPURE by the same honest reason — they read a live
+   * publisher, and the publisher moves. Registering an impure artifact still
+   * buys the thing that matters: nobody can hand-edit one and have it survive
+   * a regeneration unnoticed.
+   */
+  {
+    path: "data/identity/az-2026-candidate-registry.json",
+    command: "corepack pnpm identity:az",
+    pure: false,
+    impurity:
+      "reads the Secretary of State's candidate-filing list and the certified canvass; a " +
+      "withdrawal, a court order or a new independent filing changes the universe",
+  },
+  {
+    path: "data/identity/az-2026-certified-lineup-reconciliation.json",
+    command: "corepack pnpm identity:az",
+    pure: false,
+    impurity:
+      "derived from the registry above, so it inherits every movement in it — and an " +
+      "ambiguity that resolves later becomes a mapping that did not exist before",
+  },
+  {
+    path: "data/campaign-finance/az-2026-statewide-corpus.json",
+    command: "corepack pnpm money:az",
+    pure: false,
+    impurity:
+      "walks SeeTheMoney across every discovered filter state and reads each committee's " +
+      "itemised ledger; the totals move whenever a committee files",
+  },
+  {
+    path: "data/funding/state-money-az-2026.json",
+    command: "corepack pnpm money:az",
+    pure: false,
+    impurity:
+      "the reader projection of the corpus above — applicable candidates only, so it moves " +
+      "both when the publisher moves and when the identity layer resolves another candidacy",
+  },
   {
     /*
      * **Registered 2026-08-30, the same commit that created it** (Session A,

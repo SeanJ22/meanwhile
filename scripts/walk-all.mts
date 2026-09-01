@@ -97,10 +97,14 @@ import {
   hostCondition,
   isSoftwareRenderer,
   judgeNormalized,
+  judgeSoftware,
   LONG_FRAME_MS,
   NORMALIZED_FLOOR,
   READ_RENDERER,
+  SOFTWARE_JANK_CEILING,
+  SOFTWARE_NORMALIZED_FLOOR,
   summariseArm,
+  type ArmSummary,
 } from "../lib/ops/flyin-normalized.ts";
 import { decodePng, patchStats, regionChange } from "./png.mts";
 import { launchGuarded, type GuardedBrowser } from "./browser.mts";
@@ -7409,6 +7413,29 @@ section(
     const COUNT_CHECK = "the zip fly-in does not re-query the whole viewport on every frame of itself";
     const NORM_CHECK =
       "the fly-in holds 90% of a bare MapLibre fly-in's median frame rate on this host";
+    /**
+     * **THE SECOND POPULATION, ADDED 2026-09-01 — AND IT IS NOT A SECOND
+     * OPINION ABOUT THE FIRST.**
+     *
+     * The check above asks what the fly-in costs a reader with a GPU. This asks
+     * what it costs a reader without one, and until this session that question
+     * was DECLINED here with its numbers named — the right call while nothing
+     * had been done about it, and the wrong place to leave it once something
+     * had. The host can run both rasterisers deterministically: `GPU_ARGS`
+     * requests the real adapter and the suite's own default launch gets
+     * SwiftShader, and both runs read their renderer back rather than trusting
+     * the request.
+     *
+     * The two are never averaged and never share a floor. Hardware answers to
+     * the author's 90%; software answers to `SOFTWARE_NORMALIZED_FLOOR` AND to
+     * `SOFTWARE_JANK_CEILING`, because a build measured at 89% of bare with a
+     * quarter of its frames past 33.4 ms is what proved the median alone is not
+     * enough here.
+     */
+    const SOFT_CHECK =
+      "the fly-in on a browser with NO GPU acceleration holds " +
+      `${(SOFTWARE_NORMALIZED_FLOOR * 100).toFixed(0)}% of a bare MapLibre fly-in and stays ` +
+      `under ${(SOFTWARE_JANK_CEILING * 100).toFixed(0)}% long frames`;
     const blockedReason: string | null = !scrimDrawn
       ? /* The page never reached a reader's weight, so the flight would be
            measuring a lighter map than the one this check is about. */
@@ -7436,6 +7463,7 @@ section(
     if (blockedReason !== null) {
       cannotRun("W6H3", COUNT_CHECK, blockedReason);
       cannotRun("W6H3", NORM_CHECK, blockedReason);
+      cannotRun("W6H3", SOFT_CHECK, blockedReason);
     } else {
       /*
        * THE CEILING. Measured at 5-8 calls per flight across every run of
@@ -7572,8 +7600,66 @@ section(
        * run so a silent fallback says so instead of quietly changing what was
        * measured.
        */
-      const gpuBrowser = await launchGuarded({ label: "walk-all-w6h3-gpu", args: GPU_ARGS });
-      /** One settled flight page on the GPU browser. Both arms open the same way. */
+      /**
+       * What one rasteriser's pass hands back. Every field is EVIDENCE and none
+       * of them is a verdict: the two call sites below decide, because the
+       * hardware population and the software population answer to different
+       * floors and a shared verdict would eventually apply one to the other.
+       */
+      interface ArmsResult {
+        /** The renderer string read back off the live context, never assumed. */
+        renderer: string;
+        /** Whether that string names the CPU rasteriser. */
+        software: boolean;
+        /** Both arms produced a `__wtpMap` to fly. */
+        bareReady: boolean;
+        /** Both arms drew the scrim, so both reached a reader's weight. */
+        bareScrim: boolean;
+        /** How many layers, sources and markers the bare ablation removed. */
+        stripped: number;
+        /** Bare flights discarded because the map healed during them. */
+        healed: number;
+        /** How many pairs were attempted; the denominator both arms must fill. */
+        pairs: number;
+        app: { gaps: number[]; hostBusyPct: number | null }[];
+        bare: { gaps: number[]; hostBusyPct: number | null }[];
+      }
+
+      /**
+       * **ONE PASS, RUN TWICE, ON TWO RASTERISERS.** (Session C, 2026-09-01.)
+       *
+       * This body used to exist once, hard-wired to `GPU_ARGS`, and the software
+       * question was answered by a `cannotRun` naming last-measured numbers.
+       * That was correct while nothing had been done about the software deficit
+       * and wrong the moment something had — a check that permanently declines
+       * the question it is named for is a check nobody can regress.
+       *
+       * So the pass takes its launch arguments as a PARAMETER and is called
+       * twice: `GPU_ARGS` for the adapter a reader with a GPU has, and the
+       * suite's own default launch for the CPU rasteriser (Playwright adds
+       * `--enable-unsafe-swiftshader`, which is what the rest of this file has
+       * always been running through).
+       *
+       * **NEITHER CALL TRUSTS ITS OWN REQUEST.** `READ_RENDERER` reads the live
+       * string back and the call sites compare it against what they asked for,
+       * so a host where the GPU request silently falls back — or where the
+       * default launch happens to get a real adapter — DECLINES the affected
+       * check with the renderer it actually got, rather than filing one
+       * population's numbers under the other's name. RULING 184's shape: a
+       * harness condition may never become a fact about the build.
+       *
+       * A separate browser per rasteriser, because the flags are a launch-time
+       * property and cannot be changed on a running one.
+       */
+      const measureArms = async (
+        rasterLabel: string,
+        launchArgs: string[],
+      ): Promise<ArmsResult> => {
+      const gpuBrowser = await launchGuarded({
+        label: `walk-all-w6h3-${rasterLabel}`,
+        args: launchArgs,
+      });
+      /** One settled flight page on this browser. Both arms open the same way. */
       const openFlightPage = async (label: string) => {
         const ctx = await gpuBrowser.context({
           extraHTTPHeaders: RUN_HEADERS,
@@ -7761,7 +7847,18 @@ section(
       const PAIRS = 3;
       const appGaps: { gaps: number[]; hostBusyPct: number | null }[] = [];
       const bareGaps: { gaps: number[]; hostBusyPct: number | null }[] = [];
-      if (bareReady && bareScrim && stripped > 0 && !gpuSoftware) {
+      /*
+       * **THE RENDERER IS NOT IN THIS GATE ANY MORE, AND THAT IS THE POINT.**
+       *
+       * It used to read `&& !gpuSoftware`, which was right when the software
+       * answer was permanently declined: there was no reason to fly six flights
+       * whose numbers would be thrown away. Now BOTH rasterisers are measured,
+       * so the flights always happen and whether the renderer was the one asked
+       * for is decided at the CALL SITE, against that population's own floor.
+       * The conditions left here are the ones that make the flights meaningless
+       * whatever the adapter is.
+       */
+      if (bareReady && bareScrim && stripped > 0) {
         for (let pair = 1; pair <= PAIRS; pair += 1) {
           const order: ("app" | "bare")[] = pair % 2 === 1 ? ["app", "bare"] : ["bare", "app"];
           for (const arm of order) {
@@ -7782,94 +7879,336 @@ section(
         }
       }
 
-      if (!bareReady) {
-        cannotRun("W6H3", NORM_CHECK, "the bare-map arm never produced a __wtpMap to fly");
-      } else if (gpuSoftware) {
+      await appArm.ctx.close();
+      await bareArm.ctx.close();
+      await gpuBrowser.close();
+      return {
+        renderer: gpuRenderer,
+        software: gpuSoftware,
+        bareReady,
+        bareScrim,
+        stripped,
+        healed: bareHealed,
+        pairs: PAIRS,
+        app: appGaps,
+        bare: bareGaps,
+      };
+      /*
+       * The closing brace of `measureArms`. **ITS BODY IS DELIBERATELY NOT
+       * RE-INDENTED**, and that is a reviewability decision rather than an
+       * oversight: this block became a function without one line of its logic
+       * changing, and re-indenting three hundred lines would have buried that
+       * fact under three hundred lines of whitespace diff. The change worth
+       * reading is the parameterised launch at the top and the two call sites
+       * below.
+       */
+      };
+
+      /**
+       * Everything that invalidates a pass on EITHER rasteriser, in one place.
+       *
+       * Returns the reason or null. Shared rather than written twice, because
+       * two copies of a six-branch disposition drift, and the branch that drifts
+       * is the one nobody re-reads. What is NOT here is the renderer test: that
+       * is the one condition whose meaning differs between the two populations,
+       * and each call site states its own.
+       */
+      const armsBlocked = (r: ArmsResult): string | null => {
+        if (!r.bareReady) return "the bare-map arm never produced a __wtpMap to fly";
+        if (!r.bareScrim) {
+          return (
+            "the bare arm's scrim never drew, so it was never brought to a reader's weight " +
+            "before being stripped — the two arms would not differ in exactly one thing"
+          );
+        }
+        if (r.stripped === 0) {
+          /* The ablation matched nothing, so the "bare" arm is a fully loaded
+             page and the ratio would be a page compared against itself — which
+             reads as a flawless 1.00 and asserts nothing at all. */
+          return (
+            "the bare ablation removed NOTHING, so the bare arm is not bare and the ratio " +
+            "would be this page compared against itself"
+          );
+        }
+        if (r.healed > 0) {
+          /* The application put its district layers back on the "bare" map
+             during the flight, so that arm is not a bare map. */
+          return (
+            `${r.healed} of ${r.pairs} bare flights HEALED mid-flight — the application ` +
+            "re-added its district layers to the stripped map, so the bare arm is not bare"
+          );
+        }
+        if (r.app.length < r.pairs || r.bare.length < r.pairs) {
+          /* A missing flight is not a slow flight. Both arms must carry the full
+             denominator or the medians are taken over different populations. */
+          return (
+            `only ${r.app.length} of ${r.pairs} application flights and ${r.bare.length} of ` +
+            `${r.pairs} bare flights completed — the arms would not share a denominator`
+          );
+        }
+        return null;
+      };
+
+      /** The frame-time and jank sentence both populations report identically. */
+      const armsDetail = (app: ArmSummary, bare: ArmSummary, r: ArmsResult): string =>
+        `application median ${app.medianFps.toFixed(1)} fps over ${app.runs} flights, bare map ` +
+        `${bare.medianFps.toFixed(1)} fps over ${bare.runs} flights, ${r.pairs} INTERLEAVED ` +
+        `pairs with alternating within-pair order. Means ${app.meanFps.toFixed(1)} and ` +
+        `${bare.meanFps.toFixed(1)} fps; a mean below its median is a stall the median hid. ` +
+        `Frame time app p50 ${app.frameMs.p50.toFixed(1)}ms / p95 ${app.frameMs.p95.toFixed(1)}ms / ` +
+        `p99 ${app.frameMs.p99.toFixed(1)}ms / max ${app.frameMs.max.toFixed(1)}ms, bare ` +
+        `p50 ${bare.frameMs.p50.toFixed(1)}ms / p95 ${bare.frameMs.p95.toFixed(1)}ms / ` +
+        `p99 ${bare.frameMs.p99.toFixed(1)}ms / max ${bare.frameMs.max.toFixed(1)}ms. ` +
+        `JANK over ${LONG_FRAME_MS}ms: app ${app.longFrames}/${app.framesMeasured} frames, ` +
+        `bare ${bare.longFrames}/${bare.framesMeasured} frames. ` +
+        `${r.stripped} layers, sources and markers removed for the bare arm, and every bare ` +
+        "flight read back 0 district layers, 0 sources and 0 markers AT LANDING. " +
+        "THE ABSOLUTE RATE IS A FACT ABOUT THIS HOST; ONLY THE RATIO IS ASSERTED.";
+
+      /* ─────────────────────────────────────────────────────────────────────
+         POPULATION 1 — A READER WITH A GPU. The author's 90% criterion.
+         ───────────────────────────────────────────────────────────────────── */
+      const hw = await measureArms("gpu", GPU_ARGS);
+      const hwBlocked = armsBlocked(hw);
+      if (hwBlocked !== null) {
+        cannotRun("W6H3", NORM_CHECK, hwBlocked);
+      } else if (hw.software) {
         /*
-         * The GPU request did not land, so both arms are on the CPU rasteriser.
-         * RULING 184's shape: a harness condition may never become a fact about
-         * the build. The measured software numbers are named in the reason so
-         * the reading is not LOST — it is simply not asserted, because
-         * SwiftShader is not a reader.
+         * The GPU request did not land, so this arm is on the CPU rasteriser and
+         * its numbers belong to the OTHER population. RULING 184's shape: a
+         * harness condition may never become a fact about the build. The
+         * software check below still runs and still asserts, so declining here
+         * loses no coverage — it only refuses to file one population's numbers
+         * under the other's floor.
          */
         cannotRun(
           "W6H3",
           NORM_CHECK,
-          `the GPU request fell back to the SOFTWARE rasteriser (${gpuRenderer}), which is a ` +
-            "harness condition and not a reader's machine — measured there on 2026-08-31 this " +
-            "product held 25.8% of a bare map (app 15.4 fps median, bare 59.9, app jank 124 of " +
-            "127 frames), so asserting the criterion here would report the rasteriser as a " +
-            "regression. Run `pnpm measure:flyin --normalized` for the full instrument",
-        );
-      } else if (!bareScrim) {
-        cannotRun(
-          "W6H3",
-          NORM_CHECK,
-          "the bare arm's scrim never drew, so it was never brought to a reader's weight before " +
-            "being stripped — the two arms would not differ in exactly one thing",
-        );
-      } else if (stripped === 0) {
-        /* The ablation matched nothing, so the "bare" arm is a fully loaded
-           page and the ratio would be a page compared against itself — which
-           reads as a flawless 1.00 and asserts nothing at all. */
-        cannotRun(
-          "W6H3",
-          NORM_CHECK,
-          "the bare ablation removed NOTHING, so the bare arm is not bare and the ratio would " +
-            "be this page compared against itself",
-        );
-      } else if (bareHealed > 0) {
-        /* The application put its district layers back on the "bare" map during
-           the flight, so that arm is not a bare map and the ratio would be this
-           page compared against itself. See the note on the ablation. */
-        cannotRun(
-          "W6H3",
-          NORM_CHECK,
-          `${bareHealed} of ${PAIRS} bare flights HEALED mid-flight — the application re-added ` +
-            "its district layers to the stripped map, so the bare arm is not bare",
-        );
-      } else if (appGaps.length < PAIRS || bareGaps.length < PAIRS) {
-        /* A missing flight is not a slow flight. Both arms must carry the full
-           denominator or the medians are taken over different populations. */
-        cannotRun(
-          "W6H3",
-          NORM_CHECK,
-          `only ${appGaps.length} of ${PAIRS} application flights and ${bareGaps.length} of ` +
-            `${PAIRS} bare flights completed — the arms would not share a denominator`,
+          `the GPU request fell back to the SOFTWARE rasteriser (${hw.renderer}), so this arm ` +
+            "measured the CPU-rasterised population rather than a reader with a GPU. That " +
+            "population has its own check on the next line and it is not waived by this " +
+            "decline. Run `pnpm measure:flyin --normalized` for the full instrument",
         );
       } else {
-        const app = summariseArm("application", appGaps);
-        const bare = summariseArm("bare MapLibre", bareGaps);
+        const app = summariseArm("application", hw.app);
+        const bare = summariseArm("bare MapLibre", hw.bare);
         const verdict = judgeNormalized(app, bare);
         check(
           "W6H3",
           NORM_CHECK,
           verdict.pass,
           `RATIO ${(verdict.ratio * 100).toFixed(1)}% against the ` +
-            `${(NORMALIZED_FLOOR * 100).toFixed(0)}% floor — application median ` +
-            `${app.medianFps.toFixed(1)} fps over ${app.runs} flights, bare map ` +
-            `${bare.medianFps.toFixed(1)} fps over ${bare.runs} flights, ${PAIRS} INTERLEAVED ` +
-            `pairs with alternating within-pair order. Means ${app.meanFps.toFixed(1)} and ` +
-            `${bare.meanFps.toFixed(1)} fps; a mean below its median is a stall the median hid. ` +
-            `Frame time app p50 ${app.frameMs.p50.toFixed(1)}ms / p95 ${app.frameMs.p95.toFixed(1)}ms / ` +
-            `p99 ${app.frameMs.p99.toFixed(1)}ms / max ${app.frameMs.max.toFixed(1)}ms, bare ` +
-            `p50 ${bare.frameMs.p50.toFixed(1)}ms / p95 ${bare.frameMs.p95.toFixed(1)}ms / ` +
-            `p99 ${bare.frameMs.p99.toFixed(1)}ms / max ${bare.frameMs.max.toFixed(1)}ms. ` +
-            `JANK over ${LONG_FRAME_MS}ms: app ${app.longFrames}/${app.framesMeasured} frames, ` +
-            `bare ${bare.longFrames}/${bare.framesMeasured} frames. ` +
+            `${(NORMALIZED_FLOOR * 100).toFixed(0)}% floor — ${armsDetail(app, bare, hw)} ` +
             `HOST CONDITION: ${hostCondition(verdict)}; measured on the hardware GPU ` +
-            `(${gpuRenderer}) rather than through this suite's default rasteriser ` +
-            `(${renderer}); ${stripped} layers, sources and markers removed for the bare arm, ` +
-            "and every bare flight read back 0 district layers, 0 sources and 0 markers AT " +
-            "LANDING. THE ABSOLUTE RATE IS A FACT ABOUT THIS HOST; ONLY THE RATIO IS ASSERTED.",
+            `(${hw.renderer}) rather than through this suite's default rasteriser (${renderer}).`,
         );
       }
-      await appArm.ctx.close();
-      await bareArm.ctx.close();
-      await gpuBrowser.close();
+
+      /* ─────────────────────────────────────────────────────────────────────
+         POPULATION 2 — A READER WITH NO GPU ACCELERATION. (Session C.)
+
+         Older machines, virtual machines, remote desktop, blocklisted drivers,
+         hardware acceleration switched off. This block used to DECLINE this
+         question permanently, naming the numbers, which was the honest thing to
+         do while nothing had been done about them: 28.8% of a bare map, 17.2 fps
+         median against 59.9, 189 of 194 frames over 33.4ms — with the bare map
+         reaching 60 fps on the SAME rasteriser, which is what made the deficit
+         ours rather than SwiftShader's.
+
+         Something has now been done about it, so the question is ASSERTED. The
+         floor is lower than the hardware floor and it is stated rather than
+         chosen quietly: the repair deliberately stands treatments down while the
+         camera moves, so this arm is not being asked to match a bare map as
+         closely. The jank ceiling is not optional decoration beside it — a build
+         measured at 89% of bare with 57 of 231 frames past 33.4ms is exactly
+         what proved the median alone cannot close this question.
+         ───────────────────────────────────────────────────────────────────── */
+      /*
+       * NO GPU FLAGS, which is how this run GETS the CPU rasteriser: Playwright
+       * launches Chromium with `--enable-unsafe-swiftshader`, and that is what
+       * every other check in this file has always been running through.
+       */
+      const sw = await measureArms("software", []);
+      const swBlocked = armsBlocked(sw);
+      if (swBlocked !== null) {
+        cannotRun("W6H3", SOFT_CHECK, swBlocked);
+      } else if (!sw.software) {
+        /*
+         * **THE HOST CANNOT PRODUCE THIS POPULATION DETERMINISTICALLY.** The
+         * default launch came back on a real adapter, so there is no CPU-
+         * rasterised arm to assert about and the numbers in hand describe a
+         * reader with a GPU — who is already covered above. Declining with the
+         * renderer named is the only honest output; asserting the software floor
+         * against a hardware run would be a pass nobody measured.
+         */
+        cannotRun(
+          "W6H3",
+          SOFT_CHECK,
+          `this suite's default launch came back on a HARDWARE adapter (${sw.renderer}) rather ` +
+            "than the CPU rasteriser, so this host cannot produce the no-GPU population on " +
+            "demand and there is nothing here to assert it against. Measured on 2026-09-01 on a " +
+            "host that could: 49.9 fps median application against 54.2 bare = 92.0%, jank 20 of " +
+            "771 frames. Run `FLYIN_SOFTWARE=1 pnpm measure:flyin --normalized` to reproduce",
+        );
+      } else {
+        const app = summariseArm("application", sw.app);
+        const bare = summariseArm("bare MapLibre", sw.bare);
+        const verdict = judgeSoftware(app, bare);
+        check(
+          "W6H3",
+          SOFT_CHECK,
+          verdict.pass,
+          `RATIO ${(verdict.ratio * 100).toFixed(1)}% against the ` +
+            `${(SOFTWARE_NORMALIZED_FLOOR * 100).toFixed(0)}% software floor ` +
+            `(${verdict.ratioPass ? "MET" : "NOT MET"}) and JANK ` +
+            `${(verdict.jankFraction * 100).toFixed(1)}% against the ` +
+            `${(SOFTWARE_JANK_CEILING * 100).toFixed(0)}% ceiling ` +
+            `(${verdict.jankPass ? "MET" : "NOT MET"}) — BOTH are required, because a build ` +
+            "measured at 89% of bare with 57 of 231 frames past 33.4ms is what proved the " +
+            `median alone cannot close this. ${armsDetail(app, bare, sw)} ` +
+            `Measured on the SOFTWARE rasteriser (${sw.renderer}) — a real reader population ` +
+            "(older machines, VMs, remote desktop, blocklisted drivers, hardware acceleration " +
+            "off), reported as its OWN population and never averaged with the hardware one. " +
+            "It was 28.8% before 2026-09-01.",
+        );
+      }
     }
   }
   await context.close();
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+ * SC3 — ARIZONA MONEY REACHES THE READER, AND EVERY CARD ENDS IN ONE STATE
+ *
+ * The defect this pins was never acquisition. `data/funding/state-money-az-2026.json`
+ * held Katie Hobbs at $11,109,720 while her card showed nothing, because the
+ * certified-lineup cards key on `${contest.id}|${nominee.name}` and the money
+ * records key on candidacy ids. Two correct halves, one seam, and the seam is
+ * the only place it could fail.
+ *
+ * Measured before the fix, on production and on a local production build that
+ * agreed exactly: **4 money sections of 24 cards at 85701, 4 of 29 at 85641**.
+ * After: 24 of 24 and 29 of 29, every one in exactly one honest state.
+ *
+ * **This asserts the FLOOR, not the composition.** A candidate who genuinely
+ * files nothing must be free to move from FILED to a sourced absence without
+ * going red here. What may never happen again is a card with NO money state at
+ * all, which is the shape a broken join takes — silence that reads as "this
+ * person raised nothing" when what actually happened is that we asked the wrong
+ * question. And the OURS-gap count is CEILINGED rather than pinned, so an
+ * identity layer that quietly stops resolving fails here rather than degrading
+ * every card to an honest-looking shrug.
+ * ──────────────────────────────────────────────────────────────────────────── */
+
+section("SC3. Arizona money reaches the certified-lineup reader (Item 1, 2026-09-01)");
+
+for (const { zip, cards: cardFloor, oursCeiling } of [
+  { zip: "85701", cards: 24, oursCeiling: 6 },
+  { zip: "85641", cards: 29, oursCeiling: 6 },
+] as const) {
+  const context = await browser.context();
+  const page = await context.newPage();
+  try {
+    await page.goto(`${BASE}/ballot?zip=${zip}`, { waitUntil: "networkidle" });
+    await until(
+      page,
+      async () => (await page.locator(".candidate-row").count()) > 0,
+      15_000,
+      150,
+      `SC3 ${zip}: candidate cards`,
+    );
+
+    /* Open every battlecard, then every Campaign money section. The body is
+       `{open && …}` — not hidden, ABSENT — so it has to be clicked open. */
+    await page.evaluate(
+      "(() => { for (const b of Array.from(document.querySelectorAll('button'))) " +
+        "if ((b.textContent || '').trim() === 'View Battlecard') b.click(); })()",
+    );
+    await until(
+      page,
+      async () => (await page.locator(".card-section-title").count()) > 0,
+      15_000,
+      150,
+      `SC3 ${zip}: battlecards open`,
+    );
+    const opened = await page.evaluate(
+      "(() => { let n = 0; for (const t of Array.from(document.querySelectorAll('.card-section-title'))) " +
+        "{ if (!/^Campaign money/.test((t.textContent || '').trim())) continue; " +
+        "const b = t.closest('button'); if (b) { b.click(); n++; } } return n; })()",
+    );
+    await until(
+      page,
+      async () => (await page.locator(".card-section-body").count()) > 0,
+      15_000,
+      150,
+      `SC3 ${zip}: money bodies`,
+    );
+
+    const seen = (await page.evaluate(`(() => {
+      const titles = Array.from(document.querySelectorAll('.card-section-title'))
+        .filter((e) => /^Campaign money/.test((e.textContent || '').trim()));
+      const out = { cards: document.querySelectorAll('.candidate-row').length,
+                    sections: titles.length, filed: 0, registered: 0, absence: 0,
+                    oursGap: 0, federal: 0, silent: 0 };
+      for (const t of titles) {
+        const section = t.closest('section');
+        const el = section && section.querySelector('.card-section-body');
+        const body = ((el && el.textContent) || '').replace(/\\s+/g, ' ');
+        if (/Raised\\s*\\$/.test(body)) out.filed++;
+        else if (/Registered committee/.test(body)) out.registered++;
+        else if (/No reports on file/.test(body)) out.absence++;
+        else if (/haven\\u2019t matched|haven't matched|haven\\u2019t recorded|haven't recorded/i.test(body)) out.oursGap++;
+        else if (/(FEC|election cycle)/.test((t.textContent || '') + body)) out.federal++;
+        else out.silent++;
+      }
+      return out;
+    })()`)) as {
+      cards: number; sections: number; filed: number; registered: number;
+      absence: number; oursGap: number; federal: number; silent: number;
+    };
+
+    const detail =
+      `${seen.sections} money section(s) over ${seen.cards} card(s), ${opened} header(s) opened — ` +
+      `FILED ${seen.filed}, registered-no-activity ${seen.registered}, sourced absence ${seen.absence}, ` +
+      `OURS gap ${seen.oursGap}, federal FEC ${seen.federal}, UNCLASSIFIED ${seen.silent}`;
+
+    check(
+      "SC3",
+      `${zip}: every candidate card carries a Campaign money section`,
+      seen.cards >= cardFloor && seen.sections === seen.cards,
+      `${detail}. Before 2026-09-01 this was 4 of ${cardFloor}: the snapshot held the money and ` +
+        "the card asked for it by name, so it silently rendered nothing.",
+    );
+
+    check(
+      "SC3",
+      `${zip}: no money section renders an unrecognised state`,
+      seen.silent === 0 && seen.sections > 0,
+      `${detail}. A section whose text matches none of the four honest states is either a new ` +
+        "wording nobody taught this check, or the join failing quietly again — both are worth a look.",
+    );
+
+    check(
+      "SC3",
+      `${zip}: the identity layer still resolves most candidates to their filings`,
+      seen.filed > 0 && seen.oursGap <= oursCeiling,
+      `${detail}. The OURS gap is CEILINGED at ${oursCeiling} rather than pinned: a candidate may ` +
+        "honestly move between states, but an identity layer that stopped resolving would degrade " +
+        "every card to an honest-looking shrug and pass a floor that only counted sections.",
+    );
+
+    check(
+      "SC3",
+      `${zip}: Katie Hobbs's filed total reaches her card`,
+      await page.evaluate(
+        "document.body.innerText.replace(/\\s+/g, ' ').includes('11,109,7')",
+      ),
+      "the named control for the whole item — the figure that was in the snapshot and not on " +
+        "the page. A changed total is not a failure of this check; a MISSING one is.",
+    );
+  } finally {
+    await context.close();
+  }
 }
 
 await browser.close();

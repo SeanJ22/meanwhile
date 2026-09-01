@@ -1,13 +1,47 @@
 /**
- * **ARIZONA STATE CAMPAIGN MONEY, FOR THE 85701 AND 85641 BALLOT.**
- * (Session C2, 2026-08-31. RULING 126, RULING 205, RULING 207, RULING 224.)
+ * **ARIZONA STATE CAMPAIGN MONEY — THE STATEWIDE 2026 CORPUS.**
+ * (Session C2, 2026-08-31. Decoupled from the pilot ballot Session C3,
+ * 2026-09-01. RULING 126, RULING 205, RULING 207, RULING 224, RULING 229.)
  *
- * Produces `data/funding/state-money-az-2026.json` — a `StateMoneySnapshot`
- * the ballot page already knows how to load — and
- * `data/campaign-finance/az-seethemoney-2026-reconciliation.json`, which is the
- * MEASUREMENT that licenses every figure in it.
+ * ```
+ *   pnpm money:az                        walk, reconcile, write everything
+ *   pnpm money:az --dry                  walk and report, write nothing
+ *   pnpm money:az --ledger-budget=120    reconcile at most 120 NEW committees
+ * ```
  *
- * ## What the record said before this walk, and what was actually wrong
+ * ## THE THREE LAYERS, AND THEY ARE SEPARATE ON PURPOSE (RULING 229)
+ *
+ * ```
+ * ACQUISITION   this file, top half. The COMPLETE applicable SeeTheMoney cycle
+ *               universe and the Secretary of State's committee register.
+ *               **It has no dependency on 85641, on 85701, or on any ballot.**
+ * IDENTITY      data/identity/az-2026-candidate-registry.json, built by
+ *               `pnpm identity:az`. Who exists, statewide, and which canonical
+ *               candidacy each one is.
+ * PROJECTION    this file, bottom half, plus lib/funding/nominee-money.ts. The
+ *               reader snapshot holds only candidates a page can be about — and
+ *               its SOURCE CORPUS is not generated from that page's list.
+ * ```
+ *
+ * **What this file used to do, and why it was prohibited.** Its own header said
+ * *"FOR THE 85701 AND 85641 BALLOT"*. It loaded `data/ballot/az-pima-2026.json`,
+ * built `candidateOfInterest` by name-matching those candidacies against the
+ * portal, and read the itemised ledger only for the committees that survived —
+ * 58 of 732. So the ACQUISITION DENOMINATOR was the currently enabled reader
+ * location, and activating a third ZIP would have meant hunting the same portal
+ * again for candidates it already held. Under RULING 229 a ZIP may prioritise
+ * acquisition ORDER and may never define the DENOMINATOR. It now does exactly
+ * that: the registry-linked committees are walked FIRST so the reader surface
+ * never regresses, and the walk continues through the whole statewide candidate
+ * population afterwards.
+ *
+ * **The invariant is ZERO redundant internet hunt when a new ZIP is activated.**
+ * `data/campaign-finance/az-2026-statewide-corpus.json` holds every entity in
+ * the cycle universe with its aggregates, its office, its party, and its
+ * reconciliation state. A newly activated ZIP's candidates are answered from
+ * that committed file.
+ *
+ * ## What the record said before the first walk, and what was actually wrong
  *
  * `docs/arizona-source-enumeration.md` recorded the route as WORKING and the
  * money as UNPUBLISHABLE. A candidate returns several summary rows sharing one
@@ -60,6 +94,11 @@
  * published, because what it carries beyond the window is not established and a
  * number whose meaning is unknown does not go under a person's photograph.
  *
+ * That 370-of-370 proof against the publisher's own declared total is asserted
+ * on EVERY run below and is never restarted from zero: a committee already
+ * reconciled at unchanged summary totals is carried forward from the held
+ * corpus rather than re-read.
+ *
  * ## THE FILTER DEFAULTS ARE THE OTHER HALF OF THE SAFETY BAR
  *
  * The portal's default view returns 255 entities. `IsLessActive=true` returns
@@ -69,10 +108,14 @@
  * manufactured by our own query. So the universe walked here is the UNION of
  * all three, and a sourced absence means the union held nothing.
  *
- *   pnpm money:az              write the snapshot and the reconciliation
- *   pnpm money:az --dry        walk and report, write nothing
+ * ## PRIVACY, AND WHAT NEVER LANDS
+ *
+ * Every itemised row carries a contributor's name, occupation, employer, city
+ * and zip (RULING 167). Those rows are streamed to compute a sum and are
+ * DISCARDED. Nothing below persists a transaction, and the corpus file holds
+ * aggregates, counts and provenance only.
  */
-import { writeFileSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import net from "node:net";
 
@@ -89,8 +132,6 @@ import {
   SUMMARY_COLUMNS,
   SUMMARY_PATH,
   aggregateEntities,
-  azNamesAgree,
-  azOfficeKey,
   dataTablesBody,
   detailQuery,
   nextFilingDue,
@@ -103,10 +144,13 @@ import {
   universeQueries,
   upsertAz,
   type DetailAggregate,
+  type EntityTotals,
   type RegisterRow,
+  type ReportingPeriod,
   type SummaryRow,
 } from "../lib/sources/az-seethemoney/index.ts";
 import { computeSplit, type StateMoneySnapshot } from "../lib/funding/state-money.ts";
+import type { AzIdentityRegistry } from "../lib/identity/types.ts";
 import { OUTBOUND_CONTACT } from "../lib/geo/outbound-agent.ts";
 import { today } from "./doc-dates.mjs";
 
@@ -114,8 +158,20 @@ const ROOT = process.cwd();
 const AS_OF = today();
 const YEAR = CYCLE_2026.cycle;
 const DRY = process.argv.includes("--dry");
+const BUDGET_ARG = process.argv.find((a) => a.startsWith("--ledger-budget="));
+const LEDGER_BUDGET = BUDGET_ARG ? Number(BUDGET_ARG.split("=")[1]) : Number.POSITIVE_INFINITY;
 const SPACING_MS = 250;
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+const CORPUS_PATH = join(ROOT, "data", "campaign-finance", "az-2026-statewide-corpus.json");
+const REGISTRY_PATH = join(ROOT, "data", "identity", "az-2026-candidate-registry.json");
+const SNAPSHOT_PATH = join(ROOT, "data", "funding", "state-money-az-2026.json");
+const RECONCILIATION_PATH = join(
+  ROOT,
+  "data",
+  "campaign-finance",
+  "az-seethemoney-2026-reconciliation.json",
+);
 
 /* -------------------------------------------------------------------------
  * TRANSPORT. Two of them, because the record and the register live behind
@@ -207,29 +263,13 @@ function ftpGet(path: string): Promise<string> {
   });
 }
 
-/* -------------------------------------------------------------------------
- * THE WALK
- * ------------------------------------------------------------------------- */
-
-interface Candidacy {
-  id: string;
-  contestId: string;
-  familyName: string;
-  givenName: string;
-}
-interface Contest {
-  id: string;
-  title: string;
-}
-
-const ballot = JSON.parse(readFileSync(join(ROOT, "data", "ballot", "az-pima-2026.json"), "utf8")) as {
-  contests: Contest[];
-  candidacies: Candidacy[];
-};
-const contestById = new Map(ballot.contests.map((c) => [c.id, c]));
+/* =========================================================================
+ * LAYER 1 — ACQUISITION. STATEWIDE. NO BALLOT, NO ZIP, NO PILOT.
+ * ========================================================================= */
 
 console.log(`Arizona state campaign money — ${AS_OF}${DRY ? " (dry run)" : ""}`);
 console.log(`  agency: ${AGENCY}`);
+console.log(`  acquisition denominator: the complete Arizona ${YEAR} cycle universe (no ZIP, no ballot)`);
 
 /* RUNG 1 — the union of the portal's three own filter settings. */
 const seen = new Map<string, SummaryRow>();
@@ -255,64 +295,38 @@ console.log(`  union: ${summaryRows.length} rows in ${entities.size} entities`);
 
 /* RUNG 1 — the register and the calendar, over a different protocol. */
 const register: Map<string, RegisterRow> = parseCommitteeRegister(await ftpGet(`${FTP_DIR}/Committees.txt`));
-const reportingPeriods = parseReportingPeriods(await ftpGet(`${FTP_DIR}/ReportingPeriods.txt`));
+const reportingPeriods: ReportingPeriod[] = parseReportingPeriods(await ftpGet(`${FTP_DIR}/ReportingPeriods.txt`));
 const nextDue = nextFilingDue(reportingPeriods, AS_OF);
 console.log(`  register: ${register.size} committees   calendar: ${reportingPeriods.length} reporting periods`);
 console.log(`  next filing deadline after ${AS_OF}: ${nextDue ? `${nextDue.reportName} (${nextDue.filingPeriodEndDate})` : "NONE STATED in the published calendar"}`);
 
-/*
- * WHICH COMMITTEES THIS BALLOT COULD POSSIBLY BE ABOUT.
- * The itemised ledger is read only for these — not to save effort, but because
- * every itemised row carries a contributor's name, occupation and employer
- * (RULING 167), and reading 857 committees' donor lists to answer a question
- * about 49 candidacies would be collecting far more than the minimum.
+/**
+ * **THE STATEWIDE CANDIDATE/COMMITTEE POPULATION — the acquisition denominator.**
+ *
+ * Derived from the PUBLISHER'S OWN entity classification, which is a fact about
+ * Arizona's committee universe and not about anybody's ballot. Measured
+ * 2026-09-01 over the union: 633 `Candidate (not participating in Clean
+ * Elections)`, 83 `Candidate (participating in Clean Elections)`, 16
+ * `Officeholder Expenses`.
+ *
+ * An officeholder-expense committee is not a candidate committee and its money
+ * is not campaign money; it stays in the corpus as an identity — leaving it out
+ * would make the corpus assert that the cycle held nothing there — and it is
+ * not part of the candidate-reconciliation denominator.
  */
-const candidateOfInterest = new Set<number>();
-for (const cand of ballot.candidacies) {
-  const contest = contestById.get(cand.contestId);
-  if (!contest || azOfficeKey(contest.title) === null) continue;
-  const ballotName = `${cand.givenName} ${cand.familyName}`.trim();
-  for (const e of entities.values()) {
-    if (azNamesAgree(e.candidateDisplay, ballotName)) candidateOfInterest.add(e.entityId);
-  }
-}
-console.log(`  committees plausibly on this ballot: ${candidateOfInterest.size} of ${entities.size}`);
+const CANDIDATE_ENTITY_TYPE = /^candidate\b/i;
+const statewideCandidateEntities = [...entities.values()].filter((e) =>
+  CANDIDATE_ENTITY_TYPE.test(e.entityTypeName ?? ""),
+);
+console.log(
+  `  statewide candidate committees: ${statewideCandidateEntities.length} of ${entities.size} entities in the cycle universe`,
+);
 
-/* RUNG 7 — the itemised ledger, aggregated. The rows themselves never land. */
-const detail = new Map<number, { income: DetailAggregate; expense: DetailAggregate }>();
-let walked = 0;
-for (const entityId of candidateOfInterest) {
-  const per: Record<"income" | "expense", DetailAggregate> = {
-    income: { count: 0, sum: 0 },
-    expense: { count: 0, sum: 0 },
-  };
-  for (const kind of ["income", "expense"] as const) {
-    let start = 0;
-    let total: number | null = null;
-    for (;;) {
-      const text = await postTable(
-        DETAIL_PATH,
-        detailQuery({ entityId, kind, startYear: CYCLE_2026.startYear, endYear: CYCLE_2026.endYear, start, length: 2000 }),
-        dataTablesBody(DETAIL_COLUMNS, { start, length: 2000, orderColumn: 2, orderDir: "desc" }),
-      );
-      const parsed = parseTableResponse<{ Amount?: number | null }>(text, `GetNEWDetailedTableData ${kind} ${entityId}`);
-      if (total === null) total = parsed.recordsTotal;
-      let sum = 0;
-      for (const row of parsed.data) sum += row.Amount ?? 0;
-      per[kind].count += parsed.data.length;
-      per[kind].sum = Math.round((per[kind].sum + sum) * 100) / 100;
-      start += parsed.data.length;
-      if (parsed.data.length === 0 || start >= total) break;
-    }
-  }
-  detail.set(entityId, per);
-  walked += 1;
-  if (walked % 10 === 0) console.log(`  ledger ${walked}/${candidateOfInterest.size}`);
-}
+/* =========================================================================
+ * THE HELD CORPUS — so a completed hunt is never restarted (RULING 205).
+ * ========================================================================= */
 
-/* THE RECONCILIATION, per committee, with its denominator. */
-const reconciledEntityIds = new Set<number>();
-const reconciliationRows: {
+interface HeldReconciliation {
   entityId: number;
   committeeName: string;
   candidate: string;
@@ -324,34 +338,239 @@ const reconciliationRows: {
   expenseTransactions: number;
   agrees: boolean;
   note: string;
-}[] = [];
-for (const entityId of candidateOfInterest) {
-  const e = entities.get(entityId)!;
-  const ledger = detail.get(entityId);
-  const verdict = reconcileEntity(e, ledger);
-  if (verdict.agrees) reconciledEntityIds.add(entityId);
-  reconciliationRows.push({
-    entityId,
-    committeeName: e.committeeName,
-    candidate: e.candidateDisplay,
-    summaryIncome: e.income,
-    summaryExpense: e.expense,
-    itemisedIncome: ledger?.income.sum ?? 0,
-    itemisedExpense: ledger?.expense.sum ?? 0,
-    incomeTransactions: ledger?.income.count ?? 0,
-    expenseTransactions: ledger?.expense.count ?? 0,
-    agrees: verdict.agrees,
-    note: verdict.note,
-  });
+  walkedAt: string;
 }
+
+interface StatewideCorpusFile {
+  formatVersion: 1;
+  reconciliations?: HeldReconciliation[];
+}
+
+const held = new Map<number, HeldReconciliation>();
+if (existsSync(CORPUS_PATH)) {
+  const prior = JSON.parse(readFileSync(CORPUS_PATH, "utf8")) as StatewideCorpusFile;
+  for (const r of prior.reconciliations ?? []) held.set(r.entityId, r);
+}
+/*
+ * SEEDED FROM THE PRIOR PILOT-SCOPED RECONCILIATION, ONCE.
+ *
+ * The 2026-08-31 walk proved 58 committees against the publisher's own itemised
+ * ledger. That is finished work about the RECORDS, not about the ballot it was
+ * scoped by, and re-reading those ledgers would cost a hundred thousand
+ * contributor rows to learn something already known.
+ */
+if (existsSync(RECONCILIATION_PATH)) {
+  const prior = JSON.parse(readFileSync(RECONCILIATION_PATH, "utf8")) as {
+    collectedAt?: string;
+    reconciliation?: { rows?: (HeldReconciliation & { walkedAt?: string })[] };
+  };
+  for (const row of prior.reconciliation?.rows ?? []) {
+    if (held.has(row.entityId)) continue;
+    held.set(row.entityId, { ...row, walkedAt: row.walkedAt ?? prior.collectedAt ?? AS_OF });
+  }
+}
+
+/**
+ * A held reconciliation may be reused only while the committee's SUMMARY
+ * TOTALS are unchanged. The moment the publisher reports new money the old
+ * measurement stops describing this committee, and carrying it forward would
+ * publish a figure nothing currently verifies.
+ */
+function heldStillDescribes(entity: EntityTotals): HeldReconciliation | null {
+  const prior = held.get(entity.entityId);
+  if (!prior) return null;
+  if (prior.summaryIncome !== entity.income || prior.summaryExpense !== entity.expense) return null;
+  return prior;
+}
+
+/* =========================================================================
+ * LAYER 2 — IDENTITY. Who exists, statewide. Read, never derived from a ZIP.
+ * ========================================================================= */
+
+interface ProjectionCandidacy {
+  id: string;
+  contestId: string;
+  givenName: string;
+  familyName: string;
+}
+interface ProjectionContest {
+  id: string;
+  title: string;
+}
+
+if (!existsSync(REGISTRY_PATH)) {
+  throw new Error(
+    `${REGISTRY_PATH} is absent. The identity layer is what says who exists; without it this ` +
+      "script would have to derive its candidate list from a ballot page, which RULING 229 forbids. " +
+      "Run `pnpm identity:az` first.",
+  );
+}
+const registry = JSON.parse(readFileSync(REGISTRY_PATH, "utf8")) as AzIdentityRegistry;
+const contestTitleByIdentity = new Map(registry.contests.map((c) => [c.identityId, c.office]));
+const contestById = new Map<string, ProjectionContest>();
+for (const contest of registry.contests) {
+  for (const id of contest.canonicalContestIds) contestById.set(id, { id, title: contest.office });
+}
+const candidacies: ProjectionCandidacy[] = registry.candidates
+  .filter((c) => c.canonicalCandidacyId !== null)
+  .map((c) => {
+    const contest = registry.contests.find((x) => x.identityId === c.contestIdentityId);
+    return {
+      id: c.canonicalCandidacyId!,
+      contestId: contest?.canonicalContestIds[0] ?? "",
+      givenName: c.givenName ?? c.displayName,
+      familyName: c.familyName ?? "",
+    };
+  })
+  .filter((c) => c.contestId.length > 0);
 console.log(
-  `  reconciled against the publisher's own itemised ledger: ${reconciledEntityIds.size} of ${candidateOfInterest.size} committees`,
+  `  identity layer: ${registry.candidates.length} statewide candidates known, ` +
+    `${candidacies.length} with a canonical candidacy id, across ${contestTitleByIdentity.size} contests`,
 );
 
-/* NORMALIZE. */
+/* =========================================================================
+ * THE LEDGER WALK — STATEWIDE POPULATION, READER-PRIORITISED ORDER.
+ *
+ * RULING 229 in one line: the reader's location may set the ORDER and may never
+ * set the DENOMINATOR. The committees the identity layer has already linked to
+ * a canonical candidacy go FIRST, so a budgeted run can never regress a card
+ * that renders today; everything else in the statewide candidate population
+ * follows, and whatever a budget leaves is recorded as a ROUTE GAP with the
+ * agency's own next filing deadline rather than as an absence.
+ * ========================================================================= */
+
+const linkedCommitteeIds = new Set<number>();
+for (const cand of registry.candidates) {
+  for (const committee of cand.committees) {
+    const id = Number(committee.committeeId);
+    if (Number.isFinite(id)) linkedCommitteeIds.add(id);
+  }
+}
+
+const walkOrder = [...statewideCandidateEntities].sort((a, b) => {
+  const aLinked = linkedCommitteeIds.has(a.entityId) ? 0 : 1;
+  const bLinked = linkedCommitteeIds.has(b.entityId) ? 0 : 1;
+  if (aLinked !== bLinked) return aLinked - bLinked;
+  return a.entityId - b.entityId;
+});
+
+const detail = new Map<number, { income: DetailAggregate; expense: DetailAggregate }>();
+const reconciledEntityIds = new Set<number>();
+const reconciliationRows: HeldReconciliation[] = [];
+const routeGaps: { entityId: number; committeeName: string; reason: string; nextDue: string | null }[] = [];
+
+let carried = 0;
+let walked = 0;
+let budgetLeft = LEDGER_BUDGET;
+
+for (const entity of walkOrder) {
+  const prior = heldStillDescribes(entity);
+  if (prior) {
+    carried += 1;
+    if (prior.agrees) reconciledEntityIds.add(entity.entityId);
+    detail.set(entity.entityId, {
+      income: { count: prior.incomeTransactions, sum: prior.itemisedIncome },
+      expense: { count: prior.expenseTransactions, sum: prior.itemisedExpense },
+    });
+    reconciliationRows.push(prior);
+    continue;
+  }
+
+  if (budgetLeft <= 0) {
+    /*
+     * A ROUTE GAP, NOT AN ABSENCE (RULING 184, RULING 205). The committee
+     * exists, we have its summary, and its ledger has not been read on this
+     * run. It carries the agency's own next filing deadline so a later run —
+     * and a reader — know when it is next worked.
+     */
+    routeGaps.push({
+      entityId: entity.entityId,
+      committeeName: entity.committeeName,
+      reason: "itemised ledger not yet reconciled — this run's ledger budget was spent",
+      nextDue: nextDue?.filingPeriodEndDate ?? null,
+    });
+    continue;
+  }
+
+  const per: Record<"income" | "expense", DetailAggregate> = {
+    income: { count: 0, sum: 0 },
+    expense: { count: 0, sum: 0 },
+  };
+  for (const kind of ["income", "expense"] as const) {
+    let start = 0;
+    let total: number | null = null;
+    for (;;) {
+      const text = await postTable(
+        DETAIL_PATH,
+        detailQuery({
+          entityId: entity.entityId,
+          kind,
+          startYear: CYCLE_2026.startYear,
+          endYear: CYCLE_2026.endYear,
+          start,
+          length: 2000,
+        }),
+        dataTablesBody(DETAIL_COLUMNS, { start, length: 2000, orderColumn: 2, orderDir: "desc" }),
+      );
+      const parsed = parseTableResponse<{ Amount?: number | null }>(
+        text,
+        `GetNEWDetailedTableData ${kind} ${entity.entityId}`,
+      );
+      if (total === null) total = parsed.recordsTotal;
+      let sum = 0;
+      /* THE ONLY PLACE AN ITEMISED ROW IS SEEN. It contributes a number and is
+         dropped; nothing below this loop is ever handed a transaction. */
+      for (const row of parsed.data) sum += row.Amount ?? 0;
+      per[kind].count += parsed.data.length;
+      per[kind].sum = Math.round((per[kind].sum + sum) * 100) / 100;
+      start += parsed.data.length;
+      if (parsed.data.length === 0 || start >= total) break;
+    }
+  }
+  detail.set(entity.entityId, per);
+  const verdict = reconcileEntity(entity, per);
+  if (verdict.agrees) reconciledEntityIds.add(entity.entityId);
+  const row: HeldReconciliation = {
+    entityId: entity.entityId,
+    committeeName: entity.committeeName,
+    candidate: entity.candidateDisplay,
+    summaryIncome: entity.income,
+    summaryExpense: entity.expense,
+    itemisedIncome: per.income.sum,
+    itemisedExpense: per.expense.sum,
+    incomeTransactions: per.income.count,
+    expenseTransactions: per.expense.count,
+    agrees: verdict.agrees,
+    note: verdict.note,
+    walkedAt: AS_OF,
+  };
+  reconciliationRows.push(row);
+  held.set(entity.entityId, row);
+  walked += 1;
+  budgetLeft -= 1;
+  if (walked % 10 === 0) {
+    console.log(`  ledger ${walked} walked / ${carried} carried / ${walkOrder.length} statewide`);
+  }
+}
+
+console.log(
+  `\n  RECONCILIATION, against the publisher's own itemised ledger:` +
+    `\n    statewide candidate committees        ${walkOrder.length}` +
+    `\n    reconciled on this run                ${walked}` +
+    `\n    carried forward, totals unchanged     ${carried}` +
+    `\n    agreeing with the itemised ledger     ${reconciledEntityIds.size}` +
+    `\n    disagreeing                           ${reconciliationRows.length - reconciledEntityIds.size}` +
+    `\n    route gaps (ledger not yet read)      ${routeGaps.length}`,
+);
+
+/* =========================================================================
+ * LAYER 3 — PROJECTION. The reader snapshot: only candidates a page can be
+ * about, built from the STATEWIDE corpus rather than from a page's list.
+ * ========================================================================= */
+
 const { records, states } = normalizeAz({
   corpus: { summaryRows, detail, register, reportingPeriods, collectedAt: AS_OF },
-  candidacies: ballot.candidacies,
+  candidacies,
   contestById,
   electionYear: YEAR,
   reconciledEntityIds,
@@ -365,7 +584,9 @@ const tally = {
   OURS_GAP: states.filter((s) => s.state === "OURS_GAP").length,
   FEDERAL_NOT_IN_SCOPE: states.filter((s) => s.state === "FEDERAL_NOT_IN_SCOPE").length,
 };
-console.log(`\n  ${ballot.candidacies.length} candidacies on this ballot; ${inScope} are the Secretary of State's to hold`);
+console.log(
+  `\n  ${candidacies.length} candidacies in the identity registry; ${inScope} are the Secretary of State's to hold`,
+);
 for (const [k, v] of Object.entries(tally)) console.log(`    ${k.padEnd(22)} ${v}`);
 console.log(`    ${"records written".padEnd(22)} ${records.length}`);
 
@@ -385,9 +606,81 @@ if (DRY) {
   console.log("\n  --dry: nothing written.");
   for (const s of states) console.log(`    ${s.state.padEnd(22)} ${s.ballotName.padEnd(28)} ${s.contestTitle}`);
 } else {
-  upsertAz(snapshot, (json) => writeFileSync(join(ROOT, "data", "funding", "state-money-az-2026.json"), json));
+  upsertAz(snapshot, (json) => writeFileSync(SNAPSHOT_PATH, json));
+
+  /*
+   * THE STATEWIDE CORPUS. This is the artifact that makes the RULING 229
+   * invariant real: a newly activated ZIP's candidates are answered from here,
+   * with ZERO redundant internet hunt.
+   *
+   * NO ITEMISED TRANSACTION APPEARS IN IT. Contributor name, occupation,
+   * employer, city and zip (RULING 167) were streamed to compute a sum and were
+   * discarded; what is kept is aggregates, counts and provenance.
+   */
   writeFileSync(
-    join(ROOT, "data", "campaign-finance", "az-seethemoney-2026-reconciliation.json"),
+    CORPUS_PATH,
+    JSON.stringify(
+      {
+        formatVersion: 1,
+        _note: [
+          "THE STATEWIDE ARIZONA 2026 CAMPAIGN-FINANCE CORPUS (RULING 229).",
+          "",
+          "The acquisition denominator is the complete applicable SeeTheMoney cycle universe and the",
+          "Secretary of State's committee register. It has NO dependency on 85701, 85641, or any ballot.",
+          "A newly activated ZIP's candidates are answered from this file rather than by hunting again.",
+          "",
+          "NO ITEMISED TRANSACTION APPEARS HERE. Those rows carry contributor name, occupation, employer,",
+          "city and zip (RULING 167). They were streamed to compute a sum and were never persisted.",
+        ],
+        collectedAt: AS_OF,
+        cycle: YEAR,
+        source: {
+          summary: `${BASE}${SUMMARY_PATH}`,
+          itemised: `${BASE}${DETAIL_PATH}`,
+          register: `ftp://${FTP_HOST}${FTP_DIR}/Committees.txt`,
+          calendar: `ftp://${FTP_HOST}${FTP_DIR}/ReportingPeriods.txt`,
+          publicPage: PUBLIC_PAGE,
+        },
+        denominators: {
+          perQuery,
+          unionRows: summaryRows.length,
+          unionEntities: entities.size,
+          statewideCandidateCommittees: walkOrder.length,
+          registerRows: register.size,
+          reconciledAgainstItemisedLedger: reconciledEntityIds.size,
+          reconciliationsHeld: reconciliationRows.length,
+          routeGaps: routeGaps.length,
+          identityRegistryCandidates: registry.candidates.length,
+          identityRegistryCandidaciesProjectable: candidacies.length,
+        },
+        nextFilingDeadline: nextDue,
+        routeGaps,
+        /* Every entity in the cycle universe, with its aggregates and its
+           office — the identity half of the corpus, so a new ZIP resolves its
+           candidates locally. */
+        entities: [...entities.values()].map((e) => ({
+          entityId: e.entityId,
+          committeeName: e.committeeName,
+          candidateDisplay: e.candidateDisplay,
+          entityTypeName: e.entityTypeName,
+          officeNames: e.officeNames,
+          officeKeys: e.officeKeys,
+          partyNames: e.partyNames,
+          income: e.income,
+          expense: e.expense,
+          rowCount: e.rowCount,
+          reconciledAgainstItemisedLedger: reconciledEntityIds.has(e.entityId),
+        })),
+        reconciliations: reconciliationRows,
+      },
+      null,
+      1,
+    ) + "\n",
+    "utf8",
+  );
+
+  writeFileSync(
+    RECONCILIATION_PATH,
     JSON.stringify(
       {
         formatVersion: 1,
@@ -402,6 +695,10 @@ if (DRY) {
           "/Reporting/GetNEWDetailedTableData with the entityId parameter the earlier walk was missing.",
           "Each row below compares one committee's summary totals against the sum of its own itemised",
           "transactions. A committee that does not agree does not render, whatever else about it matches.",
+          "",
+          "THE POPULATION IS STATEWIDE (RULING 229, 2026-09-01). It was the 58 committees a name test",
+          "linked to the 85701/85641 ballot; a reader's ZIP may prioritise acquisition ORDER and may",
+          "never define the DENOMINATOR.",
           "",
           "NO ITEMISED TRANSACTION APPEARS HERE. Those rows carry contributor name, occupation, employer,",
           "city and zip (RULING 167). They were read to compute a sum and were never persisted.",
@@ -419,6 +716,7 @@ if (DRY) {
           perQuery,
           unionRows: summaryRows.length,
           unionEntities: entities.size,
+          statewideCandidateCommittees: walkOrder.length,
           registerRows: register.size,
           note:
             "The portal's DEFAULT view is IsLessActive=false and it hides most of the register. " +
@@ -428,6 +726,9 @@ if (DRY) {
           committeesTested: reconciliationRows.length,
           agreed: reconciledEntityIds.size,
           disagreed: reconciliationRows.length - reconciledEntityIds.size,
+          walkedThisRun: walked,
+          carriedForward: carried,
+          routeGaps,
           rows: reconciliationRows,
         },
         readerStates: { inScope, tally, perCandidacy: states },
@@ -436,7 +737,9 @@ if (DRY) {
       null,
       1,
     ) + "\n",
+    "utf8",
   );
   console.log("\n  wrote data/funding/state-money-az-2026.json");
+  console.log("  wrote data/campaign-finance/az-2026-statewide-corpus.json");
   console.log("  wrote data/campaign-finance/az-seethemoney-2026-reconciliation.json");
 }

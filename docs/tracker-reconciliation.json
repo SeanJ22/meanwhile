@@ -1,8 +1,8 @@
 {
-  "generated": "2026-08-31",
+  "generated": "2026-09-01",
   "ruling": "RULING 227",
   "openedDateProvenance": {
-    "opened-ledger": 387,
+    "opened-ledger": 388,
     "session-label": 243,
     "unrecoverable": 225
   },
@@ -43,6 +43,7 @@
       "NH283",
       "NH287",
       "NH299",
+      "NH303",
       "NH43",
       "NS01",
       "NS10",
@@ -57,7 +58,6 @@
       "NS23",
       "OWN01",
       "OWN02",
-      "OWN03",
       "OWN04",
       "OWN05",
       "OWN06",
@@ -82,7 +82,8 @@
     "orphaned": [
       "NH272",
       "NH281",
-      "NH300"
+      "NH300",
+      "OWN03"
     ]
   },
   "summary": {
@@ -126,10 +127,10 @@
       "evidence": []
     },
     {
-      "rowId": "OWN03",
+      "rowId": "NH303",
       "kind": "NOT_MACHINE_VERIFIABLE",
       "verdict": "HOLDS",
-      "why": "OWN03 is marked NOT_MACHINE_VERIFIABLE and carries a decision card. It waits on the author's judgement, which no artifact can supply.",
+      "why": "NH303 is marked NOT_MACHINE_VERIFIABLE and carries a decision card. It waits on the author's judgement, which no artifact can supply.",
       "read": [],
       "evidence": []
     },

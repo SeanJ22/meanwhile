@@ -61,6 +61,7 @@
  */
 
 import { readFileSync, writeFileSync } from "node:fs";
+import { heldConfirmation, readCitationLedger } from "../lib/hunt/citation-ledger.ts";
 import { join } from "node:path";
 
 import { topOfficesFor } from "../lib/officials/top-offices.ts";
@@ -111,6 +112,8 @@ const AS_OF = declaredSourceStamp({
 const DRY = process.argv.includes("--dry");
 
 const WIKI = "data/hunt/wikipedia-nj-morris.json";
+/* Read ONCE: a per-municipality read would open the same file 39 times. */
+const ledger = readCitationLedger(ROOT);
 const PAGES = "data/hunt/roster-pages-muni-sites-nj-morris.json";
 const LEDGER = "docs/evidence/njhunt6-morris-rosters.jsonl";
 const OUT_TS = "lib/registry/rosters-nj-morris.ts";
@@ -556,8 +559,37 @@ for (const m of wiki.municipalities) {
   const confirmedByPage = (name: string): boolean =>
     namedOnOwnPage.size > 0 && namedOnOwnPage.has(surnameOf(name));
 
+  /**
+   * **A HOST THAT IS DOWN TODAY DOES NOT UNMAKE A PROOF TAKEN BEFORE.**
+   * (2026-09-01.)
+   *
+   * This read `verdict === "CONFIRMED"` off TODAY'S walk and nothing else. The
+   * walk artifact is overwritten every run, so a citation confirmed last month
+   * and unreachable this morning arrived here indistinguishable from one that
+   * was never proved — and the member was dropped.
+   *
+   * It happened. Re-walking on the permitted Wikipedia route returned every
+   * Wikipedia-derived number identically and moved 8 citations to UNREACHABLE,
+   * and this line deleted **David A. Runfeldt, Mayor of Lincoln Park Borough**,
+   * from the reader's page. His citation host was `www.lincolnpark.org`, which
+   * had stopped resolving while `lincolnpark.org` answered 200. A borough
+   * dropped a `www` and a sitting mayor left this product.
+   *
+   * `UNREACHABLE` is a fact about a host on a date. It is not evidence that the
+   * proof was never taken, and it is not evidence about who governs Lincoln
+   * Park. RULING 53 puts a clock on an ABSENCE so it can be re-walked; a
+   * CONFIRMATION runs the other way — it was taken, against a named URL, on a
+   * named date, and nothing that happens to the host afterwards unmakes it.
+   *
+   * The held confirmation is scoped to the URL the encyclopedia STILL cites for
+   * that person, so a receipt never travels to a source nobody read.
+   */
+  const heldFor = (r: WikiOfficial) => heldConfirmation(ledger, r.name, r.citationUrls);
   const wikiConfirmed = wikiRows.filter(
-    (r) => checks.get(r.name)?.verdict === "CONFIRMED" || confirmedByPage(r.name),
+    (r) =>
+      checks.get(r.name)?.verdict === "CONFIRMED" ||
+      confirmedByPage(r.name) ||
+      heldFor(r) !== null,
   );
   const wikiCouncilConfirmed = wikiConfirmed.filter((r) => r.body !== "Mayor");
 

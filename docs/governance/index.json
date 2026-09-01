@@ -1,11 +1,11 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "bf23395ed1e05940",
+  "snapshot": "574249f750707cc3",
   "counts": {
-    "records": 265,
-    "current": 244,
-    "law": 213,
+    "records": 268,
+    "current": 247,
+    "law": 216,
     "decisions": 31,
     "historical": 21
   },
@@ -5005,6 +5005,145 @@
         {
           "kind": "related_to",
           "target": "R-0191"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0229",
+      "aliases": [
+        "RULING 229",
+        "R229",
+        "R-229"
+      ],
+      "title": "RULING 229 — acquire to the authoritative source universe; project to the reader",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-09-01",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [
+        {
+          "key": "acquisition.denominator_authority",
+          "value": "source-authority-universe"
+        },
+        {
+          "key": "acquisition.new_location_cost",
+          "value": "zero-new-external-hunt-for-already-owed-records"
+        },
+        {
+          "key": "enrichment.keying",
+          "value": "canonical-statewide-candidate-universe"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0205"
+        },
+        {
+          "kind": "extends",
+          "target": "R-0207"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0206"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0224"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0221"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0223"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0230",
+      "aliases": [
+        "RULING 230",
+        "R230",
+        "R-230"
+      ],
+      "title": "RULING 230 — one canonical model-switch verdict",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-09-01",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [
+        {
+          "key": "model.switch_rule",
+          "value": "every-required-question-measured-and-held"
+        },
+        {
+          "key": "model.verdict_emitters",
+          "value": "exactly-one-canonical-emitter"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "related_to",
+          "target": "R-0185"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0180"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0189"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0103"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0231",
+      "aliases": [
+        "RULING 231",
+        "R231",
+        "R-231"
+      ],
+      "title": "RULING 231 — a false description of a named person is corrected by recorded supersession, never by an edit",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "tracker-workflow",
+      "adopted": "2026-09-01",
+      "operativePolicy": "docs/governance/policies/tracker-workflow.md",
+      "claims": [
+        {
+          "key": "tracker.person_description_amend_path",
+          "value": "recorded-supersession-preserving-the-original-text"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0099"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0176"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0227"
         }
       ],
       "uncertain": [],

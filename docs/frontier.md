@@ -57,21 +57,26 @@ left, with what it is waiting on. Nothing here is a claim that it is finished.
 
 ### Waiting on the owner
 
-- **`pnpm pilot:install` from an ELEVATED PowerShell.** The Windows Scheduled
-  Task was refused (`Access denied`, 0x80070005) without elevation, so what is
-  installed is a per-user startup entry. It survives a reboot; it does **not**
-  restart a crashed runner. Reboot-survival is therefore partial, and saying
-  otherwise would overstate Part G2.
-- **OWN03 — nine portraits, one look.** `docs/photo-review/own03-nine.png`.
-  Approve or refuse by number. Regenerate with `pnpm own03:stage` then
-  `pnpm sheet`.
+- ~~**`pnpm pilot:install` from an ELEVATED PowerShell.**~~ **DONE by the owner,
+  2026-09-01.** The Windows Scheduled Task "WeThePeople Pilot Runner" is
+  installed and started — restart every 5 minutes, at logon, 1 process, with
+  promotion OFF. Restart-on-crash is now satisfied rather than partial.
+- ~~**OWN03 — nine portraits, one look.**~~ **APPROVED by the owner, 2026-09-01,
+  and all nine now render.** Verified per person on the rendered DOM at 85641,
+  85701 and 07866. Tom Horne was never among the nine and is not a decision
+  waiting on the owner — his portrait is an open acquisition obligation.
+  **What IS newly his:** four of the nine are Sitefinity thumbnails, and the
+  full-size originals (2533–3275px) are staged in
+  `data/photos/door2-azcc-originals-2026-09-01.json` awaiting a second look.
 - **69 Needs-Sean rows, each with a decision card.** All are marked
   `NOT_MACHINE_VERIFIABLE`; the three that carried a checkable predicate
   auto-resolved and left the queue.
-- **The `tracker amend` guard.** It refuses a row the current session did not
-  open, which is why a false sentence naming Tom Horne could be corrected in his
-  card but not in the row's own description. A later session cannot correct an
-  earlier session's false description of a named person. That needs a ruling.
+- ~~**The `tracker amend` guard.**~~ **RULED, 2026-09-01 — RULING 231.** A later
+  session corrects an earlier session's false description of a named person
+  through a RECORDED SUPERSESSION that preserves the original text and cites
+  evidence about the person. The guard is preserved and direct edits stay
+  prohibited; what changed is that there is now a lawful path where there was
+  none.
 
 ### Executable, and not reached
 
@@ -106,19 +111,42 @@ left, with what it is waiting on. Nothing here is a claim that it is finished.
   the flight; the bare arm now fires 0 `sourcedata` events and 0
   `queryRenderedFeatures` calls against 303–536 before.
 
-- **The statistics disagree, and the disagreement is the finding.** Median ratio
-  99.7% passes; **p95-sustained ratio is 66.2% and would fail**. The median is
+- **The statistics disagree, and the disagreement is the finding — and it is
+  STILL OPEN on hardware after the no-GPU repair closed.** Median ratio
+  99.7% passes; **p95-sustained ratio is 66.2% and would fail**. The 2026-09-01
+  software work took the sustained and jank half seriously for the software
+  population and installed a criterion that requires ratio AND jank there; the
+  HARDWARE criterion is still median-only, and the 66.2% below is what it does
+  not see. The median is
   the criterion the owner set, and the tail is where the application's cost
   actually lives — app p99 frame time 61.0 ms against bare 18.4 ms, jank 2.98%
   against 0.31%. A median-only criterion is blind to concentrated jank, which is
   why the call-count gate is RETAINED beside it: the pre-fix 170-query build had
   a *perfect* 59.5 fps median.
 
-- **Without GPU acceleration the application holds 29.6% of bare** — 17.7 fps
-  against 60.0, with 193 of 201 frames janky under SwiftShader. Not a harness
-  artifact: the bare map hits 60 fps with zero jank on that same rasteriser. It
-  is a real statement about readers whose machines fall back to software, and it
-  is owed work rather than a measurement problem.
+- ~~**Without GPU acceleration the application holds 29.6% of bare.**~~
+  **CLOSED 2026-09-01. It holds 100.1%, jank 1.5%, and hardware did not
+  regress (100.3%).** The ablation named one CSS property: removing
+  `.state-focus-scrim`'s `backdrop-filter` alone bought **+13.9 fps of the
+  +14.8** that removing the entire state-focus layer bought — 94% of that
+  layer's cost. District layers +6.3, SVG art +3.8 on median but nearly all the
+  residual jank, and **markers +0.6, which is inside their own spread and
+  therefore names nothing**. Corroborated by profile: 1762 ms of `(program)`
+  self time in a 2768 ms flight with every named JS function under 40 ms, so
+  the deficit was per-frame raster and never our JavaScript.
+
+  The repair DEGRADES rather than deletes, and only where the rasteriser names
+  itself software: during camera motion the blur and the SVG art stand down in
+  CSS and the district layers go to `visibility:none`, all restored on
+  `moveend`. An unreadable renderer is treated as HARDWARE — positive
+  identification only, so a misread never degrades a reader who did not need it.
+
+  **Two things that are still owed, and neither is a measurement problem.** The
+  degradation fires on ANY camera motion on a software rasteriser, so such a
+  reader's drag-pan also loses district boundaries until they release — endorsed
+  by the brief for the fly-in, not scoped to it. And the absolute rates are facts
+  about ONE host with ONE GPU (Intel Iris Xe); only the ratios are claims about
+  the build, and no second machine has been measured.
 - **Arizona's source universe is larger than any one query.** Three filters over
   `GetNEWTableData` union to 860 rows across 732 entities, 16 reachable from no
   other filter, and `ftp://ftp.azsos.gov/cfsdata2/` has **four** root
@@ -137,11 +165,55 @@ left, with what it is waiting on. Nothing here is a claim that it is finished.
   REPRESENTATION of the same record, not a harder fetch of that URL.
 - **A cache-read field in `AttemptCost`.** The digest reports cache hit rate as
   **NOT MEASURED** — correctly, because nothing in the cost ledger records a
-  cache read, and `0%` would be a measurement nobody took. The Ask probe now
-  measures 62.5% at the API's own `usage` block; the worker cost ledger cannot
-  yet see the same thing.
+  cache read, and `0%` would be a measurement nobody took. The **production**
+  Ask path is now measured at Anthropic's own `usage` block — 15,731 cache-read
+  tokens against 583 uncached input, 4 of 6 model-reaching calls reading,
+  2026-09-01, `docs/evidence/cache-production-workspace-2026-09-01.md`. The
+  worker cost ledger still cannot see the same thing.
+  *(The 62.5% this line used to quote was the LOCAL probe, and it did not name
+  the credential it measured. `scripts/ask-cache-probe.mts` refuses a production
+  target by design, so that number was never evidence about production; the
+  three keys were later proved to share one workspace, which is what makes the
+  production reading above the one that settles it.)*
 
-### Arizona money is ACQUIRED and does not reach the reader — Part E's reader clause is NOT MET
+### Arizona money is ACQUIRED and does not reach the reader — CLOSED 2026-09-01
+
+**It reaches the reader now.** Measured on the integrated head against a local
+production build, by opening every card's battlecard and its Campaign money
+section and classifying the sentence it ends in:
+
+| ZIP | candidate cards | money sections BEFORE | AFTER |
+| --- | ---: | ---: | ---: |
+| 85701 | 24 | **4** | **24** — 19 filed, 3 our gap, 2 federal, 0 unclassified |
+| 85641 | 29 | **4** | **29** — 22 filed, 3 our gap, 4 federal, 0 unclassified |
+
+The diagnosis below was exactly right and nothing was acquired to fix it — the
+JOIN was built. One precomputed, auditable reconciliation over the whole lineup
+population, resolving into a STATEWIDE Arizona 2026 identity registry rather
+than another ZIP-specific bridge: 30 nominees = 27 uniquely reconciled + 1
+ambiguous + 2 unmatched, 0 duplicate-target collisions, and a collision refuses
+the write. No fuzzy or runtime name matching reaches the reader; published names
+expand into exact strings, each labelled with the annotation rule that produced
+it, compared by string equality, once, into a committed table.
+
+**The caution below was also right, and it has a price this session paid rather
+than hid.** Teri Ann Hourihan is **No Labels** on the certified canvass and
+**Arizona Independent Party** on the SOS candidate-filing list. Two Arizona
+authorities disagree, the party criterion blocks the mapping, and her card
+renders our gap although the corpus holds her filed figure. Both published
+values are recorded in the reconciliation for the author to adjudicate. **That
+is the rule working**, and one wrong join would have put a candidate's
+fundraising on their opponent's card.
+
+Pinned by `pnpm walk:all`, four checks per pilot ZIP under `[SC3]`, which
+assert the FLOOR and never the composition — a candidate may move honestly
+between states, but a card with NO money state at all is what may never happen
+again.
+
+*The original entry, kept because a closed frontier item is still the record of
+how the defect was found:*
+
+### (original) Arizona money is ACQUIRED and does not reach the reader — Part E's reader clause was NOT MET
 
 **Measured on production and on a local production build of the same tree, which
 agree exactly:**
@@ -224,6 +296,24 @@ GREEN 3/3 where the incumbent was RED 3/3, and it is 2.5–3.2× cheaper — but
 owner's criterion is absolute and Q5 fails on the challenger too, so the
 incumbent is retained. The finding worth acting on is the budget, not the model.
 
+### `switchVerdict` and the owner's criterion disagreed — CLOSED by RULING 230, 2026-09-01
+
+**The ruling this section said was owed has been made.** RULING 230: SWITCH only
+if every required challenger question is measured and holds; any required
+question measured and not held is HOLD/RETAIN; any unmeasured is NOT_MEASURED
+and the incumbent is retained; and **no second function may emit a
+`SwitchVerdict`**. `git grep -E ")s*:s*SwitchVerdict"` returns exactly one
+line, `lib/ask/model-economics.ts`, and a test holds it there.
+
+The relative reasoning was not withdrawn — it survives as
+`relativeNonRegressionAnalysis()` with its own type, structurally unassignable
+to a `SwitchVerdict`. The comparison record was regenerated from its recorded
+rows and now derives `decision` FROM `verdict` in one function, so the pair that
+used to read `SWITCH` beside `RETAIN:claude-opus-5` cannot come apart again.
+
+*The original entry, kept because a closed frontier item is still the record of
+why the rule exists:*
+
 ### `switchVerdict` and the owner's criterion disagree, and both are kept
 
 `lib/ask/model-economics.ts` carries a RELATIVE rule — a challenger question
@@ -237,10 +327,63 @@ holds.* On the 2026-08-31 runs the two derive opposite outcomes. Neither was
 deleted; the decision was taken on the author's directive at precedence 1
 (RULING 185) and the relative derivation is reported beside it as what it is.
 
-**What is owed is not a bug fix but a ruling**: whether the standing rule should
-become absolute, or stay relative with the absolute one reserved to explicit
-author directives. Until that lands, a session calling `switchVerdict` alone
-would take a decision the author has already taken differently.
+~~**What is owed is not a bug fix but a ruling**: whether the standing rule
+should become absolute, or stay relative with the absolute one reserved to
+explicit author directives.~~ **Landed as RULING 230 on 2026-09-01 — absolute.**
+
+### One test failed once inside `pnpm gates` and has never been named (2026-09-01)
+
+A gates run on the Session C integrated head recorded `test FAIL` with
+`failureKind: ASSERTION_FAILURE` and `suiteTotals { tests 4523, pass 4522,
+fail 1 }` — a **real** single-test failure, correctly distinguished from the
+early-abort class, and **the name of the test went with the run**. Two
+subsequent full suites and a second full gates run all came back clean:
+4523 of 4523, 14 of 14.
+
+`scripts/gates.mjs` no longer loses the name — its detail filter never matched
+`node:test`'s own `✖ <name>` lines, and it now extracts them separately and
+writes them into the run record as `failingTests`. **That fixes the next one.
+It does not recover this one**, and this entry exists so that a later
+identical failure is recognised as a second sighting rather than a first.
+
+Two things narrow it. It is not the documented EARLY_ABORT class — a complete
+summary was printed and it named a failure. And the host was under load: the
+record carries `nodeProcessesAtStart: 15`, with a subagent lane still running
+its own installs and builds. **Load is a hypothesis, not a finding**; nothing
+here measured a causal link, and recording one would be the single-case
+reasoning this repository has refused twice already.
+
+Owed: reproduce it under load with the new instrument, or wait for it to recur
+and read the name.
+
+### The runner: what is actually true about its cadence, and what is not (2026-09-01)
+
+A lane reported that *“a cycle now costs ~7m42s”* against 2,358 obligations
+and that **the runner's 5-minute interval no longer fits one cycle**. The
+second half is a misreading, and correcting it matters rather than passing it
+on: it would have reached the author as a scheduling emergency.
+
+`-RestartInterval (New-TimeSpan -Minutes 5)` in `scripts/pilot-task.ps1` is the
+**restart-after-crash delay**, not the cycle interval. The cycle interval is
+`--interval`, default **60 minutes** (`scripts/pilot-runner.mts`), and the task
+carries `-MultipleInstances IgnoreNew`. A 7m42s cycle fits inside 60 minutes
+with room to spare and cannot overlap itself.
+
+**What IS owed is smaller than it sounded, and it is real.** The cycle cost
+rose with the obligation count — Neon round trips in the reclaim sweep and in
+the list calls. Two of the worst offenders were fixed in the same lane
+(`syncObligations` from N reads to one `list()`, and skipping unchanged
+`next_due` writes); the remainder is not addressed.
+
+**Roughly 1,000 occurrences opened by that lane's first unbounded run are still
+open** in the control plane. `resumeOpenOccurrence` picks them up rather than
+stranding them, so they drain rather than leak — over many cycles.
+
+**And the runner is not running right now.** `pnpm pilot:status` on 2026-09-01
+reads *scheduled task Ready, last run 06:48:53, last result 3221225786*
+(`0xC000013A`, STATUS_CONTROL_C_EXIT) with **0 pilot-runner processes**. The
+task is installed and its at-logon trigger stands; what is not true is that a
+worker is turning right now.
 
 ### Instrument debt, and why each one matters
 

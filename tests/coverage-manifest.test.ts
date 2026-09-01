@@ -244,6 +244,16 @@ const CONTENT_FILES = new Set(
     // filing system and its own recorded wall. Per-state CONTENT in the same
     // sense as the rows above — no manifest can generate an Akamai refusal.
     "lib/funding/state-vocabulary.ts",
+    // Session C3 lane C, RULING 229: one FILING-OFFICER ROUTING record per
+    // state — which statute names the officer, and what it routes to whom.
+    // Per-state CONTENT in the same sense as the two rows above: no manifest
+    // can generate A.R.S. § 16-928's three custodian classes, and a state
+    // whose statute nobody has read must never be defaulted into one. The
+    // generator DERIVES its state list from `COVERED_STATES` and throws BY
+    // NAME for a covered state it holds no routing for, so the failure this
+    // guard protects against — onboarding a state and silently producing no
+    // jurisdiction registry for it — is caught at generation time instead.
+    "scripts/enumerate-jurisdictions.mts",
   ],
 );
 

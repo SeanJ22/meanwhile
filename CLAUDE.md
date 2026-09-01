@@ -127,7 +127,9 @@ frequently deliberate, and this product exists to defeat it.
 ## The acquisition doctrine
 
 *(Adopted 2026-08-29, the author's directive. RULING 205, RULING 206, RULING 207
-and RULING 208. Operative text: `docs/governance/policies/discovery.md`,
+and RULING 208, extended 2026-09-01 by RULING 229, which fixes the
+DENOMINATOR the doctrine acquires against. Operative text:
+`docs/governance/policies/discovery.md`,
 `docs/governance/policies/sources-licensing.md`,
 `docs/governance/policies/tracker-workflow.md`. This is the transparency
 mandate's operative half — the mandate says go and get it; this says what that
@@ -190,6 +192,29 @@ without it — and keep working every other executable path meanwhile. **NEEDS
 SEAN never closes, pauses or satisfies the obligation the row is about**, and
 one blocked record never freezes the rest of the hunt. No secret is ever pasted
 into chat, a prompt, a row, a commit, a fixture or a log. (RULING 208.)
+
+**Acquire to the authoritative source universe; project to the reader.** A ZIP,
+address, pilot or currently enabled reader location may prioritise acquisition
+ORDER and may never define the acquisition DENOMINATOR. Where a source authority
+governs a state, acquire the state; where it governs a county, municipality,
+district or other bounded jurisdiction, acquire that authority's complete
+applicable universe. **Reader location determines applicability and display
+only.** Candidate enrichment is keyed to the canonical statewide
+candidate/contest universe, never to the visible ZIP, and local filing regimes
+are enumerated as durable jurisdiction obligations before a reader needs them.
+The invariant is **ZERO REDUNDANT INTERNET HUNT WHEN A NEW ZIP IS ACTIVATED**:
+anything absent when a ZIP activates already exists as an identifiable
+pre-existing obligation, never as new work caused by adding the ZIP. Three
+layers, kept apart — ACQUISITION (the source-authority universe, no ZIP
+dependency), IDENTITY (candidate → contest → office/division → party → filing
+authority → committee), PROJECTION (a ZIP picks applicable candidates from the
+registry and asks the corpus). A reader snapshot may hold only what a page
+applies to; its SOURCE CORPUS may never be generated from that page's candidate
+list. "Already acquired" does not mean "in Git" — normalized reader-ready data
+in the versioned snapshot, canonical records in DB or object store, raw
+artifacts in the durable vault, methods and provenance and denominators
+committed. The autonomous worker graph owns the unresolved remainder, not a
+future author prompt. (RULING 229.)
 
 ---
 

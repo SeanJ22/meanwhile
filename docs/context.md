@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-31 21:22:38 EDT.
-Session day 2026-08-31 (America/Phoenix, from `pnpm stamp`).
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-01 12:45:48 EDT.
+Session day 2026-09-01 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1264 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1273 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -612,7 +612,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 238 recorded
+## Rulings — 247 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -831,6 +831,15 @@ from. Each entry there names what it supersedes.
 - RULING 220 — Level-2 scheduling authority persists in a Postgres provider behind the existing control-plane interfaces  [R-0220 · DECISION · ACTIVE]
 - RULING 221 — a session's completion denominator is finite and stated at its start; discovery does not enlarge it  [R-0221 · LAW_DECISION · ACTIVE]
 - RULING 222 — before a confirmed address the scope is the ZIP; after one, the scope IS the address  [R-0222 · LAW_DECISION · ACTIVE]
+- RULING 223 — a session's discretion covers how, never what; it may not redefine the completion contract  [R-0223 · LAW_DECISION · ACTIVE]
+- RULING 224 — acquisition without promotion is inventory; an obligation's completion contract extends to the reader  [R-0224 · LAW_DECISION · ACTIVE]
+- RULING 225 — every session report leads in reader terms; infrastructure counts afterward  [R-0225 · LAW_DECISION · ACTIVE]
+- RULING 226 — aggregate-only governs what is exposed, never what exists at rest; the implementation is ratified  [R-0226 · LAW_DECISION · ACTIVE]
+- RULING 227 — escalation without reconciliation is prohibited  [R-0227 · LAW_DECISION · ACTIVE]
+- RULING 228 — an interface between independently built lanes is one shared typed schema, never prose  [R-0228 · LAW_DECISION · ACTIVE]
+- RULING 229 — acquire to the authoritative source universe; project to the reader  [R-0229 · LAW_DECISION · ACTIVE]
+- RULING 230 — one canonical model-switch verdict  [R-0230 · LAW_DECISION · ACTIVE]
+- RULING 231 — a false description of a named person is corrected by recorded supersession, never by an edit  [R-0231 · LAW_DECISION · ACTIVE]
 - `package.json`'s `scripts` block is the list.  [R-C-commands-package-json-s-scripts-block-is-the-list · LAW_DECISION · ACTIVE]
 - More principles will not fix this.  [R-C-discovery-conduct-more-principles-will-not-fix-this · LAW_DECISION · ACTIVE]
 - THE REPORT CONTRACT IS A FILE NOW, AND IT IS AMENDED RATHER THAN REINVENTED  [R-C-discovery-conduct-the-report-contract-is-a-file-now-and-it-is-am · LAW_DECISION · ACTIVE]
@@ -1020,18 +1029,18 @@ _No status change recovered in the commits walked._
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-31 21:22:37 EDT
+generated: 2026-09-01 12:45:48 EDT
 branch: main
-head sha: c853abfc4e485f3252e3c71e79bddc52c3b9f89a
-head subject: Merge pull request #243 from SeanJ22/claude/session-c-close
-origin/main sha: c853abfc4e485f3252e3c71e79bddc52c3b9f89a
-origin/main subject: Merge pull request #243 from SeanJ22/claude/session-c-close
-local main sha: c853abfc4e485f3252e3c71e79bddc52c3b9f89a
-local main matches origin/main: yes
+head sha: a2427a85aebf968e5f5650e004f17eacf1c59ad0
+head subject: The Postgres conformance lane could pass exactly once
+origin/main sha: a0cebbc110086551f957f0c9f846488a8e00de78
+origin/main subject: Intake tripwire report: 2026-09-01T15:09Z
+local main sha: a2427a85aebf968e5f5650e004f17eacf1c59ad0
+local main matches origin/main: no — 0 commit(s) behind, 44 ahead
 working tree: clean
 open prs: none
-last recorded tests: 239 (recorded without a verdict)
+last recorded tests: 555 (recorded without a verdict)
 last recorded lint: not recorded
 last recorded build: not recorded
-last recorded status from: docs/state.md:20296
+last recorded status from: docs/state.md:22848
 ```

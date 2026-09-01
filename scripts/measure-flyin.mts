@@ -463,6 +463,22 @@ interface Run {
   vertices: unknown;
   /** What the host's own CPU counters said across this run's window. */
   hostBusyPct: number | null;
+  /**
+   * **WHAT WAS ACTUALLY ON THE MAP WHEN THE CAMERA LANDED.**
+   *
+   * Read on EVERY run, not only the bare one. `--normalized` reads it for the
+   * bare arm because a healed bare arm invalidates the ratio; the isolation
+   * pass needs it for every row, because a healed `no-districts` row is a fully
+   * loaded flight filed under the district layers' name — and the ablation
+   * returns a truthful count of things it removed either way. A row that says
+   * "24 district layers at landing" cannot be read as that component's cost.
+   */
+  landingState: {
+    districtLayers: number;
+    districtSources: number;
+    markers: number;
+    scrimHidden: boolean;
+  };
 }
 
 /**
@@ -518,16 +534,42 @@ const ABLATIONS: Record<string, string> = {
     if (el) el.style.display = "none";
     return Boolean(el);
   })()`,
-  /** Every district fill and line, and the GeoJSON sources behind them. */
+  /**
+   * Every district fill, line and label, and the GeoJSON sources behind them.
+   *
+   * **IT BLOCKS THE RE-ADD BEFORE REMOVING ANYTHING, FOR THE REASON `bare`
+   * DOES** (Session C, 2026-09-01). This ablation shipped without that order
+   * and therefore carried the identical defect the `bare` note documents at
+   * length: `syncDistrictLayer` is idempotent, a removal PROVOKES the next sync
+   * pass, and the pass puts every layer and source straight back. The removal
+   * never throws and the ablation returns a large truthful count of things it
+   * removed, so the failure is invisible — and the row it produces is a fully
+   * loaded map wearing the district ablation's name.
+   *
+   * That matters more here than anywhere else in this list, because "do the
+   * district layers dominate?" is one of the questions the isolation pass
+   * exists to answer, and a healed ablation answers it with a confident NO.
+   */
   "no-districts": `(() => {
     const map = window.__wtpMap;
     if (!map) return false;
-    const style = map.getStyle() || {};
+    /* THE ORDER IS THE FIX: block first, so the sync pass the removals below
+       provoke is a no-op rather than a repair. */
+    const realAddSource = map.addSource.bind(map);
+    const realAddLayer = map.addLayer.bind(map);
+    map.addSource = function (id, spec) {
+      if (typeof id === "string" && id.indexOf("district-") === 0) return map;
+      return realAddSource(id, spec);
+    };
+    map.addLayer = function (spec, before) {
+      if (spec && typeof spec.id === "string" && spec.id.indexOf("district-") === 0) return map;
+      return realAddLayer(spec, before);
+    };
     let removed = 0;
+    const style = map.getStyle() || {};
     for (const layer of (style.layers || []).slice()) {
       if (layer.id.indexOf("district-") !== 0) continue;
-      map.removeLayer(layer.id);
-      removed += 1;
+      try { map.removeLayer(layer.id); removed += 1; } catch (e) { void e; }
     }
     for (const id of Object.keys(style.sources || {})) {
       if (id.indexOf("district-") !== 0) continue;
@@ -555,6 +597,46 @@ const ABLATIONS: Record<string, string> = {
     if (!el) return false;
     el.style.display = "none";
     return true;
+  })()`,
+  /**
+   * **THE PROPOSED REPAIR, MEASURED BEFORE IT WAS WRITTEN** (Session C,
+   * 2026-09-01).
+   *
+   * Not an ablation of a component — a simulation of the DEGRADATION the
+   * software-rasteriser path applies while the camera is moving: the scrim's
+   * `backdrop-filter` dropped, and the district fill, line and label layers set
+   * to `visibility: none`. Everything else stays: the SVG mute rect, both rise
+   * silhouettes, the markers, and every district SOURCE with its geometry still
+   * attached, so the layers can come back on `moveend` without re-tiling.
+   *
+   * It exists because "which component costs most" and "does removing the
+   * expensive ones actually clear the bar" are different questions, and the
+   * second one is answerable in ten minutes with a page script instead of an
+   * afternoon with a component. Kept afterwards as the repair's predicted
+   * ceiling: a shipped build measuring materially below this row has a defect
+   * in the WIRING rather than in the choice of what to degrade.
+   *
+   * `visibility` rather than `removeLayer`, deliberately and for the same
+   * reason the product does it that way: removing a layer provokes
+   * `syncDistrictLayer` to put it back, and removing a SOURCE throws away tiled
+   * geometry that then has to be rebuilt at exactly the moment the camera
+   * stops.
+   */
+  "motion-degrade": `(() => {
+    const map = window.__wtpMap;
+    if (!map) return false;
+    const el = document.querySelector(".state-focus-scrim");
+    if (el) {
+      el.style.backdropFilter = "none";
+      el.style.webkitBackdropFilter = "none";
+    }
+    let hidden = 0;
+    const style = map.getStyle() || {};
+    for (const layer of (style.layers || []).slice()) {
+      if (layer.id.indexOf("district-") !== 0) continue;
+      try { map.setLayoutProperty(layer.id, "visibility", "none"); hidden += 1; } catch (e) { void e; }
+    }
+    return hidden > 0;
   })()`,
   /** Every marker element the pin pool holds. */
   "no-markers": `(() => {
@@ -767,6 +849,13 @@ async function measure(
   });
   page.off("request", onRequest);
 
+  const landing = (await page.evaluate(BARE_INTACT)) as {
+    layers: number;
+    sources: number;
+    markers: number;
+    scrimHidden: boolean;
+  };
+
   const requests: Requests = { tiles: 0, geometry: 0, other: 0, hosts: [] };
   const hosts = new Set<string>();
   for (const url of seen) {
@@ -791,6 +880,12 @@ async function measure(
     requests,
     vertices,
     hostBusyPct,
+    landingState: {
+      districtLayers: landing.layers,
+      districtSources: landing.sources,
+      markers: landing.markers,
+      scrimHidden: landing.scrimHidden,
+    },
   };
 }
 
@@ -841,6 +936,14 @@ function report(run: Run): void {
       `${run.requests.other} other — hosts ${run.requests.hosts.join(", ") || "none"}`,
   );
   console.log(`  geometry at flight start: ${JSON.stringify(run.vertices)}`);
+  /* AT LANDING, not at start: an ablation that healed mid-flight looks correct
+     at start and is a different experiment by the time the camera stops. */
+  console.log(
+    `  AT LANDING: ${run.landingState.districtLayers} district layers, ` +
+      `${run.landingState.districtSources} district sources, ` +
+      `${run.landingState.markers} markers, ` +
+      `state-focus layer ${run.landingState.scrimHidden ? "hidden" : "VISIBLE"}`,
+  );
 }
 
 /**
@@ -1041,6 +1144,239 @@ async function normalizedPass(
   };
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   `--rotate` — THE ABLATION TABLE, WITH THE LOAD CONTROL `--isolate` LACKS
+   ═══════════════════════════════════════════════════════════════════════════
+
+   ## The measurement that made this necessary, stated before the fix
+
+   `--isolate --repeat=3` ran on 2026-09-01 and produced a table that could not
+   be read. Every row is a BLOCK — three consecutive flights of one ablation,
+   then three of the next — and the host's own CPU counters, recorded per run,
+   say what that cost:
+
+   ```
+   none (FULL APPLICATION)   17.9 fps    host busy 66%, 64%, 71%
+   no-scrim                  25.6 fps    host busy 100%, 100%, 100%
+   no-districts              11.8 fps    host busy 100%, 100%, 100%
+   no-markers                16.3 fps    host busy 62%, 64%, 65%
+   ```
+
+   `no-districts` came back SLOWER than the fully loaded application — removing
+   work made the flight worse — and the only honest reading of that is that the
+   row is measuring a load burst rather than a component. Six other worktree
+   lanes were building on this machine; the burst arrived during three rows and
+   left before three others, and a block design hands the whole of it to
+   whichever rows it spanned.
+
+   ## The control, which is the same one `--normalized` already uses
+
+   Arms are ROTATED rather than blocked. Round 1 flies the arms in their listed
+   order; round 2 starts one position later; round 3 one later again. Over R
+   rounds each arm occupies each position in the rotation as evenly as R allows,
+   so a burst lasting part of a round lands on a DIFFERENT arm each round
+   instead of on the same one every time.
+
+   That does not make the host quiet — nothing here can — and it does not remove
+   variance. It removes the systematic part: the property the table actually
+   needs is that no arm is measured under reliably worse conditions than
+   another, and rotation is what buys that. The per-run spread and the per-run
+   host-busy figures are still printed on every row, because a delta smaller
+   than its own spread names nothing and the reader has to be able to see that.
+
+   ## A fresh page per flight, for the reason `--normalized` gives
+
+   `removeSource` has no inverse, so a re-used page would make every later
+   flight cumulatively ablated. Each flight loads and settles from scratch and
+   differs from the `none` arm in exactly one thing: which ablation ran. */
+
+/**
+ * The arms, in rotation order.
+ *
+ * `legacy-sourcedata` is deliberately ABSENT: it ADDS a mechanism back rather
+ * than subtracting one, so it is not an ablation and it does not belong in a
+ * table whose whole meaning is "what does removing this buy". It stays
+ * available under `--isolate`, where it is a paired control for one removed
+ * subscription and is read as such.
+ */
+const ROTATION_ARMS = [
+  "none",
+  "no-scrim",
+  "no-backdrop",
+  "no-svg-art",
+  "no-districts",
+  "no-markers",
+  "bare",
+] as const;
+
+/**
+ * Which arms make a claim about the map's contents that a readback can check.
+ *
+ * `no-scrim` and `bare` hide the state-focus layer; `no-districts` and `bare`
+ * remove the district layers and sources. A flight whose landing state
+ * contradicts its own ablation is DISCARDED rather than averaged in — the
+ * healed-`bare` defect of 2026-08-31 is the reason this exists, and
+ * `no-districts` carried the identical defect until 2026-09-01.
+ *
+ * `no-backdrop`, `no-svg-art` and `no-markers` are style mutations on elements
+ * that stay in the DOM, so there is nothing here for a landing readback to
+ * check; their ablation function returning false is what reports a miss, and
+ * `measure` already prints that.
+ */
+const ROTATION_READBACK: Record<string, (s: Run["landingState"]) => string | null> = {
+  "no-scrim": (s) => (s.scrimHidden ? null : "the state-focus layer was VISIBLE at landing"),
+  "no-districts": (s) =>
+    s.districtLayers === 0 && s.districtSources === 0
+      ? null
+      : `${s.districtLayers} district layers and ${s.districtSources} sources were back at landing`,
+  bare: (s) =>
+    s.districtLayers === 0 && s.districtSources === 0 && s.markers === 0 && s.scrimHidden
+      ? null
+      : `${s.districtLayers} district layers, ${s.districtSources} sources, ${s.markers} markers, ` +
+        `state-focus layer ${s.scrimHidden ? "hidden" : "VISIBLE"} at landing`,
+};
+
+async function rotatedPass(
+  browser: GuardedBrowser,
+  rounds: number,
+  arms: readonly string[],
+): Promise<{ name: string; summary: ArmSummary; runs: Run[] }[]> {
+  const taken = new Map<string, Run[]>();
+  for (const arm of arms) taken.set(arm, []);
+  for (let round = 0; round < rounds; round += 1) {
+    const order = arms.map((_, i) => arms[(i + round) % arms.length]);
+    for (const arm of order) {
+      const page = await settledPage(browser);
+      if (!page) {
+        console.log(
+          `  ??  round ${round + 1} ${arm} COULD NOT RUN — no __wtpMap on a fresh page. ` +
+            "Absent from this arm's denominator rather than counted as slow.",
+        );
+        continue;
+      }
+      try {
+        const run = await measure(page, `round ${round + 1} · ${arm}`, true, arm);
+        const complaint = ROTATION_READBACK[arm]?.(run.landingState) ?? null;
+        if (complaint !== null) {
+          console.log(
+            `  ??  round ${round + 1} ${arm} DISCARDED — ${complaint}. An ablation that ` +
+              "healed during its own flight would file a fully loaded flight under its name.",
+          );
+          continue;
+        }
+        taken.get(arm)?.push(run);
+        console.log(
+          `  ${arm.padEnd(14)} round ${round + 1}: median ${run.frames.medianFps.toFixed(1)} fps, ` +
+            `p95-sustained ${run.frames.sustainedFps.toFixed(1)}, ` +
+            `${run.frames.longFrames}/${run.frames.frames} over ${LONG_FRAME_MS}ms, ` +
+            `host ${run.hostBusyPct === null ? "load UNREAD" : `${run.hostBusyPct.toFixed(0)}% busy`}`,
+        );
+      } finally {
+        await page.context().close();
+      }
+    }
+  }
+  const out: { name: string; summary: ArmSummary; runs: Run[] }[] = [];
+  for (const arm of arms) {
+    const runs = taken.get(arm) ?? [];
+    if (runs.length === 0) {
+      console.log(`  ??  arm "${arm}" completed ZERO flights — absent from the table entirely`);
+      continue;
+    }
+    out.push({
+      name: arm,
+      summary: summariseArm(
+        arm,
+        runs.map((r) => ({ gaps: r.gaps, hostBusyPct: r.hostBusyPct })),
+      ),
+      runs,
+    });
+  }
+  return out;
+}
+
+/** The table both `--rotate` and `--isolate` print, so the two cannot drift. */
+function ablationTable(
+  summaries: { name: string; summary: ArmSummary; runs: Run[] }[],
+  fullName: string,
+): void {
+  const full = summaries.find((s) => s.name === fullName)?.summary;
+  const bare = summaries.find((s) => s.name === "bare")?.summary;
+  if (!full) {
+    console.log(
+      `  ??  NO "${fullName}" ROW — the 'delta vs full app' column cannot be computed and is ` +
+        "printed as UNMEAS rather than as zero.",
+    );
+  }
+  if (!bare) {
+    console.log(
+      "  ??  NO BARE ROW — the 'delta vs bare' column cannot be computed and is printed as " +
+        "UNMEAS rather than as zero.",
+    );
+  }
+  console.log(
+    `\n  ${"ablation".padEnd(24)}${"medFps".padStart(8)}${"sustFps".padStart(9)}` +
+      `${"p50ms".padStart(8)}${"p95ms".padStart(8)}${"long/frames".padStart(14)}` +
+      `${"vs full".padStart(10)}${"vs bare".padStart(10)}`,
+  );
+  for (const { name, summary } of summaries) {
+    const vsFull = full ? (summary.medianFps - full.medianFps).toFixed(1) : "UNMEAS";
+    const vsBare = bare ? (summary.medianFps - bare.medianFps).toFixed(1) : "UNMEAS";
+    console.log(
+      `  ${name.padEnd(24)}${summary.medianFps.toFixed(1).padStart(8)}` +
+        `${summary.sustainedFps.toFixed(1).padStart(9)}` +
+        `${summary.frameMs.p50.toFixed(1).padStart(8)}` +
+        `${summary.frameMs.p95.toFixed(1).padStart(8)}` +
+        `${`${summary.longFrames}/${summary.framesMeasured}`.padStart(14)}` +
+        `${vsFull.padStart(10)}${vsBare.padStart(10)}`,
+    );
+  }
+  for (const { name, summary } of summaries) {
+    console.log(
+      `  ${name}: per-run medians ${summary.medianFpsPerRun.map((v) => v.toFixed(1)).join(", ")} fps ` +
+        `(spread ${(Math.max(...summary.medianFpsPerRun) - Math.min(...summary.medianFpsPerRun)).toFixed(1)} fps), ` +
+        `host busy ${summary.hostBusyPct.map((v) => (v === null ? "UNREAD" : `${v.toFixed(0)}%`)).join(", ")}`,
+    );
+  }
+}
+
+/** The evidence record, written identically by both ablation modes. */
+function writeAblationEvidence(
+  file: string,
+  body: Record<string, unknown>,
+  summaries: { name: string; summary: ArmSummary; runs: Run[] }[],
+  fullName: string,
+): void {
+  const full = summaries.find((s) => s.name === fullName)?.summary;
+  const bare = summaries.find((s) => s.name === "bare")?.summary;
+  writeFileSync(
+    join(process.cwd(), "docs", "evidence", file),
+    `${JSON.stringify(
+      {
+        ...body,
+        rows: summaries.map(({ name, summary, runs }) => ({
+          name,
+          /* The readback that keeps each row honest — see `Run.landingState`. */
+          landingStates: runs.map((r) => r.landingState),
+          medianFps: summary.medianFps,
+          sustainedFps: summary.sustainedFps,
+          meanFps: summary.meanFps,
+          frameMs: summary.frameMs,
+          longFrames: summary.longFrames,
+          framesMeasured: summary.framesMeasured,
+          medianFpsPerRun: summary.medianFpsPerRun,
+          hostBusyPct: summary.hostBusyPct,
+          deltaVsFullApp: full ? summary.medianFps - full.medianFps : null,
+          deltaVsBare: bare ? summary.medianFps - bare.medianFps : null,
+        })),
+      },
+      null,
+      2,
+    )}\n`,
+    "utf8",
+  );
+}
+
 function reportArm(summary: ArmSummary): void {
   console.log(`\n── ${summary.arm} — ${summary.runs} runs ────────────────────`);
   console.log(
@@ -1142,6 +1478,7 @@ async function main(): Promise<void> {
   const isolate = process.argv.includes("--isolate");
   const wantProfile = process.argv.includes("--profile");
   const normalized = process.argv.includes("--normalized");
+  const rotate = process.argv.includes("--rotate");
   const repeatArg = process.argv.find((a) => a.startsWith("--repeat="));
   const REPEATS = Math.max(1, Number(repeatArg?.split("=")[1] ?? 1) || 1);
   const browser = await launchGuarded({
@@ -1149,6 +1486,70 @@ async function main(): Promise<void> {
     args: SOFTWARE ? [] : GPU_ARGS,
   });
   console.log(`run ${browser.runId} against ${BASE} at ${ZIP}`);
+
+  if (rotate) {
+    try {
+      const probe = await settledPage(browser);
+      const renderer = probe ? String(await probe.evaluate(READ_RENDERER)) : "NOT READ";
+      if (probe) await probe.context().close();
+      console.log(`  webgl renderer: ${renderer}`);
+
+      const roundArg = process.argv.find((a) => a.startsWith("--rounds="));
+      const ROUNDS = Math.max(1, Number(roundArg?.split("=")[1] ?? 3) || 3);
+      /*
+       * `--only` picks from EVERY ablation, not only the default rotation.
+       * It filtered against `ROTATION_ARMS` first, which silently dropped any
+       * name outside the default list and then ran a table with a missing arm
+       * — the shape of failure this file refuses everywhere else. An
+       * unrecognised name now REFUSES rather than being quietly omitted.
+       */
+      const onlyArg = process.argv.find((a) => a.startsWith("--only="));
+      const asked = onlyArg ? onlyArg.split("=")[1].split(",").filter(Boolean) : null;
+      const unknown = (asked ?? []).filter((a) => !(a in ABLATIONS));
+      if (unknown.length > 0) {
+        throw new Error(
+          `measure-flyin: --only names ${unknown.join(", ")}, which no ablation defines. ` +
+            `Known ablations: ${Object.keys(ABLATIONS).join(", ")}. Running the table with the ` +
+            "unrecognised arm silently omitted would report a table nobody asked for.",
+        );
+      }
+      const arms = asked ?? [...ROTATION_ARMS];
+      console.log(
+        `\nROTATED ABLATION TABLE — ${ROUNDS} rounds over ${arms.length} arms ` +
+          `(${ROUNDS * arms.length} flights), rotation order changes every round so no arm is ` +
+          "measured under reliably worse host load than another\n",
+      );
+      const summaries = await rotatedPass(browser, ROUNDS, arms);
+      console.log(`\n══ THE ABLATION TABLE (ROTATED) ════════════════════════════`);
+      ablationTable(summaries, "none");
+      writeAblationEvidence(
+        SOFTWARE ? "flyin-rotation-software.json" : "flyin-rotation.json",
+        {
+          base: BASE,
+          zip: ZIP,
+          renderer,
+          rounds: ROUNDS,
+          arms,
+          design:
+            "ROTATED — every arm flown once per round, rotation order advanced each round, " +
+            "fresh page per flight",
+          machineLoadCaveat:
+            "Other worktree lanes were building and testing on this host concurrently, so " +
+            "variance is elevated and the ABSOLUTE fps figures are not portable to a quiet " +
+            "machine. Rotation controls the SYSTEMATIC part — no arm is measured under " +
+            "reliably worse load than another — and does not remove variance. Every row " +
+            "carries its per-run medians, the spread across them, and the host CPU busy " +
+            "percentage measured across each flight's own window. A delta smaller than the " +
+            "spread beside it names nothing.",
+        },
+        summaries,
+        "none",
+      );
+    } finally {
+      await browser.close();
+    }
+    return;
+  }
 
   if (normalized) {
     /*
@@ -1225,6 +1626,27 @@ async function main(): Promise<void> {
             renderer,
             pairs: PAIRS,
             design: "interleaved app/bare, alternating within-pair order, fresh page per flight",
+            /*
+             * **THE CAVEAT TRAVELS WITH THE NUMBERS, RATHER THAN WITH WHOEVER
+             * HAPPENED TO RUN THEM.** (Session C, 2026-09-01.)
+             *
+             * This file is read months later by a session that was not here and
+             * cannot ask what the machine was doing. `hostBusyPct` is recorded
+             * per flight and always was; what was missing is the sentence that
+             * says what those percentages MEAN for the two kinds of number in
+             * this file — that the ratio survives contention by construction
+             * and the absolute rates do not. Without it a future session reads
+             * "49.9 fps" as a property of the build.
+             */
+            machineLoadCaveat:
+              "Other worktree lanes were building and testing on this host while these flights " +
+              "ran, and the per-flight hostBusyPct figures below record it. The interleaved " +
+              "design is what makes the RATIO readable anyway: a load burst spanning a pair " +
+              "lands on one flight of each arm, and the alternating within-pair order stops a " +
+              "second-position advantage accumulating on one arm. Variance is still elevated, " +
+              "so read medianFpsPerRun for the spread. THE ABSOLUTE fps FIGURES ARE FACTS ABOUT " +
+              "THIS HOST ON THIS DAY AND ARE NOT PORTABLE; only the ratio is a statement about " +
+              "the build.",
             app,
             bare,
             ratio: verdict.ratio,
@@ -1302,18 +1724,93 @@ async function main(): Promise<void> {
     );
 
     const ablated: Run[] = [];
+    /**
+     * **THE ABLATION TABLE, WITH THE SAME FIVE STATISTICS FOR EVERY ARM.**
+     *
+     * `report()` above prints one median RUN, which is the right shape for a
+     * descriptive pass and the wrong shape for an attribution: a median run
+     * carries one run's frame-time distribution, and "which component costs
+     * what" is a question about a POPULATION of flights. So each ablation is
+     * reduced through `summariseArm` — the identical reduction the normalized
+     * criterion uses, so the ablation table and the criterion can never come to
+     * mean two different things by "median fps".
+     *
+     * The two deltas are BOTH reported, deliberately, because they answer
+     * different questions. Against the full application: how much of the
+     * deficit does removing this one component buy back. Against bare: how much
+     * of the deficit is still there once it is gone. A component can look large
+     * on the first and leave the flight nowhere near bare on the second, which
+     * is exactly the case where naming it as THE culprit would be wrong.
+     */
+    const summaries: { name: string; summary: ArmSummary; runs: Run[] }[] = [];
     if (isolate) {
       const onlyArg = process.argv.find((a) => a.startsWith("--only="));
       const only = onlyArg ? onlyArg.split("=")[1].split(",") : null;
+      summaries.push({
+        name: "none (FULL APPLICATION)",
+        summary: summariseArm(
+          "none (FULL APPLICATION)",
+          flights.map((r) => ({ gaps: r.gaps, hostBusyPct: r.hostBusyPct })),
+        ),
+        runs: flights,
+      });
       for (const name of Object.keys(ABLATIONS)) {
         if (name === "none") continue;
         if (only && !only.includes(name)) continue;
         const runs = await repeated(browser, `FLIGHT with ${name}`, true, name, REPEATS);
-        if (runs.length === 0) continue;
+        if (runs.length === 0) {
+          console.log(`  ??  ablation "${name}" completed ZERO flights — absent from the table`);
+          continue;
+        }
         const med = medianRun(runs);
         report({ ...med, label: `FLIGHT with ${name} — median of ${runs.length}` });
         ablated.push(med);
+        summaries.push({
+          name,
+          summary: summariseArm(
+            name,
+            runs.map((r) => ({ gaps: r.gaps, hostBusyPct: r.hostBusyPct })),
+          ),
+          runs,
+        });
       }
+
+      console.log(`\n══ THE ABLATION TABLE (BLOCKED — read the caveat) ══════════`);
+      console.log(
+        "  Each row is ONE suspect removed and the identical camera path re-flown. " +
+          `${REPEATS} flight(s) per row; per-run medians printed so the SPREAD is visible ` +
+          "rather than implied. **THESE ROWS ARE BLOCKS, NOT INTERLEAVED** — a load burst " +
+          "spanning one row lands entirely on that row. `--rotate` is the load-controlled " +
+          "version of this same table and is what a delta should be read from.",
+      );
+      ablationTable(summaries, "none (FULL APPLICATION)");
+      writeAblationEvidence(
+        SOFTWARE ? "flyin-ablation-software.json" : "flyin-ablation.json",
+        {
+          base: BASE,
+          zip: ZIP,
+          renderer,
+          repeats: REPEATS,
+          design: "BLOCKED — each ablation measured as consecutive runs, arms not interleaved",
+          /*
+           * **THE CAVEAT TRAVELS WITH THE NUMBERS.** Other worktree lanes
+           * compile on this host while these run, and unlike `--normalized`
+           * and `--rotate` this pass is NOT interleaved — each row is a block.
+           * The per-row host-busy percentages and the per-run spread are
+           * recorded for exactly that reason; a row whose spread is wide, or
+           * whose host-busy figure differs from its neighbours', is a row whose
+           * delta must not be read as a component's cost.
+           */
+          machineLoadCaveat:
+            "Ablation rows are measured as BLOCKS, not interleaved, so a load burst arriving " +
+            "during one row lands entirely on that row. Other worktree lanes were building and " +
+            "testing on this host concurrently. Read every delta against the per-run spread and " +
+            "the per-run hostBusyPct recorded beside it; a delta smaller than the spread names " +
+            "nothing. Prefer the rotated pass in flyin-rotation-*.json.",
+        },
+        summaries,
+        "none (FULL APPLICATION)",
+      );
     }
 
     writeFileSync(

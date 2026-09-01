@@ -116,11 +116,25 @@ Every row carries its **status**, **access method**, **licence status** and the
 `docs/branch-manifest.md`: this file answers *what exists and what may we use*,
 the manifest answers *what do we walk and in what order*.
 
+> **A PERMISSION CLAIM IN THIS FILE WAS WRONG FOR WEEKS, AND NOTHING FAILED.**
+> (2026-09-01.) The Wikipedia row read *Tier A, WIRED* against
+> `en.wikipedia.org/w/api.php`, and that path is **disallowed by the host's own
+> `robots.txt`**. It was found only because a lane registering a NEW Wikipedia
+> route read the host's file before shipping it — the row itself had never been
+> checked against it. Ten requests reached the disallowed path first.
+>
+> **This is the failure mode this table is most exposed to.** A wall announces
+> itself: a 403, a challenge, a timeout, and a session goes and looks. A
+> permission error announces nothing — `/w/api.php` answers 200 all day — so the
+> only thing that can catch one is reading the publisher's own file and
+> comparing it to the row. **A row here is a claim about someone else's
+> permission, and it expires the way any other measurement does.**
+
 | Source | Access | Licence | Tier | Status | Last walked |
 |---|---|---|---|---|---|
 | **USA.gov** — `usa.gov/elected-officials`, `/local-governments`, `/state-election-office`, `/state-governor`, `/agency-index`, `/states/{state}` | plain GET, no key, no rate wall observed | **US government work — public domain.** No attribution obligation, no terms to accept | **A** | **WIRED** — `pnpm tier:directory`. RULING 93's federal tier. 7 routes, all answering, 227 entities. Re-read 2026-08-23 out of the committed walk at `data/hunt/tier-directories.json`, whose `nj-localgov` route carries 624 entities and 592 distinct hosts — that directory is what settled `rockawaytownship.org` and `rockawayborough.org` as OFFICIAL rather than press | 2026-08-23 |
 | **State of New Jersey local-government directory** — `nj.gov/nj/gov/county/localgov.shtml` | plain GET, no key | **US state government work — public domain** | **A** | **WIRED** — `pnpm tier:directory --route nj-localgov`. **624 entities: all 21 counties and all 564 municipalities with their official websites.** Note the live URL: `/nj/gov/county/` answers HTTP 200 with a "Page not found" body | 2026-08-22 |
-| **Wikipedia** — municipality and election articles | `en.wikipedia.org/w/api.php`, no key, identified User-Agent, spaced 400 ms | **CC BY-SA.** Facts — names, parties, term dates, districts — are **not copyrightable** and are what is extracted; the prose is never copied. RULING 87 | **A** | **WIRED** — `pnpm wiki:muni`, `pnpm wiki:graph`, and **`pnpm wiki:citation` (new 2026-08-23)**, which walks the FOOTNOTE rather than the article. Walked 2026-08-23 against three Morris municipality articles; 9 of 9 parked leads resolved to a branch result. **DISCOVERY ONLY, never a source of record** | 2026-08-23 |
+| **Wikipedia** — municipality and election articles | `en.wikipedia.org/wiki/<Title>?action=raw`, no key, identified User-Agent, spaced 400 ms. **`/w/api.php` IS DISALLOWED and was used until 2026-09-01** — the host's own `robots.txt` carries `Disallow: /w/` for `User-agent: *` with exactly two exceptions, `Allow: /w/api.php?action=mobileview&` and `Allow: /w/load.php?`, and neither is a content query. `/wiki/` carries no blanket Disallow and returns the same wikitext (measured: `Tucson, Arizona`, 200 `text/x-wiki`, 183,138 bytes). A disallow is honoured and is never re-walked on a clock | **CC BY-SA.** Facts — names, parties, term dates, districts — are **not copyrightable** and are what is extracted; the prose is never copied. RULING 87 | **A** | **WIRED** — `pnpm wiki:muni`, `pnpm wiki:graph`, `pnpm wiki:citation`. **Re-walked on the permitted route 2026-09-01 and diffed against the previous artifact: 39 of 39 municipalities reached, 908 official rows, 270 distinct officials — every Wikipedia-derived number identical.** **DISCOVERY ONLY, never a source of record** | 2026-09-01 |
 | **Each body's own website** — municipal, county, district | plain GET, identified User-Agent, spaced 700 ms, ceiling on pages per site | Public records published by the body. The public-records rule governs | **B** | **WIRED** — `pnpm roster:hunt`. The route that carries phone and email where the encyclopedia carries neither. Walked 2026-08-23 against `rockawaytownship.org`, `rockawayborough.org` and `denvillenj.gov`, each control-paired; two confirmed a sitting mayor by name and office | 2026-08-23 |
 | **FEC Combined Federal/State Disclosure Directory** | committed at `data/reference/fec_combined_federal_state_disclosure_directory.csv`; re-fetch with `pnpm fec:directories` | **US federal government work — public domain** | **A** | **WIRED.** 349 offices across 56 jurisdictions with records-held, URL, email and phone | 2026-08-22 |
 | **2022 Census of Governments** | committed at `data/reference/census_govt_units_2022.csv` | **US federal government work — public domain** | **A** | **WIRED.** The OFFICIAL UNIVERSE every coverage claim is measured against | 2026-08-22 |

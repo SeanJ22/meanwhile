@@ -32,6 +32,21 @@
  * leaves the criterion unmet, and an unmet criterion means NO SWITCH — the
  * incumbent stays because nothing displaced it, not because the challenger was
  * tried and lost.
+ *
+ * ## RULING 230 — ONE CANONICAL VERDICT (2026-09-01)
+ *
+ * ```
+ *   SWITCH only if EVERY required challenger question is measured AND holds.
+ *   Any required question measured and not held -> HOLD / retain incumbent.
+ *   Any required question unmeasured           -> NOT_MEASURED / retain.
+ *   NO SECOND FUNCTION MAY EMIT A SwitchVerdict.
+ * ```
+ *
+ * This module used to carry two rules that could disagree — an absolute one
+ * and a relative non-regression one — and the 2026-08-31 run record recorded
+ * both, so it said `RETAIN` and `SWITCH` in the same file. The absolute rule
+ * is now the only verdict; the relative reading survives as
+ * `relativeNonRegressionAnalysis`, a diagnostic with its own type.
  */
 
 import type { ModelRate } from "../control-plane/model-cost.ts";
@@ -105,36 +120,11 @@ export interface QuestionRun {
 }
 
 /**
- * **THE OWNER'S CRITERION, ABSOLUTE, AND WHY IT LIVES BESIDE `switchVerdict`
- * RATHER THAN INSIDE IT.** (H2, measured 2026-08-31.)
+ * The challenger questions that did NOT hold — a question that ran and failed
+ * and a question that never ran are both in here, because neither is a hold.
  *
- * `switchVerdict` below implements a RELATIVE rule — a challenger question
- * blocks the switch only where the incumbent held it and the challenger did
- * not — and it is argued, tested and deliberate: *a question neither model
- * answers is a retrieval gap, and holding the model choice hostage to it would
- * make every future switch impossible for a reason unrelated to the model.*
- *
- * The owner's instruction for this comparison is ABSOLUTE:
- *
- * > Switch only if every required question holds; otherwise retain the
- * > incumbent.
- *
- * On the 2026-08-31 measurement the two rules DISAGREE IN OUTCOME. Two of the
- * four questions that reached the synthesis contract (Q3, Q5) failed on BOTH
- * models, for the same reason on both — the ASK-19 length budget. Nothing
- * degraded, so the relative rule derives SWITCH; nothing like "every question
- * holds" is true, so the absolute rule derives RETAIN.
- *
- * Neither is deleted and neither silently wins. Under RULING 185 the author's
- * current directive is precedence 1 and the prior implementation decision is
- * lower, so the DECISION is taken on this function and the relative derivation
- * is reported beside it as what it is. Representing the conflict is the rule;
- * resolving it by whichever function was called last is what the precedence
- * model exists to forbid.
- *
- * Returns the challenger questions that did NOT hold — empty means the
- * criterion is met over the runs supplied, which is a claim about that
- * denominator and never about the corpus.
+ * Empty means every required question held over the runs supplied, which is a
+ * claim about THAT DENOMINATOR and never about the corpus.
  */
 export function challengerQuestionsNotHolding(
   challengerRuns: readonly QuestionRun[],
@@ -143,21 +133,61 @@ export function challengerQuestionsNotHolding(
 }
 
 export type SwitchVerdict =
-  /** Every question ran and every question held on the challenger. */
+  /** Every required question was measured and every one of them HELD. */
   | { kind: "SWITCH"; to: string; questions: number }
-  /** At least one question ran and degraded. */
-  | { kind: "HOLD"; degraded: readonly string[] }
-  /** The comparison did not produce a complete result. Never a switch. */
+  /** Every required question was measured and at least one did not hold. */
+  | { kind: "HOLD"; notHolding: readonly string[] }
+  /** At least one required question was never measured. Never a switch. */
   | { kind: "NOT_MEASURED"; unmeasured: readonly string[]; why: string };
 
 /**
- * The verdict, DERIVED from the runs. A session does not award itself this.
+ * **RULING 230 — ONE CANONICAL MODEL-SWITCH VERDICT.** (Adopted 2026-09-01.)
  *
- * Three outcomes, and `NOT_MEASURED` is a real one rather than a polite way of
- * saying HOLD: they carry different obligations. HOLD means the challenger was
- * tried and lost, and the question is closed until something changes.
- * NOT_MEASURED means the comparison is still owed — the obligation stays live,
- * exactly as a blocked route never closes a record obligation.
+ * ```
+ *   SWITCH        every required challenger question is MEASURED and HOLDS
+ *   HOLD          any required question is measured and does NOT hold
+ *   NOT_MEASURED  any required question is unmeasured — retain the incumbent
+ * ```
+ *
+ * **This is the only function in the repository that returns a
+ * `SwitchVerdict`**, and that is the point of the ruling rather than a
+ * side-effect of it.
+ *
+ * ## What this supersedes, and why
+ *
+ * Until 2026-09-01 this function implemented a RELATIVE non-regression rule: a
+ * challenger question blocked the switch only where the INCUMBENT held it and
+ * the challenger did not, so two arms failing the SAME question read as "no
+ * degradation" and derived SWITCH. The owner's criterion — *switch only if
+ * every required question holds* — was implemented separately, in
+ * `challengerQuestionsNotHolding`, and the run record carried both. On the
+ * 2026-08-31 measurement they disagreed: the record says
+ * `decision: RETAIN:claude-opus-5`, `ownerCriterionMet: false`, and
+ * `verdict.kind: "SWITCH"`, all three at once.
+ *
+ * A machine-readable verdict that contradicts the human decision in the same
+ * artifact is not a represented conflict — it is a record that will be read by
+ * whichever field the next reader happens to look at. RULING 230 collapses the
+ * two into this one, on the ABSOLUTE rule, for the reason the header above
+ * already gives: *correct first, fast second.* A question neither model
+ * answers is a real unanswered reader question, and a switch taken while one
+ * is open is a switch taken on a comparison that never finished.
+ *
+ * The relative derivation survives as `relativeNonRegressionAnalysis` below —
+ * a DIAGNOSTIC, with its own return type, which cannot be mistaken for or
+ * assigned to a switching verdict.
+ *
+ * ## `NOT_MEASURED` is not a polite `HOLD`
+ *
+ * They carry different obligations. HOLD means the challenger was tried and
+ * lost, and the question is closed until something changes. NOT_MEASURED means
+ * the comparison is still owed — the obligation stays live, exactly as a
+ * blocked route never closes a record obligation. *Our failure to measure is
+ * never evidence about the challenger.*
+ *
+ * An EMPTY challenger set is NOT_MEASURED and never a vacuous SWITCH: zero
+ * questions all holding is the classic vacuous truth and it would read as a
+ * clean sweep.
  */
 export function switchVerdict(
   incumbentRuns: readonly QuestionRun[],
@@ -173,11 +203,65 @@ export function switchVerdict(
     return { kind: "NOT_MEASURED", unmeasured, why };
   }
 
+  /* THE ABSOLUTE RULE. Not "did the challenger degrade anything the incumbent
+     held" — "did EVERY required question hold on the challenger". A question
+     both arms fail is counted here, deliberately: it is exactly the case the
+     relative rule used to wave through. */
+  const notHolding = challengerQuestionsNotHolding(challengerRuns);
+  if (notHolding.length > 0) return { kind: "HOLD", notHolding };
+  return { kind: "SWITCH", to: ASK_CHALLENGER_MODEL, questions: challengerRuns.length };
+}
+
+/* ── the diagnostic that used to be a verdict ────────────────────────────── */
+
+/**
+ * The RELATIVE non-regression reading, and it is a DIAGNOSTIC.
+ *
+ * Its own type, deliberately unassignable to `SwitchVerdict` and carrying no
+ * member named SWITCH, HOLD or NOT_MEASURED. It answers one narrow question —
+ * *did the challenger lose any question the incumbent won?* — which is useful
+ * for attributing a failure to the MODEL rather than to retrieval, and which
+ * RULING 230 says may never by itself decide a switch.
+ *
+ * `bothArmsFailed` is the field the 2026-08-31 run needed and did not have:
+ * questions that failed on BOTH arms, which are a claim about the pipeline
+ * (there, the ASK-19 length budget) and not about either model.
+ */
+export interface RelativeNonRegressionAnalysis {
+  readonly kind: "NO_DEGRADATION" | "DEGRADED" | "INCOMPLETE";
+  /** Held on the incumbent, did not hold on the challenger. */
+  readonly degraded: readonly string[];
+  /** Did not hold on EITHER arm — not a model result. */
+  readonly bothArmsFailed: readonly string[];
+  /** Never ran on one arm or the other. */
+  readonly unmeasured: readonly string[];
+  /** Stated in the type so no caller has to remember it. */
+  readonly isNotASwitchVerdict: true;
+}
+
+export function relativeNonRegressionAnalysis(
+  incumbentRuns: readonly QuestionRun[],
+  challengerRuns: readonly QuestionRun[],
+): RelativeNonRegressionAnalysis {
+  const unmeasured = [
+    ...incumbentRuns.filter((r) => r.held === null),
+    ...challengerRuns.filter((r) => r.held === null),
+  ].map((r) => `${r.questionId}@${r.model}`);
+
   const incumbentHeld = new Map(incumbentRuns.map((r) => [r.questionId, r.held]));
   const degraded = challengerRuns
     .filter((r) => incumbentHeld.get(r.questionId) === true && r.held !== true)
     .map((r) => r.questionId);
+  const bothArmsFailed = challengerRuns
+    .filter((r) => incumbentHeld.get(r.questionId) === false && r.held === false)
+    .map((r) => r.questionId);
 
-  if (degraded.length > 0) return { kind: "HOLD", degraded };
-  return { kind: "SWITCH", to: ASK_CHALLENGER_MODEL, questions: challengerRuns.length };
+  const kind =
+    unmeasured.length > 0 || challengerRuns.length === 0 || incumbentRuns.length === 0
+      ? "INCOMPLETE"
+      : degraded.length > 0
+        ? "DEGRADED"
+        : "NO_DEGRADATION";
+
+  return { kind, degraded, bothArmsFailed, unmeasured, isNotASwitchVerdict: true };
 }

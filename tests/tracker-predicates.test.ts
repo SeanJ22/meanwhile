@@ -11,10 +11,11 @@ import {
   RESOLVED_BY_EVIDENCE,
   auditCoverage,
   evaluateEntry,
+  resolvedByEvidence,
 } from "../lib/tracker/predicates.mjs";
 import { PREDICATES, REGISTRY } from "../lib/tracker/registry.mjs";
 import { UNKNOWN, firstClaimByLedger, readOpenedLedger, resolveOpenedDate } from "../lib/tracker/opened-dates.mjs";
-import { ageInDays, describeAge } from "../lib/tracker/reconcile.mjs";
+import { ageInDays, describeAge, reconcile } from "../lib/tracker/reconcile.mjs";
 import { isOpen, readStore, planMoves, readSections, WORKING_CSV, RESOLVED_CSV } from "../scripts/tracker-core.mjs";
 
 /**
@@ -120,7 +121,7 @@ test("RULING 227: every NOT_MACHINE_VERIFIABLE entry carries a complete decision
 /* The three proof cases                                                      */
 /* ========================================================================== */
 
-test("RULING 227: each of the three proof-case predicates still reads its evidence and answers RESOLVED_BY_EVIDENCE", () => {
+test("RULING 227: every predicate still reads its evidence and answers RESOLVED_BY_EVIDENCE", () => {
   /*
    * NH272, NH281 and NH300 are the rows the mechanism was built from, and all
    * three are now in the resolved store. This is the assertion that keeps them
@@ -128,11 +129,16 @@ test("RULING 227: each of the three proof-case predicates still reads its eviden
    * or emptied, this goes red rather than the closes quietly becoming
    * unfounded.
    *
-   * It also proves the mechanism itself works, which nothing else can now do —
-   * the three rows are closed, so the live generation has no predicated open
-   * row left to exercise.
+   * **OWN03 joined them on 2026-09-01 and it is a different KIND of predicate**,
+   * which is why the count moved rather than the test being left at three. The
+   * other three read an operational artifact — a deploy observation, a proof
+   * record. This one reads the AUTHOR'S OWN DECISION out of
+   * `data/photos/review.json`. It cannot decide for him and does not try; it
+   * observes that he decided, which is the fact the row was blocked on. If any
+   * of the nine ever stops carrying his approval against that exact image, this
+   * goes red and the row goes back in front of him.
    */
-  assert.equal(PREDICATES.length, 3);
+  assert.equal(PREDICATES.length, 4);
   for (const p of PREDICATES as unknown as RegistryEntry[]) {
     const outcome = evaluateEntry(p, { root: ROOT });
     assert.equal(
@@ -148,6 +154,61 @@ test("RULING 227: each of the three proof-case predicates still reads its eviden
   }
 });
 
+/*
+ * **THE SECOND COPY OF A RULE, PAID FOR.**
+ *
+ * OWN03's predicate inlines the person-key normalisation from
+ * `lib/photos/person.ts` because `lib/tracker/registry.mjs` is loaded by
+ * `node scripts/tracker.mjs` with no build step and must not depend on type
+ * stripping to reach a `.ts`. RULING 103 says once and only once, so a second
+ * copy needs a reason AND a guard, and this is the guard.
+ *
+ * It is not theoretical. The first version of that inline copy lost its regex
+ * escapes in transit — `\\s+` became `s+`, which collapses no whitespace at
+ * all — and `Dale G. Caldwell` keyed to a double-spaced string that matched
+ * nothing. The predicate then reported six of nine portraits unapproved on the
+ * day the author approved all nine: a false blocker, put back in front of him
+ * by the very mechanism written to take blockers away.
+ */
+test("OWN03: the inlined person key agrees with lib/photos/person.ts on every queued subject", async () => {
+  const { personKey } = await import("../lib/photos/person.ts");
+
+  /* The same normalisation the predicate performs, read out of the module it
+     actually runs, so this cannot pass against a copy of the copy. */
+  const source = readFileSync(join(ROOT, "lib/tracker/registry.mjs"), "utf8");
+  const inlined = source.slice(
+    source.indexOf("    const key = (name) =>"),
+    source.indexOf("    const entityDecoded = (url) =>"),
+  );
+  assert.ok(inlined.includes("const key"), "the inlined key was not found in registry.mjs");
+  assert.ok(
+    !inlined.includes("\u0008"),
+    "the inlined key contains a literal backspace — a regex escape was lost in transit",
+  );
+
+  /* eslint-disable-next-line no-new-func -- the point is to run REGISTRY's own text */
+  const keyFn = new Function(`return ${inlined.slice(inlined.indexOf("(name) =>")).replace(/;\s*$/, "")}`)() as (
+    n: string,
+  ) => string;
+
+  const recordPath = join(ROOT, "data/photos/door2-statewide-executives-2026-08-28.json");
+  const record = JSON.parse(readFileSync(recordPath, "utf8")) as {
+    rows: { subject?: string }[];
+  };
+  const subjects = record.rows.map((r) => (r.subject ?? "").trim()).filter(Boolean);
+  assert.ok(subjects.length > 0, "no subjects to compare the two normalisations over");
+
+  const drift = subjects
+    .map((s) => ({ s, mine: keyFn(s), theirs: personKey(s) }))
+    .filter((d) => d.mine !== d.theirs)
+    .map((d) => `${d.s}: registry says "${d.mine}", person.ts says "${d.theirs}"`);
+
+  assert.deepEqual(
+    drift,
+    [],
+    "the tracker registry and the photo index disagree about who a person is, so an approval he made would read as an approval he did not make",
+  );
+});
 test("RULING 227: the three rows are closed, and each carries its evidence in the resolved store", () => {
   for (const id of ["NH272", "NH281", "NH300"]) {
     const row = resolved.find((r) => (r.ID ?? "").trim() === id);
@@ -161,6 +222,132 @@ test("RULING 227: the three rows are closed, and each carries its evidence in th
       /RULING 208/,
       `${id} must state that the obligation it concerned is NOT closed by the row closing`,
     );
+  }
+});
+
+/*
+ * **THE RECHECK RUNS EVERY GENERATION; THE APPEND HAPPENS ONCE.**
+ *
+ * Found 2026-09-01. An auto-resolved row STAYS IN THE WORKING STORE until
+ * `pnpm tracker:move` carries it across, so every generation in between found
+ * the same row, re-evaluated the same predicate to the same
+ * RESOLVED_BY_EVIDENCE, and appended the same evidence paragraph again.
+ *
+ * It reached the resolved store: `NH272`, `NH281` and `NH300` each carried
+ * their RULING 227 paragraph TWICE, verbatim. The verdict was right every
+ * time; the append had no memory.
+ *
+ * The paragraph is the AUTHOR'S CARD, and a card that repeats itself is a card
+ * that gets skimmed. These two tests hold both halves: the recheck still runs
+ * (Last verified moves), and the record does not grow.
+ */
+test("RULING 227: a second generation over an already auto-resolved row appends nothing", () => {
+  const registry = [
+    {
+      rowId: "TEST_APPEND_ONCE",
+      kind: "predicate",
+      blocker: "a blocker that has since cleared",
+      evaluate: () => resolvedByEvidence("it cleared.", { evidence: ["an artifact says so"] }),
+    },
+  ];
+  const row: Record<string, string> = {
+    ID: "TEST_APPEND_ONCE",
+    Section: "needs-sean",
+    Resolution: "",
+    "Session record": "",
+    "Last verified": "",
+  };
+
+  const first = reconcile({
+    working: [row],
+    registry,
+    stamp: "2026-09-01",
+    sessionLabel: "first-generation",
+    root: ROOT,
+  });
+  assert.equal(first.autoResolved.length, 1, "the first generation resolves it");
+  const afterFirst = row["Session record"];
+  assert.match(afterFirst, /AUTO-RESOLVED under RULING 227/);
+
+  const second = reconcile({
+    working: [row],
+    registry,
+    stamp: "2026-09-02",
+    sessionLabel: "second-generation",
+    root: ROOT,
+  });
+  assert.equal(second.autoResolved.length, 0, "the second generation resolves nothing new");
+  assert.equal(row["Session record"], afterFirst, "and it appends nothing to the record");
+  assert.equal(
+    row["Closed by"],
+    "first-generation (RULING 227 auto-reconciliation)",
+    "the close keeps the generation that actually earned it",
+  );
+  assert.equal(row["Resolved on"], "2026-09-01", "and the day it was actually earned");
+});
+
+test("RULING 227: the recheck still RUNS on an already-resolved row — only the append is suppressed", () => {
+  /*
+   * The cheap fix would have been to skip the whole entry once a row is
+   * resolved. That would stop the duplication and also stop the RECHECK, which
+   * is the mechanism RULING 227 exists to install. `Last verified` moving on
+   * the second generation is what proves the predicate was actually run again.
+   */
+  const registry = [
+    {
+      rowId: "TEST_STILL_RECHECKED",
+      kind: "predicate",
+      blocker: "a blocker that has since cleared",
+      evaluate: () => resolvedByEvidence("it cleared.", { evidence: ["an artifact says so"] }),
+    },
+  ];
+  const row: Record<string, string> = {
+    ID: "TEST_STILL_RECHECKED",
+    Section: "needs-sean",
+    Resolution: "Resolved",
+    "Session record": "closed by the author himself, in his own words",
+    "Last verified": "",
+  };
+
+  reconcile({
+    working: [row],
+    registry,
+    stamp: "2026-09-02",
+    sessionLabel: "later-generation",
+    root: ROOT,
+  });
+
+  assert.equal(
+    row["Last verified"],
+    `2026-09-02 · ${RESOLVED_BY_EVIDENCE}`,
+    "the predicate was re-evaluated and its verdict recorded",
+  );
+  assert.equal(
+    row["Session record"],
+    "closed by the author himself, in his own words",
+    "and a predicate never overwrites or extends an author's own close (RULING 37)",
+  );
+});
+
+/*
+ * And the same defect, asserted where it actually landed: the committed store.
+ * A generator fix is not finished until its output is regenerated and diffed
+ * (RULING 102), so the three repaired rows are held here by count.
+ */
+test("RULING 227: no row in either store carries its evidence paragraph more than once", () => {
+  const marker = "AUTO-RESOLVED under RULING 227";
+  for (const [label, store] of [
+    ["working", working],
+    ["resolved", resolved],
+  ] as const) {
+    for (const row of store) {
+      const record = (row as Record<string, string>)["Session record"] ?? "";
+      const occurrences = record.split(marker).length - 1;
+      assert.ok(
+        occurrences <= 1,
+        `${label} store row ${(row as Record<string, string>).ID} repeats its RULING 227 card ${occurrences} times`,
+      );
+    }
   }
 });
 
@@ -379,11 +566,21 @@ test("a decision card naming subjects for approval names ONLY subjects the recor
       "decision. Correct the card; do not close the row.",
   );
 
-  // And the nine that ARE queued are all named, so the card is complete as well as correct.
-  const missing = queued
-    .map((full) => full.split(/\s+/).at(-1) ?? "")
-    .filter((surname) => !new RegExp(`\\b${surname}\\b`).test(cardText));
-  assert.deepEqual(missing, [], `OWN03's card omits queued subject(s): ${missing.join(", ")}`);
+  /*
+   * The completeness half — every queued subject NAMED — applies to a CARD,
+   * where the author is being asked to decide about specific people and an
+   * omitted name is somebody he never got to rule on. A PREDICATE names a
+   * population and derives its members from the acquisition record, so there is
+   * no list to be incomplete; requiring one would force a second copy of the
+   * population into the row's text, which is exactly how "Mayes, Fontes and
+   * Horne among them" came to be wrong in the first place.
+   */
+  if (own03.kind === NOT_MACHINE_VERIFIABLE) {
+    const missing = queued
+      .map((full) => full.split(/\s+/).at(-1) ?? "")
+      .filter((surname) => !new RegExp(`\\b${surname}\\b`).test(cardText));
+    assert.deepEqual(missing, [], `OWN03's card omits queued subject(s): ${missing.join(", ")}`);
+  }
 });
 
 test("the reconciliation record is written and reconciles with the registry", () => {

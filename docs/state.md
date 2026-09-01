@@ -22671,3 +22671,183 @@ filed reports themselves, or `ftp://ftp.azsos.gov/cfsdata2/`, already recorded
 as reachable on 2026-08-26 with 8,828 committees and unwalked for this purpose.
 The FTP is the most promising. The obligation is not closed and was never
 dispositioned as closed.
+
+## 2026-09-01 — Session C, closeout: the join, the denominator, the rasteriser, and a permission we never checked
+
+Five lanes in parallel, one integration owner, one merge at the end.
+`data/workstate/orchestration/2026-09-01-session-c-closeout.json` records the
+plan: 5 workstreams, 5 executable, **5 PARALLEL, 0 serialized**, 10 independent
+pairs, verdict TEAM.
+
+### Three rulings, adopted through the canonical ledger
+
+**RULING 229 — acquire to the authoritative source universe; project to the
+reader.** The author observed the same architecture error independently in three
+states, and it was in the code with its own header saying so:
+
+```
+  scripts/state-money-az.mts   "FOR THE 85701 AND 85641 BALLOT"
+  scripts/state-money-nh.mts   "FOR THE 03255 BALLOT", COUNTY = "Merrimack"
+  scripts/state-money-nj.mts   "NJ ELEC FOR THE WHOLE 07866 BALLOT"
+```
+
+Each is a correct answer to the wrong question. The Arizona Secretary of State
+does not publish a Pima County universe. A collector that asks it only about the
+candidates on one page has not been limited by the publisher — **it has limited
+itself, and then the limit becomes invisible because every page it was built for
+looks full.** The invariant is ZERO REDUNDANT INTERNET HUNT WHEN A NEW ZIP IS
+ACTIVATED, and the three layers — acquisition, identity, projection — are kept
+apart.
+
+**RULING 230 — one canonical model-switch verdict**, and **RULING 231 — a false
+description of a named person is corrected by recorded supersession**, which
+answers the `tracker amend` question the frontier had been carrying as *"that
+needs a ruling"*.
+
+### Arizona money reached the reader, and nothing was acquired to do it
+
+`state-money-az-2026.json` held Katie Hobbs at **$11,109,719.95** and her card
+showed nothing. Certified-lineup cards key on `${contest.id}|${nominee.name}`;
+money records key on candidacy ids. **Two correct halves, one seam, and the seam
+is the only place it could fail** — which is RULING 228's shape one layer down
+from a producer/consumer contract.
+
+The repair is one precomputed, auditable reconciliation over the whole lineup
+population, resolving into a **statewide** identity registry:
+
+```
+  lineup nominees 30 = uniquely reconciled 27 + ambiguous 1 + unmatched 2
+  duplicate target collisions 0 — and a collision REFUSES the write
+```
+
+No fuzzy or runtime matching reaches the reader. Published names expand into
+exact strings, each labelled with the annotation rule that produced it, compared
+by string equality, once, into a committed table. Negative controls are
+asserted: `Tom Horne` does not match `Thomas Chalres Horne`, `Katie Hobbs` does
+not match `Katherine Hobbs`, and no diminutive is ever inferred.
+
+Measured on rendered DOM, before and after:
+
+```
+  85701   4 money sections of 24 cards  ->  24 of 24  (19 filed, 3 our gap, 2 federal)
+  85641   4 of 29                       ->  29 of 29  (22 filed, 3 our gap, 4 federal)
+```
+
+**One case costs a reader a real number, and it is recorded rather than
+resolved.** Teri Ann Hourihan is *No Labels* on Arizona's certified canvass and
+*Arizona Independent Party* on the Secretary of State's candidate-filing list.
+Two Arizona authorities disagree, the party criterion blocks the mapping, and
+her card renders our gap although the corpus holds her filed figure. That is the
+rule working — one wrong join puts a candidate's fundraising on their opponent's
+card — and both published values are in the reconciliation for the author.
+
+And the denominator moved from a ballot to a publisher: **58 committees chosen
+by name-matching the Pima ballot became 716 of 716 chosen by the publisher**,
+0 disagreeing, 0 route gaps, over an 860-row / 732-entity cycle universe. No
+itemised transaction was persisted — contributor name, occupation, employer,
+city and zip were streamed to a sum and discarded, asserted on the committed
+bytes.
+
+### The fly-in on a reader with no GPU, and why the first table was unreadable
+
+`--isolate --repeat=3` produced a table where **`no-districts` came back SLOWER
+than the fully loaded app**. Removing work made the flight worse, which is not a
+finding about districts — it is a load burst wearing one. Arms are BLOCKS in
+that mode, and the host sat at 100% during four of them.
+
+A rotated mode fixed the instrument before the instrument was believed: every
+arm flown once per round, rotation order advanced each round. 28 flights later
+the culprit is **one CSS property** — `.state-focus-scrim`'s `backdrop-filter` is
++13.9 fps of the +14.8 that removing the entire state-focus layer buys, 94% of
+that layer's cost. Districts +6.3. SVG art +3.8 on median but nearly all the
+residual jank. **Markers +0.6, which is inside their own spread and therefore
+names nothing**, reported as naming nothing.
+
+Corroborated independently: **1762 ms of `(program)` self time inside a 2768 ms
+flight**, every named JS function under 40 ms. Per-frame raster, never our
+JavaScript.
+
+```
+  hardware (Intel Iris Xe)   59.9 vs 59.7 = 100.3%, jank 2.0%   PASS, no regression
+  software (SwiftShader)     59.9 vs 59.8 = 100.1%, jank 1.5%   PASS, was 28.8%
+```
+
+**The intermediate result is the argument for the criterion.** With only the blur
+and districts stood down, software reached 89% of bare and still dropped 24.7% of
+frames at p95 97.3 ms. The median called that finished; it was not. The software
+verdict therefore requires ratio AND jank, and the two populations are never
+averaged.
+
+A second instrument defect fell out of it: `no-districts` was **healing
+mid-flight** exactly as `bare` did before 2026-08-31, filing a fully loaded
+flight under the districts' name. Every run now reads its landing state back and
+discards a healed flight — and it fired on the integrated head, declining the
+hardware arm rather than passing it.
+
+### A permission we had never checked, on a host we had been calling WIRED
+
+A lane registering a NEW Wikipedia route read `en.wikipedia.org/robots.txt`
+before shipping it. Under `User-agent: *`:
+
+```
+  Allow: /w/api.php?action=mobileview&
+  Allow: /w/load.php?
+  Disallow: /w/
+```
+
+Two `Allow` lines, neither a content query. **Every Wikipedia call this
+repository has ever made ran through `/w/api.php?action=query`** — `lib/hunt/
+wikipedia.ts` and `lib/hunt/wiki-graph.ts` — while `docs/sources.md` recorded the
+host as Tier A and WIRED. Ten requests reached the disallowed path before the
+lane caught its own route.
+
+**The row was never checked against the host's own file.** A permission claim
+resting on our own paperwork rather than on the publisher's is not a permission
+claim, and this is worse than an unread wall: the host answers `/w/api.php` with
+200 all day, so nothing would ever have failed.
+
+It is RULING 206 rather than a wall. `/wiki/<Title>?action=raw` is another
+representation of the same record, is not under `Disallow: /w/`, and returns the
+same bytes — measured on `Tucson, Arizona`: `200 text/x-wiki`, 183,138 bytes.
+Both modules now read it, the redirect the API's `redirects=1` was carrying is
+followed explicitly (`Template:NJ Morris County Commissioners` → lowercase
+`commissioners`, the case the old doc block named), and
+`tests/wikipedia-permission.test.ts` refuses the path repo-wide over what WOULD
+BE COMMITTED rather than over what is tracked.
+
+**One thing narrowed and is stated rather than absorbed.** `prop=categories`
+returned the categories a page lands in AFTER template expansion;
+`[[Category:…]]` in wikitext is only what the article declares itself. Fewer
+categories, in the safe direction — a node classified as less certain rather than
+as something it is not.
+
+### OWN03 closed through the mechanism, not around it
+
+The author approved nine portraits. RULING 37 reserves a Needs Sean close to
+him, and the only mechanism for his close is a keystroke in the workbook — which
+a session writing it would be forging. So OWN03 became a **RULING 227
+predicate** on a distinction its old card ran together: *the approval is
+reserved to him; whether he has GIVEN it is not.* It reads `review.json`,
+resolves only when all nine carry APPROVED against that exact image decided by
+him, and closes as `predicate` rather than as `sean`.
+
+Its first draft put a false blocker back in front of him — a lost regex escape
+keyed `Dale G. Caldwell` to a double-spaced string, and six of nine read
+unapproved on the day he approved all nine. A test now runs `registry.mjs`'s own
+inlined key TEXT against `lib/photos/person.ts` over every queued subject.
+
+And the promotion refused once, correctly: Wix content-negotiates Kimberly Yee's
+portrait on `Accept`, returning a **different 22,544-byte webp** at the same
+326×468 where the author approved a 36,019-byte JPEG. Same photograph, different
+file. The ask was narrowed to the reviewed format; the guard was not loosened.
+
+### Where the numbers landed
+
+```
+  tracker            378 open · 69 Needs Sean, all carded · 477 resolved
+  suite              4,555 tests
+  gates              14 of 14
+  walk:all           444 passed, 0 regressions, 23 could not run
+  governance         268 records, 0 semantic conflicts, 0 structural issues
+  governments named  2,641 across AZ (688), NH (552) and NJ (1,401)
+```

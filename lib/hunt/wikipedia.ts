@@ -97,7 +97,60 @@ import { OUTBOUND_CONTACT } from "../geo/outbound-agent.ts";
  */
 export const WIKI_USER_AGENT = `we-the-people/1.0 (civic data for a public-records product; contact: ${OUTBOUND_CONTACT})`;
 
-export const WIKI_API = "https://en.wikipedia.org/w/api.php";
+/**
+ * **`/w/api.php` IS DISALLOWED, AND THIS PROJECT WAS USING IT.** (2026-09-01.)
+ *
+ * `https://en.wikipedia.org/robots.txt`, read on 2026-09-01 under
+ * `User-agent: *`, operative lines verbatim:
+ *
+ * ```
+ *   Allow: /w/api.php?action=mobileview&
+ *   Allow: /w/load.php?
+ *   Disallow: /w/
+ * ```
+ *
+ * The two `Allow` lines are the entire permitted surface under `/w/`, and
+ * neither is a content query. **Every call this module made was disallowed**,
+ * and so was `lib/hunt/wiki-graph.ts`'s `action=query&redirects=1`. The row in
+ * `docs/sources.md` said Tier A, WIRED, and was never checked against the
+ * host's own file — a permission claim standing on our own paperwork rather
+ * than on the publisher's.
+ *
+ * Found because a lane registered a NEW Wikipedia route on the strength of that
+ * same row, then read robots.txt before shipping it. Ten requests reached the
+ * disallowed path first, and they are counted rather than glossed.
+ *
+ * **This is RULING 206, not a wall.** The record is the article; `/w/api.php`
+ * was one representation of it. `/wiki/<Title>?action=raw` is another, it is
+ * NOT under `Disallow: /w/`, and it returns the same bytes — measured on
+ * `Tucson, Arizona`: `200 text/x-wiki`, 183,138 bytes, identical to what the
+ * API's `rvslots=main` content field carried. Permission state and transport
+ * state are orthogonal (RULING 182); this was never transport.
+ *
+ * The constant stays EXPORTED and unused so the guard in
+ * `tests/wikipedia-permission.test.ts` can assert nothing composes a URL from
+ * it. Deleting it would make the guard pass by having nothing to look at.
+ */
+export const WIKI_API_DISALLOWED = "https://en.wikipedia.org/w/api.php";
+
+/**
+ * The allowed representation of the same record.
+ *
+ * `/wiki/` carries no blanket `Disallow` — only specific pages do
+ * (`/wiki/Special:`, a list of German project pages, and others), none of which
+ * is an article, a template or a category.
+ */
+export const WIKI_RAW_BASE = "https://en.wikipedia.org/wiki/";
+
+/** The title as it appears in a `/wiki/` path. */
+export function wikiRawUrl(title: string): string {
+  /*
+   * Underscores first, then component-encoding. `encodeURIComponent` escapes
+   * the colon in `Template:…` to `%3A`, which the host accepts — verified on
+   * `Template:NJ Morris County Commissioners`, HTTP 200.
+   */
+  return `${WIKI_RAW_BASE}${encodeURIComponent(title.replace(/ /g, "_"))}?action=raw`;
+}
 
 /** Serialized, spaced. A hunt may never become a load test. */
 export const WIKI_SPACING_MS = 400;
@@ -133,10 +186,9 @@ export async function fetchWikitext(
   title: string,
   fetcher: WikiFetcher,
   now: string,
+  depth = 0,
 ): Promise<WikiPage> {
-  const url =
-    `${WIKI_API}?action=query&redirects=1&prop=revisions&rvprop=content&rvslots=main` +
-    `&format=json&formatversion=2&titles=${encodeURIComponent(title)}`;
+  const url = wikiRawUrl(title);
 
   const base: WikiPage = {
     requested: title,
@@ -153,38 +205,52 @@ export async function fetchWikitext(
   } catch (err) {
     return { ...base, missReason: `fetch threw: ${(err as Error).message}` };
   }
+  /*
+   * A missing article answers 404 on this route where the API answered 200 with
+   * `missing: true`. Both are "no such article"; only the shape moved.
+   */
+  if (res.status === 404) return { ...base, missReason: "no such article" };
   if (res.status !== 200) return { ...base, missReason: `HTTP ${res.status}` };
 
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(res.body);
-  } catch {
-    return { ...base, missReason: "the API did not answer with JSON" };
-  }
-
-  const pages = (parsed as { query?: { pages?: unknown[] } }).query?.pages;
-  if (!Array.isArray(pages) || pages.length === 0) {
-    return { ...base, missReason: "the API answered with no pages" };
-  }
-  const page = pages[0] as {
-    missing?: boolean;
-    title?: string;
-    pageid?: number;
-    revisions?: { slots?: { main?: { content?: string } } }[];
-  };
-  if (page.missing === true) return { ...base, missReason: "no such article" };
-
-  const content = page.revisions?.[0]?.slots?.main?.content;
-  if (typeof content !== "string" || content.length === 0) {
-    // RULING: a zero-row extraction is a FAILED extraction, never an empty document.
+  const body = res.body ?? "";
+  if (body.length === 0) {
+    // A zero-row extraction is a FAILED extraction, never an empty document.
     return { ...base, missReason: "the article exists and returned no wikitext" };
+  }
+
+  /*
+   * **REDIRECTS ARE FOLLOWED HERE BECAUSE THEY WERE LOAD-BEARING THERE.**
+   *
+   * The API call this replaces carried `redirects=1`, and the doc block above
+   * says exactly why: `Template:NJ Morris County Commissioners` is a redirect to
+   * `Template:NJ Morris County commissioners`, and a session that did not follow
+   * it would record seven county commissioners as unreachable on the strength of
+   * a capital letter. The raw route answers a redirect with its wikitext —
+   * `#REDIRECT [[Target]]` — so the follow is explicit rather than free.
+   *
+   * ONE hop, then stop. A redirect loop is a fact about the encyclopedia and
+   * must not become an unbounded walk here.
+   */
+  const redirect = /^\s*#\s*REDIRECT\s*\[\[([^\]|#]+)/i.exec(body);
+  if (redirect) {
+    const target = redirect[1].trim();
+    if (depth >= 1) {
+      return { ...base, missReason: `redirect chain deeper than one hop, at "${target}"` };
+    }
+    const followed = await fetchWikitext(target, fetcher, now, depth + 1);
+    return { ...followed, requested: title };
   }
 
   return {
     ...base,
-    title: page.title ?? title,
-    pageId: page.pageid ?? null,
-    wikitext: content,
+    title,
+    /*
+     * The raw route does not carry a page id, and inventing one is worse than
+     * not having it. Nothing outside this module and `wiki-graph.ts` reads the
+     * field — checked before the route moved, not assumed.
+     */
+    pageId: null,
+    wikitext: body,
     missReason: null,
   };
 }

@@ -175,6 +175,33 @@ export function StateFocusOverlay({
    * the projection speaks in, and the element has to be positioned in it.
    */
   const boxRef = useRef<HTMLDivElement | null>(null);
+  /**
+   * **THE BOX IS MEASURED WHEN IT CHANGES, NOT ON EVERY FRAME OF A FLY-IN.**
+   * (W6 H3, 2026-08-31, from a CPU profile — `pnpm measure:flyin --profile`.)
+   *
+   * `redraw` ran `box.getBoundingClientRect()` every time the camera moved, and
+   * during the 2600 ms zip fly-in that is once per animation frame. A profile of
+   * one flight put **46 ms of main-thread self time in `getBoundingClientRect`
+   * alone** — third behind MapLibre's own worker-message handler and ahead of
+   * every other named function in the page.
+   *
+   * Its own 46 ms is not the whole bill and is not the reason this changed.
+   * `getBoundingClientRect` forces a SYNCHRONOUS STYLE AND LAYOUT FLUSH, and
+   * this one is called from inside the animation frame that then sets React
+   * state and rewrites four SVG path attributes — so the layout it forces is
+   * the layout that was about to be invalidated anyway, computed twice, in the
+   * middle of the frame a reader is watching.
+   *
+   * **And the value cannot change while the camera moves.** This is the MAP's
+   * box. Panning, zooming and flying do not resize it; only a window resize, the
+   * rail opening or a container change does. So it is measured on those, through
+   * a `ResizeObserver` on the element itself, which catches every one of them —
+   * including the rail, which the old `window.resize` listener could not see.
+   *
+   * `null` means "not measured yet", and the redraw below measures it once
+   * rather than treating an unmeasured box as a zero-sized one.
+   */
+  const boxSizeRef = useRef<{ width: number; height: number } | null>(null);
 
   /**
    * Ids unique to this instance.
@@ -207,7 +234,13 @@ export function StateFocusOverlay({
         setDrawing(null);
         return;
       }
-      const { width, height } = box.getBoundingClientRect();
+      // Measured once and re-measured only when the element actually resizes —
+      // see the note on `boxSizeRef`. A camera move never changes it.
+      if (!boxSizeRef.current) {
+        const rect = box.getBoundingClientRect();
+        boxSizeRef.current = { width: rect.width, height: rect.height };
+      }
+      const { width, height } = boxSizeRef.current;
       const spec = extrusionSpecForZoom(zoomOf?.() ?? 10);
 
       /*
@@ -299,10 +332,36 @@ export function StateFocusOverlay({
     // it would also measure the box before layout has settled on a fresh
     // mount, so the very first clip could be built against a zero-width
     // rectangle.
+    /*
+     * A resize is the ONE thing that invalidates the cached box, so every
+     * path that can resize it clears the cache before scheduling the redraw.
+     * Clearing rather than measuring here: the measurement then happens inside
+     * the animation frame, where it always did, instead of synchronously
+     * inside a resize event that may be one of a rapid series.
+     */
+    const onResize = () => {
+      boxSizeRef.current = null;
+      schedule();
+    };
+
     schedule();
     const unsubscribe = subscribe ? subscribe(schedule) : () => {};
-    window.addEventListener("resize", schedule);
+    window.addEventListener("resize", onResize);
+    /*
+     * **The element's own resizes, which `window.resize` never fired for.**
+     *
+     * The rail opening changes this box's width without the window changing
+     * size at all, and the old listener could not see it — the scrim kept
+     * drawing against a stale width until the next camera move happened to
+     * re-measure it. Caching the box would have made that permanent, so the
+     * observer is not an optimisation detail; it is what makes the cache
+     * correct, and it fixes a staleness that predates it.
+     */
+    const observer =
+      typeof ResizeObserver === "undefined" ? null : new ResizeObserver(onResize);
+    if (observer && boxRef.current) observer.observe(boxRef.current);
     return () => {
+      observer?.disconnect();
       if (frame.current !== null) {
         window.cancelAnimationFrame(frame.current);
         /*
@@ -320,7 +379,7 @@ export function StateFocusOverlay({
          */
         frame.current = null;
       }
-      window.removeEventListener("resize", schedule);
+      window.removeEventListener("resize", onResize);
       unsubscribe();
     };
   }, [outline, project, subscribe, zoomOf]);

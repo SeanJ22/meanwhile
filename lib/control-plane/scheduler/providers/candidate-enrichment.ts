@@ -27,9 +27,13 @@
  * ```
  *   candidate-site-recorded      the site we already hold, re-walked. RULING 53:
  *                                a held finding is re-established, not assumed
- *   candidate-wikipedia-api      en.wikipedia.org/w/api.php — Tier A, WIRED,
- *                                identified User-Agent, spaced. DISCOVERY ONLY
- *                                and never a source of record (RULING 87)
+ *   candidate-wikipedia-api      REGISTERED AS DISALLOWED, NOT AS A ROUTE.
+ *                                `en.wikipedia.org/robots.txt`, read
+ *                                2026-09-01, carries `Disallow: /w/` for
+ *                                `User-agent: *` with two narrow `Allow:`
+ *                                exceptions, and a search query is neither.
+ *                                A disallow is honoured and is NEVER re-walked
+ *                                on a clock
  *   candidate-marginalia-index   api.marginalia.nu/public/search — an
  *                                independent keyword index, walked 2026-08-24
  *                                with a real control (a `license` field and a
@@ -45,6 +49,13 @@
  *                                back to it. Left unregistered it would simply
  *                                be forgotten
  * ```
+ *
+ * **PERMISSION WAS READ BEFORE EACH ROUTE WAS BUILT, AND ONE READING KILLED A
+ * ROUTE.** `candidate-wikipedia-api` was first written as an openable HTTP GET
+ * on the strength of `docs/sources.md`'s Wikipedia row. Reading the host's own
+ * `robots.txt` refused it. The row is now a recorded DISALLOW, and the note it
+ * carries says which claim in `docs/sources.md` that falsifies — a question
+ * this lane raises and does not answer.
  *
  * **`4get.ca` is the reason this file names its walls.** The 2026-08-25 reading
  * recorded it as working; the 2026-08-26 re-measurement found the "names the
@@ -131,41 +142,71 @@ function siteRoute(c: CanonicalCandidacy, url: string): RouteDescriptor {
   };
 }
 
+/**
+ * **THE WIKIPEDIA SEARCH API IS DISALLOWED, AND THIS ROW SAYS SO.**
+ * (Measured 2026-09-01, lane C, before the workers were left running.)
+ *
+ * This route was FIRST REGISTERED AS AN OPENABLE HTTP GET against
+ * `https://en.wikipedia.org/w/api.php?action=query&list=search&…`, on the
+ * strength of `docs/sources.md`'s Wikipedia row — Tier A, WIRED, identified
+ * User-Agent, spaced. **That was a route built without reading the host's
+ * `robots.txt`, and the robots.txt refuses it.** Read verbatim on 2026-09-01:
+ *
+ * ```
+ *   User-agent: *
+ *   Allow: /w/api.php?action=mobileview&
+ *   Allow: /w/load.php?
+ *   Allow: /api/rest_v1/?doc
+ *   Allow: /w/rest.php/site/v1/sitemap
+ *   Disallow: /w/
+ *   Disallow: /api/
+ * ```
+ *
+ * `Disallow: /w/` covers `/w/api.php`, and the only two `Allow:` exceptions are
+ * `action=mobileview` and `load.php`. A search query is the disallowed form.
+ *
+ * **A DISALLOW IS NOT A WALL.** A wall is a host refusing us; it carries a date
+ * and RULING 53 sends a session back to re-walk it. A disallow is a host
+ * telling us not to ask, and re-testing it on a clock would be asking the same
+ * question after being told no. So this row is NOT_MACHINE_EXECUTABLE, it
+ * carries the operative line verbatim, and nothing schedules a retry of it.
+ *
+ * The compliant route to the same information exists and is a DISCOVERY step
+ * rather than a fetch: the Wikimedia REST API on `api.wikimedia.org`, whose
+ * `/robots.txt` answered HTTP 301 to a documentation page on 2026-09-01 — no
+ * robots document, which is an absence of restrictions and never a grant, and
+ * is recorded as `CANNOT_TELL` rather than resolved by fetching.
+ */
 function wikipediaRoute(c: CanonicalCandidacy): RouteDescriptor {
-  const params = new URLSearchParams({
-    action: "query",
-    list: "search",
-    srsearch: query(c),
-    srlimit: "10",
-    format: "json",
-    formatversion: "2",
-  });
   return {
     routeId: "candidate-wikipedia-api",
-    label: `${displayName(c)} — Wikipedia search API, DISCOVERY ONLY`,
-    executorClass: "DETERMINISTIC",
+    label: `${displayName(c)} — Wikipedia search API, DISALLOWED by robots.txt`,
+    executorClass: "BOUNDED_MODEL_WORKER",
     executorReason:
-      "the API shape is written down and stable; replaying a documented query needs no model",
+      "no deterministic client may open this path, because the host's own robots.txt refuses it. " +
+      "Finding the compliant route to the same facts is a scout's job",
     open: {
-      kind: "HTTP_GET",
-      url: `https://en.wikipedia.org/w/api.php?${params.toString()}`,
-      headers: identifiedHeaders(),
-    },
-    /*
-     * THE CONTROL, AS A YIELD CONTRACT. The MediaWiki API answers HTTP 200 with
-     * `{"query":{"search":[]}}` for a person who is not there, which is a real
-     * answer and not a wall — but a 200 with no `search` key at all is a
-     * different page entirely, and ingesting it as a reading of Wikipedia would
-     * be a two-byte-200 defect with a longer body.
-     */
-    yieldContract: {
-      describe: "a MediaWiki search response carrying query.search[]",
-      requireAll: ["query", "search"],
-      rowsAt: "query.search",
+      kind: "NOT_MACHINE_EXECUTABLE",
+      target: "https://en.wikipedia.org/w/api.php",
+      reason:
+        "DISALLOWED BY THE HOST'S OWN robots.txt, read 2026-09-01. `User-agent: *` carries " +
+        "`Disallow: /w/` with exactly two exceptions — `Allow: /w/api.php?action=mobileview&` and " +
+        "`Allow: /w/load.php?` — and a search query is neither. THIS IS NOT A WALL: the host is not " +
+        "refusing us, it is telling us not to ask, and RULING 53's re-walk clock applies to walls and " +
+        "never to disallows. The compliant route to the same facts is the Wikimedia REST API on " +
+        "api.wikimedia.org, whose /robots.txt answered HTTP 301 to a documentation page on 2026-09-01 " +
+        "— NO ROBOTS DOCUMENT, which is an absence of restrictions and never a grant, recorded " +
+        "CANNOT_TELL under RULING 182 and owed a permission reading before it is opened.",
     },
     citation:
-      "docs/sources.md — Wikipedia, en.wikipedia.org/w/api.php, Tier A, WIRED, identified User-Agent, " +
-      "spaced 400 ms; RULING 87 — DISCOVERY ONLY, never a source of record",
+      "https://en.wikipedia.org/robots.txt read 2026-09-01; docs/sources.md — Wikipedia, Tier A, " +
+      "RULING 87 DISCOVERY ONLY. NOTE FOR THE INTEGRATION OWNER: docs/sources.md records this host " +
+      "as WIRED at `en.wikipedia.org/w/api.php`, and that row's permission claim is falsified by the " +
+      "line above. Which of this repository's existing Wikipedia routes use a disallowed path is a " +
+      "question this lane raises and does not answer.",
+    awaitingAdapter:
+      "a permission reading of api.wikimedia.org, then an adapter for its REST search — the compliant " +
+      "route to the same discovery facts",
   };
 }
 
@@ -188,7 +229,14 @@ function marginaliaRoute(c: CanonicalCandidacy): RouteDescriptor {
     citation:
       "docs/sources.md — api.marginalia.nu/public/search, walked 2026-08-24, control: an impossible " +
       "term returns a `license` field and an empty `results` array. CC-BY-NC-SA 4.0 — DISCOVERY ONLY, " +
-      "so it may point at a URL and may never be a source of record here",
+      "so it may point at a URL and may never be a source of record here. PERMISSION RE-READ " +
+      "2026-09-01 BEFORE THIS ROUTE WAS REGISTERED: `https://marginalia.nu/robots.txt` answers 301 " +
+      "then HTTP 404 — the publisher serves NO robots document, which is an absence of restrictions " +
+      "and never a grant. `https://api.marginalia.nu/robots.txt` answers HTTP 401 to a bare client " +
+      "and to an identified one alike, which is a TRANSPORT answer and not a permission verdict " +
+      "(RULING 182, CANNOT_TELL). The endpoint itself answered HTTP 200 with a `license` field and a " +
+      "populated `results` array on the same date, and that licence is the publisher's own statement " +
+      "of the terms it is served under.",
   };
 }
 

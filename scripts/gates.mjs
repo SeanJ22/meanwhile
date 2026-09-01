@@ -286,9 +286,12 @@ console.log("local gates — the set CI requires (RULING 155)\n");
 const results = [];
 for (const gate of GATES) {
   const started = Date.now();
+  const nodeProcessesAtStart = countNodeProcesses();
   process.stdout.write(`  ${gate.id} … `);
   let status = "PASS";
   let detail = "";
+  let failureKind = null;
+  let suiteTotals = null;
   try {
     execSync(gate.command, {
       stdio: ["ignore", "pipe", "pipe"],
@@ -354,12 +357,61 @@ for (const gate of GATES) {
         .filter((l) => /error TS\d+|✖ \d+ problems|error {2}Error|Failed to compile|not ok \d/.test(l))
         .slice(0, 6);
       if (lines.length) detail += `\n${lines.map((l) => `        ${l.trim()}`).join("\n")}`;
+      /*
+       * **AN EARLY ABORT IS NOT AN ASSERTION FAILURE, AND SAYING SO IS THE
+       * WHOLE POINT.** (Part C, 2026-08-31. Measured, not theorised.)
+       *
+       * `data/ops/gate-runs/2026-08-31-41.json` recorded `test FAIL` at
+       * 18d1f808 and no session could ever name a failing test, because there
+       * was not one to name. The discriminating measurement is the CLOCK: the
+       * failing run took 59s and a complete passing run of the same tree takes
+       * 75s. **It failed FASTER than a full run takes.** A suite that fails an
+       * assertion still runs to the end and reports `fail N`; this one never
+       * reached the summary at all. Under concurrent load on this host — seven
+       * parallel agents running installs, builds and suites — a child process
+       * dies and `node --test` exits non-zero with nothing to report.
+       *
+       * That is a FALSE RED, it is reproducible on demand by running the gate
+       * under load, and until now the record it wrote was indistinguishable
+       * from a real failure. So the record now carries WHICH KIND, derived
+       * from the suite's own summary rather than from the exit code:
+       *
+       *   ASSERTION_FAILURE  a summary was printed and `fail` is above zero
+       *   EARLY_ABORT        exit non-zero with NO complete summary, or a
+       *                      summary reporting zero failures
+       *   UNATTRIBUTED       non-zero, and this gate prints no summary to read
+       *
+       * `EARLY_ABORT` is never evidence about the tree. A session that meets
+       * one RE-RUNS THE GATE ISOLATED before believing it — and may neither
+       * ship on it nor record it as green.
+       */
+      suiteTotals = parseSuiteTotals(out);
+      if (suiteTotals === null) {
+        failureKind = /^\s*(?:ℹ|#)\s*(?:tests|pass|fail)\b/m.test(out)
+          ? "EARLY_ABORT"
+          : "UNATTRIBUTED";
+      } else if (suiteTotals.fail > 0) {
+        failureKind = "ASSERTION_FAILURE";
+      } else {
+        failureKind = "EARLY_ABORT";
+      }
     }
   }
   const secs = ((Date.now() - started) / 1000).toFixed(0);
   console.log(`${status} (${secs}s)`);
   if (detail) console.log(`      ${detail}`);
-  results.push({ ...gate, status, secs });
+  if (failureKind === "EARLY_ABORT") {
+    console.log(
+      `      EARLY ABORT — exit non-zero with no failing test named` +
+        (suiteTotals
+          ? ` (the summary says tests ${suiteTotals.tests}, pass ${suiteTotals.pass}, fail ${suiteTotals.fail})`
+          : " (no complete summary was printed at all)") +
+        `.\n      ${nodeProcessesAtStart === null ? "Host node-process count unavailable" : `${nodeProcessesAtStart} node process(es) were running on this host when the gate started`}.` +
+        `\n      This is NOT evidence about the tree. Re-run this gate ISOLATED before` +
+        `\n      believing it. Do not ship on it, and do not record it as green.`,
+    );
+  }
+  results.push({ ...gate, status, secs, failureKind, suiteTotals, nodeProcessesAtStart });
 }
 
 console.log("\n  gate            CI job                        result");
@@ -392,6 +444,56 @@ console.log(
 writeGateRunRecord(results);
 
 process.exitCode = bad.length ? 1 : 0;
+}
+
+/**
+ * `node --test`'s own summary, or null when it never printed one.
+ *
+ * Both reporters are read: the spec reporter prefixes with `ℹ`, TAP with `#`.
+ * Null is the load-bearing answer — a non-zero exit with NO summary is a run
+ * that never reached the end, which is a different fact from a run that
+ * reached the end and reported failures.
+ */
+function parseSuiteTotals(out) {
+  const field = (name) => {
+    const m = new RegExp(`^\\s*(?:ℹ|#)\\s*${name}\\s+(\\d+)\\s*$`, "m").exec(out);
+    return m ? Number(m[1]) : null;
+  };
+  const tests = field("tests");
+  const pass = field("pass");
+  const fail = field("fail");
+  if (tests === null || pass === null || fail === null) return null;
+  return { tests, pass, fail };
+}
+
+/**
+ * How many `node` processes are on this host right now, or null.
+ *
+ * Cheap, portable and never fatal: a gate run may not fail because the host
+ * would not answer a question about itself. Null means UNKNOWN and is recorded
+ * as such — a missing measurement is never rendered as zero, which would read
+ * as "the host was idle" and is exactly the wrong conclusion to hand the next
+ * session reading a false RED.
+ */
+function countNodeProcesses() {
+  try {
+    if (process.platform === "win32") {
+      const out = execSync('tasklist /FI "IMAGENAME eq node.exe" /NH /FO CSV', {
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"],
+        timeout: 10_000,
+      });
+      return out.split("\n").filter((l) => /^"node\.exe"/i.test(l.trim())).length;
+    }
+    const out = execSync("ps -eo comm=", {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+      timeout: 10_000,
+    });
+    return out.split("\n").filter((l) => /(^|\/)node$/.test(l.trim())).length;
+  } catch {
+    return null;
+  }
 }
 
 function writeGateRunRecord(results) {
@@ -431,6 +533,21 @@ function writeGateRunRecord(results) {
       command: r.command,
       status: r.status,
       seconds: Number(r.secs),
+      /*
+       * WHY IT FAILED, not merely THAT it did. Null on a passing gate.
+       * See the EARLY_ABORT note in the runner above: a gate record that
+       * stores only `{status, seconds}` cannot tell a real failure from a
+       * process killed by host contention, and every reading of one of those
+       * has cost a full re-run to attribute.
+       */
+      failureKind: r.failureKind ?? null,
+      suiteTotals: r.suiteTotals ?? null,
+      /*
+       * HOW BUSY THE HOST WAS. The false RED on the test gate is producible on
+       * demand by running it under concurrent load, so the load is recorded
+       * beside the result rather than reconstructed from memory afterwards.
+       */
+      nodeProcessesAtStart: r.nodeProcessesAtStart ?? null,
     })),
     /*
      * WHO RAN THIS, recorded at run time. (Session B WI1.8.)

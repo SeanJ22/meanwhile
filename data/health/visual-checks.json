@@ -1,0 +1,376 @@
+[
+  {
+    "check": {
+      "id": "vac:ask-answer-dismiss",
+      "surface": "/",
+      "zip": "85701",
+      "viewport": { "width": 1280, "height": 900 },
+      "window": { "notBefore": null, "notAfter": null },
+      "status": { "state": "ACTIVE" },
+      "expectation": {
+        "kind": "WRITTEN_EXPECTATION",
+        "text": "ASK-16, 8.30.26: the owner met an Ask answer with no way to close or back out of it. Every Ask answer carries a control that retires it and leaves the question in the box. This certifies that the control is ON the answer panel; the dismissal BEHAVIOUR is a state change this check does not drive."
+      },
+      "property": "element_presence",
+      "evidenceKind": "DOM_EVALUATED"
+    },
+    "selector": "[data-ask-grounded] [data-ask-dismiss]",
+    "assertion": { "kind": "PRESENT" },
+    "setup": [
+      { "kind": "CLICK", "selector": "[data-ask-pill]" },
+      { "kind": "WAIT_FOR", "selector": "[data-ask-box]" },
+      { "kind": "FILL", "selector": "[data-ask-box]", "text": "Who is on the Pima County Board of Supervisors?" },
+      { "kind": "PRESS", "selector": "[data-ask-box]", "key": "Enter" },
+      { "kind": "WAIT_FOR", "selector": "[data-ask-grounded-mode]", "timeoutMs": 150000 }
+    ]
+  },
+  {
+    "check": {
+      "id": "vac:ask-answer-scrolls",
+      "surface": "/",
+      "zip": "85701",
+      "viewport": { "width": 1280, "height": 900 },
+      "window": { "notBefore": null, "notAfter": null },
+      "status": { "state": "ACTIVE" },
+      "expectation": {
+        "kind": "WRITTEN_EXPECTATION",
+        "text": "ASK-17, 8.30.26: the owner met an answer cut off with no way to scroll. The answer panel is bounded and scrolls to its end rather than cutting content off — a bounded height, a scrolling overflow, and scroll containment so the page behind does not take the wheel."
+      },
+      "property": "element_presence",
+      "evidenceKind": "DOM_EVALUATED"
+    },
+    "selector": "[data-ask-grounded].max-h-\\[60vh\\].overflow-y-auto.overscroll-contain",
+    "assertion": { "kind": "PRESENT" },
+    "setup": [
+      { "kind": "CLICK", "selector": "[data-ask-pill]" },
+      { "kind": "WAIT_FOR", "selector": "[data-ask-box]" },
+      { "kind": "FILL", "selector": "[data-ask-box]", "text": "Who is on the Pima County Board of Supervisors?" },
+      { "kind": "PRESS", "selector": "[data-ask-box]", "key": "Enter" },
+      { "kind": "WAIT_FOR", "selector": "[data-ask-grounded-mode]", "timeoutMs": 150000 }
+    ]
+  },
+  {
+    "check": {
+      "id": "vac:ask-roster-collapsed",
+      "surface": "/",
+      "zip": "85701",
+      "viewport": { "width": 1280, "height": 900 },
+      "window": { "notBefore": null, "notAfter": null },
+      "status": { "state": "ACTIVE" },
+      "expectation": {
+        "kind": "WRITTEN_EXPECTATION",
+        "text": "ASK-21, 8.30.26: the owner asked for the \"Who this is\" roster to be collapsed by default. The disclosure carries no `open`, so it starts collapsed, with its count on the summary and every contact still rendered behind it."
+      },
+      "property": "element_presence",
+      "evidenceKind": "DOM_EVALUATED"
+    },
+    "selector": "[data-ask-grounded] details[data-ask-contacts]",
+    "assertion": { "kind": "DETAILS_COLLAPSED" },
+    "setup": [
+      { "kind": "CLICK", "selector": "[data-ask-pill]" },
+      { "kind": "WAIT_FOR", "selector": "[data-ask-box]" },
+      { "kind": "FILL", "selector": "[data-ask-box]", "text": "Who is on the Pima County Board of Supervisors?" },
+      { "kind": "PRESS", "selector": "[data-ask-box]", "key": "Enter" },
+      { "kind": "WAIT_FOR", "selector": "[data-ask-grounded-mode]", "timeoutMs": 150000 },
+      { "kind": "WAIT_FOR", "selector": "[data-ask-grounded] details[data-ask-contacts]", "timeoutMs": 30000 }
+    ]
+  },
+  {
+    "check": {
+      "id": "vac:districts-door-agrees-with-tile",
+      "surface": "/",
+      "zip": "85701",
+      "viewport": { "width": 1280, "height": 900 },
+      "window": { "notBefore": null, "notAfter": null },
+      "status": { "state": "ACTIVE" },
+      "expectation": {
+        "kind": "WRITTEN_EXPECTATION",
+        "text": "MAP-5, 8.30.26: the districts door said boundaries were switched off and there was nothing to count while the tile beside it counted 33. The door describes what the map has actually drawn, and the switch-it-on offer appears only when the layer is off AND nothing is painted. With districts drawn, neither refusal sentence may be on the door."
+      },
+      "property": "text_content",
+      "evidenceKind": "DOM_EVALUATED"
+    },
+    "selector": ".door-overlay",
+    "assertion": {
+      "kind": "TEXT_ABSENT",
+      "needles": [
+        "switched off, so none are drawn and there is nothing to count",
+        "there is nothing to count",
+        "no district boundaries are drawn in this view yet"
+      ]
+    },
+    "setup": [
+      { "kind": "WAIT_FOR", "selector": ".stats-bar [data-stat=\"districts in view\"]", "timeoutMs": 60000 },
+      { "kind": "CLICK", "selector": ".stats-bar [data-stat=\"districts in view\"]" },
+      { "kind": "WAIT_FOR", "selector": ".door-overlay", "timeoutMs": 20000 }
+    ]
+  },
+  {
+    "check": {
+      "id": "vac:wgh-ordered-by-kind",
+      "surface": "/",
+      "zip": "85701",
+      "viewport": { "width": 1280, "height": 900 },
+      "window": { "notBefore": null, "notAfter": null },
+      "status": { "state": "ACTIVE" },
+      "expectation": {
+        "kind": "WRITTEN_EXPECTATION",
+        "text": "WGH-17, 8.30.26: local bodies had no hierarchy. Governing bodies order by what kind of government each is — county, city or town, school district, then other districts — and the criterion is STATED ON SCREEN, together with the scope sentence that says what the list is. An ordering nobody is told about is not a criterion a reader can check."
+      },
+      "property": "text_content",
+      "evidenceKind": "DOM_EVALUATED"
+    },
+    "selector": ".coverage-notice details:not([data-other-bodies-disclosure])",
+    "assertion": {
+      "kind": "TEXT_CONTAINS",
+      "needles": [
+        "ordered by what kind of government",
+        "whose boundaries cover this area",
+        "and by nothing else"
+      ]
+    },
+    "setup": [
+      { "kind": "WAIT_FOR", "selector": ".notice-fab", "timeoutMs": 60000 },
+      { "kind": "CLICK", "selector": ".notice-fab" },
+      { "kind": "WAIT_FOR", "selector": ".coverage-notice details:not([data-other-bodies-disclosure]) > summary", "timeoutMs": 30000 },
+      { "kind": "CLICK", "selector": ".coverage-notice details:not([data-other-bodies-disclosure]) > summary" }
+    ]
+  },
+  {
+    "check": {
+      "id": "vac:wgh-see-the-rest",
+      "surface": "/",
+      "zip": "85701",
+      "viewport": { "width": 1280, "height": 900 },
+      "window": { "notBefore": null, "notAfter": null },
+      "status": { "state": "ACTIVE" },
+      "expectation": {
+        "kind": "WRITTEN_EXPECTATION",
+        "text": "WGH-18, 8.30.26: tracked bodies were named but unreachable from the panel that counted them. The disclosure opens them in place, and the count on its summary is the count of the rows behind it — stated N equals rendered rows, which is the only form of that claim this project accepts."
+      },
+      "property": "stated_n_equals_rendered_rows",
+      "evidenceKind": "DOM_EVALUATED"
+    },
+    "selector": "[data-other-bodies-disclosure] > summary",
+    "assertion": {
+      "kind": "STATED_N_EQUALS_ROWS",
+      "statedPattern": "\\((\\d+)\\)",
+      "rowSelector": "[data-other-body-row]"
+    },
+    "setup": [
+      { "kind": "WAIT_FOR", "selector": ".notice-fab", "timeoutMs": 60000 },
+      { "kind": "CLICK", "selector": ".notice-fab" },
+      { "kind": "WAIT_FOR", "selector": "[data-other-bodies-disclosure] > summary", "timeoutMs": 30000 }
+    ]
+  },
+  {
+    "check": {
+      "id": "vac:wgh-no-completeness-claim",
+      "surface": "/",
+      "zip": "85701",
+      "viewport": { "width": 1280, "height": 900 },
+      "window": { "notBefore": null, "notAfter": null },
+      "status": { "state": "ACTIVE" },
+      "expectation": {
+        "kind": "WRITTEN_EXPECTATION",
+        "text": "WGH-19, 8.30.26: the \"Why these 8?\" explainer was inaccurate and read badly. It states the scope we can source and makes NO completeness claim: completeness is a property of the hunt, and a panel that says nothing is left out is asserting an absence about a government from our own record being finished. The explainer is OPENED before this reads, because a phrase hidden inside a collapsed disclosure is absent from innerText for a reason that has nothing to do with the product."
+      },
+      "property": "text_content",
+      "evidenceKind": "DOM_EVALUATED"
+    },
+    "selector": ".coverage-notice",
+    "assertion": {
+      "kind": "TEXT_ABSENT",
+      "needles": [
+        "none is left out",
+        "all of them are listed",
+        "this is every government",
+        "nothing is missing"
+      ]
+    },
+    "setup": [
+      { "kind": "WAIT_FOR", "selector": ".notice-fab", "timeoutMs": 60000 },
+      { "kind": "CLICK", "selector": ".notice-fab" },
+      { "kind": "WAIT_FOR", "selector": ".coverage-notice details:not([data-other-bodies-disclosure]) > summary", "timeoutMs": 30000 },
+      { "kind": "CLICK", "selector": ".coverage-notice details:not([data-other-bodies-disclosure]) > summary" },
+      { "kind": "CLICK", "selector": "[data-other-bodies-disclosure] > summary" }
+    ]
+  },
+  {
+    "check": {
+      "id": "vac:wgh-no-statewide-only-claim",
+      "surface": "/",
+      "zip": "85701",
+      "viewport": { "width": 1280, "height": 900 },
+      "window": { "notBefore": null, "notAfter": null },
+      "status": { "state": "ACTIVE" },
+      "expectation": {
+        "kind": "WRITTEN_EXPECTATION",
+        "text": "WGH-21, 8.30.26: the panel claimed the governor was the only statewide office listed while nine statewide officeholders rendered above it — a false claim about a government, contradicted by the surface making it. Nothing on the panel says that. The other half of this row, that the slate does render, is `vac:wgh-statewide-slate`; the pair is what makes neither of them vacuous."
+      },
+      "property": "text_content",
+      "evidenceKind": "DOM_EVALUATED"
+    },
+    "selector": ".coverage-notice",
+    "assertion": {
+      "kind": "TEXT_ABSENT",
+      "needles": [
+        "only statewide office",
+        "the only statewide",
+        "is the only office listed statewide"
+      ]
+    },
+    "setup": [
+      { "kind": "WAIT_FOR", "selector": ".notice-fab", "timeoutMs": 60000 },
+      { "kind": "CLICK", "selector": ".notice-fab" },
+      { "kind": "WAIT_FOR", "selector": ".coverage-notice", "timeoutMs": 30000 },
+      { "kind": "CLICK", "selector": ".coverage-notice details:not([data-other-bodies-disclosure]) > summary" }
+    ]
+  },
+  {
+    "check": {
+      "id": "vac:ballot-offices-from-record",
+      "surface": "/ballot?zip=85701",
+      "zip": "85701",
+      "viewport": { "width": 1280, "height": 900 },
+      "window": { "notBefore": null, "notAfter": null },
+      "status": { "state": "ACTIVE" },
+      "expectation": {
+        "kind": "WRITTEN_EXPECTATION",
+        "text": "BAL-33, 8.30.26: the ballot card claimed no office location while the map held full contact data for the same person. The Committees and Offices near you sections read the officeholder record the map reads — and where the member DIRECTORY source does not reach that person, the section renders its NAMED GAP rather than a blank. Graded on 2026-08-31 this went RED: both sections opened to innerHTML === \"\", zero children, because the slot was a truthy element that rendered null and the battlecard's `content ?? emptyLine` tests the slot. A null renders as its named gap on every surface, always."
+      },
+      "property": "text_content",
+      "evidenceKind": "DOM_EVALUATED"
+    },
+    "selector": "[data-candidate-battlecard] .card-section[data-open] .card-section-body",
+    "assertion": {
+      "kind": "TEXT_CONTAINS",
+      "needles": ["office location"]
+    },
+    "setup": [
+      { "kind": "WAIT_FOR", "selector": "[data-battlecard-pill]", "timeoutMs": 60000 },
+      { "kind": "CLICK", "selector": "[data-battlecard-pill]" },
+      { "kind": "WAIT_FOR", "selector": "[data-candidate-battlecard]", "timeoutMs": 30000 },
+      { "kind": "CLICK", "selector": "[data-candidate-battlecard] .card-section:nth-of-type(4) .card-section-header" },
+      { "kind": "WAIT_FOR", "selector": "[data-candidate-battlecard] .card-section[data-open] .card-section-body", "timeoutMs": 20000 }
+    ]
+  },
+  {
+    "check": {
+      "id": "vac:ballot-contact-routes",
+      "surface": "/ballot?zip=85701",
+      "zip": "85701",
+      "viewport": { "width": 1280, "height": 900 },
+      "window": { "notBefore": null, "notAfter": null },
+      "status": { "state": "ACTIVE" },
+      "expectation": {
+        "kind": "WRITTEN_EXPECTATION",
+        "text": "BAL-35, 8.30.26: the ballot and the map read different records for the same person. One record per person, consumed by both surfaces — the ballot battlecard renders the same ContactPills over the same SeatHolder the map renders. The three named routes are asserted by name; the phone route is a published number that would churn this check if it were pinned, and it is visible in the rendered text the verdict quotes."
+      },
+      "property": "text_content",
+      "evidenceKind": "DOM_EVALUATED"
+    },
+    "selector": "[data-candidate-battlecard] [data-ballot-contact-row]",
+    "assertion": {
+      "kind": "TEXT_CONTAINS",
+      "needles": ["Email", "Contact form", "Official page"]
+    },
+    "setup": [
+      { "kind": "WAIT_FOR", "selector": "[data-battlecard-pill]", "timeoutMs": 60000 },
+      { "kind": "CLICK", "selector": "[data-battlecard-pill]" },
+      { "kind": "WAIT_FOR", "selector": "[data-candidate-battlecard]", "timeoutMs": 30000 }
+    ]
+  },
+  {
+    "check": {
+      "id": "vac:map-battlecard-complete",
+      "surface": "/",
+      "zip": "85701",
+      "viewport": { "width": 1280, "height": 900 },
+      "window": { "notBefore": null, "notAfter": null },
+      "status": { "state": "ACTIVE" },
+      "expectation": {
+        "kind": "WRITTEN_EXPECTATION",
+        "text": "POS-1, 8.30.26, a POSITIVE the owner asked to keep: map battlecards render the complete card, and they are the reference standard the other surfaces are measured against. Recorded so a later change cannot silently reduce it — the four unconditional sections must all be on the card."
+      },
+      "property": "text_content",
+      "evidenceKind": "DOM_EVALUATED"
+    },
+    "selector": ".account-modal",
+    "assertion": {
+      "kind": "TEXT_CONTAINS",
+      "needles": ["What this office does", "Positions", "Campaign money", "Sources"]
+    },
+    "setup": [
+      { "kind": "WAIT_FOR", "selector": ".notice-fab", "timeoutMs": 60000 },
+      { "kind": "CLICK", "selector": ".notice-fab" },
+      { "kind": "WAIT_FOR", "selector": ".coverage-notice .person-row-name button", "timeoutMs": 30000 },
+      { "kind": "CLICK", "selector": ".coverage-notice .person-row-name button" },
+      { "kind": "WAIT_FOR", "selector": ".popup-card-more", "timeoutMs": 20000 },
+      { "kind": "CLICK", "selector": ".popup-card-more" },
+      { "kind": "WAIT_FOR", "selector": ".account-modal", "timeoutMs": 20000 }
+    ]
+  },
+  {
+    "check": {
+      "id": "vac:meeting-card-agenda-wording",
+      "surface": "/",
+      "zip": "85701",
+      "viewport": { "width": 1280, "height": 900 },
+      "window": { "notBefore": null, "notAfter": null },
+      "status": { "state": "ACTIVE" },
+      "expectation": {
+        "kind": "WRITTEN_EXPECTATION",
+        "text": "POS-2, 8.30.26, a POSITIVE the owner asked to keep — with the finding attached to it. The owner kept the meeting card's register; the sweep recorded that the sentence was then driven by a bare `agendaUrl === null`, so it asserted an absence about a GOVERNMENT from OUR OWN record being empty, and tracked that as SWEEP-01. The register is kept and the attribution is now the check: the line says WHOSE gap it is. \"We haven't recorded an agenda for this meeting yet\" is a fact about us; \"no agenda posted yet\" was a fact about them that we could not evidence, and it is gone."
+      },
+      "property": "text_content",
+      "evidenceKind": "DOM_EVALUATED"
+    },
+    "selector": ".panel article p.uppercase",
+    "assertion": {
+      "kind": "TEXT_ABSENT",
+      "needles": [
+        "no agenda posted yet",
+        "no agenda posted",
+        "agenda not posted",
+        "has not posted an agenda",
+        "hasn't posted an agenda"
+      ]
+    },
+    "setup": [
+      { "kind": "WAIT_FOR", "selector": ".stats-bar [data-stat=\"meetings\"]", "timeoutMs": 60000 },
+      { "kind": "CLICK", "selector": ".stats-bar [data-stat=\"meetings\"]" },
+      { "kind": "WAIT_FOR", "selector": ".al-group-head", "timeoutMs": 30000 },
+      { "kind": "CLICK", "selector": ".al-group-head" },
+      { "kind": "WAIT_FOR", "selector": ".al-row", "timeoutMs": 20000 },
+      { "kind": "CLICK", "selector": ".al-row" },
+      { "kind": "WAIT_FOR", "selector": ".panel article p.uppercase", "timeoutMs": 30000 }
+    ]
+  },
+  {
+    "check": {
+      "id": "vac:wgh-statewide-slate",
+      "surface": "/",
+      "zip": "85641",
+      "viewport": { "width": 1280, "height": 900 },
+      "window": { "notBefore": null, "notAfter": null },
+      "status": { "state": "ACTIVE" },
+      "expectation": {
+        "kind": "WRITTEN_EXPECTATION",
+        "text": "POS-3, 8.30.26, a POSITIVE the owner asked to keep: the state-level officeholder slate on Who Governs Here is good. Recorded at the owner's own zip, 85641. It is also what stops `vac:wgh-no-statewide-only-claim` from passing on an empty section — an absence check with nothing rendered beside it certifies nothing."
+      },
+      "property": "text_content",
+      "evidenceKind": "DOM_EVALUATED"
+    },
+    "selector": ".coverage-notice",
+    "assertion": {
+      "kind": "TEXT_CONTAINS",
+      "needles": ["Kris Mayes", "Kimberly Yee", "Tom Horne", "Katie Hobbs"]
+    },
+    "setup": [
+      { "kind": "WAIT_FOR", "selector": ".notice-fab", "timeoutMs": 60000 },
+      { "kind": "CLICK", "selector": ".notice-fab" },
+      { "kind": "WAIT_FOR", "selector": ".coverage-notice", "timeoutMs": 30000 }
+    ]
+  }
+]

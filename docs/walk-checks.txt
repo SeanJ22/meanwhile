@@ -88,6 +88,30 @@
 [0819] 85641: the ask box is on the who-governs card
 [0819] 85701: the ask box is on the who-governs card
 [0819] D40: distinct officials render distinct campaign books
+[BAL25] 07866: prose keeps a readable measure while the container widens
+[BAL25] 07866: the ballot does not scroll sideways at 1280
+[BAL25] 07866: the ballot does not scroll sideways at 390
+[BAL25] 07866: the ballot fills the desktop width rather than a 672px column
+[BAL25] 07866: the contest grid really is two columns at 1280
+[BAL25] 85629: prose keeps a readable measure while the container widens
+[BAL25] 85629: the ballot does not scroll sideways at 1280
+[BAL25] 85629: the ballot does not scroll sideways at 390
+[BAL25] 85629: the ballot fills the desktop width rather than a 672px column
+[BAL25] 85629: the contest grid really is two columns at 1280
+[BAL26] 07866: the Ask affordance sits ABOVE the contests at 1280
+[BAL26] 07866: the Ask affordance sits ABOVE the contests at 390
+[BAL26] 07866: the Ask panel opens at 390 without pushing the page sideways
+[BAL26] 07866: the Ask panel opens from the pill at 1280, input and submit inside it
+[BAL26] 85629: the Ask affordance sits ABOVE the contests at 1280
+[BAL26] 85629: the Ask affordance sits ABOVE the contests at 390
+[BAL26] 85629: the Ask panel opens at 390 without pushing the page sideways
+[BAL26] 85629: the Ask panel opens from the pill at 1280, input and submit inside it
+[BAL30] 07866: a measure with no recorded statement names the gap as OURS
+[BAL30] 07866: every measure with recorded question text renders it
+[BAL30] 07866: no local measure renders under the statewide heading
+[BAL30] 85629: a measure with no recorded statement names the gap as OURS
+[BAL30] 85629: every measure with recorded question text renders it
+[BAL30] 85629: no local measure renders under the statewide heading
 [F01C2] 07866: a multi-day window carries the affordance too
 [F01C2] 07866: every candidate row carries a battlecard pill
 [F01C2] 07866: every dated voting event can be calendared
@@ -128,6 +152,42 @@
 [F22] 85701: the polling-place pointer renders exactly once on the ballot
 [NHHUNT] 07866: no per-card completeness count or enumeration anywhere on the ballot
 [NHHUNT] 85701: no per-card completeness count or enumeration anywhere on the ballot
+[SB0831] 03255: confirming an address CHANGES the panel to the resolved scope
+[SB0831] 03255: no district the address ruled out is rendered, marked or disclosed
+[SB0831] 03255: no seat row renders an identifier or an unnamed district
+[SB0831] 03255: the districts a confirmed address settled are the districts the panel lists
+[SB0831] 07866: both ballot columns start at the same height
+[SB0831] 07866: confirming an address CHANGES the panel to the resolved scope
+[SB0831] 07866: no district the address ruled out is rendered, marked or disclosed
+[SB0831] 07866: no seat row renders an identifier or an unnamed district
+[SB0831] 07866: the ballot really is two columns of equal width at 1280
+[SB0831] 07866: the districts a confirmed address settled are the districts the panel lists
+[SB0831] 07866: the two-column ballot has no hole between consecutive cards
+[SB0831] 85641: confirming an address CHANGES the panel to the resolved scope
+[SB0831] 85641: no district the address ruled out is rendered, marked or disclosed
+[SB0831] 85641: no seat row renders an identifier or an unnamed district
+[SB0831] 85641: the districts a confirmed address settled are the districts the panel lists
+[SB0831] 85701: both ballot columns start at the same height
+[SB0831] 85701: confirming an address CHANGES the panel to the resolved scope
+[SB0831] 85701: no district the address ruled out is rendered, marked or disclosed
+[SB0831] 85701: no seat row renders an identifier or an unnamed district
+[SB0831] 85701: the ballot really is two columns of equal width at 1280
+[SB0831] 85701: the districts a confirmed address settled are the districts the panel lists
+[SB0831] 85701: the two-column ballot has no hole between consecutive cards
+[SC0831] 03255: a candidate the state holds a filing for renders the filed totals
+[SC0831] 03255: a candidate the state holds nothing for renders a sourced absence, never a zero
+[SC0831] 03255: a device revisiting with a kept resolution lists the settled districts
+[SC0831] 03255: the panel a reader sees after typing lists the districts the resolver settled
+[SC0831] 03255: typing an address into the prompt moves the panel in the same tab, no reload
+[SC0831] 07866: a device revisiting with a kept resolution lists the settled districts
+[SC0831] 07866: the panel a reader sees after typing lists the districts the resolver settled
+[SC0831] 07866: typing an address into the prompt moves the panel in the same tab, no reload
+[SC0831] 85641: a device revisiting with a kept resolution lists the settled districts
+[SC0831] 85641: the panel a reader sees after typing lists the districts the resolver settled
+[SC0831] 85641: typing an address into the prompt moves the panel in the same tab, no reload
+[SC0831] 85701: a device revisiting with a kept resolution lists the settled districts
+[SC0831] 85701: the panel a reader sees after typing lists the districts the resolver settled
+[SC0831] 85701: typing an address into the prompt moves the panel in the same tab, no reload
 [f] 03255: Kearsarge Regional School District's sittings
 [g10] 85701: agenda attribution reaches the served payload
 [g10] 85701: an unresolved heading is attributed to NOTHING, never to the host
@@ -344,6 +404,7 @@
 [g8] 85701: no internal source id on /ballot
 [g8] 85701: no internal source id on the map's server HTML
 [g8] 85701: the map's server HTML carries the current product name, not the old one
+[g8] PLANTED: an adapter id in reader text is still caught, a source URL is not
 [g9] /feedback serves the form and says what happens to it
 [g9] /feedback: carries no personal email address
 [g9] /transparency discloses the feedback store

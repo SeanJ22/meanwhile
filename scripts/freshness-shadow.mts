@@ -81,6 +81,7 @@ import {
   closeOccurrence,
   loadDebts,
   openOccurrence,
+  resumeOpenOccurrence,
   persistDebts,
   recordNextDue,
   syncObligations,
@@ -220,6 +221,8 @@ const nextDueByObligation = new Map<string, string>();
 let opened = 0;
 /** Due obligations this cycle deliberately did not START. Never silent. */
 let deferredForCeiling = 0;
+/** Occurrences a previous cycle opened and did not reach, picked back up. */
+let resumedCount = 0;
 /** Everything due, collected before any occurrence is opened, so it can be
  *  sorted into the dispatcher's own oldest-first order. */
 const dueThisCycle: { obligation: (typeof sync.all)[number]; nextDueAt: string }[] = [];
@@ -298,12 +301,30 @@ for (const { obligation: o, nextDueAt } of dueThisCycle) {
     deferredForCeiling += 1;
     continue;
   }
+  /*
+   * RESUME BEFORE OPENING. An occurrence a previous cycle opened and did not
+   * reach is real work with a real WorkItem and a real RouteTask; opening a
+   * second one beside it strands the first, and a stranded open occurrence
+   * reads back as a worker that abandoned a route.
+   */
+  const resumed = await resumeOpenOccurrence(repos, o);
+  if (resumed !== null) {
+    occurrenceByObligation.set(o.id, resumed);
+    resumedCount += 1;
+    opened += 1;
+    continue;
+  }
   const occ = await openOccurrence(repos, { obligation: o, dueAt: row.nextDueAt, now: NOW });
   if (occ === null) continue;
   occurrenceByObligation.set(o.id, { id: occ.occurrence.id, routeTaskId: occ.routeTask.id });
   opened += 1;
 }
-console.log(`  occurrences opened this cycle: ${opened} (each with its OWN WorkItem and RouteTask)`);
+console.log(
+  `  occurrences opened this cycle: ${opened} (each with its OWN WorkItem and RouteTask)` +
+    (resumedCount > 0
+      ? ` — ${resumedCount} of them RESUMED from an earlier cycle that opened them and did not reach them`
+      : ""),
+);
 if (deferredForCeiling > 0) {
   console.log(
     `  ${deferredForCeiling} due obligation(s) got NO occurrence this cycle: the stated ceiling is ` +

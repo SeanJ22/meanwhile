@@ -502,7 +502,15 @@ export function projectionFrom(corpus: readonly FilerRow[]): {
   /** How many corpus reads happened. A projection makes zero requests. */
   outboundRequests: () => number;
 } {
-  let outbound = 0;
+  /*
+   * ZERO, AND IT IS A CONSTANT ON PURPOSE.
+   *
+   * Nothing in this closure can increment it, because nothing in this closure
+   * can make a request. A `let` here would be the honest shape if there were a
+   * network path to count; there is not, and a counter that could move would
+   * imply there was one.
+   */
+  const outbound = 0;
   return {
     outboundRequests: () => outbound,
     filersFor: async (surname: string): Promise<FilerRead> => {

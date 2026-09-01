@@ -731,10 +731,19 @@ console.log(`\n─── RULING 229: the acquisition denominator and the reader 
 console.log(`  ${projectionLine(readerProjection)}`);
 const readiness = newZipReadiness(readerProjection);
 console.log(`  NEW-ZIP READINESS: ${readiness.ready ? "READY" : "NOT READY"} — ${readiness.why}`);
+/*
+ * `statedBy` is nullable ON THE TYPE because a publisher that states no count
+ * is a real case and one this project must not paper over. ELEC states one —
+ * its own dropdown IS the count — so the null branch is a defect in the read
+ * rather than a state of the world, and it says so instead of printing "null".
+ */
 console.log(
-  `  ELEC locations held ${universe.held} of ${universe.statedBy} stated · ` +
-    `${universe.statedBy - universe.held} still owed. Every one of them is enumerated by name in ` +
-    "data/jurisdictions/nj.json and carries a durable obligation.",
+  universe.statedBy === null
+    ? "  ELEC stated NO location count on this run — the dropdown parse produced no denominator, which " +
+        "is a failed read of our own input and never a New Jersey with an unknown number of filing offices."
+    : `  ELEC locations held ${universe.held} of ${universe.statedBy} stated · ` +
+      `${universe.statedBy - universe.held} still owed. Every one of them is enumerated by name in ` +
+      "data/jurisdictions/nj.json and carries a durable obligation.",
 );
 /*
  * **AND THE PART THAT IS STILL PROJECTION-BOUND, SAID PLAINLY.**

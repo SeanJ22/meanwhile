@@ -241,7 +241,9 @@ test("NH: the held corpus proves its denominator against the publisher's own cou
 });
 
 test("NH: a corpus shorter than the stated total is REFUSED, not used", () => {
-  const held = loadCorpus(NH_CORPUS) as { rows: FilerRow[]; statedTotalItems: number };
+  const loaded = loadCorpus(NH_CORPUS);
+  assert.ok(!("error" in loaded), "the real corpus must load before its refusal can be exercised");
+  const held = loaded;
   /* The refusal is what keeps a partial from becoming a smaller universe.
      Written against a temporary file so the real corpus is never touched. */
   const tmp = join(ROOT, "data", "campaign-finance", "nh-cfs-filer-index-2026.json");

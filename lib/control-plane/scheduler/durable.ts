@@ -256,6 +256,40 @@ export async function syncObligations(
 }
 
 /**
+ * **RESUME THE OCCURRENCE THIS OBLIGATION ALREADY HAS OPEN.**
+ * (Session C3, lane C, 2026-09-01.)
+ *
+ * ## The state this exists to stop accumulating
+ *
+ * `openOccurrence` always opens sequence N+1. That was right while every due
+ * obligation was dispatched in the same cycle that opened it — the occurrence
+ * was opened, worked and closed before the next cycle looked.
+ *
+ * Under RULING 229 the corpus is the authoritative source universe and a cycle
+ * carries a stated dispatch ceiling, so an occurrence can now be opened and not
+ * reached. Opening a fresh one next cycle strands the first: an occurrence with
+ * an open WorkItem and an open RouteTask that nothing will ever dispatch, which
+ * **reads back as a worker that abandoned a route** — a false statement about a
+ * worker, produced by arithmetic in the runner.
+ *
+ * So a cycle RESUMES what is open before it opens anything. Returns null when
+ * there is nothing open, which is the normal case and the one that opens.
+ */
+export async function resumeOpenOccurrence(
+  repos: ControlPlaneRepositories,
+  obligation: StandingObligation,
+): Promise<{ readonly id: string; readonly routeTaskId: string } | null> {
+  if (obligation.openOccurrenceId === null) return null;
+  const held = await repos.occurrences.read(obligation.openOccurrenceId);
+  if (held === null) return null;
+  /* A CLOSED occurrence is finished work and is never re-dispatched: its
+     RouteTask carries a committed disposition, and re-opening it would attach a
+     second Attempt to a settled task. */
+  if (held.value.closedAt !== null) return null;
+  return { id: held.value.id, routeTaskId: held.value.routeTaskId };
+}
+
+/**
  * Open the next occurrence of a due obligation, with its own WorkItem and
  * RouteTask.
  *

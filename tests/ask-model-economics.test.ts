@@ -193,9 +193,14 @@ test("RULING 230 seeded: BOTH ARMS FAILING one question yields HOLD, never SWITC
   assert.deepEqual([...relative.bothArmsFailed], ["Q5"]);
   assert.deepEqual([...relative.degraded], []);
   assert.equal(relative.isNotASwitchVerdict, true);
+  /* No switch-shaped member, checked over the VALUE rather than the type — the
+     compiler already refuses `relative.kind === "SWITCH"` as an impossible
+     comparison, which is the structural half of the same guarantee. */
+  const members = Object.keys(relative);
+  assert.ok(!members.includes("to"), "the diagnostic must carry no target model");
   assert.ok(
-    !("to" in relative) && !("kind" in relative && relative.kind === "SWITCH"),
-    "the diagnostic must carry no switch-shaped member",
+    !["SWITCH", "HOLD", "NOT_MEASURED"].includes(relative.kind),
+    `the diagnostic's kind is ${relative.kind}; it must not reuse a verdict name`,
   );
 });
 

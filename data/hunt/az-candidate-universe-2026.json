@@ -1,0 +1,2451 @@
+{
+ "formatVersion": 1,
+ "stateCode": "AZ",
+ "cycle": 2026,
+ "generatedBy": "scripts/candidate-universe.mts",
+ "generatedOn": "2026-09-01",
+ "_note": [
+  "GENERATED ARTIFACT — never hand-edited (RULING 92). Regenerate with `pnpm candidates:universe`.",
+  "",
+  "RULING 229: this is the ACQUISITION DENOMINATOR for candidate enrichment in this state. It is",
+  "keyed to the STATE and the OFFICE, never to a ZIP, a county or a pilot ballot. `pilotIds` keeps",
+  "the join to the certified ballots this identity was seen on, so a reader projection is a JOIN and",
+  "never a rename.",
+  "",
+  "IT IS THE LARGEST DENOMINATOR DERIVABLE FROM COMMITTED SOURCES TODAY, and it is not the state's",
+  "candidate universe. `derivedFrom` names every document it was built from. A candidate absent from",
+  "all of them is absent from THIS FILE — never absent from the ballot.",
+  "",
+  "FOUND / SEARCHED_NO_RESULT / UNWORKED are three different facts. A field nobody looked for is",
+  "UNWORKED. A field searched and not found carries the date it was searched. Neither is ever a",
+  "statement that the candidate has no such thing."
+ ],
+ "derivedFrom": [
+  {
+   "path": "data/ballot/az-pima-2026.json",
+   "candidaciesContributed": 55
+  }
+ ],
+ "candidacies": [
+  {
+   "id": "az:2026:state-az-cd-6:u-s-representative-district-6:bah-iman",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-cd-6:u-s-representative-district-6",
+   "officeTitle": "U.S. Representative, District 6",
+   "ocdId": "ocd-division/country:us/state:az/cd:6",
+   "givenName": "Iman",
+   "familyName": "Bah",
+   "partyLabel": "Arizona Independent Party",
+   "pilotIds": [
+    "ballot-az-pima:us-house-6:bah-iman"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-cd-6:u-s-representative-district-6:ciscomani-juan",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-cd-6:u-s-representative-district-6",
+   "officeTitle": "U.S. Representative, District 6",
+   "ocdId": "ocd-division/country:us/state:az/cd:6",
+   "givenName": "Juan",
+   "familyName": "Ciscomani",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:us-house-6:ciscomani-juan"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-cd-6:u-s-representative-district-6:mendoza-joanna",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-cd-6:u-s-representative-district-6",
+   "officeTitle": "U.S. Representative, District 6",
+   "ocdId": "ocd-division/country:us/state:az/cd:6",
+   "givenName": "JoAnna",
+   "familyName": "Mendoza",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:us-house-6:mendoza-joanna"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-cd-6:u-s-representative-district-6:peters-jereme-lance",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-cd-6:u-s-representative-district-6",
+   "officeTitle": "U.S. Representative, District 6",
+   "ocdId": "ocd-division/country:us/state:az/cd:6",
+   "givenName": "Jereme Lance",
+   "familyName": "Peters",
+   "partyLabel": "Libertarian",
+   "pilotIds": [
+    "ballot-az-pima:us-house-6:peters-jereme-lance"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "SEARCHED_NO_RESULT",
+     "checkedAt": "2026-08-13",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-cd-7:u-s-representative-district-7:butierez-sr-daniel-francis",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-cd-7:u-s-representative-district-7",
+   "officeTitle": "U.S. Representative, District 7",
+   "ocdId": "ocd-division/country:us/state:az/cd:7",
+   "givenName": "Daniel Francis",
+   "familyName": "Butierez Sr.",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:us-house-7:butierez-sr--daniel-francis"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-cd-7:u-s-representative-district-7:grijalva-adelita",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-cd-7:u-s-representative-district-7",
+   "officeTitle": "U.S. Representative, District 7",
+   "ocdId": "ocd-division/country:us/state:az/cd:7",
+   "givenName": "Adelita",
+   "familyName": "Grijalva",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:us-house-7:grijalva-adelita"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-sldl-17:state-representative-district-17:keshel-rachel-jones",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-sldl-17:state-representative-district-17",
+   "officeTitle": "State Representative, District 17",
+   "ocdId": "ocd-division/country:us/state:az/sldl:17",
+   "givenName": "Rachel \"Jones\"",
+   "familyName": "Keshel",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:state-house-17:keshel"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Pima County Elections Department, 2026 Primary Election Official Candidate List (updated 2026-05-21) — https://content.civicplus.com/api/assets/az-pimacounty/e3efef88-46d4-421c-817b-50200031aef3"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-sldl-17:state-representative-district-17:lyon-hollace-holly",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-sldl-17:state-representative-district-17",
+   "officeTitle": "State Representative, District 17",
+   "ocdId": "ocd-division/country:us/state:az/sldl:17",
+   "givenName": "Hollace \"Holly\"",
+   "familyName": "Lyon",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:state-house-17:lyon"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Pima County Elections Department, 2026 Primary Election Official Candidate List (updated 2026-05-21) — https://content.civicplus.com/api/assets/az-pimacounty/e3efef88-46d4-421c-817b-50200031aef3"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-sldl-17:state-representative-district-17:volk-kevin",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-sldl-17:state-representative-district-17",
+   "officeTitle": "State Representative, District 17",
+   "ocdId": "ocd-division/country:us/state:az/sldl:17",
+   "givenName": "Kevin",
+   "familyName": "Volk",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:state-house-17:volk"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Pima County Elections Department, 2026 Primary Election Official Candidate List (updated 2026-05-21) — https://content.civicplus.com/api/assets/az-pimacounty/e3efef88-46d4-421c-817b-50200031aef3"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-sldl-17:state-representative-district-17:winchester-john",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-sldl-17:state-representative-district-17",
+   "officeTitle": "State Representative, District 17",
+   "ocdId": "ocd-division/country:us/state:az/sldl:17",
+   "givenName": "John",
+   "familyName": "Winchester",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:state-house-17:winchester"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Pima County Elections Department, 2026 Primary Election Official Candidate List (updated 2026-05-21) — https://content.civicplus.com/api/assets/az-pimacounty/e3efef88-46d4-421c-817b-50200031aef3"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-sldl-19:state-representative-district-19:anderson-jackie-o-donnell",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-sldl-19:state-representative-district-19",
+   "officeTitle": "State Representative, District 19",
+   "ocdId": "ocd-division/country:us/state:az/sldl:19",
+   "givenName": "Jackie O'Donnell",
+   "familyName": "Anderson",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:state-house-19:anderson-jackie-o-donnell"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "SEARCHED_NO_RESULT",
+     "checkedAt": "2026-08-13",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-sldl-19:state-representative-district-19:caswell-cheryl",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-sldl-19:state-representative-district-19",
+   "officeTitle": "State Representative, District 19",
+   "ocdId": "ocd-division/country:us/state:az/sldl:19",
+   "givenName": "Cheryl",
+   "familyName": "Caswell",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:state-house-19:caswell-cheryl"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-sldl-19:state-representative-district-19:diaz-lupe",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-sldl-19:state-representative-district-19",
+   "officeTitle": "State Representative, District 19",
+   "ocdId": "ocd-division/country:us/state:az/sldl:19",
+   "givenName": "Lupe",
+   "familyName": "Diaz",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:state-house-19:diaz-lupe"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-sldl-19:state-representative-district-19:gowan-david",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-sldl-19:state-representative-district-19",
+   "officeTitle": "State Representative, District 19",
+   "ocdId": "ocd-division/country:us/state:az/sldl:19",
+   "givenName": "David",
+   "familyName": "Gowan",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:state-house-19:gowan-david"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-sldl-19:state-representative-district-19:swallow-aiden-nicholette",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-sldl-19:state-representative-district-19",
+   "officeTitle": "State Representative, District 19",
+   "ocdId": "ocd-division/country:us/state:az/sldl:19",
+   "givenName": "Aiden Nicholette",
+   "familyName": "Swallow",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:state-house-19:swallow-aiden-nicholette"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-sldl-20:state-representative-district-20:diaz-genoveva",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-sldl-20:state-representative-district-20",
+   "officeTitle": "State Representative, District 20",
+   "ocdId": "ocd-division/country:us/state:az/sldl:20",
+   "givenName": "Genoveva",
+   "familyName": "Diaz",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:state-house-20:diaz-genoveva"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-sldl-20:state-representative-district-20:gonzales-sally-ann",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-sldl-20:state-representative-district-20",
+   "officeTitle": "State Representative, District 20",
+   "ocdId": "ocd-division/country:us/state:az/sldl:20",
+   "givenName": "Sally Ann",
+   "familyName": "Gonzales",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:state-house-20:gonzales-sally-ann"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-sldl-20:state-representative-district-20:koehler-ben",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-sldl-20:state-representative-district-20",
+   "officeTitle": "State Representative, District 20",
+   "ocdId": "ocd-division/country:us/state:az/sldl:20",
+   "givenName": "Ben",
+   "familyName": "Koehler",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:state-house-20:koehler-ben"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-sldl-20:state-representative-district-20:villegas-betty",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-sldl-20:state-representative-district-20",
+   "officeTitle": "State Representative, District 20",
+   "ocdId": "ocd-division/country:us/state:az/sldl:20",
+   "givenName": "Betty",
+   "familyName": "Villegas",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:state-house-20:villegas-betty"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-sldu-17:state-senator-district-17:king-christopher",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-sldu-17:state-senator-district-17",
+   "officeTitle": "State Senator, District 17",
+   "ocdId": "ocd-division/country:us/state:az/sldu:17",
+   "givenName": "Christopher",
+   "familyName": "King",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:state-senate-17:king"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Pima County Elections Department, Official Canvass of the July 21, 2026 Primary Election, certified 2026-07-30 — https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-sldu-17:state-senator-district-17:soto-edgar",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-sldu-17:state-senator-district-17",
+   "officeTitle": "State Senator, District 17",
+   "ocdId": "ocd-division/country:us/state:az/sldu:17",
+   "givenName": "Edgar",
+   "familyName": "Soto",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:state-senate-17:soto"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Pima County Elections Department, Official Canvass of the July 21, 2026 Primary Election, certified 2026-07-30 — https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-sldu-19:state-senator-district-19:griffin-gail",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-sldu-19:state-senator-district-19",
+   "officeTitle": "State Senator, District 19",
+   "ocdId": "ocd-division/country:us/state:az/sldu:19",
+   "givenName": "Gail",
+   "familyName": "Griffin",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:state-senate-19:griffin-gail"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-sldu-19:state-senator-district-19:slawson-ryan",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-sldu-19:state-senator-district-19",
+   "officeTitle": "State Senator, District 19",
+   "ocdId": "ocd-division/country:us/state:az/sldu:19",
+   "givenName": "Ryan",
+   "familyName": "Slawson",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:state-senate-19:slawson-ryan"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-sldu-20:state-senator-district-20:hernandez-alma",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-sldu-20:state-senator-district-20",
+   "officeTitle": "State Senator, District 20",
+   "ocdId": "ocd-division/country:us/state:az/sldu:20",
+   "givenName": "Alma",
+   "familyName": "Hernandez",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:state-senate-20:hernandez-alma"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az-sldu-20:state-senator-district-20:perez-rocque",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az-sldu-20:state-senator-district-20",
+   "officeTitle": "State Senator, District 20",
+   "ocdId": "ocd-division/country:us/state:az/sldu:20",
+   "givenName": "Rocque",
+   "familyName": "Perez",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:state-senate-20:perez-rocque"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:attorney-general:glassman-rodney",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:attorney-general",
+   "officeTitle": "Attorney General",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Rodney",
+   "familyName": "Glassman",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:attorney-general:glassman-rodney"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:attorney-general:mayes-kris",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:attorney-general",
+   "officeTitle": "Attorney General",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Kris",
+   "familyName": "Mayes",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:attorney-general:mayes-kris"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:attorney-general:petersen-warren",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:attorney-general",
+   "officeTitle": "Attorney General",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Warren",
+   "familyName": "Petersen",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:attorney-general:petersen-warren"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:corporation-commissioner:hill-jonathon",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:corporation-commissioner",
+   "officeTitle": "Corporation Commissioner",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Jonathon",
+   "familyName": "Hill",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:corporation-commissioner:hill"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Pima County Elections Department, Official Canvass of the July 21, 2026 Primary Election, certified 2026-07-30 — https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:corporation-commissioner:myers-nicholas-nick",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:corporation-commissioner",
+   "officeTitle": "Corporation Commissioner",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Nicholas \"Nick\"",
+   "familyName": "Myers",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:corporation-commissioner:myers"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Pima County Elections Department, Official Canvass of the July 21, 2026 Primary Election, certified 2026-07-30 — https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:corporation-commissioner:pratte-clara",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:corporation-commissioner",
+   "officeTitle": "Corporation Commissioner",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Clara",
+   "familyName": "Pratte",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:corporation-commissioner:pratte"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Pima County Elections Department, Official Canvass of the July 21, 2026 Primary Election, certified 2026-07-30 — https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:corporation-commissioner:thompson-kevin",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:corporation-commissioner",
+   "officeTitle": "Corporation Commissioner",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Kevin",
+   "familyName": "Thompson",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:corporation-commissioner:thompson"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Pima County Elections Department, Official Canvass of the July 21, 2026 Primary Election, certified 2026-07-30 — https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:governor:biggs-andy",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:governor",
+   "officeTitle": "Governor",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Andy",
+   "familyName": "Biggs",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:governor:biggs-andy"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "FOUND",
+     "checkedAt": null,
+     "sourceUrl": "https://biggsforarizona.com"
+    },
+    "photo": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:governor:hobbs-katie",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:governor",
+   "officeTitle": "Governor",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Katie",
+   "familyName": "Hobbs",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:governor:hobbs-katie"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "FOUND",
+     "checkedAt": null,
+     "sourceUrl": "https://katiehobbs.org"
+    },
+    "photo": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:governor:hourihan-teri-ann",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:governor",
+   "officeTitle": "Governor",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Teri Ann",
+   "familyName": "Hourihan",
+   "partyLabel": "Arizona Independent Party",
+   "pilotIds": [
+    "ballot-az-pima:governor:hourihan-teri-ann"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:governor:lombardo-risa",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:governor",
+   "officeTitle": "Governor",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Risa",
+   "familyName": "Lombardo",
+   "partyLabel": "Green",
+   "pilotIds": [
+    "ballot-az-pima:governor:lombardo-risa"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:governor:lytle-hugh",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:governor",
+   "officeTitle": "Governor",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Hugh",
+   "familyName": "Lytle",
+   "partyLabel": "Arizona Independent Party",
+   "pilotIds": [
+    "ballot-az-pima:governor:lytle-hugh"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:governor:miceli-ken",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:governor",
+   "officeTitle": "Governor",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Ken",
+   "familyName": "Miceli",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:governor:miceli-ken"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:governor:neely-scott",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:governor",
+   "officeTitle": "Governor",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Scott",
+   "familyName": "Neely",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:governor:neely-scott"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:governor:schweikert-david",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:governor",
+   "officeTitle": "Governor",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "David",
+   "familyName": "Schweikert",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:governor:schweikert-david"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:secretary-of-state:collier-duwayne",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:secretary-of-state",
+   "officeTitle": "Secretary of State",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Duwayne",
+   "familyName": "Collier",
+   "partyLabel": "Green",
+   "pilotIds": [
+    "ballot-az-pima:secretary-of-state:collier-duwayne"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "SEARCHED_NO_RESULT",
+     "checkedAt": "2026-08-13",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:secretary-of-state:fontes-adrian",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:secretary-of-state",
+   "officeTitle": "Secretary of State",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Adrian",
+   "familyName": "Fontes",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:secretary-of-state:fontes-adrian"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:secretary-of-state:kolodin-alexander",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:secretary-of-state",
+   "officeTitle": "Secretary of State",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Alexander",
+   "familyName": "Kolodin",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:secretary-of-state:kolodin-alexander"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:secretary-of-state:swoboda-gina",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:secretary-of-state",
+   "officeTitle": "Secretary of State",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Gina",
+   "familyName": "Swoboda",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:secretary-of-state:swoboda-gina"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:state-mine-inspector:matlock-brian",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:state-mine-inspector",
+   "officeTitle": "State Mine Inspector",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Brian",
+   "familyName": "Matlock",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:mine-inspector:matlock-brian"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "SEARCHED_NO_RESULT",
+     "checkedAt": "2026-08-13",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:state-mine-inspector:presmyk-walter-les",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:state-mine-inspector",
+   "officeTitle": "State Mine Inspector",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Walter \"Les\"",
+   "familyName": "Presmyk",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:mine-inspector:presmyk-walter"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:state-treasurer:haley-katherine",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:state-treasurer",
+   "officeTitle": "State Treasurer",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Katherine",
+   "familyName": "Haley",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:state-treasurer:haley-katherine"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:state-treasurer:mansour-nick",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:state-treasurer",
+   "officeTitle": "State Treasurer",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Nick",
+   "familyName": "Mansour",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:state-treasurer:mansour-nick"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:state-treasurer:norton-elijah",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:state-treasurer",
+   "officeTitle": "State Treasurer",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Elijah",
+   "familyName": "Norton",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:state-treasurer:norton-elijah"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:state-treasurer:zepeda-michael",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:state-treasurer",
+   "officeTitle": "State Treasurer",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Michael",
+   "familyName": "Zepeda",
+   "partyLabel": "Arizona Independent Party",
+   "pilotIds": [
+    "ballot-az-pima:state-treasurer:zepeda-michael"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:superintendent-of-public-instruction:butts-michael-d",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:superintendent-of-public-instruction",
+   "officeTitle": "Superintendent of Public Instruction",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Michael D.",
+   "familyName": "Butts",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:superintendent:butts-michael-d-"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:superintendent-of-public-instruction:horne-tom",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:superintendent-of-public-instruction",
+   "officeTitle": "Superintendent of Public Instruction",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Tom",
+   "familyName": "Horne",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:superintendent:horne-tom"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:superintendent-of-public-instruction:leyba-ruiz-teresa",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:superintendent-of-public-instruction",
+   "officeTitle": "Superintendent of Public Instruction",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Teresa",
+   "familyName": "Leyba Ruiz",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:superintendent:leyba-ruiz-teresa"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:superintendent-of-public-instruction:newby-brett-matthew",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:superintendent-of-public-instruction",
+   "officeTitle": "Superintendent of Public Instruction",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Brett Matthew",
+   "familyName": "Newby",
+   "partyLabel": "Democratic",
+   "pilotIds": [
+    "ballot-az-pima:superintendent:newby-brett-matthew"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  },
+  {
+   "id": "az:2026:state-az:superintendent-of-public-instruction:yee-kimberly",
+   "stateCode": "AZ",
+   "cycle": 2026,
+   "canonicalContestId": "az:2026:state-az:superintendent-of-public-instruction",
+   "officeTitle": "Superintendent of Public Instruction",
+   "ocdId": "ocd-division/country:us/state:az",
+   "givenName": "Kimberly",
+   "familyName": "Yee",
+   "partyLabel": "Republican",
+   "pilotIds": [
+    "ballot-az-pima:superintendent:yee-kimberly"
+   ],
+   "provenance": [
+    "data/ballot/az-pima-2026.json — Arizona Secretary of State — https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf"
+   ],
+   "enrichment": {
+    "campaignSite": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "positions": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "bio": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    },
+    "photo": {
+     "state": "FOUND",
+     "checkedAt": "2026-08-21",
+     "sourceUrl": null
+    },
+    "contact": {
+     "state": "UNWORKED",
+     "checkedAt": null,
+     "sourceUrl": null
+    }
+   }
+  }
+ ]
+}

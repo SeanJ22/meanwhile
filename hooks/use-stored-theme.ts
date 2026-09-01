@@ -1,7 +1,11 @@
 "use client";
 
 import { useCallback, useSyncExternalStore } from "react";
-import { subscribeToStorage } from "@/lib/state/subscribe-to-storage";
+import {
+  commitStorageWrite,
+  publishToListeners,
+  subscribeToStorage,
+} from "@/lib/state/subscribe-to-storage";
 
 /**
  * The chosen theme.
@@ -89,16 +93,16 @@ export function useStoredTheme() {
   const setTheme = useCallback((next: Theme) => {
     apply(next);
 
-    try {
-      window.localStorage.setItem(STORAGE_KEY, next);
-    } catch {
-      // Not being able to remember the choice is survivable; not honouring it
-      // for this session is not. Publish it anyway.
-      cachedRaw = next;
-      cachedSnapshot = { restored: true, theme: next };
-    }
-
-    for (const listener of listeners) listener();
+    commitStorageWrite(
+      () => window.localStorage.setItem(STORAGE_KEY, next),
+      () => publishToListeners(listeners),
+      () => {
+        // Not being able to remember the choice is survivable; not honouring it
+        // for this session is not. The publish runs either way.
+        cachedRaw = next;
+        cachedSnapshot = { restored: true, theme: next };
+      },
+    );
   }, []);
 
   const toggle = useCallback(() => {

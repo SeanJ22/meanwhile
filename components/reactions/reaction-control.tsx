@@ -2,11 +2,10 @@
 
 import { Fragment, useState, useSyncExternalStore } from "react";
 
-const emptySubscribe = () => () => {};
-
 import {
   getStoredReaction,
   submitReaction,
+  subscribeReactions,
   NOT_COUNTED_LINE,
   type ReactionSubmitOutcome,
   type ReactionViewContext,
@@ -113,13 +112,35 @@ export function ReactionControl({
   const choices = scale.values.filter(
     (value) => value !== "SOMEONE_ELSE" || singleCandidateContest,
   );
-  // The device's stored answer reads through useSyncExternalStore: this
-  // control now also renders inside server-rendered pages (the ballot, 3d),
-  // and the store pattern hydrates against the server's blank then re-reads
-  // — no mismatch, no setState-in-effect. Taps land in `override` so the
-  // selection updates without a store notification round-trip.
+  /*
+   * The device's stored answer reads through `useSyncExternalStore`: this
+   * control also renders inside server-rendered pages (the ballot, 3d), and the
+   * store pattern hydrates against the server's blank then re-reads — no
+   * mismatch, no setState-in-effect.
+   *
+   * **IT USED TO SUBSCRIBE TO NOTHING.** (`WGH-22` class audit, 2026-08-31.)
+   *
+   * The subscribe argument was a local `emptySubscribe` returning an empty
+   * teardown, and `override` — a `useState` set on the tap — was what made this
+   * control's own selection move. That works for the control the finger landed
+   * on and for nothing else. `wtp.reactions` has a publisher
+   * (`REACTIONS_EVENT`, M134) and two other readers already subscribe to it
+   * (`pick-control.tsx`, `my-picks.tsx`); this file, the store's PRIMARY
+   * reader, was the one that could not hear it — so a second control for the
+   * same candidate on the same page kept rendering the old answer, and so did
+   * every control in a second tab, because an inert subscribe drops the
+   * cross-tab `storage` event as well.
+   *
+   * This is `WGH-22` one level down. There the writers could not reach the
+   * hook's listener set; here the reader never joined one. Same reader-visible
+   * result: the store moved and a surface went on rendering what it read at
+   * mount.
+   *
+   * `override` stays, and it is not redundant — it is what makes the tap
+   * render instantly rather than after the `fetch` in `record` settles.
+   */
   const stored = useSyncExternalStore(
-    emptySubscribe,
+    subscribeReactions,
     () => getStoredReaction(targetType, targetId),
     () => null,
   );

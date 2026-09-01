@@ -22845,9 +22845,36 @@ file. The ask was narrowed to the reviewed format; the guard was not loosened.
 
 ```
   tracker            378 open · 69 Needs Sean, all carded · 477 resolved
-  suite              4,555 tests
+  suite              4,562 tests   ← see below; this read 4,555 and 4,555 was
+                                     a true count of a SMALLER RUN
   gates              14 of 14
   walk:all           444 passed, 0 regressions, 23 could not run
   governance         268 records, 0 semantic conflicts, 0 structural issues
   governments named  2,641 across AZ (688), NH (552) and NJ (1,401)
 ```
+
+**The suite count was corrected on 2026-09-01, and the correction is more
+interesting than the number.** This line read `4,555` while the close-out for
+the same tree reported `4,562`, and the gate record could not adjudicate them
+because it never persisted suite totals.
+
+Neither number was wrong. They are the same tree measured two ways:
+
+```
+  4,555   this tree, WITHOUT the Postgres lane
+  4,562   this tree, WITH it   ← the complete count, and what this line now says
+```
+
+The seven-test difference is a lane gated behind an environment variable. The
+same test file registers **18** tests when the suite runs without
+`--env-file=.env.local` and **25** with it; all seven additions are named
+`postgres:`. A bare shell does not load `.env.local`, so a session that ran the
+suite directly and a session that loaded the env file counted different
+denominators and both reported honestly.
+
+**What made it unresolvable was that nothing recorded which run had happened.**
+`scripts/gates.mjs` now persists `suiteTotals` on the SUCCESS path as well as on
+failure, records an unreadable total as `read: false` with a reason rather than
+as `0`, and records `suiteLaneEnv` — each lane-gating variable's PRESENCE, never
+its value. Without that last field, a skipped lane and seven deleted tests look
+exactly alike.

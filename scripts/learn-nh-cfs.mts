@@ -49,6 +49,13 @@
  * can send it too and the procedure becomes a script. If the answer is
  * JavaScript rendering, a login, or a challenge, it cannot.
  *
+ * **This batch also carries an ARIZONA route.** The same question — what was
+ * the browser actually for? — was put to `seethemoney.az.gov` in the same
+ * session, and the answer there was different: not CORS but a DataTables
+ * request shape whose column array IS its projection. It is batched here
+ * because the two were learned together and the second is the first one's
+ * method applied to a second vendor.
+ *
  * Idempotent: `learnRoute` refuses a duplicate id.
  */
 
@@ -140,6 +147,47 @@ const ROUTES: LearnedRoute[] = [
         statement:
           "On 2026-08-31 it returned 2026 filer records — committee name, candidate name, office, district, town, totals raised and spent, and a filer id — for every surname on the 03255 ballot that the CFS holds.",
         restsOn: ["ask-what-the-browser-was-for-before-recording-human-only#exists"],
+      },
+    ],
+  },
+  {
+    id: 'datatables-endpoint-needs-its-column-array',
+    title:
+      'a server-side DataTables action answers 200 with an empty object until the request carries its column array and view flags',
+    tier: 'A1',
+    fields: ['filing', 'document', 'source'],
+    note:
+      "THE MISTAKE THIS PREVENTS IS READING A 200 WITH AN EMPTY BODY AS A ROUTE THAT YIELDS NOTHING. seethemoney.az.gov/Reporting/GetNEWTableData was recorded on 2026-08-24 as LIVE with its parameter shape UNKNOWN, because a guessed body returned 200 and two bytes. It is a server-side DataTables action: the filters ride in the QUERY STRING appended to the path, and the POST body must be the standard DataTables form encoding INCLUDING the columns[N][data] array, because that array is the projection the action builds its result from. THE THREE MISSING FILTERS were IsLessActive, ShowOfficeHolder and ChartName; with them and the column array the endpoint returns recordsTotal 370 for the 2025-2026 cycle at JurisdictionId=0. THE PROCEDURE: when an endpoint answers 200 with an empty payload, do not record it as empty - observe one real call the application makes (rung 7) and replay it verbatim before changing anything. A DataTables action in particular cannot be probed by guessing a body, because the body IS the schema. RECOGNISING IT: the response carries draw, data, recordsTotal and recordsFiltered.",
+    origin:
+      'walked 2026-08-31 (Session C) resuming Arizona statewide money from the recorded enumeration, which named rung 7 as the next rung and had not walked it.',
+    effort: {
+      repeats: 'PER_VENDOR',
+      execution: 'MACHINE_AFTER_HUMAN_SETUP',
+      discovery: 'NEW_METHOD',
+      note:
+        'One browser observation to capture a real request; every call after that is a plain server-side POST replaying its shape.',
+    },
+    outcome: {
+      jurisdiction: 'az',
+      rows: 370,
+      outcome: 'YIELDED',
+      note:
+        'recordsTotal 370 for the 2025-2026 cycle at JurisdictionId=0, each row carrying EntityID, names, CommitteeName, OfficeName, PartyName, Income, Expense and CashBalance. NO SNAPSHOT WAS BUILT: several rows share one EntityID with differing Income and an identical CashBalance, so which aggregation is the cycle total is undetermined and publishing a guess would put a wrong figure on a named person card.',
+    },
+    claims: [
+      {
+        id: 'datatables-endpoint-needs-its-column-array#exists',
+        class: 'ROUTE_EXISTENCE',
+        statement:
+          'A server-side DataTables action is reachable by replaying one observed request verbatim: query-string filters on the path plus the columns[N][data] array in the form body.',
+        restsOn: ['ask-what-the-browser-was-for-before-recording-human-only#exists'],
+      },
+      {
+        id: 'datatables-endpoint-needs-its-column-array#az-outcome',
+        class: 'ROUTE_OUTCOME',
+        statement:
+          'On 2026-08-31 it returned 370 Arizona Secretary of State filer rows for the 2025-2026 cycle, with the per-entity row semantics left explicitly undetermined.',
+        restsOn: ['datatables-endpoint-needs-its-column-array#exists'],
       },
     ],
   },

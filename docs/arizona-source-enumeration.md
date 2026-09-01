@@ -324,6 +324,75 @@ degrades service, nothing not already published.
 vendor's compilation would be. **RULING 126 governs what may be done with them
 once retrieved: they render for readers and never enter anything sold.**
 
+### 2026-08-31 (Session C) — the parameter shape is RESOLVED, and the endpoint yields
+
+The block above recorded the endpoint as LIVE with its **parameter shape not yet
+determined**: posted with a guessed body it answered `200` with a two-byte
+payload, and that was correctly recorded as a statement about our request rather
+than about Arizona's records (RULING 100). Rung 7 — the page's own network
+calls — was named as the next rung and is now walked.
+
+**The request, observed rather than guessed:**
+
+```
+POST https://seethemoney.az.gov/Reporting/GetNEWTableData/
+     ?Page=1&startYear=2025&endYear=2026&JurisdictionId=0
+     &TablePage=1&TableLength=10
+     &IsLessActive=false&ShowOfficeHolder=false&ChartName=1
+```
+
+Body: a standard **DataTables server-side form post** — `draw`, `start`,
+`length`, `order[0][*]`, `search[*]`, and a `columns[N][data]` array naming
+`EntityLastName, CommitteeName, OfficeName, PartyName, Income, Expense,
+CashBalance, IESupport, IEOpposition`.
+
+**Three parameters are what the guessed body was missing** — `IsLessActive`,
+`ShowOfficeHolder` and `ChartName` — and the column array must be present. With
+them the endpoint returns **`recordsTotal` 370 for the 2025–2026 cycle** at
+`JurisdictionId=0` (Arizona Secretary of State), 296 for 2026 alone.
+
+Each row carries `EntityID`, `EntityFirstName`, `EntityLastName`,
+`CommitteeName`, `OfficeName` (e.g. `State Senator - District No. 15`),
+`PartyName`, `EntityTypeName`, `Income`, `Expense`, `CashBalance`, `IESupport`
+and `IEOpposition`. `EntityID` is a real join key, which is what the
+`StateMoneyRecord` contract requires instead of a name string.
+
+**Permission is unchanged and was re-confirmed:** no `robots.txt` (404), no
+terms document (404), no challenge, no credential.
+
+#### The one thing that is NOT resolved, and why nothing was built on it
+
+**A single candidate returns SEVERAL rows sharing one `EntityID`, with
+different `Income` and `Expense` and an IDENTICAL `CashBalance`.** Jayme
+Accalia (`EntityID` 102162) returns three: income 686.91 / 205 / 1123.97,
+expense 101 / 0 / 466.73, cash balance 1448.15 on all three, and `OfficeName`
+empty on one of them and `State Senator - District No. 15` on the other two.
+Narrowing to 2026 alone returns the same three rows.
+
+So the rows are a breakdown — plausibly per filed report, per period, or per
+committee-office pairing — and **which of them, or which aggregation of them,
+is "raised this cycle" is undetermined.**
+
+**No snapshot was produced from this, deliberately.** Summing looked reasonable
+and so did taking the largest, and the two disagree. Publishing either as a
+named person's campaign total, on their own card, under their own photograph, is
+the failure `lib/funding/state-money.ts` opens by naming — *"a candidate joined
+to the wrong committee renders someone else's money on their card, and that is a
+worse failure than an empty drop-down by a wide margin."* The same is true of
+the wrong TOTAL for the right committee.
+
+**The next step is a verification, not a guess:** read one candidate's total as
+the portal itself displays it — the entity overview the UI renders, or
+`/Reporting/ExportEntityOverview` and `/Reporting/ExportEntityTransactions`,
+both of which take the same parameter string plus `ExportOptions` and were seen
+in the bundle — and adopt whichever aggregation reproduces the publisher's own
+figure. That is one bounded experiment, and it is what stands between this route
+and `data/funding/state-money-az-2026.json`.
+
+The obligation is NOT closed by this note. Arizona statewide money remains owed;
+what changed is that the route is known to work and the remaining question is a
+named, single one.
+
 ### The Citizens Clean Elections Commission, walked
 
 **`https://www.azcleanelections.gov` — HTTP 200, 26,249 bytes**, walked

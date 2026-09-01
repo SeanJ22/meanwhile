@@ -153,10 +153,28 @@ Observed 2026-08-31 (Session C). Gate run `2026-08-31-25` recorded
 no intervening edit, recorded `14 of 14 gates green`. `pnpm test` run directly
 either side passes at 4266/0.
 
-So one of the tests is flaky — and **it cannot be named**, because
-`data/ops/gate-runs/*.json` stores `{id, ciJob, command, status, seconds}` and
-nothing else. The failing output is printed to the console and then discarded,
-so a gate failure that is not watched live leaves no evidence of its cause.
+**CAUSE FOUND LATER THE SAME DAY, and it was not a flake.**
+`tests/tracker-transaction.test.ts` writes a synthetic row (`NH303`) into the
+LIVE tracker store and restores the store in a `finally`. **A run KILLED
+mid-test never reaches that `finally`**, so the synthetic row and its
+`tracker-opened.json` ledger entry survive into the working tree — and the next
+suite then fails two tests: the transaction test itself, and the expansion-log
+guard, because the leftover row makes `tracker-transaction-test` the newest
+session in `docs/log.md`.
+
+This session killed several long runs with a task-stop, which is what produced
+it. Removing the row and regenerating the views returned the suite to 4274/0.
+**So the failures were self-inflicted, and the test is not flaky** — though a
+test that mutates a canonical store and depends on its own `finally` for
+correctness is a hazard worth knowing about, because an interrupted run leaves
+the repository dirty in a way that looks like an unrelated failure.
+
+**The instrument gap is real and stands regardless.** It took a suite re-run to
+name the failing tests, because `data/ops/gate-runs/*.json` stores
+`{id, ciJob, command, status, seconds}` and nothing else. The failing output is
+printed to the console and then discarded, so a gate failure that is not watched
+live leaves no evidence of its cause — which is exactly why this took three
+runs and a guess to diagnose.
 
 That matters more than the flake does. A gate set is the instrument the shipping
 law rests on, and this one can say NO without saying why — which on CI, where
@@ -226,6 +244,39 @@ file, not missing code** — `lib/funding/state-snapshot.ts:28-32` already names
 **already reaches readers today** through Ask, for the Vail governing board, via
 a deliberately one-entry crosswalk at `lib/ask/local-finance.ts:145`. The bridge
 to the pilot ballot is the AZ SOS regime, which is unacquired.
+
+**Part E — Arizona money. The bridge route is now OPEN, and one named question
+stands between it and a snapshot.** The held Pima corpus cannot reach the pilot
+ballot (see below), so the bridge was always the AZ Secretary of State. That
+portal's endpoint was recorded on 2026-08-24 as live with its **parameter shape
+unknown** — a guessed body returned 200 and two bytes — and rung 7 was named as
+the next rung and never walked.
+
+Walked 2026-08-31. `POST seethemoney.az.gov/Reporting/GetNEWTableData/` is a
+server-side **DataTables** action: the filters ride in the query string and the
+body must be the DataTables form encoding INCLUDING its `columns[N][data]`
+array, because that array is the projection. The three missing filters were
+`IsLessActive`, `ShowOfficeHolder` and `ChartName`. With them it returns
+**`recordsTotal` 370 for the 2025–2026 cycle** at `JurisdictionId=0`, each row
+carrying `EntityID`, names, `CommitteeName`, `OfficeName`, `PartyName`,
+`Income`, `Expense` and `CashBalance` — and `EntityID` is the non-name join key
+the contract wants. Permission re-confirmed: no `robots.txt`, no terms, no
+challenge, no credential.
+
+**NO SNAPSHOT WAS BUILT, deliberately.** A single candidate returns SEVERAL rows
+sharing one `EntityID`, with differing `Income`/`Expense` and an IDENTICAL
+`CashBalance` — Jayme Accalia returns three. Which row, or which aggregation, is
+the cycle total is **undetermined**; summing and taking the largest disagree, and
+publishing either as a named person's campaign total is precisely the failure
+`lib/funding/state-money.ts` opens by naming.
+
+**The next step is a verification, not a guess:** read one candidate's total as
+the portal itself displays it — `/Reporting/ExportEntityOverview` and
+`/Reporting/ExportEntityTransactions` take the same parameter string plus
+`ExportOptions` — and adopt whichever aggregation reproduces the publisher's own
+figure. One bounded experiment. Full write-up in
+`docs/arizona-source-enumeration.md`; the route is in the method store as
+`datatables-endpoint-needs-its-column-array`. **The obligation is not closed.**
 
 **Part F — New Hampshire money. DELIVERED this session; what remains is named
 below.** The directive said the higher rungs were never worked, which was false —

@@ -1,21 +1,21 @@
 {
-  "runId": "gates@2026-09-01T02:38:42.036Z",
-  "testedSha": "dc3922f636261dbb4b8af0e1b659ad90682f9cbb",
-  "finishedAt": "2026-09-01T02:38:42.036Z",
+  "runId": "gates@2026-09-01T02:20:19.452Z",
+  "testedSha": "ac3cfced9d628f4745ce6304895a7a832d27539b",
+  "finishedAt": "2026-09-01T02:20:19.452Z",
   "gates": [
     {
       "id": "lint",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm lint",
       "status": "PASS",
-      "seconds": 48
+      "seconds": 34
     },
     {
       "id": "tsc",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm exec tsc --noEmit",
-      "status": "FAIL",
-      "seconds": 26
+      "status": "PASS",
+      "seconds": 23
     },
     {
       "id": "governance:check",
@@ -64,28 +64,28 @@
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm test",
       "status": "FAIL",
-      "seconds": 69
+      "seconds": 59
     },
     {
       "id": "db:gate",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm exec tsx scripts/db-shipping-gate.mts",
       "status": "PASS",
-      "seconds": 2
+      "seconds": 1
     },
     {
       "id": "release:freeze",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm exec tsx scripts/release-freeze-gate.mts",
       "status": "PASS",
-      "seconds": 6
+      "seconds": 1
     },
     {
       "id": "build",
       "ciJob": "build (default)",
       "command": "pnpm run build",
-      "status": "FAIL",
-      "seconds": 103
+      "status": "PASS",
+      "seconds": 17
     },
     {
       "id": "test:bundle",
@@ -98,14 +98,14 @@
       "id": "build:standalone",
       "ciJob": "build (standalone)",
       "command": "pnpm run build",
-      "status": "FAIL",
-      "seconds": 23
+      "status": "PASS",
+      "seconds": 25
     }
   ],
   "provenance": {
     "runClass": "LOCAL_SESSION",
     "workingTreeClean": false,
-    "integratedAtRunTime": false,
+    "integratedAtRunTime": true,
     "integrationRef": "origin/main"
   }
 }

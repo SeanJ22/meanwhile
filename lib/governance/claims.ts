@@ -272,6 +272,70 @@ export const CLAIM_KEYS: readonly ClaimKeyDef[] = [
       "May a governing-entities surface display an entity the address ruled out, labelled as not the reader's?",
     values: ["prohibited-out-of-scope-not-annotated", "kept-and-labelled"],
   },
+  {
+    key: "session.discretion_scope",
+    question: "What may a session decide for itself?",
+    values: [
+      "implementation-and-ordering-never-the-contract",
+      "including-what-counts-as-done",
+    ],
+  },
+  {
+    key: "session.capacity_end_output",
+    question: "What does a session report when capacity ends with work owed?",
+    values: [
+      "unfinished-session-with-resume-point-and-named-items",
+      "complete-with-a-rationale",
+    ],
+  },
+  {
+    key: "obligation.completion_boundary",
+    question: "When does an acquisition obligation close?",
+    values: [
+      "reader-surface-or-honest-gap-not-the-vault",
+      "when-evidence-reaches-the-vault",
+    ],
+  },
+  {
+    key: "obligation.promotion_tail",
+    question: "How far does the acquisition pipeline run without an operator?",
+    values: [
+      "automatic-through-staged-shipping-carries-last-mile",
+      "halts-at-vaulted-bytes",
+    ],
+  },
+  {
+    key: "report.lead_order",
+    question: "What does a session report lead with?",
+    values: [
+      "reader-then-unattended-then-owner-then-infrastructure",
+      "infrastructure-counts-first",
+    ],
+  },
+  {
+    key: "collection.aggregate_only_scope",
+    question: "What does aggregate-only constrain?",
+    values: [
+      "exposure-boundary-not-storage-at-rest",
+      "storage-at-rest-as-well",
+    ],
+  },
+  {
+    key: "escalation.entry_requirement",
+    question: "What must a row carry before it may enter NEEDS_SEAN?",
+    values: [
+      "machine-predicate-or-explicit-not-verifiable-with-card",
+      "nothing-beyond-a-title",
+    ],
+  },
+  {
+    key: "escalation.reconciliation_cadence",
+    question: "How often is a NEEDS_SEAN blocker predicate rechecked?",
+    values: [
+      "rechecked-every-generation-auto-resolves",
+      "when-a-session-happens-to-look",
+    ],
+  },
 ] as const;
 
 const KEY_INDEX = new Map(CLAIM_KEYS.map((k) => [k.key, k]));

@@ -5,17 +5,21 @@
  "split": {
   "candidaciesInScope": 28,
   "filed": 9,
-  "noReportsOnFile": 19,
-  "lead": 0,
-  "unresolved": 0,
+  "registeredNoActivityReported": 6,
+  "noReportsOnFile": 11,
+  "lead": 2,
+  "routeUnread": 0,
+  "unresolved": 2,
   "filedRecords": 9
  },
  "byJurisdiction": {
   "NH": {
    "inScope": 28,
    "filed": 9,
-   "noReports": 19,
-   "lead": 0
+   "registeredNoActivityReported": 6,
+   "noReports": 11,
+   "lead": 2,
+   "routeUnread": 0
   }
  },
  "records": [
@@ -123,7 +127,7 @@
     "electionYearAsFiled": null,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"Fife\" on 2026-08-31 and holds no 2026 filer whose filed name, office and year agree with this candidacy"
+    "note": "the Campaign Finance System was searched for \"Fife\" on 2026-08-31; all 1 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
    },
    "checkedAt": "2026-08-31",
    "provenance": {
@@ -161,7 +165,7 @@
     "electionYearAsFiled": null,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"McClory\" on 2026-08-31 and holds no 2026 filer whose filed name, office and year agree with this candidacy"
+    "note": "the Campaign Finance System was searched for \"McClory\" on 2026-08-31; all 0 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
    },
    "checkedAt": "2026-08-31",
    "provenance": {
@@ -257,7 +261,7 @@
    "candidateNameAsFiled": "Karen Ebel",
    "officeSought": "State Representative",
    "electionYear": 2026,
-   "filingState": "NO_REPORTS_ON_FILE",
+   "filingState": "REGISTERED_NO_ACTIVITY_REPORTED",
    "totals": {
     "receipts": null,
     "expenditures": null,
@@ -351,7 +355,7 @@
     "electionYearAsFiled": null,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"Rusis\" on 2026-08-31 and holds no 2026 filer whose filed name, office and year agree with this candidacy"
+    "note": "the Campaign Finance System was searched for \"Rusis\" on 2026-08-31; all 0 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
    },
    "checkedAt": "2026-08-31",
    "provenance": {
@@ -409,7 +413,7 @@
    "candidateNameAsFiled": "TOBIN MENARD",
    "officeSought": "Executive Council",
    "electionYear": 2026,
-   "filingState": "NO_REPORTS_ON_FILE",
+   "filingState": "REGISTERED_NO_ACTIVITY_REPORTED",
    "totals": {
     "receipts": null,
     "expenditures": null,
@@ -465,7 +469,7 @@
     "electionYearAsFiled": null,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"Strathdee\" on 2026-08-31 and holds no 2026 filer whose filed name, office and year agree with this candidacy"
+    "note": "the Campaign Finance System was searched for \"Strathdee\" on 2026-08-31; all 1 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
    },
    "checkedAt": "2026-08-31",
    "provenance": {
@@ -503,7 +507,7 @@
     "electionYearAsFiled": null,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"Ribas\" on 2026-08-31 and holds no 2026 filer whose filed name, office and year agree with this candidacy"
+    "note": "the Campaign Finance System was searched for \"Ribas\" on 2026-08-31; all 0 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
    },
    "checkedAt": "2026-08-31",
    "provenance": {
@@ -541,7 +545,7 @@
     "electionYearAsFiled": null,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"Bilodeau\" on 2026-08-31 and holds no 2026 filer whose filed name, office and year agree with this candidacy"
+    "note": "the Campaign Finance System was searched for \"Bilodeau\" on 2026-08-31; all 0 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
    },
    "checkedAt": "2026-08-31",
    "provenance": {
@@ -579,7 +583,7 @@
     "electionYearAsFiled": null,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"French\" on 2026-08-31 and holds no 2026 filer whose filed name, office and year agree with this candidacy"
+    "note": "the Campaign Finance System was searched for \"French\" on 2026-08-31; all 9 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
    },
    "checkedAt": "2026-08-31",
    "provenance": {
@@ -675,7 +679,7 @@
    "candidateNameAsFiled": "Jason Gerhard",
    "officeSought": "Sheriff",
    "electionYear": 2026,
-   "filingState": "NO_REPORTS_ON_FILE",
+   "filingState": "REGISTERED_NO_ACTIVITY_REPORTED",
    "totals": {
     "receipts": null,
     "expenditures": null,
@@ -731,7 +735,7 @@
     "electionYearAsFiled": null,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"Weir\" on 2026-08-31 and holds no 2026 filer whose filed name, office and year agree with this candidacy"
+    "note": "the Campaign Finance System was searched for \"Weir\" on 2026-08-31; all 1 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
    },
    "checkedAt": "2026-08-31",
    "provenance": {
@@ -751,7 +755,7 @@
    "candidateNameAsFiled": "STEVEN ENDRES",
    "officeSought": "County Attorney",
    "electionYear": 2026,
-   "filingState": "NO_REPORTS_ON_FILE",
+   "filingState": "REGISTERED_NO_ACTIVITY_REPORTED",
    "totals": {
     "receipts": null,
     "expenditures": null,
@@ -784,12 +788,12 @@
    "jurisdiction": "NH",
    "agency": "New Hampshire Secretary of State — Campaign Finance System",
    "filingsUrl": "https://cfs.sos.nh.gov/",
-   "committeeId": null,
-   "registeredName": "",
-   "candidateNameAsFiled": "",
-   "officeSought": "Merrimack County Attorney",
+   "committeeId": "243723",
+   "registeredName": "Meg For Merrimack",
+   "candidateNameAsFiled": "Meghan Hagaman",
+   "officeSought": "County Attorney",
    "electionYear": 2026,
-   "filingState": "NO_REPORTS_ON_FILE",
+   "filingState": "LEAD",
    "totals": {
     "receipts": null,
     "expenditures": null,
@@ -797,17 +801,15 @@
     "reportCount": null,
     "coveringPeriod": null
    },
-   "targetKeys": [
-    "ballot-nh-merrimack:county-attorney:hagaman-meg"
-   ],
+   "targetKeys": [],
    "match": {
-    "registeredName": "",
-    "officeAsFiled": null,
+    "registeredName": "Meg For Merrimack",
+    "officeAsFiled": "County Attorney",
     "officeOnBallot": "Merrimack County Attorney",
-    "electionYearAsFiled": null,
+    "electionYearAsFiled": 2026,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"Hagaman\" on 2026-08-31 and holds no 2026 filer whose filed name, office and year agree with this candidacy"
+    "note": "LEAD — the filed name does not agree with the certified-ballot name"
    },
    "checkedAt": "2026-08-31",
    "provenance": {
@@ -822,12 +824,12 @@
    "jurisdiction": "NH",
    "agency": "New Hampshire Secretary of State — Campaign Finance System",
    "filingsUrl": "https://cfs.sos.nh.gov/",
-   "committeeId": null,
-   "registeredName": "",
-   "candidateNameAsFiled": "",
-   "officeSought": "Merrimack County Attorney",
+   "committeeId": "243729",
+   "registeredName": "Raiche, Jonathan M. (Raiche, Jon )",
+   "candidateNameAsFiled": "Jonathan Raiche",
+   "officeSought": "County Attorney",
    "electionYear": 2026,
-   "filingState": "NO_REPORTS_ON_FILE",
+   "filingState": "LEAD",
    "totals": {
     "receipts": null,
     "expenditures": null,
@@ -835,17 +837,15 @@
     "reportCount": null,
     "coveringPeriod": null
    },
-   "targetKeys": [
-    "ballot-nh-merrimack:county-attorney:raiche-jon"
-   ],
+   "targetKeys": [],
    "match": {
-    "registeredName": "",
-    "officeAsFiled": null,
+    "registeredName": "Raiche, Jonathan M. (Raiche, Jon )",
+    "officeAsFiled": "County Attorney",
     "officeOnBallot": "Merrimack County Attorney",
-    "electionYearAsFiled": null,
+    "electionYearAsFiled": 2026,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"Raiche\" on 2026-08-31 and holds no 2026 filer whose filed name, office and year agree with this candidacy"
+    "note": "LEAD — the filed name does not agree with the certified-ballot name"
    },
    "checkedAt": "2026-08-31",
    "provenance": {
@@ -921,7 +921,7 @@
     "electionYearAsFiled": null,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"Donnelly\" on 2026-08-31 and holds no 2026 filer whose filed name, office and year agree with this candidacy"
+    "note": "the Campaign Finance System was searched for \"Donnelly\" on 2026-08-31; all 3 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
    },
    "checkedAt": "2026-08-31",
    "provenance": {
@@ -941,7 +941,7 @@
    "candidateNameAsFiled": "Dianne Schuett",
    "officeSought": "County Treasurer",
    "electionYear": 2026,
-   "filingState": "NO_REPORTS_ON_FILE",
+   "filingState": "REGISTERED_NO_ACTIVITY_REPORTED",
    "totals": {
     "receipts": null,
     "expenditures": null,
@@ -997,7 +997,7 @@
     "electionYearAsFiled": null,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"Davis\" on 2026-08-31 and holds no 2026 filer whose filed name, office and year agree with this candidacy"
+    "note": "the Campaign Finance System was searched for \"Davis\" on 2026-08-31; all 13 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
    },
    "checkedAt": "2026-08-31",
    "provenance": {
@@ -1017,7 +1017,7 @@
    "candidateNameAsFiled": "Samantha Morse",
    "officeSought": "Register of Deeds",
    "electionYear": 2026,
-   "filingState": "NO_REPORTS_ON_FILE",
+   "filingState": "REGISTERED_NO_ACTIVITY_REPORTED",
    "totals": {
     "receipts": null,
     "expenditures": null,
@@ -1073,7 +1073,7 @@
     "electionYearAsFiled": null,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"Bradstreet\" on 2026-08-31 and holds no 2026 filer whose filed name, office and year agree with this candidacy"
+    "note": "the Campaign Finance System was searched for \"Bradstreet\" on 2026-08-31; all 0 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
    },
    "checkedAt": "2026-08-31",
    "provenance": {

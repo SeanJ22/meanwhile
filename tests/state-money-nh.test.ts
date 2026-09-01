@@ -95,16 +95,59 @@ test("a LEAD never reaches a reader, and only a confirmed match carries a target
       );
     }
     if (r.targetKeys.length > 0 && r.committeeId === null) {
-      assert.equal(
-        r.filingState,
-        "NO_REPORTS_ON_FILE",
-        `${r.targetKeys[0]}: a record with no committee can only be a sourced absence`,
+      /*
+       * Amended 2026-08-31. A record naming no committee used to be able to be
+       * only one thing, and that was the defect: an unread route was forced
+       * into the same state as a completed read that found nothing, and the
+       * reader was told New Hampshire holds nothing when nobody had asked it
+       * successfully. Two states now, and they are different sentences.
+       */
+      assert.ok(
+        r.filingState === "NO_REPORTS_ON_FILE" || r.filingState === "ROUTE_UNREAD",
+        `${r.targetKeys[0]}: a record with no committee is a sourced absence or an unread route, not a filing`,
       );
       assert.match(
         r.match.note,
-        /searched|holds no/i,
-        `${r.targetKeys[0]}: an absence must say what was asked and when`,
+        /searched|holds no|did not answer|cannot be shown complete/i,
+        `${r.targetKeys[0]}: an absence must say what was asked and when; an unread route must say what failed`,
       );
+    }
+
+    /*
+     * **THE DEFECT-3 CLASS, PINNED OVER THE POPULATION RATHER THAN THE
+     * EXAMPLE.** (2026-08-31.)
+     *
+     * Six named candidates on this ballot shipped a card reading "No reports
+     * on file with the New Hampshire Secretary of State" while this snapshot
+     * held their committee's id, its registered name, its filed office and its
+     * election cycle. A committee the agency NAMES can never again be recorded
+     * as a registry that holds nothing.
+     */
+    if (r.committeeId !== null) {
+      assert.notEqual(
+        r.filingState,
+        "NO_REPORTS_ON_FILE",
+        `${r.registeredName} (committee ${r.committeeId}): the agency names this committee, so it cannot be a record the agency does not hold`,
+      );
+    }
+
+    if (r.filingState === "REGISTERED_NO_ACTIVITY_REPORTED") {
+      assert.ok(
+        r.committeeId,
+        "a registered committee is identified by the agency's own id, never by a name string",
+      );
+      // Zero reported is not zero raised. Null, on both lines, always.
+      assert.equal(r.totals.receipts, null, `${r.registeredName}: an unreported total is not a reported zero`);
+      assert.equal(r.totals.expenditures, null);
+      assert.match(
+        r.totals.coveringPeriod ?? "",
+        /registered for/i,
+        `${r.registeredName}: the record states what the agency published about this committee`,
+      );
+    }
+
+    if (r.filingState === "ROUTE_UNREAD") {
+      assert.equal(isRenderable(r), false, "RULING 139: the product does not announce its own failure");
     }
   }
 });

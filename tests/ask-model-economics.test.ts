@@ -44,29 +44,67 @@ test("H2: ONE MODEL FOR ALL ASK TRAFFIC — every Ask call site names the same m
    * is model-scoped, and forfeit every hit H1 exists to earn.
    */
   const root = process.cwd();
+
+  /*
+   * **STRUCTURAL, NOT FOUR LITERALS AGREEING.** (ITEM K, 2026-09-01.)
+   *
+   * This test used to read every `"claude-…"` literal out of the four call
+   * sites and assert they were equal. That checks the rule and does not
+   * ENFORCE it: four literals are four places to forget, and the test passes
+   * right up until the moment someone changes three of them. ITEM K had to
+   * change all four and met exactly that.
+   *
+   * So the shape is inverted. ONE module declares the model; the call sites
+   * declare none and import it. A call site that reintroduces a literal fails
+   * here whatever value it picks — including the right one — because the
+   * defect is the second declaration, not the disagreement it will later cause.
+   */
+  const DECLARING_MODULE = "lib/ask/model.ts";
   const sites = [
     "lib/ask/synthesize.ts",
     "lib/ask/interpret.ts",
     "lib/routing/classifier.ts",
     "lib/routing/unsourced-fallback.ts",
   ];
+
+  /* Only a model ID in DOUBLE QUOTES counts as a declaration. Prose naming a
+     model in backticks is documentation, and a guard that reads its own
+     comments as the defect is a guard that gets loosened. */
+  const declarations = (path: string) =>
+    [...readFileSync(join(root, path), "utf8").matchAll(/"(claude-[a-z0-9-]+)"/g)].map(
+      (m) => m[1],
+    );
+
+  const declared = declarations(DECLARING_MODULE);
+  assert.deepEqual(
+    declared,
+    [ASK_INCUMBENT_MODEL],
+    `${DECLARING_MODULE} must declare the Ask model exactly once and declare no other`,
+  );
+
   for (const site of sites) {
-    const source = readFileSync(join(root, site), "utf8");
-    const declared = [...source.matchAll(/"(claude-[a-z0-9-]+)"/g)].map((m) => m[1]);
-    assert.ok(declared.length > 0, `${site} declares no model`);
-    for (const model of declared) {
-      assert.equal(
-        model,
-        ASK_INCUMBENT_MODEL,
-        `${site} runs ${model}; Ask runs one model for all traffic`,
-      );
-    }
+    assert.deepEqual(
+      declarations(site),
+      [],
+      `${site} declares a model literal; the Ask model is declared once, in ${DECLARING_MODULE}`,
+    );
+    assert.match(
+      readFileSync(join(root, site), "utf8"),
+      /ASK_SYNTHESIS_MODEL/,
+      `${site} is an Ask call site and must read the shared model constant`,
+    );
   }
 });
 
 test("H2: the incumbent is read from the code, never from a constant that can drift", () => {
   assert.equal(ASK_INCUMBENT_MODEL, ASK_SYNTHESIS_MODEL);
-  assert.equal(ASK_SYNTHESIS_MODEL, "claude-opus-5");
+  /*
+   * ITEM K, 2026-09-01: the owner ruled the switch from `claude-opus-5`.
+   * Pinned deliberately — a model ID that can change without a test changing
+   * is a model ID that can change without anyone noticing, and every stored
+   * answer's provenance depends on knowing which one shipped.
+   */
+  assert.equal(ASK_SYNTHESIS_MODEL, "claude-sonnet-5");
 });
 
 test("H2: both candidates' rates carry a date and a source", () => {
@@ -80,13 +118,26 @@ test("H2: both candidates' rates carry a date and a source", () => {
   }
 });
 
-test("H2: the published rate ratio is 2.5x on input and 2.5x on output", () => {
+test("the published rate ratio is 0.4x both ways — the arms swapped when the switch landed", () => {
+  /*
+   * ITEM K, 2026-09-01. This asserted 2.5x when the incumbent was Opus 5 and
+   * the challenger was Sonnet 5. Both constants moved: the incumbent is now
+   * Sonnet 5 and the standing comparison arm is Opus 5, the revert target. The
+   * ratio is therefore the reciprocal, and asserting it in the new direction
+   * is what proves the two constants actually swapped rather than one of them
+   * being changed and the other forgotten.
+   *
+   * `rateRatio` is incumbent-over-challenger, so 2/5 and 10/25 = 0.4. The
+   * product now runs the cheaper of the two arms per token, which is the
+   * direction of the switch — and never the reason for it.
+   */
   const ratio = rateRatio(
     ASK_MODEL_RATES[ASK_INCUMBENT_MODEL],
     ASK_MODEL_RATES[ASK_CHALLENGER_MODEL],
   );
-  assert.equal(ratio.input, 2.5);
-  assert.equal(ratio.output, 2.5);
+  assert.equal(ratio.input, 0.4);
+  assert.equal(ratio.output, 0.4);
+  assert.ok(ratio.input < 1, "the incumbent must be the cheaper arm after the ITEM K switch");
 });
 
 /* ── the verdict ─────────────────────────────────────────────────────────── */

@@ -1,4 +1,5 @@
 import { scrubFreeText } from "../log/scrub.ts";
+import { ASK_SYNTHESIS_MODEL } from "../ask/model.ts";
 
 import { TOPIC_ROUTES } from "./topics.ts";
 
@@ -160,12 +161,22 @@ function noteCall(): boolean {
 const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
 
 /**
- * The model. `claude-opus-5` deliberately, at `low` effort with thinking off:
- * the task is one label out of sixteen, and the cost lever this session pulls
- * is effort and the ceiling, never a quieter model chosen on the reader's
- * behalf.
+ * The model, READ FROM `lib/ask/model.ts` rather than declared here.
+ * (ITEM K, 2026-09-01.)
+ *
+ * This rung is an Ask call site — the ask box's second rung — so *one model
+ * for all Ask traffic* binds it. It used to declare its own `claude-opus-5`
+ * literal, and a rule enforced by four literals being equal is a rule that
+ * survives only as long as everyone remembers to change all four. Importing
+ * the shared constant makes it structural: there is no expression here that
+ * could name a different model.
+ *
+ * `low` effort with thinking off is unchanged and is still this rung's own
+ * choice — the task is one label out of sixteen. The cost lever remains effort
+ * and the ceiling. Verified against `claude-sonnet-5` by an actual request:
+ * thinking-disabled at `low` effort answers HTTP 200 on this model.
  */
-const MODEL = "claude-opus-5";
+const MODEL = ASK_SYNTHESIS_MODEL;
 
 export interface ClassifyOptions {
   /** Overridden in tests so the suite never touches the network. */

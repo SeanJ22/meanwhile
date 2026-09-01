@@ -1,5 +1,6 @@
 import { lengthRuleForPrompt } from "./length-contract.ts";
 import { packHasEvidence, type EvidencePack } from "./evidence.ts";
+import { resolveAskEffort, resolveAskModel, type AskEffort } from "./model.ts";
 import {
   SYNTHESIS_CACHE_TTL,
   askCallerKey,
@@ -48,17 +49,28 @@ import {
  */
 
 /**
- * **THE ASK MODEL. ONE DECLARATION, AND IT IS THIS ONE.**
+ * **THE ASK MODEL LIVES IN `lib/ask/model.ts` AND IS RE-EXPORTED HERE.**
+ * (ITEM K, 2026-09-01.)
  *
- * Exported so `lib/ask/model-economics.ts` can compare against the model the
- * product actually runs rather than against one a session remembered, and so
- * the "one model for all Ask traffic" rule is checkable instead of asserted:
- * a per-caller or per-question model would also fragment the prompt cache,
- * which is model-scoped, and forfeit every hit H1 exists to earn.
+ * It used to be declared on this line. It moved because the brief that
+ * switched the model required ONE exported constant in ONE module carrying the
+ * measurement-integrity argument for why it is a constant rather than a
+ * per-environment variable — and that argument is about the whole Ask surface,
+ * not about this file. `model.ts` holds it, together with the bounded
+ * `WTP_ASK_MODEL` override and the resolution functions.
+ *
+ * The re-export is kept so `lib/ask/model-economics.ts` and the comparison
+ * tests still read the model the product actually runs from the module that
+ * runs it, rather than from one a session remembered.
  */
-export const ASK_SYNTHESIS_MODEL = "claude-opus-5";
+export {
+  ASK_SYNTHESIS_MODEL,
+  ASK_SYNTHESIS_EFFORT,
+  resolveAskModel,
+  resolveAskEffort,
+  type AskEffort,
+} from "./model.ts";
 
-const MODEL = ASK_SYNTHESIS_MODEL;
 const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
 
 export type SynthesisOutcome =
@@ -66,7 +78,19 @@ export type SynthesisOutcome =
       kind: "WROTE";
       answer: string;
       citedUrls: string[];
+      /**
+       * **THE RESOLVED MODEL, NEVER THE DEFAULT.** (ITEM K §5, 2026-09-01.)
+       *
+       * Carried on the outcome so the route can persist it with the answer.
+       * An artifact that does not carry its own provenance cannot be checked —
+       * the same reasoning that makes a rendered position without a source
+       * record a defect. Without this, a bad answer six weeks from now cannot
+       * be attributed to the model, the prompt or the data, and every stored
+       * answer from before a model switch is incomparable to every one after.
+       */
       model: string;
+      /** The resolved effort. Recorded for the same reason as `model`. */
+      effort: AskEffort;
       ms: number;
       /**
        * What the API reported about cache activity on THIS call. The only
@@ -270,7 +294,7 @@ export function synthesisPayload(pack: EvidencePack): string {
  */
 export function synthesisRequestBody(
   pack: EvidencePack,
-  shape: { model: string; cached: boolean },
+  shape: { model: string; cached: boolean; effort?: AskEffort },
 ): Record<string, unknown> {
   const context: Record<string, unknown> = {
     type: "text",
@@ -287,11 +311,19 @@ export function synthesisRequestBody(
    * questions about one government share a prefix at all.
    *
    * There is exactly ONE breakpoint. A second one on the system block
-   * would never fire — the system prompt renders 1,503 characters = 478
-   * tokens, counted at Anthropic's `count_tokens` endpoint on 2026-09-01,
-   * below Claude Opus 5's 512-token minimum cacheable prefix, and
-   * a prefix under the minimum caches silently and reports nothing. A
-   * marker that cannot fire reads to the next session as a guarantee.
+   * would never fire — the system prompt renders 1,503 characters = 471
+   * tokens, counted at Anthropic's `count_tokens` endpoint on 2026-09-01
+   * and identical on `claude-opus-5` and `claude-sonnet-5`. That is below
+   * the minimum cacheable prefix of BOTH models (512 and 1024
+   * respectively), and a prefix under the minimum caches silently and
+   * reports nothing. A marker that cannot fire reads to the next session
+   * as a guarantee.
+   *
+   * ITEM K, 2026-09-01: the minimum is a property of the MODEL and it
+   * doubled when Ask moved to Sonnet 5, which is why the one breakpoint
+   * that survives no longer fires for the product's smallest packs. The
+   * measurement and its consequence are in `lib/ask/prompt-cache.ts`;
+   * it is a cost fact, not a correctness one, and it is not fixed here.
    *
    * The marker is ADDED rather than set to a falsy value when caching is off:
    * `cache_control: undefined` would serialise away in JSON and read the same
@@ -302,10 +334,47 @@ export function synthesisRequestBody(
 
   return {
     model: shape.model,
+    /*
+     * **THE OUTPUT CEILING, RE-COUNTED ON SONNET 5 AND LEFT WHERE IT WAS.**
+     * (ITEM K, 2026-09-01.)
+     *
+     * 2048 is not a budget derived from the prompt; it is a ceiling on the one
+     * unbounded term, and the term it bounds is small by contract — ASK-19
+     * caps a rendered answer at 700 characters and five sentences. The
+     * canonical corpus was re-measured against this model rather than assumed
+     * — the per-question output token counts are in the ITEM K run record
+     * under `data/health/ask-model-compare-runs/` — and every answer landed an
+     * order of magnitude under the ceiling, so it did not need to move.
+     *
+     * It is deliberately NOT tightened toward the observed mean, and the
+     * effort sweep showed exactly why. Adaptive thinking is on and thinking
+     * tokens count against `max_tokens`: at `xhigh` and `max` the structured
+     * answer is truncated mid-string and arrives as an unparseable body or no
+     * text block at all — three of four canonical questions failed that way at
+     * `max`. A ceiling that clips a thinking-heavy draw truncates an answer
+     * mid-claim, which is the one failure mode this surface may not have.
+     *
+     * So this number and `ASK_SYNTHESIS_EFFORT` are COUPLED. Raising effort
+     * above `high` requires raising this first, and a session that moves one
+     * without the other will meet the truncation rather than a slower answer.
+     */
     max_tokens: 2048,
+    /*
+     * ADAPTIVE, and it is the only on-mode Sonnet 5 accepts. The manual form
+     * — `{type: "enabled", budget_tokens: N}` — is REMOVED on this model
+     * generation and answers 400. There is no thinking budget to tune here;
+     * `effort` below is the whole of the depth control.
+     */
     thinking: { type: "adaptive" },
     output_config: {
-      effort: "medium",
+      /*
+       * PINNED, never omitted. An omitted `effort` defaults to `high` on the
+       * Claude API, and thinking tokens bill at the OUTPUT rate — so omitting
+       * it is not a neutral default, it is the most expensive setting chosen
+       * by accident. The value is `lib/ask/model.ts`'s resolved one so the
+       * override and the recorded value cannot disagree.
+       */
+      effort: shape.effort ?? resolveAskEffort(),
       format: { type: "json_schema", schema: synthesisSchema() },
     },
     /*
@@ -366,6 +435,16 @@ export async function synthesizeAnswer(
     return { kind: "UNAVAILABLE", why: "ceiling", ms: elapsed() };
   }
 
+  /*
+   * **RESOLVED ONCE, HERE, AND USED FOR BOTH THE REQUEST AND THE RECORD.**
+   *
+   * Reading the environment twice — once to build the body and once to write
+   * the outcome — is how a record comes to disagree with what was actually
+   * sent. One read, one pair of values, one truth.
+   */
+  const model = resolveAskModel();
+  const effort = resolveAskEffort();
+
   const impl = options.fetchImpl ?? fetch;
   try {
     const response = await impl(MESSAGES_URL, {
@@ -376,13 +455,17 @@ export async function synthesizeAnswer(
         "anthropic-version": "2023-06-01",
       },
       /*
-       * **THE MODEL IS THE MODULE CONSTANT AND NOTHING ELSE READS IT IN.**
+       * **THE MODEL IS RESOLVED FROM `lib/ask/model.ts` AND NOTHING ELSE
+       * READS IT IN.**
        *
        * `options` is not consulted for a model here and carries no field that
        * could supply one. One model for all Ask traffic is not a convention
-       * this line follows; it is the only expression this line can write.
+       * this line follows; it is the only expression this line can write. The
+       * `WTP_ASK_MODEL` override is a DEPLOYMENT-wide value read once above —
+       * it cannot vary by caller, by reader or by request, so it does not
+       * fragment the model-scoped prompt cache.
        */
-      body: JSON.stringify(synthesisRequestBody(pack, { model: MODEL, cached: true })),
+      body: JSON.stringify(synthesisRequestBody(pack, { model, cached: true, effort })),
     });
     if (!response.ok) {
       /* The status, and Anthropic's own error TYPE token if it sent one. The
@@ -420,7 +503,8 @@ export async function synthesizeAnswer(
       citedUrls: Array.isArray(parsed.citedUrls)
         ? parsed.citedUrls.filter((u): u is string => typeof u === "string")
         : [],
-      model: MODEL,
+      model,
+      effort,
       ms: elapsed(),
       /* Read off the response, never inferred from the request we sent. A
          missing usage block is zero MEASURED, never an assumed hit. */

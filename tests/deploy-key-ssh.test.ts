@@ -47,10 +47,10 @@ const PLACEHOLDER_KEY =
 
 test("RULING 165: the deploy key is required by the DESTINATION, not by the environment", () => {
   // GitHub, in every shape a remote arrives in.
-  assert.equal(isGitHubTarget("https://github.com/SeanJ22/We-The-People.git"), true);
-  assert.equal(isGitHubTarget("https://x-access-token:TOKEN@github.com/SeanJ22/We-The-People.git"), true);
-  assert.equal(isGitHubTarget("git@github.com:SeanJ22/We-The-People.git"), true);
-  assert.equal(isGitHubTarget("ssh://git@github.com/SeanJ22/We-The-People.git"), true);
+  assert.equal(isGitHubTarget("https://github.com/SeanJ22/meanwhile.git"), true);
+  assert.equal(isGitHubTarget("https://x-access-token:TOKEN@github.com/SeanJ22/meanwhile.git"), true);
+  assert.equal(isGitHubTarget("git@github.com:SeanJ22/meanwhile.git"), true);
+  assert.equal(isGitHubTarget("ssh://git@github.com/SeanJ22/meanwhile.git"), true);
 
   // Not GitHub — and these must NOT demand a key, or the guard's own
   // both-directions proof could never run on a machine that correctly holds
@@ -67,13 +67,13 @@ test("RULING 165: the deploy key is required by the DESTINATION, not by the envi
 });
 
 test("RULING 165: every GitHub remote shape resolves to the same SSH URL", () => {
-  const expected = "git@github.com:SeanJ22/We-The-People.git";
+  const expected = "git@github.com:SeanJ22/meanwhile.git";
   for (const input of [
-    "https://github.com/SeanJ22/We-The-People.git",
-    "https://github.com/SeanJ22/We-The-People",
-    "https://x-access-token:TOKEN@github.com/SeanJ22/We-The-People.git",
-    "git@github.com:SeanJ22/We-The-People.git",
-    "ssh://git@github.com/SeanJ22/We-The-People.git",
+    "https://github.com/SeanJ22/meanwhile.git",
+    "https://github.com/SeanJ22/meanwhile",
+    "https://x-access-token:TOKEN@github.com/SeanJ22/meanwhile.git",
+    "git@github.com:SeanJ22/meanwhile.git",
+    "ssh://git@github.com/SeanJ22/meanwhile.git",
   ]) {
     assert.equal(sshUrlForGitHub(input), expected, `${input} should resolve to ${expected}`);
   }

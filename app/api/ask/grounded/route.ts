@@ -53,6 +53,7 @@ import {
 import { readLocationOrigin, stampResidency } from "@/lib/ask/residency";
 import { captureAskInteraction } from "@/lib/db/ask-signal";
 import { askCallerKey, cacheCallLine } from "@/lib/ask/prompt-cache";
+import { askModelStartupLine } from "@/lib/ask/model";
 import { synthesizeAnswer } from "@/lib/ask/synthesize";
 import { sittingsOnSameLocalDay, selectSitting, type AgendaSelection } from "@/lib/ask/select";
 import {
@@ -142,6 +143,22 @@ import { statesOf, voteEvidenceFor } from "@/lib/ask/votes";
  */
 
 export const runtime = "nodejs";
+
+/**
+ * **WHICH MODEL IS THIS DEPLOYMENT SERVING? ANSWERED IN THE LOG, AT STARTUP.**
+ * (ITEM K §3, 2026-09-01.)
+ *
+ * Module scope, so it runs once when this route's runtime initialises — a cold
+ * start on the deployed function, and process start on a local build. It
+ * prints the RESOLVED model and effort, never the defaults, which is the whole
+ * point: the moment a `WTP_ASK_MODEL` override exists, "read the code that was
+ * deployed" stops being a way to answer the question, and an operator
+ * diagnosing an answer needs it answerable from the deployment log alone.
+ *
+ * Two configuration values and nothing else. No reader fact, no credential,
+ * no request content — the same standing rule the trace lines follow.
+ */
+console.log(askModelStartupLine());
 
 const MAX_BODY_BYTES = 16384;
 const MAX_QUESTION_CHARS = 400;
@@ -1723,7 +1740,11 @@ export async function POST(request: Request) {
   if (synthesis.kind === "WROTE") {
     trace.synthesis = {
       ran: true,
+      /* ITEM K §5: the RESOLVED model and effort, read off the outcome that
+         made the call rather than off the constants — an override that ran
+         unrecorded is exactly the un-attributable answer §5 exists to stop. */
       model: synthesis.model,
+      effort: synthesis.effort,
       ms: synthesis.ms,
       /*
        * H1. The cache numbers travel with the answer, per caller key, so a

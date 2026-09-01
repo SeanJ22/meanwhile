@@ -55,6 +55,7 @@ import { today } from "./doc-dates.mjs";
 import {
   COLUMNS,
   ALL_RESOLUTIONS,
+  CLOSING_RESOLUTIONS,
   DELETIONS_JSON,
   OPENED_JSON,
   planDeletions,
@@ -79,6 +80,10 @@ import {
 } from "./tracker-core.mjs";
 import { buildWorkbook, readWorkbook } from "./xlsx.mjs";
 import { reconcileTracker, reconciliationReport } from "../lib/ops/tracker-transaction.ts";
+import { REGISTRY } from "../lib/tracker/registry.mjs";
+import { RESOLVED_BY_EVIDENCE, auditCoverage, evaluateEntry } from "../lib/tracker/predicates.mjs";
+import { applyOpenedDates, reconcile, summarize } from "../lib/tracker/reconcile.mjs";
+import { ownerView } from "../lib/tracker/owner-view.mjs";
 
 const MODE = process.argv[2] ?? "views";
 /** Who a SESSION-authored resolution closes as. The author needs no flag. */
@@ -802,6 +807,41 @@ session closes (RULING 37): ${sessionCloses.join(", ")}`);
   refusals.push(...deleteRefusals);
   const deletedIds = new Set(deletions.map((d) => (d.row.ID ?? "").trim()));
 
+  /*
+   * **RULING 227 — a row whose predicate has gone false moves out.**
+   *
+   * The authority is NOT the "(RULING 227 auto-reconciliation)" string sitting
+   * in the row's `Closed by` column. That string is data, and data in a CSV is
+   * exactly what a session could type by hand to smuggle a Needs Sean row past
+   * RULING 37. So the predicate is RE-EVALUATED here, at move time, against the
+   * committed artifacts — and only a row whose predicate answers
+   * RESOLVED_BY_EVIDENCE right now is granted the `predicate` author.
+   *
+   * A row that HOLDS or that CANNOT_TELL at move time is left exactly where it
+   * is, whatever its columns claim.
+   */
+  const predicateCloses = [];
+  for (const entry of REGISTRY) {
+    if (entry.kind !== "predicate") continue;
+    const row = working.find((r) => (r.ID ?? "").trim() === entry.rowId);
+    if (!row || !CLOSING_RESOLUTIONS.includes((row.Resolution ?? "").trim())) continue;
+    const outcome = evaluateEntry(entry, { root: ROOT });
+    if (outcome.verdict !== RESOLVED_BY_EVIDENCE) {
+      refusals.push(
+        `RULING 227 — ${entry.rowId} carries a closing resolution but its predicate ` +
+          `re-evaluates to ${outcome.verdict} right now: ${outcome.why} The row does not ` +
+          "move on a stale claim, including one this mechanism itself wrote earlier.",
+      );
+      continue;
+    }
+    resolutionAuthor[entry.rowId] = "predicate";
+    predicateCloses.push(`${entry.rowId} ← predicate re-evaluated FALSE: ${outcome.why}`);
+  }
+  if (predicateCloses.length > 0) {
+    console.log("\nRULING 227 auto-reconciliation closes (each is reported so any can be reversed):");
+    for (const line of predicateCloses) console.log(`  ${line}`);
+  }
+
   const { moves, refusals: moveRefusals } = planMoves({
     working,
     sections,
@@ -1426,6 +1466,82 @@ function modeViews(working, resolved, sections) {
     : {};
 
   /*
+   * ======================================================================
+   * RULING 227 — THE RECHECK, RUN HERE BECAUSE HERE IS WHERE IT CANNOT BE
+   * SKIPPED.
+   * ======================================================================
+   *
+   * Three P1 Needs Sean rows were stating blockers that had already cleared,
+   * and one of them had been false for days while being named in a close-out
+   * as "what requires you". Nobody lied: a row records the wall at the moment a
+   * session hits it, and then nothing ever asks whether the wall is still
+   * standing.
+   *
+   * A recheck written into a session's instructions is a recheck that runs when
+   * somebody remembers. This one is bolted to the GENERATOR, so it runs every
+   * time anything regenerates the tracker at all — including on CI, including
+   * from a `tracker add` that has nothing to do with Needs Sean.
+   *
+   * The stores are written back only if this actually changed something, and
+   * the diff is reported rather than performed silently.
+   */
+  const beforeWorking = writeStore(working);
+  const beforeResolved = writeStore(resolved);
+
+  const { counts: openedCounts } = applyOpenedDates({ rows: [...working, ...resolved], root: ROOT });
+  const { outcomes, autoResolved } = reconcile({
+    working,
+    registry: REGISTRY,
+    stamp: STAMP,
+    sessionLabel: SESSION_LABEL || "tracker:views",
+    root: ROOT,
+  });
+  const coverage = auditCoverage({
+    needsSeanIds: working
+      .filter((r) => (r.Section ?? "").trim() === "needs-sean" && isOpen(r))
+      .map((r) => (r.ID ?? "").trim()),
+    registry: REGISTRY,
+  });
+
+  writeFileSync(
+    join(ROOT, "docs/tracker-owner-view.md"),
+    ownerView({ working, registry: REGISTRY, outcomes, autoResolved, stamp: STAMP, openedCounts }),
+    "utf8",
+  );
+  writeFileSync(
+    join(ROOT, "docs/tracker-reconciliation.json"),
+    JSON.stringify(
+      {
+        generated: STAMP,
+        ruling: "RULING 227",
+        openedDateProvenance: openedCounts,
+        coverage,
+        summary: summarize({ outcomes }),
+        outcomes: outcomes.map((o) => ({
+          rowId: o.rowId,
+          kind: o.kind,
+          verdict: o.outcome.verdict,
+          why: o.outcome.why,
+          read: o.outcome.read,
+          evidence: o.outcome.evidence,
+        })),
+      },
+      null,
+      2,
+    ) + "\n",
+    "utf8",
+  );
+
+  const afterWorking = writeStore(working);
+  const afterResolved = writeStore(resolved);
+  if (afterWorking !== beforeWorking) writeFileSync(join(ROOT, WORKING_CSV), afterWorking, "utf8");
+  if (afterResolved !== beforeResolved) {
+    writeFileSync(join(ROOT, RESOLVED_CSV), afterResolved, "utf8");
+  }
+
+  const recheck = summarize({ outcomes });
+
+  /*
    * THE MARKDOWN VIEWS ARE WRITTEN FIRST, AND A LOCKED WORKBOOK NO LONGER
    * STOPS THEM. (NH Hunt 5, 2026-08-21.)
    *
@@ -1484,6 +1600,41 @@ function modeViews(working, resolved, sections) {
   }
   console.log(`\n  resolved store                ${resolved.length} row(s)`);
   console.log("");
+  console.log("  RULING 227 recheck — every predicate re-evaluated this run:");
+  console.log(`    predicated rows       ${recheck.predicates}`);
+  console.log(`      still blocked       ${recheck.holds}`);
+  console.log(`      AUTO-RESOLVED       ${recheck.resolved}`);
+  console.log(`      could not tell      ${recheck.cannotTell}`);
+  console.log(`    NOT_MACHINE_VERIFIABLE ${recheck.notMachineVerifiable} (each carries a decision card)`);
+  console.log(
+    `  opened-date provenance  ledger ${openedCounts["opened-ledger"] ?? 0} · ` +
+      `session label ${openedCounts["session-label"] ?? 0} · UNKNOWN ${openedCounts.unrecoverable ?? 0}`,
+  );
+  console.log(`  docs/tracker-owner-view.md    written`);
+  console.log(`  docs/tracker-reconciliation.json written`);
+  for (const a of autoResolved) {
+    console.log(`    AUTO-RESOLVED ${a.rowId} — ${a.outcome.why}`);
+  }
+  console.log("");
+
+  /*
+   * RULING 227's invariant, enforced where it is measured. A Needs Sean row in
+   * neither arm of the registry escalated to the author with no route back
+   * down, which is the whole thing the rule prohibits. It is a REFUSAL rather
+   * than a warning, because a warning in a generator's output is a warning
+   * nobody reads.
+   */
+  if (coverage.uncovered.length) {
+    console.error(
+      `\n  RULING 227 — ${coverage.uncovered.length} Needs Sean row(s) carry neither a ` +
+        "machine-verifiable predicate nor a NOT_MACHINE_VERIFIABLE marking with a " +
+        "decision card:\n" +
+        coverage.uncovered.map((id) => `    ${id}`).join("\n") +
+        "\n\n  Escalation without reconciliation is prohibited. Add each row to " +
+        "lib/tracker/registry.mjs — a predicate if a machine can check it, a card if not.",
+    );
+    process.exitCode = 4;
+  }
 
   if (workbookError) {
     console.error(

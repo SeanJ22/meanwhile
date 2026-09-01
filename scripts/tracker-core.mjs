@@ -127,7 +127,7 @@ export const COLUMNS = [
  * recovered from history reads `UNKNOWN` and is never guessed.
  *
  * **`Last verified` — when a machine last checked whether the row is still
- * true.** Written only by the R-C5 reconciler (`lib/tracker/reconcile.mjs`) for
+ * true.** Written only by the RULING 227 reconciler (`lib/tracker/reconcile.mjs`) for
  * rows carrying a predicate. Blank means no predicate has ever run against this
  * row, which is itself the honest reading.
  */
@@ -339,7 +339,44 @@ export function planMoves({ working, sections, actor = "session", resolutionAuth
      * such close is reported individually so he can reverse any the session got
      * wrong. Ambiguity is not a licence: a row no ruling answers stays open.
      */
-    if (onlySean.has(section) && author !== "sean" && author !== "ruling") {
+    /*
+     * **RULING 227 (2026-08-31) — escalation without reconciliation is prohibited.**
+     *
+     * A FOURTH author, and like RULING 79's it is not a session wearing a
+     * disguise. RULING 79 handles the row the author has already ANSWERED.
+     * RULING 227 handles the row whose PREMISE HAS EXPIRED — the blocker it
+     * describes is measurably no longer there.
+     *
+     * The three rows that produced the rule: `NH272` asked for a secret that by
+     * then existed, `NH281` said production was stuck on a build it had long
+     * since moved off, and `NH300` asked for a proof that had already been run
+     * 7 of 7 against live Postgres. All three were P1, all three were named in
+     * a close-out as "what requires you", and all three were FALSE when that
+     * sentence was written. Nobody lied: a row records the wall at the moment a
+     * session hits it, and then nothing ever asks whether the wall is still
+     * standing. The author reads a queue and cannot tell which rows are
+     * photographs.
+     *
+     * So `"predicate"` closes a row only when a registered predicate in
+     * `lib/tracker/registry.mjs` has been RE-EVALUATED against committed
+     * artifacts on this run and returned `RESOLVED_BY_EVIDENCE`. The evidence
+     * that earned it is written onto the row, so every such close is as
+     * reversible and as auditable as a RULING 79 close.
+     *
+     * **This does not weaken RULING 37 and it does not weaken RULING 208.**
+     * RULING 37 stands entire for a row awaiting the author's JUDGEMENT, which
+     * is why the registry's other arm exists: a row no machine can decide is
+     * marked NOT_MACHINE_VERIFIABLE and carries a decision card, and no
+     * predicate may ever touch it. RULING 208 stands entire too: a predicate
+     * closes the ROW, which was a request for the author's attention, and never
+     * the record OBLIGATION the row was about.
+     */
+    if (
+      onlySean.has(section) &&
+      author !== "sean" &&
+      author !== "ruling" &&
+      author !== "predicate"
+    ) {
       refusals.push(
         `RULING 37 — ${id} is in "${section}" and only Sean closes a row there. ` +
           `A session may open one and may work it; it may never mark it ` +

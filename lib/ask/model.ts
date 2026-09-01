@@ -66,16 +66,68 @@ export const ASK_EFFORT_LEVELS = ["low", "medium", "high", "xhigh", "max"] as co
 export type AskEffort = (typeof ASK_EFFORT_LEVELS)[number];
 
 /**
- * **THE MODEL.** `claude-sonnet-5` — exactly this string, and deliberately no
- * date suffix.
+ * **THE MODEL — and it is `claude-opus-5`, REVERTED FROM `claude-sonnet-5` ON
+ * THE MEASUREMENT, on the day the switch was made.**
  *
- * From the Claude 4.6 generation onward model IDs are dateless AND pinned: the
- * ID identifies one version and the underlying model does not move under it.
- * The floating-alias behaviour that made a dated snapshot necessary on earlier
- * models does not apply, so there is no dated variant to pin to and adding one
- * would name a model that does not exist.
+ * Exactly this string, deliberately no date suffix. From the Claude 4.6
+ * generation onward model IDs are dateless AND pinned: the ID identifies one
+ * version and the underlying model does not move under it. The floating-alias
+ * behaviour that made a dated snapshot necessary on earlier models does not
+ * apply, so there is no dated variant to pin to and adding one would name a
+ * model that does not exist.
+ *
+ * ## Why this says opus when ITEM K said sonnet
+ *
+ * The owner decided the switch, and RULING 234 recorded it. **That same ruling
+ * is what reverted it**, in its own words:
+ *
+ * > The override is not a licence to skip the measurement. […] the
+ * > reversibility mechanism is the measurement itself: **if Sonnet 5 fails a
+ * > required question the incumbent held on the same run, the one constant is
+ * > reverted and the question is named.**
+ *
+ * **THE QUESTION, NAMED:** *"what will the weather be like on election day"* —
+ * `walk:all`'s `[g12]` check *the matcher ruling: the weather question is not
+ * keyword-routed*, at all four pilot ZIPs. The incumbent REFUSES it. The
+ * challenger ANSWERS it.
+ *
+ * ```
+ *   787211c1  pre-session, opus     refusal=true   answered=false   ok
+ *   cb481649  this head,   sonnet   refusal=false  answered=true    FAIL
+ *   cb481649  this head,   opus     refusal=true   answered=false   ok
+ * ```
+ *
+ * The third row is the one that matters: **same build, same code, one
+ * variable.** It is not the routing change and not the constant module — it is
+ * the model, and the reader-facing consequence is that a civic product answers
+ * a weather question instead of declining it. The check's own comment is the
+ * standard being failed: *it must never be answered with a lecture on who runs
+ * elections off the single word "election".*
+ *
+ * ## What was NOT done, and why
+ *
+ * The refusal path was not tuned to make Sonnet behave. ITEM K's brief forbids
+ * it in as many words — *do not touch prompts, retrieval, context assembly, or
+ * output formatting in this session* — and a prompt edited until a model stops
+ * failing a check is a measurement destroyed, not a defect fixed.
+ *
+ * ## What survives, and it is nearly all of ITEM K
+ *
+ * One constant moved back. Everything the item MEASURED stands and is what
+ * makes this revert possible rather than a retreat: the request shape verified
+ * against Sonnet 5 by live request, the token recount, the effort sweep that
+ * found `xhigh` and `max` break the output contract, the model recorded on
+ * every stored answer, and the harness repairs — the silent denominator, the
+ * swapped arms on regenerate, and the three rungs that ignored this file's own
+ * override. **Rollback after this session is still editing one constant**,
+ * which is exactly the property §3 asked for, now demonstrated rather than
+ * asserted.
+ *
+ * Reverting is not overriding the owner. RULING 234 pre-authorised it on this
+ * evidence, and the switch remains his to re-make once the pipeline no longer
+ * lets a weather question through.
  */
-export const ASK_SYNTHESIS_MODEL = "claude-sonnet-5";
+export const ASK_SYNTHESIS_MODEL = "claude-opus-5";
 
 /**
  * **THE EFFORT, AND IT WAS MEASURED RATHER THAN REASONED.**

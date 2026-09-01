@@ -3351,6 +3351,92 @@ edit and this ruling does not silently become false.`,
      */
     relations: [{ kind: "related_to", target: "R-0233" }],
   },
+  {
+    n: 236,
+    title:
+      "RULING 236 — MEASURED: RULING 234's reversibility clause fired on the same day, and the Ask model is back on claude-opus-5",
+    adopted: "2026-09-01",
+    domain: "meta-governance",
+    kind: "FACT",
+    provenance: "observed_fact",
+    body: `**The owner decided the Ask model switch to \`claude-sonnet-5\`, RULING
+234 recorded it, and RULING 234's own reversibility clause reverted it hours
+later. The constant reads \`claude-opus-5\`. This record is the measurement, not
+an amendment: RULING 234 pre-authorised exactly this and nothing about it needs
+changing.**
+
+Its words, which are the whole authority for the revert:
+
+> The override is not a licence to skip the measurement. […] the reversibility
+> mechanism is the measurement itself: **if Sonnet 5 fails a required question
+> the incumbent held on the same run, the one constant is reverted and the
+> question is named.**
+
+## THE QUESTION, NAMED
+
+*"what will the weather be like on election day"* — \`walk:all\`'s \`[g12]\`
+check *the matcher ruling: the weather question is not keyword-routed*, at all
+four pilot ZIPs. **The incumbent REFUSES it. The challenger ANSWERS it.**
+
+\`\`\`
+  787211c1  pre-session build, opus     refusal=true   answered=false   ok
+  cb481649  this session,      sonnet   refusal=false  answered=true    FAIL
+  cb481649  this session,      opus     refusal=true   answered=false   ok
+\`\`\`
+
+The third row is what makes this a model result rather than a guess: **same
+build, same code, one variable.** The check's own comment states the standard
+being failed — *it must never be answered with a lecture on who runs elections
+off the single word "election"* — and the reader-facing consequence is a civic
+product answering a weather question instead of declining it.
+
+## Two wrong answers were reached first, and both are worth recording
+
+**The first isolation run said "not the model", and it was measuring nothing.**
+\`WTP_ASK_MODEL=claude-opus-5\` reproduced the failure identically, which read
+as proof the model was innocent. It was proof that the override never arrived:
+\`ASK_SYNTHESIS_MODEL\` is a constant and the override lives in
+\`resolveAskModel()\`, and **three of the four Ask call sites bound the constant
+at module load** — the classifier, the unsourced fallback and the interpreter.
+Only \`synthesize.ts\` honoured it. So the experiment moved one rung of four and
+was read as moving the model.
+
+That is a defect in its own right and a serious one, because **this ruling's
+reversibility mechanism runs through that override**: an emergency revert
+through the environment would have moved a single call site while reporting that
+the model had changed. All four now resolve at call time, and
+\`tests/ask-model-constant.test.ts\` refuses a module-bound binding.
+
+**The second was assuming the pre-session baseline was green.** It was not — it
+carried four \`[SC3] 85641\` campaign-money failures of its own. A session that
+had assumed a clean baseline would have booked those four as its own
+regressions, which is the opposite of true.
+
+## What was NOT done
+
+The refusal path was not tuned to make the challenger behave. ITEM K's brief
+forbids it in as many words — *do not touch prompts, retrieval, context
+assembly, or output formatting in this session* — and a prompt edited until a
+model stops failing a check is a measurement destroyed rather than a defect
+fixed.
+
+## What survives
+
+Nearly all of ITEM K, and it is what made the revert cheap: the request shape
+verified against Sonnet 5 by live request, the token recount, the effort sweep
+that found \`xhigh\` and \`max\` break the output contract at
+\`max_tokens: 2048\`, the model persisted on every stored answer, and the
+harness repairs. **Rollback was editing one constant**, which is exactly the
+property ITEM K §3 asked for — now demonstrated rather than asserted.
+
+**The switch remains the owner's to re-make.** Nothing here forbids it; the
+evidence says the pipeline lets a weather question through on that model today.`,
+    claims: [],
+    relations: [
+      { kind: "related_to", target: "R-0234" },
+      { kind: "related_to", target: "R-0230" },
+    ],
+  },
 ];
 
 /**

@@ -100,7 +100,7 @@ export const ASK_INCUMBENT_MODEL = ASK_SYNTHESIS_MODEL;
  * `pnpm ask:model-compare`), and the run record names the two it used — so no
  * later reader has to infer a record's arms from what this constant says today.
  */
-export const ASK_CHALLENGER_MODEL = "claude-opus-5";
+export const ASK_CHALLENGER_MODEL = "claude-sonnet-5";
 
 /**
  * How much cheaper the challenger's tokens are, on the published rates alone.

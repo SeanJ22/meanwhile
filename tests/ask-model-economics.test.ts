@@ -100,12 +100,18 @@ test("H2: ONE MODEL FOR ALL ASK TRAFFIC — every Ask call site names the same m
 test("H2: the incumbent is read from the code, never from a constant that can drift", () => {
   assert.equal(ASK_INCUMBENT_MODEL, ASK_SYNTHESIS_MODEL);
   /*
-   * ITEM K, 2026-09-01: the owner ruled the switch from `claude-opus-5`.
-   * Pinned deliberately — a model ID that can change without a test changing
-   * is a model ID that can change without anyone noticing, and every stored
-   * answer's provenance depends on knowing which one shipped.
+   * ITEM K, 2026-09-01: the owner ruled the switch to `claude-sonnet-5`, and
+   * **RULING 234's own reversibility clause reverted it the same day** — the
+   * challenger answered *"what will the weather be like on election day"* at
+   * all four pilot ZIPs where the incumbent refuses it, proved on one build
+   * with the model as the only variable.
+   *
+   * Pinned deliberately, and the pin is the point: a model ID that can change
+   * without a test changing is a model ID that can change without anyone
+   * noticing, and every stored answer's provenance depends on knowing which
+   * one shipped. Re-making the switch means editing this line too, on purpose.
    */
-  assert.equal(ASK_SYNTHESIS_MODEL, "claude-sonnet-5");
+  assert.equal(ASK_SYNTHESIS_MODEL, "claude-opus-5");
 });
 
 test("H2: both candidates' rates carry a date and a source", () => {
@@ -119,26 +125,36 @@ test("H2: both candidates' rates carry a date and a source", () => {
   }
 });
 
-test("the published rate ratio is 0.4x both ways — the arms swapped when the switch landed", () => {
+test("the published rate ratio is 2.5x — and the arms are back where they started", () => {
   /*
-   * ITEM K, 2026-09-01. This asserted 2.5x when the incumbent was Opus 5 and
-   * the challenger was Sonnet 5. Both constants moved: the incumbent is now
-   * Sonnet 5 and the standing comparison arm is Opus 5, the revert target. The
-   * ratio is therefore the reciprocal, and asserting it in the new direction
-   * is what proves the two constants actually swapped rather than one of them
-   * being changed and the other forgotten.
+   * ITEM K, 2026-09-01, and this assertion has now been written twice in one
+   * day, which is worth recording rather than tidying away.
    *
-   * `rateRatio` is incumbent-over-challenger, so 2/5 and 10/25 = 0.4. The
-   * product now runs the cheaper of the two arms per token, which is the
-   * direction of the switch — and never the reason for it.
+   * It asserted 2.5x with incumbent Opus / challenger Sonnet. The switch landed
+   * and both constants moved, so it was rewritten to 0.4x — the reciprocal —
+   * precisely to prove the two had swapped TOGETHER rather than one being
+   * changed and the other forgotten. Then RULING 234's reversibility clause
+   * fired on the weather question and both moved back.
+   *
+   * So the number is 2.5x again, and the mechanism did its job in both
+   * directions: the ratio cannot read correctly unless both arms agree about
+   * which model is which.
+   *
+   * `rateRatio` is incumbent-over-challenger: 5/2 and 25/10 = 2.5. The product
+   * runs the DEARER of the two arms per token, deliberately — the cheaper one
+   * answers a weather question, and cost was never the reason for the switch.
    */
   const ratio = rateRatio(
     ASK_MODEL_RATES[ASK_INCUMBENT_MODEL],
     ASK_MODEL_RATES[ASK_CHALLENGER_MODEL],
   );
-  assert.equal(ratio.input, 0.4);
-  assert.equal(ratio.output, 0.4);
-  assert.ok(ratio.input < 1, "the incumbent must be the cheaper arm after the ITEM K switch");
+  assert.equal(ratio.input, 2.5);
+  assert.equal(ratio.output, 2.5);
+  assert.ok(
+    ratio.input > 1,
+    "the incumbent is the DEARER arm per token, and deliberately: the cheaper one " +
+      "answers a weather question at all four pilot ZIPs",
+  );
 });
 
 /* ── the verdict ─────────────────────────────────────────────────────────── */

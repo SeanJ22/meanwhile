@@ -76,10 +76,25 @@ test("an empty or whitespace override is treated as unset, never as an empty mod
 });
 
 test("a set override is honoured, and is REPORTED as an override", () => {
-  const env = { [ASK_MODEL_ENV]: "claude-opus-5" };
-  assert.equal(resolveAskModel(env), "claude-opus-5");
+  /*
+   * The override value is DERIVED from the constant rather than written down,
+   * and that is the point of this line. It used to be the literal
+   * `claude-opus-5` — which was a different model from the constant on the day
+   * it was written, and became the SAME model the day the switch was reverted.
+   * An override equal to the constant is not an override, so the assertion
+   * quietly stopped testing anything and went red only because
+   * `askModelOverrides` is honest about it.
+   *
+   * A test that has to be edited every time the constant moves is a test that
+   * will one day be edited wrongly.
+   */
+  const other =
+    ASK_SYNTHESIS_MODEL === "claude-sonnet-5" ? "claude-opus-5" : "claude-sonnet-5";
+  const env = { [ASK_MODEL_ENV]: other };
+  assert.notEqual(other, ASK_SYNTHESIS_MODEL, "the override must differ from the default");
+  assert.equal(resolveAskModel(env), other);
   assert.equal(askModelOverrides(env).model, true);
-  assert.match(askModelStartupLine(env), /claude-opus-5/);
+  assert.match(askModelStartupLine(env), new RegExp(other));
   assert.match(askModelStartupLine(env), new RegExp(`overridden by ${ASK_MODEL_ENV}`));
 });
 
@@ -158,4 +173,70 @@ test("the declaring module states WHY the model is a constant and not a per-envi
   assert.match(source, /measurement integrity/i);
   assert.match(source, /local/i);
   assert.match(source, /production/i);
+});
+
+/* ========================================================================== */
+/* The override must reach EVERY Ask rung, not just the one that reported it  */
+/* ========================================================================== */
+
+test("no Ask call site binds the model at module load", () => {
+  /*
+   * `const MODEL = ASK_SYNTHESIS_MODEL` binds the CONSTANT once, when the
+   * module is first imported, so `WTP_ASK_MODEL` never reaches that rung.
+   * Three of the four Ask call sites did exactly that: `synthesize.ts`
+   * honoured the override and `classifier.ts`, `unsourced-fallback.ts` and
+   * `interpret.ts` silently did not.
+   *
+   * ITEM K's brief allows the override on two conditions, and the second is
+   * that **the RESOLVED value — not the default — is what gets recorded**. A
+   * rung reading the constant meets the first and quietly breaks the second.
+   *
+   * What it cost: RULING 234 makes the measurement the reversibility mechanism
+   * for the Sonnet 5 switch. With three rungs bound at load, an emergency
+   * revert through the environment would have moved ONE call site while
+   * reporting the model had changed. It was found that way — an isolation walk
+   * with `WTP_ASK_MODEL=claude-opus-5` reproduced a failure identically, which
+   * read as proof the model was innocent and was really proof that the
+   * override never arrived.
+   */
+  const rungs = [
+    "lib/routing/classifier.ts",
+    "lib/routing/unsourced-fallback.ts",
+    "lib/ask/interpret.ts",
+    "lib/ask/synthesize.ts",
+  ];
+  const offenders: string[] = [];
+  for (const rung of rungs) {
+    const src = readFileSync(join(process.cwd(), rung), "utf8");
+    // Strip block comments: these files DISCUSS the constant by name, and a
+    // guard that reads its own explanation as the defect is the defect.
+    const code = src.replace(/\/\*[\s\S]*?\*\//g, "");
+    if (/const\s+\w*MODEL\w*\s*=\s*ASK_SYNTHESIS_MODEL\s*;/.test(code)) {
+      offenders.push(`${rung} binds ASK_SYNTHESIS_MODEL at module load`);
+    }
+    if (/model:\s*MODEL\b/.test(code)) {
+      offenders.push(`${rung} sends a module-bound MODEL in its request body`);
+    }
+  }
+  assert.deepEqual(
+    offenders,
+    [],
+    "every Ask rung must resolve the model at call time:\n  " + offenders.join("\n  "),
+  );
+});
+
+test("every Ask rung imports the RESOLVER, so the override cannot miss one", () => {
+  for (const rung of [
+    "lib/routing/classifier.ts",
+    "lib/routing/unsourced-fallback.ts",
+    "lib/ask/interpret.ts",
+    "lib/ask/synthesize.ts",
+  ]) {
+    const src = readFileSync(join(process.cwd(), rung), "utf8");
+    assert.match(
+      src,
+      /import\s*\{[^}]*resolveAskModel[^}]*\}\s*from/,
+      `${rung} does not import resolveAskModel, so WTP_ASK_MODEL cannot reach it`,
+    );
+  }
 });

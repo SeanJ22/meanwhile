@@ -51,7 +51,7 @@
  */
 import { ripcordPulled } from "../ripcords.ts";
 import { scrubFreeText } from "../log/scrub.ts";
-import { ASK_SYNTHESIS_MODEL } from "../ask/model.ts";
+import { resolveAskModel } from "../ask/model.ts";
 
 /**
  * The mark, in plain language, rendered ABOVE the answer.
@@ -131,7 +131,34 @@ const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
  * the import makes it structural. Thinking off at `low` effort is unchanged
  * and was verified against `claude-sonnet-5` by an actual request.
  */
-const MODEL = ASK_SYNTHESIS_MODEL;
+/**
+ * **RESOLVED AT CALL TIME, NOT BOUND AT MODULE LOAD.**
+ * (Repaired 2026-09-01, found while attributing a walk regression.)
+ *
+ * This read `const MODEL = ASK_SYNTHESIS_MODEL`, which binds the CONSTANT
+ * once when the module is first imported. `WTP_ASK_MODEL` is applied by
+ * {@link resolveAskModel}, so this rung ignored the override entirely —
+ * `lib/ask/synthesize.ts` honoured it and three other Ask call sites did not.
+ *
+ * ITEM K's brief permits the override on two conditions: it defaults to the
+ * constant when unset, and **the RESOLVED value — not the default — is what
+ * gets recorded and logged**. A rung that reads the constant satisfies the
+ * first and silently breaks the second.
+ *
+ * The cost is not hypothetical. RULING 234 makes the measurement the
+ * reversibility mechanism for the Sonnet 5 switch — *if it fails a required
+ * question the incumbent held, revert the one constant and report the
+ * question.* With three rungs bound at load, an experiment or an emergency
+ * revert through the environment would have moved ONE of four call sites while
+ * reporting that it had moved the model, and the run that proved it would have
+ * been measuring a mixture.
+ *
+ * It was found exactly that way: an isolation walk with
+ * `WTP_ASK_MODEL=claude-opus-5` reproduced the failure identically, which
+ * looked like proof the model was innocent and was really proof that the
+ * override never reached this code.
+ */
+const askModel = (): string => resolveAskModel();
 
 /**
  * The system prompt, and every line of it is a constraint rather than a style.
@@ -192,7 +219,7 @@ export async function askUnsourced(
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: MODEL,
+        model: askModel(),
         max_tokens: 300,
         thinking: { type: "disabled" },
         output_config: { effort: "low" },

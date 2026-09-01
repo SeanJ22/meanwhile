@@ -1,10 +1,10 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "e89946c84579c9ef",
+  "snapshot": "a07a0fd11625c91d",
   "counts": {
-    "records": 272,
-    "current": 251,
+    "records": 273,
+    "current": 252,
     "law": 219,
     "decisions": 31,
     "historical": 21
@@ -5279,6 +5279,34 @@
         {
           "kind": "related_to",
           "target": "R-0233"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0236",
+      "aliases": [
+        "RULING 236",
+        "R236",
+        "R-236"
+      ],
+      "title": "RULING 236 — MEASURED: RULING 234's reversibility clause fired on the same day, and the Ask model is back on claude-opus-5",
+      "kind": "FACT",
+      "status": "ACTIVE",
+      "provenance": "observed_fact",
+      "domain": "meta-governance",
+      "adopted": "2026-09-01",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [
+        {
+          "kind": "related_to",
+          "target": "R-0234"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0230"
         }
       ],
       "uncertain": [],

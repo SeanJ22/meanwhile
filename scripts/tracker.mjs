@@ -192,7 +192,8 @@ function widthFor(column) {
   if (column === "Resolution") return 22;
   if (column === "Condition") return 40;
   if (column === "Notes") return 46;
-  if (column === "Resolved on") return 13;
+  if (column === "Resolved on" || column === "Opened on") return 13;
+  if (column === "Last verified") return 34;
   if (column === "Opened by" || column === "Closed by") return 26;
   if (column === "Depends on" || column === "Legacy area") return 14;
   return 70;

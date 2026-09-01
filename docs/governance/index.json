@@ -1,11 +1,11 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "574249f750707cc3",
+  "snapshot": "62ff0603b6996548",
   "counts": {
-    "records": 268,
-    "current": 247,
-    "law": 216,
+    "records": 271,
+    "current": 250,
+    "law": 219,
     "decisions": 31,
     "historical": 21
   },
@@ -5144,6 +5144,112 @@
         {
           "kind": "related_to",
           "target": "R-0227"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0232",
+      "aliases": [
+        "RULING 232",
+        "R232",
+        "R-232",
+        "R-C9"
+      ],
+      "title": "RULING 232 — 'statewide' and 'source-universe' are claims about the POPULATION, never about the shape of the key",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-09-01",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [
+        {
+          "key": "labeling.population_scope",
+          "value": "acquired-source-authority-universe"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0229"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0205"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0221"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0092"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0233",
+      "aliases": [
+        "RULING 233",
+        "R233",
+        "R-233",
+        "R-C10"
+      ],
+      "title": "RULING 233 — staging is the integration branch and deploys to the staging origin; promotion to main is earned against that exact head",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-09-01",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "amends",
+          "target": "R-0001",
+          "changed": "the ROUTE a session's verified head takes to production: it merges to `staging` and is promoted to `main` through an exact-head gate, instead of merging to `main` directly. Not operative until the first session after Session C closes.",
+          "survives": "RULING 1's merge cadence entire — verify locally, accumulate, ship ONCE at the real end, one code merge per session, close-out records following through their existing gated path, and the planned merge having happened never being a reason to stop."
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0125"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0191"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0234",
+      "aliases": [
+        "RULING 234",
+        "R234",
+        "R-234",
+        "R-C11"
+      ],
+      "title": "RULING 234 — the owner overrides the H2 RETAIN verdict for the Sonnet 5 switch, and only for that decision",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-09-01",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "related_to",
+          "target": "R-0230"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0189"
         }
       ],
       "uncertain": [],

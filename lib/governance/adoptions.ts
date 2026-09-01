@@ -36,6 +36,20 @@ interface NewDecision {
    * to have governed decisions taken before it existed.
    */
   adopted?: string;
+  /**
+   * Extra names this record is cited by, ON TOP of the mechanical
+   * `RULING n` / `Rn` / `R-n` set the compiler always emits.
+   *
+   * A directive written in a chat session names its rulings before the
+   * repository has numbered them — Session C's final brief adopts "R-C9",
+   * "R-C10" and "R-C11", and those labels are what the brief, the audit
+   * package and the code comments written against it all say. Without the
+   * alias, `R-C10` resolves to nothing and a reader following the citation
+   * concludes the rule does not exist. That is the same failure RULING 156
+   * describes one floor up: a name that no longer resolves does not announce
+   * itself, it just silently finds nothing.
+   */
+  aliases?: string[];
   domain: Domain;
   kind: RecordKind;
   provenance: Provenance;
@@ -3003,6 +3017,228 @@ happen.`,
       { kind: "extends", target: "R-0099" },
       { kind: "related_to", target: "R-0176" },
       { kind: "related_to", target: "R-0227" },
+    ],
+  },
+  {
+    n: 232,
+    aliases: ["R-C9"],
+    title:
+      "RULING 232 — 'statewide' and 'source-universe' are claims about the POPULATION, never about the shape of the key",
+    adopted: "2026-09-01",
+    domain: "discovery",
+    kind: "LAW_DECISION",
+    provenance: "author_explicit",
+    body: `**An obligation, registry, corpus, or report line may be labeled
+"statewide" or "source-universe" only when its subject population was acquired
+from the authoritative source's complete applicable universe. A pilot-derived
+population with a statewide-shaped key is pilot-derived and is labeled so. "No
+ZIP in the key" is a property of the KEY, not of the POPULATION.**
+
+## What this closes, exactly
+
+The candidate-universe artifacts for all three pilot states were built from
+PILOT BALLOT DOCUMENTS — \`data/ballot/az-pima-2026.json\` (55 candidacies),
+\`nh-merrimack-2026.json\` (47), \`nj-morris-2026.json\` (276). The Arizona
+"statewide candidate identity registry" loads the Pima ballot and iterates its
+contests and candidacies. The generator's own comments already said so: the
+Arizona denominator is "not the state's candidate universe", and the Secretary
+of State's statewide filing list had been READ for one county's projection and
+never ACQUIRED as a corpus. The jurisdiction inventory recorded that source as
+\`DISCOVERY_OWED\`. And the "1,087 statewide enrichment obligations" were
+ZIP-free keys over that pilot population.
+
+Every one of those statements was individually true and correctly recorded. The
+LABEL was the defect. A reader of the tracker, the report or the registry saw
+the word "statewide" and read a claim about Arizona; what the word actually
+described was the absence of a ZIP from a key.
+
+## Why the key is not the population
+
+RULING 229 separated three layers — ACQUISITION against the source-authority
+universe, IDENTITY, and PROJECTION onto a reader's location — precisely so that
+a ZIP could never define the acquisition denominator. Removing the ZIP from a
+key is a correct move IN THE IDENTITY LAYER. It says nothing whatever about
+which candidates the acquisition layer went and got.
+
+So the two questions are orthogonal, and the label must answer the second:
+
+\`\`\`
+  KEY SHAPE        does this record's identity depend on a reader location?
+  POPULATION       was this population acquired from the authoritative
+                   source's complete applicable universe?
+
+  statewide-shaped key + pilot population  =  PILOT-DERIVED
+\`\`\`
+
+## What a session must do with it
+
+The obligation is not merely to stop writing the wrong word. **Correct every
+current label that violates this before any regeneration** — a generated view
+carries the label its generator wrote, so a regeneration performed before the
+correction propagates the false label into a new artifact and stamps it fresh.
+
+A pilot-derived population relabeled honestly is not a retreat. It is the same
+data with its denominator stated, and it makes the acquisition obligation that
+remains VISIBLE rather than already-apparently-met. Under RULING 205 that
+obligation stays open regardless of what the label said.`,
+    claims: [
+      {
+        key: "labeling.population_scope",
+        value: "acquired-source-authority-universe",
+      },
+    ],
+    relations: [
+      { kind: "extends", target: "R-0229" },
+      { kind: "related_to", target: "R-0205" },
+      { kind: "related_to", target: "R-0221" },
+      { kind: "related_to", target: "R-0092" },
+    ],
+  },
+  {
+    n: 233,
+    aliases: ["R-C10"],
+    title:
+      "RULING 233 — staging is the integration branch and deploys to the staging origin; promotion to main is earned against that exact head",
+    adopted: "2026-09-01",
+    domain: "shipping-ci",
+    kind: "LAW_DECISION",
+    provenance: "author_explicit",
+    body: `**\`main\` is production and deploys to \`meanwhileusa.com\`. \`staging\` is
+the integration branch and deploys to \`test.meanwhileusa.com\`.
+\`READY_FOR_INTEGRATION\` heads merge to \`staging\` first under the existing
+exact-head rule. Promotion \`staging\` → \`main\` occurs only when the canonical
+reader suite, visual checks, and the walk pass against \`test.meanwhileusa.com\`
+as a \`STAGING_RENDER\` target on that exact head, and the freeze gate is clear.
+The production-integrity observer continues to verify \`main\` against
+\`meanwhileusa.com\`; a second observer verifies \`staging\` against
+\`test.meanwhileusa.com\`. Civic data is runtime and is not staged; only code
+and schema changes flow through staging.**
+
+## THE BOOTSTRAP CLAUSE, AND IT IS NOT OPTIONAL
+
+**This ruling is NOT OPERATIVE until the first session after Session C closes.**
+The author was explicit about it, and the reason is that a shipping law cannot
+first take effect inside the merge that installs it: the head that would be
+promoted is the head that contains the promotion machinery, and nothing has yet
+verified that machinery against a real staging deploy.
+
+So, during Session C only:
+
+- the \`staging\` branch may be created, and its ref may be fast-forwarded to
+  the exact Session C integration head **solely to prove** the branch
+  deployment, the staging database isolation, the observers, and promotion
+  eligibility. **That is not a merge of code to \`main\`.**
+- the promotion workflow **must be proved in exact-head eligibility/refusal
+  mode**: a green exact staging head is ELIGIBLE; a stale, red, or
+  wrong-database head is REFUSED. Proving the refusal branch matters more than
+  proving the eligible one, because a gate that has only ever said yes has not
+  been shown to be a gate.
+- **it does not move \`main\`.** Session C's actual product shipment still uses
+  the one planned RULING 1 merge from the integrated head to \`main\`.
+- after that merge, \`staging\` may be fast-forwarded to the resulting \`main\`
+  head so the next session begins synchronized.
+
+## What it amends, and what survives untouched
+
+RULING 1's merge cadence stands entire: verify locally, accumulate, ship once
+at the real end, and the planned merge having happened is never a reason to
+stop. What changes is the ROUTE that merge takes from the session's head to
+production — through \`staging\` and a promotion gate rather than straight to
+\`main\`.
+
+**\`PRODUCTION_RENDER\` remains required for activation.** A \`STAGING_RENDER\`
+run counts as \`INDEPENDENTLY_REPRODUCED\` for the purpose of earning
+promotion; it does not become the production verification, and it may not be
+recorded as one. That distinction is the same one RULING 125 draws between the
+test bench and the delivery truck, with one more bench in between.
+
+## Civic data does not stage
+
+Only code and schema changes flow through staging. Civic data is acquired at
+runtime against real publishers, and a staged copy of it would be a second
+corpus with its own staleness, its own gaps and its own provenance — a
+duplicate of the one store this product's whole claim rests on. The staging
+database exists to isolate WRITES made by staging code, not to hold a rehearsal
+copy of the record.
+
+## The claim slot is deliberately left alone until this rule bites
+
+\`shipping.promotion_path\` is declared in \`lib/governance/claims.ts\` and this
+record does NOT claim it. That is not an omission. A semantic claim states what
+is TRUE NOW, and until the bootstrap clause above expires the true answer is
+still RULING 1's — the integrated head merges to \`main\`. A record that claimed
+\`staging-first-then-promotion\` on the day it was adopted would make the
+validator assert a shipping path that the very session adopting it is
+forbidden to use.
+
+**The first session after Session C closes assigns that claim**, and doing so
+is how this ruling becomes operative rather than merely recorded.`,
+    claims: [],
+    relations: [
+      {
+        kind: "amends",
+        target: "R-0001",
+        changed:
+          "the ROUTE a session's verified head takes to production: it merges to `staging` and is promoted to `main` through an exact-head gate, instead of merging to `main` directly. Not operative until the first session after Session C closes.",
+        survives:
+          "RULING 1's merge cadence entire — verify locally, accumulate, ship ONCE at the real end, one code merge per session, close-out records following through their existing gated path, and the planned merge having happened never being a reason to stop.",
+      },
+      { kind: "related_to", target: "R-0125" },
+      { kind: "related_to", target: "R-0191" },
+    ],
+  },
+  {
+    n: 234,
+    aliases: ["R-C11"],
+    title:
+      "RULING 234 — the owner overrides the H2 RETAIN verdict for the Sonnet 5 switch, and only for that decision",
+    adopted: "2026-09-01",
+    domain: "meta-governance",
+    kind: "LAW_DECISION",
+    provenance: "author_explicit",
+    body: `**The author has decided the Ask surface moves from \`claude-opus-5\` to
+\`claude-sonnet-5\`. This supersedes the H2 \`RETAIN\` verdict FOR THIS DECISION
+ONLY. The automated switch rule is not amended, not relaxed, and not
+suspended.**
+
+## Why the automated verdict has to be overridden rather than argued with
+
+The H2 comparison returned \`RETAIN\` because Q5 did not hold on the challenger.
+**Q5 fails identically on the incumbent** — the 18-record pack cannot fit the
+ASK-19 700-character budget — so Q5 does not DISCRIMINATE between the two
+models. It is a fact about the budget, reported as a fact about the challenger.
+
+That is a real limitation of the instrument and not a reason to weaken it. The
+rule it implements is deliberately absolute: a switch is earned when every
+required question is measured and holds. A rule that could be talked out of its
+verdict by whoever is reading the run is not a rule. So the instrument keeps
+its verdict, the verdict is recorded, and the AUTHOR overrides it in the open,
+on this one decision, with the reason written down.
+
+## What survives, exactly
+
+- **The automated switch rule stands unchanged** for every future automated
+  switch. This record does not touch \`model.switch_rule\`.
+- **The single canonical \`SwitchVerdict\` emitter stands** (RULING 230), and
+  \`relativeNonRegressionAnalysis()\` remains a distinct diagnostic type rather
+  than a second verdict.
+- **The override is not a licence to skip the measurement.** The reader-
+  answerability suite is re-run against both models on the same question set
+  and reported PER QUESTION, and the reversibility mechanism is the measurement
+  itself: if Sonnet 5 fails a required question the incumbent held on the same
+  run, the one constant is reverted and the question is named.
+
+## The narrow shape of an override
+
+An owner override that did not say what it covers would quietly become a
+precedent — the next session would find a ruling that says an automated verdict
+can be set aside, and would not find the sentence limiting it to one decision.
+So the limit is the ruling: **this decision, this pair of models, this date.**
+Anything else takes a new record.`,
+    claims: [],
+    relations: [
+      { kind: "related_to", target: "R-0230" },
+      { kind: "related_to", target: "R-0189" },
     ],
   },
 ];

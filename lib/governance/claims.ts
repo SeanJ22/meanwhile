@@ -401,6 +401,20 @@ export const CLAIM_KEYS: readonly ClaimKeyDef[] = [
       "editing the row in place",
     ],
   },
+  {
+    key: "labeling.population_scope",
+    question:
+      "What earns an obligation, registry, corpus or report line the label 'statewide' or 'source-universe'?",
+    values: [
+      "acquired-source-authority-universe",
+      "a statewide-shaped key over whatever population is held",
+    ],
+  },
+  {
+    key: "shipping.promotion_path",
+    question: "How does a verified head reach production?",
+    values: ["staging-first-then-promotion", "integrated-head-merges-to-main"],
+  },
 ] as const;
 
 const KEY_INDEX = new Map(CLAIM_KEYS.map((k) => [k.key, k]));

@@ -1,0 +1,1366 @@
+{
+ "formatVersion": 1,
+ "_note": [
+  "THE MEASUREMENT THAT LICENSES EVERY FIGURE IN data/funding/state-money-az-2026.json.",
+  "",
+  "SeeTheMoney returns a candidate as several summary rows partitioned by office and party.",
+  "Whether those rows are PARTS whose sum is the cycle total was undetermined until this walk,",
+  "and Session C correctly refused to ship a snapshot on the untested guess.",
+  "",
+  "The independent statement is the publisher's own ITEMISED TRANSACTION LEDGER, reachable at",
+  "/Reporting/GetNEWDetailedTableData with the entityId parameter the earlier walk was missing.",
+  "Each row below compares one committee's summary totals against the sum of its own itemised",
+  "transactions. A committee that does not agree does not render, whatever else about it matches.",
+  "",
+  "NO ITEMISED TRANSACTION APPEARS HERE. Those rows carry contributor name, occupation, employer,",
+  "city and zip (RULING 167). They were read to compute a sum and were never persisted."
+ ],
+ "collectedAt": "2026-08-31",
+ "cycle": 2026,
+ "source": {
+  "summary": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
+  "itemised": "https://seethemoney.az.gov/Reporting/GetNEWDetailedTableData/",
+  "register": "ftp://ftp.azsos.gov/cfsdata2/Committees.txt",
+  "calendar": "ftp://ftp.azsos.gov/cfsdata2/ReportingPeriods.txt",
+  "publicPage": "https://seethemoney.az.gov/"
+ },
+ "universe": {
+  "perQuery": [
+   {
+    "label": "IsLessActive=false ShowOfficeHolder=false",
+    "rows": 370,
+    "entities": 255
+   },
+   {
+    "label": "IsLessActive=true ShowOfficeHolder=false",
+    "rows": 844,
+    "entities": 716
+   },
+   {
+    "label": "IsLessActive=true ShowOfficeHolder=true",
+    "rows": 16,
+    "entities": 16
+   }
+  ],
+  "unionRows": 860,
+  "unionEntities": 732,
+  "registerRows": 8829,
+  "note": "The portal's DEFAULT view is IsLessActive=false and it hides most of the register. A sourced absence here means the union of all three settings held nothing."
+ },
+ "reconciliation": {
+  "committeesTested": 58,
+  "agreed": 58,
+  "disagreed": 0,
+  "rows": [
+   {
+    "entityId": 201800057,
+    "committeeName": "Elect Katie Hobbs",
+    "candidate": "Katie Hobbs",
+    "summaryIncome": 11109719.95,
+    "summaryExpense": 14355612.69,
+    "itemisedIncome": 11109719.95,
+    "itemisedExpense": 14355612.69,
+    "incomeTransactions": 122491,
+    "expenseTransactions": 2679,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (122491 income and 2679 expense transactions)"
+   },
+   {
+    "entityId": 102014,
+    "committeeName": "Teri Ann PhD for Governor",
+    "candidate": "Teri Ann Hourihan",
+    "summaryIncome": 53242.06,
+    "summaryExpense": 48585.04,
+    "itemisedIncome": 53242.06,
+    "itemisedExpense": 48585.04,
+    "incomeTransactions": 114,
+    "expenseTransactions": 31,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (114 income and 31 expense transactions)"
+   },
+   {
+    "entityId": 101840,
+    "committeeName": "Lombardo for AZ (Clean Elections)",
+    "candidate": "Risa Lombardo",
+    "summaryIncome": 1141433,
+    "summaryExpense": 1141305.59,
+    "itemisedIncome": 1141433,
+    "itemisedExpense": 1141305.59,
+    "incomeTransactions": 4304,
+    "expenseTransactions": 35,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (4304 income and 35 expense transactions)"
+   },
+   {
+    "entityId": 102108,
+    "committeeName": "Hugh Lytle for Governor",
+    "candidate": "Hugh Lytle",
+    "summaryIncome": 2152968.1,
+    "summaryExpense": 1141903.58,
+    "itemisedIncome": 2152968.1,
+    "itemisedExpense": 1141903.58,
+    "incomeTransactions": 96,
+    "expenseTransactions": 157,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (96 income and 157 expense transactions)"
+   },
+   {
+    "entityId": 101830,
+    "committeeName": "Biggs for Arizona",
+    "candidate": "Andy Biggs",
+    "summaryIncome": 3952851.21,
+    "summaryExpense": 2752348.58,
+    "itemisedIncome": 3952851.21,
+    "itemisedExpense": 2752348.58,
+    "incomeTransactions": 46327,
+    "expenseTransactions": 510,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (46327 income and 510 expense transactions)"
+   },
+   {
+    "entityId": 201600176,
+    "committeeName": "Biggs2016",
+    "candidate": "ANDY BIGGS",
+    "summaryIncome": 0,
+    "summaryExpense": 50050,
+    "itemisedIncome": 0,
+    "itemisedExpense": 50050,
+    "incomeTransactions": 0,
+    "expenseTransactions": 2,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (0 income and 2 expense transactions)"
+   },
+   {
+    "entityId": 100675,
+    "committeeName": "Neely for Arizona (Clean Elections)",
+    "candidate": "Scott David Neely",
+    "summaryIncome": 1141996.75,
+    "summaryExpense": 1137367.99,
+    "itemisedIncome": 1141996.75,
+    "itemisedExpense": 1137367.99,
+    "incomeTransactions": 4140,
+    "expenseTransactions": 57,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (4140 income and 57 expense transactions)"
+   },
+   {
+    "entityId": 101980,
+    "committeeName": "David Schweikert for Governor",
+    "candidate": "David Schweikert",
+    "summaryIncome": 1256024.81,
+    "summaryExpense": 1227096.4,
+    "itemisedIncome": 1256024.81,
+    "itemisedExpense": 1227096.4,
+    "incomeTransactions": 420,
+    "expenseTransactions": 657,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (420 income and 657 expense transactions)"
+   },
+   {
+    "entityId": 100622,
+    "committeeName": "Fontes for AZ",
+    "candidate": "Adrian Fontes",
+    "summaryIncome": 1874086.35,
+    "summaryExpense": 992036.78,
+    "itemisedIncome": 1874086.35,
+    "itemisedExpense": 992036.78,
+    "incomeTransactions": 22801,
+    "expenseTransactions": 1062,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (22801 income and 1062 expense transactions)"
+   },
+   {
+    "entityId": 102163,
+    "committeeName": "Duwayne Collier for Secretary of State (Clean Elections)",
+    "candidate": "Duwayne Collier",
+    "summaryIncome": 295798,
+    "summaryExpense": 295747.6,
+    "itemisedIncome": 295798,
+    "itemisedExpense": 295747.6,
+    "incomeTransactions": 3610,
+    "expenseTransactions": 12,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (3610 income and 12 expense transactions)"
+   },
+   {
+    "entityId": 102164,
+    "committeeName": "Duwayne Collier for Secretary of State",
+    "candidate": "Duwayne Collier",
+    "summaryIncome": 0,
+    "summaryExpense": 0,
+    "itemisedIncome": 0,
+    "itemisedExpense": 0,
+    "incomeTransactions": 0,
+    "expenseTransactions": 0,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (0 income and 0 expense transactions)"
+   },
+   {
+    "entityId": 100625,
+    "committeeName": "Alex For Arizona",
+    "candidate": "Alexander Kolodin",
+    "summaryIncome": 415256.75,
+    "summaryExpense": 134049.9,
+    "itemisedIncome": 415256.75,
+    "itemisedExpense": 134049.9,
+    "incomeTransactions": 1260,
+    "expenseTransactions": 337,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (1260 income and 337 expense transactions)"
+   },
+   {
+    "entityId": 102117,
+    "committeeName": "Gina Swoboda for Arizona Secretary of State",
+    "candidate": "Gina Swoboda",
+    "summaryIncome": 241007.85,
+    "summaryExpense": 222627.59,
+    "itemisedIncome": 241007.85,
+    "itemisedExpense": 222627.59,
+    "incomeTransactions": 137,
+    "expenseTransactions": 71,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (137 income and 71 expense transactions)"
+   },
+   {
+    "entityId": 100626,
+    "committeeName": "Kris Mayes for Arizona",
+    "candidate": "Kris Mayes",
+    "summaryIncome": 4612992.16,
+    "summaryExpense": 3422077.9,
+    "itemisedIncome": 4612992.16,
+    "itemisedExpense": 3422077.9,
+    "incomeTransactions": 48194,
+    "expenseTransactions": 968,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (48194 income and 968 expense transactions)"
+   },
+   {
+    "entityId": 101445,
+    "committeeName": "Glassman for Attorney General",
+    "candidate": "Rodney Glassman",
+    "summaryIncome": 3775589.91,
+    "summaryExpense": 3932955.22,
+    "itemisedIncome": 3775589.91,
+    "itemisedExpense": 3932955.22,
+    "incomeTransactions": 2314,
+    "expenseTransactions": 256,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (2314 income and 256 expense transactions)"
+   },
+   {
+    "entityId": 201600171,
+    "committeeName": "Friends of Warren Petersen",
+    "candidate": "Warren Petersen",
+    "summaryIncome": 1855754.36,
+    "summaryExpense": 1788513.17,
+    "itemisedIncome": 1855754.36,
+    "itemisedExpense": 1788513.17,
+    "incomeTransactions": 1354,
+    "expenseTransactions": 765,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (1354 income and 765 expense transactions)"
+   },
+   {
+    "entityId": 101897,
+    "committeeName": "MANSOUR FOR ARIZONA",
+    "candidate": "Nick Mansour",
+    "summaryIncome": 1283715.59,
+    "summaryExpense": 441692.26,
+    "itemisedIncome": 1283715.59,
+    "itemisedExpense": 441692.26,
+    "incomeTransactions": 1268,
+    "expenseTransactions": 541,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (1268 income and 541 expense transactions)"
+   },
+   {
+    "entityId": 102000,
+    "committeeName": "Zepeda4AZ",
+    "candidate": "Michael Zepeda",
+    "summaryIncome": 3953.44,
+    "summaryExpense": 3978.44,
+    "itemisedIncome": 3953.44,
+    "itemisedExpense": 3978.44,
+    "incomeTransactions": 184,
+    "expenseTransactions": 9,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (184 income and 9 expense transactions)"
+   },
+   {
+    "entityId": 102106,
+    "committeeName": "Katherine Haley for AZ",
+    "candidate": "Katherine Haley",
+    "summaryIncome": 338943.23,
+    "summaryExpense": 281773.56,
+    "itemisedIncome": 338943.23,
+    "itemisedExpense": 281773.56,
+    "incomeTransactions": 496,
+    "expenseTransactions": 97,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (496 income and 97 expense transactions)"
+   },
+   {
+    "entityId": 101861,
+    "committeeName": "Friends of Elijah Norton",
+    "candidate": "Elijah Norton",
+    "summaryIncome": 3178196.25,
+    "summaryExpense": 3098945.26,
+    "itemisedIncome": 3178196.25,
+    "itemisedExpense": 3098945.26,
+    "incomeTransactions": 136,
+    "expenseTransactions": 130,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (136 income and 130 expense transactions)"
+   },
+   {
+    "entityId": 101877,
+    "committeeName": "Elect Michael D. Butts",
+    "candidate": "Michael Butts",
+    "summaryIncome": 11516.08,
+    "summaryExpense": 10471.55,
+    "itemisedIncome": 11516.08,
+    "itemisedExpense": 10471.55,
+    "incomeTransactions": 815,
+    "expenseTransactions": 118,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (815 income and 118 expense transactions)"
+   },
+   {
+    "entityId": 101821,
+    "committeeName": "Ruiz for AZ Education",
+    "candidate": "Teresa Leyba Ruiz",
+    "summaryIncome": 311144.91,
+    "summaryExpense": 171900.97,
+    "itemisedIncome": 311144.91,
+    "itemisedExpense": 171900.97,
+    "incomeTransactions": 3427,
+    "expenseTransactions": 246,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (3427 income and 246 expense transactions)"
+   },
+   {
+    "entityId": 101922,
+    "committeeName": "Brett Newby for Superintendent of Public Instruction",
+    "candidate": "Brett Newby",
+    "summaryIncome": 127613.3,
+    "summaryExpense": 18458.65,
+    "itemisedIncome": 127613.3,
+    "itemisedExpense": 18458.65,
+    "incomeTransactions": 92,
+    "expenseTransactions": 10,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (92 income and 10 expense transactions)"
+   },
+   {
+    "entityId": 101898,
+    "committeeName": "Kimberly Yee for Superintendent of Public Instruction",
+    "candidate": "Kimberly Yee",
+    "summaryIncome": 423616.47,
+    "summaryExpense": 175576.84,
+    "itemisedIncome": 423616.47,
+    "itemisedExpense": 175576.84,
+    "incomeTransactions": 388,
+    "expenseTransactions": 296,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (388 income and 296 expense transactions)"
+   },
+   {
+    "entityId": 201800367,
+    "committeeName": "Kimberly Yee for Arizona Treasurer",
+    "candidate": "Kimberly Yee",
+    "summaryIncome": 5875,
+    "summaryExpense": 171050.28,
+    "itemisedIncome": 5875,
+    "itemisedExpense": 171050.28,
+    "incomeTransactions": 11,
+    "expenseTransactions": 34,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (11 income and 34 expense transactions)"
+   },
+   {
+    "entityId": 201200033,
+    "committeeName": "Kimberly Yee Officeholder Expense Account",
+    "candidate": "Kimberly Yee",
+    "summaryIncome": 0,
+    "summaryExpense": 0,
+    "itemisedIncome": 0,
+    "itemisedExpense": 0,
+    "incomeTransactions": 0,
+    "expenseTransactions": 0,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (0 income and 0 expense transactions)"
+   },
+   {
+    "entityId": 101902,
+    "committeeName": "Brian Matlock for State Mine Inspector",
+    "candidate": "Brian Matlock",
+    "summaryIncome": 25596.18,
+    "summaryExpense": 25907.17,
+    "itemisedIncome": 25596.18,
+    "itemisedExpense": 25907.17,
+    "incomeTransactions": 366,
+    "expenseTransactions": 192,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (366 income and 192 expense transactions)"
+   },
+   {
+    "entityId": 102016,
+    "committeeName": "Presmyk for Mine Inspector (Clean Elections)",
+    "candidate": "Walter \"Les\" Presmyk",
+    "summaryIncome": 94013.01,
+    "summaryExpense": 94007.39,
+    "itemisedIncome": 94013.01,
+    "itemisedExpense": 94007.39,
+    "incomeTransactions": 734,
+    "expenseTransactions": 19,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (734 income and 19 expense transactions)"
+   },
+   {
+    "entityId": 101965,
+    "committeeName": "Fred Slawson for State Senator - District No. 19",
+    "candidate": "Fred \"Ryan\" Slawson",
+    "summaryIncome": 100,
+    "summaryExpense": 0,
+    "itemisedIncome": 100,
+    "itemisedExpense": 0,
+    "incomeTransactions": 1,
+    "expenseTransactions": 0,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (1 income and 0 expense transactions)"
+   },
+   {
+    "entityId": 101867,
+    "committeeName": "Griffin for Arizona",
+    "candidate": "GAIL GRIFFIN",
+    "summaryIncome": 111665,
+    "summaryExpense": 52174.81,
+    "itemisedIncome": 111665,
+    "itemisedExpense": 52174.81,
+    "incomeTransactions": 86,
+    "expenseTransactions": 97,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (86 income and 97 expense transactions)"
+   },
+   {
+    "entityId": 100029,
+    "committeeName": "GAIL GRIFFIN for State Representative - District 19",
+    "candidate": "GAIL GRIFFIN",
+    "summaryIncome": 8750,
+    "summaryExpense": 70085.75,
+    "itemisedIncome": 8750,
+    "itemisedExpense": 70085.75,
+    "incomeTransactions": 25,
+    "expenseTransactions": 9,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (25 income and 9 expense transactions)"
+   },
+   {
+    "entityId": 201400023,
+    "committeeName": "GRIFFIN FOR SENATE 2014",
+    "candidate": "Gail Griffin",
+    "summaryIncome": 0,
+    "summaryExpense": 0,
+    "itemisedIncome": 0,
+    "itemisedExpense": 0,
+    "incomeTransactions": 0,
+    "expenseTransactions": 0,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (0 income and 0 expense transactions)"
+   },
+   {
+    "entityId": 101952,
+    "committeeName": "Alma for Arizona",
+    "candidate": "ALMA HERNANDEZ",
+    "summaryIncome": 284520.15,
+    "summaryExpense": 262592.54,
+    "itemisedIncome": 284520.15,
+    "itemisedExpense": 262592.54,
+    "incomeTransactions": 751,
+    "expenseTransactions": 281,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (751 income and 281 expense transactions)"
+   },
+   {
+    "entityId": 101373,
+    "committeeName": "ALMA HERNANDEZ for State Representative - District 20",
+    "candidate": "ALMA HERNANDEZ",
+    "summaryIncome": 30135.5,
+    "summaryExpense": 32254.08,
+    "itemisedIncome": 30135.5,
+    "itemisedExpense": 32254.08,
+    "incomeTransactions": 88,
+    "expenseTransactions": 56,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (88 income and 56 expense transactions)"
+   },
+   {
+    "entityId": 201800416,
+    "committeeName": "Alma for Arizona",
+    "candidate": "Alma C Hernandez",
+    "summaryIncome": 0,
+    "summaryExpense": 0,
+    "itemisedIncome": 0,
+    "itemisedExpense": 0,
+    "incomeTransactions": 0,
+    "expenseTransactions": 0,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (0 income and 0 expense transactions)"
+   },
+   {
+    "entityId": 102067,
+    "committeeName": "Rocque for Arizona",
+    "candidate": "rocque perez",
+    "summaryIncome": 49354.26,
+    "summaryExpense": 47284.26,
+    "itemisedIncome": 49354.26,
+    "itemisedExpense": 47284.26,
+    "incomeTransactions": 460,
+    "expenseTransactions": 169,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (460 income and 169 expense transactions)"
+   },
+   {
+    "entityId": 101953,
+    "committeeName": "Jackie Anderson for AZ House (Clean Elections)",
+    "candidate": "Jackie O'Donnell Anderson",
+    "summaryIncome": 60043,
+    "summaryExpense": 25526.42,
+    "itemisedIncome": 60043,
+    "itemisedExpense": 25526.42,
+    "incomeTransactions": 316,
+    "expenseTransactions": 44,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (316 income and 44 expense transactions)"
+   },
+   {
+    "entityId": 101913,
+    "committeeName": "Aiden Swallow for Arizona (Clean Elections)",
+    "candidate": "Aiden Nicholette Swallow",
+    "summaryIncome": 3237.68,
+    "summaryExpense": 2728.37,
+    "itemisedIncome": 3237.68,
+    "itemisedExpense": 2728.37,
+    "incomeTransactions": 295,
+    "expenseTransactions": 46,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (295 income and 46 expense transactions)"
+   },
+   {
+    "entityId": 101836,
+    "committeeName": "Cheryl Caswell for Arizona State House Committee",
+    "candidate": "Cheryl Caswell",
+    "summaryIncome": 44908.83,
+    "summaryExpense": 35648.13,
+    "itemisedIncome": 44908.83,
+    "itemisedExpense": 35648.13,
+    "incomeTransactions": 239,
+    "expenseTransactions": 96,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (239 income and 96 expense transactions)"
+   },
+   {
+    "entityId": 100805,
+    "committeeName": "Conservatives For Diaz",
+    "candidate": "Lupe Diaz",
+    "summaryIncome": 58706,
+    "summaryExpense": 46798.23,
+    "itemisedIncome": 58706,
+    "itemisedExpense": 46798.23,
+    "incomeTransactions": 146,
+    "expenseTransactions": 73,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (146 income and 73 expense transactions)"
+   },
+   {
+    "entityId": 201800010,
+    "committeeName": "Gowan for Arizona",
+    "candidate": "DAVID GOWAN",
+    "summaryIncome": 127337.08,
+    "summaryExpense": 111810.39,
+    "itemisedIncome": 127337.08,
+    "itemisedExpense": 111810.39,
+    "incomeTransactions": 303,
+    "expenseTransactions": 76,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (303 income and 76 expense transactions)"
+   },
+   {
+    "entityId": 102071,
+    "committeeName": "DIAZ FOR AZ",
+    "candidate": "Genoveva Diaz",
+    "summaryIncome": 47768.95,
+    "summaryExpense": 47331.48,
+    "itemisedIncome": 47768.95,
+    "itemisedExpense": 47331.48,
+    "incomeTransactions": 110,
+    "expenseTransactions": 65,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (110 income and 65 expense transactions)"
+   },
+   {
+    "entityId": 102077,
+    "committeeName": "Sally Ann for AZ",
+    "candidate": "Sally Ann Gonzales",
+    "summaryIncome": 27069.36,
+    "summaryExpense": 25319.48,
+    "itemisedIncome": 27069.36,
+    "itemisedExpense": 25319.48,
+    "incomeTransactions": 67,
+    "expenseTransactions": 55,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (67 income and 55 expense transactions)"
+   },
+   {
+    "entityId": 201600425,
+    "committeeName": "Sally Gonzales for Arizona",
+    "candidate": "SALLY GONZALES",
+    "summaryIncome": 0,
+    "summaryExpense": 0,
+    "itemisedIncome": 0,
+    "itemisedExpense": 0,
+    "incomeTransactions": 0,
+    "expenseTransactions": 0,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (0 income and 0 expense transactions)"
+   },
+   {
+    "entityId": 100892,
+    "committeeName": "Sally Gonzales for State Senate - District No. 20",
+    "candidate": "Sally Ann GONZALES",
+    "summaryIncome": 700,
+    "summaryExpense": 9144.85,
+    "itemisedIncome": 700,
+    "itemisedExpense": 9144.85,
+    "incomeTransactions": 2,
+    "expenseTransactions": 64,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (2 income and 64 expense transactions)"
+   },
+   {
+    "entityId": 201800379,
+    "committeeName": "Sally Ann Gonzales for State Senate 2018",
+    "candidate": "SALLY ANN GONZALES",
+    "summaryIncome": 0,
+    "summaryExpense": 0,
+    "itemisedIncome": 0,
+    "itemisedExpense": 0,
+    "incomeTransactions": 0,
+    "expenseTransactions": 0,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (0 income and 0 expense transactions)"
+   },
+   {
+    "entityId": 102047,
+    "committeeName": "Ben Koehler for State Representative - District 20",
+    "candidate": "Ben Koehler",
+    "summaryIncome": 9534.88,
+    "summaryExpense": 8454.72,
+    "itemisedIncome": 9534.88,
+    "itemisedExpense": 8454.72,
+    "incomeTransactions": 51,
+    "expenseTransactions": 25,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (51 income and 25 expense transactions)"
+   },
+   {
+    "entityId": 101451,
+    "committeeName": "Villegas for Arizona",
+    "candidate": "Betty J Villegas",
+    "summaryIncome": 39184,
+    "summaryExpense": 24481.39,
+    "itemisedIncome": 39184,
+    "itemisedExpense": 24481.39,
+    "incomeTransactions": 173,
+    "expenseTransactions": 47,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (173 income and 47 expense transactions)"
+   },
+   {
+    "entityId": 101966,
+    "committeeName": "Christopher King for State Senator - District No. 17",
+    "candidate": "Christopher King",
+    "summaryIncome": 102776.05,
+    "summaryExpense": 64712.49,
+    "itemisedIncome": 102776.05,
+    "itemisedExpense": 64712.49,
+    "incomeTransactions": 199,
+    "expenseTransactions": 88,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (199 income and 88 expense transactions)"
+   },
+   {
+    "entityId": 102081,
+    "committeeName": "Soto for Arizona",
+    "candidate": "Edgar Soto",
+    "summaryIncome": 113584.76,
+    "summaryExpense": 36525.9,
+    "itemisedIncome": 113584.76,
+    "itemisedExpense": 36525.9,
+    "incomeTransactions": 865,
+    "expenseTransactions": 69,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (865 income and 69 expense transactions)"
+   },
+   {
+    "entityId": 100917,
+    "committeeName": "Jones for Arizona",
+    "candidate": "Rachel Jones",
+    "summaryIncome": 50737.68,
+    "summaryExpense": 21697.94,
+    "itemisedIncome": 50737.68,
+    "itemisedExpense": 21697.94,
+    "incomeTransactions": 458,
+    "expenseTransactions": 255,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (458 income and 255 expense transactions)"
+   },
+   {
+    "entityId": 102004,
+    "committeeName": "Winchester for Arizona",
+    "candidate": "John Winchester",
+    "summaryIncome": 132023,
+    "summaryExpense": 46810.95,
+    "itemisedIncome": 132023,
+    "itemisedExpense": 46810.95,
+    "incomeTransactions": 220,
+    "expenseTransactions": 59,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (220 income and 59 expense transactions)"
+   },
+   {
+    "entityId": 102112,
+    "committeeName": "Lyon for Arizona",
+    "candidate": "Hollace Drage Lyon",
+    "summaryIncome": 164077.72,
+    "summaryExpense": 33215.5,
+    "itemisedIncome": 164077.72,
+    "itemisedExpense": 33215.5,
+    "incomeTransactions": 1098,
+    "expenseTransactions": 51,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (1098 income and 51 expense transactions)"
+   },
+   {
+    "entityId": 101507,
+    "committeeName": "Kevin Volk for Arizona",
+    "candidate": "Kevin Volk",
+    "summaryIncome": 173742.29,
+    "summaryExpense": 48362.82,
+    "itemisedIncome": 173742.29,
+    "itemisedExpense": 48362.82,
+    "incomeTransactions": 1535,
+    "expenseTransactions": 116,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (1535 income and 116 expense transactions)"
+   },
+   {
+    "entityId": 101859,
+    "committeeName": "KEVIN THOMPSON for Corporation Commissioner (Clean Elections)",
+    "candidate": "KEVIN THOMPSON",
+    "summaryIncome": 176766,
+    "summaryExpense": 176765,
+    "itemisedIncome": 176766,
+    "itemisedExpense": 176765,
+    "incomeTransactions": 1872,
+    "expenseTransactions": 155,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (1872 income and 155 expense transactions)"
+   },
+   {
+    "entityId": 100484,
+    "committeeName": "Nick Myers for Corporation Commissioner (Clean Elections)",
+    "candidate": "Nick Myers",
+    "summaryIncome": 179499.75,
+    "summaryExpense": 179104.75,
+    "itemisedIncome": 179499.75,
+    "itemisedExpense": 179104.75,
+    "incomeTransactions": 1741,
+    "expenseTransactions": 131,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (1741 income and 131 expense transactions)"
+   },
+   {
+    "entityId": 101905,
+    "committeeName": "Clara Pratte for Arizona (Clean Elections)",
+    "candidate": "Clara Pratte",
+    "summaryIncome": 165197.31,
+    "summaryExpense": 164801.56,
+    "itemisedIncome": 165197.31,
+    "itemisedExpense": 164801.56,
+    "incomeTransactions": 1947,
+    "expenseTransactions": 70,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (1947 income and 70 expense transactions)"
+   },
+   {
+    "entityId": 100699,
+    "committeeName": "Jonathon Hill for Arizona (Clean Elections)",
+    "candidate": "Jonathon Ryan Hill",
+    "summaryIncome": 174655.4,
+    "summaryExpense": 166801.51,
+    "itemisedIncome": 174655.4,
+    "itemisedExpense": 166801.51,
+    "incomeTransactions": 1855,
+    "expenseTransactions": 60,
+    "agrees": true,
+    "note": "summary totals reproduce the publisher's own itemised ledger exactly (1855 income and 60 expense transactions)"
+   }
+  ]
+ },
+ "readerStates": {
+  "inScope": 49,
+  "tally": {
+   "SOURCED_FILED": 44,
+   "SOURCED_ABSENCE": 1,
+   "OURS_GAP": 4,
+   "FEDERAL_NOT_IN_SCOPE": 6
+  },
+  "perCandidacy": [
+   {
+    "candidacyId": "ballot-az-pima:governor:hobbs-katie",
+    "ballotName": "Katie Hobbs",
+    "contestTitle": "Governor",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     201800057
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:governor:hourihan-teri-ann",
+    "ballotName": "Teri Ann Hourihan",
+    "contestTitle": "Governor",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     102014
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:governor:lombardo-risa",
+    "ballotName": "Risa Lombardo",
+    "contestTitle": "Governor",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101840
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:governor:lytle-hugh",
+    "ballotName": "Hugh Lytle",
+    "contestTitle": "Governor",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     102108
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:governor:biggs-andy",
+    "ballotName": "Andy Biggs",
+    "contestTitle": "Governor",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101830
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:governor:miceli-ken",
+    "ballotName": "Ken Miceli",
+    "contestTitle": "Governor",
+    "state": "SOURCED_ABSENCE",
+    "why": "asked across every filter the portal offers AND against the state's own committee register; neither holds one",
+    "entityIds": []
+   },
+   {
+    "candidacyId": "ballot-az-pima:governor:neely-scott",
+    "ballotName": "Scott Neely",
+    "contestTitle": "Governor",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     100675
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:governor:schweikert-david",
+    "ballotName": "David Schweikert",
+    "contestTitle": "Governor",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101980
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:secretary-of-state:fontes-adrian",
+    "ballotName": "Adrian Fontes",
+    "contestTitle": "Secretary of State",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     100622
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:secretary-of-state:collier-duwayne",
+    "ballotName": "Duwayne Collier",
+    "contestTitle": "Secretary of State",
+    "state": "SOURCED_FILED",
+    "why": "2 committees agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     102163,
+     102164
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:secretary-of-state:kolodin-alexander",
+    "ballotName": "Alexander Kolodin",
+    "contestTitle": "Secretary of State",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     100625
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:secretary-of-state:swoboda-gina",
+    "ballotName": "Gina Swoboda",
+    "contestTitle": "Secretary of State",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     102117
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:attorney-general:mayes-kris",
+    "ballotName": "Kris Mayes",
+    "contestTitle": "Attorney General",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     100626
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:attorney-general:glassman-rodney",
+    "ballotName": "Rodney Glassman",
+    "contestTitle": "Attorney General",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101445
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:attorney-general:petersen-warren",
+    "ballotName": "Warren Petersen",
+    "contestTitle": "Attorney General",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     201600171
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-treasurer:mansour-nick",
+    "ballotName": "Nick Mansour",
+    "contestTitle": "State Treasurer",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101897
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-treasurer:zepeda-michael",
+    "ballotName": "Michael Zepeda",
+    "contestTitle": "State Treasurer",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     102000
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-treasurer:haley-katherine",
+    "ballotName": "Katherine Haley",
+    "contestTitle": "State Treasurer",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     102106
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-treasurer:norton-elijah",
+    "ballotName": "Elijah Norton",
+    "contestTitle": "State Treasurer",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101861
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:superintendent:butts-michael-d-",
+    "ballotName": "Michael D. Butts",
+    "contestTitle": "Superintendent of Public Instruction",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101877
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:superintendent:leyba-ruiz-teresa",
+    "ballotName": "Teresa Leyba Ruiz",
+    "contestTitle": "Superintendent of Public Instruction",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101821
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:superintendent:newby-brett-matthew",
+    "ballotName": "Brett Matthew Newby",
+    "contestTitle": "Superintendent of Public Instruction",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101922
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:superintendent:horne-tom",
+    "ballotName": "Tom Horne",
+    "contestTitle": "Superintendent of Public Instruction",
+    "state": "OURS_GAP",
+    "why": "the portal returned no committee we could match to this person, but the Secretary of State's own register holds 1 live candidate committee under this surname (100587 Thomas Horne for Superintendent of Public Instruction). Two representations disagree, so this is our gap and not an absence.",
+    "entityIds": []
+   },
+   {
+    "candidacyId": "ballot-az-pima:superintendent:yee-kimberly",
+    "ballotName": "Kimberly Yee",
+    "contestTitle": "Superintendent of Public Instruction",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101898
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:mine-inspector:matlock-brian",
+    "ballotName": "Brian Matlock",
+    "contestTitle": "State Mine Inspector",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101902
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:mine-inspector:presmyk-walter",
+    "ballotName": "Walter \"Les\" Presmyk",
+    "contestTitle": "State Mine Inspector",
+    "state": "OURS_GAP",
+    "why": "a committee for this person is on file and its filed seat does not agree: the agency states no office for this committee",
+    "entityIds": [
+     102016
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:us-house-6:mendoza-joanna",
+    "ballotName": "JoAnna Mendoza",
+    "contestTitle": "U.S. Representative, District 6",
+    "state": "FEDERAL_NOT_IN_SCOPE",
+    "why": "this seat does not key to an Arizona state office — it is not the Secretary of State's to hold",
+    "entityIds": []
+   },
+   {
+    "candidacyId": "ballot-az-pima:us-house-6:bah-iman",
+    "ballotName": "Iman Bah",
+    "contestTitle": "U.S. Representative, District 6",
+    "state": "FEDERAL_NOT_IN_SCOPE",
+    "why": "this seat does not key to an Arizona state office — it is not the Secretary of State's to hold",
+    "entityIds": []
+   },
+   {
+    "candidacyId": "ballot-az-pima:us-house-6:peters-jereme-lance",
+    "ballotName": "Jereme Lance Peters",
+    "contestTitle": "U.S. Representative, District 6",
+    "state": "FEDERAL_NOT_IN_SCOPE",
+    "why": "this seat does not key to an Arizona state office — it is not the Secretary of State's to hold",
+    "entityIds": []
+   },
+   {
+    "candidacyId": "ballot-az-pima:us-house-6:ciscomani-juan",
+    "ballotName": "Juan Ciscomani",
+    "contestTitle": "U.S. Representative, District 6",
+    "state": "FEDERAL_NOT_IN_SCOPE",
+    "why": "this seat does not key to an Arizona state office — it is not the Secretary of State's to hold",
+    "entityIds": []
+   },
+   {
+    "candidacyId": "ballot-az-pima:us-house-7:grijalva-adelita",
+    "ballotName": "Adelita Grijalva",
+    "contestTitle": "U.S. Representative, District 7",
+    "state": "FEDERAL_NOT_IN_SCOPE",
+    "why": "this seat does not key to an Arizona state office — it is not the Secretary of State's to hold",
+    "entityIds": []
+   },
+   {
+    "candidacyId": "ballot-az-pima:us-house-7:butierez-sr--daniel-francis",
+    "ballotName": "Daniel Francis Butierez Sr.",
+    "contestTitle": "U.S. Representative, District 7",
+    "state": "FEDERAL_NOT_IN_SCOPE",
+    "why": "this seat does not key to an Arizona state office — it is not the Secretary of State's to hold",
+    "entityIds": []
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-senate-19:slawson-ryan",
+    "ballotName": "Ryan Slawson",
+    "contestTitle": "State Senator, District 19",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101965
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-senate-19:griffin-gail",
+    "ballotName": "Gail Griffin",
+    "contestTitle": "State Senator, District 19",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101867
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-senate-20:hernandez-alma",
+    "ballotName": "Alma Hernandez",
+    "contestTitle": "State Senator, District 20",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101952
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-senate-20:perez-rocque",
+    "ballotName": "Rocque Perez",
+    "contestTitle": "State Senator, District 20",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     102067
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-house-19:anderson-jackie-o-donnell",
+    "ballotName": "Jackie O'Donnell Anderson",
+    "contestTitle": "State Representative, District 19",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101953
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-house-19:swallow-aiden-nicholette",
+    "ballotName": "Aiden Nicholette Swallow",
+    "contestTitle": "State Representative, District 19",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101913
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-house-19:caswell-cheryl",
+    "ballotName": "Cheryl Caswell",
+    "contestTitle": "State Representative, District 19",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101836
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-house-19:diaz-lupe",
+    "ballotName": "Lupe Diaz",
+    "contestTitle": "State Representative, District 19",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     100805
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-house-19:gowan-david",
+    "ballotName": "David Gowan",
+    "contestTitle": "State Representative, District 19",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     201800010
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-house-20:diaz-genoveva",
+    "ballotName": "Genoveva Diaz",
+    "contestTitle": "State Representative, District 20",
+    "state": "OURS_GAP",
+    "why": "a committee for this person is on file and its filed seat does not agree: the agency states no office for this committee",
+    "entityIds": [
+     102071
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-house-20:gonzales-sally-ann",
+    "ballotName": "Sally Ann Gonzales",
+    "contestTitle": "State Representative, District 20",
+    "state": "OURS_GAP",
+    "why": "a committee for this person is on file and its filed seat does not agree: the agency states no office for this committee; the filed seat az:state-senate:3 is not the ballot seat az:state-house:20; the filed seat az:state-senate:20 is not the ballot seat az:state-house:20",
+    "entityIds": [
+     102077,
+     201600425,
+     100892,
+     201800379
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-house-20:koehler-ben",
+    "ballotName": "Ben Koehler",
+    "contestTitle": "State Representative, District 20",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     102047
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-house-20:villegas-betty",
+    "ballotName": "Betty Villegas",
+    "contestTitle": "State Representative, District 20",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101451
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-senate-17:king",
+    "ballotName": "Christopher King",
+    "contestTitle": "State Senator, District 17",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101966
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-senate-17:soto",
+    "ballotName": "Edgar Soto",
+    "contestTitle": "State Senator, District 17",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     102081
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-house-17:keshel",
+    "ballotName": "Rachel \"Jones\" Keshel",
+    "contestTitle": "State Representative, District 17",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     100917
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-house-17:winchester",
+    "ballotName": "John Winchester",
+    "contestTitle": "State Representative, District 17",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     102004
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-house-17:lyon",
+    "ballotName": "Hollace \"Holly\" Lyon",
+    "contestTitle": "State Representative, District 17",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     102112
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:state-house-17:volk",
+    "ballotName": "Kevin Volk",
+    "contestTitle": "State Representative, District 17",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101507
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:corporation-commissioner:thompson",
+    "ballotName": "Kevin Thompson",
+    "contestTitle": "Corporation Commissioner",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101859
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:corporation-commissioner:myers",
+    "ballotName": "Nicholas \"Nick\" Myers",
+    "contestTitle": "Corporation Commissioner",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     100484
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:corporation-commissioner:pratte",
+    "ballotName": "Clara Pratte",
+    "contestTitle": "Corporation Commissioner",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     101905
+    ]
+   },
+   {
+    "candidacyId": "ballot-az-pima:corporation-commissioner:hill",
+    "ballotName": "Jonathon Hill",
+    "contestTitle": "Corporation Commissioner",
+    "state": "SOURCED_FILED",
+    "why": "1 committee agree on name, exact Arizona seat and cycle",
+    "entityIds": [
+     100699
+    ]
+   }
+  ]
+ },
+ "nextFilingDeadline": {
+  "cycle": 2026,
+  "reportName": "Post-Primary Election (Q3)",
+  "filingPeriodEndDate": "2026-10-15",
+  "reportType": "Standing Reports"
+ }
+}

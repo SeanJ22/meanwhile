@@ -61,19 +61,34 @@ function readJson<T>(path: string): T {
  * candidacy whose contest cannot be resolved has no office and no division, and
  * a canonical identity without an office is a person filed under nothing.
  */
+/**
+ * The directories a committed candidate document may land in.
+ *
+ * `data/ballot/` is where every certified ballot this project holds lives.
+ * `data/candidates/` is the contract path for a STATEWIDE IDENTITY REGISTRY
+ * another lane is building: this derivation must enlarge the moment a larger
+ * committed source exists, not when somebody remembers to change a constant,
+ * so both are scanned and the shape decides rather than the filename.
+ */
+const SCAN_DIRS = ["data/ballot", "data/candidates"] as const;
+
 function ballotDocuments(stateCode: string): { docs: BallotDocument[]; skipped: string[] } {
   const docs: BallotDocument[] = [];
   const skipped: string[] = [];
-  for (const name of readdirSync(BALLOT_DIR).sort()) {
-    if (!name.startsWith(`${stateCode}-`) || !name.endsWith(".json")) continue;
-    const path = `data/ballot/${name}`;
-    const doc = readJson<Partial<BallotDocument>>(join(BALLOT_DIR, name));
-    if (!Array.isArray(doc.candidacies) || doc.candidacies.length === 0) continue;
-    if (!Array.isArray(doc.contests) || doc.contests.length === 0) {
-      skipped.push(`${path} carries candidacies and NO contests — no office, so no canonical identity`);
-      continue;
+  for (const dir of SCAN_DIRS) {
+    const abs = join(ROOT, dir);
+    if (!existsSync(abs)) continue;
+    for (const name of readdirSync(abs).sort()) {
+      if (!name.startsWith(`${stateCode}-`) || !name.endsWith(".json")) continue;
+      const path = `${dir}/${name}`;
+      const doc = readJson<Partial<BallotDocument>>(join(abs, name));
+      if (!Array.isArray(doc.candidacies) || doc.candidacies.length === 0) continue;
+      if (!Array.isArray(doc.contests) || doc.contests.length === 0) {
+        skipped.push(`${path} carries candidacies and NO contests — no office, so no canonical identity`);
+        continue;
+      }
+      docs.push({ path, contests: doc.contests, candidacies: doc.candidacies });
     }
-    docs.push({ path, contests: doc.contests, candidacies: doc.candidacies });
   }
   return { docs, skipped };
 }

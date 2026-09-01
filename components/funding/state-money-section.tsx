@@ -6,8 +6,16 @@
  * FEC does not cover their race — true, and useless to a reader who wants to
  * know who is paying for the campaign on their ballot.
  *
- * ## THE THREE THINGS THIS MUST NEVER DO
+ * ## THE FOUR THINGS THIS MUST NEVER DO
  *
+ * 0. **Never say a registry holds nothing when the record in hand names a
+ *    committee.** Added 2026-08-31 after this file did exactly that to six
+ *    named New Hampshire candidates on production: it had a committee id, a
+ *    registered name, a filed office and an election cycle, and it rendered
+ *    *"No reports on file with the New Hampshire Secretary of State."*
+ *    `RegisteredNoActivityRecord` below carries the distinction — a committee
+ *    that has reported no money is a fact about a COMMITTEE, and a registry
+ *    holding nothing is a fact about a REGISTRY.
  * 1. **Never render `$0` for a candidate who has filed nothing.** Small-race
  *    candidates file short forms or sit under a reporting threshold entirely.
  *    `$0` is a claim about their campaign; *no reports on file* is a claim
@@ -138,6 +146,46 @@ function FiledRecord({ record }: { record: StateMoneyRecord }) {
   );
 }
 
+/**
+ * **REGISTERED, AND THE AGENCY PUBLISHES NOTHING RAISED AND NOTHING SPENT.**
+ *
+ * Added 2026-08-31 (Session C) because this card was rendering `AbsentRecord`
+ * for these people, which says the New Hampshire Secretary of State holds no
+ * reports for them — while the record in hand named their committee, its id,
+ * its registered name, the office they filed for and the cycle they filed in.
+ *
+ * Six named candidates on the 03255 ballot were reading that sentence on
+ * production, and the collector had already written the TRUE one into
+ * `coveringPeriod`: *registered for the 2026 Election Cycle, with no receipts
+ * or expenditures reported as of ...*. The data was right and this file threw
+ * it away.
+ *
+ * The distinction, in the reader's terms: *this committee exists and has
+ * reported no money* is a fact about a committee. *Nothing is on file* is a
+ * fact about a registry. A reader who is told the second when the first is
+ * true has been told a different thing about a different subject.
+ *
+ * Still never `$0`. The agency publishes no report count on this endpoint, so
+ * what is said is what is published — activity reported, as of a date, by a
+ * named authority — and nothing about how much money exists.
+ */
+function RegisteredNoActivityRecord({ record }: { record: StateMoneyRecord }) {
+  return (
+    <div className="mt-3 first:mt-0">
+      <p className="text-sm font-medium">{record.registeredName}</p>
+      <p className="mt-1 text-sm">
+        Registered committee. No money raised and none spent has been reported to the{" "}
+        {record.agency} as of {readableDate(record.checkedAt)}.
+      </p>
+      <p className="mt-1 text-xs text-muted-foreground">
+        A committee registers before it reports. This is what the committee has
+        reported so far, not a statement that no money was raised.
+      </p>
+      <AgencyLine record={record} />
+    </div>
+  );
+}
+
 function AbsentRecord({ record }: { record: StateMoneyRecord }) {
   return (
     <div className="mt-3 first:mt-0">
@@ -183,12 +231,22 @@ export function StateMoneySection({
   if (records.length === 0) return null;
 
   const filed = records.filter((r) => r.filingState === "FILED");
+  const registered = records.filter(
+    (r) => r.filingState === "REGISTERED_NO_ACTIVITY_REPORTED",
+  );
   const absent = records.filter((r) => r.filingState === "NO_REPORTS_ON_FILE");
 
-  // A candidate with a real filing does not also show the absence note: the
-  // absence was written for a location pass that another committee answered,
-  // and rendering both would contradict itself on one card.
-  const shown = filed.length > 0 ? filed : absent.slice(0, 1);
+  /*
+   * A candidate with a real filing does not also show the absence note: the
+   * absence was written for a location pass that another committee answered,
+   * and rendering both would contradict itself on one card.
+   *
+   * The middle state slots in by the same reasoning — the STRONGER statement
+   * the agency actually made wins. A committee it names, reporting nothing,
+   * outranks the registry holding nothing; money outranks both.
+   */
+  const shown =
+    filed.length > 0 ? filed : registered.length > 0 ? registered : absent.slice(0, 1);
   const agency = shown[0]?.agency ?? "";
 
   return (
@@ -198,14 +256,16 @@ export function StateMoneySection({
           Campaign money{agency ? ` · ${agency}` : ""}
         </p>
       )}
-      {shown.map((record, i) =>
-        record.filingState === "FILED" ? (
-          <FiledRecord key={record.committeeId ?? i} record={record} />
-        ) : (
-          <AbsentRecord key={record.committeeId ?? i} record={record} />
-        ),
-      )}
-      {filed.length > 1 && (
+      {shown.map((record, i) => {
+        if (record.filingState === "FILED") {
+          return <FiledRecord key={record.committeeId ?? i} record={record} />;
+        }
+        if (record.filingState === "REGISTERED_NO_ACTIVITY_REPORTED") {
+          return <RegisteredNoActivityRecord key={record.committeeId ?? i} record={record} />;
+        }
+        return <AbsentRecord key={record.committeeId ?? i} record={record} />;
+      })}
+      {shown.length > 1 && (
         <p className="mt-2 text-xs text-muted-foreground">
           This candidate has more than one committee registered. Every one the
           agency holds is shown.

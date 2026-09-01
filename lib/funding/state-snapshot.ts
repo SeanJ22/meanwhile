@@ -92,23 +92,39 @@ export function stateMoneyWasAsked(targetKey: string): boolean {
  */
 export function stateMoneySplit(): {
   candidaciesWithFilings: number;
+  candidaciesWithRegisteredNoActivity: number;
   candidaciesWithSourcedAbsence: number;
   renderableRecords: number;
   leadsWithheld: number;
+  routesUnread: number;
 } {
   const all = load();
   const filed = new Set<string>();
+  const registered = new Set<string>();
   const absent = new Set<string>();
   for (const r of all) {
     if (r.filingState === "FILED") for (const k of r.targetKeys) filed.add(k);
+    else if (r.filingState === "REGISTERED_NO_ACTIVITY_REPORTED")
+      for (const k of r.targetKeys) registered.add(k);
     else if (r.filingState === "NO_REPORTS_ON_FILE") for (const k of r.targetKeys) absent.add(k);
   }
-  for (const k of filed) absent.delete(k);
+  for (const k of filed) {
+    registered.delete(k);
+    absent.delete(k);
+  }
+  for (const k of registered) absent.delete(k);
   return {
     candidaciesWithFilings: filed.size,
+    candidaciesWithRegisteredNoActivity: registered.size,
     candidaciesWithSourcedAbsence: absent.size,
     renderableRecords: all.filter(isRenderable).length,
     leadsWithheld: all.filter((r) => r.filingState === "LEAD").length,
+    /*
+     * A route this product could not read. Counted so the number is STATED
+     * rather than hidden inside a residual — but never rendered: it is a fact
+     * about us, and it is not an answer to anything a reader asked.
+     */
+    routesUnread: all.filter((r) => r.filingState === "ROUTE_UNREAD").length,
   };
 }
 

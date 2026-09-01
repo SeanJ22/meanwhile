@@ -1,6 +1,6 @@
 # Frontier
 
-Updated: 2026-08-31 (rev 5 — post Session B close). Priorities only — never
+Updated: 2026-08-31 (rev 6 — post Session C resume). Priorities only — never
 invariants (the generated constitution), never status claims (generated status
 ledger). This is a mutable planning artifact, not law and not a governance
 input.
@@ -49,6 +49,89 @@ External orchestration (revisit trigger per the adopted ruling). New
 multi-project investment. Level 4 auto-publishing past 2026-11-03. <!-- expected-future: the author's Level-4 automatic-publishing deferral horizon, deliberately past the 2026 general election -->
 Level 5 removed. National activation (pilot health green and stable, plus
 cost-model national math from measured pilot numbers).
+
+## Carried forward from Session C (resume) — 2026-08-31
+
+Priorities, not status. Every item below is something this session deliberately
+left, with what it is waiting on. Nothing here is a claim that it is finished.
+
+### Waiting on the owner
+
+- **`pnpm pilot:install` from an ELEVATED PowerShell.** The Windows Scheduled
+  Task was refused (`Access denied`, 0x80070005) without elevation, so what is
+  installed is a per-user startup entry. It survives a reboot; it does **not**
+  restart a crashed runner. Reboot-survival is therefore partial, and saying
+  otherwise would overstate Part G2.
+- **OWN03 — nine portraits, one look.** `docs/photo-review/own03-nine.png`.
+  Approve or refuse by number. Regenerate with `pnpm own03:stage` then
+  `pnpm sheet`.
+- **69 Needs-Sean rows, each with a decision card.** All are marked
+  `NOT_MACHINE_VERIFIABLE`; the three that carried a checkable predicate
+  auto-resolved and left the queue.
+- **The `tracker amend` guard.** It refuses a row the current session did not
+  open, which is why a false sentence naming Tom Horne could be corrected in his
+  card but not in the row's own description. A later session cannot correct an
+  earlier session's false description of a named person. That needs a ruling.
+
+### Executable, and not reached
+
+- **The Ask model comparison (H2) is `NOT_MEASURED`, not `HOLD`.** Zero of seven
+  canonical questions ran on either model. `ASK_SYNTHESIS_MODEL` is a hardcoded
+  constant with no override, and adding one would risk the per-caller cache
+  split the law forbids — caches are model-scoped. **The owed thing is an
+  offline harness** that calls both models over the canonical questions
+  directly, outside the product. The incumbent stays because nothing displaced
+  it, and the obligation stays live.
+- **Sustained ≥ 55 fps on the map fly-in is not achievable on this host.** The
+  flight went 12.1 → 35.8 fps and the per-frame causes are fixed
+  (`queryRenderedFeatures` 170 → 2, main thread 555–868 ms → 45 ms), but with
+  every district layer, every marker and the state-focus layer removed the bare
+  floor is **41.3 fps**. The permanent check gates the load-invariant count
+  instead. Either the target moves by ruling, or it is measured on hardware that
+  can reach it. It is recorded as UNMET rather than redefined.
+- **Arizona's source universe is larger than any one query.** Three filters over
+  `GetNEWTableData` union to 860 rows across 732 entities, 16 reachable from no
+  other filter, and `ftp://ftp.azsos.gov/cfsdata2/` has **four** root
+  directories where the record said one — `ElectionResults` (1998–2026) was
+  never walked. The remaining AZ regimes — county, municipal and school-district
+  filers whose filing officer is not the Secretary of State — are owed.
+- **New Hampshire's remaining routes**, 14 of them in
+  `data/hunt/nh-remaining-routes.json`. The highest-value is the **SOS filed
+  report PDF series**: the API publishes `reportCount: null`, which is exactly
+  why six candidates carry `REGISTERED_NO_ACTIVITY_REPORTED` rather than a
+  report-level claim. The PDFs are the materially distinct representation that
+  can answer it.
+- **A Tom Horne portrait.** Not the file we have — `Tom Headshot 60px_0.jpg` is
+  60px against a 96px floor, and `azed.gov` answers a Cloudflare interstitial to
+  every client tried. Under RULING 206 the owed thing is ANOTHER
+  REPRESENTATION of the same record, not a harder fetch of that URL.
+- **A cache-read field in `AttemptCost`.** The digest reports cache hit rate as
+  **NOT MEASURED** — correctly, because nothing in the cost ledger records a
+  cache read, and `0%` would be a measurement nobody took. The Ask probe now
+  measures 62.5% at the API's own `usage` block; the worker cost ledger cannot
+  yet see the same thing.
+
+### Instrument debt, and why each one matters
+
+- **The gate-run record identifier collides under parallel execution.** Records
+  are numbered from local state, so four branches allocated 42–45 independently
+  in one evening and every pair conflicted on merge. RULING 190/191 make
+  parallel lanes the DEFAULT, so this recurs by design. The durable fix is an
+  identifier needing no agreement — tested SHA plus run instant.
+- **`release:freeze` has no automatic path out of its own loop.** Every commit
+  to main deploys (`netlify-ignore` reports CANNOT-TELL and builds, correctly),
+  including the observer's own reading — which moves production out from under
+  the reading just taken, while the observer only fires on push. The session
+  cleared it by hand each round. See
+  `data/health/gate-abort-evidence/2026-08-31-test-gate-false-red.md`.
+- **The duration heuristic for abort-versus-real does not always discriminate.**
+  It held on one tree (59s fail against a 75s pass) and failed on another (44s
+  fail against a 43s pass). The reliable signal is the `failureKind` field now
+  recorded by `scripts/gates.mjs`, derived from the suite's printed summary
+  rather than the exit code. **Read the field, not the clock.**
+- **The client-JS baseline for `/` looks stale.** 2003 KB measured against a
+  2653 KB baseline last set 2026-08-29. Not this session's to re-baseline, and
+  a baseline that far above the measurement cannot catch a regression.
 
 ## Carried forward from Session B (2026-08-31)
 

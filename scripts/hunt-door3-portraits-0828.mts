@@ -41,7 +41,7 @@ import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { allCandidateLinks } from "../lib/ballot/candidate-sites.ts";
-import { decodeImage, decodeRecord } from "../lib/photos/decode.ts";
+import { PORTRAIT_ACCEPT, decodeImage, decodeRecord } from "../lib/photos/decode.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { imagesIn, pickPortraits, decodeEntities } from "../lib/hunt/portrait-pick.ts";
 import { officialPhotoForPerson, personKey } from "../lib/photos/person.ts";
@@ -194,7 +194,7 @@ for (const file of BALLOTS) {
       let decode: ReturnType<typeof decodeRecord>;
       try {
         const res = await fetch(decodeEntities(candidate.src), {
-          headers: { "user-agent": sourceUserAgent() },
+          headers: { "user-agent": sourceUserAgent(), accept: PORTRAIT_ACCEPT },
           redirect: "follow",
         });
         decode = decodeRecord(decodeImage(new Uint8Array(await res.arrayBuffer())), STAMP);

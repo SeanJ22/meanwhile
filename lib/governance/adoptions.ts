@@ -2276,6 +2276,368 @@ compute what it excluded; it may not put it on screen and explain it.`,
       { kind: "related_to", target: "R-0074" },
     ],
   },
+  {
+    n: 223,
+    title:
+      "RULING 223 — a session's discretion covers how, never what; it may not redefine the completion contract",
+    adopted: "2026-08-31",
+    domain: "meta-governance",
+    kind: "LAW_DECISION",
+    provenance: "author_explicit",
+    body: `**A session's discretion covers implementation choices and lane ordering.
+It never covers redefining the completion contract. "I chose depth over
+coverage" is not a permitted stop condition. When capacity ends, the only
+lawful output is UNFINISHED SESSION with the exact resume point and every
+unreached item named.**
+
+## The failure this settles
+
+A session was asked for Parts A through J. It did Part A thoroughly, reported
+SESSION C IS CLOSED, and offered depth-over-coverage as the reason the other
+nine Parts were not attempted. Every individual choice inside Part A was sound.
+The report was still false, because the thing being reported COMPLETE was not
+the thing that was asked for.
+
+That is the precise shape of the defect: **discretion exercised one level too
+high.** Choosing to fix the house-number resolver at the root rather than
+patching the sample list is discretion. Choosing that Parts B through J are not
+this session's work is not discretion — it is an amendment to the brief, made
+unilaterally, and recorded nowhere the author would see it.
+
+## Where the line is, and it is checkable
+
+\`\`\`
+  HOW            -> the session's, entirely
+    which lane runs first, which mechanism, which file, which abstraction,
+    which of two correct implementations, when to merge, how to decompose
+
+  WHAT           -> the author's, entirely
+    which Parts exist, which acceptance criteria count, what "done" means,
+    whether an item is in scope, whether the contract has been met
+\`\`\`
+
+A session that wants the second changed asks for it, or records the conflict.
+It does not resolve it by proceeding.
+
+## This does not weaken RULING 221, and it is not in tension with it
+
+RULING 221 fixes the denominator AT THE START so that discovery cannot inflate
+it. This says the session may not DEFLATE that same denominator either. They
+are the same rule pointed in opposite directions: **the completion contract is
+set by the author at the start, and neither discovery nor discretion moves it.**
+A defect found mid-session goes to the frontier; a Part named in the brief stays
+in the denominator whether or not the session reaches it.
+
+## The only lawful output when capacity ends
+
+RULING 189 already forbids a session measuring itself and stopping on a guessed
+threshold. When capacity actually ends — the environment prevents continuation,
+or the author stops the session — the output is UNFINISHED SESSION carrying:
+
+\`\`\`
+  THE EXACT RESUME POINT      generated from canonical state, not narrated
+  EVERY UNREACHED ITEM        by name, not "the rest", not an omitted tail
+  THE SESSION NAME            so the next session resumes THIS one
+\`\`\`
+
+An excellent handoff does not convert an EARLY_HANDOFF into a COMPLETE. RULING
+180 already says so; what this adds is that **a stop reason appealing to the
+session's own judgement about what was worth doing is refused by name**, the
+same way appeals to self-estimated capacity and to merge cadence already are.`,
+    claims: [
+      { key: "session.discretion_scope", value: "implementation-and-ordering-never-the-contract" },
+      { key: "session.capacity_end_output", value: "unfinished-session-with-resume-point-and-named-items" },
+    ],
+    relations: [
+      { kind: "extends", target: "R-0189" },
+      { kind: "extends", target: "R-0180" },
+      { kind: "related_to", target: "R-0221" },
+      { kind: "related_to", target: "R-0190" },
+    ],
+  },
+  {
+    n: 224,
+    title:
+      "RULING 224 — acquisition without promotion is inventory; an obligation's completion contract extends to the reader",
+    adopted: "2026-08-31",
+    domain: "discovery",
+    kind: "LAW_DECISION",
+    provenance: "author_explicit",
+    body: `**Acquisition without promotion is inventory, not product. An acquisition
+obligation's completion contract extends to the READER: the WorkItem does not
+close when evidence reaches the vault; it closes when the reader-facing surface
+reflects the acquired truth or renders the honest gap state. While unattended
+promotion is OFF, the pipeline runs automatically through normalization and
+snapshot to a STAGED, PROMOTION-READY state, and session shipping carries the
+last mile under existing law. After activation, workers carry it all the way.
+Held data with no live promotion tail is a defect. This applies RETROACTIVELY:
+every held corpus either flows to a surface, stages promotion-ready, or carries
+an argued reason it cannot.**
+
+## What this settles
+
+RULING 205 already names the chain and already says no upstream success implies
+a downstream one:
+
+\`\`\`
+  DISCOVERED -> ACQUIRED -> EXTRACTED -> NORMALIZED -> CANONICALLY_LINKED
+             -> QUERY_RETRIEVABLE -> READER_VERIFIED
+\`\`\`
+
+What was missing was the consequence for the WORK ITEM. A held Pima County
+corpus, acquired and vaulted and never able to reach a ballot page, satisfied
+every acquisition status the system could report while delivering nothing to a
+reader. The store said ACQUIRED. The reader saw the same page as before. Both
+were true, and nothing in the system was obliged to notice the gap between them.
+
+**Inventory is not product.** A corpus that cannot reach a surface is a cost
+the project is carrying, not a capability it has.
+
+## The promotion tail is part of the pipeline, not part of shipping
+
+The distinction that makes this operable while unattended promotion stays OFF:
+
+\`\`\`
+  AUTOMATIC, EVERY CYCLE, NO OPERATOR
+    acquire -> vault -> extract -> normalize -> snapshot -> STAGED
+    the staged state is observable, named, and dated
+
+  SESSION SHIPPING, UNDER EXISTING LAW
+    STAGED -> reader-visible
+\`\`\`
+
+So the last mile stays a human-gated ship, and **everything before it stops
+being human-gated.** A pipeline that halts at vaulted bytes and waits for
+someone to choose to normalize it is the defect this names. The staged state is
+the artifact that proves the tail ran.
+
+## The honest gap state is a COMPLETION, not a failure
+
+The contract is satisfied two ways, and the second is not a lesser outcome:
+the surface reflects the acquired truth, **or** it renders the honest gap state
+— whose gap it is, what is owed, and the active obligation with its known
+next_due. RULING 184's blocked-route-is-not-a-blocked-fact stands entire; this
+adds that the blocked route must SAY SO ON THE SURFACE rather than resolving
+silently to a generic placeholder while the obligation sits in a queue no
+reader can see.
+
+## Retroactive, and that word is meant
+
+Every corpus already held is now measured against this. Three dispositions and
+no fourth: it flows to a surface; it stages promotion-ready; or it carries an
+ARGUED reason it cannot, naming the specific obstacle. "We acquired it" is not
+one of the three.`,
+    claims: [
+      { key: "obligation.completion_boundary", value: "reader-surface-or-honest-gap-not-the-vault" },
+      { key: "obligation.promotion_tail", value: "automatic-through-staged-shipping-carries-last-mile" },
+    ],
+    relations: [
+      { kind: "extends", target: "R-0205" },
+      { kind: "extends", target: "R-0184" },
+      { kind: "related_to", target: "R-0206" },
+      { kind: "related_to", target: "R-0207" },
+      { kind: "related_to", target: "R-0026" },
+    ],
+  },
+  {
+    n: 225,
+    title: "RULING 225 — every session report leads in reader terms; infrastructure counts afterward",
+    adopted: "2026-08-31",
+    domain: "meta-governance",
+    kind: "LAW_DECISION",
+    provenance: "author_explicit",
+    body: `**Every session report leads with: what a reader can now see that they could
+not see before; what workers advanced unattended; and what genuinely requires
+the owner. Infrastructure counts come afterward.**
+
+## Why the order is law and not style
+
+A report that opens with commits, gates, rows triaged and adapters written is
+answering a question the author did not ask. The author states desired PRODUCT
+OUTCOMES (RULING 190); a report that answers in engineering units makes the
+author do the translation, and a translation the author has to perform is a
+translation that can fail silently. Worse, an infrastructure-first report reads
+as successful even when no reader gained anything — the numbers are all real,
+they are just all about us.
+
+## The three leads, in this order
+
+\`\`\`
+  1. WHAT A READER CAN NOW SEE
+     by surface and by ZIP, in the words a reader would use.
+     "at 03255 a reader now sees filed totals for nine candidates" —
+     not "the NH collector was repaired".
+     If the answer is NOTHING, the report SAYS nothing, first, plainly.
+
+  2. WHAT WORKERS ADVANCED UNATTENDED
+     what moved with no operator selecting it. This is the autonomy
+     measurement, and burying it makes it unfalsifiable.
+
+  3. WHAT GENUINELY REQUIRES THE OWNER
+     decisions only, each with its card. Not blocked work, not
+     work the session chose not to do.
+\`\`\`
+
+Then, and only then, the infrastructure: counts, gates, branches, artifacts.
+
+## The lead may not be padded
+
+"What a reader can now see" means a CHANGE IN WHAT IS RENDERED. A test that now
+covers an existing behaviour is not a reader-visible change. A store that is
+now correct but whose correction reaches no surface belongs under RULING 224,
+reported as staged — not under lead 1. This rule creates an incentive to
+overstate exactly one number, so that number carries the strictest definition:
+**if a reader loading the page would see the same thing they saw yesterday, it
+does not go in the lead.**`,
+    claims: [
+      { key: "report.lead_order", value: "reader-then-unattended-then-owner-then-infrastructure" },
+    ],
+    relations: [
+      { kind: "extends", target: "R-0190" },
+      { kind: "related_to", target: "R-0180" },
+      { kind: "related_to", target: "R-0189" },
+      { kind: "related_to", target: "R-0224" },
+    ],
+  },
+  {
+    n: 226,
+    title:
+      "RULING 226 — aggregate-only governs what is exposed, never what exists at rest; the implementation is ratified",
+    adopted: "2026-08-31",
+    domain: "data-privacy",
+    kind: "LAW_DECISION",
+    provenance: "author_explicit",
+    body: `**"Aggregate-only" means anonymous event-level rows may exist at rest exactly
+as implemented — no identity, no free text, no read API — and that anything ever
+EXPOSED, RENDERED or LICENSED is aggregate-only. The implementation as built is
+ratified.**
+
+## The question this answers
+
+OWN-Q6 asked whether "aggregate-only" was violated by the existence of
+event-level rows in the collection store. It is not, and the ambiguity was in
+the phrase rather than in the code.
+
+\`\`\`
+  AT REST      anonymous event-level rows, PERMITTED
+               no identity column, no free text, no read API
+
+  AT THE EDGE  aggregate-only, ALWAYS
+               exposed, rendered, or licensed -> aggregate, without exception
+\`\`\`
+
+## Why event-level at rest is the safer design, not a concession
+
+Aggregating at write time destroys the ability to re-bucket, to audit a past
+export, or to answer a question about the data's own integrity. It also means
+the bucketing decision — which is an ask-before under the root constitution —
+becomes irreversible the moment it is made. Keeping anonymous rows at rest and
+aggregating at the boundary keeps the reversible thing reversible and puts the
+guarantee where it is actually checkable: **at the only place data leaves.**
+
+## The three properties the implementation must keep, and does
+
+No identity: nothing in the store joins to a person, and the collection stores
+never join to each other — proven over VALUE SPACES, never column names
+(RULING 132). No free text: nothing a reader typed is retained, so no row can
+carry an identifier the schema did not anticipate. No read API: there is no
+surface, internal or external, that returns a row.
+
+Those three are what make "anonymous at rest" a fact rather than an intention,
+and any change to any of them reopens this question rather than inheriting this
+ratification.
+
+## What is unchanged
+
+RULING 55's no-user-to-user surface stands entire: reactions are write-only
+from the reader's perspective, never rendered back to any user, INCLUDING IN
+AGGREGATE. This ruling is about what may be sold and what may exist; it grants
+nothing on the consumer side.`,
+    claims: [
+      { key: "collection.aggregate_only_scope", value: "exposure-boundary-not-storage-at-rest" },
+    ],
+    relations: [
+      { kind: "related_to", target: "R-0132" },
+      { kind: "related_to", target: "R-0055" },
+    ],
+  },
+  {
+    n: 227,
+    title: "RULING 227 — escalation without reconciliation is prohibited",
+    adopted: "2026-08-31",
+    domain: "tracker-workflow",
+    kind: "LAW_DECISION",
+    provenance: "author_explicit",
+    body: `**A row may not enter NEEDS_SEAN without either (a) a machine-verifiable
+predicate that is rechecked on EVERY tracker generation and AUTO-RESOLVES the
+row when the predicate goes false, or (b) an explicit NOT_MACHINE_VERIFIABLE
+marking carrying a decision card. Escalation without reconciliation is
+prohibited.**
+
+## The measured failure
+
+The queue held 72 Needs-Sean rows and no opened dates. Three of them were
+presented to the author as current blockers in a session close-out:
+
+\`\`\`
+  NH272  the read-only DB secret EXISTS; production integrity performs a
+         live 24/24 migration read
+  NH281  "stuck since 7/13/2025" — two application-bearing releases had
+         published and been observed HELD
+  NH300  a 7/7 LIVE POSTGRES proof was on disk when the row was presented
+         as blocked on obtaining one
+\`\`\`
+
+All three had been true when written. None was true when shown. **The queue had
+no mechanism capable of noticing**, so the rows aged into falsehood and were
+then reported to the author as the current state of his own project.
+
+## Why the fix is a predicate and not a review cadence
+
+A review cadence puts the burden on a session to re-check 72 rows, which is
+exactly the work that did not happen for months. A predicate puts the burden on
+the GENERATOR, which runs every time. The row states the condition that makes
+it blocked, in a form a machine can evaluate:
+
+\`\`\`
+  NEEDS_SEAN  requires  BLOCKED_WHILE: <predicate>
+                        rechecked on every generation
+                        false -> the row AUTO-RESOLVES, with the evidence
+\`\`\`
+
+A row that cannot state such a predicate is not thereby exempt — it is marked
+NOT_MACHINE_VERIFIABLE, explicitly, and carries a decision card. The marking is
+the point: it makes the un-checkable rows a visible, countable set rather than
+the invisible default.
+
+## The decision card, and what it is for
+
+A NEEDS_SEAN row's whole purpose is to get a decision made. A row that names a
+problem without stating the options makes the author do the analysis before he
+can do the deciding, which is why the queue grew. Every card carries: what is
+needed; the options; the consequence of each; and the row's AGE — because an
+old decision and a new one are different decisions, and the author cannot see
+which he is looking at without the date.
+
+## This does not weaken RULING 208 or RULING 221
+
+RULING 208 stands entire: *NEEDS SEAN never closes, pauses or satisfies the
+obligation the row is about*, and one blocked record never freezes the rest of
+the hunt. RULING 221 stands entire: NEEDS_OWNER is TERMINAL within a session's
+denominator and is never counted as open executable work. This rule governs
+only whether a row may ENTER the queue, and what must happen to it while it
+sits there.`,
+    claims: [
+      { key: "escalation.entry_requirement", value: "machine-predicate-or-explicit-not-verifiable-with-card" },
+      { key: "escalation.reconciliation_cadence", value: "rechecked-every-generation-auto-resolves" },
+    ],
+    relations: [
+      { kind: "extends", target: "R-0208" },
+      { kind: "related_to", target: "R-0221" },
+      { kind: "related_to", target: "R-0146" },
+      { kind: "related_to", target: "R-0055" },
+    ],
+  },
 ];
 
 /**

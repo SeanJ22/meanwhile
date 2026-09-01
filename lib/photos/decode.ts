@@ -53,6 +53,27 @@ export const MIN_PORTRAIT_EDGE = 96;
 
 export type ImageFormat = "png" | "jpeg" | "gif" | "webp";
 
+/**
+ * The `Accept` header every portrait fetch sends — **derived from what this
+ * module can actually read**, so the request and the decoder cannot drift.
+ *
+ * A portrait fetch that sends no `Accept` lets the host choose the format, and
+ * a portrait fetch that sends the browser-shaped `image/avif,image/webp,...`
+ * asks for one this decoder does not know. Both end the same way: a real photo,
+ * served correctly at 200, decoded as `NOT_AN_IMAGE` — **a false absence about
+ * a named public official's published portrait, manufactured by us, on a host
+ * that did nothing wrong.**
+ *
+ * This is not hypothetical. `static.wixstatic.com` content-negotiates, and on
+ * 2026-08-31 it returned AVIF for the Arizona State Treasurer's official
+ * portrait the moment it was asked for AVIF. It returned WebP when asked for
+ * the formats above. The hosts have moved; the decoder has not.
+ *
+ * So the rule is: **ask only for what we can read.** If a format is added to
+ * `ImageFormat` and to `decodeImage`, add it here in the same change.
+ */
+export const PORTRAIT_ACCEPT = "image/png,image/jpeg,image/gif,image/webp,*/*;q=0.5";
+
 export type DecodeVerdict =
   | {
       ok: true;

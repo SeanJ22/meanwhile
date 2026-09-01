@@ -2728,6 +2728,283 @@ order to make a seam look connected.`,
       { kind: "related_to", target: "R-0191" },
     ],
   },
+  {
+    n: 229,
+    title:
+      "RULING 229 — acquire to the authoritative source universe; project to the reader",
+    adopted: "2026-09-01",
+    domain: "discovery",
+    kind: "LAW_DECISION",
+    provenance: "author_explicit",
+    body: `**A ZIP, address, pilot, or currently enabled reader location may prioritise
+acquisition ORDER. It may never define the acquisition DENOMINATOR.**
+
+When a source authority governs a complete state universe, acquire that
+complete state universe. When an authority governs a county, municipality,
+district or other bounded jurisdiction, acquire that authority's complete
+applicable universe. **Reader location determines APPLICABILITY and DISPLAY
+only.**
+
+## The failure this is written from
+
+The author observed the same architecture error independently in three states.
+All three state-money collectors were pilot-bound IN CODE, and each said so in
+its own header:
+
+\`\`\`
+  scripts/state-money-az.mts   "FOR THE 85701 AND 85641 BALLOT"
+                               loads data/ballot/az-pima-2026.json, builds
+                               candidateOfInterest from those candidacies, reads
+                               the itemized ledger only for those committees
+  scripts/state-money-nh.mts   "FOR THE 03255 BALLOT"
+                               hardcodes COUNTY = "Merrimack"
+  scripts/state-money-nj.mts   "NJ ELEC FOR THE WHOLE 07866 BALLOT"
+                               denominator derived from nj-morris-2026.json
+\`\`\`
+
+Candidate enrichment carried the same shape: the position corpus keyed
+\`ballot-az-pima:*\`, and campaign sites, bios, photos and contact hunted for the
+VISIBLE candidate universe.
+
+Each of those is a correct answer to the wrong question. The Arizona Secretary
+of State does not publish a Pima County universe; it publishes an Arizona
+universe, and a collector that asks it only about the candidates on one page
+has not been limited by the publisher — it has limited itself, and then the
+limit becomes invisible because every page it was built for looks full.
+
+## The invariant
+
+**ZERO REDUNDANT INTERNET HUNT WHEN A NEW ZIP IS ACTIVATED.**
+
+A new ZIP must not create a fresh external hunt for information already owed by
+an activated state or jurisdiction deep dive. Any information absent when a ZIP
+activates must ALREADY EXIST as an identifiable pre-existing obligation — never
+as newly discovered work CAUSED by adding the ZIP. A new ZIP may create
+applicability and linkage work. It may not create a source hunt for a record
+already owed at state scope.
+
+**Candidate enrichment is keyed to the canonical statewide candidate/contest
+universe, never to the currently visible ZIP.** Local filing regimes inside a
+state are enumerated as durable jurisdiction obligations BEFORE a reader needs
+them.
+
+## What "already acquired" requires, and what it does not
+
+It does NOT require raw high-volume or privacy-sensitive records to live in
+Git. Use the appropriate durable tier:
+
+\`\`\`
+  normalized reader-ready data   -> the versioned snapshot
+  canonical records              -> DB / object store
+  raw acquisition artifacts      -> the durable vault
+  methods, provenance, denominators -> committed
+\`\`\`
+
+Detail transactions may be streamed to establish an aggregate and then
+discarded under the privacy rules already in force; contributor PII is not
+persisted unnecessarily. The obligation is that the RECORD is held somewhere
+durable and reachable, not that a particular file is in the repository.
+
+## What "deep dive [STATE]" means
+
+Establish and maintain the state's full known civic acquisition frontier:
+
+- the canonical candidate and contest universe for the applicable cycle;
+- campaign-finance filing authorities and records;
+- campaign and candidate websites and published contact routes;
+- candidate-authored issue and position pages;
+- sourced bio, photo and profile material under the existing photo and sourcing
+  rules;
+- applicable officeholder identity;
+- ballot qualification and status;
+- counties, municipalities, school districts, special districts and other local
+  filing and election regimes;
+- source methods, provenance, freshness and durable gaps.
+
+**Those obligations are not limited to candidates or bodies currently appearing
+in enabled ZIPs.** The autonomous worker graph — not future author prompts —
+owns the unresolved remainder.
+
+## The three layers, kept apart
+
+\`\`\`
+  ACQUISITION   the source-authority universe. No dependency on any ZIP.
+  IDENTITY      the canonical registry: candidate -> contest -> office/division
+                -> party -> filing authority -> committee(s).
+  PROJECTION    the reader surface. A ZIP picks applicable candidates from the
+                registry and asks the corpus.
+\`\`\`
+
+A reader snapshot MAY contain only the candidates applicable to a page. Its
+SOURCE CORPUS may not be generated from that page's candidate list.
+
+## What this does not change
+
+Statewide acquisition does NOT mean the Secretary of State owns every local
+record. A route that belongs to Pima County is Pima-specific; a route that
+belongs to the Arizona Secretary of State is statewide, and the distinction is
+preserved rather than collapsed. Nothing here permits calling a state's
+acquisition universe complete while its local jurisdictions are unknown —
+RULING 221's prohibition on inflating a denominator and RULING 223's
+prohibition on deflating one both apply to the universes this ruling defines.
+
+**The product is organised around governments, source authorities, elections,
+candidates and jurisdictions. Pilot ZIPs are test fixtures and reader
+projections.**`,
+    claims: [
+      { key: "acquisition.denominator_authority", value: "source-authority-universe" },
+      {
+        key: "acquisition.new_location_cost",
+        value: "zero-new-external-hunt-for-already-owed-records",
+      },
+      { key: "enrichment.keying", value: "canonical-statewide-candidate-universe" },
+    ],
+    relations: [
+      { kind: "extends", target: "R-0205" },
+      { kind: "extends", target: "R-0207" },
+      { kind: "related_to", target: "R-0206" },
+      { kind: "related_to", target: "R-0224" },
+      { kind: "related_to", target: "R-0221" },
+      { kind: "related_to", target: "R-0223" },
+    ],
+  },
+  {
+    n: 230,
+    title: "RULING 230 — one canonical model-switch verdict",
+    adopted: "2026-09-01",
+    domain: "meta-governance",
+    kind: "LAW_DECISION",
+    provenance: "author_explicit",
+    body: `**SWITCH only if EVERY required challenger question is measured AND holds.
+Any required question measured and not held is HOLD/RETAIN. Any required
+question unmeasured is NOT_MEASURED, and the incumbent is retained. NO SECOND
+FUNCTION MAY EMIT A SwitchVerdict.**
+
+## The contradiction this retires
+
+One comparison record carried both of these at once:
+
+\`\`\`
+  decision            RETAIN:claude-opus-5
+  ownerCriterionMet   false
+  verdict.kind        SWITCH
+\`\`\`
+
+The cause was not a bug. \`switchVerdict\` implemented a RELATIVE non-regression
+rule — a challenger question blocks the switch only where the INCUMBENT held it
+and the challenger did not — and that rule was argued, tested and deliberate.
+On the 2026-08-31 measurement two of the questions that reached the synthesis
+contract failed on BOTH arms for the SAME reason. Nothing degraded, so the
+relative rule derived SWITCH. Nothing like "every question holds" was true, so
+the author's criterion derived RETAIN. The test suite then PRESERVED the
+disagreement, which made a contradiction into a fixture.
+
+## Why the absolute rule wins, and why representing the conflict is not enough
+
+RULING 185 puts an explicit current author directive at precedence 1 and a
+prior implementation decision below it. Representing a conflict is the right
+move while it is a conflict; it is the wrong move once the author has decided.
+A machine-readable field that disagrees with the human decision beside it is
+not a represented conflict — it is **two answers with no rule for which one a
+later session reads**, and a later session reading the wrong one switches the
+model that answers a reader's question about their own government.
+
+## What survives
+
+The relative analysis is not deleted and its reasoning is not withdrawn: *a
+question neither model answers is a retrieval gap, and holding the model choice
+hostage to it would make every future switch impossible for a reason unrelated
+to the model.* That remains TRUE and remains USEFUL. It survives as a
+DIAGNOSTIC under a name that cannot be mistaken for a verdict —
+\`relativeNonRegressionAnalysis\` — and it returns its own type. **It may not
+return a SwitchVerdict.** Exactly one function in the repository emits that
+type, and it implements the rule above.
+
+## The comparison seam stays out of production
+
+The route emits the challenger model only through the comparison harness. There
+is no per-request model switching in the production Ask route, and comparison
+caches stay disabled or isolated so measured costs are an upper bound. That is
+asserted rather than assumed.
+
+## What a failing question means
+
+A question that fails identically on both arms is evidence about the PRODUCT,
+not about either model, and it belongs on the frontier under its own name. The
+2026-08-31 Q5 failure is exactly that: an 18-record pack cannot fit the ASK-19
+700-character budget. Recording it as a model result would have hidden a budget
+defect behind a model decision.`,
+    claims: [
+      { key: "model.switch_rule", value: "every-required-question-measured-and-held" },
+      { key: "model.verdict_emitters", value: "exactly-one-canonical-emitter" },
+    ],
+    relations: [
+      { kind: "related_to", target: "R-0185" },
+      { kind: "related_to", target: "R-0180" },
+      { kind: "related_to", target: "R-0189" },
+      { kind: "related_to", target: "R-0103" },
+    ],
+  },
+  {
+    n: 231,
+    title:
+      "RULING 231 — a false description of a named person is corrected by recorded supersession, never by an edit",
+    adopted: "2026-09-01",
+    domain: "tracker-workflow",
+    kind: "LAW_DECISION",
+    provenance: "author_explicit",
+    body: `**A later session may correct an earlier session's false description of a
+NAMED PERSON only through a RECORDED SUPERSESSION that PRESERVES THE ORIGINAL
+TEXT and CITES THE EVIDENCE. The amend guard is preserved. Direct edits remain
+prohibited.**
+
+## Why a person gets a rule the rest of the row does not
+
+An ordinary tracker correction changes what this project believes about its own
+work. A correction to a description of a named person changes what this project
+has ON RECORD ABOUT SOMEBODY ELSE — a candidate, an officeholder, a clerk. If
+the false sentence is edited away, three things are lost at once: that the
+claim was made, when it was made, and what evidence replaced it. The row then
+reads as though the project had always been right about them.
+
+That is the same defect class as a false absence about a government, pointed at
+a person instead: a true statement about what one process could see, left
+standing as a false statement about who somebody is.
+
+## The shape of a lawful correction
+
+\`\`\`
+  ORIGINAL TEXT     preserved verbatim, still readable, marked superseded
+  SUPERSEDING TEXT  the corrected description
+  EVIDENCE          cited on the superseding record, about the PERSON, from a
+                    source — never "a later session disagreed"
+  DATE              from pnpm stamp, never inferred
+\`\`\`
+
+The amend guard that refuses direct edits to the tracker stores is PRESERVED,
+not relaxed to make this path convenient. A correction that cannot pass the
+guard is a correction that has not recorded what it is correcting.
+
+## What this does not license
+
+It does not license leaving a known-false description standing because
+supersession is more work than an edit. The obligation to correct is unchanged
+and immediate; only the MECHANISM is constrained. And it does not license
+superseding a description merely because a later session prefers different
+wording — supersession carries evidence about the person, or it does not
+happen.`,
+    claims: [
+      {
+        key: "tracker.person_description_amend_path",
+        value: "recorded-supersession-preserving-the-original-text",
+      },
+    ],
+    relations: [
+      { kind: "extends", target: "R-0099" },
+      { kind: "related_to", target: "R-0176" },
+      { kind: "related_to", target: "R-0227" },
+    ],
+  },
 ];
 
 /**

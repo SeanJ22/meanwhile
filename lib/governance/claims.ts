@@ -352,6 +352,55 @@ export const CLAIM_KEYS: readonly ClaimKeyDef[] = [
       "a fixture each side agrees with",
     ],
   },
+  {
+    key: "acquisition.denominator_authority",
+    question: "What defines the acquisition denominator?",
+    values: [
+      "source-authority-universe",
+      "the currently enabled reader location",
+    ],
+  },
+  {
+    key: "acquisition.new_location_cost",
+    question: "What may activating a new reader location require?",
+    values: [
+      "zero-new-external-hunt-for-already-owed-records",
+      "a fresh source hunt per location",
+    ],
+  },
+  {
+    key: "enrichment.keying",
+    question: "What is candidate enrichment keyed to?",
+    values: [
+      "canonical-statewide-candidate-universe",
+      "the currently visible zip",
+    ],
+  },
+  {
+    key: "model.switch_rule",
+    question: "What earns a switch away from the incumbent synthesis model?",
+    values: [
+      "every-required-question-measured-and-held",
+      "no question degraded relative to the incumbent",
+    ],
+  },
+  {
+    key: "model.verdict_emitters",
+    question: "How many functions may emit a SwitchVerdict?",
+    values: [
+      "exactly-one-canonical-emitter",
+      "any analysis that computes one",
+    ],
+  },
+  {
+    key: "tracker.person_description_amend_path",
+    question:
+      "How does a later session correct an earlier session's false description of a named person?",
+    values: [
+      "recorded-supersession-preserving-the-original-text",
+      "editing the row in place",
+    ],
+  },
 ] as const;
 
 const KEY_INDEX = new Map(CLAIM_KEYS.map((k) => [k.key, k]));

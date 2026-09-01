@@ -6540,6 +6540,10 @@ for (const target of SCOPE_ADDRESSES) {
       `${target.zip}: the panel a reader sees after typing lists the districts the resolver settled`,
     ],
     ["SC0831", `${target.zip}: a device revisiting with a kept resolution lists the settled districts`],
+    [
+      "SC0831",
+      `${target.zip}: on the revisit the banner is not the evidence — the LIST carries the districts`,
+    ],
   ];
 
   const expectation = await resolveAddressExpectation(target);
@@ -6648,6 +6652,14 @@ for (const target of SCOPE_ADDRESSES) {
     );
 
     const confirmed = after.rows.filter((r) => r.standing === "CONFIRMED");
+    /*
+     * The names the panel gave these districts when the reader settled them, so
+     * the revisit check below can say whether the BANNER contains any of them.
+     * Taken from the rendered rows rather than from a second lookup: the point
+     * is what a reader can read on screen, and a second source of names would
+     * be a second opinion about the answer rather than the answer.
+     */
+    const ownDistrictNames = confirmed.map((r) => r.label).filter(Boolean);
     check(
       "SC0831",
       LIVE[1][1],
@@ -6699,10 +6711,264 @@ for (const target of SCOPE_ADDRESSES) {
         : `after reload the panel shows ${revisitConfirmed.length} of ${ownDistricts.length} ` +
           `settled district(s): ${revisitConfirmed.map((r) => r.label).join(" · ") || "none"}`,
     );
+
+    /*
+     * **THE BANNER IS NOT THE EVIDENCE.** (Part A remainder, 2026-08-31.)
+     *
+     * On a REVISIT the banner and the list are fed by two different things, and
+     * only one of them is the reader's districts:
+     *
+     * - The banner is `.address-prompt-confirmed` in `address-prompt.tsx`. Its
+     *   mount effect reads the kept scope and sets `phase = "SETTLED"` and
+     *   `street = held.streetLabel`, but leaves `resolution` NULL — so on a
+     *   revisit the confirmed-levels branch cannot fire and the banner falls
+     *   through to **"Set to <street>."**, rendered from the recognition label
+     *   the store keeps for the reader's benefit. It is a correct sentence that
+     *   contains no district and consults no district.
+     * - The list is the panel's `[data-seat-standing]` rows, which read the
+     *   store through `useResolvedLocation`.
+     *
+     * So a revisit check that read the banner would go green off a string the
+     * store keeps for recognition while the list below it rendered nothing —
+     * which is the 8/28 screen exactly: the control announcing District 17 over
+     * a section listing District 19. This check states both readings and passes
+     * only on the LIST: the banner is recorded as evidence of what a
+     * banner-only check WOULD have believed, and it is never what decides.
+     */
+    const revisitBanner = (await page.evaluate(
+      `(() => {
+        const el = document.querySelector('.address-prompt-confirmed');
+        const text = el ? (el.textContent || '').trim() : '';
+        return { text: text, present: !!el };
+      })()`,
+    )) as { text: string; present: boolean };
+    const bannerNamesADistrict = ownDistrictNames.some(
+      (name) => name.length > 0 && revisitBanner.text.includes(name),
+    );
+    const listNamesThem =
+      revisitConfirmed.length === ownDistricts.length &&
+      revisitConfirmed.every((r) => r.label.length > 0);
+    check(
+      "SC0831",
+      LIVE[3][1],
+      listNamesThem,
+      `banner ${revisitBanner.present ? `reads "${revisitBanner.text}"` : "absent"} and names a ` +
+        `settled district: ${bannerNamesADistrict}; the LIST names ${revisitConfirmed.length} of ` +
+        `${ownDistricts.length}: ${revisitConfirmed.map((r) => r.label).join(" · ") || "none"} — ` +
+        "the list is what this check reads",
+    );
   } finally {
     await page.context().close();
   }
 }
+/**
+ * **THE BALLOT, REVISITED WITH A KEPT RESOLUTION — ONE VARIANT PER PILOT ZIP.**
+ * (Part A remainder of `WGH-22`, 2026-08-31.)
+ *
+ * The block above asks the who-governs panel what a returning device shows.
+ * This asks the BALLOT, which is the other surface a kept resolution reaches,
+ * and it asks the question the way the 8/28 failure taught: **a banner can be
+ * right while the list under it is untouched.**
+ *
+ * `components/ballot/ballot-narrowing.tsx` renders BOTH halves and they come
+ * from different places, which is precisely why one can be right without the
+ * other. `setAside` — the number in *"Narrowed to that address — N contests
+ * elsewhere in 07866 are hidden"* — is React state. The hiding itself is a DOM
+ * write: `applyScope` stamps `data-scoped-out` on each `[data-contest-id]`
+ * section. So the sentence and the page it describes are two artefacts, and a
+ * check that reads the sentence has verified the sentence.
+ *
+ * The three checks per ZIP are therefore:
+ *
+ * 1. The revisit narrows AT ALL — the reader gets back what they already gave.
+ * 2. **The stated N equals the rendered N.** The banner's own number against
+ *    the sections actually carrying `data-scoped-out`. This is the check that
+ *    a banner-only verification cannot pass by accident.
+ * 3. Candidates still render. A narrowed ballot showing zero `.candidate-row`
+ *    cards is a shorter ballot, not a narrower one, and "show everything we
+ *    find" forbids narrowing that empties the page.
+ *
+ * **NOTHING IS SUPPLIED.** The address is settled by typing into the ballot's
+ * own prompt, and the revisit is a real navigation back to the same URL — no
+ * seeded scope, no dispatched `storage` event. The event a harness dispatches
+ * is the one notification a browser never sends the tab that wrote, and
+ * supplying it is how the 8/31 walk passed over a live defect.
+ */
+{
+  const BALLOT_REVISIT_READ = `(() => {
+    const sections = [...document.querySelectorAll('[data-contest-id]')];
+    const banner = document.querySelector('.ballot-narrowed');
+    const bannerText = banner ? (banner.textContent || '').trim() : '';
+    const stated = bannerText.match(/([0-9]+) contests? elsewhere/);
+    return {
+      contests: sections.length,
+      scopedOut: sections.filter((s) => s.getAttribute('data-scoped-out') === 'true').length,
+      candidateRows: document.querySelectorAll('.candidate-row').length,
+      bannerPresent: !!banner,
+      bannerText: bannerText,
+      bannerSaysNoneHidden: bannerText.indexOf('Every contest below') !== -1,
+      statedHidden: stated ? Number(stated[1]) : -1,
+    };
+  })()`;
+
+  interface BallotRevisitRead {
+    contests: number;
+    scopedOut: number;
+    candidateRows: number;
+    bannerPresent: boolean;
+    bannerText: string;
+    bannerSaysNoneHidden: boolean;
+    statedHidden: number;
+  }
+
+  for (const target of SCOPE_ADDRESSES) {
+    const REVISIT: [string, string][] = [
+      [
+        "SC0831",
+        `${target.zip}: returning to the ballot with a kept resolution narrows the contest list`,
+      ],
+      [
+        "SC0831",
+        `${target.zip}: the ballot's stated hidden count equals the contests actually set aside`,
+      ],
+      [
+        "SC0831",
+        `${target.zip}: the narrowed ballot still renders candidate cards, never an empty list`,
+      ],
+    ];
+
+    const page = await openAt(browser, target.zip);
+    try {
+      const ballotUrl = `${BASE}/ballot?zip=${target.zip}`;
+      await page.goto(ballotUrl, { waitUntil: "domcontentloaded", timeout: 90_000 });
+      if (!(await untilPresent(page, "[data-contest-id]", 40_000))) {
+        for (const [session, name] of REVISIT) {
+          cannotRun(session, name, `the ballot at ${target.zip} rendered no contests to narrow`);
+        }
+        continue;
+      }
+
+      /*
+       * Settle the address the way a reader does, on this page's own prompt.
+       * A ZIP whose prompt is not offered DECLARES (RULING 24) — a silent skip
+       * here is the reporting failure this whole section exists to end.
+       */
+      const trigger = page.locator(".address-prompt-trigger").first();
+      if (!(await trigger.isVisible().catch(() => false))) {
+        for (const [session, name] of REVISIT) {
+          cannotRun(session, name, "the ballot offered no address prompt to narrow with");
+        }
+        continue;
+      }
+      await trigger.click();
+      const street = page.locator('input[aria-label="Street"]').first();
+      if (!(await street.isVisible().catch(() => false))) {
+        for (const [session, name] of REVISIT) {
+          cannotRun(session, name, "the address prompt offered no street field to type into");
+        }
+        continue;
+      }
+      await street.fill(target.street);
+      await page.locator(".address-prompt-fields button").first().click();
+
+      // The house-number ask is caused by the street, so it is waited for by
+      // name rather than by a settle timer that cannot tell a slow resolver
+      // from a missing question.
+      if (target.houseNumber) {
+        const asked = await page
+          .waitForSelector('input[aria-label="House number"]', { timeout: 20_000 })
+          .then(() => true)
+          .catch(() => false);
+        if (asked) {
+          await page.locator('input[aria-label="House number"]').first().fill(target.houseNumber);
+          await page.locator(".address-prompt-fields button").first().click();
+        }
+      }
+
+      // Wait for the CONDITION — the prompt settled — never for a duration.
+      const settled = await until(
+        page,
+        async () => (await page.locator(".address-prompt-settled").count()) > 0,
+        20_000,
+      );
+      if (!settled) {
+        for (const [session, name] of REVISIT) {
+          cannotRun(
+            session,
+            name,
+            `the prompt never settled ${target.street} in ${target.zip}, so nothing was kept`,
+          );
+        }
+        continue;
+      }
+
+      /*
+       * **THE REVISIT.** A real navigation back to the same URL in the same
+       * tab: a fresh mount that holds nothing but what the store kept. This is
+       * the return a reader makes when they leave the ballot and come back.
+       */
+      await page.goto(ballotUrl, { waitUntil: "domcontentloaded", timeout: 90_000 });
+      if (!(await untilPresent(page, "[data-contest-id]", 40_000))) {
+        for (const [session, name] of REVISIT) {
+          cannotRun(session, name, "the ballot rendered no contests after the revisit");
+        }
+        continue;
+      }
+      await until(
+        page,
+        async () => (await page.locator(".ballot-narrowed").count()) > 0,
+        20_000,
+      );
+      const read = (await page.evaluate(BALLOT_REVISIT_READ)) as BallotRevisitRead;
+
+      /*
+       * Narrowing HAPPENED. Both outcomes are legitimate — contests hidden, or
+       * the honest "every contest below is on the ballot at that address" — and
+       * neither is the absence of a banner over an unchanged page.
+       */
+      check(
+        "SC0831",
+        REVISIT[0][1],
+        read.bannerPresent && (read.scopedOut > 0 || read.bannerSaysNoneHidden),
+        `banner ${read.bannerPresent ? `present: "${read.bannerText}"` : "ABSENT"}; ` +
+          `${read.scopedOut} of ${read.contests} contest(s) carry data-scoped-out`,
+      );
+
+      /*
+       * **THE STATED N AGAINST THE RENDERED N.** The banner is React state and
+       * the hiding is a DOM write, so the two can disagree — and a check that
+       * read only the banner would report the disagreement as success. A
+       * banner reading "none hidden" is held to a rendered zero by the same
+       * rule, from the other direction.
+       */
+      const expectedHidden = read.bannerSaysNoneHidden ? 0 : read.statedHidden;
+      check(
+        "SC0831",
+        REVISIT[1][1],
+        expectedHidden >= 0 && expectedHidden === read.scopedOut,
+        `the banner states ${expectedHidden < 0 ? "no number" : expectedHidden} hidden; ` +
+          `${read.scopedOut} section(s) of ${read.contests} actually carry data-scoped-out — ` +
+          `banner text: "${read.bannerText}"`,
+      );
+
+      /*
+       * A ballot narrowed to nothing is not a narrowed ballot. `.candidate-row`
+       * is the card count on this page — the `data-candidate-*` attributes
+       * return 0 and are not the instrument.
+       */
+      check(
+        "SC0831",
+        REVISIT[2][1],
+        read.candidateRows > 0 && read.scopedOut < read.contests,
+        `${read.candidateRows} candidate card(s) after the revisit, with ` +
+          `${read.contests - read.scopedOut} of ${read.contests} contest(s) still shown`,
+      );
+    } finally {
+      await page.context().close();
+    }
+  }
+}
+
 /**
  * **NEW HAMPSHIRE MONEY REACHES THE 03255 READER.** (Session C, 2026-08-31.)
  *

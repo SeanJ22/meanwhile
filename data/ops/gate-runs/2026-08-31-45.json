@@ -1,28 +1,28 @@
 {
-  "runId": "gates@2026-09-01T03:15:35.278Z",
-  "testedSha": "a9f66f02e8e050693d724b8ae29472404f3e7404",
-  "finishedAt": "2026-09-01T03:15:35.278Z",
+  "runId": "gates@2026-09-01T02:45:47.083Z",
+  "testedSha": "ac3cfced9d628f4745ce6304895a7a832d27539b",
+  "finishedAt": "2026-09-01T02:45:47.084Z",
   "gates": [
     {
       "id": "lint",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm lint",
       "status": "PASS",
-      "seconds": 23
+      "seconds": 35
     },
     {
       "id": "tsc",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm exec tsc --noEmit",
       "status": "PASS",
-      "seconds": 16
+      "seconds": 40
     },
     {
       "id": "governance:check",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm governance:check",
       "status": "PASS",
-      "seconds": 2
+      "seconds": 3
     },
     {
       "id": "orchestration:check",
@@ -57,14 +57,14 @@
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm run assert:browser",
       "status": "PASS",
-      "seconds": 1
+      "seconds": 2
     },
     {
       "id": "test",
       "ciJob": "gates (test · lint · tsc)",
       "command": "pnpm test",
       "status": "PASS",
-      "seconds": 43
+      "seconds": 55
     },
     {
       "id": "db:gate",
@@ -85,27 +85,27 @@
       "ciJob": "build (default)",
       "command": "pnpm run build",
       "status": "PASS",
-      "seconds": 15
+      "seconds": 26
     },
     {
       "id": "test:bundle",
       "ciJob": "build (default)",
       "command": "pnpm run test:bundle",
       "status": "PASS",
-      "seconds": 1
+      "seconds": 17
     },
     {
       "id": "build:standalone",
       "ciJob": "build (standalone)",
       "command": "pnpm run build",
       "status": "PASS",
-      "seconds": 22
+      "seconds": 44
     }
   ],
   "provenance": {
     "runClass": "LOCAL_SESSION",
-    "workingTreeClean": true,
-    "integratedAtRunTime": false,
+    "workingTreeClean": false,
+    "integratedAtRunTime": true,
     "integrationRef": "origin/main"
   }
 }

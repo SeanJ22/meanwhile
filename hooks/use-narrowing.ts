@@ -1,7 +1,11 @@
 "use client";
 
 import { useCallback, useSyncExternalStore } from "react";
-import { subscribeToStorage } from "@/lib/state/subscribe-to-storage";
+import {
+  commitStorageWrite,
+  publishToListeners,
+  subscribeToStorage,
+} from "@/lib/state/subscribe-to-storage";
 
 /**
  * The reader's narrowing choices — M26/4.6.3c, device-local by design.
@@ -94,7 +98,7 @@ const subscribe = (onStoreChange: () => void) =>
   subscribeToStorage(listeners, onStoreChange);
 
 function notify() {
-  for (const listener of listeners) listener();
+  publishToListeners(listeners);
 }
 
 export function useNarrowing(zip: string) {
@@ -106,7 +110,8 @@ export function useNarrowing(zip: string) {
 
   const setDivisions = useCallback(
     (ocdIds: string[]) => {
-      try {
+      // Not being able to remember is survivable; the notify is not optional.
+      commitStorageWrite(() => {
         if (ocdIds.length === 0) window.localStorage.removeItem(DIVISIONS_KEY);
         else {
           window.localStorage.setItem(
@@ -114,49 +119,39 @@ export function useNarrowing(zip: string) {
             JSON.stringify({ zip, ocdIds }),
           );
         }
-      } catch {
-        // Not being able to remember is survivable.
-      }
-      notify();
+      }, notify);
     },
     [zip],
   );
 
   const setStreet = useCallback(
     (street: string | null) => {
-      try {
+      commitStorageWrite(() => {
         if (!street) window.localStorage.removeItem(STREET_KEY);
         else {
           window.localStorage.setItem(STREET_KEY, JSON.stringify({ zip, street }));
         }
-      } catch {
-        // Same.
-      }
-      notify();
+      }, notify);
     },
     [zip],
   );
 
   const setDeclined = useCallback(() => {
-    try {
-      window.localStorage.setItem(
-        DIVISIONS_KEY,
-        JSON.stringify({ zip, ocdIds: [], declined: true }),
-      );
-    } catch {
-      // Same.
-    }
-    notify();
+    commitStorageWrite(
+      () =>
+        window.localStorage.setItem(
+          DIVISIONS_KEY,
+          JSON.stringify({ zip, ocdIds: [], declined: true }),
+        ),
+      notify,
+    );
   }, [zip]);
 
   const clear = useCallback(() => {
-    try {
+    commitStorageWrite(() => {
       window.localStorage.removeItem(DIVISIONS_KEY);
       window.localStorage.removeItem(STREET_KEY);
-    } catch {
-      // Same.
-    }
-    notify();
+    }, notify);
   }, []);
 
   return { ...state, setDivisions, setStreet, setDeclined, clear };

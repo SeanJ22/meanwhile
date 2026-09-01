@@ -156,9 +156,17 @@ test("no module keeps a listener set that nothing ever publishes", () => {
     for (const match of source.matchAll(declaration)) {
       swept += 1;
       const name = match[1];
+      /*
+       * Three publication shapes, and the third arrived with the class audit
+       * (2026-08-31): the hand-written loop moved into `publishToListeners`, so
+       * a set handed to the shared publisher is published exactly as much as
+       * one iterated in place. Accepting it is not a loosening — the sweep
+       * still refuses a set that goes nowhere, which is the whole assertion.
+       */
       const iterated =
-        new RegExp(`for\\s*\\(\\s*const\\s+\\w+\\s+of\\s+${name}\\s*\\)`).test(source) ||
-        new RegExp(`${name}\\.forEach\\s*\\(`).test(source);
+        new RegExp(`for\\s*\\(\\s*const\\s+\\w+\\s+of\\s+\\[?\\.{0,3}${name}\\]?\\s*\\)`).test(source) ||
+        new RegExp(`${name}\\.forEach\\s*\\(`).test(source) ||
+        new RegExp(`publishToListeners\\s*\\(\\s*${name}\\s*\\)`).test(source);
       if (!iterated) orphans.push(`${relative(ROOT, file)} declares ${name}`);
     }
   }

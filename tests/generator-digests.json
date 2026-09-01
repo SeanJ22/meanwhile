@@ -1,4 +1,10 @@
 {
+  "data/campaign-finance/az-2026-statewide-corpus.json": {
+    "digest": "c6902bf4ad5df7a20554df044aa44e3dee03144174d7b2a6834d1e1456aab992",
+    "files": 12,
+    "entry": "scripts/state-money-az.mts",
+    "regeneratedOn": "2026-09-01"
+  },
   "data/derived/body-forms.json": {
     "digest": "fb2aa1809bb3d54eebd38c40e244732b8ba64665814f5a155891e10827a09e6f",
     "files": 8,
@@ -15,6 +21,12 @@
     "digest": "10b0dbd405d9f689e23d3071b88b2a5bc388a41cc498edec7269152f9947a828",
     "files": 4,
     "entry": "scripts/classify-school-districts.mts",
+    "regeneratedOn": "2026-09-01"
+  },
+  "data/funding/state-money-az-2026.json": {
+    "digest": "c6902bf4ad5df7a20554df044aa44e3dee03144174d7b2a6834d1e1456aab992",
+    "files": 12,
+    "entry": "scripts/state-money-az.mts",
     "regeneratedOn": "2026-09-01"
   },
   "data/hunt/muni-sites-nj-morris.json": {
@@ -51,6 +63,18 @@
     "digest": "9831d0bccd460afe17dd0a82e802682e762748aaa4b364a3efc19848684fa6be",
     "files": 5,
     "entry": "scripts/wiki-municipality.mts",
+    "regeneratedOn": "2026-09-01"
+  },
+  "data/identity/az-2026-candidate-registry.json": {
+    "digest": "54afecbb7c988ee14538a48067b508bb00a1577ffc8b662be755d39fdb26f19a",
+    "files": 13,
+    "entry": "scripts/identity-az-2026.mts",
+    "regeneratedOn": "2026-09-01"
+  },
+  "data/identity/az-2026-certified-lineup-reconciliation.json": {
+    "digest": "54afecbb7c988ee14538a48067b508bb00a1577ffc8b662be755d39fdb26f19a",
+    "files": 13,
+    "entry": "scripts/identity-az-2026.mts",
     "regeneratedOn": "2026-09-01"
   },
   "data/questionnaire/invitations-nj-morris-2026.json": {

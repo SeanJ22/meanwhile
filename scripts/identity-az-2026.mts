@@ -47,6 +47,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import { nameFormCollisions, reconcileLineup } from "../lib/identity/reconcile.ts";
 import { nameForms } from "../lib/identity/name-forms.ts";
 import type {
@@ -362,7 +363,46 @@ const bridge: LineupReconciliation & {
  * THE PROOF, PRINTED — every number with its denominator.
  * ------------------------------------------------------------------------- */
 
+/*
+ * **THE DENOMINATOR FLOORS (RULING 159).**
+ *
+ * Every number this script prints is a count over a population, and a
+ * population that came back empty is a FAILED READ of an input file, never a
+ * measurement of Arizona. `floored` refuses a zero denominator outright, so a
+ * registry that silently lost its candidates cannot print `0 reconciled` and
+ * pass for a finished run — which is the shape that would then be committed as
+ * a bridge answering nothing, on cards that used to render money.
+ */
+const registryFloor = floored(
+  "candidates with a canonical candidacy id",
+  "data/ballot/az-pima-2026.json, the Secretary of State's candidate filings",
+  candidates.length,
+  candidates.filter((c) => c.canonicalCandidacyId !== null).length,
+);
+const contestFloor = floored(
+  "candidacy contests carried into the registry",
+  "the ballot set's contests",
+  ballot.contests.length,
+  contests.length,
+);
+const lineupFloor = floored(
+  "certified-lineup nominees uniquely reconciled",
+  "data/ballot/az-general-lineup-2026.json, the certified primary canvass",
+  result.proof.lineupNominees,
+  result.proof.uniquelyReconciled,
+);
+const applicableFloor = floored(
+  "applicable non-federal nominees reconciled",
+  "the certified lineup's non-federal contests",
+  result.proof.applicableNonFederalNominees,
+  result.proof.applicableNonFederalReconciled,
+);
+
 console.log(`Arizona ${CYCLE} identity layer — ${AS_OF}${DRY ? " (dry run)" : ""}`);
+console.log(`\n  FLOORED COUNTS (RULING 159 — both numbers, or a refusal)`);
+for (const line of [registryFloor, contestFloor, lineupFloor, applicableFloor]) {
+  console.log(`    ${floorLine(line)}`);
+}
 console.log(`\n  REGISTRY (statewide, no ZIP anywhere in it)`);
 console.log(`    contests                              ${registry.denominators.contests}`);
 console.log(`    candidates known                      ${registry.denominators.candidates}`);

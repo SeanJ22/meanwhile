@@ -1,7 +1,19 @@
 /**
- * `pnpm candidates:universe` — **THE STATEWIDE CANDIDATE ACQUISITION
- * DENOMINATOR, re-derived from every committed source.**
- * (Session C3, lane C, 2026-09-01. RULING 229.)
+ * `pnpm candidates:universe` — **THE CANDIDATE ACQUISITION DENOMINATOR,
+ * re-derived from every committed source, AND LABELLED FOR WHAT IT ACTUALLY
+ * IS.**
+ * (Session C3, lane C, 2026-09-01. RULING 229. Relabelled Session C final,
+ * lane 1, 2026-09-01, R-C9.)
+ *
+ * **THIS FILE USED TO CALL ITSELF "THE STATEWIDE CANDIDATE ACQUISITION
+ * DENOMINATOR" AND IT WAS NOT ONE.** Its own body said so four paragraphs down
+ * — *"It is not the state's candidate universe"* — and the title said the
+ * opposite, which is the shape a reader keeps and the body is not. R-C9:
+ * "no ZIP in the key" is a property of the key, not of the population. The run
+ * now PRINTS the provenance of each state's population beside its count, from
+ * `lib/candidates/population-label.ts`, where a population that was not
+ * acquired from an authority is PILOT_DERIVED by default rather than by
+ * omission.
  *
  * Writes `data/hunt/<state>-candidate-universe-<cycle>.json`. **A GENERATED
  * ARTIFACT** (RULING 92).
@@ -40,6 +52,7 @@ import {
   type CandidateUniverse,
   type EnrichmentStores,
 } from "../lib/hunt/candidate-universe.ts";
+import { populationLabel } from "../lib/candidates/population-label.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { today } from "./doc-dates.mjs";
 
@@ -140,10 +153,16 @@ for (const stateCode of STATES) {
     stores,
   });
 
+  const label = populationLabel({
+    stateCode: universe.stateCode,
+    cycle: universe.cycle,
+    derivedFrom: universe.derivedFrom,
+  });
   console.log(
     `  ${stateCode.toUpperCase()}: ${universe.candidacies.length} canonical candidacy identit(ies) ` +
-      `from ${docs.length} committed document(s)`,
+      `from ${docs.length} committed document(s) — ${label.provenance}`,
   );
+  console.log(`      ${label.authorityLine}`);
   for (const d of universe.derivedFrom) {
     console.log(`      ${d.path.padEnd(40)} contributed ${d.candidaciesContributed} new identit(ies)`);
   }

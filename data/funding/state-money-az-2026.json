@@ -26,6 +26,310 @@
    "jurisdiction": "AZ",
    "agency": "Arizona Secretary of State — See The Money",
    "filingsUrl": "https://seethemoney.az.gov/",
+   "committeeId": "101445",
+   "registeredName": "Glassman for Attorney General",
+   "candidateNameAsFiled": "Rodney Glassman",
+   "officeSought": "Attorney General",
+   "electionYear": 2026,
+   "filingState": "FILED",
+   "totals": {
+    "receipts": 3775589.91,
+    "expenditures": 3932955.22,
+    "cashOnHand": null,
+    "reportCount": null,
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
+   },
+   "targetKeys": [
+    "ballot-az-pima:attorney-general:glassman-rodney"
+   ],
+   "match": {
+    "registeredName": "Glassman for Attorney General",
+    "officeAsFiled": "Attorney General",
+    "officeOnBallot": "Attorney General",
+    "electionYearAsFiled": 2026,
+    "electionYearOnBallot": 2026,
+    "allThreeAgree": true,
+    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+   },
+   "checkedAt": "2026-09-01",
+   "provenance": {
+    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
+    "sourceOrg": "Arizona Secretary of State — See The Money",
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
+   }
+  },
+  {
+   "dataClass": "STATE_COMMITTEE",
+   "jurisdiction": "AZ",
+   "agency": "Arizona Secretary of State — See The Money",
+   "filingsUrl": "https://seethemoney.az.gov/",
+   "committeeId": "100626",
+   "registeredName": "Kris Mayes for Arizona",
+   "candidateNameAsFiled": "Kris Mayes",
+   "officeSought": "Attorney General",
+   "electionYear": 2026,
+   "filingState": "FILED",
+   "totals": {
+    "receipts": 4612992.16,
+    "expenditures": 3422077.9,
+    "cashOnHand": null,
+    "reportCount": null,
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
+   },
+   "targetKeys": [
+    "ballot-az-pima:attorney-general:mayes-kris"
+   ],
+   "match": {
+    "registeredName": "Kris Mayes for Arizona",
+    "officeAsFiled": "Attorney General",
+    "officeOnBallot": "Attorney General",
+    "electionYearAsFiled": 2026,
+    "electionYearOnBallot": 2026,
+    "allThreeAgree": true,
+    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+   },
+   "checkedAt": "2026-09-01",
+   "provenance": {
+    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
+    "sourceOrg": "Arizona Secretary of State — See The Money",
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
+   }
+  },
+  {
+   "dataClass": "STATE_COMMITTEE",
+   "jurisdiction": "AZ",
+   "agency": "Arizona Secretary of State — See The Money",
+   "filingsUrl": "https://seethemoney.az.gov/",
+   "committeeId": "201600171",
+   "registeredName": "Friends of Warren Petersen",
+   "candidateNameAsFiled": "Warren Petersen",
+   "officeSought": "Attorney General",
+   "electionYear": 2026,
+   "filingState": "FILED",
+   "totals": {
+    "receipts": 1855754.36,
+    "expenditures": 1788513.17,
+    "cashOnHand": null,
+    "reportCount": null,
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
+   },
+   "targetKeys": [
+    "ballot-az-pima:attorney-general:petersen-warren"
+   ],
+   "match": {
+    "registeredName": "Friends of Warren Petersen",
+    "officeAsFiled": "Attorney General",
+    "officeOnBallot": "Attorney General",
+    "electionYearAsFiled": 2026,
+    "electionYearOnBallot": 2026,
+    "allThreeAgree": true,
+    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+   },
+   "checkedAt": "2026-09-01",
+   "provenance": {
+    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
+    "sourceOrg": "Arizona Secretary of State — See The Money",
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
+   }
+  },
+  {
+   "dataClass": "STATE_COMMITTEE",
+   "jurisdiction": "AZ",
+   "agency": "Arizona Secretary of State — See The Money",
+   "filingsUrl": "https://seethemoney.az.gov/",
+   "committeeId": "100699",
+   "registeredName": "Jonathon Hill for Arizona (Clean Elections)",
+   "candidateNameAsFiled": "Jonathon Ryan Hill",
+   "officeSought": "Corporation Commissioner",
+   "electionYear": 2026,
+   "filingState": "FILED",
+   "totals": {
+    "receipts": 174655.4,
+    "expenditures": 166801.51,
+    "cashOnHand": null,
+    "reportCount": null,
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
+   },
+   "targetKeys": [
+    "ballot-az-pima:corporation-commissioner:hill"
+   ],
+   "match": {
+    "registeredName": "Jonathon Hill for Arizona (Clean Elections)",
+    "officeAsFiled": "Corporation Commissioner",
+    "officeOnBallot": "Corporation Commissioner",
+    "electionYearAsFiled": 2026,
+    "electionYearOnBallot": 2026,
+    "allThreeAgree": true,
+    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+   },
+   "checkedAt": "2026-09-01",
+   "provenance": {
+    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
+    "sourceOrg": "Arizona Secretary of State — See The Money",
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
+   }
+  },
+  {
+   "dataClass": "STATE_COMMITTEE",
+   "jurisdiction": "AZ",
+   "agency": "Arizona Secretary of State — See The Money",
+   "filingsUrl": "https://seethemoney.az.gov/",
+   "committeeId": "100484",
+   "registeredName": "Nick Myers for Corporation Commissioner (Clean Elections)",
+   "candidateNameAsFiled": "Nick Myers",
+   "officeSought": "Corporation Commissioner",
+   "electionYear": 2026,
+   "filingState": "FILED",
+   "totals": {
+    "receipts": 179499.75,
+    "expenditures": 179104.75,
+    "cashOnHand": null,
+    "reportCount": null,
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
+   },
+   "targetKeys": [
+    "ballot-az-pima:corporation-commissioner:myers"
+   ],
+   "match": {
+    "registeredName": "Nick Myers for Corporation Commissioner (Clean Elections)",
+    "officeAsFiled": "Corporation Commissioner",
+    "officeOnBallot": "Corporation Commissioner",
+    "electionYearAsFiled": 2026,
+    "electionYearOnBallot": 2026,
+    "allThreeAgree": true,
+    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+   },
+   "checkedAt": "2026-09-01",
+   "provenance": {
+    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
+    "sourceOrg": "Arizona Secretary of State — See The Money",
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
+   }
+  },
+  {
+   "dataClass": "STATE_COMMITTEE",
+   "jurisdiction": "AZ",
+   "agency": "Arizona Secretary of State — See The Money",
+   "filingsUrl": "https://seethemoney.az.gov/",
+   "committeeId": "101905",
+   "registeredName": "Clara Pratte for Arizona (Clean Elections)",
+   "candidateNameAsFiled": "Clara Pratte",
+   "officeSought": "Corporation Commissioner",
+   "electionYear": 2026,
+   "filingState": "FILED",
+   "totals": {
+    "receipts": 165197.31,
+    "expenditures": 164801.56,
+    "cashOnHand": null,
+    "reportCount": null,
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
+   },
+   "targetKeys": [
+    "ballot-az-pima:corporation-commissioner:pratte"
+   ],
+   "match": {
+    "registeredName": "Clara Pratte for Arizona (Clean Elections)",
+    "officeAsFiled": "Corporation Commissioner",
+    "officeOnBallot": "Corporation Commissioner",
+    "electionYearAsFiled": 2026,
+    "electionYearOnBallot": 2026,
+    "allThreeAgree": true,
+    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+   },
+   "checkedAt": "2026-09-01",
+   "provenance": {
+    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
+    "sourceOrg": "Arizona Secretary of State — See The Money",
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
+   }
+  },
+  {
+   "dataClass": "STATE_COMMITTEE",
+   "jurisdiction": "AZ",
+   "agency": "Arizona Secretary of State — See The Money",
+   "filingsUrl": "https://seethemoney.az.gov/",
+   "committeeId": "101859",
+   "registeredName": "KEVIN THOMPSON for Corporation Commissioner (Clean Elections)",
+   "candidateNameAsFiled": "KEVIN THOMPSON",
+   "officeSought": "Corporation Commissioner",
+   "electionYear": 2026,
+   "filingState": "FILED",
+   "totals": {
+    "receipts": 176766,
+    "expenditures": 176765,
+    "cashOnHand": null,
+    "reportCount": null,
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
+   },
+   "targetKeys": [
+    "ballot-az-pima:corporation-commissioner:thompson"
+   ],
+   "match": {
+    "registeredName": "KEVIN THOMPSON for Corporation Commissioner (Clean Elections)",
+    "officeAsFiled": "Corporation Commissioner",
+    "officeOnBallot": "Corporation Commissioner",
+    "electionYearAsFiled": 2026,
+    "electionYearOnBallot": 2026,
+    "allThreeAgree": true,
+    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+   },
+   "checkedAt": "2026-09-01",
+   "provenance": {
+    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
+    "sourceOrg": "Arizona Secretary of State — See The Money",
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
+   }
+  },
+  {
+   "dataClass": "STATE_COMMITTEE",
+   "jurisdiction": "AZ",
+   "agency": "Arizona Secretary of State — See The Money",
+   "filingsUrl": "https://seethemoney.az.gov/",
+   "committeeId": "101830",
+   "registeredName": "Biggs for Arizona",
+   "candidateNameAsFiled": "Andy Biggs",
+   "officeSought": "Governor",
+   "electionYear": 2026,
+   "filingState": "FILED",
+   "totals": {
+    "receipts": 3952851.21,
+    "expenditures": 2752348.58,
+    "cashOnHand": null,
+    "reportCount": null,
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
+   },
+   "targetKeys": [
+    "ballot-az-pima:governor:biggs-andy"
+   ],
+   "match": {
+    "registeredName": "Biggs for Arizona",
+    "officeAsFiled": "Governor",
+    "officeOnBallot": "Governor",
+    "electionYearAsFiled": 2026,
+    "electionYearOnBallot": 2026,
+    "allThreeAgree": true,
+    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+   },
+   "checkedAt": "2026-09-01",
+   "provenance": {
+    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
+    "sourceOrg": "Arizona Secretary of State — See The Money",
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
+   }
+  },
+  {
+   "dataClass": "STATE_COMMITTEE",
+   "jurisdiction": "AZ",
+   "agency": "Arizona Secretary of State — See The Money",
+   "filingsUrl": "https://seethemoney.az.gov/",
    "committeeId": "201800057",
    "registeredName": "Elect Katie Hobbs",
    "candidateNameAsFiled": "Katie Hobbs",
@@ -178,44 +482,6 @@
    "jurisdiction": "AZ",
    "agency": "Arizona Secretary of State — See The Money",
    "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "101830",
-   "registeredName": "Biggs for Arizona",
-   "candidateNameAsFiled": "Andy Biggs",
-   "officeSought": "Governor",
-   "electionYear": 2026,
-   "filingState": "FILED",
-   "totals": {
-    "receipts": 3952851.21,
-    "expenditures": 2752348.58,
-    "cashOnHand": null,
-    "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
-   },
-   "targetKeys": [
-    "ballot-az-pima:governor:biggs-andy"
-   ],
-   "match": {
-    "registeredName": "Biggs for Arizona",
-    "officeAsFiled": "Governor",
-    "officeOnBallot": "Governor",
-    "electionYearAsFiled": 2026,
-    "electionYearOnBallot": 2026,
-    "allThreeAgree": true,
-    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
-   },
-   "checkedAt": "2026-09-01",
-   "provenance": {
-    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
-    "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-09-01",
-    "verifiedAt": "2026-09-01"
-   }
-  },
-  {
-   "dataClass": "STATE_COMMITTEE",
-   "jurisdiction": "AZ",
-   "agency": "Arizona Secretary of State — See The Money",
-   "filingsUrl": "https://seethemoney.az.gov/",
    "committeeId": null,
    "registeredName": "",
    "candidateNameAsFiled": "Ken Miceli",
@@ -330,26 +596,26 @@
    "jurisdiction": "AZ",
    "agency": "Arizona Secretary of State — See The Money",
    "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "100622",
-   "registeredName": "Fontes for AZ",
-   "candidateNameAsFiled": "Adrian Fontes",
-   "officeSought": "Secretary of State",
+   "committeeId": "101902",
+   "registeredName": "Brian Matlock for State Mine Inspector",
+   "candidateNameAsFiled": "Brian Matlock",
+   "officeSought": "State Mine Inspector",
    "electionYear": 2026,
    "filingState": "FILED",
    "totals": {
-    "receipts": 1874086.35,
-    "expenditures": 992036.78,
+    "receipts": 25596.18,
+    "expenditures": 25907.17,
     "cashOnHand": null,
     "reportCount": null,
     "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
-    "ballot-az-pima:secretary-of-state:fontes-adrian"
+    "ballot-az-pima:mine-inspector:matlock-brian"
    ],
    "match": {
-    "registeredName": "Fontes for AZ",
-    "officeAsFiled": "Secretary of State",
-    "officeOnBallot": "Secretary of State",
+    "registeredName": "Brian Matlock for State Mine Inspector",
+    "officeAsFiled": "State Mine Inspector",
+    "officeOnBallot": "State Mine Inspector",
     "electionYearAsFiled": 2026,
     "electionYearOnBallot": 2026,
     "allThreeAgree": true,
@@ -361,6 +627,49 @@
     "sourceOrg": "Arizona Secretary of State — See The Money",
     "collectedAt": "2026-09-01",
     "verifiedAt": "2026-09-01"
+   }
+  },
+  {
+   "dataClass": "STATE_COMMITTEE",
+   "jurisdiction": "AZ",
+   "agency": "Arizona Secretary of State — See The Money",
+   "filingsUrl": "https://seethemoney.az.gov/",
+   "committeeId": null,
+   "registeredName": "",
+   "candidateNameAsFiled": "Walter \"Les\" Presmyk",
+   "officeSought": "State Mine Inspector",
+   "electionYear": 2026,
+   "filingState": "OURS_GAP",
+   "totals": {
+    "receipts": null,
+    "expenditures": null,
+    "cashOnHand": null,
+    "reportCount": null,
+    "coveringPeriod": null
+   },
+   "targetKeys": [
+    "ballot-az-pima:mine-inspector:presmyk-walter"
+   ],
+   "match": {
+    "registeredName": "",
+    "officeAsFiled": null,
+    "officeOnBallot": "State Mine Inspector",
+    "electionYearAsFiled": null,
+    "electionYearOnBallot": 2026,
+    "allThreeAgree": false,
+    "note": "OURS GAP — The agency holds a committee for this candidate, and the office it states is not the office on this ballot."
+   },
+   "checkedAt": "2026-09-01",
+   "provenance": {
+    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
+    "sourceOrg": "Arizona Secretary of State — See The Money",
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
+   },
+   "ourGap": {
+    "whatIsMissing": "The agency holds a committee for this candidate, and the office it states is not the office on this ballot.",
+    "nextDue": "2026-10-15",
+    "nextDueName": "Post-Primary Election (Q3)"
    }
   },
   {
@@ -424,6 +733,44 @@
    ],
    "match": {
     "registeredName": "Duwayne Collier for Secretary of State",
+    "officeAsFiled": "Secretary of State",
+    "officeOnBallot": "Secretary of State",
+    "electionYearAsFiled": 2026,
+    "electionYearOnBallot": 2026,
+    "allThreeAgree": true,
+    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+   },
+   "checkedAt": "2026-09-01",
+   "provenance": {
+    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
+    "sourceOrg": "Arizona Secretary of State — See The Money",
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
+   }
+  },
+  {
+   "dataClass": "STATE_COMMITTEE",
+   "jurisdiction": "AZ",
+   "agency": "Arizona Secretary of State — See The Money",
+   "filingsUrl": "https://seethemoney.az.gov/",
+   "committeeId": "100622",
+   "registeredName": "Fontes for AZ",
+   "candidateNameAsFiled": "Adrian Fontes",
+   "officeSought": "Secretary of State",
+   "electionYear": 2026,
+   "filingState": "FILED",
+   "totals": {
+    "receipts": 1874086.35,
+    "expenditures": 992036.78,
+    "cashOnHand": null,
+    "reportCount": null,
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
+   },
+   "targetKeys": [
+    "ballot-az-pima:secretary-of-state:fontes-adrian"
+   ],
+   "match": {
+    "registeredName": "Fontes for AZ",
     "officeAsFiled": "Secretary of State",
     "officeOnBallot": "Secretary of State",
     "electionYearAsFiled": 2026,
@@ -520,26 +867,26 @@
    "jurisdiction": "AZ",
    "agency": "Arizona Secretary of State — See The Money",
    "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "100626",
-   "registeredName": "Kris Mayes for Arizona",
-   "candidateNameAsFiled": "Kris Mayes",
-   "officeSought": "Attorney General",
+   "committeeId": "100917",
+   "registeredName": "Jones for Arizona",
+   "candidateNameAsFiled": "Rachel Jones",
+   "officeSought": "State Representative - District 17",
    "electionYear": 2026,
    "filingState": "FILED",
    "totals": {
-    "receipts": 4612992.16,
-    "expenditures": 3422077.9,
+    "receipts": 50737.68,
+    "expenditures": 21697.94,
     "cashOnHand": null,
     "reportCount": null,
     "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
-    "ballot-az-pima:attorney-general:mayes-kris"
+    "ballot-az-pima:state-house-17:keshel"
    ],
    "match": {
-    "registeredName": "Kris Mayes for Arizona",
-    "officeAsFiled": "Attorney General",
-    "officeOnBallot": "Attorney General",
+    "registeredName": "Jones for Arizona",
+    "officeAsFiled": "State Representative, District 17",
+    "officeOnBallot": "State Representative, District 17",
     "electionYearAsFiled": 2026,
     "electionYearOnBallot": 2026,
     "allThreeAgree": true,
@@ -558,26 +905,26 @@
    "jurisdiction": "AZ",
    "agency": "Arizona Secretary of State — See The Money",
    "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "101445",
-   "registeredName": "Glassman for Attorney General",
-   "candidateNameAsFiled": "Rodney Glassman",
-   "officeSought": "Attorney General",
+   "committeeId": "102112",
+   "registeredName": "Lyon for Arizona",
+   "candidateNameAsFiled": "Hollace Drage Lyon",
+   "officeSought": "State Representative - District 17",
    "electionYear": 2026,
    "filingState": "FILED",
    "totals": {
-    "receipts": 3775589.91,
-    "expenditures": 3932955.22,
+    "receipts": 164077.72,
+    "expenditures": 33215.5,
     "cashOnHand": null,
     "reportCount": null,
     "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
-    "ballot-az-pima:attorney-general:glassman-rodney"
+    "ballot-az-pima:state-house-17:lyon"
    ],
    "match": {
-    "registeredName": "Glassman for Attorney General",
-    "officeAsFiled": "Attorney General",
-    "officeOnBallot": "Attorney General",
+    "registeredName": "Lyon for Arizona",
+    "officeAsFiled": "State Representative, District 17",
+    "officeOnBallot": "State Representative, District 17",
     "electionYearAsFiled": 2026,
     "electionYearOnBallot": 2026,
     "allThreeAgree": true,
@@ -596,26 +943,26 @@
    "jurisdiction": "AZ",
    "agency": "Arizona Secretary of State — See The Money",
    "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "201600171",
-   "registeredName": "Friends of Warren Petersen",
-   "candidateNameAsFiled": "Warren Petersen",
-   "officeSought": "Attorney General",
+   "committeeId": "101507",
+   "registeredName": "Kevin Volk for Arizona",
+   "candidateNameAsFiled": "Kevin Volk",
+   "officeSought": "State Representative - District 17",
    "electionYear": 2026,
    "filingState": "FILED",
    "totals": {
-    "receipts": 1855754.36,
-    "expenditures": 1788513.17,
+    "receipts": 173742.29,
+    "expenditures": 48362.82,
     "cashOnHand": null,
     "reportCount": null,
     "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
-    "ballot-az-pima:attorney-general:petersen-warren"
+    "ballot-az-pima:state-house-17:volk"
    ],
    "match": {
-    "registeredName": "Friends of Warren Petersen",
-    "officeAsFiled": "Attorney General",
-    "officeOnBallot": "Attorney General",
+    "registeredName": "Kevin Volk for Arizona",
+    "officeAsFiled": "State Representative, District 17",
+    "officeOnBallot": "State Representative, District 17",
     "electionYearAsFiled": 2026,
     "electionYearOnBallot": 2026,
     "allThreeAgree": true,
@@ -634,568 +981,26 @@
    "jurisdiction": "AZ",
    "agency": "Arizona Secretary of State — See The Money",
    "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "101897",
-   "registeredName": "MANSOUR FOR ARIZONA",
-   "candidateNameAsFiled": "Nick Mansour",
-   "officeSought": "State Treasurer",
+   "committeeId": "102004",
+   "registeredName": "Winchester for Arizona",
+   "candidateNameAsFiled": "John Winchester",
+   "officeSought": "State Representative - District 17",
    "electionYear": 2026,
    "filingState": "FILED",
    "totals": {
-    "receipts": 1283715.59,
-    "expenditures": 441692.26,
+    "receipts": 132023,
+    "expenditures": 46810.95,
     "cashOnHand": null,
     "reportCount": null,
     "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
-    "ballot-az-pima:state-treasurer:mansour-nick"
+    "ballot-az-pima:state-house-17:winchester"
    ],
    "match": {
-    "registeredName": "MANSOUR FOR ARIZONA",
-    "officeAsFiled": "State Treasurer",
-    "officeOnBallot": "State Treasurer",
-    "electionYearAsFiled": 2026,
-    "electionYearOnBallot": 2026,
-    "allThreeAgree": true,
-    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
-   },
-   "checkedAt": "2026-09-01",
-   "provenance": {
-    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
-    "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-09-01",
-    "verifiedAt": "2026-09-01"
-   }
-  },
-  {
-   "dataClass": "STATE_COMMITTEE",
-   "jurisdiction": "AZ",
-   "agency": "Arizona Secretary of State — See The Money",
-   "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "102000",
-   "registeredName": "Zepeda4AZ",
-   "candidateNameAsFiled": "Michael Zepeda",
-   "officeSought": "State Treasurer",
-   "electionYear": 2026,
-   "filingState": "FILED",
-   "totals": {
-    "receipts": 3953.44,
-    "expenditures": 3978.44,
-    "cashOnHand": null,
-    "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
-   },
-   "targetKeys": [
-    "ballot-az-pima:state-treasurer:zepeda-michael"
-   ],
-   "match": {
-    "registeredName": "Zepeda4AZ",
-    "officeAsFiled": "State Treasurer",
-    "officeOnBallot": "State Treasurer",
-    "electionYearAsFiled": 2026,
-    "electionYearOnBallot": 2026,
-    "allThreeAgree": true,
-    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
-   },
-   "checkedAt": "2026-09-01",
-   "provenance": {
-    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
-    "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-09-01",
-    "verifiedAt": "2026-09-01"
-   }
-  },
-  {
-   "dataClass": "STATE_COMMITTEE",
-   "jurisdiction": "AZ",
-   "agency": "Arizona Secretary of State — See The Money",
-   "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "102106",
-   "registeredName": "Katherine Haley for AZ",
-   "candidateNameAsFiled": "Katherine Haley",
-   "officeSought": "State Treasurer",
-   "electionYear": 2026,
-   "filingState": "FILED",
-   "totals": {
-    "receipts": 338943.23,
-    "expenditures": 281773.56,
-    "cashOnHand": null,
-    "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
-   },
-   "targetKeys": [
-    "ballot-az-pima:state-treasurer:haley-katherine"
-   ],
-   "match": {
-    "registeredName": "Katherine Haley for AZ",
-    "officeAsFiled": "State Treasurer",
-    "officeOnBallot": "State Treasurer",
-    "electionYearAsFiled": 2026,
-    "electionYearOnBallot": 2026,
-    "allThreeAgree": true,
-    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
-   },
-   "checkedAt": "2026-09-01",
-   "provenance": {
-    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
-    "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-09-01",
-    "verifiedAt": "2026-09-01"
-   }
-  },
-  {
-   "dataClass": "STATE_COMMITTEE",
-   "jurisdiction": "AZ",
-   "agency": "Arizona Secretary of State — See The Money",
-   "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "101861",
-   "registeredName": "Friends of Elijah Norton",
-   "candidateNameAsFiled": "Elijah Norton",
-   "officeSought": "State Treasurer",
-   "electionYear": 2026,
-   "filingState": "FILED",
-   "totals": {
-    "receipts": 3178196.25,
-    "expenditures": 3098945.26,
-    "cashOnHand": null,
-    "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
-   },
-   "targetKeys": [
-    "ballot-az-pima:state-treasurer:norton-elijah"
-   ],
-   "match": {
-    "registeredName": "Friends of Elijah Norton",
-    "officeAsFiled": "State Treasurer",
-    "officeOnBallot": "State Treasurer",
-    "electionYearAsFiled": 2026,
-    "electionYearOnBallot": 2026,
-    "allThreeAgree": true,
-    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
-   },
-   "checkedAt": "2026-09-01",
-   "provenance": {
-    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
-    "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-09-01",
-    "verifiedAt": "2026-09-01"
-   }
-  },
-  {
-   "dataClass": "STATE_COMMITTEE",
-   "jurisdiction": "AZ",
-   "agency": "Arizona Secretary of State — See The Money",
-   "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "101877",
-   "registeredName": "Elect Michael D. Butts",
-   "candidateNameAsFiled": "Michael Butts",
-   "officeSought": "Superintendent of Public Instruction",
-   "electionYear": 2026,
-   "filingState": "FILED",
-   "totals": {
-    "receipts": 11516.08,
-    "expenditures": 10471.55,
-    "cashOnHand": null,
-    "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
-   },
-   "targetKeys": [
-    "ballot-az-pima:superintendent:butts-michael-d-"
-   ],
-   "match": {
-    "registeredName": "Elect Michael D. Butts",
-    "officeAsFiled": "Superintendent of Public Instruction",
-    "officeOnBallot": "Superintendent of Public Instruction",
-    "electionYearAsFiled": 2026,
-    "electionYearOnBallot": 2026,
-    "allThreeAgree": true,
-    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
-   },
-   "checkedAt": "2026-09-01",
-   "provenance": {
-    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
-    "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-09-01",
-    "verifiedAt": "2026-09-01"
-   }
-  },
-  {
-   "dataClass": "STATE_COMMITTEE",
-   "jurisdiction": "AZ",
-   "agency": "Arizona Secretary of State — See The Money",
-   "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "101821",
-   "registeredName": "Ruiz for AZ Education",
-   "candidateNameAsFiled": "Teresa Leyba Ruiz",
-   "officeSought": "Superintendent of Public Instruction",
-   "electionYear": 2026,
-   "filingState": "FILED",
-   "totals": {
-    "receipts": 311144.91,
-    "expenditures": 171900.97,
-    "cashOnHand": null,
-    "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
-   },
-   "targetKeys": [
-    "ballot-az-pima:superintendent:leyba-ruiz-teresa"
-   ],
-   "match": {
-    "registeredName": "Ruiz for AZ Education",
-    "officeAsFiled": "Superintendent of Public Instruction",
-    "officeOnBallot": "Superintendent of Public Instruction",
-    "electionYearAsFiled": 2026,
-    "electionYearOnBallot": 2026,
-    "allThreeAgree": true,
-    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
-   },
-   "checkedAt": "2026-09-01",
-   "provenance": {
-    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
-    "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-09-01",
-    "verifiedAt": "2026-09-01"
-   }
-  },
-  {
-   "dataClass": "STATE_COMMITTEE",
-   "jurisdiction": "AZ",
-   "agency": "Arizona Secretary of State — See The Money",
-   "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "101922",
-   "registeredName": "Brett Newby for Superintendent of Public Instruction",
-   "candidateNameAsFiled": "Brett Newby",
-   "officeSought": "Superintendent of Public Instruction",
-   "electionYear": 2026,
-   "filingState": "FILED",
-   "totals": {
-    "receipts": 127613.3,
-    "expenditures": 18458.65,
-    "cashOnHand": null,
-    "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
-   },
-   "targetKeys": [
-    "ballot-az-pima:superintendent:newby-brett-matthew"
-   ],
-   "match": {
-    "registeredName": "Brett Newby for Superintendent of Public Instruction",
-    "officeAsFiled": "Superintendent of Public Instruction",
-    "officeOnBallot": "Superintendent of Public Instruction",
-    "electionYearAsFiled": 2026,
-    "electionYearOnBallot": 2026,
-    "allThreeAgree": true,
-    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
-   },
-   "checkedAt": "2026-09-01",
-   "provenance": {
-    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
-    "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-09-01",
-    "verifiedAt": "2026-09-01"
-   }
-  },
-  {
-   "dataClass": "STATE_COMMITTEE",
-   "jurisdiction": "AZ",
-   "agency": "Arizona Secretary of State — See The Money",
-   "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": null,
-   "registeredName": "",
-   "candidateNameAsFiled": "Tom Horne",
-   "officeSought": "Superintendent of Public Instruction",
-   "electionYear": 2026,
-   "filingState": "OURS_GAP",
-   "totals": {
-    "receipts": null,
-    "expenditures": null,
-    "cashOnHand": null,
-    "reportCount": null,
-    "coveringPeriod": null
-   },
-   "targetKeys": [
-    "ballot-az-pima:superintendent:horne-tom"
-   ],
-   "match": {
-    "registeredName": "",
-    "officeAsFiled": null,
-    "officeOnBallot": "Superintendent of Public Instruction",
-    "electionYearAsFiled": null,
-    "electionYearOnBallot": 2026,
-    "allThreeAgree": false,
-    "note": "OURS GAP — Arizona's committee register holds 1 live candidate committee under this name, and we have not confirmed that any of them belongs to this candidacy."
-   },
-   "checkedAt": "2026-09-01",
-   "provenance": {
-    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
-    "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-09-01",
-    "verifiedAt": "2026-09-01"
-   },
-   "ourGap": {
-    "whatIsMissing": "Arizona's committee register holds 1 live candidate committee under this name, and we have not confirmed that any of them belongs to this candidacy.",
-    "nextDue": "2026-10-15",
-    "nextDueName": "Post-Primary Election (Q3)"
-   }
-  },
-  {
-   "dataClass": "STATE_COMMITTEE",
-   "jurisdiction": "AZ",
-   "agency": "Arizona Secretary of State — See The Money",
-   "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "101898",
-   "registeredName": "Kimberly Yee for Superintendent of Public Instruction",
-   "candidateNameAsFiled": "Kimberly Yee",
-   "officeSought": "Superintendent of Public Instruction",
-   "electionYear": 2026,
-   "filingState": "FILED",
-   "totals": {
-    "receipts": 423616.47,
-    "expenditures": 175576.84,
-    "cashOnHand": null,
-    "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
-   },
-   "targetKeys": [
-    "ballot-az-pima:superintendent:yee-kimberly"
-   ],
-   "match": {
-    "registeredName": "Kimberly Yee for Superintendent of Public Instruction",
-    "officeAsFiled": "Superintendent of Public Instruction",
-    "officeOnBallot": "Superintendent of Public Instruction",
-    "electionYearAsFiled": 2026,
-    "electionYearOnBallot": 2026,
-    "allThreeAgree": true,
-    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
-   },
-   "checkedAt": "2026-09-01",
-   "provenance": {
-    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
-    "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-09-01",
-    "verifiedAt": "2026-09-01"
-   }
-  },
-  {
-   "dataClass": "STATE_COMMITTEE",
-   "jurisdiction": "AZ",
-   "agency": "Arizona Secretary of State — See The Money",
-   "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "101902",
-   "registeredName": "Brian Matlock for State Mine Inspector",
-   "candidateNameAsFiled": "Brian Matlock",
-   "officeSought": "State Mine Inspector",
-   "electionYear": 2026,
-   "filingState": "FILED",
-   "totals": {
-    "receipts": 25596.18,
-    "expenditures": 25907.17,
-    "cashOnHand": null,
-    "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
-   },
-   "targetKeys": [
-    "ballot-az-pima:mine-inspector:matlock-brian"
-   ],
-   "match": {
-    "registeredName": "Brian Matlock for State Mine Inspector",
-    "officeAsFiled": "State Mine Inspector",
-    "officeOnBallot": "State Mine Inspector",
-    "electionYearAsFiled": 2026,
-    "electionYearOnBallot": 2026,
-    "allThreeAgree": true,
-    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
-   },
-   "checkedAt": "2026-09-01",
-   "provenance": {
-    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
-    "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-09-01",
-    "verifiedAt": "2026-09-01"
-   }
-  },
-  {
-   "dataClass": "STATE_COMMITTEE",
-   "jurisdiction": "AZ",
-   "agency": "Arizona Secretary of State — See The Money",
-   "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": null,
-   "registeredName": "",
-   "candidateNameAsFiled": "Walter \"Les\" Presmyk",
-   "officeSought": "State Mine Inspector",
-   "electionYear": 2026,
-   "filingState": "OURS_GAP",
-   "totals": {
-    "receipts": null,
-    "expenditures": null,
-    "cashOnHand": null,
-    "reportCount": null,
-    "coveringPeriod": null
-   },
-   "targetKeys": [
-    "ballot-az-pima:mine-inspector:presmyk-walter"
-   ],
-   "match": {
-    "registeredName": "",
-    "officeAsFiled": null,
-    "officeOnBallot": "State Mine Inspector",
-    "electionYearAsFiled": null,
-    "electionYearOnBallot": 2026,
-    "allThreeAgree": false,
-    "note": "OURS GAP — The agency holds a committee for this candidate, and the office it states is not the office on this ballot."
-   },
-   "checkedAt": "2026-09-01",
-   "provenance": {
-    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
-    "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-09-01",
-    "verifiedAt": "2026-09-01"
-   },
-   "ourGap": {
-    "whatIsMissing": "The agency holds a committee for this candidate, and the office it states is not the office on this ballot.",
-    "nextDue": "2026-10-15",
-    "nextDueName": "Post-Primary Election (Q3)"
-   }
-  },
-  {
-   "dataClass": "STATE_COMMITTEE",
-   "jurisdiction": "AZ",
-   "agency": "Arizona Secretary of State — See The Money",
-   "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "101965",
-   "registeredName": "Fred Slawson for State Senator - District No. 19",
-   "candidateNameAsFiled": "Fred \"Ryan\" Slawson",
-   "officeSought": "State Senator - District No. 19",
-   "electionYear": 2026,
-   "filingState": "FILED",
-   "totals": {
-    "receipts": 100,
-    "expenditures": 0,
-    "cashOnHand": null,
-    "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
-   },
-   "targetKeys": [
-    "ballot-az-pima:state-senate-19:slawson-ryan"
-   ],
-   "match": {
-    "registeredName": "Fred Slawson for State Senator - District No. 19",
-    "officeAsFiled": "State Senator, District 19",
-    "officeOnBallot": "State Senator, District 19",
-    "electionYearAsFiled": 2026,
-    "electionYearOnBallot": 2026,
-    "allThreeAgree": true,
-    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
-   },
-   "checkedAt": "2026-09-01",
-   "provenance": {
-    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
-    "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-09-01",
-    "verifiedAt": "2026-09-01"
-   }
-  },
-  {
-   "dataClass": "STATE_COMMITTEE",
-   "jurisdiction": "AZ",
-   "agency": "Arizona Secretary of State — See The Money",
-   "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "101867",
-   "registeredName": "Griffin for Arizona",
-   "candidateNameAsFiled": "GAIL GRIFFIN",
-   "officeSought": "State Senator - District No. 19",
-   "electionYear": 2026,
-   "filingState": "FILED",
-   "totals": {
-    "receipts": 111665,
-    "expenditures": 52174.81,
-    "cashOnHand": null,
-    "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
-   },
-   "targetKeys": [
-    "ballot-az-pima:state-senate-19:griffin-gail"
-   ],
-   "match": {
-    "registeredName": "Griffin for Arizona",
-    "officeAsFiled": "State Senator, District 19",
-    "officeOnBallot": "State Senator, District 19",
-    "electionYearAsFiled": 2026,
-    "electionYearOnBallot": 2026,
-    "allThreeAgree": true,
-    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
-   },
-   "checkedAt": "2026-09-01",
-   "provenance": {
-    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
-    "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-09-01",
-    "verifiedAt": "2026-09-01"
-   }
-  },
-  {
-   "dataClass": "STATE_COMMITTEE",
-   "jurisdiction": "AZ",
-   "agency": "Arizona Secretary of State — See The Money",
-   "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "101952",
-   "registeredName": "Alma for Arizona",
-   "candidateNameAsFiled": "ALMA HERNANDEZ",
-   "officeSought": "State Senator - District No. 20",
-   "electionYear": 2026,
-   "filingState": "FILED",
-   "totals": {
-    "receipts": 284520.15,
-    "expenditures": 262592.54,
-    "cashOnHand": null,
-    "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
-   },
-   "targetKeys": [
-    "ballot-az-pima:state-senate-20:hernandez-alma"
-   ],
-   "match": {
-    "registeredName": "Alma for Arizona",
-    "officeAsFiled": "State Senator, District 20",
-    "officeOnBallot": "State Senator, District 20",
-    "electionYearAsFiled": 2026,
-    "electionYearOnBallot": 2026,
-    "allThreeAgree": true,
-    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
-   },
-   "checkedAt": "2026-09-01",
-   "provenance": {
-    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
-    "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-09-01",
-    "verifiedAt": "2026-09-01"
-   }
-  },
-  {
-   "dataClass": "STATE_COMMITTEE",
-   "jurisdiction": "AZ",
-   "agency": "Arizona Secretary of State — See The Money",
-   "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "102067",
-   "registeredName": "Rocque for Arizona",
-   "candidateNameAsFiled": "rocque perez",
-   "officeSought": "State Senator - District No. 20",
-   "electionYear": 2026,
-   "filingState": "FILED",
-   "totals": {
-    "receipts": 49354.26,
-    "expenditures": 47284.26,
-    "cashOnHand": null,
-    "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
-   },
-   "targetKeys": [
-    "ballot-az-pima:state-senate-20:perez-rocque"
-   ],
-   "match": {
-    "registeredName": "Rocque for Arizona",
-    "officeAsFiled": "State Senator, District 20",
-    "officeOnBallot": "State Senator, District 20",
+    "registeredName": "Winchester for Arizona",
+    "officeAsFiled": "State Representative, District 17",
+    "officeOnBallot": "State Representative, District 17",
     "electionYearAsFiled": 2026,
     "electionYearOnBallot": 2026,
     "allThreeAgree": true,
@@ -1232,44 +1037,6 @@
    ],
    "match": {
     "registeredName": "Jackie Anderson for AZ House (Clean Elections)",
-    "officeAsFiled": "State Representative, District 19",
-    "officeOnBallot": "State Representative, District 19",
-    "electionYearAsFiled": 2026,
-    "electionYearOnBallot": 2026,
-    "allThreeAgree": true,
-    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
-   },
-   "checkedAt": "2026-09-01",
-   "provenance": {
-    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
-    "sourceOrg": "Arizona Secretary of State — See The Money",
-    "collectedAt": "2026-09-01",
-    "verifiedAt": "2026-09-01"
-   }
-  },
-  {
-   "dataClass": "STATE_COMMITTEE",
-   "jurisdiction": "AZ",
-   "agency": "Arizona Secretary of State — See The Money",
-   "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "101913",
-   "registeredName": "Aiden Swallow for Arizona (Clean Elections)",
-   "candidateNameAsFiled": "Aiden Nicholette Swallow",
-   "officeSought": "State Representative - District 19",
-   "electionYear": 2026,
-   "filingState": "FILED",
-   "totals": {
-    "receipts": 3237.68,
-    "expenditures": 2728.37,
-    "cashOnHand": null,
-    "reportCount": null,
-    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
-   },
-   "targetKeys": [
-    "ballot-az-pima:state-house-19:swallow-aiden-nicholette"
-   ],
-   "match": {
-    "registeredName": "Aiden Swallow for Arizona (Clean Elections)",
     "officeAsFiled": "State Representative, District 19",
     "officeOnBallot": "State Representative, District 19",
     "electionYearAsFiled": 2026,
@@ -1384,6 +1151,44 @@
    ],
    "match": {
     "registeredName": "Gowan for Arizona",
+    "officeAsFiled": "State Representative, District 19",
+    "officeOnBallot": "State Representative, District 19",
+    "electionYearAsFiled": 2026,
+    "electionYearOnBallot": 2026,
+    "allThreeAgree": true,
+    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+   },
+   "checkedAt": "2026-09-01",
+   "provenance": {
+    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
+    "sourceOrg": "Arizona Secretary of State — See The Money",
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
+   }
+  },
+  {
+   "dataClass": "STATE_COMMITTEE",
+   "jurisdiction": "AZ",
+   "agency": "Arizona Secretary of State — See The Money",
+   "filingsUrl": "https://seethemoney.az.gov/",
+   "committeeId": "101913",
+   "registeredName": "Aiden Swallow for Arizona (Clean Elections)",
+   "candidateNameAsFiled": "Aiden Nicholette Swallow",
+   "officeSought": "State Representative - District 19",
+   "electionYear": 2026,
+   "filingState": "FILED",
+   "totals": {
+    "receipts": 3237.68,
+    "expenditures": 2728.37,
+    "cashOnHand": null,
+    "reportCount": null,
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
+   },
+   "targetKeys": [
+    "ballot-az-pima:state-house-19:swallow-aiden-nicholette"
+   ],
+   "match": {
+    "registeredName": "Aiden Swallow for Arizona (Clean Elections)",
     "officeAsFiled": "State Representative, District 19",
     "officeOnBallot": "State Representative, District 19",
     "electionYearAsFiled": 2026,
@@ -1642,26 +1447,26 @@
    "jurisdiction": "AZ",
    "agency": "Arizona Secretary of State — See The Money",
    "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "100917",
-   "registeredName": "Jones for Arizona",
-   "candidateNameAsFiled": "Rachel Jones",
-   "officeSought": "State Representative - District 17",
+   "committeeId": "101867",
+   "registeredName": "Griffin for Arizona",
+   "candidateNameAsFiled": "GAIL GRIFFIN",
+   "officeSought": "State Senator - District No. 19",
    "electionYear": 2026,
    "filingState": "FILED",
    "totals": {
-    "receipts": 50737.68,
-    "expenditures": 21697.94,
+    "receipts": 111665,
+    "expenditures": 52174.81,
     "cashOnHand": null,
     "reportCount": null,
     "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
-    "ballot-az-pima:state-house-17:keshel"
+    "ballot-az-pima:state-senate-19:griffin-gail"
    ],
    "match": {
-    "registeredName": "Jones for Arizona",
-    "officeAsFiled": "State Representative, District 17",
-    "officeOnBallot": "State Representative, District 17",
+    "registeredName": "Griffin for Arizona",
+    "officeAsFiled": "State Senator, District 19",
+    "officeOnBallot": "State Senator, District 19",
     "electionYearAsFiled": 2026,
     "electionYearOnBallot": 2026,
     "allThreeAgree": true,
@@ -1680,26 +1485,26 @@
    "jurisdiction": "AZ",
    "agency": "Arizona Secretary of State — See The Money",
    "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "102004",
-   "registeredName": "Winchester for Arizona",
-   "candidateNameAsFiled": "John Winchester",
-   "officeSought": "State Representative - District 17",
+   "committeeId": "101965",
+   "registeredName": "Fred Slawson for State Senator - District No. 19",
+   "candidateNameAsFiled": "Fred \"Ryan\" Slawson",
+   "officeSought": "State Senator - District No. 19",
    "electionYear": 2026,
    "filingState": "FILED",
    "totals": {
-    "receipts": 132023,
-    "expenditures": 46810.95,
+    "receipts": 100,
+    "expenditures": 0,
     "cashOnHand": null,
     "reportCount": null,
     "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
-    "ballot-az-pima:state-house-17:winchester"
+    "ballot-az-pima:state-senate-19:slawson-ryan"
    ],
    "match": {
-    "registeredName": "Winchester for Arizona",
-    "officeAsFiled": "State Representative, District 17",
-    "officeOnBallot": "State Representative, District 17",
+    "registeredName": "Fred Slawson for State Senator - District No. 19",
+    "officeAsFiled": "State Senator, District 19",
+    "officeOnBallot": "State Senator, District 19",
     "electionYearAsFiled": 2026,
     "electionYearOnBallot": 2026,
     "allThreeAgree": true,
@@ -1718,26 +1523,26 @@
    "jurisdiction": "AZ",
    "agency": "Arizona Secretary of State — See The Money",
    "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "102112",
-   "registeredName": "Lyon for Arizona",
-   "candidateNameAsFiled": "Hollace Drage Lyon",
-   "officeSought": "State Representative - District 17",
+   "committeeId": "101952",
+   "registeredName": "Alma for Arizona",
+   "candidateNameAsFiled": "ALMA HERNANDEZ",
+   "officeSought": "State Senator - District No. 20",
    "electionYear": 2026,
    "filingState": "FILED",
    "totals": {
-    "receipts": 164077.72,
-    "expenditures": 33215.5,
+    "receipts": 284520.15,
+    "expenditures": 262592.54,
     "cashOnHand": null,
     "reportCount": null,
     "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
-    "ballot-az-pima:state-house-17:lyon"
+    "ballot-az-pima:state-senate-20:hernandez-alma"
    ],
    "match": {
-    "registeredName": "Lyon for Arizona",
-    "officeAsFiled": "State Representative, District 17",
-    "officeOnBallot": "State Representative, District 17",
+    "registeredName": "Alma for Arizona",
+    "officeAsFiled": "State Senator, District 20",
+    "officeOnBallot": "State Senator, District 20",
     "electionYearAsFiled": 2026,
     "electionYearOnBallot": 2026,
     "allThreeAgree": true,
@@ -1756,26 +1561,26 @@
    "jurisdiction": "AZ",
    "agency": "Arizona Secretary of State — See The Money",
    "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "101507",
-   "registeredName": "Kevin Volk for Arizona",
-   "candidateNameAsFiled": "Kevin Volk",
-   "officeSought": "State Representative - District 17",
+   "committeeId": "102067",
+   "registeredName": "Rocque for Arizona",
+   "candidateNameAsFiled": "rocque perez",
+   "officeSought": "State Senator - District No. 20",
    "electionYear": 2026,
    "filingState": "FILED",
    "totals": {
-    "receipts": 173742.29,
-    "expenditures": 48362.82,
+    "receipts": 49354.26,
+    "expenditures": 47284.26,
     "cashOnHand": null,
     "reportCount": null,
     "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
-    "ballot-az-pima:state-house-17:volk"
+    "ballot-az-pima:state-senate-20:perez-rocque"
    ],
    "match": {
-    "registeredName": "Kevin Volk for Arizona",
-    "officeAsFiled": "State Representative, District 17",
-    "officeOnBallot": "State Representative, District 17",
+    "registeredName": "Rocque for Arizona",
+    "officeAsFiled": "State Senator, District 20",
+    "officeOnBallot": "State Senator, District 20",
     "electionYearAsFiled": 2026,
     "electionYearOnBallot": 2026,
     "allThreeAgree": true,
@@ -1794,26 +1599,26 @@
    "jurisdiction": "AZ",
    "agency": "Arizona Secretary of State — See The Money",
    "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "101859",
-   "registeredName": "KEVIN THOMPSON for Corporation Commissioner (Clean Elections)",
-   "candidateNameAsFiled": "KEVIN THOMPSON",
-   "officeSought": "Corporation Commissioner",
+   "committeeId": "102106",
+   "registeredName": "Katherine Haley for AZ",
+   "candidateNameAsFiled": "Katherine Haley",
+   "officeSought": "State Treasurer",
    "electionYear": 2026,
    "filingState": "FILED",
    "totals": {
-    "receipts": 176766,
-    "expenditures": 176765,
+    "receipts": 338943.23,
+    "expenditures": 281773.56,
     "cashOnHand": null,
     "reportCount": null,
     "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
-    "ballot-az-pima:corporation-commissioner:thompson"
+    "ballot-az-pima:state-treasurer:haley-katherine"
    ],
    "match": {
-    "registeredName": "KEVIN THOMPSON for Corporation Commissioner (Clean Elections)",
-    "officeAsFiled": "Corporation Commissioner",
-    "officeOnBallot": "Corporation Commissioner",
+    "registeredName": "Katherine Haley for AZ",
+    "officeAsFiled": "State Treasurer",
+    "officeOnBallot": "State Treasurer",
     "electionYearAsFiled": 2026,
     "electionYearOnBallot": 2026,
     "allThreeAgree": true,
@@ -1832,26 +1637,26 @@
    "jurisdiction": "AZ",
    "agency": "Arizona Secretary of State — See The Money",
    "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "100484",
-   "registeredName": "Nick Myers for Corporation Commissioner (Clean Elections)",
-   "candidateNameAsFiled": "Nick Myers",
-   "officeSought": "Corporation Commissioner",
+   "committeeId": "101897",
+   "registeredName": "MANSOUR FOR ARIZONA",
+   "candidateNameAsFiled": "Nick Mansour",
+   "officeSought": "State Treasurer",
    "electionYear": 2026,
    "filingState": "FILED",
    "totals": {
-    "receipts": 179499.75,
-    "expenditures": 179104.75,
+    "receipts": 1283715.59,
+    "expenditures": 441692.26,
     "cashOnHand": null,
     "reportCount": null,
     "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
-    "ballot-az-pima:corporation-commissioner:myers"
+    "ballot-az-pima:state-treasurer:mansour-nick"
    ],
    "match": {
-    "registeredName": "Nick Myers for Corporation Commissioner (Clean Elections)",
-    "officeAsFiled": "Corporation Commissioner",
-    "officeOnBallot": "Corporation Commissioner",
+    "registeredName": "MANSOUR FOR ARIZONA",
+    "officeAsFiled": "State Treasurer",
+    "officeOnBallot": "State Treasurer",
     "electionYearAsFiled": 2026,
     "electionYearOnBallot": 2026,
     "allThreeAgree": true,
@@ -1870,26 +1675,26 @@
    "jurisdiction": "AZ",
    "agency": "Arizona Secretary of State — See The Money",
    "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "101905",
-   "registeredName": "Clara Pratte for Arizona (Clean Elections)",
-   "candidateNameAsFiled": "Clara Pratte",
-   "officeSought": "Corporation Commissioner",
+   "committeeId": "101861",
+   "registeredName": "Friends of Elijah Norton",
+   "candidateNameAsFiled": "Elijah Norton",
+   "officeSought": "State Treasurer",
    "electionYear": 2026,
    "filingState": "FILED",
    "totals": {
-    "receipts": 165197.31,
-    "expenditures": 164801.56,
+    "receipts": 3178196.25,
+    "expenditures": 3098945.26,
     "cashOnHand": null,
     "reportCount": null,
     "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
-    "ballot-az-pima:corporation-commissioner:pratte"
+    "ballot-az-pima:state-treasurer:norton-elijah"
    ],
    "match": {
-    "registeredName": "Clara Pratte for Arizona (Clean Elections)",
-    "officeAsFiled": "Corporation Commissioner",
-    "officeOnBallot": "Corporation Commissioner",
+    "registeredName": "Friends of Elijah Norton",
+    "officeAsFiled": "State Treasurer",
+    "officeOnBallot": "State Treasurer",
     "electionYearAsFiled": 2026,
     "electionYearOnBallot": 2026,
     "allThreeAgree": true,
@@ -1908,26 +1713,221 @@
    "jurisdiction": "AZ",
    "agency": "Arizona Secretary of State — See The Money",
    "filingsUrl": "https://seethemoney.az.gov/",
-   "committeeId": "100699",
-   "registeredName": "Jonathon Hill for Arizona (Clean Elections)",
-   "candidateNameAsFiled": "Jonathon Ryan Hill",
-   "officeSought": "Corporation Commissioner",
+   "committeeId": "102000",
+   "registeredName": "Zepeda4AZ",
+   "candidateNameAsFiled": "Michael Zepeda",
+   "officeSought": "State Treasurer",
    "electionYear": 2026,
    "filingState": "FILED",
    "totals": {
-    "receipts": 174655.4,
-    "expenditures": 166801.51,
+    "receipts": 3953.44,
+    "expenditures": 3978.44,
     "cashOnHand": null,
     "reportCount": null,
     "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
    },
    "targetKeys": [
-    "ballot-az-pima:corporation-commissioner:hill"
+    "ballot-az-pima:state-treasurer:zepeda-michael"
    ],
    "match": {
-    "registeredName": "Jonathon Hill for Arizona (Clean Elections)",
-    "officeAsFiled": "Corporation Commissioner",
-    "officeOnBallot": "Corporation Commissioner",
+    "registeredName": "Zepeda4AZ",
+    "officeAsFiled": "State Treasurer",
+    "officeOnBallot": "State Treasurer",
+    "electionYearAsFiled": 2026,
+    "electionYearOnBallot": 2026,
+    "allThreeAgree": true,
+    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+   },
+   "checkedAt": "2026-09-01",
+   "provenance": {
+    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
+    "sourceOrg": "Arizona Secretary of State — See The Money",
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
+   }
+  },
+  {
+   "dataClass": "STATE_COMMITTEE",
+   "jurisdiction": "AZ",
+   "agency": "Arizona Secretary of State — See The Money",
+   "filingsUrl": "https://seethemoney.az.gov/",
+   "committeeId": "101877",
+   "registeredName": "Elect Michael D. Butts",
+   "candidateNameAsFiled": "Michael Butts",
+   "officeSought": "Superintendent of Public Instruction",
+   "electionYear": 2026,
+   "filingState": "FILED",
+   "totals": {
+    "receipts": 11516.08,
+    "expenditures": 10471.55,
+    "cashOnHand": null,
+    "reportCount": null,
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
+   },
+   "targetKeys": [
+    "ballot-az-pima:superintendent:butts-michael-d-"
+   ],
+   "match": {
+    "registeredName": "Elect Michael D. Butts",
+    "officeAsFiled": "Superintendent of Public Instruction",
+    "officeOnBallot": "Superintendent of Public Instruction",
+    "electionYearAsFiled": 2026,
+    "electionYearOnBallot": 2026,
+    "allThreeAgree": true,
+    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+   },
+   "checkedAt": "2026-09-01",
+   "provenance": {
+    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
+    "sourceOrg": "Arizona Secretary of State — See The Money",
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
+   }
+  },
+  {
+   "dataClass": "STATE_COMMITTEE",
+   "jurisdiction": "AZ",
+   "agency": "Arizona Secretary of State — See The Money",
+   "filingsUrl": "https://seethemoney.az.gov/",
+   "committeeId": null,
+   "registeredName": "",
+   "candidateNameAsFiled": "Tom Horne",
+   "officeSought": "Superintendent of Public Instruction",
+   "electionYear": 2026,
+   "filingState": "OURS_GAP",
+   "totals": {
+    "receipts": null,
+    "expenditures": null,
+    "cashOnHand": null,
+    "reportCount": null,
+    "coveringPeriod": null
+   },
+   "targetKeys": [
+    "ballot-az-pima:superintendent:horne-tom"
+   ],
+   "match": {
+    "registeredName": "",
+    "officeAsFiled": null,
+    "officeOnBallot": "Superintendent of Public Instruction",
+    "electionYearAsFiled": null,
+    "electionYearOnBallot": 2026,
+    "allThreeAgree": false,
+    "note": "OURS GAP — Arizona's committee register holds 1 live candidate committee under this name, and we have not confirmed that any of them belongs to this candidacy."
+   },
+   "checkedAt": "2026-09-01",
+   "provenance": {
+    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
+    "sourceOrg": "Arizona Secretary of State — See The Money",
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
+   },
+   "ourGap": {
+    "whatIsMissing": "Arizona's committee register holds 1 live candidate committee under this name, and we have not confirmed that any of them belongs to this candidacy.",
+    "nextDue": "2026-10-15",
+    "nextDueName": "Post-Primary Election (Q3)"
+   }
+  },
+  {
+   "dataClass": "STATE_COMMITTEE",
+   "jurisdiction": "AZ",
+   "agency": "Arizona Secretary of State — See The Money",
+   "filingsUrl": "https://seethemoney.az.gov/",
+   "committeeId": "101821",
+   "registeredName": "Ruiz for AZ Education",
+   "candidateNameAsFiled": "Teresa Leyba Ruiz",
+   "officeSought": "Superintendent of Public Instruction",
+   "electionYear": 2026,
+   "filingState": "FILED",
+   "totals": {
+    "receipts": 311144.91,
+    "expenditures": 171900.97,
+    "cashOnHand": null,
+    "reportCount": null,
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
+   },
+   "targetKeys": [
+    "ballot-az-pima:superintendent:leyba-ruiz-teresa"
+   ],
+   "match": {
+    "registeredName": "Ruiz for AZ Education",
+    "officeAsFiled": "Superintendent of Public Instruction",
+    "officeOnBallot": "Superintendent of Public Instruction",
+    "electionYearAsFiled": 2026,
+    "electionYearOnBallot": 2026,
+    "allThreeAgree": true,
+    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+   },
+   "checkedAt": "2026-09-01",
+   "provenance": {
+    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
+    "sourceOrg": "Arizona Secretary of State — See The Money",
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
+   }
+  },
+  {
+   "dataClass": "STATE_COMMITTEE",
+   "jurisdiction": "AZ",
+   "agency": "Arizona Secretary of State — See The Money",
+   "filingsUrl": "https://seethemoney.az.gov/",
+   "committeeId": "101922",
+   "registeredName": "Brett Newby for Superintendent of Public Instruction",
+   "candidateNameAsFiled": "Brett Newby",
+   "officeSought": "Superintendent of Public Instruction",
+   "electionYear": 2026,
+   "filingState": "FILED",
+   "totals": {
+    "receipts": 127613.3,
+    "expenditures": 18458.65,
+    "cashOnHand": null,
+    "reportCount": null,
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
+   },
+   "targetKeys": [
+    "ballot-az-pima:superintendent:newby-brett-matthew"
+   ],
+   "match": {
+    "registeredName": "Brett Newby for Superintendent of Public Instruction",
+    "officeAsFiled": "Superintendent of Public Instruction",
+    "officeOnBallot": "Superintendent of Public Instruction",
+    "electionYearAsFiled": 2026,
+    "electionYearOnBallot": 2026,
+    "allThreeAgree": true,
+    "note": "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
+   },
+   "checkedAt": "2026-09-01",
+   "provenance": {
+    "sourceUrl": "https://seethemoney.az.gov/Reporting/GetNEWTableData/",
+    "sourceOrg": "Arizona Secretary of State — See The Money",
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
+   }
+  },
+  {
+   "dataClass": "STATE_COMMITTEE",
+   "jurisdiction": "AZ",
+   "agency": "Arizona Secretary of State — See The Money",
+   "filingsUrl": "https://seethemoney.az.gov/",
+   "committeeId": "101898",
+   "registeredName": "Kimberly Yee for Superintendent of Public Instruction",
+   "candidateNameAsFiled": "Kimberly Yee",
+   "officeSought": "Superintendent of Public Instruction",
+   "electionYear": 2026,
+   "filingState": "FILED",
+   "totals": {
+    "receipts": 423616.47,
+    "expenditures": 175576.84,
+    "cashOnHand": null,
+    "reportCount": null,
+    "coveringPeriod": "Arizona 2026 election cycle, activity recorded 2025-01-01 through 2026-09-01"
+   },
+   "targetKeys": [
+    "ballot-az-pima:superintendent:yee-kimberly"
+   ],
+   "match": {
+    "registeredName": "Kimberly Yee for Superintendent of Public Instruction",
+    "officeAsFiled": "Superintendent of Public Instruction",
+    "officeOnBallot": "Superintendent of Public Instruction",
     "electionYearAsFiled": 2026,
     "electionYearOnBallot": 2026,
     "allThreeAgree": true,

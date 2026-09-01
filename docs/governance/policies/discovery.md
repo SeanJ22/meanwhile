@@ -2705,6 +2705,33 @@ data with its denominator stated, and it makes the acquisition obligation that
 remains VISIBLE rather than already-apparently-met. Under RULING 205 that
 obligation stays open regardless of what the label said.
 
+## Three things the first application of this rule established
+
+*(Measured 2026-09-01 while acquiring the Arizona corpus and failing to acquire
+the New Hampshire and New Jersey ones. Folded in here because each one is a way
+the rule would otherwise be misapplied.)*
+
+**The complete applicable universe is PER AUTHORITY, not per state.** The
+Arizona Secretary of State's list is complete for the offices he files and
+excludes fifteen counties' offices, independents, write-ins and nonpartisan
+races. New Jersey's Division of Elections files FEDERAL OFFICE ONLY — its
+statewide universe is the union of that document and twenty-one county clerks,
+so no acquisition of the Division's documents alone could ever earn the word.
+A corpus must therefore state WHAT IT IS NOT, and every item in that list is an
+absence from a DOCUMENT, never an absence from a ballot.
+
+**The safe default is under-claiming.** The label is classified from a register
+in which each acquisition was declared beside the run that earned it, and
+anything undeclared is `PILOT_DERIVED`. **A label that can only be earned
+cannot be inherited** — which is the property that makes the rule survive a
+session that forgets it exists.
+
+**A mixed population needs its own name.** `PARTIAL_AUTHORITY_ACQUIRED` exists
+because "an authority's corpus plus a pilot ballot" is exactly the shape that
+reads as complete BECAUSE PART OF IT IS. Arizona is that shape today: the
+Secretary's 266 filings joined to the held Pima ballot. Calling it statewide
+would be the original defect with better provenance.
+
 ## THE REPORT CONTRACT IS A FILE NOW, AND IT IS AMENDED RATHER THAN REINVENTED
 
 *`R-C-discovery-conduct-the-report-contract-is-a-file-now-and-it-is-am` · ACTIVE · author_explicit · 2026-08-22*

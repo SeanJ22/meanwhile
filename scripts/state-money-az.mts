@@ -434,8 +434,9 @@ console.log(
  * RULING 229 in one line: the reader's location may set the ORDER and may never
  * set the DENOMINATOR. The committees the identity layer has already linked to
  * a canonical candidacy go FIRST, so a budgeted run can never regress a card
- * that renders today; everything else in the statewide candidate population
- * follows, and whatever a budget leaves is recorded as a ROUTE GAP with the
+ * that renders today; everything else in the acquired candidate population
+ * follows — Arizona is PARTIAL_AUTHORITY_ACQUIRED, the Secretary's filing list
+ * plus the held ballot, and not the whole state (R-C9) — and whatever a budget leaves is recorded as a ROUTE GAP with the
  * agency's own next filing deadline rather than as an absence.
  * ========================================================================= */
 

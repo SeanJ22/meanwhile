@@ -1,0 +1,128 @@
+[
+  {
+    "subject": "Adrian Fontes",
+    "officeTitle": "Secretary of State",
+    "stateOcdId": "ocd-division/country:us/state:az",
+    "page": "https://azsos.gov/about/about-secretary",
+    "sourceUrl": "https://azsos.gov/sites/default/files/photo/AZ-SOS-Adrian-Fontes-Official-Photo-2025-sml.jpg",
+    "fetch": {
+      "ok": true,
+      "status": 200
+    },
+    "stagedFile": "C:\\Users\\seanj\\dev\\we-the-people\\data\\photos\\staged\\own03-2026-08-31\\01-adrian-fontes.jpg",
+    "bytes": 45611,
+    "format": "jpg"
+  },
+  {
+    "subject": "Kris Mayes",
+    "officeTitle": "Attorney General",
+    "stateOcdId": "ocd-division/country:us/state:az",
+    "page": "https://www.azag.gov/kris-mayes",
+    "sourceUrl": "https://www.azag.gov/sites/default/files/2024-10/KrisMayesHeadshot.png",
+    "fetch": {
+      "ok": true,
+      "status": 200
+    },
+    "stagedFile": "C:\\Users\\seanj\\dev\\we-the-people\\data\\photos\\staged\\own03-2026-08-31\\02-kris-mayes.png",
+    "bytes": 399636,
+    "format": "png"
+  },
+  {
+    "subject": "Kimberly Yee",
+    "officeTitle": "State Treasurer",
+    "stateOcdId": "ocd-division/country:us/state:az",
+    "page": "https://www.aztreasury.gov/treasurer-kimberly-yee",
+    "sourceUrl": "https://static.wixstatic.com/media/8bb536_52985fafdda3411d8ce7ed2daabd13ef~mv2.jpg/v1/fill/w_326,h_468,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/KimberlyYee_2024_official.jpg",
+    "fetch": {
+      "ok": true,
+      "status": 200
+    },
+    "stagedFile": "C:\\Users\\seanj\\dev\\we-the-people\\data\\photos\\staged\\own03-2026-08-31\\03-kimberly-yee.webp",
+    "bytes": 22544,
+    "format": "webp"
+  },
+  {
+    "subject": "Nick Myers",
+    "officeTitle": "Corporation Commissioner",
+    "stateOcdId": "ocd-division/country:us/state:az",
+    "page": "https://www.azcc.gov/nick-myers/biography",
+    "sourceUrl": "https://www.azcc.gov/images/default-source/commissioners/2025-nick-myers.tmb-thumb200.jpg?Culture=en&amp;sfvrsn=7963c1fe_1",
+    "fetch": {
+      "ok": true,
+      "status": 200
+    },
+    "stagedFile": "C:\\Users\\seanj\\dev\\we-the-people\\data\\photos\\staged\\own03-2026-08-31\\04-nick-myers.jpg",
+    "bytes": 9815,
+    "format": "jpg"
+  },
+  {
+    "subject": "Rachel Walden",
+    "officeTitle": "Corporation Commissioner",
+    "stateOcdId": "ocd-division/country:us/state:az",
+    "page": "https://www.azcc.gov/Rachel-Walden/biography",
+    "sourceUrl": "https://www.azcc.gov/images/default-source/commissioners/2025-rachel-walden.tmb-thumb200.jpg?Culture=en&amp;sfvrsn=fbe9096a_1",
+    "fetch": {
+      "ok": true,
+      "status": 200
+    },
+    "stagedFile": "C:\\Users\\seanj\\dev\\we-the-people\\data\\photos\\staged\\own03-2026-08-31\\05-rachel-walden.jpg",
+    "bytes": 13954,
+    "format": "jpg"
+  },
+  {
+    "subject": "Kevin Thompson",
+    "officeTitle": "Corporation Commissioner",
+    "stateOcdId": "ocd-division/country:us/state:az",
+    "page": "https://www.azcc.gov/kevin-thompson/biography",
+    "sourceUrl": "https://www.azcc.gov/images/default-source/commissioners/2025-kevin-thompson.tmb-medium.jpg?Culture=en&amp;sfvrsn=ee0ef0f6_1",
+    "fetch": {
+      "ok": true,
+      "status": 200
+    },
+    "stagedFile": "C:\\Users\\seanj\\dev\\we-the-people\\data\\photos\\staged\\own03-2026-08-31\\06-kevin-thompson.jpg",
+    "bytes": 23921,
+    "format": "jpg"
+  },
+  {
+    "subject": "Lea Márquez Peterson",
+    "officeTitle": "Corporation Commissioner",
+    "stateOcdId": "ocd-division/country:us/state:az",
+    "page": "https://www.azcc.gov/lmarquezpeterson/biography",
+    "sourceUrl": "https://www.azcc.gov/images/default-source/commissioners/peterson-photo.jpg?sfvrsn=99511a81_9&amp;Width=165&amp;Height=206&amp;ScaleUp=false&amp;Quality=High&amp;Method=CropCropArguments&amp;Signature=3D4E77F443288A7D98FE48BA4D274C9FC2BC4102",
+    "fetch": {
+      "ok": true,
+      "status": 200
+    },
+    "stagedFile": "C:\\Users\\seanj\\dev\\we-the-people\\data\\photos\\staged\\own03-2026-08-31\\07-lea-m-rquez-peterson.jpg",
+    "bytes": 2602169,
+    "format": "jpg"
+  },
+  {
+    "subject": "René Lopez",
+    "officeTitle": "Corporation Commissioner",
+    "stateOcdId": "ocd-division/country:us/state:az",
+    "page": "https://www.azcc.gov/Rene-Lopez/biography",
+    "sourceUrl": "https://www.azcc.gov/images/default-source/commissioners/lopez-headshota40372b9-eb5d-4c79-83b5-a3f7800dbe90.jpg?sfvrsn=a6346954_2&amp;MaxWidth=165&amp;MaxHeight=206&amp;ScaleUp=false&amp;Quality=High&amp;Method=ResizeFitToAreaArguments&amp;Signature=0304E346B891B66CEF734D6539E29F3A07C59BAB",
+    "fetch": {
+      "ok": true,
+      "status": 200
+    },
+    "stagedFile": "C:\\Users\\seanj\\dev\\we-the-people\\data\\photos\\staged\\own03-2026-08-31\\08-ren-lopez.jpg",
+    "bytes": 4800277,
+    "format": "jpg"
+  },
+  {
+    "subject": "Dale G. Caldwell",
+    "officeTitle": "Lieutenant Governor",
+    "stateOcdId": "ocd-division/country:us/state:nj",
+    "page": "https://www.nj.gov/governor/admin/ltgovernor/",
+    "sourceUrl": "https://www.nj.gov/governor/library/secondary/ltgov_LGDaleCaldwell_new.jpg",
+    "fetch": {
+      "ok": true,
+      "status": 200
+    },
+    "stagedFile": "C:\\Users\\seanj\\dev\\we-the-people\\data\\photos\\staged\\own03-2026-08-31\\09-dale-g-caldwell.jpg",
+    "bytes": 205421,
+    "format": "jpg"
+  }
+]

@@ -114,6 +114,7 @@
     "integrity:check": "tsx scripts/production-integrity.mts",
     "integrity:observe": "tsx scripts/post-deploy-observer.mts",
     "jobs:status": "tsx scripts/jobs-status.mts",
+    "jurisdictions:enumerate": "tsx scripts/enumerate-jurisdictions.mts",
     "kelly": "tsx scripts/kelly-scoreboard.mts",
     "key-votes:fetch": "tsx scripts/fetch-key-votes.mts",
     "key-votes:positions": "tsx scripts/fetch-key-vote-positions.mts",

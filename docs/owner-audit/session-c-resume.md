@@ -15,6 +15,34 @@ claimed it was finished; that close-out is rejected and this continues it.*
 *(RULING 225, adopted this session: a report leads in reader terms. If a reader
 loading the page would see what they saw yesterday, it does not go here.)*
 
+### Arizona — the money is acquired and does NOT reach you yet
+
+**Read this before the New Hampshire section, because it is the correction.**
+Arizona campaign finance is collected, normalized, reconciled 255 of 255 against
+the publisher's own itemised ledger, and committed as
+`data/funding/state-money-az-2026.json` with 44 candidates carrying real filed
+totals — Katie Hobbs $11,109,720, Kris Mayes $4,612,992.
+
+**Four of them render.** Measured on production and on a local build of the same
+tree, which agree exactly: at 85701, 24 candidate cards and **4** money
+sections; at 85641, 29 cards and **4**. Thirty-six of the 38 candidacies in the
+contests shown at 85701 have a record. Thirty-two show nothing.
+
+The cause is one key. Contests that render as a *certified lineup* pass
+`<contestId>|<name>` where the snapshot is keyed on the candidacy id, so the
+lookup returns nothing and the section is omitted. The four that work are the
+Corporation Commissioner candidates, whose contest renders through the other
+branch.
+
+It was not fixed at the end of this session on purpose: the only join available
+is by NAME, and this session measured name joins turning five live committees
+into manufactured absences. A wrong join here puts one candidate's fundraising
+on their opponent's card. The full reasoning and the recommended smaller repair
+are in `docs/frontier.md`.
+
+> **Check it:** open `/ballot?zip=85701`, count the cards with a Campaign money
+> section. It should be 4, and it should be about 36.
+
 ### New Hampshire — eight people stop carrying a false claim
 
 **Six were told the state has never heard of them.** Karen Ebel, Tobin Menard,

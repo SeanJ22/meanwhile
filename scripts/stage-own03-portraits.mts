@@ -21,6 +21,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
+import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import { PORTRAIT_ACCEPT } from "../lib/photos/decode.ts";
 
 const ROOT = resolve(import.meta.dirname, "..");
@@ -62,7 +63,17 @@ const record = JSON.parse(
 const queued = record.rows.filter((r) => r.portrait?.src && r.decode?.ok !== false);
 const refused = record.rows.filter((r) => r.portrait?.src && r.decode?.ok === false);
 
-console.log(`own03:stage — ${record.rows.length} walked, ${queued.length} queued, ${refused.length} refused at decode`);
+/*
+ * RULING 159: every count here is floored against the population it was taken
+ * over. A walk that reached NO pages and a walk where nobody publishes a
+ * portrait produce the identical zero, and the floor is what keeps them apart.
+ */
+console.log(
+  floorLine(floored("own03:stage - portraits queued", "the door-2 statewide walk", record.rows.length, queued.length)),
+);
+console.log(
+  floorLine(floored("own03:stage - refused at decode", "the door-2 statewide walk", record.rows.length, refused.length)),
+);
 for (const r of refused) {
   console.log(`  ! ${r.subject}: ${r.decode?.reason} — NOT staged, and NOT an absence. ${r.page}`);
 }
@@ -147,7 +158,8 @@ for (const [i, row] of queued.entries()) {
 writeFileSync(join(OUT_DIR, "results.json"), `${JSON.stringify(results, null, 2)}\n`, "utf8");
 
 const got = results.filter((r) => r.fetch.ok).length;
-console.log(`\nown03:stage — ${got} of ${queued.length} staged into ${OUT_DIR}`);
+const staged = floored("own03:stage - staged", "the queued set", queued.length, got);
+console.log(`\n${floorLine(staged)} into ${OUT_DIR}`);
 if (got < queued.length) {
   console.log(`  ${queued.length - got} could not be fetched. They are still QUEUED and still owed.`);
 }

@@ -99,6 +99,52 @@ test("RULING 92: a file declaring itself GENERATED is registered here", () => {
   );
 });
 
+/**
+ * **A MISMATCH IS RE-RUN BEFORE IT IS BELIEVED, AND A RACE IS SAID OUT LOUD.**
+ * (Repaired 2026-09-01, after this case failed three times under full-suite
+ * load and passed every time in isolation.)
+ *
+ * ## Why this test in particular is raceable
+ *
+ * It is the only test in the suite that MUTATES THE WORKING TREE on purpose:
+ * it runs each pure generator, compares the output to the committed bytes, and
+ * restores the file in a `finally`. Meanwhile the rest of the suite runs
+ * CONCURRENTLY — `node --test` parallelises across files — and several other
+ * tests read the very artifacts this one is rewriting, notably the fourteen
+ * governance views.
+ *
+ * Measured three times on 2026-09-01, at three different commits, all under a
+ * full `pnpm gates` run, and each time it passed when re-run alone:
+ *
+ * ```
+ *   UNKNOWN errno -4094 opening docs/governance/index.json   (Windows sharing violation)
+ *   UNKNOWN errno -4094 opening docs/governance/history.md
+ *   ASSERTION_FAILURE   a byte difference that did not reproduce
+ * ```
+ *
+ * ## Why a re-run rather than a retry-until-green
+ *
+ * `lib/ops/flake-quarantine.ts` already states this repository's doctrine for
+ * exactly this situation: *a check cannot be classified from one run; the
+ * evidence that separates a flake from a regression is fails, then passes,
+ * with nothing changed.* So the mismatch is re-derived ONCE.
+ *
+ * **A real defect reproduces.** A generator whose output genuinely drifted from
+ * its artifact produces the same difference every time, and the second attempt
+ * fails identically — which is still an assertion failure, with the same
+ * message it always had.
+ *
+ * **A race does not reproduce**, and it is reported as its own outcome rather
+ * than as either a pass or a byte difference. That distinction is the whole
+ * point: a test that quietly retried until green would hide a real drift, and
+ * a test that reported the race as a byte difference sends a session hunting a
+ * defect that is not there. This one had already sent this session hunting
+ * twice.
+ *
+ * It does NOT swallow the failure. A non-reproducing mismatch throws, naming
+ * the concurrency explicitly, so the run still goes red and a human still
+ * reads it — it just reads the truth.
+ */
 test("RULING 92: a PURE generator's artifact is byte-identical to what it produces now", () => {
   for (const a of GENERATED.filter((x) => x.pure)) {
     const full = join(ROOT, a.path);
@@ -106,10 +152,31 @@ test("RULING 92: a PURE generator's artifact is byte-identical to what it produc
     try {
       execSync(a.command, { cwd: ROOT, stdio: "pipe", encoding: "utf8" });
       const regenerated = readFileSync(full, "utf8");
+      if (regenerated === committed) continue;
+
+      /* Re-derive once, from the committed bytes, before believing it. */
+      writeFileSync(full, committed, "utf8");
+      execSync(a.command, { cwd: ROOT, stdio: "pipe", encoding: "utf8" });
+      const second = readFileSync(full, "utf8");
+
+      if (second === committed) {
+        throw new Error(
+          `${a.path} differed from \`${a.command}\` on the first derivation and ` +
+            "matched on the second, with nothing changed in between. That is a " +
+            "CONCURRENCY OBSERVATION, not a byte difference: this is the only test " +
+            "that rewrites the working tree, and the rest of the suite reads these " +
+            "same artifacts while it runs. It is reported rather than retried away " +
+            "because a test that retried until green would hide a real drift — and " +
+            "it is not passed off as a generator defect, because that is what sent " +
+            "two sessions hunting something that was not there.",
+        );
+      }
+
       assert.equal(
-        regenerated,
+        second,
         committed,
-        `${a.path} differs from what \`${a.command}\` produces. ` +
+        `${a.path} differs from what \`${a.command}\` produces, and the difference ` +
+          "REPRODUCED on a second derivation — so it is real, not a race. " +
           "RULING 92: fix the GENERATOR and regenerate — never hand-correct the artifact.",
       );
     } finally {

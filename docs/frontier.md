@@ -111,19 +111,42 @@ left, with what it is waiting on. Nothing here is a claim that it is finished.
   the flight; the bare arm now fires 0 `sourcedata` events and 0
   `queryRenderedFeatures` calls against 303–536 before.
 
-- **The statistics disagree, and the disagreement is the finding.** Median ratio
-  99.7% passes; **p95-sustained ratio is 66.2% and would fail**. The median is
+- **The statistics disagree, and the disagreement is the finding — and it is
+  STILL OPEN on hardware after the no-GPU repair closed.** Median ratio
+  99.7% passes; **p95-sustained ratio is 66.2% and would fail**. The 2026-09-01
+  software work took the sustained and jank half seriously for the software
+  population and installed a criterion that requires ratio AND jank there; the
+  HARDWARE criterion is still median-only, and the 66.2% below is what it does
+  not see. The median is
   the criterion the owner set, and the tail is where the application's cost
   actually lives — app p99 frame time 61.0 ms against bare 18.4 ms, jank 2.98%
   against 0.31%. A median-only criterion is blind to concentrated jank, which is
   why the call-count gate is RETAINED beside it: the pre-fix 170-query build had
   a *perfect* 59.5 fps median.
 
-- **Without GPU acceleration the application holds 29.6% of bare** — 17.7 fps
-  against 60.0, with 193 of 201 frames janky under SwiftShader. Not a harness
-  artifact: the bare map hits 60 fps with zero jank on that same rasteriser. It
-  is a real statement about readers whose machines fall back to software, and it
-  is owed work rather than a measurement problem.
+- ~~**Without GPU acceleration the application holds 29.6% of bare.**~~
+  **CLOSED 2026-09-01. It holds 100.1%, jank 1.5%, and hardware did not
+  regress (100.3%).** The ablation named one CSS property: removing
+  `.state-focus-scrim`'s `backdrop-filter` alone bought **+13.9 fps of the
+  +14.8** that removing the entire state-focus layer bought — 94% of that
+  layer's cost. District layers +6.3, SVG art +3.8 on median but nearly all the
+  residual jank, and **markers +0.6, which is inside their own spread and
+  therefore names nothing**. Corroborated by profile: 1762 ms of `(program)`
+  self time in a 2768 ms flight with every named JS function under 40 ms, so
+  the deficit was per-frame raster and never our JavaScript.
+
+  The repair DEGRADES rather than deletes, and only where the rasteriser names
+  itself software: during camera motion the blur and the SVG art stand down in
+  CSS and the district layers go to `visibility:none`, all restored on
+  `moveend`. An unreadable renderer is treated as HARDWARE — positive
+  identification only, so a misread never degrades a reader who did not need it.
+
+  **Two things that are still owed, and neither is a measurement problem.** The
+  degradation fires on ANY camera motion on a software rasteriser, so such a
+  reader's drag-pan also loses district boundaries until they release — endorsed
+  by the brief for the fly-in, not scoped to it. And the absolute rates are facts
+  about ONE host with ONE GPU (Intel Iris Xe); only the ratios are claims about
+  the build, and no second machine has been measured.
 - **Arizona's source universe is larger than any one query.** Three filters over
   `GetNEWTableData` union to 860 rows across 732 entities, 16 reachable from no
   other filter, and `ftp://ftp.azsos.gov/cfsdata2/` has **four** root
@@ -153,7 +176,44 @@ left, with what it is waiting on. Nothing here is a claim that it is finished.
   three keys were later proved to share one workspace, which is what makes the
   production reading above the one that settles it.)*
 
-### Arizona money is ACQUIRED and does not reach the reader — Part E's reader clause is NOT MET
+### Arizona money is ACQUIRED and does not reach the reader — CLOSED 2026-09-01
+
+**It reaches the reader now.** Measured on the integrated head against a local
+production build, by opening every card's battlecard and its Campaign money
+section and classifying the sentence it ends in:
+
+| ZIP | candidate cards | money sections BEFORE | AFTER |
+| --- | ---: | ---: | ---: |
+| 85701 | 24 | **4** | **24** — 19 filed, 3 our gap, 2 federal, 0 unclassified |
+| 85641 | 29 | **4** | **29** — 22 filed, 3 our gap, 4 federal, 0 unclassified |
+
+The diagnosis below was exactly right and nothing was acquired to fix it — the
+JOIN was built. One precomputed, auditable reconciliation over the whole lineup
+population, resolving into a STATEWIDE Arizona 2026 identity registry rather
+than another ZIP-specific bridge: 30 nominees = 27 uniquely reconciled + 1
+ambiguous + 2 unmatched, 0 duplicate-target collisions, and a collision refuses
+the write. No fuzzy or runtime name matching reaches the reader; published names
+expand into exact strings, each labelled with the annotation rule that produced
+it, compared by string equality, once, into a committed table.
+
+**The caution below was also right, and it has a price this session paid rather
+than hid.** Teri Ann Hourihan is **No Labels** on the certified canvass and
+**Arizona Independent Party** on the SOS candidate-filing list. Two Arizona
+authorities disagree, the party criterion blocks the mapping, and her card
+renders our gap although the corpus holds her filed figure. Both published
+values are recorded in the reconciliation for the author to adjudicate. **That
+is the rule working**, and one wrong join would have put a candidate's
+fundraising on their opponent's card.
+
+Pinned by `pnpm walk:all`, four checks per pilot ZIP under `[SC3]`, which
+assert the FLOOR and never the composition — a candidate may move honestly
+between states, but a card with NO money state at all is what may never happen
+again.
+
+*The original entry, kept because a closed frontier item is still the record of
+how the defect was found:*
+
+### (original) Arizona money is ACQUIRED and does not reach the reader — Part E's reader clause was NOT MET
 
 **Measured on production and on a local production build of the same tree, which
 agree exactly:**

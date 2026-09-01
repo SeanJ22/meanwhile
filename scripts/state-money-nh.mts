@@ -1,6 +1,42 @@
 /**
- * **NEW HAMPSHIRE STATE AND COUNTY CAMPAIGN MONEY, FOR THE 03255 BALLOT.**
- * (Session C, 2026-08-31. RULING 126, RULING 118.)
+ * **NEW HAMPSHIRE CAMPAIGN MONEY — ACQUIRED STATEWIDE, PROJECTED TO A BALLOT.**
+ * (Session C, 2026-08-31. RULING 126, RULING 118. Split into acquisition and
+ * projection by Session C3, lane C, 2026-09-01, under RULING 229.)
+ *
+ * ## WHAT CHANGED ON 2026-09-01, AND WHY THE PREVIOUS SHAPE COULD NOT BE RIGHT
+ *
+ * The header used to read **FOR THE 03255 BALLOT**, and it was accurate: the
+ * collector asked the statewide registry one SURNAME at a time, and the
+ * surnames were the ones on one certified ballot. `COUNTY` was a module
+ * constant reading `"Merrimack"`.
+ *
+ * The cost was not that the numbers were small. It was that **activating a
+ * second New Hampshire ZIP meant a fresh external hunt** — a new set of surname
+ * queries to the Secretary of State for records the state had already
+ * published and we had already been entitled to. RULING 229: a ZIP may
+ * prioritise acquisition ORDER and may never define the acquisition
+ * DENOMINATOR.
+ *
+ * ```
+ *   ACQUISITION   acquireStatewideIndex()  -> the WHOLE filer index, one read,
+ *                                             `filerName: ""`, checked against
+ *                                             the publisher's own totalItems,
+ *                                             committed at
+ *                                             data/campaign-finance/nh-cfs-filer-index-2026.json
+ *
+ *   PROJECTION    projectionFrom(corpus)   -> a `filersFor` that holds no
+ *                                             fetch, no URL and no client. A
+ *                                             ballot is answered out of memory
+ *   NARROWING     countyFromBallot(ballot) -> the county filter, which is a
+ *                                             MATCHING guard and stays, and is
+ *                                             no longer an acquisition bound
+ * ```
+ *
+ * The county guard is unchanged in what it does: a filer in Cheshire is not a
+ * candidate on a Merrimack ballot, and that is what keeps `Allen Davis`, State
+ * Representative in Cheshire district 18, off a Merrimack card. What changed is
+ * that it is now derived from the ballot being projected onto instead of being
+ * written into the module.
  *
  * Produces `data/funding/state-money-nh-2026.json` — a `StateMoneySnapshot`
  * the ballot page already knows how to load. `lib/funding/state-snapshot.ts`
@@ -96,8 +132,9 @@
  * entry — so `tests/state-money-nh-absence.test.ts` can drive the exact code
  * path production runs, against recorded fixtures, with no live call.
  *
- *   pnpm money:nh              write the snapshot
- *   pnpm money:nh --dry        read and report, write nothing
+ *   pnpm money:nh              project from the held corpus, write the snapshot
+ *   pnpm money:nh --acquire    re-acquire the statewide index first
+ *   pnpm money:nh --dry        read and report, write no snapshot
  */
 import { writeFileSync } from "node:fs";
 import { readFileSync } from "node:fs";
@@ -112,6 +149,12 @@ import {
   type StateMoneySnapshot,
   computeSplit,
 } from "../lib/funding/state-money.ts";
+import {
+  newZipReadiness,
+  projectionLine,
+  type AcquisitionUniverse,
+  type ReaderProjection,
+} from "../lib/hunt/source-universe.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { today } from "./doc-dates.mjs";
 
@@ -124,8 +167,42 @@ export const PUBLIC_PAGE = "https://cfs.sos.nh.gov/";
 const SPACING_MS = 1100;
 const PAGE_SIZE = 100;
 
-/** The county this ballot belongs to. A filer in another county is not this seat. */
-export const COUNTY = "Merrimack";
+/**
+ * **THE COUNTY IS A READER PROJECTION, NOT AN ACQUISITION BOUND.** (RULING 229.)
+ *
+ * This was `export const COUNTY = "Merrimack"` and it was doing two jobs. As a
+ * MATCHING guard it is right and it stays: a filer in Cheshire is not a
+ * candidate on a Merrimack ballot, and that is what keeps `Allen Davis`, State
+ * Representative in Cheshire district 18, off a Merrimack card.
+ *
+ * As an ACQUISITION bound it was wrong, and it was not even the worst of it —
+ * the collector asked the statewide registry one SURNAME at a time, and the
+ * surnames were the ones on the 03255 ballot. Arriving in a second New
+ * Hampshire ZIP therefore meant asking the Secretary of State for a fresh set
+ * of surnames: a new external hunt for records the state had already published
+ * and we had already been entitled to.
+ *
+ * So acquisition now takes the WHOLE registry — `acquireStatewideIndex` — and
+ * this name is what a projection is narrowed BY. It is a default, and the
+ * caller derives the real value from the ballot it is projecting onto.
+ */
+export const DEFAULT_PROJECTION_COUNTY = "Merrimack";
+
+/**
+ * The county a ballot belongs to, from its own contests' divisions.
+ *
+ * Returns null when the ballot names none — which happens for a ballot cut down
+ * to a single statewide contest, and is why the caller supplies a fallback
+ * rather than this function inventing one. A derivation that guessed a county
+ * from nothing would put a filer filter on a ballot that never asked for one.
+ */
+export function countyFromBallot(ballot: { contests: { ocdId?: string }[] }): string | null {
+  for (const c of ballot.contests) {
+    const m = /\/county:([a-z_]+)/.exec(c.ocdId ?? "");
+    if (m) return m[1].replace(/_/g, " ").replace(/\b\w/g, (ch) => ch.toUpperCase());
+  }
+  return null;
+}
 
 /**
  * Identification the host actually serves. The project name in a User-Agent is
@@ -150,6 +227,8 @@ export interface Candidacy {
 export interface Contest {
   id: string;
   title: string;
+  /** The division. Read only to derive the projection county; never fetched. */
+  ocdId?: string;
 }
 export interface Ballot {
   contests: Contest[];
@@ -258,9 +337,17 @@ export const livePage: FetchPage = async ({ surname, pageNumber, pageSize }) => 
 export async function readFilers(
   surname: string,
   fetchPage: FetchPage,
-  opts: { year?: number; pageSize?: number; maxPages?: number } = {},
+  opts: { year?: number | null; pageSize?: number; maxPages?: number } = {},
 ): Promise<FilerRead> {
-  const year = opts.year ?? YEAR;
+  /*
+   * `year: null` means KEEP EVERY YEAR, and it exists for the statewide
+   * acquisition. A corpus filtered to one cycle at read time cannot answer a
+   * question about another cycle without going back to the publisher, which is
+   * the pilot-bound acquisition defect wearing a date instead of a ZIP.
+   * `undefined` still means the collector's own cycle, so every existing caller
+   * is unchanged.
+   */
+  const year = opts.year === null ? null : (opts.year ?? YEAR);
   const pageSize = opts.pageSize ?? PAGE_SIZE;
   /*
    * A stop that is a FLOOR on paging rather than a cap on the answer: it exists
@@ -309,7 +396,7 @@ export async function readFilers(
 
     return {
       ok: true,
-      rows: items.filter((r) => r.electionYear === year),
+      rows: year === null ? items : items.filter((r) => r.electionYear === year),
       retrieved: items.length,
       totalItems: stated ?? items.length,
       denominatorProven: stated !== null,
@@ -317,6 +404,163 @@ export async function readFilers(
   } catch (e) {
     return { ok: false, reason: (e as Error).message };
   }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ACQUISITION — the authoritative source universe (RULING 229)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/** Where the acquired statewide corpus lives. Committed, and it is the point. */
+export const CORPUS_FILE = join(ROOT, "data", "campaign-finance", "nh-cfs-filer-index-2026.json");
+
+export interface FilerCorpus {
+  readonly formatVersion: 1;
+  readonly acquiredAt: string;
+  readonly agency: string;
+  readonly sourceUrl: string;
+  readonly _note: readonly string[];
+  /** The PUBLISHER's own count of what it holds. The checkable denominator. */
+  readonly statedTotalItems: number;
+  readonly retrieved: number;
+  readonly rows: readonly FilerRow[];
+}
+
+/**
+ * **ACQUIRE EVERY FILER THE REGISTRY HOLDS — the whole state, one read.**
+ *
+ * The endpoint honours `filerName` only, and it honours the EMPTY string by
+ * returning the whole index. That single fact is what makes RULING 229
+ * executable here: the acquisition denominator is the New Hampshire Secretary
+ * of State's complete filer universe, not the surnames on one certified ballot.
+ *
+ * `data.totalItems` is the publisher's own count and does not move with
+ * `pageSize` — measured 2026-08-31 by asking for "Smith" at pageSize 100 and at
+ * pageSize 5 and reading 29 both times. So completeness is checked against a
+ * number the publisher stated, and a short read is reported as a short read
+ * rather than becoming a smaller universe.
+ */
+/**
+ * **THE CORPUS CARRIES THE FIELDS THE PROJECTION USES AND NOTHING ELSE.**
+ *
+ * The endpoint returns considerably more per row than this collector reads, and
+ * the first acquisition wrote all of it: 11 MB for 5,738 filers. That is not a
+ * size problem, it is a COLLECTION problem — `CLAUDE.md` says collect the
+ * minimum, and persisting fields nobody reads is holding data for no stated
+ * purpose. Every field kept below is one `buildRecords` actually consults, and
+ * a field this collector starts needing is added here deliberately rather than
+ * arriving because it was in the response.
+ */
+export function narrowFilerRow(r: FilerRow): FilerRow {
+  return {
+    filerName: r.filerName,
+    firstnameLastname: r.firstnameLastname ?? null,
+    officeSoughtName: r.officeSoughtName ?? null,
+    districtName: r.districtName ?? null,
+    town: r.town ?? null,
+    electionYear: r.electionYear ?? null,
+    totalRaised: r.totalRaised ?? null,
+    totalSpent: r.totalSpent ?? null,
+    filerEntityId: r.filerEntityId ?? null,
+    electionCycle: r.electionCycle ?? null,
+    filerTypeDesc: r.filerTypeDesc ?? null,
+  };
+}
+
+export async function acquireStatewideIndex(
+  fetchPage: FetchPage,
+  opts: { pageSize?: number; maxPages?: number } = {},
+): Promise<FilerRead> {
+  return readFilers("", fetchPage, {
+    year: null,
+    pageSize: opts.pageSize ?? 500,
+    maxPages: opts.maxPages ?? 200,
+  });
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PROJECTION — what one reader's ballot may see, cut out of the corpus
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/**
+ * **A `filersFor` THAT NEVER TOUCHES THE NETWORK.**
+ *
+ * This is the half of RULING 229 that a test can fail. `buildRecords` asks for
+ * a surname; the answer comes out of the acquired corpus in memory. Activating
+ * another New Hampshire ZIP therefore projects — it does not hunt — and the
+ * proof is structural rather than a promise: this closure holds no `fetch`, no
+ * URL and no client.
+ *
+ * The surname match is a PREFIX-free equality on the filed surname AND a
+ * substring test on the whole filed name, because the registry files a
+ * committee ("Friends of Dan Innis") alongside the person ("Daniel Innis") and
+ * a surname query at the publisher matched either. Narrowing here to only one
+ * of them would drop rows the live route used to return, which would read as
+ * the state holding less than it does.
+ */
+export function projectionFrom(corpus: readonly FilerRow[]): {
+  filersFor: (surname: string) => Promise<FilerRead>;
+  /** How many corpus reads happened. A projection makes zero requests. */
+  outboundRequests: () => number;
+} {
+  let outbound = 0;
+  return {
+    outboundRequests: () => outbound,
+    filersFor: async (surname: string): Promise<FilerRead> => {
+      const needle = surname.toUpperCase();
+      const rows = corpus.filter((r) => {
+        const filed = `${r.filerName ?? ""} ${r.firstnameLastname ?? ""}`.toUpperCase();
+        return filed.includes(needle);
+      });
+      return {
+        ok: true,
+        rows: rows.filter((r) => r.electionYear === YEAR),
+        retrieved: rows.length,
+        totalItems: rows.length,
+        /*
+         * TRUE, and the denominator is the PUBLISHER's: the corpus this reads
+         * was accepted only when its row count equalled the registry's own
+         * stated total. A projection over a proven corpus inherits the proof;
+         * a projection over a short read would not, and the corpus loader
+         * refuses to hand one over.
+         */
+        denominatorProven: true,
+      };
+    },
+  };
+}
+
+/**
+ * Read the acquired corpus back, refusing anything that cannot carry a proof.
+ *
+ * A missing file, an unparseable file, or a file whose row count disagrees with
+ * the publisher's own stated total is a FAILED read — not a smaller corpus.
+ * Returning a partial here would let a projection assert an absence over a
+ * universe nobody proved.
+ */
+export function loadCorpus(path = CORPUS_FILE): FilerCorpus | { error: string } {
+  let raw: string;
+  try {
+    raw = readFileSync(path, "utf8");
+  } catch (e) {
+    return { error: `${path} could not be read (${(e as Error).message}) — run \`pnpm money:nh\`` };
+  }
+  let parsed: FilerCorpus;
+  try {
+    parsed = JSON.parse(raw) as FilerCorpus;
+  } catch (e) {
+    return { error: `${path} did not parse (${(e as Error).message})` };
+  }
+  if (!Array.isArray(parsed.rows) || parsed.rows.length === 0) {
+    return { error: `${path} parsed and holds ZERO filer rows — a FAILED read, never an empty registry` };
+  }
+  if (parsed.rows.length !== parsed.statedTotalItems) {
+    return {
+      error:
+        `${path} holds ${parsed.rows.length} row(s) against the publisher's stated ` +
+        `${parsed.statedTotalItems} — an incomplete corpus can never be evidence of an absence`,
+    };
+  }
+  return parsed;
 }
 
 /** The district a contest states, from its id suffix. Null when it states none. */
@@ -339,6 +583,17 @@ export interface BuildInput {
    * honestly said. This is what it keeps instead.
    */
   previous?: StateMoneyRecord[];
+  /**
+   * The county this projection is narrowed by. RULING 229's reader half.
+   *
+   * Omitted, it is derived from the ballot's own divisions, and where the
+   * ballot names none it falls back to `DEFAULT_PROJECTION_COUNTY`. That
+   * fallback exists for exactly one caller — a ballot cut down to a single
+   * STATEWIDE contest, which names no county and is still a cut of the
+   * Merrimack ballot. Passing `null` turns the narrowing OFF explicitly, which
+   * is a different thing from a ballot that failed to state one.
+   */
+  projectionCounty?: string | null;
 }
 
 export interface BuildResult {
@@ -359,6 +614,10 @@ export async function buildRecords(input: BuildInput): Promise<BuildResult> {
   const contestById = new Map(input.ballot.contests.map((c) => [c.id, c]));
   const records: StateMoneyRecord[] = [];
   let inScope = 0;
+  const county =
+    input.projectionCounty === undefined
+      ? (countyFromBallot(input.ballot) ?? DEFAULT_PROJECTION_COUNTY)
+      : input.projectionCounty;
 
   const provenance = {
     sourceUrl: API,
@@ -448,7 +707,7 @@ export async function buildRecords(input: BuildInput): Promise<BuildResult> {
 
     const considered = rows.filter((r) => {
       // A filer in another county is not this seat, whatever the name says.
-      if (r.town && r.town.toUpperCase() !== COUNTY.toUpperCase()) return false;
+      if (county && r.town && r.town.toUpperCase() !== county.toUpperCase()) return false;
       if (wantDistrict && r.districtName && r.districtName !== wantDistrict) return false;
       return true;
     });
@@ -730,20 +989,103 @@ async function main(): Promise<void> {
     readFileSync(join(ROOT, "data", "ballot", "nh-merrimack-2026.json"), "utf8"),
   ) as Ballot;
   const previous = previousRecords();
+  const REACQUIRE = process.argv.includes("--acquire");
 
-  /** One query per SURNAME, cached: many candidacies share one. */
-  const bySurname = new Map<string, FilerRead>();
-  const filersFor = async (surname: string): Promise<FilerRead> => {
-    const key = surname.toUpperCase();
-    const cached = bySurname.get(key);
-    if (cached) return cached;
-    const read = await readFilers(surname, livePage);
-    if (!read.ok) console.log(`  ! ${surname}: ${read.reason} — recorded as unread, never as absent`);
-    bySurname.set(key, read);
-    return read;
+  /* ── ACQUISITION: the whole state, once (RULING 229) ───────────────────── */
+
+  let corpus = loadCorpus();
+  if (REACQUIRE || "error" in corpus) {
+    if ("error" in corpus && !REACQUIRE) {
+      console.log(`  the held corpus could not be used — ${corpus.error}\n  acquiring it now.`);
+    }
+    const read = await acquireStatewideIndex(livePage);
+    if (!read.ok) {
+      console.error(
+        `state-money-nh · the statewide acquisition did not complete (${read.reason}). ` +
+          "That is a fact about the route and states nothing about what the agency holds. " +
+          "Nothing written.",
+      );
+      process.exitCode = 2;
+      return;
+    }
+    const acquired: FilerCorpus = {
+      formatVersion: 1,
+      acquiredAt: asOf,
+      agency: AGENCY,
+      sourceUrl: API,
+      _note: [
+        "THE ACQUISITION DENOMINATOR for New Hampshire campaign finance (RULING 229).",
+        "",
+        "Every filer the New Hampshire Secretary of State's Campaign Finance System states it holds,",
+        "acquired in one read with `filerName: \"\"`. `statedTotalItems` is the PUBLISHER's own count and",
+        "does not move with pageSize; a corpus whose row count disagrees with it is refused by",
+        "`loadCorpus` rather than used, because an incomplete corpus can never be evidence of an absence.",
+        "",
+        "THE READER PROJECTION IS CUT OUT OF THIS FILE AND MAKES NO REQUEST. Activating another New",
+        "Hampshire ZIP reads these rows; it does not ask the Secretary of State for a new set of",
+        "surnames. That is the whole point.",
+        "",
+        "NO CONTRIBUTOR APPEARS HERE. These are filer-level rows: committee, candidate, office,",
+        "district, county, cycle and the filer's own published totals. The contribution and expenditure",
+        "DETAIL sits behind endpoints nobody in this project has read, and it is registered as an open",
+        "obligation rather than implied by this file's existence.",
+      ],
+      statedTotalItems: read.totalItems,
+      retrieved: read.retrieved,
+      rows: read.rows.map(narrowFilerRow),
+    };
+    writeFileSync(CORPUS_FILE, `${JSON.stringify(acquired, null, 1)}\n`, "utf8");
+    console.log(
+      `  ACQUIRED ${acquired.rows.length} filer row(s) against the publisher's stated ` +
+        `${acquired.statedTotalItems} — wrote ${CORPUS_FILE}`,
+    );
+    corpus = acquired;
+  } else {
+    console.log(
+      `  HELD CORPUS: ${corpus.rows.length} filer row(s) of ${corpus.statedTotalItems} stated, ` +
+        `acquired ${corpus.acquiredAt}. Re-acquire with --acquire.`,
+    );
+  }
+
+  /* ── PROJECTION: this ballot, out of the corpus, with ZERO requests ────── */
+
+  const projection = projectionFrom(corpus.rows);
+  const projectionCounty = countyFromBallot(ballot) ?? DEFAULT_PROJECTION_COUNTY;
+  console.log(
+    `  PROJECTING onto the 03255 ballot, narrowed by county ${projectionCounty} — ` +
+      "the county is a reader narrowing and is no longer an acquisition bound",
+  );
+
+  const result = await buildRecords({
+    ballot,
+    filersFor: projection.filersFor,
+    asOf,
+    previous,
+    projectionCounty,
+  });
+
+  const universe: AcquisitionUniverse = {
+    authority: AGENCY,
+    unit: "filers",
+    statedBy: corpus.statedTotalItems,
+    held: corpus.rows.length,
+    countedBy: `one read of ${API} with filerName: "" — the whole index, not one ballot's surnames`,
+    citation: `data/campaign-finance/nh-cfs-filer-index-2026.json, acquired ${corpus.acquiredAt}`,
   };
-
-  const result = await buildRecords({ ballot, filersFor, asOf, previous });
+  const readerProjection: ReaderProjection = {
+    scope: "the 03255 ballot",
+    applicable: result.inScope,
+    projectionNarrowedFrom: universe,
+    answeredFromCorpus: result.inScope,
+    requiredFreshAcquisition: [],
+  };
+  console.log(`  ${projectionLine(readerProjection)}`);
+  const readiness = newZipReadiness(readerProjection);
+  console.log(`  NEW-ZIP READINESS: ${readiness.ready ? "READY" : "NOT READY"} — ${readiness.why}`);
+  console.log(
+    `  outbound requests made by the projection: ${projection.outboundRequests()} ` +
+      "(structural — the projection closure holds no client)",
+  );
   const snapshot = toSnapshot(result, asOf);
   const { records, inScope } = result;
   const split = snapshot.split;

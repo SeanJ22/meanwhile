@@ -1,6 +1,6 @@
 {
  "formatVersion": 1,
- "collectedAt": "2026-08-31",
+ "collectedAt": "2026-09-01",
  "cycle": 2026,
  "split": {
   "candidaciesInScope": 28,
@@ -53,12 +53,12 @@
     "allThreeAgree": true,
     "note": "name, office and election year all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -91,12 +91,12 @@
     "allThreeAgree": true,
     "note": "name, office and election year all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -127,14 +127,14 @@
     "electionYearAsFiled": null,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"Fife\" on 2026-08-31; all 1 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
+    "note": "the Campaign Finance System was searched for \"Fife\" on 2026-09-01; all 1 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -165,14 +165,14 @@
     "electionYearAsFiled": null,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"McClory\" on 2026-08-31; all 0 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
+    "note": "the Campaign Finance System was searched for \"McClory\" on 2026-09-01; all 0 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -205,12 +205,12 @@
     "allThreeAgree": true,
     "note": "name, office and election year all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -243,12 +243,12 @@
     "allThreeAgree": true,
     "note": "name, office and election year all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -267,7 +267,7 @@
     "expenditures": null,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "registered for the 2026 Election Cycle, with no receipts or expenditures reported as of 2026-08-31"
+    "coveringPeriod": "registered for the 2026 Election Cycle, with no receipts or expenditures reported as of 2026-09-01"
    },
    "targetKeys": [
     "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth"
@@ -281,12 +281,12 @@
     "allThreeAgree": true,
     "note": "name, office and election year all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -319,12 +319,12 @@
     "allThreeAgree": true,
     "note": "name, office and election year all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -355,14 +355,14 @@
     "electionYearAsFiled": null,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"Rusis\" on 2026-08-31; all 0 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
+    "note": "the Campaign Finance System was searched for \"Rusis\" on 2026-09-01; all 0 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -395,12 +395,12 @@
     "allThreeAgree": true,
     "note": "name, office and election year all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -419,7 +419,7 @@
     "expenditures": null,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "registered for the 2026 Election Cycle, with no receipts or expenditures reported as of 2026-08-31"
+    "coveringPeriod": "registered for the 2026 Election Cycle, with no receipts or expenditures reported as of 2026-09-01"
    },
    "targetKeys": [
     "ballot-nh-merrimack:executive-council-2:menard-tobin"
@@ -433,12 +433,12 @@
     "allThreeAgree": true,
     "note": "name, office and election year all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -469,14 +469,14 @@
     "electionYearAsFiled": null,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"Strathdee\" on 2026-08-31; all 1 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
+    "note": "the Campaign Finance System was searched for \"Strathdee\" on 2026-09-01; all 1 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -507,14 +507,14 @@
     "electionYearAsFiled": null,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"Ribas\" on 2026-08-31; all 0 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
+    "note": "the Campaign Finance System was searched for \"Ribas\" on 2026-09-01; all 0 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -545,14 +545,14 @@
     "electionYearAsFiled": null,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"Bilodeau\" on 2026-08-31; all 0 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
+    "note": "the Campaign Finance System was searched for \"Bilodeau\" on 2026-09-01; all 0 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -583,14 +583,14 @@
     "electionYearAsFiled": null,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"French\" on 2026-08-31; all 9 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
+    "note": "the Campaign Finance System was searched for \"French\" on 2026-09-01; all 9 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -623,12 +623,12 @@
     "allThreeAgree": true,
     "note": "name, office and election year all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -661,12 +661,12 @@
     "allThreeAgree": true,
     "note": "name, office and election year all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -685,7 +685,7 @@
     "expenditures": null,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "registered for the 2026 Election Cycle, with no receipts or expenditures reported as of 2026-08-31"
+    "coveringPeriod": "registered for the 2026 Election Cycle, with no receipts or expenditures reported as of 2026-09-01"
    },
    "targetKeys": [
     "ballot-nh-merrimack:county-sheriff:gerhard-jason"
@@ -699,12 +699,12 @@
     "allThreeAgree": true,
     "note": "name, office and election year all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -735,14 +735,14 @@
     "electionYearAsFiled": null,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"Weir\" on 2026-08-31; all 1 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
+    "note": "the Campaign Finance System was searched for \"Weir\" on 2026-09-01; all 1 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -761,7 +761,7 @@
     "expenditures": null,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "registered for the 2026 Election Cycle, with no receipts or expenditures reported as of 2026-08-31"
+    "coveringPeriod": "registered for the 2026 Election Cycle, with no receipts or expenditures reported as of 2026-09-01"
    },
    "targetKeys": [
     "ballot-nh-merrimack:county-attorney:endres-steven"
@@ -775,12 +775,12 @@
     "allThreeAgree": true,
     "note": "name, office and election year all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -811,12 +811,12 @@
     "allThreeAgree": false,
     "note": "LEAD — the filed name does not agree with the certified-ballot name"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -847,12 +847,12 @@
     "allThreeAgree": false,
     "note": "LEAD — the filed name does not agree with the certified-ballot name"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -885,12 +885,12 @@
     "allThreeAgree": true,
     "note": "name, office and election year all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -921,14 +921,14 @@
     "electionYearAsFiled": null,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"Donnelly\" on 2026-08-31; all 3 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
+    "note": "the Campaign Finance System was searched for \"Donnelly\" on 2026-09-01; all 3 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -947,7 +947,7 @@
     "expenditures": null,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "registered for the 2026 Election Cycle, with no receipts or expenditures reported as of 2026-08-31"
+    "coveringPeriod": "registered for the 2026 Election Cycle, with no receipts or expenditures reported as of 2026-09-01"
    },
    "targetKeys": [
     "ballot-nh-merrimack:county-treasurer:schuett-dianne-e-"
@@ -961,12 +961,12 @@
     "allThreeAgree": true,
     "note": "name, office and election year all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -997,14 +997,14 @@
     "electionYearAsFiled": null,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"Davis\" on 2026-08-31; all 13 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
+    "note": "the Campaign Finance System was searched for \"Davis\" on 2026-09-01; all 13 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -1023,7 +1023,7 @@
     "expenditures": null,
     "cashOnHand": null,
     "reportCount": null,
-    "coveringPeriod": "registered for the 2026 Election Cycle, with no receipts or expenditures reported as of 2026-08-31"
+    "coveringPeriod": "registered for the 2026 Election Cycle, with no receipts or expenditures reported as of 2026-09-01"
    },
    "targetKeys": [
     "ballot-nh-merrimack:register-of-deeds:morse-samantha"
@@ -1037,12 +1037,12 @@
     "allThreeAgree": true,
     "note": "name, office and election year all agree with the certified-ballot row"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   },
   {
@@ -1073,14 +1073,14 @@
     "electionYearAsFiled": null,
     "electionYearOnBallot": 2026,
     "allThreeAgree": false,
-    "note": "the Campaign Finance System was searched for \"Bradstreet\" on 2026-08-31; all 0 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
+    "note": "the Campaign Finance System was searched for \"Bradstreet\" on 2026-09-01; all 0 row(s) it states it holds under that name were retrieved, and none is a 2026 filer that could be this candidacy"
    },
-   "checkedAt": "2026-08-31",
+   "checkedAt": "2026-09-01",
    "provenance": {
     "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
     "sourceOrg": "New Hampshire Secretary of State — Campaign Finance System",
-    "collectedAt": "2026-08-31",
-    "verifiedAt": "2026-08-31"
+    "collectedAt": "2026-09-01",
+    "verifiedAt": "2026-09-01"
    }
   }
  ]

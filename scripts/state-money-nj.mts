@@ -1,14 +1,45 @@
 #!/usr/bin/env tsx
 /**
- * **NJ ELEC FOR THE WHOLE 07866 BALLOT** — item 4 of the 2026-08-24
- * state-campaign-money session. **RULING 126** governs the output: it renders
- * for readers and never enters anything sold.
+ * **NJ ELEC — ACQUIRED STATEWIDE, PROJECTED TO A BALLOT.** Item 4 of the
+ * 2026-08-24 state-campaign-money session. **RULING 126** governs the output: it
+ * renders for readers and never enters anything sold. Split into acquisition
+ * and projection by Session C3, lane C, 2026-09-01, under **RULING 229**.
  *
  * ```
- * pnpm money:nj                 all 272 candidacies, election year 2026
+ * pnpm money:nj                       project from the held corpus and top the
+ *                                     acquisition up by one batch
+ * pnpm money:nj --locations 120       acquire up to 120 unheld locations
+ * pnpm money:nj --locations 0         project only; acquire nothing
  * pnpm money:nj --year 2025
- * pnpm money:nj --limit 5       first 5 locations, for a quick shape check
  * ```
+ *
+ * ## WHAT CHANGED ON 2026-09-01
+ *
+ * The header used to read **FOR THE WHOLE 07866 BALLOT**, and the word doing the
+ * damage was "for". ELEC's location dropdown carries every municipal and county
+ * filing location in New Jersey. This script asked it for the ones a single
+ * county's certified ballot happened to need — 72 jurisdictions — and called
+ * that the walk.
+ *
+ * RULING 229: a ZIP may prioritise acquisition ORDER and may never define the
+ * acquisition DENOMINATOR. So:
+ *
+ * ```
+ *   DENOMINATOR   every location code the dropdown states, committed at
+ *                 data/campaign-finance/nj-elec-location-universe.json
+ *   ACQUISITION   an accumulating corpus at
+ *                 data/campaign-finance/nj-elec-entity-corpus-2026.json,
+ *                 topped up a batch at a time and RESUMED across runs, with the
+ *                 ballot's own locations walked FIRST — order, not denominator
+ *   PROJECTION    the ballot matched against the held corpus. A location not
+ *                 yet acquired is ROUTE_UNREAD for its candidates. It is never
+ *                 NO_REPORTS_ON_FILE, because we did not ask.
+ * ```
+ *
+ * The remainder is reported with its denominator and is registered as a durable
+ * autonomous obligation by
+ * `lib/control-plane/scheduler/providers/local-jurisdictions.ts`, so it is owed
+ * by the worker graph rather than by whoever runs this next.
  *
  * ## What this inherits rather than re-derives (RULING 63)
  *
@@ -44,7 +75,7 @@
  * parameter, answered 200 with 326,271 records, and would have shipped.
  */
 
-import { writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 import {
@@ -67,6 +98,13 @@ import {
   type StateMoneyRecord,
   type StateMoneySnapshot,
 } from "../lib/funding/state-money.ts";
+import {
+  newZipReadiness,
+  projectionLine,
+  type AcquisitionUniverse,
+  type ReaderProjection,
+} from "../lib/hunt/source-universe.ts";
+import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { today } from "./doc-dates.mjs";
 
 const ROOT = join(import.meta.dirname, "..");
@@ -82,7 +120,64 @@ const arg = (flag: string): string | undefined => {
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
 const YEAR = arg("--year") ?? "2026";
-const LIMIT = Number(arg("--limit") ?? "999");
+/**
+ * How many UNHELD locations this run acquires. A BATCH SIZE, never a universe.
+ *
+ * `--limit` used to cut the walk down to the first N of the ballot's own
+ * jurisdictions, which made a partial run and a complete one print the same
+ * shape of report. This bounds only how much of the REMAINDER one run takes:
+ * the denominator is always every location ELEC's own dropdown states, the
+ * corpus accumulates across runs, and what is still owed is printed with its
+ * denominator every time.
+ */
+const BATCH = Number(arg("--locations") ?? "60");
+
+/* ── The acquisition corpus — the state, accumulated across runs ─────────── */
+
+const UNIVERSE_FILE = join(ROOT, "data/campaign-finance/nj-elec-location-universe.json");
+const CORPUS_FILE = join(ROOT, `data/campaign-finance/nj-elec-entity-corpus-${YEAR}.json`);
+
+interface EntityCorpus {
+  formatVersion: 1;
+  electionYear: string;
+  agency: string;
+  sourceUrl: string;
+  _note: string[];
+  /** Location NAME -> the entities ELEC returned for it, and when. */
+  byLocation: Record<string, { code: string; acquiredAt: string; entities: ElecEntity[] }>;
+}
+
+function loadCorpus(): EntityCorpus {
+  if (existsSync(CORPUS_FILE)) {
+    const parsed = JSON.parse(readFileSync(CORPUS_FILE, "utf8")) as EntityCorpus;
+    if (parsed.byLocation && typeof parsed.byLocation === "object") return parsed;
+    /* A file that parsed into the wrong shape is a FAILED read. Starting an
+       empty corpus over it would silently discard everything already acquired. */
+    throw new Error(
+      `${CORPUS_FILE} parsed but carries no byLocation map. Refusing to overwrite an acquisition ` +
+        "corpus this run cannot read.",
+    );
+  }
+  return {
+    formatVersion: 1,
+    electionYear: YEAR,
+    agency: AGENCY,
+    sourceUrl: ELEC_ENTITY_ENDPOINT,
+    _note: [
+      "THE ACQUISITION CORPUS for New Jersey campaign finance (RULING 229).",
+      "",
+      "One entry per ELEC filing LOCATION, accumulated across runs. The denominator is every location",
+      "the dropdown states (nj-elec-location-universe.json); this file is what has been acquired of it.",
+      "A location absent from here has NOT been asked — its candidates are ROUTE_UNREAD, never",
+      "NO_REPORTS_ON_FILE, because we did not ask.",
+      "",
+      "ENTITY-LEVEL ROWS ONLY. The per-committee money comes from a second hop that is made only for a",
+      "candidate a reader is actually being shown, and no itemised transaction — which carries",
+      "contributor name, occupation, employer, city and zip — appears in this file or in any other.",
+    ],
+    byLocation: {},
+  };
+}
 
 /* ── The certified ballot is the denominator ──────────────────────────────── */
 
@@ -193,14 +288,55 @@ for (const c of ballot.contests) {
   if (!wanted.has(name)) wanted.set(name, { ocdIds: [], code: codes.get(name)! });
   wanted.get(name)!.ocdIds.push(c.ocdId);
 }
-
-const resolvable = [...wanted].filter(([, v]) => v.code !== null);
-const unresolved = [...wanted].filter(([, v]) => v.code === null);
 console.log(
-  `\n  ballot jurisdictions needing an ELEC location: ${wanted.size}` +
-    ` · code found ${resolvable.length} · NO CODE ${unresolved.length}`,
+  `\n  ballot jurisdictions needing an ELEC location: ${wanted.size} of the ${codes.size} the ` +
+    "dropdown states — a READER PROJECTION, not the acquisition denominator (RULING 229)",
 );
-for (const [name] of unresolved) console.log(`      no ELEC location code: ${name}`);
+if (unresolvedBases.length > 0) {
+  console.log(`      ballot divisions with NO ELEC location code: ${unresolvedBases.join(", ")}`);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THE ACQUISITION DENOMINATOR — every location ELEC's own dropdown states
+   ══════════════════════════════════════════════════════════════════════════ */
+
+writeFileSync(
+  UNIVERSE_FILE,
+  `${JSON.stringify(
+    {
+      formatVersion: 1,
+      acquiredAt: AS_OF,
+      agency: AGENCY,
+      sourceUrl: ELEC_LOCATION_PAGE,
+      _note: [
+        "THE ACQUISITION DENOMINATOR for New Jersey campaign finance (RULING 229): every filing",
+        "LOCATION the Election Law Enforcement Commission's own dropdown states, read from its page.",
+        "",
+        "A reader's ZIP chooses which of these is shown and may prioritise which is walked first. It",
+        "does not decide how many there are. That is what this file is for.",
+      ],
+      locationCount: codes.size,
+      locations: [...codes].map(([name, code]) => ({ name, code })).sort((a, b) => (a.name < b.name ? -1 : 1)),
+    },
+    null,
+    1,
+  )}\n`,
+  "utf8",
+);
+console.log(`  wrote the location universe (${codes.size} location(s)) to ${UNIVERSE_FILE}`);
+
+const corpus = loadCorpus();
+const alreadyHeld = new Set(Object.keys(corpus.byLocation));
+
+/*
+ * ORDER, NOT DENOMINATOR. RULING 229 permits a reader location to prioritise
+ * acquisition ORDER, so this ballot's own locations are walked first — and the
+ * worklist behind them is every other location in the state, which is what
+ * makes the ordering a priority rather than a boundary.
+ */
+const ballotFirst = [...wanted.keys()].filter((n) => !alreadyHeld.has(n));
+const everyoneElse = [...codes.keys()].filter((n) => !alreadyHeld.has(n) && !wanted.has(n)).sort();
+const worklist = [...ballotFirst, ...everyoneElse];
 
 /* ── The control, first ───────────────────────────────────────────────────── */
 
@@ -283,13 +419,13 @@ if (control.rows.length > 0) {
 
 /* ── Walk every location, contest by contest ──────────────────────────────── */
 
-const entitiesByLocation = new Map<string, ElecEntity[]>();
 let asked = 0;
 let short = 0;
 
-for (const [name, { code }] of resolvable.slice(0, LIMIT)) {
+for (const name of worklist.slice(0, BATCH)) {
+  const code = codes.get(name)!;
   await sleep(SPACING_MS);
-  const answer = await askElec(code!);
+  const answer = await askElec(code);
   asked += 1;
   /*
    * RULING 100: where the source states a count, fewer rows FAILS. ELEC states
@@ -304,7 +440,21 @@ for (const [name, { code }] of resolvable.slice(0, LIMIT)) {
     note = `  [SHORT: source states ${stated}, read ${got}]`;
     short += 1;
   }
-  entitiesByLocation.set(name, answer.rows);
+  /*
+   * A SHORT extraction is NOT written into the corpus. RULING 100: where the
+   * source states a count and we hold fewer, we do not know what is missing —
+   * and a location recorded from an incomplete read would let a later
+   * projection report a sourced absence over rows it never saw. The location
+   * stays on the worklist and is re-asked next run.
+   */
+  if (stated !== null && got < stated) {
+    console.log(
+      `  ${name.padEnd(24)} code ${code} — HTTP ${answer.status}, ${got} of ${stated} stated${note} ` +
+        "— NOT written to the corpus; it stays owed",
+    );
+    continue;
+  }
+  corpus.byLocation[name] = { code, acquiredAt: AS_OF, entities: answer.rows };
   console.log(
     `  ${name.padEnd(24)} code ${code} — HTTP ${answer.status}, ${got} row(s)` +
       (stated !== null ? ` of ${stated} stated` : "") +
@@ -312,13 +462,43 @@ for (const [name, { code }] of resolvable.slice(0, LIMIT)) {
   );
 }
 
-const totalEntities = [...entitiesByLocation.values()].reduce((n, r) => n + r.length, 0);
-console.log(`\n  locations asked ${asked} · entities found ${totalEntities} · SHORT extractions ${short}`);
+writeFileSync(CORPUS_FILE, `${JSON.stringify(corpus, null, 1)}\n`, "utf8");
+
+const heldLocations = Object.keys(corpus.byLocation);
+const entitiesByLocation = new Map<string, ElecEntity[]>(
+  heldLocations.map((n) => [n, corpus.byLocation[n].entities]),
+);
+const totalEntities = heldLocations.reduce((n, k) => n + corpus.byLocation[k].entities.length, 0);
+console.log(
+  `\n  locations asked THIS RUN ${asked} · SHORT extractions ${short} · entities held ${totalEntities}`,
+);
+
+const universe: AcquisitionUniverse = {
+  authority: AGENCY,
+  unit: "filing locations",
+  statedBy: codes.size,
+  held: heldLocations.length,
+  countedBy: "one read of ELEC's own location dropdown, then one entity query per location",
+  citation: `${UNIVERSE_FILE.replace(ROOT, "").replace(/\\/g, "/")} and ${CORPUS_FILE.replace(ROOT, "").replace(/\\/g, "/")}`,
+};
+console.log(
+  `  ${floorLine(
+    floored(
+      "ELEC filing locations ACQUIRED",
+      "every location ELEC's own dropdown states",
+      codes.size,
+      heldLocations.length,
+      "the dropdown yielded no location at all — a parse failure, never a state with no filing locations",
+    ),
+  )} · ${codes.size - heldLocations.length} still owed, and the remainder is a durable obligation rather than this run's leftover`,
+);
 
 /* ── Match, contest by contest, every candidate before the next contest ───── */
 
 const records: StateMoneyRecord[] = [];
 let contestsWalked = 0;
+/** Ballot locations the corpus does not hold yet. Named, never summarised. */
+const unreadLocations = new Set<string>();
 
 for (const contest of ballot.contests) {
   const locationName = locationFor.get(contest.ocdId) ?? null;
@@ -331,11 +511,62 @@ for (const contest of ballot.contests) {
   // and nothing on file", and it is not recorded as one.
   if (!locationName) continue;
 
+  /*
+   * **A LOCATION WE HAVE NOT ACQUIRED IS UNREAD, NEVER EMPTY.**
+   * (Session C3, lane C, 2026-09-01. RULING 229, RULING 184.)
+   *
+   * The acquisition denominator is now the whole state and the corpus fills a
+   * batch at a time, so for the first time a ballot location can legitimately
+   * be one this run has not reached. Falling through to `pool = []` would send
+   * every candidate in it down the sourced-absence branch and write "ELEC's
+   * filings were read and carry no committee for this person" about a location
+   * nobody asked. That is the exact shape of the defect this whole change
+   * exists to close, so it is refused by construction.
+   */
+  const acquired = entitiesByLocation.has(locationName);
   const pool = entitiesByLocation.get(locationName) ?? [];
 
   for (const cand of cands) {
     const ballotName = `${cand.givenName} ${cand.familyName}`;
-    const candidates = pool.filter((e) => namesAgree(e.entityName, ballotName));
+    const candidates = acquired ? pool.filter((e) => namesAgree(e.entityName, ballotName)) : [];
+
+    if (!acquired) {
+      unreadLocations.add(locationName);
+      records.push({
+        dataClass: "STATE_COMMITTEE",
+        jurisdiction: "NJ",
+        agency: AGENCY,
+        filingsUrl: ELEC_LOCATION_PAGE,
+        committeeId: null,
+        registeredName: "",
+        candidateNameAsFiled: "",
+        officeSought: contest.title,
+        electionYear: Number(YEAR),
+        filingState: "ROUTE_UNREAD",
+        totals: { receipts: null, expenditures: null, cashOnHand: null, reportCount: null, coveringPeriod: null },
+        targetKeys: [cand.id],
+        match: {
+          registeredName: "",
+          officeAsFiled: null,
+          officeOnBallot: contest.title,
+          electionYearAsFiled: null,
+          electionYearOnBallot: Number(YEAR),
+          allThreeAgree: false,
+          note:
+            `ELEC's ${locationName} filings for ${YEAR} have NOT been acquired yet — this location is ` +
+            "still on the statewide acquisition worklist. This is a fact about our retrieval and " +
+            "states nothing about what the Commission holds.",
+        },
+        checkedAt: AS_OF,
+        provenance: {
+          sourceUrl: ELEC_LOCATION_PAGE,
+          sourceOrg: AGENCY,
+          collectedAt: AS_OF,
+          verifiedAt: AS_OF,
+        } as StateMoneyRecord["provenance"],
+      });
+      continue;
+    }
 
     if (candidates.length === 0) {
       /*
@@ -471,6 +702,41 @@ console.log(`     backed by committee records             ${split.filedRecords} 
 console.log(`  NO REPORTS ON FILE (sourced, dated)        ${split.noReportsOnFile} of ${inScope}`);
 console.log(`  LEAD (does NOT render)                     ${split.lead}`);
 console.log(`  unresolved                                 ${split.unresolved} of ${inScope}`);
+/*
+ * COUNTED IN THE UNIVERSE'S OWN UNIT, which is FILING LOCATIONS.
+ *
+ * The first draft counted candidacies against a universe of locations and
+ * printed "239 filing locations applicable to the 07866 ballot" — a number over
+ * a denominator it was not counted against, which is precisely the mistake
+ * `projectionLine` exists to make impossible. The ballot needs 37 of ELEC's
+ * 1,215 locations; how many candidacies sit behind them is the three-way split
+ * above and is a different question.
+ */
+const ballotLocations = new Set([...wanted.keys()]);
+const readerProjection: ReaderProjection = {
+  scope: "the 07866 ballot",
+  applicable: ballotLocations.size,
+  projectionNarrowedFrom: universe,
+  answeredFromCorpus: [...ballotLocations].filter((n) => entitiesByLocation.has(n)).length,
+  /*
+   * NAMES THE LOCATIONS, not the candidates. A ballot location the statewide
+   * acquisition has not reached yet is the only thing that can make this
+   * non-empty, and it is an ACQUISITION backlog rather than a fresh hunt caused
+   * by a ZIP — which is the distinction RULING 229 turns on, so it is stated
+   * here rather than left for a reader of the number to work out.
+   */
+  requiredFreshAcquisition: [...unreadLocations].sort(),
+};
+console.log(`\n─── RULING 229: the acquisition denominator and the reader projection ───`);
+console.log(`  ${projectionLine(readerProjection)}`);
+const readiness = newZipReadiness(readerProjection);
+console.log(`  NEW-ZIP READINESS: ${readiness.ready ? "READY" : "NOT READY"} — ${readiness.why}`);
+console.log(
+  `  ELEC locations held ${universe.held} of ${universe.statedBy} stated · ` +
+    `${universe.statedBy - universe.held} still owed. Every one of them is enumerated by name in ` +
+    "data/jurisdictions/nj.json and carries a durable obligation.",
+);
+
 console.log(`\n  contests walked ${contestsWalked} of ${ballot.contests.length}`);
 console.log(`
   second-hop filing calls ${filingCalls} · failures ${filingFailures} · entities cached ${moneyCache.size}`);

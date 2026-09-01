@@ -1,7 +1,7 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-01 12:45:48 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-01 13:32:05 EDT.
 Session day 2026-09-01 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
@@ -1029,14 +1029,14 @@ _No status change recovered in the commits walked._
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-09-01 12:45:48 EDT
+generated: 2026-09-01 13:32:05 EDT
 branch: main
-head sha: a2427a85aebf968e5f5650e004f17eacf1c59ad0
-head subject: The Postgres conformance lane could pass exactly once
-origin/main sha: a0cebbc110086551f957f0c9f846488a8e00de78
-origin/main subject: Intake tripwire report: 2026-09-01T15:09Z
-local main sha: a2427a85aebf968e5f5650e004f17eacf1c59ad0
-local main matches origin/main: no — 0 commit(s) behind, 44 ahead
+head sha: 74193f1469e637d67881206969d486b797b72b1c
+head subject: Merge pull request #257 from SeanJ22/claude/sc3-tail
+origin/main sha: 74193f1469e637d67881206969d486b797b72b1c
+origin/main subject: Merge pull request #257 from SeanJ22/claude/sc3-tail
+local main sha: 74193f1469e637d67881206969d486b797b72b1c
+local main matches origin/main: yes
 working tree: clean
 open prs: none
 last recorded tests: 555 (recorded without a verdict)

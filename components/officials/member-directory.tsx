@@ -13,6 +13,7 @@ import {
   battlecardSectionTitle,
   type BattlecardSectionId,
 } from "@/lib/ballot/battlecard-sections";
+import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
 import { officeDirectionsUrl } from "@/lib/registry/links";
 import type { SeatHolder } from "@/lib/officials/lookup";
 
@@ -106,7 +107,12 @@ function DirectoryContent({
   // The source scope is sitting federal members. A state legislator or a
   // school-board member renders nothing here rather than an empty heading,
   // which would read as "this person sits on none".
-  if (!holder.id.startsWith("congress:")) return null;
+  //
+  // The predicate is `lib/officials/member-directory-scope.ts` and it is the
+  // ONE copy: a caller that does not ask it hands this component a slot that
+  // looks filled and renders blank, which is what a reader met on the ballot
+  // battlecard (Part C, 2026-08-31).
+  if (!memberDirectoryReaches(holder.id)) return null;
 
   if (only === "committees") {
     return (
@@ -276,7 +282,7 @@ function useDirectoryCounts(holder: SeatHolder): {
  */
 function MemberDirectoryInner({ holder }: { holder: SeatHolder }) {
   const counts = useDirectoryCounts(holder);
-  const inScope = holder.id.startsWith("congress:");
+  const inScope = memberDirectoryReaches(holder.id);
   return (
     <>
       <CardSection

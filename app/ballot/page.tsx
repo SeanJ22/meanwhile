@@ -44,6 +44,7 @@ import {
 import { CardSourcesList } from "@/components/officials/card-sources-list";
 import { RecentVotes } from "@/components/map/popup/official-popup";
 import { personCardSources } from "@/lib/officials/card-sources";
+import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { CandidateCard } from "@/components/ballot/candidate-card";
 import {
@@ -551,8 +552,31 @@ async function BallotBattlecard({
          * resolution matched to this candidate by seat — the same record the
          * map battlecard renders from.
          */
-        committees: recordHolder ? <MemberCommitteesContent holder={recordHolder} /> : null,
-        offices: recordHolder ? <MemberOfficesContent holder={recordHolder} /> : null,
+        /*
+         * **AND THE SLOT IS NULL WHERE THE SOURCE DOES NOT REACH THEM.**
+         * (Part C, 2026-08-31, found by grading `vac:ballot-offices-from-record`.)
+         *
+         * `recordHolder` being non-null says the RECORD exists. It says
+         * nothing about whether the member DIRECTORY — committee seats and
+         * district offices, sourced from the congressional snapshot — covers
+         * them. Gating on `recordHolder` alone handed this card a truthy React
+         * element that then rendered null, and `content ?? emptyLine` above
+         * tests the SLOT rather than what the slot rendered — so the named gap
+         * never fired and both sections opened to an EMPTY BOX. Measured on
+         * Katie Hobbs' card at 85701: `innerHTML === ""`, zero children.
+         *
+         * A null renders as its named gap on every surface, always. The map
+         * battlecard already did this correctly; this surface did not, which
+         * is the same asymmetry BAL-33 was reported for.
+         */
+        committees:
+          recordHolder && memberDirectoryReaches(recordHolder.id) ? (
+            <MemberCommitteesContent holder={recordHolder} />
+          ) : null,
+        offices:
+          recordHolder && memberDirectoryReaches(recordHolder.id) ? (
+            <MemberOfficesContent holder={recordHolder} />
+          ) : null,
         money: federal ? (
           <CandidateFunding targetKey={targetKey} context={context} />
         ) : stateMoney.length > 0 ? (

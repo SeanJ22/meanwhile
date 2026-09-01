@@ -22621,3 +22621,53 @@ itemised endpoints are unwalked. Rung 13, the Department's public-records path,
 remains unwalked and has been named as a next start since 2026-08-19. And the
 lobbyist registry — a source class this product holds nothing of in any state
 except Arizona — sits on a host now known to be permitted.
+
+---
+
+## 2026-08-31 — Session C, Part E: the Arizona route opened, and the obvious answer was refuted
+
+Arizona statewide money is REACHABLE and NO SNAPSHOT WAS BUILT. Both halves of
+that sentence are the finding.
+
+**The route.** `seethemoney.az.gov/Reporting/GetNEWTableData` was recorded on
+2026-08-24 as live with its parameter shape UNKNOWN — a guessed body answered
+200 with two bytes, correctly recorded under RULING 100 as a statement about our
+request rather than about Arizona's records. Rung 7 was named as the next rung
+and had not been walked.
+
+Walked. It is a server-side **DataTables** action: filters ride in the query
+string appended to the path, and the POST body must be the DataTables form
+encoding **including its `columns[N][data]` array**, because that array is the
+projection the action builds its result from. The three missing filters were
+`IsLessActive`, `ShowOfficeHolder` and `ChartName`. With them it returns
+`recordsTotal` **370** for the 2025–2026 cycle at `JurisdictionId=0`, each row
+carrying `EntityID`, first and last name, `CommitteeName`, `OfficeName`,
+`PartyName`, `Income`, `Expense` and `CashBalance`. `EntityID` is the non-name
+join key the contract wants. Permission re-confirmed: no `robots.txt`, no terms,
+no challenge, no credential.
+
+**The refutation, which is why there is no file.** A candidate returns several
+rows sharing one `EntityID` with different amounts and an identical
+`CashBalance`. On Jayme Accalia the arithmetic looked like proof: incomes
+686.91 + 205 + 1123.97 = 2015.88, expenses 101 + 0 + 466.73 = 567.73, and
+2015.88 − 567.73 = **1448.15**, exactly the repeated cash balance.
+
+Checked over all 370 rows in 255 entities, `sum(Income) − sum(Expense) ==
+CashBalance` **holds for 134 and breaks for 121** — including for single-row
+entities, where there is nothing to sum at all. `CashBalance` carries something
+the 2025–2026 window does not, a prior-cycle balance being the obvious
+candidate, and Accalia matched because she began from zero.
+
+**The lesson is the one this whole session is about.** A single case agreeing
+with a hypothesis is not evidence for the hypothesis, and the check that
+refuted it cost one query over the population. Had the snapshot been built on
+the seductive version, it would have put a confident wrong number under a named
+candidate's photograph — and every instrument downstream would have agreed with
+it, because they all read the same file.
+
+**What is owed and where it points.** A source that states a cycle total
+independently: `ExportEntityTransactions` (itemised and therefore summable), the
+filed reports themselves, or `ftp://ftp.azsos.gov/cfsdata2/`, already recorded
+as reachable on 2026-08-26 with 8,828 committees and unwalked for this purpose.
+The FTP is the most promising. The obligation is not closed and was never
+dispositioned as closed.

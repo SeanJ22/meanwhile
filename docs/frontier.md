@@ -270,11 +270,23 @@ the cycle total is **undetermined**; summing and taking the largest disagree, an
 publishing either as a named person's campaign total is precisely the failure
 `lib/funding/state-money.ts` opens by naming.
 
-**The next step is a verification, not a guess:** read one candidate's total as
-the portal itself displays it — `/Reporting/ExportEntityOverview` and
-`/Reporting/ExportEntityTransactions` take the same parameter string plus
-`ExportOptions` — and adopt whichever aggregation reproduces the publisher's own
-figure. One bounded experiment. Full write-up in
+**That experiment was run, and it REFUTED the obvious answer.** The portal
+displays no per-candidate total to reproduce — its table renders the same rows
+the endpoint returns. And the arithmetic that looked like proof does not survive
+the population: on Accalia, `sum(Income) − sum(Expense)` equals the repeated
+`CashBalance` exactly, but across all 370 rows (255 entities) that identity
+**holds for 134 and breaks for 121**, including for single-row entities where
+there is nothing to sum. `CashBalance` carries something the 2025–2026 window
+does not — a prior-cycle balance most likely — and Accalia matched because she
+started from nothing.
+
+**One candidate agreeing with a hypothesis is not evidence for it**, which is
+the whole reason the check was run over the population before anything was
+built. What would settle it is a source stating a cycle total independently:
+`ExportEntityTransactions` (itemised, summable), the filed reports, or the
+`ftp://ftp.azsos.gov/cfsdata2/` bulk drop already recorded as reachable on
+2026-08-26 with 8,828 committees — **the FTP is the most promising and is
+unwalked for this purpose.** Full write-up in
 `docs/arizona-source-enumeration.md`; the route is in the method store as
 `datatables-endpoint-needs-its-column-array`. **The obligation is not closed.**
 

@@ -87,6 +87,25 @@ console.log(
   )}`,
 );
 
+/*
+ * **THE DISPOSITION LOG IS THE COMMIT POINT, NOT THE OCCURRENCE FIELD.**
+ *
+ * An occurrence carries a `disposition` only when it CLOSED, and a
+ * REQUIRES_NEW_ADAPTER never closes one — it is not in the terminal set, which
+ * is the whole reason the obligation stays owed and the debt keeps accruing.
+ * A read-back that counted only closed occurrences would therefore report ZERO
+ * for a domain whose every route is a missing adapter, and read as "the workers
+ * never touched it" when the workers touched all of it and said so.
+ *
+ * So the committed dispositions are read from the append-only log, joined to
+ * these obligations through their occurrences' RouteTask ids.
+ */
+const routeTaskToObligation = new Map<string, string>();
+for (const o of occ) routeTaskToObligation.set(o.routeTaskId, o.obligationId);
+const commits = (await repos.dispositions.readAll()).filter((c) =>
+  routeTaskToObligation.has(c.routeTaskId),
+);
+
 const terminal = occ.filter((o) => o.disposition != null);
 console.log(
   `  ${floorLine(
@@ -100,13 +119,40 @@ console.log(
   )}`,
 );
 
+console.log(
+  `  ${floorLine(
+    floored(
+      "occurrences whose RouteTask carries a COMMITTED disposition in the append-only log",
+      "the occurrences opened on matching obligations",
+      occ.length,
+      new Set(commits.map((c) => c.routeTaskId)).size,
+      "no occurrence has been opened on a matching obligation — the clock has not passed, or the " +
+        "registration did not reach the store",
+    ),
+  )}`,
+);
+
 const dispCount = new Map<string, number>();
-for (const o of terminal) dispCount.set(String(o.disposition), (dispCount.get(String(o.disposition)) ?? 0) + 1);
+for (const c of commits) {
+  const d = c.disposition.disposition;
+  dispCount.set(d, (dispCount.get(d) ?? 0) + 1);
+}
 console.log("  dispositions, VERBATIM as the workers committed them:");
 for (const [k, v] of [...dispCount].sort()) console.log(`      ${k.padEnd(30)} ${v}`);
+console.log(
+  "      (a disposition that is not TERMINAL — REQUIRES_NEW_ADAPTER — is committed and does NOT close " +
+    "the occurrence: the obligation stays owed, the debt accrues and the next-due stands)",
+);
 
 const myDebts = debts.filter((d) => ids.has(d.obligationId));
 console.log(`  debt rows on matching obligations                ${myDebts.length}`);
+console.log("");
+console.log("  three committed dispositions, verbatim, with the note the worker wrote:");
+for (const c of commits.slice(0, 3)) {
+  console.log(`      ${c.disposition.disposition} on routeTask ${c.routeTaskId.slice(0, 16)} at ${c.committedAt}`);
+  console.log(`          permission=${c.disposition.permission} transport=${c.disposition.transport}`);
+  console.log(`          ${c.disposition.note.slice(0, 380)}`);
+}
 
 const show = Number(process.env.READBACK_SHOW ?? "12");
 console.log(`\n  first ${show} matching rows, verbatim:`);

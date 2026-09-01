@@ -93,6 +93,16 @@ const LITERAL_ALLOWED = new Map<string, string>([
     "a comment naming the endpoint a human would curl",
   ],
   ["tests/origins.test.ts", "this file asserts the host's value"],
+  [
+    "lib/governance/adoptions.ts",
+    // RULING 233's body states the shipping law in the author's own words, and
+    // those words name both hosts: "main is production and deploys to
+    // meanwhileusa.com. staging is the integration branch and deploys to
+    // test.meanwhileusa.com." That is QUOTED LAW, not a call site — nothing in
+    // this file is fetched, rendered or compared against, and a ruling body
+    // rewritten to satisfy a lint is a different ruling. The file is data.
+    "governance record bodies quote the law verbatim; a ruling is not a call site",
+  ],
 ]);
 
 /** Source trees the sweep covers. Docs and recorded data are history, not code. */

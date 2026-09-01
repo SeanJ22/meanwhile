@@ -3171,8 +3171,15 @@ still RULING 1's — the integrated head merges to \`main\`. A record that claim
 validator assert a shipping path that the very session adopting it is
 forbidden to use.
 
-**The first session after Session C closes assigns that claim**, and doing so
-is how this ruling becomes operative rather than merely recorded.`,
+So the slot is answered, and answered CORRECTLY: it is assigned to RULING 1
+with the value \`integrated-head-merges-to-main\`. Declaring a rule slot and
+leaving it empty would have been the worse failure — the acceptance gate counts
+answered slots precisely so that a question nobody has answered cannot sit in
+the ledger looking settled.
+
+**The first session after Session C closes retires that assignment and lets
+this record claim the slot**, and that reassignment — not this adoption — is
+what makes this ruling operative rather than merely recorded.`,
     claims: [],
     relations: [
       {
@@ -3251,6 +3258,17 @@ Anything else takes a new record.`,
  * rather than something a session might notice.
  */
 export const CLAIM_ASSIGNMENTS: Array<{ id: string; key: string; value: string; why: string }> = [
+  {
+    id: "R-0001",
+    key: "shipping.promotion_path",
+    value: "integrated-head-merges-to-main",
+    why:
+      "RULING 233 declares the slot and deliberately does not claim it: a semantic claim states what is TRUE NOW, " +
+      "and RULING 233's own bootstrap clause forbids the session adopting it from using staging-first. So the slot " +
+      "holds RULING 1's answer, which is the answer in force — the integrated head merges to `main`. " +
+      "The first session after Session C closes RETIRES this assignment and lets RULING 233 claim the slot, and " +
+      "that reassignment is what makes RULING 233 operative rather than merely recorded.",
+  },
   {
     id: "R-0125",
     key: "verification.target",

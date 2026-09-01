@@ -42,7 +42,9 @@ import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 import { launchGuarded, type GuardedBrowser } from "./browser.mts";
 import { today } from "./doc-dates.mjs";
 
-const BASE = (process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(/\/$/, "");
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+
+const BASE = (process.env.SHOOT_BASE_URL ?? PUBLIC_SITE_ORIGIN).replace(/\/$/, "");
 const ZIP = process.env.PERF_ZIP ?? "85701";
 const RUNS = Number(process.env.PERF_RUNS ?? 3);
 const HEADLESS = process.argv.includes("--headless");

@@ -51,7 +51,9 @@
  */
 import { launchGuarded } from "./browser.mts";
 
-const BASE = process.env.WTP_BASE ?? "https://sparkwtp.netlify.app";
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+
+const BASE = process.env.WTP_BASE ?? PUBLIC_SITE_ORIGIN;
 
 /**
  * **THE PLANT — a real township, which MUST read as one.**

@@ -76,6 +76,31 @@
 [functions]
   directory = "netlify/functions"
 
+# THE LEGACY HOST FORWARDS — ITEM F (2026-09-01).
+#
+# `sparkwtp.netlify.app` is the Netlify site's default subdomain and it keeps
+# answering forever; setting a custom domain does not retire it. Measured
+# 2026-09-01, before this redirect existed: `GET https://sparkwtp.netlify.app/`
+# returned **200**, not a redirect. So the old host was serving the whole
+# application in parallel with the new one — two origins, one product, and
+# every link, bookmark, bot user-agent and archived reference pointing at the
+# one nobody maintains.
+#
+# That is not merely untidy. `lib/ops/origin-confinement.ts` decides whether a
+# synthetic-run marker may travel by comparing HOSTS, and the reader-facing
+# claim this product makes about its own origin is the load-bearing half of
+# that comparison. An origin that answers 200 but is not `PUBLIC_SITE_ORIGIN`
+# is an origin where the confinement rule and the deployed reality disagree.
+#
+# `force = true` because there is no path on the old host worth preserving,
+# and the full-URL `from` scopes the rule to that exact host — deploy previews
+# and branch deploys live on other `*.netlify.app` names and are untouched.
+[[redirects]]
+  from = "https://sparkwtp.netlify.app/*"
+  to = "https://meanwhileusa.com/:splat"
+  status = 301
+  force = true
+
 # The demo is unlisted: platform-level visibility is the access control, and
 # these headers keep crawlers from indexing whatever they can reach anyway.
 # Belt to the braces in next.config.ts `headers()`, which covers Next-served

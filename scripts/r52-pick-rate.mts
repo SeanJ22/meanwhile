@@ -75,7 +75,9 @@
 
 import { launchGuarded } from "./browser.mts";
 
-const BASE = process.env.WTP_WALK_BASE ?? "https://sparkwtp.netlify.app";
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+
+const BASE = process.env.WTP_WALK_BASE ?? PUBLIC_SITE_ORIGIN;
 const TRIALS = Number(process.env.WTP_R52_TRIALS ?? "12");
 const PHONE = { width: 390, height: 844 };
 const PICK = '.reaction-box[data-kind="pick"] .reaction-choice';

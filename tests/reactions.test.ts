@@ -22,6 +22,8 @@ import {
 import { hashReactionKey, writeReaction } from "../lib/db/reactions.ts";
 import { getVoteIds } from "../lib/votes/snapshot.ts";
 
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+
 /**
  * Reaction capture (P03) — the first user-writable surface, tested at the
  * layers that must be launch-grade from day one even while collection is
@@ -508,7 +510,7 @@ test("M63: the write path refuses the answer outside a one-candidate race", asyn
 
   const post = (targetId: string, reaction: string, targetType = "CANDIDATE") =>
     POST(
-      new Request("https://sparkwtp.netlify.app/api/reactions", {
+      new Request(`${PUBLIC_SITE_ORIGIN}/api/reactions`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
@@ -847,7 +849,7 @@ test("P03: the write path accepts a real provision and refuses an invented one",
 
   const post = (targetId: string, extra: Record<string, unknown> = {}) =>
     POST(
-      new Request("https://sparkwtp.netlify.app/api/reactions", {
+      new Request(`${PUBLIC_SITE_ORIGIN}/api/reactions`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
@@ -1004,7 +1006,7 @@ test("P03: pulling the ripcord stops capture and SAYS SO — the binary still co
 
   const post = () =>
     POST(
-      new Request("https://sparkwtp.netlify.app/api/reactions", {
+      new Request(`${PUBLIC_SITE_ORIGIN}/api/reactions`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
@@ -1057,7 +1059,7 @@ test("P03: a reader who types nothing is never told their words were dropped", a
   try {
     process.env.WTP_RIPCORD_REACTION_FREE_TEXT = "pulled";
     const response = await POST(
-      new Request("https://sparkwtp.netlify.app/api/reactions", {
+      new Request(`${PUBLIC_SITE_ORIGIN}/api/reactions`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
@@ -1093,7 +1095,7 @@ test("P03: an oversized verbatim is refused, and validation sits outside every f
 
   const post = (text: unknown) =>
     POST(
-      new Request("https://sparkwtp.netlify.app/api/reactions", {
+      new Request(`${PUBLIC_SITE_ORIGIN}/api/reactions`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({

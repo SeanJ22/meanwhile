@@ -29,6 +29,8 @@
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 import { launchGuarded } from "./browser.mts";
 
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+
 /**
  * C05 (2026-08-17): this run declares itself so the rows it writes to
  * production's search log are never counted as a reader's. The runner cannot
@@ -40,7 +42,7 @@ const RUN_HEADERS = syntheticRunHeaders({
     makeRunId("measure-fly", new Date().toISOString()),
 });
 
-const BASE = (process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(
+const BASE = (process.env.SHOOT_BASE_URL ?? PUBLIC_SITE_ORIGIN).replace(
   /\/$/,
   "",
 );

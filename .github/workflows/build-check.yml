@@ -548,7 +548,7 @@ jobs:
       # IT DOES MAKE ONE NETWORK CALL, AND IT NEEDS NO CREDENTIAL EITHER
       # (2026-08-29). Rule 4 — a healthy reading must still cover the production
       # it is about — turns on WHAT PRODUCTION SERVES RIGHT NOW, so the gate asks
-      # `GET https://sparkwtp.netlify.app/api/build`, which returns the deployed
+      # `GET https://meanwhileusa.com/api/build`, which returns the deployed
       # commit from a build-time constant. That route writes nothing: no database
       # handle, no search-log row, so a gate that runs on every pull request
       # cannot contaminate the store this product sells. The synthetic-run header

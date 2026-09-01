@@ -70,7 +70,9 @@ import { extrusionSpecForZoom } from "../lib/map/state-focus.ts";
 import { decodePng, patchStats, type DecodedPng } from "./png.mts";
 import { launchGuarded } from "./browser.mts";
 
-const BASE = (process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+
+const BASE = (process.env.SHOOT_BASE_URL ?? PUBLIC_SITE_ORIGIN).replace(
   /\/$/,
   "",
 );

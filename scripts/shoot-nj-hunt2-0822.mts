@@ -23,6 +23,8 @@ import { join } from "node:path";
 
 import { launchGuarded } from "./browser.mts";
 
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+
 /*
  * `page.evaluate` given a STRING page-function has no return type to infer
  * from, so Playwright hands back `unknown` and `strict` refuses every property
@@ -47,7 +49,7 @@ type ContestBox =
 type PageCounts = { cards: number; contests: number; height: number };
 type MapFacts = { welcomeStillUp: boolean; canvases: number; firstWords: string };
 
-const BASE = process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app";
+const BASE = process.env.SHOOT_BASE_URL ?? PUBLIC_SITE_ORIGIN;
 const OUT = join(process.cwd(), ".njhunt2", "shots");
 mkdirSync(OUT, { recursive: true });
 

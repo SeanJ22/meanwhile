@@ -24,9 +24,11 @@ import { join } from "node:path";
 import { decodeImage, decodeRecord, type PortraitDecodeRecord } from "../lib/photos/decode.ts";
 import { today } from "./doc-dates.mjs";
 
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+
 const ROOT = process.cwd();
 const UA =
-  "we-the-people/1.0 (civic meeting data; contact via https://sparkwtp.netlify.app/feedback)";
+  `we-the-people/1.0 (civic meeting data; contact via ${PUBLIC_SITE_ORIGIN}/feedback)`;
 
 /** Every artifact the review queue reads. Kept in step with `STAGING_FILES`. */
 const FILES = [

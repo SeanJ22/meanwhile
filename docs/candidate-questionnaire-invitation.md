@@ -164,9 +164,14 @@ distinct* is a claim and a claim is something a test can hold.
 
 1. **A monitored reply address exists** and a person actually reads it. The
    message promises this three times.
-2. **The site is publicly reachable.** `sparkwtp.netlify.app` is
-   password-walled, so a candidate following the link today would hit a password
-   prompt.
+2. **The site is publicly reachable.** This read `sparkwtp.netlify.app` and
+   recorded that it was password-walled, so a candidate following the link would
+   hit a password prompt. Two things changed on 2026-09-01 (ITEM F): the public
+   origin is now `https://meanwhileusa.com`, and `GET https://meanwhileusa.com/`
+   answers **200 without a password**, measured on that date. The link in this
+   message must therefore be rewritten to the new origin before it is sent. The
+   password wall is no longer the blocker; **item 1, item 3 and item 4 still
+   are**, and this row does not close on the host change alone.
 3. **The questionnaire page exists as a reader-facing surface.** The instrument,
    the schema, the auth and the invitation list are built; the page a candidate
    types into is not.

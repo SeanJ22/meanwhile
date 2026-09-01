@@ -28,7 +28,9 @@ import { join } from "node:path";
 
 import { launchGuarded } from "./browser.mts";
 
-const BASE = process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app";
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+
+const BASE = process.env.SHOOT_BASE_URL ?? PUBLIC_SITE_ORIGIN;
 const OUT = join(process.cwd(), ".njhunt3", "shots");
 mkdirSync(OUT, { recursive: true });
 

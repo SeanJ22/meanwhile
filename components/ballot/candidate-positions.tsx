@@ -86,7 +86,7 @@ export function CandidatePositions({
                   {/* Their words. Never rewritten, never trimmed of
                       meaning — only of length, and then it says so with
                       the ellipses the corpus put there. */}
-                  <p className="text-[0.75rem] leading-relaxed text-paper-dim">
+                  <p className="t-record text-[0.75rem] leading-relaxed text-paper-dim">
                     &ldquo;{passage.quote}&rdquo;
                   </p>
                   <p className="mt-0.5 text-[0.6875rem] text-muted">

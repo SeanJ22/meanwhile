@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 
+import { Logo } from "@/components/brand/logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useShellData } from "@/lib/state/data";
 
@@ -10,7 +11,6 @@ import { NearMeControl } from "./near-me-control";
 import { ScopeSelectors } from "./scope-selectors";
 import { StatsBar } from "./stats-bar";
 import { ViewToggle } from "./view-toggle";
-import { PRODUCT_NAME } from "@/lib/brand";
 
 /**
  * The fixed left rail.
@@ -123,21 +123,30 @@ export function Sidebar({
               <polyline points="18 17 13 12 18 7" />
             </svg>
           </button>
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="var(--accent-local)"
-            strokeWidth="2"
-            aria-hidden="true"
-          >
-            <path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z" />
-            <circle cx="12" cy="10" r="3" />
-          </svg>
+          {/*
+            ITEM J (2026-09-01) — THE PIN IS GONE, AND SO IS THE TIER COLOUR.
 
+            This rail used to open with a map-pin SVG stroked in
+            `var(--accent-local)`. Two separate defects in one 20px glyph:
+
+            1. A PIN DROPS ONTO A HOUSE, and a house is identity. This
+               product's standing rule is that a ZIP and a geolocation are
+               ORIENTATION, not identity — the brand may not say the opposite
+               in the first mark on the page.
+            2. `--accent-local` IS A TIER COLOUR. The map legend teaches a
+               reader that amber means local government, and the brand was
+               wearing it. That is the same failure
+               `.jurisdiction-badge[data-badge="GOVERNS"]` was fixed for: a
+               badge in a tier colour reads as a tier CLAIM.
+
+            The lockup replaces both. It sits one row above `.view-toggle`,
+            whose selected STATE tab fills `--tier-fill-state`; the mark and
+            that fill are the same teal by design, and the reason a small
+            square beside a serif wordmark still does not read as "state
+            government" is the scoping rule on `--mark` in globals.css.
+          */}
           <span className="brand-name">
-            {PRODUCT_NAME}
+            <Logo variant="wordmark" size={22} />
             <span className="brand-sub">
               {location ? (
                 <>

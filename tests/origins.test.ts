@@ -103,7 +103,30 @@ const LITERAL_ALLOWED = new Map<string, string>([
     // rewritten to satisfy a lint is a different ruling. The file is data.
     "governance record bodies quote the law verbatim; a ruling is not a call site",
   ],
+  [
+    "lib/tracker/registry.mjs",
+    // NH304's decision card asks the author to choose between two hosts, so it
+    // has to name both of them. Same shape as the ruling above: prose the
+    // author reads, not an address anything resolves.
+    "decision-card text names the hosts the decision is between",
+  ],
 ]);
+
+/**
+ * The allowlist is for PROSE, and this is what keeps it honest.
+ *
+ * An allowlist entry that merely says "trust me" grows until the guard means
+ * nothing — the failure mode is not the first entry, it is the fourth, added
+ * because the third was there. So every allowlisted file is checked for the
+ * one thing the guard actually exists to prevent: **a bare origin literal**,
+ * which is what a call site looks like.
+ *
+ *     "https://meanwhileusa.com"          <- a call site. Refused, allowlisted or not.
+ *     "…deploys to meanwhileusa.com. …"   <- prose. Allowed.
+ *
+ * `lib/ops/origins.ts` is exempt from this check because it IS the declaration.
+ */
+const BARE_ORIGIN_LITERAL = /(["'`])https:\/\/(?:[a-z]+\.)?meanwhileusa\.com\/?\1/g;
 
 /** Source trees the sweep covers. Docs and recorded data are history, not code. */
 const SWEPT = ["app", "components", "lib", "scripts", "tests", "hooks", "netlify"];
@@ -141,6 +164,30 @@ test("the production host is not hardcoded outside the origins module", () => {
   );
 });
 
+test("an allowlisted file holds PROSE, never a bare origin literal", () => {
+  const offenders: string[] = [];
+  for (const file of LITERAL_ALLOWED.keys()) {
+    if (file === "lib/ops/origins.ts") continue; // the declaration itself
+    if (file === "tests/origins.test.ts") continue; // this file asserts the value
+    if (file === "netlify.toml") continue; // platform config, read by Netlify
+    let src: string;
+    try {
+      src = readFileSync(join(ROOT, file), "utf8");
+    } catch {
+      offenders.push(`${file} is allowlisted and does not exist — stale entry`);
+      continue;
+    }
+    for (const m of src.matchAll(BARE_ORIGIN_LITERAL)) {
+      offenders.push(`${file} carries the bare origin literal ${m[0]}`);
+    }
+  }
+  assert.deepEqual(
+    offenders,
+    [],
+    "an allowlist entry covers prose, not a call site:\n  " + offenders.join("\n  "),
+  );
+});
+
 test("the legacy host survives only as the site id and the redirect", () => {
   const allowed = new Set([
     "lib/ops/origins.ts",
@@ -148,6 +195,15 @@ test("the legacy host survives only as the site id and the redirect", () => {
     "scripts/deploy-live.mjs",
     "scripts/handoff.mjs",
     "tests/origins.test.ts",
+    // Both of these QUOTE the legacy host inside recorded evidence, and the
+    // evidence is worth more than the tidiness. RULING 235's body reproduces
+    // the exact 422 that proves a managed DNS record cannot point at a branch
+    // deploy — `value: staging--sparkwtp.netlify.app` — and NS12's predicate
+    // reproduces the `pnpm deploy:live` reading that closed it, which names
+    // the SITE. Rewriting either to satisfy a sweep would delete the thing
+    // that makes it evidence.
+    "lib/governance/adoptions.ts",
+    "lib/tracker/registry.mjs",
   ]);
   const offenders = gitGrepFiles("sparkwtp", [
     ...SWEPT,

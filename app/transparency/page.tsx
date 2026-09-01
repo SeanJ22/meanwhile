@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { PRODUCT_NAME, titleFor } from "@/lib/brand";
+import { Logo } from "@/components/brand/logo";
+import { titleFor } from "@/lib/brand";
 
 /**
  * The transparency page — item 5b, shipped in the same change as the search
@@ -56,11 +57,15 @@ function Section({
 
 export default function TransparencyPage() {
   return (
-    <main className="min-h-dvh overflow-y-auto bg-[var(--bg,#101014)]">
+    <main className="min-h-dvh overflow-y-auto bg-[var(--bg)]">
       <div className="mx-auto max-w-2xl px-5 py-10 sm:py-14">
-        <p className="font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-muted">
-          {PRODUCT_NAME}
-        </p>
+        {/* ITEM J (2026-09-01): the page eyebrow was the product name typed as
+          display text in a 10px uppercase MONO treatment — the register this
+          system reserves for numerals and identifiers, worn by the one string
+          that is neither. It is the lockup now, at the 18px wordmark floor. */}
+        <div>
+          <Logo variant="wordmark" size={18} />
+        </div>
         <h1 className="mt-2 text-2xl font-semibold text-paper">
           What this site collects, and what it doesn&apos;t
         </h1>

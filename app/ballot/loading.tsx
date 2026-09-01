@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { PRODUCT_NAME } from "@/lib/brand";
+import { Logo } from "@/components/brand/logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 /**
@@ -61,7 +61,13 @@ export default function BallotLoading() {
         </p>
         <ThemeToggle className="shrink-0" />
       </div>
-      <p className="t-eyebrow mt-4 text-muted">{PRODUCT_NAME}</p>
+      {/* ITEM J (2026-09-01): the page eyebrow was the product name typed as
+          display text in a 10px uppercase MONO treatment — the register this
+          system reserves for numerals and identifiers, worn by the one string
+          that is neither. It is the lockup now, at the 18px wordmark floor. */}
+      <div className="mt-4">
+        <Logo variant="wordmark" size={18} />
+      </div>
       <h1 className="mt-1.5 text-2xl font-semibold tracking-tight">
         Finding what&apos;s on the ballot…
       </h1>

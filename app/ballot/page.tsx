@@ -100,6 +100,7 @@ import { sharedNotesFor } from "@/lib/ballot/shared-notes";
 import { resolveZip } from "@/lib/geo/zcta";
 import { divisionsAt } from "@/lib/registry/server";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { Logo } from "@/components/brand/logo";
 import { PRODUCT_NAME } from "@/lib/brand";
 import {
   IncumbencyFootnote,
@@ -1044,7 +1045,13 @@ export default async function BallotPage({
         </p>
         <ThemeToggle className="shrink-0" />
       </div>
-      <p className="t-eyebrow mt-4 text-muted">{PRODUCT_NAME}</p>
+      {/* ITEM J (2026-09-01): the page eyebrow was the product name typed as
+          display text in a 10px uppercase MONO treatment — the register this
+          system reserves for numerals and identifiers, worn by the one string
+          that is neither. It is the lockup now, at the 18px wordmark floor. */}
+      <div className="mt-4">
+        <Logo variant="wordmark" size={18} />
+      </div>
       <h1 className="mt-1.5 text-2xl font-semibold tracking-tight">
         What&apos;s on the ballot{zip ? ` near ${zip}` : ""}
       </h1>
@@ -2158,7 +2165,7 @@ export default async function BallotPage({
                     <p className="t-eyebrow text-muted">
                       The question on the ballot, word for word
                     </p>
-                    <p className="mt-1.5 whitespace-pre-line text-[0.8125rem] leading-relaxed text-paper-dim">
+                    <p className="t-record mt-1.5 whitespace-pre-line text-[0.8125rem] leading-relaxed text-paper-dim">
                       {measure.questionText}
                     </p>
                   </div>
@@ -2356,7 +2363,7 @@ export default async function BallotPage({
                     <summary className="t-eyebrow cursor-pointer text-muted hover:text-link">
                       Official analysis — {analysis.sourceOrg}
                     </summary>
-                    <p className="mt-1.5 max-h-72 overflow-y-auto whitespace-pre-line rounded-md border border-[var(--panel-border)] p-3 text-[0.75rem] leading-relaxed text-paper-dim">
+                    <p className="t-record mt-1.5 max-h-72 overflow-y-auto whitespace-pre-line rounded-md border border-[var(--panel-border)] p-3 text-[0.75rem] leading-relaxed text-paper-dim">
                       {analysis.text}
                     </p>
                   </details>

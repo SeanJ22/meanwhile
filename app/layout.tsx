@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { DM_Sans, JetBrains_Mono } from "next/font/google";
+import { DM_Sans, EB_Garamond, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { titleFor } from "@/lib/brand";
+import { PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins";
 
 // All UI text. Loaded as a variable font, which covers the 300–700 range the
 // design uses without four separate downloads.
@@ -21,7 +22,51 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+/*
+  THE RECORD REGISTER, AND THE BRAND WORDMARK (ITEM J, 2026-09-01).
+
+  Weight 500 only. This face is not a body face here: it carries the wordmark
+  and the text this product quotes from a public record, and one weight is all
+  either of those needs.
+
+  **LOADED THROUGH `next/font/google`, NEVER THROUGH A STYLESHEET `<link>` OR
+  AN `@import` TO fonts.googleapis.com — AND THE REASON IS NOT PERFORMANCE.**
+  `next/font` downloads the font files at BUILD time and serves them from this
+  origin, so no reader's IP address is sent to Google when a page loads. A
+  `<link rel="stylesheet">` to Google's CSS, by contrast, hands Google the IP,
+  the User-Agent and the Referer of every single person who opens this site,
+  on every page view.
+
+  This site's whole claim is that it collects almost nothing about the people
+  who read it — `app/transparency/page.tsx` says so in plain words. A
+  third-party font request on every page view contradicts that claim, and it
+  is the first thing a privacy-minded reporter will check, because it is
+  visible in a network panel in about four seconds. The claim and the network
+  tab have to agree.
+
+  `tests/font-privacy.test.ts` refuses a Google font host anywhere in the app
+  tree, and `scripts/brand-shots-0901.mts` records every host a real page load
+  contacts.
+*/
+const ebGaramond = EB_Garamond({
+  variable: "--font-eb-garamond",
+  subsets: ["latin"],
+  weight: ["500"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
+  /*
+    ITEM J (2026-09-01). `app/opengraph-image.png` and `app/apple-icon.png` are
+    metadata-file conventions: Next emits the tags for them automatically, but
+    an Open Graph URL has to be ABSOLUTE, and without a `metadataBase` Next
+    resolves it against localhost and says so in a build warning.
+
+    The origin comes from `lib/ops/origins.ts` and is never typed out here —
+    one constant, three named origins, and `tests/origins.test.ts` sweeps for
+    the literal.
+  */
+  metadataBase: new URL(PUBLIC_SITE_ORIGIN),
   title: titleFor("Public meetings near you"),
   description:
     "Enter a zip code to see the councils, boards, and commissions meeting near you.",
@@ -63,7 +108,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${dmSans.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${dmSans.variable} ${jetbrainsMono.variable} ${ebGaramond.variable} h-full antialiased`}
       // The pre-paint script writes data-theme, so the server-rendered markup
       // and the first client pass legitimately differ on this element.
       suppressHydrationWarning

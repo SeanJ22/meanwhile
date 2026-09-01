@@ -158,7 +158,7 @@ export function AnswerForm({
             <p
               id={`${q.id}-count`}
               className={count.withinLimit ? "text-xs text-muted-foreground" : "text-xs font-medium"}
-              style={count.withinLimit ? undefined : { color: "var(--destructive, #b91c1c)" }}
+              style={count.withinLimit ? undefined : { color: "var(--danger)" }}
             >
               {count.words} of {q.wordLimit} words
               {count.withinLimit ? "" : ` — ${count.words - q.wordLimit} over. Nothing will be cut for you.`}
@@ -168,7 +168,7 @@ export function AnswerForm({
       })}
 
       {state.kind === "refused" && (
-        <p role="alert" className="text-sm font-medium" style={{ color: "var(--destructive, #b91c1c)" }}>
+        <p role="alert" className="text-sm font-medium" style={{ color: "var(--danger)" }}>
           {state.message}
         </p>
       )}

@@ -86,6 +86,13 @@ import type { CostEntry } from "../cost.ts";
 import type { ArtifactTier } from "../evidence/artifact.ts";
 import type { RouteDisposition, RouteTask } from "../route-task.ts";
 import type { Escalation, WorkItem, WorkItemTransition } from "../work-item.ts";
+import type {
+  CacheObservationRecord,
+  OwnerDecisionIntent,
+  OwnerDigestRecord,
+  OwnerSnapshot,
+  RunnerHeartbeat,
+} from "../owner-surface.ts";
 
 /** ------------------------------------------------------------- envelopes */
 
@@ -528,6 +535,30 @@ export interface ControlPlaneRepositories {
   readonly dispositions: AppendOnlyRepository<DispositionCommit>;
   readonly artifacts: AppendOnlyRepository<ArtifactRecord>;
   readonly costs: AppendOnlyRepository<CostEntry>;
+  /**
+   * THE OWNER CONTROL CENTRE'S DATA PLANE. (Session C final, ITEM H.)
+   *
+   * The admin host (`ADMIN_ORIGIN`) reads these SERVER-SIDE and reads nothing else.
+   * The admin site may not depend on the always-on machine's filesystem, Drive
+   * mirror, process table or agent scratch output — so anything the owner is
+   * shown has to be something the runner durably WROTE. They are ordinary
+   * repositories, with the same CAS and the same providers, because a second
+   * persistence mechanism beside the repositories is the second control plane
+   * RULING 220 forbids.
+   *
+   * Every record is aggregate-only, enforced by field name at write time by
+   * `assertAggregateOnly` in `lib/control-plane/owner-surface.ts`. The owner is
+   * not an exception to RULING 226 — his page is a rendering like any other.
+   */
+  readonly ownerSnapshots: AggregateRepository<OwnerSnapshot>;
+  /** Keyed by runner id. "Alive" is DERIVED from this beat, never stored. */
+  readonly runnerHeartbeat: AggregateRepository<RunnerHeartbeat>;
+  /** The H1 waiver's standing check — a counter reaching first non-zero. */
+  readonly cacheObservations: AggregateRepository<CacheObservationRecord>;
+  /** Every digest the runner wrote: the latest one, and the history. */
+  readonly ownerDigests: AppendOnlyRepository<OwnerDigestRecord>;
+  /** What a decision button appended. Intent, never a direct edit of authority. */
+  readonly ownerDecisions: AppendOnlyRepository<OwnerDecisionIntent>;
   readonly budget: BudgetRepository;
   readonly locks: LockManager;
   /** What this store is, for a report that must say where the state lives. */

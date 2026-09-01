@@ -1,0 +1,399 @@
+/**
+ * **THE ADMIN HOST'S AUTHENTICATION, AND EVERY PLACE THE SECRET MAY NOT GO.**
+ * (Session C final, ITEM H, 2026-09-01.)
+ *
+ * ## The threat this is actually defending against
+ *
+ * The admin host (`ADMIN_ORIGIN`) is a domain alias on the SAME Netlify site that
+ * serves readers. There is one deploy, one function bundle, one set of
+ * environment variables. So the separation between the owner's control centre
+ * and the public product is not infrastructural — it is entirely this file and
+ * `middleware.ts`. That is worth stating plainly, because it means a mistake
+ * here does not degrade a private thing; it publishes it.
+ *
+ * ## Where the secret may NEVER go, enumerated rather than implied
+ *
+ * ```
+ *   NOT in a URL          — query strings are logged by every hop, and the
+ *                           constitution forbids personal or sensitive data in
+ *                           query strings outright
+ *   NOT in the client bundle — `next.config.ts` `env` INLINES values at build
+ *                           time and anything inlined is readable by anyone who
+ *                           can read the bundle. Admin secrets are RUNTIME
+ *                           `process.env` reads in server code, never `env:`
+ *                           entries and never `NEXT_PUBLIC_*`
+ *   NOT in localStorage   — readable by any script that reaches the page
+ *   NOT in rendered HTML  — including a hidden input, a data attribute, or a
+ *                           server-component prop that gets serialised into the
+ *                           RSC payload
+ *   NOT in telemetry or logs — {@link redactSecrets} exists for the case where
+ *                           somebody logs an error object that contains one
+ * ```
+ *
+ * The cookie carries a SESSION, not the secret. The session is a signed
+ * assertion that somebody proved knowledge of the secret at a point in time; it
+ * is useless for learning the secret and it expires.
+ *
+ * ## Why Web Crypto rather than `node:crypto`
+ *
+ * `middleware.ts` runs on the Edge runtime, which has no `node:crypto`. Signing
+ * in a route handler with one implementation and verifying in middleware with
+ * another is two implementations of one comparison (RULING 103), and the way
+ * that fails is the worst kind: it works in development, where both happen to
+ * run in Node. `crypto.subtle` exists in both, so there is one implementation.
+ */
+
+/** The owner's shared secret. RUNTIME read, server-side only. NEVER inlined. */
+export const ADMIN_SECRET_VAR = "WTP_ADMIN_SECRET";
+
+/**
+ * The key that SIGNS session cookies — deliberately a second variable.
+ *
+ * If the session key were derived from the admin secret, rotating the secret
+ * would silently invalidate every session, and worse, a signature would be an
+ * oracle for testing guesses at the secret. Two independent values means
+ * compromising one does not hand over the other.
+ */
+export const ADMIN_SESSION_KEY_VAR = "WTP_ADMIN_SESSION_KEY";
+
+/** The cookie name. Prefixed `__Host-` so the browser enforces the rest. */
+export const ADMIN_SESSION_COOKIE = "__Host-wtp-admin";
+
+/**
+ * How long a session lasts.
+ *
+ * Bounded because an unbounded admin session is a permanent credential sitting
+ * in a browser profile. Eight hours is one working day: long enough that the
+ * owner is not retyping a secret all afternoon, short enough that a laptop left
+ * open overnight is not still authenticated in the morning.
+ */
+export const SESSION_LIFETIME_SECONDS = 8 * 60 * 60;
+
+/** The minimum secret length that will be accepted at all. */
+export const MIN_SECRET_LENGTH = 24;
+
+/* ------------------------------------------------------------------ *
+ * ENCODING
+ * ------------------------------------------------------------------ */
+
+const encoder = new TextEncoder();
+
+function base64UrlEncode(bytes: Uint8Array): string {
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+/**
+ * Decode into a view backed by a REAL `ArrayBuffer`.
+ *
+ * `new Uint8Array(length)` types as `Uint8Array<ArrayBufferLike>`, and
+ * `ArrayBufferLike` includes `SharedArrayBuffer`, which is not a `BufferSource`.
+ * `crypto.subtle.verify` therefore refuses it at the type level — a real error
+ * rather than a pedantic one, since a shared buffer can be mutated by another
+ * thread between the signature check and the read of what was checked.
+ * Allocating the buffer explicitly narrows the type and removes the hazard.
+ */
+function base64UrlDecode(value: string): Uint8Array<ArrayBuffer> {
+  const padded = value.replace(/-/g, "+").replace(/_/g, "/");
+  const binary = atob(padded + "=".repeat((4 - (padded.length % 4)) % 4));
+  const bytes = new Uint8Array(new ArrayBuffer(binary.length));
+  for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+  return bytes;
+}
+
+/* ------------------------------------------------------------------ *
+ * CONSTANT-TIME COMPARISON
+ * ------------------------------------------------------------------ */
+
+/**
+ * Compare two strings without leaking WHERE they differ through timing.
+ *
+ * `a === b` returns as soon as it finds a differing byte, so the time it takes
+ * is a function of how many leading bytes matched — which is enough to
+ * reconstruct a secret one character at a time given enough requests. This
+ * always walks the whole length.
+ *
+ * Length is folded into the result rather than short-circuited on, for the same
+ * reason: an early return on length difference leaks the length.
+ */
+export function timingSafeEqual(a: string, b: string): boolean {
+  const aBytes = encoder.encode(a);
+  const bBytes = encoder.encode(b);
+  let diff = aBytes.length ^ bBytes.length;
+  const length = Math.max(aBytes.length, bBytes.length);
+  for (let i = 0; i < length; i += 1) {
+    diff |= (aBytes[i] ?? 0) ^ (bBytes[i] ?? 0);
+  }
+  return diff === 0;
+}
+
+/* ------------------------------------------------------------------ *
+ * THE SESSION ID, AND WHY IT MAY NOT SHARE A MINTER WITH A READER KEY
+ * ------------------------------------------------------------------ */
+
+/**
+ * **The admin session id lives in a DISJOINT VALUE SPACE from every reader
+ * identifier, and that is enforced by shape rather than by intention.**
+ *
+ * The first version of this was `new Uint8Array(16)` → `getRandomValues` → hex,
+ * which is a perfectly good identifier and was ALSO byte-for-byte identical to
+ * `mintBrowserKey` in `lib/state/browser-key.ts` — the minter for the reader's
+ * own local key. `tests/duplicate-implementations.test.ts` caught it, and the
+ * guard was right for a bigger reason than duplication:
+ *
+ * **The collection stores never join, and RULING 132 proves that over VALUE
+ * SPACES rather than over column names.** Two identifier generators producing
+ * the same 32-hex-character space put an admin session id and a reader browser
+ * key into one space where a value from either could be mistaken for — or
+ * matched against — a value from the other. Nothing would have to intend it.
+ *
+ * So this is deliberately not that:
+ *
+ * ```
+ *   reader browser key   32 chars, [0-9a-f] only
+ *   admin session id     "adm_" + 32 chars of base64url
+ * ```
+ *
+ * The `adm_` prefix alone makes the spaces provably disjoint, because `m` and
+ * `_` are not hexadecimal digits — no reader key can ever begin `adm_`, and no
+ * admin session id can ever fail to. `tests/admin-control-centre.test.ts`
+ * asserts that, so the separation is checked rather than remembered.
+ */
+export const ADMIN_SESSION_ID_PREFIX = "adm_";
+
+export function mintAdminSessionId(): string {
+  const bytes = new Uint8Array(new ArrayBuffer(24));
+  crypto.getRandomValues(bytes);
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  const body = btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  return `${ADMIN_SESSION_ID_PREFIX}${body}`;
+}
+
+/* ------------------------------------------------------------------ *
+ * THE HOST CHECK — ONE IMPLEMENTATION, TWO ROUTES
+ * ------------------------------------------------------------------ */
+
+/**
+ * Is this request on the admin host?
+ *
+ * Both admin API routes need this and both had their own copy, which is the
+ * shape of RULING 103's whole complaint: one comparison, two implementations,
+ * and the day they disagree is the day one route is reachable from the public
+ * host and the other is not. Nobody would notice until it mattered.
+ *
+ * `x-forwarded-host` is what Netlify's edge sets and carries the alias the
+ * caller actually typed; `host` is the fallback. The FIRST value of a
+ * comma-joined list is the one the edge itself wrote — a second value is either
+ * a proxy chain or an attempt to smuggle a host past this check.
+ */
+export function isAdminHostRequest(
+  headers: { get(name: string): string | null },
+  adminOrigin: string,
+): boolean {
+  const raw = headers.get("x-forwarded-host")?.split(",")[0] ?? headers.get("host") ?? "";
+  const host = raw.trim().toLowerCase().replace(/:\d+$/, "");
+  let adminHost: string;
+  try {
+    adminHost = new URL(adminOrigin).host.toLowerCase();
+  } catch {
+    return false;
+  }
+  return host !== "" && host === adminHost;
+}
+
+/* ------------------------------------------------------------------ *
+ * SESSION SIGNING
+ * ------------------------------------------------------------------ */
+
+export interface AdminSession {
+  /** An opaque id for this session. Used to reference decisions in the audit. */
+  readonly sid: string;
+  /** Issued-at, epoch seconds. */
+  readonly iat: number;
+  /** Expires-at, epoch seconds. Bounded by {@link SESSION_LIFETIME_SECONDS}. */
+  readonly exp: number;
+}
+
+async function hmacKey(sessionKey: string): Promise<CryptoKey> {
+  return crypto.subtle.importKey(
+    "raw",
+    encoder.encode(sessionKey),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign", "verify"],
+  );
+}
+
+/** Sign a session into a cookie value. The value contains no secret. */
+export async function signSession(session: AdminSession, sessionKey: string): Promise<string> {
+  const payload = base64UrlEncode(encoder.encode(JSON.stringify(session)));
+  const key = await hmacKey(sessionKey);
+  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(payload));
+  return `${payload}.${base64UrlEncode(new Uint8Array(signature))}`;
+}
+
+/**
+ * Why a cookie was not accepted. Named states, because "invalid" covers a
+ * forged signature and an ordinary expiry, and those want different responses.
+ */
+export type SessionRejection =
+  | "NO_COOKIE"
+  | "MALFORMED"
+  | "BAD_SIGNATURE"
+  | "EXPIRED"
+  | "NOT_CONFIGURED";
+
+export type SessionVerdict =
+  | { readonly ok: true; readonly session: AdminSession }
+  | { readonly ok: false; readonly rejection: SessionRejection };
+
+/**
+ * Verify a cookie value.
+ *
+ * **Signature first, contents second.** Parsing an unverified payload and then
+ * checking the signature means the parser runs on attacker-controlled bytes;
+ * checking first means a forged cookie never reaches `JSON.parse` at all.
+ */
+export async function verifySession(
+  cookieValue: string | undefined | null,
+  sessionKey: string | undefined | null,
+  nowSeconds: number,
+): Promise<SessionVerdict> {
+  if (!sessionKey) return { ok: false, rejection: "NOT_CONFIGURED" };
+  if (!cookieValue) return { ok: false, rejection: "NO_COOKIE" };
+  const dot = cookieValue.lastIndexOf(".");
+  if (dot <= 0) return { ok: false, rejection: "MALFORMED" };
+  const payload = cookieValue.slice(0, dot);
+  const signature = cookieValue.slice(dot + 1);
+  let valid = false;
+  try {
+    const key = await hmacKey(sessionKey);
+    valid = await crypto.subtle.verify(
+      "HMAC",
+      key,
+      base64UrlDecode(signature),
+      encoder.encode(payload),
+    );
+  } catch {
+    return { ok: false, rejection: "MALFORMED" };
+  }
+  if (!valid) return { ok: false, rejection: "BAD_SIGNATURE" };
+
+  let session: AdminSession;
+  try {
+    session = JSON.parse(new TextDecoder().decode(base64UrlDecode(payload))) as AdminSession;
+  } catch {
+    return { ok: false, rejection: "MALFORMED" };
+  }
+  if (typeof session?.exp !== "number" || typeof session?.iat !== "number") {
+    return { ok: false, rejection: "MALFORMED" };
+  }
+  if (session.exp <= nowSeconds) return { ok: false, rejection: "EXPIRED" };
+  // A cookie whose lifetime exceeds the policy was not issued under this
+  // policy. Trusting its own `exp` would let a once-issued long session
+  // outlive a tightening of the rule.
+  if (session.exp - session.iat > SESSION_LIFETIME_SECONDS) {
+    return { ok: false, rejection: "MALFORMED" };
+  }
+  return { ok: true, session };
+}
+
+/* ------------------------------------------------------------------ *
+ * THE LOGIN COMPARISON
+ * ------------------------------------------------------------------ */
+
+export type LoginVerdict =
+  | { readonly ok: true }
+  | { readonly ok: false; readonly reason: "NOT_CONFIGURED" | "WEAK_SECRET" | "REFUSED" };
+
+/**
+ * Compare a submitted secret against the configured one.
+ *
+ * **`NOT_CONFIGURED` is not a pass.** A missing environment variable is the
+ * single most likely way an admin surface ends up open: the check reads
+ * `undefined`, the submitted value is also falsy in some comparison, and the
+ * door opens. So absence is an explicit refusal with its own name, and the
+ * short-secret case is refused too — a two-character `WTP_ADMIN_SECRET` set
+ * during a hurried deploy is worse than none, because it looks configured.
+ */
+export function checkLogin(
+  submitted: string | undefined | null,
+  configured: string | undefined | null,
+): LoginVerdict {
+  if (!configured || configured.trim() === "") return { ok: false, reason: "NOT_CONFIGURED" };
+  if (configured.length < MIN_SECRET_LENGTH) return { ok: false, reason: "WEAK_SECRET" };
+  if (!submitted) return { ok: false, reason: "REFUSED" };
+  return timingSafeEqual(submitted, configured) ? { ok: true } : { ok: false, reason: "REFUSED" };
+}
+
+/* ------------------------------------------------------------------ *
+ * ORIGIN / CSRF FOR STATE-CHANGING REQUESTS
+ * ------------------------------------------------------------------ */
+
+/**
+ * Is this state-changing request coming from the admin surface itself?
+ *
+ * `SameSite=Strict` already stops a cross-site form post from carrying the
+ * cookie, which is most of the defence. This is the second layer, and it exists
+ * because SameSite is enforced by the BROWSER: a client that does not implement
+ * it, or a request that never went through one, is not covered. Checking the
+ * `Origin` header server-side does not depend on the caller's good behaviour.
+ *
+ * A MISSING Origin is refused rather than allowed. Some legitimate clients omit
+ * it, and that is precisely the point — a state-changing admin request should
+ * come from the admin page in a browser, and nothing else needs to work.
+ */
+export function originAllowed(
+  originHeader: string | null | undefined,
+  adminOrigin: string,
+): boolean {
+  if (!originHeader) return false;
+  try {
+    return new URL(originHeader).origin === new URL(adminOrigin).origin;
+  } catch {
+    return false;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * REDACTION
+ * ------------------------------------------------------------------ */
+
+/**
+ * Remove any configured secret from a string before it is logged or rendered.
+ *
+ * The realistic leak is not somebody printing the secret on purpose. It is an
+ * error object, a stack frame, or a serialised config blob that happens to
+ * contain it reaching a log aggregator. This is the last line, and it is cheap.
+ */
+export function redactSecrets(text: string, secrets: readonly (string | undefined | null)[]): string {
+  let out = text;
+  for (const secret of secrets) {
+    if (typeof secret === "string" && secret.length >= 8) {
+      out = out.split(secret).join("[REDACTED]");
+    }
+  }
+  return out;
+}
+
+/**
+ * The `Set-Cookie` attributes, in one place so no caller can forget one.
+ *
+ * `__Host-` is not decoration: the prefix makes the BROWSER refuse the cookie
+ * unless it is Secure, has Path=/, and has NO Domain attribute. That last one
+ * is the important one here — a cookie scoped to the PARENT domain would be
+ * sent to the PUBLIC host too, which would put an admin session credential on
+ * every reader request. The prefix makes that configuration impossible rather
+ * than merely discouraged.
+ */
+export function sessionCookieAttributes(maxAgeSeconds: number): string {
+  return [
+    `Path=/`,
+    `Max-Age=${maxAgeSeconds}`,
+    "HttpOnly",
+    "Secure",
+    "SameSite=Strict",
+  ].join("; ");
+}

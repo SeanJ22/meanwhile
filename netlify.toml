@@ -53,25 +53,76 @@
 # branch. .github/workflows/build-check.yml already runs the same command on
 # ubuntu in both modes and its log is readable without a Netlify login, which
 # is the check the preview was standing in for.
+# ITEM I, 2026-09-01 — A CONFLICT REPRESENTED, NOT RESOLVED.
+#
+# The ITEM I brief states that "Deploy Previews per PR remain available at their
+# Netlify URLs for pre-integration checks." That sentence has a false premise:
+# previews are not currently available to REMAIN available. They have been
+# cancelled here since g17 (2026-08-18, the author's configuration order), and
+# the measurement above is why.
+#
+# Re-enabling them would AMEND g17, and CLAUDE.md's authority precedence puts a
+# session brief (level 5) below current law (levels 2-3). A brief that conflicts
+# with current law does not silently win — the conflict is represented rather
+# than resolved by whichever document was read last. So this block is left
+# exactly as g17 set it, and the conflict is carried in the session report for
+# the author.
+#
+# The reconciliation on the merits, offered rather than applied: what the brief
+# wants a preview FOR — a rendered pre-integration target the owner can open —
+# is precisely what the `staging` branch deploy now provides, at a stable
+# hostname, against an isolated database, with an observer watching it. A
+# per-PR preview would be a second, weaker answer to a question ITEM I has just
+# answered properly. If the author wants previews back regardless, that is a
+# one-line change here plus a ruling that names g17.
 [context.deploy-preview]
   ignore = "exit 0"
 
-# BRANCH DEPLOYS DO NOT BUILD EITHER (RULING 124, 2026-08-24, item 1.1).
+# BRANCH DEPLOYS BUILD FOR EXACTLY ONE BRANCH (ITEM I, 2026-09-01).
 #
-# The preview context was closed in g17 and the branch context was not, which
-# left the same duplicate build running under a different name — and invisible
-# in the production deploy list, so nothing counted it. The overnight session of
-# 2026-08-24 alone pushed 15 branch commits.
+# RULING 124 item 1.1 (2026-08-24) set this to a bare `exit 0` — an
+# unconditional cancel of every branch deploy — because a branch deploy of this
+# repo was never looked at by anyone, and `.github/workflows/build-check.yml`
+# already runs the literal build command on every pull request with a log
+# readable without a Netlify login. The overnight session of 2026-08-24 alone
+# pushed 15 branch commits, every one of them a full Next build nobody read.
 #
-# `exit 0` rather than the filter script: there is no path-based question to ask
-# here. A branch deploy of this repo is never looked at by anyone, in any
-# context, and `.github/workflows/build-check.yml` already runs the literal
-# build command on every pull request with a log readable without a Netlify
-# login. The dashboard toggles for both contexts are named in the session report
-# rather than claimed — the connector this repo has exposes no build-settings
-# write, so this file is the half that can be enforced from the repo.
+# ITEM I changes exactly one fact in that finding: there is now a branch whose
+# deploy IS read, by the owner, at a real hostname — `staging`, serving
+# `STAGING_RENDER_ORIGIN` (`lib/ops/origins.ts`). Nothing else about RULING 124
+# has changed, so nothing else about this filter changes: every other branch is
+# still cancelled, and the cancel is now written down by name in
+# `scripts/netlify-staging-ignore.mjs` rather than being a bare `exit 0` that
+# cannot say WHY it cancelled.
+#
+# Exit 0 CANCELS; non-zero builds. The script exits non-zero for `staging` and
+# for an unset BRANCH (every failure path builds), and 0 for anything else.
+#
+# SECOND LAYER, and neither is sufficient alone: the Netlify site's own
+# `build_settings.allowed_branches` is `["main", "staging"]`, which is what
+# actually prevents a session branch from reaching a deploy at all. This file
+# is the half that is readable and diffable without a Netlify login, and the
+# half that still holds if `allowed_branches` is ever widened by hand.
 [context.branch-deploy]
-  ignore = "exit 0"
+  ignore = "node scripts/netlify-staging-ignore.mjs"
+
+# THE STAGING CONTEXT'S DATABASE (ITEM I, 2026-09-01).
+#
+# Deploy-context environment variables are set on the NETLIFY SIDE, scoped to
+# the `branch-deploy` context, not written here — a database URL is a secret and
+# `netlify.toml` is a public file in a public repository. The names, and only
+# the names, are recorded here so that a reader of this file knows what the
+# staging context is expected to carry:
+#
+#   DATABASE_URL                       scoped branch-deploy -> the Neon STAGING branch
+#   WTP_CONTROL_PLANE_DATABASE_URL     scoped branch-deploy -> the staging control plane
+#   NEXT_PUBLIC_MAPTILER_KEY           scoped branch-deploy -> the staging tile key
+#
+# `lib/ops/staging-isolation.ts` is the seeded failure that makes this real: a
+# staging build whose resolved `DATABASE_URL` is the production database fails
+# the gate rather than deploying. A staging environment that silently shares
+# production's database is worse than no staging environment, because every
+# test run against it would be a write to the store readers are served from.
 
 [functions]
   directory = "netlify/functions"

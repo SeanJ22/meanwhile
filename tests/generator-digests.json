@@ -192,8 +192,8 @@
     "regeneratedOn": "2026-09-01"
   },
   "docs/status-ledger.md": {
-    "digest": "32dd95e51813c921456158f813764fad672d64366d5dba77ed7ee8baef74971a",
-    "files": 7,
+    "digest": "a4b11335ea56cfd1914057e0e81a6e13e6748bebb1093cd749d25397faf5e888",
+    "files": 17,
     "entry": "scripts/status-ledger.mts",
     "regeneratedOn": "2026-09-01"
   },

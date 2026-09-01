@@ -48,6 +48,10 @@ import { createHash } from "node:crypto";
 import { join } from "node:path";
 
 import { createWorkItem, type WorkItem } from "../control-plane/work-item.ts";
+// TYPE-ONLY, so this costs nothing at runtime. RULING 216 has two halves — the
+// TARGET and the PROOF CLASS — and `satisfiesActivationGate` below refuses to
+// answer with only one of them, which means it has to name the other's type.
+import type { ProofClass } from "../ops/run-provenance.ts";
 import type { ReaderExpectation } from "./ask-evaluation.ts";
 import type { Body, Registry } from "../registry/types.ts";
 
@@ -648,9 +652,81 @@ export function checkInstanceUniverse(
 
 /* --------------------------------------------------------------- runs */
 
-/** Where an evaluation actually looked. Recorded on every run. */
-export const EVALUATION_TARGETS = ["LOCAL_RENDER", "PRODUCTION_RENDER"] as const;
+/**
+ * Where an evaluation actually looked. Recorded on every run.
+ *
+ * `STAGING_RENDER` joined this vocabulary on 2026-09-01 as a TYPED, RECORDED
+ * value that the harness cannot yet reach — exactly as `PRODUCTION_RENDER`
+ * already is. `scripts/reader-suite.mts` refuses every non-local host citing
+ * RULING 125, and that refusal is deliberately NOT touched here: RULING 125's
+ * claim slot `verification.target` can only be amended by a later dated ruling,
+ * and naming a target is not amending one. A record that can SAY where it
+ * looked is what makes a future non-local run legible; it is not permission to
+ * take one.
+ */
+export const EVALUATION_TARGETS = ["LOCAL_RENDER", "PRODUCTION_RENDER", "STAGING_RENDER"] as const;
 export type EvaluationTarget = (typeof EVALUATION_TARGETS)[number];
+
+/**
+ * **WHICH RESULTS COUNT TOWARD THE ACTIVATION GATE — RULING 216, both halves.**
+ * (Lane 5, 2026-09-01.)
+ *
+ * The ruling is one sentence: *"only INDEPENDENTLY_REPRODUCED PRODUCTION_RENDER
+ * results count toward the activation gate."* Until now it existed ONLY as
+ * prose — in the ledger, and in a paragraph `scripts/status-ledger.mts` prints.
+ * Nothing computed it, so nothing could disagree with it, and nothing could
+ * enforce it either.
+ *
+ * **The failure this prevents, and it is a live one the moment a third target
+ * exists.** A rule with no implementation gets implemented by whoever needs it
+ * next, and the obvious shape is *"the target is not the local one, so it must
+ * be production"*. That reading is CORRECT while the vocabulary has two members
+ * and WRONG the instant it has three — and the wrong answer is not a cosmetic
+ * one. `STAGING_RENDER` is a branch deploy of unreviewed code against a
+ * separate database; treating a green there as production-verified would let
+ * the activation gate pass on evidence about a site no reader has ever loaded.
+ * The thing that then reaches a reader is a false claim about a government.
+ *
+ * So the predicate is stated POSITIVELY — an allowlist of one — and a new
+ * target is excluded until somebody adds it here on purpose. Both halves are
+ * required in one call, because a caller holding only the target could pass the
+ * target half and quietly skip the proof-class half; there is deliberately no
+ * way to ask this question about a target alone.
+ */
+export const ACTIVATION_GATING_TARGETS: readonly EvaluationTarget[] = ["PRODUCTION_RENDER"];
+
+export function satisfiesActivationGate(input: {
+  readonly target: EvaluationTarget | null | undefined;
+  readonly proofClass: ProofClass | null | undefined;
+}): { readonly counts: boolean; readonly why: string } {
+  const target = input.target ?? null;
+  const proofClass = input.proofClass ?? null;
+
+  // An absent target is not a permissive one. A record that does not say where
+  // it looked has not established that it looked at production.
+  if (target === null || !ACTIVATION_GATING_TARGETS.includes(target)) {
+    return {
+      counts: false,
+      why:
+        `the result's target is ${JSON.stringify(target)}, and only ` +
+        `${ACTIVATION_GATING_TARGETS.join(", ")} counts toward activation (RULING 216). ` +
+        "A green anywhere else is a green about somewhere else.",
+    };
+  }
+  if (proofClass !== "INDEPENDENTLY_REPRODUCED") {
+    return {
+      counts: false,
+      why:
+        `the result is ${JSON.stringify(proofClass)}, and RULING 216 counts only ` +
+        "INDEPENDENTLY_REPRODUCED results — the implementing session's own observation of its " +
+        "own work is not reproduction, however canonical the command was.",
+    };
+  }
+  return {
+    counts: true,
+    why: "an INDEPENDENTLY_REPRODUCED PRODUCTION_RENDER result, which is what RULING 216 counts.",
+  };
+}
 
 export type InstanceVerdict =
   | { readonly kind: "GREEN" }

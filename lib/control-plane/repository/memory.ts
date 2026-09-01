@@ -24,6 +24,13 @@ import type { BudgetLedger } from "../budget.ts";
 import type { CostEntry } from "../cost.ts";
 import type { RouteTask } from "../route-task.ts";
 import type { Escalation, WorkItem } from "../work-item.ts";
+import type {
+  CacheObservationRecord,
+  OwnerDecisionIntent,
+  OwnerDigestRecord,
+  OwnerSnapshot,
+  RunnerHeartbeat,
+} from "../owner-surface.ts";
 import { budgetRepositoryFrom, jsonCopy } from "./shared.ts";
 import {
   ConcurrentModification,
@@ -208,6 +215,12 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     dispositions: memoryAppendOnlyRepository<DispositionCommit>("dispositions"),
     artifacts: memoryAppendOnlyRepository<ArtifactRecord>("artifacts"),
     costs: memoryAppendOnlyRepository<CostEntry>("costs"),
+    /* The owner control centre's data plane (ITEM H). */
+    ownerSnapshots: memoryAggregateRepository<OwnerSnapshot>("OwnerSnapshot"),
+    runnerHeartbeat: memoryAggregateRepository<RunnerHeartbeat>("RunnerHeartbeat"),
+    cacheObservations: memoryAggregateRepository<CacheObservationRecord>("CacheObservationRecord"),
+    ownerDigests: memoryAppendOnlyRepository<OwnerDigestRecord>("owner_digests"),
+    ownerDecisions: memoryAppendOnlyRepository<OwnerDecisionIntent>("owner_decisions"),
     budget: budgetRepositoryFrom(budgetAggregate, locks),
     locks,
     describe: () => "in-memory control-plane repositories (lost when this process ends)",

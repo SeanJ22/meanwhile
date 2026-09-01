@@ -57,6 +57,13 @@
  */
 
 import { neon } from "@neondatabase/serverless";
+import type {
+  CacheObservationRecord,
+  OwnerDecisionIntent,
+  OwnerDigestRecord,
+  OwnerSnapshot,
+  RunnerHeartbeat,
+} from "../owner-surface.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 
@@ -475,6 +482,24 @@ export async function createPgRepositories(
     dispositions: pgAppendOnlyRepository<DispositionCommit>(sql, "dispositions"),
     artifacts: pgAppendOnlyRepository<ArtifactRecord>(sql, "artifacts"),
     costs: pgAppendOnlyRepository<CostEntry>(sql, "costs"),
+    /* The owner control centre's data plane (ITEM H, schema v3). */
+    ownerSnapshots: pgAggregateRepository<OwnerSnapshot>(
+      sql,
+      "OwnerSnapshot",
+      "cp_owner_snapshots",
+    ),
+    runnerHeartbeat: pgAggregateRepository<RunnerHeartbeat>(
+      sql,
+      "RunnerHeartbeat",
+      "cp_runner_heartbeat",
+    ),
+    cacheObservations: pgAggregateRepository<CacheObservationRecord>(
+      sql,
+      "CacheObservationRecord",
+      "cp_cache_observations",
+    ),
+    ownerDigests: pgAppendOnlyRepository<OwnerDigestRecord>(sql, "owner_digests"),
+    ownerDecisions: pgAppendOnlyRepository<OwnerDecisionIntent>(sql, "owner_decisions"),
     budget: budgetRepositoryFrom(
       pgAggregateRepository<BudgetLedger>(sql, "BudgetLedger", "cp_budget"),
       locks,

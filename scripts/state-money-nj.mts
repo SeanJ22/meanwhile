@@ -736,6 +736,25 @@ console.log(
     `${universe.statedBy - universe.held} still owed. Every one of them is enumerated by name in ` +
     "data/jurisdictions/nj.json and carries a durable obligation.",
 );
+/*
+ * **AND THE PART THAT IS STILL PROJECTION-BOUND, SAID PLAINLY.**
+ *
+ * The readiness verdict above is about the ENTITY LISTING, which is now
+ * acquired to the authority's own denominator. The per-committee MONEY comes
+ * from a second hop (`/filing/<entityId>`) that is still made for the
+ * candidates a reader is being shown — so those calls are outbound during a
+ * render, and a new ZIP reaching an unheld committee will make them again.
+ *
+ * That is a REMAINING pilot-bound acquisition and it is stated rather than
+ * hidden behind a green line: a report that printed "zero outbound" while 318
+ * requests went out would be true about locations and false about the render.
+ */
+console.log(
+  `  STILL PROJECTION-BOUND: ${filingCalls} second-hop filing call(s) were made during this render ` +
+    `for ${moneyCache.size} committee(s). The entity LISTING is acquired to ELEC's own denominator; ` +
+    "the per-committee money is not yet a corpus, so a ZIP reaching an unheld committee still costs " +
+    "one outbound request. That is the next acquisition, and it is owed rather than solved.",
+);
 
 console.log(`\n  contests walked ${contestsWalked} of ${ballot.contests.length}`);
 console.log(`

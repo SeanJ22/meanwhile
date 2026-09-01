@@ -42,6 +42,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { COVERED_STATES } from "../lib/coverage/states.ts";
 import { readRecords } from "../lib/reference/index.ts";
 import type {
   Jurisdiction,
@@ -482,6 +483,22 @@ function newJerseySources(unit: CensusUnit, govClass: JurisdictionClass): Jurisd
 
 /* ------------------------------------------------------------ the assembly */
 
+/**
+ * **THE COVERED-STATE LIST IS DERIVED, NEVER KEPT HERE.**
+ *
+ * `lib/coverage/states.ts` is the manifest and onboarding a state is an edit
+ * there and nowhere else. A second hand-kept list of covered states is exactly
+ * what `tests/coverage-manifest.test.ts` exists to catch, and it caught this
+ * file on the first run: a fourth state onboarded in the manifest would
+ * otherwise have silently had no jurisdiction registry, which reads downstream
+ * as a state with no local government.
+ *
+ * The ROUTING for a state — which statute names its filing officer, which
+ * custodians this repository has actually walked — is not derivable from a
+ * manifest and stays written down per state below. A covered state with no
+ * routing entry is REFUSED at generation time rather than being emitted with a
+ * default nobody read.
+ */
 interface StatePlan {
   readonly code: string;
   readonly name: string;
@@ -520,9 +537,8 @@ function azFilingJurisdictions(): { total: number; byType: Map<string, number> }
   return { total: rows.length, byType };
 }
 
-const PLANS: StatePlan[] = [
+const ROUTING: Omit<StatePlan, "code">[] = [
   {
-    code: "AZ",
     name: "Arizona",
     sourcesFor: arizonaSources,
     extraEnumerations: () => {
@@ -571,20 +587,64 @@ const PLANS: StatePlan[] = [
     },
   },
   {
-    code: "NH",
     name: "New Hampshire",
     sourcesFor: newHampshireSources,
     extraEnumerations: () => [],
     extraDisagreements: () => [],
   },
   {
-    code: "NJ",
     name: "New Jersey",
     sourcesFor: newJerseySources,
     extraEnumerations: () => [],
     extraDisagreements: () => [],
   },
 ];
+
+/**
+ * USPS -> the state name the routing entry above is written under.
+ *
+ * This is the one place this file names a state code, and it is per-state
+ * CONTENT rather than a coverage list - the same category as
+ * `scripts/fetch-voting-sites.mts` and `lib/funding/state-vocabulary.ts` on
+ * `tests/coverage-manifest.test.ts`'s allowlist, and for the same reason: no
+ * manifest can generate A.R.S. 16-928, and a state whose filing-officer statute
+ * nobody has read must never be defaulted into one.
+ *
+ * A covered state absent from here throws BY NAME at generation time, which is
+ * the behaviour the coverage guard is actually protecting: onboarding a fourth
+ * state must not silently produce a state with no local government.
+ */
+const STATE_NAME: Readonly<Record<string, string>> = {
+  AZ: "arizona",
+  NH: "new hampshire",
+  NJ: "new jersey",
+};
+
+function stateNameHint(usps: string): string {
+  return STATE_NAME[usps] ?? "__no routing recorded for " + usps;
+}
+
+/**
+ * The plans, JOINED to the coverage manifest — which is the list, not this file.
+ *
+ * A covered state with no routing entry is REFUSED here by name. That is the
+ * whole value of the join: onboarding a fourth state in
+ * `lib/coverage/states.ts` now FAILS this generator with "AK is covered and has
+ * no filing-officer routing" instead of quietly producing no registry for it,
+ * which downstream would read as a state with no local government.
+ */
+const PLANS: StatePlan[] = COVERED_STATES.map((s) => {
+  const routing = ROUTING.find((r) => r.name.toLowerCase().startsWith(stateNameHint(s.usps)));
+  if (!routing) {
+    throw new Error(
+      `${s.usps} is in lib/coverage/states.ts and this generator holds no filing-officer routing for ` +
+        "it. Which statute names the filing officer, and what it routes to whom, is not derivable from " +
+        "a coverage manifest and is never defaulted. Add its routing here, with the statute read from " +
+        "the legislature's own site.",
+    );
+  }
+  return { ...routing, code: s.usps };
+});
 
 function build(plan: StatePlan): JurisdictionRegistry {
   const units = censusUnits(plan.code);

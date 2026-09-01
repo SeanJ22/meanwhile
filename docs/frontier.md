@@ -1,6 +1,6 @@
 # Frontier
 
-Updated: 2026-08-31 (rev 5 — post Session B close). Priorities only — never
+Updated: 2026-08-31 (rev 6 — post Session C resume). Priorities only — never
 invariants (the generated constitution), never status claims (generated status
 ledger). This is a mutable planning artifact, not law and not a governance
 input.
@@ -49,6 +49,164 @@ External orchestration (revisit trigger per the adopted ruling). New
 multi-project investment. Level 4 auto-publishing past 2026-11-03. <!-- expected-future: the author's Level-4 automatic-publishing deferral horizon, deliberately past the 2026 general election -->
 Level 5 removed. National activation (pilot health green and stable, plus
 cost-model national math from measured pilot numbers).
+
+## Carried forward from Session C (resume) — 2026-08-31
+
+Priorities, not status. Every item below is something this session deliberately
+left, with what it is waiting on. Nothing here is a claim that it is finished.
+
+### Waiting on the owner
+
+- **`pnpm pilot:install` from an ELEVATED PowerShell.** The Windows Scheduled
+  Task was refused (`Access denied`, 0x80070005) without elevation, so what is
+  installed is a per-user startup entry. It survives a reboot; it does **not**
+  restart a crashed runner. Reboot-survival is therefore partial, and saying
+  otherwise would overstate Part G2.
+- **OWN03 — nine portraits, one look.** `docs/photo-review/own03-nine.png`.
+  Approve or refuse by number. Regenerate with `pnpm own03:stage` then
+  `pnpm sheet`.
+- **69 Needs-Sean rows, each with a decision card.** All are marked
+  `NOT_MACHINE_VERIFIABLE`; the three that carried a checkable predicate
+  auto-resolved and left the queue.
+- **The `tracker amend` guard.** It refuses a row the current session did not
+  open, which is why a false sentence naming Tom Horne could be corrected in his
+  card but not in the row's own description. A later session cannot correct an
+  earlier session's false description of a named person. That needs a ruling.
+
+### Executable, and not reached
+
+- **The Ask model comparison (H2) is MEASURED and the decision is RETAIN.**
+  Amended by the owner on 2026-08-31 from a deferral to a work item, and done:
+  7 canonical questions, 3 passes per arm, decision RETAIN `claude-opus-5`
+  because Q5 does not hold on the challenger. See the two entries below for
+  what the comparison actually surfaced. The harness now exists —
+  `pnpm ask:model-compare`, a comparison-only seam OUTSIDE the production
+  request path: `SynthesizeOptions` has no model field, the production route
+  emits `ASK_SYNTHESIS_MODEL` even when handed the challenger's id through an
+  untyped cast, and nothing under `app/` imports the seam. Comparison caches
+  are DISABLED rather than isolated, because a cache read prices a model by
+  arrival order and whichever ran second would look up to 10× cheaper for a
+  reason unrelated to the model — so the dollar figures are an UPPER BOUND on
+  production cost, where H1's cache is live.
+- **H3 is MEASURED and PASSES the host-normalized criterion — and the number
+  that argued the old one is WITHDRAWN.** The owner replaced the absolute 55 fps
+  target with *application median ≥ 90% of bare-map median on this host*.
+  Measured over 6 interleaved pairs: bare **60.06 fps** median, application
+  **59.88**, **ratio 99.7% — PASS**. The host reaches smooth motion, so the
+  host-limit clause did not fire.
+
+  **The `41.3 fps` "bare floor" cited everywhere before this is false and is
+  withdrawn.** The bare arm was never bare: the ablation removed 24 district
+  layers and 8 sources and `syncDistrictLayer` put every one back
+  synchronously, throwing nothing and logging nothing. Measured live — 24
+  layers / 8 sources before, 45 things removed, 24 layers / 8 sources
+  immediately after. Every number taken through that arm described a fully
+  loaded map with markers hidden. The fix blocks `addSource`/`addLayer` for
+  `district-*` BEFORE removing anything and reads back at landing, or discards
+  the flight; the bare arm now fires 0 `sourcedata` events and 0
+  `queryRenderedFeatures` calls against 303–536 before.
+
+- **The statistics disagree, and the disagreement is the finding.** Median ratio
+  99.7% passes; **p95-sustained ratio is 66.2% and would fail**. The median is
+  the criterion the owner set, and the tail is where the application's cost
+  actually lives — app p99 frame time 61.0 ms against bare 18.4 ms, jank 2.98%
+  against 0.31%. A median-only criterion is blind to concentrated jank, which is
+  why the call-count gate is RETAINED beside it: the pre-fix 170-query build had
+  a *perfect* 59.5 fps median.
+
+- **Without GPU acceleration the application holds 29.6% of bare** — 17.7 fps
+  against 60.0, with 193 of 201 frames janky under SwiftShader. Not a harness
+  artifact: the bare map hits 60 fps with zero jank on that same rasteriser. It
+  is a real statement about readers whose machines fall back to software, and it
+  is owed work rather than a measurement problem.
+- **Arizona's source universe is larger than any one query.** Three filters over
+  `GetNEWTableData` union to 860 rows across 732 entities, 16 reachable from no
+  other filter, and `ftp://ftp.azsos.gov/cfsdata2/` has **four** root
+  directories where the record said one — `ElectionResults` (1998–2026) was
+  never walked. The remaining AZ regimes — county, municipal and school-district
+  filers whose filing officer is not the Secretary of State — are owed.
+- **New Hampshire's remaining routes**, 14 of them in
+  `data/hunt/nh-remaining-routes.json`. The highest-value is the **SOS filed
+  report PDF series**: the API publishes `reportCount: null`, which is exactly
+  why six candidates carry `REGISTERED_NO_ACTIVITY_REPORTED` rather than a
+  report-level claim. The PDFs are the materially distinct representation that
+  can answer it.
+- **A Tom Horne portrait.** Not the file we have — `Tom Headshot 60px_0.jpg` is
+  60px against a 96px floor, and `azed.gov` answers a Cloudflare interstitial to
+  every client tried. Under RULING 206 the owed thing is ANOTHER
+  REPRESENTATION of the same record, not a harder fetch of that URL.
+- **A cache-read field in `AttemptCost`.** The digest reports cache hit rate as
+  **NOT MEASURED** — correctly, because nothing in the cost ledger records a
+  cache read, and `0%` would be a measurement nobody took. The Ask probe now
+  measures 62.5% at the API's own `usage` block; the worker cost ledger cannot
+  yet see the same thing.
+
+### The ASK-19 length budget and large evidence packs are incompatible (H2, 2026-08-31)
+
+**Found by the model comparison, and it is not a fact about either model.** Two
+of the four canonical questions that reach the synthesis contract — **Q3 and
+Q5** — fail the ASK-19 700-character budget on the incumbent AND on the
+challenger, on every pass, over the same 18-record / 6-gap Vail evidence pack:
+
+```
+  Q3  incumbent 736 / 771 / 733 chars      challenger held 3/3
+  Q5  incumbent 760 / 840 / 794 chars      challenger 720 / 783 / 717
+```
+
+The reader consequence is a fall back to deterministic structured prose where a
+grounded synthesis was available. Not a false claim — the fallback is honest —
+but the reader loses the answer the evidence could have supported.
+
+**The owed decision is which side gives.** Either the budget rises for packs
+above some size, or large packs are summarised in stages, or the budget becomes
+a target the synthesiser is told about rather than a gate applied after. All
+three are product decisions and none is a model choice, which is why the model
+comparison could not settle it and correctly did not try.
+
+**Do not read this as a reason to switch models.** On Q3 the challenger was
+GREEN 3/3 where the incumbent was RED 3/3, and it is 2.5–3.2× cheaper — but the
+owner's criterion is absolute and Q5 fails on the challenger too, so the
+incumbent is retained. The finding worth acting on is the budget, not the model.
+
+### `switchVerdict` and the owner's criterion disagree, and both are kept
+
+`lib/ask/model-economics.ts` carries a RELATIVE rule — a challenger question
+blocks a switch only where the incumbent held it and the challenger did not —
+which is argued and tested: *a question neither model answers is a retrieval
+gap, and holding the model choice hostage to it would make every future switch
+impossible for a reason unrelated to the model.*
+
+The owner's instruction is ABSOLUTE: *switch only if every required question
+holds.* On the 2026-08-31 runs the two derive opposite outcomes. Neither was
+deleted; the decision was taken on the author's directive at precedence 1
+(RULING 185) and the relative derivation is reported beside it as what it is.
+
+**What is owed is not a bug fix but a ruling**: whether the standing rule should
+become absolute, or stay relative with the absolute one reserved to explicit
+author directives. Until that lands, a session calling `switchVerdict` alone
+would take a decision the author has already taken differently.
+
+### Instrument debt, and why each one matters
+
+- **The gate-run record identifier collides under parallel execution.** Records
+  are numbered from local state, so four branches allocated 42–45 independently
+  in one evening and every pair conflicted on merge. RULING 190/191 make
+  parallel lanes the DEFAULT, so this recurs by design. The durable fix is an
+  identifier needing no agreement — tested SHA plus run instant.
+- **`release:freeze` has no automatic path out of its own loop.** Every commit
+  to main deploys (`netlify-ignore` reports CANNOT-TELL and builds, correctly),
+  including the observer's own reading — which moves production out from under
+  the reading just taken, while the observer only fires on push. The session
+  cleared it by hand each round. See
+  `data/health/gate-abort-evidence/2026-08-31-test-gate-false-red.md`.
+- **The duration heuristic for abort-versus-real does not always discriminate.**
+  It held on one tree (59s fail against a 75s pass) and failed on another (44s
+  fail against a 43s pass). The reliable signal is the `failureKind` field now
+  recorded by `scripts/gates.mjs`, derived from the suite's printed summary
+  rather than the exit code. **Read the field, not the clock.**
+- **The client-JS baseline for `/` looks stale.** 2003 KB measured against a
+  2653 KB baseline last set 2026-08-29. Not this session's to re-baseline, and
+  a baseline that far above the measurement cannot catch a regression.
 
 ## Carried forward from Session B (2026-08-31)
 

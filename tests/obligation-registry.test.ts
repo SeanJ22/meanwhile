@@ -560,7 +560,14 @@ test("a PARTIAL index is labelled PARTIAL and never staged under the index's nam
   assert.equal(entry.complete, false);
   assert.equal(entry.rowCount, 1);
   assert.equal(entry.declaredTotal, 370);
-  assert.match(entry.readerSentence, /1 of 370/);
+  assert.match(entry.readerSentence, /1 of the 370 row\(s\)/);
+  /*
+   * And the sentence must say WHICH whole it is claiming. `complete` means the
+   * response we asked for arrived entire; it never means the index is entire.
+   * Arizona's `GetNEWTableData` declared 370 and returned 370, and Kevin Volk —
+   * on the 85701 ballot with $173,742 filed — is not among them. RULING 207.
+   */
+  assert.match(entry.readerSentence, /not a claim that the index is whole/);
   assert.ok(entry.unresolved.some((u) => u.startsWith("PARTIAL:")));
 });
 
@@ -679,7 +686,7 @@ test("the NH normalizer reads the publisher's OWN declared total", () => {
 
 /* ------------------------------------------------------------ tracker intake */
 
-test("ABSENT, UNREADABLE and EMPTY are three different answers", () => {
+test("ABSENT, UNREADABLE and PRESENT_EMPTY are three different answers", () => {
   const root = tmp();
   assert.equal(readTrackerHandoff(join(root, "nope.json")).state, "ABSENT");
 
@@ -692,7 +699,7 @@ test("ABSENT, UNREADABLE and EMPTY are three different answers", () => {
   const empty = join(root, "empty.json");
   writeFileSync(empty, JSON.stringify({ rows: [] }), "utf8");
   const zero = readTrackerHandoff(empty);
-  assert.equal(zero.state, "EMPTY");
+  assert.equal(zero.state, "PRESENT_EMPTY");
   assert.match(zero.detail, /FAILED extraction/);
 });
 
@@ -700,19 +707,26 @@ test("the ingestion path turns a converted tracker row into a scheduled unit", (
   const fixture = join(ROOT, "tests", "fixtures", "tracker-obligation-handoff.json");
   const read = readTrackerHandoff(fixture);
 
-  assert.equal(read.state, "INGESTED");
+  /* RULING 228 renamed these: the state vocabulary is the shared contract's, and
+     `rejected` became `deferred` because a row that is not yet schedulable has
+     not been refused - it is waiting on something its producer named. */
+  assert.equal(read.state, "PARTIALLY_REGISTERED");
   assert.equal(read.rows.length, 1, "one usable row of the two the fixture carries");
-  assert.equal(read.rejected.length, 1, "and the unusable one is NAMED, never silently dropped");
-  assert.equal(read.rejected[0].trackerId, "AZ-NO-ROUTES");
+  assert.equal(read.deferred.length, 1, "and the unusable one is NAMED, never silently dropped");
+  assert.equal(read.deferred[0].trackerId, "AZ-NO-ROUTES");
 
   const pass = buildRegistry([trackerIntakeProvider(fixture)], { root: ROOT, nowIso: NOW });
   assert.equal(pass.units.length, 1);
   assert.equal(pass.units[0].obligation.id, "freshness:tracker:az-easyvote-tenant-list#easyvote-tenant-list");
   assert.equal(pass.units[0].obligation.routeId, "easyvote-tenant-list");
+  /* A DEFERRED row is not a read FAILURE. The producer said why it is not
+     ready, which is an answer rather than a breakage - so it travels as the
+     reason, and readFailure stays null. */
+  assert.equal(pass.byProvider[0].readFailure, null);
   assert.match(
-    pass.byProvider[0].readFailure ?? "",
-    /unusable/,
-    "the rejected row is reported as a failure of that row, not hidden behind a count",
+    pass.byProvider[0].emptyReason ?? "",
+    /DEFERRED/,
+    "the deferred row is NAMED, not hidden behind a count",
   );
 });
 

@@ -85,6 +85,19 @@ import { join } from "node:path";
 import type { Page } from "playwright";
 
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
+import {
+  busyPct,
+  cpuTicks,
+  frameGaps,
+  GPU_ARGS,
+  hostCondition,
+  judgeNormalized,
+  LONG_FRAME_MS,
+  NORMALIZED_FLOOR,
+  READ_RENDERER,
+  summariseArm,
+  type ArmSummary,
+} from "../lib/ops/flyin-normalized.ts";
 import { launchGuarded, type GuardedBrowser } from "./browser.mts";
 
 const BASE = process.env.SHOOT_BASE_URL ?? "http://127.0.0.1:3000";
@@ -95,9 +108,14 @@ const ZIP = process.env.FLYIN_ZIP ?? "85701";
  * BEFORE ANY PRODUCT CODE WAS TOUCHED.**
  *
  * The first isolation pass flew the camera with every district layer removed,
- * every marker removed and the whole state-focus layer hidden — a MapLibre map
- * drawing one flat ground colour and nothing else — and it still sustained
- * 8.1 fps with a 23.9 fps median. Nothing was left in that page to blame.
+ * every marker removed and the whole state-focus layer hidden — or so it
+ * believed; see the `bare` ablation's own note, because on 2026-08-31 that
+ * ablation was found to be healing mid-flight and the district layers were in
+ * fact still there. **The CONCLUSION below survives that anyway, and this is
+ * why it is worth keeping**: it does not rest on the ablation at all. The
+ * renderer string is read directly out of the live context, so it is a fact
+ * about the rasteriser no matter what was drawn through it. The 8.1 fps and
+ * 23.9 fps figures in this paragraph are the part that is withdrawn.
  * `WEBGL_debug_renderer_info` named the culprit outright:
  *
  * ```
@@ -114,34 +132,23 @@ const ZIP = process.env.FLYIN_ZIP ?? "85701";
  * for the run to open a window on. That is a wall and it is named rather than
  * worked around by lowering the question.
  *
- * The way through is these flags, which keep the run headless and put it on the
- * real adapter. Verified, not assumed — the renderer string is read back on
- * every run and printed, so a run that silently fell back to SwiftShader says
- * so instead of reporting its numbers as if they meant the same thing:
+ * The way through is `GPU_ARGS`, which keeps the run headless and puts it on
+ * the real adapter. Verified, not assumed — `READ_RENDERER` reads the string
+ * back on every run and prints it, so a run that silently fell back to
+ * SwiftShader says so instead of reporting its numbers as if they meant the
+ * same thing:
  *
  * ```
  * ANGLE (Intel, Intel(R) Iris(R) Xe Graphics Direct3D11 vs_5_0 ps_5_0, D3D11)
  * ```
+ *
+ * Both now live in `lib/ops/flyin-normalized.ts`, because the permanent check
+ * in `scripts/walk-all.mts` has to request the SAME adapter — measured on
+ * 2026-08-31, the rasteriser is the difference between this product holding
+ * 99.7% of a bare map and holding 25.8% of it.
  */
-const GPU_ARGS = [
-  "--use-angle=d3d11",
-  "--ignore-gpu-blocklist",
-  "--enable-gpu-rasterization",
-  // SwiftShader arrives through the Vulkan path in this Chromium; without this
-  // the ANGLE request above is honoured and then overridden.
-  "--disable-features=Vulkan",
-];
 /** Set to `1` to measure through the software rasteriser on purpose. */
 const SOFTWARE = process.env.FLYIN_SOFTWARE === "1";
-
-/** Read the live WebGL renderer back, so no run has to be trusted about it. */
-const READ_RENDERER = `(() => {
-  const c = document.createElement("canvas");
-  const gl = c.getContext("webgl2") || c.getContext("webgl");
-  if (!gl) return "NO WEBGL";
-  const dbg = gl.getExtension("WEBGL_debug_renderer_info");
-  return dbg ? String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)) : "UNKNOWN";
-})()`;
 
 /** The fly-in's own parameters, copied from `components/map/map-canvas.tsx`. */
 export const FLIGHT = {
@@ -358,8 +365,7 @@ export function frameStats(times: number[]): FrameStats {
         "the fly-in — refusing to report a frame rate rather than printing 0 fps.",
     );
   }
-  const gaps: number[] = [];
-  for (let i = 1; i < times.length; i += 1) gaps.push(times[i] - times[i - 1]);
+  const gaps = frameGaps(times);
   const sorted = [...gaps].sort((a, b) => a - b);
   const at = (q: number) => sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * q))];
   const windowMs = times[times.length - 1] - times[0];
@@ -438,6 +444,16 @@ export async function untilMapReady(page: Page, ms = 30_000): Promise<boolean> {
 interface Run {
   label: string;
   frames: FrameStats;
+  /**
+   * THE FRAME INTERVALS THEMSELVES, kept rather than only summarised.
+   *
+   * The host-normalized criterion (below) needs a frame-time DISTRIBUTION per
+   * arm, not one number per run, and a distribution cannot be reconstructed
+   * from a median after the fact. Keeping the gaps is also what lets a later
+   * session re-derive any statistic from the recorded evidence instead of
+   * re-running the measurement on a different day's host.
+   */
+  gaps: number[];
   commits: number;
   records: number;
   events: Record<string, number>;
@@ -445,6 +461,8 @@ interface Run {
   longTasks: { count: number; ms: number };
   requests: Requests;
   vertices: unknown;
+  /** What the host's own CPU counters said across this run's window. */
+  hostBusyPct: number | null;
 }
 
 /**
@@ -551,28 +569,97 @@ const ABLATIONS: Record<string, string> = {
    * because of a software rasteriser and a flight that is slow because of our
    * overlays produce the same aggregate number, and only the floor tells them
    * apart — if `bare` is still slow, the instrument is measuring the harness.
+   *
+   * ## **THIS ABLATION USED TO UNDO ITSELF, AND IT SAID NOTHING** (2026-08-31)
+   *
+   * The version this replaces removed the district layers and sources and then
+   * let the application put every one of them straight back. Measured, on a
+   * live page, rather than reasoned about:
+   *
+   * ```
+   * BEFORE ablation:   24 district layers, 8 sources, 12 markers
+   * stripped:          45 things removed
+   * IMMEDIATELY after: 24 district layers, 8 sources, 0 markers
+   * ```
+   *
+   * `syncDistrictLayer` in `lib/map/districts.ts` is deliberately idempotent —
+   * `if (!map.getSource(source)) map.addSource(...)`, and the same guard per
+   * layer — so removing a source is an INVITATION to the next sync pass to
+   * rebuild it, and removing one is what triggers the pass. The removal never
+   * failed and never threw; the page simply healed. The markers and the scrim
+   * stayed removed, which is precisely why the failure was invisible: the
+   * ablation returned a large truthful count of things it had removed.
+   *
+   * **Everything measured through the old `bare` was a fully-loaded map with
+   * its markers and scrim hidden** — including the 41.3 fps "bare floor" that
+   * the absolute 55 fps criterion was argued against. That number is withdrawn.
+   *
+   * The fix is to BLOCK THE RE-ADD BEFORE REMOVING ANYTHING, so a sync pass
+   * racing the removal is a no-op rather than a repair. Verified across three
+   * consecutive fly-ins on one page: 0 layers, 0 sources, 0 markers throughout.
+   * `bareIntact` below is the readback that keeps it honest — an ablation that
+   * silently stops working must never again be able to report a ratio.
    */
   bare: `(() => {
+    const map = window.__wtpMap;
+    if (!map) return false;
+    /* THE ORDER IS THE FIX. Blocking first means the application's own sync
+       pass — which the removals below are what provokes — cannot win the race. */
+    const realAddSource = map.addSource.bind(map);
+    const realAddLayer = map.addLayer.bind(map);
+    map.addSource = function (id, spec) {
+      if (typeof id === "string" && id.indexOf("district-") === 0) return map;
+      return realAddSource(id, spec);
+    };
+    map.addLayer = function (spec, before) {
+      if (spec && typeof spec.id === "string" && spec.id.indexOf("district-") === 0) return map;
+      return realAddLayer(spec, before);
+    };
+    let removed = 0;
+    const style = map.getStyle() || {};
+    for (const layer of (style.layers || []).slice()) {
+      if (layer.id.indexOf("district-") !== 0) continue;
+      try { map.removeLayer(layer.id); removed += 1; } catch (e) { void e; }
+    }
+    for (const id of Object.keys(style.sources || {})) {
+      if (id.indexOf("district-") !== 0) continue;
+      try { map.removeSource(id); removed += 1; } catch (e) { void e; }
+    }
     const el = document.querySelector(".state-focus-layer");
-    if (el) el.style.display = "none";
+    if (el) { el.style.display = "none"; removed += 1; }
     for (const pin of Array.from(document.querySelectorAll(".maplibregl-marker"))) {
       pin.remove();
+      removed += 1;
     }
-    const map = window.__wtpMap;
-    if (map) {
-      const style = map.getStyle() || {};
-      for (const layer of (style.layers || []).slice()) {
-        if (layer.id.indexOf("district-") !== 0) continue;
-        map.removeLayer(layer.id);
-      }
-      for (const id of Object.keys(style.sources || {})) {
-        if (id.indexOf("district-") !== 0) continue;
-        try { map.removeSource(id); } catch (e) { void e; }
-      }
-    }
-    return true;
+    return removed > 0;
   })()`,
 };
+
+/**
+ * **IS THE BARE MAP STILL BARE?** Read at the END of every bare flight.
+ *
+ * The ablation above returns whether it removed anything, and that is exactly
+ * the claim that was true while the experiment was invalid. So the state is
+ * read back AFTER the camera lands, and a bare arm that healed during its own
+ * flight is refused rather than averaged in. No regex, no backtick.
+ */
+const BARE_INTACT = `(() => {
+  const map = window.__wtpMap;
+  if (!map) return { ok: false, layers: -1, sources: -1, markers: -1, scrimHidden: false };
+  const style = map.getStyle() || {};
+  const layers = (style.layers || []).filter((l) => l.id.indexOf("district-") === 0).length;
+  const sources = Object.keys(style.sources || {}).filter((id) => id.indexOf("district-") === 0).length;
+  const markers = document.querySelectorAll(".maplibregl-marker").length;
+  const el = document.querySelector(".state-focus-layer");
+  const scrimHidden = el ? el.style.display === "none" : true;
+  return {
+    ok: layers === 0 && sources === 0 && markers === 0 && scrimHidden,
+    layers: layers,
+    sources: sources,
+    markers: markers,
+    scrimHidden: scrimHidden,
+  };
+})()`;
 
 async function measure(
   page: Page,
@@ -603,6 +690,7 @@ async function measure(
   await page.waitForTimeout(600);
 
   seen.length = 0;
+  const ticksBefore = cpuTicks();
   await page.evaluate(() =>
     (window as unknown as { __flyProbe: { start: () => void } }).__flyProbe.start(),
   );
@@ -627,6 +715,7 @@ async function measure(
    * question is what happened inside it. Waiting for `moveend` would measure a
    * window whose length depends on the very stalls being counted. */
   await page.waitForTimeout(FLIGHT.durationMs + 200);
+  const hostBusyPct = busyPct(ticksBefore, cpuTicks());
 
   /*
    * **DID THE CAMERA ACTUALLY MOVE?** (RULING 159's shape, applied to a rate.)
@@ -693,6 +782,7 @@ async function measure(
   return {
     label,
     frames: frameStats(raw.frames),
+    gaps: frameGaps(raw.frames),
     commits: raw.commits,
     records: raw.records,
     events: raw.events,
@@ -700,6 +790,7 @@ async function measure(
     longTasks: raw.longTasks,
     requests,
     vertices,
+    hostBusyPct,
   };
 }
 
@@ -818,13 +909,179 @@ async function repeated(
   return runs;
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   `--normalized` — THE AUTHOR'S AMENDED CRITERION, MEASURED
+   ═══════════════════════════════════════════════════════════════════════════
+
+   The statistics and the verdict live in `lib/ops/flyin-normalized.ts`, which
+   `scripts/walk-all.mts` imports too. What lives HERE is the experimental
+   design, which is the half that decides whether the numbers mean anything.
+
+   ## HOST LOAD IS THE CONFOUND, AND IT IS CONTROLLED BY INTERLEAVING
+
+   Six or seven worktree lanes install, build and test on this machine at once.
+   Load is not constant and it is not random — it ARRIVES and it LEAVES, in
+   bursts lasting minutes. Measuring arm (a) as one block and arm (b) as a
+   second block hands the whole of any load change to whichever arm was running
+   when it happened, and the ratio then reports another agent's `pnpm build` as
+   a performance regression in this product.
+
+   So the arms are INTERLEAVED at the individual flight, never blocked:
+
+       pair 1:  app,  bare
+       pair 2:  bare, app
+       pair 3:  app,  bare
+       ...
+
+   Two separate controls, and both are needed:
+
+   1. **Alternating ARMS within a pair** means a load burst spanning one pair
+      lands on one run of each arm rather than on two runs of one arm.
+   2. **Alternating ORDER between pairs** means a systematic within-pair
+      position effect — the second flight of a pair running on a warmer cache,
+      a browser that has already JITed the animation — cannot accumulate onto
+      one arm either. Over an even number of pairs each arm runs first exactly
+      as often as it runs second.
+
+   Neither of those makes the host quiet. They make it IMPOSSIBLE for the host
+   to be quiet for one arm and busy for the other, which is the only property
+   the ratio actually needs. The absolute numbers still move with the load, and
+   that is why the absolute is not what is asserted.
+
+   ## A FRESH PAGE PER FLIGHT, WHICH IS NOT OPTIONAL HERE
+
+   The `bare` ablation REMOVES sources and layers, and `removeSource` has no
+   inverse. Re-using one page would make every later flight cumulatively
+   ablated and every number after the first meaningless. Each flight therefore
+   gets its own context, loaded and settled from scratch — which also means the
+   two arms differ in exactly one thing: whether the ablation ran. */
+
+/** One flight of one arm, with the host condition it ran under. */
+interface Interleaved {
+  arm: "app" | "bare";
+  pair: number;
+  positionInPair: 1 | 2;
+  run: Run;
+}
+
+async function normalizedPass(
+  browser: GuardedBrowser,
+  pairs: number,
+): Promise<{ app: ArmSummary; bare: ArmSummary; order: Interleaved[] }> {
+  const taken: Interleaved[] = [];
+  for (let pair = 1; pair <= pairs; pair += 1) {
+    /* Odd pairs run the application first, even pairs run the bare map first.
+       See the block comment above: this is control (2), and without it the
+       second-position advantage would be a constant bias on one arm. */
+    const order: ("app" | "bare")[] = pair % 2 === 1 ? ["app", "bare"] : ["bare", "app"];
+    for (const [index, arm] of order.entries()) {
+      const page = await settledPage(browser);
+      if (!page) {
+        console.log(
+          `  ??  pair ${pair} ${arm} COULD NOT RUN — no __wtpMap on a fresh page. ` +
+            "This flight is absent from the denominator rather than counted as slow.",
+        );
+        continue;
+      }
+      const label = `pair ${pair} · ${arm}`;
+      try {
+        const run = await measure(page, label, true, arm === "bare" ? "bare" : "none");
+        if (arm === "bare") {
+          /*
+           * **THE BARE ARM PROVES IT WAS BARE, OR ITS FLIGHT IS DISCARDED.**
+           *
+           * This is not defensive coding; it is the specific failure that
+           * invalidated the previous measurement of this exact criterion. An
+           * ablation that quietly stops working turns the ratio into the
+           * application compared against itself, which reads as a flawless
+           * 100% and asserts nothing. A dropped flight lowers the denominator,
+           * which is visible; a healed flight does not, which is not.
+           */
+          const intact = (await page.evaluate(BARE_INTACT)) as {
+            ok: boolean;
+            layers: number;
+            sources: number;
+            markers: number;
+            scrimHidden: boolean;
+          };
+          if (!intact.ok) {
+            console.log(
+              `  ??  pair ${pair} bare DISCARDED — the map healed during its own flight: ` +
+                `${intact.layers} district layers, ${intact.sources} sources, ${intact.markers} ` +
+                `markers, scrim ${intact.scrimHidden ? "hidden" : "VISIBLE"} at landing. ` +
+                "A bare arm that is not bare would report a meaningless ratio.",
+            );
+            continue;
+          }
+        }
+        taken.push({ arm, pair, positionInPair: index === 0 ? 1 : 2, run });
+        console.log(
+          `  ${arm === "app" ? "app " : "bare"} pair ${pair} pos ${index + 1}: ` +
+            `median ${run.frames.medianFps.toFixed(1)} fps, ` +
+            `mean ${run.frames.meanFps.toFixed(1)}, ` +
+            `p95-sustained ${run.frames.sustainedFps.toFixed(1)}, ` +
+            `${run.frames.longFrames}/${run.frames.frames} frames over ${LONG_FRAME_MS}ms, ` +
+            `host ${run.hostBusyPct === null ? "load UNREAD" : `${run.hostBusyPct.toFixed(0)}% busy`}`,
+        );
+      } finally {
+        await page.context().close();
+      }
+    }
+  }
+
+  const forArm = (arm: "app" | "bare") =>
+    taken
+      .filter((t) => t.arm === arm)
+      .map((t) => ({ gaps: t.run.gaps, hostBusyPct: t.run.hostBusyPct }));
+
+  return {
+    app: summariseArm("application", forArm("app")),
+    bare: summariseArm("bare MapLibre", forArm("bare")),
+    order: taken,
+  };
+}
+
+function reportArm(summary: ArmSummary): void {
+  console.log(`\n── ${summary.arm} — ${summary.runs} runs ────────────────────`);
+  console.log(
+    `  MEDIAN ${summary.medianFps.toFixed(1)} fps   ` +
+      `mean ${summary.meanFps.toFixed(1)} fps   ` +
+      `p95-sustained ${summary.sustainedFps.toFixed(1)} fps`,
+  );
+  console.log(
+    `  frame time (pooled, ${summary.framesMeasured} frames): ` +
+      `p50 ${summary.frameMs.p50.toFixed(1)}ms  ` +
+      `p95 ${summary.frameMs.p95.toFixed(1)}ms  ` +
+      `p99 ${summary.frameMs.p99.toFixed(1)}ms  ` +
+      `max ${summary.frameMs.max.toFixed(1)}ms`,
+  );
+  console.log(
+    `  ${floorLine(
+      floored(
+        `frames slower than ${LONG_FRAME_MS}ms (JANK)`,
+        `${summary.runs} pooled flight windows`,
+        summary.framesMeasured,
+        summary.longFrames,
+      ),
+    )}`,
+  );
+  console.log(`  per-run medians: ${summary.medianFpsPerRun.map((v) => v.toFixed(1)).join(", ")} fps`);
+}
+
 /**
  * **A CPU PROFILE, BECAUSE ABLATION STOPPED CONVERGING.**
  *
  * With seven lanes on the host, the ablation medians disagreed with each other:
- * `bare` — the flight with everything of ours removed — scored 46.9 while the
- * fully loaded flight scored 41.3 and `no-svg-art` scored 48.1. Those gaps are
- * inside the noise, so no further subtraction was going to name the residual.
+ * `bare` — the flight with everything of ours supposedly removed — scored 46.9
+ * while the fully loaded flight scored 41.3 and `no-svg-art` scored 48.1. Those
+ * gaps are inside the noise, so no further subtraction was going to name the
+ * residual.
+ *
+ * **AND THE SECOND REASON, FOUND ON 2026-08-31: `bare` WAS NOT BARE.** It was
+ * healing mid-flight — see the ablation's own note — so `bare` and the fully
+ * loaded flight were measuring very nearly the same page, which is exactly what
+ * "gaps inside the noise" looks like from the outside. Every ablation number in
+ * this paragraph predates that fix and none of them should be cited.
  *
  * A sampling profile does not have that problem. It attributes MAIN-THREAD
  * TIME to named functions, and a function's share of the flight is a ratio
@@ -884,6 +1141,7 @@ async function profileFlight(page: Page): Promise<[string, number][]> {
 async function main(): Promise<void> {
   const isolate = process.argv.includes("--isolate");
   const wantProfile = process.argv.includes("--profile");
+  const normalized = process.argv.includes("--normalized");
   const repeatArg = process.argv.find((a) => a.startsWith("--repeat="));
   const REPEATS = Math.max(1, Number(repeatArg?.split("=")[1] ?? 1) || 1);
   const browser = await launchGuarded({
@@ -891,6 +1149,115 @@ async function main(): Promise<void> {
     args: SOFTWARE ? [] : GPU_ARGS,
   });
   console.log(`run ${browser.runId} against ${BASE} at ${ZIP}`);
+
+  if (normalized) {
+    /*
+     * `--normalized` is its own instrument and it does not share `main`'s body.
+     * The descriptive pass below takes a CONTROL with the camera standing
+     * still, which answers "can this harness see 60 fps at all"; the author's
+     * criterion answers a different question — "what does the application cost
+     * against a bare map on THIS host" — and mixing the two passes would put
+     * two unrelated sets of flights on one contended machine and make each
+     * one's numbers a little worse for no gain.
+     */
+    try {
+      const probe = await settledPage(browser);
+      const renderer = probe ? String(await probe.evaluate(READ_RENDERER)) : "NOT READ";
+      if (probe) await probe.context().close();
+      console.log(`  webgl renderer: ${renderer}`);
+
+      const pairArg = process.argv.find((a) => a.startsWith("--pairs="));
+      const PAIRS = Math.max(1, Number(pairArg?.split("=")[1] ?? 6) || 6);
+      console.log(
+        `\nHOST-NORMALIZED CRITERION — ${PAIRS} interleaved pairs, ` +
+          `${PAIRS} flights per arm, identical camera path\n`,
+      );
+      const { app, bare, order } = await normalizedPass(browser, PAIRS);
+      reportArm(bare);
+      reportArm(app);
+
+      const verdict = judgeNormalized(app, bare);
+      console.log(`\n══ THE CRITERION ═══════════════════════════════════════════`);
+      console.log(
+        `  application ${app.medianFps.toFixed(1)} fps median / ` +
+          `bare map ${bare.medianFps.toFixed(1)} fps median = ` +
+          `RATIO ${verdict.ratio.toFixed(4)} (${(verdict.ratio * 100).toFixed(1)}%)`,
+      );
+      console.log(
+        `  ${verdict.pass ? "PASS" : "FAIL"} against the ${(NORMALIZED_FLOOR * 100).toFixed(0)}% floor ` +
+          `— denominators ${app.runs} application flights and ${bare.runs} bare flights`,
+      );
+      console.log(`  HOST CONDITION: ${hostCondition(verdict)}`);
+      if (verdict.hostBelowSmoothMotion) {
+        console.log(
+          `  HOST LIMIT, STATED NUMERICALLY: the bare map — every district layer, every ` +
+            `marker and the whole state-focus layer removed — held only ` +
+            `${bare.medianFps.toFixed(1)} fps median and ${bare.sustainedFps.toFixed(1)} fps ` +
+            `p95-sustained, with ${bare.longFrames} of ${bare.framesMeasured} frames over ` +
+            `${LONG_FRAME_MS}ms. That is this machine's ceiling for this animation. It does ` +
+            `NOT waive the relative requirement above.`,
+        );
+      }
+
+      /*
+       * **THE TWO RASTERISERS GET TWO FILES, NEVER ONE FILE TWICE.**
+       *
+       * `FLYIN_SOFTWARE=1` measures the same criterion through the CPU
+       * rasteriser on purpose, and that reading is worth keeping — it is what
+       * a reader with no GPU acceleration gets. Writing it over the hardware
+       * reading would silently replace the number the permanent check is
+       * calibrated against with a number from a different machine class, and
+       * nothing in the file would say which one it held.
+       */
+      writeFileSync(
+        join(
+          process.cwd(),
+          "docs",
+          "evidence",
+          SOFTWARE ? "flyin-normalized-software.json" : "flyin-normalized.json",
+        ),
+        `${JSON.stringify(
+          {
+            criterion:
+              "application median fps >= 90% of bare-map median fps on this host (2026-08-31)",
+            base: BASE,
+            zip: ZIP,
+            renderer,
+            pairs: PAIRS,
+            design: "interleaved app/bare, alternating within-pair order, fresh page per flight",
+            app,
+            bare,
+            ratio: verdict.ratio,
+            pass: verdict.pass,
+            hostCeilingFps: verdict.hostCeilingFps,
+            hostBelowSmoothMotion: verdict.hostBelowSmoothMotion,
+            hostCondition: hostCondition(verdict),
+            runOrder: order.map((t) => ({
+              pair: t.pair,
+              arm: t.arm,
+              positionInPair: t.positionInPair,
+              medianFps: t.run.frames.medianFps,
+              meanFps: t.run.frames.meanFps,
+              sustainedFps: t.run.frames.sustainedFps,
+              longFrames: t.run.frames.longFrames,
+              frames: t.run.frames.frames,
+              worstFrameMs: t.run.frames.worstFrameMs,
+              qrfCalls: t.run.qrf.calls,
+              sourcedata: t.run.events.sourcedata,
+              hostBusyPct: t.run.hostBusyPct,
+            })),
+          },
+          null,
+          2,
+        )}\n`,
+        "utf8",
+      );
+    } finally {
+      await browser.close();
+    }
+    return;
+  }
+
   try {
     const page = await settledPage(browser);
     if (!page) {

@@ -1,11 +1,11 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "a8cd51d6130fafd6",
+  "snapshot": "bf23395ed1e05940",
   "counts": {
-    "records": 264,
-    "current": 243,
-    "law": 212,
+    "records": 265,
+    "current": 244,
+    "law": 213,
     "decisions": 31,
     "historical": 21
   },
@@ -4960,6 +4960,51 @@
         {
           "kind": "related_to",
           "target": "R-0055"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0228",
+      "aliases": [
+        "RULING 228",
+        "R228",
+        "R-228"
+      ],
+      "title": "RULING 228 — an interface between independently built lanes is one shared typed schema, never prose",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-31",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [
+        {
+          "key": "interface.definition_form",
+          "value": "one-shared-typed-schema-both-sides-validate"
+        },
+        {
+          "key": "interface.compatibility_evidence",
+          "value": "real-producer-output-into-real-consumer"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0103"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0224"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0190"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0191"
         }
       ],
       "uncertain": [],

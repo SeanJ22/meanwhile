@@ -154,6 +154,22 @@ async function askOnce(
          signal in a store the business sells from. */
       "x-wtp-synthetic-run": `ask-cache-probe-${today()}`,
       "cache-control": "no-cache",
+      /*
+       * SAME-ORIGIN, because the route requires it and is right to.
+       *
+       * `/api/ask/grounded` refuses a cross-origin submission with 403 before
+       * it reaches synthesis (`isSameOriginSubmission`, an anti-abuse guard on
+       * an endpoint that spends money per call). `fetch` in Node sends no
+       * `Origin`, so the first run of this probe made 14 calls, took 14 × 403,
+       * and reported `no calls recorded` — correctly refusing to call a wall a
+       * 0% hit rate, and measuring nothing.
+       *
+       * This is the header a browser on this origin would send, and BASE is
+       * already forced local by refusal 1 above. It defeats no guard: an
+       * attacker can set a header, which is why the guard is defence in depth
+       * rather than authentication.
+       */
+      origin: BASE,
     },
     body: JSON.stringify({ question, ocdIds: [...divisionIds], today: today() }),
   });

@@ -298,7 +298,7 @@ function buildDigest(record: RunRecord, cycle: number, at: string, ok: boolean):
   for (const s of ready) {
     out.push(
       `- **READY** \`${s.obligationId}\` — ${s.rowCount} of ${s.declaredTotal ?? "an undeclared total"}` +
-        `${s.complete ? " (COMPLETE)" : " (PARTIAL — the rest is still owed)"} at \`${s.snapshotPath}\``,
+        `${s.complete ? " (RESPONSE WHOLE — not the whole index)" : " (PARTIAL — the rest is still owed)"} at \`${s.snapshotPath}\``,
     );
   }
   for (const s of gaps) {

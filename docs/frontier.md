@@ -57,21 +57,26 @@ left, with what it is waiting on. Nothing here is a claim that it is finished.
 
 ### Waiting on the owner
 
-- **`pnpm pilot:install` from an ELEVATED PowerShell.** The Windows Scheduled
-  Task was refused (`Access denied`, 0x80070005) without elevation, so what is
-  installed is a per-user startup entry. It survives a reboot; it does **not**
-  restart a crashed runner. Reboot-survival is therefore partial, and saying
-  otherwise would overstate Part G2.
-- **OWN03 — nine portraits, one look.** `docs/photo-review/own03-nine.png`.
-  Approve or refuse by number. Regenerate with `pnpm own03:stage` then
-  `pnpm sheet`.
+- ~~**`pnpm pilot:install` from an ELEVATED PowerShell.**~~ **DONE by the owner,
+  2026-09-01.** The Windows Scheduled Task "WeThePeople Pilot Runner" is
+  installed and started — restart every 5 minutes, at logon, 1 process, with
+  promotion OFF. Restart-on-crash is now satisfied rather than partial.
+- ~~**OWN03 — nine portraits, one look.**~~ **APPROVED by the owner, 2026-09-01,
+  and all nine now render.** Verified per person on the rendered DOM at 85641,
+  85701 and 07866. Tom Horne was never among the nine and is not a decision
+  waiting on the owner — his portrait is an open acquisition obligation.
+  **What IS newly his:** four of the nine are Sitefinity thumbnails, and the
+  full-size originals (2533–3275px) are staged in
+  `data/photos/door2-azcc-originals-2026-09-01.json` awaiting a second look.
 - **69 Needs-Sean rows, each with a decision card.** All are marked
   `NOT_MACHINE_VERIFIABLE`; the three that carried a checkable predicate
   auto-resolved and left the queue.
-- **The `tracker amend` guard.** It refuses a row the current session did not
-  open, which is why a false sentence naming Tom Horne could be corrected in his
-  card but not in the row's own description. A later session cannot correct an
-  earlier session's false description of a named person. That needs a ruling.
+- ~~**The `tracker amend` guard.**~~ **RULED, 2026-09-01 — RULING 231.** A later
+  session corrects an earlier session's false description of a named person
+  through a RECORDED SUPERSESSION that preserves the original text and cites
+  evidence about the person. The guard is preserved and direct edits stay
+  prohibited; what changed is that there is now a lawful path where there was
+  none.
 
 ### Executable, and not reached
 
@@ -137,9 +142,16 @@ left, with what it is waiting on. Nothing here is a claim that it is finished.
   REPRESENTATION of the same record, not a harder fetch of that URL.
 - **A cache-read field in `AttemptCost`.** The digest reports cache hit rate as
   **NOT MEASURED** — correctly, because nothing in the cost ledger records a
-  cache read, and `0%` would be a measurement nobody took. The Ask probe now
-  measures 62.5% at the API's own `usage` block; the worker cost ledger cannot
-  yet see the same thing.
+  cache read, and `0%` would be a measurement nobody took. The **production**
+  Ask path is now measured at Anthropic's own `usage` block — 15,731 cache-read
+  tokens against 583 uncached input, 4 of 6 model-reaching calls reading,
+  2026-09-01, `docs/evidence/cache-production-workspace-2026-09-01.md`. The
+  worker cost ledger still cannot see the same thing.
+  *(The 62.5% this line used to quote was the LOCAL probe, and it did not name
+  the credential it measured. `scripts/ask-cache-probe.mts` refuses a production
+  target by design, so that number was never evidence about production; the
+  three keys were later proved to share one workspace, which is what makes the
+  production reading above the one that settles it.)*
 
 ### Arizona money is ACQUIRED and does not reach the reader — Part E's reader clause is NOT MET
 
@@ -224,6 +236,24 @@ GREEN 3/3 where the incumbent was RED 3/3, and it is 2.5–3.2× cheaper — but
 owner's criterion is absolute and Q5 fails on the challenger too, so the
 incumbent is retained. The finding worth acting on is the budget, not the model.
 
+### `switchVerdict` and the owner's criterion disagreed — CLOSED by RULING 230, 2026-09-01
+
+**The ruling this section said was owed has been made.** RULING 230: SWITCH only
+if every required challenger question is measured and holds; any required
+question measured and not held is HOLD/RETAIN; any unmeasured is NOT_MEASURED
+and the incumbent is retained; and **no second function may emit a
+`SwitchVerdict`**. `git grep -E ")s*:s*SwitchVerdict"` returns exactly one
+line, `lib/ask/model-economics.ts`, and a test holds it there.
+
+The relative reasoning was not withdrawn — it survives as
+`relativeNonRegressionAnalysis()` with its own type, structurally unassignable
+to a `SwitchVerdict`. The comparison record was regenerated from its recorded
+rows and now derives `decision` FROM `verdict` in one function, so the pair that
+used to read `SWITCH` beside `RETAIN:claude-opus-5` cannot come apart again.
+
+*The original entry, kept because a closed frontier item is still the record of
+why the rule exists:*
+
 ### `switchVerdict` and the owner's criterion disagree, and both are kept
 
 `lib/ask/model-economics.ts` carries a RELATIVE rule — a challenger question
@@ -237,10 +267,9 @@ holds.* On the 2026-08-31 runs the two derive opposite outcomes. Neither was
 deleted; the decision was taken on the author's directive at precedence 1
 (RULING 185) and the relative derivation is reported beside it as what it is.
 
-**What is owed is not a bug fix but a ruling**: whether the standing rule should
-become absolute, or stay relative with the absolute one reserved to explicit
-author directives. Until that lands, a session calling `switchVerdict` alone
-would take a decision the author has already taken differently.
+~~**What is owed is not a bug fix but a ruling**: whether the standing rule
+should become absolute, or stay relative with the absolute one reserved to
+explicit author directives.~~ **Landed as RULING 230 on 2026-09-01 — absolute.**
 
 ### Instrument debt, and why each one matters
 

@@ -5,7 +5,11 @@ import { useCallback, useSyncExternalStore } from "react";
 import { recordRecentZip } from "@/hooks/use-recent-zips";
 import { lookupIn, type CentroidTable } from "@/lib/geo/zcta-core";
 import { loadZctaTable } from "@/lib/geo/zcta-table";
-import { subscribeToStorage } from "@/lib/state/subscribe-to-storage";
+import {
+  commitStorageWrite,
+  publishToListeners,
+  subscribeToStorage,
+} from "@/lib/state/subscribe-to-storage";
 
 /**
  * The zip the reader is currently looking at.
@@ -121,7 +125,7 @@ function ensureTable(): void {
     // moves from PENDING to the resolved location in one pass.
     cachedRaw = undefined;
     cachedSnapshot = PENDING;
-    for (const listener of listeners) listener();
+    publishToListeners(listeners);
   });
 }
 
@@ -181,22 +185,23 @@ export function useStoredZip() {
       savedAt: new Date().toISOString(),
     };
 
-    try {
-      window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-    } catch {
-      // Not being able to remember is survivable; failing the search is not.
-      // Publish the choice anyway so this session still works.
-      cachedRaw = JSON.stringify(payload);
-      cachedSnapshot = { restored: true, location: next };
-    }
-
-    // The one thing that outlives the tab (item 3), so the next open is a tap
-    // rather than eleven. Written here so every path that sets a location —
-    // the welcome card, the switcher, Near me — records it without having to
-    // remember to.
-    recordRecentZip(next.zip);
-
-    for (const listener of listeners) listener();
+    commitStorageWrite(
+      () => window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(payload)),
+      () => {
+        // The one thing that outlives the tab (item 3), so the next open is a
+        // tap rather than eleven. Written here so every path that sets a
+        // location — the welcome card, the switcher, Near me — records it
+        // without having to remember to. It publishes its own store.
+        recordRecentZip(next.zip);
+        publishToListeners(listeners);
+      },
+      () => {
+        // Not being able to remember is survivable; failing the search is not.
+        // Keep the choice for this page's life; the publish still runs.
+        cachedRaw = JSON.stringify(payload);
+        cachedSnapshot = { restored: true, location: next };
+      },
+    );
   }, []);
 
   return { ...snapshot, remember };

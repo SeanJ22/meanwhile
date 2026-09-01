@@ -78,79 +78,79 @@
     "regeneratedOn": "2026-08-31"
   },
   "docs/governance/constitution.md": {
-    "digest": "2d264bd36bb8c3c50d4e1f962f9398f0d8226883fb8bcba718c925933cd359d2",
+    "digest": "591b0975be3a0669653454edb9fee4b72dd510780c51b27ae67c37d4342385ba",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-08-31"
   },
   "docs/governance/current-decisions.md": {
-    "digest": "2d264bd36bb8c3c50d4e1f962f9398f0d8226883fb8bcba718c925933cd359d2",
+    "digest": "591b0975be3a0669653454edb9fee4b72dd510780c51b27ae67c37d4342385ba",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-08-31"
   },
   "docs/governance/history.md": {
-    "digest": "2d264bd36bb8c3c50d4e1f962f9398f0d8226883fb8bcba718c925933cd359d2",
+    "digest": "591b0975be3a0669653454edb9fee4b72dd510780c51b27ae67c37d4342385ba",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-08-31"
   },
   "docs/governance/index.json": {
-    "digest": "2d264bd36bb8c3c50d4e1f962f9398f0d8226883fb8bcba718c925933cd359d2",
+    "digest": "591b0975be3a0669653454edb9fee4b72dd510780c51b27ae67c37d4342385ba",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-08-31"
   },
   "docs/governance/policies/business.md": {
-    "digest": "2d264bd36bb8c3c50d4e1f962f9398f0d8226883fb8bcba718c925933cd359d2",
+    "digest": "591b0975be3a0669653454edb9fee4b72dd510780c51b27ae67c37d4342385ba",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-08-31"
   },
   "docs/governance/policies/data-privacy.md": {
-    "digest": "2d264bd36bb8c3c50d4e1f962f9398f0d8226883fb8bcba718c925933cd359d2",
+    "digest": "591b0975be3a0669653454edb9fee4b72dd510780c51b27ae67c37d4342385ba",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-08-31"
   },
   "docs/governance/policies/discovery.md": {
-    "digest": "2d264bd36bb8c3c50d4e1f962f9398f0d8226883fb8bcba718c925933cd359d2",
+    "digest": "591b0975be3a0669653454edb9fee4b72dd510780c51b27ae67c37d4342385ba",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-08-31"
   },
   "docs/governance/policies/meta-governance.md": {
-    "digest": "2d264bd36bb8c3c50d4e1f962f9398f0d8226883fb8bcba718c925933cd359d2",
+    "digest": "591b0975be3a0669653454edb9fee4b72dd510780c51b27ae67c37d4342385ba",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-08-31"
   },
   "docs/governance/policies/rendering-neutrality.md": {
-    "digest": "2d264bd36bb8c3c50d4e1f962f9398f0d8226883fb8bcba718c925933cd359d2",
+    "digest": "591b0975be3a0669653454edb9fee4b72dd510780c51b27ae67c37d4342385ba",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-08-31"
   },
   "docs/governance/policies/shipping-ci.md": {
-    "digest": "2d264bd36bb8c3c50d4e1f962f9398f0d8226883fb8bcba718c925933cd359d2",
+    "digest": "591b0975be3a0669653454edb9fee4b72dd510780c51b27ae67c37d4342385ba",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-08-31"
   },
   "docs/governance/policies/sources-licensing.md": {
-    "digest": "2d264bd36bb8c3c50d4e1f962f9398f0d8226883fb8bcba718c925933cd359d2",
+    "digest": "591b0975be3a0669653454edb9fee4b72dd510780c51b27ae67c37d4342385ba",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-08-31"
   },
   "docs/governance/policies/tracker-workflow.md": {
-    "digest": "2d264bd36bb8c3c50d4e1f962f9398f0d8226883fb8bcba718c925933cd359d2",
+    "digest": "591b0975be3a0669653454edb9fee4b72dd510780c51b27ae67c37d4342385ba",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-08-31"
   },
   "docs/governance/policies/visual-feedback.md": {
-    "digest": "2d264bd36bb8c3c50d4e1f962f9398f0d8226883fb8bcba718c925933cd359d2",
+    "digest": "591b0975be3a0669653454edb9fee4b72dd510780c51b27ae67c37d4342385ba",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-08-31"
@@ -162,7 +162,7 @@
     "regeneratedOn": "2026-08-31"
   },
   "docs/rulings.md": {
-    "digest": "2d264bd36bb8c3c50d4e1f962f9398f0d8226883fb8bcba718c925933cd359d2",
+    "digest": "591b0975be3a0669653454edb9fee4b72dd510780c51b27ae67c37d4342385ba",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-08-31"

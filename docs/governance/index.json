@@ -1,11 +1,11 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "8cff0c478da2cc11",
+  "snapshot": "a8cd51d6130fafd6",
   "counts": {
-    "records": 259,
-    "current": 238,
-    "law": 207,
+    "records": 264,
+    "current": 243,
+    "law": 212,
     "decisions": 31,
     "historical": 21
   },
@@ -4747,6 +4747,219 @@
         {
           "kind": "related_to",
           "target": "R-0074"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0223",
+      "aliases": [
+        "RULING 223",
+        "R223",
+        "R-223"
+      ],
+      "title": "RULING 223 — a session's discretion covers how, never what; it may not redefine the completion contract",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-31",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [
+        {
+          "key": "session.discretion_scope",
+          "value": "implementation-and-ordering-never-the-contract"
+        },
+        {
+          "key": "session.capacity_end_output",
+          "value": "unfinished-session-with-resume-point-and-named-items"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0189"
+        },
+        {
+          "kind": "extends",
+          "target": "R-0180"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0221"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0190"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0224",
+      "aliases": [
+        "RULING 224",
+        "R224",
+        "R-224"
+      ],
+      "title": "RULING 224 — acquisition without promotion is inventory; an obligation's completion contract extends to the reader",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-31",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [
+        {
+          "key": "obligation.completion_boundary",
+          "value": "reader-surface-or-honest-gap-not-the-vault"
+        },
+        {
+          "key": "obligation.promotion_tail",
+          "value": "automatic-through-staged-shipping-carries-last-mile"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0205"
+        },
+        {
+          "kind": "extends",
+          "target": "R-0184"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0206"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0207"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0026"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0225",
+      "aliases": [
+        "RULING 225",
+        "R225",
+        "R-225"
+      ],
+      "title": "RULING 225 — every session report leads in reader terms; infrastructure counts afterward",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-31",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [
+        {
+          "key": "report.lead_order",
+          "value": "reader-then-unattended-then-owner-then-infrastructure"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0190"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0180"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0189"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0224"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0226",
+      "aliases": [
+        "RULING 226",
+        "R226",
+        "R-226"
+      ],
+      "title": "RULING 226 — aggregate-only governs what is exposed, never what exists at rest; the implementation is ratified",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "data-privacy",
+      "adopted": "2026-08-31",
+      "operativePolicy": "docs/governance/policies/data-privacy.md",
+      "claims": [
+        {
+          "key": "collection.aggregate_only_scope",
+          "value": "exposure-boundary-not-storage-at-rest"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "related_to",
+          "target": "R-0132"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0055"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0227",
+      "aliases": [
+        "RULING 227",
+        "R227",
+        "R-227"
+      ],
+      "title": "RULING 227 — escalation without reconciliation is prohibited",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-31",
+      "operativePolicy": "docs/governance/policies/tracker-workflow.md",
+      "claims": [
+        {
+          "key": "escalation.entry_requirement",
+          "value": "machine-predicate-or-explicit-not-verifiable-with-card"
+        },
+        {
+          "key": "escalation.reconciliation_cadence",
+          "value": "rechecked-every-generation-auto-resolves"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0208"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0221"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0146"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0055"
         }
       ],
       "uncertain": [],

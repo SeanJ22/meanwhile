@@ -137,6 +137,16 @@ export interface StateMoneyRecord {
    */
   checkedAt: string;
   provenance: Provenance;
+  /**
+   * Set when a refresh could NOT read the route and this record was carried
+   * forward from the previous snapshot rather than replaced.
+   *
+   * `checkedAt` stays the date the facts were actually read, so the reader's
+   * attribution line remains true; this field is the auditor's half. It is not
+   * an announcement — RULING 139 strikes a verdict on ourselves from a reader
+   * surface, and the read date is the whole of what a reader is owed.
+   */
+  retainedFrom?: { attemptedAt: string; reason: string } | null;
 }
 
 export interface StateMoneySnapshot {

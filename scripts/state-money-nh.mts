@@ -193,7 +193,17 @@ export interface FilerPage {
  * accident: `ok: false` has no `rows` field to read.
  */
 export type FilerRead =
-  | { ok: true; rows: FilerRow[]; totalItems: number }
+  | {
+      ok: true;
+      /** The rows in the target year. */
+      rows: FilerRow[];
+      /** Every row actually retrieved, across every page, before the year filter. */
+      retrieved: number;
+      /** What the registry says it holds for this query. */
+      totalItems: number;
+      /** Whether `totalItems` came from the registry rather than from our own tally. */
+      denominatorProven: boolean;
+    }
   | { ok: false; reason: string };
 
 /** How a page is actually fetched. Injected so a test never makes a live call. */
@@ -245,7 +255,9 @@ export async function readFilers(
     return {
       ok: true,
       rows: page.items.filter((r) => r.electionYear === year),
+      retrieved: page.items.length,
       totalItems: page.totalItems ?? page.items.length,
+      denominatorProven: page.totalItems !== null,
     };
   } catch (e) {
     return { ok: false, reason: (e as Error).message };
@@ -265,6 +277,13 @@ export interface BuildInput {
   /** The read stamp every record carries. */
   asOf: string;
   year?: number;
+  /**
+   * The previous snapshot's records — LAST-GOOD READER TRUTH.
+   *
+   * A refresh that cannot read the route must not replace what a card already
+   * honestly said. This is what it keeps instead.
+   */
+  previous?: StateMoneyRecord[];
 }
 
 export interface BuildResult {

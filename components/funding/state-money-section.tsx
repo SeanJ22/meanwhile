@@ -221,6 +221,62 @@ function AbsentRecord({ record }: { record: StateMoneyRecord }) {
   );
 }
 
+/**
+ * **THE GAP THAT SAYS WHOSE IT IS.** (RULING 224, 2026-08-31.)
+ *
+ * Before this existed, a candidate we had actively investigated — whose
+ * committee we had found, read and could not safely attribute — rendered the
+ * card's generic empty line: *"We don't hold a campaign finance filing for this
+ * person."* Undated, unsourced, and word-for-word identical to what a candidate
+ * nobody had ever looked for renders. The reader could not tell the two apart,
+ * and one of them is a fact about us while the other is very nearly a fact
+ * about the candidate.
+ *
+ * **No money appears here and none may ever be added.** Not a total, not a
+ * partial, not a committee name — those are exactly what the matching bar
+ * withheld, and rendering them under a hedge would be the failure the bar
+ * exists to prevent, wearing a disclaimer. What renders is one sentence about
+ * what we have not settled, the date the agency's own next filing deadline
+ * falls, and the reader's route to look for themselves.
+ */
+function OurGapRecord({ record }: { record: StateMoneyRecord }) {
+  const gap = record.ourGap;
+  return (
+    <div className="mt-3 first:mt-0">
+      <p className="text-sm">
+        We haven&rsquo;t matched this candidate to a campaign finance filing yet.
+      </p>
+      <p className="mt-1 text-xs text-muted-foreground">
+        {gap?.whatIsMissing ??
+          "The agency holds a record we could not confirm belongs to this candidacy."}{" "}
+        This is a gap in our records, not a statement that nothing was filed.
+        {/*
+          A LITERAL ENTITY IN A TEMPLATE STRING RENDERS AS ITS OWN SOURCE.
+          This clause was written as `${agency}&rsquo;s` inside a JS template
+          literal rather than in JSX, and React escaped it: readers saw the six
+          characters `&rsquo;` on the card. The character itself goes in.
+        */}
+        {gap?.nextDue
+          ? ` We check again after the agency’s next filing deadline, ${readableDate(gap.nextDue)}.`
+          : ""}{" "}
+        Read {readableDate(record.checkedAt)}.
+      </p>
+      {record.filingsUrl ? (
+        <p className="mt-2 text-xs text-muted-foreground">
+          <a
+            href={record.filingsUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="underline underline-offset-2"
+          >
+            Search the {record.agency}&rsquo;s public filings
+          </a>
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
 export function StateMoneySection({
   records,
   bare = false,
@@ -235,6 +291,7 @@ export function StateMoneySection({
     (r) => r.filingState === "REGISTERED_NO_ACTIVITY_REPORTED",
   );
   const absent = records.filter((r) => r.filingState === "NO_REPORTS_ON_FILE");
+  const gaps = records.filter((r) => r.filingState === "OURS_GAP");
 
   /*
    * A candidate with a real filing does not also show the absence note: the
@@ -244,9 +301,19 @@ export function StateMoneySection({
    * The middle state slots in by the same reasoning — the STRONGER statement
    * the agency actually made wins. A committee it names, reporting nothing,
    * outranks the registry holding nothing; money outranks both.
+   *
+   * AN OURS GAP RANKS LAST OF ALL, and that ordering is the point of it: it is
+   * what renders when the agency has made no statement we can carry, and never
+   * alongside one we can. It replaces silence, never a fact.
    */
   const shown =
-    filed.length > 0 ? filed : registered.length > 0 ? registered : absent.slice(0, 1);
+    filed.length > 0
+      ? filed
+      : registered.length > 0
+        ? registered
+        : absent.length > 0
+          ? absent.slice(0, 1)
+          : gaps.slice(0, 1);
   const agency = shown[0]?.agency ?? "";
 
   return (
@@ -262,6 +329,9 @@ export function StateMoneySection({
         }
         if (record.filingState === "REGISTERED_NO_ACTIVITY_REPORTED") {
           return <RegisteredNoActivityRecord key={record.committeeId ?? i} record={record} />;
+        }
+        if (record.filingState === "OURS_GAP") {
+          return <OurGapRecord key={record.committeeId ?? i} record={record} />;
         }
         return <AbsentRecord key={record.committeeId ?? i} record={record} />;
       })}

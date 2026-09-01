@@ -435,3 +435,159 @@ That pamphlet is worth naming as a route in its own right, and not for money:
 identical terms** — which is the same instrument RULING 112 describes and cites
 this Commission as the model for. It is a `in their own words` route as much as
 a `filing-campaign-finance-state` one.
+
+---
+
+## 2026-08-31 (Session C2) — THE ROUTE IS WALKED END TO END AND ARIZONA MONEY IS ON THE BALLOT
+
+The block above closed with the row semantics UNDETERMINED, the identity
+`sum(Income) − sum(Expense) == CashBalance` refuted 134/121 over the population,
+and the note *"Arizona statewide money remains owed."* It is no longer owed for
+44 of the 49 candidacies the Secretary of State is the filing officer for.
+`data/funding/state-money-az-2026.json` exists and the ballot page renders it.
+
+### Why the refutation was correct and its conclusion was not
+
+The 134/121 measurement was real and the refusal to ship on it was right. What
+was wrong was what it was taken to mean.
+
+**`CashBalance` could never have validated that sum.** It is repeated
+IDENTICALLY on every row of an entity — 94 of 94 multi-row entities — and it
+does not move when the query window moves, because it carries a balance brought
+forward from before the cycle. Checking a WITHIN-WINDOW SUM against an
+ACROSS-WINDOW BALANCE compares two quantities that are not commensurable. The
+134 that agreed were the committees that happened to start from zero, which is
+exactly why Jayme Accalia's three rows summed to her balance to the cent and
+looked like proof.
+
+So the hypothesis was not refuted. **The test was invalid, and a session that
+accepts a refutation without asking whether the two sides were commensurable
+inherits a fact class recorded as unknowable when it is merely unmeasured.**
+That is now a method route:
+`a-refuted-hypothesis-may-have-been-tested-against-the-wrong-quantity`.
+
+### The commensurable source, and the parameter that was hiding it
+
+The prior note named the itemised transaction ledger as the thing that would
+settle it, and recorded it as returning nothing.
+
+**It was returning nothing because our request was short one parameter.**
+`POST /Reporting/GetNEWDetailedTableData` needs the page's own `Name=1~<id>`
+form **AND** a separate **`entityId=<id>`** in the query string. With `Name`
+alone it answers HTTP 200 with a complete, well-formed DataTables envelope —
+`draw`, `recordsFiltered`, `data: []` — and `recordsTotal: 0`. Nothing about it
+looks like a failure. That is the dangerous shape of RULING 100: not the
+obviously-broken two-byte reply, but the well-formed zero.
+
+### THE MEASUREMENT, over the population, with its denominator
+
+```
+2025-2026 cycle, JurisdictionId=0, 370 summary rows in 255 entities
+  sum(summary Income)  == sum(itemised income)     HOLDS 255/255   BREAKS 0
+  sum(summary Expense) == sum(itemised expense)    HOLDS 255/255   BREAKS 0
+  sum(Income) − sum(Expense) == CashBalance        HOLDS 133/255   BREAKS 122
+```
+
+The rows are parts and their sum is the cycle total. `CashBalance` is **not
+published**: what it carries beyond the window is not established, and a number
+whose meaning is unknown does not go under a person's photograph.
+
+That is the population test. **Every committee actually published is
+additionally reconciled INDIVIDUALLY** — 58 of 58 agreed, across 291,930
+itemised transactions — and a committee that stops agreeing stops rendering.
+
+### THE DEFAULT VIEW IS NOT THE UNIVERSE, and this is the correction that matters most
+
+| Query, at `JurisdictionId=0`, 2025-2026 | Rows the publisher declares | Entities |
+| --- | ---: | ---: |
+| `IsLessActive=false ShowOfficeHolder=false` (**the default**) | 370 | 255 |
+| `IsLessActive=true ShowOfficeHolder=false` | 844 | 716 |
+| `IsLessActive=true ShowOfficeHolder=true` | 16 | **16, disjoint** |
+| **union** | **860** | **732** |
+
+`ShowOfficeHolder=true` **replaces** the set rather than widening it. A
+candidate behind either flag, asked for with the defaults, comes back as
+nothing — and *"370 of 370 rows the publisher itself declares"* is the
+strongest-sounding completeness claim available while being scoped to one query.
+
+**Concretely: Kevin Volk, on this ballot for State Representative District 17
+with $173,742.29 raised, is not among the default 370.** Matching the pilot
+ballot against the default view alone writes a false absence on his card.
+
+### A quoted nickname is an alternate name, and reading it as text cost five committees
+
+Both publishers annotate names the same way and nothing was reading the
+annotation. The ballot carries `Rachel "Jones" Keshel`, `Nicholas "Nick" Myers`,
+`Hollace "Holly" Lyon`, `Walter "Les" Presmyk`; the register carries
+`Slawson, Fred "Ryan"`. Treated as ordinary text the quoted word becomes a token
+that can never match, and the shared `namesAgree` — correctly, on the input it
+was given — refused. **That turned five live committees into five manufactured
+absences**, including Keshel's, which had filed $47,878.92.
+
+The fix parses; it does not fuzz. A name with a quoted segment expands into the
+names it actually states and `namesAgree` is applied unchanged. `Tom Horne`
+against the filed `Horne, Thomas Chalres` is the control: no annotation, no
+match, and he stays an OURS GAP rather than a guess.
+
+### AN ABSENCE NOW NEEDS TWO REPRESENTATIONS TO AGREE
+
+RULING 206. The portal is a filing cabinet and the FTP register is another. An
+absence is written only when the union of all three portal queries holds nothing
+**and** the Secretary of State's own 8,829-row `Committees.txt` holds no live
+candidate committee under the surname. Where they disagree it is OUR gap.
+
+**One candidacy on this ballot clears that bar: Ken Miceli**, for Governor,
+absent from both representations.
+
+### The FTP root has four directories, not one
+
+Previously recorded as though `/cfsdata2/` were the whole of it. Listed
+2026-08-31: **`cfsdata`** (an older sibling), **`cfsdata2`** (14 files),
+**`ElectionResults`** — a directory per even year from **1998 through 2026**,
+the 2026 one modified 5 July — and **`EzBulkFilling Deploy`**. `ElectionResults`
+is results rather than money and was not walked; it is recorded as `DISCOVERED`
+in `data/campaign-finance/az-route-descriptors.json` so it is not re-lost.
+
+**Still no bulk transaction extract**, re-confirmed: none of the 14 files is
+transactional. The Bulk Filing Guide is an UPLOAD specification.
+
+### Permission, re-measured 2026-08-31
+
+- `seethemoney.az.gov/robots.txt` — **HTTP 404 to a bare client, an identified
+  client and a browser-identified client alike**, so the 404 is about the host
+  rather than about our identification. No terms document. No challenge, no
+  credential.
+- `apps.azsos.gov/robots.txt` — HTTP 200, `Crawl-delay: 5`, disallowing only
+  `/apps/`, `/scripts/`, `/poll/`, `/election/EOC2015/`, `/cptest/`. No rule
+  reaches the FTP service.
+- `https://ftp.azsos.gov/robots.txt` — **CONNECT TIMEOUT**, because there is no
+  HTTPS service on that host. **That is TRANSPORT state and is not a permission
+  verdict** (RULING 182). The FTP service itself answers `230 Password Ok` to
+  anonymous.
+
+### Where the 49 candidacies ended, with the denominator
+
+Both pilot ZIPs — **85701** and **85641** — reach the same 30 contests and the
+same 55 candidacies, because a zip is an area and both ZCTAs cross the same
+divisions. Six are federal and file with the FEC, which this product already
+reads. **The Secretary of State is the filing officer for the other 49.**
+
+| Reader state | 85701 | 85641 |
+| --- | ---: | ---: |
+| Sourced filed totals | **44** | **44** |
+| Sourced, dated absence (both representations agree) | **1** | **1** |
+| OURS GAP, with a live obligation and a stated next date | **4** | **4** |
+| **Total in scope** | **49** | **49** |
+
+45 committee records back the 44 filed candidacies — one candidate has two.
+No candidacy is in two states and none is in none. **Generic placeholders are
+gone from all 49.**
+
+The four gaps and what each is owed are enumerated in
+`data/campaign-finance/az-route-descriptors.json` under `obligationStillOpen`,
+and each renders on its own card naming the state's next filing deadline,
+**2026-10-15 (Post-Primary Election Q3)**, read from the state's own calendar. <!-- expected-future: Arizona's own Cycle 2026 Standing Reports filing deadline, read 2026-08-31 from ftp://ftp.azsos.gov/cfsdata2/ReportingPeriods.txt. A deadline, not a stamp. -->
+
+**The obligation is NOT closed by this note.** Four candidacies remain owed, and
+the county and municipal tiers — 108 of Arizona's 109 filing jurisdictions —
+are not touched by any route here.

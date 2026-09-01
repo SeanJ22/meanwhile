@@ -375,7 +375,9 @@
     "money:az": "tsx scripts/state-money-az.mts",
     "method:learn-az-seethemoney": "tsx scripts/learn-az-seethemoney.mts",
     "identity:az": "tsx scripts/identity-az-2026.mts",
-    "acquire:az-sos-candidates": "tsx scripts/acquire-az-sos-candidate-filings.mts"
+    "acquire:az-sos-candidates": "tsx scripts/acquire-az-sos-candidate-filings.mts",
+    "acquire:filing-authorities": "tsx scripts/acquire-candidate-filing-authorities.mts",
+    "readback:artifact": "tsx scripts/readback-artifact.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

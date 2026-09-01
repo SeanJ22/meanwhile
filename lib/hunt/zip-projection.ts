@@ -30,6 +30,7 @@
  * that absence there "is never a claim about a place".
  */
 
+import { populationLabel } from "../candidates/population-label.ts";
 import type { CandidateUniverse, CanonicalCandidacy } from "./candidate-universe.ts";
 import type { AcquisitionUniverse, ReaderProjection } from "./source-universe.ts";
 
@@ -94,12 +95,34 @@ export function projectOntoZip(input: {
   readonly divisions: readonly string[];
   readonly citation: string;
 }): { readonly projection: ReaderProjection; readonly candidacies: readonly CanonicalCandidacy[] } {
+  /*
+   * **R-C9: THIS LINE USED TO READ `"${stateCode} statewide candidate universe"`
+   * FOR EVERY STATE, INCLUDING THE TWO WHOSE POPULATION IS ONE COUNTY'S BALLOT.**
+   *
+   * New Hampshire's universe is 47 candidacies from Merrimack County's
+   * certified ballot and New Jersey's is 276 from Morris County's. The keys had
+   * genuinely been de-ZIPped; the populations had not been acquired. This
+   * string is the one a report quotes as the acquisition denominator's
+   * AUTHORITY, so the word travelled into every count cut out of it.
+   *
+   * `populationLabel` derives the label from the documents the universe was
+   * actually built from, against a register of acquisitions that each had to be
+   * declared beside the run that earned it — and anything undeclared is
+   * PILOT_DERIVED. The label can no longer be right by coincidence or wrong by
+   * inheritance.
+   */
+  const label = populationLabel({
+    stateCode: input.universe.stateCode,
+    cycle: input.universe.cycle,
+    derivedFrom: input.universe.derivedFrom,
+  });
   const acquisition: AcquisitionUniverse = {
-    authority: `${input.universe.stateCode} statewide candidate universe, cycle ${input.universe.cycle}`,
+    authority: label.authorityLine,
     unit: "candidacies",
-    /* The publisher states no count we hold: the Arizona Secretary of State's
-       statewide filing list is an OPEN acquisition obligation, so this
-       denominator is ours and says so rather than borrowing authority. */
+    /* The publisher states no count we hold. Arizona's Secretary of State
+       publishes a filing list and this project now holds it as a corpus, but he
+       does not publish a TOTAL, and neither does any other authority here — so
+       this denominator is ours and says so rather than borrowing authority. */
     statedBy: null,
     held: input.universe.candidacies.length,
     countedBy: `derived from ${input.universe.derivedFrom.map((d) => d.path).join(", ")}`,

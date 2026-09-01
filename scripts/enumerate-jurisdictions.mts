@@ -307,16 +307,32 @@ function arizonaSources(unit: CensusUnit, govClass: JurisdictionClass): Jurisdic
       authority: "Arizona Secretary of State",
       authorityBasis: "the Secretary of State certifies and publishes statewide and legislative candidate lists",
       scope: "STATEWIDE",
-      routeId: null,
-      url: "https://azsos.gov/elections/results-data/candidate-filings",
-      state: "DISCOVERY_OWED",
+      routeId: "az-sos-candidate-filings",
+      /*
+       * THE URL THIS ROW USED TO CARRY —
+       * `azsos.gov/elections/results-data/candidate-filings` — ANSWERED HTTP 404
+       * ON 2026-09-01. The document it was supposed to lead to answers 200.
+       * That is RULING 206 in one line: the record is the Secretary's filing
+       * list, never the navigation path that served it, and a dead landing page
+       * is not a lost record.
+       */
+      url: "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+      state: "ADAPTED",
       owed:
-        "acquire the Secretary of State's full 2026 candidate-filing list as DATA. The 2026 filings PDF " +
-        "was read for the Pima projection only; the statewide list is the acquisition denominator and " +
-        "is not held as a corpus.",
+        "ACQUIRED 2026-09-01 as a corpus at data/candidates/az-2026-sos-candidate-filings.json — 266 " +
+        "candidacies across 76 contests, the Secretary's complete applicable universe for the offices " +
+        "he is the filing officer for (federal congressional, statewide executive, legislative). WHAT " +
+        "IS STILL OWED IS A DIFFERENT RECORD, and it is the 15 county rows below: county, municipal, " +
+        "school-district and special-district candidacies are filed with the county officer in charge " +
+        "of elections and are not on this list. Nor are independent and no-party candidates, write-in " +
+        "nominees, or nonpartisan and judicial offices — each an absence from THIS DOCUMENT and never " +
+        "from the ballot.",
       citation:
-        "data/ballot/az-pima-2026.json — provenance sourceUrl " +
-        "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "data/candidates/az-2026-sos-candidate-filings.json — HTTP 200, 183,097 B, last-modified " +
+        "2026-03-31, sha256 a13d2a82f83b52206d3697a840382403b1c3d5cb6c80481e383b42d360669016, read " +
+        "2026-09-01. Extracted twice by independent mechanisms, both returning 266 rows; " +
+        "`pnpm acquire:az-sos-candidates` re-runs it and tests/az-sos-candidate-filings.test.ts " +
+        "reproduces the parse offline from the committed bytes.",
     });
     return out;
   }

@@ -1,0 +1,85 @@
+Label the candidate populations for what they are, prove 85122 renders held records with no hunt, and land the control-plane read-back
+
+R-C9: a population may be called statewide or source-universe only when it was
+acquired from the authoritative source's complete applicable universe. No ZIP
+in the key is a property of the KEY, not of the POPULATION.
+
+Three labels were describing pilot-derived populations as statewide, and the
+worst of them was reader-adjacent: lib/hunt/zip-projection.ts built the
+AcquisitionUniverse authority string as `${stateCode} statewide candidate
+universe` for every state, so a report quoting the acquisition denominator
+called 47 candidacies off Merrimack County's ballot New Hampshire's statewide
+universe. scripts/candidate-universe.mts titled itself THE STATEWIDE CANDIDATE
+ACQUISITION DENOMINATOR while its own body four paragraphs down said it was
+not one.
+
+lib/candidates/population-label.ts replaces the string with a derivation over
+a REGISTER of acquisitions, each declared beside the run that earned it. What
+this makes impossible: a population inheriting a word nobody re-checked.
+Anything not in the register is PILOT_DERIVED, so the failure direction is
+under-claiming. AZ now reads PARTIAL_AUTHORITY_ACQUIRED - the Secretary's list
+plus a pilot ballot, and the Secretary does not file county offices. NH and NJ
+read PILOT_DERIVED and say so in one sentence apiece.
+
+NH and NJ were WORKED, not skipped. scripts/acquire-candidate-filing-authorities.mts
+runs the routes and records what each answered:
+
+  NH SOS cumulative filings   HTTP 200, 473,945 B, 77 pages with a text layer.
+                              Two named walls, both ours: the pages are
+                              ROTATED, so the table layer reads each COLUMN as
+                              one row and returns ZERO_ROWS; and this
+                              repository holds NO SOURCED CROSSWALK from an NH
+                              State Representative district to an OCD division
+                              (one data point, sldl:607, is not a scheme).
+                              Deriving the rest would be inventing division
+                              ids, so it is not wired to the reader.
+  NJ Division of Elections    HTTP 200 on both official general-candidate
+                              lists. The Division files FEDERAL office only;
+                              every county, municipal and school candidacy is
+                              one of 21 county clerks, which is where Morris's
+                              276 come from. NJ cannot be called statewide by
+                              acquiring this alone.
+
+REQUIRES_NEW_ADAPTER on every row, dated, with the wall named. A disposition
+is about a route; the obligation stays open (RULING 205).
+
+The AZ SOS row in data/jurisdictions/az.json moves DISCOVERY_OWED -> ADAPTED,
+and its recorded URL moves too: azsos.gov/elections/results-data/candidate-filings
+answered HTTP 404 on 2026-09-01 while the document it pointed at answered 200.
+RULING 206 in one line.
+
+ITEM B. tests/new-zip-readiness.test.ts proves projectOntoZip performs no
+acquisition. It never renders a page, so it cannot see a route handler
+hunting. tests/new-zip-render.test.ts drives 85122 through a LOCAL production
+build with two traps, and the second is the one that matters:
+
+  BROWSER  context.route records and aborts every non-loopback request
+  SERVER   scripts/trap-outbound.mjs, preloaded into the Next process, wraps
+           fetch / http.request / https.request, APPENDS EVERY ATTEMPT TO A
+           FILE and only then refuses it
+
+A browser-only version would report ZERO OUTBOUND over a render that hunted
+during SSR. Measured: 85122 renders 18 contests and 19 candidate cards
+including ballot-az-pima:governor with Katie Hobbs, 0 browser outbound, 0
+server outbound. With no build or no trap the test SKIPS WITH THE MISSING
+PIECE NAMED - it does not pass, because a render check that passes when
+nothing rendered is how a suite goes green over a product nobody looked at.
+
+Two instrument defects found while writing it, both recorded in the file:
+innerText omits collapsed sections and reported a name absent that the SSR
+HTML carries 24 times; and a fixed sleep would pass on a fast machine.
+
+ITEM E. scripts/lane-c-readback.mts writes nothing on purpose, so
+scripts/readback-artifact.mts runs it as a SUBPROCESS and keeps its verbatim
+stdout, parsing every number back out of the text the reader printed. There is
+no path by which a count reaches the artifact without the separate process
+having printed it first. The proof class is computed by proofClassOf and is
+never claimed: it reads SESSION_MEASURED, and the record says exactly why -
+runClass=LOCAL_SESSION - and what would move it. A session cannot award itself
+independence by running the same command twice.
+
+Read back after registration: 2,996 obligations, of which candidate-enrichment
+1,720 (was 1,087 before this branch), 1,346 occurrences, 301 committed
+dispositions.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>

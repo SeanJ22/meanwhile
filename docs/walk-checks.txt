@@ -205,6 +205,7 @@
 [SC0831] 85701: the panel a reader sees after typing lists the districts the resolver settled
 [SC0831] 85701: typing an address into the prompt moves the panel in the same tab, no reload
 [W6H3] the fly-in holds 90% of a bare MapLibre fly-in's median frame rate on this host
+[W6H3] the fly-in on a browser with NO GPU acceleration holds 75% of a bare MapLibre fly-in and stays under 20% long frames
 [W6H3] the zip fly-in does not re-query the whole viewport on every frame of itself
 [f] 03255: Kearsarge Regional School District's sittings
 [g10] 85701: agenda attribution reaches the served payload

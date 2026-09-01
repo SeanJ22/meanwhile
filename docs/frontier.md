@@ -784,10 +784,16 @@ tail is a defect**, retroactively, so this is a defect and not a plan.
   state's universe is the union of that authority and **21 county clerks**, so
   the remaining work is an enumeration of clerks, not a parser.
 
-### Instruments that reported cleanly while looking at nothing
+### Instruments that reported wrongly — and the count kept rising
 
-Three found in one session, and the pattern is worth naming rather than filing
-three separate rows.
+Five found in one session, and the pattern is worth naming rather than filing
+five separate rows. **Three passed while looking at nothing; one FAILED while
+looking at a race; one was this session's own new code.** A later independent
+refutation pass then raised sixty more suspect claims across the session's own
+acceptance package and confirmed forty of them
+(), so the honest count is
+not five — it is *this project has many sweeps and nothing systematically asks a
+sweep to prove it looked.*
 
 1. **The model-comparison harness filtered incomparable questions out** instead
    of carrying them as unmeasured, so a sweep emitted `SWITCH` over one row.
@@ -807,9 +813,21 @@ red) is the answer that exists; it is not applied broadly.
 
 ### Still owed on Ask, unchanged by the model switch
 
-**Q3 and Q5 fail identically on both models** — an 18-record pack cannot fit the
-ASK-19 700-character budget. That is a real unanswered reader question and a
-PIPELINE defect, not a model result. RULING 234 does not close it.
+**Q3 and Q5 fail on the INCUMBENT, 0 of 3 each** — an 18-record pack cannot fit
+the ASK-19 700-character budget. That is a real unanswered reader question and a
+PIPELINE defect. RULING 234 does not close it, and the model revert leaves it
+exactly where it was: the model now shipping is the one that fails both.
+
+**This line previously read "fail identically on both models", and that was
+wrong.** It was true of the 2026-08-31 comparison runs and false of the two
+later ones, which record the challenger holding **Q3 1 of 3** and **Q5 2 of 3**
+with substantive stored answers
+(`data/health/ask-model-compare-runs/2026-09-01-1788289823520.json` and
+`…-1788292079219.json`). Two of this project's own artifacts disagreed about a
+measurement, and the one a later session inherits carried the stale half —
+which is the whole reason the frontier is not allowed to state results it has
+not re-read. Found by the refutation pass recorded in
+`docs/evidence/session-c-refutation-2026-09-01.json`.
 
 Two effort levels are unusable and the reason is structural: **`xhigh` and `max`
 break the output contract** at `max_tokens: 2048`, because thinking counts

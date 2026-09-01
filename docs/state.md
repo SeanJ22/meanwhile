@@ -22998,14 +22998,56 @@ author provenance.* A session does not legislate. So the measurement is recorded
 as a FACT that explicitly declines to amend, RULING 233 stands as the author
 wrote it, and `NH304` carries the choice to him with both options.
 
+### SESSION C DOES NOT CLOSE — three items are UNFINISHED
+
+**ITEM A.** Arizona was acquired from the authoritative source universe; **New
+Hampshire and New Jersey were not.** Relabelling them `PILOT_DERIVED` /
+`REQUIRES_NEW_ADAPTER` satisfies R-C9 honesty and does **not** satisfy Item A,
+which requires migration to each state's authoritative candidate-filing
+universe. An honestly named wall is not completion.
+
+**ITEM K.** `ASK_SYNTHESIS_MODEL` is `claude-opus-5`. The switch was made,
+measured, and reverted the same day under RULING 234's own clause — correctly.
+But the directive's acceptance requires production serving `claude-sonnet-5`,
+so the item cannot also be called complete. **Readers get `claude-opus-5`.**
+
+**THE RUNNER, and this session broke it.** The shared control-plane database was
+migrated to schema v3 from a worktree while the runner executes from the main
+checkout on pre-session code declaring v2. That module refuses undeclared tables
+by design, so it shut itself down: `control-plane:gate` REFUSED there, cycles
+exited NON-ZERO from ~19:56Z, digests read `0 providers, 0 units`. The same gate
+PASSES at this head. **Expand-first is only safe when the old code tolerates the
+new schema** — true of the additive Drizzle column, false of the control-plane
+bootstrap. The repair is this merge; verification can only follow it.
+
+### And the acceptance package did not survive its own audit
+
+Ten skeptics were run against this session's acceptance claims, told to REFUTE
+rather than confirm, with every finding handed to a second agent told to show
+the first was wrong. **71 agents, 89 claims, 60 raised, 40 CONFIRMED BROKEN.**
+Full record: `docs/evidence/session-c-refutation-2026-09-01.json`.
+
+It found, among others: a count printed as `301` where the artifact it cited
+says `342`; a "plant-check both ways" with no red arm; an admin self-check whose
+`stated` and `rendered` are the same expression, so it can never fail; and an
+Item B verification command that produces a SKIP rather than the stated result.
+
+**The pass is itself fallible and was spot-checked rather than believed** — one
+CONFIRMED_BROKEN finding is wrong on its facts, and one was stale. The number to
+carry is not "40 defects" but that this package asserted things it had not
+verified at a rate an independent pass could detect.
+
 ### Where the numbers landed
 
 ```
-  suite              4,675 tests · 4,674 pass · 1 skipped
-  gates              14 of 14
-  governance         272 records · 0 semantic conflicts · 0 structural issues
+  suite              4,677 tests · 4,676 pass · 0 fail · 1 skipped
+  gates              14 of 14   (record 2026-09-01-25, head ad1585f1)
+  governance         273 records · 0 semantic conflicts · 0 structural issues
+  walk:all           445 ran · 0 quarantined · 5 failures, NONE this session's
   tracker            69 Needs Sean, all carded · 478 resolved
   AZ candidates      55 -> 266 (the Secretary's filing list, acquired)
+  NH / NJ            NOT acquired — pilot-derived, wall named
   obligations        1,087 -> 1,720, each with its denominator stated
-  Ask cost           2.64x cheaper, measured cold, against a 2.5x rate card
+  Ask model          claude-opus-5 — the switch was reverted on measurement
+  refutation         40 of 89 acceptance claims confirmed broken
 ```

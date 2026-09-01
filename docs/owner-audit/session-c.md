@@ -1,5 +1,126 @@
 # Session C — the owner's audit package
 
+---
+
+# READ THIS BEFORE ANY ROW ABOVE — the package was audited and it did not survive
+
+**Session C does NOT close. Three items are UNFINISHED against the directive's
+own acceptance criteria, and this package's own claims were attacked by an
+independent pass that found forty of them broken.**
+
+## 1. The refutation pass, and what it did to this document
+
+After the acceptance rows above were written, ten independent skeptics were run
+against them — instructed to **REFUTE, never to confirm** — and every finding
+they raised was handed to a second agent told to show the first was wrong.
+**71 agents, 89 claims examined, 60 raised as suspect, 40 CONFIRMED BROKEN, 20
+where the refuter was shown wrong, 0 undecided.**
+
+The full record, every finding with the command that produced it, is committed
+at **`docs/evidence/session-c-refutation-2026-09-01.json`**.
+
+**The refutation is itself fallible and was spot-checked rather than believed.**
+Two examples, because the pattern matters more than the count:
+
+- **One CONFIRMED_BROKEN finding is wrong.** It claimed the reported
+  *"Q5 2/3 vs 0/3"* had no support in any stored measurement. It does:
+  `data/health/ask-model-compare-runs/2026-09-01-1788289823520.json` and
+  `…-1788292079219.json` both record Q5 `incumbent heldCount 0/3`,
+  `challenger heldCount 2/3`, and the challenger's stored pass carries a
+  substantive answer with real figures. The finding was right about something
+  else, though: **`docs/frontier.md` says Q3 and Q5 "fail identically on both
+  models"**, which was true of the earlier run and false of the later two. That
+  contradiction is real and is corrected there.
+- **One was stale.** It read gate record `2026-09-01-24.json` and called
+  *"gates 14 of 14"* false. Record `-25.json`, at the shipping head, is green.
+
+So the number to carry is not "40 defects". It is: **this package asserted
+things it had not verified, at a rate an independent pass could detect in
+89 claims.**
+
+## 2. What is UNFINISHED
+
+### ITEM A — UNFINISHED
+
+Arizona was acquired from the authoritative source universe. **New Hampshire
+and New Jersey were not.** Relabelling them `PILOT_DERIVED` /
+`REQUIRES_NEW_ADAPTER` satisfies R-C9 honesty and **does not** satisfy Item A,
+which requires migration to each state's authoritative candidate-filing
+universe. An honestly named acquisition wall is not completion, and this
+package previously read as though it were.
+
+### ITEM K — UNFINISHED
+
+`ASK_SYNTHESIS_MODEL` is **`claude-opus-5`**. The switch was made, measured,
+and reverted the same day under RULING 234's own reversibility clause. The
+revert is authorised and correct. **The directive's final acceptance requires
+production serving `claude-sonnet-5`**, so Item K cannot simultaneously be
+called complete. **Readers get `claude-opus-5`.**
+
+### THE RUNNER — NOT VERIFIED, and this session broke it
+
+Diagnosed, not guessed:
+
+```
+main checkout  (787211c1)  control-plane:gate REFUSED
+                           applied version 3 against declared 2
+                           5 undeclared cp_ tables
+integration    (this head) control-plane:gate PASSED
+                           version 3, 20 of 20 tables, no drift
+```
+
+**This session migrated the shared control-plane database to schema v3 from a
+worktree**, while the runner executes from the main checkout on pre-session
+code declaring v2. That module refuses undeclared tables by design, so it shut
+itself down correctly: cycles have exited NON-ZERO since ~19:56Z and digests
+read `0 providers, 0 units`.
+
+The ordering lesson: **expand-first is only safe when the old code tolerates
+the new schema.** Lane 5's additive Drizzle column was; the control-plane
+bootstrap was not.
+
+The repair is the code in this merge. Verification can only follow it, and
+until the runner is observed completing a clean cycle on the merged code,
+**Session C remains UNFINISHED on this item.**
+
+Separately: **two runner processes** were found, one from the Scheduled Task
+and one orphaned from the Startup entry, writing digests 11 seconds apart. The
+duplicate was stopped. The two-mechanism configuration is an owner decision.
+
+## 3. Corrections to specific rows above
+
+| Row | It said | It should say |
+| --- | --- | --- |
+| Item E counts | `RouteTask dispositions 301` | **342.** The cited artifact `data/health/control-plane-readback/2026-09-01-03.json` records `routeTaskDispositions: 342`. The package named a file as the place to verify and then printed a number that file contradicts. |
+| Item J, the undeclared-token sweep | "guards it with a **plant-check both ways**" | There is **no red arm**. The guard asserts the current state; it was not shown failing on a planted violation, so it cannot distinguish "the rule holds" from "the sweep looked at nothing". |
+| Item H, seeded failure 3 | "a number rendered without a denominator fails the page's own check" — **MET** | **NOT MET.** `countClaimsFor` in `lib/control-plane/owner-surface.ts:665` sets `stated` and `rendered` to the *same expression* for all four entries. The check compares a number to itself and **can never fail**. This is the session's own failure pattern inside the surface built to report it. |
+| Item B, "Where to verify" | `pnpm build && pnpm start`, then run the test | Those commands produce a **SKIP**, not the stated result: `pnpm start` is plain `next start` with no `--import ./scripts/trap-outbound.mjs` and no `WTP_OUTBOUND_LOG`. The recorded pass required a server started with the trap preloaded. An owner following the row verbatim gets a skip and exit 0. |
+| Item A, "established TWICE by independent mechanisms" | "the two mechanisms share nothing" | **Overstated.** Both extractions walk the same pdfjs `page.getTextContent()` stream and consume different fields of it. They catch cell misalignment and header handling; they would **not** catch a correlated whole-page loss, which is the failure the sentence is sold against. The number 266 is correct by measurement — the *guarantee* is not what was claimed. |
+| Item 5 denominator table | AZ candidacies 55 | Contradicts Item A on the same page (55 → 266). The Item-5 caveat "each state is currently derived from exactly one certified pilot-county ballot" is now false for Arizona. |
+
+## 4. What was NOT done about the other findings
+
+**They are recorded, not repaired.** The remaining confirmed findings — chiefly
+guards that cannot catch what they are cited as catching (the `--mark` scope
+test exempting legend dots, the comment-stripping sweep skipping the directory
+whose comment caused the defect, the `derive()` template-level `continue`, the
+NS12 predicate's acceptance of placeholder strings, the unchecked middleware
+matcher) — are open defects with evidence in the committed findings file.
+
+Repairing forty guards is a session's work and each repair needs its own gate
+and CI cycle. Claiming them fixed here would be the exact defect this pass
+exists to catch, one level up.
+
+## 5. The generated-artifact race is NOT fixed
+
+`tests/generated-artifacts.test.ts` now re-derives a mismatch once, so a real
+drift (which reproduces) is told apart from a working-tree race (which does
+not), and the race is thrown with its cause named. **The race is not
+eliminated.** A non-reproducing mismatch still throws, so it can still turn a
+`pnpm gates` run red at random. Isolating or removing the shared-tree mutation
+remains open.
+
+
 Written for you, not for a machine. **Every claim below is paired with exactly
 where to check it**, one line each. Nothing here asks you to take a session's
 word for anything.
@@ -633,7 +754,7 @@ unmerged data and no conclusion stranded outside a governed artifact.
 | | |
 | --- | --- |
 | **Where to verify** | `data/health/control-plane-readback/2026-09-01-03.json`, produced by `pnpm readback:artifact`, which runs `pnpm readback:control-plane` **as a subprocess** and parses every number back out of its verbatim stdout — there is no path by which a count reaches the artifact without the reader having printed it |
-| **The counts, read back** | obligations **2,996** (candidate-enrichment 1,720, local-jurisdiction 1,177, meetings 83, campaign-finance 16); occurrences **1,346**, of which **55** carry a committed disposition; RouteTask dispositions **301**; debt rows 96 | **MET as a reading** |
+| **The counts, read back** | obligations **2,996** (candidate-enrichment 1,720, local-jurisdiction 1,177, meetings 83, campaign-finance 16); occurrences **1,346**, of which **55** carry a committed disposition; RouteTask dispositions **342**; debt rows 96 | **MET as a reading** |
 | **The proof class did NOT move** | `proofClassOf` in `lib/ops/run-provenance.ts` requires `runClass ≠ LOCAL_SESSION`, `workingTreeClean`, and `integratedAtRunTime`. This run records `LOCAL_SESSION / true / false` | **NOT MET — still `SESSION_MEASURED`, deliberately.** A session cannot award itself independence by running the same command twice. Moving it needs a CI or scheduled run on an already-merged SHA, and the artifact says so in its own `_note` |
 | **Two premises in the directive were wrong, and are corrected here** | The three figures 1,087 / 1,020 / 52 were never both in the repo and current: the durable store held **1,087 / 1,294 / 300**. And "the latest committed freshness run shows 94 obligations" is a **per-cycle** number, not a store total — the two were being compared as if they were the same quantity | Recorded |
 | **`verify:readonly` and `census:runs` cannot answer this** | Both are scoped to the four collection stores and have never been control-plane aware. The read-back uses `WTP_CONTROL_PLANE_DATABASE_URL`, which is not the production read-only role. No second instrument was built — `pnpm dupes` passes | Recorded |

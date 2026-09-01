@@ -75,13 +75,19 @@ left, with what it is waiting on. Nothing here is a claim that it is finished.
 
 ### Executable, and not reached
 
-- **The Ask model comparison (H2) is `NOT_MEASURED`, not `HOLD`.** Zero of seven
-  canonical questions ran on either model. `ASK_SYNTHESIS_MODEL` is a hardcoded
-  constant with no override, and adding one would risk the per-caller cache
-  split the law forbids — caches are model-scoped. **The owed thing is an
-  offline harness** that calls both models over the canonical questions
-  directly, outside the product. The incumbent stays because nothing displaced
-  it, and the obligation stays live.
+- **The Ask model comparison (H2) is MEASURED and the decision is RETAIN.**
+  Amended by the owner on 2026-08-31 from a deferral to a work item, and done:
+  7 canonical questions, 3 passes per arm, decision RETAIN `claude-opus-5`
+  because Q5 does not hold on the challenger. See the two entries below for
+  what the comparison actually surfaced. The harness now exists —
+  `pnpm ask:model-compare`, a comparison-only seam OUTSIDE the production
+  request path: `SynthesizeOptions` has no model field, the production route
+  emits `ASK_SYNTHESIS_MODEL` even when handed the challenger's id through an
+  untyped cast, and nothing under `app/` imports the seam. Comparison caches
+  are DISABLED rather than isolated, because a cache read prices a model by
+  arrival order and whichever ran second would look up to 10× cheaper for a
+  reason unrelated to the model — so the dollar figures are an UPPER BOUND on
+  production cost, where H1's cache is live.
 - **Sustained ≥ 55 fps on the map fly-in is not achievable on this host.** The
   flight went 12.1 → 35.8 fps and the per-frame causes are fixed
   (`queryRenderedFeatures` 170 → 2, main thread 555–868 ms → 45 ms), but with
@@ -110,6 +116,51 @@ left, with what it is waiting on. Nothing here is a claim that it is finished.
   cache read, and `0%` would be a measurement nobody took. The Ask probe now
   measures 62.5% at the API's own `usage` block; the worker cost ledger cannot
   yet see the same thing.
+
+### The ASK-19 length budget and large evidence packs are incompatible (H2, 2026-08-31)
+
+**Found by the model comparison, and it is not a fact about either model.** Two
+of the four canonical questions that reach the synthesis contract — **Q3 and
+Q5** — fail the ASK-19 700-character budget on the incumbent AND on the
+challenger, on every pass, over the same 18-record / 6-gap Vail evidence pack:
+
+```
+  Q3  incumbent 736 / 771 / 733 chars      challenger held 3/3
+  Q5  incumbent 760 / 840 / 794 chars      challenger 720 / 783 / 717
+```
+
+The reader consequence is a fall back to deterministic structured prose where a
+grounded synthesis was available. Not a false claim — the fallback is honest —
+but the reader loses the answer the evidence could have supported.
+
+**The owed decision is which side gives.** Either the budget rises for packs
+above some size, or large packs are summarised in stages, or the budget becomes
+a target the synthesiser is told about rather than a gate applied after. All
+three are product decisions and none is a model choice, which is why the model
+comparison could not settle it and correctly did not try.
+
+**Do not read this as a reason to switch models.** On Q3 the challenger was
+GREEN 3/3 where the incumbent was RED 3/3, and it is 2.5–3.2× cheaper — but the
+owner's criterion is absolute and Q5 fails on the challenger too, so the
+incumbent is retained. The finding worth acting on is the budget, not the model.
+
+### `switchVerdict` and the owner's criterion disagree, and both are kept
+
+`lib/ask/model-economics.ts` carries a RELATIVE rule — a challenger question
+blocks a switch only where the incumbent held it and the challenger did not —
+which is argued and tested: *a question neither model answers is a retrieval
+gap, and holding the model choice hostage to it would make every future switch
+impossible for a reason unrelated to the model.*
+
+The owner's instruction is ABSOLUTE: *switch only if every required question
+holds.* On the 2026-08-31 runs the two derive opposite outcomes. Neither was
+deleted; the decision was taken on the author's directive at precedence 1
+(RULING 185) and the relative derivation is reported beside it as what it is.
+
+**What is owed is not a bug fix but a ruling**: whether the standing rule should
+become absolute, or stay relative with the absolute one reserved to explicit
+author directives. Until that lands, a session calling `switchVerdict` alone
+would take a decision the author has already taken differently.
 
 ### Instrument debt, and why each one matters
 

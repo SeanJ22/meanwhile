@@ -141,6 +141,62 @@ left, with what it is waiting on. Nothing here is a claim that it is finished.
   measures 62.5% at the API's own `usage` block; the worker cost ledger cannot
   yet see the same thing.
 
+### Arizona money is ACQUIRED and does not reach the reader — Part E's reader clause is NOT MET
+
+**Measured on production and on a local production build of the same tree, which
+agree exactly:**
+
+| ZIP | contests | candidate cards | money sections rendered |
+| --- | ---: | ---: | ---: |
+| 85701 | 22 | 24 | **4** |
+| 85641 | 23 | 29 | **4** |
+
+Cross-referenced against the snapshot: **36 of the 38 candidacies in the
+contests shown at 85701 have a record in `state-money-az-2026.json`** — the 2
+that do not are US House District 7, correctly federal and served by the FEC
+path. So 36 should carry a money section and **4 do**.
+
+The four that render are all Corporation Commissioner Clean Elections
+committees: Jonathon Hill, Nick Myers, Clara Pratte, Kevin Thompson.
+
+**The cause, located.** `app/ballot/page.tsx` has two contest branches. The
+filed-candidacies branch passes `targetKey={cand.id}`, which matches the
+snapshot's `targetKeys` exactly — those four render. The **certified-lineup
+branch** passes `targetKey={`${contest.id}|${nominee.name}`}`, and a lineup
+nominee "exists only as a canvass name" with no candidacy id. That key can never
+match `ballot-az-pima:governor:hobbs-katie`, so `stateMoneyForTarget` returns
+`[]` and the money slot is `null`.
+
+Verified directly: `stateMoneyForTarget("ballot-az-pima:governor:hobbs-katie")`
+returns `FILED $11,109,719.95` when called with the candidacy id. The data, the
+loader, the deploy tracing (`./data/funding/*.json` is named for `/ballot`) and
+`isRenderable` are all correct. The key is the only thing wrong.
+
+**This falsifies Part E's third acceptance clause** — *every applicable pilot
+candidate ends in exactly one honest reader state* — because 32 candidates end
+in NO state at all. The section is absent rather than showing filed data, a
+sourced absence, or an OURS gap.
+
+**Why it was NOT fixed at session end, which is a decision and not an
+oversight.** The repair is a join from certified-canvass nominees to
+candidacies, and the only available join key is the NAME. This session already
+measured what name joins do here: quoted-nickname forms
+(`Rachel "Jones" Keshel`) turned five live committees into manufactured
+absences, and the Arizona lane refused to widen `namesAgree` on exactly the
+reasoning that applies here — **a stranger's money on a named person's card is
+the worse failure**. Shipping a name join into a reader surface, at the end of a
+session, with no reconciliation evidence, would risk attributing one candidate's
+fundraising to their opponent. That is the one failure this product cannot
+survive.
+
+**What the repair actually needs:** a reconciled nominee↔candidacy mapping with
+its own evidence bar — `lib/ballot/contest-universe.ts` already carries the
+concept ("certified nominees no rendered candidate could be reconciled to"), and
+`lib/ballot/candidate-targets.ts` builds a valid-id SET but no mapping. Until
+that mapping exists and is proven over the population, the honest render for a
+lineup nominee is the OURS gap the snapshot already supports — which is itself a
+smaller, safer change than the join, and is the recommended next step.
+
 ### The ASK-19 length budget and large evidence packs are incompatible (H2, 2026-08-31)
 
 **Found by the model comparison, and it is not a fact about either model.** Two

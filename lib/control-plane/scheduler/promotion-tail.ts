@@ -1,0 +1,537 @@
+/**
+ * **THE PROMOTION TAIL — RULING 224, IMPLEMENTED.**
+ * (Session C, PART D4, 2026-08-31.)
+ *
+ * > Acquisition without promotion is inventory, not product. An acquisition
+ * > obligation's completion contract extends to the READER: the WorkItem does
+ * > not close when evidence reaches the vault; it closes when the reader-facing
+ * > surface reflects the acquired truth or renders the honest gap state. While
+ * > unattended promotion is OFF, the pipeline runs automatically through
+ * > normalization and snapshot to a STAGED, PROMOTION-READY state, and session
+ * > shipping carries the last mile under existing law. Held data with no live
+ * > promotion tail is a defect.
+ *
+ * ## The split this file draws, and the exact line it does not cross
+ *
+ * ```
+ *   AUTOMATIC, EVERY CYCLE, NO OPERATOR
+ *     acquire -> vault -> extract -> normalize -> snapshot -> STAGED
+ *
+ *   ------------------ the promotion boundary ------------------
+ *
+ *   SESSION SHIPPING, HUMAN-GATED
+ *     STAGED -> reader-visible
+ * ```
+ *
+ * Everything above the line runs here, unattended, on every cycle. Nothing
+ * below it does. **This module writes only under `data/control-plane/staging/`
+ * and can write nowhere else** — it never touches `data/funding/`,
+ * `data/meetings-snapshot.json`, `data/ballot/` or any other reader-content
+ * path, and `tests/obligation-registry.test.ts` asserts that over the module's
+ * own output rather than over a promise in this comment.
+ *
+ * ## THE STAGED STATE IS A FILE, not a status
+ *
+ * A later session must be able to point at it. So each staged record set is a
+ * real JSON file named for its obligation, and
+ * `data/control-plane/staging/manifest.json` lists every entry with its state,
+ * its date, the obligation it answers, the route it came from, its next due
+ * time and its path. An in-memory "staged" would prove nothing tomorrow.
+ *
+ * ## A WALL STAGES TOO, and that is the second half of RULING 224
+ *
+ * The contract is satisfied EITHER by the surface reflecting acquired truth OR
+ * by it rendering the honest gap state, and the second is not a lesser outcome.
+ * So a route that hit `REQUIRES_NEW_ADAPTER` or `BLOCKED_CURRENTLY` produces a
+ * `STAGED_GAP` entry carrying the NAMED wall, the obligation that is still
+ * live, and the persisted next-due — everything a reader surface needs to say
+ * whose gap it is and that it is still being worked. A wall that resolved
+ * silently to a generic placeholder would not satisfy anything.
+ *
+ * ## Normalization is HONEST about what it could not parse
+ *
+ * A route with no normalizer produces `STAGED_GAP` with state
+ * `NORMALIZER_MISSING` and the next move named. It does NOT produce an empty
+ * record set: a zero-row normalization of a document that carried 370 rows is a
+ * FAILED normalization, and it may never be staged as a snapshot of nothing.
+ */
+
+import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
+import { join } from "node:path";
+
+import type { RouteDescriptor } from "./registry.ts";
+
+/** The one directory this module may write to. Enforced, not just documented. */
+export const STAGING_DIR = ["data", "control-plane", "staging"] as const;
+export const STAGING_MANIFEST = "manifest.json";
+
+export const STAGED_STATES = [
+  /** Normalized, snapshotted, and ready for a session to carry the last mile. */
+  "STAGED_PROMOTION_READY",
+  /** A named wall or a missing normalizer. The honest gap a surface renders. */
+  "STAGED_GAP",
+] as const;
+export type StagedState = (typeof STAGED_STATES)[number];
+
+/** One normalized row. Deliberately open — each normalizer states its own shape. */
+export type NormalizedRow = Readonly<Record<string, unknown>>;
+
+export interface Normalization {
+  readonly normalizerId: string;
+  readonly rows: readonly NormalizedRow[];
+  /**
+   * **THE DENOMINATOR THE PUBLISHER ITSELF STATED.**
+   *
+   * Null only when the response declares none. A staged snapshot that reported
+   * its own row count and nothing else would present page one of an index as
+   * the index — which is shipping partial data as complete, and is the failure
+   * both of these routes make available for free: Arizona's response carries
+   * `recordsTotal` and New Hampshire's carries `data.totalItems`, so the
+   * publisher hands us the denominator and we only have to state it.
+   */
+  readonly declaredTotal: number | null;
+  /**
+   * What this normalization deliberately did NOT conclude, in full sentences.
+   *
+   * Arizona's row semantics are undetermined — several rows share one EntityID
+   * with differing Income/Expense and an identical CashBalance, and the sum
+   * identity holds for 134 of 255 entities and breaks for 121 — so the
+   * normalizer carries the fields and states that no per-person cycle total is
+   * derived from them. A staged snapshot that quietly picked one would put a
+   * wrong figure on a named person's card.
+   */
+  readonly unresolved: readonly string[];
+}
+
+/** Raised by a normalizer that read a document and produced nothing from it. */
+export class FailedNormalization extends Error {
+  constructor(normalizerId: string, detail: string) {
+    super(
+      `${normalizerId} read the artifact and produced ZERO rows: ${detail}. A zero-row ` +
+        "normalization is a FAILED normalization, never an empty document, and it may not be " +
+        "staged as a snapshot of nothing.",
+    );
+    this.name = "FailedNormalization";
+  }
+}
+
+/** A normalizer, keyed by the route id whose bytes it understands. */
+export type Normalizer = (body: string) => Normalization;
+
+/* ------------------------------------------------------------ normalizers */
+
+/**
+ * NEW HAMPSHIRE CFS — `data.items[]`, filer-level.
+ *
+ * Filer-level TOTALS only, and the record says so: the CFS holds contribution
+ * and expenditure detail behind endpoints nobody has derived, and a staged
+ * snapshot that presented filer totals as the whole of a committee's money
+ * would overstate what we hold.
+ */
+export const normalizeNhCfs: Normalizer = (body) => {
+  const parsed = JSON.parse(body) as {
+    data?: { items?: readonly Record<string, unknown>[]; totalItems?: number };
+  };
+  const items = parsed.data?.items ?? [];
+  if (items.length === 0) {
+    throw new FailedNormalization("nh-cfs-filing-entity-details", "data.items[] was empty");
+  }
+  const total = typeof parsed.data?.totalItems === "number" ? parsed.data.totalItems : null;
+  return {
+    normalizerId: "nh-cfs-filing-entity-details",
+    declaredTotal: total,
+    rows: items.map((row) => ({
+      filerEntityId: row.filerEntityId ?? null,
+      filerName: row.filerName ?? null,
+      candidateName: row.firstnameLastname ?? null,
+      committeeName: row.committeeName ?? null,
+      officeSought: row.officeSoughtName ?? null,
+      officeType: row.officeTypeDesc ?? null,
+      district: row.districtName ?? null,
+      town: row.town ?? null,
+      electionYear: row.electionYear ?? null,
+      electionCycle: row.electionCycle ?? null,
+      politicalParty: row.politicalParty ?? null,
+      totalRaised: row.totalRaised ?? null,
+      totalSpent: row.totalSpent ?? null,
+      filerType: row.filerTypeDesc ?? null,
+      filerStatus: row.filerStatus ?? null,
+      makingIndependentExpenditure: row.isMakingIndependentExpenditure ?? null,
+    })),
+    unresolved: [
+      "THE QUERY IS UNFILTERED BY CYCLE. `filerName: \"\"` asks the index for everything it holds, " +
+        "so rows carry election years across many cycles and each row states its own " +
+        "`electionYear`. Filtering to one cycle is the promotion step's decision, not a " +
+        "normalizer's — a normalizer that dropped rows would make the staged file smaller than " +
+        "what was acquired.",
+      "FILER-LEVEL TOTALS ONLY. The CFS holds contribution and expenditure DETAIL behind endpoints " +
+        "this project has not derived (route nh-cfs-transaction-detail, REQUIRES_NEW_ADAPTER), so " +
+        "these totals are what the filer reported and are not an itemized record of their money.",
+      "NO BALLOT JOIN IS PERFORMED HERE. Matching a filer to a candidacy needs name AND office AND " +
+        "year, plus the county and district guards `lib/funding/state-money.ts` states; that " +
+        "judgement belongs to the promotion step and not to a normalizer.",
+    ],
+  };
+};
+
+/**
+ * ARIZONA SEETHEMONEY — `data[]`, entity-level, TOTALS DELIBERATELY UNRESOLVED.
+ *
+ * The endpoint returns several rows per `EntityID` with differing Income and
+ * Expense and an identical CashBalance. Summing and taking the largest
+ * disagree, and the arithmetic that looked like proof was tested over the
+ * population on 2026-08-31 and REFUTED: `sum(Income) - sum(Expense) ==
+ * CashBalance` holds for 134 of 255 entities and breaks for 121, including for
+ * single-row entities where there is nothing to sum.
+ *
+ * So this normalizer carries the fields and derives NO cycle total. That is the
+ * whole reason it is safe to run unattended.
+ */
+export const normalizeAzSeeTheMoney: Normalizer = (body) => {
+  const parsed = JSON.parse(body) as {
+    data?: readonly Record<string, unknown>[];
+    recordsTotal?: number;
+  };
+  const rows = parsed.data ?? [];
+  if (rows.length === 0) {
+    throw new FailedNormalization(
+      "az-sos-seethemoney-datatables",
+      `data[] was empty while recordsTotal reported ${JSON.stringify(parsed.recordsTotal)}`,
+    );
+  }
+  return {
+    normalizerId: "az-sos-seethemoney-datatables",
+    declaredTotal: typeof parsed.recordsTotal === "number" ? parsed.recordsTotal : null,
+    rows: rows.map((row) => ({
+      entityId: row.EntityID ?? null,
+      entityFirstName: row.EntityFirstName ?? null,
+      /* Carried VERBATIM. The publisher embeds `<br>(id)` in this field and a
+         normalizer that stripped it would be editing a government's record on a
+         guess about its intent. Cleaning belongs to promotion, where it can be
+         checked. */
+      entityLastNameRaw: row.EntityLastName ?? null,
+      entityType: row.EntityTypeName ?? null,
+      committeeName: row.CommitteeName ?? null,
+      officeName: row.OfficeName ?? null,
+      partyName: row.PartyName ?? null,
+      reportedIncome: row.Income ?? null,
+      reportedExpense: row.Expense ?? null,
+      independentExpenditureSupport: row.IESupport ?? null,
+      independentExpenditureOpposition: row.IEOpposition ?? null,
+      reportedCashBalance: row.CashBalance ?? null,
+    })),
+    unresolved: [
+      "`entityLastNameRaw` carries the publisher's own presentation markup — " +
+        "`\"Accalia, Jayme <br>(102162)\"` — verbatim. Splitting it into a name is a promotion-step " +
+        "decision that can be checked against the ballot; doing it here would edit a government's " +
+        "record on a guess.",
+      "NO PER-ENTITY CYCLE TOTAL IS DERIVED. Several rows share one EntityID with differing " +
+        "Income/Expense and an identical CashBalance. Tested over the population 2026-08-31: " +
+        "sum(Income) - sum(Expense) equals CashBalance for 134 of 255 entities and BREAKS for 121, " +
+        "including single-row entities where there is nothing to sum. Publishing either aggregation " +
+        "as a named person's campaign total would be a wrong figure on a card.",
+      "What would settle it: ExportEntityTransactions (itemized, summable), the filed reports, or " +
+        "the ftp://ftp.azsos.gov/cfsdata2/ bulk drop — 8,828 committees, reachable 2026-08-26, and " +
+        "unwalked for this purpose because this process holds no FTP client.",
+    ],
+  };
+};
+
+/** Every normalizer this project holds, by route id. A floor, never complete. */
+export const NORMALIZERS: Readonly<Record<string, Normalizer>> = {
+  "nh-cfs-filing-entity-details": normalizeNhCfs,
+  "az-sos-seethemoney-datatables": normalizeAzSeeTheMoney,
+};
+
+/* ---------------------------------------------------------------- staging */
+
+export interface StagedEntry {
+  readonly obligationId: string;
+  readonly providerId: string;
+  readonly recordClass: string;
+  readonly subjectId: string;
+  readonly routeId: string;
+  readonly state: StagedState;
+  /** The stamp this entry was staged on. From the caller; no clock is read. */
+  readonly stagedOn: string;
+  /** The persisted next-due for the obligation. A gap that is still worked. */
+  readonly nextDueAt: string | null;
+  /** The disposition the cycle committed for this route. */
+  readonly disposition: string | null;
+  /** Rows in the staged snapshot. Zero only for a STAGED_GAP entry. */
+  readonly rowCount: number;
+  /** What the publisher said the whole index holds. Null when it said nothing. */
+  readonly declaredTotal: number | null;
+  /**
+   * True only when the rows staged are the WHOLE of what the publisher declared.
+   *
+   * A partial index is still stageable and still promotion-ready — as a
+   * PARTIAL. What is forbidden is staging page one of 5,738 rows under a name
+   * that reads like the index, and this flag plus `readerSentence`'s "N of M"
+   * is what stops that happening by omission.
+   */
+  readonly complete: boolean;
+  /** Where the staged snapshot lives, relative to the repo root. Null for a gap. */
+  readonly snapshotPath: string | null;
+  /**
+   * THE SENTENCE A READER SURFACE RENDERS.
+   *
+   * Whose gap it is, in plain language, with no enum value and no
+   * `NO_SOURCE_FOUND` in it. Present on every entry — a promotion-ready one
+   * states what was acquired and what is still unresolved about it.
+   */
+  readonly readerSentence: string;
+  readonly unresolved: readonly string[];
+}
+
+export interface StagingManifest {
+  readonly stagedOn: string;
+  readonly promotionEnabled: false;
+  readonly entries: readonly StagedEntry[];
+}
+
+export interface StagedSnapshot {
+  readonly obligationId: string;
+  readonly routeId: string;
+  readonly normalizerId: string;
+  readonly stagedOn: string;
+  readonly sourceArtifactIds: readonly string[];
+  readonly rowCount: number;
+  readonly declaredTotal: number | null;
+  readonly complete: boolean;
+  /** "N of M row(s) the publisher itself declares", ready to quote. */
+  readonly coverage: string;
+  readonly rows: readonly NormalizedRow[];
+  readonly unresolved: readonly string[];
+  /** Structural. This file is not read by any reader surface. */
+  readonly promotedToReaderTruth: false;
+}
+
+export interface StageInput {
+  readonly root: string;
+  readonly obligationId: string;
+  readonly providerId: string;
+  readonly recordClass: string;
+  readonly subjectId: string;
+  readonly route: RouteDescriptor;
+  readonly disposition: string | null;
+  readonly artifactIds: readonly string[];
+  /** The retrieved bytes, read back from the vault. Null when none were held. */
+  readonly body: string | null;
+  readonly nextDueAt: string | null;
+  /** Whatever the cycle recorded about this dispatch, for the gap sentence. */
+  readonly detail: string;
+  readonly stagedOn: string;
+}
+
+function stagingDir(root: string): string {
+  return join(root, ...STAGING_DIR);
+}
+
+/** A filesystem-safe name for an obligation id. Ids carry `:` and `#`. */
+export function stagedFileName(obligationId: string): string {
+  return `${obligationId.replace(/[^A-Za-z0-9._-]/g, "_")}.staged.json`;
+}
+
+/**
+ * Run the tail for ONE dispatched route, and return what was staged.
+ *
+ * Never throws for a route-level condition: a missing normalizer, an
+ * unparseable body and a wall are all STAGED_GAP entries with their reason
+ * named, because each of them is a state a reader surface has to be able to
+ * render honestly.
+ */
+export function stageOne(input: StageInput): StagedEntry {
+  const base = {
+    obligationId: input.obligationId,
+    providerId: input.providerId,
+    recordClass: input.recordClass,
+    subjectId: input.subjectId,
+    routeId: input.route.routeId,
+    stagedOn: input.stagedOn,
+    nextDueAt: input.nextDueAt,
+    disposition: input.disposition,
+  };
+
+  const gap = (sentence: string, unresolved: readonly string[]): StagedEntry => ({
+    ...base,
+    state: "STAGED_GAP",
+    rowCount: 0,
+    declaredTotal: null,
+    complete: false,
+    snapshotPath: null,
+    readerSentence: sentence,
+    unresolved,
+  });
+
+  if (input.disposition !== "INGESTED" || input.body === null) {
+    /*
+     * A WALL, STAGED. RULING 224's second half: the honest gap state is not a
+     * lesser outcome. The sentence names WHOSE gap it is and the next-due says
+     * the obligation is still being worked, which is what stops it resolving to
+     * a generic placeholder.
+     */
+    const what =
+      input.disposition === null
+        ? "we have not yet reached it"
+        : `the route closed ${input.disposition}`;
+    return gap(
+      `${input.route.label}: ${what}. ${
+        input.route.open.kind === "NOT_MACHINE_EXECUTABLE"
+          ? input.route.open.reason
+          : input.detail
+      }`,
+      [
+        input.route.awaitingAdapter ??
+          "no next move is recorded on this route descriptor, which is itself a gap worth closing",
+        input.nextDueAt === null
+          ? "no next-due is persisted for this obligation, so nothing schedules the retry — a defect"
+          : `still owed, and scheduled to be tried again at ${input.nextDueAt}`,
+      ],
+    );
+  }
+
+  const normalizer = NORMALIZERS[input.route.routeId];
+  if (normalizer === undefined) {
+    return gap(
+      `${input.route.label}: the record was ACQUIRED and is held, and this project has no reader ` +
+        "yet for its shape.",
+      [
+        `NORMALIZER MISSING for route ${input.route.routeId}. The bytes are vaulted and cited; what ` +
+          "is absent is code that turns them into rows. That is a gap in OUR tooling, not in their " +
+          "publication, and the artifact is not lost while it waits.",
+        `artifact(s): ${input.artifactIds.join(", ") || "none recorded"}`,
+      ],
+    );
+  }
+
+  let normalized: Normalization;
+  try {
+    normalized = normalizer(input.body);
+  } catch (error) {
+    return gap(
+      `${input.route.label}: the record was acquired and could not be read into rows.`,
+      [
+        `NORMALIZATION FAILED: ${error instanceof Error ? error.message : String(error)}`,
+        "The bytes are held and the failure is ours to fix. Nothing is staged as a snapshot of " +
+          "nothing, and the obligation stays live.",
+      ],
+    );
+  }
+
+  const rowCount = normalized.rows.length;
+  const declaredTotal = normalized.declaredTotal;
+  const complete = declaredTotal === null ? false : rowCount >= declaredTotal;
+
+  const coverage =
+    declaredTotal === null
+      ? `${rowCount} row(s) acquired; the publisher declared no total, so what fraction of the ` +
+        "index this is CANNOT BE ASSERTED"
+      : `${rowCount} of ${declaredTotal} row(s) the publisher itself declares`;
+
+  const dir = stagingDir(input.root);
+  mkdirSync(dir, { recursive: true });
+  const file = stagedFileName(input.obligationId);
+  const snapshot: StagedSnapshot = {
+    obligationId: input.obligationId,
+    routeId: input.route.routeId,
+    normalizerId: normalized.normalizerId,
+    stagedOn: input.stagedOn,
+    sourceArtifactIds: input.artifactIds,
+    rowCount,
+    declaredTotal,
+    complete,
+    coverage,
+    rows: normalized.rows,
+    unresolved: normalized.unresolved,
+    promotedToReaderTruth: false,
+  };
+  writeFileSync(join(dir, file), `${JSON.stringify(snapshot, null, 2)}\n`, "utf8");
+
+  return {
+    ...base,
+    state: "STAGED_PROMOTION_READY",
+    rowCount,
+    declaredTotal,
+    complete,
+    snapshotPath: `${STAGING_DIR.join("/")}/${file}`,
+    readerSentence:
+      `${input.route.label}: ${coverage}, normalized and staged. Not yet shown to readers — a ` +
+      "session carries the last mile.",
+    unresolved: complete
+      ? normalized.unresolved
+      : [
+          `PARTIAL: this staged file holds ${coverage}. It may not be promoted as the whole index; ` +
+            "the remaining pages are still owed and the obligation stays live.",
+          ...normalized.unresolved,
+        ],
+  };
+}
+
+/**
+ * Write the manifest.
+ *
+ * MERGED, not replaced. A cycle that only worked two routes must not erase the
+ * staged state of everything it did not touch — a manifest that shrank every
+ * cycle would report the pipeline as having lost work it never ran.
+ */
+export function writeStagingManifest(
+  root: string,
+  entries: readonly StagedEntry[],
+  stagedOn: string,
+): { readonly path: string; readonly total: number; readonly written: number } {
+  const dir = stagingDir(root);
+  mkdirSync(dir, { recursive: true });
+  const path = join(dir, STAGING_MANIFEST);
+
+  const merged = new Map<string, StagedEntry>();
+  if (existsSync(path)) {
+    try {
+      const prior = JSON.parse(readFileSync(path, "utf8")) as StagingManifest;
+      for (const entry of prior.entries ?? []) merged.set(entry.obligationId, entry);
+    } catch {
+      /* An unreadable manifest is rebuilt from this cycle rather than throwing;
+         the entries it holds are all derivable from the control plane and the
+         staged files beside it, and refusing to write would lose this cycle too. */
+    }
+  }
+  for (const entry of entries) merged.set(entry.obligationId, entry);
+
+  const manifest: StagingManifest = {
+    stagedOn,
+    promotionEnabled: false,
+    entries: [...merged.values()].sort((a, b) =>
+      a.obligationId < b.obligationId ? -1 : a.obligationId > b.obligationId ? 1 : 0,
+    ),
+  };
+  writeFileSync(path, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+  return { path, total: manifest.entries.length, written: entries.length };
+}
+
+/** Read the manifest back. Absent is absent; unreadable throws. */
+export function readStagingManifest(root: string): StagingManifest | null {
+  const path = join(stagingDir(root), STAGING_MANIFEST);
+  if (!existsSync(path)) return null;
+  return JSON.parse(readFileSync(path, "utf8")) as StagingManifest;
+}
+
+/** The digest lines for the tail. Both states counted, always. */
+export function promotionLines(entries: readonly StagedEntry[]): string[] {
+  const ready = entries.filter((e) => e.state === "STAGED_PROMOTION_READY");
+  const gaps = entries.filter((e) => e.state === "STAGED_GAP");
+  const out: string[] = [];
+  out.push(
+    `  promotion tail     ${entries.length} entry(ies) staged — ${ready.length} PROMOTION-READY, ` +
+      `${gaps.length} honest gap(s). Promotion itself is OFF.`,
+  );
+  for (const e of ready) {
+    out.push(
+      `      READY ${e.obligationId} — ${e.rowCount} of ${e.declaredTotal ?? "an undeclared total"}` +
+        `${e.complete ? " (COMPLETE)" : " (PARTIAL — the rest is still owed)"} at ${e.snapshotPath}`,
+    );
+  }
+  for (const e of gaps) {
+    out.push(`      GAP   ${e.obligationId} — ${e.readerSentence}`);
+  }
+  return out;
+}

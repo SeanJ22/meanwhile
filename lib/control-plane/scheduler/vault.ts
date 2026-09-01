@@ -1,0 +1,102 @@
+/**
+ * **THE VAULT SEAM THE SCHEDULER ACTUALLY WRITES THROUGH.**
+ * (Session C, PART D2/D4, 2026-08-31.)
+ *
+ * ## The gap this closes
+ *
+ * `http-executor.ts` returned artifact METADATA and wrote the bytes NOWHERE,
+ * while its own disposition note said "captured to the vault". Every citation
+ * it produced pointed at a body no store held. That is survivable while nothing
+ * downstream reads the bytes — and RULING 224's promotion tail is exactly a
+ * thing downstream that reads the bytes, so it stops being survivable the
+ * moment the tail exists.
+ *
+ * This module is the join: it wraps the already-proven `DurableEvidenceStore`
+ * and `putArtifact` — which verify the offered length and hash against the
+ * artifact record, refuse an immutability conflict, and re-verify on every read
+ * — and hands the executor a `VaultPut` and the tail a way to read the same
+ * bytes back by key.
+ *
+ * ## It is NOT a second store
+ *
+ * One control plane. Nothing here implements content addressing, atomic writes,
+ * sidecars or corruption detection; all four live in
+ * `lib/control-plane/evidence/durable-store.ts` and are used as they are. What
+ * this adds is the per-cycle KEY LEDGER, so the tail can find the body an
+ * Attempt produced without guessing at a path.
+ *
+ * ## RESTRICTED_RAW is refused, and the refusal is reported rather than thrown
+ *
+ * A body carrying a confirmed third-party credential is quarantined by the
+ * shipped scanner and the durable store refuses it without an encrypted,
+ * access-controlled provider. That refusal is CORRECT. It is surfaced into the
+ * disposition note — "the vault REFUSED these bytes" — instead of aborting an
+ * Attempt whose retrieval genuinely succeeded.
+ */
+
+import { DurableEvidenceStore } from "../evidence/durable-store.ts";
+import { putArtifact } from "../evidence/store.ts";
+import type { Artifact } from "../evidence/artifact.ts";
+
+import { FRESHNESS_PROJECT } from "./durable.ts";
+import type { VaultPut } from "./route-executor.ts";
+
+/** Where the freshness vault lives. Named once, in one place. */
+export const VAULT_DIR = ["data", "control-plane", "vault"] as const;
+
+export interface VaultLedgerEntry {
+  readonly artifactId: string;
+  readonly key: string;
+  readonly byteLength: number;
+  readonly tier: string;
+  readonly canonicalUrl: string;
+}
+
+export interface CycleVault {
+  readonly put: VaultPut;
+  /** Every artifact this cycle persisted, by artifact id. */
+  readonly ledger: ReadonlyMap<string, VaultLedgerEntry>;
+  /** Read a stored body back. Null when the key holds nothing. */
+  readBack(key: string): Promise<string | null>;
+}
+
+/**
+ * Build the vault for one cycle.
+ *
+ * `root` is explicit and nothing here reads an environment variable or invents
+ * a path: a store that picks its own location is a store two processes can
+ * disagree about, and the disagreement reads back as missing evidence.
+ */
+export function cycleVault(vaultRoot: string): CycleVault {
+  const store = new DurableEvidenceStore(vaultRoot);
+  const ledger = new Map<string, VaultLedgerEntry>();
+
+  const put: VaultPut = async (artifact: Artifact, body: string) => {
+    const bytes = Buffer.from(body, "utf8");
+    const { key, written } = await putArtifact(store, FRESHNESS_PROJECT, artifact, bytes);
+    ledger.set(artifact.id, {
+      artifactId: artifact.id,
+      key,
+      byteLength: artifact.byteLength,
+      tier: artifact.tier,
+      canonicalUrl: artifact.canonicalUrl,
+    });
+    return {
+      stored: true,
+      where: key,
+      why: written
+        ? "written"
+        : "already held at this key with identical metadata, so the write was a no-op success",
+    };
+  };
+
+  return {
+    put,
+    ledger,
+    async readBack(key: string): Promise<string | null> {
+      const object = await store.get(key);
+      if (object === null) return null;
+      return Buffer.from(object.bytes).toString("utf8");
+    },
+  };
+}

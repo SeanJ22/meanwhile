@@ -1,50 +1,63 @@
 /**
  * `pnpm freshness:shadow` — ONE UNATTENDED CYCLE OF THE FRESHNESS SCHEDULER.
  * (Session B, W3.5, 2026-08-30. Rewritten Session B resume, W3.B/C/E/F,
- * 2026-08-31.)
+ * 2026-08-31. Rewritten again Session C, PART D, 2026-08-31.)
  *
- * It observes, ACQUIRES for real, records, and **promotes nothing to canonical
- * reader truth** — `runCycle` has no parameter that could.
+ * It observes, ACQUIRES for real, records, normalizes, STAGES — and **promotes
+ * nothing to canonical reader truth**. `runCycle` has no parameter that could,
+ * and the promotion tail writes only under `data/control-plane/staging/`.
  *
- * ## What changed, and why the previous version could not have been right
+ * ## What changed in Session C, and why the previous version could not be right
  *
- * Three things, and each was invisible while the others held:
+ * **The corpus was meetings and could only ever be meetings.** This script
+ * imported `freshnessObligationsFromMeetings`, built its whole corpus from it,
+ * and built its route map by reading `sourceUrl` out of
+ * `data/meetings-snapshot.json`. So the unattended loop hunted calendars and
+ * nothing else, while a modelled Arizona campaign-finance obligation sat in
+ * `lib/control-plane/campaign-finance/obligations.ts` reachable from its own
+ * test and from nothing operational. **A domain obligation reachable only from
+ * tests is a failure.**
  *
- * 1. **The executor did not fetch.** It was `async () => ({ ok: true })`, and
- *    under the old seam that `ok: true` became WORKED and cleared the
- *    obligation's freshness debt. Eight dispatches were reported as having
- *    worked routes nothing opened. It is now `httpExecutor`, which opens the
- *    publisher's own surface and maps what it got to an honest disposition.
+ * The input is now an OBLIGATION-PROVIDER REGISTRY
+ * (`lib/control-plane/scheduler/registry.ts`). Meetings is one provider.
+ * Campaign finance is the second. Tracker intake is the third, and reports
+ * ABSENT rather than EMPTY until a converting lane ships its handoff file.
  *
- * 2. **Debt was not durable.** `runCycle` accepted `debts` and this script
- *    passed `debts: []` on every invocation, so a route that failed today was
- *    not retried tomorrow by a fresh process. Debt now loads from and persists
- *    to the control plane, and `pnpm control-plane:proof`'s P6 proves the
- *    inheritance across two real processes.
+ * **The scheduled unit is (RECORD x REPRESENTATION).** A campaign-finance
+ * record carries several materially distinct routes and every one gets its own
+ * occurrence, RouteTask, Attempt, disposition, debt and next-due — which is
+ * `ONE ROUTE SUCCESS != SOURCE UNIVERSE COMPLETE` expressed as state rather
+ * than as a sentence in a report.
  *
- * 3. **One RouteTask was reused for every occurrence.** That only appeared to
- *    work because the fake executor never disposed of anything. A disposed
- *    RouteTask is settled and cannot be the container for the next reading, so
- *    fixing (1) breaks (3) immediately. Each due occurrence now opens its own
- *    WorkItem and RouteTask through `openOccurrence`, and the standing
- *    obligation survives them all.
+ * **The lane is decided per route, not per cycle.** A DataTables POST is
+ * deterministic; an FTP drop this process holds no client for is not walked at
+ * all and disposes REQUIRES_NEW_ADAPTER. `runCycle` therefore takes a function.
  *
- * ## The provider
+ * **The bytes reach a real vault**, through `DurableEvidenceStore`, and the
+ * promotion tail reads them back out by key. The previous executor recorded
+ * artifact metadata and stored no body while claiming "captured to the vault".
  *
- * `--provider=postgres` runs against the dedicated control-plane database named
- * by `WTP_CONTROL_PLANE_DATABASE_URL`; the default is the durable file store.
- * The loop is provider-neutral by construction — it takes
- * `ControlPlaneRepositories` and never a connection — so the flag changes where
- * state lives and nothing about what the cycle does.
+ * **The tail runs automatically** (RULING 224): acquire, vault, normalize,
+ * snapshot, STAGED. Promotion itself stays OFF and a session carries the last
+ * mile.
  *
- * `--dry` uses a recorded executor instead of the network, for a cycle that
- * exercises the lifecycle without opening a route. It is labelled SIMULATED in
- * the digest and, by construction, discharges nothing.
+ * ## Flags
+ *
+ * ```
+ *   --provider=postgres   the durable control plane named by
+ *                         WTP_CONTROL_PLANE_DATABASE_URL; default is the file store
+ *   --dry                 a recorded executor instead of the network. Labelled
+ *                         SIMULATED, and by construction discharges nothing
+ *   --max=N               the stated dispatch ceiling for this cycle
+ *   --only=<prefix>       work only obligations whose id starts with <prefix>.
+ *                         A DIAGNOSTIC filter: the count it skipped is printed,
+ *                         so a filtered cycle can never read as a full one
+ * ```
  *
  * Env var names only, never values.
  */
 
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
@@ -55,9 +68,12 @@ import {
 } from "../lib/control-plane/repository/pg-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { digestLines, runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
-import type { FreshnessObligation } from "../lib/control-plane/scheduler/obligation.ts";
 import { scheduleObligation, isScheduled } from "../lib/control-plane/scheduler/obligation.ts";
-import { freshnessObligationsFromMeetings } from "../lib/control-plane/scheduler/obligations-from-corpus.ts";
+import { retryable } from "../lib/control-plane/scheduler/debt.ts";
+import { buildRegistry, registryLines } from "../lib/control-plane/scheduler/registry.ts";
+import { meetingsProvider } from "../lib/control-plane/scheduler/providers/meetings.ts";
+import { campaignFinanceProvider } from "../lib/control-plane/scheduler/providers/campaign-finance.ts";
+import { trackerIntakeProvider } from "../lib/control-plane/scheduler/providers/tracker-intake.ts";
 import { methodMaturityFrom } from "../lib/control-plane/scheduler/maturity.ts";
 import {
   closeOccurrence,
@@ -67,7 +83,15 @@ import {
   recordNextDue,
   syncObligations,
 } from "../lib/control-plane/scheduler/durable.ts";
-import { hostSpacer, httpExecutor } from "../lib/control-plane/scheduler/http-executor.ts";
+import { hostSpacer } from "../lib/control-plane/scheduler/http-executor.ts";
+import { routeExecutor } from "../lib/control-plane/scheduler/route-executor.ts";
+import { cycleVault, VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
+import {
+  promotionLines,
+  stageOne,
+  writeStagingManifest,
+  type StagedEntry,
+} from "../lib/control-plane/scheduler/promotion-tail.ts";
 import type { DeclaredExecutor, RunWork } from "../lib/control-plane/scheduler/dispatch.ts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
@@ -85,6 +109,8 @@ const wantsPostgres = argv.includes("--provider=postgres");
 const dry = argv.includes("--dry");
 const ceilingArg = argv.find((a) => a.startsWith("--max="));
 const MAX_DISPATCHES = ceilingArg ? Number(ceilingArg.slice("--max=".length)) : 50;
+const onlyArg = argv.find((a) => a.startsWith("--only="));
+const ONLY = onlyArg ? onlyArg.slice("--only=".length) : null;
 
 /* ------------------------------------------------------------- provider --- */
 
@@ -105,14 +131,44 @@ if (wantsPostgres) {
   repos = await createFileRepositories(CONTROL_PLANE_ROOT);
 }
 
-/* ---------------------------------------------------------- obligations --- */
+/* ----------------------------------------------------------- the registry --- */
 
-const corpus: FreshnessObligation[] = freshnessObligationsFromMeetings(ROOT, NOW);
+const registry = buildRegistry(
+  [meetingsProvider(), campaignFinanceProvider(), trackerIntakeProvider()],
+  { root: ROOT, nowIso: NOW },
+);
+
+const allUnits = registry.units;
+const units = ONLY === null ? allUnits : allUnits.filter((u) => u.obligation.id.startsWith(ONLY));
+const corpus = units.map((u) => u.obligation);
 
 console.log(
-  `freshness:shadow · ${corpus.length} obligation(s) derived from the committed corpus\n` +
+  `freshness:shadow · ${corpus.length} obligation(s) from the obligation-provider registry\n` +
     `  provider: ${repos.describe()}\n` +
-    `  executor: ${dry ? "SIMULATED (--dry, no retrieval)" : "http (real retrieval)"}`,
+    `  executor: ${dry ? "SIMULATED (--dry, no retrieval)" : "route-aware (real retrieval)"}`,
+);
+for (const line of registryLines(registry)) console.log(line);
+if (ONLY !== null) {
+  console.log(
+    `  --only=${ONLY} FILTERED this cycle to ${units.length} of ${allUnits.length} registered ` +
+      `unit(s); ${allUnits.length - units.length} were not looked at. A filtered cycle is a ` +
+      "diagnostic and is never a reading of the whole corpus.",
+  );
+}
+
+/* ---------------------------------------------- non-meeting share, stated --- */
+
+const nonMeeting = units.filter((u) => u.providerId !== "meetings");
+console.log(
+  `  ${floorLine(
+    floored(
+      "scheduled units that are NOT meetings",
+      "the obligation-provider registry",
+      units.length,
+      nonMeeting.length,
+      units.length === 0 ? "the registry produced no units at all this cycle" : undefined,
+    ),
+  )}`,
 );
 
 const sync = await syncObligations(repos, corpus, NOW);
@@ -123,68 +179,38 @@ console.log(
       "the freshness control plane",
       corpus.length,
       sync.alreadyDurable.length,
-      corpus.length === 0
-        ? "the committed meetings corpus yielded no obligations to register"
-        : undefined,
+      corpus.length === 0 ? "the registry yielded no obligations to register" : undefined,
     ),
   )} · ${sync.registered.length} newly registered this cycle`,
 );
-
-/* ------------------------------------------------- the source URL lookup --- */
-
-/**
- * The publisher surface each obligation is worked through.
- *
- * Built from the snapshot's own provenance rather than carried on the
- * obligation, because an obligation names a SUBJECT and a route class. An
- * obligation carrying a URL would be a route list with a clock attached, which
- * is exactly what `VENDOR != RECORD` refuses.
- */
-const urlByObligation = new Map<string, string>();
-try {
-  const snapshot = JSON.parse(readFileSync(join(ROOT, "data", "meetings-snapshot.json"), "utf8")) as {
-    meetings?: { bodyId?: string; ocdId?: string; provenance?: { sourceUrl?: string } }[];
-  };
-  for (const m of snapshot.meetings ?? []) {
-    const subject = m.bodyId ?? m.ocdId;
-    const url = m.provenance?.sourceUrl;
-    if (!subject || !url) continue;
-    const id = `freshness:meetings:${subject}`;
-    if (!urlByObligation.has(id)) urlByObligation.set(id, url);
-  }
-} catch (error) {
-  console.error(
-    `  the meetings snapshot could not be read for source URLs: ${
-      error instanceof Error ? error.message : String(error)
-    }. Obligations will report a provenance gap rather than a publisher fact.`,
+if (sync.refreshed.length > 0) {
+  console.log(
+    `  provider signals REFRESHED on ${sync.refreshed.length} durable row(s) — a corrected ` +
+      "derivation reaching rows that were registered under the old one:",
   );
+  for (const r of sync.refreshed.slice(0, 5)) {
+    console.log(`      ${r.id}  ->  ${r.changed.join(", ")}`);
+  }
+  if (sync.refreshed.length > 5) console.log(`      … and ${sync.refreshed.length - 5} more`);
 }
-console.log(
-  `  ${floorLine(
-    floored(
-      "obligations with a held source URL to open",
-      "the committed meetings snapshot",
-      corpus.length,
-      corpus.filter((o) => urlByObligation.has(o.id)).length,
-      corpus.length === 0 ? "no obligations exist to look one up for" : undefined,
-    ),
-  )}`,
-);
 
 /* ------------------------------------------------------- the occurrences --- */
 
-/*
- * Open an occurrence for every obligation that is DUE, and hand the cycle a
- * lookup from obligation to THIS occurrence's RouteTask. The obligation that
- * is not due gets no occurrence and no RouteTask, which is why the lookup
- * returns null rather than a stale task id from a previous reading.
- */
 const nowMs = Date.parse(NOW);
 const occurrenceByObligation = new Map<string, { id: string; routeTaskId: string }>();
+const nextDueByObligation = new Map<string, string>();
 let opened = 0;
 
 const debtsIn = await loadDebts(repos);
 const debtIds = new Set(debtsIn.filter((d) => d.consecutiveFailures > 0).map((d) => d.obligationId));
+/*
+ * An obligation whose backoff has NOT elapsed gets no occurrence this cycle.
+ * `runCycle` holds it out of the due set for the same reason; opening a
+ * WorkItem and a RouteTask for it here would leave an occurrence nothing
+ * dispatches, which reads back as a worker that abandoned it.
+ */
+const retryNow = new Set(retryable(debtsIn, nowMs).map((d) => d.obligationId));
+const backedOff = new Set([...debtIds].filter((id) => !retryNow.has(id)));
 console.log(
   `  freshness debt inherited from earlier processes: ${debtIds.size} open row(s)` +
     (debtIds.size === 0 ? "" : ` — ${[...debtIds].slice(0, 3).join(", ")}${debtIds.size > 3 ? " …" : ""}`),
@@ -194,7 +220,9 @@ for (const o of sync.all) {
   const row = scheduleObligation(o, nowMs);
   if (!isScheduled(row)) continue;
   await recordNextDue(repos, { obligationId: o.id, nextDueAt: row.nextDueAt, now: NOW });
-  const isDue = Date.parse(row.nextDueAt) <= nowMs || debtIds.has(o.id);
+  nextDueByObligation.set(o.id, row.nextDueAt);
+  if (backedOff.has(o.id)) continue;
+  const isDue = Date.parse(row.nextDueAt) <= nowMs || retryNow.has(o.id);
   if (!isDue) continue;
 
   const occ = await openOccurrence(repos, { obligation: o, dueAt: row.nextDueAt, now: NOW });
@@ -206,34 +234,45 @@ console.log(`  occurrences opened this cycle: ${opened} (each with its OWN WorkI
 
 /* ----------------------------------------------------------- the executor --- */
 
+const vault = cycleVault(join(ROOT, ...VAULT_DIR));
+
 const simulated: RunWork = async ({ executor, routeTaskId }) => ({
   ranAs: "DETERMINISTIC",
   kind: "SIMULATED",
   detail: `--dry: ${executor} decided route task ${routeTaskId.slice(0, 12)} — no retrieval ran`,
 });
 
-/*
- * **THE LANE IS DECLARED, and both of these are deterministic.**
- * (W3.E regression, 2026-08-31.)
+const walk = routeExecutor({
+  routeFor: (id) => registry.routeFor(id),
+  spaceOut: hostSpacer(),
+  vault: vault.put,
+});
+
+/**
+ * **THE LANE IS DECLARED PER ROUTE.**
  *
- * `chooseExecutor` routes every meetings obligation to the bounded model lane,
- * because nothing in the method store joins a meetings publisher to a graduated
- * route. Neither executor here is a model: the http one is an HTTP GET and the
- * dry one performs no retrieval at all. Declaring it is what stops the Attempt
- * being persisted under an anthropic worker identity for work no model touched.
+ * The registry's descriptor states the class the representation genuinely
+ * needs, and that class is what the Attempt is opened under. Neither branch
+ * here is a model: `--dry` performs no retrieval, and the route executor is an
+ * HTTP GET or POST. A route whose class is BOUNDED_MODEL_WORKER is one nothing
+ * has derived a shape for; it is opened by nothing today and disposes
+ * REQUIRES_NEW_ADAPTER with the missing adapter named, so no Attempt is
+ * persisted under an anthropic worker identity for work no model touched.
+ * `WTP_WORKERS_ANTHROPIC_API_KEY` is the variable a bounded model worker would
+ * read; no route in this cycle reads one.
  */
-const executor: DeclaredExecutor = {
-  lane: "DETERMINISTIC",
-  workerFor: ({ holder }) => ({
-    role: "ACQUIRER",
-    provider: "we-the-people",
-    version: dry ? "shadow-decision/1.0" : "http-executor/1.0",
-    instance: holder,
-  }),
-  run: dry ? simulated : httpExecutor({
-    urlFor: (id) => urlByObligation.get(id) ?? null,
-    spaceOut: hostSpacer(),
-  }),
+const executorFor = (obligation: { obligation: { id: string } }): DeclaredExecutor => {
+  const route = registry.routeFor(obligation.obligation.id);
+  return {
+    lane: "DETERMINISTIC",
+    workerFor: ({ holder }) => ({
+      role: "ACQUIRER",
+      provider: "we-the-people",
+      version: dry ? "shadow-decision/1.0" : `route-executor/1.0 (${route?.routeId ?? "unrouted"})`,
+      instance: holder,
+    }),
+    run: dry ? simulated : walk,
+  };
 };
 
 /* --------------------------------------------------------------- the cycle --- */
@@ -246,7 +285,7 @@ const cycle = await runCycle({
   /* Read from the method store — the project's own record of what it knows how
      to walk — rather than from a string prefix. */
   maturity: methodMaturityFrom(ROOT),
-  executor,
+  executor: executorFor,
   holder: `freshness-shadow@${process.pid}`,
   now: NOW,
   leaseTtlMs: 120_000,
@@ -290,7 +329,64 @@ console.log(
   `\n  debt persisted: ${persisted.written} row(s) written, ${persisted.cleared.length} cleared`,
 );
 
-const lines = digestLines(cycle);
+/* ------------------------------------------------------- the promotion tail --- */
+
+/*
+ * RULING 224. Acquisition without promotion is inventory, not product. The tail
+ * runs on EVERY cycle with no operator: acquire -> vault -> normalize ->
+ * snapshot -> STAGED. Promotion itself is OFF and a session carries the last
+ * mile, so nothing below writes outside data/control-plane/staging/.
+ *
+ * A wall stages TOO, as an honest gap with the obligation still live and its
+ * next-due named — the second half of the ruling, and not a lesser outcome.
+ */
+const staged: StagedEntry[] = [];
+for (const result of cycle.dispatched) {
+  const unit = units.find((u) => u.obligation.id === result.obligationId);
+  if (unit === undefined) continue;
+  /* Meetings routes have no normalizer and would stage a gap for every body on
+     every cycle. The tail is scoped to the record classes whose promotion is
+     what RULING 224 was adopted about; meetings already has a live snapshot
+     path of its own through `pnpm ingest`. */
+  if (unit.record.recordClass === "meetings") continue;
+
+  let body: string | null = null;
+  for (const artifactId of result.artifactIds) {
+    const entry = vault.ledger.get(artifactId);
+    if (entry === undefined) continue;
+    body = await vault.readBack(entry.key);
+    if (body !== null) break;
+  }
+
+  staged.push(
+    stageOne({
+      root: ROOT,
+      obligationId: result.obligationId,
+      providerId: unit.providerId,
+      recordClass: unit.record.recordClass,
+      subjectId: unit.record.subjectId,
+      route: unit.route,
+      disposition: result.disposition,
+      artifactIds: result.artifactIds,
+      body,
+      nextDueAt: nextDueByObligation.get(result.obligationId) ?? null,
+      detail: result.detail,
+      stagedOn: today(),
+    }),
+  );
+}
+const manifest = writeStagingManifest(ROOT, staged, today());
+
+/* ------------------------------------------------------------- the digest --- */
+
+const lines = [
+  ...digestLines(cycle),
+  "",
+  ...registryLines(registry),
+  "",
+  ...promotionLines(staged),
+  `  staging manifest   ${manifest.total} entry(ies) held, ${manifest.written} written this cycle`,
+];
 console.log();
 for (const line of lines) console.log(line);
 
@@ -307,9 +403,15 @@ writeFileSync(
       testedSha: headSha(ROOT),
       provider: repos.describe(),
       durable: repos.durable,
-      executor: dry ? "SIMULATED" : "http",
+      executor: dry ? "SIMULATED" : "route-aware",
+      registry: {
+        providers: registry.byProvider,
+        registeredUnits: allUnits.length,
+        workedUnits: units.length,
+        nonMeetingUnits: nonMeeting.length,
+        only: ONLY,
+      },
       obligations: sync.all.length,
-      obligationsWithUrl: corpus.filter((o) => urlByObligation.has(o.id)).length,
       occurrencesOpened: opened,
       debtInherited: debtIds.size,
       debtPersisted: persisted.written,
@@ -332,6 +434,9 @@ writeFileSync(
       dispositions: cycle.dispatched
         .filter((d) => d.dispositionCommitted)
         .map((d) => ({ obligationId: d.obligationId, disposition: d.disposition, artifacts: d.artifactIds.length })),
+      vaulted: [...vault.ledger.values()],
+      staged,
+      stagingManifest: `${["data", "control-plane", "staging"].join("/")}/manifest.json`,
       deferred: cycle.deferred.length,
       reclaim: cycle.reclaim,
       debts: cycle.debts.length,

@@ -227,10 +227,43 @@ export function scheduleObligation(
    * exists to avoid.
    */
   const anchor = obligation.lastWorkedAt ? Date.parse(obligation.lastWorkedAt) : NaN;
-  const from = Number.isFinite(anchor) ? anchor : nowMs;
+
+  /*
+   * **A RECORD NOBODY HAS EVER WORKED IS OWED NOW.** (Session C, 2026-08-31.)
+   *
+   * This anchored an unworked row at `now` and added the cadence, so a newly
+   * registered obligation's first due time was one full interval into the
+   * future — and for anything whose only signal is a distant reader deadline,
+   * that is a month. Registering Arizona's campaign-finance portfolio made the
+   * consequence visible: seven brand-new obligations, every one scheduled, and
+   * NOT ONE due, so the unattended loop would have registered them and then
+   * walked nothing for thirty days while reporting a healthy schedule.
+   *
+   * The cadence answers *how often is this owed again*. It has nothing to say
+   * about the first reading, and using it as a delay before the first reading
+   * is the scheduler deciding that a record it has never opened can wait —
+   * which is a claim about the record that nothing supports.
+   *
+   * Re-dispatch of a row that keeps FAILING is governed by debt backoff, not by
+   * this anchor; `runCycle` holds a backed-off obligation out of the due set and
+   * names it. Without that half this line would be a hot loop.
+   */
+  if (!Number.isFinite(anchor)) {
+    return {
+      obligation,
+      nextDueAt: new Date(nowMs).toISOString(),
+      cadenceHours,
+      cadenceSource: source,
+      basis:
+        `${basis}. This obligation has NEVER been worked, so its first reading is owed NOW rather ` +
+        `than one ${cadenceHours.toFixed(2)}h interval from registration — the cadence says how ` +
+        "often it recurs and says nothing about when the first reading is owed.",
+    };
+  }
+
   return {
     obligation,
-    nextDueAt: new Date(from + cadenceHours * 3_600_000).toISOString(),
+    nextDueAt: new Date(anchor + cadenceHours * 3_600_000).toISOString(),
     cadenceHours,
     cadenceSource: source,
     basis,

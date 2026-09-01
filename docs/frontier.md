@@ -331,6 +331,31 @@ deleted; the decision was taken on the author's directive at precedence 1
 should become absolute, or stay relative with the absolute one reserved to
 explicit author directives.~~ **Landed as RULING 230 on 2026-09-01 — absolute.**
 
+### One test failed once inside `pnpm gates` and has never been named (2026-09-01)
+
+A gates run on the Session C integrated head recorded `test FAIL` with
+`failureKind: ASSERTION_FAILURE` and `suiteTotals { tests 4523, pass 4522,
+fail 1 }` — a **real** single-test failure, correctly distinguished from the
+early-abort class, and **the name of the test went with the run**. Two
+subsequent full suites and a second full gates run all came back clean:
+4523 of 4523, 14 of 14.
+
+`scripts/gates.mjs` no longer loses the name — its detail filter never matched
+`node:test`'s own `✖ <name>` lines, and it now extracts them separately and
+writes them into the run record as `failingTests`. **That fixes the next one.
+It does not recover this one**, and this entry exists so that a later
+identical failure is recognised as a second sighting rather than a first.
+
+Two things narrow it. It is not the documented EARLY_ABORT class — a complete
+summary was printed and it named a failure. And the host was under load: the
+record carries `nodeProcessesAtStart: 15`, with a subagent lane still running
+its own installs and builds. **Load is a hypothesis, not a finding**; nothing
+here measured a causal link, and recording one would be the single-case
+reasoning this repository has refused twice already.
+
+Owed: reproduce it under load with the new instrument, or wait for it to recur
+and read the name.
+
 ### Instrument debt, and why each one matters
 
 - **The gate-run record identifier collides under parallel execution.** Records

@@ -74,6 +74,7 @@ import { spawnSync } from "node:child_process";
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { today } from "./doc-dates.mjs";
 
 const ROOT = process.cwd();
@@ -255,7 +256,30 @@ function buildDigest(record: RunRecord, cycle: number, at: string, ok: boolean):
         (p.units === 0 && p.emptyReason ? ` — ${p.emptyReason}` : ""),
     );
   }
-  out.push(`- ${record.dueCount ?? 0} due, ${record.dispatched ?? 0} dispatched, ${(record.worked ?? []).length} DISCHARGED`);
+  out.push(
+    `- ${floorLine(
+      floored(
+        "obligations DUE this cycle",
+        "the whole registry",
+        registry?.registeredUnits ?? 0,
+        record.dueCount ?? 0,
+        (registry?.registeredUnits ?? 0) === 0
+          ? "the registry produced no units, which is a defect and not an idle night"
+          : undefined,
+      ),
+    )}`,
+  );
+  out.push(
+    `- ${floorLine(
+      floored(
+        "DISCHARGED",
+        "what was dispatched",
+        record.dispatched ?? 0,
+        (record.worked ?? []).length,
+        (record.dispatched ?? 0) === 0 ? "nothing was dispatched this cycle" : undefined,
+      ),
+    )}`,
+  );
   for (const d of record.dispositions ?? []) {
     out.push(`  - \`${d.disposition}\` — ${d.obligationId} (${d.artifacts} artifact(s))`);
   }
@@ -346,11 +370,34 @@ while (cycle < CYCLES) {
     );
   }
 
+  /*
+   * THE HEADLINE CARRIES ITS DENOMINATORS (RULING 159). "4 discharged" is the
+   * shape that reads as health; "4 of 7 dispatched" is the shape that can be
+   * argued with, and a cycle that dispatched nothing says COULD NOT ASSERT
+   * rather than printing a measured-looking zero.
+   */
+  const stagedRows = record.staged ?? [];
+  const discharge = floored(
+    "obligations DISCHARGED",
+    "what this cycle dispatched",
+    record.dispatched ?? 0,
+    (record.worked ?? []).length,
+    (record.dispatched ?? 0) === 0
+      ? "this cycle dispatched nothing, so there is no population to measure a discharge rate over"
+      : undefined,
+  );
+  const readiness = floored(
+    "staged entries PROMOTION-READY",
+    "this cycle's promotion tail",
+    stagedRows.length,
+    stagedRows.filter((s) => s.state === "STAGED_PROMOTION_READY").length,
+    stagedRows.length === 0 ? "this cycle staged nothing" : undefined,
+  );
+
   const headline =
-    `${new Date().toISOString()} · cycle ${cycle} · ` +
-    `${(record.worked ?? []).length} discharged of ${record.dispatched ?? 0} dispatched · ` +
-    `${(record.staged ?? []).filter((s) => s.state === "STAGED_PROMOTION_READY").length} staged ready · ` +
-    `health ${record.health?.green ? "GREEN" : "NOT GREEN"} · ` +
+    `${new Date().toISOString()} - cycle ${cycle} - ` +
+    `${floorLine(discharge)} - ${floorLine(readiness)} - ` +
+    `health ${record.health?.green ? "GREEN" : "NOT GREEN"} - ` +
     `exit ${result.ok ? "clean" : "NON-ZERO"}`;
 
   const delivered = deliver(buildDigest(record, cycle, today(), result.ok), headline);

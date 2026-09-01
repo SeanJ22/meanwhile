@@ -47,6 +47,7 @@ import {
   CONTROL_PLANE_URL_VAR,
 } from "../lib/control-plane/repository/pg-store.ts";
 import { readStagingManifest } from "../lib/control-plane/scheduler/promotion-tail.ts";
+import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { today } from "./doc-dates.mjs";
@@ -372,14 +373,51 @@ mkdirSync(OUT_DIR, { recursive: true });
 const path = join(OUT_DIR, `${today()}-autonomous-advancement.json`);
 writeFileSync(path, `${JSON.stringify(record, null, 2)}\n`, "utf8");
 
+/*
+ * EVERY COUNT THIS PRINTS CARRIES ITS DENOMINATOR (RULING 159). The whole
+ * record is a claim about a proportion — how much of what is owed actually
+ * advanced — and a numerator on its own is the shape that reads as a result
+ * and is not one.
+ */
 console.log(`autonomy:evidence · ${verdict}`);
-console.log(
-  `  ${advancedWithDisposition.length} of ${nonMeeting.length} non-meeting obligation(s) reached a ` +
-    `committed disposition; ${advancedToStaged.length} reached a staged state`,
-);
-console.log(
-  `  ${ready.length} of ${staged.length} staged entry(ies) are PROMOTION-READY; promotion is OFF`,
-);
-console.log(`  ${unfiltered.length} unfiltered Postgres cycle(s) on record`);
+for (const line of [
+  floored(
+    "non-meeting obligations that reached a committed disposition",
+    "the Postgres control plane",
+    nonMeeting.length,
+    advancedWithDisposition.length,
+  ),
+  floored(
+    "non-meeting obligations that reached a STAGED state",
+    "the Postgres control plane",
+    nonMeeting.length,
+    advancedToStaged.length,
+  ),
+  floored(
+    "non-meeting dispositions committed in cycles NOBODY narrowed",
+    "the unfiltered Postgres cycles on record",
+    advancedWithDisposition.length,
+    Math.min(unattendedAdvances.length, advancedWithDisposition.length),
+    advancedWithDisposition.length === 0
+      ? "no non-meeting obligation reached a disposition at all, so there is nothing to attribute"
+      : undefined,
+  ),
+  floored(
+    "staged entries that are PROMOTION-READY",
+    "the staging manifest",
+    staged.length,
+    ready.length,
+    staged.length === 0 ? "the promotion tail has staged nothing yet" : undefined,
+  ),
+  floored(
+    "Postgres cycles run with no --only filter",
+    "every Postgres cycle on record",
+    cycles.length,
+    unfiltered.length,
+    cycles.length === 0 ? "no Postgres cycle has written a run record" : undefined,
+  ),
+]) {
+  console.log(`  ${floorLine(line)}`);
+}
 console.log(`  record: ${path}`);
 if (verdict !== "AUTONOMOUS_ADVANCEMENT_PROVEN") process.exitCode = 1;

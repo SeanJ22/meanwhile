@@ -4,7 +4,9 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-31 — **A defect three instruments called fixed while the owner watched it happen, and a state we had recorded as closed that was refusing us for saying our own name.** Session C, Parts A and F; its record is the LAST section of this file.
+Last updated: 2026-09-01 — **Three instruments reported clean results while looking at nothing, and a registry had been calling one county's ballot a state.** Session C (final directive); its record is the LAST section of this file.
+
+Previous: 2026-08-31 — **A defect three instruments called fixed while the owner watched it happen, and a state we had recorded as closed that was refusing us for saying our own name.** Session C, Parts A and F.
 
 Previous: 2026-08-30 — **The served commit was not the application, and the reader finally heard how the Board voted.** The release-identity and reader-answerability session.
 
@@ -22878,3 +22880,132 @@ failure, records an unreadable total as `read: false` with a reason rather than
 as `0`, and records `suiteLaneEnv` — each lane-gating variable's PRESENCE, never
 its value. Without that last field, a skipped lane and seven deleted tests look
 exactly alike.
+
+---
+
+## 2026-09-01 — Session C (final directive)
+
+**Three instruments reported clean results while looking at nothing, and a
+registry had been calling one county's ballot a state.**
+
+Eleven items, five lanes in isolated worktrees off one base commit, one
+integration owner, one merge. `orchestration:check` reports TEAM: 6 workstreams,
+12 independent pairs, 0 serialized.
+
+### What a reader can now see that they could not before
+
+**The product has an identity.** A lowercase serif wordmark, two grey dots, one
+filled square — *while you were living an ordinary week, decisions got made.*
+The map pin is gone from both places it appeared, and it had been wearing two
+different wrong colours: `var(--link)`, the accent that means "tappable", in the
+welcome overlay; and `var(--accent-local)`, a **tier** colour a reader learns
+from the map legend, in the sidebar. The second was not in the brief and nobody
+had noticed it.
+
+**The "Where can I vote?" panel has a border again**, and so do its input, its
+jurisdiction rule, its site cards and its two refusal blocks. Measured in a
+browser: `border-top-style: none` before, `solid` after.
+
+**Ask answers are written by `claude-sonnet-5`**, and on the two hardest
+canonical questions a reader gets an answer where they previously got none.
+
+**The site is at `https://meanwhileusa.com`**, and the old host now forwards
+instead of serving a parallel copy of the whole application.
+
+**What a reader does NOT see, and it is the largest owed thing:** 211 newly
+acquired Arizona candidates. They are `ACQUIRED → EXTRACTED → NORMALIZED →
+CANONICALLY_LINKED`, and nothing in `app/` reads them. Under RULING 224 that is
+a **defect**, retroactively, not future work.
+
+### The registry had been calling one county's ballot a state
+
+Every candidate registry was built from a pilot ballot document — Pima,
+Merrimack, Morris — and labelled statewide. Each individual statement about it
+was true and correctly recorded; the LABEL was the defect, and RULING 232 is now
+the rule: *"No ZIP in the key" is a property of the key, not of the population.*
+
+Arizona is fixed by acquisition rather than by relabelling: the Secretary of
+State's 2026 filing list, vaulted with provenance, **266 candidacies across 76
+contests, established twice by independent mechanisms** — positional table
+recovery, and filing-date tokens counted out of the text layer — with the
+adapter refusing to write when the two disagree. **55 → 266**, zero identities
+lost, all 44 committee identities preserved.
+
+New Hampshire and New Jersey are fixed by telling the truth about them. NH's
+document is retrieved and hashed and its pages are **rotated**, so the generic
+table layer reads each column as a row and returns `ZERO_ROWS`; a prototype
+recovered 1,268 rows whose segmentation could not be verified and **was not
+shipped**. NJ's Division of Elections files **federal office only** — that
+state's universe is the union of that authority and **21 county clerks**, so no
+acquisition of those documents alone could ever have earned the word. Both are
+`REQUIRES_NEW_ADAPTER` with the wall named; both populations are now
+`PILOT_DERIVED`.
+
+### Three instruments that were reporting cleanly while looking at nothing
+
+This is the through-line of the session, and it was three separate discoveries
+before it was a pattern.
+
+1. **The model-comparison harness FILTERED incomparable questions out** instead
+   of carrying them as unmeasured. `switchVerdict` refuses a run carrying
+   `held: null` and refuses an empty set — both correct, and both blind to a
+   question that never reached it. So the denominator shrank in silence: the
+   effort sweep emitted `SWITCH` over three surviving rows at `xhigh` and over
+   **one** at `max`, and the record reported `questions: 1` as though that had
+   been the plan.
+2. **`--regenerate` read the arm names from today's constants**, which the model
+   switch had just swapped. Re-deriving a pre-switch record stamped a real
+   measurement with **reversed roles** — rows saying `incumbent: claude-opus-5`
+   came back as `incumbentModel: claude-sonnet-5`. Three such records were
+   written and **deleted**; the path now refuses a mismatch and prints the
+   command that would be correct.
+3. **A stylesheet sweep reported ZERO `var()` references across 1,428 rules.**
+   Chromium's nested-CSS support gives every ordinary rule an empty-but-truthy
+   `cssRules`, so the walker recursed into nothing 1,428 times. The repaired
+   sweep walks 1,177 references and is what found a live undeclared-token rule
+   the source sweep could not see.
+
+**The open question underneath all three** is on the frontier: this project has
+many sweeps, and nothing systematically asks a sweep to prove it looked.
+
+### A stale blocker had been sitting in the owner's queue
+
+`NS12` said there was no Netlify credential on this machine. There is, and
+`pnpm deploy:live` answers in full. The row never noticed because it was
+**carded** `NOT_MACHINE_VERIFIABLE` — which HOLDS by construction, since the
+machine never asks again — while its blocker was "does a credential resolve?",
+which a machine can decide perfectly well. That is the exact failure RULING 227
+was adopted over, surviving inside the mechanism built to prevent it. It is now
+a predicate reading a committed artifact, and `tracker:views` auto-resolved it.
+
+The same sweep found **two decision cards pointing at git refs that no longer
+exist**, one of which said in as many words that its branch must not be deleted
+unread. The work is not lost — GitHub still serves the tip `33f6f520` by SHA —
+and both cards now name the SHA instead of the vanished ref.
+
+### The rulings
+
+**RULING 232** (`R-C9`) labelling · **RULING 233** (`R-C10`) staging-first,
+adopted and **not operative until the session after this one** · **RULING 234**
+(`R-C11`) the owner's override of the H2 `RETAIN` verdict, for the Sonnet 5
+switch only · **RULING 235** a FACT, not a law.
+
+RULING 235 is worth reading for how it came about. Netlify derives a branch
+deploy's hostname as `<branch>.<suffix>`, so RULING 233's two halves — branch
+`staging`, host `test.meanwhileusa.com` — cannot both hold. The amendment was
+drafted, and **the governance validator refused it**: *a LAW_DECISION requires
+author provenance.* A session does not legislate. So the measurement is recorded
+as a FACT that explicitly declines to amend, RULING 233 stands as the author
+wrote it, and `NH304` carries the choice to him with both options.
+
+### Where the numbers landed
+
+```
+  suite              4,675 tests · 4,674 pass · 1 skipped
+  gates              14 of 14
+  governance         272 records · 0 semantic conflicts · 0 structural issues
+  tracker            69 Needs Sean, all carded · 478 resolved
+  AZ candidates      55 -> 266 (the Secretary's filing list, acquired)
+  obligations        1,087 -> 1,720, each with its denominator stated
+  Ask cost           2.64x cheaper, measured cold, against a 2.5x rate card
+```

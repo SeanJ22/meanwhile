@@ -24,21 +24,20 @@
  * give the firewall two places to be enforced instead of one. So the data class
  * union grows and the render path is shared.
  *
- * ## THE THREE-WAY STATE IS THE DESIGN, NOT A CONVENIENCE
+ * ## THE SPLIT STATE IS THE DESIGN, NOT A CONVENIENCE
  *
  * **An absence of filings is not zero dollars.** Small-race candidates file
  * short forms, or sit under a reporting threshold entirely — New Hampshire's
  * thresholds exempt most town-level candidates, so a sourced "no reports" will
- * be the DOMINANT outcome there and that is a correct result rather than a thin
+ * be a common outcome there and that is a correct result rather than a thin
  * one. Rendering that as `$0` would be a false claim about a named person's
  * campaign, and rendering it as blank would be indistinguishable from our not
- * having looked. So:
+ * having looked.
  *
- * - `FILED` — reports are on file and the totals below are what they say.
- * - `NO_REPORTS_ON_FILE` — the agency was asked, on `checkedAt`, and answered
- *   that this candidate has nothing filed. A SOURCED, DATED statement.
- * - `LEAD` — something plausible was found and it does not meet the matching
- *   bar. **It does not render.**
+ * It began as three states. **It is five, because two of the three were each
+ * doing more than one job and the extra jobs were false sentences about named
+ * people** — see `FilingState` below, which carries the amendment and the
+ * audit that forced it.
  *
  * ## MATCHING IS THE DANGEROUS PART, AND THE BAR IS DELIBERATELY HIGH
  *
@@ -70,9 +69,43 @@ export type MoneyJurisdiction = (typeof COVERED_STATES)[number]["usps"];
 
 /**
  * Whether this candidate's money is filed, absent, or merely suspected.
- * The three-way split every report of this data states.
+ *
+ * ## IT WAS THREE STATES AND TWO OF THEM WERE DOING FOUR JOBS
+ *
+ * Amended 2026-08-31 (Session C) after an audit found the New Hampshire
+ * collector writing `NO_REPORTS_ON_FILE` — a SOURCED, DATED claim about a
+ * government's records — for three things that are not that claim:
+ *
+ * - a committee the state NAMES, with an id, a registered name, an office and
+ *   an election cycle, whose published totals happen to be zero;
+ * - a surname query that returned HTTP 500;
+ * - a row we could not match to a person because the ballot says `Jon` and the
+ *   filing says `Jonathan`.
+ *
+ * All three are different sentences and one of them is not about the state at
+ * all. So the union grows, and it grows in the direction of saying LESS:
+ *
+ * - `FILED` — reports are on file and the totals below are what they say.
+ * - `REGISTERED_NO_ACTIVITY_REPORTED` — the agency holds this committee and
+ *   publishes zero receipts and zero expenditures for it. A statement about a
+ *   REGISTERED committee's reported activity, which is a different fact about
+ *   a different thing from the registry holding nothing. **Renders**, with its
+ *   own sentence.
+ * - `NO_REPORTS_ON_FILE` — the agency was asked, on `checkedAt`, with a read
+ *   proven complete against the agency's own published count, and holds
+ *   nothing that could be this candidate. A SOURCED, DATED statement.
+ * - `LEAD` — something plausible was found and it does not meet the matching
+ *   bar. **It does not render.**
+ * - `ROUTE_UNREAD` — the route did not answer. An OURS gap, never theirs.
+ *   **It does not render**: RULING 139 forbids the product announcing its own
+ *   failure to a reader, and a card with nothing to say says nothing.
  */
-export type FilingState = "FILED" | "NO_REPORTS_ON_FILE" | "LEAD";
+export type FilingState =
+  | "FILED"
+  | "REGISTERED_NO_ACTIVITY_REPORTED"
+  | "NO_REPORTS_ON_FILE"
+  | "LEAD"
+  | "ROUTE_UNREAD";
 
 /** Which of the three matching criteria were satisfied, and by what. */
 export interface MatchBasis {
@@ -137,6 +170,16 @@ export interface StateMoneyRecord {
    */
   checkedAt: string;
   provenance: Provenance;
+  /**
+   * Set when a refresh could NOT read the route and this record was carried
+   * forward from the previous snapshot rather than replaced.
+   *
+   * `checkedAt` stays the date the facts were actually read, so the reader's
+   * attribution line remains true; this field is the auditor's half. It is not
+   * an announcement — RULING 139 strikes a verdict on ourselves from a reader
+   * surface, and the read date is the whole of what a reader is owed.
+   */
+  retainedFrom?: { attemptedAt: string; reason: string } | null;
 }
 
 export interface StateMoneySnapshot {
@@ -151,8 +194,12 @@ export interface StateMoneySnapshot {
   split: {
     candidaciesInScope: number;
     filed: number;
+    /** Registered with the agency, and the agency publishes zero activity. */
+    registeredNoActivityReported: number;
     noReportsOnFile: number;
     lead: number;
+    /** Routes that did not answer. OURS, and never counted as an answer. */
+    routeUnread: number;
     /** In scope, asked, and not yet resolved to any of the three. */
     unresolved: number;
     /**
@@ -163,7 +210,23 @@ export interface StateMoneySnapshot {
     filedRecords: number;
   };
   /** Per-jurisdiction, so one state's silence cannot hide inside a total. */
-  byJurisdiction: Record<string, { inScope: number; filed: number; noReports: number; lead: number }>;
+  byJurisdiction: Record<
+    string,
+    {
+      inScope: number;
+      filed: number;
+      noReports: number;
+      lead: number;
+      /**
+       * The two states added 2026-08-31. Optional because the New Jersey and
+       * Arizona snapshots predate them and a snapshot is a WRITTEN FILE — a
+       * required field here would make a committed, honest, older file fail to
+       * type rather than making it truer.
+       */
+      registeredNoActivityReported?: number;
+      routeUnread?: number;
+    }
+  >;
   records: StateMoneyRecord[];
 }
 
@@ -244,6 +307,57 @@ export function nameTokens(name: string): string[] {
     .split(/\s+/)
     .map((t) => t.trim())
     .filter((t) => t.length > 1 && !SUFFIXES.has(t));
+}
+
+/**
+ * **A DELIBERATELY WEAK TEST THAT MAY ONLY EVER WITHHOLD A CLAIM.**
+ *
+ * `namesAgree` is the MATCHING bar and it stays exactly as strict as it was:
+ * it decides whether a committee's money may appear on a named person's card,
+ * and loosening it puts a stranger's money there.
+ *
+ * This answers a different question — *could the row the agency just handed us
+ * be about this person?* — and it exists for one purpose: **to forbid the
+ * product from claiming an absence.** It never licenses a match, never fills a
+ * field and never reaches a reader. Because its only effect is to make the
+ * product say less, being generous here is the safe direction, which is the
+ * opposite of `namesAgree`, where being generous is the dangerous one.
+ *
+ * The case that produced it: New Hampshire's registry holds
+ * `Raiche, Jonathan M. (Raiche, Jon )` for 2026 Merrimack County Attorney; the
+ * certified ballot carries `Jon Raiche` for Merrimack County Attorney. The
+ * strict bar correctly refuses that as a match. What was NOT correct is that
+ * the product then published *"No reports on file with the New Hampshire
+ * Secretary of State"* — a claim about a government's records that the
+ * government's own answer contradicted.
+ *
+ * Surname must agree exactly. A forename pair counts as compatible when the
+ * two are equal, or one is a prefix of the other of at least two characters —
+ * `Jon`/`Jonathan`, `Meg`/`Meghan`. That is a stated, checkable rule rather
+ * than a distance threshold, and `Allen`/`Erica` is not compatible under it.
+ */
+export function mayBeSamePerson(a: string, b: string): boolean {
+  const ta = nameTokens(a);
+  const tb = nameTokens(b);
+  if (ta.length < 2 || tb.length < 2) return false;
+  // Agencies file `SURNAME, FORENAME`; ballots carry `Forename Surname`. The
+  // surname is whichever token the two share exactly, so compare SETS for it
+  // rather than trusting either side's word order.
+  const setB = new Set(tb);
+  const shared = ta.filter((t) => setB.has(t));
+  if (shared.length === 0) return false;
+  const restA = ta.filter((t) => !shared.includes(t));
+  const restB = tb.filter((t) => !shared.includes(t));
+  // Nothing left to disagree about: the shared tokens already carry both names.
+  if (restA.length === 0 || restB.length === 0) return true;
+  for (const x of restA) {
+    for (const y of restB) {
+      const short = x.length <= y.length ? x : y;
+      const long = x.length <= y.length ? y : x;
+      if (short.length >= 2 && long.startsWith(short)) return true;
+    }
+  }
+  return false;
 }
 
 export function namesAgree(a: string, b: string): boolean {
@@ -372,32 +486,61 @@ export function computeSplit(
   candidaciesInScope: number,
 ): StateMoneySnapshot["split"] {
   const filedCandidacies = new Set<string>();
+  const registeredCandidacies = new Set<string>();
   const absentCandidacies = new Set<string>();
   for (const r of records) {
     if (r.filingState === "FILED") for (const k of r.targetKeys) filedCandidacies.add(k);
+    else if (r.filingState === "REGISTERED_NO_ACTIVITY_REPORTED")
+      for (const k of r.targetKeys) registeredCandidacies.add(k);
     else if (r.filingState === "NO_REPORTS_ON_FILE") for (const k of r.targetKeys) absentCandidacies.add(k);
   }
-  // A candidacy that has BOTH a filing and an absence record resolves as filed:
-  // the absence was written for a location pass that another committee answered.
-  for (const k of filedCandidacies) absentCandidacies.delete(k);
+  /*
+   * A candidacy that has BOTH a filing and an absence record resolves as filed:
+   * the absence was written for a location pass that another committee
+   * answered. The same reasoning orders the middle state — a committee with
+   * money outranks a sibling committee with none, and a NAMED committee
+   * reporting nothing outranks the registry holding nothing, because the
+   * stronger statement is the one the agency actually made.
+   */
+  for (const k of filedCandidacies) {
+    registeredCandidacies.delete(k);
+    absentCandidacies.delete(k);
+  }
+  for (const k of registeredCandidacies) absentCandidacies.delete(k);
 
   const filed = filedCandidacies.size;
+  const registeredNoActivityReported = registeredCandidacies.size;
   const noReportsOnFile = absentCandidacies.size;
   return {
     candidaciesInScope,
     filed,
+    registeredNoActivityReported,
     noReportsOnFile,
     lead: records.filter((r) => r.filingState === "LEAD").length,
-    unresolved: Math.max(0, candidaciesInScope - filed - noReportsOnFile),
+    routeUnread: records.filter((r) => r.filingState === "ROUTE_UNREAD").length,
+    unresolved: Math.max(
+      0,
+      candidaciesInScope - filed - registeredNoActivityReported - noReportsOnFile,
+    ),
     filedRecords: records.filter((r) => r.filingState === "FILED").length,
   };
 }
 
 /**
- * Only a FILED or a sourced-absent record may reach a reader. A LEAD never
- * renders — asked here rather than at each surface, so no surface can decide
- * otherwise (the RULING 118 shape: ask once).
+ * Only a record that states a FACT ABOUT THE AGENCY'S HOLDINGS may reach a
+ * reader — a filing, a registered committee's reported activity, or a sourced
+ * dated absence. Asked here rather than at each surface, so no surface can
+ * decide otherwise (the RULING 118 shape: ask once).
+ *
+ * The two that never render are the two that are about US: a `LEAD` is a guess
+ * about a named person's money, and a `ROUTE_UNREAD` is our own failed
+ * retrieval. RULING 139 — the product does not announce its own failure; it
+ * states what is known and moves on.
  */
 export function isRenderable(record: StateMoneyRecord): boolean {
-  return record.filingState === "FILED" || record.filingState === "NO_REPORTS_ON_FILE";
+  return (
+    record.filingState === "FILED" ||
+    record.filingState === "REGISTERED_NO_ACTIVITY_REPORTED" ||
+    record.filingState === "NO_REPORTS_ON_FILE"
+  );
 }

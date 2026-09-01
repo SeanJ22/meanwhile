@@ -291,6 +291,8 @@ for (const gate of GATES) {
   let status = "PASS";
   let detail = "";
   let failureKind = null;
+  /* The failing test names, when the runner prints any. Recorded, not only printed. */
+  let failingTests = [];
   let suiteTotals = null;
   try {
     execSync(gate.command, {
@@ -352,11 +354,46 @@ for (const gate of GATES) {
     } else {
       status = "FAIL";
       detail = `exit ${error.status}`;
+      /*
+       * **AN ASSERTION FAILURE THAT NAMES NOTHING IS AS UNACTIONABLE AS AN
+       * EARLY ABORT.** (2026-09-01, met head-on.)
+       *
+       * This filter matched `error TS…`, ESLint's problem count, and TAP's
+       * `not ok` — and NOT `node:test`'s own `✖ <name>` lines, which is the
+       * only place the failing test's NAME appears. So a real single-test
+       * failure inside `pnpm gates` printed `test … FAIL` with `exit 1` under
+       * it and nothing else, the record read `ASSERTION_FAILURE` with
+       * `4522 pass, 1 fail`, and the run that produced it was gone.
+       *
+       * The whole point of separating ASSERTION_FAILURE from EARLY_ABORT was
+       * that the first kind is evidence about the tree. Evidence you cannot
+       * read is not evidence, and a session meeting this had exactly one move
+       * left — re-run and hope it reproduces — which is the move the split was
+       * supposed to make unnecessary.
+       */
       const lines = out
         .split("\n")
-        .filter((l) => /error TS\d+|✖ \d+ problems|error {2}Error|Failed to compile|not ok \d/.test(l))
+        .filter((l) =>
+          /error TS\d+|✖ \d+ problems|error {2}Error|Failed to compile|not ok \d/.test(l),
+        )
         .slice(0, 6);
+      /*
+       * The failing test NAMES, kept separately from the line filter above so a
+       * suite failure cannot be crowded out of the six-line budget by whatever
+       * else the run happened to print.
+       */
+      failingTests = [
+        ...new Set(
+          out
+            .split("\n")
+            .map((l) => /^\s*✖\s+(?!\d+ problems)(.+?)(?:\s+\([\d.]+ms\))?\s*$/.exec(l)?.[1])
+            .filter((n) => n && n !== "failing tests:"),
+        ),
+      ].slice(0, 10);
       if (lines.length) detail += `\n${lines.map((l) => `        ${l.trim()}`).join("\n")}`;
+      if (failingTests.length) {
+        detail += `\n${failingTests.map((n) => `        ✖ ${n}`).join("\n")}`;
+      }
       /*
        * **AN EARLY ABORT IS NOT AN ASSERTION FAILURE, AND SAYING SO IS THE
        * WHOLE POINT.** (Part C, 2026-08-31. Measured, not theorised.)
@@ -411,7 +448,7 @@ for (const gate of GATES) {
         `\n      believing it. Do not ship on it, and do not record it as green.`,
     );
   }
-  results.push({ ...gate, status, secs, failureKind, suiteTotals, nodeProcessesAtStart });
+  results.push({ ...gate, status, secs, failureKind, failingTests, suiteTotals, nodeProcessesAtStart });
 }
 
 console.log("\n  gate            CI job                        result");
@@ -541,6 +578,7 @@ function writeGateRunRecord(results) {
        * has cost a full re-run to attribute.
        */
       failureKind: r.failureKind ?? null,
+      failingTests: r.failingTests ?? [],
       suiteTotals: r.suiteTotals ?? null,
       /*
        * HOW BUSY THE HOST WAS. The false RED on the test gate is producible on

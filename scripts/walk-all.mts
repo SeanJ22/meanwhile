@@ -6795,6 +6795,377 @@ for (const target of SCOPE_ADDRESSES) {
   }
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// W6H3 — the zip fly-in does not re-query the map on every frame of itself.
+// ═══════════════════════════════════════════════════════════════════════════
+
+section("W6H3. The fly-in's per-frame cost (W6 H3, 2026-08-31)");
+
+{
+  /*
+   * **WHAT THIS ASSERTS, AND WHY IT IS A COUNT RATHER THAN A FRAME RATE.**
+   *
+   * Entering a zip flies the camera for 2600 ms. Two effects in
+   * `components/map/map-canvas.tsx` were subscribed straight to `sourcedata`,
+   * and `drawnDistrictsOn` runs a full-viewport `queryRenderedFeatures` across
+   * eight district line layers. A fly-to crossing eight zoom levels re-tiles
+   * every one of those eight GeoJSON sources repeatedly, so the measured cost
+   * of one flight was:
+   *
+   * ```
+   * 170 sourcedata events, 170 queryRenderedFeatures calls, 555ms of MAIN
+   * THREAD inside a 2837ms animation — a fifth of the flight spent computing
+   * answers the next frame threw away
+   * ```
+   *
+   * `onSettledSourceChange` now drops those passes while `map.isMoving()` and
+   * runs once on `moveend`. `pnpm measure:flyin` is the full instrument; this
+   * is the one line of it that has to hold on every deploy.
+   *
+   * **THE GATE IS THE CALL COUNT, NOT THE FPS, AND THAT IS DELIBERATE.**
+   * A frame rate measured on a shared CI host is a fact about the host: on the
+   * machine this was written on — seven agents building in parallel — the same
+   * build measured 29.5, 31.6, 33.7, 36.1 and 38.2 fps sustained across five
+   * consecutive runs, and a flight with EVERY district layer, every marker and
+   * the whole state-focus layer removed still only reached 41.3 against a
+   * 55.2 fps control. A `>= 55` assertion here would have gone red on a healthy
+   * build, and a check that goes red on healthy builds is a check nobody reads.
+   *
+   * The call count does not move with load. It was 170; it is a handful; a
+   * regression that re-subscribes either effect to raw `sourcedata` puts it
+   * back into the hundreds no matter what else the host is doing. The frame
+   * rate is MEASURED AND PRINTED beside it, with its own control, so a session
+   * reading this has the number — it is simply not the thing that fails.
+   */
+  const context = await browser.context({
+    extraHTTPHeaders: RUN_HEADERS,
+    viewport: { width: 1280, height: 900 },
+    deviceScaleFactor: 1,
+    /*
+     * **NOT `reducedMotion: "reduce"`, unlike every other context in this
+     * file.** `prefersReducedMotion()` short-circuits the fly-in to
+     * `map.jumpTo`, so a reduced-motion context measures a fly-in that never
+     * happens and reports a perfect score for it.
+     */
+    reducedMotion: "no-preference",
+  });
+  await context.addInitScript(
+    ({ zip }) => {
+      try {
+        sessionStorage.setItem(
+          "wtp.approximate_location",
+          JSON.stringify({ zip, savedAt: new Date().toISOString() }),
+        );
+        localStorage.setItem("wtp.tutorial_seen", "1");
+      } catch {
+        // The read below fails honestly if the app never resolved a zip.
+      }
+    },
+    { zip: "85701" },
+  );
+  const page = await context.newPage();
+  page.on("response", (r) => countProbe(r.url()));
+  await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 90_000 });
+
+  // R49: the map instance is on the page, rather than N seconds have passed.
+  const ready = await until(
+    page,
+    () =>
+      page.evaluate(() => Boolean((window as unknown as { __wtpMap?: unknown }).__wtpMap)),
+    30_000,
+    150,
+    "W6H3 __wtpMap",
+  );
+  if (!ready) {
+    cannotRun("W6H3", "the zip fly-in does not re-query the map on every frame", "no __wtpMap on the page");
+  } else {
+    /*
+     * **R49: THE SCRIM HAS DRAWN, RATHER THAN 2.5 SECONDS HAVE PASSED.**
+     *
+     * Flying before the state-focus overlay exists would measure a LIGHTER
+     * page than a reader's and quietly flatter the build. The first version of
+     * this wait was a fixed 2,500 ms on the grounds that there is no event for
+     * "the scrim has drawn" — but there is an OUTCOME for it, which is the
+     * scrim's own paths being in the DOM, and an outcome is always the better
+     * instrument. A slow host now waits longer instead of measuring the wrong
+     * page, and a build that never draws the scrim says so below rather than
+     * silently scoring a lighter flight.
+     */
+    const scrimDrawn = await until(
+      page,
+      () =>
+        page.evaluate(
+          () => document.querySelectorAll(".state-focus-layer path").length > 0,
+        ),
+      20_000,
+      150,
+      "W6H3 state-focus scrim",
+    );
+    /* Not reported here: it joins the disposition chain below, so this block
+       cannot both decline and then assert on the same run. */
+
+    /*
+     * The probe, as a STRING for the reason `scripts/browser.mts` gives for
+     * its own: tsx rewrites named functions through a `__name` helper the page
+     * does not have. No regex and no backtick inside it — a backtick would
+     * close this template, and a regex would lose its escapes.
+     */
+    await page.evaluate(`(() => {
+      const w = window;
+      const map = w.__wtpMap;
+      if (!map) return false;
+      const probe = { frames: [], sourcedata: 0, qrf: 0, running: false };
+      w.__wtpFlyProbe = probe;
+      map.on("sourcedata", () => { if (probe.running) probe.sourcedata += 1; });
+      const real = map.queryRenderedFeatures.bind(map);
+      map.queryRenderedFeatures = function (...args) {
+        if (probe.running) probe.qrf += 1;
+        return real(...args);
+      };
+      /*
+        THE FRAME WINDOW CLOSES ON TIME; THE CALL COUNTER KEEPS COUNTING.
+
+        These two measurements want different windows and used to share one.
+        The frame rate is about a FIXED 2600ms animation, so its window must be
+        fixed too — extending it would fold post-flight idle frames into the
+        average and quietly improve the number. The call count is about work
+        that happens ON ARRIVAL, one animation frame after moveend, so its
+        window has to outlast the flight or it reads zero for work that did
+        happen. So the recorder stops pushing frames at the deadline and the
+        loop keeps running for the counters.
+      */
+      const tick = () => {
+        if (!probe.running) return;
+        if (performance.now() < probe.frameDeadline) probe.frames.push(performance.now());
+        else probe.windowClosed = true;
+        w.requestAnimationFrame(tick);
+      };
+      probe.run = (opts, windowMs) => {
+        probe.frames = [];
+        probe.sourcedata = 0;
+        probe.qrf = 0;
+        probe.running = true;
+        probe.windowClosed = false;
+        probe.frameDeadline = performance.now() + windowMs;
+        w.requestAnimationFrame(tick);
+        if (opts) map.flyTo(opts);
+      };
+      probe.stop = () => { probe.running = false; };
+      /*
+        THE CAMERA IS PARKED AND ITS TILES HAVE LANDED — an OUTCOME the Node
+        side can wait on, so neither run has to guess how long a jumpTo takes
+        to settle. Both runs must start from the identical camera or the
+        control is not a control.
+      */
+      probe.parked = () => !map.isMoving() && map.areTilesLoaded();
+      return true;
+    })()`);
+
+    // Both walks start at the continent, which is where a reader with no
+    // remembered camera actually starts.
+    /*
+     * **R49 THROUGHOUT THIS SEQUENCE: every wait below is an OUTCOME.**
+     *
+     * The sampling window is still a fixed 2,800 ms — it has to be, because the
+     * frame rate is about a fixed 2,600 ms animation and a window that stretched
+     * with the host would fold post-flight idle frames into the average and
+     * quietly improve the number. But the fixed duration now runs IN THE PAGE,
+     * where it is the instrument, and the Node side waits for the window to
+     * report itself CLOSED. That is the difference R49 is about: a blind
+     * `waitForTimeout` here could not tell "the window closed" from "the page
+     * never started", and would read the second as the first.
+     */
+    const park = async (label: string): Promise<boolean> => {
+      await page.evaluate(`window.__wtpMap.jumpTo({ center: [-98.5, 39.5], zoom: 3.2 })`);
+      return until(
+        page,
+        () => page.evaluate(`window.__wtpFlyProbe.parked()`) as Promise<boolean>,
+        10_000,
+        50,
+        label,
+      );
+    };
+    const sampled = (label: string): Promise<boolean> =>
+      until(
+        page,
+        () => page.evaluate(`window.__wtpFlyProbe.windowClosed === true`) as Promise<boolean>,
+        15_000,
+        100,
+        label,
+      );
+
+    // Both walks start at the continent, which is where a reader with no
+    // remembered camera actually starts.
+    const parkedForControl = await park("W6H3 camera parked (control)");
+
+    // The CONTROL first: the same frame clock, on the same page, in the same
+    // second, with the camera standing still. It carries this host's load in
+    // its own number, which is what makes the flight number readable.
+    await page.evaluate(`window.__wtpFlyProbe.run(null, 2800)`);
+    const controlSampled = await sampled("W6H3 control frame window");
+    const control = (await page.evaluate(
+      `(() => { const p = window.__wtpFlyProbe; p.stop(); return { frames: p.frames }; })()`,
+    )) as { frames: number[] };
+
+    const parkedForFlight = await park("W6H3 camera parked (flight)");
+    // The options are the fly-in's own, copied from map-canvas.tsx.
+    await page.evaluate(
+      `window.__wtpFlyProbe.run({ center: [-110.9747, 32.2226], zoom: 11, duration: 2600, essential: true, curve: 1.5 }, 2800)`,
+    );
+    const flightSampled = await sampled("W6H3 flight frame window");
+    /*
+     * **R49: WAIT FOR THE ARRIVAL, NOT FOR A DURATION.**
+     *
+     * The first run of this check measured exactly ONE deferred query — the
+     * floor, with no margin. That pass runs on the animation frame after
+     * `moveend`, and a fixed window that happens to close between the two reads
+     * zero and fails the floor on a build with nothing wrong with it. This is
+     * the R49 shape: the frame window above is fixed because the animation is,
+     * and this one waits on the OUTCOME. The read below is unconditional, so a
+     * pass that genuinely never happens still fails on the truth.
+     */
+    await until(
+      page,
+      () => page.evaluate(`window.__wtpFlyProbe.qrf >= 1`) as Promise<boolean>,
+      5_000,
+      150,
+      "W6H3 moveend settle",
+    );
+    const flight = (await page.evaluate(
+      `(() => {
+        const p = window.__wtpFlyProbe;
+        p.stop();
+        return { frames: p.frames, sourcedata: p.sourcedata, qrf: p.qrf, zoom: window.__wtpMap.getZoom() };
+      })()`,
+    )) as { frames: number[]; sourcedata: number; qrf: number; zoom: number };
+
+    /*
+     * **DID THE CAMERA ACTUALLY FLY?** The g3 pin check reported "11 to 11 to
+     * 11" while its gesture landed on an overlay and the map never moved. A
+     * fly-in check has the same failure available to it and it is worse, because
+     * a map that never flew renders a flawless 60 fps and a call count of zero
+     * — a green check for an experiment that did not run.
+     */
+    const flew = flight.zoom > 5;
+    /*
+     * A window with fewer than three timestamps has no interval to measure, so
+     * it says so instead of returning a rate. `0.0 fps` on this line would read
+     * as a frozen fly-in when it means the recorder never started — the same
+     * false-zero the product's own render rules forbid, one layer down.
+     */
+    const fps = (times: number[]): string => {
+      if (times.length < 3) return `NOT MEASURED (${times.length} frame timestamps)`;
+      const gaps: number[] = [];
+      for (let i = 1; i < times.length; i += 1) gaps.push(times[i] - times[i - 1]);
+      gaps.sort((a, b) => a - b);
+      const p95 = gaps[Math.min(gaps.length - 1, Math.floor(gaps.length * 0.95))];
+      return `${(1000 / p95).toFixed(1)} fps`;
+    };
+    const controlFps = fps(control.frames);
+    const flightFps = fps(flight.frames);
+    /*
+     * **THE RENDERER IS NAMED, OR THE FRAME RATE BELOW IS UNREADABLE.**
+     *
+     * This suite launches through `launchGuarded` with no GPU flags, and
+     * Playwright adds `--enable-unsafe-swiftshader` — so every WebGL pixel here
+     * is rasterised on the CPU. Measured on this machine: a MapLibre fly-to with
+     * NOTHING of ours on the map sustained 8.1 fps under SwiftShader and 41.3 on
+     * the real adapter. A single-digit number on this line is the rasteriser
+     * saying so, not a regression, and a session reading it needs to be told
+     * which one it got. `pnpm measure:flyin` runs the same flight on the GPU.
+     */
+    const renderer = String(
+      await page.evaluate(`(() => {
+        const c = document.createElement("canvas");
+        const gl = c.getContext("webgl2") || c.getContext("webgl");
+        if (!gl) return "NO WEBGL";
+        const dbg = gl.getExtension("WEBGL_debug_renderer_info");
+        return dbg ? String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)) : "UNKNOWN";
+      })()`),
+    );
+    const software = renderer.toLowerCase().includes("swiftshader");
+
+    if (!scrimDrawn) {
+      /* The page never reached a reader's weight, so the flight below would be
+         measuring a lighter map than the one this check is about. */
+      cannotRun(
+        "W6H3",
+        "the zip fly-in does not re-query the map on every frame",
+        "the state-focus scrim never drew, so the flight would measure a lighter page than a reader's",
+      );
+    } else if (!parkedForControl || !parkedForFlight) {
+      /* The two runs did not start from the identical camera, so the control
+         is not a control and the comparison has no meaning. */
+      cannotRun(
+        "W6H3",
+        "the zip fly-in does not re-query the map on every frame",
+        "the camera never parked at the continent between runs, so the control and the flight " +
+          "did not start from the same place",
+      );
+    } else if (!controlSampled || !flightSampled) {
+      /* The in-page frame window never reported itself closed — the sample was
+         cut short or never started, and a short sample is not a fast one. */
+      cannotRun(
+        "W6H3",
+        "the zip fly-in does not re-query the map on every frame",
+        "the in-page frame window never closed, so the frames read are an incomplete sample",
+      );
+    } else if (!flew) {
+      cannotRun(
+        "W6H3",
+        "the zip fly-in does not re-query the map on every frame",
+        `the camera ended at zoom ${flight.zoom.toFixed(1)} — it never left the continent`,
+      );
+    } else if (flight.sourcedata === 0) {
+      /*
+       * No source re-tiled, so the ratio this check is about has no
+       * denominator (RULING 159). That is a real state — a build serving no
+       * district geometry — and it is not this check passing.
+       */
+      cannotRun(
+        "W6H3",
+        "the zip fly-in does not re-query the map on every frame",
+        "the flight fired no sourcedata events, so no district source re-tiled",
+      );
+    } else {
+      /*
+       * THE CEILING. Measured at 5-8 calls per flight across every run of
+       * `pnpm measure:flyin` after the fix, against 170 before it. Twenty is
+       * generous enough that a slow host firing extra sourcedata bursts between
+       * camera moves cannot trip it, and far below the hundreds that a
+       * re-subscription to raw `sourcedata` produces.
+       */
+      /*
+       * **BOTH HALVES, OR THIS CHECK REWARDS THE WRONG FIX.**
+       *
+       * A ceiling on its own says "do less", and the cheapest way to satisfy
+       * "do less" is to do NOTHING — unsubscribe the effects and the count goes
+       * to zero and this check goes green while the districts card never
+       * updates again. The floor is what makes the ceiling safe: the deferred
+       * pass must still be PAID, once, when the camera lands. That is the exact
+       * failure mode `onSettledSourceChange` introduces by deferring at all —
+       * if `moveend` ever stops settling the debt, the work is not slow, it is
+       * gone — so the check that authorises the deferral is the one that has to
+       * prove the arrival still happens.
+       */
+      check(
+        "W6H3",
+        "the zip fly-in does not re-query the whole viewport on every frame of itself",
+        flight.qrf <= 20 && flight.qrf >= 1,
+        `${flight.qrf} queryRenderedFeatures calls across ${flight.sourcedata} sourcedata ` +
+          `events in one 2600ms fly-in (floor 1, ceiling 20; it was 170 of 170 before W6 H3, ` +
+          "and the floor is what proves moveend still pays the deferred pass) — " +
+          `frame rate this run: ${flightFps} sustained in flight against a ` +
+          `${controlFps} standing-still control on the same host, ` +
+          `${flight.frames.length} frames measured, on ${software ? "the SOFTWARE rasteriser" : "a hardware GPU"} ` +
+          `(${renderer}). THE FRAME RATE IS REPORTED, NOT ASSERTED: it is a fact about the ` +
+          "host and its rasteriser as much as about the build — see the note on this check.",
+      );
+    }
+  }
+  await context.close();
+}
+
 await browser.close();
 
 const EXCLUDED = [

@@ -1,0 +1,1101 @@
+{
+  "base": "http://127.0.0.1:3149",
+  "zip": "85701",
+  "renderer": "ANGLE (Intel, Intel(R) Iris(R) Xe Graphics (0x0000A7A0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "repeats": 5,
+  "controls": [
+    {
+      "label": "CONTROL — camera standing still (run 1/5)",
+      "frames": {
+        "frames": 170,
+        "windowMs": 2813.900000035763,
+        "meanFps": 60.058992856125705,
+        "sustainedFps": 55.55555555555556,
+        "medianFps": 60.24096376890021,
+        "worstFrameMs": 18.200000047683716,
+        "longFrames": 0
+      },
+      "commits": 0,
+      "records": 0,
+      "events": {
+        "sourcedata": 0,
+        "idle": 0,
+        "move": 0,
+        "render": 0
+      },
+      "qrf": {
+        "calls": 0,
+        "ms": 0
+      },
+      "longTasks": {
+        "count": 0,
+        "ms": 0
+      },
+      "requests": {
+        "tiles": 0,
+        "geometry": 0,
+        "other": 0,
+        "hosts": []
+      },
+      "vertices": {
+        "sources": [
+          {
+            "id": "district-congressional",
+            "features": 9,
+            "vertices": 1108
+          },
+          {
+            "id": "district-state-senate",
+            "features": 30,
+            "vertices": 1830
+          },
+          {
+            "id": "district-county",
+            "features": 22,
+            "vertices": 615
+          },
+          {
+            "id": "district-school-secondary",
+            "features": 13,
+            "vertices": 353
+          },
+          {
+            "id": "district-state-house",
+            "features": 30,
+            "vertices": 1830
+          },
+          {
+            "id": "district-school-elementary",
+            "features": 77,
+            "vertices": 1281
+          },
+          {
+            "id": "district-school-unified",
+            "features": 61,
+            "vertices": 1922
+          },
+          {
+            "id": "district-municipal",
+            "features": 56,
+            "vertices": 6900
+          }
+        ],
+        "svgPaths": [
+          {
+            "chars": 84,
+            "vertices": 5
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          }
+        ],
+        "svgVertices": 17,
+        "hasOverlay": true,
+        "markers": 12
+      }
+    },
+    {
+      "label": "CONTROL — camera standing still (run 2/5)",
+      "frames": {
+        "frames": 170,
+        "windowMs": 2811,
+        "meanFps": 60.12095339736749,
+        "sustainedFps": 55.24861871175526,
+        "medianFps": 59.88023956370228,
+        "worstFrameMs": 22.80000001192093,
+        "longFrames": 0
+      },
+      "commits": 0,
+      "records": 0,
+      "events": {
+        "sourcedata": 0,
+        "idle": 0,
+        "move": 0,
+        "render": 0
+      },
+      "qrf": {
+        "calls": 0,
+        "ms": 0
+      },
+      "longTasks": {
+        "count": 0,
+        "ms": 0
+      },
+      "requests": {
+        "tiles": 0,
+        "geometry": 0,
+        "other": 0,
+        "hosts": []
+      },
+      "vertices": {
+        "sources": [
+          {
+            "id": "district-congressional",
+            "features": 9,
+            "vertices": 1108
+          },
+          {
+            "id": "district-county",
+            "features": 22,
+            "vertices": 615
+          },
+          {
+            "id": "district-state-senate",
+            "features": 30,
+            "vertices": 1830
+          },
+          {
+            "id": "district-state-house",
+            "features": 30,
+            "vertices": 1830
+          },
+          {
+            "id": "district-school-unified",
+            "features": 61,
+            "vertices": 1922
+          },
+          {
+            "id": "district-school-secondary",
+            "features": 13,
+            "vertices": 353
+          },
+          {
+            "id": "district-school-elementary",
+            "features": 77,
+            "vertices": 1281
+          },
+          {
+            "id": "district-municipal",
+            "features": 56,
+            "vertices": 6900
+          }
+        ],
+        "svgPaths": [
+          {
+            "chars": 84,
+            "vertices": 5
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          }
+        ],
+        "svgVertices": 17,
+        "hasOverlay": true,
+        "markers": 12
+      }
+    },
+    {
+      "label": "CONTROL — camera standing still (run 3/5)",
+      "frames": {
+        "frames": 170,
+        "windowMs": 2812.400000035763,
+        "meanFps": 60.091025457918846,
+        "sustainedFps": 56.179775243274435,
+        "medianFps": 59.88023956370228,
+        "worstFrameMs": 18.69999998807907,
+        "longFrames": 0
+      },
+      "commits": 0,
+      "records": 0,
+      "events": {
+        "sourcedata": 0,
+        "idle": 0,
+        "move": 0,
+        "render": 0
+      },
+      "qrf": {
+        "calls": 0,
+        "ms": 0
+      },
+      "longTasks": {
+        "count": 0,
+        "ms": 0
+      },
+      "requests": {
+        "tiles": 0,
+        "geometry": 0,
+        "other": 0,
+        "hosts": []
+      },
+      "vertices": {
+        "sources": [
+          {
+            "id": "district-congressional",
+            "features": 9,
+            "vertices": 1108
+          },
+          {
+            "id": "district-state-senate",
+            "features": 30,
+            "vertices": 1830
+          },
+          {
+            "id": "district-county",
+            "features": 22,
+            "vertices": 615
+          },
+          {
+            "id": "district-state-house",
+            "features": 30,
+            "vertices": 1830
+          },
+          {
+            "id": "district-school-unified",
+            "features": 61,
+            "vertices": 1922
+          },
+          {
+            "id": "district-school-secondary",
+            "features": 13,
+            "vertices": 353
+          },
+          {
+            "id": "district-school-elementary",
+            "features": 77,
+            "vertices": 1281
+          },
+          {
+            "id": "district-municipal",
+            "features": 56,
+            "vertices": 6900
+          }
+        ],
+        "svgPaths": [
+          {
+            "chars": 84,
+            "vertices": 5
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          }
+        ],
+        "svgVertices": 17,
+        "hasOverlay": true,
+        "markers": 12
+      }
+    },
+    {
+      "label": "CONTROL — camera standing still (run 4/5)",
+      "frames": {
+        "frames": 170,
+        "windowMs": 2815.699999988079,
+        "meanFps": 60.020598785636075,
+        "sustainedFps": 56.49717498903982,
+        "medianFps": 59.88023956370228,
+        "worstFrameMs": 18.399999976158142,
+        "longFrames": 0
+      },
+      "commits": 0,
+      "records": 0,
+      "events": {
+        "sourcedata": 0,
+        "idle": 0,
+        "move": 0,
+        "render": 0
+      },
+      "qrf": {
+        "calls": 0,
+        "ms": 0
+      },
+      "longTasks": {
+        "count": 0,
+        "ms": 0
+      },
+      "requests": {
+        "tiles": 0,
+        "geometry": 0,
+        "other": 0,
+        "hosts": []
+      },
+      "vertices": {
+        "sources": [
+          {
+            "id": "district-congressional",
+            "features": 9,
+            "vertices": 1108
+          },
+          {
+            "id": "district-state-senate",
+            "features": 30,
+            "vertices": 1830
+          },
+          {
+            "id": "district-state-house",
+            "features": 30,
+            "vertices": 1830
+          },
+          {
+            "id": "district-county",
+            "features": 22,
+            "vertices": 615
+          },
+          {
+            "id": "district-school-secondary",
+            "features": 13,
+            "vertices": 353
+          },
+          {
+            "id": "district-school-unified",
+            "features": 61,
+            "vertices": 1922
+          },
+          {
+            "id": "district-school-elementary",
+            "features": 77,
+            "vertices": 1281
+          },
+          {
+            "id": "district-municipal",
+            "features": 56,
+            "vertices": 6900
+          }
+        ],
+        "svgPaths": [
+          {
+            "chars": 84,
+            "vertices": 5
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          }
+        ],
+        "svgVertices": 17,
+        "hasOverlay": true,
+        "markers": 12
+      }
+    },
+    {
+      "label": "CONTROL — camera standing still (run 5/5)",
+      "frames": {
+        "frames": 170,
+        "windowMs": 2815.699999988079,
+        "meanFps": 60.020598785636075,
+        "sustainedFps": 56.81818193363503,
+        "medianFps": 60.2409639852039,
+        "worstFrameMs": 18.30000001192093,
+        "longFrames": 0
+      },
+      "commits": 0,
+      "records": 0,
+      "events": {
+        "sourcedata": 0,
+        "idle": 0,
+        "move": 0,
+        "render": 0
+      },
+      "qrf": {
+        "calls": 0,
+        "ms": 0
+      },
+      "longTasks": {
+        "count": 0,
+        "ms": 0
+      },
+      "requests": {
+        "tiles": 0,
+        "geometry": 0,
+        "other": 0,
+        "hosts": []
+      },
+      "vertices": {
+        "sources": [
+          {
+            "id": "district-congressional",
+            "features": 9,
+            "vertices": 1108
+          },
+          {
+            "id": "district-school-secondary",
+            "features": 13,
+            "vertices": 353
+          },
+          {
+            "id": "district-county",
+            "features": 22,
+            "vertices": 615
+          },
+          {
+            "id": "district-state-house",
+            "features": 30,
+            "vertices": 1830
+          },
+          {
+            "id": "district-school-elementary",
+            "features": 77,
+            "vertices": 1281
+          },
+          {
+            "id": "district-school-unified",
+            "features": 61,
+            "vertices": 1922
+          },
+          {
+            "id": "district-state-senate",
+            "features": 30,
+            "vertices": 1830
+          },
+          {
+            "id": "district-municipal",
+            "features": 56,
+            "vertices": 6900
+          }
+        ],
+        "svgPaths": [
+          {
+            "chars": 84,
+            "vertices": 5
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          }
+        ],
+        "svgVertices": 17,
+        "hasOverlay": true,
+        "markers": 12
+      }
+    }
+  ],
+  "flights": [
+    {
+      "label": "FLIGHT — the 2600ms fly-in (run 1/5)",
+      "frames": {
+        "frames": 157,
+        "windowMs": 2828.600000023842,
+        "meanFps": 55.15095807066574,
+        "sustainedFps": 41.322314069942166,
+        "medianFps": 60.24096376890021,
+        "worstFrameMs": 112.10000002384186,
+        "longFrames": 4
+      },
+      "commits": 43,
+      "records": 288,
+      "events": {
+        "sourcedata": 239,
+        "idle": 0,
+        "move": 146,
+        "render": 156
+      },
+      "qrf": {
+        "calls": 8,
+        "ms": 46.400000154972076
+      },
+      "longTasks": {
+        "count": 0,
+        "ms": 0
+      },
+      "requests": {
+        "tiles": 0,
+        "geometry": 0,
+        "other": 0,
+        "hosts": []
+      },
+      "vertices": {
+        "sources": [
+          {
+            "id": "district-state-senate",
+            "features": 30,
+            "vertices": 1830
+          },
+          {
+            "id": "district-county",
+            "features": 22,
+            "vertices": 615
+          },
+          {
+            "id": "district-state-house",
+            "features": 30,
+            "vertices": 1830
+          },
+          {
+            "id": "district-congressional",
+            "features": 9,
+            "vertices": 1108
+          },
+          {
+            "id": "district-school-unified",
+            "features": 61,
+            "vertices": 1922
+          },
+          {
+            "id": "district-school-elementary",
+            "features": 77,
+            "vertices": 1281
+          },
+          {
+            "id": "district-school-secondary",
+            "features": 13,
+            "vertices": 353
+          },
+          {
+            "id": "district-municipal",
+            "features": 56,
+            "vertices": 6900
+          }
+        ],
+        "svgPaths": [
+          {
+            "chars": 84,
+            "vertices": 5
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          }
+        ],
+        "svgVertices": 17,
+        "hasOverlay": true,
+        "markers": 12
+      }
+    },
+    {
+      "label": "FLIGHT — the 2600ms fly-in (run 2/5)",
+      "frames": {
+        "frames": 161,
+        "windowMs": 2851.800000011921,
+        "meanFps": 56.10491619304691,
+        "sustainedFps": 45.248868851503424,
+        "medianFps": 59.88023956370228,
+        "worstFrameMs": 101.39999997615814,
+        "longFrames": 3
+      },
+      "commits": 45,
+      "records": 296,
+      "events": {
+        "sourcedata": 228,
+        "idle": 0,
+        "move": 148,
+        "render": 160
+      },
+      "qrf": {
+        "calls": 10,
+        "ms": 57.199999928474426
+      },
+      "longTasks": {
+        "count": 0,
+        "ms": 0
+      },
+      "requests": {
+        "tiles": 0,
+        "geometry": 0,
+        "other": 0,
+        "hosts": []
+      },
+      "vertices": {
+        "sources": [
+          {
+            "id": "district-congressional",
+            "features": 9,
+            "vertices": 1108
+          },
+          {
+            "id": "district-county",
+            "features": 22,
+            "vertices": 615
+          },
+          {
+            "id": "district-state-senate",
+            "features": 30,
+            "vertices": 1830
+          },
+          {
+            "id": "district-state-house",
+            "features": 30,
+            "vertices": 1830
+          },
+          {
+            "id": "district-school-unified",
+            "features": 61,
+            "vertices": 1922
+          },
+          {
+            "id": "district-school-elementary",
+            "features": 77,
+            "vertices": 1281
+          },
+          {
+            "id": "district-school-secondary",
+            "features": 13,
+            "vertices": 353
+          },
+          {
+            "id": "district-municipal",
+            "features": 56,
+            "vertices": 6900
+          }
+        ],
+        "svgPaths": [
+          {
+            "chars": 84,
+            "vertices": 5
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          }
+        ],
+        "svgVertices": 17,
+        "hasOverlay": true,
+        "markers": 12
+      }
+    },
+    {
+      "label": "FLIGHT — the 2600ms fly-in (run 3/5)",
+      "frames": {
+        "frames": 132,
+        "windowMs": 2802.199999988079,
+        "meanFps": 46.74898294217304,
+        "sustainedFps": 27.548209357344344,
+        "medianFps": 59.52380969275693,
+        "worstFrameMs": 161.10000002384186,
+        "longFrames": 8
+      },
+      "commits": 34,
+      "records": 212,
+      "events": {
+        "sourcedata": 261,
+        "idle": 0,
+        "move": 123,
+        "render": 131
+      },
+      "qrf": {
+        "calls": 8,
+        "ms": 51.59999996423721
+      },
+      "longTasks": {
+        "count": 1,
+        "ms": 140
+      },
+      "requests": {
+        "tiles": 0,
+        "geometry": 0,
+        "other": 0,
+        "hosts": []
+      },
+      "vertices": {
+        "sources": [
+          {
+            "id": "district-congressional",
+            "features": 9,
+            "vertices": 1108
+          },
+          {
+            "id": "district-county",
+            "features": 22,
+            "vertices": 615
+          },
+          {
+            "id": "district-state-senate",
+            "features": 30,
+            "vertices": 1830
+          },
+          {
+            "id": "district-state-house",
+            "features": 30,
+            "vertices": 1830
+          },
+          {
+            "id": "district-school-unified",
+            "features": 61,
+            "vertices": 1922
+          },
+          {
+            "id": "district-school-elementary",
+            "features": 77,
+            "vertices": 1281
+          },
+          {
+            "id": "district-school-secondary",
+            "features": 13,
+            "vertices": 353
+          },
+          {
+            "id": "district-municipal",
+            "features": 56,
+            "vertices": 6900
+          }
+        ],
+        "svgPaths": [
+          {
+            "chars": 84,
+            "vertices": 5
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          }
+        ],
+        "svgVertices": 17,
+        "hasOverlay": true,
+        "markers": 12
+      }
+    },
+    {
+      "label": "FLIGHT — the 2600ms fly-in (run 4/5)",
+      "frames": {
+        "frames": 150,
+        "windowMs": 2782.5,
+        "meanFps": 53.54896675651393,
+        "sustainedFps": 35.84229393743895,
+        "medianFps": 59.88023956370228,
+        "worstFrameMs": 122.59999996423721,
+        "longFrames": 4
+      },
+      "commits": 41,
+      "records": 272,
+      "events": {
+        "sourcedata": 174,
+        "idle": 0,
+        "move": 141,
+        "render": 149
+      },
+      "qrf": {
+        "calls": 7,
+        "ms": 45.19999998807907
+      },
+      "longTasks": {
+        "count": 0,
+        "ms": 0
+      },
+      "requests": {
+        "tiles": 0,
+        "geometry": 0,
+        "other": 0,
+        "hosts": []
+      },
+      "vertices": {
+        "sources": [
+          {
+            "id": "district-congressional",
+            "features": 9,
+            "vertices": 1108
+          },
+          {
+            "id": "district-state-senate",
+            "features": 30,
+            "vertices": 1830
+          },
+          {
+            "id": "district-state-house",
+            "features": 30,
+            "vertices": 1830
+          },
+          {
+            "id": "district-county",
+            "features": 22,
+            "vertices": 615
+          },
+          {
+            "id": "district-school-elementary",
+            "features": 77,
+            "vertices": 1281
+          },
+          {
+            "id": "district-school-secondary",
+            "features": 13,
+            "vertices": 353
+          },
+          {
+            "id": "district-school-unified",
+            "features": 61,
+            "vertices": 1922
+          },
+          {
+            "id": "district-municipal",
+            "features": 56,
+            "vertices": 6900
+          }
+        ],
+        "svgPaths": [
+          {
+            "chars": 84,
+            "vertices": 5
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          }
+        ],
+        "svgVertices": 17,
+        "hasOverlay": true,
+        "markers": 12
+      }
+    },
+    {
+      "label": "FLIGHT — the 2600ms fly-in (run 5/5)",
+      "frames": {
+        "frames": 156,
+        "windowMs": 2806.899999976158,
+        "meanFps": 55.221062382456296,
+        "sustainedFps": 33.670033683548084,
+        "medianFps": 59.88023956370228,
+        "worstFrameMs": 66.10000002384186,
+        "longFrames": 6
+      },
+      "commits": 43,
+      "records": 280,
+      "events": {
+        "sourcedata": 204,
+        "idle": 0,
+        "move": 147,
+        "render": 154
+      },
+      "qrf": {
+        "calls": 6,
+        "ms": 31.69999998807907
+      },
+      "longTasks": {
+        "count": 0,
+        "ms": 0
+      },
+      "requests": {
+        "tiles": 0,
+        "geometry": 0,
+        "other": 0,
+        "hosts": []
+      },
+      "vertices": {
+        "sources": [
+          {
+            "id": "district-congressional",
+            "features": 9,
+            "vertices": 1108
+          },
+          {
+            "id": "district-state-senate",
+            "features": 30,
+            "vertices": 1830
+          },
+          {
+            "id": "district-county",
+            "features": 22,
+            "vertices": 615
+          },
+          {
+            "id": "district-state-house",
+            "features": 30,
+            "vertices": 1830
+          },
+          {
+            "id": "district-school-elementary",
+            "features": 77,
+            "vertices": 1281
+          },
+          {
+            "id": "district-school-unified",
+            "features": 61,
+            "vertices": 1922
+          },
+          {
+            "id": "district-school-secondary",
+            "features": 13,
+            "vertices": 353
+          },
+          {
+            "id": "district-municipal",
+            "features": 56,
+            "vertices": 6900
+          }
+        ],
+        "svgPaths": [
+          {
+            "chars": 84,
+            "vertices": 5
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          }
+        ],
+        "svgVertices": 17,
+        "hasOverlay": true,
+        "markers": 12
+      }
+    }
+  ],
+  "ablated": [
+    {
+      "label": "FLIGHT with legacy-sourcedata (run 2/5)",
+      "frames": {
+        "frames": 127,
+        "windowMs": 2954.7000000476837,
+        "meanFps": 42.64392324024997,
+        "sustainedFps": 10.131712260595537,
+        "medianFps": 59.52380948157267,
+        "worstFrameMs": 115.40000003576279,
+        "longFrames": 15
+      },
+      "commits": 31,
+      "records": 192,
+      "events": {
+        "sourcedata": 168,
+        "idle": 0,
+        "move": 121,
+        "render": 126
+      },
+      "qrf": {
+        "calls": 173,
+        "ms": 868.0000000596046
+      },
+      "longTasks": {
+        "count": 0,
+        "ms": 0
+      },
+      "requests": {
+        "tiles": 0,
+        "geometry": 0,
+        "other": 0,
+        "hosts": []
+      },
+      "vertices": {
+        "sources": [
+          {
+            "id": "district-congressional",
+            "features": 9,
+            "vertices": 1108
+          },
+          {
+            "id": "district-state-senate",
+            "features": 30,
+            "vertices": 1830
+          },
+          {
+            "id": "district-county",
+            "features": 22,
+            "vertices": 615
+          },
+          {
+            "id": "district-school-secondary",
+            "features": 13,
+            "vertices": 353
+          },
+          {
+            "id": "district-state-house",
+            "features": 30,
+            "vertices": 1830
+          },
+          {
+            "id": "district-school-elementary",
+            "features": 77,
+            "vertices": 1281
+          },
+          {
+            "id": "district-school-unified",
+            "features": 61,
+            "vertices": 1922
+          },
+          {
+            "id": "district-municipal",
+            "features": 56,
+            "vertices": 6900
+          }
+        ],
+        "svgPaths": [
+          {
+            "chars": 84,
+            "vertices": 5
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          },
+          {
+            "chars": 57,
+            "vertices": 4
+          }
+        ],
+        "svgVertices": 17,
+        "hasOverlay": true,
+        "markers": 12
+      }
+    }
+  ]
+}

@@ -272,6 +272,100 @@ function createHereElement(zipLabel: string): HTMLDivElement {
   return element;
 }
 
+/**
+ * **RUN THIS WHEN THE SOURCES CHANGE — NOT 170 TIMES INSIDE ONE FLY-IN.**
+ * (W6 H3, 2026-08-31. `pnpm measure:flyin` is the instrument; the numbers below
+ * are its output, not an estimate.)
+ *
+ * Two effects in this file need to re-read the map after its GeoJSON sources
+ * change: the narrowed-division shading, and the report of which districts are
+ * currently drawn. Both were subscribed directly to `sourcedata` and `idle`,
+ * and both had to be, for a reason that is still true — **`idle` never fires
+ * under the MapTiler styles this product ships**. The note on `ensureDistricts`
+ * has the account: those styles declare a `maptiler_attribution` source with
+ * nothing to fetch, so it never reports loaded, `map.loaded()` is never true,
+ * and the `idle` that everything else would have keyed on never arrives.
+ * `sourcedata` was the only signal left.
+ *
+ * **The cost of that, measured through the fly-in:**
+ *
+ * ```
+ * 170 sourcedata events inside a 2837ms flight
+ * 170 queryRenderedFeatures calls costing 555ms of MAIN THREAD
+ * sustained 12.1 fps (p95 frame interval) against a 55.6 fps control
+ * ```
+ *
+ * `drawnDistrictsOn` runs a full-viewport rasterised query across eight
+ * district line layers. A fly-to crossing eight zoom levels makes every one of
+ * those eight GeoJSON sources re-tile repeatedly, each re-tile fires
+ * `sourcedata`, and each `sourcedata` ran the query again — a fifth of the
+ * entire flight spent computing answers that were thrown away by the next
+ * frame. **Not one of those 170 answers could reach a reader**: they feed a
+ * count on a card, and the only value that survives an animation is the one at
+ * the end of it.
+ *
+ * So this coalesces on the two axes that were being ignored:
+ *
+ * 1. **A moving camera is not asked at all.** `map.isMoving()` is true for the
+ *    whole of a fly-to, a pan and a pinch. The work is marked pending and
+ *    `moveend` runs it once — which is the arrival, and the arrival is the only
+ *    frame whose answer a reader ever sees.
+ * 2. **A burst is one run.** Eight sources landing in the same tick used to be
+ *    eight full passes; they are now coalesced onto a single animation frame.
+ *
+ * **NOTHING ABOUT THE STATIONARY CASE CHANGES, AND THAT IS THE POINT.** The
+ * standing invariant these effects exist for — *the shading appears the moment
+ * the polygon does* — is a claim about a map at rest waiting for a boundary
+ * file, and a map at rest still runs on the very next frame after the source
+ * lands. `moveend` is added rather than substituted, so a camera that stops
+ * with sources still arriving is answered by both.
+ */
+function onSettledSourceChange(map: MapLibreMap, run: () => void): () => void {
+  let frame: number | null = null;
+  let disposed = false;
+
+  const flush = () => {
+    frame = null;
+    if (disposed) return;
+    /*
+     * Still moving: drop this pass rather than pay it into a frame the reader
+     * is watching. Nothing is lost by dropping it — `moveend` schedules
+     * another, and every camera move MapLibre makes ends in exactly one.
+     */
+    if (map.isMoving()) return;
+    run();
+  };
+
+  const schedule = () => {
+    if (disposed || frame !== null) return;
+    frame = requestAnimationFrame(flush);
+  };
+
+  // The first pass is immediate and unconditional, exactly as it was before:
+  // a mount is not an animation, and deferring it would leave the card empty
+  // for a frame it never used to be empty for.
+  run();
+  map.on("sourcedata", schedule);
+  map.on("idle", schedule);
+  // A move that consumed no sourcedata still has to report: a camera arriving
+  // somewhere new IS a change in which districts are drawn.
+  map.on("moveend", schedule);
+
+  return () => {
+    disposed = true;
+    if (frame !== null) {
+      cancelAnimationFrame(frame);
+      // Cleared, not just cancelled. A non-null handle for a frame that will
+      // never run is the "already scheduled" guard latched on forever — the
+      // exact defect state-focus-overlay.tsx documents in its own cleanup.
+      frame = null;
+    }
+    map.off("sourcedata", schedule);
+    map.off("idle", schedule);
+    map.off("moveend", schedule);
+  };
+}
+
 export function MapCanvas({
   venues,
   visibleVenueKeys = null,
@@ -1404,19 +1498,11 @@ export function MapCanvas({
     const map = mapRef.current;
     if (!map) return;
 
-    const apply = () => {
+    return onSettledSourceChange(map, () => {
       const live = mapRef.current;
       if (!live) return;
       setNarrowedDistricts(live, narrowedRef.current);
-    };
-
-    apply();
-    map.on("idle", apply);
-    map.on("sourcedata", apply);
-    return () => {
-      map.off("idle", apply);
-      map.off("sourcedata", apply);
-    };
+    });
   }, [narrowedDistricts, districtTypes]);
 
   // A one-off fly-to from search or the list. Separate from `camera`, which is
@@ -1447,22 +1533,13 @@ export function MapCanvas({
     const map = mapRef.current;
     if (!map) return;
 
-    const report = () => {
+    return onSettledSourceChange(map, () => {
       const live = mapRef.current;
       if (!live) return;
       onDrawnDistrictsRef.current(
         drawnDistrictsOn(live, districtTypesRef.current),
       );
-    };
-
-    report();
-    map.on("idle", report);
-    map.on("sourcedata", report);
-
-    return () => {
-      map.off("idle", report);
-      map.off("sourcedata", report);
-    };
+    });
   }, [districtTypes]);
 
   /*

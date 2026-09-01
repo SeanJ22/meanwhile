@@ -1,5 +1,12 @@
 import { lengthRuleForPrompt } from "./length-contract.ts";
 import { packHasEvidence, type EvidencePack } from "./evidence.ts";
+import {
+  SYNTHESIS_CACHE_TTL,
+  askCallerKey,
+  readCacheUsage,
+  type AskCallerKey,
+  type CacheUsage,
+} from "./prompt-cache.ts";
 
 /**
  * **THE SYNTHESIS RUNG — Claude explaining evidence it was handed
@@ -40,11 +47,35 @@ import { packHasEvidence, type EvidencePack } from "./evidence.ts";
  * the single most reliable way to manufacture a plausible falsehood.
  */
 
-const MODEL = "claude-opus-5";
+/**
+ * **THE ASK MODEL. ONE DECLARATION, AND IT IS THIS ONE.**
+ *
+ * Exported so `lib/ask/model-economics.ts` can compare against the model the
+ * product actually runs rather than against one a session remembered, and so
+ * the "one model for all Ask traffic" rule is checkable instead of asserted:
+ * a per-caller or per-question model would also fragment the prompt cache,
+ * which is model-scoped, and forfeit every hit H1 exists to earn.
+ */
+export const ASK_SYNTHESIS_MODEL = "claude-opus-5";
+
+const MODEL = ASK_SYNTHESIS_MODEL;
 const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
 
 export type SynthesisOutcome =
-  | { kind: "WROTE"; answer: string; citedUrls: string[]; model: string; ms: number }
+  | {
+      kind: "WROTE";
+      answer: string;
+      citedUrls: string[];
+      model: string;
+      ms: number;
+      /**
+       * What the API reported about cache activity on THIS call. The only
+       * ground truth that caching is working; everything else is a claim about
+       * the request we sent rather than about what the server did.
+       */
+      usage: CacheUsage;
+      callerKey: AskCallerKey;
+    }
   | { kind: "UNAVAILABLE"; why: "no-key" | "ceiling" | "no-evidence" | "error"; ms: number };
 
 export function synthesisSchema(): Record<string, unknown> {
@@ -104,27 +135,100 @@ export function synthesisPrompt(pack: EvidencePack): string {
   ].join("\n");
 }
 
-/** The pack, as the model sees it. JSON so nothing is lost in prose framing. */
+/**
+ * **EVERY FIELD THE MODEL IS GIVEN. ONE DECLARATION.**
+ *
+ * The two payloads below are a PARTITION of this object — every key lands in
+ * exactly one of them, and `tests/ask-prompt-cache.test.ts` asserts that
+ * mechanically. Declaring the fields once is what makes the caching split
+ * provably information-preserving: a field cannot be silently dropped from the
+ * prompt by the partition, and a field added here without being assigned to a
+ * side fails the partition test rather than vanishing from the model's view.
+ */
+function synthesisFields(pack: EvidencePack): Record<string, unknown> {
+  return {
+    question: pack.question,
+    whatTheyAreAskingFor: pack.intent,
+    timeframe: pack.temporal,
+    subject: pack.subject,
+    records: pack.records,
+    namedGaps: pack.gaps,
+    whatWasSearched: pack.denominators,
+  };
+}
+
+/**
+ * The STABLE side: the ZIP civic context. This is what the cache breakpoint
+ * covers, together with the system rules that render ahead of it.
+ */
+export const SYNTHESIS_CONTEXT_FIELDS = [
+  "subject",
+  "records",
+  "namedGaps",
+  "whatWasSearched",
+] as const;
+
+/**
+ * The VOLATILE side: the reader's question and the two values read off it.
+ *
+ * `whatTheyAreAskingFor` and `timeframe` are derived from the question by
+ * `interpret.ts`, so they change whenever it does. Leaving either on the
+ * stable side would put a question-shaped value inside the cached prefix and
+ * quietly cost every hit the split exists to earn.
+ */
+export const SYNTHESIS_QUESTION_FIELDS = [
+  "question",
+  "whatTheyAreAskingFor",
+  "timeframe",
+] as const;
+
+function pick(fields: readonly string[], pack: EvidencePack): string {
+  const all = synthesisFields(pack);
+  const out: Record<string, unknown> = {};
+  for (const field of fields) out[field] = all[field];
+  return JSON.stringify(out, null, 1);
+}
+
+/**
+ * The ZIP civic context, as the model sees it — the cached prefix's tail.
+ *
+ * JSON so nothing is lost in prose framing, and key order is fixed by the
+ * declaration above rather than by object iteration, because a reordered key
+ * is a different prefix and therefore a silent cache miss.
+ */
+export function synthesisContextPayload(pack: EvidencePack): string {
+  return pick(SYNTHESIS_CONTEXT_FIELDS, pack);
+}
+
+/** The reader's question. Deliberately the last thing in the request. */
+export function synthesisQuestionPayload(pack: EvidencePack): string {
+  return pick(SYNTHESIS_QUESTION_FIELDS, pack);
+}
+
+/**
+ * The pre-caching single blob, kept as the EQUIVALENCE REFERENCE and called by
+ * nothing on the live path.
+ *
+ * It is what the model was given before the split, and the partition test
+ * diffs the two payloads against it field by field. Deleting it would leave
+ * "the split changed no information" as an assertion nobody can check, which
+ * is the class of claim this repository does not accept.
+ */
 export function synthesisPayload(pack: EvidencePack): string {
-  return JSON.stringify(
-    {
-      question: pack.question,
-      whatTheyAreAskingFor: pack.intent,
-      timeframe: pack.temporal,
-      subject: pack.subject,
-      records: pack.records,
-      namedGaps: pack.gaps,
-      whatWasSearched: pack.denominators,
-    },
-    null,
-    1,
-  );
+  return JSON.stringify(synthesisFields(pack), null, 1);
 }
 
 export interface SynthesizeOptions {
   fetchImpl?: typeof fetch;
   apiKey?: string;
   allowCall?: () => boolean;
+  /**
+   * Which deployment is calling. Defaults to the environment. Cache hit rates
+   * are reported per caller key and NEVER pooled: production traffic and a
+   * local build have different prefixes and different arrival rates, and one
+   * blended rate describes neither.
+   */
+  callerKey?: AskCallerKey;
 }
 
 export async function synthesizeAnswer(
@@ -133,6 +237,7 @@ export async function synthesizeAnswer(
 ): Promise<SynthesisOutcome> {
   const started = Date.now();
   const elapsed = () => Date.now() - started;
+  const callerKey = options.callerKey ?? askCallerKey();
 
   /*
    * **THE EMPTY-PACK REFUSAL IS A FEATURE AND IT COMES FIRST.**
@@ -167,8 +272,44 @@ export async function synthesizeAnswer(
           effort: "medium",
           format: { type: "json_schema", schema: synthesisSchema() },
         },
+        /*
+         * **UNCHANGED, BYTE FOR BYTE.** The system field is the front of the
+         * cached prefix and the one thing in this request that must not move.
+         * `thinking` and `output_config.effort` are likewise pinned per route
+         * rather than varied per request — changing either invalidates the
+         * messages cache on every model, and on some models the system cache
+         * with it.
+         */
         system: synthesisPrompt(pack),
-        messages: [{ role: "user", content: synthesisPayload(pack) }],
+        /*
+         * **THE BREAKPOINT, AND WHY IT SITS HERE.**
+         *
+         * The cached prefix is `model` + `system` + this first content block:
+         * the constitutional rules, today's date, and the ZIP civic context —
+         * the bound subject, the retrieved records, the named gaps and the
+         * denominators. The reader's QUESTION is the second block, AFTER the
+         * breakpoint, which is the whole mechanism: it is what lets two
+         * questions about one government share a prefix at all.
+         *
+         * There is exactly ONE breakpoint. A second one on the system block
+         * would never fire — the system prompt renders 1,503 characters ≈ 418
+         * tokens, below Claude Opus 5's 512-token minimum cacheable prefix, and
+         * a prefix under the minimum caches silently and reports nothing. A
+         * marker that cannot fire reads to the next session as a guarantee.
+         */
+        messages: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "text",
+                text: synthesisContextPayload(pack),
+                cache_control: SYNTHESIS_CACHE_TTL.cacheControl,
+              },
+              { type: "text", text: synthesisQuestionPayload(pack) },
+            ],
+          },
+        ],
       }),
     });
     if (!response.ok) return { kind: "UNAVAILABLE", why: "error", ms: elapsed() };
@@ -190,6 +331,10 @@ export async function synthesizeAnswer(
         : [],
       model: MODEL,
       ms: elapsed(),
+      /* Read off the response, never inferred from the request we sent. A
+         missing usage block is zero MEASURED, never an assumed hit. */
+      usage: readCacheUsage(body),
+      callerKey,
     };
   } catch {
     return { kind: "UNAVAILABLE", why: "error", ms: elapsed() };

@@ -77,7 +77,28 @@ export interface AskTrace {
    */
   officeLookup?: { phrase: string; office: string };
   /** Did the model write the answer, and did the answer survive checking? */
-  synthesis: RungTrace;
+  synthesis: RungTrace & {
+    /**
+     * **WHAT THE PROMPT CACHE ACTUALLY DID ON THIS CALL.** (Lane W6, H1.)
+     *
+     * Read off the API's own `usage` block and never inferred from the request
+     * we sent — the usage fields are the only ground truth that caching is
+     * working, and the costliest caching failure is the silent one where every
+     * request still succeeds and the bill is simply higher.
+     *
+     * `callerKey` names a DEPLOYMENT, never a reader, so this stays inside the
+     * trace's standing rule: facts about our machinery, no reader identifier of
+     * any kind. `uncachedInputTokens` is the REMAINDER — the whole prompt is
+     * the sum of the three token counts, and reading it alone as "the prompt
+     * size" once caching is on is reading a different number than it looks.
+     */
+    cache?: {
+      callerKey: string;
+      cacheReadInputTokens: number;
+      cacheCreationInputTokens: number;
+      uncachedInputTokens: number;
+    };
+  };
   validation: {
     ran: boolean;
     passed?: boolean;

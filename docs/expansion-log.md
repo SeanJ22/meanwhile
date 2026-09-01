@@ -1469,3 +1469,105 @@ for.
   transparency mandate's own rule — a wall never renders as an emptiness —
   applied to our own regeneration rather than to a hunt. Portable, and now
   mechanical: `data/hunt/citation-confirmations.json`.
+
+## session-c-final · 2026-09-01
+
+**Four routes that did not exist at session start. Two returned the corpus they
+were built for; two returned the document and then hit a wall inside our own
+tooling, and those two are reported here exactly as fully as the successes.**
+The invention is the deliverable and the yield is not (RULING 88).
+
+The subject of all four is the same owed question, and it is the one RULING 232
+was adopted over: *what is the authoritative candidate population of a state?*
+The registries answered it from one county's ballot in each state and called the
+answer statewide.
+
+### The Arizona Secretary of State's filing list, as a CORPUS rather than a lookup
+
+- **Conceived:** the generator's own comment already said the Arizona
+  denominator was "not the state's candidate universe", and the jurisdiction
+  inventory carried the Secretary's list as `DISCOVERY_OWED`. The list had been
+  READ once, for one county's projection. The question was the acquisition
+  doctrine's, asked literally: a public record that exists and has been read is
+  not a record that has been ACQUIRED, and reading is not vaulting.
+- **Query:** `https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf`
+  — reached after `https://azsos.gov/elections/results-data/candidate-filings`,
+  the URL the inventory recorded, answered **HTTP 404** while the document it
+  used to point at answered 200. RULING 206 in one observation: the record is
+  not the URL. Permission read first at `https://azsos.gov/robots.txt` on
+  2026-09-01; no rule covers `/sites/default/files/`.
+- **Returned:** HTTP 200, 183,097 bytes, `application/pdf`, sha256
+  `a13d2a82f83b52206d3697a840382403b1c3d5cb6c80481e383b42d360669016`.
+  **266 candidacies across 76 contests** (9 federal, 67 state), established
+  TWICE by independent mechanisms — positional table recovery, and filing-date
+  tokens counted out of the text layer minus page furniture — with the adapter
+  refusing to write when the two disagree or when either returns zero. The
+  Arizona candidate universe moved **55 → 266**, and no identity or enrichment
+  finding was lost in the re-keying.
+- **Generalises:** **yes**, to any state whose filing officer publishes a
+  cumulative filing PDF with a text layer, which is most of them. The
+  double-count discipline generalises further and to every extraction in this
+  repository: one count is a number, two independent counts that agree are a
+  measurement, and a disagreement is a refusal rather than a tie-break.
+
+### The New Hampshire cumulative filing PDF, reached by varying the CLIENT
+
+- **Conceived:** the same question asked of the second pilot state. The host
+  refused the first client tried, and the standing method note says a refusal by
+  one client is a fact about that client until a second one has been tried.
+- **Query:** `https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf`
+  — **curl returns 403 from Akamai; node `fetch` returns 200.** The wall was the
+  client, not the publisher, and the permission read at the host root allowed it.
+- **Returned:** HTTP 200, 473,945 bytes, sha256
+  `cd3d45a9db80b8247d98e3ab144e5f1b0184d395ee942786ff0f621a64a7e25d`, 77 pages
+  each carrying a text layer. **Then a wall inside our own tooling, and it is
+  ours rather than theirs:** the pages are ROTATED, so pdfjs transform `[4]` is
+  the row axis and `[5]` the column axis, and the generic table layer reads each
+  COLUMN as one row and returns `ZERO_ROWS`. A prototype axis-swapped parse
+  recovered 1,268 candidate rows across 274 office contexts, and its
+  heading/candidate segmentation leaked two names into the wrong stream — so
+  **the count was not shipped**, because a count nobody verified is worse than
+  no count. `REQUIRES_NEW_ADAPTER`.
+- **Generalises:** **yes, twice.** The client-variation route generalises to
+  every Akamai-fronted government host in the portfolio. The rotated-page
+  finding generalises to every PDF table this project will ever read: a
+  `ZERO_ROWS` from the table layer is now a question about page orientation
+  before it is anything else.
+
+### The New Jersey Division of Elections candidate lists, and what they are NOT
+
+- **Conceived:** the third pilot state, same question — and the answer turned
+  out to be about the AUTHORITY rather than about the retrieval.
+- **Query:** the Division's *Official List Candidates for House of
+  Representatives* and *…United States Senate*, under
+  `nj.gov/state/elections/assets/`. Permission read at both `www.nj.gov` and
+  `nj.gov` roots on 2026-09-01; neither disallows the path.
+- **Returned:** HTTP 200 for both — 84,439 bytes (sha256 `692018a0…`, 14 pages)
+  and 57,353 bytes (sha256 `f1458af2…`, 5 pages). **And the structural finding
+  that matters more than either document: the Division files FEDERAL OFFICE
+  ONLY.** All 276 Morris candidacies are county-clerk publications. New Jersey's
+  candidate universe is the union of this authority and **twenty-one county
+  clerks**, so no acquisition of these documents alone could ever earn the word
+  "statewide". `REQUIRES_NEW_ADAPTER`, and the population relabelled
+  `PILOT_DERIVED` rather than left wearing a word it had not earned.
+- **Generalises:** **yes**, and it is the finding that shaped RULING 232's body:
+  **the complete applicable universe is per AUTHORITY, not per state.** A corpus
+  must state what it is NOT, and every item in that list is an absence from a
+  DOCUMENT rather than an absence from a ballot.
+
+### A publisher signal recorded rather than obeyed or ignored
+
+- **Conceived:** while reading permission for New Jersey, a third robots
+  document turned up in a place a robots document has no authority.
+- **Query:** `https://nj.gov/state/elections/robots.txt`
+- **Returned:** **HTTP 200 with `Disallow: /assets`** — a real signal from the
+  publisher, at a path where the standard gives it no force, since a robots
+  document governs only at its host root. The judgment that it is non-operative
+  is a READING, so it is written into
+  `data/hunt/candidate-filing-authorities-2026.json` under
+  `observedPublisherSignals` where it can be inspected and disagreed with,
+  rather than being silently discarded as invalid or silently obeyed as binding.
+- **Generalises:** **yes**, to every host in the portfolio that serves a robots
+  document below its root. Permission state is recorded as observed, and the
+  inference from it is recorded separately — which is the same separation
+  RULING 182 draws between permission state and transport state.

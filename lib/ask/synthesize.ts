@@ -218,6 +218,96 @@ export function synthesisPayload(pack: EvidencePack): string {
   return JSON.stringify(synthesisFields(pack), null, 1);
 }
 
+/**
+ * **THE REQUEST, BUILT IN ONE PLACE — AND THE MODEL IS AN ARGUMENT HERE AND
+ * NOWHERE ELSE.** (Session C, lane H2, 2026-08-31.)
+ *
+ * The Ask model comparison had to call THE SAME synthesis contract on a second
+ * model, and there were only two ways to do that: copy the request into a
+ * harness, or build it once and let exactly one caller name the model.
+ *
+ * A copy is refused by RULING 103 and by arithmetic — a duplicated prompt
+ * drifts, and a comparison run against a drifted copy grades a contract the
+ * product does not have. So the body is built here, and the model is a
+ * parameter of THIS function only.
+ *
+ * **`synthesizeAnswer` — the one function the production route calls — passes
+ * the module constant and reads nothing from its options.** `SynthesizeOptions`
+ * carries no model field, so a route, a caller key, a reader or a request
+ * header has no expression that could select one. That is the law *one model
+ * for all Ask traffic* made structural rather than asserted, and
+ * `tests/ask-model-comparison.test.ts` asserts it mechanically: the production
+ * path emits `ASK_SYNTHESIS_MODEL` even when handed an options object carrying
+ * a `model` key.
+ *
+ * `cached` exists for the same reason and answers a different question. The
+ * breakpoint is what makes the production request cheap; it is also what makes
+ * a COMPARISON incomparable, because a cache read prices one model's input
+ * tokens at a tenth of the other's depending only on which ran first. The
+ * comparison seam therefore builds the identical request with `cached: false`
+ * — see `lib/ask/model-comparison.ts` for why that is isolation rather than a
+ * missing feature.
+ */
+export function synthesisRequestBody(
+  pack: EvidencePack,
+  shape: { model: string; cached: boolean },
+): Record<string, unknown> {
+  const context: Record<string, unknown> = {
+    type: "text",
+    text: synthesisContextPayload(pack),
+  };
+  /*
+   * **THE BREAKPOINT, AND WHY IT SITS HERE.**
+   *
+   * The cached prefix is `model` + `system` + this first content block:
+   * the constitutional rules, today's date, and the ZIP civic context —
+   * the bound subject, the retrieved records, the named gaps and the
+   * denominators. The reader's QUESTION is the second block, AFTER the
+   * breakpoint, which is the whole mechanism: it is what lets two
+   * questions about one government share a prefix at all.
+   *
+   * There is exactly ONE breakpoint. A second one on the system block
+   * would never fire — the system prompt renders 1,503 characters ≈ 418
+   * tokens, below Claude Opus 5's 512-token minimum cacheable prefix, and
+   * a prefix under the minimum caches silently and reports nothing. A
+   * marker that cannot fire reads to the next session as a guarantee.
+   *
+   * The marker is ADDED rather than set to a falsy value when caching is off:
+   * `cache_control: undefined` would serialise away in JSON and read the same
+   * on the wire, but it would leave a key in the object that a later reader
+   * could believe was doing something.
+   */
+  if (shape.cached) context.cache_control = SYNTHESIS_CACHE_TTL.cacheControl;
+
+  return {
+    model: shape.model,
+    max_tokens: 2048,
+    thinking: { type: "adaptive" },
+    output_config: {
+      effort: "medium",
+      format: { type: "json_schema", schema: synthesisSchema() },
+    },
+    /*
+     * **UNCHANGED, BYTE FOR BYTE.** The system field is the front of the
+     * cached prefix and the one thing in this request that must not move.
+     * `thinking` and `output_config.effort` are likewise pinned per route
+     * rather than varied per request — changing either invalidates the
+     * messages cache on every model, and on some models the system cache
+     * with it.
+     */
+    system: synthesisPrompt(pack),
+    messages: [
+      {
+        role: "user",
+        content: [context, { type: "text", text: synthesisQuestionPayload(pack) }],
+      },
+    ],
+  };
+}
+
+/** The Anthropic Messages endpoint, shared by the live path and the seam. */
+export const SYNTHESIS_MESSAGES_URL = MESSAGES_URL;
+
 export interface SynthesizeOptions {
   fetchImpl?: typeof fetch;
   apiKey?: string;
@@ -264,53 +354,14 @@ export async function synthesizeAnswer(
         "x-api-key": apiKey,
         "anthropic-version": "2023-06-01",
       },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 2048,
-        thinking: { type: "adaptive" },
-        output_config: {
-          effort: "medium",
-          format: { type: "json_schema", schema: synthesisSchema() },
-        },
-        /*
-         * **UNCHANGED, BYTE FOR BYTE.** The system field is the front of the
-         * cached prefix and the one thing in this request that must not move.
-         * `thinking` and `output_config.effort` are likewise pinned per route
-         * rather than varied per request — changing either invalidates the
-         * messages cache on every model, and on some models the system cache
-         * with it.
-         */
-        system: synthesisPrompt(pack),
-        /*
-         * **THE BREAKPOINT, AND WHY IT SITS HERE.**
-         *
-         * The cached prefix is `model` + `system` + this first content block:
-         * the constitutional rules, today's date, and the ZIP civic context —
-         * the bound subject, the retrieved records, the named gaps and the
-         * denominators. The reader's QUESTION is the second block, AFTER the
-         * breakpoint, which is the whole mechanism: it is what lets two
-         * questions about one government share a prefix at all.
-         *
-         * There is exactly ONE breakpoint. A second one on the system block
-         * would never fire — the system prompt renders 1,503 characters ≈ 418
-         * tokens, below Claude Opus 5's 512-token minimum cacheable prefix, and
-         * a prefix under the minimum caches silently and reports nothing. A
-         * marker that cannot fire reads to the next session as a guarantee.
-         */
-        messages: [
-          {
-            role: "user",
-            content: [
-              {
-                type: "text",
-                text: synthesisContextPayload(pack),
-                cache_control: SYNTHESIS_CACHE_TTL.cacheControl,
-              },
-              { type: "text", text: synthesisQuestionPayload(pack) },
-            ],
-          },
-        ],
-      }),
+      /*
+       * **THE MODEL IS THE MODULE CONSTANT AND NOTHING ELSE READS IT IN.**
+       *
+       * `options` is not consulted for a model here and carries no field that
+       * could supply one. One model for all Ask traffic is not a convention
+       * this line follows; it is the only expression this line can write.
+       */
+      body: JSON.stringify(synthesisRequestBody(pack, { model: MODEL, cached: true })),
     });
     if (!response.ok) return { kind: "UNAVAILABLE", why: "error", ms: elapsed() };
 

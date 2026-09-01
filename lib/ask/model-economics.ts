@@ -104,6 +104,44 @@ export interface QuestionRun {
   readonly usd: number | null;
 }
 
+/**
+ * **THE OWNER'S CRITERION, ABSOLUTE, AND WHY IT LIVES BESIDE `switchVerdict`
+ * RATHER THAN INSIDE IT.** (H2, measured 2026-08-31.)
+ *
+ * `switchVerdict` below implements a RELATIVE rule — a challenger question
+ * blocks the switch only where the incumbent held it and the challenger did
+ * not — and it is argued, tested and deliberate: *a question neither model
+ * answers is a retrieval gap, and holding the model choice hostage to it would
+ * make every future switch impossible for a reason unrelated to the model.*
+ *
+ * The owner's instruction for this comparison is ABSOLUTE:
+ *
+ * > Switch only if every required question holds; otherwise retain the
+ * > incumbent.
+ *
+ * On the 2026-08-31 measurement the two rules DISAGREE IN OUTCOME. Two of the
+ * four questions that reached the synthesis contract (Q3, Q5) failed on BOTH
+ * models, for the same reason on both — the ASK-19 length budget. Nothing
+ * degraded, so the relative rule derives SWITCH; nothing like "every question
+ * holds" is true, so the absolute rule derives RETAIN.
+ *
+ * Neither is deleted and neither silently wins. Under RULING 185 the author's
+ * current directive is precedence 1 and the prior implementation decision is
+ * lower, so the DECISION is taken on this function and the relative derivation
+ * is reported beside it as what it is. Representing the conflict is the rule;
+ * resolving it by whichever function was called last is what the precedence
+ * model exists to forbid.
+ *
+ * Returns the challenger questions that did NOT hold — empty means the
+ * criterion is met over the runs supplied, which is a claim about that
+ * denominator and never about the corpus.
+ */
+export function challengerQuestionsNotHolding(
+  challengerRuns: readonly QuestionRun[],
+): readonly string[] {
+  return challengerRuns.filter((r) => r.held !== true).map((r) => r.questionId);
+}
+
 export type SwitchVerdict =
   /** Every question ran and every question held on the challenger. */
   | { kind: "SWITCH"; to: string; questions: number }

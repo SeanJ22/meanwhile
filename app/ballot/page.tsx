@@ -36,7 +36,7 @@ import { COLLECTION_NOTE } from "@/lib/ballot/collection-note";
 import { FilingNote } from "@/components/ballot/filing-note";
 import { CandidateBattlecard } from "@/components/ballot/candidate-battlecard";
 import { StateMoneySection } from "@/components/funding/state-money-section";
-import { stateMoneyForTarget } from "@/lib/funding/state-snapshot";
+import { stateMoneyForCard } from "@/lib/funding/nominee-money";
 import {
   MemberCommitteesContent,
   MemberOfficesContent,
@@ -473,7 +473,28 @@ async function BallotBattlecard({
    * LEADs are already filtered out inside `stateMoneyForTarget`, so this
    * surface cannot render an unproven committee even by accident.
    */
-  const stateMoney = stateMoneyForTarget(targetKey);
+  /*
+   * **AND THE KEY IS THE RECONCILED CANDIDACY ID, NOT THE NOMINEE'S NAME.**
+   * (Session C3, 2026-09-01. RULING 229.)
+   *
+   * This read `stateMoneyForTarget(targetKey)`, and `targetKey` on a certified
+   * general-election nominee card is `${contest.id}|${nominee.name}` while the
+   * state campaign-money snapshot keys its records to canonical CANDIDACY ids.
+   * The two never met. Katie Hobbs' own card asked for
+   * `ballot-az-pima:governor|Katie Hobbs`, the snapshot held
+   * `ballot-az-pima:governor:hobbs-katie` carrying a reconciled FILED
+   * $11,109,719.95, and the card rendered *"We don't hold a campaign finance
+   * filing for this person"* — a sentence about US that was false about us.
+   * Measured on rendered DOM at 9703dc9d: 4 money states across 22 non-federal
+   * cards at 85701, and 4 across 25 at 85641.
+   *
+   * `stateMoneyForCard` resolves the card key through the PRECOMPUTED bridge in
+   * `data/identity/` and hands `stateMoneyForTarget` the candidacy id. It does
+   * no name matching — the matching happened once, over the whole population,
+   * in `pnpm identity:az`, and a nominee it could not resolve comes back as the
+   * OURS-gap state rather than as silence.
+   */
+  const stateMoney = stateMoneyForCard(targetKey, contestId).records;
 
   return (
     <CandidateBattlecard

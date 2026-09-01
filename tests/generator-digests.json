@@ -60,7 +60,7 @@
     "regeneratedOn": "2026-09-01"
   },
   "data/hunt/wikipedia-nj-morris.json": {
-    "digest": "9831d0bccd460afe17dd0a82e802682e762748aaa4b364a3efc19848684fa6be",
+    "digest": "b513cda0b4e77449c767695899a6c33ba931f7dfc6bf4a54448d16d5284c2c60",
     "files": 5,
     "entry": "scripts/wiki-municipality.mts",
     "regeneratedOn": "2026-09-01"
@@ -180,7 +180,7 @@
     "regeneratedOn": "2026-09-01"
   },
   "docs/repo-inventory.md": {
-    "digest": "2400af27d9744f010a9aea209a55b32ec35a403269d7bf33853df1d24fe7b86f",
+    "digest": "4c944fe477dab3d84de5bc1c202e69f295092e2596338e77af316af623774fe2",
     "files": 9,
     "entry": "scripts/repo-map.mts",
     "regeneratedOn": "2026-09-01"

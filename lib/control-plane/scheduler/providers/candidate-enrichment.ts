@@ -83,6 +83,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { WIKI_API_DISALLOWED } from "../../../hunt/wikipedia.ts";
 import {
   ENRICHMENT_FIELDS,
   type CandidateUniverse,
@@ -187,7 +188,7 @@ function wikipediaRoute(c: CanonicalCandidacy): RouteDescriptor {
       "Finding the compliant route to the same facts is a scout's job",
     open: {
       kind: "NOT_MACHINE_EXECUTABLE",
-      target: "https://en.wikipedia.org/w/api.php",
+      target: WIKI_API_DISALLOWED,
       reason:
         "DISALLOWED BY THE HOST'S OWN robots.txt, read 2026-09-01. `User-agent: *` carries " +
         "`Disallow: /w/` with exactly two exceptions — `Allow: /w/api.php?action=mobileview&` and " +
@@ -201,9 +202,11 @@ function wikipediaRoute(c: CanonicalCandidacy): RouteDescriptor {
     citation:
       "https://en.wikipedia.org/robots.txt read 2026-09-01; docs/sources.md — Wikipedia, Tier A, " +
       "RULING 87 DISCOVERY ONLY. NOTE FOR THE INTEGRATION OWNER: docs/sources.md records this host " +
-      "as WIRED at `en.wikipedia.org/w/api.php`, and that row's permission claim is falsified by the " +
-      "line above. Which of this repository's existing Wikipedia routes use a disallowed path is a " +
-      "question this lane raises and does not answer.",
+      "as WIRED at the disallowed API path, and that row's permission claim is falsified by the " +
+      "line above. ANSWERED 2026-09-01 by the integration owner: two existing routes used it — " +
+      "lib/hunt/wikipedia.ts and lib/hunt/wiki-graph.ts — and both now read " +
+      "/wiki/<Title>?action=raw, which carries no Disallow. tests/wikipedia-permission.test.ts " +
+      "refuses the path repo-wide.",
     awaitingAdapter:
       "a permission reading of api.wikimedia.org, then an adapter for its REST search — the compliant " +
       "route to the same discovery facts",

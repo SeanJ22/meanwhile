@@ -22572,9 +22572,16 @@ Both are in the method store (v61 → v63):
   procedure becomes a script. JavaScript rendering, a session or a challenge
   cannot, and the human-only record stands.
 
-**This is owed to every host whose `robots.txt` was recorded as refusing us.**
-That refusal may everywhere have been our User-Agent rather than the government,
-and each one of those is a fact class currently recorded as closed.
+**The two-client `robots.txt` read is worth running against any newly walled
+host — it costs two requests and it unlocked a state. It is NOT a general
+explanation for walls, and that was measured rather than assumed:** eight hosts
+carrying a recorded wall or a CANNOT_TELL were re-read the same day with an
+identified client and a bare one, and not one showed New Hampshire’s pattern.
+`apps.arizona.vote`, `www.pimajted.org`, `services6.arcgis.com`, `asmi.az.gov`
+and `azed.gov` refuse both clients equally — a transport wall, CANNOT_TELL under
+RULING 182, never a disallow — and `azdor.gov` and `www.pima.gov` serve their
+robots.txt to both. The NH route is agent discrimination on one host family, and
+the frontier carries the table.
 
 ### The join, and the guards on it
 

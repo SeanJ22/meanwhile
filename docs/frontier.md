@@ -251,9 +251,35 @@ unwalked and was named as the next session's start on 2026-08-19. The CFS holds
 CONTRIBUTION and EXPENDITURE detail behind other endpoints; only filer-level
 totals are taken. The lobbyist registry — *a source class this product holds
 nothing of in any state except Arizona* — is on a host now known to be permitted
-and is unwalked. And the same permission re-read is owed to every host whose
-`robots.txt` was recorded as refusing us, because that refusal may everywhere
-have been our User-Agent rather than the government.
+and is unwalked.
+
+**AND THE GENERALISATION WAS TESTED AND DOES NOT HOLD — recorded because the
+obvious next move is to assume it does.** The NH finding invites the conclusion
+that every host recorded as refusing us was refusing our NAME. Eight hosts
+carrying a recorded wall or a `CANNOT_TELL` were re-read on 2026-08-31 with an
+identified client and with a bare one:
+
+| host | identified | bare |
+| --- | --- | --- |
+| `apps.arizona.vote` | 403 | 403 |
+| `www.pimajted.org` | 403 | 403 |
+| `services6.arcgis.com` | 403 | 403 |
+| `asmi.az.gov` | 403 | 403 |
+| `azed.gov` | 403 | 403 |
+| `azmineinspector.gov` | connection failed | connection failed |
+| `azdor.gov` | 200 (robots) | 200 (robots) |
+| `www.pima.gov` | 200 (robots) | 200 (robots) |
+
+**Not one shows New Hampshire's pattern.** The 403s refuse both clients equally,
+which is a transport wall — Cloudflare bot protection in the recorded cases —
+and remains `CANNOT_TELL` under RULING 182 rather than a disallow. Bypassing bot
+detection is prohibited and is not attempted.
+
+So the NH route is **agent discrimination on a `nh.gov` host family**, not a
+general property of civic hosts. The two-client `robots.txt` read is still worth
+running against any newly walled host — it costs two requests and it unlocked a
+state — but it should be run as a CHECK, never as an assumption that a wall is
+our fault.
 
 **Part H — W6.** No `cache_control` exists anywhere in any API path. Ask is
 `claude-opus-5` at two rungs (`lib/ask/interpret.ts:101`,

@@ -45,7 +45,7 @@
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { decodeImage, decodeRecord } from "../lib/photos/decode.ts";
+import { PORTRAIT_ACCEPT, decodeImage, decodeRecord } from "../lib/photos/decode.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { imagesIn, pickPortraits, decodeEntities } from "../lib/hunt/portrait-pick.ts";
 import { officialPhotoForPerson } from "../lib/photos/person.ts";
@@ -186,7 +186,7 @@ for (const executive of STATEWIDE_EXECUTIVES) {
     let decode: ReturnType<typeof decodeRecord>;
     try {
       const res = await fetch(decodeEntities(candidate.src), {
-        headers: { "user-agent": sourceUserAgent() },
+        headers: { "user-agent": sourceUserAgent(), accept: PORTRAIT_ACCEPT },
         redirect: "follow",
       });
       const buf = new Uint8Array(await res.arrayBuffer());

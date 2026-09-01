@@ -1,7 +1,11 @@
 "use client";
 
 import { useState, useSyncExternalStore } from "react";
-import { subscribeToStorage } from "@/lib/state/subscribe-to-storage";
+import {
+  commitStorageWrite,
+  publishToListeners,
+  subscribeToStorage,
+} from "@/lib/state/subscribe-to-storage";
 
 /**
  * First-run tutorial, v1 (6c, wall clock 2026-08-14 second session): a
@@ -53,12 +57,12 @@ function readSeen(): boolean {
 }
 
 function markSeen() {
-  try {
-    window.localStorage.setItem(STORAGE_KEY, "1");
-  } catch {
-    // Can't remember; the local override below still dismisses.
-  }
-  for (const listener of listeners) listener();
+  // Can't remember: the local override in the component still dismisses, and
+  // the publish runs either way.
+  commitStorageWrite(
+    () => window.localStorage.setItem(STORAGE_KEY, "1"),
+    () => publishToListeners(listeners),
+  );
 }
 
 export function TutorialOverlay({ active }: { active: boolean }) {

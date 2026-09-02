@@ -1,35 +1,43 @@
 /**
- * **THE LOGIN POST.** (Session C final, ITEM H, 2026-09-01.)
+ * **THE BREAK-GLASS, AND SIGN-OUT.** (Session C final, ITEM H, 2026-09-01.
+ * Retired as a login path and retained as the RULING 245 break-glass under
+ * RULING 238 custody, 2026-09-02.)
  *
- * The one place the admin secret is compared, and the only place it is read.
+ * ## POST — the break-glass
  *
- * ## What this route is careful about, and why each one
+ * This was the login. It is not any more: the owner signs in with Google
+ * (`app/(admin)/admin/auth/`). The shared secret survives here for exactly the
+ * case RULING 245 permits — a documented, rate-limited, incident-logged path
+ * held by the owner — and it is RETAINED rather than removed because the Google
+ * path could not be proven live in the session that built it: the OAuth client
+ * variables were not on the Netlify site, so a removed secret would have left
+ * the owner with no way into his own control centre while that stays true.
  *
  * ```
- *   HOST         refuses on any host but ADMIN_ORIGIN's. Middleware already
- *                404s this path on the public host; this is the second lock,
- *                because a route that is only safe because of a matcher is one
- *                regex edit away from not being safe
- *   ORIGIN       state-changing, so the Origin header must be the admin origin.
- *                SameSite=Strict is the browser's half; this is ours
- *   BODY         the secret arrives in the body, never a query string
- *   COMPARE      constant-time, so response latency does not leak a prefix
- *   LOG          nothing about the submitted value is logged, ever — not its
- *                length, not a prefix, not a hash
- *   REDIRECT     303 to /admin on success, and to /admin/login?why=… on
- *                failure. `why` is a rejection CLASS, never an echo of input
+ *   HOST          404 on any host but the admin host
+ *   FLAG          404 unless WTP_ADMIN_BREAK_GLASS=enabled — the path does not
+ *                 exist until the owner turns it on, and a 404 is what the
+ *                 public host says too, so a prober learns nothing
+ *   ORIGIN        the Origin header must be the admin origin
+ *   INCIDENT LOG  the durable control plane must open, or the attempt is refused
+ *                 as INCIDENT_LOG_UNAVAILABLE — an unloggable break-glass is
+ *                 the old login with a new name
+ *   RATE LIMIT    read from the log itself: more than N attempts in the window
+ *                 is RATE_LIMITED, refused WITHOUT appending
+ *   COMPARE       constant-time against WTP_ADMIN_SECRET, by name
+ *   APPEND        one incident record per attempt — class, moment, outcome,
+ *                 the opaque session id issued. Appended BEFORE the session is
+ *                 issued; a failed append refuses even a correct secret
+ *   ISSUE         the existing session cookie, marked `via: "break-glass"`
  * ```
  *
- * ## Why failures are not rate-limited here, and what that means
+ * Nothing about the submitted value is logged, ever — not its length, not a
+ * prefix, not a hash. The incident record names the CLASS of the outcome.
  *
- * They are not, and pretending otherwise would be worse than saying so. A
- * per-instance counter in a serverless function is not a rate limit — instances
- * are created and destroyed per request — and a real one needs the durable
- * store, which is a write on an unauthenticated path and therefore its own
- * denial-of-service surface. The defence that is actually load-bearing is the
- * secret's own entropy, which is why {@link MIN_SECRET_LENGTH} is enforced and
- * a short secret is refused as a CONFIGURATION error rather than accepted.
- * This is named in the session report rather than left for someone to discover.
+ * ## DELETE — sign-out
+ *
+ * Unchanged, and NOT behind the flag: a Google-issued session needs a way out
+ * regardless of whether the break-glass is on.
  */
 
 import { NextResponse, type NextRequest } from "next/server";
@@ -39,61 +47,97 @@ import {
   ADMIN_SECRET_VAR,
   ADMIN_SESSION_COOKIE,
   ADMIN_SESSION_KEY_VAR,
+  BREAK_GLASS_LOG_KEY,
   SESSION_LIFETIME_SECONDS,
+  breakGlassWindowVerdict,
+  buildBreakGlassIncident,
   checkLogin,
   isAdminHostRequest,
+  isBreakGlassEnabled,
   mintAdminSessionId,
   originAllowed,
   sessionCookieAttributes,
   signSession,
+  type BreakGlassRejection,
 } from "@/lib/control-plane/admin-auth.ts";
+import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
+import { loginPathFor } from "@/lib/control-plane/admin-google.ts";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 function backToLogin(request: NextRequest, why: string): NextResponse {
-  const url = new URL("/admin/login", request.url);
-  url.searchParams.set("why", why);
-  return NextResponse.redirect(url, 303);
+  return NextResponse.redirect(new URL(loginPathFor(why), request.url), 303);
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  // The second lock on the host. Not redundant — see the header.
   if (!isAdminHostRequest(request.headers, ADMIN_ORIGIN)) {
     return new NextResponse(null, { status: 404 });
   }
-
-  // State-changing: the request must come from the admin surface itself.
+  // The path does not exist unless the owner turned it on, by the exact word.
+  if (!isBreakGlassEnabled(process.env)) {
+    return new NextResponse(null, { status: 404 });
+  }
   if (!originAllowed(request.headers.get("origin"), ADMIN_ORIGIN)) {
     return backToLogin(request, "ORIGIN");
   }
 
-  const form = await request.formData();
-  const submitted = form.get("secret");
-
-  const verdict = checkLogin(
-    typeof submitted === "string" ? submitted : null,
-    process.env[ADMIN_SECRET_VAR],
-  );
-
-  if (!verdict.ok) {
-    return backToLogin(request, verdict.reason);
+  // A body that is not a form is an attempt with no secret, not a 500: it is
+  // refused and logged like any other, and a prober learns nothing from it.
+  let submitted: FormDataEntryValue | null = null;
+  try {
+    submitted = (await request.formData()).get("secret");
+  } catch {
+    submitted = null;
   }
 
+  const opened = await openControlPlane();
+  if (!opened.ok) return backToLogin(request, "INCIDENT_LOG_UNAVAILABLE");
+
+  const nowIso = new Date().toISOString();
+  let priorRecords: readonly { readonly writtenAt: string }[];
+  try {
+    priorRecords = await opened.repos.ownerDigests.read(BREAK_GLASS_LOG_KEY);
+  } catch {
+    return backToLogin(request, "INCIDENT_LOG_UNAVAILABLE");
+  }
+  const window = breakGlassWindowVerdict(priorRecords, nowIso);
+  if (!window.allowed) return backToLogin(request, "RATE_LIMITED");
+
+  const verdict = checkLogin(typeof submitted === "string" ? submitted : null, process.env[ADMIN_SECRET_VAR]);
   const sessionKey = process.env[ADMIN_SESSION_KEY_VAR];
-  if (!sessionKey) {
-    // The secret was right and we still cannot issue a session. Saying
-    // NOT_CONFIGURED rather than REFUSED matters: the owner would otherwise
-    // spend the afternoon convinced he had the wrong secret.
-    return backToLogin(request, "NOT_CONFIGURED");
+  const rejection: BreakGlassRejection | null = !verdict.ok
+    ? verdict.reason
+    : sessionKey
+      ? null
+      : "NOT_CONFIGURED";
+  const sid = rejection === null ? mintAdminSessionId() : null;
+
+  const incident = buildBreakGlassIncident({
+    at: nowIso,
+    outcome: rejection === null ? "ACCEPTED" : "REFUSED",
+    rejection,
+    sessionRef: sid,
+    attemptsInWindowIncludingThis: window.attemptsInWindow + 1,
+    max: window.max,
+    windowSeconds: window.windowSeconds,
+  });
+  try {
+    await opened.repos.ownerDigests.append(BREAK_GLASS_LOG_KEY, incident.digestId, incident, nowIso);
+  } catch {
+    // A correct secret that cannot be recorded is still refused. See the header.
+    return backToLogin(request, "INCIDENT_LOG_UNAVAILABLE");
+  }
+
+  if (rejection !== null || sid === null || !sessionKey) {
+    return backToLogin(request, rejection ?? "NOT_CONFIGURED");
   }
 
   const iat = Math.floor(Date.now() / 1000);
   const cookie = await signSession(
-    { sid: mintAdminSessionId(), iat, exp: iat + SESSION_LIFETIME_SECONDS },
+    { sid, iat, exp: iat + SESSION_LIFETIME_SECONDS, via: "break-glass" },
     sessionKey,
   );
-
   const response = NextResponse.redirect(new URL("/admin", request.url), 303);
   response.headers.append(
     "set-cookie",

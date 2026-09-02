@@ -17,10 +17,12 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  REFRESH_INCIDENT_KINDS,
   STALENESS_INCIDENT_STATES,
   STALENESS_WINDOW_MULTIPLE,
   cronsInWorkflowYaml,
   newestScheduledRun,
+  refreshRunIncident,
   scheduleStaleness,
   shortestIntervalHours,
 } from "../lib/ops/schedule-audit.ts";
@@ -200,4 +202,129 @@ test("the cron reader is what separates scheduled from not, and it reads the fil
     cronsInWorkflowYaml('on:\n  schedule:\n    - cron: "11 9 * * *"\n  workflow_dispatch:\n'),
     ["11 9 * * *"],
   );
+});
+
+/* ========== THE NEWEST SCHEDULED REFRESH: FAILED, OR LANDED NOTHING ========= */
+
+/**
+ * (2026-09-02.) The refresh failed at the gate on 2026-09-01 and 2026-09-02.
+ * The staleness check above said FRESH both days — correctly, the cron fired
+ * — and the consecutive-failure watcher needed the second day. A refresh that
+ * fires on time and lands nothing was, to every instrument here, a healthy
+ * schedule. These are the two shapes that are now incidents on their own.
+ */
+
+const REFRESH_RUN_BASE = {
+  event: "schedule",
+  status: "completed",
+  createdAt: "2026-09-02T13:36:00.000Z",
+  startedAt: "2026-09-02T13:36:00.000Z",
+  updatedAt: "2026-09-02T13:41:00.000Z",
+} as const;
+
+/** The step list of run 33636708298, as `gh run view --json jobs` reported it. */
+const STEPS_FAILED_AT_GATE = [
+  { name: "Refresh every due source", conclusion: "success" },
+  { name: "Diff the governed artifacts", conclusion: "success" },
+  { name: "Unchanged — stating what was skipped and why", conclusion: "skipped" },
+  { name: "Validate before committing", conclusion: "failure" },
+  { name: "Commit", conclusion: "skipped" },
+  { name: "Go red for the failed sources", conclusion: "skipped" },
+];
+const STEPS_LANDED = [
+  { name: "Refresh every due source", conclusion: "success" },
+  { name: "Diff the governed artifacts", conclusion: "success" },
+  { name: "Unchanged — stating what was skipped and why", conclusion: "skipped" },
+  { name: "Validate before committing", conclusion: "success" },
+  { name: "Commit", conclusion: "success" },
+];
+const STEPS_QUIET_DAY = [
+  { name: "Refresh every due source", conclusion: "success" },
+  { name: "Diff the governed artifacts", conclusion: "success" },
+  { name: "Unchanged — stating what was skipped and why", conclusion: "success" },
+  { name: "Validate before committing", conclusion: "skipped" },
+  { name: "Commit", conclusion: "skipped" },
+];
+
+test("SEEDED: run 33636708298 — the newest SCHEDULED refresh FAILED at the gate — is an incident on its own", () => {
+  const incident = refreshRunIncident({
+    newestScheduled: {
+      ...REFRESH_RUN_BASE,
+      databaseId: 33636708298,
+      conclusion: "failure",
+      steps: STEPS_FAILED_AT_GATE,
+      failureText: "✖ failing tests:\n test at tests/concluded.test.ts:289:1\n ELIFECYCLE  Test failed.",
+    },
+    dueSourceCount: 3,
+    landedAfterRun: false,
+  });
+  assert.ok(incident, "a failed scheduled refresh opened nothing until 2026-09-02");
+  assert.equal(incident.kind, "NEWEST_SCHEDULED_RUN_FAILED");
+  assert.equal(incident.runId, 33636708298);
+  assert.match(incident.detail, /Validate before committing/);
+  assert.match(incident.detail, /not after a second one/);
+  assert.ok(REFRESH_INCIDENT_KINDS.includes(incident.kind));
+});
+
+test("SEEDED: a GREEN scheduled refresh that landed NOTHING on a day sources were due is an incident", () => {
+  /*
+   * The shape a gate refusal wears when nothing goes red: the diff said data
+   * moved, the Commit step ran and exited 0 ("unchanged at commit time"), and
+   * main never moved. Read from the branch, never from the step colours.
+   */
+  const incident = refreshRunIncident({
+    newestScheduled: { ...REFRESH_RUN_BASE, databaseId: 1, conclusion: "success", steps: STEPS_LANDED },
+    dueSourceCount: 3,
+    landedAfterRun: false,
+  });
+  assert.ok(incident);
+  assert.equal(incident.kind, "NO_COMMIT_ON_A_DUE_DAY");
+  assert.match(incident.detail, /not a quiet day/);
+});
+
+test("a LANDED refresh, confirmed on the branch, is no incident", () => {
+  assert.equal(
+    refreshRunIncident({
+      newestScheduled: { ...REFRESH_RUN_BASE, databaseId: 2, conclusion: "success", steps: STEPS_LANDED },
+      dueSourceCount: 3,
+      landedAfterRun: true,
+    }),
+    null,
+  );
+});
+
+test("a legitimate QUIET DAY — the Unchanged step RAN — is no incident, whatever was due", () => {
+  assert.equal(
+    refreshRunIncident({
+      newestScheduled: { ...REFRESH_RUN_BASE, databaseId: 3, conclusion: "success", steps: STEPS_QUIET_DAY },
+      dueSourceCount: 3,
+      landedAfterRun: false,
+    }),
+    null,
+    "zero commits and zero builds is RULING 124 working, not a refusal",
+  );
+});
+
+test("a landed-shaped run whose branch was NOT checked opens nothing — could-not-tell is not evidence", () => {
+  assert.equal(
+    refreshRunIncident({
+      newestScheduled: { ...REFRESH_RUN_BASE, databaseId: 4, conclusion: "success", steps: STEPS_LANDED },
+      dueSourceCount: 3,
+      landedAfterRun: null,
+    }),
+    null,
+  );
+});
+
+test("a manual dispatch that went green after a failed scheduled run does not clear the incident", () => {
+  const runs = [
+    { ...REFRESH_RUN_BASE, databaseId: 6, event: "workflow_dispatch", conclusion: "success", createdAt: "2026-09-02T15:00:00.000Z", steps: STEPS_LANDED },
+    { ...REFRESH_RUN_BASE, databaseId: 5, conclusion: "failure", steps: STEPS_FAILED_AT_GATE, failureText: "ELIFECYCLE Test failed" },
+  ];
+  const newest = newestScheduledRun(runs);
+  const scheduled = runs.find((r) => r.createdAt === newest)!;
+  const incident = refreshRunIncident({ newestScheduled: scheduled, dueSourceCount: 3, landedAfterRun: true });
+  assert.ok(incident);
+  assert.equal(incident.kind, "NEWEST_SCHEDULED_RUN_FAILED");
+  assert.equal(incident.runId, 5, "judged on the schedule's own run, never the human's");
 });

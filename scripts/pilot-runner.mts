@@ -78,6 +78,8 @@ import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { RESEARCH_INTENT_LOG_KEY, readIntents } from "../lib/control-plane/scheduler/research-policy.ts";
+import type { ResearchMetrics } from "../lib/control-plane/research-metrics.ts";
+import { researchDigestLines } from "../lib/control-plane/research-digest.ts";
 import { today } from "./doc-dates.mjs";
 
 const ROOT = process.cwd();
@@ -136,6 +138,8 @@ interface RunRecord {
   /** Level 1 — Research, as the cycle recorded it. Absent on a record written before activation. */
   readonly research?: {
     readonly state?: {
+      /** RULING 244 / Work Item 5: the metrics the cycle computed. Absent on a record written before them. */
+      readonly metrics?: ResearchMetrics | null;
       readonly modelLaneEnabled?: boolean;
       readonly modelLaneDisabledReason?: string | null;
       readonly workerCredential?: { readonly name?: string; readonly configured?: boolean };
@@ -319,6 +323,13 @@ function laneShare(record: RunRecord): string[] {
     out.push(`- runtime conditions: ${(state?.runtimeConditions ?? []).join("; ")}`);
   }
   out.push("- PROMOTION: OFF. A Scout finding is inventory and a candidate; nothing it produced changed what a reader is told.");
+  /* The metrics travel on the research state the cycle wrote; a record without them says so rather than printing zeros. */
+  out.push("", "## RESEARCH METRICS (RULING 244 · reader-impact ordering)", "");
+  if (state?.metrics) {
+    for (const line of researchDigestLines(state.metrics)) out.push(`- ${line.trim()}`);
+  } else {
+    out.push("- not yet computed by a cycle: this record's research state carries no metrics (a cycle on code before Work Item 5, or a cycle that did not reach the metrics step)");
+  }
   return out;
 }
 
@@ -486,6 +497,65 @@ async function pendingRunNow(): Promise<boolean> {
     return false;
   }
 }
+/* ===================== LANE E — THE NIGHTLY WINDOW (RULING 242) — begin =====================
+ *
+ * The window is scheduled INSIDE this runner, on the machine's own clock:
+ * between cycles the one-minute poll asks whether the 04:00 America/New_York
+ * window for the current local date has run, and runs it when it has not. A
+ * runner that was down across 04:00 runs the missed window at its first poll,
+ * and the window record names the catch-up. The backup wakeup (the Scheduled
+ * Task from `pilot-task.ps1 -Action install-window`, and the GitHub workflow
+ * behind it) only appends RUN_WINDOW_NOW; it is not this clock.
+ *
+ * Promotion stays OFF: the child runs with `--shadow` and nothing else.
+ */
+const WINDOW_INTENT_KEY = "nightly-window";
+const WINDOW_TIMEOUT_MS = 45 * 60_000;
+let windowCheckFailed = false;
+
+async function windowDecision(): Promise<{ readonly run: boolean; readonly trigger: string; readonly reason: string }> {
+  if (provider !== "postgres") return { run: false, trigger: "", reason: "file provider" };
+  try {
+    if (intentRepos === null) {
+      const url = controlPlaneUrlFromEnv();
+      if (url === null) return { run: false, trigger: "", reason: "no control plane" };
+      intentRepos = await createPgRepositories(url, new Date().toISOString());
+    }
+    const { windowDue, lastWindowLocalDate } = await import("../lib/control-plane/promotion/window.ts");
+    const last = lastWindowLocalDate(await intentRepos.windowRuns.readAll());
+    const due = windowDue({ nowIso: new Date().toISOString(), lastWindowLocalDate: last });
+    if (due.due) return { run: true, trigger: due.trigger, reason: due.reason };
+    const log = await intentRepos.windowIntents.read(WINDOW_INTENT_KEY);
+    const honored = new Set(log.filter((r) => r.kind === "HONORED").map((r) => (r as { honors: string }).honors));
+    const pending = log.filter((r) => r.kind === "INTENT" && !honored.has(r.intentId));
+    if (pending.length > 0) return { run: true, trigger: "WAKEUP", reason: `${pending.length} RUN_WINDOW_NOW intent(s) pending` };
+    return { run: false, trigger: "", reason: due.reason };
+  } catch (error) {
+    if (!windowCheckFailed) {
+      windowCheckFailed = true;
+      console.error(
+        `  the nightly window's due-check could not read the control plane (${error instanceof Error ? error.message : String(error)}); ` +
+          "the window is not run on a guess. This is printed once.",
+      );
+    }
+    return { run: false, trigger: "", reason: "unreadable" };
+  }
+}
+
+function runNightlyWindow(trigger: string): void {
+  const startedAt = new Date().toISOString();
+  console.log(`\npilot:run · nightly window (${trigger}) started ${startedAt} — SHADOW`);
+  const run = spawnSync(
+    process.execPath,
+    ["--env-file=.env.local", "--experimental-strip-types", "scripts/nightly-window.mts", "--shadow", trigger === "WAKEUP" ? "--force" : "", `--trigger=${trigger}`].filter((a) => a !== ""),
+    { cwd: ROOT, encoding: "utf8", timeout: WINDOW_TIMEOUT_MS, maxBuffer: 64 * 1024 * 1024 },
+  );
+  const lines = `${run.stdout ?? ""}${run.stderr ?? ""}`.split("\n").filter((l) => l.trim() !== "");
+  for (const l of lines.slice(-12)) console.log(`  ${l}`);
+  console.log(`  nightly window exit ${run.status ?? `signal ${run.signal ?? "none"}`} (0 clean, 2 a stage FAILED and is recorded, 3 lock held)`);
+}
+/* ===================== LANE E — THE NIGHTLY WINDOW (RULING 242) — end ===================== */
+
 async function sleepUnlessRunNow(totalMs: number): Promise<void> {
   const until = Date.now() + totalMs;
   while (Date.now() < until) {
@@ -494,6 +564,9 @@ async function sleepUnlessRunNow(totalMs: number): Promise<void> {
       console.log(`  a RUN_CYCLE_NOW intent is pending — starting the next cycle early at ${new Date().toISOString()}`);
       return;
     }
+    /* LANE E — the nightly window runs between cycles, on this clock. */
+    const decision = await windowDecision();
+    if (decision.run) runNightlyWindow(decision.trigger);
   }
 }
 

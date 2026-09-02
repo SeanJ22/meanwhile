@@ -161,7 +161,18 @@ test("RULING 227: every predicate still reads its evidence and answers RESOLVED_
    * must still read its evidence and answer RESOLVED_BY_EVIDENCE.
    */
   /* NH306 (2026-09-02) is the second OPEN predicated row: two credentials await rotation. */
-  assert.equal(PREDICATES.length, 7);
+  /*
+   * **NH305 RESOLVED on 2026-09-02 by its own predicate** — the owner ran the
+   * elevated install, prove-relaunch measured a relaunch in 274 s, and the
+   * committed proof moved the row. It now sits with the resolved set and must
+   * keep reading its evidence. **NH310 joined the same day as the third OPEN
+   * predicated row:** the Google client variables are absent from the
+   * provider (read back by name), and the predicate reads the login readback's
+   * `googleConfigured` field — CANNOT_TELL while the readback predates the
+   * field, HOLDS while it names the missing variables, RESOLVED when the
+   * deployed host reports the client configured.
+   */
+  assert.equal(PREDICATES.length, 8);
   const openIds = new Set(openRows.map((r) => String(r.ID ?? "").trim()));
   for (const p of PREDICATES as unknown as RegistryEntry[]) {
     const outcome = evaluateEntry(p, { root: ROOT });

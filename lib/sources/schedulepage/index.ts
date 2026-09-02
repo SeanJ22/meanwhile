@@ -16,6 +16,7 @@ import { toZonedIso } from "../../time/zoned.ts";
 import { decodeEntities, politeGetText } from "../http.ts";
 import type {
   Meeting,
+  MeetingQuery,
   MeetingStatus,
   NormalizeDropCounts,
   ReportingMeetingSource,
@@ -691,6 +692,63 @@ function shapesOf(wiring: BodySourceWiring): ScheduleShape[] {
   return raw.split(",").map((s) => s.trim()) as ScheduleShape[];
 }
 
+/** One month page of a calendar that serves one month per view. */
+export interface MonthPage {
+  year: number;
+  /** 1–12, as the page's own `&month=` query names it. */
+  month: number;
+}
+
+/**
+ * Every month page a one-month calendar must be walked for, besides the
+ * default view — which serves the CURRENT month and nothing else.
+ *
+ * **A month grid rolls, and history rolled off with it** (2026-09-01, the
+ * scheduled refresh's first red run of September). `monthsAhead` walked the
+ * page's own `&month=&year=` navigation FORWARD only. On 1 September New
+ * London's calendar opened on September, the six August sittings this
+ * pipeline had held since 2026-08-19 were no longer on any page it read, and
+ * the rebuilt snapshot carried the town with no concluded meeting at all. The
+ * town had published them the whole time — `&month=8&year=2026` answered 200
+ * with 25 events on 2026-09-02 — so this was a clip of ours reading exactly
+ * like a body with no history, which is the shape M58 exists to refuse.
+ *
+ * So the walk covers the WHOLE serving window in both directions: every month
+ * overlapping `[startsAfter, startsBefore]` — the window the composite asks
+ * every adapter for — plus `monthsAhead` as a floor for a row that is fetched
+ * without one. The current month is the default page and is never repeated.
+ * Months are read off UTC components; a window edge that falls in the last
+ * hours of a month costs one extra page, and the normalizer's own clip decides
+ * what a page's rows are worth.
+ */
+export function monthPagesToWalk(input: {
+  now: Date;
+  startsAfter?: string;
+  startsBefore?: string;
+  monthsAhead: number;
+}): MonthPage[] {
+  const key = (d: Date) => d.getUTCFullYear() * 12 + d.getUTCMonth();
+  const current = key(input.now);
+
+  const after = input.startsAfter ? Date.parse(input.startsAfter) : Number.NaN;
+  const before = input.startsBefore ? Date.parse(input.startsBefore) : Number.NaN;
+  const from = Number.isFinite(after)
+    ? key(new Date(after))
+    : key(new Date(input.now.getTime() - WINDOW_BACK_DAYS * 86_400_000));
+  const toWindow = Number.isFinite(before)
+    ? key(new Date(before))
+    : key(new Date(input.now.getTime() + WINDOW_FORWARD_DAYS * 86_400_000));
+  const ahead = Number.isFinite(input.monthsAhead) ? Math.max(0, Math.floor(input.monthsAhead)) : 0;
+  const to = Math.max(toWindow, current + ahead);
+
+  const pages: MonthPage[] = [];
+  for (let k = Math.min(from, current); k <= to; k++) {
+    if (k === current) continue;
+    pages.push({ year: Math.floor(k / 12), month: (k % 12) + 1 });
+  }
+  return pages;
+}
+
 export function makeSchedulePageSource(
   wiringRows: BodySourceWiring[],
   fetchImpl?: typeof fetch,
@@ -907,7 +965,7 @@ export function makeSchedulePageSource(
      * the right division, and a silently shorter list is the empty-success
      * shape this repo has now sighted five times.
      */
-    async fetch(): Promise<SchedulePageRaw[]> {
+    async fetch(query?: MeetingQuery): Promise<SchedulePageRaw[]> {
       const collected: SchedulePageRaw[] = [];
       for (const wiring of wiringRows) {
         const profile =
@@ -927,20 +985,24 @@ export function makeSchedulePageSource(
            * London's Board of Selectmen sits twice a month all year; the
            * default view carries two of them.
            *
-           * `monthsAhead` walks the page's OWN `&month=&year=` navigation,
-           * which the page publishes as links, and the extra months are
-           * concatenated onto the same HTML — every event in this shape
-           * states its own full date, so there is nothing to keep separate.
+           * `monthsAhead` marks a row whose page publishes `&month=&year=`
+           * navigation. The months walked are `monthPagesToWalk`'s — the
+           * whole serving window, BEHIND as well as ahead — and the extra
+           * months are concatenated onto the same HTML: every event in this
+           * shape states its own full date, so there is nothing to keep
+           * separate.
            */
           let schedule = text;
           const ahead = Number(wiring.config.monthsAhead ?? 0);
           if (Number.isFinite(ahead) && ahead > 0) {
             const base = new URL(wiring.config.schedulePage);
-            const start = new Date();
-            for (let i = 1; i <= ahead; i++) {
-              const when = new Date(
-                Date.UTC(start.getUTCFullYear(), start.getUTCMonth() + i, 1),
-              );
+            const pages = monthPagesToWalk({
+              now: new Date(),
+              startsAfter: query?.startsAfter,
+              startsBefore: query?.startsBefore,
+              monthsAhead: ahead,
+            });
+            for (const page of pages) {
               const next = new URL(
                 wiring.config.monthPagePath ?? base.pathname,
                 base.origin,
@@ -950,15 +1012,15 @@ export function makeSchedulePageSource(
               )) {
                 next.searchParams.set(k, v);
               }
-              next.searchParams.set("month", String(when.getUTCMonth() + 1));
-              next.searchParams.set("year", String(when.getUTCFullYear()));
+              next.searchParams.set("month", String(page.month));
+              next.searchParams.set("year", String(page.year));
               try {
-                const page = await politeGetText(next.toString(), {
+                const monthPage = await politeGetText(next.toString(), {
                   fetchImpl,
                   accept: "text/html",
                   profile,
                 });
-                schedule += page.text;
+                schedule += monthPage.text;
               } catch {
                 // One month refused is not the body's calendar refused. The
                 // months that answered still produce, and the shortfall shows

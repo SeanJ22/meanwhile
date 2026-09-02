@@ -79,6 +79,26 @@ describe("git verification reports rather than guesses", () => {
      * reports UNVERIFIABLE on CI — which is honest rather than useless: the
      * value is declared, so CI does not need git to reproduce the artifact, and
      * the person who edits the constant has the history to check it against.
+     *
+     * **TWO GATES, TWO CLONE DEPTHS, TWO ANSWERS** (2026-09-02). "CI" above is
+     * not one place. `build-check.yml` — the gate every PR passes — checks out
+     * at depth 1, so this test SKIPS there. `refresh-daily.yml` checks out with
+     * `fetch-depth: 0` because `push-main.mjs` has to rebase, so this test RUNS
+     * there, on whatever `main` carries. Commit 7514e68e (2026-09-01) moved
+     * `data/hunt/wikipedia-nj-morris.json` without moving
+     * `build-nj-rosters.mts`'s declaration: the PR gate could not see it, the
+     * next two scheduled refreshes could, and both went red on a defect that
+     * was already on `main` — with every governed artifact's data thrown away
+     * behind it.
+     *
+     * They cannot be made to ask the SAME question cheaply: the full answer
+     * needs every commit that ever touched each source, and the PR gate
+     * deliberately does not fetch a 311 MiB pack per run (see the merge-base
+     * note in build-check.yml). What the PR gate CAN ask is narrower and
+     * sufficient for its purpose — "did THIS change move a source without
+     * moving its declaration" — from the PR's own base..head diff, which needs
+     * no history. Until it does, this asymmetry is the stated reason a
+     * scheduled refresh can go red on a stamp a merged PR never saw.
      */
     if (isShallowClone()) {
       assert.ok(true, "shallow clone — verification is not available here, and says so");

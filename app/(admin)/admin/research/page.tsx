@@ -32,6 +32,13 @@ import {
   readScoutSpend,
   renderedNumbersOf,
 } from "@/lib/control-plane/research-view.ts";
+import {
+  buildWindowView,
+  countClaimsOf as windowCountClaimsOf,
+  readLastWindow,
+  readWindowIncidents,
+  renderedNumbersOf as windowNumbersOf,
+} from "@/lib/control-plane/window-view.ts";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -128,8 +135,17 @@ export default async function ResearchPage() {
   ]);
   const view = buildResearchView({ nowIso, heartbeat, state, intents, results, spend, evidence });
 
-  const numberAudit = auditRenderedNumbers(renderedNumbersOf(view));
-  const countAudit = checkStatedEqualsRendered(countClaimsOf(view));
+  // THE LAST NIGHTLY WINDOW (RULING 242). Read from the same control plane; a
+  // window the runner never ran renders as its named gap, never as zero.
+  const lastWindow = await readLastWindow(opened.repos);
+  const windowIncidents =
+    lastWindow.kind === "HELD"
+      ? await readWindowIncidents(opened.repos, lastWindow.value.last.windowId)
+      : { kind: "HELD" as const, value: [] };
+  const windowView = buildWindowView({ nowIso, lastWindow, incidents: windowIncidents });
+
+  const numberAudit = auditRenderedNumbers([...renderedNumbersOf(view), ...windowNumbersOf(windowView)]);
+  const countAudit = checkStatedEqualsRendered([...countClaimsOf(view), ...windowCountClaimsOf(windowView)]);
   if (!numberAudit.ok || !countAudit.ok) {
     return (
       <Refusal
@@ -206,6 +222,134 @@ export default async function ResearchPage() {
             <li key={condition}>{condition}</li>
           ))}
         </ul>
+      )}
+
+      {/* HOST SUPERVISION (RULING 246) */}
+      <h2>Host supervision</h2>
+      {view.supervision.held ? (
+        <>
+          <p>
+            <span
+              className={
+                view.supervision.value.condition === null
+                  ? "state-unknown"
+                  : view.supervision.value.condition.ok
+                    ? "state-green"
+                    : "state-red"
+              }
+            >
+              {view.supervision.value.condition === null
+                ? "NOT DERIVED"
+                : view.supervision.value.condition.ok
+                  ? "PROVEN"
+                  : "NOT PROVEN"}
+            </span>{" "}
+            {view.supervision.value.condition ? (
+              view.supervision.value.condition.reason
+            ) : (
+              <GapNote
+                gap={{
+                  whose: "OURS",
+                  says: "the derived verdict carried no host-supervision condition; the cycle that wrote this state predates RULING 246",
+                }}
+              />
+            )}
+          </p>
+          <p className="note">
+            Read on {view.supervision.value.host} at {view.supervision.value.checkedAt};{" "}
+            {view.supervision.value.measurable
+              ? `relaunch trigger present: ${
+                  view.supervision.value.relaunchTrigger.present === null
+                    ? "could not ask"
+                    : view.supervision.value.relaunchTrigger.present
+                      ? "true"
+                      : "false"
+                } (${view.supervision.value.relaunchTrigger.detail})`
+              : `not measurable on this host: ${view.supervision.value.notMeasurableReason ?? ""}`}
+            .{" "}
+            {view.supervision.value.proof
+              ? `Proof ${view.supervision.value.proof.verdict} measured ${view.supervision.value.proof.measuredAt}: killed pid ${view.supervision.value.proof.killedPid}, relaunched pid ${view.supervision.value.proof.relaunchedPid} after ${view.supervision.value.proof.secondsToRelaunch} s.`
+              : `No relaunch proof at ${view.supervision.value.proofPath} on the runner's checkout.`}
+          </p>
+        </>
+      ) : (
+        <p>
+          <GapNote gap={view.supervision.gap} />
+        </p>
+      )}
+
+      {/* DISPATCH ORDERING (Work Item 5) */}
+      <h2>Dispatch ordering</h2>
+      {view.ordering.held ? (
+        <>
+          <p className="note">{view.ordering.value.rule}</p>
+          <p className="note">{view.ordering.value.scope}</p>
+          <ul>
+            <li>
+              Band 1: <strong>{view.ordering.value.bands[1]}</strong> · Band 2:{" "}
+              <strong>{view.ordering.value.bands[2]}</strong> · Band 3:{" "}
+              <strong>{view.ordering.value.bands[3]}</strong> — due model-class rows, {view.ordering.value.appliesTo}
+            </li>
+            <li>
+              Inputs: {view.ordering.value.inputs.readerImpactAt}; {view.ordering.value.inputs.pilotJurisdictions}; open
+              red reader questions {view.ordering.value.inputs.openRedQuestions.count}
+              {view.ordering.value.inputs.openRedQuestions.zips.length > 0
+                ? ` (ZIPs ${view.ordering.value.inputs.openRedQuestions.zips.join(", ")})`
+                : ""}
+              {view.ordering.value.inputs.openRedQuestions.run
+                ? ` from ${view.ordering.value.inputs.openRedQuestions.run}`
+                : ""}
+              ; universe providers {view.ordering.value.inputs.universeProviders.join(", ")}; tie-break{" "}
+              {view.ordering.value.inputs.tieBreak}
+            </li>
+          </ul>
+        </>
+      ) : (
+        <p>
+          <GapNote gap={view.ordering.gap} />
+        </p>
+      )}
+
+      {/* RESEARCH METRICS (RULING 244) */}
+      <h2>Research metrics</h2>
+      {view.metrics.held ? (
+        <table>
+          <thead>
+            <tr>
+              <th>Measure</th>
+              <th>Value</th>
+              <th>Denominator / rule</th>
+            </tr>
+          </thead>
+          <tbody>
+            {(
+              [
+                ["Capacity", view.metrics.value.rows.capacity],
+                ["Queue by band", view.metrics.value.rows.queueBands],
+                ["Graduation funnel", view.metrics.value.rows.funnel],
+                ["Model vs deterministic share", view.metrics.value.rows.share],
+                ["Cache hit rate by role", view.metrics.value.rows.cache],
+                ["Cost per useful outcome", view.metrics.value.rows.costPerOutcome],
+              ] as const
+            ).flatMap(([group, rows]) =>
+              rows.map((row) => (
+                <tr key={`${group}:${row.label}`}>
+                  <td>
+                    <span className="gap-whose">{group}</span> {row.label}
+                  </td>
+                  <td>
+                    <strong>{row.value}</strong>
+                  </td>
+                  <td className="note">{row.denominator}</td>
+                </tr>
+              )),
+            )}
+          </tbody>
+        </table>
+      ) : (
+        <p>
+          <GapNote gap={view.metrics.gap} />
+        </p>
       )}
 
       {/* SCOUTS */}
@@ -347,6 +491,129 @@ export default async function ResearchPage() {
           <GapNote gap={view.methodCandidates.gap} />
         )}
       </p>
+
+      {/* LAST NIGHTLY WINDOW (RULING 242) */}
+      <h2>
+        Last nightly window{" "}
+        <span
+          className={
+            windowView.verdict === "COMPLETED"
+              ? "state-green"
+              : windowView.verdict === "FAILED_STAGE"
+                ? "state-red"
+                : "state-unknown"
+          }
+        >
+          {windowView.verdict}
+        </span>
+      </h2>
+      {windowView.reasons.length > 0 && (
+        <ul>
+          {windowView.reasons.map((r) => (
+            <li key={r}>{r}</li>
+          ))}
+        </ul>
+      )}
+      {windowView.time.held ? (
+        <p className="note">
+          Window <code>{windowView.time.value.windowId}</code> for {windowView.time.value.localDate} (
+          {windowView.time.value.zone}), {windowView.time.value.trigger}, mode {windowView.time.value.mode};
+          scheduled {windowView.time.value.scheduledFor}; ran {windowView.time.value.startedAt} →{" "}
+          {windowView.time.value.finishedAt}; host {windowView.time.value.host}; SHA{" "}
+          {windowView.time.value.testedSha ?? "unrecorded"}
+          {windowView.time.value.caughtUp.length > 0
+            ? `; caught up ${windowView.time.value.caughtUp.join(", ")}`
+            : ""}
+          .
+        </p>
+      ) : (
+        <p>
+          <GapNote gap={windowView.time.gap} />
+        </p>
+      )}
+      {windowView.gate.held && <p className="note">Gate: {windowView.gate.value.reason}</p>}
+      {windowView.stages.held && (
+        <ul>
+          {windowView.stages.value.map((s) => (
+            <li key={s.stage}>
+              <strong>{s.stage}</strong> {s.outcome}
+              {s.reason ? ` — ${s.reason}` : ""}
+            </li>
+          ))}
+        </ul>
+      )}
+      <p>
+        Promoted: <Stat h={windowView.promoted} /> · Would promote: <Stat h={windowView.wouldPromote} /> ·
+        Refused: <Stat h={windowView.refused} /> · Deferred: <Stat h={windowView.deferred} />
+      </p>
+      {windowView.byRecordClass.held ? (
+        <ul>
+          {windowView.byRecordClass.value.map((row) => (
+            <li key={row.recordClass}>
+              <code>{row.recordClass}</code>: would promote <Count m={row.promoteWould} />; refused{" "}
+              <Count m={row.refuseWould} />; deferred <Count m={row.deferred} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>
+          <GapNote gap={windowView.byRecordClass.gap} />
+        </p>
+      )}
+      <p>
+        Legacy refresh:{" "}
+        {windowView.legacy.held ? (
+          <>
+            ran <Count m={windowView.legacy.value.ran} /> ({windowView.legacy.value.source})
+          </>
+        ) : (
+          <GapNote gap={windowView.legacy.gap} />
+        )}
+      </p>
+      <p>
+        Controls:{" "}
+        {windowView.controls.held ? (
+          <>
+            recall <Count m={windowView.controls.value.recall} />; false absences{" "}
+            <Count m={windowView.controls.value.falseAbsences} />; false presences{" "}
+            <Count m={windowView.controls.value.falsePresences} />
+          </>
+        ) : (
+          <GapNote gap={windowView.controls.gap} />
+        )}
+      </p>
+      <p>
+        Served-surface check:{" "}
+        {windowView.verification.held ? (
+          `${windowView.verification.value.instrument}: ${windowView.verification.value.verdict}`
+        ) : (
+          <GapNote gap={windowView.verification.gap} />
+        )}
+      </p>
+      <p>
+        Incidents:{" "}
+        {windowView.incidents.held ? (
+          <Count m={windowView.incidents.value.shown} />
+        ) : (
+          <GapNote gap={windowView.incidents.gap} />
+        )}
+      </p>
+      {windowView.incidents.held && windowView.incidents.value.rows.length > 0 && (
+        <ul>
+          {windowView.incidents.value.rows.map((i) => (
+            <li key={i.incidentId}>
+              <code>{i.incidentId}</code> {i.stage} {i.code} — {i.detail}
+            </li>
+          ))}
+        </ul>
+      )}
+      {windowView.proof.held && (
+        <p className="note">
+          Proof: record {windowView.proof.value.recordPath ?? "unwritten"}; digest{" "}
+          {windowView.proof.value.digestPath ?? "unwritten"}; lease <code>{windowView.proof.value.leaseId}</code>;{" "}
+          {windowView.proof.value.windowsRecorded} window(s) recorded.
+        </p>
+      )}
 
       {/* CONTROLS */}
       <h2>Controls</h2>

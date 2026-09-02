@@ -22,6 +22,7 @@
  */
 
 import { execFileSync } from "node:child_process";
+import { existsSync, readFileSync } from "node:fs";
 
 import { diagnose } from "../lib/ops/failure-classes.ts";
 
@@ -40,7 +41,9 @@ function cannotRun(why: string): never {
 
 const runId = process.env.GITHUB_RUN_ID;
 const repo = process.env.GITHUB_REPOSITORY;
-if (!runId || !repo) cannotRun("GITHUB_RUN_ID or GITHUB_REPOSITORY is not set, so there is no run to read");
+if ((!runId || !repo) && !process.env.WTP_JOB_LOG?.trim()) {
+  cannotRun("GITHUB_RUN_ID or GITHUB_REPOSITORY is not set and WTP_JOB_LOG names no file, so there is no log to read");
+}
 
 /**
  * **A ZIP IS NOT A LOG** (2026-08-28, proving the `actions: read` fix).
@@ -74,24 +77,60 @@ function asLogText(bytes: Buffer): string | null {
 const GH_ENV = { ...process.env, GH_PROMPT: "disabled", GIT_TERMINAL_PROMPT: "0" };
 
 let logText: string | null = null;
-try {
-  const bytes = execFileSync("gh", ["api", `repos/${repo}/actions/runs/${runId}/logs`, "--cache", "0s"], {
-    maxBuffer: 256 * 1024 * 1024,
-    env: GH_ENV,
-    timeout: 120_000,
-  });
-  logText = asLogText(bytes);
-  if (logText === null) {
-    log("diagnose: the logs endpoint answered with an archive rather than text — reading the job log instead");
+
+/**
+ * **A JOB CANNOT READ ITS OWN LOG FROM THE API WHILE IT IS STILL RUNNING**
+ * (2026-09-02, runs 33517560447 and 33636708298).
+ *
+ * Both runs died at `Validate before committing` and both ended with
+ * `diagnose: CANNOT RUN — the run log could not be read (Command failed: gh run
+ * view <id> --log-failed)`. The API's own words, one line above: `run <id> is
+ * still in progress; logs will be available when it is complete`. The `Name
+ * the cause` step runs INSIDE the job it diagnoses, so the run is in progress
+ * by construction, and every read below answered 404 or "in progress" — the
+ * `actions: read` grant of 2026-08-28 fixed the permission and could not fix
+ * the timing.
+ *
+ * So the step that runs the suite tees what it prints to a file and names it
+ * in `WTP_JOB_LOG`. That file is read FIRST. The API paths stay as the fallback
+ * for a workflow that does not tee, and for a failure that happened before the
+ * teeing step ran.
+ */
+const localLog = process.env.WTP_JOB_LOG?.trim();
+if (localLog && existsSync(localLog)) {
+  const text = readFileSync(localLog, "utf8");
+  if (text.trim().length > 0) {
+    logText = text;
+    log(`diagnose: reading the job's own log from ${localLog} (${text.length} chars) — the API cannot serve a run's log while the run is in progress`);
+  } else {
+    log(`diagnose: WTP_JOB_LOG names ${localLog} and it is EMPTY — the failing step wrote nothing there; falling back to the API`);
   }
-} catch {
-  /* 403, a redirect gh would not follow, a network failure — all the same here. */
+}
+
+if (logText === null && (!runId || !repo)) {
+  cannotRun("no local job log could be read and GITHUB_RUN_ID or GITHUB_REPOSITORY is not set, so there is no run to read");
+}
+
+if (logText === null) {
+  try {
+    const bytes = execFileSync("gh", ["api", `repos/${repo}/actions/runs/${runId}/logs`, "--cache", "0s"], {
+      maxBuffer: 256 * 1024 * 1024,
+      env: GH_ENV,
+      timeout: 120_000,
+    });
+    logText = asLogText(bytes);
+    if (logText === null) {
+      log("diagnose: the logs endpoint answered with an archive rather than text — reading the job log instead");
+    }
+  } catch {
+    /* 403, a redirect gh would not follow, a network failure — all the same here. */
+  }
 }
 
 if (logText === null) {
   // The per-job text, which is what a reader sees in the Actions UI.
   try {
-    logText = execFileSync("gh", ["run", "view", runId, "--log-failed"], {
+    logText = execFileSync("gh", ["run", "view", String(runId), "--log-failed"], {
       encoding: "utf8",
       maxBuffer: 256 * 1024 * 1024,
       env: GH_ENV,

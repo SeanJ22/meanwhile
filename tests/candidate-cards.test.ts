@@ -31,9 +31,24 @@ test("every card key resolves against the ballot data or lineup keys", () => {
   ]) {
     const set = JSON.parse(
       readFileSync(join(process.cwd(), "data", "ballot", file), "utf8"),
-    ) as { candidacies: { id: string }[]; contests: { id: string }[] };
+    ) as {
+      candidacies: { id: string }[];
+      contests: { id: string }[];
+      removals?: { id: string; status: string }[];
+    };
     for (const c of set.candidacies) candidacyIds.add(c.id);
     for (const c of set.contests) candidacyIds.add(c.id);
+    /*
+     * A candidacy the clerk has since removed keeps its id in `removals`, with
+     * the evidence of the change (2026-09-02, Lana Leguía). The card hunted
+     * for that person is not dangling — it resolves to the retained record —
+     * and it is not rendered as a running candidate either, because the card
+     * layer keys off `candidacies` and the removal is not one.
+     */
+    for (const r of set.removals ?? []) {
+      assert.equal(r.status, "REMOVED_FROM_FILING", `${file}: ${r.id} carries an unknown removal status`);
+      candidacyIds.add(r.id);
+    }
   }
   for (const key of Object.keys(cards)) {
     const base = key.includes("|") ? key.split("|")[0]! : key;

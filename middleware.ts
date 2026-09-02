@@ -64,8 +64,19 @@ import {
 /** Everything the admin surface owns. Both are refused on the public host. */
 const ADMIN_PATH_PREFIXES = ["/admin", "/api/admin"] as const;
 
-/** The login page and the login POST must be reachable unauthenticated. */
-const UNAUTHENTICATED_ADMIN_PATHS = ["/admin/login", "/api/admin/session"] as const;
+/**
+ * What may be reached unauthenticated on the admin host, and nothing else:
+ * the login page; the Google start and its registered callback (RULING 245 —
+ * the callback is a top-level navigation FROM Google carrying no session yet);
+ * and the session route, which is sign-out (DELETE) and the flag-gated
+ * break-glass (POST). Every other admin path needs a valid session cookie.
+ */
+const UNAUTHENTICATED_ADMIN_PATHS = [
+  "/admin/login",
+  "/admin/auth/google",
+  "/admin/auth/callback",
+  "/api/admin/session",
+] as const;
 
 function isAdminPath(pathname: string): boolean {
   return ADMIN_PATH_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`));

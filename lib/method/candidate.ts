@@ -161,6 +161,27 @@ export interface MethodCandidate {
   readonly admission: CandidateAdmission | null;
   /** Retained forever on a refusal. A rejection is evidence, never a silence. */
   readonly rejection: CandidateRejection | null;
+  /**
+   * **THE MODEL'S OWN PROVENANCE STATEMENTS, RECORDED AND NEVER USED.**
+   * (RULING 243, 2026-09-02.) `proposal.origin`, `proposal.note` and the
+   * claims' statements carry MACHINE-derived values (observedOn from the
+   * artifact record, permission from the retrieval verdict, recordClass from
+   * the obligation). What the model said about those facts is kept here so an
+   * audit can see the disagreement; it is never copied into the proposal.
+   * Optional: candidates submitted before the ruling carry none.
+   */
+  readonly modelClaims?: {
+    readonly observedOn: string | null;
+    readonly permission: string | null;
+    readonly recordClass: string | null;
+  };
+  /** Set by `scripts/scout-candidates-rederive.mts` when the proposal's provenance was rewritten from the record. */
+  readonly provenanceRederived?: {
+    readonly at: string;
+    readonly rule: string;
+    readonly derivedFrom: readonly string[];
+    readonly before: { readonly origin: string; readonly observedOn: string | null; readonly permission: string | null };
+  };
 }
 
 export interface CandidateStore {

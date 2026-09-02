@@ -74,6 +74,9 @@ test("SEEDED: every admin route returns 404 on the PUBLIC host", async () => {
     "/admin",
     "/admin/",
     "/admin/login",
+    "/admin/auth/google",
+    "/admin/auth/callback",
+    "/admin/auth/callback?code=x&state=y",
     "/api/admin/session",
     "/api/admin/decision",
     "/admin/anything/deeper",
@@ -121,8 +124,8 @@ test("SEEDED: an unauthenticated admin API request on the ADMIN host is refused 
   assert.equal(response.status, 401);
 });
 
-test("the login page and the login POST are reachable unauthenticated on the admin host", async () => {
-  for (const path of ["/admin/login", "/api/admin/session"]) {
+test("the login page, the Google start and callback, and the session route are reachable unauthenticated on the admin host", async () => {
+  for (const path of ["/admin/login", "/admin/auth/google", "/admin/auth/callback", "/api/admin/session"]) {
     const response = await middleware(request(ADMIN_HOST, path));
     assert.equal(response.status, 200, `${path} must be reachable so the owner can sign in`);
   }

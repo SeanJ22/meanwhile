@@ -98,6 +98,12 @@ bind every session. **This file and the constitution remain superior wherever
 they and the efficiency law touch** — it directs effort; it never lowers a proof
 bar the constitution sets.
 
+**The WORKER EFFICIENCY LAW — RULING 244 — is that law's worker-side counterpart,**
+adopted verbatim and binding every autonomous worker and every session-spawned
+agent: cache the stable prefix, route each step to the cheapest adequate model
+class, budget every representation, never re-read or re-walk, measure per step,
+and never lower a proof bar to save a token.
+
 ---
 
 ## The order of every trade
@@ -261,6 +267,21 @@ state, and session shipping carries the last mile. **Held data with no live
 promotion tail is a defect** — retroactively, so every held corpus either flows
 to a surface, stages promotion-ready, or carries an argued reason it cannot.
 
+**Reader-facing civic truth changes through exactly one door** (RULING 242): the
+nightly window, run by the standing runner on the machine's own clock at 04:00
+America/New_York, over a typed pipeline — `SCOUTED → CONFIRMED → VERIFIED →
+AUDITED → APPROVED_FOR_PROMOTION`, or `REFUSED` with its reason at any stage.
+Scouts, Acquirers, Parsers and Detectives never write reader truth. Until the
+activation gate opens the window runs in SHADOW and promotes nothing; the legacy
+daily refresh is the named transitional path, retired source by source under
+`docs/migration-inventory.md`.
+
+**Provenance is machine-owned** (RULING 243). When a record was retrieved, from
+where, under what permission verdict, in what record class and on which
+artifacts is written by the machine from the Attempt, artifact, obligation and
+permission records; the model's statements about those facts are recorded as
+claims and never become durable provenance.
+
 **Every session report leads in reader terms** (RULING 225), in this order: what
 a reader can now see that they could not before; what workers advanced
 unattended; what genuinely requires the owner. Infrastructure counts come
@@ -300,6 +321,11 @@ implemented — no identity, no free text, no read API. Anything ever EXPOSED,
 RENDERED or LICENSED is aggregate-only, without exception. Changing any of those
 three at-rest properties reopens the question rather than inheriting the
 ratification.
+
+**The owner's identity is one Google address** (RULING 245). Administrative
+access authenticates through Sign in with Google for exactly the enrolled owner
+address, verified server-side; a shared secret is never a login path except as
+a documented, rate-limited, incident-logged break-glass under RULING 238.
 
 **Collect the minimum.** Zip or address for district resolution, an email for
 account identity. Adding a field to the user model is an ask-before.

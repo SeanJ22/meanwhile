@@ -312,6 +312,41 @@ function proofConditions(
       holds: true,
       evidence: PROMOTION_STATEMENT,
     },
+    /*
+     * RULING 244 and RULING 243 conditions. Results recorded before the
+     * rulings carry no steps and no claims; for those the conditions read
+     * NOT INSTRUMENTED and do not hold — a pre-ruling result is not proof of
+     * the post-ruling lane, and saying so beats a vacuous pass.
+     */
+    ...efficiencyConditions(r),
+  ];
+}
+
+function efficiencyConditions(r: ScoutResult): ProofCondition[] {
+  const model = (r.steps ?? []).filter((s) => s.kind === "MODEL").sort((a, b) => (a.turn ?? 0) - (b.turn ?? 0));
+  const later = model.filter((s) => (s.turn ?? 0) >= 2);
+  const misses = later.filter((s) => s.tokens.cacheRead === 0);
+  const withClaims = r.candidates.filter((c) => c.claims !== undefined && c.provenance !== undefined);
+  return [
+    {
+      name: "cache read on every turn after the first (RULING 244: a repeated prefix is read, never re-sent)",
+      holds: r.steps !== undefined && r.usage.turns >= 1 && misses.length === 0 && (r.cacheDefect ?? null) === null,
+      evidence:
+        r.steps === undefined
+          ? "NOT INSTRUMENTED: the result carries no per-turn steps (recorded before RULING 244)"
+          : `cache reads per turn ${model.map((s) => s.tokens.cacheRead).join("/") || "(no model turn)"}; ` +
+            `${misses.length} of ${later.length} later turn(s) read zero` +
+            (r.cacheDefect ? `; cacheDefect on turn(s) ${r.cacheDefect.turns.join(", ")}` : ""),
+    },
+    {
+      name: "candidate provenance machine-owned (RULING 243: every candidate carries claims and a derivation)",
+      holds: r.candidates.length === 0 || withClaims.length === r.candidates.length,
+      evidence:
+        r.candidates.length === 0
+          ? "no candidate on this result; nothing to derive"
+          : `${withClaims.length} of ${r.candidates.length} candidate(s) carry claims + provenance` +
+            (withClaims.length > 0 ? `; observedOn ${withClaims.map((c) => `${c.routeId} ${c.observedOn} (claimed ${c.claims?.observedOn ?? "null"})`).join(", ")}` : " — recorded before RULING 243"),
+    },
   ];
 }
 
@@ -373,10 +408,16 @@ for (const r of shown) {
     `result.usage: in=${r.usage.inputTokens ?? "null"} out=${r.usage.outputTokens ?? "null"} cacheRead=${r.usage.cacheReadInputTokens ?? "null"} ` +
       `cacheCreate=${r.usage.cacheCreationInputTokens ?? "null"} turns=${r.usage.turns} toolCalls=${r.usage.toolCalls}`,
   );
+  if (r.steps !== undefined) {
+    const model = r.steps.filter((s) => s.kind === "MODEL");
+    line(`effort=${r.effort ?? "n/a"} steps: ${model.map((s) => `t${s.turn} ${s.model} read=${s.tokens.cacheRead} write=${s.tokens.cacheWrite} uncached=${s.tokens.uncachedInput} out=${s.tokens.output} usd=${s.usd === null ? "null" : s.usd.toFixed(4)}`).join(" | ")}`);
+    line(`deterministic steps: ${r.steps.filter((s) => s.kind === "DETERMINISTIC").map((s) => `${s.step} x${s.count} (${s.representationBytes} bytes)`).join(", ") || "none"}` +
+      ` · cacheDefect ${r.cacheDefect ? `turn(s) ${r.cacheDefect.turns.join(", ")}` : "none"} · guard refusals ${r.guardRefusals?.length ?? 0} · overruns ${r.representationOverruns?.length ?? 0} · resumed from ${r.resumedFromRungs ?? 0} prior rung(s)`);
+  }
   line(`rungs (${r.rungs.length}):`);
   for (const g of r.rungs) line(`    [${g.index}] ${g.rung} · ${g.tool} -> ${g.target} — ${g.observed.slice(0, 120)} (artifacts ${g.artifactIds.length})`);
   line(`candidates (${r.candidates.length}):`);
-  for (const c of r.candidates) line(`    ${c.routeId} ${c.url} permission=${c.permission} evidence=${c.evidenceArtifactIds.length}`);
+  for (const c of r.candidates) line(`    ${c.routeId} ${c.url} permission=${c.permission} observedOn=${c.observedOn} evidence=${c.evidenceArtifactIds.length}${c.claims ? ` claims={observedOn ${c.claims.observedOn}, permission ${c.claims.permission}, recordClass ${c.claims.recordClass}}` : " (no claims recorded: pre-RULING 243)"}`);
   line(`findings (${r.findings.length}):`);
   for (const f of r.findings) line(`    ${f.kind} "${f.summary.slice(0, 120)}" artifacts=${f.artifactIds.length}`);
   line(`nextRungs: ${r.nextRungs.length === 0 ? "(none)" : r.nextRungs.join(" | ")}`);

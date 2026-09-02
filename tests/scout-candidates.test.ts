@@ -49,6 +49,9 @@ const candidate = (over: Partial<ScoutCandidate> = {}): ScoutCandidate => ({
   recordClass: "meetings",
   deterministic: true,
   unverified: [],
+  /* RULING 243: the executor writes these before a candidate reaches this module. */
+  claims: { observedOn: "2026-01-01", permission: "ALLOWED", recordClass: "meetings" },
+  provenance: { derivedFrom: ["raw-1"], rule: "test derivation" },
   ...over,
 });
 
@@ -99,6 +102,20 @@ test("1. an opened, evidence-backed candidate is proposed and VALIDATED — neve
   assert.equal(store.candidates[0].admission, null, "the Scout may not promote its own proposal");
   assert.equal(readMethodStore(join(root, "data", "method", "knowledge.json")).version, report.storeVersionObserved, "the method store did not move");
   assert.deepEqual(candidateStoreCounts(root), { PROPOSED: 0, VALIDATED: 1, ADMITTED: 0, REJECTED: 0 });
+
+  /* RULING 243: durable provenance carries the MACHINE's observedOn; the model's 2026-01-01 is a recorded claim beside it. */
+  const rec = store.candidates[0];
+  assert.match(rec.proposal.origin, new RegExp(`observed ${STAMP}`));
+  assert.doesNotMatch(rec.proposal.origin, /2026-01-01/);
+  assert.match(rec.proposal.claims?.[0]?.statement ?? "", new RegExp(`on ${STAMP};`));
+  assert.deepEqual(rec.modelClaims, { observedOn: "2026-01-01", permission: "ALLOWED", recordClass: "meetings" });
+
+  /* A candidate with no machine derivation is a pre-ruling shape and is not learned. */
+  const unowned = { ...candidate({ routeId: "testville-unowned" }) } as Record<string, unknown>;
+  delete unowned.provenance;
+  const noDerivation = proposeScoutCandidates({ root, result: result([unowned as never]), artifacts: opened, stamp: STAMP });
+  assert.equal(noDerivation.proposed.length, 0);
+  assert.match(noDerivation.notProposed[0].why, /no machine provenance derivation/);
 
   /* Idempotent: re-proposing the identical offer does not duplicate it. */
   const again = proposeScoutCandidates({ root, result: result([candidate()]), artifacts: opened, stamp: STAMP });

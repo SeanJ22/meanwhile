@@ -1,6 +1,22 @@
 /**
  * **THE ADMIN HOST'S AUTHENTICATION, AND EVERY PLACE THE SECRET MAY NOT GO.**
- * (Session C final, ITEM H, 2026-09-01.)
+ * (Session C final, ITEM H, 2026-09-01. Sign in with Google and the break-glass
+ * law, RULING 245, 2026-09-02.)
+ *
+ * ## Two ways in, and only one of them is a login
+ *
+ * RULING 245: administrative access authenticates the OWNER'S IDENTITY through
+ * Sign in with Google for exactly the enrolled address, verified server-side
+ * (`lib/control-plane/admin-google.ts`). The shared secret this module was
+ * first written around is no longer a login path. It survives ONLY as the
+ * documented break-glass at the bottom of this file — a path that does not
+ * exist unless the owner turns it on by name, that is rate-limited through the
+ * durable control plane rather than through a per-instance counter, and that
+ * writes an incident record for every attempt it accepts or refuses.
+ *
+ * The session cookie is the same for both ways in. Which one issued it is
+ * carried in the session (`via`) so a decision made under a break-glass session
+ * is distinguishable from one made under the owner's Google identity.
  *
  * ## The threat this is actually defending against
  *
@@ -78,7 +94,12 @@ export const MIN_SECRET_LENGTH = 24;
 
 const encoder = new TextEncoder();
 
-function base64UrlEncode(bytes: Uint8Array): string {
+/**
+ * Exported because `admin-google.ts` decodes JWT segments with it. One
+ * implementation of one encoding (RULING 103); a second copy in the Google
+ * module would be the duplicate the sweep exists to catch.
+ */
+export function base64UrlEncode(bytes: Uint8Array): string {
   let binary = "";
   for (const byte of bytes) binary += String.fromCharCode(byte);
   return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
@@ -94,12 +115,19 @@ function base64UrlEncode(bytes: Uint8Array): string {
  * thread between the signature check and the read of what was checked.
  * Allocating the buffer explicitly narrows the type and removes the hazard.
  */
-function base64UrlDecode(value: string): Uint8Array<ArrayBuffer> {
+export function base64UrlDecode(value: string): Uint8Array<ArrayBuffer> {
   const padded = value.replace(/-/g, "+").replace(/_/g, "/");
   const binary = atob(padded + "=".repeat((4 - (padded.length % 4)) % 4));
   const bytes = new Uint8Array(new ArrayBuffer(binary.length));
   for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
   return bytes;
+}
+
+/** Random bytes as base64url — session ids, PKCE verifiers, OAuth state. */
+export function randomBase64Url(byteLength: number): string {
+  const bytes = new Uint8Array(new ArrayBuffer(byteLength));
+  crypto.getRandomValues(bytes);
+  return base64UrlEncode(bytes);
 }
 
 /* ------------------------------------------------------------------ *
@@ -163,12 +191,7 @@ export function timingSafeEqual(a: string, b: string): boolean {
 export const ADMIN_SESSION_ID_PREFIX = "adm_";
 
 export function mintAdminSessionId(): string {
-  const bytes = new Uint8Array(new ArrayBuffer(24));
-  crypto.getRandomValues(bytes);
-  let binary = "";
-  for (const byte of bytes) binary += String.fromCharCode(byte);
-  const body = btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-  return `${ADMIN_SESSION_ID_PREFIX}${body}`;
+  return `${ADMIN_SESSION_ID_PREFIX}${randomBase64Url(24)}`;
 }
 
 /* ------------------------------------------------------------------ *
@@ -207,6 +230,13 @@ export function isAdminHostRequest(
  * SESSION SIGNING
  * ------------------------------------------------------------------ */
 
+/**
+ * How a session was issued. Carried in the cookie so a durable record that
+ * references the session (a decision intent, a break-glass incident) can say
+ * whether the owner proved an IDENTITY or knowledge of a SECRET.
+ */
+export type SessionIssuer = "google" | "break-glass";
+
 export interface AdminSession {
   /** An opaque id for this session. Used to reference decisions in the audit. */
   readonly sid: string;
@@ -214,6 +244,8 @@ export interface AdminSession {
   readonly iat: number;
   /** Expires-at, epoch seconds. Bounded by {@link SESSION_LIFETIME_SECONDS}. */
   readonly exp: number;
+  /** Absent on a session issued before RULING 245; read as unknown, never as Google. */
+  readonly via?: SessionIssuer;
 }
 
 async function hmacKey(sessionKey: string): Promise<CryptoKey> {
@@ -226,12 +258,61 @@ async function hmacKey(sessionKey: string): Promise<CryptoKey> {
   );
 }
 
+/* ------------------------------------------------------------------ *
+ * THE SIGNED ENVELOPE — one primitive under both cookies
+ * ------------------------------------------------------------------ */
+
+/**
+ * Sign any JSON payload into `<base64url payload>.<base64url HMAC>`.
+ *
+ * The session cookie and the OAuth state cookie are both this. Two envelope
+ * formats would be two verifiers, and the one that drifted would be the one
+ * nobody tested in middleware.
+ */
+export async function signEnvelope(payload: unknown, key: string): Promise<string> {
+  const body = base64UrlEncode(encoder.encode(JSON.stringify(payload)));
+  const signature = await crypto.subtle.sign("HMAC", await hmacKey(key), encoder.encode(body));
+  return `${body}.${base64UrlEncode(new Uint8Array(signature))}`;
+}
+
+export type EnvelopeVerdict =
+  | { readonly ok: true; readonly payload: unknown }
+  | { readonly ok: false; readonly rejection: "MALFORMED" | "BAD_SIGNATURE" };
+
+/**
+ * Open an envelope.
+ *
+ * **Signature first, contents second.** Parsing an unverified payload and then
+ * checking the signature means the parser runs on attacker-controlled bytes;
+ * checking first means a forged value never reaches `JSON.parse` at all.
+ */
+export async function openEnvelope(value: string, key: string): Promise<EnvelopeVerdict> {
+  const dot = value.lastIndexOf(".");
+  if (dot <= 0) return { ok: false, rejection: "MALFORMED" };
+  const body = value.slice(0, dot);
+  const signature = value.slice(dot + 1);
+  let valid = false;
+  try {
+    valid = await crypto.subtle.verify(
+      "HMAC",
+      await hmacKey(key),
+      base64UrlDecode(signature),
+      encoder.encode(body),
+    );
+  } catch {
+    return { ok: false, rejection: "MALFORMED" };
+  }
+  if (!valid) return { ok: false, rejection: "BAD_SIGNATURE" };
+  try {
+    return { ok: true, payload: JSON.parse(new TextDecoder().decode(base64UrlDecode(body))) };
+  } catch {
+    return { ok: false, rejection: "MALFORMED" };
+  }
+}
+
 /** Sign a session into a cookie value. The value contains no secret. */
 export async function signSession(session: AdminSession, sessionKey: string): Promise<string> {
-  const payload = base64UrlEncode(encoder.encode(JSON.stringify(session)));
-  const key = await hmacKey(sessionKey);
-  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(payload));
-  return `${payload}.${base64UrlEncode(new Uint8Array(signature))}`;
+  return signEnvelope(session, sessionKey);
 }
 
 /**
@@ -249,13 +330,7 @@ export type SessionVerdict =
   | { readonly ok: true; readonly session: AdminSession }
   | { readonly ok: false; readonly rejection: SessionRejection };
 
-/**
- * Verify a cookie value.
- *
- * **Signature first, contents second.** Parsing an unverified payload and then
- * checking the signature means the parser runs on attacker-controlled bytes;
- * checking first means a forged cookie never reaches `JSON.parse` at all.
- */
+/** Verify a session cookie value. */
 export async function verifySession(
   cookieValue: string | undefined | null,
   sessionKey: string | undefined | null,
@@ -263,30 +338,9 @@ export async function verifySession(
 ): Promise<SessionVerdict> {
   if (!sessionKey) return { ok: false, rejection: "NOT_CONFIGURED" };
   if (!cookieValue) return { ok: false, rejection: "NO_COOKIE" };
-  const dot = cookieValue.lastIndexOf(".");
-  if (dot <= 0) return { ok: false, rejection: "MALFORMED" };
-  const payload = cookieValue.slice(0, dot);
-  const signature = cookieValue.slice(dot + 1);
-  let valid = false;
-  try {
-    const key = await hmacKey(sessionKey);
-    valid = await crypto.subtle.verify(
-      "HMAC",
-      key,
-      base64UrlDecode(signature),
-      encoder.encode(payload),
-    );
-  } catch {
-    return { ok: false, rejection: "MALFORMED" };
-  }
-  if (!valid) return { ok: false, rejection: "BAD_SIGNATURE" };
-
-  let session: AdminSession;
-  try {
-    session = JSON.parse(new TextDecoder().decode(base64UrlDecode(payload))) as AdminSession;
-  } catch {
-    return { ok: false, rejection: "MALFORMED" };
-  }
+  const opened = await openEnvelope(cookieValue, sessionKey);
+  if (!opened.ok) return { ok: false, rejection: opened.rejection };
+  const session = opened.payload as AdminSession;
   if (typeof session?.exp !== "number" || typeof session?.iat !== "number") {
     return { ok: false, rejection: "MALFORMED" };
   }
@@ -396,4 +450,161 @@ export function sessionCookieAttributes(maxAgeSeconds: number): string {
     "Secure",
     "SameSite=Strict",
   ].join("; ");
+}
+
+/* ------------------------------------------------------------------ *
+ * THE BREAK-GLASS — RULING 245's one permitted use of the shared secret,
+ * held under RULING 238 custody
+ * ------------------------------------------------------------------ */
+
+/**
+ * ## What the break-glass is, and what it is not
+ *
+ * RULING 245: "Shared secrets are not a login path except as a documented,
+ * rate-limited, incident-logged break-glass held by the owner under RULING
+ * 238." Each of those four words is a mechanism here, not an adjective:
+ *
+ * ```
+ *   DOCUMENTED       docs/admin-sign-in.md — how it is enabled, and that
+ *                    enabling it is itself visible in the incident log
+ *   HELD BY THE OWNER  RULING 238: the secret is a value the OWNER holds a copy
+ *                    of. The first WTP_ADMIN_SECRET was generated by a session
+ *                    and installed masked, with no owner copy — the owner could
+ *                    not log in to his own control centre. That is the custody
+ *                    violation this section is written after
+ *   RATE-LIMITED     through the DURABLE control plane. A per-instance counter
+ *                    in a serverless function is not a rate limit: instances
+ *                    come and go per request and each one starts at zero. The
+ *                    count is read from the append-only incident log itself
+ *   INCIDENT-LOGGED  every attempt the path accepts or refuses appends a record
+ *                    naming the class, the moment and the outcome. Never the
+ *                    value, never its length, never a prefix
+ * ```
+ *
+ * ## The path does not exist unless the owner turns it on
+ *
+ * `WTP_ADMIN_BREAK_GLASS` must equal `enabled`, exactly. Absent, empty, `true`,
+ * `1`, `Enabled` — all mean the route answers 404, which is the same answer the
+ * public host gives, so a prober cannot tell a disabled break-glass from a path
+ * that was never there. A flag that has to be typed as a specific word is a
+ * decision; a flag that any truthy value opens is an accident waiting for a
+ * copy-paste.
+ *
+ * ## Why an unloggable attempt is a refused attempt
+ *
+ * The incident record is appended BEFORE a session is issued, and a failed
+ * append refuses the login even when the secret was right. A break-glass that
+ * can be used without leaving a record is not the break-glass the ruling
+ * permits; it is the old login path with a new name.
+ *
+ * ## The rate limit's own denial-of-service surface, stated
+ *
+ * When the flag is on, every POST reads one indexed log partition and appends
+ * at most one row — bounded work, but work, on an unauthenticated path. That
+ * is accepted because the flag is OFF by default and is meant to be on for the
+ * length of an incident. Beyond the ceiling the path refuses WITHOUT
+ * appending: the N records already in the window are the evidence of a flood,
+ * and a log that grew by one row per refused request would be the flood's
+ * amplifier.
+ */
+export const BREAK_GLASS_FLAG_VAR = "WTP_ADMIN_BREAK_GLASS";
+export const BREAK_GLASS_ENABLED_VALUE = "enabled";
+
+/** The append-only log partition the incident records live under. */
+export const BREAK_GLASS_LOG_KEY = "admin-break-glass";
+
+/** Attempts permitted per window, counted from the durable log. */
+export const BREAK_GLASS_MAX_ATTEMPTS_PER_WINDOW = 5;
+export const BREAK_GLASS_WINDOW_SECONDS = 15 * 60;
+
+export function isBreakGlassEnabled(env: { readonly [name: string]: string | undefined }): boolean {
+  return env[BREAK_GLASS_FLAG_VAR] === BREAK_GLASS_ENABLED_VALUE;
+}
+
+/** Why a break-glass attempt was refused, beyond the login verdict's own reasons. */
+export type BreakGlassRejection =
+  | "RATE_LIMITED"
+  | "INCIDENT_LOG_UNAVAILABLE"
+  | "NOT_CONFIGURED"
+  | "WEAK_SECRET"
+  | "REFUSED";
+
+export interface BreakGlassWindowVerdict {
+  readonly allowed: boolean;
+  /** Attempts already recorded inside the window, BEFORE this one. */
+  readonly attemptsInWindow: number;
+  readonly max: number;
+  readonly windowSeconds: number;
+}
+
+/**
+ * Count the attempts already recorded in the window and decide whether one
+ * more may proceed.
+ *
+ * A record whose `writtenAt` does not parse is counted AGAINST the caller: a
+ * log entry we cannot date is not evidence that the window is quiet.
+ */
+export function breakGlassWindowVerdict(
+  records: readonly { readonly writtenAt: string }[],
+  nowIso: string,
+  max: number = BREAK_GLASS_MAX_ATTEMPTS_PER_WINDOW,
+  windowSeconds: number = BREAK_GLASS_WINDOW_SECONDS,
+): BreakGlassWindowVerdict {
+  const nowMs = Date.parse(nowIso);
+  const floorMs = nowMs - windowSeconds * 1000;
+  let attemptsInWindow = 0;
+  for (const record of records) {
+    const at = Date.parse(record.writtenAt);
+    if (Number.isNaN(at) || at >= floorMs) attemptsInWindow += 1;
+  }
+  return { allowed: attemptsInWindow < max, attemptsInWindow, max, windowSeconds };
+}
+
+/**
+ * The incident record, shaped as an owner digest so it lives in the existing
+ * append-only owner log under its own key. Nothing here is a value anyone
+ * typed: the class, the moment, the outcome, the session it issued (an opaque
+ * id) and the window arithmetic.
+ */
+export interface BreakGlassIncident {
+  readonly formatVersion: number;
+  readonly digestId: string;
+  readonly writtenAt: string;
+  readonly headline: string;
+  readonly lines: readonly string[];
+  readonly cycleOk: boolean | null;
+  readonly testedSha: string | null;
+}
+
+export function buildBreakGlassIncident(input: {
+  readonly at: string;
+  readonly outcome: "ACCEPTED" | "REFUSED";
+  readonly rejection: BreakGlassRejection | null;
+  /** The opaque session id issued, or null when nothing was issued. */
+  readonly sessionRef: string | null;
+  readonly attemptsInWindowIncludingThis: number;
+  readonly max: number;
+  readonly windowSeconds: number;
+}): BreakGlassIncident {
+  const cls = input.outcome === "ACCEPTED" ? "ACCEPTED" : (input.rejection ?? "REFUSED");
+  return {
+    formatVersion: 1,
+    // Random suffix rather than the moment alone: two attempts in one
+    // millisecond are two attempts, and an id derived from time alone would
+    // make the second an idempotent no-op of the first.
+    digestId: `break-glass:${input.at}:${randomBase64Url(6)}`,
+    writtenAt: input.at,
+    headline: `BREAK-GLASS SIGN-IN ${input.outcome}: ${cls}`,
+    lines: [
+      `class: ${cls}`,
+      `outcome: ${input.outcome}`,
+      `at: ${input.at}`,
+      `route: POST /api/admin/session (${BREAK_GLASS_FLAG_VAR}=${BREAK_GLASS_ENABLED_VALUE})`,
+      `session issued: ${input.sessionRef ?? "none"}`,
+      `attempts in window: ${input.attemptsInWindowIncludingThis} of ${input.max} per ${input.windowSeconds}s`,
+      "law: RULING 245 break-glass under RULING 238 custody",
+    ],
+    cycleOk: null,
+    testedSha: null,
+  };
 }

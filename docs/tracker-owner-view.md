@@ -21,7 +21,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 ## Decisions waiting on you
 
-**68 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
+**69 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
 
 ### P1
 
@@ -52,14 +52,6 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 - **Take the four decisions** — the questionnaire can go out and candidate-supplied positions become a source.
 - **Defer** — the instrument sits built and unused; candidate cards stay as thin as the hunt leaves them.
 
-#### NH305 — Install the runner's relaunch trigger from an ELEVATED PowerShell (Level 1 prerequisite)
-
-*Opened 2026-09-01 · 1 day old · verified still blocked (2026-09-02 · HOLDS)*
-
-**Blocked while.** the Scheduled Task 'WeThePeople Pilot Runner' carries only an at-logon trigger; registering the 5-minute relaunch trigger is refused from an unelevated shell (Access is denied, measured 2026-09-01), and an unattended session does not elevate itself.
-
-**Rechecked this run.** data/ops/runner-relaunch-proof.json is not present in this checkout. The elevated install and prove-relaunch have not been run, or their proof has not been committed; the runner is still DOWN after any kill until a logon. Read: data/ops/runner-relaunch-proof.json.
-
 #### NH306 — Rotate DATA_GOV_API_KEY and NETLIFY_AUTH_TOKEN: their values appeared in a prior session transcript (RULING 127)
 
 *Opened 2026-09-02 · opened today · verified still blocked (2026-09-02 · HOLDS)*
@@ -67,6 +59,14 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 **Blocked while.** the values of DATA_GOV_API_KEY and NETLIFY_AUTH_TOKEN appeared in a prior session's subagent transcript (scrubbed 2026-09-02); a credential that has appeared in a transcript is compromised until rotated, and rotation is an owner act this session did not perform.
 
 **Rechecked this run.** data/ops/credential-events.jsonl is not present in this checkout. No rotation has been REPORTED; a rotation nobody recorded is not one this predicate can see, and RULING 238 requires the report by name. Read: data/ops/credential-events.jsonl.
+
+#### NH310 — Install GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET on the Netlify site under RULING 238 custody, then sign in once through Google on admin.meanwhileusa.com (RULING 245 live proof)
+
+*Opened 2026-09-02 · opened today · COULD NOT VERIFY this run — the readback record predates RULING 245 and carries no googleConfigured field; nothing has measured the Google path on the deployed host yet.*
+
+**Blocked while.** GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET are absent from the Netlify site's environment (read back by name on 2026-09-02, both sites and account level), so the deployed Google sign-in reports NOT_CONFIGURED and the live proof of RULING 245 cannot be taken.
+
+**Rechecked this run.** the readback record predates RULING 245 and carries no googleConfigured field; nothing has measured the Google path on the deployed host yet. Read: data/ops/admin-login-readback.json.
 
 ### P2
 
@@ -505,6 +505,20 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 - **Supply it / rule on it** — the blocked route opens and the work behind this row continues on the machine.
 - **Decline or defer** — the obligation stays LIVE and visible — declining the escalation is never a disposition of the record it concerns (RULING 205, RULING 208) — and the other routes keep being worked.
 
+#### NW11 — Which record classes open first at the activation gate
+
+*Opened 2026-09-02 · opened today · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+
+**What is needed.** Name the first record classes to open at the activation gate (zero or more of meeting-times, agendas, published-minutes, routine-filings). The open set in lib/control-plane/promotion/activation-gate.ts is EMPTY and the nightly window (RULING 242) runs in SHADOW until READER, TRUTH and FRESHNESS are GREEN and INDEPENDENTLY_REPRODUCED, so nothing waits on this today; the list must exist before the gate can open.
+
+**Why no machine can decide it.** Opening a class is a product decision about which reader truth may change unattended each night; no artifact can decide it, and it cannot take effect before the three contracts are GREEN and independently reproduced, which is a later measurement, not a reason to decide later.
+
+**Your options.**
+
+- **Open meeting-times and agendas first** — the first promoted reader truth is a meeting time or an agenda — the lowest-stakes class — verified on the served surface within the same window and reverted automatically on regression
+- **Also open published-minutes and routine-filings** — minutes and routine filings promote nightly too, more reader surface per window
+- **Open none yet** — the window stays in SHADOW after the gate is otherwise green, and every promotion remains a session's last mile
+
 ### P3
 
 #### D70 — Agenda-platform tenant enumeration crawler (replaces the h2 enumeration approach)
@@ -933,7 +947,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 append-only ledger of every id any session has ever claimed. It is never typed and
 never guessed.
 
-- 403 row(s) carry a date the ledger stamped directly.
+- 427 row(s) carry a date the ledger stamped directly.
 - 243 row(s) take the date from the session the ledger names, where the entry was reconstructed on 2026-08-21 without a stamp.
 - 225 row(s) read **UNKNOWN**. Their ledger entries were reconstructed with no stamped day and name a session that carries no date. The ledger bound around them is a multi-day range, and a range is not a date; this clone is also shallow at 2026-08-25, so git cannot answer for rows older than that either. **UNKNOWN is the honest reading and is never replaced by a guess.**
 
@@ -943,4 +957,4 @@ committed artifacts on EVERY tracker generation — not when a session remembers
 and auto-resolves the moment its blocker stops being true.
 
 - 2 row(s) carry a machine-verifiable predicate.
-- 70 row(s) are marked NOT_MACHINE_VERIFIABLE with a card.
+- 71 row(s) are marked NOT_MACHINE_VERIFIABLE with a card.

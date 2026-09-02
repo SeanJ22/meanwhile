@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-01 13:32:05 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-02 00:46:43 EDT. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-09-01 -->
 Session day 2026-09-01 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1273 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1295 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -612,7 +612,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 247 recorded
+## Rulings — 255 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -840,6 +840,14 @@ from. Each entry there names what it supersedes.
 - RULING 229 — acquire to the authoritative source universe; project to the reader  [R-0229 · LAW_DECISION · ACTIVE]
 - RULING 230 — one canonical model-switch verdict  [R-0230 · LAW_DECISION · ACTIVE]
 - RULING 231 — a false description of a named person is corrected by recorded supersession, never by an edit  [R-0231 · LAW_DECISION · ACTIVE]
+- RULING 232 — 'statewide' and 'source-universe' are claims about the POPULATION, never about the shape of the key  [R-0232 · LAW_DECISION · ACTIVE]
+- RULING 233 — staging is the integration branch and deploys to the staging origin; promotion to main is earned against that exact head  [R-0233 · LAW_DECISION · ACTIVE]
+- RULING 234 — the owner overrides the H2 RETAIN verdict for the Sonnet 5 switch, and only for that decision  [R-0234 · LAW_DECISION · ACTIVE]
+- RULING 235 — MEASURED: the provider derives a branch deploy's subdomain from the branch name, so RULING 233 cannot have both halves  [R-0235 · FACT · ACTIVE]
+- RULING 236 — MEASURED: RULING 234's reversibility clause fired on the same day, and the Ask model is back on claude-opus-5  [R-0236 · FACT · ACTIVE]
+- RULING 237 — the SESSION EFFICIENCY LAW is adopted verbatim: maximum verified progress per wall-clock minute, model token, and human attention  [R-0237 · LAW_DECISION · ACTIVE]
+- RULING 238 — Owner Secret Custody: an owner-accessible copy of any masked new or rotated credential is persisted to the gitignored secret store BEFORE provider installation, and a report lacking any required field fails the session report gate  [R-0238 · LAW_DECISION · ACTIVE]
+- RULING 239 — SESSION C is terminal: SHIPPED, OPERATIONALLY IMPROVED, UNFINISHED — its production improvement stands merged and its unmet criteria are carried as durable frontier obligations, never a reopening  [R-0239 · FACT · ACTIVE]
 - `package.json`'s `scripts` block is the list.  [R-C-commands-package-json-s-scripts-block-is-the-list · LAW_DECISION · ACTIVE]
 - More principles will not fix this.  [R-C-discovery-conduct-more-principles-will-not-fix-this · LAW_DECISION · ACTIVE]
 - THE REPORT CONTRACT IS A FILE NOW, AND IT IS AMENDED RATHER THAN REINVENTED  [R-C-discovery-conduct-the-report-contract-is-a-file-now-and-it-is-am · LAW_DECISION · ACTIVE]
@@ -1029,18 +1037,18 @@ _No status change recovered in the commits walked._
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-09-01 13:32:05 EDT
-branch: main
-head sha: 74193f1469e637d67881206969d486b797b72b1c
-head subject: Merge pull request #257 from SeanJ22/claude/sc3-tail
-origin/main sha: 74193f1469e637d67881206969d486b797b72b1c
-origin/main subject: Merge pull request #257 from SeanJ22/claude/sc3-tail
-local main sha: 74193f1469e637d67881206969d486b797b72b1c
+generated: 2026-09-02 00:46:43 EDT   <!-- expected-future: Eastern run stamp (R18) past midnight; Phoenix session day is 2026-09-01 -->
+branch: claude/autonomy-recovery-efficiency-616f07
+head sha: 63c7515839f628f69c5abc1d432320c6f6b583b3
+head subject: Serialize the one seam two test files share, so the ship door stops going red on a Windows file lock
+origin/main sha: 07bbb08134bda0d34ea1ca1f889caa16e86ca6b0
+origin/main subject: Post-deploy integrity reading: 2026-09-02T01:52Z   <!-- expected-future: a UTC stamp inside a quoted commit subject; Phoenix session day is 2026-09-01 -->
+local main sha: 07bbb08134bda0d34ea1ca1f889caa16e86ca6b0
 local main matches origin/main: yes
 working tree: clean
 open prs: none
-last recorded tests: 555 (recorded without a verdict)
+last recorded tests: 92 (recorded without a verdict)
 last recorded lint: not recorded
 last recorded build: not recorded
-last recorded status from: docs/state.md:22848
+last recorded status from: docs/state.md:23224
 ```

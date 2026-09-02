@@ -2,14 +2,14 @@
   "obligationId": "freshness:campaign-finance:az-sos-cfs-2026#az-sos-seethemoney-datatables",
   "routeId": "az-sos-seethemoney-datatables",
   "normalizerId": "az-sos-seethemoney-datatables",
-  "stagedOn": "2026-08-31",
+  "stagedOn": "2026-09-01",
   "sourceArtifactIds": [
-    "ar-c6d7737d75dfe4762b76ed8a"
+    "ar-0f4bd33dfb2a852d6bf898b1"
   ],
   "rowCount": 370,
   "declaredTotal": 370,
   "complete": true,
-  "coverage": "370 of 370 row(s) the publisher itself declares",
+  "coverage": "370 of the 370 row(s) this query's own response declares — whole for THIS request, which is not a claim that the index is whole (RULING 207)",
   "rows": [
     {
       "entityId": 102162,
@@ -187,7 +187,7 @@
       "committeeName": "Jackie Anderson for AZ House<br>(Clean Elections)",
       "officeName": "State Representative - District 19",
       "partyName": "",
-      "reportedIncome": 1260,
+      "reportedIncome": 1265,
       "reportedExpense": 363.69,
       "independentExpenditureSupport": 0,
       "independentExpenditureOpposition": 0,
@@ -371,8 +371,8 @@
       "partyName": "Republican",
       "reportedIncome": 713380.58,
       "reportedExpense": 514322.51,
-      "independentExpenditureSupport": 35230.47,
-      "independentExpenditureOpposition": 84208.35,
+      "independentExpenditureSupport": 0,
+      "independentExpenditureOpposition": 0,
       "reportedCashBalance": 1200502.63
     },
     {
@@ -385,8 +385,8 @@
       "partyName": "",
       "reportedIncome": 3239470.63,
       "reportedExpense": 2238026.07,
-      "independentExpenditureSupport": 458611.85,
-      "independentExpenditureOpposition": 0,
+      "independentExpenditureSupport": 493842.32,
+      "independentExpenditureOpposition": 84208.35,
       "reportedCashBalance": 1200502.63
     },
     {
@@ -1491,7 +1491,7 @@
       "partyName": "Republican",
       "reportedIncome": 99133.38,
       "reportedExpense": 20284.52,
-      "independentExpenditureSupport": 175,
+      "independentExpenditureSupport": 0,
       "independentExpenditureOpposition": 0,
       "reportedCashBalance": 126027.54
     },
@@ -1505,7 +1505,7 @@
       "partyName": "Republican",
       "reportedIncome": 56913.92,
       "reportedExpense": 17864.69,
-      "independentExpenditureSupport": 0,
+      "independentExpenditureSupport": 175,
       "independentExpenditureOpposition": 0,
       "reportedCashBalance": 126027.54
     },
@@ -1673,7 +1673,7 @@
       "partyName": "",
       "reportedIncome": 58585.03,
       "reportedExpense": 3182.03,
-      "independentExpenditureSupport": 21052.09,
+      "independentExpenditureSupport": 0,
       "independentExpenditureOpposition": 0,
       "reportedCashBalance": 6872.55
     },
@@ -1687,7 +1687,7 @@
       "partyName": "Democratic",
       "reportedIncome": 8304.61,
       "reportedExpense": 12191.18,
-      "independentExpenditureSupport": 0,
+      "independentExpenditureSupport": 21052.09,
       "independentExpenditureOpposition": 0,
       "reportedCashBalance": 6872.55
     },
@@ -1799,7 +1799,7 @@
       "partyName": "No Labels",
       "reportedIncome": 4925,
       "reportedExpense": 131.35,
-      "independentExpenditureSupport": 7014.62,
+      "independentExpenditureSupport": 0,
       "independentExpenditureOpposition": 0,
       "reportedCashBalance": 1749.88
     },
@@ -1813,7 +1813,7 @@
       "partyName": "Democratic",
       "reportedIncome": 22144.36,
       "reportedExpense": 25188.13,
-      "independentExpenditureSupport": 0,
+      "independentExpenditureSupport": 7014.62,
       "independentExpenditureOpposition": 0,
       "reportedCashBalance": 1749.88
     },
@@ -4137,7 +4137,7 @@
       "partyName": "Republican",
       "reportedIncome": 252.4,
       "reportedExpense": 7671.96,
-      "independentExpenditureSupport": 5938.69,
+      "independentExpenditureSupport": 0,
       "independentExpenditureOpposition": 0,
       "reportedCashBalance": 537.31
     },
@@ -4151,7 +4151,7 @@
       "partyName": "Republican",
       "reportedIncome": 13011.72,
       "reportedExpense": 463.29,
-      "independentExpenditureSupport": 0,
+      "independentExpenditureSupport": 5938.69,
       "independentExpenditureOpposition": 0,
       "reportedCashBalance": 537.31
     },

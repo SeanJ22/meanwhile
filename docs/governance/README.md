@@ -46,6 +46,8 @@ docs/governance/index.json             GENERATED. Ids, aliases, relations, point
 docs/rulings.md                        GENERATED. Compatibility view so `RULING n` resolves.
 docs/governance/legacy/*.md            PINNED pre-remediation snapshots, byte-verified.
 docs/governance/migration-manifest.json  The preservation receipt.
+docs/governance/session-efficiency.md  OWNER DIRECTIVE, committed VERBATIM (RULING 237). Hand-authored law text;
+                                       not generated, not a compiler input; changes only by a later ruling.
 ```
 
 **Only `ledger.jsonl` and `lib/governance/adoptions.ts` are inputs.** Everything

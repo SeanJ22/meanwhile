@@ -748,6 +748,36 @@ recorded here rather than taken into the denominator (RULING 221).
 
 ---
 
+## Carried out of the autonomy-recovery session, 2026-09-01
+
+*Priorities only. The full classified discovery list, with evidence pointers,
+is `docs/evidence/autonomy-recovery-discoveries-2026-09-01.json`; the runner
+defect itself is FIXED and is not here.*
+
+- **Reconcile an already-disposed occurrence on resume without re-walking.**
+  A resumed occurrence whose RouteTask already carries a committed disposition
+  now soft-fails and closes instead of crashing the cycle; closing it directly
+  from that disposition would drain the leaked-open set for free. Efficiency,
+  not recovery. Readback before the fix: 393 of 1,447 occurrences had a disposed
+  RouteTask while 55 were closed with one.
+- **Batch the pre-open resume reads.** One hundred serial Neon round trips took
+  about ten minutes under load. The corpus list is already one query; the
+  resume reads and next-due writes are not.
+- **Measure the Scheduled Task's restart-on-failure by killing the PARENT after
+  the merge.** The runner is resilient to child failures; whether Windows
+  relaunches a dead `pilot-runner` process is unmeasured because task history
+  is disabled on this host. A reboot restores it through the at-logon trigger.
+- **Netlify scopes the admin secret and session key to `functions` only.** The
+  live login passes because middleware verifies where that scope applies on the
+  current runtime; a move to an edge scope must re-check it.
+- **The drain rate is the owner's** — tracker `RO08`, a decision card: 100
+  dispatches per hourly cycle against roughly 2,900 due.
+- **The generated-artifact race Session C carried is CLOSED at its seam.** Its
+  mechanism was the governance atomicity test's recursive copy of `docs/`
+  holding the views open while the RULING 92 test recompiled them in place —
+  Windows refuses the write. Reproduced 3 of 5 with a concurrent copier, 0 of
+  5 without; serialized with `tests/tree-lock.ts` rather than retried.
+
 ## Carried out of Session C (final), 2026-09-01
 
 *Priorities only. None of this is law, and none of it is a status claim — the

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
+import { withTreeLock } from "./tree-lock.ts";
 import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
@@ -37,11 +38,17 @@ function tsx(script: string, cwd: string): string {
 
 function scratchRepo(): string {
   const dir = mkdtempSync(join(tmpdir(), "wtp-atomic-"));
-  for (const p of ["lib", "scripts", "docs", "package.json", "tsconfig.json"]) {
-    const src = join(ROOT, p);
-    if (existsSync(src)) cpSync(src, join(dir, p), { recursive: true });
-  }
-  cpSync(join(ROOT, "CLAUDE.md"), join(dir, "CLAUDE.md"));
+  /* Under the working-tree lock: this recursive copy holds every file under
+     docs/ open while it runs, and on Windows that refuses the in-place write
+     the RULING 92 test makes to the same governance views at the same moment.
+     See tests/tree-lock.ts. */
+  withTreeLock("snapshot the tree for an out-of-place governance compile", () => {
+    for (const p of ["lib", "scripts", "docs", "package.json", "tsconfig.json"]) {
+      const src = join(ROOT, p);
+      if (existsSync(src)) cpSync(src, join(dir, p), { recursive: true });
+    }
+    cpSync(join(ROOT, "CLAUDE.md"), join(dir, "CLAUDE.md"));
+  });
   return dir;
 }
 

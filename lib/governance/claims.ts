@@ -415,6 +415,18 @@ export const CLAIM_KEYS: readonly ClaimKeyDef[] = [
     question: "How does a verified head reach production?",
     values: ["staging-first-then-promotion", "integrated-head-merges-to-main"],
   },
+  {
+    key: "session.efficiency_law",
+    question:
+      "How does a session spend effort — is the SESSION EFFICIENCY LAW (docs/governance/session-efficiency.md) in force verbatim?",
+    values: ["adopted-verbatim", "not-adopted"],
+  },
+  {
+    key: "session.credential_custody",
+    question:
+      "When a provider masks a new or rotated credential, where must an owner-accessible copy exist, and when?",
+    values: ["owner-copy-before-install", "provider-only"],
+  },
 ] as const;
 
 const KEY_INDEX = new Map(CLAIM_KEYS.map((k) => [k.key, k]));

@@ -87,6 +87,17 @@ compile/check path, and **this file is superior wherever the two touch**.
 `docs/frontier.md` is the mutable planning artifact beside it — priorities
 only, never law, never a governance input.
 
+**The SESSION EFFICIENCY LAW — `docs/governance/session-efficiency.md` — is an
+owner directive adopted VERBATIM (RULING 237) and sits beside the constitution.**
+It governs HOW a session spends effort: parallelism follows independence,
+verification fan-out has diminishing returns, acceptance criteria are the work
+queue, the proof is designed before the implementation, targeted checks during
+development and full gates at integration, and a session may end UNFINISHED
+without being a failure. Its Session Bootstrap and Session Closeout requirements
+bind every session. **This file and the constitution remain superior wherever
+they and the efficiency law touch** — it directs effort; it never lowers a proof
+bar the constitution sets.
+
 ---
 
 ## The order of every trade

@@ -39,6 +39,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { execSync } from "node:child_process";
+import { withTreeLock } from "./tree-lock.ts";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -145,7 +146,9 @@ test("RULING 92: a file declaring itself GENERATED is registered here", () => {
  * the concurrency explicitly, so the run still goes red and a human still
  * reads it — it just reads the truth.
  */
-test("RULING 92: a PURE generator's artifact is byte-identical to what it produces now", () => {
+test("RULING 92: a PURE generator's artifact is byte-identical to what it produces now", () => withTreeLock(
+  "regenerate every pure artifact in place and compare it to the committed bytes",
+  () => {
   for (const a of GENERATED.filter((x) => x.pure)) {
     const full = join(ROOT, a.path);
     const committed = readFileSync(full, "utf8");
@@ -184,7 +187,8 @@ test("RULING 92: a PURE generator's artifact is byte-identical to what it produc
       writeFileSync(full, committed, "utf8");
     }
   }
-});
+  },
+));
 
 /* ========================================================================== */
 /* RULING 102 — a generator fix is incomplete until its output is regenerated */

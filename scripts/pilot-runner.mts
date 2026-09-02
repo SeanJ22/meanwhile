@@ -134,27 +134,51 @@ interface RunRecord {
 
 /* ------------------------------------------------------------- one cycle --- */
 
-function runOneCycle(): { readonly ok: boolean; readonly recordPath: string | null; readonly stdout: string } {
+/**
+ * The child's dispatch budget, in minutes, passed through so the cycle stops
+ * starting work BEFORE this supervisor's ceiling and exits clean. The ceiling
+ * below is the backstop for a child that hangs, never the normal end of a
+ * healthy-but-slow cycle — a kill mid-dispatch leaks open occurrences that the
+ * next cycle must resume and pay for again.
+ */
+const budgetArg = argv.find((a) => a.startsWith("--budget-min="));
+const BUDGET_MIN = budgetArg ? Number(budgetArg.slice("--budget-min=".length)) : 15;
+
+function runOneCycle(): {
+  readonly ok: boolean;
+  readonly recordPath: string | null;
+  readonly stdout: string;
+  /** The last lines the child wrote to stderr. The diagnosis of a failed cycle. */
+  readonly stderrTail: string;
+  readonly signal: string | null;
+} {
   const args = [
     "--env-file=.env.local",
     "--experimental-strip-types",
     "scripts/freshness-shadow.mts",
     `--provider=${provider}`,
     `--max=${MAX}`,
+    `--budget-min=${BUDGET_MIN}`,
     ...(onlyArg ? [onlyArg] : []),
   ];
   const run = spawnSync(process.execPath, args, {
     cwd: ROOT,
     encoding: "utf8",
-    /* Twenty minutes. A full sweep of the registered portfolios is dozens of
-       requests at 1.5s per host, and a ceiling shorter than the work would
-       kill a healthy cycle and report it as a failure. */
+    /* Twenty minutes: the BACKSTOP for a hung child. A healthy cycle ends on
+       its own dispatch budget (above) well inside this. */
     timeout: 20 * 60_000,
     maxBuffer: 64 * 1024 * 1024,
   });
   const stdout = `${run.stdout ?? ""}${run.stderr ?? ""}`;
   const match = stdout.match(/run record: (.+\.json)/);
-  return { ok: run.status === 0, recordPath: match ? match[1].trim() : null, stdout };
+  const stderrLines = (run.stderr ?? "").split("\n").filter((l) => l.trim() !== "");
+  return {
+    ok: run.status === 0,
+    recordPath: match ? match[1].trim() : null,
+    stdout,
+    stderrTail: stderrLines.slice(-12).join("\n"),
+    signal: run.signal ?? null,
+  };
 }
 
 /* --------------------------------------------------------------- the cost --- */
@@ -394,13 +418,45 @@ while (cycle < CYCLES) {
     stagedRows.length === 0 ? "this cycle staged nothing" : undefined,
   );
 
+  /*
+   * A cycle that ran out of dispatch budget dispatched little or nothing ON
+   * PURPOSE. Read from the record's own digest line (one derivation, three
+   * surfaces) so the headline says "budget spent" rather than letting a
+   * deliberate deferral read as an idle night.
+   */
+  const budgetLine = (record.digest ?? []).find((l) => l.includes("dispatch budget"));
+  const budgetSpent = budgetLine !== undefined && /SPENT/.test(budgetLine);
   const headline =
     `${new Date().toISOString()} - cycle ${cycle} - ` +
     `${floorLine(discharge)} - ${floorLine(readiness)} - ` +
     `health ${record.health?.green ? "GREEN" : "NOT GREEN"} - ` +
+    (budgetSpent ? "dispatch budget SPENT, rest deferred by name - " : "") +
     `exit ${result.ok ? "clean" : "NON-ZERO"}`;
 
-  const delivered = deliver(buildDigest(record, cycle, today(), result.ok), headline);
+  /*
+   * A FAILED CYCLE CARRIES ITS OWN DIAGNOSIS. Before this the child's stderr
+   * was discarded, so seven hours of NON-ZERO cycles left nothing to read but
+   * "0 providers". The last stderr lines and the kill signal (the supervisor's
+   * ceiling, when it fired) travel into the digest and onto the console.
+   */
+  let failureSection = "";
+  if (!result.ok) {
+    failureSection =
+      "\n## WHY THE CYCLE DID NOT FINISH\n\n" +
+      `- process signal: ${result.signal ?? "none (the child exited non-zero on its own)"}\n` +
+      "- last stderr lines from the cycle:\n\n```\n" +
+      (result.stderrTail || "(the child wrote nothing to stderr)") +
+      "\n```\n";
+    console.error(
+      `  the cycle exited NON-ZERO${result.signal ? ` (signal ${result.signal})` : ""}; last stderr:\n` +
+        (result.stderrTail || "    (nothing on stderr)")
+          .split("\n")
+          .map((l) => `    ${l}`)
+          .join("\n"),
+    );
+  }
+
+  const delivered = deliver(buildDigest(record, cycle, today(), result.ok) + failureSection, headline);
   console.log(`  digest: ${delivered.where}${delivered.mirrored ? "" : "  (MIRROR NOT REACHABLE — repo fallback)"}`);
   console.log(`  ${headline}`);
 

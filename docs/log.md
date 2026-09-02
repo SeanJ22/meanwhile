@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-09-01 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **173 sessions.**
+Newest first. **174 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -49,6 +49,19 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NH303** — From the OWN03 promotion, 2026-09-01. You approved nine portraits and all nine now render. Four of them are Arizona Corporation Commissioners, and all four are under the large card's 184px floor at 133x200, 133x200, 165x206 and 137x206 — soft when a card shows a face large. The reason is not that the Commission publishes small photographs: the URLs the original pick took are Sitefinity RENDITIONS, carrying tmb-thumb200 and MaxWidth=165 in the path. Dropping those parameters on the same host returns the SAME photographs at 3275x4913, 3138x4707, 2828x3600 and 2533x3800, measured HTTP 200 on all four on 2026-09-01. That is RULING 206 — the rendition is one representation and the portrait is the record — so this is a REPLACEMENT obligation rather than a shortfall to live with. WHY THIS IS BACK IN FRONT OF YOU RATHER THAN SHIPPED: a decision is about an IMAGE, not a person, and a 3275px original is a different image from the 133px crop you approved. Shipping it would be your approval inherited by a file you have not seen, which is the hole RULING 55 exists to close. NOTHING IS BLOCKED MEANWHILE: the approved thumbnails keep rendering, so a reader sees a face today either way. The four are staged at data/photos/door2-azcc-originals-2026-09-01.json and registered in lib/photos/staged.ts, so they reach the review sheet. *(open)*
 
 **Needs Sean.** NH303
+
+## autonomy-recovery 2026-09-01 · 2026-09-01
+
+**What it finished.** 1 row(s).
+
+- **RO07** — The autonomous runner could not work through its own backlog. Diagnosed by reproduction, single-process, against the real control plane: a resumed occurrence re-walked a route whose prior observation was already recorded, retrieved byte-identical content, and offered the SAME content-addressed artifact under a new Attempt; the append-only log refused the differing attemptId/recordedAt as a history rewrite (AppendOnlyViolation), the throw was unhandled, the whole cycle exited 1 with no run record, and every crash-restart re-resumed the same occurrence into the same death. Fixed at the shared code path: recordArtifactMetadata treats a content-identical re-observation as idempotent (a different-content collision is still refused); runCycle isolates one obligation's unexpected throw to a FAILED dispatch instead of aborting the cycle; the freshness cycle writes a legible FAILED run record on any crash instead of vanishing into a 0-providers digest, and isolates a throw in the occurrence open/resume loop.
+
+**What it started.** 3 row(s) opened, 2 still open.
+
+- **RO06** — The durable pointer to Session C's terminal state. Its production improvement stands as merged (PR #259, 2026-09-01). Its unmet acceptance criteria and open defects are carried forward as frontier obligations, never as grounds to reopen Session C, which is not resumed or extended as a session. Enumerated from its own closeout artifacts: 4 UNFINISHED, 9 NOT MET, 14 NEEDS_SEAN, 8 OPEN defects, 10 frontier items - 45 in all, each with an evidence pointer in docs/owner-audit/session-c.md and docs/frontier.md. The refutation record is docs/evidence/session-c-refutation-2026-09-01.json. Prior Session C proofs are inherited under the Session Efficiency Law s3 (RULING 237) and re-opened only when a change invalidates a dependency, a current check fails, or contradictory evidence appears. *(open)*
+- **RO08** — NOT_MACHINE_VERIFIABLE. Decision card. WHAT IS NEEDED: a choice of dispatch ceiling and cycle interval for the pilot runner. THE STATE: 2,996 standing obligations, roughly 2,900 due at any moment because most have never been discharged, and 1,144 with open occurrences; each cycle starts at most 100 (scripts/pilot-runner.mts --max, default 100) and cycles are 60 minutes apart, so the backlog drains at about 100 per hour and a full first pass over the corpus takes more than a day of unattended cycles. OPTIONS: (A) keep 100/hour - lowest load on publishers and on Neon, slowest drain; (B) raise --max to 300 with the same interval - three times the drain, three times the Neon round trips and publisher requests per cycle, cycle time roughly triples and must stay inside the 20-minute child ceiling; (C) shorten --interval to 30 minutes at 100 - same per-cycle cost, twice the drain. CONSEQUENCE OF NOT DECIDING: (A) stands; nothing is stuck, only slow. The per-host spacing and the debt backoff apply under every option, so no choice here can hot-loop a publisher. *(open)*
+
+**Needs Sean.** RO08
 
 ## SC2-tracker-nonhunt (RULING 227 auto-reconciliation) · 2026-08-31
 

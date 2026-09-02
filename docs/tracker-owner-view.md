@@ -21,7 +21,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 ## Decisions waiting on you
 
-**65 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
+**66 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
 
 ### P1
 
@@ -884,6 +884,20 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 - **Approve the four full-resolution originals** — the four Corporation Commissioners rise above the large card's 184px floor and tests/portrait-resolution.test.ts's shortfall ceiling drops from 148 back toward 144.
 - **Refuse the four full-resolution originals** — the approved thumbnails keep rendering, which is honest and already live; the cards stay soft where a portrait is shown large, and the frontier keeps the note.
 
+#### RO08 — Runner backlog drain rate: keep 100 dispatches per hourly cycle, or raise it?
+
+*Opened 2026-09-01 · opened today · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+
+**What is needed.** Choose the pilot runner's backlog drain rate: keep 100 dispatches per hourly cycle, raise the ceiling, or shorten the interval.
+
+**Why no machine can decide it.** Nothing is stuck and no measurement settles this. The runner now recovers on its own; what remains is a trade the owner makes between drain speed and load on publishers and on Neon. 2,996 standing obligations, roughly 2,900 due at any moment because most have never been discharged, 1,144 with open occurrences; a cycle starts at most --max (default 100) and cycles are --interval (default 60 min) apart, so a full first pass takes more than a day. Per-host spacing and debt backoff apply under every option, so no choice can hot-loop a publisher.
+
+**Your options.**
+
+- **Keep 100 per hour (the default; nothing to change)** — lowest load; the slowest drain — about 100 obligations an hour against roughly 2,900 due.
+- **Raise --max to 300 with the same interval** — three times the drain and three times the Neon round trips and publisher requests per cycle; the cycle still ends on its 15-minute dispatch budget inside the runner's 20-minute ceiling, so the extra items are deferred by name rather than run over time.
+- **Shorten --interval to 30 minutes at 100** — twice the drain at the same per-cycle cost; the fixed pre-dispatch overhead (about nine minutes of serial Neon work today) is paid twice as often.
+
 ---
 
 ## For your information — no decision required
@@ -903,7 +917,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 append-only ledger of every id any session has ever claimed. It is never typed and
 never guessed.
 
-- 398 row(s) carry a date the ledger stamped directly.
+- 401 row(s) carry a date the ledger stamped directly.
 - 243 row(s) take the date from the session the ledger names, where the entry was reconstructed on 2026-08-21 without a stamp.
 - 225 row(s) read **UNKNOWN**. Their ledger entries were reconstructed with no stamped day and name a session that carries no date. The ledger bound around them is a multi-day range, and a range is not a date; this clone is also shallow at 2026-08-25, so git cannot answer for rows older than that either. **UNKNOWN is the honest reading and is never replaced by a guess.**
 
@@ -913,4 +927,4 @@ committed artifacts on EVERY tracker generation — not when a session remembers
 and auto-resolves the moment its blocker stops being true.
 
 - 0 row(s) carry a machine-verifiable predicate.
-- 69 row(s) are marked NOT_MACHINE_VERIFIABLE with a card.
+- 70 row(s) are marked NOT_MACHINE_VERIFIABLE with a card.

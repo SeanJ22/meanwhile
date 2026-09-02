@@ -384,6 +384,7 @@
     "staging:isolation": "tsx scripts/staging-isolation-gate.mts",
     "staging:observe": "tsx scripts/staging-observer.mts",
     "owner:readback": "node --env-file=.env.local --experimental-strip-types scripts/owner-surface-readback.mts",
+    "admin:login-readback": "node --env-file=.env.local --experimental-strip-types scripts/admin-login-readback.mts",
     "owner:decision-proof": "node --env-file=.env.local --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/owner-decision-proof.mts"
   },
   "dependencies": {

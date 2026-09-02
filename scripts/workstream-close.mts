@@ -22,6 +22,12 @@ import {
 } from "../lib/workstate/workstream.ts";
 import { classifySessionStop, type SessionStatus } from "../lib/workstate/types.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
+import {
+  CREDENTIAL_EVENTS_PATH,
+  SESSION_REPORT_GATE_REFUSED,
+  loadCredentialReports,
+  sessionReportGateLines,
+} from "../lib/ops/credential-report.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const WS_DIR = join(ROOT, "data", "workstate");
@@ -112,6 +118,37 @@ const verdict = classifySessionStop(
   argv.includes("--claim") ? (argv[argv.indexOf("--claim") + 1] as SessionStatus) : undefined,
 );
 const sessionStatus = verdict.status;
+
+// THE CREDENTIAL REPORT GATE — runs on BOTH the --status and close paths, before
+// any handoff is printed. A credential created or rotated this session must be
+// reported by name, provider, context, scope, actor and owner-copy location
+// (lib/ops/credential-report.ts); a report lacking any of those refuses the
+// session report outright, so the handoff below is not generated until the
+// report is complete. `WTP_CREDENTIAL_EVENTS` overrides the file path (tests).
+{
+  const eventsPath = process.env.WTP_CREDENTIAL_EVENTS ?? CREDENTIAL_EVENTS_PATH;
+  console.log("=".repeat(72));
+  console.log("CREDENTIAL REPORTS (owner-copy-before-install)");
+  console.log("=".repeat(72));
+  const loaded = (() => {
+    try {
+      return loadCredentialReports(ROOT, eventsPath);
+    } catch (e) {
+      // A present file that cannot be read is never zero events.
+      console.log(`credential reports: UNREADABLE — ${(e as Error).message}`);
+      console.log(`${SESSION_REPORT_GATE_REFUSED} — the credential event log could not be read`);
+      process.exit(1);
+    }
+  })();
+  const gate = sessionReportGateLines(loaded, eventsPath);
+  for (const line of gate.lines) console.log(line);
+  console.log("");
+  if (gate.refused) {
+    console.log(`complete the deficient report in ${eventsPath} and re-run; no handoff is generated`);
+    console.log("while the session report is refused.");
+    process.exit(1);
+  }
+}
 
 if (!statusOnly) {
   console.log("=".repeat(72));

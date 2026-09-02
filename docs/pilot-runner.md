@@ -60,9 +60,38 @@ pnpm pilot:run --provider=file          against the file store instead of Postgr
 
 ---
 
-## How it survives a reboot, and the wall that shaped the answer
+## What a cycle does when it cannot finish
 
-**The mechanism that is installed here is a per-user STARTUP ENTRY:**
+*(Autonomy-recovery session, 2026-09-01. These are the behaviours that make the
+machine recover on its own; before them, one throw ended a cycle with no
+record, and every restart re-hit the same state.)*
+
+- **A content-identical artifact re-observed by a later Attempt is idempotent.**
+  A resumed occurrence that re-walks its route and retrieves the same bytes no
+  longer trips the append-only log's rewrite refusal — that refusal is kept for
+  a genuine different-content collision.
+- **One obligation's unexpected throw is isolated**, in the dispatch loop and in
+  the occurrence open/resume loop. It is recorded as a FAILED dispatch (debt
+  accrues, the obligation stays owed) and the cycle continues.
+- **A crash still writes a run record.** `freshness-shadow` marks the cycle
+  `crashed: true` with the error, prints the `run record:` line, and exits
+  non-zero; the digest then says a cycle CRASHED rather than "0 providers".
+- **A cycle stops starting work at its dispatch budget** (`--budget-min`,
+  default 15 from process start) and finishes cleanly inside the runner's
+  20-minute backstop, deferring the rest by name. A cycle killed mid-write is
+  not recoverable state; a cycle that ends on its own budget is.
+
+## How it survives a reboot
+
+**As of 2026-09-01 the Windows Scheduled Task "WeThePeople Pilot Runner" IS
+installed** — the owner ran `pnpm pilot:install` from an elevated PowerShell.
+At logon, restart every 5 minutes up to 999 times, one instance, no execution
+time limit. `pnpm pilot:status` reads it back. The section below records the
+wall the unelevated install hit and the per-user startup entry it fell back to;
+both mechanisms may be present on this host, and which survives is the owner's
+decision (tracker, Needs Sean).
+
+**The mechanism an UNELEVATED install lands is a per-user STARTUP ENTRY:**
 
 ```
 C:\Users\seanj\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\wtp-pilot-runner.cmd

@@ -12,6 +12,7 @@ import {
   switchVerdict,
   type QuestionRun,
 } from "../lib/ask/model-economics.ts";
+import { comparabilityFailure } from "../lib/ask/model-comparison.ts";
 import { ASK_SYNTHESIS_MODEL } from "../lib/ask/synthesize.ts";
 
 /**
@@ -44,28 +45,72 @@ test("H2: ONE MODEL FOR ALL ASK TRAFFIC — every Ask call site names the same m
    * is model-scoped, and forfeit every hit H1 exists to earn.
    */
   const root = process.cwd();
+
+  /*
+   * **STRUCTURAL, NOT FOUR LITERALS AGREEING.** (ITEM K, 2026-09-01.)
+   *
+   * This test used to read every `"claude-…"` literal out of the four call
+   * sites and assert they were equal. That checks the rule and does not
+   * ENFORCE it: four literals are four places to forget, and the test passes
+   * right up until the moment someone changes three of them. ITEM K had to
+   * change all four and met exactly that.
+   *
+   * So the shape is inverted. ONE module declares the model; the call sites
+   * declare none and import it. A call site that reintroduces a literal fails
+   * here whatever value it picks — including the right one — because the
+   * defect is the second declaration, not the disagreement it will later cause.
+   */
+  const DECLARING_MODULE = "lib/ask/model.ts";
   const sites = [
     "lib/ask/synthesize.ts",
     "lib/ask/interpret.ts",
     "lib/routing/classifier.ts",
     "lib/routing/unsourced-fallback.ts",
   ];
+
+  /* Only a model ID in DOUBLE QUOTES counts as a declaration. Prose naming a
+     model in backticks is documentation, and a guard that reads its own
+     comments as the defect is a guard that gets loosened. */
+  const declarations = (path: string) =>
+    [...readFileSync(join(root, path), "utf8").matchAll(/"(claude-[a-z0-9-]+)"/g)].map(
+      (m) => m[1],
+    );
+
+  const declared = declarations(DECLARING_MODULE);
+  assert.deepEqual(
+    declared,
+    [ASK_INCUMBENT_MODEL],
+    `${DECLARING_MODULE} must declare the Ask model exactly once and declare no other`,
+  );
+
   for (const site of sites) {
-    const source = readFileSync(join(root, site), "utf8");
-    const declared = [...source.matchAll(/"(claude-[a-z0-9-]+)"/g)].map((m) => m[1]);
-    assert.ok(declared.length > 0, `${site} declares no model`);
-    for (const model of declared) {
-      assert.equal(
-        model,
-        ASK_INCUMBENT_MODEL,
-        `${site} runs ${model}; Ask runs one model for all traffic`,
-      );
-    }
+    assert.deepEqual(
+      declarations(site),
+      [],
+      `${site} declares a model literal; the Ask model is declared once, in ${DECLARING_MODULE}`,
+    );
+    assert.match(
+      readFileSync(join(root, site), "utf8"),
+      /ASK_SYNTHESIS_MODEL/,
+      `${site} is an Ask call site and must read the shared model constant`,
+    );
   }
 });
 
 test("H2: the incumbent is read from the code, never from a constant that can drift", () => {
   assert.equal(ASK_INCUMBENT_MODEL, ASK_SYNTHESIS_MODEL);
+  /*
+   * ITEM K, 2026-09-01: the owner ruled the switch to `claude-sonnet-5`, and
+   * **RULING 234's own reversibility clause reverted it the same day** — the
+   * challenger answered *"what will the weather be like on election day"* at
+   * all four pilot ZIPs where the incumbent refuses it, proved on one build
+   * with the model as the only variable.
+   *
+   * Pinned deliberately, and the pin is the point: a model ID that can change
+   * without a test changing is a model ID that can change without anyone
+   * noticing, and every stored answer's provenance depends on knowing which
+   * one shipped. Re-making the switch means editing this line too, on purpose.
+   */
   assert.equal(ASK_SYNTHESIS_MODEL, "claude-opus-5");
 });
 
@@ -80,13 +125,36 @@ test("H2: both candidates' rates carry a date and a source", () => {
   }
 });
 
-test("H2: the published rate ratio is 2.5x on input and 2.5x on output", () => {
+test("the published rate ratio is 2.5x — and the arms are back where they started", () => {
+  /*
+   * ITEM K, 2026-09-01, and this assertion has now been written twice in one
+   * day, which is worth recording rather than tidying away.
+   *
+   * It asserted 2.5x with incumbent Opus / challenger Sonnet. The switch landed
+   * and both constants moved, so it was rewritten to 0.4x — the reciprocal —
+   * precisely to prove the two had swapped TOGETHER rather than one being
+   * changed and the other forgotten. Then RULING 234's reversibility clause
+   * fired on the weather question and both moved back.
+   *
+   * So the number is 2.5x again, and the mechanism did its job in both
+   * directions: the ratio cannot read correctly unless both arms agree about
+   * which model is which.
+   *
+   * `rateRatio` is incumbent-over-challenger: 5/2 and 25/10 = 2.5. The product
+   * runs the DEARER of the two arms per token, deliberately — the cheaper one
+   * answers a weather question, and cost was never the reason for the switch.
+   */
   const ratio = rateRatio(
     ASK_MODEL_RATES[ASK_INCUMBENT_MODEL],
     ASK_MODEL_RATES[ASK_CHALLENGER_MODEL],
   );
   assert.equal(ratio.input, 2.5);
   assert.equal(ratio.output, 2.5);
+  assert.ok(
+    ratio.input > 1,
+    "the incumbent is the DEARER arm per token, and deliberately: the cheaper one " +
+      "answers a weather question at all four pilot ZIPs",
+  );
 });
 
 /* ── the verdict ─────────────────────────────────────────────────────────── */
@@ -242,4 +310,112 @@ test("RULING 230: exactly ONE function in the repository returns a switch verdic
     ["lib/ask/model-economics.ts"],
     `a switch verdict is emitted from ${emitters.length} place(s); RULING 230 allows one`,
   );
+});
+
+/* ========================================================================== */
+/* The silent denominator — a question that could not be compared             */
+/* ========================================================================== */
+
+/*
+ * ITEM K's own effort sweep found this and reported it rather than working
+ * around it: the harness FILTERED incomparable rows out before deriving a
+ * verdict, so `xhigh` emitted SWITCH over three surviving rows and `max` over
+ * ONE, and the record said `questions: 1` as though a one-question sweep had
+ * been the plan. RULING 230's guard was in place and could not fire, because
+ * the questions never reached it.
+ *
+ * These are the assertions that would have caught it. They are written against
+ * the SHARED rule rather than against the harness's private copy, because a
+ * private copy is how the two drift back apart (RULING 103).
+ */
+
+test("a question that reached neither arm is NOT MEASURED, not absent", () => {
+  const why = comparabilityFailure({
+    packsIdentical: true,
+    incumbentRanCount: 0,
+    challengerRanCount: 0,
+    incumbentModel: "model-a",
+    challengerModel: "model-b",
+  });
+  assert.ok(why, "a question no pass completed on must give a reason, not null");
+  assert.match(why, /never put to either arm/);
+});
+
+test("a question that reached only one arm names THAT arm", () => {
+  const onlyChallenger = comparabilityFailure({
+    packsIdentical: true,
+    incumbentRanCount: 0,
+    challengerRanCount: 3,
+    incumbentModel: "model-a",
+    challengerModel: "model-b",
+  });
+  assert.ok(onlyChallenger);
+  assert.match(onlyChallenger, /model-a/);
+  assert.doesNotMatch(onlyChallenger, /model-b/);
+  assert.match(onlyChallenger, /never put to that arm/);
+});
+
+test("differing evidence packs void the comparison, and say why", () => {
+  const why = comparabilityFailure({
+    packsIdentical: false,
+    incumbentRanCount: 3,
+    challengerRanCount: 3,
+    incumbentModel: "model-a",
+    challengerModel: "model-b",
+  });
+  assert.ok(why);
+  assert.match(why, /not attributable to the model/);
+});
+
+test("a comparable question returns null — the rule refuses nothing it should not", () => {
+  assert.equal(
+    comparabilityFailure({
+      packsIdentical: true,
+      incumbentRanCount: 3,
+      challengerRanCount: 3,
+      incumbentModel: "model-a",
+      challengerModel: "model-b",
+    }),
+    null,
+  );
+});
+
+test("carrying an incomparable question as unmeasured REFUSES the vacuous switch", () => {
+  /*
+   * The defect, reproduced end to end. Six questions attempted; five reached
+   * neither arm; the one that ran held on the challenger.
+   *
+   * Under the filter, `switchVerdict` saw one run per arm, every challenger
+   * question held, and it returned SWITCH with `questions: 1`.
+   * Carried as unmeasured, the guard RULING 230 already put there fires.
+   */
+  const ids = ["q1", "q2", "q3", "q4", "q5", "q6"];
+  const ran = new Set(["q6"]);
+  const runs = (model: string): QuestionRun[] =>
+    ids.map((questionId) => ({
+      questionId,
+      model,
+      held: ran.has(questionId) ? true : null,
+      ms: 1,
+      usd: 1,
+    }));
+
+  const verdict = switchVerdict(runs("model-a"), runs("model-b"), "the sweep");
+  assert.equal(
+    verdict.kind,
+    "NOT_MEASURED",
+    "five of six questions never ran; a SWITCH over the sixth is a vacuous sweep",
+  );
+  assert.equal(
+    verdict.kind === "NOT_MEASURED" ? verdict.unmeasured.length : -1,
+    10,
+    "every unmeasured question is named, on BOTH arms — 5 questions x 2 arms",
+  );
+
+  // And the control: with all six measured and holding, SWITCH is still reachable.
+  const allHeld = (model: string): QuestionRun[] =>
+    ids.map((questionId) => ({ questionId, model, held: true, ms: 1, usd: 1 }));
+  const clean = switchVerdict(allHeld("model-a"), allHeld("model-b"), "the sweep");
+  assert.equal(clean.kind, "SWITCH");
+  assert.equal(clean.kind === "SWITCH" ? clean.questions : -1, 6);
 });

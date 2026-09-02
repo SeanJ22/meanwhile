@@ -18,8 +18,10 @@ import { type Page } from "playwright";
 import { join } from "node:path";
 import { launchGuarded } from "./browser.mts";
 
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+
 const OUT = "C:/Users/seanj/dev/we-the-people/screenshots";
-const BASE = process.env.WALK_BASE_URL ?? "https://sparkwtp.netlify.app";
+const BASE = process.env.WALK_BASE_URL ?? PUBLIC_SITE_ORIGIN;
 
 const results: string[] = [];
 function check(name: string, ok: boolean, detail = "") {

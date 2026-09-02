@@ -157,16 +157,27 @@ test("BAL-26: Escape on the input clears a half-typed question before it closes 
  * **THE TOKENS THAT RESOLVED TO NOTHING.**
  *
  * `--line` is defined in no file in this repository, and `ballot-ask.tsx` used
- * `border-[var(--line)]` for the panel border, the input border and the Ask
- * button's border — three borders falling back to `currentColor`. `--muted` is
- * likewise defined nowhere and was used for five text colours here plus one in
- * `app/globals.css` (`.could-govern-action`). The real token is `--text-muted`.
+ * it as a Tailwind arbitrary border colour for the panel border, the input
+ * border and the Ask button's border — three borders falling back to
+ * `currentColor`. `--muted` is likewise defined nowhere and was used for five
+ * text colours here plus one in `app/globals.css` (`.could-govern-action`).
+ * The real token is `--text-muted`.
  *
  * The arbitrary-value form is what makes this class of defect silent: the
  * Tailwind utility `text-muted` works through `--color-muted`, so a reader of
  * the source sees a working utility one line away from a broken one. Reading
  * the stylesheet is not enough either — a `@theme inline` block emits no
  * custom property at all — so this asserts a real `--token:` declaration.
+ *
+ * **THE CLASS NAME IS NOT WRITTEN OUT ABOVE, AND THAT IS DELIBERATE**
+ * (ITEM J, 2026-09-01). Tailwind v4 detects its sources automatically and
+ * scans every file this repository tracks, comments included. The literal
+ * arbitrary-value class that used to sit in this paragraph was therefore
+ * COMPILED, and the shipped stylesheet carried a live
+ * `border-color: var(--line)` rule that no element wore — a fixed defect's own
+ * documentation regenerating the defect in production CSS. A browser-side
+ * sweep of the built chunk is what found it; reading the source never would
+ * have.
  */
 test("BAL-26: every custom property the Ask surfaces name is actually defined", () => {
   const named = new Set<string>();

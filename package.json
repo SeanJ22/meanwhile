@@ -374,7 +374,17 @@
     "zipgov:build": "tsx scripts/build-zip-governments.mts",
     "money:az": "tsx scripts/state-money-az.mts",
     "method:learn-az-seethemoney": "tsx scripts/learn-az-seethemoney.mts",
-    "identity:az": "tsx scripts/identity-az-2026.mts"
+    "identity:az": "tsx scripts/identity-az-2026.mts",
+    "acquire:az-sos-candidates": "tsx scripts/acquire-az-sos-candidate-filings.mts",
+    "acquire:filing-authorities": "tsx scripts/acquire-candidate-filing-authorities.mts",
+    "readback:artifact": "tsx scripts/readback-artifact.mts",
+    "owner:publish": "node --env-file=.env.local --experimental-strip-types scripts/publish-owner-snapshot.mts",
+    "owner:canonicalize": "node --env-file=.env.local --experimental-strip-types scripts/canonicalize-owner-decisions.mts",
+    "promote:staging": "tsx scripts/promote-staging.mts",
+    "staging:isolation": "tsx scripts/staging-isolation-gate.mts",
+    "staging:observe": "tsx scripts/staging-observer.mts",
+    "owner:readback": "node --env-file=.env.local --experimental-strip-types scripts/owner-surface-readback.mts",
+    "owner:decision-proof": "node --env-file=.env.local --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/owner-decision-proof.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

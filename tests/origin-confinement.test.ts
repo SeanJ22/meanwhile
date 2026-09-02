@@ -10,11 +10,13 @@ import {
   THIRD_PARTY_HOSTS,
 } from "../lib/ops/origin-confinement.ts";
 
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+
 /* ========================================================================== */
 /* RULING 101 — synthetic-run identification never leaves our origin          */
 /* ========================================================================== */
 
-const OURS = "https://sparkwtp.netlify.app";
+const OURS = PUBLIC_SITE_ORIGIN;
 const MARKERS = { [SYNTHETIC_RUN_HEADER]: "walk-all-2026-08-23" } as const;
 const BASE = {
   accept: "*/*",
@@ -82,7 +84,10 @@ test("the MapTiler style request — the exact call that failed — carries no c
 
 test("a subdomain is a different origin, and so is a scheme change", () => {
   assert.equal(marksTravel(`${OURS}/x`, "https://other.netlify.app/"), false);
-  assert.equal(marksTravel("http://sparkwtp.netlify.app/x", `${OURS}/`), false);
+  assert.equal(
+    marksTravel(OURS.replace("https://", "http://") + "/x", `${OURS}/`),
+    false,
+  );
   assert.equal(marksTravel(`${OURS}:8443/x`, `${OURS}/`), false);
 });
 
@@ -94,7 +99,7 @@ test("an unreadable origin fails SAFE — stripped, and named as its own verdict
    */
   for (const [url, frame] of [
     ["data:text/html,x", `${OURS}/`],
-    ["blob:https://sparkwtp.netlify.app/abc", `${OURS}/`],
+    [`blob:${OURS}/abc`, `${OURS}/`],
     [`${OURS}/x`, "about:blank"],
     ["not a url at all", `${OURS}/`],
   ] as const) {

@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-09-01 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **172 sessions.**
+Newest first. **173 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -27,11 +27,20 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 ## tracker:views (RULING 227 auto-reconciliation) · 2026-09-01
 
-**What it finished.** 1 row(s).
+**What it finished.** 2 row(s).
 
 - **OWN03** — From the owner's 8.30.26 testing pass, surface Officials at 85641. WHAT IS NEEDED: Approve or refuse the 9 portraits queued in data/photos/door2-statewide-executives-2026-08-28.json, Mayes, Fontes and Horne among them. The acquisition is done; the review is the only remaining step. WHY THE MACHINE CANNOT PROCEED: RULING 55: every photo is reviewed by the author, and only an approved photo renders — and a decision is about an IMAGE, not about a person. A 480x720 original is a different image from the 150x150 crop we hold, so it needs its own review. A session shipping it would be taking the author's decision. The row's own note says it: QUEUED for the author, shipped by nobody. WHAT WAS TRIED: The acquisition already ran. scripts/hunt-statewide-portraits-0828.mts walked door 2 — the portrait a government body publishes of its own member — for every statewide executive on 2026-08-28: 11 pages walked, 9 portraits QUEUED, 0 shipped. Mayes, Fontes and Horne are all three of them queued off their own offices' pages (azag.gov, azsos.gov, azed.gov), name-matched and decoded as real images — Mayes at 442x553, which is well above every floor in tests/portrait-resolution.test.ts. WHAT CONTINUES WITHOUT IT: Each of the three renders honest initials rather than a wrong or unreviewed photo, which is the correct state under RULING 55 and is not a suppression: the card is complete in every other respect.
+- **NS12** — RULING 125 moves every walk onto the local production build and leaves exactly one question that needs Netlify: which SHA is live. pnpm deploy:live reads it from Netlify's deploy API in one call with zero requests to the site. There is no NETLIFY_AUTH_TOKEN in .env.local and the Netlify CLI config on this machine holds no user, so the tool correctly reports CANNOT-TELL and exits 3 rather than passing. A Personal Access Token from Netlify (User settings, Applications, Personal access tokens) added to .env.local as NETLIFY_AUTH_TOKEN closes it.
 
 **Needs Sean.** Nothing.
+
+## session-c-final · 2026-09-01
+
+**What it started.** 1 row(s) opened, 1 still open.
+
+- **NH304** — WHAT IS NEEDED: your ruling on ONE word. RULING 233 (alias R-C10), in your verbatim text, says "staging is the integration branch and deploys to test.meanwhileusa.com". Netlify derives a branch deploy's hostname as <branch-name>.<suffix>, so the branch name IS the subdomain label, and the two halves cannot both be true. WHY NO MACHINE CAN DECIDE IT: both options work; which one you meant is a judgement about your own words, and a session may not amend your law. OPTION A - amend the BRANCH to 'test', keep the host test.meanwhileusa.com. Consequence: the host you named twice is preserved, STAGING_RENDER_ORIGIN in lib/ops/origins.ts is unchanged, and the git ref name (which appears on no reader-facing or owner-facing surface) moves. This is what the session shipped under, because RULING 233 is not operative until the session after Session C closes. OPTION B - keep the BRANCH 'staging', move the host to staging.meanwhileusa.com. Consequence: the ref name is preserved and the host you specified changes, along with STAGING_RENDER_ORIGIN and every reference to it. MEASURED, four ways, against the live API on 2026-09-01: branch_deploy_custom_domain is a SUFFIX not a per-branch map; GET /sites/<id>/domains and /branch_domains both 404; a managed NETLIFY DNS record pointing the subdomain at a branch deploy is refused 422 'invalid site'; a plain CNAME is accepted but reads back site_id null and managed false, so it is unregistered at the edge and uncovered by the certificate. Positive control: https://nosuchbranch.meanwhileusa.com/api/build resolves on the wildcard certificate and returns 404, which is the provider answering 'no branch deploy by that name'. RULING 235 records the measurement as a FACT and deliberately does NOT amend your ruling. *(open)*
+
+**Needs Sean.** NH304
 
 ## session-c-closeout · 2026-09-01
 
@@ -794,15 +803,14 @@ WHAT THE FAILING RUN PRINTED (run 32961466707). The last 14 of 257 line(s) the r
 
 - **NH121** — pnpm walk:all against production on 2026-08-24 raised a NAMED REGRESSION at 03255 on the phone viewport: the sidebar says 201, the panel header says 201, and the seven group headings add up to 200. One meeting is in the panel's own count and in none of its groups. The reader is not shown a wrong number - both figures are internally consistent with what they are counting - but one row is invisible in the grouped list, and the check that exists to catch exactly this is red.
 
-**What it started.** 6 row(s) opened, 5 still open.
+**What it started.** 6 row(s) opened, 4 still open.
 
-- **NS12** — RULING 125 moves every walk onto the local production build and leaves exactly one question that needs Netlify: which SHA is live. pnpm deploy:live reads it from Netlify's deploy API in one call with zero requests to the site. There is no NETLIFY_AUTH_TOKEN in .env.local and the Netlify CLI config on this machine holds no user, so the tool correctly reports CANNOT-TELL and exits 3 rather than passing. A Personal Access Token from Netlify (User settings, Applications, Personal access tokens) added to .env.local as NETLIFY_AUTH_TOKEN closes it. *(open)*
 - **NS13** — RULING 124 item 5 makes pnpm closeout REFUSE a separate push to main, per Sean's instruction that records ship inside the PR or not at all. CLAUDE.md's merge-cadence rule permits separate close-out commits for a stated reason: a document cannot name the commit that contains it. Most of that reason is now gone — RULING 125 moves walks onto a local build, so the walk numbers ARE knowable before the ship. What remains genuinely unknowable in advance is the deploy SHA. This session's position: that is an operational fact read from Netlify's deploy record afterwards and it does not need to live in a commit at all. If Sean disagrees, the merge-cadence rule needs amending rather than the tool. *(open)*
 - **NH122** — cfs.sos.nh.gov ANSWERS: Node fetch gets HTTP 200 and 65,928 bytes. But the page is an Angular single-page app whose HTML is a shell, and the campaign-finance data endpoints were not found. Rung 6 (a live browser, which would reveal the calls) is REFUSED with 403 by the edge — curl is also refused, and only Node's fetch passes, which inverts the usual assumption that the browser is the strongest rung. Reading the served JS bundles (a new route, recorded in the expansion log) surfaced only lobbyist paths; the campaign-finance routes are in lazy chunks this pass did not locate. *(open)*
 - **AZ02** — POST https://seethemoney.az.gov/Reporting/GetNEWTableData answers HTTP 200. Posted with a guessed body it returns a two-byte empty payload, which is a statement about our request rather than about Arizona's records. The sibling name GetDetailedTableData is a 404, so the endpoint name is exact. robots.txt is 404 and there is no terms-of-use page at the guessed path — both recorded as measurements rather than as permissions. *(open)*
 - **NJ14** — Of the 07866 ballot's 272 candidacies, 235 resolved to an ELEC location and 37 did not. Fifteen of the 37 are correctly out of scope: US Senate and two congressional districts file with the FEC, and the state-level contest files elsewhere. The rest are REGIONAL SCHOOL DISTRICTS — West Morris Regional, Morris Hills Regional, Hanover Park Regional — plus Long Hill Township and Parsippany-Troy Hills, whose names did not resolve against the ELEC dropdown under any of the six municipal suffixes tried. *(open)*
 
-**Needs Sean.** NS12, NS13
+**Needs Sean.** NS13
 
 ## rulings-sweep-0824 · 2026-08-24
 

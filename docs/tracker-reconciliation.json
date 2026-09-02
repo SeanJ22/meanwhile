@@ -2,7 +2,7 @@
   "generated": "2026-09-01",
   "ruling": "RULING 227",
   "openedDateProvenance": {
-    "opened-ledger": 388,
+    "opened-ledger": 398,
     "session-label": 243,
     "unrecoverable": 225
   },
@@ -44,10 +44,10 @@
       "NH287",
       "NH299",
       "NH303",
+      "NH304",
       "NH43",
       "NS01",
       "NS10",
-      "NS12",
       "NS13",
       "NS14",
       "NS16",
@@ -83,6 +83,7 @@
       "NH272",
       "NH281",
       "NH300",
+      "NS12",
       "OWN03"
     ]
   },
@@ -479,18 +480,18 @@
       "evidence": []
     },
     {
-      "rowId": "NS01",
+      "rowId": "NH304",
       "kind": "NOT_MACHINE_VERIFIABLE",
       "verdict": "HOLDS",
-      "why": "NS01 is marked NOT_MACHINE_VERIFIABLE and carries a decision card. It waits on the author's judgement, which no artifact can supply.",
+      "why": "NH304 is marked NOT_MACHINE_VERIFIABLE and carries a decision card. It waits on the author's judgement, which no artifact can supply.",
       "read": [],
       "evidence": []
     },
     {
-      "rowId": "NS12",
+      "rowId": "NS01",
       "kind": "NOT_MACHINE_VERIFIABLE",
       "verdict": "HOLDS",
-      "why": "NS12 is marked NOT_MACHINE_VERIFIABLE and carries a decision card. It waits on the author's judgement, which no artifact can supply.",
+      "why": "NS01 is marked NOT_MACHINE_VERIFIABLE and carries a decision card. It waits on the author's judgement, which no artifact can supply.",
       "read": [],
       "evidence": []
     },

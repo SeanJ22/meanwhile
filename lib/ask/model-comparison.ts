@@ -4,6 +4,7 @@ import type { ModelRate } from "../control-plane/model-cost.ts";
 
 import { packHasEvidence, type EvidencePack } from "./evidence.ts";
 import { ASK_MODEL_RATES } from "./model-economics.ts";
+import type { AskEffort } from "./model.ts";
 import { readCacheUsage, type CacheUsage } from "./prompt-cache.ts";
 import {
   SYNTHESIS_MESSAGES_URL,
@@ -135,6 +136,21 @@ export type ComparisonOutcome =
 export interface ComparisonOptions {
   fetchImpl?: typeof fetch;
   apiKey?: string;
+  /**
+   * **THE EFFORT SWEEP'S ONE VARIABLE.** (ITEM K §4, 2026-09-01.)
+   *
+   * Omitted, the request is built with the resolved production effort — so the
+   * default behaviour of this seam still measures the shape the product ships.
+   * Supplied, it varies effort and NOTHING ELSE: same prompt, same pack, same
+   * model, same cache policy, so the difference between two sweep rows is
+   * attributable to the effort level rather than to anything the harness did.
+   *
+   * It lives here, on the comparison seam, and NOT on `SynthesizeOptions` —
+   * for the same reason the model does not: a production entry point with an
+   * effort field is a per-request effort choice whether or not today's route
+   * passes one, and effort is part of the cached prefix's request shape.
+   */
+  effort?: AskEffort;
 }
 
 /**
@@ -174,7 +190,9 @@ export async function synthesizeForComparison(
       /* The product's own request, with the model named and the cache marker
          absent. Nothing else about it differs from what a reader's question
          sends. */
-      body: JSON.stringify(synthesisRequestBody(pack, { model, cached: false })),
+      body: JSON.stringify(
+        synthesisRequestBody(pack, { model, cached: false, effort: options.effort }),
+      ),
     });
     if (!response.ok) {
       /* The status is CARRIED. "It failed" is not a measurement, and a
@@ -264,4 +282,59 @@ export function callUsd(
     usage.cacheReadInputTokens * perInput * 0.1 +
     outputTokens * perOutput
   );
+}
+
+/* ========================================================================== */
+/* Comparability — and a question that could not be compared is NOT MEASURED  */
+/* ========================================================================== */
+
+/** What `comparabilityFailure` needs to know about one question's two arms. */
+export interface ComparabilityInput {
+  readonly packsIdentical: boolean;
+  readonly incumbentRanCount: number;
+  readonly challengerRanCount: number;
+  readonly incumbentModel: string;
+  readonly challengerModel: string;
+}
+
+/**
+ * Why this question could not be compared — or `null` when it can be.
+ *
+ * ## Why this is a named function rather than a filter predicate
+ *
+ * It used to be a `filter` inside the harness, and the filter was the defect.
+ * Rows it excluded did not become unmeasured questions; they stopped existing.
+ * `switchVerdict` refuses a run carrying `held: null` and refuses an empty set —
+ * both correct, and both blind to a question that never reached it — so the
+ * DENOMINATOR SHRANK IN SILENCE. ITEM K's effort sweep emitted `SWITCH` over
+ * three surviving rows at `xhigh` and over **one** at `max`, and the record
+ * reported `questions: 1` as though that had been the plan.
+ *
+ * A dropped row is the same failure this repository refuses everywhere else,
+ * wearing a filter's clothes: a zero-row extraction is a FAILED extraction and
+ * never an empty document (RULING 100), and our failure to measure is never
+ * evidence about the thing we failed to measure.
+ *
+ * So the reason is RETURNED rather than the row being discarded, the caller
+ * carries it into both arms as `held: null`, and the guard RULING 230 already
+ * put in `switchVerdict` fires on its own. No second rule, no threshold, and no
+ * new verdict emitter — which is the other half of RULING 230.
+ */
+export function comparabilityFailure(input: ComparabilityInput): string | null {
+  if (!input.packsIdentical) {
+    return (
+      "the two arms did not receive an identical evidence pack, so any " +
+      "difference between them is not attributable to the model"
+    );
+  }
+  const dead: string[] = [];
+  if (input.incumbentRanCount === 0) dead.push(input.incumbentModel);
+  if (input.challengerRanCount === 0) dead.push(input.challengerModel);
+  if (dead.length > 0) {
+    return (
+      `no pass completed on ${dead.join(" or ")}, so this question was never ` +
+      `put to ${dead.length === 2 ? "either arm" : "that arm"}`
+    );
+  }
+  return null;
 }

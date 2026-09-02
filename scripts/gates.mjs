@@ -242,6 +242,44 @@ const GATES = [
 export { GATES };
 
 /**
+ * **THE ENVIRONMENT VARIABLES THAT CHANGE HOW MANY TESTS EXIST.**
+ * (Session C final, Item C.4, 2026-09-01.)
+ *
+ * A suite total is only comparable against another suite total taken under the
+ * same environment, and this repository has already paid for not recording
+ * that: **4,555 and 4,562 were both correct measurements of the same test
+ * tree**, seven apart, because `tests/control-plane-conformance.test.ts`
+ * registers a seventh-per-provider Postgres lane only when
+ * `WTP_CONTROL_PLANE_DATABASE_URL` is set — and `pnpm test` does not load
+ * `.env.local`. Two sessions reported two numbers and neither could be
+ * adjudicated, because a total with no environment beside it is not a
+ * denominator, it is an integer.
+ *
+ * **PRESENCE ONLY. NEVER THE VALUE.** These are connection strings. The record
+ * says `SET` or `UNSET` and nothing else — a gate record is committed, and a
+ * secret has no business in one.
+ *
+ * This list is what the project knows NOW, exactly like every other manifest
+ * here. A variable that starts gating a lane belongs in it; nothing about the
+ * list being short means it is finished.
+ */
+const SUITE_LANE_ENV = [
+  {
+    name: "WTP_CONTROL_PLANE_DATABASE_URL",
+    gates: "the postgres arm of tests/control-plane-conformance.test.ts — 7 tests",
+  },
+];
+
+function readSuiteLaneEnv() {
+  return Object.fromEntries(
+    SUITE_LANE_ENV.map((v) => [
+      v.name,
+      { present: Boolean(process.env[v.name]), gates: v.gates },
+    ]),
+  );
+}
+
+/**
  * **NOTHING BELOW RUNS ON IMPORT, and that guard is load-bearing.**
  *
  * `tests/gate-parity.test.ts` imports `GATES` to compare it against the
@@ -295,12 +333,39 @@ for (const gate of GATES) {
   let failingTests = [];
   let suiteTotals = null;
   try {
-    execSync(gate.command, {
+    /*
+     * **A PASSING GATE'S SUMMARY IS EVIDENCE TOO, AND IT WAS BEING THROWN
+     * AWAY.** (Session C final, Item C.4, 2026-09-01. Measured, not theorised.)
+     *
+     * `suiteTotals` was parsed ONLY in the `catch` below, so every PASSING run
+     * wrote `"suiteTotals": null` — `2026-09-01-01`, `-03`, `-04` and `-06` all
+     * did. The only totals this repository has ever persisted came from runs
+     * that were RED, which is exactly backwards: the number a close-out quotes
+     * is the number from the run it shipped on, and that run is green.
+     *
+     * The cost was a close-out that could not say how many tests it had. The
+     * session report said **4,555**, the pull-request close-out said **4,562**,
+     * and no record on disk held either against a green run. Both were true
+     * measurements of the SAME test tree — `7514e68e..f2e1aa9b` changes no test
+     * file — taken in two different ENVIRONMENTS: the control-plane
+     * conformance suite registers a seventh-per-provider Postgres lane only
+     * when `WTP_CONTROL_PLANE_DATABASE_URL` is set, `pnpm test` does not load
+     * `.env.local`, and 4,555 + 7 = 4,562. A whole lane not running showed up
+     * as nothing but a smaller integer nobody could source.
+     *
+     * So the summary is now read on the SUCCESS path as well, and it carries
+     * `suites`, `skipped`, `todo` and `cancelled` beside `tests`/`pass`/`fail`
+     * — because "fewer tests registered" is the only shape a skipped lane has,
+     * and a record holding only `tests` cannot tell that from a deleted test.
+     */
+    const out = execSync(gate.command, {
       stdio: ["ignore", "pipe", "pipe"],
       env: { ...process.env, ...(gate.env ?? {}) },
       encoding: "utf8",
       maxBuffer: 256 * 1024 * 1024,
     });
+    /* Null for every gate that prints no `node:test` summary. Never invented. */
+    suiteTotals = parseSuiteTotals(typeof out === "string" ? out : "");
   } catch (error) {
     /*
      * THE TWO FAILURE MODES STAY APART (RULING 24, and buildGate's own note).
@@ -437,6 +502,19 @@ for (const gate of GATES) {
   const secs = ((Date.now() - started) / 1000).toFixed(0);
   console.log(`${status} (${secs}s)`);
   if (detail) console.log(`      ${detail}`);
+  /*
+   * PRINTED AS WELL AS PERSISTED. A session reading its own run should not have
+   * to open the record to learn the denominator it is about to report.
+   */
+  if (status === "PASS" && suiteTotals) {
+    const extra = ["suites", "skipped", "todo", "cancelled"]
+      .filter((k) => suiteTotals[k] !== null && suiteTotals[k] !== undefined)
+      .map((k) => `${k} ${suiteTotals[k]}`);
+    console.log(
+      `      summary: tests ${suiteTotals.tests}, pass ${suiteTotals.pass}, ` +
+        `fail ${suiteTotals.fail}${extra.length ? `, ${extra.join(", ")}` : ""}`,
+    );
+  }
   if (failureKind === "EARLY_ABORT") {
     console.log(
       `      EARLY ABORT — exit non-zero with no failing test named` +
@@ -461,6 +539,26 @@ console.log(
   `\n${results.length - bad.length} of ${results.length} gates green` +
     (bad.length ? ` — FAILING: ${bad.map((b) => b.id).join(", ")}` : ""),
 );
+/*
+ * THE SUITE DENOMINATOR, NAMED ONCE, WHERE A CLOSE-OUT WILL LOOK FOR IT.
+ * A run that printed no summary says so rather than printing a number from
+ * somewhere else (RULING 184 — a missing measurement is never a measurement).
+ */
+{
+  const suite = results.find((r) => r.id === "test");
+  if (suite?.suiteTotals) {
+    console.log(
+      `  suite denominator: ${suite.suiteTotals.tests} tests registered ` +
+        `(${suite.suiteTotals.pass} pass, ${suite.suiteTotals.fail} fail` +
+        (suite.suiteTotals.skipped === null ? "" : `, ${suite.suiteTotals.skipped} skipped`) +
+        `) — this run, this environment`,
+    );
+  } else if (suite) {
+    console.log(
+      `  suite denominator: NOT MEASURED — the test gate printed no summary this run`,
+    );
+  }
+}
 /*
  * **THE GATE RUN RECORD.** (A.1 WI6, 2026-08-30.)
  *
@@ -500,7 +598,22 @@ function parseSuiteTotals(out) {
   const pass = field("pass");
   const fail = field("fail");
   if (tests === null || pass === null || fail === null) return null;
-  return { tests, pass, fail };
+  /*
+   * `suites`, `skipped`, `todo` and `cancelled` are RECORDED WHEN PRINTED and
+   * null when they are not — never defaulted to 0, which would assert a
+   * measurement the summary did not make. They are here because `tests` alone
+   * cannot distinguish a lane that never registered from tests that were
+   * deleted, and that ambiguity is what cost the 4,555-vs-4,562 close-out.
+   */
+  return {
+    tests,
+    pass,
+    fail,
+    suites: field("suites"),
+    skipped: field("skipped"),
+    todo: field("todo"),
+    cancelled: field("cancelled"),
+  };
 }
 
 /**
@@ -599,6 +712,45 @@ function writeGateRunRecord(results) {
      * dependent one claim independence.
      */
     provenance: readRunProvenance(testedSha),
+    /*
+     * **THE SUITE DENOMINATOR, AT THE TOP OF THE RECORD, WHERE A CLOSE-OUT
+     * LOOKS.** (Session C final, Item C.4.)
+     *
+     * The per-gate `suiteTotals` above is the primary. This is the same thing
+     * hoisted, because the question a close-out actually asks is *how many
+     * tests did this run have*, and making it hunt through fourteen gate
+     * entries for the one that answers is how a report ends up quoting a
+     * number from a session's memory instead.
+     *
+     * **`read: false` IS NOT ZERO, AND THAT DISTINCTION IS THE POINT.** A run
+     * whose summary could not be parsed — the EARLY_ABORT case, where a
+     * failure shorter than a full pass never reaches the summary at all —
+     * records `read: false` with the reason in words. It never records `0`
+     * tests, because zero tests is a measurement and "we could not read it" is
+     * not. Every counter inside `totals` obeys the same rule: `null` when the
+     * runner did not print that line, never a defaulted `0`.
+     */
+    suiteDenominator: (() => {
+      const suite = results.find((r) => r.id === "test");
+      if (!suite) return { gate: "test", read: false, reason: "no test gate ran" };
+      if (!suite.suiteTotals) {
+        return {
+          gate: "test",
+          read: false,
+          reason: "the test gate printed no complete node:test summary this run",
+          gateStatus: suite.status,
+          failureKind: suite.failureKind ?? null,
+        };
+      }
+      return { gate: "test", read: true, ...suite.suiteTotals };
+    })(),
+    /*
+     * WHICH TEST LANES WERE EVEN ELIGIBLE THIS RUN. Presence, never value.
+     * See SUITE_LANE_ENV above: two totals taken under different environments
+     * are not comparable, and this is the field that lets a later reader see
+     * that rather than conclude tests were deleted.
+     */
+    suiteLaneEnv: readSuiteLaneEnv(),
   };
   writeFileSync(recordPath, `${JSON.stringify(record, null, 2)}\n`, "utf8");
   console.log(`  gate run record: ${recordPath}`);

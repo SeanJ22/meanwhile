@@ -199,19 +199,6 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 - **Build the surface and review them yourself** — the held rows get read; T05's path is you.
 - **Resolve T05 first** — this row waits on a genuine dependency rather than on a preference.
 
-#### NS12 — No Netlify credential on this machine, so the deploy record cannot be read
-
-*Opened 2026-08-24 · 8 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
-
-**What is needed.** Provide a NETLIFY_AUTH_TOKEN, or confirm the deploy record stays unread on this machine.
-
-**Why no machine can decide it.** RULING 125 leaves exactly one question needing Netlify — which SHA is live — and pnpm deploy:live answers it in one call with zero requests to the site. No artifact can decide it: it needs a resource, a permission or a judgement that only the author can supply. Under RULING 208 the escalation is a parallel lane — this row does not close, pause or satisfy the obligation it is about, and every other executable path continues meanwhile.
-
-**Your options.**
-
-- **Supply it / rule on it** — the blocked route opens and the work behind this row continues on the machine.
-- **Decline or defer** — the obligation stays LIVE and visible — declining the escalation is never a disposition of the record it concerns (RULING 205, RULING 208) — and the other routes keep being worked.
-
 #### NS13 — The close-out refusal collides with the merge-cadence rule, and the collision is narrow
 
 *Opened 2026-08-24 · 8 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
@@ -320,9 +307,9 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 *Opened 2026-08-28 · 4 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
-**What is needed.** Read or release claude/g17-aud03-measure — one remote branch whose single 2026-08-18 commit could not be proved shipped.
+**What is needed.** Read or release commit 33f6f520 — the single 2026-08-18 commit that could not be proved shipped. Its branch, claude/g17-aud03-measure, no longer exists on origin, but THE WORK IS INTACT: GitHub still serves 33f6f520 by SHA ('AUD-03 measurement: the eight pre-registered surfaces behind async boundaries', +52/-8 on components/map/map-entry.tsx), and the commit is present in the local object store. Nothing was lost; the ref was.
 
-**Why no machine can decide it.** the sweep classified 143 branches and proved 135 content-shipped; this is the one it could not, and it must not be deleted unread. No artifact can decide it: it needs a resource, a permission or a judgement that only the author can supply. Under RULING 208 the escalation is a parallel lane — this row does not close, pause or satisfy the obligation it is about, and every other executable path continues meanwhile.
+**Why no machine can decide it.** the sweep classified 143 branches and proved 135 content-shipped; this is the one it could not, and the row said it must not be deleted unread — the ref went anyway, which is why the card now carries the SHA the work can always be recovered from. No artifact can decide it: it needs a resource, a permission or a judgement that only the author can supply. Under RULING 208 the escalation is a parallel lane — this row does not close, pause or satisfy the obligation it is about, and every other executable path continues meanwhile.
 
 **Your options.**
 
@@ -488,6 +475,19 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 - **Approve a third-party suggester and accept that partial addresses leave the product** — autocomplete works as readers expect it to. The transparency page must be amended in the same change, because it would otherwise be false, and reader friction rules make that disclosure one of the three permitted frictions.
 - **Approve a suggester but require it be proxied through this product** — no partial address reaches the third party with the reader's identity attached; costs a server round-trip per keystroke and a rate-limiting design.
 - **Refuse — no autocomplete** — BAL-37 stays as reported. Readers type the whole address, which is the current behaviour and is a real friction on mobile.
+
+#### NH304 — RULING 233 names a branch and a host the provider will not serve together - choose which half moves
+
+*Opened 2026-09-01 · opened today · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+
+**What is needed.** Rule on ONE WORD in RULING 233: the branch is `staging` and the host is `test.meanwhileusa.com`, and this provider will not serve both. Option A — amend the BRANCH to `test`, preserving the host you named twice and `STAGING_RENDER_ORIGIN`; the git ref name moves, and it appears on no reader-facing or owner-facing surface. Option B — keep the branch `staging` and move the host to `staging.meanwhileusa.com`, preserving the ref name and changing the host you specified. The session shipped under Option A because RULING 233 is not operative until the session after Session C closes, so nothing is decided that you cannot undo.
+
+**Why no machine can decide it.** a session may not amend the author's law, and which of your own two words you meant is a judgement no measurement settles — the measurement (RULING 235, a FACT) only establishes that both cannot stand. No artifact can decide it: it needs a resource, a permission or a judgement that only the author can supply. Under RULING 208 the escalation is a parallel lane — this row does not close, pause or satisfy the obligation it is about, and every other executable path continues meanwhile.
+
+**Your options.**
+
+- **Supply it / rule on it** — the blocked route opens and the work behind this row continues on the machine.
+- **Decline or defer** — the obligation stays LIVE and visible — declining the escalation is never a disposition of the record it concerns (RULING 205, RULING 208) — and the other routes keep being worked.
 
 ### P3
 
@@ -862,9 +862,9 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 *Opened 2026-08-28 · 4 days old · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
 
-**What is needed.** Rule on whether an owner-created branch is ever retired automatically — sean/captures-0826 waits on the answer.
+**What is needed.** Rule on whether an owner-created branch is ever retired automatically. The branch that prompted it, sean/captures-0826, is no longer on origin as of 2026-09-01 — so the specific case is moot and only the GENERAL rule is still open.
 
-**Why no machine can decide it.** its content is provably in main and a trial merge is a no-op, so on evidence it is disposable; nothing in the law says a session may delete a branch you made. No artifact can decide it: it needs a resource, a permission or a judgement that only the author can supply. Under RULING 208 the escalation is a parallel lane — this row does not close, pause or satisfy the obligation it is about, and every other executable path continues meanwhile.
+**Why no machine can decide it.** its content was provably in main and a trial merge was a no-op, so on evidence it was disposable; nothing in the law says a session may delete a branch you made, and that question outlives the branch that raised it. No artifact can decide it: it needs a resource, a permission or a judgement that only the author can supply. Under RULING 208 the escalation is a parallel lane — this row does not close, pause or satisfy the obligation it is about, and every other executable path continues meanwhile.
 
 **Your options.**
 
@@ -903,7 +903,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 append-only ledger of every id any session has ever claimed. It is never typed and
 never guessed.
 
-- 388 row(s) carry a date the ledger stamped directly.
+- 398 row(s) carry a date the ledger stamped directly.
 - 243 row(s) take the date from the session the ledger names, where the entry was reconstructed on 2026-08-21 without a stamp.
 - 225 row(s) read **UNKNOWN**. Their ledger entries were reconstructed with no stamped day and name a session that carries no date. The ledger bound around them is a multi-day range, and a range is not a date; this clone is also shallow at 2026-08-25, so git cannot answer for rows older than that either. **UNKNOWN is the honest reading and is never replaced by a guess.**
 

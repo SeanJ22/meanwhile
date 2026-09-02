@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **387 open**, 477 resolved.
+- **387 open**, 478 resolved.
 - **69 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **2**
@@ -35,7 +35,7 @@ and when. Nothing is ever deleted.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**69 open · 71 resolved.**
+**69 open · 72 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -81,11 +81,11 @@ Only Sean closes a row here. A session may open one and may work it.
 
 **NH299** — docs/Meanwhile-Owner-Checklist.xlsx holds three rows with Status CONFIRMED — EX, F1 and F5 — of which EX is the workbook's own documented example row. So the answer key is two facts, both known_present. The Adversarial questions tab has Keep? blank on all twelve rows, so zero questions load. The READER contract therefore reads AWAITING_OWNER_DATA and TRUTH cannot score a false-presence rate for want of a known_absence denominator.
 
+**NH304** — WHAT IS NEEDED: your ruling on ONE word. RULING 233 (alias R-C10), in your verbatim text, says "staging is the integration branch and deploys to test.meanwhileusa.com". Netlify derives a branch deploy's hostname as <branch-name>.<suffix>, so the branch name IS the subdomain label, and the two halves cannot both be true. WHY NO MACHINE CAN DECIDE IT: both options work; which one you meant is a judgement about your own words, and a session may not amend your law. OPTION A - amend the BRANCH to 'test', keep the host test.meanwhileusa.com. Consequence: the host you named twice is preserved, STAGING_RENDER_ORIGIN in lib/ops/origins.ts is unchanged, and the git ref name (which appears on no reader-facing or owner-facing surface) moves. This is what the session shipped under, because RULING 233 is not operative until the session after Session C closes. OPTION B - keep the BRANCH 'staging', move the host to staging.meanwhileusa.com. Consequence: the ref name is preserved and the host you specified changes, along with STAGING_RENDER_ORIGIN and every reference to it. MEASURED, four ways, against the live API on 2026-09-01: branch_deploy_custom_domain is a SUFFIX not a per-branch map; GET /sites/<id>/domains and /branch_domains both 404; a managed NETLIFY DNS record pointing the subdomain at a branch deploy is refused 422 'invalid site'; a plain CNAME is accepted but reads back site_id null and managed false, so it is unregistered at the edge and uncovered by the certificate. Positive control: https://nosuchbranch.meanwhileusa.com/api/build resolves on the wildcard certificate and returns 404, which is the provider answering 'no branch deploy by that name'. RULING 235 records the measurement as a FACT and deliberately does NOT amend your ruling.
+
 **NH43** — RULING 60's residual. NH Hunt 5 hand-worked every un-held unit at 03255 and holds 48 of 48. Three bodies inside those units were reached by nothing, and each is listed below with every branch already walked and what each returned. The ruling asks you to hunt one or two yourself and return the process, which then gets built as a branch the same way the six in zip-playbook.md section 8 were.
 
 **NS01** — The Meta Ad Library is the single best compliant route to a campaign that lives on Facebook, and it is the one route in the manifest that this project cannot walk at all. Political-ad disclosure is mandatory by law, so any candidate who buys a single ad appears there with the campaign's website, its paid-for-by disclaimer and often a contact. The API refuses every unauthenticated request (graph.facebook.com/ads_archive answers HTTP 500 OAuthException), and the public Ad Library web pages answer HTTP 403 with an anti-automation challenge. Measured 2026-08-22 for all sixteen Merrimack County candidates: ad-library REFUSED 16 of 16, and that refusal is recorded as a refusal rather than an absence, so no candidate field moved toward exhaustion on it. A token is issued against an identity-verified Meta developer account, which means it is tied to a real person and to that person's acceptance of Meta's platform terms. That is a standing commitment to a third party and a legal question wearing an API key, which CLAUDE.md lists as an ask-before. It is also the reason no session may make it: RULING 12 says a wall like Facebook's is named and not defeated, and authenticated access risks the account it runs under. This row exists so the decision is documented and yours, with counsel's read, rather than made quietly inside a session. NOTHING is blocked on it — the other three RULING 66 routes are built and walked, and the answer may simply be no.
-
-**NS12** — RULING 125 moves every walk onto the local production build and leaves exactly one question that needs Netlify: which SHA is live. pnpm deploy:live reads it from Netlify's deploy API in one call with zero requests to the site. There is no NETLIFY_AUTH_TOKEN in .env.local and the Netlify CLI config on this machine holds no user, so the tool correctly reports CANNOT-TELL and exits 3 rather than passing. A Personal Access Token from Netlify (User settings, Applications, Personal access tokens) added to .env.local as NETLIFY_AUTH_TOKEN closes it.
 
 **NS13** — RULING 124 item 5 makes pnpm closeout REFUSE a separate push to main, per Sean's instruction that records ship inside the PR or not at all. CLAUDE.md's merge-cadence rule permits separate close-out commits for a stated reason: a document cannot name the commit that contains it. Most of that reason is now gone — RULING 125 moves walks onto a local build, so the walk numbers ARE knowable before the ship. What remains genuinely unknowable in advance is the deploy SHA. This session's position: that is an operational fact read from Netlify's deploy record afterwards and it does not need to live in a commit at all. If Sean disagrees, the merge-cadence rule needs amending rather than the tool.
 

@@ -1,4 +1,5 @@
 import { scrubFreeText } from "../log/scrub.ts";
+import { resolveAskModel } from "../ask/model.ts";
 
 import { TOPIC_ROUTES } from "./topics.ts";
 
@@ -160,12 +161,49 @@ function noteCall(): boolean {
 const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
 
 /**
- * The model. `claude-opus-5` deliberately, at `low` effort with thinking off:
- * the task is one label out of sixteen, and the cost lever this session pulls
- * is effort and the ceiling, never a quieter model chosen on the reader's
- * behalf.
+ * The model, READ FROM `lib/ask/model.ts` rather than declared here.
+ * (ITEM K, 2026-09-01.)
+ *
+ * This rung is an Ask call site — the ask box's second rung — so *one model
+ * for all Ask traffic* binds it. It used to declare its own `claude-opus-5`
+ * literal, and a rule enforced by four literals being equal is a rule that
+ * survives only as long as everyone remembers to change all four. Importing
+ * the shared constant makes it structural: there is no expression here that
+ * could name a different model.
+ *
+ * `low` effort with thinking off is unchanged and is still this rung's own
+ * choice — the task is one label out of sixteen. The cost lever remains effort
+ * and the ceiling. Verified against `claude-sonnet-5` by an actual request:
+ * thinking-disabled at `low` effort answers HTTP 200 on this model.
  */
-const MODEL = "claude-opus-5";
+/**
+ * **RESOLVED AT CALL TIME, NOT BOUND AT MODULE LOAD.**
+ * (Repaired 2026-09-01, found while attributing a walk regression.)
+ *
+ * This read `const MODEL = ASK_SYNTHESIS_MODEL`, which binds the CONSTANT
+ * once when the module is first imported. `WTP_ASK_MODEL` is applied by
+ * {@link resolveAskModel}, so this rung ignored the override entirely —
+ * `lib/ask/synthesize.ts` honoured it and three other Ask call sites did not.
+ *
+ * ITEM K's brief permits the override on two conditions: it defaults to the
+ * constant when unset, and **the RESOLVED value — not the default — is what
+ * gets recorded and logged**. A rung that reads the constant satisfies the
+ * first and silently breaks the second.
+ *
+ * The cost is not hypothetical. RULING 234 makes the measurement the
+ * reversibility mechanism for the Sonnet 5 switch — *if it fails a required
+ * question the incumbent held, revert the one constant and report the
+ * question.* With three rungs bound at load, an experiment or an emergency
+ * revert through the environment would have moved ONE of four call sites while
+ * reporting that it had moved the model, and the run that proved it would have
+ * been measuring a mixture.
+ *
+ * It was found exactly that way: an isolation walk with
+ * `WTP_ASK_MODEL=claude-opus-5` reproduced the failure identically, which
+ * looked like proof the model was innocent and was really proof that the
+ * override never reached this code.
+ */
+const askModel = (): string => resolveAskModel();
 
 export interface ClassifyOptions {
   /** Overridden in tests so the suite never touches the network. */
@@ -201,7 +239,7 @@ export async function classifyQuestion(
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: MODEL,
+        model: askModel(),
         max_tokens: 64,
         // Thinking off and effort low: the answer is one identifier, and
         // disabling thinking is permitted at `high` or below.

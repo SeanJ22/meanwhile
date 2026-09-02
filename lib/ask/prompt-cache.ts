@@ -30,18 +30,53 @@
  *
  * Measured, not assumed, and measured at Anthropic's own `count_tokens`
  * endpoint rather than estimated from characters: `synthesisPrompt()` renders
- * 1,503 characters = **478 tokens** (2026-09-01; the earlier "≈ 418" was a
- * chars/4 estimate and was 60 tokens low). **Claude Opus 5's minimum cacheable
- * prefix is 512 tokens.** A
- * breakpoint on a prefix below the minimum does not error — it silently never
- * caches, reporting `cache_creation_input_tokens: 0` forever. A marker that
- * can never fire is worse than no marker, because it reads as a guarantee to
- * the next session. So there is ONE breakpoint, at the end of the civic
- * context, and the prefix it covers is system + context, which clears the
- * minimum for any pack carrying real records.
+ * 1,503 characters = **471 tokens** (re-counted 2026-09-01 against
+ * `claude-sonnet-5` AND `claude-opus-5`, which returned the SAME count — the
+ * two models share a tokenizer for this text. The earlier "≈ 418" was a
+ * chars/4 estimate and was 53 tokens low; the earlier "478" was the same
+ * string counted without subtracting the empty-request baseline).
+ *
+ * A breakpoint on a prefix below the model's minimum does not error — it
+ * silently never caches, reporting `cache_creation_input_tokens: 0` forever. A
+ * marker that can never fire is worse than no marker, because it reads as a
+ * guarantee to the next session. So there is ONE breakpoint, at the end of the
+ * civic context, and the prefix it covers is system + context.
+ *
+ * ## THE MINIMUM MOVED WHEN THE MODEL DID, AND IT COSTS US THE SMALL PACKS
+ *
+ * **(ITEM K, 2026-09-01. Measured by request, not read off a table.)**
+ *
+ * The minimum cacheable prefix is a property of the MODEL:
+ *
+ * ```
+ *   claude-opus-5     512 tokens
+ *   claude-sonnet-5  1024 tokens
+ * ```
+ *
+ * The sentence that used to end this section — *which clears the minimum for
+ * any pack carrying real records* — was true of Opus 5 and is **FALSE of
+ * Sonnet 5**. Sent twice with the production marker, measured on
+ * `cache_creation_input_tokens` and `cache_read_input_tokens`:
+ *
+ * ```
+ *   pack            prefix    opus-5            sonnet-5
+ *   1 short record    979t    write 979 / read 979   write 0 / read 0   <- SILENT
+ *   1 long record    1029t    write 1029/ read 1029  write 1029/ read 1029
+ *   12 records       2734t    write 2734/ read 2734  write 2734/ read 2734
+ * ```
+ *
+ * So on Sonnet 5 the breakpoint fires for ordinary packs and does NOT fire for
+ * the smallest ones, with roughly fifty tokens between the two cases. This is
+ * a COST fact and not a correctness one — an uncached request returns the same
+ * answer — and it is recorded here rather than quietly absorbed because the
+ * hit rate this module reports will now legitimately sit below 100% for a
+ * reason that is not a defect in prompt assembly. A session reading a
+ * collapsed rate without this paragraph would go looking for a bug that is a
+ * documented property of the model.
  *
  * (`synthesizeAnswer` refuses an empty pack before it ever reaches the
- * network, so the "pack too small to cache" case is not a live path.)
+ * network, so the "pack too small to cache" case is bounded below by a
+ * one-record pack rather than by an empty one.)
  *
  * ## The honest limit of the win
  *

@@ -169,6 +169,13 @@
       "when": 1788203017540,
       "tag": "0023_tricky_sister_grimm",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1788291910497,
+      "tag": "0024_living_invaders",
+      "breakpoints": true
     }
   ]
 }

@@ -122,7 +122,18 @@ for (const d of NEW_DECISIONS) {
   }
   const rec: GovernanceRecord = {
     id,
-    aliases: [`RULING ${d.n}`, `R${d.n}`, `R-${d.n}`],
+    // The mechanical set, plus any name the adopting directive already used
+    // for this rule. Deduplicated, because an alias declared twice is one
+    // alias and a citation index that lists it twice is a defect a reader
+    // would have to explain to themselves.
+    aliases: [
+      ...new Set([
+        `RULING ${d.n}`,
+        `R${d.n}`,
+        `R-${d.n}`,
+        ...(d.aliases ?? []),
+      ]),
+    ],
     kind: d.kind,
     status: "ACTIVE",
     provenance: d.provenance,

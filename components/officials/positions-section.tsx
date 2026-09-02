@@ -152,7 +152,7 @@ export function PositionsSection({
                   >
                     {/* Verbatim, and marked as a quotation so a screen reader
                         knows these are not our words either. */}
-                    <blockquote className="text-[0.8125rem] leading-relaxed text-paper">
+                    <blockquote className="t-record text-[0.8125rem] leading-relaxed text-paper">
                       &ldquo;{p.quote}&rdquo;
                     </blockquote>
                     <figcaption className="mt-1.5 text-[0.625rem] leading-relaxed text-muted">

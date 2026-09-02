@@ -80,15 +80,56 @@ test("the registry states every denominator it claims, and they equal the rows",
   );
 });
 
-test("a candidate the filing list never carried gets NO invented candidacy id", () => {
-  /* Arizona's canvass stars write-in primary winners. They exist and are in the
-     registry; a key no authority published would be a fabrication the
-     projection layer would then join on. */
-  const canvassOnly = registry.candidates.filter((c) => c.canonicalCandidacyId === null);
-  assert.ok(canvassOnly.length > 0, "the registry holds no canvass-only candidate to test");
-  for (const c of canvassOnly) {
-    assert.match(c.candidacyAuthority, /canvass/i);
+test("a candidate no held ballot names gets NO invented candidacy id", () => {
+  /*
+   * **THIS TEST USED TO ASSERT `null` IMPLIED `canvass`, AND THAT WAS TRUE ONLY
+   * WHILE THE POPULATION WAS ONE COUNTY'S BALLOT.**
+   *
+   * `canonicalCandidacyId` is the `ballot-az-pima:*` key the campaign-money
+   * corpus is written against, so it can only be non-null for someone a held
+   * certified ballot names. When the registry's population became the Secretary
+   * of State's statewide filing list, 211 real filed candidates arrived with no
+   * such key — and the old assertion read that as 213 write-in nominees.
+   *
+   * The invariant it was protecting is unchanged and is asserted harder below:
+   * **no candidacy key is ever invented.** Every non-null one must appear in
+   * the held ballot document itself, which is the check that would actually
+   * catch a fabricated key — the old shape could not have.
+   */
+  const held = JSON.parse(
+    readFileSync(join(ROOT, "data", "ballot", "az-pima-2026.json"), "utf8"),
+  ) as { candidacies: { id: string }[] };
+  const heldIds = new Set(held.candidacies.map((c) => c.id));
+  assert.ok(heldIds.size > 0, "the held ballot produced no candidacy ids — a failed read");
+
+  const withKey = registry.candidates.filter((c) => c.canonicalCandidacyId !== null);
+  assert.ok(withKey.length > 0, "no registry candidate carries a candidacy key at all");
+  for (const c of withKey) {
+    assert.ok(
+      heldIds.has(c.canonicalCandidacyId!),
+      `${c.identityId} carries candidacy key ${c.canonicalCandidacyId}, which no held ballot ` +
+        "publishes. A key no authority published is a fabrication the projection layer joins on.",
+    );
   }
+
+  /* Every candidate WITHOUT a key names an authority this project actually
+     read. Two are the certified canvass's write-in winners; the rest are the
+     Secretary's filed candidates who are on no ballot this project holds. Both
+     are real people and neither may be rendered as the other. */
+  const withoutKey = registry.candidates.filter((c) => c.canonicalCandidacyId === null);
+  assert.ok(withoutKey.length > 0, "the registry holds nobody without a candidacy key");
+  const authorities = new Set(withoutKey.map((c) => c.candidacyAuthority));
+  for (const a of authorities) {
+    assert.match(
+      a,
+      /Arizona Secretary of State/,
+      `a candidate with no candidacy key cites "${a}", which is not an authority this registry reads`,
+    );
+  }
+  assert.ok(
+    withoutKey.some((c) => /canvass/i.test(c.candidacyAuthority)),
+    "the registry holds no canvass-only candidate — the write-in nominees were dropped",
+  );
 });
 
 /* ── The population proof ────────────────────────────────────────────────── */

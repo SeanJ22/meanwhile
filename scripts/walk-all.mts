@@ -109,6 +109,8 @@ import {
 import { decodePng, patchStats, regionChange } from "./png.mts";
 import { launchGuarded, type GuardedBrowser } from "./browser.mts";
 
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+
 /**
  * THE TARGET IS LOCAL, AND PRODUCTION IS REFUSED — RULING 125 (2026-08-24).
  *
@@ -116,7 +118,8 @@ import { launchGuarded, type GuardedBrowser } from "./browser.mts";
  * production build — never from Netlify. Production is the delivery truck, not
  * the test bench.*
  *
- * This used to default to `https://sparkwtp.netlify.app`, and the cost was not
+ * This used to default to the live site — the Netlify default subdomain
+ * then, the custom domain since ITEM F — and the cost was not
  * the traffic. **Every `/api/meetings` GET writes a row to the search log**,
  * and the search log is a store this product SELLS. A walk of four zips writes
  * dozens; 11,755 synthetic rows had accumulated in the production store by
@@ -8308,7 +8311,7 @@ const PRODUCTION_DB = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
  */
 const LANDED_CHECK = "the sold store accepted this run's rows at all";
 
-if (BASE !== "https://sparkwtp.netlify.app") {
+if (BASE !== PUBLIC_SITE_ORIGIN) {
   console.log(
     `  rows landed: NOT READ — this run targeted ${BASE}, not production, so a production ` +
       `census would be answering about someone else's rows.`,

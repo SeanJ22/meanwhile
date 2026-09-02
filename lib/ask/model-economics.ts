@@ -81,7 +81,25 @@ export const ASK_MODEL_RATES: Readonly<Record<string, ModelRate>> = {
 /** The model Ask runs today, read from the code that runs it. */
 export const ASK_INCUMBENT_MODEL = ASK_SYNTHESIS_MODEL;
 
-/** The model H2 was asked to evaluate against it. */
+/**
+ * **THE STANDING COMPARISON ARM — and after ITEM K it points the other way.**
+ * (2026-09-01.)
+ *
+ * H2 evaluated `claude-sonnet-5` against an incumbent `claude-opus-5`. ITEM K
+ * landed that switch under the owner's ruling, so the incumbent IS Sonnet 5
+ * now and this constant would name the incumbent if it were left alone —
+ * `switchVerdict` would then grade a model against itself.
+ *
+ * It names `claude-opus-5` instead, and that is not a leftover: §6's
+ * reversibility mechanism is *if the new model fails any required question the
+ * previous one held on the same run, revert the one constant*. The standing
+ * comparison this repository owes is therefore incumbent-versus-revert-target,
+ * and a SWITCH verdict on this arm reads, correctly, as **revert**.
+ *
+ * The arms are overridable per run (`--incumbent` / `--challenger` on
+ * `pnpm ask:model-compare`), and the run record names the two it used — so no
+ * later reader has to infer a record's arms from what this constant says today.
+ */
 export const ASK_CHALLENGER_MODEL = "claude-sonnet-5";
 
 /**
@@ -209,7 +227,21 @@ export function switchVerdict(
      relative rule used to wave through. */
   const notHolding = challengerQuestionsNotHolding(challengerRuns);
   if (notHolding.length > 0) return { kind: "HOLD", notHolding };
-  return { kind: "SWITCH", to: ASK_CHALLENGER_MODEL, questions: challengerRuns.length };
+  /*
+   * **`to` NAMES THE ARM THAT WAS ACTUALLY MEASURED**, read off the runs
+   * rather than off `ASK_CHALLENGER_MODEL`. (ITEM K, 2026-09-01.)
+   *
+   * The constant is a DEFAULT for which comparison to run; the runs are the
+   * measurement. Once the harness could be pointed at named arms, a verdict
+   * that read the constant could name a model the run never touched — a
+   * recommendation to switch to something nothing was measured about, which is
+   * precisely the class of claim RULING 230 collapsed the two rules to prevent.
+   */
+  return {
+    kind: "SWITCH",
+    to: challengerRuns[0].model,
+    questions: challengerRuns.length,
+  };
 }
 
 /* ── the diagnostic that used to be a verdict ────────────────────────────── */

@@ -351,6 +351,18 @@ export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
       "code that names the table merges, which is the ordering the 2026-08-28 incident taught " +
       "and the ordering the owner authorized on 2026-08-31.",
   },
+  "0024_living_invaders": {
+    phase: "expand",
+    why:
+      "Adds one NULLABLE column, ask_interactions.answer_effort (ITEM K, 2026-09-01), so the " +
+      "Ask trace records the reasoning effort an answer was produced at rather than only the " +
+      "model. Nullable and undefaulted, which is what makes it expand: every build that " +
+      "predates the column — including the one live while this applies — keeps inserting " +
+      "successfully, because nothing it writes mentions the column and the column demands " +
+      "nothing of it. A NOT NULL or a defaulted column would have been a contract in disguise, " +
+      "and a default would additionally have recorded an effort for the deterministic answer " +
+      "modes, which never call a model at all.",
+  },
 };
 
 /** The declaration for a tag, or null when there is none. Never a default. */

@@ -143,8 +143,9 @@ if (wantsPostgres) {
  * looks like from the scheduler's side: `local-jurisdictions` gives every named
  * filing officer and election custodian a clock, and `candidate-enrichment`
  * makes campaign sites, positions, bios, photos and contact standing
- * obligations against the CANONICAL STATEWIDE candidate universe rather than
- * against whichever ZIPs happen to be enabled.
+ * obligations against each state's CANONICAL CANDIDATE ACQUISITION DENOMINATOR
+ * — labelled by `lib/candidates/population-label.ts`, never assumed statewide
+ * (R-C9) — rather than against whichever ZIPs happen to be enabled.
  */
 const registry = buildRegistry(
   [

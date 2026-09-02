@@ -597,7 +597,7 @@ test("RULING 165: a missing deploy key FAILS CLOSED and names the secret", () =>
     // A github.com remote with no PUSH_DEPLOY_KEY in the environment. This is
     // precisely what a workflow looks like when somebody adds a ninth pusher
     // and forgets the one plumbing line.
-    git(["remote", "set-url", "origin", "https://github.com/SeanJ22/We-The-People.git"], run);
+    git(["remote", "set-url", "origin", "https://github.com/SeanJ22/meanwhile.git"], run);
 
     const result = pushMain({
       cwd: run,

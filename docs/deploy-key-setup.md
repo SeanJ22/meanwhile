@@ -16,16 +16,51 @@ wrote down is a setup that gets re-derived under pressure the next time.
 
 | What | Read from | Value |
 | --- | --- | --- |
-| Deploy key | `repos/SeanJ22/We-The-People/keys` | `wtp-scheduled-pushers`, **write-enabled**, created `2026-08-26T15:32:24Z`, `last_used: null` |
+| Deploy key | `repos/SeanJ22/meanwhile/keys` | `wtp-scheduled-pushers`, **write-enabled**, created `2026-08-26T15:32:24Z`, `last_used: null` |
 | Write-enabled keys on the repo | same | **1** — which is the intended end state |
-| Actions secret | `repos/SeanJ22/We-The-People/actions/secrets` | `PUSH_DEPLOY_KEY`, created `2026-08-26T15:34:39Z` |
-| Ruleset bypass | `repos/SeanJ22/We-The-People/rulesets/21572280` | `DeployKey`, mode `exempt` |
+| Actions secret | `repos/SeanJ22/meanwhile/actions/secrets` | `PUSH_DEPLOY_KEY`, created `2026-08-26T15:34:39Z` |
+| Ruleset bypass | `repos/SeanJ22/meanwhile/rulesets/21572280` | `DeployKey`, mode `exempt` |
 
 `pnpm protection:verify` reports **INTACT — 9 of 9**.
 
 **The one thing still outstanding is a single dispatch to prove the key
 actually authenticates.** `last_used: null` means it has never been used. Step 5
 below is that proof.
+
+---
+
+## THE REPOSITORY WAS RENAMED, 2026-09-01 — every checkout's remote must move
+
+`SeanJ22/We-The-People` is now **`SeanJ22/meanwhile`**. GitHub 301s the old
+name, so a stale remote keeps working and therefore keeps quiet — which is the
+dangerous shape, not the safe one. A redirect is a courtesy that can be
+withdrawn the moment anyone creates a new repository under the freed-up old
+name, and the push in Step 5 goes over **SSH**, where the redirect is not
+guaranteed to apply at all.
+
+**Run this once on the always-on box** (and on any other long-lived checkout —
+a developer laptop, a CI runner with a persistent workspace):
+
+```bash
+git remote set-url origin https://github.com/SeanJ22/meanwhile.git
+```
+
+Then confirm it, without pushing anything:
+
+```bash
+git remote -v
+git ls-remote --heads origin | head -3
+```
+
+`git remote -v` must print `https://github.com/SeanJ22/meanwhile.git` for both
+`fetch` and `push`, and `ls-remote` must return refs. **A worktree does not have
+its own remote** — `origin` lives in the shared repository config, so setting it
+once moves every worktree of that clone at the same time. That is intended;
+do not run it per worktree and conclude it failed the second time.
+
+Nothing about the deploy key changes: the key is attached to the repository
+object, not to its name, so `wtp-scheduled-pushers` keeps authenticating across
+the rename and does not need rotating.
 
 ---
 
@@ -60,7 +95,7 @@ private half is many lines beginning `-----BEGIN OPENSSH PRIVATE KEY-----`.
 
 ## Step 2 — The PUBLIC half goes to Deploy keys
 
-1. Go to **Settings → Deploy keys** on `SeanJ22/We-The-People`.
+1. Go to **Settings → Deploy keys** on `SeanJ22/meanwhile`.
 2. Click **Add deploy key**.
 3. **Title:** `wtp-scheduled-pushers`
 4. **Key:** paste the entire contents of `wtp_push_deploy.pub` — one line.
@@ -130,20 +165,20 @@ from. If it is ever needed again, the answer is Step 6, not a backup.
 **One dispatch. You are looking at four lines of log, not at a key.**
 
 ```bash
-gh workflow run refresh-daily.yml --repo SeanJ22/We-The-People --field all_sources=true
+gh workflow run refresh-daily.yml --repo SeanJ22/meanwhile --field all_sources=true
 ```
 
 Then watch it:
 
 ```bash
-gh run list --repo SeanJ22/We-The-People --workflow=refresh-daily.yml --limit 1
+gh run list --repo SeanJ22/meanwhile --workflow=refresh-daily.yml --limit 1
 ```
 
 ### What proves the key works
 
 In the **Commit** step's log, all four:
 
-1. `push-main: pushing to git@github.com:SeanJ22/We-The-People.git as a deploy key`
+1. `push-main: pushing to git@github.com:SeanJ22/meanwhile.git as a deploy key`
    — it chose SSH rather than HTTPS.
 2. `push-main: path guard PASSED for refresh-daily` — the allowlist ran.
 3. `push-main: pushed on attempt 1 of 5` — **the push landed.** This is the
@@ -164,7 +199,7 @@ In the **Commit** step's log, all four:
 **Afterwards, `last_used` on the deploy key stops being `null`:**
 
 ```bash
-gh api repos/SeanJ22/We-The-People/keys --jq '.[] | "\(.title) write=\(.read_only == false) last_used=\(.last_used)"'
+gh api repos/SeanJ22/meanwhile/keys --jq '.[] | "\(.title) write=\(.read_only == false) last_used=\(.last_used)"'
 ```
 
 That field is the only external anchor there is for "this key has authenticated

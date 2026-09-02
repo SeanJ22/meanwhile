@@ -48,7 +48,9 @@ import { groupByVenue } from "../lib/meetings/venues.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import type { CoveredBody } from "../lib/registry/coverage.ts";
 
-const BASE = (process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+
+const BASE = (process.env.SHOOT_BASE_URL ?? PUBLIC_SITE_ORIGIN).replace(
   /\/$/,
   "",
 );

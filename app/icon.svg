@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" role="img" aria-label="Meanwhile">
+  <title>Meanwhile</title>
+  <!--
+    THE COMPRESSED MARK (ITEM J, 2026-09-01).
+
+    At 16px and below the wordmark and the two dots are dropped and the square
+    renders alone, so a favicon is the square and nothing else.
+
+    THE COLOURS ARE LITERAL HERE, AND THAT IS NOT A TOKEN VIOLATION. This file
+    is served as a standalone image by the browser's tab chrome; it never
+    enters the document, so no custom property is in scope and there is no
+    cascade to inherit from. The values are the DARK theme's, because a
+    browser tab strip is dark far more often than not and a favicon has one
+    form:
+      #0f1117 is --bg (dark)
+      #00b894 is --accent-state (dark), which is what --mark resolves to
+    `tests/brand-icon-assets.test.ts` pins both against globals.css, so a
+    palette change that leaves this file behind fails rather than drifts.
+
+    FILLED, ALWAYS. Hollow means concluded and dashed means unsourced
+    everywhere else in this product; the brand square has exactly one form.
+
+    The 3px margin is the icon's clear space. The lockup's rule — one dot
+    diameter, measured from the square — cannot apply literally inside a 16px
+    canvas without shrinking the mark to five pixels, and a mark nobody can
+    see is a worse answer than a tight one. The canvas edge is the clear-space
+    boundary for the icon; the rule still governs the mark IN A LAYOUT.
+  -->
+  <rect width="16" height="16" fill="#0f1117" />
+  <rect x="3" y="3" width="10" height="10" fill="#00b894" />
+</svg>

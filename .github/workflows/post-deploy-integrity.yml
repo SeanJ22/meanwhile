@@ -17,7 +17,7 @@
 # would never run. A gate that never executes reports nothing and reads as
 # covered — worse than no gate. So the trigger is the push that CAUSES the
 # deploy, and the deploy's arrival is OBSERVED: the job polls
-# `GET https://sparkwtp.netlify.app/api/build` until the served commit is this
+# `GET https://meanwhileusa.com/api/build` until the served commit is this
 # one, under a hard bound.
 #
 # ## The three outcomes, and none of them is a rollback

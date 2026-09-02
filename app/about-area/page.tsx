@@ -5,7 +5,8 @@ import { areaFactsForState } from "@/lib/area/facts";
 import { COVERED } from "@/lib/coverage/artifacts";
 import { resolveZip } from "@/lib/geo/zcta";
 import { divisionsAt } from "@/lib/registry/server";
-import { PRODUCT_NAME, titleFor } from "@/lib/brand";
+import { Logo } from "@/components/brand/logo";
+import { titleFor } from "@/lib/brand";
 
 /**
  * "About this area" v1 (7, 2026-08-17) — built for the mover: the questions
@@ -60,9 +61,13 @@ export default async function AboutAreaPage({
           ← Back
         </Link>
       </p>
-      <p className="mt-3 font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-muted">
-        {PRODUCT_NAME}
-      </p>
+      {/* ITEM J (2026-09-01): the page eyebrow was the product name typed as
+          display text in a 10px uppercase MONO treatment — the register this
+          system reserves for numerals and identifiers, worn by the one string
+          that is neither. It is the lockup now, at the 18px wordmark floor. */}
+      <div className="mt-3">
+        <Logo variant="wordmark" size={18} />
+      </div>
       <h1 className="mt-1 text-xl font-semibold">
         The basics of living here
         {facts ? ` — ${facts.stateName}` : ""}

@@ -79,6 +79,20 @@ export interface AskTrace {
   /** Did the model write the answer, and did the answer survive checking? */
   synthesis: RungTrace & {
     /**
+     * **THE RESOLVED EFFORT LEVEL.** (ITEM K §5, 2026-09-01.)
+     *
+     * `RungTrace` already carries the resolved `model`. Effort belongs beside
+     * it for the identical reason: effort changes what the model produces and
+     * what it costs, so an answer recorded with its model but without its
+     * effort is only half-attributed. Two answers from one model at two effort
+     * levels are not the same measurement, and nothing in the record would
+     * say which one this was.
+     *
+     * Absent when the rung did not run. Never defaulted — a written-in default
+     * would claim a setting that was never sent.
+     */
+    effort?: string;
+    /**
      * **WHAT THE PROMPT CACHE ACTUALLY DID ON THIS CALL.** (Lane W6, H1.)
      *
      * Read off the API's own `usage` block and never inferred from the request

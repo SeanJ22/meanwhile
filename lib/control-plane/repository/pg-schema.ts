@@ -36,7 +36,7 @@
  */
 
 /** Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it. */
-export const BOOTSTRAP_VERSION = 2;
+export const BOOTSTRAP_VERSION = 3;
 
 /**
  * The tables, and the shape each one carries.
@@ -64,6 +64,36 @@ export const AGGREGATE_KINDS = [
   "obligations",
   "occurrences",
   "debts",
+  /*
+   * THE OWNER CONTROL CENTRE'S DATA PLANE. (Session C final, ITEM H — version 3.)
+   *
+   * The admin host (`ADMIN_ORIGIN`) runs in a Netlify function bundle. It cannot read
+   * the always-on machine's filesystem, its Drive mirror, its process table or
+   * its scratch output, and `next.config.ts` documents at length what happens
+   * to a `process.cwd()` read that nobody traced: it returns nothing, the catch
+   * returns null, and the surface renders a gap that is indistinguishable from
+   * honest missing data. On a HEALTH page that failure mode tells the owner his
+   * pilot is fine because the page could not find the file that says otherwise.
+   *
+   * So these three exist to be WRITTEN by the runner and READ by the deploy:
+   *
+   *   owner_snapshots      one aggregate, id "current" — the whole control
+   *                        centre at one instant, so seven panels cannot show
+   *                        seven different moments and imply they are one
+   *   runner_heartbeat     id "pilot-runner" — "is it alive" has to be a fact
+   *                        the runner WROTE, never one the page infers from the
+   *                        absence of bad news
+   *   cache_observations   id "organic-prod-ask" — the H1 waiver's standing
+   *                        check. A "has this ever happened?" fact cannot live
+   *                        in a serverless function's memory, and the ledger in
+   *                        `lib/ask/prompt-cache.ts` is per-process
+   *
+   * Every one of them is AGGREGATE-ONLY at rest and in render, enforced by
+   * field name in `lib/control-plane/owner-surface.ts`.
+   */
+  "owner_snapshots",
+  "runner_heartbeat",
+  "cache_observations",
 ] as const;
 
 export const APPEND_ONLY_LOGS = [
@@ -72,6 +102,20 @@ export const APPEND_ONLY_LOGS = [
   "dispositions",
   "artifacts",
   "costs",
+  /*
+   * THE OWNER'S HISTORY AND HIS DECISIONS. (Session C final, ITEM H — version 3.)
+   *
+   *   owner_digests    every digest the runner wrote, so the page can show the
+   *                    latest AND the history. Append-only because a digest is
+   *                    a reading taken at a time; rewriting one would be
+   *                    rewriting what was true then
+   *   owner_decisions  the INTENT a decision button appends. Append-only for
+   *                    the same reason the disposition log is: it is the commit
+   *                    point, and the canonicalisation that follows replays it
+   *                    rather than mutating it
+   */
+  "owner_digests",
+  "owner_decisions",
 ] as const;
 
 /** Every table this schema declares, for the drift check. */

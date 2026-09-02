@@ -28,6 +28,7 @@ Read this first. Everything below it is the evidence for one row.
 | 3 | **A harness-supplied signal for the publisher** | The harness sent the notification the product was failing to send, then measured everything downstream of it. |
 | 4 | **A file's account of itself for the store's behaviour** | A comment saying a subscriber deliberately does not subscribe was accepted as a fact about the store, which had a publisher and two other subscribers. |
 | 5 | **The host for the tree** | A gate reported RED about the code when what aborted was a suite starved by seven parallel lanes on one machine. |
+| 6 | **A log line's spelling for a process's exit** | A background waiter asked whether a human-readable sentence had been printed in a particular shape, and answered "not finished" about a producer that had exited 0 two hours earlier. |
 
 Rows 1–3 are the three that certified `WGH-22` fixed while it was live. Row 4
 is the class audit that followed them, and it is here for the same reason they
@@ -241,23 +242,74 @@ changed — here, the machine.
 
 ---
 
-## The one rule under all five
+## 6 — The orphan waiter (9/1)
+
+**What it claimed.** That the Wikipedia municipality walk over NJ/Morris was
+still running, and therefore that Session C had an acquisition job outstanding.
+
+**What it actually measured.** Whether a particular anchored pattern had matched
+a line in the producer's captured output.
+
+**Why that is not the claim.** `scripts/wiki-municipality.mts` prints its
+completion line **indented by two spaces** — line 366 is
+`` console.log(`  written                     ${outPath}`) `` — and every line in
+that summary block is written the same way, aligned for a human reading a
+terminal. An anchored match against the unindented word could never fire against
+that stream, on any run, for any jurisdiction. The predicate was not flaky and
+it was not a race: it was incapable of ever going true.
+
+**And the producer was long finished.** Measured here, against the repository
+rather than against the waiter: the artifact
+`data/hunt/wikipedia-nj-morris.json` was committed at **7514e68e, 2026-09-01
+09:22:43 -0700**, that commit is an ancestor of PR #255's merge commit
+`91caa766`, and #255 merged at **2026-09-01T16:56:31Z**. The walk's own numbers
+are inside the committed artifact's `totals` block and re-derive from its
+`municipalities` array. **Nothing was pending. A process was.** It ran for
+roughly two hours after the work it was watching had exited 0, and it did no
+civic work in any of them.
+
+**Why the gap matters, and it is not the wasted CPU.** A completion predicate is
+what a session's own status report rests on. This one could only ever answer one
+way, so every reading it gave was the same reading — and a status that cannot
+change is not a measurement, it is a constant wearing an instrument's clothes. A
+close-out that had believed it would have reported an open acquisition
+obligation over a record that was already acquired, merged and on `main`:
+**a false claim about our own coverage, which is the same class of error as a
+false claim about a government, pointed inward.**
+
+**What replaces it.** A background completion predicate observes **the
+producer's exit status**, or **durable artifact state** — the output file
+existing, its `walkedAt`/`totals` populated, its bytes differing from the prior
+run — or both. It never observes human log prose, and it never observes prose
+through an anchor, a column position or a whitespace shape. Where a log genuinely
+is the only channel, the producer emits a machine token intended for the reader
+that consumes it, and the token is asserted at the point it is written.
+
+**Reusable form.** *A completion predicate must be able to go false.* Before
+trusting one, ask what output would make it fire and confirm the producer can
+actually emit that output — a predicate no possible run can satisfy reports
+"still working" forever and is indistinguishable, from the outside, from work.
+
+---
+
+## The one rule under all six
 
 Every row above is the same move: **something cheaper stood in for the thing
 the claim was about.** A fixture for a derivation, a string for a record, a
-harness for a publisher, a comment for a behaviour, a machine for a tree. The
-substitution is never announced, because in each case the cheaper thing was a
-genuine and correct measurement of SOMETHING — which is exactly what gives the
-result its authority.
+harness for a publisher, a comment for a behaviour, a machine for a tree, a
+line's spelling for a process's exit. The substitution is never announced,
+because in each case the cheaper thing was a genuine and correct measurement of
+SOMETHING — which is exactly what gives the result its authority.
 
-So the question that catches all five is not *did it pass?* It is:
+So the question that catches all six is not *did it pass?* It is:
 
 > **Name the thing the claim is about, and name what was read. If they are not
 > the same object, the verification is of the second one.**
 
-And the verdict's colour is not part of the test. Four of the five above were
-green; one was red; all five described something other than what their reader
-took them to describe.
+And the verdict's colour is not part of the test. Four of the six above were
+green, one was red, and the sixth was neither: it reported *still working*, and
+would have reported it forever. All six described something other than what
+their reader took them to describe.
 
 ---
 

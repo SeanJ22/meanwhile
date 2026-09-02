@@ -117,10 +117,12 @@ import { classifyDeploy } from "../lib/ops/deploy-paths.ts";
 import { sameCommit } from "../lib/ops/production-integrity.ts";
 import { git } from "./production-integrity.mts";
 
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 /** The origin this repository deploys to. `scripts/deploy-live.mjs` names the same host. */
-export const PRODUCTION_BASE_URL = "https://sparkwtp.netlify.app";
+export const PRODUCTION_BASE_URL = PUBLIC_SITE_ORIGIN;
 
 /**
  * The hard bound. A CEILING, not a default: `--attempts` may tighten it and

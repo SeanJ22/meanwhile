@@ -41,9 +41,11 @@ import { neon } from "@neondatabase/serverless";
 
 import { resolveProductionWriteHandle, WriteHandleRefused } from "../lib/db/write-handle.ts";
 
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+
 loadEnv({ path: join(process.cwd(), ".env.local") });
 
-const BASE = process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app";
+const BASE = process.env.SHOOT_BASE_URL ?? PUBLIC_SITE_ORIGIN;
 const REVERT = process.argv.includes("--revert");
 const MARKER = "promptd_alarm_probe";
 const KEY = `${MARKER}_user`;

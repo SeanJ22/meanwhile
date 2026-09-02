@@ -745,3 +745,90 @@ rather than overwrite, and that is a design decision.
 Discovered 2026-08-31 while verifying the merge. It falsifies none of this
 session's acceptance criteria and is not a regression from its changes, so it is
 recorded here rather than taken into the denominator (RULING 221).
+
+---
+
+## Carried out of Session C (final), 2026-09-01
+
+*Priorities only. None of this is law, and none of it is a status claim — the
+generated status ledger and the ledger itself hold those.*
+
+### Deferred by decision
+
+- **Organization transfer of `SeanJ22/meanwhile` to `meanwhileusa/meanwhile` —
+  DEFERRED TO INCORPORATION.** The user-level rename is complete and every live
+  reference now addresses `SeanJ22/meanwhile`, so **nothing is blocked on it.**
+  Netlify's stored `repo_url` and `repo_path` were re-linked and read back.
+
+### The promotion tail, and it is the largest owed thing here
+
+**211 newly acquired Arizona candidates are inventory, not product.** They are
+`ACQUIRED → EXTRACTED → NORMALIZED → CANONICALLY_LINKED`, and nothing in `app/`
+or `components/` reads
+`data/hunt/<state>-candidate-universe-2026.json` or calls `projectOntoZip`.
+RULING 224 is explicit that an acquisition obligation does not close when
+evidence reaches the vault — it closes when a reader-facing surface reflects the
+acquired truth or renders the honest gap. **Held data with no live promotion
+tail is a defect**, retroactively, so this is a defect and not a plan.
+
+### The two corpora that are retrieved and not normalized
+
+- **New Hampshire** — the cumulative filing PDF is retrieved and hashed. Two
+  walls, both OURS: the pages are rotated, so the generic table layer reads each
+  column as a row and returns `ZERO_ROWS`; and this repository holds no sourced
+  crosswalk from an NH State Representative or Executive Council district to an
+  OCD division. A prototype axis-swapped parse recovered 1,268 rows whose
+  segmentation could not be verified, and **an unverified count was not
+  shipped.** `REQUIRES_NEW_ADAPTER`.
+- **New Jersey** — the Division of Elections files **federal office only**. The
+  state's universe is the union of that authority and **21 county clerks**, so
+  the remaining work is an enumeration of clerks, not a parser.
+
+### Instruments that reported wrongly — and the count kept rising
+
+Five found in one session, and the pattern is worth naming rather than filing
+five separate rows. **Three passed while looking at nothing; one FAILED while
+looking at a race; one was this session's own new code.** A later independent
+refutation pass then raised sixty more suspect claims across the session's own
+acceptance package and confirmed forty of them
+(), so the honest count is
+not five — it is *this project has many sweeps and nothing systematically asks a
+sweep to prove it looked.*
+
+1. **The model-comparison harness filtered incomparable questions out** instead
+   of carrying them as unmeasured, so a sweep emitted `SWITCH` over one row.
+   Fixed; the denominator is now stated in the record.
+2. **`--regenerate` read the arm names from today's constants**, which the model
+   switch had swapped, so re-deriving a historical record stamped it with
+   reversed roles. Now refused with the correct command.
+3. **A stylesheet sweep reported zero `var()` references across 1,428 rules**,
+   because Chromium's nested-CSS support gives every rule an empty-but-truthy
+   `cssRules` and the walker recursed into nothing. The repaired sweep found a
+   live undeclared-token rule that the source sweep could not see.
+
+**The open question underneath all three:** this project has many sweeps, and
+nothing systematically asks a sweep to prove it looked. The plant-check pattern
+(`tests/brand-identity.test.ts` plants a violation and asserts the guard goes
+red) is the answer that exists; it is not applied broadly.
+
+### Still owed on Ask, unchanged by the model switch
+
+**Q3 and Q5 fail on the INCUMBENT, 0 of 3 each** — an 18-record pack cannot fit
+the ASK-19 700-character budget. That is a real unanswered reader question and a
+PIPELINE defect. RULING 234 does not close it, and the model revert leaves it
+exactly where it was: the model now shipping is the one that fails both.
+
+**This line previously read "fail identically on both models", and that was
+wrong.** It was true of the 2026-08-31 comparison runs and false of the two
+later ones, which record the challenger holding **Q3 1 of 3** and **Q5 2 of 3**
+with substantive stored answers
+(`data/health/ask-model-compare-runs/2026-09-01-1788289823520.json` and
+`…-1788292079219.json`). Two of this project's own artifacts disagreed about a
+measurement, and the one a later session inherits carried the stale half —
+which is the whole reason the frontier is not allowed to state results it has
+not re-read. Found by the refutation pass recorded in
+`docs/evidence/session-c-refutation-2026-09-01.json`.
+
+Two effort levels are unusable and the reason is structural: **`xhigh` and `max`
+break the output contract** at `max_tokens: 2048`, because thinking counts
+against that ceiling and the JSON answer truncates mid-string.

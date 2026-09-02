@@ -13,10 +13,18 @@
  * would have started the identical hunt over, because the corpus was keyed by
  * where we happened to look first.
  *
- * This provider makes the enrichment fields STANDING OBLIGATIONS against the
- * canonical statewide candidate universe
+ * This provider makes the enrichment fields STANDING OBLIGATIONS against each
+ * state's canonical candidate ACQUISITION DENOMINATOR
  * (`data/hunt/<state>-candidate-universe-<cycle>.json`), so the work is owed
  * before a reader arrives rather than triggered by one.
+ *
+ * **The denominator is labelled, not assumed "statewide" (R-C9).** Only a
+ * population acquired from an authority's complete applicable universe earns
+ * that word; a pilot-derived population with a ZIP-free key is pilot-derived,
+ * and `lib/candidates/population-label.ts` is what says which is which. As of
+ * 2026-09-01, 925 of these 1,720 obligations stand over pilot-derived NH and
+ * NJ populations, so a header claiming "statewide" here would have described
+ * the KEY and been read as describing the PEOPLE.
  *
  * ## THE PORTFOLIO IS THE ONE ALREADY PROVEN, AND ITS WALLS ARE CARRIED TOO
  *
@@ -355,8 +363,8 @@ export function candidateEnrichmentProvider(): ObligationProvider {
     id: CANDIDATE_ENRICHMENT_PROVIDER_ID,
     describe:
       "campaign sites, candidate-authored positions, bios, photos and published contact as STANDING " +
-      "obligations against the canonical STATEWIDE candidate universe — never against the ZIPs that " +
-      "happen to be enabled",
+      "obligations against each state's canonical candidate ACQUISITION DENOMINATOR, labelled by " +
+      "lib/candidates/population-label.ts — never against the ZIPs that happen to be enabled",
 
     /*
      * THE IDENTITY SCHEME IS THE FIX. `freshness:candidate-enrichment:` then a

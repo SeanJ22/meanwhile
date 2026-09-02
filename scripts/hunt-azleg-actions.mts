@@ -28,6 +28,8 @@ import {
   type ParsedLetter,
 } from "./hunt-azleg-parse.mts";
 
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+
 /**
  * **WHAT THE GOVERNOR DID WITH THE LEGISLATURE'S BILLS, FROM THE
  * LEGISLATURE'S OWN PERMITTED PUBLICATION.** (AZ04, 2026-08-28.)
@@ -116,7 +118,7 @@ const PHASE = (ARGS.get("phase") ?? "all") as "index" | "chapters" | "letters" |
 /** Record the two index pages and two sample PDFs as test fixtures. */
 const WRITE_FIXTURES = ARGS.get("fixtures") === "true";
 
-const UA = "Mozilla/5.0 (compatible; MeanwhileCivicBot/1.0; +https://sparkwtp.netlify.app)";
+const UA = `Mozilla/5.0 (compatible; MeanwhileCivicBot/1.0; +${PUBLIC_SITE_ORIGIN})`;
 
 const LETTERS_INDEX = `${AZLEG_BASE}/governors-letters/`;
 const SESSION_LAWS_INDEX = `${AZLEG_BASE}/sessionlaws/`;

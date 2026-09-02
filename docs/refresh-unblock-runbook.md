@@ -35,7 +35,7 @@ or stop.
 ## The re-dispatch, exactly
 
 ```bash
-gh workflow run refresh-daily.yml --repo SeanJ22/We-The-People --field all_sources=true
+gh workflow run refresh-daily.yml --repo SeanJ22/meanwhile --field all_sources=true
 ```
 
 `all_sources=true` ignores the per-source cadence and runs every source, which
@@ -46,8 +46,8 @@ documents as *"for proving a source end-to-end without waiting for its Monday."*
 Then find the run and watch it:
 
 ```bash
-gh run list --repo SeanJ22/We-The-People --workflow=refresh-daily.yml --limit 1
-gh run watch <run-id> --repo SeanJ22/We-The-People
+gh run list --repo SeanJ22/meanwhile --workflow=refresh-daily.yml --limit 1
+gh run watch <run-id> --repo SeanJ22/meanwhile
 ```
 
 ### The run ids to check against
@@ -81,7 +81,7 @@ looks identical to the one that does.
 
 1. **The push chose SSH.** The log carries:
    ```
-   push-main: pushing to git@github.com:SeanJ22/We-The-People.git as a deploy key
+   push-main: pushing to git@github.com:SeanJ22/meanwhile.git as a deploy key
    ```
    **If this line is absent, the Commit step never ran** — the run early-exited
    and told you nothing. Re-dispatch after forcing a change, or wait for a day
@@ -112,7 +112,7 @@ looks identical to the one that does.
 5. **The key's `last_used` is no longer `null`** — the one external anchor for
    "this key authenticated", read from GitHub rather than inferred from a colour:
    ```bash
-   gh api repos/SeanJ22/We-The-People/keys --jq '.[] | "\(.title) last_used=\(.last_used)"'
+   gh api repos/SeanJ22/meanwhile/keys --jq '.[] | "\(.title) last_used=\(.last_used)"'
    ```
 
 6. **Exactly one commit, not five.** RULING 124: one orchestrated run, one

@@ -27,7 +27,9 @@ import type { Page } from "playwright";
 import { launchGuarded } from "./browser.mts";
 import { today } from "./doc-dates.mjs";
 
-const BASE = process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app";
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+
+const BASE = process.env.SHOOT_BASE_URL ?? PUBLIC_SITE_ORIGIN;
 
 const OUT = "screenshots/nj-hunt-0822";
 const PHONE = { width: 430, height: 932 };

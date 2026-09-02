@@ -63,6 +63,8 @@
 
 import { classifyDeploy } from "./deploy-paths.ts";
 
+import { PUBLIC_SITE_ORIGIN } from "./origins.ts";
+
 /** ---------------------------------------------------------- the states */
 
 /**
@@ -621,7 +623,7 @@ export function evaluateReleaseFreeze(input: {
   if (healthy) {
     const reread =
       "Take a post-deploy reading against the commit production actually serves:\n" +
-      "  pnpm integrity:check --sha=<the sha GET https://sparkwtp.netlify.app/api/build returns> --write\n" +
+      `  pnpm integrity:check --sha=<the sha GET ${PUBLIC_SITE_ORIGIN}/api/build returns> --write\n` +
       "or let the observer do it — `.github/workflows/post-deploy-integrity.yml` runs\n" +
       "`pnpm exec tsx scripts/post-deploy-observer.mts` on every push to main and records the\n" +
       "reading itself. There is no skip flag and no environment override for this bound.";

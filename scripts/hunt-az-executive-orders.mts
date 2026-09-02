@@ -2,6 +2,8 @@ import { writeFileSync } from "node:fs";
 
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+
 /**
  * **THE GOVERNOR'S OWN ACTIONS, FROM THE GOVERNOR'S OWN PUBLICATION.**
  * (AZ03, 2026-08-28.)
@@ -56,7 +58,7 @@ const CRAWL_DELAY_MS = 10_000;
 /** How many index pages to walk. Stated, so a partial walk cannot read as all. */
 const MAX_INDEX_PAGES = 4;
 
-const UA = "Mozilla/5.0 (compatible; MeanwhileCivicBot/1.0; +https://sparkwtp.netlify.app)";
+const UA = `Mozilla/5.0 (compatible; MeanwhileCivicBot/1.0; +${PUBLIC_SITE_ORIGIN})`;
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 

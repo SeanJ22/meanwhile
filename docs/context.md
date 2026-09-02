@@ -1,7 +1,7 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-02 16:58:52 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-02 17:04:24 EDT.
 Session day 2026-09-02 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
@@ -1044,10 +1044,10 @@ _No status change recovered in the commits walked._
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-09-02 16:58:51 EDT
+generated: 2026-09-02 17:04:24 EDT
 branch: codex/provider-transition-2026-09-02
-head sha: 79bef556f30ffb529107c69b290e2ef1712b8165
-head subject: Reconcile generated tracker provenance after main update and retain transition gate diagnosis
+head sha: 4257a9dea2a25454ba7c3ca740b68f612a9e365a
+head subject: Record fourteen passing transition gates after installing the pinned browser
 origin/main sha: 366d54e7e9945d0d465f937f3f61a97e5beb5eca
 origin/main subject: Job watch: a scheduled job has failed twice in a row
 local main sha: 366d54e7e9945d0d465f937f3f61a97e5beb5eca

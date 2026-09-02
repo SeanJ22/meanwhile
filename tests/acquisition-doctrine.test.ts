@@ -287,7 +287,7 @@ test("AGENTS.md carries the project law as its first project-owned content", () 
       `the AGENTS.md mirror no longer carries the mantra "${m}"`,
     );
   }
-  for (const extra of ["ROUTE FAILED", "ROUTE BLOCKED", "EXTRACTION FAILED", "NEEDS_SEAN != STOP"]) {
+  for (const extra of ["ROUTE FAILED", "ROUTE BLOCKED", "EXTRACTION FAILED", "NEEDS SEAN != STOP"]) {
     assert.ok(flat(text).includes(extra), `the AGENTS.md mirror no longer carries "${extra}"`);
   }
 });

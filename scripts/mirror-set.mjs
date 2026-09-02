@@ -273,6 +273,14 @@ export const DECLARED_EXTRAS = [
    */
   "pilot-digest.md",
   "pilot-digest-log.md",
+  /*
+   * The nightly window (RULING 242, 2026-09-02) delivers its digest the same
+   * way: `nightly-window-digest.md` overwritten per window, `nightly-window-log.md`
+   * appended. Written by scripts/nightly-window.mts; read by the owner; never
+   * copied from the repository.
+   */
+  "nightly-window-digest.md",
+  "nightly-window-log.md",
   // Written by the author 2026-08-15/16, 182 MB between them. Not mirror
   // documents, not produced by handoff, and not this script's to remove.
   "primary-rhetoric.csv",

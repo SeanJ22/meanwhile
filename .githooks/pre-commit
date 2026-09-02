@@ -25,4 +25,8 @@ fi
 # file is the one failure that makes every later check meaningless, because
 # the rules those checks enforce are the thing that just went missing (R01).
 node scripts/check-claude-size.mjs
+# AGENTS.md must be the byte-exact generated mirror of CLAUDE.md (provider
+# transition, 2026-09-02): a constitution change committed without
+# `pnpm agents:sync` would hand a non-Claude agent stale law.
+node scripts/agents-sync.mjs --check
 exec node scripts/check-staged-dates.mjs

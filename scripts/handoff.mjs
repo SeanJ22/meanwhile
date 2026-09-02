@@ -351,6 +351,21 @@ if (dirty.length === 0) {
   );
 }
 
+/*
+ * AGENTS.md is the byte-exact generated mirror of CLAUDE.md (provider
+ * transition, 2026-09-02). A stale mirror is a closeout defect: the next
+ * session, on any provider, would read law that no longer says what the
+ * constitution says.
+ */
+{
+  const parity = tryRun("node", ["scripts/agents-sync.mjs", "--check"]);
+  if (parity === null) {
+    fail("AGENTS.md mirror", "STALE against CLAUDE.md — run pnpm agents:sync and commit the result");
+  } else {
+    ok("AGENTS.md mirror", "current — the Next block plus the byte-exact mirror of CLAUDE.md");
+  }
+}
+
 // Reassigned by ship(), which creates the upstream when a new branch has none.
 let upstream = tryRun("git", [
   "rev-parse",

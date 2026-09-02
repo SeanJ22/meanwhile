@@ -43,8 +43,16 @@ import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 
-/** Branch-name shape used by every session in this repo. */
-const BRANCH_TOKEN = /claude\/[A-Za-z0-9._/-]+/g;
+/**
+ * Branch-name shape used by every session in this repo.
+ *
+ * Both provider prefixes: `claude/…` for Claude Code sessions and `codex/…`
+ * for OpenAI Codex sessions (provider transition, 2026-09-02). The token both
+ * HARVESTS known branch names from merges and the reflog and VALIDATES branch
+ * references in tracker prose, so a prefix omitted here is a prefix the guard
+ * is blind to — a codex branch would be neither counted as real nor checked.
+ */
+const BRANCH_TOKEN = /(?:claude|codex)\/[A-Za-z0-9._/-]+/g;
 
 /**
  * Names that appear in the tracker as PROSE ABOUT THE FAILURE rather than as a

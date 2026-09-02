@@ -5,6 +5,7 @@ import { test } from "node:test";
 import { wiringForTypes } from "../lib/registry/source-wiring.ts";
 import {
   makeSchedulePageSource,
+  monthPagesToWalk,
   parseAgendaList,
   parseDatedList,
   parseDocuments,
@@ -531,4 +532,113 @@ test("event-tip: four New London boards are wired, each with its own match", () 
     matches.length,
     "two boards share a titleMatch — one town calendar, two bodies, same rows",
   );
+});
+
+/* ---------------------------------------------------------------------- *
+ * The month walk covers the WHOLE serving window, behind as well as ahead.
+ * (2026-09-02 — the scheduled refresh's first red run of September.)
+ * ---------------------------------------------------------------------- */
+
+test("SEEDED: a one-month calendar is walked BEHIND the current month, to the window's back edge", () => {
+  /*
+   * The defect, reproduced. `monthsAhead` walked forward only, so on the 1st
+   * of every month a body's whole previous month rolled off every page this
+   * adapter read, and the snapshot carried the town with no concluded meeting
+   * at all. New London published August the entire time.
+   */
+  const pages = monthPagesToWalk({
+    now: new Date("2026-09-02T15:00:00Z"),
+    startsAfter: "2026-06-04T15:00:00Z",
+    startsBefore: "2026-11-01T15:00:00Z",
+    monthsAhead: 2,
+  });
+  assert.deepEqual(pages, [
+    { year: 2026, month: 6 },
+    { year: 2026, month: 7 },
+    { year: 2026, month: 8 },
+    { year: 2026, month: 10 },
+    { year: 2026, month: 11 },
+  ]);
+  // September is the default view and is never fetched twice.
+  assert.ok(!pages.some((p) => p.year === 2026 && p.month === 9));
+  // And the old behaviour is pinned as wrong: at least one page lies behind.
+  assert.ok(
+    pages.some((p) => p.year * 12 + p.month - 1 < 2026 * 12 + 8),
+    "no month behind the current one was walked — the calendar's history rolls off again",
+  );
+});
+
+test("without a window the walk still reaches the serving window's back edge, and the year boundary holds", () => {
+  const pages = monthPagesToWalk({ now: new Date("2027-01-15T12:00:00Z"), monthsAhead: 2 });
+  // CONCLUDED_LOOKBACK_DAYS (90) back from 15 January is 17 October;
+  // UPCOMING_HORIZON_DAYS (120) ahead is 15 May.
+  assert.deepEqual(pages, [
+    { year: 2026, month: 10 },
+    { year: 2026, month: 11 },
+    { year: 2026, month: 12 },
+    { year: 2027, month: 2 },
+    { year: 2027, month: 3 },
+    { year: 2027, month: 4 },
+    { year: 2027, month: 5 },
+  ]);
+});
+
+test("monthsAhead stays a floor when the window asked for is shorter than it", () => {
+  const pages = monthPagesToWalk({
+    now: new Date("2026-09-02T15:00:00Z"),
+    startsAfter: "2026-09-01T00:00:00Z",
+    startsBefore: "2026-09-30T00:00:00Z",
+    monthsAhead: 2,
+  });
+  assert.deepEqual(pages, [
+    { year: 2026, month: 10 },
+    { year: 2026, month: 11 },
+  ]);
+});
+
+test("event-tip: fetch asks the calendar for every month in the window it was given, behind and ahead", async () => {
+  const rows = wiringForTypes(["SCHEDULEPAGE"]).filter(
+    (r) => (r.config.shapes ?? "").includes("event-tip") && r.config.slug === "new-london-board-of-selectmen",
+  );
+  assert.equal(rows.length, 1, "the New London Board of Selectmen row is the subject");
+
+  const asked: string[] = [];
+  const fakeFetch = (async (input: string | URL | Request) => {
+    asked.push(String(input));
+    return new Response(NEWLONDON, { status: 200, headers: { "content-type": "text/html" } });
+  }) as unknown as typeof fetch;
+
+  const query = {
+    lat: 43.4,
+    lng: -72.0,
+    radiusKm: 40,
+    startsAfter: "2026-05-17T00:00:00.000Z",
+    startsBefore: "2026-10-14T00:00:00.000Z",
+  };
+  const source = makeSchedulePageSource(rows, fakeFetch);
+  await source.fetch(query);
+
+  const expected = monthPagesToWalk({
+    now: new Date(),
+    startsAfter: query.startsAfter,
+    startsBefore: query.startsBefore,
+    monthsAhead: Number(rows[0]!.config.monthsAhead),
+  });
+  assert.ok(expected.length >= 4, `the window spans ${expected.length} month page(s) — the fixture window lost its months`);
+  for (const page of expected) {
+    assert.ok(
+      asked.some((u) => u.includes(`month=${page.month}`) && u.includes(`year=${page.year}`)),
+      `the fetch never asked for ${page.year}-${page.month}: ${asked.join(", ")}`,
+    );
+  }
+  const now = new Date();
+  const currentKey = now.getUTCFullYear() * 12 + now.getUTCMonth();
+  assert.ok(
+    expected.some((p) => p.year * 12 + p.month - 1 < currentKey),
+    "the window given reaches behind the current month, and the walk must too",
+  );
+  // The default view is read once, first, and every month page carries the
+  // page's own navigation query rather than a bare `?month=`.
+  assert.equal(asked[0], rows[0]!.config.schedulePage);
+  for (const u of asked.slice(1)) assert.ok(u.includes("Type=B_EV"), `month page lost its section query: ${u}`);
 });

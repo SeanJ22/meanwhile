@@ -22,6 +22,8 @@ function loadJson(rel: string): unknown {
 
 interface BallotFile {
   candidacies: { id: string }[];
+  /** Candidacies the clerk's current filing no longer lists — id retained with its evidence. */
+  removals?: { id: string; status: string }[];
 }
 
 interface LineupFile {
@@ -37,8 +39,16 @@ test("every candidate-links key resolves to a real candidacy or lineup nominee",
     "data/ballot/az-pima-2026.json",
     "data/ballot/nh-merrimack-2026.json",
   ]) {
-    for (const c of (loadJson(file) as BallotFile).candidacies) {
+    const ballot = loadJson(file) as BallotFile;
+    for (const c of ballot.candidacies) {
       candidacyIds.add(c.id);
+    }
+    // A link verified for a person the clerk later removed resolves to the
+    // retained removal record rather than dangling (2026-09-02); the removal
+    // is not a candidacy, so nothing renders it as one.
+    for (const r of ballot.removals ?? []) {
+      assert.equal(r.status, "REMOVED_FROM_FILING", `${file}: ${r.id} carries an unknown removal status`);
+      candidacyIds.add(r.id);
     }
   }
 

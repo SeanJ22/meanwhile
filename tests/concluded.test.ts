@@ -289,9 +289,25 @@ test("M58: the Apptegy fetch asks the vendor for the past", async () => {
 test("M58: every wired jurisdiction either has history or explains its absence", () => {
   const snapshot = JSON.parse(
     readFileSync(join(ROOT, "data", "meetings-snapshot.json"), "utf8"),
-  ) as { meetings: Array<{ id: string; jurisdiction: string; startsAt: string }> };
+  ) as {
+    generatedAt: string;
+    meetings: Array<{ id: string; jurisdiction: string; startsAt: string }>;
+  };
 
-  const now = Date.parse(snapshot.meetings[0] ? "2026-08-15T12:00:00.000Z" : "");
+  /*
+   * "Past" is measured against the instant the snapshot was READ — the same
+   * instant every adapter's `normalize` used to stamp CONCLUDED — never
+   * against a date typed here. This held `2026-08-15` from the day it was
+   * written until 2026-09-02, which made it a clock with a stopped hand:
+   * once the serving window's 90 days had rolled past that date, no source
+   * could hold a sitting before it and every jurisdiction would have failed
+   * here at once, for a reason that had nothing to do with history.
+   */
+  const now = Date.parse(snapshot.generatedAt);
+  assert.ok(
+    Number.isFinite(now),
+    "the snapshot carries no readable generatedAt — this test cannot say what is past",
+  );
   const pastByJurisdiction = new Map<string, number>();
   for (const m of snapshot.meetings) {
     const past = Date.parse(m.startsAt) < now ? 1 : 0;

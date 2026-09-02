@@ -6,6 +6,7 @@ import type {
   BallotSet,
   BallotSource,
   Candidacy,
+  CandidacyRemoval,
   Contest,
   Election,
   Measure,
@@ -32,6 +33,7 @@ interface RawFile {
   candidacies: Candidacy[];
   measures: Measure[];
   absences: BallotAbsence[];
+  removals?: CandidacyRemoval[];
 }
 
 /** The count invariant at the source boundary. */
@@ -66,6 +68,20 @@ export function validateBallotFile(value: unknown): asserts value is RawFile {
       throw new Error("an absence must state itself and cite its authority");
     }
   }
+  // A removal is evidence of a change between two documents, so it cites both
+  // — and a person cannot be listed and removed in the same file.
+  const listed = new Set((raw.candidacies ?? []).map((c) => c.id));
+  for (const r of raw.removals ?? []) {
+    if (!r.id || !r.contestId) throw new Error("a removal must keep the candidacy id it had");
+    if (listed.has(r.id)) throw new Error(`${r.id}: listed as a candidacy AND recorded as removed`);
+    if (r.status !== "REMOVED_FROM_FILING") throw new Error(`${r.id}: unknown removal status`);
+    if (!r.lastListed?.sourceUrl || !r.absentFrom?.sourceUrl || !r.statement || !r.firstAbsentOn) {
+      throw new Error(
+        `${r.id}: a removal cites the document that listed the person, the later document that does not, ` +
+          "the day it was first found absent, and states the change",
+      );
+    }
+  }
   // Every CANDIDACY contest must have candidates or be an accounted absence —
   // an empty contest reads as "nobody is running", which is a claim.
   for (const c of raw.contests) {
@@ -94,6 +110,7 @@ export const ballotNjMorrisSource: BallotSource = {
       candidacies: file.candidacies,
       measures: file.measures,
       absences: file.absences,
+      removals: file.removals ?? [],
     };
   },
 

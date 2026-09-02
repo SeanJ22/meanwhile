@@ -1034,3 +1034,90 @@ export function newestScheduledRun(
     .sort();
   return scheduled.length === 0 ? null : scheduled[scheduled.length - 1];
 }
+
+/* ========================================================================== */
+/* THE NEWEST SCHEDULED REFRESH: DID IT LAND, AND IF NOT, DOES ANYONE KNOW    */
+/* ========================================================================== */
+
+/**
+ * **WHY THIS EXISTS.** (2026-09-02, the refresh-failure session; Work Item 1.5.)
+ *
+ * The scheduled refresh failed on 2026-09-01 and again on 2026-09-02, at the
+ * gate, with three sources' fresh data thrown away each time. The staleness
+ * check above said FRESH both days — correctly: the cron fired. The
+ * consecutive-failure watcher would have raised a row after the second — a day
+ * late, and only because there happened to be two. A refresh that fires on
+ * time and lands nothing is, to every instrument this repository had, a
+ * healthy schedule.
+ *
+ * Two shapes, and neither is a quiet day:
+ *
+ * ```
+ *   NEWEST_SCHEDULED_RUN_FAILED   the newest run the SCHEDULE triggered
+ *                                 concluded failure — at any step.
+ *   NO_COMMIT_ON_A_DUE_DAY        it concluded success, sources were due,
+ *                                 the run was not the quiet-day shape, and
+ *                                 no refresh commit reached main after it.
+ * ```
+ *
+ * A quiet day is the `Unchanged` step RUNNING: the refresh looked and nothing
+ * moved. That is `RAN_NOOP` and it opens nothing. Everything else that leaves
+ * `main` untouched on a day something was due is an incident, because the
+ * reader is a day older and nobody said so.
+ *
+ * Judged on the newest SCHEDULED run only, for the reason `newestScheduledRun`
+ * gives: a manual dispatch after a failure proves a person ran it, not that the
+ * schedule is healthy.
+ */
+export const REFRESH_INCIDENT_KINDS = ["NEWEST_SCHEDULED_RUN_FAILED", "NO_COMMIT_ON_A_DUE_DAY"] as const;
+export type RefreshIncidentKind = (typeof REFRESH_INCIDENT_KINDS)[number];
+
+export interface RefreshRunIncident {
+  readonly kind: RefreshIncidentKind;
+  readonly runId: number;
+  readonly detail: string;
+}
+
+export function refreshRunIncident(input: {
+  /** The newest run the schedule triggered, with its steps read. Null when there is none. */
+  readonly newestScheduled: RunObservation | null;
+  /** How many sources the cadence (or open debt) called for on that run's day. */
+  readonly dueSourceCount: number;
+  /**
+   * Whether a refresh commit reached `main` after the run was created — read
+   * from the branch, never inferred from the step list. Null when unchecked.
+   */
+  readonly landedAfterRun: boolean | null;
+}): RefreshRunIncident | null {
+  const run = input.newestScheduled;
+  if (!run) return null;
+  const outcome = outcomeOf(run);
+
+  if (outcome.kind === "RAN_FAILED" || outcome.kind === "RAN_PUSH_REJECTED") {
+    return {
+      kind: "NEWEST_SCHEDULED_RUN_FAILED",
+      runId: run.databaseId,
+      detail:
+        `the newest SCHEDULED refresh, run ${run.databaseId} (created ${run.createdAt}), concluded failure — ` +
+        `${outcome.why}. Whatever its sources fetched did not reach main. A failed refresh is a day of ` +
+        "freshness the reader lost, and it is an incident on its own, not after a second one.",
+    };
+  }
+
+  if (outcome.kind === "RAN_NOOP") return null;
+  if (outcome.kind === "RAN_IN_PROGRESS" || outcome.kind === "RAN_OTHER") return null;
+
+  // RAN_LANDED or RAN_SUCCEEDED_UNCLASSIFIED: green, and not the quiet-day shape.
+  if (input.dueSourceCount > 0 && input.landedAfterRun === false) {
+    return {
+      kind: "NO_COMMIT_ON_A_DUE_DAY",
+      runId: run.databaseId,
+      detail:
+        `the newest SCHEDULED refresh, run ${run.databaseId} (created ${run.createdAt}), concluded success and ` +
+        `was NOT the quiet-day shape (${outcome.kind}: ${outcome.why}), ${input.dueSourceCount} source(s) were due, ` +
+        "and no refresh commit reached main after it. A green run that landed nothing on a due day is not a " +
+        "quiet day: data moved and something between the diff and the push declined to carry it.",
+    };
+  }
+  return null;
+}

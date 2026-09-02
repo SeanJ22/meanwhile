@@ -105,8 +105,18 @@ const AS_OF = declaredSourceStamp({
    * (one municipality may lie across several legislative districts), so the walk
    * artifact was regenerated from the live sources that day. The rosters are
    * regenerated in this same commit for the same reason the line above gives.
+   *
+   * Moved to 2026-09-01 by the refresh-failure session of 2026-09-02, and the
+   * input that moved is again `data/hunt/wikipedia-nj-morris.json`: commit
+   * 7514e68e re-walked it over the `?action=raw` route the same day (the API
+   * path was disallowed by the host's own robots.txt) and re-stamped
+   * `walkedAt: 2026-09-01`, and this line was NOT moved with it. Nothing
+   * noticed for a day because the PR gate runs on a depth-1 clone, where
+   * `verifyAgainstGit` says UNVERIFIABLE; the scheduled refresh runs on a full
+   * clone, where it said DISAGREES and took the whole refresh red. The rosters
+   * are regenerated in this same commit.
    */
-  readOn: "2026-08-28",
+  readOn: "2026-09-01",
   sources: SOURCE_FILES,
 });
 const DRY = process.argv.includes("--dry");

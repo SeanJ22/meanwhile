@@ -120,7 +120,19 @@ test("2: the committed ballot's ids are distinct and its coverage never silently
    */
   const ballot = JSON.parse(
     readFileSync(join(ROOT, "data", "ballot", "nj-morris-2026.json"), "utf8"),
-  ) as { contests: { id: string }[]; candidacies: { id: string; contestId: string }[] };
+  ) as {
+    contests: { id: string }[];
+    candidacies: { id: string; contestId: string }[];
+    removals?: {
+      id: string;
+      contestId: string;
+      status: string;
+      lastListed: { sourceUrl: string; collectedAt: string };
+      absentFrom: { sourceUrl: string; collectedAt: string };
+      firstAbsentOn: string;
+      statement: string;
+    }[];
+  };
 
   // THE DIRECTION. The floors are the last measured values, and they move only
   // upward and only in the same commit as the work that moved them.
@@ -128,9 +140,40 @@ test("2: the committed ballot's ids are distinct and its coverage never silently
     ballot.contests.length >= 99,
     `contests fell to ${ballot.contests.length} from a floor of 99 — coverage may improve and may not silently reverse`,
   );
+
+  /*
+   * ## A SHRINK THE CLERK EXPLAINS IS NOT A SILENT ONE (2026-09-02)
+   *
+   * The clerk's 1 September revision listed one fewer candidate than the
+   * 21 August revision — Lana Leguía, CD-7 — and this floor took two scheduled
+   * refreshes red on a ballot that was CORRECT. The floor's purpose is to catch
+   * coverage falling without anyone saying so; a removal that names the person,
+   * the document that listed them, the later document that does not, and the
+   * day it was first seen is the opposite of silence, and rendering a person
+   * the clerk no longer lists would be the false claim. So the accounting is
+   * LISTED + EXPLAINED REMOVALS against the floor, and every removal has to
+   * carry both documents or it does not count.
+   */
+  const removals = ballot.removals ?? [];
+  for (const r of removals) {
+    assert.equal(r.status, "REMOVED_FROM_FILING", `${r.id}: unknown removal status`);
+    assert.ok(r.lastListed?.sourceUrl && r.absentFrom?.sourceUrl, `${r.id}: a removal cites both documents`);
+    assert.notEqual(
+      r.lastListed.sourceUrl,
+      r.absentFrom.sourceUrl,
+      `${r.id}: the document that listed the person and the one that does not are the same document — that is not evidence of a change`,
+    );
+    assert.match(r.firstAbsentOn, /^\d{4}-\d{2}-\d{2}$/, `${r.id}: firstAbsentOn is not a day`);
+    assert.ok(r.statement.length > 40, `${r.id}: a removal states the change in words a reader can read`);
+    assert.ok(
+      !ballot.candidacies.some((c) => c.id === r.id),
+      `${r.id}: listed as a candidacy AND recorded as removed`,
+    );
+  }
   assert.ok(
-    ballot.candidacies.length >= 276,
-    `candidacies fell to ${ballot.candidacies.length} from a floor of 276`,
+    ballot.candidacies.length + removals.length >= 276,
+    `candidacies fell to ${ballot.candidacies.length} from a floor of 276, and only ${removals.length} of the ` +
+      "shortfall is an explained removal — the rest vanished without a word",
   );
 
   // THE INVARIANT. Distinct ids, and no candidacy pointing at a contest that

@@ -1571,3 +1571,62 @@ answer statewide.
   document below its root. Permission state is recorded as observed, and the
   inference from it is recorded separately — which is the same separation
   RULING 182 draws between permission state and transport state.
+
+## daily-refresh-admin-signin-2026-09-02 · 2026-09-02
+
+### A GovOffice calendar walked BEHIND the current month
+
+- **Conceived:** the M58 control refused the refreshed meetings snapshot on
+  2026-09-01 and 2026-09-02 because New London, NH showed no concluded meeting.
+  The committed snapshot held seven. The town had not stopped publishing; the
+  question was what the adapter had stopped asking for.
+- **Query:** `https://www.nl-nh.com/index.asp?Type=B_EV&SEC=<section>&month=8&year=2026`
+  (the `schedulepage` / `event-tip` adapter's own page, with the month and
+  year parameters it had only ever walked FORWARD), then `month=6`.
+- **Returned:** HTTP 200 with 25 event tips for August and 21 for June. The
+  calendar serves one month per page; on 1 September the default view rolled
+  to September and every August sitting left every page the adapter read. The
+  rebuilt snapshot after the fix carries 67 New London meetings, 32 of them
+  concluded, the earliest on 2026-06-04.
+- **Generalises:** **yes**, to every GovOffice calendar in the portfolio:
+  `monthPagesToWalk()` now walks every month overlapping the composite's
+  window in both directions, and the test measures "past" against
+  `snapshot.generatedAt` rather than a date typed on 2026-08-15.
+
+### The clerk's republished candidate list, and the one row it no longer carries
+
+- **Conceived:** the nj-filing floor refused a shrink from 276 to 275 and the
+  cards and links keyed to `legu-a-lana` dangled; a shrink is either a silent
+  loss or a published fact, and only the publisher's document can say which.
+- **Query:** the Morris County Clerk's candidates page, whose current href had
+  moved from `v/9/…/2026-general-candidates-082126.pdf` (148 rows) to
+  `v/11/…/2026-general-election-candidates-9012026.pdf`, read with
+  `pnpm pdf:read`.
+- **Returned:** 147 rows; CD-7 lists Kean, Bennett and O'Toole, and no
+  Leguía, with no withdrawal text on the page. The rebuild now records the
+  removal — id retained, both documents cited, a stable first-absent date, a
+  statement — and renders it to the reader as a cited absence on the CD-7
+  division. The floor counts listed plus EXPLAINED removals, and a removal
+  must cite two different documents or it does not count.
+- **Generalises:** **yes**, to every curated ballot rebuilt from a clerk's
+  document: a candidacy that leaves a later document is a recorded removal,
+  never a silent drop and never a manufactured presence.
+
+### Two provider readbacks that returned ZERO, reported as successes
+
+- **Conceived:** the session brief stated two credentials rotated and two
+  Google client variables installed; the constitution counts provider truth
+  only after a live readback.
+- **Query:** `GET https://api.netlify.com/api/v1/accounts/<slug>/env?site_id=<id>`
+  for both visible sites and both accounts (names only), and
+  `GET https://api.github.com/repos/<owner>/<repo>/actions/secrets` (names and
+  dates only); then one authenticated call per configured credential (status
+  only): `GET https://api.govinfo.gov/collections` with `DATA_GOV_API_KEY`
+  and `GET https://api.netlify.com/api/v1/user` with `NETLIFY_AUTH_TOKEN`.
+- **Returned:** no `GOOGLE_OAUTH_*` variable anywhere (NH310); neither
+  credential exists as a GitHub secret; and both configured values answered
+  HTTP 200 while the secret store's modification time (01:44Z) predates the
+  transcript finding (07:28Z) — so the values that appeared in the transcript
+  are the live ones and NH306 stays open with that evidence.
+- **Generalises:** **yes**: a brief's "done" is a claim to read back, and a
+  readback that returns nothing is the result, not a failure to look.

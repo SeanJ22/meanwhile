@@ -14,7 +14,7 @@
  *                              as a window that ran clean
  */
 
-import type { ReadOutcome } from "./admin-data.ts";
+import { unreachable, type ReadOutcome } from "./admin-data.ts";
 import {
   gap,
   held,
@@ -37,13 +37,6 @@ export const INCIDENTS_SHOWN = 10;
 export const VERDICTS_SHOWN = 25;
 
 /* ------------------------------------------------------------------ reads */
-
-function unreachable<T>(which: string, error: unknown): ReadOutcome<T> {
-  return {
-    kind: "STORE_UNREACHABLE",
-    detail: `Reading ${which} failed (${(error as Error)?.name ?? "error"}). We could not ask.`,
-  };
-}
 
 export interface LastWindowRead {
   /** Every window record the log holds. */

@@ -57,6 +57,18 @@ export type ReadOutcome<T> =
   | { readonly kind: "STORE_UNREACHABLE"; readonly detail: string };
 
 /**
+ * A read that threw, as the outcome every view reports it as. ONE
+ * implementation: the research view and the window view each carried a copy
+ * until the duplicate sweep caught them at the 2026-09-02 integration.
+ */
+export function unreachable<T>(which: string, error: unknown): ReadOutcome<T> {
+  return {
+    kind: "STORE_UNREACHABLE",
+    detail: `Reading ${which} failed (${(error as Error)?.name ?? "error"}). We could not ask.`,
+  };
+}
+
+/**
  * Open the control plane, or say precisely why not.
  *
  * `NOT_CONFIGURED` is a legitimate state — a machine without a control plane is

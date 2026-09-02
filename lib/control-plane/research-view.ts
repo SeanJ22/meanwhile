@@ -22,7 +22,7 @@
  * ```
  */
 
-import type { ReadOutcome } from "./admin-data.ts";
+import { unreachable, type ReadOutcome } from "./admin-data.ts";
 import type { CostEntry } from "./cost.ts";
 import {
   assertAggregateOnly,
@@ -66,13 +66,6 @@ export const SCOUT_RESULTS_SHOWN = 25;
 export const INTENTS_SHOWN = 10;
 
 /* ------------------------------------------------------------------ reads */
-
-function unreachable<T>(which: string, error: unknown): ReadOutcome<T> {
-  return {
-    kind: "STORE_UNREACHABLE",
-    detail: `Reading ${which} failed (${(error as Error)?.name ?? "error"}). We could not ask.`,
-  };
-}
 
 export async function readResearchState(
   repos: ControlPlaneRepositories,

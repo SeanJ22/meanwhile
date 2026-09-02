@@ -244,7 +244,16 @@ export default async function ResearchPage() {
                   ? "PROVEN"
                   : "NOT PROVEN"}
             </span>{" "}
-            {view.supervision.value.condition?.reason ?? "the verdict carried no host-supervision condition"}
+            {view.supervision.value.condition ? (
+              view.supervision.value.condition.reason
+            ) : (
+              <GapNote
+                gap={{
+                  whose: "OURS",
+                  says: "the derived verdict carried no host-supervision condition; the cycle that wrote this state predates RULING 246",
+                }}
+              />
+            )}
           </p>
           <p className="note">
             Read on {view.supervision.value.host} at {view.supervision.value.checkedAt};{" "}

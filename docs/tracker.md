@@ -14,18 +14,18 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **391 open**, 479 resolved.
-- **72 waiting on Sean** — the first section below.
+- **393 open**, 480 resolved.
+- **71 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **4**
+  - Needs Sean — **3**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **1**
   - Arizona hunt — **2**
   - Visual feedback — **3**
-  - Data infrastructure — **3**
+  - Data infrastructure — **5**
   - Product / UI — **3**
   - Constitution & rules — **1**
-  - Repo & ops — **6** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
+  - Repo & ops — **7** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
 
 **1 section(s) over the cap.** A section over five P1 rows is STOPPED, and that is reported as a fact. Nothing is relabelled to fit — a demotion changes the label and not the situation.
 
@@ -35,15 +35,13 @@ and when. Nothing is ever deleted.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**72 open · 72 resolved.**
+**71 open · 73 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
 ### P1
 
 **NH108** — The questionnaire instrument is built and 272 invitations are generated, every one with invitedOn null, so nothing has been sent to anybody. The page a candidate types into is buildable and is NH104. SENDING is not a build, it is four decisions, and they are all yours: (1) the sending DOMAIN this goes out from, because a civic questionnaire arriving from a generic address is the one a campaign deletes; (2) an email PROVIDER CREDENTIAL, which this project does not hold and cannot obtain on your behalf; (3) DELIVERABILITY WARM-UP, because 272 near-simultaneous messages from a cold domain is the textbook shape of a spam classification, and being classified once is close to unrecoverable; and (4) WHETHER THE INVITATION GOES OUT BEFORE OR AFTER 3 NOVEMBER 2026, which is a judgement about the election and not a technical question at all. Raised as ONE row on purpose so you can rule once rather than in four pieces, and so a session cannot start building a send path on the strength of having answered one of them.
-
-**NH305** — PREDICATE: resolves itself when data/ops/runner-relaunch-proof.json records verdict RELAUNCHED. WHAT IS NEEDED: one elevated command. The standing runner's Scheduled Task has only an at-logon trigger, and the measured fact (2026-09-01) is that RestartCount does not relaunch an externally killed runner on this host. The corrected installer registers a second trigger that fires every 5 minutes for 3650 days (a no-op while the runner lives, a relaunch within five minutes after a death), and the unelevated install attempt on 2026-09-01 was refused: Access is denied. From an elevated PowerShell in C:\Users\seanj\dev\we-the-people run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action install ; then -Action verify-triggers (expect exit 0) ; then -Action prove-relaunch (kills the runner, waits up to 8 minutes for the trigger to bring it back, writes data/ops/runner-relaunch-proof.json) ; then commit that proof file. OPTIONS: (A) run the three commands - the runner then survives a kill unattended and L1-8 turns MET; (B) do not - the Level 1 lane keeps running while the runner lives, and any kill or crash of the parent leaves it DOWN until a logon or pnpm pilot:start, which is the state measured today. CONSEQUENCE OF NOT DECIDING: (B) stands, and the admin Research view reports the runner dead the next time it dies.
 
 **NH306** — PREDICATE: resolves itself when data/ops/credential-events.jsonl records a rotation event for BOTH names. WHAT IS NEEDED: two credential rotations, by the owner or under RULING 238 with an owner copy first. THE FINDING: pnpm secrets:sweep --transcripts, run from the main checkout on 2026-09-02 by the Level 1 activation session, found the VALUES of DATA_GOV_API_KEY and NETLIFY_AUTH_TOKEN in a subagent transcript of the earlier session 771dfc3d-591d-4a39-9cb2-2c028431acdd (agent-a5abb86c7d4cf8d7a.jsonl, line 24). The file was scrubbed in place (8 values replaced, 0 remaining on re-read) and the repository and the Drive mirror read 0 secret occurrences. RULING 127: a credential that has appeared in a transcript is COMPROMISED and is ROTATED; scrubbing is necessary and not sufficient. OPTIONS: (A) rotate both now - regenerate the api.data.gov key and the Netlify personal access token, place the owner copies in .env.local first, then record each rotation in data/ops/credential-events.jsonl by name, provider, context, scope, actor and owner-copy location; (B) rotate only the Netlify token (the higher-privilege one: it can deploy and read site settings) and accept the data.gov key as low-risk; (C) do nothing - both values stay valid for whoever read that transcript. CONSEQUENCE OF NOT DECIDING: (C) stands and the row ages.
 
@@ -551,13 +549,17 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**93 open · 111 resolved.**
+**95 open · 111 resolved.**
 
 ### P1
 
 **NH215** — pnpm tenancy found morriscountynj.gov linking out to morriscountynj.iqm2.com/Citizens/LegalNotice.aspx. This project has an IQM2 adapter (lib/sources/iqm2/) and Morris County is the county containing 07866, the New Jersey pilot zip. It has never been connected. This is the cheapest coverage in the product: an adapter we already own, a tenant we already found, a county a reader is standing in.
 
 **NH270** — A definition tells a reader what a body actually does. definitionsForBody is keyed on the DIVISION rather than the BODY, so every body sharing the Pima County division resolves to the Arizona county class definition.
+
+**NH307** — The independent audit of Level 1 found that a Scout's observedOn was written by the model, that validateScoutFinish() never checked it against the artifact's retrievedAt, and that learnedRouteFrom() copied it into the durable method-candidate provenance: the Coconino Attempt at-a45f746dee4c4289aeda9e98 on 2026-09-02 produced VALIDATED candidate mc-54a3b641ab944461c5516985 whose origin reads observed 2026-01-01. Nothing was admitted and canonical method knowledge was not polluted. Classified BLOCKING for method admission under s25, which is what makes L1-11 honest again. The correction is RULING 243 (machine-owned provenance): the executor derives observedOn, the permission verdict, the record class and the substantiating artifact ids from the vault and the obligation; a finish whose model-supplied provenance disagrees or is absent is REFUSED; the model's values are recorded only as claims; the seven VALIDATED candidates in data/method/candidates.json are re-derived from their Attempts' artifacts and re-validated without admission. Resolves when the correction and the re-derived store are merged with the seeded refusal test green.
+
+**NH308** — The audit of L1-12 found that the derived Level 1 verdict considered the heartbeat, a fresh research state, not-paused, the model lane, the worker credential, the cost state and the runtime dispatch conditions, but never whether the host has a proven parent-relaunch mechanism; once the unmeasured-cost row aged out of the 24-hour window the page would say ACTIVE while a killed parent stayed dead, because a historical Scout success was standing in for the current system's health. The correction adds a required condition: a durable, reasonably fresh host-supervision proof (the prove-relaunch record showing RELAUNCHED within tolerance, plus the live relaunch trigger's presence, both carried into the research state by the cycle so the admin host can read them). Absent or stale reads DEGRADED naming the reason. Also fixes the denominator wording flagged in the audit: 'machine capable' becomes 'has a runnable executor lane; result held / not yet'. Resolves when the correction is merged with its tests and the admin page shows the condition.
 
 **NH45** — data/ballot/candidate-hunt-state.json holds 136 candidate keys in TWO formats for the same people: a slug form, ballot-az-pima:governor:hobbs-katie, and a pipe-and-display-name form, ballot-az-pima:governor|Katie Hobbs. Thirty of the 136 are the pipe form and every one names somebody the slug form already names. candidate-cards-2026.json carries 20 of the same duplicates.
 
@@ -905,7 +907,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**42 open · 97 resolved.**
+**43 open · 97 resolved.**
 
 ### P1
 
@@ -967,6 +969,8 @@ WHAT THE FAILING RUN PRINTED (run 32961466707). The last 14 of 257 line(s) the r
 **NH264** — refresh-daily is on cron 09:11 UTC. Of the three scheduled runs on record two failed, the one success started 637 minutes late, and today's has not appeared at all ten hours past its cron.
 
 **NH280** — PR #216 built and bundled clean, then failed Netlify secret scanning: Pima County's own Clerk of the Board page emitted a Google Maps browser key into the HTML that scripts/learn-legistar-horizon.mts recorded verbatim as a test fixture. Scanning the whole tree for the class found more than Netlify reported - the same fixture also carried a live 30-day CivicPlus bearer token repeated five times, and a second fixture, the New London NH calendar, carried a different Google key that would have been the next red deploy. The repair sanitizes captured pages at the moment of acquisition, records the provenance of every redaction without keeping the credential, and adds a gate so GitHub CI catches the class before Netlify does.
+
+**NH309** — Scheduled runs 33517560447 (2026-09-01) and 33636708298 (2026-09-02) of refresh-daily.yml both failed at 'Validate before committing', never at the refresh or Commit steps: the refreshed data failed the suite (M58 New London NH lost its concluded meetings without a recorded history gap on both days; on 2026-09-02 also the Morris County clerk's list fell from 276 to 275 candidacies so the cards and links keyed to legu-a-lana dangled, and build-nj-rosters.mts's stamp disagreed with git under the workflow's full-depth clone). No refresh has landed on main since the 2026-08-31 run. The repair makes the gate per-source (the culprit source becomes durable freshness debt in data/ops/refresh-debt.json and the survivors commit) and writes docs/refresh-run.json. Closure requires, after the repair merges: (1) a manual all-sources dispatch landing a 'Daily refresh:' commit on main with per-source as-of dates before/after recorded, and (2) the NEXT run with event=schedule concluding success and landing what was due. Read with: gh run list --workflow=refresh-daily.yml --json databaseId,event,conclusion,createdAt,headSha and git log --grep='Daily refresh:' origin/main.
 
 ### P2
 

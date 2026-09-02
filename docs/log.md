@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-09-02 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **176 sessions.**
+Newest first. **178 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -32,6 +32,24 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NH306** — PREDICATE: resolves itself when data/ops/credential-events.jsonl records a rotation event for BOTH names. WHAT IS NEEDED: two credential rotations, by the owner or under RULING 238 with an owner copy first. THE FINDING: pnpm secrets:sweep --transcripts, run from the main checkout on 2026-09-02 by the Level 1 activation session, found the VALUES of DATA_GOV_API_KEY and NETLIFY_AUTH_TOKEN in a subagent transcript of the earlier session 771dfc3d-591d-4a39-9cb2-2c028431acdd (agent-a5abb86c7d4cf8d7a.jsonl, line 24). The file was scrubbed in place (8 values replaced, 0 remaining on re-read) and the repository and the Drive mirror read 0 secret occurrences. RULING 127: a credential that has appeared in a transcript is COMPROMISED and is ROTATED; scrubbing is necessary and not sufficient. OPTIONS: (A) rotate both now - regenerate the api.data.gov key and the Netlify personal access token, place the owner copies in .env.local first, then record each rotation in data/ops/credential-events.jsonl by name, provider, context, scope, actor and owner-copy location; (B) rotate only the Netlify token (the higher-privilege one: it can deploy and read site settings) and accept the data.gov key as low-risk; (C) do nothing - both values stay valid for whoever read that transcript. CONSEQUENCE OF NOT DECIDING: (C) stands and the row ages. *(open)*
 
 **Needs Sean.** NH306
+
+## daily-refresh-admin-signin-2026-09-02 (RULING 227 auto-reconciliation) · 2026-09-02
+
+**What it finished.** 1 row(s).
+
+- **NH305** — PREDICATE: resolves itself when data/ops/runner-relaunch-proof.json records verdict RELAUNCHED. WHAT IS NEEDED: one elevated command. The standing runner's Scheduled Task has only an at-logon trigger, and the measured fact (2026-09-01) is that RestartCount does not relaunch an externally killed runner on this host. The corrected installer registers a second trigger that fires every 5 minutes for 3650 days (a no-op while the runner lives, a relaunch within five minutes after a death), and the unelevated install attempt on 2026-09-01 was refused: Access is denied. From an elevated PowerShell in C:\Users\seanj\dev\we-the-people run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action install ; then -Action verify-triggers (expect exit 0) ; then -Action prove-relaunch (kills the runner, waits up to 8 minutes for the trigger to bring it back, writes data/ops/runner-relaunch-proof.json) ; then commit that proof file. OPTIONS: (A) run the three commands - the runner then survives a kill unattended and L1-8 turns MET; (B) do not - the Level 1 lane keeps running while the runner lives, and any kill or crash of the parent leaves it DOWN until a logon or pnpm pilot:start, which is the state measured today. CONSEQUENCE OF NOT DECIDING: (B) stands, and the admin Research view reports the runner dead the next time it dies.
+
+**Needs Sean.** Nothing.
+
+## daily-refresh-admin-signin-2026-09-02 · 2026-09-02
+
+**What it started.** 3 row(s) opened, 3 still open.
+
+- **NH307** — The independent audit of Level 1 found that a Scout's observedOn was written by the model, that validateScoutFinish() never checked it against the artifact's retrievedAt, and that learnedRouteFrom() copied it into the durable method-candidate provenance: the Coconino Attempt at-a45f746dee4c4289aeda9e98 on 2026-09-02 produced VALIDATED candidate mc-54a3b641ab944461c5516985 whose origin reads observed 2026-01-01. Nothing was admitted and canonical method knowledge was not polluted. Classified BLOCKING for method admission under s25, which is what makes L1-11 honest again. The correction is RULING 243 (machine-owned provenance): the executor derives observedOn, the permission verdict, the record class and the substantiating artifact ids from the vault and the obligation; a finish whose model-supplied provenance disagrees or is absent is REFUSED; the model's values are recorded only as claims; the seven VALIDATED candidates in data/method/candidates.json are re-derived from their Attempts' artifacts and re-validated without admission. Resolves when the correction and the re-derived store are merged with the seeded refusal test green. *(open)*
+- **NH308** — The audit of L1-12 found that the derived Level 1 verdict considered the heartbeat, a fresh research state, not-paused, the model lane, the worker credential, the cost state and the runtime dispatch conditions, but never whether the host has a proven parent-relaunch mechanism; once the unmeasured-cost row aged out of the 24-hour window the page would say ACTIVE while a killed parent stayed dead, because a historical Scout success was standing in for the current system's health. The correction adds a required condition: a durable, reasonably fresh host-supervision proof (the prove-relaunch record showing RELAUNCHED within tolerance, plus the live relaunch trigger's presence, both carried into the research state by the cycle so the admin host can read them). Absent or stale reads DEGRADED naming the reason. Also fixes the denominator wording flagged in the audit: 'machine capable' becomes 'has a runnable executor lane; result held / not yet'. Resolves when the correction is merged with its tests and the admin page shows the condition. *(open)*
+- **NH309** — Scheduled runs 33517560447 (2026-09-01) and 33636708298 (2026-09-02) of refresh-daily.yml both failed at 'Validate before committing', never at the refresh or Commit steps: the refreshed data failed the suite (M58 New London NH lost its concluded meetings without a recorded history gap on both days; on 2026-09-02 also the Morris County clerk's list fell from 276 to 275 candidacies so the cards and links keyed to legu-a-lana dangled, and build-nj-rosters.mts's stamp disagreed with git under the workflow's full-depth clone). No refresh has landed on main since the 2026-08-31 run. The repair makes the gate per-source (the culprit source becomes durable freshness debt in data/ops/refresh-debt.json and the survivors commit) and writes docs/refresh-run.json. Closure requires, after the repair merges: (1) a manual all-sources dispatch landing a 'Daily refresh:' commit on main with per-source as-of dates before/after recorded, and (2) the NEXT run with event=schedule concluding success and landing what was due. Read with: gh run list --workflow=refresh-daily.yml --json databaseId,event,conclusion,createdAt,headSha and git log --grep='Daily refresh:' origin/main. *(open)*
+
+**Needs Sean.** Nothing.
 
 ## tracker:views (RULING 227 auto-reconciliation) · 2026-09-01
 
@@ -60,11 +78,10 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 ## level-1-activation 2026-09-01 · 2026-09-01
 
-**What it started.** 1 row(s) opened, 1 still open.
+**What it started.** 1 row(s) opened, 0 still open.
 
-- **NH305** — PREDICATE: resolves itself when data/ops/runner-relaunch-proof.json records verdict RELAUNCHED. WHAT IS NEEDED: one elevated command. The standing runner's Scheduled Task has only an at-logon trigger, and the measured fact (2026-09-01) is that RestartCount does not relaunch an externally killed runner on this host. The corrected installer registers a second trigger that fires every 5 minutes for 3650 days (a no-op while the runner lives, a relaunch within five minutes after a death), and the unelevated install attempt on 2026-09-01 was refused: Access is denied. From an elevated PowerShell in C:\Users\seanj\dev\we-the-people run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action install ; then -Action verify-triggers (expect exit 0) ; then -Action prove-relaunch (kills the runner, waits up to 8 minutes for the trigger to bring it back, writes data/ops/runner-relaunch-proof.json) ; then commit that proof file. OPTIONS: (A) run the three commands - the runner then survives a kill unattended and L1-8 turns MET; (B) do not - the Level 1 lane keeps running while the runner lives, and any kill or crash of the parent leaves it DOWN until a logon or pnpm pilot:start, which is the state measured today. CONSEQUENCE OF NOT DECIDING: (B) stands, and the admin Research view reports the runner dead the next time it dies. *(open)*
 
-**Needs Sean.** NH305
+**Needs Sean.** Nothing.
 
 ## autonomy-recovery 2026-09-01 · 2026-09-01
 

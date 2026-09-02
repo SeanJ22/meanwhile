@@ -1,11 +1,11 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "0bd4089fefc9a830",
+  "snapshot": "ff96d60545edf000",
   "counts": {
-    "records": 278,
-    "current": 257,
-    "law": 222,
+    "records": 283,
+    "current": 262,
+    "law": 226,
     "decisions": 32,
     "historical": 21
   },
@@ -5490,6 +5490,198 @@
         {
           "kind": "related_to",
           "target": "R-0213"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0242",
+      "aliases": [
+        "RULING 242",
+        "R242",
+        "R-242"
+      ],
+      "title": "RULING 242 — THE SINGLE NIGHTLY PROMOTION DOOR: reader-facing civic truth changes through exactly one door, the nightly window on the standing runner's own clock, which runs in SHADOW until the activation gate opens",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-09-02",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [
+        {
+          "key": "reader_truth.change_door",
+          "value": "single-nightly-window"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0224"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0212"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0216"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0218"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0233"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0240"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0243",
+      "aliases": [
+        "RULING 243",
+        "R243",
+        "R-243"
+      ],
+      "title": "RULING 243 — MACHINE-OWNED PROVENANCE: execution and provenance facts in any model-produced candidate, finding or result are written by the machine from the Attempt, artifact, obligation and permission records; the model's statements about them are claims",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-09-02",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [
+        {
+          "key": "provenance.owner",
+          "value": "machine-owned"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0240"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0206"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0092"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0244",
+      "aliases": [
+        "RULING 244",
+        "R244",
+        "R-244"
+      ],
+      "title": "RULING 244 — WORKER EFFICIENCY LAW (owner-ordered): near flawless and wildly efficient — no step is skipped, and no token is spent twice for the same thing",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-09-02",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [
+        {
+          "key": "worker.efficiency_law",
+          "value": "adopted-verbatim"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0237"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0240"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0241"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0245",
+      "aliases": [
+        "RULING 245",
+        "R245",
+        "R-245"
+      ],
+      "title": "RULING 245 — OWNER ADMIN IDENTITY: administrative access authenticates the owner through Sign in with Google for exactly the enrolled owner address, verified server-side; a shared secret is never a login path except as a documented, rate-limited, incident-logged break-glass under RULING 238",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "sources-licensing",
+      "adopted": "2026-09-02",
+      "operativePolicy": "docs/governance/policies/sources-licensing.md",
+      "claims": [
+        {
+          "key": "admin.identity",
+          "value": "google-owner-only"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "related_to",
+          "target": "R-0238"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0127"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0246",
+      "aliases": [
+        "RULING 246",
+        "R246",
+        "R-246"
+      ],
+      "title": "RULING 246 — LEVEL 1 RESEARCH is terminal: SHIPPED, RUNNING, DEGRADED, UNFINISHED — the audit verdicts per criterion and the carried items are recorded, and the machinery is corrected under the finite rules rather than by reopening the session",
+      "kind": "FACT",
+      "status": "ACTIVE",
+      "provenance": "observed_fact",
+      "domain": "meta-governance",
+      "adopted": "2026-09-02",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [
+        {
+          "kind": "related_to",
+          "target": "R-0240"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0241"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0239"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0243"
         }
       ],
       "uncertain": [],

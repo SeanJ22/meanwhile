@@ -439,6 +439,30 @@ export const CLAIM_KEYS: readonly ClaimKeyDef[] = [
       "level-4-automatic-publishing",
     ],
   },
+  {
+    key: "reader_truth.change_door",
+    question:
+      "Through what door does reader-facing civic truth change — session shipping and the legacy refresh, or the single nightly window on the standing runner's clock?",
+    values: ["session-and-legacy-refresh", "single-nightly-window"],
+  },
+  {
+    key: "provenance.owner",
+    question:
+      "Who writes the execution and provenance facts on a model-produced candidate, finding or result — the model, or the machine from the Attempt, artifact, obligation and permission records?",
+    values: ["model-may-write", "machine-owned"],
+  },
+  {
+    key: "worker.efficiency_law",
+    question:
+      "Does the WORKER EFFICIENCY LAW (cache the stable prefix, route each step to the cheapest adequate model class, budget representations, never re-read or re-walk, measure per step) bind every autonomous worker and session-spawned agent?",
+    values: ["adopted-verbatim", "not-adopted"],
+  },
+  {
+    key: "admin.identity",
+    question:
+      "How does the owner authenticate to the admin control centre — a shared secret, or Sign in with Google for exactly the enrolled owner address?",
+    values: ["shared-secret", "google-owner-only"],
+  },
 ] as const;
 
 const KEY_INDEX = new Map(CLAIM_KEYS.map((k) => [k.key, k]));

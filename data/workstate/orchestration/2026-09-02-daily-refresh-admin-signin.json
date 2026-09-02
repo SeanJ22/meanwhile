@@ -67,9 +67,10 @@
       ],
       "consumes": [],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "concurrencyEvidence": [
-        "Dispatched as a background subagent in its own git worktree off the integration head c2be46ed, in the same round as lanes BD, C and E; branch worktree-agent-a232f5298199e7726."
+        "Dispatched as a background subagent in its own git worktree off the integration head c2be46ed, in the same round as lanes BD, C and E; branch worktree-agent-a232f5298199e7726.",
+        "Merged --no-ff into the integration branch as 33ff423d (lane commit b8abddf7; 34 files; full suite 4796/4794/0 in the lane); the lanes ran concurrently and each was merged once, in the order its report arrived (C, E, BD, A), with no conflict."
       ],
       "executionArtifacts": [
         {
@@ -126,9 +127,10 @@
         "relaunch-proof"
       ],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "concurrencyEvidence": [
-        "Dispatched as a background subagent in its own git worktree off c2be46ed in the same round as lanes A, C and E; branch worktree-agent-ae77eb8c06c8ef35a. Its live Attempts run one at a time in the standing runner's idle window against the shared Postgres control plane; the runner was never paused."
+        "Dispatched as a background subagent in its own git worktree off c2be46ed in the same round as lanes A, C and E; branch worktree-agent-ae77eb8c06c8ef35a. Its live Attempts run one at a time in the standing runner's idle window against the shared Postgres control plane; the runner was never paused.",
+        "Merged --no-ff into the integration branch as fc7992b5 (lane commit bbae5906; 25 files; 4798/4796/0 in the lane); the lanes ran concurrently and each was merged once, in the order its report arrived (C, E, BD, A), with no conflict."
       ],
       "executionArtifacts": [
         {
@@ -165,9 +167,10 @@
       ],
       "consumes": [],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "concurrencyEvidence": [
-        "Dispatched as a background subagent in its own git worktree off c2be46ed in the same round as lanes A, BD and E; branch worktree-agent-a5292ed1938290b6b. The live proof is blocked by name (no GOOGLE_OAUTH_* in the provider's environment on readback) and is recorded as NEEDS_SEAN, not serialized."
+        "Dispatched as a background subagent in its own git worktree off c2be46ed in the same round as lanes A, BD and E; branch worktree-agent-a5292ed1938290b6b. The live proof is blocked by name (no GOOGLE_OAUTH_* in the provider's environment on readback) and is recorded as NEEDS_SEAN, not serialized.",
+        "Merged --no-ff into the integration branch as 4dc32c0f (lane commit 02c6ad58; 12 files; 4816/4814/0 in the lane); the lanes ran concurrently and each was merged once, in the order its report arrived (C, E, BD, A), with no conflict."
       ],
       "executionArtifacts": [
         {
@@ -219,9 +222,10 @@
         "refresh-run-json-contract"
       ],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "concurrencyEvidence": [
-        "Dispatched as a background subagent in its own git worktree off c2be46ed in the same round as lanes A, BD and C; branch worktree-agent-af52bd5328aa68c15. Its one live SHADOW window runs in the standing runner's idle window against the shared control plane through append-only logs and a lease-backed lock."
+        "Dispatched as a background subagent in its own git worktree off c2be46ed in the same round as lanes A, BD and C; branch worktree-agent-af52bd5328aa68c15. Its one live SHADOW window runs in the standing runner's idle window against the shared control plane through append-only logs and a lease-backed lock.",
+        "Merged --no-ff into the integration branch as 8f0ee204 (lane commit ef66b4d8; 27 files; 4816/4814/0 in the lane); the lanes ran concurrently and each was merged once, in the order its report arrived (C, E, BD, A), with no conflict."
       ],
       "executionArtifacts": [
         {
@@ -274,9 +278,10 @@
         "custody-violation-row-text"
       ],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "concurrencyEvidence": [
-        "Executed by the integration owner on the integration branch claude/daily-refresh-admin-signin-69f56b CONCURRENTLY with the four lanes: the rulings, the constitution, the relaunch proof and the tracker rows were produced while the lanes ran (commits a18cf654, 9f65a61e); the digest/page wiring and the merge wait on the named handoffs and nothing else."
+        "Executed by the integration owner on the integration branch claude/daily-refresh-admin-signin-69f56b CONCURRENTLY with the four lanes: the rulings, the constitution, the relaunch proof and the tracker rows were produced while the lanes ran (commits a18cf654, 9f65a61e); the digest/page wiring and the merge wait on the named handoffs and nothing else.",
+        "The digest hooks, the research-page panels, the cycle lease and the workflow comment were wired at aabc9836 and after the lane-A merge; the tracker rows from every lane were added and the four rows whose fixes merged were session-resolved."
       ],
       "executionArtifacts": [
         {

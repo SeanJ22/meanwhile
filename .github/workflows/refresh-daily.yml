@@ -20,6 +20,22 @@
 # operational incident and a WorkItem - never a Needs-Owner escalation by
 # itself.
 # ===========================================================================
+# ===========================================================================
+# BACKUP WAKEUP ONLY — NOT THE DOOR. (RULING 242, 2026-09-02.)
+#
+# Reader-facing civic truth changes through exactly one door: the nightly
+# window, run by the standing runner on the machine's own clock at 04:00
+# America/New_York (scripts/pilot-runner.mts -> scripts/nightly-window.mts).
+# This schedule is at most a backup wakeup. It is not the freshness clock
+# (RULING 218, above) and it is not the promotion door: the window runs the
+# legacy refresh IN SHADOW inside an isolated worktree and promotes nothing
+# until the activation gate opens (READER, TRUTH, FRESHNESS GREEN and
+# INDEPENDENTLY_REPRODUCED; lib/control-plane/promotion/activation-gate.ts).
+# A commit this workflow makes today is the legacy last mile RULING 224
+# permits; once the gate opens, this commit step retires and the window's
+# single commit through the shipping door replaces it. docs/nightly-window.md
+# and docs/migration-inventory.md name, per source, what must be true first.
+# ===========================================================================
 # THE ONE DAILY REFRESH — RULING 124 items 3 and 4 (2026-08-24, Sean's
 # instruction that deploys be cut to the floor).
 #

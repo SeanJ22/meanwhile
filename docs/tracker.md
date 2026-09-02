@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **411 open**, 480 resolved.
+- **410 open**, 484 resolved.
 - **73 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
@@ -22,7 +22,7 @@ and when. Nothing is ever deleted.
   - New Jersey hunt — **1**
   - Arizona hunt — **2**
   - Visual feedback — **3**
-  - Data infrastructure — **5**
+  - Data infrastructure — **3**
   - Product / UI — **3**
   - Constitution & rules — **1**
   - Repo & ops — **7** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
@@ -317,7 +317,7 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
-**45 open · 5 resolved.**
+**46 open · 5 resolved.**
 
 ### P1
 
@@ -336,6 +336,8 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 **NH191** — From the 8/25 Part 2 walkthrough, captures 17-30-28 and 17-30-58. The Morris Hills Regional School District card reads We haven't sourced who leads this body yet and We know this division has a governing body because its boundary exists. We haven't sourced who sits on it. Sean finds this hard to believe given New Jersey was supposed to be complete. The audit he asks for is whether the NJ hunt actually finished or silently skipped districts — a possible partial-extraction defect of the class RULING 100 governs, seen six times before — and the deliverable is the DISTRICT-LEVEL COVERAGE DENOMINATOR for New Jersey. One number is already measured and is a start: pnpm nj:wire reports 20 bodies wired and 19 owed of 39 MUNICIPALITIES, which is a municipal denominator and says nothing about school districts. Not reached by part2-0825.
 
 **NH213** — Sean found Morris Hills Regional School District rendering 'We haven't sourced who runs it yet' and doubted it, given New Jersey was supposed to be complete. Audited 2026-08-26 against data/audit/universe-07866.json, the official universe: 413 units carry an NJ ocd id, 187 of them school districts. 23 have a roster in BODY_ROSTERS; 390 do not, and Morris Hills is one of them. This is NOT the partial-extraction defect it was suspected of being - the universe NAMES all 413, which is RULING 57 working, named first and hunted second. The NJ hunt did not silently skip districts; it named them all and hunted a fraction. What was reported complete was the 07866 BALLOT (272 candidacies), which is a different denominator from district-level roster coverage, and the two were being read as one.
+
+**NH318** — The Morris County Clerk republished the 2026 general candidate list on 2026-09-01 (document v/11 superseding v/9); Lana Leguía is in the earlier and not the later, with no withdrawal text on the page. The repaired rebuild records the removal honestly — data/ballot/nj-morris-2026.json carries removals[] with the id retained, lastListed and absentFrom documents (two different documents required), a stable firstAbsentOn and a statement — and the same fact as a BallotAbsence on the CD-7 division so a reader sees it as a cited absence block. Nothing under app/ballot renders a REMOVED candidacy as such: the card, the verified links and the hunted photo remain keyed to the removal id but do not render. Decide the surface: a struck or annotated card that states the clerk removed the name and cites both documents, or the absence block as it stands. Either way the reader is told the fact and its source; the constitution forbids silence and forbids manufacturing a presence.
 
 **NH38** — Six of the 40 New Jersey senators carry a websiteUrl on assemblydems.com or njassemblygop.com - a party caucus page for the Assembly, for people who now sit in the Senate. Two of them, John McKeon and Parker Space, answer HTTP 404 and surfaced in the officials audit as MISS-404.
 
@@ -555,17 +557,13 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**106 open · 111 resolved.**
+**104 open · 113 resolved.**
 
 ### P1
 
 **NH215** — pnpm tenancy found morriscountynj.gov linking out to morriscountynj.iqm2.com/Citizens/LegalNotice.aspx. This project has an IQM2 adapter (lib/sources/iqm2/) and Morris County is the county containing 07866, the New Jersey pilot zip. It has never been connected. This is the cheapest coverage in the product: an adapter we already own, a tenant we already found, a county a reader is standing in.
 
 **NH270** — A definition tells a reader what a body actually does. definitionsForBody is keyed on the DIVISION rather than the BODY, so every body sharing the Pima County division resolves to the Arizona county class definition.
-
-**NH307** — The independent audit of Level 1 found that a Scout's observedOn was written by the model, that validateScoutFinish() never checked it against the artifact's retrievedAt, and that learnedRouteFrom() copied it into the durable method-candidate provenance: the Coconino Attempt at-a45f746dee4c4289aeda9e98 on 2026-09-02 produced VALIDATED candidate mc-54a3b641ab944461c5516985 whose origin reads observed 2026-01-01. Nothing was admitted and canonical method knowledge was not polluted. Classified BLOCKING for method admission under s25, which is what makes L1-11 honest again. The correction is RULING 243 (machine-owned provenance): the executor derives observedOn, the permission verdict, the record class and the substantiating artifact ids from the vault and the obligation; a finish whose model-supplied provenance disagrees or is absent is REFUSED; the model's values are recorded only as claims; the seven VALIDATED candidates in data/method/candidates.json are re-derived from their Attempts' artifacts and re-validated without admission. Resolves when the correction and the re-derived store are merged with the seeded refusal test green.
-
-**NH308** — The audit of L1-12 found that the derived Level 1 verdict considered the heartbeat, a fresh research state, not-paused, the model lane, the worker credential, the cost state and the runtime dispatch conditions, but never whether the host has a proven parent-relaunch mechanism; once the unmeasured-cost row aged out of the 24-hour window the page would say ACTIVE while a killed parent stayed dead, because a historical Scout success was standing in for the current system's health. The correction adds a required condition: a durable, reasonably fresh host-supervision proof (the prove-relaunch record showing RELAUNCHED within tolerance, plus the live relaunch trigger's presence, both carried into the research state by the cycle so the admin host can read them). Absent or stale reads DEGRADED naming the reason. Also fixes the denominator wording flagged in the audit: 'machine capable' becomes 'has a runnable executor lane; result held / not yet'. Resolves when the correction is merged with its tests and the admin page shows the condition.
 
 **NH45** — data/ballot/candidate-hunt-state.json holds 136 candidate keys in TWO formats for the same people: a slug form, ballot-az-pima:governor:hobbs-katie, and a pipe-and-display-name form, ballot-az-pima:governor|Katie Hobbs. Thirty of the 136 are the pipe form and every one names somebody the slug form already names. candidate-cards-2026.json carries 20 of the same duplicates.
 
@@ -935,7 +933,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**47 open · 97 resolved.**
+**47 open · 99 resolved.**
 
 ### P1
 
@@ -1128,6 +1126,8 @@ OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshn
 
 **NH311** — ADJACENT DISCOVERY, classified HIGH-RISK ADJACENT. The shared-secret admin login's WTP_ADMIN_SECRET was generated by a prior session and installed in Netlify with no owner-recoverable copy, so the owner could not sign in to his own control centre. That is the exact shape RULING 238 (2026-09-01) forbids — a masked credential installed before an owner copy existed, unreported by name, provider, context, scope, actor and owner-copy location — and this secret predates that ruling's enforcement. FIX APPLIED: the owner reset WTP_ADMIN_SECRET and WTP_ADMIN_SESSION_KEY to values he holds (Netlify shows both updated 2026-09-02T01:44Z), and RULING 245 retires the secret as a login path: the login page offers Sign in with Google only, and the secret POST exists only when WTP_ADMIN_BREAK_GLASS equals the exact word enabled, is rate-limited durably through the control plane (5 attempts per 15 minutes), and appends an incident record for every accepted or refused use. WHAT REMAINS: the two Google client variables must be installed under RULING 238 custody (owner copy first, CREATED events appended) and the Google path proven live once — tracked as the Needs Sean row opened beside this one. Resolves when that row resolves and the break-glass flag is off.
 
+**NH317** — Demonstrated on 2026-09-02: commit 7514e68e (2026-09-01) re-walked data/hunt/wikipedia-nj-morris.json without moving the readOn stamp in scripts/build-nj-rosters.mts; the PR gate's shallow clone made git unable to answer, so the stamp test skipped and the commit merged green, and the next two scheduled refreshes — whose workflow clones at full depth — went red on it. The stamp is fixed (readOn 2026-09-01, rosters regenerated) and the asymmetry is documented in the test and the workflow, but the two gates still answer different questions. FIX SHAPE: in build-check.yml's gates job, a base..head diff check against the platform base sha (the shape scripts/db-shipping-gate.mts already uses) that refuses a PR moving any file in a declaration's SOURCE_FILES without moving the declaration on the same commit; a seeded test proving the refusal. Not editable from the refresh lane's ownership, so recorded here.
+
 **NH32** — The intake tripwire raised an alarm on 2026-08-21 at 00:28 UTC: a search_log insert was refused in production. The alarm is doing exactly what it was built for. The problem is that its output prints five dashes where the database's reason should be, so the one thing needed to diagnose it is the one thing not recorded. Production schema is in sync at 0015, so a missing column is ruled out.
 
 **NH47** — pnpm test reported 1561 passing, 0 failing, while EIGHT guard tests had stopped running entirely. A deleted test and a passing test are indistinguishable in that output; the only instrument that can see the difference is the COUNT, and nothing checks it.
@@ -1137,10 +1137,6 @@ OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshn
 **NH85** — RULING 75's third part asks GitHub rather than the working tree, and the four verdicts it keeps apart are green, red, pending and could-not-tell. Measured on 2026-08-23: both of this session's commits to main are GREEN on GitHub - d0f2831 carries build default, build standalone and the gates, and e83db50 carries those plus the tripwire. But main's TIP was 7112307, an intake-tripwire[bot] commit pushed minutes later, and no check has ever been registered against it. So main:green exits 2 with CANNOT TELL on a healthy tree, and it did the same on 750e094 at the start of this session. Seven workflows push main daily, so the tip is a bot commit far more often than it is a human one, and a gate that reads could-not-tell as its normal answer is a gate a session learns to walk past. What is owed is a decision about the shape rather than a patch: either the scheduled workflows' pushes to main run build check too, or main:green reports on the newest commit that HAS a check and says how many bot commits sit above it. The second keeps the Actions budget RULING 78 protects; the first is stricter. Nothing is broken today and the distinction between the four verdicts must not be softened to make this go away.
 
 **NH96** — NH91 is closed: playwright is pinned to an exact version, EXPECTED_CHROMIUM_REVISION is committed in lib/ops/chromium-pin.ts and checked against playwright's own browsers.json, and scripts/browser.mts launches whatever complete Chromium the image has by explicit path while NAMING the substitution. Two of the three tests that could not run now run and pass on build 1194. THE THIRD CANNOT, and it is a real finding rather than a harness problem: the plant that proves the guard can fail asserts that an unload-time sendBeacon escapes extraHTTPHeaders, and on Chromium 1194 the headers DO reach it, so the beacon arrives declared. That is a measurement of build 1194 and says nothing about the pinned 1234, so the test reports CANNOT RUN with the substituted build named rather than asserting either way. WHAT WOULD CLOSE IT: the container image carrying the pinned build, at which point the plant runs against the browser it was written for. Nothing in the repo can fix it — this is a fact about the image.
-
-**NW06** — The nightly window reads per-source outcomes from docs/refresh-run.json, Lane A's machine-readable contract. On the live shadow window of 2026-09-02 the file was ABSENT after refresh:daily ran in the isolated checkout (Lane A's change was not yet on origin/main), so the window parsed the Markdown table in docs/refresh-run.md and recorded source: MARKDOWN_FALLBACK with coarser outcomes (UNKNOWN rather than INGESTED/UNCHANGED). The parser for the contract and its fixture are in lib/control-plane/promotion/legacy-refresh.ts and tests/nightly-window.test.ts.
-
-**NW09** — The window refuses to run while the hourly cycle holds the control plane, and the cycle should refuse to start under a running window. The lock is the CAS lease nightly-window in the leases aggregate (withNightlyWindowLease in lib/control-plane/promotion/window.ts), because the Postgres provider's advisory lock is released by the HTTP driver before the guarded section runs (measured 2026-09-02). The cycle's side is two lines in scripts/freshness-shadow.mts, which another lane owns; the exact snippet is in Lane E's session report and in docs/nightly-window.md.
 
 **PB07** — Four of the five scheduled jobs run the full test suite before they push. The fifth does not, so a broken document can reach the repository unchallenged.
 
@@ -1163,6 +1159,8 @@ OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshn
 **NH284** — When a site's robots.txt says do not crawl, we do not send a request at all. But every one of the six transport states describes an attempt that actually happened, so there is no honest value to record. Both the Pima shadow fixture and the new proving run write CHALLENGED, which reads as though we tried and were turned away. Nothing about correctness turns on it today - the route is disposed BLOCKED_CURRENTLY, an open state, so the obligation correctly stays open and no absence is asserted. But the vocabulary is imprecise at exactly the point where a wall must not become an emptiness, which is the one conversion this product cannot survive.
 
 **NH285** — states/nh/explainer.md says RSA 664:6 and 664:7 are quoted in sources.md. They are not: states/nh/sources.md contains no 664 string at all, and a repo-wide search finds no verbatim operative sentence anywhere. Two other states' notes summarise the rule as centralised on the Secretary of State, but a summary is not a quote. This blocks New Hampshire from entering the campaign-finance filing-regime registry, because a regime record built from a paraphrase of a routing rule is a different routing rule - and the registry's whole job is to say which authority governs a contest.
+
+**NH319** — Both September scheduled runs (33517560447, 33636708298) show INGEST_CONTACT_EMAIL: empty in the refresh step's environment, so the meetings ingest's user agent carries the repository URL fallback rather than a contact address. Publishers who read the agent string cannot reach a person. Set the GitHub repository variable INGEST_CONTACT_EMAIL to the address the owner wants publishers to see, or record in lib/ops/refresh-cadence.ts that the fallback is the deliberate choice. Also folded in (FRONTIER): tests/concluded.test.ts compared a live snapshot against a date typed on 2026-08-15 — a stopped clock that would have failed every jurisdiction once the 90-day window rolled past it (fixed to measure against snapshot.generatedAt); sweep the suite for other assertions that hold committed live data against a hard-coded now. And: on a red day scripts/refresh-gate.mts re-runs the full suite because the gate step is kept literal for tests/workflow-actions.test.ts; a reporter-to-file via NODE_OPTIONS on the gate step would let the attribution reuse the first run.
 
 **NH86** — Measured 2026-08-23. corepack pnpm closeout fails its build gate with "pnpm build refused (exit 1)" and no TS diagnostic, while the same build run on its own exits 0; pnpm closeout passes the gate in 9 seconds. This is the same failure already recorded for pnpm handoff --ship, one script later: close-out.mjs shells out to pnpm run build, and through corepack that inner call cannot run. The gate is honest about it - it refuses rather than passing - which is exactly the four-verdict discipline working, and it still cost a debugging round because nothing in the repo says so at the point of use. What is owed is small: close-out.mjs and handoff.mjs should detect a corepack-shimmed parent and say which command to run instead, rather than reporting a build refusal that is really an environment refusal. A note in CLAUDE.md's Commands section would do at a minimum.
 

@@ -94,6 +94,16 @@ const LITERAL_ALLOWED = new Map<string, string>([
   ],
   ["tests/origins.test.ts", "this file asserts the host's value"],
   [
+    "lib/control-plane/admin-google.ts",
+    // RULING 245 enrolls exactly one Google identity, and an identity is an
+    // EMAIL ADDRESS, not an origin: it happens to sit at the owner's domain and
+    // would not move if the product's host did. Deriving it from
+    // PUBLIC_SITE_ORIGIN would tie who may administer the product to where the
+    // product is served from, which is the wrong fact. The bare-origin check
+    // below still applies to the file.
+    "the enrolled owner address (RULING 245) — an identity, never a call site",
+  ],
+  [
     "lib/governance/adoptions.ts",
     // RULING 233's body states the shipping law in the author's own words, and
     // those words name both hosts: "main is production and deploys to

@@ -772,6 +772,11 @@ defect itself is FIXED and is not here.*
   current runtime; a move to an edge scope must re-check it.
 - **The drain rate is the owner's** — tracker `RO08`, a decision card: 100
   dispatches per hourly cycle against roughly 2,900 due.
+- **The generated-artifact race Session C carried is CLOSED at its seam.** Its
+  mechanism was the governance atomicity test's recursive copy of `docs/`
+  holding the views open while the RULING 92 test recompiled them in place —
+  Windows refuses the write. Reproduced 3 of 5 with a concurrent copier, 0 of
+  5 without; serialized with `tests/tree-lock.ts` rather than retried.
 
 ## Carried out of Session C (final), 2026-09-01
 

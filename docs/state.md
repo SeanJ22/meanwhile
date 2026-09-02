@@ -23214,7 +23214,16 @@ admin secret and session key to `functions` only.
 
 ### Discoveries, classified, zero unclassified
 
-`docs/evidence/autonomy-recovery-discoveries-2026-09-01.json` — 12 of this
-session's own (3 BLOCKING fixed, 2 HIGH-RISK ADJACENT measured or recorded,
+`docs/evidence/autonomy-recovery-discoveries-2026-09-01.json` — 13 of this
+session's own (4 BLOCKING fixed, 2 HIGH-RISK ADJACENT measured or recorded,
 4 FRONTIER, 2 NEEDS_SEAN, 2 VERIFIED_NO_DEFECT) plus the 45 carried from
-Session C, none of which was started here.
+Session C, none of which was started here. The fourth BLOCKING one was found
+by the ship door itself: the generated-artifact race Session C carried turned
+its gates red twice in one evening, was reproduced (a recursive copy of
+`docs/` by the atomicity test holds the governance views open while the
+RULING 92 test recompiles them in place, and Windows refuses the write — 3 of
+5 compiles fail with the copier, 0 of 5 without), and was serialized at the
+seam with `tests/tree-lock.ts`. The ship door's own regeneration commit was
+also refused once, by the date guard reading the observer's UTC commit stamp
+as a future date; the context generator now annotates a quoted commit subject
+the way it already annotated its own past-midnight run stamp.

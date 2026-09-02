@@ -126,6 +126,18 @@
       "title": "The main checkout's node_modules (installed 2026-08-16) matches the lockfile the Scheduled Task runs against",
       "evidence": ["diff of node_modules/.pnpm/lock.yaml against pnpm-lock.yaml in C:/Users/seanj/dev/we-the-people: identical"],
       "note": "Checked because a stale install would have been an instant-crash explanation for the runner; it was not."
+    },
+    {
+      "id": "D-13",
+      "class": "BLOCKING",
+      "disposition": "FIXED",
+      "title": "The generated-artifact race Session C carried (SC-32), with its mechanism named: the atomicity test's recursive copy of docs/ holds the governance views open while the RULING 92 test recompiles them in place, and Windows refuses the write",
+      "evidence": [
+        "data/ops/gate-runs/2026-09-01-28.json and -29.json (the ship door's gates: RULING 92 byte-identical check the only test failure, 4700 of 4702 and 4698 of 4702 pass; four standalone runs of the same test pass, including one under the ship's pnpm nesting)",
+        "reproduction: a loop of recursive copies of docs/governance while governance:compile runs five times — 3 of 5 compiles exit 1 with the copier, 0 of 5 without; the copier itself never errors (3,499 copies)",
+        "tests/tree-lock.ts (a directory mutex, cross-process, stale-after-5-min takeover), used by tests/generated-artifacts.test.ts and tests/governance-atomicity.test.ts"
+      ],
+      "why_blocking": "The ship door runs the full suite; a race that turns it red one run in two means the machine cannot merge its own fix without a person re-running the door. Serialized at the seam per the efficiency law s9 rather than retried."
     }
   ],
   "session_c_carried": {

@@ -108,6 +108,25 @@ export interface CycleInput {
   readonly truth: ContractReading;
   /** A ceiling on how many due items one cycle dispatches. Stated, not implied. */
   readonly maxDispatches?: number;
+  /**
+   * **A WALL-CLOCK BUDGET FOR DISPATCH, SO THE CYCLE FINISHES CLEANLY.**
+   * (Autonomy-recovery session, 2026-09-01.)
+   *
+   * The runner supervises each cycle under a hard ceiling and kills a child
+   * that outlives it. A kill lands mid-dispatch: occurrences opened and not
+   * closed, an Attempt with no outcome, a lease that expires unrenewed — and
+   * the next cycle resumes that state and pays for it again. A cycle over the
+   * real backlog can outlive the ceiling on latency alone, so the overrun is a
+   * recovery seam and not an edge case.
+   *
+   * With a budget the cycle stops STARTING work once the injected clock passes
+   * `deadlineMs`: every remaining due item is DEFERRED with a named reason, the
+   * record is written, and the process exits clean inside the supervisor's
+   * ceiling. Nothing is lost — a deferred item keeps its next-due and is
+   * dispatched by a later cycle. Injected, never `Date.now()` here, so a test
+   * can move the clock.
+   */
+  readonly budget?: { readonly deadlineMs: number; readonly now: () => number };
 }
 
 export interface CycleResult {
@@ -211,6 +230,17 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
   const debtsById = new Map(input.debts.map((d) => [d.obligationId, d]));
 
   for (const [i, row] of workNow.entries()) {
+    if (input.budget !== undefined && input.budget.now() >= input.budget.deadlineMs) {
+      deferred.push({
+        obligationId: row.obligation.id,
+        why:
+          `the cycle's dispatch budget was spent at ${new Date(input.budget.deadlineMs).toISOString()} ` +
+          "before this item was reached. It keeps its next-due and is dispatched by a later cycle — " +
+          "a cycle that ends on its own budget leaves recoverable state; one killed mid-write by its " +
+          "supervisor does not",
+      });
+      continue;
+    }
     if (i >= ceiling) {
       deferred.push({
         obligationId: row.obligation.id,
@@ -222,18 +252,59 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
       });
       continue;
     }
-    const result = await dispatchOne(input.repos, {
-      obligation: row,
-      routeTaskId: input.routeTaskFor(row.obligation.id),
-      holder: input.holder,
-      now: input.now,
-      leaseTtlMs: input.leaseTtlMs,
-      bound: input.bound,
-      maturity: input.maturity,
-      executor: typeof input.executor === "function" ? input.executor(row) : input.executor,
-      ...(input.methodVersion !== undefined ? { methodVersion: input.methodVersion } : {}),
-      ...(input.policyVersion !== undefined ? { policyVersion: input.policyVersion } : {}),
-    });
+    /*
+     * **ONE OBLIGATION'S THROW MAY NOT ABORT THE CYCLE.** (Autonomy-recovery
+     * session, 2026-09-01.)
+     *
+     * `dispatchOne` already converts every EXPECTED failure — a live foreign
+     * lease, a refused disposition, a worker that threw — into a FAILED
+     * `DispatchResult` and returns it. What it does not catch is an UNEXPECTED
+     * throw from the store beneath it: a transient Neon error, or the
+     * inconsistent state a killed cycle leaves behind (an occurrence whose
+     * RouteTask a crash left mid-transition). Before this, such a throw
+     * propagated out of `runCycle`, aborted the whole cycle, and stranded every
+     * other due occurrence — and a crash-restart re-hit the same state and
+     * re-aborted, which is the recovery loop that required manual surgery.
+     *
+     * So an unexpected throw is isolated to its obligation: recorded as a
+     * FAILED dispatch (the branch below accrues debt and keeps it owed) and the
+     * cycle continues. The obligation is not discharged, only deferred to a
+     * retry — which is exactly the honest state.
+     */
+    let result: DispatchResult;
+    try {
+      result = await dispatchOne(input.repos, {
+        obligation: row,
+        routeTaskId: input.routeTaskFor(row.obligation.id),
+        holder: input.holder,
+        now: input.now,
+        leaseTtlMs: input.leaseTtlMs,
+        bound: input.bound,
+        maturity: input.maturity,
+        executor: typeof input.executor === "function" ? input.executor(row) : input.executor,
+        ...(input.methodVersion !== undefined ? { methodVersion: input.methodVersion } : {}),
+        ...(input.policyVersion !== undefined ? { policyVersion: input.policyVersion } : {}),
+      });
+    } catch (error) {
+      result = {
+        obligationId: row.obligation.id,
+        routeTaskId: input.routeTaskFor(row.obligation.id),
+        executor: null,
+        executorChosen: null,
+        executorMismatch: false,
+        claimed: false,
+        outcome: "FAILED",
+        attemptId: null,
+        dispositionCommitted: false,
+        disposition: null,
+        artifactIds: [],
+        cost: null,
+        worker: null,
+        detail:
+          "the dispatch threw and was isolated so the cycle could continue rather than aborting " +
+          `every other due occurrence: ${error instanceof Error ? error.message : String(error)}`,
+      };
+    }
     dispatched.push(result);
 
     /*

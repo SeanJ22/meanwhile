@@ -4,7 +4,9 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-09-01 — **Three instruments reported clean results while looking at nothing, and a registry had been calling one county's ballot a state.** Session C (final directive); its record is the LAST section of this file.
+Last updated: 2026-09-01 — **The runner could not survive its own backlog because a re-observation of the same bytes was refused as a rewrite of history, and every restart walked back into it.** The autonomy-recovery session; its record is the LAST section of this file.
+
+Previous: 2026-09-01 — **Three instruments reported clean results while looking at nothing, and a registry had been calling one county's ballot a state.** Session C (final directive).
 
 Previous: 2026-08-31 — **A defect three instruments called fixed while the owner watched it happen, and a state we had recorded as closed that was refusing us for saying our own name.** Session C, Parts A and F.
 
@@ -23051,3 +23053,168 @@ verified at a rate an independent pass could detect.
   Ask model          claude-opus-5 — the switch was reverted on measurement
   refutation         40 of 89 acceptance claims confirmed broken
 ```
+
+
+## 2026-09-01 — the autonomy-recovery session: the runner could not survive its own backlog
+
+*(One subject, one planned merge, under the SESSION EFFICIENCY LAW adopted this
+session as RULING 237. Branch `claude/autonomy-recovery-efficiency-616f07`.)*
+
+### What a reader can now see that they could not before
+
+**Nothing new on the page — and that is the honest lead.** This session touched
+no reader surface. A reader loading the ballot sees what they saw yesterday.
+What changed is that the machine that keeps civic records fresh can now work
+through its own backlog without a person, which is the precondition for
+anything reaching a reader unattended.
+
+### What the machine now does unattended, and the defect it had
+
+**The autonomous runner was in a death loop it could not leave.** Diagnosed by
+reproduction — one `freshness-shadow` cycle, single process, against the real
+control plane, output captured (the runner had been discarding it):
+
+```
+AppendOnlyViolation: cp_log_artifacts already contains record ar-0a63a288…
+  recorded: attemptId at-b878b386…  recordedAt 2026-09-01T19:45:40Z
+  offered:  attemptId at-3ed9ceec…  recordedAt …T03:19:23Z, the next UTC day
+  (same artifactId, contentHash, byteLength, canonicalUrl, routeTaskId)
+```
+
+A resumed occurrence re-walked a route whose prior observation was already
+recorded, retrieved byte-identical content, and offered the SAME
+content-addressed artifact under a new Attempt. The append-only log refused the
+differing `attemptId`/`recordedAt` as a history rewrite; the throw was
+unhandled; the whole cycle exited 1 with no run record; the digest read
+"0 providers, 0 units" — indistinguishable from an idle night — and every
+crash-restart re-resumed the same occurrence into the same death. Seven hours
+of `exit NON-ZERO` digests, `docs/evidence/autonomy-recovery-cycle-pre-fix-2026-09-01.txt`.
+
+**Fixed at the shared code path, four ways:**
+
+1. `recordArtifactMetadata` treats a content-identical re-observation as
+   idempotent — the first observation's attribution stands, nothing is
+   rewritten — and STILL refuses a different-content collision under one
+   content-derived id. `tests/artifact-reobservation.test.ts`, 3 of 3.
+2. `runCycle` isolates one obligation's unexpected throw to a FAILED dispatch
+   (debt accrues, the obligation stays owed) instead of aborting the cycle and
+   stranding every other due occurrence; the occurrence open/resume loop does
+   the same and records what it skipped.
+3. A crashed cycle writes a legible FAILED run record and prints the
+   `run record:` line the runner greps, so the digest says a cycle CRASHED and
+   why. Measured on this runtime: a rejected top-level `await` fires
+   `uncaughtException`, so both process events are handled.
+4. A cycle stops STARTING work at an injected dispatch budget (`--budget-min`,
+   default 15 from process start) and ends clean inside the runner's 20-minute
+   kill, deferring the rest by name. `tests/cycle-budget.test.ts`, 3 of 3, with
+   a moved clock. The runner now surfaces the child's stderr tail and kill
+   signal into the digest on a non-zero exit, and the headline says
+   "dispatch budget SPENT" when that is why little was dispatched.
+
+**Proof over the real backlog, read back from the durable store, not from the
+process under test** (`docs/evidence/autonomy-recovery-readback-before-2026-09-01.txt`
+and the after-reading in this section):
+
+| | before | after one post-fix cycle |
+| --- | ---: | ---: |
+| standing obligations, carrying a next-due | 2,996 of 2,996 | 2,996 of 2,996 |
+| obligations with at least one occurrence | 1,144 | 1,144 |
+| occurrences | 1,447 | 1,452 |
+| occurrences closed with a committed disposition | 55 | **77** |
+| occurrences whose RouteTask is disposed | 393 | **470** |
+| INGESTED dispositions | 69 | **91** |
+| REQUIRES_NEW_ADAPTER / BLOCKED_CURRENTLY | 305 / 19 | 359 / 20 |
+| debt rows (walls, each with a retry time) | 96 | 149 |
+
+The post-fix cycle: exit 0, 17m00s, dispatched 100 — 22 DISCHARGED, 23 failed
+and recorded as debt with backoff, 55 disposed as walls, 2,805 deferred under
+the stated ceiling. Zero active obligations have an unknown next-due, before
+or after. `docs/evidence/autonomy-recovery-cycle-post-fix-2026-09-01.txt`.
+
+**Cycle time was a second seam, and it is closed by construction.** That
+17-minute cycle ran 3 minutes short of the runner's 20-minute kill, on Neon
+latency alone — about ten minutes of it opening/resuming 100 occurrences
+serially. A kill mid-dispatch leaks open occurrences and repeats. Run through
+the real `pilot:run` path with a deliberately tiny 3-minute budget, the
+overhead exceeded the budget and the cycle ended CLEAN: exit 0, 2,883 deferred
+by name, record written, digest delivered
+(`data/health/freshness-shadow-runs/2026-09-01-10.json`).
+
+**Kill-9 recovery, with no manual command.** A cycle (`--max=30`) was started,
+allowed to open its occurrences — 30, of which 5 resumed and 25 new — and reach
+dispatch, then killed with `Stop-Process -Force` (TerminateProcess: no handler
+ran, no run record was written, the wrapper saw exit 127). The next cycle,
+started with the same command and nothing else, resumed 28 of those 30 open
+occurrences, reclaimed the one lease that had expired with its Attempt closed
+LEASE_EXPIRED, dispatched 30 (1 discharged, 13 walls disposed, the rest recorded
+as debt with a retry time), wrote 25 staged entries and its run record, and
+exited 0 in 10m33s. Nothing was cleared by hand.
+`docs/evidence/autonomy-recovery-kill9-victim-2026-09-01.txt` and
+`…-kill9-recovery-2026-09-01.txt`.
+
+**Refuted on the exact row that killed the pre-fix cycle**, read back from the
+store (`docs/evidence/autonomy-recovery-colliding-row-readback-2026-09-01.txt`):
+its RouteTask had been disposed INGESTED at 19:36Z by the attempt that recorded
+the artifact, and then carried SEVEN orphan Attempts with no outcome — one per
+dead cycle from 20:56Z to the 03:09Z reproduction — because the occurrence was
+never closed and every cycle resumed it, re-claimed the settled task, re-walked,
+re-recorded and died. The post-fix cycle's attempt on the same row closed
+ABORTED (the second disposition was refused by the domain and handled), the
+occurrence closed, and the artifact log still holds exactly one record. That is
+the fix exercised on the row that needed it, not inferred.
+
+**What is NOT proved here, said plainly.** The Scheduled Task runs from the
+MAIN checkout, so the fixed code is not what the task runs until this merge
+lands and main is fast-forwarded. The proofs above ran the same child the task
+spawns, from the worktree. Whether Windows relaunches a killed PARENT runner
+under `RestartCount 999` is unmeasured — task history is disabled on this host
+— and both start mechanisms (the task and the older per-user startup entry)
+are present, which is the owner's call (tracker `RO08`'s neighbour, carried
+from Session C as SC-06).
+
+### The admin login: the expected defect does not reproduce
+
+The directive expected a redirect defect on `admin.meanwhileusa.com`. A full
+owner login readback against the LIVE host — `pnpm admin:login-readback`, the
+secret read by name and never printed — passed 6 of 6 hops: anonymous
+dashboard → `/admin/login?why=NO_COOKIE`; login POST → 303 to `/admin` with the
+`__Host-` cookie (Path, Max-Age, HttpOnly, Secure, SameSite); dashboard with
+the session → 200 rendering "Pilot health"; admin API with the session → not
+401; public host with the session → 404; sign-out → 204.
+`data/ops/admin-login-readback.json`. Session C's ITEM H shipped this flow on
+2026-09-01; the premise was stale. No code changed for it. The 33 seeded
+admin checks pass. One observation recorded for later: Netlify scopes the
+admin secret and session key to `functions` only.
+
+### Law adopted this session
+
+- **RULING 237** — the SESSION EFFICIENCY LAW, verbatim, at
+  `docs/governance/session-efficiency.md`, referenced from `CLAUDE.md` beside
+  the constitution, which stays superior where they touch.
+- **RULING 238** — Owner Secret Custody: an owner-accessible copy of any masked
+  new or rotated credential lands in `.env.local` BEFORE provider installation;
+  creation, rotation and scope changes are reported by name, provider, context,
+  scope, actor and owner-copy location; a report missing any of those FAILS the
+  session report gate (`lib/ops/credential-report.ts`, wired into
+  `pnpm workstream:close`, `tests/credential-report-gate.test.ts` 12 of 12 with
+  the seeded failure proven by exit code).
+- **RULING 239** — Session C is TERMINAL: SHIPPED, OPERATIONALLY IMPROVED,
+  UNFINISHED. 45 carried items enumerated from its own closeout artifacts
+  (4 UNFINISHED, 9 NOT MET, 14 NEEDS_SEAN, 8 OPEN defects, 10 frontier),
+  `docs/evidence/autonomy-recovery-session-c-carried-2026-09-01.json`.
+
+`pnpm governance:check`: 276 records, 13 checks, 0 conflicts, 0 issues.
+
+### What genuinely requires the owner
+
+- **`RO08`** — the backlog drain rate: 100 dispatches per hourly cycle against
+  roughly 2,900 due, or faster. A decision card, not a to-do; nothing is stuck.
+- The Session C decision cards stand as they were (14, listed in the carried
+  enumeration). Nothing new was added to them by this session except `RO08`.
+
+### Discoveries, classified, zero unclassified
+
+`docs/evidence/autonomy-recovery-discoveries-2026-09-01.json` — 12 of this
+session's own (3 BLOCKING fixed, 2 HIGH-RISK ADJACENT measured or recorded,
+4 FRONTIER, 2 NEEDS_SEAN, 2 VERIFIED_NO_DEFECT) plus the 45 carried from
+Session C, none of which was started here.

@@ -1,11 +1,11 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "a07a0fd11625c91d",
+  "snapshot": "f395c8184e84500f",
   "counts": {
-    "records": 273,
-    "current": 252,
-    "law": 219,
+    "records": 276,
+    "current": 255,
+    "law": 221,
     "decisions": 31,
     "historical": 21
   },
@@ -5307,6 +5307,112 @@
         {
           "kind": "related_to",
           "target": "R-0230"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0237",
+      "aliases": [
+        "RULING 237",
+        "R237",
+        "R-237"
+      ],
+      "title": "RULING 237 — the SESSION EFFICIENCY LAW is adopted verbatim: maximum verified progress per wall-clock minute, model token, and human attention",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-09-01",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [
+        {
+          "key": "session.efficiency_law",
+          "value": "adopted-verbatim"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0190"
+        },
+        {
+          "kind": "extends",
+          "target": "R-0191"
+        },
+        {
+          "kind": "extends",
+          "target": "R-0189"
+        },
+        {
+          "kind": "extends",
+          "target": "R-0223"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0217"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0238",
+      "aliases": [
+        "RULING 238",
+        "R238",
+        "R-238"
+      ],
+      "title": "RULING 238 — Owner Secret Custody: an owner-accessible copy of any masked new or rotated credential is persisted to the gitignored secret store BEFORE provider installation, and a report lacking any required field fails the session report gate",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "sources-licensing",
+      "adopted": "2026-09-01",
+      "operativePolicy": "docs/governance/policies/sources-licensing.md",
+      "claims": [
+        {
+          "key": "session.credential_custody",
+          "value": "owner-copy-before-install"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "related_to",
+          "target": "R-0208"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0095"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0239",
+      "aliases": [
+        "RULING 239",
+        "R239",
+        "R-239"
+      ],
+      "title": "RULING 239 — SESSION C is terminal: SHIPPED, OPERATIONALLY IMPROVED, UNFINISHED — its production improvement stands merged and its unmet criteria are carried as durable frontier obligations, never a reopening",
+      "kind": "FACT",
+      "status": "ACTIVE",
+      "provenance": "observed_fact",
+      "domain": "meta-governance",
+      "adopted": "2026-09-01",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [
+        {
+          "kind": "related_to",
+          "target": "R-0237"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0225"
         }
       ],
       "uncertain": [],

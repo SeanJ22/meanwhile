@@ -2,7 +2,7 @@
   "generated": "2026-09-01",
   "ruling": "RULING 227",
   "openedDateProvenance": {
-    "opened-ledger": 398,
+    "opened-ledger": 400,
     "session-label": 243,
     "unrecoverable": 225
   },
@@ -62,6 +62,7 @@
       "OWN05",
       "OWN06",
       "PB10",
+      "RO08",
       "T01",
       "T02",
       "T03",
@@ -89,12 +90,20 @@
   },
   "summary": {
     "predicates": 0,
-    "notMachineVerifiable": 69,
+    "notMachineVerifiable": 70,
     "holds": 0,
     "resolved": 0,
     "cannotTell": 0
   },
   "outcomes": [
+    {
+      "rowId": "RO08",
+      "kind": "NOT_MACHINE_VERIFIABLE",
+      "verdict": "HOLDS",
+      "why": "RO08 is marked NOT_MACHINE_VERIFIABLE and carries a decision card. It waits on the author's judgement, which no artifact can supply.",
+      "read": [],
+      "evidence": []
+    },
     {
       "rowId": "OWN01",
       "kind": "NOT_MACHINE_VERIFIABLE",

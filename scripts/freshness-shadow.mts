@@ -107,6 +107,69 @@ const CONTROL_PLANE_ROOT = join(ROOT, "data", "control-plane", "freshness-shadow
 const RUNS_DIR = join(ROOT, "data", "health", "freshness-shadow-runs");
 const NOW = new Date().toISOString();
 
+/*
+ * **A CRASHED CYCLE WRITES A LEGIBLE RECORD; IT DOES NOT VANISH.**
+ * (Autonomy-recovery session, 2026-09-01.)
+ *
+ * Every await in this script is unguarded by construction — it is a script, not
+ * a function. Before this, an uncaught throw (a transient store error, or the
+ * inconsistent state a killed cycle leaves behind) ended the process with NO
+ * run record, and the runner's digest then read "0 providers, 0 units" — which
+ * is indistinguishable from an idle night and is the opposite of what happened.
+ *
+ * So a last-resort handler writes a run record marking the cycle FAILED with
+ * the error, prints the `run record:` line the runner greps for, and exits
+ * non-zero. The failure is diagnosable, the digest says a cycle crashed rather
+ * than that nothing was due, and the NEXT cycle proceeds because the runner
+ * loops regardless. A rejected top-level await surfaces here as
+ * `uncaughtException` on this runtime; both events are handled and the handler
+ * fires at most once. Per-obligation faults are isolated deeper in (the
+ * dispatch loop and the occurrence loop) so this backstop rarely fires.
+ */
+let crashRecorded = false;
+function recordCrash(error: unknown): void {
+  if (crashRecorded) return;
+  crashRecorded = true;
+  const message = error instanceof Error ? (error.stack ?? error.message) : String(error);
+  const headline = message.split("\n")[0];
+  try {
+    mkdirSync(RUNS_DIR, { recursive: true });
+    const path = nextRunRecordPath(RUNS_DIR, today());
+    writeFileSync(
+      path,
+      `${JSON.stringify(
+        {
+          startedAt: NOW,
+          finishedAt: new Date().toISOString(),
+          testedSha: headSha(ROOT),
+          crashed: true,
+          error: message,
+          digest: [
+            "PILOT HEALTH",
+            "  the cycle CRASHED before completing — a failed cycle, never an idle one",
+            `      ${headline}`,
+            "  ROLLUP    NOT GREEN — the cycle did not finish",
+          ],
+        },
+        null,
+        2,
+      )}\n`,
+      "utf8",
+    );
+    console.error(`\n  freshness:shadow CRASHED — ${headline}`);
+    console.log(`  run record: ${path}`);
+  } catch (writeError) {
+    console.error(
+      `\n  freshness:shadow CRASHED and could not write a run record (${
+        writeError instanceof Error ? writeError.message : String(writeError)
+      }): ${headline}`,
+    );
+  }
+  process.exit(1);
+}
+process.on("uncaughtException", recordCrash);
+process.on("unhandledRejection", recordCrash);
+
 const argv = process.argv.slice(2);
 const wantsPostgres = argv.includes("--provider=postgres");
 const dry = argv.includes("--dry");
@@ -114,6 +177,17 @@ const ceilingArg = argv.find((a) => a.startsWith("--max="));
 const MAX_DISPATCHES = ceilingArg ? Number(ceilingArg.slice("--max=".length)) : 50;
 const onlyArg = argv.find((a) => a.startsWith("--only="));
 const ONLY = onlyArg ? onlyArg.slice("--only=".length) : null;
+/*
+ * The dispatch budget, in minutes from PROCESS START. The runner kills a child
+ * at twenty minutes; this stops the cycle starting new work well inside that,
+ * so it finishes cleanly — record written, occurrences closable — instead of
+ * dying mid-write. Measured from process start because that is what the
+ * supervisor's ceiling is measured from.
+ */
+const budgetArg = argv.find((a) => a.startsWith("--budget-min="));
+const BUDGET_MIN = budgetArg ? Number(budgetArg.slice("--budget-min=".length)) : 15;
+const CYCLE_STARTED_MS = Date.now();
+const DISPATCH_DEADLINE_MS = CYCLE_STARTED_MS + BUDGET_MIN * 60_000;
 
 /* ------------------------------------------------------------- provider --- */
 
@@ -224,6 +298,8 @@ let opened = 0;
 let deferredForCeiling = 0;
 /** Occurrences a previous cycle opened and did not reach, picked back up. */
 let resumedCount = 0;
+/** Obligations whose open/resume threw and were isolated. Never silent. */
+const preOpenSkipped: { obligationId: string; why: string }[] = [];
 /** Everything due, collected before any occurrence is opened, so it can be
  *  sorted into the dispatcher's own oldest-first order. */
 const dueThisCycle: { obligation: (typeof sync.all)[number]; nextDueAt: string }[] = [];
@@ -307,18 +383,33 @@ for (const { obligation: o, nextDueAt } of dueThisCycle) {
    * reach is real work with a real WorkItem and a real RouteTask; opening a
    * second one beside it strands the first, and a stranded open occurrence
    * reads back as a worker that abandoned a route.
+   *
+   * **ONE OBLIGATION'S OPEN/RESUME THROW IS ISOLATED.** (Autonomy-recovery
+   * session, 2026-09-01.) `resumeOpenOccurrence` and `openOccurrence` read and
+   * compare-and-set durable rows, so a transient store error or the
+   * inconsistent state a killed cycle left on ONE obligation could throw here.
+   * Left unguarded that aborted the whole pre-open phase and every obligation
+   * behind it in the sort. Isolated, the bad obligation is skipped this cycle
+   * (it keeps its next-due and is opened by a later cycle) and the rest proceed.
    */
-  const resumed = await resumeOpenOccurrence(repos, o);
-  if (resumed !== null) {
-    occurrenceByObligation.set(o.id, resumed);
-    resumedCount += 1;
+  try {
+    const resumed = await resumeOpenOccurrence(repos, o);
+    if (resumed !== null) {
+      occurrenceByObligation.set(o.id, resumed);
+      resumedCount += 1;
+      opened += 1;
+      continue;
+    }
+    const occ = await openOccurrence(repos, { obligation: o, dueAt: row.nextDueAt, now: NOW });
+    if (occ === null) continue;
+    occurrenceByObligation.set(o.id, { id: occ.occurrence.id, routeTaskId: occ.routeTask.id });
     opened += 1;
-    continue;
+  } catch (error) {
+    preOpenSkipped.push({
+      obligationId: o.id,
+      why: error instanceof Error ? error.message : String(error),
+    });
   }
-  const occ = await openOccurrence(repos, { obligation: o, dueAt: row.nextDueAt, now: NOW });
-  if (occ === null) continue;
-  occurrenceByObligation.set(o.id, { id: occ.occurrence.id, routeTaskId: occ.routeTask.id });
-  opened += 1;
 }
 console.log(
   `  occurrences opened this cycle: ${opened} (each with its OWN WorkItem and RouteTask)` +
@@ -333,6 +424,14 @@ if (deferredForCeiling > 0) {
       "nothing works, which reads back as a worker that abandoned a route. They keep their next-due " +
       "and are opened by a later cycle — the obligation is not discharged, only unstarted.",
   );
+}
+if (preOpenSkipped.length > 0) {
+  console.log(
+    `  ${preOpenSkipped.length} obligation(s) threw while opening/resuming and were ISOLATED so the ` +
+      "rest of the phase could proceed; each keeps its next-due and is retried by a later cycle:",
+  );
+  for (const s of preOpenSkipped.slice(0, 5)) console.log(`      ${s.obligationId} — ${s.why}`);
+  if (preOpenSkipped.length > 5) console.log(`      … and ${preOpenSkipped.length - 5} more`);
 }
 
 /* ----------------------------------------------------------- the executor --- */
@@ -408,7 +507,17 @@ const cycle = await runCycle({
     reason: "not computed by this run; the truth contract is the control set's to state",
   },
   maxDispatches: MAX_DISPATCHES,
+  budget: { deadlineMs: DISPATCH_DEADLINE_MS, now: () => Date.now() },
 });
+
+const budgetDeferred = cycle.deferred.filter((d) => d.why.includes("dispatch budget was spent")).length;
+console.log(
+  `\n  dispatch budget: ${BUDGET_MIN} min from process start` +
+    (budgetDeferred > 0
+      ? ` — SPENT; ${budgetDeferred} due item(s) deferred to a later cycle rather than run past the ` +
+        "runner's ceiling and be killed mid-write"
+      : " — not reached"),
+);
 
 /* ------------------------------------------------- close, and persist debt --- */
 
@@ -489,6 +598,13 @@ const lines = [
   "",
   ...promotionLines(staged),
   `  staging manifest   ${manifest.total} entry(ies) held, ${manifest.written} written this cycle`,
+  /* Into the RECORD, not only the console: the runner's headline reads this
+     line so a budget-bounded cycle says "SPENT" instead of reading as idle. */
+  `  dispatch budget    ${BUDGET_MIN} min from process start — ${
+    budgetDeferred > 0
+      ? `SPENT; ${budgetDeferred} due item(s) deferred to a later cycle rather than run past the runner's ceiling`
+      : "not reached"
+  }`,
 ];
 console.log();
 for (const line of lines) console.log(line);
@@ -516,6 +632,7 @@ writeFileSync(
       },
       obligations: sync.all.length,
       occurrencesOpened: opened,
+      preOpenSkipped,
       debtInherited: debtIds.size,
       debtPersisted: persisted.written,
       debtCleared: persisted.cleared,

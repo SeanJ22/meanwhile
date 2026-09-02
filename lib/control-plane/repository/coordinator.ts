@@ -88,6 +88,7 @@ import {
 } from "../route-task.ts";
 import { withRouteTasks, type Escalation, type WorkItem, type WorkItemState } from "../work-item.ts";
 import {
+  AppendOnlyViolation,
   ConcurrentModification,
   IdentityCollision,
   canonicalJson,
@@ -392,7 +393,46 @@ export async function recordArtifactMetadata(
   now: string,
 ): Promise<AppendOutcome<ArtifactRecord>> {
   await repos.attempts.mustRead(record.attemptId);
-  return repos.artifacts.append(record.workItemId, record.artifactId, record, now);
+  try {
+    return await repos.artifacts.append(record.workItemId, record.artifactId, record, now);
+  } catch (error) {
+    if (!(error instanceof AppendOnlyViolation)) throw error;
+    /*
+     * **A RE-OBSERVATION OF ONE ARTIFACT IS IDEMPOTENT, NOT A REWRITE.**
+     *
+     * An artifact IS its content: `artifactId` is content-derived, and
+     * `contentHash`/`byteLength`/`canonicalUrl`/`tier`/`partial` are the bytes
+     * and how they were classified. When a resumed occurrence re-runs a route
+     * whose prior observation was recorded but whose occurrence was never
+     * closed — a killed cycle, a crash-restart — a SECOND Attempt retrieves
+     * byte-identical content and offers the SAME artifact under a new
+     * `attemptId`/`recordedAt`. The append-only log sees a differing record
+     * under one id and refuses it as a history rewrite. It is not one: the fact
+     * (this content, at this URL, for this work) already exists, and the FIRST
+     * observation's attribution stands. So a content-identical re-record is an
+     * idempotent success and the cycle proceeds — the disposition cites the
+     * artifact from the disposing Attempt's own declared ids, not from the
+     * log's attribution, so nothing false is recorded.
+     *
+     * A collision on the same id with DIFFERENT content is a genuine violation
+     * (a broken content-address, a hash collision) and is re-thrown untouched.
+     * Without this, one such re-record aborts the entire cycle with no run
+     * record, and every crash-restart re-resumes the same occurrence into the
+     * same death — the recovery loop that required manual surgery.
+     */
+    const held = await repos.artifacts.read(record.workItemId);
+    const position = held.findIndex((a) => a.artifactId === record.artifactId);
+    const prior = position >= 0 ? held[position] : undefined;
+    const contentIdentical =
+      prior !== undefined &&
+      prior.contentHash === record.contentHash &&
+      prior.byteLength === record.byteLength &&
+      prior.canonicalUrl === record.canonicalUrl &&
+      prior.tier === record.tier &&
+      prior.partial === record.partial;
+    if (!contentIdentical) throw error;
+    return { appended: false, recordId: record.artifactId, record: prior, position };
+  }
 }
 
 /** Artifacts attributed to one Attempt. Attribution is never re-pointed. */

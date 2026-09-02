@@ -2214,5 +2214,14 @@
     "ids": [
       "NH304"
     ]
+  },
+  {
+    "session": "autonomy-recovery 2026-09-01",
+    "opened": "2026-09-01",
+    "ids": [
+      "RO06",
+      "RO07",
+      "RO08"
+    ]
   }
 ]

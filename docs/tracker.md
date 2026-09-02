@@ -14,8 +14,8 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **387 open**, 478 resolved.
-- **69 waiting on Sean** — the first section below.
+- **390 open**, 478 resolved.
+- **70 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **2**
   - New Hampshire hunt — **2**
@@ -35,7 +35,7 @@ and when. Nothing is ever deleted.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**69 open · 72 resolved.**
+**70 open · 72 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -162,6 +162,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NS18** — You asked whether Mark Kelly's two sources are capped or filtered. NEITHER. sourceCountLabel is computed from the same array the tab maps over, so the stated N equals the rendered rows by construction; mergeSources merges by (org, url), which is a dedupe of identical publishers rather than a cap; and there is no slice, limit or threshold anywhere in the path. The 2 is a true count of what the tab was handed, and personCardSources is handed exactly two things: the identity spine, and the congress-legislators directory. THE GAP, and it is a design question rather than a defect: his card also renders CAMPAIGN MONEY from the FEC and a VOTING RECORD from roll calls, and both cite their own publisher inline at the claim rather than joining the Sources tab. So the tab is honest about what it was given and is not a complete list of what the card is sourced from. THE QUESTION: should the Sources tab be (a) the card's COMPLETE citation list, which means passing the FEC and the roll-call publishers into it, or (b) what it is now — the identity sources, with each section citing its own? (a) makes the count larger and more useful; (b) keeps every citation next to the claim it supports.
 
 **NS19** — Built nothing, as the brief directs. THE EVIDENCE: the ballot page at 07866 now carries THREE pill treatments in one screen. (1) The two top pills — Narrow this to where you live, Moving here? Know the basics — at 40px tall, lavender-tinted, 1px border, semibold, added this session for BAL-11. (2) The election-box pills — Where can I vote?, Check whether you're registered — taller, more saturated lavender, and set on their own lines rather than in a row. (3) View Battlecard, now deep navy and filled, 522px wide, one per candidate. A fourth exists on the map: the two map pills, which this session made agree with each other for WGH-9 at 224x42 with a mono face. THE PROPOSAL: one pill scale with three named roles — PRIMARY (filled, the one thing a surface most wants done: View Battlecard, Speak Your Mind), SECONDARY (tinted outline, a real action that is not the main one: the top two, the election box's two), and COUNT (mono, a readout that happens to be pressable: the map's meetings and who-governs pills). Same height and padding within a role, at every surface. THE QUESTION: is that the right three roles, and do you want the election-box pair to become a ROW like the top two, or stay stacked?
+
+**RO08** — NOT_MACHINE_VERIFIABLE. Decision card. WHAT IS NEEDED: a choice of dispatch ceiling and cycle interval for the pilot runner. THE STATE: 2,996 standing obligations, roughly 2,900 due at any moment because most have never been discharged, and 1,144 with open occurrences; each cycle starts at most 100 (scripts/pilot-runner.mts --max, default 100) and cycles are 60 minutes apart, so the backlog drains at about 100 per hour and a full first pass over the corpus takes more than a day of unattended cycles. OPTIONS: (A) keep 100/hour - lowest load on publishers and on Neon, slowest drain; (B) raise --max to 300 with the same interval - three times the drain, three times the Neon round trips and publisher requests per cycle, cycle time roughly triples and must stay inside the 20-minute child ceiling; (C) shorten --interval to 30 minutes at 100 - same per-cycle cost, twice the drain. CONSEQUENCE OF NOT DECIDING: (A) stands; nothing is stuck, only slow. The per-host spacing and the debt backoff apply under every option, so no choice here can hot-loop a publisher.
 
 **V01** — Five conversations with the people who would buy the data — campaign consultants, party data staff, PAC data directors, at least one on each side. The question to put to them is exclusivity.
 
@@ -899,7 +901,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**41 open · 96 resolved.**
+**43 open · 96 resolved.**
 
 ### P1
 
@@ -961,6 +963,8 @@ WHAT THE FAILING RUN PRINTED (run 32961466707). The last 14 of 257 line(s) the r
 **NH264** — refresh-daily is on cron 09:11 UTC. Of the three scheduled runs on record two failed, the one success started 637 minutes late, and today's has not appeared at all ten hours past its cron.
 
 **NH280** — PR #216 built and bundled clean, then failed Netlify secret scanning: Pima County's own Clerk of the Board page emitted a Google Maps browser key into the HTML that scripts/learn-legistar-horizon.mts recorded verbatim as a test fixture. Scanning the whole tree for the class found more than Netlify reported - the same fixture also carried a live 30-day CivicPlus bearer token repeated five times, and a second fixture, the New London NH calendar, carried a different Google key that would have been the next red deploy. The repair sanitizes captured pages at the moment of acquisition, records the provenance of every redaction without keeping the credential, and adds a gate so GitHub CI catches the class before Netlify does.
+
+**RO07** — The autonomous runner could not work through its own backlog. Diagnosed by reproduction, single-process, against the real control plane: a resumed occurrence re-walked a route whose prior observation was already recorded, retrieved byte-identical content, and offered the SAME content-addressed artifact under a new Attempt; the append-only log refused the differing attemptId/recordedAt as a history rewrite (AppendOnlyViolation), the throw was unhandled, the whole cycle exited 1 with no run record, and every crash-restart re-resumed the same occurrence into the same death. Fixed at the shared code path: recordArtifactMetadata treats a content-identical re-observation as idempotent (a different-content collision is still refused); runCycle isolates one obligation's unexpected throw to a FAILED dispatch instead of aborting the cycle; the freshness cycle writes a legible FAILED run record on any crash instead of vanishing into a 0-providers digest, and isolates a throw in the occurrence open/resume loop.
 
 ### P2
 
@@ -1099,6 +1103,8 @@ OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshn
 **NH96** — NH91 is closed: playwright is pinned to an exact version, EXPECTED_CHROMIUM_REVISION is committed in lib/ops/chromium-pin.ts and checked against playwright's own browsers.json, and scripts/browser.mts launches whatever complete Chromium the image has by explicit path while NAMING the substitution. Two of the three tests that could not run now run and pass on build 1194. THE THIRD CANNOT, and it is a real finding rather than a harness problem: the plant that proves the guard can fail asserts that an unload-time sendBeacon escapes extraHTTPHeaders, and on Chromium 1194 the headers DO reach it, so the beacon arrives declared. That is a measurement of build 1194 and says nothing about the pinned 1234, so the test reports CANNOT RUN with the substituted build named rather than asserting either way. WHAT WOULD CLOSE IT: the container image carrying the pinned build, at which point the plant runs against the browser it was written for. Nothing in the repo can fix it — this is a fact about the image.
 
 **PB07** — Four of the five scheduled jobs run the full test suite before they push. The fifth does not, so a broken document can reach the repository unchallenged.
+
+**RO06** — The durable pointer to Session C's terminal state. Its production improvement stands as merged (PR #259, 2026-09-01). Its unmet acceptance criteria and open defects are carried forward as frontier obligations, never as grounds to reopen Session C, which is not resumed or extended as a session. Enumerated from its own closeout artifacts: 4 UNFINISHED, 9 NOT MET, 14 NEEDS_SEAN, 8 OPEN defects, 10 frontier items - 45 in all, each with an evidence pointer in docs/owner-audit/session-c.md and docs/frontier.md. The refutation record is docs/evidence/session-c-refutation-2026-09-01.json. Prior Session C proofs are inherited under the Session Efficiency Law s3 (RULING 237) and re-opened only when a change invalidates a dependency, a current check fails, or contradictory evidence appears.
 
 **JOB30** — THE CLASS ROW for scheduled-workflow lateness, absorbing JOB21 through JOB29. Nine rows were opened on 2026-08-31 recording nine individually-audited late slots across three workflows over three days: intake-tripwire.yml (276.1, 256.6 and 420.6 minutes late), job-watch.yml (187.9, 186.5 and 322.1) and refresh-daily.yml (315.7, 313.1 and 471). Every one of them records the SAME cause in its own text - the run was CREATED late rather than queued late, so the delay is GitHub's dispatch of the cron event and not this repository's runners, its concurrency or its jobs. Nine rows describing one phenomenon is a measurement wearing a task's clothes, which RULING 33 refuses: a measurement changes every time it is taken, and at three workflows a day this accumulates about three new rows daily forever while the thing they describe stays exactly the same. The nine are resolved into this row and remain permanently readable in the resolved store. WHAT IS ACTUALLY OWED, and it is a decision rather than an audit: the 60-minute tolerance was chosen when GitHub dispatch was assumed punctual, and every observation on record says it is not. Either the tolerance is re-derived from observed dispatch delay so it measures something real, or lateness stops being a per-slot row and becomes a rate on a dashboard, or the scheduler stops depending on cron punctuality altogether - which is what RULING 218's runtime-scheduler-derived clock and RULING 220's durable control plane exist to make possible. Until one of those lands, a late slot is a fact about GitHub and never a fact about this product's freshness.
 

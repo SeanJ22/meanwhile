@@ -1,7 +1,7 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-02 00:26:08 EDT. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-09-01 -->
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-02 00:32:05 EDT. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-09-01 -->
 Session day 2026-09-01 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
@@ -1037,10 +1037,10 @@ _No status change recovered in the commits walked._
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-09-02 00:26:07 EDT   <!-- expected-future: Eastern run stamp (R18) past midnight; Phoenix session day is 2026-09-01 -->
+generated: 2026-09-02 00:32:05 EDT   <!-- expected-future: Eastern run stamp (R18) past midnight; Phoenix session day is 2026-09-01 -->
 branch: claude/autonomy-recovery-efficiency-616f07
-head sha: c4634c2ba001458566ac53f40979c4aa56084442
-head subject: Annotate a UTC stamp quoted from a commit subject, so the ship door can commit its own context after 5pm Phoenix
+head sha: 8b58655cfdf89d460379a784849df31b7b112bbe
+head subject: Move RO07 to the resolved store, and keep the gate record that caught it in the working view
 origin/main sha: 07bbb08134bda0d34ea1ca1f889caa16e86ca6b0
 origin/main subject: Post-deploy integrity reading: 2026-09-02T01:52Z   <!-- expected-future: a UTC stamp inside a quoted commit subject; Phoenix session day is 2026-09-01 -->
 local main sha: 07bbb08134bda0d34ea1ca1f889caa16e86ca6b0

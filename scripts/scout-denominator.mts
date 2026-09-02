@@ -534,13 +534,13 @@ const methodMaturity: ScoutDenominatorReadback["methodMaturity"] = {
   deterministicUnitsUngraduatedByStore: detUnits.filter((u) => !known.has(u.route.routeId)).length,
   reading:
     "Two classifications exist and they can disagree. The DESCRIPTOR declares executorClass; " +
-    "`chooseExecutor` reads the METHOD STORE (routeId present in data/method/knowledge.json = GRADUATED). " +
+    "`chooseExecutor` reads the METHOD STORE (routeId present in the canonical method store = GRADUATED). " +
     "A model-class routeId the store has graduated would be dispatched DETERMINISTIC by chooseExecutor; a " +
     "deterministic routeId the store has not learned would be dispatched to the bounded worker. The counts " +
     "here are that disagreement, stated — not resolved.",
 };
 console.log();
-line(`method store: ${known.size} routeId(s) known in data/method/knowledge.json`);
+line(`method store: ${known.size} routeId(s) known in the canonical method store`);
 floor(
   "model-class routeIds GRADUATED by the method store (disagreement: descriptor says model, store says known)",
   "the distinct BOUNDED_MODEL_WORKER routeIds",

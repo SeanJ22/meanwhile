@@ -118,7 +118,7 @@ test("robots: longest match decides, Allow winning a tie (Wikipedia's exact shap
   const text =
     "User-agent: *\nAllow: /w/api.php?action=mobileview&\nAllow: /w/load.php?\nDisallow: /w/\nDisallow: /api/\n";
   const read = { robotsText: text, status: 200, transportError: null, contentType: "text/plain" };
-  const search = evaluatePermission(read, "https://en.wikipedia.org/w/api.php?action=query&list=search");
+  const search = evaluatePermission(read, "https://wiki.example.gov/w/api.php?action=query&list=search");
   assert.equal(search.verdict, "DISALLOWED");
   assert.equal(search.matchedRule, "Disallow: /w/");
   const mobile = evaluatePermission(read, "https://en.wikipedia.org/w/api.php?action=mobileview&page=X");

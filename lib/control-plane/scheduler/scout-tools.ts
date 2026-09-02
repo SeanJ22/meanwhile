@@ -35,6 +35,7 @@ import { DEFAULT_USER_AGENT, realOpen, type OpenOne } from "./route-executor.ts"
 import {
   SCOUT_RESEARCH_TOOLS,
   UNTRUSTED_CONTENT_HEADER,
+  type ArtifactProvenance,
   type BytesOutcome,
   type OpenBytes,
   type ScoutResearchTool,
@@ -310,6 +311,8 @@ type Rung = NonNullable<ScoutToolCallResult["rung"]>;
 
 interface CallAccount {
   readonly artifacts: WorkArtifact[];
+  /** RULING 243: the machine's record of each artifact this call vaulted. */
+  readonly provenance: ArtifactProvenance[];
   requests: number;
   bytes: number;
 }
@@ -372,11 +375,17 @@ function workArtifact(artifact: Artifact, recordedAt: string): WorkArtifact {
   };
 }
 
+/**
+ * The envelope carries `retrieved <stamp>` and the permission verdict so the
+ * model's provenance CLAIMS can be copied from the record it was shown
+ * (RULING 243); the machine still derives the values from the artifact itself.
+ */
 function envelope(artifact: Artifact, url: string, finalUrl: string, status: number | null, byteLength: number): string {
   return (
     `ARTIFACT ${artifact.id} | url ${url}` +
     (finalUrl !== url ? ` | final ${finalUrl}` : "") +
-    ` | HTTP ${status ?? "none"} | ${artifact.contentType} | ${byteLength} bytes | ${artifact.contentHash}`
+    ` | HTTP ${status ?? "none"} | ${artifact.contentType} | ${byteLength} bytes | ${artifact.contentHash}` +
+    ` | retrieved ${artifact.retrievedAt} | permission ${artifact.permission}`
   );
 }
 
@@ -546,6 +555,14 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     }
     vaulted.add(artifact.id);
     acc.artifacts.push(workArtifact(artifact, at));
+    acc.provenance.push({
+      artifactId: artifact.id,
+      canonicalUrl: artifact.canonicalUrl,
+      retrievedAt: artifact.retrievedAt,
+      permission: artifact.permission,
+      methodRouteId: artifact.methodRouteId,
+      httpStatus: artifact.httpStatus,
+    });
     return { artifact, stored: true, why: "stored" };
   }
 
@@ -625,16 +642,19 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
   /* ------------------------------------------------------------- tools */
 
   function refusal(text: string, extra: Partial<ScoutToolCallResult> = {}): ScoutToolCallResult {
-    return { ok: false, forModel: `REFUSED: ${text}`, artifacts: [], rung: null, requestCount: 0, bytesFetched: 0, ...extra };
+    return { ok: false, forModel: `REFUSED: ${text}`, artifacts: [], provenance: [], rung: null, requestCount: 0, bytesFetched: 0, ...extra };
   }
 
+  /** The rung carries the machine's `ok` and, when the call ran under a verdict, its permission. */
   function result(
     ok: boolean,
     forModel: string,
     rung: Rung | null,
     acc: CallAccount,
+    permission?: PermissionState,
   ): ScoutToolCallResult {
-    return { ok, forModel, artifacts: acc.artifacts, rung, requestCount: acc.requests, bytesFetched: acc.bytes };
+    const stamped: Rung | null = rung === null ? null : { ...rung, ok, ...(permission !== undefined ? { permission } : {}) };
+    return { ok, forModel, artifacts: acc.artifacts, provenance: acc.provenance, rung: stamped, requestCount: acc.requests, bytesFetched: acc.bytes };
   }
 
   function publicUrl(raw: string): URL | string {
@@ -649,7 +669,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const url = publicUrl(input.url ?? "");
     if (typeof url === "string") return refusal(url);
     const host = hostOf(url);
-    const acc: CallAccount = { artifacts: [], requests: 0, bytes: 0 };
+    const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
     const cached = robotsByHost.has(host);
     if (!cached) {
       const cap = overCap(host);
@@ -667,7 +687,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
           : `robots.txt HTTP ${robots.status ?? "none"}; permission ${reading.verdict}` + (cached ? " (cached)" : ""),
       artifactIds: cached ? [...robots.artifactIds] : acc.artifacts.map((a) => a.artifactId),
     };
-    return result(true, permissionText(url, robots, reading, cached), rung, acc);
+    return result(true, permissionText(url, robots, reading, cached), rung, acc, permissionState(reading.verdict));
   }
 
   /** The shared front half of fetch_public and browse. A string is a refusal. */
@@ -681,7 +701,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const url = publicUrl(input.url ?? "");
     if (typeof url === "string") return { kind: "REFUSED", result: refusal(url) };
     const host = hostOf(url);
-    const acc: CallAccount = { artifacts: [], requests: 0, bytes: 0 };
+    const acc: CallAccount = { artifacts: [], provenance: [], requests: 0, bytes: 0 };
     const capBefore = overCap(host);
     if (capBefore !== null) return { kind: "REFUSED", result: refusal(capBefore) };
     const robots = await readRobots(url, acc);
@@ -697,7 +717,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       const text =
         `permission for ${host} is ${reading.verdict}, so ${tool} did not open it. ` +
         permissionText(url, robots, reading, acc.requests === 0);
-      return { kind: "REFUSED", result: { ...result(false, `REFUSED: ${text}`, rung, acc) } };
+      return { kind: "REFUSED", result: { ...result(false, `REFUSED: ${text}`, rung, acc, permissionState(reading.verdict)) } };
     }
     const capAfter = overCap(host);
     if (capAfter !== null) {
@@ -736,8 +756,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       return result(
         false,
         `nothing was reached at ${url.host}: ${got.transportError}. A transport failure is a fact about this client and this moment, never about the record.\n${permLine}`,
-        rung(`transport failure: ${got.transportError}`),
-        acc,
+        rung(`transport failure: ${got.transportError}`), acc, permission
       );
     }
     const status = got.status ?? 0;
@@ -748,8 +767,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
         return result(
           false,
           `${url} answered HTTP ${status} and ZERO BYTES. A zero-byte read is a FAILED read, never an empty document; the record is still owed.\n${permLine}`,
-          rung(`HTTP ${status} (0 bytes)`),
-          acc,
+          rung(`HTTP ${status} (0 bytes)`), acc, permission
         );
       }
       if (isBinary(got.contentType, got.bytes)) {
@@ -765,19 +783,17 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
         return result(
           false,
           `${head}\nVAULT REFUSED: ${report.why}. Nothing of the body is shown: a body the vault does not hold cannot be cited, and a finding grounded in it would be grounded in memory. Try another representation of the record.`,
-          rung(`HTTP ${status}, ${got.byteLength} bytes, NOT VAULTED`),
-          acc,
+          rung(`HTTP ${status}, ${got.byteLength} bytes, NOT VAULTED`), acc, permission
         );
       }
       if (report.artifact.tier === "RESTRICTED_RAW") {
         return result(
           true,
           `${head}\nQUARANTINED: the body carries a confirmed third-party credential and is stored RESTRICTED_RAW. Nothing of it is shown to you. Cite the artifact id; a sanitized derivative is the acquirer's to make.`,
-          rung(`HTTP ${status}, ${got.byteLength} bytes, RESTRICTED_RAW`),
-          acc,
+          rung(`HTTP ${status}, ${got.byteLength} bytes, RESTRICTED_RAW`), acc, permission
         );
       }
-      return result(true, textRepresentation(head, text, got.contentType, url), rung(`HTTP ${status}, ${got.byteLength} bytes, ${got.contentType}`), acc);
+      return result(true, textRepresentation(head, text, got.contentType, url), rung(`HTTP ${status}, ${got.byteLength} bytes, ${got.contentType}`), acc, permission);
     }
 
     /* Non-2xx: the answer is DIAGNOSTIC evidence that the rung was walked; the body is never shown. */
@@ -800,23 +816,20 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       return result(
         false,
         `HTTP ${status} from ${url.host} to this client: a WALL, named. It is not a fact about whether the record exists or about the host's policy. ${diagnostic}. Walk another branch: another representation of the same record, the API behind the page, an official mirror, an archive.\n${permLine}`,
-        rung(`HTTP ${status} (wall)`),
-        acc,
+        rung(`HTTP ${status} (wall)`), acc, permission
       );
     }
     if (status >= 400 && status < 500) {
       return result(
         false,
         `HTTP ${status} at ${url}: a fact about this URL, not about the record; another representation of it is owed. ${diagnostic}.\n${permLine}`,
-        rung(`HTTP ${status}`),
-        acc,
+        rung(`HTTP ${status}`), acc, permission
       );
     }
     return result(
       false,
       `${url.host} answered HTTP ${status}: their side broke. ${diagnostic}. This may be retried later; it is not evidence about the record.\n${permLine}`,
-      rung(`HTTP ${status}`),
-      acc,
+      rung(`HTTP ${status}`), acc, permission
     );
   }
 
@@ -861,26 +874,24 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const report = await vaultBinary({ url, finalUrl, status, contentType: got.contentType, bytes: got.bytes, permission: input.permission }, acc);
     const head = `${envelope(report.artifact, url.toString(), finalUrl, status, got.byteLength)}\n${input.permLine}`;
     if (!report.stored) {
-      return result(false, `${head}\nNOT VAULTED: ${report.why}. Nothing of the body is shown.`, input.rung(`HTTP ${status}, ${got.byteLength} bytes binary, NOT VAULTED`), acc);
+      return result(false, `${head}\nNOT VAULTED: ${report.why}. Nothing of the body is shown.`, input.rung(`HTTP ${status}, ${got.byteLength} bytes binary, NOT VAULTED`), acc, input.permission);
     }
     if (!isPdf(got.contentType, got.bytes)) {
-      return result(true, `${head}\nBINARY body vaulted (${got.contentType}); no text representation is derived for this type.`, input.rung(`HTTP ${status}, ${got.byteLength} bytes, ${got.contentType}`), acc);
+      return result(true, `${head}\nBINARY body vaulted (${got.contentType}); no text representation is derived for this type.`, input.rung(`HTTP ${status}, ${got.byteLength} bytes, ${got.contentType}`), acc, input.permission);
     }
     const extracted = await extractPdf(got.bytes);
     if (extracted.kind !== "TEXT") {
       return result(
         true,
         `${head}\nPDF vaulted; ${extracted.kind}: ${extracted.why}. Only the artifact id and byte length are available; cite the id.`,
-        input.rung(`HTTP ${status}, ${got.byteLength} bytes PDF, ${extracted.kind}`),
-        acc,
+        input.rung(`HTTP ${status}, ${got.byteLength} bytes PDF, ${extracted.kind}`), acc, input.permission
       );
     }
     const body = capText(extracted.text);
     return result(
       true,
       [UNTRUSTED_CONTENT_HEADER, head, DATA_BEGIN, `PDF TEXT (${extracted.pages} page(s), ${body.note}):`, body.text, DATA_END].join("\n"),
-      input.rung(`HTTP ${status}, ${got.byteLength} bytes PDF, ${extracted.pages} page(s)`),
-      acc,
+      input.rung(`HTTP ${status}, ${got.byteLength} bytes PDF, ${extracted.pages} page(s)`), acc, input.permission
     );
   }
 
@@ -911,7 +922,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       const why = error instanceof Error ? error.message : String(error);
       requestCount += 1;
       acc.requests += 1;
-      return result(false, `the browser failed on ${url}: ${why}. A browser failure is a fact about this client, not about the record.`, rung(`browser failure: ${why}`), acc);
+      return result(false, `the browser failed on ${url}: ${why}. A browser failure is a fact about this client, not about the record.`, rung(`browser failure: ${why}`), acc, permission);
     }
     const htmlBytes = Buffer.byteLength(obs.html, "utf8");
     requestCount += 1;
@@ -923,8 +934,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       return result(
         false,
         `the browser rendered nothing at ${url}${obs.transportError ? `: ${obs.transportError}` : ""} (HTTP ${obs.status ?? "none"}). Nothing is vaulted and nothing is shown; a blank render is a failed read, never an empty page.`,
-        rung(`browser HTTP ${obs.status ?? "none"}, empty render${obs.transportError ? `: ${obs.transportError}` : ""}`),
-        acc,
+        rung(`browser HTTP ${obs.status ?? "none"}, empty render${obs.transportError ? `: ${obs.transportError}` : ""}`), acc, permission
       );
     }
 
@@ -979,8 +989,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     return result(
       page.stored,
       parts.join("\n"),
-      rung(`browser HTTP ${obs.status ?? "none"}, ${htmlBytes} bytes rendered, ${obs.requests.length} request(s) observed`),
-      acc,
+      rung(`browser HTTP ${obs.status ?? "none"}, ${htmlBytes} bytes rendered, ${obs.requests.length} request(s) observed`), acc, permission
     );
   }
 
@@ -1000,7 +1009,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const text =
       `INHERITED EVIDENCE — citable artifact ids (${ids.length}): ${ids.length > 0 ? ids.join(", ") : "(none)"}\n` +
       (ctx.inherited.summary.trim() === "" ? "(no inherited summary for this obligation)" : ctx.inherited.summary);
-    return { ok: true, forModel: text, artifacts: [], rung: null, requestCount: 0, bytesFetched: 0 };
+    return { ok: true, forModel: text, artifacts: [], provenance: [], rung: null, requestCount: 0, bytesFetched: 0 };
   }
 
   /* -------------------------------------------------------------- call */

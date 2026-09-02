@@ -47,6 +47,8 @@ import {
   deriveLevel1,
   readIntents,
   scoutSpendInWindow,
+  type HostSupervision,
+  type Level1Condition,
   type Level1Reading,
   type Level1Verdict,
   type ResearchBounds,
@@ -56,6 +58,8 @@ import {
   type RunningScout,
 } from "./scheduler/research-policy.ts";
 import type { ScoutOutcome, ScoutResult, ScoutStop } from "./scheduler/scout-result.ts";
+import { researchDigestRows, type ResearchDigestRows } from "./research-digest.ts";
+import type { DispatchOrdering, ResearchMetrics } from "./research-metrics.ts";
 
 /** How many Scout results and intents the page lists. The totals are always stated beside them. */
 export const SCOUT_RESULTS_SHOWN = 25;
@@ -337,6 +341,16 @@ export interface ResearchView {
   readonly intents: Held<{ readonly shown: Measured; readonly rows: readonly IntentRow[] }>;
   /** The one pause form that applies: PAUSE when running, RESUME when paused. */
   readonly pauseAction: "PAUSE" | "RESUME";
+  /**
+   * The host supervision reading the last cycle carried (RULING 246), and the
+   * condition it derived. A gap names whose gap it is; the condition is also
+   * in `reading.conditions`, this is the panel's own copy.
+   */
+  readonly supervision: Held<HostSupervision & { readonly condition: Level1Condition | null }>;
+  /** The reader-impact order the last cycle applied to the Scout lane (Work Item 5). */
+  readonly ordering: Held<DispatchOrdering>;
+  /** The lane's numbers as the last cycle computed them, plus the typed rows the page's panels render. */
+  readonly metrics: Held<{ readonly record: ResearchMetrics; readonly rows: ResearchDigestRows }>;
 }
 
 export interface ResearchViewInput {
@@ -712,6 +726,23 @@ export function buildResearchView(input: ResearchViewInput): ResearchView {
 
   const paused = readIntents(intentLog ?? []).paused || state?.pausedByOwner === true;
 
+  const supervisionCondition = reading.conditions.find((c) => c.name.startsWith("host supervision")) ?? null;
+  const supervision: ResearchView["supervision"] = !state
+    ? stateGap()
+    : state.hostSupervision === undefined || state.hostSupervision === null
+      ? gap("OURS", "the last cycle carried no host supervision reading; a parent relaunch has not been proven to this page (RULING 246)")
+      : held({ ...state.hostSupervision, condition: supervisionCondition });
+  const ordering: ResearchView["ordering"] = !state
+    ? stateGap()
+    : state.dispatchOrdering === undefined || state.dispatchOrdering === null
+      ? gap("OURS", "the last cycle recorded no dispatch ordering: no model-class work was due, or the cycle predates the reader-impact order")
+      : held(state.dispatchOrdering);
+  const metrics: ResearchView["metrics"] = !state
+    ? stateGap()
+    : state.metrics === undefined || state.metrics === null
+      ? gap("OURS", "the last cycle recorded no research metrics; the numbers exist only once a cycle computes them")
+      : held({ record: state.metrics, rows: researchDigestRows(state.metrics) });
+
   return {
     nowIso: input.nowIso,
     verdict,
@@ -732,6 +763,9 @@ export function buildResearchView(input: ResearchViewInput): ResearchView {
     methodCandidates,
     intents,
     pauseAction: paused ? "RESUME" : "PAUSE",
+    supervision,
+    ordering,
+    metrics,
   };
 }
 

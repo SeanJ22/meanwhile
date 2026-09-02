@@ -1,6 +1,7 @@
 /**
  * **FROM A SCOUT'S ROUTE CANDIDATE TO THE METHOD-CANDIDATE STORE.**
- * (Level 1 activation, 2026-09-01. RULING 240.)
+ * (Level 1 activation, 2026-09-01. RULING 240. Machine-owned provenance,
+ * 2026-09-02, RULING 243.)
  *
  * Models handle novelty; code handles learned procedure. The bridge is the
  * EXISTING candidate lifecycle in `lib/method/candidate.ts` —
@@ -17,6 +18,17 @@
  * that canonical URL) is proposed: a route the method store learns carries an
  * outcome in a jurisdiction, and a URL merely observed on a page has none.
  * The rest stay on the typed Scout result, marked unverified.
+ *
+ * ## What reaches durable provenance (RULING 243)
+ *
+ * `learnedRouteFrom` writes `origin`, `note` and the ROUTE_EXISTENCE claim
+ * from the candidate's MACHINE-OWNED fields — `observedOn`, `permission`,
+ * `recordClass`, `evidenceArtifactIds` — which the executor derived from the
+ * artifact, obligation and permission records before it accepted the finish.
+ * The model's own statements about those facts travel separately as
+ * `modelClaims` on the candidate record and are never written into the
+ * proposal. A candidate without a machine derivation (no `provenance`) is a
+ * pre-ruling shape and is not proposed.
  */
 
 import { join } from "node:path";
@@ -31,6 +43,7 @@ import {
   readMethodStore,
   writeCandidateStore,
   type CandidateLifecycle,
+  type MethodCandidate,
 } from "../../method/candidate.ts";
 import { learnBatch, type LearnedRoute } from "../../method/learn-batch.ts";
 import type { WorkArtifact } from "./dispatch.ts";
@@ -55,13 +68,37 @@ export interface ProposalReport {
   readonly storeVersionObserved: number;
 }
 
-/** The LearnedRoute shape the store accepts, built from what the Scout actually showed. */
+/** The machine-owned fields a proposal's provenance text is written from. Nothing else reaches it. */
+export interface MachineOwnedProvenance {
+  readonly observedOn: string;
+  readonly permission: string;
+  readonly recordClass: string;
+  readonly evidenceArtifactIds: readonly string[];
+}
+
+/** The origin line, written from machine-owned values only. */
+export function originLine(attemptId: string, obligationId: string, observedOn: string): string {
+  return `SCOUT Attempt ${attemptId} on ${obligationId}, observed ${observedOn} (provenance machine-derived from the artifact record, RULING 243)`;
+}
+
+/** The ROUTE_EXISTENCE statement, written from machine-owned values only. */
+export function existenceStatement(url: string, observedOn: string, evidence: readonly string[]): string {
+  return `${url} answered to an identified public client on ${observedOn}; evidence ${evidence.join(", ")}`;
+}
+
+/**
+ * The LearnedRoute shape the store accepts, built from what the Scout actually
+ * showed. `machine` defaults to the candidate's own fields, which the executor
+ * has already made machine-owned; a caller re-deriving an older candidate
+ * passes the derivation explicitly.
+ */
 export function learnedRouteFrom(
   c: ScoutCandidate,
   result: Pick<ScoutResult, "attemptId" | "obligationId" | "subjectId">,
   openedArtifacts: readonly WorkArtifact[],
+  machine: MachineOwnedProvenance = c,
 ): LearnedRoute {
-  const evidence = [...new Set([...c.evidenceArtifactIds, ...openedArtifacts.map((a) => a.artifactId)])];
+  const evidence = [...new Set([...machine.evidenceArtifactIds, ...openedArtifacts.map((a) => a.artifactId)])];
   let host = c.url;
   try {
     host = new URL(c.url).host;
@@ -73,11 +110,11 @@ export function learnedRouteFrom(
     title: c.title,
     /* An official host's own publication is A1; anything else is B until a session says otherwise. */
     tier: /\.gov$|\.us$|\.state\./i.test(host) ? "A1" : "B",
-    fields: [c.recordClass],
+    fields: [machine.recordClass],
     note:
-      `${c.relevance} Permission: ${c.permission} — ${c.permissionReading}. Procedure: ${c.procedure}. ` +
+      `${c.relevance} Permission: ${machine.permission} (the verdict the cited evidence was retrieved under) — ${c.permissionReading}. Procedure: ${c.procedure}. ` +
       `Evidence artifacts: ${evidence.join(", ")}. Unverified: ${c.unverified.join("; ") || "nothing stated"}.`,
-    origin: `SCOUT Attempt ${result.attemptId} on ${result.obligationId}, observed ${c.observedOn}`,
+    origin: originLine(result.attemptId, result.obligationId, machine.observedOn),
     outcome: {
       jurisdiction: result.subjectId,
       rows: openedArtifacts.length,
@@ -88,11 +125,16 @@ export function learnedRouteFrom(
       {
         id: `${c.routeId}#exists`,
         class: "ROUTE_EXISTENCE",
-        statement: `${c.url} answered to an identified public client on ${c.observedOn}; evidence ${evidence.join(", ")}`,
+        statement: existenceStatement(c.url, machine.observedOn, evidence),
         restsOn: [],
       },
     ],
   };
+}
+
+/** The model's claims as the candidate record carries them. Null when the executor recorded none. */
+function modelClaimsOf(c: ScoutCandidate): MethodCandidate["modelClaims"] {
+  return c.claims === undefined ? undefined : { ...c.claims };
 }
 
 /**
@@ -123,6 +165,13 @@ export function proposeScoutCandidates(input: {
       notProposed.push({ routeId: c.routeId, why: "the proposed route id is not a kebab-case identifier" });
       continue;
     }
+    if (c.provenance === undefined) {
+      notProposed.push({
+        routeId: c.routeId,
+        why: "the candidate carries no machine provenance derivation (RULING 243); a proposal whose provenance the model wrote is not learned",
+      });
+      continue;
+    }
     const proposal = learnedRouteFrom(c, input.result, opened);
     const offered = proposeCandidate(store, {
       attemptId: input.result.attemptId,
@@ -134,6 +183,14 @@ export function proposeScoutCandidates(input: {
     if (offered.already) {
       proposed.push({ routeId: c.routeId, candidateId: offered.candidate.id, lifecycle: offered.candidate.lifecycle, issues: [], already: true });
       continue;
+    }
+    /* The model's claims travel on the record, beside the proposal and never inside it. */
+    const claims = modelClaimsOf(c);
+    if (claims !== undefined) {
+      store = {
+        ...store,
+        candidates: store.candidates.map((mc) => (mc.id === offered.candidate.id ? { ...mc, modelClaims: claims } : mc)),
+      };
     }
     wrote = true;
     /* Validate the PROSPECTIVE store, exactly as admission would, and record the verdict. */

@@ -63,8 +63,9 @@
  * provider request header.
  */
 
-import { mkdirSync, writeFileSync } from "node:fs";
-import { hostname } from "node:os";
+import { spawnSync } from "node:child_process";
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { hostname, platform } from "node:os";
 import { join } from "node:path";
 
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
@@ -112,7 +113,7 @@ import {
 } from "../lib/control-plane/scheduler/dispatch.ts";
 import { anthropicTransport, scoutExecutor } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { buildScoutToolkit } from "../lib/control-plane/scheduler/scout-tools.ts";
-import type { InheritedEvidence } from "../lib/control-plane/scheduler/scout-contract.ts";
+import type { ArtifactProvenance, InheritedEvidence, PriorRung } from "../lib/control-plane/scheduler/scout-contract.ts";
 import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import {
   RESEARCH_BOUNDS,
@@ -124,11 +125,28 @@ import {
   ceilingPermits,
   readIntents,
   scoutSpendInWindow,
+  type HostSupervision,
+  type RelaunchProof,
   type ResearchIntent,
   type ResearchState,
   type RunningScout,
 } from "../lib/control-plane/scheduler/research-policy.ts";
 import { candidateStoreCounts, proposeScoutCandidates, type ProposalReport } from "../lib/control-plane/scheduler/scout-candidates.ts";
+import {
+  NO_PIPELINE_RECORDED,
+  cacheDefectCounts,
+  cacheHitRateByRole,
+  costPerUsefulOutcome,
+  graduationFunnel,
+  modelShareTrend,
+  orderByReaderImpact,
+  scoutCapacity,
+  type DispatchOrdering,
+  type OrderingInputs,
+  type ResearchMetrics,
+} from "../lib/control-plane/research-metrics.ts";
+import { researchDigestLines } from "../lib/control-plane/research-digest.ts";
+import { PILOT_ZIPS } from "../lib/health/owner-corpus-compile.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 import { RUNNER_ID } from "../lib/control-plane/admin-data.ts";
 import { OWNER_SURFACE_FORMAT_VERSION, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
@@ -353,6 +371,8 @@ const decisionDisagreements = units
 /* ------------------------------------------------------- the occurrences --- */
 
 const nowMs = Date.parse(NOW);
+/** Named runtime conditions, accumulated from here on; the research state carries them. */
+const runtimeConditions: string[] = [];
 const occurrenceByObligation = new Map<string, { id: string; routeTaskId: string }>();
 const nextDueByObligation = new Map<string, string>();
 let openedDeterministic = 0;
@@ -388,12 +408,74 @@ for (const o of sync.all) {
   dueThisCycle.push({ obligation: o, nextDueAt: row.nextDueAt });
 }
 
-/* OLDEST FIRST, which is the dispatcher's own order. */
+/* OLDEST FIRST for the deterministic lane, which is the dispatcher's own order. */
 dueThisCycle.sort((a, b) => (a.nextDueAt < b.nextDueAt ? -1 : a.nextDueAt > b.nextDueAt ? 1 : 0));
 const dueModel = dueThisCycle.filter((d) => decisionFor(d.obligation.id, d.obligation.routeId).kind === "BOUNDED_MODEL_WORKER");
-const dueDeterministic = dueThisCycle.length - dueModel.length;
+const dueDeterministicRows = dueThisCycle.filter((d) => !dueModel.includes(d));
+const dueDeterministic = dueDeterministicRows.length;
 
-for (const { obligation: o, nextDueAt } of dueThisCycle) {
+/*
+ * **READER IMPACT FIRST for the Scout lane.** (Work Item 5, 2026-09-02.
+ * RULING 229.) Oldest-first answered what had waited longest; the Scout
+ * ceiling is three a cycle, so WHICH three matters. Band 1 feeds a pilot
+ * surface or an open red reader question, band 2 completes a source universe,
+ * band 3 is the tail; oldest due first within a band. The inputs are read
+ * here and NAMED on the record.
+ */
+function openRedReaderQuestions(): { readonly zips: readonly string[]; readonly count: number; readonly run: string | null } {
+  const dir = join(ROOT, "data", "health", "reader-suite-runs");
+  try {
+    const files = readdirSync(dir).filter((f) => f.endsWith(".json")).sort();
+    const latest = files.at(-1);
+    if (latest === undefined) return { zips: [], count: 0, run: null };
+    const run = JSON.parse(readFileSync(join(dir, latest), "utf8")) as {
+      runId?: string;
+      results?: { questionText?: string; verdict?: { kind?: string } }[];
+    };
+    const red = (run.results ?? []).filter((r) => r.verdict?.kind === "RED");
+    const corpus = JSON.parse(readFileSync(join(ROOT, "data", "health", "reader-questions.json"), "utf8")) as {
+      templateText?: string;
+      applicability?: { zips?: string[] };
+    }[];
+    const zips = new Set<string>();
+    for (const r of red) {
+      const q = corpus.find((c) => c.templateText === r.questionText);
+      for (const z of q?.applicability?.zips ?? []) zips.add(z);
+    }
+    return { zips: [...zips].sort(), count: red.length, run: run.runId ?? latest };
+  } catch {
+    return { zips: [], count: 0, run: null };
+  }
+}
+const redQuestions = openRedReaderQuestions();
+const orderingInputs: OrderingInputs = {
+  openRedQuestionZips: redQuestions.zips,
+  openRedQuestions: redQuestions.count,
+  readerSuiteRun: redQuestions.run,
+  pilotZips: PILOT_ZIPS,
+};
+const modelOrder = orderByReaderImpact(
+  dueModel.map((d) => ({
+    id: d.obligation.id,
+    subjectId: d.obligation.subjectId,
+    readerImpactAt: d.obligation.readerImpactAt,
+    providerId: registry.providerOf(d.obligation.id),
+    nextDueAt: d.nextDueAt,
+    entry: d,
+  })),
+  orderingInputs,
+);
+const dispatchOrdering: DispatchOrdering | null = dueModel.length === 0 ? null : modelOrder.ordering;
+const openingOrder = [...dueDeterministicRows, ...modelOrder.ordered.map((b) => b.row.entry)];
+if (dispatchOrdering !== null) {
+  console.log(
+    `  Scout lane order: band 1 ${dispatchOrdering.bands[1]} · band 2 ${dispatchOrdering.bands[2]} · band 3 ${dispatchOrdering.bands[3]} of ${dueModel.length} due model-class ` +
+      `(open red reader questions ${redQuestions.count}${redQuestions.zips.length > 0 ? ` at ${redQuestions.zips.join(", ")}` : ""})`,
+  );
+  for (const b of modelOrder.ordered.slice(0, SCOUT_MAX)) console.log(`      band ${b.band}  ${b.row.id}  — ${b.why}`);
+}
+
+for (const { obligation: o, nextDueAt } of openingOrder) {
   const row = { nextDueAt };
   /*
    * **DO NOT OPEN AN OCCURRENCE THIS CYCLE CANNOT DISPATCH.** Each lane opens
@@ -451,8 +533,6 @@ if (preOpenSkipped.length > 0) {
 }
 
 /* -------------------------------------------------- LEVEL 1 — RESEARCH --- */
-
-const runtimeConditions: string[] = [];
 
 /* The credential, BY NAME. Its value goes into the transport and nowhere else. */
 const workerKey = (process.env[WORKER_CREDENTIAL_VAR] ?? "").trim();
@@ -559,9 +639,13 @@ if (modelLaneEnabled && dueModel.length > 0) {
   }
 }
 
+/** The most recent prior rungs a resumed Attempt is briefed with. A floor on the brief's size, never on the record. */
+const PRIOR_RUNGS_BRIEFED = 40;
+
 function inheritedFor(row: ScheduledObligation): InheritedEvidence {
   const id = row.obligation.id;
-  const prior = (priorScoutResults.get(id) ?? []).slice(-2);
+  const all = [...(priorScoutResults.get(id) ?? [])].sort((a, b) => (a.recordedAt < b.recordedAt ? -1 : a.recordedAt > b.recordedAt ? 1 : 0));
+  const prior = all.slice(-2);
   const dispositions = (priorDispositionsByObligation.get(id) ?? []).slice(-3);
   const debt = debtsIn.find((d) => d.obligationId === id);
   const lines: string[] = [];
@@ -577,11 +661,118 @@ function inheritedFor(row: ScheduledObligation): InheritedEvidence {
     lines.push(`PRIOR DISPOSITION ${d.at}: ${d.disposition} (permission ${d.permission}, transport ${d.transport}) — ${d.note.slice(0, 300)}`);
   }
   if (debt) lines.push(`DEBT: ${debt.consecutiveFailures} consecutive failure(s), retry at ${debt.retryAt}`);
+  /*
+   * RULING 244: the recorded rung list is the resume cursor, and a durably
+   * failed rung is not re-walked. RULING 243: an inherited artifact may be
+   * cited only where the machine can say when and under what verdict it was
+   * retrieved — rungs recorded before the verdict travelled on them yield
+   * provenance for robots documents only (the tool vaults those under
+   * ALLOWED); a page artifact with no recorded verdict yields none, so a
+   * candidate resting on it alone is refused rather than guessed at.
+   */
+  const priorRungs: PriorRung[] = all
+    .flatMap((r) => r.rungs.map((g) => ({ rung: g.rung, tool: g.tool, target: g.target, observed: g.observed, ok: g.ok ?? null, at: g.at, attemptId: r.attemptId })))
+    .slice(-PRIOR_RUNGS_BRIEFED);
+  const provenance: ArtifactProvenance[] = [];
+  const seen = new Set<string>();
+  for (const r of all) {
+    for (const g of r.rungs) {
+      const verdict = g.permission ?? (g.tool === "read_permission" ? "ALLOWED" : null);
+      if (verdict === null) continue;
+      for (const artifactId of g.artifactIds) {
+        if (seen.has(artifactId)) continue;
+        seen.add(artifactId);
+        provenance.push({
+          artifactId,
+          canonicalUrl: g.target,
+          retrievedAt: g.at,
+          permission: verdict,
+          methodRouteId: g.tool === "read_permission" ? "scout:read_permission" : g.tool === "browse" ? "scout:browse" : "scout:fetch_public",
+          httpStatus: Number(/HTTP (\d{3})/.exec(g.observed)?.[1] ?? NaN) || null,
+        });
+      }
+    }
+  }
   return {
     artifactIds: [...new Set(prior.flatMap((r) => r.artifactIds))],
     summary: lines.join("\n"),
+    provenance,
+    priorRungs,
+    nextRungs: all.at(-1)?.nextRungs ?? [],
   };
 }
+
+/* ------------------------------------------------- host supervision --- */
+
+/**
+ * **THE RELAUNCH PROOF TRAVELS WITH THE STATE.** (Work Item 3.2, RULING 246.)
+ * The proof file is read from THIS checkout; the live trigger is asked of the
+ * scheduled task through `scripts/pilot-task.ps1 -Action verify-triggers`
+ * (win32 only; elsewhere the reading is NOT_MEASURABLE_ON_THIS_HOST). Neither
+ * read can make the verdict ACTIVE by itself — `deriveLevel1` asks for a
+ * RELAUNCHED proof within tolerance AND the trigger still present.
+ */
+function measureHostSupervision(): HostSupervision {
+  const proofRel = join("data", "ops", "runner-relaunch-proof.json");
+  const proofPath = join(ROOT, proofRel);
+  let proof: RelaunchProof | null = null;
+  if (existsSync(proofPath)) {
+    try {
+      const raw = JSON.parse(readFileSync(proofPath, "utf8")) as Record<string, unknown>;
+      const n = (v: unknown): number | null => (typeof v === "number" && Number.isFinite(v) ? v : null);
+      const s = (v: unknown): string | null => (typeof v === "string" ? v : null);
+      proof = {
+        measuredAt: s(raw.measuredAt) ?? "",
+        killedPid: n(raw.killedPid),
+        relaunchedPid: n(raw.relaunchedPid),
+        secondsToRelaunch: n(raw.secondsToRelaunch),
+        relaunchTriggerPresent: raw.relaunchTriggerPresent === true,
+        taskStateAfter: s(raw.taskStateAfter),
+        lastTaskResult: s(raw.lastTaskResult),
+        verdict: raw.verdict === "RELAUNCHED" ? "RELAUNCHED" : "NOT_RELAUNCHED",
+      };
+    } catch (error) {
+      runtimeConditions.push(`the relaunch proof at ${proofRel} could not be parsed: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+  if (platform() !== "win32") {
+    return {
+      host: HOST,
+      checkedAt: nowIso(),
+      measurable: false,
+      notMeasurableReason: `NOT_MEASURABLE_ON_THIS_HOST (${platform()}: the scheduled task and its relaunch trigger exist only on the Windows runner host)`,
+      relaunchTrigger: { present: null, detail: "not asked: no scheduled task on this platform" },
+      proof,
+      proofPath: proofRel,
+    };
+  }
+  let present: boolean | null = null;
+  let detail: string;
+  try {
+    const run = spawnSync(
+      "powershell",
+      ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", join(ROOT, "scripts", "pilot-task.ps1"), "-Action", "verify-triggers"],
+      { encoding: "utf8", timeout: 60_000, windowsHide: true },
+    );
+    const text = `${run.stdout ?? ""}`;
+    const start = text.indexOf("{");
+    const parsed = start >= 0 ? (JSON.parse(text.slice(start)) as { relaunchTriggerPresent?: unknown; taskPresent?: unknown; state?: unknown }) : null;
+    if (parsed === null) {
+      detail = `verify-triggers printed no JSON (exit ${run.status ?? "null"}${run.error ? `, ${run.error.message}` : ""})`;
+    } else {
+      present = parsed.relaunchTriggerPresent === true;
+      detail = `verify-triggers: taskPresent ${String(parsed.taskPresent)}, state ${String(parsed.state)}, relaunchTriggerPresent ${String(parsed.relaunchTriggerPresent)} (exit ${run.status ?? "null"})`;
+    }
+  } catch (error) {
+    detail = `verify-triggers could not run: ${error instanceof Error ? error.message : String(error)}`;
+  }
+  return { host: HOST, checkedAt: nowIso(), measurable: true, notMeasurableReason: null, relaunchTrigger: { present, detail }, proof, proofPath: proofRel };
+}
+const hostSupervision = measureHostSupervision();
+console.log(
+  `  host supervision: ${hostSupervision.measurable ? `trigger ${hostSupervision.relaunchTrigger.present === null ? "UNKNOWN" : hostSupervision.relaunchTrigger.present ? "present" : "ABSENT"}` : hostSupervision.notMeasurableReason} · ` +
+    `proof ${hostSupervision.proof === null ? `ABSENT at ${hostSupervision.proofPath}` : `${hostSupervision.proof.verdict} measured ${hostSupervision.proof.measuredAt} (${hostSupervision.proof.secondsToRelaunch ?? "?"}s)`}`,
+);
 
 /* ----------------------------------------------------- research state --- */
 
@@ -593,6 +784,8 @@ let laneCounts: { deterministicDispatched: number; modelDispatched: number; defe
   modelDispatched: 0,
   deferredBy: {},
 };
+/** Computed once at cycle end; null on the start-of-cycle state. */
+let metrics: ResearchMetrics | null = null;
 
 function researchState(cycleFinishedAt: string | null): ResearchState {
   const window = spendWindow.windowUsd === null ? null : spendWindow.windowUsd + spentThisCycle;
@@ -640,6 +833,9 @@ function researchState(cycleFinishedAt: string | null): ResearchState {
         ? null
         : { proposed: counts.PROPOSED, validated: counts.VALIDATED, admitted: counts.ADMITTED, rejected: counts.REJECTED };
     })(),
+    hostSupervision,
+    dispatchOrdering,
+    metrics,
   };
 }
 
@@ -708,6 +904,8 @@ const scout: DeclaredExecutor = modelLaneEnabled
         route: registry.routeFor(row.obligation.id),
         providerId: registry.providerOf(row.obligation.id),
         reason: decisionFor(row.obligation.id, row.obligation.routeId).why,
+        /* RULING 244: a DETERMINISTIC decision reaching the Scout is refused before any request. */
+        decision: decisionFor(row.obligation.id, row.obligation.routeId).kind,
         inherited: inheritedFor(row),
         tools: { vault: vault.put, vaultBytes: vault.putBytes, spaceOut: spacer, browse: browseWithPlaywright },
       }),
@@ -880,6 +1078,58 @@ for (const result of cycle.dispatched) {
 }
 const manifest = writeStagingManifest(ROOT, staged, today());
 
+/* ------------------------------------------------- research metrics --- */
+
+/*
+ * Computed ONCE, at cycle end, from re-reads of the durable logs so this
+ * cycle's own Attempts are in the denominators. A failed re-read is a named
+ * runtime condition and the metrics record is withheld, never zeroed.
+ */
+async function computeMetrics(): Promise<ResearchMetrics | null> {
+  let results: readonly ScoutResult[];
+  let costsNow: readonly CostEntry[];
+  try {
+    results = await repos.scoutResults.readAll();
+    costsNow = await repos.costs.readAll();
+  } catch (error) {
+    runtimeConditions.push(`research metrics NOT computed: a durable log could not be re-read (${error instanceof Error ? error.message : String(error)})`);
+    return null;
+  }
+  const at = nowIso();
+  const windowCycles: { startedAt: string; deterministic: number; model: number }[] = [];
+  try {
+    const since = Date.parse(at) - RESEARCH_BOUNDS.windowHours * 3_600_000;
+    for (const f of readdirSync(RUNS_DIR).filter((x) => x.endsWith(".json")).sort()) {
+      const rec = JSON.parse(readFileSync(join(RUNS_DIR, f), "utf8")) as { startedAt?: string; research?: { lanes?: { deterministic?: { dispatched?: number }; model?: { dispatched?: number } } | null } };
+      const lanes = rec.research?.lanes;
+      if (!lanes || typeof rec.startedAt !== "string" || Date.parse(rec.startedAt) < since) continue;
+      windowCycles.push({ startedAt: rec.startedAt, deterministic: lanes.deterministic?.dispatched ?? 0, model: lanes.model?.dispatched ?? 0 });
+    }
+  } catch {
+    /* no run records readable: the window is what this cycle saw */
+  }
+  const counts = candidateStoreCounts(ROOT);
+  const candidateCounts = counts === null ? null : { proposed: counts.PROPOSED, validated: counts.VALIDATED, admitted: counts.ADMITTED, rejected: counts.REJECTED };
+  const pipeline = await NO_PIPELINE_RECORDED();
+  return {
+    computedAt: at,
+    capacity: scoutCapacity({ costs: costsNow, nowIso: at, windowHours: RESEARCH_BOUNDS.windowHours, ceilingUsd: RESEARCH_BOUNDS.dailyCeilingUsd }),
+    ordering: dispatchOrdering,
+    funnel: graduationFunnel({
+      results,
+      candidateCounts,
+      pipeline,
+      pipelineSource: "none recorded — the promotion pipeline (lib/control-plane/promotion) is another lane's; plug its reader in here",
+      deterministicReplays: 0,
+    }),
+    share: modelShareTrend({ thisCycle: { deterministic: laneCounts.deterministicDispatched, model: laneCounts.modelDispatched }, windowCycles }),
+    cacheByRole: cacheHitRateByRole(results),
+    costPerOutcome: costPerUsefulOutcome({ results, candidateCounts, confirmed: null }),
+    cacheDefects: cacheDefectCounts(results),
+  };
+}
+metrics = await computeMetrics();
+
 /* -------------------------------------------- research state, heartbeat --- */
 
 const finishedAt = nowIso();
@@ -931,7 +1181,23 @@ const researchLines = [
   `  disagreements      ${decisionDisagreements.length} executor-decision disagreement(s) recorded in the run record, never reconciled`,
   `  intents            ${honoredIntents.length} RUN_CYCLE_NOW honored · paused: ${intents.paused ? "yes" : "no"}`,
   `  runtime            ${runtimeConditions.length === 0 ? "no condition prevents eligible Scout work" : runtimeConditions.join("; ")}`,
+  `  supervision        ${hostSupervision.measurable ? `relaunch trigger ${hostSupervision.relaunchTrigger.present === null ? "UNKNOWN" : hostSupervision.relaunchTrigger.present ? "present" : "ABSENT"}` : hostSupervision.notMeasurableReason} · ` +
+    `proof ${hostSupervision.proof === null ? `ABSENT at ${hostSupervision.proofPath}` : `${hostSupervision.proof.verdict} ${hostSupervision.proof.measuredAt} (${hostSupervision.proof.secondsToRelaunch ?? "?"}s)`} (RULING 246)`,
+  /* RULING 244: every Attempt this cycle, by step — the cache reads per turn are the proof the prefix held. */
+  ...scoutResultsThisCycle.flatMap((r) => {
+    const model = (r.steps ?? []).filter((s) => s.kind === "MODEL");
+    const det = (r.steps ?? []).filter((s) => s.kind === "DETERMINISTIC");
+    return [
+      `  attempt ${r.attemptId}  ${r.refusal ? "REFUSED" : r.outcome} · effort ${r.effort ?? "n/a"} · ${r.usage.turns} turn(s) · usd ${r.usd === null ? "UNMEASURED" : r.usd.toFixed(4)}` +
+        ` · cache reads/turn ${model.map((s) => s.tokens.cacheRead).join("/") || "none recorded"}` +
+        (r.cacheDefect ? ` · CACHE DEFECT turn(s) ${r.cacheDefect.turns.join(", ")}` : "") +
+        ` · deterministic ${det.map((s) => `${s.step} x${s.count}`).join(", ") || "none"}` +
+        ` · guard refusals ${r.guardRefusals?.length ?? 0} · overruns ${r.representationOverruns?.length ?? 0} · resumed from ${r.resumedFromRungs ?? 0} rung(s)`,
+    ];
+  }),
   "  PROMOTION          OFF. A Scout finding is inventory and a candidate; nothing it produced changed what a reader is told.",
+  "",
+  ...(metrics === null ? ["RESEARCH METRICS   NOT COMPUTED this cycle (a named runtime condition says why)"] : researchDigestLines(metrics)),
 ];
 
 const lines = [
@@ -1037,10 +1303,20 @@ writeFileSync(
           methodCandidateIds: r.methodCandidateIds,
           usd: r.usd,
           elapsedMs: r.elapsedMs,
+          effort: r.effort ?? null,
+          steps: r.steps ?? null,
+          cacheDefect: r.cacheDefect ?? null,
+          guardRefusals: r.guardRefusals ?? null,
+          representationOverruns: r.representationOverruns ?? null,
+          resumedFromRungs: r.resumedFromRungs ?? null,
         })),
         candidateReports,
         decisionDisagreements,
         honoredIntents,
+        hostSupervision,
+        dispatchOrdering,
+        orderedScoutQueue: modelOrder.ordered.map((b) => ({ obligationId: b.row.id, band: b.band, why: b.why, nextDueAt: b.row.nextDueAt })),
+        metrics,
       },
       vaulted: [...vault.ledger.values()],
       staged,

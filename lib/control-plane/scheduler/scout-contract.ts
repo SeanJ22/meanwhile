@@ -1,6 +1,7 @@
 /**
  * **THE SEAM BETWEEN A SCOUT AND ITS RESEARCH TOOLS.**
- * (Level 1 activation, 2026-09-01.)
+ * (Level 1 activation, 2026-09-01. Machine-owned provenance, 2026-09-02,
+ * RULING 243.)
  *
  * The model never touches the network. It asks a TOOL, the tool acts under
  * enforcement the model cannot reach — public-URL guard, permission reading,
@@ -17,10 +18,16 @@
  * over evidence nobody can later re-read, and a finding grounded in that is a
  * finding grounded in the model's memory of a page.
  *
+ * Every tool call also hands the executor the PROVENANCE of what it vaulted —
+ * when, from where, under what permission verdict — so the machine can write
+ * a candidate's provenance from the record rather than from the model's
+ * account of it (RULING 243).
+ *
  * This file is the CONTRACT only. `scout-tools.ts` implements it;
  * `scout-executor.ts` drives it. Neither imports the other's internals.
  */
 
+import type { PermissionState } from "../../workstate/types.ts";
 import type { WorkArtifact } from "./dispatch.ts";
 import type { ScheduledObligation } from "./obligation.ts";
 import type { RouteDescriptor } from "./registry.ts";
@@ -34,6 +41,25 @@ export interface ScoutToolSpec {
   readonly name: string;
   readonly description: string;
   readonly input_schema: Record<string, unknown>;
+  /** The executor sets this on the LAST definition so the tool list is a cache prefix. */
+  readonly cache_control?: { readonly type: "ephemeral" };
+}
+
+/**
+ * **THE MACHINE'S RECORD OF ONE VAULTED ARTIFACT.** Written by the tool from
+ * the `Artifact` it vaulted, never from anything the model said. This is what
+ * a candidate's `observedOn` and `permission` are DERIVED from (RULING 243).
+ */
+export interface ArtifactProvenance {
+  readonly artifactId: string;
+  readonly canonicalUrl: string;
+  /** The vault stamp. The date part is a candidate's `observedOn`. */
+  readonly retrievedAt: string;
+  /** The verdict the retrieval ran under. A robots document's own record says ALLOWED; it is the instrument, not the route. */
+  readonly permission: PermissionState;
+  /** `scout:read_permission`, `scout:fetch_public`, `scout:browse`, `scout:browse:network-observation`. */
+  readonly methodRouteId: string;
+  readonly httpStatus: number | null;
 }
 
 /** What one tool call produced. `forModel` is the ONLY thing the model reads. */
@@ -47,10 +73,34 @@ export interface ScoutToolCallResult {
   readonly forModel: string;
   /** Artifacts this call vaulted. The executor attributes them to the Attempt. */
   readonly artifacts: readonly WorkArtifact[];
+  /**
+   * The provenance of every artifact this call vaulted. Optional on the
+   * contract so a test double may omit it; a candidate citing an artifact
+   * with NO provenance record cannot have its provenance derived and is
+   * refused by name (SCOUT_PROVENANCE_UNDERIVABLE).
+   */
+  readonly provenance?: readonly ArtifactProvenance[];
   /** The rung this call walked, when it acted on a public source. Machine-written. */
   readonly rung: Omit<ScoutRung, "index" | "note" | "at"> | null;
   readonly requestCount: number;
   readonly bytesFetched: number;
+}
+
+/**
+ * One rung a PRIOR Attempt walked on this obligation, as the machine recorded
+ * it. The executor lists these FIRST in the brief (a resumed Attempt starts
+ * from the recorded rung list) and refuses a re-walk of a durably failed one
+ * (RULING 244).
+ */
+export interface PriorRung {
+  readonly rung: string;
+  readonly tool: string;
+  readonly target: string;
+  readonly observed: string;
+  /** Null when the prior result predates the `ok` field; classified from `observed` then. */
+  readonly ok: boolean | null;
+  readonly at: string;
+  readonly attemptId: string;
 }
 
 /** Sanitized inherited project context the `read_inherited` tool serves. */
@@ -59,6 +109,12 @@ export interface InheritedEvidence {
   readonly artifactIds: readonly string[];
   /** Prior route outcomes, prior Scout results, known routes for the hosts — as text. */
   readonly summary: string;
+  /** Machine provenance for the inherited ids, where the control plane holds it. */
+  readonly provenance?: readonly ArtifactProvenance[];
+  /** Rungs prior Attempts walked, oldest first. The resume cursor. */
+  readonly priorRungs?: readonly PriorRung[];
+  /** What the newest prior Attempt said it would try next. */
+  readonly nextRungs?: readonly string[];
 }
 
 /** What a real browser observed. Bytes are vaulted by the toolkit, not here. */

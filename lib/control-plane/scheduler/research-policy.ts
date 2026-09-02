@@ -29,6 +29,7 @@ import type { RunnerHeartbeat } from "../owner-surface.ts";
 import { HEARTBEAT_LATE_MINUTES } from "../owner-surface.ts";
 import type { CostEntry } from "../cost.ts";
 import { MODEL_WORKER_MODEL } from "../model-cost.ts";
+import type { DispatchOrdering, ResearchMetrics } from "../research-metrics.ts";
 
 /* ------------------------------------------------------------------ bounds */
 
@@ -88,6 +89,53 @@ export interface RunningScout {
 }
 
 /**
+ * **THE HOST'S SUPERVISION, AS THE CYCLE MEASURED IT.** (Work Item 3.2,
+ * 2026-09-02. RULING 246.)
+ *
+ * The admin page reads only the control plane, and a Netlify function cannot
+ * read this host's files — so the relaunch proof `scripts/pilot-task.ps1
+ * -Action prove-relaunch` writes to `data/ops/runner-relaunch-proof.json`
+ * must TRAVEL: the cycle script reads the proof from its checkout and the
+ * live trigger presence from the scheduled task, and records both here.
+ * A historical Scout success never makes the system ACTIVE; a proven parent
+ * relaunch is what `deriveLevel1` asks for.
+ */
+export interface RelaunchProof {
+  readonly measuredAt: string;
+  readonly killedPid: number | null;
+  readonly relaunchedPid: number | null;
+  readonly secondsToRelaunch: number | null;
+  readonly relaunchTriggerPresent: boolean;
+  readonly taskStateAfter: string | null;
+  readonly lastTaskResult: string | null;
+  readonly verdict: "RELAUNCHED" | "NOT_RELAUNCHED";
+}
+
+export interface HostSupervision {
+  /** The host the reading was taken on. */
+  readonly host: string;
+  readonly checkedAt: string;
+  /** Whether this host can be asked at all (the scheduled task exists only on win32). */
+  readonly measurable: boolean;
+  readonly notMeasurableReason: string | null;
+  /** The live trigger reading. `present` is null when the task could not be asked. */
+  readonly relaunchTrigger: { readonly present: boolean | null; readonly detail: string };
+  /** The proof file's record, or null when the checkout holds none. */
+  readonly proof: RelaunchProof | null;
+  readonly proofPath: string;
+}
+
+/**
+ * How old a RELAUNCHED proof may be and still count. Thirty days: the trigger
+ * is a property of the registered task, which changes only when someone
+ * re-registers it, and a monthly re-proof is cheap (one kill, one relaunch,
+ * under five minutes). Older than that, the proof is a fact about a task
+ * that may since have been replaced, and the lane reads DEGRADED until the
+ * proof is re-run.
+ */
+export const SUPERVISION_PROOF_MAX_AGE_DAYS = 30;
+
+/**
  * The record the runner writes at the START and END of every cycle, and on
  * every Scout start/finish. Read by the admin Research view.
  */
@@ -139,6 +187,12 @@ export interface ResearchState {
     readonly admitted: number;
     readonly rejected: number;
   } | null;
+  /** The host's supervision reading (RULING 246). Absent on states written before 2026-09-02: read as unproven. */
+  readonly hostSupervision?: HostSupervision | null;
+  /** The reader-impact dispatch order this cycle applied to the Scout lane, and its inputs. */
+  readonly dispatchOrdering?: DispatchOrdering | null;
+  /** Capacity, queue bands, funnel, share, cache hit rate, cost per outcome — computed at cycle end. */
+  readonly metrics?: ResearchMetrics | null;
 }
 
 export const RESEARCH_INTENT_ACTIONS = ["PAUSE", "RESUME", "RUN_CYCLE_NOW"] as const;
@@ -376,6 +430,40 @@ export function deriveLevel1(input: {
     ok: runtime.length === 0,
     required: false,
     reason: runtime.length === 0 ? "none reported by the last cycle" : runtime.join("; "),
+  });
+
+  /*
+   * HOST SUPERVISION PROVEN (Work Item 3.2, RULING 246). A soft condition: the
+   * lane can run without it, but it is not ACTIVE — a runner nothing relaunches
+   * is one kill away from a dead lane that still reads healthy for
+   * HEARTBEAT_LATE_MINUTES. Proven means: the proof travelled with the state,
+   * its verdict is RELAUNCHED, it is within SUPERVISION_PROOF_MAX_AGE_DAYS, and
+   * the live task still carries the relaunch trigger.
+   */
+  const supervision = input.state?.hostSupervision ?? null;
+  const proof = supervision?.proof ?? null;
+  const proofAgeDays = proof === null ? null : (now - Date.parse(proof.measuredAt)) / 86_400_000;
+  const proofFresh = proofAgeDays !== null && Number.isFinite(proofAgeDays) && proofAgeDays >= 0 && proofAgeDays <= SUPERVISION_PROOF_MAX_AGE_DAYS;
+  const triggerLive = supervision?.relaunchTrigger.present === true;
+  const supervisionOk = supervision !== null && supervision.measurable && proof !== null && proof.verdict === "RELAUNCHED" && proofFresh && triggerLive;
+  conditions.push({
+    name: "host supervision proven (parent relaunch measured, RULING 246)",
+    ok: supervisionOk,
+    required: false,
+    reason:
+      supervision === null
+        ? "no host supervision reading travelled with the research state; a parent relaunch has not been proven to this page"
+        : !supervision.measurable
+          ? `host ${supervision.host} cannot be asked for its scheduled task: ${supervision.notMeasurableReason ?? "NOT_MEASURABLE_ON_THIS_HOST"}`
+          : proof === null
+            ? `no relaunch proof at ${supervision.proofPath} on ${supervision.host}; run scripts/pilot-task.ps1 -Action prove-relaunch`
+            : proof.verdict !== "RELAUNCHED"
+              ? `the relaunch proof measured ${proof.measuredAt} read NOT_RELAUNCHED (killed pid ${proof.killedPid ?? "?"}, nothing came back)`
+              : !proofFresh
+                ? `the RELAUNCHED proof measured ${proof.measuredAt} is ${proofAgeDays === null ? "undated" : `${Math.floor(proofAgeDays)} day(s)`} old, past the ${SUPERVISION_PROOF_MAX_AGE_DAYS}-day tolerance; re-run prove-relaunch`
+                : !triggerLive
+                  ? `the RELAUNCHED proof stands (${proof.measuredAt}, ${proof.secondsToRelaunch ?? "?"}s) but the live task no longer carries the relaunch trigger: ${supervision.relaunchTrigger.detail}`
+                  : `parent relaunch proven ${proof.measuredAt}: pid ${proof.killedPid ?? "?"} killed, pid ${proof.relaunchedPid ?? "?"} back in ${proof.secondsToRelaunch ?? "?"}s; relaunch trigger present on ${supervision.host} at ${supervision.checkedAt}`,
   });
 
   const failingRequired = conditions.filter((c) => c.required && !c.ok);

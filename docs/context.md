@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-02 03:14:27 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-02 16:52:00 EDT.
 Session day 2026-09-02 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1295 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1308 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -612,7 +612,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 257 recorded
+## Rulings — 262 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -850,6 +850,11 @@ from. Each entry there names what it supersedes.
 - RULING 239 — SESSION C is terminal: SHIPPED, OPERATIONALLY IMPROVED, UNFINISHED — its production improvement stands merged and its unmet criteria are carried as durable frontier obligations, never a reopening  [R-0239 · FACT · ACTIVE]
 - RULING 240 — MEANWHILE IS AUTHORIZED TO OPERATE AT LEVEL 1 — RESEARCH  [R-0240 · LAW_DECISION · ACTIVE]
 - RULING 241 — Level 1 activation parameters: a TEMPORARY $25/day rolling research spend ceiling, the local dispatchOne worker runtime, hosted worker runtimes deferred to the frontier  [R-0241 · DECISION · ACTIVE]
+- RULING 242 — THE SINGLE NIGHTLY PROMOTION DOOR: reader-facing civic truth changes through exactly one door, the nightly window on the standing runner's own clock, which runs in SHADOW until the activation gate opens  [R-0242 · LAW_DECISION · ACTIVE]
+- RULING 243 — MACHINE-OWNED PROVENANCE: execution and provenance facts in any model-produced candidate, finding or result are written by the machine from the Attempt, artifact, obligation and permission records; the model's statements about them are claims  [R-0243 · LAW_DECISION · ACTIVE]
+- RULING 244 — WORKER EFFICIENCY LAW (owner-ordered): near flawless and wildly efficient — no step is skipped, and no token is spent twice for the same thing  [R-0244 · LAW_DECISION · ACTIVE]
+- RULING 245 — OWNER ADMIN IDENTITY: administrative access authenticates the owner through Sign in with Google for exactly the enrolled owner address, verified server-side; a shared secret is never a login path except as a documented, rate-limited, incident-logged break-glass under RULING 238  [R-0245 · LAW_DECISION · ACTIVE]
+- RULING 246 — LEVEL 1 RESEARCH is terminal: SHIPPED, RUNNING, DEGRADED, UNFINISHED — the audit verdicts per criterion and the carried items are recorded, and the machinery is corrected under the finite rules rather than by reopening the session  [R-0246 · FACT · ACTIVE]
 - `package.json`'s `scripts` block is the list.  [R-C-commands-package-json-s-scripts-block-is-the-list · LAW_DECISION · ACTIVE]
 - More principles will not fix this.  [R-C-discovery-conduct-more-principles-will-not-fix-this · LAW_DECISION · ACTIVE]
 - THE REPORT CONTRACT IS A FILE NOW, AND IT IS AMENDED RATHER THAN REINVENTED  [R-C-discovery-conduct-the-report-contract-is-a-file-now-and-it-is-am · LAW_DECISION · ACTIVE]
@@ -1039,16 +1044,17 @@ _No status change recovered in the commits walked._
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-09-02 03:14:27 EDT
-branch: claude/autonomous-scout-activation-f24965
-head sha: 53a9361482ad0ae0a4f9e5d3dc0457fc3956ad70
-head subject: Level 1 - Research activation: RULING 240/241, the one executor-decision rule, a real bounded Scout through dispatchOne with vault-first research tools, typed results and method candidates, the rolling spend ceiling, the two-trigger installer, the /admin/research view, and seven live Scout Attempts
-origin/main sha: e2a4ff5154ab5a1595f3ba170afda2ff1b25b7cc
-origin/main subject: Post-deploy integrity reading: 2026-09-02T05:01Z
-local main sha: e2a4ff5154ab5a1595f3ba170afda2ff1b25b7cc
+generated: 2026-09-02 16:52:00 EDT
+branch: codex/provider-transition-2026-09-02
+head sha: 64267246addc5fa23b58837e29a91065a7b087bd
+head subject: Merge remote-tracking branch 'origin/main' into codex/provider-transition-2026-09-02
+origin/main sha: 366d54e7e9945d0d465f937f3f61a97e5beb5eca
+origin/main subject: Job watch: a scheduled job has failed twice in a row
+local main sha: 366d54e7e9945d0d465f937f3f61a97e5beb5eca
 local main matches origin/main: yes
 working tree: clean
-open prs: none
+open prs: 1
+open pr: #265 Provider transition: prepare Meanwhile for a Codex session (AGENTS.md ⇄ CLAUDE.md parity, provider-neutral bootstrap)
 last recorded tests: 92 (recorded without a verdict)
 last recorded lint: not recorded
 last recorded build: not recorded

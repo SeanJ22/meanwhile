@@ -39,6 +39,21 @@ export const GENERATED: GeneratedArtifact[] = [
   },
   {
     /*
+     * AGENTS.md's project-law portion is a byte-exact mirror of CLAUDE.md
+     * (provider transition, 2026-09-02; lib/ops/agents-mirror.mjs). A coding
+     * agent that is not Claude Code reads AGENTS.md first, so the constitution
+     * travels there mechanically rather than by a second hand-written copy —
+     * the shape that once let docs/rulings.md diverge from CLAUDE.md on 87 of
+     * 90 rulings. The generator preserves the Next.js-owned block and never
+     * invents it. Pure: it reads CLAUDE.md and the existing AGENTS.md, nothing
+     * else.
+     */
+    path: "AGENTS.md",
+    command: "corepack pnpm agents:sync",
+    pure: true,
+  },
+  {
+    /*
      * The governance views (2026-08-26, the governance remediation).
      *
      * `docs/rulings.md` STOPPED BEING AN AUTHORITY on this date. It was a

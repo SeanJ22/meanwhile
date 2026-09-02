@@ -1,4 +1,10 @@
 {
+  "AGENTS.md": {
+    "digest": "15975fabd953a0577238920e9e29a8afdc5c133aa7352d44fac9f93f727d3f3f",
+    "files": 2,
+    "entry": "scripts/agents-sync.mjs",
+    "regeneratedOn": "2026-09-02"
+  },
   "data/campaign-finance/az-2026-statewide-corpus.json": {
     "digest": "b4ca255048b3e2aebf8eb512a15c803a5f5121ebacd5e16928b3b21deb5caea7",
     "files": 12,

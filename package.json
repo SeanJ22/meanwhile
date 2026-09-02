@@ -88,6 +88,8 @@
     "freshness:shadow": "tsx scripts/freshness-shadow.mts",
     "freshness:shadow:pg": "node --env-file=.env.local --experimental-strip-types scripts/freshness-shadow.mts --provider=postgres",
     "gates": "node scripts/gates.mjs",
+    "agents:check": "node scripts/agents-sync.mjs --check",
+    "agents:sync": "node scripts/agents-sync.mjs",
     "geocode": "tsx scripts/geocode.mts",
     "gop:shape": "tsx scripts/gop-municipal-shape-0825.mts",
     "gov:directory": "tsx scripts/walk-government-directory.mts",

@@ -85,6 +85,7 @@ import {
   cronsInWorkflowYaml,
   STALENESS_INCIDENT_STATES,
   newestScheduledRun,
+  refreshRunIncident,
   scheduleStaleness,
   type ScheduleStaleness,
   deriveEnvelope,
@@ -93,7 +94,10 @@ import {
   type AuditEnvelope,
   type RunObservation,
   type SlotVerdict,
+  type StepObservation,
 } from "../lib/ops/schedule-audit.ts";
+import { CATCH_UP_MAX_DAYS, dueDecisions } from "../lib/ops/refresh-cadence.ts";
+import { readDebt } from "../lib/ops/refresh-report.ts";
 import { loadSecrets, redactSecrets } from "../lib/ops/secret-redaction.ts";
 
 /** The scheduled workflows that push `main`, plus the tripwire. */
@@ -568,6 +572,118 @@ console.log("\n  SCHEDULE STALENESS — a job that stopped produces no runs to g
 for (const row of staleness) {
   console.log(`    ${row.workflow.padEnd(34)} ${row.state}`);
   if (row.state !== "FRESH") console.log(`${"".padEnd(38)}${row.detail}`);
+}
+
+/* -------------------------------------------------------------------------- */
+/* THE NEWEST SCHEDULED REFRESH — FAILED, OR LANDED NOTHING (2026-09-02)       */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The refresh failed at the gate on 2026-09-01 and again on 2026-09-02, and
+ * nothing here said so until the second day: the staleness check saw a cron
+ * that fired, and the consecutive rule needed two. A refresh that fires and
+ * lands nothing is a day the reader lost, and it is an incident on the first
+ * day. `refreshRunIncident` decides; this reads what it needs.
+ */
+const REFRESH = "refresh-daily.yml";
+const REFRESH_MARKER = (runId: number): string => `[job-watch:refresh-outcome:${runId}]`;
+
+function stepsOfRun(runId: number): readonly StepObservation[] | undefined {
+  try {
+    const parsed = JSON.parse(gh(["run", "view", String(runId), "--json", "jobs"])) as {
+      jobs?: { steps?: StepObservation[] }[];
+    };
+    const steps = (parsed.jobs ?? []).flatMap((j) => j.steps ?? []);
+    return steps.length > 0 ? steps : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Whether a refresh commit reached `main` after the run was created — read
+ * off the branch's own history, never inferred from a step's colour. Null
+ * when the branch could not be read, which opens nothing (could-not-tell is
+ * not evidence either way).
+ */
+function refreshLandedAfter(createdAt: string): boolean | null {
+  try {
+    const raw = gh([
+      "api",
+      `repos/{owner}/{repo}/commits?sha=main&since=${encodeURIComponent(createdAt)}&per_page=50`,
+      "--jq",
+      "[.[].commit.message] | map(select(startswith(\"Daily refresh:\"))) | length",
+    ]).trim();
+    const n = Number(raw);
+    return Number.isFinite(n) ? n > 0 : null;
+  } catch {
+    return null;
+  }
+}
+
+/** How many sources the cadence and open debt called for on the run's own day. */
+function dueSourcesOn(createdAt: string): number {
+  const runDay = new Date(createdAt);
+  const report = join(process.cwd(), "docs", "refresh-run.md");
+  const landed = existsSync(report)
+    ? readFileSync(report, "utf8").match(/^Run date:\s*\*\*(\d{4}-\d{2}-\d{2})\*\*/m)?.[1]
+    : undefined;
+  const lastLanded = landed ? new Date(`${landed}T00:00:00Z`) : null;
+  const debt = readDebt(process.cwd(), createdAt.slice(0, 10)).debts;
+  return dueDecisions(lastLanded, runDay, CATCH_UP_MAX_DAYS, debt).filter((d) => d.due).length;
+}
+
+{
+  const observed = runsAsRead.get(REFRESH) ?? [];
+  const newestAt = newestScheduledRun(observed);
+  const newest = observed.find((r) => r.event === "schedule" && r.createdAt === newestAt) ?? null;
+  const enriched: RunObservation | null = newest
+    ? {
+        ...newest,
+        steps: stepsOfRun(newest.databaseId),
+        failureText: newest.conclusion === "failure" ? failureTailOf(newest.databaseId) : undefined,
+      }
+    : null;
+  const incident = enriched
+    ? refreshRunIncident({
+        newestScheduled: enriched,
+        dueSourceCount: dueSourcesOn(enriched.createdAt),
+        landedAfterRun: refreshLandedAfter(enriched.createdAt),
+      })
+    : null;
+
+  console.log("\n  THE NEWEST SCHEDULED REFRESH");
+  if (!enriched) {
+    console.log(`    ${REFRESH}: no scheduled run was read — the staleness row above owns that`);
+  } else if (!incident) {
+    console.log(`    ${REFRESH}: run ${enriched.databaseId} (${enriched.createdAt}) — no incident`);
+  } else {
+    console.log(`    ${REFRESH}: ${incident.kind} — run ${incident.runId}`);
+    console.log(`      ${incident.detail}`);
+    const marker = REFRESH_MARKER(incident.runId);
+    if (openRowsMentioning(marker)) {
+      console.log("      a row is already open for this run — not opening a second.");
+    } else {
+      rows.push({
+        Section: "repo-ops",
+        Title:
+          incident.kind === "NEWEST_SCHEDULED_RUN_FAILED"
+            ? `${REFRESH}: the newest scheduled refresh failed (run ${incident.runId})`
+            : `${REFRESH}: the newest scheduled refresh landed nothing on a due day (run ${incident.runId})`,
+        "What this is":
+          `${incident.detail}\n\nTHIS IS THE ONLY REFRESH PATH THAT REACHES READERS, so a day it lands nothing is a ` +
+          "day of freshness the product lost. Read docs/refresh-run.json on the run's checkout (or the run log) " +
+          "for the per-source outcome — ROUTE_UNREAD names the source and the reason — and " +
+          "data/ops/refresh-debt.json for what is still owed. A source the gate refused is due on the next run " +
+          "until it lands; a tree-level red (a failure no source's revert fixes) is a defect on main and is fixed " +
+          "there.\n\nOPERATIONAL INCIDENT (RULING 218): engineering work, never a Needs-Owner escalation by " +
+          `itself.\n\n${marker}`,
+        Priority: "P1",
+        prefix: "JOB",
+      });
+      console.log("      -> repo-ops incident row queued (RULING 218).");
+    }
+  }
 }
 
 for (const row of staleness.filter((r) => STALENESS_INCIDENT_STATES.includes(r.state))) {

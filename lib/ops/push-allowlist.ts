@@ -151,8 +151,20 @@ export const PUSHER_PROFILES: readonly PusherProfile[] = [
     id: "refresh-daily",
     workflow: ".github/workflows/refresh-daily.yml",
     allow: [
-      { path: "data/", why: "the orchestrated daily refresh writes every due source's artifact under data/" },
+      {
+        path: "data/",
+        why:
+          "the orchestrated daily refresh writes every due source's artifact under data/ — and, since " +
+          "2026-09-02, data/ops/refresh-debt.json, the durable record of a source whose data the gate " +
+          "refused. A failure day commits its debt; that file is non-shipping and costs no build.",
+      },
       { path: "docs/refresh-run.md", why: "the run report the orchestrator writes beside the data" },
+      {
+        path: "docs/refresh-run.json",
+        why:
+          "the same run, machine-readable: per-source outcome, changed paths and next due day, written by " +
+          "the orchestrator and finalised by the gate (2026-09-02). Another lane reads it.",
+      },
     ],
   },
   {

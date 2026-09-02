@@ -208,3 +208,89 @@ eight findings, and duplication in the tracker is worse than a gap.
 **What is worth watching is the CLOCK GAP**, not the headroom — a refresh taking
 longer than a day between its first source and its stamp trips a source that
 declared itself correctly. That is `NH197`, and it stays open.
+
+---
+
+## The gate, after 2026-09-02 — one source's refusal no longer costs every source
+
+**Written 2026-09-02 by the refresh-failure session**, after the scheduled runs
+of 2026-09-01 (`33517560447`) and 2026-09-02 (`33636708298`) both died at
+`Validate before committing` with three sources' fresh data thrown away each
+time. The full diagnosis, with each failing test's demonstrated cause, is
+`data/ops/refresh-failure-diagnosis-2026-09-02.json`.
+
+### What a run leaves behind now
+
+| File | What it is | Committed when |
+| --- | --- | --- |
+| `docs/refresh-run.json` | The run as data — one typed outcome per source: `INGESTED`, `UNCHANGED`, `ROUTE_UNREAD` (with the reason), `NOT_DUE`; `changedPaths`; `nextDueAt`; the gate's verdict and per-file attribution | alongside data that moved, like the `.md` |
+| `docs/refresh-run.md` | Rendered FROM the JSON. Never hand-edited | same |
+| `data/ops/refresh-debt.json` | Every source that did not land: first failure, latest, how many in a row, why, next due. A source in debt is DUE on the next run whatever its cadence says, until it lands | only when a debt moves — a failure day commits its debt (non-shipping prefix, no build) |
+
+### How a red gate is handled
+
+`Validate before committing` is still `corepack pnpm test`, literal, over the
+changed path. When it is red, `Attribute the refusal and keep the survivors`
+(`scripts/refresh-gate.mts`) re-runs the suite tee'd to `$RUNNER_TEMP/gate.log`
+(which `pnpm diagnose` now reads first — a job cannot fetch its own log from the
+API while it is running), then reverts each changed source's governed paths to
+HEAD one at a time and re-runs only the failing files:
+
+- a file that passes with source S reverted is S's — S is refused, its paths go
+  back to HEAD, it goes into the debt file, and it is `ROUTE_UNREAD` in the
+  record with the file named;
+- the survivors commit as usual — one commit, then the job goes red for the
+  refused source;
+- a file that still fails with EVERY changed source reverted is the tree's, a
+  defect already on `main`. Nothing commits under it (only the debt file), and
+  the record says which file.
+
+### The post-merge proof, exactly
+
+The integration owner dispatches — this lane does not:
+
+```bash
+gh workflow run refresh-daily.yml --repo SeanJ22/we-the-people --field all_sources=true
+gh run list --repo SeanJ22/we-the-people --workflow=refresh-daily.yml --limit 1
+gh run watch <run-id> --repo SeanJ22/we-the-people
+```
+
+Then read back, in this order — a green colour is not the proof, these are:
+
+1. **The commit on `main`**, authored `github-actions[bot]`, message
+   `Daily refresh: <timestamp>`, and the files it carries:
+   ```bash
+   git fetch origin && git log origin/main -1 --format='%H %an %s' -- docs/refresh-run.json
+   git show --stat --format= origin/main -- data/ docs/refresh-run.json docs/refresh-run.md
+   ```
+2. **`docs/refresh-run.json` on that commit** — every source `ran: true`
+   (`--all`), every outcome `INGESTED` or `UNCHANGED`, `gate.verdict: "GREEN"`,
+   and no `ROUTE_UNREAD`. A `ROUTE_UNREAD` names its reason; read it.
+3. **`data/ops/refresh-debt.json`** — absent, or `debts: []`. A debt here is a
+   source still owed, with the day it is next due.
+4. **Per-source as-of, before and after** — read the field named, on
+   `origin/main~1` and `origin/main`:
+
+   | Source | Artifact | The as-of field |
+   | --- | --- | --- |
+   | `meetings` | `data/meetings-snapshot.json` | `generatedAt` (ISO); per row `provenance.collectedAt` |
+   | `nj-filing` | `data/ballot/nj-morris-2026.json` | `curatedAt` (`YYYY-MM-DD`); per candidacy `provenance.collectedAt`; `removals[].absentFrom.collectedAt` |
+   | `nj-filing` | `data/questionnaire/invitations-nj-morris-2026.json` | the embedded filing `collectedAt` the generator carries |
+   | `fec` | `data/fec/fec-2026.json` | `fetchedAt` (ISO) |
+   | `legiscan` | `data/votes/state-votes-snapshot.json` | `generatedAt` (ISO); per dataset `datasetHash`, `datasetDate`, `downloadedAt` — the hash is the publisher's own version, so an unchanged hash is an honest `UNCHANGED` |
+   | `dotgov` | `data/dotgov/snapshot.json` | `source.sha` (the upstream commit of `current-full.csv`) |
+
+   ```bash
+   for f in data/meetings-snapshot.json data/fec/fec-2026.json data/votes/state-votes-snapshot.json; do
+     echo "== $f"; git show origin/main~1:$f | head -c 300 | tr '\n' ' '; echo; git show origin/main:$f | head -c 300 | tr '\n' ' '; echo;
+   done
+   git show origin/main:data/ballot/nj-morris-2026.json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const b=JSON.parse(s);console.log(b.curatedAt,b.candidacies.length,(b.removals||[]).length)})'
+   ```
+5. **The reader-visible check** — `data/meetings-snapshot.json` carries New
+   London, NH with concluded meetings (`status: "CONCLUDED"`, dates in the
+   month before the run), and `data/ballot/nj-morris-2026.json` carries the
+   `removals` record for the CD-7 candidacy the clerk removed on 2026-09-01,
+   with both documents cited.
+
+**A run that lands nothing on a due day is an incident from the first day**
+(`pnpm watch:workflows`, `refreshRunIncident`), not after a second failure.

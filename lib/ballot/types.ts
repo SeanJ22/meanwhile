@@ -97,12 +97,51 @@ export interface BallotAbsence {
   provenance: Provenance;
 }
 
+/**
+ * A candidacy the authority's CURRENT filing no longer lists, retained with
+ * its evidence rather than deleted (2026-09-02).
+ *
+ * The Morris County Clerk's 1 September revision listed 147 general-election
+ * candidates where the 21 August revision listed 148; Lana Leguía (CD-7) was
+ * the difference, and the clerk's page said nothing about it. Deleting the
+ * row would have been silence about a real change; keeping her in
+ * `candidacies` would have rendered a person the clerk no longer lists as
+ * running. So the record is kept, keyed on the id every reaction, card and
+ * link already hangs off, and it carries BOTH documents — the one that listed
+ * the person and the later one that does not. Two citations, or it is not
+ * evidence of a removal.
+ *
+ * Never rendered as a candidate. The generator also writes the same fact as a
+ * `BallotAbsence` on the contest's division, which is the surface a reader
+ * sees it on.
+ */
+export interface CandidacyRemoval {
+  /** The candidacy id it had — the join key that must not be re-minted. */
+  id: string;
+  contestId: string;
+  familyName: string;
+  givenName: string;
+  partyLabel: string | null;
+  slogan: string | null;
+  status: "REMOVED_FROM_FILING";
+  /** The document that listed the candidacy, and the day it was read. */
+  lastListed: Provenance;
+  /** The later document that does not, and the day it was read. */
+  absentFrom: Provenance;
+  /** The first run that found it absent, `YYYY-MM-DD`. Stable across runs. */
+  firstAbsentOn: string;
+  /** What the authority says about the change, or that it says nothing. */
+  statement: string;
+}
+
 export interface BallotSet {
   election: Election;
   contests: Contest[];
   candidacies: Candidacy[];
   measures: Measure[];
   absences: BallotAbsence[];
+  /** Candidacies the current filing no longer lists, with their evidence. */
+  removals?: CandidacyRemoval[];
   /**
    * Honest statements of OUR gaps — contests known to exist that are not yet
    * curated or not yet mappable to a division. Rendered distinctly, because

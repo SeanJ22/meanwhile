@@ -334,6 +334,13 @@ export interface DueDecision {
    * being recovered rather than reporting a source as mysteriously due.
    */
   readonly recoveredFrom: readonly string[];
+  /**
+   * The day this source first failed to land, when it carries open freshness
+   * debt (`data/ops/refresh-debt.json`, 2026-09-02). A source in debt is DUE
+   * whatever its cadence says: a weekly source whose data the gate refused on
+   * Monday is not owed next Monday, it is owed now.
+   */
+  readonly debtSince?: string;
 }
 
 /** The UNION of what every day in the window asks for, in table order. */
@@ -353,17 +360,20 @@ export function dueDecisions(
   lastLandedRunDate: Date | null | undefined,
   runDate: Date,
   maxDays: number = CATCH_UP_MAX_DAYS,
+  openDebt: readonly { sourceId: string; firstFailedOn: string }[] = [],
 ): DueDecision[] {
   const days = catchUpSlots(lastLandedRunDate, runDate, maxDays);
   const todayKey = utcDay(runDate);
   return REFRESH_SOURCES.map((source) => {
     const dueDays = days.filter((d) => isDue(source, d)).map(utcDay);
     const dueToday = dueDays.includes(todayKey);
+    const debt = openDebt.find((d) => d.sourceId === source.id);
     return {
       source,
-      due: dueDays.length > 0,
+      due: dueDays.length > 0 || debt !== undefined,
       dueToday,
       recoveredFrom: dueDays.filter((d) => d !== todayKey),
+      ...(debt ? { debtSince: debt.firstFailedOn } : {}),
     };
   });
 }

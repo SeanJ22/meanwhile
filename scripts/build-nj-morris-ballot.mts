@@ -45,6 +45,7 @@
 import { readFileSync, writeFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
+import type { CandidacyRemoval } from "../lib/ballot/types.ts";
 import { extractTextLayer } from "../lib/extract/text-layer.ts";
 import {
   NJ_FILING_SOURCES,
@@ -177,9 +178,19 @@ function schoolDivision(jurisdiction: string): { ocdId: string; label: string } 
  * Both are properties of the world rather than of the old file's naming
  * convention, which is what makes the carry-forward stable across a rename.
  */
+type PriorCandidacy = {
+  id: string;
+  contestId: string;
+  familyName: string;
+  givenName: string;
+  partyLabel?: string | null;
+  slogan?: string | null;
+  provenance?: { sourceUrl: string; sourceOrg: string; collectedAt: string };
+};
 type PriorFile = {
   contests: { id: string; ocdId: string; title: string }[];
-  candidacies: { id: string; contestId: string; familyName: string; givenName: string }[];
+  candidacies: PriorCandidacy[];
+  removals?: CandidacyRemoval[];
 };
 let prior: PriorFile = { contests: [], candidacies: [] };
 try {
@@ -247,7 +258,9 @@ function carriedContestId(
   return bucket.find((p) => p.id.startsWith(wanted))?.id;
 }
 const priorCandidacyId = new Map<string, string>();
-for (const c of prior.candidacies ?? []) {
+// A person the clerk removed and later lists again gets the id back: the
+// removal record kept it precisely so the join key would survive the gap.
+for (const c of [...(prior.candidacies ?? []), ...(prior.removals ?? [])]) {
   priorCandidacyId.set(
     `${c.contestId}|${norm(c.familyName)}|${norm(c.givenName)}`,
     c.id,
@@ -290,7 +303,7 @@ const pdfs = newestFilingPdfs(clerkPage, NJ_FILING_SOURCES.morrisClerkCandidates
 );
 console.log(`clerk page → ${pdfs.length} filed-candidate PDF(s)`);
 
-const docs = [];
+const docs: Awaited<ReturnType<typeof readPdf>>[] = [];
 for (const url of pdfs) {
   const d = await readPdf(url);
   console.log(
@@ -495,6 +508,98 @@ const absences = noElection
   })
   .filter((a): a is NonNullable<typeof a> => a !== null);
 
+/* -------------------------------------------------------------------------- */
+/* WHAT THE CLERK NO LONGER LISTS (2026-09-02)                                 */
+/* -------------------------------------------------------------------------- */
+
+/*
+ * The clerk's 1 September revision listed 147 general-election candidates
+ * where the 21 August revision listed 148. The previous version of this
+ * generator wrote the 147 and said nothing about the 148th — and the gate
+ * behind it, correctly, refused a ballot that had silently shrunk. Deleting a
+ * person is a claim as much as listing one is.
+ *
+ * So a candidacy the previous committed file carried and the current documents
+ * do not is written as a REMOVAL: the id it had (every reaction, card and link
+ * hangs off it), the document that listed it, the document that does not, and
+ * the day it was first found absent — carried forward unchanged on later runs,
+ * so the record says when the change was first seen rather than when it was
+ * last confirmed. The same fact is written once more as an absence on the
+ * contest's own division, which is the surface the reader sees it on.
+ *
+ * It is NOT rendered as a candidate. The clerk's current list is the ballot.
+ */
+const currentIds = new Set(candidacies.map((c) => c.id as string));
+const docFor = (priorUrl: string | undefined) =>
+  docs.find((d) => /school/i.test(d.url) === /school/i.test(priorUrl ?? "")) ?? docs[0]!;
+const contestDivision = (contestId: string) =>
+  contests.get(contestId)?.ocdId ?? prior.contests.find((p) => p.id === contestId)?.ocdId ?? null;
+const ordinal = (n: number) =>
+  `${n}${[11, 12, 13].includes(n % 100) ? "th" : (["th", "st", "nd", "rd"][n % 10] ?? "th")}`;
+/** The contest as a reader would name it — the carried title, plus the district a federal seat's title omits. */
+const contestTitle = (contestId: string) => {
+  const title =
+    contests.get(contestId)?.title ?? prior.contests.find((p) => p.id === contestId)?.title ?? contestId;
+  const cd = /\/cd:(\d+)$/.exec(contestDivision(contestId) ?? "");
+  return cd ? `${title} (New Jersey's ${ordinal(Number(cd[1]))} Congressional District)` : title;
+};
+
+const priorRemovalById = new Map((prior.removals ?? []).map((r) => [r.id, r]));
+const removals: CandidacyRemoval[] = [];
+for (const c of prior.candidacies ?? []) {
+  if (currentIds.has(c.id)) continue;
+  const absentFrom = docFor(c.provenance?.sourceUrl);
+  const earlier = priorRemovalById.get(c.id);
+  const party = c.partyLabel ? ` (${c.partyLabel}${c.slogan ? ` — ${c.slogan}` : ""})` : "";
+  const lastListed = c.provenance ?? {
+    sourceUrl: absentFrom.url,
+    sourceOrg: "Morris County Clerk",
+    collectedAt: "unknown",
+  };
+  removals.push({
+    id: c.id,
+    contestId: c.contestId,
+    familyName: c.familyName,
+    givenName: c.givenName,
+    partyLabel: c.partyLabel ?? null,
+    slogan: c.slogan ?? null,
+    status: "REMOVED_FROM_FILING",
+    lastListed: { ...lastListed, verifiedAt: lastListed.collectedAt },
+    absentFrom: {
+      sourceUrl: absentFrom.url,
+      sourceOrg: "Morris County Clerk",
+      collectedAt: STAMP,
+      verifiedAt: STAMP,
+    },
+    firstAbsentOn: earlier?.firstAbsentOn ?? STAMP,
+    statement:
+      `${c.givenName} ${c.familyName}${party}, listed for ${contestTitle(c.contestId)} in the Morris County ` +
+      `Clerk's filed-candidate document read ${lastListed.collectedAt}, is not on the clerk's revision ` +
+      `${absentFrom.url.split("/").pop()} read ${STAMP}. The revision does not say why.`,
+  });
+}
+// A removal recorded earlier whose person is neither listed nor in the prior
+// candidacies is carried as it stands — the file never forgets a change it saw.
+for (const r of prior.removals ?? []) {
+  if (currentIds.has(r.id) || removals.some((x) => x.id === r.id)) continue;
+  removals.push(r);
+}
+for (const r of removals) {
+  const ocdId = contestDivision(r.contestId);
+  if (!ocdId) continue;
+  absences.push({
+    ocdId,
+    divisionVintage: VINTAGE,
+    statement: r.statement,
+    provenance: {
+      sourceUrl: r.absentFrom.sourceUrl ?? "",
+      sourceOrg: r.absentFrom.sourceOrg,
+      collectedAt: r.absentFrom.collectedAt,
+      verifiedAt: r.absentFrom.verifiedAt ?? r.absentFrom.collectedAt,
+    },
+  });
+}
+
 const out = {
   formatVersion: 1,
   curatedAt: STAMP,
@@ -529,11 +634,13 @@ const out = {
   candidacies,
   measures: [],
   absences,
+  removals,
 };
 
 console.log(`\n  candidates read              ${filed.length}`);
 console.log(`  contests built               ${contests.size}`);
 console.log(`  candidacies built            ${candidacies.length}`);
+console.log(`  removed from the filing      ${removals.length}${removals.length > 0 ? " — " + removals.map((r) => `${r.givenName} ${r.familyName} (first absent ${r.firstAbsentOn})`).join("; ") : ""}`);
 console.log(`  contacts carried             ${contacts.length}`);
 console.log(`  NO LOCAL ELECTION absences   ${absences.length}`);
 console.log(`  seats a party filed nobody for ${unfilled.length}`);

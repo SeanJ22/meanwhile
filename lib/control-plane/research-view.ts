@@ -658,34 +658,42 @@ export function buildResearchView(input: ResearchViewInput): ResearchView {
               ),
             });
 
+  /*
+   * The counts are BY LIFECYCLE STATE (`candidateCounts`): `proposed` is what
+   * is still PROPOSED, not the total offered. Measured live 2026-09-02: seven
+   * candidates stood VALIDATED with zero still PROPOSED, and a denominator of
+   * `proposed` rendered them as "no method candidate proposed yet". The total
+   * every candidate was offered against is the sum of the four states.
+   */
   const mc = state?.methodCandidates ?? null;
+  const mcTotal = mc === null ? 0 : mc.proposed + mc.validated + mc.admitted + mc.rejected;
   const methodCandidates: ResearchView["methodCandidates"] = !state
     ? stateGap()
     : mc === null
       ? gap("OURS", "the last cycle did not report method-candidate counts")
-      : mc.proposed === 0
-        ? gap("OURS", "the last cycle reports no method candidate proposed yet")
+      : mcTotal === 0
+        ? gap("OURS", "the last cycle reports no method candidate offered yet")
         : held({
             validated: count(
               "method candidates validated",
               mc.validated,
-              mc.proposed,
-              "method candidates that passed validation, of every candidate a Scout proposed",
-              "the last research state's methodCandidates",
+              mcTotal,
+              "method candidates that passed validation (awaiting a session's admission), of every candidate a Scout has offered",
+              "the last research state's methodCandidates, summed over its four lifecycle states",
             ),
             admitted: count(
               "method candidates admitted",
               mc.admitted,
-              mc.proposed,
-              "method candidates admitted to the method store, of every candidate a Scout proposed",
-              "the last research state's methodCandidates",
+              mcTotal,
+              "method candidates admitted to the method store by a session, of every candidate a Scout has offered",
+              "the last research state's methodCandidates, summed over its four lifecycle states",
             ),
             rejected: count(
               "method candidates rejected",
               mc.rejected,
-              mc.proposed,
-              "method candidates rejected, of every candidate a Scout proposed",
-              "the last research state's methodCandidates",
+              mcTotal,
+              "method candidates the validators refused, of every candidate a Scout has offered",
+              "the last research state's methodCandidates, summed over its four lifecycle states",
             ),
           });
 

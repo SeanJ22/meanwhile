@@ -1,17 +1,17 @@
 {
   "formatVersion": 1,
   "label": "after",
-  "measuredAt": "2026-09-02T07:12:35.516Z",
-  "testedSha": "e2a4ff5154ab5a1595f3ba170afda2ff1b25b7cc",
+  "measuredAt": "2026-09-02T07:53:53.721Z",
+  "testedSha": "017049435e76359023bf7eef1717a45d27dd0241",
   "store": "Postgres control-plane repositories (schema v4, connection named by WTP_CONTROL_PLANE_DATABASE_URL)",
   "reads": {
     "debts": {
       "ok": true,
-      "rows": 180
+      "rows": 206
     },
     "dispositions": {
       "ok": true,
-      "rows": 648
+      "rows": 697
     },
     "obligations": {
       "ok": true,
@@ -19,7 +19,7 @@
     },
     "occurrences": {
       "ok": true,
-      "rows": 1650
+      "rows": 1818
     },
     "researchIntents": {
       "ok": true,
@@ -31,7 +31,7 @@
     },
     "scoutResults": {
       "ok": true,
-      "rows": 7
+      "rows": 9
     }
   },
   "registry": {
@@ -100,9 +100,9 @@
     "registeredNotDurable": 0,
     "registeredNotDurableSample": [],
     "durableNotRegistered": 5,
-    "debtRowsOpen": 165,
-    "debtRowsRetryableNow": 82,
-    "debtRowsBackedOff": 83
+    "debtRowsOpen": 187,
+    "debtRowsRetryableNow": 124,
+    "debtRowsBackedOff": 63
   },
   "due": {
     "DETERMINISTIC": {
@@ -110,18 +110,18 @@
       "durable": 658,
       "notDurable": 0,
       "unscheduled": 0,
-      "backedOff": 10,
-      "due": 542,
-      "notDue": 106,
-      "storedNextDuePassed": 546
+      "backedOff": 11,
+      "due": 536,
+      "notDue": 111,
+      "storedNextDuePassed": 531
     },
     "BOUNDED_MODEL_WORKER": {
       "registered": 2333,
       "durable": 2333,
       "notDurable": 0,
       "unscheduled": 0,
-      "backedOff": 73,
-      "due": 2252,
+      "backedOff": 52,
+      "due": 2273,
       "notDue": 8,
       "storedNextDuePassed": 2325
     }
@@ -140,11 +140,11 @@
     "candidate-enrichment": {
       "DETERMINISTIC": {
         "registered": 573,
-        "due": 539
+        "due": 533
       },
       "BOUNDED_MODEL_WORKER": {
         "registered": 1147,
-        "due": 1081
+        "due": 1097
       }
     },
     "local-jurisdictions": {
@@ -154,7 +154,7 @@
       },
       "BOUNDED_MODEL_WORKER": {
         "registered": 1176,
-        "due": 1171
+        "due": 1176
       }
     },
     "meetings": {
@@ -919,7 +919,7 @@
       ],
       "registered": 15,
       "durable": 15,
-      "due": 13,
+      "due": 15,
       "graduatedByMethodStore": false
     },
     "campaign-finance-0": {
@@ -933,7 +933,7 @@
       ],
       "registered": 105,
       "durable": 105,
-      "due": 104,
+      "due": 105,
       "graduatedByMethodStore": false
     },
     "candidate-authored-awaits-site": {
@@ -947,7 +947,7 @@
       ],
       "registered": 571,
       "durable": 571,
-      "due": 540,
+      "due": 548,
       "graduatedByMethodStore": false
     },
     "candidate-marginalia-index": {
@@ -961,7 +961,7 @@
       ],
       "registered": 573,
       "durable": 573,
-      "due": 539,
+      "due": 533,
       "graduatedByMethodStore": false
     },
     "candidate-web-index-4get": {
@@ -975,7 +975,7 @@
       ],
       "registered": 3,
       "durable": 3,
-      "due": 0,
+      "due": 2,
       "graduatedByMethodStore": false
     },
     "candidate-wikipedia-api": {
@@ -989,7 +989,7 @@
       ],
       "registered": 573,
       "durable": 573,
-      "due": 541,
+      "due": 547,
       "graduatedByMethodStore": false
     },
     "meetings-1": {
@@ -1003,7 +1003,7 @@
       ],
       "registered": 469,
       "durable": 469,
-      "due": 467,
+      "due": 469,
       "graduatedByMethodStore": false
     },
     "meetings-2": {
@@ -1132,30 +1132,30 @@
     ],
     "deterministicUnits": 658,
     "deterministicUnitsUngraduatedByStore": 652,
-    "reading": "Two classifications exist and they can disagree. The DESCRIPTOR declares executorClass; `chooseExecutor` reads the METHOD STORE (routeId present in data/method/knowledge.json = GRADUATED). A model-class routeId the store has graduated would be dispatched DETERMINISTIC by chooseExecutor; a deterministic routeId the store has not learned would be dispatched to the bounded worker. The counts here are that disagreement, stated — not resolved."
+    "reading": "Two classifications exist and they can disagree. The DESCRIPTOR declares executorClass; `chooseExecutor` reads the METHOD STORE (routeId present in the canonical method store = GRADUATED). A model-class routeId the store has graduated would be dispatched DETERMINISTIC by chooseExecutor; a deterministic routeId the store has not learned would be dispatched to the bounded worker. The counts here are that disagreement, stated — not resolved."
   },
   "lastCommittedDisposition": {
     "DETERMINISTIC": {
       "denominator": 658,
       "REQUIRES_NEW_ADAPTER": 1,
       "BLOCKED_CURRENTLY": 5,
-      "INGESTED": 82,
+      "INGESTED": 91,
       "WALKED_NO_YIELD": 0,
       "other": 0,
       "otherByDisposition": {},
-      "none": 570
+      "none": 561
     },
     "BOUNDED_MODEL_WORKER": {
       "denominator": 2333,
-      "REQUIRES_NEW_ADAPTER": 163,
+      "REQUIRES_NEW_ADAPTER": 178,
       "BLOCKED_CURRENTLY": 0,
       "INGESTED": 8,
       "WALKED_NO_YIELD": 0,
-      "other": 4,
+      "other": 5,
       "otherByDisposition": {
-        "DISCOVERED": 4
+        "DISCOVERED": 5
       },
-      "none": 2158
+      "none": 2142
     }
   },
   "cannotProgressWithoutNovelInvestigation": {
@@ -1169,40 +1169,40 @@
     "reading": "model-class units whose open kind is NOT_MACHINE_EXECUTABLE: this process holds no client for the representation, so nothing deterministic can open it and only novel investigation (a Scout) can advance it."
   },
   "scout": {
-    "resultsTotal": 7,
+    "resultsTotal": 9,
     "byOutcome": {
       "EVIDENCE_FOUND": 2,
-      "NO_PROGRESS": 1,
-      "ROUTE_CANDIDATE": 4
+      "NO_PROGRESS": 2,
+      "ROUTE_CANDIDATE": 5
     },
-    "distinctObligationsWithResult": 7,
+    "distinctObligationsWithResult": 9,
     "resultsOnObligationsNotInRegistry": 0,
     "modelClassUnits": 2333,
-    "modelClassWithAtLeastOneResult": 7,
-    "noMachineCapable": 2326,
+    "modelClassWithAtLeastOneResult": 9,
+    "noMachineCapable": 2324,
     "expectation": "noMachineCapable = model-class units with NO Scout result in repos.scoutResults. BEFORE Scout activation the expectation is ALL of them; AFTER, fewer. A Scout result is the only machine-capable act recorded against a model-class unit."
   },
   "researchState": {
     "host": "SeanLenovo",
     "model": "claude-opus-5",
     "queue": {
-      "modelClassDue": 2,
-      "modelClassUnits": 3,
+      "modelClassDue": 2243,
+      "modelClassUnits": 2333,
       "registeredUnits": 2991,
-      "deterministicDue": 0,
+      "deterministicDue": 542,
       "modelClassDeferredForLane": 0,
       "modelClassDeferredForCeiling": 0,
-      "modelClassDeferredForCycleMax": 0,
+      "modelClassDeferredForCycleMax": 2240,
       "modelClassDispatchedThisCycle": 2,
-      "deterministicDispatchedThisCycle": 0
+      "deterministicDispatchedThisCycle": 16
     },
     "spend": {
-      "asOf": "2026-09-02T07:12:05.804Z",
-      "windowUsd": 5.628169,
-      "measuredAttempts": 4,
+      "asOf": "2026-09-02T07:52:44.239Z",
+      "windowUsd": 8.371072000000002,
+      "measuredAttempts": 6,
       "unmeasuredAttempts": 1
     },
-    "beatAt": "2026-09-02T07:12:05.783Z",
+    "beatAt": "2026-09-02T07:52:44.208Z",
     "bounds": {
       "perDispatch": {
         "maxTurns": 18,
@@ -1218,17 +1218,17 @@
       "maxScoutDispatchesPerCycle": 3
     },
     "running": [],
-    "testedSha": "e2a4ff5154ab5a1595f3ba170afda2ff1b25b7cc",
+    "testedSha": "95e1eb1227b730c6eb4d0850d208e1a0d3e63799",
     "formatVersion": 1,
     "pauseIntentId": null,
     "pausedByOwner": false,
-    "cycleStartedAt": "2026-09-02T07:08:24.073Z",
-    "cycleFinishedAt": "2026-09-02T07:12:05.704Z",
+    "cycleStartedAt": "2026-09-02T07:36:35.321Z",
+    "cycleFinishedAt": "2026-09-02T07:52:44.121Z",
     "methodCandidates": {
       "admitted": 0,
       "proposed": 0,
       "rejected": 0,
-      "validated": 7
+      "validated": 8
     },
     "modelLaneEnabled": true,
     "workerCredential": {

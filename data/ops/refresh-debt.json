@@ -1,0 +1,14 @@
+{
+  "formatVersion": 1,
+  "updatedOn": "2026-09-02",
+  "debts": [
+    {
+      "sourceId": "fec",
+      "firstFailedOn": "2026-09-02",
+      "lastFailedOn": "2026-09-02",
+      "consecutiveFailures": 1,
+      "reason": "failed at `pnpm fec:fetch` (exit 1)",
+      "nextDueAt": "2026-09-03"
+    }
+  ]
+}

@@ -1,10 +1,10 @@
 {
   "formatVersion": 1,
   "runDate": "2026-09-02",
-  "startedAt": "2026-09-02T16:19:49.151Z",
-  "finishedAt": "2026-09-02T16:21:18.072Z",
-  "mode": "CADENCE",
-  "exitCode": 0,
+  "startedAt": "2026-09-02T16:49:14.065Z",
+  "finishedAt": "2026-09-02T16:58:58.911Z",
+  "mode": "ALL",
+  "exitCode": 2,
   "sources": [
     {
       "id": "meetings",
@@ -23,17 +23,15 @@
       "changedPaths": [
         "data/meetings-snapshot.json"
       ],
-      "recoveredFrom": [
-        "2026-09-01"
-      ],
+      "recoveredFrom": [],
       "nextDueAt": "2026-09-03"
     },
     {
       "id": "nj-filing",
       "due": true,
       "ran": true,
-      "outcome": "INGESTED",
-      "reason": "ran clean; 3 governed path(s) changed and the gate passed — committed",
+      "outcome": "UNCHANGED",
+      "reason": "ran clean; every governed path is byte-identical to HEAD",
       "commands": [
         "nj:ballot --write",
         "nj:filing:check",
@@ -45,49 +43,45 @@
         "data/ballot/",
         "data/questionnaire/"
       ],
-      "changedPaths": [
-        "data/ballot/nj-morris-2026-contacts.json",
-        "data/ballot/nj-morris-2026.json",
-        "data/questionnaire/invitations-nj-morris-2026.json"
-      ],
-      "recoveredFrom": [
-        "2026-09-01"
-      ],
+      "changedPaths": [],
+      "recoveredFrom": [],
       "nextDueAt": "2026-09-03"
     },
     {
       "id": "fec",
-      "due": false,
-      "ran": false,
-      "outcome": "NOT_DUE",
-      "reason": "weekly, not due on 2026-09-02 or on any uncovered day since the last landed refresh, and carrying no debt",
+      "due": true,
+      "ran": true,
+      "outcome": "ROUTE_UNREAD",
+      "reason": "failed at `pnpm fec:fetch` (exit 1) — nothing usable was written; owed until it lands",
       "commands": [
         "fec:fetch"
       ],
-      "failedCommand": null,
-      "exitCode": null,
+      "failedCommand": "fec:fetch",
+      "exitCode": 1,
       "governs": [
         "data/fec/fec-2026.json"
       ],
       "changedPaths": [],
       "recoveredFrom": [],
-      "nextDueAt": "2026-09-07"
+      "nextDueAt": "2026-09-03"
     },
     {
       "id": "legiscan",
-      "due": false,
-      "ran": false,
-      "outcome": "NOT_DUE",
-      "reason": "weekly, not due on 2026-09-02 or on any uncovered day since the last landed refresh, and carrying no debt",
+      "due": true,
+      "ran": true,
+      "outcome": "INGESTED",
+      "reason": "ran clean; 1 governed path(s) changed and the gate passed — committed",
       "commands": [
         "legiscan:fetch"
       ],
       "failedCommand": null,
-      "exitCode": null,
+      "exitCode": 0,
       "governs": [
         "data/votes/state-votes-snapshot.json"
       ],
-      "changedPaths": [],
+      "changedPaths": [
+        "data/votes/state-votes-snapshot.json"
+      ],
       "recoveredFrom": [],
       "nextDueAt": "2026-09-07"
     },
@@ -95,8 +89,8 @@
       "id": "dotgov",
       "due": true,
       "ran": true,
-      "outcome": "INGESTED",
-      "reason": "ran clean; 1 governed path(s) changed and the gate passed — committed",
+      "outcome": "UNCHANGED",
+      "reason": "ran clean; every governed path is byte-identical to HEAD",
       "commands": [
         "dotgov:fetch"
       ],
@@ -105,27 +99,22 @@
       "governs": [
         "data/dotgov/snapshot.json"
       ],
-      "changedPaths": [
-        "data/dotgov/snapshot.json"
-      ],
-      "recoveredFrom": [
-        "2026-09-01"
-      ],
+      "changedPaths": [],
+      "recoveredFrom": [],
       "nextDueAt": "2026-10-01"
     }
   ],
   "catchUp": {
-    "lastLanded": "docs/refresh-run.md, run date 2026-08-31",
+    "lastLanded": "catch-up off",
     "days": [
-      "2026-09-01",
       "2026-09-02"
     ],
     "cap": 8,
-    "off": false
+    "off": true
   },
   "gate": {
     "verdict": "GREEN",
-    "ranAt": "2026-09-02T16:20:39.101Z",
+    "ranAt": "2026-09-02T16:58:58.911Z",
     "failingFiles": [],
     "attribution": [],
     "note": "The full suite passed over every changed source's data together. Everything that changed commits."

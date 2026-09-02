@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **390 open**, 478 resolved.
+- **389 open**, 479 resolved.
 - **70 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **2**
@@ -901,7 +901,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**43 open · 96 resolved.**
+**42 open · 97 resolved.**
 
 ### P1
 
@@ -963,8 +963,6 @@ WHAT THE FAILING RUN PRINTED (run 32961466707). The last 14 of 257 line(s) the r
 **NH264** — refresh-daily is on cron 09:11 UTC. Of the three scheduled runs on record two failed, the one success started 637 minutes late, and today's has not appeared at all ten hours past its cron.
 
 **NH280** — PR #216 built and bundled clean, then failed Netlify secret scanning: Pima County's own Clerk of the Board page emitted a Google Maps browser key into the HTML that scripts/learn-legistar-horizon.mts recorded verbatim as a test fixture. Scanning the whole tree for the class found more than Netlify reported - the same fixture also carried a live 30-day CivicPlus bearer token repeated five times, and a second fixture, the New London NH calendar, carried a different Google key that would have been the next red deploy. The repair sanitizes captured pages at the moment of acquisition, records the provenance of every redaction without keeping the credential, and adds a gate so GitHub CI catches the class before Netlify does.
-
-**RO07** — The autonomous runner could not work through its own backlog. Diagnosed by reproduction, single-process, against the real control plane: a resumed occurrence re-walked a route whose prior observation was already recorded, retrieved byte-identical content, and offered the SAME content-addressed artifact under a new Attempt; the append-only log refused the differing attemptId/recordedAt as a history rewrite (AppendOnlyViolation), the throw was unhandled, the whole cycle exited 1 with no run record, and every crash-restart re-resumed the same occurrence into the same death. Fixed at the shared code path: recordArtifactMetadata treats a content-identical re-observation as idempotent (a different-content collision is still refused); runCycle isolates one obligation's unexpected throw to a FAILED dispatch instead of aborting the cycle; the freshness cycle writes a legible FAILED run record on any crash instead of vanishing into a 0-providers digest, and isolates a throw in the occurrence open/resume loop.
 
 ### P2
 

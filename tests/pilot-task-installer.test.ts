@@ -216,6 +216,71 @@ test("POSITIVE CONTROL: removing the prove-relaunch guard fails the checker", ()
   assert.ok(fails(() => checkProveRelaunchRefusesWithoutTrigger(unguarded)), "a prove-relaunch that kills without checking passed");
 });
 
+/* ==========================================================================
+ * THE NIGHTLY WINDOW'S BACKUP WAKEUP (RULING 242, Lane E, 2026-09-02).
+ *
+ * `-Action install-window` registers "WeThePeople Nightly Window": a DAILY
+ * trigger per host-local equivalent of 04:00 America/New_York, running
+ * `scripts/nightly-window.mts --wakeup`, refused unelevated with the exact
+ * elevated one-liner printed. Checked as text, with positive controls, like
+ * the runner's installer above.
+ * ======================================================================= */
+
+/** 4. install-window registers a daily trigger derived from the Eastern zone, running --wakeup. */
+function checkInstallWindow(src: string): void {
+  const block = actionBlock(src, "install-window");
+  assert.match(src, /^\$WindowTaskName\s*=\s*"WeThePeople Nightly Window"/m, "the window task has no fixed name");
+  assert.match(src, /^\$WindowEasternZoneId\s*=\s*"Eastern Standard Time"/m, "the window zone is not the Eastern zone id");
+  assert.match(src, /^\$WindowEasternHour\s*=\s*4\s*$/m, "the window hour is not 04:00");
+
+  const args = src.match(/function Get-WindowArgs \{[\s\S]*?\n\}/);
+  assert.ok(args, "no Get-WindowArgs function");
+  assert.match(args[0], /scripts\/nightly-window\.mts --wakeup/, "the window task does not run nightly-window.mts --wakeup");
+  assert.doesNotMatch(args[0], /--shadow|--force/, "the backup wakeup must not run the window directly; --wakeup decides");
+
+  const times = src.match(/function Get-WindowLocalTimes \{[\s\S]*?\n\}/);
+  assert.ok(times, "no Get-WindowLocalTimes function");
+  assert.match(times[0], /FindSystemTimeZoneById\(\$WindowEasternZoneId\)/, "local times are not derived from the Eastern zone");
+  assert.match(times[0], /ConvertTime/, "local times are not converted from Eastern to host-local");
+
+  assert.match(block, /Get-WindowLocalTimes/, "install-window does not derive the local times");
+  assert.match(block, /New-ScheduledTaskTrigger -Daily -At \$t/, "install-window does not create a daily trigger per local time");
+  const register = block.match(/Register-ScheduledTask(?:[^\n]*`\n)*[^\n]*/);
+  assert.ok(register, "install-window never calls Register-ScheduledTask");
+  assert.match(register[0], /-TaskName \$WindowTaskName/, "the registration does not name the window task");
+  assert.match(register[0], /-Trigger \$windowTriggers/, "the registration does not pass the daily triggers");
+  assert.match(block, /Get-WindowArgs/, "install-window does not use Get-WindowArgs");
+
+  const refusal = block.match(/catch \{[\s\S]*?\}/);
+  assert.ok(refusal, "install-window has no catch for the unelevated refusal");
+  assert.match(refusal[0], /\$WindowElevatedOneLiner/, "the refusal does not print the elevated one-liner");
+  assert.match(src, /^\$WindowElevatedOneLiner\s*=\s*"powershell -NoProfile -ExecutionPolicy Bypass -File scripts\/pilot-task\.ps1 -Action install-window"/m);
+  assert.match(block, /if \(-not \$windowLanded\) \{ exit 1 \}/, "a refused registration does not exit 1");
+}
+
+test("install-window registers a daily Eastern-derived trigger running nightly-window.mts --wakeup, and prints the elevated one-liner when refused", () => {
+  checkInstallWindow(scriptText());
+});
+
+test("POSITIVE CONTROL: dropping the daily trigger, the --wakeup flag, or the one-liner fails the install-window checker", () => {
+  const src = scriptText();
+  const noDaily = src.replace("New-ScheduledTaskTrigger -Daily -At $t", "New-ScheduledTaskTrigger -AtLogOn");
+  assert.notEqual(noDaily, src);
+  assert.ok(fails(() => checkInstallWindow(noDaily)), "an install-window with no daily trigger passed");
+
+  const noWakeup = src.replace("scripts/nightly-window.mts --wakeup", "scripts/nightly-window.mts --shadow");
+  assert.notEqual(noWakeup, src);
+  assert.ok(fails(() => checkInstallWindow(noWakeup)), "a task that runs the window directly passed as the backup wakeup");
+
+  const noOneLiner = src.replace(/Write-Output "    \$WindowElevatedOneLiner"/, 'Write-Output "    see the docs"');
+  assert.notEqual(noOneLiner, src);
+  assert.ok(fails(() => checkInstallWindow(noOneLiner)), "a refusal that names no elevated command passed");
+
+  const notEastern = src.replace(/^\$WindowEasternZoneId\s*=\s*"Eastern Standard Time"/m, '$WindowEasternZoneId = "US Mountain Standard Time"');
+  assert.notEqual(notEastern, src);
+  assert.ok(fails(() => checkInstallWindow(notEastern)), "a task derived from the wrong zone passed");
+});
+
 test("POSITIVE CONTROL: a constant relaunchTriggerPresent fails the checker", () => {
   const src = scriptText();
   const constant = src.replace(/relaunchTriggerPresent\s*=\s*\$relaunch\b/, "relaunchTriggerPresent = $true");

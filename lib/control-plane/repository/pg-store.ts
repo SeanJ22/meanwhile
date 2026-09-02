@@ -68,6 +68,12 @@ import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
+import type {
+  PromotionPipelineRecord,
+  WindowIncident,
+  WindowIntent,
+  WindowRunRecord,
+} from "../promotion/types.ts";
 
 import type { Attempt, ExecutionLease } from "../attempt.ts";
 import type { BudgetLedger } from "../budget.ts";
@@ -506,6 +512,11 @@ export async function createPgRepositories(
     researchState: pgAggregateRepository<ResearchState>(sql, "ResearchState", "cp_research_state"),
     researchIntents: pgAppendOnlyRepository<ResearchIntent>(sql, "research_intents"),
     scoutResults: pgAppendOnlyRepository<ScoutResult>(sql, "scout_results"),
+    /* The nightly door (RULING 242, schema v5). */
+    promotionPipeline: pgAppendOnlyRepository<PromotionPipelineRecord>(sql, "promotion_pipeline"),
+    windowRuns: pgAppendOnlyRepository<WindowRunRecord>(sql, "window_runs"),
+    windowIncidents: pgAppendOnlyRepository<WindowIncident>(sql, "window_incidents"),
+    windowIntents: pgAppendOnlyRepository<WindowIntent>(sql, "window_intents"),
     budget: budgetRepositoryFrom(
       pgAggregateRepository<BudgetLedger>(sql, "BudgetLedger", "cp_budget"),
       locks,

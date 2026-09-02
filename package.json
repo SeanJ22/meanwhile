@@ -387,7 +387,11 @@
     "staging:observe": "tsx scripts/staging-observer.mts",
     "owner:readback": "node --env-file=.env.local --experimental-strip-types scripts/owner-surface-readback.mts",
     "admin:login-readback": "node --env-file=.env.local --experimental-strip-types scripts/admin-login-readback.mts",
-    "owner:decision-proof": "node --env-file=.env.local --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/owner-decision-proof.mts"
+    "owner:decision-proof": "node --env-file=.env.local --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/owner-decision-proof.mts",
+    "window:run": "node --env-file=.env.local --experimental-strip-types scripts/nightly-window.mts",
+    "window:readback": "node --env-file=.env.local --experimental-strip-types scripts/window-readback.mts",
+    "pipeline:map": "node --env-file=.env.local --experimental-strip-types scripts/pipeline-map.mts",
+    "pilot:install-window": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action install-window"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

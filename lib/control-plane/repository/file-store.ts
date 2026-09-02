@@ -63,6 +63,12 @@ import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
+import type {
+  PromotionPipelineRecord,
+  WindowIncident,
+  WindowIntent,
+  WindowRunRecord,
+} from "../promotion/types.ts";
 import path from "node:path";
 
 import type { Attempt, ExecutionLease } from "../attempt.ts";
@@ -694,6 +700,11 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     researchState: fileAggregateRepository<ResearchState>(resolved, "ResearchState", "research-state"),
     researchIntents: fileAppendOnlyRepository<ResearchIntent>(resolved, "research-intents"),
     scoutResults: fileAppendOnlyRepository<ScoutResult>(resolved, "scout-results"),
+    /* The nightly door (RULING 242, schema v5). */
+    promotionPipeline: fileAppendOnlyRepository<PromotionPipelineRecord>(resolved, "promotion-pipeline"),
+    windowRuns: fileAppendOnlyRepository<WindowRunRecord>(resolved, "window-runs"),
+    windowIncidents: fileAppendOnlyRepository<WindowIncident>(resolved, "window-incidents"),
+    windowIntents: fileAppendOnlyRepository<WindowIntent>(resolved, "window-intents"),
     budget: budgetRepositoryFrom(
       fileAggregateRepository<BudgetLedger>(resolved, "BudgetLedger", "budget"),
       locks,

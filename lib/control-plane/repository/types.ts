@@ -95,6 +95,12 @@ import type {
 } from "../owner-surface.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
+import type {
+  PromotionPipelineRecord,
+  WindowIncident,
+  WindowIntent,
+  WindowRunRecord,
+} from "../promotion/types.ts";
 
 /** ------------------------------------------------------------- envelopes */
 
@@ -577,6 +583,20 @@ export interface ControlPlaneRepositories {
   readonly researchState: AggregateRepository<ResearchState>;
   readonly researchIntents: AppendOnlyRepository<ResearchIntent>;
   readonly scoutResults: AppendOnlyRepository<ScoutResult>;
+  /**
+   * THE NIGHTLY DOOR. (RULING 242 — schema v5.)
+   *
+   *   promotionPipeline  every typed transition and refusal, keyed by item id;
+   *                      the only path a finding may travel toward promotion
+   *   windowRuns         one record per nightly window, keyed by local date
+   *   windowIncidents    a stage failure, typed, keyed by window id
+   *   windowIntents      the backup wakeup's RUN_WINDOW_NOW and the runner's
+   *                      HONORED record beside it
+   */
+  readonly promotionPipeline: AppendOnlyRepository<PromotionPipelineRecord>;
+  readonly windowRuns: AppendOnlyRepository<WindowRunRecord>;
+  readonly windowIncidents: AppendOnlyRepository<WindowIncident>;
+  readonly windowIntents: AppendOnlyRepository<WindowIntent>;
   readonly budget: BudgetRepository;
   readonly locks: LockManager;
   /** What this store is, for a report that must say where the state lives. */

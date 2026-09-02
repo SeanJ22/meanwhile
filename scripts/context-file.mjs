@@ -739,8 +739,14 @@ export async function buildContext({
     } else {
       put("| Date | ID | From → To | Commit |", "|---|---|---|---|");
       for (const c of shown) {
+        const row = `| ${c.date} | ${cell(c.id)} | ${cell(c.from)} → ${cell(c.to)} | \`${c.sha.slice(0, 7)}\` ${cell(oneLine(c.subject, 54))} |`;
+        /* Same class as the git-facts block below: a quoted commit subject
+           may carry a UTC stamp a day ahead of the Phoenix session day. */
+        const quoted = row.match(/(?<!\d)(20\d\d-\d\d-\d\d)/g) ?? [];
         put(
-          `| ${c.date} | ${cell(c.id)} | ${cell(c.from)} → ${cell(c.to)} | \`${c.sha.slice(0, 7)}\` ${cell(oneLine(c.subject, 54))} |`,
+          quoted.some((d) => d > stampToday)
+            ? `${row} <!-- expected-future: a UTC stamp inside a quoted commit subject; Phoenix session day is ${stampToday} -->`
+            : row,
         );
       }
       put("");
@@ -757,11 +763,25 @@ export async function buildContext({
        */
       put("\`\`\`");
       put(
-        ...gitFacts.map((line) =>
-          /^generated:/.test(line) && line.slice(11, 21) > stampToday
-            ? `${line}   <!-- expected-future: Eastern run stamp (R18) past midnight; Phoenix session day is ${stampToday} -->`
-            : line,
-        ),
+        ...gitFacts.map((line) => {
+          if (/^generated:/.test(line) && line.slice(11, 21) > stampToday) {
+            return `${line}   <!-- expected-future: Eastern run stamp (R18) past midnight; Phoenix session day is ${stampToday} -->`;
+          }
+          /*
+           * A COMMIT SUBJECT quoted verbatim can carry a UTC stamp — the
+           * post-deploy observer writes "Post-deploy integrity reading:
+           * 2026-09-02T01:52Z" — and after 5pm Phoenix that reads a day
+           * ahead of the session day. It is the observer's real clock, not a
+           * fabrication, so it is annotated the way the run stamp above is
+           * rather than rewritten; without this the ship door's own
+           * regeneration commit is refused by the date guard.
+           */
+          const quoted = line.match(/(?<!\d)(20\d\d-\d\d-\d\d)/g) ?? [];
+          if (quoted.some((d) => d > stampToday)) {
+            return `${line}   <!-- expected-future: a UTC stamp inside a quoted commit subject; Phoenix session day is ${stampToday} -->`;
+          }
+          return line;
+        }),
       );
       put("\`\`\`");
     }

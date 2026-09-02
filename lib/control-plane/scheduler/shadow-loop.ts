@@ -46,6 +46,8 @@ import {
   dispatchOne,
   sweepExpiredLeases,
   type DispatchResult,
+  type ExecutorDecision,
+  type ExecutorKind,
   type MethodMaturity,
   type ReclaimSweep,
   type DeclaredExecutor,
@@ -127,6 +129,43 @@ export interface CycleInput {
    * can move the clock.
    */
   readonly budget?: { readonly deadlineMs: number; readonly now: () => number };
+  /**
+   * **LEVEL 1 — TWO LANES IN ONE CYCLE.** (Level 1 activation, 2026-09-01.)
+   *
+   * Absent, the cycle runs exactly as before: one serial queue. Present, the
+   * due set is split by the canonical executor decision: deterministic rows
+   * run the existing serial queue under `maxDispatches`; model rows run a
+   * bounded pool of Scouts, each admitted or DEFERRED BY NAME by `admitScout`
+   * (the rolling ceiling, the per-cycle maximum, the lane state). The two
+   * lanes run concurrently — they are different obligations on different
+   * route tasks — so Scout minutes do not come out of the deterministic
+   * drain. Both stop STARTING work at the dispatch budget.
+   */
+  readonly research?: ResearchLanes;
+}
+
+export interface ResearchLanes {
+  readonly decide: (row: ScheduledObligation) => ExecutorDecision;
+  readonly admitScout: (
+    row: ScheduledObligation,
+  ) => { readonly admit: true } | { readonly admit: false; readonly code: string; readonly why: string };
+  readonly modelExecutor: DeclaredExecutor;
+  readonly maxConcurrentScouts: number;
+  readonly scoutLeaseTtlMs: number;
+  /** A Scout is not STARTED when it could not finish inside the dispatch budget. */
+  readonly scoutWallMs: number;
+  readonly onDispatched?: (result: DispatchResult, lane: ExecutorKind) => void | Promise<void>;
+}
+
+export interface LaneCounts {
+  readonly deterministic: { readonly due: number; readonly dispatched: number };
+  readonly model: {
+    readonly due: number;
+    readonly dispatched: number;
+    readonly deferred: number;
+    /** Deferral counts by the admit code, so a cap reads as a cap and a pause as a pause. */
+    readonly deferredBy: Readonly<Record<string, number>>;
+  };
 }
 
 export interface CycleResult {
@@ -146,8 +185,23 @@ export interface CycleResult {
   readonly incidents: readonly Incident[];
   readonly risk: StalenessRisk;
   readonly health: PilotHealthRollup;
+  /** Per-lane counts when research lanes ran; null when the cycle ran one queue. */
+  readonly lanes: LaneCounts | null;
   /** Structural, and it is the shadow guarantee. Always false in this module. */
   readonly promotedToReaderTruth: false;
+}
+
+/** A bounded pool: at most `limit` items in flight, in input order. */
+async function runPool<T>(items: readonly T[], limit: number, fn: (item: T) => Promise<void>): Promise<void> {
+  let next = 0;
+  const workers = Array.from({ length: Math.max(1, Math.min(limit, items.length || 1)) }, async () => {
+    while (next < items.length) {
+      const item = items[next];
+      next += 1;
+      await fn(item);
+    }
+  });
+  await Promise.all(workers);
 }
 
 /**
@@ -229,84 +283,14 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
   }
   const debtsById = new Map(input.debts.map((d) => [d.obligationId, d]));
 
-  for (const [i, row] of workNow.entries()) {
-    if (input.budget !== undefined && input.budget.now() >= input.budget.deadlineMs) {
-      deferred.push({
-        obligationId: row.obligation.id,
-        why:
-          `the cycle's dispatch budget was spent at ${new Date(input.budget.deadlineMs).toISOString()} ` +
-          "before this item was reached. It keeps its next-due and is dispatched by a later cycle — " +
-          "a cycle that ends on its own budget leaves recoverable state; one killed mid-write by its " +
-          "supervisor does not",
-      });
-      continue;
-    }
-    if (i >= ceiling) {
-      deferred.push({
-        obligationId: row.obligation.id,
-        why:
-          `this cycle dispatched its stated ceiling of ${ceiling} item(s) and ${workNow.length - ceiling} ` +
-          "remained due. They are deferred to the next cycle, counted here, and their debt " +
-          "continues to age — a ceiling that dropped them silently would report the same number " +
-          "whatever the backlog was",
-      });
-      continue;
-    }
-    /*
-     * **ONE OBLIGATION'S THROW MAY NOT ABORT THE CYCLE.** (Autonomy-recovery
-     * session, 2026-09-01.)
-     *
-     * `dispatchOne` already converts every EXPECTED failure — a live foreign
-     * lease, a refused disposition, a worker that threw — into a FAILED
-     * `DispatchResult` and returns it. What it does not catch is an UNEXPECTED
-     * throw from the store beneath it: a transient Neon error, or the
-     * inconsistent state a killed cycle leaves behind (an occurrence whose
-     * RouteTask a crash left mid-transition). Before this, such a throw
-     * propagated out of `runCycle`, aborted the whole cycle, and stranded every
-     * other due occurrence — and a crash-restart re-hit the same state and
-     * re-aborted, which is the recovery loop that required manual surgery.
-     *
-     * So an unexpected throw is isolated to its obligation: recorded as a
-     * FAILED dispatch (the branch below accrues debt and keeps it owed) and the
-     * cycle continues. The obligation is not discharged, only deferred to a
-     * retry — which is exactly the honest state.
-     */
-    let result: DispatchResult;
-    try {
-      result = await dispatchOne(input.repos, {
-        obligation: row,
-        routeTaskId: input.routeTaskFor(row.obligation.id),
-        holder: input.holder,
-        now: input.now,
-        leaseTtlMs: input.leaseTtlMs,
-        bound: input.bound,
-        maturity: input.maturity,
-        executor: typeof input.executor === "function" ? input.executor(row) : input.executor,
-        ...(input.methodVersion !== undefined ? { methodVersion: input.methodVersion } : {}),
-        ...(input.policyVersion !== undefined ? { policyVersion: input.policyVersion } : {}),
-      });
-    } catch (error) {
-      result = {
-        obligationId: row.obligation.id,
-        routeTaskId: input.routeTaskFor(row.obligation.id),
-        executor: null,
-        executorChosen: null,
-        executorMismatch: false,
-        claimed: false,
-        outcome: "FAILED",
-        attemptId: null,
-        dispositionCommitted: false,
-        disposition: null,
-        artifactIds: [],
-        cost: null,
-        worker: null,
-        detail:
-          "the dispatch threw and was isolated so the cycle could continue rather than aborting " +
-          `every other due occurrence: ${error instanceof Error ? error.message : String(error)}`,
-      };
-    }
+  /*
+   * The record step, shared by both lanes. Applied to each result as it
+   * arrives; the two lanes interleave on `await` boundaries only, and every
+   * Map operation below is synchronous, so the shared debt map cannot lose an
+   * update to concurrency.
+   */
+  const record = (row: ScheduledObligation, result: DispatchResult): void => {
     dispatched.push(result);
-
     /*
      * 5 · RECORD. A failure becomes DEBT — durable, self-retrying, and nobody
      * is notified (RULING 218).
@@ -365,7 +349,180 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
     /* NOT_CLAIMED is not a failure. Another worker holds it; that is the lease
        working, and counting it as debt would make ordinary concurrency read as
        a backlog. */
+  };
+
+  const budgetSpent = (): boolean =>
+    input.budget !== undefined && input.budget.now() >= input.budget.deadlineMs;
+  const deferForBudget = (row: ScheduledObligation): void => {
+    deferred.push({
+      obligationId: row.obligation.id,
+      why:
+        `the cycle's dispatch budget was spent at ${new Date(input.budget!.deadlineMs).toISOString()} ` +
+        "before this item was reached. It keeps its next-due and is dispatched by a later cycle — " +
+        "a cycle that ends on its own budget leaves recoverable state; one killed mid-write by its " +
+        "supervisor does not",
+    });
+  };
+
+  /*
+   * **ONE OBLIGATION'S THROW MAY NOT ABORT THE CYCLE.** (Autonomy-recovery
+   * session, 2026-09-01.)
+   *
+   * `dispatchOne` already converts every EXPECTED failure — a live foreign
+   * lease, a refused disposition, a worker that threw — into a FAILED
+   * `DispatchResult` and returns it. What it does not catch is an UNEXPECTED
+   * throw from the store beneath it: a transient Neon error, or the
+   * inconsistent state a killed cycle leaves behind (an occurrence whose
+   * RouteTask a crash left mid-transition). Before this, such a throw
+   * propagated out of `runCycle`, aborted the whole cycle, and stranded every
+   * other due occurrence — and a crash-restart re-hit the same state and
+   * re-aborted, which is the recovery loop that required manual surgery.
+   *
+   * So an unexpected throw is isolated to its obligation: recorded as a
+   * FAILED dispatch (the branch above accrues debt and keeps it owed) and the
+   * cycle continues. The obligation is not discharged, only deferred to a
+   * retry — which is exactly the honest state.
+   */
+  const dispatchRow = async (
+    row: ScheduledObligation,
+    opts: { readonly executor: DeclaredExecutor; readonly leaseTtlMs: number; readonly decision?: ExecutorDecision },
+  ): Promise<DispatchResult> => {
+    let result: DispatchResult;
+    try {
+      result = await dispatchOne(input.repos, {
+        obligation: row,
+        routeTaskId: input.routeTaskFor(row.obligation.id),
+        holder: input.holder,
+        now: input.now,
+        leaseTtlMs: opts.leaseTtlMs,
+        bound: input.bound,
+        maturity: input.maturity,
+        executor: opts.executor,
+        ...(opts.decision !== undefined ? { decision: opts.decision } : {}),
+        ...(input.methodVersion !== undefined ? { methodVersion: input.methodVersion } : {}),
+        ...(input.policyVersion !== undefined ? { policyVersion: input.policyVersion } : {}),
+      });
+    } catch (error) {
+      result = {
+        obligationId: row.obligation.id,
+        routeTaskId: input.routeTaskFor(row.obligation.id),
+        executor: null,
+        executorChosen: opts.decision?.kind ?? null,
+        decisionDisagreement: opts.decision?.disagreement ?? null,
+        executorMismatch: false,
+        claimed: false,
+        outcome: "FAILED",
+        attemptId: null,
+        dispositionCommitted: false,
+        disposition: null,
+        artifactIds: [],
+        cost: null,
+        worker: null,
+        detail:
+          "the dispatch threw and was isolated so the cycle could continue rather than aborting " +
+          `every other due occurrence: ${error instanceof Error ? error.message : String(error)}`,
+      };
+    }
+    record(row, result);
+    return result;
+  };
+
+  const research = input.research;
+  const decisions = new Map<string, ExecutorDecision>();
+  const deterministicRows: ScheduledObligation[] = [];
+  const modelRows: ScheduledObligation[] = [];
+  if (research === undefined) {
+    deterministicRows.push(...workNow);
+  } else {
+    for (const row of workNow) {
+      const decision = research.decide(row);
+      decisions.set(row.obligation.id, decision);
+      (decision.kind === "BOUNDED_MODEL_WORKER" ? modelRows : deterministicRows).push(row);
+    }
   }
+  const deferredBy: Record<string, number> = {};
+  let modelDispatched = 0;
+  let modelDeferred = 0;
+
+  /* THE DETERMINISTIC LANE — the serial queue, exactly as before. */
+  const deterministicLane = async (): Promise<void> => {
+    for (const [i, row] of deterministicRows.entries()) {
+      if (budgetSpent()) {
+        deferForBudget(row);
+        continue;
+      }
+      if (i >= ceiling) {
+        deferred.push({
+          obligationId: row.obligation.id,
+          why:
+            `this cycle dispatched its stated ceiling of ${ceiling} item(s) and ${deterministicRows.length - ceiling} ` +
+            "remained due. They are deferred to the next cycle, counted here, and their debt " +
+            "continues to age — a ceiling that dropped them silently would report the same number " +
+            "whatever the backlog was",
+        });
+        continue;
+      }
+      const result = await dispatchRow(row, {
+        executor: typeof input.executor === "function" ? input.executor(row) : input.executor,
+        leaseTtlMs: input.leaseTtlMs,
+        ...(research !== undefined ? { decision: decisions.get(row.obligation.id) } : {}),
+      });
+      if (research?.onDispatched) await research.onDispatched(result, "DETERMINISTIC");
+    }
+  };
+
+  /*
+   * THE MODEL LANE — a bounded pool of Scouts. Every row is admitted or
+   * DEFERRED BY CODE (the rolling ceiling, the per-cycle maximum, a paused or
+   * unconfigured lane), and a Scout that could not finish inside the dispatch
+   * budget is not started at all: a Scout killed mid-walk by the supervisor
+   * leaves an Attempt with no outcome and a lease to reclaim.
+   */
+  const modelLane = async (): Promise<void> => {
+    if (research === undefined) return;
+    await runPool(modelRows, research.maxConcurrentScouts, async (row) => {
+      const deadline = input.budget?.deadlineMs;
+      if (
+        budgetSpent() ||
+        (deadline !== undefined && input.budget !== undefined && input.budget.now() + research.scoutWallMs >= deadline)
+      ) {
+        deferForBudget(row);
+        modelDeferred += 1;
+        deferredBy.BUDGET = (deferredBy.BUDGET ?? 0) + 1;
+        return;
+      }
+      const admit = research.admitScout(row);
+      if (!admit.admit) {
+        deferred.push({
+          obligationId: row.obligation.id,
+          why: `${admit.code}: ${admit.why}. Deferred with its next-due, never dropped and never reported complete.`,
+        });
+        modelDeferred += 1;
+        deferredBy[admit.code] = (deferredBy[admit.code] ?? 0) + 1;
+        return;
+      }
+      modelDispatched += 1;
+      const result = await dispatchRow(row, {
+        executor: research.modelExecutor,
+        leaseTtlMs: research.scoutLeaseTtlMs,
+        decision: decisions.get(row.obligation.id),
+      });
+      if (research.onDispatched) await research.onDispatched(result, "BOUNDED_MODEL_WORKER");
+    });
+  };
+
+  await Promise.all([deterministicLane(), modelLane()]);
+
+  const lanes: LaneCounts | null =
+    research === undefined
+      ? null
+      : {
+          deterministic: {
+            due: deterministicRows.length,
+            dispatched: dispatched.filter((d) => d.executor !== "BOUNDED_MODEL_WORKER" && d.executorChosen !== "BOUNDED_MODEL_WORKER").length,
+          },
+          model: { due: modelRows.length, dispatched: modelDispatched, deferred: modelDeferred, deferredBy },
+        };
 
   const debts = [...debtsById.values()];
   const risk = stalenessRisk({
@@ -389,6 +546,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
     debts,
     incidents: aggregateIncidents(debts, nowMs),
     risk,
+    lanes,
     health: pilotHealth(input.reader, input.truth, freshnessContract(risk)),
     promotedToReaderTruth: false,
   };

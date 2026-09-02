@@ -347,6 +347,31 @@ test("Q: we hold text from a host later found to disallow crawling. Purge it?", 
   assert.match(flat(r209.body), /KEEP AND USE/, "RULING 209 no longer records the author's decision");
 });
 
+/* ------------------------------------------------ the Level 1 activation (240) */
+
+test("Q: May the standing autonomous system perform bounded public-source scouting without session-by-session owner authorization?", () => {
+  // artifact: docs/governance/index.json — the compiled rule slot RULING 240 claims
+  assert.equal(claim("activation.standing_level"), "level-1-research");
+  // and the policy says it in the author's own words, so a session that reads
+  // only current law finds the authorization AND its ceiling in one place.
+  assert.ok(whereInLaw("MEANWHILE IS AUTHORIZED TO OPERATE AT LEVEL 1", ROOT));
+  assert.match(
+    flat(law),
+    /without session-by-session owner authorization/i,
+    "current law no longer states that Level 1 research needs no per-session authorization",
+  );
+  // Research is not publication. The same paragraph that authorizes the hunt
+  // withholds promotion, and RULING 215's Level-4/5 limits stay current.
+  assert.match(
+    flat(law),
+    /does not authorize canonical promotion merely because a model found something/i,
+    "current law no longer withholds promotion from a model's finding",
+  );
+  assert.match(flat(law), /Absence is argued, never asserted/);
+  const r215 = index.resolve("RULING 215");
+  assert.ok(r215 && ["ACTIVE", "AMENDED"].includes(r215.status), "RULING 215 stopped being current");
+});
+
 test("answering a CURRENT question never requires the history files", () => {
   // The bar: if answering a current-rule question still requires reading the
   // chronology, the remediation is not finished. So the history is measured

@@ -1,8 +1,8 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-02 00:46:43 EDT. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-09-01 -->
-Session day 2026-09-01 (America/Phoenix, from `pnpm stamp`).
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-02 03:14:27 EDT.
+Session day 2026-09-02 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
@@ -612,7 +612,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 255 recorded
+## Rulings — 257 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -848,6 +848,8 @@ from. Each entry there names what it supersedes.
 - RULING 237 — the SESSION EFFICIENCY LAW is adopted verbatim: maximum verified progress per wall-clock minute, model token, and human attention  [R-0237 · LAW_DECISION · ACTIVE]
 - RULING 238 — Owner Secret Custody: an owner-accessible copy of any masked new or rotated credential is persisted to the gitignored secret store BEFORE provider installation, and a report lacking any required field fails the session report gate  [R-0238 · LAW_DECISION · ACTIVE]
 - RULING 239 — SESSION C is terminal: SHIPPED, OPERATIONALLY IMPROVED, UNFINISHED — its production improvement stands merged and its unmet criteria are carried as durable frontier obligations, never a reopening  [R-0239 · FACT · ACTIVE]
+- RULING 240 — MEANWHILE IS AUTHORIZED TO OPERATE AT LEVEL 1 — RESEARCH  [R-0240 · LAW_DECISION · ACTIVE]
+- RULING 241 — Level 1 activation parameters: a TEMPORARY $25/day rolling research spend ceiling, the local dispatchOne worker runtime, hosted worker runtimes deferred to the frontier  [R-0241 · DECISION · ACTIVE]
 - `package.json`'s `scripts` block is the list.  [R-C-commands-package-json-s-scripts-block-is-the-list · LAW_DECISION · ACTIVE]
 - More principles will not fix this.  [R-C-discovery-conduct-more-principles-will-not-fix-this · LAW_DECISION · ACTIVE]
 - THE REPORT CONTRACT IS A FILE NOW, AND IT IS AMENDED RATHER THAN REINVENTED  [R-C-discovery-conduct-the-report-contract-is-a-file-now-and-it-is-am · LAW_DECISION · ACTIVE]
@@ -1037,13 +1039,13 @@ _No status change recovered in the commits walked._
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-09-02 00:46:43 EDT   <!-- expected-future: Eastern run stamp (R18) past midnight; Phoenix session day is 2026-09-01 -->
-branch: claude/autonomy-recovery-efficiency-616f07
-head sha: 63c7515839f628f69c5abc1d432320c6f6b583b3
-head subject: Serialize the one seam two test files share, so the ship door stops going red on a Windows file lock
-origin/main sha: 07bbb08134bda0d34ea1ca1f889caa16e86ca6b0
-origin/main subject: Post-deploy integrity reading: 2026-09-02T01:52Z   <!-- expected-future: a UTC stamp inside a quoted commit subject; Phoenix session day is 2026-09-01 -->
-local main sha: 07bbb08134bda0d34ea1ca1f889caa16e86ca6b0
+generated: 2026-09-02 03:14:27 EDT
+branch: claude/autonomous-scout-activation-f24965
+head sha: 53a9361482ad0ae0a4f9e5d3dc0457fc3956ad70
+head subject: Level 1 - Research activation: RULING 240/241, the one executor-decision rule, a real bounded Scout through dispatchOne with vault-first research tools, typed results and method candidates, the rolling spend ceiling, the two-trigger installer, the /admin/research view, and seven live Scout Attempts
+origin/main sha: e2a4ff5154ab5a1595f3ba170afda2ff1b25b7cc
+origin/main subject: Post-deploy integrity reading: 2026-09-02T05:01Z
+local main sha: e2a4ff5154ab5a1595f3ba170afda2ff1b25b7cc
 local main matches origin/main: yes
 working tree: clean
 open prs: none

@@ -75,6 +75,9 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } fr
 import { join } from "node:path";
 
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
+import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
+import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
+import { RESEARCH_INTENT_LOG_KEY, readIntents } from "../lib/control-plane/scheduler/research-policy.ts";
 import { today } from "./doc-dates.mjs";
 
 const ROOT = process.cwd();
@@ -130,6 +133,43 @@ interface RunRecord {
   readonly incidents?: readonly { cause: string; target: string; obligationsAffected: number; nextRetryAt: string }[];
   readonly promotedToReaderTruth?: boolean;
   readonly digest?: readonly string[];
+  /** Level 1 — Research, as the cycle recorded it. Absent on a record written before activation. */
+  readonly research?: {
+    readonly state?: {
+      readonly modelLaneEnabled?: boolean;
+      readonly modelLaneDisabledReason?: string | null;
+      readonly workerCredential?: { readonly name?: string; readonly configured?: boolean };
+      readonly model?: string;
+      readonly spend?: { readonly windowUsd?: number | null; readonly measuredAttempts?: number; readonly unmeasuredAttempts?: number };
+      readonly bounds?: { readonly dailyCeilingUsd?: number; readonly maxConcurrentScouts?: number; readonly maxScoutDispatchesPerCycle?: number };
+      readonly queue?: { readonly modelClassDue?: number; readonly modelClassUnits?: number; readonly modelClassDispatchedThisCycle?: number };
+      readonly runtimeConditions?: readonly string[];
+    };
+    readonly lanes?: {
+      readonly deterministic?: { readonly due?: number; readonly dispatched?: number };
+      readonly model?: { readonly due?: number; readonly dispatched?: number; readonly deferred?: number; readonly deferredBy?: Readonly<Record<string, number>> };
+    } | null;
+    readonly scouts?: readonly {
+      readonly obligationId: string;
+      readonly attemptId: string | null;
+      readonly outcome: string | null;
+      readonly disposition: string | null;
+      readonly worker: { readonly role?: string; readonly provider?: string; readonly version?: string } | null;
+      readonly cost: { readonly usd?: number | null; readonly inputTokens?: number | null; readonly outputTokens?: number | null } | null;
+      readonly artifacts: number;
+    }[];
+    readonly results?: readonly {
+      readonly obligationId: string;
+      readonly outcome: string;
+      readonly refused: boolean;
+      readonly stoppedBy: string;
+      readonly rungs: number;
+      readonly distinctEvidenceRungs: number;
+      readonly candidates: number;
+      readonly usd: number | null;
+      readonly elapsedMs: number;
+    }[];
+  };
 }
 
 /* ------------------------------------------------------------- one cycle --- */
@@ -159,6 +199,8 @@ function runOneCycle(): {
     `--provider=${provider}`,
     `--max=${MAX}`,
     `--budget-min=${BUDGET_MIN}`,
+    /* So the child's heartbeat can state when the next cycle is due. */
+    `--interval=${INTERVAL_MIN}`,
     ...(onlyArg ? [onlyArg] : []),
   ];
   const run = spawnSync(process.execPath, args, {
@@ -207,7 +249,22 @@ function costSection(record: RunRecord): CostLines {
     .filter((l) => /^ {6}(DETERMINISTIC|BOUNDED_MODEL_WORKER)/.test(l))
     .map((l) => l.trim());
   lines.push(cost.length > 0 ? `- TOTAL — ${cost[0].replace(/^cost\s+/, "")}` : "- TOTAL — the cycle recorded no cost line, which is a defect in the run record and not a zero");
-  lines.push("- BY ROLE — every Attempt this cycle opened under role ACQUIRER; no SCOUT, no VERIFIER, no SYNTHESIZER ran");
+  /*
+   * BY ROLE is READ from the record, never asserted. Before Level 1 this line
+   * stated that no SCOUT ran, as a constant; a constant cannot notice the day
+   * it stops being true.
+   */
+  const scouts = record.research?.scouts ?? [];
+  const scoutUsd = scouts.reduce((n, s) => n + (s.cost?.usd ?? 0), 0);
+  const unmeasured = scouts.filter((s) => s.cost?.usd === null || s.cost?.usd === undefined).length;
+  lines.push(
+    scouts.length === 0
+      ? "- BY ROLE — every Attempt this cycle opened under role ACQUIRER (deterministic); no SCOUT Attempt ran this cycle" +
+          (record.research ? "" : " (a record written before Level 1 carries no research section)")
+      : `- BY ROLE — SCOUT ${scouts.length} Attempt(s), $${scoutUsd.toFixed(4)} measured` +
+          (unmeasured > 0 ? ` (${unmeasured} unmeasured — NOT zero)` : "") +
+          `; the rest ACQUIRER (deterministic)`,
+  );
   for (const lane of lanes) lines.push(`- BY MODEL — ${lane}`);
   lines.push(
     "- CACHE HIT RATE — **NOT MEASURED.** `AttemptCost` carries inputTokens, outputTokens, usd, " +
@@ -221,16 +278,48 @@ function costSection(record: RunRecord): CostLines {
 function laneShare(record: RunRecord): string[] {
   const digest = record.digest ?? [];
   const executors = digest.find((l) => l.includes("executors          "));
-  return [
+  const research = record.research;
+  const state = research?.state;
+  const lanes = research?.lanes ?? null;
+  const out = [
     "## DETERMINISTIC vs MODEL",
     "",
     executors
       ? `- ${executors.trim().replace(/^executors\s+/, "")}`
       : "- the cycle recorded no executor split, which is a defect in the run record",
-    "- Every Attempt above ran a deterministic HTTP client. No route in the registered portfolios " +
-      "reads `WTP_WORKERS_ANTHROPIC_API_KEY`; a route whose shape nothing has derived disposes " +
-      "REQUIRES_NEW_ADAPTER with the missing adapter named, rather than spending a model to guess.",
   ];
+  if (!research) {
+    out.push("- this record was written before Level 1 — Research was wired; it carries no Scout lane");
+    return out;
+  }
+  out.push(
+    `- deterministic lane: ${lanes?.deterministic?.dispatched ?? 0} dispatched of ${lanes?.deterministic?.due ?? 0} due`,
+    `- Scout lane: ${lanes?.model?.dispatched ?? 0} dispatched of ${lanes?.model?.due ?? 0} due model-class` +
+      ` · deferred ${lanes?.model?.deferred ?? 0}` +
+      (lanes?.model?.deferredBy && Object.keys(lanes.model.deferredBy).length > 0
+        ? ` (${Object.entries(lanes.model.deferredBy).map(([k, v]) => `${k} ${v}`).join(", ")})`
+        : ""),
+  );
+  out.push("", "## RESEARCH — LEVEL 1 (RULING 240)", "");
+  out.push(
+    `- lane: ${state?.modelLaneEnabled ? "ENABLED" : `CLOSED — ${state?.modelLaneDisabledReason ?? "reason unrecorded"}`}`,
+    `- credential: ${state?.workerCredential?.name ?? "WTP_WORKERS_ANTHROPIC_API_KEY"} configured in the cycle process: ${state?.workerCredential?.configured ? "yes" : "NO"} (by name)`,
+    `- model: ${state?.model ?? "unrecorded"} · concurrency ${state?.bounds?.maxConcurrentScouts ?? "?"} · per cycle ${state?.bounds?.maxScoutDispatchesPerCycle ?? "?"}`,
+    `- spend: ${state?.spend?.windowUsd === null || state?.spend?.windowUsd === undefined ? "UNMEASURED" : `$${state.spend.windowUsd.toFixed(4)}`} of $${state?.bounds?.dailyCeilingUsd ?? "?"} rolling ceiling` +
+      ` (measured ${state?.spend?.measuredAttempts ?? 0}, unmeasured ${state?.spend?.unmeasuredAttempts ?? 0})`,
+  );
+  for (const r of research.results ?? []) {
+    out.push(
+      `  - ${r.refused ? "REFUSED" : r.outcome} (${r.stoppedBy}) — \`${r.obligationId}\` — ${r.rungs} rung(s), ` +
+        `${r.distinctEvidenceRungs} evidence-backed, ${r.candidates} candidate(s), ` +
+        `${r.usd === null ? "usd UNMEASURED" : `$${r.usd.toFixed(4)}`}, ${Math.round(r.elapsedMs / 1000)}s`,
+    );
+  }
+  if ((state?.runtimeConditions ?? []).length > 0) {
+    out.push(`- runtime conditions: ${(state?.runtimeConditions ?? []).join("; ")}`);
+  }
+  out.push("- PROMOTION: OFF. A Scout finding is inventory and a candidate; nothing it produced changed what a reader is told.");
+  return out;
 }
 
 /* ------------------------------------------------------------- the digest --- */
@@ -363,6 +452,51 @@ function deliver(body: string, headline: string): { readonly where: string; read
 
 const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
 
+/**
+ * **THE OWNER'S "RUN RESEARCH CYCLE NOW" IS HONORED BETWEEN CYCLES.**
+ * (Level 1 activation, 2026-09-01.)
+ *
+ * The interval sleep is taken in one-minute slices; each minute the
+ * research-intents log is read, and a pending RUN_CYCLE_NOW ends the sleep so
+ * the next cycle starts at once. The cycle itself appends the HONORED record.
+ * A store that cannot be read keeps the ordinary interval — an intent nobody
+ * can read is not an intent nobody sent, so the failure is printed, once.
+ */
+const POLL_MS = 60_000;
+let intentRepos: ControlPlaneRepositories | null = null;
+let intentReadFailed = false;
+async function pendingRunNow(): Promise<boolean> {
+  if (provider !== "postgres") return false;
+  try {
+    if (intentRepos === null) {
+      const url = controlPlaneUrlFromEnv();
+      if (url === null) return false;
+      intentRepos = await createPgRepositories(url, new Date().toISOString());
+    }
+    const log = await intentRepos.researchIntents.read(RESEARCH_INTENT_LOG_KEY);
+    return readIntents(log).pendingRunNow.length > 0;
+  } catch (error) {
+    if (!intentReadFailed) {
+      intentReadFailed = true;
+      console.error(
+        `  research intents could not be read while waiting (${error instanceof Error ? error.message : String(error)}); ` +
+          "the ordinary interval stands. This is printed once.",
+      );
+    }
+    return false;
+  }
+}
+async function sleepUnlessRunNow(totalMs: number): Promise<void> {
+  const until = Date.now() + totalMs;
+  while (Date.now() < until) {
+    await sleep(Math.min(POLL_MS, until - Date.now()));
+    if (await pendingRunNow()) {
+      console.log(`  a RUN_CYCLE_NOW intent is pending — starting the next cycle early at ${new Date().toISOString()}`);
+      return;
+    }
+  }
+}
+
 console.log(
   `pilot:run · control plane ${provider}, interval ${INTERVAL_MIN} min, ` +
     `${CYCLES === Infinity ? "running until stopped" : `${CYCLES} cycle(s)`}\n` +
@@ -461,7 +595,7 @@ while (cycle < CYCLES) {
   console.log(`  ${headline}`);
 
   if (cycle >= CYCLES) break;
-  await sleep(INTERVAL_MIN * 60_000);
+  await sleepUnlessRunNow(INTERVAL_MIN * 60_000);
 }
 
 console.log(`\npilot:run · ${cycle} cycle(s) complete. Run records under ${RUNS_DIR}.`);

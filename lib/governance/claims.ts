@@ -427,6 +427,18 @@ export const CLAIM_KEYS: readonly ClaimKeyDef[] = [
       "When a provider masks a new or rotated credential, where must an owner-accessible copy exist, and when?",
     values: ["owner-copy-before-install", "provider-only"],
   },
+  {
+    key: "activation.standing_level",
+    question:
+      "At which activation level may the standing autonomous system operate without session-by-session owner authorization?",
+    values: [
+      "none",
+      "level-1-research",
+      "level-2-verified-promotion",
+      "level-3-broad-publication",
+      "level-4-automatic-publishing",
+    ],
+  },
 ] as const;
 
 const KEY_INDEX = new Map(CLAIM_KEYS.map((k) => [k.key, k]));

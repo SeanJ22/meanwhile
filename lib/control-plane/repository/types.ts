@@ -93,6 +93,8 @@ import type {
   OwnerSnapshot,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
+import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
+import type { ScoutResult } from "../scheduler/scout-result.ts";
 
 /** ------------------------------------------------------------- envelopes */
 
@@ -559,6 +561,22 @@ export interface ControlPlaneRepositories {
   readonly ownerDigests: AppendOnlyRepository<OwnerDigestRecord>;
   /** What a decision button appended. Intent, never a direct edit of authority. */
   readonly ownerDecisions: AppendOnlyRepository<OwnerDecisionIntent>;
+  /**
+   * LEVEL 1 — RESEARCH. (Level 1 activation, 2026-09-01 — schema v4.)
+   *
+   *   researchState     one aggregate, id "level-1": what the standing runner
+   *                     measured about the Scout lane on its last cycle. The
+   *                     page DERIVES a verdict from it; it stores none
+   *   researchIntents   the owner's pause/resume/run-now intents, and the
+   *                     runner's HONORED records beside them. Append-only,
+   *                     because an intent is a fact about a moment
+   *   scoutResults      every typed Scout result, keyed by obligation id, so
+   *                     the next Attempt resumes rather than restarts and the
+   *                     page can list what the Scouts actually did
+   */
+  readonly researchState: AggregateRepository<ResearchState>;
+  readonly researchIntents: AppendOnlyRepository<ResearchIntent>;
+  readonly scoutResults: AppendOnlyRepository<ScoutResult>;
   readonly budget: BudgetRepository;
   readonly locks: LockManager;
   /** What this store is, for a report that must say where the state lives. */

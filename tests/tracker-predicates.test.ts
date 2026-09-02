@@ -149,9 +149,32 @@ test("RULING 227: every predicate still reads its evidence and answers RESOLVED_
    * alternative to it, and a blocker a machine can decide does not get to take
    * the human route.
    */
-  assert.equal(PREDICATES.length, 5);
+  /*
+   * **NH305 joined on 2026-09-01 as the first predicate over a row that is
+   * still OPEN.** The runner's relaunch trigger needs an elevated install the
+   * machine cannot perform; the predicate reads the proof record the elevated
+   * `prove-relaunch` writes, and until then it HOLDS by name. That is the
+   * other half of RULING 227 working as written — a blocker a machine can
+   * check is re-checked on every generation and the row moves the moment the
+   * proof lands. So an OPEN predicated row must NOT answer RESOLVED_BY_EVIDENCE
+   * here (if it did, the row should already have moved), and a RESOLVED one
+   * must still read its evidence and answer RESOLVED_BY_EVIDENCE.
+   */
+  /* NH306 (2026-09-02) is the second OPEN predicated row: two credentials await rotation. */
+  assert.equal(PREDICATES.length, 7);
+  const openIds = new Set(openRows.map((r) => String(r.ID ?? "").trim()));
   for (const p of PREDICATES as unknown as RegistryEntry[]) {
     const outcome = evaluateEntry(p, { root: ROOT });
+    assert.ok(outcome.read.length > 0, `${p.rowId} must name what it read`);
+    if (openIds.has(p.rowId)) {
+      assert.notEqual(
+        outcome.verdict,
+        RESOLVED_BY_EVIDENCE,
+        `${p.rowId} is OPEN and its predicate answers RESOLVED_BY_EVIDENCE — the row should have moved: ${outcome.why}`,
+      );
+      assert.ok(outcome.why.trim().length > 0, `${p.rowId} must say why it still holds`);
+      continue;
+    }
     assert.equal(
       outcome.verdict,
       RESOLVED_BY_EVIDENCE,
@@ -161,7 +184,6 @@ test("RULING 227: every predicate still reads its evidence and answers RESOLVED_
       outcome.evidence.length >= 3,
       `${p.rowId} must cite its evidence, not merely assert a verdict`,
     );
-    assert.ok(outcome.read.length > 0, `${p.rowId} must name what it read`);
   }
 });
 

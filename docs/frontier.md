@@ -862,3 +862,67 @@ not re-read. Found by the refutation pass recorded in
 Two effort levels are unusable and the reason is structural: **`xhigh` and `max`
 break the output contract** at `max_tokens: 2048`, because thinking counts
 against that ceiling and the JSON answer truncates mid-string.
+
+## Carried out of the Level 1 activation session, 2026-09-01
+
+Priorities, not status. Level 1 — Research is authorized (RULING 240) and
+wired: the standing cycle decides every due unit by one executor rule, runs a
+real bounded Scout (role SCOUT, provider anthropic, model on the Attempt) for
+genuine novelty, vaults before the model sees anything, persists a typed
+result, proposes method candidates it may never admit, and defers by name at
+the rolling $25/day ceiling (RULING 241). What this session deliberately left:
+
+### Waiting on the owner
+
+- **NH305 — the runner's relaunch trigger needs one ELEVATED install.** The
+  corrected installer carries the 5-minute repetition trigger; the unelevated
+  install was refused (Access is denied). Until the owner runs
+  `scripts/pilot-task.ps1 -Action install` elevated, then `verify-triggers`
+  and `prove-relaunch`, a killed parent runner stays down until a logon. The
+  row carries a predicate on `data/ops/runner-relaunch-proof.json` and closes
+  itself when the proof records RELAUNCHED.
+- **NH306 — rotate `DATA_GOV_API_KEY` and `NETLIFY_AUTH_TOKEN`.** The ship door
+  reported the transcript mirror carrying a credential value; `pnpm
+  secrets:sweep --transcripts` from the main checkout found both VALUES in a
+  subagent transcript of the earlier session `771dfc3d…` (line 24). The file
+  was scrubbed in place (8 values replaced, 0 remaining); the repository and
+  the Drive mirror read 0 secret occurrences. RULING 127: a credential that
+  appeared in a transcript is COMPROMISED and is ROTATED; the row carries a
+  predicate on `data/ops/credential-events.jsonl` and closes itself when a
+  rotation event names both. Neither value was produced by this session.
+- **RO08 stands** (drain rate). Scouts do not change it: the deterministic
+  lane keeps its own ceiling and the Scout lane runs beside it.
+
+### Executable, and not reached
+
+- **Method-candidate ADMISSION is a session's act.** Scouts propose and
+  validate into `data/method/candidates.json`; nothing admits. The graduation
+  path is proven (`tests/scout-candidates.test.ts` test 4) and the door is
+  `writeMethodStore` through the existing method:learn idiom, with independent
+  repetition before a route becomes project knowledge. A session that admits a
+  Scout candidate must also register an executable opening for it in the
+  provider, or the decision rule records GRADUATED_WITHOUT_OPENING and keeps
+  sending a Scout.
+- **`api.wikimedia.org` reads CANNOT_TELL** under the robots evaluator (its
+  robots.txt answers 301 to a documentation page), so the Scout's tools refuse
+  it and the compliant Wikipedia branch is `/wiki/<Title>?action=raw` on
+  `en.wikipedia.org`. A permission reading of the REST host by a session would
+  open it; the evaluator fails safe by design (RULING 182).
+- **One provider contradiction, recorded and not reconciled:**
+  `az-sos-cfs-bulk-ftp` is declared DETERMINISTIC with a NOT_MACHINE_EXECUTABLE
+  opening (no FTP client). The decision rule keeps it deterministic — a
+  declared-deterministic route never consumes a model — and it disposes
+  REQUIRES_NEW_ADAPTER on a clock. The adapter is the FTP client itself.
+- **Eight model-class units carry an earlier INGESTED disposition** from
+  descriptors that have since changed class (the BEFORE denominator names
+  them). A session should decide whether those readings stand.
+- **The Scout has no FTP, no authenticated, and no records-request tool**, by
+  design (RULING 215). HUMAN_REQUIRED results dispose BLOCKED_CURRENTLY with
+  the human act named; that is the closest canonical disposition, and a
+  dedicated one would be a governance change.
+- **Hosted worker runtimes** (managed agent services) stay FRONTIER
+  (RULING 241). The local dispatchOne path on the standing runner is the
+  runtime.
+- **The full Control Center** (Overview, Needs You, Methods, Evidence, Costs,
+  System, the graduation visual, "new since you last looked") is a later
+  session. `/admin/research` is the minimum and nothing more.

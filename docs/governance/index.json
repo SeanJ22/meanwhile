@@ -1,12 +1,12 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "f395c8184e84500f",
+  "snapshot": "0bd4089fefc9a830",
   "counts": {
-    "records": 276,
-    "current": 255,
-    "law": 221,
-    "decisions": 31,
+    "records": 278,
+    "current": 257,
+    "law": 222,
+    "decisions": 32,
     "historical": 21
   },
   "records": [
@@ -5413,6 +5413,83 @@
         {
           "kind": "related_to",
           "target": "R-0225"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0240",
+      "aliases": [
+        "RULING 240",
+        "R240",
+        "R-240"
+      ],
+      "title": "RULING 240 — MEANWHILE IS AUTHORIZED TO OPERATE AT LEVEL 1 — RESEARCH",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-09-01",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [
+        {
+          "key": "activation.standing_level",
+          "value": "level-1-research"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0205"
+        },
+        {
+          "kind": "extends",
+          "target": "R-0208"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0215"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0224"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0237"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0238"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0241",
+      "aliases": [
+        "RULING 241",
+        "R241",
+        "R-241"
+      ],
+      "title": "RULING 241 — Level 1 activation parameters: a TEMPORARY $25/day rolling research spend ceiling, the local dispatchOne worker runtime, hosted worker runtimes deferred to the frontier",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-09-01",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [
+        {
+          "kind": "related_to",
+          "target": "R-0240"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0213"
         }
       ],
       "uncertain": [],

@@ -61,6 +61,8 @@
 import { appendFile, link, mkdir, open, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
+import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
+import type { ScoutResult } from "../scheduler/scout-result.ts";
 import path from "node:path";
 
 import type { Attempt, ExecutionLease } from "../attempt.ts";
@@ -688,6 +690,10 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     ),
     ownerDigests: fileAppendOnlyRepository<OwnerDigestRecord>(resolved, "owner-digests"),
     ownerDecisions: fileAppendOnlyRepository<OwnerDecisionIntent>(resolved, "owner-decisions"),
+    /* Level 1 — Research (schema v4). */
+    researchState: fileAggregateRepository<ResearchState>(resolved, "ResearchState", "research-state"),
+    researchIntents: fileAppendOnlyRepository<ResearchIntent>(resolved, "research-intents"),
+    scoutResults: fileAppendOnlyRepository<ScoutResult>(resolved, "scout-results"),
     budget: budgetRepositoryFrom(
       fileAggregateRepository<BudgetLedger>(resolved, "BudgetLedger", "budget"),
       locks,

@@ -1,5 +1,5 @@
 {
-  "stagedOn": "2026-09-01",
+  "stagedOn": "2026-09-02",
   "promotionEnabled": false,
   "entries": [
     {
@@ -1645,6 +1645,26 @@
       ]
     },
     {
+      "obligationId": "freshness:candidate-enrichment:az:2026:state-az-cd-5:u-s-representative-district-5:keenan-daniel#candidate-wikipedia-api",
+      "providerId": "candidate-enrichment",
+      "recordClass": "candidate-enrichment",
+      "subjectId": "az:2026:state-az-cd-5:u-s-representative-district-5:keenan-daniel",
+      "routeId": "candidate-wikipedia-api",
+      "stagedOn": "2026-09-02",
+      "nextDueAt": "2026-09-02T07:01:18.163Z",
+      "disposition": "DISCOVERED",
+      "state": "STAGED_GAP",
+      "rowCount": 0,
+      "declaredTotal": null,
+      "complete": false,
+      "snapshotPath": null,
+      "readerSentence": "Daniel Keenan — Wikipedia search API, DISALLOWED by robots.txt — owed: campaignSite, positions, bio, photo, contact: the route closed DISCOVERED. DISALLOWED BY THE HOST'S OWN robots.txt, read 2026-09-01. `User-agent: *` carries `Disallow: /w/` with exactly two exceptions — `Allow: /w/api.php?action=mobileview&` and `Allow: /w/load.php?` — and a search query is neither. THIS IS NOT A WALL: the host is not refusing us, it is telling us not to ask, and RULING 53's re-walk clock applies to walls and never to disallows. The compliant route to the same facts is the Wikimedia REST API on api.wikimedia.org, whose /robots.txt answered HTTP 301 to a documentation page on 2026-09-01 — NO ROBOTS DOCUMENT, which is an absence of restrictions and never a grant, recorded CANNOT_TELL under RULING 182 and owed a permission reading before it is opened.",
+      "unresolved": [
+        "a permission reading of api.wikimedia.org, then an adapter for its REST search — the compliant route to the same discovery facts",
+        "still owed, and scheduled to be tried again at 2026-09-02T07:01:18.163Z"
+      ]
+    },
+    {
       "obligationId": "freshness:candidate-enrichment:az:2026:state-az-cd-6:u-s-representative-district-6:peters-jereme-lance#candidate-authored-awaits-site",
       "providerId": "candidate-enrichment",
       "recordClass": "candidate-enrichment",
@@ -1822,6 +1842,126 @@
       "unresolved": [
         "no next move is recorded on this route descriptor, which is itself a gap worth closing",
         "still owed, and scheduled to be tried again at 2026-08-27T00:00:00.000Z"
+      ]
+    },
+    {
+      "obligationId": "freshness:jurisdiction:az:city:city-of-apache-junction#campaign-finance-0",
+      "providerId": "local-jurisdictions",
+      "recordClass": "local-jurisdiction",
+      "subjectId": "az:city:city-of-apache-junction",
+      "routeId": "campaign-finance-0",
+      "stagedOn": "2026-09-02",
+      "nextDueAt": "2026-09-02T07:01:18.163Z",
+      "disposition": "DISCOVERED",
+      "state": "STAGED_GAP",
+      "rowCount": 0,
+      "declaredTotal": null,
+      "complete": false,
+      "snapshotPath": null,
+      "readerSentence": "CITY OF APACHE JUNCTION — campaign finance via CITY OF APACHE JUNCTION clerk: the route closed DISCOVERED. find this clerk's campaign-finance publication. The routing rule is settled by statute and the address is not read here. REQUIRES_NEW_ADAPTER: this is a fact about our tooling and our reading, never about the record.",
+      "unresolved": [
+        "an address for CITY OF APACHE JUNCTION clerk",
+        "still owed, and scheduled to be tried again at 2026-09-02T07:01:18.163Z"
+      ]
+    },
+    {
+      "obligationId": "freshness:jurisdiction:az:city:city-of-avondale#meetings-1",
+      "providerId": "local-jurisdictions",
+      "recordClass": "local-jurisdiction",
+      "subjectId": "az:city:city-of-avondale",
+      "routeId": "meetings-1",
+      "stagedOn": "2026-09-02",
+      "nextDueAt": "2026-09-02T07:08:24.073Z",
+      "disposition": "DISCOVERED",
+      "state": "STAGED_GAP",
+      "rowCount": 0,
+      "declaredTotal": null,
+      "complete": false,
+      "snapshotPath": null,
+      "readerSentence": "CITY OF AVONDALE — meetings via this government itself: the route closed DISCOVERED. walk this row's `ownWebAddress` for the body's own meeting notices, agendas, minutes and officeholder roster, under RULING 166's body-own-publication-first order. The address is recorded; no adapter in this repository opens it, and an address is not an acquisition. PERMISSION FOR http://www.avondale.org HAS NOT BEEN READ. RULING 182: permission state and transport state are orthogonal, and CANNOT_TELL fails safe for the route. This is a fact about what we have read, never about what the government publishes.",
+      "unresolved": [
+        "a permission reading of http://www.avondale.org, then an adapter for whatever it publishes",
+        "still owed, and scheduled to be tried again at 2026-09-02T07:08:24.073Z"
+      ]
+    },
+    {
+      "obligationId": "freshness:jurisdiction:az:city:city-of-benson#meetings-1",
+      "providerId": "local-jurisdictions",
+      "recordClass": "local-jurisdiction",
+      "subjectId": "az:city:city-of-benson",
+      "routeId": "meetings-1",
+      "stagedOn": "2026-09-01",
+      "nextDueAt": "2026-09-02T06:54:16.377Z",
+      "disposition": null,
+      "state": "STAGED_GAP",
+      "rowCount": 0,
+      "declaredTotal": null,
+      "complete": false,
+      "snapshotPath": null,
+      "readerSentence": "CITY OF BENSON — meetings via this government itself: we have not yet reached it. walk this row's `ownWebAddress` for the body's own meeting notices, agendas, minutes and officeholder roster, under RULING 166's body-own-publication-first order. The address is recorded; no adapter in this repository opens it, and an address is not an acquisition. PERMISSION FOR http://www.cityofbenson.com HAS NOT BEEN READ. RULING 182: permission state and transport state are orthogonal, and CANNOT_TELL fails safe for the route. This is a fact about what we have read, never about what the government publishes.",
+      "unresolved": [
+        "a permission reading of http://www.cityofbenson.com, then an adapter for whatever it publishes",
+        "still owed, and scheduled to be tried again at 2026-09-02T06:54:16.377Z"
+      ]
+    },
+    {
+      "obligationId": "freshness:jurisdiction:az:county:county-of-apache#ballot-and-candidates-1",
+      "providerId": "local-jurisdictions",
+      "recordClass": "local-jurisdiction",
+      "subjectId": "az:county:county-of-apache",
+      "routeId": "ballot-and-candidates-1",
+      "stagedOn": "2026-09-02",
+      "nextDueAt": "2026-09-02T07:01:18.163Z",
+      "disposition": null,
+      "state": "STAGED_GAP",
+      "rowCount": 0,
+      "declaredTotal": null,
+      "complete": false,
+      "snapshotPath": null,
+      "readerSentence": "COUNTY OF APACHE — ballot and candidates via APACHE County officer in charge of elections: we have not yet reached it. acquire APACHE County's certified candidate and contest list for the applicable cycle. Arizona's statewide contests come from the Secretary of State and are already held; the county-and-below contests are the county's own publication and are not. REQUIRES_NEW_ADAPTER: this is a fact about our tooling and our reading, never about the record.",
+      "unresolved": [
+        "an address for APACHE County officer in charge of elections",
+        "still owed, and scheduled to be tried again at 2026-09-02T07:01:18.163Z"
+      ]
+    },
+    {
+      "obligationId": "freshness:jurisdiction:az:county:county-of-cochise#ballot-and-candidates-1",
+      "providerId": "local-jurisdictions",
+      "recordClass": "local-jurisdiction",
+      "subjectId": "az:county:county-of-cochise",
+      "routeId": "ballot-and-candidates-1",
+      "stagedOn": "2026-09-01",
+      "nextDueAt": "2026-09-02T06:54:16.377Z",
+      "disposition": null,
+      "state": "STAGED_GAP",
+      "rowCount": 0,
+      "declaredTotal": null,
+      "complete": false,
+      "snapshotPath": null,
+      "readerSentence": "COUNTY OF COCHISE — ballot and candidates via COCHISE County officer in charge of elections: we have not yet reached it. acquire COCHISE County's certified candidate and contest list for the applicable cycle. Arizona's statewide contests come from the Secretary of State and are already held; the county-and-below contests are the county's own publication and are not. REQUIRES_NEW_ADAPTER: this is a fact about our tooling and our reading, never about the record.",
+      "unresolved": [
+        "an address for COCHISE County officer in charge of elections",
+        "still owed, and scheduled to be tried again at 2026-09-02T06:54:16.377Z"
+      ]
+    },
+    {
+      "obligationId": "freshness:jurisdiction:az:county:county-of-coconino#ballot-and-candidates-1",
+      "providerId": "local-jurisdictions",
+      "recordClass": "local-jurisdiction",
+      "subjectId": "az:county:county-of-coconino",
+      "routeId": "ballot-and-candidates-1",
+      "stagedOn": "2026-09-02",
+      "nextDueAt": "2026-09-02T07:08:24.073Z",
+      "disposition": "DISCOVERED",
+      "state": "STAGED_GAP",
+      "rowCount": 0,
+      "declaredTotal": null,
+      "complete": false,
+      "snapshotPath": null,
+      "readerSentence": "COUNTY OF COCONINO — ballot and candidates via COCONINO County officer in charge of elections: the route closed DISCOVERED. acquire COCONINO County's certified candidate and contest list for the applicable cycle. Arizona's statewide contests come from the Secretary of State and are already held; the county-and-below contests are the county's own publication and are not. REQUIRES_NEW_ADAPTER: this is a fact about our tooling and our reading, never about the record.",
+      "unresolved": [
+        "an address for COCONINO County officer in charge of elections",
+        "still owed, and scheduled to be tried again at 2026-09-02T07:08:24.073Z"
       ]
     }
   ]

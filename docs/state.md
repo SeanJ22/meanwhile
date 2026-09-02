@@ -23227,3 +23227,124 @@ seam with `tests/tree-lock.ts`. The ship door's own regeneration commit was
 also refused once, by the date guard reading the observer's UTC commit stamp
 as a future date; the context generator now annotates a quoted commit subject
 the way it already annotated its own past-midnight run stamp.
+
+
+## 2026-09-02 — daily refresh reliability closure, the nightly promotion door, and admin sign-in
+
+*(Session label `daily-refresh-admin-signin-2026-09-02`; branch
+`claude/daily-refresh-admin-signin-69f56b` off `c2be46ed`; four lanes in their
+own worktrees under one integration owner; one planned merge. RULINGs 242–246
+adopted. The acceptance table and the orchestration record are
+`data/workstate/orchestration/2026-09-02-daily-refresh-admin-signin.json`.)*
+
+### What a reader can now see, once this head deploys
+
+- **New London, NH gets its meeting history back.** The GovOffice calendar
+  serves one month per page and the `schedulepage` adapter only ever walked
+  forward, so on 1 September every August sitting rolled off every page it
+  read and the rebuilt snapshot held the town with zero concluded meetings —
+  which is exactly why both scheduled refreshes since then went red at the
+  suite and NOTHING has landed on `main` since 2026-08-31. The adapter now
+  walks every month the composite's window overlaps; the repaired snapshot
+  carries 67 New London meetings, 32 of them concluded, the earliest on
+  2026-06-04 (the committed one held 36, 7 concluded).
+- **The Morris County ballot says what the clerk did.** The clerk republished
+  the 2026 general candidate list on 2026-09-01 and Lana Leguía (CD-7) is in
+  the earlier document and not the later one, with no withdrawal text. The
+  rebuild now records the removal with the id retained, both documents cited
+  and a stable first-absent date, and renders it to the reader as a cited
+  absence block on the CD-7 division — never silence, never a manufactured
+  presence. NH318 asks the owner which surface (an annotated card, or the block
+  as it stands) he wants for a removed candidacy.
+- **Nothing else a reader loads changed.** Promotion is OFF and the nightly
+  window ran in SHADOW; the Scouts' 23 typed results, the 7 VALIDATED method
+  candidates and the 27 pipeline items are inventory, all at SCOUTED.
+
+### What workers advanced unattended
+
+- The standing runner kept its hourly Scout cycles through the whole session
+  (never paused); the persisted Scout population grew from 19 to 23 typed
+  results; the rolling spend reached the $25 ceiling ($27.11 of $25 at 16:20Z,
+  fires AT the cap, after the Attempt that crossed it) and eligible work is
+  cap-deferred by name until the window rolls.
+- The runner was KILLED on purpose at 15:36:25Z and the owner's elevated
+  install brought it back in 274 s through the 5-minute repetition trigger
+  (`data/ops/runner-relaunch-proof.json`, verdict RELAUNCHED); NH305 resolved
+  by its own predicate. A relaunched runner starts a cycle at once, so the
+  cycle clock moved from :10 to :41 past the hour.
+- One live SHADOW nightly window ran at 16:02:13Z (68 s, lease held and
+  released): the legacy refresh in an isolated worktree (3 of 5 sources ran,
+  6 paths moved there, none committed), 27 pipeline items evaluated (would
+  promote 0, refused 27 at SCOUTED, deferred 0), the staging observer as the
+  served-surface check (HELD, NOT_A_RELEASE), control scores NOT MEASURED, the
+  digest delivered to `G:\My Drive\we-the-people\nightly-window-digest.md`.
+
+### What genuinely requires the owner
+
+- **NH306 is NOT closed, on evidence.** The brief stated the two credentials
+  were rotated. The secret store was last modified 2026-09-02T01:44Z, before
+  the transcript finding landed at 07:28Z; the sweep matches transcripts
+  against the CURRENT store values; and both configured values still
+  authenticated live today (HTTP 200 at govinfo and at Netlify, read by name).
+  A value that appeared in a transcript and still authenticates is not
+  rotated. The row carries the note and the exact steps.
+- **NH310: the Google client variables.** `GOOGLE_OAUTH_CLIENT_ID` and
+  `GOOGLE_OAUTH_CLIENT_SECRET` are absent from every Netlify site and the
+  account (read back by name), so the Google sign-in ships proven by 45 seeded
+  tests and cannot be proven live; the predicate reads the login readback's
+  `googleConfigured`. Custody first (`.env.local`), then the site's Production
+  context, Functions scope, then one sign-in.
+- **NW11: which record classes open first at the activation gate** (a decision
+  card; nothing waits on it until READER, TRUTH and FRESHNESS are GREEN and
+  independently reproduced).
+- The elevated `pilot:install-window` (the window's backup wakeup task) is an
+  owner action recorded as NW10.
+
+### The acceptance table
+
+| Item | Verdict | Proof |
+| --- | --- | --- |
+| R0 Level 1 terminal record; provenance defect classified | MET | RULING 246 (FACT); NH307 (BLOCKING, resolved on the merged fix), NH308 (HIGH-RISK ADJACENT, resolved) |
+| R1 exact failed run diagnosed; per-source isolation; refresh lands on main; next scheduled run green; recurrence incident | PARTLY MET → the landing and the next scheduled run are post-merge and recorded in NH309 | `data/ops/refresh-failure-diagnosis-2026-09-02.json`; `lib/ops/refresh-gate.ts` + `scripts/refresh-gate.mts` (14 seeded tests); `docs/refresh-run.json`; `lib/ops/schedule-audit.ts` `refreshRunIncident` (6 seeded tests) |
+| R2 pipeline model; honest mapping; window at 04:00 America/New_York with lock; one SHADOW run + digest; no-reader-write seeded failures; post-promotion verification in shadow; migration inventory; three rulings | MET (control scores NOT MEASURED, said) | `lib/control-plane/promotion/`, `window_runs` `2026-09-02`, `data/health/nightly-window-runs/2026-09-02-01.json`, `docs/migration-inventory.md`, NW01–NW11, RULINGs 242/243/244 |
+| R3 machine-owned provenance with seeded refusal; candidates re-derived; ACTIVE requires relaunch proof; NH305; NH306 | MET except NH306 (NEEDS_SEAN, on evidence) | `tests/scout-lane.test.ts` 11–19; `data/method/candidates.json` (Coconino now observed 2026-09-02); `tests/level1-supervision.test.ts`; the relaunch proof |
+| R4 Google sign-in with five seeded refusals; break-glass; custody violation recorded | MET in code; live proof NEEDS_SEAN (NH310) | `lib/control-plane/admin-google.ts`, `tests/admin-google-signin.test.ts` (45), NH311 |
+| R5 reader-impact ordering; capacity, bands, funnel, share in digest and page; graduated-route check | MET | `lib/control-plane/research-metrics.ts`, `research-digest.ts`, the research state's `dispatchOrdering` (band 1 182 · band 2 2,142 · band 3 0 of 2,324 due at 16:20Z), test 13 |
+| R6 worker efficiency law; baseline; caching/routing/budgets/no re-read; five seeded failures; two live Attempts side by side | NOT MET on the live half only — the ceiling defers it (NH314) | RULING 244; `data/ops/scout-efficiency-baseline.json` (84.2% of input was repeated prefix; $10.68 of $27.11 would have been cache reads); tests 14–18 |
+
+### The refresh diagnosis, in one paragraph
+
+Runs 33517560447 (2026-09-01) and 33636708298 (2026-09-02) both exited the
+refresh step 0, found governed artifacts changed, and failed at "Validate
+before committing"; Commit was skipped, so the prior Commit-step failures
+(JOB04, NH202, NH203, NH207: the read-only token, the ruleset, the unproven
+deploy key) share nothing with them. Five tests refused the refreshed data:
+M58 (New London, both days), the two ballot-key tests and the nj-filing floor
+(the clerk's removal, 2026-09-02 only), and the source stamp on
+`build-nj-rosters.mts` (a drift only the workflow's full-depth clone can see;
+the PR gate's shallow clone skips it — NH317). The gate is now per-source: on
+a red suite the failing test files are attributed to sources by reverting one
+source's governed paths at a time and re-running only those files; the
+survivors commit; the culprit becomes durable debt in
+`data/ops/refresh-debt.json` with a next-due; the diagnoser reads the teed
+suite output instead of an API that cannot serve a running job's log.
+
+### Post-merge procedure (the integration owner's, after this head merges)
+
+1. Fast-forward the main checkout; the runner's next cycle spawns the new
+   child code; kill the parent once so the window scheduler is live
+   (the trigger relaunches it).
+2. `pnpm control-plane:bootstrap` with the env loaded (the live control plane
+   is already at schema v5 from the shadow window; the v4 runner had been
+   re-recording 4 until this head), then `pnpm control-plane:gate`.
+3. `gh workflow run refresh-daily.yml --repo SeanJ22/we-the-people --field all_sources=true`,
+   watch it, read back the bot's commit on `main`, `docs/refresh-run.json`
+   (`gate.verdict` GREEN, no `ROUTE_UNREAD`), and the per-source as-of fields
+   before/after (`generatedAt`, `curatedAt`, `fetchedAt`, `datasetHash`,
+   `source.sha`). The NEXT scheduled run is NH309's closure, not this session's.
+4. `pnpm admin:login-readback` reports the Google path NOT_CONFIGURED by name
+   until NH310 is done; the shared secret is a break-glass behind
+   `WTP_ADMIN_BREAK_GLASS=enabled` only.
+
+The four questions the directive asks at the end are answered in the session's
+final report with the readbacks taken after the merge.

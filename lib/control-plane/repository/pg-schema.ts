@@ -36,7 +36,7 @@
  */
 
 /** Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it. */
-export const BOOTSTRAP_VERSION = 4;
+export const BOOTSTRAP_VERSION = 5;
 
 /**
  * The tables, and the shape each one carries.
@@ -141,6 +141,24 @@ export const APPEND_ONLY_LOGS = [
    */
   "research_intents",
   "scout_results",
+  /*
+   * THE NIGHTLY DOOR. (RULING 242 — version 5.)
+   *
+   *   promotion_pipeline  every typed transition SCOUTED -> CONFIRMED ->
+   *                       VERIFIED -> AUDITED -> APPROVED_FOR_PROMOTION, and
+   *                       every REFUSED record with its reasons, keyed by
+   *                       item id. The only path toward reader truth
+   *   window_runs         one record per nightly window, keyed by the
+   *                       America/New_York date it answered for
+   *   window_incidents    a stage failure, typed, keyed by window id; the
+   *                       next window catches up what it names
+   *   window_intents      RUN_WINDOW_NOW from the backup wakeup, and the
+   *                       runner's HONORED record beside it
+   */
+  "promotion_pipeline",
+  "window_runs",
+  "window_incidents",
+  "window_intents",
 ] as const;
 
 /** Every table this schema declares, for the drift check. */

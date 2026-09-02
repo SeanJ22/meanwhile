@@ -69,6 +69,12 @@ yarn-error.log*
 /docs/code-manifest.md
 # staging directory, only written when the mirror drive is unreachable
 /.mirror/
+# THE NIGHTLY WINDOW'S ISOLATED CHECKOUT (RULING 242). `pnpm window:run` runs
+# the legacy refresh in a git worktree at .window/checkout so the main
+# checkout is never dirtied and nothing is committed; the worktree is reset to
+# origin/main after every window. The window's RUN RECORDS under
+# data/health/nightly-window-runs/ are committed, as freshness-shadow-runs are.
+/.window/
 
 # typescript
 *.tsbuildinfo

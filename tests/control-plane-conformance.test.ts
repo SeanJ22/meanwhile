@@ -256,6 +256,38 @@ for (const provider of providers) {
     );
   });
 
+  test(`${provider.name}: the nightly door's four logs exist and keep history (schema v5)`, async () => {
+    /*
+     * RULING 242. A log that is declared in `APPEND_ONLY_LOGS` but absent from
+     * a provider would let the window write into nothing on that provider and
+     * report a clean night. Every provider is asked to append to each of the
+     * four and to refuse a rewrite, under this run's namespace.
+     */
+    const repos = await provider.open();
+    const { AppendOnlyViolation } = await import("../lib/control-plane/repository/types.ts");
+    const logs = [
+      ["promotionPipeline", repos.promotionPipeline],
+      ["windowRuns", repos.windowRuns],
+      ["windowIncidents", repos.windowIncidents],
+      ["windowIntents", repos.windowIntents],
+    ] as const;
+    for (const [name, log] of logs) {
+      const key = `${name}-${RUN_NAMESPACE}`;
+      const recordId = `r-${RUN_NAMESPACE}`;
+      const record = { formatVersion: 1, note: name, at: NOW } as never;
+      const first = await log.append(key, recordId, record, NOW);
+      assert.equal(first.appended, true, `${name} did not append`);
+      const retried = await log.append(key, recordId, record, LATER);
+      assert.equal(retried.appended, false, `${name} duplicated a retried append`);
+      await assert.rejects(
+        () => log.append(key, recordId, { formatVersion: 1, note: "rewritten", at: NOW } as never, LATER),
+        (error: unknown) => error instanceof AppendOnlyViolation,
+        `${name} accepted a rewrite`,
+      );
+      assert.deepEqual(await log.read(key), [record], `${name} did not read back what it holds`);
+    }
+  });
+
   test(`${provider.name}: durable says what it means`, async () => {
     const repos = await provider.open();
     assert.equal(
@@ -287,6 +319,23 @@ test("the advisory lock key is STABLE — two machines computing it must agree",
     a <= BigInt("0x7fffffffffffffff"),
     "and inside the signed 64-bit range Postgres accepts",
   );
+});
+
+test("schema v5 declares the four nightly-door logs, and every provider bundle carries them", async () => {
+  const { APPEND_ONLY_LOGS, BOOTSTRAP_VERSION, DECLARED_TABLES } = await import(
+    "../lib/control-plane/repository/pg-schema.ts"
+  );
+  assert.equal(BOOTSTRAP_VERSION, 5, "the four logs are a schema move, and the version says so");
+  for (const log of ["promotion_pipeline", "window_runs", "window_incidents", "window_intents"]) {
+    assert.ok((APPEND_ONLY_LOGS as readonly string[]).includes(log), `${log} is not declared`);
+    assert.ok(DECLARED_TABLES.includes(`cp_log_${log}`), `cp_log_${log} is not a declared table`);
+  }
+  for (const provider of providers) {
+    const repos = await provider.open();
+    for (const field of ["promotionPipeline", "windowRuns", "windowIncidents", "windowIntents"] as const) {
+      assert.equal(typeof repos[field]?.append, "function", `${provider.name} bundle lacks ${field}`);
+    }
+  }
 });
 
 test("controlPlaneUrlFromEnv refuses an empty value rather than defaulting", () => {

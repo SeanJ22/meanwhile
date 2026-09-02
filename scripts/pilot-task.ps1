@@ -80,7 +80,7 @@
 #>
 
 param(
-    [ValidateSet("install", "start", "stop", "status", "disable", "uninstall", "verify-triggers", "prove-relaunch")]
+    [ValidateSet("install", "start", "stop", "status", "disable", "uninstall", "verify-triggers", "prove-relaunch", "install-window")]
     [string]$Action = "status",
 
     # The repository the runner runs in. Defaults to the main checkout rather
@@ -109,6 +109,38 @@ $ScriptRepo = Split-Path -Parent $PSScriptRoot
 $ProofFile  = Join-Path $ScriptRepo "data\ops\runner-relaunch-proof.json"
 
 $ElevatedOneLiner = "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action install"
+
+# THE NIGHTLY WINDOW'S BACKUP WAKEUP (RULING 242). The window itself runs on
+# the pilot runner's own clock at 04:00 America/New_York; this task only nudges
+# a live runner with a RUN_WINDOW_NOW intent, or runs the window under the
+# lease if the runner is dead. Registered from an ELEVATED shell only, like the
+# runner's task (invariant 4 above).
+$WindowTaskName         = "WeThePeople Nightly Window"
+$WindowEasternZoneId    = "Eastern Standard Time"
+$WindowEasternHour      = 4
+$WindowElevatedOneLiner = "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action install-window"
+
+function Get-WindowArgs {
+    return "--env-file=.env.local --experimental-strip-types scripts/nightly-window.mts --wakeup"
+}
+
+function Get-WindowLocalTimes {
+    # 04:00 America/New_York expressed in THIS host's local clock, once for
+    # standard time and once for daylight time. Task Scheduler triggers are
+    # host-local; registering both distinct values means one of them lands on
+    # 04:00 Eastern whichever rule is in force, and the other fires an hour
+    # off — where `--wakeup` is a no-op because the window already ran.
+    $eastern = [System.TimeZoneInfo]::FindSystemTimeZoneById($WindowEasternZoneId)
+    $local   = [System.TimeZoneInfo]::Local
+    $year    = (Get-Date).Year
+    $times   = @()
+    foreach ($probe in @((Get-Date -Year $year -Month 1 -Day 15), (Get-Date -Year $year -Month 7 -Day 15))) {
+        $easternAt = New-Object DateTime($probe.Year, $probe.Month, $probe.Day, $WindowEasternHour, 0, 0, [DateTimeKind]::Unspecified)
+        $localAt   = [System.TimeZoneInfo]::ConvertTime($easternAt, $eastern, $local)
+        $times    += $localAt.ToString("HH:mm")
+    }
+    return @($times | Select-Object -Unique)
+}
 
 function Get-NodePath {
     $node = (Get-Command node -ErrorAction SilentlyContinue)
@@ -300,6 +332,55 @@ switch ($Action) {
         Write-Output "  digest:          `$WTP_MIRROR\pilot-digest.md  (default G:\My Drive\we-the-people)"
         Write-Output "  start it now:    pnpm pilot:start"
         if (-not $taskLanded) { exit 1 }
+    }
+
+    "install-window" {
+        # The BACKUP WAKEUP for the nightly window (RULING 242). Daily, at the
+        # host-local equivalent(s) of 04:00 America/New_York, running
+        # `nightly-window.mts --wakeup`. Refused unelevated on this host, like
+        # `install`; the exact elevated one-liner is printed.
+        if (-not (Test-Path $RepoPath)) { throw "repo path does not exist: $RepoPath" }
+        $node = Get-NodePath
+        $windowArgs = Get-WindowArgs
+        $localTimes = @(Get-WindowLocalTimes)
+        $windowLanded = $false
+
+        try {
+            $windowAction = New-ScheduledTaskAction -Execute $node -Argument $windowArgs -WorkingDirectory $RepoPath
+            $windowTriggers = @()
+            foreach ($t in $localTimes) {
+                $windowTriggers += New-ScheduledTaskTrigger -Daily -At $t
+            }
+            $windowSettings = New-ScheduledTaskSettingsSet `
+                -AllowStartIfOnBatteries `
+                -DontStopIfGoingOnBatteries `
+                -StartWhenAvailable `
+                -ExecutionTimeLimit (New-TimeSpan -Hours 2) `
+                -MultipleInstances IgnoreNew
+            $windowPrincipal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Limited
+            Register-ScheduledTask -TaskName $WindowTaskName -Action $windowAction `
+                -Trigger $windowTriggers `
+                -Settings $windowSettings -Principal $windowPrincipal -Force | Out-Null
+            $windowLanded = $true
+        }
+        catch {
+            Write-Output "SCHEDULED TASK REFUSED: $($_.Exception.Message)"
+            Write-Output "  The Task Scheduler service on this host will not accept a registration"
+            Write-Output "  from an unelevated shell. That is a WALL, named. The window still runs on"
+            Write-Output "  the pilot runner's own clock at 04:00 America/New_York; only the BACKUP"
+            Write-Output "  wakeup is missing. To register it, run this ONCE from an ELEVATED"
+            Write-Output "  PowerShell in $RepoPath :"
+            Write-Output "    $WindowElevatedOneLiner"
+        }
+
+        Write-Output ""
+        Write-Output "NIGHTLY WINDOW BACKUP WAKEUP"
+        Write-Output "  task:            $WindowTaskName  $(if ($windowLanded) { 'REGISTERED' } else { 'REFUSED - see above' })"
+        Write-Output "  fires daily at:  $($localTimes -join ', ') host-local = 04:00 America/New_York (standard and daylight)"
+        Write-Output "  runs:            $node $windowArgs"
+        Write-Output "  in:              $RepoPath"
+        Write-Output "  the clock:       the pilot runner (scripts/pilot-runner.mts) runs the window itself; this task only nudges it"
+        if (-not $windowLanded) { exit 1 }
     }
 
     "start" {

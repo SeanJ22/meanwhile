@@ -22,6 +22,12 @@ import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
+import type {
+  PromotionPipelineRecord,
+  WindowIncident,
+  WindowIntent,
+  WindowRunRecord,
+} from "../promotion/types.ts";
 import type { BudgetLedger } from "../budget.ts";
 import type { CostEntry } from "../cost.ts";
 import type { RouteTask } from "../route-task.ts";
@@ -227,6 +233,11 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     researchState: memoryAggregateRepository<ResearchState>("ResearchState"),
     researchIntents: memoryAppendOnlyRepository<ResearchIntent>("research_intents"),
     scoutResults: memoryAppendOnlyRepository<ScoutResult>("scout_results"),
+    /* The nightly door (RULING 242, schema v5). */
+    promotionPipeline: memoryAppendOnlyRepository<PromotionPipelineRecord>("promotion_pipeline"),
+    windowRuns: memoryAppendOnlyRepository<WindowRunRecord>("window_runs"),
+    windowIncidents: memoryAppendOnlyRepository<WindowIncident>("window_incidents"),
+    windowIntents: memoryAppendOnlyRepository<WindowIntent>("window_intents"),
     budget: budgetRepositoryFrom(budgetAggregate, locks),
     locks,
     describe: () => "in-memory control-plane repositories (lost when this process ends)",

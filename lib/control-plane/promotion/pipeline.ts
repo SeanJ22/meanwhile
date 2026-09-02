@@ -1,0 +1,511 @@
+/**
+ * THE PIPELINE'S RULES — pure, over records; and the one append path.
+ *
+ *   validateTransition   decides, and returns either the accepted record or
+ *                        a REFUSED record carrying the offered one
+ *   appendTransition     validates against the item's log and appends
+ *                        whichever it decided; a refusal is history too
+ *   deriveItemState      replays an item's records in append order
+ *   map*                 the honest mapping of EXISTING evidence into SCOUTED
+ *
+ * Nothing here reads a clock or a disk. Lookups the rules need (an artifact
+ * by id, an Attempt's role) are handed in as functions.
+ */
+
+import type { WorkerRole } from "../attempt.ts";
+import { INDEPENDENT_BASES } from "../audit.ts";
+import { fingerprint } from "../ids.ts";
+import { canonicalJson, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
+import type { ScoutResult } from "../scheduler/scout-result.ts";
+import type { MethodCandidate } from "../../method/candidate.ts";
+import {
+  PIPELINE_STAGES,
+  PRECEDING_STAGE,
+  PROMOTION_PIPELINE_FORMAT_VERSION,
+  VERIFICATION_CHECKS,
+  sameActor,
+  type ApprovedRecord,
+  type ConfirmedRecord,
+  type PipelineActor,
+  type PipelineItemState,
+  type PipelineRefusalReason,
+  type PipelineStage,
+  type PromotionPipelineRecord,
+  type RefusedRecord,
+  type ScoutedRecord,
+  type StageRecordMap,
+  type TransitionRecord,
+  type VerificationCheck,
+  type VerificationCheckName,
+} from "./types.ts";
+
+export const PROMOTION_PIPELINE_LOG = "promotion_pipeline";
+
+/** The lookups a decision needs. Absent is null, never a default. */
+export interface PipelineContext {
+  readonly artifactById: (artifactId: string) => ArtifactRecord | null;
+  readonly attemptRoleById: (attemptId: string) => WorkerRole | null;
+}
+
+/* ---------------------------------------------------------------- state */
+
+/** A record this module wrote, as opposed to a foreign row under the same log. */
+export function isPipelineRecord(value: unknown): value is PromotionPipelineRecord {
+  if (value === null || typeof value !== "object") return false;
+  const r = value as { formatVersion?: unknown; stage?: unknown; itemId?: unknown };
+  return (
+    r.formatVersion === PROMOTION_PIPELINE_FORMAT_VERSION &&
+    typeof r.itemId === "string" &&
+    (r.stage === "REFUSED" || (PIPELINE_STAGES as readonly string[]).includes(r.stage as string))
+  );
+}
+
+export function deriveItemState(itemId: string, records: readonly PromotionPipelineRecord[]): PipelineItemState {
+  const byStage: StageRecordMap = {};
+  let refused: RefusedRecord | null = null;
+  let refusals = 0;
+  let recordClass: string | null = null;
+  let subjectId: string | null = null;
+  for (const r of records) {
+    if (r.stage === "REFUSED") {
+      refused = r;
+      refusals += 1;
+      continue;
+    }
+    if (byStage[r.stage] !== undefined) continue;
+    switch (r.stage) {
+      case "SCOUTED":
+        byStage.SCOUTED = r;
+        recordClass = r.recordClass;
+        subjectId = r.subjectId;
+        break;
+      case "CONFIRMED":
+        byStage.CONFIRMED = r;
+        break;
+      case "VERIFIED":
+        byStage.VERIFIED = r;
+        break;
+      case "AUDITED":
+        byStage.AUDITED = r;
+        break;
+      case "APPROVED_FOR_PROMOTION":
+        byStage.APPROVED_FOR_PROMOTION = r;
+        break;
+    }
+  }
+  let stage: PipelineStage | null = null;
+  for (const s of PIPELINE_STAGES) if (byStage[s] !== undefined) stage = s;
+  return { itemId, recordClass, subjectId, stage, refused, refusals, records, byStage };
+}
+
+/* ------------------------------------------------------------ decisions */
+
+function refuse(offered: TransitionRecord, reasons: readonly PipelineRefusalReason[]): RefusedRecord {
+  return {
+    formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION,
+    recordId: `${offered.recordId}:refused:${fingerprint([offered.at, ...reasons.map((r) => r.code)])}`,
+    itemId: offered.itemId,
+    at: offered.at,
+    actor: offered.actor,
+    stage: "REFUSED",
+    atStage: offered.stage,
+    reasons,
+    offered,
+  };
+}
+
+function confirmationReasons(
+  state: PipelineItemState,
+  offered: ConfirmedRecord,
+  ctx: PipelineContext,
+): PipelineRefusalReason[] {
+  const scouted = state.byStage.SCOUTED;
+  const reasons: PipelineRefusalReason[] = [];
+  if (offered.confirmingArtifactIds.length === 0) {
+    reasons.push({
+      code: "CONFIRMATION_WITHOUT_ARTIFACT",
+      detail: "a confirmation cites no artifact; model prose never confirms model prose",
+    });
+    return reasons;
+  }
+  if (offered.basis === "SECOND_ROUTE" && (offered.sameFact === null || offered.sameFact.trim() === "")) {
+    reasons.push({
+      code: "CONFIRMATION_SECOND_ROUTE_UNNAMED",
+      detail: "a second route must name the fact it shares with the scouted representation",
+    });
+  }
+  for (const id of offered.confirmingArtifactIds) {
+    const artifact = ctx.artifactById(id);
+    if (artifact === null) {
+      reasons.push({ code: "CONFIRMATION_ARTIFACT_UNKNOWN", detail: `artifact ${id} is not in the artifact log` });
+      continue;
+    }
+    if (scouted !== undefined && artifact.attemptId === scouted.scoutAttemptId) {
+      reasons.push({
+        code: "CONFIRMATION_SAME_ATTEMPT",
+        detail: `artifact ${id} was vaulted by the Scout's own Attempt ${artifact.attemptId}`,
+      });
+    }
+    const role = ctx.attemptRoleById(artifact.attemptId);
+    if (role === null) {
+      reasons.push({
+        code: "CONFIRMATION_ATTEMPT_UNKNOWN",
+        detail: `artifact ${id} names Attempt ${artifact.attemptId}, which the attempts aggregate does not hold`,
+      });
+    } else if (role === "SCOUT") {
+      reasons.push({
+        code: "CONFIRMATION_BY_SCOUT_ROLE",
+        detail: `artifact ${id} was vaulted by SCOUT-role Attempt ${artifact.attemptId}`,
+      });
+    }
+    if (offered.basis === "SECOND_ACQUISITION" && scouted !== undefined) {
+      if (scouted.canonicalUrl === null || artifact.canonicalUrl !== scouted.canonicalUrl) {
+        reasons.push({
+          code: "CONFIRMATION_URL_MISMATCH",
+          detail:
+            `a second acquisition must be of the same representation; artifact ${id} is ` +
+            `${artifact.canonicalUrl} and the scouted representation is ${scouted.canonicalUrl ?? "(none)"}`,
+        });
+      }
+    }
+  }
+  return reasons;
+}
+
+function verificationReasons(checks: readonly VerificationCheck[]): PipelineRefusalReason[] {
+  const reasons: PipelineRefusalReason[] = [];
+  const seen = new Map<VerificationCheckName, VerificationCheck>();
+  for (const c of checks) seen.set(c.name, c);
+  for (const name of VERIFICATION_CHECKS) {
+    const c = seen.get(name);
+    if (c === undefined) {
+      reasons.push({ code: "VERIFICATION_CHECK_MISSING", detail: `${name} is not on the record` });
+    } else if (c.result === "FAIL") {
+      reasons.push({ code: "VERIFICATION_CHECK_FAILED", detail: `${name}: ${c.detail}` });
+    } else if (c.result === "NOT_IMPLEMENTED") {
+      reasons.push({ code: "VERIFICATION_CHECK_NOT_IMPLEMENTED", detail: `${name}: ${c.detail}` });
+    }
+  }
+  return reasons;
+}
+
+function auditReasons(state: PipelineItemState, offered: Extract<TransitionRecord, { stage: "AUDITED" }>): PipelineRefusalReason[] {
+  const reasons: PipelineRefusalReason[] = [];
+  const scouted = state.byStage.SCOUTED;
+  const verified = state.byStage.VERIFIED;
+  if (scouted !== undefined && sameActor(offered.actor, scouted.actor)) {
+    reasons.push({ code: "AUDIT_NOT_INDEPENDENT", detail: "the auditor is the Scout" });
+  }
+  if (verified !== undefined && sameActor(offered.actor, verified.actor)) {
+    reasons.push({ code: "AUDIT_NOT_INDEPENDENT", detail: "the auditor is the validator" });
+  }
+  if (!offered.startedFrom.some((b) => INDEPENDENT_BASES.includes(b))) {
+    reasons.push({
+      code: "AUDIT_STARTING_POINT_NOT_INDEPENDENT",
+      detail: `startedFrom [${offered.startedFrom.join(", ")}] holds none of ${INDEPENDENT_BASES.join(", ")}`,
+    });
+  }
+  if (offered.controls === null) {
+    reasons.push({
+      code: "AUDIT_CONTROLS_NOT_MEASURED",
+      detail: "the batch carried no injected controls, so recall and the false-absence and false-presence rates are NOT MEASURED",
+    });
+  }
+  if (!offered.survived) {
+    reasons.push({ code: "AUDIT_DID_NOT_SURVIVE", detail: offered.findings.join("; ") || "the auditor broke the claim" });
+  }
+  return reasons;
+}
+
+function approvalReasons(state: PipelineItemState, offered: ApprovedRecord): PipelineRefusalReason[] {
+  const reasons: PipelineRefusalReason[] = [];
+  const expect: readonly (readonly [PipelineStage, string])[] = [
+    ["SCOUTED", offered.chain.scouted],
+    ["CONFIRMED", offered.chain.confirmed],
+    ["VERIFIED", offered.chain.verified],
+    ["AUDITED", offered.chain.audited],
+  ];
+  for (const [stage, id] of expect) {
+    const held: TransitionRecord | undefined = state.byStage[stage];
+    if (held === undefined || held.recordId !== id) {
+      reasons.push({
+        code: "APPROVAL_CHAIN_INCOMPLETE",
+        detail: `chain.${stage.toLowerCase()} names ${id}; the item's ${stage} record is ${held?.recordId ?? "absent"}`,
+      });
+    }
+  }
+  return reasons;
+}
+
+/**
+ * Decide one offered transition against the item's current state.
+ *
+ * Returns the accepted record, or a REFUSED record that carries the offered
+ * one and every reason at once — a refusal that reported only the first
+ * defect would send the next attempt back one defect at a time.
+ */
+export function validateTransition(
+  state: PipelineItemState,
+  offered: TransitionRecord,
+  ctx: PipelineContext,
+): { readonly ok: true; readonly record: TransitionRecord } | { readonly ok: false; readonly record: RefusedRecord } {
+  const reasons: PipelineRefusalReason[] = [];
+  const preceding = PRECEDING_STAGE[offered.stage];
+  const held: TransitionRecord | undefined = state.byStage[offered.stage];
+  if (held !== undefined) {
+    if (held.recordId === offered.recordId && canonicalJson(held) === canonicalJson(offered)) {
+      return { ok: true, record: held };
+    }
+    reasons.push({ code: "STAGE_ALREADY_REACHED", detail: `the item already holds ${offered.stage} record ${held.recordId}` });
+    return { ok: false, record: refuse(offered, reasons) };
+  }
+  if (preceding !== null && state.stage !== preceding) {
+    reasons.push({
+      code: "STAGE_OUT_OF_ORDER",
+      detail: `${offered.stage} follows ${preceding}; the item is at ${state.stage ?? "nothing"}`,
+    });
+    return { ok: false, record: refuse(offered, reasons) };
+  }
+  if (preceding !== null) {
+    const prior: TransitionRecord | undefined = state.byStage[preceding];
+    if (prior !== undefined && sameActor(prior.actor, offered.actor)) {
+      reasons.push({
+        code: "SELF_CERTIFICATION",
+        detail: `${offered.actor.role}/${offered.actor.instance} performed ${preceding} and may not perform ${offered.stage}`,
+      });
+    }
+  }
+  switch (offered.stage) {
+    case "SCOUTED":
+      break;
+    case "CONFIRMED":
+      reasons.push(...confirmationReasons(state, offered, ctx));
+      break;
+    case "VERIFIED":
+      reasons.push(...verificationReasons(offered.checks));
+      break;
+    case "AUDITED":
+      reasons.push(...auditReasons(state, offered));
+      break;
+    case "APPROVED_FOR_PROMOTION":
+      reasons.push(...approvalReasons(state, offered));
+      break;
+  }
+  return reasons.length === 0 ? { ok: true, record: offered } : { ok: false, record: refuse(offered, reasons) };
+}
+
+/* ---------------------------------------------------------------- append */
+
+export interface AppendTransitionOutcome {
+  readonly accepted: boolean;
+  /** False when the identical record was already in the log. */
+  readonly appended: boolean;
+  readonly record: PromotionPipelineRecord;
+  readonly state: PipelineItemState;
+}
+
+async function readItemRecords(repos: ControlPlaneRepositories, itemId: string): Promise<PromotionPipelineRecord[]> {
+  /* A foreign row under this log (the conformance suite writes one per run) is not a transition. */
+  return (await repos.promotionPipeline.read(itemId)).filter(isPipelineRecord);
+}
+
+/**
+ * Validate against the log, then append what was decided. A refusal is
+ * appended too. An identical re-offer of a held record is a no-op success.
+ */
+export async function appendTransition(
+  repos: ControlPlaneRepositories,
+  offered: TransitionRecord,
+  ctx: PipelineContext,
+  now: string,
+): Promise<AppendTransitionOutcome> {
+  const before = deriveItemState(offered.itemId, await readItemRecords(repos, offered.itemId));
+  const decided = validateTransition(before, offered, ctx);
+  const outcome = await repos.promotionPipeline.append(offered.itemId, decided.record.recordId, decided.record, now);
+  const after = deriveItemState(offered.itemId, await readItemRecords(repos, offered.itemId));
+  return { accepted: decided.ok, appended: outcome.appended, record: decided.record, state: after };
+}
+
+/** Every item's derived state, by item id order. Keys holding no pipeline record are not items. */
+export async function readPipelineStates(repos: ControlPlaneRepositories): Promise<PipelineItemState[]> {
+  const keys = await repos.promotionPipeline.keys();
+  const out: PipelineItemState[] = [];
+  for (const key of keys) {
+    const records = await readItemRecords(repos, key);
+    if (records.length === 0) continue;
+    out.push(deriveItemState(key, records));
+  }
+  return out;
+}
+
+/** A context over the live logs, read once. */
+export async function contextFromRepositories(repos: ControlPlaneRepositories): Promise<PipelineContext> {
+  const artifacts = new Map<string, ArtifactRecord>();
+  for (const a of await repos.artifacts.readAll()) artifacts.set(a.artifactId, a);
+  const roles = new Map<string, WorkerRole>();
+  for (const a of await repos.attempts.list()) roles.set(a.id, a.value.worker.role);
+  return {
+    artifactById: (id) => artifacts.get(id) ?? null,
+    attemptRoleById: (id) => roles.get(id) ?? null,
+  };
+}
+
+/* --------------------------------------------------------------- mapping */
+
+export const SCOUTED_OUTCOMES = ["ROUTE_CANDIDATE", "EVIDENCE_FOUND"] as const;
+
+/** The item id is derived from what the item IS, so a re-map collides instead of duplicating. */
+export function scoutResultItemId(result: Pick<ScoutResult, "attemptId">, routeId: string | null): string {
+  return `pp-${fingerprint(["scout-result", result.attemptId, routeId])}`;
+}
+
+export function methodCandidateItemId(candidateId: string): string {
+  return `pp-${fingerprint(["method-candidate", candidateId])}`;
+}
+
+function scoutActor(result: ScoutResult): PipelineActor {
+  return { role: "SCOUT", lane: "BOUNDED_MODEL_WORKER", instance: result.attemptId };
+}
+
+/**
+ * SCOUTED items from one persisted Scout result: one per candidate for a
+ * ROUTE_CANDIDATE, one for the findings of an EVIDENCE_FOUND. A refused
+ * result maps to nothing — its outcome was never a finding.
+ */
+export function scoutedFromScoutResult(result: ScoutResult): ScoutedRecord[] {
+  if (result.refusal !== null) return [];
+  if (!(SCOUTED_OUTCOMES as readonly string[]).includes(result.outcome)) return [];
+  const outcome = result.outcome as "ROUTE_CANDIDATE" | "EVIDENCE_FOUND";
+  const base = (itemId: string, routeId: string | null, canonicalUrl: string | null, artifactIds: readonly string[], summary: string): ScoutedRecord => ({
+    formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION,
+    recordId: `${itemId}:scouted`,
+    itemId,
+    at: result.recordedAt,
+    actor: scoutActor(result),
+    stage: "SCOUTED",
+    source: { kind: "SCOUT_RESULT", attemptId: result.attemptId, obligationId: result.obligationId, outcome, routeId },
+    recordClass: result.recordClass,
+    subjectId: result.subjectId,
+    canonicalUrl,
+    artifactIds,
+    scoutAttemptId: result.attemptId,
+    summary,
+  });
+  if (outcome === "ROUTE_CANDIDATE") {
+    return result.candidates.map((c) =>
+      base(scoutResultItemId(result, c.routeId), c.routeId, c.url, c.evidenceArtifactIds, `${c.title} — ${c.url}`),
+    );
+  }
+  const artifactIds = [...new Set(result.findings.flatMap((f) => f.artifactIds))];
+  return [
+    base(
+      scoutResultItemId(result, null),
+      null,
+      null,
+      artifactIds,
+      result.findings.map((f) => `${f.kind}: ${f.summary}`).join(" | "),
+    ),
+  ];
+}
+
+/**
+ * A VALIDATED (or PROPOSED) method candidate is a SCOUTED item: method-store
+ * validation checks the store's shape, which is not the pipeline's VERIFIED.
+ */
+export function scoutedFromMethodCandidate(
+  candidate: MethodCandidate,
+  resultsByAttempt: ReadonlyMap<string, ScoutResult>,
+): ScoutedRecord | null {
+  if (candidate.lifecycle !== "VALIDATED" && candidate.lifecycle !== "PROPOSED") return null;
+  const result = resultsByAttempt.get(candidate.attemptId) ?? null;
+  const proposal = candidate.proposal;
+  const scoutCandidate = result?.candidates.find((c) => c.routeId === proposal.id) ?? null;
+  const itemId = methodCandidateItemId(candidate.id);
+  return {
+    formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION,
+    recordId: `${itemId}:scouted`,
+    itemId,
+    at: candidate.submittedAt,
+    actor: { role: "SCOUT", lane: "BOUNDED_MODEL_WORKER", instance: candidate.attemptId },
+    stage: "SCOUTED",
+    source: { kind: "METHOD_CANDIDATE", candidateId: candidate.id, attemptId: candidate.attemptId, lifecycle: candidate.lifecycle, routeId: proposal.id },
+    recordClass: result?.recordClass ?? scoutCandidate?.recordClass ?? proposal.fields[0] ?? "unknown",
+    subjectId: result?.subjectId ?? proposal.outcome.jurisdiction,
+    canonicalUrl: scoutCandidate?.url ?? null,
+    artifactIds: scoutCandidate?.evidenceArtifactIds ?? [],
+    scoutAttemptId: candidate.attemptId,
+    summary: `method candidate ${candidate.id} (${candidate.lifecycle}): ${proposal.title}`,
+  };
+}
+
+/**
+ * The one CONFIRMED record the evidence could honestly support: artifacts at
+ * the scouted URL vaulted by an ACQUIRER-role Attempt other than the Scout's.
+ * Returns null when no such artifact exists — which is the measured case.
+ */
+export function confirmationFromArtifacts(
+  scouted: ScoutedRecord,
+  artifacts: readonly ArtifactRecord[],
+  attemptRoleById: (attemptId: string) => WorkerRole | null,
+  now: string,
+): ConfirmedRecord | null {
+  if (scouted.canonicalUrl === null) return null;
+  const confirming = artifacts.filter(
+    (a) =>
+      a.canonicalUrl === scouted.canonicalUrl &&
+      a.attemptId !== scouted.scoutAttemptId &&
+      attemptRoleById(a.attemptId) === "ACQUIRER",
+  );
+  if (confirming.length === 0) return null;
+  const instance = confirming[0].attemptId;
+  return {
+    formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION,
+    recordId: `${scouted.itemId}:confirmed:${fingerprint(confirming.map((a) => a.artifactId))}`,
+    itemId: scouted.itemId,
+    at: now,
+    actor: { role: "ACQUIRER", lane: "DETERMINISTIC", instance },
+    stage: "CONFIRMED",
+    basis: "SECOND_ACQUISITION",
+    confirmingArtifactIds: confirming.map((a) => a.artifactId),
+    sameFact: null,
+  };
+}
+
+/* ---------------------------------------------------------------- counts */
+
+export interface StageCounts {
+  readonly items: number;
+  readonly byStage: Readonly<Record<PipelineStage, number>>;
+  readonly refused: number;
+  readonly byRecordClass: readonly { readonly recordClass: string; readonly items: number; readonly byStage: Readonly<Record<PipelineStage, number>>; readonly refused: number }[];
+}
+
+/** Counts by furthest stage reached. Every number's denominator is `items`. */
+export function stageCounts(states: readonly PipelineItemState[]): StageCounts {
+  const zero = (): Record<PipelineStage, number> => ({ SCOUTED: 0, CONFIRMED: 0, VERIFIED: 0, AUDITED: 0, APPROVED_FOR_PROMOTION: 0 });
+  const total = zero();
+  let refused = 0;
+  const classes = new Map<string, { items: number; byStage: Record<PipelineStage, number>; refused: number }>();
+  for (const s of states) {
+    const cls = s.recordClass ?? "unknown";
+    const row = classes.get(cls) ?? { items: 0, byStage: zero(), refused: 0 };
+    row.items += 1;
+    if (s.stage !== null) {
+      total[s.stage] += 1;
+      row.byStage[s.stage] += 1;
+    }
+    if (s.refusals > 0) {
+      refused += 1;
+      row.refused += 1;
+    }
+    classes.set(cls, row);
+  }
+  return {
+    items: states.length,
+    byStage: total,
+    refused,
+    byRecordClass: [...classes.entries()]
+      .sort((a, b) => (a[0] < b[0] ? -1 : 1))
+      .map(([recordClass, row]) => ({ recordClass, ...row })),
+  };
+}

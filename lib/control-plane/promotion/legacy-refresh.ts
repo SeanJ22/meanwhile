@@ -84,29 +84,54 @@ export function parseRefreshRunJson(text: string, where = "docs/refresh-run.json
 export function parseRefreshRunMarkdown(text: string): LegacyRefreshReading {
   const runDate = text.match(/Run date: \*\*(\d{4}-\d{2}-\d{2})\*\*/)?.[1] ?? null;
   const sources: LegacySourceOutcome[] = [];
-  for (const line of text.split("\n")) {
-    const m = line.match(/^\| `([a-z0-9-]+)` \| ([^|]*) \| (yes|no) \| ([^|]*) \| ([^|]*) \| (.*) \|\s*$/);
-    if (!m) continue;
-    const [, id, , ran, why, result, governsRaw] = m;
-    const resultText = result.trim();
-    const outcome: LegacySourceOutcome["outcome"] = resultText.startsWith("not due")
-      ? "NOT_DUE"
-      : resultText.startsWith("clean")
-        ? "UNKNOWN"
-        : resultText.startsWith("failed") || resultText.startsWith("FAILED")
-          ? "ROUTE_UNREAD"
-          : "UNKNOWN";
+  /*
+   * HEADER-DRIVEN, not position-driven. The table gained columns on
+   * 2026-09-02 (Outcome, Changed paths, Next due) and a trailing annotation
+   * cell; a parser pinned to the older six columns read zero rows and called
+   * a real report unreadable. Columns are found by name in the header row and
+   * a column the table does not carry is simply absent from the reading.
+   */
+  const lines = text.split(/\r?\n/);
+  const headerAt = lines.findIndex((l) => /^\|\s*Source\s*\|/.test(l));
+  const header = headerAt < 0 ? [] : lines[headerAt].split("|").map((c) => c.trim().toLowerCase());
+  const col = (name: string): number => header.indexOf(name);
+  const cSource = col("source");
+  const cRan = col("ran");
+  const cWhy = col("why");
+  const cOutcome = col("outcome") >= 0 ? col("outcome") : col("result");
+  const cChanged = col("changed paths");
+  const cNext = col("next due");
+  const cGoverns = col("governs");
+  const cell = (cells: string[], index: number): string => (index >= 0 && index < cells.length ? cells[index].trim() : "");
+  const paths = (raw: string): string[] => [...raw.matchAll(/`([^`]+)`/g)].map((x) => x[1]);
+  const outcomeOf = (raw: string): LegacySourceOutcome["outcome"] => {
+    const head = raw.trim();
+    if (/^INGESTED\b/.test(head)) return "INGESTED";
+    if (/^UNCHANGED\b/.test(head)) return "UNCHANGED";
+    if (/^ROUTE_UNREAD\b/.test(head) || /^(failed|FAILED)\b/.test(head)) return "ROUTE_UNREAD";
+    if (/^NOT_DUE\b/.test(head) || /^not due\b/.test(head)) return "NOT_DUE";
+    return "UNKNOWN";
+  };
+  for (const line of headerAt < 0 ? [] : lines.slice(headerAt + 1)) {
+    if (!/^\|\s*`[a-z0-9-]+`\s*\|/.test(line)) continue;
+    const cells = line.split("|");
+    const id = cell(cells, cSource).replace(/`/g, "");
+    const ran = cell(cells, cRan);
+    const why = cell(cells, cWhy);
+    const outcomeText = cell(cells, cOutcome);
+    const outcome = outcomeOf(outcomeText);
     const recovered = why.match(/(?:recover(?:ed|ing)|CATCH-UP for) (\d{4}-\d{2}-\d{2})/g)?.map((s) => s.slice(-10)) ?? [];
+    const next = cell(cells, cNext).match(/\d{4}-\d{2}-\d{2}/)?.[0] ?? null;
     sources.push({
       id,
       due: ran === "yes" || outcome !== "NOT_DUE",
       ran: ran === "yes",
       outcome,
-      reason: `${why.trim()} — ${resultText}`,
-      governs: [...governsRaw.matchAll(/`([^`]+)`/g)].map((x) => x[1]),
-      changedPaths: [],
+      reason: `${why} — ${outcomeText}`,
+      governs: paths(cell(cells, cGoverns)),
+      changedPaths: paths(cell(cells, cChanged)),
       recoveredFrom: recovered,
-      nextDueAt: null,
+      nextDueAt: next,
     });
   }
   if (sources.length === 0) {

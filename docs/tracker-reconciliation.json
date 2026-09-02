@@ -2,7 +2,7 @@
   "generated": "2026-09-02",
   "ruling": "RULING 227",
   "openedDateProvenance": {
-    "opened-ledger": 405,
+    "opened-ledger": 408,
     "session-label": 243,
     "unrecoverable": 225
   },
@@ -46,6 +46,7 @@
       "NH303",
       "NH304",
       "NH306",
+      "NH310",
       "NH43",
       "NS01",
       "NS10",
@@ -91,11 +92,11 @@
     ]
   },
   "summary": {
-    "predicates": 1,
+    "predicates": 2,
     "notMachineVerifiable": 70,
     "holds": 1,
     "resolved": 0,
-    "cannotTell": 0
+    "cannotTell": 1
   },
   "outcomes": [
     {
@@ -105,6 +106,16 @@
       "why": "data/ops/credential-events.jsonl is not present in this checkout. No rotation has been REPORTED; a rotation nobody recorded is not one this predicate can see, and RULING 238 requires the report by name.",
       "read": [
         "data/ops/credential-events.jsonl"
+      ],
+      "evidence": []
+    },
+    {
+      "rowId": "NH310",
+      "kind": "predicate",
+      "verdict": "CANNOT_TELL",
+      "why": "the readback record predates RULING 245 and carries no googleConfigured field; nothing has measured the Google path on the deployed host yet.",
+      "read": [
+        "data/ops/admin-login-readback.json"
       ],
       "evidence": []
     },

@@ -14,10 +14,10 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **393 open**, 480 resolved.
-- **71 waiting on Sean** — the first section below.
+- **395 open**, 480 resolved.
+- **72 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **3**
+  - Needs Sean — **4**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **1**
   - Arizona hunt — **2**
@@ -35,7 +35,7 @@ and when. Nothing is ever deleted.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**71 open · 73 resolved.**
+**72 open · 73 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -44,6 +44,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH108** — The questionnaire instrument is built and 272 invitations are generated, every one with invitedOn null, so nothing has been sent to anybody. The page a candidate types into is buildable and is NH104. SENDING is not a build, it is four decisions, and they are all yours: (1) the sending DOMAIN this goes out from, because a civic questionnaire arriving from a generic address is the one a campaign deletes; (2) an email PROVIDER CREDENTIAL, which this project does not hold and cannot obtain on your behalf; (3) DELIVERABILITY WARM-UP, because 272 near-simultaneous messages from a cold domain is the textbook shape of a spam classification, and being classified once is close to unrecoverable; and (4) WHETHER THE INVITATION GOES OUT BEFORE OR AFTER 3 NOVEMBER 2026, which is a judgement about the election and not a technical question at all. Raised as ONE row on purpose so you can rule once rather than in four pieces, and so a session cannot start building a send path on the strength of having answered one of them.
 
 **NH306** — PREDICATE: resolves itself when data/ops/credential-events.jsonl records a rotation event for BOTH names. WHAT IS NEEDED: two credential rotations, by the owner or under RULING 238 with an owner copy first. THE FINDING: pnpm secrets:sweep --transcripts, run from the main checkout on 2026-09-02 by the Level 1 activation session, found the VALUES of DATA_GOV_API_KEY and NETLIFY_AUTH_TOKEN in a subagent transcript of the earlier session 771dfc3d-591d-4a39-9cb2-2c028431acdd (agent-a5abb86c7d4cf8d7a.jsonl, line 24). The file was scrubbed in place (8 values replaced, 0 remaining on re-read) and the repository and the Drive mirror read 0 secret occurrences. RULING 127: a credential that has appeared in a transcript is COMPROMISED and is ROTATED; scrubbing is necessary and not sufficient. OPTIONS: (A) rotate both now - regenerate the api.data.gov key and the Netlify personal access token, place the owner copies in .env.local first, then record each rotation in data/ops/credential-events.jsonl by name, provider, context, scope, actor and owner-copy location; (B) rotate only the Netlify token (the higher-privilege one: it can deploy and read site settings) and accept the data.gov key as low-risk; (C) do nothing - both values stay valid for whoever read that transcript. CONSEQUENCE OF NOT DECIDING: (C) stands and the row ages.
+
+**NH310** — PREDICATE: resolves itself when data/ops/admin-login-readback.json records googleConfigured true on a readback taken on or after 2026-09-02 against the admin origin. WHAT IS NEEDED: two environment variables and one sign-in. The Google sign-in path (RULING 245) is merged and proven by 45 seeded tests, but a live readback of the Netlify environment on 2026-09-02 (both sites, account level, by name) found NO GOOGLE_OAUTH_CLIENT_ID and NO GOOGLE_OAUTH_CLIENT_SECRET, so the deployed login page will report NOT_CONFIGURED by name and the only working door is the flag-gated break-glass. Steps, in this order: (1) confirm the Google Cloud OAuth client's authorized redirect URI is exactly https://admin.meanwhileusa.com/admin/auth/callback; (2) RULING 238 custody FIRST — copy the client id and secret into .env.local under those two names; (3) add both to Netlify site sparkwtp, context Production, scope Functions; (4) append two CREATED lines to data/ops/credential-events.jsonl (kind, reportedAt, name, provider, context, scope, actor, ownerCopyLocation — never a value; the shape is in docs/admin-sign-in.md); (5) after the deploy carrying this head, run pnpm admin:login-readback from the main checkout (it records googleConfigured, missingVariables and googleRoutesDeployed, names only) and sign in once in a browser: /admin then /admin/research. OPTIONS AND CONSEQUENCES: do it — the owner's identity becomes the login and the break-glass can be turned off (WTP_ADMIN_BREAK_GLASS unset); do not do it — the admin host stays reachable only through the shared-secret break-glass, every use of which is logged as an incident, and RULING 245 stays adopted but unproven live. AGE is measured from the Opened on date.
 
 **T05** — The abuse policy is written but the review path behind it does not exist. No free-text answer can be accepted until somebody can actually act on a threat.
 
@@ -907,7 +909,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**43 open · 97 resolved.**
+**44 open · 97 resolved.**
 
 ### P1
 
@@ -1097,6 +1099,8 @@ OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshn
 **NH298** — A.1 WI7 measured the walk, repaired the dead readiness wait, and took it from 1463.4s to 321.2s over the same 390 checks. Three of the named avenues are not done: running checks concurrently across Playwright contexts, making the walk hermetic with no live network, and reusing the production build when HEAD is unchanged.
 
 **NH302** — pnpm walk:wait-audit, added this session, reports 26 until()/untilPresent() call sites in scripts/walk-all.mts: 26 of 26 name a selector the product source can produce, so the A.1 dead-selector class is clear, and 25 of 26 DISCARD the boolean. A wait whose result nobody reads cannot fail - if its condition is never met the walk spends the ceiling and proceeds identically, which is exactly how A.1's dead .coverage-notice wait cost 1142 seconds without anything going red. Session B did not convert the 25 call sites to hard failures: until() returning false is deliberately not a failure (a slow surface must not red the walk), so making every miss throw would trade one instrument defect for another. What shipped instead is that every timeout is now COUNTED and written to the walk run record by label, so a wait that never settles appears as a number rather than as unattributed wall time. Converting individual call sites to consume their result is the remaining work, one at a time, each with a reason.
+
+**NH311** — ADJACENT DISCOVERY, classified HIGH-RISK ADJACENT. The shared-secret admin login's WTP_ADMIN_SECRET was generated by a prior session and installed in Netlify with no owner-recoverable copy, so the owner could not sign in to his own control centre. That is the exact shape RULING 238 (2026-09-01) forbids — a masked credential installed before an owner copy existed, unreported by name, provider, context, scope, actor and owner-copy location — and this secret predates that ruling's enforcement. FIX APPLIED: the owner reset WTP_ADMIN_SECRET and WTP_ADMIN_SESSION_KEY to values he holds (Netlify shows both updated 2026-09-02T01:44Z), and RULING 245 retires the secret as a login path: the login page offers Sign in with Google only, and the secret POST exists only when WTP_ADMIN_BREAK_GLASS equals the exact word enabled, is rate-limited durably through the control plane (5 attempts per 15 minutes), and appends an incident record for every accepted or refused use. WHAT REMAINS: the two Google client variables must be installed under RULING 238 custody (owner copy first, CREATED events appended) and the Google path proven live once — tracked as the Needs Sean row opened beside this one. Resolves when that row resolves and the break-glass flag is off.
 
 **NH32** — The intake tripwire raised an alarm on 2026-08-21 at 00:28 UTC: a search_log insert was refused in production. The alarm is doing exactly what it was built for. The problem is that its output prints five dashes where the database's reason should be, so the one thing needed to diagnose it is the one thing not recorded. Production schema is in sync at 0015, so a missing column is ruled out.
 

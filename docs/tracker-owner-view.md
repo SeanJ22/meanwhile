@@ -21,7 +21,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 ## Decisions waiting on you
 
-**67 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
+**68 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
 
 ### P1
 
@@ -59,6 +59,14 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 **Blocked while.** the values of DATA_GOV_API_KEY and NETLIFY_AUTH_TOKEN appeared in a prior session's subagent transcript (scrubbed 2026-09-02); a credential that has appeared in a transcript is compromised until rotated, and rotation is an owner act this session did not perform.
 
 **Rechecked this run.** data/ops/credential-events.jsonl is not present in this checkout. No rotation has been REPORTED; a rotation nobody recorded is not one this predicate can see, and RULING 238 requires the report by name. Read: data/ops/credential-events.jsonl.
+
+#### NH310 — Install GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET on the Netlify site under RULING 238 custody, then sign in once through Google on admin.meanwhileusa.com (RULING 245 live proof)
+
+*Opened 2026-09-02 · opened today · COULD NOT VERIFY this run — the readback record predates RULING 245 and carries no googleConfigured field; nothing has measured the Google path on the deployed host yet.*
+
+**Blocked while.** GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET are absent from the Netlify site's environment (read back by name on 2026-09-02, both sites and account level), so the deployed Google sign-in reports NOT_CONFIGURED and the live proof of RULING 245 cannot be taken.
+
+**Rechecked this run.** the readback record predates RULING 245 and carries no googleConfigured field; nothing has measured the Google path on the deployed host yet. Read: data/ops/admin-login-readback.json.
 
 ### P2
 
@@ -925,7 +933,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 append-only ledger of every id any session has ever claimed. It is never typed and
 never guessed.
 
-- 405 row(s) carry a date the ledger stamped directly.
+- 408 row(s) carry a date the ledger stamped directly.
 - 243 row(s) take the date from the session the ledger names, where the entry was reconstructed on 2026-08-21 without a stamp.
 - 225 row(s) read **UNKNOWN**. Their ledger entries were reconstructed with no stamped day and name a session that carries no date. The ledger bound around them is a multi-day range, and a range is not a date; this clone is also shallow at 2026-08-25, so git cannot answer for rows older than that either. **UNKNOWN is the honest reading and is never replaced by a guess.**
 
@@ -934,5 +942,5 @@ NOT_MACHINE_VERIFIABLE, per RULING 227. A predicated row is re-evaluated against
 committed artifacts on EVERY tracker generation — not when a session remembers —
 and auto-resolves the moment its blocker stops being true.
 
-- 1 row(s) carry a machine-verifiable predicate.
+- 2 row(s) carry a machine-verifiable predicate.
 - 70 row(s) are marked NOT_MACHINE_VERIFIABLE with a card.

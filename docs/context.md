@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-02 00:32:05 EDT. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-09-01 -->
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-02 00:46:43 EDT. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-09-01 -->
 Session day 2026-09-01 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1294 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1295 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -1037,18 +1037,18 @@ _No status change recovered in the commits walked._
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-09-02 00:32:05 EDT   <!-- expected-future: Eastern run stamp (R18) past midnight; Phoenix session day is 2026-09-01 -->
+generated: 2026-09-02 00:46:43 EDT   <!-- expected-future: Eastern run stamp (R18) past midnight; Phoenix session day is 2026-09-01 -->
 branch: claude/autonomy-recovery-efficiency-616f07
-head sha: 8b58655cfdf89d460379a784849df31b7b112bbe
-head subject: Move RO07 to the resolved store, and keep the gate record that caught it in the working view
+head sha: 63c7515839f628f69c5abc1d432320c6f6b583b3
+head subject: Serialize the one seam two test files share, so the ship door stops going red on a Windows file lock
 origin/main sha: 07bbb08134bda0d34ea1ca1f889caa16e86ca6b0
 origin/main subject: Post-deploy integrity reading: 2026-09-02T01:52Z   <!-- expected-future: a UTC stamp inside a quoted commit subject; Phoenix session day is 2026-09-01 -->
 local main sha: 07bbb08134bda0d34ea1ca1f889caa16e86ca6b0
 local main matches origin/main: yes
 working tree: clean
 open prs: none
-last recorded tests: 677 (fail)
+last recorded tests: 92 (recorded without a verdict)
 last recorded lint: not recorded
 last recorded build: not recorded
-last recorded status from: docs/state.md:23045
+last recorded status from: docs/state.md:23224
 ```

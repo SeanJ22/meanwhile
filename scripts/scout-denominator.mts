@@ -652,9 +652,9 @@ if (scoutResultsR.ok) {
     modelClassWithAtLeastOneResult: withResult,
     noMachineCapable: modelUnits.length - withResult,
     expectation:
-      "noMachineCapable = model-class units with NO Scout result in repos.scoutResults. BEFORE Scout " +
-      "activation the expectation is ALL of them; AFTER, fewer. A Scout result is the only machine-capable " +
-      "act recorded against a model-class unit.",
+      "noMachineCapable = model-class units that HAVE a runnable executor lane (the Scout) and whose result is " +
+      "not yet held in repos.scoutResults — 'has a runnable executor lane; result held / not yet', never " +
+      "'no machine capable'. BEFORE Scout activation the expectation is ALL of them; AFTER, fewer.",
   };
   const NO_RESULTS =
     "the scoutResults log holds ZERO rows. Either no Scout Attempt has recorded a result yet or the read " +
@@ -671,7 +671,7 @@ if (scoutResultsR.ok) {
     withResult,
     NO_MODEL,
   );
-  floor("noMachineCapable (model-class units with NO Scout result)", "the BOUNDED_MODEL_WORKER units", modelUnits.length, scout.noMachineCapable, NO_MODEL);
+  floor("has a runnable executor lane; result NOT YET held (model-class units with no Scout result)", "the BOUNDED_MODEL_WORKER units", modelUnits.length, scout.noMachineCapable, NO_MODEL);
   line(`    expected ${LABEL === "after" ? "FEWER than the BEFORE reading" : "ALL of them before activation"}`);
   if (scout.resultsOnObligationsNotInRegistry > 0) {
     line(`    ${scout.resultsOnObligationsNotInRegistry} obligation id(s) carry Scout results and are NOT in this registry`);

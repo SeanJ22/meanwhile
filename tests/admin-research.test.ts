@@ -132,6 +132,25 @@ function state(over: Record<string, unknown> = {}): ResearchState {
     running: [{ attemptId: "att-run-1", obligationId: "obl-1", startedAt: FRESH }],
     runtimeConditions: [],
     methodCandidates: { proposed: 4, validated: 2, admitted: 1, rejected: 1 },
+    /* RULING 246: a proven parent relaunch travels with the state; without it the lane is DEGRADED. */
+    hostSupervision: {
+      host: "test-host",
+      checkedAt: FRESH,
+      measurable: true,
+      notMeasurableReason: null,
+      relaunchTrigger: { present: true, detail: "Repetition trigger present on the live task" },
+      proof: {
+        measuredAt: "2026-09-01T11:00:00.000Z",
+        killedPid: 20240,
+        relaunchedPid: 12900,
+        secondsToRelaunch: 274,
+        relaunchTriggerPresent: true,
+        taskStateAfter: "Running",
+        lastTaskResult: "0x00000000",
+        verdict: "RELAUNCHED",
+      },
+      proofPath: "data/ops/runner-relaunch-proof.json",
+    },
     ...over,
   } as unknown as ResearchState;
 }
@@ -535,6 +554,82 @@ test("a paused lane shows RESUME; a pause then a resume shows PAUSE; the state's
   );
   assert.equal(stateSaysPaused.pauseAction, "RESUME");
   assert.equal(stateSaysPaused.verdict, "INACTIVE");
+});
+
+/* ================================================================== *
+ * RULING 246 — the ACTIVE verdict needs a proven parent relaunch (view level)
+ * ================================================================== */
+
+test("SEEDED (RULING 246): a state with no host supervision reading derives DEGRADED naming the missing proof; the panel is OUR named gap", () => {
+  const view = buildResearchView(healthyInput({ state: heldOut(state({ hostSupervision: null })) }));
+  assert.equal(view.verdict, "DEGRADED");
+  assert.match(view.reasons.join("\n"), /host supervision proven/);
+  assert.match(view.reasons.join("\n"), /has not been proven/);
+  assert.equal(view.supervision.held, false);
+  if (!view.supervision.held) assert.equal(view.supervision.gap.whose, "OURS");
+});
+
+test("POSITIVE CONTROL (RULING 246): a fresh RELAUNCHED proof with the trigger live holds the supervision panel and keeps ACTIVE", () => {
+  const view = buildResearchView(healthyInput());
+  assert.equal(view.verdict, "ACTIVE");
+  assert.equal(view.supervision.held, true);
+  if (view.supervision.held) {
+    assert.equal(view.supervision.value.proof?.verdict, "RELAUNCHED");
+    assert.equal(view.supervision.value.condition?.ok, true);
+    assert.match(view.supervision.value.condition?.reason ?? "", /pid 20240 killed, pid 12900 back in 274s/);
+  }
+  const notRelaunched = buildResearchView(
+    healthyInput({
+      state: heldOut(
+        state({
+          hostSupervision: {
+            host: "test-host",
+            checkedAt: FRESH,
+            measurable: true,
+            notMeasurableReason: null,
+            relaunchTrigger: { present: true, detail: "present" },
+            proof: { measuredAt: FRESH, killedPid: 1, relaunchedPid: null, secondsToRelaunch: null, relaunchTriggerPresent: true, taskStateAfter: "Ready", lastTaskResult: "0x00000000", verdict: "NOT_RELAUNCHED" },
+            proofPath: "data/ops/runner-relaunch-proof.json",
+          },
+        }),
+      ),
+    }),
+  );
+  assert.equal(notRelaunched.verdict, "DEGRADED");
+  assert.match(notRelaunched.reasons.join("\n"), /NOT_RELAUNCHED/);
+});
+
+test("the metrics and ordering panels are OUR named gaps until a cycle computes them, and typed rows once it has", () => {
+  const view = buildResearchView(healthyInput());
+  assert.equal(view.metrics.held, false);
+  assert.equal(view.ordering.held, false);
+  if (!view.metrics.held) assert.match(view.metrics.gap.says, /no research metrics/);
+  const withMetrics = buildResearchView(
+    healthyInput({
+      state: heldOut(
+        state({
+          dispatchOrdering: { rule: "r", scope: "s", inputs: { readerImpactAt: "FreshnessObligation.readerImpactAt", pilotJurisdictions: "p", openRedQuestions: { count: 1, zips: ["85701"], run: "x" }, universeProviders: ["candidate-enrichment"], tieBreak: "oldest nextDueAt first within a band" }, bands: { 1: 2, 2: 3, 3: 4 }, appliesTo: "BOUNDED_MODEL_WORKER" },
+          metrics: {
+            computedAt: FRESH,
+            capacity: { meanUsdPerAttempt: 1.25, measuredAttempts: 4, unmeasuredAttempts: 0, windowHours: 24, ceilingUsd: 25, attemptsPerDayAtCap: 20, denominator: "d" },
+            ordering: null,
+            funnel: { stages: [{ stage: "SCOUTED", count: 3, source: "s" }], pipelineSource: "none recorded" },
+            share: { thisCycle: { deterministic: 1, model: 1, modelShare: 0.5 }, window: { deterministic: 2, model: 2, modelShare: 0.5, cycles: 2, since: FRESH }, delta: 0 },
+            cacheByRole: [],
+            costPerOutcome: [],
+            cacheDefects: { defective: 0, instrumented: 0 },
+          },
+        }),
+      ),
+    }),
+  );
+  assert.equal(withMetrics.ordering.held, true);
+  if (withMetrics.ordering.held) assert.deepEqual(withMetrics.ordering.value.bands, { 1: 2, 2: 3, 3: 4 });
+  assert.equal(withMetrics.metrics.held, true);
+  if (withMetrics.metrics.held) {
+    assert.equal(withMetrics.metrics.value.rows.capacity[0].value, "20");
+    for (const row of Object.values(withMetrics.metrics.value.rows).flat()) assert.ok(row.denominator.length > 0, `${row.label} has no denominator`);
+  }
 });
 
 /* ================================================================== *

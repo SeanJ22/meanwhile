@@ -37,15 +37,23 @@ import {
   type ModelResponse,
   type ModelTransport,
 } from "../lib/control-plane/scheduler/scout-executor.ts";
-import type { ScoutToolkit, ScoutToolContext } from "../lib/control-plane/scheduler/scout-contract.ts";
+import type { ArtifactProvenance, InheritedEvidence, ScoutToolkit, ScoutToolContext } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { MIN_DISTINCT_RUNGS, validateScoutFinish, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import {
   RESEARCH_BOUNDS,
   ceilingPermits,
   deriveLevel1,
   scoutSpendInWindow,
+  type HostSupervision,
   type ResearchState,
 } from "../lib/control-plane/scheduler/research-policy.ts";
+import {
+  DeterministicStepInvokedModel,
+  REPRESENTATION_BUDGETS,
+  UnknownStepInvokedModel,
+  assertStepMayInvokeModel,
+  fitRepresentation,
+} from "../lib/control-plane/scheduler/model-routing.ts";
 
 const NOW = "2026-09-01T12:00:00.000Z";
 const NOW_MS = Date.parse(NOW);
@@ -128,11 +136,45 @@ function fakeToolkit(): ScoutToolkit & { calls: string[] } {
             recordedAt: NOW,
           },
         ],
-        rung: { rung: rungLabel ?? "other:unlabelled", tool: name, target: url, observed: "HTTP 200, 10 bytes", artifactIds: [id] },
+        /* RULING 243: the machine's record of what was vaulted, from which provenance is derived. */
+        provenance: [
+          {
+            artifactId: id,
+            canonicalUrl: url,
+            retrievedAt: NOW,
+            permission: "ALLOWED",
+            methodRouteId: name === "read_permission" ? "scout:read_permission" : "scout:fetch_public",
+            httpStatus: 200,
+          },
+        ],
+        rung: { rung: rungLabel ?? "other:unlabelled", tool: name, target: url, observed: "HTTP 200, 10 bytes", artifactIds: [id], ok: true },
         requestCount: 1,
         bytesFetched: 10,
       };
     },
+  };
+}
+
+/** A fresh, RELAUNCHED supervision reading: what a proven host carries on its research state (RULING 246). */
+function provenSupervision(over: Partial<HostSupervision> = {}): HostSupervision {
+  return {
+    host: "test",
+    checkedAt: NOW,
+    measurable: true,
+    notMeasurableReason: null,
+    relaunchTrigger: { present: true, detail: "Repetition trigger present on the live task" },
+    proof: {
+      measuredAt: "2026-09-01T11:00:00.000Z",
+      killedPid: 20240,
+      relaunchedPid: 12900,
+      secondsToRelaunch: 274,
+      relaunchTriggerPresent: true,
+      taskStateAfter: "Running",
+      lastTaskResult: "0x00000000",
+      verdict: "RELAUNCHED",
+    },
+    proofPath: "data/ops/runner-relaunch-proof.json",
+    ...over,
   };
 }
 
@@ -168,7 +210,16 @@ const finish = (id: string, outcome: string, extra: Record<string, unknown> = {}
     ...extra,
   });
 
-function executorWith(transport: ModelTransport, toolkit: ScoutToolkit, opts: { onResult?: (r: ScoutResult) => Promise<void>; bound?: Partial<typeof RESEARCH_BOUNDS.perDispatch> } = {}) {
+function executorWith(
+  transport: ModelTransport,
+  toolkit: ScoutToolkit,
+  opts: {
+    onResult?: (r: ScoutResult) => Promise<void>;
+    bound?: Partial<typeof RESEARCH_BOUNDS.perDispatch>;
+    inherited?: InheritedEvidence;
+    decision?: "DETERMINISTIC" | "BOUNDED_MODEL_WORKER";
+  } = {},
+) {
   const results: ScoutResult[] = [];
   const exec = scoutExecutor({
     transport,
@@ -177,8 +228,9 @@ function executorWith(transport: ModelTransport, toolkit: ScoutToolkit, opts: { 
       route: null,
       providerId: "test",
       reason: "test novelty",
-      inherited: { artifactIds: ["inherited-1"], summary: "none" },
+      inherited: opts.inherited ?? { artifactIds: ["inherited-1"], summary: "none" },
       tools: { vault: async () => ({ stored: true, where: "x", why: "written" }), spaceOut: async () => undefined },
+      ...(opts.decision ? { decision: opts.decision } : {}),
     }),
     now: () => NOW,
     bound: { ...RESEARCH_BOUNDS.perDispatch, ...(opts.bound ?? {}) },
@@ -463,6 +515,7 @@ test("7. SEEDED: a manually asserted ACTIVE flag is ignored — the verdict is D
     running: [],
     runtimeConditions: [],
     methodCandidates: null,
+    hostSupervision: provenSupervision(),
     /* the seeded lie */
     active: true,
     verdict: "ACTIVE",
@@ -647,4 +700,288 @@ test("10. SEEDED (measured live): a provider refusal before any completion abort
   await dispatchOne(second.repos, { obligation: scheduled(), routeTaskId: second.task.id, holder: "t", now: NOW, leaseTtlMs: 60_000, maturity: () => "UNGRADUATED", executor: exec2 });
   assert.equal(results2[0].usage.turns, 1);
   assert.ok((results2[0].usd ?? 0) > 0, "the one served turn is the charge");
+});
+
+/* ================================================================== *
+ * RULING 243 — provenance is the machine's
+ * ================================================================== */
+
+const candidateWith = (over: Record<string, unknown> = {}) => ({
+  routeId: "a-gov-meetings",
+  title: "meetings page",
+  url: "https://a.gov/meetings",
+  procedure: "GET",
+  relevance: "the meetings page",
+  permission: "ALLOWED",
+  permissionReading: "robots allows /",
+  evidenceArtifactIds: ["art-1"],
+  observedOn: "2026-09-01",
+  recordClass: "meetings",
+  deterministic: true,
+  unverified: [],
+  ...over,
+});
+
+async function dispatchScout(exec: DeclaredExecutor) {
+  const { repos, task } = await registered();
+  const result = await dispatchOne(repos, { obligation: scheduled(), routeTaskId: task.id, holder: "t", now: NOW, leaseTtlMs: 60_000, maturity: () => "UNGRADUATED", executor: exec });
+  return { repos, task, result };
+}
+
+test("11. SEEDED (RULING 243): a finish whose observedOn disagrees with the artifact record is REFUSED; the corrected claim is accepted and the candidate carries machine-owned provenance", async () => {
+  const toolkit = fakeToolkit();
+  const transport = scriptedTransport([
+    [toolUse("u1", "fetch_public", { url: "https://a.gov/meetings", rung: "primary-site-navigation", why: "w" })],
+    [finish("f1", "ROUTE_CANDIDATE", { rungsWalked: [{ index: 0, note: "n" }], candidates: [candidateWith({ observedOn: "2026-01-01" })] })],
+    [finish("f2", "ROUTE_CANDIDATE", { rungsWalked: [{ index: 0, note: "n" }], candidates: [candidateWith({ observedOn: "2026-09-01" })] })],
+  ]);
+  const { exec, results } = executorWith(transport, toolkit);
+  const { result } = await dispatchScout(exec);
+  assert.equal(result.outcome, "WORKED", result.detail);
+  assert.equal(transport.requests.length, 3, "the wrong claim cost one refused turn, then the corrected one was accepted");
+  const afterRefusal = JSON.stringify(transport.requests[2].messages.at(-1)?.content);
+  assert.match(afterRefusal, /SCOUT_PROVENANCE_DISAGREES/);
+  assert.match(afterRefusal, /the model says 2026-01-01/);
+  const c = results[0].candidates[0];
+  assert.equal(c.observedOn, "2026-09-01", "observedOn is the artifact's retrieval date, machine-written");
+  assert.equal(c.permission, "ALLOWED");
+  assert.equal(c.recordClass, "meetings");
+  assert.deepEqual(c.evidenceArtifactIds, ["art-1"]);
+  assert.deepEqual(c.claims, { observedOn: "2026-09-01", permission: "ALLOWED", recordClass: "meetings" }, "the model's statements are recorded as claims");
+  assert.deepEqual(c.provenance?.derivedFrom, ["art-1"]);
+  assert.match(c.provenance?.rule ?? "", /earliest retrievedAt/);
+});
+
+test("12. SEEDED (RULING 243): a permission claim the record contradicts, a citation of robots documents only, and an absent claim are each refused by name", () => {
+  const prov = new Map<string, ArtifactProvenance>([
+    ["art-1", { artifactId: "art-1", canonicalUrl: "https://a.gov/meetings", retrievedAt: NOW, permission: "NOT_APPLICABLE", methodRouteId: "scout:fetch_public", httpStatus: 200 }],
+    ["rob-1", { artifactId: "rob-1", canonicalUrl: "https://a.gov/robots.txt", retrievedAt: NOW, permission: "ALLOWED", methodRouteId: "scout:read_permission", httpStatus: 404 }],
+    ["art-2", { artifactId: "art-2", canonicalUrl: "https://b.gov/x", retrievedAt: "2026-08-30T00:00:00.000Z", permission: "ALLOWED", methodRouteId: "scout:fetch_public", httpStatus: 200 }],
+  ]);
+  const rungs = [{ index: 0, rung: "primary-site-navigation", tool: "fetch_public", target: "https://a.gov/meetings", observed: "200", artifactIds: ["art-1"], note: null, at: NOW }];
+  const base = { rungs, toolCalls: 1, stoppedBy: "MODEL" as const, vaulted: new Set(["art-1", "rob-1", "art-2"]), inherited: new Set<string>(), machine: { provenance: prov, recordClass: "meetings" } };
+  const fin = (candidates: unknown[]) => ({ outcome: "ROUTE_CANDIDATE", rungsWalked: [{ index: 0, note: "n" }], candidates: candidates as never, findings: [], nextRungs: [], unverified: [], narrative: "n" });
+
+  const disagrees = validateScoutFinish({ ...base, finish: fin([candidateWith({ permission: "ALLOWED" })]) });
+  assert.ok(disagrees.some((i) => i.code === "SCOUT_PROVENANCE_DISAGREES" && /retrieved under NOT_APPLICABLE/.test(i.detail)), JSON.stringify(disagrees));
+
+  const agrees = validateScoutFinish({ ...base, finish: fin([candidateWith({ permission: "NOT_APPLICABLE" })]) });
+  assert.deepEqual(agrees, [], "POSITIVE CONTROL: the claim that matches the record passes");
+
+  const robotsOnly = validateScoutFinish({ ...base, finish: fin([candidateWith({ evidenceArtifactIds: ["rob-1"] })]) });
+  assert.ok(robotsOnly.some((i) => i.code === "SCOUT_PROVENANCE_UNDERIVABLE" && /only robots documents/.test(i.detail)));
+
+  const absent = validateScoutFinish({ ...base, finish: fin([candidateWith({ observedOn: "", permission: "NOT_APPLICABLE" })]) });
+  assert.ok(absent.some((i) => i.code === "SCOUT_PROVENANCE_ABSENT" && /observedOn/.test(i.detail)));
+
+  const wrongClass = validateScoutFinish({ ...base, finish: fin([candidateWith({ permission: "NOT_APPLICABLE", recordClass: "roster" })]) });
+  assert.ok(wrongClass.some((i) => i.code === "SCOUT_PROVENANCE_DISAGREES" && /recordClass/.test(i.detail)));
+
+  /* Two hosts, two verdicts, neither at the candidate URL: no single verdict follows. */
+  const conflict = validateScoutFinish({ ...base, finish: fin([candidateWith({ url: "https://c.gov/api", evidenceArtifactIds: ["art-1", "art-2"], permission: "ALLOWED" })]) });
+  assert.ok(conflict.some((i) => i.code === "SCOUT_PROVENANCE_UNDERIVABLE" && /disagree on permission/.test(i.detail)));
+
+  /* The earliest retrieval date wins; the claim may name any cited artifact's date. */
+  const earliest = validateScoutFinish({ ...base, finish: fin([candidateWith({ url: "https://b.gov/x", evidenceArtifactIds: ["art-2", "art-1"], observedOn: "2026-09-01", permission: "ALLOWED" })]) });
+  assert.deepEqual(earliest, []);
+});
+
+/* ================================================================== *
+ * RULING 244 — the Worker Efficiency Law's five seeded failures
+ * ================================================================== */
+
+test("13. SEEDED (v): a route the decision rule sent DETERMINISTIC reaching the model executor makes NO request and aborts by name; decideExecutor names the graduation", async () => {
+  const transport = scriptedTransport([[finish("f", "NO_PROGRESS")]]);
+  const { exec, results } = executorWith(transport, fakeToolkit(), { decision: "DETERMINISTIC" });
+  const { result, repos, task } = await dispatchScout(exec);
+  assert.equal(transport.requests.length, 0, "a graduated route never spends a model");
+  assert.equal(result.outcome, "FAILED");
+  assert.match(result.detail, /SCOUT_GRADUATED_ROUTE/);
+  assert.equal(results[0].refusal?.[0].code, "SCOUT_GRADUATED_ROUTE");
+  const attempt = (await attemptsForRouteTask(repos, task.id)).at(-1)!.value;
+  assert.equal(attempt.outcome, "ABORTED");
+  assert.equal(attempt.cost.usd, 0, "nothing was served and nothing billed: a measured zero");
+
+  const graduated = decideExecutor({ routeId: "learned", descriptor: { executorClass: "BOUNDED_MODEL_WORKER", open: { kind: "HTTP_GET" } }, maturity: () => "GRADUATED" });
+  assert.equal(graduated.kind, "DETERMINISTIC");
+  assert.match(graduated.disagreement ?? "", /GRADUATED_SINCE_DECLARED/);
+  const noDescriptor = decideExecutor({ routeId: "learned", descriptor: null, maturity: () => "GRADUATED" });
+  assert.equal(noDescriptor.kind, "DETERMINISTIC");
+});
+
+test("14. SEEDED (i): a repeated-prefix turn with zero cache-read tokens is recorded as a cacheDefect; the request carries the four breakpoints", async () => {
+  const toolkit = fakeToolkit();
+  const turns = [
+    [toolUse("u1", "read_permission", { url: "https://a.gov/", rung: "primary-site-navigation", why: "p" })],
+    [toolUse("u2", "fetch_public", { url: "https://a.gov/meetings", rung: "primary-site-navigation", why: "n" })],
+    [finish("f", "ROUTE_CANDIDATE", { rungsWalked: [{ index: 0, note: "a" }, { index: 1, note: "b" }], candidates: [candidateWith({ evidenceArtifactIds: ["art-2"] })] })],
+  ];
+  let i = 0;
+  const requests: ModelRequest[] = [];
+  const coldOnTurnTwo: ModelTransport = async (request) => {
+    requests.push(request);
+    const content = turns[Math.min(i, turns.length - 1)];
+    i += 1;
+    return { model: "claude-opus-5", stop_reason: "tool_use", content, usage: { input_tokens: 5000, output_tokens: 100, cache_read_input_tokens: i === 2 ? 0 : 4000, cache_creation_input_tokens: i === 2 ? 4000 : 0 } };
+  };
+  const { exec, results } = executorWith(coldOnTurnTwo, toolkit);
+  const { result } = await dispatchScout(exec);
+  assert.equal(result.outcome, "WORKED", result.detail);
+  assert.deepEqual(results[0].cacheDefect?.turns, [2], "turn 2 re-sent an identical prefix and read nothing from the cache");
+  assert.match(results[0].cacheDefect?.detail ?? "", /RULING 244/);
+  assert.match(result.detail, /CACHE DEFECT on turn\(s\) 2/);
+
+  /* POSITIVE CONTROL: a transport that reads the prefix on every later turn records no defect. */
+  const warm = scriptedTransport(turns);
+  const { exec: exec2, results: results2 } = executorWith(warm, fakeToolkit());
+  await dispatchScout(exec2);
+  assert.equal(results2[0].cacheDefect, null);
+
+  /* The request shape: tools-last, system, the brief, and the newest user turn's last block. */
+  const third = requests[2];
+  assert.deepEqual(third.tools.at(-1)?.cache_control, { type: "ephemeral" }, "the last tool definition is a breakpoint");
+  assert.equal(third.tools[0].cache_control, undefined, "only the last tool carries the marker");
+  assert.deepEqual(third.system[0].cache_control, { type: "ephemeral" });
+  const first = third.messages[0].content as { cache_control?: unknown }[];
+  assert.deepEqual(first[0].cache_control, { type: "ephemeral" }, "the brief is a breakpoint");
+  const last = third.messages.at(-1)!.content as { cache_control?: unknown }[];
+  assert.deepEqual(last.at(-1)?.cache_control, { type: "ephemeral" }, "the newest user turn's last block is a breakpoint");
+  const markers = third.messages.flatMap((m) => (Array.isArray(m.content) ? (m.content as { cache_control?: unknown }[]).filter((b) => b.cache_control !== undefined) : []));
+  assert.equal(markers.length, 2, "exactly two message breakpoints: the brief and the moving one (four in all with tools and system)");
+  const second = requests[1].messages.at(-1)!.content as { cache_control?: unknown }[];
+  assert.deepEqual(second.at(-1)?.cache_control, { type: "ephemeral" });
+  const secondInThird = third.messages[2].content as { cache_control?: unknown }[];
+  assert.equal(secondInThird.at(-1)?.cache_control, undefined, "the marker MOVED: the previous turn's block no longer carries it");
+  assert.equal(third.output_config?.effort, "medium", "effort is the SCOUT role's, recorded per request");
+  assert.equal(results[0].effort, "medium");
+});
+
+test("15. SEEDED (ii): a deterministic-capable step routed to a model is REFUSED by the step registry; model steps route to the cheapest class and escalate on record", () => {
+  assert.throws(() => assertStepMayInvokeModel("page-to-representation"), DeterministicStepInvokedModel);
+  assert.throws(() => assertStepMayInvokeModel("permission-reading"), DeterministicStepInvokedModel);
+  assert.throws(() => assertStepMayInvokeModel("date-parsing"), DeterministicStepInvokedModel);
+  assert.throws(() => assertStepMayInvokeModel("made-up-step"), UnknownStepInvokedModel);
+  const loop = assertStepMayInvokeModel("scout-research-loop");
+  assert.deepEqual(loop, { model: "claude-opus-5", modelClass: "frontier", effort: "medium", role: "SCOUT" });
+  const extraction = assertStepMayInvokeModel("extraction");
+  assert.deepEqual(extraction, { model: "claude-haiku-4-5", modelClass: "haiku", effort: "low", role: "SUB_STEP" });
+  const escalated = assertStepMayInvokeModel("extraction", true);
+  assert.equal(escalated.modelClass, "sonnet", "a cheaper model that fails the standard escalates one class");
+  assert.equal(assertStepMayInvokeModel("summarization", true).modelClass, "frontier");
+});
+
+test("16. SEEDED (iii): a representation past its step budget is truncated with a stated notice naming the artifact, and the overrun is recorded", async () => {
+  const big = "x".repeat(REPRESENTATION_BUDGETS.fetch_public + 5_000);
+  const fit = fitRepresentation("fetch_public", big, ["art-9"]);
+  assert.equal(fit.truncated, true);
+  assert.ok(Buffer.byteLength(fit.text, "utf8") <= fit.budget, "the truncated text fits the budget");
+  assert.match(fit.text, /REPRESENTATION TRUNCATED: \d+ bytes exceeds the fetch_public budget/);
+  assert.match(fit.text, /art-9/);
+  assert.equal(fitRepresentation("fetch_public", "small", ["a"]).truncated, false, "POSITIVE CONTROL: within budget nothing is touched");
+  assert.equal(fitRepresentation("unknown-tool", "x".repeat(20_000), []).truncated, true, "an unnamed tool gets the smallest budget, never an unbounded one");
+
+  const toolkit = fakeToolkit();
+  const original = toolkit.call.bind(toolkit);
+  toolkit.call = async (name, input, rung) => {
+    const r = await original(name, input, rung);
+    return { ...r, forModel: big };
+  };
+  const transport = scriptedTransport([
+    [toolUse("u1", "fetch_public", { url: "https://a.gov/huge", rung: "primary-site-navigation", why: "w" })],
+    [finish("f", "ROUTE_CANDIDATE", { rungsWalked: [{ index: 0, note: "n" }], candidates: [candidateWith({ url: "https://a.gov/huge" })] })],
+  ]);
+  const { exec, results } = executorWith(transport, toolkit);
+  await dispatchScout(exec);
+  assert.equal(results[0].representationOverruns?.length, 1);
+  assert.equal(results[0].representationOverruns?.[0].tool, "fetch_public");
+  assert.ok((results[0].representationOverruns?.[0].bytes ?? 0) > REPRESENTATION_BUDGETS.fetch_public);
+  const shown = JSON.stringify(transport.requests[1].messages.at(-1)?.content);
+  assert.match(shown, /REPRESENTATION TRUNCATED/);
+  assert.match(shown, /art-1/);
+});
+
+test("17. SEEDED (iv): a rung a prior Attempt recorded as durably FAILED is not re-walked — refused with the prior observation quoted; a transient failure and a different client are not refused", async () => {
+  const toolkit = fakeToolkit();
+  const inherited: InheritedEvidence = {
+    artifactIds: [],
+    summary: "prior",
+    priorRungs: [
+      { rung: "primary-site-navigation", tool: "fetch_public", target: "https://a.gov/walled", observed: "HTTP 403 (wall)", ok: false, at: "2026-08-31T12:00:00.000Z", attemptId: "at-prior" },
+      { rung: "site-search-or-sitemap", tool: "fetch_public", target: "https://a.gov/flaky", observed: "transport failure: fetch failed", ok: false, at: "2026-08-31T12:00:00.000Z", attemptId: "at-prior" },
+    ],
+    nextRungs: ["open-data-portal"],
+  };
+  const transport = scriptedTransport([
+    [toolUse("u1", "fetch_public", { url: "https://a.gov/walled", rung: "primary-site-navigation", why: "again" })],
+    [toolUse("u2", "fetch_public", { url: "https://a.gov/flaky", rung: "site-search-or-sitemap", why: "retry a transient" })],
+    [toolUse("u3", "browse", { url: "https://a.gov/walled", rung: "in-browser-network-observation", why: "vary the client" })],
+    [finish("f", "ROUTE_CANDIDATE", { rungsWalked: [{ index: 0, note: "a" }, { index: 1, note: "b" }], candidates: [candidateWith({ url: "https://a.gov/flaky", evidenceArtifactIds: ["art-1"] })] })],
+  ]);
+  const { exec, results } = executorWith(transport, toolkit, { inherited });
+  const { result } = await dispatchScout(exec);
+  assert.equal(result.outcome, "WORKED", result.detail);
+  assert.deepEqual(toolkit.calls, ["fetch_public", "browse"], "the durable re-walk never reached the toolkit; the transient retry and the other client did");
+  const refusal = JSON.stringify(transport.requests[1].messages.at(-1)?.content);
+  assert.match(refusal, /RE-WALK REFUSED/);
+  assert.match(refusal, /HTTP 403 \(wall\)/);
+  assert.match(refusal, /at-prior/);
+  assert.equal(results[0].guardRefusals?.length, 1);
+  assert.equal(results[0].guardRefusals?.[0].kind, "RE_WALK");
+  assert.equal(results[0].resumedFromRungs, 2);
+  const brief = (transport.requests[0].messages[0].content as { text: string }[])[0].text;
+  assert.match(brief, /^RUNGS ALREADY WALKED/, "a resumed Attempt lists the recorded rungs FIRST");
+  assert.match(brief, /FAILED, durable/);
+  assert.match(brief, /NEXT RUNGS THE PRIOR INVESTIGATION NAMED[\s\S]*open-data-portal/);
+  assert.match(brief, /Continue the ladder/);
+});
+
+test("18. no re-read: a second fetch of a URL this Attempt vaulted is refused and hands back the artifact id; a different representation is not refused", async () => {
+  const toolkit = fakeToolkit();
+  const transport = scriptedTransport([
+    [toolUse("u1", "fetch_public", { url: "https://a.gov/meetings", rung: "primary-site-navigation", why: "w" })],
+    [toolUse("u2", "fetch_public", { url: "https://a.gov/meetings#top", rung: "primary-site-navigation", why: "again" })],
+    [toolUse("u3", "browse", { url: "https://a.gov/meetings", rung: "in-browser-network-observation", why: "the page's own API" })],
+    [finish("f", "ROUTE_CANDIDATE", { rungsWalked: [{ index: 0, note: "a" }, { index: 1, note: "b" }], candidates: [candidateWith()] })],
+  ]);
+  const { exec, results } = executorWith(transport, toolkit);
+  const { result } = await dispatchScout(exec);
+  assert.equal(result.outcome, "WORKED", result.detail);
+  assert.deepEqual(toolkit.calls, ["fetch_public", "browse"]);
+  const refusal = JSON.stringify(transport.requests[2].messages.at(-1)?.content);
+  assert.match(refusal, /RE-READ REFUSED/);
+  assert.match(refusal, /ARTIFACT art-1/);
+  assert.deepEqual(results[0].guardRefusals?.map((g) => g.kind), ["RE_READ"]);
+});
+
+test("19. every turn is a recorded step: model, effort, tokens by category and cost; the deterministic steps ran no model; the cost is the steps' sum", async () => {
+  const toolkit = fakeToolkit();
+  const transport = scriptedTransport([
+    [toolUse("u1", "read_permission", { url: "https://a.gov/", rung: "primary-site-navigation", why: "p" })],
+    [toolUse("u2", "fetch_public", { url: "https://a.gov/meetings", rung: "primary-site-navigation", why: "n" })],
+    [finish("f", "ROUTE_CANDIDATE", { rungsWalked: [{ index: 0, note: "a" }, { index: 1, note: "b" }], candidates: [candidateWith({ evidenceArtifactIds: ["art-2"] })] })],
+  ]);
+  const { exec, results } = executorWith(transport, toolkit);
+  await dispatchScout(exec);
+  const r = results[0];
+  const model = (r.steps ?? []).filter((s) => s.kind === "MODEL");
+  assert.equal(model.length, 3);
+  for (const [i, s] of model.entries()) {
+    assert.equal(s.turn, i + 1);
+    assert.equal(s.model, "claude-opus-5");
+    assert.equal(s.effort, "medium");
+    assert.deepEqual(s.tokens, { cacheRead: 500, cacheWrite: 0, uncachedInput: 1000, output: 100 });
+    assert.ok((s.usd ?? 0) > 0);
+  }
+  const sum = model.reduce((n, s) => n + (s.usd ?? 0), 0);
+  assert.ok(Math.abs(sum - (r.usd ?? 0)) < 1e-9, "the Attempt's cost is the sum of its steps");
+  const det = Object.fromEntries((r.steps ?? []).filter((s) => s.kind === "DETERMINISTIC").map((s) => [s.step, s]));
+  assert.equal(det["page-to-representation"].count, 1);
+  assert.equal(det["permission-reading"].count, 1);
+  assert.equal(det["date-parsing"].count, 1);
+  for (const s of Object.values(det)) {
+    assert.equal(s.model, null);
+    assert.equal(s.usd, 0);
+    assert.deepEqual(s.tokens, { cacheRead: 0, cacheWrite: 0, uncachedInput: 0, output: 0 });
+  }
+  assert.ok(model[1].representationBytes > 0, "the bytes the tools handed the model are counted on the turn that read them");
 });

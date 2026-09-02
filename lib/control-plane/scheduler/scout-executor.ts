@@ -1,6 +1,8 @@
 /**
  * **THE SCOUT — A BOUNDED MODEL WORKER THAT INVESTIGATES THROUGH TOOLS.**
- * (Level 1 activation, 2026-09-01. RULING 240, RULING 241.)
+ * (Level 1 activation, 2026-09-01. RULING 240, RULING 241. Machine-owned
+ * provenance, 2026-09-02, RULING 243. Worker Efficiency Law, 2026-09-02,
+ * RULING 244.)
  *
  * This is the model lane's `DeclaredExecutor`. It generalizes the proven
  * `pnpm model:proof` plumbing — one Attempt through `dispatchOne`, lane
@@ -19,12 +21,35 @@
  *         sanitized representation second
  *   MAY   annotate the rungs it walked and propose route/method candidates
  *   MAY NOT  see bytes no vault holds, cite an artifact no vault holds, return
- *         an absence before the ladder, promote its own proposal, or end the
- *         Attempt without the typed result
+ *         an absence before the ladder, promote its own proposal, end the
+ *         Attempt without the typed result, re-read a URL this Attempt already
+ *         vaulted, or re-walk a rung a prior Attempt recorded as durably failed
  * ```
  *
  * The rung list is DERIVED from the tool calls that ran. The model annotates;
- * it does not invent.
+ * it does not invent. A candidate's provenance — observedOn, permission,
+ * recordClass, evidenceArtifactIds — is DERIVED from the artifact, obligation
+ * and permission records; the model's statements about them are recorded as
+ * CLAIMS and checked, never written into durable provenance (RULING 243).
+ *
+ * ## The request shape, and why every byte of it is where it is (RULING 244)
+ *
+ * ```
+ *   tools     stable per process   breakpoint on the LAST definition
+ *   system    stable per process   breakpoint on the block
+ *   brief     stable per Attempt   breakpoint on the first user block
+ *   turns     grow per turn        breakpoint on the LAST block of the newest
+ *                                  user turn, moved forward every turn, so
+ *                                  turn N reads turns 1..N-1 from the cache
+ * ```
+ *
+ * Four breakpoints, the provider's maximum, five-minute TTL (turns are seconds
+ * apart; `SCOUT_CACHE_POLICY` states the argument). Every turn's usage is
+ * recorded as a STEP with the model, the effort, the four token categories and
+ * the cost at that model's rate; a turn after the first that reads ZERO cached
+ * tokens over an identical prefix is recorded as a `cacheDefect` — a fact
+ * about our request assembly, never hidden in a total. Effort is set per role
+ * and never varies inside an Attempt (a change would invalidate the cache).
  *
  * ## Bounds, and every one is stated on the result
  *
@@ -39,32 +64,46 @@
  */
 
 import type { AttemptCost } from "../attempt.ts";
-import { usdForUsageWithCache } from "../model-cost.ts";
+import { usdForModelUsage } from "../model-cost.ts";
 import type { Disposition, PermissionState, TransportState } from "../../workstate/types.ts";
-import type { DeclaredExecutor, WorkArtifact, WorkDisposition, WorkOutcome } from "./dispatch.ts";
+import type { DeclaredExecutor, ExecutorKind, WorkArtifact, WorkDisposition, WorkOutcome } from "./dispatch.ts";
 import type { ScheduledObligation } from "./obligation.ts";
 import type { RouteDescriptor } from "./registry.ts";
 import { RESEARCH_BOUNDS, SCOUT_MODEL, type ScoutBound } from "./research-policy.ts";
 import {
+  SCOUT_CACHE_POLICY,
+  assertStepMayInvokeModel,
+  fitRepresentation,
+  type ModelEffort,
+} from "./model-routing.ts";
+import {
   SCOUT_RESEARCH_TOOLS,
+  type ArtifactProvenance,
   type InheritedEvidence,
+  type PriorRung,
   type ScoutToolContext,
   type ScoutToolSpec,
   type ScoutToolkit,
 } from "./scout-contract.ts";
 import {
   MIN_DISTINCT_RUNGS,
+  REWALK_REFUSAL_DAYS,
   SCOUT_LADDER,
   SCOUT_OUTCOMES,
+  classifyPriorRung,
   distinctEvidenceRungs,
-  validateScoutFinish,
+  validateScoutFinishWithCandidates,
+  type ScoutCacheDefect,
   type ScoutCandidate,
   type ScoutFinding,
   type ScoutFinishInput,
+  type ScoutGuardRefusal,
   type ScoutIssue,
   type ScoutOutcome,
+  type ScoutRepresentationOverrun,
   type ScoutResult,
   type ScoutRung,
+  type ScoutStep,
   type ScoutStop,
 } from "./scout-result.ts";
 
@@ -89,14 +128,16 @@ export interface ModelResponse {
   readonly usage: ModelUsage;
 }
 
+export type CacheControl = { readonly type: "ephemeral" };
+
 export interface ModelRequest {
   readonly model: string;
   readonly max_tokens: number;
-  readonly system: readonly { readonly type: "text"; readonly text: string; readonly cache_control?: { readonly type: "ephemeral" } }[];
+  readonly system: readonly { readonly type: "text"; readonly text: string; readonly cache_control?: CacheControl }[];
   readonly tools: readonly ScoutToolSpec[];
   readonly tool_choice?: { readonly type: "auto" } | { readonly type: "tool"; readonly name: string };
-  /** Effort: medium for a bounded research loop; the cap is economic, never a truth judgement. */
-  readonly output_config?: { readonly effort: "low" | "medium" | "high" };
+  /** Effort per role (`ROLE_EFFORT`); the cap is economic, never a truth judgement. */
+  readonly output_config?: { readonly effort: ModelEffort };
   readonly messages: readonly { readonly role: "user" | "assistant"; readonly content: unknown }[];
 }
 
@@ -162,6 +203,9 @@ const FINISH_SPEC: ScoutToolSpec = {
   description:
     "End the investigation with the TYPED RESULT. Call exactly once. Every rung index you walked must appear in rungsWalked. " +
     "Candidates and findings must cite artifact ids that tool results returned in THIS investigation (or inherited ids you were given). " +
+    "A candidate's observedOn, permission and recordClass are CLAIMS: copy observedOn from the `retrieved` stamp and permission from the " +
+    "`permission` verdict on the cited artifact's envelope, and recordClass from the obligation; the machine derives the values from the " +
+    "vault record and refuses a finish whose claims disagree with it. " +
     `Outcomes: ${SCOUT_OUTCOMES.join(", ")}.`,
   input_schema: {
     type: "object",
@@ -186,11 +230,11 @@ const FINISH_SPEC: ScoutToolSpec = {
             url: { type: "string" },
             procedure: { type: "string", description: "GET/POST and parameters, in words, replayable by code" },
             relevance: { type: "string" },
-            permission: { type: "string", enum: ["ALLOWED", "DISALLOWED", "CANNOT_TELL", "NOT_APPLICABLE"] },
+            permission: { type: "string", enum: ["ALLOWED", "DISALLOWED", "CANNOT_TELL", "NOT_APPLICABLE"], description: "CLAIM: the verdict shown on the cited artifact's envelope." },
             permissionReading: { type: "string" },
             evidenceArtifactIds: { type: "array", items: { type: "string" } },
-            observedOn: { type: "string" },
-            recordClass: { type: "string" },
+            observedOn: { type: "string", description: "CLAIM: the retrieval date (YYYY-MM-DD, UTC) from the cited artifact's `retrieved` stamp." },
+            recordClass: { type: "string", description: "CLAIM: the obligation's record class, as briefed." },
             deterministic: { type: "boolean" },
             unverified: { type: "array", items: { type: "string" } },
           },
@@ -253,6 +297,9 @@ export function scoutSystemPrompt(bound: ScoutBound, minRungs: number): string {
     "5. A candidate route is GROUNDED: it cites artifact ids that tool results returned in THIS investigation (or inherited artifact ids you were given). A URL from memory is not a candidate. You may propose method knowledge; you may never promote it.",
     "6. Never generate a claim about a government, a candidate's position, or a record's contents beyond what a vaulted artifact shows. A Scout that only writes prose has failed.",
     "7. Label EVERY tool call with `rung` (a ladder name above, or other:<name>) and `why`. Use record_rung to note what a rung returned. Call finish exactly once, covering every rung index you walked.",
+    "8. Never re-read. A URL already vaulted in this investigation is in this conversation; a second fetch_public or browse of it is refused and hands back the artifact id. Reason over what you were shown, or open a materially different representation (the page's own API, a linked document, another host).",
+    "9. Never re-walk. The brief lists the rungs prior investigations already walked on this obligation and what each returned; a rung recorded as durably failed (a wall, a disallow, a not-found) is refused if you try it again. Start from the NEXT RUNGS the prior investigation named.",
+    "10. Provenance is the machine's. In finish, a candidate's observedOn is the `retrieved` date on the cited artifact's envelope, its permission is the `permission` verdict on that envelope, and its recordClass is the obligation's. State them as shown; the executor derives the values from the vault record and refuses a finish whose claims disagree with it.",
     "",
     "BOUNDS",
     `${bound.maxTurns} model turns, ${bound.maxToolCalls} tool calls, ${bound.maxRequestsPerHost} requests per host, ${Math.round(bound.maxWallMs / 60_000)} minutes. When you are told BOUND REACHED, call finish immediately: outcome from what you have, rungsWalked complete, nextRungs naming exactly what you would have tried next so the next Attempt resumes rather than restarts.`,
@@ -262,9 +309,40 @@ export function scoutSystemPrompt(bound: ScoutBound, minRungs: number): string {
   ].join("\n");
 }
 
-function brief(row: ScheduledObligation, route: RouteDescriptor | null, providerId: string | null, reason: string, inherited: InheritedEvidence): string {
+/**
+ * The brief — the first user message. Stable for the whole Attempt, so it
+ * sits under a breakpoint. A RESUMED Attempt starts from the recorded rung
+ * list: the prior rungs come FIRST, with what each returned, then the next
+ * rungs the prior Attempt named, then the obligation.
+ */
+export function scoutBrief(
+  row: ScheduledObligation,
+  route: RouteDescriptor | null,
+  providerId: string | null,
+  reason: string,
+  inherited: InheritedEvidence,
+): string {
   const o = row.obligation;
-  const lines = [
+  const prior = inherited.priorRungs ?? [];
+  const lines: string[] = [];
+  if (prior.length > 0) {
+    lines.push(
+      `RUNGS ALREADY WALKED ON THIS OBLIGATION BY PRIOR INVESTIGATIONS (${prior.length}; do not re-walk a failed one — the executor refuses it)`,
+      ...prior.map(
+        (r) =>
+          `- ${r.at.slice(0, 10)} ${r.tool} ${r.rung} -> ${r.target} [${r.observed.slice(0, 160)}]` +
+          (classifyPriorRung(r) === "DURABLE" ? " — FAILED, durable" : classifyPriorRung(r) === "TRANSIENT" ? " — failed, transient (may be retried)" : ""),
+      ),
+      "",
+    );
+    const next = inherited.nextRungs ?? [];
+    lines.push(
+      "NEXT RUNGS THE PRIOR INVESTIGATION NAMED — continue from here",
+      next.length > 0 ? next.map((n) => `- ${n}`).join("\n") : "(none named)",
+      "",
+    );
+  }
+  lines.push(
     "THE OBLIGATION",
     `obligation id: ${o.id}`,
     `subject: ${o.subjectId}`,
@@ -286,8 +364,10 @@ function brief(row: ScheduledObligation, route: RouteDescriptor | null, provider
     inherited.summary.trim() === "" ? "(none recorded)" : inherited.summary,
     inherited.artifactIds.length > 0 ? `inherited artifact ids: ${inherited.artifactIds.join(", ")}` : "",
     "",
-    "Begin by reading permission for the primary authority's host, then walk the ladder. Finish with the typed result.",
-  ];
+    prior.length > 0
+      ? "Continue the ladder from the next rungs above. Finish with the typed result."
+      : "Begin by reading permission for the primary authority's host, then walk the ladder. Finish with the typed result.",
+  );
   return lines.filter((l) => l !== "").join("\n");
 }
 
@@ -307,6 +387,12 @@ export interface ScoutExecutorDeps {
     readonly reason: string;
     readonly inherited: InheritedEvidence;
     readonly tools: Pick<ScoutToolContext, "vault" | "vaultBytes" | "spaceOut" | "browse" | "openOne" | "timeoutMs">;
+    /**
+     * The canonical executor decision for this row (`decideExecutor`). A
+     * DETERMINISTIC decision reaching this executor is refused before any
+     * request (SCOUT_GRADUATED_ROUTE): a graduated route never spends a model.
+     */
+    readonly decision?: ExecutorKind;
   };
   readonly onStart?: (info: { readonly attemptId: string; readonly obligationId: string; readonly startedAt: string }) => Promise<void>;
   /**
@@ -323,7 +409,16 @@ interface ToolResultBlock {
   readonly tool_use_id: string;
   readonly content: string;
   readonly is_error?: boolean;
+  readonly cache_control?: CacheControl;
 }
+
+interface TextBlock {
+  readonly type: "text";
+  readonly text: string;
+  readonly cache_control?: CacheControl;
+}
+
+type UserContent = readonly (ToolResultBlock | TextBlock)[];
 
 function isToolUse(b: ContentBlock): b is { type: "tool_use"; id: string; name: string; input: unknown } {
   return b.type === "tool_use" && typeof (b as { id?: unknown }).id === "string";
@@ -331,6 +426,50 @@ function isToolUse(b: ContentBlock): b is { type: "tool_use"; id: string; name: 
 
 function num(v: unknown): number | null {
   return typeof v === "number" && Number.isFinite(v) ? v : null;
+}
+
+function normalizedUrl(raw: string): string {
+  try {
+    const u = new URL(raw);
+    u.hash = "";
+    return u.toString();
+  } catch {
+    return raw.trim();
+  }
+}
+
+/**
+ * Place the four breakpoints on a copy of the conversation. The first user
+ * block (the brief) and the last block of the newest user turn carry the
+ * marker; every other block is sent bare, so the moving marker never leaves a
+ * stale one behind. Assistant turns are the provider's own content, echoed.
+ */
+export function withCacheBreakpoints(
+  messages: readonly { readonly role: "user" | "assistant"; readonly content: unknown }[],
+): { readonly role: "user" | "assistant"; readonly content: unknown }[] {
+  const cc = SCOUT_CACHE_POLICY.cacheControl;
+  const lastUser = messages.reduce((at, m, i) => (m.role === "user" ? i : at), -1);
+  return messages.map((m, i) => {
+    if (m.role !== "user" || !Array.isArray(m.content)) return m;
+    const blocks = (m.content as UserContent).map((b) => {
+      const { cache_control: _dropped, ...bare } = b as TextBlock & { cache_control?: CacheControl };
+      return bare as TextBlock | ToolResultBlock;
+    });
+    const mark = (idx: number): void => {
+      if (idx >= 0 && idx < blocks.length) blocks[idx] = { ...blocks[idx], cache_control: cc };
+    };
+    if (i === 0) mark(0);
+    if (i === lastUser) mark(blocks.length - 1);
+    return { role: m.role, content: blocks };
+  });
+}
+
+/** The tool list with the breakpoint on its LAST definition, so tools + system cache as one prefix. */
+export function withToolBreakpoint(specs: readonly ScoutToolSpec[]): ScoutToolSpec[] {
+  return specs.map((s, i) => {
+    const { cache_control: _dropped, ...bare } = s;
+    return i === specs.length - 1 ? { ...bare, cache_control: SCOUT_CACHE_POLICY.cacheControl } : bare;
+  });
 }
 
 /**
@@ -411,17 +550,23 @@ export function dispositionForScout(result: {
   }
 }
 
+/** The step the research loop is registered under. Frontier; asserted before every transport call. */
+export const SCOUT_LOOP_STEP = "scout-research-loop";
+
 export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
-  const model = deps.model ?? SCOUT_MODEL;
   const bound = deps.bound ?? RESEARCH_BOUNDS.perDispatch;
   const minRungs = deps.minRungs ?? MIN_DISTINCT_RUNGS;
   const clock = deps.now ?? (() => new Date().toISOString());
   const system = scoutSystemPrompt(bound, minRungs);
+  /* The routing decides the model and the effort; an injected model (tests, a proof) overrides the id only. */
+  const routed = assertStepMayInvokeModel(SCOUT_LOOP_STEP);
+  const model = deps.model ?? (routed.model === SCOUT_MODEL ? SCOUT_MODEL : routed.model);
+  const effort: ModelEffort = routed.effort;
 
   return {
     lane: "BOUNDED_MODEL_WORKER",
     workerFor: ({ holder }) => ({ role: "SCOUT", provider: "anthropic", version: model, instance: holder }),
-    run: async ({ obligation: row, routeTaskId, workItemId, attemptId, holder }): Promise<WorkOutcome> => {
+    run: async ({ obligation: row, routeTaskId, workItemId, attemptId, holder, executor: decidedKind }): Promise<WorkOutcome> => {
       const startedMs = Date.now();
       const startedAt = clock();
       const ctx = deps.contextFor(row);
@@ -439,24 +584,58 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         ...ctx.tools,
       });
       const inherited = new Set(ctx.inherited.artifactIds);
+      const provenance = new Map<string, ArtifactProvenance>();
+      for (const p of ctx.inherited.provenance ?? []) provenance.set(p.artifactId, p);
+      const priorRungs: readonly PriorRung[] = ctx.inherited.priorRungs ?? [];
       if (deps.onStart) await deps.onStart({ attemptId, obligationId: row.obligation.id, startedAt }).catch(() => undefined);
 
-      const specs: ScoutToolSpec[] = [...toolkit.specs, RECORD_RUNG_SPEC, FINISH_SPEC];
+      const specs: ScoutToolSpec[] = withToolBreakpoint([...toolkit.specs, RECORD_RUNG_SPEC, FINISH_SPEC]);
       const rungs: ScoutRung[] = [];
       const artifacts: WorkArtifact[] = [];
       const messages: { role: "user" | "assistant"; content: unknown }[] = [
-        { role: "user", content: brief(row, ctx.route, ctx.providerId, ctx.reason, ctx.inherited) },
+        { role: "user", content: [{ type: "text", text: scoutBrief(row, ctx.route, ctx.providerId, ctx.reason, ctx.inherited) }] satisfies UserContent },
       ];
       const usage = { input: 0, output: 0, cacheRead: 0, cacheCreate: 0, reported: false };
+      const steps: ScoutStep[] = [];
+      const deterministic = new Map<string, { count: number; bytes: number }>();
+      const runDeterministic = (step: string, bytes: number): void => {
+        const d = deterministic.get(step) ?? { count: 0, bytes: 0 };
+        deterministic.set(step, { count: d.count + 1, bytes: d.bytes + bytes });
+      };
+      const defectTurns: number[] = [];
+      const guardRefusals: ScoutGuardRefusal[] = [];
+      const overruns: ScoutRepresentationOverrun[] = [];
+      /** (tool | normalized url) -> artifact ids vaulted by it this Attempt. The no-re-read set. */
+      const vaultedByCall = new Map<string, string[]>();
       let turns = 0;
       let modelReported: string | null = null;
       let finish: ScoutFinishInput | null = null;
+      let acceptedCandidates: ScoutCandidate[] = [];
       let lastRefusal: ScoutIssue[] | null = null;
       let stoppedBy: ScoutStop = "MODEL";
       let boundNotice: string | null = null;
       let transportFailure: string | null = null;
       let nudges = 0;
       let earlyAbsenceRefusedAtRungs: number | null = null;
+      let representationBytesThisTurn = 0;
+
+      /*
+       * RULING 244, SEEDED (v): a route the decision rule sent to the
+       * DETERMINISTIC lane never spends a model. The dispatcher declares the
+       * decided kind on the run input; if it says DETERMINISTIC and this
+       * executor was reached anyway, no transport call is made and the
+       * Attempt aborts by name with a measured zero.
+       */
+      if (decidedKind === "DETERMINISTIC" || ctx.decision === "DETERMINISTIC") {
+        lastRefusal = [
+          {
+            code: "SCOUT_GRADUATED_ROUTE",
+            detail:
+              `the executor decision for ${row.obligation.id} is DETERMINISTIC (route ${row.obligation.routeId ?? "(none)"} is graduated or declared); ` +
+              "a graduated route never dispatches to a model, so no request was made",
+          },
+        ];
+      }
 
       const tokensSoFar = () => usage.input + usage.output + usage.cacheRead + usage.cacheCreate;
       const boundReached = (): string | null => {
@@ -467,35 +646,72 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         return null;
       };
 
+      /** The no-re-read / no-re-walk guard. A string is the refusal the model reads. */
+      const guard = (tool: string, rawUrl: string): string | null => {
+        if (tool !== "fetch_public" && tool !== "browse") return null;
+        const url = normalizedUrl(rawUrl);
+        const already = vaultedByCall.get(`${tool}|${url}`);
+        if (already !== undefined) {
+          const detail =
+            `RE-READ REFUSED: ${tool} already opened ${url} in this investigation and vaulted it as ARTIFACT ${already.join(", ") || "(nothing stored)"}. ` +
+            "That representation is in this conversation; reason over it, or open a materially different representation (the page's own API, a linked document, another host).";
+          guardRefusals.push({ kind: "RE_READ", tool, target: url, detail });
+          return detail;
+        }
+        const nowMs = Date.parse(clock());
+        const prior = priorRungs.find(
+          (r) =>
+            r.tool === tool &&
+            normalizedUrl(r.target) === url &&
+            classifyPriorRung(r) === "DURABLE" &&
+            (!Number.isFinite(nowMs) || !Number.isFinite(Date.parse(r.at)) || nowMs - Date.parse(r.at) < REWALK_REFUSAL_DAYS * 86_400_000),
+        );
+        if (prior !== undefined) {
+          const detail =
+            `RE-WALK REFUSED: a prior investigation (${prior.attemptId}, ${prior.at.slice(0, 10)}) already walked ${tool} -> ${url} and recorded: "${prior.observed.slice(0, 200)}". ` +
+            `A durably failed rung is not re-walked for ${REWALK_REFUSAL_DAYS} days (RULING 244; absences expire, RULING 53). Walk another branch.`;
+          guardRefusals.push({ kind: "RE_WALK", tool, target: url, detail });
+          return detail;
+        }
+        return null;
+      };
+
       /* Two grace turns past the bound exist ONLY for the typed result. */
       const GRACE_TURNS = 2;
       let graceUsed = 0;
 
-      while (finish === null) {
+      while (finish === null && lastRefusal?.[0]?.code !== "SCOUT_GRADUATED_ROUTE") {
         const reached = boundReached();
         if (reached !== null && boundNotice === null) {
           stoppedBy = "BOUND";
           boundNotice = reached;
           messages.push({
             role: "user",
-            content:
-              `BOUND REACHED: ${reached}. Call finish NOW with the typed result: rungsWalked covering every rung index, ` +
-              "nextRungs naming exactly what you would have tried next, and the outcome your evidence supports. No further research tools will run.",
+            content: [
+              {
+                type: "text",
+                text:
+                  `BOUND REACHED: ${reached}. Call finish NOW with the typed result: rungsWalked covering every rung index, ` +
+                  "nextRungs naming exactly what you would have tried next, and the outcome your evidence supports. No further research tools will run.",
+              },
+            ] satisfies UserContent,
           });
         }
         if (boundNotice !== null && graceUsed >= GRACE_TURNS) break;
         if (boundNotice !== null) graceUsed += 1;
 
+        /* RULING 244: the step registry is consulted before EVERY model call. A deterministic step here throws. */
+        const step = assertStepMayInvokeModel(SCOUT_LOOP_STEP);
         let response: ModelResponse;
         try {
           response = await deps.transport({
             model,
             max_tokens: bound.maxOutputTokensPerTurn,
-            system: [{ type: "text", text: system, cache_control: { type: "ephemeral" } }],
+            system: [{ type: "text", text: system, cache_control: SCOUT_CACHE_POLICY.cacheControl }],
             tools: specs,
             tool_choice: boundNotice !== null ? { type: "tool", name: "finish" } : { type: "auto" },
-            output_config: { effort: "medium" },
-            messages,
+            output_config: { effort: step.effort },
+            messages: withCacheBreakpoints(messages),
           });
         } catch (error) {
           transportFailure = error instanceof Error ? error.message : String(error);
@@ -505,10 +721,42 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         modelReported = response.model ?? modelReported;
         const u = response.usage ?? {};
         if (num(u.input_tokens) !== null || num(u.output_tokens) !== null) usage.reported = true;
-        usage.input += num(u.input_tokens) ?? 0;
-        usage.output += num(u.output_tokens) ?? 0;
-        usage.cacheRead += num(u.cache_read_input_tokens) ?? 0;
-        usage.cacheCreate += num(u.cache_creation_input_tokens) ?? 0;
+        const turnTokens = {
+          uncachedInput: num(u.input_tokens) ?? 0,
+          output: num(u.output_tokens) ?? 0,
+          cacheRead: num(u.cache_read_input_tokens) ?? 0,
+          cacheWrite: num(u.cache_creation_input_tokens) ?? 0,
+        };
+        usage.input += turnTokens.uncachedInput;
+        usage.output += turnTokens.output;
+        usage.cacheRead += turnTokens.cacheRead;
+        usage.cacheCreate += turnTokens.cacheWrite;
+        steps.push({
+          step: SCOUT_LOOP_STEP,
+          kind: "MODEL",
+          turn: turns,
+          model: response.model ?? model,
+          effort: step.effort,
+          tokens: turnTokens,
+          usd: usage.reported
+            ? usdForModelUsage(model, {
+                inputTokens: turnTokens.uncachedInput,
+                outputTokens: turnTokens.output,
+                cacheReadInputTokens: turnTokens.cacheRead,
+                cacheCreationInputTokens: turnTokens.cacheWrite,
+              })
+            : null,
+          representationBytes: representationBytesThisTurn,
+          count: 1,
+        });
+        representationBytesThisTurn = 0;
+        /*
+         * RULING 244: turn N's prefix (tools, system, brief, turns 1..N-1) is
+         * byte-identical to what turn N-1 sent, so turn N must read it from
+         * the cache. Zero cache-read tokens on such a turn is a defect in OUR
+         * request assembly — recorded, never averaged away.
+         */
+        if (turns >= 2 && usage.reported && turnTokens.cacheRead === 0) defectTurns.push(turns);
 
         messages.push({ role: "assistant", content: response.content });
         const uses = response.content.filter(isToolUse);
@@ -517,7 +765,9 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           if (nudges > 2) break;
           messages.push({
             role: "user",
-            content: "You ended without calling finish. Continue the ladder through the tools, or call finish with the typed result.",
+            content: [
+              { type: "text", text: "You ended without calling finish. Continue the ladder through the tools, or call finish with the typed result." },
+            ] satisfies UserContent,
           });
           continue;
         }
@@ -527,7 +777,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           const input = (use.input ?? {}) as Record<string, unknown>;
           if (use.name === "finish") {
             const candidate = input as unknown as ScoutFinishInput;
-            const issues = validateScoutFinish({
+            const validated = validateScoutFinishWithCandidates({
               finish: candidate,
               rungs,
               toolCalls: toolkit.toolCalls,
@@ -535,7 +785,9 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
               vaulted: toolkit.vaultedArtifactIds,
               inherited,
               minRungs,
+              machine: { provenance, recordClass: row.obligation.recordClass },
             });
+            const issues = validated.issues;
             /*
              * THE BOUND DOES NOT LAUNDER A REFUSED ABSENCE. A model told its
              * absence was early, that then walks NO further rung and waits for
@@ -561,6 +813,8 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
             }
             if (issues.length === 0) {
               finish = candidate;
+              acceptedCandidates = validated.candidates;
+              runDeterministic("date-parsing", 0);
               results.push({ type: "tool_result", tool_use_id: use.id, content: "ACCEPTED." });
             } else {
               lastRefusal = issues;
@@ -590,16 +844,34 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
               results.push({ type: "tool_result", tool_use_id: use.id, is_error: true, content: `BOUND REACHED (${boundNotice}); no research tool runs now. Call finish.` });
               continue;
             }
+            const rawUrl = typeof input.url === "string" ? input.url : "";
+            const refused = guard(use.name, rawUrl);
+            if (refused !== null) {
+              results.push({ type: "tool_result", tool_use_id: use.id, is_error: true, content: refused });
+              continue;
+            }
             const rungLabel = typeof input.rung === "string" ? input.rung : null;
             const call = await toolkit.call(use.name, input, rungLabel);
             artifacts.push(...call.artifacts);
+            for (const p of call.provenance ?? []) provenance.set(p.artifactId, p);
+            if ((use.name === "fetch_public" || use.name === "browse") && rawUrl !== "") {
+              vaultedByCall.set(`${use.name}|${normalizedUrl(rawUrl)}`, call.artifacts.map((a) => a.artifactId));
+            }
             let header = "";
             if (call.rung !== null) {
               const index = rungs.length;
               rungs.push({ ...call.rung, index, note: null, at: clock() });
               header = `[rung ${index}: ${call.rung.rung} → ${call.rung.target} · ${call.rung.observed}]\n`;
             }
-            results.push({ type: "tool_result", tool_use_id: use.id, is_error: !call.ok, content: `${header}${call.forModel}` });
+            /* RULING 244: the representation is sized to the step, never a raw document. */
+            const ids = call.artifacts.map((a) => a.artifactId);
+            const fit = fitRepresentation(use.name, `${header}${call.forModel}`, ids);
+            if (fit.truncated) overruns.push({ tool: use.name, target: rawUrl || use.name, bytes: fit.bytes, budget: fit.budget, artifactIds: ids });
+            const shownBytes = Math.min(fit.bytes, fit.budget);
+            representationBytesThisTurn += shownBytes;
+            if (use.name === "fetch_public" || use.name === "browse") runDeterministic("page-to-representation", shownBytes);
+            else if (use.name === "read_permission") runDeterministic("permission-reading", shownBytes);
+            results.push({ type: "tool_result", tool_use_id: use.id, is_error: !call.ok, content: fit.text });
             continue;
           }
           results.push({ type: "tool_result", tool_use_id: use.id, is_error: true, content: `unknown tool ${use.name}` });
@@ -609,6 +881,19 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
 
       /* ---------------------------------------------------- the result */
       const elapsedMs = Date.now() - startedMs;
+      for (const [step, d] of deterministic) {
+        steps.push({
+          step,
+          kind: "DETERMINISTIC",
+          turn: null,
+          model: null,
+          effort: null,
+          tokens: { cacheRead: 0, cacheWrite: 0, uncachedInput: 0, output: 0 },
+          usd: 0,
+          representationBytes: d.bytes,
+          count: d.count,
+        });
+      }
       /*
        * A PROVIDER ERROR BEFORE ANY COMPLETION IS A MEASURED ZERO, NOT AN
        * UNMEASURED COST. (Measured live 2026-09-02: HTTP 529 overloaded on the
@@ -616,18 +901,18 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
        * nothing was served and nothing billed; recording null there would make
        * the rolling ceiling read UNMEASURED after every provider hiccup and
        * defer real work against a cap nobody could read. A failure AFTER usage
-       * was reported keeps the reported usage, which is the charge.
+       * was reported keeps the reported usage, which is the charge. A route
+       * refused before any request (SCOUT_GRADUATED_ROUTE) is the same zero.
        */
-      const refusedBeforeAnyUsage = transportFailure !== null && !usage.reported && turns === 0;
+      const refusedBeforeAnyUsage = (transportFailure !== null || turns === 0) && !usage.reported;
       const inputTokens = usage.reported ? usage.input + usage.cacheRead + usage.cacheCreate : refusedBeforeAnyUsage ? 0 : null;
       const outputTokens = usage.reported ? usage.output : refusedBeforeAnyUsage ? 0 : null;
+      /* The cost is the sum of the steps at each step's model rate; one model today, so it equals the total-at-rate. */
+      const modelSteps = steps.filter((s) => s.kind === "MODEL");
       const usd = usage.reported
-        ? usdForUsageWithCache({
-            inputTokens: usage.input,
-            outputTokens: usage.output,
-            cacheReadInputTokens: usage.cacheRead,
-            cacheCreationInputTokens: usage.cacheCreate,
-          })
+        ? modelSteps.some((s) => s.usd === null)
+          ? null
+          : modelSteps.reduce((n, s) => n + (s.usd ?? 0), 0)
         : refusedBeforeAnyUsage
           ? 0
           : null;
@@ -657,6 +942,15 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         const note = accepted?.rungsWalked.find((w) => w.index === r.index)?.note ?? r.note;
         return note === undefined ? r : { ...r, note: note === null ? null : String(note).slice(0, 400) };
       });
+      const cacheDefect: ScoutCacheDefect | null =
+        defectTurns.length === 0
+          ? null
+          : {
+              turns: defectTurns,
+              detail:
+                `turn(s) ${defectTurns.join(", ")} read ZERO cached tokens over a prefix identical to the previous turn's; ` +
+                "a repeated-prefix turn with no cache read is a defect in our request assembly (RULING 244)",
+            };
       const result: ScoutResult = {
         formatVersion: 1,
         attemptId,
@@ -672,7 +966,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         stoppedBy,
         rungs: rungsAnnotated,
         distinctEvidenceRungs: distinctEvidenceRungs(rungsAnnotated),
-        candidates: accepted?.candidates ?? [],
+        candidates: accepted ? acceptedCandidates : [],
         findings: accepted?.findings ?? [],
         nextRungs: accepted?.nextRungs ?? [],
         unverified: accepted?.unverified ?? [],
@@ -693,6 +987,12 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         refusal,
         startedAt,
         recordedAt: clock(),
+        effort,
+        steps,
+        cacheDefect,
+        guardRefusals,
+        representationOverruns: overruns,
+        resumedFromRungs: priorRungs.length,
       };
 
       /*
@@ -748,7 +1048,8 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         disposition,
         detail:
           `SCOUT ${persisted.outcome} (${stoppedBy}) in ${turns} turn(s), ${toolkit.toolCalls} tool call(s), ` +
-          `${rungs.length} rung(s), ${artifacts.length} artifact(s), usd ${usd === null ? "UNMEASURED" : usd.toFixed(4)}`,
+          `${rungs.length} rung(s), ${artifacts.length} artifact(s), usd ${usd === null ? "UNMEASURED" : usd.toFixed(4)}` +
+          (cacheDefect ? ` · CACHE DEFECT on turn(s) ${cacheDefect.turns.join(", ")}` : ""),
       };
     },
   };

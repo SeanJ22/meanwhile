@@ -157,12 +157,61 @@ jurisdictional outcome the Attempt observed.
 | registered route units | 2,991 | 2,991 |
 | declared BOUNDED_MODEL_WORKER | 2,333 | 2,333 |
 | model-class last disposition REQUIRES_NEW_ADAPTER · DISCOVERED | 156 · 0 | 163 · 4 |
-| Scout results held | 0 | 7 (ROUTE_CANDIDATE 4, EVIDENCE_FOUND 2, NO_PROGRESS 1) |
-| model-class units with at least one Scout result | 0 | 7 of 2,333 |
-| no machine capable of running them | 2,333 of 2,333 | 2,326 of 2,333 without a result yet — and a machine now exists for every one |
+| Scout results held | 0 | 9 after the first unattended cycle (ROUTE_CANDIDATE 5, EVIDENCE_FOUND 2, NO_PROGRESS 2) |
+| model-class units with at least one Scout result | 0 | 9 of 2,333 |
+| no machine capable of running them | 2,333 of 2,333 | 2,324 of 2,333 without a result yet — and a machine now exists for every one |
 | research state `level-1` | absent | present: lane enabled, credential confirmed by name |
 | rolling Scout spend | — | $5.63 of $25 |
 
-## Unattended activation — L1-10 (PENDING the post-merge cycle)
+## Unattended activation — L1-10
 
-## /admin/research readback — L1-12 (PENDING the deploy)
+After PR #261 merged (95e1eb12) the main checkout was fast-forwarded and the
+standing runner restarted through the Scheduled Task (`schtasks /Run`), with
+no other command. Its first cycle — `data/health/freshness-shadow-runs/2026-09-02-04.json`
+in the main checkout, started 2026-09-02T07:36:35Z at SHA 95e1eb12 — ran both
+lanes:
+
+| Reading | Value |
+| --- | --- |
+| due | 2,785 (deterministic 542 · model-class 2,243) |
+| deterministic dispatched | 16 of 542 (the 15-minute dispatch budget was spent) |
+| Scouts dispatched | 2 of 2,243 due (per-cycle bound 3; the rest deferred BY NAME — BUDGET 2,241 — each keeping its next-due) |
+| executors, as they ran | DETERMINISTIC 16 · BOUNDED_MODEL_WORKER 2 · mismatches 0 · decision disagreements recorded 3 |
+| worker identities on the Scout Attempts | `SCOUT / anthropic / claude-opus-5` on both, matching what ran |
+| Scout results | ROUTE_CANDIDATE (BOUND, 15 rungs, 13 evidence-backed, 1 candidate, $2.0395, DISCOVERED) · NO_PROGRESS (MODEL, 14 rungs, 11 evidence-backed, $0.7034, Attempt aborted, obligation still owed) |
+| cost measured | $2.7429 over 18 measured Attempts of 18 dispatched; rolling Scout spend $8.3711 of $25 |
+| research state written by the task-launched process | lane ENABLED · `WTP_WORKERS_ANTHROPIC_API_KEY` configured: true (by name) · running 0 at close · runtime conditions none · method candidates validated 8 |
+| promotion | `promotedToReaderTruth=false`; 16 entries staged as honest gaps, 0 promotion-ready |
+| digest | delivered to the Drive mirror with a RESEARCH — LEVEL 1 section stating the lane, the credential by name, the spend and each Scout result |
+
+The obligations both Scouts worked were Jereme Lance Peters (AZ CD-6):
+`candidate-wikipedia-api` (a disallowed route; the Scout found and vaulted the
+compliant `/wiki/<Title>?action=raw` representation and proposed a candidate)
+and `candidate-authored-awaits-site` (NO_PROGRESS after eleven evidence-backed
+rungs, which is the doctrine's honest answer, not an absence about the
+candidate).
+
+## /admin/research readback — L1-12 — `docs/evidence/admin-research-readback-2026-09-02.json`
+
+Read from the deployed admin host after the merge deployed (production serving
+95e1eb1 per `pnpm deploy:sha`; post-deploy observer green): login POST 303 with
+the `__Host-` session cookie; `GET /admin/research` 200; the same path on the
+public host **404**; sign-out 204; no credential value anywhere in the HTML.
+The page derived **DEGRADED** and named its one failing condition — *every
+Scout Attempt in the window measured its cost: 1 Scout Attempt reported no
+usd* — which is the pre-fix HTTP 529 Attempt (`at-efaed514…`) whose ledger
+entry carries `usd: null`; the fix that records an unserved request as a
+measured zero shipped in the same PR, and the condition clears when that entry
+ages out of the 24-hour window. Every other condition held: runner ALIVE,
+research state current, not paused, model lane enabled, credential confirmed
+by name, spend $5.6282 of $25, 2 of 2 Scouts running at read time, 2,243 of
+2,333 model-class units due, 7 of 7 Scout Attempts listed with subject, reason,
+model, elapsed, cost and outcome, 47 of 54 distinct evidence artifacts, the
+two intent controls rendered, 15 rendered numbers each carrying a denominator.
+
+One rendering defect measured on the live page and fixed in the follow-up:
+the method-candidate panel used the `proposed` lifecycle count as its
+denominator (zero once candidates validate) and rendered seven VALIDATED
+candidates as "no method candidate proposed yet"; the denominator is now the
+sum of the four lifecycle states.
+

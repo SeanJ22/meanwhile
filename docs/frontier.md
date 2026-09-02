@@ -881,6 +881,15 @@ the rolling $25/day ceiling (RULING 241). What this session deliberately left:
   and `prove-relaunch`, a killed parent runner stays down until a logon. The
   row carries a predicate on `data/ops/runner-relaunch-proof.json` and closes
   itself when the proof records RELAUNCHED.
+- **NH306 — rotate `DATA_GOV_API_KEY` and `NETLIFY_AUTH_TOKEN`.** The ship door
+  reported the transcript mirror carrying a credential value; `pnpm
+  secrets:sweep --transcripts` from the main checkout found both VALUES in a
+  subagent transcript of the earlier session `771dfc3d…` (line 24). The file
+  was scrubbed in place (8 values replaced, 0 remaining); the repository and
+  the Drive mirror read 0 secret occurrences. RULING 127: a credential that
+  appeared in a transcript is COMPROMISED and is ROTATED; the row carries a
+  predicate on `data/ops/credential-events.jsonl` and closes itself when a
+  rotation event names both. Neither value was produced by this session.
 - **RO08 stands** (drain rate). Scouts do not change it: the deterministic
   lane keeps its own ceiling and the Scout lane runs beside it.
 

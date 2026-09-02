@@ -160,7 +160,8 @@ test("RULING 227: every predicate still reads its evidence and answers RESOLVED_
    * here (if it did, the row should already have moved), and a RESOLVED one
    * must still read its evidence and answer RESOLVED_BY_EVIDENCE.
    */
-  assert.equal(PREDICATES.length, 6);
+  /* NH306 (2026-09-02) is the second OPEN predicated row: two credentials await rotation. */
+  assert.equal(PREDICATES.length, 7);
   const openIds = new Set(openRows.map((r) => String(r.ID ?? "").trim()));
   for (const p of PREDICATES as unknown as RegistryEntry[]) {
     const outcome = evaluateEntry(p, { root: ROOT });

@@ -4,9 +4,9 @@
 (`scripts/tracker.mjs`) from the tracker's own attribution and description fields,
 plus one authored sentence per session in `docs/log-purposes.json`.
 
-Generated 2026-09-01 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-09-02 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **175 sessions.**
+Newest first. **176 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -24,6 +24,14 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **B08** — Read separation agreement before signing · deleted 2026-08-20 by Sean · authority: his note: "This has absolutely nothing to do with this project at all.  Delete this entirely"
 
 ---
+
+## level-1-activation 2026-09-02 · 2026-09-02
+
+**What it started.** 1 row(s) opened, 1 still open.
+
+- **NH306** — PREDICATE: resolves itself when data/ops/credential-events.jsonl records a rotation event for BOTH names. WHAT IS NEEDED: two credential rotations, by the owner or under RULING 238 with an owner copy first. THE FINDING: pnpm secrets:sweep --transcripts, run from the main checkout on 2026-09-02 by the Level 1 activation session, found the VALUES of DATA_GOV_API_KEY and NETLIFY_AUTH_TOKEN in a subagent transcript of the earlier session 771dfc3d-591d-4a39-9cb2-2c028431acdd (agent-a5abb86c7d4cf8d7a.jsonl, line 24). The file was scrubbed in place (8 values replaced, 0 remaining on re-read) and the repository and the Drive mirror read 0 secret occurrences. RULING 127: a credential that has appeared in a transcript is COMPROMISED and is ROTATED; scrubbing is necessary and not sufficient. OPTIONS: (A) rotate both now - regenerate the api.data.gov key and the Netlify personal access token, place the owner copies in .env.local first, then record each rotation in data/ops/credential-events.jsonl by name, provider, context, scope, actor and owner-copy location; (B) rotate only the Netlify token (the higher-privilege one: it can deploy and read site settings) and accept the data.gov key as low-risk; (C) do nothing - both values stay valid for whoever read that transcript. CONSEQUENCE OF NOT DECIDING: (C) stands and the row ages. *(open)*
+
+**Needs Sean.** NH306
 
 ## tracker:views (RULING 227 auto-reconciliation) · 2026-09-01
 

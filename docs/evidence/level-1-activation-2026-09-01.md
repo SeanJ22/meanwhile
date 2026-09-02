@@ -88,6 +88,20 @@ credential; actor: this session, verification only; owner copy:
 research state each cycle writes — `workerCredential.configured`. Its value
 reaches only the provider request header.
 
+## A finding the ship door surfaced — NEEDS_SEAN NH306
+
+`pnpm secrets:sweep --transcripts`, run from the main checkout on 2026-09-02
+after the ship door reported the transcript mirror carrying a credential value,
+found the VALUES of `DATA_GOV_API_KEY` and `NETLIFY_AUTH_TOKEN` in a subagent
+transcript of the earlier session `771dfc3d-591d-4a39-9cb2-2c028431acdd`
+(`agent-a5abb86c7d4cf8d7a.jsonl`, line 24). The file was scrubbed in place (8
+values replaced, 0 remaining on re-read); the repository and the Drive mirror
+read 0 secret occurrences. RULING 127: a credential that has appeared in a
+transcript is COMPROMISED and is ROTATED, and scrubbing is necessary and not
+sufficient. Tracker row **NH306** carries a predicate on
+`data/ops/credential-events.jsonl`. Neither value was produced or handled by
+this session; this is a prior session's transcript.
+
 ## Real civic Scout proof — L1-9
 
 Three proof cycles ran the standing cycle itself (`scripts/freshness-shadow.mts`

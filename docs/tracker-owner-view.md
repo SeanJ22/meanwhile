@@ -21,7 +21,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 ## Decisions waiting on you
 
-**67 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
+**68 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
 
 ### P1
 
@@ -59,6 +59,14 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 **Blocked while.** the Scheduled Task 'WeThePeople Pilot Runner' carries only an at-logon trigger; registering the 5-minute relaunch trigger is refused from an unelevated shell (Access is denied, measured 2026-09-01), and an unattended session does not elevate itself.
 
 **Rechecked this run.** data/ops/runner-relaunch-proof.json is not present in this checkout. The elevated install and prove-relaunch have not been run, or their proof has not been committed; the runner is still DOWN after any kill until a logon. Read: data/ops/runner-relaunch-proof.json.
+
+#### NH306 — Rotate DATA_GOV_API_KEY and NETLIFY_AUTH_TOKEN: their values appeared in a prior session transcript (RULING 127)
+
+*Opened 2026-09-02 · opened today · verified still blocked (2026-09-02 · HOLDS)*
+
+**Blocked while.** the values of DATA_GOV_API_KEY and NETLIFY_AUTH_TOKEN appeared in a prior session's subagent transcript (scrubbed 2026-09-02); a credential that has appeared in a transcript is compromised until rotated, and rotation is an owner act this session did not perform.
+
+**Rechecked this run.** data/ops/credential-events.jsonl is not present in this checkout. No rotation has been REPORTED; a rotation nobody recorded is not one this predicate can see, and RULING 238 requires the report by name. Read: data/ops/credential-events.jsonl.
 
 ### P2
 
@@ -934,5 +942,5 @@ NOT_MACHINE_VERIFIABLE, per RULING 227. A predicated row is re-evaluated against
 committed artifacts on EVERY tracker generation — not when a session remembers —
 and auto-resolves the moment its blocker stops being true.
 
-- 1 row(s) carry a machine-verifiable predicate.
+- 2 row(s) carry a machine-verifiable predicate.
 - 70 row(s) are marked NOT_MACHINE_VERIFIABLE with a card.

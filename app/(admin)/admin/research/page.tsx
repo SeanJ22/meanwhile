@@ -224,6 +224,125 @@ export default async function ResearchPage() {
         </ul>
       )}
 
+      {/* HOST SUPERVISION (RULING 246) */}
+      <h2>Host supervision</h2>
+      {view.supervision.held ? (
+        <>
+          <p>
+            <span
+              className={
+                view.supervision.value.condition === null
+                  ? "state-unknown"
+                  : view.supervision.value.condition.ok
+                    ? "state-green"
+                    : "state-red"
+              }
+            >
+              {view.supervision.value.condition === null
+                ? "NOT DERIVED"
+                : view.supervision.value.condition.ok
+                  ? "PROVEN"
+                  : "NOT PROVEN"}
+            </span>{" "}
+            {view.supervision.value.condition?.reason ?? "the verdict carried no host-supervision condition"}
+          </p>
+          <p className="note">
+            Read on {view.supervision.value.host} at {view.supervision.value.checkedAt};{" "}
+            {view.supervision.value.measurable
+              ? `relaunch trigger present: ${
+                  view.supervision.value.relaunchTrigger.present === null
+                    ? "could not ask"
+                    : view.supervision.value.relaunchTrigger.present
+                      ? "true"
+                      : "false"
+                } (${view.supervision.value.relaunchTrigger.detail})`
+              : `not measurable on this host: ${view.supervision.value.notMeasurableReason ?? ""}`}
+            .{" "}
+            {view.supervision.value.proof
+              ? `Proof ${view.supervision.value.proof.verdict} measured ${view.supervision.value.proof.measuredAt}: killed pid ${view.supervision.value.proof.killedPid}, relaunched pid ${view.supervision.value.proof.relaunchedPid} after ${view.supervision.value.proof.secondsToRelaunch} s.`
+              : `No relaunch proof at ${view.supervision.value.proofPath} on the runner's checkout.`}
+          </p>
+        </>
+      ) : (
+        <p>
+          <GapNote gap={view.supervision.gap} />
+        </p>
+      )}
+
+      {/* DISPATCH ORDERING (Work Item 5) */}
+      <h2>Dispatch ordering</h2>
+      {view.ordering.held ? (
+        <>
+          <p className="note">{view.ordering.value.rule}</p>
+          <p className="note">{view.ordering.value.scope}</p>
+          <ul>
+            <li>
+              Band 1: <strong>{view.ordering.value.bands[1]}</strong> · Band 2:{" "}
+              <strong>{view.ordering.value.bands[2]}</strong> · Band 3:{" "}
+              <strong>{view.ordering.value.bands[3]}</strong> — due model-class rows, {view.ordering.value.appliesTo}
+            </li>
+            <li>
+              Inputs: {view.ordering.value.inputs.readerImpactAt}; {view.ordering.value.inputs.pilotJurisdictions}; open
+              red reader questions {view.ordering.value.inputs.openRedQuestions.count}
+              {view.ordering.value.inputs.openRedQuestions.zips.length > 0
+                ? ` (ZIPs ${view.ordering.value.inputs.openRedQuestions.zips.join(", ")})`
+                : ""}
+              {view.ordering.value.inputs.openRedQuestions.run
+                ? ` from ${view.ordering.value.inputs.openRedQuestions.run}`
+                : ""}
+              ; universe providers {view.ordering.value.inputs.universeProviders.join(", ")}; tie-break{" "}
+              {view.ordering.value.inputs.tieBreak}
+            </li>
+          </ul>
+        </>
+      ) : (
+        <p>
+          <GapNote gap={view.ordering.gap} />
+        </p>
+      )}
+
+      {/* RESEARCH METRICS (RULING 244) */}
+      <h2>Research metrics</h2>
+      {view.metrics.held ? (
+        <table>
+          <thead>
+            <tr>
+              <th>Measure</th>
+              <th>Value</th>
+              <th>Denominator / rule</th>
+            </tr>
+          </thead>
+          <tbody>
+            {(
+              [
+                ["Capacity", view.metrics.value.rows.capacity],
+                ["Queue by band", view.metrics.value.rows.queueBands],
+                ["Graduation funnel", view.metrics.value.rows.funnel],
+                ["Model vs deterministic share", view.metrics.value.rows.share],
+                ["Cache hit rate by role", view.metrics.value.rows.cache],
+                ["Cost per useful outcome", view.metrics.value.rows.costPerOutcome],
+              ] as const
+            ).flatMap(([group, rows]) =>
+              rows.map((row) => (
+                <tr key={`${group}:${row.label}`}>
+                  <td>
+                    <span className="gap-whose">{group}</span> {row.label}
+                  </td>
+                  <td>
+                    <strong>{row.value}</strong>
+                  </td>
+                  <td className="note">{row.denominator}</td>
+                </tr>
+              )),
+            )}
+          </tbody>
+        </table>
+      ) : (
+        <p>
+          <GapNote gap={view.metrics.gap} />
+        </p>
+      )}
+
       {/* SCOUTS */}
       <h2>Scouts</h2>
       <p>

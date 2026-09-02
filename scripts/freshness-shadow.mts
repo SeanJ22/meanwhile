@@ -76,6 +76,7 @@ import {
 } from "../lib/control-plane/repository/pg-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { digestLines, runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import { WindowLockHeld, acquireWindowLease, releaseWindowLease } from "../lib/control-plane/promotion/window.ts";
 import { scheduleObligation, isScheduled, type ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
 import { retryable } from "../lib/control-plane/scheduler/debt.ts";
 import { buildRegistry, registryLines } from "../lib/control-plane/scheduler/registry.ts";
@@ -265,6 +266,25 @@ if (wantsPostgres) {
 } else {
   mkdirSync(CONTROL_PLANE_ROOT, { recursive: true });
   repos = await createFileRepositories(CONTROL_PLANE_ROOT);
+}
+
+/*
+ * THE CYCLE AND THE NIGHTLY WINDOW NEVER WRITE CONCURRENTLY (RULING 242). One
+ * CAS lease on the fixed aggregate id `nightly-window` serializes them: a cycle
+ * that finds the window holding it is REFUSED by name (exit 3) rather than
+ * interleaved, and the runner's digest carries the refusal. The lease is
+ * released at the run record; a crashed cycle holds nothing past the TTL.
+ */
+const CYCLE_LEASE_HOLDER = `cycle@${HOST}#${process.pid}`;
+const CYCLE_LEASE_TTL_MS = 25 * 60_000;
+try {
+  await acquireWindowLease(repos, CYCLE_LEASE_HOLDER, nowIso(), CYCLE_LEASE_TTL_MS);
+} catch (error) {
+  if (error instanceof WindowLockHeld) {
+    console.error(`freshness:shadow · REFUSED under the nightly window: ${error.message}`);
+    process.exit(3);
+  }
+  throw error;
 }
 
 /* ----------------------------------------------------------- the registry --- */
@@ -1338,3 +1358,4 @@ writeFileSync(
   "utf8",
 );
 console.log(`\n  run record: ${path}`);
+await releaseWindowLease(repos, CYCLE_LEASE_HOLDER, nowIso());

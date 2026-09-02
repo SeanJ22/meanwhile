@@ -78,6 +78,8 @@ import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { RESEARCH_INTENT_LOG_KEY, readIntents } from "../lib/control-plane/scheduler/research-policy.ts";
+import type { ResearchMetrics } from "../lib/control-plane/research-metrics.ts";
+import { researchDigestLines } from "../lib/control-plane/research-digest.ts";
 import { today } from "./doc-dates.mjs";
 
 const ROOT = process.cwd();
@@ -136,6 +138,8 @@ interface RunRecord {
   /** Level 1 — Research, as the cycle recorded it. Absent on a record written before activation. */
   readonly research?: {
     readonly state?: {
+      /** RULING 244 / Work Item 5: the metrics the cycle computed. Absent on a record written before them. */
+      readonly metrics?: ResearchMetrics | null;
       readonly modelLaneEnabled?: boolean;
       readonly modelLaneDisabledReason?: string | null;
       readonly workerCredential?: { readonly name?: string; readonly configured?: boolean };
@@ -319,6 +323,13 @@ function laneShare(record: RunRecord): string[] {
     out.push(`- runtime conditions: ${(state?.runtimeConditions ?? []).join("; ")}`);
   }
   out.push("- PROMOTION: OFF. A Scout finding is inventory and a candidate; nothing it produced changed what a reader is told.");
+  /* The metrics travel on the research state the cycle wrote; a record without them says so rather than printing zeros. */
+  out.push("", "## RESEARCH METRICS (RULING 244 · reader-impact ordering)", "");
+  if (state?.metrics) {
+    for (const line of researchDigestLines(state.metrics)) out.push(`- ${line.trim()}`);
+  } else {
+    out.push("- not yet computed by a cycle: this record's research state carries no metrics (a cycle on code before Work Item 5, or a cycle that did not reach the metrics step)");
+  }
   return out;
 }
 

@@ -32,6 +32,13 @@ import {
   readScoutSpend,
   renderedNumbersOf,
 } from "@/lib/control-plane/research-view.ts";
+import {
+  buildWindowView,
+  countClaimsOf as windowCountClaimsOf,
+  readLastWindow,
+  readWindowIncidents,
+  renderedNumbersOf as windowNumbersOf,
+} from "@/lib/control-plane/window-view.ts";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -128,8 +135,17 @@ export default async function ResearchPage() {
   ]);
   const view = buildResearchView({ nowIso, heartbeat, state, intents, results, spend, evidence });
 
-  const numberAudit = auditRenderedNumbers(renderedNumbersOf(view));
-  const countAudit = checkStatedEqualsRendered(countClaimsOf(view));
+  // THE LAST NIGHTLY WINDOW (RULING 242). Read from the same control plane; a
+  // window the runner never ran renders as its named gap, never as zero.
+  const lastWindow = await readLastWindow(opened.repos);
+  const windowIncidents =
+    lastWindow.kind === "HELD"
+      ? await readWindowIncidents(opened.repos, lastWindow.value.last.windowId)
+      : { kind: "HELD" as const, value: [] };
+  const windowView = buildWindowView({ nowIso, lastWindow, incidents: windowIncidents });
+
+  const numberAudit = auditRenderedNumbers([...renderedNumbersOf(view), ...windowNumbersOf(windowView)]);
+  const countAudit = checkStatedEqualsRendered([...countClaimsOf(view), ...windowCountClaimsOf(windowView)]);
   if (!numberAudit.ok || !countAudit.ok) {
     return (
       <Refusal
@@ -347,6 +363,129 @@ export default async function ResearchPage() {
           <GapNote gap={view.methodCandidates.gap} />
         )}
       </p>
+
+      {/* LAST NIGHTLY WINDOW (RULING 242) */}
+      <h2>
+        Last nightly window{" "}
+        <span
+          className={
+            windowView.verdict === "COMPLETED"
+              ? "state-green"
+              : windowView.verdict === "FAILED_STAGE"
+                ? "state-red"
+                : "state-unknown"
+          }
+        >
+          {windowView.verdict}
+        </span>
+      </h2>
+      {windowView.reasons.length > 0 && (
+        <ul>
+          {windowView.reasons.map((r) => (
+            <li key={r}>{r}</li>
+          ))}
+        </ul>
+      )}
+      {windowView.time.held ? (
+        <p className="note">
+          Window <code>{windowView.time.value.windowId}</code> for {windowView.time.value.localDate} (
+          {windowView.time.value.zone}), {windowView.time.value.trigger}, mode {windowView.time.value.mode};
+          scheduled {windowView.time.value.scheduledFor}; ran {windowView.time.value.startedAt} →{" "}
+          {windowView.time.value.finishedAt}; host {windowView.time.value.host}; SHA{" "}
+          {windowView.time.value.testedSha ?? "unrecorded"}
+          {windowView.time.value.caughtUp.length > 0
+            ? `; caught up ${windowView.time.value.caughtUp.join(", ")}`
+            : ""}
+          .
+        </p>
+      ) : (
+        <p>
+          <GapNote gap={windowView.time.gap} />
+        </p>
+      )}
+      {windowView.gate.held && <p className="note">Gate: {windowView.gate.value.reason}</p>}
+      {windowView.stages.held && (
+        <ul>
+          {windowView.stages.value.map((s) => (
+            <li key={s.stage}>
+              <strong>{s.stage}</strong> {s.outcome}
+              {s.reason ? ` — ${s.reason}` : ""}
+            </li>
+          ))}
+        </ul>
+      )}
+      <p>
+        Promoted: <Stat h={windowView.promoted} /> · Would promote: <Stat h={windowView.wouldPromote} /> ·
+        Refused: <Stat h={windowView.refused} /> · Deferred: <Stat h={windowView.deferred} />
+      </p>
+      {windowView.byRecordClass.held ? (
+        <ul>
+          {windowView.byRecordClass.value.map((row) => (
+            <li key={row.recordClass}>
+              <code>{row.recordClass}</code>: would promote <Count m={row.promoteWould} />; refused{" "}
+              <Count m={row.refuseWould} />; deferred <Count m={row.deferred} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>
+          <GapNote gap={windowView.byRecordClass.gap} />
+        </p>
+      )}
+      <p>
+        Legacy refresh:{" "}
+        {windowView.legacy.held ? (
+          <>
+            ran <Count m={windowView.legacy.value.ran} /> ({windowView.legacy.value.source})
+          </>
+        ) : (
+          <GapNote gap={windowView.legacy.gap} />
+        )}
+      </p>
+      <p>
+        Controls:{" "}
+        {windowView.controls.held ? (
+          <>
+            recall <Count m={windowView.controls.value.recall} />; false absences{" "}
+            <Count m={windowView.controls.value.falseAbsences} />; false presences{" "}
+            <Count m={windowView.controls.value.falsePresences} />
+          </>
+        ) : (
+          <GapNote gap={windowView.controls.gap} />
+        )}
+      </p>
+      <p>
+        Served-surface check:{" "}
+        {windowView.verification.held ? (
+          `${windowView.verification.value.instrument}: ${windowView.verification.value.verdict}`
+        ) : (
+          <GapNote gap={windowView.verification.gap} />
+        )}
+      </p>
+      <p>
+        Incidents:{" "}
+        {windowView.incidents.held ? (
+          <Count m={windowView.incidents.value.shown} />
+        ) : (
+          <GapNote gap={windowView.incidents.gap} />
+        )}
+      </p>
+      {windowView.incidents.held && windowView.incidents.value.rows.length > 0 && (
+        <ul>
+          {windowView.incidents.value.rows.map((i) => (
+            <li key={i.incidentId}>
+              <code>{i.incidentId}</code> {i.stage} {i.code} — {i.detail}
+            </li>
+          ))}
+        </ul>
+      )}
+      {windowView.proof.held && (
+        <p className="note">
+          Proof: record {windowView.proof.value.recordPath ?? "unwritten"}; digest{" "}
+          {windowView.proof.value.digestPath ?? "unwritten"}; lease <code>{windowView.proof.value.leaseId}</code>;{" "}
+          {windowView.proof.value.windowsRecorded} window(s) recorded.
+        </p>
+      )}
 
       {/* CONTROLS */}
       <h2>Controls</h2>

@@ -21,7 +21,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 ## Decisions waiting on you
 
-**68 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
+**69 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
 
 ### P1
 
@@ -505,6 +505,20 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 - **Supply it / rule on it** — the blocked route opens and the work behind this row continues on the machine.
 - **Decline or defer** — the obligation stays LIVE and visible — declining the escalation is never a disposition of the record it concerns (RULING 205, RULING 208) — and the other routes keep being worked.
 
+#### NW11 — Which record classes open first at the activation gate
+
+*Opened 2026-09-02 · opened today · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+
+**What is needed.** Name the first record classes to open at the activation gate (zero or more of meeting-times, agendas, published-minutes, routine-filings). The open set in lib/control-plane/promotion/activation-gate.ts is EMPTY and the nightly window (RULING 242) runs in SHADOW until READER, TRUTH and FRESHNESS are GREEN and INDEPENDENTLY_REPRODUCED, so nothing waits on this today; the list must exist before the gate can open.
+
+**Why no machine can decide it.** Opening a class is a product decision about which reader truth may change unattended each night; no artifact can decide it, and it cannot take effect before the three contracts are GREEN and independently reproduced, which is a later measurement, not a reason to decide later.
+
+**Your options.**
+
+- **Open meeting-times and agendas first** — the first promoted reader truth is a meeting time or an agenda — the lowest-stakes class — verified on the served surface within the same window and reverted automatically on regression
+- **Also open published-minutes and routine-filings** — minutes and routine filings promote nightly too, more reader surface per window
+- **Open none yet** — the window stays in SHADOW after the gate is otherwise green, and every promotion remains a session's last mile
+
 ### P3
 
 #### D70 — Agenda-platform tenant enumeration crawler (replaces the h2 enumeration approach)
@@ -933,7 +947,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 append-only ledger of every id any session has ever claimed. It is never typed and
 never guessed.
 
-- 407 row(s) carry a date the ledger stamped directly.
+- 421 row(s) carry a date the ledger stamped directly.
 - 243 row(s) take the date from the session the ledger names, where the entry was reconstructed on 2026-08-21 without a stamp.
 - 225 row(s) read **UNKNOWN**. Their ledger entries were reconstructed with no stamped day and name a session that carries no date. The ledger bound around them is a multi-day range, and a range is not a date; this clone is also shallow at 2026-08-25, so git cannot answer for rows older than that either. **UNKNOWN is the honest reading and is never replaced by a guess.**
 
@@ -943,4 +957,4 @@ committed artifacts on EVERY tracker generation — not when a session remembers
 and auto-resolves the moment its blocker stops being true.
 
 - 2 row(s) carry a machine-verifiable predicate.
-- 70 row(s) are marked NOT_MACHINE_VERIFIABLE with a card.
+- 71 row(s) are marked NOT_MACHINE_VERIFIABLE with a card.

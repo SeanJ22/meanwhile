@@ -2254,5 +2254,30 @@
       "NH310",
       "NH311"
     ]
+  },
+  {
+    "session": "Lane E — nightly window (2026-09-02)",
+    "opened": "2026-09-02",
+    "ids": [
+      "NW01",
+      "NW02",
+      "NW03",
+      "NW04",
+      "NW05",
+      "NW06",
+      "NW07",
+      "NW08",
+      "NW09",
+      "NW10",
+      "NW11"
+    ]
+  },
+  {
+    "session": "daily-refresh-admin-signin-2026-09-02",
+    "opened": "2026-09-02",
+    "ids": [
+      "NH312",
+      "NH313"
+    ]
   }
 ]

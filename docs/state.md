@@ -23348,3 +23348,92 @@ suite output instead of an API that cannot serve a running job's log.
 
 The four questions the directive asks at the end are answered in the session's
 final report with the readbacks taken after the merge.
+
+## 2026-09-02 — provider transition: preparing the repository for a Codex session
+
+*(Session `codex/provider-transition-2026-09-02`, branch off `origin/main`. The
+owner is moving the next engineering session from Claude Code to OpenAI Codex.
+This is transition infrastructure, not new product scope. The one planned merge
+of the prior session already shipped (PR #263); this change rides its own
+next-session branch and is NOT a second merge.)*
+
+### What changed, and why it is mechanical
+
+`AGENTS.md` — the file a coding agent that is not Claude Code reads first — now
+carries the whole root constitution, byte-for-byte, as a GENERATED mirror. The
+generator is `lib/ops/agents-mirror.mjs`; `pnpm agents:sync` writes it and
+`pnpm agents:check` reports staleness by line. It is registered in
+`lib/ops/generated-register.ts` as a pure artifact, so
+`tests/generated-artifacts.test.ts` regenerates it in place and compares bytes
+every gate run (RULING 92, RULING 102); the pre-commit hook and the closeout
+checklist run the check too. A stale or hand-edited mirror fails all three
+(`tests/agents-parity.test.ts` seeds each way). The mirror preserves the
+Next.js-owned `<!-- BEGIN:nextjs-agent-rules -->` block verbatim and never
+invents it; its notice states that it is NOT an authority, that `CLAUDE.md`
+wins over it, and that `docs/governance/ledger.jsonl` wins over `CLAUDE.md`
+(RULING 185). Delegated policies under `docs/governance/policies/` are not
+copied — they stay where they are.
+
+The invariant, now enforced rather than remembered:
+
+> Everything operative in the root `CLAUDE.md` is supplied to a non-Claude
+> coding agent through the root `AGENTS.md`, and a change to one that does not
+> update the other fails a gate.
+
+### Session bootstrap and closeout are the same for any provider
+
+Nothing a session needs to resume lives in a provider's transcripts, memory, or
+tools; it all lives in committed machinery. A Codex session opens the repo and
+runs, in order:
+
+```
+pnpm install --frozen-lockfile           node_modules (a worktree has none)
+pnpm session:start --check               stale main, clobbered CLAUDE.md, port, hooks
+git fetch origin && git rev-parse origin/main    the exact current main SHA
+pnpm governance:open --task <domain>     current authority, policy, decisions, snapshot
+pnpm workstream:status                   canonical work state and the exact resume cursor
+pnpm tracker:open                        what is open, what Needs Sean, the author's notes
+pnpm stamp                               every date a session writes
+```
+
+The session directive sets the acceptance denominator (RULING 223); the SESSION
+EFFICIENCY LAW's bootstrap requirement (RULING 237) turns it into the finite
+table. Parallel work runs in isolated checkouts with named file ownership — the
+law names no vendor (RULING 190), so `git worktree` or Codex's own mechanism
+both satisfy it — and one integration owner merges once (RULING 191). Closeout
+is `pnpm gates` (the fourteen CI gates), then `pnpm handoff` (regenerates the
+standing views, syncs the Drive mirror, records the exact SHA in
+`git-state.txt`), then push and a PR that the ruleset merges only when green
+(RULING 1, RULING 155). `pnpm handoff --check` is non-mutating and reports the
+whole checklist; `pnpm handoff --ship` is the one-command close and is the ONLY
+path that merges.
+
+### What is provider-specific, and what happens to it under Codex
+
+Two closeout steps read Claude Code's own files and DEGRADE harmlessly when
+Codex runs them, by design — neither fails the run:
+
+- `pnpm handoff`'s transcript export shells out to
+  `~/.claude/export-transcript.mjs`. Absent under Codex, it prints
+  `warn transcripts — exporter not found` and the run continues; the mirror's
+  `transcripts/` folder simply is not refreshed by that step.
+- `pnpm secrets:sweep --transcripts` scans a hard-coded Claude transcript path.
+  Under Codex that path is `NOT PRESENT` and is skipped; the repository and the
+  Drive mirror are still swept by value, which is the load-bearing part.
+
+The branch-name guard (`scripts/check-branch-names.mjs`) now recognises
+`codex/…` branch prefixes as well as `claude/…`, so a Codex branch referenced
+in tracker prose is validated rather than invisible.
+
+### Local write and secret readiness (verified this session, names only)
+
+`gh auth status` is logged in as SeanJ22 (keyring, scopes include `repo` and
+`workflow`); `origin` is `SeanJ22/meanwhile`; `git fetch origin` succeeds; this
+identity created, pushed, and merged PR #263 today — sufficient write evidence,
+so no junk PR was manufactured. `.env.local` on this Windows account holds every
+variable the standing machinery reads; the only absent names are the two Google
+OAuth client variables (tracked as NH310), the two staging/meeting optionals,
+and `WTP_MIRROR`/`WTP_ADMIN_BREAK_GLASS` which fall back to their defaults. No
+value was printed, hashed, or copied anywhere, and `.env.local` was not mirrored
+to Drive.
+

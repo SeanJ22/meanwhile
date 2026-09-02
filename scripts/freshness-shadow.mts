@@ -1,45 +1,45 @@
 /**
  * `pnpm freshness:shadow` — ONE UNATTENDED CYCLE OF THE FRESHNESS SCHEDULER.
  * (Session B, W3.5, 2026-08-30. Rewritten Session B resume, W3.B/C/E/F,
- * 2026-08-31. Rewritten again Session C, PART D, 2026-08-31.)
+ * 2026-08-31. Rewritten again Session C, PART D, 2026-08-31. Level 1 —
+ * Research wired in, 2026-09-01, RULING 240 / RULING 241.)
  *
  * It observes, ACQUIRES for real, records, normalizes, STAGES — and **promotes
  * nothing to canonical reader truth**. `runCycle` has no parameter that could,
  * and the promotion tail writes only under `data/control-plane/staging/`.
  *
- * ## What changed in Session C, and why the previous version could not be right
+ * ## Two lanes, one cycle (Level 1)
  *
- * **The corpus was meetings and could only ever be meetings.** This script
- * imported `freshnessObligationsFromMeetings`, built its whole corpus from it,
- * and built its route map by reading `sourceUrl` out of
- * `data/meetings-snapshot.json`. So the unattended loop hunted calendars and
- * nothing else, while a modelled Arizona campaign-finance obligation sat in
- * `lib/control-plane/campaign-finance/obligations.ts` reachable from its own
- * test and from nothing operational. **A domain obligation reachable only from
- * tests is a failure.**
+ * The input is the OBLIGATION-PROVIDER REGISTRY
+ * (`lib/control-plane/scheduler/registry.ts`) — five providers, one scheduled
+ * unit per (RECORD x REPRESENTATION). Every due unit is decided ONCE by the
+ * canonical executor rule (`decideExecutor`):
  *
- * The input is now an OBLIGATION-PROVIDER REGISTRY
- * (`lib/control-plane/scheduler/registry.ts`). Meetings is one provider.
- * Campaign finance is the second. Tracker intake is the third, and reports
- * ABSENT rather than EMPTY until a converting lane ships its handoff file.
+ * ```
+ *   a machine-executable shape exists       ->  DETERMINISTIC   the route executor, serial
+ *   no shape exists — unresolved novelty    ->  BOUNDED_MODEL_WORKER   a real Scout, pooled
+ * ```
  *
- * **The scheduled unit is (RECORD x REPRESENTATION).** A campaign-finance
- * record carries several materially distinct routes and every one gets its own
- * occurrence, RouteTask, Attempt, disposition, debt and next-due — which is
- * `ONE ROUTE SUCCESS != SOURCE UNIVERSE COMPLETE` expressed as state rather
- * than as a sentence in a report.
+ * The Scout lane is ADMITTED per row or DEFERRED BY CODE: `LANE_DISABLED`
+ * (no credential in this process, `--dry`, `--no-model`), `PAUSED` (an owner
+ * intent), `CEILING` (the rolling $/day ceiling, RULING 241), `CYCLE_MAX`
+ * (the per-cycle Scout maximum), `BUDGET` (it could not finish inside the
+ * dispatch budget). A deferred row keeps its next-due; nothing is dropped and
+ * nothing is reported complete.
  *
- * **The lane is decided per route, not per cycle.** A DataTables POST is
- * deterministic; an FTP drop this process holds no client for is not walked at
- * all and disposes REQUIRES_NEW_ADAPTER. `runCycle` therefore takes a function.
+ * **The bytes reach a real vault** through `DurableEvidenceStore`; the Scout's
+ * tools vault before the model sees anything. The typed Scout result is
+ * appended to `scout_results`; route candidates are PROPOSED and VALIDATED
+ * into `data/method/candidates.json` and never admitted here.
  *
- * **The bytes reach a real vault**, through `DurableEvidenceStore`, and the
- * promotion tail reads them back out by key. The previous executor recorded
- * artifact metadata and stored no body while claiming "captured to the vault".
+ * ## What this process writes about itself
  *
- * **The tail runs automatically** (RULING 224): acquire, vault, normalize,
- * snapshot, STAGED. Promotion itself stays OFF and a session carries the last
- * mile.
+ * A `research_state` record (id `level-1`) at cycle start, on every Scout
+ * start and end, and at cycle end — lane state, the credential CONFIRMED BY
+ * NAME, the bounds, the rolling spend, the queue, the Scouts running. A runner
+ * heartbeat (`pilot-runner`). Pending RUN_CYCLE_NOW intents are marked
+ * HONORED by this cycle. The admin Research view DERIVES its verdict from
+ * these; none of them stores a verdict.
  *
  * ## Flags
  *
@@ -48,16 +48,23 @@
  *                         WTP_CONTROL_PLANE_DATABASE_URL; default is the file store
  *   --dry                 a recorded executor instead of the network. Labelled
  *                         SIMULATED, and by construction discharges nothing
- *   --max=N               the stated dispatch ceiling for this cycle
+ *   --max=N               the stated deterministic dispatch ceiling for this cycle
+ *   --scout-max=N         the stated Scout ceiling for this cycle (default RESEARCH_BOUNDS)
+ *   --no-model            hold the Scout lane closed for this cycle (a diagnostic)
+ *   --interval=N          the runner's minutes between cycles, so the heartbeat
+ *                         can state when the next cycle is due
  *   --only=<prefix>       work only obligations whose id starts with <prefix>.
  *                         A DIAGNOSTIC filter: the count it skipped is printed,
  *                         so a filtered cycle can never read as a full one
  * ```
  *
- * Env var names only, never values.
+ * Env var names only, never values. `WTP_WORKERS_ANTHROPIC_API_KEY` is read
+ * by NAME to build the Scout transport; its value reaches nothing but the
+ * provider request header.
  */
 
 import { mkdirSync, writeFileSync } from "node:fs";
+import { hostname } from "node:os";
 import { join } from "node:path";
 
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
@@ -68,7 +75,7 @@ import {
 } from "../lib/control-plane/repository/pg-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { digestLines, runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
-import { scheduleObligation, isScheduled } from "../lib/control-plane/scheduler/obligation.ts";
+import { scheduleObligation, isScheduled, type ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
 import { retryable } from "../lib/control-plane/scheduler/debt.ts";
 import { buildRegistry, registryLines } from "../lib/control-plane/scheduler/registry.ts";
 import { meetingsProvider } from "../lib/control-plane/scheduler/providers/meetings.ts";
@@ -95,7 +102,37 @@ import {
   writeStagingManifest,
   type StagedEntry,
 } from "../lib/control-plane/scheduler/promotion-tail.ts";
-import type { DeclaredExecutor, RunWork } from "../lib/control-plane/scheduler/dispatch.ts";
+import {
+  decideExecutor,
+  type DeclaredExecutor,
+  type DispatchResult,
+  type ExecutorDecision,
+  type RunWork,
+  type WorkArtifact,
+} from "../lib/control-plane/scheduler/dispatch.ts";
+import { anthropicTransport, scoutExecutor } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { buildScoutToolkit } from "../lib/control-plane/scheduler/scout-tools.ts";
+import type { InheritedEvidence } from "../lib/control-plane/scheduler/scout-contract.ts";
+import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
+import {
+  RESEARCH_BOUNDS,
+  RESEARCH_FORMAT_VERSION,
+  RESEARCH_INTENT_LOG_KEY,
+  RESEARCH_STATE_ID,
+  SCOUT_MODEL,
+  WORKER_CREDENTIAL_VAR,
+  ceilingPermits,
+  readIntents,
+  scoutSpendInWindow,
+  type ResearchIntent,
+  type ResearchState,
+  type RunningScout,
+} from "../lib/control-plane/scheduler/research-policy.ts";
+import { candidateStoreCounts, proposeScoutCandidates, type ProposalReport } from "../lib/control-plane/scheduler/scout-candidates.ts";
+import type { CostEntry } from "../lib/control-plane/cost.ts";
+import { RUNNER_ID } from "../lib/control-plane/admin-data.ts";
+import { OWNER_SURFACE_FORMAT_VERSION, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
+import { browseWithPlaywright } from "./scout-browse.mts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { nextRunRecordPath } from "../lib/health/run-records.ts";
@@ -106,25 +143,19 @@ const ROOT = process.cwd();
 const CONTROL_PLANE_ROOT = join(ROOT, "data", "control-plane", "freshness-shadow");
 const RUNS_DIR = join(ROOT, "data", "health", "freshness-shadow-runs");
 const NOW = new Date().toISOString();
+const HOST = hostname();
+const nowIso = (): string => new Date().toISOString();
 
 /*
  * **A CRASHED CYCLE WRITES A LEGIBLE RECORD; IT DOES NOT VANISH.**
  * (Autonomy-recovery session, 2026-09-01.)
  *
  * Every await in this script is unguarded by construction — it is a script, not
- * a function. Before this, an uncaught throw (a transient store error, or the
- * inconsistent state a killed cycle leaves behind) ended the process with NO
- * run record, and the runner's digest then read "0 providers, 0 units" — which
- * is indistinguishable from an idle night and is the opposite of what happened.
- *
- * So a last-resort handler writes a run record marking the cycle FAILED with
- * the error, prints the `run record:` line the runner greps for, and exits
- * non-zero. The failure is diagnosable, the digest says a cycle crashed rather
- * than that nothing was due, and the NEXT cycle proceeds because the runner
- * loops regardless. A rejected top-level await surfaces here as
+ * a function. A last-resort handler writes a run record marking the cycle
+ * FAILED with the error, prints the `run record:` line the runner greps for,
+ * and exits non-zero. A rejected top-level await surfaces here as
  * `uncaughtException` on this runtime; both events are handled and the handler
- * fires at most once. Per-obligation faults are isolated deeper in (the
- * dispatch loop and the occurrence loop) so this backstop rarely fires.
+ * fires at most once.
  */
 let crashRecorded = false;
 function recordCrash(error: unknown): void {
@@ -173,10 +204,20 @@ process.on("unhandledRejection", recordCrash);
 const argv = process.argv.slice(2);
 const wantsPostgres = argv.includes("--provider=postgres");
 const dry = argv.includes("--dry");
+const noModel = argv.includes("--no-model");
 const ceilingArg = argv.find((a) => a.startsWith("--max="));
 const MAX_DISPATCHES = ceilingArg ? Number(ceilingArg.slice("--max=".length)) : 50;
+const scoutMaxArg = argv.find((a) => a.startsWith("--scout-max="));
+const SCOUT_MAX = scoutMaxArg
+  ? Number(scoutMaxArg.slice("--scout-max=".length))
+  : RESEARCH_BOUNDS.maxScoutDispatchesPerCycle;
+const intervalArg = argv.find((a) => a.startsWith("--interval="));
+const INTERVAL_MIN = intervalArg ? Number(intervalArg.slice("--interval=".length)) : null;
 const onlyArg = argv.find((a) => a.startsWith("--only="));
 const ONLY = onlyArg ? onlyArg.slice("--only=".length) : null;
+/* Exact obligation ids, comma-separated. A DIAGNOSTIC filter like --only, for a proof run. */
+const idsArg = argv.find((a) => a.startsWith("--ids="));
+const IDS = idsArg ? new Set(idsArg.slice("--ids=".length).split(",").map((s) => s.trim()).filter(Boolean)) : null;
 /*
  * The dispatch budget, in minutes from PROCESS START. The runner kills a child
  * at twenty minutes; this stops the cycle starting new work well inside that,
@@ -211,15 +252,12 @@ if (wantsPostgres) {
 /* ----------------------------------------------------------- the registry --- */
 
 /*
- * FIVE PROVIDERS. (Session C3, lane C, 2026-09-01. RULING 229.)
- *
- * The fourth and fifth are what "acquire to the AUTHORITATIVE SOURCE UNIVERSE"
- * looks like from the scheduler's side: `local-jurisdictions` gives every named
- * filing officer and election custodian a clock, and `candidate-enrichment`
- * makes campaign sites, positions, bios, photos and contact standing
- * obligations against each state's CANONICAL CANDIDATE ACQUISITION DENOMINATOR
- * — labelled by `lib/candidates/population-label.ts`, never assumed statewide
- * (R-C9) — rather than against whichever ZIPs happen to be enabled.
+ * FIVE PROVIDERS. (Session C3, lane C, 2026-09-01. RULING 229.) `local-jurisdictions`
+ * gives every named filing officer and election custodian a clock, and
+ * `candidate-enrichment` makes campaign sites, positions, bios, photos and
+ * contact standing obligations against each state's CANONICAL CANDIDATE
+ * ACQUISITION DENOMINATOR — labelled by `lib/candidates/population-label.ts`,
+ * never assumed statewide (R-C9).
  */
 const registry = buildRegistry(
   [
@@ -233,18 +271,20 @@ const registry = buildRegistry(
 );
 
 const allUnits = registry.units;
-const units = ONLY === null ? allUnits : allUnits.filter((u) => u.obligation.id.startsWith(ONLY));
+const units = allUnits.filter(
+  (u) => (ONLY === null || u.obligation.id.startsWith(ONLY)) && (IDS === null || IDS.has(u.obligation.id)),
+);
 const corpus = units.map((u) => u.obligation);
 
 console.log(
   `freshness:shadow · ${corpus.length} obligation(s) from the obligation-provider registry\n` +
     `  provider: ${repos.describe()}\n` +
-    `  executor: ${dry ? "SIMULATED (--dry, no retrieval)" : "route-aware (real retrieval)"}`,
+    `  executor: ${dry ? "SIMULATED (--dry, no retrieval)" : "route-aware (real retrieval) + Scout lane (Level 1)"}`,
 );
 for (const line of registryLines(registry)) console.log(line);
-if (ONLY !== null) {
+if (ONLY !== null || IDS !== null) {
   console.log(
-    `  --only=${ONLY} FILTERED this cycle to ${units.length} of ${allUnits.length} registered ` +
+    `  ${ONLY !== null ? `--only=${ONLY}` : ""}${IDS !== null ? ` --ids=(${IDS.size})` : ""} FILTERED this cycle to ${units.length} of ${allUnits.length} registered ` +
       `unit(s); ${allUnits.length - units.length} were not looked at. A filtered cycle is a ` +
       "diagnostic and is never a reading of the whole corpus.",
   );
@@ -288,30 +328,45 @@ if (sync.refreshed.length > 0) {
   if (sync.refreshed.length > 5) console.log(`      … and ${sync.refreshed.length - 5} more`);
 }
 
+/* ---------------------------------------------- the executor decision --- */
+
+/*
+ * ONE decision per unit, from the descriptor and the method store together
+ * (`decideExecutor`). Made here, before any occurrence is opened, so the
+ * deterministic ceiling and the Scout ceiling each see their own queue.
+ */
+const maturity = methodMaturityFrom(ROOT);
+const decisions = new Map<string, ExecutorDecision>();
+const decisionFor = (obligationId: string, routeId: string | null): ExecutorDecision => {
+  const held = decisions.get(obligationId);
+  if (held !== undefined) return held;
+  const d = decideExecutor({ routeId, descriptor: registry.routeFor(obligationId), maturity });
+  decisions.set(obligationId, d);
+  return d;
+};
+for (const u of units) decisionFor(u.obligation.id, u.obligation.routeId);
+const modelClassUnits = units.filter((u) => decisions.get(u.obligation.id)?.kind === "BOUNDED_MODEL_WORKER");
+const decisionDisagreements = units
+  .map((u) => ({ obligationId: u.obligation.id, disagreement: decisions.get(u.obligation.id)?.disagreement ?? null }))
+  .filter((d) => d.disagreement !== null);
+
 /* ------------------------------------------------------- the occurrences --- */
 
 const nowMs = Date.parse(NOW);
 const occurrenceByObligation = new Map<string, { id: string; routeTaskId: string }>();
 const nextDueByObligation = new Map<string, string>();
-let opened = 0;
+let openedDeterministic = 0;
+let openedModel = 0;
 /** Due obligations this cycle deliberately did not START. Never silent. */
 let deferredForCeiling = 0;
 /** Occurrences a previous cycle opened and did not reach, picked back up. */
 let resumedCount = 0;
 /** Obligations whose open/resume threw and were isolated. Never silent. */
 const preOpenSkipped: { obligationId: string; why: string }[] = [];
-/** Everything due, collected before any occurrence is opened, so it can be
- *  sorted into the dispatcher's own oldest-first order. */
 const dueThisCycle: { obligation: (typeof sync.all)[number]; nextDueAt: string }[] = [];
 
 const debtsIn = await loadDebts(repos);
 const debtIds = new Set(debtsIn.filter((d) => d.consecutiveFailures > 0).map((d) => d.obligationId));
-/*
- * An obligation whose backoff has NOT elapsed gets no occurrence this cycle.
- * `runCycle` holds it out of the due set for the same reason; opening a
- * WorkItem and a RouteTask for it here would leave an occurrence nothing
- * dispatches, which reads back as a worker that abandoned it.
- */
 const retryNow = new Set(retryable(debtsIn, nowMs).map((d) => d.obligationId));
 const backedOff = new Set([...debtIds].filter((id) => !retryNow.has(id)));
 console.log(
@@ -322,18 +377,7 @@ console.log(
 for (const o of sync.all) {
   const row = scheduleObligation(o, nowMs);
   if (!isScheduled(row)) continue;
-  /*
-   * DO NOT PAY A ROUND TRIP TO WRITE A VALUE THAT IS ALREADY THERE.
-   * (Session C3, lane C, 2026-09-01.)
-   *
-   * `recordNextDue` already no-ops when the stored value matches — but it
-   * discovers that by READING the row, which is one round trip per obligation
-   * per cycle. `sync.all` is the row, already in hand. Under RULING 229 the
-   * corpus is the authoritative source universe rather than one pilot ballot,
-   * so this loop runs over thousands of rows and the difference between "check
-   * in memory" and "ask the database" is the difference between a cycle that
-   * fits inside the runner's interval and one that does not.
-   */
+  /* Do not pay a round trip to write a value that is already there. */
   if (o.nextDueAt !== row.nextDueAt) {
     await recordNextDue(repos, { obligationId: o.id, nextDueAt: row.nextDueAt, now: NOW });
   }
@@ -344,66 +388,37 @@ for (const o of sync.all) {
   dueThisCycle.push({ obligation: o, nextDueAt: row.nextDueAt });
 }
 
-/*
- * OLDEST FIRST, which is the dispatcher's own order (`dueNow` sorts ascending
- * by next-due). Opening occurrences in corpus order and dispatching in due
- * order would start work on whatever sorted first by ID while the most overdue
- * route waited — and the two orders only agree by accident.
- */
+/* OLDEST FIRST, which is the dispatcher's own order. */
 dueThisCycle.sort((a, b) => (a.nextDueAt < b.nextDueAt ? -1 : a.nextDueAt > b.nextDueAt ? 1 : 0));
+const dueModel = dueThisCycle.filter((d) => decisionFor(d.obligation.id, d.obligation.routeId).kind === "BOUNDED_MODEL_WORKER");
+const dueDeterministic = dueThisCycle.length - dueModel.length;
 
 for (const { obligation: o, nextDueAt } of dueThisCycle) {
   const row = { nextDueAt };
   /*
-   * **DO NOT OPEN AN OCCURRENCE THIS CYCLE CANNOT DISPATCH.**
-   * (Session C3, lane C, 2026-09-01.)
-   *
-   * `runCycle` takes a STATED ceiling and defers the rest with a reason. This
-   * loop had no such ceiling, so it opened an occurrence — a WorkItem, a
-   * RouteTask and an occurrence row, three durable writes — for every due
-   * obligation before the dispatcher had looked at any of them.
-   *
-   * At 94 obligations that was invisible. Under RULING 229 the corpus is the
-   * authoritative source universe and it is 2,358 units, so the first cycle
-   * opened thousands of occurrences the ceiling then deferred, and each one is
-   * an OPEN occurrence a later cycle has to reconcile or abandon. An abandoned
-   * occurrence reads back as a worker that gave up on a route — which is a
-   * false statement about a worker, produced by arithmetic in the runner.
-   *
-   * The ceiling here is deliberately the SAME number the dispatcher uses, and
-   * the list was sorted into the dispatcher's own order above, so what is
-   * opened is what is oldest — not what happens to sort first by id.
+   * **DO NOT OPEN AN OCCURRENCE THIS CYCLE CANNOT DISPATCH.** Each lane opens
+   * at most its own ceiling, in the dispatcher's own order — what is opened is
+   * what is oldest in that lane.
    */
-  if (opened >= MAX_DISPATCHES) {
+  const lane = decisionFor(o.id, o.routeId).kind;
+  const opened = lane === "BOUNDED_MODEL_WORKER" ? openedModel : openedDeterministic;
+  const laneCeiling = lane === "BOUNDED_MODEL_WORKER" ? SCOUT_MAX : MAX_DISPATCHES;
+  if (opened >= laneCeiling) {
     deferredForCeiling += 1;
     continue;
   }
-  /*
-   * RESUME BEFORE OPENING. An occurrence a previous cycle opened and did not
-   * reach is real work with a real WorkItem and a real RouteTask; opening a
-   * second one beside it strands the first, and a stranded open occurrence
-   * reads back as a worker that abandoned a route.
-   *
-   * **ONE OBLIGATION'S OPEN/RESUME THROW IS ISOLATED.** (Autonomy-recovery
-   * session, 2026-09-01.) `resumeOpenOccurrence` and `openOccurrence` read and
-   * compare-and-set durable rows, so a transient store error or the
-   * inconsistent state a killed cycle left on ONE obligation could throw here.
-   * Left unguarded that aborted the whole pre-open phase and every obligation
-   * behind it in the sort. Isolated, the bad obligation is skipped this cycle
-   * (it keeps its next-due and is opened by a later cycle) and the rest proceed.
-   */
   try {
     const resumed = await resumeOpenOccurrence(repos, o);
     if (resumed !== null) {
       occurrenceByObligation.set(o.id, resumed);
       resumedCount += 1;
-      opened += 1;
-      continue;
+    } else {
+      const occ = await openOccurrence(repos, { obligation: o, dueAt: row.nextDueAt, now: NOW });
+      if (occ === null) continue;
+      occurrenceByObligation.set(o.id, { id: occ.occurrence.id, routeTaskId: occ.routeTask.id });
     }
-    const occ = await openOccurrence(repos, { obligation: o, dueAt: row.nextDueAt, now: NOW });
-    if (occ === null) continue;
-    occurrenceByObligation.set(o.id, { id: occ.occurrence.id, routeTaskId: occ.routeTask.id });
-    opened += 1;
+    if (lane === "BOUNDED_MODEL_WORKER") openedModel += 1;
+    else openedDeterministic += 1;
   } catch (error) {
     preOpenSkipped.push({
       obligationId: o.id,
@@ -412,17 +427,18 @@ for (const { obligation: o, nextDueAt } of dueThisCycle) {
   }
 }
 console.log(
-  `  occurrences opened this cycle: ${opened} (each with its OWN WorkItem and RouteTask)` +
+  `  occurrences opened this cycle: ${openedDeterministic + openedModel} (deterministic ${openedDeterministic}, ` +
+    `Scout ${openedModel}; each with its OWN WorkItem and RouteTask)` +
     (resumedCount > 0
       ? ` — ${resumedCount} of them RESUMED from an earlier cycle that opened them and did not reach them`
       : ""),
 );
 if (deferredForCeiling > 0) {
   console.log(
-    `  ${deferredForCeiling} due obligation(s) got NO occurrence this cycle: the stated ceiling is ` +
-      `${MAX_DISPATCHES} and opening a WorkItem the dispatcher will not reach leaves an occurrence ` +
-      "nothing works, which reads back as a worker that abandoned a route. They keep their next-due " +
-      "and are opened by a later cycle — the obligation is not discharged, only unstarted.",
+    `  ${deferredForCeiling} due obligation(s) got NO occurrence this cycle: the stated ceilings are ` +
+      `${MAX_DISPATCHES} deterministic and ${SCOUT_MAX} Scout, and opening a WorkItem the dispatcher will not reach ` +
+      "leaves an occurrence nothing works. They keep their next-due and are opened by a later cycle — " +
+      "the obligation is not discharged, only unstarted.",
   );
 }
 if (preOpenSkipped.length > 0) {
@@ -434,9 +450,221 @@ if (preOpenSkipped.length > 0) {
   if (preOpenSkipped.length > 5) console.log(`      … and ${preOpenSkipped.length - 5} more`);
 }
 
+/* -------------------------------------------------- LEVEL 1 — RESEARCH --- */
+
+const runtimeConditions: string[] = [];
+
+/* The credential, BY NAME. Its value goes into the transport and nowhere else. */
+const workerKey = (process.env[WORKER_CREDENTIAL_VAR] ?? "").trim();
+const credentialConfigured = workerKey.length > 0;
+
+let intentLog: ResearchIntent[] = [];
+try {
+  intentLog = [...(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))];
+} catch (error) {
+  runtimeConditions.push(
+    `research intents could not be read (${error instanceof Error ? error.message : String(error)}); the lane treats the owner as not paused`,
+  );
+}
+const intents = readIntents(intentLog);
+/* A pending RUN_CYCLE_NOW is honored by the cycle that runs. This is it. */
+const honoredIntents: string[] = [];
+for (const pending of intents.pendingRunNow) {
+  const id = `${pending.intentId}:honored`;
+  try {
+    await repos.researchIntents.append(
+      RESEARCH_INTENT_LOG_KEY,
+      id,
+      {
+        formatVersion: RESEARCH_FORMAT_VERSION,
+        kind: "HONORED",
+        intentId: id,
+        honors: pending.intentId,
+        action: pending.action,
+        honoredAt: NOW,
+        honoredBy: `freshness-shadow@${HOST}#${process.pid}`,
+        detail: "a cycle ran; whether it started early or on the interval is the runner's record",
+      },
+      NOW,
+    );
+    honoredIntents.push(pending.intentId);
+  } catch (error) {
+    runtimeConditions.push(`intent ${pending.intentId} could not be marked honored: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
+const laneDisabledCode = dry
+  ? "LANE_DISABLED"
+  : noModel
+    ? "LANE_DISABLED"
+    : !credentialConfigured
+      ? "LANE_DISABLED"
+      : intents.paused
+        ? "PAUSED"
+        : null;
+const laneDisabledReason = dry
+  ? "--dry: no retrieval of any kind runs, so no Scout runs"
+  : noModel
+    ? "--no-model: the Scout lane is held closed for this diagnostic cycle"
+    : !credentialConfigured
+      ? `${WORKER_CREDENTIAL_VAR} is not set in this process, so no model can be invoked`
+      : intents.paused
+        ? `paused by owner intent ${intents.pauseIntentId ?? "(id unrecorded)"}`
+        : null;
+const modelLaneEnabled = laneDisabledReason === null;
+
+let costLedger: CostEntry[] = [];
+let ledgerUnreadable: string | null = null;
+try {
+  costLedger = [...(await repos.costs.readAll())];
+} catch (error) {
+  ledgerUnreadable = error instanceof Error ? error.message : String(error);
+  runtimeConditions.push(`the cost ledger could not be read (${ledgerUnreadable}); the rolling ceiling cannot be enforced, so Scout work is deferred`);
+}
+const spendWindow = scoutSpendInWindow(costLedger, NOW);
+let spentThisCycle = 0;
+let scoutsAdmittedThisCycle = 0;
+
+/* Prior context the Scout may inherit — read once, only when a Scout can run. */
+const priorScoutResults = new Map<string, ScoutResult[]>();
+const priorDispositionsByObligation = new Map<string, { disposition: string; permission: string; transport: string; note: string; at: string }[]>();
+if (modelLaneEnabled && dueModel.length > 0) {
+  try {
+    for (const r of await repos.scoutResults.readAll()) {
+      const list = priorScoutResults.get(r.obligationId) ?? [];
+      list.push(r);
+      priorScoutResults.set(r.obligationId, list);
+    }
+  } catch (error) {
+    runtimeConditions.push(`prior Scout results could not be read: ${error instanceof Error ? error.message : String(error)}`);
+  }
+  try {
+    const routeTaskToObligation = new Map<string, string>();
+    for (const occ of await repos.occurrences.list()) routeTaskToObligation.set(occ.value.routeTaskId, occ.value.obligationId);
+    for (const c of await repos.dispositions.readAll()) {
+      const obligationId = routeTaskToObligation.get(c.routeTaskId);
+      if (obligationId === undefined) continue;
+      const list = priorDispositionsByObligation.get(obligationId) ?? [];
+      list.push({
+        disposition: c.disposition.disposition,
+        permission: c.disposition.permission,
+        transport: c.disposition.transport,
+        note: c.disposition.note,
+        at: c.committedAt,
+      });
+      priorDispositionsByObligation.set(obligationId, list);
+    }
+  } catch (error) {
+    runtimeConditions.push(`prior dispositions could not be read: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
+function inheritedFor(row: ScheduledObligation): InheritedEvidence {
+  const id = row.obligation.id;
+  const prior = (priorScoutResults.get(id) ?? []).slice(-2);
+  const dispositions = (priorDispositionsByObligation.get(id) ?? []).slice(-3);
+  const debt = debtsIn.find((d) => d.obligationId === id);
+  const lines: string[] = [];
+  for (const r of prior) {
+    lines.push(
+      `PRIOR SCOUT ${r.recordedAt}: ${r.refusal ? `REFUSED (${r.refusal.map((i) => i.code).join(", ")})` : r.outcome} (${r.stoppedBy}); ` +
+        `rungs: ${r.rungs.map((g) => `${g.rung} -> ${g.target} [${g.observed}]`).join("; ") || "none"}; ` +
+        `next rungs it named: ${r.nextRungs.join("; ") || "none"}; ` +
+        `candidates: ${r.candidates.map((c) => `${c.routeId} <${c.url}>`).join(", ") || "none"}`,
+    );
+  }
+  for (const d of dispositions) {
+    lines.push(`PRIOR DISPOSITION ${d.at}: ${d.disposition} (permission ${d.permission}, transport ${d.transport}) — ${d.note.slice(0, 300)}`);
+  }
+  if (debt) lines.push(`DEBT: ${debt.consecutiveFailures} consecutive failure(s), retry at ${debt.retryAt}`);
+  return {
+    artifactIds: [...new Set(prior.flatMap((r) => r.artifactIds))],
+    summary: lines.join("\n"),
+  };
+}
+
+/* ----------------------------------------------------- research state --- */
+
+const running: RunningScout[] = [];
+const scoutResultsThisCycle: ScoutResult[] = [];
+const candidateReports: ProposalReport[] = [];
+let laneCounts: { deterministicDispatched: number; modelDispatched: number; deferredBy: Record<string, number> } = {
+  deterministicDispatched: 0,
+  modelDispatched: 0,
+  deferredBy: {},
+};
+
+function researchState(cycleFinishedAt: string | null): ResearchState {
+  const window = spendWindow.windowUsd === null ? null : spendWindow.windowUsd + spentThisCycle;
+  return {
+    formatVersion: RESEARCH_FORMAT_VERSION,
+    beatAt: nowIso(),
+    cycleStartedAt: NOW,
+    cycleFinishedAt,
+    testedSha: headSha(ROOT),
+    host: HOST,
+    modelLaneEnabled,
+    modelLaneDisabledReason: laneDisabledReason,
+    pausedByOwner: intents.paused,
+    pauseIntentId: intents.pauseIntentId,
+    workerCredential: {
+      name: WORKER_CREDENTIAL_VAR,
+      configured: credentialConfigured,
+      provider: "anthropic",
+      context: `standing runner child process (freshness-shadow) on ${HOST}, env via node --env-file`,
+    },
+    model: SCOUT_MODEL,
+    bounds: { ...RESEARCH_BOUNDS, maxScoutDispatchesPerCycle: SCOUT_MAX },
+    spend: {
+      windowUsd: window,
+      measuredAttempts: spendWindow.measured,
+      unmeasuredAttempts: spendWindow.unmeasured,
+      asOf: nowIso(),
+    },
+    queue: {
+      registeredUnits: allUnits.length,
+      modelClassUnits: modelClassUnits.length,
+      modelClassDue: dueModel.length,
+      modelClassDispatchedThisCycle: laneCounts.modelDispatched,
+      modelClassDeferredForCeiling: laneCounts.deferredBy.CEILING ?? 0,
+      modelClassDeferredForCycleMax: (laneCounts.deferredBy.CYCLE_MAX ?? 0) + Math.max(0, dueModel.length - openedModel),
+      modelClassDeferredForLane: (laneCounts.deferredBy.LANE_DISABLED ?? 0) + (laneCounts.deferredBy.PAUSED ?? 0),
+      deterministicDue: dueDeterministic,
+      deterministicDispatchedThisCycle: laneCounts.deterministicDispatched,
+    },
+    running: [...running],
+    runtimeConditions: [...runtimeConditions],
+    methodCandidates: (() => {
+      const counts = candidateStoreCounts(ROOT);
+      return counts === null
+        ? null
+        : { proposed: counts.PROPOSED, validated: counts.VALIDATED, admitted: counts.ADMITTED, rejected: counts.REJECTED };
+    })(),
+  };
+}
+
+async function writeResearchState(cycleFinishedAt: string | null): Promise<void> {
+  for (let tries = 0; tries < 4; tries += 1) {
+    try {
+      const current = await repos.researchState.read(RESEARCH_STATE_ID);
+      const next = researchState(cycleFinishedAt);
+      if (current === null) await repos.researchState.put(RESEARCH_STATE_ID, next, nowIso());
+      else await repos.researchState.compareAndSet(RESEARCH_STATE_ID, current.revision, next, nowIso());
+      return;
+    } catch (error) {
+      if (tries === 3) {
+        runtimeConditions.push(`the research state could not be written: ${error instanceof Error ? error.message : String(error)}`);
+      }
+    }
+  }
+}
+
+await writeResearchState(null);
+
 /* ----------------------------------------------------------- the executor --- */
 
 const vault = cycleVault(join(ROOT, ...VAULT_DIR));
+const spacer = hostSpacer();
 
 const simulated: RunWork = async ({ executor, routeTaskId }) => ({
   ranAs: "DETERMINISTIC",
@@ -446,23 +674,11 @@ const simulated: RunWork = async ({ executor, routeTaskId }) => ({
 
 const walk = routeExecutor({
   routeFor: (id) => registry.routeFor(id),
-  spaceOut: hostSpacer(),
+  spaceOut: spacer,
   vault: vault.put,
 });
 
-/**
- * **THE LANE IS DECLARED PER ROUTE.**
- *
- * The registry's descriptor states the class the representation genuinely
- * needs, and that class is what the Attempt is opened under. Neither branch
- * here is a model: `--dry` performs no retrieval, and the route executor is an
- * HTTP GET or POST. A route whose class is BOUNDED_MODEL_WORKER is one nothing
- * has derived a shape for; it is opened by nothing today and disposes
- * REQUIRES_NEW_ADAPTER with the missing adapter named, so no Attempt is
- * persisted under an anthropic worker identity for work no model touched.
- * `WTP_WORKERS_ANTHROPIC_API_KEY` is the variable a bounded model worker would
- * read; no route in this cycle reads one.
- */
+/** The deterministic lane: an HTTP GET or POST from a committed descriptor. Never a model. */
 const executorFor = (obligation: { obligation: { id: string } }): DeclaredExecutor => {
   const route = registry.routeFor(obligation.obligation.id);
   return {
@@ -477,6 +693,60 @@ const executorFor = (obligation: { obligation: { id: string } }): DeclaredExecut
   };
 };
 
+/**
+ * THE SCOUT LANE. A real bounded model worker: role SCOUT, provider
+ * anthropic, the model named, provider-reported usage and computed cost on
+ * the Attempt, research through tools that vault first. Built only when the
+ * lane is enabled; otherwise a refusing stand-in that `admitScout` never
+ * reaches.
+ */
+const scout: DeclaredExecutor = modelLaneEnabled
+  ? scoutExecutor({
+      transport: anthropicTransport(workerKey),
+      toolkitFor: buildScoutToolkit,
+      contextFor: (row) => ({
+        route: registry.routeFor(row.obligation.id),
+        providerId: registry.providerOf(row.obligation.id),
+        reason: decisionFor(row.obligation.id, row.obligation.routeId).why,
+        inherited: inheritedFor(row),
+        tools: { vault: vault.put, vaultBytes: vault.putBytes, spaceOut: spacer, browse: browseWithPlaywright },
+      }),
+      onStart: async ({ attemptId, obligationId, startedAt }) => {
+        running.push({ attemptId, obligationId, startedAt });
+        await writeResearchState(null);
+      },
+      onResult: async (result: ScoutResult, artifacts: readonly WorkArtifact[]) => {
+        let amended = result;
+        if (result.refusal === null && result.candidates.length > 0) {
+          try {
+            const report = proposeScoutCandidates({ root: ROOT, result, artifacts, stamp: today() });
+            candidateReports.push(report);
+            amended = {
+              ...result,
+              methodCandidateIds: report.proposed.map((p) => p.candidateId),
+              unverified: [...result.unverified, ...report.notProposed.map((n) => `${n.routeId}: ${n.why}`)],
+            };
+          } catch (error) {
+            amended = {
+              ...result,
+              unverified: [...result.unverified, `method candidate proposal failed: ${error instanceof Error ? error.message : String(error)}`],
+            };
+          }
+        }
+        await repos.scoutResults.append(amended.obligationId, amended.attemptId, amended, nowIso());
+        scoutResultsThisCycle.push(amended);
+        return amended;
+      },
+    })
+  : {
+      lane: "BOUNDED_MODEL_WORKER",
+      run: async () => ({
+        ranAs: "BOUNDED_MODEL_WORKER",
+        kind: "ABORTED",
+        detail: `the Scout lane is closed this cycle: ${laneDisabledReason ?? "(no reason recorded)"}`,
+      }),
+    };
+
 /* --------------------------------------------------------------- the cycle --- */
 
 const cycle = await runCycle({
@@ -484,16 +754,11 @@ const cycle = await runCycle({
   obligations: sync.all,
   debts: debtsIn,
   routeTaskFor: (id) => occurrenceByObligation.get(id)?.routeTaskId ?? null,
-  /* Read from the method store — the project's own record of what it knows how
-     to walk — rather than from a string prefix. */
-  maturity: methodMaturityFrom(ROOT),
+  maturity,
   executor: executorFor,
   holder: `freshness-shadow@${process.pid}`,
   now: NOW,
   leaseTtlMs: 120_000,
-  /* The canonical readings come from their own instruments. This script does
-     not compute reader or truth health — a scheduler grading its own reader
-     contract is the shape RULING 217's rollup exists to prevent. */
   reader: {
     contract: "READER",
     state: "NOT_READY",
@@ -508,7 +773,40 @@ const cycle = await runCycle({
   },
   maxDispatches: MAX_DISPATCHES,
   budget: { deadlineMs: DISPATCH_DEADLINE_MS, now: () => Date.now() },
+  research: {
+    decide: (row) => decisionFor(row.obligation.id, row.obligation.routeId),
+    admitScout: () => {
+      if (!modelLaneEnabled) return { admit: false, code: laneDisabledCode ?? "LANE_DISABLED", why: laneDisabledReason ?? "lane closed" };
+      if (ledgerUnreadable !== null) return { admit: false, code: "CEILING", why: `the cost ledger could not be read, so the ceiling cannot be enforced (${ledgerUnreadable})` };
+      const window = spendWindow.windowUsd === null ? null : spendWindow.windowUsd + spentThisCycle;
+      const cap = ceilingPermits(window, RESEARCH_BOUNDS.dailyCeilingUsd);
+      if (!cap.permits) return { admit: false, code: "CEILING", why: cap.why };
+      if (scoutsAdmittedThisCycle >= SCOUT_MAX) return { admit: false, code: "CYCLE_MAX", why: `this cycle's Scout maximum of ${SCOUT_MAX} is reached` };
+      scoutsAdmittedThisCycle += 1;
+      return { admit: true };
+    },
+    modelExecutor: scout,
+    maxConcurrentScouts: RESEARCH_BOUNDS.maxConcurrentScouts,
+    scoutLeaseTtlMs: RESEARCH_BOUNDS.perDispatch.maxWallMs + 120_000,
+    scoutWallMs: RESEARCH_BOUNDS.perDispatch.maxWallMs,
+    onDispatched: async (result: DispatchResult, lane) => {
+      if (lane === "BOUNDED_MODEL_WORKER") {
+        spentThisCycle += result.cost?.usd ?? 0;
+        const at = running.findIndex((r) => r.attemptId === result.attemptId);
+        if (at >= 0) running.splice(at, 1);
+        laneCounts = { ...laneCounts, modelDispatched: laneCounts.modelDispatched + 1 };
+        await writeResearchState(null);
+      } else {
+        laneCounts = { ...laneCounts, deterministicDispatched: laneCounts.deterministicDispatched + 1 };
+      }
+    },
+  },
 });
+laneCounts = {
+  deterministicDispatched: cycle.lanes?.deterministic.dispatched ?? laneCounts.deterministicDispatched,
+  modelDispatched: cycle.lanes?.model.dispatched ?? laneCounts.modelDispatched,
+  deferredBy: { ...(cycle.lanes?.model.deferredBy ?? {}) },
+};
 
 const budgetDeferred = cycle.deferred.filter((d) => d.why.includes("dispatch budget was spent")).length;
 console.log(
@@ -548,18 +846,11 @@ console.log(
  * runs on EVERY cycle with no operator: acquire -> vault -> normalize ->
  * snapshot -> STAGED. Promotion itself is OFF and a session carries the last
  * mile, so nothing below writes outside data/control-plane/staging/.
- *
- * A wall stages TOO, as an honest gap with the obligation still live and its
- * next-due named — the second half of the ruling, and not a lesser outcome.
  */
 const staged: StagedEntry[] = [];
 for (const result of cycle.dispatched) {
   const unit = units.find((u) => u.obligation.id === result.obligationId);
   if (unit === undefined) continue;
-  /* Meetings routes have no normalizer and would stage a gap for every body on
-     every cycle. The tail is scoped to the record classes whose promotion is
-     what RULING 224 was adopted about; meetings already has a live snapshot
-     path of its own through `pnpm ingest`. */
   if (unit.record.recordClass === "meetings") continue;
 
   let body: string | null = null;
@@ -589,17 +880,69 @@ for (const result of cycle.dispatched) {
 }
 const manifest = writeStagingManifest(ROOT, staged, today());
 
+/* -------------------------------------------- research state, heartbeat --- */
+
+const finishedAt = nowIso();
+await writeResearchState(finishedAt);
+const finalState = researchState(finishedAt);
+
+const heartbeat: RunnerHeartbeat = {
+  formatVersion: OWNER_SURFACE_FORMAT_VERSION,
+  beatAt: finishedAt,
+  lastCycleStartedAt: NOW,
+  lastCycleFinishedAt: finishedAt,
+  nextCycleDueAt: INTERVAL_MIN === null ? null : new Date(Date.now() + INTERVAL_MIN * 60_000).toISOString(),
+  lastCycleOk: true,
+  testedSha: headSha(ROOT),
+  host: HOST,
+};
+try {
+  const beat = await repos.runnerHeartbeat.read(RUNNER_ID);
+  if (beat === null) await repos.runnerHeartbeat.put(RUNNER_ID, heartbeat, finishedAt);
+  else await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, beat.revision, heartbeat, finishedAt);
+} catch (error) {
+  runtimeConditions.push(`the runner heartbeat could not be written: ${error instanceof Error ? error.message : String(error)}`);
+}
+
 /* ------------------------------------------------------------- the digest --- */
+
+const scoutDispatches = cycle.dispatched.filter((d) => d.executor === "BOUNDED_MODEL_WORKER");
+const outcomeCounts = new Map<string, number>();
+for (const r of scoutResultsThisCycle) {
+  const key = r.refusal ? "REFUSED" : r.outcome;
+  outcomeCounts.set(key, (outcomeCounts.get(key) ?? 0) + 1);
+}
+const deferredByLine = Object.entries(laneCounts.deferredBy)
+  .map(([k, v]) => `${k} ${v}`)
+  .join(", ");
+const researchLines = [
+  "RESEARCH — LEVEL 1 (RULING 240)",
+  `  lane               ${modelLaneEnabled ? "ENABLED" : `CLOSED — ${laneDisabledReason}`}`,
+  `  credential         ${WORKER_CREDENTIAL_VAR} configured in this process: ${credentialConfigured ? "yes" : "NO"} (by name; the value reaches only the provider request)`,
+  `  model              ${SCOUT_MODEL} · concurrency ${RESEARCH_BOUNDS.maxConcurrentScouts} · per cycle ${SCOUT_MAX} · per Attempt ${RESEARCH_BOUNDS.perDispatch.maxTurns} turns / ${RESEARCH_BOUNDS.perDispatch.maxToolCalls} tools / ${Math.round(RESEARCH_BOUNDS.perDispatch.maxWallMs / 60_000)} min`,
+  `  scouts             ${laneCounts.modelDispatched} dispatched of ${dueModel.length} due model-class (${modelClassUnits.length} registered model-class of ${allUnits.length}) · ` +
+    `deferred ${cycle.lanes?.model.deferred ?? 0}${deferredByLine ? ` (${deferredByLine})` : ""}` +
+    (dueModel.length - openedModel > 0 ? ` · ${dueModel.length - openedModel} not opened (Scout ceiling ${SCOUT_MAX})` : ""),
+  `  spend              rolling ${RESEARCH_BOUNDS.windowHours}h: ${spendWindow.windowUsd === null ? "UNMEASURED" : `$${(spendWindow.windowUsd + spentThisCycle).toFixed(4)}`} of $${RESEARCH_BOUNDS.dailyCeilingUsd} ceiling ` +
+    `(measured ${spendWindow.measured}, unmeasured ${spendWindow.unmeasured} before this cycle) · this cycle $${spentThisCycle.toFixed(4)}`,
+  `  results            ${scoutResultsThisCycle.length} typed result(s)${outcomeCounts.size > 0 ? ` — ${[...outcomeCounts].map(([k, v]) => `${k} ${v}`).join(", ")}` : ""}` +
+    ` · ${scoutDispatches.filter((d) => d.dispositionCommitted).length} disposition(s) committed`,
+  `  candidates         ${candidateReports.reduce((n, r) => n + r.proposed.length, 0)} method candidate(s) proposed and validated (never admitted here)`,
+  `  disagreements      ${decisionDisagreements.length} executor-decision disagreement(s) recorded in the run record, never reconciled`,
+  `  intents            ${honoredIntents.length} RUN_CYCLE_NOW honored · paused: ${intents.paused ? "yes" : "no"}`,
+  `  runtime            ${runtimeConditions.length === 0 ? "no condition prevents eligible Scout work" : runtimeConditions.join("; ")}`,
+  "  PROMOTION          OFF. A Scout finding is inventory and a candidate; nothing it produced changed what a reader is told.",
+];
 
 const lines = [
   ...digestLines(cycle),
+  "",
+  ...researchLines,
   "",
   ...registryLines(registry),
   "",
   ...promotionLines(staged),
   `  staging manifest   ${manifest.total} entry(ies) held, ${manifest.written} written this cycle`,
-  /* Into the RECORD, not only the console: the runner's headline reads this
-     line so a budget-bounded cycle says "SPENT" instead of reading as idle. */
   `  dispatch budget    ${BUDGET_MIN} min from process start — ${
     budgetDeferred > 0
       ? `SPENT; ${budgetDeferred} due item(s) deferred to a later cycle rather than run past the runner's ceiling`
@@ -622,7 +965,7 @@ writeFileSync(
       testedSha: headSha(ROOT),
       provider: repos.describe(),
       durable: repos.durable,
-      executor: dry ? "SIMULATED" : "route-aware",
+      executor: dry ? "SIMULATED" : "route-aware + scout",
       registry: {
         providers: registry.byProvider,
         registeredUnits: allUnits.length,
@@ -631,7 +974,7 @@ writeFileSync(
         only: ONLY,
       },
       obligations: sync.all.length,
-      occurrencesOpened: opened,
+      occurrencesOpened: openedDeterministic + openedModel,
       preOpenSkipped,
       debtInherited: debtIds.size,
       debtPersisted: persisted.written,
@@ -654,10 +997,56 @@ writeFileSync(
       dispositions: cycle.dispatched
         .filter((d) => d.dispositionCommitted)
         .map((d) => ({ obligationId: d.obligationId, disposition: d.disposition, artifacts: d.artifactIds.length })),
+      executors: cycle.dispatched.map((d) => ({
+        obligationId: d.obligationId,
+        chosen: d.executorChosen,
+        ran: d.executor,
+        mismatch: d.executorMismatch,
+        disagreement: d.decisionDisagreement,
+      })),
+      /* Every dispatch's own account, so a FAILED reads as its cause and not as a count. */
+      dispatchDetails: cycle.dispatched.map((d) => ({
+        obligationId: d.obligationId,
+        attemptId: d.attemptId,
+        outcome: d.outcome,
+        disposition: d.disposition,
+        detail: d.detail,
+      })),
+      research: {
+        state: finalState,
+        lanes: cycle.lanes,
+        scouts: scoutDispatches.map((d) => ({
+          obligationId: d.obligationId,
+          attemptId: d.attemptId,
+          outcome: d.outcome,
+          disposition: d.disposition,
+          worker: d.worker,
+          cost: d.cost,
+          artifacts: d.artifactIds.length,
+          detail: d.detail,
+        })),
+        results: scoutResultsThisCycle.map((r) => ({
+          obligationId: r.obligationId,
+          attemptId: r.attemptId,
+          outcome: r.outcome,
+          refused: r.refusal !== null,
+          stoppedBy: r.stoppedBy,
+          rungs: r.rungs.length,
+          distinctEvidenceRungs: r.distinctEvidenceRungs,
+          candidates: r.candidates.length,
+          methodCandidateIds: r.methodCandidateIds,
+          usd: r.usd,
+          elapsedMs: r.elapsedMs,
+        })),
+        candidateReports,
+        decisionDisagreements,
+        honoredIntents,
+      },
       vaulted: [...vault.ledger.values()],
       staged,
       stagingManifest: `${["data", "control-plane", "staging"].join("/")}/manifest.json`,
       deferred: cycle.deferred.length,
+      deferredReasons: cycle.deferred,
       reclaim: cycle.reclaim,
       debts: cycle.debts.length,
       incidents: cycle.incidents,

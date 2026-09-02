@@ -255,6 +255,8 @@
     "queue:homes": "tsx scripts/queue-homes.mts",
     "reader:suite": "tsx scripts/reader-suite.mts",
     "readback:control-plane": "node --env-file=.env.local --experimental-strip-types scripts/lane-c-readback.mts",
+    "scout:denominator": "node --env-file=.env.local --experimental-strip-types scripts/scout-denominator.mts",
+    "scout:readback": "node --env-file=.env.local --experimental-strip-types scripts/scout-readback.mts",
     "reference:verify": "tsx scripts/reference-verify.mts",
     "refresh:daily": "tsx scripts/refresh-daily.mts",
     "regen": "tsx scripts/regen-check.mts",

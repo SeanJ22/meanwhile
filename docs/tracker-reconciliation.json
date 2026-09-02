@@ -45,6 +45,7 @@
       "NH299",
       "NH303",
       "NH304",
+      "NH305",
       "NH43",
       "NS01",
       "NS10",
@@ -89,13 +90,23 @@
     ]
   },
   "summary": {
-    "predicates": 0,
+    "predicates": 1,
     "notMachineVerifiable": 70,
-    "holds": 0,
+    "holds": 1,
     "resolved": 0,
     "cannotTell": 0
   },
   "outcomes": [
+    {
+      "rowId": "NH305",
+      "kind": "predicate",
+      "verdict": "HOLDS",
+      "why": "data/ops/runner-relaunch-proof.json is not present in this checkout. The elevated install and prove-relaunch have not been run, or their proof has not been committed; the runner is still DOWN after any kill until a logon.",
+      "read": [
+        "data/ops/runner-relaunch-proof.json"
+      ],
+      "evidence": []
+    },
     {
       "rowId": "RO08",
       "kind": "NOT_MACHINE_VERIFIABLE",

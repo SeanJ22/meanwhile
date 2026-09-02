@@ -3575,6 +3575,84 @@ staging operationalization, or any other carried Session C item.`,
       { kind: "related_to", target: "R-0225" },
     ],
   },
+  {
+    n: 240,
+    title: "RULING 240 — MEANWHILE IS AUTHORIZED TO OPERATE AT LEVEL 1 — RESEARCH",
+    adopted: "2026-09-01",
+    domain: "discovery",
+    kind: "LAW_DECISION",
+    provenance: "author_explicit",
+    body: `"MEANWHILE IS AUTHORIZED TO OPERATE AT LEVEL 1 — RESEARCH. The standing
+autonomous system may continuously perform bounded public-source scouting,
+acquisition, parsing, detective investigation, method-candidate learning,
+reopening, and freshness work without session-by-session owner authorization.
+Models handle novelty; deterministic code handles learned procedure. Level 1
+does not authorize canonical promotion merely because a model found something.
+Existing validation, evidence, neutrality, provenance, and promotion boundaries
+remain in force."
+
+**The executor decision.** A known or graduated machine-executable procedure
+runs DETERMINISTICALLY and never consumes a model because one is available.
+Genuine unresolved novelty runs a bounded Scout — role \`SCOUT\`, lane
+\`BOUNDED_MODEL_WORKER\` — whose Attempt records the real model and provider
+identity, the provider-reported usage, and the computed cost. Any disagreement
+between the decision and what actually ran is durably recorded and never
+silently reconciled.
+
+**The Scout persistence doctrine.** Absence is argued, never asserted. A Scout
+may not return \`NO_PROGRESS\`, \`BLOCKED\` or \`NEEDS_ADAPTER\` until it has
+walked an explicit ladder of compliant public paths with evidence recorded per
+rung, within its permission and cost bounds. The ladder never includes evading
+robots, authentication, access controls, rate limits or publisher restrictions.
+A bound reached returns a typed result naming the rungs walked and the next
+rungs owed.
+
+**The network-to-model boundary.** No public-source bytes reach a Scout except
+through the evidence vault — the Artifact and its provenance first, a sanitized
+representation second. A Scout may propose method candidates and may never
+promote its own proposal.
+
+**\`CLAUDE.md\` and the generated \`docs/governance/constitution.md\` remain
+SUPERIOR wherever they touch this ruling.** RULING 215's Level-4 deferral and
+Level-5 removal are untouched: this ruling authorizes research, never
+publication.`,
+    claims: [{ key: "activation.standing_level", value: "level-1-research" }],
+    relations: [
+      { kind: "extends", target: "R-0205" },
+      { kind: "extends", target: "R-0208" },
+      { kind: "related_to", target: "R-0215" },
+      { kind: "related_to", target: "R-0224" },
+      { kind: "related_to", target: "R-0237" },
+      { kind: "related_to", target: "R-0238" },
+    ],
+  },
+  {
+    n: 241,
+    title:
+      "RULING 241 — Level 1 activation parameters: a TEMPORARY $25/day rolling research spend ceiling, the local dispatchOne worker runtime, hosted worker runtimes deferred to the frontier",
+    adopted: "2026-09-01",
+    domain: "discovery",
+    kind: "DECISION",
+    provenance: "author_explicit",
+    body: `**The daily research model-spend ceiling is $25 per rolling 24 hours.** It is
+recorded as a TEMPORARY ACTIVATION SAFETY CEILING for owner adjustment, not as
+business policy. When the ceiling is reached, the remaining Scout work stays
+durably owed with its next-due — deferred, never dropped, never reported
+complete. The cap controls how much work runs and never whether a fact is true.
+
+**The worker runtime for this activation is the existing local \`dispatchOne\`
+path on the standing runner**, over the Playwright and network infrastructure
+already in the repository. Hosted worker runtimes — managed agent services —
+are FRONTIER, not authorized here.
+
+The code constants live in \`lib/control-plane/scheduler/research-policy.ts\`
+(\`RESEARCH_BOUNDS\`) and are named there, never here.`,
+    claims: [],
+    relations: [
+      { kind: "related_to", target: "R-0240" },
+      { kind: "related_to", target: "R-0213" },
+    ],
+  },
 ];
 
 /**

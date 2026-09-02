@@ -66,6 +66,8 @@ import type {
 } from "../owner-surface.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
+import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
+import type { ScoutResult } from "../scheduler/scout-result.ts";
 
 import type { Attempt, ExecutionLease } from "../attempt.ts";
 import type { BudgetLedger } from "../budget.ts";
@@ -500,6 +502,10 @@ export async function createPgRepositories(
     ),
     ownerDigests: pgAppendOnlyRepository<OwnerDigestRecord>(sql, "owner_digests"),
     ownerDecisions: pgAppendOnlyRepository<OwnerDecisionIntent>(sql, "owner_decisions"),
+    /* Level 1 — Research (schema v4). */
+    researchState: pgAggregateRepository<ResearchState>(sql, "ResearchState", "cp_research_state"),
+    researchIntents: pgAppendOnlyRepository<ResearchIntent>(sql, "research_intents"),
+    scoutResults: pgAppendOnlyRepository<ScoutResult>(sql, "scout_results"),
     budget: budgetRepositoryFrom(
       pgAggregateRepository<BudgetLedger>(sql, "BudgetLedger", "cp_budget"),
       locks,

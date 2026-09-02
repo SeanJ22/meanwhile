@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-09-01 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **174 sessions.**
+Newest first. **175 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -49,6 +49,14 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NH303** — From the OWN03 promotion, 2026-09-01. You approved nine portraits and all nine now render. Four of them are Arizona Corporation Commissioners, and all four are under the large card's 184px floor at 133x200, 133x200, 165x206 and 137x206 — soft when a card shows a face large. The reason is not that the Commission publishes small photographs: the URLs the original pick took are Sitefinity RENDITIONS, carrying tmb-thumb200 and MaxWidth=165 in the path. Dropping those parameters on the same host returns the SAME photographs at 3275x4913, 3138x4707, 2828x3600 and 2533x3800, measured HTTP 200 on all four on 2026-09-01. That is RULING 206 — the rendition is one representation and the portrait is the record — so this is a REPLACEMENT obligation rather than a shortfall to live with. WHY THIS IS BACK IN FRONT OF YOU RATHER THAN SHIPPED: a decision is about an IMAGE, not a person, and a 3275px original is a different image from the 133px crop you approved. Shipping it would be your approval inherited by a file you have not seen, which is the hole RULING 55 exists to close. NOTHING IS BLOCKED MEANWHILE: the approved thumbnails keep rendering, so a reader sees a face today either way. The four are staged at data/photos/door2-azcc-originals-2026-09-01.json and registered in lib/photos/staged.ts, so they reach the review sheet. *(open)*
 
 **Needs Sean.** NH303
+
+## level-1-activation 2026-09-01 · 2026-09-01
+
+**What it started.** 1 row(s) opened, 1 still open.
+
+- **NH305** — PREDICATE: resolves itself when data/ops/runner-relaunch-proof.json records verdict RELAUNCHED. WHAT IS NEEDED: one elevated command. The standing runner's Scheduled Task has only an at-logon trigger, and the measured fact (2026-09-01) is that RestartCount does not relaunch an externally killed runner on this host. The corrected installer registers a second trigger that fires every 5 minutes for 3650 days (a no-op while the runner lives, a relaunch within five minutes after a death), and the unelevated install attempt on 2026-09-01 was refused: Access is denied. From an elevated PowerShell in C:\Users\seanj\dev\we-the-people run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action install ; then -Action verify-triggers (expect exit 0) ; then -Action prove-relaunch (kills the runner, waits up to 8 minutes for the trigger to bring it back, writes data/ops/runner-relaunch-proof.json) ; then commit that proof file. OPTIONS: (A) run the three commands - the runner then survives a kill unattended and L1-8 turns MET; (B) do not - the Level 1 lane keeps running while the runner lives, and any kill or crash of the parent leaves it DOWN until a logon or pnpm pilot:start, which is the state measured today. CONSEQUENCE OF NOT DECIDING: (B) stands, and the admin Research view reports the runner dead the next time it dies. *(open)*
+
+**Needs Sean.** NH305
 
 ## autonomy-recovery 2026-09-01 · 2026-09-01
 

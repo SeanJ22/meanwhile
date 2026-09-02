@@ -126,7 +126,136 @@ To get the better one, run this from an **elevated** PowerShell:
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action install
 ```
 
+## Relaunch after a kill
+
+*(Autonomous-scout session, 2026-09-01. Operative code: `scripts/pilot-task.ps1`;
+guard: `tests/pilot-task-installer.test.ts`; measurements:
+`docs/evidence/runner-installer-2026-09-01.md`.)*
+
+**`RestartCount 999 / RestartInterval PT5M` does not relaunch a killed runner
+on this host.** Measured 2026-09-01 against the owner-installed task (AtLogOn
+trigger only): a runner killed with `Stop-Process -Force` left the task at
+`Ready`, `LastTaskResult 0xFFFFFFFF`, and no new process within 8 minutes.
+Windows treats the run as completed-with-failure and the restart setting does
+not fire. After a kill or a crash the runner is DOWN until a logon or
+`pnpm pilot:start`. The child-level recovery above (the next cycle absorbs a
+killed cycle) is real; parent-level recovery from the task's settings is not,
+and the "restarts a crashed runner" row in the table above is true only with
+the trigger below present.
+
+**The relaunch path is a second trigger.** `-Action install` now registers
+TWO triggers and keeps the settings (`IgnoreNew`, `RestartCount 999`,
+`ExecutionTimeLimit 0`) unchanged:
+
+| trigger | what it does |
+| --- | --- |
+| AtLogOn | starts the runner at every logon, including after a reboot |
+| Once, repeating every 5 minutes for 3650 days | with `MultipleInstances IgnoreNew`, a firing while the runner lives is a no-op; a firing after a death relaunches it within five minutes |
+
+Registration still needs elevation. The unelevated attempt on 2026-09-01
+answered `Access is denied.` (exit 1), rewrote the per-user startup entry, and
+left the running task and its pid untouched. The owner runs this ONCE from an
+**elevated** PowerShell in `C:\Users\seanj\dev\we-the-people`:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action install
+```
+
+`install` prints which triggers LANDED, read back from the live task rather
+than from what it asked for.
+
+**Trigger presence is derived, never flagged.** Three actions read the live
+task (`Get-ScheduledTask` -> `Triggers` -> `Repetition`) through one shared
+derivation:
+
+```
+-Action status            lists every trigger; says RELAUNCH TRIGGER IS PRESENT / ABSENT
+-Action verify-triggers   read-only JSON {taskPresent, state, triggers, relaunchTriggerPresent,
+                          lastRunTime, lastTaskResult, runningPids}; exit 0 present, 1 absent
+-Action prove-relaunch    THE ACCEPTANCE MEASUREMENT: records the running pid, kills it,
+                          polls every 15 s for up to 8 min for a NEW pid, writes
+                          data/ops/runner-relaunch-proof.json and prints it;
+                          exit 0 on RELAUNCHED, 1 on NOT_RELAUNCHED
+```
+
+`prove-relaunch` REFUSES (exit 2) while the relaunch trigger is absent, because
+killing the runner then leaves nothing to bring it back. It has not been run;
+no proof record exists yet. The sequence once the owner has run the elevated
+install: `verify-triggers` (expect exit 0), then `prove-relaunch`, then commit
+the record. Neither new action has a `pnpm` alias yet; use the
+`powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action <name>`
+form.
+
 ---
+
+## Level 1 — Research: the Scout lane (RULING 240, RULING 241)
+
+*(Level 1 activation, 2026-09-01. Operative code:
+`lib/control-plane/scheduler/dispatch.ts` (`decideExecutor`),
+`lib/control-plane/scheduler/shadow-loop.ts` (two lanes),
+`lib/control-plane/scheduler/scout-executor.ts`,
+`lib/control-plane/scheduler/scout-tools.ts`,
+`lib/control-plane/scheduler/research-policy.ts`.)*
+
+Every due unit is decided ONCE by the executor rule: a machine-executable
+shape (declared by the provider, or graduated since in the method store) runs
+the deterministic route executor; genuine unresolved novelty runs a **real
+bounded Scout** — role `SCOUT`, provider `anthropic`, the model named on the
+Attempt, provider-reported usage and computed cost on the Attempt and in the
+cost ledger, whatever the outcome. A route declared DETERMINISTIC never
+consumes a model. Any disagreement between the two classifications is recorded
+in the run record's `executors` list and never reconciled silently.
+
+The two lanes run concurrently inside one cycle. The Scout lane is admitted per
+row or **deferred by code** — `LANE_DISABLED` (no credential in the process,
+`--dry`, `--no-model`), `PAUSED` (an owner intent), `CEILING` (the rolling
+daily ceiling, RULING 241), `CYCLE_MAX`, `BUDGET`. A deferred row keeps its
+next-due; nothing is dropped and nothing is reported complete.
+
+```
+concurrency        2 Scouts at once
+per cycle          3 Scouts (--scout-max)
+per Attempt        18 turns · 16 tool calls · 10 requests per host · 5 minutes · 400k tokens
+rolling ceiling    $25 per 24 hours, TEMPORARY, an owner safety ceiling
+```
+
+A Scout acts only through tools — `read_permission`, `fetch_public`, `browse`,
+`read_inherited` — and every tool **vaults first**: the bytes become an
+Artifact with provenance before the model sees a sanitized representation, and
+what it sees carries the artifact id. Disallowed and cannot-tell hosts are
+refused by the tool, never by the model's judgement. A Scout may not return
+NO_PROGRESS, BLOCKED or NEEDS_ADAPTER before it has walked at least four
+distinct evidence-backed rungs of the ladder, unless its bound ended the walk —
+in which case the typed result names the rungs walked and the next rungs, and
+the next Attempt resumes. A finish that cites an artifact nobody vaulted, that
+omits the rung list, or that follows no tool use at all is REFUSED and the
+Attempt aborts with the reason.
+
+What a cycle writes about the lane, and where the owner reads it:
+
+```
+scout_results       every typed result, keyed by obligation id
+research_state      id level-1 — lane on/off with reason, the credential
+                    CONFIRMED BY NAME, bounds, rolling spend, queue, Scouts running
+research_intents    PAUSE / RESUME / RUN_CYCLE_NOW from /admin/research, and the
+                    HONORED record the cycle appends beside each
+runner_heartbeat    written at the end of every cycle
+data/method/candidates.json   route candidates PROPOSED and VALIDATED; never admitted here
+```
+
+`admin.meanwhileusa.com/admin/research` DERIVES ACTIVE / DEGRADED / INACTIVE
+from those records at read time and names every failing condition. No record
+stores a verdict.
+
+**Promotion stays OFF.** A Scout finding is inventory and a candidate; the
+disposition it earns (`DISCOVERED`, `INGESTED`, `POINTER_ONLY`,
+`REQUIRES_NEW_ADAPTER`, `BLOCKED_CURRENTLY`) lands in the control plane and the
+staging area, and nothing a reader sees moves.
+
+```bash
+pnpm scout:denominator --label=after     the typed Scout denominator
+pnpm scout:readback --last=25            the proof conditions, answered from persisted rows
+```
 
 ## What the digest carries
 

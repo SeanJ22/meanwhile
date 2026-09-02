@@ -560,6 +560,14 @@ export async function abandonAttempt(
     /** Named, always. `endAttempt` refuses an unnamed one and so does this. */
     reason: string;
     now: string;
+    /**
+     * What the abandoned Attempt MEASURED. (Level 1 activation, 2026-09-01.)
+     * A model worker that walked its ladder and reached no conclusion still
+     * spent real tokens; an abandoned Attempt that dropped its cost would let
+     * the rolling spend ceiling under-count exactly the Attempts most likely
+     * to be repeated. Optional, because a killed worker reports nothing.
+     */
+    cost?: AttemptCost;
   },
 ): Promise<{ readonly task: Persisted<RouteTask>; readonly attempt: Persisted<Attempt> }> {
   const attemptRow = await repos.attempts.mustRead(input.attemptId);
@@ -578,6 +586,7 @@ export async function abandonAttempt(
   const closedAttempt = endAttempt(attemptRow.value, input.outcome, input.now, {
     abortReason: input.reason,
     artifactIds: artifacts.map((a) => a.artifactId),
+    ...(input.cost ? { cost: input.cost } : {}),
   });
   const attempt = await repos.attempts.compareAndSet(
     attemptRow.id,

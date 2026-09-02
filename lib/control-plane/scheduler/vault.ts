@@ -54,6 +54,15 @@ export interface VaultLedgerEntry {
 
 export interface CycleVault {
   readonly put: VaultPut;
+  /**
+   * Raw bytes — a PDF, an image — that cannot round-trip through a string.
+   * (Level 1 activation, 2026-09-01.) Same store, same key ledger, same
+   * verification of length and hash against the artifact record.
+   */
+  readonly putBytes: (
+    artifact: Artifact,
+    bytes: Uint8Array,
+  ) => Promise<{ readonly stored: boolean; readonly where: string; readonly why: string }>;
   /** Every artifact this cycle persisted, by artifact id. */
   readonly ledger: ReadonlyMap<string, VaultLedgerEntry>;
   /** Read a stored body back. Null when the key holds nothing. */
@@ -71,8 +80,7 @@ export function cycleVault(vaultRoot: string): CycleVault {
   const store = new DurableEvidenceStore(vaultRoot);
   const ledger = new Map<string, VaultLedgerEntry>();
 
-  const put: VaultPut = async (artifact: Artifact, body: string) => {
-    const bytes = Buffer.from(body, "utf8");
+  const putBytes = async (artifact: Artifact, bytes: Uint8Array) => {
     const { key, written } = await putArtifact(store, FRESHNESS_PROJECT, artifact, bytes);
     ledger.set(artifact.id, {
       artifactId: artifact.id,
@@ -90,8 +98,12 @@ export function cycleVault(vaultRoot: string): CycleVault {
     };
   };
 
+  const put: VaultPut = async (artifact: Artifact, body: string) =>
+    putBytes(artifact, Buffer.from(body, "utf8"));
+
   return {
     put,
+    putBytes,
     ledger,
     async readBack(key: string): Promise<string | null> {
       const object = await store.get(key);

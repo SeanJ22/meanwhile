@@ -36,7 +36,7 @@
  */
 
 /** Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it. */
-export const BOOTSTRAP_VERSION = 3;
+export const BOOTSTRAP_VERSION = 4;
 
 /**
  * The tables, and the shape each one carries.
@@ -94,6 +94,18 @@ export const AGGREGATE_KINDS = [
   "owner_snapshots",
   "runner_heartbeat",
   "cache_observations",
+  /*
+   * LEVEL 1 — RESEARCH. (Level 1 activation, 2026-09-01 — version 4.)
+   *
+   *   research_state   id "level-1" — what the standing runner measured about
+   *                    the Scout lane on its last cycle: lane enabled, the
+   *                    worker credential confirmed BY NAME, the bounds, the
+   *                    rolling spend, the queue counts, the Scouts running.
+   *                    The admin Research view DERIVES ACTIVE/DEGRADED/
+   *                    INACTIVE from it and from the heartbeat; no verdict is
+   *                    stored, because a stored verdict outlives its truth
+   */
+  "research_state",
 ] as const;
 
 export const APPEND_ONLY_LOGS = [
@@ -116,6 +128,19 @@ export const APPEND_ONLY_LOGS = [
    */
   "owner_digests",
   "owner_decisions",
+  /*
+   * LEVEL 1 — RESEARCH. (Version 4.)
+   *
+   *   research_intents  the owner's PAUSE / RESUME / RUN_CYCLE_NOW intents,
+   *                     appended by the admin API under the admin security
+   *                     boundary, and the runner's HONORED records beside
+   *                     them. Append-only: an intent is a fact about a moment
+   *   scout_results     every typed Scout result, keyed by obligation id —
+   *                     the durable learning, and the resume cursor the next
+   *                     Attempt on that obligation reads
+   */
+  "research_intents",
+  "scout_results",
 ] as const;
 
 /** Every table this schema declares, for the drift check. */

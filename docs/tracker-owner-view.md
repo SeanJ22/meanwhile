@@ -21,7 +21,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 ## Decisions waiting on you
 
-**66 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
+**67 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
 
 ### P1
 
@@ -51,6 +51,14 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 - **Take the four decisions** — the questionnaire can go out and candidate-supplied positions become a source.
 - **Defer** — the instrument sits built and unused; candidate cards stay as thin as the hunt leaves them.
+
+#### NH305 — Install the runner's relaunch trigger from an ELEVATED PowerShell (Level 1 prerequisite)
+
+*Opened 2026-09-01 · opened today · verified still blocked (2026-09-01 · HOLDS)*
+
+**Blocked while.** the Scheduled Task 'WeThePeople Pilot Runner' carries only an at-logon trigger; registering the 5-minute relaunch trigger is refused from an unelevated shell (Access is denied, measured 2026-09-01), and an unattended session does not elevate itself.
+
+**Rechecked this run.** data/ops/runner-relaunch-proof.json is not present in this checkout. The elevated install and prove-relaunch have not been run, or their proof has not been committed; the runner is still DOWN after any kill until a logon. Read: data/ops/runner-relaunch-proof.json.
 
 ### P2
 
@@ -926,5 +934,5 @@ NOT_MACHINE_VERIFIABLE, per RULING 227. A predicated row is re-evaluated against
 committed artifacts on EVERY tracker generation — not when a session remembers —
 and auto-resolves the moment its blocker stops being true.
 
-- 0 row(s) carry a machine-verifiable predicate.
+- 1 row(s) carry a machine-verifiable predicate.
 - 70 row(s) are marked NOT_MACHINE_VERIFIABLE with a card.

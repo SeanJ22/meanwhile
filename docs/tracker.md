@@ -14,10 +14,10 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **389 open**, 479 resolved.
-- **70 waiting on Sean** — the first section below.
+- **390 open**, 479 resolved.
+- **71 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **2**
+  - Needs Sean — **3**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **1**
   - Arizona hunt — **2**
@@ -35,13 +35,15 @@ and when. Nothing is ever deleted.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**70 open · 72 resolved.**
+**71 open · 72 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
 ### P1
 
 **NH108** — The questionnaire instrument is built and 272 invitations are generated, every one with invitedOn null, so nothing has been sent to anybody. The page a candidate types into is buildable and is NH104. SENDING is not a build, it is four decisions, and they are all yours: (1) the sending DOMAIN this goes out from, because a civic questionnaire arriving from a generic address is the one a campaign deletes; (2) an email PROVIDER CREDENTIAL, which this project does not hold and cannot obtain on your behalf; (3) DELIVERABILITY WARM-UP, because 272 near-simultaneous messages from a cold domain is the textbook shape of a spam classification, and being classified once is close to unrecoverable; and (4) WHETHER THE INVITATION GOES OUT BEFORE OR AFTER 3 NOVEMBER 2026, which is a judgement about the election and not a technical question at all. Raised as ONE row on purpose so you can rule once rather than in four pieces, and so a session cannot start building a send path on the strength of having answered one of them.
+
+**NH305** — PREDICATE: resolves itself when data/ops/runner-relaunch-proof.json records verdict RELAUNCHED. WHAT IS NEEDED: one elevated command. The standing runner's Scheduled Task has only an at-logon trigger, and the measured fact (2026-09-01) is that RestartCount does not relaunch an externally killed runner on this host. The corrected installer registers a second trigger that fires every 5 minutes for 3650 days (a no-op while the runner lives, a relaunch within five minutes after a death), and the unelevated install attempt on 2026-09-01 was refused: Access is denied. From an elevated PowerShell in C:\Users\seanj\dev\we-the-people run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action install ; then -Action verify-triggers (expect exit 0) ; then -Action prove-relaunch (kills the runner, waits up to 8 minutes for the trigger to bring it back, writes data/ops/runner-relaunch-proof.json) ; then commit that proof file. OPTIONS: (A) run the three commands - the runner then survives a kill unattended and L1-8 turns MET; (B) do not - the Level 1 lane keeps running while the runner lives, and any kill or crash of the parent leaves it DOWN until a logon or pnpm pilot:start, which is the state measured today. CONSEQUENCE OF NOT DECIDING: (B) stands, and the admin Research view reports the runner dead the next time it dies.
 
 **T05** — The abuse policy is written but the review path behind it does not exist. No free-text answer can be accepted until somebody can actually act on a threat.
 

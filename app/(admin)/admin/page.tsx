@@ -226,6 +226,9 @@ export default async function AdminPage() {
           <span className="state-unknown">no snapshot recorded</span>
         )}
       </h1>
+      <p className="note">
+        <a href="/admin/research">Research — Level 1</a>
+      </p>
       {outcomeNote(snapshotOut) && <p className="note">{outcomeNote(snapshotOut)}</p>}
       {snapshot && (
         <>

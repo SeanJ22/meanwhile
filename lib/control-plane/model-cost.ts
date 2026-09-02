@@ -43,6 +43,45 @@ export const MODEL_WORKER_RATES: ModelRate = {
 };
 
 /**
+ * The prompt-cache rates, as multiples of the input rate. (Level 1 activation,
+ * 2026-09-01.) A cache WRITE is billed at 1.25x input and a cache READ at 0.1x,
+ * read from the claude-api reference on that date. Stated as data beside the
+ * base rate so a later session can check both against the same price list.
+ */
+export const CACHE_RATE_MULTIPLIERS = {
+  cacheCreation: 1.25,
+  cacheRead: 0.1,
+  statedOn: "2026-09-01",
+  source: "Anthropic first-party API rates, read from the claude-api reference (prompt caching)",
+} as const;
+
+/**
+ * The dollar cost of a run whose provider usage split cached from uncached
+ * input. Null when the base counts are absent; cached counts default to zero
+ * ONLY when the provider reported the base counts, because a provider that
+ * reported `input_tokens` and omitted the cache fields reported no cache use.
+ */
+export function usdForUsageWithCache(
+  usage: {
+    readonly inputTokens: number | null;
+    readonly outputTokens: number | null;
+    readonly cacheReadInputTokens?: number | null;
+    readonly cacheCreationInputTokens?: number | null;
+  },
+  rate: ModelRate = MODEL_WORKER_RATES,
+): number | null {
+  if (usage.inputTokens === null || usage.outputTokens === null) return null;
+  const read = usage.cacheReadInputTokens ?? 0;
+  const created = usage.cacheCreationInputTokens ?? 0;
+  return (
+    (usage.inputTokens / 1_000_000) * rate.inputUsdPerMillion +
+    (created / 1_000_000) * rate.inputUsdPerMillion * CACHE_RATE_MULTIPLIERS.cacheCreation +
+    (read / 1_000_000) * rate.inputUsdPerMillion * CACHE_RATE_MULTIPLIERS.cacheRead +
+    (usage.outputTokens / 1_000_000) * rate.outputUsdPerMillion
+  );
+}
+
+/**
  * The dollar cost of one run, from the PROVIDER's own token counts.
  *
  * Null when either count is absent — see the header. There is deliberately no

@@ -118,6 +118,118 @@ export function chooseExecutor(
 }
 
 /**
+ * **THE ONE EXECUTOR-DECISION RULE.** (Level 1 activation, 2026-09-01. RULING 240.)
+ *
+ * Two classifications exist and they encode DIFFERENT facts, so both survive:
+ *
+ * ```
+ *   descriptor.executorClass + open.kind   the PROVIDER's declaration: does a
+ *                                          derived, machine-executable shape
+ *                                          exist for THIS representation?
+ *   method maturity                        the METHOD STORE's knowledge: has
+ *                                          the project learned a route by
+ *                                          this id? (route ids and method ids
+ *                                          are different namespaces today, so
+ *                                          this is usually UNGRADUATED)
+ * ```
+ *
+ * The rule, entire:
+ *
+ * ```
+ *   a machine-executable shape exists (declared, or graduated since)  ->  DETERMINISTIC
+ *   no shape exists to replay — genuine unresolved novelty            ->  BOUNDED_MODEL_WORKER
+ * ```
+ *
+ * A route declared DETERMINISTIC never consumes a model because one is
+ * available. A route declared BOUNDED_MODEL_WORKER that the store has since
+ * graduated AND that has an executable opening runs deterministically — the
+ * legitimate graduation case — and the disagreement is RECORDED. A
+ * declaration that contradicts its own opening is recorded as a contradiction
+ * and never silently reconciled.
+ */
+export interface ExecutorDecision {
+  readonly kind: ExecutorKind;
+  readonly why: string;
+  /** A disagreement between the two classifications, or a contradiction within one. Never reconciled silently. */
+  readonly disagreement: string | null;
+}
+
+export interface DecidableDescriptor {
+  readonly executorClass: ExecutorKind;
+  readonly open: { readonly kind: string };
+  readonly executorReason?: string;
+}
+
+export function decideExecutor(input: {
+  readonly routeId: string | null;
+  readonly descriptor: DecidableDescriptor | null;
+  readonly maturity: MethodMaturity;
+}): ExecutorDecision {
+  const { routeId, descriptor } = input;
+  const graduated = routeId !== null && input.maturity(routeId) === "GRADUATED";
+  if (descriptor === null) {
+    return graduated
+      ? {
+          kind: "DETERMINISTIC",
+          why: `route ${routeId} is graduated in the method store and no descriptor overrides it`,
+          disagreement: null,
+        }
+      : {
+          kind: "BOUNDED_MODEL_WORKER",
+          why:
+            routeId === null
+              ? "this obligation names no route and no descriptor, so a Scout's first job is to find one"
+              : `route ${routeId} has no descriptor and is not graduated, so nothing exists to replay`,
+          disagreement: null,
+        };
+  }
+  const executable = descriptor.open.kind !== "NOT_MACHINE_EXECUTABLE";
+  const reason = descriptor.executorReason ? ` (${descriptor.executorReason})` : "";
+
+  if (descriptor.executorClass === "DETERMINISTIC") {
+    if (executable) {
+      return {
+        kind: "DETERMINISTIC",
+        why: `the provider declares a derived ${descriptor.open.kind} shape for route ${routeId}${reason}; a model is never spent on a known shape`,
+        disagreement: null,
+      };
+    }
+    return {
+      kind: "DETERMINISTIC",
+      why: `route ${routeId} is declared DETERMINISTIC; a declared-deterministic route never consumes a model`,
+      disagreement:
+        `CONTRADICTION: route ${routeId} is declared DETERMINISTIC with a NOT_MACHINE_EXECUTABLE opening. ` +
+        "The deterministic executor will dispose REQUIRES_NEW_ADAPTER; the provider's declaration is wrong on its own terms.",
+    };
+  }
+
+  /* Declared BOUNDED_MODEL_WORKER. */
+  if (executable && graduated) {
+    return {
+      kind: "DETERMINISTIC",
+      why: `route ${routeId} was declared novel and the method store has since graduated it with an executable opening; deterministic replay owns it now`,
+      disagreement: `GRADUATED_SINCE_DECLARED: the provider still declares route ${routeId} BOUNDED_MODEL_WORKER; the method store lists it as learned`,
+    };
+  }
+  if (executable) {
+    return {
+      kind: "BOUNDED_MODEL_WORKER",
+      why: `route ${routeId} is declared novel${reason}; the declaration is honoured`,
+      disagreement:
+        `DECLARED_NOVEL_WITH_EXECUTABLE_OPENING: route ${routeId} carries a ${descriptor.open.kind} opening while declared ` +
+        "BOUNDED_MODEL_WORKER; the Scout may open it through its tools",
+    };
+  }
+  return {
+    kind: "BOUNDED_MODEL_WORKER",
+    why: `route ${routeId} has no machine-executable opening${reason}; genuine unresolved novelty runs a bounded Scout`,
+    disagreement: graduated
+      ? `GRADUATED_WITHOUT_OPENING: the method store lists route ${routeId} as learned but no executable opening is registered for it`
+      : null,
+  };
+}
+
+/**
  * **WHAT A WORKER PRODUCED, AND WHETHER IT IS A CONCLUSION.**
  * (Session B resume, W3.A, 2026-08-31.)
  *
@@ -202,6 +314,8 @@ export interface DispatchResult {
   readonly executor: ExecutorKind | null;
   /** What `chooseExecutor` decided. The DECISION, kept for the disagreement. */
   readonly executorChosen: ExecutorKind | null;
+  /** The decision rule's own recorded disagreement between classifications, if any. */
+  readonly decisionDisagreement: string | null;
   /**
    * True when the worker ran something other than what was chosen.
    *
@@ -406,6 +520,13 @@ export async function dispatchOne(
     readonly maturity: MethodMaturity;
     /** The executor, WITH its lane declared before anything is persisted. */
     readonly executor: DeclaredExecutor;
+    /**
+     * The canonical executor decision, when the caller made one with the
+     * route descriptor in hand (`decideExecutor`). Absent, the maturity-only
+     * `chooseExecutor` stands in, which is what the tests written before the
+     * registry existed exercise.
+     */
+    readonly decision?: ExecutorDecision;
     readonly methodVersion?: number;
     readonly policyVersion?: string;
   },
@@ -413,6 +534,7 @@ export async function dispatchOne(
   const obligationId = input.obligation.obligation.id;
   const nothingRan = {
     executorChosen: null,
+    decisionDisagreement: null,
     executorMismatch: false,
     attemptId: null,
     dispositionCommitted: false,
@@ -458,7 +580,8 @@ export async function dispatchOne(
     };
   }
 
-  const executor = chooseExecutor(input.obligation, input.maturity);
+  const executor = input.decision ?? chooseExecutor(input.obligation, input.maturity);
+  const decisionDisagreement = input.decision?.disagreement ?? null;
   /*
    * **THE DECLARED LANE, NOT THE CHOSEN ONE, BUILDS THE WORKER.**
    *
@@ -501,9 +624,45 @@ export async function dispatchOne(
     obligationId,
     routeTaskId: input.routeTaskId,
     executorChosen: executor.kind,
+    decisionDisagreement,
     claimed: true,
     attemptId,
     worker,
+  };
+
+  /**
+   * **EVERY MEASURED COST REACHES THE LEDGER, WHATEVER THE OUTCOME.**
+   * (Level 1 activation, 2026-09-01.)
+   *
+   * Cost was recorded only on the disposing path. A model worker that walked
+   * its ladder to NO_PROGRESS spent real tokens and left no ledger entry, so a
+   * rolling spend ceiling read from the ledger would under-count precisely the
+   * Attempts most likely to be repeated. The append is idempotent by record id.
+   */
+  const claimedRouteTaskId: string = input.routeTaskId;
+  const ledgerCost = async (cost: AttemptCost): Promise<void> => {
+    let source: string | null = null;
+    try {
+      source = (await repos.routeTasks.read(claimedRouteTaskId))?.value.target ?? null;
+    } catch {
+      source = null;
+    }
+    await recordCost(
+      repos,
+      {
+        attemptId,
+        workItemId,
+        routeTaskId: claimedRouteTaskId,
+        routeId: input.obligation.obligation.routeId,
+        source,
+        jurisdiction: input.obligation.obligation.subjectId,
+        project: "freshness",
+        role: worker.role,
+        cost,
+        recordedAt: input.now,
+      },
+      input.now,
+    ).catch(() => undefined);
   };
 
   /**
@@ -580,7 +739,9 @@ export async function dispatchOne(
       outcome: "DENIED_BY_POLICY",
       reason: why,
       now: input.now,
+      ...(outcome.cost ? { cost: outcome.cost } : {}),
     }).catch(() => undefined);
+    if (outcome.cost) await ledgerCost(outcome.cost);
     return {
       ...base,
       ...ran(),
@@ -588,23 +749,55 @@ export async function dispatchOne(
       dispositionCommitted: false,
       disposition: null,
       artifactIds: [],
-      cost: null,
+      cost: outcome.cost ?? null,
       detail: why,
     };
   }
 
-  /* Artifacts are recorded FIRST, so a disposition can cite them. */
+  /*
+   * Artifacts are recorded FIRST, so a disposition can cite them.
+   *
+   * **ONE ARTIFACT THE LOG REFUSES MAY NOT LEAVE THE ATTEMPT OPEN.**
+   * (Level 1 activation, 2026-09-01 — measured on the first live Scout.)
+   *
+   * An artifact id is derived from its CONTENT. Two hosts serving
+   * byte-identical bodies — `bensonaz.gov/robots.txt` and
+   * `www.bensonaz.gov/robots.txt` — produce one id under two canonical URLs,
+   * and the append-only log refuses the second as a history rewrite. That
+   * refusal used to propagate out of this function after the worker had
+   * finished, so the Attempt stayed OPEN with its lease, its cost never
+   * reached the ledger, and the cycle counted a completed investigation as a
+   * dispatch that threw. The refusal is a fact about attribution, not about
+   * the work: it is recorded by name, the disposition cites only what the log
+   * accepted, and the Attempt closes.
+   */
   const artifactIds: string[] = [];
+  const artifactRefusals: string[] = [];
+  const seenArtifactIds = new Set<string>();
   for (const artifact of outcome.artifacts ?? []) {
+    if (seenArtifactIds.has(artifact.artifactId)) continue;
+    seenArtifactIds.add(artifact.artifactId);
     const record: ArtifactRecord = {
       ...artifact,
       workItemId,
       routeTaskId: input.routeTaskId,
       attemptId,
     };
-    await recordArtifactMetadata(repos, record, input.now);
-    artifactIds.push(record.artifactId);
+    try {
+      await recordArtifactMetadata(repos, record, input.now);
+      artifactIds.push(record.artifactId);
+    } catch (error) {
+      artifactRefusals.push(
+        `${record.artifactId} <${record.canonicalUrl}> not attributed: ${
+          error instanceof Error ? error.message.split("\n")[0] : String(error)
+        }`,
+      );
+    }
   }
+  const attributionNote =
+    artifactRefusals.length === 0
+      ? ""
+      : ` ${artifactRefusals.length} artifact(s) were vaulted and NOT attributed to this Attempt by the log (${artifactRefusals.join("; ")}).`;
 
   if (outcome.kind !== "DISPOSED" || outcome.disposition === undefined) {
     /*
@@ -629,7 +822,9 @@ export async function dispatchOne(
         ? `SHADOW_DECISION: the executor deliberately performed no retrieval. ${outcome.detail}`
         : `the worker reached no boundary. ${outcome.detail}`,
       now: input.now,
+      ...(outcome.cost ? { cost: outcome.cost } : {}),
     });
+    if (outcome.cost) await ledgerCost(outcome.cost);
     return {
       ...base,
       ...ran(),
@@ -642,7 +837,7 @@ export async function dispatchOne(
         simulated
           ? "no retrieval was performed, so nothing is discharged and the debt stands"
           : "no terminal disposition was reached"
-      }: ${outcome.detail}`,
+      }: ${outcome.detail}${attributionNote}`,
     };
   }
 
@@ -684,7 +879,9 @@ export async function dispatchOne(
       outcome: "ABORTED",
       reason: `the control plane refused the proposed disposition: ${why}`,
       now: input.now,
+      ...(outcome.cost ? { cost: outcome.cost } : {}),
     }).catch(() => undefined);
+    if (outcome.cost) await ledgerCost(outcome.cost);
     return {
       ...base,
       ...ran(),
@@ -693,7 +890,7 @@ export async function dispatchOne(
       disposition: null,
       artifactIds,
       cost: outcome.cost ?? null,
-      detail: `${executor.why}; the disposition was refused and the route remains owed: ${why}`,
+      detail: `${executor.why}; the disposition was refused and the route remains owed: ${why}${attributionNote}`,
     };
   }
 
@@ -727,7 +924,7 @@ export async function dispatchOne(
     detail:
       `${executor.why}; lease ${claimOutcome.lease.value.id}; Attempt ${attemptId} closed ` +
       `COMPLETED with disposition ${disposition.disposition} over ${artifactIds.length} ` +
-      `artifact(s): ${outcome.detail}`,
+      `artifact(s): ${outcome.detail}${attributionNote}`,
   };
 }
 

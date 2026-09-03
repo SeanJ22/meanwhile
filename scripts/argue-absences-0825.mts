@@ -485,7 +485,7 @@ for (let i = 0; i < cap; i++) {
       {
         move: "tier-above",
         query: "https://www.morriscountyclerk.org/Elections/Current-Election-Candidates — the county clerk's certified filed-candidate documents",
-        result: `Held in this repo as data/ballot/${chosen.ballot}. The filing carries an email and a street address for every one of the ${ballot.candidacies.length} candidacies and carries NO ${field} for any of them — a fact about the document, not about this person.`,
+        result: `Held in this repo as data/states/${chosen.state}/ballot/${chosen.ballot}. The filing carries an email and a street address for every one of the ${ballot.candidacies.length} candidacies and carries NO ${field} for any of them — a fact about the document, not about this person.`,
         reached: true,
       },
       {

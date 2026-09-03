@@ -4,7 +4,7 @@
 (`scripts/tracker.mjs`) from `docs/tracker-working.csv`. It cannot disagree with the
 store, because it is derived from it.
 
-Generated 2026-09-02 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-09-03 (America/Phoenix, from `pnpm stamp`).
 
 Open rows only. Finished work is in `docs/tracker-resolved.csv` and on the
 **Resolved** tab of `docs/tracker.xlsx`, which is the record of what was decided
@@ -14,10 +14,10 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **417 open**, 485 resolved.
-- **73 waiting on Sean** — the first section below.
+- **418 open**, 485 resolved.
+- **74 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **4**
+  - Needs Sean — **5**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **1**
   - Arizona hunt — **2**
@@ -35,7 +35,7 @@ and when. Nothing is ever deleted.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**73 open · 73 resolved.**
+**74 open · 73 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -46,6 +46,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH306** — PREDICATE: resolves itself when data/ops/credential-events.jsonl records a rotation event for BOTH names. WHAT IS NEEDED: two credential rotations, by the owner or under RULING 238 with an owner copy first. THE FINDING: pnpm secrets:sweep --transcripts, run from the main checkout on 2026-09-02 by the Level 1 activation session, found the VALUES of DATA_GOV_API_KEY and NETLIFY_AUTH_TOKEN in a subagent transcript of the earlier session 771dfc3d-591d-4a39-9cb2-2c028431acdd (agent-a5abb86c7d4cf8d7a.jsonl, line 24). The file was scrubbed in place (8 values replaced, 0 remaining on re-read) and the repository and the Drive mirror read 0 secret occurrences. RULING 127: a credential that has appeared in a transcript is COMPROMISED and is ROTATED; scrubbing is necessary and not sufficient. OPTIONS: (A) rotate both now - regenerate the api.data.gov key and the Netlify personal access token, place the owner copies in .env.local first, then record each rotation in data/ops/credential-events.jsonl by name, provider, context, scope, actor and owner-copy location; (B) rotate only the Netlify token (the higher-privilege one: it can deploy and read site settings) and accept the data.gov key as low-risk; (C) do nothing - both values stay valid for whoever read that transcript. CONSEQUENCE OF NOT DECIDING: (C) stands and the row ages.
 
 **NH310** — PREDICATE: resolves itself when data/ops/admin-login-readback.json records googleConfigured true on a readback taken on or after 2026-09-02 against the admin origin. WHAT IS NEEDED: two environment variables and one sign-in. The Google sign-in path (RULING 245) is merged and proven by 45 seeded tests, but a live readback of the Netlify environment on 2026-09-02 (both sites, account level, by name) found NO GOOGLE_OAUTH_CLIENT_ID and NO GOOGLE_OAUTH_CLIENT_SECRET, so the deployed login page will report NOT_CONFIGURED by name and the only working door is the flag-gated break-glass. Steps, in this order: (1) confirm the Google Cloud OAuth client's authorized redirect URI is exactly https://admin.meanwhileusa.com/admin/auth/callback; (2) RULING 238 custody FIRST — copy the client id and secret into .env.local under those two names; (3) add both to Netlify site sparkwtp, context Production, scope Functions; (4) append two CREATED lines to data/ops/credential-events.jsonl (kind, reportedAt, name, provider, context, scope, actor, ownerCopyLocation — never a value; the shape is in docs/admin-sign-in.md); (5) after the deploy carrying this head, run pnpm admin:login-readback from the main checkout (it records googleConfigured, missingVariables and googleRoutesDeployed, names only) and sign in once in a browser: /admin then /admin/research. OPTIONS AND CONSEQUENCES: do it — the owner's identity becomes the login and the break-glass can be turned off (WTP_ADMIN_BREAK_GLASS unset); do not do it — the admin host stays reachable only through the shared-secret break-glass, every use of which is logged as an incident, and RULING 245 stays adopted but unproven live. AGE is measured from the Opened on date.
+
+**WF01** — Automatic approval review rejected the corrected live worker audit twice. It requires explicit owner approval to send the bounded 31,998-byte representation of eight already-vaulted public Avondale artifacts plus canonical subject and method-route context to https://api.anthropic.com/v1/messages. This is the existing worker provider under the unchanged rolling 25 USD ceiling. The payload has no producer or validator reasoning, restricted raw, credentials or browser/session data. Until approved, W4 has no surviving verified record and the corrected live audit cannot run. No rejected command started.
 
 **T05** — The abuse policy is written but the review path behind it does not exist. No free-text answer can be accepted until somebody can actually act on a threat.
 

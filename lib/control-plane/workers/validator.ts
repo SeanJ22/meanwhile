@@ -1,10 +1,10 @@
 import type {
   EvidenceSpan,
-  FieldValue,
   ValidatorResult,
   ValidatorWorkerInput,
   WorkerFinding,
 } from "./types.ts";
+import { isFieldValue as scalar } from "./types.ts";
 
 export const VALIDATOR_IMPLEMENTATION = "civic-event-contract-validator";
 export const VALIDATOR_VERSION = "1.0.0";
@@ -35,11 +35,6 @@ interface SourceToken {
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
-}
-
-function scalar(value: unknown): value is FieldValue {
-  return value === null || typeof value === "string" || typeof value === "boolean" ||
-    (typeof value === "number" && Number.isFinite(value));
 }
 
 function pointerPart(value: string): string {

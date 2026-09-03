@@ -67,7 +67,7 @@ for (const [name, source] of [
   ["WebSocket", 'new WebSocket("wss://example.invalid/"); JSON.stringify({ forbidden: true });'],
   ["XMLHttpRequest", 'new XMLHttpRequest(); JSON.stringify({ forbidden: true });'],
   ["browser", 'browser.open("https://example.invalid/"); JSON.stringify({ forbidden: true });'],
-  ["require", 'require("node:fs"); JSON.stringify({ forbidden: true });'],
+  ["require", 'globalThis.require("node:fs"); JSON.stringify({ forbidden: true });'],
 ]) {
   test(`${name} is denied by name at its execution seam`, async () => {
     await assert.rejects(runIsolatedSource(source, {}, 1000), /DENIED_BY_POLICY/);

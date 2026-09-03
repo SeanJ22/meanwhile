@@ -1,8 +1,8 @@
 {
-  "generated": "2026-09-02",
+  "generated": "2026-09-03",
   "ruling": "RULING 227",
   "openedDateProvenance": {
-    "opened-ledger": 434,
+    "opened-ledger": 435,
     "session-label": 243,
     "unrecoverable": 225
   },
@@ -79,6 +79,7 @@
       "V06",
       "V07",
       "V08",
+      "WF01",
       "X02",
       "X03"
     ],
@@ -94,7 +95,7 @@
   },
   "summary": {
     "predicates": 2,
-    "notMachineVerifiable": 71,
+    "notMachineVerifiable": 72,
     "holds": 1,
     "resolved": 0,
     "cannotTell": 1
@@ -118,6 +119,14 @@
       "read": [
         "data/ops/admin-login-readback.json"
       ],
+      "evidence": []
+    },
+    {
+      "rowId": "WF01",
+      "kind": "NOT_MACHINE_VERIFIABLE",
+      "verdict": "HOLDS",
+      "why": "WF01 is marked NOT_MACHINE_VERIFIABLE and carries a decision card. It waits on the author's judgement, which no artifact can supply.",
+      "read": [],
       "evidence": []
     },
     {

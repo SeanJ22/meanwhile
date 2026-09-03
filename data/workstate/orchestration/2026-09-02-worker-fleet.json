@@ -24,7 +24,7 @@
       ],
       "consumes": [],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "executionArtifacts": [
         {
           "ref": "/root/parser",
@@ -53,7 +53,7 @@
       ],
       "consumes": [],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "executionArtifacts": [
         {
           "ref": "/root/validator",
@@ -84,7 +84,7 @@
       ],
       "consumes": [],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "executionArtifacts": [
         {
           "ref": "/root/auditor",

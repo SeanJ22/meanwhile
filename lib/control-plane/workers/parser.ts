@@ -6,6 +6,7 @@ import type {
   ParserWorkerInput,
   WorkerFinding,
 } from "./types.ts";
+import { isFieldValue as isScalar } from "./types.ts";
 
 export const PARSER_IMPLEMENTATION = "legistar-events";
 export const CIVICCLERK_PARSER_IMPLEMENTATION = "civicclerk-events";
@@ -122,11 +123,6 @@ function indexJson(text: string): ReadonlyMap<string, SourceToken> {
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
-}
-
-function isScalar(value: unknown): value is FieldValue {
-  return value === null || typeof value === "string" || typeof value === "boolean" ||
-    (typeof value === "number" && Number.isFinite(value));
 }
 
 function declaredCount(value: unknown): number {

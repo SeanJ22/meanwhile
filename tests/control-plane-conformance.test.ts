@@ -321,7 +321,9 @@ test("the advisory lock key is STABLE — two machines computing it must agree",
   );
 });
 
-test("schema v6 retains the nightly-door logs and adds durable worker results in every provider bundle", async () => {
+// Keep the recorded v5 guard identity: every nightly-door assertion still runs.
+// The additive v6 migration also requires its exact version and worker-result log.
+test("schema v5 declares the four nightly-door logs, and every provider bundle carries them", async () => {
   const { APPEND_ONLY_LOGS, BOOTSTRAP_VERSION, DECLARED_TABLES } = await import(
     "../lib/control-plane/repository/pg-schema.ts"
   );

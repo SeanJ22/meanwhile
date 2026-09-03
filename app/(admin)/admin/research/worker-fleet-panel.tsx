@@ -52,7 +52,7 @@ export function WorkerFleetPanel({ view }: { readonly view: WorkerFleetReadback 
                 <tbody>{role.attempts.map((attempt) => (
                   <tr key={attempt.attemptId} data-worker-attempt={attempt.attemptId}>
                     <th scope="row"><code>{attempt.attemptId}</code><br /><small className="note">{attempt.worker.provider} · {attempt.worker.version}<br />Instance: {attempt.worker.instance}</small></th>
-                    <td>{attempt.outcome}<br /><small className="note">Started: <time dateTime={attempt.startedAt}>{attempt.startedAt}</time><br />Ended: {attempt.endedAt ? <time dateTime={attempt.endedAt}>{attempt.endedAt}</time> : "Not recorded"}<br />{attempt.executionMode ?? "Execution mode not recorded"}</small></td>
+                    <td>{attempt.outcome}<br /><small className="note">Started: <time dateTime={attempt.startedAt}>{attempt.startedAt}</time><br />Ended: {attempt.endedAt ? <time dateTime={attempt.endedAt}>{attempt.endedAt}</time> : "Not recorded"}<br />Execution mode: {attempt.executionMode ?? "NOT_RECORDED"}</small></td>
                     <td>{attempt.duration ? <Metric value={attempt.duration} /> : "NOT MEASURED"}</td>
                     <td>{attempt.cost ? <Metric value={attempt.cost} /> : "NOT MEASURED"}</td>
                     <td><Metric value={attempt.artifacts} /></td>

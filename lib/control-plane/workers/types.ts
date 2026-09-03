@@ -10,6 +10,11 @@ export const WORKER_SCHEMA_VERSION = 1 as const;
 export const FLEET_ROLES = ["PARSER", "VALIDATOR", "ADVERSARIAL_AUDITOR"] as const;
 export type FleetRole = (typeof FLEET_ROLES)[number];
 export type FieldValue = string | number | boolean | null;
+/** The shared wire scalar contract; this does not interpret source evidence. */
+export function isFieldValue(value: unknown): value is FieldValue {
+  return value === null || typeof value === "string" || typeof value === "boolean" ||
+    (typeof value === "number" && Number.isFinite(value));
+}
 
 /** Text is issued by readForParser, never fetched or supplied by a model. */
 export interface WorkerEvidence {
@@ -255,7 +260,7 @@ export function assertFleetResult(value: unknown, role: FleetRole, attemptId: st
     valid([r.declaredRowCount, r.sourceRowCount].every(v => v === null || count(v)), "PARSER_COUNTS");
     valid((r.warnings as unknown[]).every(finding), "PARSER_WARNINGS");
     valid((r.records as unknown[]).every(record => object(record) && string(record.id) && string(record.subjectId) && object(record.fields) &&
-      strings(record.evidenceSpanIds) && Object.values(record.fields).every(v => v === null || typeof v === "string" || typeof v === "boolean" || (typeof v === "number" && Number.isFinite(v)))), "PARSER_RECORDS");
+      strings(record.evidenceSpanIds) && Object.values(record.fields).every(isFieldValue)), "PARSER_RECORDS");
     valid((r.spans as unknown[]).every(span => object(span) && [span.id, span.artifactId, span.contentHash, span.recordId, span.field, span.jsonPointer, span.quote].every(string) &&
       span.offsetUnit === "UTF16_CODE_UNITS" && count(span.start) && count(span.end) && Number(span.end) > Number(span.start) &&
       String(span.quote).length === Number(span.end) - Number(span.start)), "PARSER_SPANS");

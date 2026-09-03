@@ -109,16 +109,9 @@ const TODAY = today();
 const DELAY_MS = Number((process.argv.find((a) => a.startsWith("--delay=")) ?? "--delay=9000").slice(8));
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-/*
- * The per-state ballot source, contacts and hunt corpora moved under
- * data/states/<state>/ in the 2026-09-03 state-holdings reorg (PR #266); this
- * generator was left pointing at the old data/ballot/ and data/hunt/ paths and
- * so could no longer run. The `state` here routes each read to the new home.
- * (candidate-cards/links below stayed at data/ballot/, and are read there.)
- */
-const BALLOTS: Record<string, { state: string; ballot: string; contacts: string | null }> = {
-  "07866": { state: "nj", ballot: "nj-morris-2026.json", contacts: "nj-morris-2026-contacts.json" },
-  "03255": { state: "nh", ballot: "nh-merrimack-2026.json", contacts: null },
+const BALLOTS: Record<string, { ballot: string; contacts: string | null }> = {
+  "07866": { ballot: "nj-morris-2026.json", contacts: "nj-morris-2026-contacts.json" },
+  "03255": { ballot: "nh-merrimack-2026.json", contacts: null },
 };
 const chosen = BALLOTS[ZIP];
 if (!chosen) {
@@ -126,7 +119,7 @@ if (!chosen) {
   process.exit(1);
 }
 
-const ballot = JSON.parse(readFileSync(join(ROOT, "data", "states", chosen.state, "ballot", chosen.ballot), "utf8")) as {
+const ballot = JSON.parse(readFileSync(join(ROOT, "data", "ballot", chosen.ballot), "utf8")) as {
   contests: { id: string; title: string; ocdId: string }[];
   candidacies: { id: string; contestId: string; givenName: string; familyName: string }[];
 };
@@ -144,7 +137,7 @@ const links = JSON.parse(readFileSync(join(ROOT, "data", "ballot", "candidate-li
  * email for every candidacy; New Hampshire's filing does not, and assuming the
  * first was true of the second is exactly what this fixes.
  */
-const contactsPath = chosen.contacts ? join(ROOT, "data", "states", chosen.state, "ballot", chosen.contacts) : null;
+const contactsPath = chosen.contacts ? join(ROOT, "data", "ballot", chosen.contacts) : null;
 const filedEmail = new Map<string, string | null>(
   contactsPath && existsSync(contactsPath)
     ? (
@@ -176,8 +169,7 @@ function isHeld(id: string, field: KellyField): boolean {
 /* ── The corpora moves 2 through 5 read, each a walk that happened ───────── */
 
 function readIf<T>(rel: string): T | null {
-  // Corpora moved under data/states/<state>/hunt/ in the 2026-09-03 reorg.
-  const p = join(ROOT, "data", "states", chosen.state, "hunt", rel);
+  const p = join(ROOT, "data", "hunt", rel);
   return existsSync(p) ? (JSON.parse(readFileSync(p, "utf8")) as T) : null;
 }
 
@@ -485,7 +477,7 @@ for (let i = 0; i < cap; i++) {
       {
         move: "tier-above",
         query: "https://www.morriscountyclerk.org/Elections/Current-Election-Candidates — the county clerk's certified filed-candidate documents",
-        result: `Held in this repo as data/states/${chosen.state}/ballot/${chosen.ballot}. The filing carries an email and a street address for every one of the ${ballot.candidacies.length} candidacies and carries NO ${field} for any of them — a fact about the document, not about this person.`,
+        result: `Held in this repo as data/ballot/${chosen.ballot}. The filing carries an email and a street address for every one of the ${ballot.candidacies.length} candidacies and carries NO ${field} for any of them — a fact about the document, not about this person.`,
         reached: true,
       },
       {

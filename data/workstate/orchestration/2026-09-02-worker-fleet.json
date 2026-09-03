@@ -157,7 +157,8 @@
         "auditor-implementation"
       ],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "BLOCKED",
+      "blockedReason": "WF01: automatic approval review twice refused the corrected public Avondale audit context sent to the existing Anthropic endpoint and requires specific owner approval. W4 has no surviving verified record; canonical shipping and post-merge W8 remain owed. All implementation lanes are reconciled and the clean committed-head local run passed all 16 gates at 2dfe9e596470a1dee23796dfa539c323b3ed30e6. Draft PR, remote CI and mirror handoff are verification/handback work, not a claim that this integration is complete. Exact action and rejections: data/health/worker-fleet-proofs/approval-block.json.",
       "executionArtifacts": [
         {
           "kind": "integration-branch",

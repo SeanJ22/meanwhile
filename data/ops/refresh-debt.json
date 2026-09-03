@@ -1,14 +1,30 @@
 {
   "formatVersion": 1,
-  "updatedOn": "2026-09-02",
+  "updatedOn": "2026-09-03",
   "debts": [
     {
       "sourceId": "fec",
       "firstFailedOn": "2026-09-02",
-      "lastFailedOn": "2026-09-02",
-      "consecutiveFailures": 1,
+      "lastFailedOn": "2026-09-03",
+      "consecutiveFailures": 2,
       "reason": "failed at `pnpm fec:fetch` (exit 1)",
-      "nextDueAt": "2026-09-03"
+      "nextDueAt": "2026-09-04"
+    },
+    {
+      "sourceId": "meetings",
+      "firstFailedOn": "2026-09-03",
+      "lastFailedOn": "2026-09-03",
+      "consecutiveFailures": 1,
+      "reason": "the suite is red independent of any source's data (tests/coverage-matrix.test.ts, tests/generated-artifacts.test.ts) — nothing commits under a red the refresh did not cause; its governed paths are back at HEAD and it is owed until it lands",
+      "nextDueAt": "2026-09-04"
+    },
+    {
+      "sourceId": "nj-filing",
+      "firstFailedOn": "2026-09-03",
+      "lastFailedOn": "2026-09-03",
+      "consecutiveFailures": 1,
+      "reason": "the suite is red independent of any source's data (tests/coverage-matrix.test.ts, tests/generated-artifacts.test.ts) — nothing commits under a red the refresh did not cause; its governed paths are back at HEAD and it is owed until it lands",
+      "nextDueAt": "2026-09-04"
     }
   ]
 }

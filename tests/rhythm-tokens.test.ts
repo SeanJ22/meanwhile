@@ -9,6 +9,7 @@ import {
   rawFontSize,
   rawElevation,
   rhythmScalesDeclared,
+  type RhythmOffender,
 } from "../lib/design/rhythm.ts";
 
 const ROOT = join(import.meta.dirname, "..");
@@ -39,7 +40,7 @@ interface Baseline {
 const css = readFileSync(GLOBALS, "utf8");
 const baseline = JSON.parse(readFileSync(BASELINE, "utf8")) as Baseline;
 
-const CATEGORIES: { name: keyof Baseline; sweep: (c: string) => { value: string }[] }[] = [
+const CATEGORIES: { name: keyof Baseline; sweep: (c: string) => RhythmOffender[] }[] = [
   { name: "spacing", sweep: offScaleSpacing },
   { name: "radius", sweep: offFamilyRadius },
   { name: "fontSize", sweep: rawFontSize },
@@ -73,7 +74,7 @@ for (const { name, sweep } of CATEGORIES) {
         `New off-scale literals:\n` +
         offenders
           .filter((o) => !base.values.includes(o.value))
-          .map((o: { line?: number; text: string }) => `  ${o.text}`)
+          .map((o) => `  L${o.line}: ${o.value} — ${o.text}`)
           .join("\n") +
         `\nUse the ${name} scale token, or record a reduction by regenerating the baseline.`,
     );

@@ -844,3 +844,73 @@ file whose whole claim is that every row is a government publication or a
 classified third party.
 
 - **Neumorphism in user interfaces** — https://www.breakfreegraphics.com/design-blog/neumorphism-in-user-interfaces/ — a design reference Sean bookmarked. Not a civic source, not registered as one, and nothing in the committed token set derives from it.
+
+---
+
+# The 0903 pass — motion and rhythm become tokens, and each is guarded
+
+Adopted 2026-09-03, the visual-polish session. The design system was ~80% of
+the way to beautiful; this pass closes part of the gap by turning the last two
+freehand dimensions — MOTION and RHYTHM — into named scales, and putting a
+permanent check behind each so the scale stays the only source. Nothing here
+changes what the product says.
+
+**Two laws bound every value below**, and they are not stylistic: no new hue and
+no borrowed tier colour (`--mark` stays in the logo), and **motion never implies
+status** — a surface may move because it is interesting, never because it is
+urgent, because urgency is an editorial claim about a government.
+
+## Motion — one duration scale, one easing family
+
+Every transition and animation reads from `app/globals.css`:
+
+| Token | Value | What moves on it |
+| --- | --- | --- |
+| `--dur-fast` | 120ms | micro-feedback: carets, hovers, focus rings, small toggles |
+| `--dur-base` | 200ms | the standard state change: panel, pill, tab, disclosure |
+| `--dur-slow` | 320ms | the largest single move a reader's eye tracks |
+| `--dur-pulse` | 1100ms | the ambient loading loop ONLY — named apart from the scale |
+
+Easings are the standard decelerate / accelerate / symmetric set —
+`--ease-enter` (content arriving), `--ease-exit` (content leaving), `--ease-move`
+(a thing moving or resizing in place). **No overshoot: nothing bounces**, because
+a bounce is a personality the civic record does not have. Tailwind's default
+`transition` utilities and `duration-fast|base|slow` / `ease-enter|exit|move`
+resolve to the same tokens, so a utility and a hand-written rule never disagree.
+
+**Reduced motion is the guaranteed floor.** One global
+`@media (prefers-reduced-motion: reduce)` block collapses every transition and
+animation to instant while keeping every affordance exactly as visible — a
+skeleton still shows, it just stops breathing. `lib/design/motion.ts` +
+`tests/motion-tokens.test.ts` fail a raw duration in any transition/animation and
+assert the floor is present; a reduced-motion capture measures motion off.
+
+## Rhythm — one radius family, one spacing scale, one type scale
+
+- **Radius** is a five-token family so every rounded object reads as the same
+  system: `--radius` (10px, the card corner), `--radius-sm` (6px, inner block),
+  `--radius-lg` (16px, flagship sheet), `--radius-pill` (fully round chip/pill),
+  `--radius-circle` (portrait). Every `999px`/`50%` in the sheet was unified onto
+  the pill/circle tokens — value-identical, so the look did not move, but the
+  family now has one address.
+- **Spacing** is the 4-based scale from this file — `--space-1`..`--space-12`
+  (4 / 8 / 12 / 16 / 24 / 32 / 48).
+- **Type** is the scale above, now carried as tokens with a tuned line-height per
+  rung: `--text-display|title|heading|body|detail|caption` and their `-lh` pairs.
+- **Elevation** stays the `--shadow-panel|popup|card` family.
+
+The system is mature and hand-tuned, so the off-scale literals it still carries
+are **not snapped blind** — that would reflow rhythm the author set by eye.
+`lib/design/rhythm.ts` + `tests/rhythm-tokens.test.ts` freeze each category to a
+baseline that only SHRINKS and forbids any new off-scale value; consolidating the
+remainder onto the scale is the author's-eye work the baseline tracks.
+
+## The two checks the palette and the keyboard already earned
+
+- **Theme parity** (`tests/theme-parity.test.ts`): a literal colour authored in
+  one theme block only fails, while var-aliases and derivations are exempt
+  because they inherit theme variance. It is the half `pnpm contrast` cannot see,
+  since the audit seeds the light map from dark.
+- **Focus-visible** (`tests/focus-visible.test.ts`): the global `:focus-visible`
+  ring must exist and no rule may remove it without giving back a box-shadow or a
+  lit border, so a keyboard reader never loses their place.

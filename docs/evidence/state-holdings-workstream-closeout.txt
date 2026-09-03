@@ -1,0 +1,185 @@
+
+> we-the-people@0.1.0 workstream:close C:\Users\seanj\dev\wtp-state-holdings
+> tsx scripts/workstream-close.mts "--external-stop" "--stop-reason" "State Holdings A1/A2 are MET after the single PR266 merge and post-merge proof. The clean-main closeout command refuses the preserved standing-runner records; existing NS13 requires the owner decision. Other standing discovery obligations remain outside this finite session."
+
+========================================================================
+CREDENTIAL REPORTS (owner-copy-before-install)
+========================================================================
+credential reports: none recorded (data/ops/credential-events.jsonl absent)
+
+========================================================================
+STOP ACCOUNTING (RULING 180, amended by RULING 189)
+========================================================================
+stop_reason                     State Holdings A1/A2 are MET after the single PR266 merge and post-merge proof. The clean-main closeout command refuses the preserved standing-runner records; existing NS13 requires the owner decision. Other standing discovery obligations remain outside this finite session.
+executable_owed_work_remaining  1720   (derived, not asserted)
+author_stop                     false
+external_stop                   true
+
+No context percentage is recorded, and none is asked for: a session cannot
+measure its own capacity, and a guess dressed as a measurement bought a status
+that reads as success (RULING 189). Keep working while authorized executable
+work remains.
+
+SESSION STATUS: CLEAN_HANDOFF_EXTERNAL_STOP
+  because: an actual external condition prevented continued authorized work
+
+========================================================================
+SESSION CLOSE-OUT — descent:az
+========================================================================
+SESSION STATUS:    CLEAN_HANDOFF_EXTERNAL_STOP
+WORKSTREAM STATUS: OPEN
+GRAPH STATUS:      EXPANDING
+
+METHOD VERSION AT CLOSE:          72
+ROUTES INHERITED:                 0
+NEW ROUTES LEARNED THIS SESSION:  0
+
+EXACT RESUME CURSOR:
+  az / 842 edge(s) persisted / 759 eligible edge(s) outstanding / by tier: state=131, statewide and multi-county districts=130, county=261, local and special districts=16, city=3, everything else the state names=218 / next: edge-d4b9d6cbc678 https://az.gov/administration-department / eligibility ee-v1-2026-08-26 / unmaterialized obligation 1143 (legacy final pass, identities never persisted) / adjudicated 31 lead(s) on 2026-08-27
+
+CANDIDATES: 849 lead(s) | 0 verified | 354 PROMOTED BODIES | 184 duplicate | 38 rejected | 260 unclassified
+  coverage numerator is 354 — leads never count toward it
+
+OPEN (7):
+  az:state (IN_PROGRESS)
+  az:county (IN_PROGRESS)
+  az:multi-county (IN_PROGRESS)
+  az:special-district (IN_PROGRESS)
+  az:city (IN_PROGRESS)
+  az:other (IN_PROGRESS)
+  az:frontier-recovery (REQUIRES_NEW_ADAPTER)
+BLOCKED (1):
+  az:frontier-recovery: 1143 queued edges from the final pass were never persisted by the legacy descent — only their COUNT was. They are recoverable only by re-walking, which is the defect RULING 181 names. Every edge discovered from this point forward is persisted.
+DISCOVERED NOT YET PROCESSED (759):
+  edge-d4b9d6cbc678
+  edge-d033ec800f5f
+  edge-c10a6ac6d91c
+  edge-72a3301393d6
+  edge-01789ec27f15
+  edge-ca5a716d39a2
+  edge-65df12c852ee
+  edge-357bcbeb161d
+  edge-7e30b8dadc66
+  edge-1df6ae935abd
+  edge-0d9e9f4c160e
+  edge-f067f643c8f2
+  ... 747 more — run with --full, or read data/workstate/az.json
+RECHECK DUE (0):
+  none
+PERMISSION UNRESOLVED (CANNOT_TELL — neither allowed nor disallowed) (0):
+  none
+
+WHY THIS IS NOT COMPLETE (6):
+  - 7 item(s) not terminal: IN_PROGRESS×6, REQUIRES_NEW_ADAPTER×1
+  - 1 open blocker(s); a blocked route is never a factual absence
+  - 759 eligible edge(s) still queued
+  - 273 discovery candidate(s) unclassified
+  - 1143 unmaterialized obligation(s) carried: work a previous run discovered whose identities were never persisted — counted, not resumable, and not discharged
+  - no convergence record — the eligible graph has never been declared converged
+
+========================================================================
+SESSION CLOSE-OUT — descent:nh
+========================================================================
+SESSION STATUS:    CLEAN_HANDOFF_EXTERNAL_STOP
+WORKSTREAM STATUS: OPEN
+GRAPH STATUS:      EXPANDING
+
+METHOD VERSION AT CLOSE:          72
+ROUTES INHERITED:                 0
+NEW ROUTES LEARNED THIS SESSION:  0
+
+EXACT RESUME CURSOR:
+  nh / 290 edge(s) persisted / 255 eligible edge(s) outstanding / by tier: state=53, statewide and multi-county districts=125, county=15, local and special districts=58, town, township, borough, village, plantation, unincorporated place=4 / next: edge-c7bc1fef450f https://www.banking.nh.gov/ / eligibility ee-v1-2026-08-26 / unmaterialized obligation 771 (legacy final pass, identities never persisted) / adjudicated 5 lead(s) on 2026-08-27
+
+CANDIDATES: 264 lead(s) | 0 verified | 114 PROMOTED BODIES | 28 duplicate | 38 rejected | 79 unclassified
+  coverage numerator is 114 — leads never count toward it
+
+OPEN (6):
+  nh:state (IN_PROGRESS)
+  nh:multi-county (IN_PROGRESS)
+  nh:special-district (IN_PROGRESS)
+  nh:minor-civil (IN_PROGRESS)
+  nh:county (IN_PROGRESS)
+  nh:frontier-recovery (REQUIRES_NEW_ADAPTER)
+BLOCKED (1):
+  nh:frontier-recovery: 771 queued edges from the final pass were never persisted by the legacy descent — only their COUNT was. They are recoverable only by re-walking, which is the defect RULING 181 names. Every edge discovered from this point forward is persisted.
+DISCOVERED NOT YET PROCESSED (255):
+  edge-c7bc1fef450f
+  edge-4c0e22ea4c37
+  edge-88e6531c7376
+  edge-ecbb444ff925
+  edge-3d2fbe036d72
+  edge-beda42637412
+  edge-019a1f67dbeb
+  edge-ae662c15b087
+  edge-b474a58cf509
+  edge-24bf675086a0
+  edge-8cc575c3cc00
+  edge-26a31ebd113c
+  ... 243 more — run with --full, or read data/workstate/nh.json
+RECHECK DUE (0):
+  none
+PERMISSION UNRESOLVED (CANNOT_TELL — neither allowed nor disallowed) (0):
+  none
+
+WHY THIS IS NOT COMPLETE (6):
+  - 6 item(s) not terminal: IN_PROGRESS×5, REQUIRES_NEW_ADAPTER×1
+  - 1 open blocker(s); a blocked route is never a factual absence
+  - 255 eligible edge(s) still queued
+  - 84 discovery candidate(s) unclassified
+  - 771 unmaterialized obligation(s) carried: work a previous run discovered whose identities were never persisted — counted, not resumable, and not discharged
+  - no convergence record — the eligible graph has never been declared converged
+
+========================================================================
+SESSION CLOSE-OUT — descent:nj
+========================================================================
+SESSION STATUS:    CLEAN_HANDOFF_EXTERNAL_STOP
+WORKSTREAM STATUS: OPEN
+GRAPH STATUS:      EXPANDING
+
+METHOD VERSION AT CLOSE:          72
+ROUTES INHERITED:                 0
+NEW ROUTES LEARNED THIS SESSION:  0
+
+EXACT RESUME CURSOR:
+  nj / 822 edge(s) persisted / 686 eligible edge(s) outstanding / by tier: state=17, statewide and multi-county districts=158, county=84, local and special districts=48, city=13, town, township, borough, village, plantation, unincorporated place=366 / next: edge-ffd8421f356b https://www.nj.gov/mvc/locations/closing.htm / eligibility ee-v1-2026-08-26 / unmaterialized obligation 1986 (legacy final pass, identities never persisted) / adjudicated 2 lead(s) on 2026-08-27
+
+CANDIDATES: 715 lead(s) | 0 verified | 207 PROMOTED BODIES | 237 duplicate | 85 rejected | 185 unclassified
+  coverage numerator is 207 — leads never count toward it
+
+OPEN (7):
+  nj:minor-civil (IN_PROGRESS)
+  nj:state (IN_PROGRESS)
+  nj:multi-county (IN_PROGRESS)
+  nj:county (IN_PROGRESS)
+  nj:special-district (IN_PROGRESS)
+  nj:city (IN_PROGRESS)
+  nj:frontier-recovery (REQUIRES_NEW_ADAPTER)
+BLOCKED (1):
+  nj:frontier-recovery: 1986 queued edges from the final pass were never persisted by the legacy descent — only their COUNT was. They are recoverable only by re-walking, which is the defect RULING 181 names. Every edge discovered from this point forward is persisted.
+DISCOVERED NOT YET PROCESSED (686):
+  edge-ffd8421f356b
+  edge-087af8037371
+  edge-66aa6b1599e5
+  edge-d0daaff7ff9f
+  edge-3ae5515d3e61
+  edge-e5aff801bd32
+  edge-05391aeb7db1
+  edge-db256704505c
+  edge-10d68b34a0d0
+  edge-b18e046791c6
+  edge-e03706474dd6
+  edge-dc60ec7fe337
+  ... 674 more — run with --full, or read data/workstate/nj.json
+RECHECK DUE (0):
+  none
+PERMISSION UNRESOLVED (CANNOT_TELL — neither allowed nor disallowed) (0):
+  none
+
+WHY THIS IS NOT COMPLETE (6):
+  - 7 item(s) not terminal: IN_PROGRESS×6, REQUIRES_NEW_ADAPTER×1
+  - 1 open blocker(s); a blocked route is never a factual absence
+  - 686 eligible edge(s) still queued
+  - 186 discovery candidate(s) unclassified
+  - 1986 unmaterialized obligation(s) carried: work a previous run discovered whose identities were never persisted — counted, not resumable, and not discharged
+  - no convergence record — the eligible graph has never been declared converged

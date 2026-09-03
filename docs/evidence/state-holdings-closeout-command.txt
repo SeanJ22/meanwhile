@@ -1,0 +1,16 @@
+
+> we-the-people@0.1.0 closeout C:\Users\seanj\dev\we-the-people
+> node scripts/close-out.mjs
+
+✗ working tree           uncommitted changes — commit the records first, then run this
+    M data/control-plane/staging/freshness_campaign-finance_az-sos-cfs-2026_az-sos-seethemoney-datatables.staged.json
+     M data/control-plane/staging/freshness_campaign-finance_nh-sos-cfs-2026_nh-cfs-filing-entity-details.staged.json
+     M data/control-plane/staging/manifest.json
+     M data/method/candidates.json
+    ?? data/health/freshness-shadow-runs/2026-09-01-13.json
+    ?? data/health/freshness-shadow-runs/2026-09-01-14.json
+    ?? data/health/freshness-shadow-runs/2026-09-02-03.json
+    ?? data/health/freshness-shadow-runs/2026-09-02-04.json
+    ?? data/health/freshness-shadow-runs/2026-09-02-05.json
+    ?? data/health/freshness-shadow-runs/2026-09-02-06.json
+ ELIFECYCLE  Command failed with exit code 1.

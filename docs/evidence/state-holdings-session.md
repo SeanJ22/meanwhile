@@ -10,8 +10,8 @@ Governance snapshot: `ff96d60545edf000`, discovery domain, zero unresolved confl
 
 | Item | Exact acceptance | Dependencies | Proof | Status |
 | --- | --- | --- | --- | --- |
-| A1 | Every candidate canonical state holding classified; classified = moved + explicitly exempted; one atomic move and all reference updates; permanent residual guard; README layout | Frozen base and readback denominator, classification | Move plan with per-file counts, seeded residual failure, integrated gates | NOT MET |
-| A2 | Exactly one generated manifest per discovered state, AZ/NH/NJ included; holdings/completeness/feeds/owed with row denominators; external inputs only committed dated readbacks; typed dataset/surface registry | A1 paths, canonical external readbacks | Input inventory, generated manifests, stale-manifest seed, mapping existence test | NOT MET |
+| A1 | Every candidate canonical state holding classified; classified = moved + explicitly exempted; one atomic move and all reference updates; permanent residual guard; README layout | Frozen base and readback denominator, classification | Move plan with per-file counts, seeded residual failure, integrated gates | MET |
+| A2 | Exactly one generated manifest per discovered state, AZ/NH/NJ included; holdings/completeness/feeds/owed with row denominators; external inputs only committed dated readbacks; typed dataset/surface registry | A1 paths, canonical external readbacks | Input inventory, generated manifests, stale-manifest seed, mapping existence test | MET |
 
 The snapshot denominator is the base Git tree plus the committed external readbacks
 named in the manifest input artifact. Later discoveries are next obligations unless
@@ -50,7 +50,7 @@ Promotion remains gated. The standing runner and Scouts keep running.
 - `session:start --check`: main current, constitution intact, hooks installed,
   port 3000 free. Sandbox fetch warning was resolved by the successful host fetch.
 
-## Closeout record
+## Implementation checkpoint before merge
 
 The architecture is implemented in the isolated branch; the acceptance rows remain
 NOT MET until the integrated gates, local production walk and planned merge finish.
@@ -63,7 +63,7 @@ every moved/exempted file and every reference file. Its final literal sweep is
 4,391 references in 161 files in the initial sweep, plus 92 replacements in 52
 files for the embedded-data correction: **4,483 applied replacements across 205
 distinct files**, with both sweeps and the combined per-file list retained. Its
-separate 269-file consumer census includes dynamic path helpers and generated
+separate 272-file consumer census includes dynamic path helpers and generated
 answer surfaces; it counts changed lines, not literal occurrences.
 
 The discovered denominator is 56 states/territories, including AZ, NH and NJ.
@@ -450,3 +450,74 @@ The required production-only questions remain observations for after merge. The
 combined build passed the unchanged limits: largest application trace 223/230
 files and initial client gzip 547,475/940,000 bytes. The next canonical shipping
 run must pass all sixteen gates and all required GitHub checks on its exact head.
+
+## Integrated acceptance and closeout
+
+A1 and A2 are MET from the actual post-merge contracts. PR 266 merged as
+`fd28d6fb3150aef2fd5550a4e5b7ee0d7b4d7099`, whose second parent is exactly the local and GitHub tested
+head `2dc650e4d38d6f65be66b539fb38467c5286c697`. Its tree equals the tested tree. All 16/16
+local gates and the required GitHub checks passed. The canonical production
+observation is HELD for that merge SHA, with 25/25 committed migrations applied.
+The exact observations, times, input hashes and checks are in
+`docs/evidence/state-holdings-merged-proof.json`. The post-merge residual-layout
+check and manifest byte-freshness check both passed against the merged code.
+The full suite includes the planted residual violation, planted stale manifest
+and typed dataset/surface existence tests.
+
+The final move identity is 305 = 237 moved + 68 exempted; the 3,485-candidate
+universe also classifies 3,180 non-holdings. There are 56/56 discovered-state
+manifests. The two earlier sweeps plus the current-main integration applied
+4488 literal replacements across 208 files; every file and count
+is listed in the merged proof and move report. The broader 272-file consumer
+census measures changed reference lines separately.
+
+The combined local production walk passed 444 checks, zero failures,
+with 23 explicitly unable to run. Its reader code was preserved through shipping.
+The standing checkout was fast-forwarded with fresh backups and overlap checks;
+26/26 observed runner files were preserved byte for byte.
+The synchronization artifact names every path, original/current hash and backup.
+No standing runner or Scout was stopped. No additional acquisition was begun.
+
+First-pass acceptance MET: 0/2. After-correction acceptance MET: 2/2.
+OpenAI Codex was the provider; exact model identifier, tokens and cost remain
+NOT EXPOSED. Gate failures and BLOCKING corrections are preserved in the history
+above; final gate evidence supersedes their verdicts without deleting them.
+NH320 was resolved. NH321, NH322 and NH323 remain classified FRONTIER obligations.
+NH314, NH315 and the other explicit exclusions were not started; promotion remains gated.
+
+The canonical `pnpm closeout` command remains NOT MET: its clean-main guard
+refused the 26 intentionally preserved runner-owned records. The exact command
+output is in `docs/evidence/state-holdings-closeout-command.txt`. Existing owner
+obligation NS13 carries this evidence. No data was cleared, no clean-tree
+exception was taken, and no second merge or separate push to main was performed.
+Post-merge records are durable on this session branch and in the authorized
+project mirror; the unresolved closeout policy is not represented as a green
+command. This does not change the independently proved A1/A2 results.
+
+Final local run 18 passed 16/16 gates: 4984 tests passed, 0 failed,
+1 skipped. GitHub run 33722990967 passed all three PR jobs; the merge
+commit's run 33723409183 passed, and the observer commit's run 33723528463 passed.
+Canonical `main:green` read four successful checks on
+`d88356aacc076b07f5bb2e27de164b3cc95f9098`. The canonical handoff exported 126
+transcripts, mirrored 26 canonical documents and 12 code files, and re-read zero
+credential values. Its two terminal defects were the checked-out-main fetch
+refusal, corrected by the byte-preserving synchronization, and generated
+closeout records, preserved in the named session-branch closeout commit.
+
+Workstream closeout preserved the standing 1,720-obligation denominator and
+classified this policy-blocked terminal state CLEAN_HANDOFF_EXTERNAL_STOP.
+Orchestration closeout reconciled four declared/executed workstreams and two
+artifacts, with zero unaccounted artifacts. All four post-hoc declarations remain
+explicitly reported as a process defect. Full outputs and the provider comparison
+are in the adjacent state-holdings closeout artifacts. The provider comparison
+records the observed terminal clock and direct bootstrap-to-close arithmetic;
+model, token and cost values were not estimated.
+
+Automatic approval review rejected the final non-shipping Drive refresh before
+it ran, stating that trusted authorization covered the canonical `--ship`
+payload but not this additional export. No alternate export route was attempted.
+The authorized shipping export already completed with 126 transcripts, the
+canonical document/code sets and zero credential values after the mandatory
+sweep. Final post-merge records are preserved in Git; the Drive copy does not
+claim to contain these later closeout updates. Local generated context, status
+and inventory are regenerated without a mirror destination.

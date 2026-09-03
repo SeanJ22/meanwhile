@@ -1,0 +1,952 @@
+{
+  "observed_at": "2026-09-03T06:33:36.905Z",
+  "mergeSha": "fd28d6fb3150aef2fd5550a4e5b7ee0d7b4d7099",
+  "testedHead": "2dc650e4d38d6f65be66b539fb38467c5286c697",
+  "exactTestedTreeMerged": true,
+  "localGateArtifact": "data/ops/gate-runs/2026-09-02-18.json",
+  "localGateDenominator": 16,
+  "localGatePasses": 16,
+  "github": {
+    "headRefOid": "2dc650e4d38d6f65be66b539fb38467c5286c697",
+    "mergeCommit": {
+      "oid": "fd28d6fb3150aef2fd5550a4e5b7ee0d7b4d7099"
+    },
+    "mergedAt": "2026-09-03T06:28:54Z",
+    "state": "MERGED",
+    "statusCheckRollup": [
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-09-03T06:24:38Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/SeanJ22/meanwhile/actions/runs/33722990967/job/100545864886",
+        "name": "build (standalone)",
+        "startedAt": "2026-09-03T06:23:31Z",
+        "status": "COMPLETED",
+        "workflowName": "Build check"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-09-03T06:24:43Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/SeanJ22/meanwhile/actions/runs/33722990967/job/100545864608",
+        "name": "build (default)",
+        "startedAt": "2026-09-03T06:23:31Z",
+        "status": "COMPLETED",
+        "workflowName": "Build check"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-09-03T06:28:45Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/SeanJ22/meanwhile/actions/runs/33722990967/job/100545864799",
+        "name": "gates (test · lint · tsc)",
+        "startedAt": "2026-09-03T06:23:31Z",
+        "status": "COMPLETED",
+        "workflowName": "Build check"
+      }
+    ]
+  },
+  "walk": {
+    "artifact": "data/health/walk-runs/2026-09-02-03.json",
+    "testedSha": "1cd545f4a31d329e8dc682f138f97e3f203c7ddc",
+    "checksRan": 444,
+    "failures": 0,
+    "declaredCouldNotRun": 23
+  },
+  "production": {
+    "formatVersion": 1,
+    "deployedSha": "fd28d6fb3150aef2fd5550a4e5b7ee0d7b4d7099",
+    "mainSha": "fd28d6fb3150aef2fd5550a4e5b7ee0d7b4d7099",
+    "observed": "HELD",
+    "failureClass": null,
+    "detail": "HOLDS — shipping invariant HOLDS at post-deploy: 25 of 25 committed migration(s) applied, head 0024_living_invaders",
+    "observedAt": "2026-09-03T06:30:19.408Z",
+    "moment": "post-deploy",
+    "gateExit": 0
+  },
+  "frozenBase": "3f9a138fd39f6160659329e17c496d2dd99cee00",
+  "readerInputsUnchangedFromWalk": true,
+  "references": {
+    "appliedReplacements": 4488,
+    "files": 208,
+    "byFile": [
+      {
+        "path": ".github/workflows/refresh-nj-filing.yml",
+        "count": 2
+      },
+      {
+        "path": "app/ballot/page.tsx",
+        "count": 3
+      },
+      {
+        "path": "components/map/map-entry.tsx",
+        "count": 3
+      },
+      {
+        "path": "components/map/popup/agenda-section.tsx",
+        "count": 1
+      },
+      {
+        "path": "components/map/popup/entity-modal.tsx",
+        "count": 1
+      },
+      {
+        "path": "data/audit/universe-03255.json",
+        "count": 1
+      },
+      {
+        "path": "data/audit/universe-07866.json",
+        "count": 1
+      },
+      {
+        "path": "data/ballot/candidate-cards-2026.json",
+        "count": 1
+      },
+      {
+        "path": "data/ballot/candidate-links-2026.json",
+        "count": 1
+      },
+      {
+        "path": "data/campaign-finance/az-route-descriptors.json",
+        "count": 3
+      },
+      {
+        "path": "data/feedback/sweeps/9.2.26.json",
+        "count": 2
+      },
+      {
+        "path": "data/health/rollcall-walks/2026-08-31T15-56-19-436Z.json",
+        "count": 1
+      },
+      {
+        "path": "data/health/rollcall-walks/2026-08-31T15-56-38-332Z.json",
+        "count": 1
+      },
+      {
+        "path": "data/hunt/85641-obligation-ledger.json",
+        "count": 11
+      },
+      {
+        "path": "data/hunt/argued-absences-03255.json",
+        "count": 124
+      },
+      {
+        "path": "data/hunt/argued-absences-07866.json",
+        "count": 1038
+      },
+      {
+        "path": "data/hunt/candidate-filing-authorities-2026.json",
+        "count": 3
+      },
+      {
+        "path": "data/hunt/nh-remaining-routes.json",
+        "count": 1
+      },
+      {
+        "path": "data/method/knowledge.json",
+        "count": 3
+      },
+      {
+        "path": "data/ops/refresh-failure-diagnosis-2026-09-02.json",
+        "count": 4
+      },
+      {
+        "path": "data/states/az/campaign-finance/az-pima-2026-transactions.json",
+        "count": 1
+      },
+      {
+        "path": "data/states/az/campaign-finance/az-seethemoney-2026-reconciliation.json",
+        "count": 1
+      },
+      {
+        "path": "data/states/az/candidates/az-2026-sos-candidate-filings.json",
+        "count": 2
+      },
+      {
+        "path": "data/states/az/hunt/85641-primary-certified-results.json",
+        "count": 1
+      },
+      {
+        "path": "data/states/az/hunt/az-candidate-universe-2026.json",
+        "count": 323
+      },
+      {
+        "path": "data/states/az/identity/az-2026-candidate-registry.json",
+        "count": 1
+      },
+      {
+        "path": "data/states/az/identity/az-2026-certified-lineup-reconciliation.json",
+        "count": 1
+      },
+      {
+        "path": "data/states/az/jurisdictions/az.json",
+        "count": 22
+      },
+      {
+        "path": "data/states/nh/hunt/nh-candidate-universe-2026.json",
+        "count": 48
+      },
+      {
+        "path": "data/states/nh/jurisdictions/nh.json",
+        "count": 551
+      },
+      {
+        "path": "data/states/nj/ballot/nj-morris-2026.json",
+        "count": 1
+      },
+      {
+        "path": "data/states/nj/hunt/campaign-site-leads-nj-morris.json",
+        "count": 1
+      },
+      {
+        "path": "data/states/nj/hunt/nj-candidate-universe-2026.json",
+        "count": 277
+      },
+      {
+        "path": "data/states/nj/hunt/officials-contact-nj-morris.json",
+        "count": 1
+      },
+      {
+        "path": "data/states/nj/hunt/wiki-leader-leads-07866.json",
+        "count": 1
+      },
+      {
+        "path": "data/states/nj/jurisdictions/nj.json",
+        "count": 1366
+      },
+      {
+        "path": "data/workstate/orchestration/2026-08-28-finish-aug28.json",
+        "count": 3
+      },
+      {
+        "path": "data/workstate/orchestration/2026-08-28-pre-control-plane-cleanroom.json",
+        "count": 1
+      },
+      {
+        "path": "data/workstate/orchestration/2026-08-29-exact-body-identity-and-answerability.json",
+        "count": 1
+      },
+      {
+        "path": "data/workstate/orchestration/2026-09-01-session-c-closeout.json",
+        "count": 4
+      },
+      {
+        "path": "data/workstate/orchestration/2026-09-02-session-c-visual-feedback.json",
+        "count": 1
+      },
+      {
+        "path": "docs/architecture/control-plane-current-system-inventory.md",
+        "count": 3
+      },
+      {
+        "path": "docs/arizona-source-enumeration.md",
+        "count": 2
+      },
+      {
+        "path": "docs/candidate-questionnaire-invitation.md",
+        "count": 1
+      },
+      {
+        "path": "docs/context.md",
+        "count": 1
+      },
+      {
+        "path": "docs/deferred.csv",
+        "count": 3
+      },
+      {
+        "path": "docs/detective/85641-unincorporated-bodies-2026-08-29.md",
+        "count": 4
+      },
+      {
+        "path": "docs/evidence/session-c-refutation-2026-09-01.json",
+        "count": 1
+      },
+      {
+        "path": "docs/evidence/state-holdings-photo-base.json",
+        "count": 1
+      },
+      {
+        "path": "docs/expansion-log.md",
+        "count": 6
+      },
+      {
+        "path": "docs/false-verifications.md",
+        "count": 1
+      },
+      {
+        "path": "docs/frontier.md",
+        "count": 1
+      },
+      {
+        "path": "docs/governance/history.md",
+        "count": 4
+      },
+      {
+        "path": "docs/governance/policies/discovery.md",
+        "count": 3
+      },
+      {
+        "path": "docs/governance/policies/meta-governance.md",
+        "count": 1
+      },
+      {
+        "path": "docs/log.md",
+        "count": 13
+      },
+      {
+        "path": "docs/owner-audit/session-c-resume.md",
+        "count": 1
+      },
+      {
+        "path": "docs/owner-audit/session-c.md",
+        "count": 18
+      },
+      {
+        "path": "docs/refresh-unblock-runbook.md",
+        "count": 3
+      },
+      {
+        "path": "docs/repo-inventory.md",
+        "count": 245
+      },
+      {
+        "path": "docs/rulings.md",
+        "count": 4
+      },
+      {
+        "path": "docs/session-map.md",
+        "count": 1
+      },
+      {
+        "path": "docs/source-ladder.md",
+        "count": 1
+      },
+      {
+        "path": "docs/sources.md",
+        "count": 1
+      },
+      {
+        "path": "docs/state.md",
+        "count": 9
+      },
+      {
+        "path": "docs/status-ledger.md",
+        "count": 1
+      },
+      {
+        "path": "docs/tracker-resolved.csv",
+        "count": 14
+      },
+      {
+        "path": "docs/tracker-working.csv",
+        "count": 27
+      },
+      {
+        "path": "docs/tracker.md",
+        "count": 12
+      },
+      {
+        "path": "docs/universe-03255.md",
+        "count": 4
+      },
+      {
+        "path": "docs/zip-playbook.md",
+        "count": 4
+      },
+      {
+        "path": "lib/ask/contacts.ts",
+        "count": 2
+      },
+      {
+        "path": "lib/ask/local-finance.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/ask/server-sources.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/ballot/battlecard-sections.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/ballot/incumbency-resolve.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/ballot/seat-holders.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/candidates/population-label.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/control-plane/campaign-finance/held-records.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/control-plane/campaign-finance/model.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/control-plane/campaign-finance/obligations.ts",
+        "count": 3
+      },
+      {
+        "path": "lib/control-plane/scheduler/providers/local-jurisdictions.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/corpus/artifacts.ts",
+        "count": 2
+      },
+      {
+        "path": "lib/coverage/photo-slots.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/funding/nominee-money.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/geo/district-overlap.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/hunt/citation-ledger.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/hunt/nj-filing-clock.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/hunt/source-universe.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/hunt/wikipedia.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/identity/az-2026.ts",
+        "count": 2
+      },
+      {
+        "path": "lib/meetings/notice-summary.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/officials/body-definitions.ts",
+        "count": 2
+      },
+      {
+        "path": "lib/officials/body-form.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/officials/division-government.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/officials/form-definitions.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/ops/capability-registry.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/ops/generated-register.ts",
+        "count": 15
+      },
+      {
+        "path": "lib/ops/generator-digest.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/ops/tenant-body-binding.ts",
+        "count": 5
+      },
+      {
+        "path": "lib/outcomes/ingest.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/outcomes/store.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/registry/body-rosters.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/registry/body-territory.ts",
+        "count": 2
+      },
+      {
+        "path": "lib/registry/coverage-audit.ts",
+        "count": 3
+      },
+      {
+        "path": "lib/registry/curated-bodies.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/registry/curated-divisions.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/registry/links.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/registry/registry.json",
+        "count": 1
+      },
+      {
+        "path": "lib/registry/source-wiring.ts",
+        "count": 2
+      },
+      {
+        "path": "lib/sources/az-seethemoney/index.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/sources/az-sos-candidate-filings/index.ts",
+        "count": 7
+      },
+      {
+        "path": "lib/sources/ballot-curated/index.ts",
+        "count": 2
+      },
+      {
+        "path": "lib/sources/legiscan/districts.ts",
+        "count": 1
+      },
+      {
+        "path": "lib/sources/legistar-insite/index.ts",
+        "count": 2
+      },
+      {
+        "path": "lib/sources/legistar/index.ts",
+        "count": 1
+      },
+      {
+        "path": "scripts/acquire-az-sos-candidate-filings.mts",
+        "count": 3
+      },
+      {
+        "path": "scripts/acquire-candidate-filing-authorities.mts",
+        "count": 3
+      },
+      {
+        "path": "scripts/audit-nj-slogan-field.mts",
+        "count": 2
+      },
+      {
+        "path": "scripts/az-county-levy.mts",
+        "count": 1
+      },
+      {
+        "path": "scripts/b14-coverage.mts",
+        "count": 1
+      },
+      {
+        "path": "scripts/build-commons-targets.mts",
+        "count": 1
+      },
+      {
+        "path": "scripts/build-gap-ledger.mts",
+        "count": 1
+      },
+      {
+        "path": "scripts/build-nj-morris-ballot.mts",
+        "count": 3
+      },
+      {
+        "path": "scripts/build-nj-rosters.mts",
+        "count": 8
+      },
+      {
+        "path": "scripts/campaign-finance-az-pima-transactions.mts",
+        "count": 2
+      },
+      {
+        "path": "scripts/cfd-territory.mts",
+        "count": 1
+      },
+      {
+        "path": "scripts/check-nj-filing.mts",
+        "count": 1
+      },
+      {
+        "path": "scripts/coverage-four-layer.mts",
+        "count": 1
+      },
+      {
+        "path": "scripts/definitions-verify.mts",
+        "count": 1
+      },
+      {
+        "path": "scripts/district-territory-probe.mts",
+        "count": 3
+      },
+      {
+        "path": "scripts/doctor.mts",
+        "count": 2
+      },
+      {
+        "path": "scripts/enumerate-jurisdictions.mts",
+        "count": 7
+      },
+      {
+        "path": "scripts/fetch-measure-analyses.mts",
+        "count": 1
+      },
+      {
+        "path": "scripts/fix-stale-official-pages.mts",
+        "count": 4
+      },
+      {
+        "path": "scripts/hunt-azleg-actions.mts",
+        "count": 1
+      },
+      {
+        "path": "scripts/hunt-azleg-build-store.mts",
+        "count": 2
+      },
+      {
+        "path": "scripts/hunt-filed-email-domain.mts",
+        "count": 3
+      },
+      {
+        "path": "scripts/hunt-wikipedia-citation.mts",
+        "count": 2
+      },
+      {
+        "path": "scripts/identity-az-2026.mts",
+        "count": 8
+      },
+      {
+        "path": "scripts/learn-az-seethemoney.mts",
+        "count": 1
+      },
+      {
+        "path": "scripts/learn-executive-actions.mts",
+        "count": 1
+      },
+      {
+        "path": "scripts/learn-legistar-horizon.mts",
+        "count": 1
+      },
+      {
+        "path": "scripts/learn-nh-cfs.mts",
+        "count": 1
+      },
+      {
+        "path": "scripts/legistar-outcomes-ingest.mts",
+        "count": 3
+      },
+      {
+        "path": "scripts/measure-definitions-0823.mts",
+        "count": 1
+      },
+      {
+        "path": "scripts/mine-campaign-sites.mts",
+        "count": 3
+      },
+      {
+        "path": "scripts/mine-wiki-leaders.mts",
+        "count": 3
+      },
+      {
+        "path": "scripts/muni-site-index.mts",
+        "count": 6
+      },
+      {
+        "path": "scripts/name-census.mts",
+        "count": 2
+      },
+      {
+        "path": "scripts/nh-gencourt-members.mts",
+        "count": 2
+      },
+      {
+        "path": "scripts/nh-legislator.mts",
+        "count": 1
+      },
+      {
+        "path": "scripts/nj-hunt4-search.mts",
+        "count": 1
+      },
+      {
+        "path": "scripts/nj-hunt5-ledger.mts",
+        "count": 5
+      },
+      {
+        "path": "scripts/party-directory-0825.mts",
+        "count": 1
+      },
+      {
+        "path": "scripts/pima-rollcall-walk.mts",
+        "count": 1
+      },
+      {
+        "path": "scripts/promote-leads-0823.mts",
+        "count": 3
+      },
+      {
+        "path": "scripts/questionnaire-invitations.mts",
+        "count": 2
+      },
+      {
+        "path": "scripts/regen-check.mts",
+        "count": 2
+      },
+      {
+        "path": "scripts/roster-hunt.mts",
+        "count": 2
+      },
+      {
+        "path": "scripts/seed-citation-ledger.mts",
+        "count": 1
+      },
+      {
+        "path": "scripts/stamp-body-forms.mts",
+        "count": 1
+      },
+      {
+        "path": "scripts/state-money-az.mts",
+        "count": 7
+      },
+      {
+        "path": "scripts/state-money-nh.mts",
+        "count": 3
+      },
+      {
+        "path": "scripts/state-money-nj.mts",
+        "count": 6
+      },
+      {
+        "path": "scripts/verify-composition-0827.mts",
+        "count": 1
+      },
+      {
+        "path": "scripts/walk-all.mts",
+        "count": 3
+      },
+      {
+        "path": "scripts/wire-campaign-sites-0823.mts",
+        "count": 3
+      },
+      {
+        "path": "scripts/zip-district-intersect.mts",
+        "count": 2
+      },
+      {
+        "path": "scripts/zip-universe.mts",
+        "count": 1
+      },
+      {
+        "path": "states/az/85641.md",
+        "count": 2
+      },
+      {
+        "path": "states/az/NOTES.md",
+        "count": 1
+      },
+      {
+        "path": "states/nh/NOTES.md",
+        "count": 2
+      },
+      {
+        "path": "tests/ask-grounded-route.test.ts",
+        "count": 1
+      },
+      {
+        "path": "tests/az-finance-corpus.test.ts",
+        "count": 1
+      },
+      {
+        "path": "tests/body-battlecard.test.ts",
+        "count": 1
+      },
+      {
+        "path": "tests/body-composition.test.ts",
+        "count": 3
+      },
+      {
+        "path": "tests/body-definition-body-keyed.test.ts",
+        "count": 1
+      },
+      {
+        "path": "tests/body-definition-identity.test.ts",
+        "count": 1
+      },
+      {
+        "path": "tests/body-identity.test.ts",
+        "count": 2
+      },
+      {
+        "path": "tests/campaign-finance-answerability.test.ts",
+        "count": 2
+      },
+      {
+        "path": "tests/campaign-finance-az-pima-transactions.test.ts",
+        "count": 1
+      },
+      {
+        "path": "tests/candidate-links.test.ts",
+        "count": 4
+      },
+      {
+        "path": "tests/cawcd-roster.test.ts",
+        "count": 1
+      },
+      {
+        "path": "tests/control-plane-campaign-finance.test.ts",
+        "count": 1
+      },
+      {
+        "path": "tests/district-overlap.test.ts",
+        "count": 3
+      },
+      {
+        "path": "tests/fixture-credentials.test.ts",
+        "count": 1
+      },
+      {
+        "path": "tests/generated-artifacts.test.ts",
+        "count": 2
+      },
+      {
+        "path": "tests/generator-digests.json",
+        "count": 10
+      },
+      {
+        "path": "tests/incumbency-eligibility.test.ts",
+        "count": 2
+      },
+      {
+        "path": "tests/incumbency.test.ts",
+        "count": 1
+      },
+      {
+        "path": "tests/legiscan.test.ts",
+        "count": 1
+      },
+      {
+        "path": "tests/legistar-insite-union.test.ts",
+        "count": 1
+      },
+      {
+        "path": "tests/legistar-insite.test.ts",
+        "count": 2
+      },
+      {
+        "path": "tests/legistar-outcome-store.test.ts",
+        "count": 1
+      },
+      {
+        "path": "tests/legistar.test.ts",
+        "count": 1
+      },
+      {
+        "path": "tests/measure-order.test.ts",
+        "count": 1
+      },
+      {
+        "path": "tests/measure-provisions.test.ts",
+        "count": 1
+      },
+      {
+        "path": "tests/measure-summaries.test.ts",
+        "count": 2
+      },
+      {
+        "path": "tests/new-zip-readiness.test.ts",
+        "count": 2
+      },
+      {
+        "path": "tests/nj-filing-clock.test.ts",
+        "count": 1
+      },
+      {
+        "path": "tests/person-name.test.ts",
+        "count": 8
+      },
+      {
+        "path": "tests/ruling-59-coverage-silence.test.ts",
+        "count": 2
+      },
+      {
+        "path": "tests/source-stamp.test.ts",
+        "count": 1
+      },
+      {
+        "path": "tests/tenant-body-binding.test.ts",
+        "count": 2
+      },
+      {
+        "path": "tests/visual-feedback-9-2.test.ts",
+        "count": 1
+      },
+      {
+        "path": "tests/vote-explainers.test.ts",
+        "count": 1
+      },
+      {
+        "path": "tests/wiki-citation-follow.test.ts",
+        "count": 1
+      }
+    ]
+  },
+  "externalReadbacks": [
+    {
+      "path": "data/state-holdings/control-plane-readback.json",
+      "sha256": "c0122279bb259b7a27ab60fa8c642c8d8372228a27544e2d4246664398008368",
+      "observed_at": "2026-09-03T01:06:49.779Z"
+    },
+    {
+      "path": "data/state-holdings/vault-readback.json",
+      "sha256": "4803744daee2f33da0428c6767997f74c6fa21513a0d615da3a979db2d03b784",
+      "observed_at": "2026-09-03T01:06:51.158Z"
+    }
+  ],
+  "provingArtifacts": [
+    "data/state-holdings/move-plan.json",
+    "data/state-holdings/move-report.json",
+    "data/state-holdings/manifest-inputs.json",
+    "docs/evidence/state-holdings-current-inputs.json",
+    "tests/state-holdings-paths.test.ts",
+    "tests/state-manifest.test.ts"
+  ],
+  "mainChecks": {
+    "sha": "d88356aacc076b07f5bb2e27de164b3cc95f9098",
+    "verdict": "green",
+    "why": "4 check(s) passed",
+    "failed": [],
+    "pending": []
+  },
+  "postMergeChecks": [
+    {
+      "commandOutput": "\r\n> we-the-people@0.1.0 state-holdings:check C:\\Users\\seanj\\dev\\wtp-state-holdings\r\n> tsx scripts/state-holdings-check.mts\r\n\r\nState holding paths: 305 classified holdings; 3989 text files checked against 3f9a138fd39f6160659329e17c496d2dd99cee00.\r\nNo residual canonical paths or stale references.\r\n"
+    },
+    {
+      "commandOutput": "\r\n> we-the-people@0.1.0 state-manifest C:\\Users\\seanj\\dev\\wtp-state-holdings\r\n> tsx scripts/state-manifest.mts \"--check\"\r\n\r\nstate-manifest: 56 of 56 discovered-state manifests are byte-current against committed inputs; no files touched\r\n"
+    },
+    {
+      "commandOutput": "\r\n> we-the-people@0.1.0 deploy:live C:\\Users\\seanj\\dev\\wtp-state-holdings\r\n> node scripts/deploy-live.mjs\r\n\r\n· site                   sparkwtp.netlify.app\r\n· main tip               d88356a Post-deploy integrity reading: 2026-09-03T06:30Z\r\n· last deployable        fd28d6f Merge pull request #266 from SeanJ22/codex/state-hol  (1 paperwork commit(s) above it, correctly not built)\r\n· live deploy            6a9914027cea130008918dc8 · ready · 2026-09-03T06:30:26.708Z\r\n· live commit            d88356a\r\n✓ verdict                CURRENT — production is serving fd28d6f. deploy 6a9913a807e3f90008073a13 is ready\r\n"
+    }
+  ],
+  "canonicalCloseout": {
+    "status": "NOT MET",
+    "commandExit": 1,
+    "existingObligation": "NS13",
+    "artifact": "docs/evidence/state-holdings-closeout-command.txt",
+    "reason": "The clean-main requirement conflicts with the explicitly preserved runner-owned dirty records. No exception, cleanup, second merge or separate push to main was taken."
+  }
+}

@@ -1,0 +1,57 @@
+
+> we-the-people@0.1.0 orchestration:closeout C:\Users\seanj\dev\wtp-state-holdings
+> tsx scripts/orchestration-check.mts --closeout "--plan" "data/workstate/orchestration/2026-09-02-state-holdings.json" "--executed" "holdings-inventory,manifest-inputs,geography-paths,integration" "--artifacts" "codex/state-holdings-20260903,worktree:C:/Users/seanj/dev/wtp-state-holdings" "--integration-artifacts" "codex/state-holdings-20260903,worktree:C:/Users/seanj/dev/wtp-state-holdings"
+
+
+========================================================================
+orchestration:check workstreams: 4 of 4
+PLAN                  data/workstate/orchestration/2026-09-02-state-holdings.json
+session               2026-09-02 state holdings architecture: frozen denominator, atomic move, generated state answers
+integration owner     codex/state-holdings-20260903
+status                TEAM
+                      4 workstream(s), 2 independent pair(s); every serialization is backed by a shared owned domain or a named artifact handoff
+counts                4 workstream(s), 4 executable, 0 parallel, 0 serialized, 0 blocked, 0 ready, 4 integrated
+independent pairs     2
+  holdings-inventory           INTEGRATED
+                               evidence: holdings_inventory agent worked independently beside manifest_inputs and the integration owner; ownership then transferred to the integration owner
+                               evidence: Provider usage limit stopped the later residual-fix turn; remaining edits were completed locally
+                               evidence: After provider capacity resumed, the agent completed its explicitly reassigned repair/review lane and yielded files back to the integration owner. Ownership transfers were serialized before edits.
+                               evidence: A1 adversarial census identified 23 canonical TypeScript modules at the same base. The corrected plan preceded all seven extractions. holdings_inventory owned the first four source/data/consumer contracts and code-data equality test.
+                               evidence: After PR267 merged, this agent exclusively owned data/states/az/ballot/measure-summaries.json, lib/ballot/measure-summary.ts and tests/state-holdings-code-data.test.ts. It preserved the original 11-record snapshot and added all four upstream records with exact Git-source equality. Ownership returned to root before integration tests.
+  manifest-inputs              INTEGRATED
+                               evidence: manifest_inputs agent implemented and proved seven targeted checks independently alongside inventory and geography lanes
+                               evidence: Provider usage limit ended the agent after generation; final integration and review transferred to the integration owner
+                               evidence: After provider capacity resumed, the agent completed its explicitly reassigned repair/review lane and yielded files back to the integration owner. Ownership transfers were serialized before edits.
+                               evidence: manifest_inputs exclusively implemented 16 shared-module adapters in manifest.ts, datasets.ts, module-datasets.ts and state-manifest.test.ts; no data or docs generation.
+  geography-paths              INTEGRATED             <- holdings-inventory
+                               evidence: geography_paths agent owned explicitly allocated geometry/roster consumers while holdings_inventory corrected non-geography consumers; shared files remained with the integration owner
+                               evidence: Provider usage limit stopped this lane; integration owner regenerated the resolver artifact and finished the projection tests
+                               evidence: After provider capacity resumed, the agent completed its explicitly reassigned repair/review lane and yielded files back to the integration owner. Ownership transfers were serialized before edits.
+                               evidence: geography_paths owned only the three meeting source/data/consumer extraction contracts and meeting-data equality test, independently beside the first four extractions.
+                               evidence: The independent upstream integration lane exclusively updated the two path references in tests/measure-summaries.test.ts and tests/visual-feedback-9-2.test.ts, retaining every upstream assertion, then yielded to root.
+  integration                  INTEGRATED             <- holdings-inventory, manifest-inputs, geography-paths
+                               evidence: Sole integration owner in fresh isolated worktree from current main; standing runner checkout never edited; no merge attempted while other lane edits were running
+                               evidence: After the seven state-scoped module extractions were finished, root serialized 52 import/reference files with 92 replacements. Distinct consumer paths keep every old holding path absent.
+                               evidence: Final bounded walk diagnoses were read-only worker outputs; root alone repaired the shared walk instrument and ran the local integration walk. Source implementation and all readbacks remained fixed.
+                               evidence: The three independent final guard diagnoses had explicit ownership: root owned workflow parity, geography_paths owned tenant-body-binding, and holdings_inventory owned the coverage-language guard. Workers yielded after targeted tests; root alone committed and reran all sixteen gates. Destination verification resolved automatic approval. PR 266 is open; the shipping door now waits for required checks and binds the merge to its tested head. No merge has occurred at this checkpoint.
+                               evidence: The shipping wait repair passed all 16 local gates in run 15. Automatic approval review renewed the bundled Drive/transcript export hold before the next handoff executed; explicit author authorization is pending. PR 266 remains open, and no merge or production HELD receipt is claimed.
+                               evidence: Explicit author export/synchronization authorization superseded the prior hold. Root serialized current-main integration, CI shallow-source preparation, feedback references, gate-record preservation, generated views and tracker NH323. The independent merge had finished before our merge attempt; PR266 remains the sole planned session merge.
+                               evidence: The single planned PR266 merge is fd28d6fb3150aef2fd5550a4e5b7ee0d7b4d7099. Local and GitHub gates passed on its exact second parent 2dc650e4d38d6f65be66b539fb38467c5286c697; the tested and merged trees match. Production is HELD. All agent lanes were yielded before final integration and no other shipping PR was open at the final ownership check.
+
+------------------------------------------------------------------------
+CLOSEOUT              RECONCILED
+                      4 declared workstream(s), 4 terminal, 0 appended mid-session, 4 declared post hoc; 2 observed artifact(s), all linked. Every executed name is declared and every declared workstream has an end.
+logical workstreams   4 declared, 4 executable, 4 terminal, 0 still open
+  of which appended   0 mid-session, 4 post hoc
+execution artifacts   2 observed, 2 linked, 0 unaccounted
+                      NOT a workstream count (RULING 190)
+  holdings-inventory           (none — declares no private ref)
+  manifest-inputs              (none — declares no private ref)
+  geography-paths              (none — declares no private ref)
+  integration                  (none — declares no private ref)
+
+  NOTE  4 workstream(s) declared post hoc — the plan was not kept append-safe during the session. The record is now truthful; the discipline still failed, and these are counted apart from the mid-session appends for exactly that reason.
+
+  NOTE  4 logical workstream(s) ran on 2 execution artifact(s). These are DIFFERENT NUMBERS and neither is the other: a workstream may run on zero artifacts, one, or many, and reporting the artifact count as the workstream count is the substitution RULING 190 forbids.
+
+orchestration:check PASSED

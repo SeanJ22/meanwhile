@@ -1,0 +1,114 @@
+{
+  "provider": "OpenAI Codex",
+  "models": "NOT EXPOSED",
+  "tokens": "NOT EXPOSED",
+  "cost": "NOT EXPOSED",
+  "bootstrapUtc": "2026-09-03T00:56:36Z",
+  "terminalCloseUtc": "2026-09-03T06:47:26.529Z",
+  "wallClockSeconds": 21050.529,
+  "acceptance": {
+    "firstPassMet": 0,
+    "afterCorrectionMet": 2,
+    "denominator": 2
+  },
+  "finalLocalGates": {
+    "artifact": "data/ops/gate-runs/2026-09-02-18.json",
+    "passed": 16,
+    "denominator": 16,
+    "suite": {
+      "tests": 4985,
+      "pass": 4984,
+      "fail": 0,
+      "suites": 32,
+      "skipped": 1,
+      "todo": 0,
+      "cancelled": 0
+    }
+  },
+  "failedLocalGateRuns": [
+    {
+      "path": "data/ops/gate-runs/2026-09-02-state-holdings-10.json",
+      "testedSha": "e289a475042cc4eb94fa4a85af5d4e6987a16613",
+      "failedGates": [
+        {
+          "id": "test",
+          "status": "FAIL",
+          "failingTests": [
+            "gate parity · every command CI runs as a gate is in the local gate set",
+            "gate parity · the instrument actually reads the workflow",
+            "gate parity · no MUTATING command was wired in to make a question look covered",
+            "RULING 59: no reader surface renders a coverage claim",
+            "no adapter carries a body id outside the serving-tenant denominator",
+            "a body id nothing in the registry carries is caught, and the message names the tenant"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "data/ops/gate-runs/2026-09-02-11.json",
+      "testedSha": "fb6c3a8b18d54d3ec166f03bdc81b3a2da87f7d7",
+      "failedGates": [
+        {
+          "id": "test",
+          "status": "FAIL",
+          "failingTests": [
+            "R46: tracked source carries no CommonJS-only construct"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "data/ops/gate-runs/2026-09-02-13.json",
+      "testedSha": "86c53f913192ff602094d8f1915c74b58066f4ce",
+      "failedGates": [
+        {
+          "id": "state-holdings:check",
+          "status": "FAIL",
+          "failingTests": []
+        }
+      ]
+    },
+    {
+      "path": "data/ops/gate-runs/2026-09-02-17.json",
+      "testedSha": "1b7335327d455600932e09143a8f3d04639fe2e4",
+      "failedGates": [
+        {
+          "id": "release:freeze",
+          "status": "FAIL",
+          "failingTests": []
+        }
+      ]
+    }
+  ],
+  "discoveries": {
+    "blocking": "Corrected denominator for embedded TypeScript holdings, read-only readback construction, dynamic/serving paths, immutable-source rendering, gate parity, context freshness, pending-check shipping, and preservation of the concurrently merged ballot summaries.",
+    "resolvedFrontier": [
+      "NH320"
+    ],
+    "openFrontier": [
+      "NH321",
+      "NH322",
+      "NH323"
+    ],
+    "existingOwnerDecision": "NS13"
+  },
+  "terminal": {
+    "A1": "MET",
+    "A2": "MET",
+    "canonicalCloseout": "NOT MET",
+    "workstreamStop": "CLEAN_HANDOFF_EXTERNAL_STOP",
+    "reason": "Canonical closeout requires clean main; the author requires preserving the standing runner records. Existing NS13 carries this unresolved policy decision.",
+    "additionalMirrorRefresh": "BLOCKED_BY_AUTOMATIC_APPROVAL_REVIEW",
+    "approvalReason": "Automatic approval review rejected the additional non-shipping Drive refresh: it considered the trusted authorization limited to the canonical --ship payload. No alternative Drive export was attempted.",
+    "lastAuthorizedMirrorResult": {
+      "command": "pnpm handoff --ship",
+      "transcriptsExported": 126,
+      "canonicalDocuments": 26,
+      "codeFiles": 12,
+      "secretValuesAfterSweep": 0
+    }
+  },
+  "closeoutRecordCorrections": [
+    "Final git diff --check found trailing whitespace and a blank EOF in captured command output. Formatting was normalized; observed outcomes were preserved."
+  ]
+}

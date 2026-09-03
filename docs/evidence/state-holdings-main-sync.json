@@ -1,0 +1,168 @@
+{
+  "observed_at": "2026-09-03T06:31:23.455Z",
+  "expectedMerge": "fd28d6fb3150aef2fd5550a4e5b7ee0d7b4d7099",
+  "beforeHead": "3f9a138fd39f6160659329e17c496d2dd99cee00",
+  "afterHead": "d88356aacc076b07f5bb2e27de164b3cc95f9098",
+  "backup": "C:/Users/seanj/dev/wtp-backups/state-holdings-sync-2026-09-03T06-31-23-455Z",
+  "incomingRunnerOverlaps": 0,
+  "files": [
+    {
+      "path": "data/control-plane/staging/freshness_campaign-finance_az-sos-cfs-2026_az-sos-seethemoney-datatables.staged.json",
+      "bytes": 197513,
+      "sha256": "a3ab3b3c5141a18a9f89493198c0912052f4caf7d64fce87f6ebc138c2dca895",
+      "afterSha256": "a3ab3b3c5141a18a9f89493198c0912052f4caf7d64fce87f6ebc138c2dca895"
+    },
+    {
+      "path": "data/control-plane/staging/freshness_campaign-finance_nh-sos-cfs-2026_nh-cfs-filing-entity-details.staged.json",
+      "bytes": 3247453,
+      "sha256": "d5e6e1e1adf65a247f7e86abd9619db633571c7edf07fe6919be7b3209978c90",
+      "afterSha256": "d5e6e1e1adf65a247f7e86abd9619db633571c7edf07fe6919be7b3209978c90"
+    },
+    {
+      "path": "data/control-plane/staging/manifest.json",
+      "bytes": 314726,
+      "sha256": "786db3a2d4fb3c01740fd41a7403bfc61a2c80b5c63915bec6eaf152b901d7d7",
+      "afterSha256": "786db3a2d4fb3c01740fd41a7403bfc61a2c80b5c63915bec6eaf152b901d7d7"
+    },
+    {
+      "path": "data/method/candidates.json",
+      "bytes": 66467,
+      "sha256": "7ca91f1e713790f66c9514a8a1fc7cbb46ea30b76a183c570490f9f4a0bab5af",
+      "afterSha256": "7ca91f1e713790f66c9514a8a1fc7cbb46ea30b76a183c570490f9f4a0bab5af"
+    },
+    {
+      "path": "data/health/freshness-shadow-runs/2026-09-01-13.json",
+      "bytes": 264658,
+      "sha256": "c6c7be96cfc28e26ad5e4689f0946bb23baa0925873ad4bf43b5c79660e77acf",
+      "afterSha256": "c6c7be96cfc28e26ad5e4689f0946bb23baa0925873ad4bf43b5c79660e77acf"
+    },
+    {
+      "path": "data/health/freshness-shadow-runs/2026-09-01-14.json",
+      "bytes": 208325,
+      "sha256": "8f55f29545a7c2e18948f3f7291001ac61270d70651bff924b14a0027538c090",
+      "afterSha256": "8f55f29545a7c2e18948f3f7291001ac61270d70651bff924b14a0027538c090"
+    },
+    {
+      "path": "data/health/freshness-shadow-runs/2026-09-02-03.json",
+      "bytes": 171192,
+      "sha256": "2655689f5fff883709b0e411fc2aad1c5fde56cfe41e026a7487e1eb7aedcb83",
+      "afterSha256": "2655689f5fff883709b0e411fc2aad1c5fde56cfe41e026a7487e1eb7aedcb83"
+    },
+    {
+      "path": "data/health/freshness-shadow-runs/2026-09-02-04.json",
+      "bytes": 1356910,
+      "sha256": "84ba3018e647ab1c1d471200c67c15533286369f2513ba92c75a164fe774f922",
+      "afterSha256": "84ba3018e647ab1c1d471200c67c15533286369f2513ba92c75a164fe774f922"
+    },
+    {
+      "path": "data/health/freshness-shadow-runs/2026-09-02-05.json",
+      "bytes": 1348854,
+      "sha256": "b7b9a9bebb19a5c5113bd6877f661b5fa6a3bac775320466d16147b85a142ed1",
+      "afterSha256": "b7b9a9bebb19a5c5113bd6877f661b5fa6a3bac775320466d16147b85a142ed1"
+    },
+    {
+      "path": "data/health/freshness-shadow-runs/2026-09-02-06.json",
+      "bytes": 1360018,
+      "sha256": "512928fb9da3cd76c82c58662accc0d611d99e2ee430e6b5e87110242aa35ed7",
+      "afterSha256": "512928fb9da3cd76c82c58662accc0d611d99e2ee430e6b5e87110242aa35ed7"
+    },
+    {
+      "path": "data/health/freshness-shadow-runs/2026-09-02-07.json",
+      "bytes": 1356765,
+      "sha256": "224f7811ec620d49be05c6409efe416c2776a14556f5394c243abe62cb2a99bb",
+      "afterSha256": "224f7811ec620d49be05c6409efe416c2776a14556f5394c243abe62cb2a99bb"
+    },
+    {
+      "path": "data/health/freshness-shadow-runs/2026-09-02-08.json",
+      "bytes": 1359186,
+      "sha256": "f0680e1907cba47a33fc111f70d425a49c1c0fcac62e77cdf73be4a93a2f5ec5",
+      "afterSha256": "f0680e1907cba47a33fc111f70d425a49c1c0fcac62e77cdf73be4a93a2f5ec5"
+    },
+    {
+      "path": "data/health/freshness-shadow-runs/2026-09-02-09.json",
+      "bytes": 1369334,
+      "sha256": "37c776523aa5a7531727ab96b6d27a2683827b4e53a677c6259aaca68b7d6411",
+      "afterSha256": "37c776523aa5a7531727ab96b6d27a2683827b4e53a677c6259aaca68b7d6411"
+    },
+    {
+      "path": "data/health/freshness-shadow-runs/2026-09-02-10.json",
+      "bytes": 1350476,
+      "sha256": "4f6669d6c8c7c8404ecd69c9c1d1d71207e45589cdf2d794f53c18f8d6537a29",
+      "afterSha256": "4f6669d6c8c7c8404ecd69c9c1d1d71207e45589cdf2d794f53c18f8d6537a29"
+    },
+    {
+      "path": "data/health/freshness-shadow-runs/2026-09-02-11.json",
+      "bytes": 1355173,
+      "sha256": "ef8292484803fba08018791bf3b90cdf10ff48ee176001783b8c8e64ca36d8e7",
+      "afterSha256": "ef8292484803fba08018791bf3b90cdf10ff48ee176001783b8c8e64ca36d8e7"
+    },
+    {
+      "path": "data/health/freshness-shadow-runs/2026-09-02-12.json",
+      "bytes": 1198,
+      "sha256": "fe9bbe1ff94f5d8ccba2416b1d604731ced032258182d93c71055d94f302ac2d",
+      "afterSha256": "fe9bbe1ff94f5d8ccba2416b1d604731ced032258182d93c71055d94f302ac2d"
+    },
+    {
+      "path": "data/health/freshness-shadow-runs/2026-09-02-13.json",
+      "bytes": 1842472,
+      "sha256": "eb5fbbaae99aa43d2be3ff76dc56a240fbfaeda84f0b87e04279d71a731db5b2",
+      "afterSha256": "eb5fbbaae99aa43d2be3ff76dc56a240fbfaeda84f0b87e04279d71a731db5b2"
+    },
+    {
+      "path": "data/health/freshness-shadow-runs/2026-09-02-14.json",
+      "bytes": 1839352,
+      "sha256": "aa938fb73676dd42fdcb756211582b75d900edc6a139c16d6a4ff850c303d400",
+      "afterSha256": "aa938fb73676dd42fdcb756211582b75d900edc6a139c16d6a4ff850c303d400"
+    },
+    {
+      "path": "data/health/freshness-shadow-runs/2026-09-02-15.json",
+      "bytes": 1840225,
+      "sha256": "dd116b07ab8a73e31b90dc6536d5fcf9906bbbbaf4d44bd2eaea4e606a5e7fcb",
+      "afterSha256": "dd116b07ab8a73e31b90dc6536d5fcf9906bbbbaf4d44bd2eaea4e606a5e7fcb"
+    },
+    {
+      "path": "data/health/freshness-shadow-runs/2026-09-02-16.json",
+      "bytes": 1832802,
+      "sha256": "b2ecbb0b5b247382da0a59a463b84f8b92bbfdcd760fdf2ca1cb69967a9aff9f",
+      "afterSha256": "b2ecbb0b5b247382da0a59a463b84f8b92bbfdcd760fdf2ca1cb69967a9aff9f"
+    },
+    {
+      "path": "data/health/freshness-shadow-runs/2026-09-02-17.json",
+      "bytes": 1833177,
+      "sha256": "d42e63c398e69c483bb088aa776fbb2cc79f588b201805d8ea6906bc38015df9",
+      "afterSha256": "d42e63c398e69c483bb088aa776fbb2cc79f588b201805d8ea6906bc38015df9"
+    },
+    {
+      "path": "data/health/freshness-shadow-runs/2026-09-02-18.json",
+      "bytes": 1827720,
+      "sha256": "3a418ec43bac9b11a82ad38079a39481faa9de5fee0b6c081a59cd678e7f65e7",
+      "afterSha256": "3a418ec43bac9b11a82ad38079a39481faa9de5fee0b6c081a59cd678e7f65e7"
+    },
+    {
+      "path": "data/health/freshness-shadow-runs/2026-09-02-19.json",
+      "bytes": 1822725,
+      "sha256": "3f708f8aff98633f0f64d21c37fe47a6b1b7b0644163dd2718fc0352fa20be7c",
+      "afterSha256": "3f708f8aff98633f0f64d21c37fe47a6b1b7b0644163dd2718fc0352fa20be7c"
+    },
+    {
+      "path": "data/health/freshness-shadow-runs/2026-09-02-20.json",
+      "bytes": 1821925,
+      "sha256": "5d29e389ad69e2a48c7d34976cc9488f8332f06b960dde2d86112ca297301654",
+      "afterSha256": "5d29e389ad69e2a48c7d34976cc9488f8332f06b960dde2d86112ca297301654"
+    },
+    {
+      "path": "data/health/freshness-shadow-runs/2026-09-02-21.json",
+      "bytes": 1843346,
+      "sha256": "608cb1f0cc82dcaeff55ae9afb5c48ed565b784f020bd240df67537589672a13",
+      "afterSha256": "608cb1f0cc82dcaeff55ae9afb5c48ed565b784f020bd240df67537589672a13"
+    },
+    {
+      "path": "data/health/freshness-shadow-runs/2026-09-02-22.json",
+      "bytes": 2051708,
+      "sha256": "8533a67d637e5ad36d83ccb835f2221402fbe3c14f3a683d1c5dc5f220cc048b",
+      "afterSha256": "8533a67d637e5ad36d83ccb835f2221402fbe3c14f3a683d1c5dc5f220cc048b"
+    }
+  ],
+  "preservedByteForByte": 26,
+  "changedDuringSync": []
+}

@@ -168,14 +168,15 @@
         "serving-projections"
       ],
       "executable": true,
-      "disposition": "READY_FOR_INTEGRATION",
+      "disposition": "INTEGRATED",
       "concurrencyEvidence": [
         "Sole integration owner in fresh isolated worktree from current main; standing runner checkout never edited; no merge attempted while other lane edits were running",
         "After the seven state-scoped module extractions were finished, root serialized 52 import/reference files with 92 replacements. Distinct consumer paths keep every old holding path absent.",
         "Final bounded walk diagnoses were read-only worker outputs; root alone repaired the shared walk instrument and ran the local integration walk. Source implementation and all readbacks remained fixed.",
         "The three independent final guard diagnoses had explicit ownership: root owned workflow parity, geography_paths owned tenant-body-binding, and holdings_inventory owned the coverage-language guard. Workers yielded after targeted tests; root alone committed and reran all sixteen gates. Destination verification resolved automatic approval. PR 266 is open; the shipping door now waits for required checks and binds the merge to its tested head. No merge has occurred at this checkpoint.",
         "The shipping wait repair passed all 16 local gates in run 15. Automatic approval review renewed the bundled Drive/transcript export hold before the next handoff executed; explicit author authorization is pending. PR 266 remains open, and no merge or production HELD receipt is claimed.",
-        "Explicit author export/synchronization authorization superseded the prior hold. Root serialized current-main integration, CI shallow-source preparation, feedback references, gate-record preservation, generated views and tracker NH323. The independent merge had finished before our merge attempt; PR266 remains the sole planned session merge."
+        "Explicit author export/synchronization authorization superseded the prior hold. Root serialized current-main integration, CI shallow-source preparation, feedback references, gate-record preservation, generated views and tracker NH323. The independent merge had finished before our merge attempt; PR266 remains the sole planned session merge.",
+        "The single planned PR266 merge is fd28d6fb3150aef2fd5550a4e5b7ee0d7b4d7099. Local and GitHub gates passed on its exact second parent 2dc650e4d38d6f65be66b539fb38467c5286c697; the tested and merged trees match. Production is HELD. All agent lanes were yielded before final integration and no other shipping PR was open at the final ownership check."
       ],
       "declaredPostHoc": {
         "backfilledOn": "2026-09-02",

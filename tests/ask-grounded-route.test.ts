@@ -436,6 +436,60 @@ test("BALLOT: a measure resolves from the short form a reader actually types", a
   assert.match(question!.text, /BUDGET OVERRIDE CONTINUATION/);
 });
 
+test("ASK-24: 'Explain Prop 141 to me' carries NOTHING off the measure — no Senate bullet, no unconnected people", async () => {
+  /*
+   * **THE OWNER'S PROP 141 REPORT, PINNED.** (2026-09-02.)
+   *
+   * *"Explain Prop 141 to me"* returned the measure explained and then a bullet
+   * about the U.S. Senate seat on the 2026 ballot — a real, sourced
+   * `BALLOT_ABSENCE` that attached only because Prop 141 and the Senate contest
+   * share the statewide division — plus three of the reader's own legislators
+   * under WHO THIS IS with no stated tie to the measure. Both reached the
+   * synthesis rung. The relevance gate removes them before the pack is sealed.
+   *
+   * Asked at 85641, whose reader carries the statewide division that Prop 141
+   * and the U.S. Senate absence both sit on — which is the exact overlap that
+   * produced the bullet.
+   */
+  const body = await ask("Explain Prop 141 to me", {
+    surface: "BALLOT",
+    ocdIds: [AZ, PIMA, VAIL, SLDU, SLDL],
+  });
+
+  assert.equal(body.subject?.id, "ballot-az-pima:prop-141");
+  assert.equal(body.subject?.kind, "MEASURE");
+  assert.equal(body.mode, "STRUCTURED_GROUNDED", "the measure's own records still answer it");
+
+  /* The Senate bullet is gone — as a record and as any prose about it. */
+  const absences = body.records?.filter((r) => r.kind === "BALLOT_ABSENCE") ?? [];
+  assert.deepEqual(absences, [], "no ballot-at-large absence rides with a measure");
+  for (const record of body.records ?? []) {
+    assert.ok(
+      !/U\.S\. Senate|Senate seat/i.test(record.text),
+      `a record off the measure's subject reached the pack: ${record.text.slice(0, 80)}`,
+    );
+  }
+
+  /* WHO THIS IS is omitted — the reader's legislators have no printed
+     connection to a yes/no measure, so no contact is offered rather than an
+     unconnected one. */
+  assert.deepEqual(body.contacts ?? [], [], "no contact without a printed connection to the measure");
+  const contactRecords = body.records?.filter((r) => r.kind === "CONTACT") ?? [];
+  assert.deepEqual(contactRecords, [], "and none reaches the evidence pack either");
+
+  /* CONTROL: the measure's own definition IS there, sourced. The gate narrowed
+     the answer without emptying it. */
+  const own = (body.records ?? []).filter((r) => /^(CONTEST|MEASURE)/.test(r.kind));
+  assert.ok(own.length > 0, "the measure's own contest/summary/provision records answer the question");
+  for (const record of own) assert.ok(record.sourceUrl, `${record.kind} carries its source`);
+
+  /* And the trace reports the gate ran, so a regression shows as a number. */
+  assert.ok(
+    (body.denominators?.recordsExcludedOffSubject ?? 0) >= 1,
+    "the gate recorded the off-subject record it removed",
+  );
+});
+
 test("BALLOT: a contest resolves and lists who filed for it", async () => {
   const body = await ask("Who is running for Governor?", { surface: "BALLOT" });
 
@@ -611,11 +665,25 @@ test("SOURCES: an answer does not carry documents it did not rest on", async () 
     "an absence about a school district is not evidence in an answer about the Governor",
   );
 
-  /* CONTROL: it is still evidence where it belongs. */
+  /*
+   * ── ASK-24 (2026-09-02) ── **A MEASURE ANSWER CARRIES NOTHING OUTSIDE THE
+   * MEASURE.** (The owner's Prop 141 report.)
+   *
+   * This used to assert that Prop 423 rode with its OWN division's absence — one
+   * BALLOT_ABSENCE, "no Vail governing board race". The owner's Prop 141 report
+   * closed that door: a ballot measure is a single yes/no question, and an
+   * absence about a DIFFERENT race — a board seat, a U.S. Senate seat — is not
+   * about the measure however small the shared division. The relevance gate
+   * (`lib/ask/relevance.ts`) drops it before the pack is sealed, so a measure
+   * answer now carries no ballot-at-large absence at all.
+   */
   const vail = await ask("What does Prop 423 do?", { surface: "BALLOT" });
   const vailAbsences = vail.records?.filter((r) => r.kind === "BALLOT_ABSENCE") ?? [];
-  assert.equal(vailAbsences.length, 1, "Vail's own absence rides with a Vail subject");
-  assert.match(vailAbsences[0].text, /no Vail Unified School District governing board race/i);
+  assert.equal(vailAbsences.length, 0, "a measure answer carries no absence about another race");
+  /* CONTROL: the measure's OWN records and its own district's board still ride
+     with it — the gate narrowed the answer, it did not empty it. */
+  assert.ok((vail.records ?? []).some((r) => r.kind.startsWith("MEASURE")), "the measure's own records stay");
+  assert.ok((vail.contacts ?? []).some((c) => /Vail Unified District$/.test(c.relationship)), "its district board stays");
 });
 
 /* ══════════════════════════════════════════════════════════════════════

@@ -21,6 +21,8 @@ import { groupMeetingsForReading } from "@/lib/meetings/ordering";
 import { JurisdictionPill } from "@/components/address/jurisdiction-pill";
 import { badgeFor } from "@/lib/meetings/jurisdiction-badge";
 import { useShellData } from "@/lib/state/data";
+import { tierForMeeting } from "@/lib/state/derive";
+import { LevelTag } from "@/components/ui/level-tag";
 import type { Venue } from "@/lib/meetings/venues";
 import { commentAccessFor } from "@/lib/registry/comment-access";
 import { venueLink } from "@/lib/registry/links";
@@ -95,6 +97,11 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
               shared `bodyName` turned out to name a sitting. */}
           <h2 className="font-display text-lg font-semibold leading-snug tracking-tight text-paper">
             {cardTitle.title}
+            {/* MTG-15 (2026-09-02): the level tag right after the body name, so
+                a reader knows whether this is a local, state or federal body
+                without reading the address. Tier from the meeting's OCD
+                identity via `tierForMeeting`, never the body name. */}
+            <LevelTag tier={first ? tierForMeeting(first) : null} />
           </h2>
           <p className="notice-eyebrow mt-1.5">
             {venue.meetings.length === 1

@@ -127,6 +127,10 @@ export function MeetingPopup({
       type={meeting.jurisdiction}
       tier={tier}
       title={cardTitle}
+      /* MTG-15 (2026-09-02): the level word after the title on the compact
+         meeting card too, so the map-pin glance and the full panel say the same
+         thing. `tier` is already resolved from the meeting's OCD identity. */
+      levelTier={tier}
       badges={badge ? [badge] : []}
       onExpand={onExpand}
       expandLabel={`More about ${meeting.title} — agenda and how to be heard`}

@@ -170,6 +170,26 @@ export interface EvidenceRecord {
    * from reaching a reader, which the name-only check demonstrably could not.
    */
   bodyId?: string | null;
+  /**
+   * **THE CANONICAL SUBJECT THIS RECORD IS EVIDENCE *FOR*.** (ASK-24, 2026-09-02.)
+   *
+   * `bodyId` answers *whose government is this*, and it is null for everything
+   * that belongs to no single body — a ballot measure, a statewide officeholder,
+   * a topic sweep. That left the pipeline with no id-level way to ask the second
+   * question, *is this record about the thing the reader asked about*, for a
+   * subject that is not a body. So the Prop 141 pack carried the U.S. Senate
+   * absence and three of the reader's own legislators, none of which is about
+   * Proposition 141 — and every one reached the synthesis rung, which then
+   * wrote a bullet about a Senate seat under a question about a tax measure.
+   *
+   * This is the positive half of the relevance gate: a record retrieved AS the
+   * bound subject's evidence carries that subject's id here, so
+   * `lib/ask/relevance.ts` can keep it and drop a record stamped for a DIFFERENT
+   * subject at the id level rather than by reading prose. Null or absent where a
+   * record genuinely belongs to no one subject — the gate then falls back to the
+   * kind-scoped rules it holds, and a null is never treated as a foreign stamp.
+   */
+  subjectId?: string | null;
   /** The record's own words, or a mechanical read of its fields. Never a summary. */
   text: string;
   /** ISO date this record is ABOUT, where that is meaningful. */

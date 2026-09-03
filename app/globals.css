@@ -5547,6 +5547,42 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   background: color-mix(in srgb, var(--signal) 14%, var(--panel-bg));
 }
 
+/* BAL-41 / MTG-15 (2026-09-02): the level tag — Local / State / Federal in the
+   tier's own accent, the same word and treatment the Who Governs Here card
+   wears (`.popup-type`: uppercase, bold, letter-spaced). One class so a ballot
+   race and a meeting card cannot say "State" two different ways.
+
+   Placed after the last word of a title. Inline flow is the owner's
+   deterministic fallback: `inline-block` + `white-space: nowrap` keeps the tag
+   whole and lets it follow the last word when the line has room, or wrap to its
+   own line beneath the title when it does not. Colour is set inline from
+   `--accent-<tier>` by <LevelTag>; the tier comes from OCD identity, never the
+   title. */
+.level-tag {
+  display: inline-block;
+  white-space: nowrap;
+  margin-inline-start: 0.4em;
+  /* LBL-2: letter-spacing adds its space AFTER the last glyph, so a tag pinned
+     against a right edge (a wrapping title, a flex end) would clip its last
+     letter. The trim takes the trailing space back, matching the tracking —
+     the same compensation `.popup-type` and the `.t-eyebrow` family carry. */
+  margin-inline-end: -0.13em;
+  font-family: var(--font-display);
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  vertical-align: baseline;
+}
+
+/* A section header the owner asked to carry the tier's colour outright —
+   "Statewide measures" in the state accent, "Local measures" in the local one —
+   rather than a tag beside it. The structure eyebrow (`.t-structure`) keeps its
+   size and rule; only the ink changes, from the same `--accent-<tier>` set. */
+.t-structure.level-heading {
+  color: var(--level-heading-color, inherit);
+}
+
 .ballot-ask-caret {
   display: inline-block;
   margin-right: 7px;

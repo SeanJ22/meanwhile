@@ -168,7 +168,7 @@ test("R1: timestamps are machine-owned — taken from the run record, not an arg
 });
 
 test("R1: readGithubIdentity names the missing variables rather than inventing a blank identity", () => {
-  const gap = readGithubIdentity({ GITHUB_REPOSITORY: "SeanJ22/meanwhile" } as NodeJS.ProcessEnv);
+  const gap = readGithubIdentity({ GITHUB_REPOSITORY: "SeanJ22/meanwhile" });
   assert.equal(gap.ok, false);
   if (!gap.ok) {
     assert.ok(gap.missing.includes("GITHUB_RUN_ID"));
@@ -182,7 +182,7 @@ test("R1: readGithubIdentity names the missing variables rather than inventing a
     GITHUB_RUN_ATTEMPT: "1",
     GITHUB_SHA: "d88356aa",
     GITHUB_REF: "refs/heads/main",
-  } as NodeJS.ProcessEnv);
+  });
   assert.equal(ok.ok, true);
   if (ok.ok) assert.equal(ok.identity.workflowRunId, 33761722124);
 });

@@ -81,7 +81,9 @@ export type IdentityResult = { ok: true; identity: GithubExecutionIdentity } | I
  * variable names rather than a half-populated identity — a record keyed to a
  * blank run id would attribute every local run to the same non-execution.
  */
-export function readGithubIdentity(env: NodeJS.ProcessEnv = process.env): IdentityResult {
+export function readGithubIdentity(
+  env: Record<string, string | undefined> = process.env,
+): IdentityResult {
   const missing: string[] = [];
   const req = (name: string): string => {
     const v = (env[name] ?? "").trim();

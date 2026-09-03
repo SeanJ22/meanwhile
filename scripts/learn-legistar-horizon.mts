@@ -61,7 +61,7 @@ import {
   type RouteObservation,
 } from "../lib/sources/legistar-insite/horizon.ts";
 import { InSiteSession } from "../lib/sources/legistar-insite/http.ts";
-import { findTenant, INSITE_TENANTS } from "../lib/sources/legistar-insite/tenants.ts";
+import { findTenant, INSITE_TENANTS } from "../lib/sources/legistar-insite/tenant-registry.ts";
 import { sourceUserAgent } from "../lib/sources/http.ts";
 
 const args = process.argv.slice(2);

@@ -17,7 +17,7 @@ import { tierForOcdId } from "../ocd/tiers.ts";
  * None of them could be entered, because `scripts/build-registry.ts` refuses a
  * curated body whose DIVISION does not exist, and the division did not exist
  * for a reason that has nothing to do with those towns: **the committed TIGER
- * geometry is clipped to one county per state.** `public/geo/cousub-33.geojson`
+ * geometry is clipped to one county per state.** `data/states/nh/geo/cousub-33.geojson`
  * says so on its own face — `clippedTo: ["04019","34027","33013"]`. Sullivan
  * and Hillsborough county subdivisions are absent, and the four Sullivan towns
  * that ARE present are present only because their polygons touch Merrimack's.

@@ -558,7 +558,7 @@ interface BallotFile {
   candidacies: { id: string; contestId: string; familyName: string; givenName: string }[];
 }
 
-const AZ = JSON.parse(readFileSync(join(ROOT, "data/ballot/az-pima-2026.json"), "utf8")) as BallotFile;
+const AZ = JSON.parse(readFileSync(join(ROOT, "data/states/az/ballot/az-pima-2026.json"), "utf8")) as BallotFile;
 
 /** The list the PAGE hands over: certified nominees where a canvass names them. */
 async function liveContest(contestId: string) {
@@ -615,7 +615,7 @@ test("Arizona's U.S. Representative, District 6 is label-eligible, and every can
 /* CONTROL 2 — A SECOND CONTEST, CHOSEN, EXERCISING THE SAME PATH             */
 /* ========================================================================== */
 
-const NH = JSON.parse(readFileSync(join(ROOT, "data/ballot/nh-merrimack-2026.json"), "utf8")) as BallotFile;
+const NH = JSON.parse(readFileSync(join(ROOT, "data/states/nh/ballot/nh-merrimack-2026.json"), "utf8")) as BallotFile;
 
 test("Merrimack House District 7 has a COMPLETE officeholder universe and is still refused", async () => {
   /*

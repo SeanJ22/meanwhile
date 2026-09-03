@@ -207,9 +207,9 @@ const REQUIRED_ARTIFACTS: { path: string; what: string; how: string }[] = [
     how: "run `pnpm ingest composite`. Without it the app serves no meetings and says so.",
   },
   {
-    path: "public/geo/body-territories.geojson",
+    path: "data/states/az/geo/body-territories.geojson",
     what: "territories for governments with no Census division",
-    how: "run `pnpm cfd:territory --geojson public/geo/body-territories.geojson`. Without it, districts smaller than any division reach no reader (NH233).",
+    how: "run `pnpm cfd:territory --geojson data/states/az/geo/body-territories.geojson`. Without it, districts smaller than any division reach no reader (NH233).",
   },
   {
     path: "data/derived/resolver-geometry.json",

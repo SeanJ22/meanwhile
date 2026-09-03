@@ -100,7 +100,7 @@
       "instancesFound": 0,
       "instancesFixed": 0,
       "checkId": "vac:bal42-county-offices-note",
-      "checkResult": "GREEN — verified against the held certified data (data/ballot/az-pima-2026.json): no county Board of Supervisors CANDIDACY contest exists; the coverageNotes state the absence, sourced to the county's Official Candidate List. The sourced note renders in Notes on this ballot at both 85701 and 85641 (DOM-confirmed). No missing contest to acquire; the absence reads as normal beside the BAL-41 tags. vac:bal42-county-offices-note pins the note to the surface.",
+      "checkResult": "GREEN — verified against the held certified data (data/states/az/ballot/az-pima-2026.json): no county Board of Supervisors CANDIDACY contest exists; the coverageNotes state the absence, sourced to the county's Official Candidate List. The sourced note renders in Notes on this ballot at both 85701 and 85641 (DOM-confirmed). No missing contest to acquire; the absence reads as normal beside the BAL-41 tags. vac:bal42-county-offices-note pins the note to the surface.",
       "blocker": null
     },
     {
@@ -151,7 +151,7 @@
       "instancesFound": 4,
       "instancesFixed": 4,
       "checkId": "vac:bal46-local-summary-on-face",
-      "checkResult": "GREEN — plain-language summaries authored for all four local measures (425/423/428/429) in lib/ballot/measure-summaries.ts, each cited to its own held source (citation: measure-source), each passing the describe-never-advocate neutrality test (tests/measure-summaries.test.ts). The summary condition was widened from `summary && analysis?.text` (which never fired for a local measure) to fire on the summary alone. IMAGE-verified on Prop 423 at 85641. Part-by-part omitted for these single-question measures with the neutral rationale recorded (provisions law forbids inventing enumeration). vac:bal46-local-summary-on-face grades GREEN.",
+      "checkResult": "GREEN — plain-language summaries authored for all four local measures (425/423/428/429) in lib/ballot/measure-summary.ts, each cited to its own held source (citation: measure-source), each passing the describe-never-advocate neutrality test (tests/measure-summaries.test.ts). The summary condition was widened from `summary && analysis?.text` (which never fired for a local measure) to fire on the summary alone. IMAGE-verified on Prop 423 at 85641. Part-by-part omitted for these single-question measures with the neutral rationale recorded (provisions law forbids inventing enumeration). vac:bal46-local-summary-on-face grades GREEN.",
       "blocker": null
     },
     {

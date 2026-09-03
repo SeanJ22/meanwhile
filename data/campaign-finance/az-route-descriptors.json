@@ -59,7 +59,7 @@
    "disposition": "INGESTED",
    "lastAttemptedOn": "2026-08-31",
    "cadence": "The state's own filing calendar. Next Standing Reports deadline after 2026-08-31 is Post-Primary Election (Q3), 2026-10-15, read from ftp://ftp.azsos.gov/cfsdata2/ReportingPeriods.txt.",
-   "citation": "lib/sources/az-seethemoney/index.ts; scripts/state-money-az.mts; data/campaign-finance/az-seethemoney-2026-reconciliation.json"
+   "citation": "lib/sources/az-seethemoney/index.ts; scripts/state-money-az.mts; data/states/az/campaign-finance/az-seethemoney-2026-reconciliation.json"
   },
   {
    "routeId": "AZ_SOS_SEETHEMONEY_ITEMISED_LEDGER",
@@ -77,8 +77,8 @@
    "disposition": "INGESTED",
    "lastAttemptedOn": "2026-08-31",
    "privacyConstraint": "EVERY ROW CARRIES CONTRIBUTOR NAME, OCCUPATION, EMPLOYER, CITY AND ZIP (RULING 167). This lane reads them to compute a per-committee SUM and persists aggregates only. A scheduler registration that stores the rows would be a new personal-data class and is an ask-before, not an implementation detail.",
-   "whyItIsRegistered": "It is the only INDEPENDENT statement of a committee's cycle total, and it is what licenses every figure in data/funding/state-money-az-2026.json. Registering the summary route without this one re-creates the exact position that blocked Arizona for two sessions.",
-   "citation": "lib/sources/az-seethemoney/index.ts reconcileEntity(); data/campaign-finance/az-seethemoney-2026-reconciliation.json"
+   "whyItIsRegistered": "It is the only INDEPENDENT statement of a committee's cycle total, and it is what licenses every figure in data/states/az/funding/state-money-az-2026.json. Registering the summary route without this one re-creates the exact position that blocked Arizona for two sessions.",
+   "citation": "lib/sources/az-seethemoney/index.ts reconcileEntity(); data/states/az/campaign-finance/az-seethemoney-2026-reconciliation.json"
   },
   {
    "routeId": "AZ_SOS_FTP_CFSDATA2_REGISTER",

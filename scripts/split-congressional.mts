@@ -1,3 +1,4 @@
+import { geometryPath } from "../lib/holdings/files.ts";
 /**
  * `pnpm cd:split` — cut the national congressional file into the three
  * covered states (g4 item 3, and the largest single load win in the item).
@@ -27,8 +28,8 @@
  * script, and deleting a source to save space in a repository that ships its
  * own provenance would be the wrong trade.
  */
-import { readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 
 import { USPS_BY_FIPS } from "../lib/coverage/artifacts.ts";
 
@@ -71,7 +72,8 @@ for (const [fips, abbr] of Object.entries(STATES)) {
   }
 
   const out = { ...national, features };
-  const path = join(dir, `cd119-${fips}.geojson`);
+  const path = join(process.cwd(), geometryPath(`cd119-${fips}.geojson`));
+  mkdirSync(dirname(path), { recursive: true });
   const body = JSON.stringify(out) + "\n";
   writeFileSync(path, body, "utf8");
   written += features.length;

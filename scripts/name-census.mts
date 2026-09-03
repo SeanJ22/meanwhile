@@ -18,6 +18,7 @@ import { fileURLToPath } from "node:url";
 
 import { isIncompletePersonName, nameTokens } from "../lib/officials/person-name.ts";
 import { BALLOT_FILES, COVERED, rosterFile } from "../lib/coverage/artifacts.ts";
+import { ballotPath, rosterPath } from "../lib/holdings/files.ts";
 import { BODY_ROSTERS } from "../lib/registry/body-rosters.ts";
 import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
 
@@ -46,7 +47,7 @@ const people: Person[] = [];
 const OFFICEHOLDER_FILES: { file: string; kind: string; state: string }[] = [
   { file: "lib/registry/officeholders-us.json", kind: "federal officeholder", state: "US" },
   ...COVERED.map((state) => ({
-    file: `lib/registry/${rosterFile(state)}`,
+    file: rosterPath(rosterFile(state)),
     kind: "state officeholder",
     state: state.usps,
   })),
@@ -99,7 +100,7 @@ for (const executive of STATEWIDE_EXECUTIVES) {
 
 // ── ballot candidacies and nominees ────────────────────────────────────────
 const BALLOT_SOURCES = BALLOT_FILES.map((entry) => ({
-  file: `data/ballot/${entry.file}`,
+  file: ballotPath(entry.file),
   state: entry.state.toUpperCase(),
 }));
 
@@ -119,8 +120,8 @@ for (const source of BALLOT_SOURCES) {
   }
 }
 
-if (existsSync(join(ROOT, "data/ballot/az-general-lineup-2026.json"))) {
-  const lineup = read("data/ballot/az-general-lineup-2026.json") as {
+if (existsSync(join(ROOT, "data/states/az/ballot/az-general-lineup-2026.json"))) {
+  const lineup = read("data/states/az/ballot/az-general-lineup-2026.json") as {
     contests?: { contestId: string; nominees?: { name: string }[] }[];
   };
   for (const contest of lineup.contests ?? []) {

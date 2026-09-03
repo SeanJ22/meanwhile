@@ -9,9 +9,9 @@
  *
  * The two artifacts:
  *
- * - `data/identity/az-2026-candidate-registry.json` — the statewide canonical
+ * - `data/states/az/identity/az-2026-candidate-registry.json` — the statewide canonical
  *   candidate/contest registry.
- * - `data/identity/az-2026-certified-lineup-reconciliation.json` — the
+ * - `data/states/az/identity/az-2026-certified-lineup-reconciliation.json` — the
  *   PRECOMPUTED bridge from each certified-lineup nominee card to the canonical
  *   candidacy the state campaign-money snapshot is keyed on, plus the population
  *   proof.
@@ -22,7 +22,7 @@
  * name matching would be exactly the fuzzy join this layer exists to replace.
  *
  * The files are read through `process.cwd()`, which the Next tracer cannot see,
- * so `next.config.ts` names `./data/identity/*.json` for `/ballot`. Untraced,
+ * so `next.config.ts` traces `./data/states/az/identity/*.json` for `/ballot`. Untraced,
  * these reads return nothing, every certified nominee falls back to the
  * unreconciled state, and the money vanishes again — a regression that looks
  * exactly like honest missing data, which is why it is called out here.
@@ -41,7 +41,7 @@ export const AZ_REGISTRY_FILE = "az-2026-candidate-registry.json";
 export const AZ_LINEUP_BRIDGE_FILE = "az-2026-certified-lineup-reconciliation.json";
 
 function readIdentityFile<T>(file: string): T | null {
-  const path = join(process.cwd(), "data", "identity", file);
+  const path = join(process.cwd(), "data", "states", "az", "identity", file);
   if (!existsSync(path)) return null;
   try {
     return JSON.parse(readFileSync(path, "utf8")) as T;

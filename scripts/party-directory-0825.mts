@@ -16,7 +16,7 @@
  *
  * ```
  * pnpm party:directory                # walk and report, write nothing
- * pnpm party:directory --write        # record data/hunt/nj-morris-party-directory-0825.json
+ * pnpm party:directory --write        # record data/states/nj/hunt/nj-morris-party-directory-0825.json
  * pnpm party:directory --limit=5
  * ```
  *
@@ -75,7 +75,7 @@ const LIMIT = Number((process.argv.find((a) => a.startsWith("--limit=")) ?? "--l
 /** The municipalities, read from the committed walk rather than typed here. */
 const MUNICIPALITIES: string[] = (
   JSON.parse(
-    readFileSync(join(ROOT, "data", "hunt", "roster-pages-muni-sites-nj-morris.json"), "utf8"),
+    readFileSync(join(ROOT, "data", "states", "nj", "hunt", "roster-pages-muni-sites-nj-morris.json"), "utf8"),
   ) as { sites: { municipality: string }[] }
 ).sites.map((s) => s.municipality);
 
@@ -318,7 +318,7 @@ if (accounting.outcome !== "CONSERVED") {
 }
 
 if (WRITE) {
-  const out = join(ROOT, "data", "hunt", "nj-morris-party-directory-0825.json");
+  const out = join(ROOT, "data", "states", "nj", "hunt", "nj-morris-party-directory-0825.json");
   writeFileSync(
     out,
     `${JSON.stringify(

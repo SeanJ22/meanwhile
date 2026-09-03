@@ -1,6 +1,6 @@
 {
   "at": "2026-08-31T15:56:38.333Z",
-  "store": "data/outcomes/legistar-outcomes.json",
+  "store": "data/states/az/outcomes/legistar-outcomes.json",
   "tenants": [
     "pima"
   ],

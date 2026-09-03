@@ -39,8 +39,8 @@
  *    so" are different strengths of evidence and must never print the same.
  *
  * Usage:
- *   pnpm district:probe --points data/hunt/85641-governing-universe.json
- *   pnpm district:probe --points <file> --layers data/hunt/az-district-layers.json --out <file>
+ *   pnpm district:probe --points data/states/az/hunt/85641-governing-universe.json
+ *   pnpm district:probe --points <file> --layers data/states/az/hunt/az-district-layers.json --out <file>
  */
 
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
@@ -126,7 +126,7 @@ if (!pointsPath || !existsSync(pointsPath)) {
   console.error("--points <file> is required (the output of pnpm zip:governing --json)");
   process.exit(2);
 }
-const layersPath = arg("layers") ?? "data/hunt/az-district-layers.json";
+const layersPath = arg("layers") ?? "data/states/az/hunt/az-district-layers.json";
 if (!existsSync(layersPath)) {
   console.error(`--layers ${layersPath} does not exist`);
   process.exit(2);

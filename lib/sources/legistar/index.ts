@@ -36,7 +36,7 @@ import {
   isPlaceless,
   LEGISTAR_CLIENTS,
   type LegistarClient,
-} from "./clients.ts";
+} from "./client-registry.ts";
 import type { LegistarOutcomeRecord } from "./outcomes.ts";
 import type { LegistarEvent, LegistarEventItem } from "./types.ts";
 

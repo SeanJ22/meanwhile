@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { stateForBallotFile } from "../holdings/runtime-paths.ts";
 
 import { getGeneralLineup } from "./general-lineup.ts";
 
@@ -24,8 +25,10 @@ export function getCandidateTargetIds(): Set<string> {
   if (cache) return cache;
   const ids = new Set<string>();
   for (const file of BALLOT_FILES) {
+    const state = stateForBallotFile(file);
+    if (!state) throw new Error(`State ballot filename required: ${file}`);
     const data = JSON.parse(
-      readFileSync(join(process.cwd(), "data", "ballot", file), "utf8"),
+      readFileSync(join(process.cwd(), "data", "states", state, "ballot", file), "utf8"),
     ) as { candidacies?: { id: string }[] };
     for (const c of data.candidacies ?? []) ids.add(c.id);
   }

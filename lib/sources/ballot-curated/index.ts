@@ -23,15 +23,15 @@ import { validateBallotFile } from "../ballot-nj-morris/index.ts";
  */
 const CURATED_FILES: Record<string, { file: string; read: () => string }> = {
   "ballot-az-pima": {
-    file: "data/ballot/az-pima-2026.json",
+    file: "data/states/az/ballot/az-pima-2026.json",
     read: () =>
-      readFileSync(join(process.cwd(), "data", "ballot", "az-pima-2026.json"), "utf8"),
+      readFileSync(join(process.cwd(), "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8"),
   },
   "ballot-nh-merrimack": {
-    file: "data/ballot/nh-merrimack-2026.json",
+    file: "data/states/nh/ballot/nh-merrimack-2026.json",
     read: () =>
       readFileSync(
-        join(process.cwd(), "data", "ballot", "nh-merrimack-2026.json"),
+        join(process.cwd(), "data", "states", "nh", "ballot", "nh-merrimack-2026.json"),
         "utf8",
       ),
   },

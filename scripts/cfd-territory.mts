@@ -41,7 +41,7 @@
  * ```
  * pnpm cfd:territory --zip 85641
  * pnpm cfd:territory --zip 85641 --json out.json
- * pnpm cfd:territory --geojson public/geo/body-territories.geojson
+ * pnpm cfd:territory --geojson data/states/az/geo/body-territories.geojson
  * ```
  */
 import { writeFileSync } from "node:fs";

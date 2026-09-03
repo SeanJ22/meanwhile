@@ -342,7 +342,7 @@ generation for a reason of your own. **This row stays open until you say.**
 | No card renders an unrecognised state | `[SC3] <zip>: no money section renders an unrecognised state` |
 | Katie Hobbs's total is on her card | Live: `/ballot?zip=85701`, open her battlecard, expand **Campaign money**. Guard: `[SC3] 85701: Katie Hobbs's filed total reaches her card` |
 | No fuzzy name matching reaches the reader | `lib/identity/name-forms.ts` — published names expand to exact strings, each labelled with the rule that produced it; comparison is string equality, run once into a committed table |
-| The population proof | `data/identity/az-2026-certified-lineup-reconciliation.json`, key `proof`: 30 nominees = 27 uniquely reconciled + 1 ambiguous + 2 unmatched, 0 duplicate-target collisions |
+| The population proof | `data/states/az/identity/az-2026-certified-lineup-reconciliation.json`, key `proof`: 30 nominees = 27 uniquely reconciled + 1 ambiguous + 2 unmatched, 0 duplicate-target collisions |
 | A duplicate target is an error, not a warning | `scripts/identity-az-2026.mts` exits 1 and writes nothing if any appear |
 | Nickname and annotation forms | `tests/az-identity-reconciliation.test.ts` — `Walter "Les" Presmyk`, `Nicholas "Nick" Myers`, `Rachel "Jones" Keshel`, `Jackie O'Donnell Anderson`, `Daniel Francis Butierez Sr.` |
 | No diminutive is ever inferred | same file — `Tom Horne` does not match `Thomas Chalres Horne`; `Katie Hobbs` does not match `Katherine Hobbs` |
@@ -353,7 +353,7 @@ Independent Party** on the Secretary of State's candidate-filing list. Two
 Arizona authorities disagree; the party criterion blocks the mapping; her card
 renders our gap although the corpus holds a filed figure for that candidacy.
 Both published values are recorded in
-`data/identity/az-2026-certified-lineup-reconciliation.json` for you to
+`data/states/az/identity/az-2026-certified-lineup-reconciliation.json` for you to
 adjudicate. **The rule working, not failing** — but it is worth knowing it has a
 price.
 
@@ -461,7 +461,7 @@ obligation store.
 says of itself, in its own `_note`: *"IT IS THE LARGEST DENOMINATOR DERIVABLE
 FROM COMMITTED SOURCES TODAY, and it is not the state's candidate universe."*
 Each state is currently derived from exactly one certified pilot-county ballot —
-`data/ballot/az-pima-2026.json`, `nh-merrimack-2026.json`,
+`data/states/az/ballot/az-pima-2026.json`, `nh-merrimack-2026.json`,
 `nj-morris-2026.json`. **These are the acquisition denominators as recorded, and
 recording them is not the same as claiming they are the state.**
 
@@ -494,7 +494,7 @@ known-versus-canonical gap is recorded is Arizona, and it is a real gap:
 | with a committee identity | 44 |
 
 ```
-node -e 'console.log(JSON.stringify(require("./data/identity/az-2026-candidate-registry.json").denominators));'
+node -e 'console.log(JSON.stringify(require("./data/states/az/identity/az-2026-candidate-registry.json").denominators));'
 ```
 
 **NH and NJ: NOT DERIVABLE — no identity registry exists for either state.**
@@ -531,22 +531,22 @@ how far the hunt has got, not about the candidates.
 | NJ | NOT DERIVABLE — see below | 1,220 distinct entity ids | NOT DERIVABLE — see below | 0 | 172 |
 
 ```
-node -e 'const az=require("./data/identity/az-2026-candidate-registry.json").denominators;
-const c=require("./data/campaign-finance/az-2026-statewide-corpus.json").denominators;
+node -e 'const az=require("./data/states/az/identity/az-2026-candidate-registry.json").denominators;
+const c=require("./data/states/az/campaign-finance/az-2026-statewide-corpus.json").denominators;
 console.log("AZ", JSON.stringify(az)); console.log("AZ corpus", JSON.stringify(c));
-const nh=require("./data/campaign-finance/nh-cfs-filer-index-2026.json"); const t={};
+const nh=require("./data/states/nh/campaign-finance/nh-cfs-filer-index-2026.json"); const t={};
 for (const r of nh.rows) t[r.filerTypeDesc]=(t[r.filerTypeDesc]||0)+1;
 console.log("NH rows="+nh.rows.length, "stated="+nh.statedTotalItems, JSON.stringify(t));
-const nj=require("./data/campaign-finance/nj-elec-entity-corpus-2026.json");
+const nj=require("./data/states/nj/campaign-finance/nj-elec-entity-corpus-2026.json");
 const rows=Object.values(nj.byLocation).flatMap(v=>v.entities);
 console.log("NJ entityRows="+rows.length, "distinctEntityId="+new Set(rows.map(e=>e.entityId)).size);'
 ```
 
 ```
-node -e 'const r=require("./data/campaign-finance/az-seethemoney-2026-reconciliation.json").reconciliation;
+node -e 'const r=require("./data/states/az/campaign-finance/az-seethemoney-2026-reconciliation.json").reconciliation;
 console.log("AZ", JSON.stringify(r).slice(0,200));
-const lu=require("./data/campaign-finance/nj-elec-location-universe.json");
-const c=require("./data/campaign-finance/nj-elec-entity-corpus-2026.json");
+const lu=require("./data/states/nj/campaign-finance/nj-elec-location-universe.json");
+const c=require("./data/states/nj/campaign-finance/nj-elec-entity-corpus-2026.json");
 console.log("NJ locations="+lu.locationCount, "acquired="+Object.keys(c.byLocation).length,
 "neverAsked="+(lu.locationCount-Object.keys(c.byLocation).length));'
 ```
@@ -557,7 +557,7 @@ console.log("NJ locations="+lu.locationCount, "acquired="+Object.keys(c.byLocati
   2,944 rows typed `Candidate` and 2,789 typed as one of the three committee
   kinds, out of 5,738 rows / 4,944 distinct filer ids. There is **no committed
   New Hampshire identity registry** joining any of them to a canonical candidacy;
-  the only join that exists is inside `data/funding/state-money-nh-2026.json`,
+  the only join that exists is inside `data/states/nh/funding/state-money-nh-2026.json`,
   over 28 candidacies.
 - **NJ cannot be split into candidate and committee identities at all.** ELEC's
   entity rows carry `entityId, entityName, office, party, location, electionYear,
@@ -682,12 +682,12 @@ rather than a fact, it says so.*
 
 | | |
 | --- | --- |
-| **Arizona — ACQUIRED** | `data/candidates/az-2026-sos-candidate-filings.json` cites the Secretary of State's 2026 partisan filing list. Bytes committed at `tests/fixtures/az-sos-2026-candidate-filings.pdf`, sha256 `a13d2a82f83b…`, 183,097 B. Count: `node -e "const j=require('./data/candidates/az-2026-sos-candidate-filings.json'); console.log(j.candidacies.length)"` | **MET — 266 candidacies across 76 contests**, established TWICE by independent mechanisms (positional table recovery, and filing-date tokens counted out of the text layer); the adapter refuses to write on disagreement or on zero |
-| **The registry equals the corpus** | `node -e "const r=require('./data/identity/az-2026-candidate-registry.json'); console.log(r.candidates.length)"` | **MET — 268** = the 266 filed candidates **plus 2 write-in nominees the certified canvass stars and the filing list never carried.** Every filing-list row is in the registry; nothing was dropped. The candidate universe moved **55 → 266** |
+| **Arizona — ACQUIRED** | `data/states/az/candidates/az-2026-sos-candidate-filings.json` cites the Secretary of State's 2026 partisan filing list. Bytes committed at `tests/fixtures/az-sos-2026-candidate-filings.pdf`, sha256 `a13d2a82f83b…`, 183,097 B. Count: `node -e "const j=require('./data/states/az/candidates/az-2026-sos-candidate-filings.json'); console.log(j.candidacies.length)"` | **MET — 266 candidacies across 76 contests**, established TWICE by independent mechanisms (positional table recovery, and filing-date tokens counted out of the text layer); the adapter refuses to write on disagreement or on zero |
+| **The registry equals the corpus** | `node -e "const r=require('./data/states/az/identity/az-2026-candidate-registry.json'); console.log(r.candidates.length)"` | **MET — 268** = the 266 filed candidates **plus 2 write-in nominees the certified canvass stars and the filing list never carried.** Every filing-list row is in the registry; nothing was dropped. The candidate universe moved **55 → 266** |
 | **New Hampshire — NOT ACQUIRED** | `data/hunt/candidate-filing-authorities-2026.json`, the NH row | **NOT MET, and the wall is OURS.** The document is retrieved and hashed (sha256 `cd3d45a9db80…`, 77 pages, all with a text layer). The pages are **rotated**, so the generic table layer reads each COLUMN as a row and returns `ZERO_ROWS`; and this repository holds no sourced crosswalk from an NH State Representative district to an OCD division. A prototype recovered 1,268 rows whose segmentation could not be verified and **was not shipped**. `REQUIRES_NEW_ADAPTER` |
 | **New Jersey — NOT ACQUIRED, and could not be** | same file, the NJ rows | **NOT MET, structurally.** The Division of Elections files **federal office only**; NJ's universe is the union of that authority and **21 county clerks**. No acquisition of these documents alone could earn the word "statewide" |
 | **Both are relabelled rather than left overclaiming** | `lib/candidates/population-label.ts`; NH and NJ read `PILOT_DERIVED`, AZ reads `PARTIAL_AUTHORITY_ACQUIRED` | **MET** |
-| **The AZ SOS `DISCOVERY_OWED` row resolves** | `data/jurisdictions/az.json` — key `BALLOT_AND_CANDIDATES:STATEWIDE:az-sos-candidate-filings`, now `ADAPTED` | **MET.** Its recorded URL also moved: the old one answered **404** while the document answered 200 — RULING 206, the record is not the URL |
+| **The AZ SOS `DISCOVERY_OWED` row resolves** | `data/states/az/jurisdictions/az.json` — key `BALLOT_AND_CANDIDATES:STATEWIDE:az-sos-candidate-filings`, now `ADAPTED` | **MET.** Its recorded URL also moved: the old one answered **404** while the document answered 200 — RULING 206, the record is not the URL |
 | **Enrichment obligations, with denominators** | `pnpm readback:control-plane` | **MET — 1,087 → 1,720.** AZ 795 against a denominator of 266 corpus candidacies; NH 114 against 47 **pilot-derived**; NJ 811 against 276 **pilot-derived** |
 | **R-C9 labels corrected everywhere** | `git grep -n "statewide" -- lib scripts` | **MET — 9 sites found, 6 corrected by the lane, 3 corrected by the integration owner** (the lane correctly refused to reach outside its ownership and reported them with exact text). 925 of the 1,720 obligations those headers described stand over pilot-derived populations |
 | **Result** | **MET for Arizona. NOT MET for New Hampshire and New Jersey, with the wall named in each case and the population relabelled rather than left wearing a word it had not earned.** |
@@ -728,7 +728,7 @@ not re-run.** The walk was already complete.
 | 270 distinct officials | **270** distinct names across those three | agrees |
 
 ```
-node -e 'const d=require("./data/hunt/wikipedia-nj-morris.json"); const m=d.municipalities;
+node -e 'const d=require("./data/states/nj/hunt/wikipedia-nj-morris.json"); const m=d.municipalities;
 let council=0,mayors=0,tmpl=0; const names=new Set();
 for (const x of m) { council+=(x.council||[]).length; (x.council||[]).forEach(p=>names.add((p.name||"").trim().toLowerCase()));
   if (x.mayor&&x.mayor.name) { mayors++; names.add(x.mayor.name.trim().toLowerCase()); }
@@ -741,7 +741,7 @@ console.log("reached="+m.filter(x=>x.title&&x.fetchedAt).length,
 
 | Claim | Where to verify | Result |
 | --- | --- | --- |
-| The artifact is committed and merged in PR #255 | `git log --format="%h %ad %s" --date=iso -- data/hunt/wikipedia-nj-morris.json` → newest is `7514e68e`, 2026-09-01 09:22:43 -0700. `git merge-base --is-ancestor 7514e68e 91caa766` succeeds, and `91caa766` is #255's merge commit, merged 2026-09-01T16:56:31Z | **MET** |
+| The artifact is committed and merged in PR #255 | `git log --format="%h %ad %s" --date=iso -- data/states/nj/hunt/wikipedia-nj-morris.json` → newest is `7514e68e`, 2026-09-01 09:22:43 -0700. `git merge-base --is-ancestor 7514e68e 91caa766` succeeds, and `91caa766` is #255's merge commit, merged 2026-09-01T16:56:31Z | **MET** |
 | The artifact matches what its generator would produce | `pnpm regen` reports it `CURRENT` against `pnpm wiki:muni --state NJ --county Morris --confirm`, 6 source files | **MET** |
 | No conclusion from the walk sits only in scratch output | The producer `scripts/wiki-municipality.mts` writes exactly one file (`writeFileSync` at line 320; everything else it emits is console text). The session scratch directory `.scratch/` in `C:\Users\seanj\dev\we-the-people` holds 77 files, **none modified on 2026-09-01**, none named for this walk, and `grep -rl "wikipedia-nj-morris" .scratch` returns nothing. The permission finding is committed in `docs/sources.md`; the route is in `data/method/knowledge.json` as `wikipedia-municipality`; the guard is `tests/wikipedia-permission.test.ts` | **MET** |
 | The orphan-waiter defect is recorded as a reusable lesson | `docs/false-verifications.md`, row 6, *"The orphan waiter (9/1)"* | **MET** |

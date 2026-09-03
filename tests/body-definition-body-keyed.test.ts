@@ -44,7 +44,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { definitionsForBody } from "../lib/officials/body-definitions.ts";
-import type { BodyDivisionType } from "../lib/officials/body-blurbs.ts";
+import type { BodyDivisionType } from "../lib/officials/body-description.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 

@@ -1,9 +1,9 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 438,
-    "named": 4915,
-    "dynamic": 16
+    "files": 445,
+    "named": 4959,
+    "dynamic": 18
   },
   "files": {
     "tests/absence-defaults.test.ts": {
@@ -1825,6 +1825,7 @@
         "RULING 108: the repo copy carries the pinned conduct block verbatim",
         "RULING 108: the repo copy of context.md exists",
         "a block claimed VERBATIM is tested against its source, and divergence fails",
+        "context resolves frozen tracker holding pointers without rewriting the source",
         "context.md carries the Discovery conduct block verbatim from CLAUDE.md",
         "every section of context.md states where it came from"
       ],
@@ -2387,9 +2388,11 @@
       "names": [
         "POSITIVE CONTROL (NH289): the observer commit alone cancels — the filter was never the defect",
         "SEEDED (NH289): a shipping commit accumulated in the range BUILDS, even under a data-only head",
+        "a completed production build has current state serving projections",
         "a docs-only commit cancels; one shipping path anywhere in it builds",
         "an uncomputable diff BUILDS and says so, and is never a cancel",
         "an unknown path is SHIPPING — the allowlist direction is the rule",
+        "built registry routes contain their canonical geometry and roster inputs",
         "every non-shipping prefix carries a stated reason",
         "no file under a non-shipping prefix is traced into the deploy",
         "previews and branch deploys cancel without needing a diff",
@@ -3008,6 +3011,7 @@
     },
     "tests/gate-parity.test.ts": {
       "names": [
+        "gate parity · block commands cannot consume later steps or turn comments into gates",
         "gate parity · each canonical authority is in BOTH the local set and the required CI job",
         "gate parity · every command CI runs as a gate is in the local gate set",
         "gate parity · every gate names the CI job it stands in for",
@@ -3199,6 +3203,13 @@
         "empty corpora read as AWAITING_OWNER_DATA with the exact stated strings",
         "no contract certifies another: TRUTH green does not flip READER",
         "the rollup refuses readings out of order rather than mislabelling them"
+      ],
+      "dynamic": 0
+    },
+    "tests/holdings-readback.test.ts": {
+      "names": [
+        "holdings instrument observes one database snapshot without schema initialization or mutations",
+        "readback refuses an empty or structurally incomplete observed denominator"
       ],
       "dynamic": 0
     },
@@ -5708,6 +5719,8 @@
     },
     "tests/ruling-59-coverage-silence.test.ts": {
       "names": [
+        "RULING 59: changing the historical quotation cannot broaden the exemption",
+        "RULING 59: historical migration evidence cannot exempt reader data or other plan fields",
         "RULING 59: no reader surface renders a coverage claim",
         "RULING 59: the deleted coverage note has not come back",
         "RULING 59: the sanctioned line is exactly one sentence and unchanged",
@@ -6036,6 +6049,18 @@
       ],
       "dynamic": 0
     },
+    "tests/ship-pr-checks.test.ts": {
+      "names": [
+        "a different remote head is refused before waiting or merging",
+        "a failed check watch cannot reach merge",
+        "an empty check rollup waits for registration before starting the watch",
+        "changed heads or protection refusals are not reported as merged",
+        "checks that never register time out without a watch or merge",
+        "failed, unavailable or timed-out checks never reach the merge",
+        "shipping waits for checks and binds the merge to the tested head"
+      ],
+      "dynamic": 0
+    },
     "tests/signal-taxonomy.test.ts": {
       "names": [
         "TAXONOMY: Speak Your Mind is sentiment and is NOT the same thing as a reaction",
@@ -6298,6 +6323,60 @@
         "the rise is capped by the size of the state it is marking",
         "the rise scales with zoom and never reaches zero",
         "the state code comes off the OCD-ID, never off a name string"
+      ],
+      "dynamic": 0
+    },
+    "tests/state-holdings-code-data.test.ts": {
+      "names": [
+        "the baseline record reader refuses executable or imported expressions",
+        "upstream measure integration preserves all 15 records and the unchanged frozen 11"
+      ],
+      "dynamic": 1
+    },
+    "tests/state-holdings-meeting-data.test.ts": {
+      "names": [
+        "meeting consumers read held rows and retain version and venue matching"
+      ],
+      "dynamic": 1
+    },
+    "tests/state-holdings-paths.test.ts": {
+      "names": [
+        "a composed legacy path is detected and an unrelated fixture stays a fixture",
+        "classification distinguishes canonical acquisitions from state-themed evidence",
+        "denominator identity and missing planned holdings cannot yield a vacuous green",
+        "dynamic filenames cannot reconstruct removed domain-first readers",
+        "historical evidence allowances bind to an exact field and its hash",
+        "new state's future legacy layout fails without appearing in the finite move plan",
+        "residual check accepts migrated data and rejects a planted old reference",
+        "standalone residual command fails a planted violation without repairing it"
+      ],
+      "dynamic": 0
+    },
+    "tests/state-holdings-projections.test.ts": {
+      "names": [
+        "a future state's canonical geometry is discovered and served through an offline byte projection"
+      ],
+      "dynamic": 0
+    },
+    "tests/state-manifest.test.ts": {
+      "names": [
+        "a new state's first acquisition creates a required manifest without a state list edit",
+        "a readback update makes a byte-current manifest stale while preserving its observed_at",
+        "a transitive generator code change invalidates manifests independently of held data",
+        "content-addressed asset aliases preserve the union of authoritative state joins",
+        "dataset-to-surface contract refuses absent datasets and absent reader surfaces",
+        "every advertised table row count equals the rendered row count",
+        "every exempt canonical TypeScript holding has an explicit export and dependency contract",
+        "extracted canonical envelopes count roster records and render every member",
+        "ignored local source bytes are never external manifest inputs",
+        "imported module values cannot pass freshness after a supporting source changes",
+        "seeded stale manifest makes standalone --check red and touches no input or output bytes",
+        "source UTC observations and scheduling deadlines preserve their dates without excusing authorship stamps",
+        "state attribution decodes US identity tags and excludes Canadian and status values",
+        "state funding citations never borrow the first other-state candidate's provenance",
+        "unknown canonical TypeScript and a different context root fail closed",
+        "unpartitioned canonical holdings and non-state control rows remain explicitly visible",
+        "vault-only state joins through durable work-item identity and acquires a manifest obligation"
       ],
       "dynamic": 0
     },

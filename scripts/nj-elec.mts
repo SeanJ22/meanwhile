@@ -162,7 +162,7 @@ for (const name of wanted) {
   }
 }
 
-const outPath = join(process.cwd(), "data", "hunt", `nj-elec-${year}.json`);
+const outPath = join(process.cwd(), "data", "states", "nj", "hunt", `nj-elec-${year}.json`);
 writeFileSync(
   outPath,
   JSON.stringify(

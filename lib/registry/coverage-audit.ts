@@ -3,7 +3,7 @@ import type { BodyCoverageAudit, CoverageAuditFile } from "./audit.ts";
 /**
  * Every source hunt anyone has actually run, and what each rung returned.
  *
- * Hand-maintained and cited, the same way `lib/sources/legistar/clients.ts` is
+ * Hand-maintained and cited, the same way `lib/sources/legistar/client-registry.ts` is
  * and for the same reason: this records work a person did — pages opened and
  * read — so it cannot be generated, and a row without the URL it was read from
  * is worthless. `scripts/build-registry.ts` overlays it onto the derived bodies.
@@ -709,7 +709,7 @@ export const COVERAGE_AUDITS: BodyCoverageAudit[] = [
   /**
    * **THE ROW MESA WAS SERVING WITHOUT** (2026-08-28).
    *
-   * `lib/sources/legistar-insite/tenants.ts` began serving Mesa's City Council
+   * `lib/sources/legistar-insite/tenant-registry.ts` began serving Mesa's City Council
    * sittings on 2026-08-28 — ten of them are in `data/meetings-snapshot.json`
    * under `…place:mesa#governing` — while this file had no row for that body,
    * so `build-registry.ts` left it exactly as the derivation made it:
@@ -762,7 +762,7 @@ export const COVERAGE_AUDITS: BodyCoverageAudit[] = [
     agendaSourceRef: "https://mesa.legistar.com/Calendar.aspx",
     coverageStatus: "LIVE",
     notes:
-      "LIVE as of 2026-08-28. The body's name stays null on the registry row, and deliberately: this is a DERIVED_FROM_DIVISION_TYPE body, and finding a body's website does not make its EXISTENCE a sourced claim — the same rule Pima and Tucson sit under, asserted by tests/registry-oracle.test.ts. What the primary source DID settle is the reader-facing name the adapter renders: the city publishes this body as \"City Council\" on its own domain, so lib/sources/legistar-insite/tenants.ts is quoting the city rather than guessing. The city also publishes its own dated instance list on that page; it is NOT wired as a clerk schedule, because the parser that field feeds is a table parser written against Pima's HTML table and this page is a CMS event widget. That is a fact about our tooling — a rung nobody has built — and never about Mesa.",
+      "LIVE as of 2026-08-28. The body's name stays null on the registry row, and deliberately: this is a DERIVED_FROM_DIVISION_TYPE body, and finding a body's website does not make its EXISTENCE a sourced claim — the same rule Pima and Tucson sit under, asserted by tests/registry-oracle.test.ts. What the primary source DID settle is the reader-facing name the adapter renders: the city publishes this body as \"City Council\" on its own domain, so lib/sources/legistar-insite/tenant-registry.ts is quoting the city rather than guessing. The city also publishes its own dated instance list on that page; it is NOT wired as a clerk schedule, because the parser that field feeds is a table parser written against Pima's HTML table and this page is a CMS event widget. That is a fact about our tooling — a rung nobody has built — and never about Mesa.",
   },
 ];
 

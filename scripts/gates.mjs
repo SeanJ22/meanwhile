@@ -157,6 +157,18 @@ const GATES = [
     why: "RULING 220 puts Level-2 scheduling state in a dedicated database outside lib/db and invisible to db:gate; that exemption must not become ungoverned, so the schema has its own version, applied-version and drift check (Session B, W3.2)",
   },
   {
+    id: "state-holdings:check",
+    ciJob: "gates (test · lint · tsc)",
+    command: "pnpm state-holdings:check",
+    why: "canonical state holdings cannot regress to the old domain-first layouts",
+  },
+  {
+    id: "state-manifest",
+    ciJob: "gates (test · lint · tsc)",
+    command: "pnpm state-manifest --check",
+    why: "each discovered state needs a byte-current answer derived only from committed inputs and durable external observations",
+  },
+  {
     id: "feedback:sweep",
     ciJob: "gates (test · lint · tsc)",
     command: "pnpm feedback:sweep --check",

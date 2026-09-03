@@ -101,13 +101,13 @@ interface LineupFile {
  * BALLOT.** (Session C final, lane 1, 2026-09-01. R-C9.)
  *
  * This registry called itself STATEWIDE from the day it was written and its
- * population was `data/ballot/az-pima-2026.json` — 15 contests and 55
+ * population was `data/states/az/ballot/az-pima-2026.json` — 15 contests and 55
  * candidacies from ONE COUNTY'S certified general-election ballot. The key had
  * no ZIP in it, so it looked statewide; the population had one county in it, so
  * it was not. R-C9 names that exactly: *"'No ZIP in the key' is a property of
  * the key, not of the population."*
  *
- * The population is now `data/candidates/az-2026-sos-candidate-filings.json` —
+ * The population is now `data/states/az/candidates/az-2026-sos-candidate-filings.json` —
  * the Secretary of State's complete partisan candidate filing list for the 2026
  * primary, 76 contests and 266 candidacies, acquired by
  * `pnpm acquire:az-sos-candidates`. That is the authority's COMPLETE APPLICABLE
@@ -148,7 +148,7 @@ interface CorpusDoc {
   candidacies: CorpusCandidacy[];
 }
 
-const corpusPath = join(ROOT, "data", "candidates", "az-2026-sos-candidate-filings.json");
+const corpusPath = join(ROOT, "data", "states", "az", "candidates", "az-2026-sos-candidate-filings.json");
 const corpus = JSON.parse(readFileSync(corpusPath, "utf8")) as CorpusDoc;
 if (corpus.candidacies.length === 0 || corpus.contests.length === 0) {
   throw new Error(
@@ -158,7 +158,7 @@ if (corpus.candidacies.length === 0 || corpus.contests.length === 0) {
 }
 
 const pima = JSON.parse(
-  readFileSync(join(ROOT, "data", "ballot", "az-pima-2026.json"), "utf8"),
+  readFileSync(join(ROOT, "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8"),
 ) as { contests: BallotContest[]; candidacies: BallotCandidacy[] };
 
 /*
@@ -199,13 +199,13 @@ for (const c of corpus.contests) {
   if (match) pilotContestIdByCorpusId.set(c.id, match.id);
 }
 const lineup = JSON.parse(
-  readFileSync(join(ROOT, "data", "ballot", "az-general-lineup-2026.json"), "utf8"),
+  readFileSync(join(ROOT, "data", "states", "az", "ballot", "az-general-lineup-2026.json"), "utf8"),
 ) as LineupFile;
 const money = JSON.parse(
-  readFileSync(join(ROOT, "data", "funding", "state-money-az-2026.json"), "utf8"),
+  readFileSync(join(ROOT, "data", "states", "az", "funding", "state-money-az-2026.json"), "utf8"),
 ) as StateMoneySnapshot;
 const financeReconciliation = JSON.parse(
-  readFileSync(join(ROOT, "data", "campaign-finance", "az-seethemoney-2026-reconciliation.json"), "utf8"),
+  readFileSync(join(ROOT, "data", "states", "az", "campaign-finance", "az-seethemoney-2026-reconciliation.json"), "utf8"),
 ) as { nextFilingDeadline: { reportName: string; filingPeriodEndDate: string } | null };
 
 /* -------------------------------------------------------------------------
@@ -435,7 +435,7 @@ const registry: AzIdentityRegistry = {
       readAt: corpus.retrieval.retrievedAt,
       note:
         `${corpus.authority.documentTitle} — acquired as a corpus at ` +
-        `data/candidates/az-2026-sos-candidate-filings.json (${corpus.retrieval.byteLength} B, ` +
+        `data/states/az/candidates/az-2026-sos-candidate-filings.json (${corpus.retrieval.byteLength} B, ` +
         `sha256 ${corpus.retrieval.sha256}). THE REGISTRY'S POPULATION. ` +
         corpus.applicableUniverse.describes,
     },
@@ -496,7 +496,7 @@ const bridge: LineupReconciliation & {
   sources: [
     { name: CANVASS_AUTHORITY, url: lineup.canvass.url, readAt: lineup.canvass.readAt, note: lineup.canvass.title },
     {
-      name: "data/identity/az-2026-candidate-registry.json",
+      name: "data/states/az/identity/az-2026-candidate-registry.json",
       url: null,
       readAt: AS_OF,
       note: "The statewide identity registry this bridge resolves INTO.",
@@ -529,7 +529,7 @@ const bridge: LineupReconciliation & {
  */
 const registryFloor = floored(
   "registry candidates carrying a held-ballot candidacy key",
-  "data/candidates/az-2026-sos-candidate-filings.json, the Secretary of State's 2026 partisan filing list",
+  "data/states/az/candidates/az-2026-sos-candidate-filings.json, the Secretary of State's 2026 partisan filing list",
   candidates.length,
   candidates.filter((c) => c.canonicalCandidacyId !== null).length,
 );
@@ -541,7 +541,7 @@ const contestFloor = floored(
 );
 const lineupFloor = floored(
   "certified-lineup nominees uniquely reconciled",
-  "data/ballot/az-general-lineup-2026.json, the certified primary canvass",
+  "data/states/az/ballot/az-general-lineup-2026.json, the certified primary canvass",
   result.proof.lineupNominees,
   result.proof.uniquelyReconciled,
 );
@@ -595,7 +595,7 @@ for (const row of result.rows.filter((r) => r.outcome !== "RECONCILED")) {
 if (DRY) {
   console.log("\n  --dry: nothing written.");
 } else {
-  const dir = join(ROOT, "data", "identity");
+  const dir = join(ROOT, "data", "states", "az", "identity");
   mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, "az-2026-candidate-registry.json"), `${JSON.stringify(registry, null, 1)}\n`, "utf8");
   writeFileSync(
@@ -603,6 +603,6 @@ if (DRY) {
     `${JSON.stringify(bridge, null, 1)}\n`,
     "utf8",
   );
-  console.log("\n  wrote data/identity/az-2026-candidate-registry.json");
-  console.log("  wrote data/identity/az-2026-certified-lineup-reconciliation.json");
+  console.log("\n  wrote data/states/az/identity/az-2026-candidate-registry.json");
+  console.log("  wrote data/states/az/identity/az-2026-certified-lineup-reconciliation.json");
 }

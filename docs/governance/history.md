@@ -1280,7 +1280,7 @@ walked at any rung. `lib/hunt/discovery.ts` is the machinery; it is guarded in
 `tests/discovery-tree.test.ts`.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -1333,7 +1333,7 @@ way is how a bad date buys permanent trust. This runs on the scheduled refresh,
 not by hand.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -1491,7 +1491,7 @@ Operationally:
   authorities could not agree it exists.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -1674,7 +1674,7 @@ a route's portability. Honest uncertainty is a legal answer there and is
 better than a confident wrong one.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -1777,7 +1777,7 @@ hunted again on its RULING 53 clock. Nothing in this project is ever concluded
 to be unobtainable.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -1874,7 +1874,7 @@ re-litigated. The density ruling was never reversed — it simply stopped being
 checked for four days.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -1949,7 +1949,7 @@ Rockaway Township is the median American shape and is the first test of whether
 these routes travel at all.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -2244,7 +2244,7 @@ hook that gets `--no-verify`d out of existence. The server-truth check has
 neither problem — it cannot be absent, and it costs one API call.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -2343,7 +2343,7 @@ worth more than the eleventh `shoot-<date>.mts`, and the preference is stated
 here so the count of 34 is a fact about the past rather than a target.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -2417,7 +2417,7 @@ to readers. A local production build is the same bytes. There was never a reason
 to find out on the live site.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -2479,7 +2479,7 @@ read as a broken tree for a whole session (`NS04`).
   fit the change it was supposed to catch, in another costume.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -2546,7 +2546,7 @@ RULING 37's second half is untouched: **sessions still OPEN Needs Sean rows**,
 and routing something to his attention remains the session's job.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -2609,7 +2609,7 @@ body. `lib/registry/curated-divisions.ts` supplies a division with no polygon an
 that stays legal, because RULING 57 outranks the map.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -2725,7 +2725,7 @@ nine of them outright, and then concluding from the exhausted quota that the
 constraint was money.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -2792,7 +2792,7 @@ fails the build, and `judgeManifestWalk` refuses to honour a Tier C walk for a
 field whose Tier A and Tier B routes are unwalked.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -2840,7 +2840,7 @@ whether there was anything to get past. Six sessions walked increasingly
 sophisticated routes to facts that were sitting on the second Google result.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -2892,7 +2892,7 @@ usually incompletely. Enumerating first costs an hour and is paid back the first
 time a route is walked in tier order.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -2950,7 +2950,7 @@ wrong in a different direction — refusing it entirely leaves nine council memb
 unnamed, and trusting it directly puts an unsourced claim in front of a reader.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -3023,7 +3023,7 @@ imagination rather than its diligence.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -3083,7 +3083,7 @@ is expansion, however novel the method. If no, it is a row.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -3181,7 +3181,7 @@ have surfaced. Every one of those was available while the previous session was
 measuring how fast a free search engine would rate-limit it.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -3290,7 +3290,7 @@ and **the defect recurred in NJ Hunt 5**, one session later.
 
 **The sweep it requires**, run on adoption day: every generated file is checked
 against what its generator currently produces, and a difference is a finding.
-NJ Hunt 6's sweep found `data/hunt/nj-morris-municipal-sites.json` **five
+NJ Hunt 6's sweep found `data/states/nj/hunt/nj-morris-municipal-sites.json` **five
 municipalities deep in wrong governments** — `morris_township` pointed at Morris
 Plains' website, `chatham_township` at Chatham Borough's, and three more — with
 six municipalities missing outright. The generator had already been fixed;
@@ -3353,7 +3353,7 @@ publication: US government work, public domain, no attribution obligation and
 no terms to accept.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -3449,7 +3449,7 @@ where all 272 live.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -3523,7 +3523,7 @@ artifact is never hand-edited (RULING 92).
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -3585,7 +3585,7 @@ observations and which are folklore.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -3646,7 +3646,7 @@ find came the same way.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -3695,7 +3695,7 @@ an instruction to whoever writes the brief.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -3750,7 +3750,7 @@ from it, and nothing says it was overturned — which is the exact failure
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -3817,7 +3817,7 @@ without answering the question and "did not consider" is not expressible.
 Guarded in `tests/count-assertion.test.ts`.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -3860,7 +3860,7 @@ The rule is now a piece of code with its own test rather than four lines inside 
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -3918,7 +3918,7 @@ The fingerprint is taken of the PROGRAM, not the file, and that is the whole des
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -3931,7 +3931,7 @@ the completion condition it never had.)
 artifact. A generator whose digest has moved FAILS THE BUILD until its artifact
 is regenerated and the digest re-recorded, and the count changed is reported.**
 
-`data/hunt/nj-morris-municipal-sites.json` pointed **five municipalities at the
+`data/states/nj/hunt/nj-morris-municipal-sites.json` pointed **five municipalities at the
 wrong government's website** — `morris_township` at Morris Plains',
 `chatham_township` at Chatham Borough's — **with its generator already fixed**.
 Somebody did the RULING 92 thing, correctly, and stopped. Every downstream hunt
@@ -3973,7 +3973,7 @@ The first version of the new tool read 241 pieces of code across 806 files and r
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -4037,7 +4037,7 @@ names the exemption with its reason so a size guard cannot push them back out
 to somewhere a session cannot reach.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -4076,7 +4076,7 @@ Each of the three carries its own denominator, so the three add up to something 
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -4121,7 +4121,7 @@ Two limits were found and removed. The orientation file now runs to 44 KB with i
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -4218,7 +4218,7 @@ restamp without reading and now 0; 523 files swept, 31 clock-fed sites found,
 29 verified by hand as reading paths and declared, 1 fixed, 1 a tracker row.**
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -4267,7 +4267,7 @@ The repository copy is now the one that gets written, it is written first, and n
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -4330,7 +4330,7 @@ Also cited as: `RULING 109`, `R109`, `R-109`.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -4412,7 +4412,7 @@ The machinery is `lib/text/refusal-shapes.ts`, `pnpm sweep:refusal` and
 `tests/absence-defaults.test.ts`.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -4486,7 +4486,7 @@ correct.**
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -4606,7 +4606,7 @@ question RULING 70 governs rather than a workaround for it.
 because we chose it.**
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -4712,7 +4712,7 @@ available "fix" — letting the guard pass with no browser — is what
 `scripts/browser.mts` forbids in as many words.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -4799,7 +4799,7 @@ The machinery is `scripts/class-stamp-sweep.mts` (`pnpm class:sweep`),
 `data/derived/class-stamp-sweep.json`, and `tests/class-stamp-sweep.test.ts`.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -4881,7 +4881,7 @@ scheduled double failure STILL raises a row*, so narrowing the input cannot have
 narrowed the detector.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -4934,7 +4934,7 @@ What is actually worth holding still is the shape of the accounting, not its cur
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -5020,7 +5020,7 @@ load-bearing case is the one a live call would almost never exercise: **HTTP 200
 carrying the wrong bytes must be REFUSED.**
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -5078,7 +5078,7 @@ because the three label maps this replaced included a BINARY
 kind of body advisory. Guarded in `tests/body-class-labels.test.ts`.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -5148,7 +5148,7 @@ the **Navajo Nation**, the **Tohono O'odham Nation** and the **Pascua Yaqui
 Tribe** (`lib/registry/tribal-nations.ts`).
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -5212,7 +5212,7 @@ proves this, not the sales record. And every export continues to report its
 confidence mix, which is a separate obligation and is untouched by this one.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -5253,7 +5253,7 @@ Filing each under one town only would have been worse: it hides a real body from
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -5309,7 +5309,7 @@ other source. It supplies no prose beyond the labelled self-description the
 blurb rule already governs, and it **never supplies a photo**.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -5402,7 +5402,7 @@ And that is only the visible half. Deploy previews are Netlify's default, so **e
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -5487,7 +5487,7 @@ RULING 77 already established that almost nothing needs production, because a lo
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -5549,7 +5549,7 @@ Two separate reasons, and either alone would be enough.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -5625,7 +5625,7 @@ had to exist before the next one.
   be assumed read. **Rotation is the fix.**
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -5689,7 +5689,7 @@ Measured on adoption: 13 of 13 call sites declare a count, 12 adapters' fixtures
 re-run under the shared contract, 0 newly failing.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -5760,7 +5760,7 @@ stays: a runaway stop is a real need, and what changed is what hitting it MEANS.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -5812,7 +5812,7 @@ doubles, and production, which injects nothing, walks the real rungs.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -5868,7 +5868,7 @@ that had already concluded — asserted in both directions.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -5937,7 +5937,7 @@ side of the join is.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -6009,7 +6009,7 @@ the tests assert counts.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -6065,7 +6065,7 @@ attached rather than closing on a number that describes a rasterizer.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -6120,7 +6120,7 @@ first act of the session was therefore a no-op. Reported rather than smoothed.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -6185,7 +6185,7 @@ found the same defect on another card the next day. The six were right. **The
 class was 23.**
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -6259,7 +6259,7 @@ image was followed and the difference was reported.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -6327,7 +6327,7 @@ nobody reads.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -6398,7 +6398,7 @@ all until a planted instance caught it.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -6463,7 +6463,7 @@ this product is a false claim about a government.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -6538,7 +6538,7 @@ respondents and corrupts the data being sold. **The default is REVERSIBLE and is
 the author's call.**
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -6638,7 +6638,7 @@ verdict itself. Guarded in `tests/demo-window.test.ts`.
 deletion on a fabricated number.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -6734,7 +6734,7 @@ thin one across the line.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -6836,7 +6836,7 @@ which of them answered and which slammed.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -6934,7 +6934,7 @@ equal-effort rule exists to catch, committed by the field definition itself.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -7001,7 +7001,7 @@ that has to be restated every time is a rule that will eventually be left out of
 a brief, and the session that reads that brief will stop and wait.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -7060,7 +7060,7 @@ it always does.
   did (RULING 24).
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -7124,7 +7124,7 @@ about to do. The run was stopped at 125 of 276 and its output discarded.
   rather than asserted.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -7182,7 +7182,7 @@ untouched: a measuring instrument that had to collect something in order to
 measure would have changed the thing it measures.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -7236,7 +7236,7 @@ accumulation RULING 79 was adopted over, arriving through a different door.
   him.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -7288,7 +7288,7 @@ his decisions of 2026-08-24, so that a close has an authority which exists.)
   application, and it was diagnosed the same day it moved.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -7636,7 +7636,7 @@ that reasoning pointed at a FIX rather than at a check.
   session finding the class before Sean does, which is the whole point.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -7719,7 +7719,7 @@ scheduling, the other is a problem.
 - **Order is unchanged.** Shedding is from the BOTTOM, never mid-item.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -7789,7 +7789,7 @@ shrinks.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -7917,7 +7917,7 @@ list.**
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -8365,7 +8365,7 @@ gone to the aggregator, or to the brief, and not to the body, would have
 recorded a dead endpoint.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -8500,7 +8500,7 @@ published the same record with one column hidden. The row had to stop being a
 row.*
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -8656,7 +8656,7 @@ high followed-count with no bodies discovered is a session that walked a site
 thoroughly and learned nothing, and the report says that too.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -8769,7 +8769,7 @@ walls, and it still expires the day a wall falls. What it forbids is arriving at
 that argument by counting.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -11367,7 +11367,7 @@ its own header:
 
 ```
   scripts/state-money-az.mts   "FOR THE 85701 AND 85641 BALLOT"
-                               loads data/ballot/az-pima-2026.json, builds
+                               loads data/states/az/ballot/az-pima-2026.json, builds
                                candidateOfInterest from those candidacies, reads
                                the itemized ledger only for those committees
   scripts/state-money-nh.mts   "FOR THE 03255 BALLOT"
@@ -11608,7 +11608,7 @@ ZIP in the key" is a property of the KEY, not of the POPULATION.**
 ## What this closes, exactly
 
 The candidate-universe artifacts for all three pilot states were built from
-PILOT BALLOT DOCUMENTS — `data/ballot/az-pima-2026.json` (55 candidacies),
+PILOT BALLOT DOCUMENTS — `data/states/az/ballot/az-pima-2026.json` (55 candidacies),
 `nh-merrimack-2026.json` (47), `nj-morris-2026.json` (276). The Arizona
 "statewide candidate identity registry" loads the Pima ballot and iterates its
 contests and candidacies. The generator's own comments already said so: the

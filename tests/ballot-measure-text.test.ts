@@ -49,7 +49,7 @@ function code(src: string): string {
 }
 
 const SET = JSON.parse(
-  readFileSync(join(ROOT, "data", "ballot", "az-pima-2026.json"), "utf8"),
+  readFileSync(join(ROOT, "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8"),
 ) as BallotSet;
 
 const measureOf = (contestId: string) =>

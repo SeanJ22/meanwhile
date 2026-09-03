@@ -19,7 +19,7 @@
 import type { Provenance } from "../sources/types.ts";
 
 import ROSTER_PHOTOS from "./roster-photos.json" with { type: "json" };
-import { AZ_CAWCD_ROSTERS } from "./rosters-az-cawcd.ts";
+import { AZ_CAWCD_ROSTERS } from "./cawcd-rosters.ts";
 import { NJ_MORRIS_ROSTERS } from "./rosters-nj-morris.ts";
 
 export interface RosterMember {

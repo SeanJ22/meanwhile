@@ -68,7 +68,7 @@ const ROOT = join(import.meta.dirname, "..");
 const WRITE = process.argv.includes("--write");
 const TODAY = today();
 
-const ballot = JSON.parse(readFileSync(join(ROOT, "data", "ballot", "nj-morris-2026.json"), "utf8")) as {
+const ballot = JSON.parse(readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8")) as {
   contests: { id: string; title: string }[];
   candidacies: { id: string; contestId: string; givenName: string; familyName: string }[];
 };
@@ -108,7 +108,7 @@ if (existsSync(wired)) {
   for (const b of bodies) for (const m of b.members) members.push({ ...m, bodyName: b.bodyName });
 }
 
-const walkPath = join(ROOT, "data", "hunt", "roster-pages-muni-sites-nj-morris.json");
+const walkPath = join(ROOT, "data", "states", "nj", "hunt", "roster-pages-muni-sites-nj-morris.json");
 if (existsSync(walkPath)) {
   const walk = JSON.parse(readFileSync(walkPath, "utf8")) as {
     sites: { municipality: string; url?: string; rosterUrl?: string; members?: Member[] }[];

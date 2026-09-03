@@ -19,7 +19,7 @@
  * ## What this file does, and the one thing it must never do
  *
  * It resolves the card key through the PRECOMPUTED bridge in
- * `data/identity/az-2026-certified-lineup-reconciliation.json` and asks the
+ * `data/states/az/identity/az-2026-certified-lineup-reconciliation.json` and asks the
  * corpus with the RECONCILED CANDIDACY ID. **It performs no name matching.**
  * The matching happened once, in `pnpm identity:az`, over the whole lineup
  * population, and its result is committed for a person to read. A runtime name

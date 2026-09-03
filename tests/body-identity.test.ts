@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { membersOfBody } from "../lib/registry/body-composition.ts";
+import { membersOfBody } from "../lib/registry/body-membership.ts";
 import { CURATED_BODIES } from "../lib/registry/curated-bodies.ts";
 import { coverageAt } from "../lib/registry/server.ts";
 import type { CoveredBody } from "../lib/registry/coverage.ts";
@@ -10,7 +10,7 @@ import type { CoveredBody } from "../lib/registry/coverage.ts";
 /**
  * DATA-3 — A BODY'S MEMBERS COME FROM THE BODY, NEVER FROM ITS GEOGRAPHY.
  *
- * `lib/registry/body-composition.ts` established the rule on 2026-08-27 and is
+ * `lib/registry/body-membership.ts` established the rule on 2026-08-27 and is
  * correct. What this file guards is the LOOKUP that feeds it, which was still
  * joining on the division: `bodyFor(meeting.ocdId)` in the map shell returned
  * whichever coverage body happened to sit on the meeting's division, and the

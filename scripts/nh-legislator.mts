@@ -10,7 +10,7 @@
  *
  * ## Why this exists, and it is a correction to our own record
  *
- * `CLAUDE.md` and `data/ballot/nh-merrimack-2026.json` both record that
+ * `CLAUDE.md` and `data/states/nh/ballot/nh-merrimack-2026.json` both record that
  * *"the General Court's own site (gc.nh.gov) refuses every client this project
  * has, browsers included"*. That was true when it was written on 2026-08-14.
  * **It is not true now.** Both `gc.nh.gov` and `gencourt.state.nh.us` answer a

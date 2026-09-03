@@ -1,7 +1,7 @@
-# The scheduled refresh behind data/ballot/nj-morris-2026.json.
+# The scheduled refresh behind data/states/nj/ballot/nj-morris-2026.json.
 # (NJ Hunt 3 item 2.3, 2026-08-22.)
 #
-# `data/ballot/nj-morris-2026.json` is GENERATED from the Morris County Clerk's
+# `data/states/nj/ballot/nj-morris-2026.json` is GENERATED from the Morris County Clerk's
 # filed-candidate PDFs. The clerk republishes at a new version path on their own
 # schedule and leaves the old path reachable — `/v/9/...-082126.pdf` superseded
 # `/v/6/...-080726.pdf` WHILE NJ Hunt 2 WAS RUNNING, and the New Jersey ballot

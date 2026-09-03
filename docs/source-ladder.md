@@ -1059,7 +1059,7 @@ indexed from 1 produced 10 matches out of 426 — which reads exactly like a
 thin roster, not like a broken key. And zero-padding Belknap (ordinal 0)
 produced `sldl:007` against a real id of `sldl:7`, silently losing all nine
 Belknap seats. Both are now asserted against **our own committed boundary
-labels**: `public/geo/sldl-33.geojson` carries `State House District
+labels**: `data/states/nh/geo/sldl-33.geojson` carries `State House District
 Merrimack 08` beside `sldl:608`, so every NH lower district round-trips
 through the mapping in `tests/legiscan.test.ts`.
 

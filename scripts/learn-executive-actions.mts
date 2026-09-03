@@ -62,7 +62,7 @@ const ROUTES: LearnedRoute[] = [
       rows: 12,
       outcome: "YIELDED",
       note:
-        "12 executive orders with dates and signed PDFs, 6 of them inside the trailing 12 months. Committed to data/officials/az-governor-actions.json with its denominator.",
+        "12 executive orders with dates and signed PDFs, 6 of them inside the trailing 12 months. Committed to data/states/az/officials/az-governor-actions.json with its denominator.",
     },
   },
   {

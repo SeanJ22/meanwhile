@@ -30,7 +30,7 @@
  * real committee, filing or amount — there is no independent-expenditure data
  * anywhere in this repository (tracker D51, blocked behind PB10/D23), so an IE
  * test could only be a fixture. Tests that assert about the WORLD read the
- * committed artifacts: `data/ballot/az-pima-2026.json`, `data/fec/fec-2026.json`,
+ * committed artifacts: `data/states/az/ballot/az-pima-2026.json`, `data/fec/fec-2026.json`,
  * `states/az/sources.md` and `lib/funding/state-vocabulary.ts`.
  */
 
@@ -534,7 +534,7 @@ test("the real federal contest's asymmetry is explained by the filers' own repor
 
   // NOT VACUOUS: the four candidacies really are the four on the committed ballot.
   const ballot = JSON.parse(
-    readFileSync(join(ROOT, "data", "ballot", "az-pima-2026.json"), "utf8"),
+    readFileSync(join(ROOT, "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8"),
   ) as { candidacies: { id: string; contestId: string }[] };
   const onBallot = ballot.candidacies
     .filter((c) => c.contestId === "ballot-az-pima:us-house-6")

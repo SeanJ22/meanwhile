@@ -48,6 +48,7 @@
  */
 
 import { existsSync, readFileSync } from "node:fs";
+import { ballotPath } from "../holdings/files.ts";
 import { join } from "node:path";
 
 import {
@@ -129,7 +130,7 @@ export function loadKellyInputs(root: string, zip: string): KellyInputs {
   const ballot = readJson<{
     contests: { id: string; title: string }[];
     candidacies: Candidacy[];
-  }>(join(root, "data", "ballot", chosen.file), { contests: [], candidacies: [] });
+  }>(join(root, ballotPath(chosen.file)), { contests: [], candidacies: [] });
 
   const cards = readJson<{ cards: Record<string, CandidateCard> }>(
     join(root, "data", "ballot", "candidate-cards-2026.json"),
@@ -144,7 +145,7 @@ export function loadKellyInputs(root: string, zip: string): KellyInputs {
      is absent the card is the only source, which is a smaller claim honestly
      made rather than a guessed one. */
   const contactsPath = chosen.contacts
-    ? join(root, "data", "ballot", chosen.contacts)
+    ? join(root, ballotPath(chosen.contacts))
     : null;
   const filedEmail = new Map<string, string | null>(
     contactsPath && existsSync(contactsPath)

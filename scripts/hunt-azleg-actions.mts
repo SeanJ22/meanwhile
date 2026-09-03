@@ -107,7 +107,7 @@ const ARGS = new Map(
   }),
 );
 
-const STATE_PATH = ARGS.get("state") ?? "data/hunt/azleg-actions-progress.json";
+const STATE_PATH = ARGS.get("state") ?? "data/states/az/hunt/azleg-actions-progress.json";
 /** Where PDF bytes are cached so a re-run never re-asks the host for one. */
 const PDF_CACHE = ARGS.get("cache") ?? join(process.env.TEMP ?? ".", "wtp-azleg-pdfs");
 /** The host asks for 120 seconds between requests. It gets 120 seconds. */

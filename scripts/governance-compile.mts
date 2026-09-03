@@ -18,7 +18,7 @@
  */
 
 import { createHash } from "node:crypto";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -37,6 +37,7 @@ import {
   canonicalId,
   type GovernanceRecord,
 } from "../lib/governance/schema.ts";
+import { currentHoldingPaths } from "./holding-paths.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const GOV = join(ROOT, "docs", "governance");
@@ -290,7 +291,7 @@ const cd: string[] = [
 for (const domain of [...new Set(decisions.map((d) => d.domain))].sort()) {
   cd.push(`## ${domain}`, "");
   for (const d of decisions.filter((x) => x.domain === domain).sort(sortRecords)) {
-    cd.push(`### ${d.title}`, "", `*${d.adopted} · ${d.provenance} · \`${d.id}\`*`, "", d.body, "");
+    cd.push(`### ${d.title}`, "", `*${d.adopted} · ${d.provenance} · \`${d.id}\`*`, "", currentHoldingPaths(d.body), "");
   }
 }
 if (decisions.length === 0) {
@@ -340,7 +341,7 @@ for (const r of records) {
   if (r.uncertain.length) {
     hist.push("**Uncertain:**", ...r.uncertain.map((u) => `- ${u}`), "");
   }
-  hist.push(r.body, "", ...renderVariants(r));
+  hist.push(currentHoldingPaths(r.body), "", ...renderVariants(r));
 }
 writeFileSync(join(GOV, "history.md"), hist.join("\n"), "utf8");
 
@@ -408,7 +409,7 @@ for (const r of numbered) {
     if (rel.survives) rul.push(`  - what survives: ${rel.survives}`);
   }
   if (r.relations.length) rul.push("");
-  rul.push(r.body, "", ...renderVariants(r));
+  rul.push(currentHoldingPaths(r.body), "", ...renderVariants(r));
 }
 
 /*
@@ -495,7 +496,7 @@ for (const domain of DOMAINS) {
     }
     for (const c of r.claims) out.push(`- **sets** \`${c.key}\` = \`${c.value}\``);
     if (r.relations.length || r.claims.length) out.push("");
-    out.push(r.body, "", ...renderVariants(r));
+    out.push(currentHoldingPaths(r.body), "", ...renderVariants(r));
   }
   writeFileSync(join(POLICY_DIR, `${domain}.md`), out.join("\n"), "utf8");
 }
@@ -551,13 +552,13 @@ function renderVariants(r: GovernanceRecord): string[] {
   for (const v of r.variants) {
     out.push(
       "<details>",
-      `<summary>The other hand-written copy of this rule, from <code>${v.source}</code> — preserved verbatim</summary>`,
+      `<summary>The other hand-written copy of this rule, from <code>${v.source}</code> — wording preserved; repository paths resolved through the holdings move plan</summary>`,
       "",
       "*Two copies of this rule were maintained by hand and they diverged. Neither was complete.",
       "The fuller one is above; this is the other, kept whole rather than merged, because merging",
       "prose neither author wrote would be composition.*",
       "",
-      v.body,
+      currentHoldingPaths(v.body),
       "",
       "</details>",
       "",

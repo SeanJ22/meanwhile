@@ -75,7 +75,7 @@ interface Repair {
 
 const REPAIRS: Repair[] = [
   {
-    file: "lib/registry/officeholders-04.json",
+    file: "data/states/az/officials/officeholders-04.json",
     name: "Rachel Keshel",
     was: "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2173",
     now: "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2317",
@@ -83,7 +83,7 @@ const REPAIRS: Repair[] = [
       "stored page HTTP 200 / 106,944 b with the surname ABSENT; replacement HTTP 200 / 96,715 b with it present, and the same legislator id her official portrait cites (read 2026-08-21)",
   },
   {
-    file: "lib/registry/officeholders-04.json",
+    file: "data/states/az/officials/officeholders-04.json",
     name: "Rosanna Gabaldón",
     was: "https://www.azleg.gov/senate-member/?legislature=55&legislator=1956",
     now: "https://www.azleg.gov/Senate/Senate-member/?legislature=57&session=130&legislator=2380",
@@ -91,7 +91,7 @@ const REPAIRS: Repair[] = [
       "stored page was the 55th Legislature; replacement HTTP 200 / 103,037 b, surname present, 57th Legislature — the one her portrait cites (read 2026-08-21)",
   },
   {
-    file: "lib/registry/officeholders-34.json",
+    file: "data/states/nj/officials/officeholders-34.json",
     name: "John McKeon",
     was: "https://www.assemblydems.com/john-mckeon/",
     now: "https://www.njleg.state.nj.us/legislative-roster/478/senator-mckeon",
@@ -99,7 +99,7 @@ const REPAIRS: Repair[] = [
       "stored page HTTP 404 and a party ASSEMBLY page for a sitting SENATOR; replacement is a rung-2 false miss (SPA shell, 25,380 b) that renders at rung 6 as 'Senator John F. McKeon (D), District 27' with (862) 930-7071, matching the stored phone (read 2026-08-21)",
   },
   {
-    file: "lib/registry/officeholders-34.json",
+    file: "data/states/nj/officials/officeholders-34.json",
     name: "Parker Space",
     was: "https://www.njassemblygop.com/space/",
     now: "https://www.njleg.state.nj.us/legislative-roster/473/senator-space",

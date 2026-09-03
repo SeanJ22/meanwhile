@@ -85,7 +85,7 @@ describe("git verification reports rather than guesses", () => {
      * at depth 1, so this test SKIPS there. `refresh-daily.yml` checks out with
      * `fetch-depth: 0` because `push-main.mjs` has to rebase, so this test RUNS
      * there, on whatever `main` carries. Commit 7514e68e (2026-09-01) moved
-     * `data/hunt/wikipedia-nj-morris.json` without moving
+     * `data/states/nj/hunt/wikipedia-nj-morris.json` without moving
      * `build-nj-rosters.mts`'s declaration: the PR gate could not see it, the
      * next two scheduled refreshes could, and both went red on a defect that
      * was already on `main` — with every governed artifact's data thrown away

@@ -54,7 +54,7 @@ function arg(flag: string): string | undefined {
 }
 
 const contestFilter = arg("--contest");
-const outPath = arg("--out") ?? join(ROOT, "data", "hunt", "nj-hunt4-fields.json");
+const outPath = arg("--out") ?? join(ROOT, "data", "states", "nj", "hunt", "nj-hunt4-fields.json");
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -69,7 +69,7 @@ interface Ballot {
   }[];
 }
 const ballot = JSON.parse(
-  readFileSync(join(ROOT, "data", "ballot", "nj-morris-2026.json"), "utf8"),
+  readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8"),
 ) as Ballot;
 
 interface RosterFile {
@@ -79,7 +79,7 @@ interface RosterFile {
   }[];
 }
 const rosters = JSON.parse(
-  readFileSync(join(ROOT, "data", "hunt", "nj-hunt4-rosters.json"), "utf8"),
+  readFileSync(join(ROOT, "data", "states", "nj", "hunt", "nj-hunt4-rosters.json"), "utf8"),
 ) as RosterFile;
 
 interface SearchFile {
@@ -89,7 +89,7 @@ interface SearchFile {
   >;
 }
 const search = JSON.parse(
-  readFileSync(join(ROOT, "data", "hunt", "nj-hunt4-search.json"), "utf8"),
+  readFileSync(join(ROOT, "data", "states", "nj", "hunt", "nj-hunt4-search.json"), "utf8"),
 ) as SearchFile;
 
 /* ── page cache, so a directory naming twelve people is fetched once ─────── */

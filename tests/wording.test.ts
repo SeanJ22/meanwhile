@@ -271,7 +271,7 @@ test("item 4: the office and body absence lines keep their whose-gap attribution
     "the office section lost its whose-gap attribution",
   );
 
-  const body = read(j(process.cwd(), "lib", "officials", "body-blurbs.ts"), "utf8");
+  const body = read(j(process.cwd(), "lib", "officials", "body-description.ts"), "utf8");
   assert.match(
     body,
     /We haven[’']?t yet read the law that says what this body decides\. What we do hold about it is below\./,

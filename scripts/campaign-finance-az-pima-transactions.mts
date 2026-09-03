@@ -3,7 +3,7 @@
  *
  * **THE ROUTE THAT BROKE THE 401.**
  *
- * `data/campaign-finance/az-pima-2026-held.json` recorded, honestly and
+ * `data/states/az/campaign-finance/az-pima-2026-held.json` recorded, honestly and
  * correctly, that Pima County's filing INDEX was public and every filing BODY
  * answered HTTP 401 on `documents/getdocumentfiling/{id}`. Its `notHeld` array
  * said in five separate lines that no contribution row, no expenditure row, no
@@ -87,7 +87,7 @@ const TENANT_ORIGIN = "https://pimacountyaz.easyvotecampaignfinance.com";
 /** Pima County's customer id, read from the portal itself in the prior acquisition. */
 const CUSTOMER_ID = "19626734-D3E9-449C-BB5D-EDB9C0034907";
 
-const OUT = join(REPO, "data", "campaign-finance", "az-pima-2026-transactions.json");
+const OUT = join(REPO, "data", "states", "az", "campaign-finance", "az-pima-2026-transactions.json");
 
 /** Politeness. The vendor rate-limits, and a rushed loop got HTML back. */
 const PAUSE_MS = 3000;
@@ -330,7 +330,7 @@ async function main(): Promise<void> {
         whatIsStillUnknown: "everything. A committee's NAME is not evidence of its position and is never inferred from.",
         exactNextStep:
           "Read the Statement of Organization filings already present in the filing index of " +
-          "data/campaign-finance/az-pima-2026-held.json.",
+          "data/states/az/campaign-finance/az-pima-2026-held.json.",
       },
     ],
     contributions: contributions.rows,

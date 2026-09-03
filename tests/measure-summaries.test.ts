@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 
-import { MEASURE_SUMMARIES } from "../lib/ballot/measure-summaries.ts";
+import { MEASURE_SUMMARIES } from "../lib/ballot/measure-summary.ts";
 
 /**
  * The plain-language summary rules (4d), held mechanically:
@@ -30,7 +30,7 @@ interface AnalysisRecord {
 
 const analysesFile = JSON.parse(
   readFileSync(
-    join(process.cwd(), "data", "ballot", "az-analyses-2026.json"),
+    join(process.cwd(), "data", "states", "az", "ballot", "az-analyses-2026.json"),
     "utf8",
   ),
 ) as { counts: { measures: number; extracted: number }; analyses: AnalysisRecord[] };
@@ -82,7 +82,7 @@ test("every statewide summary cites the exact official analysis it was written f
 test("every local summary cites the exact measure source it was written from", () => {
   const ballot = JSON.parse(
     readFileSync(
-      join(process.cwd(), "data", "ballot", "az-pima-2026.json"),
+      join(process.cwd(), "data", "states", "az", "ballot", "az-pima-2026.json"),
       "utf8",
     ),
   ) as { measures?: { contestId: string; questionText?: string; provenance: { sourceUrl: string | null } }[] };

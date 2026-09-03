@@ -276,7 +276,7 @@ test("the committed roster answers for Merrimack House District 7 and names Ebel
 });
 
 test("the corpus was taken from the BODY and says so", () => {
-  const raw = JSON.parse(readFileSync(join(ROOT, "data/hunt/nh-gencourt-members.json"), "utf8")) as {
+  const raw = JSON.parse(readFileSync(join(ROOT, "data/states/nh/hunt/nh-gencourt-members.json"), "utf8")) as {
     source: { url: string; org: string; collectedAt: string };
     counts: { produced: number; dropped: number; logicalInput: number };
   };

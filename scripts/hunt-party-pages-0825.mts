@@ -72,7 +72,7 @@ const ROOT = join(import.meta.dirname, "..");
 const WRITE = process.argv.includes("--write");
 const PAGES = Number((process.argv.find((a) => a.startsWith("--pages=")) ?? "--pages=12").slice(8));
 
-const DIRECTORY = join(ROOT, "data", "hunt", "nj-morris-party-directory-0825.json");
+const DIRECTORY = join(ROOT, "data", "states", "nj", "hunt", "nj-morris-party-directory-0825.json");
 if (!existsSync(DIRECTORY)) {
   console.error("run `pnpm party:directory --write` first — this consumes its output");
   process.exit(1);
@@ -104,7 +104,7 @@ const directory = JSON.parse(readFileSync(DIRECTORY, "utf8")) as { rows: DirRow[
  * domain answering 200 is the host talking about itself, and crawling one would
  * spend requests on a placeholder.
  */
-const gopFile = join(ROOT, "data", "hunt", "nj-morris-gop-municipal-shape-0825.json");
+const gopFile = join(ROOT, "data", "states", "nj", "hunt", "nj-morris-gop-municipal-shape-0825.json");
 const gopSeeds: DirRow[] = existsSync(gopFile)
   ? (
       JSON.parse(readFileSync(gopFile, "utf8")) as {
@@ -122,7 +122,7 @@ const gopSeeds: DirRow[] = existsSync(gopFile)
   : [];
 
 const ballot = JSON.parse(
-  readFileSync(join(ROOT, "data", "ballot", "nj-morris-2026.json"), "utf8"),
+  readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8"),
 ) as {
   contests: { id: string; title: string }[];
   candidacies: {
@@ -389,7 +389,7 @@ if (accounting.outcome !== "CONSERVED") {
 }
 
 if (WRITE) {
-  const out = join(ROOT, "data", "hunt", "nj-morris-party-pages-0825.json");
+  const out = join(ROOT, "data", "states", "nj", "hunt", "nj-morris-party-pages-0825.json");
   writeFileSync(
     out,
     `${JSON.stringify(

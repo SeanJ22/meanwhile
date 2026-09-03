@@ -7,7 +7,7 @@ import {
   BODY_COMPOSITIONS,
   compositionFor,
   membersOfBody,
-} from "../lib/registry/body-composition.ts";
+} from "../lib/registry/body-membership.ts";
 import { governingRosterHoldersForDivision, rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 import type { Registry } from "../lib/registry/types.ts";
@@ -34,7 +34,7 @@ import type { Registry } from "../lib/registry/types.ts";
  * 2. An inherited roster requires a recorded, cited authority.
  * 3. An unsourced body renders nobody rather than plausible people.
  *
- * They live outside `lib/registry/body-composition.ts` so a defect in the
+ * They live outside `lib/registry/body-membership.ts` so a defect in the
  * resolver cannot also disable the check on it.
  */
 
@@ -259,7 +259,7 @@ test("no reader surface reaches a body's members through a division roster", () 
     [],
     `${offenders.length} module(s) outside the allowed set reach a division roster:\n  ` +
       offenders.join("\n  ") +
-      "\n\nA body's members come from lib/registry/body-composition.ts. A division's " +
+      "\n\nA body's members come from lib/registry/body-membership.ts. A division's " +
       "representatives are a different question and have a different resolver.",
   );
 });

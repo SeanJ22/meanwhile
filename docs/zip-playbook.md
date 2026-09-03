@@ -915,7 +915,7 @@ people-on-the-ledger against people-read-this-run.
 | Command | What it does |
 |---|---|
 | `pnpm zip:divisions` | **A zip is an AREA.** Indexes `data/derived/zip-governments.json` — the 30 MB lattice-sampled edge list, too large to trace into a route — into a 108 KB per-zip list of OCD ids, for the zips in the covered states. `lib/ballot/zip-divisions.ts` unions it with the centroid answer so the ballot page shows every government whose territory reaches inside the zip. Never replaces the centroid answer; a zip absent from the index falls back to exactly the previous behaviour. This is what made Rockaway Borough visible to a 07866 reader. |
-| `pnpm nj:ballot [--write]` | Generates `data/ballot/nj-morris-2026.json` from the Morris County Clerk's CURRENT filed-candidate PDFs — 91 contests, 272 candidacies, each with a filed email — instead of a hand transcription that goes stale on the county's schedule. **Carries every previous id forward**, matching contests on division-plus-office and candidacies on contest-plus-filed-name, because reactions key on candidacy ids and re-minting one orphans a reader's answer invisibly. Refuses to guess a division: a jurisdiction that resolves to none produces NO contest and is NAMED in the run. Filed emails and street addresses go to a separate contacts file, never into the file the page reads. |
+| `pnpm nj:ballot [--write]` | Generates `data/states/nj/ballot/nj-morris-2026.json` from the Morris County Clerk's CURRENT filed-candidate PDFs — 91 contests, 272 candidacies, each with a filed email — instead of a hand transcription that goes stale on the county's schedule. **Carries every previous id forward**, matching contests on division-plus-office and candidacies on contest-plus-filed-name, because reactions key on candidacy ids and re-minting one orphans a reader's answer invisibly. Refuses to guess a division: a jurisdiction that resolves to none produces NO contest and is NAMED in the run. Filed emails and street addresses go to a separate contacts file, never into the file the page reads. |
 | `pnpm fec:directories` | RULING 69. Fetches the FEC's state-election-offices table and its Combined Federal/State Disclosure and Election Directory, and commits them as DATA — 58 and 349 rows — with provenance notes carrying the source URL, the fetch date, the byte count and the PDF's SHA-256. Reads the PDF link off the landing page's own hrefs, never hardcoded. Content-checks every response: a 200 whose body lacks the words the document must contain is not that document. |
 
 **Two shared modules, both extracted rather than left where they were found:**
@@ -2605,7 +2605,7 @@ Three of the walls re-walked this session were gone, and one of them was gone in
 a way that cost a whole tracker row:
 
 - **`gc.nh.gov` / `gencourt.state.nh.us`.** `CLAUDE.md` and
-  `data/ballot/nh-merrimack-2026.json` both say *"the General Court's own site
+  `data/states/nh/ballot/nh-merrimack-2026.json` both say *"the General Court's own site
   refuses every client this project has, browsers included"* (written
   2026-08-14). It answers a **plain rung-2 fetch at HTTP 200** and probably has
   for some time. Nobody re-checked, because the wall was written down and a
@@ -4370,7 +4370,7 @@ throwing it away.
 
 ## NJ2 8. A GENERATED BALLOT MUST CARRY THE OLD IDS
 
-Regenerating `data/ballot/nj-morris-2026.json` from the clerk's current filing
+Regenerating `data/states/nj/ballot/nj-morris-2026.json` from the clerk's current filing
 took it from 6 contests and 15 candidacies to 91 and 272, every one with a filed
 email. **Minting fresh ids broke nine guards, and what they were guarding is the
 real hazard: the REACTIONS store keys on candidacy ids.**
@@ -4721,7 +4721,7 @@ at rung 2, read its `href`s, and take the one whose path is about towns —
 website of every municipality in the county. **One document, 39 municipalities.**
 
 `pnpm nj:rosters --index` does exactly this and writes
-`data/hunt/nj-morris-municipal-sites.json`.
+`data/states/nj/hunt/nj-morris-municipal-sites.json`.
 
 **This travels.** Every county in the United States that has a website has a page
 listing its municipalities; almost none of them is at a path you can guess.

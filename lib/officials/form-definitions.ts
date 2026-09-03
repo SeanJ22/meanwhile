@@ -81,7 +81,7 @@
  * form is not in Title 40A chapters 60–64, and it has not been located. One
  * body is affected. It is a gap, not a decision.
  */
-import type { BodyBlurb as Definition } from "./body-blurbs.ts";
+import type { BodyBlurb as Definition } from "./body-description.ts";
 
 export interface FormDefinitionRow {
   /** `<state>:<form>`, exactly as `lib/officials/body-form.ts` stamps it. */

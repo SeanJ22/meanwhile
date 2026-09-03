@@ -20,7 +20,7 @@
           "components/map/meeting-panel.tsx",
           "components/map/popup/meeting-popup.tsx",
           "components/map/popup/popup-card.tsx",
-          "lib/ballot/measure-summaries.ts",
+          "lib/ballot/measure-summary.ts",
           "tests/measure-summaries.test.ts",
           "tests/visual-feedback-9-2.test.ts",
           "data/health/visual-checks.json",

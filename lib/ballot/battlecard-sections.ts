@@ -90,7 +90,7 @@ export const BATTLECARD_SECTIONS: readonly BattlecardSectionSpec[] = [
      * vote.
      *
      * What replaces it names OUR gap and then points at what IS there, which is
-     * the shape `NO_BODY_BLURB_LINE` already uses in `lib/officials/body-blurbs.ts`.
+     * the shape `NO_BODY_BLURB_LINE` already uses in `lib/officials/body-description.ts`.
      * A card may say it has not read the law. It may not say it will therefore
      * tell the reader nothing.
      */

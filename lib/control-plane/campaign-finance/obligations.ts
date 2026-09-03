@@ -3,7 +3,7 @@
  *
  * A domain model that only ever runs against its own fixtures proves nothing.
  * These two obligations are attached to REAL contests on a REAL committed
- * ballot, `data/ballot/az-pima-2026.json`, election `az-2026-11-03`, and every
+ * ballot, `data/states/az/ballot/az-pima-2026.json`, election `az-2026-11-03`, and every
  * fact in them is either read from a committed artifact at call time or cited to
  * the file it was read from. Where a value is unknown it is null and the
  * obligation stays OPEN. Nothing here invents a committee, an amount or a
@@ -84,9 +84,9 @@ export const PIMA_BODY_ID = "ocd-division/country:us/state:az/county:pima#govern
 
 export const AZ_PIMA_ELECTION_ID = "az-2026-11-03";
 export const AZ_PIMA_ELECTION_DATE = "2026-11-03";
-export const BALLOT_CITATION = "data/ballot/az-pima-2026.json";
+export const BALLOT_CITATION = "data/states/az/ballot/az-pima-2026.json";
 
-/** The four candidacies certified for AZ-06, as `data/ballot/az-pima-2026.json` lists them. */
+/** The four candidacies certified for AZ-06, as `data/states/az/ballot/az-pima-2026.json` lists them. */
 export const US_HOUSE_6_CANDIDACIES: readonly { candidacyId: string; displayName: string }[] = [
   { candidacyId: "ballot-az-pima:us-house-6:mendoza-joanna", displayName: "JoAnna Mendoza" },
   { candidacyId: "ballot-az-pima:us-house-6:bah-iman", displayName: "Iman Bah" },

@@ -57,7 +57,7 @@ respondents and corrupts the data being sold. **The default is REVERSIBLE and is
 the author's call.**
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging

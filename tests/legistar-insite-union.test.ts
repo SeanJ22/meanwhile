@@ -60,7 +60,7 @@ import {
   type UnionInstance,
 } from "../lib/sources/legistar-insite/horizon.ts";
 import { normalizeWithDrops } from "../lib/sources/legistar-insite/index.ts";
-import { INSITE_TENANTS } from "../lib/sources/legistar-insite/tenants.ts";
+import { INSITE_TENANTS } from "../lib/sources/legistar-insite/tenant-registry.ts";
 import type { LegistarInSiteRaw } from "../lib/sources/legistar-insite/index.ts";
 import type { InSiteRange } from "../lib/sources/legistar-insite/calendar.ts";
 

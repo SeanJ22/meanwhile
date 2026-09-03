@@ -39,6 +39,7 @@
 
 import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { ballotPath } from "../lib/holdings/files.ts";
 
 import { allCandidateLinks } from "../lib/ballot/candidate-sites.ts";
 import { PORTRAIT_ACCEPT, decodeImage, decodeRecord } from "../lib/photos/decode.ts";
@@ -95,7 +96,7 @@ let queued = 0;
 let decodeRefused = 0;
 
 for (const file of BALLOTS) {
-  const data = JSON.parse(readFileSync(join(ROOT, "data", "ballot", file), "utf8")) as {
+  const data = JSON.parse(readFileSync(join(ROOT, ballotPath(file)), "utf8")) as {
     candidacies?: { id: string; contestId: string; givenName: string; familyName: string }[];
   };
   for (const c of data.candidacies ?? []) {

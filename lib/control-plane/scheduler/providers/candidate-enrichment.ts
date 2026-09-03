@@ -15,7 +15,7 @@
  *
  * This provider makes the enrichment fields STANDING OBLIGATIONS against each
  * state's canonical candidate ACQUISITION DENOMINATOR
- * (`data/hunt/<state>-candidate-universe-<cycle>.json`), so the work is owed
+ * (`data/states/<state>/hunt/<state>-candidate-universe-<cycle>.json`), so the work is owed
  * before a reader arrives rather than triggered by one.
  *
  * **The denominator is labelled, not assumed "statewide" (R-C9).** Only a
@@ -146,7 +146,7 @@ function siteRoute(c: CanonicalCandidacy, url: string): RouteDescriptor {
       "wrote down is spending tokens on a known answer",
     open: { kind: "HTTP_GET", url, headers: identifiedHeaders() },
     citation:
-      "data/hunt/<state>-candidate-universe-2026.json — the recorded campaign site for this canonical " +
+      "data/states/<state>/hunt/<state>-candidate-universe-2026.json — the recorded campaign site for this canonical " +
       "candidacy, carried forward from data/ballot/candidate-links-2026.json",
   };
 }
@@ -353,7 +353,7 @@ function routesForCandidacy(
 }
 
 function readUniverse(root: string, stateCode: string): CandidateUniverse | null {
-  const path = join(root, "data", "hunt", `${stateCode}-candidate-universe-${CYCLE}.json`);
+  const path = join(root, "data", "states", stateCode, "hunt", `${stateCode}-candidate-universe-${CYCLE}.json`);
   if (!existsSync(path)) return null;
   return JSON.parse(readFileSync(path, "utf8")) as CandidateUniverse;
 }
@@ -386,14 +386,14 @@ export function candidateEnrichmentProvider(): ObligationProvider {
           universe = readUniverse(ctx.root, stateCode);
         } catch (error) {
           failures.push(
-            `data/hunt/${stateCode}-candidate-universe-${CYCLE}.json did not parse ` +
+            `data/states/${stateCode}/hunt/${stateCode}-candidate-universe-${CYCLE}.json did not parse ` +
               `(${error instanceof Error ? error.message : String(error)})`,
           );
           continue;
         }
         if (universe === null) {
           failures.push(
-            `data/hunt/${stateCode}-candidate-universe-${CYCLE}.json is ABSENT. Regenerate with ` +
+            `data/states/${stateCode}/hunt/${stateCode}-candidate-universe-${CYCLE}.json is ABSENT. Regenerate with ` +
               "`pnpm candidates:universe`. A missing denominator is a missing file, never a state " +
               "with no candidates.",
           );
@@ -401,7 +401,7 @@ export function candidateEnrichmentProvider(): ObligationProvider {
         }
         if (universe.candidacies.length === 0) {
           failures.push(
-            `data/hunt/${stateCode}-candidate-universe-${CYCLE}.json parsed and holds ZERO candidacies ` +
+            `data/states/${stateCode}/hunt/${stateCode}-candidate-universe-${CYCLE}.json parsed and holds ZERO candidacies ` +
               "— a FAILED read, never an election with no candidates",
           );
           continue;

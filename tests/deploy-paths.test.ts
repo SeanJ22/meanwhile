@@ -27,6 +27,9 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join, resolve, dirname, sep } from "node:path";
+import { ROSTER_FILES } from "../lib/coverage/artifacts.ts";
+import { projectStateHoldings, rosterPath } from "../lib/holdings/files.ts";
+import { BODY_TERRITORY_FILE } from "../lib/registry/body-territory.ts";
 
 import {
   NON_SHIPPING_PREFIXES,
@@ -35,6 +38,41 @@ import {
 } from "../lib/ops/deploy-paths.ts";
 
 const ROOT = resolve(import.meta.dirname, "..");
+
+test("built registry routes contain their canonical geometry and roster inputs", (context) => {
+  if (!existsSync(join(ROOT, ".next", "BUILD_ID"))) {
+    context.skip("No completed production build; canonical holdings trace proof requires pnpm build.");
+    return;
+  }
+  const resolver = "data/derived/resolver-geometry.json";
+  const manifest = JSON.parse(readFileSync(join(ROOT, resolver), "utf8")) as { files: string[] };
+  assert.ok(manifest.files.length >= 20, "resolver input denominator unexpectedly empty or partial");
+  const expected = [resolver, ...manifest.files, BODY_TERRITORY_FILE, ...ROSTER_FILES.map(rosterPath)];
+  const routes = [
+    "api/address/resolve/route", "api/ballot/scope/route", "api/demand-signal/route",
+    "api/meetings/route", "api/reactions/route", "api/representation/[...division]/route",
+    "api/speak/route", "api/votes/route", "api/voting-sites/route", "api/ask/grounded/route",
+    "ballot/page", "about-area/page",
+  ];
+  for (const route of routes) {
+    const traceFile = join(ROOT, ".next", "server", "app", `${route}.js.nft.json`);
+    assert.ok(existsSync(traceFile), `${route}: production trace is absent`);
+    const trace = JSON.parse(readFileSync(traceFile, "utf8")) as { files: string[] };
+    const traced = new Set(trace.files.map((file) => resolve(dirname(traceFile), file)));
+    const missing = expected.filter((file) => !traced.has(resolve(ROOT, file)));
+    assert.deepEqual(missing, [], `${route}: canonical holdings missing from production bundle`);
+  }
+});
+
+test("a completed production build has current state serving projections", (context) => {
+  if (!existsSync(join(ROOT, ".next", "BUILD_ID"))) {
+    context.skip("No completed production build; serving projection proof requires pnpm build.");
+    return;
+  }
+  const projection = projectStateHoldings(ROOT, true);
+  assert.ok(projection.files > 0, "no canonical state geo/street inputs were examined");
+  assert.deepEqual(projection.issues, [], "production serving copies differ from their canonical holdings");
+});
 
 test("every non-shipping prefix carries a stated reason", () => {
   assert.ok(NON_SHIPPING_PREFIXES.length > 0, "the allowlist is empty");
@@ -56,6 +94,8 @@ test("the shipping directories are NOT on the allowlist", () => {
     "components/ballot/candidate-card.tsx",
     "data/meetings-snapshot.json",
     "data/fec/fec-2026.json",
+    "data/states/az/geo/sldl-04.geojson",
+    "data/states/nh/officials/officeholders-33.json",
     "public/geo/zcta.json",
     "hooks/use-map.ts",
     "next.config.ts",

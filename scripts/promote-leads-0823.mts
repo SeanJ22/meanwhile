@@ -64,9 +64,9 @@ import {
 import { politeGetText } from "../lib/sources/http.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const CAMPAIGN_LEADS = join(ROOT, "data/hunt/campaign-site-leads-nj-morris.json");
-const WIKI_LEADS = join(ROOT, "data/hunt/wiki-leader-leads-07866.json");
-const OUT = join(ROOT, "data/hunt/lead-promotion-0823.json");
+const CAMPAIGN_LEADS = join(ROOT, "data/states/nj/hunt/campaign-site-leads-nj-morris.json");
+const WIKI_LEADS = join(ROOT, "data/states/nj/hunt/wiki-leader-leads-07866.json");
+const OUT = join(ROOT, "data/states/nj/hunt/lead-promotion-0823.json");
 
 /** Today, passed in rather than read from a clock. `pnpm stamp` is the source. */
 const STAMP = process.env.WTP_STAMP ?? "";

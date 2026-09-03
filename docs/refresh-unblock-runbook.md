@@ -274,7 +274,7 @@ Then read back, in this order — a green colour is not the proof, these are:
    | Source | Artifact | The as-of field |
    | --- | --- | --- |
    | `meetings` | `data/meetings-snapshot.json` | `generatedAt` (ISO); per row `provenance.collectedAt` |
-   | `nj-filing` | `data/ballot/nj-morris-2026.json` | `curatedAt` (`YYYY-MM-DD`); per candidacy `provenance.collectedAt`; `removals[].absentFrom.collectedAt` |
+   | `nj-filing` | `data/states/nj/ballot/nj-morris-2026.json` | `curatedAt` (`YYYY-MM-DD`); per candidacy `provenance.collectedAt`; `removals[].absentFrom.collectedAt` |
    | `nj-filing` | `data/questionnaire/invitations-nj-morris-2026.json` | the embedded filing `collectedAt` the generator carries |
    | `fec` | `data/fec/fec-2026.json` | `fetchedAt` (ISO) |
    | `legiscan` | `data/votes/state-votes-snapshot.json` | `generatedAt` (ISO); per dataset `datasetHash`, `datasetDate`, `downloadedAt` — the hash is the publisher's own version, so an unchanged hash is an honest `UNCHANGED` |
@@ -284,11 +284,11 @@ Then read back, in this order — a green colour is not the proof, these are:
    for f in data/meetings-snapshot.json data/fec/fec-2026.json data/votes/state-votes-snapshot.json; do
      echo "== $f"; git show origin/main~1:$f | head -c 300 | tr '\n' ' '; echo; git show origin/main:$f | head -c 300 | tr '\n' ' '; echo;
    done
-   git show origin/main:data/ballot/nj-morris-2026.json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const b=JSON.parse(s);console.log(b.curatedAt,b.candidacies.length,(b.removals||[]).length)})'
+   git show origin/main:data/states/nj/ballot/nj-morris-2026.json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const b=JSON.parse(s);console.log(b.curatedAt,b.candidacies.length,(b.removals||[]).length)})'
    ```
 5. **The reader-visible check** — `data/meetings-snapshot.json` carries New
    London, NH with concluded meetings (`status: "CONCLUDED"`, dates in the
-   month before the run), and `data/ballot/nj-morris-2026.json` carries the
+   month before the run), and `data/states/nj/ballot/nj-morris-2026.json` carries the
    `removals` record for the CD-7 candidacy the clerk removed on 2026-09-01,
    with both documents cited.
 

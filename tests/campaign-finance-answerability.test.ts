@@ -13,8 +13,8 @@
  * way to test the independent-expenditure path at all, because **this
  * repository holds no independent-expenditure data of any kind** (tracker D51,
  * blocked behind PB10/D23). Tests that assert about the WORLD read the committed
- * artifacts: `data/fec/fec-2026.json`, `data/ballot/az-pima-2026.json` and
- * `data/campaign-finance/az-pima-2026-held.json`.
+ * artifacts: `data/fec/fec-2026.json`, `data/states/az/ballot/az-pima-2026.json` and
+ * `data/states/az/campaign-finance/az-pima-2026-held.json`.
  *
  * ## Every seeded failure has a POSITIVE CONTROL
  *
@@ -199,7 +199,7 @@ function side(over: Partial<MeasureSideCoverage> & { side: "SUPPORT" | "OPPOSE" 
 
 test("FEDERAL CHAIN: the ballot's four candidacies resolve to the FEC and carry real held records", () => {
   const ballot = JSON.parse(
-    readFileSync(join(ROOT, "data", "ballot", "az-pima-2026.json"), "utf8"),
+    readFileSync(join(ROOT, "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8"),
   ) as { candidacies: { id: string; contestId: string; familyName: string }[] };
 
   // The DENOMINATOR comes from the ballot, never from what we found.

@@ -34,7 +34,7 @@ import {
 
 const ROOT = process.cwd();
 const WRITE = process.argv.includes("--write");
-const ARTIFACT = "data/hunt/wikipedia-nj-morris.json";
+const ARTIFACT = "data/states/nj/hunt/wikipedia-nj-morris.json";
 
 interface WalkArtifact {
   walkedAt?: string;

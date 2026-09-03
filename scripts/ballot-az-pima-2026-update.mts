@@ -57,7 +57,7 @@ import { join } from "node:path";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { today } from "./doc-dates.mjs";
 
-const FILE = join(process.cwd(), "data", "ballot", "az-pima-2026.json");
+const FILE = join(process.cwd(), "data", "states", "az", "ballot", "az-pima-2026.json");
 const STAMP = today();
 
 const AZ = "ocd-division/country:us/state:az";

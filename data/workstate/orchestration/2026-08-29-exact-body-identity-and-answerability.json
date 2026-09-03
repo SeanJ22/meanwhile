@@ -39,7 +39,7 @@
       "owns": {
         "paths": [
           "lib/officials/body-definitions.ts",
-          "lib/officials/body-blurbs.ts",
+          "data/states/az/reference/body-blurbs.json",
           "lib/meetings/jurisdiction-badge.ts",
           "components/map/map-entry.tsx",
           "tests/body-definition-body-keyed.test.ts",
@@ -107,7 +107,7 @@
           "data/hunt/85641-obligation-ledger.json",
           "docs/evidence/85641-detective-2026-08-29.md"
         ],
-        "data": ["data/hunt/85641-*"]
+        "data": ["data/states/az/hunt/85641-*"]
       },
       "produces": ["pima-outcome-routes", "vail-roster-verification", "granicus-permission-finding"],
       "consumes": [],

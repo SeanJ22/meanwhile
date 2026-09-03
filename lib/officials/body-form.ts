@@ -53,7 +53,7 @@
  * group keeps it apart from the second.
  */
 
-import type { BodyDivisionType } from "./body-blurbs.ts";
+import type { BodyDivisionType } from "./body-description.ts";
 
 /** `nj:township`, `nh:town`, `az:county` — state-scoped, always. */
 export type FormKey = string;

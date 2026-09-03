@@ -47,12 +47,12 @@ const WRITE = process.argv.includes("--write");
 const TODAY = today();
 
 const MUNICIPALITIES: string[] = (
-  JSON.parse(readFileSync(join(ROOT, "data", "hunt", "roster-pages-muni-sites-nj-morris.json"), "utf8")) as {
+  JSON.parse(readFileSync(join(ROOT, "data", "states", "nj", "hunt", "roster-pages-muni-sites-nj-morris.json"), "utf8")) as {
     sites: { municipality: string }[];
   }
 ).sites.map((s) => s.municipality);
 
-const ballot = JSON.parse(readFileSync(join(ROOT, "data", "ballot", "nj-morris-2026.json"), "utf8")) as {
+const ballot = JSON.parse(readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8")) as {
   contests: { id: string; title: string }[];
   candidacies: { id: string; contestId: string; givenName: string; familyName: string }[];
 };
@@ -210,7 +210,7 @@ if (accounting.outcome !== "CONSERVED") {
 }
 
 if (WRITE) {
-  const out = join(ROOT, "data", "hunt", "nj-morris-press-surface-0825.json");
+  const out = join(ROOT, "data", "states", "nj", "hunt", "nj-morris-press-surface-0825.json");
   writeFileSync(
     out,
     `${JSON.stringify(

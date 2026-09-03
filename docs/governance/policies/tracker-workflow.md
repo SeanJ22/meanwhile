@@ -212,7 +212,7 @@ RULING 37's second half is untouched: **sessions still OPEN Needs Sean rows**,
 and routing something to his attention remains the session's job.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -291,7 +291,7 @@ correct.**
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -388,7 +388,7 @@ scheduled double failure STILL raises a row*, so narrowing the input cannot have
 narrowed the detector.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -444,7 +444,7 @@ that had already concluded — asserted in both directions.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -498,7 +498,7 @@ that has to be restated every time is a rule that will eventually be left out of
 a brief, and the session that reads that brief will stop and wait.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -553,7 +553,7 @@ accumulation RULING 79 was adopted over, arriving through a different door.
   him.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging

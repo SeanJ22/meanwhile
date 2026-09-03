@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { stateForRosterFile } from "../holdings/runtime-paths.ts";
 import { join } from "node:path";
 
 import { nameParts, splitDisplayName } from "../ballot/incumbency.ts";
@@ -181,7 +182,9 @@ function loadRoster(): VoteSubjectSeat[] {
     let set: RosterSet | null = null;
     try {
       set = JSON.parse(
-        readFileSync(join(process.cwd(), "lib", "registry", file), "utf8"),
+        (stateForRosterFile(file) === null
+          ? readFileSync(join(process.cwd(), "lib", "registry", "officeholders-us.json"), "utf8")
+          : readFileSync(join(process.cwd(), "data", "states", stateForRosterFile(file)!, "officials", file), "utf8")),
       ) as RosterSet;
     } catch {
       /* A committed file that will not read is a real state. It contributes

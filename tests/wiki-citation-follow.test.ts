@@ -28,7 +28,7 @@ interface Row {
 }
 
 const walk = JSON.parse(
-  readFileSync(join(process.cwd(), "data/hunt/wiki-citation-follow.json"), "utf8"),
+  readFileSync(join(process.cwd(), "data/states/nj/hunt/wiki-citation-follow.json"), "utf8"),
 ) as { walkedAt: string; tally: Record<string, number>; rows: Row[] };
 
 describe("the wikipedia-citation-follow route", () => {

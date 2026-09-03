@@ -1,3 +1,5 @@
+import { geometryPath, rosterPath } from "../lib/holdings/files.ts";
+import { stateHoldingPath } from "../lib/holdings/paths.ts";
 /**
  * THE COVERAGE MANIFEST, AND THE ONE-EDIT CLAIM (AUD-06, g18, 2026-08-18).
  *
@@ -70,13 +72,13 @@ test("the manifest's generated artifacts are all committed on disk", () => {
   // A manifest that names files nobody generated is a manifest that lies about
   // coverage. Every artifact it claims is opened here.
   for (const file of ROSTER_FILES) {
-    statSync(join(ROOT, "lib", "registry", file));
+    statSync(join(ROOT, rosterPath(file)));
   }
-  for (const { file } of BALLOT_FILES) {
-    statSync(join(ROOT, "data", "ballot", file));
+  for (const { file, state } of BALLOT_FILES) {
+    statSync(join(ROOT, stateHoldingPath(state.toLowerCase(), "ballot", file)));
   }
   for (const f of geoFilesFor("cd119", "sldu", "sldl", "place", "cousub", "unsd", "elsd", "scsd")) {
-    statSync(join(ROOT, "public", "geo", f));
+    statSync(join(ROOT, geometryPath(f)));
   }
   assert.equal(ROSTER_FILES.length, COVERED_STATES.length + 1, "federal roster plus one per state");
   assert.equal(BALLOT_FILES.length, COVERED_STATES.length);

@@ -11,7 +11,7 @@
  *
  * The observation was an inventory one rather than a research one. NJ Hunt 4
  * spent its whole search budget walking 272 candidates and committed the result
- * as `data/hunt/nj-hunt4-search.json` — **858 hits across 179 of the 272**, each
+ * as `data/states/nj/hunt/nj-hunt4-search.json` — **858 hits across 179 of the 272**, each
  * with a URL, a title and a snippet. Campaign site then stood at **0 of 272**.
  *
  * Those two facts cannot both be doing their job. The corpus was collected to
@@ -56,8 +56,8 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const ROOT = process.cwd();
-const CORPUS = "data/hunt/nj-hunt4-search.json";
-const OUT = "data/hunt/campaign-site-leads-nj-morris.json";
+const CORPUS = "data/states/nj/hunt/nj-hunt4-search.json";
+const OUT = "data/states/nj/hunt/campaign-site-leads-nj-morris.json";
 
 interface Hit {
   url: string;

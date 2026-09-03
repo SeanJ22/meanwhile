@@ -21,6 +21,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { parse } from "yaml";
 import { GATES } from "../scripts/gates.mjs";
 
 const WORKFLOW = ".github/workflows/build-check.yml";
@@ -52,6 +53,14 @@ const NOT_A_GATE = [
   "corepack pnpm exec playwright install --with-deps chromium",
   "echo \"path=$(corepack pnpm store path --silent)\" >> \"$GITHUB_OUTPUT\"",
   "node scripts/trace-census.mjs --files trace-files.txt",
+  // Shallow-checkout preparation for exact equality with the frozen holdings base.
+  `holdings_base=$(node --input-type=module -e "import{readFileSync}from'node:fs';console.log(JSON.parse(readFileSync('data/state-holdings/move-plan.json','utf8')).baseSha)")`,
+  '[[ "$holdings_base" =~ ^[0-9a-f]{40}$ ]] || exit 1',
+  'git cat-file -e "${holdings_base}^{commit}" 2>/dev/null || git fetch --no-tags --depth=1 origin "$holdings_base"',
+  // The upstream summaries merged during migration have their own exact-source proof.
+  `holdings_update=$(node --input-type=module -e "import{readFileSync}from'node:fs';console.log(JSON.parse(readFileSync('data/states/az/ballot/measure-summaries.json','utf8')).source.integratedUpdate.commit)")`,
+  '[[ "$holdings_update" =~ ^[0-9a-f]{40}$ ]] || exit 1',
+  'git cat-file -e "${holdings_update}^{commit}" 2>/dev/null || git fetch --no-tags --depth=1 origin "$holdings_update"',
 ];
 
 /*
@@ -64,22 +73,35 @@ const NOT_A_GATE = [
  * for a file nothing here parses.
  */
 
-function ciCommands(): string[] {
-  const src = readFileSync(WORKFLOW, "utf8");
-  const found: string[] = [];
-  /* `run:` steps, both the inline and the block form. */
-  const re = /^\s*run:\s*(?:\|\s*\n((?:\s+.*\n)+)|(.+))$/gm;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(src)) !== null) {
-    const block = m[1];
-    const inline = m[2];
-    const lines = block
-      ? block.split("\n").map((l) => l.trim()).filter(Boolean)
-      : [inline.trim()];
-    for (const line of lines) found.push(line);
-  }
+function ciCommands(src = readFileSync(WORKFLOW, "utf8")): string[] {
+  // Parse YAML boundaries: a whitespace regex swallowed subsequent steps and
+  // comments after the first block-form run, hiding the actual gates.
+  const workflow = parse(src) as { jobs: Record<string, { steps?: { run?: string }[] }> };
+  const found = Object.values(workflow.jobs).flatMap((job) =>
+    (job.steps ?? []).flatMap((step) =>
+      (step.run ?? "").split("\n").map((line) => line.trim())
+        .filter((line) => line && !line.startsWith("#")),
+    ),
+  );
   return found.filter((c) => !NOT_A_GATE.includes(c));
 }
+
+test("gate parity · block commands cannot consume later steps or turn comments into gates", () => {
+  const commands = ciCommands(`jobs:
+  gates:
+    steps:
+      - run: |
+          corepack enable
+          pnpm test
+      # governance:compile is forbidden, not executed here.
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - run: pnpm lint
+      - run: pnpm governance:compile
+`);
+  assert.deepEqual(commands, ["pnpm test", "pnpm lint", "pnpm governance:compile"]);
+});
 
 /** `corepack pnpm run build` and `pnpm run build` are the same gate. */
 function normalise(command: string): string {

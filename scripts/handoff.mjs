@@ -110,6 +110,7 @@ import { readWorkbook } from "./xlsx.mjs";
 import { tryRun as sharedTryRun } from "./try-run.mjs";
 import { verdictForDeploys } from "../lib/ops/deploy-verdict.ts";
 import { loadEnvLocal } from "./load-env-local.mjs";
+import { mergeCheckedPullRequest } from "./ship-pr-checks.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(here, "..");
@@ -871,6 +872,7 @@ if (!CHECK_ONLY) {
   const statusGenerators = [
     { label: "status ledger", command: "pnpm run status:ledger", path: "docs/status-ledger.md" },
     { label: "repo inventory", command: "pnpm run repo-map", path: "docs/repo-inventory.md" },
+    { label: "state manifests", command: "pnpm run state-manifest", path: "docs/states", required: true },
   ];
   for (const g of statusGenerators) {
     if (CHECK_ONLY) {
@@ -904,7 +906,7 @@ if (!CHECK_ONLY) {
           .at(-1);
         ok(g.label, line ?? `${g.path} regenerated`);
       } catch (error) {
-        warn(g.label, `${g.command} did not run — ${String(error.message).split("\n")[0]}`);
+        (g.required ? fail : warn)(g.label, `${g.command} did not run — ${String(error.message).split("\n")[0]}`);
       }
     }
   }
@@ -1482,7 +1484,7 @@ function buildGate() {
  * Runs only under `--ship`, and only from a clean tree — see the header. Each
  * step is skipped when it is already done, so running it twice is harmless.
  */
-function ship() {
+async function ship() {
   /*
    * **THE GENERATED FILES THIS RUN ITSELF WROTE, COMMITTED BEFORE THE PUSH.**
    * (2026-08-25, Item 16.)
@@ -1507,6 +1509,7 @@ function ship() {
     "docs/coverage-matrix.csv",
     "docs/status-ledger.md",
     "docs/repo-inventory.md",
+    "docs/states",
   ].filter((path) => git("status", "--porcelain", "--", path) !== "");
   if (generated.length > 0) {
     try {
@@ -1535,7 +1538,12 @@ function ship() {
     fail("ship", "refused — gh is not available");
     return;
   }
+  const testedHead = git("rev-parse", "HEAD");
   if (!buildGate()) return;
+  if (git("rev-parse", "HEAD") !== testedHead) {
+    fail("ship · head", "HEAD changed during local gates — nothing pushed or merged");
+    return;
+  }
 
   // R07's second gap: this used to refuse outright when a branch had no
   // upstream, so the first --ship of every session failed until someone ran
@@ -1598,12 +1606,14 @@ function ship() {
     ok("ship · pr", `reusing open #${number}`);
   }
 
-  // --merge to match this repo's existing history, which is merge commits.
-  const merged = tryRun("gh", ["pr", "merge", String(number), "--merge"]);
-  if (merged === null) {
+  // A push starts CI. Wait here instead of making another handoff generate
+  // another context commit and restart those checks. Bind the merge to the head
+  // that passed this invocation's full local gates; protection still applies.
+  const merged = await mergeCheckedPullRequest({ number, head: testedHead, run: tryRun });
+  if (merged !== "merged") {
     fail(
       "ship · merge",
-      `#${number} did not merge — checks pending, or branch protection wants a review`,
+      `#${number} did not merge — ${merged}; no protection was bypassed`,
     );
     return;
   }
@@ -1763,7 +1773,7 @@ async function verifyDeployLanded(expectedSha) {
 }
 
 if (SHIP) {
-  ship();
+  await ship();
 
   // Only worth asking once the merge and fast-forward actually succeeded —
   // otherwise the SHA we would be waiting for is not the one being deployed.

@@ -1,3 +1,4 @@
+import { geometryPath, rosterPath } from "../lib/holdings/files.ts";
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -50,7 +51,7 @@ const ZIPS: Record<string, [number, number]> = {
 
 function rosterPeopleCount(name: string): number {
   const parsed = JSON.parse(
-    readFileSync(join(ROOT, "lib", "registry", name), "utf8"),
+    readFileSync(join(ROOT, rosterPath(name)), "utf8"),
   ) as { officeholders?: unknown[]; people?: unknown[] };
   const list = parsed.officeholders ?? parsed.people ?? [];
   return Array.isArray(list) ? list.length : 0;
@@ -114,7 +115,7 @@ test("every district layer's committed files exist and hold features", () => {
   for (const type of DISTRICT_TYPES) {
     for (const file of DISTRICT_LAYERS[type].files) {
       const parsed = JSON.parse(
-        readFileSync(join(ROOT, "public", "geo", file), "utf8"),
+        readFileSync(join(ROOT, geometryPath(file)), "utf8"),
       ) as { features?: unknown[] };
       assert.ok(
         Array.isArray(parsed.features) && parsed.features.length > 0,
@@ -173,7 +174,7 @@ test("every body the who-governs card counts is reachable on the map with defaul
       for (const file of DISTRICT_LAYERS[type as (typeof DISTRICT_TYPES)[number]]
         .files) {
         const parsed = JSON.parse(
-          readFileSync(join(ROOT, "public", "geo", file), "utf8"),
+          readFileSync(join(ROOT, geometryPath(file)), "utf8"),
         ) as { features: Array<{ properties: { ocdId?: string } }> };
         for (const feature of parsed.features) {
           if (feature.properties.ocdId) ids.add(feature.properties.ocdId);

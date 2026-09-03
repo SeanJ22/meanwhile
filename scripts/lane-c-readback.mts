@@ -26,12 +26,13 @@
  */
 import {
   controlPlaneUrlFromEnv,
-  createPgRepositories,
   CONTROL_PLANE_URL_VAR,
 } from "../lib/control-plane/repository/pg-store.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
+import { readHoldingsControlPlane } from "../lib/control-plane/repository/holdings-readback.ts";
 
-const prefix = process.argv[2] ?? "";
+const json = process.argv.includes("--json");
+const prefix = process.argv.slice(2).find((arg) => !arg.startsWith("--")) ?? "";
 const url = controlPlaneUrlFromEnv();
 if (url === null) {
   console.error(
@@ -40,13 +41,14 @@ if (url === null) {
   );
   process.exit(1);
 }
-const repos = await createPgRepositories(url, new Date().toISOString());
+const readback = await readHoldingsControlPlane(url);
+if (json) {
+  console.log(JSON.stringify(readback, null, 2));
+  process.exit(0);
+}
+const { obligations, occurrences, debts } = readback;
 
-const obligations = (await repos.obligations.list()).map((r) => r.value);
-const occurrences = (await repos.occurrences.list()).map((r) => r.value);
-const debts = (await repos.debts.list()).map((r) => r.value);
-
-console.log(`READ BACK FROM THE DURABLE CONTROL PLANE — ${repos.describe()}`);
+console.log(`READ BACK FROM THE DURABLE CONTROL PLANE — Postgres control-plane repositories (schema v${readback.source.schemaVersion}, connection named by ${CONTROL_PLANE_URL_VAR})`);
 
 /*
  * THE FLOOR IS ON THE INSTRUMENT, NOT ON THE DOMAIN. (RULING 159.)
@@ -102,7 +104,7 @@ console.log(
  */
 const routeTaskToObligation = new Map<string, string>();
 for (const o of occ) routeTaskToObligation.set(o.routeTaskId, o.obligationId);
-const commits = (await repos.dispositions.readAll()).filter((c) =>
+const commits = readback.dispositions.filter((c) =>
   routeTaskToObligation.has(c.routeTaskId),
 );
 

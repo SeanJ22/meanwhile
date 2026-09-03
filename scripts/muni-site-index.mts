@@ -3,8 +3,8 @@
  * (NJ Hunt 6, 2026-08-22. Branch `wikipedia-external-links-official-site`, Tier A.)
  *
  * ```
- * pnpm muni:sites --wiki data/hunt/wikipedia-nj-morris.json --county data/hunt/nj-morris-municipal-sites.json
- * pnpm muni:sites --wiki <file> --out data/hunt/muni-sites-nj-morris.json
+ * pnpm muni:sites --wiki data/states/nj/hunt/wikipedia-nj-morris.json --county data/states/nj/hunt/nj-morris-municipal-sites.json
+ * pnpm muni:sites --wiki <file> --out data/states/nj/hunt/muni-sites-nj-morris.json
  * ```
  *
  * ## What this fixes, and it is the same shape twice
@@ -20,7 +20,7 @@
  * The second branch was already walked and sitting in the repo. Every Wikipedia
  * municipality article carries an External links section, and the first entry is
  * the municipality's own website — `rockawaytownship.org` was in
- * `data/hunt/wikipedia-nj-morris.json` the whole time, beside the school
+ * `data/states/nj/hunt/wikipedia-nj-morris.json` the whole time, beside the school
  * district's site. RULING 85's two-click test, answered after the fact.
  *
  * ## A guessed identifier yields a LEAD, never a HIT
@@ -353,7 +353,7 @@ const outArg = arg("--out");
 
 if (wikiPath === undefined) {
   console.error(
-    "pnpm muni:sites --wiki data/hunt/wikipedia-nj-morris.json [--county data/hunt/nj-morris-municipal-sites.json] [--out <file>]",
+    "pnpm muni:sites --wiki data/states/nj/hunt/wikipedia-nj-morris.json [--county data/states/nj/hunt/nj-morris-municipal-sites.json] [--out <file>]",
   );
   process.exit(2);
 }

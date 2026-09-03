@@ -62,6 +62,7 @@
  */
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
+import { ballotPath } from "../lib/holdings/files.ts";
 import { fileURLToPath } from "node:url";
 
 import { stripImageMetadata } from "./strip-image-metadata.mts";
@@ -140,7 +141,7 @@ interface LinksFile {
 function validCandidacyKeys(): Set<string> {
   const keys = new Set<string>();
   for (const file of ["nj-morris-2026.json", "nh-merrimack-2026.json", "az-pima-2026.json"]) {
-    const path = join(ROOT, "data", "ballot", file);
+    const path = join(ROOT, ballotPath(file));
     if (!existsSync(path)) continue;
     const set = JSON.parse(readFileSync(path, "utf8")) as {
       candidacies: { id: string }[];

@@ -55,7 +55,7 @@ interface Winner {
 }
 
 const certified = JSON.parse(
-  readFileSync(join(ROOT, "data", "hunt", "nj-morris-certified-winners.json"), "utf8"),
+  readFileSync(join(ROOT, "data", "states", "nj", "hunt", "nj-morris-certified-winners.json"), "utf8"),
 ) as { winners: Winner[]; walkedAt: string; documents?: unknown[] };
 
 /**

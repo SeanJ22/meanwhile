@@ -12,7 +12,7 @@ import {
   UPCOMING_HORIZON_DAYS,
 } from "../../meetings/constants.ts";
 import { toZonedIso } from "../../time/zoned.ts";
-import { isPlaceless } from "../legistar/clients.ts";
+import { isPlaceless } from "../legistar/client-registry.ts";
 import {
   accountedNormalize,
   type Accounted,
@@ -71,7 +71,7 @@ import {
   findTenantVenue,
   isWiredBody,
   type InSiteTenant,
-} from "./tenants.ts";
+} from "./tenant-registry.ts";
 
 /**
  * **Legistar InSite — the vendor's own portal, read directly.** (2026-08-28.)

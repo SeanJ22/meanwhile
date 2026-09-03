@@ -63,7 +63,7 @@ const walk = JSON.parse(readFileSync(walkPath, "utf8")) as {
   }[];
 };
 
-const ballot = JSON.parse(readFileSync(join(ROOT, "data", "ballot", "nj-morris-2026.json"), "utf8")) as {
+const ballot = JSON.parse(readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8")) as {
   candidacies: { id: string }[];
 };
 const onBallot = new Set(ballot.candidacies.map((c) => c.id));

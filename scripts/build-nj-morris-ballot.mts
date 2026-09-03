@@ -6,7 +6,7 @@
  *
  * ## Why this replaces a hand transcription
  *
- * `data/ballot/nj-morris-2026.json` was transcribed by hand from the clerk's
+ * `data/states/nj/ballot/nj-morris-2026.json` was transcribed by hand from the clerk's
  * 2026-08-07 revision and carried six contests: two federal, one county, and
  * three Rockaway TOWNSHIP school contests. Rockaway BOROUGH — a separate
  * municipality inside the same zip, running a four-candidate council race —
@@ -70,9 +70,9 @@ const UA = "we-the-people/1.0 (civic data; seanj22@gmail.com)";
 
 type Feature = { properties: Record<string, string> };
 const layers = new Map<string, Feature[]>();
-for (const name of readdirSync(join(ROOT, "public", "geo"))) {
+for (const name of readdirSync(join(ROOT, "data", "states", "nj", "geo"))) {
   if (!/^(place|cousub|unsd|elsd|scsd)-34\.geojson$/.test(name)) continue;
-  const parsed = JSON.parse(readFileSync(join(ROOT, "public", "geo", name), "utf8")) as {
+  const parsed = JSON.parse(readFileSync(join(ROOT, "data", "states", "nj", "geo", name), "utf8")) as {
     features?: Feature[];
   };
   layers.set(name.replace(/-34\.geojson$/, ""), parsed.features ?? []);
@@ -195,7 +195,7 @@ type PriorFile = {
 let prior: PriorFile = { contests: [], candidacies: [] };
 try {
   prior = JSON.parse(
-    readFileSync(join(ROOT, "data", "ballot", "nj-morris-2026.json"), "utf8"),
+    readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8"),
   ) as PriorFile;
 } catch {
   /* No previous file is a first run, not an error. Stated in the counts below. */
@@ -612,7 +612,7 @@ const out = {
     `machine-readable and candidates render alphabetically by surname. The filings carry party, slogan, ` +
     `term and seats; they state neither incumbency nor websites, so those fields are null throughout. ` +
     `Filed emails and street addresses are contact data and are written to ` +
-    `data/ballot/nj-morris-2026-contacts.json rather than into this file.`,
+    `data/states/nj/ballot/nj-morris-2026-contacts.json rather than into this file.`,
   election: ELECTION,
   contests: [...contests.values()].map((b) => ({
     id: b.contestId,
@@ -661,12 +661,12 @@ console.log(
 
 if (WRITE) {
   writeFileSync(
-    join(ROOT, "data", "ballot", "nj-morris-2026.json"),
+    join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"),
     `${JSON.stringify(out, null, 2)}\n`,
     "utf8",
   );
   writeFileSync(
-    join(ROOT, "data", "ballot", "nj-morris-2026-contacts.json"),
+    join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026-contacts.json"),
     `${JSON.stringify(
       {
         generatedAt: STAMP,
@@ -682,7 +682,7 @@ if (WRITE) {
     )}\n`,
     "utf8",
   );
-  console.log("\n  written data/ballot/nj-morris-2026.json and nj-morris-2026-contacts.json");
+  console.log("\n  written data/states/nj/ballot/nj-morris-2026.json and nj-morris-2026-contacts.json");
 } else {
   console.log("\n  dry run — pass --write to update the committed files");
 }

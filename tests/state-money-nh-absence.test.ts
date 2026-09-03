@@ -41,7 +41,7 @@ import {
  */
 
 const FIXTURE = join(ROOT, "tests", "fixtures", "nh-cfs", "filer-search-2026.json");
-const BALLOT = join(ROOT, "data", "ballot", "nh-merrimack-2026.json");
+const BALLOT = join(ROOT, "data", "states", "nh", "ballot", "nh-merrimack-2026.json");
 
 /** The read stamp used throughout. A fixed value: this is a test, not a run. */
 const TODAY = "2026-08-31";

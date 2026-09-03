@@ -142,7 +142,7 @@
           "app/globals.css",
           "docs/DESIGN.md",
           "docs/globals-css-notes.md",
-          "lib/ballot/measure-summaries.ts",
+          "data/states/az/ballot/measure-summaries.json",
           "lib/ballot/measure-provisions.ts",
           "lib/ballot/analyses.ts",
           "scripts/fetch-measure-analyses.mts"
@@ -299,7 +299,7 @@
       "owns": {
         "paths": [
           "lib/officials/body-definitions.ts",
-          "lib/officials/body-blurbs.ts",
+          "data/states/az/reference/body-blurbs.json",
           "lib/officials/form-definitions.ts",
           "lib/officials/body-form.ts",
           "lib/officials/office-blurbs.ts",
@@ -341,7 +341,7 @@
         "paths": [
           "lib/officials/statewide-executives.ts",
           "lib/officials/office-identity.ts",
-          "lib/registry/officeholders-04.json",
+          "data/states/az/officials/officeholders-04.json",
           "lib/ballot/incumbency-resolve.ts",
           "lib/ballot/incumbency.ts",
           "lib/photos",

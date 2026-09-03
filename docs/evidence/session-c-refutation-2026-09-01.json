@@ -57,7 +57,7 @@
    "dim": "item-cd-audit-and-wiki",
    "verdict1": "FALSE",
    "verdict2": "CONFIRMED_BROKEN",
-   "claim": "Item 5 caveat: 'Each state is currently derived from exactly one certified pilot-county ballot — `data/ballot/az-pima-2026.json`, `nh-merrimack-2026.json`, `nj-morris-2026.json`.'",
+   "claim": "Item 5 caveat: 'Each state is currently derived from exactly one certified pilot-county ballot — `data/states/az/ballot/az-pima-2026.json`, `nh-merrimack-2026.json`, `nj-morris-2026.json`.'",
    "matters": "The caveat is the sentence that tells the owner how far to trust every number under it. Stated as written it understates Arizona's acquisition, contradicting Item A of the same package, which correctly reports the SOS acquisition as MET."
   },
   {

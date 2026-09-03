@@ -1,3 +1,4 @@
+import { stateDomainFiles, streetPath } from "../lib/holdings/files.ts";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -159,7 +160,7 @@ test("the street index exists for the exemplar zips, ambiguity computed", () => 
     assert.ok(entry.streets > 0, `${zip}: an index with no streets is broken`);
     // The per-zip file the client fetches actually exists and parses.
     const file = JSON.parse(
-      readFileSync(join(ROOT, "public", "streets", `${zip}.json`), "utf8"),
+      readFileSync(join(ROOT, streetPath(ROOT, zip)!), "utf8"),
     ) as { municipalities: unknown[]; schoolDistricts: unknown[]; streets: Record<string, unknown> };
     assert.equal(file.municipalities.length, entry.municipalities);
     assert.equal(file.schoolDistricts.length, entry.schoolDistricts);
@@ -171,9 +172,7 @@ test("every written index file is ambiguous — no prompt where nothing changes"
   const summary = JSON.parse(
     readFileSync(join(ROOT, "lib", "registry", "street-index-summary.json"), "utf8"),
   ) as { zips: Record<string, { municipalities: number; schoolDistricts: number }> };
-  const files = readdirSync(join(ROOT, "public", "streets")).filter((n) =>
-    n.endsWith(".json"),
-  );
+  const files = stateDomainFiles(ROOT, "streets").filter((n) => n.endsWith(".json"));
   assert.equal(
     files.length,
     Object.keys(summary.zips).length,

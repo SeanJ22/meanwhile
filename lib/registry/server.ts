@@ -1,3 +1,4 @@
+import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
@@ -58,7 +59,7 @@ let cache: Promise<Loaded> | null = null;
 
 async function load(): Promise<Loaded> {
   const root = process.cwd();
-  const geoDir = join(root, "public", "geo");
+  const stateCodes = new Set(Object.values(FIPS_TO_STATE).map((state) => state.postal.toLowerCase()));
 
   /*
    * **P-003 · THE RESOLVER READS A MANIFEST, NOT A DIRECTORY.**
@@ -84,7 +85,7 @@ async function load(): Promise<Loaded> {
    * The old comment's worry is preserved rather than dropped: an allow-list
    * rots the other way, a new district type silently absent. The manifest is
    * GENERATED, states its rule as SUPERSESSION, and accounts for every
-   * `.geojson` in the directory on one list or the other —
+   * canonical state or national `.geojson` on one list or the other —
    * `tests/resolver-manifest.test.ts` fails the build on a file that is on
    * neither.
    */
@@ -93,8 +94,25 @@ async function load(): Promise<Loaded> {
   ) as { files: string[] };
   const names = manifest.files;
   const features: GeoFeature[] = [];
+  // Literal roots keep dynamic reads bounded in the server deployment trace.
   for (const name of names) {
-    const parsed = JSON.parse(await readFile(join(geoDir, name), "utf8"));
+    const stateFile = /^data\/states\/([a-z]{2})\/geo\/([a-z0-9][a-z0-9.-]*\.geojson)$/.exec(name);
+    const nationalFile = /^public\/geo\/([a-z0-9][a-z0-9.-]*\.geojson)$/.exec(name);
+    let raw: string;
+    if (stateFile) {
+      const [, state, file] = stateFile;
+      if (!stateCodes.has(state)) throw new Error(`Unknown state in resolver manifest: ${name}`);
+      const fips = /-(\d{2})\.geojson$/.exec(file)?.[1];
+      if (fips && FIPS_TO_STATE[fips]?.postal.toLowerCase() !== state) {
+        throw new Error(`State/FIPS mismatch in resolver manifest: ${name}`);
+      }
+      raw = await readFile(join(root, "data", "states", state, "geo", file), "utf8");
+    } else if (nationalFile) {
+      raw = await readFile(join(root, "public", "geo", nationalFile[1]), "utf8");
+    } else {
+      throw new Error(`Invalid canonical geometry path in resolver manifest: ${name}`);
+    }
+    const parsed = JSON.parse(raw);
     features.push(...(parsed.features as GeoFeature[]));
   }
 
@@ -108,10 +126,15 @@ async function load(): Promise<Loaded> {
   // over a file that is nice to have.
   const sets: OfficeholderSet[] = [];
   for (const name of ROSTERS) {
+    const fips = /^officeholders-(\d{2})\.json$/.exec(name)?.[1];
+    const state = fips ? FIPS_TO_STATE[fips]?.postal.toLowerCase() : undefined;
+    if (name !== "officeholders-us.json" && !state) throw new Error(`Invalid canonical roster name: ${name}`);
     try {
       sets.push(
         JSON.parse(
-          await readFile(join(root, "lib", "registry", name), "utf8"),
+          await (name === "officeholders-us.json"
+            ? readFile(join(root, "lib", "registry", "officeholders-us.json"), "utf8")
+            : readFile(join(root, "data", "states", state!, "officials", name), "utf8")),
         ) as OfficeholderSet,
       );
     } catch (error) {
@@ -180,7 +203,7 @@ async function load(): Promise<Loaded> {
      * spells it in segments, because the tracer has to read it.
      */
     territory = JSON.parse(
-      await readFile(join(root, "public", "geo", "body-territories.geojson"), "utf8"),
+      await readFile(join(root, "data", "states", "az", "geo", "body-territories.geojson"), "utf8"),
     ) as BodyTerritoryFile;
   } catch (error) {
     console.error(`body territories (${BODY_TERRITORY_FILE}) could not be read`, error);

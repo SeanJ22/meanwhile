@@ -43,7 +43,7 @@ function scratchRepo(): string {
      the RULING 92 test makes to the same governance views at the same moment.
      See tests/tree-lock.ts. */
   withTreeLock("snapshot the tree for an out-of-place governance compile", () => {
-    for (const p of ["lib", "scripts", "docs", "package.json", "tsconfig.json"]) {
+    for (const p of ["lib", "scripts", "docs", "data/state-holdings", "package.json", "tsconfig.json"]) {
       const src = join(ROOT, p);
       if (existsSync(src)) cpSync(src, join(dir, p), { recursive: true });
     }

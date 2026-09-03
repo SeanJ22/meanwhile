@@ -36,7 +36,7 @@ import {
 const ROOT = process.cwd();
 const PDF = join(ROOT, "tests", "fixtures", "az-sos-2026-candidate-filings.pdf");
 const RETRIEVAL = join(ROOT, "tests", "fixtures", "az-sos-2026-candidate-filings.retrieval.json");
-const CORPUS = join(ROOT, "data", "candidates", "az-2026-sos-candidate-filings.json");
+const CORPUS = join(ROOT, "data", "states", "az", "candidates", "az-2026-sos-candidate-filings.json");
 
 const retrieval = JSON.parse(readFileSync(RETRIEVAL, "utf8")) as {
   url: string;
@@ -139,7 +139,7 @@ test("the corpus holds exactly one identity per filing row, and no duplicates", 
 });
 
 test("every held Arizona candidacy is joined, by an EXACT name form", () => {
-  const held = JSON.parse(readFileSync(join(ROOT, "data", "ballot", "az-pima-2026.json"), "utf8")) as {
+  const held = JSON.parse(readFileSync(join(ROOT, "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8")) as {
     candidacies: { id: string }[];
   };
   const heldIds = new Set(held.candidacies.map((c) => c.id));

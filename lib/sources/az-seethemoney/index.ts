@@ -481,7 +481,7 @@ export interface EntityTotals {
  * **That much is structure. Whether the partitions SUM to the cycle total is a
  * question about the data and it is answered by measurement, not by this
  * function** — see `scripts/state-money-az.mts` and
- * `data/campaign-finance/az-seethemoney-2026-reconciliation.json`.
+ * `data/states/az/campaign-finance/az-seethemoney-2026-reconciliation.json`.
  */
 export function aggregateEntities(rows: readonly SummaryRow[]): Map<number, EntityTotals> {
   const out = new Map<number, EntityTotals>();

@@ -67,8 +67,8 @@ function arg(flag: string): string | undefined {
 
 const INDEX_URL =
   "https://www.morriscountynj.gov/Residents/Community-Information/Cities-and-Towns";
-const INDEX_PATH = join(ROOT, "data", "hunt", "nj-morris-municipal-sites.json");
-const OUT_PATH = arg("--out") ?? join(ROOT, "data", "hunt", "nj-hunt4-rosters.json");
+const INDEX_PATH = join(ROOT, "data", "states", "nj", "hunt", "nj-morris-municipal-sites.json");
+const OUT_PATH = arg("--out") ?? join(ROOT, "data", "states", "nj", "hunt", "nj-hunt4-rosters.json");
 const only = arg("--only");
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -111,7 +111,7 @@ async function buildIndex(): Promise<SiteIndex> {
    * is discarded rather than attached to a guess.
    */
   const ballot = JSON.parse(
-    readFileSync(join(ROOT, "data", "ballot", "nj-morris-2026.json"), "utf8"),
+    readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8"),
   ) as { contests: { ocdId: string }[] };
   const municipalities = [
     ...new Set(
@@ -372,7 +372,7 @@ if (process.argv.includes("--index")) {
 } else {
 
 const ballot = JSON.parse(
-  readFileSync(join(ROOT, "data", "ballot", "nj-morris-2026.json"), "utf8"),
+  readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8"),
 ) as {
   contests: { id: string; ocdId: string }[];
   candidacies: { id: string; contestId: string; familyName: string; givenName: string }[];

@@ -1,16 +1,17 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-02 17:04:24 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-03 02:14:24 EDT. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-09-02 -->
 Session day 2026-09-02 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1308 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1309 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
+Repository holding paths resolve through the committed move plan; source records stay unchanged.
 
 ---
 
@@ -898,7 +899,7 @@ Source: `docs/tracker.csv`, every row with Priority `P0`. Notes clipped to 130 c
 | D15 | Decide the OCD-ID convention and reconcile to the canonical l… | Done | 2026-08-12. Was docs/state.md 5.2 item 8 ('verify before Phase 5'); checked and it fails, so it is now a blocker for Phase 4.6 ra… |
 | D26 | Meetings snapshot - the committed file production reads | Done | 2026-08-13, branch claude/deploy-snapshot-and-demo. Built: snapshot module with validation refusing count-less or all-failed snap… |
 | D32 | Officials become people you can actually reach (3a-3e) | Done | 2026-08-14, branch claude/restore-representation-session-0814 (second session). 3a: Officeholder gained email; the Plural adapter… |
-| D33 | AZ and NH ballot surfaces (S3, into S2's shape) | Done | 2026-08-14, branch claude/restore-representation-session-0814 (second session). ARIZONA (data/ballot/az-pima-2026.json): transcri… |
+| D33 | AZ and NH ballot surfaces (S3, into S2's shape) | Done | 2026-08-14, branch claude/restore-representation-session-0814 (second session). ARIZONA (data/states/az/ballot/az-pima-2026.json)… |
 | D37 | NH 2026 ballot measures - the earned absence | Done | 2026-08-17: seven CACRs enumerated via LegiScan/CitizensCount/news, ALL dead (CACR 6 ITL 01/07; 12 failed House 3/5 05/14 193-148… |
 | D38 | Coverage completeness audit - the official universe | Done | 2026-08-17 branch claude/final-prep-nh-nj-depth-0817. Official universe measured: Pima 50 / Morris 98 / Merrimack 63 governments… |
 | D39 | Sunnyside and Amphitheater wired live — the author's catch cl… | Done | 2026-08-18 (session date; wall clock 2026-08-14), branch claude/fec-funding-and-final-prep-0818. THE HONEST DIAGNOSIS FIRST: the… |
@@ -1044,19 +1045,19 @@ _No status change recovered in the commits walked._
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-09-02 17:04:24 EDT
-branch: codex/provider-transition-2026-09-02
-head sha: 4257a9dea2a25454ba7c3ca740b68f612a9e365a
-head subject: Record fourteen passing transition gates after installing the pinned browser
-origin/main sha: 366d54e7e9945d0d465f937f3f61a97e5beb5eca
-origin/main subject: Job watch: a scheduled job has failed twice in a row
-local main sha: 366d54e7e9945d0d465f937f3f61a97e5beb5eca
-local main matches origin/main: yes
+generated: 2026-09-03 02:14:24 EDT   <!-- expected-future: Eastern run stamp (R18) past midnight; Phoenix session day is 2026-09-02 -->
+branch: codex/state-holdings-20260903
+head sha: 0809ad296fc75e8d053a3238436b7a98ae8f1d61
+head subject: Record the combined state holdings reader walk before shipping
+origin/main sha: 6a3c9b4ff272adcd689e9130c2285fc64293fff8
+origin/main subject: Post-deploy integrity reading: 2026-09-03T05:43Z   <!-- expected-future: a UTC stamp inside a quoted commit subject; Phoenix session day is 2026-09-02 -->
+local main sha: 3f9a138fd39f6160659329e17c496d2dd99cee00
+local main matches origin/main: no — 3 commit(s) behind
 working tree: clean
 open prs: 1
-open pr: #265 Provider transition: prepare Meanwhile for a Codex session (AGENTS.md ⇄ CLAUDE.md parity, provider-neutral bootstrap)
+open pr: #266 Organize canonical state holdings and generate state manifests
 last recorded tests: 92 (recorded without a verdict)
 last recorded lint: not recorded
 last recorded build: not recorded
-last recorded status from: docs/state.md:23224
+last recorded status from: docs/state.md:23226
 ```

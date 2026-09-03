@@ -33,7 +33,7 @@ import { polygonContains } from "../geo/polygon.ts";
  * The missing thing was never a division. It was the geometry, and
  * `scripts/cfd-territory.mts` had been fetching it all along with
  * `returnGeometry: "true"` and keeping only a centroid. It now emits the rings
- * to `public/geo/body-territories.geojson`, and this module point-tests them
+ * to `data/states/az/geo/body-territories.geojson`, and this module point-tests them
  * with **the same even-odd implementation that decides every other government**
  * — `contains` from `lib/registry/resolve.ts`, not a second copy of it.
  *
@@ -78,7 +78,7 @@ export interface BodyTerritoryFile {
 }
 
 /** Repo-relative, so the generator, the loader and the guard agree on one spelling. */
-export const BODY_TERRITORY_FILE = "public/geo/body-territories.geojson";
+export const BODY_TERRITORY_FILE = "data/states/az/geo/body-territories.geojson";
 
 /**
  * The body ids a point falls inside, from a loaded territory file.

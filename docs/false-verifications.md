@@ -260,7 +260,7 @@ it was not a race: it was incapable of ever going true.
 
 **And the producer was long finished.** Measured here, against the repository
 rather than against the waiter: the artifact
-`data/hunt/wikipedia-nj-morris.json` was committed at **7514e68e, 2026-09-01
+`data/states/nj/hunt/wikipedia-nj-morris.json` was committed at **7514e68e, 2026-09-01
 09:22:43 -0700**, that commit is an ancestor of PR #255's merge commit
 `91caa766`, and #255 merged at **2026-09-01T16:56:31Z**. The walk's own numbers
 are inside the committed artifact's `totals` block and re-derive from its

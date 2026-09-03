@@ -29,11 +29,11 @@ const snapshot = getStateVotesSnapshot();
 /* ------------------------------------------------------------- the join --- */
 
 test("the NH county table agrees with our own boundary labels", () => {
-  // `public/geo/sldl-33.geojson` carries `State House District Merrimack 08`
+  // `data/states/nh/geo/sldl-33.geojson` carries `State House District Merrimack 08`
   // beside `sldl:608`. That is the claim the table makes, so it is checked
   // against the file rather than remembered.
   const geo = JSON.parse(
-    readFileSync(join(process.cwd(), "public", "geo", "sldl-33.geojson"), "utf8"),
+    readFileSync(join(process.cwd(), "data", "states", "nh", "geo", "sldl-33.geojson"), "utf8"),
   ) as { features: Array<{ properties: { ocdId: string; label: string } }> };
 
   const abbrevOf: Record<string, string> = {

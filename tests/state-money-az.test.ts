@@ -37,8 +37,8 @@ import {
  */
 
 const FIX = join(ROOT, "tests", "fixtures", "campaign-finance");
-const SNAPSHOT = join(ROOT, "data", "funding", "state-money-az-2026.json");
-const RECONCILIATION = join(ROOT, "data", "campaign-finance", "az-seethemoney-2026-reconciliation.json");
+const SNAPSHOT = join(ROOT, "data", "states", "az", "funding", "state-money-az-2026.json");
+const RECONCILIATION = join(ROOT, "data", "states", "az", "campaign-finance", "az-seethemoney-2026-reconciliation.json");
 
 function summaryFixture(): { data: SummaryRow[] } {
   return JSON.parse(readFileSync(join(FIX, "azsos-seethemoney-summary-2026.json"), "utf8")) as { data: SummaryRow[] };

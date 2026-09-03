@@ -38,7 +38,7 @@ import type { LegistarEvent } from "../lib/sources/legistar/types.ts";
  * against, because a state machine tested only against data that happens to be
  * healthy is a state machine whose failure branches have never run.
  *
- * `data/outcomes/legistar-outcomes.json` is the real committed store. It is
+ * `data/states/az/outcomes/legistar-outcomes.json` is the real committed store. It is
  * asserted on for LINKAGE and SHAPE — that its ids join to the meetings snapshot
  * byte for byte — and never for exact counts, because it grows every time the
  * ingest walks a wider window and a test that pinned its totals would have to be
@@ -46,12 +46,12 @@ import type { LegistarEvent } from "../lib/sources/legistar/types.ts";
  * regression.
  */
 
-const FIXTURE_ROOT = join(process.cwd(), "tests", "fixtures", "legistar-outcome-store");
+const FIXTURE_PATH = join(process.cwd(), "tests/fixtures/legistar-outcome-store/data/outcomes/legistar-outcomes.json");
 const PIMA_BOARD = "ocd-division/country:us/state:az/county:pima#governing";
 
 function fixtureStore(): OutcomeSnapshot {
   return JSON.parse(
-    readFileSync(join(FIXTURE_ROOT, "data", "outcomes", "legistar-outcomes.json"), "utf8"),
+    readFileSync(FIXTURE_PATH, "utf8"),
   ) as OutcomeSnapshot;
 }
 

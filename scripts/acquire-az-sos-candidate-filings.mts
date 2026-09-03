@@ -11,7 +11,7 @@
  *
  * ## What this closes
  *
- * `data/jurisdictions/az.json` carried
+ * `data/states/az/jurisdictions/az.json` carried
  * `BALLOT_AND_CANDIDATES:STATEWIDE:arizona-secretary-of-state` as
  * `DISCOVERY_OWED`, owed: *"acquire the Secretary of State's full 2026
  * candidate-filing list as DATA. The 2026 filings PDF was read for the Pima
@@ -30,7 +30,7 @@
  *
  * ## The held population is OFFERED to the normalizer, never merged after
  *
- * `data/ballot/az-pima-2026.json` is passed in so the name join happens while
+ * `data/states/az/ballot/az-pima-2026.json` is passed in so the name join happens while
  * the corpus is being built. Every enrichment finding this project holds is
  * keyed to those 55 candidacies; a corpus that minted its own splits would give
  * one person two canonical identities and the enrichment scheduler would hunt
@@ -65,7 +65,7 @@ const FIXTURE_META = join(ROOT, "tests", "fixtures", "az-sos-2026-candidate-fili
 
 /** The held Arizona candidacies, offered to the name join. */
 function heldCandidacies(): HeldCandidacy[] {
-  const path = join(ROOT, "data", "ballot", "az-pima-2026.json");
+  const path = join(ROOT, "data", "states", "az", "ballot", "az-pima-2026.json");
   const doc = JSON.parse(readFileSync(path, "utf8")) as {
     contests: { id: string; ocdId: string; title: string; type: string }[];
     candidacies: { id: string; contestId: string; familyName: string; givenName: string }[];
@@ -85,7 +85,7 @@ function heldCandidacies(): HeldCandidacy[] {
   }
   if (out.length === 0) {
     throw new Error(
-      "data/ballot/az-pima-2026.json offered ZERO held candidacies. That is a failed read of the " +
+      "data/states/az/ballot/az-pima-2026.json offered ZERO held candidacies. That is a failed read of the " +
         "held population, not a ballot with nobody on it, and continuing would mint a second " +
         "canonical identity for every candidate this project already knows.",
     );

@@ -26,9 +26,9 @@
  *
  * ```
  *   DENOMINATOR   every location code the dropdown states, committed at
- *                 data/campaign-finance/nj-elec-location-universe.json
+ *                 data/states/nj/campaign-finance/nj-elec-location-universe.json
  *   ACQUISITION   an accumulating corpus at
- *                 data/campaign-finance/nj-elec-entity-corpus-2026.json,
+ *                 data/states/nj/campaign-finance/nj-elec-entity-corpus-2026.json,
  *                 topped up a batch at a time and RESUMED across runs, with the
  *                 ballot's own locations walked FIRST — order, not denominator
  *   PROJECTION    the ballot matched against the held corpus. A location not
@@ -134,8 +134,8 @@ const BATCH = Number(arg("--locations") ?? "60");
 
 /* ── The acquisition corpus — the state, accumulated across runs ─────────── */
 
-const UNIVERSE_FILE = join(ROOT, "data/campaign-finance/nj-elec-location-universe.json");
-const CORPUS_FILE = join(ROOT, `data/campaign-finance/nj-elec-entity-corpus-${YEAR}.json`);
+const UNIVERSE_FILE = join(ROOT, "data/states/nj/campaign-finance/nj-elec-location-universe.json");
+const CORPUS_FILE = join(ROOT, `data/states/nj/campaign-finance/nj-elec-entity-corpus-${YEAR}.json`);
 
 interface EntityCorpus {
   formatVersion: 1;
@@ -196,7 +196,7 @@ interface Contest {
 
 const ballot = JSON.parse(
   await import("node:fs").then((fs) =>
-    fs.readFileSync(join(ROOT, "data/ballot/nj-morris-2026.json"), "utf8"),
+    fs.readFileSync(join(ROOT, "data/states/nj/ballot/nj-morris-2026.json"), "utf8"),
   ),
 ) as { contests: Contest[]; candidacies: Candidacy[] };
 
@@ -689,7 +689,7 @@ const snapshot: StateMoneySnapshot = {
   records,
 };
 
-const out = join(ROOT, "data/funding/state-money-nj-2026.json");
+const out = join(ROOT, "data/states/nj/funding/state-money-nj-2026.json");
 writeFileSync(out, `${JSON.stringify(snapshot, null, 1)}\n`, "utf8");
 
 console.log(`\n─── the three-way split, with denominators ───`);
@@ -743,7 +743,7 @@ console.log(
         "is a failed read of our own input and never a New Jersey with an unknown number of filing offices."
     : `  ELEC locations held ${universe.held} of ${universe.statedBy} stated · ` +
       `${universe.statedBy - universe.held} still owed. Every one of them is enumerated by name in ` +
-      "data/jurisdictions/nj.json and carries a durable obligation.",
+      "data/states/nj/jurisdictions/nj.json and carries a durable obligation.",
 );
 /*
  * **AND THE PART THAT IS STILL PROJECTION-BOUND, SAID PLAINLY.**

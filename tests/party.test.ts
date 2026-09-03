@@ -8,6 +8,7 @@ import { officeIdentity } from "../lib/officials/office-identity.ts";
 import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
 import { allOfficialRows } from "../lib/officials/tier-grouping.ts";
 import { coverageAt } from "../lib/registry/server.ts";
+import { ballotPath } from "../lib/holdings/files.ts";
 
 /**
  * M61 (2026-08-15) — party renders wherever it is held, and is never held
@@ -162,7 +163,7 @@ test("M61: the ballot and the officeholder row agree about party", () => {
   const officeOfContest = new Map<string, string>();
   for (const f of files) {
     const parsed = JSON.parse(
-      readFileSync(join(ROOT, "data", "ballot", f), "utf8"),
+      readFileSync(join(ROOT, ballotPath(f)), "utf8"),
     ) as {
       candidacies?: typeof candidacies;
       contests?: { id: string; title: string }[];

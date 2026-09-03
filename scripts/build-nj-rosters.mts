@@ -75,9 +75,9 @@ const ROOT = process.cwd();
  * this closes and why a clock call here was two defects, not one.
  */
 const SOURCE_FILES = [
-  "data/hunt/wikipedia-nj-morris.json",
-  "data/hunt/roster-pages-muni-sites-nj-morris.json",
-  "data/hunt/nj-morris-certified-winners.json",
+  "data/states/nj/hunt/wikipedia-nj-morris.json",
+  "data/states/nj/hunt/roster-pages-muni-sites-nj-morris.json",
+  "data/states/nj/hunt/nj-morris-certified-winners.json",
   "lib/registry/registry.json",
 ] as const;
 const AS_OF = declaredSourceStamp({
@@ -101,13 +101,13 @@ const AS_OF = declaredSourceStamp({
    * RULING 102 that a stamp bump on its own would skip.
    *
    * Moved to 2026-08-28 by the finish-aug28 session, and the input that moved is
-   * `data/hunt/wikipedia-nj-morris.json`: WGH-16 made the parser multi-capture
+   * `data/states/nj/hunt/wikipedia-nj-morris.json`: WGH-16 made the parser multi-capture
    * (one municipality may lie across several legislative districts), so the walk
    * artifact was regenerated from the live sources that day. The rosters are
    * regenerated in this same commit for the same reason the line above gives.
    *
    * Moved to 2026-09-01 by the refresh-failure session of 2026-09-02, and the
-   * input that moved is again `data/hunt/wikipedia-nj-morris.json`: commit
+   * input that moved is again `data/states/nj/hunt/wikipedia-nj-morris.json`: commit
    * 7514e68e re-walked it over the `?action=raw` route the same day (the API
    * path was disallowed by the host's own robots.txt) and re-stamped
    * `walkedAt: 2026-09-01`, and this line was NOT moved with it. Nothing
@@ -121,10 +121,10 @@ const AS_OF = declaredSourceStamp({
 });
 const DRY = process.argv.includes("--dry");
 
-const WIKI = "data/hunt/wikipedia-nj-morris.json";
+const WIKI = "data/states/nj/hunt/wikipedia-nj-morris.json";
 /* Read ONCE: a per-municipality read would open the same file 39 times. */
 const ledger = readCitationLedger(ROOT);
-const PAGES = "data/hunt/roster-pages-muni-sites-nj-morris.json";
+const PAGES = "data/states/nj/hunt/roster-pages-muni-sites-nj-morris.json";
 const LEDGER = "docs/evidence/njhunt6-morris-rosters.jsonl";
 const OUT_TS = "lib/registry/rosters-nj-morris.ts";
 
@@ -289,7 +289,7 @@ interface CertifiedWinner {
   sourceUrl: string;
 }
 const certified = JSON.parse(
-  readFileSync(join(ROOT, "data/hunt/nj-morris-certified-winners.json"), "utf8"),
+  readFileSync(join(ROOT, "data/states/nj/hunt/nj-morris-certified-winners.json"), "utf8"),
 ) as { winners: CertifiedWinner[]; walkedAt: string };
 
 /** `Rockaway Township` in the clerk's document -> `rockaway_township` here. */

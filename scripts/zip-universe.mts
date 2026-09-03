@@ -1,3 +1,4 @@
+import { geometryPath } from "../lib/holdings/files.ts";
 /**
  * The two universes for a zip, enumerated against an OUTSIDE denominator.
  *
@@ -56,8 +57,8 @@ import { assertEnumerationGeography, geographyLine } from "../lib/geo/zip-geogra
 import { parseCsv } from "../lib/reference/index.ts";
 import { containsPoint, ringsOf } from "../lib/geo/polygon.ts";
 
-const GUS = "data/audit/gus-2022-merrimack-sullivan-hillsborough.json";
-const GEO = (layer: string) => `public/geo/${layer}.geojson`;
+const GUS = "data/states/nh/reference/gus-2022-merrimack-sullivan-hillsborough.json";
+const GEO = (layer: string) => geometryPath(`${layer}.geojson`);
 
 type GusRow = {
   kind: string;

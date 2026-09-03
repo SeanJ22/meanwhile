@@ -1,10 +1,11 @@
+import { stateForRosterFile } from "../holdings/runtime-paths.ts";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { BALLOT_SOURCES } from "../ballot/registry.ts";
 import { contestsForDivisions } from "../sources/ballot-nj-morris/index.ts";
 import { lineupForContest } from "../ballot/general-lineup.ts";
-import { summaryForContest } from "../ballot/measure-summaries.ts";
+import { summaryForContest } from "../ballot/measure-summary.ts";
 import { provisionsForContest } from "../ballot/measure-provisions.ts";
 import { positionsFor } from "../candidates/positions.ts";
 import { ROSTER_FILES } from "../coverage/artifacts.ts";
@@ -221,7 +222,9 @@ function readRoster(name: string): RosterFile | null {
   let parsed: RosterFile | null = null;
   try {
     parsed = JSON.parse(
-      readFileSync(join(process.cwd(), "lib", "registry", name), "utf8"),
+      (stateForRosterFile(name) === null
+          ? readFileSync(join(process.cwd(), "lib", "registry", "officeholders-us.json"), "utf8")
+          : readFileSync(join(process.cwd(), "data", "states", stateForRosterFile(name)!, "officials", name), "utf8")),
     ) as RosterFile;
   } catch {
     parsed = null;

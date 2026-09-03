@@ -44,7 +44,7 @@ test("BAL-29: Proposition 423 precedes 425, the reported regression", () => {
 
 test("BAL-29: the real Pima measure set comes out ascending", () => {
   const set = JSON.parse(
-    readFileSync(new URL("../data/ballot/az-pima-2026.json", import.meta.url), "utf8"),
+    readFileSync(new URL("../data/states/az/ballot/az-pima-2026.json", import.meta.url), "utf8"),
   ) as { contests: (Contest & { ballotOrder?: number })[] };
 
   const measures = set.contests.filter((c) => c.type === "MEASURE");

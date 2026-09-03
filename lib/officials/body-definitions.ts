@@ -1,5 +1,5 @@
-import type { BodyBlurb, BodyDivisionType } from "./body-blurbs.ts";
-import { blurbForBody } from "./body-blurbs.ts";
+import type { BodyBlurb, BodyDivisionType } from "./body-description.ts";
+import { blurbForBody } from "./body-description.ts";
 import { formFor } from "./body-form.ts";
 import { formDefinitionFor } from "./form-definitions.ts";
 

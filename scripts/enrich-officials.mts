@@ -1,3 +1,4 @@
+import { rosterPath } from "../lib/holdings/files.ts";
 /**
  * Enrich the committed state officeholder rosters from the legislatures' OWN
  * member rosters — the Kelly-standard fix for the wrong-URL and dead-email
@@ -182,7 +183,7 @@ async function enrich(
   parse: (html: string) => RosterRow[],
   apply: (o: Officeholder, row: RosterRow) => void,
 ) {
-  const path = join(process.cwd(), "lib", "registry", `officeholders-${fips}.json`);
+  const path = join(process.cwd(), rosterPath(`officeholders-${fips}.json`));
   const set = JSON.parse(readFileSync(path, "utf8")) as OfficeholderSet & Record<string, unknown>;
   const rows = parse(await fetchText(rosterUrl));
   if (rows.length === 0) throw new Error(`${rosterUrl}: parsed ZERO roster rows — refusing to write`);
@@ -338,7 +339,7 @@ function nhDesignationOf(
 }
 
 async function enrichNhFromArchive() {
-  const path = join(process.cwd(), "lib", "registry", "officeholders-33.json");
+  const path = join(process.cwd(), rosterPath("officeholders-33.json"));
   const set = JSON.parse(readFileSync(path, "utf8")) as OfficeholderSet &
     Record<string, unknown>;
   const registry = JSON.parse(

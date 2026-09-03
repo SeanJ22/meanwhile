@@ -4414,15 +4414,21 @@ for (const { zip } of FOUR) {
         await input.fill("");
         // R49: the autocomplete has cleared, then has rows for the new text.
         await until(page, async () => (await page.locator(".search-ac-item").count()) === 0, 6_000);
-        await input.fill("Board");
+        // This corpus has fourteen meetings with the same displayed title.
+        // The exact-name contract refuses that ambiguity; use its unique body.
+        const exactBody = zip === "85701" ? "Board of Supervisors" : null;
+        await input.fill(exactBody ?? "Board");
         await untilPresent(page, ".search-ac-item", 8_000);
         const offered = await page.evaluate(
-          () =>
-            (
-              document.querySelector(
-                ".search-ac-item .search-ac-name",
-              ) as HTMLElement | null
-            )?.innerText ?? "",
+          (bodyName) => {
+            const rows = Array.from(document.querySelectorAll(".search-ac-item"));
+            const row = bodyName ? rows.find((entry) =>
+              entry.querySelector(".search-ac-type")?.textContent?.trim() === "Body" &&
+              entry.querySelector(".search-ac-name")?.textContent?.trim() === bodyName
+            ) : rows[0];
+            return (row?.querySelector(".search-ac-name") as HTMLElement | null)?.innerText ?? "";
+          },
+          exactBody,
         );
         if (offered) {
           await input.fill(offered);
@@ -4438,19 +4444,19 @@ for (const { zip } of FOUR) {
           const named = await page.evaluate(() => ({
             refusal: Boolean(document.querySelector("[data-ask-refusal]")),
             digest: Boolean(document.querySelector("[data-ask-digest]")),
+            bodyOpened: Boolean(document.querySelector(".account-modal")),
           }));
           check(
             "g12",
             `the matcher ruling: an exact name navigates and asks nothing at ${zip}`,
-            !named.refusal && !named.digest,
+            !named.refusal && !named.digest && (!exactBody || named.bodyOpened),
             `offered=${JSON.stringify(offered)}`,
           );
         } else {
-          check(
+          cannotRun(
             "g12",
             `the matcher ruling: an exact name navigates and asks nothing at ${zip}`,
-            true,
-            "COULD NOT RUN — the autocomplete offered nothing to name at this zip",
+            "the autocomplete offered no unambiguous name for this scenario",
           );
         }
 
@@ -5968,7 +5974,7 @@ for (const zip of ["85629", "07866"]) {
       }
 
       /*
-       * BAL-30 — the measure text. `data/ballot/az-pima-2026.json` has carried
+       * BAL-30 — the measure text. `data/states/az/ballot/az-pima-2026.json` has carried
        * the official question for four local measures since 2026-08-27 and the
        * page rendered none of it, which is the rule in `lib/ballot/analyses.ts`
        * broken by the surface the rule was written for.
@@ -6618,8 +6624,17 @@ for (const target of SCOPE_ADDRESSES) {
       continue;
     }
 
+    await untilInteractive(page, 'input[aria-label="Street"]');
     await street.fill(target.street);
+    const submitted = page.waitForResponse(
+      (response) => response.url().endsWith("/api/address/resolve") && response.request().method() === "POST",
+      { timeout: 25_000 },
+    ).then(async (response) => {
+      const body = await response.json();
+      return { http: response.status(), resolution: body.resolution?.status ?? "not recorded" };
+    }).catch(() => ({ http: null, resolution: "NO RESPONSE OBSERVED" }));
     await page.locator(".address-prompt-fields button").first().click();
+    const addressResponse = await submitted;
 
     /*
      * **WAIT FOR THE FIELD, NOT FOR THE PAGE TO GO QUIET.** The first version
@@ -6660,6 +6675,7 @@ for (const target of SCOPE_ADDRESSES) {
     );
 
     const after = (await page.evaluate(SCOPE_READ)) as ScopeRead;
+    const addressPrompt = await page.evaluate(() => document.querySelector(".address-prompt")?.textContent ?? null);
     const beforeState = before.rows.map((r) => `${r.label}:${r.standing}`).sort().join("|");
     const afterState = after.rows.map((r) => `${r.label}:${r.standing}`).sort().join("|");
 
@@ -6674,7 +6690,8 @@ for (const target of SCOPE_ADDRESSES) {
       LIVE[0][1],
       beforeState !== afterState && after.rows.every((r) => r.standing === "CONFIRMED"),
       `before: ${beforeState || "no rows"} · after: ${afterState || "no rows"} — ` +
-        `${after.rows.filter((r) => r.standing === "CONFIRMED").length} of ${after.rows.length} CONFIRMED`,
+        `${after.rows.filter((r) => r.standing === "CONFIRMED").length} of ${after.rows.length} CONFIRMED; ` +
+        `resolver response ${JSON.stringify(addressResponse)}; prompt ${JSON.stringify(addressPrompt)}`,
     );
 
     const confirmed = after.rows.filter((r) => r.standing === "CONFIRMED");
@@ -6998,7 +7015,7 @@ for (const target of SCOPE_ADDRESSES) {
 /**
  * **NEW HAMPSHIRE MONEY REACHES THE 03255 READER.** (Session C, 2026-08-31.)
  *
- * `data/funding/state-money-nh-2026.json` is acquired data, and the whole
+ * `data/states/nh/funding/state-money-nh-2026.json` is acquired data, and the whole
  * failure mode this suite exists for applies to it: the file can go missing,
  * be regenerated against the wrong year, or lose its deploy tracing, and every
  * one of those renders as a clean card with no money on it. `tests/
@@ -8083,7 +8100,7 @@ section(
 /* ────────────────────────────────────────────────────────────────────────────
  * SC3 — ARIZONA MONEY REACHES THE READER, AND EVERY CARD ENDS IN ONE STATE
  *
- * The defect this pins was never acquisition. `data/funding/state-money-az-2026.json`
+ * The defect this pins was never acquisition. `data/states/az/funding/state-money-az-2026.json`
  * held Katie Hobbs at $11,109,720 while her card showed nothing, because the
  * certified-lineup cards key on `${contest.id}|${nominee.name}` and the money
  * records key on candidacy ids. Two correct halves, one seam, and the seam is
@@ -8123,6 +8140,8 @@ for (const { zip, cards: cardFloor, oursCeiling } of [
 
     /* Open every battlecard, then every Campaign money section. The body is
        `{open && …}` — not hidden, ABSENT — so it has to be clicked open. */
+    // Server-rendered cards can precede their click handlers (R52).
+    await untilInteractive(page, '.candidate-row button[aria-expanded]');
     await page.evaluate(
       "(() => { for (const b of Array.from(document.querySelectorAll('button'))) " +
         "if ((b.textContent || '').trim() === 'View Battlecard') b.click(); })()",

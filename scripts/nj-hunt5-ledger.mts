@@ -57,7 +57,7 @@ interface WikiOut {
     citationChecks: { person: string; verdict: string }[];
   }[];
 }
-const wiki = read<WikiOut>("data/hunt/wikipedia-nj-morris.json");
+const wiki = read<WikiOut>("data/states/nj/hunt/wikipedia-nj-morris.json");
 console.log("\nWIKIPEDIA-MUNICIPALITY (Tier A) — Morris County");
 if (wiki === null) {
   console.log("  NOT RUN");
@@ -108,7 +108,7 @@ interface GraphOut {
   totals: Record<string, number>;
   nodes: { expanded: boolean; classification: { kind: string | null } }[];
 }
-const graph = read<GraphOut>("data/hunt/wiki-graph-07866.json");
+const graph = read<GraphOut>("data/states/nj/hunt/wiki-graph-07866.json");
 console.log("\nWIKIPEDIA-GOVERNMENT-GRAPH (Tier A) — seeded from 07866");
 if (graph === null) {
   console.log("  NOT RUN");
@@ -135,7 +135,7 @@ interface OffOut {
     contacts: { name: string; emails: string[]; phones: string[]; verifiedPageUrl: string | null }[];
   }[];
 }
-const off = read<OffOut>("data/hunt/officials-contact-nj-morris.json");
+const off = read<OffOut>("data/states/nj/hunt/officials-contact-nj-morris.json");
 console.log("\nBODY-ROSTER-PAGE for OFFICIALS (Tier B) — Morris County");
 if (off === null) {
   console.log("  NOT RUN");
@@ -178,7 +178,7 @@ interface ElecOut {
   control: { rows: number; bytes: number };
   locations: { location: string; rows: unknown[]; indistinguishableFromControl: boolean }[];
 }
-const elec = read<ElecOut>("data/hunt/nj-elec-2026.json");
+const elec = read<ElecOut>("data/states/nj/hunt/nj-elec-2026.json");
 console.log("\nFILING-CAMPAIGN-FINANCE-LOCAL — NJ ELEC (the largest NH71 route)");
 if (elec === null) {
   console.log("  NOT RUN");
@@ -195,7 +195,7 @@ interface Ballot {
   contests: { id: string }[];
   candidacies: { id: string }[];
 }
-const ballot = read<Ballot>("data/ballot/nj-morris-2026.json");
+const ballot = read<Ballot>("data/states/nj/ballot/nj-morris-2026.json");
 const cards = read<{ cards: Record<string, unknown> }>("data/ballot/candidate-cards-2026.json");
 const links = read<{ links: Record<string, unknown> }>("data/ballot/candidate-links-2026.json");
 console.log("\nTHE BALLOT — collection against rendering (D68, stated as a pair)");

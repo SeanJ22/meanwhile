@@ -318,7 +318,7 @@ const out = {
   winners,
 };
 
-const outPath = join(ROOT, "data", "hunt", "nj-morris-certified-winners.json");
+const outPath = join(ROOT, "data", "states", "nj", "hunt", "nj-morris-certified-winners.json");
 writeFileSync(outPath, `${JSON.stringify(out, null, 2)}\n`, "utf8");
 
 console.log(

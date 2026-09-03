@@ -42,7 +42,7 @@ const ROUTES: LearnedRoute[] = [
       rows: 58,
       outcome: "YIELDED",
       note:
-        "58 Arizona committees' itemised income and expense ledgers read and aggregated, which is what licensed data/funding/state-money-az-2026.json. Aggregates only: the itemised rows carry contributor name, occupation and employer (RULING 167) and were never persisted.",
+        "58 Arizona committees' itemised income and expense ledgers read and aggregated, which is what licensed data/states/az/funding/state-money-az-2026.json. Aggregates only: the itemised rows carry contributor name, occupation and employer (RULING 167) and were never persisted.",
     },
     claims: [
       {

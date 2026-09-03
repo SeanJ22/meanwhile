@@ -12,7 +12,7 @@ import {
   hasConcluded,
   orderByUpcomingFirst,
 } from "@/lib/meetings/ordering";
-import { NO_BODY_BLURB_LINE } from "@/lib/officials/body-blurbs";
+import { NO_BODY_BLURB_LINE } from "@/lib/officials/body-description";
 import { TOP_OFFICES_GAP, runsSomething, topOfficesFor,
   rosterInReadingOrder,
 } from "@/lib/officials/top-offices";

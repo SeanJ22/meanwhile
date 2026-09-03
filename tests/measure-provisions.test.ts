@@ -9,7 +9,7 @@ import {
   type ProvisionKind,
 } from "../lib/ballot/measure-provisions.ts";
 import { getMeasureAnalyses, analysisForContest } from "../lib/ballot/analyses.ts";
-import { MEASURE_SUMMARIES } from "../lib/ballot/measure-summaries.ts";
+import { MEASURE_SUMMARIES } from "../lib/ballot/measure-summary.ts";
 
 /**
  * P01 — the decomposition is held to the same standard as the summaries.

@@ -13,7 +13,7 @@
  },
  "stepA": {
   "source": "2022 Census of Governments, Government Units Listing",
-  "file": "data/audit/gus-2022-merrimack-sullivan-hillsborough.json",
+  "file": "data/states/nh/reference/gus-2022-merrimack-sullivan-hillsborough.json",
   "counties": [
    "34001",
    "34003",

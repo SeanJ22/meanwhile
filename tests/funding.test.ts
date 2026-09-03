@@ -84,13 +84,13 @@ test("snapshot target keys resolve to real app-side ids", () => {
   const rosterIds = new Set(roster.officeholders.map((o) => o.id));
   const ballotIds = new Set<string>();
   for (const file of ["nj-morris-2026.json", "az-pima-2026.json", "nh-merrimack-2026.json"]) {
-    const data = JSON.parse(readFileSync(join(ROOT, "data", "ballot", file), "utf8")) as {
+    const data = JSON.parse(readFileSync(join(ROOT, "data", "states", file.slice(0, 2), "ballot", file), "utf8")) as {
       candidacies: { id: string }[];
     };
     for (const c of data.candidacies) ballotIds.add(c.id);
   }
   const lineup = JSON.parse(
-    readFileSync(join(ROOT, "data", "ballot", "az-general-lineup-2026.json"), "utf8"),
+    readFileSync(join(ROOT, "data", "states", "az", "ballot", "az-general-lineup-2026.json"), "utf8"),
   ) as { contests: { contestId: string; nominees: { name: string }[] }[] };
   for (const contest of lineup.contests) {
     for (const n of contest.nominees) ballotIds.add(`${contest.contestId}|${n.name}`);

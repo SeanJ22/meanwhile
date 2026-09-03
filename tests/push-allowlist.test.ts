@@ -96,7 +96,7 @@ test("RULING 162: the happy path is allowed, and states its count", () => {
 test("RULING 162: one refresher may not write another's artifact", () => {
   const d = classifyPushPaths({
     profileId: "refresh-fec-snapshot",
-    changed: ["data/ballot/07866.json"],
+    changed: ["data/states/nj/ballot/07866.json"],
   });
   assert.equal(d.verdict, "refused", "a per-workflow list is the point; a shared one would allow this");
 });

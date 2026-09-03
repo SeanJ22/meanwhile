@@ -52,7 +52,7 @@ import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
  */
 
 const BASE = "https://azgovernor.gov";
-const OUT = process.argv[2] ?? "data/hunt/az-executive-orders.json";
+const OUT = process.argv[2] ?? "data/states/az/hunt/az-executive-orders.json";
 /** The host asks for ten seconds between requests. It gets ten seconds. */
 const CRAWL_DELAY_MS = 10_000;
 /** How many index pages to walk. Stated, so a partial walk cannot read as all. */

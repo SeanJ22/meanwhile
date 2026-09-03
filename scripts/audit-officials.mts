@@ -1,3 +1,4 @@
+import { rosterPath } from "../lib/holdings/files.ts";
 /**
  * The Kelly-standard audit (session 2026-08-16, item 2a).
  *
@@ -160,7 +161,7 @@ async function main() {
 
   for (const { label, file } of files) {
     const set = JSON.parse(
-      readFileSync(join(process.cwd(), "lib", "registry", file), "utf8"),
+      readFileSync(join(process.cwd(), rosterPath(file)), "utf8"),
     ) as OfficeholderSet;
     const linked = new Set(set.divisions.map((d) => d.officeholderId));
     const audited = set.officeholders.filter((o) => linked.has(o.id));

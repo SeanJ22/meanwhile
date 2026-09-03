@@ -25,7 +25,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { definitionsForBody } from "../lib/officials/body-definitions.ts";
-import type { BodyDivisionType } from "../lib/officials/body-blurbs.ts";
+import type { BodyDivisionType } from "../lib/officials/body-description.ts";
 import { schoolDependency } from "../lib/officials/school-dependency.ts";
 import { runsSomething } from "../lib/officials/top-offices.ts";
 

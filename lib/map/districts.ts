@@ -1,3 +1,4 @@
+import { stateServingUrl } from "../holdings/paths.ts";
 import type { Map as MapLibreMap, MapGeoJSONFeature } from "maplibre-gl";
 
 // Relative, extension-bearing imports — the style the rest of lib/ uses —
@@ -53,7 +54,7 @@ export interface DistrictCollection {
 
 /** Where each overlay's geometry lives, and which tier it belongs to. */
 interface LayerSpec {
-  /** Files under public/geo, merged into one source. */
+  /** Geometry basenames; state files are served from generated state projections. */
   files: string[];
   /**
    * Draw only features whose FUNCSTAT says a government sits there — M14.
@@ -323,9 +324,12 @@ export function loadDistricts(
 
   const promise = Promise.all(
     files.map(async (file) => {
-      const response = await fetch(`/geo/${file}`);
+      const url = /-\d{2}\.geojson$/.test(file)
+        ? stateServingUrl(stateAbbr!.toLowerCase(), "geo", file)
+        : `/geo/${file}`;
+      const response = await fetch(url);
       if (response.status === 404) return [];
-      if (!response.ok) throw new Error(`/geo/${file} returned ${response.status}`);
+      if (!response.ok) throw new Error(`${url} returned ${response.status}`);
       const collection = (await response.json()) as DistrictCollection;
       return collection.features ?? [];
     }),

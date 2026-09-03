@@ -52,7 +52,7 @@ import {
   normalizeWithDrops as legistarNormalize,
   type LegistarEventWithClient,
 } from "../lib/sources/legistar/index.ts";
-import { LEGISTAR_CLIENTS } from "../lib/sources/legistar/clients.ts";
+import { LEGISTAR_CLIENTS } from "../lib/sources/legistar/client-registry.ts";
 import {
   calendarFeedUrl,
   dateRangePostback,
@@ -73,7 +73,7 @@ import {
   normalizeWithDrops,
   type LegistarInSiteRaw,
 } from "../lib/sources/legistar-insite/index.ts";
-import { INSITE_TENANTS } from "../lib/sources/legistar-insite/tenants.ts";
+import { INSITE_TENANTS } from "../lib/sources/legistar-insite/tenant-registry.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 
 const FIXTURES = join(import.meta.dirname, "fixtures");

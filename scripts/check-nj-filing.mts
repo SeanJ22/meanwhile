@@ -7,7 +7,7 @@
  *
  * ## Why this exists
  *
- * `data/ballot/nj-morris-2026.json` is GENERATED from the Morris County Clerk's
+ * `data/states/nj/ballot/nj-morris-2026.json` is GENERATED from the Morris County Clerk's
  * filed-candidate PDFs, and the clerk republishes at a new version path on their
  * own schedule — `/v/9/...-082126.pdf` superseded `/v/6/...-080726.pdf` while NJ
  * Hunt 2 was running, and the older path stayed reachable the whole time. A
@@ -144,7 +144,7 @@ async function publishedCount(): Promise<number | null> {
 }
 
 const ballot = JSON.parse(
-  readFileSync(join(ROOT, "data", "ballot", "nj-morris-2026.json"), "utf8"),
+  readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8"),
 ) as { contests: unknown[]; candidacies: unknown[]; curatedAt: string };
 
 const verdict = compareFiling({

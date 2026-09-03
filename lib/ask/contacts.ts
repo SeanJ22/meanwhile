@@ -42,7 +42,7 @@ import { rosterForBody } from "../registry/body-rosters.ts";
 import { representationForDivision } from "../registry/representation.ts";
 import type { SeatHolder } from "../officials/lookup.ts";
 import { isDivisionsOwnGovernment } from "../officials/division-government.ts";
-import type { BodyDivisionType } from "../officials/body-blurbs.ts";
+import type { BodyDivisionType } from "../officials/body-description.ts";
 
 /** Where a contact came from, so the answer can say the relationship out loud. */
 export type ContactBasis =
@@ -95,7 +95,7 @@ function isStaff(holder: SeatHolder): boolean {
  * `tests/body-composition.test.ts` bans outside two named callers.
  *
  * That ban is right and it is worth restating rather than routing around: a
- * BODY's members come from `lib/registry/body-composition.ts` and from
+ * BODY's members come from `lib/registry/body-membership.ts` and from
  * nowhere else, because the convenient division fallback is what once gave a
  * Tucson advisory board the Mayor and Council as its membership. Ask is not
  * rendering a body's roster here; it is answering "who can I contact about this

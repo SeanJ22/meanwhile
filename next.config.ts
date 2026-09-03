@@ -1,5 +1,14 @@
 import type { NextConfig } from "next";
 
+// Dynamic registry reads must retain their canonical inputs in every consuming route.
+const registryHoldingsTrace = [
+  "./data/states/*/geo/**/*.geojson",
+  "./data/states/*/officials/officeholders-*.json",
+  "./data/derived/resolver-geometry.json",
+  "./public/geo/*.geojson",
+  "./lib/registry/*.json",
+];
+
 const nextConfig: NextConfig = {
   productionBrowserSourceMaps: process.env.WTP_ATTRIBUTION_BUILD === "1",
   /**
@@ -38,6 +47,8 @@ const nextConfig: NextConfig = {
   // so on a serverless host the files would silently be absent from the
   // function bundle without this. Locally it changes nothing.
   outputFileTracingIncludes: {
+    "/api/{address/resolve,ballot/scope,demand-signal,meetings,reactions,representation/**,speak,votes,voting-sites}": registryHoldingsTrace,
+    "/{ballot,about-area}": registryHoldingsTrace,
     "/api/meetings": [
       "./public/geo/**",
       "./lib/registry/*.json",
@@ -96,7 +107,7 @@ const nextConfig: NextConfig = {
        * this ruling was adopted to close, and would look exactly like honest
        * missing data.
        */
-      "./data/funding/*.json",
+      "./data/funding/*.json", "./data/states/*/funding/*.json",
       /*
        * THE ARIZONA 2026 IDENTITY LAYER (RULING 229, Session C3, 2026-09-01).
        *
@@ -107,7 +118,7 @@ const nextConfig: NextConfig = {
        * the money that IS held stops reaching the reader — indistinguishable
        * from honest missing data, which is the exact reason this list exists.
        */
-      "./data/identity/*.json",
+      "./data/identity/*.json", "./data/states/*/identity/*.json",
     ],
     /*
      * THE QUESTIONNAIRE PAGE RESOLVES AN ID TO A NAME, through `process.cwd()`.
@@ -118,7 +129,7 @@ const nextConfig: NextConfig = {
      * neutral fallback — which reads as a deliberate choice rather than as a
      * missing file, and is exactly the failure that made this list necessary.
      */
-    "/questionnaire/[token]": ["./data/ballot/*.json"],
+    "/questionnaire/*": ["./data/ballot/*.json", "./data/states/*/ballot/*.json"],
     "/about-area": ["./data/derived/zip-coverage-tiers-runtime.json"],
     "/api/reactions": ["./data/derived/zip-coverage-tiers-runtime.json"],
     "/api/log": ["./data/derived/zip-coverage-tiers-runtime.json"],
@@ -146,9 +157,10 @@ const nextConfig: NextConfig = {
      * Named per route that reaches them, as every other entry here is.
      */
     "/api/ask/grounded": [
+      ...registryHoldingsTrace,
       "./data/*.json",
-      "./data/ballot/*.json",
-      "./data/officials/*.json",
+      "./data/ballot/*.json", "./data/states/*/ballot/*.json",
+      "./data/officials/*.json", "./data/states/*/officials/*.json",
       "./data/derived/zip-coverage-tiers-runtime.json",
       "./data/derived/zip-division-ids.json",
       "./lib/registry/*.json",
@@ -163,7 +175,7 @@ const nextConfig: NextConfig = {
        * is indistinguishable from honest missing data, which is the exact
        * reason this list exists.
        */
-      "./data/votes/*.json",
+      "./data/votes/*.json", "./data/states/*/votes/*.json",
       /*
        * The Legistar outcome store (2026-08-29). Same reasoning as the votes
        * snapshot immediately above, and the same failure mode if it is left
@@ -175,7 +187,7 @@ const nextConfig: NextConfig = {
        * `lib/outcomes/store.ts` reads the default path as a LITERAL so the
        * tracer can see it; this is the other half, and neither works alone.
        */
-      "./data/outcomes/*.json",
+      "./data/outcomes/*.json", "./data/states/*/outcomes/*.json",
       /*
        * The held campaign-finance stores (2026-08-30). Same two-half rule as
        * the votes and outcome entries above: `lib/control-plane/campaign-
@@ -187,7 +199,7 @@ const nextConfig: NextConfig = {
        * money rows — the exact false sentence lib/ask/local-finance.ts was
        * built to retire.
        */
-      "./data/campaign-finance/*.json",
+      "./data/campaign-finance/*.json", "./data/states/*/campaign-finance/*.json",
     ],
     "/api/ask/agenda": ["./data/*.json"],
   },

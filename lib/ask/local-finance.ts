@@ -126,7 +126,7 @@ export function financeQuestionAsked(question: string): boolean {
  *
  * - `"School Governing Board - Vail"` is the Pima County filing officer's own
  *   designation on four candidate-committee register rows
- *   (`data/campaign-finance/az-pima-2026-held.json`,
+ *   (`data/states/az/campaign-finance/az-pima-2026-held.json`,
  *   `committeeRegisterCountyPortal`, read from the county's own portal API
  *   2026-08-29). The body is the Vail Unified School District Governing Board:
  *   the registry's LIVE Vail body (`lib/registry/registry.json`), whose roster

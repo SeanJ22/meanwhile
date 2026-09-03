@@ -2197,7 +2197,7 @@
     {
       "key": "ballot-nh-merrimack:state-senate-7:innis-daniel-e-",
       "name": "Daniel E. Innis",
-      "note": "CONTEST 8 of 12. THE WALL THAT WAS NOT THERE: CLAUDE.md and data/ballot/nh-merrimack-2026.json both record that gc.nh.gov 'refuses every client this project has, browsers included' (written 2026-08-14). Re-walked 2026-08-21 and it is FALSE — gc.nh.gov and gencourt.state.nh.us both answer a plain rung-2 fetch at HTTP 200. Four of the five Kelly fields for this candidate came from that one host. He is the sitting Senator for District 7 and is standing again. PHOTO door 2, email, phone and specific verified page all from the General Court's own roster and district page. FILED CONTACT: 328 Center Rd, Bradford NH 03221 (Secretary of State 2026 filing). CAMPAIGN SITE: not yet searched at the time this row was written — owed.",
+      "note": "CONTEST 8 of 12. THE WALL THAT WAS NOT THERE: CLAUDE.md and data/states/nh/ballot/nh-merrimack-2026.json both record that gc.nh.gov 'refuses every client this project has, browsers included' (written 2026-08-14). Re-walked 2026-08-21 and it is FALSE — gc.nh.gov and gencourt.state.nh.us both answer a plain rung-2 fetch at HTTP 200. Four of the five Kelly fields for this candidate came from that one host. He is the sitting Senator for District 7 and is standing again. PHOTO door 2, email, phone and specific verified page all from the General Court's own roster and district page. FILED CONTACT: 328 Center Rd, Bradford NH 03221 (Secretary of State 2026 filing). CAMPAIGN SITE: not yet searched at the time this row was written — owed.",
       "attemptedAt": "2026-08-21"
     },
     {

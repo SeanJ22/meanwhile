@@ -66,8 +66,8 @@ import { fetchWikitext, refs, resolveRefNames, plain } from "../lib/hunt/wikiped
 import { politeGetText } from "../lib/sources/http.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const LEADS = join(ROOT, "data/hunt/wiki-leader-leads-07866.json");
-const OUT = join(ROOT, "data/hunt/wiki-citation-follow.json");
+const LEADS = join(ROOT, "data/states/nj/hunt/wiki-leader-leads-07866.json");
+const OUT = join(ROOT, "data/states/nj/hunt/wiki-citation-follow.json");
 const TIER_DIRECTORIES = join(ROOT, "data/hunt/tier-directories.json");
 
 const STAMP = process.env.WTP_STAMP ?? "";

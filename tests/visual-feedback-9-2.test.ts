@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
-import { MEASURE_SUMMARIES } from "../lib/ballot/measure-summaries.ts";
+import { MEASURE_SUMMARIES } from "../lib/ballot/measure-summary.ts";
 
 /**
  * VISUAL FEEDBACK 9.2.26 — the permanent checks for the rows this session

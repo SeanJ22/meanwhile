@@ -92,8 +92,8 @@ test("no adapter carries a body id outside the serving-tenant denominator", () =
    * exists rather than a comment asking people to remember.
    */
   const DECLARED = new Set([
-    join("lib", "sources", "legistar", "clients.ts"),
-    join("lib", "sources", "legistar-insite", "tenants.ts"),
+    join("lib", "sources", "legistar", "client-registry.ts"),
+    join("lib", "sources", "legistar-insite", "tenant-registry.ts"),
   ]);
 
   // `tsFilesUnder` walks the whole tree, so an adapter directory somebody adds
@@ -172,7 +172,7 @@ const SYNTHETIC: RegistryView = {
 
 const tenant = (over: Partial<ServingTenant>): ServingTenant => ({
   table: "INSITE_TENANTS",
-  modulePath: "lib/sources/legistar-insite/tenants.ts",
+  modulePath: "lib/sources/legistar-insite/tenant-registry.ts",
   tenant: "probe",
   bodyId: "ocd-division/country:us/state:az/place:x#governing",
   ocdId: "ocd-division/country:us/state:az/place:x",
@@ -206,7 +206,7 @@ test("a body id nothing in the registry carries is caught, and the message names
   assert.deepEqual(faults.map((f) => f.code), ["BODY_NOT_IN_REGISTRY"]);
   const message = formatFault(faults[0]!);
   assert.match(message, /INSITE_TENANTS "ghost"/);
-  assert.match(message, /lib\/sources\/legistar-insite\/tenants\.ts/);
+  assert.match(message, /lib\/sources\/legistar-insite\/tenant-registry\.ts/);
   assert.match(message, /place:ghost#governing/);
 });
 
@@ -240,7 +240,7 @@ test("a division the registry does not have is caught", () => {
     [
       {
         table: "LEGISTAR_CLIENTS",
-        modulePath: "lib/sources/legistar/clients.ts",
+        modulePath: "lib/sources/legistar/client-registry.ts",
         tenant: "nowhere",
         bodyId: "ocd-division/country:us/state:az/place:nowhere#governing",
         ocdId: "ocd-division/country:us/state:az/place:nowhere",

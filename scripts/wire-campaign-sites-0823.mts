@@ -61,9 +61,9 @@ import { fileURLToPath } from "node:url";
 import { politeGetText } from "../lib/sources/http.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const PROMOTION = join(ROOT, "data/hunt/lead-promotion-0823.json");
-const EMAIL_ROUTE = join(ROOT, "data/hunt/nj-filed-email-domain.json");
-const BALLOT = join(ROOT, "data/ballot/nj-morris-2026.json");
+const PROMOTION = join(ROOT, "data/states/nj/hunt/lead-promotion-0823.json");
+const EMAIL_ROUTE = join(ROOT, "data/states/nj/hunt/nj-filed-email-domain.json");
+const BALLOT = join(ROOT, "data/states/nj/ballot/nj-morris-2026.json");
 const LINKS = join(ROOT, "data/ballot/candidate-links-2026.json");
 
 const STAMP = process.env.WTP_STAMP ?? "";

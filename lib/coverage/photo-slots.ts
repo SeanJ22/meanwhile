@@ -33,6 +33,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { BALLOT_FILES, COVERED, rosterFile } from "./artifacts.ts";
+import { stateForBallotFile } from "../holdings/runtime-paths.ts";
 import { BODY_ROSTERS } from "../registry/body-rosters.ts";
 import { STATEWIDE_EXECUTIVES } from "../officials/statewide-executives.ts";
 
@@ -71,30 +72,31 @@ function stateOfOcdId(ocdId: string): string {
  * the wrong tree.
  */
 export function photoSlots(root: string): PhotoSlot[] {
-  const read = (p: string) => JSON.parse(readFileSync(join(root, p), "utf8"));
   const slots: PhotoSlot[] = [];
 
   // The manifest gate: a row only ships if it carries a licence. This is the
   // same test the render path applies, so the census cannot report a portrait
   // the product would refuse to serve.
-  const manifest = read("lib/registry/official-photos.json") as {
+  const manifest = JSON.parse(readFileSync(join(root, "lib", "registry", "official-photos.json"), "utf8")) as {
     photos: { officeholderId: string; license: string | null }[];
   };
   const shippedIds = new Set(
     manifest.photos.filter((p) => p.license).map((p) => p.officeholderId),
   );
 
-  const registry = read("lib/registry/registry.json") as {
+  const registry = JSON.parse(readFileSync(join(root, "lib", "registry", "registry.json"), "utf8")) as {
     divisions: { ocdId: string; tier?: string }[];
   };
   const coveredOcdIds = new Set(registry.divisions.map((d) => d.ocdId));
 
   // ── Surface 1: ballot candidates (cards + lineup nominees) ────────────
-  const cardsFile = read("data/ballot/candidate-cards-2026.json") as {
+  const cardsFile = JSON.parse(readFileSync(join(root, "data", "ballot", "candidate-cards-2026.json"), "utf8")) as {
     cards: Record<string, { photoUrl: string | null }>;
   };
   for (const { file, state } of BALLOT_FILES) {
-    const data = read(`data/ballot/${file}`) as {
+    const holdingState = stateForBallotFile(file);
+    if (!holdingState) throw new Error(`State ballot filename required: ${file}`);
+    const data = JSON.parse(readFileSync(join(root, "data", "states", holdingState, "ballot", file), "utf8")) as {
       candidacies: { id: string; familyName: string; givenName: string }[];
     };
     for (const cand of data.candidacies) {
@@ -114,7 +116,7 @@ export function photoSlots(root: string): PhotoSlot[] {
       });
     }
   }
-  const lineup = read("data/ballot/az-general-lineup-2026.json") as {
+  const lineup = JSON.parse(readFileSync(join(root, "data", "states", "az", "ballot", "az-general-lineup-2026.json"), "utf8")) as {
     contests: { contestId: string; nominees: { name: string }[] }[];
   };
   // A nominee who is also a candidacy (the governor's race) must not be
@@ -137,7 +139,7 @@ export function photoSlots(root: string): PhotoSlot[] {
   }
 
   // ── Surface 2: federal roster officials ───────────────────────────────
-  const us = read("lib/registry/officeholders-us.json") as {
+  const us = JSON.parse(readFileSync(join(root, "lib", "registry", "officeholders-us.json"), "utf8")) as {
     officeholders: { id: string; name: string }[];
     divisions: { officeholderId: string; ocdId: string }[];
   };
@@ -176,7 +178,7 @@ export function photoSlots(root: string): PhotoSlot[] {
 
   // ── Surface 3: state legislators (district popups) ────────────────────
   for (const state of COVERED) {
-    const data = read(`lib/registry/${rosterFile(state)}`) as {
+    const data = JSON.parse(readFileSync(join(root, "data", "states", state.slug, "officials", rosterFile(state)), "utf8")) as {
       officeholders: { id: string; name: string }[];
       divisions: { officeholderId: string; ocdId: string }[];
     };

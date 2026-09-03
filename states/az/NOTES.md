@@ -224,7 +224,7 @@ The five, none of them connected: **`gilacountyaz.gov` (Revize)**,
 **`navajocountyaz.gov`**, **`pinalcountyaz.gov`** and
 **`santacruzcountyaz.gov`** (CivicPlus). Table at `states/az/tenancy.md`.
 
-**Pima's Legistar tenant was ALREADY WIRED** — `lib/sources/legistar/clients.ts`
+**Pima's Legistar tenant was ALREADY WIRED** — `data/states/az/meetings/legistar-venues.json`
 carries it as the only client, with two venues and their coordinates. The
 brief's Item 4 premise that *nobody asked the county whether it had a tenant* is
 wrong against the repo, and is recorded as wrong rather than worked around.

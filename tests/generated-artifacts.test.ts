@@ -14,7 +14,7 @@
  *    untouched. The script kept producing the wrong caption and the defect
  *    recurred one session later, in NJ Hunt 5.
  *
- * 2. **`data/hunt/nj-morris-municipal-sites.json`, which was worse.** Its
+ * 2. **`data/states/nj/hunt/nj-morris-municipal-sites.json`, which was worse.** Its
  *    generator had ALREADY been fixed; nobody had regenerated. The committed
  *    artifact pointed five municipalities at the wrong government's website —
  *    `morris_township` at Morris Plains', `chatham_township` at Chatham
@@ -149,7 +149,13 @@ test("RULING 92: a file declaring itself GENERATED is registered here", () => {
 test("RULING 92: a PURE generator's artifact is byte-identical to what it produces now", () => withTreeLock(
   "regenerate every pure artifact in place and compare it to the committed bytes",
   () => {
+  const checked = new Set<string>();
   for (const a of GENERATED.filter((x) => x.pure)) {
+    if (a.checkCommand) {
+      if (!checked.has(a.checkCommand)) execSync(a.checkCommand, { cwd: ROOT, stdio: "pipe", encoding: "utf8" });
+      checked.add(a.checkCommand);
+      continue;
+    }
     const full = join(ROOT, a.path);
     const committed = readFileSync(full, "utf8");
     try {
@@ -195,7 +201,7 @@ test("RULING 92: a PURE generator's artifact is byte-identical to what it produc
 /* ========================================================================== */
 
 /**
- * RULING 92 has no end. `data/hunt/nj-morris-municipal-sites.json` pointed
+ * RULING 92 has no end. `data/states/nj/hunt/nj-morris-municipal-sites.json` pointed
  * five municipalities at the wrong government's website **with its generator
  * already fixed** — somebody had done the RULING 92 thing, correctly, and
  * stopped. Nothing went red, because "fix the generator" was satisfied the

@@ -387,7 +387,7 @@ the portal itself displays it — the entity overview the UI renders, or
 both of which take the same parameter string plus `ExportOptions` and were seen
 in the bundle — and adopt whichever aggregation reproduces the publisher's own
 figure. That is one bounded experiment, and it is what stands between this route
-and `data/funding/state-money-az-2026.json`.
+and `data/states/az/funding/state-money-az-2026.json`.
 
 #### That experiment was RUN, and it REFUTED the obvious answer
 
@@ -444,7 +444,7 @@ The block above closed with the row semantics UNDETERMINED, the identity
 `sum(Income) − sum(Expense) == CashBalance` refuted 134/121 over the population,
 and the note *"Arizona statewide money remains owed."* It is no longer owed for
 44 of the 49 candidacies the Secretary of State is the filing officer for.
-`data/funding/state-money-az-2026.json` exists and the ballot page renders it.
+`data/states/az/funding/state-money-az-2026.json` exists and the ballot page renders it.
 
 ### Why the refutation was correct and its conclusion was not
 

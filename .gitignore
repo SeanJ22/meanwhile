@@ -50,6 +50,14 @@ yarn-error.log*
 # a committed copy goes stale the moment maplibre-gl is upgraded.
 /public/maplibre-gl-worker.mjs
 
+# Serving projections of canonical data/states holdings, regenerated on build/dev.
+/public/states/
+# Acquired raw page corpora remain external/ignored after the state layout move.
+/data/states/*/hunt/*.html
+/data/states/*/hunt/*.xml
+/data/states/*/hunt/**/*.png
+/data/states/*/hunt/*-pdfs/
+
 # pid of the running dev server, written by scripts/dev.mjs, removed on exit.
 # Machine-local by definition; a committed one would name someone else's process.
 /.dev-server.pid

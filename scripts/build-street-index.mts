@@ -1,3 +1,5 @@
+import { stateForFips } from "../lib/holdings/files.ts";
+import { stateHoldingPath } from "../lib/holdings/paths.ts";
 /**
  * Build the device-local street index for the narrowing prompt — M26/4.6.3c.
  *
@@ -9,7 +11,7 @@
  * registry geometry to the municipal government and school district covering
  * it, and the result aggregates per (zip, street).
  *
- * Output, per ambiguous zip: `public/streets/<zip>.json` — a small static
+ * Output, per ambiguous zip: `data/states/<st>/streets/<zip>.json` — a small static
  * file the client fetches and matches AGAINST ON THE DEVICE. The reader's
  * street never leaves their browser; the only thing the server ever sees is
  * the zip-level file request, which reveals nothing the map didn't already
@@ -29,7 +31,6 @@ import { divisionsAt } from "../lib/registry/server.ts";
 import registryJson from "../lib/registry/registry.json" with { type: "json" };
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const OUT_DIR = join(ROOT, "public", "streets");
 const SUMMARY = join(ROOT, "lib", "registry", "street-index-summary.json");
 const UA = "we-the-people-civic-app/0.1 (contact: seanj22@gmail.com)";
 
@@ -128,6 +129,7 @@ function parseMidpoints(buf: Buffer): ([number, number] | null)[] {
 
 // ---- build ---------------------------------------------------------------
 interface ZipEntry {
+  state: string;
   municipalities: Map<string, string>;
   schoolDistricts: Map<string, string>;
   streets: Map<string, { muni: Set<string>; school: Set<string> }>;
@@ -137,6 +139,7 @@ const byZip = new Map<string, ZipEntry>();
 const resolveCache = new Map<string, { muni: [string, string][]; school: [string, string][] }>();
 
 for (const county of COUNTIES) {
+  const state = stateForFips(county.slice(0, 2));
   const url = `https://www2.census.gov/geo/tiger/TIGER2025/ADDRFEAT/tl_2025_${county}_addrfeat.zip`;
   const response = await fetch(url, { headers: { "user-agent": UA } });
   if (!response.ok) throw new Error(`${url} -> HTTP ${response.status}`);
@@ -191,12 +194,14 @@ for (const county of COUNTIES) {
       let entry = byZip.get(zipCode);
       if (!entry) {
         entry = {
+          state,
           municipalities: new Map(),
           schoolDistricts: new Map(),
           streets: new Map(),
         };
         byZip.set(zipCode, entry);
       }
+      if (entry.state !== state) throw new Error(`${zipCode}: street edges span states; a multi-state holding needs an explicit scope`);
       let street = entry.streets.get(streetKey);
       if (!street) {
         street = { muni: new Set(), school: new Set() };
@@ -219,7 +224,6 @@ for (const county of COUNTIES) {
 }
 
 // ---- emit ----------------------------------------------------------------
-await mkdir(OUT_DIR, { recursive: true });
 const generatedAt = new Date().toISOString();
 const summary: Record<
   string,
@@ -256,8 +260,10 @@ for (const [zipCode, entry] of [...byZip.entries()].sort()) {
     };
   }
 
+  const output = join(ROOT, stateHoldingPath(entry.state, "streets", `${zipCode}.json`));
+  await mkdir(dirname(output), { recursive: true });
   await writeFile(
-    join(OUT_DIR, `${zipCode}.json`),
+    output,
     JSON.stringify(
       {
         zip: zipCode,
@@ -286,7 +292,7 @@ await writeFile(
 );
 
 console.log(
-  `${byZip.size} zips seen, ${written} ambiguous zips written to public/streets/, summary → ${SUMMARY}`,
+  `${byZip.size} zips seen, ${written} ambiguous zips written to data/states/<st>/streets/, summary → ${SUMMARY}`,
 );
 console.log(
   `85641: ${JSON.stringify(summary["85641"] ?? "not ambiguous")} · 07866: ${JSON.stringify(summary["07866"] ?? "not ambiguous")}`,

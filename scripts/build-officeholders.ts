@@ -1,3 +1,4 @@
+import { rosterPath } from "../lib/holdings/files.ts";
 /**
  * @freshness-reads-here
  *
@@ -22,8 +23,8 @@
  * doing it here is that it stops being invisible.
  */
 
-import { writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 
 import { FIPS_BY_SLUG } from "../lib/coverage/artifacts.ts";
 import { congressSource } from "../lib/sources/congress/index.ts";
@@ -43,12 +44,9 @@ const OUT = join(process.cwd(), "lib", "registry", "officeholders-us.json");
 const STATE_FIPS: Record<string, string> = FIPS_BY_SLUG;
 
 function stateOut(state: string): string {
-  return join(
-    process.cwd(),
-    "lib",
-    "registry",
-    `officeholders-${STATE_FIPS[state]}.json`,
-  );
+  const path = join(process.cwd(), rosterPath(`officeholders-${STATE_FIPS[state]}.json`));
+  mkdirSync(dirname(path), { recursive: true });
+  return path;
 }
 
 interface RegistryDivision {

@@ -1,3 +1,4 @@
+import { rosterPath } from "../lib/holdings/files.ts";
 /**
  * **The portrait review list** — D50 item 7b, the author's standing order
  * (2026-08-19): *"make sure those are noted in the tracker for ME to go look
@@ -125,7 +126,7 @@ function renderSites(): {
     };
     try {
       parsed = JSON.parse(
-        readFileSync(join(ROOT, "lib", "registry", file), "utf8"),
+        readFileSync(join(ROOT, rosterPath(file)), "utf8"),
       );
     } catch {
       continue;

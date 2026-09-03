@@ -1,3 +1,4 @@
+import { stateDomainFiles } from "../lib/holdings/files.ts";
 /**
  * `pnpm mine:wiki-leaders` — **the roster rows already sitting in a committed
  * graph, with the markup taken off.**
@@ -9,7 +10,7 @@
  *
  * ## How it was conceived
  *
- * `data/hunt/wiki-graph-07866.json` is 4.5 MB of committed government graph
+ * `data/states/nj/hunt/wiki-graph-07866.json` is 4.5 MB of committed government graph
  * from 2026-08-22: 280 nodes, 174 entities discovered, 171 of them bodies the
  * registry does not hold. Its per-node `leaders` array had never been read.
  *
@@ -44,11 +45,11 @@
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { readdirSync } from "node:fs";
+
 
 const ROOT = process.cwd();
-const GRAPH = process.argv[2] ?? "data/hunt/wiki-graph-07866.json";
-const OUT = "data/hunt/wiki-leader-leads-07866.json";
+const GRAPH = process.argv[2] ?? "data/states/nj/hunt/wiki-graph-07866.json";
+const OUT = "data/states/nj/hunt/wiki-leader-leads-07866.json";
 
 interface Leader {
   title?: string;
@@ -87,9 +88,8 @@ const graph = JSON.parse(readFileSync(join(ROOT, GRAPH), "utf8")) as {
 
 /** Every officeholder name this product already holds, for the delta. */
 const held = new Set<string>();
-for (const file of readdirSync(join(ROOT, "lib/registry"))) {
-  if (!/^officeholders-.*\.json$/.test(file)) continue;
-  const parsed = JSON.parse(readFileSync(join(ROOT, "lib/registry", file), "utf8")) as
+for (const file of ["lib/registry/officeholders-us.json", ...stateDomainFiles(ROOT, "officials").filter((file) => /officeholders-\d{2}\.json$/.test(file))]) {
+  const parsed = JSON.parse(readFileSync(join(ROOT, file), "utf8")) as
     | { officeholders?: { name?: string }[] }
     | { name?: string }[];
   const arr = Array.isArray(parsed) ? parsed : (parsed.officeholders ?? []);

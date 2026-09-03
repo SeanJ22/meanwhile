@@ -68,6 +68,7 @@
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { ballotPath } from "../lib/holdings/files.ts";
 
 import {
   classifyCampaignPage,
@@ -152,7 +153,7 @@ if (!ballotFile) {
   console.error(`pnpm leads:adjudicate --zip=<${Object.keys(BALLOTS).join("|")}>`);
   process.exit(1);
 }
-const ballot = JSON.parse(readFileSync(join(ROOT, "data", "ballot", ballotFile), "utf8")) as {
+const ballot = JSON.parse(readFileSync(join(ROOT, ballotPath(ballotFile)), "utf8")) as {
   contests: { id: string; title: string }[];
   candidacies: Candidate[];
 };

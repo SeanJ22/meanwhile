@@ -41,8 +41,8 @@ import {
  * asserted on here; its statewide denominator is that lane's to state.
  */
 
-const NH_CORPUS = join(ROOT, "data", "campaign-finance", "nh-cfs-filer-index-2026.json");
-const NJ_UNIVERSE = join(ROOT, "data", "campaign-finance", "nj-elec-location-universe.json");
+const NH_CORPUS = join(ROOT, "data", "states", "nh", "campaign-finance", "nh-cfs-filer-index-2026.json");
+const NJ_UNIVERSE = join(ROOT, "data", "states", "nj", "campaign-finance", "nj-elec-location-universe.json");
 const NJ_SCRIPT = join(ROOT, "scripts", "state-money-nj.mts");
 
 /* ------------------------------------------------- the vocabulary itself */
@@ -246,7 +246,7 @@ test("NH: a corpus shorter than the stated total is REFUSED, not used", () => {
   const held = loaded;
   /* The refusal is what keeps a partial from becoming a smaller universe.
      Written against a temporary file so the real corpus is never touched. */
-  const tmp = join(ROOT, "data", "campaign-finance", "nh-cfs-filer-index-2026.json");
+  const tmp = join(ROOT, "data", "states", "nh", "campaign-finance", "nh-cfs-filer-index-2026.json");
   const parsed = JSON.parse(readFileSync(tmp, "utf8")) as Record<string, unknown>;
   const short = { ...parsed, rows: held.rows.slice(0, 10) };
   const path = join(ROOT, "tests", "fixtures", "__nh-short-corpus.json");

@@ -234,7 +234,7 @@ export function executiveActionStore(): ExecutiveActionStore | null {
   if (cache !== undefined) return cache;
   try {
     cache = JSON.parse(
-      readFileSync(join(process.cwd(), "data", "officials", "az-governor-actions.json"), "utf8"),
+      readFileSync(join(process.cwd(), "data", "states", "az", "officials", "az-governor-actions.json"), "utf8"),
     ) as ExecutiveActionStore;
   } catch {
     cache = null;

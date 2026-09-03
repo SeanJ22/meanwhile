@@ -20,8 +20,8 @@ import { isRenderable, type StateMoneySnapshot } from "../lib/funding/state-mone
  * fail honestly every time the state updated it.
  */
 
-const SNAPSHOT = join(ROOT, "data", "funding", "state-money-nh-2026.json");
-const BALLOT = join(ROOT, "data", "ballot", "nh-merrimack-2026.json");
+const SNAPSHOT = join(ROOT, "data", "states", "nh", "funding", "state-money-nh-2026.json");
+const BALLOT = join(ROOT, "data", "states", "nh", "ballot", "nh-merrimack-2026.json");
 
 function snapshot(): StateMoneySnapshot {
   return JSON.parse(readFileSync(SNAPSHOT, "utf8")) as StateMoneySnapshot;

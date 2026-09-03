@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "state": "AZ",
+  "source": {
+    "baseSha": "3f9a138fd39f6160659329e17c496d2dd99cee00",
+    "sourceSha256": "baf1975b708486bbd536ee9fb644cc3eacf0d7e65daf686afb4e3683a401af01",
+    "recordsSha256": "9337ee6a0736d8df30c62d51dc4f080a292296b4fbe922f763744ef61844a27b"
+  },
+  "commentary": [
+    "/**\n * WHAT A GOVERNING BODY DOES — the sourced half of M136's section 2.\n *\n * ## Why this is a separate library from `office-blurbs.ts`\n *\n * That one answers \"what does the person holding this office do\", keyed by an\n * office TITLE. This answers \"what does this body do\", which is a different\n * question with a different legal basis: a school board's powers come from one\n * statute whether it has five members or seven, and a county board's from\n * another, and neither is derivable from any one seat's title.\n *\n * ## The rule these entries live under\n *\n * `CLAUDE.md`: **never generate a claim about a government.** Every entry here\n * is a plain-language paraphrase of a CITED statute or charter, read before it\n * was written, with the citation and its URL on the row. A body this library\n * has no entry for gets the honest absence line — never a paraphrase of what\n * bodies of that kind \"generally\" do, which is exactly the shape of a\n * generated claim wearing a reasonable face.\n *\n * The register is LEVEL, because this is a claim surface: what the body can\n * and cannot decide, in words a fifteen-year-old reads once.\n *\n * ## What is here, and what is honestly not\n *\n * Arizona's three governing classes are entered, because M136's own done-test\n * names Pima County, Tucson and Tucson Unified. New Hampshire's are NOT, and\n * that is a stated gap rather than a silent one: those bodies render the\n * absence line until a session reads RSA 28, RSA 47 and RSA 189 the way this\n * one read A.R.S. 11-251 and 15-341. The absence line is identical for every\n * unsourced body, so no body is made to look smaller than another by it.\n */",
+    "/** The plain-words explanation. Level register — this is a claim. */",
+    "/** Where this body's powers are defined. The checkable source. */",
+    "/** The date the citation above was read. Never a plausible date. */",
+    "/** The division kinds a covered body can sit on. Mirrors `CoveredBody`. */",
+    "/** Two-letter state, lowercased, as it appears in an OCD-ID. */",
+    "/**\n * By state and division kind. A body whose state or kind is missing gets\n * nothing — there is deliberately no national default, because \"what a county\n * board does\" is a different answer in all fifty states and a national\n * paraphrase would be wrong somewhere without ever saying so.\n */",
+    "/**\n * Overrides for one specific division, where the general answer would be\n * wrong for it. Same idea as `DIVISION_OFFICE_BLURBS` — and the same reason:\n * Tucson is a charter council-manager city, so anything saying its council\n * runs the city day to day would be false there.\n */",
+    "/**\n * The honest absence line for section 2. One sentence, describing OUR\n * research and never the body.\n *\n * It used to cite the candidate card's `THIN_CANDIDATE_LINE` as its sibling.\n * That line is deleted (RULING 42, 2026-08-20) and this one is NOT, because\n * they are different things: a BODY is an institution, and one body is not\n * ranked against another by how much we hold on it. The reason the card line\n * had to go — a marker that lands on exactly the least-resourced PERSON in a\n * contest — has no equivalent here.\n */",
+    "/**\n * The blurb for a body, or null. The division override wins, because it exists\n * precisely for the case where the general answer is wrong.\n *\n * **THIS FUNCTION IS KEYED ON THE DIVISION, AND ITS NAME SAYS BODY. THAT GAP IS\n * THE DEFECT DATA-4 / NH270 WAS ABOUT, AND IT IS LEFT NAMED RATHER THAN\n * SILENT.** (2026-08-29.)\n *\n * Both lookups below take an `ocdId`. `DIVISION_BODY_BLURBS` says so in its own\n * field name, and `BODY_BLURBS` is state × division-kind. So every answer this\n * returns is a claim about *the government of that division* — and 58 bodies\n * sit on `az/place:tucson`, of which exactly one is that government. Calling\n * this for any of the other 57 hands *\"This is the city's governing body — the\n * mayor and the council together\"* to a design review board.\n *\n * **The only legitimate caller is one that has ALREADY established the body IS\n * its division's own government**, by `isDivisionsOwnGovernment` in\n * `body-definitions.ts` — `bodyId === ocdId + \"#\" + <the registry's derived\n * suffix>`. Today there is exactly one such caller, `definitionsForBody`, and\n * the call sits below that gate. A new call site that does not pass the gate is\n * a false claim about a named government, not a missing feature.\n *\n * The signature is deliberately NOT widened to take a `bodyId` and check the\n * gate itself: that would make the gate a thing two modules each half-own, and\n * the check would then run twice with no single place to read it. The gate has\n * one home. This note names it.\n */"
+  ],
+  "records": {
+    "BODY_BLURBS": [
+      {
+        "state": "az",
+        "divisionType": "county",
+        "blurb": {
+          "text": "This is the county's governing board. It sets the county budget and property tax rate, runs county roads, the jail, the county hospital and health programs, and decides what can be built in the areas outside any city or town. It supervises how the county's other elected officers handle public money. It cannot change state law, and it has no say over what happens inside a city's own limits.",
+          "basis": "Arizona Revised Statutes § 11-251 (Powers of board)",
+          "basisUrl": "https://www.azleg.gov/ars/11/00251.htm",
+          "readOn": "2026-08-18"
+        }
+      },
+      {
+        "state": "az",
+        "divisionType": "school_district",
+        "blurb": {
+          "text": "This is the school district's governing board. It sets the policies the district's schools run on, manages school buildings and property, decides the district's budget and how state and county school money is spent, and hires the superintendent who runs the district day to day. It also handles appeals when a family disagrees with a decision a teacher made. It does not set state education standards — those come from the State Board of Education.",
+          "basis": "Arizona Revised Statutes § 15-341 (Governing board; powers and duties)",
+          "basisUrl": "https://www.azleg.gov/ars/15/00341.htm",
+          "readOn": "2026-08-18"
+        }
+      }
+    ],
+    "DIVISION_BODY_BLURBS": [
+      {
+        "divisionOcdId": "ocd-division/country:us/state:az/place:tucson",
+        "blurb": {
+          "text": "This is the city's governing body — the mayor and the council together. It passes city ordinances, adopts the city budget, sets city taxes and fees, and decides zoning: what can be built where. Tucson runs on a charter where a city manager the council hires handles the day-to-day work, so the mayor and council decide the direction and the money rather than running departments themselves.",
+          "basis": "Tucson City Charter (council–manager form)",
+          "basisUrl": "https://codelibrary.amlegal.com/codes/tucson/latest/tucson_az_charter",
+          "readOn": "2026-08-18"
+        }
+      }
+    ]
+  }
+}

@@ -13,7 +13,7 @@
  *
  * It reports what it observed and does not decide whether that is acceptable —
  * the expected roster comes from each body's own publication, quoted in
- * `lib/registry/body-composition.ts`, and is restated here so a reader of the
+ * `lib/registry/body-membership.ts`, and is restated here so a reader of the
  * output can check the comparison rather than trust it.
  *
  * Usage:

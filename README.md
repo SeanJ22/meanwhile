@@ -14,6 +14,22 @@ anyone how to vote.
 **Consumers never pay.** State campaign finance is tracked in Phase B and has
 not shipped.
 
+## Data layout
+
+State-scoped canonical data holdings live under `data/states/<st>/<domain>/`.
+Genuinely multi-state or national files remain in their domain folders. New
+state-scoped artifacts use the state directory when they are appropriate for Git;
+raw vault and asset-store bytes remain in their external stores.
+
+[`docs/states/<st>.md`](docs/states/az.md) is the generated answer to “what do we
+hold for this state?” It derives from authoritative registries, acquisitions,
+snapshots, obligations, and committed external readbacks. Run `pnpm state-manifest`
+to regenerate; never hand-edit these manifests. Each manifest names observation
+times so byte freshness cannot be mistaken for a fresh live observation.
+
+See [the holdings architecture](docs/architecture/state-holdings.md) for the move
+denominator, residual-path guard, reader mapping, and external readback contract.
+
 ## Getting started
 
 ```bash

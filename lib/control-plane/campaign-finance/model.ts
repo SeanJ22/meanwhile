@@ -839,7 +839,7 @@ export type CoverageStatus = (typeof COVERAGE_STATUSES)[number];
  *
  * The candidate universe is the DENOMINATOR and it comes from the ballot, not
  * from what we managed to find. A denominator that measures our own output is
- * the coverage attack mode; `data/ballot/az-pima-2026.json` is the ballot.
+ * the coverage attack mode; `data/states/az/ballot/az-pima-2026.json` is the ballot.
  */
 export interface CampaignFinanceCoverage {
   readonly contestId: string;

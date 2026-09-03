@@ -49,6 +49,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
+import { regenerateStaleDependents, spawningRunner } from "../lib/ops/generated-freshness.ts";
 import {
   CATCH_UP_MAX_DAYS,
   REFRESH_SOURCES,
@@ -406,6 +407,35 @@ const run: RefreshRun = {
 };
 
 if (!dryRun) {
+  // REGENERATE PURE DEPENDENTS OF THE FRESHLY-FETCHED DATA, BEFORE THE GATE.
+  // (2026-09-03, R6 liveness.)
+  //
+  // A source that changed a registered PURE generator's INPUT leaves the
+  // dependent stale — `meetings` writes data/meetings-snapshot.json, which feeds
+  // every docs/states/<xx>.md (lib/holdings/manifest.ts). The workflow's gate
+  // (`corepack pnpm test`) runs generated-artifacts.test.ts BEFORE refresh-gate
+  // could regenerate anything, so without this the gate would refuse the healthy
+  // source on a stale MANIFEST and the change could never land — proven by the
+  // controlled run 33786728614, where `meetings` was refused on
+  // generated-artifacts.test.ts. Regenerating here, from the data the sources
+  // just wrote, lets the gate see a fresh tree and the source survive. It is
+  // read-first (only stale dependents are rewritten) and deterministic. A source
+  // whose data the gate later refuses is reverted by refresh-gate, which
+  // regenerates AGAIN from the survivor tree — the two stages together keep every
+  // committed dependent current against whatever actually commits, and the
+  // push-door staleness guard is the backstop if either misses.
+  const preGate = regenerateStaleDependents({
+    runCheck: spawningRunner(ROOT),
+    runGen: (command) => spawningRunner(ROOT)(command),
+    log: (line) => console.log(line),
+  });
+  if (preGate.regenerated.length > 0) {
+    console.log(`refresh-daily · regenerated ${preGate.regenerated.length} stale dependent path(s) before the gate`);
+  }
+  for (const f of preGate.failed) {
+    console.error(`refresh-daily · a PURE dependent could not be regenerated before the gate: \`${f.command}\`\n${f.output}`);
+  }
+
   writeRefreshRun(ROOT, run, REFRESH_SOURCES);
   console.log(`\nrefresh-daily · wrote docs/refresh-run.json and docs/refresh-run.md`);
   if (writeDebtIfChanged(ROOT, debt, dayName)) {

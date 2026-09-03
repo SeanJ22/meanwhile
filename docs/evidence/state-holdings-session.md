@@ -332,3 +332,31 @@ Three focused tests prove ordering, refusal after a failed check, and refusal
 when the merge cannot complete. No gate or branch protection was removed.
 This shared-file repair is serialized to the integration owner. The final
 shipping invocation will rerun the full gate set and reuse PR 266.
+
+## Current hold: explicit export authorization required
+
+The retry was rejected before execution by automatic approval review. Its stated
+reason was that the command also exports local repository/transcript contents,
+and destination ownership alone did not establish explicit user authorization
+for that payload. The requested authorization names all local Claude transcripts
+from the seven WTP-named project directories, the canonical 26 documents and 12
+code files, and the verified private Drive folder `we-the-people`, ID
+`1YEB6h15FgRrXe6eD-IHAToEC9cvJaaaA`. The mandatory secret-value sweep remains
+required. This renewed hold supersedes the earlier approval-resolution checkpoint.
+No workaround, alternate merge door, or bypass was used.
+
+All unaffected local work is complete. Run
+`data/ops/gate-runs/2026-09-02-15.json` passed 16/16 gates on `7f5cf207` with
+4,958 registered tests: 4,957 passed, zero failed, one skipped. The three new
+shipping refusal tests passed. PR 266's prior head `47947aaf` passed all three
+GitHub jobs in run `33716191448`; the latest branch's remote checks must be read
+separately after its update. The local application walk remains 443 passed,
+zero failed and 24 explicitly unable to run. Subsequent changes affect the
+shipping instrument and durable records, not reader behavior.
+
+A1 and A2 remain NOT MET as integrated acceptance because the planned merge is
+still owed. Implementation and local proofs are ready for both rows. First-pass
+MET: 0/2; after-correction integrated MET: 0/2 at this hold. The remaining cursor
+is explicit export authorization, the existing `pnpm handoff --ship` door reusing
+PR 266, GitHub main checks, the actual deployed-SHA/HELD observation, and named
+closeout records. No additional acquisition or carried work enters this cursor.

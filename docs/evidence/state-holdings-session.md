@@ -442,3 +442,11 @@ archive filename recorded above. NH323 records collision-safe future run IDs as
 FRONTIER work. Root alone resolved shared files and owns final gates and merge.
 The prior 443-pass local walk predates the incoming reader changes, so a fresh
 combined local production walk is owed before shipping.
+
+The combined local production walk on `1cd545f4a31d329e8dc682f138f97e3f203c7ddc` passed 444
+executed checks, with zero failures, 23 explicitly unable to run and
+0 quarantined. Artifact: `data/health/walk-runs/2026-09-02-03.json`.
+The required production-only questions remain observations for after merge. The
+combined build passed the unchanged limits: largest application trace 223/230
+files and initial client gzip 547,475/940,000 bytes. The next canonical shipping
+run must pass all sixteen gates and all required GitHub checks on its exact head.

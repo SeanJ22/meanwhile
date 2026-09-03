@@ -53,9 +53,12 @@ test("the analyses store is populated, with its counts stated and consistent", (
   }
 });
 
-test("every summary cites the exact official text it was written from", () => {
+test("every statewide summary cites the exact official analysis it was written from", () => {
   const byContest = new Map(analysesFile.analyses.map((a) => [a.contestId, a]));
   for (const summary of MEASURE_SUMMARIES) {
+    // BAL-46: the local measures are written from their own held authority
+    // text, not a Legislative Council analysis — they resolve in the next test.
+    if (summary.citation === "measure-source") continue;
     const analysis = byContest.get(summary.contestId);
     assert.ok(analysis, `${summary.contestId}: summary with no analysis record`);
     assert.equal(
@@ -64,6 +67,39 @@ test("every summary cites the exact official text it was written from", () => {
       `${summary.contestId}: the summary's citation must be the analysis it summarizes`,
     );
     assert.ok(analysis.text, `${summary.contestId}: cited analysis has no text`);
+    assert.ok(summary.summary.length >= 100, `${summary.contestId}: summary too thin to be one`);
+  }
+});
+
+/**
+ * BAL-46 (2026-09-02): a local measure's summary cites the measure's OWN held
+ * authority text. The citation must resolve — the measure exists in the ballot
+ * data, it holds authority text (a question, and where published a statement),
+ * and the summary's URL is that measure's provenance URL exactly. Same
+ * describe-never-advocate rule as the statewide layer (held by the test below),
+ * same thinness floor.
+ */
+test("every local summary cites the exact measure source it was written from", () => {
+  const ballot = JSON.parse(
+    readFileSync(
+      join(process.cwd(), "data", "ballot", "az-pima-2026.json"),
+      "utf8",
+    ),
+  ) as { measures?: { contestId: string; questionText?: string; provenance: { sourceUrl: string | null } }[] };
+  const byContest = new Map((ballot.measures ?? []).map((m) => [m.contestId, m]));
+  for (const summary of MEASURE_SUMMARIES) {
+    if (summary.citation !== "measure-source") continue;
+    const measure = byContest.get(summary.contestId);
+    assert.ok(measure, `${summary.contestId}: local summary with no measure record`);
+    assert.ok(
+      measure.questionText && measure.questionText.length > 0,
+      `${summary.contestId}: cited measure holds no authority text to summarize`,
+    );
+    assert.equal(
+      summary.summarizesUrl,
+      measure.provenance.sourceUrl,
+      `${summary.contestId}: the summary's citation must be the measure's own source`,
+    );
     assert.ok(summary.summary.length >= 100, `${summary.contestId}: summary too thin to be one`);
   }
 });

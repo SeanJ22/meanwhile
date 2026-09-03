@@ -111,5 +111,22 @@
         "85641"
       ]
     }
+  },
+  {
+    "id": "Q10",
+    "questionClass": "HAND_AUTHORED_ADVERSARIAL",
+    "templateText": "Explain Prop 141 to me",
+    "placeholders": [],
+    "applicability": {
+      "kind": "SPECIFIC_ZIPS",
+      "zips": [
+        "85641"
+      ]
+    },
+    "expectation": {
+      "kind": "ENTITY",
+      "entityId": "ballot-az-pima:prop-141",
+      "entityName": "Proposition 141"
+    }
   }
 ]

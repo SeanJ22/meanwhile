@@ -164,7 +164,20 @@ export function synthesisPrompt(pack: EvidencePack): string {
     "- Never tell the reader how to vote, never rank or score candidates, and never say who to support.",
     "- Never state a candidate's or official's position, stance or vote unless a supplied record states it.",
     "- Do not announce your own failure or apologise. State what is known, name what is missing, stop.",
-    "- Plain language. No identifiers, no codes, no internal state names.",
+    "- Plain language a twelve-year-old would understand. No identifiers, no codes, no internal state names.",
+    /*
+     * ASK-24, the owner's Prop 141 report: *"We want a 12-year-old's definition
+     * of what this proposition actually means."* The answer led with detail and
+     * buried the plain meaning, so the ordering is now a rule the model is given
+     * and not a hope. The relevance gate has already removed everything that is
+     * not about the asked subject, so "only about what was asked" is enforced
+     * upstream of this line too — this restates it because a rule the model can
+     * read is one more wall than a filter it cannot.
+     */
+    "- LEAD WITH THE PLAIN DEFINITION: begin with one or two short sentences saying, in the simplest words, what the thing the reader asked about actually MEANS. Say what it is before you say anything else about it.",
+    "- After the definition, add only the most important supporting facts, in DESCENDING order of relevance — most important first, and stop when the important part is said. Do not list everything in the records.",
+    "- Everything you write is about the ONE thing the reader asked about. Nothing about any other race, office, measure or person on the ballot belongs in the answer, even if a record mentions it.",
+    "- Any procedural caveat — wording not final, an analysis still pending, where a title came from — comes AFTER the definition, briefly, once, and only when a record states it. It is never the lead.",
     /*
      * ASK-19: the budget, generated from `lib/ask/length-contract.ts`, so the
      * rule the model is given and the rule the validator enforces are one
@@ -310,14 +323,21 @@ export function synthesisRequestBody(
    * breakpoint, which is the whole mechanism: it is what lets two
    * questions about one government share a prefix at all.
    *
-   * There is exactly ONE breakpoint. A second one on the system block
-   * would never fire — the system prompt renders 1,503 characters = 471
-   * tokens, counted at Anthropic's `count_tokens` endpoint on 2026-09-01
-   * and identical on `claude-opus-5` and `claude-sonnet-5`. That is below
-   * the minimum cacheable prefix of BOTH models (512 and 1024
-   * respectively), and a prefix under the minimum caches silently and
-   * reports nothing. A marker that cannot fire reads to the next session
-   * as a guarantee.
+   * There is exactly ONE breakpoint. On 2026-09-01 a second one on the
+   * system block would never fire — the system prompt rendered 1,503
+   * characters = 471 tokens, counted at Anthropic's `count_tokens` endpoint
+   * and identical on `claude-opus-5` and `claude-sonnet-5`, below the
+   * minimum cacheable prefix of BOTH models (512 and 1024), and a prefix
+   * under the minimum caches silently and reports nothing.
+   *
+   * **ASK-24 (2026-09-02) grew the system prompt to 2,347 characters** — the
+   * definition-first answer contract — which is ~56% larger by character
+   * count and, against the Opus-5 floor of 512, likely now ABOVE it. A
+   * system-block breakpoint could begin to fire on the incumbent model, so
+   * this is a cost OPPORTUNITY; it is still not added, because the
+   * `count_tokens` recount is owed first and a marker that only sometimes
+   * clears the floor reads as a guarantee in the other direction. The one
+   * breakpoint on the reader's question is unchanged.
    *
    * ITEM K, 2026-09-01: the minimum is a property of the MODEL and it
    * doubled when Ask moved to Sonnet 5, which is why the one breakpoint
@@ -357,6 +377,18 @@ export function synthesisRequestBody(
      * So this number and `ASK_SYNTHESIS_EFFORT` are COUPLED. Raising effort
      * above `high` requires raising this first, and a session that moves one
      * without the other will meet the truncation rather than a slower answer.
+     *
+     * **ASK-25 (2026-09-02) considered LOWERING this and did not.** The owner's
+     * report was token burn — *"pumping out way more information than what is
+     * asked."* But `max_tokens` only CAPS a draw; it does not shrink a
+     * well-behaved answer, so lowering it saves nothing on the answers the
+     * reader actually gets and only moves the truncation cliff closer to the
+     * adaptive-thinking budget that already sits under it. The token burn is cut
+     * where it is actually spent: the relevance gate (`lib/ask/relevance.ts`)
+     * hands the model a pack with the off-subject records removed — fewer input
+     * tokens, and fewer facts to write about — and the definition-first length
+     * contract in `synthesisPrompt` stops the model enumerating the records. The
+     * ceiling stays a safety ceiling.
      */
     max_tokens: 2048,
     /*

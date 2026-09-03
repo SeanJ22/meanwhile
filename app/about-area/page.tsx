@@ -66,7 +66,9 @@ export default async function AboutAreaPage({
           system reserves for numerals and identifiers, worn by the one string
           that is neither. It is the lockup now, at the 18px wordmark floor. */}
       <div className="mt-3">
-        <Logo variant="wordmark" size={18} />
+        {/* BAL-40 (2026-09-02): logo-first hierarchy — the wordmark leads the
+            page-title headline below it. */}
+        <Logo variant="wordmark" size={30} />
       </div>
       <h1 className="mt-1 text-xl font-semibold">
         The basics of living here

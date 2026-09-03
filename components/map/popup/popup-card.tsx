@@ -5,6 +5,7 @@ import { useRef, type ReactNode } from "react";
 
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 import type { Tier } from "@/lib/ocd/tiers";
+import { LevelTag } from "@/components/ui/level-tag";
 
 /**
  * The port of EdiaStratMap's `.popup-card`, as React primitives.
@@ -48,6 +49,17 @@ interface PopupCardProps {
    * The heading is still the accessible name via `aria-label`.
    */
   titleInBody?: boolean;
+  /**
+   * MTG-15 (2026-09-02): the level word after the title, opt-in.
+   *
+   * The eyebrow above already wears the tier's COLOUR on the jurisdiction
+   * string, but not the WORD — so a reader learns "Tucson, AZ" is local from
+   * the ink, never in as many words. The meeting card asks for the word by
+   * passing its tier; the official and district compact cards leave it unset
+   * and are unchanged, so this closes the meeting class without restyling the
+   * other two.
+   */
+  levelTier?: Tier | null;
   children: ReactNode;
 }
 
@@ -74,6 +86,7 @@ export function PopupCard({
   expandLabel,
   onClose,
   titleInBody = false,
+  levelTier,
   children,
 }: PopupCardProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -127,7 +140,12 @@ export function PopupCard({
             </span>
           ))}
         </p>
-        {!titleInBody && <h3>{title}</h3>}
+        {!titleInBody && (
+          <h3>
+            {title}
+            {levelTier !== undefined && <LevelTag tier={levelTier} />}
+          </h3>
+        )}
       </div>
 
       <div className={`popup-card-body${titleInBody ? "" : " mt-2.5"}`}>

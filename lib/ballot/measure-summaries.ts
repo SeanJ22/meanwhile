@@ -24,6 +24,23 @@ export interface MeasureSummary {
   /** The official text this was written from — the citation. */
   summarizesUrl: string;
   writtenAt: string;
+  /**
+   * WHICH store the citation resolves against (BAL-46, 2026-09-02).
+   *
+   * The eleven statewide propositions are written from the Arizona Legislative
+   * Council's adopted analysis, and `az-analyses-2026.json` is where that text
+   * lives — the default. The LOCAL measures — a county expenditure-base
+   * adjustment, three school-district budget overrides — have no Legislative
+   * Council analysis and never will; their authority is a county board and
+   * three school boards. Their summary is written from the measure's OWN held
+   * authority text (the ballot question and the authority's published
+   * statement, in `data/ballot/az-pima-2026.json`), so its citation resolves
+   * against the measure's provenance, not the analyses store. The neutrality
+   * rules are identical for both — describe, never advocate; write only from
+   * the cited text — which is why this is one store with two citation sources
+   * rather than two stores.
+   */
+  citation?: "azleg-analysis" | "measure-source";
 }
 
 const WRITTEN_AT = "2026-08-13";
@@ -116,6 +133,48 @@ export const MEASURE_SUMMARIES: MeasureSummary[] = [
     summarizesUrl:
       "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20SCR1032%20-%202026.pdf",
     writtenAt: WRITTEN_AT,
+  },
+
+  /*
+   * BAL-46 (2026-09-02): the LOCAL measures get the same plain-language layer
+   * the statewide ones have. Each is written ONLY from the measure's own held
+   * authority text — the ballot question and, where held, the authority's
+   * published statement — in `data/ballot/az-pima-2026.json`, and cites that
+   * source (`citation: "measure-source"`). What it does, never whether it is
+   * good; every figure is the authority's own.
+   */
+  {
+    contestId: "ballot-az-pima:prop-425",
+    summary:
+      "Would let Pima County permanently raise the state-set limit on how much money it is allowed to spend — its “expenditure base” — by $70 million, with that amount adjusted every year afterward for population growth and inflation. The county says that if voters approve it, the spending limit for 2027–28 would rise by about $610 million, from about $817 million to about $1.43 billion. A YES vote lets the county raise its 1979–80 base limit; a NO vote does not. The Pima County Board of Supervisors put it on the ballot.",
+    summarizesUrl:
+      "https://content.civicplus.com/api/assets/az-pimacounty/55aa379c-bc22-47fe-8b7c-d10dab0ade8c/permanent-base-adjustment-proposition-pdf.pdf",
+    writtenAt: WRITTEN_AT,
+    citation: "measure-source",
+  },
+  {
+    contestId: "ballot-az-pima:prop-423",
+    summary:
+      "Would let the Vail Unified School District keep spending up to 12.5% more than the state's revenue control limit each year, for 2027/2028 and the next six years. The district says this continues about $5.1 million above the alternate budget for 2027/2028, at an estimated $1.61 per $100 of a property's secondary assessed value. A YES vote continues the override; a NO vote ends it.",
+    summarizesUrl: "https://www.schools.pima.gov/",
+    writtenAt: WRITTEN_AT,
+    citation: "measure-source",
+  },
+  {
+    contestId: "ballot-az-pima:prop-428",
+    summary:
+      "Would let the Sahuarita Unified School District keep spending up to 15% more than its normal day-to-day “maintenance and operations” budget. Only voters who live in the district decide it, at the November 3, 2026 election. A YES vote continues that extra spending; a NO vote ends it.",
+    summarizesUrl: "https://www.schools.pima.gov/",
+    writtenAt: WRITTEN_AT,
+    citation: "measure-source",
+  },
+  {
+    contestId: "ballot-az-pima:prop-429",
+    summary:
+      "Would let the Tanque Verde Unified School District keep spending up to 15% more than its normal day-to-day “maintenance and operations” budget. Only voters who live in the district decide it, at the November 3, 2026 election. A YES vote continues that extra spending; a NO vote ends it.",
+    summarizesUrl: "https://www.schools.pima.gov/",
+    writtenAt: WRITTEN_AT,
+    citation: "measure-source",
   },
 ];
 

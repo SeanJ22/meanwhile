@@ -64,9 +64,11 @@ export default function TransparencyPage() {
           system reserves for numerals and identifiers, worn by the one string
           that is neither. It is the lockup now, at the 18px wordmark floor. */}
         <div>
-          <Logo variant="wordmark" size={18} />
+          {/* BAL-40 (2026-09-02): logo-first hierarchy — the wordmark leads,
+              the headline below comes down a step. */}
+          <Logo variant="wordmark" size={30} />
         </div>
-        <h1 className="mt-2 text-2xl font-semibold text-paper">
+        <h1 className="mt-2 text-xl font-semibold text-paper">
           What this site collects, and what it doesn&apos;t
         </h1>
 

@@ -100,6 +100,8 @@ import { sharedNotesFor } from "@/lib/ballot/shared-notes";
 import { resolveZip } from "@/lib/geo/zcta";
 import { divisionsAt } from "@/lib/registry/server";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { LevelTag } from "@/components/ui/level-tag";
+import { tierForOcdId } from "@/lib/ocd/tiers";
 import { Logo } from "@/components/brand/logo";
 import { PRODUCT_NAME } from "@/lib/brand";
 import {
@@ -154,6 +156,22 @@ export const runtime = "nodejs";
  */
 const NEUTRAL_NOTE =
   "The official ballot order either hasn't been drawn yet or wasn't machine-readable from the authority's filings. Candidates with a photo are listed first, then the rest, alphabetically by surname within each group — a photo is what lets someone tell two names apart. Party labels and slogans appear as filed. Nothing on this page is a recommendation.";
+
+/**
+ * **BAL-48 (2026-09-02): the length at which a contest's scope note is
+ * "extended election-mechanics text" and collapses behind "More info".**
+ *
+ * The owner's instance was Corporation Commissioner on a phone: the office
+ * explainer (which stays open — every race has one) followed by a further open
+ * paragraph on how many seats are up, the document that states the seat count,
+ * and the primary vote totals. That paragraph is `contest.scopeNote`, and at
+ * ~300 characters it walls off the ballot on a narrow screen. A short authority
+ * note — a one-line "nomination papers are not certified until September 2" —
+ * is context a reader should see at a glance and stays inline. The threshold is
+ * a plain character count, deterministic and viewport-independent; roughly two
+ * lines of body text on a phone.
+ */
+const EXTENDED_MECHANICS_CHARS = 180;
 
 /**
  * **THE ONE PAGE-LEVEL DISCLOSURE** (RULING 42, Prompt E item 3, 2026-08-20).
@@ -1048,11 +1066,19 @@ export default async function BallotPage({
       {/* ITEM J (2026-09-01): the page eyebrow was the product name typed as
           display text in a 10px uppercase MONO treatment — the register this
           system reserves for numerals and identifiers, worn by the one string
-          that is neither. It is the lockup now, at the 18px wordmark floor. */}
+          that is neither. It is the lockup now.
+
+          BAL-40 (2026-09-02): and the lockup leads. It sat at the 18px wordmark
+          floor beneath a 24px headline — small, big, small down the page, with
+          the brand the smallest mark on it. The owner's rule is that the logo
+          is the prominent element and the headline comes down to sit under it;
+          the wordmark reads first. 30px clears the 18px floor with room, and the
+          headline drops from text-2xl to text-xl so the hierarchy reads logo,
+          then page. Applied wherever the wordmark sits above a page headline. */}
       <div className="mt-4">
-        <Logo variant="wordmark" size={18} />
+        <Logo variant="wordmark" size={30} />
       </div>
-      <h1 className="mt-1.5 text-2xl font-semibold tracking-tight">
+      <h1 className="mt-1.5 text-xl font-semibold tracking-tight">
         What&apos;s on the ballot{zip ? ` near ${zip}` : ""}
       </h1>
 
@@ -1683,6 +1709,10 @@ export default async function BallotPage({
               <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
                 <h2 className="text-[1.0625rem] font-semibold tracking-tight">
                   {contest.title}
+                  {/* BAL-41 (2026-09-02): the level tag, immediately after the
+                      last word of the race title, in the tier's accent. Tier
+                      from the contest's OCD identity — never the office name. */}
+                  <LevelTag tier={tierForOcdId(contest.ocdId)} />
                   {/*
                     RULING 71, as JUR-4 leaves it (2026-08-23). The full
                     eleven-word pill rendered here twelve times across nine
@@ -1918,6 +1948,19 @@ export default async function BallotPage({
                           {scopeNotes.markerFor(contest.id)} see note
                         </a>
                       </p>
+                    ) : contest.scopeNote.length > EXTENDED_MECHANICS_CHARS ? (
+                      /* BAL-48: extended election-mechanics text collapses
+                         behind "More info", by default, on every viewport — the
+                         office explainer above stays open. Same disclosure
+                         pattern the measures' official analysis uses. */
+                      <details className="mt-1.5" data-scope-note-collapsed>
+                        <summary className="t-eyebrow cursor-pointer text-muted hover:text-link">
+                          More info
+                        </summary>
+                        <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
+                          {contest.scopeNote}
+                        </p>
+                      </details>
                     ) : (
                       <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
                         {contest.scopeNote}
@@ -2118,14 +2161,25 @@ export default async function BallotPage({
           renders no heading at all. */}
       {(
         [
-          { scope: "STATEWIDE", heading: "Statewide measures", list: statewideMeasures },
-          { scope: "LOCAL", heading: "Local measures", list: localMeasures },
+          { scope: "STATEWIDE", heading: "Statewide measures", list: statewideMeasures, tier: "state" },
+          { scope: "LOCAL", heading: "Local measures", list: localMeasures, tier: "local" },
         ] as const
       )
         .filter((group) => group.list.length > 0)
         .map((group) => (
         <section className="mt-7" key={group.scope} data-measure-scope={group.scope}>
-          <h2 className="t-structure text-paper-dim">{group.heading}</h2>
+          {/* BAL-41 (2026-09-02): the section header wears the tier's own
+              colour — the owner asked "Statewide measures" to read in the State
+              accent and "Local measures" in the Local one, matching the words
+              on the Who Governs Here card. Same structure eyebrow, only the ink
+              changes; the tier is the group's own scope, not a title match. */}
+          <h2
+            className="t-structure level-heading"
+            data-level-heading={group.tier}
+            style={{ "--level-heading-color": `var(--accent-${group.tier})` } as React.CSSProperties}
+          >
+            {group.heading}
+          </h2>
           <div className="ballot-card-grid">
           {group.list.map((contest) => {
             const analysis = analysisForContest(contest.id);
@@ -2146,6 +2200,10 @@ export default async function BallotPage({
               >
                 <h3 className="text-[0.9375rem] font-semibold tracking-tight">
                   {contest.title}
+                  {/* BAL-41 (2026-09-02): the level tag on every proposition
+                      title too — a statewide measure reads State, a county or
+                      district one reads Local, from the measure's OCD identity. */}
+                  <LevelTag tier={tierForOcdId(contest.ocdId)} />
                 </h3>
 
                 {/*
@@ -2160,19 +2218,26 @@ export default async function BallotPage({
                   measures do not have and never will — their authority is a
                   county board and three school boards.
                 */}
-                {measure && (
-                  <div className="mt-2.5" data-measure-question={measure.id}>
-                    <p className="t-eyebrow text-muted">
-                      The question on the ballot, word for word
-                    </p>
-                    <p className="t-record mt-1.5 whitespace-pre-line text-[0.8125rem] leading-relaxed text-paper-dim">
-                      {measure.questionText}
-                    </p>
-                  </div>
-                )}
+                {/*
+                  **BAL-46 (2026-09-02): the plain-language summary leads, for a
+                  LOCAL measure as well as a statewide one.**
 
-                {summary && analysis?.text && (
-                  <div className="mt-2.5 rounded-md bg-[var(--surface,rgba(255,255,255,0.04))] p-3">
+                  The condition was `summary && analysis?.text`, which could
+                  never fire for a local measure — a county resolution or a
+                  district Notice of Election has no Legislative Council analysis
+                  — so Prop 425 rendered its verbatim ballot text and its fiscal
+                  statement with no basic explainer at all, the exact gap the
+                  owner reported. It now fires on the summary alone. The "official
+                  text below" it points to is the statewide analysis for a state
+                  measure and the collapsed ballot-text disclosure (below) for a
+                  local one; both exist on the card. Sans, in the app's own
+                  voice, matching the state cards — the BAL-45 font parity.
+                */}
+                {summary ? (
+                  <div
+                    className="mt-2.5 rounded-md bg-[var(--surface,rgba(255,255,255,0.04))] p-3"
+                    data-measure-summary="PRESENT"
+                  >
                     <p className="t-eyebrow text-muted">
                       Plain-language summary — read the official text below
                     </p>
@@ -2181,6 +2246,21 @@ export default async function BallotPage({
                       {summary.summary}
                     </p>
                   </div>
+                ) : (
+                  measure && (
+                    /* The honest gap: a local measure whose plain-language layer
+                       has not been written yet says so, in our register, above
+                       the verbatim official text below — never a guessed
+                       summary. */
+                    <p
+                      className="mt-2.5 text-[0.75rem] leading-relaxed text-muted"
+                      data-measure-summary="GAP_OURS"
+                    >
+                      We haven&apos;t written a plain-language summary for this
+                      measure yet — the official ballot text is below, word for
+                      word.
+                    </p>
+                  )
                 )}
 
                 {/*
@@ -2306,28 +2386,61 @@ export default async function BallotPage({
                   this points at it rather than repeating it — and only where
                   there is a note to point at.
                 */}
-                {measure &&
-                  (measure.officialStatement ? (
-                    <div className="mt-3" data-measure-statement="PRESENT">
+                {/*
+                  **BAL-45 / BAL-47 (2026-09-02): the verbatim ballot text moves
+                  into a collapsed disclosure, where the statewide measures keep
+                  their Legislative Council analysis.**
+
+                  The owner struck the fiscal statement open on the card face
+                  (BAL-47) and the serif question text that made the local card
+                  read unlike the state ones (BAL-45). Both are quoted public
+                  record, so both belong one level down, behind a control that
+                  names them — exactly the treatment the state analysis gets. The
+                  plain-language summary above now speaks on the face; serif
+                  (`t-record`) is correct INSIDE the disclosure, the same
+                  register the state analysis wears there. The question and the
+                  statement stay addressable by a walk (`data-measure-question`,
+                  `data-measure-statement`) even collapsed — `<details>` keeps
+                  its children in the DOM. */}
+                {measure && (
+                  <details className="mt-2.5" data-measure-official-text>
+                    <summary className="t-eyebrow cursor-pointer text-muted hover:text-link">
+                      The official ballot text
+                    </summary>
+                    <div className="mt-2 rounded-md border border-[var(--panel-border)] p-3">
                       <p className="t-eyebrow text-muted">
-                        What the authority published with it
+                        The question on the ballot, word for word
                       </p>
-                      <p className="mt-1.5 whitespace-pre-line text-[0.8125rem] leading-relaxed text-paper-dim">
-                        {measure.officialStatement}
+                      <p
+                        className="t-record mt-1.5 whitespace-pre-line text-[0.8125rem] leading-relaxed text-paper-dim"
+                        data-measure-question={measure.id}
+                      >
+                        {measure.questionText}
                       </p>
+                      {measure.officialStatement ? (
+                        <div className="mt-3" data-measure-statement="PRESENT">
+                          <p className="t-eyebrow text-muted">
+                            What the authority published with it
+                          </p>
+                          <p className="t-record mt-1.5 whitespace-pre-line text-[0.8125rem] leading-relaxed text-paper-dim">
+                            {measure.officialStatement}
+                          </p>
+                        </div>
+                      ) : (
+                        <p
+                          className="mt-3 text-[0.75rem] leading-relaxed text-muted"
+                          data-measure-statement="GAP_OURS"
+                        >
+                          We have not recorded an official statement for this
+                          question
+                          {contest.scopeNote
+                            ? " — the note below names the document we have not read."
+                            : "."}
+                        </p>
+                      )}
                     </div>
-                  ) : (
-                    <p
-                      className="mt-3 text-[0.75rem] leading-relaxed text-muted"
-                      data-measure-statement="GAP_OURS"
-                    >
-                      We have not recorded an official statement for this
-                      question
-                      {contest.scopeNote
-                        ? " — the note below names the document we have not read."
-                        : "."}
-                    </p>
-                  ))}
+                  </details>
+                )}
 
                 {/*
                   The measure text's OWN citation, and only when the card's

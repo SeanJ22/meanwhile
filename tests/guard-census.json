@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 442,
-    "named": 4925,
+    "named": 4928,
     "dynamic": 18
   },
   "files": {
@@ -2993,6 +2993,7 @@
     },
     "tests/gate-parity.test.ts": {
       "names": [
+        "gate parity · block commands cannot consume later steps or turn comments into gates",
         "gate parity · each canonical authority is in BOTH the local set and the required CI job",
         "gate parity · every command CI runs as a gate is in the local gate set",
         "gate parity · every gate names the CI job it stands in for",
@@ -5699,6 +5700,8 @@
     },
     "tests/ruling-59-coverage-silence.test.ts": {
       "names": [
+        "RULING 59: changing the historical quotation cannot broaden the exemption",
+        "RULING 59: historical migration evidence cannot exempt reader data or other plan fields",
         "RULING 59: no reader surface renders a coverage claim",
         "RULING 59: the deleted coverage note has not come back",
         "RULING 59: the sanctioned line is exactly one sentence and unchanged",

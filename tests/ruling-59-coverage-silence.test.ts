@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -124,6 +125,35 @@ function withoutComments(src: string): string {
  */
 const LEDGER_VOCABULARY = "lib/coverage/tier.ts";
 
+const MOVE_PLAN = "data/state-holdings/move-plan.json";
+const HISTORICAL_TRACKER_LINE_SHA256 =
+  "41f95beb26c89289ab447c6a34a27acb32f2a3d64cc20e9ae193d25d0b71d648";
+
+/**
+ * The migration plan preserves one tracker line describing the deleted UI.
+ * That exact, hash-bound source quotation is evidence, like the comments
+ * above. Keep scanning every other field and every other file: neither the
+ * plan nor its directory is exempt from the reader-language guard.
+ */
+function readerSource(path: string, source: string): string {
+  if (path !== MOVE_PLAN) return withoutComments(source);
+  const plan = JSON.parse(source);
+  const historical = plan.allowedHistoricalReferences.filter(
+    (row: { path: string; jsonPointer: string }) =>
+      row.path === "docs/tracker.csv" && row.jsonPointer === "/sourceLine/15",
+  );
+  assert.equal(historical.length, 1, "the historical tracker quotation must be unique");
+  const quotation = historical[0];
+  assert.equal(quotation.sha256, HISTORICAL_TRACKER_LINE_SHA256);
+  assert.equal(
+    createHash("sha256").update(quotation.sourceText).digest("hex"),
+    HISTORICAL_TRACKER_LINE_SHA256,
+    "the historical tracker quotation changed; it cannot exempt new reader prose",
+  );
+  quotation.sourceText = "[exact historical tracker quotation: hash verified]";
+  return withoutComments(JSON.stringify(plan, null, 2));
+}
+
 const FILES = RENDER_ROOTS.flatMap((r) => walk(join(ROOT, r)));
 
 /**
@@ -213,17 +243,19 @@ const BANNED: ReadonlyArray<{ re: RegExp; why: string }> = [
   },
 ];
 
+function coverageClaims(path: string, source: string): string[] {
+  if (path === LEDGER_VOCABULARY) return [];
+  const src = readerSource(path, source);
+  return BANNED.flatMap(({ re, why }) => {
+    const m = re.exec(src);
+    return m ? [`${path}: ${JSON.stringify(m[0])} — ${why}`] : [];
+  });
+}
+
 test("RULING 59: no reader surface renders a coverage claim", () => {
-  const hits: string[] = [];
-  for (const file of FILES) {
-    if (rel(file) === LEDGER_VOCABULARY) continue;
-    const src = withoutComments(readFileSync(file, "utf8"));
-    for (const { re, why } of BANNED) {
-      const m = re.exec(src);
-      if (!m) continue;
-      hits.push(`${rel(file)}: ${JSON.stringify(m[0])} — ${why}`);
-    }
-  }
+  const hits = FILES.flatMap((file) =>
+    coverageClaims(rel(file), readFileSync(file, "utf8")),
+  );
   assert.deepEqual(
     hits,
     [],
@@ -235,6 +267,33 @@ test("RULING 59: no reader surface renders a coverage claim", () => {
       "generated and current by construction.\n\nFound:\n  " +
       hits.join("\n  "),
   );
+});
+
+test("RULING 59: historical migration evidence cannot exempt reader data or other plan fields", () => {
+  const source = readFileSync(join(ROOT, MOVE_PLAN), "utf8");
+  assert.deepEqual(coverageClaims(MOVE_PLAN, source), []);
+  assert.ok(
+    coverageClaims("data/states/az/ballot/planted-reader.json", source).length > 0,
+    "copying the archived UI quotation to a reader dataset must remain red",
+  );
+  const plan = JSON.parse(source);
+  plan.readerNote = "Not here yet";
+  assert.ok(
+    coverageClaims(MOVE_PLAN, JSON.stringify(plan)).some((hit) => hit.includes("Not here yet")),
+    "only the exact evidence field is exempt, never the entire plan",
+  );
+});
+
+test("RULING 59: changing the historical quotation cannot broaden the exemption", () => {
+  const plan = JSON.parse(readFileSync(join(ROOT, MOVE_PLAN), "utf8"));
+  const quotation = plan.allowedHistoricalReferences.find(
+    (row: { path: string; jsonPointer: string }) =>
+      row.path === "docs/tracker.csv" && row.jsonPointer === "/sourceLine/15",
+  );
+  quotation.sourceText += " Not curated yet";
+  // Rehashing a new claim in the plan must not turn it into frozen evidence.
+  quotation.sha256 = createHash("sha256").update(quotation.sourceText).digest("hex");
+  assert.throws(() => coverageClaims(MOVE_PLAN, JSON.stringify(plan)), assert.AssertionError);
 });
 
 test("RULING 59: the deleted coverage note has not come back", () => {

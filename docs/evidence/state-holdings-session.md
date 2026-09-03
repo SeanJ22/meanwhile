@@ -181,3 +181,37 @@ Drive mirror, which the mutating shipping path updates. Current main remained
 `3f9a138` and its four GitHub checks were green; no other PR was open.
 
 The full shipping gate set and single merge are the remaining A1/A2 requirements.
+
+## Final gate diagnosis and shipping authorization
+
+The first sixteen-gate integration run is recorded in
+`data/ops/gate-runs/2026-09-02-10.json`: 15 gates passed. The test gate registered
+4,951 tests (4,944 passed, six failed, one skipped). Both production builds, the
+manifest freshness check and residual-path check passed. Three failures came from
+the workflow test's block-command regex consuming subsequent YAML steps and
+comments after the new frozen-base setup. The repaired instrument uses the
+existing YAML parser, explicitly names the three setup commands, and proves that
+a block cannot hide a following gate or mistake a comment for a command. Two
+tenant-binding tests retained old consumer basenames after their modules moved.
+The sixth failure was the reader-coverage guard scanning the exact historical
+tracker quotation carried as move-plan evidence. Only that field is excluded,
+after verifying its fixed source hash; copied reader data, other plan fields and
+changed/rehashed quotations remain red under planted controls. The three repaired
+test files pass 27/27 together. These discoveries were BLOCKING and corrected
+before the next full integration run; application behavior is unchanged.
+
+The source-date annotation repair also required a correction before commit:
+the first regex missed ISO timestamps followed by `T`, and the next hook refused
+2,896 dates. The corrected source-row annotation passed all 17 manifest tests;
+the actual staged hook then scanned 11,889 dates in 91 files with zero failures
+and zero allowlisted dates. The authorship-date guard remains intact.
+
+Automatic approval review rejected the first shipping command before it ran.
+The stated concern was its external Drive export, not the authorized merge.
+Read-only inspection found the existing destination
+`G:/My Drive/we-the-people`, the canonical 26-document set from
+`scripts/mirror-set.mjs`, the 12 code files in `docs/mirror-code.json`, and a
+transcript exporter invoked without a project filter. That exporter would copy
+all local Claude project transcripts. Explicit direction was requested for that
+full export or omission of unrelated transcripts; no export or merge occurred.
+Local gates continued independently. No approval control was bypassed.

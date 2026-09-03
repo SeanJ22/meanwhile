@@ -108,16 +108,10 @@ console.log(
     `${record.workflowRunAttempt} @ ${record.headSha}`,
 );
 console.log(`  finalStatus (typed, derived from phases): ${record.finalStatus}`);
-console.log(
-  `  acquisition: ${record.phases.acquisition.sources
-    .map((s) => `${s.id}=${s.outcome}`)
-    .join(", ")}`,
-);
-console.log(
-  `  validation: ${record.phases.validation.verdict}` +
-    (record.phases.validation.failingTests.length > 0
-      ? ` (${record.phases.validation.failingTests.map((t) => t.file).join(", ")})`
-      : ""),
-);
+const acquisitionLine = record.phases.acquisition.sources.map((s) => `${s.id}=${s.outcome}`).join(", ");
+console.log(`  acquisition: ${acquisitionLine}`);
+const failingFiles = record.phases.validation.failingTests.map((t) => t.file).join(", ");
+const validationSuffix = failingFiles ? ` (${failingFiles})` : "";
+console.log(`  validation: ${record.phases.validation.verdict}${validationSuffix}`);
 console.log(`  commit: survivor ${record.phases.commit.survivorCommitSha ?? "none"}`);
 console.log("  Provenance reconciled — a downstream narrator may explain THIS run from THIS record.");

@@ -632,15 +632,9 @@ function reconcileRefreshRun(runId: number): {
     } catch {
       return { verdict: "NO_RECORD", detail: "no execution-result artifact for this run (a run before the record existed, or the artifact expired)" };
     }
-    const found: string[] = [];
-    const walk = (d: string): void => {
-      for (const name of readdirSync(d, { withFileTypes: true })) {
-        const full = join(d, name.name);
-        if (name.isDirectory()) walk(full);
-        else if (name.name.endsWith(".json")) found.push(full);
-      }
-    };
-    walk(dir);
+    const found = readdirSync(dir, { recursive: true })
+      .filter((p): p is string => typeof p === "string" && p.endsWith(".json"))
+      .map((p) => join(dir, p));
     if (found.length === 0) return { verdict: "NO_RECORD", detail: "the artifact carried no execution-result JSON" };
     try {
       const out = execFileSync(

@@ -179,6 +179,7 @@ export const GENERATED: GeneratedArtifact[] = [
      */
     path: "data/questionnaire/invitations-nj-morris-2026.json",
     command: "corepack pnpm questionnaire:invitations --write",
+    checkCommand: "corepack pnpm questionnaire:invitations --check",
     pure: true,
   },
   {

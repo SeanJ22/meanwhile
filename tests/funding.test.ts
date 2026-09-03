@@ -28,6 +28,7 @@ import {
   plainMoney,
   STATE_FUNDING_NOTE,
 } from "../lib/funding/display.ts";
+import type { FundingSnapshot } from "../lib/funding/types.ts";
 
 /**
  * The FEC funding surface (D34) — the ripcord doctrine's first application,
@@ -922,6 +923,26 @@ function guardFixture(
   };
 }
 
+/**
+ * Make a committee STILL-DERIVED from a snapshot's first hop: give a tracked
+ * candidate a committee-typed contribution row carrying `committeeId`, exactly
+ * the way scripts/fetch-fec.mts derives its second-hop set (it scans every
+ * `contributorCommitteeId` across `candidates[].topContributions`). A returned
+ * snapshot therefore reports `committeeId` as a top contributor this run, so
+ * the guard's second-hop block treats its absence as "still asked, answered
+ * nothing" rather than as expected derived-set churn.
+ */
+function withDerivedHopId(
+  snap: ReturnType<typeof guardFixture>,
+  committeeId: string,
+): FundingSnapshot {
+  const copy: FundingSnapshot = JSON.parse(JSON.stringify(snap));
+  const row = copy.candidates[0].topContributions[0];
+  row.contributorCommitteeId = committeeId;
+  row.kind = "COMMITTEE_OR_ORGANIZATION";
+  return copy;
+}
+
 test("thin guard: the Kelly-504 shape — a retained candidate's rows shrink — is a regression", async () => {
   const { findShrinkRegressions } = await import("../lib/funding/guard.ts");
   const prior = guardFixture([
@@ -1013,14 +1034,29 @@ test("thin guard: the second hop thins under the same rule — a fund that stops
   assert.equal(thinned[0].kind, "SECOND_HOP_ROWS");
   assert.match(thinned[0].detail, /5 → 2/);
 
-  // A committee that VANISHES fails too: a fund that stops answering looks
-  // exactly like a fund with no donors.
+  // A committee that VANISHES while STILL a top contributor this run fails:
+  // "still asked, answered nothing" looks exactly like a fund with no donors.
+  // (The second-hop set is derived each run, so "vanished" only means an
+  // outage when the committee is still derived from this run's first hop.)
+  const derived = withDerivedHopId(base, "C00000001");
   const vanished = findShrinkRegressions(
-    { ...base, secondHop: [hop("C00000001", 5)] },
-    { ...base, secondHop: [] },
+    { ...derived, secondHop: [hop("C00000001", 5)] },
+    { ...derived, secondHop: [] },
   );
   assert.equal(vanished.length, 1);
   assert.match(vanished[0].detail, /missing from this run/);
+
+  // A committee that dropped OUT of the derived set entirely — no longer a top
+  // contributor to any tracked candidate this run — is expected churn, not a
+  // regression (the C00422774 case that red-failed the daily refresh). `base`
+  // carries no committee-typed rows, so C00000001 is not derived here.
+  assert.deepEqual(
+    findShrinkRegressions(
+      { ...base, secondHop: [hop("C00000001", 5)] },
+      { ...base, secondHop: [] },
+    ),
+    [],
+  );
 
   // An empty hop disappearing is not a regression — it told us nothing.
   assert.deepEqual(
@@ -1052,6 +1088,174 @@ test("thin guard: growth and steady state pass clean", async () => {
   ]);
   assert.deepEqual(findShrinkRegressions(prior, grown), []);
   assert.deepEqual(findShrinkRegressions(prior, prior), []);
+});
+
+// ── R4: the second hop is a DERIVED set, so churn is not an outage ────────
+// scripts/fetch-fec.mts rebuilds the second-hop set each run from the first
+// hop's `contributorCommitteeId`s (fetch-fec.mts ~L730). A committee is only
+// fetched while it is still a top-N contributor to a tracked candidate THIS
+// run, so a committee dropping out of that set is normal churn — it did not
+// "stop answering." The guard must red-fail only the genuine "still asked,
+// answered nothing" shape (still derived, yet its own books absent) and the
+// thinning shape (present both runs, fewer rows). C00422774 (ADVANCING
+// DEMOCRACY AND MOBILIZATION PAC) held 5 rows and simply left the derived set
+// one week, and the pre-R4 guard red-failed every daily refresh for it.
+
+test("R4: a vanished second-hop committee that is no longer derived is churn, not a regression", async () => {
+  const { findShrinkRegressions } = await import("../lib/funding/guard.ts");
+  const hopRows = (committeeId: string, rows: number) => ({
+    dataClass: "FEC_CONTRIBUTOR" as const,
+    committeeId,
+    name: `${committeeId} (ADVANCING DEMOCRACY AND MOBILIZATION PAC)`,
+    committeeType: "N",
+    organizationType: null,
+    designation: "J",
+    receipts: 1000,
+    topContributions: Array.from({ length: rows }, (_, i) => ({
+      dataClass: "FEC_CONTRIBUTOR" as const,
+      kind: "INDIVIDUAL" as const,
+      contributorName: `DONOR ${i}`,
+      amount: 100 - i,
+      receiptDate: "2026-01-01",
+      city: "TUCSON",
+      state: "AZ",
+      entityType: "IND",
+      lineNumber: "11AI",
+      committeeType: null,
+      organizationType: null,
+      designation: null,
+      contributorCommitteeId: null,
+    })),
+    provenance: {
+      sourceUrl: `https://www.fec.gov/data/committee/${committeeId}/`,
+      sourceOrg: "Federal Election Commission",
+      collectedAt: "2026-08-15",
+      verifiedAt: "2026-08-15",
+    },
+  });
+  // `base` carries no committee-typed first-hop rows, so C00422774 is NOT in
+  // this run's derived hop-id set. It held 5 rows last week and is gone now —
+  // exactly the C00422774 case. That is expected churn, not a shrink.
+  const base = guardFixture([{ id: "S6AZ00191", name: "Mark Kelly", rows: 10 }]);
+  const regressions = findShrinkRegressions(
+    { ...base, secondHop: [hopRows("C00422774", 5)] },
+    { ...base, secondHop: [] },
+  );
+  assert.deepEqual(
+    regressions,
+    [],
+    "a committee that left the derived set must not be a SECOND_HOP_ROWS regression",
+  );
+});
+
+test("R4: a vanished second-hop committee that is STILL derived is a regression", async () => {
+  const { findShrinkRegressions } = await import("../lib/funding/guard.ts");
+  const hopRows = (committeeId: string, rows: number) => ({
+    dataClass: "FEC_CONTRIBUTOR" as const,
+    committeeId,
+    name: `${committeeId} FUND`,
+    committeeType: "N",
+    organizationType: null,
+    designation: "J",
+    receipts: 1000,
+    topContributions: Array.from({ length: rows }, (_, i) => ({
+      dataClass: "FEC_CONTRIBUTOR" as const,
+      kind: "INDIVIDUAL" as const,
+      contributorName: `DONOR ${i}`,
+      amount: 100 - i,
+      receiptDate: "2026-01-01",
+      city: "TUCSON",
+      state: "AZ",
+      entityType: "IND",
+      lineNumber: "11AI",
+      committeeType: null,
+      organizationType: null,
+      designation: null,
+      contributorCommitteeId: null,
+    })),
+    provenance: {
+      sourceUrl: `https://www.fec.gov/data/committee/${committeeId}/`,
+      sourceOrg: "Federal Election Commission",
+      collectedAt: "2026-08-15",
+      verifiedAt: "2026-08-15",
+    },
+  });
+  // Committee Y is STILL a top contributor this run (a candidate row carries
+  // its id), yet its own books are absent from next.secondHop — "still asked,
+  // answered nothing." That is the genuine outage shape and must fail.
+  const derived = withDerivedHopId(
+    guardFixture([{ id: "S6AZ00191", name: "Mark Kelly", rows: 10 }]),
+    "C00000009",
+  );
+  const regressions = findShrinkRegressions(
+    { ...derived, secondHop: [hopRows("C00000009", 5)] },
+    { ...derived, secondHop: [] },
+  );
+  assert.equal(regressions.length, 1);
+  assert.equal(regressions[0].kind, "SECOND_HOP_ROWS");
+  assert.match(regressions[0].detail, /C00000009/);
+  assert.match(regressions[0].detail, /missing from this run/);
+});
+
+test("R4: a retained second-hop committee whose rows thin is still a regression", async () => {
+  // Thinning is untouched by the derived-set fix: present in BOTH runs, rows
+  // fell 5 → 2 — the Kelly-504 shape one level down, still a shrink.
+  const { findShrinkRegressions } = await import("../lib/funding/guard.ts");
+  const hopRows = (committeeId: string, rows: number) => ({
+    dataClass: "FEC_CONTRIBUTOR" as const,
+    committeeId,
+    name: `${committeeId} FUND`,
+    committeeType: "N",
+    organizationType: null,
+    designation: "J",
+    receipts: 1000,
+    topContributions: Array.from({ length: rows }, (_, i) => ({
+      dataClass: "FEC_CONTRIBUTOR" as const,
+      kind: "INDIVIDUAL" as const,
+      contributorName: `DONOR ${i}`,
+      amount: 100 - i,
+      receiptDate: "2026-01-01",
+      city: "TUCSON",
+      state: "AZ",
+      entityType: "IND",
+      lineNumber: "11AI",
+      committeeType: null,
+      organizationType: null,
+      designation: null,
+      contributorCommitteeId: null,
+    })),
+    provenance: {
+      sourceUrl: `https://www.fec.gov/data/committee/${committeeId}/`,
+      sourceOrg: "Federal Election Commission",
+      collectedAt: "2026-08-15",
+      verifiedAt: "2026-08-15",
+    },
+  });
+  const base = guardFixture([{ id: "S6AZ00191", name: "Mark Kelly", rows: 10 }]);
+  const regressions = findShrinkRegressions(
+    { ...base, secondHop: [hopRows("C00000001", 5)] },
+    { ...base, secondHop: [hopRows("C00000001", 2)] },
+  );
+  assert.equal(regressions.length, 1);
+  assert.equal(regressions[0].kind, "SECOND_HOP_ROWS");
+  assert.match(regressions[0].detail, /5 → 2/);
+});
+
+test("R4: the first-hop candidate checks are unchanged by the second-hop fix", async () => {
+  // Guard rail: the derived-set change touches only the second hop. A vanished
+  // candidate with no recorded absence still fails CANDIDATE_MISSING (and
+  // CANDIDATE_COUNT), and a retained candidate whose contributor rows fall
+  // still fails CONTRIBUTOR_ROWS.
+  const { findShrinkRegressions } = await import("../lib/funding/guard.ts");
+  const prior = guardFixture([
+    { id: "S6AZ00191", name: "Mark Kelly", rows: 10 },
+    { id: "H2AZ02360", name: "Juan Ciscomani", rows: 10 },
+  ]);
+  const next = guardFixture([{ id: "H2AZ02360", name: "Juan Ciscomani", rows: 6 }]);
+  const kinds = findShrinkRegressions(prior, next)
+    .map((r) => r.kind)
+    .sort();
+  assert.deepEqual(kinds, ["CANDIDATE_COUNT", "CANDIDATE_MISSING", "CONTRIBUTOR_ROWS"]);
 });
 
 test("thin guard: the fetch script runs it before writing and keeps the prior snapshot on failure", () => {

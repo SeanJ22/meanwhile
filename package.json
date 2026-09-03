@@ -273,6 +273,8 @@
     "reader:suite": "tsx scripts/reader-suite.mts",
     "reference:verify": "tsx scripts/reference-verify.mts",
     "refresh:daily": "tsx scripts/refresh-daily.mts",
+    "refresh:emit-result": "tsx scripts/emit-execution-result.mts",
+    "refresh:provenance": "tsx scripts/refresh-provenance-check.mts",
     "regen": "tsx scripts/regen-check.mts",
     "registry:build": "tsx scripts/build-registry.ts",
     "release:freeze": "tsx scripts/release-freeze-gate.mts",

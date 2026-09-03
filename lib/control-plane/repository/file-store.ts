@@ -1,3 +1,4 @@
+import type { WorkerResultRecord } from "../workers/types.ts";
 /**
  * THE DURABLE FILESYSTEM STORE — where "the worker may die" stops being a
  * design intention.
@@ -700,6 +701,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     researchState: fileAggregateRepository<ResearchState>(resolved, "ResearchState", "research-state"),
     researchIntents: fileAppendOnlyRepository<ResearchIntent>(resolved, "research-intents"),
     scoutResults: fileAppendOnlyRepository<ScoutResult>(resolved, "scout-results"),
+    workerResults: fileAppendOnlyRepository<WorkerResultRecord>(resolved, "worker-results"),
     /* The nightly door (RULING 242, schema v5). */
     promotionPipeline: fileAppendOnlyRepository<PromotionPipelineRecord>(resolved, "promotion-pipeline"),
     windowRuns: fileAppendOnlyRepository<WindowRunRecord>(resolved, "window-runs"),

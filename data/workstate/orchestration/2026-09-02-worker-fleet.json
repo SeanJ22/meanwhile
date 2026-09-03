@@ -1,0 +1,173 @@
+{
+  "session": "2026-09-02 disposable Parser Validator Adversarial Auditor worker fleet",
+  "integrationOwner": "codex/worker-fleet",
+  "workstreams": [
+    {
+      "id": "parser",
+      "title": "Parser procedure and permanent parser controls",
+      "dependsOn": [],
+      "dependencyReasons": {},
+      "owns": {
+        "paths": [
+          "lib/control-plane/workers/parser.ts",
+          "tests/worker-fleet-parser.test.ts",
+          "tests/worker-fleet-isolation.test.ts",
+          "lib/control-plane/workers/standing.ts",
+          "lib/control-plane/workers/scheduling.ts",
+          "tests/worker-fleet-standing.test.ts"
+        ],
+        "data": []
+      },
+      "produces": [
+        "parser-proposal",
+        "parser-implementation"
+      ],
+      "consumes": [],
+      "executable": true,
+      "disposition": "PARALLEL",
+      "executionArtifacts": [
+        {
+          "ref": "/root/parser",
+          "kind": "agent"
+        }
+      ]
+    },
+    {
+      "id": "validator",
+      "title": "Independent validator procedure and defect controls",
+      "dependsOn": [],
+      "dependencyReasons": {},
+      "owns": {
+        "paths": [
+          "lib/control-plane/workers/validator.ts",
+          "tests/worker-fleet-validator.test.ts",
+          "tests/worker-fleet-runtime.test.ts",
+          "lib/control-plane/repository/worker-completion.ts",
+          "tests/worker-fleet-completion.test.ts"
+        ],
+        "data": []
+      },
+      "produces": [
+        "validator-proposal",
+        "validator-implementation"
+      ],
+      "consumes": [],
+      "executable": true,
+      "disposition": "PARALLEL",
+      "executionArtifacts": [
+        {
+          "ref": "/root/validator",
+          "kind": "agent"
+        }
+      ]
+    },
+    {
+      "id": "auditor",
+      "title": "Independent auditor procedure and adversarial controls",
+      "dependsOn": [],
+      "dependencyReasons": {},
+      "owns": {
+        "paths": [
+          "lib/control-plane/workers/auditor.ts",
+          "tests/worker-fleet-auditor.test.ts",
+          "lib/control-plane/workers/readback.ts",
+          "app/(admin)/admin/research/worker-fleet-panel.tsx",
+          "tests/worker-fleet-readback.test.ts",
+          "lib/control-plane/workers/model-audit.ts",
+          "tests/worker-fleet-model-audit.test.ts"
+        ],
+        "data": []
+      },
+      "produces": [
+        "auditor-proposal",
+        "auditor-implementation"
+      ],
+      "consumes": [],
+      "executable": true,
+      "disposition": "PARALLEL",
+      "executionArtifacts": [
+        {
+          "ref": "/root/auditor",
+          "kind": "agent"
+        }
+      ]
+    },
+    {
+      "id": "integration",
+      "title": "Shared durable runtime, actual proof, visibility and one canonical shipment",
+      "dependsOn": [
+        "parser",
+        "validator",
+        "auditor"
+      ],
+      "dependencyReasons": {
+        "parser": "Consumes the Parser proposal and executable parser for durable dispatch and the vertical proof.",
+        "validator": "Consumes the Validator proposal and executable validator for durable dispatch and the vertical proof.",
+        "auditor": "Consumes the Auditor proposal and executable auditor for durable dispatch and the vertical proof."
+      },
+      "owns": {
+        "paths": [
+          "lib/control-plane/workers/types.ts",
+          "lib/control-plane/workers/runtime.ts",
+          "lib/control-plane/scheduler/",
+          "lib/control-plane/promotion/",
+          "lib/control-plane/research-view.ts",
+          "lib/control-plane/research-metrics.ts",
+          "lib/control-plane/admin-data.ts",
+          "scripts/worker-fleet-proof.mts",
+          "scripts/control-plane-gate.mts",
+          "package.json",
+          "docs/evidence/worker-fleet-session.md",
+          "data/workstate/orchestration/2026-09-02-worker-fleet.json",
+          "lib/control-plane/repository/coordinator.ts",
+          "lib/control-plane/repository/file-store.ts",
+          "lib/control-plane/repository/memory.ts",
+          "lib/control-plane/repository/pg-schema.ts",
+          "lib/control-plane/repository/pg-store.ts",
+          "lib/control-plane/repository/types.ts",
+          "lib/control-plane/workers/isolation.ts",
+          "lib/control-plane/workers/vault.ts",
+          "lib/control-plane/workers/pipeline.ts",
+          "lib/control-plane/route-task.ts",
+          "app/(admin)/admin/research/page.tsx",
+          "lib/control-plane/evidence/parser-boundary.ts",
+          "scripts/freshness-shadow.mts"
+        ],
+        "data": [
+          "worker-fleet-proof",
+          "governance",
+          "tracker",
+          "generated-views",
+          "live-control-plane",
+          "real-evidence-vault"
+        ]
+      },
+      "produces": [
+        "shared-worker-contract",
+        "integrated-worker-fleet",
+        "real-vertical-proof",
+        "exact-head-shipment"
+      ],
+      "consumes": [
+        "parser-proposal",
+        "parser-implementation",
+        "validator-proposal",
+        "validator-implementation",
+        "auditor-proposal",
+        "auditor-implementation"
+      ],
+      "executable": true,
+      "disposition": "PARALLEL",
+      "executionArtifacts": [
+        {
+          "kind": "integration-branch",
+          "ref": "codex/worker-fleet"
+        },
+        {
+          "kind": "worktree",
+          "ref": "C:/Users/seanj/dev/wtp-worker-fleet"
+        }
+      ]
+    }
+  ]
+}

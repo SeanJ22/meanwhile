@@ -1,3 +1,5 @@
+import { readWorkerFleet } from "@/lib/control-plane/workers/readback.ts";
+import { WorkerFleetPanel } from "./worker-fleet-panel";
 /**
  * **RESEARCH — LEVEL 1.** (Level 1 activation, 2026-09-01. RULING 240, RULING 241.)
  *
@@ -133,6 +135,7 @@ export default async function ResearchPage() {
     readScoutSpend(opened.repos, nowIso),
     readScoutEvidenceCount(opened.repos),
   ]);
+  const fleet = await readWorkerFleet(opened.repos, nowIso);
   const view = buildResearchView({ nowIso, heartbeat, state, intents, results, spend, evidence });
 
   // THE LAST NIGHTLY WINDOW (RULING 242). Read from the same control plane; a
@@ -177,6 +180,8 @@ export default async function ResearchPage() {
           ))}
         </ul>
       )}
+
+      <WorkerFleetPanel view={fleet} />
 
       {/* RUNNER */}
       <h2>Runner</h2>

@@ -1,3 +1,4 @@
+import type { WorkerResultRecord } from "../workers/types.ts";
 /**
  * **THE POSTGRES CONTROL-PLANE PROVIDER.** (Session B, W3.1. RULING 220.)
  *
@@ -512,6 +513,7 @@ export async function createPgRepositories(
     researchState: pgAggregateRepository<ResearchState>(sql, "ResearchState", "cp_research_state"),
     researchIntents: pgAppendOnlyRepository<ResearchIntent>(sql, "research_intents"),
     scoutResults: pgAppendOnlyRepository<ScoutResult>(sql, "scout_results"),
+    workerResults: pgAppendOnlyRepository<WorkerResultRecord>(sql, "worker_results"),
     /* The nightly door (RULING 242, schema v5). */
     promotionPipeline: pgAppendOnlyRepository<PromotionPipelineRecord>(sql, "promotion_pipeline"),
     windowRuns: pgAppendOnlyRepository<WindowRunRecord>(sql, "window_runs"),

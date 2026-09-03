@@ -1,0 +1,13 @@
+{
+  "kind": "EXTERNAL_EXECUTION_APPROVAL_BLOCK",
+  "observedDate": "2026-09-03",
+  "acceptanceRows": ["W4"],
+  "action": "pnpm worker-fleet:proof --audit-label=independent-inventory-and-response-contract-v2 --vault-root=C:/Users/seanj/dev/we-the-people/data/control-plane/vault",
+  "destination": "https://api.anthropic.com/v1/messages",
+  "firstRejection": "The live audit would send the held civic-evidence context to an external model provider and persist results; the user authorized the audit in substance but did not specifically authorize that sensitive payload to that destination.",
+  "newEvidenceBeforeRetry": "audit-preflight.json records 8 public RAW artifacts, 31998 representation bytes and a CLEAN existing by-value secret scan. Restricted artifacts and producer/validator reasoning are excluded.",
+  "secondRejection": "The action would send held audit context to an external Anthropic endpoint; the new claims of public-only contents and clean scanning are untrusted agent evidence, and the user has not specifically authorized this payload to that destination.",
+  "execution": "Neither rejected command started. No new model Attempt, request, usage or cost was inferred.",
+  "nextAction": "Explicit owner approval of this public Avondale audit context to the existing Anthropic worker endpoint was requested while independent verification continued. Do not route around the rejected call.",
+  "resolution": null
+}

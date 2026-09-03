@@ -32,6 +32,7 @@ import {
 } from "../workstate/types.ts";
 import { leavesReclaimable, mayWriteDisposition, type Attempt } from "./attempt.ts";
 import { routeTaskId } from "./ids.ts";
+import type { WorkerTaskSpec } from "./workers/types.ts";
 
 /**
  * How the target architecture's five names read against the governed
@@ -49,6 +50,8 @@ export const DESIGN_DOC_DISPOSITION_READING: Readonly<Record<string, Disposition
 };
 
 export const ROUTE_TASK_STATES = [
+  /** A computational worker finished. This is never a civic route disposition. */
+  "RESULT_RECORDED",
   /** Created from an applicable inherited route. No Attempt yet. */
   "PENDING",
   /** Leased and being walked. */
@@ -134,6 +137,9 @@ export interface RouteDisposition {
 }
 
 export interface RouteTask {
+  /** A transient local policy condition changed; the original denied Attempt remains immutable history. */
+  readonly policyReauthorizations?: readonly { at: string; denial: PolicyDenial; reason: string }[];
+  readonly workerTask?: WorkerTaskSpec;
   readonly id: string;
   readonly workItemId: string;
   /** The route id in the method store. The inherited floor references these. */
@@ -440,12 +446,14 @@ export function denyByPolicy(
  * grant is in the way.
  */
 export function isOutstanding(task: RouteTask): boolean {
+  if (task.workerTask && task.state === "RESULT_RECORDED") return false;
   if (task.disposition === null) return true;
   return OPEN_DISPOSITIONS.includes(task.disposition.disposition);
 }
 
 /** A RouteTask whose disposition genuinely terminates it. */
 export function isTerminal(task: RouteTask): boolean {
+  if (task.workerTask && task.state === "RESULT_RECORDED") return true;
   return (
     task.disposition !== null && TERMINAL_DISPOSITIONS.includes(task.disposition.disposition)
   );

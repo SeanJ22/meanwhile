@@ -82,6 +82,7 @@ import type { CostEntry } from "../cost.ts";
 import { fingerprint } from "../ids.ts";
 import {
   disposeRoute,
+  denyByPolicy,
   reclaim,
   type RouteDisposition,
   type RouteTask,
@@ -99,6 +100,7 @@ import {
   type Persisted,
   type RecordedTransition,
 } from "./types.ts";
+import { loadWorkerCompletionEvidence, reconcileWorkerCompletions } from "./worker-completion.ts";
 
 /** ------------------------------------------------------------- refusals */
 
@@ -271,6 +273,10 @@ export async function claimRouteTask(
   // Read the task FRESH, after winning. Reading it before the race and writing
   // it after would reintroduce the window the conditional write just closed.
   const current = await repos.routeTasks.mustRead(input.routeTaskId);
+  if (current.value.workerTask && !["PENDING", "RECLAIMABLE"].includes(current.value.state)) {
+    await repos.leases.compareAndSet(input.routeTaskId, lease.revision, releaseLease(lease.value), input.now);
+    throw new AttemptContract("WORKER_TASK_NOT_DISPATCHABLE");
+  }
   const claimed: RouteTask = { ...current.value, state: "CLAIMED" };
   const task =
     canonicalJson(claimed) === canonicalJson(current.value)
@@ -596,7 +602,12 @@ export async function abandonAttempt(
   );
 
   const taskRow = await repos.routeTasks.mustRead(input.routeTaskId);
-  const next = reclaim(taskRow.value, closedAttempt);
+  const next = closedAttempt.outcome === "DENIED_BY_POLICY"
+    ? denyByPolicy(taskRow.value, closedAttempt, input.reason.includes("AUDIT_ROLLING_COST_CEILING")
+      ? "The existing rolling-cost window must permit admission; never raise the ceiling to clear this refusal."
+      : input.reason.includes("AUDIT_MODEL_TRANSPORT_UNAVAILABLE") ? "The configured audit model transport must become available."
+        : "The named capability or policy refusal must be resolved under current project law before reauthorization.")
+    : reclaim(taskRow.value, closedAttempt);
   const task =
     canonicalJson(next) === canonicalJson(taskRow.value)
       ? taskRow
@@ -678,6 +689,7 @@ export async function disposeRouteTask(
   },
 ): Promise<DisposeOutcome> {
   const task = await repos.routeTasks.mustRead(input.routeTaskId);
+  if (task.value.workerTask) throw new AttemptContract("WORKER_TASK_CANNOT_WRITE_CIVIC_DISPOSITION");
   const attempt = await repos.attempts.mustRead(input.attemptId);
 
   if (task.revision !== input.expectedTaskRevision) {
@@ -960,6 +972,8 @@ export async function loadCompletionSnapshot(
   },
 ): Promise<CompletionSnapshot> {
   await reconcile(repos, input.now);
+  await reconcileWorkerCompletions(repos);
+  const workerEvidence = await loadWorkerCompletionEvidence(repos, input.workItemId);
   const item = await repos.workItems.mustRead(input.workItemId);
   const tasks = await repos.routeTasks.list();
   return {
@@ -967,8 +981,8 @@ export async function loadCompletionSnapshot(
     routeTasks: tasks
       .filter((row) => row.value.workItemId === input.workItemId)
       .map((row) => row.value),
-    validations: input.validations ?? [],
-    audits: input.audits ?? [],
+    validations: workerEvidence.managed ? workerEvidence.validations : input.validations ?? [],
+    audits: workerEvidence.managed ? workerEvidence.audits : input.audits ?? [],
     contradictions: input.contradictions ?? [],
     upstreamStates: input.upstreamStates ?? new Map<string, WorkItemState>(),
     denominatorComplete: input.denominatorComplete ?? null,

@@ -146,5 +146,7 @@ test("BAL-23: the pill class is still a pill for the collapsed control", () => {
     css(),
   );
   assert.ok(rule, "the ballot pill no longer styles the address prompt's trigger");
-  assert.match(rule[1], /border-radius:\s*999px/);
+  // The pill radius is the --radius-pill token now (value-identical to the old
+  // 999px), unified across the pill family by the 0903 rhythm pass.
+  assert.match(rule[1], /border-radius:\s*var\(--radius-pill\)/);
 });

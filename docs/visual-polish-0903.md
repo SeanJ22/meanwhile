@@ -80,23 +80,23 @@ restructure, entangled with walk-all BAL25), ASK-25 (Ask live output
 measurement, needs ANTHROPIC_API_KEY). Resume points are in
 `data/feedback/sweeps/9.2.26.json`.
 
-## Merge status — HELD behind a pre-existing, unrelated red
+## Merge status — the pre-existing red was cleared by an authorized re-walk
 
-Local gates: **15 of 16 green** at the session head. Both builds (default +
-standalone), `test:bundle`, and every design guard this session added pass. The
-one failure is `tests/coverage-matrix.test.ts` → *"an ARGUED absence carries its
-expiry"*, failing at line 83 (`checked > 0`): **every argued-absence record on
-file has expired as of 2026-09-03 America/Phoenix** (RULING 53 — absences
-expire and must be re-hunted). This session touched no coverage/kelly/absence/
-data path; the failure is identical on clean `origin/main` today (its last green
-CI ran at 06:30Z = 2026-09-02 23:30 Phoenix, before the expiry boundary).
+`main` was latently red today independent of this work: the 07866 argued-absence
+corpus (walked 2026-08-26, 7-day shelf life) expired 2026-09-02, so
+`tests/coverage-matrix.test.ts` found zero valid argued absences and failed on
+any build after the 09-02→09-03 Phoenix boundary — blocking **every** merge, not
+just this one (RULING 53: absences expire and must be re-hunted).
 
-So `main` is latently red today for a reason unrelated to this work, and it
-blocks **every** merge, not only this PR. This visual work is complete and green
-on its own and is **held**, not shipped. It may not be merged onto a red suite
-(RULING 77), and the red may not be cleared by weakening a guard this session
-does not own or by re-dating an expired absence without re-hunting (that would
-falsify a coverage claim — the transparency mandate forbids it).
+The author authorized a re-walk of 07866. It surfaced a second defect: the
+re-walk generator `scripts/argue-absences-0825.mts` was orphaned by the
+2026-09-03 state-holdings reorg (PR #266), which moved its inputs under
+`data/states/<state>/` and left it pointing at `data/ballot/`/`data/hunt/`. The
+moved-input paths were repaired (a minimal patch would have logged FALSE "no
+corpus" walls, forbidden), and a full honest re-walk ran: **275/275 candidacies,
+1036 absences, 0 walls, 0 voided**, dated 2026-09-03, on RULING 53's seven-day window.
+`coverage-matrix` now passes and `main` is un-blocked. The visual work then
+ships on a green suite (RULING 77), nothing weakened or fabricated.
 
 ## Classified discoveries (§25)
 
@@ -107,11 +107,20 @@ falsify a coverage claim — the transparency mandate forbids it).
   gates should name the real artifact.
 - **DISC-COVERAGE-MATRIX-TIMEBOMB** — `tests/coverage-matrix.test.ts`'s argued-
   absence guard turns `main` red on the calendar day the last argued absence
-  expires, with no code change (RULING 53 working as designed: an expired
-  absence needs re-hunting). Its resume is a data/coverage task, not visual:
-  re-hunt the expired argued-absence subject(s) for the pilot ZIP so a valid
-  argued absence is on file again, or the author's ruling on the guard. Until
-  then no PR can merge today. NEEDS_SEAN.
+  expires, with no code change (RULING 53 working as designed). RESOLVED this
+  session by an authorized 07866 re-walk (fresh corpus on the seven-day window). It
+  will recur when that lapses; the durable fix is a scheduled re-walk, not a
+  session catching it. `data/hunt/argued-absences-03255.json` is stale the same
+  way (walked 2026-08-26) but is not covered by this test.
+- **DISC-REORG-ORPHANED-CONSUMERS** — the 2026-09-03 state-holdings reorg
+  (PR #266) moved per-state ballot/hunt data under `data/states/<state>/` but
+  left ~10 hunt scripts pointing at the old `data/ballot/`/`data/hunt/` paths:
+  `argue-absences-0825` (repaired here), and unrepaired `b14-official-links`,
+  `candidate-universe`, `coverage-four-layer`, `directory-inversion-0825`,
+  `fetch-candidate-corpus`, `fetch-official-portraits`, `hunt-campaign-photos`,
+  `hunt-door3-portraits-0828`, `build-photo-review`. Each breaks the next time
+  it runs. This is a residual-path gap in the state-holdings (Codex) domain, not
+  visual — recorded here for a state-holdings session to sweep comprehensively.
 
 ## The plain answer
 

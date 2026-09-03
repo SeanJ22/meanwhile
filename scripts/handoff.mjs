@@ -1484,7 +1484,7 @@ function buildGate() {
  * Runs only under `--ship`, and only from a clean tree — see the header. Each
  * step is skipped when it is already done, so running it twice is harmless.
  */
-function ship() {
+async function ship() {
   /*
    * **THE GENERATED FILES THIS RUN ITSELF WROTE, COMMITTED BEFORE THE PUSH.**
    * (2026-08-25, Item 16.)
@@ -1538,7 +1538,12 @@ function ship() {
     fail("ship", "refused — gh is not available");
     return;
   }
+  const testedHead = git("rev-parse", "HEAD");
   if (!buildGate()) return;
+  if (git("rev-parse", "HEAD") !== testedHead) {
+    fail("ship · head", "HEAD changed during local gates — nothing pushed or merged");
+    return;
+  }
 
   // R07's second gap: this used to refuse outright when a branch had no
   // upstream, so the first --ship of every session failed until someone ran
@@ -1604,7 +1609,7 @@ function ship() {
   // A push starts CI. Wait here instead of making another handoff generate
   // another context commit and restart those checks. Bind the merge to the head
   // that passed this invocation's full local gates; protection still applies.
-  const merged = mergeCheckedPullRequest({ number, head: git("rev-parse", "HEAD"), run: tryRun });
+  const merged = await mergeCheckedPullRequest({ number, head: testedHead, run: tryRun });
   if (merged !== "merged") {
     fail(
       "ship · merge",
@@ -1768,7 +1773,7 @@ async function verifyDeployLanded(expectedSha) {
 }
 
 if (SHIP) {
-  ship();
+  await ship();
 
   // Only worth asking once the merge and fast-forward actually succeeded —
   // otherwise the SHA we would be waiting for is not the one being deployed.

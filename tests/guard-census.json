@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 443,
-    "named": 4932,
+    "named": 4936,
     "dynamic": 18
   },
   "files": {
@@ -6033,7 +6033,11 @@
     },
     "tests/ship-pr-checks.test.ts": {
       "names": [
+        "a different remote head is refused before waiting or merging",
+        "a failed check watch cannot reach merge",
+        "an empty check rollup waits for registration before starting the watch",
         "changed heads or protection refusals are not reported as merged",
+        "checks that never register time out without a watch or merge",
         "failed, unavailable or timed-out checks never reach the merge",
         "shipping waits for checks and binds the merge to the tested head"
       ],

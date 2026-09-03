@@ -401,3 +401,20 @@ on touching that checkout for the narrow post-merge synchronization step.
 The sole integration owner will finish PR 266, verify its tested head and actual
 deployment, reconcile runner data, resolve acceptance from the observed proofs,
 and close out without starting the carried work.
+
+The authorized handoff exported 125 transcripts, synchronized the canonical
+mirror, and re-read it with zero credential values. Its local run 16 passed
+16/16 gates on `8e917ae5a1aba6863f82ca3ca8551a8aaf4bc553`, with 4,957 tests
+passed, zero failed and one skipped. It pushed that head but the watch returned
+`checks-not-green` immediately; no merge occurred. The original watch diagnostic
+was not retained by the shared command wrapper. The subsequent GitHub readback
+showed two successful build jobs and the test job still running, not a failed
+check. This is consistent with the check-registration gap just after a push.
+
+The shipping door now waits, under a two-minute bound, for a nonempty check
+rollup on the exact pushed head before starting the existing bounded check
+watch. An empty rollup never counts as success. Seven tests cover delayed and
+missing registration, unavailable/failed checks, changed heads and protection
+refusals. The local head is also captured before the full gates and compared
+after them, then used for the remote match constraint. These are BLOCKING
+shipping-instrument corrections; no branch protection or gate was bypassed.

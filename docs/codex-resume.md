@@ -41,7 +41,7 @@ meta-governance.
 | active acceptance denominator | the session directive; the SESSION EFFICIENCY LAW (`docs/governance/session-efficiency.md`) turns it into the finite table |
 | unresolved Needs Sean / carried items | `pnpm tracker:open` and `docs/frontier.md` |
 | shipping law | `pnpm governance:open --task shipping-ci` (RULING 1, RULING 155, RULING 233) |
-| required gates | `pnpm gates` (the fourteen CI gates, each named) |
+| required gates | `pnpm gates` (the sixteen CI gates, each named) |
 | how to close out and hand off | `pnpm handoff --check` (report), then `pnpm handoff --ship` (the only path that merges) |
 
 ## Rules that will bite you if you skip them

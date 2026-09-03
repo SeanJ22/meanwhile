@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { agendaSentenceFor } from "@/lib/ask/agenda-sentence";
 
-import { noticeSummaryFor } from "@/lib/meetings/notice-summaries";
+import { noticeSummaryFor } from "@/lib/meetings/notice-summary";
 import { formatDateMDY } from "@/lib/map/format";
 import { agendaItems } from "@/lib/routing/agenda-search";
 

@@ -16,7 +16,7 @@
  "classes": {
   "governments_bodies_universe": {
    "held": {
-    "summary": "The territorial universe is ESTABLISHED and it is the strongest class in this ZIP. 96 interior sample points were resolved against the Census TIGERweb geographies endpoint (data/hunt/85641-governing-universe.json, 0 failed reads) and 44 points against 20 Pima County / City of Tucson / AZ state GIS layers (data/hunt/85641-district-territory.json, every layer WALKED, 0 point failures).",
+    "summary": "The territorial universe is ESTABLISHED and it is the strongest class in this ZIP. 96 interior sample points were resolved against the Census TIGERweb geographies endpoint (data/states/az/hunt/85641-governing-universe.json, 0 failed reads) and 44 points against 20 Pima County / City of Tucson / AZ state GIS layers (data/states/az/hunt/85641-district-territory.json, every layer WALKED, 0 point failures).",
     "governingLayersConfirmedByPointProbe": [
      {
       "body": "United States — Congressional District 6",
@@ -90,7 +90,7 @@
      },
      {
       "body": "Rocking K South Community Facilities District",
-      "pointsHeld": "territory proven by a different method — formation resolution to recorded plat to the county Subdivisions layer to a TIGERweb ZCTA point query (data/hunt/85641-cfd-territory.json). Governed by the Board of Supervisors ex officio under Pima County Resolution No. 2017-2 s.4",
+      "pointsHeld": "territory proven by a different method — formation resolution to recorded plat to the county Subdivisions layer to a TIGERweb ZCTA point query (data/states/az/hunt/85641-cfd-territory.json). Governed by the Board of Supervisors ex officio under Pima County Resolution No. 2017-2 s.4",
       "source": "Pima County Resolution 2017-2, recorded 2017-02-14 as sequence 20170450755"
      }
     ],
@@ -99,7 +99,7 @@
    "owed": [
     "A DENOMINATOR. The answerability measurement records DISCOVERED 60 for AZ 85641 against DENOMINATOR_NOT_ESTABLISHED. The universe of governing layers is proven for the layers WALKED; the number of layers that exist is not.",
     "Special taxing districts with no boundary layer. The CFD method (formation document -> recorded plat -> GIS) closed Rocking K South. Whether other CFDs, improvement districts or domestic water improvement districts touch this ZIP is not established: pima-improvement-district-plans returned 0 of 190 features intersecting the ZIP, which is a fact about THAT layer and not about the district universe.",
-    "The county levy resolution as an independent enumeration of the taxing universe. data/hunt/pima-2026-27-levy.json exists in the corpus; this session did not reconcile it against the layer probe."
+    "The county levy resolution as an independent enumeration of the taxing universe. data/states/az/hunt/pima-2026-27-levy.json exists in the corpus; this session did not reconcile it against the layer probe."
    ],
    "routesWalked": [
     "Census TIGERweb geographies endpoint, layers=all, Public_AR_Current/Current_Current benchmark — 96 points, 0 failed",
@@ -201,7 +201,7 @@
       "body": "Empire Elementary School District No. 37",
       "governs": "4 of 44 probed points",
       "custodian": "Pima County School Superintendent — the FY2027 budget hearing notice for Empire was filed by Peter Laing, Peter.Laing@pima.gov, 200 N. Stone Ave, Tucson, which is the County School Superintendent office, not a district office. This district appears to be county-administered.",
-      "knownRouteFloor": "data/hunt/85641-school-meeting-notices.json already holds Empire budget-hearing notices for FY2026 and FY2027 from the ADE budget system — that is a STATUTORY MEETING NOTICE and therefore a proven route to at least one sitting a year."
+      "knownRouteFloor": "data/states/az/hunt/85641-school-meeting-notices.json already holds Empire budget-hearing notices for FY2026 and FY2027 from the ADE budget system — that is a STATUTORY MEETING NOTICE and therefore a proven route to at least one sitting a year."
      },
      {
       "body": "Pima Community College District Governing Board (district 4)",
@@ -213,7 +213,7 @@
       "body": "Pima County JTED No. 11 Governing Board (district 4)",
       "governs": "36 of 44 probed points",
       "custodian": "Pima County Joint Technical Education District",
-      "knownRouteFloor": "data/hunt/85641-school-meeting-notices.json holds a JTED budget-hearing notice (Kenneth McGovern, kmcgovern@pimajted.org). Same statutory-notice route as Empire."
+      "knownRouteFloor": "data/states/az/hunt/85641-school-meeting-notices.json holds a JTED budget-hearing notice (Kenneth McGovern, kmcgovern@pimajted.org). Same statutory-notice route as Empire."
      },
      {
       "body": "Rincon Valley Fire District",
@@ -334,12 +334,12 @@
   },
   "ballot_contests": {
    "held": {
-    "curatedStore": "data/ballot/az-pima-2026.json, curatedAt 2026-08-27",
+    "curatedStore": "data/states/az/ballot/az-pima-2026.json, curatedAt 2026-08-27",
     "contests": 30,
     "candidacies": 55,
     "citedAbsences": 4,
-    "certifiedPrimaryResults": "data/hunt/85641-primary-certified-results.json, collectedAt 2026-08-27, 75 race records across 15 distinct contest titles, from the Pima County certified canvass of the July 21 2026 primary (apps.azsos.gov, 4,445 pages, 4,435 with a text layer).",
-    "officialCandidateList": "data/hunt/pima-2026-primary-ballot.json — 34 offices from the county OFFICIAL CANDIDATE LIST, which unlike the canvass includes UNCONTESTED races. The repo already knows these are two different documents answering two different questions.",
+    "certifiedPrimaryResults": "data/states/az/hunt/85641-primary-certified-results.json, collectedAt 2026-08-27, 75 race records across 15 distinct contest titles, from the Pima County certified canvass of the July 21 2026 primary (apps.azsos.gov, 4,445 pages, 4,435 with a text layer).",
+    "officialCandidateList": "data/states/az/hunt/pima-2026-primary-ballot.json — 34 offices from the county OFFICIAL CANDIDATE LIST, which unlike the canvass includes UNCONTESTED races. The repo already knows these are two different documents answering two different questions.",
     "contestTitlesTouchingThisZip": [
      "U.S. Representative in Congress District 6",
      "Governor",
@@ -381,7 +381,7 @@
      "ballot-az-pima:prop-428 — Sahuarita Unified budget override continuation",
      "ballot-az-pima:prop-429 — Tanque Verde Unified budget override continuation"
     ],
-    "vailOverrideStatus": "HELD, WITH QUESTION TEXT. The tracker note on NH216 says the ballot pipeline does not see the Vail Override Reauthorization 2026. That is STALE. data/ballot/az-pima-2026.json carries ballot-az-pima:prop-423:question with the verbatim question: \"BUDGET OVERRIDE CONTINUATION, YES / NO — whether Vail Unified School District No. 20 of Pima County, Arizona may continue to exceed the revenue control limit by not more than 12.5% per fiscal year, for fiscal years 2027/2028 and the next six fiscal years.\" Verified by reading the committed file this session.",
+    "vailOverrideStatus": "HELD, WITH QUESTION TEXT. The tracker note on NH216 says the ballot pipeline does not see the Vail Override Reauthorization 2026. That is STALE. data/states/az/ballot/az-pima-2026.json carries ballot-az-pima:prop-423:question with the verbatim question: \"BUDGET OVERRIDE CONTINUATION, YES / NO — whether Vail Unified School District No. 20 of Pima County, Arizona may continue to exceed the revenue control limit by not more than 12.5% per fiscal year, for fiscal years 2027/2028 and the next six fiscal years.\" Verified by reading the committed file this session.",
     "supportingPrimarySources": "data/hunt/85641-pdfs/ holds VailUSDNoticeofElection.pdf and VailUSDRequestforArguments.pdf — the district own statutory Notice of Election and Request for Arguments. The method store records this as the route ballot-measure-from-the-body-statutory-notice-pdf."
    },
    "owed": [
@@ -425,7 +425,7 @@
      "az:16-928:county-and-districts — custodian the county officer in charge of elections, covering COUNTY, SCHOOL_DISTRICT, COMMUNITY_COLLEGE_DISTRICT and SPECIAL_TAXING_DISTRICT offices. This is the regime that governs every local office in 85641.",
      "az:16-928:city-and-town — custodian the city or town clerk"
     ],
-    "acquisitionsForPima": "data/campaign-finance/az-pima-2026-held.json, recordedOn 2026-08-29, records an ALLOWED acquisition at rung 6 from the county EasyVote filer document-search API (ecf-api.easyvoteapp.com, robots.txt HTTP 404 -> NO_ROBOTS), HTTP 200.",
+    "acquisitionsForPima": "data/states/az/campaign-finance/az-pima-2026-held.json, recordedOn 2026-08-29, records an ALLOWED acquisition at rung 6 from the county EasyVote filer document-search API (ecf-api.easyvoteapp.com, robots.txt HTTP 404 -> NO_ROBOTS), HTTP 200.",
     "honestGap": "That file states in its own words that no transaction amount appears anywhere in it because none was retrieved. The gap is named by the custodian of the record, which is the correct shape."
    },
    "owed": [

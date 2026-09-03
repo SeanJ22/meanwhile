@@ -5968,7 +5968,7 @@ for (const zip of ["85629", "07866"]) {
       }
 
       /*
-       * BAL-30 — the measure text. `data/ballot/az-pima-2026.json` has carried
+       * BAL-30 — the measure text. `data/states/az/ballot/az-pima-2026.json` has carried
        * the official question for four local measures since 2026-08-27 and the
        * page rendered none of it, which is the rule in `lib/ballot/analyses.ts`
        * broken by the surface the rule was written for.
@@ -6998,7 +6998,7 @@ for (const target of SCOPE_ADDRESSES) {
 /**
  * **NEW HAMPSHIRE MONEY REACHES THE 03255 READER.** (Session C, 2026-08-31.)
  *
- * `data/funding/state-money-nh-2026.json` is acquired data, and the whole
+ * `data/states/nh/funding/state-money-nh-2026.json` is acquired data, and the whole
  * failure mode this suite exists for applies to it: the file can go missing,
  * be regenerated against the wrong year, or lose its deploy tracing, and every
  * one of those renders as a clean card with no money on it. `tests/
@@ -8083,7 +8083,7 @@ section(
 /* ────────────────────────────────────────────────────────────────────────────
  * SC3 — ARIZONA MONEY REACHES THE READER, AND EVERY CARD ENDS IN ONE STATE
  *
- * The defect this pins was never acquisition. `data/funding/state-money-az-2026.json`
+ * The defect this pins was never acquisition. `data/states/az/funding/state-money-az-2026.json`
  * held Katie Hobbs at $11,109,720 while her card showed nothing, because the
  * certified-lineup cards key on `${contest.id}|${nominee.name}` and the money
  * records key on candidacy ids. Two correct halves, one seam, and the seam is

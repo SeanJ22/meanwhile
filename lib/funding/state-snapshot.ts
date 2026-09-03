@@ -6,13 +6,15 @@
  * same shape**: one loader, one lookup, one render path (RULING 103), and the
  * firewall asserted in one place rather than in two.
  *
- * The snapshot lives in `data/funding/`, which is a committed reader-content
+ * Snapshots live in `data/states/<st>/funding/`, a committed reader-content
  * path. It is never in Postgres — that is wall 1 of the firewall, and
  * `tests/campaign-finance-firewall.test.ts` fails if it moves.
  */
 
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
+import * as fs from "node:fs";
 import { join } from "node:path";
+import { FIPS_TO_STATE } from "../ocd/fips.ts";
 
 import {
   isRenderable,
@@ -21,15 +23,25 @@ import {
 } from "./state-money.ts";
 
 /**
- * Every state snapshot this product holds. One per state, because the agencies
- * are separate, their terms are separate, and a state whose walk failed must
- * not be able to empty another state's rows (the refresh corollary).
+ * Discover normalized state snapshots independently of reader coverage. Each
+ * agency's file remains isolated, so an unreadable state's corpus cannot empty
+ * the other states' rows.
  */
-const SNAPSHOT_FILES = [
-  "state-money-nj-2026.json",
-  "state-money-nh-2026.json",
-  "state-money-az-2026.json",
-] as const;
+function snapshotFiles(root: string): { state: string; file: string }[] {
+  const knownStates = new Set(Object.values(FIPS_TO_STATE).map((state) => state.postal.toLowerCase()));
+  // Node 24 is the deployed runtime; the repo's Node 20 typings predate this
+  // stable API. A bounded glob avoids tracing every unrelated state holding.
+  const { globSync } = fs as typeof fs & {
+    globSync(pattern: string, options: { cwd: string }): string[];
+  };
+  const paths = globSync("data/states/*/funding/state-money-??-????.json", { cwd: root });
+  const files: { state: string; file: string }[] = [];
+  for (const path of paths) {
+    const match = /^data\/states\/([a-z]{2})\/funding\/(state-money-([a-z]{2})-\d{4}\.json)$/.exec(path.replaceAll("\\", "/"));
+    if (match && knownStates.has(match[1]) && match[1] === match[3]) files.push({ state: match[1], file: match[2] });
+  }
+  return files.sort((a, b) => a.state.localeCompare(b.state) || a.file.localeCompare(b.file));
+}
 
 let cache: StateMoneyRecord[] | null = null;
 let loadedFrom: string[] = [];
@@ -38,13 +50,12 @@ function load(): StateMoneyRecord[] {
   if (cache) return cache;
   const records: StateMoneyRecord[] = [];
   const from: string[] = [];
-  for (const file of SNAPSHOT_FILES) {
+  for (const { state, file } of snapshotFiles(process.cwd())) {
     // Read through `process.cwd()`, so `next.config.ts` must name the path in
     // `outputFileTracingIncludes` or the file is simply absent from the deploy
     // and every card silently loses its money. That failure renders as honest
     // missing data, which is why it is called out here rather than assumed.
-    const path = join(process.cwd(), "data", "funding", file);
-    if (!existsSync(path)) continue;
+    const path = join(process.cwd(), "data", "states", state, "funding", file);
     try {
       const snapshot = JSON.parse(readFileSync(path, "utf8")) as StateMoneySnapshot;
       records.push(...snapshot.records);

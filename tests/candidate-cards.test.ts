@@ -4,6 +4,7 @@ import { join, relative, sep } from "node:path";
 import { test } from "node:test";
 
 import { allCandidateCards } from "../lib/ballot/candidate-cards.ts";
+import { ballotPath } from "../lib/holdings/files.ts";
 
 /** Every .ts/.tsx file under a directory, so a class sweep cannot miss a file by naming it. */
 function* walkFiles(dir: string): Generator<string> {
@@ -30,7 +31,7 @@ test("every card key resolves against the ballot data or lineup keys", () => {
     "az-pima-2026.json",
   ]) {
     const set = JSON.parse(
-      readFileSync(join(process.cwd(), "data", "ballot", file), "utf8"),
+      readFileSync(join(process.cwd(), ballotPath(file)), "utf8"),
     ) as {
       candidacies: { id: string }[];
       contests: { id: string }[];

@@ -15,9 +15,9 @@ audit trail appended below. M never moves silently.
 | Object | Where it lives | Frozen |
 |---|---|---|
 | Body denominators (both universes) | `data/audit/universe-03255.json` | 2026-08-16 |
-| Official universe (step A) | `data/audit/gus-2022-merrimack-sullivan-hillsborough.json` | fetched 2026-08-16 |
+| Official universe (step A) | `data/states/nh/reference/gus-2022-merrimack-sullivan-hillsborough.json` | fetched 2026-08-16 |
 | Required-field matrix | `lib/evidence/field-matrix.ts` (`vH-1`) | 2026-08-16 |
-| Target election and ballot universe | `data/ballot/nh-merrimack-2026.json` | curated 2026-08-14, adopted here |
+| Target election and ballot universe | `data/states/nh/ballot/nh-merrimack-2026.json` | curated 2026-08-14, adopted here |
 | Meetings-near rule | `lib/meetings/constants.ts` `RADIUS_LADDER_KM[0]` | standing law, 25 km |
 | Ladder version | `CLAUDE.md`, `ladder vH-start` | 2026-08-16, item 0 |
 
@@ -218,12 +218,12 @@ never surface.
 **Election:** the 2026 New Hampshire General Election, election id
 `nh-2026-11-03` <!-- expected-future: the election ID embeds polling day; same source as the line below -->, polling day:
 
-**2026-11-03** <!-- expected-future: NH general election day, from the Secretary of State's 2026-2027 political calendar as transcribed into data/ballot/nh-merrimack-2026.json, read 2026-08-14 -->
+**2026-11-03** <!-- expected-future: NH general election day, from the Secretary of State's 2026-2027 political calendar as transcribed into data/states/nh/ballot/nh-merrimack-2026.json, read 2026-08-14 -->
 
 **Official source of truth:** the New Hampshire Secretary of State's
 cumulative primary filing (`cumulative-filings-7.16.26.pdf`, July 16 revision)
 and the 2026–2027 political calendar, transcribed 2026-08-14 into
-`data/ballot/nh-merrimack-2026.json`.
+`data/states/nh/ballot/nh-merrimack-2026.json`.
 
 **Does 03255 resolve to ONE ballot style or a union?** **One.** Newbury is a
 single town wholly inside one of each relevant district: NH-2, State Senate 7,

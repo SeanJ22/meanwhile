@@ -74,7 +74,7 @@ export interface AcquiredCorpus {
  */
 export const ACQUIRED_CORPORA: readonly AcquiredCorpus[] = [
   {
-    path: "data/candidates/az-2026-sos-candidate-filings.json",
+    path: "data/states/az/candidates/az-2026-sos-candidate-filings.json",
     authority: "Arizona Secretary of State",
     covers:
       "every candidate listed as qualified for the July 21, 2026 primary ballot, for every office the " +

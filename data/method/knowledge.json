@@ -2845,7 +2845,7 @@
           "walkedOn": "2026-08-28",
           "rows": 12,
           "outcome": "YIELDED",
-          "note": "12 executive orders with dates and signed PDFs, 6 of them inside the trailing 12 months. Committed to data/officials/az-governor-actions.json with its denominator."
+          "note": "12 executive orders with dates and signed PDFs, 6 of them inside the trailing 12 months. Committed to data/states/az/officials/az-governor-actions.json with its denominator."
         }
       ],
       "subBranches": [],
@@ -4156,7 +4156,7 @@
           "walkedOn": "2026-08-31",
           "rows": 28,
           "outcome": "YIELDED",
-          "note": "28 candidacies on the 03255 ballot resolved against the CFS from a script: 9 filed with reported totals, 19 sourced dated absences, 0 leads. Produced data/funding/state-money-nh-2026.json, which the ballot page already knew how to load."
+          "note": "28 candidacies on the 03255 ballot resolved against the CFS from a script: 9 filed with reported totals, 19 sourced dated absences, 0 leads. Produced data/states/nh/funding/state-money-nh-2026.json, which the ballot page already knew how to load."
         }
       ],
       "subBranches": [],
@@ -4642,7 +4642,7 @@
           "walkedOn": "2026-08-31",
           "rows": 58,
           "outcome": "YIELDED",
-          "note": "58 Arizona committees' itemised income and expense ledgers read and aggregated, which is what licensed data/funding/state-money-az-2026.json. Aggregates only: the itemised rows carry contributor name, occupation and employer (RULING 167) and were never persisted."
+          "note": "58 Arizona committees' itemised income and expense ledgers read and aggregated, which is what licensed data/states/az/funding/state-money-az-2026.json. Aggregates only: the itemised rows carry contributor name, occupation and employer (RULING 167) and were never persisted."
         }
       ],
       "subBranches": [],

@@ -8,7 +8,7 @@ import {
   DIVISION_BODY_BLURBS,
   NO_BODY_BLURB_LINE,
   blurbForBody,
-} from "../lib/officials/body-blurbs.ts";
+} from "../lib/officials/body-description.ts";
 
 /*
   M136 — the body battlecard reaches person-card depth.

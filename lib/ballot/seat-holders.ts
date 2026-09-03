@@ -60,7 +60,7 @@ function corpus(): Corpus | null {
   if (cache !== undefined) return cache;
   try {
     cache = JSON.parse(
-      readFileSync(join(process.cwd(), "data/hunt/nh-gencourt-members.json"), "utf8"),
+      readFileSync(join(process.cwd(), "data/states/nh/hunt/nh-gencourt-members.json"), "utf8"),
     ) as Corpus;
   } catch {
     // No corpus, no holders — and that reads as UNKNOWN downstream, never as

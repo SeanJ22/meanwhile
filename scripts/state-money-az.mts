@@ -15,7 +15,7 @@
  * ACQUISITION   this file, top half. The COMPLETE applicable SeeTheMoney cycle
  *               universe and the Secretary of State's committee register.
  *               **It has no dependency on 85641, on 85701, or on any ballot.**
- * IDENTITY      data/identity/az-2026-candidate-registry.json, built by
+ * IDENTITY      data/states/az/identity/az-2026-candidate-registry.json, built by
  *               `pnpm identity:az`. Who exists, statewide, and which canonical
  *               candidacy each one is.
  * PROJECTION    this file, bottom half, plus lib/funding/nominee-money.ts. The
@@ -24,7 +24,7 @@
  * ```
  *
  * **What this file used to do, and why it was prohibited.** Its own header said
- * *"FOR THE 85701 AND 85641 BALLOT"*. It loaded `data/ballot/az-pima-2026.json`,
+ * *"FOR THE 85701 AND 85641 BALLOT"*. It loaded `data/states/az/ballot/az-pima-2026.json`,
  * built `candidateOfInterest` by name-matching those candidacies against the
  * portal, and read the itemised ledger only for the committees that survived —
  * 58 of 732. So the ACQUISITION DENOMINATOR was the currently enabled reader
@@ -36,7 +36,7 @@
  * population afterwards.
  *
  * **The invariant is ZERO redundant internet hunt when a new ZIP is activated.**
- * `data/campaign-finance/az-2026-statewide-corpus.json` holds every entity in
+ * `data/states/az/campaign-finance/az-2026-statewide-corpus.json` holds every entity in
  * the cycle universe with its aggregates, its office, its party, and its
  * reconciliation state. A newly activated ZIP's candidates are answered from
  * that committed file.
@@ -163,14 +163,12 @@ const LEDGER_BUDGET = BUDGET_ARG ? Number(BUDGET_ARG.split("=")[1]) : Number.POS
 const SPACING_MS = 250;
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-const CORPUS_PATH = join(ROOT, "data", "campaign-finance", "az-2026-statewide-corpus.json");
-const REGISTRY_PATH = join(ROOT, "data", "identity", "az-2026-candidate-registry.json");
-const SNAPSHOT_PATH = join(ROOT, "data", "funding", "state-money-az-2026.json");
+const CORPUS_PATH = join(ROOT, "data", "states", "az", "campaign-finance", "az-2026-statewide-corpus.json");
+const REGISTRY_PATH = join(ROOT, "data", "states", "az", "identity", "az-2026-candidate-registry.json");
+const SNAPSHOT_PATH = join(ROOT, "data", "states", "az", "funding", "state-money-az-2026.json");
 const RECONCILIATION_PATH = join(
   ROOT,
-  "data",
-  "campaign-finance",
-  "az-seethemoney-2026-reconciliation.json",
+  "data", "states", "az", "campaign-finance", "az-seethemoney-2026-reconciliation.json",
 );
 
 /* -------------------------------------------------------------------------
@@ -686,7 +684,7 @@ if (DRY) {
       {
         formatVersion: 1,
         _note: [
-          "THE MEASUREMENT THAT LICENSES EVERY FIGURE IN data/funding/state-money-az-2026.json.",
+          "THE MEASUREMENT THAT LICENSES EVERY FIGURE IN data/states/az/funding/state-money-az-2026.json.",
           "",
           "SeeTheMoney returns a candidate as several summary rows partitioned by office and party.",
           "Whether those rows are PARTS whose sum is the cycle total was undetermined until this walk,",
@@ -740,7 +738,7 @@ if (DRY) {
     ) + "\n",
     "utf8",
   );
-  console.log("\n  wrote data/funding/state-money-az-2026.json");
-  console.log("  wrote data/campaign-finance/az-2026-statewide-corpus.json");
-  console.log("  wrote data/campaign-finance/az-seethemoney-2026-reconciliation.json");
+  console.log("\n  wrote data/states/az/funding/state-money-az-2026.json");
+  console.log("  wrote data/states/az/campaign-finance/az-2026-statewide-corpus.json");
+  console.log("  wrote data/states/az/campaign-finance/az-seethemoney-2026-reconciliation.json");
 }

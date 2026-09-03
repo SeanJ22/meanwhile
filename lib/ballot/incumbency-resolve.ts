@@ -196,7 +196,7 @@ export function enumeratedSeatHolders(contest: { title: string; ocdId: string })
  * **IT HANDS OVER THE NAMES, AND IT USED TO HAND OVER A COUNT.**
  * (2026-08-28, the candidate-identity repair.) `LineupNominee.name` is the only
  * identity material the certified corpus carries — there is no candidate id, no
- * filing number and no state person key in `data/ballot/az-general-lineup-2026.json`,
+ * filing number and no state person key in `data/states/az/ballot/az-general-lineup-2026.json`,
  * for any of the twelve contests it names — so the name as the canvass prints it
  * IS the certified identity, quoted marks and generational suffix included
  * (`Walter "Les" Presmyk`, `Daniel Francis Butierez Sr.`). It is passed through

@@ -42,7 +42,7 @@ import { personKey } from "../lib/photos/person.ts";
 import { houseRoster, senateRoster } from "./nh-legislator.mts";
 
 const WRITE = process.argv.includes("--write");
-const FILE = join(process.cwd(), "lib", "registry", "officeholders-33.json");
+const FILE = join(process.cwd(), "data", "states", "nh", "officials", "officeholders-33.json");
 
 interface Officeholder {
   id: string;

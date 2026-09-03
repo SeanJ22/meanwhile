@@ -37,7 +37,7 @@ export function getMeasureAnalyses(): AnalysesFile | null {
   try {
     cache = JSON.parse(
       readFileSync(
-        join(process.cwd(), "data", "ballot", "az-analyses-2026.json"),
+        join(process.cwd(), "data", "states", "az", "ballot", "az-analyses-2026.json"),
         "utf8",
       ),
     ) as AnalysesFile;

@@ -31,7 +31,7 @@ import {
  * below check the SCOPE FIELD against the URL rather than trusting the naming.
  */
 
-const REGISTRY = join(ROOT, "data", "jurisdictions", "az.json");
+const REGISTRY = join(ROOT, "data", "states", "az", "jurisdictions", "az.json");
 
 function registry(): JurisdictionRegistry {
   return JSON.parse(readFileSync(REGISTRY, "utf8")) as JurisdictionRegistry;

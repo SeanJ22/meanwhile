@@ -30,7 +30,7 @@ import {
   CLASS_DEFINITIONS,
   DEPENDENT_SCHOOL_DEFINITION,
 } from "../lib/officials/body-definitions.ts";
-import { BODY_BLURBS, DIVISION_BODY_BLURBS } from "../lib/officials/body-blurbs.ts";
+import { BODY_BLURBS, DIVISION_BODY_BLURBS } from "../lib/officials/body-description.ts";
 import { FORM_DEFINITIONS } from "../lib/officials/form-definitions.ts";
 
 const UA = "we-the-people/1.0 (civic data for a public-records product; seanj22@gmail.com)";

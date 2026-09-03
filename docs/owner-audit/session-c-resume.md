@@ -20,7 +20,7 @@ loading the page would see what they saw yesterday, it does not go here.)*
 **Read this before the New Hampshire section, because it is the correction.**
 Arizona campaign finance is collected, normalized, reconciled 255 of 255 against
 the publisher's own itemised ledger, and committed as
-`data/funding/state-money-az-2026.json` with 44 candidates carrying real filed
+`data/states/az/funding/state-money-az-2026.json` with 44 candidates carrying real filed
 totals — Katie Hobbs $11,109,720, Kris Mayes $4,612,992.
 
 **Four of them render.** Measured on production and on a local build of the same

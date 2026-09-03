@@ -397,7 +397,7 @@ test("the AZ general lineup cites the certified canvass and keys to real contest
   const { join } = await import("node:path");
   const lineup = JSON.parse(
     readFileSync(
-      join(process.cwd(), "data", "ballot", "az-general-lineup-2026.json"),
+      join(process.cwd(), "data", "states", "az", "ballot", "az-general-lineup-2026.json"),
       "utf8",
     ),
   ) as {
@@ -416,7 +416,7 @@ test("the AZ general lineup cites the certified canvass and keys to real contest
   );
 
   const az = JSON.parse(
-    readFileSync(join(process.cwd(), "data", "ballot", "az-pima-2026.json"), "utf8"),
+    readFileSync(join(process.cwd(), "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8"),
   ) as { contests: { id: string; type: string }[] };
   const contestIds = new Set(az.contests.map((c) => c.id));
 

@@ -131,7 +131,7 @@ const ROUTES: LearnedRoute[] = [
       rows: 28,
       outcome: "YIELDED",
       note:
-        "28 candidacies on the 03255 ballot resolved against the CFS from a script: 9 filed with reported totals, 19 sourced dated absences, 0 leads. Produced data/funding/state-money-nh-2026.json, which the ballot page already knew how to load.",
+        "28 candidacies on the 03255 ballot resolved against the CFS from a script: 9 filed with reported totals, 19 sourced dated absences, 0 leads. Produced data/states/nh/funding/state-money-nh-2026.json, which the ballot page already knew how to load.",
     },
     claims: [
       {

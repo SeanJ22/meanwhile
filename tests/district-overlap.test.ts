@@ -21,7 +21,7 @@ import {
  * **WGH-16 — A POINT RESOLVES TO ONE DISTRICT; A POLYGON MAY OVERLAP MANY.**
  *
  * Every assertion below is measured against
- * `data/hunt/85641-district-territory.json` — 44 probed points across 20 walked
+ * `data/states/az/hunt/85641-district-territory.json` — 44 probed points across 20 walked
  * Pima County ArcGIS layers — rather than reasoned about. The probe point
  * labels are shared across layers, so co-occurrence at a point is exact.
  *
@@ -38,7 +38,7 @@ import {
  */
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const INSTRUMENT = "data/hunt/85641-district-territory.json";
+const INSTRUMENT = "data/states/az/hunt/85641-district-territory.json";
 
 const probe = JSON.parse(
   readFileSync(join(ROOT, INSTRUMENT), "utf8"),
@@ -275,7 +275,7 @@ test("WGH-16: a repeated district is named once, and state does not leak between
 
 test("WGH-16: the committed NJ Morris walk is migrated, with no value lost", () => {
   const doc = JSON.parse(
-    readFileSync(join(ROOT, "data/hunt/wikipedia-nj-morris.json"), "utf8"),
+    readFileSync(join(ROOT, "data/states/nj/hunt/wikipedia-nj-morris.json"), "utf8"),
   ) as { municipalities: { title: string; representation: Representation | null }[] };
 
   assert.equal(doc.municipalities.length, 39);

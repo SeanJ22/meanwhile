@@ -1,3 +1,4 @@
+import { geometryPath } from "../lib/holdings/files.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
@@ -22,7 +23,7 @@ import registryFile from "../lib/registry/registry.json" with { type: "json" };
 const geo = (name: string): DistrictFeature[] =>
   (
     JSON.parse(
-      readFileSync(new URL(`../public/geo/${name}`, import.meta.url), "utf8"),
+      readFileSync(new URL(`../${geometryPath(name)}`, import.meta.url), "utf8"),
     ) as { features: DistrictFeature[] }
   ).features;
 

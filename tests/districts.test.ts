@@ -170,7 +170,7 @@ test("item 6b: no Census placeholder name reaches a reader as a district's name"
   // the NAME becomes the fact.
   const files = [
     join(process.cwd(), "lib", "registry", "registry.json"),
-    join(process.cwd(), "public", "geo", "unsd-04.geojson"),
+    join(process.cwd(), "data", "states", "az", "geo", "unsd-04.geojson"),
   ];
   for (const file of files) {
     const text = readFileSync(file, "utf8");

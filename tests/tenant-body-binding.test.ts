@@ -172,7 +172,7 @@ const SYNTHETIC: RegistryView = {
 
 const tenant = (over: Partial<ServingTenant>): ServingTenant => ({
   table: "INSITE_TENANTS",
-  modulePath: "lib/sources/legistar-insite/tenants.ts",
+  modulePath: "lib/sources/legistar-insite/tenant-registry.ts",
   tenant: "probe",
   bodyId: "ocd-division/country:us/state:az/place:x#governing",
   ocdId: "ocd-division/country:us/state:az/place:x",
@@ -240,7 +240,7 @@ test("a division the registry does not have is caught", () => {
     [
       {
         table: "LEGISTAR_CLIENTS",
-        modulePath: "lib/sources/legistar/clients.ts",
+        modulePath: "lib/sources/legistar/client-registry.ts",
         tenant: "nowhere",
         bodyId: "ocd-division/country:us/state:az/place:nowhere#governing",
         ocdId: "ocd-division/country:us/state:az/place:nowhere",

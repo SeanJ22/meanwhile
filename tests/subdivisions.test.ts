@@ -1,3 +1,4 @@
+import { geometryPath } from "../lib/holdings/files.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
@@ -18,7 +19,7 @@ import { subdivisionIdentity } from "../lib/ocd/divisions.ts";
  */
 
 function load(file: string) {
-  const raw = readFileSync(`public/geo/${file}`, "utf8");
+  const raw = readFileSync(geometryPath(file), "utf8");
   return JSON.parse(raw) as {
     features: { properties: { ocdId: string; label: string; lsad?: string } }[];
   };

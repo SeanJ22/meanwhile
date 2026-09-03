@@ -35,7 +35,7 @@ import { join } from "node:path";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 
 const ROOT = process.cwd();
-const STORE = join(ROOT, "data", "outcomes", "legistar-outcomes.json");
+const STORE = join(ROOT, "data", "states", "az", "outcomes", "legistar-outcomes.json");
 const OUT = join(ROOT, "data", "health", "rollcall-walks");
 
 interface Sitting {
@@ -131,7 +131,7 @@ writeFileSync(
   `${JSON.stringify(
     {
       at: new Date().toISOString(),
-      store: "data/outcomes/legistar-outcomes.json",
+      store: "data/states/az/outcomes/legistar-outcomes.json",
       tenants: store.tenants,
       sittings: store.sittings.length,
       sittingsWithRolls: withRolls,

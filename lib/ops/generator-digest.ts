@@ -7,7 +7,7 @@
  * RULING 92 says: fix the generator, never the artifact. It is correct and it
  * caught things. It also has no end.
  *
- * `data/hunt/nj-morris-municipal-sites.json` pointed five municipalities at the
+ * `data/states/nj/hunt/nj-morris-municipal-sites.json` pointed five municipalities at the
  * wrong government's website — `morris_township` at Morris Plains',
  * `chatham_township` at Chatham Borough's — **with its generator already
  * fixed**. Somebody had done the RULING 92 thing, correctly, and stopped. The

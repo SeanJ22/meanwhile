@@ -6,7 +6,7 @@ import { divisionIdsForZipArea } from "@/lib/ballot/zip-divisions";
 import { needsPill, zipCertainty } from "@/lib/geo/zip-certainty";
 import { analysisForContest } from "@/lib/ballot/analyses";
 import { orderMeasures } from "@/lib/ballot/measure-order";
-import { summaryForContest } from "@/lib/ballot/measure-summaries";
+import { summaryForContest } from "@/lib/ballot/measure-summary";
 import {
   PROVISION_KIND_LABEL,
   provisionsForContest,
@@ -750,7 +750,7 @@ export default async function BallotPage({
    * **BAL-30 (2026-08-28) — THE MEASURE TEXT WAS ALREADY IN THE REPOSITORY
    * AND THE PAGE RENDERED IT AS MISSING.**
    *
-   * `data/ballot/az-pima-2026.json` has carried a `measures[]` array since
+   * `data/states/az/ballot/az-pima-2026.json` has carried a `measures[]` array since
    * 2026-08-27 holding four LOCAL measures with the official question verbatim
    * and, for two of them, the official interpretive statement verbatim. This
    * page referenced none of it: no `set.measures`, no `questionText`, no
@@ -2444,7 +2444,7 @@ export default async function BallotPage({
         It survived the first sweep of this session because the sweep was a
         source-text scan and this heading is three ordinary words in a JSX
         element, while the sentence that made it a coverage claim lived in
-        `data/ballot/az-pima-2026.json` and never appeared in `app/` at all.
+        `data/states/az/ballot/az-pima-2026.json` and never appeared in `app/` at all.
         **It was caught by reading a production screenshot as an image** —
         exactly as NH Hunt 4's stale note was, and for the same reason: the DOM
         assertion was happy, and the reader's view was not.

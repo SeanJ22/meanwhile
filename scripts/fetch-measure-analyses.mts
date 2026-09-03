@@ -14,7 +14,7 @@
  * it — data in hand, displayed as missing, was the defect.
  *
  * Same manners as every adapter: identified UA, serialized requests, no
- * refetch of an unchanged hash. Writes data/ballot/az-analyses-2026.json
+ * refetch of an unchanged hash. Writes data/states/az/ballot/az-analyses-2026.json
  * and prints fetched/extracted/failed with the denominator.
  *
  * `pnpm tsx scripts/fetch-measure-analyses.mts`
@@ -29,8 +29,8 @@ import { extractPdfText } from "../lib/meetings/agenda-documents.ts";
 import { sourceUserAgent } from "../lib/sources/http.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const BALLOT_PATH = join(root, "data", "ballot", "az-pima-2026.json");
-const OUT_PATH = join(root, "data", "ballot", "az-analyses-2026.json");
+const BALLOT_PATH = join(root, "data", "states", "az", "ballot", "az-pima-2026.json");
+const OUT_PATH = join(root, "data", "states", "az", "ballot", "az-analyses-2026.json");
 
 interface Contest {
   id: string;

@@ -42,7 +42,7 @@ import { legistarMeetingId } from "../sources/legistar/index.ts";
 import { minutesPointerFor } from "../sources/legistar/outcomes.ts";
 import type { EventOutcomes } from "../sources/legistar/outcomes.ts";
 import type { LegistarEvent } from "../sources/legistar/types.ts";
-import type { LegistarClient } from "../sources/legistar/clients.ts";
+import type { LegistarClient } from "../sources/legistar/client-registry.ts";
 
 import { observationFromEvent } from "./publication.ts";
 import type { AgendaPublicationObservation } from "./publication.ts";

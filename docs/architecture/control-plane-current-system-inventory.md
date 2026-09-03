@@ -178,7 +178,7 @@ rather than a green-while-wrong guard.
 | Body identity | `lib/registry/registry.json`, `curated-bodies.ts` | `REUSE_AS_AUTHORITY` | R-0197: the registry is the authority; an adapter never mints one. |
 | Tenant→body guard | `lib/ops/tenant-body-binding.ts` | `REUSE_AS_AUTHORITY` | |
 | Source wiring | `lib/registry/source-wiring.ts` (76 rows) | `MIGRATE` | Its own header calls it the committed forerunner of a table; it cannot stay in code at 90,000 governments. |
-| Private tenant tables | `lib/sources/legistar/clients.ts`, `legistar-insite/tenants.ts` | `WRAP_BEHIND_INTERFACE` | Two adapters keep tenant tables outside `SOURCE_WIRING`. |
+| Private tenant tables | `data/states/az/meetings/legistar-venues.json`, `legistar-insite/insite-venues.json` | `WRAP_BEHIND_INTERFACE` | Two adapters keep tenant tables outside `SOURCE_WIRING`. |
 | Browser constructor | `scripts/browser.mts` | `REUSE_AS_AUTHORITY` | The only sanctioned browser; its bypass is test-refused. |
 | Extraction toolkit | `lib/extract/**` | `REUSE_AS_AUTHORITY` | Its `CANNOT_RUN` ≠ `zeroRows` contract is exactly the discipline a vault needs. |
 | Two colliding rung namespaces | `lib/sources/http.ts` (14-rung mechanics) vs `lib/registry/audit.ts` (`LadderRung`, 9 values) | `HARDEN_IN_PLACE` | Documented, not resolved. Only a typed `walledAtRung` stops it recurring. |
@@ -274,7 +274,7 @@ all.
 | Coverage tier ladder | `lib/coverage/tier.ts` | `REUSE_AS_AUTHORITY` | Stored and stamped, never inferred at read time. |
 | FEC snapshot + reader | `data/fec/fec-2026.json`, `lib/funding/snapshot.ts` | `REUSE_AS_AUTHORITY` | No live call at request time; the key never reaches runtime. |
 | Campaign-finance firewall | `tests/campaign-finance-firewall.test.ts` | `REUSE_AS_AUTHORITY` | RULING 126. **Binding constraint on the control plane** — see below. |
-| AZ state/local money | — | **NOT PRESENT** | `data/funding/state-money-az-2026.json` does not exist. `seethemoney.az.gov` is an SPA shell; rung 6 recorded as NOT YET WALKED. |
+| AZ state/local money | — | **NOT PRESENT** | `data/states/az/funding/state-money-az-2026.json` does not exist. `seethemoney.az.gov` is an SPA shell; rung 6 recorded as NOT YET WALKED. |
 | IndependentExpenditure model | — | **NOT PRESENT** | The phrase appears only in prose. |
 
 ### RULING 126 constrains the campaign-finance design

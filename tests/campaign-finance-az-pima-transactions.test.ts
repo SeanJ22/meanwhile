@@ -1,7 +1,7 @@
 /**
  * THE PIMA COUNTY 401 IS DOWN, AND THIS IS THE PROOF THAT IT STAYED HONEST.
  *
- * `data/campaign-finance/az-pima-2026-held.json` recorded a total money wall:
+ * `data/states/az/campaign-finance/az-pima-2026-held.json` recorded a total money wall:
  * no contribution row, no expenditure row, no independent-expenditure row, no
  * summary total, because `documents/getdocumentfiling/{id}` answered HTTP 401.
  * Under RULING 205 that closed a RouteTask and never the record obligation, and

@@ -83,9 +83,9 @@ import {
 import { politeGetText } from "../lib/sources/http.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const BALLOT = join(ROOT, "data/ballot/nj-morris-2026.json");
-const CONTACTS = join(ROOT, "data/ballot/nj-morris-2026-contacts.json");
-const OUT = join(ROOT, "data/hunt/nj-filed-email-domain.json");
+const BALLOT = join(ROOT, "data/states/nj/ballot/nj-morris-2026.json");
+const CONTACTS = join(ROOT, "data/states/nj/ballot/nj-morris-2026-contacts.json");
+const OUT = join(ROOT, "data/states/nj/hunt/nj-filed-email-domain.json");
 
 const STAMP = process.env.WTP_STAMP ?? "";
 

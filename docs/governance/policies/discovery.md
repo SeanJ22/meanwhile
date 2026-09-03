@@ -125,7 +125,7 @@ walked at any rung. `lib/hunt/discovery.ts` is the machinery; it is guarded in
 `tests/discovery-tree.test.ts`.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -176,7 +176,7 @@ way is how a bad date buys permanent trust. This runs on the scheduled refresh,
 not by hand.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -251,7 +251,7 @@ a route's portability. Honest uncertainty is a legal answer there and is
 better than a confident wrong one.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -352,7 +352,7 @@ hunted again on its RULING 53 clock. Nothing in this project is ever concluded
 to be unobtainable.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -442,7 +442,7 @@ Rockaway Township is the median American shape and is the first test of whether
 these routes travel at all.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -598,7 +598,7 @@ worth more than the eleventh `shoot-<date>.mts`, and the preference is stated
 here so the count of 34 is a fact about the past rather than a target.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -722,7 +722,7 @@ nine of them outright, and then concluding from the exhausted quota that the
 constraint was money.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -787,7 +787,7 @@ fails the build, and `judgeManifestWalk` refuses to honour a Tier C walk for a
 field whose Tier A and Tier B routes are unwalked.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -833,7 +833,7 @@ whether there was anything to get past. Six sessions walked increasingly
 sophisticated routes to facts that were sitting on the second Google result.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -883,7 +883,7 @@ usually incompletely. Enumerating first costs an hour and is paid back the first
 time a route is walked in tier order.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -939,7 +939,7 @@ wrong in a different direction — refusing it entirely leaves nine council memb
 unnamed, and trusting it directly puts an unsourced claim in front of a reader.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -1042,7 +1042,7 @@ have surfaced. Every one of those was available while the previous session was
 measuring how fast a free search engine would rate-limit it.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -1117,7 +1117,7 @@ and **the defect recurred in NJ Hunt 5**, one session later.
 
 **The sweep it requires**, run on adoption day: every generated file is checked
 against what its generator currently produces, and a difference is a finding.
-NJ Hunt 6's sweep found `data/hunt/nj-morris-municipal-sites.json` **five
+NJ Hunt 6's sweep found `data/states/nj/hunt/nj-morris-municipal-sites.json` **five
 municipalities deep in wrong governments** — `morris_township` pointed at Morris
 Plains' website, `chatham_township` at Chatham Borough's, and three more — with
 six municipalities missing outright. The generator had already been fixed;
@@ -1178,7 +1178,7 @@ publication: US government work, public domain, no attribution obligation and
 no terms to accept.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -1272,7 +1272,7 @@ where all 272 live.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -1341,7 +1341,7 @@ observations and which are folklore.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -1400,7 +1400,7 @@ find came the same way.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -1447,7 +1447,7 @@ an instruction to whoever writes the brief.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -1486,7 +1486,7 @@ deprioritised it; it has cancelled it, while appearing to require it.**
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -1549,7 +1549,7 @@ doubles, and production, which injects nothing, walks the real rungs.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -1633,7 +1633,7 @@ which of them answered and which slammed.
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -1768,7 +1768,7 @@ gone to the aggregator, or to the brief, and not to the body, would have
 recorded a dead endpoint.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -1885,7 +1885,7 @@ high followed-count with no bodies discovered is a session that walked a site
 thoroughly and learned nothing, and the report says that too.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -2542,7 +2542,7 @@ its own header:
 
 ```
   scripts/state-money-az.mts   "FOR THE 85701 AND 85641 BALLOT"
-                               loads data/ballot/az-pima-2026.json, builds
+                               loads data/states/az/ballot/az-pima-2026.json, builds
                                candidateOfInterest from those candidacies, reads
                                the itemized ledger only for those committees
   scripts/state-money-nh.mts   "FOR THE 03255 BALLOT"
@@ -2660,7 +2660,7 @@ ZIP in the key" is a property of the KEY, not of the POPULATION.**
 ## What this closes, exactly
 
 The candidate-universe artifacts for all three pilot states were built from
-PILOT BALLOT DOCUMENTS — `data/ballot/az-pima-2026.json` (55 candidacies),
+PILOT BALLOT DOCUMENTS — `data/states/az/ballot/az-pima-2026.json` (55 candidacies),
 `nh-merrimack-2026.json` (47), `nj-morris-2026.json` (276). The Arizona
 "statewide candidate identity registry" loads the Pima ballot and iterates its
 contests and candidacies. The generator's own comments already said so: the

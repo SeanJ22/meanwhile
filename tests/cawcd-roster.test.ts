@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { AZ_CAWCD_ROSTERS } from "../lib/registry/rosters-az-cawcd.ts";
+import { AZ_CAWCD_ROSTERS } from "../lib/registry/cawcd-rosters.ts";
 import { BODY_ROSTERS, rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
 
 /**

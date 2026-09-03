@@ -1,3 +1,4 @@
+import { geometryFiles } from "../lib/holdings/files.ts";
 /**
  * **A ZIP IS AN AREA, AND THE BALLOT PAGE WAS READING IT AS A POINT**
  * (`NJ01`, NJ Hunt 2, 2026-08-22).
@@ -43,15 +44,14 @@
  * nothing regresses and no absence here is a claim about a place.
  */
 
-import { readFileSync, writeFileSync, readdirSync } from "node:fs";
-import { join } from "node:path";
+import { readFileSync, writeFileSync } from "node:fs";
+import { basename, join } from "node:path";
 
 import { COVERED_FIPS } from "../lib/coverage/artifacts.ts";
 import { resolveZipGeography } from "../lib/geo/zip-geography.ts";
 import { today } from "./doc-dates.mjs";
 
 const ROOT = process.cwd();
-const GEO_DIR = join(ROOT, "public", "geo");
 
 /* GEOID → OCD id, read off the committed layers themselves. A hand-kept second
  * copy of this mapping is a copy that goes wrong; the layers already carry it. */
@@ -78,14 +78,15 @@ const LAYER_OF_FILE: Record<string, string> = {
 };
 const ocdByLayerGeoid = new Map<string, string>();
 let features = 0;
-for (const name of readdirSync(GEO_DIR)) {
+for (const file of geometryFiles(ROOT)) {
+  const name = basename(file);
   if (!name.endsWith(".geojson") || name === "state-outlines.geojson") continue;
   const stem = name.replace(/\.geojson$/, "");
   const layer = LAYER_OF_FILE[stem] ?? LAYER_OF_FILE[stem.replace(/-\d{2}$/, "")];
   // Layers the ZCTA edge list does not use — legislative and congressional
   // districts — are skipped rather than folded in under a guessed layer name.
   if (!layer) continue;
-  const parsed = JSON.parse(readFileSync(join(GEO_DIR, name), "utf8")) as {
+  const parsed = JSON.parse(readFileSync(join(ROOT, file), "utf8")) as {
     features?: { properties: Record<string, string> }[];
   };
   for (const f of parsed.features ?? []) {
@@ -201,7 +202,7 @@ if (considered === 0) {
 
 const payload = {
   generatedAt: today(),
-  source: "data/derived/zip-governments.json, joined to public/geo/*.geojson by GEOID",
+  source: "data/derived/zip-governments.json, joined to canonical state and national geometry by GEOID",
   sourceOrg: "U.S. Census Bureau (TIGER) via this repo's own lattice sampling",
   scope:
     `zips whose ZCTA sits in state FIPS ${COVERED_FIPS.join(", ")} — the states this repo has committed ` +

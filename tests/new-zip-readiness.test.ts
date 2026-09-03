@@ -46,7 +46,7 @@ import { applicableDivisions, projectOntoZip, stateDivision } from "../lib/hunt/
  * a call that has not happened yet.
  */
 
-const UNIVERSE = join(ROOT, "data", "hunt", "az-candidate-universe-2026.json");
+const UNIVERSE = join(ROOT, "data", "states", "az", "hunt", "az-candidate-universe-2026.json");
 const ZIP_DIVISIONS = join(ROOT, "data", "derived", "zip-division-ids.json");
 
 /** Outside the pilot pair, and in this repository's committed geometry. */
@@ -133,7 +133,7 @@ test("RULING 229: activating 85122 renders held statewide records with ZERO outb
       zip: NON_PILOT_ZIP,
       universe: u,
       divisions,
-      citation: "data/hunt/az-candidate-universe-2026.json",
+      citation: "data/states/az/hunt/az-candidate-universe-2026.json",
     });
   });
 
@@ -167,7 +167,7 @@ test("85122 actually reaches a statewide contest, so the projection is not vacuo
     zip: NON_PILOT_ZIP,
     universe: u,
     divisions,
-    citation: "data/hunt/az-candidate-universe-2026.json",
+    citation: "data/states/az/hunt/az-candidate-universe-2026.json",
   });
 
   assert.ok(

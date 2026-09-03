@@ -25,7 +25,7 @@
  *
  * Usage:
  *   pnpm zip:intersect --zip 85641
- *   pnpm zip:intersect --zip 85641 --layers data/hunt/az-district-layers.json --out <file>
+ *   pnpm zip:intersect --zip 85641 --layers data/states/az/hunt/az-district-layers.json --out <file>
  */
 
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
@@ -69,7 +69,7 @@ async function getJson(url: string, init?: RequestInit): Promise<ArcGisResponse>
 }
 
 const zip = arg("zip") ?? "85641";
-const layersPath = arg("layers") ?? "data/hunt/az-district-layers.json";
+const layersPath = arg("layers") ?? "data/states/az/hunt/az-district-layers.json";
 if (!existsSync(layersPath)) {
   console.error(`--layers ${layersPath} does not exist`);
   process.exit(2);

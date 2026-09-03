@@ -9,7 +9,7 @@
  *
  * ```
  *   scripts/state-money-az.mts   "FOR THE 85701 AND 85641 BALLOT"
- *                                loads data/ballot/az-pima-2026.json
+ *                                loads data/states/az/ballot/az-pima-2026.json
  *   scripts/state-money-nh.mts   "FOR THE 03255 BALLOT"
  *                                hardcodes COUNTY = "Merrimack", and asks the
  *                                statewide registry one SURNAME at a time —

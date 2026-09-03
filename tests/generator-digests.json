@@ -5,15 +5,9 @@
     "entry": "scripts/agents-sync.mjs",
     "regeneratedOn": "2026-09-02"
   },
-  "data/campaign-finance/az-2026-statewide-corpus.json": {
-    "digest": "b4ca255048b3e2aebf8eb512a15c803a5f5121ebacd5e16928b3b21deb5caea7",
-    "files": 12,
-    "entry": "scripts/state-money-az.mts",
-    "regeneratedOn": "2026-09-02"
-  },
   "data/derived/body-forms.json": {
-    "digest": "fb2aa1809bb3d54eebd38c40e244732b8ba64665814f5a155891e10827a09e6f",
-    "files": 8,
+    "digest": "2547d6a791b24a80c170dd1a2157a642a60b59a238106ae43d2b2147d88ed066",
+    "files": 9,
     "entry": "scripts/stamp-body-forms.mts",
     "regeneratedOn": "2026-09-02"
   },
@@ -29,64 +23,76 @@
     "entry": "scripts/classify-school-districts.mts",
     "regeneratedOn": "2026-09-02"
   },
-  "data/funding/state-money-az-2026.json": {
-    "digest": "b4ca255048b3e2aebf8eb512a15c803a5f5121ebacd5e16928b3b21deb5caea7",
-    "files": 12,
-    "entry": "scripts/state-money-az.mts",
-    "regeneratedOn": "2026-09-02"
-  },
-  "data/hunt/muni-sites-nj-morris.json": {
-    "digest": "2fa8a4c9e92de5d75de9c5f79d70660cdea36a6b9dbfe805c2103e5d7da77ef1",
-    "files": 3,
-    "entry": "scripts/muni-site-index.mts",
-    "regeneratedOn": "2026-09-02"
-  },
-  "data/hunt/nj-morris-certified-winners.json": {
-    "digest": "1896bd51ef11f04c8950c115db2205ab79b5708cd36ae7885ed45bcc923e4cfe",
-    "files": 5,
-    "entry": "scripts/nj-certified-winners.mts",
-    "regeneratedOn": "2026-09-02"
-  },
-  "data/hunt/nj-morris-municipal-sites.json": {
-    "digest": "f46e62be44e936350803ec37a41d5a856c5172a666a44be13deb2f49e6d2aa46",
-    "files": 4,
-    "entry": "scripts/nj-hunt4-rosters.mts",
-    "regeneratedOn": "2026-09-02"
-  },
-  "data/hunt/roster-pages-muni-sites-nj-morris.json": {
-    "digest": "63898d032fb194e30ee820fd019f53f3fbaa9e3ab2690333303ab521fbd34cfd",
-    "files": 3,
-    "entry": "scripts/roster-hunt.mts",
-    "regeneratedOn": "2026-09-02"
-  },
   "data/hunt/tier-directories.json": {
     "digest": "e0a210dbd594762c9eebf0eac80613b78c2f57d2ef83894df5f28c0ac5effc62",
     "files": 3,
     "entry": "scripts/tier-directory.mts",
     "regeneratedOn": "2026-09-02"
   },
-  "data/hunt/wikipedia-nj-morris.json": {
-    "digest": "26223d4c469b5b17c4c8f5677ed980bef05194e6ee05a2f29cd611b356bab017",
-    "files": 6,
-    "entry": "scripts/wiki-municipality.mts",
-    "regeneratedOn": "2026-09-02"
-  },
-  "data/identity/az-2026-candidate-registry.json": {
-    "digest": "e2ad443f88ab2dd281dba53e588a73eaa57c5f4e3f96ff089ff8d8f09dd964c5",
-    "files": 13,
-    "entry": "scripts/identity-az-2026.mts",
-    "regeneratedOn": "2026-09-02"
-  },
-  "data/identity/az-2026-certified-lineup-reconciliation.json": {
-    "digest": "e2ad443f88ab2dd281dba53e588a73eaa57c5f4e3f96ff089ff8d8f09dd964c5",
-    "files": 13,
-    "entry": "scripts/identity-az-2026.mts",
-    "regeneratedOn": "2026-09-02"
-  },
   "data/questionnaire/invitations-nj-morris-2026.json": {
-    "digest": "6eda47f82d79330d35379f7210ae1cd5e88f73362c25bdce8d19a8af1c5dd854",
+    "digest": "43e389c5869cbb6e7530c178924c5a249b2cfe26f7b94e062d40d8e0ef1cec49",
     "files": 4,
     "entry": "scripts/questionnaire-invitations.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "data/states/az/campaign-finance/az-2026-statewide-corpus.json": {
+    "digest": "1e1582abf30ec628eb0c0c91eb9ac64ea15ee2aed3d20f55dcb7008afb9ea13b",
+    "files": 12,
+    "entry": "scripts/state-money-az.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "data/states/az/funding/state-money-az-2026.json": {
+    "digest": "1e1582abf30ec628eb0c0c91eb9ac64ea15ee2aed3d20f55dcb7008afb9ea13b",
+    "files": 12,
+    "entry": "scripts/state-money-az.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "data/states/az/geo/body-territories.geojson": {
+    "digest": "3e37e56d6cc98a2d872104343699a3aab34d6ba9cc288841a3500222594d2fdd",
+    "files": 1,
+    "entry": "scripts/cfd-territory.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "data/states/az/identity/az-2026-candidate-registry.json": {
+    "digest": "8c27ed3a0ac73256f1466f785c8e47de764dc89b9b8c9adb498cb8f526599a82",
+    "files": 13,
+    "entry": "scripts/identity-az-2026.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "data/states/az/identity/az-2026-certified-lineup-reconciliation.json": {
+    "digest": "8c27ed3a0ac73256f1466f785c8e47de764dc89b9b8c9adb498cb8f526599a82",
+    "files": 13,
+    "entry": "scripts/identity-az-2026.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "data/states/nj/hunt/muni-sites-nj-morris.json": {
+    "digest": "d7e6ae0ac0d70c891f33320f61b073910d20e172964c1c5877c9ff5d3f78ed6d",
+    "files": 3,
+    "entry": "scripts/muni-site-index.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "data/states/nj/hunt/nj-morris-certified-winners.json": {
+    "digest": "b62308aacb0ad5fb544a6930812ec7009b56480d80c2ebd3f493001de58ac715",
+    "files": 5,
+    "entry": "scripts/nj-certified-winners.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "data/states/nj/hunt/nj-morris-municipal-sites.json": {
+    "digest": "ac4eabc9271f4bc267bcbf0cf02b930b0604e5cdfc07757504c438ac4af30373",
+    "files": 4,
+    "entry": "scripts/nj-hunt4-rosters.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "data/states/nj/hunt/roster-pages-muni-sites-nj-morris.json": {
+    "digest": "7905c999baf32e9d10695a7d1dbd8b2d15287e97270b0922083efbd8a88974ea",
+    "files": 3,
+    "entry": "scripts/roster-hunt.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "data/states/nj/hunt/wikipedia-nj-morris.json": {
+    "digest": "0d0bb8d6808820ee8ee3af29109d87c2c7e6b3530f473fe6cb093c8975e85f57",
+    "files": 6,
+    "entry": "scripts/wiki-municipality.mts",
     "regeneratedOn": "2026-09-02"
   },
   "docs/branch-manifest.md": {
@@ -102,103 +108,439 @@
     "regeneratedOn": "2026-09-02"
   },
   "docs/evidence/njhunt6-morris-rosters.jsonl": {
-    "digest": "8a1cc916e546cfd95c87b0c6821567da151cb3b8506c5d7e200191494195163c",
+    "digest": "71999e7918bd5ec3cebbef808c14cd0f7cc272e6b7363a0981206692d18a09ea",
     "files": 12,
     "entry": "scripts/build-nj-rosters.mts",
     "regeneratedOn": "2026-09-02"
   },
   "docs/governance/constitution.md": {
-    "digest": "e22cf267bc15507f475666d3b2ba56ff04691ce247d1f594fe0d519b3593533e",
+    "digest": "8a1328f6dc244071e5de48ae4b2856a88dd9c85ee5ba3609f93ff9504e17eeb8",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-09-02"
   },
   "docs/governance/current-decisions.md": {
-    "digest": "e22cf267bc15507f475666d3b2ba56ff04691ce247d1f594fe0d519b3593533e",
+    "digest": "8a1328f6dc244071e5de48ae4b2856a88dd9c85ee5ba3609f93ff9504e17eeb8",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-09-02"
   },
   "docs/governance/history.md": {
-    "digest": "e22cf267bc15507f475666d3b2ba56ff04691ce247d1f594fe0d519b3593533e",
+    "digest": "8a1328f6dc244071e5de48ae4b2856a88dd9c85ee5ba3609f93ff9504e17eeb8",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-09-02"
   },
   "docs/governance/index.json": {
-    "digest": "e22cf267bc15507f475666d3b2ba56ff04691ce247d1f594fe0d519b3593533e",
+    "digest": "8a1328f6dc244071e5de48ae4b2856a88dd9c85ee5ba3609f93ff9504e17eeb8",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-09-02"
   },
   "docs/governance/policies/business.md": {
-    "digest": "e22cf267bc15507f475666d3b2ba56ff04691ce247d1f594fe0d519b3593533e",
+    "digest": "8a1328f6dc244071e5de48ae4b2856a88dd9c85ee5ba3609f93ff9504e17eeb8",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-09-02"
   },
   "docs/governance/policies/data-privacy.md": {
-    "digest": "e22cf267bc15507f475666d3b2ba56ff04691ce247d1f594fe0d519b3593533e",
+    "digest": "8a1328f6dc244071e5de48ae4b2856a88dd9c85ee5ba3609f93ff9504e17eeb8",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-09-02"
   },
   "docs/governance/policies/discovery.md": {
-    "digest": "e22cf267bc15507f475666d3b2ba56ff04691ce247d1f594fe0d519b3593533e",
+    "digest": "8a1328f6dc244071e5de48ae4b2856a88dd9c85ee5ba3609f93ff9504e17eeb8",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-09-02"
   },
   "docs/governance/policies/meta-governance.md": {
-    "digest": "e22cf267bc15507f475666d3b2ba56ff04691ce247d1f594fe0d519b3593533e",
+    "digest": "8a1328f6dc244071e5de48ae4b2856a88dd9c85ee5ba3609f93ff9504e17eeb8",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-09-02"
   },
   "docs/governance/policies/rendering-neutrality.md": {
-    "digest": "e22cf267bc15507f475666d3b2ba56ff04691ce247d1f594fe0d519b3593533e",
+    "digest": "8a1328f6dc244071e5de48ae4b2856a88dd9c85ee5ba3609f93ff9504e17eeb8",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-09-02"
   },
   "docs/governance/policies/shipping-ci.md": {
-    "digest": "e22cf267bc15507f475666d3b2ba56ff04691ce247d1f594fe0d519b3593533e",
+    "digest": "8a1328f6dc244071e5de48ae4b2856a88dd9c85ee5ba3609f93ff9504e17eeb8",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-09-02"
   },
   "docs/governance/policies/sources-licensing.md": {
-    "digest": "e22cf267bc15507f475666d3b2ba56ff04691ce247d1f594fe0d519b3593533e",
+    "digest": "8a1328f6dc244071e5de48ae4b2856a88dd9c85ee5ba3609f93ff9504e17eeb8",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-09-02"
   },
   "docs/governance/policies/tracker-workflow.md": {
-    "digest": "e22cf267bc15507f475666d3b2ba56ff04691ce247d1f594fe0d519b3593533e",
+    "digest": "8a1328f6dc244071e5de48ae4b2856a88dd9c85ee5ba3609f93ff9504e17eeb8",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-09-02"
   },
   "docs/governance/policies/visual-feedback.md": {
-    "digest": "e22cf267bc15507f475666d3b2ba56ff04691ce247d1f594fe0d519b3593533e",
+    "digest": "8a1328f6dc244071e5de48ae4b2856a88dd9c85ee5ba3609f93ff9504e17eeb8",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-09-02"
   },
   "docs/repo-inventory.md": {
-    "digest": "b867d5a023e5c50c08288a83119c51d4a16905d02614c64e230d7392c75f131b",
+    "digest": "c62bcd5b64a7e796e1eed0b0500fe3fbd4586e49c8551f4801499a2a8d4e7724",
     "files": 9,
     "entry": "scripts/repo-map.mts",
     "regeneratedOn": "2026-09-02"
   },
   "docs/rulings.md": {
-    "digest": "e22cf267bc15507f475666d3b2ba56ff04691ce247d1f594fe0d519b3593533e",
+    "digest": "8a1328f6dc244071e5de48ae4b2856a88dd9c85ee5ba3609f93ff9504e17eeb8",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
     "regeneratedOn": "2026-09-02"
   },
+  "docs/states/ak.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/al.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/ar.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/as.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/az.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/ca.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/co.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/ct.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/dc.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/de.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/fl.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/ga.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/gu.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/hi.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/ia.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/id.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/il.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/in.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/ks.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/ky.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/la.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/ma.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/md.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/me.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/mi.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/mn.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/mo.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/mp.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/ms.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/mt.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/nc.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/nd.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/ne.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/nh.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/nj.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/nm.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/nv.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/ny.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/oh.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/ok.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/or.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/pa.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/pr.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/ri.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/sc.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/sd.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/tn.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/tx.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/ut.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/va.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/vi.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/vt.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/wa.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/wi.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/wv.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
+  "docs/states/wy.md": {
+    "digest": "f60f7d6f7870414ad3ed9121d26ae2b067f8428c3948b2e6037e0af5ca74490f",
+    "files": 41,
+    "entry": "scripts/state-manifest.mts",
+    "regeneratedOn": "2026-09-02"
+  },
   "docs/status-ledger.md": {
-    "digest": "a4b11335ea56cfd1914057e0e81a6e13e6748bebb1093cd749d25397faf5e888",
+    "digest": "b3be02da20ba2b349e687a8cf0a79597f71ab3be47dd188f7d96ab075c3e9362",
     "files": 17,
     "entry": "scripts/status-ledger.mts",
     "regeneratedOn": "2026-09-02"
@@ -210,21 +552,15 @@
     "regeneratedOn": "2026-09-02"
   },
   "lib/registry/registry.json": {
-    "digest": "5a1348d7e237b8dbcc147e0be084e74c7728446fcf063e4ca24e12eb6ed8575e",
-    "files": 13,
+    "digest": "c4729693d1f44278a82e5d8043fed87d7b328f26238ef37f12301842fa4660b2",
+    "files": 17,
     "entry": "scripts/build-registry.ts",
     "regeneratedOn": "2026-09-02"
   },
   "lib/registry/rosters-nj-morris.ts": {
-    "digest": "8a1cc916e546cfd95c87b0c6821567da151cb3b8506c5d7e200191494195163c",
+    "digest": "71999e7918bd5ec3cebbef808c14cd0f7cc272e6b7363a0981206692d18a09ea",
     "files": 12,
     "entry": "scripts/build-nj-rosters.mts",
-    "regeneratedOn": "2026-09-02"
-  },
-  "public/geo/body-territories.geojson": {
-    "digest": "83cfc752aa606c41a8d4bd6e75f5e30fed6176089b68f039ce22c74d797b2db7",
-    "files": 1,
-    "entry": "scripts/cfd-territory.mts",
     "regeneratedOn": "2026-09-02"
   }
 }

@@ -64,7 +64,7 @@ import { conserve } from "../lib/sources/normalize-account.ts";
 import { today } from "./doc-dates.mjs";
 
 const ROOT = process.cwd();
-const OUT_DIR = join(ROOT, "data", "hunt");
+const OUT_DIR = join(ROOT, "data", "states", "nj", "hunt");
 const SPACING_MS = 1_200;
 
 /* ------------------------------------------------------------------ types */
@@ -510,7 +510,7 @@ for (const id of wanted) {
   }
 }
 
-const ballot = JSON.parse(readFileSync(join(ROOT, "data", "ballot", "nj-morris-2026.json"), "utf8")) as {
+const ballot = JSON.parse(readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8")) as {
   contests: Contest[];
   candidacies: Candidacy[];
 };

@@ -13,7 +13,7 @@ import {
   findVenue,
   isPlaceless,
   LEGISTAR_CLIENTS,
-} from "../lib/sources/legistar/clients.ts";
+} from "../lib/sources/legistar/client-registry.ts";
 import type {
   LegistarEvent,
   LegistarEventItem,

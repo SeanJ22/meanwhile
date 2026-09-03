@@ -47,17 +47,17 @@ export const CENSUS_PLACEHOLDER_LABELS: Readonly<Record<string, string>> = {
  * It used to be the first entry, and that made this script a third writer to a
  * GENERATED artifact — the same class of defect that let `pnpm registry:build`
  * silently delete 731 promoted bodies. The registry derives its division labels
- * from `public/geo/*.geojson`, which IS in this list, so rewriting the boundary
+ * from the canonical state geometry, which IS in this list, so rewriting the boundary
  * file and rebuilding produces the normalised label through the generator
  * instead of behind its back. Verified on 2026-08-27: the geojson already
  * carries `No unified school district here` and the placeholder string appears
  * nowhere in a freshly built registry.
  */
 const TARGETS = [
-  join(ROOT, "public", "geo", "unsd-04.geojson"),
-  join(ROOT, "public", "streets", "85321.json"),
-  join(ROOT, "public", "streets", "85601.json"),
-  join(ROOT, "public", "streets", "85602.json"),
+  join(ROOT, "data", "states", "az", "geo", "unsd-04.geojson"),
+  join(ROOT, "data", "states", "az", "streets", "85321.json"),
+  join(ROOT, "data", "states", "az", "streets", "85601.json"),
+  join(ROOT, "data", "states", "az", "streets", "85602.json"),
 ];
 
 let changedFiles = 0;

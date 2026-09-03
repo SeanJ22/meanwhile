@@ -1,5 +1,6 @@
+import { geometryFiles } from "../lib/holdings/files.ts";
 import assert from "node:assert/strict";
-import { readFile, readdir } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
@@ -22,7 +23,7 @@ import type { Division, Registry } from "../lib/registry/types.ts";
  */
 
 const here = dirname(fileURLToPath(import.meta.url));
-const GEO_DIR = join(here, "..", "public", "geo");
+const HOLDINGS_ROOT = join(here, "..");
 
 /**
  * What must resolve, per zip, as OCD-ID substrings.
@@ -79,10 +80,10 @@ const ORACLE: Record<string, { must: string[]; note: string }> = {
 };
 
 async function loadFeatures(): Promise<GeoFeature[]> {
-  const names = (await readdir(GEO_DIR)).filter((n) => n.endsWith(".geojson"));
+  const names = geometryFiles(HOLDINGS_ROOT);
   const all: GeoFeature[] = [];
   for (const name of names) {
-    const parsed = JSON.parse(await readFile(join(GEO_DIR, name), "utf8"));
+    const parsed = JSON.parse(await readFile(join(HOLDINGS_ROOT, name), "utf8"));
     all.push(...(parsed.features as GeoFeature[]));
   }
   return all;

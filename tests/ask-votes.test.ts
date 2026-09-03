@@ -378,7 +378,9 @@ test("(c) two people of one exact name is a REFUSAL, and the state exists before
     (scope) =>
       JSON.parse(
         readFileSync(
-          join(process.cwd(), "lib", "registry", `officeholders-${scope}.json`),
+          join(process.cwd(), ...(scope === "us"
+            ? ["lib", "registry", `officeholders-${scope}.json`]
+            : ["data", "states", ({ "04": "az", "33": "nh", "34": "nj" } as Record<string, string>)[scope], "officials", `officeholders-${scope}.json`])),
           "utf8",
         ),
       ) as { officeholders: { name: string }[] },
@@ -486,7 +488,7 @@ test("the roster scope is read from the reader's own divisions, never from a sta
    * attached to it.
    */
   const nh = JSON.parse(
-    readFileSync(join(process.cwd(), "lib", "registry", "officeholders-33.json"), "utf8"),
+    readFileSync(join(process.cwd(), "data", "states", "nh", "officials", "officeholders-33.json"), "utf8"),
   ) as { officeholders: { name: string }[] };
   const someNewHampshireMember = nh.officeholders[0].name;
   assert.equal(

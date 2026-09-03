@@ -38,16 +38,16 @@ import type { AzIdentityRegistry, LineupReconciliation } from "../lib/identity/t
 const ROOT = process.cwd();
 
 const registry = JSON.parse(
-  readFileSync(join(ROOT, "data", "identity", "az-2026-candidate-registry.json"), "utf8"),
+  readFileSync(join(ROOT, "data", "states", "az", "identity", "az-2026-candidate-registry.json"), "utf8"),
 ) as AzIdentityRegistry;
 const bridge = JSON.parse(
   readFileSync(
-    join(ROOT, "data", "identity", "az-2026-certified-lineup-reconciliation.json"),
+    join(ROOT, "data", "states", "az", "identity", "az-2026-certified-lineup-reconciliation.json"),
     "utf8",
   ),
 ) as LineupReconciliation;
 const lineup = JSON.parse(
-  readFileSync(join(ROOT, "data", "ballot", "az-general-lineup-2026.json"), "utf8"),
+  readFileSync(join(ROOT, "data", "states", "az", "ballot", "az-general-lineup-2026.json"), "utf8"),
 ) as { contests: { contestId: string; nominees: { name: string; partyLabel: string | null }[] }[] };
 
 /* ── The registry is STATEWIDE, and that is a structural claim ───────────── */
@@ -97,7 +97,7 @@ test("a candidate no held ballot names gets NO invented candidacy id", () => {
    * catch a fabricated key — the old shape could not have.
    */
   const held = JSON.parse(
-    readFileSync(join(ROOT, "data", "ballot", "az-pima-2026.json"), "utf8"),
+    readFileSync(join(ROOT, "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8"),
   ) as { candidacies: { id: string }[] };
   const heldIds = new Set(held.candidacies.map((c) => c.id));
   assert.ok(heldIds.size > 0, "the held ballot produced no candidacy ids — a failed read");

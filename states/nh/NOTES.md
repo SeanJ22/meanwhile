@@ -157,7 +157,7 @@ Newbury** — the nearest is Lake Todd, in Bradford/Sutton. Checked against the
 Wilmot.** Nine board seats, seated by town, plus an appointed School District
 Clerk who is an officer rather than a seat. Full roster with year first
 elected, term expiry and committee assignments in
-`data/audit/krsd-board-2026-08-16.json`.
+`data/states/nh/officials/krsd-board-2026-08-16.json`.
 
 **The working list this session inherited was wrong in both directions.** It
 read "New London, Sutton, Bradford, Springfield, Wilmot, Goshen". **Goshen is
@@ -474,7 +474,7 @@ can drift. That decision is INHERITED here, not revisited.
 ### Two official enumerations of the delegation, reconciled (RULING 57)
 
 The county's annual report against the General Court roster this project
-already holds (`data/hunt/nh-gencourt-members.json`, 408 members, filtered to
+already holds (`data/states/nh/hunt/nh-gencourt-members.json`, 408 members, filtered to
 `chamber = H` and `county = Merrimack`):
 
 ```

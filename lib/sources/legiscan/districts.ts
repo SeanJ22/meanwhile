@@ -19,7 +19,7 @@
  *   NH Senate districts are statewide-numbered like everyone else.
  *
  * The county table below is asserted against our own committed boundary
- * labels in `tests/legiscan.test.ts` — `public/geo/sldl-33.geojson` carries
+ * labels in `tests/legiscan.test.ts` — `data/states/nh/geo/sldl-33.geojson` carries
  * `State House District Merrimack 08` beside `sldl:608`, so the claim is
  * checkable rather than remembered.
  */

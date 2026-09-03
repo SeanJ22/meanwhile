@@ -73,7 +73,7 @@ export interface BodySourceWiring {
 
 export const SOURCE_WIRING: BodySourceWiring[] = [
   // ── Legistar ────────────────────────────────────────────────────────────
-  // The adapter keeps its own client registry (lib/sources/legistar/clients.ts)
+  // The adapter keeps its own client registry (lib/sources/legistar/client-registry.ts)
   // including the curated venue table; this row is what routes the body to it.
   {
     bodyId: "ocd-division/country:us/state:az/county:pima#governing",
@@ -88,7 +88,7 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
   /**
    * **THE ROW THAT MAKES THE REGISTRY THE AUTHORITY FOR MESA** (2026-08-28).
    *
-   * Mesa was already serving. `lib/sources/legistar-insite/tenants.ts` carried
+   * Mesa was already serving. `lib/sources/legistar-insite/tenant-registry.ts` carried
    * it, ten of its sittings are in `data/meetings-snapshot.json` under
    * `…place:mesa#governing`, and there was no row for it here — so a
    * repo-wide search for that body id found it in a source adapter and in the

@@ -539,7 +539,7 @@ three named attachments, and `10.B. RATIFICATION OF SALARY`.
 
 Note `Kenneth McGovern` is the same official the corpus already holds as the
 filer of a JTED budget-hearing notice (`kmcgovern@pimajted.org`) in
-`data/hunt/85641-school-meeting-notices.json` — the two sources agree.
+`data/states/az/hunt/85641-school-meeting-notices.json` — the two sources agree.
 
 `/Documents/FileViewerOrPublic/{slug}?file={fileId}` was probed for a single
 attachment and returned **HTTP 302 with a zero-byte body** under a
@@ -563,12 +563,12 @@ and has not been walked.
 | Fire-district **filed candidates** for the Nov 3 seats (RVFD 3 seats; SEFD 2 by term expiry; Mescal-J6 3 by term expiry) | The filing officer is the **Pima County Elections Department**, not the School Superintendent (§6.3). Route: `www.pima.gov` elections pages, permitted (`robots.txt` disallows only Baiduspider and Yandex). |
 | Corona de Tucson and Sonoita-Elgin **election notices** | Neither sitemap contained an election/candidate/nomination slug on this pass. Their `/district-transparency` pages were not fetched (Corona 404s on `/transparency` and `/district-transparency` was listed but not retrieved). Next: fetch `https://www.coronafire.org/district-transparency` and the SEFD `/archives` surface. |
 | The **write-in** candidate list | The Superintendent's page links it as "CLICK HERE to see WRITE-IN candidate filing"; the slug guess `/elections/2026-write-in-candidates` 404s. Next: read the `href` off `supt-filing.html` rather than guessing, or enumerate `https://www.schools.pima.gov/sitemap`. |
-| **Empire Elementary No. 37** roster and meetings | Three named leads, none walked: (a) `https://www.schools.pima.gov/schools/` — the Superintendent's own district directory; (b) `pima-county-schools.s3.amazonaws.com/downloads/` — the same bucket that held the argument requests; (c) the ADE budget-notice route already in `data/hunt/85641-school-meeting-notices.json`, whose FY2027 Empire notice was filed by Peter Laing at the Superintendent's office. No `empireschool.org` / `empire.k12.az.us` hostname resolves (NXDOMAIN, three variants) — **a wrong guess at a hostname, not a district that publishes nothing.** |
+| **Empire Elementary No. 37** roster and meetings | Three named leads, none walked: (a) `https://www.schools.pima.gov/schools/` — the Superintendent's own district directory; (b) `pima-county-schools.s3.amazonaws.com/downloads/` — the same bucket that held the argument requests; (c) the ADE budget-notice route already in `data/states/az/hunt/85641-school-meeting-notices.json`, whose FY2027 Empire notice was filed by Peter Laing at the Superintendent's office. No `empireschool.org` / `empire.k12.az.us` hostname resolves (NXDOMAIN, three variants) — **a wrong guess at a hostname, not a district that publishes nothing.** |
 | The **ballot-measure question texts** for the Vail override and the JTED bond | Both request-for-arguments documents state the question is in the authorising Resolution, held at the district office. Vail's resolution is dated 2026-06-02 and JTED's 2026-06-09 — **the JTED one is an agenda item on BoardBook meeting for June 9, 2026, so the packet PDF for that meeting very likely contains it.** That is the cheapest route and it is permitted. |
 | The Vail override's **estimated tax rate** | Blank on the published exhibit. It will appear in the county informational pamphlet, still unpublished as of the corpus read. |
 | The **arguments** for and against both measures | Filed with the County School Superintendent by 2026-08-07, to be published in the informational pamphlet. Route: `www.schools.pima.gov/elections/`. A dated recheck, not a records request. |
 | **PSPRS Local Board** rosters for all districts | RVFD and SEFD publish PSPRS agendas/minutes (§5.6) which will name the trustees. Corona's pension-funding-policy page was not fetched. |
-| Denominator for the special-district universe | `data/hunt/pima-2026-27-levy.json` enumerates **20 named fire districts** county-wide, plus 21 street-lighting improvement districts, 3 domestic water improvement districts, 1 health district, and 8 named CFDs. **All four fire districts covering this ZIP appear in it** — Corona de Tucson, Mescal-J6, Rincon Valley, Sonoita-Elgin — so the levy resolution independently corroborates the GIS territory probe. The levy is the denominator instrument the ledger asked for; reconciling it against the layer probe is a corpus task, not a network one. |
+| Denominator for the special-district universe | `data/states/az/hunt/pima-2026-27-levy.json` enumerates **20 named fire districts** county-wide, plus 21 street-lighting improvement districts, 3 domestic water improvement districts, 1 health district, and 8 named CFDs. **All four fire districts covering this ZIP appear in it** — Corona de Tucson, Mescal-J6, Rincon Valley, Sonoita-Elgin — so the levy resolution independently corroborates the GIS territory probe. The levy is the denominator instrument the ledger asked for; reconciling it against the layer probe is a corpus task, not a network one. |
 
 ### Hosts where only a human, offline, or records-request route remains
 
@@ -730,7 +730,7 @@ boards notice separately and are routinely missed by a detector keyed on
 **MC-11 — `a-levy-resolution-is-the-special-district-denominator`** — PORTABLE
 *Publisher: county boards of supervisors / county treasurers. Platform: any.
 Government class: all levying districts. Record class: government universe.*
-Already implicit in `data/hunt/pima-2026-27-levy.json`'s own note, and this
+Already implicit in `data/states/az/hunt/pima-2026-27-levy.json`'s own note, and this
 session confirms it end to end: all four fire districts covering 85641 appear in
 the county's annual levy resolution under A.R.S. 42-17101–42-17110, alongside 16
 more county-wide, plus street-lighting, domestic-water and health districts and

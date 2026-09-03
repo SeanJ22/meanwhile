@@ -67,7 +67,7 @@ import type {
 } from "./types.ts";
 
 /** Where the committed store lives, relative to the repo root. */
-export const OUTCOME_SNAPSHOT_PATH = ["data", "outcomes", "legistar-outcomes.json"];
+export const OUTCOME_SNAPSHOT_PATH = ["data", "states", "az", "outcomes", "legistar-outcomes.json"];
 
 const EMPTY: OutcomeSnapshot = {
   generatedOn: "UNKNOWN",
@@ -129,7 +129,7 @@ export function getOutcomeSnapshot(): OutcomeSnapshot {
   if (cache !== null) return cache;
   try {
     cache = JSON.parse(
-      readFileSync("data/outcomes/legistar-outcomes.json", "utf8"),
+      readFileSync("data/states/az/outcomes/legistar-outcomes.json", "utf8"),
     ) as OutcomeSnapshot;
   } catch {
     cache = EMPTY;

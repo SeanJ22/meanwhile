@@ -1,4 +1,5 @@
 import type { ArtifactProvenance } from "./contract.ts";
+import { stateDomainFiles } from "../holdings/files.ts";
 
 /**
  * **THE ARTIFACT CLASSES `pnpm coverage` ACTUALLY CONSUMES, each measured
@@ -19,7 +20,7 @@ import type { ArtifactProvenance } from "./contract.ts";
  *
  * Adding a row is not the same as fixing one. A row here describes what IS.
  */
-export const CORPUS_ARTIFACTS: readonly (Partial<ArtifactProvenance> &
+const RECORDED_CORPUS_ARTIFACTS: readonly (Partial<ArtifactProvenance> &
   Pick<ArtifactProvenance, "localPath" | "what" | "sourceClass"> & { notes?: string[] })[] = [
   {
     localPath: "data/meetings-snapshot.json",
@@ -79,7 +80,7 @@ export const CORPUS_ARTIFACTS: readonly (Partial<ArtifactProvenance> &
     ],
   },
   {
-    localPath: "public/geo/body-territories.geojson",
+    localPath: "data/states/az/geo/body-territories.geojson",
     what: "recorded plat polygons for governments the Census enumerates no division for",
     sourceClass: "RETRIEVED",
     sourceUrl:
@@ -94,7 +95,7 @@ export const CORPUS_ARTIFACTS: readonly (Partial<ArtifactProvenance> &
     contentHash: null,
     jurisdiction: "ocd-division/country:us/state:az/county:pima",
     datasetId: "Pima County Subdivisions, layer 15",
-    freshness: { staleAfterDays: 180, refreshedBy: "pnpm cfd:territory --geojson public/geo/body-territories.geojson" },
+    freshness: { staleAfterDays: 180, refreshedBy: "pnpm cfd:territory --geojson data/states/az/geo/body-territories.geojson" },
     permission: {
       state: "ALLOWED",
       basis: "gisdata.pima.gov robots.txt is HTTP 404 (NO_ROBOTS, nothing forbids the path); docs/sources.md carries the row, walked 2026-08-27",
@@ -197,4 +198,13 @@ export const CORPUS_ARTIFACTS: readonly (Partial<ArtifactProvenance> &
       "THE CLASS THAT ALREADY CONFORMS, and the model for the rest: it is append-only, content-addressed, and an unchanged hash for the same (subject, url) appends nothing while a changed one appends a new snapshot beside the old. FETCH, ATTRIBUTE, HASH, REUSE and DETECT CHANGE are all answerable from the store itself.",
     ],
   },
+];
+
+// The national corpus remains in its domain; canonical state geometry is
+// enumerated independently of reader coverage, so new holdings cannot disappear.
+const censusGeometry = RECORDED_CORPUS_ARTIFACTS.find((a) => a.localPath === "public/geo/*.geojson")!;
+export const CORPUS_ARTIFACTS = [
+  ...RECORDED_CORPUS_ARTIFACTS,
+  ...stateDomainFiles(process.cwd(), "geo").filter((p) => !p.endsWith("/body-territories.geojson"))
+    .map((localPath) => ({ ...censusGeometry, localPath })),
 ];

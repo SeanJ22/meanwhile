@@ -149,7 +149,7 @@ distinct* is a claim and a claim is something a test can hold.
 
 | Placeholder | Source |
 | --- | --- |
-| `{GIVEN_NAME}` / `{FAMILY_NAME}` | the candidacy row in `data/ballot/nj-morris-2026.json` |
+| `{GIVEN_NAME}` / `{FAMILY_NAME}` | the candidacy row in `data/states/nj/ballot/nj-morris-2026.json` |
 | `{OFFICE}` | the contest title in the same file |
 | `{PLANNED_INVITED_ON}` | `plannedInvitedOn` on the invitation row |
 | `{PLANNED_REMINDER_1}` / `{PLANNED_REMINDER_2}` | `plannedRemindersOn` on the invitation row |

@@ -238,7 +238,7 @@ test("RED CONTROL: the corpus now HOLDS gubernatorial action records, windowed a
    * This test used to assert `actionRecordsHeld === 0` — the honest answer when
    * the corpus held nothing about what any governor had DONE. The reader's
    * question was the lead, the hunt followed it, and the answer changed:
-   * `data/officials/az-governor-actions.json` holds Arizona executive orders
+   * `data/states/az/officials/az-governor-actions.json` holds Arizona executive orders
    * read from the office's own index and detail pages, each with a date and a
    * signed PDF.
    *

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
+import { ballotPath } from "../lib/holdings/files.ts";
 
 import {
   OFFICE_BLURBS,
@@ -28,7 +29,7 @@ test("every candidacy contest on every covered ballot has an office explainer", 
   let contests = 0;
   for (const file of BALLOT_FILES) {
     const set = JSON.parse(
-      readFileSync(join(process.cwd(), "data", "ballot", file), "utf8"),
+      readFileSync(join(process.cwd(), ballotPath(file)), "utf8"),
     ) as { contests: { title: string; type: string }[] };
     for (const contest of set.contests) {
       if (contest.type !== "CANDIDACY") continue;

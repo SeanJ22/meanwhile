@@ -24,7 +24,7 @@ import type {
  */
 
 const SOURCE_NAME = "ballot-nj-morris";
-const FILE = join("data", "ballot", "nj-morris-2026.json");
+const FILE = join("data", "states", "nj", "ballot", "nj-morris-2026.json");
 
 interface RawFile {
   formatVersion: number;

@@ -1,6 +1,7 @@
+import { geometryFiles, geometryPath } from "../lib/holdings/files.ts";
 import assert from "node:assert/strict";
-import { readFile, readdir } from "node:fs/promises";
-import { dirname, join } from "node:path";
+import { readFile } from "node:fs/promises";
+import { basename, dirname, join } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
@@ -19,7 +20,7 @@ import { tierForOcdId } from "../lib/ocd/tiers.ts";
  */
 
 const here = dirname(fileURLToPath(import.meta.url));
-const GEO_DIR = join(here, "..", "public", "geo");
+const HOLDINGS_ROOT = join(here, "..");
 
 type Ring = [number, number][];
 type Polygon = Ring[];
@@ -62,7 +63,7 @@ function contains(point: [number, number], feature: Feature): boolean {
 
 /** Layer key from a filename: `sldl-33.geojson` -> `sldl`. */
 function layerOf(file: string): string {
-  return file.replace(/\.geojson$/, "").replace(/-(?:us|\d{2})$/, "");
+  return basename(file).replace(/\.geojson$/, "").replace(/-(?:us|\d{2})$/, "");
 }
 
 interface Hit {
@@ -100,11 +101,11 @@ let cache: { file: string; features: Feature[] }[] | null = null;
 
 async function allLayers() {
   if (cache) return cache;
-  const files = (await readdir(GEO_DIR)).filter((f) => f.endsWith(".geojson"));
+  const files = geometryFiles(HOLDINGS_ROOT);
   cache = await Promise.all(
     files.map(async (file) => ({
       file,
-      features: JSON.parse(await readFile(join(GEO_DIR, file), "utf8"))
+      features: JSON.parse(await readFile(join(HOLDINGS_ROOT, file), "utf8"))
         .features as Feature[],
     })),
   );
@@ -235,7 +236,7 @@ test("Census SLDL is a partition, which is why floterials are missing", async ()
   // The evidence for the note above, kept as a test so the claim cannot rot.
   // If a future source adds floterials this fails, and the Newbury assertion
   // above should be tightened to 2 in the same change.
-  const nh = (await allLayers()).find((l) => l.file === "sldl-33.geojson");
+  const nh = (await allLayers()).find((l) => l.file === geometryPath("sldl-33.geojson"));
   assert.ok(nh, "sldl-33.geojson should exist");
 
   let overlapping = 0;

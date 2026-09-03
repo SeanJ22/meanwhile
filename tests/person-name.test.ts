@@ -78,9 +78,9 @@ test("no person this product holds carries a name that cannot stand as one", () 
 
   for (const file of [
     "lib/registry/officeholders-us.json",
-    "lib/registry/officeholders-04.json",
-    "lib/registry/officeholders-33.json",
-    "lib/registry/officeholders-34.json",
+    "data/states/az/officials/officeholders-04.json",
+    "data/states/nh/officials/officeholders-33.json",
+    "data/states/nj/officials/officeholders-34.json",
   ]) {
     if (!existsSync(join(ROOT, file))) continue;
     const parsed = readJson(file) as { officeholders?: { id: string; name: string }[] };
@@ -109,9 +109,9 @@ test("no person this product holds carries a name that cannot stand as one", () 
   }
 
   for (const file of [
-    "data/ballot/az-pima-2026.json",
-    "data/ballot/nh-merrimack-2026.json",
-    "data/ballot/nj-morris-2026.json",
+    "data/states/az/ballot/az-pima-2026.json",
+    "data/states/nh/ballot/nh-merrimack-2026.json",
+    "data/states/nj/ballot/nj-morris-2026.json",
   ]) {
     if (!existsSync(join(ROOT, file))) continue;
     const parsed = readJson(file) as {
@@ -126,8 +126,8 @@ test("no person this product holds carries a name that cannot stand as one", () 
     }
   }
 
-  if (existsSync(join(ROOT, "data/ballot/az-general-lineup-2026.json"))) {
-    const lineup = readJson("data/ballot/az-general-lineup-2026.json") as {
+  if (existsSync(join(ROOT, "data/states/az/ballot/az-general-lineup-2026.json"))) {
+    const lineup = readJson("data/states/az/ballot/az-general-lineup-2026.json") as {
       contests?: { contestId: string; nominees?: { name: string }[] }[];
     };
     for (const contest of lineup.contests ?? []) {

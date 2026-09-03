@@ -596,7 +596,7 @@ author, 2 open as data hunts
 
 | Items | Files |
 |---|---|
-| 6.1, 6.2 — the gap sweep | `components/officials/key-votes-section.tsx`, `components/funding/funding-block.tsx`, `components/map/coverage-notice.tsx`, `lib/funding/display.ts`, `lib/candidates/positions.ts`, `lib/candidates/corpus.ts`, `app/ballot/page.tsx`, `data/ballot/az-pima-2026.json`, `tests/wording.test.ts` |
+| 6.1, 6.2 — the gap sweep | `components/officials/key-votes-section.tsx`, `components/funding/funding-block.tsx`, `components/map/coverage-notice.tsx`, `lib/funding/display.ts`, `lib/candidates/positions.ts`, `lib/candidates/corpus.ts`, `app/ballot/page.tsx`, `data/states/az/ballot/az-pima-2026.json`, `tests/wording.test.ts` |
 | 1e — the address copy | `components/map/voting-sites-panel.tsx`, `components/map/narrowing-prompt.tsx`, `components/ballot/ballot-narrowing.tsx`, `app/transparency/page.tsx`, `components/shell/near-me-control.tsx`, `app/api/geocode/route.ts` |
 | 1.1, 1.2, 1.3 — the small card | `components/map/popup/district-popup.tsx`, `components/map/popup/popup-card.tsx`, **`lib/officials/top-offices.ts` (new)** |
 | 2.1–2.5 — the large card | `components/map/map-entry.tsx`, `components/map/popup/entity-modal.tsx`, `app/globals.css` |

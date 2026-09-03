@@ -27,7 +27,7 @@ import type { LineupReconciliation } from "../lib/identity/types.ts";
 const ROOT = process.cwd();
 const bridge = JSON.parse(
   readFileSync(
-    join(ROOT, "data", "identity", "az-2026-certified-lineup-reconciliation.json"),
+    join(ROOT, "data", "states", "az", "identity", "az-2026-certified-lineup-reconciliation.json"),
     "utf8",
   ),
 ) as LineupReconciliation;

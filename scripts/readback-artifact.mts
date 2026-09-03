@@ -41,6 +41,28 @@ import { proofClassOf, readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { today } from "./doc-dates.mjs";
 
 const ROOT = process.cwd();
+// Holdings snapshots are explicit acquisition of observations, never part of
+// Markdown generation or --check. The independent instruments only print.
+if (process.argv.includes("--holdings")) {
+  const value = (key: string) => process.argv.find((a) => a.startsWith(`${key}=`))?.slice(key.length + 1);
+  const envFile = value("--env-file") ?? ".env.local";
+  const vaultRoot = value("--vault-root");
+  if (!vaultRoot) throw new Error("--holdings requires an explicit canonical --vault-root");
+  const run = (args: string[]) => execFileSync(process.execPath, args, { cwd: ROOT, encoding: "utf8", maxBuffer: 256 * 1024 * 1024 });
+  const control = run([`--env-file=${envFile}`, "--experimental-strip-types", "scripts/lane-c-readback.mts", "--json"]);
+  const vault = run(["--experimental-strip-types", "scripts/vault-readback.mts", `--vault-root=${vaultRoot}`, ...(value("--asset-root") ? [`--asset-root=${value("--asset-root")}`] : [])]);
+  const cp = JSON.parse(control);
+  const inventory = JSON.parse(vault);
+  if (cp.formatVersion !== 1 || !cp.observed_at || !cp.obligations?.length || inventory.formatVersion !== 1 || !inventory.objects?.length) {
+    throw new Error("The holdings readback instruments did not return their required denominator");
+  }
+  const out = join(ROOT, "data", "state-holdings");
+  mkdirSync(out, { recursive: true });
+  writeFileSync(join(out, "control-plane-readback.json"), control, "utf8");
+  writeFileSync(join(out, "vault-readback.json"), vault, "utf8");
+  console.log(`Holdings observation persisted: ${cp.obligations.length} obligations, ${cp.artifacts.length} artifact records, ${inventory.objects.length} vault objects, ${inventory.assetInventory.length} asset index entries`);
+  process.exit(0);
+}
 const AS_OF = today();
 const DRY = process.argv.includes("--dry");
 const OUT_DIR = join(ROOT, "data", "health", "control-plane-readback");

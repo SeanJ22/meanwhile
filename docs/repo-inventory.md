@@ -184,29 +184,29 @@ Method: the would-be-committed set from `filesThatWouldBeCommitted()` in `lib/op
 | `components/ui/button.tsx` | 50 |
 | `data/assets/manifest.json` | 6450 |
 | `data/audit/gus-2022-clip-counties.json` | 1775 |
-| `data/audit/gus-2022-merrimack-sullivan-hillsborough.json` | 1956 |
-| `data/audit/krsd-board-2026-08-16.json` | 59 |
+| `data/states/nh/reference/gus-2022-merrimack-sullivan-hillsborough.json` | 1956 |
+| `data/states/nh/officials/krsd-board-2026-08-16.json` | 59 |
 | `data/audit/universe-03255.json` | 3519 |
 | `data/audit/universe-07866.json` | 27939 |
-| `data/ballot/az-analyses-2026.json` | 133 |
-| `data/ballot/az-general-lineup-2026.json` | 133 |
-| `data/ballot/az-pima-2026.json` | 1506 |
+| `data/states/az/ballot/az-analyses-2026.json` | 133 |
+| `data/states/az/ballot/az-general-lineup-2026.json` | 133 |
+| `data/states/az/ballot/az-pima-2026.json` | 1506 |
 | `data/ballot/candidate-cards-2026.json` | 2744 |
 | `data/ballot/candidate-hunt-state.json` | 2738 |
 | `data/ballot/candidate-links-2026.json` | 2019 |
-| `data/ballot/nh-merrimack-2026.json` | 1012 |
-| `data/ballot/nj-morris-2026-contacts.json` | 3032 |
-| `data/ballot/nj-morris-2026.json` | 6214 |
-| `data/campaign-finance/az-2026-statewide-corpus.json` | 23502 |
-| `data/campaign-finance/az-pima-2026-held.json` | 550 |
-| `data/campaign-finance/az-pima-2026-transactions.json` | 58186 |
+| `data/states/nh/ballot/nh-merrimack-2026.json` | 1012 |
+| `data/states/nj/ballot/nj-morris-2026-contacts.json` | 3032 |
+| `data/states/nj/ballot/nj-morris-2026.json` | 6214 |
+| `data/states/az/campaign-finance/az-2026-statewide-corpus.json` | 23502 |
+| `data/states/az/campaign-finance/az-pima-2026-held.json` | 550 |
+| `data/states/az/campaign-finance/az-pima-2026-transactions.json` | 58186 |
 | `data/campaign-finance/az-route-descriptors.json` | 141 |
-| `data/campaign-finance/az-seethemoney-2026-reconciliation.json` | 10644 |
+| `data/states/az/campaign-finance/az-seethemoney-2026-reconciliation.json` | 10644 |
 | `data/campaign-finance/filing-regimes.json` | 391 |
-| `data/campaign-finance/nh-cfs-filer-index-2026.json` | 74621 |
-| `data/campaign-finance/nj-elec-entity-corpus-2026.json` | 23495 |
-| `data/campaign-finance/nj-elec-location-universe.json` | 4876 |
-| `data/candidates/az-2026-sos-candidate-filings.json` | 5515 |
+| `data/states/nh/campaign-finance/nh-cfs-filer-index-2026.json` | 74621 |
+| `data/states/nj/campaign-finance/nj-elec-entity-corpus-2026.json` | 23495 |
+| `data/states/nj/campaign-finance/nj-elec-location-universe.json` | 4876 |
+| `data/states/az/candidates/az-2026-sos-candidate-filings.json` | 5515 |
 | `data/candidates/corpus-2026.json` | 1402 |
 | `data/congress-legislators/directory.json` | 40176 |
 | `data/congress-legislators/snapshot.json` | 52596 |
@@ -1480,7 +1480,7 @@ Method: the would-be-committed set from `filesThatWouldBeCommitted()` in `lib/op
 | `data/derived/gap-ledger.json` | 605 |
 | `data/derived/resolver-geometry.json` | 185 |
 | `data/derived/school-district-dependency.json` | 1058 |
-| `data/derived/special-district-territory.json` | 153 |
+| `data/states/nh/jurisdictions/special-district-territory.json` | 153 |
 | `data/derived/zip-add/03255-gap-queue.md` | 49 |
 | `data/derived/zip-add/03255.json` | 97 |
 | `data/derived/zip-coverage-tiers-runtime.json` | 1 |
@@ -1491,9 +1491,9 @@ Method: the would-be-committed set from `filesThatWouldBeCommitted()` in `lib/op
 | `data/fec/fec-2026.json` | 7818 |
 | `data/feedback/sweeps/8.30.26.json` | 868 |
 | `data/fixtures/sanitization.json` | 54 |
-| `data/funding/state-money-az-2026.json` | 1945 |
-| `data/funding/state-money-nh-2026.json` | 1087 |
-| `data/funding/state-money-nj-2026.json` | 13095 |
+| `data/states/az/funding/state-money-az-2026.json` | 1945 |
+| `data/states/nh/funding/state-money-nh-2026.json` | 1087 |
+| `data/states/nj/funding/state-money-nj-2026.json` | 13095 |
 | `data/git/branch-retirement.json` | 3784 |
 | `data/health/agenda-sentence-walk/agenda-sentence@2026-08-31T14-59-10-758Z.json` | 59 |
 | `data/health/ask-cache-runs/2026-08-31-1788235011336.json` | 124 |
@@ -1592,82 +1592,82 @@ Method: the would-be-committed set from `filesThatWouldBeCommitted()` in `lib/op
 | `data/health/walk-runs/2026-09-01-05.json` | 2358 |
 | `data/health/walk-runs/2026-09-01-06.json` | 2358 |
 | `data/health/walk-runs/2026-09-01-07.json` | 2358 |
-| `data/hunt/85641-cfd-territory.json` | 225 |
+| `data/states/az/hunt/85641-cfd-territory.json` | 225 |
 | `data/hunt/85641-detective-2026-08-29.json` | 332 |
-| `data/hunt/85641-district-intersect.json` | 762 |
-| `data/hunt/85641-district-territory.json` | 1009 |
-| `data/hunt/85641-governing-universe.json` | 1125 |
+| `data/states/az/hunt/85641-district-intersect.json` | 762 |
+| `data/states/az/hunt/85641-district-territory.json` | 1009 |
+| `data/states/az/hunt/85641-governing-universe.json` | 1125 |
 | `data/hunt/85641-obligation-ledger.json` | 568 |
-| `data/hunt/85641-primary-certified-results.json` | 1682 |
-| `data/hunt/85641-school-meeting-notices.json` | 393 |
+| `data/states/az/hunt/85641-primary-certified-results.json` | 1682 |
+| `data/states/az/hunt/85641-school-meeting-notices.json` | 393 |
 | `data/hunt/api-keys-walk.json` | 2664 |
 | `data/hunt/argued-absences-03255.json` | 4858 |
 | `data/hunt/argued-absences-07866.json` | 40504 |
 | `data/hunt/ask-walk-0828/captures.json` | 162 |
-| `data/hunt/az-candidate-universe-2026.json` | 11849 |
-| `data/hunt/az-district-layers.json` | 186 |
-| `data/hunt/az-executive-orders-2026-08-28.json` | 345 |
-| `data/hunt/azleg-actions-progress.json` | 5939 |
+| `data/states/az/hunt/az-candidate-universe-2026.json` | 11849 |
+| `data/states/az/hunt/az-district-layers.json` | 186 |
+| `data/states/az/hunt/az-executive-orders-2026-08-28.json` | 345 |
+| `data/states/az/hunt/azleg-actions-progress.json` | 5939 |
 | `data/hunt/azleg-walk.log.err` | 50 |
-| `data/hunt/campaign-site-leads-nj-morris.json` | 151 |
+| `data/states/nj/hunt/campaign-site-leads-nj-morris.json` | 151 |
 | `data/hunt/candidate-filing-authorities-2026.json` | 139 |
-| `data/hunt/citation-confirmations.json` | 1335 |
+| `data/states/nj/hunt/citation-confirmations.json` | 1335 |
 | `data/hunt/congress-corpus-walk.json` | 857 |
-| `data/hunt/directory-inversion-03255-0825.json` | 3130 |
-| `data/hunt/kearsarge-bodies.urls` | 16 |
-| `data/hunt/lead-adjudication-07866-0825.json` | 6103 |
-| `data/hunt/lead-promotion-0823.json` | 696 |
+| `data/states/nh/hunt/directory-inversion-03255-0825.json` | 3130 |
+| `data/states/nh/hunt/kearsarge-bodies.urls` | 16 |
+| `data/states/nj/hunt/lead-adjudication-07866-0825.json` | 6103 |
+| `data/states/nj/hunt/lead-promotion-0823.json` | 696 |
 | `data/hunt/map-ask-endpoint-2026-08-28.json` | 21 |
-| `data/hunt/merrimack-county-bodies.urls` | 21 |
-| `data/hunt/muni-sites-nj-morris.json` | 1370 |
-| `data/hunt/newbury-bodies.urls` | 34 |
-| `data/hunt/nh-candidate-universe-2026.json` | 2099 |
+| `data/states/nh/hunt/merrimack-county-bodies.urls` | 21 |
+| `data/states/nj/hunt/muni-sites-nj-morris.json` | 1370 |
+| `data/states/nh/hunt/newbury-bodies.urls` | 34 |
+| `data/states/nh/hunt/nh-candidate-universe-2026.json` | 2099 |
 | `data/hunt/nh-cfs-ladder.json` | 96 |
-| `data/hunt/nh-gencourt-members.json` | 7418 |
+| `data/states/nh/hunt/nh-gencourt-members.json` | 7418 |
 | `data/hunt/nh-remaining-routes.json` | 404 |
-| `data/hunt/nj-campaign-sites-party-municipal-committee+party-county-gop+party-committee-domain-shape.json` | 5595 |
-| `data/hunt/nj-campaign-sites-party-municipal-committee+party-county-gop.json` | 2213 |
-| `data/hunt/nj-campaign-sites-press-outlet-wp-search+party-municipal-committee+party-county-gop+party-committee-domain-shape.json` | 158884 |
-| `data/hunt/nj-campaign-sites-press-outlet-wp-search.json` | 154021 |
-| `data/hunt/nj-candidate-universe-2026.json` | 12175 |
-| `data/hunt/nj-elec-2026.json` | 248 |
-| `data/hunt/nj-filed-email-domain.json` | 2544 |
-| `data/hunt/nj-hunt4-fields.json` | 669 |
-| `data/hunt/nj-hunt4-rosters.json` | 1611 |
-| `data/hunt/nj-hunt4-search.json` | 12155 |
-| `data/hunt/nj-morris-certified-winners.json` | 3410 |
-| `data/hunt/nj-morris-gop-municipal-shape-0825.json` | 510 |
-| `data/hunt/nj-morris-municipal-sites.json` | 127 |
-| `data/hunt/nj-morris-party-directory-0825.json` | 628 |
-| `data/hunt/nj-morris-party-pages-0825.json` | 4883 |
-| `data/hunt/nj-morris-press-surface-0825.json` | 1004 |
+| `data/states/nj/hunt/nj-campaign-sites-party-municipal-committee+party-county-gop+party-committee-domain-shape.json` | 5595 |
+| `data/states/nj/hunt/nj-campaign-sites-party-municipal-committee+party-county-gop.json` | 2213 |
+| `data/states/nj/hunt/nj-campaign-sites-press-outlet-wp-search+party-municipal-committee+party-county-gop+party-committee-domain-shape.json` | 158884 |
+| `data/states/nj/hunt/nj-campaign-sites-press-outlet-wp-search.json` | 154021 |
+| `data/states/nj/hunt/nj-candidate-universe-2026.json` | 12175 |
+| `data/states/nj/hunt/nj-elec-2026.json` | 248 |
+| `data/states/nj/hunt/nj-filed-email-domain.json` | 2544 |
+| `data/states/nj/hunt/nj-hunt4-fields.json` | 669 |
+| `data/states/nj/hunt/nj-hunt4-rosters.json` | 1611 |
+| `data/states/nj/hunt/nj-hunt4-search.json` | 12155 |
+| `data/states/nj/hunt/nj-morris-certified-winners.json` | 3410 |
+| `data/states/nj/hunt/nj-morris-gop-municipal-shape-0825.json` | 510 |
+| `data/states/nj/hunt/nj-morris-municipal-sites.json` | 127 |
+| `data/states/nj/hunt/nj-morris-party-directory-0825.json` | 628 |
+| `data/states/nj/hunt/nj-morris-party-pages-0825.json` | 4883 |
+| `data/states/nj/hunt/nj-morris-press-surface-0825.json` | 1004 |
 | `data/hunt/nj-slogan-audit.json` | 2474 |
 | `data/hunt/novus-control-2026-08-28.json` | 64 |
-| `data/hunt/officials-contact-nj-morris.json` | 2334 |
-| `data/hunt/pima-2026-27-levy.json` | 1189 |
-| `data/hunt/pima-2026-primary-ballot.json` | 745 |
-| `data/hunt/pima-agoopendata-items.json` | 1793 |
-| `data/hunt/pima-arcgis-catalog.json` | 2536 |
-| `data/hunt/roster-pages-muni-sites-nj-morris.json` | 7212 |
+| `data/states/nj/hunt/officials-contact-nj-morris.json` | 2334 |
+| `data/states/az/hunt/pima-2026-27-levy.json` | 1189 |
+| `data/states/az/hunt/pima-2026-primary-ballot.json` | 745 |
+| `data/states/az/hunt/pima-agoopendata-items.json` | 1793 |
+| `data/states/az/hunt/pima-arcgis-catalog.json` | 2536 |
+| `data/states/nj/hunt/roster-pages-muni-sites-nj-morris.json` | 7212 |
 | `data/hunt/tier-directories.json` | 4381 |
-| `data/hunt/vail-directory.json` | 1 |
+| `data/states/az/hunt/vail-directory.json` | 1 |
 | `data/hunt/vail-novus-2026-08-28.json` | 104 |
 | `data/hunt/vail-novus-custom-2026-08-28.json` | 110 |
 | `data/hunt/vail-novus-probe.json` | 409 |
-| `data/hunt/wiki-citation-follow.json` | 314 |
-| `data/hunt/wiki-graph-07866.json` | 145721 |
-| `data/hunt/wiki-leader-leads-07866.json` | 665 |
-| `data/hunt/wikipedia-nj-morris.json` | 47451 |
-| `data/identity/az-2026-candidate-registry.json` | 6904 |
-| `data/identity/az-2026-certified-lineup-reconciliation.json` | 908 |
-| `data/jurisdictions/az.json` | 11594 |
-| `data/jurisdictions/nh.json` | 13692 |
-| `data/jurisdictions/nj.json` | 34495 |
+| `data/states/nj/hunt/wiki-citation-follow.json` | 314 |
+| `data/states/nj/hunt/wiki-graph-07866.json` | 145721 |
+| `data/states/nj/hunt/wiki-leader-leads-07866.json` | 665 |
+| `data/states/nj/hunt/wikipedia-nj-morris.json` | 47451 |
+| `data/states/az/identity/az-2026-candidate-registry.json` | 6904 |
+| `data/states/az/identity/az-2026-certified-lineup-reconciliation.json` | 908 |
+| `data/states/az/jurisdictions/az.json` | 11594 |
+| `data/states/nh/jurisdictions/nh.json` | 13692 |
+| `data/states/nj/jurisdictions/nj.json` | 34495 |
 | `data/meetings-snapshot.json` | 19352 |
 | `data/method/candidates.json` | 418 |
 | `data/method/conclusions.json` | 1 |
 | `data/method/knowledge.json` | 4787 |
-| `data/officials/az-governor-actions.json` | 956 |
+| `data/states/az/officials/az-governor-actions.json` | 956 |
 | `data/ops/admin-login-readback.json` | 83 |
 | `data/ops/deploy-record-read.json` | 20 |
 | `data/ops/gate-runs/2026-08-30-01.json` | 91 |
@@ -1788,7 +1788,7 @@ Method: the would-be-committed set from `filesThatWouldBeCommitted()` in `lib/op
 | `data/ops/runner-relaunch-proof.json` | 10 |
 | `data/ops/scout-efficiency-after.json` | 97 |
 | `data/ops/scout-efficiency-baseline.json` | 980 |
-| `data/outcomes/legistar-outcomes.json` | 50778 |
+| `data/states/az/outcomes/legistar-outcomes.json` | 50778 |
 | `data/photos/approved-2026-08-24-morris-commissioners.json` | 83 |
 | `data/photos/door2-azcc-originals-2026-09-01.json` | 118 |
 | `data/photos/door2-incumbents-2026-08-25.json` | 384 |
@@ -1853,9 +1853,9 @@ Method: the would-be-committed set from `filesThatWouldBeCommitted()` in `lib/op
 | `data/workstate/orchestration/2026-09-01-session-c-closeout.json` | 226 |
 | `data/workstate/orchestration/2026-09-01-session-c-final.json` | 296 |
 | `data/workstate/orchestration/2026-09-02-daily-refresh-admin-signin.json` | 294 |
-| `data/zcta/zcta-04.json` | 1 |
-| `data/zcta/zcta-33.json` | 1 |
-| `data/zcta/zcta-34.json` | 1 |
+| `data/states/az/zcta/zcta-04.json` | 1 |
+| `data/states/nh/zcta/zcta-33.json` | 1 |
+| `data/states/nj/zcta/zcta-34.json` | 1 |
 | `docs/DESIGN.md` | 846 |
 | `docs/Meanwhile-Owner-Checklist.xlsx` | 19708 bytes (binary) |
 | `docs/abuse-policy.md` | 229 |
@@ -2204,7 +2204,7 @@ Method: the would-be-committed set from `filesThatWouldBeCommitted()` in `lib/op
 | `lib/ballot/incumbent-record.ts` | 39 |
 | `lib/ballot/measure-order.ts` | 97 |
 | `lib/ballot/measure-provisions.ts` | 596 |
-| `lib/ballot/measure-summaries.ts` | 124 |
+| `data/states/az/ballot/measure-summaries.json` | 124 |
 | `lib/ballot/name-case.ts` | 110 |
 | `lib/ballot/photo-order.ts` | 60 |
 | `lib/ballot/pick-jurisdiction.ts` | 65 |
@@ -2513,7 +2513,7 @@ Method: the would-be-committed set from `filesThatWouldBeCommitted()` in `lib/op
 | `lib/meetings/jurisdiction-badge.ts` | 411 |
 | `lib/meetings/list-attribution.ts` | 168 |
 | `lib/meetings/minutes-summaries.ts` | 59 |
-| `lib/meetings/notice-summaries.ts` | 51 |
+| `data/states/az/meetings/notice-summaries.json` | 51 |
 | `lib/meetings/office-phone.ts` | 40 |
 | `lib/meetings/online.ts` | 124 |
 | `lib/meetings/ordering.ts` | 170 |
@@ -2543,7 +2543,7 @@ Method: the would-be-committed set from `filesThatWouldBeCommitted()` in `lib/op
 | `lib/ocd/divisions.ts` | 274 |
 | `lib/ocd/fips.ts` | 164 |
 | `lib/ocd/tiers.ts` | 169 |
-| `lib/officials/body-blurbs.ts` | 170 |
+| `data/states/az/reference/body-blurbs.json` | 170 |
 | `lib/officials/body-definitions.ts` | 1115 |
 | `lib/officials/body-form.ts` | 248 |
 | `lib/officials/campaign-link-label.ts` | 115 |
@@ -2641,7 +2641,7 @@ Method: the would-be-committed set from `filesThatWouldBeCommitted()` in `lib/op
 | `lib/reference/index.ts` | 235 |
 | `lib/registry/audit.ts` | 149 |
 | `lib/registry/body-class-labels.ts` | 160 |
-| `lib/registry/body-composition.ts` | 403 |
+| `data/states/az/officials/body-compositions.json` | 403 |
 | `lib/registry/body-name-match.ts` | 123 |
 | `lib/registry/body-rosters.ts` | 2588 |
 | `lib/registry/body-territory.ts` | 120 |
@@ -2653,9 +2653,9 @@ Method: the would-be-committed set from `filesThatWouldBeCommitted()` in `lib/op
 | `lib/registry/curated-divisions.ts` | 303 |
 | `lib/registry/derive.ts` | 190 |
 | `lib/registry/links.ts` | 245 |
-| `lib/registry/officeholders-04.json` | 2374 |
-| `lib/registry/officeholders-33.json` | 10755 |
-| `lib/registry/officeholders-34.json` | 3151 |
+| `data/states/az/officials/officeholders-04.json` | 2374 |
+| `data/states/nh/officials/officeholders-33.json` | 10755 |
+| `data/states/nj/officials/officeholders-34.json` | 3151 |
 | `lib/registry/officeholders-us.json` | 18508 |
 | `lib/registry/official-photos.json` | 11513 |
 | `lib/registry/promoted-bodies.json` | 14739 |
@@ -2664,7 +2664,7 @@ Method: the would-be-committed set from `filesThatWouldBeCommitted()` in `lib/op
 | `lib/registry/representation.ts` | 188 |
 | `lib/registry/resolve.ts` | 223 |
 | `lib/registry/roster-photos.json` | 31 |
-| `lib/registry/rosters-az-cawcd.ts` | 243 |
+| `data/states/az/officials/cawcd-rosters.json` | 243 |
 | `lib/registry/rosters-nj-morris.ts` | 1904 |
 | `lib/registry/school-name-key.ts` | 194 |
 | `lib/registry/server.ts` | 457 |
@@ -2725,9 +2725,9 @@ Method: the would-be-committed set from `filesThatWouldBeCommitted()` in `lib/op
 | `lib/sources/legistar-insite/horizon.ts` | 614 |
 | `lib/sources/legistar-insite/http.ts` | 148 |
 | `lib/sources/legistar-insite/index.ts` | 1539 |
-| `lib/sources/legistar-insite/tenants.ts` | 250 |
+| `data/states/az/meetings/insite-venues.json` | 250 |
 | `lib/sources/legistar/client.ts` | 295 |
-| `lib/sources/legistar/clients.ts` | 196 |
+| `data/states/az/meetings/legistar-venues.json` | 196 |
 | `lib/sources/legistar/index.ts` | 592 |
 | `lib/sources/legistar/outcomes.ts` | 775 |
 | `lib/sources/legistar/routes.ts` | 469 |
@@ -2799,7 +2799,7 @@ Method: the would-be-committed set from `filesThatWouldBeCommitted()` in `lib/op
 | `netlify.toml` | 169 |
 | `netlify/functions/README.md` | 3 |
 | `next.config.ts` | 213 |
-| `nh-village-rates-2024.xlsx` | 87525 bytes (binary) |
+| `data/states/nh/reference/nh-village-rates-2024.xlsx` | 87525 bytes (binary) |
 | `package.json` | 428 |
 | `pnpm-workspace.yaml` | 3 |
 | `postcss.config.mjs` | 7 |
@@ -2855,34 +2855,34 @@ Method: the would-be-committed set from `filesThatWouldBeCommitted()` in `lib/op
 | `public/candidates/nj-morris-us-senate-booker.png` | 406440 bytes (binary) |
 | `public/candidates/nj-morris-us-senate-fernandez.png` | 1080799 bytes (binary) |
 | `public/candidates/nj-morris-us-senate-murphy.jpg` | 99241 bytes (binary) |
-| `public/geo/body-territories.geojson` | 14101 |
-| `public/geo/cd119-04.geojson` | 1 |
-| `public/geo/cd119-33.geojson` | 1 |
-| `public/geo/cd119-34.geojson` | 1 |
+| `data/states/az/geo/body-territories.geojson` | 14101 |
+| `data/states/az/geo/cd119-04.geojson` | 1 |
+| `data/states/nh/geo/cd119-33.geojson` | 1 |
+| `data/states/nj/geo/cd119-34.geojson` | 1 |
 | `public/geo/cd119.geojson` | 1 |
 | `public/geo/county-us.geojson` | 1 |
-| `public/geo/cousub-04.geojson` | 1 |
-| `public/geo/cousub-33.geojson` | 1 |
-| `public/geo/cousub-34.geojson` | 1 |
-| `public/geo/elsd-04.geojson` | 1 |
-| `public/geo/elsd-33.geojson` | 1 |
-| `public/geo/elsd-34.geojson` | 1 |
-| `public/geo/place-04.geojson` | 1 |
-| `public/geo/place-33.geojson` | 1 |
-| `public/geo/place-34.geojson` | 1 |
-| `public/geo/scsd-04.geojson` | 1 |
-| `public/geo/scsd-33.geojson` | 1 |
-| `public/geo/scsd-34.geojson` | 1 |
-| `public/geo/sldl-04.geojson` | 1 |
-| `public/geo/sldl-33.geojson` | 1 |
-| `public/geo/sldl-34.geojson` | 1 |
-| `public/geo/sldu-04.geojson` | 1 |
-| `public/geo/sldu-33.geojson` | 1 |
-| `public/geo/sldu-34.geojson` | 1 |
+| `data/states/az/geo/cousub-04.geojson` | 1 |
+| `data/states/nh/geo/cousub-33.geojson` | 1 |
+| `data/states/nj/geo/cousub-34.geojson` | 1 |
+| `data/states/az/geo/elsd-04.geojson` | 1 |
+| `data/states/nh/geo/elsd-33.geojson` | 1 |
+| `data/states/nj/geo/elsd-34.geojson` | 1 |
+| `data/states/az/geo/place-04.geojson` | 1 |
+| `data/states/nh/geo/place-33.geojson` | 1 |
+| `data/states/nj/geo/place-34.geojson` | 1 |
+| `data/states/az/geo/scsd-04.geojson` | 1 |
+| `data/states/nh/geo/scsd-33.geojson` | 1 |
+| `data/states/nj/geo/scsd-34.geojson` | 1 |
+| `data/states/az/geo/sldl-04.geojson` | 1 |
+| `data/states/nh/geo/sldl-33.geojson` | 1 |
+| `data/states/nj/geo/sldl-34.geojson` | 1 |
+| `data/states/az/geo/sldu-04.geojson` | 1 |
+| `data/states/nh/geo/sldu-33.geojson` | 1 |
+| `data/states/nj/geo/sldu-34.geojson` | 1 |
 | `public/geo/state-outlines.geojson` | 1 |
-| `public/geo/unsd-04.geojson` | 1 |
-| `public/geo/unsd-33.geojson` | 1 |
-| `public/geo/unsd-34.geojson` | 1 |
+| `data/states/az/geo/unsd-04.geojson` | 1 |
+| `data/states/nh/geo/unsd-33.geojson` | 1 |
+| `data/states/nj/geo/unsd-34.geojson` | 1 |
 | `public/officials/A000055.jpg` | 140604 bytes (binary) |
 | `public/officials/A000148.jpg` | 136251 bytes (binary) |
 | `public/officials/A000369.jpg` | 130374 bytes (binary) |
@@ -3898,129 +3898,129 @@ Method: the would-be-committed set from `filesThatWouldBeCommitted()` in `lib/op
 | `public/officials/statewide-nj-governor.jpg` | 401897 bytes (binary) |
 | `public/officials/statewide-nj-lieutenant-governor.jpg` | 205421 bytes (binary) |
 | `public/robots.txt` | 3 |
-| `public/streets/03046.json` | 1 |
-| `public/streets/03106.json` | 1 |
-| `public/streets/03216.json` | 1 |
-| `public/streets/03220.json` | 1 |
-| `public/streets/03221.json` | 1 |
-| `public/streets/03224.json` | 1 |
-| `public/streets/03229.json` | 1 |
-| `public/streets/03230.json` | 1 |
-| `public/streets/03233.json` | 1 |
-| `public/streets/03234.json` | 1 |
-| `public/streets/03235.json` | 1 |
-| `public/streets/03242.json` | 1 |
-| `public/streets/03243.json` | 1 |
-| `public/streets/03255.json` | 1 |
-| `public/streets/03257.json` | 1 |
-| `public/streets/03258.json` | 1 |
-| `public/streets/03263.json` | 1 |
-| `public/streets/03268.json` | 1 |
-| `public/streets/03275.json` | 1 |
-| `public/streets/03276.json` | 1 |
-| `public/streets/03278.json` | 1 |
-| `public/streets/03287.json` | 1 |
-| `public/streets/03301.json` | 1 |
-| `public/streets/03303.json` | 1 |
-| `public/streets/03304.json` | 1 |
-| `public/streets/03307.json` | 1 |
-| `public/streets/07005.json` | 1 |
-| `public/streets/07034.json` | 1 |
-| `public/streets/07035.json` | 1 |
-| `public/streets/07045.json` | 1 |
-| `public/streets/07046.json` | 1 |
-| `public/streets/07054.json` | 1 |
-| `public/streets/07058.json` | 1 |
-| `public/streets/07082.json` | 1 |
-| `public/streets/07405.json` | 1 |
-| `public/streets/07435.json` | 1 |
-| `public/streets/07438.json` | 1 |
-| `public/streets/07440.json` | 1 |
-| `public/streets/07444.json` | 1 |
-| `public/streets/07457.json` | 1 |
-| `public/streets/07460.json` | 1 |
-| `public/streets/07801.json` | 1 |
-| `public/streets/07803.json` | 1 |
-| `public/streets/07828.json` | 1 |
-| `public/streets/07830.json` | 1 |
-| `public/streets/07834.json` | 1 |
-| `public/streets/07836.json` | 1 |
-| `public/streets/07840.json` | 1 |
-| `public/streets/07842.json` | 1 |
-| `public/streets/07847.json` | 1 |
-| `public/streets/07849.json` | 1 |
-| `public/streets/07850.json` | 1 |
-| `public/streets/07852.json` | 1 |
-| `public/streets/07853.json` | 1 |
-| `public/streets/07856.json` | 1 |
-| `public/streets/07857.json` | 1 |
-| `public/streets/07865.json` | 1 |
-| `public/streets/07866.json` | 1 |
-| `public/streets/07869.json` | 1 |
-| `public/streets/07870.json` | 1 |
-| `public/streets/07876.json` | 1 |
-| `public/streets/07878.json` | 1 |
-| `public/streets/07885.json` | 1 |
-| `public/streets/07920.json` | 1 |
-| `public/streets/07926.json` | 1 |
-| `public/streets/07927.json` | 1 |
-| `public/streets/07928.json` | 1 |
-| `public/streets/07930.json` | 1 |
-| `public/streets/07931.json` | 1 |
-| `public/streets/07932.json` | 1 |
-| `public/streets/07933.json` | 1 |
-| `public/streets/07934.json` | 1 |
-| `public/streets/07935.json` | 1 |
-| `public/streets/07936.json` | 1 |
-| `public/streets/07940.json` | 1 |
-| `public/streets/07945.json` | 1 |
-| `public/streets/07946.json` | 1 |
-| `public/streets/07950.json` | 1 |
-| `public/streets/07960.json` | 1 |
-| `public/streets/07961.json` | 1 |
-| `public/streets/07970.json` | 1 |
-| `public/streets/07980.json` | 1 |
-| `public/streets/07981.json` | 1 |
-| `public/streets/85321.json` | 1 |
-| `public/streets/85601.json` | 1 |
-| `public/streets/85602.json` | 1 |
-| `public/streets/85614.json` | 1 |
-| `public/streets/85622.json` | 1 |
-| `public/streets/85629.json` | 1 |
-| `public/streets/85637.json` | 1 |
-| `public/streets/85641.json` | 1 |
-| `public/streets/85645.json` | 1 |
-| `public/streets/85652.json` | 1 |
-| `public/streets/85658.json` | 1 |
-| `public/streets/85701.json` | 1 |
-| `public/streets/85704.json` | 1 |
-| `public/streets/85705.json` | 1 |
-| `public/streets/85706.json` | 1 |
-| `public/streets/85707.json` | 1 |
-| `public/streets/85709.json` | 1 |
-| `public/streets/85710.json` | 1 |
-| `public/streets/85711.json` | 1 |
-| `public/streets/85713.json` | 1 |
-| `public/streets/85714.json` | 1 |
-| `public/streets/85718.json` | 1 |
-| `public/streets/85719.json` | 1 |
-| `public/streets/85730.json` | 1 |
-| `public/streets/85734.json` | 1 |
-| `public/streets/85735.json` | 1 |
-| `public/streets/85736.json` | 1 |
-| `public/streets/85739.json` | 1 |
-| `public/streets/85741.json` | 1 |
-| `public/streets/85742.json` | 1 |
-| `public/streets/85743.json` | 1 |
-| `public/streets/85745.json` | 1 |
-| `public/streets/85746.json` | 1 |
-| `public/streets/85747.json` | 1 |
-| `public/streets/85748.json` | 1 |
-| `public/streets/85749.json` | 1 |
-| `public/streets/85750.json` | 1 |
-| `public/streets/85755.json` | 1 |
-| `public/streets/85756.json` | 1 |
-| `public/streets/85757.json` | 1 |
+| `data/states/nh/streets/03046.json` | 1 |
+| `data/states/nh/streets/03106.json` | 1 |
+| `data/states/nh/streets/03216.json` | 1 |
+| `data/states/nh/streets/03220.json` | 1 |
+| `data/states/nh/streets/03221.json` | 1 |
+| `data/states/nh/streets/03224.json` | 1 |
+| `data/states/nh/streets/03229.json` | 1 |
+| `data/states/nh/streets/03230.json` | 1 |
+| `data/states/nh/streets/03233.json` | 1 |
+| `data/states/nh/streets/03234.json` | 1 |
+| `data/states/nh/streets/03235.json` | 1 |
+| `data/states/nh/streets/03242.json` | 1 |
+| `data/states/nh/streets/03243.json` | 1 |
+| `data/states/nh/streets/03255.json` | 1 |
+| `data/states/nh/streets/03257.json` | 1 |
+| `data/states/nh/streets/03258.json` | 1 |
+| `data/states/nh/streets/03263.json` | 1 |
+| `data/states/nh/streets/03268.json` | 1 |
+| `data/states/nh/streets/03275.json` | 1 |
+| `data/states/nh/streets/03276.json` | 1 |
+| `data/states/nh/streets/03278.json` | 1 |
+| `data/states/nh/streets/03287.json` | 1 |
+| `data/states/nh/streets/03301.json` | 1 |
+| `data/states/nh/streets/03303.json` | 1 |
+| `data/states/nh/streets/03304.json` | 1 |
+| `data/states/nh/streets/03307.json` | 1 |
+| `data/states/nj/streets/07005.json` | 1 |
+| `data/states/nj/streets/07034.json` | 1 |
+| `data/states/nj/streets/07035.json` | 1 |
+| `data/states/nj/streets/07045.json` | 1 |
+| `data/states/nj/streets/07046.json` | 1 |
+| `data/states/nj/streets/07054.json` | 1 |
+| `data/states/nj/streets/07058.json` | 1 |
+| `data/states/nj/streets/07082.json` | 1 |
+| `data/states/nj/streets/07405.json` | 1 |
+| `data/states/nj/streets/07435.json` | 1 |
+| `data/states/nj/streets/07438.json` | 1 |
+| `data/states/nj/streets/07440.json` | 1 |
+| `data/states/nj/streets/07444.json` | 1 |
+| `data/states/nj/streets/07457.json` | 1 |
+| `data/states/nj/streets/07460.json` | 1 |
+| `data/states/nj/streets/07801.json` | 1 |
+| `data/states/nj/streets/07803.json` | 1 |
+| `data/states/nj/streets/07828.json` | 1 |
+| `data/states/nj/streets/07830.json` | 1 |
+| `data/states/nj/streets/07834.json` | 1 |
+| `data/states/nj/streets/07836.json` | 1 |
+| `data/states/nj/streets/07840.json` | 1 |
+| `data/states/nj/streets/07842.json` | 1 |
+| `data/states/nj/streets/07847.json` | 1 |
+| `data/states/nj/streets/07849.json` | 1 |
+| `data/states/nj/streets/07850.json` | 1 |
+| `data/states/nj/streets/07852.json` | 1 |
+| `data/states/nj/streets/07853.json` | 1 |
+| `data/states/nj/streets/07856.json` | 1 |
+| `data/states/nj/streets/07857.json` | 1 |
+| `data/states/nj/streets/07865.json` | 1 |
+| `data/states/nj/streets/07866.json` | 1 |
+| `data/states/nj/streets/07869.json` | 1 |
+| `data/states/nj/streets/07870.json` | 1 |
+| `data/states/nj/streets/07876.json` | 1 |
+| `data/states/nj/streets/07878.json` | 1 |
+| `data/states/nj/streets/07885.json` | 1 |
+| `data/states/nj/streets/07920.json` | 1 |
+| `data/states/nj/streets/07926.json` | 1 |
+| `data/states/nj/streets/07927.json` | 1 |
+| `data/states/nj/streets/07928.json` | 1 |
+| `data/states/nj/streets/07930.json` | 1 |
+| `data/states/nj/streets/07931.json` | 1 |
+| `data/states/nj/streets/07932.json` | 1 |
+| `data/states/nj/streets/07933.json` | 1 |
+| `data/states/nj/streets/07934.json` | 1 |
+| `data/states/nj/streets/07935.json` | 1 |
+| `data/states/nj/streets/07936.json` | 1 |
+| `data/states/nj/streets/07940.json` | 1 |
+| `data/states/nj/streets/07945.json` | 1 |
+| `data/states/nj/streets/07946.json` | 1 |
+| `data/states/nj/streets/07950.json` | 1 |
+| `data/states/nj/streets/07960.json` | 1 |
+| `data/states/nj/streets/07961.json` | 1 |
+| `data/states/nj/streets/07970.json` | 1 |
+| `data/states/nj/streets/07980.json` | 1 |
+| `data/states/nj/streets/07981.json` | 1 |
+| `data/states/az/streets/85321.json` | 1 |
+| `data/states/az/streets/85601.json` | 1 |
+| `data/states/az/streets/85602.json` | 1 |
+| `data/states/az/streets/85614.json` | 1 |
+| `data/states/az/streets/85622.json` | 1 |
+| `data/states/az/streets/85629.json` | 1 |
+| `data/states/az/streets/85637.json` | 1 |
+| `data/states/az/streets/85641.json` | 1 |
+| `data/states/az/streets/85645.json` | 1 |
+| `data/states/az/streets/85652.json` | 1 |
+| `data/states/az/streets/85658.json` | 1 |
+| `data/states/az/streets/85701.json` | 1 |
+| `data/states/az/streets/85704.json` | 1 |
+| `data/states/az/streets/85705.json` | 1 |
+| `data/states/az/streets/85706.json` | 1 |
+| `data/states/az/streets/85707.json` | 1 |
+| `data/states/az/streets/85709.json` | 1 |
+| `data/states/az/streets/85710.json` | 1 |
+| `data/states/az/streets/85711.json` | 1 |
+| `data/states/az/streets/85713.json` | 1 |
+| `data/states/az/streets/85714.json` | 1 |
+| `data/states/az/streets/85718.json` | 1 |
+| `data/states/az/streets/85719.json` | 1 |
+| `data/states/az/streets/85730.json` | 1 |
+| `data/states/az/streets/85734.json` | 1 |
+| `data/states/az/streets/85735.json` | 1 |
+| `data/states/az/streets/85736.json` | 1 |
+| `data/states/az/streets/85739.json` | 1 |
+| `data/states/az/streets/85741.json` | 1 |
+| `data/states/az/streets/85742.json` | 1 |
+| `data/states/az/streets/85743.json` | 1 |
+| `data/states/az/streets/85745.json` | 1 |
+| `data/states/az/streets/85746.json` | 1 |
+| `data/states/az/streets/85747.json` | 1 |
+| `data/states/az/streets/85748.json` | 1 |
+| `data/states/az/streets/85749.json` | 1 |
+| `data/states/az/streets/85750.json` | 1 |
+| `data/states/az/streets/85755.json` | 1 |
+| `data/states/az/streets/85756.json` | 1 |
+| `data/states/az/streets/85757.json` | 1 |
 | `scripts/a001-feedback-backup.mts` | 90 |
 | `scripts/a001-verify-catalog.mts` | 80 |
 | `scripts/a008-false-green-audit.mts` | 151 |
@@ -4785,7 +4785,7 @@ Method: the would-be-committed set from `filesThatWouldBeCommitted()` in `lib/op
 | `tests/fixtures/legistar-insite-pima-ical-1381586.ics` | 13 |
 | `tests/fixtures/legistar-insite-pima-webapi-aug-oct.json` | 1 |
 | `tests/fixtures/legistar-mesa-events-future.json` | 552 |
-| `tests/fixtures/legistar-outcome-store/data/outcomes/legistar-outcomes.json` | 523 |
+| `tests/fixtures/legistar-outcome-store/data/states/az/outcomes/legistar-outcomes.json` | 523 |
 | `tests/fixtures/legistar-pima-eventdates-138-all.json` | 1 |
 | `tests/fixtures/legistar-pima-eventdates-138-future.json` | 1 |
 | `tests/fixtures/legistar-pima-eventitems-1823.json` | 281 |
@@ -5269,7 +5269,7 @@ Method: mechanical export parse per tracked `.ts`/`.tsx` file under `lib/` — `
 - `lib/ballot/incumbent-record.ts` (1): `incumbentHolderFor`
 - `lib/ballot/measure-order.ts` (2): `measureNumber`, `orderMeasures`
 - `lib/ballot/measure-provisions.ts` (7): `MEASURE_PROVISIONS`, `MeasureProvision`, `PROVISION_KIND_LABEL`, `ProvisionKind`, `getProvisionTargetIds`, `provisionById`, `provisionsForContest`
-- `lib/ballot/measure-summaries.ts` (3): `MEASURE_SUMMARIES`, `MeasureSummary`, `summaryForContest`
+- `data/states/az/ballot/measure-summaries.json` (3): `MEASURE_SUMMARIES`, `MeasureSummary`, `summaryForContest`
 - `lib/ballot/name-case.ts` (3): `searchableGiven`, `searchableSurname`, `surnameDisplayCase`
 - `lib/ballot/photo-order.ts` (1): `photosFirst`
 - `lib/ballot/pick-jurisdiction.ts` (4): `PICK_JURISDICTION_LABELS`, `isForeignPick`, `jurisdictionKeyForContestId`, `pickJurisdictionLabel`
@@ -5585,7 +5585,7 @@ Method: mechanical export parse per tracked `.ts`/`.tsx` file under `lib/` — `
 - `lib/meetings/jurisdiction-badge.ts` (10): `BADGE_COPY`, `BadgeCopy`, `JurisdictionBadge`, `JurisdictionBasis`, `JurisdictionClaim`, `REPRESENTATION_NOTE_UNSOURCED`, `badgeCensus`, `badgeFor`, `jurisdictionClaim`, `representationNoteForClaim`
 - `lib/meetings/list-attribution.ts` (5): `AttributionNote`, `MeetingAttribution`, `SourceCredit`, `numberWord`, `sourceCreditFor`
 - `lib/meetings/minutes-summaries.ts` (3): `MINUTES_SUMMARIES`, `MinutesSummary`, `minutesSummaryForMeeting`
-- `lib/meetings/notice-summaries.ts` (3): `NOTICE_SUMMARIES`, `NoticeSummary`, `noticeSummaryFor`
+- `data/states/az/meetings/notice-summaries.json` (3): `NOTICE_SUMMARIES`, `NoticeSummary`, `noticeSummaryFor`
 - `lib/meetings/office-phone.ts` (2): `OfficePhone`, `officePhoneForBody`
 - `lib/meetings/online.ts` (6): `ONLINE_MARK_WORD`, `ONLINE_ONLY_LINE`, `hasPhysicalLocation`, `isOnlineOnly`, `joinLine`, `onlineAccessFor`
 - `lib/meetings/ordering.ts` (6): `MeetingGroup`, `MeetingGroupId`, `SOON_DAYS`, `groupMeetingsForReading`, `hasConcluded`, `orderByUpcomingFirst`
@@ -5624,7 +5624,7 @@ Method: mechanical export parse per tracked `.ts`/`.tsx` file under `lib/` — `
 
 ### `lib/officials` — 150 exported symbol(s) across 30 file(s)
 
-- `lib/officials/body-blurbs.ts` (6): `BODY_BLURBS`, `BodyBlurb`, `BodyDivisionType`, `DIVISION_BODY_BLURBS`, `NO_BODY_BLURB_LINE`, `blurbForBody`
+- `data/states/az/reference/body-blurbs.json` (6): `BODY_BLURBS`, `BodyBlurb`, `BodyDivisionType`, `DIVISION_BODY_BLURBS`, `NO_BODY_BLURB_LINE`, `blurbForBody`
 - `lib/officials/body-definitions.ts` (20): `BODY_KINDS`, `BODY_KIND_DEFINITIONS`, `BodyDefinitions`, `BodyKindKey`, `CHARTER_UNREAD_LINE`, `CLASS_DEFINITIONS`, `ClassKey`, `DEPENDENT_SCHOOL_DEFINITION`, `DERIVED_BODY_SUFFIX`, `Definition`, `SeatDivisionType`, `SeatKind`, `UNCLASSIFIED_SCHOOL_DEFINITION`, `bodyKindDefinitionFor`, `classKeyFor`, `classKeyForSeat`, `classKeysWithNoRow`, `definitionsForBody`, `definitionsForSeat`, `isDivisionsOwnGovernment`
 - `lib/officials/body-form.ts` (5): `FormKey`, `FormStamp`, `formFor`, `knownForms`, `stateOf`
 - `lib/officials/campaign-link-label.ts` (6): `CampaignLinkKind`, `PARTY_HOSTED_HOSTS`, `PartyHostedHost`, `campaignLinkKind`, `campaignLinkLabel`, `partyHostFor`
@@ -5742,7 +5742,7 @@ Method: mechanical export parse per tracked `.ts`/`.tsx` file under `lib/` — `
 
 - `lib/registry/audit.ts` (9): `BodyCoverageAudit`, `CoverageAuditFile`, `HuntOutcome`, `LadderRung`, `NOT_ATTEMPTED_STATUS`, `RungOutcome`, `RungResult`, `indexAudits`, `wasLookedAt`
 - `lib/registry/body-class-labels.ts` (6): `APPOINTED_LED`, `BODY_CLASS_LABELS`, `BodyClassLabel`, `bodyClassLong`, `bodyClassShort`, `governVerbMayAttach`
-- `lib/registry/body-composition.ts` (8): `AdditionalSeat`, `BODY_COMPOSITIONS`, `BodyComposition`, `CompositionAuthority`, `CompositionKind`, `ResolvedComposition`, `compositionFor`, `membersOfBody`
+- `data/states/az/officials/body-compositions.json` (8): `AdditionalSeat`, `BODY_COMPOSITIONS`, `BodyComposition`, `CompositionAuthority`, `CompositionKind`, `ResolvedComposition`, `compositionFor`, `membersOfBody`
 - `lib/registry/body-name-match.ts` (2): `bodyAccountingFor`, `looseName`
 - `lib/registry/body-rosters.ts` (9): `BODY_ROSTERS`, `BodyRoster`, `Partisanship`, `RosterHolder`, `RosterMember`, `divisionOcdIdForRosterHolder`, `governingRosterHoldersForDivision`, `rosterForBody`, `rosterHoldersForBody`
 - `lib/registry/body-territory.ts` (4): `BODY_TERRITORY_FILE`, `BodyTerritoryFile`, `bodyIdsAtPoint`, `bodyIdsWithTerritory`
@@ -5757,7 +5757,7 @@ Method: mechanical export parse per tracked `.ts`/`.tsx` file under `lib/` — `
 - `lib/registry/promoted-bodies.ts` (9): `PROMOTED_BODIES_FILE`, `PROMOTED_BODIES_PATH`, `PROMOTED_ORIGINS`, `PromotedBodyStore`, `REGISTRY_FILE`, `appendPromotedBodies`, `isPromotedOrigin`, `loadPromotedBodies`, `validatePromotedBodies`
 - `lib/registry/representation.ts` (9): `LeadKind`, `hasRepresentation`, `leadKind`, `namedHolderCount`, `noteStateFor`, `noticeLabel`, `representationForDivision`, `representationNoteFor`, `shouldRenderNotice`
 - `lib/registry/resolve.ts` (10): `BoundingBox`, `GeoFeature`, `Polygon`, `Ring`, `bodiesAt`, `boundingBoxOf`, `candidateFeaturesTested`, `contains`, `divisionsAt`, `sweepsRun`
-- `lib/registry/rosters-az-cawcd.ts` (1): `AZ_CAWCD_ROSTERS`
+- `data/states/az/officials/cawcd-rosters.json` (1): `AZ_CAWCD_ROSTERS`
 - `lib/registry/rosters-nj-morris.ts` (1): `NJ_MORRIS_ROSTERS`
 - `lib/registry/school-name-key.ts` (3): `NormalizedName`, `normalizeName`, `schoolNameKey`
 - `lib/registry/server.ts` (9): `chamberForOfficeholder`, `coverageAt`, `divisionsAt`, `divisionsByOcdIds`, `knownBodySubjectIds`, `partyByOfficeholderId`, `seatHolderById`, `seatHoldersForDivision`, `seatHoldersForOffice`
@@ -5828,9 +5828,9 @@ Method: mechanical export parse per tracked `.ts`/`.tsx` file under `lib/` — `
 - `lib/sources/legistar-insite/horizon.ts` (22): `DispositionEvidence`, `DispositionVerdict`, `EnumerationState`, `FIRST_PARTY_ROUTES`, `FirstPartyRoute`, `GRANICUS_LIVE_PROCEEDINGS_WALL`, `InstanceDisposition`, `MEETING_PRODUCING_ROUTES`, `OPEN_OBLIGATION_VERDICTS`, `ProducedVendorRecord`, `RicherRouteLink`, `RouteInstance`, `RouteObservation`, `UnionInstance`, `granicusWallObservation`, `intersectionOfRoutes`, `openObligations`, `richerRouteLink`, `summarizeRoute`, `timelessInstances`, `unaccounted`, `unionFutureInstances`
 - `lib/sources/legistar-insite/http.ts` (3): `INSITE_CRAWL_DELAY_SECONDS`, `INSITE_SPACING_MS`, `InSiteSession`
 - `lib/sources/legistar-insite/index.ts` (7): `GRANICUS_LIVE_PROCEEDINGS_WALL`, `InSiteNormalizeResult`, `LegistarInSiteRaw`, `MAX_GRID_PAGES`, `RANGES`, `makeLegistarInSiteSource`, `normalizeWithDrops`
-- `lib/sources/legistar-insite/tenants.ts` (5): `INSITE_TENANTS`, `InSiteTenant`, `findTenant`, `findTenantVenue`, `isWiredBody`
+- `data/states/az/meetings/insite-venues.json` (5): `INSITE_TENANTS`, `InSiteTenant`, `findTenant`, `findTenantVenue`, `isWiredBody`
 - `lib/sources/legistar/client.ts` (9): `LegistarError`, `PAGE_SIZE`, `REQUEST_SPACING_MS`, `describeStatus`, `fetchEvent`, `fetchEventItemVotes`, `fetchEventItems`, `fetchEvents`, `userAgent`
-- `lib/sources/legistar/clients.ts` (8): `LEGISTAR_CLIENTS`, `LegistarClient`, `LegistarVenue`, `PLACELESS_VENUES`, `findClient`, `findVenue`, `isPlaceless`, `venueKey`
+- `data/states/az/meetings/legistar-venues.json` (8): `LEGISTAR_CLIENTS`, `LegistarClient`, `LegistarVenue`, `PLACELESS_VENUES`, `findClient`, `findVenue`, `isPlaceless`, `venueKey`
 - `lib/sources/legistar/index.ts` (20): `LegistarEventWithClient`, `NormalizeDrops`, `classifyRollCall`, `collectEventOutcomes`, `detectSittingAs`, `dispositionGap`, `hasRecordedAction`, `isFailedExtraction`, `legistarMeetingId`, `legistarSource`, `legistarStartsAt`, `minutesPointerFor`, `normalizeWithDrops`, `readDisposition`, `receiptFor`, `rollCallGap`, `rollCallRecordFrom`, `toAgendaItems`, `toAgendaRecords`, `toOutcomeRecords`
 - `lib/sources/legistar/outcomes.ts` (23): `CollectOptions`, `EventOutcomes`, `LegistarAgendaRecord`, `LegistarMinutesPointer`, `LegistarOutcomeRecord`, `LegistarRecordProvenance`, `LegistarRecordedVote`, `LegistarRollCallRecord`, `OutcomeContext`, `OutcomeDisposition`, `RollCallState`, `classifyRollCall`, `collectEventOutcomes`, `dispositionGap`, `hasRecordedAction`, `isFailedExtraction`, `minutesPointerFor`, `readDisposition`, `receiptFor`, `rollCallGap`, `rollCallRecordFrom`, `toAgendaRecords`, `toOutcomeRecords`
 - `lib/sources/legistar/routes.ts` (14): `LEGISTAR_FACT_CLASSES`, `LEGISTAR_ROUTES`, `LEGISTAR_ROUTE_CLASSES`, `LegistarFactClass`, `LegistarRoute`, `LegistarRouteClass`, `LegistarRouteDisposition`, `LegistarTransport`, `factClassesOwedAfter`, `factsBorneBy`, `findRoute`, `routesBearing`, `routesStillWorthAsking`, `singlyRoutedFacts`

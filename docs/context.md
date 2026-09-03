@@ -898,7 +898,7 @@ Source: `docs/tracker.csv`, every row with Priority `P0`. Notes clipped to 130 c
 | D15 | Decide the OCD-ID convention and reconcile to the canonical l… | Done | 2026-08-12. Was docs/state.md 5.2 item 8 ('verify before Phase 5'); checked and it fails, so it is now a blocker for Phase 4.6 ra… |
 | D26 | Meetings snapshot - the committed file production reads | Done | 2026-08-13, branch claude/deploy-snapshot-and-demo. Built: snapshot module with validation refusing count-less or all-failed snap… |
 | D32 | Officials become people you can actually reach (3a-3e) | Done | 2026-08-14, branch claude/restore-representation-session-0814 (second session). 3a: Officeholder gained email; the Plural adapter… |
-| D33 | AZ and NH ballot surfaces (S3, into S2's shape) | Done | 2026-08-14, branch claude/restore-representation-session-0814 (second session). ARIZONA (data/ballot/az-pima-2026.json): transcri… |
+| D33 | AZ and NH ballot surfaces (S3, into S2's shape) | Done | 2026-08-14, branch claude/restore-representation-session-0814 (second session). ARIZONA (data/states/az/ballot/az-pima-2026.json): transcri… |
 | D37 | NH 2026 ballot measures - the earned absence | Done | 2026-08-17: seven CACRs enumerated via LegiScan/CitizensCount/news, ALL dead (CACR 6 ITL 01/07; 12 failed House 3/5 05/14 193-148… |
 | D38 | Coverage completeness audit - the official universe | Done | 2026-08-17 branch claude/final-prep-nh-nj-depth-0817. Official universe measured: Pima 50 / Morris 98 / Merrimack 63 governments… |
 | D39 | Sunnyside and Amphitheater wired live — the author's catch cl… | Done | 2026-08-18 (session date; wall clock 2026-08-14), branch claude/fec-funding-and-final-prep-0818. THE HONEST DIAGNOSIS FIRST: the… |

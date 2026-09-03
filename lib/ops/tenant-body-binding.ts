@@ -26,8 +26,8 @@
  * three serving tenant tables; only this module's own address did.
  */
 
-import { LEGISTAR_CLIENTS } from "../sources/legistar/clients.ts";
-import { INSITE_TENANTS } from "../sources/legistar-insite/tenants.ts";
+import { LEGISTAR_CLIENTS } from "../sources/legistar/client-registry.ts";
+import { INSITE_TENANTS } from "../sources/legistar-insite/tenant-registry.ts";
 import { SOURCE_WIRING } from "../registry/source-wiring.ts";
 
 /**
@@ -35,7 +35,7 @@ import { SOURCE_WIRING } from "../registry/source-wiring.ts";
  *
  * ## The defect this exists for
  *
- * Found 2026-08-28 on Mesa. `lib/sources/legistar-insite/tenants.ts` declared
+ * Found 2026-08-28 on Mesa. `lib/sources/legistar-insite/tenant-registry.ts` declared
  * `ocd-division/country:us/state:az/place:mesa#governing`, ten of that body's
  * sittings were in `data/meetings-snapshot.json`, and the registry row for it
  * said `coverageStatus: NOT_ATTEMPTED`, `agendaSourceType: NONE`. Nothing in
@@ -194,7 +194,7 @@ export function servingTenants(): ServingTenant[] {
   for (const client of LEGISTAR_CLIENTS) {
     rows.push({
       table: "LEGISTAR_CLIENTS",
-      modulePath: "lib/sources/legistar/clients.ts",
+      modulePath: "lib/sources/legistar/client-registry.ts",
       tenant: client.slug,
       bodyId: client.bodyId,
       ocdId: client.ocdId,
@@ -207,7 +207,7 @@ export function servingTenants(): ServingTenant[] {
   for (const tenant of INSITE_TENANTS) {
     rows.push({
       table: "INSITE_TENANTS",
-      modulePath: "lib/sources/legistar-insite/tenants.ts",
+      modulePath: "lib/sources/legistar-insite/tenant-registry.ts",
       tenant: tenant.slug,
       bodyId: tenant.bodyId,
       ocdId: tenant.ocdId,

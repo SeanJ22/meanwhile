@@ -66,7 +66,7 @@ const RENDER_ROOTS = ["app", "components", "lib", "data"];
  * `.json` is in scope, and that is the point.
  *
  * The "Not here yet" section was half in `app/ballot/page.tsx` and half in
- * `data/ballot/az-pima-2026.json`, and a sweep over code alone could see only
+ * `data/states/az/ballot/az-pima-2026.json`, and a sweep over code alone could see only
  * the half that carried no claim. Reader-facing prose in this product lives in
  * DATA as often as it lives in code.
  */
@@ -190,7 +190,7 @@ const BANNED: ReadonlyArray<{ re: RegExp; why: string }> = [
    *    nothing. A pattern list built from the sentences you already know about
    *    only finds the sentences you already know about.
    * 2. The sentence that made it a coverage claim lived in
-   *    `data/ballot/az-pima-2026.json` and never appeared under `app/` at all.
+   *    `data/states/az/ballot/az-pima-2026.json` and never appeared under `app/` at all.
    *    Reader-facing prose in this product lives in DATA as often as in code.
    */
   {

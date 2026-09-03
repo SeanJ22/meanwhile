@@ -111,7 +111,7 @@ test("MEASURED: the Pima roll-call routes are walked, and the counts are the rec
    * assertion is a floor and not an equality.
    */
   const outcomes = JSON.parse(
-    readFileSync(join(ROOT, "data", "outcomes", "legistar-outcomes.json"), "utf8"),
+    readFileSync(join(ROOT, "data", "states", "az", "outcomes", "legistar-outcomes.json"), "utf8"),
   ) as {
     sittings: {
       startsAt: string;

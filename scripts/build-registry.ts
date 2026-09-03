@@ -1,3 +1,4 @@
+import { geometryPath } from "../lib/holdings/files.ts";
 /**
  * Generate the division and body registry from the committed boundary files.
  *
@@ -40,7 +41,7 @@ import type {
 } from "../lib/registry/types.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const GEO_DIR = join(here, "..", "public", "geo");
+const HOLDINGS_ROOT = join(here, "..");
 const OUT = join(here, "..", "lib", "registry", "registry.json");
 
 const CANONICAL_URL =
@@ -113,7 +114,7 @@ async function loadDivisions(now: string): Promise<Division[]> {
   for (const { file, divisionType } of SOURCES) {
     let raw: string;
     try {
-      raw = await readFile(join(GEO_DIR, file), "utf8");
+      raw = await readFile(join(HOLDINGS_ROOT, geometryPath(file)), "utf8");
     } catch {
       console.log(`  skip ${file} (absent)`);
       continue;
@@ -596,7 +597,7 @@ async function main() {
    * them. RULING 57 says a body is NAMED FIRST and hunted second; a body that
    * cannot be named because a map file was clipped is the opposite of that.
    *
-   * A registry division carries no geometry - that lives in public/geo and is
+   * A registry division carries no geometry - canonical state geometry lives in data/states/<st>/geo and is
    * served separately - so these rows are identifier, label, tier and parent,
    * taken from the Census of Governments and NCES. See
    * lib/registry/curated-divisions.ts for what may and may not go in there.

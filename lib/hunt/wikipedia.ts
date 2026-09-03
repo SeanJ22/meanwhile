@@ -1132,7 +1132,7 @@ export function parseMayor(localGovernment: string): WikiOfficial | null {
  * crosses whatever it crosses: legislative districts are drawn to equal
  * population and municipal lines are drawn to history, so the two agree only by
  * coincidence. Measured on this repository's own instrument
- * (`data/hunt/85641-district-territory.json`, 44 probed points against 20
+ * (`data/states/az/hunt/85641-district-territory.json`, 44 probed points against 20
  * walked ArcGIS layers), **five of the seven territories at ZIP 85641 span two
  * legislative districts**, including Vail Unified and the Corona de Tucson Fire
  * District.

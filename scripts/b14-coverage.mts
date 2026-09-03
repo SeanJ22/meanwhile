@@ -15,6 +15,7 @@
  * `contestId|name`) and both are the reader's ballot, so both count.
  */
 import { readFileSync } from "node:fs";
+import { ballotPath } from "../lib/holdings/files.ts";
 
 import { derivedBlurbFor } from "../lib/candidates/blurbs.ts";
 import { join } from "node:path";
@@ -38,7 +39,7 @@ export function ballotPeople(): BallotPerson[] {
     "nh-merrimack-2026.json",
     "nj-morris-2026.json",
   ]) {
-    const j = read(`data/ballot/${file}`) as {
+    const j = read(ballotPath(file)) as {
       candidacies: Array<{
         id: string;
         contestId: string;
@@ -56,7 +57,7 @@ export function ballotPeople(): BallotPerson[] {
       });
     }
   }
-  const lineup = read("data/ballot/az-general-lineup-2026.json") as {
+  const lineup = read("data/states/az/ballot/az-general-lineup-2026.json") as {
     contests: Array<{ contestId: string; nominees: Array<{ name: string }> }>;
   };
   for (const contest of lineup.contests) {

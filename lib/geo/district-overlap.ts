@@ -22,7 +22,7 @@
  *
  * ## Measured, not reasoned about
  *
- * `data/hunt/85641-district-territory.json` is 44 probed points against 20
+ * `data/states/az/hunt/85641-district-territory.json` is 44 probed points against 20
  * walked ArcGIS layers from Pima County's open data. The point labels are
  * **shared across layers**, so co-occurrence at a point is exact rather than
  * inferred — two districts that hold the same label demonstrably overlap on the

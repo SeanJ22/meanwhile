@@ -22,7 +22,7 @@
  *                                             `filerName: ""`, checked against
  *                                             the publisher's own totalItems,
  *                                             committed at
- *                                             data/campaign-finance/nh-cfs-filer-index-2026.json
+ *                                             data/states/nh/campaign-finance/nh-cfs-filer-index-2026.json
  *
  *   PROJECTION    projectionFrom(corpus)   -> a `filersFor` that holds no
  *                                             fetch, no URL and no client. A
@@ -38,7 +38,7 @@
  * that it is now derived from the ballot being projected onto instead of being
  * written into the module.
  *
- * Produces `data/funding/state-money-nh-2026.json` — a `StateMoneySnapshot`
+ * Produces `data/states/nh/funding/state-money-nh-2026.json` — a `StateMoneySnapshot`
  * the ballot page already knows how to load. `lib/funding/state-snapshot.ts`
  * has named that filename since it was written; only the file was missing.
  *
@@ -411,7 +411,7 @@ export async function readFilers(
    ══════════════════════════════════════════════════════════════════════════ */
 
 /** Where the acquired statewide corpus lives. Committed, and it is the point. */
-export const CORPUS_FILE = join(ROOT, "data", "campaign-finance", "nh-cfs-filer-index-2026.json");
+export const CORPUS_FILE = join(ROOT, "data", "states", "nh", "campaign-finance", "nh-cfs-filer-index-2026.json");
 
 export interface FilerCorpus {
   readonly formatVersion: 1;
@@ -973,7 +973,7 @@ export function toSnapshot(result: BuildResult, asOf: string, year = YEAR): Stat
   };
 }
 
-const OUT_FILE = join(ROOT, "data", "funding", `state-money-nh-${YEAR}.json`);
+const OUT_FILE = join(ROOT, "data", "states", "nh", "funding", `state-money-nh-${YEAR}.json`);
 
 /**
  * The snapshot on disk — LAST-GOOD READER TRUTH for this run.
@@ -994,7 +994,7 @@ async function main(): Promise<void> {
   const DRY = process.argv.includes("--dry");
   const asOf = today();
   const ballot = JSON.parse(
-    readFileSync(join(ROOT, "data", "ballot", "nh-merrimack-2026.json"), "utf8"),
+    readFileSync(join(ROOT, "data", "states", "nh", "ballot", "nh-merrimack-2026.json"), "utf8"),
   ) as Ballot;
   const previous = previousRecords();
   const REACQUIRE = process.argv.includes("--acquire");
@@ -1078,7 +1078,7 @@ async function main(): Promise<void> {
     statedBy: corpus.statedTotalItems,
     held: corpus.rows.length,
     countedBy: `one read of ${API} with filerName: "" — the whole index, not one ballot's surnames`,
-    citation: `data/campaign-finance/nh-cfs-filer-index-2026.json, acquired ${corpus.acquiredAt}`,
+    citation: `data/states/nh/campaign-finance/nh-cfs-filer-index-2026.json, acquired ${corpus.acquiredAt}`,
   };
   const readerProjection: ReaderProjection = {
     scope: "the 03255 ballot",

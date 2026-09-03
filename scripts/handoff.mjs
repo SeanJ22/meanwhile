@@ -871,6 +871,7 @@ if (!CHECK_ONLY) {
   const statusGenerators = [
     { label: "status ledger", command: "pnpm run status:ledger", path: "docs/status-ledger.md" },
     { label: "repo inventory", command: "pnpm run repo-map", path: "docs/repo-inventory.md" },
+    { label: "state manifests", command: "pnpm run state-manifest", path: "docs/states", required: true },
   ];
   for (const g of statusGenerators) {
     if (CHECK_ONLY) {
@@ -904,7 +905,7 @@ if (!CHECK_ONLY) {
           .at(-1);
         ok(g.label, line ?? `${g.path} regenerated`);
       } catch (error) {
-        warn(g.label, `${g.command} did not run — ${String(error.message).split("\n")[0]}`);
+        (g.required ? fail : warn)(g.label, `${g.command} did not run — ${String(error.message).split("\n")[0]}`);
       }
     }
   }
@@ -1507,6 +1508,7 @@ function ship() {
     "docs/coverage-matrix.csv",
     "docs/status-ledger.md",
     "docs/repo-inventory.md",
+    "docs/states",
   ].filter((path) => git("status", "--porcelain", "--", path) !== "");
   if (generated.length > 0) {
     try {

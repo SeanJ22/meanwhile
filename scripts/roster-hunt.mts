@@ -3,7 +3,7 @@
  * (NJ Hunt 6, 2026-08-22. Serves item 1: wire what was collected.)
  *
  * ```
- * pnpm roster:hunt --index data/hunt/nj-morris-municipal-sites.json
+ * pnpm roster:hunt --index data/states/nj/hunt/nj-morris-municipal-sites.json
  * pnpm roster:hunt --index <file> --only rockaway_township
  * pnpm roster:hunt --url https://www.rockawaytownship.org/ --label rockaway_township
  * ```
@@ -533,7 +533,7 @@ if (singleUrl !== undefined) {
   scope = indexPath.replace(/^.*[\\/]/, "").replace(/\.json$/, "").replace(/-municipal-sites$/, "");
 } else {
   console.error(
-    "pnpm roster:hunt --index data/hunt/nj-morris-municipal-sites.json [--only <slug>]\n" +
+    "pnpm roster:hunt --index data/states/nj/hunt/nj-morris-municipal-sites.json [--only <slug>]\n" +
       "pnpm roster:hunt --url <site> --label <slug>",
   );
   process.exit(2);

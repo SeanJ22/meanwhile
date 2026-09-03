@@ -52,7 +52,7 @@ if (process.env.WTP_GOVERNANCE_SKIP_REGEN !== "1") {
   try {
     // Regenerate in a COPY so the check never mutates the tree it is judging.
     // A validator that repairs what it measures cannot report a failure.
-    for (const dir of ["lib", "scripts", "docs", "package.json", "tsconfig.json"]) {
+    for (const dir of ["lib", "scripts", "docs", "data/state-holdings", "package.json", "tsconfig.json"]) {
       const src = join(ROOT, dir);
       if (existsSync(src)) cpSync(src, join(scratch, dir), { recursive: true });
     }

@@ -30,6 +30,7 @@
  */
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { stateForBallotFile } from "../holdings/runtime-paths.ts";
 
 import { surnameDisplayCase } from "../ballot/name-case.ts";
 
@@ -58,9 +59,11 @@ function load(): Map<string, CandidacyDisplay> {
   if (cache) return cache;
   const out = new Map<string, CandidacyDisplay>();
   for (const file of BALLOT_FILES) {
+    const state = stateForBallotFile(file);
+    if (!state) throw new Error(`State ballot filename required: ${file}`);
     try {
       const raw = JSON.parse(
-        readFileSync(join(process.cwd(), "data", "ballot", file), "utf8"),
+        readFileSync(join(process.cwd(), "data", "states", state, "ballot", file), "utf8"),
       ) as BallotFile;
       const titles = new Map(raw.contests.map((c) => [c.id, c.title]));
       for (const c of raw.candidacies) {

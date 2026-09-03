@@ -14,6 +14,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { BALLOT_FILES, NAME_BY_USPS } from "../lib/coverage/artifacts.ts";
+import { ballotPath } from "../lib/holdings/files.ts";
 import { BODY_ROSTERS } from "../lib/registry/body-rosters.ts";
 import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
 
@@ -64,7 +65,7 @@ const cardsFile = read("data/ballot/candidate-cards-2026.json") as {
 const hasPhoto = (key: string) => Boolean(cardsFile.cards[key]?.photoUrl);
 
 for (const { file, state } of BALLOT_FILES) {
-  const data = read(`data/ballot/${file}`) as {
+  const data = read(ballotPath(file)) as {
     candidacies: { id: string; contestId?: string; familyName: string; givenName: string }[];
   };
   for (const cand of data.candidacies) {
@@ -83,7 +84,7 @@ for (const { file, state } of BALLOT_FILES) {
   }
 }
 
-const lineup = read("data/ballot/az-general-lineup-2026.json") as {
+const lineup = read("data/states/az/ballot/az-general-lineup-2026.json") as {
   contests: { contestId: string; nominees: { name: string }[] }[];
 };
 const alreadyNamed = new Set(targets.map((t) => t.name));

@@ -43,6 +43,7 @@
 import { config as loadEnv } from "dotenv";
 import { mkdir, writeFile } from "node:fs/promises";
 import { readFileSync } from "node:fs";
+import { ballotPath } from "../lib/holdings/files.ts";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -269,7 +270,7 @@ for (const holder of roster.officeholders) {
 // plus the AZ certified-lineup nominees (the surface's own target keys).
 const BALLOT_FILES = ["nj-morris-2026.json", "az-pima-2026.json", "nh-merrimack-2026.json"];
 for (const file of BALLOT_FILES) {
-  const data = JSON.parse(readFileSync(join(ROOT, "data", "ballot", file), "utf8")) as {
+  const data = JSON.parse(readFileSync(join(ROOT, ballotPath(file)), "utf8")) as {
     contests: { id: string; ocdId: string; type: string }[];
     candidacies: {
       id: string;
@@ -309,7 +310,7 @@ for (const file of BALLOT_FILES) {
 }
 
 const lineup = JSON.parse(
-  readFileSync(join(ROOT, "data", "ballot", "az-general-lineup-2026.json"), "utf8"),
+  readFileSync(join(ROOT, "data", "states", "az", "ballot", "az-general-lineup-2026.json"), "utf8"),
 ) as { contests: { contestId: string; nominees: { name: string }[] }[] };
 for (const contest of lineup.contests) {
   const houseMatch = /us-house-(\d+)$/.exec(contest.contestId);

@@ -306,7 +306,7 @@ for (const pilot of PILOTS) {
    * nowhere to put the answer, so the resolution lived in an evidence page and
    * the ledger went on saying nobody had tried.
    *
-   * `data/derived/special-district-territory.json` is that place. A district
+   * `data/states/nh/jurisdictions/special-district-territory.json` is that place. A district
    * with `reaches` including this zip moves into the resolved list; one with
    * `reachesNot` including it leaves the picture entirely, because it is not a
    * government over this zip at all. A district ABSENT from that file stays

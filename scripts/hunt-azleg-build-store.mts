@@ -32,8 +32,8 @@ import type { ChapterStamp, ParsedLetter } from "./hunt-azleg-parse.mts";
  *     pnpm exec tsx scripts/hunt-azleg-build-store.mts
  */
 
-const STATE_PATH = process.argv[2] ?? "data/hunt/azleg-actions-progress.json";
-const STORE_PATH = process.argv[3] ?? "data/officials/az-governor-actions.json";
+const STATE_PATH = process.argv[2] ?? "data/states/az/hunt/azleg-actions-progress.json";
+const STORE_PATH = process.argv[3] ?? "data/states/az/officials/az-governor-actions.json";
 
 const SEAT = "statewide:az/governor";
 const NAME = "Katie Hobbs";

@@ -301,7 +301,7 @@ export const CAPABILITY_REGISTRY: readonly CapabilityEntry[] = [
     neededCheck:
       "a canonical `pnpm reader:suite` run on PRODUCTION_RENDER carrying a reader-question instance whose expectation is the $297.86 contribution as a typed VALUE proposition. The evaluator supports exactly that shape (A.1 WI1); the PRODUCTION_RENDER target and the owner-stated expectation are what is missing.",
     evidence:
-      "docs/state.md, the 2026-08-30 session record (“The first local campaign-finance records to reach a reader's evidence pack”, PR #233); the $297.86 row is committed in data/campaign-finance/az-pima-2026-transactions.json",
+      "docs/state.md, the 2026-08-30 session record (“The first local campaign-finance records to reach a reader's evidence pack”, PR #233); the $297.86 row is committed in data/states/az/campaign-finance/az-pima-2026-transactions.json",
     target: "PRODUCTION_RENDER",
   },
 ];

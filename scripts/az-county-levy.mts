@@ -39,7 +39,7 @@
  * somebody's money.
  *
  * ```
- * pnpm az:levy --pdf <file> --out data/hunt/pima-2026-27-levy.json
+ * pnpm az:levy --pdf <file> --out data/states/az/hunt/pima-2026-27-levy.json
  * ```
  */
 import { execFileSync } from "node:child_process";

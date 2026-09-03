@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync } from "node:fs";
+import { stateDomainFiles } from "../lib/holdings/files.ts";
 import { join } from "node:path";
 import { test } from "node:test";
 
@@ -215,11 +216,10 @@ test("4c: every shipped ballot's contests have a reader-facing label", () => {
   // and may never render. A key with no label renders NOTHING, which is safe
   // and also silent — so the denominator is checked here instead, against
   // the ballot data that actually ships.
-  const dir = join(process.cwd(), "data", "ballot");
   const keys = new Set<string>();
-  for (const name of readdirSync(dir)) {
+  for (const name of stateDomainFiles(process.cwd(), "ballot")) {
     if (!name.endsWith(".json")) continue;
-    const file = JSON.parse(readFileSync(join(dir, name), "utf8")) as {
+    const file = JSON.parse(readFileSync(join(process.cwd(), name), "utf8")) as {
       contests?: { id?: string }[];
     };
     for (const contest of file.contests ?? []) {
@@ -228,7 +228,7 @@ test("4c: every shipped ballot's contests have a reader-facing label", () => {
     }
   }
 
-  assert.ok(keys.size >= 3, `only ${keys.size} ballot jurisdictions found in data/ballot`);
+  assert.ok(keys.size >= 3, `only ${keys.size} ballot jurisdictions found in canonical state holdings`);
   for (const key of keys) {
     assert.ok(
       PICK_JURISDICTION_LABELS[key],

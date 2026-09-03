@@ -5,7 +5,7 @@
  * ## The defect this closes, stated as the number it was hiding
  *
  * Every Arizona candidate artifact in this repository was derived from ONE
- * COUNTY'S CERTIFIED BALLOT — `data/ballot/az-pima-2026.json`, 15 candidacy
+ * COUNTY'S CERTIFIED BALLOT — `data/states/az/ballot/az-pima-2026.json`, 15 candidacy
  * contests and 55 candidacies. The identity registry, the candidate universe
  * and the 1,087 candidate-enrichment obligations were all keyed off that
  * population, and every one of them was labelled STATEWIDE.
@@ -14,7 +14,7 @@
  * file — `provenance.sourceUrl` on all 55 rows is
  * `azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf`
  * — and it had been read for the Pima projection and never acquired as a
- * corpus. `data/jurisdictions/az.json` recorded that as `DISCOVERY_OWED`:
+ * corpus. `data/states/az/jurisdictions/az.json` recorded that as `DISCOVERY_OWED`:
  *
  * > acquire the Secretary of State's full 2026 candidate-filing list as DATA.
  * > The 2026 filings PDF was read for the Pima projection only; the statewide
@@ -41,7 +41,7 @@
  *   COUNTY AND BELOW      the county officer in charge of elections is the
  *                         filing authority, not the Secretary. 15 counties,
  *                         each already a DISCOVERY_OWED row in
- *                         data/jurisdictions/az.json
+ *                         data/states/az/jurisdictions/az.json
  *   INDEPENDENT / NO-PARTY  file by nomination petition on a later deadline and
  *                         do not appear on a PARTISAN filing list
  *   WRITE-IN NOMINEES     never on a filing list; they appear starred in the
@@ -113,7 +113,7 @@ export const FILING_LIST_URL =
 /**
  * The page the list is published from — recorded because a URL is not a record
  * (RULING 206) and this one moved. `azsos.gov/elections/results-data/candidate-filings`,
- * the URL `data/jurisdictions/az.json` carries, answered **HTTP 404** on
+ * the URL `data/states/az/jurisdictions/az.json` carries, answered **HTTP 404** on
  * 2026-09-01. `azsos.gov/elections/candidates` answers 200. The document itself
  * answers 200 either way, which is exactly why the record is the document and
  * never the navigation path to it.
@@ -703,7 +703,7 @@ export interface CorpusDocument {
 export const NOT_IN_THIS_DOCUMENT: readonly string[] = [
   "COUNTY AND BELOW — the county officer in charge of elections is the filing authority for county, " +
     "municipal, school-district and special-district offices, not the Secretary of State. All 15 " +
-    "Arizona counties are already carried as DISCOVERY_OWED rows in data/jurisdictions/az.json.",
+    "Arizona counties are already carried as DISCOVERY_OWED rows in data/states/az/jurisdictions/az.json.",
   "INDEPENDENT AND NO-PARTY candidates — they qualify by nomination petition on a later deadline and " +
     "are not on a PARTISAN filing list.",
   "WRITE-IN NOMINEES — never on a filing list. They appear starred in the certified primary canvass, " +
@@ -751,7 +751,7 @@ export function buildCorpusDocument(input: {
       supersededLandingUrl: {
         url: FILING_LIST_LANDING_SUPERSEDED,
         observed:
-          "HTTP 404 on 2026-09-01 — the URL data/jurisdictions/az.json recorded. The document itself " +
+          "HTTP 404 on 2026-09-01 — the URL data/states/az/jurisdictions/az.json recorded. The document itself " +
           "answers 200. A URL is not a record (RULING 206).",
       },
     },
@@ -786,7 +786,7 @@ export function buildCorpusDocument(input: {
 }
 
 /** Where the corpus lands. `scripts/candidate-universe.mts` globs this directory. */
-export const CORPUS_PATH = "data/candidates/az-2026-sos-candidate-filings.json";
+export const CORPUS_PATH = "data/states/az/candidates/az-2026-sos-candidate-filings.json";
 
 /**
  * Write the corpus.

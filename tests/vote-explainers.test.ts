@@ -7,7 +7,7 @@ import {
   VOTE_EXPLAINERS,
   explainVoteQuestion,
 } from "../lib/votes/vote-explainers.ts";
-import { NOTICE_SUMMARIES } from "../lib/meetings/notice-summaries.ts";
+import { NOTICE_SUMMARIES } from "../lib/meetings/notice-summary.ts";
 
 /**
  * The vote-type explainers (4b) and notice summaries (4d), held to their

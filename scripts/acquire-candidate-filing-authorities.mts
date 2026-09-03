@@ -86,7 +86,7 @@ const TARGETS: readonly Target[] = [
       "ZERO_ROWS — an axis-swapped positional parse is the adapter that is owed, and the office " +
       "heading / county section / candidate row segmentation is its unsolved half; (2) this " +
       "repository holds NO SOURCED CROSSWALK from a New Hampshire State Representative district or " +
-      "Executive Council district to an OCD division. `data/ballot/nh-merrimack-2026.json` carries " +
+      "Executive Council district to an OCD division. `data/states/nh/ballot/nh-merrimack-2026.json` carries " +
       "exactly one such id (sldl:607, Merrimack District 7) and one data point is not a scheme. " +
       "Deriving the rest would be inventing division ids, so the corpus is not wired into the " +
       "reader projection until the crosswalk is acquired from its own authority.",
@@ -109,7 +109,7 @@ const TARGETS: readonly Target[] = [
       "Division's complete applicable universe for the offices it is the filing officer for — " +
       "federal — and that is not New Jersey's candidate universe. Every county, municipal, school " +
       "and fire-district candidacy is filed with and published by ONE OF 21 COUNTY CLERKS, which is " +
-      "where data/ballot/nj-morris-2026.json's 276 candidacies come from. NJ therefore cannot be " +
+      "where data/states/nj/ballot/nj-morris-2026.json's 276 candidacies come from. NJ therefore cannot be " +
       "labelled statewide by acquiring this alone (R-C9): the state universe is the UNION of this " +
       "document and 21 county-clerk publications.",
   },
@@ -297,7 +297,7 @@ const record = {
     "this repository cannot yet READ it — a fact about our tooling, never about the state.",
     "",
     "ARIZONA IS NOT IN THIS FILE because it is no longer in this state: the Secretary of State's 2026",
-    "partisan filing list is held as a corpus at data/candidates/az-2026-sos-candidate-filings.json.",
+    "partisan filing list is held as a corpus at data/states/az/candidates/az-2026-sos-candidate-filings.json.",
   ],
   authorities: readings.map((r) => ({
     id: r.target.id,

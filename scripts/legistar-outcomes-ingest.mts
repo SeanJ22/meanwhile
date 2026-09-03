@@ -53,7 +53,7 @@
  * `User-agent: *` with `Disallow: /`; those URLs are RECORDED as leads and are
  * not fetched.
  *
- * Writes exactly one repository file: `data/outcomes/legistar-outcomes.json`.
+ * Writes exactly one repository file: `data/states/az/outcomes/legistar-outcomes.json`.
  * Touches no database and makes no request to Meanwhile's own production.
  *
  * `@freshness-reads-here` — RULING 107's declared carve-out, and it is the rule
@@ -78,7 +78,7 @@ import {
   fetchEventItems,
   fetchEvents,
 } from "../lib/sources/legistar/client.ts";
-import { findClient, LEGISTAR_CLIENTS } from "../lib/sources/legistar/clients.ts";
+import { findClient, LEGISTAR_CLIENTS } from "../lib/sources/legistar/client-registry.ts";
 import { legistarStartsAt } from "../lib/sources/legistar/index.ts";
 import { collectEventOutcomes } from "../lib/sources/legistar/outcomes.ts";
 import type {
@@ -192,7 +192,7 @@ async function main(): Promise<void> {
       `No LegistarClient is wired for slug "${args.slug}". Known: ` +
         `${LEGISTAR_CLIENTS.map((c) => c.slug).join(", ")}. ` +
         "A tenant needs an ocdId, a bodyId and a time zone before its outcomes " +
-        "can be linked to anything — add it to lib/sources/legistar/clients.ts. " +
+        "can be linked to anything — add it to lib/sources/legistar/client-registry.ts. " +
         "This is a gap in OUR wiring and says nothing about the tenant.",
     );
     process.exitCode = 1;

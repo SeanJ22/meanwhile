@@ -31,7 +31,7 @@
  *
  * ## Per state, because the map only ever draws one
  *
- * Written as `data/zcta/zcta-<statefp>.json`, one file per covered state,
+ * Written as `data/states/<st>/zcta/zcta-<statefp>.json`, one file per state,
  * because
  * g4 item 3 made the whole map per-state: only the ACTIVE state's overlays
  * are ever fetched or drawn. A national ZCTA file would be ~40 MB and the
@@ -47,6 +47,7 @@ import { join } from "node:path";
 
 import { stamp } from "./stamp.mts";
 import { pointInRings } from "../lib/geo/polygon.ts";
+import { stateForFips } from "../lib/holdings/files.ts";
 
 const SOURCE_ORG = "U.S. Census Bureau";
 const SERVICE =
@@ -68,7 +69,6 @@ const MAX_ALLOWABLE_OFFSET = 0.002;
 const BATCH = 120;
 
 const geoDir = join(process.cwd(), "public", "geo");
-const outDir = join(process.cwd(), "data", "zcta");
 
 const outlines = JSON.parse(
   readFileSync(join(geoDir, "state-outlines.geojson"), "utf8"),
@@ -102,9 +102,9 @@ for (const [zip, [lat, lng]] of Object.entries(centroids)) {
   }
 }
 
-mkdirSync(outDir, { recursive: true });
-
 for (const [statefp, zips] of [...byState].sort()) {
+  const outDir = join(process.cwd(), "data", "states", stateForFips(statefp), "zcta");
+  mkdirSync(outDir, { recursive: true });
   zips.sort();
   const features: unknown[] = [];
 

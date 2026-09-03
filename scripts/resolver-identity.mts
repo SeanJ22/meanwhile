@@ -1,3 +1,4 @@
+import { geometryFiles } from "../lib/holdings/files.ts";
 /**
  * `pnpm resolver:identity` — P-003's NON-NEGOTIABLE CORRECTNESS GATE.
  *
@@ -7,7 +8,7 @@
  *
  * Three resolvers are run against every zip:
  *
- *   old    the pre-P-003 path — every `.geojson` in `public/geo` except the
+ *   old    the unfiltered canonical geometry universe — every `.geojson` except the
  *          state outlines, every feature given an exact polygon test.
  *   files  the manifest's file list, exact test on every feature. Isolates the
  *          effect of DROPPING the redundant national congressional file.
@@ -24,7 +25,7 @@
  * It also reports `candidateFeaturesTested` per zip, which is the P-003 figure
  * the close-out quotes.
  */
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import {
@@ -34,12 +35,11 @@ import {
 } from "../lib/registry/resolve.ts";
 
 const ROOT = process.cwd();
-const GEO = join(ROOT, "public", "geo");
 
 function load(files: string[]): GeoFeature[] {
   const out: GeoFeature[] = [];
   for (const name of files) {
-    const parsed = JSON.parse(readFileSync(join(GEO, name), "utf8")) as {
+    const parsed = JSON.parse(readFileSync(join(ROOT, name), "utf8")) as {
       features: GeoFeature[];
     };
     out.push(...parsed.features);
@@ -48,8 +48,8 @@ function load(files: string[]): GeoFeature[] {
 }
 
 /** The pre-P-003 discovery, reproduced here rather than described. */
-const OLD_FILES = readdirSync(GEO)
-  .filter((n) => n.endsWith(".geojson") && n !== "state-outlines.geojson")
+const OLD_FILES = geometryFiles(ROOT)
+  .filter((n) => !n.endsWith("/state-outlines.geojson"))
   .sort();
 
 const manifest = JSON.parse(

@@ -4,7 +4,9 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-09-01 — **The runner could not survive its own backlog because a re-observation of the same bytes was refused as a rewrite of history, and every restart walked back into it.** The autonomy-recovery session; its record is the LAST section of this file.
+Last updated: 2026-09-02 — **State holdings are organized by state, with generated answers for every discovered state.** The implementation and finite acceptance record are in `docs/evidence/state-holdings-session.md`; integration and shipping proof are pending there.
+
+Previous: 2026-09-01 — **The runner could not survive its own backlog because a re-observation of the same bytes was refused as a rewrite of history, and every restart walked back into it.** The autonomy-recovery session.
 
 Previous: 2026-09-01 — **Three instruments reported clean results while looking at nothing, and a registry had been calling one county's ballot a state.** Session C (final directive).
 
@@ -1568,7 +1570,7 @@ concluded "Granicus, therefore Legistar" and been wrong twice over. Tracker
 
 **The API returns no coordinates.** `EventLocation` is a room name — "Board of
 Supervisors' Hearing Room" — and there is no address, latitude or longitude
-anywhere in the payload. So `clients.ts` carries a curated venue table in which
+anywhere in the payload. So `legistar-venues.json` carries a curated venue table in which
 every entry cites the body's own page for the address and the Census geocoder
 call for the coordinates, and an unknown venue **drops** the meeting rather than
 placing an approximate pin. The drop is counted, never silent. This is the same
@@ -3011,7 +3013,7 @@ The four-zip gate after the refresh — **85 meetings from 8/8 sources**,
 
 `/ballot?zip=07866` renders every contest a Rockaway Township voter sees on
 2026-11-03, curated from the county clerk's own filed-candidate PDFs into <!-- expected-future: general election day. R16. -->
-`data/ballot/nj-morris-2026.json` behind a `BallotSource` contract parallel
+`data/states/nj/ballot/nj-morris-2026.json` behind a `BallotSource` contract parallel
 to `MeetingSource` (D08's national feed becomes a source swap): US Senate
 (4 candidates), US House NJ-11 (3), County Commissioner (2), Rockaway Twp
 BOE vote-for-2 plus unexpired (4), Morris Hills Regional's Rockaway seats
@@ -13666,7 +13668,7 @@ predicate, both deleted, with a note in their place saying why),
 `CLAUDE.md` (the equal-effort rule's clause mandating it), and
 `lib/evidence/field-matrix.ts` (two `exhausted` cells that named it — **fields
 moved 0, requirements moved 0, denominators moved 0**, so the frozen version
-stayed `vH-1` with a dated correction note). `lib/officials/body-blurbs.ts`
+stayed `vH-1` with a dated correction note). `data/states/az/reference/body-blurbs.json`
 cited it as a sibling; that citation is replaced with the reason the BODY line
 is not deleted — one body is not ranked against another by how much we hold.
 
@@ -14478,7 +14480,7 @@ Lake Todd Village District, whose dead website's archived history page says it
 is *"located in Bradford and Newbury"* and posts its warrant *"outside the
 Newbury Town Office."* `NH14` carries the wiring.
 
-`data/derived/special-district-territory.json` is new and is why the ledger
+`data/states/nh/jurisdictions/special-district-territory.json` is new and is why the ledger
 moved: a district resolved by a DOCUMENT had nowhere to be recorded, so the
 generated ledger went on reporting all eighteen as untried while the answer sat
 in an evidence page. A district absent from that file stays UNRESOLVED, which is
@@ -14609,7 +14611,7 @@ that a reader acts on by driving somewhere. `NH34` carries the venue hunt.
 
 `HUNT05` resolved the **Merrimack County Conservation District** and **Lake Todd
 Village District** to 03255 on 2026-08-21 and wrote them into
-`data/derived/special-district-territory.json`. Nothing but the gap ledger reads
+`data/states/nh/jurisdictions/special-district-territory.json`. Nothing but the gap ledger reads
 that file. **A resolution recorded where no reader-facing surface reads it is
 not a resolution a reader can see.**
 
@@ -15119,7 +15121,7 @@ Tucson offices, and school-district (TUSD, Vail Unified) contests are not
 curated yet."* `walk:all` passed 371 of 371, the RULING 59 guard passed, and the
 shot script's own DOM assertion reported `bannedCoverage: []`. It was invisible
 to all three because the heading was three ordinary words in JSX, and the
-sentence that made it a coverage claim lived in `data/ballot/az-pima-2026.json`
+sentence that made it a coverage claim lived in `data/states/az/ballot/az-pima-2026.json`
 and never appeared under `app/`. **The guard now sweeps `.json`, because
 reader-facing prose in this product lives in data as often as in code.**
 
@@ -16259,7 +16261,7 @@ found"**. The document is at `/nj/gov/county/localgov.shtml`.
 
 `RO01`'s caption fix is confirmed **in the tool**, not only in `state.md`.
 
-The sweep found `data/hunt/nj-morris-municipal-sites.json` **stale against a
+The sweep found `data/states/nj/hunt/nj-morris-municipal-sites.json` **stale against a
 generator that had already been fixed**. The committed artifact pointed five
 municipalities at the wrong government's website —
 
@@ -19116,7 +19118,7 @@ through nothing else: CAWCD showed the five Pima County Supervisors over a
 popularly elected 15-member board, and 58 appointed Tucson commissions each
 showed the Mayor and Council. Deleting the fallback alone would have replaced
 false claims with false absences, because some of those bodies really are
-another government sitting as a board — so `lib/registry/body-composition.ts`
+another government sitting as a board — so `data/states/az/officials/body-compositions.json`
 models the relationship explicitly and every alias carries the document that
 makes it lawful. **CAWCD and the flood control district hang off the same
 division and now give different answers**, which no geographic fallback could
@@ -20049,7 +20051,7 @@ layers it draws, the app-owned labels on them, and `districtsAt` HIT-TESTING.
 A hidden level is therefore unclickable by construction rather than by a second
 predicate, and no synchronising callback exists to fall out of step.
 
-**DATA-3.** `lib/registry/body-composition.ts` was correct and was being asked
+**DATA-3.** `data/states/az/officials/body-compositions.json` was correct and was being asked
 about the wrong body. `bodyFor(meeting.ocdId)` matched a coverage body by
 DIVISION, and the only thing that result is ever used for is
 `membersOfBody(...)` — so a division match was a membership claim derived from
@@ -20714,7 +20716,7 @@ credential at all, and the two live cases in this repository are why it exists:
 
 - The Pima token decodes to `exp`, `nbf`, `iss`, `iat`, `jti`, `client_id`,
   `scope` — RFC 7519 registered authentication claims. **A credential.**
-- `https://lnks.gd/l/eyJ…` in `data/hunt/nj-campaign-sites-*.json` decodes to
+- `https://lnks.gd/l/eyJ…` in `data/states/nj/hunt/nj-campaign-sites-*.json` decodes to
   `{bulletin_link_id, uri, bulletin_id, url}`, a GovDelivery signed link whose
   entire payload is a public justice.gov URL. **A public record identifier**,
   and redacting it would have destroyed the provenance of a source link the
@@ -23436,4 +23438,3 @@ OAuth client variables (tracked as NH310), the two staging/meeting optionals,
 and `WTP_MIRROR`/`WTP_ADMIN_BREAK_GLASS` which fall back to their defaults. No
 value was printed, hashed, or copied anywhere, and `.env.local` was not mirrored
 to Drive.
-

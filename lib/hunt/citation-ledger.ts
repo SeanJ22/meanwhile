@@ -55,7 +55,7 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 /** Where the ledger lives. Committed, because it is evidence. */
-export const CITATION_LEDGER_PATH = "data/hunt/citation-confirmations.json";
+export const CITATION_LEDGER_PATH = "data/states/nj/hunt/citation-confirmations.json";
 
 export interface ConfirmationRow {
   /** The name as the encyclopedia gave it, which is the key the walk uses. */

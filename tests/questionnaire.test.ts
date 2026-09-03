@@ -613,7 +613,7 @@ test("questionnaire: every NJ candidacy has an invitation, and none claims a sen
     uninvitable: unknown[];
   };
   const ballot = JSON.parse(
-    readFileSync(join(ROOT, "data", "ballot", "nj-morris-2026.json"), "utf8"),
+    readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8"),
   ) as { candidacies: unknown[] };
 
   assert.equal(
@@ -701,7 +701,7 @@ test("questionnaire: a title that matches nothing falls to `other`, never to a g
 
 test("questionnaire: every NJ contest classifies, and none falls back", () => {
   const ballot = JSON.parse(
-    readFileSync(join(ROOT, "data", "ballot", "nj-morris-2026.json"), "utf8"),
+    readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8"),
   ) as { contests: Array<{ ocdId: string; title: string }> };
 
   const fallbacks = ballot.contests.filter(

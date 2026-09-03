@@ -10,7 +10,7 @@ import { ageInDays, compareFiling } from "../lib/hunt/nj-filing-clock.ts";
  * **THE CLERK'S PUBLISHED COUNT AGAINST WHAT THIS PRODUCT RENDERS.**
  * (NJ Hunt 3 item 2, 2026-08-22.)
  *
- * `data/ballot/nj-morris-2026.json` is generated from the Morris County Clerk's
+ * `data/states/nj/ballot/nj-morris-2026.json` is generated from the Morris County Clerk's
  * filed-candidate PDFs, and the clerk republishes at a new version path on their
  * own schedule — one revision landed WHILE NJ Hunt 2 was running, so the New
  * Jersey ballot was stale the day it shipped. A hand transcription's only
@@ -119,7 +119,7 @@ test("2: the committed ballot's ids are distinct and its coverage never silently
    * both.
    */
   const ballot = JSON.parse(
-    readFileSync(join(ROOT, "data", "ballot", "nj-morris-2026.json"), "utf8"),
+    readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8"),
   ) as {
     contests: { id: string }[];
     candidacies: { id: string; contestId: string }[];

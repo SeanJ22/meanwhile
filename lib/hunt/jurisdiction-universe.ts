@@ -260,7 +260,10 @@ export function adaptedSplit(reg: JurisdictionRegistry): {
 /* ------------------------------------------------------------- the loader */
 
 /** Where a state's registry lives. One file per state, generated. */
-export const JURISDICTION_DIR = ["data", "jurisdictions"] as const;
+export function jurisdictionRegistryPath(stateCode: string): string {
+  const state = stateCode.toLowerCase();
+  return `data/states/${state}/jurisdictions/${state}.json`;
+}
 
 /**
  * Read one state's registry.
@@ -275,7 +278,7 @@ export function loadRegistry(
   readFile: (path: string) => string,
   root = ".",
 ): JurisdictionRegistry {
-  const path = [root, ...JURISDICTION_DIR, `${stateCode.toLowerCase()}.json`].join("/");
+  const path = [root, jurisdictionRegistryPath(stateCode)].join("/");
   let text: string;
   try {
     text = readFile(path);

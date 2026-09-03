@@ -46,7 +46,7 @@ export function getGeneralLineup(): GeneralLineup | null {
   try {
     cache = JSON.parse(
       readFileSync(
-        join(process.cwd(), "data", "ballot", "az-general-lineup-2026.json"),
+        join(process.cwd(), "data", "states", "az", "ballot", "az-general-lineup-2026.json"),
         "utf8",
       ),
     ) as GeneralLineup;

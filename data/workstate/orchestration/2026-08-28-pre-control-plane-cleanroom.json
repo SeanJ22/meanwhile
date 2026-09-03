@@ -231,7 +231,7 @@
       "dependencyReasons": {},
       "owns": {
         "paths": [
-          "lib/sources/legistar-insite/tenants.ts",
+          "data/states/az/meetings/insite-venues.json",
           "lib/registry/source-wiring.ts",
           "lib/registry/curated-bodies.ts"
         ],

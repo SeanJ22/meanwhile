@@ -28,7 +28,7 @@ import { fileURLToPath } from "node:url";
 
 import { definitionsForBody } from "../lib/officials/body-definitions.ts";
 import { formFor, knownForms, type FormStamp } from "../lib/officials/body-form.ts";
-import type { BodyDivisionType } from "../lib/officials/body-blurbs.ts";
+import type { BodyDivisionType } from "../lib/officials/body-description.ts";
 import { schoolDependency } from "../lib/officials/school-dependency.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");

@@ -42,7 +42,7 @@ interface FieldsFile {
 }
 
 const fields = JSON.parse(
-  readFileSync(join(ROOT, "data", "hunt", "nj-hunt4-fields.json"), "utf8"),
+  readFileSync(join(ROOT, "data", "states", "nj", "hunt", "nj-hunt4-fields.json"), "utf8"),
 ) as FieldsFile;
 
 const wanted = new Map<string, FieldsFile["roster"][number]>();

@@ -77,7 +77,7 @@ export interface LinkableBody {
  * native app where one is installed (iOS and Android alike) and the website
  * everywhere else, which is the platform-appropriate fallback in one URL.
  * The coordinates are already sourced — the Census geocoder, cited per venue
- * in `lib/sources/legistar/clients.ts` — so this renders data we hold rather
+ * in `lib/sources/legistar/client-registry.ts` — so this renders data we hold rather
  * than fetching anything new.
  *
  * It is still `DERIVED`. The URL was constructed here; nobody opened it.

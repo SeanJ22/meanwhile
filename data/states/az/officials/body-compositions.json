@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "state": "AZ",
+  "source": {
+    "baseSha": "3f9a138fd39f6160659329e17c496d2dd99cee00",
+    "sourceSha256": "125f1b315ca365e2522709ad5e5847bdb5d4eb5d0c153aa8b54c3e00ca483998",
+    "recordsSha256": "79a4b1247843b9dfb8ce5ad35f9a554806ca6aa58dcbfc29b8a3394d17343a02"
+  },
+  "commentary": [
+    "/**\n * **WHO CONSTITUTES THIS BODY — EXPLICITLY, OR NOT AT ALL.**\n * (2026-08-27, the coverage-truth session. Red Controls 2 and 3.)\n *\n * ## The defect\n *\n * A body card resolved its membership like this:\n *\n * ```\n * the body has its own roster?  -> use it\n * otherwise                     -> governingRosterHoldersForDivision(body.ocdId)\n * ```\n *\n * The fallback asks *who governs this GEOGRAPHY* and renders the answer as\n * *who sits on this BODY*. Those are different questions, and the second one is\n * a claim about named people.\n *\n * **74 of the registry's 1,998 bodies rendered named members through that\n * fallback and through nothing else** (measured 2026-08-27 on `main` at\n * `9e75bea`). Among them:\n *\n * - The **Central Arizona Water Conservation District Board** showed the five\n *   Pima County Supervisors, with \"Jennifer Allen — Presides\". CAWCD's own\n *   board page says it is a *popularly elected, 15-member board* — ten from\n *   Maricopa, four from Pima, one from Pinal — currently Aguilar, Arboleda,\n *   Atkins, Cesare, Fischer, Goddard, Graff, Jacobs, Macre, Manuel, Miller,\n *   Monize, Seago, Taylor and Tornquist, presided over by **Terry Goddard**.\n *   Wrong people, wrong count, wrong presiding officer.\n * - **58 City of Tucson boards and commissions** — the Planning Commission, the\n *   Civil Service Commission, the Design Review Board, the Human Relations\n *   Commission — each showed the Mayor and the six Council Members. These are\n *   appointed citizen bodies. Not one of those rosters was true.\n * - Eight Newbury committees showed the three Selectmen; four Rockaway Township\n *   boards showed the ten-member Council; the Merrimack County Conservation\n *   District showed the county's three commissioners.\n *\n * ## Why deleting the fallback is not the whole answer\n *\n * Some of those bodies genuinely ARE another government sitting as a board, and\n * a repair that rendered them all empty would replace a false claim with a\n * false absence. Verified from primary sources on 2026-08-27:\n *\n * ```\n * Pima County Regional Flood Control District\n *   A.R.S. 48-3602(B)  \"The county board of supervisors shall be the board\n *                       of directors of the district.\"\n * Pima County Free Library District\n *   A.R.S. 48-3901(C)  \"The board of supervisors shall be the board of\n *                       directors of the county free library district.\"\n * Pima County Stadium District\n *   A.R.S. 48-4202(D)  \"The county board of supervisors shall be the board of\n *                       directors of a countywide district ... in a county with\n *                       a population of less than one million five hundred\n *                       thousand persons.\"\n * City of Tucson Public Housing Authority Board of Commissioners\n *   the City's own 2026-02-18 agenda: \"The Mayor and Council and a Resident\n *   Appointee will act as the Board of Commissioners of the Public Housing\n *   Authority\"\n * ```\n *\n * So three of the four Pima districts inherited the RIGHT people for the WRONG\n * reason, and the Tucson PHA inherited *most* of the right people — it is\n * missing the Resident Appointee, currently **Trystan Hawkins**, a Housing\n * Choice Voucher participant, named by the City's own HCD newsroom.\n *\n * **CAWCD is the control that proves the pattern is not a rule.** It is\n * attached to the same county division as the three statutory districts and its\n * board is nothing like theirs. A fallback cannot tell those apart. A recorded\n * authority can, and must.\n *\n * ## The model\n *\n * Every body reaching a reader resolves through exactly one of these, and the\n * default is the honest one:\n *\n * - `DIRECT_BODY_ROSTER` — the body publishes its own membership.\n * - `EXPLICIT_LEGAL_ALIAS` — another governing body legally sits as this board,\n *   and the authority for that is recorded and cited.\n * - `ALIAS_PLUS_ADDITIONAL_SEATS` — as above, plus seats the aliased roster\n *   does not contain.\n * - `UNKNOWN_COMPOSITION` — the body is verified and its membership is not\n *   sourced. **This is the default, and it renders as a named gap.**\n *\n * A body may never acquire members because it shares an `ocdId` with a\n * government that has some.\n */",
+    "/** The record that proves a composition claim. No claim ships without one. */",
+    "/** What the source actually says, quoted rather than paraphrased. */",
+    "/** The day it was read. */",
+    "/** A seat the aliased roster does not contain. */",
+    "/** The seat's own title, as the source words it. */",
+    "/**\n   * Who holds it, or **null when the seat is proven and the holder is not**.\n   * A named seat with an unsourced holder is a real, renderable fact — \"this\n   * board has a Resident Appointee seat and we have not sourced who fills it\"\n   * is true and useful. Inventing a name for it is not.\n   */",
+    "/** Matches `Body.id` exactly. */",
+    "/**\n   * The body whose roster legally sits as this board. Required for both alias\n   * kinds and forbidden otherwise — it is the join, and it is a BODY id, never\n   * a division.\n   */",
+    "/** Required for both alias kinds: what makes the alias lawful. */",
+    "/**\n   * The seat count the source itself states, where it states one.\n   *\n   * This is the number a rendered roster is checked against. CAWCD publishes\n   * \"15-member board\"; the app rendered 5. A stated count that disagrees with\n   * the rendered count is an integrity defect, and it is only catchable if the\n   * stated count is carried.\n   */",
+    "/**\n * The recorded compositions.\n *\n * **Absence from this list is not a defect** — it means `UNKNOWN_COMPOSITION`,\n * which is the honest state for a body whose membership nobody has sourced, and\n * which is where 70 of the 74 formerly-inheriting bodies now sit. Adding a row\n * here is a claim, and every row carries the document behind it.\n */",
+    "/*\n   * ---- Arizona county special districts, aliased BY STATUTE ---------------\n   *\n   * A REUSABLE ROUTE, not three one-off findings. Arizona declares each\n   * special district's governing board in A.R.S. Title 48, so the question\n   * \"who sits on this district's board?\" has a statutory answer for every\n   * district in the state, and the statute is a better source than any county\n   * page because it says what the board IS rather than who is on it today.\n   * Recorded in the method store so the next Arizona county costs nothing.\n   */",
+    "/*\n       * The population clause is part of the quote deliberately. It is a\n       * CONDITION, and a district in Maricopa — over 1.5 million — has a\n       * different board under the same section. Quoting only the first half\n       * would make this row look portable to a county where it is false.\n       */",
+    "/*\n   * ---- A community facilities district, aliased BY ITS OWN FORMATION DOC ---\n   *\n   * NH233's other half. `pnpm cfd:territory` reads each district's formation\n   * resolution to recover its LAND, and the same resolution states its BOARD —\n   * so the document that proves where it governs also proves who constitutes\n   * it, and reading one without the other would have left this body with a\n   * territory and an unknown roster.\n   *\n   * These two are the third distinct authority class for the same pattern, and\n   * the spread is the point: a county's special districts are aliased by\n   * STATUTE (A.R.S. Title 48 above), a city's housing authority by a COUNCIL\n   * ACTION recorded on an agenda, and a CFD by the RESOLUTION that created it.\n   * No single source would have found all three.\n   */",
+    "/*\n   * ---- Tucson's Public Housing Authority: alias PLUS a seat ---------------\n   *\n   * The author's visual review flagged this card because it showed the Mayor\n   * and Council, and the primary source says the Mayor and Council are RIGHT.\n   * What the card could not do was prove it — it reached them through the\n   * division fallback, the same way the CAWCD card reached the wrong people —\n   * and it dropped the Resident Appointee, so a seven-person roster stood for\n   * an eight-seat board.\n   */",
+    "/** The authority behind an alias, for the card to cite. Null otherwise. */",
+    "/** What the source says the seat count is, where it says one. */",
+    "/**\n   * True when the body is verified but its membership is not sourced.\n   *\n   * The card renders a NAMED GAP on this, never an empty list dressed as a\n   * complete one — \"we haven't recorded who sits on this body\" is a fact about\n   * US, and it may never look like a fact about them.\n   */",
+    "/**\n * **The one place a surface asks who sits on a body.**\n *\n * There is no division fallback in here and there must never be one. A body\n * with no own roster and no recorded composition resolves to\n * `UNKNOWN_COMPOSITION` with an empty member list, and that is the correct\n * answer: the alternative is plausible people from the parent government, which\n * is the defect this module was built to end.\n */",
+    "/*\n     * A RECORDED ALIAS WHOSE ALIASED ROSTER IS EMPTY IS STILL UNKNOWN.\n     * The authority proves the RELATIONSHIP; it does not conjure members. If\n     * the body we alias to has nobody, this body has nobody to show, and\n     * saying so is the honest answer rather than rendering the authority quote\n     * over an empty list as though it were a roster.\n     */"
+  ],
+  "records": {
+    "BODY_COMPOSITIONS": [
+      {
+        "bodyId": "ocd-division/country:us/state:az/county:pima#regional-flood-control-district",
+        "kind": "EXPLICIT_LEGAL_ALIAS",
+        "aliasOfBodyId": "ocd-division/country:us/state:az/county:pima#governing",
+        "authority": {
+          "quote": "The county board of supervisors shall be the board of directors of the district.",
+          "sourceUrl": "https://www.azleg.gov/ars/48/03602.htm",
+          "sourceOrg": "Arizona Revised Statutes § 48-3602(B)",
+          "collectedAt": "2026-08-27"
+        }
+      },
+      {
+        "bodyId": "ocd-division/country:us/state:az/county:pima#free-library-district",
+        "kind": "EXPLICIT_LEGAL_ALIAS",
+        "aliasOfBodyId": "ocd-division/country:us/state:az/county:pima#governing",
+        "authority": {
+          "quote": "The board of supervisors shall be the board of directors of the county free library district.",
+          "sourceUrl": "https://www.azleg.gov/ars/48/03901.htm",
+          "sourceOrg": "Arizona Revised Statutes § 48-3901(C)",
+          "collectedAt": "2026-08-27"
+        }
+      },
+      {
+        "bodyId": "ocd-division/country:us/state:az/county:pima#stadium-district",
+        "kind": "EXPLICIT_LEGAL_ALIAS",
+        "aliasOfBodyId": "ocd-division/country:us/state:az/county:pima#governing",
+        "authority": {
+          "quote": "The county board of supervisors shall be the board of directors of a countywide district established under subsection A of this section in a county with a population of less than one million five hundred thousand persons.",
+          "sourceUrl": "https://www.azleg.gov/ars/48/04202.htm",
+          "sourceOrg": "Arizona Revised Statutes § 48-4202(D)",
+          "collectedAt": "2026-08-27"
+        }
+      },
+      {
+        "bodyId": "curated:az/pima-rocking-k-south-cfd#governing",
+        "kind": "EXPLICIT_LEGAL_ALIAS",
+        "aliasOfBodyId": "ocd-division/country:us/state:az/county:pima#governing",
+        "authority": {
+          "quote": "the members of the Pima County Board of Supervisors, ex officio (Resolution 2017-2 s.4). The County Administrator serves as District Administrator, the County Treasurer as District Treasurer, and the Clerk of the Board as District Clerk.",
+          "sourceUrl": "https://content.civicplus.com/api/assets/8e51ea97-7725-4a0e-ab70-630811e7c22f",
+          "sourceOrg": "Pima County Resolution No. 2017-2, recorded 2017-02-14 as sequence 20170450755",
+          "collectedAt": "2026-08-27"
+        }
+      },
+      {
+        "bodyId": "wtp-body/country:us/state:az/wildflower_community_facilities_district#governing",
+        "kind": "EXPLICIT_LEGAL_ALIAS",
+        "aliasOfBodyId": "ocd-division/country:us/state:az/county:pima#governing",
+        "authority": {
+          "quote": "the members of the Pima County Board of Supervisors, sitting as the Board of Directors of the District (Resolution 2021-78).",
+          "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/93c68105-6282-4ba7-9103-568593e5a978",
+          "sourceOrg": "Pima County Resolution No. 2021-78",
+          "collectedAt": "2026-08-27"
+        }
+      },
+      {
+        "bodyId": "ocd-division/country:us/state:az/place:tucson#public-housing-authority",
+        "kind": "ALIAS_PLUS_ADDITIONAL_SEATS",
+        "aliasOfBodyId": "ocd-division/country:us/state:az/place:tucson#governing",
+        "authority": {
+          "quote": "The Mayor and Council and a Resident Appointee will act as the Board of Commissioners of the Public Housing Authority for the purpose of the following item(s).",
+          "sourceUrl": "https://www.tucsonaz.gov/files/sharedassets/public/v/1/clerks/documents/agenda-committee/20260218acmtg1.min.pdf",
+          "sourceOrg": "City of Tucson, Mayor and Council agenda, 2026-02-18",
+          "collectedAt": "2026-08-27"
+        },
+        "additionalSeats": [
+          {
+            "officeTitle": "Resident Appointee",
+            "name": "Trystan Hawkins",
+            "sourceUrl": "https://www.tucsonaz.gov/Departments/Housing-and-Community-Development/HCD-News/HCD-Thanks-Property-Managers-for-Supporting-Housing-Voucher-Program",
+            "sourceOrg": "City of Tucson Housing and Community Development",
+            "collectedAt": "2026-08-27"
+          }
+        ]
+      }
+    ]
+  }
+}

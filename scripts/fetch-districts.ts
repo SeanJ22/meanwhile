@@ -1,3 +1,4 @@
+import { geometryPath } from "../lib/holdings/files.ts";
 /**
  * Build public/geo/cd119.geojson from the Census cartographic boundary file
  * for the 119th Congress.
@@ -215,7 +216,7 @@ const SIMPLIFY_PASSES = Number(process.env.DISTRICTS_PASSES ?? 8);
 const KEEP_ZIP = process.env.DISTRICTS_KEEP_ZIP === "1";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const GEO_DIR = join(here, "..", "public", "geo");
+const HOLDINGS_ROOT = join(here, "..");
 const TMP_DIR = join(here, "..", ".districts-cache");
 
 /* ------------------------------------------------------------------ zip --- */
@@ -786,7 +787,7 @@ interface Feature {
 }
 
 interface BuildOptions {
-  /** Output file stem under public/geo. */
+  /** Output stem; state FIPS suffixes resolve to canonical state geometry. */
   outName: string;
   sourceUrl: string;
   note: string;
@@ -1122,9 +1123,9 @@ async function build(opts: BuildOptions): Promise<number> {
       features,
     };
 
-    const outPath = join(GEO_DIR, `${opts.outName}.geojson`);
+    const outPath = join(HOLDINGS_ROOT, geometryPath(`${opts.outName}.geojson`));
     const json = JSON.stringify(collection);
-    await mkdir(GEO_DIR, { recursive: true });
+    await mkdir(dirname(outPath), { recursive: true });
     await writeFile(outPath, `${json}\n`);
 
     const bytes = Buffer.byteLength(json);

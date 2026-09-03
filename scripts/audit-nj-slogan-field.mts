@@ -87,8 +87,8 @@ import { notAssertable, assertionLine } from "../lib/extract/count-assertion.ts"
 import { sourceUserAgent } from "../lib/sources/http.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const BALLOT = join(ROOT, "data/ballot/nj-morris-2026.json");
-const CONTACTS = join(ROOT, "data/ballot/nj-morris-2026-contacts.json");
+const BALLOT = join(ROOT, "data/states/nj/ballot/nj-morris-2026.json");
+const CONTACTS = join(ROOT, "data/states/nj/ballot/nj-morris-2026-contacts.json");
 const OUT = join(ROOT, "data/hunt/nj-slogan-audit.json");
 
 /** Today, passed in rather than read from a clock. `pnpm stamp` is the source. */

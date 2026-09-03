@@ -510,7 +510,7 @@ test("readSubjectRefs refuses anything that is neither a name nor an id", () => 
    ══════════════════════════════════════════════════════════════════════ */
 
 const AZ_BALLOT = JSON.parse(
-  readFileSync(join(ROOT, "data", "ballot", "az-pima-2026.json"), "utf8"),
+  readFileSync(join(ROOT, "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8"),
 ) as BallotSet;
 
 /** The live inventory: the same lineup lookup the ballot page renders from. */

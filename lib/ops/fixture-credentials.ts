@@ -52,7 +52,7 @@
  *     payload carrying `exp`, `nbf`, `iss`, `iat`, `jti`, `client_id` and
  *     `scope`. Those are RFC 7519 registered authentication claims. It is a
  *     bearer credential and it is live for thirty days.
- *   - `https://lnks.gd/l/eyJ…` in `data/hunt/nj-campaign-sites-*.json` decodes
+ *   - `https://lnks.gd/l/eyJ…` in `data/states/nj/hunt/nj-campaign-sites-*.json` decodes
  *     to `{"bulletin_link_id", "uri", "bulletin_id", "url"}` — a GovDelivery
  *     signed *link*, whose entire payload is a public justice.gov URL. It is a
  *     PUBLIC RECORD IDENTIFIER that the hunt genuinely found, and redacting it

@@ -1,4 +1,4 @@
-import type { BodyDivisionType } from "./body-blurbs.ts";
+import type { BodyDivisionType } from "./body-description.ts";
 
 /**
  * **IS THIS BODY THE GOVERNMENT OF THE DIVISION IT SITS ON?**

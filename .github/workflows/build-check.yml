@@ -280,6 +280,15 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      # Exact historical data equality is a migration proof, not a live-source query.
+      # Fetch this one frozen commit only; keep the rest of checkout shallow.
+      - name: Frozen holdings base for extraction proofs
+        shell: bash
+        run: |
+          holdings_base=$(node -p "require('./data/state-holdings/move-plan.json').baseSha")
+          [[ "$holdings_base" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          git cat-file -e "${holdings_base}^{commit}" 2>/dev/null || git fetch --no-tags --depth=1 origin "$holdings_base"
+
       - uses: actions/setup-node@v7
         with:
           node-version: 24
@@ -460,6 +469,16 @@ jobs:
         if: always()
         timeout-minutes: 5
         run: corepack pnpm method:check
+
+      - name: Canonical state holdings and residual paths
+        if: always()
+        timeout-minutes: 5
+        run: corepack pnpm state-holdings:check
+
+      - name: Generated state manifests against committed observations
+        if: always()
+        timeout-minutes: 5
+        run: corepack pnpm state-manifest --check
 
       # THE SHIPPING INVARIANT — ASKED BEFORE THE MERGE, NOT THE MORNING AFTER.
       # (2026-08-28, the P0 schema drift. Intake tripwire run 33211710028.)

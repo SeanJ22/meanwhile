@@ -1,3 +1,4 @@
+import { streetPath } from "../lib/holdings/files.ts";
 /**
  * `pnpm coverage --zip 85641` — **WHAT SHOULD EXIST, WHAT WE VERIFIED, WHAT
  * THE PRODUCT STORES, AND WHAT THE READER GETS — COMPARED INDEPENDENTLY.**
@@ -79,7 +80,7 @@ import { globalIntegrityLine, globalIntegrityStatus } from "../lib/ops/integrity
 import { answerQuestion } from "../lib/routing/ask.ts";
 import { resolveRouting } from "../lib/routing/resolve.ts";
 import { coverageAt } from "../lib/registry/server.ts";
-import { membersOfBody } from "../lib/registry/body-composition.ts";
+import { membersOfBody } from "../lib/registry/body-membership.ts";
 import { officeIdentity } from "../lib/officials/office-identity.ts";
 import { seatHoldersForOffice } from "../lib/registry/server.ts";
 import type { Body, Registry } from "../lib/registry/types.ts";
@@ -184,7 +185,7 @@ function ballotFor(zip: string): {
 /**
  * The distinct governing combinations a zip actually contains.
  *
- * `public/streets/<zip>.json` records, per street, which municipalities and
+ * `data/states/<st>/streets/<zip>.json` records, per street, which municipalities and
  * which school districts it touches. Distinct combinations of those two sets
  * ARE the seams — the places where two addresses in one zip have different
  * governments — and they are derivable without geocoding a single address.
@@ -196,8 +197,9 @@ function ballotFor(zip: string): {
  * combination" are different claims and only the first is made here.
  */
 function seamsIn(zip: string): { combinations: number; streets: number; detail: string[] } | null {
-  const p = join(ROOT, "public", "streets", `${zip}.json`);
-  if (!existsSync(p)) return null;
+  const held = streetPath(ROOT, zip);
+  if (!held) return null;
+  const p = join(ROOT, held);
   const f = JSON.parse(readFileSync(p, "utf8")) as {
     municipalities: { label: string }[];
     schoolDistricts: { label: string }[];

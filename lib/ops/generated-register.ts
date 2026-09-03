@@ -13,6 +13,9 @@
  * records the new digest. The machinery is `lib/ops/generator-digest.ts`.
  */
 
+import { readdirSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+
 export interface GeneratedArtifact {
   /** Repo-relative path of the committed output. */
   path: string;
@@ -25,6 +28,8 @@ export interface GeneratedArtifact {
   pure: boolean;
   /** Why it is not pure, when it is not. Stated rather than implied. */
   impurity?: string;
+  /** A read-only freshness check for a generator that checks its whole output set. */
+  checkCommand?: string;
 }
 
 /**
@@ -32,6 +37,13 @@ export interface GeneratedArtifact {
  * commit — the same discipline `tests/guard-census.json` applies to guards.
  */
 export const GENERATED: GeneratedArtifact[] = [
+  ...readdirSync(fileURLToPath(new URL("../../docs/states/", import.meta.url)))
+    .filter((name) => /^[a-z]{2}\.md$/.test(name)).sort().map((name) => ({
+      path: `docs/states/${name}`,
+      command: "corepack pnpm state-manifest",
+      checkCommand: "corepack pnpm state-manifest --check",
+      pure: true,
+    })),
   {
     path: "docs/branch-manifest.md",
     command: "corepack pnpm manifest:doc",
@@ -244,8 +256,8 @@ export const GENERATED: GeneratedArtifact[] = [
      * artifact three scripts can write; this one is registered before anything
      * else can reach it.
      */
-    path: "public/geo/body-territories.geojson",
-    command: "corepack pnpm cfd:territory --geojson public/geo/body-territories.geojson",
+    path: "data/states/az/geo/body-territories.geojson",
+    command: "corepack pnpm cfd:territory --geojson data/states/az/geo/body-territories.geojson",
     pure: false,
     impurity:
       "reads Pima County's ArcGIS Subdivisions layer for the recorded plat polygons and the Census " +
@@ -263,7 +275,7 @@ export const GENERATED: GeneratedArtifact[] = [
       "rebuild that changes nothing produces no diff.",
   },
   {
-    path: "data/hunt/nj-morris-municipal-sites.json",
+    path: "data/states/nj/hunt/nj-morris-municipal-sites.json",
     command: "corepack pnpm nj:rosters --index",
     pure: false,
     impurity:
@@ -272,17 +284,17 @@ export const GENERATED: GeneratedArtifact[] = [
       "its generator had already been fixed.",
   },
   {
-    path: "data/hunt/muni-sites-nj-morris.json",
+    path: "data/states/nj/hunt/muni-sites-nj-morris.json",
     command:
-      "corepack pnpm muni:sites --wiki data/hunt/wikipedia-nj-morris.json " +
-      "--state-directory data/hunt/tier-directories.json --county data/hunt/nj-morris-municipal-sites.json " +
-      "--out data/hunt/muni-sites-nj-morris.json",
+      "corepack pnpm muni:sites --wiki data/states/nj/hunt/wikipedia-nj-morris.json " +
+      "--state-directory data/hunt/tier-directories.json --county data/states/nj/hunt/nj-morris-municipal-sites.json " +
+      "--out data/states/nj/hunt/muni-sites-nj-morris.json",
     pure: false,
     impurity: "control-checks every candidate URL live — a municipality's site may move or refuse",
   },
   {
-    path: "data/hunt/roster-pages-muni-sites-nj-morris.json",
-    command: "corepack pnpm roster:hunt --index data/hunt/muni-sites-nj-morris.json",
+    path: "data/states/nj/hunt/roster-pages-muni-sites-nj-morris.json",
+    command: "corepack pnpm roster:hunt --index data/states/nj/hunt/muni-sites-nj-morris.json",
     pure: false,
     impurity: "walks each body's own site — the roster changes when the body changes",
   },
@@ -293,13 +305,13 @@ export const GENERATED: GeneratedArtifact[] = [
     impurity: "walks USA.gov and the state directories live",
   },
   {
-    path: "data/hunt/nj-morris-certified-winners.json",
+    path: "data/states/nj/hunt/nj-morris-certified-winners.json",
     command: "corepack pnpm nj:winners",
     pure: false,
     impurity: "fetches the county clerk's certified PDFs; a new cycle adds a document",
   },
   {
-    path: "data/hunt/wikipedia-nj-morris.json",
+    path: "data/states/nj/hunt/wikipedia-nj-morris.json",
     command: "corepack pnpm wiki:muni --state NJ --county Morris --confirm",
     pure: false,
     impurity: "reads the encyclopedia and fetches every citation — both move",
@@ -341,7 +353,7 @@ export const GENERATED: GeneratedArtifact[] = [
    * a regeneration unnoticed.
    */
   {
-    path: "data/identity/az-2026-candidate-registry.json",
+    path: "data/states/az/identity/az-2026-candidate-registry.json",
     command: "corepack pnpm identity:az",
     pure: false,
     impurity:
@@ -349,7 +361,7 @@ export const GENERATED: GeneratedArtifact[] = [
       "withdrawal, a court order or a new independent filing changes the universe",
   },
   {
-    path: "data/identity/az-2026-certified-lineup-reconciliation.json",
+    path: "data/states/az/identity/az-2026-certified-lineup-reconciliation.json",
     command: "corepack pnpm identity:az",
     pure: false,
     impurity:
@@ -357,7 +369,7 @@ export const GENERATED: GeneratedArtifact[] = [
       "ambiguity that resolves later becomes a mapping that did not exist before",
   },
   {
-    path: "data/campaign-finance/az-2026-statewide-corpus.json",
+    path: "data/states/az/campaign-finance/az-2026-statewide-corpus.json",
     command: "corepack pnpm money:az",
     pure: false,
     impurity:
@@ -365,7 +377,7 @@ export const GENERATED: GeneratedArtifact[] = [
       "itemised ledger; the totals move whenever a committee files",
   },
   {
-    path: "data/funding/state-money-az-2026.json",
+    path: "data/states/az/funding/state-money-az-2026.json",
     command: "corepack pnpm money:az",
     pure: false,
     impurity:

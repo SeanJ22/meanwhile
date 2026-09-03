@@ -48,7 +48,7 @@ import {
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
 import { bodyClassLong } from "@/lib/registry/body-class-labels";
 import { rosterHoldersForBody } from "@/lib/registry/body-rosters";
-import { membersOfBody } from "@/lib/registry/body-composition";
+import { membersOfBody } from "@/lib/registry/body-membership";
 import {
   noteStateFor,
   representationForDivision,
@@ -1024,7 +1024,7 @@ function MapEntryInner() {
    * This used to match on the meeting's DIVISION, and the only thing the
    * result is ever used for is `membersOfBody(body.bodyId)` — so a division
    * match was a membership claim derived from shared geography, which is the
-   * one inference `lib/registry/body-composition.ts` exists to forbid.
+   * one inference `lib/registry/body-membership.ts` exists to forbid.
    *
    * Six coverage bodies sit on `county:pima`. The division match returned the
    * FIRST, which is `county:pima#governing`, so every Central Arizona Water
@@ -2594,7 +2594,7 @@ function bodySubject(
    * `membersOfBody` resolves an EXPLICIT composition or returns nobody. A body
    * that legally IS another government sitting as a board still renders their
    * names, through a recorded and cited authority; a body whose membership is
-   * unsourced renders the named gap. See lib/registry/body-composition.ts.
+   * unsourced renders the named gap. See lib/registry/body-membership.ts.
    */
   const composition = membersOfBody(body.bodyId);
   const roster = composition.members;

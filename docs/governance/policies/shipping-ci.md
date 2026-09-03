@@ -100,7 +100,7 @@ hook that gets `--no-verify`d out of existence. The server-truth check has
 neither problem — it cannot be absent, and it costs one API call.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -184,7 +184,7 @@ to readers. A local production build is the same bytes. There was never a reason
 to find out on the live site.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -244,7 +244,7 @@ read as a broken tree for a whole session (`NS04`).
   fit the change it was supposed to catch, in another costume.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -318,7 +318,7 @@ available "fix" — letting the guard pass with no browser — is what
 `scripts/browser.mts` forbids in as many words.
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>docs/rulings.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -385,7 +385,7 @@ And that is only the visible half. Deploy previews are Netlify's default, so **e
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging
@@ -470,7 +470,7 @@ RULING 77 already established that almost nothing needs production, because a lo
 ---
 
 <details>
-<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — preserved verbatim</summary>
+<summary>The other hand-written copy of this rule, from <code>CLAUDE.md</code> — wording preserved; repository paths resolved through the holdings move plan</summary>
 
 *Two copies of this rule were maintained by hand and they diverged. Neither was complete.
 The fuller one is above; this is the other, kept whole rather than merged, because merging

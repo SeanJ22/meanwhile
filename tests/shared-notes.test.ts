@@ -70,7 +70,7 @@ test("F01 11.1: contests with no note contribute nothing and break nothing", () 
 test("F01 11.1: the Arizona measures actually collapse — eleven into one", () => {
   // The author's instance, against the shipped data rather than a fixture.
   const ballot = JSON.parse(
-    readFileSync(join(process.cwd(), "data", "ballot", "az-pima-2026.json"), "utf8"),
+    readFileSync(join(process.cwd(), "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8"),
   ) as { contests: { id: string; scopeNote: string | null }[] };
 
   const { notes, isShared } = sharedNotesFor(ballot.contests);

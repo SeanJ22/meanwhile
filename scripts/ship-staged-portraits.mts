@@ -102,7 +102,7 @@ const cardsFile = JSON.parse(
   await readFile(join(ROOT, "data", "ballot", "candidate-cards-2026.json"), "utf8"),
 );
 const lineup = JSON.parse(
-  await readFile(join(ROOT, "data", "ballot", "az-general-lineup-2026.json"), "utf8"),
+  await readFile(join(ROOT, "data", "states", "az", "ballot", "az-general-lineup-2026.json"), "utf8"),
 ) as { contests: { contestId: string; nominees: { name: string }[] }[] };
 
 /** contestId|name key when the lineup lists this person, else null. */

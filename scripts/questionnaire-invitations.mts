@@ -51,8 +51,8 @@ import {
 import { officeClassFor } from "../lib/questionnaire/office-class.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const BALLOT = join(ROOT, "data/ballot/nj-morris-2026.json");
-const CONTACTS = join(ROOT, "data/ballot/nj-morris-2026-contacts.json");
+const BALLOT = join(ROOT, "data/states/nj/ballot/nj-morris-2026.json");
+const CONTACTS = join(ROOT, "data/states/nj/ballot/nj-morris-2026-contacts.json");
 const OUT = join(ROOT, "data/questionnaire/invitations-nj-morris-2026.json");
 
 /**

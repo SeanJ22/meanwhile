@@ -83,7 +83,7 @@ type Ballot = {
 };
 
 const ballot = JSON.parse(
-  readFileSync(join(ROOT, "data", "ballot", "nj-morris-2026.json"), "utf8"),
+  readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8"),
 ) as Ballot;
 
 const contest = ballot.contests.find((c) => c.id.includes(contestArg));

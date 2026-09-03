@@ -10,7 +10,7 @@
  *
  * ## What is being compared, and why it is a PAIR
  *
- * `data/ballot/nj-morris-2026.json` is GENERATED from those PDFs. The clerk
+ * `data/states/nj/ballot/nj-morris-2026.json` is GENERATED from those PDFs. The clerk
  * republishes at a new version path on their own schedule and leaves the old
  * path reachable — `/v/9/…-082126.pdf` superseded `/v/6/…-080726.pdf` while NJ
  * Hunt 2 was running, so the New Jersey ballot was stale the day it shipped.

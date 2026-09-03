@@ -1,3 +1,4 @@
+import { rosterPath, stateDomainFiles } from "../lib/holdings/files.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -52,14 +53,17 @@ const DIVISION_TYPES = [
  * point, because "what we hold" must not be defined by where anyone stands.
  */
 async function heldDivisions(): Promise<Map<string, number>> {
-  const { readdir, readFile } = await import("node:fs/promises");
+  const { readFile } = await import("node:fs/promises");
   const { join } = await import("node:path");
-  const dir = join(process.cwd(), "lib", "registry");
+  const root = process.cwd();
+  const files = [
+    rosterPath("officeholders-us.json"),
+    ...stateDomainFiles(root, "officials").filter((file) => /\/officeholders-\d{2}\.json$/.test(file)),
+  ];
   const held = new Map<string, number>();
 
-  for (const file of await readdir(dir)) {
-    if (!/^officeholders-.+\.json$/.test(file)) continue;
-    const set = JSON.parse(await readFile(join(dir, file), "utf8")) as OfficeholderSet;
+  for (const file of files) {
+    const set = JSON.parse(await readFile(join(root, file), "utf8")) as OfficeholderSet;
     for (const [ocdId, holders] of indexByDivision([set])) {
       if (holders.length > 0) held.set(ocdId, holders.length);
     }

@@ -35,9 +35,9 @@ test("every candidate-links key resolves to a real candidacy or lineup nominee",
 
   const candidacyIds = new Set<string>();
   for (const file of [
-    "data/ballot/nj-morris-2026.json",
-    "data/ballot/az-pima-2026.json",
-    "data/ballot/nh-merrimack-2026.json",
+    "data/states/nj/ballot/nj-morris-2026.json",
+    "data/states/az/ballot/az-pima-2026.json",
+    "data/states/nh/ballot/nh-merrimack-2026.json",
   ]) {
     const ballot = loadJson(file) as BallotFile;
     for (const c of ballot.candidacies) {
@@ -52,7 +52,7 @@ test("every candidate-links key resolves to a real candidacy or lineup nominee",
     }
   }
 
-  const lineup = loadJson("data/ballot/az-general-lineup-2026.json") as LineupFile;
+  const lineup = loadJson("data/states/az/ballot/az-general-lineup-2026.json") as LineupFile;
   const nomineeKeys = new Set<string>();
   for (const contest of lineup.contests) {
     for (const nominee of contest.nominees) {

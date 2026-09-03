@@ -62,7 +62,7 @@ const sql = neon(url);
 
 /** A real candidacy from the committed ballot, so the name resolver is exercised. */
 const ballot = JSON.parse(
-  readFileSync(join(process.cwd(), "data", "ballot", "nj-morris-2026.json"), "utf8"),
+  readFileSync(join(process.cwd(), "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8"),
 ) as {
   contests: { id: string; title: string }[];
   candidacies: { id: string; contestId: string; givenName: string; familyName: string }[];

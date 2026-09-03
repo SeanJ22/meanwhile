@@ -4,7 +4,7 @@
  * ```
  * pnpm nj:search                          # every candidate in every contest
  * pnpm nj:search --contest borough-council
- * pnpm nj:search --limit 20 --out data/hunt/nj-hunt4-search.json
+ * pnpm nj:search --limit 20 --out data/states/nj/hunt/nj-hunt4-search.json
  * ```
  *
  * ## Why this exists
@@ -69,7 +69,7 @@ function arg(flag: string): string | undefined {
 const contestFilter = arg("--contest");
 const limit = Number(arg("--limit") ?? "0");
 const skip = Number(arg("--skip") ?? "0");
-const outPath = arg("--out") ?? join(ROOT, "data", "hunt", "nj-hunt4-search.json");
+const outPath = arg("--out") ?? join(ROOT, "data", "states", "nj", "hunt", "nj-hunt4-search.json");
 /**
  * **RESUME, AND WHY IT IS NOT A CONVENIENCE.**
  *
@@ -101,7 +101,7 @@ interface Ballot {
 }
 
 const ballot = JSON.parse(
-  readFileSync(join(ROOT, "data", "ballot", "nj-morris-2026.json"), "utf8"),
+  readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8"),
 ) as Ballot;
 
 /**

@@ -7,7 +7,7 @@
  * `data/campaign-finance/filing-regimes.json` routes Arizona correctly and knows
  * exactly two custodians by NAME: the Secretary of State, and Pima County. The
  * Arizona SOS's own bulk table names **109 filing jurisdictions**. Until
- * `data/jurisdictions/az.json` existed, the other 107 were not small obligations
+ * `data/states/az/jurisdictions/az.json` existed, the other 107 were not small obligations
  * — they were no obligations at all. No name, no clock, no debt row, no
  * denominator. **A government nobody has named cannot be behind schedule.**
  *
@@ -36,7 +36,7 @@
  *      times in Pima alone.
  *
  *   3  The 2,501 enumerated governments that hold no filing-officer role of
- *      their own. They ARE named, durably, in `data/jurisdictions/<state>.json`
+ *      their own. They ARE named, durably, in `data/states/<state>/jurisdictions/<state>.json`
  *      with their custodian, their routing statute and the sentence saying what
  *      is owed. What they do not have is an individually scheduled row, and the
  *      reason is the record and not the queue: their finance records belong to
@@ -61,7 +61,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import {
-  JURISDICTION_DIR,
+  jurisdictionRegistryPath,
   sourcesOf,
   type Jurisdiction,
   type JurisdictionRegistry,
@@ -170,7 +170,7 @@ function descriptorFor(j: Jurisdiction, s: JurisdictionSource, n: number): Route
 }
 
 function readRegistry(root: string, stateCode: string): JurisdictionRegistry | null {
-  const path = join(root, ...JURISDICTION_DIR, `${stateCode}.json`);
+  const path = join(root, jurisdictionRegistryPath(stateCode));
   if (!existsSync(path)) return null;
   return JSON.parse(readFileSync(path, "utf8")) as JurisdictionRegistry;
 }
@@ -195,14 +195,14 @@ export function localJurisdictionsProvider(): ObligationProvider {
           reg = readRegistry(ctx.root, stateCode);
         } catch (error) {
           failures.push(
-            `data/jurisdictions/${stateCode}.json did not parse ` +
+            `${jurisdictionRegistryPath(stateCode)} did not parse ` +
               `(${error instanceof Error ? error.message : String(error)})`,
           );
           continue;
         }
         if (reg === null) {
           failures.push(
-            `data/jurisdictions/${stateCode}.json is ABSENT. Regenerate it with ` +
+            `${jurisdictionRegistryPath(stateCode)} is ABSENT. Regenerate it with ` +
               "`pnpm jurisdictions:enumerate`. A missing registry is a missing file, never a state " +
               "with no local government.",
           );
@@ -210,7 +210,7 @@ export function localJurisdictionsProvider(): ObligationProvider {
         }
         if (reg.jurisdictions.length === 0) {
           failures.push(
-            `data/jurisdictions/${stateCode}.json parsed and holds ZERO jurisdictions — a FAILED read, ` +
+            `${jurisdictionRegistryPath(stateCode)} parsed and holds ZERO jurisdictions — a FAILED read, ` +
               "never an empty state",
           );
           continue;

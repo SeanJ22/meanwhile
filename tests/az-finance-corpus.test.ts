@@ -3,7 +3,7 @@
  * ZIP.** (Session C3, 2026-09-01. RULING 229, RULING 207, RULING 167.)
  *
  * `scripts/state-money-az.mts` used to say so in its own header — *"FOR THE
- * 85701 AND 85641 BALLOT"* — and mean it: it loaded `data/ballot/az-pima-2026.json`,
+ * 85701 AND 85641 BALLOT"* — and mean it: it loaded `data/states/az/ballot/az-pima-2026.json`,
  * built its committee list by name-matching those candidacies against the
  * portal, and read the itemised ledger for 58 of 732 entities. The acquisition
  * DENOMINATOR was the currently enabled reader location, so activating a third
@@ -27,7 +27,7 @@ import type { AzIdentityRegistry } from "../lib/identity/types.ts";
 import type { StateMoneySnapshot } from "../lib/funding/state-money.ts";
 
 const ROOT = process.cwd();
-const CORPUS_PATH = join(ROOT, "data", "campaign-finance", "az-2026-statewide-corpus.json");
+const CORPUS_PATH = join(ROOT, "data", "states", "az", "campaign-finance", "az-2026-statewide-corpus.json");
 const SCRIPT_PATH = join(ROOT, "scripts", "state-money-az.mts");
 
 interface Corpus {
@@ -75,10 +75,10 @@ const corpus: Corpus | null = existsSync(CORPUS_PATH)
   ? (JSON.parse(readFileSync(CORPUS_PATH, "utf8")) as Corpus)
   : null;
 const registry = JSON.parse(
-  readFileSync(join(ROOT, "data", "identity", "az-2026-candidate-registry.json"), "utf8"),
+  readFileSync(join(ROOT, "data", "states", "az", "identity", "az-2026-candidate-registry.json"), "utf8"),
 ) as AzIdentityRegistry;
 const snapshot = JSON.parse(
-  readFileSync(join(ROOT, "data", "funding", "state-money-az-2026.json"), "utf8"),
+  readFileSync(join(ROOT, "data", "states", "az", "funding", "state-money-az-2026.json"), "utf8"),
 ) as StateMoneySnapshot;
 
 /* ── The acquisition layer has no ballot dependency. Read from the source. ─ */
@@ -92,13 +92,13 @@ test("the acquisition script reads no ballot file and names no pilot ZIP", () =>
   );
   for (const path of reads) {
     assert.ok(
-      !path.startsWith("data/ballot"),
+      !path.startsWith("data/ballot") && !/^data\/states\/[^/]+\/ballot\//.test(path),
       `the acquisition script builds a path into data/ballot: ${path}`,
     );
   }
   assert.ok(reads.length > 0, "no ROOT-relative path was found — the matcher is broken, not the script");
   assert.ok(
-    reads.some((p) => p.startsWith("data/identity")),
+    reads.some((p) => /^data\/states\/[^/]+\/identity\//.test(p)),
     "the script does not read the identity layer, so it has nothing to project onto",
   );
 });

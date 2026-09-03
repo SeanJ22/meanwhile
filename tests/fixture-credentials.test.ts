@@ -148,7 +148,7 @@ test("ordinary civic identifiers are NOT flagged", () => {
 
 test("a signed LINK is a public record identifier, not a credential", () => {
   /*
-   * The live case, from `data/hunt/nj-campaign-sites-press-outlet-wp-search.json`.
+   * The live case, from `data/states/nj/hunt/nj-campaign-sites-press-outlet-wp-search.json`.
    * GovDelivery's `lnks.gd` wraps a public justice.gov URL in a signed token
    * whose payload carries NO RFC 7519 authentication claim. Redacting it would
    * destroy the provenance of a source link the hunt genuinely found.

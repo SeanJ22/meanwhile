@@ -1,3 +1,4 @@
+import { rosterPath } from "../lib/holdings/files.ts";
 /**
  * @freshness-reads-here
  *
@@ -228,7 +229,7 @@ async function main() {
 
     // ── The join, stated ────────────────────────────────────────────────────
     const roster = JSON.parse(
-      await readFile(join(ROOT, "lib", "registry", ROSTERS[state]), "utf8"),
+      await readFile(join(ROOT, rosterPath(ROSTERS[state])), "utf8"),
     ) as {
       officeholders: Array<{ id: string; name: string }>;
       divisions: Record<string, { officeholderId: string; ocdId: string }>;

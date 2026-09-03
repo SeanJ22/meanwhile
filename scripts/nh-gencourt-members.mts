@@ -29,7 +29,7 @@
  *
  * Usage:
  *   pnpm nh:members            # fetch, parse, report; writes nothing
- *   pnpm nh:members --write    # write data/hunt/nh-gencourt-members.json
+ *   pnpm nh:members --write    # write data/states/nh/hunt/nh-gencourt-members.json
  *   pnpm nh:members --from <path>   # parse a local copy instead of fetching
  */
 
@@ -40,7 +40,7 @@ import { dirname, join } from "node:path";
 
 const ROOT = process.cwd();
 const SOURCE_URL = "https://gc.nh.gov/downloads/Members.txt";
-const OUT = "data/hunt/nh-gencourt-members.json";
+const OUT = "data/states/nh/hunt/nh-gencourt-members.json";
 const UA = "we-the-people/1.0 (civic data; +mailto:seanj22@gmail.com)";
 
 export type ElectedStatus = "INCUMBENT" | "NEW" | "FORMER" | "UNSTATED";

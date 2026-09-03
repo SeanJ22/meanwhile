@@ -663,7 +663,7 @@ script" is retired. Both findings are in the method store
 `ask-what-the-browser-was-for-before-recording-human-only`, v61 → v63) and
 `states/nh/sources.md` carries the answered permission.
 
-`pnpm money:nh` writes `data/funding/state-money-nh-2026.json`: 28 non-federal
+`pnpm money:nh` writes `data/states/nh/funding/state-money-nh-2026.json`: 28 non-federal
 candidacies, 9 filed with reported totals, 19 sourced dated absences, 0 leads.
 
 **Still open here.** Rung 13, the Department's public-records path, remains

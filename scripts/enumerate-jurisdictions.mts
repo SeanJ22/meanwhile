@@ -3,7 +3,7 @@
  * AN ELECTION, BEFORE A READER NEEDS ONE.**
  * (Session C3, lane C, 2026-09-01. RULING 229, RULING 205, RULING 207.)
  *
- * Writes `data/jurisdictions/<state>.json`. **A GENERATED ARTIFACT** (RULING 92):
+ * Writes `data/states/<st>/jurisdictions/<st>.json`. **A GENERATED ARTIFACT** (RULING 92):
  * never hand-edited, and fixing this generator is not finished until the output
  * is regenerated and diffed (RULING 102).
  *
@@ -56,7 +56,6 @@ import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { today } from "./doc-dates.mjs";
 
 const ROOT = process.cwd();
-const OUT_DIR = join(ROOT, "data", "jurisdictions");
 const GENERATOR = "scripts/enumerate-jurisdictions.mts";
 const AS_OF = today();
 
@@ -78,7 +77,7 @@ const AZ_FILING_JURISDICTIONS_PATH = join(
 const AZ_FILING_CITATION =
   "tests/fixtures/campaign-finance/azsos-cfsdata2-Jurisdictions.txt — the Arizona Secretary of " +
   "State's OWN filing-jurisdiction table, retrieved from ftp://ftp.azsos.gov/cfsdata2/ (FTP RETR 226, " +
-  "2026-08-29, recorded in data/campaign-finance/az-pima-2026-held.json)";
+  "2026-08-29, recorded in data/states/az/campaign-finance/az-pima-2026-held.json)";
 const ARS_16_928 =
   "A.R.S. § 16-928, read 2026-08-26 from https://www.azleg.gov/ars/16/00928.htm and quoted verbatim " +
   "in data/campaign-finance/filing-regimes.json";
@@ -193,7 +192,7 @@ const AZ_COUNTY_ADAPTED = new Map<string, { routeId: string; url: string; citati
       routeId: "az-pima-easyvote-public-filings",
       url: "https://pimacountyaz.easyvotecampaignfinance.com/home/publicfilings",
       citation:
-        "data/campaign-finance/az-pima-2026-held.json — the EasyVote tenant API answered HTTP 200 on " +
+        "data/states/az/campaign-finance/az-pima-2026-held.json — the EasyVote tenant API answered HTTP 200 on " +
         "2026-08-29 with 138 filers and 680 filing records for Pima County",
     },
   ],
@@ -292,7 +291,7 @@ function azBallotSource(countyName: string): JurisdictionSource {
       "Arizona's statewide contests come from the Secretary of State and are already held; the " +
       "county-and-below contests are the county's own publication and are not.",
     citation:
-      "data/ballot/az-pima-2026.json — Pima County's certified list is held; no other Arizona county's is",
+      "data/states/az/ballot/az-pima-2026.json — Pima County's certified list is held; no other Arizona county's is",
   };
 }
 
@@ -319,7 +318,7 @@ function arizonaSources(unit: CensusUnit, govClass: JurisdictionClass): Jurisdic
       url: "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
       state: "ADAPTED",
       owed:
-        "ACQUIRED 2026-09-01 as a corpus at data/candidates/az-2026-sos-candidate-filings.json — 266 " +
+        "ACQUIRED 2026-09-01 as a corpus at data/states/az/candidates/az-2026-sos-candidate-filings.json — 266 " +
         "candidacies across 76 contests, the Secretary's complete applicable universe for the offices " +
         "he is the filing officer for (federal congressional, statewide executive, legislative). WHAT " +
         "IS STILL OWED IS A DIFFERENT RECORD, and it is the 15 county rows below: county, municipal, " +
@@ -328,7 +327,7 @@ function arizonaSources(unit: CensusUnit, govClass: JurisdictionClass): Jurisdic
         "nominees, or nonpartisan and judicial offices — each an absence from THIS DOCUMENT and never " +
         "from the ballot.",
       citation:
-        "data/candidates/az-2026-sos-candidate-filings.json — HTTP 200, 183,097 B, last-modified " +
+        "data/states/az/candidates/az-2026-sos-candidate-filings.json — HTTP 200, 183,097 B, last-modified " +
         "2026-03-31, sha256 a13d2a82f83b52206d3697a840382403b1c3d5cb6c80481e383b42d360669016, read " +
         "2026-09-01. Extracted twice by independent mechanisms, both returning 266 rows; " +
         "`pnpm acquire:az-sos-candidates` re-runs it and tests/az-sos-candidate-filings.test.ts " +
@@ -450,7 +449,7 @@ function newHampshireSources(unit: CensusUnit, govClass: JurisdictionClass): Jur
       owed:
         "find this government's certified candidate and contest publication. The state list is held; the " +
         "local list is not.",
-      citation: "data/ballot/nh-merrimack-2026.json — one county's certified list is held; no other's is",
+      citation: "data/states/nh/ballot/nh-merrimack-2026.json — one county's certified list is held; no other's is",
     });
   }
   const own = ownSiteSource(unit);
@@ -489,7 +488,7 @@ function newJerseySources(unit: CensusUnit, govClass: JurisdictionClass): Jurisd
       owed:
         "acquire this county clerk's certified candidate and contest list for the applicable cycle. " +
         "Morris County's is held; no other New Jersey county's is.",
-      citation: "data/ballot/nj-morris-2026.json",
+      citation: "data/states/nj/ballot/nj-morris-2026.json",
     });
   }
   const own = ownSiteSource(unit);
@@ -791,7 +790,6 @@ function build(plan: StatePlan): JurisdictionRegistry {
 /* ------------------------------------------------------------------- main */
 
 const DRY = process.argv.includes("--dry");
-if (!existsSync(OUT_DIR)) mkdirSync(OUT_DIR, { recursive: true });
 
 console.log(`jurisdictions:enumerate · as of ${AS_OF}\n`);
 for (const plan of PLANS) {
@@ -829,10 +827,12 @@ for (const plan of PLANS) {
   for (const d of registry.disagreements) {
     console.log(`      DISAGREEMENT — ${d.about}: ${d.counts.map((c) => `${c.count} (${c.source})`).join(" vs ")}`);
   }
-  const out = join(OUT_DIR, `${plan.code.toLowerCase()}.json`);
+  const directory = join(ROOT, "data", "states", plan.code.toLowerCase(), "jurisdictions");
+  const out = join(directory, `${plan.code.toLowerCase()}.json`);
   if (DRY) {
     console.log(`      --dry: nothing written. Would write ${out}`);
   } else {
+    if (!existsSync(directory)) mkdirSync(directory, { recursive: true });
     writeFileSync(out, `${JSON.stringify(registry, null, 1)}\n`, "utf8");
     console.log(`      wrote ${out}`);
   }

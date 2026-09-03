@@ -1,0 +1,164 @@
+{
+  "schemaVersion": 1,
+  "state": "AZ",
+  "source": {
+    "baseSha": "3f9a138fd39f6160659329e17c496d2dd99cee00",
+    "sourceSha256": "fb2740b0de3e8ecf0e625befdd3d59cba020b51d7b3fd22d2b380ec5f16cce0e",
+    "recordsSha256": "7b2da6ff3c1486cb08cdac21c684811f616fba846ae04f899051f7a3c649111a"
+  },
+  "commentary": [
+    "/**\n * **THE CENTRAL ARIZONA WATER CONSERVATION DISTRICT BOARD, WIRED**\n * (2026-08-27, the ask-entity session.)\n *\n * Fifteen directly elected directors, read from the district's own board pages\n * on 2026-08-27. This is the body that taxes every parcel in Pima County —\n * Resolution 2026-43 levies its ad valorem secondary at 0.1000 and its water\n * storage secondary at 0.0400 — and until this file it rendered NO members to\n * a reader at all.\n *\n * ## Why it rendered nobody, and why that was the right failure\n *\n * It used to render the FIVE PIMA COUNTY SUPERVISORS, taken by a geographic\n * fallback from the division this body hangs off (`county:pima`). That was a\n * false claim about who governs a reader, and it was corrected by removing the\n * fallback — which left an honest emptiness in its place. `lib/registry/\n * body-composition.ts` holds that story.\n *\n * ## Why it stayed empty afterwards, and why that was NOT right\n *\n * The roster was verified once before and not wired, because the board's\n * PARTISANSHIP had not been sourced from an election authority. That coupled\n * two independent facts: **who sits on the body** (verified, from the body's\n * own current publication) and **whether its seats carry a party** (genuinely\n * unknown). CLAUDE.md is explicit that collection state never governs display\n * and that there is no completeness bar — so fifteen sourced people were held\n * back from a reader by an orthogonal unknown.\n *\n * They are separated here. Membership is integrated with its provenance;\n * partisanship stays `UNDETERMINED`, renders nothing, and remains an open\n * work item. **No party is invented, and silence is not read as nonpartisan.**\n *\n * ## Provenance, and what is read rather than inferred\n *\n * Each member has their own page under `/board/board-members/<name>/`, and\n * each page states the member's ROLE and COUNTY in its own heading — \"PRESIDENT\n * - MARICOPA\", \"Secretary - PIMA\", \"Board Member - Pima\". Both are read off\n * that heading. Nothing here is derived from a name, a photograph or a search\n * result.\n *\n * The county split the pages produce is **Maricopa 10, Pima 4, Pinal 1**, which\n * is exactly the statutory composition of this board — an independent check\n * that the fifteen pages were read correctly and that none was missed.\n *\n * This also CORRECTS a note in `curated-bodies.ts` written from an earlier\n * read, which recorded that only three members were confirmed Pima and that\n * \"four members' pages do not state a county\". Every one of the fifteen pages\n * states a county today. The fourth Pima member is Justin Manuel.\n *\n * ## The four Pima seats\n *\n * All four Pima directors trace to the 3 November 2020 election and six-year\n * terms — Mark Taylor's page says so outright (\"His term expires December 31,\n * 2026\") — with Justin Manuel appointed by Governor Hobbs in May 2023 to fill\n * that term. So four Pima seats fall vacant on 2026-12-31. Whether, and how,\n * they appear on the 2026 ballot is an ELECTION AUTHORITY question and is\n * tracked separately (NH244); nothing about the ballot is asserted from this\n * roster, and a sitting director is never treated as a candidate.\n */",
+    "/** One member's own page — the record each row's role and county is read from. */",
+    "/*\n     * **NONPARTISAN, BY STATUTE — closed the same day it was opened, from the\n     * strongest instrument there is.**\n     *\n     * This roster shipped `UNDETERMINED` a few hours earlier, because the\n     * district's own pages state role and county for every member and party for\n     * none — which is a finding about the PAGES and settles nothing about the\n     * SEATS. The record that settles seats was then found where M62's own rule\n     * says to look FIRST: *\"a local office is partisan or nonpartisan by law or\n     * charter FIRST, and only a partisan office gets a party.\"*\n     *\n     * **A.R.S. § 48-3709(B)**, read verbatim from the Legislature on\n     * 2026-08-27: *\"The names of candidates for election to the board of\n     * directors of a district shall be included on the general election ballot\n     * of the county in which the candidate resides, WITHOUT PARTY DESIGNATION,\n     * and the candidates receiving the highest number of votes for the number\n     * of directors to be elected from such county shall be declared elected.\"*\n     *\n     * That is law rather than an inference from a silent page, and it is a\n     * stronger source than the certified canvasses M62 used for the twelve\n     * rosters before this one — those established partisanship from what the\n     * election authority PRINTED; this establishes it from what the statute\n     * REQUIRES. Nothing renders a party here, and now nothing should.\n     */"
+  ],
+  "records": {
+    "AZ_CAWCD_ROSTERS": [
+      {
+        "bodyId": "ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district",
+        "bodyName": "Central Arizona Water Conservation District Board of Directors",
+        "sourceUrl": "https://www.cap-az.com/board/board-members/",
+        "sourceOrg": "Central Arizona Water Conservation District",
+        "collectedAt": "2026-08-27",
+        "partisanship": "NONPARTISAN",
+        "partisanshipSourceUrl": "https://www.azleg.gov/ars/48/03709.htm",
+        "members": [
+          {
+            "id": "roster:cawcd#goddard",
+            "name": "Terry Goddard",
+            "officeTitle": "Board President",
+            "termNote": "Represents Maricopa County. Term expires December 31, 2030",
+            "email": null,
+            "phone": null,
+            "websiteUrl": "https://www.cap-az.com/board/board-members/terry-goddard/"
+          },
+          {
+            "id": "roster:cawcd#arboleda",
+            "name": "Alexandra Arboleda",
+            "officeTitle": "Board Vice President",
+            "termNote": "Represents Maricopa County",
+            "email": null,
+            "phone": null,
+            "websiteUrl": "https://www.cap-az.com/board/board-members/alexandra-arboleda/"
+          },
+          {
+            "id": "roster:cawcd#cesare",
+            "name": "Karen Cesare",
+            "officeTitle": "Board Secretary",
+            "termNote": "Represents Pima County. Term expires December 31, 2026",
+            "email": null,
+            "phone": null,
+            "websiteUrl": "https://www.cap-az.com/board/board-members/karen-cesare/"
+          },
+          {
+            "id": "roster:cawcd#aguilar",
+            "name": "Ylenia Aguilar",
+            "officeTitle": "Board Member",
+            "termNote": "Represents Maricopa County",
+            "email": null,
+            "phone": null,
+            "websiteUrl": "https://www.cap-az.com/board/board-members/ylenia-aguilar/"
+          },
+          {
+            "id": "roster:cawcd#atkins",
+            "name": "Lisa A. Atkins",
+            "officeTitle": "Board Member",
+            "termNote": "Represents Maricopa County. Term expires December 31, 2030",
+            "email": null,
+            "phone": null,
+            "websiteUrl": "https://www.cap-az.com/board/board-members/lisa-a-atkins/"
+          },
+          {
+            "id": "roster:cawcd#fischer",
+            "name": "Rudy Fischer",
+            "officeTitle": "Board Member",
+            "termNote": "Represents Maricopa County",
+            "email": null,
+            "phone": null,
+            "websiteUrl": "https://www.cap-az.com/board/board-members/rudy-fischer/"
+          },
+          {
+            "id": "roster:cawcd#graff",
+            "name": "Benjamin Graff",
+            "officeTitle": "Board Member",
+            "termNote": "Represents Maricopa County",
+            "email": null,
+            "phone": null,
+            "websiteUrl": "https://www.cap-az.com/board/board-members/benjamin-graff/"
+          },
+          {
+            "id": "roster:cawcd#jacobs",
+            "name": "Pat Jacobs",
+            "officeTitle": "Board Member",
+            "termNote": "Represents Pima County. Term expires December 31, 2026",
+            "email": null,
+            "phone": null,
+            "websiteUrl": "https://www.cap-az.com/board/board-members/pat-jacobs/"
+          },
+          {
+            "id": "roster:cawcd#macre",
+            "name": "Heather Macre",
+            "officeTitle": "Board Member",
+            "termNote": "Represents Maricopa County",
+            "email": null,
+            "phone": null,
+            "websiteUrl": "https://www.cap-az.com/board/board-members/heather-macre/"
+          },
+          {
+            "id": "roster:cawcd#manuel",
+            "name": "Justin Manuel",
+            "officeTitle": "Board Member",
+            "termNote": "Represents Pima County. Appointed by Governor Katie Hobbs in May 2023",
+            "email": null,
+            "phone": null,
+            "websiteUrl": "https://www.cap-az.com/board/board-members/justin-manuel/"
+          },
+          {
+            "id": "roster:cawcd#miller",
+            "name": "Stephen Miller",
+            "officeTitle": "Board Member",
+            "termNote": "Represents Pinal County",
+            "email": null,
+            "phone": null,
+            "websiteUrl": "https://www.cap-az.com/board/board-members/stephen-miller/"
+          },
+          {
+            "id": "roster:cawcd#monize",
+            "name": "Amanda Monize",
+            "officeTitle": "Board Member",
+            "termNote": "Represents Maricopa County",
+            "email": null,
+            "phone": null,
+            "websiteUrl": "https://www.cap-az.com/board/board-members/amanda-monize/"
+          },
+          {
+            "id": "roster:cawcd#seago",
+            "name": "Barbara Seago",
+            "officeTitle": "Board Member",
+            "termNote": "Represents Maricopa County",
+            "email": null,
+            "phone": null,
+            "websiteUrl": "https://www.cap-az.com/board/board-members/barbara-seago/"
+          },
+          {
+            "id": "roster:cawcd#taylor",
+            "name": "Mark Taylor",
+            "officeTitle": "Board Member",
+            "termNote": "Represents Pima County. Term expires December 31, 2026",
+            "email": null,
+            "phone": null,
+            "websiteUrl": "https://www.cap-az.com/board/board-members/mark-taylor/"
+          },
+          {
+            "id": "roster:cawcd#tornquist",
+            "name": "April Tornquist",
+            "officeTitle": "Board Member",
+            "termNote": "Represents Maricopa County",
+            "email": null,
+            "phone": null,
+            "websiteUrl": "https://www.cap-az.com/board/board-members/april-tornquist/"
+          }
+        ]
+      }
+    ]
+  }
+}

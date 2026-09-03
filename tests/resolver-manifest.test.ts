@@ -1,3 +1,4 @@
+import { geometryFiles, geometryPath } from "../lib/holdings/files.ts";
 /**
  * **P-003 · THE RESOLVER READS A MANIFEST, AND THE MANIFEST ACCOUNTS FOR
  * EVERY FILE.** (Performance audit of `336a3eb`, remediated 2026-08-24.)
@@ -15,7 +16,7 @@
  * shape, and it fails the build.
  */
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -24,7 +25,6 @@ import { COVERED_STATES } from "../lib/coverage/states.ts";
 import { boundingBoxOf, contains, type GeoFeature } from "../lib/registry/resolve.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const GEO = join(ROOT, "public", "geo");
 
 const manifest = JSON.parse(
   readFileSync(join(ROOT, "data", "derived", "resolver-geometry.json"), "utf8"),
@@ -35,7 +35,7 @@ const manifest = JSON.parse(
   coveredStateFips: string[];
 };
 
-const onDisk = readdirSync(GEO).filter((n) => n.endsWith(".geojson")).sort();
+const onDisk = geometryFiles(ROOT);
 
 test("P-003 · every .geojson is either read or excluded WITH A REASON", () => {
   assert.ok(onDisk.length >= 20, `only ${onDisk.length} geometry files — this would pass blind`);
@@ -58,12 +58,12 @@ test("P-003 · every .geojson is either read or excluded WITH A REASON", () => {
 
 test("P-003 · the national congressional file is excluded, and its splits are all present", () => {
   const excluded = manifest.excluded.map((e) => e.file);
-  assert.ok(excluded.includes("cd119.geojson"), "the 1.63 MB national file is being loaded again");
+  assert.ok(excluded.includes(geometryPath("cd119.geojson")), "the 1.63 MB national file is being loaded again");
 
   // The whole justification for excluding it: every covered state has its own.
   for (const state of COVERED_STATES) {
     assert.ok(
-      manifest.files.includes(`cd119-${state.fips}.geojson`),
+      manifest.files.includes(geometryPath(`cd119-${state.fips}.geojson`)),
       `cd119-${state.fips}.geojson is missing, so dropping the national file LOSES ${state.usps}`,
     );
   }
@@ -75,7 +75,7 @@ test("P-003 · the national congressional file is excluded, and its splits are a
 });
 
 test("P-003 · the state outline is still excluded, for the reason it always was", () => {
-  const row = manifest.excluded.find((e) => e.file === "state-outlines.geojson");
+  const row = manifest.excluded.find((e) => e.file === geometryPath("state-outlines.geojson"));
   assert.ok(row, "a generalized outline is back in the resolver");
   assert.match(row.reason, /never a governance boundary/);
 });
@@ -105,7 +105,7 @@ test("P-003 · the server reads the manifest and no longer lists a directory", (
  */
 test("P-003 · a point inside a feature is inside its bounding box", () => {
   const features: GeoFeature[] = JSON.parse(
-    readFileSync(join(GEO, "cousub-33.geojson"), "utf8"),
+    readFileSync(join(ROOT, geometryPath("cousub-33.geojson")), "utf8"),
   ).features;
   assert.ok(features.length > 50, `only ${features.length} features read`);
 
@@ -136,7 +136,7 @@ test("P-003 · the box is a PREFILTER, never the answer", () => {
   // A point inside the box and outside the polygon must still resolve to
   // nothing. This is the case a box-only implementation would get wrong.
   const features: GeoFeature[] = JSON.parse(
-    readFileSync(join(GEO, "cousub-33.geojson"), "utf8"),
+    readFileSync(join(ROOT, geometryPath("cousub-33.geojson")), "utf8"),
   ).features;
 
   // An L-shaped-enough town: find one whose box area is much larger than the

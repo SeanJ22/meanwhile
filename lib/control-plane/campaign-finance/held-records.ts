@@ -13,7 +13,7 @@
  * candidacies; a reported receipts and disbursements total exists for all four.
  *
  * **LOCAL — `ballot-az-pima:prop-423`.** Read out of
- * `data/campaign-finance/az-pima-2026-held.json`, acquired 2026-08-29 from the
+ * `data/states/az/campaign-finance/az-pima-2026-held.json`, acquired 2026-08-29 from the
  * Pima County filing officer's own portal. **It contains no money.** 138 filers
  * and 680 filing records were retrieved; the filing BODIES answered HTTP 401,
  * so not one contribution row, expenditure row or summary total for any Pima
@@ -58,7 +58,7 @@ import type { HeldFilingUniverse } from "./answers.ts";
 
 /* ── The Arizona local acquisition ────────────────────────────────────────── */
 
-export const AZ_PIMA_HELD_PATH = ["data", "campaign-finance", "az-pima-2026-held.json"] as const;
+export const AZ_PIMA_HELD_PATH = ["data", "states", "az", "campaign-finance", "az-pima-2026-held.json"] as const;
 
 /*
  * READ THROUGH process.cwd(), AS A LITERAL — measured, not style (2026-08-30).
@@ -72,7 +72,7 @@ export const AZ_PIMA_HELD_PATH = ["data", "campaign-finance", "az-pima-2026-held
  * spread path variable must not come back: any variable in the path re-arms
  * the whole-project trace.
  */
-const AZ_PIMA_FILE = join(process.cwd(), "data", "campaign-finance", "az-pima-2026-held.json");
+const AZ_PIMA_FILE = join(process.cwd(), "data", "states", "az", "campaign-finance", "az-pima-2026-held.json");
 export const AZ_PIMA_CITATION = AZ_PIMA_HELD_PATH.join("/");
 
 export interface AzPimaFilingIndexRow {
@@ -273,12 +273,10 @@ export function azPimaMoneyGap(subjectId: string): {
 /* ── The Arizona TRANSACTION acquisition — the route that broke the 401 ───── */
 
 export const AZ_PIMA_TRANSACTIONS_PATH = [
-  "data",
-  "campaign-finance",
-  "az-pima-2026-transactions.json",
+  "data", "states", "az", "campaign-finance", "az-pima-2026-transactions.json",
 ] as const;
 
-const AZ_PIMA_TX_FILE = join(process.cwd(), "data", "campaign-finance", "az-pima-2026-transactions.json");
+const AZ_PIMA_TX_FILE = join(process.cwd(), "data", "states", "az", "campaign-finance", "az-pima-2026-transactions.json");
 export const AZ_PIMA_TX_CITATION = AZ_PIMA_TRANSACTIONS_PATH.join("/");
 
 export interface AzPimaContributionRow {

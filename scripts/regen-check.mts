@@ -6,7 +6,7 @@
  *
  * *Has any generator been fixed without its artifact being regenerated?*
  *
- * That question had no instrument. `data/hunt/nj-morris-municipal-sites.json`
+ * That question had no instrument. `data/states/nj/hunt/nj-morris-municipal-sites.json`
  * pointed five municipalities at the wrong government's website while its
  * generator was already correct — somebody had done the RULING 92 thing and
  * stopped, and every downstream hunt read the stale output as current.
@@ -110,7 +110,7 @@ const by = (v: string) => checks.filter((c) => c.verdict === v);
  * The digest ledger is forward-looking: it catches the NEXT generator fix that
  * ships without a regeneration. It cannot see the ones already in the tree,
  * because there is no earlier digest to compare against — and
- * `data/hunt/nj-morris-municipal-sites.json` was exactly that shape.
+ * `data/states/nj/hunt/nj-morris-municipal-sites.json` was exactly that shape.
  *
  * Git can see it. If any file in a generator's source closure was last
  * committed AFTER its artifact was last committed, the generator was fixed and
@@ -123,15 +123,20 @@ const by = (v: string) => checks.filter((c) => c.verdict === v);
  * right verdict for a tool to print, because the only way to KNOW is to
  * regenerate and diff, which is what the ruling asks for.
  */
+const commitTimes = new Map<string, string | null>();
 function lastCommit(path: string): string | null {
+  if (commitTimes.has(path)) return commitTimes.get(path)!;
   try {
     const out = execSync(`git log -1 --format=%cI -- "${path}"`, {
       cwd: ROOT,
       encoding: "utf8",
       stdio: ["ignore", "pipe", "ignore"],
     }).trim();
-    return out.length > 0 ? out : null;
+    const result = out.length > 0 ? out : null;
+    commitTimes.set(path, result);
+    return result;
   } catch {
+    commitTimes.set(path, null);
     return null;
   }
 }

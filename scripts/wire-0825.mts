@@ -59,8 +59,8 @@ const ROOT = join(import.meta.dirname, "..");
 const WRITE = process.argv.includes("--write");
 
 const LINKS = join(ROOT, "data", "ballot", "candidate-links-2026.json");
-const ADJUDICATION = join(ROOT, "data", "hunt", "lead-adjudication-07866-0825.json");
-const PARTY_PAGES = join(ROOT, "data", "hunt", "nj-morris-party-pages-0825.json");
+const ADJUDICATION = join(ROOT, "data", "states", "nj", "hunt", "lead-adjudication-07866-0825.json");
+const PARTY_PAGES = join(ROOT, "data", "states", "nj", "hunt", "nj-morris-party-pages-0825.json");
 
 for (const f of [LINKS, ADJUDICATION, PARTY_PAGES]) {
   if (!existsSync(f)) {
@@ -83,7 +83,7 @@ interface LinksFile {
 }
 
 const linksFile = JSON.parse(readFileSync(LINKS, "utf8")) as LinksFile;
-const ballot = JSON.parse(readFileSync(join(ROOT, "data", "ballot", "nj-morris-2026.json"), "utf8")) as {
+const ballot = JSON.parse(readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8")) as {
   candidacies: { id: string; givenName: string; familyName: string; partyLabel: string | null }[];
 };
 const onBallot = new Map(ballot.candidacies.map((c) => [c.id, c]));

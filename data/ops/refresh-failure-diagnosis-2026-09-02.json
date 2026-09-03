@@ -15,7 +15,7 @@
       "exitCode": 1,
       "precedingSteps": {
         "Refresh every due source": "success — meetings (also covers 2026-09-01), nj-filing (also covers 2026-09-01), dotgov (CATCH-UP for 2026-09-01) ran clean; 3 clean, 0 failed, 2 not due; refresh_exit=0",
-        "Diff the governed artifacts": "success — changed=true; 5 files changed, 3070 insertions(+), 3234 deletions(-): data/ballot/nj-morris-2026-contacts.json, data/ballot/nj-morris-2026.json, data/dotgov/snapshot.json, data/meetings-snapshot.json, data/questionnaire/invitations-nj-morris-2026.json",
+        "Diff the governed artifacts": "success — changed=true; 5 files changed, 3070 insertions(+), 3234 deletions(-): data/states/nj/ballot/nj-morris-2026-contacts.json, data/states/nj/ballot/nj-morris-2026.json, data/dotgov/snapshot.json, data/meetings-snapshot.json, data/questionnaire/invitations-nj-morris-2026.json",
         "Unchanged — stating what was skipped and why": "skipped",
         "Install the browser the gate needs": "success",
         "Assert the browser landed where the suite looks": "success",
@@ -85,9 +85,9 @@
           "message": "build-nj-rosters.mts: declares 2026-08-28, git says 2026-09-01",
           "source": null,
           "classification": "c",
-          "demonstratedCause": "Commit 7514e68e (2026-09-01, 'The Wikipedia routes were disallowed for as long as they existed') re-walked data/hunt/wikipedia-nj-morris.json and moved its walkedAt to 2026-09-01 without moving the readOn declaration in scripts/build-nj-rosters.mts. build-check.yml's gates job checks out at depth 1, where verifyAgainstGit returns UNVERIFIABLE and the test skips; refresh-daily.yml checks out with fetch-depth 0 (push-main.mjs must rebase), where the same test runs and reports DISAGREES. The defect was on main from 7514e68e onward and only the scheduled refresh could see it.",
+          "demonstratedCause": "Commit 7514e68e (2026-09-01, 'The Wikipedia routes were disallowed for as long as they existed') re-walked data/states/nj/hunt/wikipedia-nj-morris.json and moved its walkedAt to 2026-09-01 without moving the readOn declaration in scripts/build-nj-rosters.mts. build-check.yml's gates job checks out at depth 1, where verifyAgainstGit returns UNVERIFIABLE and the test skips; refresh-daily.yml checks out with fetch-depth 0 (push-main.mjs must rebase), where the same test runs and reports DISAGREES. The defect was on main from 7514e68e onward and only the scheduled refresh could see it.",
           "evidence": [
-            "git log -3 -- data/hunt/wikipedia-nj-morris.json: 7514e68e 2026-09-01, d2c5dc56 2026-08-28, 9726d6d0 2026-08-25",
+            "git log -3 -- data/states/nj/hunt/wikipedia-nj-morris.json: 7514e68e 2026-09-01, d2c5dc56 2026-08-28, 9726d6d0 2026-08-25",
             "the other three SOURCE_FILES last moved 2026-08-25 and 2026-08-28",
             "judgeStamp('2026-08-28','2026-09-01') is DISAGREES — the tolerance is one day, this is four",
             "this worktree is a shallow clone (git rev-parse --is-shallow-repository = true), so the test skips here exactly as it does on the PR gate; the failing assertion is the run's own log"

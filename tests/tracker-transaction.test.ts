@@ -108,8 +108,11 @@ test("EVERY failure is reported, never the first (RULING 164)", () => {
 
 const ARTIFACTS = [
   "docs/tracker-working.csv",
+  "docs/tracker-resolved.csv",
   "docs/tracker-opened.json",
   "docs/tracker.md",
+  "docs/tracker-owner-view.md",
+  "docs/tracker-reconciliation.json",
   "docs/log.md",
   "docs/tracker.xlsx",
 ];
@@ -196,6 +199,7 @@ test("THE WRITER: recording a synthetic failed workflow lands all five parts tog
     for (const [a, buf] of backup) {
       const p = join(ROOT, a);
       if (buf !== null) writeFileSync(p, buf);
+      else if (existsSync(p)) rmSync(p, { force: true });
     }
     // `rmSync` directly. The first version shelled out to `node -e` with a
     // CommonJS loader call inside it, which R46 correctly refuses: this package
@@ -207,6 +211,13 @@ test("THE WRITER: recording a synthetic failed workflow lands all five parts tog
 
   // AND THE FIXTURE IS GONE. Asserted after the restore, because a test that
   // leaves an invented row in a committed store is worse than no test.
+  // The owner and reconciliation views are writer outputs too; leaving them
+  // behind polluted canonical readback and invalidated clean-head gate evidence.
+  for (const [artifact, before] of backup) {
+    const path = join(ROOT, artifact);
+    if (before === null) assert.ok(!existsSync(path), `${artifact} survived despite being absent before the test`);
+    else assert.ok(readFileSync(path).equals(before), `${artifact} was not restored byte-for-byte`);
+  }
   const restored = readFileSync(join(ROOT, "docs/tracker-working.csv"), "utf8");
   assert.ok(
     !restored.includes("SYNTHETIC — zzz-nonexistent-workflow.yml"),

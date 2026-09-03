@@ -52,6 +52,7 @@ import {
 } from "../lib/ops/deploy-key-ssh.ts";
 import { classifyPushPaths } from "../lib/ops/push-allowlist.ts";
 import { classifyRejection } from "../lib/ops/push-rejection.ts";
+import { guardGeneratedFreshness } from "../lib/ops/generated-freshness.ts";
 
 const DEFAULT_ATTEMPTS = 5;
 
@@ -434,6 +435,25 @@ if (invokedDirectly) {
   // a gate is how the gate stops meaning anything.
   const guard = guardPushPaths({ cwd, workflowId: opt(argv, "workflow"), remote, branch });
   if (guard.verdict !== "allowed") process.exit(1);
+
+  // THE GENERATED-ARTIFACT / TEMPORAL STALENESS GUARD (2026-09-03).
+  //
+  // A bot may not advance `main` to a revision whose own deterministic
+  // generated-artifact invariants are stale — the failure that let a stale
+  // state-manifest ride onto `main` under the deploy-key bypass and then
+  // propagate through three more bot commits. Like the path guard above, it
+  // runs at the ONE door every pusher shares, and there is no flag that skips
+  // it. It is read-only (each registered PURE generator's `checkCommand`
+  // re-derives from committed inputs and compares; nothing is written), so it
+  // cannot itself corrupt the tree it refuses.
+  const freshness = guardGeneratedFreshness({ cwd });
+  if (freshness.verdict !== "fresh") {
+    console.error(
+      "push-main: the commit made by this run has NOT landed on main — the tree it would " +
+        "push carries a stale generated artifact. This run is red on purpose.",
+    );
+    process.exit(1);
+  }
 
   const result = pushMain({
     cwd,

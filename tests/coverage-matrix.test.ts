@@ -4,7 +4,7 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { today } from "../scripts/doc-dates.mjs";
-import { KELLY_FIELDS, STUCK_MOVES, type ArguedAbsence } from "../lib/hunt/kelly-depth.ts";
+import { KELLY_FIELDS, STUCK_MOVES, type ArguedAbsence, type FieldState } from "../lib/hunt/kelly-depth.ts";
 import {
   ASYMMETRY_THRESHOLD,
   CELL_STATES,
@@ -67,6 +67,7 @@ test("every column carries a cell for every candidate — no silent blanks", () 
 });
 
 test("an ARGUED absence carries its expiry, because it is a measurement with a shelf life", () => {
+  {
   // The current corpus can correctly have no unexpired absences. Exercise the
   // shared protocol/row/cell path at fixed instants without renewing civic data.
   const candidacyId = "fixture:coverage-matrix:absence";
@@ -106,6 +107,54 @@ test("an ARGUED absence carries its expiry, because it is a measurement with a s
     assert.equal(cell.state, "OWED", "an expired absence cannot remain an ABSENT matrix cell");
     assert.match(cell.source, /STALE.*expired 2026-09-02/);
     assert.equal(cell.expiresOn, undefined);
+  }
+
+  }
+  {
+  /*
+   * THE INVARIANT IS PROVEN FROM A FIXTURE, NOT FROM WHATEVER THE LIVE CORPUS
+   * HOLDS TODAY. (2026-09-03, R5 — Daily Refresh truth & reliability.)
+   *
+   * The fact under test is the MAPPING: an `ARGUED_ABSENT` reading becomes an
+   * `ABSENT` cell that carries an expiry, and that expiry is after the date the
+   * absence was made. That mapping is `cellFromKelly`'s, and it must be
+   * exercised on every run.
+   *
+   * The earlier form of this test asserted `checked > 0` over the live 07866
+   * corpus — "at least one argued absence must currently stand". But an argued
+   * absence is a measurement with a seven-day shelf life
+   * (`CANDIDATE_FIELD_EXPIRY_DAYS`), and the whole 07866 corpus was walked on
+   * one day (2026-08-26) and so expires on one day (2026-09-02). On 2026-09-03
+   * `absenceStands` correctly reports NONE standing, every field is OWED again
+   * (RULING 53), and the old assertion went red on the calendar with no defect
+   * in code or data — and, in exactly that state, stopped testing the mapping
+   * at all. Coupling a deterministic guard to time-expiring live data, and
+   * losing all coverage the moment the data legitimately empties, is the
+   * demonstrable defect; a fixture that never expires is the stronger guard.
+   */
+  const fixture: FieldState = { state: "ARGUED_ABSENT", at: "2026-01-01", expiresOn: "2026-01-08" };
+  const fixtureCell = cellFromKelly("verifiedPage", fixture, "2026-01-05");
+  assert.equal(fixtureCell.state, "ABSENT");
+  assert.ok(fixtureCell.expiresOn, "the mapped ABSENT cell carries no expiry");
+  assert.ok(fixtureCell.expiresOn! > fixtureCell.date, "an absence that expires before it was made");
+
+  // And every argued absence that CURRENTLY stands in the live corpus obeys the
+  // same rule. Zero standing is a legitimate state — the corpus expired and the
+  // fields are owed again — so this loop is deliberately NOT guarded by a
+  // nonzero count. It is a bonus check on real data, never the proof itself.
+  const inputs = loadKellyInputs(ROOT, ZIP);
+  const readings = kellyRows(inputs, TODAY);
+  for (const reading of readings) {
+    for (const field of KELLY_FIELDS) {
+      const state = reading.fields[field];
+      if (state.state !== "ARGUED_ABSENT") continue;
+      const cell = cellFromKelly(field, state, TODAY);
+      assert.equal(cell.state, "ABSENT");
+      assert.ok(cell.expiresOn, `${reading.subject}/${field} is absent with no expiry`);
+      assert.ok(cell.expiresOn! > cell.date, "an absence that expires before it was made");
+    }
+  }
+
   }
 });
 

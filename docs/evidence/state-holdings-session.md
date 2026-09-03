@@ -159,3 +159,25 @@ NOT EXPOSED. The three agents initially hit provider capacity limits, then resum
 under explicit, non-overlapping repair allocations. Only the integration owner
 runs the full gate set and merge. Terminal clock, wall-clock interval, final gate
 artifact, PR/merge SHA and observed HELD readback remain pending.
+
+## Local integration proof
+
+The repaired local production walk passed 443 executed checks with
+zero failures; 24 checks declared they could not run and none disappeared
+silently. The exact run, tested head, provenance and per-check outcomes are in
+`data/health/walk-runs/2026-09-02-02.json`. Local-session evidence does not activate promotion.
+
+The original walk had 9 failures across 3 cases, documented in
+`docs/evidence/state-holdings-walk-diagnosis.json`: ambiguous exact-name test
+selection, an address response whose original cause was not captured, and a
+card-opening step that could run before hydration. The corrected walk preserves
+the application assertions and records the response at the address interaction.
+A browser replay independently observed the NJ same-tab/revisit confirmations
+and the Vail funding control. No civic data or matching behavior was changed.
+
+Handoff preflight verified all 56 manifests without writing. Its other red items
+were the unpushed new branch, stale generated status views and the downstream
+Drive mirror, which the mutating shipping path updates. Current main remained
+`3f9a138` and its four GitHub checks were green; no other PR was open.
+
+The full shipping gate set and single merge are the remaining A1/A2 requirements.

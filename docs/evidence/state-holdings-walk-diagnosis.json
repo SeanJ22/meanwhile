@@ -81,7 +81,7 @@
     },
     "selectedPresentInNarrowAutocomplete": true,
     "plantedDuplicateRefused": true,
-    "browserVerification": "Pending repaired full walk; original ambiguous selection was correctly refused."
+    "browserVerification": "Repaired full walk passed the unique body scenario, including navigation and absence of a generated answer."
   },
   "address": {
     "fixture": {
@@ -112,5 +112,12 @@
     "browserObservation": "View Battlecard opened the Katie Hobbs dialog. Campaign money rendered Elect Katie Hobbs, Raised $11,109,720 and Spent $14,355,613 with the Arizona filing citation.",
     "repair": "Use the existing untilInteractive wait before the click burst; retain all count, classification, identity and named-total assertions."
   },
-  "classification": "BLOCKING verification-instrument corrections; no candidate, boundary, filing or routing truth changed."
+  "classification": "BLOCKING verification-instrument corrections; no candidate, boundary, filing or routing truth changed.",
+  "repairedWalk": {
+    "artifact": "data/health/walk-runs/2026-09-02-02.json",
+    "testedSha": "458cfa389c2de6994ada4a0a7a2cae36e508a46c",
+    "checksRan": 443,
+    "failures": 0,
+    "declaredCouldNotRun": 24
+  }
 }

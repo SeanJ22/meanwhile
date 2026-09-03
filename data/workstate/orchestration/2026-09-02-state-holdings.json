@@ -169,7 +169,8 @@
       "disposition": "READY_FOR_INTEGRATION",
       "concurrencyEvidence": [
         "Sole integration owner in fresh isolated worktree from current main; standing runner checkout never edited; no merge attempted while other lane edits were running",
-        "After all seven source lanes yielded, root serialized 52 import/reference files with 92 replacements. Distinct consumer paths keep every old holding path absent."
+        "After all seven source lanes yielded, root serialized 52 import/reference files with 92 replacements. Distinct consumer paths keep every old holding path absent.",
+        "Final bounded walk diagnoses were read-only worker outputs; root alone repaired the shared walk instrument and ran the local integration walk. Source implementation and all readbacks remained fixed."
       ],
       "declaredPostHoc": {
         "backfilledOn": "2026-09-02",

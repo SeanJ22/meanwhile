@@ -80,6 +80,24 @@ restructure, entangled with walk-all BAL25), ASK-25 (Ask live output
 measurement, needs ANTHROPIC_API_KEY). Resume points are in
 `data/feedback/sweeps/9.2.26.json`.
 
+## Merge status — HELD behind a pre-existing, unrelated red
+
+Local gates: **15 of 16 green** at the session head. Both builds (default +
+standalone), `test:bundle`, and every design guard this session added pass. The
+one failure is `tests/coverage-matrix.test.ts` → *"an ARGUED absence carries its
+expiry"*, failing at line 83 (`checked > 0`): **every argued-absence record on
+file has expired as of 2026-09-03 America/Phoenix** (RULING 53 — absences
+expire and must be re-hunted). This session touched no coverage/kelly/absence/
+data path; the failure is identical on clean `origin/main` today (its last green
+CI ran at 06:30Z = 2026-09-02 23:30 Phoenix, before the expiry boundary).
+
+So `main` is latently red today for a reason unrelated to this work, and it
+blocks **every** merge, not only this PR. This visual work is complete and green
+on its own and is **held**, not shipped. It may not be merged onto a red suite
+(RULING 77), and the red may not be cleared by weakening a guard this session
+does not own or by re-dating an expired absence without re-hunting (that would
+falsify a coverage claim — the transparency mandate forbids it).
+
 ## Classified discoveries (§25)
 
 - **DISC-PATH** — the brief named `feedback/SWEPT.md` as the gate witness. That
@@ -87,6 +105,13 @@ measurement, needs ANTHROPIC_API_KEY). Resume points are in
   witness of a sweep session's terminal state is
   `data/feedback/sweeps/<date>.json`. Confirmed by the author mid-session. Future
   gates should name the real artifact.
+- **DISC-COVERAGE-MATRIX-TIMEBOMB** — `tests/coverage-matrix.test.ts`'s argued-
+  absence guard turns `main` red on the calendar day the last argued absence
+  expires, with no code change (RULING 53 working as designed: an expired
+  absence needs re-hunting). Its resume is a data/coverage task, not visual:
+  re-hunt the expired argued-absence subject(s) for the pilot ZIP so a valid
+  argued absence is on file again, or the author's ruling on the guard. Until
+  then no PR can merge today. NEEDS_SEAN.
 
 ## The plain answer
 

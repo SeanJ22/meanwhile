@@ -165,6 +165,17 @@ export const PUSHER_PROFILES: readonly PusherProfile[] = [
           "the same run, machine-readable: per-source outcome, changed paths and next due day, written by " +
           "the orchestrator and finalised by the gate (2026-09-02). Another lane reads it.",
       },
+      {
+        path: "docs/states/",
+        why:
+          "the state-holdings manifests are PURE generated views of the data the refresh writes " +
+          "(scripts/state-manifest.mts) — a candidate ballot under data/ feeds docs/states/<xx>.md. Since " +
+          "2026-09-03 the gate regenerates any stale manifest from the final tree before the commit, so the " +
+          "refresh can LAND a candidate change instead of having it refused forever for want of a regenerated " +
+          "manifest; and the push-door staleness guard refuses any push whose committed manifest is stale, so " +
+          "this grant can only ever carry a manifest that is byte-current against its committed inputs. " +
+          "docs/states is non-shipping and costs no build.",
+      },
     ],
   },
   {

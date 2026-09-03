@@ -296,13 +296,21 @@ jobs:
         env:
           PUSH_DEPLOY_KEY: ${{ secrets.PUSH_DEPLOY_KEY }}
         run: |
-          if git diff --quiet -- data/; then
+          # `docs/states/` is in the diff check and the add list because the gate
+          # regenerates any stale PURE state-manifest from the final survivor tree
+          # before this step (refresh-gate.mts -> regenerateStaleDependents). A
+          # candidate ballot change under data/ feeds docs/states/<xx>.md, and a
+          # committed-but-stale manifest would be refused at the push door; so the
+          # regenerated manifest must land in the SAME commit as the data that
+          # moved it. docs/ is non-shipping (lib/ops/deploy-paths.ts) — this costs
+          # no build.
+          if git diff --quiet -- data/ docs/states/; then
             echo "unchanged at commit time — nothing to commit"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/ docs/refresh-run.md docs/refresh-run.json
+          git add data/ docs/states/ docs/refresh-run.md docs/refresh-run.json
           git commit -m "Daily refresh: $(date -u +%Y-%m-%dT%H:%MZ)"
           node scripts/push-main.mjs --workflow refresh-daily
 
@@ -316,6 +324,34 @@ jobs:
           echo "One or more sources did not land this run. Their names are in the step log above and in docs/refresh-run.json (outcome ROUTE_UNREAD, with the reason)."
           echo "refresh exit: ${{ steps.refresh.outputs.refresh_exit }} · gate refused: ${{ steps.attribute.outputs.gate_refused }} · refused sources: ${{ steps.attribute.outputs.refused_sources }}"
           exit 1
+
+      # THE CANONICAL EXECUTION RESULT, BOUND TO THIS RUN (2026-09-03, R1).
+      #
+      # Every execution — green, degraded or refused — emits ONE record keyed to
+      # (repository, run id, run attempt), binding the run record the machine
+      # just wrote to this run's GitHub identity, its starting head SHA and the
+      # survivor commit it actually landed on main. It runs `always()` so a
+      # FAILED run has a canonical account of itself too, which is the run the
+      # standing watch most needs to reconcile before it explains anything. The
+      # record is UPLOADED as an artifact GitHub keys to this exact run and
+      # attempt — immutable, per-run, and downloadable by the watch — rather than
+      # committed, because a per-run commit is the ceremonial commit RULING 124
+      # ended. `WTP_RUN_ID` is not set here: this step writes to the runner temp
+      # and makes no network request that could count as reader signal.
+      - name: Emit the canonical execution result
+        if: always()
+        env:
+          GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: corepack pnpm exec tsx scripts/emit-execution-result.mts --out "${{ runner.temp }}/exec-result"
+
+      - name: Upload the execution result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: refresh-execution-result-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/exec-result/**/*.json
+          if-no-files-found: warn
+          retention-days: 90
 
       # ITEM 8a (2026-08-26) — EVERY JOB NAMES ITS OWN CAUSE BEFORE IT DIES.
       #

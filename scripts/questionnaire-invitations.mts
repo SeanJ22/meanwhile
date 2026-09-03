@@ -5,7 +5,14 @@
  * ```
  * corepack pnpm questionnaire:invitations            # report only
  * corepack pnpm questionnaire:invitations --write    # write the artifact
+ * corepack pnpm questionnaire:invitations --check    # read-only staleness check
  * ```
+ *
+ * `--check` builds the artifact in memory and compares it byte-for-byte against
+ * the committed file, exiting non-zero when they differ. It writes nothing, so
+ * a freshness guard (the push-door staleness guard, `lib/ops/generated-freshness.ts`)
+ * can ask "is the committed invitation list current against its inputs?" without
+ * mutating the tree — the same contract `pnpm state-manifest --check` offers.
  *
  * ## What it produces, and what it deliberately does not
  *
@@ -33,7 +40,7 @@
  * cannot forget it.
  */
 
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -83,6 +90,7 @@ interface ContactsFile {
 
 function main(): void {
   const write = process.argv.includes("--write");
+  const check = process.argv.includes("--check");
 
   const ballot = JSON.parse(readFileSync(BALLOT, "utf8")) as BallotFile;
   const contacts = JSON.parse(readFileSync(CONTACTS, "utf8")) as ContactsFile;
@@ -175,35 +183,52 @@ function main(): void {
     return;
   }
 
+  // Build the artifact bytes ONCE, so `--check` compares exactly what `--write`
+  // would write.
+  const payload = `${JSON.stringify(
+    {
+      formatVersion: 1,
+      generatedBy: "scripts/questionnaire-invitations.mts",
+      note:
+        "READY TO SEND, NOT SENT. Every row carries invitedOn: null and remindedOn: []. " +
+        "A date on either is written only by the code path that performs the send (RULING 107). " +
+        "Emails are the candidates' own filed contact from the Morris County Clerk's certified " +
+        "candidate PDF, which is public record; they are held for sending and are never rendered.",
+      instrumentVersion: INSTRUMENT_VERSION,
+      plannedInvitedOn: PLANNED_INVITED_ON,
+      plannedRemindersOn: PLANNED_REMINDERS_ON,
+      deadline: DEADLINE,
+      statedCandidacies,
+      invitations,
+      uninvitable,
+    },
+    null,
+    2,
+  )}\n`;
+
+  if (check) {
+    // Read-only: is the committed artifact byte-current against its inputs?
+    const current = existsSync(OUT) ? readFileSync(OUT, "utf8") : null;
+    if (current === payload) {
+      console.log("\nquestionnaire invitations: CURRENT (byte-identical to the committed artifact).");
+      return;
+    }
+    console.error(
+      `\nSTALE ${OUT.replace(/\\/g, "/").replace(/.*\/(data\/questionnaire\/.*)$/, "$1")}` +
+        " — the committed invitation list differs from what its inputs now generate." +
+        " Regenerate with `corepack pnpm questionnaire:invitations --write`.",
+    );
+    process.exitCode = 1;
+    return;
+  }
+
   if (!write) {
     console.log("\n(report only — pass --write to write the artifact)");
     return;
   }
 
   mkdirSync(dirname(OUT), { recursive: true });
-  writeFileSync(
-    OUT,
-    `${JSON.stringify(
-      {
-        formatVersion: 1,
-        generatedBy: "scripts/questionnaire-invitations.mts",
-        note:
-          "READY TO SEND, NOT SENT. Every row carries invitedOn: null and remindedOn: []. " +
-          "A date on either is written only by the code path that performs the send (RULING 107). " +
-          "Emails are the candidates' own filed contact from the Morris County Clerk's certified " +
-          "candidate PDF, which is public record; they are held for sending and are never rendered.",
-        instrumentVersion: INSTRUMENT_VERSION,
-        plannedInvitedOn: PLANNED_INVITED_ON,
-        plannedRemindersOn: PLANNED_REMINDERS_ON,
-        deadline: DEADLINE,
-        statedCandidacies,
-        invitations,
-        uninvitable,
-      },
-      null,
-      2,
-    )}\n`,
-  );
+  writeFileSync(OUT, payload);
   console.log(`\nwrote ${OUT}`);
 }
 

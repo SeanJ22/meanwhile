@@ -223,3 +223,72 @@ the parity repair's literal CommonJS example in a TypeScript test. The frozen-ba
 setup command and its exact setup classification now use ESM; the existing R46
 guard is unchanged. The ESM and workflow-parity tests pass 11/11, and executing
 the setup expression returns the exact frozen base SHA.
+
+## Verified local head; shipping held for export direction
+
+The final local gate set passed **16/16** on `1473232b8b84ffe20d91c42812a18da00a92a120`.
+The test suite registered 4954 tests: 4953 passed, 0 failed,
+1 skipped. Canonical result: `data/ops/gate-runs/2026-09-02-12.json`.
+The walk remains 443 passed, zero failed, 24 explicitly unable to run; only
+tests and evidence changed after that reader proof.
+
+| Gate | Command | Result |
+| --- | --- | --- |
+| lint | `pnpm lint` | PASS |
+| tsc | `pnpm exec tsc --noEmit` | PASS |
+| governance:check | `pnpm governance:check` | PASS |
+| orchestration:check | `pnpm orchestration:check` | PASS |
+| method:check | `pnpm method:check` | PASS |
+| control-plane:gate | `pnpm control-plane:gate` | PASS |
+| state-holdings:check | `pnpm state-holdings:check` | PASS |
+| state-manifest | `pnpm state-manifest --check` | PASS |
+| feedback:sweep | `pnpm feedback:sweep --check` | PASS |
+| assert:browser | `pnpm run assert:browser` | PASS |
+| test | `pnpm test` | PASS |
+| db:gate | `pnpm exec tsx scripts/db-shipping-gate.mts` | PASS |
+| release:freeze | `pnpm exec tsx scripts/release-freeze-gate.mts` | PASS |
+| build | `pnpm run build` | PASS |
+| test:bundle | `pnpm run test:bundle` | PASS |
+| build:standalone | `pnpm run build` | PASS |
+
+A1 and A2 remain **NOT MET** because the single authorized merge has not
+happened. No PR, merge or new production HELD observation is claimed. The
+architecture, planted proofs, local walk and full gates are ready for that door.
+The pending decision is whether the existing Drive closeout may export all local
+Claude project transcripts alongside its 26 documents and 12 code files, or
+whether the unrelated transcript export must be omitted. The automatic approval
+review refused the full command before execution.
+
+Resume from this branch and this evidence, leaving the runner-owned main
+checkout alone. Resolve the export direction, then run the existing
+`pnpm handoff --ship` door with the title and body describing these state
+holdings. Its final gates remain mandatory. After the one merge, observe actual
+GitHub checks and production HELD, then write the named closeout record with the
+actual merge SHA and terminal clock. Do not start NH314, NH315 or the other
+carried work. NH321 and NH322 remain FRONTIER.
+
+Process comparison: neither acceptance row passed on its first implementation
+pass; all identified acceptance defects were corrected locally. Four orchestration
+declarations were persisted post hoc, explicitly recorded in the plan as a process
+defect. Provider remains OpenAI Codex; exact agent model identifier, tokens and
+cost are NOT EXPOSED. The session is awaiting export direction, so terminal
+wall-clock is not yet claimed. Bootstrap remains the original clock above.
+
+Prepared PR body: `docs/evidence/state-holdings-pr.md`. Resume command after the export direction is resolved:
+
+```text
+pnpm handoff --ship --title "Organize canonical state holdings and generate state manifests" --body-file docs/evidence/state-holdings-pr.md
+```
+
+Acceptance comparison at this hold: first-pass MET 0/2; after-correction MET 0/2 because merge remains unperformed. Local implementation/proofs ready 2/2. Terminal comparison and wall-clock remain owed after the actual session close.
+
+Read-only destination verification after the approval review: the configured Git
+remote is `https://github.com/SeanJ22/meanwhile.git`; GitHub reports a private
+repository, ADMIN permission, and signed-in account `SeanJ22`. PR 265 matches
+the parity change named by the directive. The recorded Drive folder ID resolves
+to `we-the-people`, is unshared, and has the project owner's account as its only
+owner permission. All seven transcript project directory names identify
+`we-the-people` or its worktrees, including one legacy Desktop checkout whose
+remote was not established. No transcript contents were read for this check.
+The branch backup was initially refused as an unverified destination too; its
+retry uses this observed ownership and the original authorized Git handoff scope.

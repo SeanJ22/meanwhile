@@ -110,6 +110,7 @@ import { readWorkbook } from "./xlsx.mjs";
 import { tryRun as sharedTryRun } from "./try-run.mjs";
 import { verdictForDeploys } from "../lib/ops/deploy-verdict.ts";
 import { loadEnvLocal } from "./load-env-local.mjs";
+import { mergeCheckedPullRequest } from "./ship-pr-checks.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(here, "..");
@@ -1600,12 +1601,14 @@ function ship() {
     ok("ship · pr", `reusing open #${number}`);
   }
 
-  // --merge to match this repo's existing history, which is merge commits.
-  const merged = tryRun("gh", ["pr", "merge", String(number), "--merge"]);
-  if (merged === null) {
+  // A push starts CI. Wait here instead of making another handoff generate
+  // another context commit and restart those checks. Bind the merge to the head
+  // that passed this invocation's full local gates; protection still applies.
+  const merged = mergeCheckedPullRequest({ number, head: git("rev-parse", "HEAD"), run: tryRun });
+  if (merged !== "merged") {
     fail(
       "ship · merge",
-      `#${number} did not merge — checks pending, or branch protection wants a review`,
+      `#${number} did not merge — ${merged}; no protection was bypassed`,
     );
     return;
   }

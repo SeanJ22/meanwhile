@@ -224,7 +224,7 @@ setup command and its exact setup classification now use ESM; the existing R46
 guard is unchanged. The ESM and workflow-parity tests pass 11/11, and executing
 the setup expression returns the exact frozen base SHA.
 
-## Verified local head; shipping held for export direction
+## Historical checkpoint: verified local head; export hold since resolved
 
 The final local gate set passed **16/16** on `1473232b8b84ffe20d91c42812a18da00a92a120`.
 The test suite registered 4954 tests: 4953 passed, 0 failed,
@@ -313,3 +313,22 @@ and governance tests passed 21/21; the regenerated context passed the residual
 check over 3,973 text files. All 14 affected governance digests were refreshed
 after regeneration; ledger and adoption bytes remain unchanged. This was an A1
 BLOCKING discovery and is corrected before the next shipping attempt.
+
+## Shipping checkpoint: PR 266 and pending-check repair
+
+The actual shipping door passed all 16 gates on
+`47947aaf3cde3b42f504244b0b9383564f9a8fa1`; run
+`data/ops/gate-runs/2026-09-02-14.json` registered 4,955 tests: 4,954 passed,
+zero failed, one skipped. It pushed the branch and opened PR 266. Both GitHub
+build jobs passed. The merge attempt occurred while the required test job was
+still running, so branch protection refused it. No merge occurred in that run.
+
+This exposed a BLOCKING integration defect in the shipping door: a retry
+regenerates context, commits and pushes it, then attempts another immediate
+merge while that new head's checks are pending. The door now waits for GitHub
+checks with a bounded watch, fails closed on unsuccessful/unavailable checks,
+and uses `--match-head-commit` to bind the merge to the locally tested head.
+Three focused tests prove ordering, refusal after a failed check, and refusal
+when the merge cannot complete. No gate or branch protection was removed.
+This shared-file repair is serialized to the integration owner. The final
+shipping invocation will rerun the full gate set and reuse PR 266.

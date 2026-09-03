@@ -360,3 +360,31 @@ MET: 0/2; after-correction integrated MET: 0/2 at this hold. The remaining curso
 is explicit export authorization, the existing `pnpm handoff --ship` door reusing
 PR 266, GitHub main checks, the actual deployed-SHA/HELD observation, and named
 closeout records. No additional acquisition or carried work enters this cursor.
+
+The terminal hold was recorded at 2026-09-03T05:00:55Z, 14,659 seconds after <!-- expected-future: clock tool observed this UTC instant while Phoenix remained on the preceding calendar day -->
+the 2026-09-03T00:56:36Z bootstrap clock (4:04:19 wall-clock). This is direct <!-- expected-future: bootstrap clock is the actual observed UTC instant, whose calendar day leads the Phoenix session day -->
+clock arithmetic, not a provider estimate. `pnpm workstream:close` classified
+the stop `CLEAN_HANDOFF_EXTERNAL_STOP`; its repository-wide denominator reported
+1,720 executable obligations across the standing discovery workstreams, none of
+which enters this finite session. `pnpm orchestration:closeout` reconciled all
+four declared session workstreams and both observed artifacts with zero
+unaccounted artifacts; it also reported that all four workstream declarations
+were reconstructed post hoc, preserving that process defect. The preceding PR head
+was `77e7eac3e0846cba045878b45334f4ad8af3cb1a`; GitHub run `33717092696` was
+pending at the hold. The ignored worktree `.env.local` copy was removed. The
+runner-owned main checkout was never modified.
+
+Provider comparison at this terminal hold: OpenAI Codex; model identifier,
+tokens and cost NOT EXPOSED. First-pass MET 0/2; after-correction integrated MET
+0/2 because the merge is held, while implementation plus local proofs are ready
+2/2. Gate failures and their corrections are enumerated above; final run 15 is
+16/16 green. Discoveries classified: embedded TypeScript holdings, writable
+readback construction, dynamic/serving path consumers, immutable-source rewrite,
+workflow block parsing, context path regeneration, and the pending-check shipping
+loop were BLOCKING and repaired; NH320 was FRONTIER then resolved; NH321 and
+NH322 remain FRONTIER. No requested provider metric was estimated or made part
+of acceptance.
+
+The closeout commit hook initially refused the two observed UTC clock dates
+above because their source-observation annotations were missing. Those annotations
+were added; the authorship-date guard and its allowlist remain unchanged.

@@ -54,7 +54,7 @@ const NOT_A_GATE = [
   "echo \"path=$(corepack pnpm store path --silent)\" >> \"$GITHUB_OUTPUT\"",
   "node scripts/trace-census.mjs --files trace-files.txt",
   // Shallow-checkout preparation for exact equality with the frozen holdings base.
-  `holdings_base=$(node -p "require('./data/state-holdings/move-plan.json').baseSha")`,
+  `holdings_base=$(node --input-type=module -e "import{readFileSync}from'node:fs';console.log(JSON.parse(readFileSync('data/state-holdings/move-plan.json','utf8')).baseSha)")`,
   '[[ "$holdings_base" =~ ^[0-9a-f]{40}$ ]] || exit 1',
   'git cat-file -e "${holdings_base}^{commit}" 2>/dev/null || git fetch --no-tags --depth=1 origin "$holdings_base"',
 ];

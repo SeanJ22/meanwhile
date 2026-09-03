@@ -215,3 +215,11 @@ transcript exporter invoked without a project filter. That exporter would copy
 all local Claude project transcripts. Explicit direction was requested for that
 full export or omission of unrelated transcripts; no export or merge occurred.
 Local gates continued independently. No approval control was bypassed.
+
+The second full integration run, `data/ops/gate-runs/2026-09-02-11.json`, passed
+15/16 gates: 4,954 tests registered, 4,952 passed, one failed and one skipped.
+All six earlier failures were repaired. The remaining failure was introduced by
+the parity repair's literal CommonJS example in a TypeScript test. The frozen-base
+setup command and its exact setup classification now use ESM; the existing R46
+guard is unchanged. The ESM and workflow-parity tests pass 11/11, and executing
+the setup expression returns the exact frozen base SHA.

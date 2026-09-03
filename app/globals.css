@@ -142,6 +142,36 @@
   --pill-slate-bg: rgba(120, 138, 170, 0.18);
   --pill-stone-text: #cfc2ae;
   --pill-stone-bg: rgba(160, 142, 112, 0.17);
+
+  /* ── MOTION (2026-09-03, the visual-polish session) ──────────────────────
+     One duration scale and one easing family. Every transition and animation
+     in the app references these; a raw duration or a bare `ease` in a
+     reader-facing rule is a defect (scripts/motion-token-sweep.mts).
+
+     Motion NEVER implies status. These tokens make a surface feel considered,
+     never urgent — urgency is an editorial claim about a government, and the
+     way a panel opens is not the place to make one.
+
+       --dur-fast   micro-feedback: carets, hovers, focus rings, small toggles
+       --dur-base   the standard state change: panel, pill, tab, disclosure
+       --dur-slow   the largest single move a reader's eye tracks
+       --dur-pulse  the ambient loading loop ONLY (a skeleton breathing). A
+                    looping ambient, never a state transition — named apart so
+                    the sweep does not read it as one.
+
+     Easings are the standard decelerate / accelerate / symmetric set. No
+     overshoot: nothing in this product bounces, because a bounce is a
+     personality the civic record does not have.
+       --ease-enter  content arriving  (decelerate: quick in, soft settle)
+       --ease-exit   content leaving   (accelerate: soft in, quick out)
+       --ease-move   a thing moving or resizing in place (symmetric) */
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 320ms;
+  --dur-pulse: 1100ms;
+  --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ease-move: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 [data-theme="light"] {
@@ -237,6 +267,27 @@
   --pill-stone-bg: rgba(160, 142, 112, 0.16);
 }
 
+/* ── REDUCED MOTION — the guaranteed floor (2026-09-03) ────────────────────
+   A reader who asks the operating system for less motion gets it, everywhere,
+   without a rule having to remember to opt in. Transitions and animations
+   settle instantly instead of playing; scrolling jumps instead of gliding.
+
+   Nothing is HIDDEN — every affordance stays exactly as visible as it is with
+   motion on. This only removes the movement, never the thing that moved. A
+   skeleton still shows; it just stops breathing. Per-surface reduced-motion
+   rules elsewhere in this file are kept as belt-and-braces; this block is the
+   floor the motion-token guard asserts. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 @theme inline {
   --color-bg: var(--bg);
   --color-panel: var(--panel);
@@ -302,6 +353,20 @@
     `.t-record` in @layer components is the only thing that should apply it.
   */
   --font-record: var(--font-eb-garamond), ui-serif, Georgia, "Times New Roman", serif;
+
+  /* Motion, exposed to Tailwind (2026-09-03). The bare `transition` /
+     `transition-colors` utilities pick up the fast rung and the symmetric
+     ease by default; `duration-fast|base|slow` and `ease-enter|exit|move`
+     name the rest. The values resolve through the real `:root` properties, so
+     a utility and a hand-written rule always agree on one scale. */
+  --default-transition-duration: var(--dur-fast);
+  --default-transition-timing-function: var(--ease-move);
+  --duration-fast: var(--dur-fast);
+  --duration-base: var(--dur-base);
+  --duration-slow: var(--dur-slow);
+  --ease-enter: var(--ease-enter);
+  --ease-exit: var(--ease-exit);
+  --ease-move: var(--ease-move);
 }
 
 /* LEGACY ALIASES — delete as Phase 2/3 replaces the components that use them — docs/globals-css-notes.md#legacy-aliases-delete-as-phase-2-3-replaces-the-components-that-use-them-15 */
@@ -415,7 +480,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.15s;
+    transition: all var(--dur-fast) var(--ease-move);
   }
 
   .icon-btn:hover {
@@ -532,7 +597,7 @@
   flex-direction: column;
   z-index: 1000;
   overflow: hidden;
-  transition: transform 0.25s ease;
+  transition: transform var(--dur-base) var(--ease-move);
 }
 
 /* One pattern at every width (2f): visible by default, slides left to hide — docs/globals-css-notes.md#one-pattern-at-every-width-2f-visible-by-default-slides-left-to-hide-20 */
@@ -724,7 +789,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   cursor: pointer;
-  transition: color 0.15s;
+  transition: color var(--dur-fast) var(--ease-move);
 }
 
 .brand-change:hover {
@@ -764,7 +829,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   font-weight: 500;
   border-radius: 7px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--dur-base) var(--ease-move);
   text-align: center;
   white-space: nowrap;
 }
@@ -959,7 +1024,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   font-family: inherit;
   font-size: 13px;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color var(--dur-base) var(--ease-move);
 }
 
 .search-input:focus {
@@ -1007,7 +1072,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   padding: 8px 12px;
   cursor: pointer;
   font-size: 12px;
-  transition: background 0.1s;
+  transition: background var(--dur-fast) var(--ease-move);
   border-bottom: 1px solid var(--panel-border);
   width: 100%;
   text-align: left;
@@ -1101,7 +1166,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   background: var(--surface);
   border-radius: 9px;
   position: relative;
-  transition: background 0.2s;
+  transition: background var(--dur-base) var(--ease-move);
   flex-shrink: 0;
   border: 1px solid var(--panel-border);
 }
@@ -1115,9 +1180,8 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   border-radius: 50%;
   top: 2px;
   left: 3px;
-  transition:
-    transform 0.2s,
-    background 0.2s;
+  transition: transform var(--dur-base) var(--ease-move),
+    background var(--dur-base) var(--ease-move);
 }
 
 .prox-toggle input:checked + .prox-slider {
@@ -1258,7 +1322,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   display: inline-block;
   font-size: 13px;
   line-height: 1;
-  transition: transform 0.15s ease;
+  transition: transform var(--dur-fast) var(--ease-move);
 }
 
 .filters-area[data-open] .filters-caret {
@@ -1321,7 +1385,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 
 .filter-group {
   margin-bottom: 16px;
-  animation: fadeIn 0.25s ease-out both;
+  animation: fadeIn var(--dur-base) var(--ease-enter) both;
 }
 .filter-group:nth-child(2) {
   animation-delay: 0.05s;
@@ -1386,7 +1450,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   font-size: 11px;
   color: var(--text-dim);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all var(--dur-fast) var(--ease-move);
   white-space: nowrap;
   font-family: inherit;
 }
@@ -1819,7 +1883,7 @@ label:has(> input[type="checkbox"]) {
   color: var(--text);
   cursor: pointer;
   text-align: left;
-  transition: border-color 0.15s, background-color 0.15s;
+  transition: border-color var(--dur-fast) var(--ease-move), background-color var(--dur-fast) var(--ease-move);
 }
 
 .card-section-header:hover,
@@ -1848,7 +1912,7 @@ label:has(> input[type="checkbox"]) {
 .card-section-chevron {
   flex-shrink: 0;
   color: var(--link);
-  transition: transform 0.18s ease;
+  transition: transform var(--dur-base) var(--ease-move);
 }
 
 /* Item 4 (2026-08-16) — THE CHEVRON DEFECT, diagnosed — docs/globals-css-notes.md#item-4-2026-08-16-the-chevron-defect-diagnosed-36 */
@@ -1892,7 +1956,7 @@ label:has(> input[type="checkbox"]) {
 /* The zip switcher's chevron (item 4's audit, 2026-08-16). It had no state
    rule at all — down while closed, still down while open. */
 .zip-chevron {
-  transition: transform 0.18s ease;
+  transition: transform var(--dur-base) var(--ease-move);
 }
 
 .zip-chevron[data-open] {
@@ -1934,10 +1998,9 @@ label:has(> input[type="checkbox"]) {
   font-weight: 600;
   line-height: 1.2;
   cursor: pointer;
-  transition:
-    border-color 0.15s ease,
-    background-color 0.15s ease,
-    color 0.15s ease;
+  transition: border-color var(--dur-fast) var(--ease-move),
+    background-color var(--dur-fast) var(--ease-move),
+    color var(--dur-fast) var(--ease-move);
 }
 
 .vote-view-btn:hover {
@@ -2139,9 +2202,8 @@ label:has(> input[type="checkbox"]) {
   font-weight: 600;
   line-height: 1.2;
   white-space: nowrap;
-  transition:
-    border-color 0.15s ease,
-    color 0.15s ease;
+  transition: border-color var(--dur-fast) var(--ease-move),
+    color var(--dur-fast) var(--ease-move);
 }
 
 .contact-pill:hover,
@@ -2410,7 +2472,7 @@ label:has(> input[type="checkbox"]) {
   background: var(--panel-bg);
   font-size: 0.8125rem;
   cursor: pointer;
-  transition: border-color 0.15s, background-color 0.15s, color 0.15s;
+  transition: border-color var(--dur-fast) var(--ease-move), background-color var(--dur-fast) var(--ease-move), color var(--dur-fast) var(--ease-move);
 }
 
 .reaction-box[data-frame="compact"] .reaction-choice {
@@ -2632,7 +2694,7 @@ label:has(> input[type="checkbox"]) {
    dims, so a held answer can never read as a settled one. */
 .coverage-notice[data-refreshing="true"] {
   opacity: 0.55;
-  transition: opacity 140ms ease-out;
+  transition: opacity var(--dur-fast) var(--ease-move);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2670,7 +2732,7 @@ label:has(> input[type="checkbox"]) {
 }
 
 .notice-fab {
-  animation: fadeIn 0.18s ease;
+  animation: fadeIn var(--dur-base) var(--ease-enter);
 }
 
 .notice-fab:hover {
@@ -2688,7 +2750,7 @@ label:has(> input[type="checkbox"]) {
 /* Everything this shares with .notice-fab is in the joint block above — docs/globals-css-notes.md#everything-this-shares-with-notice-fab-is-in-the-joint-block-above-58 */
 .count-badge {
   border-left-color: var(--tier-accent, var(--panel-border));
-  transition: all 0.2s;
+  transition: all var(--dur-base) var(--ease-move);
 }
 
 .count-badge:hover {
@@ -2813,7 +2875,7 @@ label:has(> input[type="checkbox"]) {
   cursor: pointer;
   text-align: left;
   font-family: inherit;
-  transition: background 0.12s;
+  transition: background var(--dur-fast) var(--ease-move);
 }
 
 .al-row:hover {
@@ -2946,7 +3008,7 @@ label:has(> input[type="checkbox"]) {
   cursor: pointer;
   text-align: left;
   font-family: inherit;
-  transition: background 0.12s;
+  transition: background var(--dur-fast) var(--ease-move);
 }
 
 .district-picker-row:hover {
@@ -2979,7 +3041,7 @@ label:has(> input[type="checkbox"]) {
   padding: 16px;
   background: rgba(15, 17, 23, 0.7);
   backdrop-filter: blur(4px);
-  transition: opacity 0.3s ease;
+  transition: opacity var(--dur-slow) var(--ease-move);
 }
 
 [data-theme="light"] .welcome-overlay {
@@ -3080,7 +3142,7 @@ label:has(> input[type="checkbox"]) {
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all var(--dur-fast) var(--ease-move);
 }
 
 /* Inert, not faded. A dimmed accent fill still reads as a live button in a
@@ -3119,7 +3181,7 @@ label:has(> input[type="checkbox"]) {
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all var(--dur-fast) var(--ease-move);
 }
 
 .welcome-team-btn:hover {
@@ -3138,7 +3200,7 @@ label:has(> input[type="checkbox"]) {
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all var(--dur-fast) var(--ease-move);
 }
 
 .welcome-opps-btn:hover {
@@ -3211,10 +3273,9 @@ label:has(> input[type="checkbox"]) {
   box-shadow:
     0 0 0 3px color-mix(in srgb, var(--bg) 85%, transparent),
     0 0 14px var(--pin-glow, var(--accent-local-glow));
-  transition:
-    width 140ms ease,
-    height 140ms ease,
-    box-shadow 140ms ease;
+  transition: width var(--dur-fast) var(--ease-move),
+    height var(--dur-fast) var(--ease-move),
+    box-shadow var(--dur-fast) var(--ease-move);
 }
 
 /* THE JURISDICTION BADGE — M81 — docs/globals-css-notes.md#the-jurisdiction-badge-m81-66 */
@@ -3264,9 +3325,8 @@ button.jurisdiction-badge-action {
   text-decoration: underline;
   text-decoration-style: dotted;
   text-underline-offset: 2px;
-  transition:
-    color 120ms ease,
-    border-color 120ms ease;
+  transition: color var(--dur-fast) var(--ease-move),
+    border-color var(--dur-fast) var(--ease-move);
 }
 
 button.jurisdiction-badge-action:hover,
@@ -3337,7 +3397,7 @@ button.jurisdiction-badge-action:focus-visible {
   display: inline-block;
   font-size: 14px;
   line-height: 1;
-  transition: transform 0.15s ease;
+  transition: transform var(--dur-fast) var(--ease-move);
 }
 
 [data-provisions][open] .provisions-caret {
@@ -3631,10 +3691,9 @@ button.jurisdiction-badge-action:focus-visible {
   box-shadow:
     0 0 0 3px color-mix(in srgb, var(--bg) 85%, transparent),
     0 0 16px var(--accent-voting-glow);
-  transition:
-    width 140ms ease,
-    height 140ms ease,
-    box-shadow 140ms ease;
+  transition: width var(--dur-fast) var(--ease-move),
+    height var(--dur-fast) var(--ease-move),
+    box-shadow var(--dur-fast) var(--ease-move);
 }
 
 /* The hole, so the teardrop reads as a marker rather than a blob. */
@@ -3871,9 +3930,8 @@ button.jurisdiction-badge-action:focus-visible {
   height: 24px;
   border-radius: var(--radius-sm);
   color: var(--text-muted);
-  transition:
-    color 0.15s ease,
-    background 0.15s ease;
+  transition: color var(--dur-fast) var(--ease-move),
+    background var(--dur-fast) var(--ease-move);
 }
 
 .popup-expand-btn:hover,
@@ -4009,7 +4067,7 @@ button.jurisdiction-badge-action:focus-visible {
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.15s ease;
+  transition: opacity var(--dur-fast) var(--ease-move);
   z-index: 5;
 }
 
@@ -4178,7 +4236,7 @@ button.jurisdiction-badge-action:focus-visible {
 
 .funding-type > summary::after {
   content: "›";
-  transition: transform 0.15s;
+  transition: transform var(--dur-fast) var(--ease-move);
   opacity: 0.7;
 }
 
@@ -4395,9 +4453,8 @@ main[data-sidebar="closed"] .map-top-row {
   color: var(--text-muted);
   white-space: nowrap;
   border-bottom: 2px solid transparent;
-  transition:
-    color 0.15s ease,
-    border-color 0.15s ease;
+  transition: color var(--dur-fast) var(--ease-move),
+    border-color var(--dur-fast) var(--ease-move);
 }
 
 .account-modal-tab:hover {
@@ -4560,7 +4617,7 @@ main[data-sidebar="closed"] .map-top-row {
   justify-content: center;
   padding: 9px 10px;
   border-radius: calc(var(--radius) - 4px);
-  transition: background-color 0.15s ease;
+  transition: background-color var(--dur-fast) var(--ease-move);
 }
 
 .phone-modal-row:hover,
@@ -4968,7 +5025,7 @@ main[data-sidebar="closed"] .map-top-row {
   border-right: 1.5px solid currentColor;
   border-bottom: 1.5px solid currentColor;
   transform: rotate(45deg) translate(-0.05rem, -0.05rem);
-  transition: transform 140ms ease;
+  transition: transform var(--dur-fast) var(--ease-move);
 }
 
 .how-to-be-heard[open] .how-to-be-heard-summary::after {
@@ -5309,7 +5366,7 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   text-align: left;
   cursor: pointer;
   white-space: nowrap;
-  transition: border-color 0.15s, background-color 0.15s;
+  transition: border-color var(--dur-fast) var(--ease-move), background-color var(--dur-fast) var(--ease-move);
 }
 
 /* BC-19: the fine print under the send row. Quiet, and it is the only place
@@ -5452,7 +5509,7 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
      says it is pressable now. */
   text-decoration: none;
   cursor: pointer;
-  transition: border-color 0.15s, background-color 0.15s;
+  transition: border-color var(--dur-fast) var(--ease-move), background-color var(--dur-fast) var(--ease-move);
 }
 
 .ballot-top-pill:hover,
@@ -5587,7 +5644,7 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   display: inline-block;
   margin-right: 7px;
   color: var(--signal);
-  transition: transform 0.15s;
+  transition: transform var(--dur-fast) var(--ease-move);
 }
 
 .ballot-ask-pill[aria-expanded="true"] .ballot-ask-caret {
@@ -5614,7 +5671,7 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   height: 9px;
   border-radius: 999px;
   background: var(--link);
-  animation: ballot-loading-pulse 1.1s ease-in-out infinite;
+  animation: ballot-loading-pulse var(--dur-pulse) var(--ease-move) infinite;
 }
 
 @keyframes ballot-loading-pulse {

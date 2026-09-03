@@ -23440,3 +23440,13 @@ OAuth client variables (tracked as NH310), the two staging/meeting optionals,
 and `WTP_MIRROR`/`WTP_ADMIN_BREAK_GLASS` which fall back to their defaults. No
 value was printed, hashed, or copied anywhere, and `.env.local` was not mirrored
 to Drive.
+
+## 2026-09-03 — Disposable worker fleet prepared; WF01 blocks completion
+
+Draft PR #268: https://github.com/SeanJ22/meanwhile/pull/268, branch `codex/worker-fleet`. No worker-fleet merge has occurred. PR 266 was merged and contained by origin/main before this worktree was created. The verified main remains `d88356aacc076b07f5bb2e27de164b3cc95f9098`.
+
+W1, W2, W3, W5, W6 and W7 are MET in the prepared implementation. W4 and W8 are NOT MET: the real Parser and Validator processed five held Avondale events, but the measured independent Auditor concluded INCONCLUSIVE. Automatic approval review requires explicit owner approval for the corrected public Avondale evidence/method representation sent to the existing Anthropic endpoint, under the unchanged rolling ceiling. Needs Sean WF01 carries that exact action. The pipeline remains SCOUTED, the WorkItem BLOCKED, and promotion OFF.
+
+Verification at exact committed implementation head `2dfe9e596470a1dee23796dfa539c323b3ed30e6`: **5,094 tests passed, zero failed, one skipped (5,095 registered). Lint PASS. Build PASS** for default and standalone. All **16/16 gates PASS** and the run provenance confirms a clean working tree. It is LOCAL_SESSION evidence, not independently reproduced or merged. Source: `data/ops/gate-runs/2026-09-03-03.json`. The live Attempts, measured USD 0.04852, null unmeasured costs, 110 permanent fleet controls, initial failures/corrections, local walk and exact resume action are in `docs/evidence/worker-fleet-session.md`.
+
+The existing standing runner and Scout lane remain active. The three engineering procedure lanes are integrated; the integration closeout is BLOCKED with a named external wall. No Detective, Engineering autonomy, Level 2 activation or Control Center work began. Canonical shipping and post-merge readback remain owed after WF01 is resolved.

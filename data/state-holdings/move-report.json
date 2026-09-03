@@ -1913,8 +1913,8 @@
     "references": 4391
   },
   "referenceIntegration": {
-    "definition": "Changed or new consumer/evidence files with added canonical-state paths or canonical path/discovery helper calls relative to the frozen base. Excludes holding destinations and migration accounting inputs. Counts are changed lines, not literal occurrences.",
-    "fileCount": 265,
+    "definition": "Changed or new consumer/evidence files with added canonical-state paths or canonical path/discovery helper references relative to the frozen base. Excludes holding destinations and migration accounting inputs. Counts are changed lines, not literal occurrences.",
+    "fileCount": 269,
     "files": [
       {
         "path": ".github/workflows/refresh-nj-filing.yml",
@@ -2049,6 +2049,10 @@
         "canonicalReferenceLinesAdded": 8
       },
       {
+        "path": "docs/evidence/state-holdings-pr.md",
+        "canonicalReferenceLinesAdded": 1
+      },
+      {
         "path": "docs/expansion-log.md",
         "canonicalReferenceLinesAdded": 6
       },
@@ -2090,7 +2094,7 @@
       },
       {
         "path": "docs/repo-inventory.md",
-        "canonicalReferenceLinesAdded": 245
+        "canonicalReferenceLinesAdded": 240
       },
       {
         "path": "docs/rulings.md",
@@ -2613,6 +2617,10 @@
         "canonicalReferenceLinesAdded": 1
       },
       {
+        "path": "scripts/context-file.mjs",
+        "canonicalReferenceLinesAdded": 4
+      },
+      {
         "path": "scripts/coverage-four-layer.mts",
         "canonicalReferenceLinesAdded": 1
       },
@@ -2655,6 +2663,14 @@
       {
         "path": "scripts/fix-stale-official-pages.mts",
         "canonicalReferenceLinesAdded": 4
+      },
+      {
+        "path": "scripts/governance-compile.mts",
+        "canonicalReferenceLinesAdded": 6
+      },
+      {
+        "path": "scripts/holding-paths.mjs",
+        "canonicalReferenceLinesAdded": 1
       },
       {
         "path": "scripts/hunt-az-executive-orders.mts",
@@ -2946,7 +2962,7 @@
       },
       {
         "path": "tests/ruling-59-coverage-silence.test.ts",
-        "canonicalReferenceLinesAdded": 2
+        "canonicalReferenceLinesAdded": 3
       },
       {
         "path": "tests/source-stamp.test.ts",

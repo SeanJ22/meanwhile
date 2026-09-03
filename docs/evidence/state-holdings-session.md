@@ -63,7 +63,7 @@ every moved/exempted file and every reference file. Its final literal sweep is
 4,391 references in 161 files in the initial sweep, plus 92 replacements in 52
 files for the embedded-data correction: **4,483 applied replacements across 205
 distinct files**, with both sweeps and the combined per-file list retained. Its
-separate 265-file consumer census includes dynamic path helpers and generated
+separate 269-file consumer census includes dynamic path helpers and generated
 answer surfaces; it counts changed lines, not literal occurrences.
 
 The discovered denominator is 56 states/territories, including AZ, NH and NJ.
@@ -292,3 +292,24 @@ owner permission. All seven transcript project directory names identify
 remote was not established. No transcript contents were read for this check.
 The branch backup was initially refused as an unverified destination too; its
 retry uses this observed ownership and the original authorized Git handoff scope.
+
+Both automatic approval refusals were resolved by read-only destination
+verification, without bypassing an approval control or requiring a new author
+decision. The branch backup succeeded and the unchanged shipping door was
+accepted. It synchronized the canonical mirror, exported 124 transcripts from
+the seven project directories, and re-read the mirror with zero credential
+values. A temporary ignored same-machine environment copy supplied the actual
+values to the mandatory secret sweep. The child process explicitly left the
+optional live control-plane conformance credential empty; the suite stayed at
+4,954 tests and did not append proof records to the standing runner's database.
+
+The shipping gate then stopped before PR creation: run
+`data/ops/gate-runs/2026-09-02-13.json` passed 15/16 gates and all 4,953 executed
+tests (one skipped). The residual guard found one old ballot pointer restored
+when `context.md` was regenerated from the frozen tracker. The context and
+governance generators now share `scripts/holding-paths.mjs`, resolving pointers
+before display truncation while preserving the canonical source bytes. Context
+and governance tests passed 21/21; the regenerated context passed the residual
+check over 3,973 text files. All 14 affected governance digests were refreshed
+after regeneration; ledger and adoption bytes remain unchanged. This was an A1
+BLOCKING discovery and is corrected before the next shipping attempt.

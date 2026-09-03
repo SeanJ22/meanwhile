@@ -37,17 +37,10 @@ import {
   canonicalId,
   type GovernanceRecord,
 } from "../lib/governance/schema.ts";
+import { currentHoldingPaths } from "./holding-paths.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const GOV = join(ROOT, "docs", "governance");
-
-// Adopted ledger wording remains immutable. Generated reader views resolve
-// relocated repository holdings through the committed, finite move plan.
-const holdingMoves = JSON.parse(readFileSync(join(ROOT, "data/state-holdings/move-plan.json"), "utf8")) as { rows: { oldPath: string; newPath: string }[] };
-function currentHoldingPaths(body: string): string {
-  for (const row of holdingMoves.rows) body = body.replaceAll(row.oldPath, row.newPath);
-  return body;
-}
 
 const records = readLedger(LEDGER_PATH);
 const byId = new Map(records.map((r) => [r.id, r]));

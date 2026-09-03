@@ -34,6 +34,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { parseCsv } from "./doc-dates.mjs";
+import { currentHoldingPaths } from "./holding-paths.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -114,7 +115,7 @@ function parentUnavailable(sha) {
 
 /** Collapse a multi-line CSV cell to one line, marking any clip. */
 function oneLine(text, limit) {
-  const flat = text.replace(/\s+/g, " ").trim();
+  const flat = currentHoldingPaths(text).replace(/\s+/g, " ").trim();
   if (flat.length <= limit) return flat;
   return `${flat.slice(0, limit - 1).trimEnd()}…`;
 }
@@ -508,7 +509,7 @@ export async function buildContext({
   cap = CAP_BYTES,
 }) {
   const stateText = readFileSync(join(ROOT, "docs/state.md"), "utf8");
-  const csvText = readFileSync(join(ROOT, "docs/tracker.csv"), "utf8");
+  const csvText = currentHoldingPaths(readFileSync(join(ROOT, "docs/tracker.csv"), "utf8"));
 
   const phases = readPhases(stateText);
   const { records } = readTracker(csvText);
@@ -555,6 +556,7 @@ export async function buildContext({
       `the ${Math.round(Buffer.byteLength(stateText) / 1024)} KB \`state.md\`. **Nothing in it is composed** — every line is read`,
       "from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long",
       "fields are clipped with `…`; nothing is summarised.",
+      "Repository holding paths resolve through the committed move plan; source records stay unchanged.",
       "",
       "---",
       "",
@@ -808,7 +810,7 @@ export async function buildContext({
    * could be shortened "just this once" is a pointer wearing a longer coat.
    * The same is now true of every other section.
    */
-  const text = render(history.changes.length, NOTE_CHARS, null);
+  const text = currentHoldingPaths(render(history.changes.length, NOTE_CHARS, null));
   const bytes = Buffer.byteLength(text);
 
   /*

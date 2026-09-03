@@ -4,7 +4,7 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-09-02 — **State holdings are organized by state, with generated answers for every discovered state.** The implementation, passing sixteen-gate local proof and finite acceptance record are in `docs/evidence/state-holdings-session.md`. The single merge is held for direction on the shipping door's Drive/transcript export; no new production HELD observation is claimed.
+Last updated: 2026-09-02 — **State holdings are organized by state, with generated answers for every discovered state.** The implementation, local proofs and finite acceptance record are in `docs/evidence/state-holdings-session.md`. Destination verification resolved the export approval hold; the final shipping gate and single merge remain pending. No new production HELD observation is claimed.
 
 Previous: 2026-09-01 — **The runner could not survive its own backlog because a re-observation of the same bytes was refused as a rewrite of history, and every restart walked back into it.** The autonomy-recovery session.
 

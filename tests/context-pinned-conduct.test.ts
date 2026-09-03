@@ -46,6 +46,19 @@ const OPTIONS = {
   stampToday: "2026-08-23",
 };
 
+test("context resolves frozen tracker holding pointers without rewriting the source", async () => {
+  const trackerPath = join(ROOT, "docs/tracker.csv");
+  const source = readFileSync(trackerPath);
+  const plan = JSON.parse(readFileSync(join(ROOT, "data/state-holdings/move-plan.json"), "utf8"));
+  const move = plan.rows.find((row: { newPath: string }) => row.newPath.endsWith("/az-pima-2026.json"));
+  assert.ok(move, "the migrated ballot holding must be in the finite plan");
+  assert.ok(source.toString().includes(move.oldPath), "the historical source must exercise relocation");
+  const built = await buildContext(OPTIONS);
+  assert.ok(built.text.includes(move.newPath), "the current context must point to the moved holding");
+  assert.ok(!built.text.includes(move.oldPath), "the generated context may not restore the old pointer");
+  assert.deepEqual(readFileSync(trackerPath), source, "the frozen source must remain byte-identical");
+});
+
 /**
  * The clauses the pinned block must carry, word for word.
  *

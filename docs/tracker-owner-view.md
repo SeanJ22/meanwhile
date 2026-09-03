@@ -21,7 +21,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 ## Decisions waiting on you
 
-**70 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
+**69 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
 
 ### P1
 
@@ -67,19 +67,6 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 **Blocked while.** GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET are absent from the Netlify site's environment (read back by name on 2026-09-02, both sites and account level), so the deployed Google sign-in reports NOT_CONFIGURED and the live proof of RULING 245 cannot be taken.
 
 **Rechecked this run.** the readback record predates RULING 245 and carries no googleConfigured field; nothing has measured the Google path on the deployed host yet. Read: data/ops/admin-login-readback.json.
-
-#### WF01 — Approve the specific public Avondale audit context for the existing Anthropic worker
-
-*Opened 2026-09-03 · opened today · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
-
-**What is needed.** Approve or refuse the bounded public Avondale audit context being sent to the existing Anthropic worker endpoint, https://api.anthropic.com/v1/messages, under the unchanged rolling 25 USD ceiling.
-
-**Why no machine can decide it.** Automatic approval review rejected this exact outbound action twice and requires the owner's explicit destination approval. The public-context preflight and CLEAN secret scan cannot supply that consent; the agent must not infer it or route around the rejected call.
-
-**Your options.**
-
-- **Approve the 31,998-byte public artifact and method-route representation recorded in data/health/worker-fleet-proofs/audit-preflight.json** — the corrected independent live audit may run through the existing bounded worker machinery; its actual verdict still determines W4 and no reader promotion follows automatically
-- **Refuse the 31,998-byte public artifact and method-route representation recorded in data/health/worker-fleet-proofs/audit-preflight.json** — the corrected live audit remains unexecuted, W4 remains NOT MET, and the prepared worker-fleet branch is held for an authorized disposition
 
 ### P2
 
@@ -970,4 +957,4 @@ committed artifacts on EVERY tracker generation — not when a session remembers
 and auto-resolves the moment its blocker stops being true.
 
 - 2 row(s) carry a machine-verifiable predicate.
-- 72 row(s) are marked NOT_MACHINE_VERIFIABLE with a card.
+- 71 row(s) are marked NOT_MACHINE_VERIFIABLE with a card.

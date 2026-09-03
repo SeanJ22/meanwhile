@@ -158,7 +158,7 @@
       ],
       "executable": true,
       "disposition": "BLOCKED",
-      "blockedReason": "WF01: automatic approval review twice refused the corrected public Avondale audit context sent to the existing Anthropic endpoint and requires specific owner approval. W4 has no surviving verified record; canonical shipping and post-merge W8 remain owed. All implementation lanes are reconciled and the clean committed-head local run passed all 16 gates at 2dfe9e596470a1dee23796dfa539c323b3ed30e6. Draft PR, remote CI and mirror handoff are verification/handback work, not a claim that this integration is complete. Exact action and rejections: data/health/worker-fleet-proofs/approval-block.json.",
+      "blockedReason": "W4_NOT_MET: WF01 was explicitly approved and the owner resumed W4/W8 after PRs 269/270/271 merged. Main c22a2876 is integrated; all 48 genuine-conflict checks passed. The corrected real audit at committed integrated head 6eedc514890fcdbcf5e1ce5eff89067add481c69 produced Attempt at-b9088f8b52fcf430d55d5b4d, result wr-8d72032db4f519fba0b8ceb2, INCONCLUSIVE and zero surviving verified records. Two ungrounded model quotations were refused; the raw model's SURVIVED assertion is not a durable verdict. The WorkItem remains BLOCKED and promotion OFF. W8 remains NOT MET: no canonical shipment or post-merge readback. The owner's resume directive requires stopping on this outcome; no alternate subject, retry or scope expansion. Actual proof: data/health/worker-fleet-proofs/2026-09-03.json. Terminal report: docs/evidence/worker-fleet-resume.md. Prior six MET rows and their evidence are preserved.",
       "executionArtifacts": [
         {
           "kind": "integration-branch",

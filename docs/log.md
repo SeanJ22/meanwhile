@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-09-03 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **182 sessions.**
+Newest first. **183 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -25,13 +25,20 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 ---
 
+## 2026-09-03 Codex worker-fleet (RULING 227 auto-reconciliation)
+
+**What it finished.** 1 row(s).
+
+- **WF01** — Automatic approval review rejected the corrected live worker audit twice. It requires explicit owner approval to send the bounded 31,998-byte representation of eight already-vaulted public Avondale artifacts plus canonical subject and method-route context to https://api.anthropic.com/v1/messages. This is the existing worker provider under the unchanged rolling 25 USD ceiling. The payload has no producer or validator reasoning, restricted raw, credentials or browser/session data. Until approved, W4 has no surviving verified record and the corrected live audit cannot run. No rejected command started.
+
+**Needs Sean.** Nothing.
+
 ## 2026-09-03 Codex worker-fleet
 
-**What it started.** 1 row(s) opened, 1 still open.
+**What it started.** 1 row(s) opened, 0 still open.
 
-- **WF01** — Automatic approval review rejected the corrected live worker audit twice. It requires explicit owner approval to send the bounded 31,998-byte representation of eight already-vaulted public Avondale artifacts plus canonical subject and method-route context to https://api.anthropic.com/v1/messages. This is the existing worker provider under the unchanged rolling 25 USD ceiling. The payload has no producer or validator reasoning, restricted raw, credentials or browser/session data. Until approved, W4 has no surviving verified record and the corrected live audit cannot run. No rejected command started. *(open)*
 
-**Needs Sean.** WF01
+**Needs Sean.** Nothing.
 
 ## level-1-activation 2026-09-02 · 2026-09-02
 

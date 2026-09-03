@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-03 04:57:29 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-03 16:37:30 EDT.
 Session day 2026-09-03 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1312 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1313 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 Repository holding paths resolve through the committed move plan; source records stay unchanged.
@@ -1045,15 +1045,15 @@ _No status change recovered in the commits walked._
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-09-03 04:57:28 EDT
+generated: 2026-09-03 16:37:30 EDT
 branch: codex/worker-fleet
-head sha: 6d60bc181c60b1df8372d61a9feb40f122d6473e
-head subject: Record clean fleet gates and the explicit live-audit approval hold
-origin/main sha: d88356aacc076b07f5bb2e27de164b3cc95f9098
-origin/main subject: Post-deploy integrity reading: 2026-09-03T06:30Z
-local main sha: d88356aacc076b07f5bb2e27de164b3cc95f9098
+head sha: 6eedc514890fcdbcf5e1ce5eff89067add481c69
+head subject: Record bounded public W4 preflight on integrated main
+origin/main sha: c22a2876f673c680e49070dd2228de3d38155c62
+origin/main subject: Post-deploy integrity reading: 2026-09-03T19:19Z
+local main sha: c22a2876f673c680e49070dd2228de3d38155c62
 local main matches origin/main: yes
-working tree: dirty — 4 changed file(s)
+working tree: dirty — 19 changed file(s)
 open prs: 1
 open pr: #268 Execute disposable Parser, Validator, and adversarial audit workers
 last recorded tests: 094 (pass)

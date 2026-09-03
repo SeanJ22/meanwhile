@@ -1,5 +1,7 @@
 # Disposable worker fleet session
 
+**Current terminal outcome:** see [the W4/W8 resume report](worker-fleet-resume.md). WF01 was authorized and the corrected real audit ran on current-main integration. Its durable verdict remains INCONCLUSIVE, so W4 and W8 remain NOT MET. The remainder of this document preserves the pre-resume implementation and verification record; its earlier approval hold and five-Attempt accounting are historical.
+
 Unfinished session report, observed 2026-09-03T01:56:03-07:00 (`scripts/stamp.mts --iso`). Shipping is pending. Parser and Validator have processed five real held Avondale event records through persisted disposable Attempts. The measured independent Auditor returned INCONCLUSIVE; there is no surviving verified record and no reader promotion. W4 remains NOT MET while the corrected audit is blocked by automatic approval review, recorded as Needs Sean WF01. Independent gates continue.
 
 Bootstrap date: 2026-09-02 (`pnpm stamp`). PR 266 merged as `fd28d6fb3150aef2fd5550a4e5b7ee0d7b4d7099`; its ancestry on origin/main was verified before creating this worktree. Base: `d88356aacc076b07f5bb2e27de164b3cc95f9098`. Branch: `codex/worker-fleet`; worktree: `C:/Users/seanj/dev/wtp-worker-fleet`. Last verified origin/main: `d88356aacc076b07f5bb2e27de164b3cc95f9098`. Merged worker-fleet PR: NONE. Review PR: [#268](https://github.com/SeanJ22/meanwhile/pull/268), OPEN and DRAFT. Canonical shipping remains blocked by WF01.

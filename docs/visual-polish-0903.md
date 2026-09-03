@@ -88,15 +88,60 @@ corpus (walked 2026-08-26, 7-day shelf life) expired 2026-09-02, so
 any build after the 09-02→09-03 Phoenix boundary — blocking **every** merge, not
 just this one (RULING 53: absences expire and must be re-hunted).
 
-The author authorized a re-walk of 07866. It surfaced a second defect: the
-re-walk generator `scripts/argue-absences-0825.mts` was orphaned by the
-2026-09-03 state-holdings reorg (PR #266), which moved its inputs under
-`data/states/<state>/` and left it pointing at `data/ballot/`/`data/hunt/`. The
-moved-input paths were repaired (a minimal patch would have logged FALSE "no
-corpus" walls, forbidden), and a full honest re-walk ran: **275/275 candidacies,
-1036 absences, 0 walls, 0 voided**, dated 2026-09-03, on RULING 53's seven-day window.
-`coverage-matrix` now passes and `main` is un-blocked. The visual work then
-ships on a green suite (RULING 77), nothing weakened or fabricated.
+The author authorized a re-walk of 07866, and it surfaced a chain of unrelated
+project-health issues on `main` today, each cleared without touching the visual
+work or fabricating anything:
+
+- **Re-walk generator orphaned by the reorg.** PR #266 moved the generator's
+  inputs under `data/states/<state>/` and left `scripts/argue-absences-0825.mts`
+  on the old paths (reads AND a provenance string). Both fixed; a minimal patch
+  would have logged FALSE "no corpus"/old-path records, forbidden.
+- **A moving ballot.** The daily refresh (`591c275b`, 13:48Z) changed
+  `nj-morris-2026.json`, so the walk had to run against CURRENT main, not the
+  session base. Incorporated current `origin/main`, then walked: **275/275
+  candidacies, 1036 absences, 0 walls, 0 voided**, dated 2026-09-03, seven-day
+  window. `state-holdings:check` and `coverage-matrix` pass.
+- **`release:freeze`.** Production moved to the reorg deploy `591c275b`;
+  incorporating current `origin/main` brought the observer's fresh reading
+  (`f0ca8e12`, HELD against `591c275b`), and the gate reads CURRENT. No prod-DB
+  credential is present here, so a local reading could only be COULD_NOT_TELL —
+  the incorporated observer reading is what clears it.
+- **WF01 (author decision, NOT merge-blocking).** A hand-typed workbook row
+  opened by the Codex worker-fleet session requesting owner approval to send an
+  Avondale audit payload to the Anthropic API. `tracker:move` cannot ingest a
+  hand-typed row, and its resolution is owner approval (NOT_MACHINE_VERIFIABLE),
+  so it needs `tracker:add` with a decision card only the owner/Codex can
+  author. The mirror-workbook-guard that flags it **skips on CI** (the Drive is
+  not mounted on GitHub Actions), so it fails only locally and does NOT block the
+  PR. Left for the owner to formalize; the Drive mirror is untouched.
+
+## Terminal state — HELD FOR MERGE; main needs healing first (owner decision)
+
+The visual work is complete, correct, green-on-its-own, committed and pushed. It
+is **not merged**, by the owner's decision (2026-09-03), because incorporating
+current `main` — required before shipping — drags in a systemic staleness that is
+`main`'s today, not this work's:
+
+- **`main` is stale on multiple GENERATED artifacts**, uncaught because the
+  scheduled bot commits (daily refresh, post-deploy observer, intake tripwire)
+  push under the deploy-key bypass and never run the `gates` job. Found so far on
+  the merged head: **56 `docs/states/*.md` state manifests** (refresh changed
+  inputs, views not regenerated) and **`data/questionnaire/invitations-nj-morris-2026.json`**
+  (`collectedAt` stamped 2026-09-02, a day stale). The RULING 92 guard stops at
+  the first stale artifact, so the full extent is unknown without iterating.
+- Plus **WF01** (Codex worker-fleet approval row, above) and the **~10
+  reorg-orphaned hunt scripts** (DISC-REORG-ORPHANED-CONSUMERS).
+
+Regenerating these is deterministic (RULING 92/102), but they are Codex/ops
+"central generated-artifact infrastructure," which this session's directive says
+to **record, not modify**. Patching them one gate at a time from a visual session
+is the wrong tool, and the root cause — bot commits bypassing the gates — is an
+ops issue in its own right (DISC-BOTS-BYPASS-GATES below).
+
+**To merge this visual work:** a Codex/ops/state-holdings session (or the owner)
+regenerates `main`'s stale generated artifacts and resolves WF01, then this PR
+merges cleanly into a healthy `main` (git takes the healed artifacts; this branch
+never touched them). The branch is pushed and ready.
 
 ## Classified discoveries (§25)
 

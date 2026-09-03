@@ -82,20 +82,49 @@ export function findShrinkRegressions(
   // The second hop under the same rule (item 3, 2026-08-15). A committee
   // whose own books thinned between runs is the Kelly-504 shape one level
   // down, and it would render as a shorter list of donors with nothing
-  // saying so. Committees the prior snapshot never held are not a shrink;
-  // committees that VANISH are, because a fund that stops answering looks
-  // exactly like a fund with no donors.
+  // saying so.
+  //
+  // But the second-hop set is DERIVED, not fixed: scripts/fetch-fec.mts
+  // builds it fresh each run by scanning every first-hop
+  // `contributorCommitteeId` (fetch-fec.mts ~L730 — `hopIds`), so a
+  // committee is fetched ONLY while it is still a top-N contributor to a
+  // tracked candidate THIS run. That set churns as new contributions arrive
+  // and the top-N list shifts, and a committee dropping OUT of it is not a
+  // data outage — it simply is no longer among anyone's largest donors this
+  // week. Treating that churn as a shrink red-failed every daily refresh
+  // (C00422774, the ADVANCING DEMOCRACY AND MOBILIZATION PAC, was the case
+  // that surfaced it: absent from the run's derived set, never fetched, never
+  // "stopped answering").
+  //
+  // So a VANISHED prior committee is a regression only in the genuine
+  // "still asked, answered nothing" shape — still derived from this run's
+  // first hop (still in `currentHopIds`) yet missing from `next.secondHop`.
+  // A committee no longer in the derived set at all is expected churn and is
+  // NOT a regression. THINNING is unchanged: a committee present in BOTH runs
+  // whose rows fell is still the Kelly-504 shape and still fails — a
+  // still-derived committee that returns fewer/zero rows must never pass.
   const priorHop = prior.secondHop ?? [];
   const nextHopById = new Map((next.secondHop ?? []).map((c) => [c.committeeId, c]));
+  // Re-derive THIS run's hop-id set with the same rule fetch-fec.mts uses.
+  const currentHopIds = new Set<string>();
+  for (const candidate of next.candidates) {
+    for (const row of candidate.topContributions) {
+      if (row.contributorCommitteeId) currentHopIds.add(row.contributorCommitteeId);
+    }
+  }
   for (const before of priorHop) {
     const after = nextHopById.get(before.committeeId);
     if (!after) {
-      // Only a regression if the hop was worth something before — a
-      // committee that was empty and is now absent tells us nothing.
-      if (before.topContributions.length > 0) {
+      // A committee that is no longer derived from any first-hop row this
+      // run dropped out of the top-N set = expected churn, not an outage.
+      // Only a committee STILL derived (still a top-N contributor this run)
+      // yet absent from the fetched hop is the "still asked, answered
+      // nothing" regression — and only if the hop was worth something before,
+      // since a committee that was empty and is now absent tells us nothing.
+      if (currentHopIds.has(before.committeeId) && before.topContributions.length > 0) {
         regressions.push({
           kind: "SECOND_HOP_ROWS",
-          detail: `second-hop committee ${before.committeeId} (${before.name}) held ${before.topContributions.length} rows and is missing from this run`,
+          detail: `second-hop committee ${before.committeeId} (${before.name}) held ${before.topContributions.length} rows, is still a top contributor this run, and is missing from this run`,
         });
       }
       continue;

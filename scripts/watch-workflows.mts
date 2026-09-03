@@ -601,6 +601,65 @@ function stepsOfRun(runId: number): readonly StepObservation[] | undefined {
 }
 
 /**
+ * PROVENANCE BEFORE NARRATIVE (R3, 2026-09-03).
+ *
+ * Before the standing watch explains WHY a refresh failed, it reconciles the
+ * canonical execution record for THAT exact run against the run's own GitHub
+ * facts. It downloads the record artifact the workflow emitted, then runs the
+ * tested reconciler (`scripts/refresh-provenance-check.mts`, exit 0 RECONCILED /
+ * 3 PROVENANCE_MISMATCH / 1 cannot-run) BOUND to this run id and attempt. A
+ * record that does not reconcile — a wrong run id, a wrong attempt, a
+ * nonexistent survivor SHA — SUPPRESSES the causal narrative rather than
+ * explaining the wrong run. A run with no record (one from before this feature,
+ * or an expired artifact) is `NO_RECORD`: the watch may still say the run is red
+ * from GitHub, but it says so without a provenance-bound cause.
+ */
+function reconcileRefreshRun(runId: number): {
+  verdict: "RECONCILED" | "PROVENANCE_MISMATCH" | "NO_RECORD";
+  detail: string;
+} {
+  try {
+    const attempt = Number(
+      (JSON.parse(gh(["run", "view", String(runId), "--json", "attempt"])) as { attempt?: number }).attempt ?? 1,
+    );
+    const dir = mkdtempSync(join(tmpdir(), "wtp-exec-record-"));
+    try {
+      execFileSync(
+        "gh",
+        ["run", "download", String(runId), "-n", `refresh-execution-result-${runId}-${attempt}`, "-D", dir],
+        { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
+      );
+    } catch {
+      return { verdict: "NO_RECORD", detail: "no execution-result artifact for this run (a run before the record existed, or the artifact expired)" };
+    }
+    const found = readdirSync(dir, { recursive: true })
+      .filter((p): p is string => typeof p === "string" && p.endsWith(".json"))
+      .map((p) => join(dir, p));
+    if (found.length === 0) return { verdict: "NO_RECORD", detail: "the artifact carried no execution-result JSON" };
+    try {
+      const out = execFileSync(
+        process.execPath,
+        [
+          "--experimental-strip-types",
+          "scripts/refresh-provenance-check.mts",
+          "--record", found[0],
+          "--run-id", String(runId),
+          "--attempt", String(attempt),
+        ],
+        { cwd: process.cwd(), encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
+      );
+      return { verdict: "RECONCILED", detail: out.trim() };
+    } catch (e) {
+      const err = e as { status?: number; stdout?: string; stderr?: string };
+      if (err.status === 3) return { verdict: "PROVENANCE_MISMATCH", detail: (err.stderr ?? "").trim() };
+      return { verdict: "NO_RECORD", detail: `provenance check could not run: ${(err.stderr ?? "").trim()}` };
+    }
+  } catch (e) {
+    return { verdict: "NO_RECORD", detail: `could not reconcile: ${String(e instanceof Error ? e.message : e)}` };
+  }
+}
+
+/**
  * Whether a refresh commit reached `main` after the run was created — read
  * off the branch's own history, never inferred from a step's colour. Null
  * when the branch could not be read, which opens nothing (could-not-tell is
@@ -659,29 +718,60 @@ function dueSourcesOn(createdAt: string): number {
     console.log(`    ${REFRESH}: run ${enriched.databaseId} (${enriched.createdAt}) — no incident`);
   } else {
     console.log(`    ${REFRESH}: ${incident.kind} — run ${incident.runId}`);
-    console.log(`      ${incident.detail}`);
+    // R3: reconcile the canonical execution record for THIS run before saying
+    // anything about WHY it failed.
+    const prov = reconcileRefreshRun(incident.runId);
     const marker = REFRESH_MARKER(incident.runId);
-    if (openRowsMentioning(marker)) {
-      console.log("      a row is already open for this run — not opening a second.");
+
+    if (prov.verdict === "PROVENANCE_MISMATCH") {
+      console.log("      PROVENANCE_MISMATCH — causal diagnosis SUPPRESSED (the execution record does not reconcile with this run).");
+      for (const line of prov.detail.split("\n")) console.log(`      ${line}`);
+      if (openRowsMentioning(marker)) {
+        console.log("      a row is already open for this run — not opening a second.");
+      } else {
+        rows.push({
+          Section: "repo-ops",
+          Title: `${REFRESH}: execution record does NOT reconcile with run ${incident.runId} (provenance mismatch)`,
+          "What this is":
+            `The newest scheduled refresh is red on GitHub, but its canonical execution record does not ` +
+            `reconcile with this run, so WHY it failed is NOT stated from mismatched evidence (R3, RULING 243).\n\n` +
+            `${prov.detail}\n\nDo not act on a cause read from another run's record. Re-emit or locate the correct ` +
+            `execution result for run ${incident.runId}, or read the run log directly.\n\n` +
+            `OPERATIONAL INCIDENT (RULING 218): engineering work, never a Needs-Owner escalation by itself.\n\n${marker}`,
+          Priority: "P1",
+          prefix: "JOB",
+        });
+        console.log("      -> repo-ops provenance-mismatch row queued.");
+      }
     } else {
-      rows.push({
-        Section: "repo-ops",
-        Title:
-          incident.kind === "NEWEST_SCHEDULED_RUN_FAILED"
-            ? `${REFRESH}: the newest scheduled refresh failed (run ${incident.runId})`
-            : `${REFRESH}: the newest scheduled refresh landed nothing on a due day (run ${incident.runId})`,
-        "What this is":
-          `${incident.detail}\n\nTHIS IS THE ONLY REFRESH PATH THAT REACHES READERS, so a day it lands nothing is a ` +
-          "day of freshness the product lost. Read docs/refresh-run.json on the run's checkout (or the run log) " +
-          "for the per-source outcome — ROUTE_UNREAD names the source and the reason — and " +
-          "data/ops/refresh-debt.json for what is still owed. A source the gate refused is due on the next run " +
-          "until it lands; a tree-level red (a failure no source's revert fixes) is a defect on main and is fixed " +
-          "there.\n\nOPERATIONAL INCIDENT (RULING 218): engineering work, never a Needs-Owner escalation by " +
-          `itself.\n\n${marker}`,
-        Priority: "P1",
-        prefix: "JOB",
-      });
-      console.log("      -> repo-ops incident row queued (RULING 218).");
+      const bound =
+        prov.verdict === "RECONCILED"
+          ? "The canonical execution record for this run RECONCILES with its GitHub facts (R3), so this cause is provenance-bound:\n\n" + prov.detail + "\n\n"
+          : "No provenance-bound execution record was available for this run (a run from before the record existed, or an expired artifact); the cause below is read from the run log, not from a reconciled record.\n\n";
+      console.log(`      ${incident.detail}`);
+      console.log(`      provenance: ${prov.verdict}`);
+      if (openRowsMentioning(marker)) {
+        console.log("      a row is already open for this run — not opening a second.");
+      } else {
+        rows.push({
+          Section: "repo-ops",
+          Title:
+            incident.kind === "NEWEST_SCHEDULED_RUN_FAILED"
+              ? `${REFRESH}: the newest scheduled refresh failed (run ${incident.runId})`
+              : `${REFRESH}: the newest scheduled refresh landed nothing on a due day (run ${incident.runId})`,
+          "What this is":
+            `${bound}${incident.detail}\n\nTHIS IS THE ONLY REFRESH PATH THAT REACHES READERS, so a day it lands nothing is a ` +
+            "day of freshness the product lost. Read docs/refresh-run.json on the run's checkout (or the run log) " +
+            "for the per-source outcome — ROUTE_UNREAD names the source and the reason — and " +
+            "data/ops/refresh-debt.json for what is still owed. A source the gate refused is due on the next run " +
+            "until it lands; a tree-level red (a failure no source's revert fixes) is a defect on main and is fixed " +
+            "there.\n\nOPERATIONAL INCIDENT (RULING 218): engineering work, never a Needs-Owner escalation by " +
+            `itself.\n\n${marker}`,
+          Priority: "P1",
+          prefix: "JOB",
+        });
+        console.log("      -> repo-ops incident row queued (RULING 218).");
+      }
     }
   }
 }

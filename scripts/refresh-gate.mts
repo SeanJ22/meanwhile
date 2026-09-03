@@ -36,6 +36,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
+import { regenerateStaleDependents, spawningRunner } from "../lib/ops/generated-freshness.ts";
 import { REFRESH_SOURCES, utcDay } from "../lib/ops/refresh-cadence.ts";
 import { attributeFailures, failingTestFiles, refusalReason, type RevertTrial } from "../lib/ops/refresh-gate.ts";
 import {
@@ -219,6 +220,36 @@ if (suiteExit !== null && suiteExit !== 0 && !existsSync(suiteLog)) {
 let debt = readDebt(ROOT, dayName);
 
 const finalise = (next: RefreshRun, refused: boolean): void => {
+  // REGENERATE STALE PURE DEPENDENTS OF THE FINAL SURVIVOR TREE (2026-09-03).
+  //
+  // A survivor source may have changed an input to a registered PURE generator
+  // (a candidate ballot feeds `state-manifest` and the questionnaire) without
+  // regenerating the dependent, and — on a REFUSED path — a reverted source may
+  // have left a dependent stale relative to the tree that will actually commit.
+  // Either way, a stale dependent would be refused at the push door
+  // (`lib/ops/generated-freshness.ts`), so the daily refresh could never LAND a
+  // candidate change. Regenerating here, from the final tree, is the positive
+  // half of that guard: the dependents that ship are current against the inputs
+  // that ship. It is deterministic (PURE generators over committed inputs) and
+  // read-first (only stale ones are rewritten).
+  const runner = spawningRunner(ROOT);
+  const regen = regenerateStaleDependents({
+    runCheck: runner,
+    runGen: (command) => runner(command),
+    log: (line) => console.log(line),
+  });
+  if (regen.regenerated.length > 0) {
+    console.log(`refresh-gate · regenerated ${regen.regenerated.length} stale dependent path(s) before commit`);
+  }
+  if (regen.failed.length > 0) {
+    for (const f of regen.failed) {
+      console.error(`refresh-gate · a dependent generator FAILED to regenerate: \`${f.command}\`\n${f.output}`);
+    }
+    cannotRun(
+      `a registered PURE dependent could not be regenerated (${regen.failed.map((f) => f.command).join(", ")}); ` +
+        "nothing is committed under a tree whose generated invariants cannot be made green.",
+    );
+  }
   writeRefreshRun(ROOT, next, REFRESH_SOURCES);
   const debtMoved = writeDebtIfChanged(ROOT, debt, dayName);
   console.log(`\nrefresh-gate · wrote docs/refresh-run.json and docs/refresh-run.md${debtMoved ? "; data/ops/refresh-debt.json moved" : ""}`);

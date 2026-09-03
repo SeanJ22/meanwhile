@@ -36,10 +36,12 @@ export default function FeedbackPage() {
           system reserves for numerals and identifiers, worn by the one string
           that is neither. It is the lockup now, at the 18px wordmark floor. */}
         <div>
-          <Logo variant="wordmark" size={18} />
+          {/* BAL-40 (2026-09-02): logo-first hierarchy — the wordmark leads,
+              the headline below comes down a step. */}
+          <Logo variant="wordmark" size={30} />
         </div>
         {/* Interaction surface, so the ask may be warm. */}
-        <h1 className="mt-2 text-2xl font-semibold text-paper">
+        <h1 className="mt-2 text-xl font-semibold text-paper">
           Tell us what&apos;s wrong
         </h1>
 

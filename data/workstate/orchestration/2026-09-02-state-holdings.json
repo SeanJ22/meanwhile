@@ -29,7 +29,8 @@
         "holdings_inventory agent worked independently beside manifest_inputs and the integration owner; ownership then transferred to the integration owner",
         "Provider usage limit stopped the later residual-fix turn; remaining edits were completed locally",
         "After provider capacity resumed, the agent completed its explicitly reassigned repair/review lane and yielded files back to the integration owner. Ownership transfers were serialized before edits.",
-        "A1 adversarial census identified 23 canonical TypeScript modules at the same base. The corrected plan preceded all seven extractions. holdings_inventory owned the first four source/data/consumer contracts and code-data equality test."
+        "A1 adversarial census identified 23 canonical TypeScript modules at the same base. The corrected plan preceded all seven extractions. holdings_inventory owned the first four source/data/consumer contracts and code-data equality test.",
+        "After PR267 merged, this agent exclusively owned data/states/az/ballot/measure-summaries.json, lib/ballot/measure-summary.ts and tests/state-holdings-code-data.test.ts. It preserved the original 11-record snapshot and added all four upstream records with exact Git-source equality. Ownership returned to root before integration tests."
       ],
       "declaredPostHoc": {
         "backfilledOn": "2026-09-02",
@@ -107,7 +108,8 @@
         "geography_paths agent owned explicitly allocated geometry/roster consumers while holdings_inventory corrected non-geography consumers; shared files remained with the integration owner",
         "Provider usage limit stopped this lane; integration owner regenerated the resolver artifact and finished the projection tests",
         "After provider capacity resumed, the agent completed its explicitly reassigned repair/review lane and yielded files back to the integration owner. Ownership transfers were serialized before edits.",
-        "geography_paths owned only the three meeting source/data/consumer extraction contracts and meeting-data equality test, independently beside the first four extractions."
+        "geography_paths owned only the three meeting source/data/consumer extraction contracts and meeting-data equality test, independently beside the first four extractions.",
+        "The independent upstream integration lane exclusively updated the two path references in tests/measure-summaries.test.ts and tests/visual-feedback-9-2.test.ts, retaining every upstream assertion, then yielded to root."
       ],
       "declaredPostHoc": {
         "backfilledOn": "2026-09-02",
@@ -172,7 +174,8 @@
         "After the seven state-scoped module extractions were finished, root serialized 52 import/reference files with 92 replacements. Distinct consumer paths keep every old holding path absent.",
         "Final bounded walk diagnoses were read-only worker outputs; root alone repaired the shared walk instrument and ran the local integration walk. Source implementation and all readbacks remained fixed.",
         "The three independent final guard diagnoses had explicit ownership: root owned workflow parity, geography_paths owned tenant-body-binding, and holdings_inventory owned the coverage-language guard. Workers yielded after targeted tests; root alone committed and reran all sixteen gates. Destination verification resolved automatic approval. PR 266 is open; the shipping door now waits for required checks and binds the merge to its tested head. No merge has occurred at this checkpoint.",
-        "The shipping wait repair passed all 16 local gates in run 15. Automatic approval review renewed the bundled Drive/transcript export hold before the next handoff executed; explicit author authorization is pending. PR 266 remains open, and no merge or production HELD receipt is claimed."
+        "The shipping wait repair passed all 16 local gates in run 15. Automatic approval review renewed the bundled Drive/transcript export hold before the next handoff executed; explicit author authorization is pending. PR 266 remains open, and no merge or production HELD receipt is claimed.",
+        "Explicit author export/synchronization authorization superseded the prior hold. Root serialized current-main integration, CI shallow-source preparation, feedback references, gate-record preservation, generated views and tracker NH323. The independent merge had finished before our merge attempt; PR266 remains the sole planned session merge."
       ],
       "declaredPostHoc": {
         "backfilledOn": "2026-09-02",

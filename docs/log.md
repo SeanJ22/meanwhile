@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-09-02 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **180 sessions.**
+Newest first. **181 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -65,6 +65,14 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NH319** — Both September scheduled runs (33517560447, 33636708298) show INGEST_CONTACT_EMAIL: empty in the refresh step's environment, so the meetings ingest's user agent carries the repository URL fallback rather than a contact address. Publishers who read the agent string cannot reach a person. Set the GitHub repository variable INGEST_CONTACT_EMAIL to the address the owner wants publishers to see, or record in lib/ops/refresh-cadence.ts that the fallback is the deliberate choice. Also folded in (FRONTIER): tests/concluded.test.ts compared a live snapshot against a date typed on 2026-08-15 — a stopped clock that would have failed every jurisdiction once the 90-day window rolled past it (fixed to measure against snapshot.generatedAt); sweep the suite for other assertions that hold committed live data against a hard-coded now. And: on a red day scripts/refresh-gate.mts re-runs the full suite because the gate step is kept literal for tests/workflow-actions.test.ts; a reporter-to-file via NODE_OPTIONS on the gate step would let the attribution reuse the first run. *(open)*
 
 **Needs Sean.** NH310
+
+## codex/state-holdings-20260903 · 2026-09-02
+
+**What it started.** 1 row(s) opened, 1 still open.
+
+- **NH323** — Independent state-holdings and visual-feedback worktrees both emitted data/ops/gate-runs/2026-09-02-10.json. Preserve unique run identity across parallel worktrees while retaining deterministic latest-run selection. Both observed records were preserved during integration; no gate result was overwritten or discarded. *(open)*
+
+**Needs Sean.** Nothing.
 
 ## Lane E — nightly window (2026-09-02) · 2026-09-02
 

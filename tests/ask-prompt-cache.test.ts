@@ -434,18 +434,30 @@ test("H1: the two payloads are a PARTITION of the pre-caching payload", () => {
   assert.deepEqual(questionKeys.sort(), [...SYNTHESIS_QUESTION_FIELDS].sort());
 });
 
-test("H1: the system prompt is untouched by the caching change", () => {
+test("H1: the system prompt is one string with every rule, and its size is pinned", () => {
   /*
-   * The system field is the front of the cached prefix. The caching change was
-   * required to leave it byte-identical, and this is the check that says so —
-   * `synthesisPrompt` still renders one plain string with every rule in it.
+   * The system field is the front of the cached prefix, so its size is a cost
+   * fact and a change to it is deliberate rather than incidental — this pins it.
+   *
+   * **ASK-24 (2026-09-02) grew it from 1,503 to 2,347 characters**, adding the
+   * definition-first answer contract the owner's Prop 141 report asked for:
+   * lead with a twelve-year-old's plain definition, then descending relevance,
+   * caveats after, nothing off the subject. The growth crosses a cost boundary
+   * worth naming: at ~1,503 chars the system block was measured at 471 tokens,
+   * below BOTH models' minimum cacheable prefix (512 / 1,024), so a breakpoint
+   * on it could never fire; at 2,347 chars it is above the Opus-5 floor, so the
+   * system block is now large enough to cache in its own right. That is a cost
+   * OPPORTUNITY, not a change made here — the request still carries the one
+   * breakpoint on the reader's question, and the token recount is owed to the
+   * next `count_tokens` run before a second marker is added.
    */
   const prompt = synthesisPrompt(zipPack());
   assert.equal(typeof prompt, "string");
   assert.match(prompt, /ONLY the records supplied/);
   assert.match(prompt, /Never tell the reader how to vote/);
   assert.match(prompt, /Today is 2026-08-31\./);
-  assert.equal(prompt.length, 1503, "the system prompt changed size — re-measure the 512-token floor");
+  assert.match(prompt, /LEAD WITH THE PLAIN DEFINITION/, "the definition-first contract is in the prompt");
+  assert.equal(prompt.length, 2347, "the system prompt changed size — re-measure the cache floor");
 });
 
 /* ── the caller key ──────────────────────────────────────────────────────── */

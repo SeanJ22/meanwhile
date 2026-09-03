@@ -2316,5 +2316,12 @@
       "NH321",
       "NH322"
     ]
+  },
+  {
+    "session": "codex/state-holdings-20260903",
+    "opened": "2026-09-02",
+    "ids": [
+      "NH323"
+    ]
   }
 ]

@@ -66,9 +66,11 @@ export default function BallotLoading() {
           system reserves for numerals and identifiers, worn by the one string
           that is neither. It is the lockup now, at the 18px wordmark floor. */}
       <div className="mt-4">
-        <Logo variant="wordmark" size={18} />
+        {/* BAL-40 (2026-09-02): mirror the ballot page's logo-first hierarchy so
+            the skeleton doesn't flip small→big→small before hydration. */}
+        <Logo variant="wordmark" size={30} />
       </div>
-      <h1 className="mt-1.5 text-2xl font-semibold tracking-tight">
+      <h1 className="mt-1.5 text-xl font-semibold tracking-tight">
         Finding what&apos;s on the ballot…
       </h1>
       <p className="mt-3 text-[0.8125rem] leading-relaxed text-voice lg:max-w-2xl">

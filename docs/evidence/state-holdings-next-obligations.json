@@ -1,7 +1,7 @@
 {
   "formatVersion": 1,
   "baseSha": "3f9a138fd39f6160659329e17c496d2dd99cee00",
-  "classification": "FRONTIER obligations NH321 and NH322 remain; NH320 attribution was resolved by the newly inventoried canonical roster inputs.",
+  "classification": "FRONTIER obligations NH321, NH322 and NH323 remain; NH320 attribution was resolved by the newly inventoried canonical roster inputs.",
   "assetAttribution": {
     "inventory": "data/state-holdings/vault-readback.json",
     "observed_at": "2026-09-03T01:06:51.158Z",
@@ -57,5 +57,14 @@
     "source": "scripts/build-registry.ts --offline",
     "proof": "Original and regenerated identity sets match: 2267 divisions and 1998 bodies. Offline regeneration omits canonical OCD reconciliation fields and refreshes timestamps. Original registry bytes were restored; no held identities were changed.",
     "next": "Define an offline reconstruction contract that preserves acquired canonical OCD reconciliation metadata."
+  },
+  "gateRunCollision": {
+    "tracker": "NH323",
+    "classification": "FRONTIER",
+    "preservedRecords": [
+      "data/ops/gate-runs/2026-09-02-10.json",
+      "data/ops/gate-runs/2026-09-02-state-holdings-10.json"
+    ],
+    "next": "Give parallel worktrees unique gate record identities while preserving deterministic latest-run selection. Both original records were preserved byte for byte; no allocator redesign enters this session."
   }
 }

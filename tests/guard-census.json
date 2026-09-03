@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 443,
-    "named": 4936,
+    "files": 445,
+    "named": 4959,
     "dynamic": 18
   },
   "files": {
@@ -510,6 +510,7 @@
         "ASK-06 (a): a reader asking about their sitting representative gets his roll calls",
         "ASK-06 (b): a candidate with no held voting record gets a NAMED gap, never silence",
         "ASK-06 (c): THE ADVERSARIAL CASE — Sally Ann Gonzales gets no senator's votes",
+        "ASK-24: 'Explain Prop 141 to me' carries NOTHING off the measure — no Senate bullet, no unconnected people",
         "BALLOT: a contest resolves and lists who filed for it",
         "BALLOT: a measure resolves from the short form a reader actually types",
         "BALLOT: a non-statewide challenger on the reader's ballot resolves and retrieves",
@@ -738,9 +739,25 @@
         "H1: the console line carries token counts and NO reader fact",
         "H1: the prefix clears Claude Opus 5's 512-token cacheable minimum",
         "H1: the saving is computed from the published multipliers, and one read repays the write",
-        "H1: the system prompt is untouched by the caching change",
+        "H1: the system prompt is one string with every rule, and its size is pinned",
         "H1: the two payloads are a PARTITION of the pre-caching payload",
         "H1: usage is read from the API's own usage block, absent fields as zero"
+      ],
+      "dynamic": 0
+    },
+    "tests/ask-relevance.test.ts": {
+      "names": [
+        "CORPUS: a correct, grounded Prop 141 answer evaluates GREEN against the corpus expectation",
+        "CORPUS: a fallback (non-grounded) answer is RED — a measure explained by no engine is not green",
+        "CORPUS: an answer bound to a DIFFERENT measure is RED, not a near miss",
+        "SEEDED: a MEASURE drops the reader-representative fallback from WHO THIS IS",
+        "SEEDED: a record STAMPED for a different subject cannot enter the pack, whatever its kind",
+        "SEEDED: an off-subject BALLOT_ABSENCE cannot enter a MEASURE's pack — the Senate bullet",
+        "a BODY subject drops a record naming a DIFFERENT body, keeps a null-body record",
+        "a MEASURE keeps its own kinds and its basis-filtered contacts, drops the rest",
+        "a PERSON pack is not narrowed by the measure kind rule",
+        "a candidate KEEPS the reader-representative fallback — it is the closest honest contact",
+        "a null subject gates NOTHING — the ballot-at-large question sees every record"
       ],
       "dynamic": 0
     },
@@ -3996,7 +4013,8 @@
     "tests/measure-summaries.test.ts": {
       "names": [
         "every extracted analysis has its plain-language summary",
-        "every summary cites the exact official text it was written from",
+        "every local summary cites the exact measure source it was written from",
+        "every statewide summary cites the exact official analysis it was written from",
         "summaries describe, never advocate",
         "the analyses store is populated, with its counts stated and consistent",
         "the ballot surface labels the summary and renders the official text"
@@ -6310,7 +6328,8 @@
     },
     "tests/state-holdings-code-data.test.ts": {
       "names": [
-        "the baseline record reader refuses executable or imported expressions"
+        "the baseline record reader refuses executable or imported expressions",
+        "upstream measure integration preserves all 15 records and the unchanged frozen 11"
       ],
       "dynamic": 1
     },
@@ -6765,6 +6784,20 @@
         "WI1.7: overlapping painted boxes fail overlap; disjoint boxes pass",
         "WI1.7: prominence with no surrounding band inside the capture is refused, not passed",
         "WI1.7: two boxes intersecting on both axes are refused as a spacing question"
+      ],
+      "dynamic": 0
+    },
+    "tests/visual-feedback-9-2.test.ts": {
+      "names": [
+        "BAL-40: on every wordmark-above-headline page the logo is larger than the headline",
+        "BAL-41/MTG-15: the level tag is ONE component, tier-derived, colour from the accent token",
+        "BAL-41: the ballot wires the tag onto every race, every measure, and the section headers, from OCD identity",
+        "BAL-45/46/47: the summary leads on the face; the verbatim serif ballot text is collapsed below",
+        "BAL-46: every local measure carries a plain-language summary, cited to its own source, never advocacy",
+        "BAL-48: extended election-mechanics text collapses behind a disclosure by default",
+        "MTG-15: the meeting surfaces carry the tag from the meeting's OCD identity",
+        "POS-4: the desktop map still renders the Who Governs Here panel and the district card — untouched by this session",
+        "POS-5: the statewide measure treatment the owner praised is intact — summary, part-by-part, collapsed analysis"
       ],
       "dynamic": 0
     },

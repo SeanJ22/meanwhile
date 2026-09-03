@@ -356,6 +356,18 @@ export function ballotRecordsFor(
         sourceUrl: provision.citesUrl,
       });
     }
+    /*
+     * **THE POSITIVE HALF OF THE RELEVANCE GATE.** (ASK-24, 2026-09-02.)
+     *
+     * Every record above is this measure's own evidence — its contest row, its
+     * official question and statement, its summary, its provisions — so each
+     * carries the measure's canonical id as the subject it is evidence FOR.
+     * `lib/ask/relevance.ts` reads that to keep them and to drop a record
+     * stamped for a different subject, at the id level. Without this a measure
+     * pack could carry another ballot item's record on nothing but a shared
+     * division, which is the U.S. Senate bullet the owner met under Prop 141.
+     */
+    for (const created of records) created.subjectId = record.id;
     return { records, denominators };
   }
 

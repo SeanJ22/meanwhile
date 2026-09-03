@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "inputDigest": "4bbfcfcb4cecc9a0c0cfe30c9241a2f1d5451849b1815cca062e2b06e80686e3",
+  "inputDigest": "092064731ddcac60c5dc5349a7ada91900028ff549ddea2d170ba8364f136253",
   "inputs": [
     {
       "path": "data/assets/manifest.json",
@@ -172,7 +172,7 @@
     },
     {
       "path": "data/states/az/ballot/measure-summaries.json",
-      "sha256": "aaaf1bef6a638c7820ef3d57001e1259a73d9a7016a5ed49a32f6755e5f06504"
+      "sha256": "7d781a97f82381d0de4e1dab156993e5f6673d39d2bc01fe18591e496fbd04f9"
     },
     {
       "path": "data/states/az/campaign-finance/az-2026-statewide-corpus.json",

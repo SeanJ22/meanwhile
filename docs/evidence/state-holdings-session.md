@@ -185,7 +185,7 @@ The full shipping gate set and single merge are the remaining A1/A2 requirements
 ## Final gate diagnosis and shipping authorization
 
 The first sixteen-gate integration run is recorded in
-`data/ops/gate-runs/2026-09-02-10.json`: 15 gates passed. The test gate registered
+`data/ops/gate-runs/2026-09-02-state-holdings-10.json`: 15 gates passed. The test gate registered
 4,951 tests (4,944 passed, six failed, one skipped). Both production builds, the
 manifest freshness check and residual-path check passed. Three failures came from
 the workflow test's block-command regex consuming subsequent YAML steps and
@@ -418,3 +418,27 @@ missing registration, unavailable/failed checks, changed heads and protection
 refusals. The local head is also captured before the full gates and compared
 after them, then used for the remote match constraint. These are BLOCKING
 shipping-instrument corrections; no branch protection or gate was bypassed.
+
+## Current-main integration before the single merge
+
+Local run 17 on `1b7335327d455600932e09143a8f3d04639fe2e4` passed 15/16 gates;
+only release freeze failed. All 4,961 tests passed, with zero failures and one
+skip. The failure was PRODUCTION_MOVED: PR 267 had merged and deployed while
+this shipping attempt ran. Its automatic observer committed a new HELD receipt
+on main at `6a3c9b4ff272adcd689e9130c2285fc64293fff8`. CI on the previous PR
+head likewise failed only release freeze. No merge was attempted past that gate.
+
+The integration owner merged that already committed current main into this
+isolated branch. Four new local ballot summaries and every citation were
+preserved in the canonical Arizona JSON, with their own pinned upstream-source
+proof. The frozen 11-record provenance and the 305-holding/56-state denominator
+remain unchanged. CI fetches the two exact Git source commits required by these
+proofs. The combined targeted suite passed 29/29 tests. Five newly introduced
+old-path references were corrected across four files, listed in move-report.json.
+
+Two independent gate runs had used the same filename. Both original byte sets
+were preserved; the historical state-holdings record now has the explicit
+archive filename recorded above. NH323 records collision-safe future run IDs as
+FRONTIER work. Root alone resolved shared files and owns final gates and merge.
+The prior 443-pass local walk predates the incoming reader changes, so a fresh
+combined local production walk is owed before shipping.

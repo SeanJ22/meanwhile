@@ -4,7 +4,21 @@
   "source": {
     "baseSha": "3f9a138fd39f6160659329e17c496d2dd99cee00",
     "sourceSha256": "680a62fbdb2b22d3e9dccbff89638175a929afa05cd5e87f909a341c679efb3c",
-    "recordsSha256": "b3f42d29406ae21765ab9c484ac2d5680f724f94be059d776321dbab238ee0c0"
+    "recordsSha256": "b3f42d29406ae21765ab9c484ac2d5680f724f94be059d776321dbab238ee0c0",
+    "integratedUpdate": {
+      "commit": "eb31f84a7774e8c364c59155eba581ba0fa10b59",
+      "sourceSha256": "486fa01859ff9150ef1c9b4f14c8fa64f49b4ed6864fb5a0d1a940b94725078b",
+      "recordsSha256": "1e337a4c97bbaac99a59c33b973e142b45240266295ccd81ddf77ed3f4e4f8d6",
+      "baseRecordCount": 11,
+      "addedRecordCount": 4,
+      "recordCount": 15,
+      "addedContestIds": [
+        "ballot-az-pima:prop-425",
+        "ballot-az-pima:prop-423",
+        "ballot-az-pima:prop-428",
+        "ballot-az-pima:prop-429"
+      ]
+    }
   },
   "commentary": [
     "/**\n * Hand-curated plain-language summaries of ballot measures (4d).\n *\n * The rules, each of them load-bearing:\n * - **Written ONLY from the official source text on the page** — the\n *   Legislative Council analysis each row cites. Nothing here came from\n *   news coverage, advocacy material, or general knowledge.\n * - **What it does, never whether it's good.** No advocacy vocabulary; a\n *   test holds this mechanically (tests/measure-summaries.test.ts).\n * - **Rendered ABOVE the official text, clearly labeled, never replacing\n *   it.** The label on the surface says \"read the official text below\".\n * - **Every row cites the text it summarizes** — `summarizesUrl` must\n *   match the analysis record for the same contest, asserted in tests.\n *\n * The generated-at-runtime version of this belongs to the natural-language\n * track and its A07 gates; these are curated data, reviewed like any other\n * curated row.\n */",
@@ -78,6 +92,34 @@
         "summary": "Would require large Arizona school districts — 7,500 or more students, or any district with a school in a county of 500,000 or more people — to spend at least 60 percent of their operating money on direct classroom instruction, with the state auditor general defining the terms. Districts below that line would have to raise the share each year, and districts that don't comply would lose part, and eventually all, of their classroom site fund allocation unless granted a waiver.",
         "summarizesUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20SCR1032%20-%202026.pdf",
         "writtenAt": "2026-08-13"
+      },
+      {
+        "contestId": "ballot-az-pima:prop-425",
+        "summary": "Would let Pima County permanently raise the state-set limit on how much money it is allowed to spend — its “expenditure base” — by $70 million, with that amount adjusted every year afterward for population growth and inflation. The county says that if voters approve it, the spending limit for 2027–28 would rise by about $610 million, from about $817 million to about $1.43 billion. A YES vote lets the county raise its 1979–80 base limit; a NO vote does not. The Pima County Board of Supervisors put it on the ballot.",
+        "summarizesUrl": "https://content.civicplus.com/api/assets/az-pimacounty/55aa379c-bc22-47fe-8b7c-d10dab0ade8c/permanent-base-adjustment-proposition-pdf.pdf",
+        "writtenAt": "2026-08-13",
+        "citation": "measure-source"
+      },
+      {
+        "contestId": "ballot-az-pima:prop-423",
+        "summary": "Would let the Vail Unified School District keep spending up to 12.5% more than the state's revenue control limit each year, for 2027/2028 and the next six years. The district says this continues about $5.1 million above the alternate budget for 2027/2028, at an estimated $1.61 per $100 of a property's secondary assessed value. A YES vote continues the override; a NO vote ends it.",
+        "summarizesUrl": "https://www.schools.pima.gov/",
+        "writtenAt": "2026-08-13",
+        "citation": "measure-source"
+      },
+      {
+        "contestId": "ballot-az-pima:prop-428",
+        "summary": "Would let the Sahuarita Unified School District keep spending up to 15% more than its normal day-to-day “maintenance and operations” budget. Only voters who live in the district decide it, at the November 3, 2026 election. A YES vote continues that extra spending; a NO vote ends it.",
+        "summarizesUrl": "https://www.schools.pima.gov/",
+        "writtenAt": "2026-08-13",
+        "citation": "measure-source"
+      },
+      {
+        "contestId": "ballot-az-pima:prop-429",
+        "summary": "Would let the Tanque Verde Unified School District keep spending up to 15% more than its normal day-to-day “maintenance and operations” budget. Only voters who live in the district decide it, at the November 3, 2026 election. A YES vote continues that extra spending; a NO vote ends it.",
+        "summarizesUrl": "https://www.schools.pima.gov/",
+        "writtenAt": "2026-08-13",
+        "citation": "measure-source"
       }
     ]
   }

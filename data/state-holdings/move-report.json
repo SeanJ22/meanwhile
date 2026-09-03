@@ -1914,8 +1914,12 @@
   },
   "referenceIntegration": {
     "definition": "Changed or new consumer/evidence files with added canonical-state paths or canonical path/discovery helper references relative to the frozen base. Excludes holding destinations and migration accounting inputs. Counts are changed lines, not literal occurrences.",
-    "fileCount": 269,
+    "fileCount": 272,
     "files": [
+      {
+        "path": ".github/workflows/build-check.yml",
+        "canonicalReferenceLinesAdded": 1
+      },
       {
         "path": ".github/workflows/refresh-nj-filing.yml",
         "canonicalReferenceLinesAdded": 2
@@ -1951,6 +1955,10 @@
       {
         "path": "data/derived/resolver-geometry.json",
         "canonicalReferenceLinesAdded": 49
+      },
+      {
+        "path": "data/feedback/sweeps/9.2.26.json",
+        "canonicalReferenceLinesAdded": 1
       },
       {
         "path": "data/health/rollcall-walks/2026-08-31T15-56-19-436Z.json",
@@ -2006,7 +2014,7 @@
       },
       {
         "path": "data/workstate/orchestration/2026-09-02-state-holdings.json",
-        "canonicalReferenceLinesAdded": 1
+        "canonicalReferenceLinesAdded": 2
       },
       {
         "path": "docs/architecture/control-plane-current-system-inventory.md",
@@ -2374,7 +2382,7 @@
       },
       {
         "path": "lib/ballot/measure-summary.ts",
-        "canonicalReferenceLinesAdded": 1
+        "canonicalReferenceLinesAdded": 2
       },
       {
         "path": "lib/ballot/seat-holders.ts",
@@ -2893,6 +2901,10 @@
         "canonicalReferenceLinesAdded": 1
       },
       {
+        "path": "tests/gate-parity.test.ts",
+        "canonicalReferenceLinesAdded": 1
+      },
+      {
         "path": "tests/generated-artifacts.test.ts",
         "canonicalReferenceLinesAdded": 2
       },
@@ -2970,7 +2982,7 @@
       },
       {
         "path": "tests/state-holdings-code-data.test.ts",
-        "canonicalReferenceLinesAdded": 4
+        "canonicalReferenceLinesAdded": 5
       },
       {
         "path": "tests/state-holdings-meeting-data.test.ts",
@@ -4077,6 +4089,30 @@
       },
       {
         "path": "tests/wiki-citation-follow.test.ts",
+        "count": 1
+      }
+    ]
+  },
+  "upstreamIntegration": {
+    "commit": "eb31f84a7774e8c364c59155eba581ba0fa10b59",
+    "definition": "Five old-path references introduced by the already merged visual-feedback PR were corrected while integrating current main.",
+    "replacements": 5,
+    "files": 4,
+    "byFile": [
+      {
+        "path": "tests/measure-summaries.test.ts",
+        "count": 1
+      },
+      {
+        "path": "tests/visual-feedback-9-2.test.ts",
+        "count": 1
+      },
+      {
+        "path": "data/feedback/sweeps/9.2.26.json",
+        "count": 2
+      },
+      {
+        "path": "data/workstate/orchestration/2026-09-02-session-c-visual-feedback.json",
         "count": 1
       }
     ]

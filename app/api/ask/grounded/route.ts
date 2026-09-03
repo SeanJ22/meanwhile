@@ -78,6 +78,7 @@ import {
   type AskAnswerPayload,
 } from "@/lib/ask/answer";
 import { agendaTopicEvidence } from "@/lib/ask/agenda-topic";
+import { gateContactsToSubject, gateRecordsToSubject } from "@/lib/ask/relevance";
 import {
   financeQuestionAsked,
   financeRegimeNotesFor,
@@ -1581,10 +1582,29 @@ export async function POST(request: Request) {
   if (subject && contacts.length === 0) {
     contacts.push(...contactsForRepresentatives(readerRepresentatives(ocdIds)));
   }
-  for (const contact of contacts.slice(0, MAX_ASK_CONTACTS)) {
+  /*
+   * ── ASK-24 ── **WHO THIS IS ONLY WHERE THE CONNECTION IS PRINTED.**
+   * (The owner's Prop 141 report, 2026-09-02.)
+   *
+   * A ballot MEASURE with no governing roster of its own falls back to the
+   * reader's own legislators above — and *"Your state senator"* has no stated
+   * relationship to Proposition 141, which is why three of them appeared under
+   * WHO THIS IS on a question about a tax measure. The measure's OWN district
+   * board (which governs the jurisdiction the measure is about) stays; the
+   * reader-representative fallback does not. `lib/ask/relevance.ts` holds the
+   * rule, and it is scoped to a measure so a candidate or contest keeps the
+   * fallback that is genuinely its closest honest contact.
+   *
+   * Gated HERE, before contacts become CONTACT records, so the same set reaches
+   * the evidence pack and the rendered WHO THIS IS — a contact the pack drops
+   * can never be one the panel shows.
+   */
+  const shownContacts = gateContactsToSubject(subject, contacts).contacts;
+  denominators.contactsExcludedOffSubject = contacts.length - shownContacts.length;
+  for (const contact of shownContacts.slice(0, MAX_ASK_CONTACTS)) {
     records.push(contactRecord(contact));
   }
-  denominators.verifiedContacts = Math.min(contacts.length, MAX_ASK_CONTACTS);
+  denominators.verifiedContacts = Math.min(shownContacts.length, MAX_ASK_CONTACTS);
 
   /*
    * **THE AUTHORITY'S OWN STATEMENTS OF ABSENCE — for the SUBJECT's division.**
@@ -1701,12 +1721,31 @@ export async function POST(request: Request) {
     if (interpretation.intent === "UNKNOWN") interpretation.intent = "AGENDA_TOPIC";
   }
 
+  /*
+   * ── ASK-24 ── **THE RELEVANCE GATE, BEFORE THE PACK IS SEALED.**
+   * (The owner's Prop 141 report, 2026-09-02.)
+   *
+   * *"Explain Prop 141 to me"* returned the measure explained and then a bullet
+   * about the U.S. Senate seat on the 2026 ballot — a real, sourced
+   * `BALLOT_ABSENCE` that attached only because Prop 141 and the Senate contest
+   * share the statewide division. It is not about the measure, and once it is in
+   * the pack the synthesis rung can write a sentence from it that `validate.ts`
+   * has no rule to catch. So it is removed HERE, before the model is handed the
+   * pack, at the id-and-kind level rather than by reading prose:
+   * `lib/ask/relevance.ts` keeps a record linked to the resolved subject and
+   * drops one that is not. A null subject — the ballot-at-large question — gates
+   * nothing.
+   */
+  const relevant = gateRecordsToSubject(subject, records);
+  denominators.recordsExcludedOffSubject = relevant.excluded.length;
+  const packRecords = relevant.records;
+
   const pack: EvidencePack = {
     question,
     intent: interpretation.intent,
     temporal: interpretation.temporal,
     subject,
-    records,
+    records: packRecords,
     gaps,
     denominators,
     today,
@@ -1714,8 +1753,8 @@ export async function POST(request: Request) {
 
   trace.retrieval = {
     selection,
-    recordCount: records.length,
-    sourceCount: new Set(records.map((r) => r.sourceUrl).filter(Boolean)).size,
+    recordCount: packRecords.length,
+    sourceCount: new Set(packRecords.map((r) => r.sourceUrl).filter(Boolean)).size,
     gapCount: gaps.length,
     denominators,
   };
@@ -1735,7 +1774,11 @@ export async function POST(request: Request) {
   let answer: string | null = null;
   let answerModel: string | null = null;
   let validationPassed: boolean | null = null;
-  let mode: AnswerMode = records.length > 0 ? "STRUCTURED_GROUNDED" : "NO_EVIDENCE";
+  /* The reader's structured answer is the GATED pack, so the mode is derived
+     from what actually reaches them: a subject whose only records were
+     off-subject and gated out is NO_EVIDENCE, honestly, not a structured answer
+     built from records the reader will never see. */
+  let mode: AnswerMode = packRecords.length > 0 ? "STRUCTURED_GROUNDED" : "NO_EVIDENCE";
 
   if (synthesis.kind === "WROTE") {
     trace.synthesis = {
@@ -1819,7 +1862,7 @@ export async function POST(request: Request) {
    * It ships gated. `captureAskInteraction` checks `ripcord.askSignalCapture`
    * itself, returns GATED, and builds no row at all.
    */
-  await capture(mode, subject ? [subject.id] : [], answer, answerModel, validationPassed, records, gaps);
+  await capture(mode, subject ? [subject.id] : [], answer, answerModel, validationPassed, packRecords, gaps);
 
   /*
    * **ONE DECLARED SHAPE, BUILT FROM THE PACK THAT PRODUCED IT.** (ASK-05.)
@@ -1842,7 +1885,7 @@ export async function POST(request: Request) {
     mode,
     pack,
     answer,
-    contacts: contacts.slice(0, MAX_ASK_CONTACTS),
+    contacts: shownContacts.slice(0, MAX_ASK_CONTACTS),
     /*
      * ASK-20 / ASK-23 / ASK-24. In start order and de-duplicated by id: the
      * chosen sitting first, then any other sitting the body holds on the same

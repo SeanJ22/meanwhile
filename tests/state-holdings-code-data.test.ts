@@ -51,6 +51,37 @@ const CONTRACTS = [
 
 const hash = (value: string): string => createHash("sha256").update(value).digest("hex");
 
+/** Already-merged source changes are preserved without rewriting the session-base contract. */
+const MEASURE_PATH = "data/states/az/ballot/measure-summaries.json";
+const MEASURE_INTEGRATION = {
+  commit: "eb31f84a7774e8c364c59155eba581ba0fa10b59",
+  sourceSha256: "486fa01859ff9150ef1c9b4f14c8fa64f49b4ed6864fb5a0d1a940b94725078b",
+  recordsSha256: "1e337a4c97bbaac99a59c33b973e142b45240266295ccd81ddf77ed3f4e4f8d6",
+  baseRecordCount: 11,
+  addedRecordCount: 4,
+  recordCount: 15,
+  addedContestIds: [
+    "ballot-az-pima:prop-425",
+    "ballot-az-pima:prop-423",
+    "ballot-az-pima:prop-428",
+    "ballot-az-pima:prop-429",
+  ],
+} as const;
+
+function measureId(record: Json): string {
+  assert.ok(record !== null && typeof record === "object" && !Array.isArray(record));
+  assert.equal(typeof record.contestId, "string");
+  return record.contestId as string;
+}
+
+function frozenBaseRecords(path: string, records: Records): Records {
+  if (path !== MEASURE_PATH) return records;
+  const additions = new Set<string>(MEASURE_INTEGRATION.addedContestIds);
+  return {
+    MEASURE_SUMMARIES: records.MEASURE_SUMMARIES.filter((record) => !additions.has(measureId(record))),
+  };
+}
+
 /** Read data expressions; imports, property access, arbitrary calls and statements cannot execute. */
 function literalRecords(source: string, symbols: readonly string[]): Records {
   const ast = ts.createSourceFile("baseline.ts", source, ts.ScriptTarget.Latest, true);
@@ -158,10 +189,11 @@ for (const contract of CONTRACTS) {
     assert.equal(data.source.baseSha, plan.baseSha);
     assert.equal(data.source.sourceSha256, row.sha256);
     assert.equal(data.source.recordsSha256, contract.recordsSha256);
-    assert.equal(hash(JSON.stringify(data.records)), contract.recordsSha256);
+    const frozenRecords = frozenBaseRecords(contract.path, data.records);
+    assert.equal(hash(JSON.stringify(frozenRecords)), contract.recordsSha256);
     assert.equal(hash(JSON.stringify(data.commentary)), contract.commentarySha256);
     assert.deepEqual(Object.keys(data.records), Object.keys(contract.counts));
-    for (const [symbol, count] of Object.entries(contract.counts)) assert.equal(data.records[symbol].length, count);
+    for (const [symbol, count] of Object.entries(contract.counts)) assert.equal(frozenRecords[symbol].length, count);
     if ("members" in contract) {
       const rosters = data.records.AZ_CAWCD_ROSTERS as { members: Json[] }[];
       assert.equal(rosters.reduce((sum, roster) => sum + roster.members.length, 0), contract.members);
@@ -176,11 +208,41 @@ for (const contract of CONTRACTS) {
     if (baseAvailable) {
       const source = execFileSync("git", ["show", object], { cwd: ROOT, encoding: "utf8", maxBuffer: 2_000_000 });
       assert.equal(hash(source), row.sha256);
-      assert.deepEqual(data.records, literalRecords(source, Object.keys(contract.counts)));
+      assert.deepEqual(frozenRecords, literalRecords(source, Object.keys(contract.counts)));
       assert.deepEqual(data.commentary, sourceCommentary(source));
     }
   });
 }
+
+test("upstream measure integration preserves all 15 records and the unchanged frozen 11", () => {
+  const row = plan.rows.find((candidate) => candidate.newPath === MEASURE_PATH);
+  assert.ok(row);
+  const data = JSON.parse(readFileSync(join(ROOT, MEASURE_PATH), "utf8")) as {
+    source: { integratedUpdate: typeof MEASURE_INTEGRATION };
+    records: Records;
+  };
+  assert.deepEqual(data.source.integratedUpdate, MEASURE_INTEGRATION);
+  assert.deepEqual(Object.keys(data.records), ["MEASURE_SUMMARIES"]);
+  assert.equal(hash(JSON.stringify(data.records)), MEASURE_INTEGRATION.recordsSha256);
+  assert.equal(data.records.MEASURE_SUMMARIES.length, MEASURE_INTEGRATION.recordCount);
+  const contract = CONTRACTS.find((candidate) => candidate.path === MEASURE_PATH)!;
+  const frozenRecords = frozenBaseRecords(MEASURE_PATH, data.records);
+  assert.equal(frozenRecords.MEASURE_SUMMARIES.length, MEASURE_INTEGRATION.baseRecordCount);
+  assert.equal(hash(JSON.stringify(frozenRecords)), contract.recordsSha256);
+  const baseIds = new Set(frozenRecords.MEASURE_SUMMARIES.map(measureId));
+  const additions = data.records.MEASURE_SUMMARIES.filter((record) => !baseIds.has(measureId(record)));
+  assert.equal(additions.length, MEASURE_INTEGRATION.addedRecordCount);
+  assert.deepEqual(additions.map(measureId), MEASURE_INTEGRATION.addedContestIds);
+  for (const record of additions) {
+    assert.ok(record !== null && typeof record === "object" && !Array.isArray(record));
+    assert.equal(record.citation, "measure-source");
+  }
+
+  const object = `${MEASURE_INTEGRATION.commit}:${row.oldPath}`;
+  const source = execFileSync("git", ["show", object], { cwd: ROOT, encoding: "utf8", maxBuffer: 2_000_000 });
+  assert.equal(hash(source), MEASURE_INTEGRATION.sourceSha256);
+  assert.deepEqual(data.records, literalRecords(source, ["MEASURE_SUMMARIES"]));
+});
 
 test("the baseline record reader refuses executable or imported expressions", () => {
   assert.throws(() => literalRecords("export const ROWS = fetch('https://example.invalid');", ["ROWS"]), /Not a permitted data expression/);

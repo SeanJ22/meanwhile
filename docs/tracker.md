@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **416 open**, 485 resolved.
+- **417 open**, 485 resolved.
 - **73 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
@@ -557,7 +557,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**106 open · 114 resolved.**
+**107 open · 114 resolved.**
 
 ### P1
 
@@ -730,6 +730,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH321** — The portrait inventory reaches 663 entries while rendered slots draw 572; 91 federal portraits are reachable but undrawn. Establish the intended accounting without suppressing a reader or an inventory row.
 
 **NH322** — The offline registry builder reproduces all 2267 divisions and 1998 bodies but omits held canonical OCD reconciliation metadata. Define and prove the offline preservation contract before using its output as a replacement registry.
+
+**NH323** — Independent state-holdings and visual-feedback worktrees both emitted data/ops/gate-runs/2026-09-02-10.json. Preserve unique run identity across parallel worktrees while retaining deterministic latest-run selection. Both observed records were preserved during integration; no gate result was overwritten or discarded.
 
 **NH39** — James Gallagher, a U.S. Representative sworn in on 2026-06-10, has no websiteUrl at all - the congress-legislators dataset this registry reads has not yet published his House page. Kate Murray is the one New Hampshire officeholder pnpm nh:fix-pages could not repair, because she is not on the General Court's current roster; a former member's page is the archive's hunt.
 

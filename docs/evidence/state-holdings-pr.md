@@ -10,4 +10,4 @@ Shared integration changes cover package/CI gates, handoff generation, generated
 
 The shipping retry also exposed a pending-check loop: regenerated context starts new CI, but the door attempted an immediate merge. Handoff now waits for checks with a bounded watch and binds the merge to the tested head. Focused tests verify that failed checks and a refused merge cannot report success. The updated implementation passes all 16 local gates (4,957 tests passed, zero failed, one skipped), recorded in `data/ops/gate-runs/2026-09-02-15.json`.
 
-Shipping is currently held because automatic approval review requires explicit authorization for handoff's bundled local transcript export to the verified private project Drive folder. No merge or new production HELD observation is claimed.
+The author explicitly authorized the canonical shipping operation, its bundled project transcript/document/code export to the existing private Drive folder with the secret-value sweep, and post-merge synchronization without discarding runner data. Deployment and final acceptance are recorded from actual post-merge observations.

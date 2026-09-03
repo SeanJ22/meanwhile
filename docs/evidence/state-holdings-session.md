@@ -333,7 +333,7 @@ when the merge cannot complete. No gate or branch protection was removed.
 This shared-file repair is serialized to the integration owner. The final
 shipping invocation will rerun the full gate set and reuse PR 266.
 
-## Current hold: explicit export authorization required
+## Historical hold: explicit export authorization since granted
 
 The retry was rejected before execution by automatic approval review. Its stated
 reason was that the command also exports local repository/transcript contents,
@@ -388,3 +388,16 @@ of acceptance.
 The closeout commit hook initially refused the two observed UTC clock dates
 above because their source-observation annotations were missing. Those annotations
 were added; the authorship-date guard and its allowlist remain unchanged.
+
+## Authorization resumed
+
+The author explicitly authorized the canonical `pnpm handoff --ship` operation,
+including all local Claude transcripts from the seven established WTP project
+directories and canonical documents/code files to the existing private project
+Drive folder, with the mandatory secret-value sweep. The author also explicitly
+authorized synchronization of the standing/main checkout without discarding
+runner-owned data. This supersedes the export hold and the original prohibition
+on touching that checkout for the narrow post-merge synchronization step.
+The sole integration owner will finish PR 266, verify its tested head and actual
+deployment, reconcile runner data, resolve acceptance from the observed proofs,
+and close out without starting the carried work.

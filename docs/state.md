@@ -4,7 +4,7 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-09-02 — **State holdings are organized by state, with generated answers for every discovered state.** The implementation, local proofs and finite acceptance record are in `docs/evidence/state-holdings-session.md`. PR 266 is open. The final local gate run passed 16/16 with 4,957 tests passed and one skipped; the shipping door now waits for GitHub checks before merging its tested head. Automatic approval review renewed the Drive/transcript export hold and requires explicit author approval of that payload and destination. The single merge and new production HELD observation remain owed; neither is claimed.
+Last updated: 2026-09-02 — **State holdings are organized by state, with generated answers for every discovered state.** The implementation, local proofs and finite acceptance record are in `docs/evidence/state-holdings-session.md`. PR 266 is open. The local gate run passed 16/16 with 4,957 tests passed and one skipped; the shipping door waits for GitHub checks before merging its tested head. The author explicitly authorized the bundled project Drive export, mandatory secret-value sweep, and synchronization of the standing checkout without discarding runner data. The single merge and new production HELD observation remain owed; neither is claimed.
 
 Previous: 2026-09-01 — **The runner could not survive its own backlog because a re-observation of the same bytes was refused as a rewrite of history, and every restart walked back into it.** The autonomy-recovery session.
 

@@ -2323,5 +2323,15 @@
     "ids": [
       "NH323"
     ]
+  },
+  {
+    "session": "job-watch",
+    "opened": "2026-09-03",
+    "ids": [
+      "JOB44",
+      "JOB45",
+      "JOB46",
+      "JOB47"
+    ]
   }
 ]

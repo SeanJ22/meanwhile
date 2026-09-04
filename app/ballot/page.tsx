@@ -649,7 +649,7 @@ async function BallotBattlecard({
          * positions in the snapshot.
          */
         record: recordHolder ? (
-          <RecentVotes holder={recordHolder} reactionContext={context} />
+          <RecentVotes holder={recordHolder} reactionContext={context} contentOnly />
         ) : null,
         /*
          * **BAL-15 (2026-08-25).** Sources now carries three things the ballot

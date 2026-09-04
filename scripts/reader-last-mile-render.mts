@@ -17,6 +17,12 @@ import type { Meeting } from "../lib/sources/types.ts";
 import type { MeetingReaderRecords } from "../lib/meetings/reader-records.ts";
 import type { VotingSitesAnswer } from "../lib/ballot/voting-sites.ts";
 import { officialActionsForTarget, type ReaderOfficialActions } from "../lib/officials/reader-actions.ts";
+import { directoryFor } from "../lib/officials/directory.ts";
+import { keyVotesForMember } from "../lib/votes/key-votes-reader.ts";
+import { pollingLookupFallbacks } from "../lib/ballot/polling-lookup-fallback.ts";
+import { unifiedCorpus } from "../lib/corpus/unified.ts";
+import { positionsFor, type PositionAnswer } from "../lib/corpus/positions.ts";
+import { readerPositionsFor } from "../lib/corpus/reader-positions.ts";
 
 const BASE = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
 assert.ok(["localhost", "127.0.0.1", "[::1]"].includes(new URL(BASE).hostname), "Rendered regression runs on local production build");
@@ -43,10 +49,66 @@ async function capture(page: Page, label: string, focus?: Locator) {
   return path;
 }
 async function openSection(modal: Locator, label: string) {
-  const button = modal.getByRole("button", { name: label, exact: true });
+  const button = modal.locator("button.card-section-header").filter({ has: modal.getByText(label, { exact: true }) });
   await button.waitFor({ state: "visible", timeout: 15_000 });
   if ((await button.getAttribute("aria-expanded")) !== "true") await button.click();
   return button.locator("..");
+}
+
+async function federalRecordsWitness(page: Page, modal: Locator, label: string, ballot: boolean) {
+  const member = "congress:C001133";
+  const held = directoryFor(member);
+  assert.ok(held);
+  const directoryResponse = await page.request.get(`${BASE}/api/directory?member=${encodeURIComponent(member)}`);
+  assert.equal(directoryResponse.status(), 200);
+  const directory = await directoryResponse.json();
+  assert.deepEqual(directory.districtOffices, held.entry.districtOffices);
+  assert.deepEqual(directory.committees.map((row: { committeeId: string }) => row.committeeId), held.entry.committees.map(row => row.committeeId));
+  const committees = await openSection(modal, "Committees");
+  await committees.locator("[data-committee-seat]").first().waitFor({ state: "visible" });
+  assert.deepEqual((await committees.locator("[data-committee-seat]").evaluateAll(elements => elements.map(element => element.getAttribute("data-committee-seat")))).sort(), held.entry.committees.map(row => row.committeeId).sort());
+  const committeeMeta = committees.locator(":scope > button .card-section-meta");
+  if (await committeeMeta.count()) assert.equal(Number(await committeeMeta.innerText()), held.entry.committees.length);
+  await capture(page, `${label}-committees`, committees);
+  const offices = await openSection(modal, "Offices near you");
+  await offices.locator("[data-directory-office]").first().waitFor({ state: "visible" });
+  assert.equal(await offices.locator("[data-directory-office]").count(), held.entry.districtOffices.length);
+  for (let i = 0; i < held.entry.districtOffices.length; i++) {
+    const row = held.entry.districtOffices[i];
+    const text = await offices.locator(`[data-directory-office="${i}"]`).innerText();
+    for (const value of [row.city, row.address, row.phone]) if (value) assert.ok(text.includes(value), `${member}: held office fact missing ${value}`);
+  }
+  const officeMeta = offices.locator(":scope > button .card-section-meta");
+  if (await officeMeta.count()) assert.equal(Number(await officeMeta.innerText()), held.entry.districtOffices.length);
+  await capture(page, `${label}-offices`, offices);
+  const expectedVotes = await keyVotesForMember(member);
+  const votesResponse = await page.request.get(`${BASE}/api/votes?member=${encodeURIComponent(member)}`);
+  assert.equal(votesResponse.status(), 200);
+  const votes = await votesResponse.json();
+  assert.deepEqual(votes.keyVotes, expectedVotes.rows);
+  const record = await openSection(modal, ballot ? "Voting record" : "Voting Record");
+  const keyToggle = record.getByRole("button", { name: /^When it mattered/ });
+  await keyToggle.waitFor({ state: "visible" });
+  await keyToggle.click();
+  const laws = await openSection(record, "Votes on laws");
+  const rows = expectedVotes.rows.filter(row => row.entry.group === "LAWS");
+  assert.equal(await laws.locator("[data-key-vote]").count(), rows.length);
+  for (const row of rows) {
+    const item = laws.locator(`[data-key-vote="${row.entry.id}"]`);
+    const text = await item.innerText();
+    assert.ok(text.includes(row.entry.title));
+    assert.ok(text.includes(row.entry.explainer));
+    for (let i = 0; i < row.refs.length; i++) {
+      const ref = row.refs[i];
+      if (ref.url) assert.ok(await item.locator(`a[href="${ref.url}"]`).count());
+      const position = row.positions[i];
+      const expected = position === "YES" ? "Voted yes" : position === "NO" ? "Voted no" : position === "PRESENT" ? "Voted present" : position ? "Did not vote" : row.held?.[i] ? "Not in this chamber for this vote" : "We haven't recorded this vote yet";
+      assert.ok(text.includes(expected), `${member}/${row.entry.id}: held position missing`);
+    }
+  }
+  await capture(page, `${label}-key-votes`, laws.locator("[data-key-vote]").first());
+  await capture(page, `${label}-key-votes-last`, laws.locator("[data-key-vote]").last());
+  return { member, committees: held.entry.committees.length, offices: held.entry.districtOffices.length, keyVoteRows: rows.length, positionsReadAt: expectedVotes.positionsReadAt };
 }
 async function dismissNarrowing(page: Page) {
   const optional = page.getByRole("button", { name: /No thanks|show me everything|Skip for now/i }).first();
@@ -123,6 +185,38 @@ async function inspectOfficialActions(page: Page, modal: Locator, expected: Read
   await capture(page, `${label}-official-actions`, rows.first());
   await capture(page, `${label}-official-actions-last`, rows.last());
   return { canonicalTarget: await root.getAttribute("data-official-actions-target"), count: expected.count, actualIds };
+}
+
+async function positionsWitness(page: Page, modal: Locator, subjectId: string, label: string) {
+  const topic = "transparency";
+  const holding = positionsFor("ballot-az-pima:governor|Katie Hobbs", topic, unifiedCorpus());
+  assert.equal(holding.kind, "MATCHED", "Positions control must come from an eligible held quotation");
+  const section = await openSection(modal, "Positions");
+  // Search is inside the caller's one disclosure. A nested top-level section
+  // would close its own parent through CardSectionGroup and hide the holding.
+  const input = section.locator("[data-positions-search]");
+  await input.waitFor({ state: "visible" });
+  const pending = page.waitForResponse(response => new URL(response.url()).pathname === `/api/positions/${encodeURIComponent(subjectId)}/${topic}`, { timeout: 30_000 });
+  await input.fill(topic);
+  const response = await pending;
+  assert.equal(response.status(), 200);
+  const answer = await response.json() as PositionAnswer & { totalMatches: number; canonicalSubjectKeys: string[] };
+  assert.equal(answer.kind, "MATCHED");
+  const expected = readerPositionsFor(subjectId, topic);
+  assert.deepEqual(answer.passages, expected.passages);
+  assert.deepEqual(answer.canonicalSubjectKeys, expected.canonicalSubjectKeys);
+  assert.ok(holding.passages.every(passage => answer.passages.some(actual => actual.snapshotId === passage.snapshotId && actual.quote === passage.quote && actual.url === passage.url)), `${subjectId}: held candidacy quotation disappeared`);
+  const result = section.locator('[data-positions-answer="MATCHED"]');
+  await result.waitFor({ state: "visible" });
+  const figures = result.locator("figure");
+  assert.equal(answer.totalMatches, answer.passages.length);
+  assert.equal(await figures.count(), answer.passages.length);
+  for (let i = 0; i < answer.passages.length; i++) {
+    assert.ok((await figures.nth(i).innerText()).includes(answer.passages[i].quote));
+    assert.equal(await figures.nth(i).locator(`a[href="${answer.passages[i].url}"]`).count(), 1);
+  }
+  await capture(page, `${label}-positions`, result);
+  return { topic, canonicalSubjectKeys: answer.canonicalSubjectKeys, passages: answer.passages, renderedCount: await figures.count() };
 }
 async function openBallotCandidate(page: Page, name: string) {
   const row = page.locator(".candidate-row").filter({ hasText: name }).first();
@@ -294,6 +388,46 @@ async function votingWitness(page: Page, label: string) {
   return { ...answer, renderedJurisdictions: answer.jurisdictions.length, renderedSites: sites.length, layoutFailure };
 }
 
+async function votingFallbackWitness(page: Page, label: string, kind: "outside-coverage" | "assigned-unresolved") {
+  const opener = page.getByRole("button", { name: "Where can I vote?", exact: true });
+  if (!(await opener.isVisible())) {
+    const menu = page.getByRole("button", { name: "Open menu", exact: true });
+    if (await menu.isVisible()) await menu.click();
+  }
+  await opener.click();
+  const panel = page.locator(".voting-panel");
+  // Public municipal buildings only. The NJ address is held in the meetings
+  // snapshot; Phoenix City Hall is the city clerk's published public address.
+  const address = kind === "outside-coverage" ? "200 W Washington Street, Phoenix, AZ 85003" : "65 Mount Hope Road, Rockaway Township, NJ 07866";
+  const addressSource = kind === "outside-coverage" ? "https://www.phoenix.gov/administration/departments/cityclerk/contact-us.html" : "data/meetings-snapshot.json";
+  await panel.getByLabel("Your street address").fill(address);
+  const pending = page.waitForResponse(response => new URL(response.url()).pathname === "/api/voting-sites" && response.request().method() === "POST", { timeout: 90_000 });
+  await panel.getByRole("button", { name: "Show me", exact: true }).click();
+  const response = await pending;
+  assert.equal(response.status(), 200);
+  const answer = await response.json() as VotingSitesAnswer;
+  assert.equal(answer.match, true, `${address}: public address must actually resolve`);
+  if (kind === "outside-coverage") assert.equal(answer.outsideCoverage, true);
+  else assert.ok(answer.jurisdictions.some(jurisdiction => jurisdiction.state === "NJ" && jurisdiction.narrowing.kind === "REFUSED"));
+  const expected = pollingLookupFallbacks("answered", answer);
+  assert.ok(expected.length > 0);
+  const fallback = panel.locator("[data-polling-lookup-fallback]");
+  await fallback.waitFor({ state: "visible" });
+  assert.equal(await fallback.locator("[data-polling-lookup-state]").count(), expected.length);
+  for (const link of expected) {
+    const row = fallback.locator(`[data-polling-lookup-state="${link.state}"]`);
+    assert.ok((await row.innerText()).includes(link.note));
+    assert.ok((await row.innerText()).includes(link.sourceOrg));
+    assert.equal(await row.locator(`a[href="${link.url}"]`).count(), 1);
+  }
+  const bounds = await panel.boundingBox();
+  assert.ok(bounds && bounds.x >= 0 && bounds.x + bounds.width <= page.viewportSize()!.width, "Voting fallback fits the reader viewport");
+  await capture(page, `${label}-voting-${kind}`, fallback);
+  await capture(page, `${label}-voting-${kind}-last`, fallback.locator("[data-polling-lookup-state]").last());
+  await panel.getByRole("button", { name: "Close", exact: true }).click();
+  return { kind, address, addressSource, answer, links: expected, renderedLinks: expected.length };
+}
+
 async function areaWitness(page: Page, zip: string, label: string) {
   const location = resolveZip(zip);
   assert.ok(location.ok, `${zip}: canonical centroid is held`);
@@ -385,9 +519,11 @@ try {
         const mapModal = await openOfficial(page, pilot.name);
         const mapMoney = await inspectMoney(mapModal, pilot.key, pilot.raised, pilot.spent);
         await capture(page, `${label}-map-money`, mapMoney.section);
+        const mapPositions = pilot.zip === "85701" && viewport.name === "phone" ? await positionsWitness(page, mapModal, pilot.official, `${label}-map`) : null;
         const expectedActions = officialActionsForTarget(pilot.key);
         const mapActions = pilot.zip === "85701" ? await inspectOfficialActions(page, mapModal, expectedActions, `${label}-map`) : null;
         await page.keyboard.press("Escape");
+        let mapFederalRecords = null;
         if (pilot.zip === "85641") {
           const federal = await openOfficial(page, "Juan Ciscomani");
           const profile = await openSection(federal, "Public statements");
@@ -398,16 +534,20 @@ try {
           assert.equal(federalApi.kind, "funding");
           await money.getByText(federalApi.data.sentences[0], { exact: true }).waitFor({ state: "visible" });
           assert.ok((await money.innerText()).replace(/\s+/g, " ").includes(federalApi.data.sentences[0]));
+          mapFederalRecords = await federalRecordsWitness(page, federal, `${label}-map`, false);
           await page.keyboard.press("Escape");
         }
         const meetings = await activityWitnesses(page, pilot.zip, label);
         const voting = pilot.zip === "85701" ? await votingWitness(page, label) : null;
+        const votingFallback = viewport.name === "phone" && ["85701", "07866"].includes(pilot.zip) ? await votingFallbackWitness(page, label, pilot.zip === "85701" ? "outside-coverage" : "assigned-unresolved") : null;
         await page.goto(`${BASE}/ballot?zip=${pilot.zip}`, { waitUntil: "domcontentloaded", timeout: 90_000 });
         await page.locator("[data-battlecard-pill]").first().waitFor({ state: "visible", timeout: 30_000 });
         const ballotModal = await openBallotCandidate(page, pilot.name);
         const ballotMoney = await inspectMoney(ballotModal, pilot.key, pilot.raised, pilot.spent);
         assert.equal(ballotMoney.text, mapMoney.text);
         await capture(page, `${label}-ballot-money`, ballotMoney.section);
+        const ballotPositions = pilot.zip === "85701" && viewport.name === "phone" ? await positionsWitness(page, ballotModal, (await ballotModal.getAttribute("data-candidate-subject"))!, `${label}-ballot`) : null;
+        if (mapPositions && ballotPositions) assert.deepEqual(ballotPositions, mapPositions, "Map and ballot must quote the same canonical person holdings");
         const ballotActions = pilot.zip === "85701" ? await inspectOfficialActions(page, ballotModal, expectedActions, `${label}-ballot`) : null;
         if (mapActions && ballotActions) {
           assert.deepEqual(mapActions.actualIds, ballotActions.actualIds);
@@ -425,11 +565,14 @@ try {
           await capture(page, `${label}-ballot-filed-contact`, sources);
           await page.keyboard.press("Escape");
         }
+        let ballotFederalRecords = null;
         if (pilot.zip === "85641") {
           const federal = await openBallotCandidate(page, "Juan Ciscomani");
           const profile = await openSection(federal, "Public statements");
           assert.match(await profile.innerText(), /6,875 statements/);
           await capture(page, `${label}-ballot-profile`, profile);
+          ballotFederalRecords = await federalRecordsWitness(page, federal, `${label}-ballot`, true);
+          assert.deepEqual(ballotFederalRecords, mapFederalRecords);
           await page.keyboard.press("Escape");
         }
         const population = viewport.name === "desktop" && theme === "dark" ? await allBallotMoney(page) : null;
@@ -437,7 +580,7 @@ try {
         const ask = viewport.name === "desktop" && theme === "dark" ? await ballotAskMoney(page, pilot, label) : null;
         const area = await areaWitness(page, pilot.zip, label);
         const result = voting?.layoutFailure ? "FAIL" : "PASS";
-        results.push({ label, result, error: voting?.layoutFailure ?? null, build, map: mapMoney.text, ballot: ballotMoney.text, canonicalCandidacyId: pilot.key, api, population, ask, meetings, voting, area, mapActions, ballotActions });
+        results.push({ label, result, error: voting?.layoutFailure ?? null, build, map: mapMoney.text, ballot: ballotMoney.text, canonicalCandidacyId: pilot.key, api, population, ask, meetings, voting, votingFallback, area, mapActions, ballotActions, mapPositions, ballotPositions, mapFederalRecords, ballotFederalRecords });
         console.log(`${result} ${label}${population ? `; ${population.cardsOpened} ballot cards individually opened` : ""}${voting?.layoutFailure ? `; ${voting.layoutFailure}` : ""}`);
       } catch (error) {
         await capture(page, `${label}-failure`).catch(() => {});

@@ -453,7 +453,7 @@ export function CandidateBattlecard({
                         to search before knowing there is anything to search.
                       */}
                       {spec.id === "positions" && (
-                        <PositionsSection subjectId={subjectId} subjectName={name} />
+                        <PositionsSection subjectId={subjectId} subjectName={name} contentOnly />
                       )}
                     </CardSection>
                   );

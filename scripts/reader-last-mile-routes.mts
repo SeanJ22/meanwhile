@@ -20,6 +20,7 @@ import { prlProfileForSubject } from "../lib/sources/prl/snapshot.ts";
 import type { PrlSnapshot } from "../lib/sources/prl/types.ts";
 import { unifiedCorpus } from "../lib/corpus/unified.ts";
 import { positionsFor, searchTerms } from "../lib/corpus/positions.ts";
+import { readerPositionsFor } from "../lib/corpus/reader-positions.ts";
 import { getFundingSnapshot } from "../lib/funding/snapshot.ts";
 import { officialActionsForTarget } from "../lib/officials/reader-actions.ts";
 import { executiveActionStore } from "../lib/officials/executive-actions.ts";
@@ -178,7 +179,7 @@ for (const snapshot of corpus.snapshots) {
   positionQueries.set(key, query);
 }
 await each([...positionQueries.values()], async ({ subject, topic, expectedRecordIds }) => {
-  const expected = positionsFor(subject, topic, corpus);
+  const expected = readerPositionsFor(subject, topic, corpus);
   const actual = await get(`/api/positions/${encodeURIComponent(subject)}/${encodeURIComponent(topic)}`);
   assert.deepEqual(actual, { ...expected, totalMatches: expected.passages.length }, `${subject}/${topic}`);
   const passages = rows(actual.passages);

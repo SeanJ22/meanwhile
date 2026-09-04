@@ -26,6 +26,7 @@ export function readerTraceRequirements(root: string): ReaderTraceRequirement[] 
     ...["api/meetings/route", "api/agenda/route", "api/ask/grounded/route", "api/ask/agenda/route"].map((route) => ({ route, loader: "lib/meetings/snapshot.ts", files: ["data/meetings-snapshot.json"] })),
     ...["api/agenda/route", "api/ask/grounded/route"].map((route) => ({ route, loader: "lib/outcomes/store.ts", files: outcome })),
     ...["api/positions/[subject]/[topic]/route", "api/ask/grounded/route"].map((route) => ({ route, loader: "lib/corpus/unified.ts", files: corpus })),
+    { route: "api/positions/[subject]/[topic]/route", loader: "lib/identity/reader-person.ts", files: [...identity, ...ROSTER_FILES.map(rosterPath)] },
     { route: "api/votes/route", loader: "lib/votes/snapshot.ts", files: votes },
     { route: "api/ask/grounded/route", loader: "lib/ask/votes.ts", files: votes },
     ...["api/directory/route", "ballot/page"].map((route) => ({ route, loader: "lib/officials/directory.ts", files: ["data/congress-legislators/directory.json"] })),

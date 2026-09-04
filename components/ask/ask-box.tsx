@@ -23,6 +23,7 @@ import { readLocationOriginFor } from "@/lib/state/location-origin";
 import { subjectKindOf, type AskSubjectRef } from "@/lib/ask/subject";
 import {
   readAskAnswer,
+  unresolvedReadLine,
   transportFailure,
   type AskAnswerPayload,
   type AskClassifyReply,
@@ -1136,7 +1137,7 @@ export function AskBox({
               data-ask-grounded-state="UNRESOLVED"
               className="text-[0.8125rem] leading-relaxed text-voice"
             >
-              We don&rsquo;t have anything recorded under &ldquo;{grounded.mention}&rdquo;.
+              {unresolvedReadLine(grounded)}
             </p>
           )}
 

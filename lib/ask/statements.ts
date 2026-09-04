@@ -1,4 +1,6 @@
-import { positionMatchCount, positionsFor, searchTerms } from "../corpus/positions.ts";
+import { searchTerms } from "../corpus/positions.ts";
+import { readerPositionsFor } from "../corpus/reader-positions.ts";
+import { ReaderPersonIdentityError } from "../identity/reader-person.ts";
 import { unifiedCorpus } from "../corpus/unified.ts";
 import type { StatementCorpus } from "../corpus/types.ts";
 import type { EvidenceGap, EvidenceRecord, EvidenceSubject } from "./evidence.ts";
@@ -7,7 +9,7 @@ import type { EvidenceGap, EvidenceRecord, EvidenceSubject } from "./evidence.ts
 export function statementEvidenceFor(
   subject: EvidenceSubject,
   question: string,
-  canonicalKeys: readonly string[],
+  _canonicalKeys: readonly string[],
   readCorpus: () => StatementCorpus = unifiedCorpus,
 ): { records: EvidenceRecord[]; gaps: EvidenceGap[]; denominators: Record<string, number> } {
   const records: EvidenceRecord[] = [];
@@ -27,30 +29,28 @@ export function statementEvidenceFor(
     denominators.statementLoaderFailures = 1;
     return { records, gaps, denominators };
   }
-  const keys = [...new Set(canonicalKeys.filter(Boolean))];
-  const answers = keys.map((key) => ({ key, answer: positionsFor(key, topic, corpus) }));
-  const ids = new Set<string>();
-  for (const { key, answer } of answers) {
+  let answer;
+  try { answer = readerPositionsFor(subject.id, topic, corpus); }
+  catch (error) {
+    denominators[error instanceof ReaderPersonIdentityError ? "statementIdentityUnresolved" : "statementLoaderFailures"] = 1;
+    gaps.push({ whose: "OURS", statement: error instanceof ReaderPersonIdentityError ? error.message : `The published statements for ${subject.name} could not be read for this answer.` });
+    return { records, gaps, denominators };
+  }
     for (const passage of answer.passages) {
-      const id = `${passage.snapshotId}#${passage.quote}`;
-      if (ids.has(id)) continue;
-      ids.add(id);
       records.push({
         kind: "POSITION", id: passage.snapshotId, subjectId: subject.id,
-        canonicalSubjectId: key,
+        canonicalSubjectId: passage.canonicalSubjectId,
         text: `Searching ${subject.name}'s published material for ${topic} found this passage: "${passage.quote}"`,
         sourceUrl: passage.url, retrievedAt: passage.retrievedAt,
       });
     }
-  }
-  const selected = corpus.snapshots.filter((snapshot) => keys.includes(snapshot.subjectId));
-  denominators.statementSnapshotsRead = selected.filter((s) => s.extraction === "ok" && s.text).length;
-  denominators.statementPagesRead = new Set(selected.filter((s) => s.extraction === "ok" && s.text).map((s) => s.url)).size;
-  denominators.statementSnapshotsUnreadable = selected.filter((s) => s.extraction !== "ok" || !s.text).length;
+  denominators.statementSnapshotsRead = answer.searched.snapshots;
+  denominators.statementPagesRead = answer.searched.pages;
+  denominators.statementSnapshotsUnreadable = answer.searched.unreadable;
   denominators.statementPassagesReturned = records.length;
-  denominators.statementPassagesMatched = keys.reduce((sum, key) => sum + positionMatchCount(key, topic, corpus), 0);
+  denominators.statementPassagesMatched = answer.passages.length;
   if (records.length === 0) {
-    const unquotable = answers.reduce((sum, row) => sum + row.answer.searched.presentButUnquotable, 0);
+    const unquotable = answer.searched.presentButUnquotable;
     gaps.push({ whose: "OURS", statement: unquotable > 0
       ? `The held pages for ${subject.name} mention ${topic}, but the matching text is not a quotable passage.`
       : denominators.statementPagesRead > 0

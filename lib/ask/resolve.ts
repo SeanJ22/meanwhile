@@ -89,6 +89,8 @@ export type ResolutionBasis =
 
 export interface ResolutionResult {
   binding: NamedEntityBinding;
+  /** A supplied canonical context failed; this is not a holdings absence. */
+  unresolvedCanonicalId?: string;
   /**
    * Which candidate actually produced the binding — operator diagnostics, and
    * the answer to "did the model's reading do any work here?".
@@ -174,6 +176,19 @@ export function resolveInterpretation(
     if (binding.kind !== "NONE" && !held) {
       held = { binding, basis: candidate.basis, boundOn: candidate.text };
     }
+  }
+
+  // A pronoun depends on the supplied canonical context. An unresolved ID
+  // cannot be discarded before a model expansion or an older context chooses
+  // a same-name record. Explicit names in the reader's own question still win.
+  if (!held && interpretation.entityMentions.length === 0 && isReferential(question)) {
+    const eligible = (context.activeSubjects ?? []).filter((ref) => !pointsAtPeopleOnly(question) || ref.kind === "PERSON" || !ref.kind);
+    const focused = eligible.filter((ref) => ref.focused);
+    const active = focused.length ? focused : eligible;
+    const last = context.priorSubjects?.[context.priorSubjects.length - 1];
+    const pool = active.length ? active : last ? [last] : [];
+    const unresolved = pool.find((ref) => ref.id && !entities.some((entity) => entity.id === ref.id));
+    if (unresolved) return { binding: { kind: "UNRESOLVED", mention: unresolved.name }, basis: active.length ? "PAGE_CONTEXT" : "PRIOR_TURN", boundOn: unresolved.id!, unresolvedCanonicalId: unresolved.id! };
   }
 
   /* ── TIER 2 — THE MODEL'S EXPANSION ───────────────────────────────────

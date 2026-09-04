@@ -31,6 +31,7 @@ export async function GET(request: Request) {
     .filter((doc) => doc.meetingId === meetingId)
     .sort((a, b) => Date.parse(b.retrievedAt) - Date.parse(a.retrievedAt))
     .map((doc) => ({
+      id: doc.id,
       documentUrl: doc.documentUrl,
       /** Cited by curated notice summaries — an exact-version key. */
       contentHash: doc.contentHash,

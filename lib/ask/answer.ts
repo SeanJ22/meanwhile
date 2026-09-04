@@ -215,6 +215,12 @@ export function unresolvedAnswer(mention: string, trace: AskTrace): AskAnswerPay
   return { ...base("UNRESOLVED", trace), mention };
 }
 
+export function unresolvedReadLine(answer: { mention?: string; denominators?: Record<string, number> }): string {
+  return answer.denominators?.identityUnresolved
+    ? `We could not resolve the supplied identity for “${answer.mention ?? "this subject"}”.`
+    : `We don't have anything recorded under “${answer.mention ?? "that name"}”.`;
+}
+
 /**
  * The engine is switched off.
  *

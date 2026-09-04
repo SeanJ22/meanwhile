@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 
 import { AskAnswerRecords } from "@/components/ask/answer-records";
 import { AskAnswerContacts } from "./answer-contacts";
+import { unresolvedReadLine } from "@/lib/ask/answer";
 import type { AskContact } from "@/lib/ask/contacts";
 import type { EvidenceRecord } from "@/lib/ask/evidence";
 import { sourceLinks } from "@/lib/ask/host";
@@ -66,6 +67,7 @@ interface GroundedGap {
 }
 
 interface GroundedReply {
+  denominators?: Record<string, number>;
   mode: string;
   subject?: { kind: string; id: string; name: string; office?: string | null } | null;
   answer?: string | null;
@@ -297,7 +299,7 @@ export function BallotAsk({
             sentence may not name one of the three.
           */}
           {reply.mode === "UNRESOLVED" && (
-            <p>We don&rsquo;t have anything recorded under &ldquo;{reply.mention}&rdquo;.</p>
+            <p>{unresolvedReadLine(reply)}</p>
           )}
 
           {reply.subject && (

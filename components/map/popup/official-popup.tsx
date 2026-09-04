@@ -156,6 +156,8 @@ export function RecentVotes(props: {
    * does not, and keeps its single short list.
    */
   columns?: boolean;
+  /** Full record inside a caller-owned header, including the ballot card. */
+  contentOnly?: boolean;
 }) {
   // Keyed on the holder so a holder change discards the fetched record
   // structurally — a new holder never wears the previous one's votes
@@ -167,10 +169,12 @@ function RecentVotesInner({
   holder,
   reactionContext,
   columns = false,
+  contentOnly = false,
 }: {
   holder: SeatHolder;
   reactionContext: ReactionViewContext | null;
   columns?: boolean;
+  contentOnly?: boolean;
 }) {
   const [votes, setVotes] = useState<MemberRollCall[] | null>(null);
   const [attribution, setAttribution] = useState<VoteAttribution | null>(null);
@@ -360,7 +364,7 @@ function RecentVotesInner({
    * a glance, and two collapsed columns inside a 300px popup would be two
    * things to tap before seeing anything.
    */
-  if (!columns) {
+  if (!columns && !contentOnly) {
     return (
       <>
         <PopupSectionLabel>Recent votes</PopupSectionLabel>
@@ -393,8 +397,7 @@ function RecentVotesInner({
    * be a complete answer to its own question, and cross-marking them would
    * make one look like a subset of the other.
    */
-  return (
-    <CardSection title="Voting Record">
+  const fullRecord = (
       <VotingRecordViews
         recent={recent}
         recentMeta={votes ? `last ${Math.min(votes.length, VOTE_LIMIT)}` : null}
@@ -413,8 +416,8 @@ function RecentVotesInner({
           keyVotes.length > 0 ? String(votedCount(keyVotes)) : null
         }
       />
-    </CardSection>
   );
+  return contentOnly ? fullRecord : <CardSection title="Voting Record">{fullRecord}</CardSection>;
 }
 
 /**

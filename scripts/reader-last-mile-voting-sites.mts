@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { POST } from "../app/api/voting-sites/route.ts";
 import { loadVotingSites } from "../lib/ballot/voting-sites-server.ts";
@@ -59,7 +60,8 @@ export async function proveVotingSites() {
 }
 
 if (process.argv[1]?.endsWith("reader-last-mile-voting-sites.mts")) {
-  const proof = await proveVotingSites();
+  const result = await proveVotingSites();
+  const proof = { ...result, exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), sourceHashes: Object.fromEntries(["data/voting-sites.json", "app/api/voting-sites/route.ts", "lib/ballot/voting-sites-server.ts"].map(path => [path, createHash("sha256").update(readFileSync(path)).digest("hex")])) };
   writeFileSync("docs/evidence/reader-last-mile-voting-sites.json", JSON.stringify(proof, null, 2) + "\n");
   console.log(JSON.stringify({ jurisdictions: proof.results.length, sites: proof.results.reduce((total, row) => total + row.returnedCount, 0) }));
 }

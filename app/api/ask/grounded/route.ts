@@ -812,6 +812,10 @@ export async function POST(request: Request) {
     trace.totalMs = Date.now() - started;
     await capture("UNRESOLVED", [], null, null, null, [], holdingLoadGaps);
     const answer = unresolvedAnswer(resolution.binding.mention, trace);
+    if (resolution.unresolvedCanonicalId) {
+      answer.denominators.identityUnresolved = 1;
+      answer.gaps.push({ whose: "OURS", statement: `The supplied identity for ${resolution.binding.mention} could not be resolved to a current canonical record, so no same-name person's records have been attached.` });
+    }
     answer.gaps.push(...holdingLoadGaps);
     answer.denominators.ballotLoaderFailures = ballot.loaderFailures.length;
     answer.denominators.officeholderLoaderFailures = officeholders.loaderFailures;

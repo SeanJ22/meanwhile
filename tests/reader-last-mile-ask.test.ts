@@ -19,6 +19,8 @@ import { membersOfBody, BODY_COMPOSITIONS } from "../lib/registry/body-membershi
 import { readSnapshot } from "../lib/meetings/snapshot.ts";
 import type { AskAnswerPayload } from "../lib/ask/answer.ts";
 import type { StateMoneyRecord } from "../lib/funding/state-money.ts";
+import { resolveSubjectRef } from "../lib/ask/subject.ts";
+import { readerPersonKeys } from "../lib/identity/reader-person.ts";
 
 delete process.env.ANTHROPIC_API_KEY;
 const { POST, resetGroundedState } = await import("../app/api/ask/grounded/route.ts");
@@ -30,6 +32,22 @@ const divisions = {
   NJ: [NJ, `${NJ}/county:morris`, `${NJ}/county:morris/place:rockaway_township`, `${NJ}/cd:11`],
   NH: [NH, `${NH}/county:merrimack`, `${NH}/county:merrimack/place:newbury_town`, `${NH}/cd:2`, `${NH}/sldu:7`],
 };
+
+test("an unresolved supplied canonical ID never becomes a same-name candidate through surface or prior context", async () => {
+  const canonical = { id: "ballot-az-pima:governor:hobbs-katie", name: "Katie Hobbs", nameClass: "person" as const };
+  const unresolved = { id: "unresolved:former-candidate", name: "Katie Hobbs", kind: "PERSON" as const, focused: true };
+  assert.equal(resolveSubjectRef(unresolved, [canonical]), null);
+  assert.equal(resolveSubjectRef({ ...unresolved, id: canonical.id }, [canonical]), canonical);
+  assert.equal(resolveSubjectRef({ name: canonical.name, kind: "PERSON" }, [canonical]), canonical, "a surface that genuinely holds only a name retains the normal name binder");
+  for (const extra of [{ activeSubjects: [unresolved] }, { priorSubjects: [unresolved] }]) {
+    const answer = await ask("How much campaign money has this person raised and spent?", "AZ", extra);
+    assert.notEqual(answer.subject?.id, canonical.id);
+    assert.ok(answer.records.every((record) => record.canonicalSubjectId !== canonical.id && !record.id.includes(canonical.id)));
+    assert.equal(answer.mode, "UNRESOLVED");
+    assert.equal(answer.denominators.identityUnresolved, 1);
+    assert.equal(answer.records.length, 0);
+  }
+});
 
 test("a sourced removed filing reaches only its contest or former candidacy, with both documents and no current-candidate claim", async () => {
   const ocdIds = [NJ, `${NJ}/cd:7`];
@@ -138,7 +156,7 @@ test("each readable canonical statement subject can be searched without a genera
     if (!topic) continue; // Held navigation-only text is not a quotable position.
     const result = statementEvidenceFor({ kind: "PERSON", id: key, name: "This person" }, `What is the position on ${topic}?`, [key]);
     assert.ok(result.records.length, key);
-    assert.ok(result.records.every((r) => r.canonicalSubjectId === key && r.sourceUrl));
+    assert.ok(result.records.every((r) => readerPersonKeys(key).keys.includes(r.canonicalSubjectId!) && r.sourceUrl));
     tested += 1;
   }
   assert.ok(tested >= 40, `real current corpus: ${tested} subjects with quotable passages`);

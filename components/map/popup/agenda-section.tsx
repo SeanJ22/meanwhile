@@ -174,7 +174,7 @@ function MinutesRecord({ meetingId }: { meetingId: string }) {
   </details>;
 }
 
-function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentence }: {
+export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentence }: {
   documents: AgendaDocumentView[]; meetingId: string; agendaUrl: string | null; agendaSentence: string;
 }) {
   const latest = documents[0] ?? null;

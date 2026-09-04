@@ -47,6 +47,7 @@ const nextConfig: NextConfig = {
   // so on a serverless host the files would silently be absent from the
   // function bundle without this. Locally it changes nothing.
   outputFileTracingIncludes: {
+    "/api/positions/**": ["./data/states/az/identity/*.json", "./data/states/*/officials/officeholders-*.json", "./lib/registry/officeholders-us.json"],
     "/api/funding/**": ["./data/states/*/funding/state-money-??-????.json", "./data/states/az/identity/*.json", "./data/states/*/officials/officeholders-*.json"],
     "/api/agenda": ["./data/meetings-snapshot.json", "./data/states/*/outcomes/*.json"],
     "/api/profile/**": ["./data/prl/prl-profiles.json"],

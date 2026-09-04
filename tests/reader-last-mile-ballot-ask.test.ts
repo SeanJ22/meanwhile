@@ -10,4 +10,7 @@ test("every held canonical ballot filing, contest, measure, absence and adopted 
   assert.equal(result.proofs.flatMap((proof) => proof.returnedRecords.filter((record) => record.kind === "MEASURE_ANALYSIS")).length, result.denominator.adoptedAnalyses);
   assert.equal(result.denominator.filedContacts, 275);
   assert.equal(result.proofs.flatMap((proof) => proof.expectedRecords.filter((record) => record.kind === "CONTACT")).length, result.denominator.filedContacts);
+  assert.ok(result.proofs.every((proof) => proof.scopeAgrees));
+  assert.equal(result.scopeDispositions.filter((scope) => scope.mode === "CERTIFIED_NOMINEES").length, 12);
+  assert.equal(result.scopeDispositions.filter((scope) => scope.mode === "HELD_WORDING_GAP").length, 11);
 });

@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { allCandidateCards } from "../lib/ballot/candidate-cards.ts";
+import type { EvidenceRecord } from "../lib/ask/evidence.ts";
 
 /**
  * **THE GROUNDED ROUTE, EXERCISED END TO END AGAINST THE COMMITTED CORPUS.**
@@ -55,6 +57,8 @@ interface GroundedBody {
     text: string;
     occurredAt?: string | null;
     sourceUrl?: string | null;
+    canonicalSubjectId?: string;
+    candidateProfile?: EvidenceRecord["candidateProfile"];
   }[];
   gaps?: { whose: string; statement: string }[];
   contacts?: { id: string; name: string; relationship: string; sourceUrl: string | null }[];
@@ -386,13 +390,29 @@ test("RED CONTROL: nothing in the Hobbs reply is an action the corpus does not h
   /*
    * The structural half of "cannot use model memory". With no key the model
    * never runs, so there is no prose at all — and every record that DOES travel
-   * carries a source URL that came out of the corpus. A record with no source
-   * is a record the answer may not assert.
+   * carries its corpus provenance. Existing curated contact fields may lack a
+   * recorded URL, just as CONTACT may; that exception must prove the exact
+   * native held value and explicitly disclose the provenance limitation.
+   * It never applies to an action, biography, link, or other civic claim.
    */
   const body = await ask("What did Katie Hobbs do for the state of Arizona in the last 12 months?");
   assert.equal(body.answer ?? null, null, "no model, no prose — never a plausible substitute");
   for (const record of body.records ?? []) {
     if (record.kind === "CONTACT") continue;
+    if (record.kind === "CANDIDATE_CONTACT" && !record.sourceUrl) {
+      const profile = record.candidateProfile;
+      assert.ok(profile);
+      assert.ok(["email", "phone", "filedAddress"].includes(profile.field));
+      const field = profile.field as "email" | "phone" | "filedAddress";
+      const held = allCandidateCards().cards[profile.holdingKey];
+      assert.ok(held, "contact exception requires an exact curated card holding");
+      assert.equal(profile.value, held[field], "contact must be the native held field, never a generated substitute");
+      assert.equal(record.canonicalSubjectId, profile.holdingKey);
+      const pointer = profile.holdingKey.replaceAll("~", "~0").replaceAll("/", "~1");
+      assert.equal(profile.holdingPath, `data/ballot/candidate-cards-2026.json#/cards/${pointer}/${field}`);
+      assert.ok(profile.provenanceLimitation && record.text.includes(profile.provenanceLimitation), "missing contact provenance is disclosed with the actual field");
+      continue;
+    }
     assert.ok(record.sourceUrl, `${record.kind}:${record.id} reached the pack with no source`);
   }
 });

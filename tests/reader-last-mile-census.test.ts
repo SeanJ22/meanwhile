@@ -14,6 +14,8 @@ import { registerReaderRenderHooks } from "../lib/holdings/reader-census.ts";
 import { readerSourceFingerprint, readerSourceHashProblems } from "../lib/holdings/reader-census.ts";
 import { ballotHolderObligationFailures } from "../lib/holdings/reader-census.ts";
 import { validateReaderClosureReceipt, type ReaderClosureReceipt } from "../lib/holdings/reader-census.ts";
+import { readerAcquisitionBoundaryProblems } from "../lib/holdings/reader-census.ts";
+import { ballotQualificationFailures, type BallotQualificationObligation } from "../lib/holdings/reader-census.ts";
 
 const canonical: EligibilityFacts = { held: true, source: "CANONICAL_READER_SNAPSHOT", relationship: "CANONICAL_READER_RECORD", identity: "RESOLVED" };
 const staged: EligibilityFacts = { ...canonical, source: "AUTONOMOUS_STAGING", relationship: "ACQUISITION_INPUT" };
@@ -34,6 +36,15 @@ test("ballot scope cannot hide an eligible incumbent when the consumer join retu
   assert.match(ballotHolderObligationFailures([{ ...held, actualHolderId: "official:other" }])[0], /official:one/);
   assert.match(ballotHolderObligationFailures([{ ...held, officeMatch: false }])[0], /another office/);
   assert.deepEqual(ballotHolderObligationFailures([{ ...held, officeMatch: false, standing: "UNKNOWN", actualHolderId: null }]), []);
+});
+
+test("current certified ballot truth retires obsolete filing qualification without deleting its dated source", () => {
+  const row: BallotQualificationObligation = { contestId: "contest:held", kind: "CERTIFIED_NOMINEES", rawScopeNote: "The general-election list has not yet been published.", currentNote: null, actualContestText: "The contest appears on this ballot.", sourceScopePreserved: true, expectedCanvass: { sourceUrl: "https://official.example/certified", sourceOrg: "Election authority", readAt: "2026-08-06" }, actualQualification: { sourceUrl: "https://official.example/certified", sourceOrg: "Election authority", retrievedAt: "2026-08-06" } };
+  assert.deepEqual(ballotQualificationFailures([row]), []);
+  assert.ok(ballotQualificationFailures([{ ...row, actualContestText: row.actualContestText + row.rawScopeNote }]).some(failure => failure.includes("obsolete")), "a held current nominee list forbids the old undated publication claim");
+  assert.ok(ballotQualificationFailures([{ ...row, actualQualification: { ...row.actualQualification!, sourceUrl: "https://official.example/old-filings" } }]).some(failure => failure.includes("canvass provenance")));
+  assert.ok(ballotQualificationFailures([{ ...row, sourceScopePreserved: false }]).some(failure => failure.includes("dated source")));
+  assert.ok(ballotQualificationFailures([{ ...row, kind: "HELD_WORDING_GAP", expectedCanvass: null, actualQualification: null, actualContestText: "The publisher has not posted the wording." }]).some(failure => failure.includes("OURS")), "our unrecorded wording is not a publisher absence");
 });
 
 test("source fingerprint follows a directory index and imported reader CSS as files",(t)=>{
@@ -98,6 +109,24 @@ test("eligibility negative controls keep extraction and acquisition separate fro
   // Even a forged completion/promotion string cannot bypass the normalized
   // reader snapshot boundary by dropping newly acquired bytes beside it.
   assert.equal(classifyReaderEligibility({ ...staged, promotion: "PROMOTED", validator: "PASS", audit: "PASS", externalAuthority: "VERIFIED" }).state, "STAGED_NOT_ELIGIBLE");
+});
+
+test("the actual reader graph cannot consume autonomous staging merely because an artifact exists", (t) => {
+  assert.deepEqual(readerAcquisitionBoundaryProblems(process.cwd()), []);
+  const root = mkdtempSync(join(tmpdir(), "wtp-reader-stage-boundary-"));
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  const stagedPath = "data/health/autonomous-agent-fleet/acquired.json";
+  mkdirSync(dirname(join(root, stagedPath)), { recursive: true });
+  writeFileSync(join(root, stagedPath), JSON.stringify({ id: "staged:official", extractionVerdict: "PASS", verdict: "INCONCLUSIVE", identity: "UNRESOLVED" }));
+  writeFileSync(join(root, "page.ts"), 'export const reader = "normalized holdings only";');
+  assert.deepEqual(readerAcquisitionBoundaryProblems(root, ["page.ts"]), [], "existence alone does not make staged bytes a reader input");
+  writeFileSync(join(root, "data/health/autonomous-agent-fleet/frozen-lifecycle-readback.json"), JSON.stringify({ identity: "UNRESOLVED", audit: "INCONCLUSIVE" }));
+  mkdirSync(join(root, "lib/control-plane/workers"), { recursive: true });
+  writeFileSync(join(root, "lib/control-plane/workers/activity.ts"), 'export const projectFacts = facts => ({ eligible: false, reason: facts.identity });');
+  writeFileSync(join(root, "page.ts"), 'import facts from "./data/health/autonomous-agent-fleet/frozen-lifecycle-readback.json"; import { projectFacts } from "./lib/control-plane/workers/activity.ts"; export const diagnostic=projectFacts(facts);');
+  assert.deepEqual(readerAcquisitionBoundaryProblems(root, ["page.ts"]), [], "immutable underlying lifecycle facts and pure diagnostics are permitted eligibility inputs; module names alone are not forbidden");
+  writeFileSync(join(root, "page.ts"), 'import acquired from "./data/health/autonomous-agent-fleet/acquired.json"; export const reader=acquired;');
+  assert.ok(readerAcquisitionBoundaryProblems(root, ["page.ts"]).some(failure => failure.includes(stagedPath)), "a planted direct staging import is a permanent gate failure");
 });
 
 test("graph control crosses actual API fetches and fails when the reader import is removed", (t) => {

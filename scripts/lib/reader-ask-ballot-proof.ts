@@ -6,6 +6,7 @@ import { getMeasureAnalyses } from "../../lib/ballot/analyses.ts";
 import { summaryForContest } from "../../lib/ballot/measure-summary.ts";
 import { provisionsForContest } from "../../lib/ballot/measure-provisions.ts";
 import { getGeneralLineup } from "../../lib/ballot/general-lineup.ts";
+import { readerContestScope } from "../../lib/ballot/reader-scope.ts";
 import { readerPersonKeys } from "../../lib/identity/reader-person.ts";
 import { absencesWithoutRemovals, removalRecords } from "../../lib/ask/ballot-inventory.ts";
 import { contactForCandidate } from "../../lib/ask/candidate-contact.ts";
@@ -22,6 +23,7 @@ export async function ballotAskProof() {
   process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
   const { POST, resetGroundedState } = await import("../../app/api/ask/grounded/route.ts");
   const proofs = [];
+  const scopeDispositions = [];
   const lineup = getGeneralLineup();
   const denominator = { contests: 0, candidacies: 0, measures: 0, absences: 0, removals: 0, adoptedAnalyses: 0, filedContacts: 0, certifiedLineupContests: lineup?.contests.length ?? 0, certifiedNominees: lineup?.contests.reduce((n, contest) => n + contest.nominees.length, 0) ?? 0 };
   async function prove(family: string, nativeIds: string[], ocdId: string, subject: { id: string; name: string; kind: "PERSON" | "CONTEST" | "MEASURE" } | null, question: string, expected: Expected[]) {
@@ -37,7 +39,10 @@ export async function ballotAskProof() {
     const pack: EvidencePack = { records: payload.records, gaps: payload.gaps, denominators: payload.denominators, subject: payload.subject, question, today: new Date().toISOString().slice(0, 10), intent: "CIVICS", temporal: { kind: "NONE" } };
     const synthesisReceivesEveryRecord = JSON.stringify((JSON.parse(synthesisContextPayload(pack)) as { records: EvidenceRecord[] }).records) === JSON.stringify(payload.records);
     const ownCandidateOnly = subject?.kind !== "PERSON" || returned.filter((record) => record.kind === "CANDIDACY").every((record) => nativeIds.includes(record.id));
-    return { family, nativeIds, subjectId: subject?.id ?? null, executionLevel: "REAL_ROUTE_HANDLER", request, expectedRecords: expected, expectedRecordIds: expected.map((record) => record.id), returnedRecords: returned, returnedRecordIds: returned.map((record) => record.id), contacts: payload.contacts, httpStatus: response.status, mode: payload.mode, resolvedSubjectId: payload.subject?.id ?? null, payloadSha256: hash(raw), countAgrees, synthesisReceivesEveryRecord, actualRecordCount: payload.records.length, traceRecordCount: payload.trace.retrieval.recordCount, denominators: payload.denominators, gaps: payload.gaps, missing, ownCandidateOnly, modelAnswer: payload.answer, status: response.status === 200 && payload.answer === null && countAgrees && synthesisReceivesEveryRecord && ownCandidateOnly && !missing.length ? "PROVEN" : "ELIGIBLE_NOT_FULLY_DELIVERED" };
+    const certifiedIds = new Set(lineup?.contests.map((contest) => contest.contestId) ?? []);
+    const obsoleteCurrentScope = payload.records.filter((record) => record.kind === "CONTEST" && certifiedIds.has(record.id) && /not yet published|when it publishes|everyone who filed|only the Democratic candidates/i.test(record.text));
+    const scopeAgrees = obsoleteCurrentScope.length === 0;
+    return { family, nativeIds, subjectId: subject?.id ?? null, executionLevel: "REAL_ROUTE_HANDLER", request, expectedRecords: expected, expectedRecordIds: expected.map((record) => record.id), returnedRecords: returned, returnedRecordIds: returned.map((record) => record.id), contacts: payload.contacts, httpStatus: response.status, mode: payload.mode, resolvedSubjectId: payload.subject?.id ?? null, payloadSha256: hash(raw), countAgrees, synthesisReceivesEveryRecord, actualRecordCount: payload.records.length, traceRecordCount: payload.trace.retrieval.recordCount, denominators: payload.denominators, gaps: payload.gaps, missing, ownCandidateOnly, scopeAgrees, obsoleteCurrentScope, modelAnswer: payload.answer, status: response.status === 200 && payload.answer === null && countAgrees && synthesisReceivesEveryRecord && ownCandidateOnly && scopeAgrees && !missing.length ? "PROVEN" : "ELIGIBLE_NOT_FULLY_DELIVERED" };
   }
   for (const { source } of BALLOT_SOURCES) {
     const set = source.normalize(await source.fetch());
@@ -48,6 +53,10 @@ export async function ballotAskProof() {
     denominator.removals += set.removals?.length ?? 0;
     for (const contest of set.contests) {
       const expected: Expected[] = [{ kind: "CONTEST", id: contest.id, sourceUrl: contest.provenance.sourceUrl, sourceOrg: contest.provenance.sourceOrg, retrievedAt: contest.provenance.collectedAt }];
+      const certified = lineup?.contests.find((entry) => entry.contestId === contest.id);
+      const scope = readerContestScope(contest, { certified: certified && lineup ? { count: certified.nominees.length, sourceUrl: lineup.canvass.url, sourceOrg: lineup.canvass.issuedBy, readAt: lineup.canvass.readAt } : null, questionTextHeld: set.measures.some((measure) => measure.contestId === contest.id && Boolean(measure.questionText.trim())) });
+      scopeDispositions.push({ contestId: contest.id, ...scope, sourceScopeIsCurrent: scope.mode === "SOURCE_SCOPE" });
+      if (scope.qualification) expected.push({ kind: "CONTEST", id: `${contest.id}#current-lineup`, text: scope.qualification.text, sourceUrl: scope.qualification.sourceUrl, sourceOrg: scope.qualification.sourceOrg, retrievedAt: scope.qualification.readAt });
       for (const measure of set.measures.filter((row) => row.contestId === contest.id)) {
         expected.push({ kind: "MEASURE_QUESTION", id: measure.id, text: measure.questionText, sourceUrl: measure.provenance.sourceUrl, sourceOrg: measure.provenance.sourceOrg, retrievedAt: measure.provenance.collectedAt });
         if (measure.officialStatement) expected.push({ kind: "MEASURE_STATEMENT", id: `${measure.id}#statement`, text: measure.officialStatement, sourceUrl: measure.provenance.sourceUrl, sourceOrg: measure.provenance.sourceOrg, retrievedAt: measure.provenance.collectedAt });
@@ -75,5 +84,6 @@ export async function ballotAskProof() {
     for (const removal of set.removals ?? []) proofs.push(await prove("ballot-removal", [removal.id], set.contests.find((contest) => contest.id === removal.contestId)!.ocdId, { id: removal.id, name: `${removal.givenName} ${removal.familyName}`, kind: "PERSON" }, "What filing records are held for this person?", removalRecords(removal)));
   }
   const paths = ["app/api/ask/grounded/route.ts", "lib/ask/ballot-inventory.ts", "lib/ask/candidate-contact.ts", "lib/ballot/candidate-contacts.ts", "data/states/nj/ballot/nj-morris-2026-contacts.json", "data/states/az/ballot/az-general-lineup-2026.json", "lib/ask/server-sources.ts", "lib/ask/subject.ts", "lib/ask/resolve.ts", "lib/ask/relevance.ts", "lib/ask/synthesize.ts", "lib/ballot/analyses.ts", "lib/ballot/general-lineup.ts", "lib/identity/az-2026.ts", "data/states/az/ballot/az-pima-2026.json", "data/states/nh/ballot/nh-merrimack-2026.json", "data/states/nj/ballot/nj-morris-2026.json", "data/states/az/ballot/az-analyses-2026.json", "data/states/az/ballot/measure-summaries.json"];
-  return { exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), executionLevel: "REAL_ROUTE_HANDLER", sourceHashScope: "Exact current handler and holding bytes; not deployed proof.", sourceHashes: paths.map((path) => ({ path, sha256: hash(readFileSync(path)) })), modelDisabled: true, denominator, proofs };
+  paths.push("lib/ballot/reader-scope.ts");
+  return { exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), executionLevel: "REAL_ROUTE_HANDLER", sourceHashScope: "Exact current handler and holding bytes; not deployed proof.", sourceHashes: paths.map((path) => ({ path, sha256: hash(readFileSync(path)) })), modelDisabled: true, denominator, scopeDispositions, proofs };
 }

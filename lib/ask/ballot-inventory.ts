@@ -12,6 +12,7 @@ import { formatDateLong } from "../text/format-date.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
 import { reconciledCandidacyIdForCard } from "../identity/az-2026.ts";
 import type { MeasureAnalysis } from "../ballot/analyses.ts";
+import { readerContestScope } from "../ballot/reader-scope.ts";
 
 import type { EvidenceRecord, EvidenceSubject } from "./evidence.ts";
 
@@ -377,6 +378,14 @@ export function ballotRecordsFor(
   }
 
   if (contest && !record.historicalFiling) {
+    const nominees = deps.nominees?.(contest.id) ?? [];
+    const certified = nominees[0];
+    const scope = readerContestScope(contest, {
+      certified: certified?.sourceUrl && certified.sourceOrg && certified.retrievedAt ? {
+        count: nominees.length, sourceUrl: certified.sourceUrl, sourceOrg: certified.sourceOrg, readAt: certified.retrievedAt,
+      } : null,
+      questionTextHeld: deps.set.measures.some((measure) => measure.contestId === contest.id && Boolean(measure.questionText.trim())),
+    });
     records.push({
       kind: "CONTEST",
       id: contest.id,
@@ -389,12 +398,15 @@ export function ballotRecordsFor(
         ` on ${formatDateLong(deps.set.election.date) ?? deps.set.election.date}.` +
         ` Voters choose ${contest.voteFor}` +
         `${contest.termYears ? `, for a term of ${contest.termYears} years` : ""}.` +
-        (contest.scopeNote ? ` ${contest.scopeNote}` : ""),
+        (scope.currentNote ? ` ${scope.currentNote}` : ""),
       occurredAt: deps.set.election.date,
       sourceUrl: contest.provenance?.sourceUrl ?? null,
       sourceOrg: contest.provenance?.sourceOrg ?? null,
       retrievedAt: contest.provenance?.collectedAt ?? null,
     });
+    if (scope.qualification) records.push({ kind: "CONTEST", id: `${contest.id}#current-lineup`,
+      text: scope.qualification.text, sourceUrl: scope.qualification.sourceUrl,
+      sourceOrg: scope.qualification.sourceOrg, retrievedAt: scope.qualification.readAt });
   }
 
   if (record.kind === "MEASURE") {

@@ -103,7 +103,12 @@ try {
     const mapMoney = await money(modal, pilot);
     await capture(page, `${pilot.zip}-map-money`, mapMoney.section);
     await page.keyboard.press("Escape");
-    await page.locator('[data-stat="meetings"]').first().click();
+    const meetingListButton = page.locator('[data-stat="meetings"]').first();
+    if (!(await meetingListButton.isVisible())) {
+      const menu = page.getByRole("button", { name: "Open menu", exact: true });
+      if (await menu.isVisible()) await menu.click();
+    }
+    await meetingListButton.click();
     await page.getByRole("combobox", { name: "Group by", exact: true }).selectOption("none");
     while (await page.locator(".al-more").count()) await page.locator(".al-more").click();
     const statedMeetings = Number((await page.locator(".al-overlay-count").innerText()).split(" ")[0]);

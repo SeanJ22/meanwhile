@@ -100,6 +100,7 @@ import { candidateContactForCandidacy } from "@/lib/ballot/candidate-contacts";
 import { reconciledCandidacyIdForCard } from "@/lib/identity/az-2026";
 import { groupAbsences } from "@/lib/ballot/absence-grouping";
 import { sharedNotesFor } from "@/lib/ballot/shared-notes";
+import { readerContestScope } from "@/lib/ballot/reader-scope";
 import { resolveZip } from "@/lib/geo/zcta";
 import { divisionsAt } from "@/lib/registry/server";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -996,8 +997,17 @@ export default async function BallotPage({
    * eleven the author happened to be looking at would be the instance rather
    * than the class.
    */
+  const readerScopeNotes = new Map((matched?.contests ?? []).map((contest) => {
+    const lineup = lineupForContest(contest.id);
+    const canvass = lineup ? getGeneralLineup()?.canvass : null;
+    const scope = readerContestScope(contest, {
+      certified: lineup && canvass ? { count: lineup.nominees.length, sourceUrl: canvass.url, sourceOrg: canvass.issuedBy, readAt: canvass.readAt } : null,
+      questionTextHeld: set?.measures.some((measure) => measure.contestId === contest.id && Boolean(measure.questionText.trim())),
+    });
+    return [contest.id, scope.currentNote] as const;
+  }));
   const scopeNotes = sharedNotesFor(
-    matched?.contests ?? [],
+    (matched?.contests ?? []).map((contest) => ({ id: contest.id, scopeNote: readerScopeNotes.get(contest.id) ?? null })),
     MARKER_START + sharedSources.length,
   );
 
@@ -1946,7 +1956,7 @@ export default async function BallotPage({
                 <>
                   {/* F01 11.1: inline when this note is this contest's alone;
                       a marker when it is the same note eleven contests carry. */}
-                  {contest.scopeNote &&
+                  {readerScopeNotes.get(contest.id) &&
                     (scopeNotes.isShared(contest.id) ? (
                       <p className="mt-1.5 font-mono text-[0.6875rem] text-muted">
                         <a
@@ -1956,7 +1966,7 @@ export default async function BallotPage({
                           {scopeNotes.markerFor(contest.id)} see note
                         </a>
                       </p>
-                    ) : contest.scopeNote.length > EXTENDED_MECHANICS_CHARS ? (
+                    ) : (readerScopeNotes.get(contest.id)?.length ?? 0) > EXTENDED_MECHANICS_CHARS ? (
                       /* BAL-48: extended election-mechanics text collapses
                          behind "More info", by default, on every viewport — the
                          office explainer above stays open. Same disclosure
@@ -1966,12 +1976,12 @@ export default async function BallotPage({
                           More info
                         </summary>
                         <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
-                          {contest.scopeNote}
+                          {readerScopeNotes.get(contest.id)}
                         </p>
                       </details>
                     ) : (
                       <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
-                        {contest.scopeNote}
+                        {readerScopeNotes.get(contest.id)}
                       </p>
                     ))}
                   <ul className="mt-3.5 space-y-3">
@@ -2441,10 +2451,7 @@ export default async function BallotPage({
                           data-measure-statement="GAP_OURS"
                         >
                           We have not recorded an official statement for this
-                          question
-                          {contest.scopeNote
-                            ? " — the note below names the document we have not read."
-                            : "."}
+                          question.
                         </p>
                       )}
                     </div>
@@ -2500,11 +2507,10 @@ export default async function BallotPage({
                   )
                 )}
 
-                {/* F01 11.1 — the author's named instance: eleven Arizona
-                    measures each carrying the identical "the Secretary of State
-                    has not yet published the final ballot wording" paragraph.
-                    Marker here, the note once at the page's foot. */}
-                {contest.scopeNote &&
+                {/* F01 11.1: identical current reader qualifications share one
+                    page note. The reader-scope selector distinguishes our held
+                    wording gap from the earlier source's publication claim. */}
+                {readerScopeNotes.get(contest.id) &&
                   (scopeNotes.isShared(contest.id) ? (
                     <p className="mt-2 font-mono text-[0.6875rem] text-muted">
                       <a
@@ -2516,7 +2522,7 @@ export default async function BallotPage({
                     </p>
                   ) : (
                     <p className="mt-2 text-[0.75rem] leading-relaxed text-muted">
-                      {contest.scopeNote}
+                      {readerScopeNotes.get(contest.id)}
                     </p>
                   ))}
 

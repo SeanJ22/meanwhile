@@ -421,7 +421,7 @@ export function surfaceConsumerReachability(root: string, surface: ReaderSurface
 
 /** Declared indirect acquisition relationships are checked at their normalized family. */
 export function datasetSurfaceCoverageProblems(root: string): string[] {
-  return DATASET_FAMILIES.filter((family) => family.surfaces.length && !acquisitionFamilies.has(family.id)).flatMap((family) => family.surfaces.filter((surface) => !family.consumerPaths.some((consumer) => surfaceConsumerReachability(root, surface, consumer).reached)).map((surface) => `${family.id}:${surface}: no source import, API fetch or server-props path reaches any declared canonical consumer`));
+  return [...DATASET_FAMILIES.filter((family) => family.surfaces.length && !acquisitionFamilies.has(family.id)).flatMap((family) => family.surfaces.filter((surface) => !family.consumerPaths.some((consumer) => surfaceConsumerReachability(root, surface, consumer).reached)).map((surface) => `${family.id}:${surface}: no source import, API fetch or server-props path reaches any declared canonical consumer`)), ...readerAcquisitionBoundaryProblems(root)];
 }
 
 export interface ReaderSourceHash { readonly path: string; readonly sha256: string }
@@ -445,6 +445,12 @@ export function readerSourceFingerprint(root: string, entries: readonly string[]
   return sources.sort((a,b) => a.path.localeCompare(b.path));
 }
 
+/** Raw staged corpora cannot replace promoted holdings; immutable lifecycle
+ * readbacks and pure diagnostic modules remain allowed as eligibility inputs. */
+export function readerAcquisitionBoundaryProblems(root: string, entries?: readonly string[]): string[] {
+  return readerSourceFingerprint(root, entries).filter(source => /^(?:data\/health\/autonomous-agent-fleet\/[^/]*(?:followed-records|acquired|acquisition|unverified|staged)[^/]*\.json|data\/states\/[^/]+\/(?:staged|acquisitions)\/|app\/(?:api\/)?admin\/)/.test(source.path)).map(source => `Reader graph reaches a raw staged corpus or owner administration instead of a promoted reader holding: ${source.path}`);
+}
+
 export function readerSourceHashProblems(root: string, hashes: readonly ReaderSourceHash[]): string[] {
   return hashes.filter((source) => !existsSync(join(root, source.path)) || sha256(readFileSync(join(root, source.path))) !== source.sha256).map((source) => `Reader dependency changed after proof: ${source.path}`);
 }
@@ -466,6 +472,7 @@ export function validateReaderClosureReceipt(root: string, receipt: ReaderClosur
   const proved = JSON.parse(bytes.toString("utf8")) as ReaderCensus;
   failures.push(...censusClosureFailures(proved));
   const requiredEvidence = unique(proved.rows.flatMap((row)=>row.evidencePaths));
+  for (const evidence of receipt.evidenceHashes ?? []) if (!readerEvidenceHashMatches(root, evidence.path, evidence.sha256)) failures.push(`Committed reader witness manifest or execution evidence changed: ${evidence.path}`);
   for (const path of requiredEvidence) {
     const expected = receipt.evidenceHashes?.find((entry)=>entry.path===path);
     if (!expected || !readerEvidenceHashMatches(root,path,expected.sha256)) failures.push(`Committed reader execution evidence missing or changed: ${path}`);
@@ -668,10 +675,32 @@ export interface ReaderProjectionReport {
   readonly asOf?: string;
   readonly currentBallotHolderIds?: readonly string[];
   readonly ballotHolderObligations?: readonly BallotHolderObligation[];
+  readonly ballotQualificationObligations?: readonly BallotQualificationObligation[];
   readonly rule: string;
   readonly records: readonly ReaderRecordProjection[];
   readonly counts: Readonly<Record<string, number>>;
   readonly failures: readonly string[];
+}
+export interface BallotQualificationObligation {
+  readonly contestId: string;
+  readonly kind: "CERTIFIED_NOMINEES" | "HELD_WORDING_GAP";
+  readonly rawScopeNote: string | null;
+  readonly currentNote: string | null;
+  readonly actualContestText: string;
+  readonly sourceScopePreserved: boolean;
+  readonly expectedCanvass: { sourceUrl: string; sourceOrg: string; readAt: string } | null;
+  readonly actualQualification: { sourceUrl: string | null; sourceOrg: string | null; retrievedAt: string | null } | null;
+}
+export function ballotQualificationFailures(rows: readonly BallotQualificationObligation[]): string[] {
+  return rows.flatMap(row => {
+    const failures: string[] = [];
+    if (!row.sourceScopePreserved) failures.push(`${row.contestId}: dated source filing scope was lost instead of qualified`);
+    if (row.kind === "CERTIFIED_NOMINEES") {
+      if (row.currentNote !== null || row.rawScopeNote && row.actualContestText.includes(row.rawScopeNote)) failures.push(`${row.contestId}: obsolete source filing scope was presented as current despite a held certified lineup`);
+      if (!row.actualQualification || !row.expectedCanvass || row.actualQualification.sourceUrl !== row.expectedCanvass.sourceUrl || row.actualQualification.sourceOrg !== row.expectedCanvass.sourceOrg || row.actualQualification.retrievedAt !== row.expectedCanvass.readAt) failures.push(`${row.contestId}: current certified qualification lost its exact canvass provenance`);
+    } else if (!row.actualContestText.includes("We have not recorded the final ballot wording")) failures.push(`${row.contestId}: unheld ballot wording must be an OURS recording gap, not a publisher absence`);
+    return failures;
+  });
 }
 export interface BallotHolderObligation {
   readonly officialId: string;
@@ -749,6 +778,18 @@ export async function projectCanonicalReaderRecords(root: string, census: Reader
     import("../sources/prl/snapshot.ts"), import("../officials/executive-actions.ts"), import("../ballot/voting-sites-server.ts"), import("../routing/everyday.ts"), import("../officials/form-definitions.ts"), import("../ballot/candidate-contacts.ts"), import("../votes/key-vote-positions.ts"), import("../votes/key-votes-rows.ts"), import("../votes/bill-summaries.ts"),
   ]);
   const sets = await Promise.all(ballot.BALLOT_SOURCES.map(async ({ source }) => source.normalize(await source.fetch())));
+  const [{ readerContestScope }, { ballotRecordsFor }] = await Promise.all([import("../ballot/reader-scope.ts"), import("../ask/ballot-inventory.ts")]);
+  const certifiedSource = lineup.getGeneralLineup();
+  const ballotQualificationObligations: BallotQualificationObligation[] = sets.flatMap(set => set.contests.flatMap(contest => {
+    const certified = certifiedSource?.contests.find(candidate => candidate.contestId === contest.id);
+    const questionTextHeld = set.measures.some(measure => measure.contestId === contest.id && Boolean(measure.questionText.trim()));
+    if (!certified && (contest.type !== "MEASURE" || questionTextHeld)) return [];
+    const expectedCanvass = certified && certifiedSource ? { sourceUrl: certifiedSource.canvass.url, sourceOrg: certifiedSource.canvass.issuedBy, readAt: certifiedSource.canvass.readAt } : null;
+    const scope = readerContestScope(contest, { certified: expectedCanvass && certified ? { ...expectedCanvass, count: certified.nominees.length } : null, questionTextHeld });
+    const actual = ballotRecordsFor({ id: contest.id, contestId: contest.id, kind: "CONTEST", name: contest.title, contestTitle: contest.title, ocdId: contest.ocdId }, { set, contests: set.contests, absences: set.absences, nominees: id => certifiedSource?.contests.find(candidate => candidate.contestId === id)?.nominees.map(nominee => ({ ...nominee, sourceUrl: certifiedSource.canvass.url, sourceOrg: certifiedSource.canvass.issuedBy, retrievedAt: certifiedSource.canvass.readAt })) ?? [] });
+    const qualification = actual.records.find(record => record.id === `${contest.id}#current-lineup`);
+    return [{ contestId: contest.id, kind: certified ? "CERTIFIED_NOMINEES" as const : "HELD_WORDING_GAP" as const, rawScopeNote: contest.scopeNote, currentNote: scope.currentNote, actualContestText: actual.records.find(record => record.id === contest.id)?.text ?? "", sourceScopePreserved: !contest.scopeNote || scope.sourceScope?.text === contest.scopeNote && scope.sourceScope.sourceUrl === contest.provenance.sourceUrl && scope.sourceScope.sourceOrg === contest.provenance.sourceOrg && scope.sourceScope.readAt === contest.provenance.collectedAt, expectedCanvass, actualQualification: qualification ? { sourceUrl: qualification.sourceUrl ?? null, sourceOrg: qualification.sourceOrg ?? null, retrievedAt: qualification.retrievedAt ?? null } : null }];
+  }));
   const ballotRows = sets.flatMap((set) => [...set.contests, ...set.candidacies, ...set.measures, ...set.absences, ...(set.removals ?? [])]);
   const ballotById = new Map(ballotRows.filter((r) => "id" in r).map((r) => [string(object(r).id), r]));
   const moneyIdentity = await import("../funding/campaign-money.ts");
@@ -791,7 +832,7 @@ export async function projectCanonicalReaderRecords(root: string, census: Reader
   const executiveStore = executive.executiveActionStore();
   const bodyRosterHolders = new Map(rosters.BODY_ROSTERS.flatMap((r) => rosters.rosterHoldersForBody(r.bodyId)).map((r) => [r.id, r]));
   const records: ReaderRecordProjection[] = [];
-  const failures: string[] = ballotHolderObligationFailures(ballotHolderObligations);
+  const failures: string[] = [...ballotHolderObligationFailures(ballotHolderObligations), ...ballotQualificationFailures(ballotQualificationObligations)];
   const clean = (row: unknown): unknown => Array.isArray(row) ? row.map(clean) : row && typeof row === "object" ? Object.fromEntries(Object.entries(row).filter(([k]) => !k.startsWith("_manifest")).map(([k, v]) => [k, clean(v)])) : row;
   for (const record of census.records) {
     const input = sourceRows.get(record.auditId);
@@ -1065,7 +1106,7 @@ export async function projectCanonicalReaderRecords(root: string, census: Reader
     const childDispositions = record.family === "body-rosters" ? (Array.isArray(raw.members) ? raw.members : []).map((member)=>rosters.rosterMemberReaderDisposition(string(object(member).id))).filter((child):child is NonNullable<typeof child>=>Boolean(child)) : undefined;
     records.push({ auditId: record.auditId, family: record.family, status: finalStatus, selector, canonicalIdentities: record.canonicalIdentity, returnedIdentities: returnedIds, returnedCount: returned.length, payloadSha256: returned.length ? sha256(JSON.stringify(clean(returned))) : null, reason, ...(Object.keys(surfaceDispositions).length ? { surfaceDispositions } : {}), ...(childDispositions?.length ? { childDispositions } : {}) });
   }
-  return { formatVersion: 1, holdingsDigest: census.holdingsDigest, projectorSha256: sha256(readFileSync(join(root, "lib/holdings/reader-census.ts"))), asOf: asOf.toISOString(), currentBallotHolderIds:unique([...currentBallotHolderIds]), ballotHolderObligations, rule: "Executed local selectors prove holding-to-payload survival only. PROJECTED never claims browser rendering or deployed availability. Supporting inputs and current-lineup exclusions carry explicit record-specific scope reasons; unproved direct payloads remain failures. Current ballot holder scope also includes independently expected committed same-office/division relations; a failed incumbent join cannot erase its own obligation.", records, counts: counts(records.map((r) => r.status)), failures };
+  return { formatVersion: 1, holdingsDigest: census.holdingsDigest, projectorSha256: sha256(readFileSync(join(root, "lib/holdings/reader-census.ts"))), asOf: asOf.toISOString(), currentBallotHolderIds:unique([...currentBallotHolderIds]), ballotHolderObligations, ballotQualificationObligations, rule: "Executed local selectors prove holding-to-payload survival only. PROJECTED never claims browser rendering or deployed availability. Supporting inputs and current-lineup exclusions carry explicit record-specific scope reasons; unproved direct payloads remain failures. Current ballot holder scope also includes independently expected committed same-office/division relations; a failed incumbent join cannot erase its own obligation.", records, counts: counts(records.map((r) => r.status)), failures };
 }
 
 export interface ReaderComponentCase {

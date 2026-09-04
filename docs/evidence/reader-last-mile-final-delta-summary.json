@@ -1,0 +1,26 @@
+{
+  "formatVersion": 1,
+  "exactReaderHead": "a3ba92cb68031821f9096c3d5c2254c123488fc3",
+  "inheritedRows": 310,
+  "invalidatedRows": 63,
+  "recomputedRows": 679,
+  "invalidatedApplicableRecords": 2222,
+  "routeProofs": 45,
+  "componentProofs": 29,
+  "componentCases": 1912,
+  "componentUncoveredDiagnostics": 52566,
+  "closureFailures": 0,
+  "denominatorFloor": {
+    "outcome": "MEASURED",
+    "denominator": 1052,
+    "matched": 1052,
+    "subject": "closed final reader census rows"
+  },
+  "delivery": {
+    "RENDERED": 373,
+    "INTENTIONALLY_NOT_APPLICABLE": 591,
+    "SOURCE/HOLDING_UNAVAILABLE": 53,
+    "STAGED_NOT_ELIGIBLE": 10,
+    "IDENTITY_UNRESOLVED": 25
+  }
+}

@@ -26,6 +26,7 @@
  */
 
 import { attemptId, leaseId } from "./ids.ts";
+import type { CapabilityGrant } from "./capability.ts";
 
 /** ------------------------------------------------------------- attempts */
 
@@ -114,6 +115,8 @@ export const ZERO_COST: AttemptCost = {
 };
 
 export interface Attempt {
+  /** Granted before a fleet worker executes, including failed and denied runs. */
+  readonly capabilityGrant?: CapabilityGrant;
   readonly id: string;
   readonly routeTaskId: string;
   readonly workItemId: string;

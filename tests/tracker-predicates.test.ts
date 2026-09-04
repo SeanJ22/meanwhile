@@ -172,7 +172,9 @@ test("RULING 227: every predicate still reads its evidence and answers RESOLVED_
    * field, HOLDS while it names the missing variables, RESOLVED when the
    * deployed host reports the client configured.
    */
-  assert.equal(PREDICATES.length, 8);
+  // WF01 now reads the owner's explicit, scoped approval receipt, like OWN03.
+  assert.equal(PREDICATES.length, 9);
+  assert.equal(PREDICATES.filter(p => p.rowId === "WF01").length, 1);
   const openIds = new Set(openRows.map((r) => String(r.ID ?? "").trim()));
   for (const p of PREDICATES as unknown as RegistryEntry[]) {
     const outcome = evaluateEntry(p, { root: ROOT });

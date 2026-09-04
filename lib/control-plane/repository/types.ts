@@ -1,3 +1,4 @@
+import type { WorkerResultRecord } from "../workers/types.ts";
 /**
  * THE CONTROL-PLANE REPOSITORIES — provider-neutral persistence for the state
  * that must outlive the worker holding it.
@@ -583,6 +584,7 @@ export interface ControlPlaneRepositories {
   readonly researchState: AggregateRepository<ResearchState>;
   readonly researchIntents: AppendOnlyRepository<ResearchIntent>;
   readonly scoutResults: AppendOnlyRepository<ScoutResult>;
+  readonly workerResults: AppendOnlyRepository<WorkerResultRecord>;
   /**
    * THE NIGHTLY DOOR. (RULING 242 — schema v5.)
    *

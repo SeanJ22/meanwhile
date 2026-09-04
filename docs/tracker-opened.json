@@ -2325,6 +2325,13 @@
     ]
   },
   {
+    "session": "2026-09-03 Codex worker-fleet",
+    "opened": "2026-09-03",
+    "ids": [
+      "WF01"
+    ]
+  },
+  {
     "session": "job-watch",
     "opened": "2026-09-03",
     "ids": [

@@ -18,6 +18,8 @@ import { fingerprint } from "../ids.ts";
 import { canonicalJson, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type { MethodCandidate } from "../../method/candidate.ts";
+import { loadWorkerCompletionEvidence } from "../repository/worker-completion.ts";
+import { assertFleetResult } from "../workers/types.ts";
 import {
   PIPELINE_STAGES,
   PRECEDING_STAGE,
@@ -43,6 +45,8 @@ export const PROMOTION_PIPELINE_LOG = "promotion_pipeline";
 
 /** The lookups a decision needs. Absent is null, never a default. */
 export interface PipelineContext {
+  readonly workerResultById?: (id: string) => import("../workers/types.ts").WorkerResultRecord | null;
+  readonly workerAuditBlocks?: (artifactIds: readonly string[]) => boolean;
   readonly artifactById: (artifactId: string) => ArtifactRecord | null;
   readonly attemptRoleById: (attemptId: string) => WorkerRole | null;
 }
@@ -283,12 +287,26 @@ export function validateTransition(
       break;
     case "VERIFIED":
       reasons.push(...verificationReasons(offered.checks));
+      if (offered.workerResultId) {
+        const worker = ctx.workerResultById?.(offered.workerResultId);
+        if (!worker || worker.result.role !== "VALIDATOR" || worker.result.verdict !== "PASS" || worker.worker.instance !== offered.actor.instance ||
+            !state.byStage.SCOUTED?.artifactIds.some(id => worker.inputArtifactIds.includes(id))) {
+          reasons.push({ code: "WORKER_RESULT_NOT_VERIFIED", detail: "The offered verification does not bind an exact completed independent Validator result and its source artifact." });
+        }
+      }
       break;
     case "AUDITED":
       reasons.push(...auditReasons(state, offered));
+      if (offered.workerResultId) {
+        const worker = ctx.workerResultById?.(offered.workerResultId);
+        const verification = state.byStage.VERIFIED?.workerResultId;
+        if (!worker || worker.result.role !== "ADVERSARIAL_AUDITOR" || worker.result.verdict !== "SURVIVED" || worker.worker.instance !== offered.actor.instance ||
+            !verification || !worker.inputResultIds.includes(verification)) reasons.push({ code: "WORKER_RESULT_NOT_VERIFIED", detail: "The offered audit does not bind the exact Validator and Parser result chain." });
+      }
       break;
     case "APPROVED_FOR_PROMOTION":
       reasons.push(...approvalReasons(state, offered));
+      if (ctx.workerAuditBlocks?.(state.byStage.SCOUTED?.artifactIds ?? [])) reasons.push({ code: "WORKER_AUDIT_BLOCKS_PROMOTION", detail: "A durable worker finding reopened or blocked this artifact's dependent work." });
       break;
   }
   return reasons.length === 0 ? { ok: true, record: offered } : { ok: false, record: refuse(offered, reasons) };
@@ -344,9 +362,25 @@ export async function contextFromRepositories(repos: ControlPlaneRepositories): 
   for (const a of await repos.artifacts.readAll()) artifacts.set(a.artifactId, a);
   const roles = new Map<string, WorkerRole>();
   for (const a of await repos.attempts.list()) roles.set(a.id, a.value.worker.role);
+  const results = await repos.workerResults.readAll();
+  const attempts = new Map((await repos.attempts.list()).map(a => [a.id, a.value]));
+  const workItems = new Map((await repos.workItems.list()).map(w => [w.id, w.value]));
+  const completion = new Map(await Promise.all([...new Set(results.map(r => r.workItemId))].map(async id => [id, await loadWorkerCompletionEvidence(repos, id)] as const)));
   return {
     artifactById: (id) => artifacts.get(id) ?? null,
     attemptRoleById: (id) => roles.get(id) ?? null,
+    workerResultById: (id) => {
+      const result = results.find(r => r.id === id);
+      if (!result || attempts.get(result.attemptId)?.outcome !== "COMPLETED" ||
+          canonicalJson(attempts.get(result.attemptId)) !== canonicalJson(result.completion.closedAttempt)) return null;
+      try { assertFleetResult(result.result, result.completion.completedTask.workerTask!.role, result.attemptId); return result; }
+      catch { return null; }
+    },
+    workerAuditBlocks: (ids) => results.some(r => r.inputArtifactIds.some(id => ids.includes(id)) &&
+      (completion.get(r.workItemId)?.validations.some(v => !v.passed) ||
+        !completion.get(r.workItemId)?.audits.some(a => a.survived) ||
+        completion.get(r.workItemId)?.audits.some(a => !a.survived && a.resolvedAt === null) ||
+        ["REOPENED", "BLOCKED"].includes(workItems.get(r.workItemId)?.state ?? ""))),
   };
 }
 

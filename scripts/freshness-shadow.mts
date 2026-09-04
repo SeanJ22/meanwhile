@@ -1,3 +1,6 @@
+import { boundedAuditTransport } from "../lib/control-plane/workers/model-audit.ts";
+import { runHeldWorkerFleetCycle, standingFleetRuntime } from "../lib/control-plane/workers/standing.ts";
+import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 /**
  * `pnpm freshness:shadow` — ONE UNATTENDED CYCLE OF THE FRESHNESS SCHEDULER.
  * (Session B, W3.5, 2026-08-30. Rewritten Session B resume, W3.B/C/E/F,
@@ -125,7 +128,7 @@ import {
   WORKER_CREDENTIAL_VAR,
   ceilingPermits,
   readIntents,
-  scoutSpendInWindow,
+  researchSpendInWindow,
   type HostSupervision,
   type RelaunchProof,
   type ResearchIntent,
@@ -621,7 +624,7 @@ try {
   ledgerUnreadable = error instanceof Error ? error.message : String(error);
   runtimeConditions.push(`the cost ledger could not be read (${ledgerUnreadable}); the rolling ceiling cannot be enforced, so Scout work is deferred`);
 }
-const spendWindow = scoutSpendInWindow(costLedger, NOW);
+const spendWindow = researchSpendInWindow(costLedger, NOW);
 let spentThisCycle = 0;
 let scoutsAdmittedThisCycle = 0;
 
@@ -1057,6 +1060,19 @@ console.log(
   `\n  debt persisted: ${persisted.written} row(s) written, ${persisted.cleared.length} cleared`,
 );
 
+// The disposable worker fleet consumes already-held artifacts through the same dispatcher.
+// Preserve the standing cycle budget and Scout lane; no new civic retrieval happens here.
+if (!dry && Date.now() + 150_000 < DISPATCH_DEADLINE_MS) {
+  try {
+    const fleet = standingFleetRuntime({ root: ROOT, repos, now: nowIso,
+      ...(modelLaneEnabled ? { transport: boundedAuditTransport(workerKey) } : {}) });
+    const fleetDispatches = await runHeldWorkerFleetCycle(ROOT, fleet);
+    await projectFleetPipeline(repos);
+    for (const row of fleetDispatches) console.log(`  worker fleet: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
+  } catch (error) {
+    runtimeConditions.push(`worker fleet could not complete this bounded pass: ${error instanceof Error ? error.message : "WORKER_FLEET_FAILED"}`);
+  }
+}
 /* ------------------------------------------------------- the promotion tail --- */
 
 /*

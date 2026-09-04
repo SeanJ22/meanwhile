@@ -4,7 +4,7 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { today } from "../scripts/doc-dates.mjs";
-import { KELLY_FIELDS, type FieldState } from "../lib/hunt/kelly-depth.ts";
+import { KELLY_FIELDS, STUCK_MOVES, type ArguedAbsence, type FieldState } from "../lib/hunt/kelly-depth.ts";
 import {
   ASYMMETRY_THRESHOLD,
   CELL_STATES,
@@ -13,6 +13,7 @@ import {
   cellFromKelly,
   kellyRows,
   loadKellyInputs,
+  type KellyInputs,
   type MatrixRow,
 } from "../lib/hunt/coverage-matrix.ts";
 
@@ -66,6 +67,50 @@ test("every column carries a cell for every candidate — no silent blanks", () 
 });
 
 test("an ARGUED absence carries its expiry, because it is a measurement with a shelf life", () => {
+  {
+  // The current corpus can correctly have no unexpired absences. Exercise the
+  // shared protocol/row/cell path at fixed instants without renewing civic data.
+  const candidacyId = "fixture:coverage-matrix:absence";
+  const absences: ArguedAbsence[] = KELLY_FIELDS.map((field) => ({
+    candidacyId, field, at: "2026-08-26", expiresOn: "2026-09-02",
+    argument: "Synthetic regression control; never a production absence.",
+    protocol: STUCK_MOVES.map((move) => ({
+      move, query: `fixture query for ${field}: ${move}`, result: "fixture source reached; field not found", reached: true,
+    })),
+  }));
+  const inputs: KellyInputs = {
+    zip: ZIP, label: "Expiry control", contests: [{ id: "fixture:contest", title: "Fixture contest" }],
+    candidacies: [{ id: candidacyId, contestId: "fixture:contest", givenName: "Fixture", familyName: "Candidate" }],
+    cards: {}, links: {}, filedEmail: new Map(), photoOnDisk: () => false,
+    absenceFor: new Map(absences.map((absence) => [`${candidacyId}|${absence.field}`, absence])),
+    absenceCount: absences.length,
+  };
+  for (const onDay of ["2026-09-01", "2026-09-02"]) {
+    const [reading] = kellyRows(inputs, onDay);
+    for (const field of KELLY_FIELDS) {
+      const state = reading.fields[field];
+      assert.equal(state.state, "ARGUED_ABSENT", `${field} must satisfy the complete, reached protocol before expiry`);
+      const cell = cellFromKelly(field, state, onDay);
+      assert.equal(cell.state, "ABSENT");
+      assert.ok(cell.expiresOn, `${reading.subject}/${field} is absent with no expiry`);
+      assert.ok(cell.expiresOn > cell.date, "an absence that expires before it was made");
+      assert.equal(cell.date, "2026-08-26", "the original observation date survives projection");
+      assert.equal(cell.expiresOn, "2026-09-02", "projection must not renew the absence");
+    }
+  }
+  const [expired] = kellyRows(inputs, "2026-09-03");
+  assert.equal(expired.done, false);
+  assert.deepEqual(expired.owed, [...KELLY_FIELDS]);
+  for (const field of KELLY_FIELDS) {
+    assert.equal(expired.fields[field].state, "OWED");
+    const cell = cellFromKelly(field, expired.fields[field], "2026-09-03");
+    assert.equal(cell.state, "OWED", "an expired absence cannot remain an ABSENT matrix cell");
+    assert.match(cell.source, /STALE.*expired 2026-09-02/);
+    assert.equal(cell.expiresOn, undefined);
+  }
+
+  }
+  {
   /*
    * THE INVARIANT IS PROVEN FROM A FIXTURE, NOT FROM WHATEVER THE LIVE CORPUS
    * HOLDS TODAY. (2026-09-03, R5 — Daily Refresh truth & reliability.)
@@ -108,6 +153,8 @@ test("an ARGUED absence carries its expiry, because it is a measurement with a s
       assert.ok(cell.expiresOn, `${reading.subject}/${field} is absent with no expiry`);
       assert.ok(cell.expiresOn! > cell.date, "an absence that expires before it was made");
     }
+  }
+
   }
 });
 

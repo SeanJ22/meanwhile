@@ -36,7 +36,7 @@
  */
 
 /** Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it. */
-export const BOOTSTRAP_VERSION = 5;
+export const BOOTSTRAP_VERSION = 6;
 
 /**
  * The tables, and the shape each one carries.
@@ -141,6 +141,7 @@ export const APPEND_ONLY_LOGS = [
    */
   "research_intents",
   "scout_results",
+  "worker_results",
   /*
    * THE NIGHTLY DOOR. (RULING 242 — version 5.)
    *
@@ -327,7 +328,8 @@ export function recordVersionStatement(version: number, nowIso: string): string 
   return `INSERT INTO cp_schema_version (singleton, version, applied_at)
           VALUES (true, ${version}, '${nowIso}')
           ON CONFLICT (singleton) DO UPDATE
-            SET version = EXCLUDED.version, applied_at = EXCLUDED.applied_at;`;
+            SET version = GREATEST(cp_schema_version.version, EXCLUDED.version),
+                applied_at = CASE WHEN EXCLUDED.version >= cp_schema_version.version THEN EXCLUDED.applied_at ELSE cp_schema_version.applied_at END;`;
 }
 
 /** What the gate found, and every field is a fact it read rather than assumed. */

@@ -321,18 +321,20 @@ test("the advisory lock key is STABLE — two machines computing it must agree",
   );
 });
 
+// Keep the recorded v5 guard identity: every nightly-door assertion still runs.
+// The additive v6 migration also requires its exact version and worker-result log.
 test("schema v5 declares the four nightly-door logs, and every provider bundle carries them", async () => {
   const { APPEND_ONLY_LOGS, BOOTSTRAP_VERSION, DECLARED_TABLES } = await import(
     "../lib/control-plane/repository/pg-schema.ts"
   );
-  assert.equal(BOOTSTRAP_VERSION, 5, "the four logs are a schema move, and the version says so");
-  for (const log of ["promotion_pipeline", "window_runs", "window_incidents", "window_intents"]) {
+  assert.equal(BOOTSTRAP_VERSION, 6, "the worker-result log is an additive schema move");
+  for (const log of ["promotion_pipeline", "window_runs", "window_incidents", "window_intents", "worker_results"]) {
     assert.ok((APPEND_ONLY_LOGS as readonly string[]).includes(log), `${log} is not declared`);
     assert.ok(DECLARED_TABLES.includes(`cp_log_${log}`), `cp_log_${log} is not a declared table`);
   }
   for (const provider of providers) {
     const repos = await provider.open();
-    for (const field of ["promotionPipeline", "windowRuns", "windowIncidents", "windowIntents"] as const) {
+    for (const field of ["promotionPipeline", "windowRuns", "windowIncidents", "windowIntents", "workerResults"] as const) {
       assert.equal(typeof repos[field]?.append, "function", `${provider.name} bundle lacks ${field}`);
     }
   }

@@ -81,6 +81,8 @@ export const PIPELINE_REFUSALS = [
   "AUDIT_DID_NOT_SURVIVE",
   /** The approval names a chain record the log does not hold. */
   "APPROVAL_CHAIN_INCOMPLETE",
+  "WORKER_RESULT_NOT_VERIFIED",
+  "WORKER_AUDIT_BLOCKS_PROMOTION",
 ] as const;
 export type PipelineRefusalCode = (typeof PIPELINE_REFUSALS)[number];
 
@@ -101,7 +103,7 @@ export interface PipelineActor {
 }
 
 export function sameActor(a: PipelineActor, b: PipelineActor): boolean {
-  return a.role === b.role && a.instance === b.instance;
+  return a.instance === b.instance;
 }
 
 interface RecordBase {
@@ -171,11 +173,13 @@ export interface VerificationCheck {
 }
 
 export interface VerifiedRecord extends RecordBase {
+  readonly workerResultId?: string;
   readonly stage: "VERIFIED";
   readonly checks: readonly VerificationCheck[];
 }
 
 export interface AuditedRecord extends RecordBase {
+  readonly workerResultId?: string;
   readonly stage: "AUDITED";
   readonly startedFrom: readonly AuditEvidenceBase[];
   readonly survived: boolean;

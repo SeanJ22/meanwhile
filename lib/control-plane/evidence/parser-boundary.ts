@@ -71,6 +71,8 @@ export const NETWORK_CAPABILITY_NAMES = [
   "outbound",
   "playwright",
   "curl",
+  "network_public_read",
+  "browser_drive",
 ] as const;
 
 export function isNetworkCapability(capability: string): boolean {

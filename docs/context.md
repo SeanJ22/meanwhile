@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-03 02:14:24 EDT. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-09-02 -->
-Session day 2026-09-02 (America/Phoenix, from `pnpm stamp`).
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-03 16:37:30 EDT.
+Session day 2026-09-03 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1309 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1313 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 Repository holding paths resolve through the committed move plan; source records stay unchanged.
@@ -1045,19 +1045,19 @@ _No status change recovered in the commits walked._
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-09-03 02:14:24 EDT   <!-- expected-future: Eastern run stamp (R18) past midnight; Phoenix session day is 2026-09-02 -->
-branch: codex/state-holdings-20260903
-head sha: 0809ad296fc75e8d053a3238436b7a98ae8f1d61
-head subject: Record the combined state holdings reader walk before shipping
-origin/main sha: 6a3c9b4ff272adcd689e9130c2285fc64293fff8
-origin/main subject: Post-deploy integrity reading: 2026-09-03T05:43Z   <!-- expected-future: a UTC stamp inside a quoted commit subject; Phoenix session day is 2026-09-02 -->
-local main sha: 3f9a138fd39f6160659329e17c496d2dd99cee00
-local main matches origin/main: no — 3 commit(s) behind
-working tree: clean
+generated: 2026-09-03 16:37:30 EDT
+branch: codex/worker-fleet
+head sha: 6eedc514890fcdbcf5e1ce5eff89067add481c69
+head subject: Record bounded public W4 preflight on integrated main
+origin/main sha: c22a2876f673c680e49070dd2228de3d38155c62
+origin/main subject: Post-deploy integrity reading: 2026-09-03T19:19Z
+local main sha: c22a2876f673c680e49070dd2228de3d38155c62
+local main matches origin/main: yes
+working tree: dirty — 19 changed file(s)
 open prs: 1
-open pr: #266 Organize canonical state holdings and generate state manifests
-last recorded tests: 92 (recorded without a verdict)
-last recorded lint: not recorded
-last recorded build: not recorded
-last recorded status from: docs/state.md:23226
+open pr: #268 Execute disposable Parser, Validator, and adversarial audit workers
+last recorded tests: 094 (pass)
+last recorded lint: pass
+last recorded build: pass
+last recorded status from: docs/state.md:23450
 ```

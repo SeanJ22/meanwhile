@@ -1,3 +1,4 @@
+import type { WorkerResultRecord } from "../workers/types.ts";
 /**
  * THE IN-PROCESS DOUBLE.
  *
@@ -233,6 +234,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     researchState: memoryAggregateRepository<ResearchState>("ResearchState"),
     researchIntents: memoryAppendOnlyRepository<ResearchIntent>("research_intents"),
     scoutResults: memoryAppendOnlyRepository<ScoutResult>("scout_results"),
+    workerResults: memoryAppendOnlyRepository<WorkerResultRecord>("worker_results"),
     /* The nightly door (RULING 242, schema v5). */
     promotionPipeline: memoryAppendOnlyRepository<PromotionPipelineRecord>("promotion_pipeline"),
     windowRuns: memoryAppendOnlyRepository<WindowRunRecord>("window_runs"),

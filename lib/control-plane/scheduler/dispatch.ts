@@ -48,7 +48,7 @@
  * `sweepExpiredLeases` below simply drives.
  */
 
-import { isExpired, type AttemptCost, type WorkerRef } from "../attempt.ts";
+import { isExpired, type AttemptCost, type AttemptOutcome, type WorkerRef } from "../attempt.ts";
 import {
   abandonAttempt,
   beginAttemptFor,
@@ -61,6 +61,8 @@ import {
 } from "../repository/coordinator.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
 import type { RouteDisposition } from "../route-task.ts";
+import { completeWorkerTask, reconcileWorkerCompletions, type UncommittedWorkerResult } from "../repository/worker-completion.ts";
+import { PolicyRefusal } from "../capability.ts";
 
 import type { ScheduledObligation } from "./obligation.ts";
 
@@ -251,7 +253,7 @@ export function decideExecutor(input: {
  * (we walked and got nowhere). Neither is a statement about the publisher, and
  * neither may become one.
  */
-export const WORK_OUTCOME_KINDS = ["DISPOSED", "SIMULATED", "ABORTED"] as const;
+export const WORK_OUTCOME_KINDS = ["DISPOSED", "RESULT_RECORDED", "SIMULATED", "ABORTED"] as const;
 export type WorkOutcomeKind = (typeof WORK_OUTCOME_KINDS)[number];
 
 /**
@@ -274,6 +276,9 @@ export type WorkArtifact = Omit<ArtifactRecord, "attemptId" | "workItemId" | "ro
 export type WorkDisposition = Omit<RouteDisposition, "attemptId" | "at" | "artifactIds">;
 
 export interface WorkOutcome {
+  readonly failureOutcome?: Exclude<AttemptOutcome, "COMPLETED">;
+  readonly endedAt?: string;
+  readonly workerResult?: UncommittedWorkerResult;
   readonly kind: WorkOutcomeKind;
   /**
    * **WHICH EXECUTOR ACTUALLY RAN.** (Session B closure, W3.E, 2026-08-31.)
@@ -699,7 +704,7 @@ export async function dispatchOne(
     await abandonAttempt(repos, {
       routeTaskId: input.routeTaskId,
       attemptId,
-      outcome: "ABORTED",
+      outcome: error instanceof PolicyRefusal || (error instanceof Error && error.message.startsWith("DENIED_BY_POLICY")) ? "DENIED_BY_POLICY" : "ABORTED",
       reason: `the worker threw before reaching a boundary: ${why}`,
       now: input.now,
     });
@@ -752,6 +757,18 @@ export async function dispatchOne(
       cost: outcome.cost ?? null,
       detail: why,
     };
+  }
+
+  if (outcome.kind === "RESULT_RECORDED") {
+    const record = outcome.workerResult;
+    if (!record || record.attemptId !== attemptId || record.routeTaskId !== input.routeTaskId || record.workItemId !== workItemId) {
+      await abandonAttempt(repos, { routeTaskId: input.routeTaskId, attemptId, outcome: "DENIED_BY_POLICY", reason: "WORKER_RESULT_DISPATCH_BINDING_REFUSED", now: input.now });
+      return { ...base, ...ran(), outcome: "FAILED", dispositionCommitted: false, disposition: null, artifactIds: [], cost: null, detail: "WORKER_RESULT_DISPATCH_BINDING_REFUSED" };
+    }
+    // A computational result is not an acquisition and may not acquire a civic disposition.
+    await completeWorkerTask(repos, record);
+    return { ...base, ...ran(), outcome: "WORKED", dispositionCommitted: false, disposition: null,
+      artifactIds: record.inputArtifactIds, cost: record.cost, detail: outcome.detail };
   }
 
   /*
@@ -817,11 +834,11 @@ export async function dispatchOne(
       /* Both close as ABORTED: neither reached a boundary, and `ABORTED` is
          the outcome that says so without implying the worker died. The REASON
          is what distinguishes them, and it is the field a later reader gets. */
-      outcome: "ABORTED",
+      outcome: outcome.failureOutcome ?? "ABORTED",
       reason: simulated
         ? `SHADOW_DECISION: the executor deliberately performed no retrieval. ${outcome.detail}`
-        : `the worker reached no boundary. ${outcome.detail}`,
-      now: input.now,
+        : outcome.failureOutcome ? outcome.detail : `the worker reached no boundary. ${outcome.detail}`,
+      now: outcome.endedAt ?? input.now,
       ...(outcome.cost ? { cost: outcome.cost } : {}),
     });
     if (outcome.cost) await ledgerCost(outcome.cost);
@@ -952,6 +969,8 @@ export async function sweepExpiredLeases(
   repos: ControlPlaneRepositories,
   input: { readonly now: string; readonly observedBy: string },
 ): Promise<ReclaimSweep> {
+  // A committed result outranks an expired heartbeat. Apply commits before declaring a worker dead.
+  await reconcileWorkerCompletions(repos);
   const reclaimed: string[] = [];
   const stillLive: string[] = [];
   const refused: { routeTaskId: string; why: string }[] = [];

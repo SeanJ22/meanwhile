@@ -1,9 +1,9 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 445,
-    "named": 4959,
-    "dynamic": 18
+    "files": 454,
+    "named": 5059,
+    "dynamic": 21
   },
   "files": {
     "tests/absence-defaults.test.ts": {
@@ -7011,6 +7011,151 @@
         "outside a no-agenda state, an unsearched body gets no note at all",
         "the state comes off the identifier, never off a label",
         "the statutory sentence now renders for real NH bodies"
+      ],
+      "dynamic": 0
+    },
+    "tests/worker-fleet-auditor.test.ts": {
+      "names": [
+        "CivicClerk independent profile retains mixed municipal categories and future dates without turning every event into Council",
+        "CivicClerk publisher context mismatch cannot be laundered through plausible IDs on another municipal feed",
+        "CivicClerk whole-municipality capture refuses a fabricated governing-body binding",
+        "audit refuses unsupported evidence spans and rendered counts",
+        "auditor inventories immutable evidence independently and explicitly records all canonical attack modes",
+        "central permanent control: Validator passes plausible 11/11 extraction; independent Auditor breaks the incomplete 12-record universe",
+        "isolated auditor procedure imports types only and never calls a producer procedure or ambient I/O",
+        "missing independent starting context and uninterpretable additional route are inconclusive, never automatic survival",
+        "permanent actor independence control catches relabeling one process across producer, validator and auditor",
+        "permanent false absence control: another known official route keeps the obligation open",
+        "permanent injection control preserves publisher text as scalar evidence and cannot derive authority from it",
+        "permanent official contradiction control cannot silently pick one first-party date",
+        "permanent plausible identity control refuses another body's matching event number",
+        "permanent route omission control: captured extraction survives while an unsupported universe conclusion breaks",
+        "same independent 12-record evidence survives when the exact claimed universe is restored"
+      ],
+      "dynamic": 0
+    },
+    "tests/worker-fleet-contract.test.ts": {
+      "names": [
+        "shared worker wire contract accepts a serialized scalar result and rejects corrupted nested records before durable certification",
+        "validator and auditor result envelopes reject missing counts, invented attack modes and a BROKE result that suppresses reopening"
+      ],
+      "dynamic": 0
+    },
+    "tests/worker-fleet-isolation.test.ts": {
+      "names": [
+        "Auditor keeps its broker-mediated public-read grant while direct promotion and restricted access remain refused",
+        "Parser and Validator grants permit only sanitized evidence, refusing restricted reads, promotion and every other authority",
+        "a caught dynamic import with multiple lexical comments still cannot manufacture successful output",
+        "a computation crash after partial work yields no successful result",
+        "a synchronous timeout yields no partial output",
+        "a worker cannot catch a network policy denial and turn it into a successful civic result",
+        "canonical NETWORK_PUBLIC_READ and BROWSER_DRIVE cannot widen a Parser grant",
+        "dynamic import cannot return a success envelope after a forbidden asynchronous host operation",
+        "eval and constructor code generation cannot cross the realm boundary",
+        "publisher instruction-like text remains an exact field value inside the actual isolated Parser",
+        "the actual Parser bundle runs over vault-issued serialized input in fresh disposable processes",
+        "the outer wall bound rejects a premature result when unfinished microtask computation keeps the process alive",
+        "the serialized worker input remains bounded",
+        "worker code cannot clear a policy denial before returning a civic result",
+        "worker realm contains no host process, environment, filesystem globals or host constructors"
+      ],
+      "dynamic": 1
+    },
+    "tests/worker-fleet-model-audit.test.ts": {
+      "names": [
+        "a valid grounded challenge survives beside a refused ungrounded challenge without certifying the whole response",
+        "adaptive budget keeps five complete events and every exploratory route with eight large publisher surfaces",
+        "an injected transport cannot hang the review and the established bound cannot be enlarged",
+        "an oversized primary projection is refused before transport instead of cutting through civic JSON",
+        "first-party surface evidence is represented and exact surface quotes ground challenges",
+        "instruction-like source content remains evidence while producer context and arbitrary tool actions are refused",
+        "large official HTML keeps deterministic relevant exact excerpts with explicit omission and bounded representation",
+        "malformed, truncated, mismatched and unsupported responses retain exact named validation failures and measured cost",
+        "oversized response is bounded durably and never mistaken for a complete verdict",
+        "provider outage is a named execution failure with no guessed usage or leaked transport body",
+        "strict JSON end_turn compatibility remains accepted and missing usage remains null",
+        "typed record_audit output preserves grounded challenge, actual model usage and existing cost calculation"
+      ],
+      "dynamic": 0
+    },
+    "tests/worker-fleet-parser.test.ts": {
+      "names": [
+        "12 declared rows and 11 actual rows remain an explicit ambiguity; source count never comes from the claim",
+        "CivicClerk preserves every category and exact scalar spans without minting body identities",
+        "CivicClerk source-profile mismatch refuses a sibling host or invented category-to-body binding",
+        "a malformed later row cannot turn earlier partial computation into a successful shorter feed",
+        "an incidental EventItems subresource does not assert agenda contents or change the Event denominator",
+        "duplicate JSON keys are refused instead of silently selecting the last official value",
+        "duplicate source entity is preserved for reconciliation and nested fields cannot disappear silently",
+        "escaped keys, repeated values, unicode and prompt-like evidence have exact spans and remain data",
+        "invalid or contradictory declared totals and a declared next page are named",
+        "malformed, unsupported and zero-row evidence fail by name without civic output",
+        "real held Pima capture: 18 rows retain their exact scalar evidence, identity and honest count denominator",
+        "same immutable input and parser version replay to equivalent normalized output across disposable Attempts",
+        "unexpected implementation errors escape for the execution broker instead of becoming a civic conclusion"
+      ],
+      "dynamic": 0
+    },
+    "tests/worker-fleet-readback.test.ts": {
+      "names": [
+        "canonical worker readback shows each role, measured costs, matched verdicts and current reopened findings",
+        "crashed and running Attempts cannot borrow a successful typed verdict",
+        "every displayed metric requires a source, timestamp, denominator and interpretation",
+        "failed canonical reads are named, never rendered as empty queues, and never expose error payloads",
+        "latest rows are bounded independently per role and stated counts equal the rendered row population",
+        "orphan worker results are named and cannot fabricate an Attempt row",
+        "queue due counts come from worker RouteTasks and preserve future and non-queued states",
+        "stale worker identity and missing result references refuse certification instead of hiding the Attempt"
+      ],
+      "dynamic": 0
+    },
+    "tests/worker-fleet-runtime.test.ts": {
+      "names": [
+        "BROKE remains blocking through captured audit/replay until a newer exact independent source-universe chain survives",
+        "a Validator-passing captured result is broken by another official route and dependent work reopens",
+        "actual isolated Parser → Validator → Auditor dispatch persists the existing durable execution contract",
+        "completion aggregates every artifact chain and a newer failed Validator overrides its own old pass",
+        "diagnostic replay preserves workflow and captured-only audit cannot discharge whole-obligation completion",
+        "every runtime grant denies promotion/restricted reads, and Parser/Validator deny network",
+        "file-provider restart reconciles a committed result before an expired-lease sweep can manufacture failure",
+        "malformed evidence produces a persisted typed failure and blocks the item, never an empty successful extraction",
+        "missing, hash-corrupted, or wrong immutable input abandons the Attempt without any civic output",
+        "partial computation lost before commit stays nonterminal, then lease recovery runs a fresh Parser",
+        "same held artifact replay creates a fresh Attempt with equivalent semantic output",
+        "stale producer contract and prior Validator Attempt cannot certify a different exact candidate",
+        "transient model-transport denial retries only after backoff and current availability; permanent denial stays blocked"
+      ],
+      "dynamic": 0
+    },
+    "tests/worker-fleet-standing.test.ts": {
+      "names": [
+        "a bounded audit refuses an oversized held universe instead of silently truncating it",
+        "a portal name in publisher prose does not manufacture a first-party link binding",
+        "canonical failure history stays retryable after three failures and uses the existing six-hour cap",
+        "only exact transient denials become due for current-policy reauthorization",
+        "standing audit inherits the current meeting floor and separately inventories same-subject publisher evidence"
+      ],
+      "dynamic": 2
+    },
+    "tests/worker-fleet-validator.test.ts": {
+      "names": [
+        "CivicClerk date claims, category contradictions, and omitted publication status are refused",
+        "CivicClerk municipality capture preserves council, planning, and quorum category identities",
+        "CivicClerk source context independently binds the municipality even with plausible event identities",
+        "Validator accepts an independently produced complete captured artifact with exact lexical spans",
+        "Validator controls use captured Pima publisher evidence as an additional positive control",
+        "machine provenance and artifact identity cannot be supplied by candidate assertions",
+        "ordinary validation certifies captured scope without asserting a complete official route universe",
+        "parser warnings, failed extraction, and malformed evidence never become certified empty records",
+        "required fields and unreported source rows cannot silently disappear",
+        "same immutable candidate yields exactly the same validation output",
+        "seed: a real span with the same value in another row cannot support the claimed row",
+        "seed: contradictory official values are surfaced without selecting one",
+        "seed: duplicate entity represented as two is refused even when both point to real evidence",
+        "seed: producer self-validation is refused across role aliases and shared Attempts",
+        "seed: publisher declares twelve rows but only eleven were extracted",
+        "seed: wrong date on otherwise-real evidence refuses independently of acquisition timestamp",
+        "seed: wrong subject/body identity has a named machine refusal"
       ],
       "dynamic": 0
     },

@@ -280,6 +280,12 @@ export function scoutSpendInWindow(
   return { windowUsd: measured === 0 ? (unmeasured === 0 ? 0 : null) : total, measured, unmeasured };
 }
 
+/** Both model lanes consume the existing rolling research ceiling; deterministic USD null is not model spend. */
+export function researchSpendInWindow(costs: readonly CostEntry[], nowIso: string, windowHours = RESEARCH_BOUNDS.windowHours) {
+  return scoutSpendInWindow(costs.filter(c => c.role === "SCOUT" || (c.role === "ADVERSARIAL_AUDITOR" && c.cost.requestCount !== 0))
+    .map(c => ({ ...c, role: "SCOUT" as const })), nowIso, windowHours);
+}
+
 /** Is more Scout work admissible under the rolling ceiling? Fires AT the cap. */
 export function ceilingPermits(
   windowUsd: number | null,

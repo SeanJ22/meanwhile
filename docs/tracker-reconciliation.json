@@ -1,8 +1,8 @@
 {
-  "generated": "2026-09-02",
+  "generated": "2026-09-03",
   "ruling": "RULING 227",
   "openedDateProvenance": {
-    "opened-ledger": 434,
+    "opened-ledger": 439,
     "session-label": 243,
     "unrecoverable": 225
   },
@@ -89,7 +89,8 @@
       "NH300",
       "NH305",
       "NS12",
-      "OWN03"
+      "OWN03",
+      "WF01"
     ]
   },
   "summary": {

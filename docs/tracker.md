@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **421 open**, 485 resolved.
+- **421 open**, 486 resolved.
 - **73 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
@@ -35,7 +35,7 @@ and when. Nothing is ever deleted.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**73 open · 73 resolved.**
+**73 open · 74 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 

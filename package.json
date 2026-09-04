@@ -45,6 +45,7 @@
     "contrast": "tsx scripts/contrast-audit.mts",
     "control-plane:bootstrap": "node --env-file=.env.local --experimental-strip-types scripts/control-plane-bootstrap.mts",
     "control-plane:gate": "tsx scripts/control-plane-gate.mts",
+    "worker-fleet:proof": "node --env-file=.env.local --experimental-strip-types scripts/worker-fleet-proof.mts",
     "control-plane:proof": "node --env-file=.env.local --experimental-strip-types scripts/control-plane-proof.mts",
     "corpus:check": "tsx scripts/corpus-check.mts",
     "corpus:fetch": "tsx scripts/fetch-corpus.mts",

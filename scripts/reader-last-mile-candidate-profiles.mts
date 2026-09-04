@@ -11,13 +11,13 @@ const records = [];
 for (const key of [...new Set([...Object.keys(cards), ...Object.keys(links)])].sort()) {
   const answer = candidateProfileEvidenceFor({ kind: "PERSON", id: key, name: key });
   assert.equal(answer.gaps.length, 0, key);
-  for (const field of ["bio", "official", "campaign"] as const) {
-    const expected = field === "bio" ? cards[key]?.bio : links[key]?.[field]?.url;
+  for (const field of ["bio", "official", "campaign", "email", "phone", "filedAddress"] as const) {
+    const expected = field === "official" || field === "campaign" ? links[key]?.[field]?.url : cards[key]?.[field];
     if (!expected) continue;
     const record = answer.records.find(record => record.candidateProfile?.holdingKey === key && record.candidateProfile.field === field);
     assert.ok(record, `${key}/${field}`);
     assert.equal(record.candidateProfile?.value, expected);
-    assert.ok(record.sourceUrl && record.retrievedAt);
+    assert.ok(record.sourceUrl && record.retrievedAt || record.candidateProfile?.provenanceLimitation);
     records.push({ nativeHoldingKey: key, field, record });
   }
 }
@@ -28,8 +28,9 @@ const output = {
   cardProfiles: Object.keys(cards).length, linkProfiles: Object.keys(links).length,
   eligibleBios: Object.values(cards).filter(card => card.bio).length,
   eligibleLinks: Object.values(links).flatMap(row => [row.official, row.campaign]).filter(Boolean).length,
+  eligibleContacts: Object.values(cards).flatMap(row => [row.email, row.phone, row.filedAddress]).filter(Boolean).length,
   projectedFields: records.length, falseNegatives: 0, records,
 };
-assert.equal(output.projectedFields, output.eligibleBios + output.eligibleLinks);
+assert.equal(output.projectedFields, output.eligibleBios + output.eligibleLinks + output.eligibleContacts);
 writeFileSync("docs/evidence/reader-last-mile-candidate-profiles.json", JSON.stringify(output, null, 2) + "\n");
-console.log(JSON.stringify({ bios: output.eligibleBios, links: output.eligibleLinks, projected: output.projectedFields, falseNegatives: output.falseNegatives }));
+console.log(JSON.stringify({ bios: output.eligibleBios, links: output.eligibleLinks, contacts: output.eligibleContacts, projected: output.projectedFields, falseNegatives: output.falseNegatives }));

@@ -38,6 +38,8 @@ export interface SeatHolder {
    * product cannot survive. No sourced term, nothing renders.
    */
   termEnd: string | null;
+  /** Verbatim sourced term/appointment wording; never parsed into a term date. */
+  termNote?: string | null;
   /**
    * 6d: the ONLY basis on which an age may render, and it is a DATE rather
    * than an age so the number is computed fresh at every render and cannot

@@ -1,18 +1,31 @@
 import { loadedFrom, outcomeEvidenceFor, outcomeGapWhose, sittingsForBody } from "../outcomes/store.ts";
 import { outcomeQuestionClass } from "./outcome-question.ts";
 import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
+import type { QuestionClass } from "../answerability/record-class.ts";
+
+/** Agenda wording requests noticed items; decision/vote wording stays stricter. */
+export function meetingRecordQuestionClass(question: string): QuestionClass | null {
+  return outcomeQuestionClass(question) ?? (/\b(?:agenda|agendas|docket|noticed)\b/i.test(question) ? "WHAT_WAS_NOTICED" : null);
+}
 
 /** The same exact body/sitting query serves current-calendar and older held outcomes. */
 export function meetingOutcomeEvidenceFor(input: { bodyId: string; meetingId: string; startsAt: string; question: string }) {
   const records: EvidenceRecord[] = [];
   const gaps: EvidenceGap[] = [];
   const denominators: Record<string, number> = {};
-  const questionClass = outcomeQuestionClass(input.question);
+  const questionClass = meetingRecordQuestionClass(input.question);
   if (!questionClass) return { records, gaps, denominators };
-  if (loadedFrom() === "EMPTY_STORE") return { records, gaps: [{ whose: "OURS" as const, statement: "The held meeting outcome records could not be read for this answer. This is a holding failure, not evidence that the body recorded no actions or votes." }], denominators: { outcomeLoaderFailures: 1 } };
+  if (loadedFrom() === "EMPTY_STORE") return { records, gaps: [{ whose: "OURS" as const, statement: "The held structured meeting records could not be read for this answer. This is a holding failure, not evidence that the body published no agenda, actions or votes." }], denominators: { outcomeLoaderFailures: 1 } };
   const evidence = outcomeEvidenceFor({ bodyId: input.bodyId, meetingId: input.meetingId, questionClass });
+  // The ordinary document/notice selector answers agenda availability when
+  // this separate structured source has no sitting. Its outcome-store absence
+  // must not become a claim that an already held document has no agenda.
+  if (questionClass === "WHAT_WAS_NOTICED" && evidence.state === "NO_SITTING_HELD") return { records, gaps, denominators };
   const sitting = sittingsForBody(input.bodyId).find((row) => row.meetingId === input.meetingId);
   const titles = new Map((sitting?.agenda ?? []).map((record) => [record.eventItemId, record.title]));
+  for (const rec of evidence.records) if (rec.recordClass === "AGENDA") {
+    records.push({ kind: "AGENDA_ITEM", id: `${rec.eventItemId}#agenda`, bodyId: input.bodyId, text: rec.title, occurredAt: input.startsAt, sourceUrl: rec.provenance.endpoint, sourceOrg: rec.provenance.sourceOrg, retrievedAt: rec.provenance.readOn === "NEVER_READ" ? null : rec.provenance.readOn });
+  }
   const questionTokens = [...new Set(input.question.toLowerCase().split(/[^a-z0-9]+/).filter((term) => term.length >= 5))];
   const rolls = evidence.records.filter((record) => record.recordClass === "ROLL_CALL");
   const ranked = rolls.map((rec, index) => ({ rec, index, votes: rec.votes.filter((vote) => vote.personName && vote.value), named: questionTokens.filter((term) => (titles.get(rec.eventItemId) ?? "").toLowerCase().includes(term)).length >= 2, divided: new Set(rec.votes.map((vote) => vote.value)).size > 1 }))
@@ -26,6 +39,7 @@ export function meetingOutcomeEvidenceFor(input: { bodyId: string; meetingId: st
     records.push({ kind: "MEETING_ACTION", id: `${rec.eventItemId}#action`, bodyId: input.bodyId, text: `${rec.matterFile ? `${rec.matterFile}: ` : ""}${parts.join(" ")}`, occurredAt: input.startsAt, sourceUrl: rec.provenance.endpoint, sourceOrg: rec.provenance.sourceOrg, retrievedAt: rec.provenance.readOn === "NEVER_READ" ? null : rec.provenance.readOn });
   }
   denominators.outcomeRecordsForThatMeeting = evidence.records.length;
+  denominators.structuredAgendaItemsForThatMeeting = records.filter((record) => record.kind === "AGENDA_ITEM").length;
   denominators.outcomeRecordClassesRefused = evidence.refused.length;
   denominators.personVotesHeldForThatMeeting = rolls.reduce((n, roll) => n + roll.votes.length, 0);
   denominators.personVoteRowsInPack = records.filter((record) => record.kind === "MEETING_MEMBER_VOTE").length;

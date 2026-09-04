@@ -38,6 +38,8 @@ export function readerTraceRequirements(root: string): ReaderTraceRequirement[] 
     { route: "api/profile/[subject]/route", loader: "lib/sources/prl/snapshot.ts", files: ["data/prl/prl-profiles.json"] },
     ...["api/official-actions/[subject]/route", "api/ask/grounded/route"].map((route) => ({ route, loader: "lib/officials/executive-actions.ts", files: ["data/states/az/officials/az-governor-actions.json", ...identity, ...ROSTER_FILES.map(rosterPath)] })),
     ...["ballot/page", "api/ask/grounded/route"].map((route) => ({ route, loader: "lib/ballot/candidate-contacts.ts", files: ["data/states/nj/ballot/nj-morris-2026-contacts.json"] })),
+    { route: "api/ask/grounded/route", loader: "lib/ask/candidate-profile.ts", files: ["data/ballot/candidate-cards-2026.json", "data/ballot/candidate-links-2026.json"] },
+    { route: "api/ask/grounded/route", loader: "lib/ask/local-finance.ts", files: ["data/states/az/campaign-finance/az-pima-2026-held.json", "data/states/az/campaign-finance/az-pima-2026-transactions.json"] },
   ];
 }
 

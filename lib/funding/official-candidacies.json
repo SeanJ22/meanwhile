@@ -69,7 +69,7 @@
     },
     {
       "path": "lib/registry/body-rosters.ts",
-      "sha256": "0334b7980c2e33c7de9972354c4c942e52666b9ba21de3b183b28271f8d47f3b"
+      "sha256": "64ece452c842c6c5b7d54ff3d3b4842f946e597dd91ef011f97919e1271ef2c0"
     },
     {
       "path": "lib/registry/cawcd-rosters.ts",
@@ -19672,31 +19672,6 @@
     },
     {
       "holder": {
-        "id": "roster:nj-morris-boonton_township#2",
-        "name": "Brian Honan",
-        "officeTitle": "Mayor",
-        "divisions": [
-          "ocd-division/country:us/state:nj/county:morris/place:boonton_township"
-        ],
-        "sourcePath": "lib/registry/body-rosters.ts",
-        "sourceUrl": "https://www.boontontownship.com/township-committee"
-      },
-      "status": "RESOLVED",
-      "candidacy": {
-        "candidacyId": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:honan-brian",
-        "contestId": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township",
-        "contestTitle": "Member of the Township Committee",
-        "divisionId": "ocd-division/country:us/state:nj/county:morris/place:boonton_township",
-        "electionId": "nj-2026-11-03",
-        "candidateName": "Brian HONAN",
-        "sourcePath": "data/states/nj/ballot/nj-morris-2026.json",
-        "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf"
-      },
-      "reason": "Same sourced named person in the held municipal or school governing-body roster and held candidacy. Published roster role and elected contest title are not interchangeable office labels; finance is labeled by the candidacy.",
-      "unresolvedCandidacyIds": []
-    },
-    {
-      "holder": {
         "id": "roster:nj-morris-boonton_township#3",
         "name": "William Klingener",
         "officeTitle": "Deputy Mayor",
@@ -19764,38 +19739,6 @@
         "id": "roster:nj-morris-boonton#0",
         "name": "James Lynch",
         "officeTitle": "Mayor",
-        "divisions": [
-          "ocd-division/country:us/state:nj/place:boonton"
-        ],
-        "sourcePath": "lib/registry/body-rosters.ts",
-        "sourceUrl": "https://www.boonton.org/180/Mayor-Town-Council"
-      },
-      "status": "NO_APPLICABLE_CANDIDACY",
-      "candidacy": null,
-      "reason": "No held ballot candidacy is resolved to this official. This is not a sourced absence of filings.",
-      "unresolvedCandidacyIds": []
-    },
-    {
-      "holder": {
-        "id": "roster:nj-morris-boonton#1",
-        "name": "Contact Us",
-        "officeTitle": "Council Member",
-        "divisions": [
-          "ocd-division/country:us/state:nj/place:boonton"
-        ],
-        "sourcePath": "lib/registry/body-rosters.ts",
-        "sourceUrl": "https://www.boonton.org/180/Mayor-Town-Council"
-      },
-      "status": "NO_APPLICABLE_CANDIDACY",
-      "candidacy": null,
-      "reason": "No held ballot candidacy is resolved to this official. This is not a sourced absence of filings.",
-      "unresolvedCandidacyIds": []
-    },
-    {
-      "holder": {
-        "id": "roster:nj-morris-boonton#10",
-        "name": "Town Hall",
-        "officeTitle": "Phone: 973-402-9410",
         "divisions": [
           "ocd-division/country:us/state:nj/place:boonton"
         ],
@@ -20191,31 +20134,6 @@
     {
       "holder": {
         "id": "roster:nj-morris-chatham_township#1",
-        "name": "Jennifer Rowland",
-        "officeTitle": "Mayor",
-        "divisions": [
-          "ocd-division/country:us/state:nj/county:morris/place:chatham_township"
-        ],
-        "sourcePath": "lib/registry/body-rosters.ts",
-        "sourceUrl": "https://chathamtownship.org/government/mayor-township-committee/"
-      },
-      "status": "RESOLVED",
-      "candidacy": {
-        "candidacyId": "ballot-nj-morris:chatham-township-member-of-the-township-committee-place-chatham-township:rowland-jennifer",
-        "contestId": "ballot-nj-morris:chatham-township-member-of-the-township-committee-place-chatham-township",
-        "contestTitle": "Member of the Township Committee",
-        "divisionId": "ocd-division/country:us/state:nj/county:morris/place:chatham_township",
-        "electionId": "nj-2026-11-03",
-        "candidateName": "Jennifer ROWLAND",
-        "sourcePath": "data/states/nj/ballot/nj-morris-2026.json",
-        "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf"
-      },
-      "reason": "Same sourced named person in the held municipal or school governing-body roster and held candidacy. Published roster role and elected contest title are not interchangeable office labels; finance is labeled by the candidacy.",
-      "unresolvedCandidacyIds": []
-    },
-    {
-      "holder": {
-        "id": "roster:nj-morris-chatham_township#2",
         "name": "Jennifer Rowland",
         "officeTitle": "Mayor",
         "divisions": [
@@ -20699,22 +20617,6 @@
     },
     {
       "holder": {
-        "id": "roster:nj-morris-harding_township#2",
-        "name": "Timothy D. Jones",
-        "officeTitle": "Mayor",
-        "divisions": [
-          "ocd-division/country:us/state:nj/county:morris/place:harding_township"
-        ],
-        "sourcePath": "lib/registry/body-rosters.ts",
-        "sourceUrl": "https://www.hardingnj.org/government/mayor"
-      },
-      "status": "NO_APPLICABLE_CANDIDACY",
-      "candidacy": null,
-      "reason": "No held ballot candidacy is resolved to this official. This is not a sourced absence of filings.",
-      "unresolvedCandidacyIds": []
-    },
-    {
-      "holder": {
         "id": "roster:nj-morris-harding_township#3",
         "name": "Rita Chipperson",
         "officeTitle": "Deputy Mayor",
@@ -20948,22 +20850,6 @@
         "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf"
       },
       "reason": "One held candidacy agrees on canonical division, office identity, and conservative given/family name reconciliation; resolved offline.",
-      "unresolvedCandidacyIds": []
-    },
-    {
-      "holder": {
-        "id": "roster:nj-morris-lincoln_park#1",
-        "name": "Member Name",
-        "officeTitle": "Term Expires",
-        "divisions": [
-          "ocd-division/country:us/state:nj/place:lincoln_park"
-        ],
-        "sourcePath": "lib/registry/body-rosters.ts",
-        "sourceUrl": "https://www.lincolnpark.org/129/Borough-Council"
-      },
-      "status": "NO_APPLICABLE_CANDIDACY",
-      "candidacy": null,
-      "reason": "No held ballot candidacy is resolved to this official. This is not a sourced absence of filings.",
       "unresolvedCandidacyIds": []
     },
     {
@@ -21306,22 +21192,6 @@
     },
     {
       "holder": {
-        "id": "roster:nj-morris-mendham_township#1",
-        "name": "MembersSarah Neibart, Mayor",
-        "officeTitle": "Agendas and MinutesAgendas are available before the meetings. Minutes are available and approved.",
-        "divisions": [
-          "ocd-division/country:us/state:nj/county:morris/place:mendham_township"
-        ],
-        "sourcePath": "lib/registry/body-rosters.ts",
-        "sourceUrl": "https://www.mendhamtownship.org/266/Township-Committee"
-      },
-      "status": "NO_APPLICABLE_CANDIDACY",
-      "candidacy": null,
-      "reason": "No held ballot candidacy is resolved to this official. This is not a sourced absence of filings.",
-      "unresolvedCandidacyIds": []
-    },
-    {
-      "holder": {
         "id": "roster:nj-morris-mendham_township#2",
         "name": "Amalia Duarte, Member",
         "officeTitle": "Term Expires: December 2026",
@@ -21373,22 +21243,6 @@
         "id": "roster:nj-morris-mendham_township#5",
         "name": "Lauren Spirig, Member",
         "officeTitle": "Term Expires: December 2027",
-        "divisions": [
-          "ocd-division/country:us/state:nj/county:morris/place:mendham_township"
-        ],
-        "sourcePath": "lib/registry/body-rosters.ts",
-        "sourceUrl": "https://www.mendhamtownship.org/266/Township-Committee"
-      },
-      "status": "NO_APPLICABLE_CANDIDACY",
-      "candidacy": null,
-      "reason": "No held ballot candidacy is resolved to this official. This is not a sourced absence of filings.",
-      "unresolvedCandidacyIds": []
-    },
-    {
-      "holder": {
-        "id": "roster:nj-morris-mendham_township#6",
-        "name": "Contact Us",
-        "officeTitle": "Email",
         "divisions": [
           "ocd-division/country:us/state:nj/county:morris/place:mendham_township"
         ],
@@ -21542,22 +21396,6 @@
     {
       "holder": {
         "id": "roster:nj-morris-morris_township#1",
-        "name": "Donna J. Guariglia",
-        "officeTitle": "Mayor",
-        "divisions": [
-          "ocd-division/country:us/state:nj/county:morris/place:morris_township"
-        ],
-        "sourcePath": "lib/registry/body-rosters.ts",
-        "sourceUrl": "https://www.morristwp.com/240/Township-Committee"
-      },
-      "status": "NO_APPLICABLE_CANDIDACY",
-      "candidacy": null,
-      "reason": "No held ballot candidacy is resolved to this official. This is not a sourced absence of filings.",
-      "unresolvedCandidacyIds": []
-    },
-    {
-      "holder": {
-        "id": "roster:nj-morris-morris_township#2",
         "name": "Donna J. Guariglia",
         "officeTitle": "Mayor",
         "divisions": [
@@ -21775,22 +21613,6 @@
     {
       "holder": {
         "id": "roster:nj-morris-pequannock_township#1",
-        "name": "David G. Kohle",
-        "officeTitle": "Mayor",
-        "divisions": [
-          "ocd-division/country:us/state:nj/county:morris/place:pequannock_township"
-        ],
-        "sourcePath": "lib/registry/body-rosters.ts",
-        "sourceUrl": "https://www.peqtwp.org/243/Township-Council"
-      },
-      "status": "NO_APPLICABLE_CANDIDACY",
-      "candidacy": null,
-      "reason": "No held ballot candidacy is resolved to this official. This is not a sourced absence of filings.",
-      "unresolvedCandidacyIds": []
-    },
-    {
-      "holder": {
-        "id": "roster:nj-morris-pequannock_township#2",
         "name": "David G. Kohle",
         "officeTitle": "Mayor",
         "divisions": [

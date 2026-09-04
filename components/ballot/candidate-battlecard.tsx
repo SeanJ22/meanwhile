@@ -11,6 +11,7 @@ import {
 } from "@/lib/ballot/battlecard-sections";
 import { CardSection, CardSectionGroup } from "@/components/officials/card-section";
 import { ContactPills } from "@/components/officials/contact-pills";
+import { OfficialTermNote } from "@/components/officials/official-term-note";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { IdentityChip, IdentityPortrait } from "@/components/officials/person-identity";
 import { incumbencyLabel, type Incumbency, type IncumbencyGap } from "@/lib/ballot/incumbency";
@@ -398,6 +399,7 @@ export function CandidateBattlecard({
               {contactHolder && (
                 <div className="mb-3" data-ballot-contact-row>
                   <ContactPills holder={contactHolder} scope="primary" />
+                  <OfficialTermNote holder={contactHolder} />
                 </div>
               )}
               {/*

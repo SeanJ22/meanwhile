@@ -1,6 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { existsSync } from "node:fs";
+import { existsSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join, relative, resolve, sep } from "node:path";
 import { checkReaderTraces, missingReaderTraceFiles, readerTraceRequirements } from "../lib/holdings/reader-trace.ts";
 
 test("every dynamic reader contract fails if one holding is removed from deployment tracing", () => {
@@ -20,4 +22,38 @@ test("every dynamic reader contract fails if one holding is removed from deploym
 test("the completed Next production bundle includes every declared runtime holding", (t) => {
   if (!existsSync(".next/BUILD_ID")) return t.skip("No completed build; postbuild executes the mandatory deployed trace proof.");
   assert.deepEqual(checkReaderTraces(process.cwd()).failures, []);
+});
+
+test("postbuild checker rejects a removed dynamic holding in emitted route manifests", () => {
+  const root = mkdtempSync(join(tmpdir(), "reader-trace-negative-"));
+  const write = (path: string, value: unknown) => {
+    mkdirSync(dirname(path), { recursive: true });
+    writeFileSync(path, JSON.stringify(value));
+  };
+  try {
+    write(join(root, "data/derived/resolver-geometry.json"), { files: ["public/geo/state-outlines.geojson"] });
+    write(join(root, "data/states/az/funding/state-money-az-2026.json"), {});
+    const contracts = readerTraceRequirements(root);
+    const routes = new Map<string, Set<string>>();
+    for (const contract of contracts) {
+      const files = routes.get(contract.route) ?? new Set<string>();
+      for (const file of contract.files) files.add(file);
+      routes.set(contract.route, files);
+    }
+    for (const [route, files] of routes) {
+      const path = join(root, ".next/server/app", `${route}.js.nft.json`);
+      write(path, { version: 1, files: [...files].map(file => relative(dirname(path), join(root, file))) });
+    }
+    assert.deepEqual(checkReaderTraces(root).failures, []);
+    const route = "api/funding/[target]/route";
+    const path = join(root, ".next/server/app", `${route}.js.nft.json`);
+    const missing = "data/states/az/funding/state-money-az-2026.json";
+    write(path, { version: 1, files: [...routes.get(route)!].filter(file => file !== missing).map(file => relative(dirname(path), join(root, file))) });
+    const failures = checkReaderTraces(root).failures;
+    assert.equal(failures.length, 1);
+    assert.ok(failures[0].includes(`${route}: lib/funding/campaign-money.ts cannot read untraced ${missing}`));
+  } finally {
+    assert.ok(resolve(root).startsWith(resolve(tmpdir()) + sep));
+    rmSync(root, { recursive: true, force: true });
+  }
 });

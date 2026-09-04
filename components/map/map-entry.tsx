@@ -47,7 +47,7 @@ import {
 } from "@/lib/officials/card-sources";
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
 import { bodyClassLong } from "@/lib/registry/body-class-labels";
-import { rosterHoldersForBody } from "@/lib/registry/body-rosters";
+import { rosterHoldersForBody, rosterGapForBody, rosterGapsForDivision } from "@/lib/registry/body-rosters";
 import { membersOfBody } from "@/lib/registry/body-membership";
 import {
   noteStateFor,
@@ -2555,6 +2555,7 @@ function meetingSubject(
     // Tier-3 (5a): the curated roster where one exists; the honest absence
     // where none does.
     representation: roster,
+    rosterGaps: [rosterGapForBody(body?.bodyId ?? null)].filter((gap) => gap !== null),
     representationNote:
       "We haven't sourced who sits on this body. The people we hold for this area represent it in Congress and the state legislature, which is a different thing.",
     meetings: [meeting],
@@ -2679,6 +2680,7 @@ function bodySubject(
         : []),
     ],
     representation: seated,
+    rosterGaps: [rosterGapForBody(body.bodyId)].filter((gap) => gap !== null),
     /*
      * GOV-1 (2026-08-29): this read, unconditionally, "We know this body governs
      * here because its division exists." That is an inference from the
@@ -2991,6 +2993,7 @@ function districtSubject(
     divisionOcdId: district.ocdId,
     representedByOfficeTitle: officeTitleForDivision(district.ocdId),
     representation: roster,
+    rosterGaps: resolved?.rosterGaps ?? rosterGapsForDivision(district.ocdId),
     representationNote: representationNoteFor(
       district.tier,
       resolved ? noteStateFor(resolved.status) : "gap",

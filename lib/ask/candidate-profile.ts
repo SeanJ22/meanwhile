@@ -1,6 +1,7 @@
 import { allCandidateCards, type CandidateCardData } from "../ballot/candidate-cards.ts";
 import { allCandidateLinks, type CandidateLinks } from "../ballot/candidate-sites.ts";
 import { readerPersonKeys } from "../identity/reader-person.ts";
+import { candidateContactForCandidacy } from "../ballot/candidate-contacts.ts";
 import type { EvidenceGap, EvidenceRecord, EvidenceSubject } from "./evidence.ts";
 
 type ProfileAnswer = { records: EvidenceRecord[]; gaps: EvidenceGap[]; denominators: Record<string, number> };
@@ -8,7 +9,10 @@ const pointer = (key: string) => key.replaceAll("~", "~0").replaceAll("/", "~1")
 const readDate = (text: string | null | undefined) => text?.match(/\b\d{4}-\d{2}-\d{2}\b/)?.[0] ?? null;
 const sourceUrl = (url: string | null | undefined) => Boolean(url && /^https?:\/\//.test(url));
 
-/** Same curated fields that feed candidate cards; pictures and contact routes have their own contracts. */
+const embeddedUrl = (text: string | null | undefined) => text?.match(/https?:\/\/[^\s)]+/)?.[0] ?? null;
+const contactValue = (text: string) => text.toLowerCase().replace(/[^a-z0-9@]/g, "");
+
+/** Same curated fields that feed candidate cards; pictures retain their image-review contract. */
 export function projectCandidateProfile(
   subject: EvidenceSubject,
   keys: readonly string[],
@@ -17,7 +21,7 @@ export function projectCandidateProfile(
 ): ProfileAnswer {
   const records: EvidenceRecord[] = [];
   const gaps: EvidenceGap[] = [];
-  const denominators: Record<string, number> = { candidateCardsRead: 0, candidateLinkProfilesRead: 0, candidateBiosReturned: 0, candidateLinksReturned: 0, candidateProfileFieldsWithheld: 0 };
+  const denominators: Record<string, number> = { candidateCardsRead: 0, candidateLinkProfilesRead: 0, candidateBiosReturned: 0, candidateLinksReturned: 0, candidateContactsReturned: 0, candidateContactSourceUrlsUnrecorded: 0, candidateProfileFieldsWithheld: 0 };
   if (subject.kind !== "PERSON") return { records, gaps, denominators };
   for (const key of [...new Set(keys)].sort()) {
     const card = cards[key];
@@ -37,6 +41,30 @@ export function projectCandidateProfile(
       }
     }
     const found = links[key];
+    for (const field of ["email", "phone", "filedAddress"] as const) {
+      const value = card?.[field];
+      if (!value) continue;
+      const label = field === "phone" ? card.phoneLabel ?? "Recorded phone" : field === "email" ? "Recorded email" : "Filed mailing address";
+      const sourceNote = field === "phone" ? card.phoneSource ?? card.phoneLabel : field === "filedAddress" ? card.filedAddressSource : null;
+      // A verified page is this field's source only when its held verification
+      // actually includes this value. A biography URL is never a contact source.
+      const exactLink = [found?.official, found?.campaign].find(link => link?.verification && sourceUrl(link.url)
+        && readDate(link.attemptedAt) && contactValue(link.verification).includes(contactValue(value)));
+      const filing = candidateContactForCandidacy(key);
+      const exactFiling = field !== "phone" && filing?.[field] === value ? filing : null;
+      const url = embeddedUrl(sourceNote) ?? exactFiling?.sourceUrl ?? exactLink?.url ?? null;
+      const retrievedAt = readDate(sourceNote) ?? exactFiling?.collectedAt ?? exactLink?.attemptedAt ?? null;
+      const publisher = sourceNote ?? exactFiling?.sourceOrg ?? (exactLink ? exactLink.label ?? new URL(exactLink.url).hostname : "Candidate-card contact record");
+      const provenanceLimitation = !url || !retrievedAt ? "This contact's source URL or read date was not recorded." : null;
+      if (!url) denominators.candidateContactSourceUrlsUnrecorded++;
+      records.push({ kind: "CANDIDATE_CONTACT", id: `candidate-contact-field:${key}:${field}`, subjectId: subject.id,
+        canonicalSubjectId: key, text: `${label}: ${value}${provenanceLimitation ? ` ${provenanceLimitation}` : ""}`,
+        sourceUrl: url, sourceOrg: publisher, retrievedAt,
+        candidateProfile: { field, value, label, holdingKey: key,
+          holdingPath: `data/ballot/candidate-cards-2026.json#/cards/${pointer(key)}/${field}`,
+          sourceNote: sourceNote ?? null, provenanceLimitation } });
+      denominators.candidateContactsReturned++;
+    }
     if (found) denominators.candidateLinkProfilesRead++;
     for (const field of ["official", "campaign"] as const) {
       const link = found?.[field];
@@ -67,9 +95,10 @@ export function candidateProfileEvidenceFor(subject: EvidenceSubject): ProfileAn
       records: [], gaps: [{ whose: "OURS", statement: "The current candidate/profile identity is unresolved, so no other person's biography or links have been attached." }],
       denominators: { candidateProfileIdentityUnresolved: 1 },
     };
-    return projectCandidateProfile(subject, identity.keys, allCandidateCards().cards, allCandidateLinks().links);
+    const cards = allCandidateCards();
+    return projectCandidateProfile(subject, identity.keys, cards.cards, allCandidateLinks().links);
   } catch {
-    return { records: [], gaps: [{ whose: "OURS", statement: "The held candidate biographies and verified links could not be read for this answer." }],
+    return { records: [], gaps: [{ whose: "OURS", statement: "The held candidate biographies, contacts, and verified links could not be read for this answer." }],
       denominators: { candidateProfileLoaderFailures: 1 } };
   }
 }

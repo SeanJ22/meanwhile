@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
+import { readerProofSources } from "./lib/reader-proof-sources.ts";
 import { BALLOT_SOURCES } from "../lib/ballot/registry.ts";
 import { contestsForDivisions } from "../lib/sources/ballot-nj-morris/index.ts";
 import { resolveZip } from "../lib/geo/zcta.ts";
@@ -9,6 +10,7 @@ import { divisionsAt } from "../lib/registry/server.ts";
 import { divisionIdsForZipArea } from "../lib/ballot/zip-divisions.ts";
 import { lineupForContest } from "../lib/ballot/general-lineup.ts";
 import { summaryForContest } from "../lib/ballot/measure-summary.ts";
+import { provisionsForContest } from "../lib/ballot/measure-provisions.ts";
 import { reconciledCandidacyIdForCard } from "../lib/identity/az-2026.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { launchGuarded } from "./browser.mts";
@@ -97,6 +99,12 @@ try {
       }
       const summary = summaryForContest(contest.id);
       if (summary) assert.ok(text.includes(normalize(summary.summary)), `${contest.id}: eligible summary missing`);
+      const provisions = provisionsForContest(contest.id);
+      for (const provision of provisions) {
+        assert.ok(text.includes(normalize(provision.label)), `${provision.id}: provision label missing`);
+        assert.ok(text.includes(normalize(provision.what)), `${provision.id}: provision text missing`);
+        assert.ok(await section.locator(`a[href="${provision.citesUrl}"]`).count(), `${provision.id}: provision source missing`);
+      }
       const analysis = analysisForContest(contest.id);
       if (analysis?.text) {
         const disclosure = section.locator("details").filter({ has: page.locator("summary", { hasText: /^Official analysis/ }) });
@@ -107,7 +115,7 @@ try {
       const removals = (plan.set.removals ?? []).filter((record) => record.contestId === contest.id);
       assert.equal(await section.locator("[data-filing-change-id]").count(), removals.length);
       for (const record of removals) assert.ok(text.includes(normalize(record.statement)), `${record.id}: filing change missing`);
-      proofs.push({ contestId: contest.id, candidacyIds: expectedKeys.map((key) => reconciledCandidacyIdForCard(key) ?? key), actualCardKeys: actualKeys, measureIds: plan.set.measures.filter((measure) => measure.contestId === contest.id).map((measure) => measure.id), removalIds: removals.map((record) => record.id), summaryHeld: Boolean(summary), textSha256: createHash("sha256").update(text).digest("hex"), sourceUrls: await section.locator("a[href]").evaluateAll((elements) => elements.map((element) => element.getAttribute("href"))) });
+      proofs.push({ contestId: contest.id, candidacyIds: expectedKeys.map((key) => reconciledCandidacyIdForCard(key) ?? key), actualCardKeys: actualKeys, measureIds: plan.set.measures.filter((measure) => measure.contestId === contest.id).map((measure) => measure.id), provisionIds: provisions.map((provision) => provision.id), removalIds: removals.map((record) => record.id), summaryHeld: Boolean(summary), textSha256: createHash("sha256").update(text).digest("hex"), sourceUrls: await section.locator("a[href]").evaluateAll((elements) => elements.map((element) => element.getAttribute("href"))) });
     }
     const actualAbsences = await page.locator("[data-absence-ocd-ids]").evaluateAll((elements) => elements.flatMap((element) => (element.getAttribute("data-absence-ocd-ids") ?? "").split(" ")));
     assert.deepEqual(actualAbsences.sort(), plan.absences.map((absence) => absence.ocdId).sort(), `${plan.zip}: sourced absences`);
@@ -128,4 +136,4 @@ try {
     console.log(JSON.stringify({ zip: plan.zip, contests: plan.contests.length, result: "PROVEN" }));
   }
 } finally { await context.close(); await browser.close(); }
-writeFileSync("docs/evidence/reader-last-mile-ballot.json", JSON.stringify({ exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), buildId: readFileSync(".next/BUILD_ID", "utf8").trim(), plan: planEvidence, execution: "Actual local production ballot navigation and rendered DOM; complete normalized contest population across deterministic committed ZIP coverage, including explicit disclosure gestures.", rows }, null, 2) + "\n");
+writeFileSync("docs/evidence/reader-last-mile-ballot.json", JSON.stringify({ exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), buildId: readFileSync(".next/BUILD_ID", "utf8").trim(), sourceHashes: readerProofSources(), plan: planEvidence, execution: "Actual local production ballot navigation and rendered DOM; complete normalized contest population across deterministic committed ZIP coverage, including explicit disclosure gestures.", rows }, null, 2) + "\n");

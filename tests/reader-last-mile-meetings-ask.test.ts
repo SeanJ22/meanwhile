@@ -3,6 +3,7 @@ import test from "node:test";
 import { meetingsAskProof } from "../scripts/lib/reader-ask-meetings-proof.ts";
 import { meetingDateInQuestion } from "../lib/ask/meeting-date.ts";
 import { selectSitting } from "../lib/ask/select.ts";
+import { meetingOutcomeEvidenceFor } from "../lib/ask/meeting-outcomes.ts";
 
 test("all held meetings and outcome sittings survive real dated Ask routes with exact record counts and provenance", async () => {
   const proof = await meetingsAskProof();
@@ -13,6 +14,7 @@ test("all held meetings and outcome sittings survive real dated Ask routes with 
   assert.equal(new Set(proof.proofs.filter((row) => row.family === "meeting-outcomes").flatMap((row) => row.meetingIds)).size, proof.outcomeSittingDenominator);
   assert.equal(proof.proofs.reduce((n, row) => n + row.returnedRecords.filter((record) => record.kind === "MEETING_ACTION").length, 0), 525);
   assert.equal(proof.proofs.reduce((n, row) => n + row.returnedRecords.filter((record) => record.kind === "MEETING_MEMBER_VOTE").length, 0), 2083);
+  assert.equal(proof.proofs.filter((row) => row.family === "meeting-outcomes").reduce((n, row) => n + row.returnedRecords.filter((record) => record.kind === "AGENDA_ITEM").length, 0), 1360);
 });
 
 test("invalid, multiple and unheld dates never select a different sitting", () => {
@@ -22,4 +24,14 @@ test("invalid, multiple and unheld dates never select a different sitting", () =
   assert.equal(selectSitting("DATE", held, Date.now(), "2026-09-08"), held[0]);
   assert.equal(selectSitting("DATE", held, Date.now(), "2026-09-09"), null);
   assert.equal(selectSitting("DATE", held, Date.now(), null), null);
+});
+
+test("a structured agenda never supplies an action or member vote, and no structured sitting does not erase another held agenda", () => {
+  const absent = meetingOutcomeEvidenceFor({ bodyId: "unheld-body", meetingId: "unheld-meeting", startsAt: "2026-09-04T12:00:00Z", question: "What was on the agenda?" });
+  assert.deepEqual(absent.records, []);
+  assert.deepEqual(absent.gaps, []);
+  const held = meetingOutcomeEvidenceFor({ bodyId: "ocd-division/country:us/state:az/county:pima#governing", meetingId: "legistar:pima:1825", startsAt: "2026-07-07T09:00:00-07:00", question: "What was on the agenda?" });
+  assert.ok(held.records.length > 0);
+  assert.ok(held.records.every((record) => record.kind === "AGENDA_ITEM" && record.id.endsWith("#agenda")));
+  assert.equal(held.denominators.structuredAgendaItemsForThatMeeting, held.records.length);
 });

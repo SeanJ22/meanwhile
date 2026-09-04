@@ -5,8 +5,10 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import bridge from "../lib/funding/official-candidacies.json" with { type: "json" };
+import reviewedPersonLinks from "../lib/funding/official-person-candidacy-links.json" with { type: "json" };
 import { buildFinanceIdentityBridge } from "../scripts/reader-finance-identity.mts";
-import { campaignMoneyApiAnswer, campaignMoneyForTarget, officialFinanceIdentityMatches } from "../lib/funding/campaign-money.ts";
+import { campaignMoneyApiAnswer, campaignMoneyForTarget, currentOfficialIdentity, currentOfficialIdentityStatus, resolvedCandidacyForOfficial, officialFinanceIdentityMatches } from "../lib/funding/campaign-money.ts";
+import { ROSTER_READER_DISPOSITIONS } from "../lib/registry/body-rosters.ts";
 import { stateMoneyForCard } from "../lib/funding/nominee-money.ts";
 import { fundingAnswerForTarget } from "../lib/funding/display.ts";
 import { getFundingSnapshot } from "../lib/funding/snapshot.ts";
@@ -19,6 +21,42 @@ const hobbs = stateMoneyForTarget(hobbsKey)[0];
 
 test("official finance identity bridge reproduces current canonical sources", () => {
   assert.deepEqual(buildFinanceIdentityBridge(), bridge);
+});
+
+test("exact duplicate roster aliases preserve the canonical finance answer and requested identity", () => {
+  const aliases = ROSTER_READER_DISPOSITIONS.filter(row => row.state === "EXACT_DUPLICATE");
+  assert.ok(aliases.length > 0);
+  for (const row of aliases) {
+    assert.ok(row.canonicalId);
+    const actual = campaignMoneyForTarget(row.sourceId);
+    const expected = campaignMoneyForTarget(row.canonicalId);
+    assert.equal(actual.requestedTargetKey, row.sourceId);
+    assert.deepEqual({ ...actual, requestedTargetKey: row.canonicalId }, expected);
+    assert.deepEqual(campaignMoneyApiAnswer(row.sourceId), campaignMoneyApiAnswer(row.canonicalId));
+    assert.deepEqual(currentOfficialIdentity(row.sourceId), currentOfficialIdentity(row.canonicalId));
+    assert.deepEqual(resolvedCandidacyForOfficial(row.sourceId), resolvedCandidacyForOfficial(row.canonicalId));
+    const reviewed = reviewedPersonLinks.rows.find(link => link.officialId === row.sourceId);
+    if (reviewed) {
+      assert.equal(resolvedCandidacyForOfficial(row.canonicalId)?.candidacyId, reviewed.candidacyId, "A reviewed source-row alias preserves its exact candidacy under the canonical person");
+      assert.equal(actual.officialIdentity, "RESOLVED");
+    }
+  }
+});
+
+test("malformed roster person identities remain unresolved before any finance fallback", () => {
+  const rows = ROSTER_READER_DISPOSITIONS.filter(row => row.state === "IDENTITY_UNRESOLVED");
+  assert.ok(rows.length > 0);
+  for (const row of rows) {
+    const actual = campaignMoneyForTarget(row.sourceId);
+    assert.equal(actual.requestedTargetKey, row.sourceId);
+    assert.equal(actual.officialIdentity, "IDENTITY_UNRESOLVED");
+    assert.deepEqual(actual.federal, { kind: "none" });
+    assert.deepEqual(actual.state.records, []);
+    assert.equal(currentOfficialIdentityStatus(row.sourceId), "IDENTITY_UNRESOLVED");
+    assert.equal(currentOfficialIdentity(row.sourceId), null);
+    assert.equal(resolvedCandidacyForOfficial(row.sourceId), null);
+    assert.equal(campaignMoneyApiAnswer(row.sourceId).kind, "identity-unresolved");
+  }
 });
 
 test("Katie Hobbs ballot, official API, and shared Ask selector use one canonical record", () => {

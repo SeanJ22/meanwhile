@@ -41,12 +41,12 @@ export async function candidateProfileAskProof() {
       proofs.push({ nativeHoldingKey: key, status: "IDENTITY_UNRESOLVED", executionLevel: "NOT_EXECUTED", expectedRecords: expected, reason: "No exact current or held source-ballot candidacy identity was found for this native profile key." });
       continue;
     }
-    const request = { question: "What biography and verified campaign and official pages do we hold for this person?", surface: "BALLOT", ocdIds: [identity.ocdId], today: "2026-09-04", activeSubjects: [{ id: identity.id, name: identity.name, kind: "PERSON", focused: true }] };
+    const request = { question: "What biography, published contact information, and verified campaign and official pages do we hold for this person?", surface: "BALLOT", ocdIds: [identity.ocdId], today: "2026-09-04", activeSubjects: [{ id: identity.id, name: identity.name, kind: "PERSON", focused: true }] };
     resetGroundedState();
     const response = await POST(new Request("https://wtp.test/api/ask/grounded", { method: "POST", headers: { "content-type": "application/json", origin: "https://wtp.test", "x-wtp-synthetic-run": "reader-last-mile-candidate-profile" }, body: JSON.stringify(request) }));
     const payloadText = await response.text();
     const payload = JSON.parse(payloadText) as AskAnswerPayload;
-    const profile = payload.records.filter(record => record.kind === "CANDIDATE_BIO" || record.kind === "CANDIDATE_LINK");
+    const profile = payload.records.filter(record => record.candidateProfile);
     const missing = expected.filter(record => !profile.some(actual => actual.id === record.id && actual.text === record.text && actual.sourceUrl === record.sourceUrl && actual.sourceOrg === record.sourceOrg && actual.retrievedAt === record.retrievedAt && JSON.stringify(actual.candidateProfile) === JSON.stringify(record.candidateProfile)));
     const countAgrees = payload.trace.retrieval.recordCount === payload.records.length;
     proofs.push({ nativeHoldingKey: key, request, executionLevel: "REAL_ROUTE_HANDLER", httpStatus: response.status,
@@ -56,7 +56,7 @@ export async function candidateProfileAskProof() {
       payloadSha256: createHash("sha256").update(payloadText).digest("hex"),
       status: response.status === 200 && payload.answer === null && countAgrees && !missing.length ? "PROVEN" : "ELIGIBLE_NOT_FULLY_DELIVERED" });
   }
-  const paths = ["app/api/ask/grounded/route.ts", "lib/ask/candidate-profile.ts", "lib/identity/reader-person.ts", "lib/ask/evidence.ts", "data/ballot/candidate-cards-2026.json", "data/ballot/candidate-links-2026.json"];
+  const paths = ["app/api/ask/grounded/route.ts", "lib/ask/candidate-profile.ts", "lib/ballot/candidate-contacts.ts", "lib/identity/reader-person.ts", "lib/ask/evidence.ts", "data/ballot/candidate-cards-2026.json", "data/ballot/candidate-links-2026.json", "data/states/nj/ballot/nj-morris-2026-contacts.json"];
   return { exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), executionLevel: "REAL_ROUTE_HANDLER", modelDisabled: true,
     sourceHashes: paths.map(path => ({ path, sha256: createHash("sha256").update(readFileSync(path)).digest("hex") })),
     eligibleFields: proofs.reduce((sum, proof) => sum + proof.expectedRecords.length, 0), proofs,

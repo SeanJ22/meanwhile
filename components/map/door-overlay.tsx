@@ -12,6 +12,8 @@ import {
 } from "@/lib/map/districts";
 import { districtDoorRows, governingDoorRows, type DistrictDoorRow } from "@/lib/state/derive";
 import { representationForDivision } from "@/lib/registry/representation";
+import { rosterGapsForDivision } from "@/lib/registry/body-rosters";
+import { RosterCompletenessGaps } from "@/components/officials/roster-completeness-gap";
 import {
   groupOfficials,
   TIER_GROUP_LABELS,
@@ -493,6 +495,7 @@ function DistrictRows({
               {holder.name} →
             </button>
           ))}
+          <RosterCompletenessGaps gaps={rosterGapsForDivision(row.ocdId)} />
         </li>
       ))}
     </ul>

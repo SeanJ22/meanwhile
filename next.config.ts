@@ -7,8 +7,9 @@ const registryHoldingsTrace = [
   "./data/derived/resolver-geometry.json",
   "./public/geo/*.geojson",
   // The legacy street-index summary is an acquisition diagnostic; no reader
-  // loader opens it. Retain only the registry inputs the reader actually uses.
-  "./lib/registry/{officeholders-us,official-photos,promoted-bodies,registry,roster-photos}.json",
+  // loader opens it. Roster photos are statically imported into compiled code.
+  // These are the registry inputs that need filesystem delivery.
+  "./lib/registry/{officeholders-us,official-photos,promoted-bodies,registry}.json",
 ];
 
 const nextConfig: NextConfig = {
@@ -166,15 +167,12 @@ const nextConfig: NextConfig = {
     "/api/ask/grounded": [
       "./data/states/*/funding/state-money-??-????.json",
       "./data/states/az/identity/*.json",
-      "./data/corpus/statements.json",
       ...registryHoldingsTrace,
-      // Literal ballot/contact and vote snapshot reads are traced by Next.
+      // Literal ballot/contact, corpus, meeting, outcome and local-finance
+      // reads are traced by Next.
       // The independent postbuild reader-trace contract verifies each required
       // file; broad directory includes duplicated them and bundled acquisition
       // metadata that this route never reads.
-      "./data/meetings-snapshot.json",
-      "./data/ballot/candidate-cards-2026.json",
-      "./data/ballot/candidate-links-2026.json",
       "./data/derived/zip-coverage-tiers-runtime.json",
       "./data/derived/zip-division-ids.json",
       /*
@@ -200,19 +198,6 @@ const nextConfig: NextConfig = {
        * tracer can see it; this is the other half, and neither works alone.
        */
       "./data/outcomes/*.json", "./data/states/*/outcomes/*.json",
-      /*
-       * The held campaign-finance stores (2026-08-30). Same two-half rule as
-       * the votes and outcome entries above: `lib/control-plane/campaign-
-       * finance/held-records.ts` reads both files through `process.cwd()`
-       * (its original `import.meta.dirname` is undefined inside Next's build
-       * and failed page-data collection outright), so the tracer cannot see
-       * the read, and without this line the deployed route would tell a
-       * reader we hold no finance records while the repo holds 1,484 filed
-       * money rows — the exact false sentence lib/ask/local-finance.ts was
-       * built to retire.
-       */
-      "./data/states/az/campaign-finance/az-pima-2026-held.json",
-      "./data/states/az/campaign-finance/az-pima-2026-transactions.json",
     ],
     "/api/ask/agenda": ["./data/*.json"],
   },

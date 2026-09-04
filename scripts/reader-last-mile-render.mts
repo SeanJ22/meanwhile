@@ -14,6 +14,7 @@ import { commentAccessFor } from "../lib/registry/comment-access.ts";
 import { areaFactsForState } from "../lib/area/facts.ts";
 import { resolveZip } from "../lib/geo/zcta.ts";
 import { divisionsAt } from "../lib/registry/server.ts";
+import { BODY_ROSTERS, rosterHoldersForBody, rosterGapForBody } from "../lib/registry/body-rosters.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import type { MeetingReaderRecords } from "../lib/meetings/reader-records.ts";
 import type { AgendaPublicationReading } from "../lib/ask/agenda-publication.ts";
@@ -183,6 +184,59 @@ async function inspectMoney(modal: Locator, expectedKey: string, raised: string,
   assert.ok(text.includes(spent), `${expectedKey}: spent missing from rendered answer: ${text}`);
   assert.ok((await record.getAttribute("data-state-money-targets"))?.split(" ").includes(expectedKey));
   return { section, text, canonicalTargets: await record.getAttribute("data-state-money-targets"), renderedRecords: Number(await record.getAttribute("data-state-money-record-count")) };
+}
+async function termNoteWitness(page: Page, label: string) {
+  const holder = BODY_ROSTERS.flatMap(roster => rosterHoldersForBody(roster.bodyId)).find(row => row.id === "roster:vail#supt");
+  assert.ok(holder?.termNote, "The exact Vail superintendent appointment note is held");
+  const modal = await openOfficial(page, holder.name);
+  const note = modal.locator(`[data-official-term-note="${holder.id}"]`);
+  await note.waitFor({ state: "visible" });
+  assert.ok((await note.innerText()).includes(holder.termNote));
+  assert.equal(await note.locator(`a[href="${holder.sourceUrl}"]`).count(), 1);
+  assert.ok((await note.innerText()).includes(holder.provenance.sourceOrg));
+  const screenshot = await capture(page, `${label}-official-term-note`, note);
+  await page.keyboard.press("Escape");
+  return { canonicalOfficialId: holder.id, termNote: holder.termNote, sourceUrl: holder.sourceUrl, screenshot };
+}
+async function incompleteRosterWitness(viewport: { width: number; height: number }, theme: string, label: string) {
+  const bodyId = "ocd-division/country:us/state:nj/county:morris/place:pequannock_township#governing";
+  const roster = BODY_ROSTERS.find(row => row.bodyId === bodyId);
+  const gap = rosterGapForBody(bodyId);
+  assert.ok(roster && gap, "The partial verified Pequannock roster and its source denominator are held");
+  const holders = rosterHoldersForBody(bodyId);
+  const context = await browser.context({ viewport, reducedMotion: "reduce", deviceScaleFactor: 1 });
+  const page = await context.newPage();
+  page.setDefaultTimeout(20_000);
+  try {
+    const tour = page.getByRole("button", { name: "Skip the tour", exact: true });
+    await page.addLocatorHandler(tour, async () => { await tour.click(); });
+    await mapAt(page, "07444", theme);
+    const response = await context.request.get(`${BASE}/api/representation/${bodyId.split("#")[0]}`);
+    assert.equal(response.status(), 200);
+    const payload = await response.json();
+    assert.deepEqual(payload.rosterGaps, [gap]);
+    assert.deepEqual(payload.holders.map((holder: { id: string }) => holder.id).sort(), holders.map(holder => holder.id).sort());
+    const door = page.getByRole("button", { name: "Open the bodies here list", exact: true });
+    if (!(await door.isVisible())) await page.getByRole("button", { name: "Open menu", exact: true }).click();
+    await door.click();
+    await page.locator(".door-panel").getByRole("button", { name: roster.bodyName, exact: true }).click();
+    const modal = page.getByRole("dialog", { name: roster.bodyName, exact: true });
+    const representation = await openSection(modal, "Who sits on it");
+    const renderedGap = representation.locator(`[data-roster-completeness-gap="${bodyId}"]`);
+    await renderedGap.waitFor({ state: "visible" });
+    assert.ok((await renderedGap.innerText()).includes(gap.statement));
+    assert.equal(Number(await renderedGap.getAttribute("data-verified-members")), holders.length);
+    assert.equal(Number(await renderedGap.getAttribute("data-expected-members")), gap.expectedMembers);
+    assert.equal(await renderedGap.locator(`a[href="${gap.sourceUrl}"]`).count(), 1);
+    const rows = representation.locator("[data-roster-holder]");
+    assert.deepEqual((await rows.evaluateAll(elements => elements.map(element => element.getAttribute("data-roster-holder")))).sort(), holders.map(holder => holder.id).sort());
+    const screenshot = await capture(page, `${label}-incomplete-roster`, renderedGap);
+    const lastMemberScreenshot = await capture(page, `${label}-incomplete-roster-last-member`, rows.last());
+    return { zip: "07444", bodyId, gap, actualHolderIds: holders.map(holder => holder.id), renderedCount: await rows.count(), screenshot, lastMemberScreenshot };
+  } catch (error) {
+    await capture(page, `${label}-incomplete-roster-failure`).catch(() => {});
+    throw error;
+  } finally { await context.close(); }
 }
 async function inspectOfficialActions(page: Page, modal: Locator, expected: ReaderOfficialActions, label: string) {
   const section = await openSection(modal, "Official actions");
@@ -583,6 +637,7 @@ try {
           await page.keyboard.press("Escape");
         }
         const meetings = await activityWitnesses(page, pilot.zip, label);
+        const termNote = pilot.zip === "85641" ? await termNoteWitness(page, label) : null;
         const voting = pilot.zip === "85701" ? await votingWitness(page, label) : null;
         const votingFallback = viewport.name === "phone" && ["85701", "07866"].includes(pilot.zip) ? await votingFallbackWitness(page, label, pilot.zip === "85701" ? "outside-coverage" : "assigned-unresolved") : null;
         await page.goto(`${BASE}/ballot?zip=${pilot.zip}`, { waitUntil: "domcontentloaded", timeout: 90_000 });
@@ -624,8 +679,9 @@ try {
         if (population) console.log(`${label}: opened and checked ${population.cardsOpened} ballot cards`);
         const ask = viewport.name === "desktop" && theme === "dark" ? await ballotAskMoney(page, pilot, label) : null;
         const area = await areaWitness(page, pilot.zip, label);
+        const incompleteRoster = pilot.zip === "07866" ? await incompleteRosterWitness({ width: viewport.width, height: viewport.height }, theme, label) : null;
         const result = voting?.layoutFailure ? "FAIL" : "PASS";
-        results.push({ label, result, error: voting?.layoutFailure ?? null, build, map: mapMoney.text, ballot: ballotMoney.text, canonicalCandidacyId: pilot.key, api, population, ask, meetings, voting, votingFallback, area, mapActions, ballotActions, mapPositions, ballotPositions, mapFederalRecords, ballotFederalRecords });
+        results.push({ label, result, error: voting?.layoutFailure ?? null, build, map: mapMoney.text, ballot: ballotMoney.text, canonicalCandidacyId: pilot.key, api, population, ask, meetings, termNote, incompleteRoster, voting, votingFallback, area, mapActions, ballotActions, mapPositions, ballotPositions, mapFederalRecords, ballotFederalRecords });
         console.log(`${result} ${label}${population ? `; ${population.cardsOpened} ballot cards individually opened` : ""}${voting?.layoutFailure ? `; ${voting.layoutFailure}` : ""}`);
       } catch (error) {
         await capture(page, `${label}-failure`).catch(() => {});

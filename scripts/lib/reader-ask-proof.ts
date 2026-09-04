@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { allSeatHolders } from "../../lib/registry/server.ts";
+import { rosterGapForBody, type RosterReaderGap } from "../../lib/registry/body-rosters.ts";
 import { getVotesSnapshot } from "../../lib/votes/snapshot.ts";
 import { getStateVotesSnapshot } from "../../lib/sources/legiscan/snapshot.ts";
 import { bodyIdentityIndex } from "../../lib/ask/body-identity.ts";
@@ -33,6 +34,9 @@ interface DeliveryProof {
   returnedRecordIds: string[];
   returnedRecords: EvidenceRecord[];
   contacts: AskAnswerPayload["contacts"] | null;
+  expectedRosterGap: RosterReaderGap | null;
+  rosterGapRecords: EvidenceRecord[];
+  rosterGapAgrees: boolean;
   denominators: Record<string, number>;
   actualRecordCount: number;
   traceRecordCount: number;
@@ -64,16 +68,23 @@ export async function exhaustiveAskProof(progress: (message: string) => void = (
       (record.text === undefined || actual.text === record.text)));
     const unexpected = returned.filter((record) => !expectedIds.has(record.id));
     const contacts = recordKind.includes("CONTACT") ? payload.contacts : null;
+    const expectedRosterGap = rosterGapForBody(subjectId);
+    const rosterGapRecords = payload.records.filter((record) => record.kind === "ROSTER_IDENTITY_GAP");
+    const rosterGapAgrees = expectedRosterGap ? rosterGapRecords.length === 1 &&
+      JSON.stringify(rosterGapRecords[0].rosterGap) === JSON.stringify(expectedRosterGap) &&
+      payload.gaps.some((gap) => gap.whose === "OURS" && gap.statement === expectedRosterGap.statement) &&
+      payload.denominators.rosterExpectedMembers === expectedRosterGap.expectedMembers &&
+      payload.denominators.rosterVerifiedMembers === expectedRosterGap.verifiedMembers : rosterGapRecords.length === 0;
     const pack: EvidencePack = { records: payload.records, gaps: payload.gaps, denominators: payload.denominators, subject: payload.subject, question, today: request.today, intent: "CIVICS", temporal: { kind: "NONE" } };
     const modelInput = JSON.parse(synthesisContextPayload(pack)) as { records: EvidenceRecord[] };
     const countAgrees = payload.trace.retrieval.recordCount === payload.records.length && (!contacts || (contacts.length === payload.denominators.verifiedContacts && contacts.length === returned.length));
     const synthesisReceivesEveryRecord = JSON.stringify(modelInput.records) === JSON.stringify(payload.records);
     const proof = { executionLevel: "REAL_ROUTE_HANDLER", family, subjectId, request, httpStatus: response.status, mode: payload.mode, resolvedSubjectId: payload.subject?.id ?? null,
       payloadSha256: hash(raw), payloadBytes: Buffer.byteLength(raw), modelAnswer: payload.answer, expectedRecords: expected, expectedRecordIds: [...expectedIds],
-      returnedRecordIds: payload.records.map((record) => record.id), returnedRecords: returned, contacts, denominators: payload.denominators,
+      returnedRecordIds: payload.records.map((record) => record.id), returnedRecords: returned, contacts, expectedRosterGap, rosterGapRecords, rosterGapAgrees, denominators: payload.denominators,
       actualRecordCount: payload.records.length, traceRecordCount: payload.trace.retrieval.recordCount, countAgrees, synthesisReceivesEveryRecord,
       missingRecords: missing, unexpectedRecords: unexpected, gaps: payload.gaps,
-      status: response.status === 200 && payload.answer === null && countAgrees && synthesisReceivesEveryRecord && missing.length === 0 && unexpected.length === 0 ? "PROVEN" : "ELIGIBLE_NOT_FULLY_DELIVERED" };
+      status: response.status === 200 && payload.answer === null && countAgrees && rosterGapAgrees && synthesisReceivesEveryRecord && missing.length === 0 && unexpected.length === 0 ? "PROVEN" : "ELIGIBLE_NOT_FULLY_DELIVERED" };
     proofs.push(proof);
     return proof;
   }

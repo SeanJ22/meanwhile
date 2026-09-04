@@ -1,8 +1,12 @@
 import { currentOfficialIdentityStatus, officialIdsForCandidacy, resolvedCandidacyForOfficial } from "../funding/campaign-money.ts";
 import { azLineupReconciliation, reconciledCandidacyIdForCard } from "./az-2026.ts";
+import { rosterMemberReaderDisposition } from "../registry/body-rosters.ts";
 
 /** Exact committed person relationships; no names participate in reader joins. */
 export function readerPersonKeys(subjectId: string): { status: "RESOLVED" | "DIRECT" | "IDENTITY_UNRESOLVED"; keys: string[] } {
+  const rosterIdentity = rosterMemberReaderDisposition(subjectId);
+  if (rosterIdentity?.state === "IDENTITY_UNRESOLVED") return { status: "IDENTITY_UNRESOLVED", keys: [] };
+  if (rosterIdentity?.state === "EXACT_DUPLICATE") return readerPersonKeys(rosterIdentity.canonicalId!);
   if (currentOfficialIdentityStatus(subjectId) === "IDENTITY_UNRESOLVED") return { status: "IDENTITY_UNRESOLVED", keys: [] };
   const keys = new Set<string>();
   const pending = [subjectId];

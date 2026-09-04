@@ -11,6 +11,8 @@ import { TOP_OFFICES_GAP, runsSomething, topOfficesFor,
 import { displayPersonName } from "@/lib/officials/person-name";
 import type { DistrictHit } from "@/lib/map/districts";
 import { representationNoteFor } from "@/lib/registry/representation";
+import { rosterGapsForDivision } from "@/lib/registry/body-rosters";
+import { RosterCompletenessGaps } from "@/components/officials/roster-completeness-gap";
 
 import {
   NoValue,
@@ -262,6 +264,7 @@ export function DistrictPopup({
           The identifier still keys everything behind this card. */}
       <PopupRow label="Type">{district.typeLabel}</PopupRow>
       <PopupRow label="Tier">{TIER_LABEL[district.tier]}</PopupRow>
+      <RosterCompletenessGaps gaps={rosterGapsForDivision(district.ocdId)} />
 
       {/*
         **BC-8 (2026-08-24) — THE COUNT IS A DOOR.**

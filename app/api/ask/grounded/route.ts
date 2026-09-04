@@ -33,8 +33,10 @@ import { campaignMoneyEvidenceFor } from "@/lib/ask/campaign-money";
 import { candidateProfileEvidenceFor } from "@/lib/ask/candidate-profile";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { reconciledCandidacyIdForCard } from "@/lib/identity/az-2026";
-import { outcomeQuestionClass } from "@/lib/ask/outcome-question";
-import { meetingOutcomeEvidenceFor, outcomeSittingsOnDate } from "@/lib/ask/meeting-outcomes";
+import { meetingOutcomeEvidenceFor, outcomeSittingsOnDate, meetingRecordQuestionClass } from "@/lib/ask/meeting-outcomes";
+import { minutesSummaryEvidenceFor, commentAccessEvidenceFor, noticeSummaryEvidenceFor } from "@/lib/ask/meeting-knowledge";
+import { officeholderEvidence } from "@/lib/ask/officeholder";
+import { rosterGapEvidenceFor } from "@/lib/ask/roster-gaps";
 import { formatDateLong } from "@/lib/text/format-date";
 import { unavailableInterpretation, type AskInterpretation } from "@/lib/ask/intent";
 import { asksWhatAnOfficeDoes, officeInQuestion } from "@/lib/ask/office-question";
@@ -936,16 +938,7 @@ export async function POST(request: Request) {
      */
     if (ballotRecord.kind === "PERSON") {
       for (const seat of candidateSeats) {
-        records.push({
-          kind: "OFFICEHOLDER",
-          id: `office:${seat.id}`,
-          text: `${seat.name} holds the office of ${seat.officeTitle}${
-            seat.partyLabel ? `, ${seat.partyLabel}` : ""
-          }${seat.termEnd ? `, in seat until ${seat.termEnd}` : ""}.`,
-          sourceUrl: seat.sourceUrl,
-          sourceOrg: seat.provenance?.sourceOrg ?? null,
-          retrievedAt: seat.provenance?.collectedAt ?? null,
-        });
+        records.push(officeholderEvidence(seat, `office:${seat.id}`));
         denominators.officeholderRecords = (denominators.officeholderRecords ?? 0) + 1;
         /* The office the question is ABOUT — the most relevant contact there
            is, and the one an answer about the Governor was missing while it
@@ -1022,6 +1015,10 @@ export async function POST(request: Request) {
     }
   } else if (subject?.kind === "BODY") {
     const identity = canonicalBodyIdentity(subject.id);
+    const access = commentAccessEvidenceFor(subject.id, bound?.ocdId ?? null, subject.name);
+    records.push(...access.records);
+    gaps.push(...access.gaps);
+    denominators.publicCommentAccessRecordsReturned = access.records.length;
     if (identity?.nameIsBodysOwn && identity.sourceUrl) {
       records.push({ kind: "BODY", id: subject.id, bodyId: subject.id,
         text: `${identity.name}${identity.divisionLabel && !identity.name.includes(identity.divisionLabel) ? ` — ${identity.divisionLabel}` : ""}.`,
@@ -1034,10 +1031,10 @@ export async function POST(request: Request) {
        tensed question meant. */
     const chosen = selectSitting(selection, forBody, Date.now(), requestedMeetingDate?.date);
     const calendarIds = new Set(forBody.map((meeting) => meeting.id));
-    const archivedOutcomes = requestedMeetingDate?.date && outcomeQuestionClass(question)
+    const archivedOutcomes = requestedMeetingDate?.date && meetingRecordQuestionClass(question)
       ? outcomeSittingsOnDate(subject.id, requestedMeetingDate.date).filter((sitting) => !calendarIds.has(sitting.meetingId)) : [];
     for (const sitting of archivedOutcomes) {
-      records.push({ kind: "MEETING", id: sitting.meetingId, bodyId: sitting.bodyId, text: `Held outcome records for ${subject.name}'s ${formatDateLong(requestedMeetingDate!.date!) ?? requestedMeetingDate!.date} sitting.`, occurredAt: sitting.startsAt, sourceUrl: sitting.sourceUrl, sourceOrg: sitting.sourceOrg, retrievedAt: sitting.publication.observedAt });
+      records.push({ kind: "MEETING", id: sitting.meetingId, bodyId: sitting.bodyId, text: `Held meeting records for ${subject.name}'s ${formatDateLong(requestedMeetingDate!.date!) ?? requestedMeetingDate!.date} sitting.`, occurredAt: sitting.startsAt, sourceUrl: sitting.sourceUrl, sourceOrg: sitting.sourceOrg, retrievedAt: sitting.publication.observedAt });
       const outcome = meetingOutcomeEvidenceFor({ bodyId: subject.id, meetingId: sitting.meetingId, startsAt: sitting.startsAt!, question });
       records.push(...outcome.records);
       gaps.push(...outcome.gaps);
@@ -1236,7 +1233,12 @@ export async function POST(request: Request) {
       });
       denominators.publisherPublicationObservationsForThatMeeting =
         (denominators.publisherPublicationObservationsForThatMeeting ?? 0) + publisherObservations.length;
-      if (publication.gap) gaps.push(publication.gap);
+      const outcome = meetingOutcomeEvidenceFor({ bodyId: subject.id, meetingId: chosen.id, startsAt: chosen.startsAt, question });
+      const minutes = minutesSummaryEvidenceFor(subject.id, chosen.id, question);
+      const notice = noticeSummaryEvidenceFor(subject.id, chosen.id, question);
+      // A document extraction gap is not an absence of the separately held
+      // structured agenda for this exact sitting.
+      if (publication.gap && !outcome.records.some((record) => record.kind === "AGENDA_ITEM")) gaps.push(publication.gap);
 
       const newest = [...forMeeting].sort((a, b) => (a.retrievedAt < b.retrievedAt ? 1 : -1))[0];
       const items = publication.items;
@@ -1303,9 +1305,16 @@ export async function POST(request: Request) {
        * the allow-list; this route only supplies which question was asked, which
        * is the one thing that module says it cannot decide for itself.
        */
-      const outcome = meetingOutcomeEvidenceFor({ bodyId: subject.id, meetingId: chosen.id, startsAt: chosen.startsAt, question });
       records.push(...outcome.records);
-      gaps.push(...outcome.gaps);
+      records.push(...minutes.records);
+      records.push(...notice.records);
+      gaps.push(...notice.gaps);
+      gaps.push(...minutes.gaps);
+      // A sourced summary answers what happened without pretending it records
+      // each member's vote. No outcome-store absence may erase that answer.
+      if (!minutes.records.length) gaps.push(...outcome.gaps);
+      denominators.minutesSummaryRecordsReturned = (denominators.minutesSummaryRecordsReturned ?? 0) + minutes.records.length;
+      denominators.noticeSummaryRecordsReturned = (denominators.noticeSummaryRecordsReturned ?? 0) + notice.records.length;
       for (const [key, count] of Object.entries(outcome.denominators)) denominators[key] = (denominators[key] ?? 0) + count;
       }
     }
@@ -1352,19 +1361,7 @@ export async function POST(request: Request) {
      */
     const seat = officeholders.seats.find((s) => s.id === subject.id);
     if (seat) {
-      records.push({
-        kind: "OFFICEHOLDER",
-        id: subject.id,
-        /* Identity is person AND office, never either alone — the exact-office
-           rule PR #211 landed. A record naming only the person would let a
-           later sentence attach an action to the wrong seat. */
-        text: `${seat.name} holds the office of ${seat.officeTitle}${
-          seat.partyLabel ? `, ${seat.partyLabel}` : ""
-        }${seat.termEnd ? `, in seat until ${seat.termEnd}` : ""}.`,
-        sourceUrl: seat.sourceUrl,
-        sourceOrg: seat.provenance?.sourceOrg ?? null,
-        retrievedAt: seat.provenance?.collectedAt ?? null,
-      });
+      records.push(officeholderEvidence(seat));
       denominators.officeholderRecords = 1;
       subject.office = seat.officeTitle;
       contacts.push(contactForOfficeholder(seat));
@@ -1516,6 +1513,10 @@ export async function POST(request: Request) {
    * can never be one the panel shows.
    */
   const shownContacts = gateContactsToSubject(subject, contacts).contacts;
+  const rosterGaps = rosterGapEvidenceFor(subject, shownContacts, canonicalSubjectKeys);
+  records.push(...rosterGaps.records);
+  gaps.push(...rosterGaps.gaps);
+  Object.assign(denominators, rosterGaps.denominators);
   denominators.contactsExcludedOffSubject = contacts.length - shownContacts.length;
   for (const contact of shownContacts) {
     records.push(contactRecord(contact));

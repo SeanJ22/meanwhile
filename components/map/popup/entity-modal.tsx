@@ -34,6 +34,8 @@ import { CardSourcesList } from "@/components/officials/card-sources-list";
 import { IdentityPortrait } from "@/components/officials/person-identity";
 import { SpeakYourMind } from "@/components/speak/speak-your-mind";
 import { DemandPill } from "@/components/demand/demand-pill";
+import { RosterCompletenessGaps } from "@/components/officials/roster-completeness-gap";
+import type { RosterReaderGap } from "@/lib/registry/body-rosters";
 
 import { HowToBeHeard, MeetingSourceCredit } from "../meeting-panel";
 import { venueLink } from "@/lib/registry/links";
@@ -296,6 +298,7 @@ export interface ModalSubject {
    */
   representedByOfficeTitle?: string | null;
   representation: SeatHolder[];
+  rosterGaps?: RosterReaderGap[];
   /** Why representation is empty, when it is. */
   representationNote: string;
   /**
@@ -507,6 +510,7 @@ function BodySections({
           <>
             <Representation
               holders={subject.representation}
+              gaps={subject.rosterGaps}
               note={subject.representationNote}
               onOpenHolder={onOpenHolder}
               /* LBL-1: removed, not renamed, where nothing is run. */
@@ -870,6 +874,7 @@ export function EntityModal({
           {tab === "representation" && (
             <Representation
               holders={subject.representation}
+              gaps={subject.rosterGaps}
               note={subject.representationNote}
               onOpenHolder={onOpenHolder}
               /* LBL-1: removed, not renamed, where nothing is run. */
@@ -1011,9 +1016,10 @@ export function EntityModal({
   );
 }
 
-function Representation({
+export function Representation({
   holders,
   note,
+  gaps = [],
   onOpenHolder,
   /**
    * F01 2.2 (2026-08-19): lead with WHO RUNS IT.
@@ -1028,10 +1034,11 @@ function Representation({
 }: {
   holders: SeatHolder[];
   note: string;
+  gaps?: readonly RosterReaderGap[];
   onOpenHolder?: (holder: SeatHolder) => void;
   showTopOffices?: boolean;
 }) {
-  if (holders.length === 0) return <Empty>{note}</Empty>;
+  if (holders.length === 0) return <><RosterCompletenessGaps gaps={gaps} /><Empty>{note}</Empty></>;
 
   // OFF-4 (2026-08-24): the appointed executive leads the list. See
   // rosterInReadingOrder for why it reuses the precedence table above.
@@ -1043,6 +1050,7 @@ function Representation({
 
   return (
     <>
+      <RosterCompletenessGaps gaps={gaps} />
       {/*
         F01 2.2 — the same question the small card answers, answered the same
         way, from the same precedence table. *"When I look at representation, as
@@ -1085,7 +1093,7 @@ function Representation({
         </p>
       )}
       {ordered.map((holder) => (
-        <div key={holder.id} className="account-modal-person flex items-start gap-3">
+        <div key={holder.id} data-roster-holder={holder.id} className="account-modal-person flex items-start gap-3">
           {/*
             F01 2.3 (2026-08-19, the author): *"On AZ-6, when I look at
             Representation, we should have the picture of that person — we

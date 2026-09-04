@@ -180,7 +180,8 @@ const TUCSON_CLERK = "City of Tucson City Clerk (official election results)";
 const MORRIS_CLERK = "Morris County Clerk (certified general election winners)";
 const NH_SOS = "New Hampshire Secretary of State (official general election results)";
 
-export const BODY_ROSTERS: BodyRoster[] = [
+/** Raw held rows are retained for audit, including unresolved extraction identities. */
+export const HELD_BODY_ROSTERS: BodyRoster[] = [
   {
     // The author's named example (5a): the members are front-and-center at
     // govboard.tusd1.org — five seats, roles and term expirations stated.
@@ -2455,6 +2456,84 @@ export const BODY_ROSTERS: BodyRoster[] = [
   },
 ];
 
+export interface RosterReaderDisposition {
+  sourceId: string;
+  canonicalId: string | null;
+  state: "READER_ELIGIBLE" | "EXACT_DUPLICATE" | "IDENTITY_UNRESOLVED";
+  reason: string;
+}
+
+/** A navigation label cannot identify a person; identical rows are one answer. */
+export function projectReaderRoster(roster: BodyRoster): { roster: BodyRoster; dispositions: RosterReaderDisposition[] } {
+  const members: RosterMember[] = [];
+  const dispositions: RosterReaderDisposition[] = [];
+  const exactRows = new Map<string, string>();
+  for (const member of roster.members) {
+    const label = member.name.trim().toLowerCase().replace(/\s+/g, " ");
+    const navigation = ["contact us", "contact information", "staff directory", "email us", "town hall", "member name"].includes(label)
+      || (/^members\S/i.test(member.name) && /agendas.*minutes/i.test(member.officeTitle));
+    if (!label || navigation) {
+      dispositions.push({ sourceId: member.id, canonicalId: null, state: "IDENTITY_UNRESOLVED", reason: "The held extraction contains navigation text instead of an established person identity. Its contact fields are not attached to another person." });
+      continue;
+    }
+    const exact = JSON.stringify(Object.entries(member).filter(([key]) => key !== "id").sort(([a], [b]) => a.localeCompare(b)));
+    const existing = exactRows.get(exact);
+    if (existing) {
+      dispositions.push({ sourceId: member.id, canonicalId: existing, state: "EXACT_DUPLICATE", reason: "Every held field is identical within the same sourced body roster except the source-row ID. The first source row supplies the single current answer." });
+      continue;
+    }
+    exactRows.set(exact, member.id);
+    members.push(member);
+    dispositions.push({ sourceId: member.id, canonicalId: member.id, state: "READER_ELIGIBLE", reason: "The sourced roster row identifies this member; no name-only identity join is performed." });
+  }
+  return { roster: { ...roster, members }, dispositions };
+}
+
+const READER_ROSTERS = HELD_BODY_ROSTERS.map(projectReaderRoster);
+export const BODY_ROSTERS: BodyRoster[] = READER_ROSTERS.map(result => result.roster);
+export const ROSTER_READER_DISPOSITIONS = READER_ROSTERS.flatMap(result => result.dispositions);
+const readerRosterIdentities = new Map(ROSTER_READER_DISPOSITIONS.map(row => [row.sourceId, row]));
+export function rosterMemberReaderDisposition(id: string): RosterReaderDisposition | null {
+  return readerRosterIdentities.get(id) ?? null;
+}
+
+export interface RosterReaderGap {
+  bodyId: string;
+  expectedMembers: number;
+  verifiedMembers: number;
+  unresolvedSlots: number;
+  statement: string;
+  sourceUrl: string;
+  sourceOrg: string;
+  readAt: string;
+  denominatorSource: string;
+}
+
+// The existing nj:wire gate's held five-seat denominator. Its five raw rows
+// included the same mayor twice; the four distinct verified identities remain
+// usable, but cannot be presented as a complete five-member roster.
+const ROSTER_MEMBER_DENOMINATORS = [{
+  bodyId: "ocd-division/country:us/state:nj/county:morris/place:pequannock_township#governing",
+  members: 5,
+  source: "data/states/nj/hunt/wikipedia-nj-morris.json: Pequannock Township governingBody.seats, the existing nj:wire completeness input",
+}];
+
+export function rosterGapForBody(bodyId: string | null): RosterReaderGap | null {
+  const expected = ROSTER_MEMBER_DENOMINATORS.find(row => row.bodyId === bodyId);
+  const roster = BODY_ROSTERS.find(row => row.bodyId === bodyId);
+  if (!expected || !roster || roster.members.length >= expected.members) return null;
+  const unresolvedSlots = expected.members - roster.members.length;
+  return { bodyId: roster.bodyId, expectedMembers: expected.members, verifiedMembers: roster.members.length,
+    unresolvedSlots, statement: `We have verified ${roster.members.length} of the ${expected.members} roster identities expected by our held source record. ${unresolvedSlots === 1 ? "One identity remains" : `${unresolvedSlots} identities remain`} unresolved; this is an incomplete roster.`,
+    sourceUrl: roster.sourceUrl, sourceOrg: roster.sourceOrg, readAt: roster.collectedAt, denominatorSource: expected.source };
+}
+
+export function rosterGapsForDivision(ocdId: string | null): RosterReaderGap[] {
+  if (!ocdId) return [];
+  return BODY_ROSTERS.filter(roster => roster.bodyId === `${ocdId}#governing` || roster.bodyId === `${ocdId}#board`)
+    .flatMap(roster => { const gap = rosterGapForBody(roster.bodyId); return gap ? [gap] : []; });
+}
+
 export function rosterForBody(bodyId: string | null): BodyRoster | null {
   if (!bodyId) return null;
   return BODY_ROSTERS.find((r) => r.bodyId === bodyId) ?? null;
@@ -2465,6 +2544,8 @@ export interface RosterHolder {
   id: string;
   name: string;
   officeTitle: string;
+  /** The roster's exact term or appointment wording, not an inferred term end. */
+  termNote: string | null;
   /** M61: widened from `null`. The type used to forbid a party outright. */
   partyLabel: string | null;
   websiteUrl: string | null;
@@ -2477,12 +2558,8 @@ export interface RosterHolder {
   photoUrl: string | null;
   campaignUrl: null;
   /**
-   * 6d (2026-08-15): curated local rosters publish no term end and no birth
-   * date — the pages they are read from state a name, an office and often a
-   * phone number, and nothing else. Both are null here BY SOURCE rather than
-   * by omission, and both render as nothing at all. Computing a term from an
-   * election cycle, or an age from anywhere, is the guess the whole
-   * provenance discipline exists to refuse.
+   * The roster holds wording in termNote, not normalized term-end/birth dates.
+   * Preserve that wording separately; never compute a date from its prose.
    */
   termEnd: null;
   birthDate: null;
@@ -2522,6 +2599,7 @@ export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
     id: member.id,
     name: member.name,
     officeTitle: member.officeTitle,
+    termNote: member.termNote,
     // M61: carried through where a roster holds it. Null today for every
     // curated local — see the roster's `partisanship`, which says whether
     // that null means "no party to state" or "not sourced yet".

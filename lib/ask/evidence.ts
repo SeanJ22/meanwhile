@@ -45,6 +45,7 @@ export interface EvidenceRecord {
     | "CANDIDACY"
     | "CANDIDATE_BIO"
     | "CANDIDATE_LINK"
+    | "CANDIDATE_CONTACT"
     | "POSITION"
     | "MEASURE_QUESTION"
     | "MEASURE_STATEMENT"
@@ -125,6 +126,10 @@ export interface EvidenceRecord {
      * one of them. A tally is never expanded into these.
      */
     | "MEETING_MEMBER_VOTE"
+    | "MEETING_MINUTES_SUMMARY"
+    | "MEETING_NOTICE_SUMMARY"
+    | "PUBLIC_COMMENT_ACCESS"
+    | "ROSTER_IDENTITY_GAP"
     /*
      * **A COMMITTEE'S ROW IN A FILING OFFICER'S OWN REGISTER.** (2026-08-30.)
      *
@@ -158,14 +163,21 @@ export interface EvidenceRecord {
   id: string;
   /** Canonical holding subject when the reader's question uses a bridged card identity. */
   canonicalSubjectId?: string;
+  officeholder?: { officialId: string; termNote: string | null };
+  rosterGap?: import("../registry/body-rosters.ts").RosterReaderGap;
+  noticeSummary?: { documentId: string; contentHash: string; writtenAt: string };
+  /** Published body-wide rules, not an inferred event-specific instruction. */
+  accessRule?: { field: "commentPeriod" | "commentPeriodDetail" | "timeLimit" | "signup" | "writtenComment" | "attend"; value: string; standingRule: true };
   /** Exact candidate-card field and source label, without a name-based join. */
   candidateProfile?: {
-    field: "bio" | "official" | "campaign";
+    field: "bio" | "official" | "campaign" | "email" | "phone" | "filedAddress";
     value: string;
     label: string;
     holdingPath: string;
     holdingKey: string;
     verification?: string;
+    sourceNote?: string | null;
+    provenanceLimitation?: string | null;
   };
   /** Exact normalized totals accompany the grounded prose for cross-surface parity. */
   finance?: { jurisdiction: string; filingState: string; totals: { receipts: number | null; expenditures: number | null; cashOnHand: number | null; reportCount: number | null; coveringPeriod: string | null } };

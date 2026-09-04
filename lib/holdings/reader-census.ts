@@ -1,0 +1,1784 @@
+import { isRenderable, stateMoneyRecordsForDisplay } from "../funding/state-money-reader.ts";
+/**
+ * Offline last-mile accounting. This is a diagnostic, never a reader gate or an
+ * owner readiness model. Holding, eligibility, projection and observed rendering
+ * are separate facts; a declaration/import does not certify the next seam.
+ */
+import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
+import { existsSync, readFileSync, writeFileSync, unlinkSync } from "node:fs";
+import * as fs from "node:fs";
+import { join, posix, resolve, relative, dirname } from "node:path";
+import { gzipSync, gunzipSync } from "node:zlib";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import ts from "typescript";
+import { DATASET_FAMILIES, READER_SURFACES, type ReaderSurfaceId } from "./datasets.ts";
+import { loadManifestContext, statesFromIdentity, VAULT_PATH, type Dataset, type ManifestContext } from "./manifest.ts";
+import { photoMayRender } from "../photos/review.ts";
+import { type StateMoneyRecord } from "../funding/state-money.ts";
+import { currentExtraction, type CandidateDocument } from "../candidates/corpus.ts";
+import { projectAutonomousActivity, type AutonomousActivitySnapshot, type AutonomousObligationActivity } from "../control-plane/workers/activity.ts";
+import { localFinanceEvidenceFor } from "../ask/local-finance.ts";
+import { checkReaderTraces } from "./reader-trace.ts";
+import { MEASURE_PROVISIONS, provisionsForContest } from "../ballot/measure-provisions.ts";
+import { rosterMemberReaderDisposition, rosterGapForBody } from "../registry/body-rosters.ts";
+
+type ObjectRow = Record<string, unknown>;
+const object = (value: unknown): ObjectRow => value !== null && typeof value === "object" && !Array.isArray(value) ? value as ObjectRow : {};
+const unique = (values: readonly string[]) => [...new Set(values)].sort();
+const string = (value: unknown) => typeof value === "string" ? value : "";
+export const sha256 = (value: string | Uint8Array) => createHash("sha256").update(value).digest("hex");
+
+export function readReaderEvidence(root: string, path: string): Buffer {
+  const actualPath = existsSync(join(root,path)) ? path : `${path}.gz`;
+  const bytes = readFileSync(join(root, actualPath));
+  return actualPath.endsWith(".gz") ? gunzipSync(bytes) : bytes;
+}
+function readerEvidenceHashMatches(root:string,path:string,expected:string):boolean {
+  try { return sha256(readReaderEvidence(root,path))===expected; } catch { return false; }
+}
+
+/** Lossless packaging preserves the original baseline byte hash and JSON. */
+export function packReaderEvidence(root: string, path: string): { path: string; originalSha256: string; bytes: number; packedBytes: number } {
+  if (!/^docs\/evidence\/reader-last-mile-[a-z0-9-]+\.json$/.test(path)) throw new Error("Only named last-mile JSON evidence can be packed");
+  const resolvedRoot = resolve(root);
+  const absolute = resolve(root, path);
+  if (relative(resolvedRoot, absolute).startsWith("..")) throw new Error("Evidence path escapes the workspace");
+  const bytes = readFileSync(absolute);
+  const packed = gzipSync(bytes, { level: 9 });
+  // Node's deterministic gzip header has zero modification time. Refuse an
+  // instrument/runtime which would stamp the archive with the wall clock.
+  if (packed.readUInt32LE(4) !== 0 || !gunzipSync(packed).equals(bytes)) throw new Error("Evidence compression was not deterministic and lossless");
+  writeFileSync(`${absolute}.gz`, packed);
+  if (!gunzipSync(readFileSync(`${absolute}.gz`)).equals(bytes)) throw new Error("Packed evidence readback differs from original");
+  const result = { path: `${path}.gz`, originalSha256: sha256(bytes), bytes: bytes.length, packedBytes: packed.length };
+  writeFileSync(`${absolute}.pack.json`, `${JSON.stringify({ formatVersion: 1, encoding: "gzip", rule: "Lossless original UTF-8 JSON bytes; zero gzip modification time. The baseline byte hash survives packaging.", ...result, packedSha256: sha256(packed) }, null, 2)}\n`);
+  // The checked absolute target is a single evidence file inside this root.
+  unlinkSync(absolute);
+  return result;
+}
+
+export type EligibilityState = "READER_ELIGIBLE" | "STAGED_NOT_ELIGIBLE" | "IDENTITY_UNRESOLVED" | "NOT_READER_ELIGIBLE" | "SOURCE/HOLDING_UNAVAILABLE" | "INTENTIONALLY_NOT_APPLICABLE";
+export type DeliveryState = Exclude<EligibilityState, "READER_ELIGIBLE"> | "RENDERED" | "ELIGIBLE_BUT_NOT_RENDERED" | "DELIVERY_UNPROVEN";
+export interface EligibilityFacts {
+  readonly held: boolean;
+  readonly relationship: "CANONICAL_READER_RECORD" | "ACQUISITION_INPUT" | "OPERATIONAL_METADATA";
+  readonly identity: "RESOLVED" | "UNRESOLVED" | "NOT_APPLICABLE";
+  readonly source: "CANONICAL_READER_SNAPSHOT" | "AUTONOMOUS_STAGING";
+  readonly extraction?: string | null;
+  readonly validator?: string | null;
+  readonly audit?: string | null;
+  readonly externalAuthority?: "VERIFIED" | "MISSING";
+  readonly promotion?: string | null;
+  readonly readerContractAllows?: boolean;
+  readonly exactReason?: string;
+}
+export interface EligibilityDecision { readonly state: EligibilityState; readonly reason: string }
+
+/** Extraction PASS and worker completion are deliberately insufficient inputs. */
+export function classifyReaderEligibility(facts: EligibilityFacts): EligibilityDecision {
+  if (!facts.held) return { state: "SOURCE/HOLDING_UNAVAILABLE", reason: facts.exactReason ?? "The canonical input is not held; no absence at the publisher is inferred." };
+  if (facts.relationship === "OPERATIONAL_METADATA") return { state: "INTENTIONALLY_NOT_APPLICABLE", reason: facts.exactReason ?? "Operational accounting is not a civic fact for the reader." };
+  if (facts.identity === "UNRESOLVED") return { state: "IDENTITY_UNRESOLVED", reason: facts.exactReason ?? "Canonical civic identity is unresolved; no record may attach by a guessed name." };
+  if (facts.source === "AUTONOMOUS_STAGING") return { state: "STAGED_NOT_ELIGIBLE", reason: facts.exactReason ?? `Autonomous inventory has no canonical reader promotion. Extraction=${facts.extraction ?? "NOT_RECORDED"}; validator=${facts.validator ?? "NOT_RECORDED"}; audit=${facts.audit ?? "NOT_RECORDED"}; external authority=${facts.externalAuthority ?? "MISSING"}; promotion=${facts.promotion ?? "NOT_RECORDED"}.` };
+  if (facts.relationship === "ACQUISITION_INPUT") return { state: "STAGED_NOT_ELIGIBLE", reason: facts.exactReason ?? "Acquisition input is not a directly rendered civic record; its eligible normalized projection is inventoried separately." };
+  if (facts.readerContractAllows === false) return { state: "NOT_READER_ELIGIBLE", reason: facts.exactReason ?? "The canonical reader selector explicitly withholds this record or fact." };
+  return { state: "READER_ELIGIBLE", reason: facts.exactReason ?? "Record belongs to the existing canonical reader contract; no collection-completeness threshold was applied." };
+}
+
+export interface CensusRecord {
+  readonly auditId: string;
+  readonly holdingPath: string;
+  readonly pointer: string;
+  readonly family: string;
+  readonly states: readonly string[];
+  readonly canonicalIdentity: readonly string[];
+  readonly unit: string;
+  readonly eligibility: EligibilityDecision;
+  readonly additionalComponents?: readonly string[];
+  readonly childDispositions?: readonly { sourceId:string;canonicalId:string|null;state:string;reason:string }[];
+}
+export interface CensusHolding {
+  readonly path: string;
+  readonly sha256: string;
+  readonly family: string;
+  readonly recordCount: number;
+  readonly units: Readonly<Record<string, number>>;
+  readonly readerEligibleCount: number;
+  readonly withheldCount: number;
+}
+export interface ImportReachability {
+  readonly surfacePath: string;
+  readonly consumerPath: string;
+  readonly reached: boolean;
+  readonly path: readonly string[];
+}
+/** A readback is a measured record universe, not a prose assertion of success. */
+export interface ReaderDeliveryProof {
+  readonly rowId: string;
+  readonly exactHead: string;
+  readonly source: "rendered-browser" | "executed-route" | "rendered-component";
+  readonly evidencePath: string;
+  readonly evidenceSha256: string;
+  /** Audit IDs of all eligible records applicable to this exercised scope. */
+  readonly expectedRecordIds: readonly string[];
+  readonly renderedRecordIds: readonly string[];
+  readonly actualIdentities: Readonly<Record<string, readonly string[]>>;
+  readonly statedCount: number;
+  readonly returnedCount: number;
+  readonly scope: string;
+  readonly surfaceWitnesses?: readonly { readonly component: string; readonly evidencePath: string; readonly evidenceSha256: string; readonly exactHead: string }[];
+  readonly deployedBundle?: { readonly evidencePath: string; readonly evidenceSha256: string; readonly exactHead: string; readonly holdingPaths: readonly string[] };
+}
+export interface CensusRow {
+  readonly id: string;
+  readonly datasetFamily: string;
+  readonly state: string;
+  readonly jurisdiction: string;
+  readonly relationship: string;
+  readonly holdingPaths: readonly string[];
+  readonly readerSurface: ReaderSurfaceId;
+  readonly consumerPaths: readonly string[];
+  readonly consumerReachability: readonly ImportReachability[];
+  readonly canonicalIdentityExpected: readonly string[];
+  readonly canonicalIdentityByRecord: Readonly<Record<string, readonly string[]>>;
+  readonly actualIdentityUsed: Readonly<Record<string, readonly string[]>> | null;
+  readonly provedHead?: string;
+  readonly observedExpectedRecordIds?: readonly string[];
+  readonly observedRenderedRecordIds?: readonly string[];
+  readonly bundleProvedRecordIds?: readonly string[];
+  readonly recordIds: readonly string[];
+  readonly eligibleRecordIds: readonly string[];
+  readonly readerEligiblePopulation: number;
+  /** Eligible source inputs are retained above; only direct answers are display rows. */
+  readonly applicableEligibleRecordIds?: readonly string[];
+  readonly applicabilityByRecord?: Readonly<Record<string, { readonly status: string; readonly selector: string; readonly reason: string }>>;
+  readonly withheldPopulation: number;
+  readonly unitCounts: Readonly<Record<string, number>>;
+  readonly eligibilityCounts: Readonly<Record<string, number>>;
+  readonly withheldReasons: readonly string[];
+  readonly loaderCanReadHolding: "FILES_PARSED" | "HOLDING_UNAVAILABLE";
+  readonly eligibleRecordsProjected: "UNPROVEN" | "PROVED_BY_READBACK";
+  readonly deployedBundleRequirement: string;
+  readonly deployedBundleProved: boolean;
+  readonly deliveryState: DeliveryState;
+  readonly falseNegativeCount: number | null;
+  readonly falsePositiveCount: number | null;
+  readonly unresolvedIdentityCount: number;
+  readonly childPopulation?: { readonly held:number;readonly readerEligible:number;readonly identityUnresolved:number;readonly exactDuplicates:number };
+  readonly evidencePaths: readonly string[];
+  readonly deliveryReason: string;
+}
+export interface AutonomousCensusRow {
+  readonly workItemId: string;
+  readonly state: string;
+  readonly subject: string;
+  readonly recordClass: string | null;
+  readonly lifecycle: string;
+  readonly walk: AutonomousObligationActivity["walk"];
+  readonly artifactIds: readonly string[];
+  readonly extractedRows: number | null;
+  readonly workerResults: readonly { role: string; verdict: string; extraction: string | null; resultId: string }[];
+  readonly blockers: readonly string[];
+  readonly eligibility: EligibilityDecision;
+}
+export interface ReaderCensus {
+  readonly formatVersion: 1;
+  readonly generatedBy: "scripts/reader-last-mile-census.mts";
+  readonly registrySha256: string;
+  readonly holdingsDigest: string;
+  readonly denominator: { readonly families: number; readonly declaredEdges: number; readonly holdings: number; readonly records: number; readonly rows: number; readonly states: readonly string[] };
+  readonly countingRule: string;
+  readonly holdings: readonly CensusHolding[];
+  readonly records: readonly CensusRecord[];
+  readonly rows: readonly CensusRow[];
+  readonly autonomousSource: { readonly path: string; readonly sha256: string; readonly observedAt: string };
+  readonly autonomous: readonly AutonomousCensusRow[];
+  readonly failures: readonly string[];
+  readonly currentBallotHolderIds?: readonly string[];
+}
+
+const acquisitionFamilies = new Set(["candidate-acquisitions", "campaign-finance-corpus"]);
+const metadataPaths = new Set(["data/derived/gap-ledger.json", "data/derived/zip-coverage-tiers-runtime.json", "data/derived/zip-coverage-tiers.json"]);
+const keysByFamily: Readonly<Record<string, readonly string[]>> = {
+  ballot: ["contests", "candidacies", "measures", "absences", "removals", "cards", "links", "analyses", "contacts"],
+  identity: ["candidates", "rows"], "candidate-corpus": ["documents"], "statement-corpus": ["snapshots"],
+  "state-money": ["records"], "federal-finance": ["candidates", "absences", "secondHop"], meetings: ["meetings", "agendaDocuments"],
+  outcomes: ["sittings"], votes: ["votes", "rollCalls", "positions", "entries", "summaries", "titles"],
+  "voting-sites": ["jurisdictions"], prl: ["profiles"], "official-actions": ["actions", "members"],
+  registry: ["divisions", "bodies", "officeholders", "photos", "records"],
+  "state-officeholders": ["officeholders"], congress: ["members", "byMember"],
+  geography: ["features", "records", "divisions"],
+};
+function pointerPart(value: string) { return value.replaceAll("~", "~0").replaceAll("/", "~1"); }
+interface RawRecord { value: ObjectRow; pointer: string; unit: string; identityKey?: string }
+
+/** The canonical manifest inventories vaulted image bytes outside datasets. */
+function readerDatasets(context: ManifestContext): Dataset[] {
+  const officialPhotos = object(context.datasets.find((dataset) => dataset.path === "lib/registry/official-photos.json")?.value).photos as ObjectRow[] ?? [];
+  const candidateCards = object(object(context.datasets.find((dataset) => dataset.path === "data/ballot/candidate-cards-2026.json")?.value).cards);
+  const portraitAssets = context.assetObjects.filter((asset) => /^public\/(candidates|officials)\//.test(asset.originalPath ?? "")).map((asset): Dataset => {
+    const path = asset.originalPath!;
+    const url = path.slice("public".length);
+    const bindings = [
+      ...officialPhotos.filter((row) => row.url === url && row.officeholderId).map((row) => ({ subjectId: string(row.officeholderId), permitted: true, source: "Current sourced official-photo binding" })),
+      ...Object.entries(candidateCards).filter(([, row]) => object(row).photoUrl === url).map(([key]) => ({ subjectId: key, permitted: photoMayRender(key, url), source: "Current candidate-card binding and exact image review" })),
+    ];
+    const value = { url, assetKey: asset.key, sourceReadback: VAULT_PATH, verifiedBytes: asset.verified === true, bindings, _censusPortraitAsset: true, _manifestStateCodes: asset.stateCodes ?? [] };
+    return { path, family: "portraits", domain: "portraits", states: asset.stateCodes ?? [], value, bytes: Number(asset.meta.byteLength ?? 0), sha256: string(asset.meta.contentHash), rowsByState: new Map((asset.stateCodes ?? []).map((state) => [state, 1])), totalRows: 1, unit: "vaulted portrait assets" };
+  });
+  const provisionPath = "lib/ballot/measure-provisions.ts";
+  const provisionBytes = readFileSync(join(context.root,provisionPath));
+  const provisions: Dataset[] = context.datasets.some((dataset)=>dataset.path===provisionPath) ? [] : [{ path: provisionPath, family: "measure-summaries", domain: "ballot", states: ["az"], value: { recordUnit: "measure provisions", records: MEASURE_PROVISIONS }, bytes: provisionBytes.length, sha256: sha256(provisionBytes), rowsByState: new Map([["az",MEASURE_PROVISIONS.length]]), totalRows: MEASURE_PROVISIONS.length, unit: "measure provisions" }];
+  return [...context.datasets, ...portraitAssets, ...provisions];
+}
+function entriesAt(value: unknown, pointer: string, unit: string): RawRecord[] {
+  if (Array.isArray(value)) return value.map((entry, index) => ({ value: object(entry), pointer: `${pointer}/${index}`, unit }));
+  return Object.entries(object(value)).map(([key, entry]) => ({ value: object(entry), pointer: `${pointer}/${pointerPart(key)}`, unit, identityKey: key }));
+}
+/** Reviewed semantic containers only: sources, checks, failures and notes are not records. */
+function extractRecords(dataset: Dataset): RawRecord[] {
+  const value = object(dataset.value);
+  if (dataset.family === "local-finance") {
+    const bodyId = "ocd-division/country:us/state:az/school_district:vail_unified_district#board";
+    const evidence = localFinanceEvidenceFor({ kind: "BODY", id: bodyId, name: "Vail Unified School District Governing Board" });
+    const selected = new Set(evidence?.records.map((row) => row.id));
+    const counters = new Map<string, number>();
+    return ["committeeRegisterCountyPortal", "committeeRegisterStateFtp", "filingsIndexed", "expectedFilingPeriodsAz2026PacParty", "contributions", "distributions"].flatMap((key) => entriesAt(value[key], `/${key}`, key).map((raw) => {
+      let evidenceId = "";
+      if (key === "committeeRegisterCountyPortal") evidenceId = `easyvote:pima:${string(raw.value.portalFilerId)}`;
+      const contribution = key === "contributions" && raw.value.ItemizedListType === "Contribution";
+      const spending = key === "distributions" && ["Disbursments", "Expenditures", "Miscellaneous Disbursements"].includes(string(raw.value.ItemizedListType));
+      if (contribution || spending) {
+        const committee = string(raw.value.RecipientCommitteeName ?? raw.value.CandidateCommitteeName);
+        const counterKey = `${key}:${committee}`;
+        const index = counters.get(counterKey) ?? 0; counters.set(counterKey, index + 1);
+        evidenceId = `cf:${string(raw.value.DocumentFilingId)}:${contribution ? "contribution" : "spending"}:${index}`;
+      }
+      // This instrument reproduces only the canonical selector's explicit
+      // native-ID construction. Eligibility requires that actual selector to
+      // return the ID; source names never establish a new civic relationship.
+      return { ...raw, value: { ...raw.value, ...(selected.has(evidenceId) ? { id: evidenceId, bodyId, _censusLocalFinanceSelected: true } : {}), _censusLocalFinanceUnit: key } };
+    }));
+  }
+  if (Array.isArray(dataset.value)) return entriesAt(dataset.value, "", dataset.unit);
+  if (Array.isArray(value.records) && value.recordUnit) return entriesAt(value.records, "/records", string(value.recordUnit));
+  if (value.schemaVersion === 1 && value.records) {
+    return Object.entries(object(value.records)).flatMap(([key, rows]) => Array.isArray(rows)
+      ? entriesAt(rows, `/records/${pointerPart(key)}`, dataset.unit)
+      : Object.entries(object(rows)).flatMap(([tenant, nested]) => entriesAt(nested, `/records/${pointerPart(key)}/${pointerPart(tenant)}`, dataset.unit)));
+  }
+  const keys = keysByFamily[dataset.family] ?? ["records", "rows", "candidacies", "candidates", "members", "entities", "features"];
+  const selected = keys.filter((key) => value[key] && typeof value[key] === "object");
+  if (selected.length) return selected.flatMap((key) => entriesAt(value[key], `/${key}`, key));
+  return [{ value, pointer: "", unit: dataset.unit }];
+}
+
+const identityKeys = ["id", "identityId", "canonicalCandidacyId", "canonicalContestId", "candidateKey", "candidacyId", "contestId", "subjectId", "officeholderId", "bodyId", "ocdId", "stateOcdId", "divisionOcdId", "meetingId", "rollCallId", "voteId", "bioguideId", "formKey", "classKey", "topic", "url", "targetKey", "fecCandidateId", "committeeId"];
+function identities(raw: RawRecord): string[] {
+  const values = identityKeys.flatMap((key) => typeof raw.value[key] === "string" ? [string(raw.value[key])] : []);
+  if (Array.isArray(raw.value.targetKeys)) values.push(...raw.value.targetKeys.filter((x): x is string => typeof x === "string"));
+  if (raw.identityKey) values.push(raw.identityKey);
+  if (raw.identityKey && /^[A-Z]\d{6}$/.test(raw.identityKey)) values.push(`congress:${raw.identityKey}`);
+  if (typeof raw.value.electionDay === "string" && typeof raw.value.state === "string") values.push(string(raw.value.state), string(raw.value.sourceUrl));
+  if (typeof raw.value.topicId === "string" && Array.isArray(raw.value.zips)) values.push(string(raw.value.topicId), string(raw.value.sourceUrl));
+  const bioguide = string(raw.value.bioguide ?? raw.value.bioguideId);
+  if (/^[A-Z]\d{6}$/.test(bioguide)) values.push(`congress:${bioguide}`);
+  return unique(values);
+}
+function recordStates(dataset: Dataset, raw: RawRecord): string[] {
+  const fixed = /^data\/states\/([a-z]{2})\//.exec(dataset.path)?.[1];
+  if (fixed) return [fixed];
+  // Do not infer states from arbitrary object keys: a property named "id" is
+  // not Idaho. Only explicit tags and complete civic identity values count.
+  const tagged = [raw.value.state, raw.value.stateCode, raw.value.jurisdiction, ...identities(raw)]
+    .flatMap((value) => statesFromIdentity(value));
+  const manifestTags = raw.value._manifestStateCodes;
+  if (!tagged.length && Array.isArray(manifestTags)) tagged.push(...manifestTags.filter((v): v is string => typeof v === "string"));
+  return unique(tagged);
+}
+
+function eligibility(dataset: Dataset, raw: RawRecord, currentDocuments: ReadonlySet<string>): EligibilityDecision {
+  const row = raw.value;
+  const facts: EligibilityFacts = { held: true, source: "CANONICAL_READER_SNAPSHOT", relationship: acquisitionFamilies.has(dataset.family) ? "ACQUISITION_INPUT" : metadataPaths.has(dataset.path) ? "OPERATIONAL_METADATA" : "CANONICAL_READER_RECORD", identity: "RESOLVED" };
+  if (dataset.family === "local-finance") {
+    if (row._censusLocalFinanceSelected) return { state: "READER_ELIGIBLE", reason: "The existing canonical localFinanceEvidenceFor selector returned this exact sourced native ID through the committed office-to-body bridge. This is body finance; it does not assign a committee to a person." };
+    if (["expectedFilingPeriodsAz2026PacParty", "filingsIndexed", "committeeRegisterStateFtp"].includes(string(row._censusLocalFinanceUnit))) return { state: "INTENTIONALLY_NOT_APPLICABLE", reason: "Filing-index, reporting-period or alternate register input supports acquisition accounting; it is not a linked filed money answer or a claim that a filing body was acquired." };
+    return { state: "IDENTITY_UNRESOLVED", reason: "The existing canonical local body-finance selector does not resolve this acquisition row through a held register-office-to-body relationship and supported normalized transaction type. A committee name, including PAC names, cannot establish a candidate or civic body attachment." };
+  }
+  if (dataset.family === "portraits" && row._censusPortraitAsset) {
+    const bindings = row.bindings as { subjectId: string; permitted: boolean }[];
+    if (!row.verifiedBytes) return { state: "STAGED_NOT_ELIGIBLE", reason: "Canonical asset inventory does not verify these image bytes; a path is not a verified portrait." };
+    if (!bindings.length) return { state: "IDENTITY_UNRESOLVED", reason: "Verified asset bytes have no current exact official/candidate portrait binding. A filename cannot establish the depicted person's identity." };
+    if (!bindings.some((binding) => binding.permitted)) return { state: "NOT_READER_ELIGIBLE", reason: "The current candidate image binding has no approved exact-image review. The card's other facts remain eligible." };
+    return { state: "READER_ELIGIBLE", reason: "Verified canonical asset bytes and a current sourced official binding or approved exact candidate-image review exist. Canonical portrait preference decides which eligible image is currently displayed." };
+  }
+  if (dataset.family === "state-money") {
+    const record = row as unknown as StateMoneyRecord;
+    if (record.filingState === "LEAD") return classifyReaderEligibility({ ...facts, identity: "UNRESOLVED", exactReason: `Finance LEAD: ${record.match?.note ?? "canonical committee/candidacy join is not established"}` });
+    if (record.filingState === "ROUTE_UNREAD") return classifyReaderEligibility({ ...facts, readerContractAllows: false, exactReason: "Finance ROUTE_UNREAD: no sourced money or sourced filing absence can render; this is an acquisition route gap." });
+    return classifyReaderEligibility({ ...facts, readerContractAllows: isRenderable(record), exactReason: record.filingState === "OURS_GAP" ? "The sourced OURS_GAP sentence is reader eligible; its unjoined committee, figures and totals are not." : `Existing state-money isRenderable contract: ${record.filingState}; ${record.match?.note ?? "no match note"}` });
+  }
+  if (dataset.family === "candidate-corpus") {
+    if (!currentDocuments.has(string(row.id))) return { state: "INTENTIONALLY_NOT_APPLICABLE", reason: "Historical extraction superseded by currentExtraction for this candidate and source URL." };
+    if (row.extraction !== "html" || !row.text) return { state: "NOT_READER_ELIGIBLE", reason: `Source artifact acquired but candidate text extraction is ${string(row.extraction) || "not recorded"}; no position may be generated to fill it.` };
+  }
+  if (dataset.family === "statement-corpus" && (row.extraction !== "ok" || !row.text)) return { state: "NOT_READER_ELIGIBLE", reason: `Statement text extraction is ${string(row.extraction) || "not recorded"}; acquired bytes are not readable sourced words.` };
+  if (dataset.family === "identity" && row.outcome && row.outcome !== "RECONCILED") return { state: "IDENTITY_UNRESOLVED", reason: `Canonical reconciliation outcome=${string(row.outcome)}; identity candidates must not be guessed.` };
+  if (dataset.family === "meetings" && raw.unit === "agendaDocuments" && (!row.text || row.extraction === "failed")) return { state: "NOT_READER_ELIGIBLE", reason: "Agenda document text has not been successfully extracted. The linked meeting and agenda URL remain independently reader eligible." };
+  return classifyReaderEligibility(facts);
+}
+
+function resolveImport(root: string, importer: string, specifier: string): string | null {
+  if (!specifier.startsWith(".") && !specifier.startsWith("@/")) return null;
+  const relative = specifier.startsWith("@/") ? specifier.slice(2) : posix.normalize(posix.join(posix.dirname(importer), specifier));
+  return [relative, `${relative}.ts`, `${relative}.tsx`, `${relative}.json`, `${relative}/index.ts`, `${relative}/index.tsx`].find((path) => existsSync(join(root, path))) ?? null;
+}
+function literalPrefix(node: ts.Expression | undefined): string | null {
+  if (!node) return null;
+  if (ts.isStringLiteralLike(node)) return node.text;
+  if (ts.isTemplateExpression(node)) return node.head.text;
+  if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.PlusToken) return literalPrefix(node.left);
+  return null;
+}
+const edgeCache = new Map<string, readonly string[]>();
+const apiRouteCache = new Map<string, string[]>();
+function apiRoutePaths(root: string): string[] {
+  const prior = apiRouteCache.get(root); if (prior) return prior;
+  const { globSync } = fs as typeof fs & { globSync(pattern: string, options: { cwd: string }): string[] };
+  const paths = globSync("app/api/**/route.ts", { cwd: root }).map((path) => path.replaceAll("\\", "/"));
+  apiRouteCache.set(root, paths); return paths;
+}
+/** Parse syntax, not comments: prose mentioning fetch/import cannot repair an edge. */
+function sourceEdges(root: string, importer: string, source: string): readonly string[] {
+  const key = `${root}:${importer}:${sha256(source)}`;
+  const cached = edgeCache.get(key);
+  if (cached) return cached;
+  const edges: string[] = [];
+  const tree = ts.createSourceFile(importer, source, ts.ScriptTarget.Latest, true, importer.endsWith(".tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
+  function walk(node: ts.Node): void {
+    if ((ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) && node.moduleSpecifier && ts.isStringLiteral(node.moduleSpecifier)) {
+      const typeOnly = ts.isImportDeclaration(node) ? node.importClause?.isTypeOnly || Boolean(node.importClause?.namedBindings && ts.isNamedImports(node.importClause.namedBindings) && node.importClause.namedBindings.elements.length && node.importClause.namedBindings.elements.every((specifier) => specifier.isTypeOnly) && !node.importClause.name) : node.isTypeOnly;
+      if (!typeOnly) { const path = resolveImport(root, importer, node.moduleSpecifier.text); if (path) edges.push(path); }
+    }
+    if (ts.isCallExpression(node)) {
+      const prefix = literalPrefix(node.arguments[0]);
+      if (node.expression.kind === ts.SyntaxKind.ImportKeyword && prefix) { const path = resolveImport(root, importer, prefix); if (path) edges.push(path); }
+      if (ts.isIdentifier(node.expression) && node.expression.text === "fetch" && prefix?.startsWith("/api/")) {
+        const requested = prefix.split("?")[0];
+        const literalRoute = `app${requested.replace(/\/$/, "")}/route.ts`;
+        if (existsSync(join(root, literalRoute))) edges.push(literalRoute);
+        for (const path of apiRoutePaths(root)) {
+          const route = path.replace(/^app/, "").replace(/\/route\.ts$/, "");
+          const fixedPrefix = route.split("[")[0];
+          if (route.includes("[") ? requested.startsWith(fixedPrefix) : requested === route) edges.push(path);
+        }
+      }
+    }
+    ts.forEachChild(node, walk);
+  }
+  walk(tree);
+  const result = unique(edges);
+  edgeCache.set(key, result);
+  return result;
+}
+/** Static source reachability is one seam, explicitly not rendered evidence. */
+export function importReachability(root: string, surfacePath: string, consumerPath: string, read = (path: string) => readFileSync(join(root, path), "utf8")): ImportReachability {
+  const queue: string[][] = [[surfacePath]];
+  const seen = new Set<string>();
+  while (queue.length) {
+    const path = queue.shift()!;
+    const current = path[path.length - 1];
+    if (current === consumerPath) return { surfacePath, consumerPath, reached: true, path };
+    if (seen.has(current) || !/\.(?:ts|tsx|js|mjs|mts)$/.test(current)) continue;
+    seen.add(current);
+    if (!existsSync(join(root, current))) continue;
+    const source = read(current);
+    for (const next of sourceEdges(root, current, source)) if (!seen.has(next)) queue.push([...path, next]);
+  }
+  return { surfacePath, consumerPath, reached: false, path: [] };
+}
+
+/** The state-money leaf receives a server-computed payload through props. */
+export function surfaceConsumerReachability(root: string, surface: ReaderSurfaceId, consumer: string): ImportReachability {
+  const entry = READER_SURFACES.find((s) => s.id === surface)!.path;
+  const direct = importReachability(root, entry, consumer);
+  if (direct.reached || surface !== "state-money") return direct;
+  const producer = "app/ballot/page.tsx";
+  if (!importReachability(root, producer, entry).reached) return direct;
+  const supplied = importReachability(root, producer, consumer);
+  return supplied.reached ? { ...supplied, surfacePath: entry, path: [entry, "SERVER_PROPS_FROM", ...supplied.path] } : direct;
+}
+
+/** Declared indirect acquisition relationships are checked at their normalized family. */
+export function datasetSurfaceCoverageProblems(root: string): string[] {
+  return DATASET_FAMILIES.filter((family) => family.surfaces.length && !acquisitionFamilies.has(family.id)).flatMap((family) => family.surfaces.filter((surface) => !family.consumerPaths.some((consumer) => surfaceConsumerReachability(root, surface, consumer).reached)).map((surface) => `${family.id}:${surface}: no source import, API fetch or server-props path reaches any declared canonical consumer`));
+}
+
+export interface ReaderSourceHash { readonly path: string; readonly sha256: string }
+function evidenceSourceHashes(value: unknown): ReaderSourceHash[] {
+  return Array.isArray(value) ? value.map(object).map((source) => ({ path: string(source.path), sha256: string(source.sha256) })) : Object.entries(object(value)).map(([path, hash]) => ({ path, sha256: string(hash) }));
+}
+/** Fingerprint executable reader dependencies; a documentation-only HEAD is irrelevant. */
+export function readerSourceFingerprint(root: string, entries: readonly string[] = READER_SURFACES.map((surface) => surface.path)): ReaderSourceHash[] {
+  const queue = [...entries];
+  const seen = new Set<string>();
+  const sources: ReaderSourceHash[] = [];
+  while (queue.length) {
+    const path = queue.shift()!;
+    if (seen.has(path)) continue;
+    seen.add(path);
+    if (!existsSync(join(root, path))) throw new Error(`Reader source disappeared: ${path}`);
+    const bytes = readFileSync(join(root, path));
+    sources.push({ path, sha256: sha256(bytes) });
+    if (/\.(ts|tsx|js|mjs|mts)$/.test(path)) queue.push(...sourceEdges(root, path, bytes.toString("utf8")));
+  }
+  return sources.sort((a,b) => a.path.localeCompare(b.path));
+}
+
+export function readerSourceHashProblems(root: string, hashes: readonly ReaderSourceHash[]): string[] {
+  return hashes.filter((source) => !existsSync(join(root, source.path)) || sha256(readFileSync(join(root, source.path))) !== source.sha256).map((source) => `Reader dependency changed after proof: ${source.path}`);
+}
+
+export interface ReaderClosureReceipt {
+  readonly formatVersion: 1;
+  readonly censusPath: string;
+  readonly censusSha256: string;
+  readonly holdingsDigest: string;
+  readonly registrySha256: string;
+  readonly sourceHashes: readonly ReaderSourceHash[];
+}
+
+export function validateReaderClosureReceipt(root: string, receipt: ReaderClosureReceipt): string[] {
+  const failures = readerSourceHashProblems(root, receipt.sourceHashes);
+  const bytes = readReaderEvidence(root, receipt.censusPath);
+  if (sha256(bytes) !== receipt.censusSha256) failures.push("Committed closure census bytes changed");
+  const proved = JSON.parse(bytes.toString("utf8")) as ReaderCensus;
+  failures.push(...censusClosureFailures(proved));
+  const current = buildReaderCensus(root);
+  if (current.holdingsDigest !== receipt.holdingsDigest) failures.push("Canonical holding inventory changed after closure proof");
+  if (current.registrySha256 !== receipt.registrySha256) failures.push("Declared dataset/surface registry changed after closure proof");
+  failures.push(...datasetSurfaceCoverageProblems(root));
+  return unique(failures);
+}
+
+export function reconcileDelivery(row: CensusRow, proof: ReaderDeliveryProof, root: string): { row: CensusRow; failures: string[] } {
+  const failures: string[] = [];
+  if (proof.rowId !== row.id) failures.push(`${row.id}: proof row identity does not match`);
+  if (row.provedHead && row.provedHead !== proof.exactHead) failures.push(`${row.id}: cannot combine readbacks from different heads`);
+  if (!/^[0-9a-f]{40}$/.test(proof.exactHead)) failures.push(`${row.id}: proof requires exact 40-character head`);
+  if (!readerEvidenceHashMatches(root,proof.evidencePath,proof.evidenceSha256)) failures.push(`${row.id}: readback evidence missing or byte hash differs`);
+  const expected = new Set(proof.expectedRecordIds);
+  const actual = new Set(proof.renderedRecordIds);
+  const applicableIds = row.applicableEligibleRecordIds ?? row.eligibleRecordIds;
+  const eligible = new Set(applicableIds);
+  if (!expected.size && applicableIds.length) failures.push(`${row.id}: an empty readback cannot prove a held eligible population`);
+  if (expected.size !== proof.expectedRecordIds.length || actual.size !== proof.renderedRecordIds.length) failures.push(`${row.id}: readback identities are duplicated`);
+  if ([...expected].some((id) => !eligible.has(id))) failures.push(`${row.id}: readback expects an ineligible or unrelated record`);
+  if (proof.returnedCount !== proof.renderedRecordIds.length || proof.statedCount !== proof.returnedCount) failures.push(`${row.id}: stated N differs from actual returned rows`);
+  if ([...actual].some((id) => !proof.actualIdentities[id]?.length)) failures.push(`${row.id}: returned record lacks actual canonical identity evidence`);
+  for (const id of actual) if (eligible.has(id) && proof.actualIdentities[id]?.some((identity) => !row.canonicalIdentityByRecord[id]?.includes(identity))) failures.push(`${row.id}: returned identity differs from canonical holding for ${id}`);
+  const bundle = proof.deployedBundle;
+  if (proof.source === "rendered-component" && !proof.surfaceWitnesses?.length) failures.push(`${row.id}: a component render needs an executed surface witness`);
+  for (const witness of proof.surfaceWitnesses ?? []) {
+    if (witness.exactHead !== proof.exactHead || !readerEvidenceHashMatches(root,witness.evidencePath,witness.evidenceSha256)) failures.push(`${row.id}: surface witness has no matching exact-head artifact`);
+    const surface = READER_SURFACES.find((candidate) => candidate.id === row.readerSurface)!;
+    if (!importReachability(root, surface.path, witness.component).reached) failures.push(`${row.id}: reader does not reach witnessed component ${witness.component}`);
+  }
+  const provedHoldingPaths = unique(proof.expectedRecordIds.map((id) => id.slice(0, id.indexOf("#"))));
+  if (bundle && (bundle.exactHead !== proof.exactHead || !readerEvidenceHashMatches(root,bundle.evidencePath,bundle.evidenceSha256) || provedHoldingPaths.some((path) => !bundle.holdingPaths.includes(path)))) failures.push(`${row.id}: deployed bundle proof does not cover these holdings at the reader proof head`);
+  if (failures.length) return { row, failures };
+  const allExpected = new Set([...(row.observedExpectedRecordIds ?? []), ...expected]);
+  const allActual = new Set([...(row.observedRenderedRecordIds ?? []), ...actual]);
+  const bundleRecords = unique([...(row.bundleProvedRecordIds ?? []), ...(bundle ? proof.expectedRecordIds : [])]);
+  const missing = [...allExpected].filter((id) => !allActual.has(id));
+  const unexpected = [...allActual].filter((id) => !allExpected.has(id));
+  const complete = allExpected.size === applicableIds.length;
+  return { row: { ...row, provedHead: proof.exactHead, observedExpectedRecordIds: [...allExpected], observedRenderedRecordIds: [...allActual], bundleProvedRecordIds: bundleRecords, actualIdentityUsed: { ...row.actualIdentityUsed, ...proof.actualIdentities }, eligibleRecordsProjected: "PROVED_BY_READBACK", deployedBundleProved: applicableIds.every((id) => bundleRecords.includes(id)), deliveryState: missing.length ? "ELIGIBLE_BUT_NOT_RENDERED" : complete && !unexpected.length ? "RENDERED" : "DELIVERY_UNPROVEN", falseNegativeCount: complete ? missing.length : missing.length || null, falsePositiveCount: unexpected.length, evidencePaths: unique([...row.evidencePaths, proof.evidencePath, ...(bundle ? [bundle.evidencePath] : [])]), deliveryReason: complete ? `Executed readbacks at ${proof.exactHead} cover every applicable canonical record. Latest scope=${proof.scope}.` : `Readbacks cover ${allExpected.size} of ${applicableIds.length} applicable eligible records. The unexercised remainder remains unproven.` }, failures };
+}
+
+export const AUTONOMOUS_CENSUS_SOURCE = "data/health/autonomous-agent-fleet/2026-09-03-lifecycle-readback.json";
+
+/** Unique source records and surface obligations are reported separately. */
+export function readerCensusSummary(census: ReaderCensus): { family: string; surfaces: ReaderSurfaceId[]; heldTypedRecords: number; readerEligibleRecords: number; withheldRecords: number; applicableUniqueRecords: number; applicableSurfaceRecordPairs: number; observedSurfaceRecordPairs: number; remainingUnprovedSurfaceRecordPairs: number; measuredFalseNegativesAfter: number | null; measuredFalsePositivesAfter: number | null; before: string; states: string[] }[] {
+  return DATASET_FAMILIES.filter((family) => family.surfaces.length).map((family) => {
+    const records = census.records.filter((record) => record.family === family.id);
+    const rows = census.rows.filter((row) => row.datasetFamily === family.id);
+    const applicableIds = unique(rows.flatMap((row) => row.applicableEligibleRecordIds ?? row.eligibleRecordIds));
+    const pairIds = new Set(rows.flatMap((row) => (row.applicableEligibleRecordIds ?? row.eligibleRecordIds).map((id) => `${row.readerSurface}:${id}`)));
+    const observedPairs = new Set(rows.flatMap((row) => (row.observedRenderedRecordIds ?? []).map((id) => `${row.readerSurface}:${id}`)));
+    const directRows = rows.filter((row) => (row.applicableEligibleRecordIds ?? row.eligibleRecordIds).length > 0);
+    return { family: family.id, surfaces: [...family.surfaces], heldTypedRecords: records.length,
+      readerEligibleRecords: records.filter((record) => record.eligibility.state === "READER_ELIGIBLE").length,
+      withheldRecords: records.filter((record) => record.eligibility.state !== "READER_ELIGIBLE").length,
+      applicableUniqueRecords: applicableIds.length, applicableSurfaceRecordPairs: pairIds.size, observedSurfaceRecordPairs: observedPairs.size,
+      remainingUnprovedSurfaceRecordPairs: [...pairIds].filter((id) => !observedPairs.has(id)).length,
+      measuredFalseNegativesAfter: directRows.every((row) => row.falseNegativeCount !== null) ? directRows.reduce((sum, row) => sum + row.falseNegativeCount!, 0) : null,
+      measuredFalsePositivesAfter: directRows.every((row) => row.falsePositiveCount !== null) ? directRows.reduce((sum, row) => sum + row.falsePositiveCount!, 0) : null,
+      before: "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.", states: unique(rows.map((row) => row.state)) };
+  });
+}
+function autonomousRows(root: string): { source: ReaderCensus["autonomousSource"]; rows: AutonomousCensusRow[] } {
+  const bytes = readFileSync(join(root, AUTONOMOUS_CENSUS_SOURCE));
+  const readback = JSON.parse(bytes.toString("utf8")) as { observedAt: string; activity: AutonomousObligationActivity[] };
+  // Re-run the shipped canonical projection from the committed underlying facts.
+  // This neither queries nor depends on the concurrent owner Control Center.
+  const keys = ["workItems", "routeTasks", "attempts", "leases", "transitions", "dispositions", "artifacts", "costs", "scouts", "workers", "promotion"] as const;
+  const snapshot = Object.fromEntries(keys.map((key) => [key, [...new Map(readback.activity.flatMap((a): readonly unknown[] => a.facts[key]).map((item) => [JSON.stringify(item), item])).values()]])) as unknown as AutonomousActivitySnapshot;
+  const activity = projectAutonomousActivity(snapshot, { observedAt: readback.observedAt });
+  const rows = activity.map((a): AutonomousCensusRow => {
+    const workers = a.facts.workers.map((w) => ({ role: w.worker.role, verdict: w.result.verdict, extraction: string(object(w.result).extractionVerdict) || null, resultId: w.id }));
+    const unresolved = workers.some((w) => w.role === "DETECTIVE" && w.verdict === "UNRESOLVED");
+    const blockers = unique(a.facts.workers.flatMap((w) => [...(Array.isArray(object(w.result).blockers) ? object(w.result).blockers as unknown[] : []), ...(Array.isArray(object(w.result).findings) ? object(w.result).findings as unknown[] : [])].flatMap((f) => { const r = object(f); return typeof r.code === "string" ? [`${r.code}: ${string(r.description ?? r.detail)}`] : []; })));
+    const parsers = a.facts.workers.filter((w) => w.worker.role === "PARSER").sort((a, b) => b.endedAt.localeCompare(a.endedAt));
+    const count = object(parsers[0]?.result).actualRowCount;
+    const reason = unique(["Autonomous acquisition remains outside the canonical reader snapshots and promotion boundary.", ...blockers, ...a.walk.nextUnwalkedRouteIds, ...a.evidenceGaps]).join("; ");
+    return { workItemId: a.workItem.id, state: (statesFromIdentity(a.jurisdiction)[0] ?? statesFromIdentity(a.workItem.subject)[0] ?? "unattributed"), subject: a.workItem.subject, recordClass: a.recordClass, lifecycle: a.workItem.state, walk: a.walk, artifactIds: unique([...a.facts.artifacts, ...a.referencedArtifacts].map((x) => x.artifactId)), extractedRows: typeof count === "number" ? count : null, workerResults: workers, blockers, eligibility: classifyReaderEligibility({ held: a.facts.artifacts.length + a.referencedArtifacts.length > 0, relationship: "ACQUISITION_INPUT", source: "AUTONOMOUS_STAGING", identity: unresolved ? "UNRESOLVED" : "NOT_APPLICABLE", exactReason: reason }) };
+  });
+  return { source: { path: AUTONOMOUS_CENSUS_SOURCE, sha256: sha256(bytes), observedAt: readback.observedAt }, rows };
+}
+
+export function buildReaderCensus(root: string, proofs: readonly ReaderDeliveryProof[] = []): ReaderCensus {
+  const context = loadManifestContext(root);
+  const families = DATASET_FAMILIES.filter((family) => family.surfaces.length);
+  const applicable = readerDatasets(context).filter((dataset) => families.some((family) => family.id === dataset.family));
+  const records: CensusRecord[] = [];
+  const holdings: CensusHolding[] = [];
+  const importCache = new Map<string, ImportReachability>();
+  for (const dataset of applicable) {
+    const docs = dataset.family === "candidate-corpus" ? currentExtraction(object(dataset.value).documents as CandidateDocument[]).map((d) => d.id) : [];
+    const extracted = extractRecords(dataset).map((raw): CensusRecord => ({ auditId: `${dataset.path}#${raw.pointer}`, holdingPath: dataset.path, pointer: raw.pointer, family: dataset.family, states: recordStates(dataset, raw), canonicalIdentity: identities(raw), unit: raw.unit, eligibility: eligibility(dataset, raw, new Set(docs)),
+      ...(dataset.family==="body-rosters"?{childDispositions:(Array.isArray(raw.value.members)?raw.value.members:[]).map((member)=>rosterMemberReaderDisposition(string(object(member).id))).filter((child):child is NonNullable<typeof child>=>Boolean(child))}:{}),
+      ...(dataset.family==="body-rosters"?{additionalComponents:[
+        ...((Array.isArray(raw.value.members)?raw.value.members:[]).some((member)=>object(member).termNote&&rosterMemberReaderDisposition(string(object(member).id))?.state==="READER_ELIGIBLE")?["components/officials/official-term-note.tsx"]:[]),
+        ...(rosterGapForBody(string(raw.value.bodyId))?["components/officials/roster-completeness-gap.tsx"]:[]),
+      ]}:{}) }));
+    records.push(...extracted);
+    holdings.push({ path: dataset.path, sha256: dataset.sha256, family: dataset.family, recordCount: extracted.length, units: counts(extracted.map((r) => r.unit)), readerEligibleCount: extracted.filter((r) => r.eligibility.state === "READER_ELIGIBLE").length, withheldCount: extracted.filter((r) => r.eligibility.state !== "READER_ELIGIBLE").length });
+  }
+  const rows: CensusRow[] = [];
+  const failures: string[] = [];
+  for (const family of families) {
+    const familyRecords = records.filter((record) => record.family === family.id);
+    const states = unique(["az", "nh", "nj", ...familyRecords.flatMap((record) => record.states.length ? record.states : ["national-unattributed"])]);
+    for (const state of states) for (const surface of family.surfaces) {
+      const selected = familyRecords.filter((record) => record.states.length ? record.states.includes(state) : state === "national-unattributed");
+      const eligible = selected.filter((record) => record.eligibility.state === "READER_ELIGIBLE");
+      const heldPaths = unique(selected.map((record) => record.holdingPath));
+      const surfacePath = READER_SURFACES.find((s) => s.id === surface)!.path;
+      const reachability = family.consumerPaths.map((consumer) => {
+        const key = `${surfacePath}:${consumer}`;
+        if (!importCache.has(key)) importCache.set(key, surfaceConsumerReachability(root, surface, consumer));
+        return importCache.get(key)!;
+      });
+      const statesHeld = selected.map((r) => r.eligibility.state);
+      const status: DeliveryState = eligible.length ? "DELIVERY_UNPROVEN" : statesHeld.includes("IDENTITY_UNRESOLVED") ? "IDENTITY_UNRESOLVED" : statesHeld.includes("STAGED_NOT_ELIGIBLE") ? "STAGED_NOT_ELIGIBLE" : selected.length ? "NOT_READER_ELIGIBLE" : "SOURCE/HOLDING_UNAVAILABLE";
+      const children=[...new Map(selected.flatMap((record)=>record.childDispositions??[]).map((child)=>[child.sourceId,child])).values()];
+      let row: CensusRow = {
+        id: `${family.id}:${surface}:${state}`, datasetFamily: family.id, state, jurisdiction: state === "national-unattributed" ? "National or state attribution not established by a canonical identity" : `state:${state}`,
+        relationship: family.relationship, holdingPaths: heldPaths, readerSurface: surface, consumerPaths: family.consumerPaths, consumerReachability: reachability,
+        canonicalIdentityExpected: unique(eligible.flatMap((r) => r.canonicalIdentity)), canonicalIdentityByRecord: Object.fromEntries(eligible.map((r) => [r.auditId, r.canonicalIdentity])), actualIdentityUsed: null,
+        recordIds: selected.map((r) => r.auditId), eligibleRecordIds: eligible.map((r) => r.auditId), readerEligiblePopulation: eligible.length, withheldPopulation: selected.length - eligible.length,
+        unitCounts: counts(selected.map((r) => r.unit)), eligibilityCounts: counts(statesHeld), withheldReasons: unique([...selected.filter((r) => r.eligibility.state !== "READER_ELIGIBLE").map((r) => r.eligibility.reason),...children.filter((child)=>child.state!=="READER_ELIGIBLE").map((child)=>`${child.sourceId}: ${child.state}: ${child.reason}`)]),
+        ...(children.length?{childPopulation:{held:children.length,readerEligible:children.filter((child)=>child.state==="READER_ELIGIBLE").length,identityUnresolved:children.filter((child)=>child.state==="IDENTITY_UNRESOLVED").length,exactDuplicates:children.filter((child)=>child.state==="EXACT_DUPLICATE").length}}:{}),
+        loaderCanReadHolding: selected.length ? "FILES_PARSED" : "HOLDING_UNAVAILABLE", eligibleRecordsProjected: "UNPROVEN", deployedBundleRequirement: "Static source imports or exact-route Next NFT include, plus deployed filesystem read; local JSON parsing is insufficient.", deployedBundleProved: false,
+        deliveryState: status, falseNegativeCount: eligible.length ? null : 0, falsePositiveCount: null, unresolvedIdentityCount: selected.filter((r) => r.eligibility.state === "IDENTITY_UNRESOLVED").length+children.filter((child)=>child.state==="IDENTITY_UNRESOLVED").length, evidencePaths: [],
+        deliveryReason: eligible.length ? "No executed reader proof for this full population has been supplied. Files parsed and import reachability do not prove delivery." : selected.length ? "Only withheld input records are attributed to this row; normalized eligible projections, if held, have their own census rows." : "No holding is safely attributed to this state/family. National-unattributed rows remain separately visible; this is not a publisher absence.",
+      };
+      for (const proof of proofs.filter((proof) => proof.rowId === row.id)) { const reconciled = reconcileDelivery(row, proof, root); row = reconciled.row; failures.push(...reconciled.failures); }
+      rows.push(row);
+    }
+  }
+  const autonomous = autonomousRows(root);
+  return { formatVersion: 1, generatedBy: "scripts/reader-last-mile-census.mts", registrySha256: sha256(readFileSync(join(root, "lib/holdings/datasets.ts"))), holdingsDigest: sha256(JSON.stringify(holdings.map((h) => [h.path, h.sha256]))), denominator: { families: families.length, declaredEdges: families.reduce((sum, family) => sum + family.surfaces.length, 0), holdings: holdings.length, records: records.length, rows: rows.length, states: unique(rows.map((row) => row.state)) }, countingRule: "Records are typed container rows, not unique civic people. Units are kept separately; a sourced roster and its members, a meeting and agenda text, or a normalized snapshot and acquisition input must not be summed as unique facts. Reader eligibility is distinct from measured reader delivery. Unmeasured false-negative/positive counts are null, never zero.", holdings, records, rows, autonomousSource: autonomous.source, autonomous: autonomous.rows, failures };
+}
+
+/** Exhaustive nested-field denominator, retaining source paths instead of sampling values. */
+export function readerNestedFieldInventory(root: string, census: ReaderCensus) {
+  const eligible = new Set(census.records.filter((record)=>record.eligibility.state==="READER_ELIGIBLE").map((record)=>record.auditId));
+  const byField = new Map<string,{family:string;unit:string;field:string;heldValues:number;eligibleValues:number;withheldValues:number;sourcePaths:Set<string>}>();
+  const families = new Set(census.rows.map((row)=>row.datasetFamily));
+  for (const dataset of readerDatasets(loadManifestContext(root)).filter((dataset)=>families.has(dataset.family))) for (const record of extractRecords(dataset)) {
+    const auditId = `${dataset.path}#${record.pointer}`;
+    const walk = (value:unknown,path:string,readerEligible=eligible.has(auditId)) => {
+      if (value===null || value===undefined || value==="") return;
+      if (Array.isArray(value)) { value.forEach((entry)=>walk(entry,`${path}[]`,readerEligible)); return; }
+      if (typeof value==="object") {
+        const child = dataset.family === "body-rosters" && path === "members[]" ? rosterMemberReaderDisposition(string(object(value).id)) : null;
+        const childEligible = child ? child.state === "READER_ELIGIBLE" : readerEligible;
+        Object.entries(object(value)).filter(([key])=>!key.startsWith("_manifest")&&!key.startsWith("_census")).forEach(([key,entry])=>{
+          // Source dictionary keys are identities, not different field schemas.
+          // Their exact values remain in the record census and source hash.
+          const field = /[:/#]|^\d+$|^[a-f0-9]{32,}$/i.test(key) ? "{identity}" : key;
+          walk(entry,path?`${path}.${field}`:field,childEligible);
+        }); return;
+      }
+      const key = `${dataset.family}|${record.unit}|${path}`;
+      const row = byField.get(key) ?? { family:dataset.family,unit:record.unit,field:path,heldValues:0,eligibleValues:0,withheldValues:0,sourcePaths:new Set<string>() };
+      row.heldValues++; if(readerEligible) row.eligibleValues++; else row.withheldValues++; row.sourcePaths.add(dataset.path); byField.set(key,row);
+    };
+    walk(record.value,"");
+  }
+  return { holdingsDigest:census.holdingsDigest,rule:"Every nonempty scalar field under every canonical source record, including nested arrays. Counts are source values, not unique people or rendered rows. Eligibility belongs to the enclosing record unless its canonical selector supplies a finer child/field disposition. The full record census and actual adapters carry delivery conclusions; this inventory never certifies rendering.",fields:[...byField.values()].sort((a,b)=>`${a.family}|${a.unit}|${a.field}`.localeCompare(`${b.family}|${b.unit}|${b.field}`)).map((row)=>({...row,sourcePaths:[...row.sourcePaths].sort()})) };
+}
+function counts(values: readonly string[]): Record<string, number> { return Object.fromEntries(unique(values).map((value) => [value, values.filter((v) => v === value).length])); }
+
+export function censusClosureFailures(census: ReaderCensus): string[] {
+  return [...census.failures, ...census.rows.flatMap((row) => (row.applicableEligibleRecordIds ?? row.eligibleRecordIds).length > 0 && (row.deliveryState !== "RENDERED" || row.falseNegativeCount !== 0 || row.falsePositiveCount !== 0 || !row.deployedBundleProved) ? [`${row.id}: ${row.deliveryState}; held eligible=${row.readerEligiblePopulation}; applicable eligible=${(row.applicableEligibleRecordIds ?? row.eligibleRecordIds).length}; false negatives=${row.falseNegativeCount ?? "UNMEASURED"}; false positives=${row.falsePositiveCount ?? "UNMEASURED"}; deployed bundle=${row.deployedBundleProved ? "PROVED" : "UNPROVEN"}`] : [])];
+}
+
+export function renderCensusMarkdown(census: ReaderCensus): string {
+  const cell = (value: unknown) => String(value ?? "UNMEASURED").replaceAll("|", "\\|").replaceAll("\n", " ");
+  return ["# Reader last-mile census", "", `Registry-derived denominator: ${census.denominator.families} reader dataset families; ${census.denominator.declaredEdges} declared family/surface edges; ${census.denominator.holdings} holdings; ${census.denominator.records} typed records; ${census.denominator.rows} family/surface/state rows.`, "", census.countingRule, "", "This is internal evidence. DELIVERY_UNPROVEN is an open proof obligation, never a claim of a false negative or a successful reader render.", "", "| Dataset family | Surface | State | Eligible | Withheld | Delivery | False negatives | False positives | Import path reached |", "| --- | --- | --- | ---: | ---: | --- | ---: | ---: | --- |", ...census.rows.map((r) => `| ${[r.datasetFamily, r.readerSurface, r.state, r.readerEligiblePopulation, r.withheldPopulation, r.deliveryState, r.falseNegativeCount, r.falsePositiveCount, r.consumerReachability.some((p) => p.reached)].map(cell).join(" | ")} |`), "", "## Autonomous staged inventory", "", `Canonical lifecycle readback: ${census.autonomousSource.path}; sha256 ${census.autonomousSource.sha256}.`, "", "| Work item | State | Subject | Extracted rows | Status | Exact withheld reason |", "| --- | --- | --- | ---: | --- | --- |", ...census.autonomous.map((r) => `| ${[r.workItemId, r.state, r.subject, r.extractedRows, r.eligibility.state, r.eligibility.reason].map(cell).join(" | ")} |`), "", `Closure obligations remaining: ${censusClosureFailures(census).length}. The JSON artifact retains holding hashes, record IDs, eligibility reasons, identity keys, source import paths and readback evidence for every row.`, ""].join("\n");
+}
+
+export interface ReaderRecordProjection {
+  readonly auditId: string;
+  readonly family: string;
+  readonly status: "PROJECTED" | "SUPPORTING_INPUT" | "INTENTIONALLY_OUT_OF_SCOPE" | "WITHHELD" | "BROKEN_PROJECTION" | "PROJECTION_UNPROVEN";
+  readonly selector: string;
+  readonly canonicalIdentities: readonly string[];
+  readonly returnedIdentities: readonly string[];
+  readonly returnedCount: number;
+  readonly payloadSha256: string | null;
+  readonly reason: string;
+  readonly surfaceDispositions?: Partial<Record<ReaderSurfaceId, { status: "SUPPORTING_INPUT" | "INTENTIONALLY_OUT_OF_SCOPE" | "IDENTITY_UNRESOLVED"; selector: string; reason: string }>>;
+  readonly childDispositions?: readonly { sourceId: string; canonicalId: string | null; state: string; reason: string }[];
+}
+export interface ReaderProjectionReport {
+  readonly formatVersion: 1;
+  readonly holdingsDigest: string;
+  readonly projectorSha256?: string;
+  readonly asOf?: string;
+  readonly currentBallotHolderIds?: readonly string[];
+  readonly rule: string;
+  readonly records: readonly ReaderRecordProjection[];
+  readonly counts: Readonly<Record<string, number>>;
+  readonly failures: readonly string[];
+}
+
+export function activePortraitInventory(census: ReaderCensus, projection: ReaderProjectionReport): { auditId: string; url: string; holdingPath: string; expectedSha256: string; sourceReadback: string; projectedIdentities: readonly string[] }[] {
+  if (projection.holdingsDigest !== census.holdingsDigest) throw new Error("Portrait projection belongs to different holdings");
+  const projected = new Map(projection.records.filter((record) => record.family === "portraits" && record.status === "PROJECTED").map((record) => [record.auditId, record]));
+  const holdings = new Map(census.holdings.map((holding) => [holding.path, holding]));
+  return census.records.filter((record) => record.family === "portraits" && projected.has(record.auditId)).map((record) => {
+    const url = record.canonicalIdentity.find((identity) => identity.startsWith("/"));
+    const holding = holdings.get(record.holdingPath);
+    if (!url || !holding?.sha256) throw new Error(`Portrait URL/hash unavailable: ${record.auditId}`);
+    return { auditId: record.auditId, url, holdingPath: record.holdingPath, expectedSha256: holding.sha256, sourceReadback: VAULT_PATH, projectedIdentities: projected.get(record.auditId)!.returnedIdentities };
+  });
+}
+
+/**
+ * A source template, geometry input or historical candidacy is not an extra
+ * displayed row. Retain its holding eligibility while recording exactly why
+ * the executed adapter does not expect a direct current answer from that row.
+ * This function cannot turn any projected direct answer into RENDERED.
+ */
+export function applyReaderApplicability(census: ReaderCensus, projection: ReaderProjectionReport): ReaderCensus {
+  if (projection.holdingsDigest !== census.holdingsDigest) throw new Error("Projection belongs to different canonical holdings");
+  const byId = new Map(projection.records.map((record) => [record.auditId, record]));
+  if (byId.size !== projection.records.length || byId.size !== census.records.length || census.records.some((record) => !byId.has(record.auditId))) throw new Error("Projection does not cover the exact census denominator");
+  const rows = census.rows.map((row): CensusRow => {
+    const dispositionFor = (id: string) => byId.get(id)!.surfaceDispositions?.[row.readerSurface] ?? byId.get(id)!;
+    const applicable = row.eligibleRecordIds.filter((id) => !["SUPPORTING_INPUT", "INTENTIONALLY_OUT_OF_SCOPE", "IDENTITY_UNRESOLVED"].includes(dispositionFor(id).status));
+    const excluded = row.eligibleRecordIds.filter((id) => !applicable.includes(id));
+    const scopeUnresolved = excluded.filter((id) => dispositionFor(id).status === "IDENTITY_UNRESOLVED");
+    const applicability = Object.fromEntries(excluded.map((id) => {
+      const record = dispositionFor(id);
+      if (!record.reason || !record.selector) throw new Error(`Unexplained applicability exclusion: ${id}`);
+      return [id, { status: record.status, selector: record.selector, reason: record.reason }];
+    }));
+    return { ...row, applicableEligibleRecordIds: applicable, applicabilityByRecord: applicability, unresolvedIdentityCount: row.unresolvedIdentityCount + scopeUnresolved.length,
+      ...(row.readerEligiblePopulation > 0 && applicable.length === 0 ? {
+        deliveryState: scopeUnresolved.length ? "IDENTITY_UNRESOLVED" as const : "INTENTIONALLY_NOT_APPLICABLE" as const, falseNegativeCount: 0, falsePositiveCount: 0,
+        deliveryReason: "All held eligible rows in this edge are supporting source inputs or explicitly outside the current reader scope. The per-record selector and reason remain in applicabilityByRecord; their separately inventoried projected civic answers remain delivery obligations.",
+      } : {}),
+    };
+  });
+  return { ...census, rows, failures: [...census.failures, ...projection.failures] };
+}
+
+/**
+ * Exhaustive local selector readback. Every result names the existing consumer
+ * actually executed. Supporting source records do not become display rows, and
+ * this report never changes DELIVERY_UNPROVEN to RENDERED by itself.
+ */
+export async function projectCanonicalReaderRecords(root: string, census: ReaderCensus): Promise<ReaderProjectionReport> {
+  const context = loadManifestContext(root);
+  const sourceRows = new Map<string, { dataset: Dataset; raw: RawRecord }>(readerDatasets(context).flatMap((dataset) => extractRecords(dataset).map((raw) => [`${dataset.path}#${raw.pointer}`, { dataset, raw }] as const)));
+  const [registry, ballot, meetings, corpus, finance, federal, rosters, compositions, area, navigation, polling, registration, summaries, notices, minutes, venue, comments, identity, cards, sites, lineup, analyses, votes, stateVotes, prl, executive, votingSites, everyday, forms, candidateContacts, keyPositions, keyVotes, billSummaries] = await Promise.all([
+    import("../registry/server.ts"), import("../ballot/registry.ts"), import("../meetings/snapshot.ts"), import("../corpus/unified.ts"),
+    import("../funding/state-snapshot.ts"), import("../funding/snapshot.ts"), import("../registry/body-rosters.ts"), import("../registry/body-membership.ts"),
+    import("../area/facts.ts"), import("../ballot/election-dates.ts"), import("../ballot/polling-place-links.ts"), import("../ballot/registration-links.ts"),
+    import("../ballot/measure-summary.ts"), import("../meetings/notice-summary.ts"), import("../meetings/minutes-summaries.ts"), import("../meetings/venue-cache.ts"),
+    import("../registry/comment-access.ts"), import("../identity/az-2026.ts"), import("../ballot/candidate-cards.ts"), import("../ballot/candidate-sites.ts"),
+    import("../ballot/general-lineup.ts"), import("../ballot/analyses.ts"), import("../votes/snapshot.ts"), import("../sources/legiscan/snapshot.ts"),
+    import("../sources/prl/snapshot.ts"), import("../officials/executive-actions.ts"), import("../ballot/voting-sites-server.ts"), import("../routing/everyday.ts"), import("../officials/form-definitions.ts"), import("../ballot/candidate-contacts.ts"), import("../votes/key-vote-positions.ts"), import("../votes/key-votes-rows.ts"), import("../votes/bill-summaries.ts"),
+  ]);
+  const sets = await Promise.all(ballot.BALLOT_SOURCES.map(async ({ source }) => source.normalize(await source.fetch())));
+  const ballotRows = sets.flatMap((set) => [...set.contests, ...set.candidacies, ...set.measures, ...set.absences, ...(set.removals ?? [])]);
+  const ballotById = new Map(ballotRows.filter((r) => "id" in r).map((r) => [string(object(r).id), r]));
+  const moneyIdentity = await import("../funding/campaign-money.ts");
+  const currentBallotTargets = new Set<string>();
+  const currentBallotHolderIds = new Set<string>();
+  const [{contestIncumbency},{incumbentHolderFor},{surnameDisplayCase}]=await Promise.all([import("../ballot/incumbency-resolve.ts"),import("../ballot/incumbent-record.ts"),import("../ballot/name-case.ts")]);
+  for (const set of sets) for (const contest of set.contests) {
+    const nominees = lineup.lineupForContest(contest.id);
+    if (nominees) for (const nominee of nominees.nominees) {
+      const key = `${contest.id}|${nominee.name}`;
+      currentBallotTargets.add(key);
+      const canonical = identity.reconciledCandidacyIdForCard(key);
+      if (canonical) currentBallotTargets.add(canonical);
+    } else for (const candidate of set.candidacies.filter((candidate) => candidate.contestId === contest.id)) currentBallotTargets.add(candidate.id);
+    const candidates=nominees?nominees.nominees.map((nominee)=>({key:`${contest.id}|${nominee.name}`,targetKey:`${contest.id}|${nominee.name}`,display:nominee.name})):set.candidacies.filter((candidate)=>candidate.contestId===contest.id).map((candidate)=>({key:candidate.id,targetKey:candidate.id,display:`${candidate.givenName} ${surnameDisplayCase(candidate.familyName)}`}));
+    const incumbent=await contestIncumbency({id:contest.id,title:contest.title,ocdId:contest.ocdId,candidates,federal:/:us-senate$|:us-house-\d+$/.test(contest.id),voteFor:contest.voteFor},incumbentHolderFor);
+    for(const candidate of candidates) {const holder=await incumbentHolderFor(candidate.targetKey)??incumbent.holderFor.get(candidate.targetKey);if(holder)currentBallotHolderIds.add(holder.id);}
+  }
+  const allBodies = await registry.knownBodySubjectIds();
+  const scopedDivisionIds = unique([...allBodies, ...[...sourceRows.values()].filter(({ raw }) => raw.unit === "divisions" && raw.value.officeholderId).map(({ raw }) => string(raw.value.ocdId)), ...[...sourceRows.values()].filter(({ dataset }) => dataset.family === "statewide-executives").map(({ raw }) => string(raw.value.stateOcdId))]);
+  const scopedOfficialIds = new Set((await Promise.all(scopedDivisionIds.map((id) => registry.seatHoldersForDivision(id)))).flat().map((holder) => holder.id));
+  const snapshot = meetings.readSnapshot(root);
+  if (!snapshot) throw new Error("reader census: the canonical meeting loader failed; zero is not a holding count");
+  const { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS } = await import("../meetings/constants.ts");
+  const asOf = new Date();
+  const currentMeetingWindow = (meeting: { startsAt: string }) => Date.parse(meeting.startsAt) >= asOf.getTime() - CONCLUDED_LOOKBACK_DAYS * 86_400_000 && Date.parse(meeting.startsAt) <= asOf.getTime() + UPCOMING_HORIZON_DAYS * 86_400_000;
+  const corpusById = new Map(corpus.unifiedCorpus().snapshots.map((row) => [row.id, row]));
+  const federalVotes = votes.getVotesSnapshot();
+  const legislativeVotes = stateVotes.getStateVotesSnapshot();
+  const allVoteRecords = [...federalVotes.votes, ...federalVotes.positions, ...legislativeVotes.rollCalls, ...legislativeVotes.positions];
+  const voteIdentity = (row: ObjectRow) => [row.id, row.officeholderId, row.voteId ?? row.rollCallId].filter(Boolean).join("|");
+  const voteRecords = new Map(allVoteRecords.map((row) => [voteIdentity(object(row)), row]));
+  const voting = votingSites.loadVotingSites();
+  const executiveStore = executive.executiveActionStore();
+  const bodyRosterHolders = new Map(rosters.BODY_ROSTERS.flatMap((r) => rosters.rosterHoldersForBody(r.bodyId)).map((r) => [r.id, r]));
+  const records: ReaderRecordProjection[] = [];
+  const failures: string[] = [];
+  const clean = (row: unknown): unknown => Array.isArray(row) ? row.map(clean) : row && typeof row === "object" ? Object.fromEntries(Object.entries(row).filter(([k]) => !k.startsWith("_manifest")).map(([k, v]) => [k, clean(v)])) : row;
+  for (const record of census.records) {
+    const input = sourceRows.get(record.auditId);
+    const raw = input?.raw.value ?? {};
+    let status: ReaderRecordProjection["status"] = "PROJECTION_UNPROVEN";
+    let selector = "No reviewed semantic selector adapter";
+    let reason = "This row remains an explicit projection obligation; file existence and module reachability do not close it.";
+    let returned: unknown[] = [];
+    const setResult = (name: string, result: unknown | readonly unknown[] | null | undefined, note = "Existing canonical selector returned the held record by its stable identity.") => {
+      selector = name; returned = result == null ? [] : Array.isArray(result) ? [...result] : [result];
+      status = returned.length ? "PROJECTED" : "BROKEN_PROJECTION"; reason = returned.length ? note : "The existing canonical selector returned no record for this held eligible identity.";
+    };
+    const support = (name: string, note: string) => { selector = name; status = "SUPPORTING_INPUT"; reason = note; };
+    if (record.eligibility.state !== "READER_ELIGIBLE") {
+      status = "WITHHELD"; selector = "classifyReaderEligibility"; reason = record.eligibility.reason;
+    } else switch (record.family) {
+      case "state-money": {
+        const matches = (raw.targetKeys as string[]).flatMap((key) => finance.stateMoneyForTarget(key)).filter((row) => JSON.stringify(clean(row)) === JSON.stringify(clean(raw)));
+        const selected = (raw.targetKeys as string[]).map((targetKey) => ({ targetKey, records: stateMoneyRecordsForDisplay(finance.stateMoneyForTarget(targetKey)) }));
+        const displayed = selected.flatMap((answer) => answer.records).filter((row) => JSON.stringify(clean(row)) === JSON.stringify(clean(raw)));
+        setResult("stateMoneyForTarget → stateMoneyRecordsForDisplay", displayed.slice(0, 1), "The exact normalized committee/candidacy record, values and provenance survive the canonical reader answer selector. OURS_GAP carries its sentence, never unresolved figures.");
+        if (matches.length && !displayed.length && selected.every((answer) => answer.records.length)) {
+          status = "INTENTIONALLY_OUT_OF_SCOPE";
+          reason = `Eligible source observation ${string(raw.filingState)} is represented by the current same-candidacy answer's canonical filing precedence or duplicate sourced-absence consolidation: ${selected.map((answer) => `${answer.targetKey} → ${answer.records.map((row) => `${row.filingState} committee ${row.committeeId ?? "none"}`).join(", ")}`).join("; ")}. The original observation remains held; the reader receives stronger filed evidence where held and one sourced absence where the same absence repeats.`;
+        }
+        break;
+      }
+      case "local-finance": setResult("localFinanceEvidenceFor", localFinanceEvidenceFor({ kind: "BODY", id: string(raw.bodyId), name: "Vail Unified School District Governing Board" })?.records.find((row) => row.id === raw.id)); break;
+      case "federal-finance": {
+        if (record.unit === "absences") setResult("fundingAbsenceForTarget", federal.fundingAbsenceForTarget(string(raw.targetKey)));
+        else if (record.unit === "secondHop") {
+          const { fundingAnswerForTarget } = await import("../funding/display.ts");
+          const answers = federal.getFundingSnapshot().candidates.map((candidate) => fundingAnswerForTarget(candidate.targetKeys[0]));
+          const selected = answers.flatMap((answer) => answer.kind === "funding" && answer.data.secondHop[string(raw.committeeId)] ? [answer.data.secondHop[string(raw.committeeId)]] : []);
+          if (selected.length) { setResult("fundingAnswerForTarget → secondHopForGroups", selected.slice(0,1)); support("fundingAnswerForTarget → secondHopForGroups", "This existing second-hop committee holding is nested source input to the separately inventoried candidate funding answer. Its exact committee ID survives that canonical payload; it is not a separate candidate or a new finance-depth acquisition."); }
+          else { status = "INTENTIONALLY_OUT_OF_SCOPE"; selector = "fundingAnswerForTarget → secondHopForGroups"; reason = `The existing canonical second-hop selector did not select committee ${string(raw.committeeId)} for any current held candidate answer (empty source list, no displayed first-hop committee, or current contributor-display rule). It cannot create an unrelated committee expander. This session does not expand finance depth.`; }
+        } else setResult("fundingForTarget", (raw.targetKeys as string[]).map((key) => federal.fundingForTarget(key)).find((row) => row?.fecCandidateId === raw.fecCandidateId));
+        break;
+      }
+      case "candidate-corpus": case "statement-corpus": setResult("unifiedCorpus", corpusById.get(string(raw.id))); break;
+      case "meetings": setResult("readSnapshot", record.unit === "agendaDocuments" ? snapshot.agendaDocuments?.find((row) => row.id === raw.id) : snapshot.meetings.find((row) => row.id === raw.id)); break;
+      case "body-rosters": setResult("rosterForBody", rosters.rosterForBody(string(raw.bodyId))); break;
+      case "body-compositions": {
+        const composition = compositions.membersOfBody(string(raw.bodyId));
+        setResult("membersOfBody", !composition.unknown && (typeof raw.expectedSeats !== "number" || composition.members.length === raw.expectedSeats) ? composition : null, "Exact direct/legal-alias membership, sourced seat count and its authority survive; no shared-geography fallback is introduced."); break;
+      }
+      case "curated-body-identities": setResult("knownBodySubjectIds", allBodies.has(string(raw.id)) ? { id: raw.id } : null); break;
+      case "statewide-executives": setResult("seatHoldersForDivision", (await registry.seatHoldersForDivision(string(raw.stateOcdId))).find((row) => row.id === raw.id)); break;
+      case "state-officeholders": {
+        if (record.unit === "officeholders") setResult("seatHolderById", await registry.seatHolderById(string(raw.id)));
+        else support("registry officeholder projection", "Roster container metadata supports the officeholder index; it is not a separately displayed person.");
+        break;
+      }
+      case "campaign-sites": {
+        const holder = await registry.seatHolderById(string(raw.id)) ?? bodyRosterHolders.get(string(raw.id));
+        setResult("seatHolderById / rosterHoldersForBody", holder?.campaignUrl === raw.url ? holder : null, "The verified campaign URL survives in the existing official reader shape."); break;
+      }
+      case "area-facts": setResult("areaFactsForState", area.areaFactsForState(string(raw.state))?.facts.find((fact) => fact.topic === raw.topic)); break;
+      case "ballot-navigation": setResult(record.holdingPath.includes("election-dates") ? "electionDatesFor" : record.holdingPath.includes("polling-place") ? "pollingPlaceLinkFor" : "registrationLinkFor", record.holdingPath.includes("election-dates") ? navigation.electionDatesFor(string(raw.state)) : record.holdingPath.includes("polling-place") ? polling.pollingPlaceLinkFor(string(raw.state)) : registration.registrationLinkFor(string(raw.state))); break;
+      case "measure-summaries": setResult(record.unit === "measure provisions" ? "provisionsForContest" : "summaryForContest", record.unit === "measure provisions" ? provisionsForContest(string(raw.contestId)).find((provision)=>provision.id===raw.id) : summaries.summaryForContest(string(raw.contestId))); break;
+      case "notice-summaries": setResult("noticeSummaryFor", notices.noticeSummaryFor(string(raw.meetingId), string(raw.sourceHash ?? raw.contentHash))); break;
+      case "minutes-summaries": setResult("minutesSummaryForMeeting", minutes.minutesSummaryForMeeting(string(raw.meetingId))); break;
+      case "venue-records": {
+        if (record.holdingPath.endsWith("venue-cache.ts")) {
+          setResult("resolveVenue", venue.resolveVenue(string(raw.sourceId), raw.bodyOcdId as string | null, string(raw.match), raw.tenant as string | null ?? null));
+          if (returned.length) support("resolveVenue → normalized meeting.location", "The exact vendor/body/tenant venue selector returned this address input. It supports the independently inventoried meeting.location fields; an address dictionary row is not an additional meeting or a standalone reader event.");
+        }
+        else support("venue normalization input", "Acquired vendor venue dictionary supports normalized meeting.location. A venue is not a second meeting; the complete normalized meeting population is tested separately.");
+        break;
+      }
+      case "comment-access": {
+        const names = Array.isArray(raw.bodyNames) ? raw.bodyNames as string[] : [undefined];
+        // Extra bodyId argument remains harmless against the old selector and
+        // becomes the stable join when the class-wide repair is installed.
+        const lookup = comments.commentAccessFor as (ocdId: string | null, bodyName?: string, bodyId?: string | null) => unknown;
+        setResult("commentAccessFor", names.map((name) => lookup(raw.ocdId as string | null, name, raw.bodyId as string | null)).find((row) => row && JSON.stringify(clean(row)) === JSON.stringify(clean(raw)))); break;
+      }
+      case "identity": {
+        if (record.unit === "rows") setResult("lineupRowForCard", identity.lineupRowForCard(string(raw.cardKey)));
+        else setResult("azIdentityRegistry", identity.azIdentityRegistry()?.candidates.find((row) => row.identityId === raw.identityId));
+        if (returned.length) support(selector, "This exact committed identity bridge survives its canonical selector. It is a relationship used to resolve separately inventoried candidacy and finance answers, not a second candidate, committee or reader-visible civic fact.");
+        break;
+      }
+      case "ballot": {
+        if (record.holdingPath.endsWith("candidate-cards-2026.json")) {
+          const key = input?.raw.identityKey ?? "";
+          const bar = key.indexOf("|");
+          setResult(bar < 0 ? "cardForCandidacy" : "cardForNominee", bar < 0 ? cards.cardForCandidacy(key) : cards.cardForNominee(key.slice(0, bar), key.slice(bar + 1)), "Sourced card fields survive. The existing photo review gate may independently omit an unreviewed image while preserving the card.");
+        } else if (record.holdingPath.endsWith("candidate-links-2026.json")) {
+          const key = input?.raw.identityKey ?? ""; const bar = key.indexOf("|");
+          setResult(bar < 0 ? "linksForCandidacy" : "linksForNominee", bar < 0 ? sites.linksForCandidacy(key) : sites.linksForNominee(key.slice(0, bar), key.slice(bar + 1)));
+        } else if (record.holdingPath.includes("general-lineup")) setResult("lineupForContest", lineup.lineupForContest(string(raw.contestId)));
+        else if (record.unit === "analyses") setResult("analysisForContest", analyses.analysisForContest(string(raw.contestId)));
+        else if (record.unit === "contacts") setResult("candidateContactForCandidacy", candidateContacts.candidateContactForCandidacy(string(raw.candidacyId)), "Source-cited clerk contact attaches through an exact current candidacy join. A historical hunt-use comment does not suppress the mailing address R256 permits.");
+        else if (raw.id) {
+          const currentLineup = raw.contestId ? lineup.lineupForContest(string(raw.contestId)) : null;
+          const bridge = identity.azLineupReconciliation();
+          if (record.unit === "candidacies" && currentLineup && !bridge?.rows.some((r) => r.canonicalCandidacyId === raw.id)) {
+            status = "INTENTIONALLY_OUT_OF_SCOPE"; selector = "lineupForContest / azLineupReconciliation"; reason = "Historical primary candidacy is not in this contest's certified current general-election lineup. Its source remains held; it cannot be presented as a current nominee.";
+          } else setResult("BALLOT_SOURCES.fetch / normalize", ballotById.get(string(raw.id)));
+        } else if (record.unit === "absences") setResult("BALLOT_SOURCES.fetch / normalize", ballotRows.find((row) => JSON.stringify(clean(row)) === JSON.stringify(clean(raw))));
+        break;
+      }
+      case "votes": {
+        if (record.holdingPath.endsWith("key-vote-positions.json")) {
+          const key = input?.raw.identityKey ?? "";
+          const rows = Object.entries(raw).filter(([id]) => !id.startsWith("_manifest")).map(([id, expected]) => ({ officeholderId: id, voteId: key, position: keyPositions.keyVotePositionFor(key, id), expected }));
+          setResult("keyVotePositionFor", rows.every((row) => row.position === row.expected) && keyPositions.keyVoteRollCallHeld(key) ? rows : null);
+        } else if (record.holdingPath.endsWith("key-votes-snapshot.json")) setResult("getKeyVotesSnapshot", keyVotes.getKeyVotesSnapshot().entries.find((entry) => entry.id === raw.id));
+        else if (record.holdingPath.endsWith("bill-summaries.json") && input?.raw.identityKey) setResult("summaryForBill", billSummaries.summaryForBill(input.raw.identityKey));
+        else if (["votes", "positions", "rollCalls"].includes(record.unit)) setResult("getVotesSnapshot / getStateVotesSnapshot", voteRecords.get(voteIdentity(raw)));
+        else support("recorded-vote explanation input", "Key-vote titles, bill summaries and law-title caches are explanatory inputs to named vote selectors, not additional roll-call positions. Canonical vote rows are counted separately.");
+        break;
+      }
+      case "voting-sites": setResult("loadVotingSites", voting.jurisdictions.find((row) => row.ocdId === raw.ocdId)); break;
+      case "prl": setResult("prlProfileForSubject", prl.prlProfileForSubject(`congress:${string(raw.bioguideId)}`)); break;
+      case "portraits": {
+        const bindings = raw.bindings as { subjectId: string; permitted: boolean }[];
+        const selected = await Promise.all(bindings.filter((binding) => binding.permitted).map(async (binding) => {
+          const holder = await registry.seatHolderById(binding.subjectId);
+          const bar = binding.subjectId.indexOf("|");
+          const card = binding.subjectId.startsWith("ballot-") ? bar < 0 ? cards.cardForCandidacy(binding.subjectId) : cards.cardForNominee(binding.subjectId.slice(0, bar), binding.subjectId.slice(bar + 1)) : null;
+          const url = holder?.photoUrl ?? card?.photoUrl;
+          return url === raw.url ? { subjectId: binding.subjectId, url } : null;
+        }));
+        const active = selected.filter(Boolean);
+        if (active.length) setResult("seatHolderById / cardForCandidacy / cardForNominee", active, "The exact verified asset URL survives the current canonical person/card portrait selector; other eligible image variants do not override this preference.");
+        else support("canonical portrait preference", "This eligible sourced image is an alternate or superseded portrait. Current canonical selectors choose another approved portrait for the same person; one person does not acquire multiple simultaneously displayed faces.");
+        break;
+      }
+      case "official-actions": {
+        if (record.unit === "actions") {
+          const reader = await import("../officials/reader-actions.ts");
+          setResult("officialActionsForTarget", reader.officialActionsForTarget(string(raw.officeholderId)).records.find((row) => row.id === raw.id));
+        }
+        else support("acquired roster source", "This source-backed school roster is an acquisition input to the separately inventoried assembled BODY_ROSTERS. Unmapped extra source fields remain visible as a source-to-schema obligation, not a claimed rendered official action.");
+        break;
+      }
+      case "registry": {
+        if (record.unit === "divisions" && raw.officeholderId) setResult("seatHoldersForDivision", (await registry.seatHoldersForDivision(string(raw.ocdId))).find((holder) => holder.id === raw.officeholderId), "This is an officeholder/division membership edge, not a second geometry or government record.");
+        else if (record.unit === "divisions") setResult("divisionsByOcdIds", await registry.divisionsByOcdIds([string(raw.ocdId)]));
+        else if (record.unit === "bodies") setResult("knownBodySubjectIds", allBodies.has(string(raw.id)) ? { id: raw.id } : null);
+        else if (record.unit === "officeholders") setResult("seatHolderById", await registry.seatHolderById(string(raw.id)));
+        else support("registry identity/portrait metadata", "Photo indexes and registry metadata support canonical SeatHolder projections. A source index row is not itself a second official or independently displayed record.");
+        break;
+      }
+      case "congress": {
+        const id = string(raw.bioguide) || (raw.id && typeof raw.id === "object" ? string(object(raw.id).bioguide) : string(raw.id));
+        if (record.unit === "members") {
+          setResult("seatHolderById", await registry.seatHolderById(id.startsWith("congress:") ? id : `congress:${id}`));
+          if (returned.length) support("congress migration → canonical officeholder projection", "The SHA-pinned source member snapshot is an acquisition input to separately inventoried normalized officeholders-us.json records. Every source member resolves through the actual canonical holder selector; the source file itself is not a runtime filesystem requirement or an additional official.");
+        } else if (record.unit === "byMember") {
+          const directory = await import("../officials/directory.ts");
+          const key = input?.raw.identityKey ?? id;
+          const selected = directory.directoryFor(key.startsWith("congress:") ? key : `congress:${key}`);
+          setResult("directoryFor", selected && JSON.stringify(selected.entry) === JSON.stringify(clean(raw)) ? { id: key, ...selected } : null, "Exact Bioguide directory entry, district-office contacts, committee memberships and their source survive the runtime directory selector. These are additional held directory facts, not additional people.");
+        } else support("federal directory metadata", "Directory metadata supports exact per-member entries; actual member directory facts are separately projected and rendered.");
+        break;
+      }
+      case "everyday-routing": {
+        if (raw.holdingStatus === "CONTACT_OWED") { status = "INTENTIONALLY_OUT_OF_SCOPE"; selector = "everydayContactsFor"; reason = "An explicit contact miss is operational attribution, not a held service contact or a publisher absence."; }
+        else setResult("everydayContactsFor", (raw.zips as string[] ?? []).flatMap((zip) => everyday.everydayContactsFor(string(raw.topicId), zip)).filter((r) => r.sourceUrl === raw.sourceUrl).slice(0, 1));
+        break;
+      }
+      case "sourced-definitions": {
+        if (raw.formKey) setResult("formDefinitionFor", forms.formDefinitionFor(string(raw.formKey)));
+        else support("body/office definition projection", "Class/office descriptions are keyed templates supporting a body or office, not standalone governments. Their selector applicability depends on the body's class/form or the office title, not the number of source-template rows.");
+        break;
+      }
+      case "geography": support("canonical geographic projection", "Geometry, ZIP lookups and Census/NCES crosswalk records are supporting location/identity inputs. The resolver manifest explicitly accounts for live files and superseded national inputs; only resulting governing divisions/bodies are reader rows. Exact geometry and deployment controls are separate."); break;
+      case "outcomes": {
+        const outcomes = await import("../meetings/reader-records.ts");
+        const result = outcomes.meetingReaderRecords(string(raw.meetingId), string(raw.bodyId));
+        setResult("meetingReaderRecords", result.status === "HELD" && result.bodyId === raw.bodyId ? result : null);
+        break;
+      }
+      case "nh-legislative-members": {
+        const holders = await import("../ballot/seat-holders.ts");
+        const electedStatus = string(raw.electedStatus) as Parameters<typeof holders.sits>[0];
+        const title = raw.chamber === "S" ? `State Senator, District ${string(raw.district)}` : `State Representative, ${string(raw.county)} County District ${string(raw.district)}`;
+        const selected = holders.nhLegislativeHolders(title);
+        if (!holders.sits(electedStatus)) {
+          status = "INTENTIONALLY_OUT_OF_SCOPE"; selector = "sits / nhLegislativeHolders";
+          reason = `Source electedStatus=${electedStatus}; this record cannot claim current incumbency. The exact seat selector returned ${selected.length} currently sitting member(s).`;
+        } else {
+          setResult("nhLegislativeHolders", selected.find((holder) => holder.personKey === raw.seatNo), "The publisher's exact seat number survives the district/chamber selector. NEW and INCUMBENT both count as currently sitting; no new name matching is introduced.");
+          if (returned.length) support("nhLegislativeHolders → ballot seat incumbency", "This publisher seat record is a sourced current-seat input. It supplies incumbency only for applicable current ballot contests; it is not a claim that all General Court seats are contested or held on this ballot. Current normalized contest and candidate records carry the separate reader obligation.");
+        }
+        break;
+      }
+    }
+    const returnedIds = unique(returned.flatMap((row) => identities({ value: object(row), pointer: "", unit: "returned" })));
+    const finalStatus = status as ReaderRecordProjection["status"];
+    const surfaceDispositions: NonNullable<ReaderRecordProjection["surfaceDispositions"]> = {};
+    const inputFor = (surfaces: ReaderSurfaceId[], explanation: string) => { for (const surface of surfaces) surfaceDispositions[surface] = { status: "SUPPORTING_INPUT", selector, reason: explanation }; };
+    if (finalStatus === "PROJECTED") {
+      if(record.family==="body-rosters") {
+        const applicable=(Array.isArray(raw.members)?raw.members:[]).map((member)=>string(object(member).id)).filter((id)=>currentBallotHolderIds.has(id));
+        inputFor(["ballot"],`A body-roster container is a seat/identity source for CandidateDetails, not a complete body list on the ballot. The actual current incumbentHolderFor/contestIncumbency selector resolves these source members for current candidate cards: ${applicable.length?applicable.join(", "):"none"}. Full named-body membership and each source field retain map/Ask obligations; no current candidacy is invented for another roster member.`);
+      }
+      const subjectOfficialId=record.family==="prl"?`congress:${string(raw.bioguideId)}`:record.family==="congress"&&record.unit==="byMember"?`congress:${input?.raw.identityKey??""}`:record.family==="votes"&&record.unit==="positions"?string(raw.officeholderId):null;
+      if(subjectOfficialId&&!currentBallotHolderIds.has(subjectOfficialId)) surfaceDispositions.ballot={status:"INTENTIONALLY_OUT_OF_SCOPE",selector:"current CandidateDetails canonical recordHolder IDs",reason:`This official-specific record belongs to ${subjectOfficialId}, which is not a recordHolder for a current ballot card. It remains held for the declared official/API/Ask question; no current candidate or identity pairing is manufactured.`};
+      if(subjectOfficialId&&["prl","congress"].includes(record.family)&&!scopedOfficialIds.has(subjectOfficialId)) surfaceDispositions.map={status:"IDENTITY_UNRESOLVED",selector:"canonical scoped division membership / exact official ID",reason:`The source profile identifies ${subjectOfficialId}, but no verified geographic division relationship exposes that official on the current map. Exact identity is preserved; it cannot be attached to another division or person.`};
+      if(record.family==="votes"&&["votes","rollCalls"].includes(record.unit)) {
+        const id=string(raw.id);const positions=[...federalVotes.positions,...legislativeVotes.positions].filter((position)=>string(object(position).voteId??object(position).rollCallId)===id);
+        if(!positions.some((position)=>currentBallotHolderIds.has(position.officeholderId))) surfaceDispositions.ballot={status:"INTENTIONALLY_OUT_OF_SCOPE",selector:"current CandidateDetails recordHolder IDs → canonical recorded positions",reason:`No current ballot card's exact official has a held position on vote ${id}. The vote remains on its full votes/Ask endpoints and applicable official records; it cannot be attributed to an unrelated candidate.`};
+      }
+      if(["state-officeholders","statewide-executives","campaign-sites"].includes(record.family)||record.family==="registry"&&record.unit==="officeholders") {
+        if(!currentBallotHolderIds.has(string(raw.id))) surfaceDispositions.ballot={status:"INTENTIONALLY_OUT_OF_SCOPE",selector:"CandidateDetails recordHolder = incumbentHolderFor ?? contestIncumbency.holderFor across every current canonical contest",reason:`This held official ${string(raw.id)} is not the canonical recordHolder for any current ballot candidate card. Their exact official/representation/Ask record remains available; an official holding cannot create a current candidacy or invent an incumbent join.`};
+      }
+      if (record.family === "federal-finance") {
+        const targets = record.unit === "absences" ? [string(raw.targetKey)] : raw.targetKeys as string[];
+        if (!targets.some((target)=>currentBallotTargets.has(target))) surfaceDispositions.ballot = { status: "INTENTIONALLY_OUT_OF_SCOPE", selector: "current canonical ballot targets / fundingAnswerForTarget", reason: `The held FEC answer targets ${targets.join(", ")}, none of which is a current canonical ballot card. The answer remains available for applicable officials/funding/Ask; it cannot create a current candidacy.` };
+        if (!targets.some((target)=>scopedOfficialIds.has(target) || bodyRosterHolders.has(target))) surfaceDispositions.map = { status: "INTENTIONALLY_OUT_OF_SCOPE", selector: "current canonical official targets / fundingAnswerForTarget", reason: "This held federal finance answer has no target in the current scoped official index. The candidate/funding/Ask answer remains applicable, but it cannot be assigned to an unrelated map official." };
+      }
+      if (record.family === "ballot" && record.unit === "cards" && !["bio", "phone", "email", "filedAddress"].some((field)=>raw[field])) inputFor(["ask"], "This card record contains only portrait image fields. Its separately inventoried reviewed image is a visual card obligation; it does not contain a text biography or contact value for Ask to assert.");
+      if ((record.family === "state-officeholders" || record.family === "registry") && record.unit === "officeholders" && !scopedOfficialIds.has(string(raw.id))) {
+        for (const surface of ["representation", "map", "ballot"] as const) surfaceDispositions[surface] = { status: "IDENTITY_UNRESOLVED", selector: "seatHoldersForDivision over every canonical body/division and declared roster edge; seatHolderById", reason: `The held person ${string(raw.id)} resolves exactly by ID, but no current canonical division projection attaches this person. Their official facts can answer an explicitly named/identified Ask subject; geographic representation or a ballot incumbency claim requires a verified division/office relationship. No name/geometry guess is permitted, and this does not claim the person or their facts are unheld.` };
+      }
+      if (record.family === "state-money") {
+        const targets = raw.targetKeys as string[];
+        const hasCurrentCard = targets.some((target) => currentBallotTargets.has(target));
+        const officialStates = targets.map((target) => moneyIdentity.candidacyOfficialIdentityStatus(target));
+        if (!hasCurrentCard) surfaceDispositions.ballot = { status: "INTENTIONALLY_OUT_OF_SCOPE", selector: "BALLOT_SOURCES / lineupForContest / reconciledCandidacyIdForCard", reason: "This held historical candidacy is absent from the current certified/general ballot card set. Its finance remains available through the canonical funding endpoint and any separately resolved current official; it cannot create a current nominee." };
+        if (officialStates.every((status) => status === "NO_APPLICABLE_OFFICIAL")) surfaceDispositions.map = { status: "INTENTIONALLY_OUT_OF_SCOPE", selector: "candidacyOfficialIdentityStatus", reason: "The committed candidacy bridge names no current official for this candidacy. Its eligible finance remains on its applicable candidate card and funding/Ask surfaces; attaching it to an unrelated map official would be a false positive." };
+      }
+      if (record.family === "congress" && record.unit === "byMember") inputFor(["representation"], "The canonical directory module explicitly keeps district-office and committee details out of the representation coverage payload. They are fetched per member by the card's directory endpoint and retain direct map/ballot delivery obligations; this is not a second representation record.");
+      if (record.family === "curated-body-identities") inputFor(["representation"], "This exact body identity supplies the representation lookup context; the representation endpoint returns sourced officeholders, not a list of body descriptions. The body itself retains its direct map card obligation.");
+      if (record.family === "registry") {
+        if (record.unit === "bodies") inputFor(["representation", "ballot", "meetings"], "A canonical body supplies government/office/meeting identity context to these consumers. It is not an extra person, contest or meeting row. Its own fields remain a direct map card obligation; resulting officials, ballots and meetings are separately inventoried.");
+        else if (record.unit === "divisions" && !raw.officeholderId) inputFor(["representation", "ballot", "meetings"], "The exact canonical division is a geographic selection input for these consumers, not another officeholder, contest or meeting. The executed division selector returns it; the resulting civic payload and its map division card remain separate obligations.");
+        else if (record.unit === "divisions" && raw.officeholderId) inputFor(["map", "ballot", "meetings"], "This record is the exact division-to-officeholder edge. It is directly checked in representation; the separately inventoried person fields supply cards, and the edge does not create an additional person or meeting.");
+        else if (record.unit === "officeholders") inputFor(["meetings"], "An officeholder supplies person/body membership context to meeting rendering; they are not a meeting event. Their own person fields retain map, ballot and representation obligations.");
+      }
+      if (record.family === "sourced-definitions" && raw.formKey) inputFor(["ballot"], "A governmental form definition explains a body on the map. Ballot office explanations use the separately inventoried office-blurb selector; a form template is not an additional candidate/card fact.");
+      if (record.family === "meetings" && record.unit === "agendaDocuments") inputFor(["meetings"], "This is document content for a named meeting, not another event in the meetings-list endpoint. The separately inventoried meeting row supplies that endpoint; the document retains agenda, Ask and map obligations.");
+      if (record.family === "meetings" && record.unit === "meetings") inputFor(["agenda"], "This meeting identity is context for the agenda request. The agenda response's direct facts are documents, agenda items, actions and roll calls; the event row is independently required on meetings, map and Ask.");
+      if (record.family === "meetings") {
+        const meeting = snapshot.meetings.find((meeting) => meeting.id === (record.unit === "meetings" ? raw.id : raw.meetingId));
+        if (meeting && !currentMeetingWindow(meeting)) for (const surface of record.unit === "meetings" ? ["meetings", "map"] as const : ["map"] as const) surfaceDispositions[surface] = { status: "INTENTIONALLY_OUT_OF_SCOPE", selector: "searchMeetings / CONCLUDED_LOOKBACK_DAYS / UPCOMING_HORIZON_DAYS", reason: `Event ${meeting.id} starts ${meeting.startsAt}, outside the canonical calendar window ${CONCLUDED_LOOKBACK_DAYS} days back / ${UPCOMING_HORIZON_DAYS} days ahead at ${asOf.toISOString()}. This is a current-calendar scope, not unheld data or publisher absence. Held historical records retain applicable dated Ask/agenda obligations.` };
+        if (record.unit === "agendaDocuments") {
+          const latest = snapshot.agendaDocuments?.filter((doc) => doc.meetingId === raw.meetingId).sort((a,b) => Date.parse(b.retrievedAt) - Date.parse(a.retrievedAt))[0];
+          if (latest && latest.id !== raw.id) surfaceDispositions.map = { status: "INTENTIONALLY_OUT_OF_SCOPE", selector: "GET /api/agenda newest-first → AgendaDocuments documents[0]", reason: `This is an earlier document revision. The map displays the latest held revision ${latest.id} and the full version count; the historical revision is still returned by the agenda endpoint and cannot be presented as current agenda text.` };
+        }
+      }
+      if (record.family === "body-compositions") inputFor(["civic-routing"], "The exact verified legal composition constrains membersOfBody before contact routing. Its member count was checked by this adapter. Contact records are person/office facts rather than an extra legal-composition answer; the composition itself remains a direct map obligation.");
+      if (record.family === "portraits" && Array.isArray(raw.bindings)) {
+        const activeBindings = returned.map(object).map((binding)=>string(binding.subjectId));
+        const officials = activeBindings.filter((subjectId)=>!subjectId.startsWith("ballot-"));
+        if(activeBindings.every((subjectId)=>!currentBallotTargets.has(subjectId)&&!currentBallotHolderIds.has(subjectId))) surfaceDispositions.ballot={status:"INTENTIONALLY_OUT_OF_SCOPE",selector:"current canonical ballot candidacy and recordHolder portrait bindings",reason:"The current approved portrait is not bound to any current ballot card or its exact incumbent record. Its applicable map/representation identity remains held; an image cannot create a candidacy."};
+        if (!officials.length) inputFor(["representation", "map"], "This portrait is bound only to a ballot candidacy, not a current canonical officeholder. Geographic official/representation surfaces may not attach a candidate portrait to another person; the candidate card retains the image obligation.");
+        else if (officials.every((id)=>!scopedOfficialIds.has(id) && !bodyRosterHolders.has(id))) for (const surface of ["representation", "map"] as const) surfaceDispositions[surface] = { status: "IDENTITY_UNRESOLVED", selector: "canonical portrait subject binding / seatHoldersForDivision", reason: `The image is verified and bound exactly to ${officials.join(", ")}, but none of those people has a current canonical geographic officeholder projection. Image bytes and personal identity are held; their geographic representation relationship remains unresolved.` };
+      }
+    }
+    if (finalStatus === "BROKEN_PROJECTION" || finalStatus === "PROJECTION_UNPROVEN") failures.push(`${record.auditId}: ${selector}: ${reason}`);
+    const childDispositions = record.family === "body-rosters" ? (Array.isArray(raw.members) ? raw.members : []).map((member)=>rosters.rosterMemberReaderDisposition(string(object(member).id))).filter((child):child is NonNullable<typeof child>=>Boolean(child)) : undefined;
+    records.push({ auditId: record.auditId, family: record.family, status: finalStatus, selector, canonicalIdentities: record.canonicalIdentity, returnedIdentities: returnedIds, returnedCount: returned.length, payloadSha256: returned.length ? sha256(JSON.stringify(clean(returned))) : null, reason, ...(Object.keys(surfaceDispositions).length ? { surfaceDispositions } : {}), ...(childDispositions?.length ? { childDispositions } : {}) });
+  }
+  return { formatVersion: 1, holdingsDigest: census.holdingsDigest, projectorSha256: sha256(readFileSync(join(root, "lib/holdings/reader-census.ts"))), asOf: asOf.toISOString(), currentBallotHolderIds:unique([...currentBallotHolderIds]), rule: "Executed local selectors prove holding-to-payload survival only. PROJECTED never claims browser rendering or deployed availability. Supporting inputs and current-lineup exclusions carry explicit record-specific scope reasons; unproved direct payloads remain failures.", records, counts: counts(records.map((r) => r.status)), failures };
+}
+
+export interface ReaderComponentCase {
+  readonly auditId: string;
+  readonly component: string;
+  readonly componentSha256: string;
+  readonly selector: string;
+  readonly actualCanonicalIdentities: readonly string[];
+  readonly payloadSha256: string;
+  readonly markup: string;
+  readonly markupSha256: string;
+  readonly expectedFragments: readonly string[];
+  readonly forbiddenFragments: readonly string[];
+  readonly rowCounts: Readonly<Record<string, { expected: number; actual: number }>>;
+  readonly failures: readonly string[];
+  readonly sourceDispositions?: readonly { id: string; status: string; reason: string }[];
+}
+
+export interface ReaderSurfaceClassWitness {
+  readonly surface: ReaderSurfaceId;
+  readonly component: string;
+  readonly exactHead: string;
+  readonly evidencePath: string;
+  readonly evidenceSha256: string;
+}
+
+/** Diagnostic evidence inventory only: different heads never become closure. */
+export function readerProofInventory(root: string, census: ReaderCensus, routeEvidencePaths: readonly string[], componentEvidencePaths: readonly string[]): { rule: string; routeFailures: string[]; componentFailures: string[]; rows: { rowId: string; family: string; surface: ReaderSurfaceId; applicable: number; actualRouteEvidenceAvailable: number; actualLeafEvidenceAvailable: number; lackingEitherInstrument: number; missing: string[] }[] } {
+  const routes = composeCanonicalRouteProofs(root, census, routeEvidencePaths);
+  const observed = new Map<string, Set<string>>();
+  for (const proof of routes.proofs) observed.set(proof.rowId, new Set([...(observed.get(proof.rowId) ?? []), ...proof.renderedRecordIds]));
+  const componentFailures: string[] = [];
+  const cases = new Map<string, Set<string>>();
+  const records = new Map(census.records.map((record) => [record.auditId, record]));
+  const componentHashes = new Map<string, string>();
+  const componentReach = new Map<string, boolean>();
+  for (const path of componentEvidencePaths) {
+    const evidence = JSON.parse(readReaderEvidence(root, path).toString("utf8")) as { holdingsDigest: string; cases: ReaderComponentCase[]; sourceHashes?: { path: string; sha256: string }[]; failures: string[] };
+    if (evidence.holdingsDigest !== census.holdingsDigest) { componentFailures.push(`${path}: holdings changed`); continue; }
+    if (evidence.sourceHashes?.some((source) => !existsSync(join(root, source.path)) || sha256(readFileSync(join(root, source.path))) !== source.sha256)) { componentFailures.push(`${path}: selector source changed`); continue; }
+    for (const entry of evidence.cases) {
+      if (!componentHashes.has(entry.component) && existsSync(join(root, entry.component))) componentHashes.set(entry.component, sha256(readFileSync(join(root, entry.component))));
+      const sourceMatches = componentHashes.get(entry.component) === entry.componentSha256;
+      if (!sourceMatches || sha256(entry.markup) !== entry.markupSha256 || entry.failures.length || inspectReaderMarkup(entry.markup, entry.expectedFragments, entry.forbiddenFragments, entry.rowCounts).length) { componentFailures.push(`${entry.auditId}: current actual leaf proof unavailable`); continue; }
+      const record = records.get(entry.auditId);
+      if (!record || !entry.actualCanonicalIdentities.length || entry.actualCanonicalIdentities.some((id) => !record.canonicalIdentity.includes(id))) continue;
+      cases.set(entry.auditId, new Set([...(cases.get(entry.auditId) ?? []), entry.component]));
+    }
+  }
+  return { rule: "Instrument availability only. Route and leaf evidence may name different proved heads. Leaf output still requires an actual same-head in-situ surface witness; all final delivery requires a matching deployed bundle. These counts never mark rows RENDERED or zero final false negatives.", routeFailures: routes.failures, componentFailures: unique(componentFailures), rows: census.rows.map((row) => {
+    const ids = row.applicableEligibleRecordIds ?? row.eligibleRecordIds;
+    const route = observed.get(row.id) ?? new Set<string>();
+    const surfacePath = READER_SURFACES.find((surface) => surface.id === row.readerSurface)!.path;
+    const leaf = new Set(ids.filter((id) => { const required = componentRequirements(records.get(id)!); return required.length > 0 && required.every((component) => {
+      if (!cases.get(id)?.has(component)) return false;
+      const key = `${surfacePath}#${component}`;
+      if (!componentReach.has(key)) componentReach.set(key, importReachability(root, surfacePath, component).reached);
+      return componentReach.get(key);
+    }); }));
+    const missing = ids.filter((id) => !route.has(id) && !leaf.has(id));
+    return { rowId: row.id, family: row.datasetFamily, surface: row.readerSurface, applicable: ids.length, actualRouteEvidenceAvailable: ids.filter((id) => route.has(id)).length, actualLeafEvidenceAvailable: leaf.size, lackingEitherInstrument: missing.length, missing };
+  }) };
+}
+
+/** Reconcile known actual route/browser instruments by native record identity. */
+export function composeCanonicalRouteProofs(root: string, census: ReaderCensus, evidencePaths: readonly string[], bundle?: NonNullable<ReaderDeliveryProof["deployedBundle"]>): { proofs: ReaderDeliveryProof[]; failures: string[] } {
+  const context = loadManifestContext(root);
+  const sourceRows = new Map(readerDatasets(context).flatMap((dataset) => extractRecords(dataset).map((raw) => [`${dataset.path}#${raw.pointer}` as string, raw] as const)));
+  const clean = (value: unknown): unknown => Array.isArray(value) ? value.map(clean) : value && typeof value === "object" ? Object.fromEntries(Object.entries(value).filter(([key]) => !key.startsWith("_manifest")).map(([key, value]) => [key, clean(value)])) : value;
+  const proofs: ReaderDeliveryProof[] = [];
+  const failures: string[] = [];
+  for (const evidencePath of evidencePaths) {
+    const bytes = readReaderEvidence(root, evidencePath);
+    const evidence = object(JSON.parse(readReaderEvidence(root, evidencePath).toString("utf8")));
+    if (!/^[a-f0-9]{40}$/.test(string(evidence.exactHead)) || bundle && evidence.exactHead !== bundle.exactHead) { failures.push(`${evidencePath}: actual execution is not bound to a valid exact head matching the bundle when supplied`); continue; }
+    const evidenceHashes=evidenceSourceHashes(evidence.sourceHashes);
+    if(bundle&&!evidenceHashes.length) {failures.push(`${evidencePath}: executed proof lacks its source/holding fingerprint`);continue;}
+    const stale = readerSourceHashProblems(root, evidenceHashes);
+    if (stale.length) { failures.push(`${evidencePath}: ${stale.length} source/holding hashes changed after execution`); continue; }
+    const observed = new Map<ReaderSurfaceId, Map<string, string[]>>();
+    const keyPositionsObserved = new Map<ReaderSurfaceId, Map<string, Map<string, string>>>();
+    const memberChambersObserved = new Map<ReaderSurfaceId, Map<string, string>>();
+    const observeKeyPosition = (surface: ReaderSurfaceId, key: string, member: string, position: string, chamber: string) => {
+      const maps = keyPositionsObserved.get(surface) ?? new Map<string, Map<string, string>>();
+      const members = maps.get(key) ?? new Map<string, string>(); members.set(member, position); maps.set(key, members); keyPositionsObserved.set(surface, maps);
+      const chambers = memberChambersObserved.get(surface) ?? new Map<string, string>(); chambers.set(member, chamber); memberChambersObserved.set(surface, chambers);
+    };
+    const add = (surface: ReaderSurfaceId, key: string, ids: string[]) => { const set = observed.get(surface) ?? new Map(); set.set(key, unique([...(set.get(key) ?? []), ...ids])); observed.set(surface, set); };
+    const candidateKey = (kind: string, value: unknown) => `${kind}:${string(value)}`;
+    const routeRecords = (Array.isArray(evidence.records) ? evidence.records : []).map(object);
+    for (const entry of routeRecords) {
+      const surface = string(entry.surface);
+      if (surface === "representation") {
+        const actual = Array.isArray(entry.returnedIds) ? entry.returnedIds as string[] : [];
+        if (entry.returnedCount !== actual.length || JSON.stringify(actual) !== JSON.stringify(entry.expectedIds)) { failures.push(`${evidencePath}: representation count or exact IDs differ`); continue; }
+        for (const id of actual) { add("representation", `official:${id}`, [id]); add("representation", `membership:${entry.division}#${id}`, [string(entry.division), id]); }
+        const visit = (value: unknown): void => {
+          if (!value || typeof value !== "object") return;
+          if (Array.isArray(value)) { value.forEach(visit); return; }
+          const holder = object(value);
+          if (typeof holder.id === "string" && actual.includes(holder.id)) for (const url of [holder.photoUrl, holder.photo, holder.portraitUrl].filter((url): url is string => typeof url === "string")) add("representation", `portrait:${url}`, [url]);
+          Object.values(holder).forEach(visit);
+        };
+        visit(entry.payload);
+      } else if (surface === "civic-routing") {
+        const contact = object(entry.returnedContact);
+        if (entry.sourceUrl === contact.sourceUrl && JSON.stringify(entry.expectedFields) === JSON.stringify(entry.returnedFields)) add("civic-routing", `contact:${JSON.stringify(clean(contact))}`, [string(contact.topicId), string(contact.sourceUrl)]);
+      } else if (surface === "votes") {
+        const ids = Array.isArray(entry.canonicalIds) ? entry.canonicalIds as string[] : [];
+        if (entry.returnedCount !== ids.length || entry.statedCount !== ids.length || entry.expectedCount !== ids.length) { failures.push(`${evidencePath}: vote count differs`); continue; }
+        for (const id of ids) { add("votes", `vote:${id}`, [id]); add("votes", `position:${entry.member}#${id}`, [string(entry.member), id]); }
+      } else if (surface === "key-votes") {
+        const rows = (Array.isArray(entry.payload) ? entry.payload : []).map(object);
+        if (entry.expectedCount !== rows.length || entry.returnedCount !== rows.length) { failures.push(`${evidencePath}: key-vote metadata count differs`); continue; }
+        for (const row of rows) {
+          const item = object(row.entry); add("votes", `key-entry:${item.id}`, [string(item.id)]);
+          (Array.isArray(row.refs) ? row.refs : []).map(object).forEach((ref, index) => {
+            const key = `${item.id}|${entry.chamber}|${ref.congress}-${ref.session}:${ref.rollNumber}`;
+            const position = (Array.isArray(row.positions) ? row.positions : [])[index];
+            if (typeof position === "string") observeKeyPosition("votes", key, string(entry.member), position, string(entry.chamber));
+          });
+        }
+      } else if (surface === "positions") {
+        const expected = Array.isArray(entry.expectedRecordIds) ? entry.expectedRecordIds as string[] : [];
+        const returned = Array.isArray(entry.returnedRecordIds) ? entry.returnedRecordIds as string[] : [];
+        for (const id of expected.filter((id) => returned.includes(id))) add("positions", `document:${id}`, [id]);
+      } else if (surface === "agenda" && entry.meetingId) {
+        const documents = (Array.isArray(entry.documents) ? entry.documents : []).map(object);
+        const ids = documents.map((doc) => string(doc.id));
+        if (entry.returnedCount !== ids.length || JSON.stringify(entry.expectedIds) !== JSON.stringify(entry.returnedIds) || JSON.stringify(ids) !== JSON.stringify(entry.returnedIds)) { failures.push(`${evidencePath}: agenda document identity/count differs`); continue; }
+        for (const doc of documents) add("agenda", `document:${doc.id}`, [string(doc.id), string(entry.meetingId)]);
+      } else if (surface === "agenda/map" && entry.meetingId && JSON.stringify(entry.expected) === JSON.stringify(entry.returned)) add("agenda", `outcome:${entry.meetingId}#${entry.bodyId}`, [string(entry.meetingId), string(entry.bodyId)]);
+      else if (surface === "meetings/map") {
+        const returned = (Array.isArray(entry.identities) ? entry.identities : []).map(object);
+        if (returned.length !== entry.returnedCount) { failures.push(`${evidencePath}: meeting count differs`); continue; }
+        for (const row of returned) add("meetings", `meeting:${row.id}`, [string(row.id), ...(row.bodyId ? [string(row.bodyId)] : [])]);
+      } else if (surface === "funding/state-money") {
+        if (object(entry.payload).kind === "absence") add("funding", `federal-absence:${entry.target}:${JSON.stringify(object(entry.payload).data)}`, [string(entry.target)]);
+        const visit = (value: unknown) => {
+          if (!value || typeof value !== "object") return;
+          if (Array.isArray(value)) { value.forEach(visit); return; }
+          const row = object(value);
+          if (row.dataClass === "STATE_COMMITTEE") add("funding", `state-money:${JSON.stringify(clean(row))}`, row.targetKeys as string[]);
+          if (row.fecCandidateId) add("funding", `federal:${row.fecCandidateId}`, (row.targetKeys as string[] | undefined) ?? [string(entry.target)]);
+          Object.values(row).forEach(visit);
+        };
+        visit(entry.payload);
+      }
+    }
+    for (const entry of (Array.isArray(evidence.proofs) ? evidence.proofs : []).map(object)) {
+      if (!["PROVEN", "PROVEN_FOR_THIS_QUERY"].includes(string(entry.status))) continue;
+      if (entry.httpStatus !== 200 || entry.modelAnswer !== null || entry.countAgrees === false) { failures.push(`${evidencePath}: invalid Ask execution/count/model boundary`); continue; }
+      const actual = (Array.isArray(entry.returnedRecords) ? entry.returnedRecords : []).map(object);
+      const returnedIds = new Set([...(Array.isArray(entry.returnedRecordIds) ? entry.returnedRecordIds : []), ...(Array.isArray(entry.retrievedRecordIds) ? entry.retrievedRecordIds : []), ...actual.map((record) => record.id)].filter((id): id is string => typeof id === "string"));
+      const expectedIds = Array.isArray(entry.expectedRecordIds) ? entry.expectedRecordIds as string[] : [];
+      if(entry.rosterGapAgrees===true&&entry.expectedRosterGap) {
+        const gap=object(entry.expectedRosterGap);const canonical=rosterGapForBody(string(gap.bodyId));
+        if(canonical&&JSON.stringify(gap)===JSON.stringify(canonical)&&(Array.isArray(entry.rosterGapRecords)?entry.rosterGapRecords:[]).length) add("ask",`roster-gap:${gap.bodyId}`,[string(gap.bodyId)]);
+      }
+      for (const id of expectedIds.filter((id) => returnedIds.has(id))) {
+        add("ask", `native:${id}`, [id]);
+        add("ask", `document:${id}`, [id]);
+        if (id.includes("#") && (id.startsWith("congress:") || id.startsWith("plural:"))) {
+          const at = id.indexOf("#"); add("ask", `position:${id}`, [id.slice(0, at), id.slice(at + 1)]); add("ask", `vote:${id.slice(at + 1)}`, [id.slice(at + 1)]);
+        }
+      }
+      for (const record of actual.filter((record) => record.kind === "FINANCE_SUMMARY")) {
+        add("ask", `finance:${record.canonicalSubjectId}:${object(record.finance).filingState}:${JSON.stringify(object(record.finance).totals)}`, [string(record.canonicalSubjectId)]);
+        if (string(record.id).startsWith("fec:")) add("ask", `federal:${string(record.id).slice(4)}`, [string(record.id).slice(4)]);
+        if (string(record.id).startsWith("fec-absence:")) add("ask", `federal-absence:${record.canonicalSubjectId}:${JSON.stringify({ searchUrl: record.sourceUrl, checkedAt: record.retrievedAt })}`, [string(record.canonicalSubjectId)]);
+      }
+      for (const record of actual) {
+        if (record.kind === "OFFICEHOLDER" && entry.contactAgrees === true) add("ask",`official:${record.canonicalSubjectId}`,[string(record.canonicalSubjectId)]);
+        if (record.kind === "MEETING") add("ask", `meeting:${record.id}`, [string(record.id), ...(record.bodyId ? [string(record.bodyId)] : [])]);
+        if (record.kind === "CONTEST") add("ask", `contest:${record.id}`, [string(record.id)]);
+        if (record.kind === "CANDIDACY") { add("ask", `candidacy:${record.id}`, [string(record.id)]); if(string(record.id).includes("|")) add("ask",`card-key:${record.id}`,[string(record.id)]); }
+        if (record.kind === "MEETING_MINUTES_SUMMARY") add("ask",`minutes-summary:${string(record.id).replace(/#minutes-summary$/,"")}`,[string(record.id).replace(/#minutes-summary$/,"")]);
+        if (record.kind === "MEETING_NOTICE_SUMMARY") add("ask",`notice-summary:${string(record.id).split("#notice-summary:")[0]}:${object(record.noticeSummary).contentHash}`,[string(record.id).split("#notice-summary:")[0]]);
+        if (record.kind === "PUBLIC_COMMENT_ACCESS") add("ask",`access-field:${record.bodyId}:${object(record.accessRule).field}:${object(record.accessRule).value}`,[string(record.bodyId)]);
+        if (record.kind === "MEASURE_QUESTION") add("ask", `measure:${record.id}`, [string(record.id)]);
+        if (record.kind === "MEASURE_SUMMARY") add("ask", `measure-summary:${string(record.id).replace(/#summary$/, "")}`, [string(record.id).replace(/#summary$/, "")]);
+        if (record.kind === "MEASURE_PROVISION") add("ask", `provision:${record.id}`, [string(record.id)]);
+        if (record.kind === "CONTACT") add("ask", `candidate-contact:${record.canonicalSubjectId ?? record.id}`, [string(record.canonicalSubjectId ?? record.id)]);
+        if (["CANDIDATE_BIO", "CANDIDATE_LINK", "CANDIDATE_CONTACT"].includes(string(record.kind))) {
+          const profile = object(record.candidateProfile);
+          if (profile.holdingPath && profile.holdingKey) add("ask", `profile-field:${profile.holdingPath}:${profile.field}:${profile.value}`, [string(profile.holdingKey)]);
+        }
+        if (record.kind === "MEASURE_ANALYSIS") add("ask", `analysis:${string(record.id).replace(/#analysis$/, "")}`, [string(record.id).replace(/#analysis$/, "")]);
+        if (record.kind === "BALLOT_ABSENCE") {
+          if (string(record.id).startsWith("absence:")) add("ask", string(record.id), [string(record.id).slice("absence:".length)]);
+          else add("ask", `removal:${record.id}`, [string(record.id)]);
+        }
+        if (record.kind === "KEY_VOTE_CONTEXT" && string(record.id).startsWith("key-vote-entry:")) add("ask", `key-entry:${string(record.id).slice("key-vote-entry:".length)}`, [string(record.id).slice("key-vote-entry:".length)]);
+        if (record.kind === "BILL_SUMMARY" && string(record.id).startsWith("bill-summary:")) add("ask", `bill-summary:${string(record.id).slice("bill-summary:".length)}`, [string(record.id).slice("bill-summary:".length)]);
+        if (record.kind === "KEY_VOTE_POSITION") for (const key of object(record.keyVote).positionKeys as string[] ?? []) observeKeyPosition("ask", key, string(record.canonicalSubjectId), string(object(record.keyVote).position), string(object(record.keyVote).chamber));
+      }
+      // A sitting is discharged only when every native held action and
+      // member position is present in real response records across its dated
+      // questions. Body identity alone cannot stand for its civic contents.
+      for (const sitting of census.records.filter((record) => record.family === "outcomes")) {
+        const raw = sourceRows.get(sitting.auditId)!.value;
+        if (!(entry.meetingIds as string[] ?? []).includes(string(raw.meetingId))) continue;
+        const required = [
+          ...(Array.isArray(raw.agenda) ? raw.agenda : []).map(object).map((item) => `${item.eventItemId}#agenda`),
+          ...(Array.isArray(raw.outcomes) ? raw.outcomes : []).map(object).map((action) => `${action.eventItemId}#action`),
+          ...(Array.isArray(raw.rollCalls) ? raw.rollCalls : []).map(object).flatMap((roll) => (Array.isArray(roll.votes) ? roll.votes : []).map(object).map((vote) => `${roll.eventItemId}#${vote.personId ?? vote.personName}`)),
+        ];
+        const prior = observed.get("ask");
+        if (required.length && required.every((id) => prior?.has(`native:${id}`))) add("ask", `outcome:${raw.meetingId}#${raw.bodyId}`, [string(raw.meetingId), string(raw.bodyId)]);
+      }
+      for (const finance of (Array.isArray(entry.expectedFinance) ? entry.expectedFinance : []).map(object).filter((record) => record.filingState === "OURS_GAP")) {
+        const gaps = (Array.isArray(entry.gaps) ? entry.gaps : []).map(object);
+        if (object(entry.denominators).financeIdentityUnresolved === 1 && gaps.some((gap) => gap.whose === "OURS" && gap.statement === object(finance.ourGap).whatIsMissing)) add("ask", `finance:${entry.target}:OURS_GAP:${JSON.stringify(finance.totals)}`, [string(entry.target)]);
+      }
+    }
+    for (const entry of (Array.isArray(evidence.proofs) ? evidence.proofs : []).map(object)) if (entry.snapshotId && entry.auditId && entry.renderedTextSha256) {
+      const payload = object(entry.payload);
+      const passages = (Array.isArray(payload.passages) ? payload.passages : []).map(object);
+      if (entry.statedCount !== entry.renderedCount || entry.renderedCount !== passages.length || !passages.some((passage) => passage.snapshotId === entry.snapshotId)) { failures.push(`${evidencePath}: source passage rendered identity/count differs`); continue; }
+      add("ballot", `document:${entry.snapshotId}`, [string(entry.snapshotId)]);
+    }
+    for (const disposition of (Array.isArray(evidence.documentDispositions) ? evidence.documentDispositions : []).map(object)) {
+      const documents = census.records.filter((record) => record.family === "meetings" && record.unit === "agendaDocuments" && (() => { const raw = sourceRows.get(record.auditId)!.value; return raw.meetingId === disposition.meetingId && raw.documentUrl === disposition.documentUrl && raw.retrievedAt === disposition.retrievedAt; })());
+      const expected = (Array.isArray(disposition.expectedRecordIds) ? disposition.expectedRecordIds : []) as string[];
+      const provenItems = disposition.acquisition === "ITEMS_READER_READY" && expected.length > 0 && expected.every((id) => observed.get("ask")?.has(`native:${id}`));
+      const provenGap = ["ACQUIRED_IS_PUBLICATION_INDEX", "READ_NO_ITEMS_EXTRACTED"].includes(string(disposition.acquisition)) && (evidence.proofs as unknown[]).map(object).some((entry) => entry.status === "PROVEN" && entry.httpStatus === 200 && entry.modelAnswer === null && (entry.meetingIds as string[] ?? []).includes(string(disposition.meetingId)) && (entry.gaps as unknown[] ?? []).map(object).some((gap) => gap.statement === disposition.reason));
+      if (provenItems || provenGap) for (const record of documents) { const raw = sourceRows.get(record.auditId)!.value; add("ask", `document:${raw.id}`, [string(raw.id), string(raw.meetingId)]); }
+    }
+    for (const entry of (Array.isArray(evidence.results) ? evidence.results : []).map(object)) if (entry.jurisdictionId && Array.isArray(entry.siteIds)) {
+      if (entry.expectedCount !== entry.returnedCount || entry.returnedCount !== entry.siteIds.length) { failures.push(`${evidencePath}: voting site count differs`); continue; }
+      add("voting-sites", `jurisdiction:${entry.jurisdictionId}`, [string(entry.jurisdictionId)]);
+    }
+    const isBallotBrowser = evidencePath.includes("ballot") && Array.isArray(evidence.rows);
+    if (isBallotBrowser) for (const row of (evidence.rows as unknown[]).map(object)) {
+      if (row.statedContestCount !== row.returnedContestCount) { failures.push(`${evidencePath}: ballot contest count differs`); continue; }
+      for (const entry of (row.proofs as unknown[]).map(object)) {
+        add("ballot", candidateKey("contest", entry.contestId), [string(entry.contestId)]);
+        for (const [key, kind] of [["candidacyIds", "candidacy"], ["measureIds", "measure"], ["removalIds", "removal"]]) for (const id of entry[key] as string[] ?? []) add("ballot", `${kind}:${id}`, [id]);
+        for (const id of entry.provisionIds as string[] ?? []) add("ballot", `provision:${id}`, [id]);
+        if (entry.summaryHeld) add("ballot", candidateKey("measure-summary", entry.contestId), [string(entry.contestId)]);
+        for (const key of entry.actualCardKeys as string[] ?? []) add("ballot", `card-key:${key}`, [key]);
+      }
+      for (const id of row.absenceOcdIds as string[] ?? []) add("ballot", `absence:${id}`, [id]);
+      for (const id of row.analysisContestIds as string[] ?? []) add("ballot", `analysis:${id}`, [id]);
+      const nav = object(row.navigation);
+      for (const field of ["dates", "registration"]) if (nav[field]) {
+        const value = object(nav[field]);
+        add("ballot", `navigation:${field}:${JSON.stringify(clean(value))}`, field === "dates" ? [string(value.state), string(value.sourceUrl)] : [string(value.url)]);
+      }
+    }
+    for (const row of census.rows) {
+      const observations = observed.get(row.readerSurface);
+      if (!observations?.size) continue;
+      const measured: string[] = [];
+      const actualIdentities: Record<string, string[]> = {};
+      for (const auditId of row.applicableEligibleRecordIds ?? row.eligibleRecordIds) {
+        const source = sourceRows.get(auditId)!;
+        const raw = source.value;
+        let key = "";
+        if (row.datasetFamily === "state-money") key = row.readerSurface === "ask" ? `finance:${(raw.targetKeys as string[])[0]}:${raw.filingState}:${JSON.stringify(raw.totals)}` : `state-money:${JSON.stringify(clean(raw))}`;
+        else if (row.datasetFamily === "federal-finance") {
+          if (source.unit === "absences") {
+            const prefix = `federal-absence:${raw.targetKey}:`;
+            key = [...observations.keys()].find((entry) => entry.startsWith(prefix) && (() => { const answer = object(JSON.parse(entry.slice(prefix.length))); return answer.searchUrl === raw.searchUrl && answer.checkedAt === raw.checkedAt; })()) ?? "";
+          } else key = `federal:${raw.fecCandidateId}`;
+        }
+        else if (row.datasetFamily === "everyday-routing") key = `contact:${JSON.stringify(clean(Object.fromEntries(Object.entries(raw).filter(([key])=>key!=="holdingStatus"))))}`;
+        else if (row.datasetFamily === "portraits") key = `portrait:${raw.url}`;
+        else if (["candidate-corpus", "statement-corpus"].includes(row.datasetFamily)) key = `document:${raw.id}`;
+        else if (row.datasetFamily === "votes") {
+          if (auditId.includes("key-vote-positions.json")) {
+            const native = source.identityKey ?? "";
+            const positions = keyPositionsObserved.get(row.readerSurface)?.get(native);
+            const chambers = memberChambersObserved.get(row.readerSurface);
+            const expected = Object.entries(raw).filter(([member]) => /^congress:[A-Z]\d{6}$/.test(member));
+            if (positions && expected.every(([member, position]) => positions.get(member) === position || chambers?.has(member) && chambers.get(member) !== native.split("|")[1])) {
+              key = `key-map:${native}`; observations.set(key, [native]);
+            }
+          } else if (auditId.includes("key-votes-snapshot.json")) key = `key-entry:${raw.id}`;
+          else if (auditId.includes("bill-summaries.json")) key = `bill-summary:${source.identityKey}`;
+          else key = raw.officeholderId ? `position:${raw.officeholderId}#${raw.voteId ?? raw.rollCallId}` : `vote:${raw.id}`;
+        }
+        else if (row.datasetFamily === "outcomes") key = `outcome:${raw.meetingId}#${raw.bodyId}`;
+        else if (row.datasetFamily === "minutes-summaries") key = `minutes-summary:${raw.meetingId}`;
+        else if (row.datasetFamily === "notice-summaries") key = `notice-summary:${raw.meetingId}:${raw.contentHash}`;
+        else if (row.datasetFamily === "comment-access") {
+          const required=["commentPeriod","commentPeriodDetail","timeLimit","signup","writtenComment","attend"].filter((field)=>raw[field]);
+          if(required.every((field)=>observations.has(`access-field:${raw.bodyId}:${field}:${raw[field]}`))) {key=`comment-access:${raw.bodyId}`;observations.set(key,[string(raw.bodyId)]);}
+        }
+        else if (row.datasetFamily === "body-rosters" && row.readerSurface === "ask") {
+          const members=unique((Array.isArray(raw.members)?raw.members:[]).map((member)=>rosterMemberReaderDisposition(string(object(member).id))).flatMap((child)=>child?.state==="READER_ELIGIBLE"&&child.canonicalId?[child.canonicalId]:[]));
+          if(members.length&&members.every((id)=>observations.has(`official:${id}`))&&(!rosterGapForBody(string(raw.bodyId))||observations.has(`roster-gap:${raw.bodyId}`))) {key=`roster:${raw.bodyId}`;observations.set(key,[string(raw.bodyId)]);}
+        }
+        else if (row.datasetFamily === "meetings") key = source.unit === "meetings" ? `meeting:${raw.id}` : `document:${raw.id}`;
+        else if (row.datasetFamily === "voting-sites") key = `jurisdiction:${raw.ocdId}`;
+        else if (row.datasetFamily === "local-finance" || row.datasetFamily === "official-actions") key = `native:${raw.id}`;
+        else if (["state-officeholders", "statewide-executives", "campaign-sites"].includes(row.datasetFamily) || row.datasetFamily === "registry" && source.unit === "officeholders") key = `official:${raw.id}`;
+        else if (row.datasetFamily === "congress" && source.unit === "members") key = `official:congress:${raw.bioguide}`;
+        else if (row.datasetFamily === "registry" && source.unit === "divisions" && raw.officeholderId) key = `membership:${raw.ocdId}#${raw.officeholderId}`;
+        else if (row.datasetFamily === "measure-summaries") key = source.unit === "measure provisions" ? `provision:${raw.id}` : `measure-summary:${raw.contestId}`;
+        else if (row.datasetFamily === "ballot-navigation") key = `navigation:${auditId.includes("election-dates") ? "dates" : "registration"}:${JSON.stringify(clean(raw))}`;
+        else if (row.datasetFamily === "ballot") {
+          if (row.readerSurface === "ask" && ["cards", "links"].includes(source.unit)) {
+            const fields = source.unit === "cards" ? ["bio", "phone", "email", "filedAddress"].filter((field)=>raw[field]).map((field)=>({field,value:string(raw[field]),path:auditId})) : ["official","campaign"].filter((field)=>object(raw[field]).url).map((field)=>({field,value:string(object(raw[field]).url),path:`${auditId}/${field}`}));
+            if (fields.length && fields.every(({field,value,path})=>observations.has(`profile-field:${path}:${field}:${value}`))) { key = `profile:${auditId}`; observations.set(key,[source.identityKey!]); }
+          } else if (source.unit === "contacts") key = `candidate-contact:${raw.candidacyId}`;
+          else if (Array.isArray(raw.nominees) && raw.contestId && raw.nominees.map(object).every((nominee) => observations.has(`card-key:${raw.contestId}|${nominee.name}`))) { key = `lineup:${raw.contestId}`; observations.set(key, [string(raw.contestId)]); }
+          else key = source.unit === "absences" ? `absence:${raw.ocdId}` : source.unit === "analyses" ? `analysis:${source.identityKey ?? raw.contestId}` : `${({ contests: "contest", candidacies: "candidacy", measures: "measure", removals: "removal" } as Record<string, string>)[source.unit]}:${raw.id}`;
+        }
+        const ids = observations.get(key);
+        if (ids?.length && ids.every((id) => row.canonicalIdentityByRecord[auditId]?.includes(id))) { measured.push(auditId); actualIdentities[auditId] = ids; }
+      }
+      if (measured.length) proofs.push({ rowId: row.id, exactHead: string(evidence.exactHead), source: isBallotBrowser ? "rendered-browser" : "executed-route", evidencePath, evidenceSha256: sha256(bytes), expectedRecordIds: measured, renderedRecordIds: measured, actualIdentities, statedCount: measured.length, returnedCount: measured.length, scope: "Only native IDs actually observed by the executed instrument and correlated to this holding record. Original payload counts, source comparisons and source hashes remain in the artifact; unmeasured sibling records stay obligations. An absent bundle descriptor never proves deployment.", deployedBundle: bundle });
+    }
+  }
+  return { proofs, failures };
+}
+
+/** Observe the actual production artifact; static compilation is not NFT copying. */
+export function readerBundleEvidence(root: string, census: ReaderCensus, buildReceiptPath: string, portraitProofPath?: string): { exactHead: string; buildId: string; buildReceiptPath: string; buildReceiptSha256: string; holdingsDigest: string; trace: ReturnType<typeof checkReaderTraces>; holdings: { path: string; sha256: string; mechanism: "NFT_FILESYSTEM" | "COMPILED_STATIC_IMPORT" | "PUBLIC_ASSET_HTTP"; evidence: unknown }[]; failures: string[] } {
+  const receiptBytes = readReaderEvidence(root, buildReceiptPath);
+  const receipt = JSON.parse(receiptBytes.toString("utf8")) as { exactHead: string; buildId: string; buildCompleted: boolean; sourceHashes?: unknown };
+  if (!/^[a-f0-9]{40}$/.test(receipt.exactHead) || !receipt.buildCompleted || receipt.buildId !== readFileSync(join(root, ".next/BUILD_ID"), "utf8").trim()) throw new Error("A completed exact-head build receipt matching the current production BUILD_ID is required");
+  const trace = checkReaderTraces(root);
+  const { globSync } = fs as typeof fs & { globSync(pattern: string, options: { cwd: string }): string[] };
+  const sourceHashes=evidenceSourceHashes(receipt.sourceHashes);
+  const failures = [...trace.failures,...(!sourceHashes.length?["Completed build receipt lacks its reader source and holding fingerprint"]:readerSourceHashProblems(root,sourceHashes))];
+  const traced = new Map<string, { tracePath: string; traceSha256: string }[]>();
+  for (const tracePath of globSync(".next/server/app/**/*.js.nft.json", { cwd: root })) {
+    const bytes = readFileSync(join(root, tracePath));
+    const parsed = JSON.parse(bytes.toString("utf8")) as { files: string[] };
+    for (const file of parsed.files) {
+      const path = relative(root, resolve(root, dirname(tracePath), file)).replaceAll("\\", "/");
+      if (path.startsWith("..")) continue;
+      traced.set(path, [...(traced.get(path) ?? []), { tracePath: tracePath.replaceAll("\\", "/"), traceSha256: sha256(bytes) }]);
+    }
+  }
+  const portraitBytes = portraitProofPath ? readReaderEvidence(root, portraitProofPath) : null;
+  const portraits = portraitBytes ? JSON.parse(portraitBytes.toString("utf8")) as { exactHead: string; buildId: string; holdingsDigest: string; records: { holdingPath: string; actualSha256: string; status: number; result: string }[] } : null;
+  if (portraits && (portraits.exactHead !== receipt.exactHead || portraits.buildId !== receipt.buildId)) throw new Error("Portrait HTTP proof belongs to another build");
+  // The portrait byte instrument covers its exact path/hash inventory. An
+  // unrelated civic holding changing the global digest does not invalidate
+  // measured image bytes; every applicable current image is matched below.
+  const applicable = new Set(census.rows.flatMap((row) => row.applicableEligibleRecordIds ?? row.eligibleRecordIds).map((id) => id.slice(0, id.indexOf("#"))));
+  const holdings: { path: string; sha256: string; mechanism: "NFT_FILESYSTEM" | "COMPILED_STATIC_IMPORT" | "PUBLIC_ASSET_HTTP"; evidence: unknown }[] = [];
+  for (const holding of census.holdings.filter((holding) => applicable.has(holding.path))) {
+    const files = traced.get(holding.path);
+    if (files?.length) { holdings.push({ path: holding.path, sha256: holding.sha256, mechanism: "NFT_FILESYSTEM", evidence: files }); continue; }
+    const portrait = portraits?.records.find((record) => record.holdingPath === holding.path && record.actualSha256 === holding.sha256 && record.status === 200 && record.result === "PROVEN");
+    if (portrait) { holdings.push({ path: holding.path, sha256: holding.sha256, mechanism: "PUBLIC_ASSET_HTTP", evidence: { evidencePath: portraitProofPath, evidenceSha256: sha256(portraitBytes!), record: portrait } }); continue; }
+    const sourcePath = READER_SURFACES.map((surface) => importReachability(root, surface.path, holding.path)).find((path) => path.reached);
+    if (sourcePath?.reached && /\.(ts|tsx|json)$/.test(holding.path)) {
+      holdings.push({ path: holding.path, sha256: holding.sha256, mechanism: "COMPILED_STATIC_IMPORT", evidence: { sourcePath: sourcePath.path, sourceHashes: sourcePath.path.filter((path) => existsSync(join(root, path))).map((path) => ({ path, sha256: sha256(readFileSync(join(root, path))) })), qualification: "This statically imported data is compiled into the matching build, rather than copied as a runtime filesystem holding. Actual record execution is separately required by the delivery proof." } });
+    } else failures.push(`${holding.path}: no actual NFT copy, static reader import, or same-build verified public asset response`);
+  }
+  return { exactHead: receipt.exactHead, buildId: receipt.buildId, buildReceiptPath, buildReceiptSha256: sha256(receiptBytes), holdingsDigest: census.holdingsDigest, trace, holdings, failures };
+}
+
+/** Which actual leaf must render this record's own fields, not a sibling's. */
+function componentRequirements(record: CensusRecord): string[] {
+  const identity = "components/officials/person-identity.tsx";
+  const contacts = "components/officials/contact-pills.tsx";
+  if (["state-officeholders", "statewide-executives", "body-rosters"].includes(record.family) || record.family === "congress" && record.unit === "members" || record.family === "registry" && record.unit === "officeholders") return [identity, contacts,...(record.additionalComponents??[])];
+  if (record.family === "campaign-sites") return [contacts];
+  if (record.family === "portraits") return [identity];
+  if (record.family === "congress" && record.unit === "byMember") return ["components/officials/member-directory.tsx"];
+  if (record.family === "votes" && /key-vote(?:s-snapshot|-positions)\.json$/.test(record.holdingPath)) return ["components/officials/key-votes-section.tsx"];
+  if (record.family === "votes" && record.holdingPath.endsWith("bill-summaries.json")) return ["components/map/popup/official-popup.tsx"];
+  if (record.family === "votes" && ["votes", "positions", "rollCalls"].includes(record.unit)) return ["components/map/popup/official-popup.tsx"];
+  if (record.family === "federal-finance") return ["components/funding/funding-section.tsx"];
+  if (record.family === "voting-sites") return ["components/map/voting-sites-panel.tsx"];
+  if (record.family === "ballot-navigation" && record.holdingPath.includes("polling-place")) return ["components/ballot/polling-lookup-fallback.tsx"];
+  if (["curated-body-identities", "body-compositions", "sourced-definitions"].includes(record.family) || record.family === "registry" && record.unit === "bodies") return ["components/map/popup/entity-modal.tsx"];
+  if (record.family === "registry" && record.unit === "divisions") return ["components/map/popup/district-popup.tsx"];
+  if (record.family === "state-money") return ["components/funding/state-money-section.tsx"];
+  if (record.family === "outcomes") return ["components/map/popup/meeting-records.tsx"];
+  if (record.family === "notice-summaries" || record.family === "meetings" && record.unit === "agendaDocuments") return ["components/map/popup/agenda-section.tsx"];
+  if (record.family === "meetings" && record.unit === "meetings") return ["components/map/popup/meeting-popup.tsx"];
+  if (record.family === "area-facts") return ["components/area/shuffled-facts.tsx"];
+  if (record.family === "comment-access") return ["components/map/meeting-panel.tsx"];
+  if (record.family === "minutes-summaries") return ["components/map/popup/meeting-popup.tsx"];
+  if (record.family === "official-actions" && record.unit === "actions") return ["components/officials/official-actions.tsx"];
+  if (record.family === "prl") return ["components/officials/public-statements-profile.tsx"];
+  if (record.family === "ballot" && ["cards", "links"].includes(record.unit)) return ["components/ballot/candidate-card.tsx", "components/ballot/candidate-contact.tsx"];
+  if (record.family === "ballot" && record.unit === "contacts") return ["components/ballot/candidate-contact.tsx"];
+  return [];
+}
+
+/**
+ * Compose exhaustive real leaf output with an executed in-situ surface witness.
+ * Missing API/Ask/card proofs stay explicit; neither imports nor screenshots
+ * alone can synthesize observed IDs for an unexercised record.
+ */
+export function composeReaderComponentProofs(root: string, census: ReaderCensus, componentEvidencePath: string, witnesses: readonly ReaderSurfaceClassWitness[], bundle: NonNullable<ReaderDeliveryProof["deployedBundle"]>): { proofs: ReaderDeliveryProof[]; uncovered: { rowId: string; auditId: string; reason: string }[]; failures: string[] } {
+  const evidenceBytes = readReaderEvidence(root, componentEvidencePath);
+  const evidence = JSON.parse(readReaderEvidence(root, componentEvidencePath).toString("utf8")) as { holdingsDigest: string; exactHead?: string; sourceHashes?: { path: string; sha256: string }[]; cases: ReaderComponentCase[]; failures: string[] };
+  if (evidence.holdingsDigest !== census.holdingsDigest) throw new Error("Component evidence belongs to different holdings");
+  if (evidence.exactHead && evidence.exactHead !== bundle.exactHead) throw new Error("Component evidence belongs to another proved head");
+  for (const source of evidence.sourceHashes ?? []) if (!existsSync(join(root, source.path)) || sha256(readFileSync(join(root, source.path))) !== source.sha256) throw new Error(`Component selector dependency changed after render: ${source.path}`);
+  const failures = [...evidence.failures];
+  const cases = new Map<string, ReaderComponentCase[]>();
+  const componentHashes = new Map<string, string>();
+  for (const entry of evidence.cases) {
+    if (!componentHashes.has(entry.component)) componentHashes.set(entry.component, sha256(readFileSync(join(root, entry.component))));
+    const problems = [
+      ...(sha256(entry.markup) !== entry.markupSha256 ? ["HTML hash mismatch"] : []),
+      ...(componentHashes.get(entry.component) !== entry.componentSha256 ? ["Component source changed after render"] : []),
+      ...inspectReaderMarkup(entry.markup, entry.expectedFragments, entry.forbiddenFragments, entry.rowCounts),
+      ...entry.failures,
+    ];
+    failures.push(...problems.map((problem) => `${entry.auditId}: ${problem}`));
+    if (!problems.length) cases.set(entry.auditId, [...(cases.get(entry.auditId) ?? []), entry]);
+  }
+  const records = new Map(census.records.map((record) => [record.auditId, record]));
+  const proofs: ReaderDeliveryProof[] = [];
+  const uncovered: { rowId: string; auditId: string; reason: string }[] = [];
+  const witnessCache = new Map<string, ReaderSurfaceClassWitness | undefined>();
+  for (const row of census.rows) {
+    const measured: string[] = [];
+    const actualIdentities: Record<string, readonly string[]> = {};
+    const usedWitnesses = new Map<string, ReaderSurfaceClassWitness>();
+    for (const id of row.applicableEligibleRecordIds ?? row.eligibleRecordIds) {
+      const record = records.get(id)!;
+      const required = componentRequirements(record);
+      const actualCases = cases.get(id) ?? [];
+      if (!required.length) { uncovered.push({ rowId: row.id, auditId: id, reason: "Needs an executed API/Ask or another actual reader leaf proof for this record class." }); continue; }
+      const surfacePath = READER_SURFACES.find((surface) => surface.id === row.readerSurface)!.path;
+      const applicableWitnesses = required.map((component) => {
+        const key = `${row.readerSurface}#${component}`;
+        if (!witnessCache.has(key)) witnessCache.set(key, witnesses.find((witness) => witness.surface === row.readerSurface && witness.component === component && witness.exactHead === bundle.exactHead && readerEvidenceHashMatches(root,witness.evidencePath,witness.evidenceSha256) && importReachability(root, surfacePath, component).reached));
+        return witnessCache.get(key);
+      });
+      if (applicableWitnesses.some((witness) => !witness)) { uncovered.push({ rowId: row.id, auditId: id, reason: "Actual component output lacks a matching same-head in-situ witness on this declared surface." }); continue; }
+      if (required.some((component) => !actualCases.some((entry) => entry.component === component))) { uncovered.push({ rowId: row.id, auditId: id, reason: "An applicable product leaf has not rendered this canonical payload." }); continue; }
+      const identities = unique(actualCases.filter((entry) => required.includes(entry.component)).flatMap((entry) => entry.actualCanonicalIdentities));
+      if (!identities.length || identities.some((identity) => !record.canonicalIdentity.includes(identity))) { uncovered.push({ rowId: row.id, auditId: id, reason: "Rendered membership/child identities need an explicit canonical parent-record correlation; they cannot be guessed from a shared geography." }); continue; }
+      measured.push(id); actualIdentities[id] = identities;
+      applicableWitnesses.forEach((witness) => usedWitnesses.set(witness!.component, witness!));
+    }
+    if (!measured.length) continue;
+    proofs.push({ rowId: row.id, exactHead: bundle.exactHead, source: "rendered-component", evidencePath: componentEvidencePath, evidenceSha256: sha256(evidenceBytes), expectedRecordIds: measured, renderedRecordIds: measured, actualIdentities, statedCount: measured.length, returnedCount: measured.length,
+      scope: "Measured canonical audit records only. Every required actual leaf rendered the selected fields and row counts; an executed in-situ witness and current import graph bind that leaf to this surface. Unmeasured records remain separate obligations.",
+      surfaceWitnesses: [...usedWitnesses.values()], deployedBundle: bundle });
+  }
+  return { proofs, uncovered, failures };
+}
+
+const htmlText = (value: string) => value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#x27;");
+
+/** Testable instrument: a missing rendered fact or a false shown count fails. */
+export function inspectReaderMarkup(markup: string, expected: readonly string[], forbidden: readonly string[], rowCounts: ReaderComponentCase["rowCounts"]): string[] {
+  const failures = expected.filter((text) => !markup.includes(htmlText(text))).map((text) => `Missing rendered canonical fragment: ${text}`);
+  failures.push(...forbidden.filter((text) => markup.includes(htmlText(text))).map((text) => `Withheld fragment rendered: ${text}`));
+  failures.push(...Object.entries(rowCounts).filter(([, counts]) => counts.expected !== counts.actual).map(([name, counts]) => `${name}: stated ${counts.expected}, rendered ${counts.actual}`));
+  return failures;
+}
+
+/**
+ * Execute the real pure reader leaves over EVERY applicable held payload.
+ * This requires the repository's tsx runner because the product leaves are JSX.
+ * Its evidence is component rendering, never a claim about a deployed route.
+ */
+export async function registerReaderRenderHooks(root: string): Promise<void> {
+  // Native Node 24 strips TS but not JSX. Compile the actual TSX leaf in-memory
+  // with the repository's TypeScript compiler; no alternate component is made.
+  const moduleApi = await import("node:module") as unknown as { registerHooks: (hooks: { resolve: (specifier: string, context: { parentURL?: string }, next: (specifier: string, context: unknown) => unknown) => unknown; load: (url: string, context: unknown, next: (url: string, context: unknown) => unknown) => unknown }) => { deregister: () => void } };
+  moduleApi.registerHooks({
+    resolve(specifier, context, next) {
+      const base = specifier.startsWith("@/") ? join(root, specifier.slice(2)) : specifier.startsWith(".") && context.parentURL?.startsWith("file:") ? fileURLToPath(new URL(specifier, context.parentURL)) : null;
+      if (base && !base.replaceAll("\\", "/").includes("/node_modules/")) for (const suffix of [".ts", ".tsx"]) if (existsSync(`${base}${suffix}`)) return next(pathToFileURL(`${base}${suffix}`).href, context);
+      return next(specifier, context);
+    },
+    load(url, context, next) {
+      if (!url.endsWith(".tsx")) return next(url, context);
+      const source = ts.transpileModule(readFileSync(fileURLToPath(url), "utf8"), { fileName: fileURLToPath(url), compilerOptions: { jsx: ts.JsxEmit.ReactJSX, module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
+      return { format: "module", source, shortCircuit: true };
+    },
+  });
+}
+
+export async function renderCanonicalReaderComponents(root: string, census: ReaderCensus): Promise<{ formatVersion: 1; exactHead: string; holdingsDigest: string; sourceHashes: ReaderSourceHash[]; rule: string; cases: ReaderComponentCase[]; failures: string[] }> {
+  await registerReaderRenderHooks(root);
+  const [{ createElement, Fragment }, { renderToStaticMarkup }, { StateMoneySection }, { CandidateContact }, { MeetingRecords }, { ShuffledFacts }, finance, contacts, outcomes, meetingReader, area, { PublicStatementsProfileContent }, prl, { PersonIdentity, IdentityPortrait }, { ContactPills }, registry, rosters, { CandidateCard }, cards, sites, ballot, { MeetingPopup }, { DataProvider }, snapshotSource, meetingFormat, meetingLinks, memberships, minutes, { HowToBeHeard }, commentAccess] = await Promise.all([
+    import("react"), import("react-dom/server"), import("../../components/funding/state-money-section.tsx"),
+    import("../../components/ballot/candidate-contact.tsx"), import("../../components/map/popup/meeting-records.tsx"), import("../../components/area/shuffled-facts.tsx"),
+    import("../funding/state-snapshot.ts"), import("../ballot/candidate-contacts.ts"), import("../outcomes/store.ts"), import("../meetings/reader-records.ts"), import("../area/facts.ts"), import("../../components/officials/public-statements-profile.tsx"), import("../sources/prl/snapshot.ts"), import("../../components/officials/person-identity.tsx"), import("../../components/officials/contact-pills.tsx"), import("../registry/server.ts"), import("../registry/body-rosters.ts"), import("../../components/ballot/candidate-card.tsx"), import("../ballot/candidate-cards.ts"), import("../ballot/candidate-sites.ts"), import("../ballot/registry.ts"), import("../../components/map/popup/meeting-popup.tsx"), import("../state/data.tsx"), import("../sources/snapshot/index.ts"), import("../map/format.ts"), import("../registry/links.ts"), import("../registry/body-membership.ts"), import("../meetings/minutes-summaries.ts"), import("../../components/map/meeting-panel.tsx"), import("../registry/comment-access.ts"),
+  ]);
+  const ballotSets = await Promise.all(ballot.BALLOT_SOURCES.map(async ({ source }) => source.normalize(await source.fetch())));
+  const candidateNames = new Map(ballotSets.flatMap((set) => [...set.candidacies, ...(set.removals ?? [])]).map((candidate) => [candidate.id, `${candidate.givenName} ${candidate.familyName}`]));
+  const cardName = (key: string) => key.includes("|") ? key.slice(key.indexOf("|") + 1) : candidateNames.get(key);
+  const cardFor = (key: string) => key.includes("|") ? cards.cardForNominee(key.slice(0, key.indexOf("|")), key.slice(key.indexOf("|") + 1)) : cards.cardForCandidacy(key);
+  const linksFor = (key: string) => key.includes("|") ? sites.linksForNominee(key.slice(0, key.indexOf("|")), key.slice(key.indexOf("|") + 1)) : sites.linksForCandidacy(key);
+  const source = snapshotSource.makeSnapshotSource();
+  // The production snapshot source explicitly ignores this query and returns
+  // all held rows; geographic and date applicability belong to the route proof.
+  const normalizedMeetings = new Map(source.normalize(await source.fetch({ lat: 0, lng: 0, radiusKm: 0 }), new Date()).map((meeting) => [meeting.id, meeting]));
+  const context = loadManifestContext(root);
+  const sourceRows = new Map(readerDatasets(context).flatMap((dataset) => extractRecords(dataset).map((raw) => [`${dataset.path}#${raw.pointer}` as string, raw] as const)));
+  const cases: ReaderComponentCase[] = [];
+  const add = (record: CensusRecord, component: string, selector: string, payload: unknown, actualIds: string[], markup: string, expected: string[], forbidden: string[] = [], rowCounts: ReaderComponentCase["rowCounts"] = {}, sourceDispositions?: ReaderComponentCase["sourceDispositions"]) => {
+    cases.push({ auditId: record.auditId, component, componentSha256: sha256(readFileSync(join(root, component))), selector,
+      actualCanonicalIdentities: unique(actualIds), payloadSha256: sha256(JSON.stringify(payload)), markup, markupSha256: sha256(markup),
+      expectedFragments: expected, forbiddenFragments: forbidden, rowCounts, failures: inspectReaderMarkup(markup, expected, forbidden, rowCounts), sourceDispositions });
+  };
+  const occurrences = (markup: string, attribute: string) => [...markup.matchAll(new RegExp(` ${attribute}(?:=|[ >])`, "g"))].length;
+  const [{ OfficialActionsContent }, officialActions, dateFormat] = await Promise.all([import("../../components/officials/official-actions.tsx"), import("../officials/reader-actions.ts"), import("../text/format-date.ts")]);
+  const [{ DirectoryRecordsContent }, directoryRoute, { KeyVoteGroupBlock }, keyReader, keyPositions, { BillPlainSummary }, billSummaries, { PollingLookupFallback }, polling] = await Promise.all([
+    import("../../components/officials/member-directory.tsx"), import("../../app/api/directory/route.ts"), import("../../components/officials/key-votes-section.tsx"), import("../votes/key-votes-reader.ts"), import("../votes/key-vote-positions.ts"), import("../../components/map/popup/official-popup.tsx"), import("../votes/bill-summaries.ts"), import("../../components/ballot/polling-lookup-fallback.tsx"), import("../ballot/polling-place-links.ts"),
+  ]);
+  const memberIds = unique(census.records.filter((record) => record.family === "congress" && record.unit === "byMember").flatMap((record) => record.canonicalIdentity.filter((id) => /^congress:[A-Z]\d{6}$/.test(id))));
+  const { buildCommitteeTree } = await import("../officials/committee-tree.ts");
+  const [{ AgendaDocuments }, agendaRoute, noticeSummary] = await Promise.all([import("../../components/map/popup/agenda-section.tsx"), import("../../app/api/agenda/route.ts"), import("../meetings/notice-summary.ts")]);
+  const [{ RecentVoteRecords }, voteRoute, { FundingDisplay, FundingAbsence }, federalDisplay] = await Promise.all([import("../../components/map/popup/official-popup.tsx"), import("../../app/api/votes/route.ts"), import("../../components/funding/funding-section.tsx"), import("../funding/display.ts")]);
+  type ActualVote = import("../../components/map/popup/official-popup.tsx").MemberRollCall;
+  type ActualAttribution = import("../../components/map/popup/official-popup.tsx").VoteAttribution;
+  const actualVoteMembers = unique(census.records.filter((record) => record.family === "votes").map((record) => string(sourceRows.get(record.auditId)?.value.officeholderId)).filter(Boolean));
+  const voteByMember = new Map<string, { member: string; vote: ActualVote; attribution: ActualAttribution | null }>();
+  const voteById = new Map<string, { member: string; vote: ActualVote; attribution: ActualAttribution | null }>();
+  for (const member of actualVoteMembers) {
+    const response = await voteRoute.GET(new Request(`http://localhost/api/votes?member=${encodeURIComponent(member)}`));
+    if (response.status !== 200) throw new Error(`Actual vote route failed ${member}`);
+    const payload = await response.json() as { votes: ActualVote[]; attribution?: ActualAttribution; count: number };
+    if (payload.count !== payload.votes.length) throw new Error(`Actual vote route false count ${member}`);
+    for (const vote of payload.votes) { const selected = { member, vote, attribution: payload.attribution ?? null }; voteByMember.set(`${member}#${vote.id}`, selected); if (!voteById.has(vote.id)) voteById.set(vote.id, selected); }
+  }
+  const agendaResponses = new Map<string, { documents: (Parameters<typeof AgendaDocuments>[0]["documents"][number] & { id: string })[]; documentCount: number; publication: Parameters<typeof AgendaDocuments>[0]["publication"] }>();
+  const [{ proveVotingSites }, { VotingJurisdictionRecords }, votingSiteDisplay] = await Promise.all([import("../../scripts/reader-last-mile-voting-sites.mts"), import("../../components/map/voting-sites-panel.tsx"), import("../ballot/voting-sites.ts")]);
+  const votingAnswers = (await proveVotingSites()).results;
+  const agendaFor = async (meetingId: string) => {
+    if (!agendaResponses.has(meetingId)) {
+      const response = await agendaRoute.GET(new Request(`http://localhost/api/agenda?meetingId=${encodeURIComponent(meetingId)}`));
+      if (response.status !== 200) throw new Error(`Actual agenda route failed ${meetingId}`);
+      agendaResponses.set(meetingId, await response.json());
+    }
+    return agendaResponses.get(meetingId)!;
+  };
+  const memberKeyRows = await Promise.all(memberIds.map((id) => keyReader.keyVotesForMember(id)));
+  const keyRowsByNativeRef = new Map<string, { member: string; chamber: "house" | "senate"; row: typeof memberKeyRows[number]["rows"][number]; index: number }[]>();
+  for (const answer of memberKeyRows) if (answer.chamber) for (const row of answer.rows) row.refs.forEach((ref, index) => {
+    const key = keyPositions.keyVotePositionKey(row.entry.id, answer.chamber!, ref.congress, ref.session, ref.rollNumber);
+    keyRowsByNativeRef.set(key, [...(keyRowsByNativeRef.get(key) ?? []), { member: answer.member, chamber: answer.chamber!, row, index }]);
+  });
+  for (const record of census.records) {
+    const raw = sourceRows.get(record.auditId)?.value ?? {};
+    if (record.family === "voting-sites") {
+      const executed = votingAnswers.find((entry) => entry.jurisdictionId === raw.ocdId);
+      if (!executed) throw new Error(`Actual voting-site route lost ${record.auditId}`);
+      const jurisdiction = executed.answer.jurisdictions.find((row) => row.ocdId === raw.ocdId)!;
+      const answer = { ...executed.answer, jurisdictions: [jurisdiction] };
+      const markup = renderToStaticMarkup(createElement(VotingJurisdictionRecords, { answer, selectedSiteId: null, onSelectSite: () => {} }));
+      add(record, "components/map/voting-sites-panel.tsx", "real POST /api/voting-sites with held-geometry geocoder fixture → VotingJurisdictionRecords", answer, [jurisdiction.ocdId], markup,
+        [jurisdiction.name, jurisdiction.modelSentence, jurisdiction.narrowing.sentence, jurisdiction.election, jurisdiction.sourceOrg, jurisdiction.sourceUrl, jurisdiction.collectedAt, jurisdiction.refusalLine, jurisdiction.refusal?.wall, ...(jurisdiction.refusal?.rungs ?? []).flatMap((rung) => [rung.what, rung.result, rung.attemptedAt]), ...jurisdiction.sites.flatMap((site) => [site.name, site.address, site.room, site.serves, votingSiteDisplay.directionsUrl(site)])].filter((value): value is string => Boolean(value)), [],
+        { jurisdictions: { expected: 1, actual: occurrences(markup, "data-voting-jurisdiction") }, sites: { expected: jurisdiction.sites.length, actual: occurrences(markup, "data-voting-site") } });
+    } else if ((record.family === "meetings" && record.unit === "agendaDocuments" || record.family === "notice-summaries") && record.eligibility.state === "READER_ELIGIBLE") {
+      const meetingId = string(raw.meetingId);
+      const answer = await agendaFor(meetingId);
+      const latest = answer.documents[0];
+      if (!latest) throw new Error(`Actual agenda route lost document ${record.auditId}`);
+      if (record.family === "meetings" && latest.id !== raw.id) continue;
+      const summary = noticeSummary.noticeSummaryFor(meetingId, latest.contentHash);
+      if (record.family === "notice-summaries" && !summary) throw new Error(`Exact notice summary lost ${record.auditId}`);
+      const markup = renderToStaticMarkup(createElement(AgendaDocuments, { documents: answer.documents, meetingId, agendaUrl: latest.documentUrl, agendaSentence: "The source record is held.", publication: answer.publication }));
+      const text = latest.text?.replace(/&#x([0-9a-f]+);/gi, (_,hex) => String.fromCodePoint(parseInt(hex,16))).replace(/&#(\d+);/g, (_,dec) => String.fromCodePoint(Number(dec))).replace(/&times;/gi,"×").replace(/&amp;/g,"&");
+      const portal = answer.publication?.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX";
+      add(record, "components/map/popup/agenda-section.tsx", "actual GET /api/agenda newest-first → AgendaDocuments / exact-hash noticeSummaryFor", answer, record.family === "notice-summaries" ? [meetingId] : [latest.id, meetingId], markup,
+        (portal ? [answer.publication?.gap?.statement, latest.documentUrl] : [text, latest.documentUrl, latest.sourceOrg, summary?.summary]).filter((value): value is string => Boolean(value)), portal ? [text, "On the docket"].filter((value): value is string => Boolean(value)) : [], { versions: { expected: answer.documents.length, actual: answer.documentCount } }, portal ? [{ id: latest.id, status: "ACQUIRED_IS_PUBLICATION_INDEX", reason: "This acquired publisher index is not a single meeting's agenda. The canonical acquisition gap and source portal link are the reader answer; index text and docket claims remain withheld." }] : undefined);
+    } else if (record.family === "federal-finance" && record.unit !== "secondHop") {
+      const target = record.unit === "absences" ? string(raw.targetKey) : (raw.targetKeys as string[])[0];
+      const selected = federalDisplay.fundingAnswerForTarget(target);
+      if (selected.kind === "none") throw new Error(`Eligible FEC record unavailable ${record.auditId}`);
+      const markup = renderToStaticMarkup(selected.kind === "funding" ? createElement(FundingDisplay, { data: selected.data, context: null, bare: true }) : createElement(FundingAbsence, { data: selected.data }));
+      add(record, "components/funding/funding-section.tsx", "fundingAnswerForTarget → FundingDisplay / FundingAbsence", selected, [record.unit === "absences" ? target : string(raw.fecCandidateId)], markup,
+        selected.kind === "funding" ? [...selected.data.sentences, ...selected.data.concentrationSentences, ...selected.data.typeConcentrationSentences, selected.data.sourceUrl, selected.data.sourceOrg].filter((value): value is string => Boolean(value)) : [selected.data.statement, selected.data.searchUrl].filter((value): value is string => Boolean(value)), [],
+        { federalAnswers: { expected: 1, actual: selected.kind === "funding" ? occurrences(markup, "data-funding-section") : Number(markup.length > 0) } });
+    } else if (record.family === "congress" && record.unit === "byMember") {
+      const holderId = record.canonicalIdentity.find((id) => /^congress:[A-Z]\d{6}$/.test(id));
+      if (!holderId) throw new Error(`Directory lacks canonical BioGUIDE identity: ${record.auditId}`);
+      const response = directoryRoute.GET(new Request(`http://localhost/api/directory?member=${encodeURIComponent(holderId)}`));
+      if (response.status !== 200) throw new Error(`Directory actual route failed ${holderId}`);
+      const directory = await response.json() as import("../../hooks/use-member-directory.ts").MemberDirectory;
+      const committeeRows = buildCommitteeTree(directory.committees).flatMap((node) => [node, ...node.children]);
+      const markup = renderToStaticMarkup(createElement(Fragment, null, createElement(DirectoryRecordsContent, { holderId, only: "committees", directory, failed: false }), createElement(DirectoryRecordsContent, { holderId, only: "offices", directory, failed: false })));
+      add(record, "components/officials/member-directory.tsx", "actual GET /api/directory → DirectoryRecordsContent", directory, [holderId], markup,
+        [...committeeRows.flatMap((node) => [node.label, node.seat.title, node.seat.jurisdiction, node.seat.jurisdictionSource]), ...directory.districtOffices.flatMap((office) => [office.address, office.city, office.phone])].filter((value): value is string => Boolean(value)), [],
+        { committees: { expected: directory.committees.length, actual: occurrences(markup, "data-committee-seat") }, offices: { expected: directory.districtOffices.length, actual: occurrences(markup, "data-directory-office") } });
+    } else if (record.family === "votes" && record.holdingPath.endsWith("key-vote-positions.json")) {
+      const key = sourceRows.get(record.auditId)?.identityKey ?? "";
+      const positions = Object.entries(raw).filter(([member]) => /^congress:[A-Z]\d{6}$/.test(member));
+      const ownChamber = key.split("|")[1];
+      const excluded = positions.filter(([member]) => memberKeyRows.find((answer) => answer.member === member)?.chamber !== ownChamber).map(([member, position]) => ({ member, position, sourceChamber: ownChamber, currentChamber: memberKeyRows.find((answer) => answer.member === member)?.chamber, disposition: "INTENTIONALLY_OUT_OF_SCOPE", reason: "B15: the current member's card shows only that member's current chamber. A historical position in the other chamber is not an applicable row in this view." }));
+      if (excluded.some((entry) => !entry.currentChamber)) throw new Error(`Key-vote source member lacks resolved current identity ${key}`);
+      const selected = positions.filter(([member]) => !excluded.some((entry) => entry.member === member)).map(([member, expected]) => {
+        const found = keyRowsByNativeRef.get(key)?.find((entry) => entry.member === member);
+        if (!found || found.row.positions[found.index] !== expected || !found.row.held[found.index]) throw new Error(`Key-vote position lost ${key} ${member}`);
+        return found;
+      });
+      const markup = renderToStaticMarkup(createElement(Fragment, null, ...selected.map((entry) => createElement(KeyVoteGroupBlock, { key: entry.member, chamber: entry.chamber, rows: [entry.row] }))));
+      add(record, "components/officials/key-votes-section.tsx", "keyVotesForMember shared actual route selector → KeyVoteGroupBlock", { selected, sourceCount: positions.length, excluded }, [key], markup,
+        unique(selected.flatMap(({ row }) => [row.entry.title, row.entry.explainer, ...row.refs.map((ref) => ref.url)].filter((value): value is string => Boolean(value)))), [],
+        { memberAnswers: { expected: selected.length, actual: occurrences(markup, "data-key-vote") }, sourceDisposition: { expected: positions.length, actual: selected.length + excluded.length } }, excluded.map((entry) => ({ id: `${key}#${entry.member}`, status: entry.disposition, reason: `${entry.reason} Source=${entry.sourceChamber}; current=${entry.currentChamber}.` })));
+    } else if (record.family === "votes" && record.holdingPath.endsWith("key-votes-snapshot.json")) {
+      const selected = (["house", "senate"] as const).flatMap((chamber) => {
+        const answer = memberKeyRows.find((answer) => answer.chamber === chamber);
+        const row = answer?.rows.find((row) => row.entry.id === raw.id);
+        return row ? [{ chamber, row }] : [];
+      });
+      if (selected.length !== 2) throw new Error(`Key-vote entry unavailable in actual member payload ${record.auditId}`);
+      const markup = renderToStaticMarkup(createElement(Fragment, null, ...selected.map(({ chamber, row }) => createElement(KeyVoteGroupBlock, { key: chamber, chamber, rows: [row] }))));
+      add(record, "components/officials/key-votes-section.tsx", "keyVotesForMember shared actual route selector → KeyVoteGroupBlock, both chambers", selected, [string(raw.id)], markup,
+        [string(raw.title), string(raw.explainer)], [], { chamberEntries: { expected: 2, actual: occurrences(markup, "data-key-vote") } });
+    } else if (record.family === "votes" && record.holdingPath.endsWith("bill-summaries.json")) {
+      const url = sourceRows.get(record.auditId)?.identityKey ?? "";
+      const selected = billSummaries.summaryForBill(url);
+      if (!selected) throw new Error(`Held bill summary unavailable ${record.auditId}`);
+      const markup = renderToStaticMarkup(createElement(BillPlainSummary, { billUrl: url }));
+      add(record, "components/map/popup/official-popup.tsx", "summaryForBill → BillPlainSummary", selected, [url], markup, [selected.summary], [], { summaries: { expected: 1, actual: [...markup.matchAll(/<details\b/g)].length } });
+    } else if (record.family === "votes" && ["votes", "positions", "rollCalls"].includes(record.unit)) {
+      const selected = raw.officeholderId ? voteByMember.get(`${raw.officeholderId}#${raw.voteId ?? raw.rollCallId}`) : voteById.get(string(raw.id));
+      if (!selected || raw.officeholderId && selected.vote.position !== raw.position) throw new Error(`Actual member-vote payload lost or changed ${record.auditId}`);
+      const markup = renderToStaticMarkup(createElement(RecentVoteRecords, { votes: [selected.vote], attribution: selected.attribution, failed: false, reactionContext: null }));
+      add(record, "components/map/popup/official-popup.tsx", "actual GET /api/votes exact member → RecentVoteRecords (same uncapped Show all leaf)", selected, raw.officeholderId ? [selected.member, selected.vote.id] : [selected.vote.id], markup,
+        [selected.vote.title, selected.vote.question, selected.vote.result, ({ YES: "Voted yes", NO: "Voted no", PRESENT: "Voted present", NOT_VOTING: "Did not vote" })[selected.vote.position], selected.vote.rollCallUrl, selected.vote.billUrl, selected.attribution?.text, selected.attribution?.url, selected.attribution?.licenceUrl].filter((value): value is string => Boolean(value)), [], { recordedVotes: { expected: 1, actual: occurrences(markup, "data-recent-vote-id") } });
+    } else if (record.family === "ballot-navigation" && record.holdingPath.includes("polling-place")) {
+      const selected = polling.pollingPlaceLinkFor(string(raw.state));
+      if (!selected) throw new Error(`Held polling lookup unavailable ${record.auditId}`);
+      const markup = renderToStaticMarkup(createElement(PollingLookupFallback, { links: [selected] }));
+      add(record, "components/ballot/polling-lookup-fallback.tsx", "pollingPlaceLinkFor → PollingLookupFallback", selected, [selected.url], markup, [selected.url, selected.sourceOrg, selected.note], [], { stateLookups: { expected: 1, actual: occurrences(markup, "data-polling-lookup-state") } });
+    } else if (record.family === "state-money") {
+      const holding = raw as unknown as StateMoneyRecord;
+      const eligible = isRenderable(holding);
+      const selected = eligible ? holding.targetKeys.flatMap((key) => finance.stateMoneyForTarget(key)).find((row) => row.committeeId === holding.committeeId && row.registeredName === holding.registeredName && row.filingState === holding.filingState && row.checkedAt === holding.checkedAt) : holding;
+      if (!selected) throw new Error(`SSR could not resolve ${record.auditId}`);
+      const markup = renderToStaticMarkup(createElement(StateMoneySection, { records: [selected] }));
+      const expected: string[] = [];
+      const forbidden: string[] = [];
+      if (eligible) {
+        if (holding.filingState === "FILED") {
+          expected.push(selected.registeredName, selected.agency);
+          for (const value of [selected.totals.receipts, selected.totals.expenditures, selected.totals.cashOnHand]) if (value !== null) expected.push(`$${Math.round(value).toLocaleString("en-US")}`);
+        } else if (holding.filingState === "OURS_GAP") {
+          expected.push(selected.ourGap?.whatIsMissing ?? "The agency holds a record we could not confirm belongs to this candidacy.");
+          forbidden.push("$", selected.registeredName);
+        } else {
+          expected.push(selected.agency, holding.filingState === "NO_REPORTS_ON_FILE" ? "No reports on file with the" : "Registered committee.");
+          forbidden.push("$0");
+        }
+        if (selected.filingsUrl) expected.push(selected.filingsUrl);
+      } else {
+        forbidden.push("$", holding.registeredName);
+      }
+      add(record, "components/funding/state-money-section.tsx", "stateMoneyForTarget → StateMoneySection", selected, eligible ? selected.targetKeys : [], markup, expected, forbidden.filter(Boolean), { committeeRecords: { expected: eligible ? 1 : 0, actual: Number(/data-state-money-record-count="(\d+)"/.exec(markup)?.[1] ?? -1) } });
+    } else if (record.family === "ballot" && ["cards", "links"].includes(record.unit)) {
+      const key = sourceRows.get(record.auditId)?.identityKey ?? "";
+      const name = cardName(key);
+      if (!name) throw new Error(`No canonical filed/nominee name for card ${record.auditId}`);
+      const card = cardFor(key);
+      const links = linksFor(key);
+      const markup = renderToStaticMarkup(createElement(CandidateCard, { name, partyLine: null, card, links }));
+      add(record, "components/ballot/candidate-card.tsx", "cardForCandidacy / cardForNominee → CandidateCard", { key, card, links }, [key], markup,
+        [name, card?.bio, card?.bioSourceUrl, card?.photoUrl, card?.phone, links?.official?.url].filter((value): value is string => Boolean(value)));
+      const contactMarkup = renderToStaticMarkup(createElement(CandidateContact, { card, links }));
+      add(record, "components/ballot/candidate-contact.tsx", "cardForCandidacy / linksForCandidacy → CandidateContact", { key, card, links }, [key], contactMarkup,
+        [card?.email, card?.filedAddress, card?.filedAddressSource, links?.campaign?.url].filter((value): value is string => Boolean(value)));
+    } else if (record.family === "portraits" && record.eligibility.state === "READER_ELIGIBLE") {
+      for (const binding of raw.bindings as { subjectId: string; permitted: boolean }[]) {
+        if (!binding.permitted) continue;
+        const holder = await registry.seatHolderById(binding.subjectId);
+        const card = binding.subjectId.startsWith("ballot-") ? cardFor(binding.subjectId) : null;
+        const photoUrl = holder?.photoUrl ?? card?.photoUrl;
+        if (!photoUrl || photoUrl !== raw.url) continue;
+        const name = holder?.name ?? cardName(binding.subjectId);
+        if (!name) throw new Error(`No canonical subject name for selected portrait ${record.auditId}`);
+        const markup = renderToStaticMarkup(createElement(IdentityPortrait, { name, photoUrl }));
+        add(record, "components/officials/person-identity.tsx", "canonical person/card portrait → IdentityPortrait", { name, photoUrl }, [photoUrl], markup, [photoUrl, `Portrait of ${name}`], [], { portraits: { expected: 1, actual: [...markup.matchAll(/<img\b/g)].length } });
+      }
+    } else if (record.family === "ballot" && record.unit === "contacts") {
+      const filing = contacts.candidateContactForCandidacy(string(raw.candidacyId));
+      if (!filing) throw new Error(`SSR could not resolve ${record.auditId}`);
+      const markup = renderToStaticMarkup(createElement(CandidateContact, { filing, card: null, links: null }));
+      add(record, "components/ballot/candidate-contact.tsx", "candidateContactForCandidacy → CandidateContact", filing, [filing.candidacyId], markup,
+        [filing.filedAddress, filing.email, filing.sourceUrl, filing.sourceOrg].filter((value): value is string => Boolean(value)), [], { filedContacts: { expected: 1, actual: occurrences(markup, "data-filed-contact") } });
+    } else if (record.family === "comment-access") {
+      const bodyName = Array.isArray(raw.bodyNames) ? string(raw.bodyNames[0]) : string(raw.bodyName);
+      const ocdId = typeof raw.ocdId === "string" ? raw.ocdId : null;
+      const bodyId = typeof raw.bodyId === "string" ? raw.bodyId : null;
+      const selected = commentAccess.commentAccessFor(ocdId, bodyName, bodyId);
+      if (!selected) throw new Error(`SSR could not resolve comment access ${record.auditId}`);
+      const markup = renderToStaticMarkup(createElement(HowToBeHeard, { ocdId, bodyName, bodyId }));
+      add(record, "components/map/meeting-panel.tsx", "commentAccessFor → HowToBeHeard", selected, [bodyId ?? ocdId ?? selected.sourceUrl], markup,
+        [selected.sourceUrl, ...(selected.commentPeriod === "UNKNOWN" ? ["We don't know this body's public-comment rules yet"] : [selected.commentPeriodDetail, selected.timeLimit, selected.signup, selected.writtenComment, selected.attend])].filter((value): value is string => Boolean(value)));
+    } else if ((record.family === "meetings" && record.unit === "meetings" || record.family === "minutes-summaries") && record.eligibility.state === "READER_ELIGIBLE") {
+      const selected = normalizedMeetings.get(string(record.family === "minutes-summaries" ? raw.meetingId : raw.id));
+      if (!selected) throw new Error(`SSR could not normalize ${record.auditId}`);
+      const representation = memberships.membersOfBody(selected.bodyId ?? null).members;
+      const markup = renderToStaticMarkup(createElement(DataProvider, { value: { allMeetings: [selected], meetings: [selected], venues: [], result: null, location: null, drawnDistricts: [], dropped: 0, searchFailed: false, atAddress: false, governing: null, zipPartial: null, basis: "ZIP" }, children: createElement(MeetingPopup, { meeting: selected, representation }) }));
+      const summary = selected.status === "CONCLUDED" ? minutes.minutesSummaryForMeeting(selected.id) : null;
+      const links = meetingLinks.linksForMeeting(selected, null).filter((link) => !(selected.status === "CONCLUDED" && link.rung === "VENUE_MAP"));
+      add(record, "components/map/popup/meeting-popup.tsx", "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting → MeetingPopup", selected, record.family === "minutes-summaries" ? [selected.id] : [selected.id, ...(selected.bodyId ? [selected.bodyId] : [])], markup,
+        [meetingFormat.meetingEntryTitle(selected, { bodyShown: true }), meetingFormat.formatMeetingDate(selected), meetingFormat.formatMeetingTime(selected), ...(selected.location ? [meetingFormat.locationLine(selected.location.name, selected.location.address)] : []), ...links.map((link) => link.url), ...representation.map((holder) => holder.name), summary?.summary, summary?.minutesUrl].filter((value): value is string => Boolean(value)), [], { meetings: { expected: 1, actual: [...markup.matchAll(/role="dialog"/g)].length } });
+    } else if (record.family === "outcomes") {
+      const sitting = outcomes.getOutcomeSnapshot().sittings.find((row) => row.meetingId === raw.meetingId && row.bodyId === raw.bodyId);
+      if (!sitting) throw new Error(`SSR could not resolve ${record.auditId}`);
+      const selected = meetingReader.meetingReaderRecords(sitting.meetingId, sitting.bodyId);
+      const markup = renderToStaticMarkup(createElement(MeetingRecords, { records: selected }));
+      add(record, "components/map/popup/meeting-records.tsx", "meetingReaderRecords → MeetingRecords", selected, [selected.meetingId, selected.bodyId!], markup,
+        [...selected.agenda.map((row) => row.title), ...selected.actions.flatMap((row) => [row.action, row.provenance.endpoint]), ...selected.rollCalls.flatMap((row) => row.votes.flatMap((vote) => [vote.personName, vote.value]))].filter((value): value is string => Boolean(value)), [],
+        { agenda: { expected: selected.counts.agenda, actual: occurrences(markup, "data-agenda-record") }, actions: { expected: selected.counts.actions, actual: occurrences(markup, "data-action-record") }, rollCalls: { expected: selected.counts.rollCalls, actual: occurrences(markup, "data-roll-call-record") }, votes: { expected: selected.counts.votes, actual: occurrences(markup, "data-recorded-vote") } });
+      const mismatch = meetingReader.meetingReaderRecords(sitting.meetingId, "unresolved:other-body");
+      if (renderToStaticMarkup(createElement(MeetingRecords, { records: mismatch })) !== "") throw new Error(`Unresolved body rendered under ${record.auditId}`);
+    } else if (record.family === "area-facts") {
+      const selected = area.areaFactsForState(string(raw.state))?.facts.find((fact) => fact.topic === raw.topic);
+      if (!selected) throw new Error(`SSR could not resolve ${record.auditId}`);
+      const markup = renderToStaticMarkup(createElement(ShuffledFacts, { facts: [selected] }));
+      add(record, "components/area/shuffled-facts.tsx", "areaFactsForState → ShuffledFacts", selected, [selected.topic], markup,
+        [selected.question, selected.answer, selected.sourceOrg, selected.sourceUrl], [], { facts: { expected: 1, actual: [...markup.matchAll(/<section\b/g)].length } });
+    } else if (record.family === "official-actions" && record.unit === "actions") {
+      const answer = officialActions.officialActionsForTarget(string(raw.officeholderId));
+      const selected = answer.records.find((action) => action.id === raw.id);
+      if (!selected) throw new Error(`SSR could not resolve official action ${record.auditId}`);
+      const markup = renderToStaticMarkup(createElement(OfficialActionsContent, { answer }));
+      add(record, "components/officials/official-actions.tsx", "officialActionsForTarget → OfficialActionsContent", answer, [selected.id, selected.officialId], markup,
+        [selected.text, selected.sourceUrl, selected.documentUrl, selected.sourceOrg, dateFormat.formatDateLong(selected.collectedAt.slice(0, 10))].filter((value): value is string => Boolean(value)), [],
+        { actions: { expected: answer.count, actual: occurrences(markup, "data-official-action-id") } });
+    } else if (record.family === "prl") {
+      const selected = prl.prlProfileForSubject(`congress:${string(raw.bioguideId)}`);
+      if (!selected) throw new Error(`SSR could not resolve ${record.auditId}`);
+      const markup = renderToStaticMarkup(createElement(PublicStatementsProfileContent, { profile: selected }));
+      add(record, "components/officials/public-statements-profile.tsx", "prlProfileForSubject → PublicStatementsProfileContent", selected, [selected.subjectId], markup,
+        [...selected.categories.map((category) => category.sentence), selected.attribution.citation, selected.attribution.url, selected.attribution.licence], [],
+        { categories: { expected: selected.categories.length, actual: selected.categories.filter((category) => markup.includes(htmlText(category.sentence))).length } });
+    } else if (["state-officeholders", "statewide-executives", "campaign-sites", "body-rosters"].includes(record.family) || record.family === "registry" && record.unit === "officeholders" || record.family === "congress" && record.unit === "members") {
+      const id = record.family === "congress" ? `congress:${string(raw.bioguide)}` : string(raw.id);
+      const holders = record.family === "body-rosters" ? rosters.rosterHoldersForBody(string(raw.bodyId)) : [await registry.seatHolderById(id)].filter((holder): holder is NonNullable<typeof holder> => Boolean(holder));
+      if (!holders.length) throw new Error(`SSR could not resolve official ${record.auditId}`);
+      const roster = record.family === "body-rosters" ? rosters.rosterForBody(string(raw.bodyId)) : null;
+      const childDispositions = record.family === "body-rosters" ? (Array.isArray(raw.members) ? raw.members : []).map((member)=>rosters.rosterMemberReaderDisposition(string(object(member).id))).filter((child):child is NonNullable<typeof child>=>Boolean(child)).map((child)=>({id:child.sourceId,status:child.state,reason:child.reason})) : undefined;
+      const actualIds = roster ? [roster.bodyId] : holders.map((holder) => holder.id);
+      const payload = roster ? { bodyId: roster.bodyId, holders } : holders;
+      const [tenure, { readerOfficeTitle }] = await Promise.all([import("../officials/tenure.ts"),import("../officials/reader-office-title.ts")]);
+      const identityMarkup = renderToStaticMarkup(createElement(Fragment, null, ...holders.map((holder) => createElement(PersonIdentity, { key: holder.id, holder, seatLabel: null, large: true }))));
+      add(record, "components/officials/person-identity.tsx", "seatHolderById / rosterForBody / rosterHoldersForBody → PersonIdentity", payload, actualIds, identityMarkup,
+        holders.flatMap((holder) => [holder.name, holder.photoUrl, holder.partyLabel, readerOfficeTitle(holder.officeTitle), tenure.inSeatUntil(holder.termEnd), tenure.ageFrom(holder.birthDate,new Date())?.toString()].filter((value): value is string => Boolean(value))), [],
+        { officials: { expected: holders.length, actual: [...identityMarkup.matchAll(/<h2\b/g)].length } }, childDispositions);
+      const contactsMarkup = renderToStaticMarkup(createElement(Fragment, null, ...holders.map((holder) => createElement(ContactPills, { key: holder.id, holder }))));
+      const socialUrls = (holder:unknown) => {
+        const social=object(object(holder).social);
+        const mastodon=string(social.mastodon); const parts=mastodon.replace(/^@/, "").split("@");
+        return [social.twitter&&`https://x.com/${social.twitter}`,social.facebook&&`https://facebook.com/${social.facebook}`,social.youtubeId?`https://youtube.com/channel/${social.youtubeId}`:social.youtube&&`https://youtube.com/${social.youtube}`,social.instagram&&`https://instagram.com/${social.instagram}`,mastodon&&(parts.length===2?`https://${parts[1]}/@${parts[0]}`:mastodon.startsWith("http")?mastodon:`https://mastodon.social/@${parts[0]}`)].filter((value):value is string=>Boolean(value));
+      };
+      add(record, "components/officials/contact-pills.tsx", "seatHolderById / rosterForBody / rosterHoldersForBody → ContactPills", payload, actualIds, contactsMarkup,
+        holders.flatMap((holder) => [holder.phone, holder.email, holder.contactFormUrl, holder.websiteUrl, holder.campaignUrl, ...socialUrls(holder)].filter((value): value is string => Boolean(value))),[],{},childDispositions);
+      const noted = holders.filter((holder)=>holder.termNote);
+      if (noted.length) {
+        const { OfficialTermNote } = await import("../../components/officials/official-term-note.tsx");
+        const markup = renderToStaticMarkup(createElement(Fragment,null,...noted.map((holder)=>createElement(OfficialTermNote,{key:holder.id,holder}))));
+        add(record,"components/officials/official-term-note.tsx","rosterHoldersForBody → OfficialTermNote",noted,actualIds,markup,
+          noted.flatMap((holder)=>[holder.termNote,holder.sourceUrl,holder.provenance?.sourceOrg,holder.provenance?.collectedAt?meetingFormat.formatDateMDY(holder.provenance.collectedAt.slice(0,10)):null].filter((value):value is string=>Boolean(value))),[],
+          {notes:{expected:noted.length,actual:occurrences(markup,"data-official-term-note")}},childDispositions);
+      }
+      const rosterGap=record.family==="body-rosters"?rosterGapForBody(string(raw.bodyId)):null;
+      if(rosterGap) {
+        const {RosterCompletenessGaps}=await import("../../components/officials/roster-completeness-gap.tsx");
+        const markup=renderToStaticMarkup(createElement(RosterCompletenessGaps,{gaps:[rosterGap]}));
+        add(record,"components/officials/roster-completeness-gap.tsx","rosterGapForBody → RosterCompletenessGaps",rosterGap,[rosterGap.bodyId],markup,[rosterGap.statement,rosterGap.sourceUrl,rosterGap.sourceOrg,meetingFormat.formatDateMDY(rosterGap.readAt.slice(0,10))],[],{gaps:{expected:1,actual:occurrences(markup,"data-roster-completeness-gap")}});
+      }
+    }
+  }
+  return { formatVersion: 1, exactHead: execFileSync("git",["rev-parse","HEAD"],{cwd:root,encoding:"utf8"}).trim(), holdingsDigest: census.holdingsDigest, sourceHashes: readerSourceFingerprint(root), rule: "Every named case executes the product component with the canonical selector's payload and reads its emitted HTML. This proves the leaf output only; deployed routing, API grounding and in-situ browser evidence remain separate required proofs. Empty, staged and wrong-identity controls must stay absent.", cases, failures: cases.flatMap((entry) => entry.failures.map((failure) => `${entry.auditId}: ${failure}`)) };
+}

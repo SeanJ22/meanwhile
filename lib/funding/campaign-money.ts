@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import bridge from "./official-candidacies.json" with { type: "json" };
 import { STATEWIDE_EXECUTIVES } from "../officials/statewide-executives.ts";
-import { BODY_ROSTERS } from "../registry/body-rosters.ts";
+import { BODY_ROSTERS, rosterMemberReaderDisposition } from "../registry/body-rosters.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
 import { fundingAnswerForTarget, type FundingAnswer } from "./display.ts";
 import { stateMoneyForCard, type CardMoney } from "./nominee-money.ts";
@@ -64,6 +64,9 @@ function currentHolder(row: BridgeRow) {
 
 /** The committed person relationship, checked against the current holder slot. */
 export function resolvedCandidacyForOfficial(officialId: string): { candidacyId: string; contestId: string } | null {
+  const roster = rosterMemberReaderDisposition(officialId);
+  if (roster?.state === "IDENTITY_UNRESOLVED") return null;
+  if (roster?.state === "EXACT_DUPLICATE") return resolvedCandidacyForOfficial(roster.canonicalId!);
   const row = byHolder.get(officialId);
   return row?.status === "RESOLVED" && row.candidacy && officialFinanceIdentityMatches(row, currentHolder(row))
     ? { candidacyId: row.candidacy.candidacyId, contestId: row.candidacy.contestId } : null;
@@ -76,6 +79,9 @@ export function officialIdsForCandidacy(candidacyId: string): string[] {
 
 /** Current canonical person occupying a stable slot, for other reader holdings. */
 export function currentOfficialIdentity(officialId: string) {
+  const roster = rosterMemberReaderDisposition(officialId);
+  if (roster?.state === "IDENTITY_UNRESOLVED") return null;
+  if (roster?.state === "EXACT_DUPLICATE") return currentOfficialIdentity(roster.canonicalId!);
   const row = byHolder.get(officialId);
   if (!row) return null;
   const current = currentHolder(row);
@@ -83,6 +89,9 @@ export function currentOfficialIdentity(officialId: string) {
 }
 
 export function currentOfficialIdentityStatus(officialId: string): "NOT_OFFICIAL" | "IDENTITY_UNRESOLVED" | "RESOLVED" {
+  const roster = rosterMemberReaderDisposition(officialId);
+  if (roster?.state === "IDENTITY_UNRESOLVED") return "IDENTITY_UNRESOLVED";
+  if (roster?.state === "EXACT_DUPLICATE") return currentOfficialIdentityStatus(roster.canonicalId!);
   if (!byHolder.has(officialId)) return "NOT_OFFICIAL";
   return currentOfficialIdentity(officialId) ? "RESOLVED" : "IDENTITY_UNRESOLVED";
 }
@@ -94,12 +103,17 @@ export function candidacyOfficialIdentityStatus(candidacyId: string): "NO_APPLIC
 }
 
 export function campaignMoneyForTarget(targetKey: string, contestId?: string): CampaignMoney {
-  const federal = fundingAnswerForTarget(targetKey);
+  const roster = rosterMemberReaderDisposition(targetKey);
+  if (roster?.state === "IDENTITY_UNRESOLVED") return {
+    requestedTargetKey: targetKey, federal: { kind: "none" }, state: emptyState(), officialIdentity: "IDENTITY_UNRESOLVED",
+  };
+  if (roster?.state === "EXACT_DUPLICATE") return { ...campaignMoneyForTarget(roster.canonicalId!, contestId), requestedTargetKey: targetKey };
   const official = byHolder.get(targetKey);
+  if (official && (!officialFinanceIdentityMatches(official, currentHolder(official)) || official.status === "IDENTITY_UNRESOLVED")) return {
+    requestedTargetKey: targetKey, federal: { kind: "none" }, state: emptyState(), officialIdentity: "IDENTITY_UNRESOLVED",
+  };
+  const federal = fundingAnswerForTarget(targetKey);
   if (official) {
-    if (!officialFinanceIdentityMatches(official, currentHolder(official)) || official.status === "IDENTITY_UNRESOLVED") {
-      return { requestedTargetKey: targetKey, federal, state: emptyState(), officialIdentity: "IDENTITY_UNRESOLVED" };
-    }
     if (official.status !== "RESOLVED" || !official.candidacy) {
       return { requestedTargetKey: targetKey, federal, state: emptyState(), officialIdentity: "NO_APPLICABLE_CANDIDACY" };
     }

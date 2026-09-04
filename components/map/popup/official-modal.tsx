@@ -25,6 +25,7 @@ import { SpeakYourMind } from "@/components/speak/speak-your-mind";
 
 import { identityChipsFor } from "@/lib/officials/identity-chips";
 import { ContactPills } from "@/components/officials/contact-pills";
+import { OfficialTermNote } from "@/components/officials/official-term-note";
 import { MemberDirectory } from "@/components/officials/member-directory";
 import { PersonIdentity } from "@/components/officials/person-identity";
 import { PositionsSection } from "@/components/officials/positions-section";
@@ -198,6 +199,7 @@ export function OfficialModal({
             officeholder's card. Render what is held, only what is held.
           */}
           <ContactPills holder={holder} />
+          <OfficialTermNote holder={holder} />
 
           <CardSection title="What this office does">
             <OfficeBlurb holder={holder} bare />

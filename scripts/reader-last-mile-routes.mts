@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
+import { readerProofSources } from "./lib/reader-proof-sources.ts";
 import { resolveZip } from "../lib/geo/zcta.ts";
 import { divisionIdsForZipArea } from "../lib/ballot/zip-divisions.ts";
 import { divisionsAt, seatHoldersForDivision } from "../lib/registry/server.ts";
@@ -27,7 +28,7 @@ import { executiveActionStore } from "../lib/officials/executive-actions.ts";
 import { ROSTER_FILES } from "../lib/coverage/artifacts.ts";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
 import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
-import { BODY_ROSTERS } from "../lib/registry/body-rosters.ts";
+import { BODY_ROSTERS, ROSTER_READER_DISPOSITIONS, rosterGapsForDivision } from "../lib/registry/body-rosters.ts";
 import type { OfficeholderSet } from "../lib/officials/types.ts";
 import { directoryFor } from "../lib/officials/directory.ts";
 import { keyVotesForMember } from "../lib/votes/key-votes-reader.ts";
@@ -58,6 +59,7 @@ async function representation(division: string, zip?: string) {
   const actual = rows(result.holders);
   assert.equal(result.ocdId, division);
   assert.deepEqual(actual, JSON.parse(JSON.stringify(expected)), division);
+  assert.deepEqual(result.rosterGaps, rosterGapsForDivision(division), `${division}: sourced roster completeness`);
   provedDivisions.add(division);
   return { zip, surface: "representation", division, expectedIds: expected.map((row) => row.id), returnedIds: actual.map((row) => row.id), returnedCount: actual.length, payload: result, payloadSha256: hash(result) };
 }
@@ -94,6 +96,7 @@ const moneyTargets = [...new Set([
     return (JSON.parse(readFileSync(`data/states/${match[1]}/funding/${file}`, "utf8")) as StateMoneySnapshot).records.flatMap((record) => record.targetKeys);
   }),
   ...officialBridge.rows.filter((row) => row.status === "RESOLVED").map((row) => row.holder.id),
+  ...ROSTER_READER_DISPOSITIONS.filter((row) => row.state !== "READER_ELIGIBLE").map((row) => row.sourceId),
   ...getFundingSnapshot().candidates.flatMap((row) => row.targetKeys),
   ...getFundingSnapshot().absences.map((row) => row.targetKey),
 ])].sort();
@@ -187,6 +190,6 @@ await each([...positionQueries.values()], async ({ subject, topic, expectedRecor
   return { surface: "positions", subject, topic, expectedRecordIds, returnedRecordIds: [...new Set(passages.map((passage) => passage.snapshotId))], statedCount: actual.totalMatches, returnedCount: passages.length, payload: actual, payloadSha256: hash(actual) };
 });
 evidence.push({ surface: "positions", dispositions: positionDispositions });
-const output = { exactHead: head, buildId, base, execution: "HTTP requests to the integrated local Next production server, compared to canonical committed selectors. No model or acquired autonomous evidence supplies answers.", records: evidence };
+const output = { exactHead: head, buildId, base, sourceHashes: readerProofSources(), execution: "HTTP requests to the integrated local Next production server, compared to canonical committed selectors. No model or acquired autonomous evidence supplies answers.", records: evidence };
 writeFileSync("docs/evidence/reader-last-mile-routes.json", JSON.stringify(output, null, 2) + "\n");
 console.log(JSON.stringify({ exactHead: head, buildId, controls: evidence.length, representationDivisions: provedDivisions.size, moneyTargets: moneyTargets.length, voteMembers: memberIds.length, outcomeSittings: getOutcomeSnapshot().sittings.length, prlProfiles: profiles.profiles.length, positionQueries: positionQueries.size, positionDispositions: positionDispositions.length }));

@@ -15,7 +15,7 @@ import { ROSTER_FILES } from "../coverage/artifacts.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
 import { BODY_TERRITORY_FILE, type BodyTerritoryFile } from "./body-territory.ts";
 import { STATEWIDE_EXECUTIVES, statewideExecutivesFor } from "../officials/statewide-executives.ts";
-import { BODY_ROSTERS, rosterHoldersForBody } from "./body-rosters.ts";
+import { BODY_ROSTERS, rosterHoldersForBody, rosterMemberReaderDisposition } from "./body-rosters.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
 import { collapsePhotoIndexByPerson } from "../photos/person.ts";
 
@@ -324,7 +324,9 @@ export async function divisionsByOcdIds(ocdIds: readonly string[]): Promise<Divi
  * returns null — no link rather than a wrong one.
  */
 export async function seatHolderById(id: string): Promise<SeatHolder | null> {
-  return (await loaded()).officialsById.get(id) ?? null;
+  const rosterIdentity = rosterMemberReaderDisposition(id);
+  if (rosterIdentity?.state === "IDENTITY_UNRESOLVED") return null;
+  return (await loaded()).officialsById.get(rosterIdentity?.canonicalId ?? id) ?? null;
 }
 
 /** Exact named-person answers only; this list asserts no relationship to a reader's location. */

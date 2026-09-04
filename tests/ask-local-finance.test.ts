@@ -20,7 +20,7 @@ import test from "node:test";
 
 delete process.env.ANTHROPIC_API_KEY;
 
-const { financeQuestionAsked, localFinanceEvidenceFor, MAX_FINANCE_TRANSACTION_RECORDS } =
+const { financeQuestionAsked, localFinanceEvidenceFor } =
   await import("@/lib/ask/local-finance");
 const { POST, resetGroundedState } = await import("@/app/api/ask/grounded/route");
 
@@ -92,7 +92,7 @@ test("the filed money rows travel as records with amounts and dates in plain lan
 
   const buster = tx.find((r) => /\$297\.86/.test(r.text));
   assert.ok(buster, "the committee's reported contribution is a record");
-  assert.match(buster!.text, /Edward Buster/, "the contributor as filed — 784 rows carry name parts");
+  assert.doesNotMatch(buster!.text, /Edward Buster/, "R255: an individual donor's name never reaches the reader");
   assert.match(buster!.text, /February 27th, 2025/, "dates spell out on reader surfaces");
   assert.match(buster!.text, /contribution/, "money in says it is money in");
   assert.ok(buster!.sourceUrl, "provenance travels on the record itself");
@@ -157,9 +157,12 @@ test("register-linked committees with no readable money rows are a named gap, wi
   assert.equal(vail!.denominators.financeCommitteesWithMoneyRowsHeld, 1);
   assert.ok(vail!.denominators.financeContributionRowsHeldForThisBody >= 1);
   assert.ok(vail!.denominators.financeSpendingRowsHeldForThisBody >= 1);
-  assert.ok(
-    vail!.denominators.financeTransactionRecordsShown <= MAX_FINANCE_TRANSACTION_RECORDS,
-  );
+  assert.equal(vail!.denominators.financeTransactionRecordsShown,
+    vail!.records.filter((record) => record.kind === "FINANCE_TRANSACTION").length);
+  assert.equal(vail!.denominators.financeTransactionRecordsShown,
+    vail!.denominators.financeContributionRowsHeldForThisBody +
+    vail!.denominators.financeSpendingRowsHeldForThisBody +
+    vail!.denominators.financeOtherMoneyRowsHeldForThisBody);
 });
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -202,7 +205,7 @@ test("a person NOT on a covered body gets null — never a false 'nothing record
 });
 
 test("a person ON the covered body gets the body's evidence and the no-attachment gap FIRST", () => {
-  const person = localFinanceEvidenceFor({ kind: "PERSON", id: "p3", name: "Ed Buster" });
+  const person = localFinanceEvidenceFor({ kind: "PERSON", id: "roster:vail#4", name: "Ed Buster" });
   assert.ok(person, "Ed Buster sits on the Vail board per the district's own roster");
   assert.match(
     person!.gaps[0].statement,
@@ -270,7 +273,8 @@ test("ROUTE: a funding question about the Vail board returns finance records wit
   const tx = body.records?.filter((r) => r.kind === "FINANCE_TRANSACTION") ?? [];
   assert.equal(committees.length, 4);
   assert.ok(tx.length > 0, "the filed money rows reach the delivered pack");
-  assert.ok(tx.some((r) => /\$297\.86/.test(r.text) && /Edward Buster/.test(r.text)));
+  assert.ok(tx.some((r) => /\$297\.86/.test(r.text)));
+  assert.ok(tx.every((r) => !/Edward Buster/.test(r.text)), "individual donor identity is withheld under R255");
 
   const ie = body.gaps?.find((g) => /Independent-expenditure reports/.test(g.statement));
   assert.ok(ie, "the reader is told outside spending is a different, not-held record class");
@@ -309,11 +313,16 @@ test("ROUTE: an FEC-covered federal candidate question gets NO Pima local financ
   /* Whatever else the ballot path answers about him, the local store stays
      out: his money is federal, filed with the FEC, and a Pima County register
      row links to none of it. */
-  const finance = body.records?.filter((r) => r.kind.startsWith("FINANCE_")) ?? [];
+  const finance = body.records?.filter((r) => r.kind === "FINANCE_COMMITTEE" || r.kind === "FINANCE_TRANSACTION") ?? [];
   assert.equal(finance.length, 0);
   const everything = [
     ...(body.records ?? []).map((r) => r.text),
     ...(body.gaps ?? []).map((g) => g.statement),
   ].join("\n");
   assert.ok(!/Pima County Elections/.test(everything), "no local filing officer under a federal race");
+});
+
+test("a same-name person with no canonical roster identity cannot acquire the body's finance", () => {
+  assert.equal(localFinanceEvidenceFor({ kind: "PERSON", id: "unresolved:ed-buster", name: "Ed Buster" }), null);
+  assert.equal(localFinanceEvidenceFor({ kind: "PERSON", id: "ballot:unresolved", name: "Ed Buster" }, ["not-a-held-official"]), null);
 });

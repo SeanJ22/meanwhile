@@ -366,7 +366,7 @@ function MeetingEntry({
 
       {/* 6a: nothing left to be heard at once the meeting has concluded. */}
       {meeting.status !== "CONCLUDED" && (
-        <HowToBeHeard ocdId={meeting.ocdId} bodyName={meeting.bodyName} />
+        <HowToBeHeard ocdId={meeting.ocdId} bodyName={meeting.bodyName} bodyId={meeting.bodyId} />
       )}
 
       <footer className="mt-4 border-t border-rule-soft pl-4 pt-3">
@@ -447,11 +447,13 @@ function MeetingEntry({
 export function HowToBeHeard({
   ocdId,
   bodyName,
+  bodyId,
 }: {
   ocdId: string | null;
   bodyName: string;
+  bodyId?: string | null;
 }) {
-  const access = commentAccessFor(ocdId, bodyName);
+  const access = commentAccessFor(ocdId, bodyName, bodyId);
   if (!access) return null;
 
   if (access.commentPeriod === "UNKNOWN") {

@@ -1,3 +1,4 @@
+import { isRenderable } from "../lib/funding/state-money-reader.ts";
 /**
  * **RULING 126 — campaign-finance data renders for readers and never enters
  * anything sold.** (Adopted 2026-08-24, Sean's ruling.)
@@ -34,7 +35,6 @@ import { getTableConfig } from "drizzle-orm/pg-core";
 import * as schema from "../lib/db/schema.ts";
 import {
   computeSplit,
-  isRenderable,
   judgeMatch,
   namesAgree,
   officeClassOf,
@@ -271,8 +271,14 @@ const record = (filingState: StateMoneyRecord["filingState"]): StateMoneyRecord 
 });
 
 test("a LEAD never renders; a sourced absence does", () => {
-  assert.equal(isRenderable(record("FILED")), true);
-  assert.equal(isRenderable(record("NO_REPORTS_ON_FILE")), true, "a sourced, dated absence is a finding and renders");
+  const verified = (state: StateMoneyRecord["filingState"]): StateMoneyRecord => {
+    const r = record(state);
+    return { ...r, targetKeys: ["ballot-nj-fixture:candidate"], match: { ...r.match, allThreeAgree: true },
+      provenance: { ...r.provenance, verifiedAt: r.checkedAt } };
+  };
+  assert.equal(isRenderable(verified("FILED")), true);
+  assert.equal(isRenderable(verified("NO_REPORTS_ON_FILE")), true, "a sourced, dated absence is a finding and renders");
+  assert.equal(isRenderable(record("FILED")), false, "an unverified unmatched enum is not reader eligibility");
   assert.equal(isRenderable(record("LEAD")), false, "a LEAD is a guess about a named person's money");
 });
 

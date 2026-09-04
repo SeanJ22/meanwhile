@@ -151,9 +151,6 @@ const REGISTER_OFFICE_TO_BODY_ID: Readonly<Record<string, string>> = {
 /* THE RECORDS                                                                 */
 /* -------------------------------------------------------------------------- */
 
-/** Enough to answer, few enough to read — the same bound votes.ts uses. */
-export const MAX_FINANCE_TRANSACTION_RECORDS = 12;
-
 export interface LocalFinanceEvidence {
   records: EvidenceRecord[];
   gaps: EvidenceGap[];
@@ -203,12 +200,9 @@ function transactionLines(committeeNameAsFiled: string, filedWith: string): Tran
 
   for (const [index, row] of azPimaContributionsFor(committeeNameAsFiled).entries()) {
     const date = filedDate(row.receivedOn);
-    const from = row.contributorNameAsFiled
-      ? `from ${row.contributorNameAsFiled}`
-      : "from a contributor the public copy of the filing does not name";
     lines.push({
       id: `cf:${row.filingId}:contribution:${index}`,
-      text: `${committeeNameAsFiled} reported receiving a ${usd(row.amountReceived)} contribution ${from}${
+      text: `${committeeNameAsFiled} reported receiving a ${usd(row.amountReceived)} contribution${
         date
           ? `, ${filedIso(row.receivedOn) ? "on" : "dated"} ${date}`
           : ", on a date the filed row does not carry"
@@ -335,7 +329,7 @@ function bodyFinanceEvidence(bodyId: string, bodyName: string): LocalFinanceEvid
     return a.isoDate < b.isoDate ? 1 : -1;
   });
 
-  for (const line of lines.slice(0, MAX_FINANCE_TRANSACTION_RECORDS)) {
+  for (const line of lines) {
     records.push({
       kind: "FINANCE_TRANSACTION",
       id: line.id,
@@ -353,22 +347,12 @@ function bodyFinanceEvidence(bodyId: string, bodyName: string): LocalFinanceEvid
   denominators.financeContributionRowsHeldForThisBody = contributionRows;
   denominators.financeSpendingRowsHeldForThisBody = expenditureRows;
   denominators.financeOtherMoneyRowsHeldForThisBody = otherMoneyRows;
-  denominators.financeTransactionRecordsShown = Math.min(
-    lines.length,
-    MAX_FINANCE_TRANSACTION_RECORDS,
-  );
+  denominators.financeTransactionRecordsShown = lines.length;
   denominators.financeCommitteesWithMoneyRowsHeld = committeesWithRows;
   /* The document-class denominator: candidate/committee campaign-finance
      reports are the ONLY class these rows come from, and the class that
      states outside spending is affirmatively not acquired. */
   denominators.independentExpenditureReportsHeld = 0;
-
-  if (lines.length > MAX_FINANCE_TRANSACTION_RECORDS) {
-    gaps.push({
-      whose: "OURS",
-      statement: `We hold ${lines.length} itemized money rows for these committees; the ${MAX_FINANCE_TRANSACTION_RECORDS} most recent are shown.`,
-    });
-  }
 
   if (committeesWithoutRows.length > 0) {
     /*
@@ -430,8 +414,8 @@ function bodyFinanceEvidence(bodyId: string, bodyName: string): LocalFinanceEvid
  * module has nothing honest to add.
  *
  * - **BODY** — always answers: linked committees' records, or the named gap.
- * - **PERSON** — only a person who resolves by exact normalized full name to
- *   exactly ONE roster seat on a body the crosswalk covers; they get that
+ * - **PERSON** — only a person whose canonical official ID resolves to
+ *   exactly ONE body the committed crosswalk covers; they get that
  *   body's evidence with the no-committee-attachment gap stated first. Anyone
  *   else — a statewide executive, a federal candidate — returns null: their
  *   finance records live in other stores (the FEC snapshot renders on the
@@ -444,7 +428,7 @@ function bodyFinanceEvidence(bodyId: string, bodyName: string): LocalFinanceEvid
  *   no held record links a committee to a candidacy (see held-records.ts on
  *   why `authorizedByCandidacyId` stays null).
  */
-export function localFinanceEvidenceFor(subject: EvidenceSubject): LocalFinanceEvidence | null {
+export function localFinanceEvidenceFor(subject: EvidenceSubject, canonicalOfficialIds: readonly string[] = [subject.id]): LocalFinanceEvidence | null {
   if (subject.kind === "BODY") {
     return bodyFinanceEvidence(subject.id, subject.name);
   }
@@ -468,22 +452,22 @@ export function localFinanceEvidenceFor(subject: EvidenceSubject): LocalFinanceE
 
   if (subject.kind === "PERSON") {
     const coveredBodyIds = new Set(Object.values(REGISTER_OFFICE_TO_BODY_ID));
-    const key = normalizeName(subject.name);
-    const seats: { bodyId: string; bodyName: string }[] = [];
+    const officialIds = new Set(canonicalOfficialIds);
+    const seats = new Map<string, { bodyId: string; bodyName: string }>();
     for (const roster of BODY_ROSTERS) {
       if (!coveredBodyIds.has(roster.bodyId)) continue;
       for (const member of roster.members) {
-        if (normalizeName(member.name) === key) {
-          seats.push({ bodyId: roster.bodyId, bodyName: roster.bodyName });
+        if (officialIds.has(member.id)) {
+          seats.set(roster.bodyId, { bodyId: roster.bodyId, bodyName: roster.bodyName });
         }
       }
     }
     /* Exactly one, or nothing — the same fail-closed identity rule as
        lib/ask/votes.ts. Zero seats is a person this module holds nothing
        for; two would be an ambiguity nothing here can resolve. */
-    if (seats.length !== 1) return null;
+    if (seats.size !== 1) return null;
 
-    const seat = seats[0];
+    const seat = [...seats.values()][0];
     const evidence = bodyFinanceEvidence(seat.bodyId, seat.bodyName);
     evidence.gaps.unshift({
       whose: "OURS",
@@ -557,7 +541,7 @@ export interface FinanceRegimeNote {
  * asked, which is the whole point: silence is what let one regime answer for
  * all of them.
  */
-export function financeRegimeNotesFor(subject: EvidenceSubject): FinanceRegimeNote[] {
+export function financeRegimeNotesFor(subject: EvidenceSubject, retrieved: { state: boolean; federal: boolean; county?: boolean } = { state: false, federal: false }): FinanceRegimeNote[] {
   const about = subject.name;
   const notes: FinanceRegimeNote[] = [];
 
@@ -565,10 +549,9 @@ export function financeRegimeNotesFor(subject: EvidenceSubject): FinanceRegimeNo
     regime: "COUNTY",
     gap: {
       whose: "OURS",
-      statement:
-        `County filings: we hold the Pima County filing officer's own itemized contribution and ` +
-        `distribution records, and they are what any county-level answer here is built from. We ` +
-        `hold no other county's filings.`,
+      statement: retrieved.county
+        ? `County filings: this answer includes the Pima County filing officer's committee and itemized records for the resolved body's campaigns. The filing register links committees to an office, not to an individual person.`
+        : `County filings: no applicable county filing was resolved for this answer about ${about}. That does not establish that none exists.`,
     },
   });
 
@@ -577,9 +560,9 @@ export function financeRegimeNotesFor(subject: EvidenceSubject): FinanceRegimeNo
     gap: {
       whose: "OURS",
       statement:
-        `State filings: we hold Arizona's reporting calendar, and we have NOT acquired the ` +
-        `state's itemized filings. So a state-level committee raising or spending money around ` +
-        `${about} would not appear above — that is our gap, not a statement that none exists.`,
+        retrieved.state
+          ? `State filings: this answer uses the same state campaign-money records as the card. These records describe the campaigns' own filings; they do not establish outside spending for or against ${about}.`
+          : `State filings: we have not linked a verified state filing to this answer about ${about}. That does not establish that none exists.`,
     },
   });
 
@@ -588,9 +571,9 @@ export function financeRegimeNotesFor(subject: EvidenceSubject): FinanceRegimeNo
     gap: {
       whose: "OURS",
       statement:
-        `Federal filings: FEC totals are held for federal candidates and render on the ballot ` +
-        `card rather than through this answer. Nothing above is drawn from them, so their ` +
-        `absence here says nothing about what the FEC holds.`,
+        retrieved.federal
+          ? `Federal filings: this answer uses the same FEC snapshot as the campaign-money card, with its recorded reporting period and source.`
+          : `Federal filings: no applicable FEC record was resolved for this answer. This does not establish an absence of state or county filings.`,
     },
   });
 
@@ -610,17 +593,15 @@ export function financeScopeGapFor(subject: EvidenceSubject): EvidenceGap {
     return {
       whose: "OURS",
       statement:
-        `Money in a race belongs to the campaigns in it, and none of the filing records we hold ` +
-        `links a committee to an individual candidacy — so we cannot answer about ${subject.name} ` +
+        `Money in a race belongs to the campaigns in it, so this answer does not combine their ` +
+        `filings into a total for ${subject.name} ` +
         `as a whole. Ask about one of the candidates or about the body the office sits on.`,
     };
   }
   return {
     whose: "OURS",
     statement:
-      `The campaign-finance records we hold are the county filing officer's, and they link a ` +
-      `committee to the OFFICE it filed for. ${subject.name} is not on a body that register ` +
-      `covers, so we have attached no committee here. That is the reach of what we have ` +
-      `acquired — not a finding that no filings exist.`,
+      `No applicable verified campaign-finance record was resolved for this answer about ` +
+      `${subject.name}. That is a gap in this answer, not a finding that no filings exist.`,
   };
 }

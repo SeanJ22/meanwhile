@@ -2,7 +2,9 @@ import { readSnapshot } from "@/lib/meetings/snapshot";
 import type { Meeting } from "@/lib/sources/types";
 import type { AskSitting } from "@/lib/ask/answer";
 import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
-import { statewideExecutivesFor } from "@/lib/officials/statewide-executives";
+import { seatHolderById } from "@/lib/registry/server";
+import { officialIdsForCandidacy } from "@/lib/funding/campaign-money";
+import { canonicalOfficialAliases } from "@/lib/ask/official-identity";
 import {
   actionsFor,
   actionText,
@@ -25,7 +27,11 @@ import {
   type EvidenceSubject,
 } from "@/lib/ask/evidence";
 import { snapshotEntities, titleCaseName } from "@/lib/ask/inventory";
-import { canonicalBodyIdentity } from "@/lib/ask/body-identity";
+import { bodyIdentityIndex, canonicalBodyIdentity } from "@/lib/ask/body-identity";
+import { statementEvidenceFor } from "@/lib/ask/statements";
+import { campaignMoneyEvidenceFor } from "@/lib/ask/campaign-money";
+import type { SeatHolder } from "@/lib/officials/lookup";
+import { reconciledCandidacyIdForCard } from "@/lib/identity/az-2026";
 import { outcomeGapStatement, outcomeQuestionClass } from "@/lib/ask/outcome-question";
 import { ruleOnQuestion } from "@/lib/answerability/record-class";
 import { unavailableInterpretation, type AskInterpretation } from "@/lib/ask/intent";
@@ -40,11 +46,12 @@ import {
   contactsForBody,
   contactsForDivision,
   contactsForRepresentatives,
-  MAX_ASK_CONTACTS,
   type AskContact,
 } from "@/lib/ask/contacts";
+import { contactForCandidate } from "@/lib/ask/candidate-contact";
 import {
   absencesForDivisions,
+  absencesWithoutRemovals,
   ballotAskInventory,
   ballotRecordsFor,
   ballotSubject,
@@ -69,7 +76,7 @@ import {
 } from "@/lib/outcomes/store";
 import { emptyTrace, type AnswerMode, type AskTrace } from "@/lib/ask/trace";
 import { validateAnswer } from "@/lib/ask/validate";
-import { loadBallotForDivisions, readerRepresentatives } from "@/lib/ask/server-sources";
+import { loadBallotForDivisions, namedOfficeholders, readerOfficeholders, readerRepresentatives } from "@/lib/ask/server-sources";
 import {
   askAnswer,
   clarifyAnswer,
@@ -359,22 +366,26 @@ function officeholderActionEvidence(
     /* No store is a STATE and is reported as one, never as "they did nothing". */
     gaps.push({
       whose: "OURS",
-      statement: `We have not recorded any actions in office for ${personName}.`,
+      statement: `Our canonical action records could not be read for this answer about ${personName}. This is a holding failure, not a finding that no actions occurred.`,
     });
     denominators.actionRecordsHeld = 0;
     return;
   }
 
   const from = trailingMonths ? monthsBefore(today, trailingMonths) : null;
-  const windowed = actionsFor(seatId, { from, to: today });
+  const windowed = trailingMonths ? actionsFor(seatId, { from, to: today }) : actionsFor(seatId);
   const held = actionsFor(seatId);
 
-  denominators.actionRecordsHeld = held.length;
-  denominators.actionRecordsInAskedWindow = windowed.length;
+  denominators.actionRecordsHeld = (denominators.actionRecordsHeld ?? 0) + held.length;
+  denominators.actionRecordsInAskedWindow = (denominators.actionRecordsInAskedWindow ?? 0) + windowed.length;
+  if (held.length === 0) {
+    gaps.push({ whose: "OURS", statement: `We have not recorded any actions in office for ${personName}.` });
+    return;
+  }
   denominators.executiveOrdersIndexedAtCollection = store.denominator.indexedAcrossPagesWalked;
   denominators.executiveOrdersReadAtCollection = store.denominator.detailPagesRead;
 
-  for (const action of windowed.slice(0, 25)) {
+  for (const action of windowed) {
     records.push({
       kind: "OFFICIAL_ACTION",
       id: action.id,
@@ -487,7 +498,7 @@ function officeholderActionEvidence(
 }
 
 /** Officeholders the reader can name — statewide executives, today. */
-function personEntities(ocdIds: readonly string[]): BindableEntity[] {
+function personEntities(seats: readonly SeatHolder[]): BindableEntity[] {
   const out: BindableEntity[] = [];
   /*
    * **PASS THE DIVISIONS STRAIGHT THROUGH.** (Corrected 2026-08-27, found by
@@ -505,10 +516,10 @@ function personEntities(ocdIds: readonly string[]): BindableEntity[] {
    * card do it. Re-deriving it here, differently and more strictly, was a
    * second answer to a question that already had one.
    */
-  for (const seat of statewideExecutivesFor([...new Set(ocdIds)])) {
+  for (const seat of seats) {
     if (!seat.name) continue;
     out.push({
-      id: `person:${seat.name.toLowerCase().replace(/\s+/g, "_")}`,
+      id: seat.id,
       name: seat.name,
       nameClass: "person",
       divisionType: "person",
@@ -573,17 +584,9 @@ export async function POST(request: Request) {
   const question = body.question.slice(0, MAX_QUESTION_CHARS);
 
   const snapshot = readSnapshot();
-  if (!snapshot) {
-    /* No corpus is a STATE and is reported as one, never as "nothing found" —
-       the same absence-as-assertion rule the agenda route follows. */
-    return Response.json(
-      { error: "the meetings corpus is not available right now" },
-      { status: 503 },
-    );
-  }
-
-  const meetings = snapshot.meetings as MeetingLike[];
-  const documents = (snapshot.agendaDocuments ?? []) as AgendaDocumentLike[];
+  // A failed meeting read must not withhold an unrelated eligible ballot or money record.
+  const meetings = (snapshot?.meetings ?? []) as MeetingLike[];
+  const documents = (snapshot?.agendaDocuments ?? []) as AgendaDocumentLike[];
   const ocdIds = Array.isArray(body.ocdIds)
     ? body.ocdIds.filter((v): v is string => typeof v === "string").slice(0, 40)
     : [];
@@ -595,8 +598,23 @@ export async function POST(request: Request) {
    * one government rather than a geography several of them share. See
    * `lib/ask/inventory.ts` for the defect this closes.
    */
-  const bodies = snapshotEntities(meetings, (bodyId) => canonicalBodyIdentity(bodyId));
-  const people = personEntities(ocdIds);
+  const explicitBodyIds = new Set([...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)]
+    .filter((ref) => ref.kind === "BODY").flatMap((ref) => ref.id ? [ref.id] : []));
+  const scopedBodies = [...bodyIdentityIndex().values()].filter((entry) =>
+    (entry.ocdId && ocdIds.includes(entry.ocdId)) || explicitBodyIds.has(entry.bodyId));
+  const bodies = snapshotEntities([...meetings, ...scopedBodies], (bodyId) => canonicalBodyIdentity(bodyId));
+  const officeholders = await readerOfficeholders(ocdIds, scopedBodies.map((body) => body.bodyId));
+  try {
+    const explicitIds = [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)]
+      .flatMap((ref) => ref.id ? [ref.id] : []);
+    const named = await namedOfficeholders(question, explicitIds);
+    for (const seat of named) if (!officeholders.seats.some((held) => held.id === seat.id)) officeholders.seats.push(seat);
+  } catch {
+    officeholders.loaderFailures += 1;
+  }
+  const people = personEntities(officeholders.seats);
+  const preferredOfficialIds = [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)].flatMap((ref) => ref.id ? [ref.id] : []);
+  const officialAliases = canonicalOfficialAliases(people.map((person) => person.id), preferredOfficialIds);
 
   /*
    * **THE BALLOT'S OWN ENTITIES, ON EVERY SURFACE.**
@@ -609,6 +627,8 @@ export async function POST(request: Request) {
    * `app/ballot/page.tsx` renders from, through the same source registry.
    */
   const ballot = await loadBallotForDivisions(ocdIds);
+  const ballotLoadGaps: EvidenceGap[] = ballot.loaderFailures.length ? [{ whose: "OURS", statement: "The canonical ballot records for this area could not be read for this answer. That is a failure of our holding, not a statement that no candidates or ballot items exist." }] : [];
+  const holdingLoadGaps: EvidenceGap[] = [...ballotLoadGaps, ...(officeholders.loaderFailures ? [{ whose: "OURS" as const, statement: "Our canonical officeholder records could not be read for this answer. This is a holding failure, not a finding that there are no officials for this place or person." }] : [])];
   const ballotInventory = ballotAskInventory(ballot.set, ballot.contests, ballot.nominees);
 
   /*
@@ -623,23 +643,22 @@ export async function POST(request: Request) {
    * was unclear when it was not, about a distinction that exists only in our
    * storage.
    *
-   * The ballot row wins, because it is the one whose id retrieves — a filing,
-   * a party, sourced positions — and because the officeholder record is
-   * attached to it below by the same name match. The match is EXACT on the
-   * normalized name within one state's inventory, which is the conservative
-   * form: two different people of the same name holding and seeking office in
-   * one state is possible and vanishingly rare, and the cost of not merging is
-   * a clarification on every question about a sitting officeholder who is
-   * running again.
+   * The committed person/candidacy bridge supplies the aliases. A matching
+   * display name alone never suppresses an official or attaches their record.
+   * An officeholder with no resolved bridge keeps their own canonical ID.
    */
-  const ballotPersonNames = new Set(
-    [...ballotInventory.subjects.values()]
-      .filter((s) => s.kind === "PERSON")
-      .map((s) => s.name.trim().toLowerCase()),
-  );
+  const ballotOfficialIds = new Map<string, string[]>();
+  const officialToBallot = new Map<string, string>();
+  for (const candidate of ballotInventory.subjects.values()) if (candidate.kind === "PERSON") {
+    const candidacyId = reconciledCandidacyIdForCard(candidate.id) ?? candidate.candidacyId;
+    if (!candidacyId) continue;
+    const officialIds = officialIdsForCandidacy(candidacyId);
+    ballotOfficialIds.set(candidate.id, officialIds);
+    for (const officialId of officialIds) officialToBallot.set(officialId, candidate.id);
+  }
   const inventory = [
     ...bodies,
-    ...people.filter((p) => !ballotPersonNames.has(p.name.trim().toLowerCase())),
+    ...people.map((person) => ({ ...person, id: officialToBallot.get(person.id) ?? officialAliases.get(person.id) ?? person.id })),
     ...ballotInventory.entities,
   ];
 
@@ -658,8 +677,9 @@ export async function POST(request: Request) {
    * strings — canonical ids where the surface holds them, so a pronoun can
    * resolve to a person the binder actually verified. See `lib/ask/subject.ts`.
    */
-  const activeSubjects: AskSubjectRef[] = readSubjectRefs(body.activeSubjects);
-  const priorSubjects: AskSubjectRef[] = readSubjectRefs(body.priorSubjects, 8);
+  const canonicalReference = (ref: AskSubjectRef): AskSubjectRef => ({ ...ref, id: ref.id ? officialToBallot.get(ref.id) ?? officialAliases.get(ref.id) ?? ref.id : ref.id });
+  const activeSubjects: AskSubjectRef[] = readSubjectRefs(body.activeSubjects).map(canonicalReference);
+  const priorSubjects: AskSubjectRef[] = readSubjectRefs(body.priorSubjects, 8).map(canonicalReference);
 
   // ── 1. INTERPRETATION ────────────────────────────────────────────────
   let interpretation: AskInterpretation = unavailableInterpretation();
@@ -774,21 +794,27 @@ export async function POST(request: Request) {
       null,
       null,
       [],
-      [],
+      holdingLoadGaps,
     );
-    return Response.json(
-      clarifyAnswer(
+    const answer = clarifyAnswer(
         resolution.binding.mention,
         resolution.binding.candidates.map((c) => titleCaseName(c.name)),
         trace,
-      ),
-    );
+      );
+    answer.gaps.push(...holdingLoadGaps);
+    answer.denominators.ballotLoaderFailures = ballot.loaderFailures.length;
+    answer.denominators.officeholderLoaderFailures = officeholders.loaderFailures;
+    return Response.json(answer);
   }
   if (resolution.binding.kind === "UNRESOLVED") {
     trace.answerMode = "UNRESOLVED";
     trace.totalMs = Date.now() - started;
-    await capture("UNRESOLVED", [], null, null, null, [], []);
-    return Response.json(unresolvedAnswer(resolution.binding.mention, trace));
+    await capture("UNRESOLVED", [], null, null, null, [], holdingLoadGaps);
+    const answer = unresolvedAnswer(resolution.binding.mention, trace);
+    answer.gaps.push(...holdingLoadGaps);
+    answer.denominators.ballotLoaderFailures = ballot.loaderFailures.length;
+    answer.denominators.officeholderLoaderFailures = officeholders.loaderFailures;
+    return Response.json(answer);
   }
 
   // ── 3. DETERMINISTIC RETRIEVAL ───────────────────────────────────────
@@ -821,9 +847,31 @@ export async function POST(request: Request) {
   const records: EvidenceRecord[] = [];
   /** The sittings this request resolved, for the structured half of the payload. */
   const resolvedSittings: AskSitting[] = [];
-  const gaps: EvidenceGap[] = [];
-  const denominators: Record<string, number> = {};
+  const gaps: EvidenceGap[] = [...holdingLoadGaps];
+  const denominators: Record<string, number> = { ballotLoaderFailures: ballot.loaderFailures.length };
   const contacts: AskContact[] = [];
+  const canonicalSubjectKeys = new Set<string>(subject ? [subject.id] : []);
+  if (subject?.kind === "PERSON") for (const [id, canonicalId] of officialAliases) {
+    if (canonicalId === subject.id) canonicalSubjectKeys.add(id);
+  }
+  const candidateSeats = ballotRecord?.kind === "PERSON"
+    ? (await Promise.allSettled((ballotOfficialIds.get(ballotRecord.id) ?? []).map(seatHolderById)))
+      .flatMap((result) => result.status === "fulfilled" && result.value ? [result.value] : [])
+    : [];
+  for (const seat of candidateSeats) canonicalSubjectKeys.add(seat.id);
+  if (ballotRecord?.kind === "PERSON") {
+    const candidacyId = reconciledCandidacyIdForCard(ballotRecord.id) ?? ballotRecord.candidacyId;
+    if (candidacyId) canonicalSubjectKeys.add(candidacyId);
+    try {
+      const contact = contactForCandidate(candidacyId ?? ballotRecord.id, ballotRecord.name, ballotRecord.contestTitle);
+      if (contact) contacts.push(contact);
+    } catch {
+      gaps.push({ whose: "OURS", statement: `The filed contact for ${ballotRecord.name} could not be read for this answer.` });
+      denominators.candidateContactLoaderFailures = 1;
+    }
+  }
+  denominators.meetingLoaderFailures = snapshot ? 0 : 1;
+  denominators.officeholderLoaderFailures = officeholders.loaderFailures;
 
   if (ballotRecord && ballot.set) {
     /* ── A BALLOT SUBJECT ── contest, candidate or measure, selected by its
@@ -860,10 +908,7 @@ export async function POST(request: Request) {
      * they have DONE, and silence there would read as "she has done nothing".
      */
     if (ballotRecord.kind === "PERSON") {
-      const seat = statewideExecutivesFor([...new Set(ocdIds)]).find(
-        (s) => s.name.trim().toLowerCase() === ballotRecord.name.trim().toLowerCase(),
-      );
-      if (seat) {
+      for (const seat of candidateSeats) {
         records.push({
           kind: "OFFICEHOLDER",
           id: `office:${seat.id}`,
@@ -874,7 +919,7 @@ export async function POST(request: Request) {
           sourceOrg: seat.provenance?.sourceOrg ?? null,
           retrievedAt: seat.provenance?.collectedAt ?? null,
         });
-        denominators.officeholderRecords = 1;
+        denominators.officeholderRecords = (denominators.officeholderRecords ?? 0) + 1;
         /* The office the question is ABOUT — the most relevant contact there
            is, and the one an answer about the Governor was missing while it
            listed the reader's state senator. */
@@ -923,12 +968,6 @@ export async function POST(request: Request) {
      * Silence there reads as "they have said nothing", which is a claim about
      * a person made out of our own collection state.
      */
-    if (ballotRecord.kind === "PERSON" && (denominators.sourcedPositionPassages ?? 0) === 0) {
-      gaps.push({
-        whose: "OURS",
-        statement: `We have not recorded any sourced statement of ${ballotRecord.name}'s positions.`,
-      });
-    }
 
     /*
      * ── ASK-06 ── **HOW THEY HAVE ACTUALLY VOTED.** (2026-08-28.)
@@ -937,25 +976,30 @@ export async function POST(request: Request) {
      * DID, and this product held 12,234 recorded positions that the grounded
      * engine could not reach.
      *
-     * Reached through EXACT identity and nothing looser: person → seat by
-     * exact normalized full name, unique within the reader's own states; seat
-     * → votes by the publisher's own stable officeholder id. Where the name
-     * form differs across the join — *Sally Ann Gonzales* on a House ballot
-     * line against *Sally Gonzales* the sitting SENATOR — it fails closed to a
-     * named gap rather than attaching one chamber's votes to another
-     * chamber's candidacy. `lib/ask/votes.ts` holds the whole rule and the
-     * measured cost of it.
+     * Candidacy → officeholder uses the committed person relationship above;
+     * officeholder → votes uses the publisher's stable key. An unresolved
+     * relationship produces an identity gap without a runtime name search.
      *
      * The office on every record is the one they HOLD, never the one they are
      * running for.
      */
     if (ballotRecord.kind === "PERSON") {
-      const votes = voteEvidenceFor(ballotRecord.name, { withinStates: statesOf(ocdIds) });
-      records.push(...votes.records);
-      gaps.push(...votes.gaps);
-      Object.assign(denominators, votes.denominators);
+      const candidates = candidateSeats.map((seat) => voteEvidenceFor(ballotRecord.name, { officeholderId: seat.id }));
+      const joined = candidates.filter((votes) => votes.identity.kind === "JOINED");
+      for (const votes of joined) {
+        records.push(...votes.records);
+        gaps.push(...votes.gaps);
+        for (const [key, count] of Object.entries(votes.denominators)) denominators[key] = (denominators[key] ?? 0) + count;
+      }
+      if (!joined.length) gaps.push({ whose: "OURS", statement: `We have not established a canonical voting-office identity for ${ballotRecord.name}, so no other person's voting record has been attached.` });
     }
   } else if (subject?.kind === "BODY") {
+    const identity = canonicalBodyIdentity(subject.id);
+    if (identity?.nameIsBodysOwn && identity.sourceUrl) {
+      records.push({ kind: "BODY", id: subject.id, bodyId: subject.id,
+        text: `${identity.name}${identity.divisionLabel && !identity.name.includes(identity.divisionLabel) ? ` — ${identity.divisionLabel}` : ""}.`,
+        sourceUrl: identity.sourceUrl, retrievedAt: identity.retrievedAt });
+    }
     const forBody = meetingsForBody(meetings, bound);
     denominators.meetingsHeldForThisBody = forBody.length;
     /* The SAME selection the deterministic agenda route uses — one rule, two
@@ -967,7 +1011,9 @@ export async function POST(request: Request) {
       gaps.push({
         whose: "OURS",
         statement:
-          forBody.length === 0
+          !snapshot
+            ? `The held meeting records for ${subject.name} could not be read for this answer.`
+            : forBody.length === 0
             ? `We have not recorded any meetings for ${subject.name} yet.`
             : selection === "LAST"
               ? `We hold meetings for ${subject.name} but none that have already happened.`
@@ -1168,7 +1214,7 @@ export async function POST(request: Request) {
         });
       } else if (publication.acquisition === "ITEMS_READER_READY" && newest) {
         denominators.agendaItemsExtracted = items.length;
-        for (const [index, item] of items.slice(0, 40).entries()) {
+        for (const [index, item] of items.entries()) {
           records.push({
             kind: "AGENDA_ITEM",
             id: `${chosen.id}#${index}`,
@@ -1455,9 +1501,7 @@ export async function POST(request: Request) {
      * damaging thing this route could do, and it is why synthesis is given a
      * pack rather than a question. AZ03 holds the hunt.
      */
-    const seat = statewideExecutivesFor([...new Set(ocdIds)]).find(
-      (s) => s.name.toLowerCase() === subject.name.toLowerCase(),
-    );
+    const seat = officeholders.seats.find((s) => s.id === subject.id);
     if (seat) {
       records.push({
         kind: "OFFICEHOLDER",
@@ -1504,10 +1548,18 @@ export async function POST(request: Request) {
     /* ── ASK-06 ── the same exact identity chain on the officeholder path. A
        sitting legislator asked about by name reaches their own roll calls; a
        governor reaches the honest gap, because a governor casts none. */
-    const votes = voteEvidenceFor(subject.name, { withinStates: statesOf(ocdIds) });
+    const votes = voteEvidenceFor(subject.name, { withinStates: statesOf(ocdIds), officeholderId: seat?.id });
+    if (votes.identity.kind === "JOINED") canonicalSubjectKeys.add(votes.identity.seat.officeholderId);
     records.push(...votes.records);
     gaps.push(...votes.gaps);
     Object.assign(denominators, votes.denominators);
+  }
+
+  if (subject?.kind === "PERSON") {
+    const statements = statementEvidenceFor(subject, question, [...canonicalSubjectKeys]);
+    records.push(...statements.records);
+    gaps.push(...statements.gaps);
+    Object.assign(denominators, statements.denominators);
   }
 
   /*
@@ -1552,16 +1604,24 @@ export async function POST(request: Request) {
    * store it would be in rather than a bare nothing.
    */
   if (subject && financeQuestionAsked(question)) {
-    const finance = localFinanceEvidenceFor(subject);
+    const normalized = campaignMoneyEvidenceFor(subject, ballotRecord?.id ?? subject.id, ballotRecord?.contestId);
+    records.push(...normalized.records);
+    gaps.push(...normalized.gaps);
+    Object.assign(denominators, normalized.denominators);
+    const finance = localFinanceEvidenceFor(subject, [...canonicalSubjectKeys]);
     if (finance) {
       records.push(...finance.records);
       gaps.push(...finance.gaps);
       Object.assign(denominators, finance.denominators);
-    } else {
+    } else if (normalized.records.length === 0 && normalized.gaps.length === 0) {
       gaps.push(financeScopeGapFor(subject));
     }
     // Every regime, on every money answer, whether or not records were found.
-    for (const note of financeRegimeNotesFor(subject)) gaps.push(note.gap);
+    for (const note of financeRegimeNotesFor(subject, {
+      state: normalized.denominators.stateFinanceRecordsReturned > 0,
+      federal: normalized.denominators.federalFinanceRecordsReturned > 0,
+      county: Boolean(finance?.records.length),
+    })) gaps.push(note.gap);
     denominators.financeRegimesNamed = 3;
   }
 
@@ -1601,10 +1661,10 @@ export async function POST(request: Request) {
    */
   const shownContacts = gateContactsToSubject(subject, contacts).contacts;
   denominators.contactsExcludedOffSubject = contacts.length - shownContacts.length;
-  for (const contact of shownContacts.slice(0, MAX_ASK_CONTACTS)) {
+  for (const contact of shownContacts) {
     records.push(contactRecord(contact));
   }
-  denominators.verifiedContacts = Math.min(shownContacts.length, MAX_ASK_CONTACTS);
+  denominators.verifiedContacts = shownContacts.length;
 
   /*
    * **THE AUTHORITY'S OWN STATEMENTS OF ABSENCE — for the SUBJECT's division.**
@@ -1625,9 +1685,9 @@ export async function POST(request: Request) {
        authority saying a race is not on it answers exactly that. A question
        about a PERSON is not a question about the ballot lineup, so an absence
        under it is a document the answer did not rest on. */
-    records.push(...absencesForDivisions([ballotRecord.ocdId], ballot.absences));
+    records.push(...absencesForDivisions([ballotRecord.ocdId], absencesWithoutRemovals(ballot.absences, ballot.set?.removals ?? [])));
   } else if (surface === "BALLOT" && !subject) {
-    records.push(...absencesForDivisions(ocdIds, ballot.absences));
+    records.push(...absencesForDivisions(ocdIds, absencesWithoutRemovals(ballot.absences, ballot.set?.removals ?? [])));
   }
 
   /*
@@ -1885,7 +1945,7 @@ export async function POST(request: Request) {
     mode,
     pack,
     answer,
-    contacts: shownContacts.slice(0, MAX_ASK_CONTACTS),
+    contacts: shownContacts,
     /*
      * ASK-20 / ASK-23 / ASK-24. In start order and de-duplicated by id: the
      * chosen sitting first, then any other sitting the body holds on the same

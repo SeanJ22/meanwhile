@@ -280,7 +280,7 @@ export interface ModalSubject {
     carried?: unknown;
   } | null;
   /** How to actually speak at it (D25), when the subject is a meeting. */
-  commentAccess?: { ocdId: string | null; bodyName: string } | null;
+  commentAccess?: { ocdId: string | null; bodyName: string; bodyId?: string | null } | null;
   /**
    * 6f2 (2026-08-15, the author): a district battlecard's overview rendered
    * type/tier/state and nothing else — three identifiers where a stranger
@@ -861,6 +861,7 @@ export function EntityModal({
                 <HowToBeHeard
                   ocdId={subject.commentAccess.ocdId}
                   bodyName={subject.commentAccess.bodyName}
+                  bodyId={subject.commentAccess.bodyId}
                 />
               )}
             </>

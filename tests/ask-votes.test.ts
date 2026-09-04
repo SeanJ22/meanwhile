@@ -86,11 +86,10 @@ test("(a) Juan Ciscomani's twenty federal roll calls reach Ask, each with its ow
     assert.doesNotMatch(record.text, /\d{1,2}-[A-Z][a-z]{2}-\d{4}/);
   }
 
-  /* The clip is STATED, so twelve rendered rows can never read as the whole
-     record. Stated N equals rendered rows. */
-  assert.match(
+  assert.equal(ev.records.length, ev.denominators.rollCallVotesRecorded);
+  assert.doesNotMatch(
     ev.gaps.map((g) => g.statement).join(" "),
-    /We hold 20 recorded votes for Juan Ciscomani; the \d+ most recent are shown\./,
+    /most recent are shown/,
   );
 });
 

@@ -631,7 +631,7 @@ test("CONTACTS: the reader's own legislators are the FALLBACK, and they still ap
    * inside these districts — which makes them the right answer when nothing
    * closer exists.
    */
-  const body = await ask("What do we know about Andy Biggs?", { surface: "BALLOT" });
+  const body = await ask("Who is running for Governor?", { surface: "BALLOT" });
   const names = (body.contacts ?? []).map((c) => c.name);
   assert.ok(
     names.includes("David Gowan"),
@@ -842,51 +842,27 @@ test("ASK-06 (b): a candidate with no held voting record gets a NAMED gap, never
   assert.doesNotMatch(gap.statement, /did not vote|has not voted|no votes cast/i);
 });
 
-test("ASK-06 (c): THE ADVERSARIAL CASE — Sally Ann Gonzales gets no senator's votes", async () => {
-  /*
-   * The ballot's District 20 State REPRESENTATIVE line carries *Sally Ann
-   * Gonzales*. The roster carries *Sally Gonzales*, a State SENATOR, holding
-   * twelve recorded roll calls. Joining them attaches votes cast in one
-   * chamber to a candidacy in another — a false claim about a named person's
-   * record. Refusing loses twelve real public votes — an honest gap.
-   *
-   * It fails closed, through the real handler, against the real ballot.
-   */
+test("ASK-06 (c): the committed person bridge preserves the held Senate office beside a House candidacy", async () => {
+  // The previous name-only join correctly refused this variant. The committed
+  // person relationship now resolves it; it does not change which office cast
+  // the votes. The unbridged name-only helper must continue to refuse.
   const body = await ask("How has Sally Ann Gonzales voted?", {
     ocdIds: [AZ, PIMA, SLDL20],
   });
 
   assert.equal(body.subject?.name, "Sally Ann Gonzales", "the person still resolves");
-  assert.deepEqual(
-    (body.records ?? []).filter((r) => r.kind === "ROLL_CALL_VOTE"),
-    [],
-    "NOT ONE roll call may be attached across a name-form gap",
-  );
-
-  const gap = (body.gaps ?? []).find((g) => /voting record/i.test(g.statement));
-  assert.ok(gap, "the refusal must be SAID");
-  assert.equal(gap.whose, "OURS");
-  assert.match(gap.statement, /could not confirm .* it is the same person/);
-  /* And it does not name the near miss, count her votes, or imply either
-     answer — every one of those would be the claim we cannot source. */
-  assert.doesNotMatch(gap.statement, /Senator|12|twelve/);
-
-  /*
-   * **CONTROL: the record it refused really exists.** Without this the test
-   * above proves only that we hold nothing for anybody called Gonzales, which
-   * is a much weaker and much less interesting claim than the one being made.
-   *
-   * It is taken at the module rather than through the handler on purpose: the
-   * senator is not on this reader's ballot — the District 20 House line is
-   * where the name appears — so she is correctly not an entity the binder can
-   * resolve here. The store is what has to be shown to be non-empty.
-   */
+  const votes = (body.records ?? []).filter((r) => r.kind === "ROLL_CALL_VOTE");
+  assert.equal(votes.length, 12);
+  assert.ok(votes.every((vote) => vote.id.startsWith("plural:3c965e03-1e51-4f10-a037-4fb2f35292c5#")));
+  assert.ok(votes.every((vote) => /Sally Gonzales, State Senator: voted/.test(vote.text)));
+  assert.ok(votes.every((vote) => !/State Representative: voted/.test(vote.text)));
   const { voteEvidenceFor } = await import("../lib/ask/votes.ts");
-  const senator = voteEvidenceFor("Sally Gonzales", { withinStates: ["AZ"] });
+  assert.equal(voteEvidenceFor("Sally Ann Gonzales", { withinStates: ["AZ"] }).identity.kind, "NAME_FORM_UNCONFIRMED");
+  const senator = voteEvidenceFor("display name is not used", { officeholderId: "plural:3c965e03-1e51-4f10-a037-4fb2f35292c5" });
   assert.equal(senator.identity.kind, "JOINED");
   assert.equal(
     senator.denominators.rollCallVotesRecorded,
     12,
-    "the senator's twelve votes are genuinely held — the refusal above cost something real",
+    "only the committed identity can carry these held votes into the candidate answer",
   );
 });

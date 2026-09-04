@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FilingChanges } from "@/components/ballot/filing-changes";
 
 import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
 import { BALLOT_SOURCES } from "@/lib/ballot/registry";
@@ -95,6 +96,8 @@ import type {
   Measure,
 } from "@/lib/ballot/types";
 import { CandidateContact, TAGLINE_SOURCE_NOTE } from "@/components/ballot/candidate-contact";
+import { candidateContactForCandidacy } from "@/lib/ballot/candidate-contacts";
+import { reconciledCandidacyIdForCard } from "@/lib/identity/az-2026";
 import { groupAbsences } from "@/lib/ballot/absence-grouping";
 import { sharedNotesFor } from "@/lib/ballot/shared-notes";
 import { resolveZip } from "@/lib/geo/zcta";
@@ -514,6 +517,8 @@ async function BallotBattlecard({
    * OURS-gap state rather than as silence.
    */
   const stateMoney = stateMoneyForCard(targetKey, contestId).records;
+  const contactCandidacyId = targetKey.includes("|") ? reconciledCandidacyIdForCard(targetKey) : targetKey;
+  const filingContact = contactCandidacyId ? candidateContactForCandidacy(contactCandidacyId) : null;
 
   return (
     <CandidateBattlecard
@@ -660,7 +665,7 @@ async function BallotBattlecard({
         sources: (
           <>
             {holder && <CandidateSources holder={holder} />}
-            <CandidateContact card={card ?? null} links={links} />
+            <CandidateContact card={card ?? null} links={links} filing={filingContact} />
             <p className="mt-2 text-[0.6875rem] leading-relaxed text-muted">
               {TAGLINE_SOURCE_NOTE}
             </p>
@@ -1814,6 +1819,8 @@ export default async function BallotPage({
                 </FilingNote>
               )}
 
+              <FilingChanges removals={(set.removals ?? []).filter((record) => record.contestId === contest.id)} />
+
               {/* The certified lineup retires the filing-list fallback (6a):
                   what a November voter actually chooses among. */}
               {lineup ? (
@@ -1822,6 +1829,7 @@ export default async function BallotPage({
                   {photosFirst(lineup.nominees, (n) => Boolean(cardForNominee(contest.id, n.name)?.photoUrl)).map((nominee) => (
                     <li
                       key={nominee.name}
+                      data-candidate-target={`${contest.id}|${nominee.name}`}
                       className="border-b border-[var(--panel-border)] pb-3 last:border-0 last:pb-0"
                     >
                       <CandidateCard
@@ -1970,6 +1978,7 @@ export default async function BallotPage({
                     {photosFirst(candidatesOf(set, contest), (x) => Boolean(cardForCandidacy(x.id)?.photoUrl)).map((cand) => (
                       <li
                         key={cand.id}
+                        data-candidate-target={cand.id}
                         className="border-b border-[var(--panel-border)] pb-3 last:border-0 last:pb-0"
                       >
                         <CandidateCard
@@ -2615,6 +2624,7 @@ export default async function BallotPage({
               key={absence.key}
               className="mt-5 rounded-[10px] border border-[var(--panel-border)] p-4 lg:max-w-2xl"
               data-absence-count={absence.members.length}
+              data-absence-ocd-ids={absence.members.map((record) => record.ocdId).join(" ")}
             >
               <p className="text-[0.8125rem] leading-relaxed text-paper-dim">
                 {absence.statement}

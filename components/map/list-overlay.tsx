@@ -335,7 +335,7 @@ export function ListOverlay({
 
         {groups.map((group) => {
           // Closed unless the reader opened it (g4 item 11).
-          const collapsed = !ui.expandedGroups.includes(group.key);
+          const collapsed = Boolean(group.key) && !ui.expandedGroups.includes(group.key);
 
           /*
            * The group's jurisdiction answer, where every meeting in it gets
@@ -410,6 +410,7 @@ export function ListOverlay({
                       key={meeting.id}
                       type="button"
                       className="al-row"
+                      data-meeting-id={meeting.id}
                       style={tierVars(tierForMeeting(meeting))}
                       onClick={() => {
                         onPickMeeting(meeting);

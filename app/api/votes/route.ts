@@ -37,7 +37,7 @@ function stateVotes(member: string) {
   try {
     snap = getStateVotesSnapshot();
   } catch {
-    return Response.json({ generatedAt: null, votes: [] });
+    return Response.json({ generatedAt: null, member, holdingStatus: "HOLDING_UNAVAILABLE", votes: [] }, { status: 503 });
   }
 
   const positions = new Map(
@@ -72,6 +72,9 @@ function stateVotes(member: string) {
     }));
 
   return Response.json({
+    member,
+    holdingStatus: "HELD",
+    count: votes.length,
     generatedAt: snap.generatedAt,
     attribution: LEGISCAN_ATTRIBUTION,
     votes,
@@ -93,9 +96,7 @@ export async function GET(request: Request) {
   try {
     snap = getVotesSnapshot();
   } catch {
-    // No snapshot is an honest empty state, not a 500 — the popup renders
-    // "no recorded votes on file yet".
-    return Response.json({ generatedAt: null, votes: [] });
+    return Response.json({ generatedAt: null, member, holdingStatus: "HOLDING_UNAVAILABLE", votes: [] }, { status: 503 });
   }
 
   const positions = new Map(
@@ -158,6 +159,9 @@ export async function GET(request: Request) {
     : [];
 
   return Response.json({
+    member,
+    holdingStatus: "HELD",
+    count: votes.length,
     generatedAt: snap.generatedAt,
     votes,
     chamber,

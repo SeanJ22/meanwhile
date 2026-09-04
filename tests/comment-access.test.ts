@@ -63,13 +63,31 @@ test("lookup is by division plus published body name, never the wrong body's rul
   assert.equal(commentAccessFor(tucsonOcd, "Design Review Board"), undefined);
   assert.equal(commentAccessFor(tucsonOcd), undefined);
 
-  // The division-less path (D28): PCC's rule resolves through the null key.
-  const pcc = commentAccessFor(null, "Regular Governing Board");
+  // Divisionless bodies resolve by the committed identity, never the null key.
+  const pcc = commentAccessFor(null, "Regular Governing Board", "curated:az/pima-community-college#governing");
   assert.ok(pcc);
   assert.equal(pcc.commentPeriod, "YES");
+  assert.equal(commentAccessFor(null, "Regular Governing Board"), undefined);
+  assert.equal(commentAccessFor(null, "Regular Governing Board", "curated:other#governing"), undefined);
+  assert.equal(commentAccessFor(tucsonOcd, "Mayor & Council", "curated:az/pima-community-college#governing"), undefined);
 
   assert.equal(
     commentAccessFor("ocd-division/country:us/state:mt/place:absarokee"),
     undefined,
   );
+});
+
+test("every held standing rule survives its exact canonical body join", () => {
+  for (const row of COMMENT_ACCESS) {
+    assert.equal(commentAccessFor(row.ocdId, "Unrelated vendor heading", row.bodyId), row);
+  }
+});
+
+test("one held policy in a division never supplies an unidentified sibling body's rules", () => {
+  const pima = "ocd-division/country:us/state:az/county:pima";
+  const merrimack = "ocd-division/country:us/state:nh/county:merrimack";
+  assert.equal(commentAccessFor(pima, "Planning and Zoning Commission"), undefined);
+  assert.equal(commentAccessFor(merrimack, "Delegation"), undefined);
+  assert.equal(commentAccessFor(pima), undefined);
+  assert.equal(commentAccessFor(merrimack), undefined);
 });

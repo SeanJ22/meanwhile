@@ -14,6 +14,8 @@ import {
 import { CONGRESS_DIRECTORY_SOURCE } from "@/lib/officials/directory-source";
 
 import { FundingBlock } from "@/components/funding/funding-block";
+import { PublicStatementsProfile } from "@/components/officials/public-statements-profile";
+import { OfficialActions } from "@/components/officials/official-actions";
 import {
   CardSection,
   CardSectionGroup,
@@ -241,6 +243,8 @@ export function OfficialModal({
           <CardSection title="Campaign money">
             <FundingBlock holder={holder} reactionContext={reactionContext} bare />
           </CardSection>
+          <PublicStatementsProfile subjectId={holder.id} />
+          <OfficialActions subjectId={holder.id} />
 
           {/* Item 6b: two columns inside, each its own collapsed section. */}
           <RecentVotes

@@ -6,6 +6,9 @@ import { agendaSentenceFor } from "@/lib/ask/agenda-sentence";
 import { noticeSummaryFor } from "@/lib/meetings/notice-summary";
 import { formatDateMDY } from "@/lib/map/format";
 import { agendaItems } from "@/lib/routing/agenda-search";
+import type { MeetingReaderRecords } from "@/lib/meetings/reader-records";
+import { MeetingRecords } from "./meeting-records";
+import { minutesSummaryForMeeting } from "@/lib/meetings/minutes-summaries";
 
 /**
  * What the meeting is actually about (4c) — the stored notice/agenda text,
@@ -71,7 +74,13 @@ function sanitizeStoredText(text: string): string {
     .replace(/&amp;/g, "&");
 }
 
-export function AgendaSection({
+export function AgendaSection(props: AgendaSectionProps) {
+  // A different meeting owns different network state. Never flash the previous
+  // body's agenda or vote records while the next exact identity is loading.
+  return <AgendaForMeeting key={props.meetingId} {...props} />;
+}
+
+function AgendaForMeeting({
   meetingId,
   agendaUrl,
   agendaSlotObservedEmpty,
@@ -88,6 +97,8 @@ export function AgendaSection({
     { id: meetingId, agendaUrl, agendaSlotObservedEmpty, provenance, carried },
   );
   const [documents, setDocuments] = useState<AgendaDocumentView[] | null>(null);
+  const [records, setRecords] = useState<MeetingReaderRecords | null>(null);
+  const [holdingUnavailable, setHoldingUnavailable] = useState(false);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
@@ -101,8 +112,12 @@ export function AgendaSection({
         if (!response.ok) throw new Error(String(response.status));
         const payload = (await response.json()) as {
           documents: AgendaDocumentView[];
+          records: MeetingReaderRecords;
+          holdingStatus: string;
         };
         setDocuments(payload.documents);
+        setRecords(payload.records);
+        setHoldingUnavailable(payload.holdingStatus === "HOLDING_UNAVAILABLE");
       } catch {
         if (!controller.signal.aborted) setFailed(true);
       }
@@ -141,6 +156,27 @@ export function AgendaSection({
     );
   }
 
+  return <>
+    <MinutesRecord meetingId={meetingId} />
+    <MeetingRecords records={records} />
+    {holdingUnavailable ? <p className="mt-1.5 text-[0.75rem] text-muted">The stored document is unavailable here.{agendaUrl && <> <a className="text-signal underline" href={agendaUrl} target="_blank" rel="noreferrer">Read the source document</a>.</>}</p>
+      : <AgendaDocuments documents={documents} meetingId={meetingId} agendaUrl={agendaUrl} agendaSentence={agendaState.sentence} />}
+  </>;
+}
+
+function MinutesRecord({ meetingId }: { meetingId: string }) {
+  const summary = minutesSummaryForMeeting(meetingId);
+  if (!summary) return null;
+  return <details className="mb-3 text-[0.75rem] leading-relaxed" open data-minutes-summary={meetingId}>
+    <summary className="cursor-pointer text-signal">What happened — plain language</summary>
+    <p className="mt-2 font-semibold">{summary.summary}</p>
+    <p className="mt-1 text-muted">Our paraphrase of <a href={summary.minutesUrl} target="_blank" rel="noreferrer" className="text-signal underline">the {summary.sourceOrg} minutes</a> · read {formatDateMDY(summary.readAt)}.</p>
+  </details>;
+}
+
+function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentence }: {
+  documents: AgendaDocumentView[]; meetingId: string; agendaUrl: string | null; agendaSentence: string;
+}) {
   const latest = documents[0] ?? null;
 
   if (!latest) {
@@ -160,7 +196,7 @@ export function AgendaSection({
             .
           </>
         ) : (
-          `${agendaState.sentence}.`
+          `${agendaSentence}.`
         )}
       </p>
     );

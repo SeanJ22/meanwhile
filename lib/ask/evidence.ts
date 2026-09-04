@@ -145,9 +145,14 @@ export interface EvidenceRecord {
      * or against a candidate is not money a campaign received, and collapsing
      * the two would be a false claim built from real rows.
      */
-    | "FINANCE_TRANSACTION";
+    | "FINANCE_TRANSACTION"
+    | "FINANCE_SUMMARY";
   /** Stable id where one exists — the validation rung matches on it. */
   id: string;
+  /** Canonical holding subject when the reader's question uses a bridged card identity. */
+  canonicalSubjectId?: string;
+  /** Exact normalized totals accompany the grounded prose for cross-surface parity. */
+  finance?: { jurisdiction: string; filingState: string; totals: { receipts: number | null; expenditures: number | null; cashOnHand: number | null; reportCount: number | null; coveringPeriod: string | null } };
   /**
    * **WHOSE RECORD THIS IS — the canonical body id.** (2026-08-29.)
    *

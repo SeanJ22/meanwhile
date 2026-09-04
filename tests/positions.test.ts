@@ -4,7 +4,6 @@ import { join } from "node:path";
 import test from "node:test";
 
 import {
-  PASSAGE_LIMIT,
   POSITION_TOPICS,
   positionMatchCount,
   positionsFor,
@@ -340,8 +339,8 @@ test("D35: the topic list is curated, and the search strips the question around 
   );
 });
 
-test("D35: the clip is stated, never silent", () => {
-  const many = Array.from({ length: PASSAGE_LIMIT + 4 }, (_, i) =>
+test("reader last mile: every eligible matched passage reaches the shared answer", () => {
+  const many = Array.from({ length: 10 }, (_, i) =>
     snapshot({
       id: `s${i}`,
       url: `https://example.org/${i}`,
@@ -350,10 +349,11 @@ test("D35: the clip is stated, never silent", () => {
     }),
   );
   const answer = positionsFor("congress:X000001", "housing", { snapshots: many });
-  assert.equal(answer.passages.length, PASSAGE_LIMIT);
+  assert.equal(answer.passages.length, many.length);
+  assert.deepEqual(new Set(answer.passages.map((passage) => passage.snapshotId)), new Set(many.map((row) => row.id)));
   assert.equal(
     positionMatchCount("congress:X000001", "housing", { snapshots: many }),
-    PASSAGE_LIMIT + 4,
-    "the denominator behind the clip must be the real count",
+    answer.passages.length,
+    "the reported denominator must equal the actual returned rows",
   );
 });

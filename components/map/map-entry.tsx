@@ -2551,7 +2551,7 @@ function meetingSubject(
     commentAccess:
       meeting.status === "CONCLUDED"
         ? null
-        : { ocdId: meeting.ocdId, bodyName: meeting.bodyName },
+        : { ocdId: meeting.ocdId, bodyName: meeting.bodyName, bodyId: meeting.bodyId },
     // Tier-3 (5a): the curated roster where one exists; the honest absence
     // where none does.
     representation: roster,

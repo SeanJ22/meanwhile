@@ -2,7 +2,7 @@
  "formatVersion": 1,
  "state": "AZ",
  "cycle": 2026,
- "generatedAt": "2026-09-01",
+ "generatedAt": "2026-09-04",
  "generatedBy": "pnpm identity:az (scripts/identity-az-2026.mts)",
  "sources": [
   {
@@ -14,7 +14,7 @@
   {
    "name": "data/states/az/identity/az-2026-candidate-registry.json",
    "url": null,
-   "readAt": "2026-09-01",
+   "readAt": "2026-09-04",
    "note": "The statewide identity registry this bridge resolves INTO."
   }
  ],

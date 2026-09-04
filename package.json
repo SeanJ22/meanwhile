@@ -252,7 +252,7 @@
     "pilot:verify": "tsx scripts/verify-pilot-zips.mts",
     "pipeline:map": "node --env-file=.env.local --experimental-strip-types scripts/pipeline-map.mts",
     "portraits:normalise": "tsx scripts/normalise-portraits.mts",
-    "postbuild": "node scripts/check-build-output.mjs",
+    "postbuild": "node scripts/check-build-output.mjs && node --experimental-strip-types scripts/reader-trace-check.mts",
     "prebuild": "node --experimental-strip-types scripts/state-holdings-project.mts && node scripts/build-map-worker.mjs",
     "predev": "node scripts/check-port.mjs && node --experimental-strip-types scripts/state-holdings-project.mts && node scripts/build-map-worker.mjs",
     "press:surface": "tsx scripts/press-surface-0825.mts",

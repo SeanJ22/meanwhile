@@ -1,4 +1,4 @@
-import { positionsFor, positionMatchCount } from "@/lib/corpus/positions";
+import { positionsFor } from "@/lib/corpus/positions";
 import { unifiedCorpus } from "@/lib/corpus/unified";
 import type { StatementCorpus } from "@/lib/corpus/types";
 
@@ -77,10 +77,7 @@ export async function GET(
     {
       ...answer,
       // Stated N equals rendered rows, and the denominator rides with it.
-      totalMatches:
-        answer.kind === "MATCHED"
-          ? positionMatchCount(subject, topic, corpus())
-          : 0,
+      totalMatches: answer.passages.length,
     },
     {
       status: 200,

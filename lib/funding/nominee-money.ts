@@ -41,6 +41,7 @@ import {
   lineupBridgeCovers,
   lineupRowForCard,
   azLineupReconciliation,
+  azIdentityRegistry,
 } from "../identity/az-2026.ts";
 import type { LineupReconciliationRow } from "../identity/types.ts";
 import { stateMoneyForTarget } from "./state-snapshot.ts";
@@ -48,6 +49,8 @@ import type { StateMoneyRecord } from "./state-money.ts";
 
 /** How a card's money was resolved. Reported by the tests, never by a reader surface. */
 export type MoneyResolution =
+  /** The canonical contest assigns this question to the federal finance system. */
+  | "FEDERAL_NOT_APPLICABLE"
   /** The key was already a canonical candidacy id — the pre-existing path. */
   | "DIRECT_CANDIDACY_KEY"
   /** A certified-lineup nominee card, resolved through the committed bridge. */
@@ -160,6 +163,13 @@ export function unresolvedNomineeGapRecord(
  * `stateMoneyForTarget`.
  */
 export function stateMoneyForCard(cardKey: string, contestId: string): CardMoney {
+  // Certified Arizona card keys require the committed identity projection.
+  // Its absence is a failed holding read, never an invitation to ask the
+  // finance corpus with a display-name key and manufacture a no-record answer.
+  // Direct candidacy keys and other states do not depend on this bridge.
+  if (contestId.startsWith("ballot-az-") && cardKey.includes("|") && !azLineupReconciliation()) {
+    throw new Error("Canonical Arizona candidacy identity holding unavailable");
+  }
   if (!lineupBridgeCovers(contestId)) {
     return {
       records: stateMoneyForTarget(cardKey),
@@ -167,6 +177,14 @@ export function stateMoneyForCard(cardKey: string, contestId: string): CardMoney
       resolvedTargetKey: cardKey,
     };
   }
+
+  const registry = azIdentityRegistry();
+  if (!registry) throw new Error("Canonical Arizona contest identity holding unavailable");
+  const contest = registry.contests.find(c => c.canonicalContestIds.includes(contestId));
+  if (contest?.level === "FEDERAL") return {
+    records: [], resolution: "FEDERAL_NOT_APPLICABLE",
+    resolvedTargetKey: lineupRowForCard(cardKey)?.canonicalCandidacyId ?? null,
+  };
 
   const row = lineupRowForCard(cardKey);
   if (!row) {

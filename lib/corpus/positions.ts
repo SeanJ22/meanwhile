@@ -121,9 +121,6 @@ export interface PositionAnswer {
  *  statement in context, short enough not to be a republication. */
 export const PASSAGE_MAX_CHARS = 420;
 
-/** How many passages one answer renders before the surface says how many more. */
-export const PASSAGE_LIMIT = 6;
-
 /** The shortest term worth searching. Below this every page matches. */
 export const MIN_TERM_CHARS = 3;
 
@@ -315,40 +312,20 @@ export function positionsFor(
   return {
     kind: "MATCHED",
     topic,
-    passages: hits.slice(0, PASSAGE_LIMIT),
+    passages: hits,
     searched,
     theirPage,
   };
 }
 
-/** Every passage this subject's corpus holds for the topic, before the cut —
- *  the denominator behind "showing N of M". */
+/** The count uses the same canonical answer as the visual and Ask surfaces. */
 export function positionMatchCount(
   subjectId: string,
   topic: string,
   corpus: StatementCorpus,
 ): number {
   const answer = positionsFor(subjectId, topic, corpus);
-  if (answer.kind !== "MATCHED") return 0;
-  // `positionsFor` already clipped; recount without the clip.
-  const mine = corpus.snapshots.filter(
-    (s) => s.subjectId === subjectId && s.extraction === "ok" && s.text,
-  );
-  const terms = searchTerms(topic);
-  const seen = new Set<string>();
-  let n = 0;
-  for (const snapshot of mine) {
-    for (const raw of passagesOf(snapshot.text as string)) {
-      if (raw.length > PASSAGE_MAX_CHARS) continue;
-      const normalized = ` ${normalize(raw)} `;
-      if (!terms.some((t) => normalized.includes(` ${t} `))) continue;
-      const key = normalize(raw);
-      if (seen.has(key)) continue;
-      seen.add(key);
-      n += 1;
-    }
-  }
-  return n;
+  return answer.passages.length;
 }
 
 /**

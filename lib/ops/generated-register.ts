@@ -37,6 +37,12 @@ export interface GeneratedArtifact {
  * commit — the same discipline `tests/guard-census.json` applies to guards.
  */
 export const GENERATED: GeneratedArtifact[] = [
+  {
+    path: "lib/funding/official-candidacies.json",
+    command: "corepack pnpm exec tsx scripts/reader-finance-identity.mts",
+    checkCommand: "corepack pnpm exec tsx scripts/reader-finance-identity.mts --check",
+    pure: true,
+  },
   ...readdirSync(fileURLToPath(new URL("../../docs/states/", import.meta.url)))
     .filter((name) => /^[a-z]{2}\.md$/.test(name)).sort().map((name) => ({
       path: `docs/states/${name}`,

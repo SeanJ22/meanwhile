@@ -89,6 +89,8 @@ import { BODY_ROSTERS } from "../registry/body-rosters.ts";
  * division is CONTEXT and may never be substituted for it.
  */
 export interface CanonicalBodyIdentity {
+  sourceUrl?: string | null;
+  retrievedAt?: string | null;
   /** The registry's own id. `<ocdId>#<slot>`, or a `curated:`/`wtp-body/` id. */
   bodyId: string;
   /** Reader-safe. Sourced from the registry, or the division's own label. */
@@ -127,6 +129,7 @@ interface RegistryBodyRow {
   ocdId: string | null;
   name: string | null;
   bodyClass?: string | null;
+  provenance?: { sourceUrl?: string | null; collectedAt?: string | null };
 }
 
 interface RegistryDivisionRow {
@@ -244,6 +247,8 @@ function buildIndex(root: string): Map<string, CanonicalBodyIdentity> {
       unslugBodySuffix(row.id) ||
       row.id;
     byBodyId.set(row.id, {
+      sourceUrl: own ? row.provenance?.sourceUrl ?? null : BODY_ROSTERS.find((r) => r.bodyId === row.id)?.sourceUrl ?? row.provenance?.sourceUrl ?? null,
+      retrievedAt: row.provenance?.collectedAt ?? null,
       bodyId: row.id,
       name,
       ocdId: row.ocdId ?? null,

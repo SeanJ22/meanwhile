@@ -549,26 +549,31 @@ export const COMMENT_ACCESS: CommentAccess[] = [
 /**
  * The comment-access record for a meeting, if one is curated.
  *
- * Resolution is deliberately conservative: a row naming body names wins on
- * an exact (case-insensitive) match; an unnamed row applies only while it is
- * the *sole* row for its division. Once a division carries several bodies,
- * an unmatched meeting gets no rule rather than the wrong body's rule.
+ * A canonical body identity or unique explicit published-name alias is
+ * required. A division with one held policy can still contain other bodies.
  */
 export function commentAccessFor(
   ocdId: OcdId | null,
   bodyName?: string,
+  bodyId?: string | null,
 ): CommentAccess | undefined {
+  // A resolved body is authoritative. Never fall through to another body's
+  // standing rules when its own record is absent or ambiguous.
+  if (bodyId) {
+    const exact = COMMENT_ACCESS.filter((c) => c.bodyId === bodyId);
+    return exact.length === 1 && exact[0].ocdId === ocdId ? exact[0] : undefined;
+  }
+  // Null is not a shared civic identity for unrelated divisionless bodies.
+  if (ocdId === null) return undefined;
   const rows = COMMENT_ACCESS.filter((c) => c.ocdId === ocdId);
   if (rows.length === 0) return undefined;
 
   if (bodyName) {
     const wanted = bodyName.trim().toLowerCase();
-    const named = rows.find((c) =>
+    const named = rows.filter((c) =>
       c.bodyNames?.some((n) => n.trim().toLowerCase() === wanted),
     );
-    if (named) return named;
+    return named.length === 1 ? named[0] : undefined;
   }
-
-  const generic = rows.filter((c) => !c.bodyNames);
-  return rows.length === 1 && generic.length === 1 ? generic[0] : undefined;
+  return undefined;
 }

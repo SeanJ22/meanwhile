@@ -1,6 +1,16 @@
 {
   "entries": [
     {
+      "file": "components/map/popup/meeting-records.tsx",
+      "text": "Member name unavailable",
+      "reason": "Names only a missing member-name field in our held roll-call projection. It never claims the clerk omitted the name, never substitutes another person, and preserves the recorded vote value independently. This is an OURS field gap under R254."
+    },
+    {
+      "file": "components/map/popup/meeting-records.tsx",
+      "text": "Vote value unavailable",
+      "reason": "Names only a missing value in our held roll-call projection. It never infers an abstention, nonattendance, a failed motion or a publisher absence from null, preserving the separate member identity under R254."
+    },
+    {
       "file": "app/(admin)/admin/login/page.tsx",
       "text": "Sign in to continue.",
       "reason": "Not a claim about data. `why` is a REJECTION CLASS from middleware and this is the prompt shown when there is no rejection to explain — the owner simply arrived at the login. It asserts nothing about any record."

@@ -1,3 +1,4 @@
+import { isRenderable } from "./state-money-reader.ts";
 /**
  * READING THE STATE-MONEY CORPUS — the reader-facing half of RULING 126.
  *
@@ -15,9 +16,9 @@ import { readFileSync } from "node:fs";
 import * as fs from "node:fs";
 import { join } from "node:path";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
+import identityBridge from "./official-candidacies.json" with { type: "json" };
 
 import {
-  isRenderable,
   type StateMoneyRecord,
   type StateMoneySnapshot,
 } from "./state-money.ts";
@@ -34,7 +35,12 @@ function snapshotFiles(root: string): { state: string; file: string }[] {
   const { globSync } = fs as typeof fs & {
     globSync(pattern: string, options: { cwd: string }): string[];
   };
-  const paths = globSync("data/states/*/funding/state-money-??-????.json", { cwd: root });
+  const paths = [...new Set([
+    ...globSync("data/states/*/funding/state-money-??-????.json", { cwd: root }).map(p => p.replaceAll("\\", "/")),
+    // The committed bridge inventories required snapshots independently of a
+    // deploy's directory listing. A missing bundled file stays a failed read.
+    ...identityBridge.sources.map(s => s.path).filter(p => /^data\/states\/[a-z]{2}\/funding\/state-money-[a-z]{2}-\d{4}\.json$/.test(p)),
+  ])];
   const files: { state: string; file: string }[] = [];
   for (const path of paths) {
     const match = /^data\/states\/([a-z]{2})\/funding\/(state-money-([a-z]{2})-\d{4}\.json)$/.exec(path.replaceAll("\\", "/"));
@@ -45,11 +51,13 @@ function snapshotFiles(root: string): { state: string; file: string }[] {
 
 let cache: StateMoneyRecord[] | null = null;
 let loadedFrom: string[] = [];
+let failedReads: { state: string; file: string }[] = [];
 
 function load(): StateMoneyRecord[] {
   if (cache) return cache;
   const records: StateMoneyRecord[] = [];
   const from: string[] = [];
+  const failures: { state: string; file: string }[] = [];
   for (const { state, file } of snapshotFiles(process.cwd())) {
     // Read through `process.cwd()`, so `next.config.ts` must name the path in
     // `outputFileTracingIncludes` or the file is simply absent from the deploy
@@ -58,15 +66,18 @@ function load(): StateMoneyRecord[] {
     const path = join(process.cwd(), "data", "states", state, "funding", file);
     try {
       const snapshot = JSON.parse(readFileSync(path, "utf8")) as StateMoneySnapshot;
+      if (snapshot.formatVersion !== 1 || !Array.isArray(snapshot.records)) throw new Error("Invalid normalized state-money snapshot");
       records.push(...snapshot.records);
       from.push(file);
     } catch {
       // A file that cannot be parsed is a FAILURE of that file, and it may not
-      // empty the others. The remaining states still load.
+      // empty the others. The affected state's selector reports a failed read.
+      failures.push({ state, file });
     }
   }
   cache = records;
   loadedFrom = from;
+  failedReads = failures;
   return records;
 }
 
@@ -86,7 +97,10 @@ export function stateMoneySources(): string[] {
  * while hiding the other would understate their campaign.
  */
 export function stateMoneyForTarget(targetKey: string): StateMoneyRecord[] {
-  return load().filter((r) => r.targetKeys.includes(targetKey) && isRenderable(r));
+  const records = load();
+  const state = /^ballot-([a-z]{2})-/.exec(targetKey)?.[1];
+  if (state && failedReads.some(f => f.state === state)) throw new Error(`Canonical state-money holding unavailable for ${state}`);
+  return records.filter((r) => r.targetKeys.includes(targetKey) && isRenderable(r));
 }
 
 /** Has this product asked a state agency about this candidate at all? */
@@ -143,4 +157,5 @@ export function stateMoneySplit(): {
 export function resetStateMoneyCache(): void {
   cache = null;
   loadedFrom = [];
+  failedReads = [];
 }

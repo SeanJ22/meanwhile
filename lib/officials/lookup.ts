@@ -93,6 +93,15 @@ export interface SeatHolder {
 
 export type OfficeholderIndex = Map<string, SeatHolder[]>;
 
+/** Person lookup is independent of whether their district geometry is held. */
+export function indexByOfficeholderId(sets: readonly OfficeholderSet[], photos?: PhotoIndex): Map<string, SeatHolder> {
+  const out = new Map<string, SeatHolder>();
+  for (const set of sets) for (const person of set.officeholders) {
+    if (!out.has(person.id)) out.set(person.id, toSeatHolder(person, photos));
+  }
+  return out;
+}
+
 /** officeholderId → path on our origin, from official-photos.json. */
 export type PhotoIndex = Map<string, string>;
 

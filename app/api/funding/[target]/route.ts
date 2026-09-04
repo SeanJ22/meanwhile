@@ -1,8 +1,8 @@
-import { fundingAnswerForTarget } from "@/lib/funding/display";
+import { campaignMoneyApiAnswer } from "@/lib/funding/campaign-money";
 
 /**
  * GET /api/funding/<app-side id> — the funding answer for one target (D34),
- * read from the committed FEC snapshot. No live FEC call, no key in this
+ * read from committed federal and normalized state snapshots. No live call, no key in this
  * environment; contributor rows arrive already ripcord-filtered by the
  * display builder.
  *
@@ -28,12 +28,16 @@ export async function GET(
   _request: Request,
   { params }: { params: Promise<{ target: string }> },
 ) {
-  const target = decodeURIComponent((await params).target);
-  if (!target || target.length > 128) {
-    return Response.json({ error: "target required" }, { status: 400 });
+  let target: string;
+  try { target = decodeURIComponent((await params).target); }
+  catch { return Response.json({ error: "invalid target encoding" }, { status: 400 }); }
+  // Canonical local school-seat candidacy IDs exceed the old federal-only
+  // 128-character budget. Keep a bounded input without truncating its identity.
+  if (!target || target.length > 512) {
+    return Response.json({ error: "target must contain 1–512 characters" }, { status: 400 });
   }
   try {
-    return Response.json(fundingAnswerForTarget(target), {
+    return Response.json(campaignMoneyApiAnswer(target), {
       headers: { "cache-control": "public, max-age=3600" },
     });
   } catch (error) {

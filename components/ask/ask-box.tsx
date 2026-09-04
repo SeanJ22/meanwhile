@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
+import { AskAnswerRecords } from "./answer-records";
 
 import {
   answerQuestion,
@@ -1268,22 +1269,7 @@ export function AskBox({
             </div>
           )}
 
-          {/* The structured half of the ladder: real records, no prose. */}
-          {!grounded.answer && (grounded.records?.length ?? 0) > 0 && (
-            <ul className="mt-1.5 space-y-1">
-              {(grounded.records ?? [])
-                .filter((r) => r.kind !== "CONTACT")
-                .slice(0, 8)
-                .map((r) => (
-                  <li
-                    key={r.id}
-                    className="border-l-2 border-[var(--panel-border)] pl-3 text-[0.75rem] leading-relaxed text-paper-dim"
-                  >
-                    {r.text}
-                  </li>
-                ))}
-            </ul>
-          )}
+          <AskAnswerRecords records={grounded.records ?? []} initiallyOpen={!grounded.answer} />
 
           {/* Each gap says whose it is. "We haven't recorded this" is a fact
               about us; "they haven't published it" is a fact about them, and

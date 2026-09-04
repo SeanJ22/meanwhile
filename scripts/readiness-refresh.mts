@@ -23,7 +23,7 @@
  * Run (dev file store elsewhere): `pnpm exec tsx scripts/readiness-refresh.mts --out=<dir>`
  * Publish to PRODUCTION (deliberate): `pnpm readiness:publish`  (--target=control-plane)
  */
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 import { gap, held } from "../lib/control-plane/owner-surface.ts";
@@ -154,13 +154,17 @@ function bodyStats(code: string): { county: BodyLevelStat; place: BodyLevelStat;
 /**
  * The INDEPENDENT external count of congressional districts: the cd119
  * cartographic FeatureCollection's feature count (CC-F2), never the held count.
- * AZ=9, NH=2, NJ=12. Null when the committed geojson is absent → named gap.
+ * AZ=9, NH=2, NJ=12. The file is FOUND BY GLOB (`cd119-<fips>.geojson`) so no
+ * hand-kept state→FIPS list lives here (coverage-manifest guard). Null when no
+ * committed cd119 geojson exists → the capability renders a named gap.
  */
-const STATE_FIPS: Record<string, string> = { az: "04", nh: "33", nj: "34" };
 function cdUniverse(code: string): number | null {
-  const fips = STATE_FIPS[code];
-  if (!fips) return null;
-  const geo = readJsonIf<GeoJson>(`data/states/${code}/geo/cd119-${fips}.geojson`);
+  const geoRel = join("data", "states", code, "geo");
+  const geoDir = join(ROOT, geoRel);
+  if (!existsSync(geoDir)) return null;
+  const file = readdirSync(geoDir).find((f) => /^cd119-\d+\.geojson$/.test(f));
+  if (!file) return null;
+  const geo = readJsonIf<GeoJson>(join(geoRel, file));
   const n = Array.isArray(geo?.features) ? geo.features.length : 0;
   return n > 0 ? n : null;
 }

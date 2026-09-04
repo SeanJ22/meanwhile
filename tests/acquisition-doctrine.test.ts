@@ -6,7 +6,7 @@ import test from "node:test";
 
 import { currentLawText } from "../lib/governance/current-law.ts";
 import { loadIndex } from "../lib/governance/ledger.ts";
-import { CURRENT_STATUSES } from "../lib/governance/schema.ts";
+import { CURRENT_STATUSES, type SemanticClaim } from "../lib/governance/schema.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -80,47 +80,38 @@ const flat = (text: string) => text.replace(/\s+/g, " ");
  * survive a rewrite that lets a failed fetch count as proof of absence, which
  * is the specific dilution this doctrine exists to refuse.
  */
+// After the 2026-09-03 consolidation the doctrine is RULING 248 (which absorbed
+// R-0205/0206/0207 and the transparency mandate) plus RULING 271 for the
+// escalation lane (which absorbed R-0208). The obligations and the semantic
+// claims travelled to the successors; this guard asserts the successors carry
+// them undiluted, verbatim from their new bodies.
 const CANONICAL = [
   {
-    id: "R-0205",
-    what: "the record obligation outlives the route and the worker",
-    claim: { key: "acquisition.obligation_closure", value: "acquired-evidenced-or-human-route" },
+    id: "R-0248",
+    what: "if a public record exists, get it — the obligation outlives the route",
+    claims: [
+      { key: "acquisition.obligation_closure", value: "acquired-evidenced-or-human-route" },
+      { key: "acquisition.record_identity", value: "government-record-with-representations" },
+      { key: "acquisition.representation_coverage", value: "every-material-representation" },
+    ],
     mustSay: [
-      "IF A PUBLIC CIVIC RECORD EXISTS, GET IT",
-      "Our failure to retrieve it is never that evidence",
-      "Three closes, and there is no fourth",
-      "EXHAUSTION IS NOT A DISPOSITION",
+      "no upstream success implies a downstream one",
+      "Three closes, and no fourth",
+      "our failure to retrieve is never that evidence",
+      "The vendor is not the record",
+      "One successful route never collapses the source universe",
     ],
   },
   {
-    id: "R-0206",
-    what: "the vendor is not the record",
-    claim: { key: "acquisition.record_identity", value: "government-record-with-representations" },
-    mustSay: [
-      "VENDOR != RECORD",
-      "A FAILED REPRESENTATION != A MISSING GOVERNMENT RECORD",
-      "resolve another representation of the same\nrecord",
-    ],
-  },
-  {
-    id: "R-0207",
-    what: "one successful route never collapses the source universe",
-    claim: { key: "acquisition.representation_coverage", value: "every-material-representation" },
-    mustSay: [
-      "ONE ROUTE SUCCEEDING DOES NOT CANCEL THE OTHERS",
-      "ROUTE PORTFOLIO, not one fetch function",
-    ],
-  },
-  {
-    id: "R-0208",
+    id: "R-0271",
     what: "an access escalation is a parallel lane, never a stop",
-    claim: { key: "escalation.access_request", value: "parallel-never-blocking" },
+    claims: [{ key: "escalation.access_request", value: "parallel-never-blocking" }],
     mustSay: [
-      "never stops the record\nobligation",
-      "never closes, pauses or satisfies the underlying acquisition obligation",
+      "An access escalation is a parallel lane, never a stop",
+      "never closes, pauses or satisfies the obligation the row is about",
     ],
   },
-] as const;
+];
 
 test("the acquisition doctrine is CURRENT canonical law with author provenance", () => {
   const index = loadIndex();
@@ -164,15 +155,17 @@ test("the acquisition doctrine is CURRENT canonical law with author provenance",
       );
     }
 
-    const held = r.claims.find((c) => c.key === rule.claim.key);
-    assert.ok(held, `${rule.id} stopped answering the slot ${rule.claim.key}`);
-    assert.equal(
-      held.value,
-      rule.claim.value,
-      `${rule.id} now answers ${rule.claim.key} with "${held.value}". ` +
-        `The refused value is the reading sessions actually arrived at before the doctrine ` +
-        `was written down, so a flip here is the defect returning, not a rename.`,
-    );
+    for (const claim of rule.claims) {
+      const held: SemanticClaim | undefined = r.claims.find((c) => c.key === claim.key);
+      assert.ok(held, `${rule.id} stopped answering the slot ${claim.key}`);
+      assert.equal(
+        held.value,
+        claim.value,
+        `${rule.id} now answers ${claim.key} with "${held.value}". ` +
+          `The refused value is the reading sessions actually arrived at before the doctrine ` +
+          `was written down, so a flip here is the defect returning, not a rename.`,
+      );
+    }
   }
 });
 
@@ -198,31 +191,18 @@ const MANTRAS = [
 test("CLAUDE.md states the acquisition doctrine, near the top, undiluted", () => {
   const text = readFileSync(join(ROOT, "CLAUDE.md"), "utf8");
 
-  const doctrine = text.indexOf("## The acquisition doctrine");
-  assert.ok(
-    doctrine > 0,
-    "CLAUDE.md has lost the acquisition doctrine section. Nothing in the governance " +
-      "compiler would have caught this: it does not re-derive constitutional records from " +
-      "the live file, precisely so that shortening the constitution cannot delete law from " +
-      "the ledger. The cost of that safety is this guard.",
-  );
-
   /*
-   * "Near the top of substantive current law" is checkable rather than
-   * atmospheric: the doctrine must precede the cross-cutting rules that
-   * inherit from it, and must follow the transparency mandate it is the
-   * operative half of.
+   * Post-consolidation the doctrine is the transparency mandate's operative
+   * half and carries the acquisition mantras with it, near the top: it must
+   * follow the transparency mandate and precede the non-negotiables that
+   * inherit from it.
    */
   const mandate = text.indexOf("## The transparency mandate");
-  const nonNegotiables = text.indexOf("## The cross-cutting non-negotiables");
+  const nonNegotiables = text.indexOf("## The non-negotiables");
   assert.ok(mandate > 0 && nonNegotiables > 0, "CLAUDE.md's section layout changed shape");
   assert.ok(
-    doctrine > mandate,
-    "the acquisition doctrine now precedes the transparency mandate it derives from",
-  );
-  assert.ok(
-    doctrine < nonNegotiables,
-    "the acquisition doctrine has been pushed below the cross-cutting non-negotiables — " +
+    mandate < nonNegotiables,
+    "the transparency mandate/doctrine has been pushed below the non-negotiables — " +
       "the rules that inherit from it now read first",
   );
 
@@ -236,12 +216,12 @@ test("CLAUDE.md states the acquisition doctrine, near the top, undiluted", () =>
    * said while still appearing to say it.
    */
   const UNDILUTED = [
-    "no upstream success implies a\ndownstream one",
-    "Three closes, and there is no fourth",
-    "our failure to retrieve it is never that evidence",
-    "PUBLIC RECORD STILL OWED",
-    "never skip a materially DISTINCT representation",
-    "never closes, pauses or satisfies the obligation the row is\nabout",
+    "no upstream success implies a downstream one",
+    "The vendor is not the record",
+    "one route never collapses the source universe",
+    "Acquisition without promotion is inventory, not product",
+    "NEEDS SEAN != STOP",
+    "THE WORKER MAY STOP; THE OBLIGATION DOES NOT",
   ];
   for (const clause of UNDILUTED) {
     assert.ok(
@@ -287,7 +267,7 @@ test("AGENTS.md carries the project law as its first project-owned content", () 
       `the AGENTS.md mirror no longer carries the mantra "${m}"`,
     );
   }
-  for (const extra of ["ROUTE FAILED", "ROUTE BLOCKED", "EXTRACTION FAILED", "NEEDS SEAN != STOP"]) {
+  for (const extra of ["ROUTE FAILED", "BLOCKED", "EXTRACTION FAILED", "NEEDS SEAN != STOP"]) {
     assert.ok(flat(text).includes(extra), `the AGENTS.md mirror no longer carries "${extra}"`);
   }
 });
@@ -345,7 +325,7 @@ test("the AGENTS.md mirror has not drifted from current law", () => {
   for (const rule of CANONICAL) {
     const n = rule.id.replace("R-0", "").replace(/^0+/, "");
     assert.ok(
-      agents.includes(`RULING ${n}`) || agents.includes(`${n},`) || agents.includes(`${n}, `),
+      agents.includes(`RULING ${n}`) || agents.includes(`(${n})`) || agents.includes(`${n},`),
       `the AGENTS.md mirror no longer cites RULING ${n} (${rule.what}), so an agent cannot ` +
         `reach the canonical text from it`,
     );

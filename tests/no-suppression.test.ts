@@ -159,6 +159,10 @@ const DOC_ROOTS = ["docs"];
 const DOC_EXT = /\.(md|csv|json|txt)$/;
 const RECORD_FILES = new Set([
   "CLAUDE.md",
+  // A byte-exact generated mirror of CLAUDE.md (provider transition, 2026-09-02),
+  // exempt for exactly the reason CLAUDE.md is: it is the same law, and scanning
+  // it is scanning the same text a second time.
+  "AGENTS.md",
   "docs/rulings.md",
   "docs/state.md",
   "docs/tracker.csv",

@@ -67,6 +67,7 @@ const KEY_ORDER = [
   "adopted",
   "relations",
   "operativePolicy",
+  "ruleKey",
   "claims",
   "uncertain",
   "routingNotes",

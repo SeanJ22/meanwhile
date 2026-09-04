@@ -12,6 +12,7 @@ import {
   type StopAccounting,
 } from "../lib/workstate/types.ts";
 import { proveResume } from "../lib/workstate/frontier.ts";
+import { currentLawText } from "../lib/governance/current-law.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -263,10 +264,14 @@ test("the rule is written where a session reads it, not only in a brief", () => 
   assert.match(types, /A session does not measure itself|cannot measure its own/i);
   assert.match(types, /Persisted resumability is not permission to stop/i);
 
+  // The one-line form is in the constitution; the full vocabulary (the five
+  // statuses, merge cadence) is in current law through the meta-governance and
+  // shipping policies (RULING 273, 266). Both are what a session reads.
   const claude = readFileSync(join(ROOT, "CLAUDE.md"), "utf8");
-  assert.match(claude, /EARLY_HANDOFF/);
   assert.match(claude.replace(/\s+/g, " "), /A session does not measure itself/i);
-  assert.match(claude.replace(/\s+/g, " "), /MERGE CADENCE IS NOT SESSION CADENCE/i);
+  const law = currentLawText(ROOT).replace(/\s+/g, " ");
+  assert.match(law, /EARLY_HANDOFF/);
+  assert.match(law, /Merge cadence is not session cadence/i);
 });
 
 /* ===================================================================== */

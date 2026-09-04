@@ -434,14 +434,15 @@ function readRulings() {
  * ruling that goes missing from the ledger therefore takes this block red
  * rather than quietly shrinking it.
  */
-const CONDUCT_RULINGS = [88, 89, 94, 95, 96, 97, 98, 99, 170, 177, 178, 184];
+// The 2026-09-03 consolidation absorbed the old conduct rulings (88, 89, 94–99,
+// 170, 177, 178, 184) into the six current discovery-law rulings. The pin
+// follows the law: it now quotes the consolidated discovery rulings, which carry
+// the same conduct verbatim in their bodies.
+const CONDUCT_RULINGS = [248, 249, 250, 251, 252, 253];
 
 function readDiscoveryConduct() {
-  // Read from the LEDGER, not from a policy file. The conduct rulings span four
-  // domains — 88 and 98 file under discovery, 95 under sources-licensing, 99
-  // and 176 under meta-governance — so slicing one policy would silently drop
-  // four of them and report a shorter block as healthy. The ledger is the one
-  // place all of them are, by construction.
+  // Read from the LEDGER, not from a policy file — the ledger is the one place
+  // every conduct ruling is, by construction, and a body is quoted whole.
   const source = "docs/governance/ledger.jsonl";
   let text;
   try {

@@ -55,12 +55,12 @@ test("AGENTS.md is the Next block plus a byte-exact generated mirror of CLAUDE.m
   const inside = text.slice(begin, end);
   assert.ok(inside.includes(body.split("\n")[0]), "CLAUDE.md's first line is in the mirror");
   assert.ok(inside.includes(body.split("\n").at(-1) ?? ""), "CLAUDE.md's last line is in the mirror");
-  assert.ok(inside.includes("## The acquisition doctrine"), "the doctrine section travels");
+  assert.ok(inside.includes("## The transparency mandate"), "the doctrine section travels");
   assert.ok(inside.includes("## Ask before"), "the ask-before section travels");
 });
 
 test("SEEDED: a hand edit inside the mirror is STALE, by line", () => {
-  const planted = normalize(AGENTS).replace("## The acquisition doctrine", "## The acquisition suggestion");
+  const planted = normalize(AGENTS).replace("## The transparency mandate", "## The transparency suggestion");
   assert.notEqual(planted, normalize(AGENTS), "the plant must land");
   const verdict = checkAgentsFile(planted, CLAUDE);
   assert.equal(verdict.ok, false);
@@ -69,7 +69,7 @@ test("SEEDED: a hand edit inside the mirror is STALE, by line", () => {
 });
 
 test("SEEDED: a CLAUDE.md change that was not regenerated is STALE, and the digest says so", () => {
-  const amended = normalize(CLAUDE).replace("**Never generate a candidate position.**", "**Never generate a candidate position, ever.**");
+  const amended = normalize(CLAUDE).replace("Never generate a candidate position.", "Never generate a candidate position, ever.");
   assert.notEqual(amended, normalize(CLAUDE), "the amendment must land");
   const verdict = checkAgentsFile(AGENTS, amended);
   assert.equal(verdict.ok, false);

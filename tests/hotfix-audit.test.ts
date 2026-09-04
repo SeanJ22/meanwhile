@@ -101,8 +101,12 @@ test("FINDING 2 — RULING 99's dual-write clause is no longer current, and R99 
   // The historical wording is UNTOUCHED — the clause is still readable.
   assert.match(r99.body, /mapping line in BOTH/, "RULING 99's original text must be preserved verbatim");
 
-  // ...and its status says it has been amended rather than left standing whole.
-  assert.equal(r99.status, "AMENDED");
+  // ...and its status says its dual-write clause is retired — amended by RULING
+  // 176, then absorbed (SUPERSEDED) by the 2026-09-03 consolidation into 272.
+  assert.ok(
+    ["AMENDED", "SUPERSEDED"].includes(r99.status),
+    `RULING 99 must be non-current (amended or superseded), is ${r99.status}`,
+  );
 
   // The amendment is STRUCTURED, naming both halves.
   const rel = r176.relations.find((x) => x.target === r99.id);

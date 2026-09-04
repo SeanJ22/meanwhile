@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-09-04 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **185 sessions.**
+Newest first. **186 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -24,6 +24,14 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **B08** — Read separation agreement before signing · deleted 2026-08-20 by Sean · authority: his note: "This has absolutely nothing to do with this project at all.  Delete this entirely"
 
 ---
+
+## reader-last-mile-nonhunt · 2026-09-04
+
+**What it started.** 1 row(s) opened, 1 still open.
+
+- **NH325** — The configured WTP_CONTROL_PLANE_DATABASE_URL returns HTTP 402: Your project has exceeded the data transfer quota. Upgrade your plan to increase limits. Nine configured PostgreSQL conformance checks cannot execute, and the canonical shipping door refuses the reader release. Reader-serving database integrity independently passed. No credential value is included in this record. *(open)*
+
+**Needs Sean.** NH325
 
 ## reader-last-mile · 2026-09-04
 

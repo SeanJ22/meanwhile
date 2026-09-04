@@ -165,6 +165,8 @@ export interface EvidenceRecord {
   canonicalSubjectId?: string;
   officeholder?: { officialId: string; termNote: string | null };
   rosterGap?: import("../registry/body-rosters.ts").RosterReaderGap;
+  /** A source-listing group is not a verified count of distinct meetings. */
+  meetingListingIdentity?: import("../meetings/listing-identity.ts").MeetingListingIdentityReadback["groups"][number];
   noticeSummary?: { documentId: string; contentHash: string; writtenAt: string };
   /** Published body-wide rules, not an inferred event-specific instruction. */
   accessRule?: { field: "commentPeriod" | "commentPeriodDetail" | "timeLimit" | "signup" | "writtenComment" | "attend"; value: string; standingRule: true };

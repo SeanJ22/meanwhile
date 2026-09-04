@@ -4,6 +4,19 @@ import { commentAccessFor } from "../registry/comment-access.ts";
 import { outcomeQuestionClass } from "./outcome-question.ts";
 import { noticeSummaryFor, NOTICE_SUMMARIES } from "../meetings/notice-summary.ts";
 import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
+import type { Meeting } from "../sources/types.ts";
+import { meetingListingIdentity } from "../meetings/listing-identity.ts";
+import { canonicalBodyIdentity } from "./body-identity.ts";
+
+/** Source IDs remain distinct; equal body/time listings are not a proved event count. */
+export function meetingListingKnowledgeFor(meetings: readonly Meeting[], selectedSourceIds: readonly string[]) {
+  const selected = new Set(selectedSourceIds);
+  const all = meetingListingIdentity(meetings, canonicalBodyIdentity);
+  const relatedGroups = all.groups.filter(group => group.sourceIds.some(id => selected.has(id)));
+  for (const group of relatedGroups) for (const id of group.sourceIds) selected.add(id);
+  const readback = meetingListingIdentity(meetings.filter(meeting => selected.has(meeting.id)), canonicalBodyIdentity);
+  return { readback, gaps: readback.groups.map(group => ({ whose: "OURS" as const, statement: group.reason })) };
+}
 
 /** A notice paraphrase describes only the exact held document version it cites. */
 export function noticeSummaryEvidenceFor(bodyId: string, meetingId: string, question: string, read: typeof readSnapshot = readSnapshot) {
@@ -23,6 +36,7 @@ export function noticeSummaryEvidenceFor(bodyId: string, meetingId: string, ques
     text: `Meanwhile's plain-language summary of this meeting notice: ${summary.summary}`,
     occurredAt: meetings[0].startsAt, sourceUrl: summary.summarizesUrl, sourceOrg: document.sourceOrg ?? null, retrievedAt: document.retrievedAt,
     noticeSummary: { documentId: document.id, contentHash: document.contentHash, writtenAt: summary.writtenAt } });
+  gaps.push(...meetingListingKnowledgeFor(snapshot.meetings, [meetingId]).gaps);
   return { records, gaps };
 }
 
@@ -42,6 +56,7 @@ export function minutesSummaryEvidenceFor(bodyId: string, meetingId: string, que
   records.push({ kind: "MEETING_MINUTES_SUMMARY", id: `${meetingId}#minutes-summary`, bodyId,
     text: `Meanwhile's plain-language summary of the source record: ${summary.summary}`,
     occurredAt: meetings[0].startsAt, sourceUrl: summary.minutesUrl, sourceOrg: summary.sourceOrg, retrievedAt: summary.readAt });
+  gaps.push(...meetingListingKnowledgeFor(snapshot.meetings, [meetingId]).gaps);
   return { records, gaps };
 }
 

@@ -1,6 +1,7 @@
 import type { Meeting } from "@/lib/sources/types";
 
 import { hasPhysicalLocation } from "./online.ts";
+import type { MeetingListingIdentityReadback } from "./listing-identity.ts";
 
 /**
  * A place that hosts meetings.
@@ -17,12 +18,13 @@ export interface Venue {
   lng: number;
   /** Chronological, in whatever direction the caller's list arrived. */
   meetings: Meeting[];
+  listingIdentity?: MeetingListingIdentityReadback;
 }
 
 /** ~11 meters. Two rooms in one building are one pin. */
 const COORD_PRECISION = 4;
 
-export function groupByVenue(meetings: Meeting[]): Venue[] {
+export function groupByVenue(meetings: Meeting[], listingIdentity?: MeetingListingIdentityReadback): Venue[] {
   const venues = new Map<string, Venue>();
 
   for (const meeting of meetings) {
@@ -49,7 +51,7 @@ export function groupByVenue(meetings: Meeting[]): Venue[] {
       continue;
     }
 
-    venues.set(key, { key, name, address, lat, lng, meetings: [meeting] });
+    venues.set(key, { key, name, address, lat, lng, meetings: [meeting], listingIdentity });
   }
 
   return [...venues.values()];

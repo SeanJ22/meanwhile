@@ -21,7 +21,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 ## Decisions waiting on you
 
-**69 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
+**70 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
 
 ### P1
 
@@ -67,6 +67,20 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 **Blocked while.** GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET are absent from the Netlify site's environment (read back by name on 2026-09-02, both sites and account level), so the deployed Google sign-in reports NOT_CONFIGURED and the live proof of RULING 245 cannot be taken.
 
 **Rechecked this run.** the readback record predates RULING 245 and carries no googleConfigured field; nothing has measured the Google path on the deployed host yet. Read: data/ops/admin-login-readback.json.
+
+#### NH325 — Restore dedicated Neon control-plane quota so the configured PostgreSQL shipping checks can run
+
+*Opened 2026-09-04 · opened today · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+
+**What is needed.** Restore transfer allowance for the dedicated Neon control-plane database, or provide an existing dedicated test database for its configured provider checks.
+
+**Why no machine can decide it.** The current provider returns HTTP 402 for exceeded data transfer quota. A paid-plan change or authorization to use another dedicated database is an owner account/spending decision; R241 authorizes research-model spend only. R267 still requires the configured checks to run and R220 keeps this database separate from reader-serving data.
+
+**Your options.**
+
+- **Restore quota or authorize a plan change on the existing dedicated project** — the same configured PostgreSQL conformance lane can execute; all existing state and provider boundaries remain in place.
+- **Provide an already provisioned dedicated test database with authorization for provider conformance** — the provider checks can execute on that authorized database; the reader-serving database is never substituted.
+- **Leave the account unchanged** — other implementation and verification continue, but the configured PostgreSQL lane and canonical shipping gate remain blocked.
 
 ### P2
 
@@ -947,7 +961,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 append-only ledger of every id any session has ever claimed. It is never typed and
 never guessed.
 
-- 440 row(s) carry a date the ledger stamped directly.
+- 441 row(s) carry a date the ledger stamped directly.
 - 243 row(s) take the date from the session the ledger names, where the entry was reconstructed on 2026-08-21 without a stamp.
 - 225 row(s) read **UNKNOWN**. Their ledger entries were reconstructed with no stamped day and name a session that carries no date. The ledger bound around them is a multi-day range, and a range is not a date; this clone is also shallow at 2026-08-25, so git cannot answer for rows older than that either. **UNKNOWN is the honest reading and is never replaced by a guess.**
 
@@ -957,4 +971,4 @@ committed artifacts on EVERY tracker generation — not when a session remembers
 and auto-resolves the moment its blocker stops being true.
 
 - 2 row(s) carry a machine-verifiable predicate.
-- 71 row(s) are marked NOT_MACHINE_VERIFIABLE with a card.
+- 72 row(s) are marked NOT_MACHINE_VERIFIABLE with a card.

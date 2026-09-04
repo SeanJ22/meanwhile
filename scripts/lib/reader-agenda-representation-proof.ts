@@ -10,6 +10,8 @@ import { agendaDocumentRepresentation, classifyAgendaPublication } from "../../l
 import { agendaTopicEvidence } from "../../lib/ask/agenda-topic.ts";
 import { AGENDA_TOPICS, agendaItems } from "../../lib/routing/agenda-search.ts";
 import type { AskAnswerPayload } from "../../lib/ask/answer.ts";
+import { meetingListingKnowledgeFor } from "../../lib/ask/meeting-knowledge.ts";
+import type { MeetingListingIdentityReadback } from "../../lib/meetings/listing-identity.ts";
 
 const hash = (bytes: string | Buffer) => createHash("sha256").update(bytes).digest("hex");
 
@@ -36,6 +38,8 @@ export async function agendaRepresentationProof() {
     assert.equal(response.status, 200);
     assert.equal(payload.publication.acquisition, reading.acquisition);
     assert.equal(payload.documentCount, expected.length);
+    const listingIdentity: MeetingListingIdentityReadback = meetingListingKnowledgeFor(snapshot.meetings, [meetingId]).readback;
+    assert.deepEqual(payload.listingIdentity, listingIdentity);
     assert.deepEqual(payload.documents.map((row: { contentHash: string; text: string | null }) => [row.contentHash, row.text]), expected.map(row => [row.contentHash, row.text]));
     if (isPortal || unreadable) {
       assert.equal(reading.gap?.whose, "OURS");
@@ -49,6 +53,7 @@ export async function agendaRepresentationProof() {
     const legacyPayload = await legacy.json();
     assert.equal(legacy.status, 200);
     assert.equal(legacyPayload.publication.acquisition, reading.acquisition);
+    assert.deepEqual(legacyPayload.listingIdentity, listingIdentity);
     assert.deepEqual(legacyPayload.items, legacyPayload.documentSharedAcrossGovernments ? [] : reading.items);
     if (reading.documentSharedAcrossGovernments) {
       assert.equal(legacyPayload.sourceOrg, null);
@@ -58,7 +63,7 @@ export async function agendaRepresentationProof() {
     }
     representations.push({ meetingId, nativeIds: expected.map(row => row.id), documents: expected,
       representation: agendaDocumentRepresentation(latest), acquisition: reading.acquisition,
-      publication: payload.publication, markupSha256: hash(markup), actualMarkup: markup,
+      publication: payload.publication, listingIdentity, markupSha256: hash(markup), actualMarkup: markup,
       payloadSha256: hash(raw), returnedIds: payload.documents.map((row: { id: string }) => row.id),
       legacyPayload, countAgrees: payload.documentCount === expected.length, status: "PROVEN" });
   }
@@ -104,15 +109,25 @@ export async function agendaRepresentationProof() {
   }
   assert.equal(topics.find(row => row.topic === "rezoning")!.returnedRecords.length, 15);
   assert.equal(topics.find(row => row.topic === "housing-development")!.returnedRecords.length, 23);
-  assert.equal(representations.filter(row => row.acquisition === "ITEMS_READER_READY").length, 68);
+  const referencePath = "tests/fixtures/reader-agenda-item-ready.json";
+  const reference = JSON.parse(readFileSync(referencePath, "utf8")) as { sourceHead: string; sourceArtifactSha256: string; records: { meetingId: string; documentId: string; contentHash: string }[] };
+  const heldReference = reference.records.filter(row => documents.some(document => document.meetingId === row.meetingId));
+  assert.ok(heldReference.length > 60, "The independent item-ready source reference must remain substantive");
+  for (const row of heldReference) {
+    const latest = documents.filter(document => document.meetingId === row.meetingId).sort((a, b) => Date.parse(b.retrievedAt) - Date.parse(a.retrievedAt))[0];
+    assert.equal(latest.id, row.documentId, `${row.meetingId}: changed native document needs source review`);
+    assert.equal(latest.contentHash, row.contentHash, `${row.meetingId}: changed content needs source review`);
+  }
+  assert.deepEqual(representations.filter(row => row.acquisition === "ITEMS_READER_READY").map(row => row.meetingId).sort(), heldReference.map(row => row.meetingId).sort(), "Every still-held reviewed item-ready source must survive; newly eligible versions require an explicit reference update");
   for (const [meetingId, count] of [["legistar:pima:1804", 39], ["legistar:pima:1817", 32], ["legistar:pima:1821", 33], ["legistar:pima:1827", 28], ["schedulepage:mhrd:2026-06-15", 72], ["schedulepage:mhrd:2026-08-17", 38]] as const) {
     const row: { legacyPayload: { items: string[] }; actualMarkup: string } = representations.find(candidate => candidate.meetingId === meetingId)!;
     assert.equal(row.legacyPayload.items.length, count, meetingId);
     assert.ok(row.actualMarkup.includes(row.legacyPayload.items.at(-1)!.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#x27;")), `${meetingId}: final item must render`);
   }
-  const paths = ["data/meetings-snapshot.json", "lib/ask/agenda-publication.ts", "lib/ask/agenda-topic.ts", "lib/routing/agenda-search.ts", "app/api/ask/grounded/route.ts", "app/api/ask/agenda/route.ts", "app/api/agenda/route.ts", "components/map/popup/agenda-section.tsx", "scripts/lib/reader-agenda-representation-proof.ts"];
+  const paths = ["data/meetings-snapshot.json", "lib/ask/agenda-publication.ts", "lib/ask/agenda-topic.ts", "lib/ask/meeting-knowledge.ts", "lib/meetings/listing-identity.ts", "lib/routing/agenda-search.ts", "app/api/ask/grounded/route.ts", "app/api/ask/agenda/route.ts", "app/api/agenda/route.ts", "components/map/popup/agenda-section.tsx", "scripts/lib/reader-agenda-representation-proof.ts", referencePath];
   return { exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), executionLevel: "REAL_ROUTE_HANDLER_AND_REAL_COMPONENT_SSR", modelDisabled: true,
     sourceHashes: paths.map(path => ({ path, sha256: hash(readFileSync(path)) })),
     documentDenominator: documents.length, representations, topics,
+    itemReadyReference: { sourceHead: reference.sourceHead, sourceArtifactSha256: reference.sourceArtifactSha256, held: heldReference, retired: reference.records.filter(row => !heldReference.includes(row)) },
     negativeControls: { numberedPortalNavigationWithheld: true, portalTopicNavigationWithheld: true, realHtmlAgendaPreserved: true, threeUnnumberedHeldAgendasPreserved: true } };
 }

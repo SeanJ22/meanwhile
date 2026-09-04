@@ -5,13 +5,21 @@ import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, readdirSync, rmSyn
 import { tmpdir } from "node:os";
 import { dirname, join, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
-import { READER_SURFACES, validateDatasetMapping } from "../lib/holdings/datasets.ts";
+import { READER_SURFACES, datasetFamily, validateDatasetMapping } from "../lib/holdings/datasets.ts";
 import { MODULE_DATASETS, moduleDatasetInputPaths, readModuleDataset } from "../lib/holdings/module-datasets.ts";
 import { CONTROL_PATH, INPUT_PATH, PLAN_PATH, VAULT_PATH, checkManifests, expectedManifests, loadManifestContext, statesFromIdentity, writeManifests } from "../lib/holdings/manifest.ts";
 import { classify, scanText } from "../scripts/doc-dates.mjs";
 
 const SCRIPT = resolve("scripts/state-manifest.mts");
 const BASE = "3f9a138fd39f6160659329e17c496d2dd99cee00";
+function fixtureConsumers(root: string, datasetPath: string): void {
+  const family = datasetFamily(datasetPath);
+  assert.ok(family, `Fixture must name a registered dataset: ${datasetPath}`);
+  for (const path of family.consumerPaths) {
+    mkdirSync(dirname(join(root, path)), { recursive: true });
+    writeFileSync(join(root, path), "// fixture consumer; manifest tests validate paths without executing readers\n");
+  }
+}
 function fixture(t: { after: (fn: () => void) => void }): string {
   const root = mkdtempSync(join(tmpdir(), "wtp-state-manifest-"));
   t.after(() => { assert.ok(resolve(root).startsWith(resolve(tmpdir()) + sep)); rmSync(root, { recursive: true, force: true }); });
@@ -157,8 +165,7 @@ test("content-addressed asset aliases preserve the union of authoritative state 
 test("state funding citations never borrow the first other-state candidate's provenance", (t) => {
   const root = fixture(t);
   mkdirSync(join(root, "data/fec"), { recursive: true });
-  mkdirSync(join(root, "lib/funding"), { recursive: true });
-  writeFileSync(join(root, "lib/funding/snapshot.ts"), "// fixture consumer\n");
+  fixtureConsumers(root, "data/fec/fec-test.json");
   writeFileSync(join(root, "data/fec/fec-test.json"), JSON.stringify({ candidates: [
     { id: "nh:person", state: "NH", provenance: { sourceUrl: "https://example.invalid/nh-filing" } },
     { id: "az:person", state: "AZ", provenance: { sourceUrl: "https://example.invalid/az-filing" } },
@@ -215,8 +222,8 @@ test("imported module values cannot pass freshness after a supporting source cha
 
 test("extracted canonical envelopes count roster records and render every member", (t) => {
   const root = fixture(t);
-  for (const path of ["lib/registry/body-rosters.ts", "lib/officials/tier-grouping.ts"]) { mkdirSync(dirname(join(root, path)), { recursive: true }); writeFileSync(join(root, path), "// fixture consumer\n"); }
   const path = "data/states/az/officials/cawcd-rosters.json";
+  fixtureConsumers(root, path);
   mkdirSync(dirname(join(root, path)), { recursive: true });
   writeFileSync(join(root, path), JSON.stringify({ schemaVersion: 1, state: "AZ", source: { baseSha: BASE }, commentary: [], records: { AZ_CAWCD_ROSTERS: [{ bodyId: "ocd-division/country:us/state:az#fixture", sourceUrl: "https://example.invalid/roster", collectedAt: "2026-08-27", members: [{ id: "fixture:one", name: "One", officeTitle: "Director" }, { id: "fixture:two", name: "Two", officeTitle: "Director" }] }] } }));
   const context = loadManifestContext(root);

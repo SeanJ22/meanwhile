@@ -38,6 +38,8 @@ import type { MeetingSearchResult } from "@/lib/meetings/query";
 import type { SnapshotStatus } from "@/lib/meetings/freshness";
 import { logEvent } from "@/lib/log/client";
 import { groupByVenue, type Venue } from "@/lib/meetings/venues";
+import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
+import type { MeetingListingIdentityReadback } from "@/lib/meetings/listing-identity";
 import { joinLine, onlineAccessFor, ONLINE_ONLY_LINE } from "@/lib/meetings/online";
 import type { Meeting } from "@/lib/sources/types";
 import type { SeatHolder } from "@/lib/officials/lookup";
@@ -587,7 +589,7 @@ function MapEntryInner() {
     [pinned, ui, view],
   );
 
-  const venues = useMemo<Venue[]>(() => groupByVenue(meetings), [meetings]);
+  const venues = useMemo<Venue[]>(() => groupByVenue(meetings, pinned?.listingIdentity), [meetings, pinned?.listingIdentity]);
 
   /*
    * **P-001 · TWO LISTS, AND THE MAP NEEDS BOTH.**
@@ -609,7 +611,7 @@ function MapEntryInner() {
    * collapsing them back into one.
    */
   const allVenues = useMemo<Venue[]>(
-    () => (pinned ? groupByVenue(pinned.meetings) : []),
+    () => (pinned ? groupByVenue(pinned.meetings, pinned.listingIdentity) : []),
     [pinned],
   );
   const visibleVenueKeys = useMemo(
@@ -1069,6 +1071,7 @@ function MapEntryInner() {
     () => ({
       allMeetings: current?.meetings ?? [],
       meetings,
+      listingIdentity: pinned?.listingIdentity,
       venues,
       result: current,
       location,
@@ -1100,7 +1103,7 @@ function MapEntryInner() {
       zipPartial: current?.partialOcdIds ? new Set(current.partialOcdIds) : null,
       basis: view?.key.startsWith("street:") ? "ADDRESS" : "ZIP",
     }),
-    [current, meetings, venues, location, drawnDistricts, failure, view],
+    [current, meetings, pinned?.listingIdentity, venues, location, drawnDistricts, failure, view],
   );
 
   /*
@@ -1214,6 +1217,7 @@ function MapEntryInner() {
             item.tier,
             current?.coverage?.bodies ?? [],
             current?.meetings ?? [],
+            current?.listingIdentity,
           ),
         });
       }
@@ -1809,6 +1813,7 @@ function MapEntryInner() {
             radiusKm={shown.radiusKm}
             requestedRadiusKm={shown.requestedRadiusKm}
             count={shown.meetings.length}
+            listingCount={readerMeetingCount(shown.meetings, shown.listingIdentity)}
             coverage={shown.coverage}
             refreshing={refreshing}
             failedSourceOcdIds={
@@ -2215,6 +2220,7 @@ function MapEntryInner() {
                         m.status === "SCHEDULED",
                     ).length
               }
+              listingCount={failure ? undefined : readerMeetingCount(meetings.filter(m => m.ocdId === districtPopup.ocdId && m.status === "SCHEDULED"), pinned?.listingIdentity)}
               /* BC-8: minimize the card, scope the list to this body, open it.
                  Three dispatches rather than a new action, because each one
                  already exists and already means exactly this. */
@@ -2788,6 +2794,7 @@ function placeSubject(
   rowTier: Tier | null,
   bodies: CoveredBody[],
   meetings: Meeting[],
+  listingIdentity?: MeetingListingIdentityReadback,
 ): ModalSubject {
   const mine = bodies.filter((b) => b.ocdId === ocdId);
   const divisionType = mine[0]?.divisionType ?? typeFromOcdId(ocdId);
@@ -2839,16 +2846,16 @@ function placeSubject(
            * sittings whenever the two spell the name differently, and prints
            * NOTHING at zero, so the undercount rendered as "sits never".
            */
-          const count = meetings.filter(
-            (m) => m.ocdId === ocdId && sameName(m.bodyName, b.name ?? b.divisionLabel),
-          ).length;
+          const listingCount = readerMeetingCount(meetings.filter(
+            (m) => m.ocdId === ocdId && m.bodyId === b.bodyId,
+          ), listingIdentity);
           return {
             key: b.bodyId,
             name: b.name ?? b.divisionLabel,
             tier: b.tier,
             // A count of sittings we hold, never a judgement. Omitted at zero
             // rather than rendered as "0", which reads as "sits never".
-            meta: count > 0 ? `${count}` : undefined,
+            meta: listingCount.count > 0 ? `${listingCount.count}${listingCount.unresolved ? " calendar listings · distinct meeting count unresolved" : ""}` : undefined,
           };
         })
         .sort((a, b) => a.name.localeCompare(b.name)),

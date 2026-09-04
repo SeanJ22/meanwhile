@@ -1,6 +1,7 @@
 import { readSnapshot } from "@/lib/meetings/snapshot";
 import { meetingReaderRecords } from "@/lib/meetings/reader-records";
 import { classifyAgendaPublication, observationFromMeetingRecord, publisherAgendaObservationsFor } from "@/lib/ask/agenda-publication";
+import { meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
 
 /**
  * GET /api/agenda?meetingId=<source-namespaced id>
@@ -56,5 +57,6 @@ export async function GET(request: Request) {
     }));
 
   return Response.json({ meetingId, documents, documentCount: documents.length,
-    holdingStatus: snapshot ? "HELD" : "HOLDING_UNAVAILABLE", records, publication });
+    holdingStatus: snapshot ? "HELD" : "HOLDING_UNAVAILABLE", records, publication,
+    listingIdentity: snapshot ? meetingListingKnowledgeFor(snapshot.meetings, [meetingId]).readback : null });
 }

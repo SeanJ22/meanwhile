@@ -160,6 +160,8 @@ export function synthesisPrompt(pack: EvidencePack): string {
     "- Use only the supplied records. You have no other source. If something is not in the records, you do not know it.",
     "- Never state a fact about a government that the records do not contain. Do not fill a gap with what is likely, typical, or what you may remember.",
     "- The named gaps are part of the evidence. Say them plainly when they matter to the answer.",
+    ...(pack.records.some(record => record.meetingListingIdentity?.uniqueMeetingCount === null)
+      ? ["- Calendar listings with uniqueMeetingCount:null have an unresolved distinct-meeting count. State their source-listing count and the identity gap; never call that number a count of meetings or merge their agendas, minutes or votes."] : []),
     "- A gap marked OURS is about us — say we have not recorded it. A gap marked THEIRS is about the government — say what they have not published. Never swap these.",
     "- Never tell the reader how to vote, never rank or score candidates, and never say who to support.",
     "- Never state a candidate's or official's position, stance or vote unless a supplied record states it.",

@@ -16,6 +16,8 @@ import { resolveZip } from "../lib/geo/zcta.ts";
 import { divisionsAt, coverageAt, seatHolderById } from "../lib/registry/server.ts";
 import { BODY_ROSTERS, rosterHoldersForBody, rosterGapForBody } from "../lib/registry/body-rosters.ts";
 import type { Meeting } from "../lib/sources/types.ts";
+import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
+import { meetingListingIdentity } from "../lib/meetings/listing-identity.ts";
 import type { MeetingReaderRecords } from "../lib/meetings/reader-records.ts";
 import type { AgendaPublicationReading } from "../lib/ask/agenda-publication.ts";
 import type { VotingSitesAnswer } from "../lib/ballot/voting-sites.ts";
@@ -375,6 +377,66 @@ async function allBallotMoney(page: Page) {
   return { cardsOpened: total, rows };
 }
 
+async function listingMultiplicityWitness(page: Page, label: string) {
+  const identity = meetingListingIdentity(heldMeetings, canonicalBodyIdentity);
+  const groups = identity.groups.filter(group => group.sourceIds.some(id => heldMeetings.find(row => row.id === id)?.ocdId?.includes("/state:nh/")));
+  assert.equal(groups.length, 3, "All three current held Newbury pairs are exercised");
+  const stat = page.locator('[data-stat="meetings"]').first();
+  if (!(await stat.isVisible())) await page.getByRole("button", { name: "Open menu", exact: true }).click();
+  await stat.getByText("Calendar listings", { exact: true }).waitFor({ state: "visible" });
+  assert.ok((await stat.innerText()).includes("Distinct meeting count unresolved."));
+  const count = Number(await stat.locator(".num").innerText());
+  await capture(page, `${label}-listing-count`, stat);
+  const openList = async () => {
+    if (!(await stat.isVisible())) await page.getByRole("button", { name: "Open menu", exact: true }).click();
+    await stat.click();
+    await page.getByRole("combobox", { name: "Group by", exact: true }).selectOption("none");
+    while (await page.locator(".al-more").count()) await page.locator(".al-more").click();
+    assert.equal(await page.locator(".al-row").count(), count);
+    assert.equal(await page.locator(".al-overlay-count").innerText(), `${count} calendar listings`);
+  };
+  await openList();
+  const listNotice = page.locator('.al-panel [data-meeting-listing-identity="UNRESOLVED_MULTIPLICITY"]');
+  for (const group of groups) {
+    assert.ok((await listNotice.innerText()).includes(group.reason));
+    for (const id of group.sourceIds) assert.equal(await page.locator(`.al-row[data-meeting-id="${id}"]`).count(), 1);
+    for (const source of group.sources) assert.equal(await listNotice.locator(`a[data-calendar-listing-source="${source.id}"][href="${source.sourceUrl}"]`).count(), 1);
+  }
+  await capture(page, `${label}-listing-overlay`, listNotice);
+  const readbacks = [];
+  for (const [index, group] of groups.entries()) {
+    if (index > 0) await openList();
+    const meetingId = group.sourceIds[0];
+    const meeting = heldMeetings.find(row => row.id === meetingId)!;
+    await page.locator(`.al-row[data-meeting-id="${meetingId}"]`).click();
+    const venue = page.locator('aside[aria-label^="Calendar listings at"]:visible');
+    await venue.waitFor({ state: "visible" });
+    assert.ok((await venue.innerText()).includes(group.reason));
+    if (index === 0) await capture(page, `${label}-listing-venue`, venue.locator('[data-meeting-listing-identity]'));
+    await venue.locator(`article[data-meeting-id="${meetingId}"] h3 button`).click();
+    const expand = page.getByRole("button", { name: `More about ${meeting.title} — agenda and how to be heard`, exact: true });
+    await expand.waitFor({ state: "visible" });
+    const notice = page.locator('[data-meeting-listing-identity="UNRESOLVED_MULTIPLICITY"]:visible').filter({ has: page.locator(`a[data-calendar-listing-source="${meetingId}"]`) }).last();
+    assert.ok((await notice.innerText()).includes(group.reason));
+    assert.equal(await notice.locator("a[data-calendar-listing-source]").count(), group.sourceListingCount);
+    for (const source of group.sources) assert.equal(await notice.locator(`a[href="${source.sourceUrl}"]`).count(), 1);
+    await capture(page, `${label}-listing-popup-${index + 1}`, notice);
+    if (index === 0) {
+      const [response] = await Promise.all([page.waitForResponse(response => new URL(response.url()).pathname === "/api/agenda" && new URL(response.url()).searchParams.get("meetingId") === meetingId), expand.click()]);
+      assert.equal(response.status(), 200);
+      const payload = await response.json();
+      assert.equal(payload.meetingId, meetingId);
+      assert.deepEqual(payload.listingIdentity.groups.find((candidate: { sourceIds: string[] }) => candidate.sourceIds.includes(meetingId)), group);
+      const modal = page.locator('.account-modal-overlay[role="dialog"]');
+      assert.ok((await modal.innerText()).includes(group.reason));
+      await capture(page, `${label}-listing-full-meeting`, modal.locator('[data-meeting-listing-identity]'));
+      await page.keyboard.press("Escape");
+    } else await page.keyboard.press("Escape");
+    readbacks.push({ sourceIds: group.sourceIds, reason: group.reason, sourceListingCount: group.sourceListingCount, uniqueMeetingCount: group.uniqueMeetingCount });
+  }
+  return { renderedListingCount: count, groups: readbacks };
+}
+
 async function meetingWitness(page: Page, meetingId: string, label: string) {
   const meeting = heldMeetings.find(row => row.id === meetingId);
   assert.ok(meeting, `${meetingId}: canonical sitting exists`);
@@ -410,7 +472,7 @@ async function meetingWitness(page: Page, meetingId: string, label: string) {
     // The list first opens the venue's real sitting list. Use the sitting's
     // held agenda link and date to distinguish regular/study sessions there.
     assert.ok(meeting.agendaUrl, `${meetingId}: known-answer witness has its exact agenda URL`);
-    const entry = page.locator('aside[aria-label^="Meetings at"]:visible article').filter({ has: page.locator(`a[href="${meeting.agendaUrl}"]`) }).filter({ hasText: formatMeetingDate(meeting) });
+    const entry = page.locator('aside:is([aria-label^="Meetings at"],[aria-label^="Calendar listings at"]):visible article').filter({ has: page.locator(`a[href="${meeting.agendaUrl}"]`) }).filter({ hasText: formatMeetingDate(meeting) });
     assert.equal(await entry.count(), 1, `${meetingId}: exact venue sitting`);
     if (meetingId === "legistar:pima:1825") await capture(page, `${label}-venue-meeting-panel`, entry);
     await entry.locator("h3 button").click();
@@ -787,6 +849,7 @@ try {
           await page.keyboard.press("Escape");
         }
         const meetings = await activityWitnesses(page, pilot.zip, label);
+        const listingMultiplicity = pilot.zip === "03255" ? await listingMultiplicityWitness(page, label) : null;
         const termNote = pilot.zip === "85641" ? await termNoteWitness(page, label) : null;
         const voting = pilot.zip === "85701" ? await votingWitness(page, label) : null;
         const votingFallback = viewport.name === "phone" && ["85701", "07866"].includes(pilot.zip) ? await votingFallbackWitness(page, label, pilot.zip === "85701" ? "outside-coverage" : "assigned-unresolved") : null;
@@ -837,7 +900,7 @@ try {
         const incompleteRoster = pilot.zip === "07866" ? await incompleteRosterWitness({ width: viewport.width, height: viewport.height }, theme, label) : null;
         const layoutFailure = voting?.layoutFailure ?? ballotVoting?.layoutFailure;
         const result = layoutFailure ? "FAIL" : "PASS";
-        results.push({ label, result, error: layoutFailure ?? null, build, map: mapMoney.text, ballot: ballotMoney.text, canonicalCandidacyId: pilot.key, api, population, ask, ballotScope, meetings, termNote, incompleteRoster, candidateHolder, voting, votingFallback, ballotVoting, ballotVotingFallback, area, mapActions, ballotActions, mapPositions, ballotPositions, mapFederalRecords, ballotFederalRecords });
+        results.push({ label, result, error: layoutFailure ?? null, build, map: mapMoney.text, ballot: ballotMoney.text, canonicalCandidacyId: pilot.key, api, population, ask, ballotScope, meetings, listingMultiplicity, termNote, incompleteRoster, candidateHolder, voting, votingFallback, ballotVoting, ballotVotingFallback, area, mapActions, ballotActions, mapPositions, ballotPositions, mapFederalRecords, ballotFederalRecords });
         console.log(`${result} ${label}${population ? `; ${population.cardsOpened} ballot cards individually opened` : ""}${voting?.layoutFailure ? `; ${voting.layoutFailure}` : ""}`);
       } catch (error) {
         await capture(page, `${label}-failure`).catch(() => {});

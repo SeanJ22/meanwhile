@@ -4,6 +4,7 @@ import { classifyAgendaPublication, type AgendaPublicationReading } from "@/lib/
 import { intakeLimits, isSameOriginSubmission } from "@/lib/signal/intake-limits";
 import { ripcordPulled } from "@/lib/ripcords";
 import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
+import { meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
 
 /**
  * POST /api/ask/agenda — **A05, and nothing else.** (Narrowed by ASK-05,
@@ -85,6 +86,7 @@ export interface AgendaMeetingReply {
   documentsHeld: number;
   readable: number;
   publication: AgendaPublicationReading;
+  listingIdentity: ReturnType<typeof meetingListingKnowledgeFor>["readback"];
 }
 
 const MAX_BODY_BYTES = 2048;
@@ -200,6 +202,7 @@ export async function POST(request: Request) {
       documentsHeld: forMeeting.length,
       readable: publication.acquisition === "ITEMS_READER_READY" || publication.acquisition === "READ_NO_ITEMS_EXTRACTED" ? 1 : 0,
       publication,
+      listingIdentity: meetingListingKnowledgeFor(snapshot.meetings, [meetingId]).readback,
     };
     return Response.json(reply);
   }

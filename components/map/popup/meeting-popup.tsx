@@ -21,7 +21,9 @@ import { minutesSummaryForMeeting } from "@/lib/meetings/minutes-summaries";
 import { officePhoneForBody } from "@/lib/meetings/office-phone";
 import { JurisdictionPill } from "@/components/address/jurisdiction-pill";
 import { badgeFor, type JurisdictionBadge } from "@/lib/meetings/jurisdiction-badge";
-import { useShellData } from "@/lib/state/data";
+import { useShellData, useMeetingListingIdentity } from "@/lib/state/data";
+import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
+import { MeetingListingNotice } from "../meeting-listing-notice";
 import type { Meeting } from "@/lib/sources/types";
 
 import { CalendarLinks } from "./calendar-links";
@@ -108,6 +110,7 @@ export function MeetingPopup({
    * holds three municipalities; the card picked one.
    */
   const { governing, zipPartial, basis, location } = useShellData();
+  const listingCount = readerMeetingCount([meeting], useMeetingListingIdentity());
   const jurisdiction: JurisdictionBadge = badgeFor(meeting, governing, basis, zipPartial);
   // 6a (2026-08-17): a concluded meeting is a record, not an errand —
   // Directions drops (nobody drives to a meeting that already happened),
@@ -215,6 +218,7 @@ export function MeetingPopup({
       )}
 
       <PopupRow label="Status">{STATUS_LABEL[meeting.status]}</PopupRow>
+      <MeetingListingNotice groups={listingCount.groups} />
 
       {/*
         hotfix-0817 (2026-08-17): a carried row does not inherit the snapshot's
@@ -378,4 +382,3 @@ function LinkLadder({
     </ul>
   );
 }
-

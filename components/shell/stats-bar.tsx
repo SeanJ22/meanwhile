@@ -3,7 +3,8 @@
 import { useMemo } from "react";
 
 import { formatMiles } from "@/lib/map/format";
-import { useShellData } from "@/lib/state/data";
+import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
+import { useShellData, useMeetingListingIdentity } from "@/lib/state/data";
 import { computeStats, deriveStatsView } from "@/lib/state/derive";
 import { useUi, useUiDispatch } from "@/lib/state/provider";
 
@@ -56,6 +57,7 @@ export function StatsBar() {
   );
 
   const accent = tierSetVars(ui.tiers);
+  const listingCount = readerMeetingCount(meetings, useMeetingListingIdentity());
 
   const coverage = result?.tier ?? null;
   const widened =
@@ -68,8 +70,10 @@ export function StatsBar() {
       {/* 8a (2026-08-17): the numbers are doors. Each count opens the list
           it counts — twice carried, ships now. */}
       <Card
-        label="Meetings"
+        statKey="meetings"
+        label={listingCount.heading}
         value={view.meetings}
+        sub={listingCount.countNote}
         style={accent}
         open={ui.listOverlayOpen}
         onOpen={() => dispatch({ type: "list/open", open: true })}
@@ -115,7 +119,7 @@ export function StatsBar() {
           the map as complete. */}
       {dropped > 0 && (
         <p className="stat-missing">
-          {dropped} {dropped === 1 ? "meeting" : "meetings"} not shown — no
+          {dropped} {dropped === 1 ? "calendar listing" : "calendar listings"} not shown — no
           resolvable location
         </p>
       )}
@@ -150,6 +154,7 @@ export function StatsBar() {
  * nothing is open.
  */
 function Card({
+  statKey,
   label,
   value,
   sub = null,
@@ -157,6 +162,7 @@ function Card({
   open = false,
   onOpen,
 }: {
+  statKey?: string;
   label: string;
   value: number | string;
   /** A second honest number, kept rather than thrown away. */
@@ -173,7 +179,7 @@ function Card({
       /* ITEM 1d (2026-08-17): the sidebar counter names itself, so the
          permanent walk check that asserts this number equals the map chip's
          and the panel's does not have to find it by its visible label. */
-      data-stat={label.toLowerCase()}
+      data-stat={statKey ?? label.toLowerCase()}
       data-open={open || undefined}
       aria-expanded={open}
       style={style}

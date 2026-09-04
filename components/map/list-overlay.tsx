@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
+import { MeetingListingNotice } from "./meeting-listing-notice";
 
 import { haversineKm } from "@/lib/geo/distance";
 import { hasConcluded, orderByUpcomingFirst } from "@/lib/meetings/ordering";
@@ -20,7 +22,7 @@ import {
 } from "@/lib/meetings/jurisdiction-badge";
 import { TIER_LABEL } from "@/lib/ocd/tiers";
 import { tierForMeeting } from "@/lib/state/derive";
-import { useShellData } from "@/lib/state/data";
+import { useShellData, useMeetingListingIdentity } from "@/lib/state/data";
 import { BODY_TYPE_LABEL, bodyTypeOf } from "@/lib/state/derive";
 import { useUi, useUiDispatch } from "@/lib/state/provider";
 import type { ListGroupBy, ListSort } from "@/lib/state/types";
@@ -83,6 +85,7 @@ export function ListOverlay({
   onPickMeeting: (meeting: Meeting) => void;
 }) {
   const { meetings, location, result, governing, zipPartial, basis } = useShellData();
+  const listingIdentity = useMeetingListingIdentity();
   const ui = useUi();
   const dispatch = useUiDispatch();
   const [limit, setLimit] = useState(PAGE);
@@ -227,12 +230,13 @@ export function ListOverlay({
 
   const hidden = sorted.length - Math.min(limit, sorted.length);
   const center = ui.nearMe ?? location;
+  const listingCount = readerMeetingCount(sorted, listingIdentity);
 
   return (
     <div
       className="al-overlay"
       role="dialog"
-      aria-label="Visible meetings"
+      aria-label={`Visible ${listingCount.heading.toLowerCase()}`}
       onClick={(e) => {
         // A large popup, not a takeover (3): clicking the backdrop closes.
         if (e.target === e.currentTarget)
@@ -242,7 +246,7 @@ export function ListOverlay({
       <div className="al-panel">
       <div className="al-overlay-header">
         <span className="al-overlay-count">
-          {sorted.length} {sorted.length === 1 ? "meeting" : "meetings"}
+          {sorted.length} {listingCount.unit}
         </span>
         {/* ASK-22: the focus is stated and one tap clears it. */}
         {focused.applied && ui.listFocusBodyName && (
@@ -278,6 +282,7 @@ export function ListOverlay({
         </button>
       </div>
 
+      {listingCount.unresolved && <div className="px-4"><MeetingListingNotice groups={listingCount.groups} /></div>}
       <div className="al-overlay-controls">
         <select
           className="scope-select"

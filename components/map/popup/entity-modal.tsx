@@ -7,6 +7,9 @@ import { Fragment, useEffect, useState, type ReactNode } from "react";
 
 import { formatMeetingDate, formatMeetingTime } from "@/lib/map/format";
 import { sourceCreditFor } from "@/lib/meetings/list-attribution";
+import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
+import { useMeetingListingIdentity } from "@/lib/state/data";
+import { MeetingListingNotice } from "../meeting-listing-notice";
 import {
   groupMeetingsForReading,
   hasConcluded,
@@ -441,6 +444,7 @@ function BodySections({
   onOpenHolder?: (holder: SeatHolder) => void;
 }) {
   const card = subject.bodyCard!;
+  const listingCount = readerMeetingCount(subject.meetings, useMeetingListingIdentity());
   /*
    * One `now` for the whole card (item 11's rule): the ordering and the
    * "upcoming" count below are computed from the same instant, so the number
@@ -545,8 +549,8 @@ function BodySections({
     },
     {
       id: "meetings",
-      title: "Meetings",
-      meta: meetings.length > 0 ? `${upcoming} upcoming` : undefined,
+      title: listingCount.heading,
+      meta: meetings.length > 0 ? `${upcoming} upcoming${listingCount.unresolved ? " listings" : ""}` : undefined,
       content: meetings.length > 0 ? <Meetings meetings={meetings} /> : null,
       absence:
         "No meetings on file for this body. That is our coverage, not a statement that nothing is scheduled.",
@@ -660,6 +664,7 @@ export function EntityModal({
   homeZip = null,
 }: EntityModalProps) {
   const [tab, setTab] = useState<ModalTab>(initialTab);
+  const listingCount = readerMeetingCount(subject.meetings, useMeetingListingIdentity());
   const sourceCount = sourceCountLabel(subject.sources);
 
   useEffect(() => {
@@ -750,7 +755,7 @@ export function EntityModal({
               data-active={String(tab === entry.id)}
               onClick={() => setTab(entry.id)}
             >
-              {entry.label}
+              {entry.id === "meetings" ? listingCount.heading : entry.label}
               {/* Item 1 (2026-08-16): the stated N, computed from the SAME
                   array the tab maps over. A count derived a second way is how
                   a number comes to disagree with what is on screen. */}
@@ -764,6 +769,7 @@ export function EntityModal({
         <div className="account-modal-body" role="tabpanel">
           {tab === "overview" && (
             <>
+              {subject.agenda && <MeetingListingNotice groups={listingCount.groups} />}
               {subject.facts.map((fact) => (
                 <PopupRow key={fact.label} label={fact.label} mono={fact.mono}>
                   {fact.value}
@@ -1195,6 +1201,7 @@ export function Representation({
  * used by half its callers is not a shared function.
  */
 function Meetings({ meetings }: { meetings: Meeting[] }) {
+  const listingCount = readerMeetingCount(meetings, useMeetingListingIdentity());
   // Pinned at mount — never a clock read in a render body (item 11's rule).
   const [now] = useState(() => Date.now());
 
@@ -1215,6 +1222,7 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
 
   return (
     <>
+      <MeetingListingNotice groups={listingCount.groups} />
       {groups.map((group) => (
         <section key={group.id}>
           <p className="t-structure mt-3 mb-1 text-label first:mt-0">

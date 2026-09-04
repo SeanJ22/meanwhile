@@ -210,6 +210,7 @@ const RUNTIME_DECLARED: Record<string, string> = {
   "--tier-glow": "components/shell/tier-style.ts + components/map/legend.tsx",
   "--chip-accent": "components/shell/filters-area.tsx",
   "--chip-fill": "components/officials/person-identity.tsx (guarded by [data-fill])",
+  "--ask-expansion-top": "components/shell/pill-cluster.tsx (initialized state, set on the expansion's ancestor every render)",
   "--pin-color": "lib/map/marker-pool.ts",
   "--pin-glow": "lib/map/marker-pool.ts",
   "--spider-len": "lib/map/marker-pool.ts",
@@ -221,6 +222,14 @@ const RUNTIME_DECLARED: Record<string, string> = {
   "--font-jetbrains-mono": "app/layout.tsx (next/font)",
   "--font-eb-garamond": "app/layout.tsx (next/font)",
 };
+
+test("the Ask positioning token is set on its cluster from initialized state", () => {
+  const cluster = readFileSync(join(ROOT, "components", "shell", "pill-cluster.tsx"), "utf8");
+  assert.match(cluster, /const \[expansionTop, setExpansionTop\] = useState\(0\)/,
+    "the runtime token must have a value even before layout measurement");
+  assert.match(cluster, /data-pill-cluster=\{placement\}[^>]*style=\{\{\s*"--ask-expansion-top":\s*`\$\{expansionTop\}px`\s*\} as CSSProperties\}/,
+    "the token must be set in pixels on the ancestor that contains .ask-expansion");
+});
 
 test("every var(--token) reference resolves to a declared token", () => {
   const css = readFileSync(CSS, "utf8");

@@ -46,9 +46,9 @@
       "reason": "Not a claim about any government. The zip is unknown, so the sentence names the MAP VIEW instead of naming a place we have not established — which is the opposite of the defect: it refuses to put a place name where we have none."
     },
     {
-      "file": "components/map/popup/agenda-section.tsx",
-      "text": "we haven't recorded why",
-      "reason": "Names OUR gap, in our own words, which is what the render-default rule requires. It replaced \"extraction failed\", which restated the branch condition as though it were the reason."
+      "file": "components/officials/official-term-note.tsx",
+      "text": "Published roster",
+      "reason": "Labels an existing roster-source link only when the holder already carries a verbatim sourced term note and sourceUrl. It does not supply a missing note, organization, read date or civic finding. When sourceOrg is absent the link keeps its exact held URL with this record-class label; when the note or URL is absent the fallback never renders. Actual leaf controls in reader-roster-term-note.test.ts prove those boundaries."
     },
     {
       "file": "components/map/zip-switcher.tsx",

@@ -1,6 +1,8 @@
 "use client";
 
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
+import type { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
+import { MeetingListingNotice } from "./meeting-listing-notice";
 import {
   CouldGovernMark,
   CouldGovernNotice,
@@ -69,6 +71,7 @@ interface CoverageNoticeProps {
   radiusKm: number;
   requestedRadiusKm: number;
   count: number;
+  listingCount?: ReturnType<typeof readerMeetingCount>;
   coverage: CoverageSummary | null;
   /**
    * Divisions whose calendar source failed at the last snapshot refresh. A
@@ -1607,6 +1610,7 @@ export function CoverageNotice({
   radiusKm,
   requestedRadiusKm,
   count,
+  listingCount,
   coverage,
   failedSourceOcdIds,
   ocdIdsWithMeetings,
@@ -1728,10 +1732,11 @@ export function CoverageNotice({
       </div>
 
       <div className="coverage-notice-body">
+      <MeetingListingNotice groups={listingCount?.groups ?? []} />
       {tier === "widened" && (
         <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
           Nothing scheduled within {near} miles of {zip}. Showing the{" "}
-          {count === 1 ? "one meeting" : `${count} meetings`} within {wide}{" "}
+          {listingCount?.unresolved ? `${count} ${listingCount.unit}` : count === 1 ? "one meeting" : `${count} meetings`} within {wide}{" "}
           miles.
         </p>
       )}

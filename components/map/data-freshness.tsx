@@ -45,7 +45,7 @@ export function DataFreshness({ snapshot }: { snapshot: SnapshotStatus }) {
       {carried && carried.count > 0 && (
         <>
           {" · "}
-          {carried.count === 1 ? "1 meeting is" : `${carried.count} meetings are`}{" "}
+          {carried.count === 1 ? "1 calendar listing is" : `${carried.count} calendar listings are`}{" "}
           older than that:{" "}
           {carried.lastFreshAt ? (
             <>

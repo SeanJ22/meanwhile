@@ -2,7 +2,7 @@
   "generated": "2026-09-04",
   "ruling": "RULING 227",
   "openedDateProvenance": {
-    "opened-ledger": 440,
+    "opened-ledger": 441,
     "session-label": 243,
     "unrecoverable": 225
   },
@@ -47,6 +47,7 @@
       "NH304",
       "NH306",
       "NH310",
+      "NH325",
       "NH43",
       "NS01",
       "NS10",
@@ -95,7 +96,7 @@
   },
   "summary": {
     "predicates": 2,
-    "notMachineVerifiable": 71,
+    "notMachineVerifiable": 72,
     "holds": 1,
     "resolved": 0,
     "cannotTell": 1
@@ -119,6 +120,14 @@
       "read": [
         "data/ops/admin-login-readback.json"
       ],
+      "evidence": []
+    },
+    {
+      "rowId": "NH325",
+      "kind": "NOT_MACHINE_VERIFIABLE",
+      "verdict": "HOLDS",
+      "why": "NH325 is marked NOT_MACHINE_VERIFIABLE and carries a decision card. It waits on the author's judgement, which no artifact can supply.",
+      "read": [],
       "evidence": []
     },
     {

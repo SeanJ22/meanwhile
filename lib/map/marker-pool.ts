@@ -1,6 +1,7 @@
 import { Marker, type Map as MapLibreMap } from "maplibre-gl";
 
 import type { Venue } from "@/lib/meetings/venues";
+import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import {
   LEVEL_ORDER,
   levelForMeeting,
@@ -134,7 +135,7 @@ export function renderedSignature(venue: Venue): string {
   );
   const concluded =
     venue.meetings.length > 0 && venue.meetings.every((m) => m.status === "CONCLUDED");
-  return [venue.name, venue.meetings.length, concluded ? "c" : "o", levels.join(",")].join("|");
+  return [venue.name, venue.meetings.length, concluded ? "c" : "o", levels.join(","), readerMeetingCount(venue.meetings, venue.listingIdentity).groups.map(group => group.sourceIds.join(",")).join(";")].join("|");
 }
 
 export function createMarkerPool(): MarkerPool {
@@ -274,6 +275,7 @@ export function updateMarkerIcon(
   venue: Venue,
 ): void {
   const count = venue.meetings.length;
+  const listingCount = readerMeetingCount(venue.meetings, venue.listingIdentity);
   const concluded =
     count > 0 && venue.meetings.every((m) => m.status === "CONCLUDED");
 
@@ -318,7 +320,7 @@ export function updateMarkerIcon(
 
   element.setAttribute(
     "aria-label",
-    `${venue.name}, ${count} ${count === 1 ? "meeting" : "meetings"}`,
+    `${venue.name}, ${count} ${listingCount.unit}${listingCount.countNote ? `. ${listingCount.countNote}` : ""}`,
   );
 
   const badge = element.querySelector<HTMLSpanElement>(".wtp-pin-count");

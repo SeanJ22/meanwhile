@@ -6,6 +6,8 @@ import { readSnapshot } from "../../lib/meetings/snapshot.ts";
 import { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS } from "../../lib/meetings/constants.ts";
 import { floored } from "../../lib/ops/denominator-floor.ts";
 import type { Meeting } from "../../lib/sources/types.ts";
+import { meetingListingIdentity, type MeetingListingIdentityReadback } from "../../lib/meetings/listing-identity.ts";
+import { canonicalBodyIdentity } from "../../lib/ask/body-identity.ts";
 const hash = (value: string | Uint8Array) => createHash("sha256").update(value).digest("hex");
 const base = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
 assert.match(new URL(base).hostname, /^(localhost|127\.0\.0\.1)$/);
@@ -22,8 +24,9 @@ for (let start = 0; start < points.length; start += 4) await Promise.all(points.
   const request = `/api/meetings?${new URLSearchParams({ lat: String(point.lat), lng: String(point.lng), radiusKm: "150" })}`;
   const response = await fetch(`${base}${request}`, { headers: { "x-wtp-synthetic-run": "reader-last-mile-meeting-routes" } });
   assert.equal(response.status, 200, request);
-  const actual = await response.json() as { meetings: Meeting[]; coverage: unknown; tier: string; radiusKm: number };
+  const actual = await response.json() as { meetings: Meeting[]; listingIdentity: MeetingListingIdentityReadback; coverage: unknown; tier: string; radiusKm: number };
   assert.ok(actual.coverage, `${request}: registry loader unavailable`);
+  assert.deepEqual(actual.listingIdentity, meetingListingIdentity(actual.meetings, canonicalBodyIdentity), `${request}: exact listing count, source identities and unresolved multiplicity`);
   assert.equal(new Set(actual.meetings.map(row => row.id)).size, actual.meetings.length, "Duplicate returned meeting identity");
   for (const row of actual.meetings) {
     const held: Meeting | undefined = snapshot.meetings.find(meeting => meeting.id === row.id); assert.ok(held, `Unheld meeting ${row.id}`);
@@ -31,12 +34,12 @@ for (let start = 0; start < points.length; start += 4) await Promise.all(points.
     assert.deepEqual(row, JSON.parse(JSON.stringify({ ...held, status: currentStatus })), `Canonical meeting payload ${row.id}`);
     seen.add(row.id);
   }
-  records.push({ surface: "meetings/map", request, point, returnedCount: actual.meetings.length, identities: actual.meetings.map(row => ({ id: row.id, bodyId: row.bodyId })), payloadSha256: hash(JSON.stringify(actual)), tier: actual.tier, radiusKm: actual.radiusKm });
+  records.push({ surface: "meetings/map", request, point, returnedCount: actual.meetings.length, identities: actual.meetings.map(row => ({ id: row.id, bodyId: row.bodyId })), listingIdentity: actual.listingIdentity, listingIdentityAgrees: true, payloadSha256: hash(JSON.stringify(actual)), tier: actual.tier, radiusKm: actual.radiusKm });
 }));
 records.sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b)));
 const missing = expected.filter(meeting => !seen.has(meeting.id)).map(meeting => ({ id: meeting.id, bodyId: meeting.bodyId, ocdId: meeting.ocdId, location: meeting.location, startsAt: meeting.startsAt }));
 floored("current-window held meetings returned", "every canonical held meeting inside the current serving window", expected.length, expected.length - missing.length);
-const sourcePaths = ["app/api/meetings/route.ts", "lib/meetings/query.ts", "lib/meetings/constants.ts", "lib/sources/snapshot/index.ts", "lib/registry/server.ts", "data/meetings-snapshot.json"];
+const sourcePaths = ["app/api/meetings/route.ts", "lib/meetings/query.ts", "lib/meetings/listing-identity.ts", "lib/ask/body-identity.ts", "lib/meetings/constants.ts", "lib/sources/snapshot/index.ts", "lib/registry/server.ts", "data/meetings-snapshot.json"];
 const proof = { exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), buildId: readFileSync(".next/BUILD_ID", "utf8").trim(), executionLevel: "ACTUAL_HTTP_ROUTE", asOf: asOf.toISOString(), sourceHashes: sourcePaths.map(path=>({path,sha256:hash(readFileSync(path))})), denominator: { held: snapshot.meetings.length, inCurrentWindow: expected.length, returned: expected.length - missing.length, outsideWindow: dispositions.length, queriedHeldLocations: points.length }, dispositions, missing, records };
 writeFileSync("docs/evidence/reader-last-mile-meeting-routes.json", JSON.stringify(proof, null, 2) + "\n");
 console.log(JSON.stringify({ denominator: proof.denominator, missing }, null, 2));

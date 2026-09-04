@@ -101,6 +101,8 @@ export interface AskAnswerPayload {
    * whole array for a day that holds more than one (ASK-24).
    */
   meetings: AskSitting[];
+  /** Exact listing identities; a null unique count must never become array.length. */
+  meetingListingIdentity?: import("../meetings/listing-identity.ts").MeetingListingIdentityReadback;
   /** How the reader's answer was produced. Never inferred — see `AnswerMode`. */
   mode: AnswerMode;
   /** What the question resolved to, or null. Never a substitute. */

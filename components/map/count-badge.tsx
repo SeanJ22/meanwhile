@@ -1,6 +1,7 @@
 "use client";
 
-import { useShellData } from "@/lib/state/data";
+import { useShellData, useMeetingListingIdentity } from "@/lib/state/data";
+import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import { useUi, useUiDispatch } from "@/lib/state/provider";
 
 import { tierSetVars } from "../shell/tier-style";
@@ -13,6 +14,7 @@ import { tierSetVars } from "../shell/tier-style";
  */
 export function CountBadge() {
   const { meetings, venues, searchFailed } = useShellData();
+  const listingCount = readerMeetingCount(meetings, useMeetingListingIdentity());
   const ui = useUi();
   const dispatch = useUiDispatch();
 
@@ -41,10 +43,10 @@ export function CountBadge() {
       data-active={ui.listOverlayOpen}
       aria-expanded={ui.listOverlayOpen}
       onClick={() => dispatch({ type: "list/toggle" })}
-      style={tierSetVars(ui.tiers)}
+      style={{ ...tierSetVars(ui.tiers), ...(listingCount.unresolved ? { flexWrap: "wrap", whiteSpace: "normal", maxWidth: "100%" } : {}) }}
     >
       <span className="cb-num">{meetings.length}</span>{" "}
-      {meetings.length === 1 ? "meeting" : "meetings"}
+      {listingCount.unit}
       {venues.length > 0 && (
         <>
           {" · "}
@@ -52,6 +54,7 @@ export function CountBadge() {
           {venues.length === 1 ? "venue" : "venues"}
         </>
       )}
+      {listingCount.countNote && <span className="basis-full text-left text-[0.625rem] font-normal">{listingCount.countNote}</span>}
     </button>
   );
 }

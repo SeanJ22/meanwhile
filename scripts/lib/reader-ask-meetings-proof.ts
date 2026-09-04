@@ -11,6 +11,7 @@ import { synthesisContextPayload } from "../../lib/ask/synthesize.ts";
 import type { EvidencePack, EvidenceRecord } from "../../lib/ask/evidence.ts";
 import type { AskAnswerPayload } from "../../lib/ask/answer.ts";
 import type { Meeting } from "../../lib/sources/types.ts";
+import { meetingListingIdentity } from "../../lib/meetings/listing-identity.ts";
 
 type Expected = Pick<EvidenceRecord, "id" | "kind" | "bodyId" | "sourceUrl" | "sourceOrg" | "retrievedAt"> & Partial<Pick<EvidenceRecord, "text" | "occurredAt">>;
 const hash = (value: string | Buffer) => createHash("sha256").update(value).digest("hex");
@@ -51,7 +52,14 @@ export async function meetingsAskProof(progress: (message: string) => void = () 
       (!kinds.includes("MEETING_MEMBER_VOTE") || payload.denominators.personVoteRowsInPack === actual.filter((record) => record.kind === "MEETING_MEMBER_VOTE").length);
     const pack: EvidencePack = { question, subject: payload.subject, records: payload.records, gaps: payload.gaps, denominators: payload.denominators, intent: "PAST_MEETING", temporal: { kind: "DATE", localDate: requestedDate }, today: new Date().toISOString().slice(0, 10) };
     const synthesisReceivesEveryRecord = JSON.stringify((JSON.parse(synthesisContextPayload(pack)) as { records: EvidenceRecord[] }).records) === JSON.stringify(payload.records);
-    return { family, executionLevel: "REAL_ROUTE_HANDLER", request, subjectId: bodyId, meetingIds: group.map((row) => row.id), httpStatus: response.status, resolvedSubjectId: payload.subject?.id ?? null, mode: payload.mode, expectedRecordIds: expected.map((record) => record.id), expectedRecords: expected, returnedRecordIds: actual.map((record) => record.id), returnedRecords: actual, payloadSha256: hash(raw), payloadBytes: Buffer.byteLength(raw), countAgrees, synthesisReceivesEveryRecord, actualRecordCount: payload.records.length, traceRecordCount: payload.trace.retrieval.recordCount, denominators: payload.denominators, gaps: payload.gaps, missing, unexpected, modelAnswer: payload.answer, status: response.status === 200 && payload.subject?.id === bodyId && payload.answer === null && countAgrees && synthesisReceivesEveryRecord && !missing.length && !unexpected.length ? "PROVEN" : "ELIGIBLE_NOT_FULLY_DELIVERED" };
+    const expectedListingIdentity = meetingListingIdentity(snapshot!.meetings.filter(meeting => group.some(row => row.id === meeting.id)), canonicalBodyIdentity);
+    const listingIdentityAgrees = expectedListingIdentity.groups.every(expectedGroup =>
+      payload.meetingListingIdentity?.groups.some(actualGroup => JSON.stringify(actualGroup) === JSON.stringify(expectedGroup)) &&
+      payload.gaps.some(gap => gap.whose === "OURS" && gap.statement === expectedGroup.reason) &&
+      payload.denominators.sittingsThatLocalDay === undefined &&
+      payload.denominators.calendarListingsThatLocalDay === payload.meetings.length &&
+      payload.records.filter(record => record.kind === "MEETING" && expectedGroup.sourceIds.includes(record.id)).every(record => record.text.startsWith("Calendar listing:") && record.meetingListingIdentity?.uniqueMeetingCount === null));
+    return { family, executionLevel: "REAL_ROUTE_HANDLER", request, subjectId: bodyId, meetingIds: group.map((row) => row.id), httpStatus: response.status, resolvedSubjectId: payload.subject?.id ?? null, mode: payload.mode, expectedRecordIds: expected.map((record) => record.id), expectedRecords: expected, returnedRecordIds: actual.map((record) => record.id), returnedRecords: actual, payloadSha256: hash(raw), payloadBytes: Buffer.byteLength(raw), countAgrees, synthesisReceivesEveryRecord, expectedListingIdentity, listingIdentity: payload.meetingListingIdentity, listingIdentityAgrees, actualRecordCount: payload.records.length, traceRecordCount: payload.trace.retrieval.recordCount, denominators: payload.denominators, gaps: payload.gaps, missing, unexpected, modelAnswer: payload.answer, status: response.status === 200 && payload.subject?.id === bodyId && payload.answer === null && countAgrees && synthesisReceivesEveryRecord && listingIdentityAgrees && !missing.length && !unexpected.length ? "PROVEN" : "ELIGIBLE_NOT_FULLY_DELIVERED" };
   }
   const proofs = [];
   for (const group of groups.values()) {
@@ -95,6 +103,6 @@ export async function meetingsAskProof(progress: (message: string) => void = () 
       proofs.push(await prove("meeting-outcomes", group, `${kind === "MEETING_MEMBER_VOTE" ? "How did this body's members vote" : kind === "MEETING_ACTION" ? "What did this body decide" : "What was on this body's agenda"} on ${date}?`, [kind], expected, date, kind === "AGENDA_ITEM"));
     }
   }
-  const paths = ["scripts/lib/reader-ask-meetings-proof.ts", "app/api/ask/grounded/route.ts", "lib/ask/inventory.ts", "lib/routing/named-entity.ts", "lib/ask/select.ts", "lib/ask/meeting-date.ts", "lib/ask/meeting-time.ts", "lib/ask/meeting-outcomes.ts", "lib/ask/agenda-publication.ts", "lib/ask/subject.ts", "lib/ask/resolve.ts", "lib/ask/synthesize.ts", "lib/meetings/snapshot.ts", "lib/outcomes/store.ts", "data/meetings-snapshot.json", "data/states/az/outcomes/legistar-outcomes.json"];
+  const paths = ["scripts/lib/reader-ask-meetings-proof.ts", "app/api/ask/grounded/route.ts", "lib/ask/inventory.ts", "lib/routing/named-entity.ts", "lib/ask/select.ts", "lib/ask/meeting-date.ts", "lib/ask/meeting-time.ts", "lib/ask/meeting-outcomes.ts", "lib/ask/meeting-knowledge.ts", "lib/meetings/listing-identity.ts", "lib/ask/agenda-publication.ts", "lib/ask/subject.ts", "lib/ask/resolve.ts", "lib/ask/synthesize.ts", "lib/meetings/snapshot.ts", "lib/outcomes/store.ts", "data/meetings-snapshot.json", "data/states/az/outcomes/legistar-outcomes.json"];
   return { exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), executionLevel: "REAL_ROUTE_HANDLER", sourceHashScope: "Exact source-handler bytes; the real clock is unchanged, and this is not deployed-build proof.", sourceHashes: paths.map((path) => ({ path, sha256: hash(readFileSync(path)) })), modelDisabled: true, meetingDenominator: snapshot.meetings.length, documentDenominator: documents.length, outcomeSittingDenominator: outcomes.sittings.length, unbound, documentDispositions, proofs };
 }

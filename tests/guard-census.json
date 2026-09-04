@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 509,
-    "named": 5320,
+    "files": 512,
+    "named": 5331,
     "dynamic": 23
   },
   "files": {
@@ -1325,6 +1325,7 @@
         "app/icon.svg carries the dark theme's --bg and --mark, and the square is filled",
         "every var(--token) reference resolves to a declared token",
         "no Google font host is reachable from the app tree",
+        "the Ask positioning token is set on its cluster from initialized state",
         "the brand square is filled, and no brand rule makes it hollow or dashed",
         "the record face is loaded through next/font and exposed as --font-record"
       ],
@@ -4090,6 +4091,15 @@
       ],
       "dynamic": 0
     },
+    "tests/meeting-listing-identity.test.ts": {
+      "names": [
+        "every differing civic field prevents the exact-equality multiplicity diagnostic",
+        "only read history and equivalent instant spelling may differ; neither grants an attachment",
+        "the held Newbury source pairs retain six IDs and cannot claim six distinct events",
+        "unknown body, invalid time and repeated native IDs stay separate from event multiplicity"
+      ],
+      "dynamic": 0
+    },
     "tests/meeting-online-marker.test.ts": {
       "names": [
         "MTG-14: a physical sitting is untouched by any of it",
@@ -5567,6 +5577,14 @@
       ],
       "dynamic": 0
     },
+    "tests/reader-last-mile-ask-listing-identity.test.ts": {
+      "names": [
+        "all three measured Newbury dates retain two listings with unresolved distinct-meeting counts in real Ask",
+        "date-only listing identities remain date-only records without an invented shared time or multiplicity claim",
+        "listing knowledge cannot borrow a summary or notice through equal body/time fields"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-last-mile-ask-render.test.ts": {
       "names": [
         "Ask renders every grounded non-contact record with its own source even beside a prose answer",
@@ -5733,6 +5751,13 @@
       ],
       "dynamic": 0
     },
+    "tests/reader-meeting-listing-count.test.ts": {
+      "names": [
+        "actual badge, stats, overlay and venue panel render every ambiguous listing source and honest units",
+        "all current ambiguous listing pairs survive scope filtering without becoming distinct-event counts"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-official-actions.test.ts": {
       "names": [
         "a reused officeholder slot preserves unresolved identity on both official and candidacy surfaces",
@@ -5800,6 +5825,7 @@
     "tests/reader-roster-term-note.test.ts": {
       "names": [
         "every eligible roster term note survives canonical holder lookup and the shared actual reader leaf verbatim",
+        "roster-source link label never supplies a missing note, publisher or read date",
         "shared term-note leaf never derives a note from a date or attaches an unresolved roster row"
       ],
       "dynamic": 0

@@ -728,6 +728,9 @@ export interface ReaderProjectionReport {
   readonly holdingsDigest: string;
   readonly projectorSha256?: string;
   readonly asOf?: string;
+  /** Source-listing identities remain eligible even when their unique event
+   * count is unresolved. This is not an inferred deduplication or attachment. */
+  readonly meetingListingIdentity?: import("../meetings/listing-identity.ts").MeetingListingIdentityReadback;
   readonly currentBallotHolderIds?: readonly string[];
   readonly ballotHolderObligations?: readonly BallotHolderObligation[];
   readonly ballotQualificationObligations?: readonly BallotQualificationObligation[];
@@ -823,14 +826,14 @@ export function applyReaderApplicability(census: ReaderCensus, projection: Reade
 export async function projectCanonicalReaderRecords(root: string, census: ReaderCensus): Promise<ReaderProjectionReport> {
   const context = loadManifestContext(root);
   const sourceRows = new Map<string, { dataset: Dataset; raw: RawRecord }>(readerDatasets(context).flatMap((dataset) => extractRecords(dataset).map((raw) => [`${dataset.path}#${raw.pointer}`, { dataset, raw }] as const)));
-  const [registry, ballot, meetings, corpus, finance, federal, rosters, compositions, area, navigation, polling, registration, summaries, notices, minutes, venue, comments, identity, cards, sites, lineup, analyses, votes, stateVotes, prl, executive, votingSites, everyday, forms, candidateContacts, keyPositions, keyVotes, billSummaries] = await Promise.all([
+  const [registry, ballot, meetings, corpus, finance, federal, rosters, compositions, area, navigation, polling, registration, summaries, notices, minutes, venue, comments, identity, cards, sites, lineup, analyses, votes, stateVotes, prl, votingSites, everyday, forms, candidateContacts, keyPositions, keyVotes, billSummaries] = await Promise.all([
     import("../registry/server.ts"), import("../ballot/registry.ts"), import("../meetings/snapshot.ts"), import("../corpus/unified.ts"),
     import("../funding/state-snapshot.ts"), import("../funding/snapshot.ts"), import("../registry/body-rosters.ts"), import("../registry/body-membership.ts"),
     import("../area/facts.ts"), import("../ballot/election-dates.ts"), import("../ballot/polling-place-links.ts"), import("../ballot/registration-links.ts"),
     import("../ballot/measure-summary.ts"), import("../meetings/notice-summary.ts"), import("../meetings/minutes-summaries.ts"), import("../meetings/venue-cache.ts"),
     import("../registry/comment-access.ts"), import("../identity/az-2026.ts"), import("../ballot/candidate-cards.ts"), import("../ballot/candidate-sites.ts"),
     import("../ballot/general-lineup.ts"), import("../ballot/analyses.ts"), import("../votes/snapshot.ts"), import("../sources/legiscan/snapshot.ts"),
-    import("../sources/prl/snapshot.ts"), import("../officials/executive-actions.ts"), import("../ballot/voting-sites-server.ts"), import("../routing/everyday.ts"), import("../officials/form-definitions.ts"), import("../ballot/candidate-contacts.ts"), import("../votes/key-vote-positions.ts"), import("../votes/key-votes-rows.ts"), import("../votes/bill-summaries.ts"),
+    import("../sources/prl/snapshot.ts"), import("../ballot/voting-sites-server.ts"), import("../routing/everyday.ts"), import("../officials/form-definitions.ts"), import("../ballot/candidate-contacts.ts"), import("../votes/key-vote-positions.ts"), import("../votes/key-votes-rows.ts"), import("../votes/bill-summaries.ts"),
   ]);
   const sets = await Promise.all(ballot.BALLOT_SOURCES.map(async ({ source }) => source.normalize(await source.fetch())));
   const [{ readerContestScope }, { ballotRecordsFor }] = await Promise.all([import("../ballot/reader-scope.ts"), import("../ask/ballot-inventory.ts")]);
@@ -874,6 +877,8 @@ export async function projectCanonicalReaderRecords(root: string, census: Reader
   const scopedOfficialIds = new Set((await Promise.all(scopedDivisionIds.map((id) => registry.seatHoldersForDivision(id)))).flat().map((holder) => holder.id));
   const snapshot = meetings.readSnapshot(root);
   if (!snapshot) throw new Error("reader census: the canonical meeting loader failed; zero is not a holding count");
+  const [{ meetingListingIdentity, listingMultiplicityForSource }, { canonicalBodyIdentity }] = await Promise.all([import("../meetings/listing-identity.ts"), import("../ask/body-identity.ts")]);
+  const listingIdentity = meetingListingIdentity(snapshot.meetings, canonicalBodyIdentity);
   const { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS } = await import("../meetings/constants.ts");
   const asOf = new Date();
   const currentMeetingWindow = (meeting: { startsAt: string }) => Date.parse(meeting.startsAt) >= asOf.getTime() - CONCLUDED_LOOKBACK_DAYS * 86_400_000 && Date.parse(meeting.startsAt) <= asOf.getTime() + UPCOMING_HORIZON_DAYS * 86_400_000;
@@ -884,7 +889,6 @@ export async function projectCanonicalReaderRecords(root: string, census: Reader
   const voteIdentity = (row: ObjectRow) => [row.id, row.officeholderId, row.voteId ?? row.rollCallId].filter(Boolean).join("|");
   const voteRecords = new Map(allVoteRecords.map((row) => [voteIdentity(object(row)), row]));
   const voting = votingSites.loadVotingSites();
-  const executiveStore = executive.executiveActionStore();
   const bodyRosterHolders = new Map(rosters.BODY_ROSTERS.flatMap((r) => rosters.rosterHoldersForBody(r.bodyId)).map((r) => [r.id, r]));
   const records: ReaderRecordProjection[] = [];
   const failures: string[] = [...ballotHolderObligationFailures(ballotHolderObligations), ...ballotQualificationFailures(ballotQualificationObligations)];
@@ -941,7 +945,13 @@ export async function projectCanonicalReaderRecords(root: string, census: Reader
         }
         break;
       }
-      case "meetings": setResult("readSnapshot", record.unit === "agendaDocuments" ? snapshot.agendaDocuments?.find((row) => row.id === raw.id) : snapshot.meetings.find((row) => row.id === raw.id)); break;
+      case "meetings": {
+        const group = record.unit === "meetings" ? listingMultiplicityForSource(listingIdentity, string(raw.id)) : null;
+        setResult("readSnapshot", record.unit === "agendaDocuments" ? snapshot.agendaDocuments?.find((row) => row.id === raw.id) : snapshot.meetings.find((row) => row.id === raw.id), group
+          ? `The exact source calendar listing remains reader eligible. ${group.reason} Native source IDs are ${group.sourceIds.join(", ")}; uniqueMeetingCount is null. Each native record and its own document/outcome relationship stays separate.`
+          : "Existing canonical selector returned the held record by its stable identity.");
+        break;
+      }
       case "body-rosters": setResult("rosterForBody", rosters.rosterForBody(string(raw.bodyId))); break;
       case "body-compositions": {
         const composition = compositions.membersOfBody(string(raw.bodyId));
@@ -1161,7 +1171,7 @@ export async function projectCanonicalReaderRecords(root: string, census: Reader
     const childDispositions = record.family === "body-rosters" ? (Array.isArray(raw.members) ? raw.members : []).map((member)=>rosters.rosterMemberReaderDisposition(string(object(member).id))).filter((child):child is NonNullable<typeof child>=>Boolean(child)) : undefined;
     records.push({ auditId: record.auditId, family: record.family, status: finalStatus, selector, canonicalIdentities: record.canonicalIdentity, returnedIdentities: returnedIds, returnedCount: returned.length, payloadSha256: returned.length ? sha256(JSON.stringify(clean(returned))) : null, reason, ...(Object.keys(surfaceDispositions).length ? { surfaceDispositions } : {}), ...(childDispositions?.length ? { childDispositions } : {}) });
   }
-  return { formatVersion: 1, holdingsDigest: census.holdingsDigest, projectorSha256: sha256(readFileSync(join(root, "lib/holdings/reader-census.ts"))), asOf: asOf.toISOString(), currentBallotHolderIds:unique([...currentBallotHolderIds]), ballotHolderObligations, ballotQualificationObligations, rule: "Executed local selectors prove holding-to-payload survival only. PROJECTED never claims browser rendering or deployed availability. Supporting inputs and current-lineup exclusions carry explicit record-specific scope reasons; unproved direct payloads remain failures. Current ballot holder scope also includes independently expected committed same-office/division relations; a failed incumbent join cannot erase its own obligation.", records, counts: counts(records.map((r) => r.status)), failures };
+  return { formatVersion: 1, holdingsDigest: census.holdingsDigest, projectorSha256: sha256(readFileSync(join(root, "lib/holdings/reader-census.ts"))), asOf: asOf.toISOString(), meetingListingIdentity: listingIdentity, currentBallotHolderIds:unique([...currentBallotHolderIds]), ballotHolderObligations, ballotQualificationObligations, rule: "Executed local selectors prove holding-to-payload survival only. PROJECTED never claims browser rendering or deployed availability. Supporting inputs and current-lineup exclusions carry explicit record-specific scope reasons; unproved direct payloads remain failures. Current ballot holder scope also includes independently expected committed same-office/division relations; a failed incumbent join cannot erase its own obligation.", records, counts: counts(records.map((r) => r.status)), failures };
 }
 
 export interface ReaderComponentCase {
@@ -1671,6 +1681,8 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
   // The production snapshot source explicitly ignores this query and returns
   // all held rows; geographic and date applicability belong to the route proof.
   const normalizedMeetings = new Map(source.normalize(await source.fetch({ lat: 0, lng: 0, radiusKm: 0 }), new Date()).map((meeting) => [meeting.id, meeting]));
+  const [{ meetingListingIdentity, listingMultiplicityForSource }, { canonicalBodyIdentity }] = await Promise.all([import("../meetings/listing-identity.ts"), import("../ask/body-identity.ts")]);
+  const listingIdentity = meetingListingIdentity([...normalizedMeetings.values()], canonicalBodyIdentity);
   const context = loadManifestContext(root);
   const sourceRows = new Map(readerDatasets(context).flatMap((dataset) => extractRecords(dataset).map((raw) => [`${dataset.path}#${raw.pointer}` as string, raw] as const)));
   const cases: ReaderComponentCase[] = [];
@@ -1869,11 +1881,15 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
       const selected = normalizedMeetings.get(string(record.family === "minutes-summaries" ? raw.meetingId : raw.id));
       if (!selected) throw new Error(`SSR could not normalize ${record.auditId}`);
       const representation = memberships.membersOfBody(selected.bodyId ?? null).members;
-      const markup = renderToStaticMarkup(createElement(DataProvider, { value: { allMeetings: [selected], meetings: [selected], venues: [], result: null, location: null, drawnDistricts: [], dropped: 0, searchFailed: false, atAddress: false, governing: null, zipPartial: null, basis: "ZIP" }, children: createElement(MeetingPopup, { meeting: selected, representation }) }));
+      const listingGroup = listingMultiplicityForSource(listingIdentity, selected.id);
+      // This leaf proof supplies the same canonical source identity readback as
+      // the route. It proves no geographic result; actual HTTP coverage remains
+      // a separately required proof. A filtered sibling retains its diagnostic.
+      const markup = renderToStaticMarkup(createElement(DataProvider, { value: { allMeetings: [selected], meetings: [selected], venues: [], result: { meetings: [selected], listingIdentity, tier: "exact", radiusKm: 0, requestedRadiusKm: 0, center: { lat: 0, lng: 0 }, coverage: null }, location: null, drawnDistricts: [], dropped: 0, searchFailed: false, atAddress: false, governing: null, zipPartial: null, basis: "ZIP" }, children: createElement(MeetingPopup, { meeting: selected, representation }) }));
       const summary = selected.status === "CONCLUDED" ? minutes.minutesSummaryForMeeting(selected.id) : null;
       const links = meetingLinks.linksForMeeting(selected, null).filter((link) => !(selected.status === "CONCLUDED" && link.rung === "VENUE_MAP"));
-      add(record, "components/map/popup/meeting-popup.tsx", "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting → MeetingPopup", selected, record.family === "minutes-summaries" ? [selected.id] : [selected.id, ...(selected.bodyId ? [selected.bodyId] : [])], markup,
-        [meetingFormat.meetingEntryTitle(selected, { bodyShown: true }), meetingFormat.formatMeetingDate(selected), meetingFormat.formatMeetingTime(selected), ...(selected.location ? [meetingFormat.locationLine(selected.location.name, selected.location.address)] : []), ...links.map((link) => link.url), ...representation.map((holder) => holder.name), summary?.summary, summary?.minutesUrl].filter((value): value is string => Boolean(value)), [], { meetings: { expected: 1, actual: [...markup.matchAll(/role="dialog"/g)].length } });
+      add(record, "components/map/popup/meeting-popup.tsx", "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting / meetingListingIdentity → MeetingPopup", { meeting: selected, listingIdentity }, record.family === "minutes-summaries" ? [selected.id] : [selected.id, ...(selected.bodyId ? [selected.bodyId] : [])], markup,
+        [meetingFormat.meetingEntryTitle(selected, { bodyShown: true }), meetingFormat.formatMeetingDate(selected), meetingFormat.formatMeetingTime(selected), ...(selected.location ? [meetingFormat.locationLine(selected.location.name, selected.location.address)] : []), ...links.map((link) => link.url), ...representation.map((holder) => holder.name), summary?.summary, summary?.minutesUrl, listingGroup?.reason, ...(listingGroup?.sourceIds ?? []), ...(listingGroup?.sources.map((source) => source.sourceUrl) ?? [])].filter((value): value is string => Boolean(value)), [], { meetings: { expected: 1, actual: [...markup.matchAll(/role="dialog"/g)].length }, calendarListingSources: { expected: listingGroup?.sourceListingCount ?? 0, actual: occurrences(markup, "data-calendar-listing-source") } });
     } else if (record.family === "outcomes") {
       const sitting = outcomes.getOutcomeSnapshot().sittings.find((row) => row.meetingId === raw.meetingId && row.bodyId === raw.bodyId);
       if (!sitting) throw new Error(`SSR could not resolve ${record.auditId}`);

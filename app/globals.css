@@ -1725,7 +1725,7 @@ label:has(> input[type="checkbox"]) {
     max-height: calc(100dvh - var(--ask-expansion-top) - 12px);
     overflow-y: auto;
     overscroll-behavior: contain;
-    border-radius: 10px;
+    border-radius: var(--radius);
   }
 
   [data-pill-cluster="map"] .ask-expansion [data-ask-panel] {

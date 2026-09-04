@@ -21,6 +21,8 @@ import { groupMeetingsForReading } from "@/lib/meetings/ordering";
 import { JurisdictionPill } from "@/components/address/jurisdiction-pill";
 import { badgeFor } from "@/lib/meetings/jurisdiction-badge";
 import { useShellData } from "@/lib/state/data";
+import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
+import { MeetingListingNotice } from "./meeting-listing-notice";
 import { tierForMeeting } from "@/lib/state/derive";
 import { LevelTag } from "@/components/ui/level-tag";
 import type { Venue } from "@/lib/meetings/venues";
@@ -74,10 +76,11 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
   // `basis` so the card and its entries cannot disagree about whether the body
   // has already been named.
   const cardTitle = venueBodyTitle(venue.meetings, venue.name);
+  const listingCount = readerMeetingCount(venue.meetings, venue.listingIdentity);
 
   return (
     <aside
-      aria-label={`Meetings at ${venue.name}`}
+      aria-label={`${listingCount.heading} at ${venue.name}`}
       className="panel pointer-events-auto flex max-h-[60vh] w-full flex-col sm:max-h-[calc(100dvh-8rem)] sm:w-[23rem]"
     >
       <header className="flex items-start justify-between gap-3 border-b border-rule px-5 py-4">
@@ -104,10 +107,11 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
             <LevelTag tier={first ? tierForMeeting(first) : null} />
           </h2>
           <p className="notice-eyebrow mt-1.5">
-            {venue.meetings.length === 1
+            {listingCount.unresolved ? `${listingCount.count} ${listingCount.unit}` : venue.meetings.length === 1
               ? "Public meeting"
               : `${venue.meetings.length} public meetings`}
           </p>
+          <MeetingListingNotice groups={listingCount.groups} />
           {/* MTG-6: venue name and address, in gray, beneath — the Parks and
               Recreation pattern the author named as the reference. Where the
               building IS the title there is nothing left to repeat under it,
@@ -262,7 +266,7 @@ function MeetingEntry({
   const jurisdiction = badgeFor(meeting, governing, basis, zipPartial);
 
   return (
-    <article className="px-5 py-4">
+    <article className="px-5 py-4" data-meeting-id={meeting.id}>
       <div className="flex items-baseline gap-2.5">
         <span
           aria-hidden="true"

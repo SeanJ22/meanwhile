@@ -34,7 +34,7 @@ import { candidateProfileEvidenceFor } from "@/lib/ask/candidate-profile";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { reconciledCandidacyIdForCard } from "@/lib/identity/az-2026";
 import { meetingOutcomeEvidenceFor, outcomeSittingsOnDate, meetingRecordQuestionClass } from "@/lib/ask/meeting-outcomes";
-import { minutesSummaryEvidenceFor, commentAccessEvidenceFor, noticeSummaryEvidenceFor } from "@/lib/ask/meeting-knowledge";
+import { minutesSummaryEvidenceFor, commentAccessEvidenceFor, noticeSummaryEvidenceFor, meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
 import { officeholderEvidence } from "@/lib/ask/officeholder";
 import { rosterGapEvidenceFor } from "@/lib/ask/roster-gaps";
 import { formatDateLong } from "@/lib/text/format-date";
@@ -1025,7 +1025,9 @@ export async function POST(request: Request) {
         sourceUrl: identity.sourceUrl, retrievedAt: identity.retrievedAt });
     }
     const forBody = meetingsForBody(meetings, bound);
-    denominators.meetingsHeldForThisBody = forBody.length;
+    const bodyListingIdentity = meetingListingKnowledgeFor(snapshot?.meetings ?? [], forBody.map(meeting => meeting.id)).readback;
+    denominators.calendarListingsHeldForThisBody = forBody.length;
+    if (!bodyListingIdentity.groups.length) denominators.meetingsHeldForThisBody = forBody.length;
     /* The SAME selection the deterministic agenda route uses — one rule, two
        callers, so the two surfaces can never disagree about which meeting a
        tensed question meant. */
@@ -1077,6 +1079,10 @@ export async function POST(request: Request) {
         chosen.bodyName && chosen.bodyName !== chosen.title
           ? `${chosen.title} of ${chosen.bodyName}`
           : chosen.title;
+      const sameDay = sittingsOnSameLocalDay(chosen, forBody).filter((m) => m.id !== chosen.id);
+      const listingKnowledge = meetingListingKnowledgeFor(snapshot?.meetings ?? [], [chosen.id, ...sameDay.map(meeting => meeting.id)]);
+      const listingGroupFor = (id: string) => listingKnowledge.readback.groups.find(group => group.sourceIds.includes(id));
+      gaps.push(...listingKnowledge.gaps);
       records.push({
         kind: "MEETING",
         id: chosen.id,
@@ -1084,7 +1090,8 @@ export async function POST(request: Request) {
            from the subject — so the validator is checking the record against
            the subject rather than checking the subject against itself. */
         bodyId: chosen.bodyId,
-        text: `${subject.name}: ${label}, ${readableSitting(chosen)}.`,
+        text: `${listingGroupFor(chosen.id) ? "Calendar listing: " : ""}${subject.name}: ${label}, ${readableSitting(chosen)}.`,
+        meetingListingIdentity: listingGroupFor(chosen.id),
         occurredAt: chosen.startsAt,
         sourceUrl: chosen.provenance?.sourceUrl ?? chosen.agendaUrl ?? null,
         sourceOrg: chosen.provenance?.sourceOrg ?? null,
@@ -1114,8 +1121,9 @@ export async function POST(request: Request) {
          the prose, so an answer can offer the same Add-to-calendar control the
          map card does and a jurisdiction card can lead with the right one. */
       resolvedSittings.push(chosen);
-      const sameDay = sittingsOnSameLocalDay(chosen, forBody).filter((m) => m.id !== chosen.id);
-      denominators.sittingsThatLocalDay = sameDay.length + 1;
+      denominators.calendarListingsThatLocalDay = sameDay.length + 1;
+      denominators.uniqueMeetingCountUnresolvedGroups = listingKnowledge.readback.groups.length;
+      if (!listingKnowledge.readback.groups.length) denominators.sittingsThatLocalDay = sameDay.length + 1;
       for (const sibling of sameDay) {
         const siblingLabel =
           sibling.bodyName && sibling.bodyName !== sibling.title
@@ -1127,8 +1135,10 @@ export async function POST(request: Request) {
           id: sibling.id,
           bodyId: sibling.bodyId,
           text:
-            `${subject.name}: ${siblingLabel}, ${readableSitting(sibling)} — the same day as ` +
-            `the ${label}.`,
+            listingGroupFor(sibling.id)
+              ? `Calendar listing: ${subject.name}: ${siblingLabel}, ${readableSitting(sibling)}.`
+              : `${subject.name}: ${siblingLabel}, ${readableSitting(sibling)} — the same day as the ${label}.`,
+          meetingListingIdentity: listingGroupFor(sibling.id),
           occurredAt: sibling.startsAt,
           sourceUrl: sibling.provenance?.sourceUrl ?? sibling.agendaUrl ?? null,
           sourceOrg: sibling.provenance?.sourceOrg ?? null,
@@ -1817,6 +1827,7 @@ export async function POST(request: Request) {
       .sort((a, b) => (a.startsAt < b.startsAt ? -1 : a.startsAt > b.startsAt ? 1 : 0)),
     trace,
   });
+  payload.meetingListingIdentity = meetingListingKnowledgeFor(snapshot?.meetings ?? [], resolvedSittings.map(meeting => meeting.id)).readback;
   return Response.json(payload);
 }
 

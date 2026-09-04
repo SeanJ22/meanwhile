@@ -34,6 +34,7 @@ const componentPath = "docs/evidence/reader-last-mile-final-delta-components.jso
 const witnessPath = "docs/evidence/reader-last-mile-final-delta-witnesses.json";
 const bundlePath = "docs/evidence/reader-last-mile-final-bundle.json";
 const buildReceiptPath = "docs/evidence/reader-last-mile-final-build-receipt.json";
+const portraitProofPath = "docs/evidence/reader-last-mile-final-portraits.json";
 const censusPath = "docs/evidence/reader-last-mile-final-closure.json";
 const receiptPath = "docs/evidence/reader-last-mile-final-closure-receipt.json";
 const routePaths = [
@@ -79,7 +80,7 @@ const components = await renderCanonicalReaderComponents(root, componentCensus);
 writeFileSync(componentPath, `${JSON.stringify(components, null, 2)}\n`);
 assert.deepEqual(components.failures, [], "An invalidated canonical component payload failed to render");
 
-const bundleEvidence = readerBundleEvidence(root, census, buildReceiptPath);
+const bundleEvidence = readerBundleEvidence(root, census, buildReceiptPath, portraitProofPath);
 writeFileSync(bundlePath, `${JSON.stringify(bundleEvidence, null, 2)}\n`);
 const bundleBytes = readReaderEvidence(root, bundlePath);
 assert.equal(bundleEvidence.exactHead, codeHead, "Bundle proof belongs to another reader head");
@@ -136,6 +137,7 @@ const evidencePaths = [...new Set([
   witnessPath,
   bundlePath,
   buildReceiptPath,
+  portraitProofPath,
   ...routePaths,
 ])].sort();
 const receipt: ReaderClosureReceipt = {

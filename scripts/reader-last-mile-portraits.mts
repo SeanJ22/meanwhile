@@ -6,6 +6,7 @@ import { floored } from "../lib/ops/denominator-floor.ts";
 
 const base = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
 assert.match(new URL(base).hostname, /^(localhost|127\.0\.0\.1)$/, "Exhaustive asset proof uses our local production build.");
+const outputPath = process.env.READER_PROOF_OUTPUT ?? "docs/evidence/reader-last-mile-portraits.json";
 const inputPath = "docs/evidence/reader-last-mile-active-portraits.json";
 const inputBytes = readFileSync(inputPath);
 const input = JSON.parse(inputBytes.toString()) as {
@@ -39,5 +40,5 @@ const output = {
   returnedCount: records.length,
   records,
 };
-writeFileSync("docs/evidence/reader-last-mile-portraits.json", JSON.stringify(output, null, 2) + "\n");
+writeFileSync(outputPath, JSON.stringify(output, null, 2) + "\n");
 console.log(JSON.stringify({ portraits: records.length, result: "PROVEN", buildId: output.buildId }));

@@ -56,6 +56,7 @@ test("actual badge, stats, overlay and venue panel render every ambiguous listin
     import { StatsBar } from './components/shell/stats-bar.tsx';
     import { ListOverlay } from './components/map/list-overlay.tsx';
     import { MeetingPanel } from './components/map/meeting-panel.tsx';
+    import { MeetingListingNotice } from './components/map/meeting-listing-notice.tsx';
     import { readSnapshot } from './lib/meetings/snapshot.ts';
     import { canonicalBodyIdentity } from './lib/ask/body-identity.ts';
     import { meetingListingIdentity } from './lib/meetings/listing-identity.ts';
@@ -72,10 +73,22 @@ test("actual badge, stats, overlay and venue panel render every ambiguous listin
       const failedBadge=render(h(CountBadge)),failedOverlay=render(h(ListOverlay));
       results.push({group,badge,stats,overlay,panel,carriedBadge,carriedOverlay,failedBadge,failedOverlay});
     }
-    console.log(JSON.stringify(results));
+    console.log(JSON.stringify({results,combinedNotice:renderToStaticMarkup(h(MeetingListingNotice,{groups:identity.groups}))}));
   `], { cwd: process.cwd(), encoding: "utf8", maxBuffer: 4 * 1024 * 1024 });
-  const results = JSON.parse(output.trim()) as { group: { reason: string; sourceIds: string[]; sources: { id: string; sourceUrl: string }[] }; badge: string; stats: string; overlay: string; panel: string; carriedBadge:string; carriedOverlay:string; failedBadge:string; failedOverlay:string }[];
+  const proof = JSON.parse(output.trim()) as { results: { group: { reason: string; sourceIds: string[]; sources: { id: string; sourceUrl: string }[] }; badge: string; stats: string; overlay: string; panel: string; carriedBadge:string; carriedOverlay:string; failedBadge:string; failedOverlay:string }[]; combinedNotice: string };
+  const { results, combinedNotice } = proof;
   assert.equal(results.length, 3);
+  const sharedReason = results[0].group.reason;
+  assert.ok(results.every((result) => result.group.reason === sharedReason));
+  assert.equal(combinedNotice.split(sharedReason).length - 1, 1, "The shared explanation renders once per notice, not once per pair");
+  for (const [index, result] of results.entries()) {
+    assert.ok(combinedNotice.includes(`Unresolved listing group ${index + 1}:`));
+    assert.ok(combinedNotice.includes(`data-meeting-listing-group="${result.group.sourceIds.join("|")}"`));
+    for (const source of result.group.sources) {
+      assert.ok(combinedNotice.includes(source.id));
+      assert.ok(combinedNotice.includes(source.sourceUrl));
+    }
+  }
   for (const result of results) {
     assert.match(result.badge, /2<\/span> calendar listings/);
     assert.match(result.badge, /Distinct meeting count unresolved/);

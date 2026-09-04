@@ -4,12 +4,16 @@ import type { MeetingListingMultiplicityGroup } from "@/lib/meetings/listing-ide
  * and with each source listing. Every native source remains independently openable. */
 export function MeetingListingNotice({ groups }: { groups: readonly MeetingListingMultiplicityGroup[] }) {
   if (groups.length === 0) return null;
+  const reasons = [...new Set(groups.map((group) => group.reason))];
   return <div className="my-2 text-[0.6875rem] leading-relaxed text-muted" data-meeting-listing-identity="UNRESOLVED_MULTIPLICITY">
-    {groups.map(group => <div key={group.sourceIds.join("|")} className="mt-1">
-      <p>{group.reason}</p>
-      <p>{group.sources.map((source, index) => <span key={source.id}>
-        {index > 0 && " · "}{source.sourceUrl ? <a href={source.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline" data-calendar-listing-source={source.id}>Calendar listing {index + 1}</a> : <span data-calendar-listing-source={source.id}>Calendar listing {index + 1} — source link unavailable</span>}
-      </span>)}</p>
-    </div>)}
+    {reasons.map((reason) => <p key={reason}>{reason}</p>)}
+    <ul className="mt-1 space-y-1">
+      {groups.map((group, groupIndex) => <li key={group.sourceIds.join("|")} data-meeting-listing-group={group.sourceIds.join("|")}>
+        <span className="text-paper-dim">Unresolved listing group {groupIndex + 1}:</span>{" "}
+        {group.sources.map((source, sourceIndex) => <span key={source.id}>
+          {sourceIndex > 0 && " · "}{source.sourceUrl ? <a href={source.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline" data-calendar-listing-source={source.id}>Calendar listing {sourceIndex + 1}</a> : <span data-calendar-listing-source={source.id}>Calendar listing {sourceIndex + 1} — source link unavailable</span>}
+        </span>)}
+      </li>)}
+    </ul>
   </div>;
 }

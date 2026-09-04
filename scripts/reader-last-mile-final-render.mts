@@ -270,7 +270,8 @@ try {
         assert.equal(renderedSources.filter((row) => row.id === source.id && row.href === source.sourceUrl).length, 1, `${source.id}: rendered unresolved source link`);
       }
       const pageText = await page.locator("body").innerText();
-      assert.match(pageText, /couldn.t reach their calendar source at the last check|previous check/i);
+      assert.match(pageText, /couldn.t reach .*some calendars may be missing/i);
+      assert.match(pageText, /older than that: we last reached them/i);
       const screenshot = await capture(notice, "03255-newbury-unresolved-listings");
       results.push({ id: "newbury-unresolved-listings", result: "PASS", groups, renderedListingRows: await page.locator(".al-row").count(), failedRefreshDisclosure: true, screenshot });
     } finally { await context.close(); }

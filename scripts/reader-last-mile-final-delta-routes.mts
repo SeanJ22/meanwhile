@@ -64,7 +64,11 @@ const hobbsCandidacy = "ballot-az-pima:governor:hobbs-katie";
 assert.equal(resolvedCandidacyForOfficial("statewide:az/governor")?.candidacyId, hobbsCandidacy);
 const hobbsOfficial = campaignMoneyApiAnswer("statewide:az/governor");
 const hobbsCard = campaignMoneyApiAnswer("ballot-az-pima:governor|Katie Hobbs");
-assert.deepEqual(hobbsOfficial, hobbsCard, "Official and ballot aliases must resolve one canonical state-money answer");
+assert.equal(hobbsOfficial.kind, "state");
+assert.equal(hobbsCard.kind, "state");
+assert.deepEqual(hobbsOfficial.data.records, hobbsCard.data.records, "Official and ballot aliases must return the same canonical state-money records");
+assert.equal(hobbsOfficial.data.resolvedTargetKey, hobbsCandidacy);
+assert.equal(hobbsCard.data.resolvedTargetKey, hobbsCandidacy);
 const hobbsJson = JSON.stringify(hobbsOfficial);
 assert.ok(hobbsJson.includes(hobbsCandidacy));
 const unresolved = campaignMoneyApiAnswer("unresolved:Katie Hobbs");
@@ -81,7 +85,7 @@ const output = {
   sourceHashes: JSON.parse(readFileSync(proofSourcesPath, "utf8")),
   execution: "Only the post-checkpoint funding and outcomes HTTP seams were re-executed against the frozen local production build and compared with canonical selectors.",
   denominator: { moneyTargets: moneyTargets.length, outcomeSittings: getOutcomeSnapshot().sittings.length },
-  negativeIdentity: { hobbsCandidacy, officialTarget: "statewide:az/governor", ballotTarget: "ballot-az-pima:governor|Katie Hobbs", unresolvedTarget: "unresolved:Katie Hobbs", opponentTarget, result: "PASS" },
+  negativeIdentity: { hobbsCandidacy, officialTarget: "statewide:az/governor", ballotTarget: "ballot-az-pima:governor|Katie Hobbs", officialResolution: hobbsOfficial.data.resolution, ballotResolution: hobbsCard.data.resolution, unresolvedTarget: "unresolved:Katie Hobbs", opponentTarget, result: "PASS" },
   records,
 };
 writeFileSync(outputPath, `${JSON.stringify(output, null, 2)}\n`);

@@ -78,8 +78,9 @@ export const GENERATED: GeneratedArtifact[] = [
      * It is generated now, from `docs/governance/ledger.jsonl`, and kept so
      * every `RULING n` reference in this repository still resolves.
      *
-     * Pure: the compiler reads the committed ledger and the committed
-     * adoptions module, and nothing else. No clock, no network.
+     * Pure: after the 2026-09-03 cutover the compiler reads the committed
+     * ledger and nothing else — no overlay module, no clock, no network — and
+     * never writes the ledger back.
      */
     path: "docs/rulings.md",
     command: "corepack pnpm governance:compile",

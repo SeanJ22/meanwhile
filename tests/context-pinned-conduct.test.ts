@@ -67,14 +67,11 @@ test("context resolves frozen tracker holding pointers without rewriting the sou
  * generator does, and a reader of the failure can tell which.
  */
 const VERBATIM = [
-  "RULING 88 — ",
-  "RULING 89 — ",
-  "RULING 94 — ",
-  "RULING 95 — ",
-  "RULING 96 — ",
-  "RULING 97 — ",
-  "RULING 98 — ",
-  "RULING 99 — ",
+  "RULING 248 — ",
+  "RULING 250 — ",
+  "RULING 251 — ",
+  "RULING 252 — ",
+  "RULING 253 — ",
   // The clause most likely to be lost, and the one the whole rule turns on.
   // Matched as a single line: the law wraps it mid-sentence.
   "The invention is the deliverable, not the yield.",
@@ -282,14 +279,14 @@ test("RULING 108: the repo copy carries the pinned conduct block verbatim", () =
    */
   const committed = readFileSync(join(ROOT, CONTEXT_REPO_PATH), "utf8");
   const law = currentLawText(ROOT);
-  const start = law.indexOf("## RULING 88");
+  const start = law.indexOf("## RULING 253");
   assert.ok(start > 0, "current law no longer carries the conduct rulings");
   // A handful of load-bearing sentences from the section, each of which must
   // survive the copy byte-for-byte.
   for (const line of [
-    "**Every hunt report carries an EXPANSION section listing routes that did not",
-    "**A hunt report with an empty expansion section FAILS THE ITEM**",
-    "**A recorded absence with no stuck-protocol block is VOID and the field returns",
+    "Every hunt report carries an EXPANSION section",
+    "an empty expansion section fails the item",
+    "The invention is the deliverable, not the yield.",
   ]) {
     assert.ok(law.includes(line), `CLAUDE.md no longer carries: ${line}`);
     assert.ok(committed.includes(line), `${CONTEXT_REPO_PATH} has drifted from CLAUDE.md at: ${line}`);

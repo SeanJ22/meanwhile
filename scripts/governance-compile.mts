@@ -1,20 +1,28 @@
 /**
- * `pnpm governance:compile` — apply adoptions to the ledger and regenerate
- * every derived view.
+ * `pnpm governance:compile` — regenerate every derived view from the ledger.
  *
  * ## What is input and what is output
  *
- * INPUT is `docs/governance/ledger.jsonl` plus `lib/governance/adoptions.ts`.
+ * INPUT is `docs/governance/ledger.jsonl`, and it is the SOLE canonical input.
+ * The overlay modules (`lib/governance/adoptions.ts`, `classification.ts`) that
+ * this compiler once applied on every run were folded permanently into the
+ * ledger by the 2026-09-03 consolidation cutover (RULING 277 era). This script
+ * now READS the ledger and never writes it: a generator that rewrites its own
+ * canonical input is a mirror, and a mirror loses whatever the input stops
+ * saying — which is precisely how a shortened constitution once silently
+ * deleted the transparency mandate and the ladder from the ledger.
+ *
  * Everything below is OUTPUT and is never hand-edited (RULING 92):
  *
  *   docs/governance/index.json            ids, aliases, relations, pointers
  *   docs/governance/current-decisions.md  ACTIVE non-law decisions, by question
  *   docs/governance/history.md            the human-readable historical view
  *   docs/rulings.md                       the compatibility view
+ *   docs/governance/constitution.md       the autonomous-system constitution
+ *   docs/governance/policies/*.md         current law per domain
  *
- * `docs/rulings.md` becoming generated is the point of the exercise. It stops
- * being a second hand-maintained authority the moment a person can no longer
- * edit it and have the edit survive.
+ * A new governance record is now adopted by appending it to the ledger directly
+ * (append-only, one JSON line) and recompiling — never by editing an overlay.
  */
 
 import { createHash } from "node:crypto";
@@ -22,19 +30,10 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import {
-  CLAIM_ASSIGNMENTS,
-  CLAIM_RETIREMENTS,
-  NEW_DECISIONS,
-  REMEDIATION_DATE,
-  STATUS_RESOLUTIONS,
-} from "../lib/governance/adoptions.ts";
-import { CLASSIFICATIONS } from "../lib/governance/classification.ts";
-import { LEDGER_PATH, readLedger, writeLedger } from "../lib/governance/ledger.ts";
+import { LEDGER_PATH, readLedger } from "../lib/governance/ledger.ts";
 import {
   CURRENT_STATUSES,
   DOMAINS,
-  canonicalId,
   type GovernanceRecord,
 } from "../lib/governance/schema.ts";
 import { currentHoldingPaths } from "./holding-paths.mjs";
@@ -42,191 +41,25 @@ import { currentHoldingPaths } from "./holding-paths.mjs";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const GOV = join(ROOT, "docs", "governance");
 
+// The ledger is the sole canonical input and this compiler is READ-ONLY on it.
+// Overlay application (classification / claim assignment / adoption / status
+// resolution / claim retirement) was folded permanently into the ledger by the
+// 2026-09-03 consolidation cutover; those steps no longer run here, and the
+// ledger's bytes are asserted unchanged at the end of this run. Everything
+// below regenerates views from the records exactly as the ledger states them.
+const ledgerBefore = readFileSync(LEDGER_PATH, "utf8");
 const records = readLedger(LEDGER_PATH);
-const byId = new Map(records.map((r) => [r.id, r]));
+records.sort(sortRecords);
 
-const applied = { claims: 0, statuses: 0, adopted: 0 };
-
-// --- 1b. historical classification ------------------------------------------
-// The 43 records the mechanical importer honestly could not type. Each is
-// resolved from its OWN WORDS, with the supporting quote carried on the record
-// — so a later reader can check the classification against the entry rather
-// than taking this file's word for it.
-let classified = 0;
-for (const [id, c] of Object.entries(CLASSIFICATIONS)) {
-  const r = byId.get(id);
-  if (!r) throw new Error(`classification targets a record that does not exist: ${id}`);
-  if (r.uncertain.length === 0) continue;
-  r.kind = c.kind;
-  r.provenance = c.provenance;
-  // The uncertainty is RESOLVED, not deleted: what replaces it is the evidence
-  // that resolved it, so the doubt and its answer travel together.
-  r.uncertain = [];
-  r.routingNotes.push(`classified ${c.kind}/${c.provenance} from the entry's own words: ${c.evidence}`);
-  // STATUS FIRST, then the policy pointer. The other order looks equivalent and
-  // is not: these records were parked HISTORICAL while unclassified, so a
-  // pointer assigned before the promotion tested a status that had not moved
-  // yet and 17 newly-current rules shipped with no operative home. The
-  // `law-without-policy` check caught it.
-  if (c.kind === "TOMBSTONE") {
-    r.status = "RETIRED";
-  } else if (c.kind === "FACT" || c.kind === "RATIFICATION" || c.kind === "ACCEPTANCE") {
-    // A measurement, a confirmation and an approval are all history. None of
-    // them is a current instruction, and typing them as one is the failure the
-    // FACT-as-instruction check exists for.
-    r.status = "HISTORICAL";
-  } else if (r.status === "HISTORICAL") {
-    r.status = "ACTIVE";
-  }
-
-  r.operativePolicy =
-    c.kind === "LAW_DECISION" && CURRENT_STATUSES.includes(r.status)
-      ? `docs/governance/policies/${r.domain}.md`
-      : null;
-  classified += 1;
-}
-
-// --- 2. claim assignments --------------------------------------------------
-for (const a of CLAIM_ASSIGNMENTS) {
-  const r = byId.get(a.id);
-  if (!r) throw new Error(`claim assignment targets a record that does not exist: ${a.id}`);
-  if (!r.claims.some((c) => c.key === a.key)) r.claims.push({ key: a.key, value: a.value });
-  if (!r.routingNotes.some((n) => n.startsWith(`claim ${a.key}`))) {
-    r.routingNotes.push(`claim ${a.key}=${a.value}: ${a.why}`);
-  }
-  applied.claims += 1;
-}
-
-// --- 3. new author decisions ----------------------------------------------
-// An adopted number is immutable and is never reused (RULING 99, RULING 176),
-// and that is enforced PER ID below rather than against a high-water mark. A
-// high-water mark only catches a collision at the top of the sequence, and the
-// collision this repository actually suffered on 2026-08-22 was in the middle:
-// a brief adopted five rulings as 81 through 85 while 81 and 82 had already
-// been spent earlier the same day.
-const ADOPTION_SOURCE = "lib/governance/adoptions.ts";
-for (const d of NEW_DECISIONS) {
-  const id = canonicalId(d.n);
-  const existing = byId.get(id);
-  // Re-running the compiler must reproduce the same bytes rather than throw or
-  // duplicate. A record this file already owns is REGENERATED in place; a
-  // record owned by anything else is a genuine id collision, and an adopted
-  // number is immutable (RULING 99, RULING 176).
-  if (existing && existing.sourceRef !== ADOPTION_SOURCE) {
-    throw new Error(
-      `adoption ${d.n} collides with adopted id ${id} from ${existing.sourceRef}; adopted numbers are immutable`,
-    );
-  }
-  if (existing) {
-    const at = records.indexOf(existing);
-    records.splice(at, 1);
-  }
-  const rec: GovernanceRecord = {
-    id,
-    // The mechanical set, plus any name the adopting directive already used
-    // for this rule. Deduplicated, because an alias declared twice is one
-    // alias and a citation index that lists it twice is a defect a reader
-    // would have to explain to themselves.
-    aliases: [
-      ...new Set([
-        `RULING ${d.n}`,
-        `R${d.n}`,
-        `R-${d.n}`,
-        ...(d.aliases ?? []),
-      ]),
-    ],
-    kind: d.kind,
-    status: "ACTIVE",
-    provenance: d.provenance,
-    domain: d.domain,
-    title: d.title,
-    // A later amendment carries its OWN date. Stamping every adoption with the
-    // remediation date would misdate a rule to the day before it was made, and
-    // every decision taken in between would appear to have been taken under it.
-    adopted: d.adopted ?? REMEDIATION_DATE,
-    body: d.body,
-    variants: [],
-    relations: d.relations ?? [],
-    operativePolicy:
-      d.kind === "LAW_DECISION" ? `docs/governance/policies/${d.domain}.md` : null,
-    claims: d.claims ?? [],
-    uncertain: [],
-    routingNotes: ["adopted by the governance remediation brief of 2026-08-26"],
-    sourceRef: ADOPTION_SOURCE,
-  };
-  records.push(rec);
-  byId.set(id, rec);
-  applied.adopted += 1;
-}
-
-// --- 3b. status resolutions ------------------------------------------------
-// RUN AFTER ADOPTION, deliberately. A resolution names the record that took
-// over, and the record that takes over is frequently adopted in the SAME
-// compile — RULING 189 retiring RULING 187 is exactly that shape. Resolving
-// first meant a new amendment could retire nothing until a second run, and the
-// existence check below would fail on the first.
-//
-// It also fixes the precedence. Adoption regenerates the records this file
-// owns, so a status applied before it would simply be overwritten back to
-// ACTIVE. Supersession is the later word, and it must be the last one applied.
-for (const res of STATUS_RESOLUTIONS) {
-  const r = byId.get(res.id);
-  if (!r) throw new Error(`status resolution targets a record that does not exist: ${res.id}`);
-  if (!byId.has(res.by)) throw new Error(`resolution ${res.id} cites missing ${res.by}`);
-  r.status = res.status;
-  // A record whose operative force moved has no CURRENT home. Pointing it at a
-  // policy would put retired text back in front of a session.
-  if (!CURRENT_STATUSES.includes(r.status)) r.operativePolicy = null;
-  if (!r.routingNotes.some((n) => n.startsWith("status resolved"))) {
-    r.routingNotes.push(`status resolved to ${res.status} by ${res.by}: ${res.why}`);
-  }
-  applied.statuses += 1;
-}
-
-// --- 3c. claim retirements ---------------------------------------------------
-// RUN AFTER ADOPTION AND RESOLUTION, for the same reason 3b runs after 3: the
-// ruling that takes a slot over is frequently adopted in the same compile, and
-// the existence check must be able to see it. A retirement removes ONLY the
-// claim from the amended record — the semantic index stops carrying two answers
-// for one question — while the record's body, status and history stay whole.
-// `findClaimConflicts` counts AMENDED records as current, so an amendment that
-// moves a slot MUST retire the old claim or report itself as a contradiction.
-// The removal is recorded in the record's routing notes; nothing is silent.
-for (const ret of CLAIM_RETIREMENTS) {
-  const r = byId.get(ret.id);
-  if (!r) throw new Error(`claim retirement targets a record that does not exist: ${ret.id}`);
-  if (!byId.has(ret.by)) throw new Error(`claim retirement ${ret.id} cites missing ${ret.by}`);
-  const before = r.claims.length;
-  r.claims = r.claims.filter((c) => c.key !== ret.key);
-  const note = `claim retired ${ret.key} -> ${ret.by}: ${ret.why}`;
-  if (!r.routingNotes.some((n) => n.startsWith(`claim retired ${ret.key}`))) {
-    r.routingNotes.push(note);
-  }
-  if (before !== r.claims.length) applied.claims += 1;
-}
-
-
-// The constitution's un-numbered law is NOT re-derived here. It was imported
-// ONCE, from the pinned pre-remediation snapshot, by `pnpm governance:import`.
-//
-// **This was a real defect and it is recorded rather than smoothed.** The first
-// version of this file re-derived those records from the LIVE `CLAUDE.md` on
-// every compile. The moment the constitution was shortened — which is the whole
-// point of the remediation — the transparency mandate, the fourteen-rung
-// ladder, the four photo doors and the Kelly standard were deleted from the
-// ledger, silently, by the tool built to preserve them. The
-// duplicate-canonical-law check stayed green throughout, because deletion is
-// not duplication.
-//
-// A generator that re-derives canonical state from a file that is ALLOWED TO
-// CHANGE is not a generator; it is a mirror, and it loses everything the file
-// stops saying. The ledger is canonical now. The snapshot is the input.
+// The constitution's un-numbered law lives in the ledger as R-C-* records,
+// imported once from the pinned pre-remediation snapshot. It is NEVER
+// re-derived from the live CLAUDE.md: a generator that re-derives canonical
+// state from a file that is allowed to change is a mirror, and a mirror loses
+// everything the file stops saying (the transparency mandate and the ladder
+// were once deleted from the ledger exactly this way).
 const constitutionImported = records.filter((r) =>
   r.sourceRef.startsWith("docs/governance/legacy/CLAUDE"),
 ).length;
-
-records.sort(sortRecords);
-writeLedger(records, LEDGER_PATH);
 
 // --- 4. generated views ----------------------------------------------------
 mkdirSync(GOV, { recursive: true });
@@ -524,12 +357,20 @@ if (!constitutionHolder) {
 }
 writeFileSync(join(GOV, "constitution.md"), constitutionHolder.body + "\n", "utf8");
 
-console.log(`historical classifications  ${classified}`);
+// The compiler is read-only on the ledger. Assert it: a generator that rewrites
+// its own canonical input is a mirror, and a mirror silently loses whatever the
+// input stops saying. This guard is the structural half of the 2026-09-03
+// cutover — no overlay and no code path may reactivate or replace a ledger
+// record on compile.
+const ledgerAfter = readFileSync(LEDGER_PATH, "utf8");
+if (ledgerAfter !== ledgerBefore) {
+  throw new Error(
+    "governance:compile mutated docs/governance/ledger.jsonl — the compiler must be read-only on the canonical ledger",
+  );
+}
+
 console.log(`constitution blocks         ${constitutionImported}`);
 console.log(`policy modules              ${DOMAINS.length}  ${JSON.stringify(policyCounts)}`);
-console.log(`status resolutions applied  ${applied.statuses}`);
-console.log(`claim assignments applied   ${applied.claims}`);
-console.log(`new decisions adopted       ${applied.adopted}`);
 console.log(`records total               ${records.length}`);
 console.log(`current (ACTIVE|AMENDED)    ${current.length}`);
 console.log(`  law                       ${law.length}`);

@@ -153,6 +153,45 @@ export function validateLedger(index: LedgerIndex, root: string = ROOT): Validat
     );
   }
 
+  // --- one rule, one current holder (RULING 247, ruleKey) ------------------
+  //
+  // The STRUCTURAL guarantee behind "law is written once". A rule slot
+  // (`ruleKey`) has exactly one CURRENT holder. A second active LAW_DECISION on
+  // the same key is the drain this consolidation drained — a principle re-issued
+  // as a new ruling for every incident that illustrated it — and it fails here
+  // rather than being noticed. A NON-current record may carry a key to link an
+  // incident or a superseded predecessor to the rule it illustrates, but it must
+  // then declare a relation to the current holder; an orphan key is a dangling
+  // claim of authority.
+  check("one-rule-one-holder");
+  const currentHolderByKey = new Map<string, string>();
+  for (const r of records) {
+    if (!r.ruleKey || !CURRENT_STATUSES.includes(r.status) || r.kind !== "LAW_DECISION") continue;
+    const prior = currentHolderByKey.get(r.ruleKey);
+    if (prior && prior !== r.id) {
+      bad(
+        `${prior},${r.id}`,
+        "duplicate-rulekey",
+        `ruleKey ${r.ruleKey} has two current LAW_DECISION holders — one rule may have only one`,
+      );
+    } else {
+      currentHolderByKey.set(r.ruleKey, r.id);
+    }
+  }
+  for (const r of records) {
+    if (!r.ruleKey || CURRENT_STATUSES.includes(r.status)) continue;
+    const holder = currentHolderByKey.get(r.ruleKey);
+    if (!holder) {
+      bad(r.id, "rulekey-without-current-holder", `carries ruleKey ${r.ruleKey} but no current LAW_DECISION holds it`);
+    } else if (!related(index, r.id, holder)) {
+      bad(
+        r.id,
+        "rulekey-link-missing",
+        `carries ruleKey ${r.ruleKey} (held by ${holder}) but declares no relation linking it to that rule`,
+      );
+    }
+  }
+
   // --- duplicated canonical law -------------------------------------------
   // The acceptance bar is ONE canonical current source per rule, and a bar with
   // no instrument is a wish. Two ACTIVE law records carrying substantially the

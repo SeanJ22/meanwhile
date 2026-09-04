@@ -288,22 +288,20 @@ test("every disposition the schema declares is understood by the classifier", ()
 });
 
 test("RULING 190 and RULING 191 are in force, with the operative law where they say it is", () => {
+  // The 2026-09-03 consolidation absorbed RULING 190 and 191 into RULING 273
+  // (how a session runs). The engineering-organization rule is unchanged; its
+  // current home is 273, and the constitution carries the cross-cutting line.
   const index = JSON.parse(readFileSync(join(ROOT, "docs/governance/index.json"), "utf8"));
   const records: Array<Record<string, unknown>> = index.records;
-  for (const id of ["R-0190", "R-0191"]) {
-    const r = records.find((x) => x.id === id);
-    assert.ok(r, `${id} is not in the compiled governance index`);
-    assert.ok(
-      ["ACTIVE", "AMENDED"].includes(r.status as string),
-      `${id} is ${String(r.status)} and does not bind`,
-    );
-  }
-  // The constitution carries the cross-cutting half, because a session opening
-  // on ANY domain reads it.
+  const r = records.find((x) => x.id === "R-0273");
+  assert.ok(r, "R-0273 is not in the compiled governance index");
+  assert.ok(
+    ["ACTIVE", "AMENDED"].includes(r.status as string),
+    `R-0273 is ${String(r.status)} and does not bind`,
+  );
   const constitution = readFileSync(join(ROOT, "CLAUDE.md"), "utf8");
-  assert.match(constitution, /RULING 190/);
-  assert.match(constitution, /INDEPENDENT WORK\s+-> PARALLEL BY DEFAULT/);
-  assert.match(constitution, /orchestration:check/);
+  assert.match(constitution, /\(273\)/);
+  assert.match(constitution, /Independent work runs in parallel by default/i);
 });
 
 test("this session's own plan is on disk and passes its own rule", () => {

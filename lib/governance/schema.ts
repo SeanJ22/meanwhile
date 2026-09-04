@@ -200,6 +200,26 @@ export interface GovernanceRecord {
   relations: Relation[];
   /** Required on ACTIVE LAW_DECISION: where the operative current text lives. */
   operativePolicy: string | null;
+  /**
+   * The stable rule slot this record is the current holder of (RULING 247).
+   *
+   * **One independently amendable rule, one key, exactly one CURRENT holder.**
+   * This is the STRUCTURAL half of "law is written once": the validator refuses
+   * a second active LAW_DECISION on the same key, so the consolidation's central
+   * promise — a principle is not re-issued as a new ruling every time an
+   * incident illustrates it — is a failing build rather than a discipline. A
+   * later holder that legitimately takes the slot over carries an explicit
+   * supersession or amendment relation to the prior holder; an incident that
+   * merely illustrates an existing rule is a non-law history note linked to this
+   * key, never a new active law record. Required on ACTIVE LAW_DECISION.
+   *
+   * It is deliberately NOT the record id: an id is immutable and dies with the
+   * ruling, while a ruleKey survives supersession so "who states this rule now?"
+   * has one answer across the whole amendment chain. Keyed uniqueness is the
+   * guarantee; a paraphrase that shares no key and no text still needs a human
+   * read, and that is out of scope by design.
+   */
+  ruleKey?: string | null;
   /** Semantic rule slots this record sets. */
   claims: SemanticClaim[];
   /** Set where import could not establish kind, provenance or relations. */
@@ -302,6 +322,21 @@ export function validateRecord(r: GovernanceRecord): ValidationIssue[] {
   // is claiming a rule with no current home.
   if (r.kind === "LAW_DECISION" && CURRENT_STATUSES.includes(r.status) && !r.operativePolicy) {
     bad("law-without-policy", "active LAW_DECISION has no operativePolicy pointer");
+  }
+
+  // Current law must name the stable rule slot it holds (RULING 247). A new
+  // active law record with no key cannot be checked for "one rule, one holder",
+  // so it is refused — the structural half of "law is written once".
+  if (r.kind === "LAW_DECISION" && CURRENT_STATUSES.includes(r.status)) {
+    if (!r.ruleKey || !/^[a-z][a-z0-9-]*(\.[a-z0-9-]+)+$/.test(r.ruleKey)) {
+      bad("law-without-rulekey", `active LAW_DECISION has no valid ruleKey: ${r.ruleKey ?? "(none)"}`);
+    }
+  }
+  // A ruleKey is only meaningful on current law. A non-current record may carry
+  // one to LINK an incident/history note to the rule it illustrates, but a
+  // record that is neither current nor related to the keyed rule may not.
+  if (r.ruleKey && r.kind !== "LAW_DECISION" && CURRENT_STATUSES.includes(r.status)) {
+    bad("rulekey-on-nonlaw", `a ${r.kind} may not hold a ruleKey as current authority: ${r.ruleKey}`);
   }
 
   for (const rel of r.relations) {

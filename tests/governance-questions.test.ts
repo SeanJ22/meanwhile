@@ -78,7 +78,7 @@ test("Q: Can a session close a Needs Sean row?", () => {
   assert.equal(claim("tracker.needs_sean_closure"), "author-or-answering-ruling");
   const policy = readFileSync(join(ROOT, "docs/governance/policies/tracker-workflow.md"), "utf8");
   assert.match(policy, /Only the author closes a Needs Sean row/);
-  assert.match(policy, /RULING 79/);
+  assert.match(policy, /a dated ruling which demonstrably answers one is applied by the session/);
 });
 
 test("Q: If the current client cannot fetch robots.txt, what exactly is known about permission?", () => {
@@ -89,7 +89,7 @@ test("Q: If the current client cannot fetch robots.txt, what exactly is known ab
 /* --------------------------------------------- answered by the constitution */
 
 test("Q: Which document wins if history disagrees with current policy?", () => {
-  const where = whereInLaw("History explains. History does not override.", ROOT);
+  const where = whereInLaw("History explains. History never overrides.", ROOT);
   assert.equal(where, "CLAUDE.md", "the precedence model is in the root constitution");
   assert.match(readFileSync(join(ROOT, "CLAUDE.md"), "utf8"), /Authority precedence/);
 });
@@ -120,14 +120,17 @@ test("Q: When may a session stop before the workstream is complete?", () => {
   // is not removed.
   const raw = readFileSync(join(ROOT, "CLAUDE.md"), "utf8");
   const claude = flat(raw);
+  const lawFlat = flat(law);
 
+  // The one-line form is in the constitution; the full vocabulary is in the
+  // meta-governance policy (RULING 273). Both are current law.
   assert.match(claude, /A session does not measure itself/i);
-  assert.match(claude, /KEEP WORKING WHILE AUTHORIZED EXECUTABLE WORK REMAINS/);
-  assert.match(claude, /STOP WHEN THE REQUESTED WORK IS ACTUALLY COMPLETE/);
-  assert.match(claude, /CLEAN_HANDOFF_AUTHOR_STOP/);
-  assert.match(claude, /CLEAN_HANDOFF_EXTERNAL_STOP.{0,2} is never INFERRED/i);
-  assert.match(claude, /MERGE CADENCE IS NOT SESSION CADENCE/i);
-  assert.match(claude, /PERSISTED RESUMABILITY IS NOT PERMISSION TO STOP/i);
+  assert.match(claude, /keep working while authorized/i);
+  assert.match(claude, /stop only when complete, redirected, or actually prevented/i);
+  assert.match(lawFlat, /CLEAN_HANDOFF_AUTHOR_STOP/);
+  assert.match(lawFlat, /external stop is never inferred/i);
+  assert.match(lawFlat, /Merge cadence is not session cadence/i);
+  assert.match(lawFlat, /resumability is not permission to stop/i);
 
   for (const gone of [
     "context_used_percent",
@@ -153,7 +156,7 @@ test("Q: is the context-usage stopping model gone from CURRENT authority?", () =
   const current = recs.filter(
     (r) => (r.status === "ACTIVE" || r.status === "AMENDED") && r.id !== "R-0189",
   );
-  assert.ok(current.length > 150, "the ledger must actually have been read");
+  assert.ok(current.length > 40, "the ledger must actually have been read");
   const offenders = current.filter((r) =>
     /context_used_percent|context_remaining_percent|80% of usable context|CLEAN_HANDOFF_LIMIT_REACHED|EARLY_HANDOFF_WITH_CAPACITY/.test(
       r.body,
@@ -175,7 +178,7 @@ test("Q: What prevents the project from recursively crawling irrelevant links fo
   // is finer than the unit of meaning reports the right rule against the wrong
   // text — the same correction this repository already made for its wall check.
   assert.match(
-    flat(readFileSync(join(ROOT, "CLAUDE.md"), "utf8")),
+    flat(law),
     /does not\s+recursively make every hyperlink/i,
   );
 });
@@ -194,7 +197,7 @@ test("Q: Does a new route learned in state 44 become available to state 45?", ()
   // The proof is executable — `pnpm method:prove` — and asserted in
   // tests/method-knowledge.test.ts. Here we assert the ANSWER is discoverable
   // from current authority rather than only from a passing test.
-  assert.ok(whereInLaw("inherited by every later jurisdiction", ROOT) || whereInLaw("PROJECT knowledge", ROOT));
+  assert.ok(whereInLaw("inherited by every later", ROOT) || whereInLaw("project knowledge", ROOT));
 });
 
 test("Q: Can a new route reopen an old converged or absent result?", () => {
@@ -204,26 +207,23 @@ test("Q: Can a new route reopen an old converged or absent result?", () => {
 });
 
 test("Q: What does CONVERGED_AS_OF actually mean?", () => {
-  const claude = readFileSync(join(ROOT, "CLAUDE.md"), "utf8");
-  assert.match(claude, /CONVERGED_AS_OF/);
-  assert.match(claude, /never that no other source exists/i);
+  assert.match(flat(law), /CONVERGED_AS_OF/);
+  assert.match(flat(law), /never that no other source exists/i);
 });
 
 test("Q: Is an entity candidate the same thing as a body in the registry?", () => {
-  const claude = flat(readFileSync(join(ROOT, "CLAUDE.md"), "utf8"));
-  assert.match(claude, /A lead is not a body/i);
-  assert.match(claude, /no candidate count may substitute for the promoted-body count/i);
+  assert.match(flat(law), /A lead is not a body/i);
+  assert.match(flat(law), /no candidate count may substitute for the promoted-body count/i);
 });
 
 test("Q: What is the current ballot-measure DONE standard?", () => {
-  const r171 = index.resolve("RULING 171");
-  assert.ok(r171, "RULING 171 must resolve");
-  assert.equal(r171.status, "ACTIVE");
-  const policy = readFileSync(join(ROOT, `${r171.operativePolicy}`.replace("docs/", "docs/")), "utf8");
-  assert.match(policy, /RULING 171/);
-  // The seven fields, and the money as a PAIR that blocks.
+  // RULING 171 (ballot-measure DONE) was consolidated into RULING 255, which
+  // carries the seven-field standard and the money-as-a-pair block.
+  const r255 = index.resolve("RULING 255");
+  assert.ok(r255 && ["ACTIVE", "AMENDED"].includes(r255.status), "RULING 255 must be current");
+  const policy = readFileSync(join(ROOT, "docs/governance/policies/rendering-neutrality.md"), "utf8");
   assert.match(policy, /seven/i);
-  assert.match(policy, /BLOCKED_ASYMMETRIC|equal depth|equal effort/i);
+  assert.match(policy, /equal depth|equal effort/i);
 });
 
 test("Q: Can the next session resume the exact descent frontier without recrawling seeds?", () => {
@@ -275,14 +275,14 @@ test("Q: Under the replacement status model, how is the preceding descent sessio
 test("Q: every route we know is blocked and the record exists. Is that an absence?", () => {
   assert.equal(claim("acquisition.obligation_closure"), "acquired-evidenced-or-human-route");
   // The three closes, and the one thing that is never evidence of absence.
-  assert.ok(whereInLaw("Three closes, and there is no fourth", ROOT));
-  assert.ok(whereInLaw("our failure to retrieve it is never that evidence", ROOT));
+  assert.ok(whereInLaw("Three closes, and no fourth", ROOT));
+  assert.ok(whereInLaw("our failure to retrieve is never that evidence", ROOT));
   // A blocked route escalates the EXECUTION MODE; it never produces a fact
   // about the government.
   assert.ok(whereInLaw("PUBLIC RECORD STILL OWED", ROOT));
   assert.match(
     flat(law),
-    /the record obligation does not/i,
+    /the record obligation cannot/i,
     "current law no longer says the obligation outlives the route",
   );
 });
@@ -304,11 +304,11 @@ test("Q: the API returned 200. May the adapter skip the accessible agenda and th
   assert.ok(whereInLaw("ONE ROUTE SUCCESS", ROOT));
   assert.match(
     flat(law),
-    /never skip a materially DISTINCT representation/i,
+    /an API 200 never retires the PDF|Materially distinct representations carry different facts/i,
     "current law no longer forbids collapsing the source universe onto one successful route",
   );
   // And the shape that prevents it recurring: an adapter is a portfolio.
-  assert.match(flat(law), /route\s*portfolio, not one fetch function/i);
+  assert.match(flat(law), /an adapter is a route portfolio/i);
 });
 
 test("Q: an API key would help. May this record's work stop until the author answers?", () => {
@@ -325,8 +325,10 @@ test("Q: an API key would help. May this record's work stop until the author ans
    * amendment that silently retires its target is the failure the ledger
    * exists to make impossible.
    */
-  const r146 = index.resolve("R-0146");
-  assert.ok(r146 && ["ACTIVE", "AMENDED"].includes(r146.status), "RULING 146 stopped being current");
+  // RULING 146's obligation (the SESSION keeps going) was consolidated into
+  // RULING 271, which must be current; 146 itself is superseded, not dropped.
+  const r271 = index.resolve("R-0271");
+  assert.ok(r271 && ["ACTIVE", "AMENDED"].includes(r271.status), "RULING 271 (the escalation lane) stopped being current");
 });
 
 test("Q: we hold text from a host later found to disallow crawling. Purge it?", () => {
@@ -339,7 +341,7 @@ test("Q: we hold text from a host later found to disallow crawling. Purge it?", 
    */
   assert.match(
     flat(law),
-    /binds the next fetch, never possession|does not govern what we\s*may hold/i,
+    /binds the next fetch and never possession|binds the next fetch, never possession/i,
     "current law no longer separates permission-to-fetch from possession",
   );
   const r209 = index.resolve("R-0209");
@@ -354,17 +356,17 @@ test("Q: May the standing autonomous system perform bounded public-source scouti
   assert.equal(claim("activation.standing_level"), "level-1-research");
   // and the policy says it in the author's own words, so a session that reads
   // only current law finds the authorization AND its ceiling in one place.
-  assert.ok(whereInLaw("MEANWHILE IS AUTHORIZED TO OPERATE AT LEVEL 1", ROOT));
+  assert.ok(whereInLaw("Meanwhile is authorized to operate at Level 1", ROOT));
   assert.match(
     flat(law),
-    /without session-by-session owner authorization/i,
+    /without session-by-session\s*(owner\s*)?authorization/i,
     "current law no longer states that Level 1 research needs no per-session authorization",
   );
   // Research is not publication. The same paragraph that authorizes the hunt
   // withholds promotion, and RULING 215's Level-4/5 limits stay current.
   assert.match(
     flat(law),
-    /does not authorize canonical promotion merely because a model found something/i,
+    /Level 1 never authorizes promotion because a model found something/i,
     "current law no longer withholds promotion from a model's finding",
   );
   assert.match(flat(law), /Absence is argued, never asserted/);

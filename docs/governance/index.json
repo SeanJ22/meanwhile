@@ -1,13 +1,13 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "ff96d60545edf000",
+  "snapshot": "bd60a61ad38da7f5",
   "counts": {
-    "records": 283,
-    "current": 262,
-    "law": 226,
-    "decisions": 32,
-    "historical": 21
+    "records": 314,
+    "current": 45,
+    "law": 32,
+    "decisions": 13,
+    "historical": 269
   },
   "records": [
     {
@@ -19,17 +19,12 @@
       ],
       "title": "RULING 1 — merge cadence",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "shipping-ci",
       "adopted": "2026-08-19",
       "operativePolicy": "docs/governance/policies/shipping-ci.md",
-      "claims": [
-        {
-          "key": "shipping.promotion_path",
-          "value": "integrated-head-merges-to-main"
-        }
-      ],
+      "claims": [],
       "relations": [],
       "uncertain": [],
       "sourceRef": "docs/rulings.md:45"
@@ -43,7 +38,7 @@
       ],
       "title": "RULING 2 — full-page screenshots are read as images",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "visual-feedback",
       "adopted": "2026-08-20",
@@ -100,7 +95,7 @@
       ],
       "title": "RULING 5 — `walk:all` does not tap reactions",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-20",
@@ -119,7 +114,7 @@
       ],
       "title": "RULING 6 — the coverage tier vocabulary, used verbatim everywhere",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-20",
@@ -176,7 +171,7 @@
       ],
       "title": "RULING 9 — Census counts governments; the product renders bodies",
       "kind": "DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
@@ -195,7 +190,7 @@
       ],
       "title": "RULING 10 — ZCTA is not a ZIP code",
       "kind": "DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-20",
@@ -233,7 +228,7 @@
       ],
       "title": "RULING 12 — WALL versus JOB",
       "kind": "DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-20",
@@ -252,7 +247,7 @@
       ],
       "title": "RULING 13 — a green build check does not mean the tests ran",
       "kind": "DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "shipping-ci",
       "adopted": "2026-08-20",
@@ -271,7 +266,7 @@
       ],
       "title": "RULING 14 — path comparisons may not assume a separator",
       "kind": "DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "shipping-ci",
       "adopted": "2026-08-20",
@@ -309,7 +304,7 @@
       ],
       "title": "RULING 16 — the retrieval-mechanics ladder in `CLAUDE.md` is canonical",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-20",
@@ -366,7 +361,7 @@
       ],
       "title": "RULING 19 — the nonpartisanship and committee-sale section is deferred",
       "kind": "DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-20",
@@ -385,7 +380,7 @@
       ],
       "title": "RULING 20 — portraits and PDF corpora do not go in git",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-20",
@@ -442,7 +437,7 @@
       ],
       "title": "RULING 23 — the four-state field is data, not a gate",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-20",
@@ -461,7 +456,7 @@
       ],
       "title": "RULING 24 — a check that cannot run says so",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-20",
@@ -480,7 +475,7 @@
       ],
       "title": "RULING 25 — reader-facing behaviour is not degraded to fix an internal problem",
       "kind": "DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-20",
@@ -499,13 +494,26 @@
       ],
       "title": "RULING 26 — SHOW EVERYTHING WE FIND",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-20",
       "operativePolicy": "docs/governance/policies/discovery.md",
       "claims": [],
-      "relations": [],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0007"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0018"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0022"
+        }
+      ],
       "uncertain": [],
       "sourceRef": "docs/rulings.md:324"
     },
@@ -518,7 +526,7 @@
       ],
       "title": "RULING 27 — no suppression path may exist in the codebase",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-20",
@@ -537,7 +545,7 @@
       ],
       "title": "RULING 28 — absence is one buried annotation per contest, never a per-field indicator",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-20",
@@ -556,7 +564,7 @@
       ],
       "title": "RULING 29 — three priority levels, ranked inside a section and never across sections",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
@@ -575,7 +583,7 @@
       ],
       "title": "RULING 30 — five P1 rows maximum per section, and an over-cap section is STOPPED",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
@@ -594,7 +602,7 @@
       ],
       "title": "RULING 31 — Needs Sean is always the first section",
       "kind": "DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
@@ -613,7 +621,7 @@
       ],
       "title": "RULING 32 — every row has a home",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
@@ -632,7 +640,7 @@
       ],
       "title": "RULING 33 — gaps are not tracker rows",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
@@ -651,7 +659,7 @@
       ],
       "title": "RULING 34 — the reader artifacts are generated, and hold no duplicated content",
       "kind": "DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-20",
@@ -670,7 +678,7 @@
       ],
       "title": "RULING 35 — every section is a queue that empties",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
@@ -689,7 +697,7 @@
       ],
       "title": "RULING 36 — three resolution states, and only these three",
       "kind": "DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
@@ -708,7 +716,7 @@
       ],
       "title": "RULING 37 — who may move a row",
       "kind": "LAW_DECISION",
-      "status": "AMENDED",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
@@ -727,7 +735,7 @@
       ],
       "title": "RULING 38 — the author's resolution notes are instructions, not commentary",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
@@ -746,7 +754,7 @@
       ],
       "title": "RULING 39 — resolution timestamps are written by the script, not by the spreadsheet",
       "kind": "DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
@@ -765,7 +773,7 @@
       ],
       "title": "RULING 40 — attribution has no soft landing",
       "kind": "DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-17",
@@ -784,7 +792,7 @@
       ],
       "title": "RULING 41 — the author writes rows too",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
@@ -803,7 +811,7 @@
       ],
       "title": "RULING 42 — the page-level disclosure replaces `THIN_CANDIDATE_LINE`",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-20",
@@ -822,7 +830,7 @@
       ],
       "title": "RULING 43 — a source may not report success with zero normalized rows from a non-zero fetch",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
@@ -841,7 +849,7 @@
       ],
       "title": "RULING 44 — per-card completeness statements are gone, in any wording",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-20",
@@ -865,7 +873,7 @@
       ],
       "title": "RULING 45 — the Kelly standard, and there are no tiers of it",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-20",
@@ -884,7 +892,7 @@
       ],
       "title": "RULING 46 — the author may delete a row outright; a session never may",
       "kind": "DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
@@ -910,7 +918,7 @@
       ],
       "title": "RULING 47 — the per-card issue count is removed",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-20",
@@ -929,7 +937,7 @@
       ],
       "title": "RULING 48 — a session may not use git to revert the author's files",
       "kind": "DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
@@ -948,7 +956,7 @@
       ],
       "title": "RULING 49 — a merge to satisfy a mid-session instruction from the author does not count against the cadence",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-20",
@@ -974,7 +982,7 @@
       ],
       "title": "RULING 50 — photos-first ordering is presentation; withholding data is suppression, and the two are never conflated again",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-21",
@@ -993,7 +1001,7 @@
       ],
       "title": "RULING 51 — the collection disclosure renders once per surface, and there are two surfaces",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-21",
@@ -1012,7 +1020,7 @@
       ],
       "title": "RULING 52 — discovery is a tree, not a ladder",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-21",
@@ -1031,7 +1039,7 @@
       ],
       "title": "RULING 53 — recorded absences expire",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-21",
@@ -1050,7 +1058,7 @@
       ],
       "title": "RULING 54 — the filed mailing address renders",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-21",
@@ -1069,7 +1077,7 @@
       ],
       "title": "RULING 55 — only a reviewed photo renders, and a decision is about an IMAGE",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-21",
@@ -1088,7 +1096,7 @@
       ],
       "title": "RULING 56 — a scheduled job that fails tells someone",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "shipping-ci",
       "adopted": "2026-08-21",
@@ -1107,7 +1115,7 @@
       ],
       "title": "RULING 57 — every twig is named",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-21",
@@ -1145,7 +1153,7 @@
       ],
       "title": "RULING 59 — the page says one thing about completeness and nothing else",
       "kind": "DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-21",
@@ -1164,7 +1172,7 @@
       ],
       "title": "RULING 60 — the session hand-works bodies, and that is the point",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-21",
@@ -1183,7 +1191,7 @@
       ],
       "title": "RULING 61 — the branch manifest, and what exhaustion means",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-21",
@@ -1207,7 +1215,7 @@
       ],
       "title": "RULING 62 — a test file may not lose guards silently",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-21",
@@ -1226,7 +1234,7 @@
       ],
       "title": "RULING 63 — every zip inherits; no zip starts from scratch",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-21",
@@ -1245,7 +1253,7 @@
       ],
       "title": "RULING 64 — shared office contacts are published, labeled as the office",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-21",
@@ -1264,7 +1272,7 @@
       ],
       "title": "RULING 65 — the footer-address branch",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-21",
@@ -1283,7 +1291,7 @@
       ],
       "title": "RULING 66 — Facebook by compliant routes only",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-21",
@@ -1302,7 +1310,7 @@
       ],
       "title": "RULING 67 — an enumeration states its geography and is checked externally",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-22",
@@ -1321,7 +1329,7 @@
       ],
       "title": "RULING 68 — control queries are mandatory",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-22",
@@ -1340,7 +1348,7 @@
       ],
       "title": "RULING 69 — reference data belongs in the repo, named and refreshable",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-22",
@@ -1359,7 +1367,7 @@
       ],
       "title": "RULING 70 — Ballotpedia is not scraped",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "sources-licensing",
       "adopted": "2026-08-21",
@@ -1378,7 +1386,7 @@
       ],
       "title": "RULING 71 — a zip cannot answer \"who governs you\"; a street address can",
       "kind": "DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-22",
@@ -1397,7 +1405,7 @@
       ],
       "title": "RULING 72 — a walled host is never evidence a body is unreachable",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-22",
@@ -1416,7 +1424,7 @@
       ],
       "title": "RULING 73 — large reference documents: commit the CONTENT, never the binary",
       "kind": "DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-22",
@@ -1435,7 +1443,7 @@
       ],
       "title": "RULING 74 — an address, once given, is never asked for twice",
       "kind": "DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-22",
@@ -1454,7 +1462,7 @@
       ],
       "title": "RULING 75 — a close-out commit is gated like any other commit to `main`",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "shipping-ci",
       "adopted": "2026-08-22",
@@ -1473,7 +1481,7 @@
       ],
       "title": "RULING 76 — session-dated scripts are COMMITTED, and held to every standard",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-22",
@@ -1492,7 +1500,7 @@
       ],
       "title": "RULING 77 — verify locally, ship once",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "shipping-ci",
       "adopted": "2026-08-22",
@@ -1511,7 +1519,7 @@
       ],
       "title": "RULING 78 — CI runs where it earns its cost",
       "kind": "LAW_DECISION",
-      "status": "AMENDED",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "shipping-ci",
       "adopted": "2026-08-22",
@@ -1530,17 +1538,12 @@
       ],
       "title": "RULING 79 — a ruling closes the Needs Sean row it answers",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-22",
       "operativePolicy": "docs/governance/policies/tracker-workflow.md",
-      "claims": [
-        {
-          "key": "tracker.needs_sean_closure",
-          "value": "author-or-answering-ruling"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "amends",
@@ -1561,7 +1564,7 @@
       ],
       "title": "RULING 80 — the committed geometry follows the reader, not the county",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-22",
@@ -1580,7 +1583,7 @@
       ],
       "title": "RULING 81 — an exhausted Actions balance is not a broken tree",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-22",
@@ -1599,7 +1602,7 @@
       ],
       "title": "RULING 82 — the job watcher's sampling was the defect, not its logic",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-22",
@@ -1618,7 +1621,7 @@
       ],
       "title": "RULING 83 — the free-source floor",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-22",
@@ -1637,7 +1640,7 @@
       ],
       "title": "RULING 84 — the manifest is tiered, and walked in order",
       "kind": "LAW_DECISION",
-      "status": "AMENDED",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-22",
@@ -1663,7 +1666,7 @@
       ],
       "title": "RULING 85 — the two-click test",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-22",
@@ -1682,7 +1685,7 @@
       ],
       "title": "RULING 86 — per-state source enumeration precedes the hunt",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-22",
@@ -1706,7 +1709,7 @@
       ],
       "title": "RULING 87 — Wikipedia is a Tier A discovery source, never a source of record",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-22",
@@ -1725,7 +1728,7 @@
       ],
       "title": "RULING 88 — the expansion requirement",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-22",
@@ -1744,7 +1747,7 @@
       ],
       "title": "RULING 89 — expansion is not a side quest",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-22",
@@ -1763,7 +1766,7 @@
       ],
       "title": "RULING 90 — exhaustion must be argued, not asserted",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-22",
@@ -1782,7 +1785,7 @@
       ],
       "title": "RULING 91 — every key in `.env.local` is a Tier A route and is walked",
       "kind": "DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-22",
@@ -1801,7 +1804,7 @@
       ],
       "title": "RULING 92 — fix the generator, never the artifact",
       "kind": "LAW_DECISION",
-      "status": "AMENDED",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-22",
@@ -1820,7 +1823,7 @@
       ],
       "title": "RULING 93 — ask what the tier above publishes about the tier below",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-22",
@@ -1839,7 +1842,7 @@
       ],
       "title": "RULING 94 — the stuck protocol",
       "kind": "LAW_DECISION",
-      "status": "AMENDED",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-22",
@@ -1858,7 +1861,7 @@
       ],
       "title": "RULING 95 — credentials are proven, not assumed",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-22",
@@ -1877,7 +1880,7 @@
       ],
       "title": "RULING 96 — sources have freshness",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-22",
@@ -1901,7 +1904,7 @@
       ],
       "title": "RULING 97 — a founder find is a class-wide defect",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-22",
@@ -1920,7 +1923,7 @@
       ],
       "title": "RULING 98 — exploration holds a guaranteed position in item order",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-22",
@@ -1939,7 +1942,7 @@
       ],
       "title": "RULING 99 — the amendment procedure",
       "kind": "LAW_DECISION",
-      "status": "AMENDED",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-22",
@@ -1958,7 +1961,7 @@
       ],
       "title": "RULING 100 — a partial answer that adds up is still a wrong answer",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-23",
@@ -1977,7 +1980,7 @@
       ],
       "title": "RULING 101 — our own identifier never leaves our own site",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-23",
@@ -1996,7 +1999,7 @@
       ],
       "title": "RULING 102 — fixing the recipe is not finished until you re-cook the dish",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-23",
@@ -2022,7 +2025,7 @@
       ],
       "title": "RULING 103 — a sweep looks for the same code twice, not just the same symptom",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-23",
@@ -2041,7 +2044,7 @@
       ],
       "title": "RULING 104 — a file you put in the repo is something a session must go and read",
       "kind": "LAW_DECISION",
-      "status": "AMENDED",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-23",
@@ -2065,7 +2068,7 @@
       ],
       "title": "RULING 105 — say what is rendering, what is out of scope, and what is still dark",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-23",
@@ -2084,7 +2087,7 @@
       ],
       "title": "RULING 106 — no generated file has a size limit",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-23",
@@ -2103,7 +2106,7 @@
       ],
       "title": "RULING 107 — a freshness date is written only by the code that read the source",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-23",
@@ -2122,7 +2125,7 @@
       ],
       "title": "RULING 108 — anything a session must read at the start lives in the repository",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-23",
@@ -2141,7 +2144,7 @@
       ],
       "title": "RULING 109 — a brief says what it needs to run, and the session checks before item one",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-23",
@@ -2160,7 +2163,7 @@
       ],
       "title": "RULING 110 — a search that finds nothing must show it looked in the right FORM",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-23",
@@ -2179,7 +2182,7 @@
       ],
       "title": "RULING 111 — a join is never a lookup for a fact that lives on only one side",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-23",
@@ -2198,7 +2201,7 @@
       ],
       "title": "RULING 112 — a first-party instrument is symmetric by construction, or it is not shipped",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-23",
@@ -2217,7 +2220,7 @@
       ],
       "title": "RULING 113 — a step that reports success is asked whether it did the thing",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "shipping-ci",
       "adopted": "2026-08-23",
@@ -2236,7 +2239,7 @@
       ],
       "title": "RULING 114 — a layer that always renders must be right, because finishing it removed the honest silence",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-23",
@@ -2255,7 +2258,7 @@
       ],
       "title": "RULING 115 — a drill is not a failure, and an alarm that cannot tell them apart spends the next real one",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-24",
@@ -2274,7 +2277,7 @@
       ],
       "title": "RULING 116 — a guard may pin an invariant or a direction, never the size of a gap",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-24",
@@ -2293,7 +2296,7 @@
       ],
       "title": "RULING 117 — the asset store has a public address, and a restore is proved by hash",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-24",
@@ -2312,7 +2315,7 @@
       ],
       "title": "RULING 118 — an appointed official never carries the govern verb",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-24",
@@ -2331,7 +2334,7 @@
       ],
       "title": "RULING 119 — a sovereign tribal nation is its own category of government",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-24",
@@ -2350,7 +2353,7 @@
       ],
       "title": "RULING 120 — equal solicitation is the obligation; who buys is not",
       "kind": "LAW_DECISION",
-      "status": "AMENDED",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "business",
       "adopted": "2026-08-24",
@@ -2369,7 +2372,7 @@
       ],
       "title": "RULING 121 — one body that spans two towns has one identity, and renders in both",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-24",
@@ -2388,7 +2391,7 @@
       ],
       "title": "RULING 122 — a page on a party's own site can be a candidate's page, with the host named",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-24",
@@ -2406,12 +2409,12 @@
         "R-123"
       ],
       "title": "RULING 123 — the author's decisions of 2026-08-24, recorded as a batch",
-      "kind": "LAW_DECISION",
+      "kind": "DECISION",
       "status": "ACTIVE",
       "provenance": "author_explicit",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-24",
-      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "operativePolicy": null,
       "claims": [],
       "relations": [],
       "uncertain": [],
@@ -2426,17 +2429,12 @@
       ],
       "title": "RULING 124 — a commit that cannot change what a reader sees does not cost a deploy",
       "kind": "LAW_DECISION",
-      "status": "AMENDED",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-08-24",
       "operativePolicy": "docs/governance/policies/shipping-ci.md",
-      "claims": [
-        {
-          "key": "shipping.closeout_path",
-          "value": "no-separate-push"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "amends",
@@ -2457,17 +2455,12 @@
       ],
       "title": "RULING 125 — verification happens on the local production build; production is the delivery truck, not the test bench",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-08-24",
       "operativePolicy": "docs/governance/policies/shipping-ci.md",
-      "claims": [
-        {
-          "key": "verification.target",
-          "value": "local-production-build"
-        }
-      ],
+      "claims": [],
       "relations": [],
       "uncertain": [],
       "sourceRef": "docs/rulings.md:2751"
@@ -2481,7 +2474,7 @@
       ],
       "title": "RULING 126 — campaign-finance data renders for readers and never enters anything sold",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-24",
@@ -2500,7 +2493,7 @@
       ],
       "title": "RULING 127 — no tool prints a credential value, and the guard is the values themselves",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-24",
@@ -2519,7 +2512,7 @@
       ],
       "title": "RULING 128 — extraction conserves: every input has exactly one disposition, and the sum is exact",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-24",
@@ -2538,7 +2531,7 @@
       ],
       "title": "RULING 129 — a safety cap is a failure boundary, never an implicit end of data",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-24",
@@ -2557,7 +2550,7 @@
       ],
       "title": "RULING 130 — every transport success passes one shared document finalizer",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-24",
@@ -2576,7 +2569,7 @@
       ],
       "title": "RULING 131 — a partial source is a first-class result, and completeness is never inferred from `ok: true`",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-24",
@@ -2595,7 +2588,7 @@
       ],
       "title": "RULING 132 — the identity boundary is proven over VALUE SPACES, not column names",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-24",
@@ -2614,7 +2607,7 @@
       ],
       "title": "RULING 133 — a performance change ships with its measurement",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-24",
@@ -2633,7 +2626,7 @@
       ],
       "title": "RULING 134 — an instrument without a committed baseline is unfinished",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-24",
@@ -2652,7 +2645,7 @@
       ],
       "title": "RULING 135 — a fence bars acting on content, never committing Sean's artifacts",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-24",
@@ -2678,7 +2671,7 @@
       ],
       "title": "RULING 136 — feedback names examples; a fix closes the class",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "visual-feedback",
       "adopted": "2026-08-24",
@@ -2697,7 +2690,7 @@
       ],
       "title": "RULING 137 — for layout, an annotated image is the spec, and it outranks prose",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "visual-feedback",
       "adopted": "2026-08-24",
@@ -2716,7 +2709,7 @@
       ],
       "title": "RULING 138 — display consolidates sources; the record is never deleted",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-24",
@@ -2735,7 +2728,7 @@
       ],
       "title": "RULING 139 — the product never announces its own failure",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-24",
@@ -2754,7 +2747,7 @@
       ],
       "title": "RULING 140 — dates spell out, product-wide",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-24",
@@ -2773,7 +2766,7 @@
       ],
       "title": "RULING 141 — the Speak Your Mind store's four rules",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "data-privacy",
       "adopted": "2026-08-24",
@@ -2792,7 +2785,7 @@
       ],
       "title": "RULING 142 — the line in the sand, and nothing collected before it is ever sold",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-24",
@@ -2811,7 +2804,7 @@
       ],
       "title": "RULING 143 — what DONE means for 07866, and it is per candidate",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-24",
@@ -2830,7 +2823,7 @@
       ],
       "title": "RULING 144 — an argued absence may be built from walls, and it expires the day a wall falls",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-25",
@@ -2849,7 +2842,7 @@
       ],
       "title": "RULING 145 — a platform-hosted campaign presence fills the campaign-site field, with the host labelled",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-25",
@@ -2868,7 +2861,7 @@
       ],
       "title": "RULING 146 — a session runs unattended, and nothing it runs may be able to ask it a question",
       "kind": "LAW_DECISION",
-      "status": "AMENDED",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-25",
@@ -2887,7 +2880,7 @@
       ],
       "title": "RULING 147 — no reconciliation may compare a parser to itself",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-25",
@@ -2906,7 +2899,7 @@
       ],
       "title": "RULING 148 — the may-we-walk verdict is enforced by the fetcher, never remembered by a session",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-25",
@@ -2925,7 +2918,7 @@
       ],
       "title": "RULING 149 — the coverage matrix is generated, internal, and never rendered to a reader",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-25",
@@ -2944,7 +2937,7 @@
       ],
       "title": "RULING 150 — a Needs Sean row states its ask as an answerable question, with options",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-25",
@@ -2962,12 +2955,12 @@
         "R-151"
       ],
       "title": "RULING 151 — Sean's tracker decisions of 2026-08-25, recorded as a batch",
-      "kind": "LAW_DECISION",
+      "kind": "DECISION",
       "status": "ACTIVE",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-25",
-      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "operativePolicy": null,
       "claims": [],
       "relations": [],
       "uncertain": [],
@@ -2982,7 +2975,7 @@
       ],
       "title": "RULING 152 — a reader-facing DONE names the production deploy that is serving it",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "shipping-ci",
       "adopted": "2026-08-25",
@@ -3001,7 +2994,7 @@
       ],
       "title": "RULING 153 — a fix is verified on the reader's path, not on the path that satisfies the assertion",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-25",
@@ -3020,7 +3013,7 @@
       ],
       "title": "RULING 154 — the Speak Your Mind disclosure leaves the panel, and the commitment does not",
       "kind": "DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-25",
@@ -3039,7 +3032,7 @@
       ],
       "title": "RULING 155 — a session may not claim local gates green unless it ran the gate set CI requires, and named each one",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-08-25",
@@ -3058,7 +3051,7 @@
       ],
       "title": "RULING 156 — a required check is registered by NAME, and a rename disarms protection in silence",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "shipping-ci",
       "adopted": "2026-08-25",
@@ -3077,7 +3070,7 @@
       ],
       "title": "RULING 157 — a fix is verified against a case it was NOT derived from",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-25",
@@ -3096,7 +3089,7 @@
       ],
       "title": "RULING 158 — a shed requires a measurement and a reason, or it is an unfinished session",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-25",
@@ -3115,7 +3108,7 @@
       ],
       "title": "RULING 159 — a counting script fails loudly when its denominator is zero",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-25",
@@ -3144,8 +3137,8 @@
         {
           "kind": "amends",
           "target": "R-0120",
-          "changed": "in-cycle sales are ALLOWED as standing policy, superseding the pilot-scoped retrospective-only posture, and neutrality is carried by four named constraints",
-          "survives": "RULING 120's prohibition on exclusivity and its equal-solicitation obligation are UNCHANGED and carried forward verbatim in force, as is buyer composition not being an obligation"
+          "changed": "in-cycle sales are ALLOWED as standing policy under four named constraints",
+          "survives": "RULING 120's exclusivity prohibition, equal-solicitation obligation, and buyer composition not being an obligation"
         }
       ],
       "uncertain": [],
@@ -3179,7 +3172,7 @@
       ],
       "title": "RULING 162 — a bypass is only as safe as the paths it can carry",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "shipping-ci",
       "adopted": "2026-08-25",
@@ -3198,7 +3191,7 @@
       ],
       "title": "RULING 163 — the answer to \"is the protection still what we think\" is a command",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-26",
@@ -3217,7 +3210,7 @@
       ],
       "title": "RULING 164 — a workflow reports every failure, not just the first",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "shipping-ci",
       "adopted": "2026-08-26",
@@ -3236,7 +3229,7 @@
       ],
       "title": "RULING 165 — the scheduled pushers authenticate as a deploy key, and the private half is never held",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "shipping-ci",
       "adopted": "2026-08-26",
@@ -3255,17 +3248,12 @@
       ],
       "title": "RULING 166 — the body's own publication is rung one, and its bulk download is rung zero",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-26",
       "operativePolicy": "docs/governance/policies/discovery.md",
-      "claims": [
-        {
-          "key": "discovery.source_order",
-          "value": "body-own-publication-first"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "amends",
@@ -3286,7 +3274,7 @@
       ],
       "title": "RULING 167 — donor rendering is AGGREGATE ONLY, and no individual donor name or address renders anywhere",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-26",
@@ -3324,7 +3312,7 @@
       ],
       "title": "RULING 169 — a walk is COUNTED or it did not happen",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-26",
@@ -3343,7 +3331,7 @@
       ],
       "title": "RULING 170 — no number of attempts earns an absence, and a protocol that TERMINATES is not persistence",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-26",
@@ -3369,7 +3357,7 @@
       ],
       "title": "RULING 171 — A BALLOT MEASURE IS DONE AT SEVEN FIELDS, AND THE MONEY IS A PAIR",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-26",
@@ -3388,7 +3376,7 @@
       ],
       "title": "RULING 172 — current authority and history are separate systems",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-26",
@@ -3407,7 +3395,7 @@
       ],
       "title": "RULING 173 — CLAUDE.md is the root constitution and carries current law only",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-26",
@@ -3426,7 +3414,7 @@
       ],
       "title": "RULING 174 — binding authority requires author provenance",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-26",
@@ -3445,7 +3433,7 @@
       ],
       "title": "RULING 175 — supersession is structured data, and a partial amendment names both halves",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-26",
@@ -3464,21 +3452,12 @@
       ],
       "title": "RULING 176 — governance changes are atomic",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-26",
       "operativePolicy": "docs/governance/policies/meta-governance.md",
-      "claims": [
-        {
-          "key": "rulings.id_namespace",
-          "value": "global-immutable"
-        },
-        {
-          "key": "governance.amendment_procedure",
-          "value": "canonical-ledger-and-generated-views"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "amends",
@@ -3499,21 +3478,12 @@
       ],
       "title": "RULING 177 — the subject universe may be bounded; the method never is",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-26",
       "operativePolicy": "docs/governance/policies/discovery.md",
-      "claims": [
-        {
-          "key": "discovery.completion_model",
-          "value": "bounded-universe-versioned-convergence"
-        },
-        {
-          "key": "discovery.method_growth",
-          "value": "living-versioned-never-final"
-        }
-      ],
+      "claims": [],
       "relations": [],
       "uncertain": [],
       "sourceRef": "lib/governance/adoptions.ts"
@@ -3527,7 +3497,7 @@
       ],
       "title": "RULING 178 — inherit everything, assume it is incomplete, keep the learning",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-26",
@@ -3546,7 +3516,7 @@
       ],
       "title": "RULING 179 — convergence is versioned, and completion is derived from child state",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-26",
@@ -3565,7 +3535,7 @@
       ],
       "title": "RULING 180 — session status, workstream status and graph status are three different facts",
       "kind": "LAW_DECISION",
-      "status": "AMENDED",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-26",
@@ -3584,7 +3554,7 @@
       ],
       "title": "RULING 181 — a frontier is state, not a recipe for recreating state",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-26",
@@ -3603,17 +3573,12 @@
       ],
       "title": "RULING 182 — permission state and transport state are orthogonal",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "sources-licensing",
       "adopted": "2026-08-26",
       "operativePolicy": "docs/governance/policies/sources-licensing.md",
-      "claims": [
-        {
-          "key": "permission.transport_collapse",
-          "value": "orthogonal-cannot-tell"
-        }
-      ],
+      "claims": [],
       "relations": [],
       "uncertain": [],
       "sourceRef": "lib/governance/adoptions.ts"
@@ -3627,7 +3592,7 @@
       ],
       "title": "RULING 183 — a lead is not a body",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-26",
@@ -3646,17 +3611,12 @@
       ],
       "title": "RULING 184 — blocked is a real state, and a finite attempt count never earns absence",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-26",
       "operativePolicy": "docs/governance/policies/discovery.md",
-      "claims": [
-        {
-          "key": "discovery.absence_standard",
-          "value": "argued-never-counted"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -3675,7 +3635,7 @@
       ],
       "title": "RULING 185 — the authority precedence model",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-26",
@@ -3694,7 +3654,7 @@
       ],
       "title": "RULING 186 — a session opens on task-relevant current authority, never on the full history",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-26",
@@ -3739,7 +3699,7 @@
       ],
       "title": "RULING 188 — the descent freezes only for the minimum safe state cutover",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-26",
@@ -3758,17 +3718,12 @@
       ],
       "title": "RULING 189 — a session does not measure its own context, and stops for real reasons only",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-27",
       "operativePolicy": "docs/governance/policies/meta-governance.md",
-      "claims": [
-        {
-          "key": "session.stop_standard",
-          "value": "work-author-or-external-condition"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "supersedes_full",
@@ -3795,17 +3750,12 @@
       ],
       "title": "RULING 190 — a session is an engineering organization, not one serial developer",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-28",
       "operativePolicy": "docs/governance/policies/meta-governance.md",
-      "claims": [
-        {
-          "key": "session.orchestration_model",
-          "value": "independent-work-parallel-by-default"
-        }
-      ],
+      "claims": [],
       "relations": [],
       "uncertain": [],
       "sourceRef": "lib/governance/adoptions.ts"
@@ -3819,17 +3769,12 @@
       ],
       "title": "RULING 191 — one integration owner, one combined head, one merge at the end",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-08-28",
       "operativePolicy": "docs/governance/policies/shipping-ci.md",
-      "claims": [
-        {
-          "key": "shipping.integration_model",
-          "value": "one-owner-combined-head"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -3848,17 +3793,12 @@
       ],
       "title": "RULING 192 — method knowledge is typed by claim class, and a false conclusion never deletes a valid route",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-28",
       "operativePolicy": "docs/governance/policies/discovery.md",
-      "claims": [
-        {
-          "key": "method.claim_integrity",
-          "value": "typed-classes-with-required-provenance"
-        }
-      ],
+      "claims": [],
       "relations": [],
       "uncertain": [],
       "sourceRef": "lib/governance/adoptions.ts"
@@ -3872,17 +3812,12 @@
       ],
       "title": "RULING 193 — a guard proves what it claims to prove, or it is not a guard",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-28",
       "operativePolicy": "docs/governance/policies/meta-governance.md",
-      "claims": [
-        {
-          "key": "guard.evidence_standard",
-          "value": "checked-evidence-only"
-        }
-      ],
+      "claims": [],
       "relations": [],
       "uncertain": [],
       "sourceRef": "lib/governance/adoptions.ts"
@@ -3896,17 +3831,12 @@
       ],
       "title": "RULING 194 — the workstream plan is append-safe, and a branch is never the denominator",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-28",
       "operativePolicy": "docs/governance/policies/meta-governance.md",
-      "claims": [
-        {
-          "key": "orchestration.denominator",
-          "value": "declared-logical-workstreams-reconciled"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -3925,17 +3855,12 @@
       ],
       "title": "RULING 195 — one typed projection is what a session inherits, and no consumer reads raw route prose",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-28",
       "operativePolicy": "docs/governance/policies/discovery.md",
-      "claims": [
-        {
-          "key": "method.inheritance_interface",
-          "value": "typed-current-claim-projection"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -3954,17 +3879,12 @@
       ],
       "title": "RULING 196 — an established migration is immutable, and correction is a new migration",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-08-28",
       "operativePolicy": "docs/governance/policies/shipping-ci.md",
-      "claims": [
-        {
-          "key": "schema.migration_mutability",
-          "value": "immutable-append-only"
-        }
-      ],
+      "claims": [],
       "relations": [],
       "uncertain": [],
       "sourceRef": "lib/governance/adoptions.ts"
@@ -3978,17 +3898,12 @@
       ],
       "title": "RULING 197 — a serving source tenant names a registered body; an adapter never mints one",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "sources-licensing",
       "adopted": "2026-08-28",
       "operativePolicy": "docs/governance/policies/sources-licensing.md",
-      "claims": [
-        {
-          "key": "sources.tenant_identity",
-          "value": "registry-is-the-authority"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -4007,7 +3922,7 @@
       ],
       "title": "RULING 198 — a declared contract clause is enforced, or it is not law",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-29",
@@ -4026,7 +3941,7 @@
       ],
       "title": "RULING 199 — a disposition may cite only the Attempt that earned it, and a policy denial is a fact about us",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-29",
@@ -4045,7 +3960,7 @@
       ],
       "title": "RULING 200 — a snooze is a notification decision and never a truth decision",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-29",
@@ -4064,7 +3979,7 @@
       ],
       "title": "RULING 201 — evidence bytes prove their own identity, and the vault guarantees scoped immutability rather than global dedup",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "sources-licensing",
       "adopted": "2026-08-29",
@@ -4083,7 +3998,7 @@
       ],
       "title": "RULING 202 — canonical method knowledge has ONE governed write path, and a rejected candidate is retained",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-29",
@@ -4102,7 +4017,7 @@
       ],
       "title": "RULING 203 — the pure canonical authorities are gates, and a writer is never made one",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-08-29",
@@ -4126,7 +4041,7 @@
       ],
       "title": "RULING 204 — production-integrity freshness fails closed, and the question is asked of what production SERVES",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-08-29",
@@ -4145,17 +4060,12 @@
       ],
       "title": "RULING 205 — if a public civic record exists, get it: the obligation outlives the route and the worker",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-29",
       "operativePolicy": "docs/governance/policies/discovery.md",
-      "claims": [
-        {
-          "key": "acquisition.obligation_closure",
-          "value": "acquired-evidenced-or-human-route"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -4178,17 +4088,12 @@
       ],
       "title": "RULING 206 — the vendor is not the record, and a URL is not the record",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "sources-licensing",
       "adopted": "2026-08-29",
       "operativePolicy": "docs/governance/policies/sources-licensing.md",
-      "claims": [
-        {
-          "key": "acquisition.record_identity",
-          "value": "government-record-with-representations"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -4207,17 +4112,12 @@
       ],
       "title": "RULING 207 — one successful route never collapses the source universe; an adapter is a route portfolio",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-29",
       "operativePolicy": "docs/governance/policies/discovery.md",
-      "claims": [
-        {
-          "key": "acquisition.representation_coverage",
-          "value": "every-material-representation"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -4236,17 +4136,12 @@
       ],
       "title": "RULING 208 — an access escalation is a parallel lane, never a stop",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "tracker-workflow",
       "adopted": "2026-08-29",
       "operativePolicy": "docs/governance/policies/tracker-workflow.md",
-      "claims": [
-        {
-          "key": "escalation.access_request",
-          "value": "parallel-never-blocking"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "amends",
@@ -4271,17 +4166,12 @@
       ],
       "title": "RULING 209 — a permission rule binds the next fetch, never possession of what was already published",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "sources-licensing",
       "adopted": "2026-08-29",
       "operativePolicy": "docs/governance/policies/sources-licensing.md",
-      "claims": [
-        {
-          "key": "sources.held_artifact_retention",
-          "value": "keep-and-use-with-replacement-obligation"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -4300,17 +4190,12 @@
       ],
       "title": "RULING 210 — the reader-answerability suite is the top-line health contract of the reader dimension",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-08-30",
       "operativePolicy": "docs/governance/policies/shipping-ci.md",
-      "claims": [
-        {
-          "key": "reader.health_contract",
-          "value": "answerability-suite-with-typed-diagnostics"
-        }
-      ],
+      "claims": [],
       "relations": [],
       "uncertain": [],
       "sourceRef": "lib/governance/adoptions.ts"
@@ -4324,17 +4209,12 @@
       ],
       "title": "RULING 211 — the known-answer control set is permanent, continuous, and unannounced",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-08-30",
       "operativePolicy": "docs/governance/policies/shipping-ci.md",
-      "claims": [
-        {
-          "key": "truth.control_standard",
-          "value": "permanent-unannounced-control-set"
-        }
-      ],
+      "claims": [],
       "relations": [],
       "uncertain": [],
       "sourceRef": "lib/governance/adoptions.ts"
@@ -4348,17 +4228,12 @@
       ],
       "title": "RULING 212 — refresh cadence is derived from time-to-reader-impact and observed publisher change rate",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-08-30",
       "operativePolicy": "docs/governance/policies/shipping-ci.md",
-      "claims": [
-        {
-          "key": "refresh.cadence",
-          "value": "derived-from-reader-impact-and-change-rate"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "supersedes_clause",
@@ -4451,17 +4326,12 @@
       ],
       "title": "RULING 216 — status is generated, never asserted, and proof classes are distinct",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-30",
       "operativePolicy": "docs/governance/policies/meta-governance.md",
-      "claims": [
-        {
-          "key": "status.claim_standard",
-          "value": "generated-with-proving-check"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "related_to",
@@ -4480,17 +4350,12 @@
       ],
       "title": "RULING 217 — pilot health is three contracts rolled into one owner-facing reading",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-08-30",
       "operativePolicy": "docs/governance/policies/shipping-ci.md",
-      "claims": [
-        {
-          "key": "health.pilot_rollup",
-          "value": "three-contracts-one-rollup"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -4517,17 +4382,12 @@
       ],
       "title": "RULING 218 — GitHub scheduled workflows are not the freshness clock",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-08-30",
       "operativePolicy": "docs/governance/policies/shipping-ci.md",
-      "claims": [
-        {
-          "key": "freshness.clock_authority",
-          "value": "runtime-scheduler-derived-due"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -4550,17 +4410,12 @@
       ],
       "title": "RULING 219 — the autonomous-system constitution is a generated governance view",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-30",
       "operativePolicy": "docs/governance/policies/meta-governance.md",
-      "claims": [
-        {
-          "key": "governance.constitution_view",
-          "value": "generated-view-of-the-ledger"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "derived_from",
@@ -4672,25 +4527,12 @@
       ],
       "title": "RULING 221 — a session's completion denominator is finite and stated at its start; discovery does not enlarge it",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-31",
       "operativePolicy": "docs/governance/policies/meta-governance.md",
-      "claims": [
-        {
-          "key": "session.completion_denominator",
-          "value": "finite-stated-at-start"
-        },
-        {
-          "key": "session.discovered_defect_routing",
-          "value": "frontier-unless-falsifies-or-regresses"
-        },
-        {
-          "key": "session.human_gated_status",
-          "value": "needs-owner-terminal-not-open-executable"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -4725,21 +4567,12 @@
       ],
       "title": "RULING 222 — before a confirmed address the scope is the ZIP; after one, the scope IS the address",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-31",
       "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
-      "claims": [
-        {
-          "key": "rendering.address_scope",
-          "value": "address-scope-replaces-zip-scope"
-        },
-        {
-          "key": "rendering.excluded_entity_label",
-          "value": "prohibited-out-of-scope-not-annotated"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "related_to",
@@ -4766,21 +4599,12 @@
       ],
       "title": "RULING 223 — a session's discretion covers how, never what; it may not redefine the completion contract",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-31",
       "operativePolicy": "docs/governance/policies/meta-governance.md",
-      "claims": [
-        {
-          "key": "session.discretion_scope",
-          "value": "implementation-and-ordering-never-the-contract"
-        },
-        {
-          "key": "session.capacity_end_output",
-          "value": "unfinished-session-with-resume-point-and-named-items"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -4811,21 +4635,12 @@
       ],
       "title": "RULING 224 — acquisition without promotion is inventory; an obligation's completion contract extends to the reader",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-31",
       "operativePolicy": "docs/governance/policies/discovery.md",
-      "claims": [
-        {
-          "key": "obligation.completion_boundary",
-          "value": "reader-surface-or-honest-gap-not-the-vault"
-        },
-        {
-          "key": "obligation.promotion_tail",
-          "value": "automatic-through-staged-shipping-carries-last-mile"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -4860,17 +4675,12 @@
       ],
       "title": "RULING 225 — every session report leads in reader terms; infrastructure counts afterward",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-31",
       "operativePolicy": "docs/governance/policies/meta-governance.md",
-      "claims": [
-        {
-          "key": "report.lead_order",
-          "value": "reader-then-unattended-then-owner-then-infrastructure"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -4901,17 +4711,12 @@
       ],
       "title": "RULING 226 — aggregate-only governs what is exposed, never what exists at rest; the implementation is ratified",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "data-privacy",
       "adopted": "2026-08-31",
       "operativePolicy": "docs/governance/policies/data-privacy.md",
-      "claims": [
-        {
-          "key": "collection.aggregate_only_scope",
-          "value": "exposure-boundary-not-storage-at-rest"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "related_to",
@@ -4934,21 +4739,12 @@
       ],
       "title": "RULING 227 — escalation without reconciliation is prohibited",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "tracker-workflow",
       "adopted": "2026-08-31",
       "operativePolicy": "docs/governance/policies/tracker-workflow.md",
-      "claims": [
-        {
-          "key": "escalation.entry_requirement",
-          "value": "machine-predicate-or-explicit-not-verifiable-with-card"
-        },
-        {
-          "key": "escalation.reconciliation_cadence",
-          "value": "rechecked-every-generation-auto-resolves"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -4979,21 +4775,12 @@
       ],
       "title": "RULING 228 — an interface between independently built lanes is one shared typed schema, never prose",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-31",
       "operativePolicy": "docs/governance/policies/meta-governance.md",
-      "claims": [
-        {
-          "key": "interface.definition_form",
-          "value": "one-shared-typed-schema-both-sides-validate"
-        },
-        {
-          "key": "interface.compatibility_evidence",
-          "value": "real-producer-output-into-real-consumer"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -5024,25 +4811,12 @@
       ],
       "title": "RULING 229 — acquire to the authoritative source universe; project to the reader",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-09-01",
       "operativePolicy": "docs/governance/policies/discovery.md",
-      "claims": [
-        {
-          "key": "acquisition.denominator_authority",
-          "value": "source-authority-universe"
-        },
-        {
-          "key": "acquisition.new_location_cost",
-          "value": "zero-new-external-hunt-for-already-owed-records"
-        },
-        {
-          "key": "enrichment.keying",
-          "value": "canonical-statewide-candidate-universe"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -5126,17 +4900,12 @@
       ],
       "title": "RULING 231 — a false description of a named person is corrected by recorded supersession, never by an edit",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "tracker-workflow",
       "adopted": "2026-09-01",
       "operativePolicy": "docs/governance/policies/tracker-workflow.md",
-      "claims": [
-        {
-          "key": "tracker.person_description_amend_path",
-          "value": "recorded-supersession-preserving-the-original-text"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -5164,17 +4933,12 @@
       ],
       "title": "RULING 232 — 'statewide' and 'source-universe' are claims about the POPULATION, never about the shape of the key",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-09-01",
       "operativePolicy": "docs/governance/policies/discovery.md",
-      "claims": [
-        {
-          "key": "labeling.population_scope",
-          "value": "acquired-source-authority-universe"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -5206,7 +4970,7 @@
       ],
       "title": "RULING 233 — staging is the integration branch and deploys to the staging origin; promotion to main is earned against that exact head",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-09-01",
@@ -5241,11 +5005,11 @@
       ],
       "title": "RULING 234 — the owner overrides the H2 RETAIN verdict for the Sonnet 5 switch, and only for that decision",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "HISTORICAL",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-09-01",
-      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "operativePolicy": null,
       "claims": [],
       "relations": [
         {
@@ -5269,7 +5033,7 @@
       ],
       "title": "RULING 235 — MEASURED: the provider derives a branch deploy's subdomain from the branch name, so RULING 233 cannot have both halves",
       "kind": "FACT",
-      "status": "ACTIVE",
+      "status": "HISTORICAL",
       "provenance": "observed_fact",
       "domain": "shipping-ci",
       "adopted": "2026-09-01",
@@ -5293,7 +5057,7 @@
       ],
       "title": "RULING 236 — MEASURED: RULING 234's reversibility clause fired on the same day, and the Ask model is back on claude-opus-5",
       "kind": "FACT",
-      "status": "ACTIVE",
+      "status": "HISTORICAL",
       "provenance": "observed_fact",
       "domain": "meta-governance",
       "adopted": "2026-09-01",
@@ -5321,17 +5085,12 @@
       ],
       "title": "RULING 237 — the SESSION EFFICIENCY LAW is adopted verbatim: maximum verified progress per wall-clock minute, model token, and human attention",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-09-01",
       "operativePolicy": "docs/governance/policies/meta-governance.md",
-      "claims": [
-        {
-          "key": "session.efficiency_law",
-          "value": "adopted-verbatim"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -5366,17 +5125,12 @@
       ],
       "title": "RULING 238 — Owner Secret Custody: an owner-accessible copy of any masked new or rotated credential is persisted to the gitignored secret store BEFORE provider installation, and a report lacking any required field fails the session report gate",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "sources-licensing",
       "adopted": "2026-09-01",
       "operativePolicy": "docs/governance/policies/sources-licensing.md",
-      "claims": [
-        {
-          "key": "session.credential_custody",
-          "value": "owner-copy-before-install"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "related_to",
@@ -5399,7 +5153,7 @@
       ],
       "title": "RULING 239 — SESSION C is terminal: SHIPPED, OPERATIONALLY IMPROVED, UNFINISHED — its production improvement stands merged and its unmet criteria are carried as durable frontier obligations, never a reopening",
       "kind": "FACT",
-      "status": "ACTIVE",
+      "status": "HISTORICAL",
       "provenance": "observed_fact",
       "domain": "meta-governance",
       "adopted": "2026-09-01",
@@ -5427,17 +5181,12 @@
       ],
       "title": "RULING 240 — MEANWHILE IS AUTHORIZED TO OPERATE AT LEVEL 1 — RESEARCH",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-09-01",
       "operativePolicy": "docs/governance/policies/discovery.md",
-      "claims": [
-        {
-          "key": "activation.standing_level",
-          "value": "level-1-research"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -5504,17 +5253,12 @@
       ],
       "title": "RULING 242 — THE SINGLE NIGHTLY PROMOTION DOOR: reader-facing civic truth changes through exactly one door, the nightly window on the standing runner's own clock, which runs in SHADOW until the activation gate opens",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-09-02",
       "operativePolicy": "docs/governance/policies/shipping-ci.md",
-      "claims": [
-        {
-          "key": "reader_truth.change_door",
-          "value": "single-nightly-window"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -5553,17 +5297,12 @@
       ],
       "title": "RULING 243 — MACHINE-OWNED PROVENANCE: execution and provenance facts in any model-produced candidate, finding or result are written by the machine from the Attempt, artifact, obligation and permission records; the model's statements about them are claims",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-09-02",
       "operativePolicy": "docs/governance/policies/discovery.md",
-      "claims": [
-        {
-          "key": "provenance.owner",
-          "value": "machine-owned"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -5590,17 +5329,12 @@
       ],
       "title": "RULING 244 — WORKER EFFICIENCY LAW (owner-ordered): near flawless and wildly efficient — no step is skipped, and no token is spent twice for the same thing",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-09-02",
       "operativePolicy": "docs/governance/policies/meta-governance.md",
-      "claims": [
-        {
-          "key": "worker.efficiency_law",
-          "value": "adopted-verbatim"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "extends",
@@ -5627,17 +5361,12 @@
       ],
       "title": "RULING 245 — OWNER ADMIN IDENTITY: administrative access authenticates the owner through Sign in with Google for exactly the enrolled owner address, verified server-side; a shared secret is never a login path except as a documented, rate-limited, incident-logged break-glass under RULING 238",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "sources-licensing",
       "adopted": "2026-09-02",
       "operativePolicy": "docs/governance/policies/sources-licensing.md",
-      "claims": [
-        {
-          "key": "admin.identity",
-          "value": "google-owner-only"
-        }
-      ],
+      "claims": [],
       "relations": [
         {
           "kind": "related_to",
@@ -5660,7 +5389,7 @@
       ],
       "title": "RULING 246 — LEVEL 1 RESEARCH is terminal: SHIPPED, RUNNING, DEGRADED, UNFINISHED — the audit verdicts per criterion and the carried items are recorded, and the machinery is corrected under the finite rules rather than by reopening the session",
       "kind": "FACT",
-      "status": "ACTIVE",
+      "status": "HISTORICAL",
       "provenance": "observed_fact",
       "domain": "meta-governance",
       "adopted": "2026-09-02",
@@ -5688,11 +5417,1967 @@
       "sourceRef": "lib/governance/adoptions.ts"
     },
     {
+      "id": "R-0247",
+      "aliases": [
+        "RULING 247",
+        "R247",
+        "R-247"
+      ],
+      "title": "RULING 247 — THE CONSOLIDATION",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/meta-governance.md"
+    },
+    {
+      "id": "R-0248",
+      "aliases": [
+        "RULING 248",
+        "R248",
+        "R-248"
+      ],
+      "title": "RULING 248 — if a public record exists, get it",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [
+        {
+          "key": "acquisition.obligation_closure",
+          "value": "acquired-evidenced-or-human-route"
+        },
+        {
+          "key": "acquisition.record_identity",
+          "value": "government-record-with-representations"
+        },
+        {
+          "key": "acquisition.representation_coverage",
+          "value": "every-material-representation"
+        },
+        {
+          "key": "obligation.completion_boundary",
+          "value": "reader-surface-or-honest-gap-not-the-vault"
+        },
+        {
+          "key": "obligation.promotion_tail",
+          "value": "automatic-through-staged-shipping-carries-last-mile"
+        },
+        {
+          "key": "acquisition.denominator_authority",
+          "value": "source-authority-universe"
+        },
+        {
+          "key": "acquisition.new_location_cost",
+          "value": "zero-new-external-hunt-for-already-owed-records"
+        },
+        {
+          "key": "enrichment.keying",
+          "value": "canonical-statewide-candidate-universe"
+        },
+        {
+          "key": "labeling.population_scope",
+          "value": "acquired-source-authority-universe"
+        },
+        {
+          "key": "discovery.completion_model",
+          "value": "bounded-universe-versioned-convergence"
+        },
+        {
+          "key": "discovery.method_growth",
+          "value": "living-versioned-never-final"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0205"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0206"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0207"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0224"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0229"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0232"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0060"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0063"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0177"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0178"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-non-negotiables-in-code-the-transparency-mandate"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/discovery.md"
+    },
+    {
+      "id": "R-0249",
+      "aliases": [
+        "RULING 249",
+        "R249",
+        "R-249"
+      ],
+      "title": "RULING 249 — the ladder, the tiers, and the order they are walked",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [
+        {
+          "key": "discovery.source_order",
+          "value": "body-own-publication-first"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0016"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0083"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0084"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0086"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0087"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0091"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0093"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0095"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0166"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0069"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0073"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-non-negotiables-in-code-the-ladder-exhaustively-and-it-is-the-on"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/discovery.md"
+    },
+    {
+      "id": "R-0250",
+      "aliases": [
+        "RULING 250",
+        "R250",
+        "R-250"
+      ],
+      "title": "RULING 250 — absence is argued, never asserted",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [
+        {
+          "key": "discovery.absence_standard",
+          "value": "argued-never-counted"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0012"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0052"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0053"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0061"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0068"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0072"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0085"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0090"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0094"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0110"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0144"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0170"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0182"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0184"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/discovery.md"
+    },
+    {
+      "id": "R-0251",
+      "aliases": [
+        "RULING 251",
+        "R251",
+        "R-251"
+      ],
+      "title": "RULING 251 — every twig is named, and coverage is counted from the top down",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0057"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0067"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0119"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0169"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0183"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/discovery.md"
+    },
+    {
+      "id": "R-0252",
+      "aliases": [
+        "RULING 252",
+        "R252",
+        "R-252"
+      ],
+      "title": "RULING 252 — method knowledge is typed, governed, and inherited",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [
+        {
+          "key": "method.claim_integrity",
+          "value": "typed-classes-with-required-provenance"
+        },
+        {
+          "key": "method.inheritance_interface",
+          "value": "typed-current-claim-projection"
+        },
+        {
+          "key": "provenance.owner",
+          "value": "machine-owned"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "related_to",
+          "target": "R-0178"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0179"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0181"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0192"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0195"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0198"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0199"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0200"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0202"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0243"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/discovery.md"
+    },
+    {
+      "id": "R-0253",
+      "aliases": [
+        "RULING 253",
+        "R253",
+        "R-253"
+      ],
+      "title": "RULING 253 — discovery conduct inside a hunt",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0076"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0088"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0089"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0096"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0097"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0098"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0107"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0109"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0130"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0148"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0209"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-discovery-conduct-the-report-contract-is-a-file-now-and-it-is-am"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-discovery-conduct-why-this-section-exists-and-it-is-a-diagnosis"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-external-sources-docs-sources-md-is-the-source-of-record-for-wha"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/discovery.md"
+    },
+    {
+      "id": "R-0254",
+      "aliases": [
+        "RULING 254",
+        "R254",
+        "R-254"
+      ],
+      "title": "RULING 254 — show everything we find, and say one thing about it",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0023"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0026"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0027"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0028"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0042"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0044"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0047"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0050"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0051"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0059"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0105"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0138"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0139"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0149"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-non-negotiables-in-code-the-deferral-boundary-falls-between-subj"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/rendering-neutrality.md"
+    },
+    {
+      "id": "R-0255",
+      "aliases": [
+        "RULING 255",
+        "R255",
+        "R-255"
+      ],
+      "title": "RULING 255 — neutrality is symmetric effort, explained absence, and nothing invented",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0055"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0112"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0118"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0126"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0143"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0167"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0171"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/rendering-neutrality.md"
+    },
+    {
+      "id": "R-0256",
+      "aliases": [
+        "RULING 256",
+        "R256",
+        "R-256"
+      ],
+      "title": "RULING 256 — scope, identity, and what fills a field",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [
+        {
+          "key": "rendering.address_scope",
+          "value": "address-scope-replaces-zip-scope"
+        },
+        {
+          "key": "rendering.excluded_entity_label",
+          "value": "prohibited-out-of-scope-not-annotated"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0054"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0064"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0065"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0071"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0074"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0121"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0122"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0145"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0222"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/rendering-neutrality.md"
+    },
+    {
+      "id": "R-0257",
+      "aliases": [
+        "RULING 257",
+        "R257",
+        "R-257"
+      ],
+      "title": "RULING 257 — a fix is proved on the reader's path, against a case it did not come from",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0025"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0114"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0133"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0134"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0147"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0153"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0157"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/rendering-neutrality.md"
+    },
+    {
+      "id": "R-0258",
+      "aliases": [
+        "RULING 258",
+        "R258",
+        "R-258"
+      ],
+      "title": "RULING 258 — reader surfaces speak plain language",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0140"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/rendering-neutrality.md"
+    },
+    {
+      "id": "R-0259",
+      "aliases": [
+        "RULING 259",
+        "R259",
+        "R-259"
+      ],
+      "title": "RULING 259 — the collection boundary",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "data-privacy",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/data-privacy.md",
+      "claims": [
+        {
+          "key": "collection.aggregate_only_scope",
+          "value": "exposure-boundary-not-storage-at-rest"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0101"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0132"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0142"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0226"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-reaction-capture-candidates"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-reaction-capture-measures"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-reaction-capture-incumbent-and-challenger-reactions-are-stored-a"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-reaction-capture-disclosure-at-the-point-of-capture-the-one-time"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-reaction-capture-the-free-text-input-carries-a-threat-notice"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/data-privacy.md"
+    },
+    {
+      "id": "R-0260",
+      "aliases": [
+        "RULING 260",
+        "R260",
+        "R-260"
+      ],
+      "title": "RULING 260 — Speak Your Mind",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "data-privacy",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/data-privacy.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0141"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0154"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/data-privacy.md"
+    },
+    {
+      "id": "R-0261",
+      "aliases": [
+        "RULING 261",
+        "R261",
+        "R-261"
+      ],
+      "title": "RULING 261 — what is sold, to whom, and the four constraints that carry neutrality",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "business",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/business.md",
+      "claims": [
+        {
+          "key": "business.sales_window",
+          "value": "in-cycle-allowed-four-constraints"
+        },
+        {
+          "key": "business.exclusivity",
+          "value": "never-exclusive"
+        },
+        {
+          "key": "business.buyer_composition",
+          "value": "not-an-obligation"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0120"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0160"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0126"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0142"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-reaction-capture-moderation-runs-before-any-export"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-signal-integrity-every-export-reports-its-confidence-mix"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0019"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/business.md"
+    },
+    {
+      "id": "R-0262",
+      "aliases": [
+        "RULING 262",
+        "R262",
+        "R-262"
+      ],
+      "title": "RULING 262 — feedback names examples, images are the spec, and a capture is evidence only once read",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "visual-feedback",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/visual-feedback.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0002"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0097"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0103"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0136"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0137"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/visual-feedback.md"
+    },
+    {
+      "id": "R-0263",
+      "aliases": [
+        "RULING 263",
+        "R263",
+        "R-263"
+      ],
+      "title": "RULING 263 — the sources register and what may be fetched",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "sources-licensing",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/sources-licensing.md",
+      "claims": [
+        {
+          "key": "permission.transport_collapse",
+          "value": "orthogonal-cannot-tell"
+        },
+        {
+          "key": "sources.held_artifact_retention",
+          "value": "keep-and-use-with-replacement-obligation"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0070"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0066"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0148"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0182"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0209"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-external-sources-the-register-is-docs-sources-md-and-this-sectio"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/sources-licensing.md"
+    },
+    {
+      "id": "R-0264",
+      "aliases": [
+        "RULING 264",
+        "R264",
+        "R-264"
+      ],
+      "title": "RULING 264 — evidence proves its own identity",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "sources-licensing",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/sources-licensing.md",
+      "claims": [
+        {
+          "key": "sources.tenant_identity",
+          "value": "registry-is-the-authority"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0197"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0201"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/sources-licensing.md"
+    },
+    {
+      "id": "R-0265",
+      "aliases": [
+        "RULING 265",
+        "R265",
+        "R-265"
+      ],
+      "title": "RULING 265 — secrets and the owner's identity",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "sources-licensing",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/sources-licensing.md",
+      "claims": [
+        {
+          "key": "session.credential_custody",
+          "value": "owner-copy-before-install"
+        },
+        {
+          "key": "admin.identity",
+          "value": "google-owner-only"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0127"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0165"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0238"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0245"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/sources-licensing.md"
+    },
+    {
+      "id": "R-0266",
+      "aliases": [
+        "RULING 266",
+        "R266",
+        "R-266"
+      ],
+      "title": "RULING 266 — verify locally, ship once, name the deploy",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [
+        {
+          "key": "shipping.promotion_path",
+          "value": "integrated-head-merges-to-main"
+        },
+        {
+          "key": "shipping.closeout_path",
+          "value": "no-separate-push"
+        },
+        {
+          "key": "verification.target",
+          "value": "local-production-build"
+        },
+        {
+          "key": "shipping.integration_model",
+          "value": "one-owner-combined-head"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0001"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0049"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0075"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0077"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0078"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0124"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0125"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0152"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0191"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0233"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-repo-layout-one-code-merge-per-session-close-out-records-may-fol"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-repo-layout-the-one-exception-and-it-is-the-only-one"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/shipping-ci.md"
+    },
+    {
+      "id": "R-0267",
+      "aliases": [
+        "RULING 267",
+        "R267",
+        "R-267"
+      ],
+      "title": "RULING 267 — a gate is real, or it is not a gate",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [
+        {
+          "key": "schema.migration_mutability",
+          "value": "immutable-append-only"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0013"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0014"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0024"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0062"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0113"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0155"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0156"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0162"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0163"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0164"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0165"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0193"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0196"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0203"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0204"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/shipping-ci.md"
+    },
+    {
+      "id": "R-0268",
+      "aliases": [
+        "RULING 268",
+        "R268",
+        "R-268"
+      ],
+      "title": "RULING 268 — the single nightly door, and the three contracts behind it",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [
+        {
+          "key": "reader.health_contract",
+          "value": "answerability-suite-with-typed-diagnostics"
+        },
+        {
+          "key": "truth.control_standard",
+          "value": "permanent-unannounced-control-set"
+        },
+        {
+          "key": "refresh.cadence",
+          "value": "derived-from-reader-impact-and-change-rate"
+        },
+        {
+          "key": "health.pilot_rollup",
+          "value": "three-contracts-one-rollup"
+        },
+        {
+          "key": "freshness.clock_authority",
+          "value": "runtime-scheduler-derived-due"
+        },
+        {
+          "key": "activation.standing_level",
+          "value": "level-1-research"
+        },
+        {
+          "key": "reader_truth.change_door",
+          "value": "single-nightly-window"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0056"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0081"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0082"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0115"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0210"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0211"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0212"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0216"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0217"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0218"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0240"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0242"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/shipping-ci.md"
+    },
+    {
+      "id": "R-0269",
+      "aliases": [
+        "RULING 269",
+        "R269",
+        "R-269"
+      ],
+      "title": "RULING 269 — an operation that can return nothing is asked what it returned",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0043"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0100"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0128"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0129"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0131"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0159"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/shipping-ci.md"
+    },
+    {
+      "id": "R-0270",
+      "aliases": [
+        "RULING 270",
+        "R270",
+        "R-270"
+      ],
+      "title": "RULING 270 — the tracker is a queue that empties",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "tracker-workflow",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/tracker-workflow.md",
+      "claims": [
+        {
+          "key": "tracker.needs_sean_closure",
+          "value": "author-or-answering-ruling"
+        },
+        {
+          "key": "tracker.person_description_amend_path",
+          "value": "recorded-supersession-preserving-the-original-text"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0029"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0030"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0031"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0032"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0033"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0034"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0035"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0036"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0037"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0038"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0039"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0040"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0041"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0046"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0048"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0079"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0231"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-repo-layout-an-agent-does-not-know-today-s-date-and-a-date-not-r"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-repo-layout-priority-is-three-levels-ranked-inside-a-section-and"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-repo-layout-task-status-lives-in-the-two-tracker-stores-and-the"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/tracker-workflow.md"
+    },
+    {
+      "id": "R-0271",
+      "aliases": [
+        "RULING 271",
+        "R271",
+        "R-271"
+      ],
+      "title": "RULING 271 — Needs Sean is a question, a lane, and never a stop",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "tracker-workflow",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/tracker-workflow.md",
+      "claims": [
+        {
+          "key": "escalation.access_request",
+          "value": "parallel-never-blocking"
+        },
+        {
+          "key": "escalation.entry_requirement",
+          "value": "machine-predicate-or-explicit-not-verifiable-with-card"
+        },
+        {
+          "key": "escalation.reconciliation_cadence",
+          "value": "rechecked-every-generation-auto-resolves"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "related_to",
+          "target": "R-0031"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0037"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0079"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0146"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0150"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0208"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0227"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/tracker-workflow.md"
+    },
+    {
+      "id": "R-0272",
+      "aliases": [
+        "RULING 272",
+        "R272",
+        "R-272"
+      ],
+      "title": "RULING 272 — how law is made",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [
+        {
+          "key": "rulings.id_namespace",
+          "value": "global-immutable"
+        },
+        {
+          "key": "governance.amendment_procedure",
+          "value": "canonical-ledger-and-generated-views"
+        },
+        {
+          "key": "status.claim_standard",
+          "value": "generated-with-proving-check"
+        },
+        {
+          "key": "governance.constitution_view",
+          "value": "generated-view-of-the-ledger"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0092"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0099"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0102"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0104"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0106"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0108"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0135"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0172"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0173"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0174"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0175"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0176"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0185"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0186"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0216"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0219"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-discovery-conduct-more-principles-will-not-fix-this"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-commands-package-json-s-scripts-block-is-the-list"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-stack-this-section-names-decisions-never-versions"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-repo-layout-the-tree-is-the-tree-read-it"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/meta-governance.md"
+    },
+    {
+      "id": "R-0273",
+      "aliases": [
+        "RULING 273",
+        "R273",
+        "R-273"
+      ],
+      "title": "RULING 273 — how a session runs",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [
+        {
+          "key": "session.stop_standard",
+          "value": "work-author-or-external-condition"
+        },
+        {
+          "key": "session.orchestration_model",
+          "value": "independent-work-parallel-by-default"
+        },
+        {
+          "key": "orchestration.denominator",
+          "value": "declared-logical-workstreams-reconciled"
+        },
+        {
+          "key": "session.completion_denominator",
+          "value": "finite-stated-at-start"
+        },
+        {
+          "key": "session.discovered_defect_routing",
+          "value": "frontier-unless-falsifies-or-regresses"
+        },
+        {
+          "key": "session.human_gated_status",
+          "value": "needs-owner-terminal-not-open-executable"
+        },
+        {
+          "key": "session.discretion_scope",
+          "value": "implementation-and-ordering-never-the-contract"
+        },
+        {
+          "key": "session.capacity_end_output",
+          "value": "unfinished-session-with-resume-point-and-named-items"
+        },
+        {
+          "key": "report.lead_order",
+          "value": "reader-then-unattended-then-owner-then-infrastructure"
+        },
+        {
+          "key": "interface.definition_form",
+          "value": "one-shared-typed-schema-both-sides-validate"
+        },
+        {
+          "key": "interface.compatibility_evidence",
+          "value": "real-producer-output-into-real-consumer"
+        },
+        {
+          "key": "session.efficiency_law",
+          "value": "adopted-verbatim"
+        },
+        {
+          "key": "worker.efficiency_law",
+          "value": "adopted-verbatim"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "related_to",
+          "target": "R-0146"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0158"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0180"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0187"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0188"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0189"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0190"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0191"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0194"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0221"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0223"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0225"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0228"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0237"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0244"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-C-the-order-of-every-trade-correct-first-fast-second-nothing-third"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/meta-governance.md"
+    },
+    {
+      "id": "R-0274",
+      "aliases": [
+        "RULING 274",
+        "R274",
+        "R-274"
+      ],
+      "title": "RULING 274 — an instrument proves what it claims",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [
+        {
+          "key": "guard.evidence_standard",
+          "value": "checked-evidence-only"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0005"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0024"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0062"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0116"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0147"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0157"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0159"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0193"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/meta-governance.md"
+    },
+    {
+      "id": "R-0275",
+      "aliases": [
+        "RULING 275",
+        "R275",
+        "R-275"
+      ],
+      "title": "RULING 275 — data conventions that bind everywhere",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0006"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0009"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0010"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0020"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0045"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0073"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0080"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0111"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0117"
+        },
+        {
+          "kind": "supersedes_full",
+          "target": "R-0119"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0121"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/meta-governance.md"
+    },
+    {
+      "id": "R-0276",
+      "aliases": [
+        "RULING 276",
+        "R276",
+        "R-276"
+      ],
+      "title": "RULING 276 — the pilot ZIPs and the zip order",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-X-the-zip-order-2026-08-20"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/meta-governance.md"
+    },
+    {
+      "id": "R-0277",
+      "aliases": [
+        "RULING 277",
+        "R277",
+        "R-277"
+      ],
+      "title": "RULING 277 — integration is separate from activation, and a session never waits",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-09-03",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/policies/shipping-ci.md"
+    },
+    {
       "id": "R-C-commands-package-json-s-scripts-block-is-the-list",
       "aliases": [],
       "title": "`package.json`'s `scripts` block is the list.",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-08-20",
@@ -5707,7 +7392,7 @@
       "aliases": [],
       "title": "More principles will not fix this.",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": null,
@@ -5722,7 +7407,7 @@
       "aliases": [],
       "title": "THE REPORT CONTRACT IS A FILE NOW, AND IT IS AMENDED RATHER THAN REINVENTED",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-22",
@@ -5737,7 +7422,7 @@
       "aliases": [],
       "title": "Why this section exists, and it is a diagnosis rather than an exhortation.",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": null,
@@ -5752,7 +7437,7 @@
       "aliases": [],
       "title": "`docs/sources.md` IS THE SOURCE OF RECORD FOR WHAT RESOURCES EXIST.",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-22",
@@ -5767,7 +7452,7 @@
       "aliases": [],
       "title": "The register is `docs/sources.md`, and this section is the law that governs it.",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "sources-licensing",
       "adopted": "2026-08-20",
@@ -5782,7 +7467,7 @@
       "aliases": [],
       "title": "THE DEFERRAL BOUNDARY FALLS BETWEEN SUBJECTS, NEVER INSIDE ONE",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-17",
@@ -5797,7 +7482,7 @@
       "aliases": [],
       "title": "THE LADDER, EXHAUSTIVELY — AND IT IS THE ONLY NUMBERED ONE",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-20",
@@ -5812,7 +7497,7 @@
       "aliases": [],
       "title": "THE TRANSPARENCY MANDATE",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "discovery",
       "adopted": "2026-08-16",
@@ -5827,7 +7512,7 @@
       "aliases": [],
       "title": "Candidates",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "rendering-neutrality",
       "adopted": null,
@@ -5842,7 +7527,7 @@
       "aliases": [],
       "title": "Disclosure at the point of capture — the one-time acknowledged notice.",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "visual-feedback",
       "adopted": "2026-08-13",
@@ -5857,7 +7542,7 @@
       "aliases": [],
       "title": "Incumbent and challenger reactions are stored and aggregated in separate buckets.",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "data-privacy",
       "adopted": null,
@@ -5872,7 +7557,7 @@
       "aliases": [],
       "title": "Measures",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "rendering-neutrality",
       "adopted": null,
@@ -5887,7 +7572,7 @@
       "aliases": [],
       "title": "Moderation runs before any export.",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "business",
       "adopted": null,
@@ -5902,7 +7587,7 @@
       "aliases": [],
       "title": "The free-text input carries a threat notice.",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": null,
@@ -5917,7 +7602,7 @@
       "aliases": [],
       "title": "An agent does not know today's date, and a date not read from the system clock is a fabrication.",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "tracker-workflow",
       "adopted": null,
@@ -5932,7 +7617,7 @@
       "aliases": [],
       "title": "One CODE merge per session; close-out records may follow as separate named commits.",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-08-19",
@@ -5947,7 +7632,7 @@
       "aliases": [],
       "title": "Priority is three levels, ranked inside a section and never across them",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "tracker-workflow",
       "adopted": null,
@@ -5962,7 +7647,7 @@
       "aliases": [],
       "title": "Task status lives in the TWO TRACKER STORES, and the tracker is a queue that empties.",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
@@ -5982,7 +7667,7 @@
       "aliases": [],
       "title": "The one exception, and it is the only one",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-08-20",
@@ -5997,7 +7682,7 @@
       "aliases": [],
       "title": "The tree is the tree; read it.",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-20",
@@ -6012,7 +7697,7 @@
       "aliases": [],
       "title": "Every export reports its confidence mix.",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "business",
       "adopted": null,
@@ -6027,7 +7712,7 @@
       "aliases": [],
       "title": "This section names DECISIONS, never versions.",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-08-20",
@@ -6042,7 +7727,7 @@
       "aliases": [],
       "title": "Correct first. Fast second. Nothing third.",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": null,
@@ -6222,7 +7907,7 @@
       "aliases": [],
       "title": "The zip order (2026-08-20)",
       "kind": "DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-20",

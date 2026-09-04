@@ -55,6 +55,24 @@ export const CLAIM_KEYS: readonly ClaimKeyDef[] = [
     values: ["separate-unpushed-commits", "gated-closeout-command", "no-separate-push"],
   },
   {
+    // The owner's 2026-09-03 sales decision (RULING 261). In cycle, aggregate
+    // reaction and query-interest signal may be sold to any buyer at the
+    // published uniform rate; campaign-finance data stays excluded.
+    key: "business.sales_window",
+    question: "When may aggregate signal be sold?",
+    values: ["deferred", "in-cycle-allowed-four-constraints"],
+  },
+  {
+    key: "business.exclusivity",
+    question: "May a buyer purchase exclusive access to a cut?",
+    values: ["never-exclusive", "exclusive-allowed"],
+  },
+  {
+    key: "business.buyer_composition",
+    question: "Is a balanced buyer mix an obligation on the product?",
+    values: ["not-an-obligation", "balance-required"],
+  },
+  {
     key: "discovery.absence_standard",
     question: "What earns a recorded absence?",
     values: [

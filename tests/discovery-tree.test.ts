@@ -211,16 +211,14 @@ test("RULING 52 and RULING 53 are law in CLAUDE.md, with their rationale", () =>
    * including the locked-building passage, which is the part that makes the
    * difference between "try harder" and "a ladder has one direction".
    */
+  // The consolidation moved RULING 52/53 into RULING 250 and their RATIONALE
+  // into history (RULING 172). The RULE stays current law, undiluted.
   const law = currentLawText(ROOT);
-  assert.match(law, /RULING 52/, "RULING 52 is written into the constitution");
-  assert.match(law, /RULING 53/, "RULING 53 is written into the constitution");
-  assert.match(law, /front door is locked/i, "the locked-building rationale is attached");
-  assert.match(
-    law,
-    /no branch result is permanent/i,
-    "the second half is stated, and it is not separable from the first",
-  );
-  assert.match(law, /Persistence, not circumvention/i, "the two prohibitions survive");
+  assert.match(law, /RULING 250/, "the tree/absence rule is current law");
+  assert.match(law, /tree, not a ladder/i, "discovery is a tree, not a ladder");
+  assert.match(law, /Blocked is a real state/i, "blocked is a real state, not an absence");
+  assert.match(law, /argued, never asserted/i, "absence is argued, never asserted");
+  assert.match(law, /Persistence is never intrusion/i, "the two prohibitions survive");
 });
 
 test("the staleness instrument reads every dated wiring row, and states what it cannot", () => {

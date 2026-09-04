@@ -686,6 +686,9 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
           ? `robots.txt transport failure: ${robots.transportError}; permission ${reading.verdict}`
           : `robots.txt HTTP ${robots.status ?? "none"}; permission ${reading.verdict}` + (cached ? " (cached)" : ""),
       artifactIds: cached ? [...robots.artifactIds] : acc.artifacts.map((a) => a.artifactId),
+      transport: cached ? "NOT_ATTEMPTED" : transportOf(robots.status, robots.transportError),
+      httpStatus: robots.status, returnedCount: null, applicableBecause: input.why,
+      nextHopUrls: [...(robots.text ?? "").matchAll(/^Sitemap:\s*(https?:\/\/\S+)/gim)].map(match => match[1]),
     };
     return result(true, permissionText(url, robots, reading, cached), rung, acc, permissionState(reading.verdict));
   }
@@ -713,6 +716,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
         target: url.toString(),
         observed: `permission ${reading.verdict}${reading.matchedRule ? ` (${reading.matchedRule})` : ""}; no request sent`,
         artifactIds: [...robots.artifactIds],
+        transport: "NOT_ATTEMPTED", httpStatus: null, returnedCount: null, nextHopUrls: [], applicableBecause: input.why,
       };
       const text =
         `permission for ${host} is ${reading.verdict}, so ${tool} did not open it. ` +
@@ -743,12 +747,16 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const { url, acc, reading, robots } = admitted;
     const permission = permissionState(reading.verdict);
     const permLine = permissionLine(url, reading, robots);
+    let nextHopUrls: string[] = [];
+    let returnedCount: number | null = null;
     const rung = (observed: string): Rung => ({
       rung: input.rung,
       tool: "fetch_public",
       target: url.toString(),
       observed,
       artifactIds: acc.artifacts.map((a) => a.artifactId),
+      transport: transportOf(got.status, got.transportError), httpStatus: got.status,
+      nextHopUrls, returnedCount, applicableBecause: input.why,
     });
 
     const got = await retrieve(url, ACCEPT_PAGE, acc);
@@ -792,6 +800,10 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
           `${head}\nQUARANTINED: the body carries a confirmed third-party credential and is stored RESTRICTED_RAW. Nothing of it is shown to you. Cite the artifact id; a sanitized derivative is the acquirer's to make.`,
           rung(`HTTP ${status}, ${got.byteLength} bytes, RESTRICTED_RAW`), acc, permission
         );
+      }
+      if (/html/i.test(got.contentType)) nextHopUrls = extractLinks(text, url).map(link => link.url);
+      if (/json/i.test(got.contentType)) {
+        try { const rows: unknown = JSON.parse(text); if (Array.isArray(rows)) returnedCount = rows.length; } catch { /* Raw bytes remain evidence; parsing is another worker's burden. */ }
       }
       return result(true, textRepresentation(head, text, got.contentType, url), rung(`HTTP ${status}, ${got.byteLength} bytes, ${got.contentType}`), acc, permission);
     }
@@ -904,12 +916,17 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     const host = hostOf(url);
     const permission = permissionState(reading.verdict);
     const permLine = permissionLine(url, reading, robots);
+    let browserTransport: TransportState | "NOT_ATTEMPTED" = "NOT_ATTEMPTED";
+    let browserHttpStatus: number | null = null;
+    let browserNextHopUrls: string[] = [];
     const rung = (observed: string): Rung => ({
       rung: input.rung,
       tool: "browse",
       target: url.toString(),
       observed,
       artifactIds: acc.artifacts.map((a) => a.artifactId),
+      transport: browserTransport, httpStatus: browserHttpStatus, returnedCount: null,
+      nextHopUrls: browserNextHopUrls, applicableBecause: input.why,
     });
 
     /* One navigation counts as one request to the host; the page's own calls are observed, not initiated. */
@@ -920,11 +937,14 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       obs = await browseFn({ url: url.toString(), timeoutMs, holder: ctx.holder });
     } catch (error) {
       const why = error instanceof Error ? error.message : String(error);
+      browserTransport = transportOf(null, why);
       requestCount += 1;
       acc.requests += 1;
       return result(false, `the browser failed on ${url}: ${why}. A browser failure is a fact about this client, not about the record.`, rung(`browser failure: ${why}`), acc, permission);
     }
     const htmlBytes = Buffer.byteLength(obs.html, "utf8");
+    browserTransport = transportOf(obs.status, obs.transportError);
+    browserHttpStatus = obs.status;
     requestCount += 1;
     bytesFetched += htmlBytes;
     acc.requests += 1;
@@ -967,6 +987,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     } else if (page.artifact.tier === "RESTRICTED_RAW") {
       parts.push(`${head}\nQUARANTINED: the rendered page carries a confirmed third-party credential and is stored RESTRICTED_RAW. Nothing of it is shown.`);
     } else {
+      browserNextHopUrls = extractLinks(obs.html, new URL(finalUrl), 200).map(link => link.url);
       const body = capText(visibleText(obs.html));
       parts.push(UNTRUSTED_CONTENT_HEADER, head, DATA_BEGIN, `TITLE: ${htmlTitle(obs.html) ?? "(none)"}`, `TEXT (${body.note}):`, body.text, DATA_END);
     }

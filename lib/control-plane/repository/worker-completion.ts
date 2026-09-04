@@ -59,6 +59,9 @@ async function applyWorkerCompletion(repos: ControlPlaneRepositories, record: Wo
   // result and accounting survive, but it cannot rewind the civic workflow.
   if (c.completedTask.workerTask?.purpose === "DIAGNOSTIC_REPLAY") return;
   const result = record.result;
+  // Research computation never rewinds an obligation already awaiting independent review.
+  // Its blockers and next actions are canonical in the result, not civic dispositions.
+  if (result.role === "ACQUIRER" || result.role === "DETECTIVE" || result.role === "ENGINEERING") return;
   const to = result.role === "PARSER" ? (result.verdict === "EXTRACTED" ? "AWAITING_VALIDATION" : "BLOCKED")
     : result.role === "VALIDATOR" ? (result.verdict === "PASS" ? "AWAITING_AUDIT" : "BLOCKED")
     : result.verdict === "BROKE" ? "REOPENED" : result.verdict === "INCONCLUSIVE" ? "BLOCKED" : "OPEN";
@@ -157,7 +160,7 @@ export async function loadWorkerCompletionEvidence(repos: ControlPlaneRepositori
     const spec = record.completion.completedTask.workerTask!;
     const producer = spec.producerResultId ? results.get(spec.producerResultId) : null;
     if (!complete(producer) || producer.result.role !== "PARSER" || producer.result.verdict !== "EXTRACTED" ||
-        producer.result.artifactId !== spec.artifactId || record.result.role === "PARSER" ||
+        producer.result.artifactId !== spec.artifactId || (record.result.role !== "VALIDATOR" && record.result.role !== "ADVERSARIAL_AUDITOR") ||
         record.result.producerAttemptId !== producer.attemptId || !record.inputResultIds.includes(producer.id) ||
         canonicalJson(producer.completion.completedTask.workerTask!.contract) !== canonicalJson(spec.contract) ||
         producer.worker.instance === record.worker.instance || !producer.worker.instance.trim() || !record.worker.instance.trim()) return null;

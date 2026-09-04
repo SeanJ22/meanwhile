@@ -7,7 +7,7 @@ import type { ControlPlaneRepositories } from "../lib/control-plane/repository/t
 import { createRouteTask, type RouteTask } from "../lib/control-plane/route-task.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { auditWorkerFleetView, readWorkerFleet, workerFleetCountClaims, workerFleetRenderedNumbers, type WorkerFleetReadback } from "../lib/control-plane/workers/readback.ts";
-import type { CivicExtractionContract, FleetResult, FleetRole, WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
+import type { CivicExtractionContract, FleetResult, ComputationRole, WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
 
 const NOW = "2026-09-03T10:00:00.000Z";
 const START = "2026-09-03T09:00:00.000Z";
@@ -17,7 +17,7 @@ const CONTRACT: CivicExtractionContract = {
   completenessScope: "Captured fixture rows", expectedSourceDate: null,
 };
 
-async function stored(repos: ControlPlaneRepositories, role: FleetRole, suffix = "one", options: {
+async function stored(repos: ControlPlaneRepositories, role: ComputationRole, suffix = "one", options: {
   at?: string; outcome?: Attempt["outcome"]; cost?: AttemptCost; withResult?: boolean; reopened?: boolean;
 } = {}) {
   const at = options.at ?? START;
@@ -70,7 +70,7 @@ test("canonical worker readback shows each role, measured costs, matched verdict
   const auditor = await stored(repos, "ADVERSARIAL_AUDITOR", "one", { reopened: true, cost: { ...ZERO_COST, durationMs: 1500, usd: 0.01234 } });
   const view = await readWorkerFleet(repos, NOW);
   held(view);
-  assert.deepEqual(view.roles.map((role) => role.role), ["PARSER", "VALIDATOR", "ADVERSARIAL_AUDITOR"]);
+  assert.deepEqual(view.roles.map((role) => role.role), ["PARSER", "VALIDATOR", "ADVERSARIAL_AUDITOR", "ACQUIRER", "DETECTIVE", "ENGINEERING"]);
   assert.equal(view.roles[0].attempts[0].cost, null, "Missing USD is never replaced with zero.");
   assert.equal(view.roles[1].attempts[0].cost?.value, 0, "An actually recorded zero remains distinct from null.");
   assert.equal(view.roles[1].attempts[0].duration, null, "Missing duration is never calculated from unrelated timestamps.");

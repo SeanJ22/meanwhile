@@ -32,6 +32,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
+import { withTreeLock } from "./tree-lock.ts";
 
 import { readStore, WORKING_CSV } from "../scripts/tracker-core.mjs";
 import { reconcileTracker, reconciliationReport, type TrackerState } from "../lib/ops/tracker-transaction.ts";
@@ -117,7 +118,7 @@ const ARTIFACTS = [
   "docs/tracker.xlsx",
 ];
 
-test("THE WRITER: recording a synthetic failed workflow lands all five parts together", () => {
+test("THE WRITER: recording a synthetic failed workflow lands all five parts together", () => withTreeLock("exercise and restore the synthetic tracker transaction", () => {
   // Backed up in memory FIRST. Restored in `finally` on every path, so a throw
   // anywhere below cannot leave the committed stores carrying an invented row.
   const backup = new Map<string, Buffer | null>();
@@ -224,4 +225,4 @@ test("THE WRITER: recording a synthetic failed workflow lands all five parts tog
     "the synthetic row survived the cleanup and is in the committed store",
   );
   assert.ok(!existsSync(spec), "the fixture spec file survived the cleanup");
-});
+}));

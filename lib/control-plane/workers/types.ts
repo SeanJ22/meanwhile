@@ -4,11 +4,14 @@ import { ATTACK_MODES, AUDIT_EVIDENCE_BASES } from "../audit.ts";
 import type { CapabilityGrant } from "../capability.ts";
 import type { Attempt } from "../attempt.ts";
 import type { RouteTask } from "../route-task.ts";
+import { assertResearchResult, type AcquirerResult, type DetectiveResult, type AcquirerTaskSpec, type DetectiveTaskSpec } from "./research-types.ts";
+import type { EngineeringResult, EngineeringTaskSpec } from "./engineering-types.ts";
 
 /** One wire contract: the broker validates both sides of the disposable worker boundary. */
 export const WORKER_SCHEMA_VERSION = 1 as const;
-export const FLEET_ROLES = ["PARSER", "VALIDATOR", "ADVERSARIAL_AUDITOR"] as const;
+export const FLEET_ROLES = ["PARSER", "VALIDATOR", "ADVERSARIAL_AUDITOR", "ACQUIRER", "DETECTIVE", "ENGINEERING"] as const;
 export type FleetRole = (typeof FLEET_ROLES)[number];
+export type ComputationRole = "PARSER" | "VALIDATOR" | "ADVERSARIAL_AUDITOR";
 export type FieldValue = string | number | boolean | null;
 /** The shared wire scalar contract; this does not interpret source evidence. */
 export function isFieldValue(value: unknown): value is FieldValue {
@@ -27,7 +30,7 @@ export interface WorkerEvidence {
   readonly sourceId: string;
   readonly methodRouteId: string;
 }
-export interface CivicExtractionContract {
+export interface LegacyCivicExtractionContract {
   readonly recordClass: "LEGISTAR_EVENTS" | "CIVICCLERK_EVENTS";
   readonly schemaVersion: 1;
   readonly subjectId: string;
@@ -39,6 +42,64 @@ export interface CivicExtractionContract {
   readonly completenessScope: string;
   readonly expectedSourceDate: string | null;
 }
+/** Versioned procedure contracts evolve without changing the durable store envelope. */
+export interface RecordFieldMapping {
+  /** JSON pointer relative to a row, or zero-based column index for tabular evidence. */
+  readonly source: string | number;
+  readonly type: "STRING" | "NUMBER" | "BOOLEAN" | "SCALAR";
+}
+export type RecordExtractionShape = {
+  readonly fields: Readonly<Record<string, RecordFieldMapping>>;
+} & (
+  | { readonly format: "JSON_RECORDS"; readonly rowsPointer: string; readonly countPointer?: string }
+  | { readonly format: "HTML_TABLE"; readonly tableIndex: number; readonly headerRows: number }
+  | { readonly format: "DELIMITED_TEXT"; readonly delimiter: "," | "\t"; readonly headerRows: number }
+  | { readonly format: "XML_RECORDS"; readonly rowTag: string }
+  | { readonly format: "UNSUPPORTED"; readonly mediaType: string; readonly reason: string }
+);
+export interface GeneralizedContractMetadata {
+  readonly jurisdiction: { readonly country: string; readonly state: string; readonly canonicalId: string };
+  readonly identity: { readonly namespace: string; readonly keyFields: readonly string[] };
+  readonly sourceScope: {
+    readonly sourceId: string;
+    readonly routeIds: readonly string[];
+    readonly publisher: string;
+    readonly canonicalUrls: readonly string[];
+    readonly observationArtifactIds: readonly string[];
+  };
+  readonly methodVersion: number;
+}
+export interface VerificationAuthority {
+  readonly id: string;
+  readonly type: "GOVERNMENT_REGISTER" | "STATUTORY_RECORD" | "OFFICIAL_DENOMINATOR";
+  readonly publisher: string;
+  readonly sourceId: string;
+  readonly canonicalUrls: readonly string[];
+  readonly artifactIds: readonly string[];
+  /** Publisher identity evidence establishing this as an external authority. */
+  readonly authorityEvidenceArtifactIds: readonly string[];
+  /** Same-publisher records require an explicit distinct-record basis; a copy is not independent. */
+  readonly independenceBasis: "DISTINCT_AUTHORITY" | "INDEPENDENT_OFFICIAL_RECORD";
+  readonly independenceExplanation: string;
+  readonly extraction: RecordExtractionShape;
+  readonly comparison: {
+    readonly kind: "RECORD_VALUES" | "IDENTITY_SET" | "COUNT";
+    readonly keyFields: readonly string[];
+    readonly fields: readonly string[];
+  };
+}
+export interface GeneralizedCivicExtractionContract extends GeneralizedContractMetadata {
+  readonly schemaVersion: 2;
+  readonly recordClass: string;
+  readonly subjectId: string;
+  readonly requiredFields: readonly string[];
+  readonly completenessScope: string;
+  readonly expectedSourceDate: string | null;
+  readonly dateFields?: readonly string[];
+  readonly extraction: RecordExtractionShape;
+  readonly verification: { readonly required: boolean; readonly authorities: readonly VerificationAuthority[] };
+}
+export type CivicExtractionContract = LegacyCivicExtractionContract | GeneralizedCivicExtractionContract;
 export interface EvidenceSpan {
   readonly id: string;
   readonly artifactId: string;
@@ -50,6 +111,8 @@ export interface EvidenceSpan {
   readonly end: number;
   readonly offsetUnit: "UTF16_CODE_UNITS";
   readonly quote: string;
+  /** Legacy JSON spans omit this; v2 uses an explicit source locator kind. */
+  readonly sourceFormat?: RecordExtractionShape["format"];
 }
 export interface ExtractedRecord {
   readonly id: string;
@@ -76,8 +139,9 @@ export interface ParserResult {
   readonly attemptId: string;
   readonly implementation: string;
   readonly version: string;
-  readonly schemaVersion: 1;
-  readonly recordClass: "LEGISTAR_EVENTS" | "CIVICCLERK_EVENTS";
+  readonly schemaVersion: 1 | 2;
+  readonly recordClass: string;
+  readonly contractMetadata?: GeneralizedContractMetadata;
   readonly artifactId: string;
   readonly contentHash: string;
   readonly acquiredByAttemptId: string;
@@ -91,6 +155,9 @@ export interface ParserResult {
   readonly actualRowCount: number;
 }
 export interface ValidatorWorkerInput {
+  /** Issued by the broker from the vault, separately from the producer capture. */
+  readonly authorityEvidence?: readonly WorkerEvidence[];
+  readonly verifiedAt?: string;
   readonly attemptId: string;
   readonly worker: WorkerRef;
   readonly producer: WorkerRef;
@@ -100,6 +167,8 @@ export interface ValidatorWorkerInput {
   readonly candidate: ParserResult;
 }
 export interface ValidatorResult {
+  readonly extractionVerdict?: "PASS" | "FAIL" | "INCONCLUSIVE";
+  readonly externalVerifications?: readonly ExternalVerificationResult[];
   readonly role: "VALIDATOR";
   readonly attemptId: string;
   readonly producerAttemptId: string;
@@ -108,6 +177,18 @@ export interface ValidatorResult {
   readonly findings: readonly WorkerFinding[];
   readonly artifactIds: readonly string[];
   readonly validatedRecordCount: number;
+}
+export interface ExternalVerificationResult {
+  readonly candidateAttemptId: string;
+  readonly validatorAttemptId: string;
+  readonly authority: VerificationAuthority;
+  readonly evidence: readonly Omit<WorkerEvidence, "text">[];
+  readonly comparison: VerificationAuthority["comparison"];
+  readonly candidateCount: number;
+  readonly authorityCount: number | null;
+  readonly verdict: "PASS" | "FAIL" | "INCONCLUSIVE";
+  readonly discrepancies: readonly WorkerFinding[];
+  readonly verifiedAt: string | null;
 }
 export interface OfficialRouteExpectation {
   readonly routeId: string;
@@ -119,6 +200,7 @@ export interface OfficialRouteExpectation {
 }
 /** Built before the candidate is read. No producer/validator prose is a legal field. */
 export interface IndependentAuditContext {
+  readonly authorityEvidence?: readonly WorkerEvidence[];
   /** First-party publisher/link evidence, not represented as Event rows. */
   readonly surfaceEvidence?: readonly WorkerEvidence[];
   readonly subjectId: string;
@@ -170,8 +252,11 @@ export interface AuditorResult {
   readonly reopenRequired: boolean;
 }
 export type FleetInput = ParserWorkerInput | ValidatorWorkerInput | AuditorWorkerInput;
-export type FleetResult = ParserResult | ValidatorResult | AuditorResult;
+export type FleetResult = ParserResult | ValidatorResult | AuditorResult | AcquirerResult | DetectiveResult | EngineeringResult;
 export interface WorkerTaskSpec {
+  readonly acquisition?: AcquirerTaskSpec;
+  readonly detective?: DetectiveTaskSpec;
+  readonly engineering?: EngineeringTaskSpec;
   readonly schemaVersion: 1;
   /** Replay proves reproducibility without advancing or resetting the civic obligation. */
   readonly purpose?: "OBLIGATION" | "DIAGNOSTIC_REPLAY";
@@ -193,9 +278,10 @@ export interface WorkerUsage {
 /** Stored in the same append-only repository family as Scout results. */
 export interface WorkerResultRecord {
   /** Machine inventory can reconstruct the independent input from immutable vault identities. */
-  readonly auditContext?: Omit<IndependentAuditContext, "evidence" | "surfaceEvidence"> & {
+  readonly auditContext?: Omit<IndependentAuditContext, "evidence" | "surfaceEvidence" | "authorityEvidence"> & {
     readonly evidence: readonly Omit<WorkerEvidence, "text">[];
     readonly surfaceEvidence: readonly Omit<WorkerEvidence, "text">[];
+    readonly authorityEvidence?: readonly Omit<WorkerEvidence, "text">[];
   };
   readonly modelReview?: {
     readonly step: "adversarial-audit";
@@ -238,6 +324,16 @@ export interface WorkerResultRecord {
 
 /** Shared runtime assertion, including nested discriminants and count-bearing shapes. */
 export function assertFleetResult(value: unknown, role: FleetRole, attemptId: string): asserts value is FleetResult {
+  if (role === "ACQUIRER" || role === "DETECTIVE") { assertResearchResult(value, role, attemptId); return; }
+  if (role === "ENGINEERING") {
+    const r = value as EngineeringResult;
+    if (!r || r.role !== role || r.attemptId !== attemptId || !["CANDIDATE_PROVED", "REFUSED", "PROOF_FAILED"].includes(r.verdict) ||
+      r.adoption !== "INTEGRATION_REVIEW_REQUIRED" || !Array.isArray(r.findings) || !Array.isArray(r.artifactIds) ||
+      !Array.isArray(r.proposedFiles) || !Array.isArray(r.affectedPaths) || !r.reproducibility ||
+      (r.verdict === "CANDIDATE_PROVED" && (r.reproducibility.verdict !== "PASS" || !r.proposedFiles.length || r.reproducibility.isolatedExecutions < 2)) ||
+      r.proposedFiles.some(f => !f.path.startsWith("review-candidates/") || f.path.includes("..") || !f.content || !/^sha256-[a-f0-9]{64}$/.test(f.contentHash))) throw new Error("ENGINEERING_RESULT_SCHEMA_INVALID");
+    return;
+  }
   if (!value || typeof value !== "object") throw new Error("WORKER_RESULT_SCHEMA_INVALID");
   const r = value as Record<string, unknown>;
   if (r.role !== role || r.attemptId !== attemptId) throw new Error("WORKER_RESULT_IDENTITY_MISMATCH");
@@ -251,7 +347,7 @@ export function assertFleetResult(value: unknown, role: FleetRole, attemptId: st
   const array = (key: string) => { if (!Array.isArray(r[key])) throw new Error(`WORKER_RESULT_SCHEMA_INVALID:${key}`); };
   if (role === "PARSER") {
     for (const key of ["records", "spans", "warnings"]) array(key);
-    if (r.schemaVersion !== 1 || !["LEGISTAR_EVENTS", "CIVICCLERK_EVENTS"].includes(String(r.recordClass)) ||
+    if (!((r.schemaVersion === 1 && ["LEGISTAR_EVENTS", "CIVICCLERK_EVENTS"].includes(String(r.recordClass))) || (r.schemaVersion === 2 && string(r.recordClass))) ||
         !["EXTRACTED", "FAILED", "AMBIGUOUS"].includes(String(r.verdict)) ||
         typeof r.artifactId !== "string" || typeof r.contentHash !== "string" ||
         !Number.isInteger(r.actualRowCount) || (r.actualRowCount as number) < 0 ||
@@ -264,12 +360,29 @@ export function assertFleetResult(value: unknown, role: FleetRole, attemptId: st
     valid((r.spans as unknown[]).every(span => object(span) && [span.id, span.artifactId, span.contentHash, span.recordId, span.field, span.jsonPointer, span.quote].every(string) &&
       span.offsetUnit === "UTF16_CODE_UNITS" && count(span.start) && count(span.end) && Number(span.end) > Number(span.start) &&
       String(span.quote).length === Number(span.end) - Number(span.start)), "PARSER_SPANS");
+    if (r.schemaVersion === 2) {
+      const metadata = r.contractMetadata;
+      valid(object(metadata) && object(metadata.jurisdiction) && [metadata.jurisdiction.country, metadata.jurisdiction.state, metadata.jurisdiction.canonicalId].every(string) &&
+        object(metadata.identity) && string(metadata.identity.namespace) && strings(metadata.identity.keyFields) && metadata.identity.keyFields.length > 0 &&
+        object(metadata.sourceScope) && [metadata.sourceScope.sourceId, metadata.sourceScope.publisher].every(string) && [metadata.sourceScope.routeIds, metadata.sourceScope.canonicalUrls, metadata.sourceScope.observationArtifactIds].every(v => strings(v) && v.length > 0) && count(metadata.methodVersion) && Number(metadata.methodVersion) > 0, "PARSER_CONTRACT_METADATA");
+      valid((r.spans as unknown[]).every(span => object(span) && ["JSON_RECORDS", "HTML_TABLE", "DELIMITED_TEXT", "XML_RECORDS"].includes(String(span.sourceFormat))), "PARSER_SOURCE_FORMAT");
+    }
   } else {
     array("findings"); array("artifactIds");
     valid((r.findings as unknown[]).every(finding) && strings(r.artifactIds), "FINDINGS_AND_ARTIFACTS");
     if (typeof r.producerAttemptId !== "string") throw new Error("WORKER_RESULT_SCHEMA_INVALID:PRODUCER");
     if (role === "VALIDATOR" && !["PASS", "FAIL", "INCONCLUSIVE"].includes(String(r.verdict))) throw new Error("WORKER_RESULT_SCHEMA_INVALID:VALIDATOR");
-    if (role === "VALIDATOR") valid(strings(r.checked) && count(r.validatedRecordCount), "VALIDATOR_CHECKS");
+    if (role === "VALIDATOR") {
+      valid(strings(r.checked) && count(r.validatedRecordCount), "VALIDATOR_CHECKS");
+      if (r.extractionVerdict !== undefined) valid(["PASS", "FAIL", "INCONCLUSIVE"].includes(String(r.extractionVerdict)), "VALIDATOR_EXTRACTION_VERDICT");
+      if (r.externalVerifications !== undefined) valid(Array.isArray(r.externalVerifications) && r.externalVerifications.every(v => object(v) &&
+        string(v.candidateAttemptId) && v.validatorAttemptId === attemptId && object(v.authority) && string(v.authority.id) && string(v.authority.publisher) &&
+        ["GOVERNMENT_REGISTER", "STATUTORY_RECORD", "OFFICIAL_DENOMINATOR"].includes(String(v.authority.type)) &&
+        object(v.comparison) && ["COUNT", "IDENTITY_SET", "RECORD_VALUES"].includes(String(v.comparison.kind)) && strings(v.comparison.keyFields) && strings(v.comparison.fields) &&
+        Array.isArray(v.evidence) && v.evidence.every(e => object(e) && [e.artifactId, e.contentHash, e.acquiredByAttemptId, e.canonicalUrl, e.retrievedAt, e.sourceId, e.methodRouteId].every(string) && e.text === undefined) &&
+        count(v.candidateCount) && (v.authorityCount === null || count(v.authorityCount)) && ["PASS", "FAIL", "INCONCLUSIVE"].includes(String(v.verdict)) &&
+        Array.isArray(v.discrepancies) && v.discrepancies.every(finding) && (v.verifiedAt === null ? v.verdict === "INCONCLUSIVE" : string(v.verifiedAt) && Number.isFinite(Date.parse(v.verifiedAt)))), "EXTERNAL_VERIFICATIONS");
+    }
     if (role === "ADVERSARIAL_AUDITOR") {
       array("attacks"); array("startedFrom");
       if (!["SURVIVED", "BROKE", "INCONCLUSIVE"].includes(String(r.verdict)) || typeof r.validatorAttemptId !== "string" ||

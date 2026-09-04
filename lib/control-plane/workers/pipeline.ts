@@ -15,7 +15,7 @@ export async function projectFleetPipeline(repos: ControlPlaneRepositories): Pro
   }
   const states = await readPipelineStates(repos);
   for (const result of results) {
-    if (result.result.role === "PARSER") continue;
+    if (result.result.role !== "VALIDATOR" && result.result.role !== "ADVERSARIAL_AUDITOR") continue;
     await readCompletedWorkerResult(repos, result.id);
     const state = states.find(s => s.byStage.SCOUTED?.artifactIds.some(id => result.inputArtifactIds.includes(id)));
     if (!state) continue;

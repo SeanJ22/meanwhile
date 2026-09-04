@@ -6,6 +6,7 @@ import { readFile } from "node:fs/promises";
 import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
+import { withTreeLock } from "./tree-lock.ts";
 
 import {
   CLOSING_RESOLUTIONS,
@@ -44,9 +45,19 @@ import { revertsProtectedFile } from "../scripts/guard-protected-files.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
-const sections = readSections(ROOT);
-const working = readStore(WORKING_CSV, ROOT);
-const resolved = readStore(RESOLVED_CSV, ROOT);
+// The transaction test temporarily writes and restores these files in place.
+// Read one coherent snapshot under its lock so every assertion sees the same
+// stores, ledger and views, including when restoration runs between file reads.
+const trackerSnapshot = withTreeLock("read the tracker stores, ledger and views together", () => ({
+  sections: readSections(ROOT),
+  working: readStore(WORKING_CSV, ROOT),
+  resolved: readStore(RESOLVED_CSV, ROOT),
+  markdown: readFileSync(join(ROOT, "docs/tracker.md"), "utf8"),
+  log: readFileSync(join(ROOT, "docs/log.md"), "utf8"),
+  opened: readFileSync(join(ROOT, "docs/tracker-opened.json"), "utf8"),
+  deletions: readFileSync(join(ROOT, "docs/tracker-deletions.json"), "utf8"),
+}));
+const { sections, working, resolved } = trackerSnapshot;
 const all = [...working, ...resolved];
 
 /* ========================================================================== */
@@ -230,7 +241,7 @@ test("RULING 36: three resolution states, and only these three", () => {
 test("RULING 30: a section over the five-P1 cap is REPORTED as stopped, never trimmed", () => {
   const census = p1Census(working, sections);
   const over = census.filter((c) => c.overCap);
-  const md = readFileSync(join(ROOT, "docs/tracker.md"), "utf8");
+  const md = trackerSnapshot.markdown;
   for (const c of over) {
     assert.ok(
       md.includes(`${c.title} — **${c.P1}**`) && md.includes("STOPPED"),
@@ -348,8 +359,8 @@ test("RULING 41: a session may not reword, retitle or delete a row Sean wrote", 
 /* ========================================================================== */
 
 test("RULING 34: tracker.md and log.md declare themselves generated and list no resolved row", () => {
-  const md = readFileSync(join(ROOT, "docs/tracker.md"), "utf8");
-  const log = readFileSync(join(ROOT, "docs/log.md"), "utf8");
+  const md = trackerSnapshot.markdown;
+  const log = trackerSnapshot.log;
   for (const [name, text] of [
     ["docs/tracker.md", md],
     ["docs/log.md", log],
@@ -473,7 +484,7 @@ test("the stated open count equals the rows underneath it, section by section", 
   );
 
   // And the file says the same number the store holds.
-  const md = readFileSync(join(ROOT, "docs/tracker.md"), "utf8");
+  const md = trackerSnapshot.markdown;
   assert.ok(
     md.includes(`**${working.length} open**`),
     `docs/tracker.md states an open count other than ${working.length}`,
@@ -571,7 +582,7 @@ test("RULING 46: B08 is hard-removed from both stores and recorded in the log", 
   );
 
   const record = JSON.parse(
-    readFileSync(join(ROOT, "docs", "tracker-deletions.json"), "utf8"),
+    trackerSnapshot.deletions,
   ) as { deletions: { id: string; deletedOn: string; deletedBy: string }[] };
   const b08 = record.deletions.find((d) => d.id === "B08");
   assert.ok(b08, "the permanent record of the deletion is missing");
@@ -581,7 +592,7 @@ test("RULING 46: B08 is hard-removed from both stores and recorded in the log", 
   // RULING 46 asks for the deletion to be recorded in docs/log.md, and log.md
   // is generated FROM the stores — so the record has to be rendered into it
   // from outside, or a deleted row disappears without a trace.
-  const log = readFileSync(join(ROOT, "docs", "log.md"), "utf8");
+  const log = trackerSnapshot.log;
   assert.match(log, /## Deleted rows — RULING 46/);
   assert.match(log, /\*\*B08\*\*/);
   assert.match(log, /deleted \d{4}-\d{2}-\d{2} by Sean/);
@@ -787,7 +798,7 @@ test("item 1.4: every row a session reported opening is present in a store", () 
    * they do is put all 468 existing ids under the guard from here on.
    */
   const ledger = JSON.parse(
-    readFileSync(join(ROOT, "docs", "tracker-opened.json"), "utf8"),
+    trackerSnapshot.opened,
   ) as {
     session: string;
     opened: string;
@@ -802,12 +813,12 @@ test("item 1.4: every row a session reported opening is present in a store", () 
   }[];
 
   const present = new Set(
-    [...readStore(WORKING_CSV), ...readStore(RESOLVED_CSV)].map((r) =>
+    [...working, ...resolved].map((r) =>
       (r.ID ?? "").trim(),
     ),
   );
   const deletions = JSON.parse(
-    readFileSync(join(ROOT, "docs", "tracker-deletions.json"), "utf8"),
+    trackerSnapshot.deletions,
   ) as { deletions: { id: string }[] };
   const deleted = new Set(deletions.deletions.map((r) => r.id.trim()));
 

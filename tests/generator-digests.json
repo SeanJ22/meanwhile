@@ -195,7 +195,7 @@
     "digest": "c62bcd5b64a7e796e1eed0b0500fe3fbd4586e49c8551f4801499a2a8d4e7724",
     "files": 9,
     "entry": "scripts/repo-map.mts",
-    "regeneratedOn": "2026-09-03"
+    "regeneratedOn": "2026-09-04"
   },
   "docs/rulings.md": {
     "digest": "b27241c1ddd2734a528b0094c2834dc2d285baabf90fb7b8eb9e33b03bb4e231",
@@ -540,10 +540,10 @@
     "regeneratedOn": "2026-09-03"
   },
   "docs/status-ledger.md": {
-    "digest": "b3be02da20ba2b349e687a8cf0a79597f71ab3be47dd188f7d96ab075c3e9362",
-    "files": 17,
+    "digest": "9b1882084e216094ed517346a657bbf52f76b270a6e3317a7d256bdc3d62e7b1",
+    "files": 28,
     "entry": "scripts/status-ledger.mts",
-    "regeneratedOn": "2026-09-03"
+    "regeneratedOn": "2026-09-04"
   },
   "lib/officials/directory-source.ts": {
     "digest": "a37c4ecb873c9e6042fcfafa2a698ab7fd1743aff8afea92fb94faed2c92dd5e",

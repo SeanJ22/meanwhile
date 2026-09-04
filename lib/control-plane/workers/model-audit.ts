@@ -6,7 +6,8 @@ import { assertStepMayInvokeModel } from "../scheduler/model-routing.ts";
 import { ceilingPermits, RESEARCH_BOUNDS, researchSpendInWindow } from "../scheduler/research-policy.ts";
 import { anthropicTransport, type ModelRequest, type ModelResponse, type ModelTransport } from "../scheduler/scout-executor.ts";
 import type { FleetRuntime } from "./runtime.ts";
-import type { IndependentAuditContext, WorkerEvidence, WorkerResultRecord } from "./types.ts";
+import type { IndependentAuditContext, WorkerEvidence, WorkerResultRecord, RecordExtractionShape } from "./types.ts";
+import { inventoryRecordEvidence } from "./record-evidence.ts";
 
 export const AUDIT_REVIEW_TIMEOUT_MS = 60_000;
 export const AUDIT_RESPONSE_MAX_BYTES = 16_384;
@@ -79,7 +80,7 @@ function surfaceExcerpts(text: string, budget: number): readonly { start: number
   return slices.sort((a, b) => a.start - b.start);
 }
 
-function projectedEvidence(evidence: WorkerEvidence, budget: number, surface: boolean): Record<string, unknown> {
+function projectedEvidence(evidence: WorkerEvidence, budget: number, surface: boolean, extraction?: RecordExtractionShape): Record<string, unknown> {
   const identity = { artifactId: evidence.artifactId, contentHash: evidence.contentHash, canonicalUrl: evidence.canonicalUrl, retrievedAt: evidence.retrievedAt };
   if (surface) {
     const excerpts = surfaceExcerpts(evidence.text, budget);
@@ -90,6 +91,11 @@ function projectedEvidence(evidence: WorkerEvidence, budget: number, surface: bo
   let text = evidence.text;
   let representation = "SOURCE_TEXT";
   try {
+    if (extraction) {
+      const inventory = inventoryRecordEvidence(evidence, extraction);
+      text = canonicalJson({ publisherCount: inventory.declaredCount, rows: inventory.rows.map(row => Object.fromEntries(Object.entries(row).map(([key, cell]) => [key, cell.value]))) });
+      representation = "CONTRACT_FIELD_PROJECTION";
+    } else {
     const raw: unknown = JSON.parse(evidence.text);
     const rows: unknown = Array.isArray(raw) ? raw : object(raw) ? raw.value : null;
     if (Array.isArray(rows) && rows.every(object)) {
@@ -99,6 +105,7 @@ function projectedEvidence(evidence: WorkerEvidence, budget: number, surface: bo
       text = canonicalJson({ publisherCount: object(raw) ? raw["@odata.count"] ?? raw["odata.count"] ?? null : null,
         rows: rows.map((row) => Object.fromEntries(fields.filter((field) => Object.hasOwn(row, field)).map((field) => [field, row[field]]))) });
       representation = "DETERMINISTIC_FIELD_PROJECTION";
+    }
     }
   } catch { /* Preserve bounded raw source text when a structured projection is unavailable. */ }
   // A structured feed is indivisible here. Cutting through JSON silently hid
@@ -113,13 +120,18 @@ export function auditReasoningContext(context: IndependentAuditContext): string 
   const fixed = {
     subjectId: context.subjectId, contract: {
       recordClass: context.contract.recordClass, schemaVersion: context.contract.schemaVersion,
-      subjectId: context.contract.subjectId, sourceBodyId: context.contract.sourceBodyId, sourceBodyName: context.contract.sourceBodyName,
-      publisherSlug: context.contract.publisherSlug, requiredFields: context.contract.requiredFields,
+      subjectId: context.contract.subjectId,
+      ...(context.contract.schemaVersion === 1 ? { sourceBodyId: context.contract.sourceBodyId, sourceBodyName: context.contract.sourceBodyName, publisherSlug: context.contract.publisherSlug }
+        : { jurisdiction: context.contract.jurisdiction, identity: context.contract.identity, sourceScope: context.contract.sourceScope,
+          methodVersion: context.contract.methodVersion, extraction: context.contract.extraction, verification: context.contract.verification }),
+      requiredFields: context.contract.requiredFields,
       completenessScope: context.contract.completenessScope, expectedSourceDate: context.contract.expectedSourceDate,
     }, scope: context.scope,
     publisherSurfaces: context.publisherSurfaces, methodVersion: context.methodVersion,
     routeReasonLimitation: "Route reasons may be abbreviated with explicit omitted character counts; route identities, applicability, status and artifact references are complete.",
-    evidence: context.evidence.map((evidence) => projectedEvidence(evidence, 0, false)),
+    evidence: context.evidence.map((evidence) => projectedEvidence(evidence, 0, false, context.contract.schemaVersion === 2 ? context.contract.extraction : undefined)),
+    ...(context.contract.schemaVersion === 2 ? { authorityEvidence: (context.authorityEvidence ?? []).map(evidence => projectedEvidence(evidence, 0, false,
+      context.contract.schemaVersion === 2 ? context.contract.verification.authorities.find(authority => authority.artifactIds.includes(evidence.artifactId))?.extraction : undefined)) } : {}),
   };
   let routes: Record<string, unknown>[] = [];
   const serialize = (surfaceBudget: number): string => canonicalJson({
@@ -187,7 +199,7 @@ function validateAnswer(response: ModelResponse, expectedModel: string, context:
       !Array.isArray(answer.challenges) || answer.challenges.length > 24 || Object.keys(answer).some((key) => !["verdict", "challenges"].includes(key))) validationFailure("AUDIT_MODEL_RESPONSE_SCHEMA_INVALID");
   const challenges: Review["challenges"][number][] = [];
   const failures: string[] = [];
-  const evidence = [...context.evidence, ...(context.surfaceEvidence ?? [])];
+  const evidence = [...context.evidence, ...(context.surfaceEvidence ?? []), ...(context.authorityEvidence ?? [])];
   for (const [index, challenge] of answer.challenges.entries()) {
     if (!object(challenge) || ["code", "detail", "artifactId", "quote"].some((key) => typeof challenge[key] !== "string" || !String(challenge[key]).trim()) ||
         Object.keys(challenge).some((key) => !["code", "detail", "artifactId", "quote"].includes(key))) { failures.push(`AUDIT_MODEL_CHALLENGE_SCHEMA_INVALID:${index}`); continue; }

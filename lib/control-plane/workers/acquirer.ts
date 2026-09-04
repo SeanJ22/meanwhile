@@ -1,0 +1,201 @@
+import type { WorkerRef } from "../attempt.ts";
+import { requireCapability, type CapabilityGrant } from "../capability.ts";
+import { artifactId, type Artifact } from "../evidence/artifact.ts";
+import { objectKey } from "../evidence/store.ts";
+import { contentHash } from "../ids.ts";
+import type { ScoutToolkit, ScoutToolCallResult } from "../scheduler/scout-contract.ts";
+import type { PermissionState, TransportState } from "../../workstate/types.ts";
+import { assertResearchResult, type AcquiredResearchArtifact, type AcquirerResult, type AcquirerTaskSpec,
+  type EvidenceWalkStep, type ResearchBlocker, type ResearchSpan } from "./research-types.ts";
+
+export interface VaultedResearchEvidence {
+  readonly artifact: Artifact;
+  readonly key: string;
+  readonly bytes: Uint8Array;
+}
+export interface AcquirerRuntime {
+  /** Build through buildScoutToolkit: permission, public URL, rate limits, browser and vault stay shared. */
+  readonly toolkit: ScoutToolkit;
+  readonly readVault: (artifactId: string) => Promise<VaultedResearchEvidence>;
+}
+export interface AcquirerWorkerInput extends AcquirerTaskSpec {
+  readonly attemptId: string;
+  readonly worker: WorkerRef;
+  readonly project: string;
+  readonly workItemId: string;
+  readonly grant: CapabilityGrant;
+  readonly now: () => string;
+}
+
+/** Checks bytes again at the worker boundary, including cache hits and route observations. */
+export function assertVaultedResearchEvidence(held: VaultedResearchEvidence, expectedId: string, project: string): void {
+  const a = held.artifact;
+  if (!project || /[\\/]/.test(project) || held.key !== objectKey(project, a) || a.id !== expectedId ||
+    contentHash(held.bytes) !== a.contentHash || artifactId(a.tier, a.contentHash) !== a.id || a.byteLength !== held.bytes.byteLength ||
+    !Number.isFinite(Date.parse(a.retrievedAt))) throw new Error("ACQUIRER_EVIDENCE_IDENTITY_MISMATCH");
+}
+function exactSpan(held: VaultedResearchEvidence, span: ResearchSpan): string {
+  const text = new TextDecoder().decode(held.bytes);
+  if (held.artifact.tier === "RESTRICTED_RAW" || span.contentHash !== held.artifact.contentHash ||
+    span.offsetUnit !== "UTF16_CODE_UNITS" || !Number.isSafeInteger(span.start) || span.start < 0 ||
+    span.end <= span.start || text.slice(span.start, span.end) !== span.quote) throw new Error("ACQUIRER_UNGROUNDED_ROUTE");
+  return text;
+}
+function responseStatus(call: ScoutToolCallResult): number | null {
+  if (call.rung?.httpStatus !== undefined) return call.rung.httpStatus;
+  return Number(/\bHTTP (\d{3})\b/.exec(call.rung?.observed ?? "")?.[1]) || null;
+}
+function responseTransport(call: ScoutToolCallResult): TransportState | "NOT_ATTEMPTED" {
+  if (call.rung?.transport !== undefined) return call.rung.transport;
+  const s = responseStatus(call);
+  if (s !== null) return s >= 200 && s < 300 ? "REACHABLE" : [401, 403, 429].includes(s) ? "CHALLENGED" : "FAILED_AT_RUNG";
+  if (/timeout|timed out|abort/i.test(call.rung?.observed ?? "")) return "TIMEOUT";
+  return /transport failure/i.test(call.rung?.observed ?? "") ? "OTHER_NAMED_FAILURE" : "NOT_ATTEMPTED";
+}
+
+/** HUNTER is the ACQUIRER role, with no promotion capability or new persistence path. */
+export async function runAcquirer(input: AcquirerWorkerInput, runtime: AcquirerRuntime): Promise<AcquirerResult> {
+  const { route } = input;
+  const artifacts: AcquiredResearchArtifact[] = [];
+  const artifactIds = new Set<string>();
+  const walk: EvidenceWalkStep[] = [];
+  const blockers: ResearchBlocker[] = [];
+  let requests = 0;
+  let bytesFetched = 0;
+  let permission: PermissionState = route.permission;
+  let sourceGrounding: NonNullable<AcquirerResult["sourceGrounding"]> = { verdict: "UNPROVEN", checkedArtifactIds: [] };
+  const stamp = () => input.now();
+  const block = (code: ResearchBlocker["code"], description: string, retryable: boolean) => {
+    // This dates the detected blocker. Source freshness remains the vaulted retrieval time.
+    const detectedAt = input.now();
+    blockers.push({ code, description, worker: input.worker, attemptId: input.attemptId, observedAt: detectedAt,
+      artifactIds: [...artifactIds], retryable, anotherRouteRemains: route.nextRouteIds.length > 0, operatorDecisionRequired: false });
+  };
+  const result = (verdict: AcquirerResult["verdict"]): AcquirerResult => {
+    const r: AcquirerResult = { role: "ACQUIRER", attemptId: input.attemptId, verdict, source: route, sourceGrounding, artifacts,
+      artifactIds: [...artifactIds], findings: blockers.map(b => ({ code: b.code, detail: b.description, severity: "BLOCKING" })),
+      blockers, walk, walkState: { state: "OPEN", nextRouteIds: [...new Set([...(verdict === "ACQUIRED" ? [] : [route.id]), ...route.nextRouteIds])] },
+      requestCount: requests, bytesFetched };
+    assertResearchResult(r, "ACQUIRER", input.attemptId);
+    return r;
+  };
+  const addStep = (rung: string, observed: string, outcome: EvidenceWalkStep["outcome"], ids: readonly string[],
+    transport: EvidenceWalkStep["transport"], returnedCount: number | null = null) => {
+    walk.push({ sequence: walk.length, at: stamp(), worker: input.worker, attemptId: input.attemptId, routeId: route.id,
+      rung, target: route.url, applicableBecause: route.applicableBecause, permission, transport, observed, returnedCount,
+      artifactIds: ids, nextRouteIds: route.nextRouteIds, outcome, pass: "INITIAL" });
+  };
+  try {
+    if (input.worker.role !== "ACQUIRER" || input.grant.role !== "ACQUIRER" || input.grant.project !== input.project) throw new Error("ACQUIRER_CAPABILITY_DENIED");
+    requireCapability(input.grant, "VAULT_READ_SANITIZED");
+  } catch {
+    block("CAPABILITY_DENIED", "The Attempt does not hold the scoped ACQUIRER vault-read grant.", false);
+    addStep("source-observation", "Capability refused before reading or requesting source bytes.", "NOT_WALKED", [], "NOT_ATTEMPTED");
+    return result("BLOCKED");
+  }
+  try {
+    if (![route.id, route.subjectId, route.jurisdiction, route.recordClass, route.sourceId, route.publisher, route.applicableBecause].every(s => s.trim()) ||
+      !route.publisherSubjectEvidence.length || !Number.isFinite(Date.parse(route.observedAt)) || !Number.isFinite(Date.parse(route.firstObservedAt)) ||
+      Date.parse(route.firstObservedAt) > Date.parse(route.observedAt) || Date.parse(route.observedAt) > Date.parse(stamp())) throw new Error("ACQUIRER_UNGROUNDED_ROUTE");
+    const source = await runtime.readVault(route.observation.artifactId);
+    assertVaultedResearchEvidence(source, route.observation.artifactId, input.project);
+    exactSpan(source, route.observation);
+    let quotedLocator: string | null = null;
+    try { const decoded: unknown = JSON.parse(route.observation.quote); if (typeof decoded === "string") quotedLocator = decoded; } catch { /* HTML/text observations are literal. */ }
+    if ((!route.observation.quote.includes(route.observedLocator) && quotedLocator !== route.observedLocator && source.artifact.canonicalUrl !== route.observedLocator) ||
+      new URL(route.observedLocator, source.artifact.canonicalUrl).href !== new URL(route.url).href ||
+      Date.parse(source.artifact.retrievedAt) > Date.parse(route.observedAt)) throw new Error("ACQUIRER_UNGROUNDED_ROUTE");
+    artifactIds.add(source.artifact.id);
+    for (const span of route.publisherSubjectEvidence) {
+      const held = await runtime.readVault(span.artifactId);
+      assertVaultedResearchEvidence(held, span.artifactId, input.project);
+      exactSpan(held, span);
+      artifactIds.add(held.artifact.id);
+    }
+    sourceGrounding = { verdict: "OBSERVED", checkedArtifactIds: [...artifactIds] };
+  } catch {
+    block("UNGROUNDED_ROUTE", "The exact observed locator or publisher/subject evidence cannot be reproduced from the scoped vault.", false);
+    addStep("source-observation", "Source observation failed exact evidence binding; no network request was sent.", "NOT_WALKED", [...artifactIds], "NOT_ATTEMPTED");
+    return result("BLOCKED");
+  }
+  const accept = (held: VaultedResearchEvidence, reused: boolean, partial: boolean): AcquiredResearchArtifact => {
+    const a = held.artifact;
+    assertVaultedResearchEvidence(held, a.id, input.project);
+    if (a.canonicalUrl !== route.url || a.sourceId !== route.sourceId || a.workItemId !== input.workItemId ||
+      a.transport !== "REACHABLE" || a.httpStatus < 200 || a.httpStatus >= 300 || a.retentionPolicy === "DIAGNOSTIC" || a.tier === "RESTRICTED_RAW") {
+      throw new Error("ACQUIRER_EVIDENCE_IDENTITY_MISMATCH");
+    }
+    // A literal [] is an empty captured response, never proof of civic absence.
+    const empty = a.byteLength === 0 || (/json/i.test(a.contentType) && new TextDecoder().decode(held.bytes).trim() === "[]");
+    return { artifactId: a.id, sourceRouteId: route.id, sourceObservationArtifactId: route.observation.artifactId,
+      canonicalUrl: a.canonicalUrl, sourceId: a.sourceId, acquisitionAttemptId: a.attemptId, retrievedAt: a.retrievedAt,
+      contentHash: a.contentHash, byteCount: a.byteLength, contentType: a.contentType, tier: a.tier,
+      completeness: partial || a.httpStatus === 206 || Boolean(a.headers["content-range"]) ? "PARTIAL" : empty ? "EMPTY" : "COMPLETE",
+      vaultKey: held.key, transport: a.transport, httpStatus: a.httpStatus, reused };
+  };
+  for (const cached of input.held) {
+    if (!cached.immutable || cached.partial || cached.sourceRouteId !== route.id || cached.sourceObservationArtifactId !== route.observation.artifactId ||
+      Date.parse(cached.currentUntil) <= Date.parse(stamp()) || !Number.isFinite(Date.parse(cached.currentUntil))) continue;
+    try {
+      const acquired = accept(await runtime.readVault(cached.artifactId), true, false);
+      if (acquired.completeness !== "COMPLETE") continue;
+      artifacts.push(acquired); artifactIds.add(acquired.artifactId);
+      addStep("immutable-vault-reuse", "Current immutable evidence was rehashed from the vault; no request was needed.", "WALKED_AND_FOUND", [acquired.artifactId], "NOT_ATTEMPTED", 1);
+      return result("ACQUIRED");
+    } catch {
+      block("EVIDENCE_IDENTITY_MISMATCH", "A declared current immutable artifact failed its vault identity/provenance check.", false);
+      addStep("immutable-vault-reuse", "Cache integrity check failed; evidence was not used.", "BLOCKED", [...artifactIds], "NOT_ATTEMPTED");
+      return result("BLOCKED");
+    }
+  }
+  if (permission === "DISALLOWED" || permission === "CANNOT_TELL") {
+    block(permission === "DISALLOWED" ? "PERMISSION_DENIED" : "PERMISSION_UNKNOWN", "The current route permission does not permit source retrieval.", permission === "CANNOT_TELL");
+    addStep("permission", `Current permission ${permission}; no request sent.`, "BLOCKED", [...artifactIds], "NOT_ATTEMPTED");
+    return result("BLOCKED");
+  }
+  try {
+    requireCapability(input.grant, "NETWORK_PUBLIC_READ"); requireCapability(input.grant, "VAULT_WRITE");
+    if (route.retrieval === "browse") requireCapability(input.grant, "BROWSER_DRIVE");
+  } catch {
+    block("CAPABILITY_DENIED", "The Attempt lacks the network, vault-write, or browser capability needed for this route.", false);
+    addStep("permission", "Capability denied before permission/network tools were called.", "NOT_WALKED", [...artifactIds], "NOT_ATTEMPTED");
+    return result("BLOCKED");
+  }
+  for (const tool of ["read_permission", route.retrieval] as const) {
+    const call = await runtime.toolkit.call(tool, { url: route.url, rung: "linked-documents-or-bulk-download", why: route.applicableBecause }, "linked-documents-or-bulk-download");
+    requests += call.requestCount; bytesFetched += call.bytesFetched;
+    permission = call.rung?.permission ?? permission;
+    for (const a of call.artifacts) artifactIds.add(a.artifactId);
+    const transport = responseTransport(call);
+    const status = responseStatus(call);
+    if (tool === "read_permission") {
+      addStep("permission", call.rung?.observed ?? "Permission tool was unable to run.", call.ok ? "WALKED_AND_FOUND" : "BLOCKED", call.artifacts.map(a => a.artifactId), transport);
+      if (!call.ok || permission === "DISALLOWED" || permission === "CANNOT_TELL") {
+        block(permission === "DISALLOWED" ? "PERMISSION_DENIED" : "PERMISSION_UNKNOWN", "The shared permission reader did not authorize this exact path.", permission !== "DISALLOWED");
+        return result("BLOCKED");
+      }
+      continue;
+    }
+    for (const offered of call.artifacts.filter(a => a.canonicalUrl === route.url)) {
+      try {
+        const held = await runtime.readVault(offered.artifactId);
+        if (held.artifact.transport === "REACHABLE" && held.artifact.retentionPolicy !== "DIAGNOSTIC") artifacts.push(accept(held, false, offered.partial));
+      } catch {
+        block("EVIDENCE_IDENTITY_MISMATCH", "The toolkit's artifact cannot be reproduced with its exact route, source, bytes and vault identity.", false);
+      }
+    }
+    const verdict: AcquirerResult["verdict"] = artifacts.some(a => a.completeness === "PARTIAL") ? "PARTIAL" :
+      artifacts.some(a => a.completeness === "COMPLETE") ? "ACQUIRED" : artifacts.some(a => a.completeness === "EMPTY") ? "EMPTY" : "BLOCKED";
+    const emptyRead = transport === "REACHABLE" && /\(0 bytes\)/.test(call.rung?.observed ?? "");
+    addStep(route.retrieval, call.rung?.observed ?? "The shared retrieval tool could not run.",
+      verdict === "EMPTY" || emptyRead ? "WALKED_AND_EMPTY" : verdict === "BLOCKED" ? "BLOCKED" : "WALKED_AND_FOUND",
+      call.artifacts.map(a => a.artifactId), transport, verdict === "EMPTY" || emptyRead ? 0 : artifacts.length || null);
+    if (verdict === "BLOCKED" && !blockers.length) {
+      block(status === 429 ? "RATE_LIMITED" : status === 401 || status === 403 ? "PUBLISHER_AUTHENTICATION" :
+        transport === "REACHABLE" ? "DOCUMENT_INACCESSIBLE" : "TRANSPORT_FAILED",
+      "The exact public record was not acquired; the machine-recorded rung preserves the permission and transport outcome.", true);
+    }
+    return result(blockers.length ? "BLOCKED" : verdict);
+  }
+  throw new Error("ACQUIRER_RETRIEVAL_NOT_RUN");
+}

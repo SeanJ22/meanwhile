@@ -5,6 +5,7 @@ import type {
   WorkerFinding,
 } from "./types.ts";
 import { isFieldValue as scalar } from "./types.ts";
+import { validateGeneralizedExtraction } from "./generalized-validator.ts";
 
 export const VALIDATOR_IMPLEMENTATION = "civic-event-contract-validator";
 export const VALIDATOR_VERSION = "1.0.0";
@@ -137,6 +138,7 @@ function publisherMatches(canonicalUrl: string, slug: string, civicClerk: boolea
  */
 export function validateExtraction(input: ValidatorWorkerInput): ValidatorResult {
   const { candidate, evidence, contract } = input;
+  if (contract.schemaVersion === 2) return validateGeneralizedExtraction(input, contract);
   const civicClerk = contract.recordClass === "CIVICCLERK_EVENTS";
   const idField = civicClerk ? "id" : "EventId";
   const bodyIdField = civicClerk ? "categoryId" : "EventBodyId";

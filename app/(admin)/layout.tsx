@@ -33,7 +33,25 @@ const STYLES = `
 .admin .refusal { padding: .75rem; border: 2px solid #b3261e; border-radius: .35rem; }
 .admin .state-green { color: #1b7f3b; font-weight: 600; }
 .admin .state-red { color: #b3261e; font-weight: 600; }
+.admin .state-amber { color: #b8860b; font-weight: 600; }
 .admin .state-unknown { opacity: .75; font-weight: 600; }
+
+/* Pilot-health primary view: overall band + three compact contract cards, so the
+   first viewport answers healthy?/which?/failing-or-stale?/why?/next — with the
+   run IDs, SHAs and proof classes tucked into a <details> below. */
+.admin .ph-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: .75rem; margin: .5rem 0 1.25rem; }
+.admin .ph-card { border: 1px solid rgba(128,128,128,.4); border-left-width: 4px; border-radius: .4rem; padding: .6rem .75rem; }
+.admin .ph-card h3 { display: flex; justify-content: space-between; align-items: baseline; gap: .5rem; margin: 0 0 .25rem; font-size: .95rem; }
+.admin .ph-chip { font-size: .68rem; text-transform: uppercase; letter-spacing: .04em; padding: 0 .35rem; border-radius: .25rem; border: 1px solid currentColor; white-space: nowrap; }
+.admin .ph-num { font-size: 1.25rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.admin .ph-meta { font-size: .72rem; opacity: .7; margin: .1rem 0 0; }
+.admin .ph-reason { font-size: .82rem; margin: .35rem 0 0; }
+.admin .ph-next { font-size: .8rem; margin: .35rem 0 0; }
+.admin .ph-l-GREEN { border-left-color: #1b7f3b; } .admin .ph-l-GREEN .ph-chip { color: #1b7f3b; }
+.admin .ph-l-AMBER { border-left-color: #b8860b; } .admin .ph-l-AMBER .ph-chip { color: #b8860b; }
+.admin .ph-l-RED { border-left-color: #b3261e; } .admin .ph-l-RED .ph-chip { color: #b3261e; }
+.admin .ph-l-UNKNOWN { border-left-color: rgba(128,128,128,.55); } .admin .ph-l-UNKNOWN .ph-chip { opacity: .7; }
+.admin details.ph-evidence { margin: .5rem 0 1rem; } .admin details.ph-evidence summary { cursor: pointer; font-size: .85rem; opacity: .8; }
 .admin .card { border: 1px solid rgba(128,128,128,.45); border-radius: .4rem; padding: .75rem 1rem; margin: .75rem 0; }
 .admin .card button { display: block; width: 100%; text-align: left; margin: .35rem 0; padding: .5rem .6rem; cursor: pointer; }
 .admin form { margin-top: .5rem; }
@@ -47,7 +65,14 @@ const STYLES = `
 .console-nav label { display: flex; flex-direction: column; gap: .2rem; margin: 0; font-size: .72rem;
   text-transform: uppercase; letter-spacing: .05em; opacity: .7; }
 .console-nav select { font: inherit; font-size: .95rem; text-transform: none; letter-spacing: normal;
-  padding: .35rem .5rem; min-width: 11rem; }
+  padding: .35rem .5rem; min-width: 11rem;
+  /* Dark by default; light under [data-theme="light"]. Pin the control and its
+     options to the theme's own system colours so the dropdown is not a light box
+     of low-contrast text on the dark console. Never rely on native <select>
+     inheritance for this. */
+  color-scheme: inherit; background-color: Canvas; color: CanvasText;
+  border: 1px solid rgba(128,128,128,.5); border-radius: .3rem; }
+.console-nav select option { background-color: Canvas; color: CanvasText; }
 .console-nav-brand { margin-left: auto; align-self: center; font-size: .75rem; opacity: .5; }
 /* Readiness and pilot health share the wider console frame. */
 .readiness, .admin.console-page { max-width: 72rem; }

@@ -115,6 +115,7 @@ export default async function ReadinessStatePage({
       <ReadinessPanel
         snapshot={snapshot}
         notice={notice}
+        published={outcome.kind === "HELD"}
         source={outcome.kind === "HELD" ? outcome.source : "not published — rendered NOT_WALKED at read time"}
       />
       <hr />

@@ -181,7 +181,7 @@ test("R-B: a clean ladder raises no violation", () => {
   assert.ok(gates.every((g) => g.monotonicityOk));
 });
 
-test("R-B: a CURRENT past a non-CURRENT gate to its left is a surfaced violation, not silent", () => {
+test("R-B: a CURRENT past a non-CURRENT gate to its left is DOWNGRADED to its effective state and surfaced", () => {
   const cells = [
     cellOf("SOURCE_KNOWN", "CURRENT"),
     cellOf("ACQUIRED", "NOT_WALKED"), // gap
@@ -194,7 +194,37 @@ test("R-B: a CURRENT past a non-CURRENT gate to its left is a surfaced violation
   assert.equal(violations[0].gate, "VERIFIED");
   const verified = gates.find((g) => g.gate === "VERIFIED");
   assert.equal(verified?.monotonicityOk, false); // marked, not hidden
-  assert.equal(verified?.state, "CURRENT"); // the claim is kept AND flagged, never erased
+  // The EFFECTIVE state is NOT CURRENT: a right-hand gate cannot stand past an
+  // unmet prerequisite. It reads PARTIAL_OR_STALE, the raw signal is preserved
+  // in the detail, and the unmet prerequisite (ACQUIRED) is named.
+  assert.equal(verified?.state, "PARTIAL_OR_STALE");
+  assert.match(verified?.detail ?? "", /ACQUIRED/);
+  assert.match(verified?.detail ?? "", /Raw signal/);
+  assert.match(violations[0].detail, /ACQUIRED/);
+});
+
+test("R-B NEGATIVE CONTROL (permanent): an ACQUIRED gap then a nominal VERIFIED success can NEVER render VERIFIED CURRENT", () => {
+  // Straight through the real derivation, not hand-built cells: SOURCE_KNOWN is
+  // complete and fresh, ACQUIRED is a genuine gap (11 of 91), and VERIFIED is
+  // handed a complete, fresh "success". VERIFIED must not read CURRENT — the one
+  // impossible effective state this contract exists to forbid.
+  const { gates, violations } = deriveGateCells(
+    "officials.municipal",
+    {
+      SOURCE_KNOWN: ev({ covered: 91, total: 91, asOf: "2026-09-03", staleAfterDays: 365 }),
+      ACQUIRED: ev({ covered: 11, total: 91, asOf: "2026-09-03", staleAfterDays: 365 }),
+      VERIFIED: ev({ covered: 91, total: 91, asOf: "2026-09-03", staleAfterDays: 365 }),
+    },
+    NOW,
+  );
+  const verified = gates.find((g) => g.gate === "VERIFIED");
+  assert.notEqual(verified?.state, "CURRENT", "VERIFIED rendered CURRENT past an ACQUIRED gap");
+  assert.equal(verified?.state, "PARTIAL_OR_STALE");
+  assert.equal(verified?.monotonicityOk, false);
+  assert.ok(
+    violations.some((v) => v.gate === "VERIFIED"),
+    "the impossible effective state was not surfaced as a violation",
+  );
 });
 
 test("R-B: ARGUED_ABSENT propagates — a CURRENT to its right is a violation", () => {

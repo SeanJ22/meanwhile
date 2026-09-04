@@ -9,19 +9,30 @@
  * ```
  *   memory      the in-process double, which pins the semantics
  *   file        the durable filesystem store
- *   postgres    when WTP_CONTROL_PLANE_DATABASE_URL is present
+ *   postgres    ONLY against an isolated test database (WTP_CONTROL_PLANE_TEST_DATABASE_URL)
  * ```
  *
- * ## The Postgres lane is SKIPPED WITH A REASON, never silently
+ * ## The Postgres lane runs against an ISOLATED TEST DATABASE, or NOT AT ALL
  *
- * That variable is not provisioned on the machine this was written on. A suite
- * that quietly ran two providers and reported green would be a suite claiming
- * three-provider conformance on two — so the skip is a printed sentence naming
- * the variable, and `providersUnderTest` reports the denominator.
+ * This lane MUTATES: it puts, appends and compare-and-sets. `createWorkItem`
+ * ids are derived, and the store is append-only by design, so those writes
+ * persist. Run them against the LIVE control plane and every suite run leaves
+ * fixtures in the production append-only store — which is exactly how an
+ * overnight Neon transfer quota was burned.
  *
- * This is the difference the repository keeps insisting on: *we did not run
- * this* and *this passed* are different sentences, and a suite that cannot say
- * the first will eventually say the second instead.
+ * So the lane is gated on a SEPARATE variable, `WTP_CONTROL_PLANE_TEST_DATABASE_URL`,
+ * that names a database designated for destructive test writes. The production
+ * variable `WTP_CONTROL_PLANE_DATABASE_URL` — which a normal `.env.local`
+ * carries, and which a local gate or handoff loads — is NEVER interpreted as a
+ * test database: its presence alone leaves this lane NOT RUN. And if the test
+ * variable is set to the same connection as the production one, the suite
+ * REFUSES rather than write test fixtures into production.
+ *
+ * NOT RUN is not a pass. The requirement that RULING 220's cutover eventually be
+ * proved against Postgres is unchanged; what changed is that the proof must use
+ * a database that is safe to mutate. The skip is a printed sentence naming the
+ * variable, because *we did not run this* and *this passed* are different
+ * sentences, and a suite that cannot say the first will eventually say the second.
  *
  * ## What is asserted, and why each one is a defect somebody has paid for
  *
@@ -40,8 +51,10 @@ import { join } from "node:path";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import {
+  CONTROL_PLANE_TEST_URL_VAR,
   CONTROL_PLANE_URL_VAR,
   advisoryLockKey,
+  controlPlaneTestUrlFromEnv,
   controlPlaneUrlFromEnv,
   createPgRepositories,
 } from "../lib/control-plane/repository/pg-store.ts";
@@ -72,29 +85,61 @@ const providers: Provider[] = [
 /**
  * The Postgres lane, and the honest reason it is or is not here.
  *
- * A control plane that is not configured on this machine is a legitimate
- * state, not a broken one. What is NOT legitimate is a suite that runs two
- * providers and reports as if it ran three.
+ * The lane runs ONLY against an isolated test database. Three states, kept
+ * apart:
+ *   READY           an isolated test database is named and differs from prod.
+ *   NOT_CONFIGURED  no test database is named — the lane is NOT RUN (not a pass).
+ *   REFUSED_AS_PROD the test variable points at the production control plane;
+ *                   the suite refuses rather than mutate production.
+ *
+ * The production variable's presence NEVER promotes the lane: a machine with a
+ * live control plane and no designated test database still runs only memory and
+ * file, and says so.
  */
-const pgUrl = controlPlaneUrlFromEnv();
-if (pgUrl !== null) {
-  providers.push({ name: "postgres", open: () => createPgRepositories(pgUrl, NOW) });
+const prodControlPlaneUrl = controlPlaneUrlFromEnv();
+const testControlPlaneUrl = controlPlaneTestUrlFromEnv();
+type PgLane =
+  | { readonly kind: "READY"; readonly url: string }
+  | { readonly kind: "NOT_CONFIGURED" }
+  | { readonly kind: "REFUSED_AS_PROD" };
+const pgLane: PgLane =
+  testControlPlaneUrl === null
+    ? { kind: "NOT_CONFIGURED" }
+    : prodControlPlaneUrl !== null && testControlPlaneUrl === prodControlPlaneUrl
+      ? { kind: "REFUSED_AS_PROD" }
+      : { kind: "READY", url: testControlPlaneUrl };
+
+if (pgLane.kind === "READY") {
+  const readyUrl = pgLane.url;
+  providers.push({ name: "postgres", open: () => createPgRepositories(readyUrl, NOW) });
 }
 
 test("the conformance suite states WHICH providers it ran, and which it did not", () => {
   const names = providers.map((p) => p.name);
   assert.ok(names.includes("memory") && names.includes("file"));
-  if (pgUrl === null) {
-    /*
-     * Printed rather than skipped silently. RULING 220 step 2 requires both
-     * providers to pass identically; this run covered the two that exist here.
-     * The Postgres lane's absence is a fact about this machine and is recorded
-     * as one — tracker NH300 carries the escalation.
-     */
+  /*
+   * The Postgres lane is mutable, so it runs only against a designated test
+   * database. A production connection is not one, and pointing the test
+   * variable at production is refused outright — either way the lane is NOT RUN
+   * and that is recorded here, never mistaken for a pass. RULING 220's cutover
+   * proof must be performed against a safe-to-mutate database; tracker NH300
+   * carries the escalation.
+   */
+  if (pgLane.kind === "REFUSED_AS_PROD") {
+    assert.fail(
+      `${CONTROL_PLANE_TEST_URL_VAR} is set to the SAME connection as ` +
+        `${CONTROL_PLANE_URL_VAR} (the production control plane). The mutable conformance ` +
+        "lane will not write test fixtures into production. Point it at an isolated test " +
+        "database, or unset it to leave the lane honestly NOT RUN.",
+    );
+  }
+  if (pgLane.kind === "NOT_CONFIGURED") {
     console.log(
-      `      conformance: ${names.length} of 3 provider(s) — the postgres lane is NOT RUN ` +
-        `because ${CONTROL_PLANE_URL_VAR} is not set on this machine. That is a fact about ` +
-        "this machine, not a pass: RULING 220's cutover proof has not been performed.",
+      `      POSTGRES CONFORMANCE — NOT RUN / SAFE TEST DATABASE NOT CONFIGURED: ` +
+        `${names.length} of 3 provider(s). Set ${CONTROL_PLANE_TEST_URL_VAR} to an ISOLATED ` +
+        `test database to run it. ${CONTROL_PLANE_URL_VAR}` +
+        `${prodControlPlaneUrl !== null ? " IS set, but it names the LIVE production control plane and is never used as a test database." : " is not set."} ` +
+        "RULING 220's cutover proof has not been performed.",
     );
   }
   assert.ok(names.length >= 2, "at least the double and the durable store always run");
@@ -105,8 +150,9 @@ test("the conformance suite states WHICH providers it ran, and which it did not"
  * FIXTURES ARE DERIVED-ID.** (2026-09-01.)
  *
  * `memory` gets a fresh map and `file` gets a fresh `mkdtemp`. Postgres gets the
- * live control plane, and the store is APPEND-ONLY BY DESIGN — `types.ts` says
- * *"nothing is ever removed"* — so there is no teardown to write.
+ * isolated TEST database, and the store is APPEND-ONLY BY DESIGN — `types.ts`
+ * says *"nothing is ever removed"* — so there is no teardown to write, and even
+ * the safe-to-mutate test database accumulates these rows across runs.
  *
  * With a constant `project`, `workItemId(project, subject, obligation)` is the
  * same id on every run, so the Postgres lane could pass exactly ONCE and failed
@@ -115,11 +161,14 @@ test("the conformance suite states WHICH providers it ran, and which it did not"
  * ship for that reason and for no other.
  *
  * **It hid for as long as it did because the lane usually does not run.** The
- * Postgres arm is skipped unless `WTP_CONTROL_PLANE_DATABASE_URL` is set, and a
- * bare shell does not load `.env.local` — so running this file directly SKIPS
- * the lane and prints a green 18 of 18, while `pnpm gates` under `handoff` loads
- * the environment and runs it. A session re-running "isolated" to check would
- * have been told everything was fine by a lane that never executed.
+ * Postgres arm runs only when `WTP_CONTROL_PLANE_TEST_DATABASE_URL` names an
+ * isolated test database — which is unset on this machine, and unset in a normal
+ * `.env.local` (that file carries the PRODUCTION control-plane variable, which
+ * this lane deliberately ignores). So running this file, or `pnpm gates` under
+ * `handoff`, SKIPS the lane and prints NOT RUN. A session re-running "isolated"
+ * to check would have been told everything was fine by a lane that never
+ * executed — and, before the isolation fix, the same load of `.env.local` that
+ * a gate performs would have pointed those mutating writes at production.
  *
  * The namespace is per RUN rather than per test, so the ids inside one run still
  * collide exactly the way the assertions require — two `put`s of `item("a")`
@@ -210,8 +259,8 @@ for (const provider of providers) {
   test(`${provider.name}: an append-only log refuses a rewrite and accepts a retry`, async () => {
     const repos = await provider.open();
     /* Namespaced for the same reason `item()` is: this log row persists in the
-       live Postgres control plane and an identical id next run is not a retry,
-       it is last run's row. */
+       isolated Postgres test database and an identical id next run is not a
+       retry, it is last run's row. */
     const workItemId = `wi-${RUN_NAMESPACE}`;
     const transitionId = `t-${RUN_NAMESPACE}`;
     const record = {
@@ -351,6 +400,38 @@ test("controlPlaneUrlFromEnv refuses an empty value rather than defaulting", () 
     controlPlaneUrlFromEnv({ [CONTROL_PLANE_URL_VAR]: "postgres://x" } as unknown as NodeJS.ProcessEnv),
     "postgres://x",
   );
+});
+
+test("controlPlaneTestUrlFromEnv reads its OWN variable, never the production one", () => {
+  // Empty / absent is null: no test database configured, which reads NOT RUN.
+  assert.equal(controlPlaneTestUrlFromEnv({} as unknown as NodeJS.ProcessEnv), null);
+  assert.equal(
+    controlPlaneTestUrlFromEnv({ [CONTROL_PLANE_TEST_URL_VAR]: "  " } as unknown as NodeJS.ProcessEnv),
+    null,
+  );
+  // The PRODUCTION variable's presence never satisfies the test-database gate:
+  // this is the whole point — a loaded `.env.local` must not enable mutation.
+  assert.equal(
+    controlPlaneTestUrlFromEnv({
+      [CONTROL_PLANE_URL_VAR]: "postgres://prod",
+    } as unknown as NodeJS.ProcessEnv),
+    null,
+  );
+  assert.equal(
+    controlPlaneTestUrlFromEnv({
+      [CONTROL_PLANE_TEST_URL_VAR]: "postgres://test",
+    } as unknown as NodeJS.ProcessEnv),
+    "postgres://test",
+  );
+});
+
+test("the two control-plane variables are DISTINCT names, so one can never stand in for the other", () => {
+  assert.notEqual(CONTROL_PLANE_TEST_URL_VAR, CONTROL_PLANE_URL_VAR);
+  // A machine carrying ONLY the production variable yields a production url and
+  // NO test url — the exact state that must leave the mutable lane NOT RUN.
+  const prodOnly = { [CONTROL_PLANE_URL_VAR]: "postgres://prod" } as unknown as NodeJS.ProcessEnv;
+  assert.equal(controlPlaneUrlFromEnv(prodOnly), "postgres://prod");
+  assert.equal(controlPlaneTestUrlFromEnv(prodOnly), null);
 });
 
 test("createPgRepositories refuses an empty connection string", async () => {

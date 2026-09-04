@@ -80,6 +80,28 @@ export default async function ReadinessStatePage({
     );
   }
 
+  // CC-F6: a snapshot produced under a retired derivation contract is quarantined.
+  // Its old cells are NEVER rendered and NEVER audited-as-trusted; this is neither
+  // NOT_WALKED (we did look) nor missing (a record exists) — it is stale-by-contract.
+  if (outcome.kind === "REQUIRES_REPUBLISH") {
+    return (
+      <main className="admin readiness">
+        <style dangerouslySetInnerHTML={{ __html: READINESS_STYLES }} />
+        {nav}
+        <h1>State readiness</h1>
+        <p className="refusal">
+          <strong>READINESS SNAPSHOT REQUIRES REPUBLISH.</strong> {outcome.detail}
+        </p>
+        <p className="note">
+          A record exists but was produced by a retired publisher, so its cells are not shown — a
+          snapshot under a superseded derivation contract cannot be trusted as current. This is not
+          &ldquo;not walked&rdquo; and not &ldquo;no snapshot&rdquo;; it clears on the next
+          instrument-derived publish. Source: {outcome.source}.
+        </p>
+      </main>
+    );
+  }
+
   const snapshot: ReadinessStateSnapshot =
     outcome.kind === "HELD" ? outcome.snapshot : unwalkedStateSnapshot(state, new Date().toISOString());
   const notice = outcome.kind === "NOT_RECORDED" ? outcome.detail : null;

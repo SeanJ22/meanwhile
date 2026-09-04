@@ -37,7 +37,7 @@
  * Governments counts (R-D); a class with no legitimately-established external
  * denominator renders a named gap, never "we found N therefore N of N".
  */
-import { gap, held, measured, type Held, type Measured } from "../owner-surface.ts";
+import { gap, type Held, type Measured } from "../owner-surface.ts";
 import { CAPABILITY_TAXONOMY } from "./catalog.ts";
 import type { Gate, GateEvidence } from "./gates.ts";
 import type { CapabilityInput, ReadinessInputs } from "./compute.ts";
@@ -49,6 +49,19 @@ export const STRUCTURAL_STALE_DAYS = 365;
 export const RECONCILE_STALE_DAYS = 45;
 
 const CENSUS = "Census of Governments 2022";
+
+/**
+ * Which store the readiness publisher writes to (CC-F3). PRODUCTION is written
+ * ONLY on an explicit `control-plane` target — the mere presence of the
+ * production connection string never selects it. So a generic `readiness:refresh`
+ * (no target, or `--target=file`) derives locally and cannot touch production,
+ * even when `.env.local` carries the production URL. Pure and side-effect-free
+ * so a test can pin it without constructing any database client.
+ */
+export type ReadinessStoreTarget = "file" | "control-plane";
+export function chooseReadinessStoreTarget(target: string | undefined): ReadinessStoreTarget {
+  return target === "control-plane" ? "control-plane" : "file";
+}
 
 /* ------------------------------------------------------------- instrument shapes */
 
@@ -62,12 +75,17 @@ export interface BodyLevelStat {
   readonly asOf: string | null;
 }
 
-/** The FEC reconciliation, read from data/fec/fec-2026.json `matchReport`. */
+/**
+ * A STATE-SPECIFIC federal-finance reconciliation slice (CC-F5). The committed
+ * FEC reconciliation is national; a state page may only show a state's own
+ * matched/total, never the national counter. This is null when no deterministic
+ * state slice exists (then the state renders a named gap, never the national N).
+ */
 export interface FecInstrument {
-  readonly ballotMatched: number;
-  readonly ballotTotal: number;
-  readonly rosterMatched: number;
-  readonly rosterTotal: number;
+  /** THIS state's federal candidates reconciled to FEC. */
+  readonly matched: number;
+  readonly total: number;
+  readonly authority: string;
   /** ISO date of the fetch — read from the record, not typed. */
   readonly asOf: string;
 }
@@ -84,6 +102,12 @@ export interface ReconInstrument {
 export interface ClosedWalkInstrument {
   readonly ref: string;
   readonly asOf: string;
+  /** The capability this closed walk actually proves an absence FOR. A walk may
+   *  never be projected onto a different capability (CC-F1). */
+  readonly capabilityId: string;
+  /** The date the absence argument expires; null = never expires. An expired
+   *  walk cannot render ARGUED_ABSENT (CC-F1). */
+  readonly expiresOn: string | null;
   readonly walk: EvidenceWalk;
 }
 
@@ -100,6 +124,10 @@ export interface StateAuthorities {
   readonly heldDivisions: Record<string, number>;
   /** Newest provenance.collectedAt across held divisions (YYYY-MM-DD), or null. */
   readonly divisionsAsOf: string | null;
+  /** INDEPENDENT external count of congressional districts (the cd119 geojson
+   *  feature count), or null when no committed external denominator exists (CC-F2).
+   *  Never the held registry count — that is the numerator, not an authority. */
+  readonly cdUniverse: number | null;
   readonly bodies: {
     readonly county: BodyLevelStat;
     readonly place: BodyLevelStat;
@@ -122,6 +150,17 @@ function frac(covered: number, total: number, asOf: string | null, staleAfterDay
 /** A closed-walk gate cell → ARGUED_ABSENT (R-I). */
 function closedWalk(ref: string, asOf: string): GateEvidence {
   return { covered: 0, total: 0, asOf, staleAfterDays: null, walkClosed: true, blockedReason: null, gatedReason: null, evidenceRef: ref };
+}
+
+/**
+ * True when a dated absence has expired as of `nowIso` (CC-F1). A null expiry
+ * never expires; an undatable expiry is treated as expired — we do not render an
+ * absence we cannot date.
+ */
+function isExpired(expiresOn: string | null, nowIso: string): boolean {
+  if (expiresOn === null) return false;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(expiresOn)) return true;
+  return expiresOn < nowIso.slice(0, 10);
 }
 
 /** SOURCE_KNOWN + ACQUIRED for a held boundary set of a known, complete universe. */
@@ -166,6 +205,7 @@ function coverageGap(): Coverage {
 function deriveCapability(
   capabilityId: string,
   a: StateAuthorities,
+  nowIso: string,
 ): { coverage: Coverage; gates: Partial<Record<Gate, GateEvidence>> } {
   const c = a.counts;
   const isAz = a.code === "az";
@@ -174,21 +214,23 @@ function deriveCapability(
     /* ---------------- Districts and geography: held boundaries ---------------- */
     case "districts.congressional": {
       const held_ = a.heldDivisions.cd ?? 0;
-      // cd119 is the complete apportioned set; the held count is the universe.
-      if (held_ <= 0 || a.divisionsAsOf === null) return { coverage: coverageGap(), gates: {} };
+      // The denominator is the INDEPENDENT cd119 feature count (external), never
+      // the held count (CC-F2). No external count → named gap.
+      const universe = a.cdUniverse;
+      if (universe === null || universe <= 0 || a.divisionsAsOf === null) {
+        return { coverage: coverageGap(), gates: {} };
+      }
       return {
-        coverage: coverageFrac(held_, held_, "Census 119th-Congress cartographic boundary (cd119, complete set)", a.divisionsAsOf),
-        gates: heldBoundary(held_, held_, a.divisionsAsOf),
+        coverage: coverageFrac(held_, universe, "Census 119th-Congress cartographic boundary (cd119) feature count", a.divisionsAsOf),
+        gates: heldBoundary(held_, universe, a.divisionsAsOf),
       };
     }
-    case "districts.state-legislative": {
-      const held_ = a.heldDivisions.sldu ?? 0;
-      if (held_ <= 0 || a.divisionsAsOf === null) return { coverage: coverageGap(), gates: {} };
-      return {
-        coverage: coverageFrac(held_, held_, "Census legislative district boundaries (sldu, complete set)", a.divisionsAsOf),
-        gates: heldBoundary(held_, held_, a.divisionsAsOf),
-      };
-    }
+    case "districts.state-legislative":
+      // No committed STATEWIDE count of legislative districts exists — the
+      // sldu/sldl geojson are county-clipped, not a statewide universe — so a
+      // coverage fraction would be a self-denominator (CC-F2). Named gap, and no
+      // gate may claim completeness against a universe we cannot establish.
+      return { coverage: coverageGap(), gates: {} };
     case "districts.county-precinct": {
       const total = c.COUNTY ?? null;
       const held_ = a.heldDivisions.county ?? 0;
@@ -221,18 +263,22 @@ function deriveCapability(
 
     /* ---------------- Officials: no committed roster instrument (except walks) ---------------- */
     case "officials.state-federal-seats": {
-      if (a.officialsClosedWalk) {
-        const w = a.officialsClosedWalk;
+      const w = a.officialsClosedWalk;
+      // ARGUED_ABSENT ONLY from a closed walk that is FOR THIS capability and is
+      // UNEXPIRED (CC-F1). A candidate-field absence (a missing verifiedPage for
+      // one candidacy) proves nothing about officials/seats and must never be
+      // projected here; nor may an expired absence render as current.
+      if (
+        w &&
+        w.capabilityId === "officials.state-federal-seats" &&
+        !isExpired(w.expiresOn, nowIso)
+      ) {
         return {
           coverage: coverageGap(),
-          gates: {
-            // A source was known and the ladder was walked to a closed absence.
-            ACQUIRED: closedWalk(w.ref, w.asOf),
-            VERIFIED: closedWalk(w.ref, w.asOf),
-          },
+          gates: { ACQUIRED: closedWalk(w.ref, w.asOf), VERIFIED: closedWalk(w.ref, w.asOf) },
         };
       }
-      // No committed per-state officials-roster count/proof -> NOT_WALKED.
+      // No correctly-scoped, unexpired officials instrument on current main.
       return { coverage: coverageGap(), gates: {} };
     }
     case "officials.county":
@@ -265,15 +311,18 @@ function deriveCapability(
 
     /* ---------------- Campaign finance ---------------- */
     case "finance.federal-fec": {
-      if (a.fec) {
-        const f = a.fec;
+      // The committed FEC reconciliation is NATIONAL and its absences carry no
+      // state, so no deterministic state slice exists; a.fec is populated only
+      // when a genuine STATE slice is available (CC-F5). Never show the national
+      // denominator as this state's own — a named state gap instead.
+      const f = a.fec;
+      if (f && f.total > 0) {
         return {
-          coverage: coverageFrac(f.ballotMatched, f.ballotTotal, "FEC (bulk + API), our ballot reconciled to FEC filings", f.asOf),
+          coverage: coverageFrac(f.matched, f.total, f.authority, f.asOf),
           gates: {
-            SOURCE_KNOWN: frac(f.ballotTotal, f.ballotTotal, f.asOf, RECONCILE_STALE_DAYS),
-            ACQUIRED: frac(f.ballotTotal, f.ballotTotal, f.asOf, RECONCILE_STALE_DAYS),
-            // VERIFIED against the external FEC authority: ballot candidates matched.
-            VERIFIED: frac(f.ballotMatched, f.ballotTotal, f.asOf, RECONCILE_STALE_DAYS),
+            SOURCE_KNOWN: frac(f.total, f.total, f.asOf, RECONCILE_STALE_DAYS),
+            ACQUIRED: frac(f.total, f.total, f.asOf, RECONCILE_STALE_DAYS),
+            VERIFIED: frac(f.matched, f.total, f.asOf, RECONCILE_STALE_DAYS),
           },
         };
       }
@@ -313,29 +362,44 @@ function deriveCapability(
   }
 }
 
-/** Meetings capability from a level's governing-body statistics. */
+/**
+ * Meetings capability from a level's governing-body statistics.
+ *
+ * The registry `coverageStatus` contract (lib/registry/types.ts) says LIVE means
+ * "an adapter reads this body's calendar today" and MANUAL "hand-entered from a
+ * source someone read" — a source/route that is KNOWN, NOT canonical agenda
+ * material that is held/vaulted. So these support SOURCE_KNOWN only; ACQUIRED
+ * stays NOT_WALKED until it derives from an actual held-agenda instrument
+ * (CC-F4). `stat.asOf` is the body's registration date, which is honest for
+ * "source known", not for material acquisition.
+ */
 function meetingsCap(
   stat: BodyLevelStat,
   total: number | null,
   authority: string,
 ): { coverage: Coverage; gates: Partial<Record<Gate, GateEvidence>> } {
-  if (total === null || stat.asOf === null || stat.sourceLocated <= 0) {
-    return { coverage: total === null ? coverageGap() : coverageFrac(stat.live, total, `${CENSUS} (${authority})`, stat.asOf), gates: {} };
+  if (total === null) return { coverage: coverageGap(), gates: {} };
+  if (stat.asOf === null || stat.sourceLocated <= 0) {
+    return { coverage: coverageFrac(0, total, `${CENSUS} (${authority}: sources located)`, null), gates: {} };
   }
   return {
-    coverage: coverageFrac(stat.live, total, `${CENSUS} (${authority})`, stat.asOf),
+    coverage: coverageFrac(stat.sourceLocated, total, `${CENSUS} (${authority}: sources located)`, stat.asOf),
     gates: {
-      // A source is located for the bodies that are LIVE or KNOWN_UNCOVERED.
+      // A source is LOCATED for these bodies (registry LIVE / KNOWN_UNCOVERED).
       SOURCE_KNOWN: frac(stat.sourceLocated, total, stat.asOf, STRUCTURAL_STALE_DAYS),
-      // Acquired = agendas actually pulled (LIVE).
-      ACQUIRED: frac(stat.live, total, stat.asOf, STRUCTURAL_STALE_DAYS),
+      // ACQUIRED is deliberately omitted → NOT_WALKED: registry source-status is
+      // not held agenda material, and no held-material instrument is wired here.
     },
   };
 }
 
 /** Build one capability input from its taxonomy row + derived evidence. */
-function capabilityInput(row: (typeof CAPABILITY_TAXONOMY)[number], a: StateAuthorities): CapabilityInput {
-  const { coverage, gates } = deriveCapability(row.capabilityId, a);
+function capabilityInput(
+  row: (typeof CAPABILITY_TAXONOMY)[number],
+  a: StateAuthorities,
+  nowIso: string,
+): CapabilityInput {
+  const { coverage, gates } = deriveCapability(row.capabilityId, a, nowIso);
   return {
     capabilityId: row.capabilityId,
     domain: row.domain,
@@ -363,17 +427,27 @@ export function deriveStateInputs(
   meta: { readonly nowIso: string; readonly sha: string | null; readonly publisher: string },
   zips: ReadinessInputs["zips"],
 ): ReadinessInputs {
-  const capabilities = CAPABILITY_TAXONOMY.map((row) => capabilityInput(row, a));
+  const capabilities = CAPABILITY_TAXONOMY.map((row) => capabilityInput(row, a, meta.nowIso));
 
-  // Reader-visible jurisdictions: held congressional districts over their
-  // complete external set, when we actually hold them; else a named gap.
-  const cd = a.heldDivisions.cd ?? 0;
-  const readerVisibleJurisdictions: Held<Measured> =
-    cd > 0
-      ? held(measured(cd, cd, `${a.name} congressional districts held over the cd119 set`, "Census cd119 (complete set)"))
-      : gap<Measured>("OURS", `${a.name} congressional districts are not held, so none are reader-visible yet`);
+  // Reader-visible jurisdictions is a named gap: "reader-visible" requires
+  // SHOWN_TO_READER proof, which is NOT_WALKED everywhere on current main (no
+  // committed per-capability delivery record), and a held count is not a
+  // reader-visible count nor an external denominator (CC-F2).
+  const readerVisibleJurisdictions: Held<Measured> = gap<Measured>(
+    "OURS",
+    `no committed proof that any ${a.name} jurisdiction is delivered to a reader — SHOWN_TO_READER is NOT_WALKED — so a reader-visible count cannot be asserted`,
+  );
 
-  const evidenceWalks: EvidenceWalk[] = a.officialsClosedWalk ? [a.officialsClosedWalk.walk] : [];
+  // Project the officials walk ONLY when it passes the SAME capability+expiry
+  // guard as the gate (CC-F1): a mis-scoped or expired walk that reads NOT_WALKED
+  // must not be shipped as an orphan into evidenceWalks — the record holds only
+  // walks a rendered cell actually references.
+  const ow = a.officialsClosedWalk;
+  const officialsWalkUsable =
+    ow !== null &&
+    ow.capabilityId === "officials.state-federal-seats" &&
+    !isExpired(ow.expiresOn, meta.nowIso);
+  const evidenceWalks: EvidenceWalk[] = officialsWalkUsable ? [ow.walk] : [];
 
   return {
     state: a.code,

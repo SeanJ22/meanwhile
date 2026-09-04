@@ -11,13 +11,17 @@
  * materialize derived truth; it may not author it. Where an instrument does not
  * exist on current main, the gate is NOT_WALKED — never a typed-in success.
  *
- * Target: writes to the CONTROL PLANE (Postgres, `WTP_CONTROL_PLANE_DATABASE_URL`)
- * when that is set — the same store the pilot-health page reads — else to the
- * durable file store for local dev. Force with `--target=file|control-plane`,
- * and `--out=<dir>` overrides the file-store directory (dev only).
+ * TARGET IS SAFE BY DEFAULT (CC-F3). This script writes to the LOCAL FILE STORE
+ * unless the caller passes the explicit `--target=control-plane`. The presence
+ * of `WTP_CONTROL_PLANE_DATABASE_URL` in the environment does NOT select
+ * production — so `pnpm readiness:refresh`, even with `.env.local` loaded, only
+ * derives locally and never contacts production. Production publication is the
+ * separate, deliberate `pnpm readiness:publish` (which passes
+ * `--target=control-plane`). `--out=<dir>` overrides the file-store directory.
  *
- * Run (prod): `node --env-file=.env.local --experimental-strip-types scripts/readiness-refresh.mts`
- * Run (dev file store): `pnpm exec tsx scripts/readiness-refresh.mts --target=file --out=<dir>`
+ * Run (local, safe): `pnpm readiness:refresh`  (→ data/control-plane file store)
+ * Run (dev file store elsewhere): `pnpm exec tsx scripts/readiness-refresh.mts --out=<dir>`
+ * Publish to PRODUCTION (deliberate): `pnpm readiness:publish`  (--target=control-plane)
  */
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -32,10 +36,9 @@ import type { ControlPlaneRepositories } from "../lib/control-plane/repository/t
 import { coverageTierForZip } from "../lib/coverage/zip-tier.ts";
 import {
   type BodyLevelStat,
-  type ClosedWalkInstrument,
-  type FecInstrument,
   type ReconInstrument,
   type StateAuthorities,
+  chooseReadinessStoreTarget,
   deriveStateInputs,
 } from "../lib/control-plane/readiness/extract.ts";
 import {
@@ -43,7 +46,6 @@ import {
   type ZipInput,
   computeReadinessSnapshot,
 } from "../lib/control-plane/readiness/compute.ts";
-import type { EvidenceRung, EvidenceWalk } from "../lib/control-plane/readiness/model.ts";
 
 const ROOT = process.cwd();
 const NOW = new Date().toISOString();
@@ -77,25 +79,11 @@ interface Registry {
 interface ZipDivisionIds {
   readonly zips?: Record<string, readonly string[]>;
 }
-interface StuckStep {
-  readonly move: string;
-  readonly query: string;
-  readonly result: string;
-  readonly reached: boolean;
-}
-interface ArguedAbsenceRow {
-  readonly candidacyId: string;
-  readonly field: string;
-  readonly protocol: readonly StuckStep[];
-  readonly at?: string;
-  readonly argument: string;
-}
-interface ArguedAbsenceFile {
-  readonly rows: readonly ArguedAbsenceRow[];
-  readonly walkedAt?: string;
-}
 interface Jurisdictions {
   readonly counts?: Record<string, number>;
+}
+interface GeoJson {
+  readonly features?: readonly unknown[];
 }
 
 function readJson<T>(rel: string): T {
@@ -163,22 +151,18 @@ function bodyStats(code: string): { county: BodyLevelStat; place: BodyLevelStat;
   return acc;
 }
 
-/** The FEC reconciliation, read from the record (national; federal candidates). */
-function fecInstrument(): FecInstrument | null {
-  const fec = readJsonIf<{
-    fetchedAt?: string;
-    matchReport?: { ballotMatched?: number; ballotTotal?: number; rosterMatched?: number; rosterTotal?: number };
-  }>("data/fec/fec-2026.json");
-  const m = fec?.matchReport;
-  const asOf = dateOf(fec?.fetchedAt);
-  if (!m || asOf === null || typeof m.ballotTotal !== "number") return null;
-  return {
-    ballotMatched: m.ballotMatched ?? 0,
-    ballotTotal: m.ballotTotal,
-    rosterMatched: m.rosterMatched ?? 0,
-    rosterTotal: m.rosterTotal ?? 0,
-    asOf,
-  };
+/**
+ * The INDEPENDENT external count of congressional districts: the cd119
+ * cartographic FeatureCollection's feature count (CC-F2), never the held count.
+ * AZ=9, NH=2, NJ=12. Null when the committed geojson is absent → named gap.
+ */
+const STATE_FIPS: Record<string, string> = { az: "04", nh: "33", nj: "34" };
+function cdUniverse(code: string): number | null {
+  const fips = STATE_FIPS[code];
+  if (!fips) return null;
+  const geo = readJsonIf<GeoJson>(`data/states/${code}/geo/cd119-${fips}.geojson`);
+  const n = Array.isArray(geo?.features) ? geo.features.length : 0;
+  return n > 0 ? n : null;
 }
 
 /** AZ candidate-filings reconciliation against the SoS certified canvass. */
@@ -215,35 +199,16 @@ function azStateDisclosure(): ReconInstrument | null {
   };
 }
 
-/** A NH/NJ closed argued-absence walk behind officials.state-federal-seats. */
-function closedWalk(code: string, zip: string, rel: string): ClosedWalkInstrument | null {
-  const aa = readJsonIf<ArguedAbsenceFile>(rel);
-  if (!aa || aa.rows.length === 0) return null;
-  const row = aa.rows.find((r) => r.field === "verifiedPage") ?? aa.rows[0];
-  const asOf = dateOf(row.at ?? aa.walkedAt ?? NOW) ?? NOW.slice(0, 10);
-  const ref = `${code}-${zip}-verifiedpages`;
-  const rungs: EvidenceRung[] = row.protocol.map((step, i) => ({
-    at: row.at ?? aa.walkedAt ?? NOW,
-    path: `${step.move}: ${String(step.query).slice(0, 140)}`,
-    observed: String(step.result).slice(0, 400),
-    outcome: step.reached ? ("WALKED_AND_EMPTY" as const) : ("DOES_NOT_EXIST" as const),
-    nextHop: i + 1 < row.protocol.length ? (row.protocol[i + 1].move as string) : null,
-    vaultRef: `vault:${code}-${zip}#${row.candidacyId}:${row.field}`,
-  }));
-  const walk: EvidenceWalk = {
-    ref,
-    capabilityId: "officials.state-federal-seats",
-    jurisdiction: zip,
-    rungCount: rungs.length,
-    sessionCount: 1,
-    vaultId: `${code}-${zip}`,
-    closed: true,
-    nextUnwalkedRung: null,
-    absenceArgument: String(row.argument),
-    rungs,
-  };
-  return { ref, asOf, walk };
-}
+/*
+ * NOTE (CC-F1): the committed argued-absence files (data/hunt/argued-absences-*.json)
+ * are PER-CANDIDACY, PER-FIELD records (a missing verifiedPage/phone/photo for one
+ * candidate) that carry an `expiresOn` and prove nothing about officials or seats
+ * at the capability level — and every row is currently expired. They must NOT be
+ * projected onto officials.state-federal-seats, so this publisher supplies NO
+ * officials closed walk; that capability derives honestly as NOT_WALKED. The
+ * capability+expiry-scoped ARGUED_ABSENT guard lives in extract.ts for a future
+ * correctly-scoped, unexpired instrument.
+ */
 
 /* ------------------------------------------------------------- zips (real committed data) */
 
@@ -315,24 +280,12 @@ interface StateSpec {
   readonly code: string;
   readonly name: string;
   readonly jurisdictionsRel: string;
-  /** The zip + argued-absence walk file for pilot states with a closed walk. */
-  readonly closedWalk?: { readonly zip: string; readonly rel: string };
 }
 
 const STATES: readonly StateSpec[] = [
   { code: "az", name: "Arizona", jurisdictionsRel: "data/states/az/jurisdictions/az.json" },
-  {
-    code: "nh",
-    name: "New Hampshire",
-    jurisdictionsRel: "data/states/nh/jurisdictions/nh.json",
-    closedWalk: { zip: "03255", rel: "data/hunt/argued-absences-03255.json" },
-  },
-  {
-    code: "nj",
-    name: "New Jersey",
-    jurisdictionsRel: "data/states/nj/jurisdictions/nj.json",
-    closedWalk: { zip: "07866", rel: "data/hunt/argued-absences-07866.json" },
-  },
+  { code: "nh", name: "New Hampshire", jurisdictionsRel: "data/states/nh/jurisdictions/nh.json" },
+  { code: "nj", name: "New Jersey", jurisdictionsRel: "data/states/nj/jurisdictions/nj.json" },
 ];
 
 function authoritiesFor(spec: StateSpec): StateAuthorities {
@@ -344,13 +297,16 @@ function authoritiesFor(spec: StateSpec): StateAuthorities {
     counts,
     heldDivisions: byType,
     divisionsAsOf: asOf,
+    cdUniverse: cdUniverse(spec.code),
     bodies: bodyStats(spec.code),
-    fec: fecInstrument(),
+    // The committed FEC reconciliation is NATIONAL and its absences carry no
+    // state, so no deterministic state slice exists (CC-F5) — pass none and let
+    // finance.federal-fec render a named state gap, never the national number.
+    fec: null,
     ballotFilings: spec.code === "az" ? azBallotFilings() : null,
     stateDisclosure: spec.code === "az" ? azStateDisclosure() : null,
-    officialsClosedWalk: spec.closedWalk
-      ? closedWalk(spec.code, spec.closedWalk.zip, spec.closedWalk.rel)
-      : null,
+    // No correctly-scoped, unexpired officials-seat closed walk exists (CC-F1).
+    officialsClosedWalk: null,
   };
 }
 
@@ -367,9 +323,19 @@ function inputsFor(spec: StateSpec): ReadinessInputs {
 /* ----------------------------------------------------------------- main */
 
 async function openStore(): Promise<{ repos: ControlPlaneRepositories; where: string }> {
-  const target = args.get("target");
-  const url = controlPlaneUrlFromEnv();
-  if (target !== "file" && url !== null) {
+  // Production is written ONLY on the explicit `--target=control-plane` route
+  // (the `readiness:publish` command). A generic `readiness:refresh` — no target,
+  // or `--target=file` — is ALWAYS the local file store, even when .env.local
+  // carries WTP_CONTROL_PLANE_DATABASE_URL: the production URL's mere presence
+  // never selects production (CC-F3). We do not even read the URL off-target, so
+  // no production client is constructed on the default path.
+  if (chooseReadinessStoreTarget(args.get("target")) === "control-plane") {
+    const url = controlPlaneUrlFromEnv();
+    if (url === null) {
+      throw new Error(
+        "readiness:publish (--target=control-plane) requires WTP_CONTROL_PLANE_DATABASE_URL; refusing to publish without it.",
+      );
+    }
     return { repos: await createPgRepositories(url), where: "control plane (Postgres)" };
   }
   const dir = args.get("out") ?? "data/control-plane";

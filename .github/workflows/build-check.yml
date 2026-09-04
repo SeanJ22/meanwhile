@@ -278,7 +278,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
+      # Pull-request checks run on GitHub's synthetic merge commit. The reader
+      # closure receipt binds the immediately preceding executed proof head,
+      # so the gate needs merge -> branch head -> proof head and no more.
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 3
 
       # Exact historical data equality is a migration proof, not a live-source query.
       # Fetch the frozen base and the pinned integration source; keep checkout shallow.

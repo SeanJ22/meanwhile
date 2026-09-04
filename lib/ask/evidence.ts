@@ -84,6 +84,10 @@ export interface EvidenceRecord {
      * of that module's doc block.
      */
     | "ROLL_CALL_VOTE"
+    /** Curated question context is separate from a member's recorded position. */
+    | "KEY_VOTE_CONTEXT"
+    | "KEY_VOTE_POSITION"
+    | "BILL_SUMMARY"
     /*
      * **WHAT A BODY DID TO ONE AGENDA ITEM.** (2026-08-29.)
      *
@@ -195,6 +199,16 @@ export interface EvidenceRecord {
    * kind-scoped rules it holds, and a null is never treated as a foreign stamp.
    */
   subjectId?: string | null;
+  keyVote?: {
+    entryIds: string[];
+    positionKeys: string[];
+    chamber: "house" | "senate";
+    congress: number;
+    session: number;
+    rollNumber: number;
+    position: string;
+    referenceVerifiedAt: string;
+  };
   /** The record's own words, or a mechanical read of its fields. Never a summary. */
   text: string;
   /** ISO date this record is ABOUT, where that is meaningful. */

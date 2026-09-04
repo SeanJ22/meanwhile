@@ -12,6 +12,11 @@ import { summaryForContest } from "../lib/ballot/measure-summary.ts";
 import { reconciledCandidacyIdForCard } from "../lib/identity/az-2026.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { launchGuarded } from "./browser.mts";
+import { analysisForContest } from "../lib/ballot/analyses.ts";
+import { electionDatesFor } from "../lib/ballot/election-dates.ts";
+import { registrationLinkFor } from "../lib/ballot/registration-links.ts";
+import { pollingPlaceLinkFor } from "../lib/ballot/polling-place-links.ts";
+import { formatDateMDY } from "../lib/map/format.ts";
 
 const base = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
 assert.match(new URL(base).hostname, /^(localhost|127\.0\.0\.1)$/);
@@ -52,6 +57,22 @@ const normalize = (value: string) => value.replace(/\s+/g, " ").trim();
 try {
   for (const plan of chosen) {
     await page.goto(`${base}/ballot?zip=${plan.zip}`, { waitUntil: "domcontentloaded", timeout: 90_000 });
+    const dates = electionDatesFor(plan.set.election.state);
+    const registration = registrationLinkFor(plan.set.election.state);
+    const polling = pollingPlaceLinkFor(plan.set.election.state);
+    assert.ok(dates && registration && polling, `${plan.state}: mandatory held navigation controls`);
+    const datesSection = page.locator("section").filter({ has: page.getByRole("heading", { name: "Dates that decide whether you can vote", exact: true }) });
+    if (dates) {
+      const datesText = normalize(await datesSection.innerText());
+      assert.equal(await datesSection.locator("li").count(), dates.steps.length);
+      for (const step of dates.steps) {
+        assert.ok(datesText.includes(normalize(step.label)), `${plan.state}: missing election step ${step.label}`);
+        assert.ok(datesText.includes(normalize(formatDateMDY(step.date))), `${plan.state}: missing election date ${step.date}`);
+      }
+      assert.ok(await datesSection.locator(`a[href="${dates.sourceUrl}"]`).count());
+    }
+    if (registration) assert.ok(await page.locator(`a[href="${registration.url}"]`).count(), `${plan.state}: registration link`);
+    const pollingLinkRendered = polling ? await page.locator(`a[href="${polling.url}"]`).count() > 0 : false;
     const actualContests = await page.locator("[data-contest-id]").evaluateAll((elements) => elements.map((element) => element.getAttribute("data-contest-id")));
     assert.deepEqual([...actualContests].sort(), plan.contests.map((contest) => contest.id).sort(), `${plan.zip}: exact contest population`);
     const proofs = [];
@@ -72,6 +93,13 @@ try {
       }
       const summary = summaryForContest(contest.id);
       if (summary) assert.ok(text.includes(normalize(summary.summary)), `${contest.id}: eligible summary missing`);
+      const analysis = analysisForContest(contest.id);
+      if (analysis?.text) {
+        const disclosure = section.locator("details").filter({ has: page.locator("summary", { hasText: /^Official analysis/ }) });
+        if (await disclosure.getAttribute("open") === null) await disclosure.locator(":scope > summary").click();
+        assert.ok(normalize(await disclosure.innerText()).includes(normalize(analysis.text)), `${contest.id}: complete official analysis`);
+        assert.ok(await section.locator(`a[href="${analysis.analysisUrl}"]`).count(), `${contest.id}: analysis source`);
+      }
       const removals = (plan.set.removals ?? []).filter((record) => record.contestId === contest.id);
       assert.equal(await section.locator("[data-filing-change-id]").count(), removals.length);
       for (const record of removals) assert.ok(text.includes(normalize(record.statement)), `${record.id}: filing change missing`);
@@ -79,7 +107,7 @@ try {
     }
     const actualAbsences = await page.locator("[data-absence-ocd-ids]").evaluateAll((elements) => elements.flatMap((element) => (element.getAttribute("data-absence-ocd-ids") ?? "").split(" ")));
     assert.deepEqual(actualAbsences.sort(), plan.absences.map((absence) => absence.ocdId).sort(), `${plan.zip}: sourced absences`);
-    rows.push({ zip: plan.zip, state: plan.state, statedContestCount: plan.contests.length, returnedContestCount: actualContests.length, proofs, absenceOcdIds: actualAbsences });
+    rows.push({ zip: plan.zip, state: plan.state, navigation: { dates, registration, polling, pollingLinkRendered }, analysisContestIds: plan.contests.filter((contest) => analysisForContest(contest.id)?.text).map((contest) => contest.id), statedContestCount: plan.contests.length, returnedContestCount: actualContests.length, proofs, absenceOcdIds: actualAbsences });
     console.log(JSON.stringify({ zip: plan.zip, contests: plan.contests.length, result: "PROVEN" }));
   }
 } finally { await context.close(); await browser.close(); }

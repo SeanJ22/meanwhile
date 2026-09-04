@@ -23,6 +23,13 @@ import { positionsFor, searchTerms } from "../lib/corpus/positions.ts";
 import { getFundingSnapshot } from "../lib/funding/snapshot.ts";
 import { officialActionsForTarget } from "../lib/officials/reader-actions.ts";
 import { executiveActionStore } from "../lib/officials/executive-actions.ts";
+import { ROSTER_FILES } from "../lib/coverage/artifacts.ts";
+import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
+import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
+import { BODY_ROSTERS } from "../lib/registry/body-rosters.ts";
+import type { OfficeholderSet } from "../lib/officials/types.ts";
+import { directoryFor } from "../lib/officials/directory.ts";
+import { keyVotesForMember } from "../lib/votes/key-votes-reader.ts";
 
 const base = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
 assert.match(new URL(base).hostname, /^(localhost|127\.0\.0\.1)$/,
@@ -66,7 +73,18 @@ for (const zip of ["85701", "85641", "07866", "03255"]) {
     evidence.push(await representation(division, zip));
   }
 }
-const remainingDivisions = registry.divisions.map((division) => division.ocdId).filter((id) => !provedDivisions.has(id)).sort();
+const rosterDivisions = ROSTER_FILES.flatMap((name) => {
+  const fips = /^officeholders-(\d{2})\.json$/.exec(name)?.[1];
+  const path = name === "officeholders-us.json" ? `lib/registry/${name}` : `data/states/${FIPS_TO_STATE[fips!].postal.toLowerCase()}/officials/${name}`;
+  return (JSON.parse(readFileSync(path, "utf8")) as OfficeholderSet).divisions.map((division) => division.ocdId);
+});
+const allDivisions = [...new Set([
+  ...registry.divisions.map((division) => division.ocdId),
+  ...rosterDivisions,
+  ...STATEWIDE_EXECUTIVES.map((executive) => executive.stateOcdId),
+  ...BODY_ROSTERS.filter((roster) => /#(?:governing|board)$/.test(roster.bodyId)).map((roster) => roster.bodyId.split("#")[0]).filter((id) => id.startsWith("ocd-division/")),
+])];
+const remainingDivisions = allDivisions.filter((id) => !provedDivisions.has(id)).sort();
 floored("representation division controls", "canonical registry divisions", remainingDivisions.length, remainingDivisions.length);
 await each(remainingDivisions, (division) => representation(division));
 const moneyTargets = [...new Set([
@@ -86,7 +104,8 @@ await each(moneyTargets, async (target) => {
 });
 const federal = getVotesSnapshot();
 const state = getStateVotesSnapshot();
-const memberIds = [...new Set([...federal.positions, ...state.positions].map((position) => position.officeholderId))].sort();
+const memberDirectory = JSON.parse(readFileSync("data/congress-legislators/directory.json", "utf8")) as { byMember: Record<string, unknown> };
+const memberIds = [...new Set([...federal.positions.map((position) => position.officeholderId), ...state.positions.map((position) => position.officeholderId), ...Object.keys(memberDirectory.byMember).map((id) => `congress:${id}`)])].sort();
 floored("vote member controls", "both canonical position snapshots", memberIds.length, memberIds.length);
 for (const member of memberIds) {
   const positions = member.startsWith("congress:")
@@ -99,6 +118,12 @@ for (const member of memberIds) {
   assert.equal(result.count, votes.length); assert.equal(votes.length, expected.size, member);
   for (const vote of votes) assert.equal(vote.position, expected.get(String(vote.id)), `${member}/${vote.id}`);
   evidence.push({ surface: "votes", member, expectedCount: expected.size, statedCount: result.count, returnedCount: votes.length, canonicalIds: votes.map((vote) => vote.id), payloadSha256: hash(result) });
+  if (member.startsWith("congress:")) {
+    const curated = await keyVotesForMember(member);
+    assert.equal(result.chamber, curated.chamber);
+    assert.deepEqual(result.keyVotes, JSON.parse(JSON.stringify(curated.rows)), `${member}: canonical chamber key votes`);
+    evidence.push({ surface: "key-votes", member, chamber: curated.chamber, expectedCount: curated.rows.length, returnedCount: rows(result.keyVotes).length, payload: result.keyVotes, payloadSha256: hash(result.keyVotes) });
+  }
 }
 for (const sitting of getOutcomeSnapshot().sittings) {
   const expected = meetingReaderRecords(sitting.meetingId, sitting.bodyId ?? undefined);
@@ -108,6 +133,14 @@ for (const sitting of getOutcomeSnapshot().sittings) {
   evidence.push({ surface: "agenda/map", meetingId: sitting.meetingId, bodyId: sitting.bodyId, expected: expected.counts, returned: (result.records as typeof expected).counts, status: expected.status, payloadSha256: hash(result) });
 }
 const profiles = JSON.parse(readFileSync("data/prl/prl-profiles.json", "utf8")) as PrlSnapshot;
+await each(Object.keys(memberDirectory.byMember).sort(), async (bioguide) => {
+  const member = `congress:${bioguide}`;
+  const found = directoryFor(member); assert.ok(found, member);
+  const expected = { source: found.source, districtOffices: found.entry.districtOffices, committees: found.entry.committees.map((seat) => ({ ...seat, ...found.committeeJurisdictions[seat.committeeId] })) };
+  const actual = await get(`/api/directory?member=${encodeURIComponent(member)}`);
+  assert.deepEqual(actual, JSON.parse(JSON.stringify(expected)), member);
+  return { surface: "directory", member, payload: actual, returnedCount: { offices: expected.districtOffices.length, committees: expected.committees.length }, payloadSha256: hash(actual) };
+});
 const actionOfficials = new Set((executiveActionStore()?.actions ?? []).map((row) => row.officeholderId));
 const actionTargets = [...new Set([...actionOfficials, ...officialBridge.rows.filter((row) => actionOfficials.has(row.holder.id) && row.status === "RESOLVED").flatMap((row) => row.candidacy ? [row.candidacy.candidacyId] : []), "ballot-az-pima:governor|Katie Hobbs", "congress:K000377", "statewide:nh/governor", "unresolved:Katie Hobbs"])];
 await each(actionTargets, async (subject) => {

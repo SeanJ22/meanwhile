@@ -49,6 +49,7 @@ import {
   type AskContact,
 } from "@/lib/ask/contacts";
 import { contactForCandidate } from "@/lib/ask/candidate-contact";
+import { keyVoteEvidenceFor } from "@/lib/ask/key-votes";
 import {
   absencesForDivisions,
   absencesWithoutRemovals,
@@ -1603,6 +1604,13 @@ export async function POST(request: Request) {
    * subject this pipeline holds nothing for gets a scope gap that says which
    * store it would be in rather than a bare nothing.
    */
+  if (subject?.kind === "PERSON") {
+    const keyVotes = await keyVoteEvidenceFor(subject, [...canonicalSubjectKeys]);
+    records.push(...keyVotes.records);
+    gaps.push(...keyVotes.gaps);
+    Object.assign(denominators, keyVotes.denominators);
+  }
+
   if (subject && financeQuestionAsked(question)) {
     const normalized = campaignMoneyEvidenceFor(subject, ballotRecord?.id ?? subject.id, ballotRecord?.contestId);
     records.push(...normalized.records);

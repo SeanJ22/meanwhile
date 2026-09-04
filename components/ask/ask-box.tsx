@@ -3,6 +3,7 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import { AskAnswerRecords } from "./answer-records";
+import { AskAnswerContacts } from "./answer-contacts";
 
 import {
   answerQuestion,
@@ -21,13 +22,11 @@ import { readBrowserKey } from "@/lib/state/browser-key";
 import { readLocationOriginFor } from "@/lib/state/location-origin";
 import { subjectKindOf, type AskSubjectRef } from "@/lib/ask/subject";
 import {
-  answerSaysSomething,
   readAskAnswer,
   transportFailure,
   type AskAnswerPayload,
   type AskClassifyReply,
 } from "@/lib/ask/answer";
-import { contactReadLine } from "@/lib/ask/contacts";
 import { sourceLinks } from "@/lib/ask/host";
 import {
   KIND_LABEL,
@@ -1315,53 +1314,7 @@ export function AskBox({
             is the one already on the surface, so the label a reader has
             learned does not move under them.
           */}
-          {(grounded.contacts?.length ?? 0) > 0 && (
-            <details className="mt-2" data-ask-contacts={grounded.contacts?.length}>
-              <summary className="cursor-pointer text-[0.6875rem] text-link">
-                Who this is ({grounded.contacts?.length})
-              </summary>
-              <ul className="mt-0.5 space-y-0.5">
-                {(grounded.contacts ?? []).map((c) => (
-                  <li
-                    key={c.id}
-                    /* The BASIS stays machine-readable and off the reader's
-                       page: `BODY_MEMBER` is an enum value and no enum value
-                       reaches a reader. Its plain-language form is already the
-                       relationship sentence beside it. */
-                    data-ask-contact-basis={c.basis}
-                    className="text-[0.75rem] leading-relaxed text-paper-dim"
-                  >
-                    <span className="text-paper">{c.name}</span> — {c.relationship}
-                    {c.email ? (
-                      <>
-                        {" · "}
-                        <a
-                          href={`mailto:${c.email}`}
-                          className="underline decoration-dotted underline-offset-2 hover:text-link"
-                        >
-                          {c.email}
-                        </a>
-                      </>
-                    ) : null}
-                    {/*
-                      **WHO SAID SO, AND WHEN WE READ IT.** (ASK-05.)
-
-                      `AskContact` has always carried `sourceOrg` and
-                      `retrievedAt`, and both hand-copied client contact types
-                      DROPPED them — so the provenance of a claim about a named
-                      person's role travelled on the wire and was unrenderable
-                      by declaration. A relationship sentence with no source
-                      behind it is exactly what `lib/ask/contacts.ts` says a
-                      contact may never be.
-                    */}
-                    {contactReadLine(c) ? (
-                      <span className="text-muted"> · {contactReadLine(c)}</span>
-                    ) : null}
-                  </li>
-                ))}
-              </ul>
-            </details>
-          )}
+          <AskAnswerContacts contacts={grounded.contacts ?? []} />
 
           {/*
             **NO BRANCH MAY RENDER SILENCE.** A reply with no subject, no

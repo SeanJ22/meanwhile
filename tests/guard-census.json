@@ -1,9 +1,9 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 454,
-    "named": 5059,
-    "dynamic": 21
+    "files": 487,
+    "named": 5232,
+    "dynamic": 23
   },
   "files": {
     "tests/absence-defaults.test.ts": {
@@ -509,7 +509,7 @@
         "ASK-05: the topic sweep is EVIDENCE under the one answer, never a second answer",
         "ASK-06 (a): a reader asking about their sitting representative gets his roll calls",
         "ASK-06 (b): a candidate with no held voting record gets a NAMED gap, never silence",
-        "ASK-06 (c): THE ADVERSARIAL CASE — Sally Ann Gonzales gets no senator's votes",
+        "ASK-06 (c): the committed person bridge preserves the held Senate office beside a House candidacy",
         "ASK-24: 'Explain Prop 141 to me' carries NOTHING off the measure — no Senate bullet, no unconnected people",
         "BALLOT: a contest resolves and lists who filed for it",
         "BALLOT: a measure resolves from the short form a reader actually types",
@@ -646,6 +646,7 @@
         "a measure gets the linkage gap, never an inferred committee position",
         "a person NOT on a covered body gets null — never a false 'nothing recorded'",
         "a person ON the covered body gets the body's evidence and the no-attachment gap FIRST",
+        "a same-name person with no canonical roster identity cannot acquire the body's finance",
         "finance wording is detected, and only finance wording",
         "register-linked committees with no readable money rows are a named gap, with denominators",
         "the Vail board gets its register-linked committees as sourced records",
@@ -1702,7 +1703,9 @@
         "a YES row states where the period falls, in the body's own terms",
         "an UNKNOWN row claims nothing beyond its link",
         "every comment-access row names a real registry body and cites a source",
-        "lookup is by division plus published body name, never the wrong body's rule"
+        "every held standing rule survives its exact canonical body join",
+        "lookup is by division plus published body name, never the wrong body's rule",
+        "one held policy in a division never supplies an unidentified sibling body's rules"
       ],
       "dynamic": 0
     },
@@ -1795,6 +1798,25 @@
         "S-001 · the zero-row predicate has ONE implementation and both callers use it",
         "S-001 · totalDropped sums the counters rather than asking whether any is set",
         "legistar's composite wrapper conserves, and agrees with the adapter EXACTLY"
+      ],
+      "dynamic": 0
+    },
+    "tests/consolidation-guards.test.ts": {
+      "names": [
+        "NEEDS_OWNER is gone from current law; NEEDS_SEAN is the one owner-terminal state",
+        "a duplicate ruleKey on two current law records is refused",
+        "a non-current record carrying a ruleKey must link to the current holder",
+        "an active LAW_DECISION with no ruleKey is refused",
+        "current-decisions.md promotes no LAW_DECISION",
+        "every ruling cited in CLAUDE.md as a rule carrier resolves and is current",
+        "governance:compile imports no overlay and never writes the ledger",
+        "history never overrides: the reversed clause is gone",
+        "numbering facts: 88 and 89 were issued and superseded; 11 is a retired id",
+        "the fourteen numbered retrieval-mechanics rungs and walledAtRung survive verbatim",
+        "the frontier is unordered and carries no priority sequence",
+        "the permission enum names all four states",
+        "the real ledger has exactly one current holder per ruleKey and keys every current law",
+        "the repaired conservation holes remain in current law"
       ],
       "dynamic": 0
     },
@@ -2914,6 +2936,13 @@
       ],
       "dynamic": 0
     },
+    "tests/focus-visible.test.ts": {
+      "names": [
+        "app/globals.css keeps a global focus-visible ring and never suppresses it bare",
+        "the focus sweep catches a suppressed ring — the instrument works (RULING 110)"
+      ],
+      "dynamic": 0
+    },
     "tests/format.test.ts": {
       "names": [
         "BC-12: dates spell out, including inside ranges",
@@ -2956,6 +2985,10 @@
         "D40: distinct officials resolve to distinct funding payloads",
         "D40: no query-keyed API route marks itself publicly cacheable",
         "D40: no two candidates share an FEC id, a committee id, or a target key",
+        "R4: a retained second-hop committee whose rows thin is still a regression",
+        "R4: a vanished second-hop committee that is STILL derived is a regression",
+        "R4: a vanished second-hop committee that is no longer derived is churn, not a regression",
+        "R4: the first-hop candidate checks are unchanged by the second-hop fix",
         "a surface headed 'contributions' carries only contributions — no offsets, no interest, no loan repayments",
         "aggregate output can never carry a contributor name",
         "every ripcord is registered with question, closer, and tracker rows",
@@ -4367,6 +4400,15 @@
       ],
       "dynamic": 0
     },
+    "tests/motion-tokens.test.ts": {
+      "names": [
+        "app/globals.css carries no raw duration in any transition or animation",
+        "no reader-facing component hardcodes a raw duration",
+        "the global reduced-motion floor is present in app/globals.css",
+        "the motion sweep catches a raw duration — the instrument works (RULING 110)"
+      ],
+      "dynamic": 0
+    },
     "tests/municipal-layer.test.ts": {
       "names": [
         "Arizona's statistical CCDs never draw as municipal boundaries",
@@ -4763,7 +4805,7 @@
     },
     "tests/owner-amendments.test.ts": {
       "names": [
-        "OWN-Q5 WIRING: the route pushes the regimes on EVERY money question",
+        "OWN-Q5 WIRING: real money answers name all regimes with and without applicable records",
         "OWN-Q5: THE SEEDED FAILURE — a subject this pipeline holds nothing for still gets a scope gap",
         "OWN-Q5: a contest is answered as a contest, not as an absence",
         "OWN-Q5: a money answer names all three regimes, and each is OURS",
@@ -5089,11 +5131,11 @@
         "D35 type 3 — NOT_YET_COLLECTED: a fact about our collection, not about them",
         "D35: a late answer for an abandoned query never lands",
         "D35: nothing in this path generates, and nothing reads party",
-        "D35: the clip is stated, never silent",
         "D35: the machinery answers against the committed corpus, and states its size",
         "D35: the surface renders three different sentences, in the gap's own register",
         "D35: the three answers are distinguishable in data, and none of them says 'no position'",
-        "D35: the topic list is curated, and the search strips the question around the topic"
+        "D35: the topic list is curated, and the search strips the question around the topic",
+        "reader last mile: every eligible matched passage reaches the shared answer"
       ],
       "dynamic": 0
     },
@@ -5230,6 +5272,18 @@
         "RULING 162: the happy path is allowed, and states its count",
         "RULING 162: the tracker grant is to job-watch ALONE",
         "RULING 162: traversal and absolute paths are refused before any rule is consulted"
+      ],
+      "dynamic": 0
+    },
+    "tests/push-generated-freshness.test.ts": {
+      "names": [
+        "a dependent that FAILS to regenerate is reported, never silently passed",
+        "a planted stale generator → the guard refuses and names it",
+        "a single stale artifact is enough to refuse — one red invariant stops the push",
+        "all checks green → the guard is fresh",
+        "owner deliverable 1: a stale generator input causes its dependent to REGENERATE before commit",
+        "the guard runs over the REAL register too, not just the sample",
+        "verifiableCheckCommands dedupes by command — one state-manifest check covers many docs"
       ],
       "dynamic": 0
     },
@@ -5394,6 +5448,13 @@
       ],
       "dynamic": 0
     },
+    "tests/reader-directory-delivery.test.ts": {
+      "names": [
+        "a missing deployed directory fails instead of claiming empty committees and offices",
+        "all normalized directory entries survive exact Bioguide projection"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-evaluation.test.ts": {
       "names": [
         "SEEDED: a NAMED GAP about our own records never satisfies a verified absence",
@@ -5412,6 +5473,161 @@
       ],
       "dynamic": 0
     },
+    "tests/reader-finance-delivery.test.ts": {
+      "names": [
+        "Katie Hobbs ballot, official API, and shared Ask selector use one canonical record",
+        "a candidacy for another office stays explicitly identified as that candidacy",
+        "a missing certified identity bridge cannot become a display-key funding absence",
+        "a missing deployed normalized holding raises a failed read even if staged evidence exists",
+        "a reused officeholder slot, changed office, or changed jurisdiction fails the committed identity",
+        "accent-equivalent current person identity never joins a different Hernandez",
+        "an unmapped roster division cannot erase an explicitly resolved person's held candidacy",
+        "every eligible normalized record survives the shared canonical target projection; leads stay withheld",
+        "every resolved official, including NJ county and NH governor, preserves its full canonical finance answer",
+        "federal finance answer remains identical for every existing FEC target",
+        "federal officeholders' held state candidacies project without inventing federal records",
+        "official finance identity bridge reproduces current canonical sources",
+        "the canonical federal contest cannot manufacture an Arizona state-finance gap",
+        "unverified extraction PASS and Auditor INCONCLUSIVE do not promote money",
+        "wrong-candidate and unlinked-official targets never inherit Katie Hobbs money"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-key-votes-delivery.test.ts": {
+      "names": [
+        "missing held key-vote positions cannot become null positions or unacquired roll calls",
+        "shared key-vote projection retains exact current member/chamber positions and source timestamp"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-last-mile-ask-corpus.test.ts": {
+      "names": [
+        "every quotable current corpus snapshot reaches Ask with its exact identity, verbatim passage and provenance"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-last-mile-ask-exhaustive.test.ts": {
+      "names": [
+        "all held votes, body contacts, unwindowed actions and linked county records survive the real Ask route without tail limits"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-last-mile-ask-render.test.ts": {
+      "names": [
+        "Ask renders every grounded non-contact record with its own source even beside a prose answer",
+        "a held filing revision renders its exact statement and both source documents without resurrecting a candidacy",
+        "map and ballot Ask share every held contact channel, exact rows and per-person provenance"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-last-mile-ask.test.ts": {
+      "names": [
+        "Ask body contacts use every explicit legal composition while unrelated advisory bodies inherit nobody",
+        "Ask has no import path to the unpromoted autonomous evidence store",
+        "Ask retrieves the same verbatim candidate passages as Positions in AZ, NJ, and NH",
+        "Hobbs ballot and map Ask answers share canonical candidacy and values; Biggs never inherits Hobbs money",
+        "a congressional office's everyday name reaches the same canonical contest in every pilot state",
+        "a direct held federal official remains answerable without a ballot candidacy",
+        "a failed corpus read has its own state, distinct from no held statement",
+        "a sourced removed filing reaches only its contest or former candidacy, with both documents and no current-candidate claim",
+        "all current filed candidate contacts and addresses survive the exact identity and Ask projection",
+        "an unreadable applicable ballot is a failed holding, never an empty civic population",
+        "direct official vote IDs never fall through to another same-name person",
+        "each readable canonical statement subject can be searched without a general-knowledge answer",
+        "multiple verified roles share an Ask subject only through the committed person bridge",
+        "raw acquisition, extraction PASS, and unresolved finance never become a state-money answer",
+        "the canonical body inventory remains available where no meeting has been acquired",
+        "the real Ask route carries Mejia's published filing contact with its own provenance"
+      ],
+      "dynamic": 1
+    },
+    "tests/reader-last-mile-census.test.ts": {
+      "names": [
+        "applicability keeps source inputs distinct without erasing direct reader obligations",
+        "committed autonomous negative controls preserve the exact AZ, NJ and NH lifecycle burdens",
+        "composition requires actual per-record HTML, current source and an executed same-surface witness",
+        "current normalized state-money records survive the canonical exact-key selector; leads never enter",
+        "eligibility negative controls keep extraction and acquisition separate from civic verification",
+        "every declared canonical dataset/surface edge has an executable consumer path",
+        "evidence packaging preserves the exact baseline JSON and deterministic archive",
+        "graph control crosses actual API fetches and fails when the reader import is removed",
+        "reader readback counts missing rows and refuses wrong-candidate identities, false counts, and unchecked evidence",
+        "render instrument rejects a vanished eligible fact, an inherited identity and a false row count"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-last-mile-funding-route.test.ts": {
+      "names": [
+        "every canonical state-finance target survives the real route, including long school-seat IDs",
+        "funding route refuses malformed or excessive identifiers without guessing another person"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-last-mile-meetings.test.ts": {
+      "names": [
+        "an agenda never supplies a decision or inferred per-member vote",
+        "every held sitting reaches the real agenda route with the same class-filtered records as Ask",
+        "vendor/event ambiguity and a different body cannot inherit recorded actions"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-last-mile-money-ask.test.ts": {
+      "names": [
+        "every current eligible state-money target survives the actual Ask route with exact totals, provenance, gap states and counts"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-last-mile-officeholder-identity.test.ts": {
+      "names": [
+        "Ask can answer an explicitly named unmapped official without calling them the reader's representative",
+        "every committed officeholder survives exact-ID lookup, independent of held geometry",
+        "making unmapped people readable never manufactures a geographic membership"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-last-mile-registry-failure.test.ts": {
+      "names": [
+        "a removed required roster or territory cannot turn a held population into an empty registry"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-last-mile-trace.test.ts": {
+      "names": [
+        "every dynamic reader contract fails if one holding is removed from deployment tracing",
+        "the completed Next production bundle includes every declared runtime holding"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-last-mile-voting-sites.test.ts": {
+      "names": [
+        "every eligible voting jurisdiction reaches the real route with its own exact sites or sourced refusal"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-official-actions.test.ts": {
+      "names": [
+        "a reused officeholder slot preserves unresolved identity on both official and candidacy surfaces",
+        "all42 held official actions reach map and canonical ballot projection with Ask parity",
+        "official actions never attach by display name, wrong candidacy, or another governor",
+        "unresolved certified identity is explicit and never becomes an absence"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-polling-fallback.test.ts": {
+      "names": [
+        "every held official lookup renders its actual URL, authority, access note and verification date",
+        "official voting lookup fallback preserves unavailable versus resolved jurisdictions on both surfaces"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-prl-delivery.test.ts": {
+      "names": [
+        "PRL is exact official identity only, never a display-name or wrong-tier join",
+        "all held eligible PRL profiles survive exact bioguide reader projection",
+        "reader projection preserves the counts/shares allowlist and refuses an uncited measurement"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-question.test.ts": {
       "names": [
         "RULING 9: a Census/NCES denominator is refused for the body layer",
@@ -5420,6 +5636,13 @@
         "bodiesForDivisions matches on ocdId and on alsoServesOcdIds (RULING 121)",
         "diagnosticWorkItemFor requires an explicit, valid failure class",
         "instantiation from the committed registry covers every pilot ZIP body"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-representation-delivery.test.ts": {
+      "names": [
+        "all14 held statewide executives reach the actual representation route only for their own state",
+        "held governing-body and indexed division identities survive the representation route together"
       ],
       "dynamic": 0
     },
@@ -5481,6 +5704,29 @@
         "one host's refusal does not empty the bodies on the other hosts",
         "the client meta names the carried rows and the day they were last reached",
         "the composite carries a partial refusal through to its report"
+      ],
+      "dynamic": 0
+    },
+    "tests/refresh-execution-result.test.ts": {
+      "names": [
+        "R1: a result from run A cannot be read back under run B's key",
+        "R1: a written record round-trips through the durable store",
+        "R1: readGithubIdentity names the missing variables rather than inventing a blank identity",
+        "R1: the on-disk key contains the repository, run id and run attempt",
+        "R1: the store is immutable — a differing rewrite for the same (run, attempt) is refused",
+        "R1: timestamps are machine-owned — taken from the run record, not an argument",
+        "R1: two attempts of the same run are distinct records with distinct keys",
+        "R2: a healthy survivor can be committed while the overall status stays red",
+        "R2: a not-due source is distinguishable from a failed source",
+        "R2: one source fails while another succeeds — the outcomes stay apart",
+        "R2: the final status is derived from typed phase state, not a prose or exit code",
+        "R2: validation can fail independently of a successful source",
+        "R3: a correctly bound run reconciles",
+        "R3: a later main SHA cannot silently replace the run's starting SHA",
+        "R3: a nonexistent survivor SHA yields PROVENANCE_MISMATCH",
+        "R3: a stale local checkout cannot override the canonical run",
+        "R3: the correct run id but wrong run attempt yields PROVENANCE_MISMATCH",
+        "R3: the wrong workflow run id yields PROVENANCE_MISMATCH"
       ],
       "dynamic": 0
     },
@@ -5662,6 +5908,13 @@
         "the returning reader is offered their own recent places, not only ours"
       ],
       "dynamic": 0
+    },
+    "tests/rhythm-tokens.test.ts": {
+      "names": [
+        "the rhythm sweep catches an off-scale value — the instrument works (RULING 110)",
+        "the rhythm token scales are declared in app/globals.css"
+      ],
+      "dynamic": 1
     },
     "tests/route-floor-applicability.test.ts": {
       "names": [
@@ -6555,6 +6808,13 @@
       ],
       "dynamic": 0
     },
+    "tests/theme-parity.test.ts": {
+      "names": [
+        "app/globals.css authors every literal colour in both themes",
+        "the parity classifier reads literal vs derived correctly (RULING 110)"
+      ],
+      "dynamic": 0
+    },
     "tests/tier-grouping.test.ts": {
       "names": [
         "every zip's who-governs coverage includes its state's governor",
@@ -7014,6 +7274,14 @@
       ],
       "dynamic": 0
     },
+    "tests/worker-fleet-activity.test.ts": {
+      "names": [
+        "a witnessed fixture absence walk and an unwalked obligation remain distinct; closed proof expires and retains its source argument",
+        "cross-obligation source evidence retains original artifact/Attempt ownership without polluting local accounting",
+        "uncommitted or mismatched worker output never enters the proved event chain"
+      ],
+      "dynamic": 0
+    },
     "tests/worker-fleet-auditor.test.ts": {
       "names": [
         "CivicClerk independent profile retains mixed municipal categories and future dates without turning every event into Council",
@@ -7022,6 +7290,7 @@
         "audit refuses unsupported evidence spans and rendered counts",
         "auditor inventories immutable evidence independently and explicitly records all canonical attack modes",
         "central permanent control: Validator passes plausible 11/11 extraction; independent Auditor breaks the incomplete 12-record universe",
+        "isolated auditor and source-inventory helpers never import producer procedures or ambient I/O",
         "isolated auditor procedure imports types only and never calls a producer procedure or ambient I/O",
         "missing independent starting context and uninterpretable additional route are inconclusive, never automatic survival",
         "permanent actor independence control catches relabeling one process across producer, validator and auditor",
@@ -7038,6 +7307,47 @@
       "names": [
         "shared worker wire contract accepts a serialized scalar result and rejects corrupted nested records before durable certification",
         "validator and auditor result envelopes reject missing counts, invented attack modes and a BROKE result that suppresses reopening"
+      ],
+      "dynamic": 0
+    },
+    "tests/worker-fleet-coordinator.test.ts": {
+      "names": [
+        "Hunter transport failure is durable OPEN evidence and retry reuses the canonical scheduling debt",
+        "Scout cycle cap and remaining wall time defer dispatch without inventing failed Attempts",
+        "a newly observed Scout route flows to Hunter without rewriting its extraction contract",
+        "an exact URL quotation from a publisher outside canonical seed scope cannot ground acquisition",
+        "an independent Auditor break remains blocked and never becomes staged inventory",
+        "completed Scout without a candidate continues after canonical backoff with durable rungs and immutable prior history",
+        "current acquired evidence avoids re-fetch; an elapsed canonical cadence schedules Hunter and a real re-observation resets freshness",
+        "explicitly required external verification remains missing while the diagnostic audit records an honest inconclusive result",
+        "missing Scout transport creates one attributable policy denial; retry requires both elapsed backoff and actual availability",
+        "shared model admission contention defers Scout without an Attempt and releases for a later cycle",
+        "the same coordinator advances real procedures Hunter → Parser → Validator → Auditor and preserves canonical accounting",
+        "unknown source routes to existing Scout and restart deduplicates the durable task without asserting absence"
+      ],
+      "dynamic": 0
+    },
+    "tests/worker-fleet-engineering.test.ts": {
+      "names": [
+        "Engineering compiles a current proven method to reproducible review-only implementation and executable tests",
+        "Engineering preserves failed expectations as failed proof with no adoptable candidate",
+        "Engineering refuses changed evidence, self-validation, unmeasured methods, and broad capability grants",
+        "Engineering treats zero and malformed sitemap extraction as no proof, never absence",
+        "method implementation proof retains an inconclusive civic verification and requires explicit extraction validation"
+      ],
+      "dynamic": 0
+    },
+    "tests/worker-fleet-generalized.test.ts": {
+      "names": [
+        "XML sitemap is record inventory with exact loc spans, never a derived meeting date or universe claim",
+        "acquired but unverified remains distinct from external disagreement and self-verification",
+        "cross-row repeated quotations, missing mapped fields, source-scope forgery and duplicate identity fail independently",
+        "external official comparison is a distinct durable receipt with exact authority and no source text",
+        "generalized parser, validator, and auditor execute through the scrubbed disposable realm",
+        "same-publisher authority requires an explicit independent-record basis and never accepts a duplicate capture",
+        "unsupported acquired media retains its media type and adapter reason without manufacturing parsed records",
+        "v2 office rows in HTML and tabular election records preserve exact markup and quoted CSV source spans",
+        "v2 roster JSON retains source occurrence, jurisdiction and identity through independent validation and audit"
       ],
       "dynamic": 0
     },
@@ -7109,6 +7419,26 @@
       ],
       "dynamic": 0
     },
+    "tests/worker-fleet-recovery.test.ts": {
+      "names": [
+        "OS-killed Hunter leaves Attempt and vaulted bytes; external lease reclaim and fresh coordinator continue exactly once"
+      ],
+      "dynamic": 0
+    },
+    "tests/worker-fleet-research.test.ts": {
+      "names": [
+        "Detective cannot turn model hypotheses, invented quotes, duplicate JSON keys or prose names into identity",
+        "Detective denominator is unknown without external provenance and exact count pointer prevents duplicate-value citation",
+        "Detective exact authoritative pointer comparisons preserve spans and require independent validation",
+        "Hunter capability and observed-route failures send no network request",
+        "Hunter partial bytes, publisher zero rows, zero-byte read and transport failure remain distinct",
+        "Hunter records path permission denial separately from transport",
+        "Hunter refuses corrupted cache bytes and cannot reuse another project's artifact",
+        "Hunter reuses shared permission/fetch/vault and an immutable retry keeps exact artifact identity without network",
+        "Research result assertions refuse an invented closed walk and unattributable blockers"
+      ],
+      "dynamic": 0
+    },
     "tests/worker-fleet-runtime.test.ts": {
       "names": [
         "BROKE remains blocking through captured audit/replay until a newer exact independent source-universe chain survives",
@@ -7124,6 +7454,14 @@
         "same held artifact replay creates a fresh Attempt with equivalent semantic output",
         "stale producer contract and prior Validator Attempt cannot certify a different exact candidate",
         "transient model-transport denial retries only after backoff and current availability; permanent denial stays blocked"
+      ],
+      "dynamic": 0
+    },
+    "tests/worker-fleet-standing-generalized.test.ts": {
+      "names": [
+        "generalized scope refuses a plan mismatch, a missing publisher link, and a foreign-subject observation",
+        "generalized standing independently retains two subject publisher hosts and explicit authority while excluding other subjects",
+        "standing advancement needs a successful Hunter result, not merely same-host held bytes"
       ],
       "dynamic": 0
     },

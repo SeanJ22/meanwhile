@@ -14,12 +14,12 @@ export function AskAnswerRecords({ records, initiallyOpen }: { records: readonly
           <li key={`${record.kind}:${record.id}:${index}`} data-ask-record-id={record.id}
             className="border-l-2 border-[var(--panel-border)] pl-3 text-[0.75rem] leading-relaxed text-paper-dim">
             <p>{record.text}</p>
-            {record.sourceUrl && (
+            {record.sourceUrl ? (
               <a href={record.sourceUrl} target="_blank" rel="noreferrer noopener"
                 className="text-[0.6875rem] text-link underline decoration-dotted underline-offset-2">
                 {record.sourceOrg ?? hostOf(record.sourceUrl)}
               </a>
-            )}
+            ) : record.sourceOrg ? <span className="text-[0.6875rem] text-muted">{record.sourceOrg}</span> : null}
             {record.retrievedAt && <span className="text-[0.625rem] text-muted"> · Read {formatDateMDY(record.retrievedAt.slice(0, 10))}</span>}
           </li>
         ))}

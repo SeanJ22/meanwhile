@@ -39,8 +39,8 @@ export interface GeneratedArtifact {
 export const GENERATED: GeneratedArtifact[] = [
   {
     path: "lib/funding/official-candidacies.json",
-    command: "corepack pnpm exec tsx scripts/reader-finance-identity.mts",
-    checkCommand: "corepack pnpm exec tsx scripts/reader-finance-identity.mts --check",
+    command: "corepack pnpm reader:finance-identity",
+    checkCommand: "corepack pnpm reader:finance-identity --check",
     pure: true,
   },
   ...readdirSync(fileURLToPath(new URL("../../docs/states/", import.meta.url)))

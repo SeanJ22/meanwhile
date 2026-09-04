@@ -11,6 +11,8 @@ import { formatMeetingDate, meetingRowTitle, meetingSubline } from "../lib/map/f
 import { minutesSummaryForMeeting } from "../lib/meetings/minutes-summaries.ts";
 import { commentAccessFor } from "../lib/registry/comment-access.ts";
 import { areaFactsForState } from "../lib/area/facts.ts";
+import { resolveZip } from "../lib/geo/zcta.ts";
+import { divisionsAt } from "../lib/registry/server.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import type { MeetingReaderRecords } from "../lib/meetings/reader-records.ts";
 import type { VotingSitesAnswer } from "../lib/ballot/voting-sites.ts";
@@ -18,8 +20,9 @@ import { officialActionsForTarget, type ReaderOfficialActions } from "../lib/off
 
 const BASE = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
 assert.ok(["localhost", "127.0.0.1", "[::1]"].includes(new URL(BASE).hostname), "Rendered regression runs on local production build");
-const OUT = join(process.cwd(), "screenshots", "reader-last-mile");
-const REPORT = join(process.cwd(), "docs", "evidence", "reader-last-mile-render.json");
+const PROVISIONAL = process.env.READER_RENDER_PHASE === "provisional";
+const OUT = join(process.cwd(), "screenshots", "reader-last-mile", ...(PROVISIONAL ? ["provisional"] : []));
+const REPORT = join(process.cwd(), "docs", "evidence", PROVISIONAL ? "reader-last-mile-render-provisional.json" : "reader-last-mile-render.json");
 mkdirSync(OUT, { recursive: true });
 const pilots = [
   { zip: "85701", name: "Katie Hobbs", official: "statewide:az/governor", key: "ballot-az-pima:governor:hobbs-katie", raised: "$11,109,720", spent: "$14,355,613" },
@@ -247,12 +250,13 @@ async function meetingWitness(page: Page, meetingId: string, label: string) {
     accessLines = expected.length;
     await capture(page, `${label}-${meetingId.replaceAll(":", "-")}-comment-access`, section);
   }
+  if (payload.records.status !== "HELD" && !minutes && !textDocument) await capture(page, `${label}-${meetingId.replaceAll(":", "-")}-meeting`, modal);
   await page.keyboard.press("Escape");
   return { meetingId, bodyId: meeting.bodyId, returned: payload, renderedCounts: payload.records.counts, minutes: minutes?.summary ?? null, commentAccessBodyId: access?.bodyId ?? null, commentAccessLines: accessLines, commentAccessApplicability: meeting.status === "CONCLUDED" ? "Concluded sitting: participation rules intentionally do not apply" : "Current body participation rules" };
 }
 
 async function activityWitnesses(page: Page, zip: string, label: string) {
-  const ids = zip === "85701" ? ["legistar:pima:1825", "legistar:pima:1822", "legistar:pima:1827"] : zip === "85641" ? ["legistar:pima:1825"] : zip === "07866" ? ["iqm2:morriscountynj:2236"] : ["diligent:newburynh:3367"];
+  const ids = zip === "85701" ? ["legistar:pima:1825", "legistar:pima:1822", "legistar:pima:1827"] : zip === "85641" ? ["apptegy:vail:60703698"] : zip === "07866" ? ["iqm2:morriscountynj:2236"] : ["diligent:newburynh:3367"];
   const rows = [];
   for (const id of ids) rows.push(await meetingWitness(page, id, label));
   return rows;
@@ -275,6 +279,9 @@ async function votingWitness(page: Page, label: string) {
   assert.equal(answer.match, true);
   assert.ok(answer.jurisdictions.length > 0);
   await panel.locator(".voting-jurisdiction").first().waitFor({ state: "visible" });
+  const bounds = await panel.boundingBox();
+  const layoutFailure = !bounds || bounds.x < 0 || bounds.x + bounds.width > page.viewportSize()!.width ? "Voting panel overflows the reader viewport" : null;
+  if (!PROVISIONAL) assert.equal(layoutFailure, null, "Voting sites and attribution fit inside the reader viewport");
   assert.equal(await panel.locator(".voting-jurisdiction").count(), answer.jurisdictions.length);
   const sites = answer.jurisdictions.flatMap(jurisdiction => jurisdiction.sites);
   assert.ok(sites.length > 0);
@@ -284,11 +291,17 @@ async function votingWitness(page: Page, label: string) {
   await capture(page, `${label}-voting-sites`, panel.locator(".voting-site").first());
   await capture(page, `${label}-voting-sites-source`, panel.locator(".voting-source").last());
   await panel.getByRole("button", { name: "Close", exact: true }).click();
-  return { ...answer, renderedJurisdictions: answer.jurisdictions.length, renderedSites: sites.length };
+  return { ...answer, renderedJurisdictions: answer.jurisdictions.length, renderedSites: sites.length, layoutFailure };
 }
 
 async function areaWitness(page: Page, zip: string, label: string) {
-  const facts = areaFactsForState(zip === "07866" ? "NJ" : zip === "03255" ? "NH" : "AZ")!;
+  const location = resolveZip(zip);
+  assert.ok(location.ok, `${zip}: canonical centroid is held`);
+  const divisions = await divisionsAt(location.centroid.lat, location.centroid.lng);
+  const state = divisions.map(division => division.ocdId.match(/state:([a-z]{2})/)?.[1]).find(Boolean);
+  assert.ok(state, `${zip}: canonical state division resolves`);
+  const facts = areaFactsForState(state.toUpperCase());
+  assert.ok(facts, `${state}: declared area facts are held`);
   const response = await page.goto(`${BASE}/about-area?zip=${zip}`, { waitUntil: "domcontentloaded" });
   assert.equal(response?.status(), 200);
   await page.getByRole("heading", { name: `The basics of living here — ${facts.stateName}`, exact: true }).waitFor({ state: "visible" });
@@ -423,8 +436,9 @@ try {
         if (population) console.log(`${label}: opened and checked ${population.cardsOpened} ballot cards`);
         const ask = viewport.name === "desktop" && theme === "dark" ? await ballotAskMoney(page, pilot, label) : null;
         const area = await areaWitness(page, pilot.zip, label);
-        results.push({ label, result: "PASS", build, map: mapMoney.text, ballot: ballotMoney.text, canonicalCandidacyId: pilot.key, api, population, ask, meetings, voting, area, mapActions, ballotActions });
-        console.log(`PASS ${label}${population ? `; ${population.cardsOpened} ballot cards individually opened` : ""}`);
+        const result = voting?.layoutFailure ? "FAIL" : "PASS";
+        results.push({ label, result, error: voting?.layoutFailure ?? null, build, map: mapMoney.text, ballot: ballotMoney.text, canonicalCandidacyId: pilot.key, api, population, ask, meetings, voting, area, mapActions, ballotActions });
+        console.log(`${result} ${label}${population ? `; ${population.cardsOpened} ballot cards individually opened` : ""}${voting?.layoutFailure ? `; ${voting.layoutFailure}` : ""}`);
       } catch (error) {
         await capture(page, `${label}-failure`).catch(() => {});
         results.push({ label, result: "FAIL", error: String(error), url: page.url() });

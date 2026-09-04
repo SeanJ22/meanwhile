@@ -37,6 +37,11 @@ function load(): PositionsFile {
   return cache;
 }
 
+/** The actual acquisition timestamp of the committed position map. */
+export function keyVotePositionsReadAt(): string {
+  return load().fetchedAt;
+}
+
 export function keyVotePositionKey(
   entryId: string,
   chamber: "house" | "senate",
@@ -57,14 +62,7 @@ export function keyVotePositionFor(
   key: string,
   officeholderId: string,
 ): VotePosition | null {
-  let file: PositionsFile;
-  try {
-    file = load();
-  } catch {
-    // No file is an honest empty state everywhere — the card says the gap is
-    // ours, which is exactly what a missing file means.
-    return null;
-  }
+  const file = load();
   return file.positions[key]?.[officeholderId] ?? null;
 }
 
@@ -76,9 +74,5 @@ export function keyVotePositionFor(
  * different gaps and a report should be able to tell them apart.
  */
 export function keyVoteRollCallHeld(key: string): boolean {
-  try {
-    return load().positions[key] !== undefined;
-  } catch {
-    return false;
-  }
+  return load().positions[key] !== undefined;
 }

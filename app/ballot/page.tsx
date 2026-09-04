@@ -1379,7 +1379,7 @@ export default async function BallotPage({
                     state tool, correctly recorded, and it stops RENDERING here
                     rather than being deleted.
                   */}
-                  {polls && <WhereToVote fallback={polls} />}
+                  {polls && <WhereToVote />}
               {/*
                 **ONE PILL, AT THE MOMENT OF NEED** (AZ-4 and AZ-5, the
                 author's ruling, 2026-08-23).

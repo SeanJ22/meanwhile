@@ -4,6 +4,8 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { MapPin, X } from "lucide-react";
 
 import { PLACEHOLDER_ADDRESS } from "@/lib/ballot/placeholder-address";
+import { pollingLookupFallbacks } from "@/lib/ballot/polling-lookup-fallback";
+import { PollingLookupFallback } from "@/components/ballot/polling-lookup-fallback";
 import {
   directionsUrl,
   isPinnable,
@@ -211,6 +213,8 @@ export function VotingSitesPanel({
             not a statement about your county.
           </p>
         )}
+
+      <PollingLookupFallback links={pollingLookupFallbacks(state.kind, state.kind === "answered" ? state.answer : undefined)} />
 
       {state.kind === "answered" &&
         state.answer.jurisdictions.map((j) => (

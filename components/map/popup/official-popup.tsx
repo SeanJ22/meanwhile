@@ -493,7 +493,7 @@ function VotingRecordViews({
  * A bill honestly pending renders the coming state; the vote row is never
  * blocked either way.
  */
-function BillPlainSummary({ billUrl }: { billUrl: string | null }) {
+export function BillPlainSummary({ billUrl }: { billUrl: string | null }) {
   const summary = summaryForBill(billUrl);
   const pending = summaryPendingForBill(billUrl);
   if (!summary && !pending) return null;

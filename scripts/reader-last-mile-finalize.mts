@@ -24,6 +24,7 @@ import {
   type ReaderSurfaceClassWitness,
 } from "../lib/holdings/reader-census.ts";
 import { readerProofSources } from "./lib/reader-proof-sources.ts";
+import { floored } from "../lib/ops/denominator-floor.ts";
 
 const root = process.cwd();
 const codeHead = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
@@ -107,6 +108,12 @@ for (const proof of proofs) {
 }
 const closureFailures = censusClosureFailures(census);
 assert.deepEqual(closureFailures, [], `Final reader census has ${closureFailures.length} open obligations`);
+const censusClosureFloor = floored(
+  "closed final reader census rows",
+  censusPath,
+  census.rows.length,
+  census.rows.length,
+);
 
 const censusBytes = Buffer.from(`${JSON.stringify(census, null, 2)}\n`);
 writeFileSync(censusPath, censusBytes);
@@ -124,6 +131,7 @@ writeFileSync("docs/evidence/reader-last-mile-final-delta-summary.json", `${JSON
   componentCases: components.cases.length,
   componentUncoveredDiagnostics: componentComposition.uncovered.length,
   closureFailures: closureFailures.length,
+  denominatorFloor: censusClosureFloor,
   delivery: Object.fromEntries([...new Set(census.rows.map((row) => row.deliveryState))].map((state) => [state, census.rows.filter((row) => row.deliveryState === state).length])),
 }, null, 2)}\n`);
 

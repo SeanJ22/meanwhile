@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 512,
-    "named": 5331,
+    "files": 515,
+    "named": 5364,
     "dynamic": 23
   },
   "files": {
@@ -181,6 +181,14 @@
         "the page reads no environment and posts both intents to the research route",
         "the route's security sequence is the decision route's, in order",
         "the view module never reads a stored flag off the state — checked in source, with a positive control"
+      ],
+      "dynamic": 0
+    },
+    "tests/admin-select-contrast.test.ts": {
+      "names": [
+        "POSITIVE CONTROL: stripping the themed surface fails the checker",
+        "the console-nav View and State dropdowns are theme-pinned (dark and light)",
+        "the readiness controls (level, rows, ZIP sort) are theme-pinned (dark and light)"
       ],
       "dynamic": 0
     },
@@ -1901,11 +1909,13 @@
     },
     "tests/control-plane-conformance.test.ts": {
       "names": [
+        "controlPlaneTestUrlFromEnv reads its OWN variable, never the production one",
         "controlPlaneUrlFromEnv refuses an empty value rather than defaulting",
         "createPgRepositories refuses an empty connection string",
         "schema v5 declares the four nightly-door logs, and every provider bundle carries them",
         "the advisory lock key is STABLE — two machines computing it must agree",
-        "the conformance suite states WHICH providers it ran, and which it did not"
+        "the conformance suite states WHICH providers it ran, and which it did not",
+        "the two control-plane variables are DISTINCT names, so one can never stand in for the other"
       ],
       "dynamic": 8
     },
@@ -5037,16 +5047,31 @@
       ],
       "dynamic": 0
     },
+    "tests/pilot-health-view.test.ts": {
+      "names": [
+        "a measured failure is RED, and it is named as the blocker",
+        "all three GREEN rolls up GREEN with no next actions",
+        "merely-not-proven (NOT_READY / AWAITING) without any RED is AMBER, not RED",
+        "no snapshot is UNKNOWN, never a green or a red",
+        "proof age is read from the run timestamp",
+        "the level mapping is exactly the four states"
+      ],
+      "dynamic": 0
+    },
     "tests/pilot-task-installer.test.ts": {
       "names": [
         "POSITIVE CONTROL: a constant relaunchTriggerPresent fails the checker",
+        "POSITIVE CONTROL: a state-blind Write-TriggerLines fails the disabled checker",
+        "POSITIVE CONTROL: an unconditional or unchecked disable fails the checker",
         "POSITIVE CONTROL: dropping the daily trigger, the --wakeup flag, or the one-liner fails the install-window checker",
         "POSITIVE CONTROL: dropping the repetition trigger from install fails the checker",
         "POSITIVE CONTROL: removing the prove-relaunch guard fails the checker",
+        "disable judges the measured end state and refuses success over a denied /Change",
         "install registers the 5-minute multi-year relaunch trigger beside AtLogOn",
         "install-window registers a daily Eastern-derived trigger running nightly-window.mts --wakeup, and prints the elevated one-liner when refused",
         "prove-relaunch refuses (exit 2) before killing anything when the trigger is absent",
         "status derives relaunch-trigger presence from the live task, not a constant",
+        "status never describes a DISABLED task as relaunching the runner in five minutes",
         "verify-triggers exits on the derived presence and prove-relaunch writes the typed record"
       ],
       "dynamic": 0
@@ -5844,13 +5869,36 @@
       ],
       "dynamic": 0
     },
+    "tests/readiness-extract.test.ts": {
+      "names": [
+        "AZ candidate filings and state disclosure verify against their external authorities",
+        "CC-F1 #1/#2: a candidate-field / wrong-capability closed walk satisfies NOTHING and is NOT projected",
+        "CC-F1 #3: an EXPIRED correctly-scoped closed walk cannot render ARGUED_ABSENT and is NOT projected",
+        "CC-F1 #4: an UNEXPIRED, correctly-scoped closed walk still renders ARGUED_ABSENT and is projected",
+        "CC-F2 also covers the summary: reader-visible jurisdictions is a named gap, not held/held",
+        "CC-F2: congressional uses the INDEPENDENT cd119 universe, never held/held",
+        "CC-F2: congressional with NO external universe is a named gap, never held/held",
+        "CC-F2: state-legislative has no committed statewide denominator → named gap, no gate CURRENT",
+        "CC-F3: only the explicit control-plane target selects production; a generic refresh never does",
+        "CC-F4: a known meeting source does NOT render ACQUIRED — registry LIVE is source-known, not held",
+        "CC-F5: a genuine state slice IS used when provided",
+        "CC-F5: with no derivable state slice, federal FEC is a named state gap — never the national number",
+        "CC-F6: a legacy or marker-less snapshot is QUARANTINED (REQUIRES_REPUBLISH), never trusted",
+        "CC-F6: a null row is NOT_RECORDED (no snapshot), distinct from a quarantined one",
+        "CC-F6: a snapshot under the current derivation contract is HELD",
+        "SHOWN_TO_READER and ASK_ANSWERS are NOT_WALKED for EVERY capability",
+        "external Census denominators drive county/school/special/municipal-wards"
+      ],
+      "dynamic": 0
+    },
     "tests/readiness-gates.test.ts": {
       "names": [
         "BLOCKED and GATED_ON_OPERATOR each carry their named reason and override the fraction",
         "R-A: NOT_WALKED and ARGUED_ABSENT are the opposite ends of knowing, never equal",
         "R-A: there are exactly six cell states, never two",
+        "R-B NEGATIVE CONTROL (permanent): an ACQUIRED gap then a nominal VERIFIED success can NEVER render VERIFIED CURRENT",
         "R-B: ARGUED_ABSENT propagates — a CURRENT to its right is a violation",
-        "R-B: a CURRENT past a non-CURRENT gate to its left is a surfaced violation, not silent",
+        "R-B: a CURRENT past a non-CURRENT gate to its left is DOWNGRADED to its effective state and surfaced",
         "R-B: a clean ladder raises no violation",
         "R-D: a numerator larger than its external denominator is refused, never rendered",
         "R-D: coverage with an external denominator is measured and names its authority",

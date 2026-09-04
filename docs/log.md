@@ -25,11 +25,18 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 ---
 
-## reader-last-mile · 2026-09-04
+## reader-last-mile-nonhunt · 2026-09-04
 
 **What it finished.** 1 row(s).
 
 - **NH324** — Close reader delivery gaps across the canonical dataset-to-surface registry. Ballot, map, officials, meetings, funding and Ask must share eligible canonical truth; autonomous acquisitions and unresolved identities remain withheld. Prove the four pilot ZIPs, exhaustive census, deployment tracing and exact-head production shipment.
+
+**Needs Sean.** Nothing.
+
+## Codex reader last-mile closure · 2026-09-04
+
+**What it started.** 1 row(s) opened, 0 still open.
+
 
 **Needs Sean.** Nothing.
 
@@ -3231,10 +3238,3 @@ The first session. The map, the tracker, and congressional district boundaries o
 - **NH08** — The Town of Newbury publishes its whole calendar as a feed nobody had wired, and it has more meeting dates on it than the portals we were using. Both now ship, and when they both carry the same meeting the site shows the one with the agenda attached. That is a change to what you see at 03255 and it is worth a look. *(open)*
 
 **Needs Sean.** NH08
-
-## Codex reader last-mile closure
-
-**What it started.** 1 row(s) opened, 0 still open.
-
-
-**Needs Sean.** Nothing.

@@ -77,6 +77,11 @@
       "id": "shape:scripts/verify-local-write.mts#finish,scripts/verify-readonly.mts#finish",
       "disposition": "OWED",
       "reason": "Two database-verification scripts each print their own verdict. A shared reporter keeps the four-verdict discipline (green, red, pending, could-not-tell) identical between them."
+    },
+    {
+      "id": "exact:scripts/reader-last-mile-final-render.mts#openOfficial,scripts/reader-last-mile-render.mts#openOfficial",
+      "disposition": "ALLOWED",
+      "reason": "These are isolated Playwright proof harnesses with different frozen denominators: the historical exhaustive reader census and the bounded final-delta visual sample. Sharing the navigation helper would make the delta proof import the exhaustive harness and expand LM-F1 proof rather than inheriting it; both harnesses assert the product identity and payload selectors independently."
     }
   ],
   "consolidatedOn2026-08-23-questionnaire-and-corpora": {

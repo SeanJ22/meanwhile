@@ -11,6 +11,7 @@ import { stateMoneyRecordsForDisplay } from "../lib/funding/state-money-reader.t
 import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
 import { meetingListingIdentity } from "../lib/meetings/listing-identity.ts";
 import { formatMeetingDate } from "../lib/map/format.ts";
+import { floored } from "../lib/ops/denominator-floor.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 
 const root = process.cwd();
@@ -279,6 +280,18 @@ try {
 } finally { await browser.close(); }
 
 assert.equal(screenshots.length, 4, "The bounded visual sample is exactly four screenshots");
+const resultFloor = floored(
+  "passing final rendered proof results",
+  outputPath,
+  results.length,
+  results.filter((result) => result.result === "PASS").length,
+);
+const screenshotFloor = floored(
+  "captured final rendered proof screenshots",
+  screenshotsDir,
+  screenshots.length,
+  screenshots.length,
+);
 const report = {
   formatVersion: 1,
   exactHead,
@@ -289,6 +302,7 @@ const report = {
   scope: "Four screenshots and DOM/API assertions only for Katie Hobbs parity, NJ filed contact, federal finance parity, and the changed Newbury/meeting seam.",
   results,
   screenshots,
+  denominatorFloors: [resultFloor, screenshotFloor],
   screenshotsReadAsImages: screenshots.map((row) => row.path),
 };
 writeFileSync(outputPath, `${JSON.stringify(report, null, 2)}\n`);

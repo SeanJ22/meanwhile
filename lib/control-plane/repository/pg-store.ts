@@ -114,6 +114,20 @@ import {
 export const CONTROL_PLANE_URL_VAR = "WTP_CONTROL_PLANE_DATABASE_URL";
 
 /**
+ * The SEPARATE variable that names an ISOLATED test control plane.
+ *
+ * The conformance suite's Postgres lane MUTATES — it puts, appends and
+ * compare-and-sets — so it may only ever run against a database designated for
+ * exactly that. `CONTROL_PLANE_URL_VAR` names the LIVE, append-only production
+ * control plane; a normal `.env.local` carries it, and a local gate or handoff
+ * loads that file. If the mutable lane read that variable it would write test
+ * fixtures into the production control plane every time the suite ran — which
+ * is how an overnight quota was burned. So the mutable lane requires THIS
+ * variable, and never silently treats the production connection as a test one.
+ */
+export const CONTROL_PLANE_TEST_URL_VAR = "WTP_CONTROL_PLANE_TEST_DATABASE_URL";
+
+/**
  * The SQL surface this provider uses, narrowed to what it actually calls.
  *
  * Not `ReturnType<typeof neon>`: that type is generic over array-mode and
@@ -548,5 +562,18 @@ export function controlPlaneUrlFromEnv(
   env: NodeJS.ProcessEnv = process.env,
 ): string | null {
   const value = env[CONTROL_PLANE_URL_VAR];
+  return typeof value === "string" && value.trim().length > 0 ? value : null;
+}
+
+/**
+ * The one place the ISOLATED-TEST variable is read. Same "empty is null" rule
+ * as {@link controlPlaneUrlFromEnv}, so an absent or blank value means "no test
+ * database is configured" — which is a legitimate state that reads NOT RUN, not
+ * a licence to fall back to the production control plane.
+ */
+export function controlPlaneTestUrlFromEnv(
+  env: NodeJS.ProcessEnv = process.env,
+): string | null {
+  const value = env[CONTROL_PLANE_TEST_URL_VAR];
   return typeof value === "string" && value.trim().length > 0 ? value : null;
 }

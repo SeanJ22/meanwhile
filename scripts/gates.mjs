@@ -277,8 +277,16 @@ export { GATES };
  */
 const SUITE_LANE_ENV = [
   {
+    name: "WTP_CONTROL_PLANE_TEST_DATABASE_URL",
+    gates:
+      "the MUTABLE postgres arm of tests/control-plane-conformance.test.ts — runs ONLY against " +
+      "this isolated test database, never the production control plane",
+  },
+  {
     name: "WTP_CONTROL_PLANE_DATABASE_URL",
-    gates: "the postgres arm of tests/control-plane-conformance.test.ts — 7 tests",
+    gates:
+      "the PRODUCTION control plane — its presence is recorded but it NEVER enables the mutable " +
+      "conformance lane (the test-database variable above gates that lane)",
   },
 ];
 

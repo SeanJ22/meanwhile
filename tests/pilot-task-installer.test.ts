@@ -291,3 +291,136 @@ test("POSITIVE CONTROL: a constant relaunchTriggerPresent fails the checker", ()
   assert.notEqual(blind, src);
   assert.ok(fails(() => checkStatusDerivesPresenceFromLiveTask(blind)), "a presence that never reads the task passed");
 });
+
+/* ==========================================================================
+ * DISABLE JUDGES THE MEASURED END STATE, NOT THE FACT THAT COMMANDS RAN.
+ * (Control-centre resource-safety closure, 2026-09-04.)
+ *
+ * The owner observed `pnpm pilot:disable` print
+ *   "disabled: the runner is stopped and will not return at logon."
+ * while `schtasks /Change /DISABLE` had answered "ERROR: Access is denied." and
+ * the task was still Running with its relaunch trigger live. A native nonzero
+ * exit does not throw, so the old fire-and-forget block claimed success over a
+ * refused change. These checkers hold the repaired semantics as script text,
+ * each with a positive control, exactly like the installer checkers above.
+ * ======================================================================= */
+
+/** 5. disable captures every schtasks exit, re-derives the live task, and only
+ *  prints success behind (task Disabled|absent) AND no runner proc AND no startup. */
+function checkDisableJudgesEndState(src: string): void {
+  const block = actionBlock(src, "disable");
+
+  // Every schtasks operation runs through the exit-code-returning helper, and
+  // the /DISABLE result is CAPTURED and CHECKED — never issued and ignored.
+  assert.match(block, /Invoke-Schtasks/, "disable does not route schtasks through the exit-code helper");
+  assert.match(
+    block,
+    /\$(\w+)\s*=\s*Invoke-Schtasks @\("\/Change"[^)]*"\/DISABLE"\)/,
+    "the /Change /DISABLE call's exit code is not captured into a variable",
+  );
+  assert.match(block, /\$disableCode -ne 0/, "the captured /DISABLE exit code is never checked against 0");
+
+  // The verdict re-derives the live task AFTER acting, and judges on it.
+  const rederive = block.indexOf("Get-TaskFacts");
+  assert.ok(rederive >= 0, "disable never re-derives the live task with Get-TaskFacts");
+  assert.ok(
+    rederive > block.indexOf("/DISABLE"),
+    "disable reads the task BEFORE issuing the disable, so it cannot see the result",
+  );
+  assert.match(block, /\$facts\.state -eq "Disabled"/, "disable does not require the task to be Disabled");
+  assert.match(block, /-not \$facts\.taskPresent/, "disable does not accept an absent task as down");
+  assert.match(block, /\$facts\.runningPids\.Count -eq 0/, "disable does not require zero runner processes");
+  assert.match(block, /Test-Path \$StartupFile/, "disable does not check the startup fallback is gone");
+  assert.match(
+    block,
+    /if \(\$taskDown -and \$noProcs -and \$noStartup\)/,
+    "the success sentence is not guarded by the end-state conjunction",
+  );
+
+  // The success sentence exists ONLY after the state was measured, and the
+  // failure path exits nonzero.
+  const success = block.indexOf('"disabled:');
+  assert.ok(success >= 0, "disable prints no success sentence at all");
+  assert.ok(success > rederive, "the success sentence comes BEFORE the state was measured");
+  assert.ok(block.indexOf("exit 0") > success, "there is no guarded exit 0 after the success sentence");
+  assert.match(block, /exit 1/, "disable has no nonzero refusal path for a partial shutdown");
+}
+
+/** 6. status/Write-TriggerLines never calls a DISABLED task a five-minute relauncher. */
+function checkTriggerLinesGuardsDisabled(src: string): void {
+  const fn = src.match(/function Write-TriggerLines \{[\s\S]*?\n\}/);
+  assert.ok(fn, "no Write-TriggerLines function");
+  const body = fn[0];
+  assert.match(body, /\$Facts\.state -eq "Disabled"/, "Write-TriggerLines does not read the task's disabled state");
+  assert.match(body, /will NOT relaunch/i, "Write-TriggerLines has no inert-trigger message for a disabled task");
+
+  // The relaunch claim is GATED behind the disabled check: a disabled task must
+  // never reach it. Match the CLAIM (which carries $RelaunchIntervalMinutes),
+  // not the prose "comes back within N minutes" that may appear in a comment.
+  const disabledAt = body.indexOf('-eq "Disabled"');
+  const relaunchClaim = body.indexOf("comes back within $RelaunchIntervalMinutes");
+  assert.ok(relaunchClaim >= 0, "Write-TriggerLines never states the relaunch cadence");
+  assert.ok(
+    disabledAt >= 0 && disabledAt < relaunchClaim,
+    "the disabled check does not precede (and gate) the five-minute relaunch claim",
+  );
+}
+
+test("disable judges the measured end state and refuses success over a denied /Change", () => {
+  checkDisableJudgesEndState(scriptText());
+});
+
+test("status never describes a DISABLED task as relaunching the runner in five minutes", () => {
+  checkTriggerLinesGuardsDisabled(scriptText());
+});
+
+test("POSITIVE CONTROL: an unconditional or unchecked disable fails the checker", () => {
+  const src = scriptText();
+
+  // (a) The old fire-and-forget: no re-derivation, an unconditional success.
+  const unconditional = src.replace(
+    /\$facts = Get-TaskFacts\r?\n(\s*)\$taskDown  = /,
+    "$1$taskDown  = ",
+  );
+  assert.notEqual(unconditional, src, "the mutation did not apply; the test would prove nothing");
+  assert.ok(
+    fails(() => checkDisableJudgesEndState(unconditional)),
+    "a disable that never re-derives the live task passed",
+  );
+
+  // (b) The /DISABLE exit code is captured but never checked.
+  const unchecked = src.replace(/\$disableCode -ne 0/, "$false");
+  assert.notEqual(unchecked, src);
+  assert.ok(
+    fails(() => checkDisableJudgesEndState(unchecked)),
+    "a disable that ignores the /Change exit code passed",
+  );
+
+  // (c) The end-state conjunction is widened to always-true.
+  const ungated = src.replace(/if \(\$taskDown -and \$noProcs -and \$noStartup\)/, "if ($true)");
+  assert.notEqual(ungated, src);
+  assert.ok(
+    fails(() => checkDisableJudgesEndState(ungated)),
+    "a disable whose success is not gated on the end state passed",
+  );
+});
+
+test("POSITIVE CONTROL: a state-blind Write-TriggerLines fails the disabled checker", () => {
+  const src = scriptText();
+
+  // (a) It stops reading the disabled state.
+  const blind = src.replace(/\$taskDisabled = \(\$Facts\.state -eq "Disabled"\)/, "$taskDisabled = $false");
+  assert.notEqual(blind, src);
+  assert.ok(fails(() => checkTriggerLinesGuardsDisabled(blind)), "a Write-TriggerLines blind to the task state passed");
+
+  // (b) The inert-trigger message becomes a relaunch promise.
+  const promises = src.replace(
+    /it still CARRIES a relaunch trigger definition, but a disabled task fires no trigger, so it will NOT relaunch the runner\. The definition is inert until the task is re-enabled\./,
+    "a killed runner comes back within $RelaunchIntervalMinutes minutes.",
+  );
+  assert.notEqual(promises, src);
+  assert.ok(
+    fails(() => checkTriggerLinesGuardsDisabled(promises)),
+    "a disabled-task message promising relaunch passed",
+  );
+});

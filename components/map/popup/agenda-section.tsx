@@ -185,9 +185,10 @@ export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentenc
   const latest = documents[0] ?? null;
 
   if (latest && publication?.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX") {
-    return <p data-agenda-publication="ACQUIRED_IS_PUBLICATION_INDEX" className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
-      {publication.gap?.statement} <a href={latest.documentUrl} target="_blank" rel="noreferrer" className="text-signal underline">Open the publisher&apos;s agenda portal</a>.
-    </p>;
+    return <div data-agenda-publication="ACQUIRED_IS_PUBLICATION_INDEX" className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
+      <p>{publication.gap?.statement} <a href={latest.documentUrl} target="_blank" rel="noreferrer" className="text-signal underline">{publication.documentSharedAcrossGovernments ? "Inspect the stored link" : "Open the publisher's agenda portal"}</a>.</p>
+      <p className="mt-1 text-[0.625rem]">{publication.documentSharedAcrossGovernments ? "Unresolved source link" : `From ${latest.sourceOrg}`} · read {formatDateMDY(latest.retrievedAt.slice(0, 10))}.</p>
+    </div>;
   }
 
   if (!latest) {
@@ -213,9 +214,9 @@ export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentenc
     );
   }
 
-  if (!latest.text) {
+  if (!latest.text || publication?.acquisition === "ACQUIRED_NOT_READABLE") {
     return (
-      <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
+      <p data-agenda-publication="ACQUIRED_NOT_READABLE" className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
         We fetched this meeting&apos;s document but couldn&apos;t read its
         {/*
           **A REASON WE DO NOT HOLD IS NOT "extraction failed"**
@@ -224,7 +225,7 @@ export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentenc
           looking like an explanation. Where no note was recorded, the gap is
           named as ours.
         */}
-        text ({latest.extractionNote ?? "we haven't recorded why"}).{" "}
+        text ({latest.extractionNote ?? (latest.text ? "the stored extraction contains document bytes rather than readable text" : "we haven't recorded why")}).{" "}
         <a
           href={latest.documentUrl}
           target="_blank"
@@ -233,7 +234,7 @@ export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentenc
         >
           Open the document
         </a>
-        .
+        . From {latest.sourceOrg} · read {formatDateMDY(latest.retrievedAt.slice(0, 10))}.
       </p>
     );
   }

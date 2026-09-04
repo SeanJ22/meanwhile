@@ -33,6 +33,7 @@ export async function GET(request: Request) {
   const publication = snapshot && bodyName ? classifyAgendaPublication({
     meetingId, bodyName,
     documentsForMeeting: heldDocuments,
+    meetingsAcrossCorpus: snapshot.meetings,
     documentsAcrossCorpus: snapshot.agendaDocuments ?? [], discoveredDocumentUrl: meeting?.agendaUrl,
     observations: [...publisherAgendaObservationsFor(meetingId), ...(observation ? [observation] : [])],
     now: Date.now(),

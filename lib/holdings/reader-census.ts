@@ -22,6 +22,8 @@ import { localFinanceEvidenceFor } from "../ask/local-finance.ts";
 import { checkReaderTraces } from "./reader-trace.ts";
 import { MEASURE_PROVISIONS, provisionsForContest } from "../ballot/measure-provisions.ts";
 import { rosterMemberReaderDisposition, rosterGapForBody } from "../registry/body-rosters.ts";
+import { agendaDocumentRepresentation, classifyAgendaPublication } from "../ask/agenda-publication.ts";
+import type { AgendaDocumentLike } from "../routing/agenda-search.ts";
 
 type ObjectRow = Record<string, unknown>;
 const object = (value: unknown): ObjectRow => value !== null && typeof value === "object" && !Array.isArray(value) ? value as ObjectRow : {};
@@ -127,7 +129,7 @@ export interface ReaderDeliveryProof {
   readonly statedCount: number;
   readonly returnedCount: number;
   readonly scope: string;
-  readonly surfaceWitnesses?: readonly { readonly component: string; readonly evidencePath: string; readonly evidenceSha256: string; readonly exactHead: string }[];
+  readonly surfaceWitnesses?: readonly { readonly component: string; readonly evidencePath: string; readonly evidenceSha256: string; readonly exactHead: string; readonly screenshots?: readonly { readonly path: string; readonly sha256: string }[] }[];
   readonly deployedBundle?: { readonly evidencePath: string; readonly evidenceSha256: string; readonly exactHead: string; readonly holdingPaths: readonly string[] };
 }
 export interface CensusRow {
@@ -325,7 +327,14 @@ function eligibility(dataset: Dataset, raw: RawRecord, currentDocuments: Readonl
   }
   if (dataset.family === "statement-corpus" && (row.extraction !== "ok" || !row.text)) return { state: "NOT_READER_ELIGIBLE", reason: `Statement text extraction is ${string(row.extraction) || "not recorded"}; acquired bytes are not readable sourced words.` };
   if (dataset.family === "identity" && row.outcome && row.outcome !== "RECONCILED") return { state: "IDENTITY_UNRESOLVED", reason: `Canonical reconciliation outcome=${string(row.outcome)}; identity candidates must not be guessed.` };
-  if (dataset.family === "meetings" && raw.unit === "agendaDocuments" && (!row.text || row.extraction === "failed")) return { state: "NOT_READER_ELIGIBLE", reason: "Agenda document text has not been successfully extracted. The linked meeting and agenda URL remain independently reader eligible." };
+  if (dataset.family === "meetings" && raw.unit === "agendaDocuments") {
+    if (row.extraction === "failed" || agendaDocumentRepresentation(row as unknown as AgendaDocumentLike) === "UNREADABLE") return { state: "NOT_READER_ELIGIBLE", reason: "The canonical agenda representation classifier found no readable document text. A successful extraction label cannot promote binary document bytes. The raw artifact remains held; the linked meeting, source URL and explicit OURS readability gap remain independently reader eligible." };
+    const across = object(dataset.value).agendaDocuments;
+    const meetings = object(dataset.value).meetings;
+    const publication = classifyAgendaPublication({ bodyName: "the publisher", meetingId: string(row.meetingId), documentsForMeeting: [row as unknown as AgendaDocumentLike], documentsAcrossCorpus: Array.isArray(across) ? across : [], meetingsAcrossCorpus: Array.isArray(meetings) ? meetings : [], now: 0 });
+    if (publication.documentSharedAcrossGovernments) return { state: "IDENTITY_UNRESOLVED", reason: "The exact stored document URL is attached to meetings in more than one canonical government. This body's agenda relationship and stored publisher attribution are unresolved; document text cannot attach to any body. Raw artifact identity/hash remain held and the meeting may show only the canonical OURS unresolved-link diagnostic." };
+    if (publication.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX") return { state: "READER_ELIGIBLE", reason: "Only the acquired portal's identity, source and canonical OURS acquisition gap are reader eligible. Navigation, JavaScript, loading screens and directory text are not a meeting's agenda items and must remain withheld." };
+  }
   return classifyReaderEligibility(facts);
 }
 
@@ -447,6 +456,7 @@ export interface ReaderClosureReceipt {
   readonly holdingsDigest: string;
   readonly registrySha256: string;
   readonly sourceHashes: readonly ReaderSourceHash[];
+  readonly evidenceHashes: readonly ReaderSourceHash[];
 }
 
 export function validateReaderClosureReceipt(root: string, receipt: ReaderClosureReceipt): string[] {
@@ -455,6 +465,11 @@ export function validateReaderClosureReceipt(root: string, receipt: ReaderClosur
   if (sha256(bytes) !== receipt.censusSha256) failures.push("Committed closure census bytes changed");
   const proved = JSON.parse(bytes.toString("utf8")) as ReaderCensus;
   failures.push(...censusClosureFailures(proved));
+  const requiredEvidence = unique(proved.rows.flatMap((row)=>row.evidencePaths));
+  for (const path of requiredEvidence) {
+    const expected = receipt.evidenceHashes?.find((entry)=>entry.path===path);
+    if (!expected || !readerEvidenceHashMatches(root,path,expected.sha256)) failures.push(`Committed reader execution evidence missing or changed: ${path}`);
+  }
   const current = buildReaderCensus(root);
   if (current.holdingsDigest !== receipt.holdingsDigest) failures.push("Canonical holding inventory changed after closure proof");
   if (current.registrySha256 !== receipt.registrySha256) failures.push("Declared dataset/surface registry changed after closure proof");
@@ -482,6 +497,7 @@ export function reconcileDelivery(row: CensusRow, proof: ReaderDeliveryProof, ro
   if (proof.source === "rendered-component" && !proof.surfaceWitnesses?.length) failures.push(`${row.id}: a component render needs an executed surface witness`);
   for (const witness of proof.surfaceWitnesses ?? []) {
     if (witness.exactHead !== proof.exactHead || !readerEvidenceHashMatches(root,witness.evidencePath,witness.evidenceSha256)) failures.push(`${row.id}: surface witness has no matching exact-head artifact`);
+    for (const screenshot of witness.screenshots ?? []) if (!readerEvidenceHashMatches(root, screenshot.path, screenshot.sha256)) failures.push(`${row.id}: reviewed surface image changed after its witness: ${screenshot.path}`);
     const surface = READER_SURFACES.find((candidate) => candidate.id === row.readerSurface)!;
     if (!importReachability(root, surface.path, witness.component).reached) failures.push(`${row.id}: reader does not reach witnessed component ${witness.component}`);
   }
@@ -494,7 +510,7 @@ export function reconcileDelivery(row: CensusRow, proof: ReaderDeliveryProof, ro
   const missing = [...allExpected].filter((id) => !allActual.has(id));
   const unexpected = [...allActual].filter((id) => !allExpected.has(id));
   const complete = allExpected.size === applicableIds.length;
-  return { row: { ...row, provedHead: proof.exactHead, observedExpectedRecordIds: [...allExpected], observedRenderedRecordIds: [...allActual], bundleProvedRecordIds: bundleRecords, actualIdentityUsed: { ...row.actualIdentityUsed, ...proof.actualIdentities }, eligibleRecordsProjected: "PROVED_BY_READBACK", deployedBundleProved: applicableIds.every((id) => bundleRecords.includes(id)), deliveryState: missing.length ? "ELIGIBLE_BUT_NOT_RENDERED" : complete && !unexpected.length ? "RENDERED" : "DELIVERY_UNPROVEN", falseNegativeCount: complete ? missing.length : missing.length || null, falsePositiveCount: unexpected.length, evidencePaths: unique([...row.evidencePaths, proof.evidencePath, ...(bundle ? [bundle.evidencePath] : [])]), deliveryReason: complete ? `Executed readbacks at ${proof.exactHead} cover every applicable canonical record. Latest scope=${proof.scope}.` : `Readbacks cover ${allExpected.size} of ${applicableIds.length} applicable eligible records. The unexercised remainder remains unproven.` }, failures };
+  return { row: { ...row, provedHead: proof.exactHead, observedExpectedRecordIds: [...allExpected], observedRenderedRecordIds: [...allActual], bundleProvedRecordIds: bundleRecords, actualIdentityUsed: { ...row.actualIdentityUsed, ...proof.actualIdentities }, eligibleRecordsProjected: "PROVED_BY_READBACK", deployedBundleProved: applicableIds.every((id) => bundleRecords.includes(id)), deliveryState: missing.length ? "ELIGIBLE_BUT_NOT_RENDERED" : complete && !unexpected.length ? "RENDERED" : "DELIVERY_UNPROVEN", falseNegativeCount: complete ? missing.length : missing.length || null, falsePositiveCount: unexpected.length, evidencePaths: unique([...row.evidencePaths, proof.evidencePath, ...(proof.surfaceWitnesses??[]).map((witness)=>witness.evidencePath), ...(bundle ? [bundle.evidencePath] : [])]), deliveryReason: complete ? `Executed readbacks at ${proof.exactHead} cover every applicable canonical record. Latest scope=${proof.scope}.` : `Readbacks cover ${allExpected.size} of ${applicableIds.length} applicable eligible records. The unexercised remainder remains unproven.` }, failures };
 }
 
 export const AUTONOMOUS_CENSUS_SOURCE = "data/health/autonomous-agent-fleet/2026-09-03-lifecycle-readback.json";
@@ -1033,7 +1049,7 @@ export async function projectCanonicalReaderRecords(root: string, census: Reader
         if (meeting && !currentMeetingWindow(meeting)) for (const surface of record.unit === "meetings" ? ["meetings", "map"] as const : ["map"] as const) surfaceDispositions[surface] = { status: "INTENTIONALLY_OUT_OF_SCOPE", selector: "searchMeetings / CONCLUDED_LOOKBACK_DAYS / UPCOMING_HORIZON_DAYS", reason: `Event ${meeting.id} starts ${meeting.startsAt}, outside the canonical calendar window ${CONCLUDED_LOOKBACK_DAYS} days back / ${UPCOMING_HORIZON_DAYS} days ahead at ${asOf.toISOString()}. This is a current-calendar scope, not unheld data or publisher absence. Held historical records retain applicable dated Ask/agenda obligations.` };
         if (record.unit === "agendaDocuments") {
           const latest = snapshot.agendaDocuments?.filter((doc) => doc.meetingId === raw.meetingId).sort((a,b) => Date.parse(b.retrievedAt) - Date.parse(a.retrievedAt))[0];
-          if (latest && latest.id !== raw.id) surfaceDispositions.map = { status: "INTENTIONALLY_OUT_OF_SCOPE", selector: "GET /api/agenda newest-first → AgendaDocuments documents[0]", reason: `This is an earlier document revision. The map displays the latest held revision ${latest.id} and the full version count; the historical revision is still returned by the agenda endpoint and cannot be presented as current agenda text.` };
+          if (latest && latest.id !== raw.id) for (const surface of ["map", "ask"] as const) surfaceDispositions[surface] = { status: "INTENTIONALLY_OUT_OF_SCOPE", selector: surface === "map" ? "GET /api/agenda newest-first → AgendaDocuments documents[0]" : "canonical meeting evidence → latest held agenda revision", reason: `This is an earlier document revision. The current meeting question selects the latest held revision ${latest.id}; the historical revision remains directly returned by the agenda endpoint and cannot be presented as the current agenda. The map also displays the full version count.` };
         }
       }
       if (record.family === "body-compositions") inputFor(["civic-routing"], "The exact verified legal composition constrains membersOfBody before contact routing. Its member count was checked by this adapter. Contact records are person/office facts rather than an extra legal-composition answer; the composition itself remains a direct map obligation.");
@@ -1074,6 +1090,7 @@ export interface ReaderSurfaceClassWitness {
   readonly exactHead: string;
   readonly evidencePath: string;
   readonly evidenceSha256: string;
+  readonly screenshots?: readonly { readonly path: string; readonly sha256: string }[];
 }
 
 /** Diagnostic evidence inventory only: different heads never become closure. */
@@ -1287,7 +1304,7 @@ export function composeCanonicalRouteProofs(root: string, census: ReaderCensus, 
       const documents = census.records.filter((record) => record.family === "meetings" && record.unit === "agendaDocuments" && (() => { const raw = sourceRows.get(record.auditId)!.value; return raw.meetingId === disposition.meetingId && raw.documentUrl === disposition.documentUrl && raw.retrievedAt === disposition.retrievedAt; })());
       const expected = (Array.isArray(disposition.expectedRecordIds) ? disposition.expectedRecordIds : []) as string[];
       const provenItems = disposition.acquisition === "ITEMS_READER_READY" && expected.length > 0 && expected.every((id) => observed.get("ask")?.has(`native:${id}`));
-      const provenGap = ["ACQUIRED_IS_PUBLICATION_INDEX", "READ_NO_ITEMS_EXTRACTED"].includes(string(disposition.acquisition)) && (evidence.proofs as unknown[]).map(object).some((entry) => entry.status === "PROVEN" && entry.httpStatus === 200 && entry.modelAnswer === null && (entry.meetingIds as string[] ?? []).includes(string(disposition.meetingId)) && (entry.gaps as unknown[] ?? []).map(object).some((gap) => gap.statement === disposition.reason));
+      const provenGap = ["ACQUIRED_IS_PUBLICATION_INDEX", "READ_NO_ITEMS_EXTRACTED"].includes(string(disposition.acquisition)) && (evidence.proofs as unknown[]).map(object).some((entry) => entry.status === "PROVEN" && entry.httpStatus === 200 && entry.modelAnswer === null && (entry.meetingIds as string[] ?? []).includes(string(disposition.meetingId)) && (entry.gaps as unknown[] ?? []).map(object).some((gap) => gap.whose === "OURS" && gap.statement === disposition.reason));
       if (provenItems || provenGap) for (const record of documents) { const raw = sourceRows.get(record.auditId)!.value; add("ask", `document:${raw.id}`, [string(raw.id), string(raw.meetingId)]); }
     }
     for (const entry of (Array.isArray(evidence.results) ? evidence.results : []).map(object)) if (entry.jurisdictionId && Array.isArray(entry.siteIds)) {
@@ -1421,7 +1438,7 @@ export function readerBundleEvidence(root: string, census: ReaderCensus, buildRe
 }
 
 /** Which actual leaf must render this record's own fields, not a sibling's. */
-function componentRequirements(record: CensusRecord): string[] {
+export function componentRequirements(record: CensusRecord): string[] {
   const identity = "components/officials/person-identity.tsx";
   const contacts = "components/officials/contact-pills.tsx";
   if (["state-officeholders", "statewide-executives", "body-rosters"].includes(record.family) || record.family === "congress" && record.unit === "members" || record.family === "registry" && record.unit === "officeholders") return [identity, contacts,...(record.additionalComponents??[])];
@@ -1627,7 +1644,7 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
       const text = latest.text?.replace(/&#x([0-9a-f]+);/gi, (_,hex) => String.fromCodePoint(parseInt(hex,16))).replace(/&#(\d+);/g, (_,dec) => String.fromCodePoint(Number(dec))).replace(/&times;/gi,"×").replace(/&amp;/g,"&");
       const portal = answer.publication?.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX";
       add(record, "components/map/popup/agenda-section.tsx", "actual GET /api/agenda newest-first → AgendaDocuments / exact-hash noticeSummaryFor", answer, record.family === "notice-summaries" ? [meetingId] : [latest.id, meetingId], markup,
-        (portal ? [answer.publication?.gap?.statement, latest.documentUrl] : [text, latest.documentUrl, latest.sourceOrg, summary?.summary]).filter((value): value is string => Boolean(value)), portal ? [text, "On the docket"].filter((value): value is string => Boolean(value)) : [], { versions: { expected: answer.documents.length, actual: answer.documentCount } }, portal ? [{ id: latest.id, status: "ACQUIRED_IS_PUBLICATION_INDEX", reason: "This acquired publisher index is not a single meeting's agenda. The canonical acquisition gap and source portal link are the reader answer; index text and docket claims remain withheld." }] : undefined);
+        (portal ? [answer.publication?.gap?.statement, latest.documentUrl, latest.sourceOrg] : [text, latest.documentUrl, latest.sourceOrg, summary?.summary]).filter((value): value is string => Boolean(value)), portal ? [text, "On the docket"].filter((value): value is string => Boolean(value)) : [], { versions: { expected: answer.documents.length, actual: answer.documentCount } }, portal ? [{ id: latest.id, status: "ACQUIRED_IS_PUBLICATION_INDEX", reason: "This acquired publisher index or application shell is not a single meeting's agenda. The canonical acquisition gap and source portal link are the reader answer; index text, script text and docket claims remain withheld." }] : undefined);
     } else if (record.family === "federal-finance" && record.unit !== "secondHop") {
       const target = record.unit === "absences" ? string(raw.targetKey) : (raw.targetKeys as string[])[0];
       const selected = federalDisplay.fundingAnswerForTarget(target);

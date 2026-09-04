@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { readSnapshot } from "../../lib/meetings/snapshot.ts";
 import { canonicalBodyIdentity } from "../../lib/ask/body-identity.ts";
+import { snapshotEntities, titleCaseName } from "../../lib/ask/inventory.ts";
 import { localDate } from "../../lib/ask/meeting-time.ts";
 import { classifyAgendaPublication } from "../../lib/ask/agenda-publication.ts";
 import { getOutcomeSnapshot } from "../../lib/outcomes/store.ts";
@@ -32,6 +33,7 @@ export async function meetingsAskProof(progress: (message: string) => void = () 
   }
   const documents = snapshot.agendaDocuments ?? [];
   const outcomes = getOutcomeSnapshot();
+  const bodyNames = new Map(snapshotEntities(snapshot.meetings, canonicalBodyIdentity).map((body) => [body.id, titleCaseName(body.name)]));
   const documentDispositions: { id: string; meetingId: string; documentUrl: string; sourceUrl: string; sourceOrg: string; contentHash: string; retrievedAt: string; acquisition: string; expectedRecordIds: string[]; reason: string | null }[] = [];
   async function prove(family: string, group: (Pick<Meeting, "id" | "bodyId" | "ocdId" | "startsAt"> & { timeZone?: string })[], question: string, kinds: EvidenceRecord["kind"][], expected: Expected[], requestedDate = localDate(group[0]), structuredAgendaOnly = false) {
     const meeting = group[0];
@@ -59,7 +61,7 @@ export async function meetingsAskProof(progress: (message: string) => void = () 
       for (const rec of sitting?.agenda ?? []) expected.push({ kind: "AGENDA_ITEM", id: `${rec.eventItemId}#agenda`, bodyId: meeting.bodyId, text: rec.title, occurredAt: meeting.startsAt, sourceUrl: rec.provenance.endpoint, sourceOrg: rec.provenance.sourceOrg, retrievedAt: rec.provenance.readOn === "NEVER_READ" ? null : rec.provenance.readOn });
       const held = documents.filter((document) => document.meetingId === meeting.id);
       const newest = [...held].sort((a, b) => b.retrievedAt.localeCompare(a.retrievedAt))[0];
-      const publication = classifyAgendaPublication({ bodyName: canonicalBodyIdentity(meeting.bodyId!)!.name, meetingId: meeting.id, documentsForMeeting: held, documentsAcrossCorpus: documents, discoveredDocumentUrl: meeting.agendaUrl, observations: [], now: Date.now() });
+      const publication = classifyAgendaPublication({ bodyName: bodyNames.get(meeting.bodyId!)!, meetingId: meeting.id, documentsForMeeting: held, documentsAcrossCorpus: documents, meetingsAcrossCorpus: snapshot.meetings, discoveredDocumentUrl: meeting.agendaUrl, observations: [], now: Date.now() });
       const recordIds: string[] = [];
       if (newest && publication.acquisition === "ITEMS_READER_READY") for (const [index, item] of publication.items.entries()) {
         const id = `${meeting.id}#${index}`;
@@ -68,7 +70,7 @@ export async function meetingsAskProof(progress: (message: string) => void = () 
       }
       if (newest && publication.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX") {
         recordIds.push(newest.documentUrl);
-        expected.push({ kind: "AGENDA_DOCUMENT", id: newest.documentUrl, bodyId: meeting.bodyId, sourceUrl: newest.documentUrl, sourceOrg: newest.sourceOrg ?? null, retrievedAt: newest.retrievedAt });
+        expected.push({ kind: "AGENDA_DOCUMENT", id: newest.documentUrl, bodyId: meeting.bodyId, sourceUrl: newest.documentUrl, sourceOrg: publication.documentSharedAcrossGovernments ? null : newest.sourceOrg ?? null, retrievedAt: newest.retrievedAt });
       }
       for (const document of held) documentDispositions.push({ id: document.id, meetingId: meeting.id, documentUrl: document.documentUrl, sourceUrl: document.sourceUrl, sourceOrg: document.sourceOrg, contentHash: document.contentHash, retrievedAt: document.retrievedAt, acquisition: document === newest ? publication.acquisition : "SUPERSEDED_REVISION", expectedRecordIds: document === newest ? recordIds : [], reason: document === newest ? publication.gap?.statement ?? null : "The canonical meeting projection selects the latest held revision, preserving the older acquisition as inventory." });
     }
@@ -93,6 +95,6 @@ export async function meetingsAskProof(progress: (message: string) => void = () 
       proofs.push(await prove("meeting-outcomes", group, `${kind === "MEETING_MEMBER_VOTE" ? "How did this body's members vote" : kind === "MEETING_ACTION" ? "What did this body decide" : "What was on this body's agenda"} on ${date}?`, [kind], expected, date, kind === "AGENDA_ITEM"));
     }
   }
-  const paths = ["app/api/ask/grounded/route.ts", "lib/ask/select.ts", "lib/ask/meeting-date.ts", "lib/ask/meeting-time.ts", "lib/ask/meeting-outcomes.ts", "lib/ask/agenda-publication.ts", "lib/ask/subject.ts", "lib/ask/resolve.ts", "lib/ask/synthesize.ts", "lib/meetings/snapshot.ts", "lib/outcomes/store.ts", "data/meetings-snapshot.json", "data/states/az/outcomes/legistar-outcomes.json"];
+  const paths = ["scripts/lib/reader-ask-meetings-proof.ts", "app/api/ask/grounded/route.ts", "lib/ask/inventory.ts", "lib/routing/named-entity.ts", "lib/ask/select.ts", "lib/ask/meeting-date.ts", "lib/ask/meeting-time.ts", "lib/ask/meeting-outcomes.ts", "lib/ask/agenda-publication.ts", "lib/ask/subject.ts", "lib/ask/resolve.ts", "lib/ask/synthesize.ts", "lib/meetings/snapshot.ts", "lib/outcomes/store.ts", "data/meetings-snapshot.json", "data/states/az/outcomes/legistar-outcomes.json"];
   return { exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), executionLevel: "REAL_ROUTE_HANDLER", sourceHashScope: "Exact source-handler bytes; the real clock is unchanged, and this is not deployed-build proof.", sourceHashes: paths.map((path) => ({ path, sha256: hash(readFileSync(path)) })), modelDisabled: true, meetingDenominator: snapshot.meetings.length, documentDenominator: documents.length, outcomeSittingDenominator: outcomes.sittings.length, unbound, documentDispositions, proofs };
 }

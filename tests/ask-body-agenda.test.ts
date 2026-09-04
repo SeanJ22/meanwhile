@@ -249,8 +249,8 @@ test("every honest empty is a DIFFERENT state, never one flat absence", () => {
       documentsAcrossCorpus: [portal, { ...portal, meetingId: "m2" }],
     }),
     reading({
-      documentsForMeeting: [document({ text: "   " })],
-      documentsAcrossCorpus: [document({ text: "   " })],
+      documentsForMeeting: [document({ text: "The board will discuss the published budget proposal." })],
+      documentsAcrossCorpus: [document({ text: "The board will discuss the published budget proposal." })],
     }),
   ];
 

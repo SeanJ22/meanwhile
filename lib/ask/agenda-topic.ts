@@ -6,6 +6,7 @@ import {
 } from "../routing/agenda-search.ts";
 
 import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
+import { classifyAgendaPublication } from "./agenda-publication.ts";
 
 /**
  * **THE TOPIC SWEEP, AS EVIDENCE INSTEAD OF AS A SECOND ANSWER.**
@@ -58,9 +59,6 @@ import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
  * what a government is about to do, made by us.
  */
 
-/** Enough to answer, few enough to read. The denominator states the rest. */
-export const MAX_AGENDA_MENTIONS = 12;
-
 export interface AgendaTopicEvidence {
   /** Null when the question carried no curated topic — the sweep did not run. */
   topic: AgendaTopic | null;
@@ -108,12 +106,20 @@ export function agendaTopicEvidence(input: {
   const topic = agendaTopicFor(input.question);
   if (!topic) return { topic: null, records: [], gaps: [], denominators: {} };
 
-  const { hits, searched, unreadable } = searchAgendas(input.documents, topic);
+  let portals = 0;
+  const documents = input.documents.flatMap((document) => {
+    const publication = classifyAgendaPublication({ meetingId: document.meetingId,
+      bodyName: document.sourceOrg, documentsForMeeting: [document],
+      documentsAcrossCorpus: input.documents, meetingsAcrossCorpus: input.meetings, now: Date.now() });
+    if (publication.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX") { portals++; return []; }
+    return [publication.acquisition === "ACQUIRED_NOT_READABLE" ? { ...document, text: null } : document];
+  });
+  const { hits, searched, unreadable } = searchAgendas(documents, topic);
   const byMeeting = new Map(input.meetings.map((m) => [m.id, m]));
 
   const records: EvidenceRecord[] = [];
   const gaps: EvidenceGap[] = [];
-  const shown = hits.slice(0, MAX_AGENDA_MENTIONS);
+  const shown = hits;
 
   for (const hit of shown) {
     const meeting = byMeeting.get(hit.meetingId);
@@ -143,6 +149,7 @@ export function agendaTopicEvidence(input: {
     agendaMentionsFound: hits.length,
     agendaMentionsShown: shown.length,
     agendasHeldButUnreadable: unreadable,
+    agendaPortalRepresentationsHeld: portals,
   };
 
   if (searched === 0) {
@@ -158,14 +165,10 @@ export function agendaTopicEvidence(input: {
       whose: "OURS",
       statement: `No mention of ${topic.label} in the ${searched} agenda${searched === 1 ? "" : "s"} we hold for ${input.scopeLabel}.`,
     });
-  } else if (shown.length < hits.length) {
-    /* Stated N equals rendered rows. A clip that says nothing reads as a
-       small result rather than as a long one we shortened. */
-    gaps.push({
-      whose: "OURS",
-      statement: `${hits.length} mentions of ${topic.label} across the ${searched} agendas we hold for ${input.scopeLabel} — the first ${shown.length} are shown.`,
-    });
   }
+
+  if (portals > 0) gaps.push({ whose: "OURS",
+    statement: `${portals} held link${portals === 1 ? " leads" : "s lead"} to a publisher portal rather than an agenda; portal navigation was not searched as meeting content.` });
 
   if (unreadable > 0) {
     gaps.push({

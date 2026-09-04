@@ -1227,6 +1227,7 @@ export async function POST(request: Request) {
         meetingId: chosen.id,
         documentsForMeeting: forMeeting,
         documentsAcrossCorpus: documents,
+        meetingsAcrossCorpus: meetings,
         discoveredDocumentUrl: chosen.agendaUrl ?? null,
         observations: publisherObservations,
         now: Date.now(),
@@ -1258,9 +1259,11 @@ export async function POST(request: Request) {
           /* A document inherits body identity THROUGH the meeting it is
              attached to, never from its own title text. */
           bodyId: chosen.bodyId,
-          text: `An agenda portal page for ${subject.name}, not a single meeting's agenda.`,
+          text: publication.documentSharedAcrossGovernments
+            ? "A stored source link shared across governments; it has not been verified as this body's agenda."
+            : `An agenda portal page for ${subject.name}, not a single meeting's agenda.`,
           sourceUrl: newest.documentUrl,
-          sourceOrg: newest.sourceOrg ?? null,
+          sourceOrg: publication.documentSharedAcrossGovernments ? null : newest.sourceOrg ?? null,
           retrievedAt: newest.retrievedAt,
         });
       } else if (publication.acquisition === "ITEMS_READER_READY" && newest) {

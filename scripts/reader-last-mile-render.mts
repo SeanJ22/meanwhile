@@ -5,7 +5,7 @@ import { join } from "node:path";
 import type { Locator, Page } from "playwright";
 import { launchGuarded } from "./browser.mts";
 import { today } from "./doc-dates.mjs";
-import { campaignMoneyForTarget } from "../lib/funding/campaign-money.ts";
+import { campaignMoneyForTarget, resolvedCandidacyForOfficial } from "../lib/funding/campaign-money.ts";
 import { stateMoneyRecordsForDisplay } from "../lib/funding/state-money-reader.ts";
 import { formatMeetingDate, meetingRowTitle, meetingSubline } from "../lib/map/format.ts";
 import { minutesSummaryForMeeting } from "../lib/meetings/minutes-summaries.ts";
@@ -13,7 +13,7 @@ import { noticeSummaryFor } from "../lib/meetings/notice-summary.ts";
 import { commentAccessFor } from "../lib/registry/comment-access.ts";
 import { areaFactsForState } from "../lib/area/facts.ts";
 import { resolveZip } from "../lib/geo/zcta.ts";
-import { divisionsAt } from "../lib/registry/server.ts";
+import { divisionsAt, coverageAt, seatHolderById } from "../lib/registry/server.ts";
 import { BODY_ROSTERS, rosterHoldersForBody, rosterGapForBody } from "../lib/registry/body-rosters.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import type { MeetingReaderRecords } from "../lib/meetings/reader-records.ts";
@@ -22,6 +22,7 @@ import type { VotingSitesAnswer } from "../lib/ballot/voting-sites.ts";
 import { officialActionsForTarget, type ReaderOfficialActions } from "../lib/officials/reader-actions.ts";
 import { directoryFor } from "../lib/officials/directory.ts";
 import { keyVotesForMember } from "../lib/votes/key-votes-reader.ts";
+import { summaryForBill } from "../lib/votes/bill-summaries.ts";
 import { pollingLookupFallbacks } from "../lib/ballot/polling-lookup-fallback.ts";
 import { unifiedCorpus } from "../lib/corpus/unified.ts";
 import { positionsFor, type PositionAnswer } from "../lib/corpus/positions.ts";
@@ -31,7 +32,7 @@ const BASE = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
 assert.ok(["localhost", "127.0.0.1", "[::1]"].includes(new URL(BASE).hostname), "Rendered regression runs on local production build");
 const PROVISIONAL = process.env.READER_RENDER_PHASE === "provisional";
 const OUT = join(process.cwd(), "screenshots", "reader-last-mile", ...(PROVISIONAL ? ["provisional"] : []));
-const REPORT = join(process.cwd(), "docs", "evidence", PROVISIONAL ? "reader-last-mile-render-provisional.json" : "reader-last-mile-render.json");
+const REPORT = join(process.cwd(), "docs", "evidence", process.env.READER_RENDER_FOCUS === "federal-money" ? "reader-last-mile-render-federal-money.json" : PROVISIONAL ? "reader-last-mile-render-provisional.json" : "reader-last-mile-render.json");
 mkdirSync(OUT, { recursive: true });
 const pilots = [
   { zip: "85701", name: "Katie Hobbs", official: "statewide:az/governor", key: "ballot-az-pima:governor:hobbs-katie", raised: "$11,109,720", spent: "$14,355,613" },
@@ -102,7 +103,15 @@ async function federalRecordsWitness(page: Page, modal: Locator, label: string, 
     assert.ok((await row.innerText()).includes(vote.title));
     assert.ok(await row.locator(`a[href="${vote.rollCallUrl}"]`).count());
   }
-  await capture(page, `${label}-recent-votes`, recentRows.first());
+  const summaryVote = votes.votes.find((vote: { billUrl: string | null }) => summaryForBill(vote.billUrl));
+  assert.ok(summaryVote, `${member}: current held recent votes contain a plain-language summary control`);
+  const heldSummary = summaryForBill(summaryVote.billUrl)!;
+  const summaryRow = record.locator(`[data-recent-vote-id="${summaryVote.id}"]`);
+  const summaryDisclosure = summaryRow.locator("details").filter({ has: page.getByText("What this bill does — plain language", { exact: true }) });
+  if ((await summaryDisclosure.getAttribute("open")) === null) await summaryDisclosure.locator("summary").click();
+  await summaryDisclosure.getByText(heldSummary.summary, { exact: true }).waitFor({ state: "visible" });
+  assert.ok(await summaryRow.locator(`a[href="${summaryVote.billUrl}"]`).count(), "Summary belongs to the held bill URL on this actual vote row");
+  await capture(page, `${label}-recent-votes`, summaryRow);
   await capture(page, `${label}-recent-votes-last`, recentRows.last());
   const keyToggle = record.getByRole("button", { name: /^When it mattered/ });
   await keyToggle.waitFor({ state: "visible" });
@@ -125,7 +134,7 @@ async function federalRecordsWitness(page: Page, modal: Locator, label: string, 
   }
   await capture(page, `${label}-key-votes`, laws.locator("[data-key-vote]").first());
   await capture(page, `${label}-key-votes-last`, laws.locator("[data-key-vote]").last());
-  return { member, committees: held.entry.committees.length, offices: held.entry.districtOffices.length, recentVoteRows: votes.votes.length, keyVoteRows: rows.length, positionsReadAt: expectedVotes.positionsReadAt };
+  return { member, committees: held.entry.committees.length, offices: held.entry.districtOffices.length, recentVoteRows: votes.votes.length, keyVoteRows: rows.length, positionsReadAt: expectedVotes.positionsReadAt, billSummary: { billUrl: summaryVote.billUrl, voteId: summaryVote.id, ...heldSummary, actualLeaf: "BillPlainSummary", visible: true } };
 }
 async function dismissNarrowing(page: Page) {
   const optional = page.getByRole("button", { name: /No thanks|show me everything|Skip for now/i }).first();
@@ -198,12 +207,36 @@ async function termNoteWitness(page: Page, label: string) {
   await page.keyboard.press("Escape");
   return { canonicalOfficialId: holder.id, termNote: holder.termNote, sourceUrl: holder.sourceUrl, screenshot };
 }
+async function candidateHolderWitness(page: Page, modal: Locator, officialId: string, label: string) {
+  const holder = await seatHolderById(officialId);
+  const identity = resolvedCandidacyForOfficial(officialId);
+  assert.ok(holder && identity);
+  await modal.getByText("Incumbent", { exact: true }).waitFor({ state: "visible" });
+  assert.equal(await modal.locator("[data-candidate-subject]").getAttribute("data-candidate-subject"), identity.candidacyId);
+  const contacts = modal.locator("[data-ballot-contact-row]");
+  await contacts.waitFor({ state: "visible" });
+  if (holder.phone) assert.ok((await contacts.locator('a[href^="tel:"]').getAttribute("href"))?.replace(/\D/g, "").endsWith(holder.phone.replace(/\D/g, "")));
+  if (holder.websiteUrl) assert.equal(await contacts.locator(`a.contact-pill[href="${holder.websiteUrl}"]`).count(), 1);
+  const note = contacts.locator(`[data-official-term-note="${officialId}"]`);
+  assert.equal(await note.count(), holder.termNote ? 1 : 0);
+  if (holder.termNote) {
+    assert.ok((await note.innerText()).includes(holder.termNote));
+    assert.equal(await note.locator(`a[href="${holder.sourceUrl}"]`).count(), 1);
+  }
+  const screenshot = await capture(page, `${label}-candidate-holder`, contacts);
+  return { officialId, candidacyId: identity.candidacyId, termNote: holder.termNote ?? null, phone: holder.phone, websiteUrl: holder.websiteUrl, screenshot };
+}
 async function incompleteRosterWitness(viewport: { width: number; height: number }, theme: string, label: string) {
   const bodyId = "ocd-division/country:us/state:nj/county:morris/place:pequannock_township#governing";
   const roster = BODY_ROSTERS.find(row => row.bodyId === bodyId);
   const gap = rosterGapForBody(bodyId);
   assert.ok(roster && gap, "The partial verified Pequannock roster and its source denominator are held");
   const holders = rosterHoldersForBody(bodyId);
+  const location = resolveZip("07444");
+  assert.ok(location.ok);
+  const body = (await coverageAt(location.centroid.lat, location.centroid.lng, 0)).bodies.find(row => row.bodyId === bodyId);
+  assert.ok(body, "The body belongs to the probe point's canonical coverage");
+  const bodyLabel = body.name ?? body.divisionLabel;
   const context = await browser.context({ viewport, reducedMotion: "reduce", deviceScaleFactor: 1 });
   const page = await context.newPage();
   page.setDefaultTimeout(20_000);
@@ -219,8 +252,8 @@ async function incompleteRosterWitness(viewport: { width: number; height: number
     const door = page.getByRole("button", { name: "Open the bodies here list", exact: true });
     if (!(await door.isVisible())) await page.getByRole("button", { name: "Open menu", exact: true }).click();
     await door.click();
-    await page.locator(".door-panel").getByRole("button", { name: roster.bodyName, exact: true }).click();
-    const modal = page.getByRole("dialog", { name: roster.bodyName, exact: true });
+    await page.locator(".door-panel").getByRole("button", { name: bodyLabel, exact: true }).click();
+    const modal = page.getByRole("dialog", { name: bodyLabel, exact: true });
     const representation = await openSection(modal, "Who sits on it");
     const renderedGap = representation.locator(`[data-roster-completeness-gap="${bodyId}"]`);
     await renderedGap.waitFor({ state: "visible" });
@@ -232,7 +265,27 @@ async function incompleteRosterWitness(viewport: { width: number; height: number
     assert.deepEqual((await rows.evaluateAll(elements => elements.map(element => element.getAttribute("data-roster-holder")))).sort(), holders.map(holder => holder.id).sort());
     const screenshot = await capture(page, `${label}-incomplete-roster`, renderedGap);
     const lastMemberScreenshot = await capture(page, `${label}-incomplete-roster-last-member`, rows.last());
-    return { zip: "07444", bodyId, gap, actualHolderIds: holders.map(holder => holder.id), renderedCount: await rows.count(), screenshot, lastMemberScreenshot };
+    const renderedCount = await rows.count();
+    await page.keyboard.press("Escape");
+    const canvas = page.locator(".maplibregl-canvas");
+    const bounds = await canvas.boundingBox();
+    assert.ok(bounds);
+    await canvas.click({ position: { x: bounds.width / 2, y: bounds.height / 2 } });
+    const picker = page.getByRole("dialog", { name: "Choose a district", exact: true });
+    await picker.waitFor({ state: "visible" });
+    await picker.locator(".district-picker-row").filter({ has: page.getByText(body.divisionLabel, { exact: true }) }).click();
+    const district = page.locator(".popup-card").filter({ has: page.locator(`[data-roster-completeness-gap="${bodyId}"]`) });
+    await district.waitFor({ state: "visible" });
+    assert.ok((await district.innerText()).includes(gap.statement));
+    for (const holder of holders) assert.ok((await district.innerText()).includes(holder.name));
+    const districtScreenshot = await capture(page, `${label}-district-popup`, district);
+    await page.goto(`${BASE}/ballot?zip=07444`, { waitUntil: "domcontentloaded", timeout: 90_000 });
+    await page.locator("[data-battlecard-pill]").first().waitFor({ state: "visible", timeout: 30_000 });
+    const recoveredHolder = holders.find(holder => holder.id === "roster:nj-morris-pequannock_township#5");
+    assert.ok(recoveredHolder);
+    const candidate = await openBallotCandidate(page, recoveredHolder.name);
+    const recoveredCandidate = await candidateHolderWitness(page, candidate, recoveredHolder.id, `${label}-pequannock`);
+    return { zip: "07444", bodyId, gap, actualHolderIds: holders.map(holder => holder.id), renderedCount, screenshot, lastMemberScreenshot, districtScreenshot, recoveredCandidate };
   } catch (error) {
     await capture(page, `${label}-incomplete-roster-failure`).catch(() => {});
     throw error;
@@ -358,8 +411,10 @@ async function meetingWitness(page: Page, meetingId: string, label: string) {
     assert.ok(meeting.agendaUrl, `${meetingId}: known-answer witness has its exact agenda URL`);
     const entry = page.locator('aside[aria-label^="Meetings at"]:visible article').filter({ has: page.locator(`a[href="${meeting.agendaUrl}"]`) }).filter({ hasText: formatMeetingDate(meeting) });
     assert.equal(await entry.count(), 1, `${meetingId}: exact venue sitting`);
+    if (meetingId === "legistar:pima:1825") await capture(page, `${label}-venue-meeting-panel`, entry);
     await entry.locator("h3 button").click();
   }
+  if (meetingId === "legistar:pima:1825") await capture(page, `${label}-meeting-popup`, page.getByRole("button", { name: `More about ${meeting.title} — agenda and how to be heard`, exact: true }));
   if (groupedDiagnostic) await capture(page, `${label}-meeting-diagnostic-popup`);
   const [response] = await Promise.all([page.waitForResponse(response => {
     const url = new URL(response.url());
@@ -403,10 +458,17 @@ async function meetingWitness(page: Page, meetingId: string, label: string) {
     assert.equal(await publication.locator(`a[href="${textDocument.documentUrl}"]`).count(), 1);
     assert.equal(await modal.locator("p.whitespace-pre-line").count(), 0, "Publisher index text cannot be presented as this sitting's agenda");
     await capture(page, `${label}-${meetingId.replaceAll(":", "-")}-publication-index`, publication);
+  } else if (payload.publication?.acquisition === "ACQUIRED_NOT_READABLE") {
+    const unreadable = modal.locator('[data-agenda-publication="ACQUIRED_NOT_READABLE"]');
+    await unreadable.waitFor({ state: "visible" });
+    assert.equal(await modal.locator("p.whitespace-pre-line").count(), 0, "Unreadable document bytes cannot be rendered as agenda text");
+    await capture(page, `${label}-${meetingId.replaceAll(":", "-")}-unreadable-document`, unreadable);
   } else if (textDocument) {
     const source = modal.locator(`a[href="${textDocument.documentUrl}"]`).last();
     await source.waitFor({ state: "attached" });
     const raw = modal.locator("p.whitespace-pre-line");
+    const agendaDocument = raw.locator("..");
+    assert.equal(await agendaDocument.locator("ol > li").count(), payload.publication?.items.length ?? 0, `${meetingId}: every extracted held agenda item reaches the actual preview`);
     assert.ok((await raw.innerText()).replace(/\s+/g, " ").includes(textDocument.text!.slice(0, 100).replace(/\s+/g, " ").trim()), `${meetingId}: held agenda text reaches DOM`);
     await capture(page, `${label}-${meetingId.replaceAll(":", "-")}-agenda-text`, raw);
     const notice = noticeSummaryFor(meetingId, textDocument.contentHash);
@@ -440,7 +502,7 @@ async function activityWitnesses(page: Page, zip: string, label: string) {
   return rows;
 }
 
-async function votingWitness(page: Page, label: string) {
+async function openVotingPanel(page: Page) {
   const opener = page.getByRole("button", { name: "Where can I vote?", exact: true });
   if (!(await opener.isVisible())) {
     const menu = page.getByRole("button", { name: "Open menu", exact: true });
@@ -448,6 +510,21 @@ async function votingWitness(page: Page, label: string) {
   }
   await opener.click();
   const panel = page.locator(".voting-panel");
+  // A completed page transition can leave the first gesture before hydration.
+  // Retry the same visible control once; never inject component state.
+  let gestures = 1;
+  try { await panel.waitFor({ state: "visible", timeout: 3_000 }); }
+  catch {
+    assert.equal(await panel.count(), 0, "A mounted panel must not be dismissed by a second gesture");
+    await opener.click();
+    gestures += 1;
+    await panel.waitFor({ state: "visible", timeout: 10_000 });
+  }
+  return { panel, gestures };
+}
+
+async function votingWitness(page: Page, label: string) {
+  const { panel, gestures } = await openVotingPanel(page);
   await panel.getByLabel("Your street address").fill("240 N Stone Avenue, Tucson, AZ 85701");
   const pending = page.waitForResponse(response => new URL(response.url()).pathname === "/api/voting-sites" && response.request().method() === "POST", { timeout: 90_000 });
   await panel.getByRole("button", { name: "Show me", exact: true }).click();
@@ -469,32 +546,43 @@ async function votingWitness(page: Page, label: string) {
   await capture(page, `${label}-voting-sites`, panel.locator(".voting-site").first());
   await capture(page, `${label}-voting-sites-source`, panel.locator(".voting-source").last());
   await panel.getByRole("button", { name: "Close", exact: true }).click();
-  return { ...answer, renderedJurisdictions: answer.jurisdictions.length, renderedSites: sites.length, layoutFailure };
+  return { ...answer, openerGestures: gestures, renderedJurisdictions: answer.jurisdictions.length, renderedSites: sites.length, layoutFailure };
 }
 
 async function votingFallbackWitness(page: Page, label: string, kind: "outside-coverage" | "assigned-unresolved") {
-  const opener = page.getByRole("button", { name: "Where can I vote?", exact: true });
-  if (!(await opener.isVisible())) {
-    const menu = page.getByRole("button", { name: "Open menu", exact: true });
-    if (await menu.isVisible()) await menu.click();
-  }
-  await opener.click();
-  const panel = page.locator(".voting-panel");
+  const { panel, gestures } = await openVotingPanel(page);
   // Public municipal buildings only. The NJ address is held in the meetings
   // snapshot; Phoenix City Hall is the city clerk's published public address.
-  const address = kind === "outside-coverage" ? "200 W Washington Street, Phoenix, AZ 85003" : "65 Mount Hope Road, Rockaway Township, NJ 07866";
+  const addresses = kind === "outside-coverage" ? ["200 W Washington Street, Phoenix, AZ 85003"]
+    : ["65 Mount Hope Rd, Rockaway, NJ 07866", "65 Mount Hope Road, Rockaway Township, NJ 07866"];
   const addressSource = kind === "outside-coverage" ? "https://www.phoenix.gov/administration/departments/cityclerk/contact-us.html" : "data/meetings-snapshot.json";
-  await panel.getByLabel("Your street address").fill(address);
-  const pending = page.waitForResponse(response => new URL(response.url()).pathname === "/api/voting-sites" && response.request().method() === "POST", { timeout: 90_000 });
-  await panel.getByRole("button", { name: "Show me", exact: true }).click();
-  const response = await pending;
-  assert.equal(response.status(), 200);
-  const answer = await response.json() as VotingSitesAnswer;
-  assert.equal(answer.match, true, `${address}: public address must actually resolve`);
-  if (kind === "outside-coverage") assert.equal(answer.outsideCoverage, true);
-  else assert.ok(answer.jurisdictions.some(jurisdiction => jurisdiction.state === "NJ" && jurisdiction.narrowing.kind === "REFUSED"));
+  const attempts: { address: string; answer: VotingSitesAnswer }[] = [];
+  for (const address of addresses) {
+    await panel.getByLabel("Your street address").fill(address);
+    const pending = page.waitForResponse(response => new URL(response.url()).pathname === "/api/voting-sites" && response.request().method() === "POST", { timeout: 90_000 });
+    await panel.getByRole("button", { name: "Show me", exact: true }).click();
+    const response = await pending;
+    assert.equal(response.status(), 200);
+    const answer = await response.json() as VotingSitesAnswer;
+    attempts.push({ address, answer });
+    if (answer.match && (kind === "outside-coverage" ? answer.outsideCoverage : answer.jurisdictions.some(jurisdiction => jurisdiction.state === "NJ" && jurisdiction.narrowing.kind === "REFUSED"))) break;
+  }
+  const { address, answer } = attempts.at(-1)!;
+  if (answer.match) {
+    if (kind === "outside-coverage") assert.equal(answer.outsideCoverage, true);
+    else assert.ok(answer.jurisdictions.some(jurisdiction => jurisdiction.state === "NJ"), "A resolved NJ address must use its actual held jurisdiction, without assuming the geocoder selected the Township");
+  } else assert.ok((await panel.innerText()).includes("We could not turn that into a location"), "An external unresolved geocode retains the honest OURS gap and held lookup links");
   const expected = pollingLookupFallbacks("answered", answer);
-  assert.ok(expected.length > 0);
+  if (expected.length === 0) {
+    assert.ok(answer.match && answer.jurisdictions.every(jurisdiction => jurisdiction.narrowing.kind !== "REFUSED"), "Only an answered location may omit the fallback");
+    await panel.locator(".voting-jurisdiction").first().waitFor({ state: "visible" });
+    assert.equal(await panel.locator(".voting-jurisdiction").count(), answer.jurisdictions.length);
+    assert.equal(await panel.locator(".voting-site").count(), answer.jurisdictions.reduce((sum, jurisdiction) => sum + jurisdiction.sites.length, 0));
+    assert.equal(await panel.locator("[data-polling-lookup-fallback]").count(), 0);
+    await capture(page, `${label}-voting-${kind}-answered`, panel.locator(".voting-jurisdiction").first());
+    await panel.getByRole("button", { name: "Close", exact: true }).click();
+    return { requestedKind: kind, kind: "resolved-held-location", openerGestures: gestures, address, addressSource, attempts, answer, links: expected, renderedLinks: 0 };
+  }
   const fallback = panel.locator("[data-polling-lookup-fallback]");
   await fallback.waitFor({ state: "visible" });
   assert.equal(await fallback.locator("[data-polling-lookup-state]").count(), expected.length);
@@ -509,7 +597,7 @@ async function votingFallbackWitness(page: Page, label: string, kind: "outside-c
   await capture(page, `${label}-voting-${kind}`, fallback);
   await capture(page, `${label}-voting-${kind}-last`, fallback.locator("[data-polling-lookup-state]").last());
   await panel.getByRole("button", { name: "Close", exact: true }).click();
-  return { kind, address, addressSource, answer, links: expected, renderedLinks: expected.length };
+  return { requestedKind: kind, kind: answer.match ? kind : "address-unresolved", openerGestures: gestures, address, addressSource, attempts, answer, links: expected, renderedLinks: expected.length };
 }
 
 async function areaWitness(page: Page, zip: string, label: string) {
@@ -595,6 +683,30 @@ try {
       try {
         await mapAt(page, pilot.zip, theme);
         const build = await (await context.request.get(`${BASE}/api/build`)).json();
+        if (process.env.READER_RENDER_FOCUS === "federal-money") {
+          assert.equal(pilot.zip, "85641");
+          const officialId = "congress:C001133";
+          const api = await (await context.request.get(`${BASE}/api/funding/${encodeURIComponent(officialId)}`)).json();
+          assert.equal(api.kind, "funding");
+          const official = await openOfficial(page, "Juan Ciscomani");
+          const mapSection = await openSection(official, "Campaign money");
+          await mapSection.getByText(api.data.sentences[0], { exact: true }).waitFor({ state: "visible" });
+          const mapText = await mapSection.innerText();
+          const mapScreenshot = await capture(page, `${label}-map-federal-money`, mapSection);
+          await page.keyboard.press("Escape");
+          await page.goto(`${BASE}/ballot?zip=${pilot.zip}`, { waitUntil: "networkidle", timeout: 90_000 });
+          const candidate = await openBallotCandidate(page, "Juan Ciscomani");
+          const candidateId = await candidate.locator("[data-candidate-subject]").getAttribute("data-candidate-subject");
+          const ballotSection = await openSection(candidate, "Campaign money");
+          await ballotSection.getByText(api.data.sentences[0], { exact: true }).waitFor({ state: "visible" });
+          const ballotText = await ballotSection.innerText();
+          assert.equal(ballotText.replace("CAMPAIGN MONEY · FEC\n\n", ""), mapText, "Both surfaces must render the same FEC projection; the framed ballot leaf adds its FEC eyebrow");
+          const ballotScreenshot = await capture(page, `${label}-ballot-federal-money`, ballotSection);
+          results.push({ label, result: "PASS", focus: "federal-money", build, officialId, candidateId, api, mapText, ballotText, mapScreenshot, ballotScreenshot });
+          console.log(`PASS ${label}: map and ballot share held FEC money`);
+          writeFileSync(REPORT, JSON.stringify({ date: today(), base: BASE, exactHead: build.commit, runId: browser.runId, results, screenshots, screenshotsReadAsImages: [] }, null, 2) + "\n");
+          continue;
+        }
         if (process.env.READER_RENDER_FOCUS === "positions") {
           assert.equal(pilot.zip, "85701", "Focused positions probe uses the held Hobbs regression control");
           const official = await openOfficial(page, pilot.name);
@@ -607,7 +719,7 @@ try {
           assert.deepEqual(ballotPositions, mapPositions);
           results.push({ label, result: "PASS", focus: "positions", build, mapPositions, ballotPositions });
           console.log(`PASS ${label}: map and ballot share held positions`);
-          writeFileSync(REPORT, JSON.stringify({ date: today(), base: BASE, runId: browser.runId, results, screenshots, screenshotsReadAsImages: [] }, null, 2) + "\n");
+          writeFileSync(REPORT, JSON.stringify({ date: today(), base: BASE, exactHead: build.commit, runId: browser.runId, results, screenshots, screenshotsReadAsImages: [] }, null, 2) + "\n");
           continue;
         }
         const apiResponse = await context.request.get(`${BASE}/api/funding/${encodeURIComponent(pilot.official)}`);
@@ -643,6 +755,8 @@ try {
         await page.goto(`${BASE}/ballot?zip=${pilot.zip}`, { waitUntil: "domcontentloaded", timeout: 90_000 });
         await page.locator("[data-battlecard-pill]").first().waitFor({ state: "visible", timeout: 30_000 });
         const ballotModal = await openBallotCandidate(page, pilot.name);
+        await ballotModal.getByText("Incumbent", { exact: true }).waitFor({ state: "visible" });
+        const candidateHolder = pilot.zip === "07866" ? await candidateHolderWitness(page, ballotModal, pilot.official, label) : null;
         const ballotMoney = await inspectMoney(ballotModal, pilot.key, pilot.raised, pilot.spent);
         assert.equal(ballotMoney.text, mapMoney.text);
         await capture(page, `${label}-ballot-money`, ballotMoney.section);
@@ -678,17 +792,20 @@ try {
         const population = viewport.name === "desktop" && theme === "dark" ? await allBallotMoney(page) : null;
         if (population) console.log(`${label}: opened and checked ${population.cardsOpened} ballot cards`);
         const ask = viewport.name === "desktop" && theme === "dark" ? await ballotAskMoney(page, pilot, label) : null;
+        const ballotVoting = pilot.zip === "85701" ? await votingWitness(page, `${label}-ballot`) : null;
+        const ballotVotingFallback = viewport.name === "phone" && ["85701", "07866"].includes(pilot.zip) ? await votingFallbackWitness(page, `${label}-ballot`, pilot.zip === "85701" ? "outside-coverage" : "assigned-unresolved") : null;
         const area = await areaWitness(page, pilot.zip, label);
         const incompleteRoster = pilot.zip === "07866" ? await incompleteRosterWitness({ width: viewport.width, height: viewport.height }, theme, label) : null;
-        const result = voting?.layoutFailure ? "FAIL" : "PASS";
-        results.push({ label, result, error: voting?.layoutFailure ?? null, build, map: mapMoney.text, ballot: ballotMoney.text, canonicalCandidacyId: pilot.key, api, population, ask, meetings, termNote, incompleteRoster, voting, votingFallback, area, mapActions, ballotActions, mapPositions, ballotPositions, mapFederalRecords, ballotFederalRecords });
+        const layoutFailure = voting?.layoutFailure ?? ballotVoting?.layoutFailure;
+        const result = layoutFailure ? "FAIL" : "PASS";
+        results.push({ label, result, error: layoutFailure ?? null, build, map: mapMoney.text, ballot: ballotMoney.text, canonicalCandidacyId: pilot.key, api, population, ask, meetings, termNote, incompleteRoster, candidateHolder, voting, votingFallback, ballotVoting, ballotVotingFallback, area, mapActions, ballotActions, mapPositions, ballotPositions, mapFederalRecords, ballotFederalRecords });
         console.log(`${result} ${label}${population ? `; ${population.cardsOpened} ballot cards individually opened` : ""}${voting?.layoutFailure ? `; ${voting.layoutFailure}` : ""}`);
       } catch (error) {
         await capture(page, `${label}-failure`).catch(() => {});
         results.push({ label, result: "FAIL", error: String(error), url: page.url() });
         console.error(`FAIL ${label}: ${String(error)}`);
       } finally { await context.close(); }
-      writeFileSync(REPORT, JSON.stringify({ date: today(), base: BASE, runId: browser.runId, results, screenshots, screenshotsReadAsImages: [] }, null, 2) + "\n");
+      writeFileSync(REPORT, JSON.stringify({ date: today(), base: BASE, exactHead: (results.find(row => row.build) as { build?: { commit?: string } } | undefined)?.build?.commit ?? null, runId: browser.runId, results, screenshots, screenshotsReadAsImages: [] }, null, 2) + "\n");
     }
   }
 } finally { await browser.close(); }

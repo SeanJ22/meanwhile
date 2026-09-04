@@ -110,7 +110,11 @@ if (args.includes("--check")) {
 }
 if (args.includes("--closure")) problems.push(...censusClosureFailures(census));
 if (args.includes("--closure") && problems.length === 0) {
-  const receipt: ReaderClosureReceipt = { formatVersion: 1, censusPath: output, censusSha256: sha256(json), holdingsDigest: census.holdingsDigest, registrySha256: census.registrySha256, sourceHashes: readerSourceFingerprint(root) };
+  // RULING 20 keeps screenshot bytes outside git. Validate their hashes during
+  // composition, then retain the exact reviewed-image manifest as durable proof.
+  const witnessManifest = option("--component-witnesses");
+  const evidenceHashes = [...new Set([...census.rows.flatMap((row)=>row.evidencePaths), ...(witnessManifest ? [witnessManifest] : [])])].sort().map((path)=>({path,sha256:sha256(readReaderEvidence(root,path))}));
+  const receipt: ReaderClosureReceipt = { formatVersion: 1, censusPath: output, censusSha256: sha256(json), holdingsDigest: census.holdingsDigest, registrySha256: census.registrySha256, sourceHashes: readerSourceFingerprint(root), evidenceHashes };
   writeFileSync(join(root, output.replace(/\.json$/, "-receipt.json")), `${JSON.stringify(receipt,null,2)}\n`);
 }
 console.log(JSON.stringify({ output, denominator: census.denominator, delivery: Object.fromEntries([...new Set(census.rows.map((r) => r.deliveryState))].map((state) => [state, census.rows.filter((r) => r.deliveryState === state).length])), stagedAutonomous: census.autonomous.length, closureObligations: censusClosureFailures(census).length, problemCount: problems.length, firstProblems: problems.slice(0, 20) }, null, 2));

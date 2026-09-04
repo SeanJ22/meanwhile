@@ -108,7 +108,7 @@ try {
           const x = Math.min(innerWidth - 1, Math.max(0, rectangle.left + rectangle.width / 2));
           const y = Math.min(innerHeight - 1, Math.max(0, rectangle.top + rectangle.height / 2));
           const front = document.elementFromPoint(x, y);
-          return { text: element.textContent, top: rectangle.top, bottom: rectangle.bottom, viewportHeight: innerHeight, unobscured: Boolean(front && (element.contains(front) || front.contains(element))), frontClass: front?.className ?? null };
+          return { text: element.textContent, top: rectangle.top, bottom: rectangle.bottom, viewportHeight: innerHeight, unobscured: Boolean(front && element.contains(front)), frontClass: front?.className ?? null };
         });
         assert.ok(tailReadback.top >= 0 && tailReadback.bottom <= view.height + 1 && tailReadback.unobscured, `${zip}/${view.name}/${view.theme}/${view.placement}: the reader must reach the final answer line above ambient map chrome`);
         layoutProofs.push({ zip, viewport: view.name, theme: view.theme, placement: view.placement, geometry, tailReadback, status: "PROVEN" });

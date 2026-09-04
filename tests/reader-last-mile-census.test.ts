@@ -257,6 +257,11 @@ test("composition requires actual per-record HTML, current source and an execute
   assert.deepEqual(composed.proofs[0].renderedRecordIds, [row.eligibleRecordIds[0]]);
   assert.equal(composed.uncovered.length, 1, "the second held candidate remains an obligation");
   assert.equal(reconcileDelivery(row, composed.proofs[0], root).row.deliveryState, "DELIVERY_UNPROVEN");
+  write("reviewed-image.png", "reviewed image fixture bytes");
+  const imagedProof = { ...composed.proofs[0], surfaceWitnesses: [{ ...witness, screenshots: [{ path: "reviewed-image.png", sha256: sha256(readFileSync(join(root, "reviewed-image.png"))) }] }] };
+  assert.deepEqual(reconcileDelivery(row, imagedProof, root).failures, [], "composition checks the actual reviewed image bytes; its digest remains in the durable witness manifest under RULING 20");
+  write("reviewed-image.png", "different screenshot bytes");
+  assert.ok(reconcileDelivery(row, imagedProof, root).failures.some(failure => failure.includes("reviewed surface image changed")), "a different screenshot cannot reuse a reviewed witness");
   write(component, source + " // changed after proof");
   assert.ok(composeReaderComponentProofs(root, census, "components.json", [witness], bundle).failures.some((failure) => failure.includes("source changed")));
   write(component, source);

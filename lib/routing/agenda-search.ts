@@ -255,7 +255,7 @@ export function meetingsWithin(
  * structure, so the caller says "we could not read the item list off this
  * agenda" rather than rendering an agenda with nothing on it.
  */
-export function agendaItems(text: string | null, limit = 25): string[] {
+export function agendaItems(text: string | null): string[] {
   if (!text) return [];
   const items: string[] = [];
   const seen = new Set<string>();
@@ -280,7 +280,6 @@ export function agendaItems(text: string | null, limit = 25): string[] {
     if (seen.has(trimmed)) continue;
     seen.add(trimmed);
     items.push(trimmed);
-    if (items.length >= limit) break;
   }
   return items;
 }

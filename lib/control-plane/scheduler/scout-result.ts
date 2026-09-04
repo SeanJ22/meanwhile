@@ -119,6 +119,12 @@ export type ScoutStop = "MODEL" | "BOUND";
 
 /** One rung walked — DERIVED from a tool call that ran, annotated by the model. */
 export interface ScoutRung {
+  /** Additive machine observations; absent on legacy walks means not recorded. */
+  readonly transport?: import("../../workstate/types.ts").TransportState | "NOT_ATTEMPTED";
+  readonly httpStatus?: number | null;
+  readonly returnedCount?: number | null;
+  readonly nextHopUrls?: readonly string[];
+  readonly applicableBecause?: string;
   readonly index: number;
   /** A SCOUT_LADDER name, or `other:<name>`. Stated by the model when it called the tool. */
   readonly rung: string;

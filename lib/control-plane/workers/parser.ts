@@ -7,6 +7,7 @@ import type {
   WorkerFinding,
 } from "./types.ts";
 import { isFieldValue as isScalar } from "./types.ts";
+import { parseGeneralizedRecords } from "./generalized-parser.ts";
 
 export const PARSER_IMPLEMENTATION = "legistar-events";
 export const CIVICCLERK_PARSER_IMPLEMENTATION = "civicclerk-events";
@@ -31,7 +32,7 @@ const CIVICCLERK_PROFILE = {
   subresources: ["eventLocation", "agendaFile", "minutesFile", "eventSocialMediaModel", "publishedFiles"],
 };
 
-interface SourceToken {
+export interface SourceToken {
   readonly start: number;
   readonly end: number;
 }
@@ -57,7 +58,7 @@ function pointerPart(key: string): string {
  * for a value's text is unsafe: repeated dates, names and numbers would cite
  * another row. A pointer identifies its occurrence, including escaped keys.
  */
-function indexJson(text: string): ReadonlyMap<string, SourceToken> {
+export function indexJson(text: string): ReadonlyMap<string, SourceToken> {
   const tokens = new Map<string, SourceToken>();
   let cursor = 0;
   const whitespace = () => {
@@ -142,6 +143,7 @@ function declaredCount(value: unknown): number {
  * It has no host imports, callbacks, acquisition or promotion authority.
  */
 export function parseLegistarEvents(input: ParserWorkerInput): ParserResult {
+  if (input.contract.schemaVersion === 2) return parseGeneralizedRecords(input, input.contract);
   const profile = input.contract.recordClass === "CIVICCLERK_EVENTS" ? CIVICCLERK_PROFILE : LEGISTAR_PROFILE;
   const base = {
     role: "PARSER" as const,
@@ -326,6 +328,7 @@ export function parseLegistarEvents(input: ParserWorkerInput): ParserResult {
 
 /** Record-class dispatch over the two implemented publisher profiles. */
 export const parseCivicEvents = parseLegistarEvents;
+export const parseCivicRecords = parseLegistarEvents;
 
 /** Execution identities vary across replay; civic content and evidence may not. */
 export function normalizedParserResult(

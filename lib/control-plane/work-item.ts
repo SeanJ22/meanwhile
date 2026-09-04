@@ -282,6 +282,8 @@ export function createEscalation(input: {
 }
 
 export interface WorkItem {
+  /** Additive instructions for the standing fleet; observations remain in canonical results. */
+  readonly autonomousPlan?: import("./workers/autonomous-plan.ts").AutonomousWorkPlan;
   readonly id: string;
   readonly project: string;
   /** Canonical subject identity — an OCD-ID, a contest id, a source id. */

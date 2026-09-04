@@ -6,7 +6,7 @@ import { contentHash } from "../lib/control-plane/ids.ts";
 import { PARSER_VERSION, parseLegistarEvents } from "../lib/control-plane/workers/parser.ts";
 import { validateExtraction } from "../lib/control-plane/workers/validator.ts";
 import type {
-  CivicExtractionContract,
+  LegacyCivicExtractionContract as CivicExtractionContract,
   ParserResult,
   ValidatorWorkerInput,
   WorkerEvidence,

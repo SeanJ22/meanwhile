@@ -4,7 +4,7 @@ import { build } from "esbuild";
 import ts from "typescript";
 import { requireCapability, type CapabilityGrant } from "../capability.ts";
 import { assertNoNetwork } from "../evidence/parser-boundary.ts";
-import { assertFleetResult, type FleetInput, type FleetResult, type FleetRole } from "./types.ts";
+import { assertFleetResult, type FleetInput, type FleetResult, type ComputationRole } from "./types.ts";
 
 const entries = {
   PARSER: { path: "parser.ts", entry: "parseLegistarEvents" },
@@ -13,7 +13,7 @@ const entries = {
 } as const;
 
 /** Only repository-owned portable procedure code is executable. Evidence is never code. */
-export async function bundleProcedure(role: FleetRole): Promise<string> {
+export async function bundleProcedure(role: ComputationRole): Promise<string> {
   const result = await build({
     entryPoints: [fileURLToPath(new URL(entries[role].path, import.meta.url))],
     bundle: true, write: false, format: "iife", globalName: "procedure", platform: "neutral", target: "es2022",
@@ -85,7 +85,7 @@ export async function runIsolatedSource(source: string, input: unknown, timeoutM
   });
 }
 
-export async function runIsolatedWorker(role: FleetRole, input: FleetInput, grant: CapabilityGrant, timeoutMs: number): Promise<FleetResult> {
+export async function runIsolatedWorker(role: ComputationRole, input: FleetInput, grant: CapabilityGrant, timeoutMs: number): Promise<FleetResult> {
   if (grant.role !== role || input.worker.role !== role) throw new Error("DENIED_BY_POLICY:WORKER_ROLE_MISMATCH");
   requireCapability(grant, "VAULT_READ_SANITIZED");
   const allowed = role === "ADVERSARIAL_AUDITOR" ? ["VAULT_READ_SANITIZED", "NETWORK_PUBLIC_READ"] : ["VAULT_READ_SANITIZED"];

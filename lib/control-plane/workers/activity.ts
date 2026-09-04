@@ -1,0 +1,166 @@
+import type { Attempt, ExecutionLease } from "../attempt.ts";
+import type { CostEntry } from "../cost.ts";
+import type { RouteTask } from "../route-task.ts";
+import type { WorkItem } from "../work-item.ts";
+import type { ArtifactRecord, ControlPlaneRepositories, DispositionCommit, RecordedTransition } from "../repository/types.ts";
+import type { ScoutResult } from "../scheduler/scout-result.ts";
+import type { PromotionPipelineRecord } from "../promotion/types.ts";
+import { assertFleetResult, type WorkerResultRecord } from "./types.ts";
+import { assertResearchWalk, type EvidenceWalkStep, type ResearchWalkState } from "./research-types.ts";
+import { canonicalJson } from "../repository/types.ts";
+
+export interface AutonomousActivitySnapshot {
+  readonly workItems: readonly WorkItem[];
+  readonly routeTasks: readonly RouteTask[];
+  readonly attempts: readonly Attempt[];
+  readonly leases: readonly ExecutionLease[];
+  readonly transitions: readonly RecordedTransition[];
+  readonly dispositions: readonly DispositionCommit[];
+  readonly artifacts: readonly ArtifactRecord[];
+  readonly costs: readonly CostEntry[];
+  readonly scouts: readonly ScoutResult[];
+  readonly workers: readonly WorkerResultRecord[];
+  readonly promotion: readonly PromotionPipelineRecord[];
+}
+export interface AutonomousActivityEvent {
+  readonly at: string;
+  readonly kind: "WORK_ITEM_CREATED" | "ATTEMPT_STARTED" | "ATTEMPT_ENDED" | "RUNG" | "ARTIFACT" | "WORKER_RESULT" | "SCOUT_RESULT" | "TRANSITION" | "DISPOSITION";
+  readonly id: string;
+  readonly workItemId: string;
+  readonly attemptId: string | null;
+  readonly routeTaskId: string | null;
+  readonly artifactIds: readonly string[];
+  readonly walk?: EvidenceWalkStep;
+}
+export interface AutonomousObligationActivity {
+  /** Held inputs may originate in another canonical obligation; ownership is retained. */
+  readonly referencedArtifacts: readonly ArtifactRecord[];
+  readonly referencedAttempts: readonly Attempt[];
+  readonly workItem: WorkItem;
+  readonly jurisdiction: string | null;
+  readonly capability: string | null;
+  readonly recordClass: string | null;
+  readonly timeline: readonly AutonomousActivityEvent[];
+  /** Canonical records are returned intact: no lossy panel-specific reclassification. */
+  readonly facts: AutonomousActivitySnapshot;
+  readonly walk: {readonly state: "NOT_WALKED" | "OPEN" | "CLOSED"; readonly proof: ResearchWalkState | null; readonly nextUnwalkedRouteIds: readonly string[]};
+  readonly evidenceGaps: readonly string[];
+  readonly accounting: {readonly attemptIds: readonly string[]; readonly terminalAttemptIds: readonly string[]; readonly transitionIds: readonly string[]};
+}
+
+/** Deterministic view only. This function has no repository write or readiness-state input. */
+export function projectAutonomousActivity(snapshot: AutonomousActivitySnapshot, options: { readonly observedAt?: string } = {}): readonly AutonomousObligationActivity[] {
+  if(options.observedAt!==undefined && !Number.isFinite(Date.parse(options.observedAt))) throw new Error("AUTONOMOUS_ACTIVITY_CLOCK_INVALID");
+  return snapshot.workItems.map((workItem): AutonomousObligationActivity => {
+    const workItemId = workItem.id;
+    const facts: AutonomousActivitySnapshot = {
+      workItems: [workItem], routeTasks: snapshot.routeTasks.filter(x => x.workItemId === workItemId),
+      attempts: snapshot.attempts.filter(x => x.workItemId === workItemId),
+      leases: snapshot.leases.filter(x => snapshot.routeTasks.some(t => t.id === x.routeTaskId && t.workItemId === workItemId)),
+      transitions: snapshot.transitions.filter(x => x.workItemId === workItemId),
+      dispositions: snapshot.dispositions.filter(x => x.workItemId === workItemId),
+      artifacts: snapshot.artifacts.filter(x => x.workItemId === workItemId), costs: snapshot.costs.filter(x => x.workItemId === workItemId),
+      scouts: snapshot.scouts.filter(x => x.workItemId === workItemId), workers: snapshot.workers.filter(x => x.workItemId === workItemId),
+      promotion: snapshot.promotion.filter(x => x.stage === "SCOUTED" && factsForSource(x.source.attemptId, snapshot.attempts, workItemId)),
+    };
+    const itemPipelineIds = new Set(facts.promotion.map(p => p.itemId));
+    const fullFacts = { ...facts, promotion: snapshot.promotion.filter(p => itemPipelineIds.has(p.itemId)) };
+    const references=new Set(facts.workers.flatMap(record=>record.inputArtifactIds));
+    for(const task of facts.routeTasks) {
+      const spec=task.workerTask;
+      if(!spec)continue;
+      references.add(spec.artifactId);
+      if(spec.acquisition) {references.add(spec.acquisition.route.observation.artifactId); for(const span of spec.acquisition.route.publisherSubjectEvidence)references.add(span.artifactId);}
+      if(spec.contract.schemaVersion===2) for(const id of [...spec.contract.sourceScope.observationArtifactIds,...spec.contract.verification.authorities.flatMap(authority=>[...authority.artifactIds,...authority.authorityEvidenceArtifactIds])]) references.add(id);
+    }
+    const referencedArtifacts=snapshot.artifacts.filter(artifact=>references.has(artifact.artifactId)&&artifact.workItemId!==workItemId);
+    const referencedAttempts=snapshot.attempts.filter(attempt=>attempt.workItemId!==workItemId&&referencedArtifacts.some(artifact=>artifact.attemptId===attempt.id));
+    const heldArtifacts=[...facts.artifacts,...referencedArtifacts]; const attributableAttempts=[...facts.attempts,...referencedAttempts];
+    const timeline: AutonomousActivityEvent[] = [{ at: workItem.createdAt, kind: "WORK_ITEM_CREATED", id: workItemId, workItemId,
+      attemptId: null, routeTaskId: null, artifactIds: [] }];
+    const gaps: string[] = [];
+    for (const a of facts.attempts) {
+      timeline.push({ at: a.startedAt, kind: "ATTEMPT_STARTED", id: `${a.id}:start`, workItemId, attemptId: a.id, routeTaskId: a.routeTaskId, artifactIds: [] });
+      if (a.endedAt) timeline.push({ at: a.endedAt, kind: "ATTEMPT_ENDED", id: `${a.id}:end`, workItemId, attemptId: a.id, routeTaskId: a.routeTaskId, artifactIds: a.artifactIds });
+    }
+    for (const a of facts.artifacts) timeline.push({ at: a.recordedAt, kind: "ARTIFACT", id: a.artifactId, workItemId, attemptId: a.attemptId, routeTaskId: a.routeTaskId, artifactIds: [a.artifactId] });
+    for (const t of facts.transitions) timeline.push({ at: t.transition.at, kind: "TRANSITION", id: t.transitionId, workItemId, attemptId: null, routeTaskId: null, artifactIds: [] });
+    for (const d of facts.dispositions) timeline.push({ at: d.committedAt, kind: "DISPOSITION", id: d.attemptId, workItemId, attemptId: d.attemptId, routeTaskId: d.routeTaskId, artifactIds: d.disposition.artifactIds });
+    for (const scout of facts.scouts) {
+      timeline.push({ at: scout.recordedAt, kind: "SCOUT_RESULT", id: scout.attemptId, workItemId, attemptId: scout.attemptId, routeTaskId: scout.routeTaskId, artifactIds: scout.artifactIds });
+      const attempt = facts.attempts.find(a => a.id === scout.attemptId);
+      if (!attempt) { gaps.push(`SCOUT_ATTEMPT_MISSING:${scout.attemptId}`); continue; }
+      for (const rung of scout.rungs) {
+        // Older fields remain unknown; a model note never fills the gap.
+        if (rung.transport === undefined) gaps.push(`LEGACY_TRANSPORT_NOT_RECORDED:${scout.attemptId}:${rung.index}`);
+        const walk: EvidenceWalkStep = { sequence: rung.index, at: rung.at, worker: attempt.worker, attemptId: attempt.id,
+          routeId: scout.routeId ?? scout.routeTaskId, rung: rung.rung, target: rung.target,
+          applicableBecause: rung.applicableBecause ?? "Applicability reason not recorded by the legacy tool",
+          permission: rung.permission ?? "CANNOT_TELL", transport: rung.transport ?? "NOT_ATTEMPTED", observed: rung.observed,
+          returnedCount: rung.returnedCount ?? null, artifactIds: rung.artifactIds, nextRouteIds: rung.nextHopUrls ?? [],
+          outcome: rung.ok === false ? "BLOCKED" : rung.returnedCount === 0 ? "WALKED_AND_EMPTY" : rung.artifactIds.length ? "WALKED_AND_FOUND" : "NOT_WALKED",
+          pass: "INITIAL" };
+        timeline.push({ at: rung.at, kind: "RUNG", id: `${scout.attemptId}:rung:${rung.index}`, workItemId, attemptId: attempt.id, routeTaskId: scout.routeTaskId, artifactIds: rung.artifactIds, walk });
+      }
+    }
+    let closed: ResearchWalkState | null = null;
+    const namedNext = new Set<string>();
+    for (const record of [...facts.workers].sort((a,b) => a.endedAt.localeCompare(b.endedAt))) {
+      const a = facts.attempts.find(x => x.id === record.attemptId);
+      const task = facts.routeTasks.find(x => x.id === record.routeTaskId);
+      try {
+        if (!a || a.outcome !== "COMPLETED" || !task || task.state !== "RESULT_RECORDED" || task.workerTask?.role !== record.result.role ||
+          a.worker.instance !== record.worker.instance || a.endedAt !== record.endedAt ||
+          canonicalJson(a)!==canonicalJson(record.completion.closedAttempt) || canonicalJson(task)!==canonicalJson(record.completion.completedTask)) throw new Error("UNCOMMITTED_OR_MISMATCHED_RESULT");
+        assertFleetResult(record.result, task.workerTask.role, a.id);
+      } catch { gaps.push(`WORKER_RESULT_UNPROVEN:${record.id}`); continue; }
+      timeline.push({ at: record.endedAt, kind: "WORKER_RESULT", id: record.id, workItemId, attemptId: record.attemptId, routeTaskId: record.routeTaskId, artifactIds: record.inputArtifactIds });
+      if (record.result.role === "ACQUIRER" || record.result.role === "DETECTIVE") {
+        assertResearchWalk(record.result.walk, record.result.walkState);
+        const attributable = record.result.walk.every(rung => attributableAttempts.some(attempt => attempt.id===rung.attemptId &&
+          rung.artifactIds.every(id => attempt.artifactIds.includes(id) || heldArtifacts.some(artifact=>artifact.artifactId===id && artifact.attemptId===attempt.id)))) &&
+          record.result.walk.every(rung=>rung.artifactIds.every(id=>heldArtifacts.some(artifact=>artifact.artifactId===id)));
+        if(!attributable) { gaps.push(`WORKER_WALK_ATTRIBUTION_UNPROVEN:${record.id}`); continue; }
+        for (const rung of record.result.walk) timeline.push({ at: rung.at, kind: "RUNG", id: `${record.id}:rung:${rung.sequence}`, workItemId,
+          attemptId: rung.attemptId, routeTaskId: record.routeTaskId, artifactIds: rung.artifactIds, walk: rung });
+        if (record.result.walkState.state === "CLOSED") {
+          const supported=record.result.role==="DETECTIVE"&&record.result.verdict==="SUPPORTED"&&record.result.blockers.length===0&&
+            record.result.burden==="EVIDENCE_SUPPORTED_PENDING_INDEPENDENT_VALIDATION"&&record.result.walkState.supportingArtifactIds.every(id=>
+              record.result.role==="DETECTIVE"&&record.result.spans.some(span=>span.artifactId===id&&heldArtifacts.some(artifact=>artifact.artifactId===id&&artifact.contentHash===span.contentHash)&&
+                Number.isSafeInteger(span.start)&&Number.isSafeInteger(span.end)&&span.start>=0&&span.end>span.start&&span.quote.length===span.end-span.start));
+          if(!supported) gaps.push(`CLOSED_WALK_RESULT_NOT_EVIDENCE_SUPPORTED:${record.id}`);
+          else if(!options.observedAt) gaps.push(`CLOSED_WALK_FRESHNESS_UNOBSERVED:${record.id}`);
+          else if(Date.parse(record.result.walkState.expiresAt)<=Date.parse(options.observedAt)) gaps.push(`CLOSED_WALK_EXPIRED:${record.id}`);
+          else closed = record.result.walkState;
+        }
+        else for (const route of record.result.walkState.nextRouteIds) namedNext.add(route);
+      }
+    }
+    for (const task of facts.routeTasks) if (["PENDING", "RECLAIMABLE", "POLICY_DENIED", "CLAIMED"].includes(task.state)) namedNext.add(task.routeId);
+    for (const scout of facts.scouts) for (const next of scout.nextRungs) namedNext.add(next);
+    const walked = timeline.some(e => e.kind === "RUNG" && e.walk?.outcome !== "NOT_WALKED") || facts.dispositions.length > 0;
+    // A closed proof is scoped to its ladder and expires. Later open work never disappears behind it.
+    if (namedNext.size) closed = null;
+    const plan = workItem.autonomousPlan;
+    const contract = plan?.contract ?? facts.routeTasks.find(t => t.workerTask)?.workerTask?.contract;
+    return { workItem, referencedArtifacts, referencedAttempts, jurisdiction: plan?.jurisdiction ?? (contract?.schemaVersion === 2 ? contract.jurisdiction.canonicalId : null),
+      capability: plan?.capability ?? null, recordClass: contract?.recordClass ?? facts.scouts[0]?.recordClass ?? null,
+      timeline: timeline.sort((a,b) => a.at.localeCompare(b.at) || a.id.localeCompare(b.id)), facts: fullFacts,
+      walk: { state: closed ? "CLOSED" : walked ? "OPEN" : "NOT_WALKED", proof: closed, nextUnwalkedRouteIds: [...namedNext].sort() },
+      evidenceGaps: [...new Set(gaps)].sort(), accounting: {attemptIds: facts.attempts.map(a => a.id).sort(),
+        terminalAttemptIds: facts.attempts.filter(a => a.outcome !== null).map(a => a.id).sort(), transitionIds: facts.transitions.map(t => t.transitionId).sort()} };
+  }).sort((a,b) => a.workItem.id.localeCompare(b.workItem.id));
+}
+
+function factsForSource(attemptId: string, attempts: readonly Attempt[], workItemId: string): boolean {
+  return attempts.some(a => a.id === attemptId && a.workItemId === workItemId);
+}
+
+export async function readAutonomousActivity(repos: ControlPlaneRepositories, workItemIds?: readonly string[], options: { readonly observedAt?: string } = {}) {
+  const [items,tasks,attempts,leases,transitions,dispositions,artifacts,costs,scouts,workers,promotion] = await Promise.all([
+    repos.workItems.list(),repos.routeTasks.list(),repos.attempts.list(),repos.leases.list(),repos.transitions.readAll(),repos.dispositions.readAll(),
+    repos.artifacts.readAll(),repos.costs.readAll(),repos.scoutResults.readAll(),repos.workerResults.readAll(),repos.promotionPipeline.readAll(),
+  ]);
+  return projectAutonomousActivity({workItems:items.map(x => x.value).filter(x => !workItemIds || workItemIds.includes(x.id)),
+    routeTasks:tasks.map(x => x.value), attempts:attempts.map(x => x.value), leases:leases.map(x => x.value), transitions,dispositions,artifacts,costs,scouts,workers,promotion},{observedAt:options.observedAt??new Date().toISOString()});
+}

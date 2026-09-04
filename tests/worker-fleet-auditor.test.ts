@@ -204,11 +204,13 @@ test("missing independent starting context and uninterpretable additional route 
   assert.ok(codes(dependent).includes("AUDIT_STARTING_CONTEXT_NOT_INDEPENDENT"));
 });
 
-test("isolated auditor procedure imports types only and never calls a producer procedure or ambient I/O", () => {
-  const source = readFileSync(new URL("../lib/control-plane/workers/auditor.ts", import.meta.url), "utf8");
-  assert.doesNotMatch(source, /import\s+(?!type\b)[^;]+from\s+["']/);
-  assert.doesNotMatch(source, /\b(?:parseLegistarEvents|validateExtraction|fetch|require|process)\s*\(/);
-  assert.doesNotMatch(source, /\b(?:eval|Function)\s*\(/);
+test("isolated auditor and source-inventory helpers never import producer procedures or ambient I/O", () => {
+  for (const file of ["auditor.ts", "generalized-auditor.ts", "record-evidence.ts", "record-verification.ts"]) {
+    const source = readFileSync(new URL(`../lib/control-plane/workers/${file}`, import.meta.url), "utf8");
+    assert.doesNotMatch(source, /from\s+["'](?:node:|https?:|[a-zA-Z@]|\.\/(?:generalized-)?(?:parser|validator)\.ts)/);
+    assert.doesNotMatch(source, /\b(?:parseLegistarEvents|parseGeneralizedRecords|validateExtraction|validateGeneralizedExtraction|fetch|require|process)\s*\(/);
+    assert.doesNotMatch(source, /\b(?:eval|Function)\s*\(/);
+  }
 });
 
 function civicClerkWork(): AuditorWorkerInput {

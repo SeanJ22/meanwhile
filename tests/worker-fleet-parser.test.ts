@@ -11,14 +11,14 @@ import {
   PARSER_VERSION,
   CIVICCLERK_PARSER_IMPLEMENTATION,
 } from "../lib/control-plane/workers/parser.ts";
-import type { ParserWorkerInput } from "../lib/control-plane/workers/types.ts";
+import type { LegacyCivicExtractionContract, ParserWorkerInput } from "../lib/control-plane/workers/types.ts";
 
 const HELD_TEXT = readFileSync(new URL("./fixtures/legistar-pima-events.json", import.meta.url), "utf8");
 const HELD_ROWS = JSON.parse(HELD_TEXT) as Record<string, unknown>[];
 const HELD_ARTIFACT_ID = "ar-f4dccdc84964f159958abfb9";
 const HELD_HASH = "sha256-1a077bbf57db05c7957ffc309021915a9fa2270e74a3d0be46efa6e3532ad0b5";
 
-function input(text = HELD_TEXT): ParserWorkerInput {
+function input(text = HELD_TEXT): ParserWorkerInput & { contract: LegacyCivicExtractionContract } {
   return {
     attemptId: "at-parser-test-1",
     worker: { role: "PARSER", provider: "deterministic", version: PARSER_VERSION, instance: "parser-test-1" },

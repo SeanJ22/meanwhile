@@ -1,5 +1,7 @@
 import { boundedAuditTransport } from "../lib/control-plane/workers/model-audit.ts";
-import { runHeldWorkerFleetCycle, standingFleetRuntime } from "../lib/control-plane/workers/standing.ts";
+import { runHeldWorkerFleetCycle } from "../lib/control-plane/workers/standing.ts";
+import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
+import { runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 /**
  * `pnpm freshness:shadow` — ONE UNATTENDED CYCLE OF THE FRESHNESS SCHEDULER.
@@ -970,6 +972,15 @@ const scout: DeclaredExecutor = modelLaneEnabled
 
 /* --------------------------------------------------------------- the cycle --- */
 
+// Keep a bounded share of the existing cycle for registered multi-worker work.
+// Otherwise an always-full refresh queue could starve the fleet indefinitely.
+const plannedWork = (await repos.workItems.list()).filter(item => item.value.autonomousPlan);
+const fleetReserveMs = !dry && plannedWork.length ? Math.min(360_000, BUDGET_MIN * 30_000) : 0;
+const fleetScoutReserve = !dry && plannedWork.some(item => {
+  const plan = item.value.autonomousPlan!;
+  return plan.seedUrls.length > 0 && !plan.sources.length && !plan.acquisition.length;
+}) ? Math.min(1, SCOUT_MAX) : 0;
+
 const cycle = await runCycle({
   repos,
   obligations: sync.all,
@@ -993,7 +1004,7 @@ const cycle = await runCycle({
     reason: "not computed by this run; the truth contract is the control set's to state",
   },
   maxDispatches: MAX_DISPATCHES,
-  budget: { deadlineMs: DISPATCH_DEADLINE_MS, now: () => Date.now() },
+  budget: { deadlineMs: DISPATCH_DEADLINE_MS - fleetReserveMs, now: () => Date.now() },
   research: {
     decide: (row) => decisionFor(row.obligation.id, row.obligation.routeId),
     admitScout: () => {
@@ -1002,7 +1013,7 @@ const cycle = await runCycle({
       const window = spendWindow.windowUsd === null ? null : spendWindow.windowUsd + spentThisCycle;
       const cap = ceilingPermits(window, RESEARCH_BOUNDS.dailyCeilingUsd);
       if (!cap.permits) return { admit: false, code: "CEILING", why: cap.why };
-      if (scoutsAdmittedThisCycle >= SCOUT_MAX) return { admit: false, code: "CYCLE_MAX", why: `this cycle's Scout maximum of ${SCOUT_MAX} is reached` };
+      if (scoutsAdmittedThisCycle >= SCOUT_MAX - fleetScoutReserve) return { admit: false, code: "CYCLE_MAX", why: `this cycle's Scout allowance is allocated (${fleetScoutReserve} reserved for registered autonomous discovery; total maximum ${SCOUT_MAX})` };
       scoutsAdmittedThisCycle += 1;
       return { admit: true };
     },
@@ -1060,13 +1071,18 @@ console.log(
   `\n  debt persisted: ${persisted.written} row(s) written, ${persisted.cleared.length} cleared`,
 );
 
-// The disposable worker fleet consumes already-held artifacts through the same dispatcher.
-// Preserve the standing cycle budget and Scout lane; no new civic retrieval happens here.
+// Registered autonomous plans use the same dispatcher, vault, host spacing and
+// rolling model ceiling. Discovery shares this cycle's existing Scout allowance.
 if (!dry && Date.now() + 150_000 < DISPATCH_DEADLINE_MS) {
   try {
-    const fleet = standingFleetRuntime({ root: ROOT, repos, now: nowIso,
+    const fleet = await autonomousStandingRuntime({ root: ROOT, repos, now: nowIso,
+      spaceOut: spacer, browse: browseWithPlaywright,
       ...(modelLaneEnabled ? { transport: boundedAuditTransport(workerKey) } : {}) });
-    const fleetDispatches = await runHeldWorkerFleetCycle(ROOT, fleet);
+    const autonomous = await runAutonomousCoordinator(fleet, { maximum: 3, concurrency: 2,
+      deadlineMs: DISPATCH_DEADLINE_MS, maxScoutDispatches: Math.max(0, SCOUT_MAX - scoutsAdmittedThisCycle) });
+    scoutsAdmittedThisCycle += autonomous.scoutsAdmitted;
+    const legacy = Date.now() + 150_000 < DISPATCH_DEADLINE_MS ? await runHeldWorkerFleetCycle(ROOT, fleet, true) : [];
+    const fleetDispatches = [...autonomous.dispatches, ...legacy];
     await projectFleetPipeline(repos);
     for (const row of fleetDispatches) console.log(`  worker fleet: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
   } catch (error) {

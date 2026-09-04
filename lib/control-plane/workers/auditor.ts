@@ -3,6 +3,7 @@ import type {
   AuditAttackResult, AuditorResult, AuditorWorkerInput, FieldValue,
   CivicExtractionContract, IndependentAuditContext, WorkerEvidence, WorkerFinding,
 } from "./types.ts";
+import { auditGeneralizedExtraction } from "./generalized-auditor.ts";
 
 /** Portable procedure executed by the disposable worker broker. No ambient I/O. */
 export const AUDITOR_IMPLEMENTATION = "civic-events-independent-evidence-auditor";
@@ -39,11 +40,13 @@ function publisherHost(surface: string): string | null {
   return host(surface) ?? (/^[a-z0-9.-]+$/i.test(surface) ? surface.toLowerCase() : null);
 }
 function sourceId(row: SourceRow, contract: CivicExtractionContract): string | null {
+  if (contract.schemaVersion === 2) return null;
   const civicClerk = contract.recordClass === "CIVICCLERK_EVENTS";
   const id = row[civicClerk ? "id" : "EventId"];
   return Number.isSafeInteger(id) && Number(id) > 0 ? `${civicClerk ? "civicclerk" : "legistar"}:${contract.publisherSlug}:${id}` : null;
 }
 function rowInScope(row: SourceRow, contract: CivicExtractionContract): boolean {
+  if (contract.schemaVersion === 2) return false;
   // CivicClerk categories are NOT body identities. A municipal feed may contain
   // council, planning, and possible-quorum notices; preserve every category.
   return contract.recordClass === "CIVICCLERK_EVENTS" || (row.EventBodyId === contract.sourceBodyId && row.EventBodyName === contract.sourceBodyName);
@@ -88,6 +91,7 @@ function pointer(root: unknown, path: string): unknown {
 
 export function auditExtraction(input: AuditorWorkerInput): AuditorResult {
   const { context } = input;
+  if (context.contract.schemaVersion === 2) return auditGeneralizedExtraction(input, context.contract);
   const independent = inventory(context);
   // No producer or validator output participates in the inventory above.
   const { candidate } = input;

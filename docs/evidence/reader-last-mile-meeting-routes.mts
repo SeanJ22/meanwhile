@@ -41,6 +41,6 @@ const missing = expected.filter(meeting => !seen.has(meeting.id)).map(meeting =>
 floored("current-window held meetings returned", "every canonical held meeting inside the current serving window", expected.length, expected.length - missing.length);
 const sourcePaths = ["app/api/meetings/route.ts", "lib/meetings/query.ts", "lib/meetings/listing-identity.ts", "lib/ask/body-identity.ts", "lib/meetings/constants.ts", "lib/sources/snapshot/index.ts", "lib/registry/server.ts", "data/meetings-snapshot.json"];
 const proof = { exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), buildId: readFileSync(".next/BUILD_ID", "utf8").trim(), executionLevel: "ACTUAL_HTTP_ROUTE", asOf: asOf.toISOString(), sourceHashes: sourcePaths.map(path=>({path,sha256:hash(readFileSync(path))})), denominator: { held: snapshot.meetings.length, inCurrentWindow: expected.length, returned: expected.length - missing.length, outsideWindow: dispositions.length, queriedHeldLocations: points.length }, dispositions, missing, records };
-writeFileSync("docs/evidence/reader-last-mile-meeting-routes.json", JSON.stringify(proof, null, 2) + "\n");
+writeFileSync(process.env.READER_PROOF_OUTPUT ?? "docs/evidence/reader-last-mile-meeting-routes.json", JSON.stringify(proof, null, 2) + "\n");
 console.log(JSON.stringify({ denominator: proof.denominator, missing }, null, 2));
 assert.equal(missing.length, 0, "Every current-window eligible meeting must have an actual returned route payload");

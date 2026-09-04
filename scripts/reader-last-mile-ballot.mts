@@ -22,6 +22,9 @@ import { formatDateMDY } from "../lib/map/format.ts";
 import { groupAbsences } from "../lib/ballot/absence-grouping.ts";
 
 const base = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
+const outputPath = process.env.READER_PROOF_OUTPUT ?? "docs/evidence/reader-last-mile-ballot.json";
+const planOutputPath = process.env.READER_BALLOT_PLAN_OUTPUT ?? "docs/evidence/reader-last-mile-ballot-plan.json";
+const proofSourcesPath = process.env.READER_PROOF_SOURCES;
 assert.match(new URL(base).hostname, /^(localhost|127\.0\.0\.1)$/);
 const sets = await Promise.all(BALLOT_SOURCES.map(async ({ state, source }) => ({ state, set: source.normalize(await source.fetch()) })));
 const zipIndex = JSON.parse(readFileSync("data/derived/zip-division-ids.json", "utf8")) as { zips: Record<string, string[]> };
@@ -52,7 +55,7 @@ while (remaining.size) {
   planIds(best.plan).forEach(id => remaining.delete(id));
 }
 const planEvidence = { rule: "Deterministic ZIP set cover from committed ZIP/division geometry, every normalized current contest and every sourced absence; mandatory pilot ZIPs retained.", contests: targets.size, sourcedAbsences: absenceTargets.size, chosen: chosen.map(({ zip, state, contests, absences }) => ({ zip, state, contestIds: contests.map((contest) => contest.id), absenceOcdIds: absences.map(absence => absence.ocdId) })), unresolvedContestIds: [...remaining].filter(id => !id.startsWith("absence:")).sort(), unresolvedAbsenceIds: [...remaining].filter(id => id.startsWith("absence:")).sort() };
-writeFileSync("docs/evidence/reader-last-mile-ballot-plan.json", JSON.stringify(planEvidence, null, 2) + "\n");
+writeFileSync(planOutputPath, JSON.stringify(planEvidence, null, 2) + "\n");
 if (process.argv.includes("--plan-only")) { console.log(JSON.stringify(planEvidence, null, 2)); process.exit(remaining.size ? 1 : 0); }
 assert.equal(remaining.size, 0, `Held current contests cannot reach any committed ZIP: ${[...remaining].join(", ")}`);
 const browser = await launchGuarded({ label: "reader-last-mile-all-ballots" });
@@ -136,4 +139,4 @@ try {
     console.log(JSON.stringify({ zip: plan.zip, contests: plan.contests.length, result: "PROVEN" }));
   }
 } finally { await context.close(); await browser.close(); }
-writeFileSync("docs/evidence/reader-last-mile-ballot.json", JSON.stringify({ exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), buildId: readFileSync(".next/BUILD_ID", "utf8").trim(), sourceHashes: readerProofSources(), plan: planEvidence, execution: "Actual local production ballot navigation and rendered DOM; complete normalized contest population across deterministic committed ZIP coverage, including explicit disclosure gestures.", rows }, null, 2) + "\n");
+writeFileSync(outputPath, JSON.stringify({ exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), buildId: readFileSync(".next/BUILD_ID", "utf8").trim(), sourceHashes: proofSourcesPath ? JSON.parse(readFileSync(proofSourcesPath, "utf8")) : readerProofSources(), plan: planEvidence, execution: "Actual local production ballot navigation and rendered DOM; complete normalized contest population across deterministic committed ZIP coverage, including explicit disclosure gestures.", rows }, null, 2) + "\n");

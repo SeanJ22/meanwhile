@@ -46,7 +46,7 @@ test("the committed complete reader graph still matches its proved holdings, loa
   // Mandatory current evidence: a missing receipt is a failing gate, never a
   // skipped check. Documentation-only commits need no new reader proof; changed
   // holdings, identity joins, reader code or CSS invalidate this receipt.
-  const receipt = JSON.parse(readReaderEvidence(root, "docs/evidence/reader-last-mile-closure-receipt.json").toString("utf8")) as ReaderClosureReceipt;
+  const receipt = JSON.parse(readReaderEvidence(root, "docs/evidence/reader-last-mile-final-closure-receipt.json").toString("utf8")) as ReaderClosureReceipt;
   assert.deepEqual(validateReaderClosureReceipt(root, receipt), []);
 });
 

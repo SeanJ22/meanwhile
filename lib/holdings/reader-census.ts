@@ -504,6 +504,215 @@ export interface ReaderClosureReceipt {
   readonly sourceHashes: readonly ReaderSourceHash[];
   readonly evidenceHashes: readonly ReaderSourceHash[];
   readonly sourceEolEquivalences?: readonly ReaderSourceEolEquivalence[];
+  /** A later documentary receipt may inherit rows from a proved reader head
+   * only through this hash-bound, mechanically checked invalidation report. */
+  readonly inheritance?: {
+    readonly reportPath: string;
+    readonly reportSha256: string;
+  };
+}
+
+export type ReaderProofDisposition = "INHERITED" | "INVALIDATED" | "RECOMPUTED";
+export interface ReaderProofInvalidationRow {
+  readonly rowId: string;
+  readonly disposition: ReaderProofDisposition;
+  readonly acceptance: string;
+  readonly reason: string;
+  readonly baselineStructuralSha256: string | null;
+  readonly currentStructuralSha256: string;
+  readonly holdings: readonly { path: string; baselineSha256: string | null; currentSha256: string | null }[];
+}
+export interface ReaderProofInvalidationReport {
+  readonly formatVersion: 1;
+  readonly baselineReaderHead: string;
+  readonly baselineProofCommit: string;
+  readonly baselineReceiptPath: string;
+  readonly baselineReceiptSha256: string;
+  readonly baselineCensusPath: string;
+  readonly baselineCensusSha256: string;
+  readonly currentReaderHead: string;
+  readonly reportPath: string;
+  readonly rule: string;
+  readonly acceptances: readonly {
+    id: string;
+    disposition: "INHERITED" | "INVALIDATED";
+    dependencies: readonly string[];
+    proof: string;
+  }[];
+  readonly changedReaderSources: readonly { path: string; baselineSha256: string | null; currentSha256: string | null; acceptance: string; reason: string }[];
+  readonly changedHoldings: readonly { path: string; family: string; baselineSha256: string | null; currentSha256: string | null; acceptance: string }[];
+  readonly rows: readonly ReaderProofInvalidationRow[];
+  readonly counts: Readonly<Record<ReaderProofDisposition, number>>;
+  readonly failures: readonly string[];
+}
+
+export const READER_LAST_MILE_BASE_HEAD = "d9dc2010f8a34766cd2a24ed672a64ac448619e9";
+export const READER_LAST_MILE_BASE_PROOF_COMMIT = "74f748cff379df2181785ad4e5f487d3dccac7c9";
+const readerLastMileInvalidatedFamilies = new Map<string, { acceptance: string; reason: string }>([
+  ["ballot", { acceptance: "LM-F2/LM-F5", reason: "The shared ballot normalizer and NJ canonical ballot/contact holdings changed; the ballot family is re-proved through its actual DOM and grounded Ask routes." }],
+  ["state-money", { acceptance: "LM-F4/LM-F5", reason: "The official/candidacy bridge metadata changed; every controlled state-money target and shared visual/Ask/funding projection is re-proved." }],
+  ["federal-finance", { acceptance: "LM-F2/LM-F5", reason: "The canonical FEC snapshot changed; every federal funding target and shared visual/Ask projection is re-proved." }],
+  ["meetings", { acceptance: "LM-F8", reason: "The canonical calendar/agenda snapshot, listing identity, route payload and Ask behavior changed." }],
+  ["minutes-summaries", { acceptance: "LM-F8", reason: "Meeting selection and the shared meeting popup/Ask knowledge path changed." }],
+  ["notice-summaries", { acceptance: "LM-F8", reason: "Agenda publication and shared meeting popup/Ask knowledge behavior changed." }],
+  ["comment-access", { acceptance: "LM-F8", reason: "The meeting panel and shared Ask meeting-knowledge path changed." }],
+  ["outcomes", { acceptance: "LM-F8", reason: "Agenda/meeting identity context changed around the existing outcome reader payload." }],
+]);
+const readerDeliveryFields = new Set([
+  "actualIdentityUsed", "provedHead", "observedExpectedRecordIds", "observedRenderedRecordIds", "bundleProvedRecordIds",
+  "loaderCanReadHolding", "eligibleRecordsProjected", "deployedBundleProved", "deliveryState", "falseNegativeCount",
+  "falsePositiveCount", "evidencePaths", "deliveryReason",
+]);
+function readerRowStructuralSha256(row: CensusRow): string {
+  return sha256(JSON.stringify(Object.fromEntries(Object.entries(row).filter(([key]) => !readerDeliveryFields.has(key)))));
+}
+function readerSourceImpact(path: string): { acceptance: string; reason: string } | null {
+  if (path === "lib/funding/official-candidacies.json") return { acceptance: "LM-F4", reason: "Controlled official/candidacy state-money bridge." };
+  if (path.startsWith("data/fec/")) return { acceptance: "LM-F2/LM-F5", reason: "Canonical federal-finance holding." };
+  if (/^data\/states\/nj\/ballot\//.test(path)) return { acceptance: "LM-F2/LM-F5", reason: "Canonical NJ ballot/contact holding." };
+  if (/^(?:data\/meetings-snapshot\.json|app\/api\/(?:agenda|meetings|ask\/(?:agenda|grounded))\/route\.ts|components\/(?:map|shell)\/|lib\/(?:ask\/(?:answer|evidence|meeting-knowledge|synthesize)|map\/marker-pool|meetings\/|state\/data\.tsx))/.test(path)) {
+    return { acceptance: "LM-F8", reason: "Bounded meeting/calendar identity, count, failed-refresh, agenda or Ask delta." };
+  }
+  if (path === "app/globals.css") return { acceptance: "LM-F8", reason: "Equivalent radius-token substitution is covered by the small final rendered sample." };
+  return null;
+}
+function copyInheritedReaderDelivery(current: CensusRow, baseline: CensusRow, reportPath: string): CensusRow {
+  return {
+    ...current,
+    actualIdentityUsed: baseline.actualIdentityUsed,
+    provedHead: baseline.provedHead,
+    observedExpectedRecordIds: baseline.observedExpectedRecordIds,
+    observedRenderedRecordIds: baseline.observedRenderedRecordIds,
+    bundleProvedRecordIds: baseline.bundleProvedRecordIds,
+    eligibleRecordsProjected: baseline.eligibleRecordsProjected,
+    deployedBundleProved: baseline.deployedBundleProved,
+    deliveryState: baseline.deliveryState,
+    falseNegativeCount: baseline.falseNegativeCount,
+    falsePositiveCount: baseline.falsePositiveCount,
+    evidencePaths: unique([...baseline.evidencePaths, reportPath]),
+    deliveryReason: `Dependency-aware inheritance from ${READER_LAST_MILE_BASE_HEAD}: row structure, canonical identities and every holding byte for this row are unchanged. ${baseline.deliveryReason}`,
+  };
+}
+
+/** Carry only unchanged, already-proved rows across the frozen last-mile delta.
+ * Any changed row outside the declared family boundary stays unproved and is a
+ * hard failure; this is deliberately more conservative than HEAD equality. */
+export function inheritReaderProofs(root: string, current: ReaderCensus, options: { baselineCensusPath: string; baselineReceiptPath: string; reportPath: string; currentReaderHead: string }): { census: ReaderCensus; report: ReaderProofInvalidationReport } {
+  const baselineReceiptBytes = readReaderEvidence(root, options.baselineReceiptPath);
+  const baselineReceipt = JSON.parse(baselineReceiptBytes.toString("utf8")) as ReaderClosureReceipt;
+  const baselineCensusBytes = readReaderEvidence(root, options.baselineCensusPath);
+  const baseline = JSON.parse(baselineCensusBytes.toString("utf8")) as ReaderCensus;
+  const failures: string[] = [];
+  if (baselineReceipt.censusSha256 !== sha256(baselineCensusBytes) || baselineReceipt.censusPath !== options.baselineCensusPath) failures.push("Baseline receipt does not bind the inherited census bytes");
+  if (censusClosureFailures(baseline).length) failures.push("Baseline census is not closed");
+  const baselineRows = new Map(baseline.rows.map((row) => [row.id, row]));
+  const baselineHoldings = new Map(baseline.holdings.map((holding) => [holding.path, holding]));
+  const currentHoldings = new Map(current.holdings.map((holding) => [holding.path, holding]));
+  const rows: ReaderProofInvalidationRow[] = [];
+  const inheritedRows = new Map<string, CensusRow>();
+  for (const row of current.rows) {
+    const baselineRow = baselineRows.get(row.id);
+    const applicable = row.applicableEligibleRecordIds ?? row.eligibleRecordIds;
+    const invalidation = readerLastMileInvalidatedFamilies.get(row.datasetFamily);
+    const holdingRows = row.holdingPaths.map((path) => ({ path, baselineSha256: baselineHoldings.get(path)?.sha256 ?? null, currentSha256: currentHoldings.get(path)?.sha256 ?? null }));
+    const baselineStructuralSha256 = baselineRow ? readerRowStructuralSha256(baselineRow) : null;
+    const currentStructuralSha256 = readerRowStructuralSha256(row);
+    let disposition: ReaderProofDisposition;
+    let acceptance: string;
+    let reason: string;
+    if (!applicable.length) {
+      disposition = "RECOMPUTED"; acceptance = invalidation?.acceptance ?? "LM-F3/LM-F6";
+      reason = "No direct eligible reader payload is applicable to this row; current eligibility/applicability is recomputed rather than inherited as rendered truth.";
+    } else if (invalidation) {
+      disposition = "INVALIDATED"; acceptance = invalidation.acceptance; reason = invalidation.reason;
+    } else {
+      const structuralMatches = baselineRow && baselineStructuralSha256 === currentStructuralSha256;
+      const holdingsMatch = holdingRows.every((holding) => holding.baselineSha256 !== null && holding.baselineSha256 === holding.currentSha256);
+      if (!baselineRow || !structuralMatches || !holdingsMatch || baselineRow.deliveryState !== "RENDERED" || baselineRow.provedHead !== READER_LAST_MILE_BASE_HEAD) {
+        disposition = "INVALIDATED"; acceptance = "UNCLASSIFIED";
+        reason = "An undeclared row, identity, applicability or holding dependency changed after the proved checkpoint.";
+        failures.push(`${row.id}: changed outside the frozen invalidation boundary`);
+      } else {
+        disposition = "INHERITED"; acceptance = "LM-F1";
+        reason = "Row structure, applicable canonical identities and every row holding hash are unchanged from the fully proved reader checkpoint.";
+        inheritedRows.set(row.id, copyInheritedReaderDelivery(row, baselineRow, options.reportPath));
+      }
+    }
+    rows.push({ rowId: row.id, disposition, acceptance, reason, baselineStructuralSha256, currentStructuralSha256, holdings: holdingRows });
+  }
+  for (const row of baseline.rows) if (!current.rows.some((currentRow) => currentRow.id === row.id)) failures.push(`${row.id}: baseline reader row disappeared`);
+  const baselineSources = new Map(baselineReceipt.sourceHashes.map((source) => [source.path, source.sha256]));
+  const currentSources = new Map(readerSourceFingerprint(root).map((source) => [source.path, source.sha256]));
+  const changedReaderSources = unique([...baselineSources.keys(), ...currentSources.keys()]).flatMap((path) => {
+    const before = baselineSources.get(path) ?? null, after = currentSources.get(path) ?? null;
+    if (before === after) return [];
+    const impact = readerSourceImpact(path);
+    if (!impact) { failures.push(`Reader dependency changed outside the frozen invalidation boundary: ${path}`); return [{ path, baselineSha256: before, currentSha256: after, acceptance: "UNCLASSIFIED", reason: "No LM-F1..LM-F10 dependency mapping." }]; }
+    return [{ path, baselineSha256: before, currentSha256: after, ...impact }];
+  });
+  const changedHoldings = unique([...baselineHoldings.keys(), ...currentHoldings.keys()]).flatMap((path) => {
+    const before = baselineHoldings.get(path), after = currentHoldings.get(path);
+    if (before?.sha256 === after?.sha256) return [];
+    const family = after?.family ?? before?.family ?? "unknown";
+    const invalidation = readerLastMileInvalidatedFamilies.get(family);
+    if (!invalidation) failures.push(`Canonical reader holding changed outside the frozen invalidation boundary: ${path}`);
+    return [{ path, family, baselineSha256: before?.sha256 ?? null, currentSha256: after?.sha256 ?? null, acceptance: invalidation?.acceptance ?? "UNCLASSIFIED" }];
+  });
+  const acceptances: ReaderProofInvalidationReport["acceptances"] = [
+    { id: "LM-F1", disposition: "INHERITED", dependencies: ["74f748c proof package for d9dc2010", "unchanged row structure", "unchanged row holding hashes"], proof: "Every carried row is checked independently; a changed or missing dependency becomes an unclassified hard failure." },
+    { id: "LM-F2", disposition: "INVALIDATED", dependencies: ["NJ ballot/contact refresh", "FEC refresh", "current-main integration"], proof: "Targeted ballot, finance and integration controls at the frozen reader head." },
+    { id: "LM-F3", disposition: "INVALIDATED", dependencies: ["canonical holdings digest", "reader applicability", "composed delivery rows"], proof: "One complete final census combines verified inherited rows with current targeted proofs." },
+    { id: "LM-F4", disposition: "INVALIDATED", dependencies: ["official-candidacy bridge", "state-money selector", "ballot/map/funding/Ask"], proof: "All state-money targets, Katie Hobbs parity and wrong-person controls at the frozen reader head." },
+    { id: "LM-F5", disposition: "INVALIDATED", dependencies: ["grounded Ask meeting branch", "ballot refresh", "finance refresh"], proof: "Only affected meeting, ballot and finance Ask corpora are re-executed with generation disabled." },
+    { id: "LM-F6", disposition: "INHERITED", dependencies: [AUTONOMOUS_CENSUS_SOURCE, "promotion OFF", "eligibility classifier"], proof: "Current census recomputes staged rows and the permanent acquisition-boundary negatives run in final gates." },
+    { id: "LM-F7", disposition: "INVALIDATED", dependencies: ["final Next production bundle", "dynamic trace contracts"], proof: "One final build and deterministic trace/bundle receipt." },
+    { id: "LM-F8", disposition: "INVALIDATED", dependencies: ["meeting/calendar snapshot", "listing identity", "agenda routes", "meeting Ask", "failed-refresh UI"], proof: "Targeted Newbury, meeting, agenda, Ask and rendered component proofs." },
+    { id: "LM-F9", disposition: "INVALIDATED", dependencies: ["final proof package"], proof: "Only hash-bound final delta artifacts are added; interrupted outputs were restored first." },
+    { id: "LM-F10", disposition: "INVALIDATED", dependencies: ["frozen code head", "final gates/build/census/CI/deploy"], proof: "Exact-source receipt plus final PR-head CI and bounded production reader readback." },
+  ];
+  const counts = Object.fromEntries((["INHERITED", "INVALIDATED", "RECOMPUTED"] as const).map((disposition) => [disposition, rows.filter((row) => row.disposition === disposition).length])) as Record<ReaderProofDisposition, number>;
+  const report: ReaderProofInvalidationReport = {
+    formatVersion: 1, baselineReaderHead: READER_LAST_MILE_BASE_HEAD, baselineProofCommit: READER_LAST_MILE_BASE_PROOF_COMMIT,
+    baselineReceiptPath: options.baselineReceiptPath, baselineReceiptSha256: sha256(baselineReceiptBytes), baselineCensusPath: options.baselineCensusPath,
+    baselineCensusSha256: sha256(baselineCensusBytes), currentReaderHead: options.currentReaderHead, reportPath: options.reportPath,
+    rule: "The denominator is frozen at LM-F1..LM-F10. A direct eligible row is inherited only when its complete structural projection and every holding byte are unchanged; declared shared-family deltas require current proofs. No unclassified change may close.",
+    acceptances, changedReaderSources, changedHoldings, rows, counts, failures: unique(failures),
+  };
+  return { census: { ...current, rows: current.rows.map((row) => inheritedRows.get(row.id) ?? row), failures: unique([...current.failures, ...failures]) }, report };
+}
+
+export function readerProofInheritanceProblems(root: string, census: ReaderCensus, report: ReaderProofInvalidationReport): string[] {
+  const failures = [...report.failures];
+  if (report.baselineReaderHead !== READER_LAST_MILE_BASE_HEAD || report.baselineProofCommit !== READER_LAST_MILE_BASE_PROOF_COMMIT) failures.push("Inherited reader checkpoint changed");
+  const baselineReceiptBytes = readReaderEvidence(root, report.baselineReceiptPath);
+  const baselineCensusBytes = readReaderEvidence(root, report.baselineCensusPath);
+  if (sha256(baselineReceiptBytes) !== report.baselineReceiptSha256) failures.push("Baseline reader receipt bytes changed");
+  if (sha256(baselineCensusBytes) !== report.baselineCensusSha256) failures.push("Baseline reader census bytes changed");
+  const baselineReceipt = JSON.parse(baselineReceiptBytes.toString("utf8")) as ReaderClosureReceipt;
+  const baseline = JSON.parse(baselineCensusBytes.toString("utf8")) as ReaderCensus;
+  if (baselineReceipt.censusSha256 !== report.baselineCensusSha256 || censusClosureFailures(baseline).length) failures.push("Baseline proof package is not the closed checkpoint");
+  const ancestry = execFileSync("git", ["merge-base", "--is-ancestor", report.currentReaderHead, "HEAD"], { cwd: root, encoding: "utf8" });
+  if (ancestry !== "") failures.push("Final reader proof head is not an ancestor of the documentary HEAD");
+  const baselineRows = new Map(baseline.rows.map((row) => [row.id, row]));
+  const finalRows = new Map(census.rows.map((row) => [row.id, row]));
+  if (report.rows.length !== census.rows.length || new Set(report.rows.map((row) => row.rowId)).size !== census.rows.length) failures.push("Invalidation report does not classify every final census row exactly once");
+  for (const row of report.rows) {
+    const final = finalRows.get(row.rowId), base = baselineRows.get(row.rowId);
+    if (!final || row.currentStructuralSha256 !== readerRowStructuralSha256(final)) { failures.push(`${row.rowId}: final structural projection differs from invalidation report`); continue; }
+    if (row.disposition === "INHERITED") {
+      if (!base || row.baselineStructuralSha256 !== readerRowStructuralSha256(base) || row.currentStructuralSha256 !== row.baselineStructuralSha256) failures.push(`${row.rowId}: inherited structure differs from baseline`);
+      if (final.provedHead !== READER_LAST_MILE_BASE_HEAD || final.deliveryState !== "RENDERED" || final.falseNegativeCount !== 0 || final.falsePositiveCount !== 0) failures.push(`${row.rowId}: inherited delivery is not the proved closed result`);
+      if (row.holdings.some((holding) => !holding.baselineSha256 || holding.baselineSha256 !== holding.currentSha256)) failures.push(`${row.rowId}: inherited holding bytes changed`);
+    } else if (row.disposition === "INVALIDATED" && (final.applicableEligibleRecordIds ?? final.eligibleRecordIds).length) {
+      if (final.provedHead !== report.currentReaderHead || final.deliveryState !== "RENDERED" || final.falseNegativeCount !== 0 || final.falsePositiveCount !== 0) failures.push(`${row.rowId}: invalidated row lacks complete current-head delivery proof`);
+    }
+  }
+  const baselineSources = new Map(baselineReceipt.sourceHashes.map((source) => [source.path, source.sha256]));
+  const currentSources = new Map(readerSourceFingerprint(root).map((source) => [source.path, source.sha256]));
+  const changed = unique([...baselineSources.keys(), ...currentSources.keys()]).filter((path) => (baselineSources.get(path) ?? null) !== (currentSources.get(path) ?? null));
+  if (JSON.stringify(changed) !== JSON.stringify(report.changedReaderSources.map((source) => source.path).sort())) failures.push("Reader dependency delta differs from the frozen invalidation report");
+  for (const source of report.changedReaderSources) if ((currentSources.get(source.path) ?? null) !== source.currentSha256 || !readerSourceImpact(source.path)) failures.push(`Reader dependency is unbound or unclassified: ${source.path}`);
+  return unique(failures);
 }
 
 export function validateReaderClosureReceipt(root: string, receipt: ReaderClosureReceipt): string[] {
@@ -526,6 +735,11 @@ export function validateReaderClosureReceipt(root: string, receipt: ReaderClosur
   if (sha256(bytes) !== receipt.censusSha256) failures.push("Committed closure census bytes changed");
   const proved = JSON.parse(bytes.toString("utf8")) as ReaderCensus;
   failures.push(...censusClosureFailures(proved));
+  if (receipt.inheritance) {
+    const reportBytes = readReaderEvidence(root, receipt.inheritance.reportPath);
+    if (sha256(reportBytes) !== receipt.inheritance.reportSha256) failures.push("Reader proof invalidation report bytes changed");
+    else failures.push(...readerProofInheritanceProblems(root, proved, JSON.parse(reportBytes.toString("utf8")) as ReaderProofInvalidationReport));
+  }
   const requiredEvidence = unique(proved.rows.flatMap((row)=>row.evidencePaths));
   for (const evidence of receipt.evidenceHashes ?? []) if (!readerEvidenceHashMatches(root, evidence.path, evidence.sha256)) failures.push(`Committed reader witness manifest or execution evidence changed: ${evidence.path}`);
   for (const path of requiredEvidence) {

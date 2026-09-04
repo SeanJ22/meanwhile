@@ -7,6 +7,7 @@ import { floored } from "../lib/ops/denominator-floor.ts";
 import { classifyAgendaPublication } from "../lib/ask/agenda-publication.ts";
 
 const base = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
+const outputPath = process.env.READER_PROOF_OUTPUT ?? "docs/evidence/reader-last-mile-agenda.json";
 assert.match(new URL(base).hostname, /^(localhost|127\.0\.0\.1)$/);
 const snapshot = readSnapshot(); assert.ok(snapshot);
 const documents = snapshot.agendaDocuments ?? [];
@@ -27,5 +28,5 @@ for (const meetingId of [...new Set(documents.map(row => row.meetingId))].sort()
   assert.deepEqual(result.documents, expected.map(row => ({ id: row.id, documentUrl: row.documentUrl, contentHash: row.contentHash, retrievedAt: row.retrievedAt, contentType: row.contentType, extraction: row.extraction, extractionNote: row.extractionNote, text: row.text, sourceOrg: row.sourceOrg })));
   records.push({ surface: "agenda", meetingId, bodyId: meeting?.bodyId ?? null, expectedIds: expected.map(row => row.id), returnedIds: result.documents.map((row: { id: string }) => row.id), returnedCount: result.documentCount, documents: result.documents, publication: result.publication, payloadSha256: hash(JSON.stringify(result)) });
 }
-writeFileSync("docs/evidence/reader-last-mile-agenda.json", JSON.stringify({ exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), buildId: readFileSync(".next/BUILD_ID", "utf8").trim(), sourceHashes: Object.fromEntries(["data/meetings-snapshot.json", "app/api/agenda/route.ts", "lib/meetings/snapshot.ts"].map(path => [path, hash(readFileSync(path, "utf8"))])), expectedCount: documents.length, returnedCount: records.reduce((n, row) => n + row.returnedCount, 0), execution: "Actual HTTP agenda route against local deployed production build; every exact stored version, identity, text, extraction state and provenance compared.", records }, null, 2) + "\n");
+writeFileSync(outputPath, JSON.stringify({ exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), buildId: readFileSync(".next/BUILD_ID", "utf8").trim(), sourceHashes: Object.fromEntries(["data/meetings-snapshot.json", "app/api/agenda/route.ts", "lib/meetings/snapshot.ts"].map(path => [path, hash(readFileSync(path, "utf8"))])), expectedCount: documents.length, returnedCount: records.reduce((n, row) => n + row.returnedCount, 0), execution: "Actual HTTP agenda route against local deployed production build; every exact stored version, identity, text, extraction state and provenance compared.", records }, null, 2) + "\n");
 console.log(JSON.stringify({ meetings: records.length, documents: documents.length }));

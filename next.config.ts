@@ -6,7 +6,9 @@ const registryHoldingsTrace = [
   "./data/states/*/officials/officeholders-*.json",
   "./data/derived/resolver-geometry.json",
   "./public/geo/*.geojson",
-  "./lib/registry/*.json",
+  // The legacy street-index summary is an acquisition diagnostic; no reader
+  // loader opens it. Retain only the registry inputs the reader actually uses.
+  "./lib/registry/{officeholders-us,official-photos,promoted-bodies,registry,roster-photos}.json",
 ];
 
 const nextConfig: NextConfig = {

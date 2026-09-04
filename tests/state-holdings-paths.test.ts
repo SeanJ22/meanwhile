@@ -34,6 +34,24 @@ test("new state's future legacy layout fails without appearing in the finite mov
   assert.match(checkHoldingPaths(plan, files).issues.join("\n"), /newly introduced legacy state layout/);
 });
 
+test("record JSON pointers retain exact file exemptions without hiding legacy holdings", () => {
+  const plan = plantedPlan();
+  const path = [dataRoot, "ballot", "candidate-cards-2026.json"].join("/");
+  const exemption: HoldingPlanRow = { ...classifyHolding(path), sha256: sha256("{}"), bytes: 2, referenceCount: 1, references: [] };
+  assert.equal(exemption.disposition, "EXEMPT");
+  plan.exemptions.push(exemption);
+  plan.sourceFiles.push({ path, blob: "c".repeat(40) });
+  plan.counts.candidates++;
+  plan.counts.classifiedHoldings++;
+  plan.counts.exempted++;
+  const files = new Map([[plan.rows[0].newPath!, Buffer.from("{}")], ["evidence.json", Buffer.from(JSON.stringify({ record: `${path}#/cards/example` }))]]);
+  assert.deepEqual(checkHoldingPaths(plan, files).issues, []);
+  for (const legacy of [plan.rows[0].oldPath, [dataRoot, "funding", "state-money-ca-2028.json"].join("/")]) {
+    files.set("evidence.json", Buffer.from(JSON.stringify({ record: `${legacy}#/records/0` })));
+    assert.match(checkHoldingPaths(plan, files).issues.join("\n"), /stale state-holding reference/);
+  }
+});
+
 test("a composed legacy path is detected and an unrelated fixture stays a fixture", () => {
   const plan = plantedPlan();
   const pieces = plan.rows[0].oldPath.split("/");

@@ -43,6 +43,8 @@ export interface EvidenceRecord {
        resolve a single one. */
     | "CONTEST"
     | "CANDIDACY"
+    | "CANDIDATE_BIO"
+    | "CANDIDATE_LINK"
     | "POSITION"
     | "MEASURE_QUESTION"
     | "MEASURE_STATEMENT"
@@ -156,6 +158,15 @@ export interface EvidenceRecord {
   id: string;
   /** Canonical holding subject when the reader's question uses a bridged card identity. */
   canonicalSubjectId?: string;
+  /** Exact candidate-card field and source label, without a name-based join. */
+  candidateProfile?: {
+    field: "bio" | "official" | "campaign";
+    value: string;
+    label: string;
+    holdingPath: string;
+    holdingKey: string;
+    verification?: string;
+  };
   /** Exact normalized totals accompany the grounded prose for cross-surface parity. */
   finance?: { jurisdiction: string; filingState: string; totals: { receipts: number | null; expenditures: number | null; cashOnHand: number | null; reportCount: number | null; coveringPeriod: string | null } };
   /**

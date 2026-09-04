@@ -3,18 +3,21 @@ import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { unifiedCorpus } from "../../lib/corpus/unified.ts";
 import { positionsFor, searchTerms } from "../../lib/corpus/positions.ts";
+import { readerPositionsFor } from "../../lib/corpus/reader-positions.ts";
 import { BALLOT_SOURCES } from "../../lib/ballot/registry.ts";
 import { lineupForContest } from "../../lib/ballot/general-lineup.ts";
 import { ballotAskInventory, type BallotSubjectRecord } from "../../lib/ask/ballot-inventory.ts";
 import { allSeatHolders } from "../../lib/registry/server.ts";
 import { reconciledCandidacyIdForCard } from "../../lib/identity/az-2026.ts";
 import type { AskAnswerPayload } from "../../lib/ask/answer.ts";
+import { synthesisContextPayload } from "../../lib/ask/synthesize.ts";
+import type { EvidencePack, EvidenceRecord } from "../../lib/ask/evidence.ts";
 export async function corpusAskProof() {
 delete process.env.ANTHROPIC_API_KEY;
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
 const { POST, resetGroundedState } = await import("../../app/api/ask/grounded/route.ts");
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
-const sourcePaths = ["app/api/ask/grounded/route.ts", "lib/ask/statements.ts", "lib/ask/ballot-inventory.ts", "lib/ask/server-sources.ts", "lib/funding/campaign-money.ts", "lib/funding/official-candidacies.json", "lib/corpus/unified.ts", "lib/corpus/positions.ts", "data/corpus/statements.json", "data/candidates/corpus-2026.json"];
+const sourcePaths = ["app/api/ask/grounded/route.ts", "lib/ask/statements.ts", "lib/ask/synthesize.ts", "lib/ask/subject.ts", "lib/ask/resolve.ts", "lib/ask/ballot-inventory.ts", "lib/ask/server-sources.ts", "lib/funding/campaign-money.ts", "lib/funding/official-candidacies.json", "lib/corpus/unified.ts", "lib/corpus/positions.ts", "lib/corpus/reader-positions.ts", "lib/identity/reader-person.ts", "data/corpus/statements.json", "data/candidates/corpus-2026.json"];
 const sourceHashes = sourcePaths.map((path) => ({ path, sha256: hash(readFileSync(path, "utf8")) }));
 const canonicalBallot = new Map<string, BallotSubjectRecord>();
 for (const { source } of BALLOT_SOURCES) {
@@ -43,7 +46,7 @@ for (const snapshot of corpus.snapshots) {
     proofs.push({ subjectId, snapshotId: snapshot.id, executionLevel: "NOT_EXECUTED", readableSnapshotIds: readable.map((snapshot) => snapshot.id), reason: readable.length ? "No quotable matching passage in this current canonical snapshot after testing its non-name content words." : `No readable extraction for this snapshot (extraction=${snapshot.extraction}).` });
     continue;
   }
-  const expected = positionsFor(subjectId, topic, corpus);
+  const expected = readerPositionsFor(subjectId, topic, corpus);
   const question = `What does ${displayName} say about ${topic}?`;
   const state = candidate?.ocdId.split("/").slice(0, 3).join("/") ?? `ocd-division/country:us/state:${holder?.state?.toLowerCase() ?? "az"}`;
   const request = { question, surface: candidate ? "BALLOT" : "MAP", ocdIds: [...new Set([state, ...(candidate ? [candidate.ocdId] : [])])], today: "2026-09-04", activeSubjects: [{ id: candidate?.id ?? subjectId, name: displayName, kind: "PERSON", focused: true }] };
@@ -55,7 +58,10 @@ for (const snapshot of corpus.snapshots) {
   const matching = records.filter((record) => record.kind === "POSITION" && record.canonicalSubjectId === subjectId);
   const expectedRecords = expected.passages.filter((passage) => passage.snapshotId === snapshot.id).map((passage) => ({ id: passage.snapshotId, quote: passage.quote, sourceUrl: passage.url, retrievedAt: passage.retrievedAt }));
   const missing = expectedRecords.filter((passage) => !matching.some((record) => record.id === passage.id && record.text.includes(passage.quote) && record.sourceUrl === passage.sourceUrl && record.retrievedAt === passage.retrievedAt));
-  proofs.push({ subjectId, snapshotId: snapshot.id, executionLevel: "REAL_ROUTE_HANDLER", request, httpStatus: response.status, mode: payload.mode, resolvedSubjectId: payload.subject?.id ?? null, payloadSha256: hash(payloadText), modelAnswer: payload.answer, expectedRecordIds: [...new Set(expectedRecords.map((record) => record.id))], expectedRecords, retrievedRecordIds: [...new Set(records.map((record) => record.id))], retrievedCanonicalPositionIds: [...new Set(matching.map((record) => record.id))], returnedRecords: records, traceRecordCount: payload.trace?.retrieval.recordCount ?? null, actualRecordCount: records.length, countAgrees: payload.trace?.retrieval.recordCount === records.length, missingExpectedRecords: missing, gaps: payload.gaps, currentIdentityAvailable: Boolean(candidate || holder), status: missing.length === 0 ? "PROVEN" : "ELIGIBLE_QUERY_NOT_FULLY_RETRIEVED" });
+  const pack: EvidencePack = { question, records, gaps: payload.gaps, denominators: payload.denominators, subject: payload.subject, intent: "PERSON_RECORD", temporal: { kind: "NONE" }, today: request.today };
+  const synthesisReceivesEveryRecord = JSON.stringify((JSON.parse(synthesisContextPayload(pack)) as { records: EvidenceRecord[] }).records) === JSON.stringify(records);
+  const countAgrees = payload.trace?.retrieval.recordCount === records.length;
+  proofs.push({ subjectId, snapshotId: snapshot.id, executionLevel: "REAL_ROUTE_HANDLER", request, httpStatus: response.status, mode: payload.mode, resolvedSubjectId: payload.subject?.id ?? null, payloadSha256: hash(payloadText), modelAnswer: payload.answer, expectedRecordIds: [...new Set(expectedRecords.map((record) => record.id))], expectedRecords, retrievedRecordIds: [...new Set(records.map((record) => record.id))], retrievedCanonicalPositionIds: [...new Set(matching.map((record) => record.id))], returnedRecords: records, traceRecordCount: payload.trace?.retrieval.recordCount ?? null, actualRecordCount: records.length, countAgrees, synthesisReceivesEveryRecord, missingExpectedRecords: missing, gaps: payload.gaps, currentIdentityAvailable: Boolean(candidate || holder), status: response.status === 200 && payload.answer === null && countAgrees && synthesisReceivesEveryRecord && missing.length === 0 ? "PROVEN" : "ELIGIBLE_QUERY_NOT_FULLY_RETRIEVED" });
 }
 const pilotArtifactPath = "docs/evidence/reader-last-mile-ask-after.json";
 const pilotArtifact = readFileSync(pilotArtifactPath, "utf8");

@@ -4,7 +4,7 @@ import { join } from "node:path";
 
 import { BALLOT_SOURCES } from "../ballot/registry.ts";
 import { contestsForDivisions } from "../sources/ballot-nj-morris/index.ts";
-import { lineupForContest } from "../ballot/general-lineup.ts";
+import { getGeneralLineup } from "../ballot/general-lineup.ts";
 import { summaryForContest } from "../ballot/measure-summary.ts";
 import { provisionsForContest } from "../ballot/measure-provisions.ts";
 import { getMeasureAnalyses, type MeasureAnalysis } from "../ballot/analyses.ts";
@@ -16,6 +16,7 @@ import { statewideExecutivesFor } from "../officials/statewide-executives.ts";
 import type { SeatHolder } from "../officials/lookup.ts";
 import { membersOfBody } from "../registry/body-membership.ts";
 import { bindNamedEntity } from "../routing/named-entity.ts";
+import type { AskNominee } from "./ballot-inventory.ts";
 
 /**
  * A reader may ask about a held person outside our mapped divisions. Match the
@@ -73,7 +74,7 @@ export interface BallotForDivisions {
   set: BallotSet | null;
   contests: Contest[];
   absences: BallotAbsence[];
-  nominees: (contestId: string) => readonly { name: string; partyLabel?: string | null }[];
+  nominees: (contestId: string) => readonly AskNominee[];
   positions: (targetKey: string) => readonly {
     issueLabel: string;
     quote: string;
@@ -123,6 +124,7 @@ export async function loadBallotForDivisions(
       const hit = contestsForDivisions(candidate, ocdIds);
       if (hit.contests.length === 0 && hit.absences.length === 0) continue;
       const analyses = state === "az" ? getMeasureAnalyses() : null;
+      const lineup = state === "az" ? getGeneralLineup() : null;
       return {
         loaderFailures,
         analysisLoaderFailed: state === "az" && analyses === null,
@@ -130,7 +132,7 @@ export async function loadBallotForDivisions(
         set: candidate,
         contests: hit.contests,
         absences: hit.absences,
-        nominees: (contestId) => lineupForContest(contestId)?.nominees ?? [],
+        nominees: (contestId) => (lineup?.contests.find((contest) => contest.contestId === contestId)?.nominees ?? []).map((nominee) => ({ ...nominee, sourceUrl: lineup!.canvass.url, sourceOrg: lineup!.canvass.issuedBy, retrievedAt: lineup!.canvass.readAt })),
         positions: sourcedPositions,
         measureSummary: (contestId) => {
           const summary = summaryForContest(contestId);

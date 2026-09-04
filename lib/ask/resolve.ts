@@ -191,6 +191,17 @@ export function resolveInterpretation(
     if (unresolved) return { binding: { kind: "UNRESOLVED", mention: unresolved.name }, basis: active.length ? "PAGE_CONTEXT" : "PRIOR_TURN", boundOn: unresolved.id!, unresolvedCanonicalId: unresolved.id! };
   }
 
+  // An explicit focused canonical ID can distinguish two records whose names
+  // matched the reader's words. It selects within that set; it never merges
+  // them or replaces an explicit naming with an unrelated open card.
+  if (held?.binding.kind === "AMBIGUOUS") {
+    const focused = (context.activeSubjects ?? []).filter((ref) => ref.focused && ref.id);
+    if (focused.length === 1) {
+      const entity = held.binding.candidates.find((candidate) => candidate.id === focused[0].id);
+      if (entity) return { binding: { kind: "BOUND", entity, matchedOn: entity.name }, basis: "PAGE_CONTEXT", boundOn: focused[0].id! };
+    }
+  }
+
   /* ── TIER 2 — THE MODEL'S EXPANSION ───────────────────────────────────
      Reached only when the reader's own words bound nothing. */
   for (const mention of interpretation.normalizedMentions) {

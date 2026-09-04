@@ -337,7 +337,22 @@ export interface BallotRetrievalDeps {
     citesUrl: string;
   }[];
   /** General-election nominees for a contest, where the source has them. */
-  nominees?: (contestId: string) => readonly { name: string; partyLabel?: string | null }[];
+  nominees?: (contestId: string) => readonly AskNominee[];
+}
+
+export interface AskNominee {
+  name: string;
+  partyLabel?: string | null;
+  note?: string | null;
+  sourceUrl?: string | null;
+  sourceOrg?: string | null;
+  retrievedAt?: string | null;
+}
+
+function nomineeRecord(contestId: string, contestTitle: string, nominee: AskNominee): EvidenceRecord {
+  return { kind: "CANDIDACY", id: candidateTargetKey(contestId, nominee.name),
+    text: `${nominee.name} is on the general-election ballot for ${contestTitle}${nominee.partyLabel ? `, filed as ${nominee.partyLabel}` : ""}.${nominee.note ? ` ${nominee.note}` : ""}`,
+    sourceUrl: nominee.sourceUrl ?? null, sourceOrg: nominee.sourceOrg ?? null, retrievedAt: nominee.retrievedAt ?? null };
 }
 
 /**
@@ -432,14 +447,7 @@ export function ballotRecordsFor(
     const nominees = deps.nominees?.(record.contestId) ?? [];
     denominators.generalElectionNominees = nominees.length;
     for (const nominee of nominees) {
-      records.push({
-        kind: "CANDIDACY",
-        id: candidateTargetKey(record.contestId, nominee.name),
-        text:
-          `${nominee.name} is on the general-election ballot for ${record.contestTitle}` +
-          `${nominee.partyLabel ? `, filed as ${nominee.partyLabel}` : ""}.`,
-        sourceUrl: null,
-      });
+      records.push(nomineeRecord(record.contestId, record.contestTitle, nominee));
     }
     const removals = (deps.set.removals ?? []).filter((entry) => entry.contestId === record.contestId);
     for (const removal of removals) records.push(...removalRecords(removal));
@@ -453,10 +461,11 @@ export function ballotRecordsFor(
      the page renders, and through the id itself otherwise. */
   const wantedCandidacy = record.candidacyId ?? record.id;
   const candidacy = deps.set.candidacies.find((c) => c.id === wantedCandidacy) ?? null;
+  const nominee = deps.nominees?.(record.contestId).find((entry) => candidateTargetKey(record.contestId, entry.name) === record.id);
   if (candidacy) {
     records.push(candidacyRecord(candidacy, record.contestTitle));
     denominators.filingRecordsForThisCandidate = 1;
-  } else {
+  } else if (!nominee) {
     records.push({
       kind: "CANDIDACY",
       id: record.id,
@@ -464,6 +473,7 @@ export function ballotRecordsFor(
       sourceUrl: null,
     });
   }
+  if (nominee) records.push(nomineeRecord(record.contestId, record.contestTitle, nominee));
 
   const positions = [...new Map(
     [...new Set([record.id, wantedCandidacy])].flatMap((key) => deps.positions?.(key) ?? [])

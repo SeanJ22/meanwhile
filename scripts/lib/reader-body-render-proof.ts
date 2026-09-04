@@ -113,7 +113,7 @@ export async function bodyRenderProof(root = process.cwd()) {
       const consumer = registry.bodies.find((body) => { const output = renderBody(body.id)!; return [output.subject.bodyCard!.whatItDoes.classDefinition, output.subject.bodyCard!.whatItDoes.formDefinition].some((selected) => selected !== null && selected.text === definition.text && selected.basis === definition.basis); });
       if (!consumer) { unsupported.push({ auditId: record.auditId, reason: "No held body currently selects this sourced definition; template applicability requires explicit disposition." }); continue; }
       const output = renderBody(consumer.id)!;
-      add(record, entityPath, "canonical definitionsForBody selected on exact current body → actual DefinitionBlock", output.subject.bodyCard!.whatItDoes, record.canonicalIdentity.filter((identity) => identity === consumer.id || identity === raw.formKey), output.markup, [definition.text, definition.basis ?? "", definition.readOn ?? ""].filter(Boolean));
+      add(record, entityPath, "canonical definitionsForBody selected on exact current body → actual DefinitionBlock", output.subject.bodyCard!.whatItDoes, record.canonicalIdentity.filter((identity) => identity === consumer.id || identity === raw.formKey || identity === raw.classKey), output.markup, [definition.text, definition.basis ?? "", definition.readOn ?? ""].filter(Boolean));
     }
   }
   const sourcePaths = [selectorPath, entityPath, districtPath, "components/officials/card-sources-list.tsx", "lib/registry/registry.json", "lib/registry/body-membership.ts", "lib/registry/body-rosters.ts", "lib/officials/body-definitions.ts", "lib/officials/form-definitions.ts", "lib/officials/body-form.ts"];

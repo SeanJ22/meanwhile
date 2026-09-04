@@ -30,6 +30,7 @@ import { snapshotEntities, titleCaseName } from "@/lib/ask/inventory";
 import { bodyIdentityIndex, canonicalBodyIdentity } from "@/lib/ask/body-identity";
 import { statementEvidenceFor } from "@/lib/ask/statements";
 import { campaignMoneyEvidenceFor } from "@/lib/ask/campaign-money";
+import { candidateProfileEvidenceFor } from "@/lib/ask/candidate-profile";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { reconciledCandidacyIdForCard } from "@/lib/identity/az-2026";
 import { outcomeQuestionClass } from "@/lib/ask/outcome-question";
@@ -868,6 +869,12 @@ export async function POST(request: Request) {
   const canonicalSubjectKeys = new Set<string>(subject ? [subject.id] : []);
   if (subject?.kind === "PERSON") for (const [id, canonicalId] of officialAliases) {
     if (canonicalId === subject.id) canonicalSubjectKeys.add(id);
+  }
+  if (subject?.kind === "PERSON") {
+    const profile = candidateProfileEvidenceFor(subject);
+    records.push(...profile.records);
+    gaps.push(...profile.gaps);
+    Object.assign(denominators, profile.denominators);
   }
   const candidateSeats = ballotRecord?.kind === "PERSON"
     ? (await Promise.allSettled((ballotOfficialIds.get(ballotRecord.id) ?? []).map(seatHolderById)))

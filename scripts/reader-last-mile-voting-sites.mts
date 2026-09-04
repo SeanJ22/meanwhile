@@ -6,6 +6,7 @@ import { POST } from "../app/api/voting-sites/route.ts";
 import { loadVotingSites } from "../lib/ballot/voting-sites-server.ts";
 import { contains, type GeoFeature } from "../lib/registry/resolve.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
+import type { VotingSitesAnswer } from "../lib/ballot/voting-sites.ts";
 
 function interior(feature: GeoFeature): { lat: number; lng: number } {
   const polygons = feature.geometry.type === "Polygon" ? [feature.geometry.coordinates] : feature.geometry.coordinates;
@@ -44,7 +45,7 @@ export async function proveVotingSites() {
       };
       const response = await POST(new Request("http://localhost/api/voting-sites", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ address: "Public geometry fixture" }) }));
       assert.equal(response.status, 200);
-      const answer = await response.json() as { match: boolean; jurisdictions: typeof holdings.jurisdictions };
+      const answer = await response.json() as VotingSitesAnswer;
       assert.equal(answer.match, true);
       const actual = answer.jurisdictions.find((row) => row.ocdId === jurisdiction.ocdId);
       assert.ok(actual, `${jurisdiction.ocdId}: eligible jurisdiction disappeared at the real route`);
@@ -53,7 +54,7 @@ export async function proveVotingSites() {
       assert.equal(actual.sourceUrl, jurisdiction.sourceUrl);
       assert.equal(actual.model, jurisdiction.model);
       assert.ok(answer.jurisdictions.every((row) => row.state === jurisdiction.state), "wrong-state attachment");
-      results.push({ jurisdictionId: jurisdiction.ocdId, geometryIdentity: feature.properties.ocdId, point, siteIds: actual.sites.map((site) => site.id), expectedCount: jurisdiction.sites.length, returnedCount: actual.sites.length, refusal: actual.refusal, sourceUrl: actual.sourceUrl, payloadSha256: createHash("sha256").update(JSON.stringify(answer)).digest("hex") });
+      results.push({ jurisdictionId: jurisdiction.ocdId, geometryIdentity: feature.properties.ocdId, point, siteIds: actual.sites.map((site) => site.id), expectedCount: jurisdiction.sites.length, returnedCount: actual.sites.length, refusal: actual.refusal, sourceUrl: actual.sourceUrl, answer, payloadSha256: createHash("sha256").update(JSON.stringify(answer)).digest("hex") });
     }
   } finally { globalThis.fetch = originalFetch; }
   return { execution: "Every held voting jurisdiction through the actual POST handler and canonical filesystem/geography selectors. External Census geocoding alone is a deterministic interior-point fixture; no civic records, identities or reader payloads are stubbed. Deployed filesystem availability is separately required by reader-trace-check.", results };

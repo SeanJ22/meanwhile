@@ -237,7 +237,9 @@ export function checkHoldingPaths(plan: HoldingMovePlan, files: ReadonlyMap<stri
     }
     const references = text.matchAll(/(?:^|[\s"'`(=])((?:data\/(?:ballot|campaign-finance|candidates|funding|hunt|identity|jurisdictions|officials|reference|zcta)|lib\/registry|public\/(?:geo|streets))\/[^\s"'`),;<>]+)/g);
     for (const match of references) {
-      const reference = match[1].replace(/[.:]+$/, "");
+      // Record evidence may append a JSON pointer to a holding filename. Classify
+      // the file itself; a fragment neither creates a new file nor exempts an old one.
+      const reference = match[1].split("#/")[0].replace(/[.:]+$/, "");
       if (moved.has(reference) || (!excluded.has(reference) && !exemptions.has(reference) && isLegacyStateHoldingPath(reference))) found.add(reference);
       if (/^data\/(?:funding|identity|jurisdictions|officials|zcta)\/.*(?:\$\{|<state|<st>)/.test(reference)) found.add(reference);
     }

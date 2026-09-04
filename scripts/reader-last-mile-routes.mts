@@ -59,7 +59,7 @@ async function representation(division: string, zip?: string) {
   assert.equal(result.ocdId, division);
   assert.deepEqual(actual, JSON.parse(JSON.stringify(expected)), division);
   provedDivisions.add(division);
-  return { zip, surface: "representation", division, expectedIds: expected.map((row) => row.id), returnedIds: actual.map((row) => row.id), returnedCount: actual.length, payloadSha256: hash(result) };
+  return { zip, surface: "representation", division, expectedIds: expected.map((row) => row.id), returnedIds: actual.map((row) => row.id), returnedCount: actual.length, payload: result, payloadSha256: hash(result) };
 }
 for (const zip of ["85701", "85641", "07866", "03255"]) {
   const point = resolveZip(zip); assert.ok(point.ok);

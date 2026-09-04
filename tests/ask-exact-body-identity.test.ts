@@ -373,26 +373,8 @@ for (const question of OUTCOME_QUESTIONS) {
   });
 }
 
-test("the per-member vote rows are BOUNDED, and the bound is reported rather than silent", async () => {
-  /*
-   * **A TRUNCATION NOBODY CAN SEE READS AS THE WHOLE SET.**
-   *
-   * Measured on production 2026-08-29, the first time this question was asked
-   * of the new outcome records: one sitting produced 285 per-member vote rows,
-   * they outnumbered every other record in the pack better than eight to one,
-   * and the synthesis rung wrote prose about the votes that never named the
-   * body — so `validateAnswer` refused it on
-   * `answer-does-not-name-resolved-subject` and the reader received the
-   * records with no prose at all. The evidence was correct and unusable.
-   *
-   * Two things are asserted, and the second is the one that matters more over
-   * time. The pack is BOUNDED, so the meeting record that says whose sitting
-   * this was cannot be crowded out. And the bound is REPORTED: the denominators
-   * carry how many votes are held AND how many reached the pack, because a cap
-   * applied silently is indistinguishable from a body that only voted sixty
-   * times — which is the completeness lie this repository refuses everywhere
-   * else.
-   */
+test("all held per-member votes are returned with exact item and row denominators", async () => {
+  // The evidence pack returns every eligible row; prose length never clips the reader records.
   const body = await ask("How did the Pima County Board of Supervisors vote last time?");
   const votes = (body.records ?? []).filter((r) => r.kind === "MEETING_MEMBER_VOTE");
   assert.ok(votes.length > 0, "the pack carried no per-member vote at all");
@@ -402,14 +384,8 @@ test("the per-member vote rows are BOUNDED, and the bound is reported rather tha
   assert.equal(typeof held, "number", "how many per-person votes are HELD must be reported");
   assert.equal(typeof inPack, "number", "and how many reached the pack must be reported too");
   assert.equal(inPack, votes.length, "the reported pack count must be the actual pack count");
-  assert.ok(
-    held! >= inPack!,
-    "the store cannot hold fewer votes than reached the pack",
-  );
-  assert.ok(
-    votes.length <= 60,
-    `${votes.length} vote rows reached the pack; an unbounded class crowds out the meeting record`,
-  );
+  assert.equal(held, inPack, "every held member row reaches the pack");
+  assert.ok(votes.length > 60, "the planted historical tail exceeds the removed cap");
 
   /*
    * And each row says WHAT was voted on. "Rex Scott voted Aye." says who and
@@ -422,30 +398,12 @@ test("the per-member vote rows are BOUNDED, and the bound is reported rather tha
     "no vote row carried the item it was cast on: " + JSON.stringify(votes[0]?.text),
   );
 
-  /*
-   * **SEEDED (2026-08-30): AN HONEST CAP MAY STILL NOT PICK ARBITRARILY.**
-   *
-   * The first bound was a first-N in store order, so WHICH sixty rows a reader
-   * heard about was an accident of ingestion sequence. Three properties now
-   * hold, and each is the refusal of a specific distortion:
-   *
-   *   WHOLE ITEMS — a roll call either brings every valid member row or none.
-   *   Three members of a five-member roll reads as an absence for the other
-   *   two, which is a manufactured claim about people who voted.
-   *
-   *   ITEM DENOMINATORS — "60 of 285 rows" alone hides that the rows cluster
-   *   into items; "12 of 57 items" is the sentence that makes the truncation
-   *   explainable, so both halves are reported.
-   *
-   *   DIVIDED FIRST — the budget prefers roll calls with more than one
-   *   recorded value, because a 3-2 is the vote the member rows exist for,
-   *   while a unanimous roll is faithfully carried by its action record.
-   */
+  // Every complete roll call survives; question relevance still determines its order.
   const itemsHeld = body.denominators?.rollCallItemsHeldForThatMeeting;
   const itemsInPack = body.denominators?.rollCallItemsInPack;
   assert.equal(typeof itemsHeld, "number", "how many roll-call ITEMS are held must be reported");
   assert.equal(typeof itemsInPack, "number", "and how many items reached the pack");
-  assert.ok(itemsHeld! >= itemsInPack!, "the store cannot hold fewer items than reached the pack");
+  assert.equal(itemsHeld, itemsInPack, "every held roll-call item reaches the pack");
 
   const rowsPerItem = new Map();
   for (const r of votes) {

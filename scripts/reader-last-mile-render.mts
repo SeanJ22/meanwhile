@@ -9,12 +9,14 @@ import { campaignMoneyForTarget } from "../lib/funding/campaign-money.ts";
 import { stateMoneyRecordsForDisplay } from "../lib/funding/state-money-reader.ts";
 import { formatMeetingDate, meetingRowTitle, meetingSubline } from "../lib/map/format.ts";
 import { minutesSummaryForMeeting } from "../lib/meetings/minutes-summaries.ts";
+import { noticeSummaryFor } from "../lib/meetings/notice-summary.ts";
 import { commentAccessFor } from "../lib/registry/comment-access.ts";
 import { areaFactsForState } from "../lib/area/facts.ts";
 import { resolveZip } from "../lib/geo/zcta.ts";
 import { divisionsAt } from "../lib/registry/server.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import type { MeetingReaderRecords } from "../lib/meetings/reader-records.ts";
+import type { AgendaPublicationReading } from "../lib/ask/agenda-publication.ts";
 import type { VotingSitesAnswer } from "../lib/ballot/voting-sites.ts";
 import { officialActionsForTarget, type ReaderOfficialActions } from "../lib/officials/reader-actions.ts";
 import { directoryFor } from "../lib/officials/directory.ts";
@@ -49,7 +51,7 @@ async function capture(page: Page, label: string, focus?: Locator) {
   return path;
 }
 async function openSection(modal: Locator, label: string) {
-  const button = modal.locator("button.card-section-header").filter({ has: modal.getByText(label, { exact: true }) });
+  const button = modal.locator("button.card-section-header").filter({ has: modal.page().getByText(label, { exact: true }) });
   await button.waitFor({ state: "visible", timeout: 15_000 });
   if ((await button.getAttribute("aria-expanded")) !== "true") await button.click();
   return button.locator("..");
@@ -87,6 +89,20 @@ async function federalRecordsWitness(page: Page, modal: Locator, label: string, 
   const votes = await votesResponse.json();
   assert.deepEqual(votes.keyVotes, expectedVotes.rows);
   const record = await openSection(modal, ballot ? "Voting record" : "Voting Record");
+  await record.locator("[data-recent-vote-id]").first().waitFor({ state: "visible" });
+  const showAll = record.getByRole("button", { name: `Show all ${votes.votes.length} recorded votes`, exact: true });
+  if (votes.votes.length > 20) await showAll.click();
+  const recentRows = record.locator("[data-recent-vote-id]");
+  assert.equal(await recentRows.count(), votes.votes.length, `${member}: full held recent-vote population is reachable`);
+  assert.equal(Number(await record.locator("[data-recent-vote-count]").getAttribute("data-recent-vote-count")), votes.votes.length);
+  assert.deepEqual(await recentRows.evaluateAll(elements => elements.map(element => element.getAttribute("data-recent-vote-id"))), votes.votes.map((vote: { id: string }) => vote.id));
+  for (const vote of votes.votes as { id: string; rollCallUrl: string; title: string }[]) {
+    const row = record.locator(`[data-recent-vote-id="${vote.id}"]`);
+    assert.ok((await row.innerText()).includes(vote.title));
+    assert.ok(await row.locator(`a[href="${vote.rollCallUrl}"]`).count());
+  }
+  await capture(page, `${label}-recent-votes`, recentRows.first());
+  await capture(page, `${label}-recent-votes-last`, recentRows.last());
   const keyToggle = record.getByRole("button", { name: /^When it mattered/ });
   await keyToggle.waitFor({ state: "visible" });
   await keyToggle.click();
@@ -108,7 +124,7 @@ async function federalRecordsWitness(page: Page, modal: Locator, label: string, 
   }
   await capture(page, `${label}-key-votes`, laws.locator("[data-key-vote]").first());
   await capture(page, `${label}-key-votes-last`, laws.locator("[data-key-vote]").last());
-  return { member, committees: held.entry.committees.length, offices: held.entry.districtOffices.length, keyVoteRows: rows.length, positionsReadAt: expectedVotes.positionsReadAt };
+  return { member, committees: held.entry.committees.length, offices: held.entry.districtOffices.length, recentVoteRows: votes.votes.length, keyVoteRows: rows.length, positionsReadAt: expectedVotes.positionsReadAt };
 }
 async function dismissNarrowing(page: Page) {
   const optional = page.getByRole("button", { name: /No thanks|show me everything|Skip for now/i }).first();
@@ -296,7 +312,7 @@ async function meetingWitness(page: Page, meetingId: string, label: string) {
     return url.pathname === "/api/agenda" && url.searchParams.get("meetingId") === meetingId;
   }), page.getByRole("button", { name: `More about ${meeting.title} — agenda and how to be heard`, exact: true }).click()]);
   assert.equal(response.status(), 200);
-  const payload = await response.json() as { meetingId: string; documentCount: number; documents: { documentUrl: string; text: string | null }[]; records: MeetingReaderRecords };
+  const payload = await response.json() as { meetingId: string; documentCount: number; documents: { documentUrl: string; contentHash: string; text: string | null }[]; records: MeetingReaderRecords; publication: AgendaPublicationReading | null };
   assert.equal(payload.meetingId, meetingId);
   assert.equal(payload.documentCount, payload.documents.length);
   const modal = page.locator('.account-modal-overlay[role="dialog"]');
@@ -326,12 +342,26 @@ async function meetingWitness(page: Page, meetingId: string, label: string) {
     await capture(page, `${label}-${meetingId.replaceAll(":", "-")}-minutes`, summary);
   }
   const textDocument = payload.documents.find(document => document.text);
-  if (textDocument) {
+  if (textDocument && payload.publication?.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX") {
+    const publication = modal.locator('[data-agenda-publication="ACQUIRED_IS_PUBLICATION_INDEX"]');
+    await publication.waitFor({ state: "visible" });
+    assert.ok(payload.publication.gap?.statement && (await publication.innerText()).includes(payload.publication.gap.statement));
+    assert.equal(await publication.locator(`a[href="${textDocument.documentUrl}"]`).count(), 1);
+    assert.equal(await modal.locator("p.whitespace-pre-line").count(), 0, "Publisher index text cannot be presented as this sitting's agenda");
+    await capture(page, `${label}-${meetingId.replaceAll(":", "-")}-publication-index`, publication);
+  } else if (textDocument) {
     const source = modal.locator(`a[href="${textDocument.documentUrl}"]`).last();
     await source.waitFor({ state: "attached" });
     const raw = modal.locator("p.whitespace-pre-line");
-    assert.ok((await raw.innerText()).includes(textDocument.text!.slice(0, 100)), `${meetingId}: held agenda text reaches DOM`);
+    assert.ok((await raw.innerText()).replace(/\s+/g, " ").includes(textDocument.text!.slice(0, 100).replace(/\s+/g, " ").trim()), `${meetingId}: held agenda text reaches DOM`);
     await capture(page, `${label}-${meetingId.replaceAll(":", "-")}-agenda-text`, raw);
+    const notice = noticeSummaryFor(meetingId, textDocument.contentHash);
+    if (notice) {
+      const summary = modal.getByText(notice.summary, { exact: true });
+      await summary.waitFor({ state: "visible" });
+      assert.equal(await summary.count(), 1);
+      await capture(page, `${label}-${meetingId.replaceAll(":", "-")}-notice-summary`, summary);
+    }
   }
   const access = commentAccessFor(meeting.ocdId, meeting.bodyName, meeting.bodyId);
   let accessLines = 0;
@@ -350,7 +380,7 @@ async function meetingWitness(page: Page, meetingId: string, label: string) {
 }
 
 async function activityWitnesses(page: Page, zip: string, label: string) {
-  const ids = zip === "85701" ? ["legistar:pima:1825", "legistar:pima:1822", "legistar:pima:1827"] : zip === "85641" ? ["apptegy:vail:60703698"] : zip === "07866" ? ["iqm2:morriscountynj:2236"] : ["diligent:newburynh:3367"];
+  const ids = zip === "85701" ? ["legistar:pima:1825", "legistar:pima:1822", "legistar:pima:1827", "diligent:tusd1:493"] : zip === "85641" ? ["apptegy:vail:60703698"] : zip === "07866" ? ["iqm2:morriscountynj:2236"] : ["diligent:newburynh:3367"];
   const rows = [];
   for (const id of ids) rows.push(await meetingWitness(page, id, label));
   return rows;
@@ -511,6 +541,21 @@ try {
       try {
         await mapAt(page, pilot.zip, theme);
         const build = await (await context.request.get(`${BASE}/api/build`)).json();
+        if (process.env.READER_RENDER_FOCUS === "positions") {
+          assert.equal(pilot.zip, "85701", "Focused positions probe uses the held Hobbs regression control");
+          const official = await openOfficial(page, pilot.name);
+          const mapPositions = await positionsWitness(page, official, pilot.official, `${label}-map`);
+          await page.keyboard.press("Escape");
+          await page.goto(`${BASE}/ballot?zip=${pilot.zip}`, { waitUntil: "domcontentloaded", timeout: 90_000 });
+          await page.locator("[data-battlecard-pill]").first().waitFor({ state: "visible", timeout: 30_000 });
+          const candidate = await openBallotCandidate(page, pilot.name);
+          const ballotPositions = await positionsWitness(page, candidate, (await candidate.locator("[data-candidate-subject]").getAttribute("data-candidate-subject"))!, `${label}-ballot`);
+          assert.deepEqual(ballotPositions, mapPositions);
+          results.push({ label, result: "PASS", focus: "positions", build, mapPositions, ballotPositions });
+          console.log(`PASS ${label}: map and ballot share held positions`);
+          writeFileSync(REPORT, JSON.stringify({ date: today(), base: BASE, runId: browser.runId, results, screenshots, screenshotsReadAsImages: [] }, null, 2) + "\n");
+          continue;
+        }
         const apiResponse = await context.request.get(`${BASE}/api/funding/${encodeURIComponent(pilot.official)}`);
         assert.equal(apiResponse.status(), 200);
         const api = await apiResponse.json();
@@ -546,7 +591,7 @@ try {
         const ballotMoney = await inspectMoney(ballotModal, pilot.key, pilot.raised, pilot.spent);
         assert.equal(ballotMoney.text, mapMoney.text);
         await capture(page, `${label}-ballot-money`, ballotMoney.section);
-        const ballotPositions = pilot.zip === "85701" && viewport.name === "phone" ? await positionsWitness(page, ballotModal, (await ballotModal.getAttribute("data-candidate-subject"))!, `${label}-ballot`) : null;
+        const ballotPositions = pilot.zip === "85701" && viewport.name === "phone" ? await positionsWitness(page, ballotModal, (await ballotModal.locator("[data-candidate-subject]").getAttribute("data-candidate-subject"))!, `${label}-ballot`) : null;
         if (mapPositions && ballotPositions) assert.deepEqual(ballotPositions, mapPositions, "Map and ballot must quote the same canonical person holdings");
         const ballotActions = pilot.zip === "85701" ? await inspectOfficialActions(page, ballotModal, expectedActions, `${label}-ballot`) : null;
         if (mapActions && ballotActions) {

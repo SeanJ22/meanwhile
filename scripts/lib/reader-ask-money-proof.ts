@@ -4,8 +4,6 @@ import { createHash } from "node:crypto";
 import { BALLOT_SOURCES } from "../../lib/ballot/registry.ts";
 import { stateMoneyForTarget, stateMoneySources } from "../../lib/funding/state-snapshot.ts";
 import { stateMoneyRecordsForDisplay } from "../../lib/funding/state-money-reader.ts";
-import { lineupForContest } from "../../lib/ballot/general-lineup.ts";
-import { azLineupReconciliation } from "../../lib/identity/az-2026.ts";
 import type { StateMoneySnapshot } from "../../lib/funding/state-money.ts";
 import type { AskAnswerPayload } from "../../lib/ask/answer.ts";
 import { synthesisContextPayload } from "../../lib/ask/synthesize.ts";
@@ -28,10 +26,6 @@ for (const target of targets) {
   if (!expected.length) { dispositions.push({ target, status: "NOT_READER_ELIGIBLE", reason: "Canonical reader selector withholds staged or unresolved finance." }); continue; }
   const candidate = candidates.get(target);
   if (!candidate) { dispositions.push({ target, status: "IDENTITY_UNRESOLVED", reason: "No canonical current or source-ballot candidacy with this exact target identity." }); continue; }
-  const currentLineup = lineupForContest(candidate.contestId);
-  if (currentLineup && !azLineupReconciliation()?.rows.some((row) => row.canonicalCandidacyId === candidate.id)) {
-    dispositions.push({ target, status: "INTENTIONALLY_NOT_APPLICABLE", reason: "Historical primary candidacy outside the certified current general-election lineup. The direct funding endpoint still tests the held historical record." }); continue;
-  }
   const contest = contests.get(candidate.contestId)!;
   const request = { question: "What campaign money has this person raised and spent, and what filing records do we hold?", surface: "BALLOT", ocdIds: [contest.ocdId], today: "2026-09-04", activeSubjects: [{ id: candidate.id, name: `${candidate.givenName} ${candidate.familyName}`, kind: "PERSON", focused: true }] };
   resetGroundedState();

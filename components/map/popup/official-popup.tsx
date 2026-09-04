@@ -92,7 +92,7 @@ export function VotePill({
   return <span className={`vote-pill vote-pill--${tone}`}>{children}</span>;
 }
 
-type MemberRollCall = RollCallVote & {
+export type MemberRollCall = RollCallVote & {
   position: VotePosition;
   /** Item 3: per-party for/against, or null when it wouldn't sum to the
    *  chamber's recorded tally — the honest unavailable state. */
@@ -127,7 +127,7 @@ const VOTE_LIMIT = 20;
  * renders it — never a hardcoded string on the client, which could drift from
  * the store it describes.
  */
-type VoteAttribution = {
+export type VoteAttribution = {
   text: string;
   url: string;
   licence: string;
@@ -181,6 +181,7 @@ function RecentVotesInner({
   const [chamber, setChamber] = useState<"house" | "senate" | null>(null);
   const [keyVotes, setKeyVotes] = useState<KeyVoteRow[]>([]);
   const [failed, setFailed] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     if (!hasVoteRecord(holder.id)) return;
@@ -212,7 +213,90 @@ function RecentVotesInner({
   // "Recent votes" heading, which reads as "this person does not vote".
   if (!hasVoteRecord(holder.id)) return null;
 
-  const recent = (
+  const visibleVotes = votes?.slice(0, showAll ? undefined : VOTE_LIMIT) ?? null;
+  const recent = <>
+    <RecentVoteRecords votes={visibleVotes} attribution={attribution} failed={failed} reactionContext={reactionContext} />
+    {(columns || contentOnly) && votes && votes.length > 0 && <>
+      <p className="mt-2 text-[0.6875rem] text-muted" data-recent-vote-count={visibleVotes!.length}>
+        Showing {visibleVotes!.length} of {votes.length} recorded votes.
+      </p>
+      {votes.length > VOTE_LIMIT && <button type="button" data-recent-votes-expand
+        className="mt-1 text-[0.75rem] text-link underline decoration-dotted underline-offset-2"
+        onClick={() => setShowAll(value => !value)}>
+        {showAll ? `Show latest ${VOTE_LIMIT}` : `Show all ${votes.length} recorded votes`}
+      </button>}
+    </>}
+  </>;
+
+  /*
+   * The compact glance card keeps the flat short list it always had — it is
+   * a glance, and two collapsed columns inside a 300px popup would be two
+   * things to tap before seeing anything.
+   */
+  if (!columns && !contentOnly) {
+    return (
+      <>
+        <PopupSectionLabel>Recent votes</PopupSectionLabel>
+        {recent}
+      </>
+    );
+  }
+
+  /*
+   * Item 4 (2026-08-16) — the author's pass, replacing 6b's two columns.
+   *
+   * What was wrong: "Recent" and "When it mattered" floated as two headers
+   * with no parent, so the first question a reader asks is "recent WHAT?" —
+   * and side by side they each wasted half the card on empty column space.
+   *
+   * The architecture now:
+   *
+   *   - ONE "Voting Record" section header, at the SAME full width as
+   *     "Campaign money" and the others above it. It is one of the
+   *     collapsible sections in the 6b4 grammar, not a special case.
+   *   - Inside it, Recent and When it mattered are SELECTORS. The selected
+   *     view consumes the full width of the box, and selecting one collapses
+   *     the other — accordion behaviour INSIDE Voting Record only. The
+   *     sections above are untouched by it.
+   *
+   * INFORMATION ARCHITECTURE IS OTHERWISE UNCHANGED. Both views keep their
+   * complete answers, newest first, overlap unmarked, the House nominations
+   * line as shipped. **Overlap is expected and unmarked**: a recent vote that
+   * is also a when-it-mattered vote appears in both, because each view has to
+   * be a complete answer to its own question, and cross-marking them would
+   * make one look like a subset of the other.
+   */
+  const fullRecord = (
+      <VotingRecordViews
+        recent={recent}
+        recentMeta={votes ? `${showAll ? "all" : "last"} ${visibleVotes!.length}` : null}
+        keyVotes={
+          chamber && keyVotes.length > 0 ? (
+            <KeyVotesSection chamber={chamber} rows={keyVotes} />
+          ) : null
+        }
+        /* F01 5.1 (2026-08-19): this used to be `keyVotes.length` — every
+           entry in the curated list, including the sixteen nomination
+           questions a House member cannot vote on. The headline now counts
+           the votes the member ACTUALLY PARTICIPATED IN, which is what a
+           reader opening it expects to find underneath. The full denominator
+           has not vanished: it is stated inside, per group. */
+        keyVotesMeta={
+          keyVotes.length > 0 ? String(votedCount(keyVotes)) : null
+        }
+      />
+  );
+  return contentOnly ? fullRecord : <CardSection title="Voting Record">{fullRecord}</CardSection>;
+}
+
+/** The actual recent-vote records used by both full cards and their preview. */
+export function RecentVoteRecords({ votes, attribution, failed, reactionContext }: {
+  votes: MemberRollCall[] | null;
+  attribution: VoteAttribution | null;
+  failed: boolean;
+  reactionContext: ReactionViewContext | null;
+}) {
+  return (
     <>
       {failed ? (
         <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
@@ -260,11 +344,12 @@ function RecentVotesInner({
               .
             </p>
           )}
-          {votes.slice(0, VOTE_LIMIT).map((vote) => {
+          {votes.map((vote) => {
             const explainer = explainVoteQuestion(vote.question);
             return (
               <div
                 key={vote.id}
+                data-recent-vote-id={vote.id}
                 className="mt-2 border-b border-[var(--panel-border)] pb-2 last:border-0"
               >
                 {/* Plain words first — the official title, never ours. */}
@@ -359,65 +444,6 @@ function RecentVotesInner({
     </>
   );
 
-  /*
-   * The compact glance card keeps the flat short list it always had — it is
-   * a glance, and two collapsed columns inside a 300px popup would be two
-   * things to tap before seeing anything.
-   */
-  if (!columns && !contentOnly) {
-    return (
-      <>
-        <PopupSectionLabel>Recent votes</PopupSectionLabel>
-        {recent}
-      </>
-    );
-  }
-
-  /*
-   * Item 4 (2026-08-16) — the author's pass, replacing 6b's two columns.
-   *
-   * What was wrong: "Recent" and "When it mattered" floated as two headers
-   * with no parent, so the first question a reader asks is "recent WHAT?" —
-   * and side by side they each wasted half the card on empty column space.
-   *
-   * The architecture now:
-   *
-   *   - ONE "Voting Record" section header, at the SAME full width as
-   *     "Campaign money" and the others above it. It is one of the
-   *     collapsible sections in the 6b4 grammar, not a special case.
-   *   - Inside it, Recent and When it mattered are SELECTORS. The selected
-   *     view consumes the full width of the box, and selecting one collapses
-   *     the other — accordion behaviour INSIDE Voting Record only. The
-   *     sections above are untouched by it.
-   *
-   * INFORMATION ARCHITECTURE IS OTHERWISE UNCHANGED. Both views keep their
-   * complete answers, newest first, overlap unmarked, the House nominations
-   * line as shipped. **Overlap is expected and unmarked**: a recent vote that
-   * is also a when-it-mattered vote appears in both, because each view has to
-   * be a complete answer to its own question, and cross-marking them would
-   * make one look like a subset of the other.
-   */
-  const fullRecord = (
-      <VotingRecordViews
-        recent={recent}
-        recentMeta={votes ? `last ${Math.min(votes.length, VOTE_LIMIT)}` : null}
-        keyVotes={
-          chamber && keyVotes.length > 0 ? (
-            <KeyVotesSection chamber={chamber} rows={keyVotes} />
-          ) : null
-        }
-        /* F01 5.1 (2026-08-19): this used to be `keyVotes.length` — every
-           entry in the curated list, including the sixteen nomination
-           questions a House member cannot vote on. The headline now counts
-           the votes the member ACTUALLY PARTICIPATED IN, which is what a
-           reader opening it expects to find underneath. The full denominator
-           has not vanished: it is stated inside, per group. */
-        keyVotesMeta={
-          keyVotes.length > 0 ? String(votedCount(keyVotes)) : null
-        }
-      />
-  );
-  return contentOnly ? fullRecord : <CardSection title="Voting Record">{fullRecord}</CardSection>;
 }
 
 /**

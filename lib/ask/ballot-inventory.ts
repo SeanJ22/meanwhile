@@ -7,10 +7,11 @@ import type {
   Measure,
 } from "../ballot/types.ts";
 import type { BindableEntity } from "../routing/named-entity.ts";
-import { COMMON_QUESTION_NOUNS } from "../routing/named-entity.ts";
+import { bindNamedEntity, COMMON_QUESTION_NOUNS } from "../routing/named-entity.ts";
 import { formatDateLong } from "../text/format-date.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
 import { reconciledCandidacyIdForCard } from "../identity/az-2026.ts";
+import type { MeasureAnalysis } from "../ballot/analyses.ts";
 
 import type { EvidenceRecord, EvidenceSubject } from "./evidence.ts";
 
@@ -85,6 +86,8 @@ export interface BallotSubjectRecord {
   candidacyId?: string | null;
   /** A sourced former filing, never a currently listed candidate. */
   removedFromFiling?: boolean;
+  /** A held source filing queried directly, outside the current certified lineup. */
+  historicalFiling?: boolean;
 }
 
 export interface BallotAskInventory {
@@ -150,6 +153,7 @@ export function ballotAskInventory(
   set: BallotSet | null,
   contests: readonly Contest[],
   nomineesFor: (contestId: string) => readonly { name: string; partyLabel?: string | null }[] = () => [],
+  requestedFilingIds: readonly string[] = [],
 ): BallotAskInventory {
   const entities: BindableEntity[] = [];
   const subjects = new Map<string, BallotSubjectRecord>();
@@ -282,7 +286,23 @@ export function ballotAskInventory(
     }
   }
 
+  // Exact held filings remain answerable without becoming current ballot cards.
+  const requested = new Set(requestedFilingIds);
+  for (const candidacy of set.candidacies) {
+    if (!requested.has(candidacy.id) || [...subjects.values()].some((subject) => subject.id === candidacy.id || subject.candidacyId === candidacy.id)) continue;
+    const contest = contests.find((row) => row.id === candidacy.contestId);
+    if (!contest) continue;
+    const name = candidacyDisplayName(candidacy);
+    add(candidacy.id, name, "person", "person", { kind: "PERSON", id: candidacy.id, candidacyId: candidacy.id, name, contestId: contest.id, contestTitle: contest.title, ocdId: contest.ocdId, historicalFiling: true });
+  }
   return { entities, subjects };
+}
+
+/** Bind the reader's words to a held filing; never join one civic record by a name. */
+export function namedSourceFilingIds(question: string, set: BallotSet | null): string[] {
+  if (!set) return [];
+  const binding = bindNamedEntity(question, set.candidacies.map((candidacy) => ({ id: candidacy.id, name: candidacyDisplayName(candidacy), nameClass: "person" as const, divisionType: "person" })));
+  return binding.kind === "BOUND" ? [binding.entity.id] : binding.kind === "AMBIGUOUS" ? binding.candidates.map((candidate) => candidate.id) : [];
 }
 
 /** The evidence subject for a resolved ballot entity. */
@@ -296,6 +316,7 @@ export function ballotSubject(record: BallotSubjectRecord): EvidenceSubject {
 }
 
 export interface BallotRetrievalDeps {
+  measureAnalysis?: (contestId: string) => MeasureAnalysis | null;
   set: BallotSet;
   contests: readonly Contest[];
   absences: readonly BallotAbsence[];
@@ -340,7 +361,7 @@ export function ballotRecordsFor(
     return { records: removal ? removalRecords(removal) : [], denominators: { removedFilingsForThisSubject: removal ? 1 : 0 } };
   }
 
-  if (contest) {
+  if (contest && !record.historicalFiling) {
     records.push({
       kind: "CONTEST",
       id: contest.id,
@@ -365,6 +386,9 @@ export function ballotRecordsFor(
     const measures = deps.set.measures.filter((m) => m.contestId === record.contestId);
     denominators.measureRecordsForThisQuestion = measures.length;
     for (const measure of measures) records.push(...measureRecords(measure));
+    const analysis = deps.measureAnalysis?.(record.contestId);
+    if (analysis?.text && analysis.extraction !== "failed") records.push({ kind: "MEASURE_ANALYSIS", id: `${analysis.contestId}#analysis`, text: analysis.text, sourceUrl: analysis.analysisUrl, sourceOrg: analysis.sourceOrg, retrievedAt: analysis.retrievedAt });
+    denominators.readableMeasureAnalyses = analysis?.text && analysis.extraction !== "failed" ? 1 : 0;
 
     const summary = deps.measureSummary?.(record.contestId) ?? null;
     if (summary) {

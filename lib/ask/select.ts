@@ -16,10 +16,11 @@ import { localDate } from "./meeting-time.ts";
  * function the readers do.
  */
 
-export type AgendaSelection = "NEXT" | "LAST" | "ANY";
+export type AgendaSelection = "NEXT" | "LAST" | "ANY" | "DATE";
 
 export interface SittingLike {
   startsAt: string;
+  timeZone?: string | null;
 }
 
 /**
@@ -38,7 +39,11 @@ export function selectSitting<T extends SittingLike>(
   selection: AgendaSelection,
   sittings: readonly T[],
   now: number,
+  requestedDate?: string | null,
 ): T | null {
+  if (selection === "DATE") return requestedDate
+    ? [...sittings].filter((meeting) => localDate(meeting) === requestedDate).sort((a, b) => a.startsAt.localeCompare(b.startsAt))[0] ?? null
+    : null;
   const upcoming = sittings
     .filter((m) => Date.parse(m.startsAt) >= now)
     .sort((a, b) => (a.startsAt < b.startsAt ? -1 : 1));
@@ -96,7 +101,8 @@ export function sittingsOnSameLocalDay<T extends SittingLike & { timeZone?: stri
 export function emptySelectionState(
   selection: AgendaSelection,
   totalSittings: number,
-): "NO_MEETING_HELD" | "NO_UPCOMING_MEETING_HELD" | "NO_PAST_MEETING_HELD" {
+): "NO_MEETING_HELD" | "NO_UPCOMING_MEETING_HELD" | "NO_PAST_MEETING_HELD" | "NO_MEETING_HELD_ON_DATE" {
+  if (selection === "DATE") return "NO_MEETING_HELD_ON_DATE";
   if (totalSittings === 0) return "NO_MEETING_HELD";
   if (selection === "NEXT") return "NO_UPCOMING_MEETING_HELD";
   if (selection === "LAST") return "NO_PAST_MEETING_HELD";

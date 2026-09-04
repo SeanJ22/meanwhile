@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import { meetingReaderRecords } from "../lib/meetings/reader-records.ts";
 import { outcomeEvidenceFor, useOutcomeSnapshotForTests } from "../lib/outcomes/store.ts";
 import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
@@ -54,4 +55,32 @@ test("an agenda never supplies a decision or inferred per-member vote", () => {
     assert.deepEqual(result.actions, []);
     assert.deepEqual(result.rollCalls, []);
   } finally { useOutcomeSnapshotForTests(null); }
+});
+
+test("a reused publisher portal is classified identically by the real route and agenda renderer", () => {
+  const output = execFileSync(process.execPath, ["--import", "tsx", "--input-type=module", "-e", `
+    import { createElement } from 'react';
+    import { renderToStaticMarkup } from 'react-dom/server';
+    import { AgendaDocuments } from './components/map/popup/agenda-section.tsx';
+    import { GET } from './app/api/agenda/route.ts';
+    import { readSnapshot } from './lib/meetings/snapshot.ts';
+    const results=[];
+    for (const meetingId of new Set(readSnapshot().agendaDocuments.map(row=>row.meetingId))) {
+      const response=await GET(new Request('http://localhost/api/agenda?meetingId='+encodeURIComponent(meetingId)));
+      const payload=await response.json();
+      if(payload.publication.acquisition!=='ACQUIRED_IS_PUBLICATION_INDEX')continue;
+      const markup=renderToStaticMarkup(createElement(AgendaDocuments,{documents:payload.documents,meetingId,agendaUrl:payload.documents[0].documentUrl,agendaSentence:'',publication:payload.publication}));
+      results.push({meetingId,markup,url:payload.documents[0].documentUrl,gap:payload.publication.gap});
+    }
+    console.log(JSON.stringify(results));
+  `], { cwd: process.cwd(), encoding: "utf8", timeout: 30_000, maxBuffer: 2_000_000 });
+  const results = JSON.parse(output) as { meetingId: string; markup: string; url: string; gap: { whose: string } }[];
+  assert.ok(results.length > 0, "real reused publication-index negative controls");
+  for (const row of results) {
+    assert.ok(row.markup.includes('data-agenda-publication="ACQUIRED_IS_PUBLICATION_INDEX"'), row.meetingId);
+    assert.ok(row.markup.includes(row.url.replaceAll("&", "&amp;")));
+    assert.ok(!row.markup.includes("On the docket"));
+    assert.ok(!row.markup.includes("whitespace-pre-line"), "portal navigation cannot appear as a meeting's official text");
+    assert.equal(row.gap.whose, "OURS");
+  }
 });

@@ -46,6 +46,7 @@ export interface EvidenceRecord {
     | "POSITION"
     | "MEASURE_QUESTION"
     | "MEASURE_STATEMENT"
+    | "MEASURE_ANALYSIS"
     | "MEASURE_SUMMARY"
     | "MEASURE_PROVISION"
     | "BALLOT_ABSENCE"

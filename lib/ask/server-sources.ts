@@ -7,6 +7,7 @@ import { contestsForDivisions } from "../sources/ballot-nj-morris/index.ts";
 import { lineupForContest } from "../ballot/general-lineup.ts";
 import { summaryForContest } from "../ballot/measure-summary.ts";
 import { provisionsForContest } from "../ballot/measure-provisions.ts";
+import { getMeasureAnalyses, type MeasureAnalysis } from "../ballot/analyses.ts";
 import { positionsFor } from "../candidates/positions.ts";
 import { ROSTER_FILES } from "../coverage/artifacts.ts";
 import type { BallotAbsence, BallotSet, Contest } from "../ballot/types.ts";
@@ -67,6 +68,8 @@ export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: re
 export interface BallotForDivisions {
   /** Applicable canonical state holdings that could not be read or validated. */
   loaderFailures: string[];
+  analysisLoaderFailed: boolean;
+  measureAnalysis: (contestId: string) => MeasureAnalysis | null;
   set: BallotSet | null;
   contests: Contest[];
   absences: BallotAbsence[];
@@ -88,6 +91,8 @@ export interface BallotForDivisions {
 
 const EMPTY: BallotForDivisions = {
   loaderFailures: [],
+  analysisLoaderFailed: false,
+  measureAnalysis: () => null,
   set: null,
   contests: [],
   absences: [],
@@ -117,8 +122,11 @@ export async function loadBallotForDivisions(
       const candidate = source.normalize(await source.fetch());
       const hit = contestsForDivisions(candidate, ocdIds);
       if (hit.contests.length === 0 && hit.absences.length === 0) continue;
+      const analyses = state === "az" ? getMeasureAnalyses() : null;
       return {
         loaderFailures,
+        analysisLoaderFailed: state === "az" && analyses === null,
+        measureAnalysis: (contestId) => analyses?.analyses.find((analysis) => analysis.contestId === contestId) ?? null,
         set: candidate,
         contests: hit.contests,
         absences: hit.absences,

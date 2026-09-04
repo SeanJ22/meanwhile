@@ -325,6 +325,15 @@ export function askWasAnswered(
   );
 }
 
+/** An empty unbound engine reply cannot deny a verified routing answer below it. */
+export function showGroundedAnswer(result: AskAnswer | null, grounded: AskAnswerPayload | null): boolean {
+  if (!grounded) return false;
+  if (!result || !askWasAnswered(result)) return true;
+  return Boolean(grounded.subject || answerSaysSomething(grounded) ||
+    grounded.contacts.length || grounded.meetings.length ||
+    grounded.mode === "OFF" || grounded.mode === "TRANSPORT_FAILED");
+}
+
 /** The refusal text length cap for the search log — the roadmap needs the
  *  question, never a novel. */
 export const REFUSAL_LOG_MAX_CHARS = 200;

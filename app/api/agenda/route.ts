@@ -1,5 +1,6 @@
 import { readSnapshot } from "@/lib/meetings/snapshot";
 import { meetingReaderRecords } from "@/lib/meetings/reader-records";
+import { classifyAgendaPublication, observationFromMeetingRecord, publisherAgendaObservationsFor } from "@/lib/ask/agenda-publication";
 
 /**
  * GET /api/agenda?meetingId=<source-namespaced id>
@@ -26,6 +27,16 @@ export async function GET(request: Request) {
   try { snapshot = readSnapshot(); } catch { snapshot = null; }
   const meeting = snapshot?.meetings.find((row) => row.id === meetingId);
   const records = meetingReaderRecords(meetingId, meeting?.bodyId);
+  const observation = meeting ? observationFromMeetingRecord(meeting) : null;
+  const heldDocuments = (snapshot?.agendaDocuments ?? []).filter(doc => doc.meetingId === meetingId);
+  const bodyName = meeting?.bodyName ?? heldDocuments[0]?.sourceOrg;
+  const publication = snapshot && bodyName ? classifyAgendaPublication({
+    meetingId, bodyName,
+    documentsForMeeting: heldDocuments,
+    documentsAcrossCorpus: snapshot.agendaDocuments ?? [], discoveredDocumentUrl: meeting?.agendaUrl,
+    observations: [...publisherAgendaObservationsFor(meetingId), ...(observation ? [observation] : [])],
+    now: Date.now(),
+  }) : null;
 
   const documents = (snapshot?.agendaDocuments ?? [])
     .filter((doc) => doc.meetingId === meetingId)
@@ -44,5 +55,5 @@ export async function GET(request: Request) {
     }));
 
   return Response.json({ meetingId, documents, documentCount: documents.length,
-    holdingStatus: snapshot ? "HELD" : "HOLDING_UNAVAILABLE", records });
+    holdingStatus: snapshot ? "HELD" : "HOLDING_UNAVAILABLE", records, publication });
 }

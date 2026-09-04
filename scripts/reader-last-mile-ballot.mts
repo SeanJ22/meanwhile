@@ -17,12 +17,14 @@ import { electionDatesFor } from "../lib/ballot/election-dates.ts";
 import { registrationLinkFor } from "../lib/ballot/registration-links.ts";
 import { pollingPlaceLinkFor } from "../lib/ballot/polling-place-links.ts";
 import { formatDateMDY } from "../lib/map/format.ts";
+import { groupAbsences } from "../lib/ballot/absence-grouping.ts";
 
 const base = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
 assert.match(new URL(base).hostname, /^(localhost|127\.0\.0\.1)$/);
 const sets = await Promise.all(BALLOT_SOURCES.map(async ({ state, source }) => ({ state, set: source.normalize(await source.fetch()) })));
 const zipIndex = JSON.parse(readFileSync("data/derived/zip-division-ids.json", "utf8")) as { zips: Record<string, string[]> };
-const plans = [];
+type BallotPlan = { zip: string; state: typeof sets[number]["state"]; set: typeof sets[number]["set"] } & ReturnType<typeof contestsForDivisions>;
+const plans: BallotPlan[] = [];
 for (const zip of [...new Set(["85701", "85641", "07866", "03255", ...Object.keys(zipIndex.zips)])].sort()) {
   const point = resolveZip(zip); if (!point.ok) continue;
   const divisions = await divisionIdsForZipArea(zip, (await divisionsAt(point.centroid.lat, point.centroid.lng)).map((division) => division.ocdId));
@@ -35,17 +37,19 @@ for (const zip of [...new Set(["85701", "85641", "07866", "03255", ...Object.key
   }
 }
 const targets = new Set(sets.flatMap(({ set }) => set.contests.map((contest) => contest.id)));
+const absenceTargets = new Set(sets.flatMap(({ set }) => set.absences.map((absence) => `absence:${absence.ocdId}`)));
+const planIds = (plan: typeof plans[number]) => [...plan.contests.map(contest => contest.id), ...plan.absences.map(absence => `absence:${absence.ocdId}`)];
 floored("canonical ballot contests", "all currently normalized registered ballot sources", targets.size, targets.size);
 const chosen = plans.filter((plan) => ["85701", "85641", "07866", "03255"].includes(plan.zip));
-const remaining = new Set(targets);
-for (const plan of chosen) for (const contest of plan.contests) remaining.delete(contest.id);
+const remaining = new Set([...targets, ...absenceTargets]);
+for (const plan of chosen) for (const id of planIds(plan)) remaining.delete(id);
 while (remaining.size) {
-  const best = plans.filter((plan) => !chosen.includes(plan)).map((plan) => ({ plan, added: plan.contests.filter((contest) => remaining.has(contest.id)).length })).sort((a, b) => b.added - a.added || a.plan.zip.localeCompare(b.plan.zip))[0];
+  const best = plans.filter((plan) => !chosen.includes(plan)).map((plan) => ({ plan, added: planIds(plan).filter(id => remaining.has(id)).length })).sort((a, b) => b.added - a.added || a.plan.zip.localeCompare(b.plan.zip))[0];
   if (!best?.added) break;
   chosen.push(best.plan);
-  best.plan.contests.forEach((contest) => remaining.delete(contest.id));
+  planIds(best.plan).forEach(id => remaining.delete(id));
 }
-const planEvidence = { rule: "Deterministic ZIP set cover from committed ZIP/division geometry and every normalized current contest; mandatory pilot ZIPs retained.", contests: targets.size, chosen: chosen.map(({ zip, state, contests }) => ({ zip, state, contestIds: contests.map((contest) => contest.id) })), unresolvedContestIds: [...remaining].sort() };
+const planEvidence = { rule: "Deterministic ZIP set cover from committed ZIP/division geometry, every normalized current contest and every sourced absence; mandatory pilot ZIPs retained.", contests: targets.size, sourcedAbsences: absenceTargets.size, chosen: chosen.map(({ zip, state, contests, absences }) => ({ zip, state, contestIds: contests.map((contest) => contest.id), absenceOcdIds: absences.map(absence => absence.ocdId) })), unresolvedContestIds: [...remaining].filter(id => !id.startsWith("absence:")).sort(), unresolvedAbsenceIds: [...remaining].filter(id => id.startsWith("absence:")).sort() };
 writeFileSync("docs/evidence/reader-last-mile-ballot-plan.json", JSON.stringify(planEvidence, null, 2) + "\n");
 if (process.argv.includes("--plan-only")) { console.log(JSON.stringify(planEvidence, null, 2)); process.exit(remaining.size ? 1 : 0); }
 assert.equal(remaining.size, 0, `Held current contests cannot reach any committed ZIP: ${[...remaining].join(", ")}`);
@@ -107,6 +111,19 @@ try {
     }
     const actualAbsences = await page.locator("[data-absence-ocd-ids]").evaluateAll((elements) => elements.flatMap((element) => (element.getAttribute("data-absence-ocd-ids") ?? "").split(" ")));
     assert.deepEqual(actualAbsences.sort(), plan.absences.map((absence) => absence.ocdId).sort(), `${plan.zip}: sourced absences`);
+    for (const group of groupAbsences(plan.absences)) {
+      const section = page.locator(`[data-absence-ocd-ids~="${group.members[0].ocdId}"]`);
+      assert.ok(normalize(await section.innerText()).includes(normalize(group.statement)));
+    }
+    for (const absence of plan.absences) {
+      const section = page.locator(`[data-absence-ocd-ids~="${absence.ocdId}"]`);
+      assert.equal(await section.count(), 1);
+      const declared = Number(await section.getAttribute("data-absence-count"));
+      const identities = (await section.getAttribute("data-absence-ocd-ids"))!.split(" ");
+      assert.equal(declared, identities.length);
+      if (absence.provenance.sourceUrl) assert.equal(await section.locator(`a[href="${absence.provenance.sourceUrl}"]`).count(), 1);
+      assert.ok(normalize(await section.innerText()).includes(absence.provenance.sourceOrg));
+    }
     rows.push({ zip: plan.zip, state: plan.state, navigation: { dates, registration, polling, pollingLinkRendered }, analysisContestIds: plan.contests.filter((contest) => analysisForContest(contest.id)?.text).map((contest) => contest.id), statedContestCount: plan.contests.length, returnedContestCount: actualContests.length, proofs, absenceOcdIds: actualAbsences });
     console.log(JSON.stringify({ zip: plan.zip, contests: plan.contests.length, result: "PROVEN" }));
   }

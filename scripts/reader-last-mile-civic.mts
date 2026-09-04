@@ -30,7 +30,8 @@ const screenshots: string[] = [];
 mkdirSync("screenshots/reader-last-mile", { recursive: true });
 try {
   for (const zip of EVERYDAY_ZIPS) {
-    const context = await browser.context({ viewport: { width: 1440, height: 1000 }, reducedMotion: "reduce" });
+   for (const view of [{ name: "desktop", width: 1440, height: 1000, theme: "dark", all: true }, { name: "desktop", width: 1440, height: 1000, theme: "light", all: false }, { name: "phone", width: 390, height: 844, theme: "dark", all: false }, { name: "phone", width: 390, height: 844, theme: "light", all: false }]) {
+    const context = await browser.context({ viewport: { width: view.width, height: view.height }, reducedMotion: "reduce" });
     const page = await context.newPage();
     page.setDefaultTimeout(30_000);
     for (const label of ["Skip the tour", "No thanks"]) {
@@ -41,6 +42,11 @@ try {
     const input = page.locator(".welcome-overlay input").first();
     await input.fill(zip); await input.press("Enter");
     await page.locator(".welcome-overlay.hidden").waitFor({ state: "attached" });
+    if (((await page.locator("html").getAttribute("data-theme")) === "light" ? "light" : "dark") !== view.theme) {
+      const switcher = page.getByRole("button", { name: `Switch to ${view.theme} mode`, exact: true }).first();
+      if (!(await switcher.isVisible())) await page.getByRole("button", { name: "Open menu", exact: true }).click();
+      await switcher.click();
+    }
     const point = resolveZip(zip); assert.ok(point.ok);
     const response = await page.request.get(`${base}/api/meetings?${new URLSearchParams({ zip, lat: String(point.centroid.lat), lng: String(point.centroid.lng) })}`);
     assert.equal(response.status(), 200);
@@ -49,7 +55,7 @@ try {
     await page.locator("[data-ask-pill]").first().click();
     const panel = page.locator("[data-ask-panel]");
     const box = panel.locator("[data-ask-box]");
-    for (const { topicId, question, topic } of questions) {
+    for (const { topicId, question, topic } of (view.all ? questions : questions.slice(0, 1))) {
       const expected = everydayContactsFor(topicId, zip);
       const canonical = answerQuestion(question, coverage, zip);
       assert.equal(canonical.answer.kind, "ROUTED");
@@ -60,6 +66,7 @@ try {
       const actualResponse = await answered;
       assert.equal(actualResponse.status(), 200);
       await panel.getByText(topic.label, { exact: true }).waitFor({ state: "visible" });
+      assert.equal(await panel.locator('[data-ask-grounded-state="NOTHING_HELD"]').count(), 0, "The held civic answer must not be contradicted by an empty engine's absence sentence.");
       const text = normalize(await panel.innerText());
       for (const contact of expected) {
         const expectedFields = [contact.body, contact.service, contact.phone, contact.email, contact.note, `This was sourced from ${contact.sourceOrg}.`].filter((field): field is string => Boolean(field));
@@ -68,7 +75,7 @@ try {
           assert.ok(await panel.locator(`a[href="${href}"]`).count(), `${zip}/${topicId}: ${href}`);
         }
         const index = EVERYDAY_CONTACTS.indexOf(contact); encountered.add(index);
-        records.push({ surface: "civic-routing", zip, topicId, canonicalRecordIndex: index, sourceUrl: contact.sourceUrl, sourceOrg: contact.sourceOrg, collectedAt: contact.collectedAt, verification: contact.verification, expectedFields, returnedFields: expectedFields, returnedContact: contact, question, canonicalAnswerSha256: hash(JSON.stringify(canonical)), renderedTextSha256: hash(text), grounding: "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response." });
+        records.push({ surface: "civic-routing", zip, viewport: view.name, theme: view.theme, topicId, canonicalRecordIndex: index, sourceUrl: contact.sourceUrl, sourceOrg: contact.sourceOrg, collectedAt: contact.collectedAt, verification: contact.verification, expectedFields, returnedFields: expectedFields, returnedContact: contact, question, canonicalAnswerSha256: hash(JSON.stringify(canonical)), renderedTextSha256: hash(text), grounding: "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response." });
       }
       if (!expected.length) {
         const miss = EVERYDAY_MISSES.find(row => row.topicId === topicId && row.zip === zip);
@@ -76,12 +83,13 @@ try {
         records.push({ surface: "civic-routing", zip, topicId, disposition: "SOURCE/HOLDING_UNAVAILABLE", reason: miss.reason, expectedCount: 0, returnedCount: 0 });
       }
       if (topicId === EVERYDAY_TOPIC_IDS[0]) {
-        const path = `screenshots/reader-last-mile/${zip}-desktop-dark-civic.png`;
+        const path = `screenshots/reader-last-mile/${zip}-${view.name}-${view.theme}-civic.png`;
         await panel.scrollIntoViewIfNeeded(); await page.screenshot({ path }); screenshots.push(path);
       }
     }
     await context.close();
-    console.log(JSON.stringify({ zip, contactRecordsProved: encountered.size }));
+    console.log(JSON.stringify({ zip, viewport: view.name, theme: view.theme, contactRecordsProved: encountered.size }));
+   }
   }
 } finally { await browser.close(); }
 assert.equal(encountered.size, expectedContacts.length);

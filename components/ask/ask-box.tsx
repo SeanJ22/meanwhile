@@ -8,6 +8,7 @@ import { AskAnswerContacts } from "./answer-contacts";
 import {
   answerQuestion,
   askWasAnswered,
+  showGroundedAnswer,
   REFUSAL_LOG_MAX_CHARS,
   type AskAnswer,
 } from "@/lib/routing/ask";
@@ -1048,7 +1049,7 @@ export function AskBox({
         optional field is null is the exact class PR #211 found repeatedly in
         this file.
       */}
-      {grounded && (
+      {grounded && showGroundedAnswer(asked, grounded) && (
         <div
           data-ask-grounded
           data-ask-grounded-mode={grounded.mode}

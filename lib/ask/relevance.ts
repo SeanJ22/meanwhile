@@ -58,6 +58,7 @@ const MEASURE_OWN_KINDS: ReadonlySet<EvidenceRecord["kind"]> = new Set([
   "CONTEST",
   "MEASURE_QUESTION",
   "MEASURE_STATEMENT",
+  "MEASURE_ANALYSIS",
   "MEASURE_SUMMARY",
   "MEASURE_PROVISION",
   /* A "who funded this measure" question is a real measure question, and the

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 487,
-    "named": 5232,
+    "files": 495,
+    "named": 5274,
     "dynamic": 23
   },
   "files": {
@@ -491,13 +491,13 @@
         "a body named only 'Planning Board' is reachable by the town a reader would say",
         "a named government we do not hold is still UNRESOLVED, never swapped",
         "a question the agenda CAN answer is not given an outcome gap",
+        "all held per-member votes are returned with exact item and row denominators",
         "no sibling body's meeting can reach an answer about the Board",
         "qualifying by division never overwrites a body that has its own name",
         "the Board of Supervisors resolves to a BODY id, never to its division",
         "the Board still retrieves its own meetings — the repair did not empty the answer",
         "the committed corpus still puts two different governments on one division",
         "the denominator counts the BODY's meetings, not the division's",
-        "the per-member vote rows are BOUNDED, and the bound is reported rather than silent",
         "the sibling body is still reachable under its OWN name"
       ],
       "dynamic": 1
@@ -5432,6 +5432,13 @@
       ],
       "dynamic": 0
     },
+    "tests/reader-civic-delivery.test.ts": {
+      "names": [
+        "an empty unbound engine cannot contradict a held civic answer, while identity and loader states remain visible",
+        "reader civic contacts exclude a planted unverified acquisition"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-diagnostics.test.ts": {
       "names": [
         "SEEDED: a PROJECT_REGISTRY denominator is refused for the body layer — registry checking registry is a mirror",
@@ -5516,6 +5523,7 @@
       "names": [
         "Ask renders every grounded non-contact record with its own source even beside a prose answer",
         "a held filing revision renders its exact statement and both source documents without resurrecting a candidacy",
+        "a sourced explainer without a held URL retains its publisher and read date without an invented link",
         "map and ballot Ask share every held contact channel, exact rows and per-person provenance"
       ],
       "dynamic": 0
@@ -5532,6 +5540,7 @@
         "a sourced removed filing reaches only its contest or former candidacy, with both documents and no current-candidate claim",
         "all current filed candidate contacts and addresses survive the exact identity and Ask projection",
         "an unreadable applicable ballot is a failed holding, never an empty civic population",
+        "an unresolved supplied canonical ID never becomes a same-name candidate through surface or prior context",
         "direct official vote IDs never fall through to another same-name person",
         "each readable canonical statement subject can be searched without a general-knowledge answer",
         "multiple verified roles share an Ask subject only through the committed person bridge",
@@ -5563,8 +5572,29 @@
       ],
       "dynamic": 0
     },
+    "tests/reader-last-mile-key-votes-ask.test.ts": {
+      "names": [
+        "every current federal official's key-vote answer preserves all exact source maps, entries and linked summaries through real POST",
+        "key-vote identity, missing position, physical-roll deduplication and conflicting position controls fail closed"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-last-mile-meeting-dates.test.ts": {
+      "names": [
+        "an explicit held local date retrieves that sitting rather than the next or latest one"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-last-mile-meetings-ask.test.ts": {
+      "names": [
+        "all held meetings and outcome sittings survive real dated Ask routes with exact record counts and provenance",
+        "invalid, multiple and unheld dates never select a different sitting"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-last-mile-meetings.test.ts": {
       "names": [
+        "a reused publisher portal is classified identically by the real route and agenda renderer",
         "an agenda never supplies a decision or inferred per-member vote",
         "every held sitting reaches the real agenda route with the same class-filtered records as Ask",
         "vendor/event ambiguity and a different body cannot inherit recorded actions"
@@ -5582,6 +5612,13 @@
         "Ask can answer an explicitly named unmapped official without calling them the reader's representative",
         "every committed officeholder survives exact-ID lookup, independent of held geometry",
         "making unmapped people readable never manufactures a geographic membership"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-last-mile-positions-parity.test.ts": {
+      "names": [
+        "Hobbs map, ballot and Ask use the held Governor passage while a foreign supplied key cannot supply it",
+        "every held statement identity bridge gives the Positions API the same complete answer from each current person/card identity"
       ],
       "dynamic": 0
     },
@@ -5639,10 +5676,55 @@
       ],
       "dynamic": 0
     },
+    "tests/reader-recent-vote-expansion.test.ts": {
+      "names": [
+        "actual map and ballot vote components expose a planted held tail beyond twenty"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-representation-delivery.test.ts": {
       "names": [
         "all14 held statewide executives reach the actual representation route only for their own state",
         "held governing-body and indexed division identities survive the representation route together"
+      ],
+      "dynamic": 0
+    },
+    "tests/readiness-compute.test.ts": {
+      "names": [
+        "R-10: the four pilot zips are identifiable at a glance",
+        "R-6: a closed walk renders ARGUED_ABSENT with its evidence ref, never NOT_WALKED",
+        "R-7: an unwalked capability is fully NOT_WALKED and distinct from ARGUED_ABSENT",
+        "R-B: a monotonicity violation in the inputs is surfaced on the snapshot, not hidden",
+        "R-D: coverage never fakes a denominator; the special-districts total is the cited 327",
+        "R-F: a zip with an UNKNOWN tier renders a named gap for its level, never Level 0",
+        "R-F: a zip's state is worst-of its bodies, even when the worst differs from the modal body",
+        "R-K: every stated N equals its rendered row count across the snapshot",
+        "a complete, fresh capability is all-CURRENT and rowIsCurrent"
+      ],
+      "dynamic": 0
+    },
+    "tests/readiness-gates.test.ts": {
+      "names": [
+        "BLOCKED and GATED_ON_OPERATOR each carry their named reason and override the fraction",
+        "R-A: NOT_WALKED and ARGUED_ABSENT are the opposite ends of knowing, never equal",
+        "R-A: there are exactly six cell states, never two",
+        "R-B: ARGUED_ABSENT propagates — a CURRENT to its right is a violation",
+        "R-B: a CURRENT past a non-CURRENT gate to its left is a surfaced violation, not silent",
+        "R-B: a clean ladder raises no violation",
+        "R-D: a numerator larger than its external denominator is refused, never rendered",
+        "R-D: coverage with an external denominator is measured and names its authority",
+        "R-D: coverage without an external denominator is a named gap, not 0 of 0",
+        "R-E: worst-of never averages — one blocked body sinks an otherwise green set",
+        "R-E: worst-of takes the minimum, and an empty set is NOT_WALKED not CURRENT",
+        "R-G: a complete gate past its freshness threshold is PARTIAL_OR_STALE, not CURRENT",
+        "R-G: freshness is per-capability; a null as-of is unknown, never fresh",
+        "R-I: ARGUED_ABSENT requires a closed walk on record",
+        "R-I: a zero with NO recorded walk is NOT_WALKED, never ARGUED_ABSENT",
+        "a never-established (null) as-of with no coverage is NOT_WALKED and carries no date",
+        "deriveGateCells always yields exactly five cells in GATE_ORDER and fills gaps with NOT_WALKED",
+        "derives CURRENT only when complete and fresh",
+        "isCurrent is exact — only CURRENT is current",
+        "some-but-not-all is PARTIAL_OR_STALE"
       ],
       "dynamic": 0
     },

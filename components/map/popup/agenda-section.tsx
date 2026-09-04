@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { agendaSentenceFor } from "@/lib/ask/agenda-sentence";
+import type { AgendaPublicationReading } from "@/lib/ask/agenda-publication";
 
 import { noticeSummaryFor } from "@/lib/meetings/notice-summary";
 import { formatDateMDY } from "@/lib/map/format";
@@ -98,6 +99,7 @@ function AgendaForMeeting({
   );
   const [documents, setDocuments] = useState<AgendaDocumentView[] | null>(null);
   const [records, setRecords] = useState<MeetingReaderRecords | null>(null);
+  const [publication, setPublication] = useState<AgendaPublicationReading | null>(null);
   const [holdingUnavailable, setHoldingUnavailable] = useState(false);
   const [failed, setFailed] = useState(false);
 
@@ -114,9 +116,11 @@ function AgendaForMeeting({
           documents: AgendaDocumentView[];
           records: MeetingReaderRecords;
           holdingStatus: string;
+          publication: AgendaPublicationReading | null;
         };
         setDocuments(payload.documents);
         setRecords(payload.records);
+        setPublication(payload.publication);
         setHoldingUnavailable(payload.holdingStatus === "HOLDING_UNAVAILABLE");
       } catch {
         if (!controller.signal.aborted) setFailed(true);
@@ -160,7 +164,7 @@ function AgendaForMeeting({
     <MinutesRecord meetingId={meetingId} />
     <MeetingRecords records={records} />
     {holdingUnavailable ? <p className="mt-1.5 text-[0.75rem] text-muted">The stored document is unavailable here.{agendaUrl && <> <a className="text-signal underline" href={agendaUrl} target="_blank" rel="noreferrer">Read the source document</a>.</>}</p>
-      : <AgendaDocuments documents={documents} meetingId={meetingId} agendaUrl={agendaUrl} agendaSentence={agendaState.sentence} />}
+      : <AgendaDocuments documents={documents} meetingId={meetingId} agendaUrl={agendaUrl} agendaSentence={agendaState.sentence} publication={publication} />}
   </>;
 }
 
@@ -174,10 +178,17 @@ function MinutesRecord({ meetingId }: { meetingId: string }) {
   </details>;
 }
 
-export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentence }: {
+export function AgendaDocuments({ documents, meetingId, agendaUrl, agendaSentence, publication }: {
   documents: AgendaDocumentView[]; meetingId: string; agendaUrl: string | null; agendaSentence: string;
+  publication?: AgendaPublicationReading | null;
 }) {
   const latest = documents[0] ?? null;
+
+  if (latest && publication?.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX") {
+    return <p data-agenda-publication="ACQUIRED_IS_PUBLICATION_INDEX" className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
+      {publication.gap?.statement} <a href={latest.documentUrl} target="_blank" rel="noreferrer" className="text-signal underline">Open the publisher&apos;s agenda portal</a>.
+    </p>;
+  }
 
   if (!latest) {
     return (

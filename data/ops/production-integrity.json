@@ -1,11 +1,11 @@
 {
   "formatVersion": 1,
-  "deployedSha": "5e9f49cfbfa618593cd5b8a92b0a1a00dcbab46b",
-  "mainSha": "5e9f49cfbfa618593cd5b8a92b0a1a00dcbab46b",
+  "deployedSha": "1e94425b2407a49e07f56e1f72bacd064c2b3d55",
+  "mainSha": "1e94425b2407a49e07f56e1f72bacd064c2b3d55",
   "observed": "HELD",
   "failureClass": null,
   "detail": "HOLDS — shipping invariant HOLDS at post-deploy: 25 of 25 committed migration(s) applied, head 0024_living_invaders",
-  "observedAt": "2026-09-04T13:48:44.543Z",
+  "observedAt": "2026-09-04T20:34:54.975Z",
   "moment": "post-deploy",
   "gateExit": 0
 }

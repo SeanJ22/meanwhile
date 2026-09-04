@@ -1,4 +1,4 @@
-import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../lib/control-plane/repository/pg-store.ts";
 import { registerWorkItem, registerRouteTask } from "../lib/control-plane/repository/coordinator.ts";
@@ -14,6 +14,7 @@ import { RESEARCH_BOUNDS, WORKER_CREDENTIAL_VAR, researchSpendInWindow, ceilingP
 import { durableResearchTools } from "../lib/control-plane/workers/research-runtime.ts";
 import { FLEET_POLICY_VERSION } from "../lib/control-plane/workers/runtime.ts";
 import { today } from "./doc-dates.mjs";
+import { writeAutonomousFleetProof } from "./autonomous-fleet-proof-output.ts";
 
 const root = resolve(import.meta.dirname, "..");
 const vaultRoot = process.argv.find(a => a.startsWith("--vault-root="))?.slice(13);
@@ -41,12 +42,11 @@ const admitted = ceilingPermits(spend.windowUsd, RESEARCH_BOUNDS.dailyCeilingUsd
 const intents = readIntents(await repos.researchIntents.read(RESEARCH_STATE_ID));
 const key = process.env[WORKER_CREDENTIAL_VAR];
 const outDir = join(root, "data/health/autonomous-agent-fleet");
-mkdirSync(outDir, { recursive: true });
 const outPath = join(outDir, `${today()}-nj-atlantic-scout.json`);
 if (!admitted.permits || intents.paused || !key) {
   const refusal = { observedAt: beganAt, workItemId: item.id, routeTaskId: task.id, sourceId, spend,
     blocker: !admitted.permits ? "COST_CEILING" : intents.paused ? "OWNER_PAUSED_RESEARCH" : "MODEL_TRANSPORT_UNAVAILABLE", promotion: "OFF" };
-  writeFileSync(outPath, JSON.stringify(refusal, null, 2) + "\n"); console.log(JSON.stringify(refusal));
+  writeAutonomousFleetProof(root, outPath, refusal); console.log(JSON.stringify(refusal));
 } else {
   const tools = { repos, store: new DurableEvidenceStore(resolve(vaultRoot)), spaceOut: hostSpacer(), now };
   const methodVersion = JSON.parse(readFileSync(join(root, "data/method/knowledge.json"), "utf8")).version;
@@ -85,7 +85,7 @@ if (!admitted.permits || intents.paused || !key) {
   const results = await repos.scoutResults.read(task.id);
   const proof = { formatVersion: 1, startedAt: beganAt, observedAt: now(), state: "NJ", workItemId: item.id, subjectId: item.subject,
     routeTaskId: task.id, sourceId, spendBefore: spend, dispatch, results, promotion: "OFF" };
-  writeFileSync(outPath, JSON.stringify(proof, null, 2) + "\n");
+  writeAutonomousFleetProof(root, outPath, proof);
   console.log(JSON.stringify({ outPath, workItemId: item.id, results: results.map(r => ({ attemptId: r.attemptId, outcome: r.outcome, refusal: r.refusal,
     artifactIds: r.artifactIds, candidates: r.candidates.map(c => ({ routeId: c.routeId, url: c.url, evidenceArtifactIds: c.evidenceArtifactIds })), usd: r.usd, usage: r.usage })) }, null, 2));
 }

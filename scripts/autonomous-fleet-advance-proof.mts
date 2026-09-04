@@ -1,4 +1,4 @@
-import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../lib/control-plane/repository/pg-store.ts";
 import { registerRouteTask } from "../lib/control-plane/repository/coordinator.ts";
@@ -16,6 +16,7 @@ import { durableResearchTools } from "../lib/control-plane/workers/research-runt
 import { boundedAuditTransport } from "../lib/control-plane/workers/model-audit.ts";
 import type { EngineeringTaskSpec } from "../lib/control-plane/workers/engineering-types.ts";
 import { today } from "./doc-dates.mjs";
+import { writeAutonomousFleetProof } from "./autonomous-fleet-proof-output.ts";
 
 const root = resolve(import.meta.dirname, "..");
 const vaultRoot = process.argv.find(a => a.startsWith("--vault-root="))?.slice(13);
@@ -101,6 +102,6 @@ records = await repos.workerResults.read(item.id);
 const proof = { formatVersion: 1, observedAt: now(), itemId: item.id, subject: item.subject, artifactId, dispatches,
   results: records.map(r => ({ id: r.id, attemptId: r.attemptId, role: r.result.role, verdict: r.result.verdict, cost: r.cost,
     recordCount: r.result.role === "PARSER" ? r.result.actualRowCount : null, result: r.result })), promotion: "OFF" };
-const dir = join(root, "data/health/autonomous-agent-fleet"); mkdirSync(dir, { recursive: true });
-const path = join(dir, `${today()}-${item.id}-pipeline.json`); writeFileSync(path, JSON.stringify(proof, null, 2) + "\n");
+const dir = join(root, "data/health/autonomous-agent-fleet");
+const path = join(dir, `${today()}-${item.id}-pipeline.json`); writeAutonomousFleetProof(root, path, proof);
 console.log(JSON.stringify({ proofPath: path, itemId: item.id, results: proof.results.map(({ result: _result, ...summary }) => summary), dispatches }, null, 2));

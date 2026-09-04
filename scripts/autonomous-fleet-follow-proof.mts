@@ -1,4 +1,4 @@
-import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../lib/control-plane/repository/pg-store.ts";
 import { registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
@@ -10,6 +10,7 @@ import { researchVaultResolver } from "../lib/control-plane/workers/vault-object
 import type { GeneralizedCivicExtractionContract } from "../lib/control-plane/workers/types.ts";
 import type { ObservedResearchRoute, ResearchSpan, AcquirerTaskSpec } from "../lib/control-plane/workers/research-types.ts";
 import { today } from "./doc-dates.mjs";
+import { writeAutonomousFleetProof } from "./autonomous-fleet-proof-output.ts";
 
 const root = resolve(import.meta.dirname, "..");
 const vaultRoot = process.argv.find(a => a.startsWith("--vault-root="))?.slice(13);
@@ -103,8 +104,8 @@ if (mode === "nj") {
       observedCollectionUrls: links.filter(l => /\/wp\/v2\//.test(l.url)).map(l => l.url) });
   }
 } else throw new Error("FOLLOW_PROOF_UNKNOWN_MODE");
-const dir = join(root, "data/health/autonomous-agent-fleet"); mkdirSync(dir, { recursive: true });
+const dir = join(root, "data/health/autonomous-agent-fleet");
 const path = join(dir, `${today()}-${mode}-followed-records.json`);
-writeFileSync(path, JSON.stringify({ formatVersion: 1, observedAt: now(), mode, dispatches, summary, promotion: "OFF" }, null, 2) + "\n");
+writeAutonomousFleetProof(root, path, { formatVersion: 1, observedAt: now(), mode, dispatches, summary, promotion: "OFF" });
 console.log(JSON.stringify({ path, summary: summary.map((value: unknown) => { const s = value as { itemId?: string; sourceUrl?: string; record?: { id: string; result: { verdict: string; artifacts?: unknown; sourceGrounding?: unknown } }; blocker?: string };
   return { itemId: s.itemId, sourceUrl: s.sourceUrl, resultId: s.record?.id, verdict: s.record?.result.verdict, artifacts: s.record?.result.artifacts, sourceGrounding: s.record?.result.sourceGrounding, blocker: s.blocker }; }) }, null, 2));

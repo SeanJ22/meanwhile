@@ -161,6 +161,8 @@ export async function readAutonomousActivity(repos: ControlPlaneRepositories, wo
     repos.workItems.list(),repos.routeTasks.list(),repos.attempts.list(),repos.leases.list(),repos.transitions.readAll(),repos.dispositions.readAll(),
     repos.artifacts.readAll(),repos.costs.readAll(),repos.scoutResults.readAll(),repos.workerResults.readAll(),repos.promotionPipeline.readAll(),
   ]);
+  // A completed control-plane read supplies the expiry-evaluation clock; source dates stay in the facts.
+  const snapshotReadAt = options.observedAt ?? new Date().toISOString();
   return projectAutonomousActivity({workItems:items.map(x => x.value).filter(x => !workItemIds || workItemIds.includes(x.id)),
-    routeTasks:tasks.map(x => x.value), attempts:attempts.map(x => x.value), leases:leases.map(x => x.value), transitions,dispositions,artifacts,costs,scouts,workers,promotion},{observedAt:options.observedAt??new Date().toISOString()});
+    routeTasks:tasks.map(x => x.value), attempts:attempts.map(x => x.value), leases:leases.map(x => x.value), transitions,dispositions,artifacts,costs,scouts,workers,promotion},{observedAt:snapshotReadAt});
 }

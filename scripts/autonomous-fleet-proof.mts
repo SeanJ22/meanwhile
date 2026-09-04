@@ -1,4 +1,4 @@
-import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { performance } from "node:perf_hooks";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../lib/control-plane/repository/pg-store.ts";
@@ -21,6 +21,7 @@ import type { GeneralizedCivicExtractionContract, WorkerResultRecord } from "../
 import type { AcquirerTaskSpec, DetectiveTaskSpec, ObservedResearchRoute, ResearchSpan } from "../lib/control-plane/workers/research-types.ts";
 import type { ScoutResult, ScoutRung } from "../lib/control-plane/scheduler/scout-result.ts";
 import { today } from "./doc-dates.mjs";
+import { writeAutonomousFleetProof } from "./autonomous-fleet-proof-output.ts";
 
 /** Real owed registry records only. The script writes observations; it cannot promote or render them. */
 const root = resolve(import.meta.dirname, "..");
@@ -54,7 +55,6 @@ const readEvidence = workerVaultResolver(repos, store, item.project);
 const runtime: FleetRuntime = { repos, readEvidence, methodVersion, now, independentContext: async () => { throw new Error("PROOF_REQUIRES_STANDING_AUDIT_CONTEXT"); },
   roleExecutor: (task, holder) => researchRoleExecutor(runtime, tools, task, holder) };
 const proofDir = join(root, "data/health/autonomous-agent-fleet");
-mkdirSync(proofDir, { recursive: true });
 const proofPath = join(proofDir, `${today()}-${targetName}.json`);
 const scheduled = (task: RouteTask): ScheduledObligation => ({ obligation: { id: task.id, recordClass: "OFFICIAL_MEETING_DOCUMENT_INVENTORY", subjectId: item.subject,
   routeId: task.routeId, active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null }, nextDueAt: task.createdAt,
@@ -108,7 +108,7 @@ const sourceRecords = (await repos.artifacts.readAll()).filter(a => a.workItemId
 const sources = await Promise.all(sourceRecords.map(a => resolveVault(a.artifactId)));
 const publisher = sources.find(a => a.artifact.canonicalUrl === target.seed && a.artifact.transport === "REACHABLE" && a.artifact.retentionPolicy !== "DIAGNOSTIC");
 if (!publisher) {
-  writeFileSync(proofPath, JSON.stringify({ startedAt: beganAt, observedAt: now(), itemId: item.id, subject: item.subject, dispatches, outcome: "PUBLISHER_OBSERVATION_BLOCKED", promotion: "OFF" }, null, 2) + "\n");
+  writeAutonomousFleetProof(root, proofPath, { startedAt: beganAt, observedAt: now(), itemId: item.id, subject: item.subject, dispatches, outcome: "PUBLISHER_OBSERVATION_BLOCKED", promotion: "OFF" });
   console.log(JSON.stringify({ proofPath, itemId: item.id, outcome: "PUBLISHER_OBSERVATION_BLOCKED" })); process.exitCode = 1;
 } else {
   const text = new TextDecoder().decode(publisher.bytes);
@@ -124,17 +124,24 @@ if (!publisher) {
   }
   if (locator === target.seed) {
     const linked = extractLinks(text, new URL(target.seed), 200).find(l => /sitemap/i.test(l.url));
-    if (linked) { locator = linked.url; const candidate = new URL(locator).pathname; if (text.includes(locator)) quote = locator; else if (text.includes(candidate)) quote = candidate; }
+    if (linked) {
+      locator = linked.url;
+      const linkedPublisherUrl = new URL(locator);
+      const candidate = linkedPublisherUrl.pathname;
+      if (text.includes(locator)) quote = locator; else if (text.includes(candidate)) quote = candidate;
+    }
   }
-  const route: ObservedResearchRoute = { id: `OFFICIAL_PUBLISHER_DOCUMENTS:${new URL(locator).pathname}`, subjectId: item.subject, jurisdiction: target.state,
-    recordClass: /sitemap/i.test(locator) ? "OFFICIAL_DOCUMENT_SITEMAP" : "OFFICIAL_PUBLISHER_SURFACE", sourceId: new URL(locator).host, publisher: body.name,
-    url: locator, observedLocator: quote === new URL(locator).pathname ? quote : locator, observedAt: observed.artifact.retrievedAt,
+  const publisherUrl = new URL(locator);
+  if (!["http:", "https:"].includes(publisherUrl.protocol)) throw new Error("AUTONOMOUS_PROOF_PUBLISHER_PROTOCOL_REFUSED");
+  const route: ObservedResearchRoute = { id: `OFFICIAL_PUBLISHER_DOCUMENTS:${publisherUrl.pathname}`, subjectId: item.subject, jurisdiction: target.state,
+    recordClass: /sitemap/i.test(locator) ? "OFFICIAL_DOCUMENT_SITEMAP" : "OFFICIAL_PUBLISHER_SURFACE", sourceId: publisherUrl.host, publisher: body.name,
+    url: locator, observedLocator: quote === publisherUrl.pathname ? quote : locator, observedAt: observed.artifact.retrievedAt,
     firstObservedAt: observed.artifact.retrievedAt, methodVersion, permission: "ALLOWED", observation: spanFor(observed, quote),
     publisherSubjectEvidence: [spanFor(publisher, text.slice(0, Math.min(text.length, 400)))], applicableBecause: "The current canonical registry names this publisher; its actual observation names this bulk/public record locator.",
     nextRouteIds: ["OFFICIAL_MEETING_DOCUMENTS_AND_EXTERNAL_AUTHORITY"], retrieval: "fetch_public" };
   const acquisition: AcquirerTaskSpec = { route, held: [] };
   const contract: GeneralizedCivicExtractionContract = { schemaVersion: 2, recordClass: route.recordClass, subjectId: item.subject,
-    jurisdiction: { country: "US", state: target.state, canonicalId: item.subject }, identity: { namespace: `${new URL(locator).host}:publication`, keyFields: ["loc"] },
+    jurisdiction: { country: "US", state: target.state, canonicalId: item.subject }, identity: { namespace: `${publisherUrl.host}:publication`, keyFields: ["loc"] },
     sourceScope: { sourceId: route.sourceId, routeIds: [route.id], publisher: body.name, canonicalUrls: [locator], observationArtifactIds: [...new Set([observed.artifact.id, publisher.artifact.id])] },
     methodVersion, requiredFields: ["loc"], completenessScope: "Only the URL rows in the captured official publisher sitemap; no claim of complete civic-record or meeting coverage.", expectedSourceDate: null,
     extraction: { format: "XML_RECORDS", rowTag: "url", fields: { loc: { source: "loc", type: "STRING" } } }, verification: { required: true, authorities: [] } };
@@ -175,6 +182,6 @@ if (!publisher) {
   const proof = { formatVersion: 1, startedAt: beganAt, observedAt: now(), subject: item.subject, state: target.state, itemId: item.id,
     observationTaskId: observationTask.id, sourceObservationArtifactIds: sources.map(s => s.artifact.id), contract, dispatches, results: records.map(summarize),
     promotion: "OFF", sourceUniverseComplete: false, verification: "External verification remains owed; acquired observations are not reader-facing truth." };
-  writeFileSync(proofPath, JSON.stringify(proof, null, 2) + "\n");
+  writeAutonomousFleetProof(root, proofPath, proof);
   console.log(JSON.stringify({ proofPath, itemId: item.id, state: target.state, records: records.map(summarize) }, null, 2));
 }

@@ -66,7 +66,9 @@ export async function runAcquirer(input: AcquirerWorkerInput, runtime: AcquirerR
   let sourceGrounding: NonNullable<AcquirerResult["sourceGrounding"]> = { verdict: "UNPROVEN", checkedArtifactIds: [] };
   const stamp = () => input.now();
   const block = (code: ResearchBlocker["code"], description: string, retryable: boolean) => {
-    blockers.push({ code, description, worker: input.worker, attemptId: input.attemptId, observedAt: stamp(),
+    // This dates the detected blocker. Source freshness remains the vaulted retrieval time.
+    const detectedAt = input.now();
+    blockers.push({ code, description, worker: input.worker, attemptId: input.attemptId, observedAt: detectedAt,
       artifactIds: [...artifactIds], retryable, anotherRouteRemains: route.nextRouteIds.length > 0, operatorDecisionRequired: false });
   };
   const result = (verdict: AcquirerResult["verdict"]): AcquirerResult => {

@@ -25,12 +25,61 @@ import { assertDurableRepositories } from "../repository/types.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { CAPABILITY_TAXONOMY, US_STATES, stateEntry } from "./catalog.ts";
 import { type CapabilityInput, emptyStateSnapshot } from "./compute.ts";
-import type { ReadinessStateSnapshot } from "./model.ts";
+import { READINESS_DERIVATION_CONTRACT, type ReadinessStateSnapshot } from "./model.ts";
 
 export type ReadinessReadOutcome =
   | { readonly kind: "HELD"; readonly snapshot: ReadinessStateSnapshot; readonly source: string }
   | { readonly kind: "NOT_RECORDED"; readonly detail: string; readonly source: string }
+  /**
+   * A snapshot exists but was produced under a SUPERSEDED derivation contract
+   * (CC-F6) — a legacy hand-authored record still at rest in production. It is
+   * quarantined: its old cells are never trusted, and it renders "REQUIRES
+   * REPUBLISH" until the instrument-derived publisher overwrites it. A pure
+   * read: production is never contacted-for-write or mutated.
+   */
+  | {
+      readonly kind: "REQUIRES_REPUBLISH";
+      readonly detail: string;
+      readonly source: string;
+      readonly snapshotContract: string | null;
+    }
   | { readonly kind: "UNAVAILABLE"; readonly detail: string };
+
+/**
+ * Classify a read row against the current derivation contract (CC-F6). PURE: no
+ * fs/db/clock — so a test can pin the quarantine without a control plane. A
+ * snapshot is trusted (HELD) ONLY when its marker strictly equals the current
+ * contract; absent or older marker → REQUIRES_REPUBLISH; a null row → NOT_RECORDED.
+ */
+export function readinessRowOutcome(
+  value: ReadinessStateSnapshot | null,
+  source: string,
+  stateName: string,
+): ReadinessReadOutcome {
+  if (value === null) {
+    return {
+      kind: "NOT_RECORDED",
+      detail:
+        `The control plane is reachable and holds no readiness snapshot for ${stateName} yet. ` +
+        "That is a fact about our record, not a claim that the state is empty.",
+      source,
+    };
+  }
+  const contract = (value as { readonly derivationContract?: unknown }).derivationContract;
+  if (contract !== READINESS_DERIVATION_CONTRACT) {
+    return {
+      kind: "REQUIRES_REPUBLISH",
+      snapshotContract: typeof contract === "string" ? contract : null,
+      detail:
+        `A readiness snapshot for ${stateName} exists but was produced under a superseded ` +
+        `derivation contract (${typeof contract === "string" ? contract : "no contract marker"}). ` +
+        "It must be republished under the current instrument-derived contract before its cells " +
+        "can be trusted — its old values are not shown.",
+      source,
+    };
+  }
+  return { kind: "HELD", snapshot: value, source };
+}
 
 /**
  * Open the control-plane repositories the panel reads from.
@@ -85,16 +134,7 @@ export async function readReadinessSnapshot(state: string): Promise<ReadinessRea
 
   try {
     const row = await opened.repos.readinessSnapshots.read(entry.code);
-    if (row === null) {
-      return {
-        kind: "NOT_RECORDED",
-        detail:
-          `The control plane is reachable and holds no readiness snapshot for ${entry.name} yet. ` +
-          "That is a fact about our record, not a claim that the state is empty.",
-        source: opened.source,
-      };
-    }
-    return { kind: "HELD", snapshot: row.value, source: opened.source };
+    return readinessRowOutcome(row?.value ?? null, opened.source, entry.name);
   } catch (error) {
     return {
       kind: "UNAVAILABLE",

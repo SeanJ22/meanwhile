@@ -682,3 +682,144 @@ export function countClaimsFor(snapshot: OwnerSnapshot): readonly CountClaim[] {
     },
   ];
 }
+
+/* ------------------------------------------------------------------ *
+ * 8. THE PILOT-HEALTH READING, FLATTENED FOR AN OWNER TO ACT ON.
+ *
+ * The page's job is to answer, at a glance: is it healthy, which contract is
+ * failing, is it FAILING or merely STALE/not-yet-proven, why, and what needs
+ * attention. This is a PURE PROJECTION of the snapshot the runner already
+ * published — it changes how the truth is presented, never the truth. AMBER is
+ * not a new health state: it is the honest name for "not green and not a
+ * failure" (a NOT_READY instrument or AWAITING_OWNER_DATA), so the owner can
+ * tell a broken contract from an unproven one without reading a SHA.
+ * ------------------------------------------------------------------ */
+
+/** A display band for a contract or the rollup. Never a stored health verdict. */
+export type HealthLevel = "GREEN" | "AMBER" | "RED" | "UNKNOWN";
+
+/** One contract, projected for the compact card. Raw SHAs/proof class stay off it. */
+export interface ContractCard {
+  readonly contract: string;
+  readonly level: HealthLevel;
+  /** A two-word plain headline: Met / Failing / Not yet proven / Awaiting data. */
+  readonly headline: string;
+  /** The contract's denominator (num/denom) or its named gap. */
+  readonly denominator: Held<Measured>;
+  /** Proof age in plain words, from the run's timestamp. */
+  readonly proofAge: string;
+  /** The contract's own reason sentence (already plain language). */
+  readonly reason: string;
+  /** The genuine next action, or null when the contract is met. */
+  readonly nextAction: string | null;
+}
+
+/** The whole compact pilot-health view: an overall band, one reason, three cards. */
+export interface PilotHealthView {
+  readonly overall: HealthLevel;
+  readonly reason: string;
+  readonly cards: readonly ContractCard[];
+}
+
+/** Map a contract's four-state reading to a display band. RED is a measured
+ *  failure; AMBER is "not proven yet" (NOT_READY) or "awaiting data". */
+export function contractHealthLevel(state: string): HealthLevel {
+  switch (state) {
+    case "GREEN":
+      return "GREEN";
+    case "RED":
+      return "RED";
+    case "NOT_READY":
+    case "AWAITING_OWNER_DATA":
+      return "AMBER";
+    default:
+      return "UNKNOWN";
+  }
+}
+
+function contractHeadline(state: string): string {
+  switch (state) {
+    case "GREEN":
+      return "Met";
+    case "RED":
+      return "Failing";
+    case "NOT_READY":
+      return "Not yet proven";
+    case "AWAITING_OWNER_DATA":
+      return "Awaiting owner data";
+    default:
+      return "Unknown";
+  }
+}
+
+function contractNextAction(state: string, contract: string): string | null {
+  switch (state) {
+    case "GREEN":
+      return null;
+    case "RED":
+      return `Investigate: the ${contract} bar is measurably not met (see reason).`;
+    case "NOT_READY":
+      return `Reproduce the ${contract} instrument to move it out of NOT_READY (see reason).`;
+    case "AWAITING_OWNER_DATA":
+      return "Load the owner corpus / answer key this contract measures against.";
+    default:
+      return null;
+  }
+}
+
+function proofAgeText(runAt: string | null, nowIso: string): string {
+  if (!runAt) return "no run recorded";
+  const then = Date.parse(runAt);
+  const now = Date.parse(nowIso);
+  if (!Number.isFinite(then) || !Number.isFinite(now)) return "proof date unreadable";
+  const hours = Math.max(0, Math.floor((now - then) / 3_600_000));
+  if (hours < 1) return "proof under an hour old";
+  if (hours < 48) return `proof ${hours}h old`;
+  return `proof ${Math.floor(hours / 24)}d old`;
+}
+
+/**
+ * Project the snapshot into the compact owner view. Pure: same snapshot + clock,
+ * same view. `overall` follows `pilotGreen` (green only when all three are), and
+ * distinguishes a measured failure (any RED) from merely-not-proven (AMBER).
+ */
+export function pilotHealthView(snapshot: OwnerSnapshot | null, nowIso: string): PilotHealthView {
+  if (!snapshot) {
+    return {
+      overall: "UNKNOWN",
+      reason: "No pilot-health snapshot has been published yet — nothing has been measured.",
+      cards: [],
+    };
+  }
+  const cards: ContractCard[] = snapshot.contracts.map((c) => ({
+    contract: c.contract,
+    level: contractHealthLevel(c.state),
+    headline: contractHeadline(c.state),
+    denominator: c.denominator,
+    proofAge: proofAgeText(c.runAt, nowIso),
+    reason: c.reason,
+    nextAction: contractNextAction(c.state, c.contract),
+  }));
+  const anyRed = cards.some((c) => c.level === "RED");
+  const anyAmber = cards.some((c) => c.level === "AMBER" || c.level === "UNKNOWN");
+  const overall: HealthLevel =
+    snapshot.pilotGreen === true
+      ? "GREEN"
+      : snapshot.pilotGreen === null
+        ? "UNKNOWN"
+        : anyRed
+          ? "RED"
+          : anyAmber
+            ? "AMBER"
+            : "RED";
+  const blockers = cards
+    .filter((c) => c.level !== "GREEN")
+    .map((c) => `${c.contract} ${c.headline.toLowerCase()}`);
+  const reason =
+    overall === "GREEN"
+      ? "All three contracts are met, each on its own denominator."
+      : overall === "UNKNOWN"
+        ? "No pilot-health verdict is recorded — the runner has not published one."
+        : `Not green — ${blockers.join("; ")}.`;
+  return { overall, reason, cards };
+}

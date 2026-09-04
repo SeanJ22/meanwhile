@@ -12,7 +12,28 @@ export const READINESS_STYLES = `
 .readiness .rq-controls { display: flex; flex-wrap: wrap; gap: .75rem; align-items: flex-end; margin: .5rem 0 1rem; }
 .readiness .rq-controls label { display: flex; flex-direction: column; font-size: .8rem; opacity: .8; gap: .2rem; margin: 0; }
 .readiness .rq-controls input, .readiness .rq-controls select { font: inherit; padding: .4rem .5rem; min-width: 12rem; }
+/* The control centre is dark by default (html { color-scheme: dark } in globals.css), light under
+   [data-theme="light"]. A native <select> given no explicit surface renders its closed field AND
+   its option popup in the UA's default (light) chrome even on a dark page, so the options read as
+   near-invisible low-contrast text. Pin the control and its options to the theme's own system
+   colours and follow the inherited color-scheme explicitly — never rely on native <select>
+   inheritance — so the dropdown is legible in dark AND light. */
+.readiness .rq-controls select {
+  color-scheme: inherit;
+  background-color: Canvas;
+  color: CanvasText;
+  border: 1px solid rgba(128,128,128,.5);
+  border-radius: .3rem;
+}
+.readiness .rq-controls select option { background-color: Canvas; color: CanvasText; }
 .readiness .rq-source { font-size: .8rem; opacity: .65; margin: 0 0 1rem; }
+
+/* The synthetic render-time placeholder is NOT a published measurement, and must
+   never read as one. A distinct amber banner separates "no snapshot exists" from
+   "a run measured every cell NOT_WALKED". */
+.readiness .rq-unpublished { border: 2px solid #d99a3a; border-radius: .4rem; padding: .6rem .8rem;
+  margin: .25rem 0 1rem; font-size: .9rem; background: rgba(217,154,58,.12); }
+.readiness .rq-unpublished code { font-size: .85em; }
 
 .readiness .rq-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: .6rem; margin: .5rem 0 1.5rem; }
 .readiness .rq-tile { border: 1px solid rgba(128,128,128,.4); border-radius: .4rem; padding: .6rem .75rem; }

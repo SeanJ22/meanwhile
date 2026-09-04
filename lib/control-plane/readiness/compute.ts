@@ -29,6 +29,7 @@ import {
   type ReadinessStateSnapshot,
   type SummaryBand,
   type ZipRow,
+  READINESS_DERIVATION_CONTRACT,
   gatedOnOperatorCount,
 } from "./model.ts";
 
@@ -229,6 +230,9 @@ export function computeReadinessSnapshot(
 
   return {
     formatVersion: READINESS_SNAPSHOT_FORMAT_VERSION,
+    // Stamped by the derivation itself, so a hand-authored snapshot cannot carry
+    // the current contract without going through this pure path (CC-F6).
+    derivationContract: READINESS_DERIVATION_CONTRACT,
     state: inputs.state,
     stateName: inputs.stateName,
     publishedAt: inputs.publishedAt,

@@ -250,6 +250,32 @@ function Write-Utf8NoBom {
     [System.IO.File]::WriteAllText($Path, $Text, (New-Object System.Text.UTF8Encoding $false))
 }
 
+function Invoke-Schtasks {
+    # Run schtasks.exe and RETURN ITS EXIT CODE. A native nonzero exit (e.g.
+    # "ERROR: Access is denied." -> 1) does not throw in PowerShell, so a caller
+    # that ignores the code cannot tell a refused change from an applied one —
+    # which is exactly how `disable` used to print success over a denied
+    # /Change. ErrorActionPreference is Continue for the call so a stderr line
+    # cannot be promoted to a terminating error that hides the code.
+    param([string[]]$Arguments)
+    $prev = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    $code = 0
+    try {
+        & schtasks.exe @Arguments
+        $code = if ($null -eq $LASTEXITCODE) { 0 } else { [int]$LASTEXITCODE }
+    }
+    catch {
+        # A native invocation should not throw; if the host wrapped stderr into a
+        # terminating error, that is still a failed operation, not a success.
+        $code = 1
+    }
+    finally {
+        $ErrorActionPreference = $prev
+    }
+    return $code
+}
+
 function Write-TriggerLines {
     param($Facts)
     if (-not $Facts.taskPresent) { return }
@@ -258,7 +284,20 @@ function Write-TriggerLines {
         $rep = if ($null -ne $t.repetitionInterval) { "repeat every $($t.repetitionInterval) for $(if ($null -ne $t.repetitionDuration) { $t.repetitionDuration } else { 'indefinitely' })" } else { "no repetition" }
         Write-Output "  trigger:         $($t.type)  enabled=$($t.enabled)  $rep"
     }
-    if ($Facts.relaunchTriggerPresent) {
+    # A DISABLED task fires NO trigger, so a relaunch-trigger DEFINITION on a
+    # disabled task is inert. Reporting "comes back within N minutes" for a
+    # disabled task is the false claim this branch exists to prevent: task-level
+    # disable and trigger-level presence are different facts and never collapse.
+    $taskDisabled = ($Facts.state -eq "Disabled")
+    if ($taskDisabled) {
+        if ($Facts.relaunchTriggerPresent) {
+            Write-Output "  TASK IS DISABLED: it still CARRIES a relaunch trigger definition, but a disabled task fires no trigger, so it will NOT relaunch the runner. The definition is inert until the task is re-enabled."
+        }
+        else {
+            Write-Output "  TASK IS DISABLED: it will not start the runner at logon or on any trigger."
+        }
+    }
+    elseif ($Facts.relaunchTriggerPresent) {
         Write-Output "  RELAUNCH TRIGGER IS PRESENT: a killed runner comes back within $RelaunchIntervalMinutes minutes."
     }
     else {
@@ -403,13 +442,78 @@ switch ($Action) {
     }
 
     "disable" {
+        # THE VERDICT IS THE MEASURED END STATE, NEVER THE FACT THAT COMMANDS RAN.
+        # `schtasks /Change /DISABLE` answers "Access is denied" (exit 1) from an
+        # unelevated shell and does NOT throw, so issuing it proves nothing. We
+        # capture every schtasks exit code, then re-derive the live task and
+        # refuse to print success unless the task is actually Disabled or absent,
+        # no runner process remains, and the startup fallback is gone.
+        $schtasksProblems = @()
         if (Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue) {
-            schtasks /End    /TN $TaskName
-            schtasks /Change /TN $TaskName /DISABLE
+            $endCode = Invoke-Schtasks @("/End", "/TN", $TaskName)
+            $disableCode = Invoke-Schtasks @("/Change", "/TN", $TaskName, "/DISABLE")
+            if ($disableCode -ne 0) {
+                $schtasksProblems += "schtasks /Change /DISABLE exited $disableCode (Access is denied (1) means it needs an ELEVATED shell; the task is still enabled)."
+            }
+            # /End refusing is not on its own fatal — the task may not be running,
+            # and Stop-Process below kills the process directly — but a nonzero
+            # code is still recorded rather than swallowed.
+            if ($endCode -ne 0) {
+                $schtasksProblems += "schtasks /End exited $endCode."
+            }
         }
-        Get-RunnerProcesses | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }
-        if (Test-Path $StartupFile) { Remove-Item $StartupFile -Force }
-        Write-Output "disabled: the runner is stopped and will not return at logon."
+
+        $killProblems = @()
+        foreach ($proc in @(Get-RunnerProcesses)) {
+            try { Stop-Process -Id $proc.ProcessId -Force -ErrorAction Stop }
+            catch { $killProblems += "could not stop pilot-runner pid $($proc.ProcessId): $($_.Exception.Message)" }
+        }
+        if (Test-Path $StartupFile) {
+            try { Remove-Item $StartupFile -Force -ErrorAction Stop }
+            catch { $killProblems += "could not remove the startup entry $StartupFile : $($_.Exception.Message)" }
+        }
+
+        # Re-derive the live state AFTER acting, and judge on that alone.
+        $facts = Get-TaskFacts
+        $taskDown  = (-not $facts.taskPresent) -or ($facts.state -eq "Disabled")
+        $noProcs   = $facts.runningPids.Count -eq 0
+        $noStartup = -not (Test-Path $StartupFile)
+
+        if ($taskDown -and $noProcs -and $noStartup) {
+            if (-not $facts.taskPresent) {
+                Write-Output "disabled: no scheduled task is present, no pilot-runner process is running, and the startup entry is gone."
+            }
+            else {
+                Write-Output "disabled: the scheduled task is Disabled, no pilot-runner process is running, and the startup entry is gone."
+                if ($facts.relaunchTriggerPresent) {
+                    Write-Output "  note: the task still carries a relaunch trigger definition, but a DISABLED task fires no trigger, so it will NOT relaunch the runner."
+                }
+            }
+            exit 0
+        }
+
+        # A partial shutdown. Name exactly what is still up and FAIL — never a
+        # success sentence over a task that is still enabled or a runner still alive.
+        Write-Output "DISABLE INCOMPLETE - the runner is NOT safely stopped:"
+        if (-not $taskDown) {
+            Write-Output "  - the scheduled task is still '$($facts.state)', not Disabled; it will start the runner again at the next logon or trigger."
+            if ($facts.relaunchTriggerPresent) {
+                Write-Output "    its relaunch trigger is still live: a killed runner would come back within $RelaunchIntervalMinutes minutes."
+            }
+        }
+        foreach ($p in $schtasksProblems) { Write-Output "  - $p" }
+        if (-not $noProcs) {
+            Write-Output "  - $($facts.runningPids.Count) pilot-runner process(es) still running: $($facts.runningPids -join ', ')."
+        }
+        foreach ($p in $killProblems) { Write-Output "  - $p" }
+        if (-not $noStartup) {
+            Write-Output "  - the startup entry is still present at $StartupFile; it would start the runner at the next logon."
+        }
+        if (-not $taskDown) {
+            Write-Output "  Disable the task from an ELEVATED PowerShell in $RepoPath :"
+            Write-Output "    powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action disable"
+        }
+        exit 1
     }
 
     "uninstall" {

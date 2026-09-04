@@ -20,6 +20,19 @@ import { type CellState, type GateCell, type MonotonicityViolation, worstOf } fr
 export const READINESS_SNAPSHOT_FORMAT_VERSION = 1;
 
 /**
+ * The DERIVATION CONTRACT a snapshot was produced under (CC-F6, 2026-09-04).
+ *
+ * `formatVersion` describes the record SHAPE; this describes how its truth was
+ * DERIVED. Snapshots written by the retired hand-authored publisher carry no
+ * such marker (or an older one); the instrument-derived publisher stamps the
+ * current value. The read path trusts a snapshot ONLY when its marker strictly
+ * equals this constant, and quarantines every other as REQUIRES_REPUBLISH —
+ * so a legacy production snapshot's old green cells can never be mistaken for
+ * current truth after this ships, without contacting or mutating production.
+ */
+export const READINESS_DERIVATION_CONTRACT = "readiness/instrument-derived@1";
+
+/**
  * The jurisdiction levels a capability or body belongs to, for the level filter
  * (all / state / county / municipal / school / special). `federal` rides with
  * `state` for the selector's purposes but is named where it matters.
@@ -175,6 +188,9 @@ export interface SummaryBand {
  */
 export interface ReadinessStateSnapshot {
   readonly formatVersion: number;
+  /** The derivation contract this snapshot was produced under (CC-F6). The read
+   *  path quarantines any snapshot whose marker is absent or not the current one. */
+  readonly derivationContract: string;
   /** Two-letter lower-case, e.g. "az". The snapshot's aggregate id. */
   readonly state: string;
   readonly stateName: string;

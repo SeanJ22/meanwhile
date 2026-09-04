@@ -145,12 +145,15 @@ export function isCurrent(state: CellState): boolean {
  * capability's jurisdictions for THIS gate (R-E). `asOf` is the freshness date
  * this cell was last established (R-G: every cell displays its as-of date).
  *
- * `monotonicityOk` is false when this cell claims CURRENT while a gate to its
- * left is not CURRENT (R-B). The data layer never silently renders such a cell
- * as CURRENT; the panel shows the violation.
+ * `monotonicityOk` is false when this cell would have computed CURRENT while a
+ * gate to its left is not CURRENT (R-B). The data layer never renders such a
+ * cell as CURRENT: `state` is the truthful EFFECTIVE state (downgraded to
+ * PARTIAL_OR_STALE, with the raw signal kept in `detail`), and a violation is
+ * recorded so the panel surfaces the contradiction.
  */
 export interface GateCell {
   readonly gate: Gate;
+  /** The truthful EFFECTIVE state — never CURRENT past an unmet gate to its left. */
   readonly state: CellState;
   /** ISO date (YYYY-MM-DD) this gate was last established, or null when NOT_WALKED. */
   readonly asOf: string | null;
@@ -158,7 +161,8 @@ export interface GateCell {
   readonly detail: string;
   /** A walk / vault reference the evidence drawer can open, or null. */
   readonly evidenceRef: string | null;
-  /** False = this cell is CURRENT past a non-CURRENT gate to its left (R-B). */
+  /** False = this cell computed CURRENT past a non-CURRENT gate to its left and
+   * was downgraded to its effective state (R-B). */
   readonly monotonicityOk: boolean;
 }
 
@@ -293,13 +297,22 @@ export interface MonotonicityViolation {
 }
 
 /**
- * Apply monotonicity to a capability's five gate cells, left to right.
+ * Apply monotonicity to a capability's five gate cells, left to right, deriving
+ * a TRUTHFUL EFFECTIVE STATE.
  *
- * A gate that is CURRENT while any gate to its left is not CURRENT is a defect in
- * the underlying data. It is not silently rendered as CURRENT: the cell is marked
- * `monotonicityOk: false` and a violation is recorded so the panel surfaces it.
- * The cell KEEPS its computed state — hiding the claim would be its own lie — but
- * the mark and the violation row make the contradiction visible.
+ * A gate cannot be effectively current past an unmet prerequisite to its left:
+ * SOURCE_KNOWN → ACQUIRED → VERIFIED → SHOWN_TO_READER → ASK_ANSWERS is a chain,
+ * and VERIFIED "current" while ACQUIRED is a gap is an impossible state, not a
+ * current-with-an-asterisk. So a cell that computes CURRENT while any gate to
+ * its left is not CURRENT is DOWNGRADED to PARTIAL_OR_STALE, with the unmet
+ * prerequisite named. The raw signal is preserved in the cell's detail (the
+ * direct evidence is real; it is the effective readiness that is not yet
+ * earned), `monotonicityOk` is set false, and a violation is recorded so the
+ * panel surfaces the contradiction rather than averaging it away.
+ *
+ * The running frontier is tracked from each cell's RAW computed state, never the
+ * downgraded one, so a downgrade never changes which prerequisite is named for
+ * the cells further right.
  */
 export function enforceMonotonicity(
   capabilityId: string,
@@ -307,18 +320,34 @@ export function enforceMonotonicity(
 ): { readonly gates: readonly GateCell[]; readonly violations: readonly MonotonicityViolation[] } {
   const violations: MonotonicityViolation[] = [];
   let allLeftCurrent = true;
+  let firstUnmetLeft: Gate | null = null;
   const gates = cells.map((cell) => {
-    const ok = cell.state === "CURRENT" ? allLeftCurrent : true;
-    if (!ok) {
+    const currentPastGap = cell.state === "CURRENT" && !allLeftCurrent;
+    let out = cell;
+    if (currentPastGap) {
+      const prereq: string = firstUnmetLeft ?? "an earlier gate";
       violations.push({
         capabilityId,
         gate: cell.gate,
-        detail: `${cell.gate} is CURRENT while a gate to its left is not. A gate cannot be current past a gap to its left.`,
+        detail: `${cell.gate} has direct evidence but its prerequisite ${prereq} is not current. A gate cannot be current past a gap to its left, so ${cell.gate} reads PARTIAL_OR_STALE until ${prereq} is resolved.`,
       });
+      out = {
+        ...cell,
+        // The truthful effective state — never left CURRENT past a gap.
+        state: "PARTIAL_OR_STALE",
+        monotonicityOk: false,
+        detail:
+          `Direct evidence for ${cell.gate} is complete, but its prerequisite ${prereq} is not current, ` +
+          `so its effective readiness is PARTIAL_OR_STALE until ${prereq} is resolved. ` +
+          `Raw signal: ${cell.detail}`,
+      };
     }
-    // Update the running frontier AFTER judging this cell.
-    if (cell.state !== "CURRENT") allLeftCurrent = false;
-    return ok ? cell : { ...cell, monotonicityOk: false };
+    // Advance the frontier from the RAW state, tracking the leftmost unmet gate.
+    if (cell.state !== "CURRENT") {
+      allLeftCurrent = false;
+      if (firstUnmetLeft === null) firstUnmetLeft = cell.gate;
+    }
+    return out;
   });
   return { gates, violations };
 }

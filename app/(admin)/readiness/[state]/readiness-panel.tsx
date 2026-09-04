@@ -87,6 +87,9 @@ const rank: Record<CellState, number> = {
 export function ReadinessPanel(props: {
   snapshot: ReadinessStateSnapshot;
   notice: string | null;
+  /** True when this is a real published snapshot; false when it is the synthetic
+   *  render-time NOT_WALKED placeholder for a state with no published record. */
+  published: boolean;
   source: string;
 }) {
   const { snapshot } = props;
@@ -129,9 +132,20 @@ export function ReadinessPanel(props: {
       <h1>
         State readiness — {snapshot.stateName}{" "}
         <span className="note" style={{ fontSize: ".8rem", fontWeight: 400 }}>
-          published {snapshot.publishedAt} by {snapshot.publisher}
+          {props.published
+            ? `published ${snapshot.publishedAt} by ${snapshot.publisher}`
+            : `no published snapshot — rendered at ${snapshot.publishedAt}`}
         </span>
       </h1>
+
+      {!props.published && (
+        <div className="rq-unpublished" role="status">
+          <strong>NO PUBLISHED READINESS SNAPSHOT for {snapshot.stateName}.</strong> No readiness run
+          has ever measured this state. The grid below is rendered <code>NOT_WALKED</code> at read
+          time — the <em>absence of a measurement</em>, not a run that measured every cell and found
+          nothing. Publish one with <code>pnpm readiness:refresh</code>.
+        </div>
+      )}
 
       <div className="rq-controls">
         <label>
@@ -214,8 +228,12 @@ export function ReadinessPanel(props: {
       <h2>Zip codes in {snapshot.stateName}</h2>
       <ZipTable zips={zips} sort={zipSort} onSort={setZipSort} />
       <p className="note">
-        Score is worst-of every governing body overlapping the zip, never an average. A zip is
-        complete only when every body a resident belongs to is complete.
+        Two different measures, kept apart. <strong>Resident readiness</strong> is worst-of every
+        governing body overlapping the zip, never an average: a zip is complete for a resident only
+        when every body they belong to is resolved, so the single least-ready body governs and is
+        named. <strong>Progress</strong> is how far along the zip&rsquo;s bodies are overall,
+        weighted by how ready each is — a work measure, not a completeness claim. The Level tag is
+        the worst-of coverage-tier floor.
       </p>
 
       {drawer && (
@@ -346,18 +364,25 @@ function ZipTable(props: {
             <th>Place</th>
             <th>Bodies</th>
             <th>Level</th>
-            <th>{hdr("readiness", "Complete for a resident")}</th>
+            <th>Resident readiness</th>
+            <th>{hdr("readiness", "Progress")}</th>
           </tr>
         </thead>
         <tbody>
           {props.zips.length === 0 && (
             <tr>
-              <td colSpan={5} className="note">
+              <td colSpan={6} className="note">
                 No zip readiness computed for this state yet.
               </td>
             </tr>
           )}
-          {props.zips.map((z) => (
+          {props.zips.map((z) => {
+            // Resident readiness is WORST-OF: a zip is complete for a resident
+            // only when every governing body they belong to is resolved (CURRENT
+            // or ARGUED_ABSENT). The bar to the right is PROGRESS, a different
+            // measure, and never stands in for this.
+            const residentComplete = rank[z.worstState] >= rank.CURRENT;
+            return (
             <tr key={z.zip} className={z.isPilot ? "rq-pilot" : undefined}>
               <td>
                 {z.zip}
@@ -376,6 +401,15 @@ function ZipTable(props: {
                 {z.level.held ? (TIER_DISPLAY[z.level.value] ?? z.level.value) : <span className="gap">tier not stamped</span>}
               </td>
               <td>
+                <span className={`rq-cell ${STATE_CLASS[z.worstState]}`} />{" "}
+                {residentComplete ? "complete" : "not complete"}
+                <div className="rq-worstgap">
+                  {residentComplete
+                    ? "every governing body a resident belongs to is resolved (worst-of)"
+                    : `worst-of: ${STATE_HUMAN[z.worstState]} · least-ready body: ${z.worstGap}`}
+                </div>
+              </td>
+              <td>
                 <div className="rq-barwrap">
                   <div className="rq-bartrack">
                     <div
@@ -385,19 +419,18 @@ function ZipTable(props: {
                   </div>
                   <span className="rq-pct">{Math.round(fraction(z.completeness) * 100)}%</span>
                 </div>
-                <div className="rq-worstgap">
-                  worst gap: {z.worstGap} · least-ready: {STATE_HUMAN[z.worstState]}
-                </div>
+                <div className="rq-worstgap">how far along, weighted by readiness</div>
               </td>
             </tr>
-          ))}
+            );
+          })}
         </tbody>
       </table>
       <div className="rq-controls" style={{ marginTop: ".5rem" }}>
         <label>
           Sort by
           <select value={props.sort} onChange={(e) => props.onSort(e.target.value as ZipSort)}>
-            <option value="readiness">Readiness</option>
+            <option value="readiness">Progress</option>
             <option value="zip">Zip</option>
             <option value="population">Population</option>
             <option value="gap">Largest gap</option>

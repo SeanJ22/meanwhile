@@ -49,13 +49,55 @@ import {
   checkStatedEqualsRendered,
   countClaimsFor,
   livenessOf,
+  pilotHealthView,
   renderCacheObservation,
+  type ContractCard,
   type CountClaim,
+  type HealthLevel,
   type Held,
   type Measured,
   type OwnerSnapshot,
   type RenderedNumber,
 } from "@/lib/control-plane/owner-surface.ts";
+
+/** Map a health band to the admin colour class. */
+const HEALTH_CLASS: Record<HealthLevel, string> = {
+  GREEN: "state-green",
+  AMBER: "state-amber",
+  RED: "state-red",
+  UNKNOWN: "state-unknown",
+};
+
+/** One compact contract card: name, band, num/denom, proof age, reason, next. */
+function ContractCardView({ card }: { card: ContractCard }) {
+  return (
+    <div className={`ph-card ph-l-${card.level}`}>
+      <h3>
+        {card.contract}
+        <span className="ph-chip">{card.headline}</span>
+      </h3>
+      <div className="ph-num">
+        {card.denominator.held ? (
+          <>
+            {card.denominator.value.value}
+            <span className="denom"> / {card.denominator.value.denominator}</span>
+          </>
+        ) : (
+          <span className="gap" style={{ fontSize: ".9rem", fontWeight: 400 }}>
+            {card.denominator.gap.says}
+          </span>
+        )}
+      </div>
+      <p className="ph-meta">{card.proofAge}</p>
+      <p className="ph-reason">{card.reason}</p>
+      {card.nextAction && (
+        <p className="ph-next">
+          <strong>Next:</strong> {card.nextAction}
+        </p>
+      )}
+    </div>
+  );
+}
 
 /**
  * Never statically rendered, never cached.
@@ -141,6 +183,9 @@ export default async function AdminPage() {
 
   const snapshot: OwnerSnapshot | null = snapshotOut.kind === "HELD" ? snapshotOut.value : null;
   const nowIso = new Date().toISOString();
+  // The compact, act-on-it projection of pilot health (pure; changes presentation,
+  // never the health truth). GREEN/AMBER/RED/UNKNOWN + one reason + three cards.
+  const health = pilotHealthView(snapshot, nowIso);
 
   /* ---------------------------------------------------------------- *
    * THE PAGE'S AUDIT OF ITSELF.
@@ -228,13 +273,9 @@ export default async function AdminPage() {
       {/* 1 — PILOT HEALTH */}
       <h1>
         Pilot health{" "}
-        {snapshot ? (
-          <span className={snapshot.pilotGreen ? "state-green" : "state-red"}>
-            {snapshot.pilotGreen === null ? "NOT READY" : snapshot.pilotGreen ? "GREEN" : "RED"}
-          </span>
-        ) : (
-          <span className="state-unknown">no snapshot recorded</span>
-        )}
+        <span className={HEALTH_CLASS[health.overall]}>
+          {health.overall === "UNKNOWN" ? "NO SNAPSHOT" : health.overall}
+        </span>
       </h1>
       <p className="note">
         <a href="/admin/research">Research — Level 1</a>
@@ -242,40 +283,54 @@ export default async function AdminPage() {
       {outcomeNote(snapshotOut) && <p className="note">{outcomeNote(snapshotOut)}</p>}
       {snapshot && (
         <>
-          <p className="note">
-            Published {snapshot.publishedAt} by {snapshot.publisher} at{" "}
-            {snapshot.publishedFromSha ?? "an unrecorded SHA"}.
+          {/* Primary view: one reason, three compact contract cards. */}
+          <p className={HEALTH_CLASS[health.overall]} style={{ margin: ".25rem 0" }}>
+            {health.reason}
           </p>
-          <table>
-            <thead>
-              <tr>
-                <th>Contract</th>
-                <th>State</th>
-                <th>Denominator</th>
-                <th>Proof class</th>
-                <th>Run</th>
-                <th>Why</th>
-              </tr>
-            </thead>
-            <tbody>
-              {snapshot.contracts.map((c) => (
-                <tr key={c.contract}>
-                  <td>{c.contract}</td>
-                  <td>{c.state}</td>
-                  <td>
-                    <GapOrValue held={c.denominator}>
-                      {c.denominator.held && <Num m={c.denominator.value} />}
-                    </GapOrValue>
-                  </td>
-                  <td>{c.proofClass}</td>
-                  <td>
-                    {c.runSha ?? "—"} {c.runAt ?? ""}
-                  </td>
-                  <td>{c.reason}</td>
+          <div className="ph-cards">
+            {health.cards.map((card) => (
+              <ContractCardView key={card.contract} card={card} />
+            ))}
+          </div>
+
+          {/* Everything raw — run IDs, full SHAs, proof classes — behind disclosure. */}
+          <details className="ph-evidence">
+            <summary>Contract evidence — run IDs, SHAs, proof class</summary>
+            <p className="note">
+              Published {snapshot.publishedAt} by {snapshot.publisher} at{" "}
+              {snapshot.publishedFromSha ?? "an unrecorded SHA"}.
+            </p>
+            <table>
+              <thead>
+                <tr>
+                  <th>Contract</th>
+                  <th>State</th>
+                  <th>Denominator</th>
+                  <th>Proof class</th>
+                  <th>Run</th>
+                  <th>Why</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {snapshot.contracts.map((c) => (
+                  <tr key={c.contract}>
+                    <td>{c.contract}</td>
+                    <td>{c.state}</td>
+                    <td>
+                      <GapOrValue held={c.denominator}>
+                        {c.denominator.held && <Num m={c.denominator.value} />}
+                      </GapOrValue>
+                    </td>
+                    <td>{c.proofClass}</td>
+                    <td>
+                      {c.runSha ?? "—"} {c.runAt ?? ""}
+                    </td>
+                    <td>{c.reason}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </details>
         </>
       )}
 
@@ -288,15 +343,18 @@ export default async function AdminPage() {
             <strong>{digestsOut.value[0].headline}</strong>{" "}
             <span className="note">written {digestsOut.value[0].writtenAt}</span>
           </p>
-          <pre>{digestsOut.value[0].lines.join("\n")}</pre>
-          <h3>History — {digestsOut.value.length} recorded</h3>
-          <ul>
-            {digestsOut.value.map((d) => (
-              <li key={d.digestId}>
-                {d.writtenAt} — {d.headline}
-              </li>
-            ))}
-          </ul>
+          {/* The raw digest body and full history — debug-grade text — behind disclosure. */}
+          <details className="ph-evidence">
+            <summary>Digest body &amp; history — {digestsOut.value.length} recorded</summary>
+            <pre>{digestsOut.value[0].lines.join("\n")}</pre>
+            <ul>
+              {digestsOut.value.map((d) => (
+                <li key={d.digestId}>
+                  {d.writtenAt} — {d.headline}
+                </li>
+              ))}
+            </ul>
+          </details>
         </>
       )}
 

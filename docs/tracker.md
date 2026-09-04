@@ -14,10 +14,10 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **422 open**, 487 resolved.
-- **74 waiting on Sean** — the first section below.
+- **424 open**, 487 resolved.
+- **73 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **5**
+  - Needs Sean — **4**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **1**
   - Arizona hunt — **2**
@@ -35,7 +35,7 @@ and when. Nothing is ever deleted.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**74 open · 74 resolved.**
+**73 open · 74 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -46,8 +46,6 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH306** — PREDICATE: resolves itself when data/ops/credential-events.jsonl records a rotation event for BOTH names. WHAT IS NEEDED: two credential rotations, by the owner or under RULING 238 with an owner copy first. THE FINDING: pnpm secrets:sweep --transcripts, run from the main checkout on 2026-09-02 by the Level 1 activation session, found the VALUES of DATA_GOV_API_KEY and NETLIFY_AUTH_TOKEN in a subagent transcript of the earlier session 771dfc3d-591d-4a39-9cb2-2c028431acdd (agent-a5abb86c7d4cf8d7a.jsonl, line 24). The file was scrubbed in place (8 values replaced, 0 remaining on re-read) and the repository and the Drive mirror read 0 secret occurrences. RULING 127: a credential that has appeared in a transcript is COMPROMISED and is ROTATED; scrubbing is necessary and not sufficient. OPTIONS: (A) rotate both now - regenerate the api.data.gov key and the Netlify personal access token, place the owner copies in .env.local first, then record each rotation in data/ops/credential-events.jsonl by name, provider, context, scope, actor and owner-copy location; (B) rotate only the Netlify token (the higher-privilege one: it can deploy and read site settings) and accept the data.gov key as low-risk; (C) do nothing - both values stay valid for whoever read that transcript. CONSEQUENCE OF NOT DECIDING: (C) stands and the row ages.
 
 **NH310** — PREDICATE: resolves itself when data/ops/admin-login-readback.json records googleConfigured true on a readback taken on or after 2026-09-02 against the admin origin. WHAT IS NEEDED: two environment variables and one sign-in. The Google sign-in path (RULING 245) is merged and proven by 45 seeded tests, but a live readback of the Netlify environment on 2026-09-02 (both sites, account level, by name) found NO GOOGLE_OAUTH_CLIENT_ID and NO GOOGLE_OAUTH_CLIENT_SECRET, so the deployed login page will report NOT_CONFIGURED by name and the only working door is the flag-gated break-glass. Steps, in this order: (1) confirm the Google Cloud OAuth client's authorized redirect URI is exactly https://admin.meanwhileusa.com/admin/auth/callback; (2) RULING 238 custody FIRST — copy the client id and secret into .env.local under those two names; (3) add both to Netlify site sparkwtp, context Production, scope Functions; (4) append two CREATED lines to data/ops/credential-events.jsonl (kind, reportedAt, name, provider, context, scope, actor, ownerCopyLocation — never a value; the shape is in docs/admin-sign-in.md); (5) after the deploy carrying this head, run pnpm admin:login-readback from the main checkout (it records googleConfigured, missingVariables and googleRoutesDeployed, names only) and sign in once in a browser: /admin then /admin/research. OPTIONS AND CONSEQUENCES: do it — the owner's identity becomes the login and the break-glass can be turned off (WTP_ADMIN_BREAK_GLASS unset); do not do it — the admin host stays reachable only through the shared-secret break-glass, every use of which is logged as an incident, and RULING 245 stays adopted but unproven live. AGE is measured from the Opened on date.
-
-**NH325** — The configured WTP_CONTROL_PLANE_DATABASE_URL returns HTTP 402: Your project has exceeded the data transfer quota. Upgrade your plan to increase limits. Nine configured PostgreSQL conformance checks cannot execute, and the canonical shipping door refuses the reader release. Reader-serving database integrity independently passed. No credential value is included in this record.
 
 **T05** — The abuse policy is written but the review path behind it does not exist. No free-text answer can be accepted until somebody can actually act on a threat.
 
@@ -941,7 +939,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**55 open · 99 resolved.**
+**58 open · 99 resolved.**
 
 ### P1
 
@@ -1205,6 +1203,42 @@ THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflow
 OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
 
 [job-watch:dispatch-delay:refresh-daily.yml@2026-09-03T09:11:00.000Z]
+
+**JOB48** — AUDITED SLOT: 2026-09-04T10:41:00.000Z (cron "41 10 * * *"). AS OF: 2026-09-04T18:33:10.599Z. Run 33884197529 was created 230.2 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
+
+WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_SUCCEEDED_UNCLASSIFIED — it succeeded, and this workflow has no "Unchanged" step, so landed-versus-no-op cannot be told apart from its step list. That is a limit of the observation, not a claim that nothing landed. 
+
+ENVELOPE USED: envelope 266 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (266 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
+
+THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-09-04T18:33:10.599Z, not as of when you are reading it.
+
+OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
+
+[job-watch:dispatch-delay:intake-tripwire.yml@2026-09-04T10:41:00.000Z]
+
+**JOB49** — AUDITED SLOT: 2026-09-04T15:40:00.000Z (cron "40 15 * * *"). AS OF: 2026-09-04T18:33:10.599Z. Run 33906456751 was created 172.7 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
+
+WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_IN_PROGRESS — status is "in_progress" — it has not concluded 
+
+ENVELOPE USED: envelope 266 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (266 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
+
+THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-09-04T18:33:10.599Z, not as of when you are reading it.
+
+OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
+
+[job-watch:dispatch-delay:job-watch.yml@2026-09-04T15:40:00.000Z]
+
+**JOB50** — AUDITED SLOT: 2026-09-04T09:11:00.000Z (cron "11 9 * * *"). AS OF: 2026-09-04T18:33:10.599Z. Run 33878348810 was created 258.5 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
+
+WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_SUCCEEDED_UNCLASSIFIED — it succeeded, and this workflow has no "Unchanged" step, so landed-versus-no-op cannot be told apart from its step list. That is a limit of the observation, not a claim that nothing landed. 
+
+ENVELOPE USED: envelope 266 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (266 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
+
+THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-09-04T18:33:10.599Z, not as of when you are reading it.
+
+OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshness clock; a late dispatch is an engineering/freshness defect, never a Needs-Owner escalation by itself. The standing class incident is WorkItem incident-github-dispatch-delay in data/control-plane/incidents.
+
+[job-watch:dispatch-delay:refresh-daily.yml@2026-09-04T09:11:00.000Z]
 
 **NH103** — Found 2026-08-23 writing the first test that imports lib/officials/body-definitions.ts at RUNTIME rather than reading it as text. Two separate ESM defects were in the chain and both were invisible because nothing had ever imported that file under node --test. (1) body-definitions.ts and lib/registry/census-school-systems.ts used EXTENSIONLESS relative imports, which Next's bundler tolerates and Node's ESM loader refuses - FIXED this session, 3 sites. (2) school-dependency.ts still imports data/derived/school-district-dependency.json with no `with { type: json }` attribute, so ERR_IMPORT_ATTRIBUTE_MISSING. WORKED AROUND rather than fixed: lib/officials/body-form.ts takes the dependency as a PARAMETER instead of importing it. WHAT IS OWED: decide whether to add the import attribute (verify the Next build accepts it first) or to move the JSON read behind a function. Until then any new test importing that module transitively fails, and the failure names the JSON rather than the cause. THE CLASS, swept: 3 extensionless relative imports under lib/**/*.ts, all fixed; 10 more under components/**/*.tsx and lib/state/*.tsx are OUT OF SCOPE with the reason - they are React components reached only through the bundler and never imported by node --test.
 

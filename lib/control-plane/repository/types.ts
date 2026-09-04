@@ -102,6 +102,7 @@ import type {
   WindowIntent,
   WindowRunRecord,
 } from "../promotion/types.ts";
+import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 
 /** ------------------------------------------------------------- envelopes */
 
@@ -560,6 +561,8 @@ export interface ControlPlaneRepositories {
    * not an exception to RULING 226 — his page is a rendering like any other.
    */
   readonly ownerSnapshots: AggregateRepository<OwnerSnapshot>;
+  /** The readiness control panel's data plane — one snapshot per state, keyed by two-letter state code; derived, never authored. */
+  readonly readinessSnapshots: AggregateRepository<ReadinessStateSnapshot>;
   /** Keyed by runner id. "Alive" is DERIVED from this beat, never stored. */
   readonly runnerHeartbeat: AggregateRepository<RunnerHeartbeat>;
   /** The H1 waiver's standing check — a counter reaching first non-zero. */

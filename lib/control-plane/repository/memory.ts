@@ -40,6 +40,7 @@ import type {
   OwnerSnapshot,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
+import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import { budgetRepositoryFrom, jsonCopy } from "./shared.ts";
 import {
   ConcurrentModification,
@@ -226,6 +227,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     costs: memoryAppendOnlyRepository<CostEntry>("costs"),
     /* The owner control centre's data plane (ITEM H). */
     ownerSnapshots: memoryAggregateRepository<OwnerSnapshot>("OwnerSnapshot"),
+    readinessSnapshots: memoryAggregateRepository<ReadinessStateSnapshot>("ReadinessStateSnapshot"),
     runnerHeartbeat: memoryAggregateRepository<RunnerHeartbeat>("RunnerHeartbeat"),
     cacheObservations: memoryAggregateRepository<CacheObservationRecord>("CacheObservationRecord"),
     ownerDigests: memoryAppendOnlyRepository<OwnerDigestRecord>("owner_digests"),

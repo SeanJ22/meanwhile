@@ -85,6 +85,7 @@ import type {
   OwnerSnapshot,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
+import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import { budgetRepositoryFrom } from "./shared.ts";
 import {
   AppendOnlyViolation,
@@ -684,6 +685,11 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
       resolved,
       "OwnerSnapshot",
       "owner-snapshots",
+    ),
+    readinessSnapshots: fileAggregateRepository<ReadinessStateSnapshot>(
+      resolved,
+      "ReadinessStateSnapshot",
+      "readiness-snapshots",
     ),
     runnerHeartbeat: fileAggregateRepository<RunnerHeartbeat>(
       resolved,

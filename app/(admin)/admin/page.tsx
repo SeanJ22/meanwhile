@@ -31,6 +31,10 @@
 
 import { cookies } from "next/headers";
 
+import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
+
+import { ConsoleNav } from "../console-nav.tsx";
+
 import {
   openControlPlane,
   readCacheObservation,
@@ -107,10 +111,14 @@ export default async function AdminPage() {
   const jar = await cookies();
   const hasSession = jar.has("__Host-wtp-admin");
 
+  // The one console header, shared with State readiness (unified console, 2026-09-04).
+  const nav = <ConsoleNav view="pilot-health" currentState={null} states={US_STATES} />;
+
   const opened = await openControlPlane();
   if (!opened.ok) {
     return (
-      <main className="admin">
+      <main className="admin console-page">
+        {nav}
         <h1>Pilot health</h1>
         <p className="refusal">
           <strong>We could not ask.</strong> {opened.detail}
@@ -195,7 +203,8 @@ export default async function AdminPage() {
 
   if (!numberAudit.ok || !countAudit.ok) {
     return (
-      <main className="admin">
+      <main className="admin console-page">
+        {nav}
         <h1>Pilot health</h1>
         <p className="refusal">
           <strong>This page refused to render its own numbers.</strong>
@@ -214,7 +223,8 @@ export default async function AdminPage() {
   const cacheLine = renderCacheObservation(cacheOut.kind === "HELD" ? cacheOut.value : null);
 
   return (
-    <main className="admin">
+    <main className="admin console-page">
+      {nav}
       {/* 1 — PILOT HEALTH */}
       <h1>
         Pilot health{" "}

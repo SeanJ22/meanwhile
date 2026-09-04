@@ -36,7 +36,7 @@
  */
 
 /** Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it. */
-export const BOOTSTRAP_VERSION = 6;
+export const BOOTSTRAP_VERSION = 7;
 
 /**
  * The tables, and the shape each one carries.
@@ -106,6 +106,17 @@ export const AGGREGATE_KINDS = [
    *                    stored, because a stored verdict outlives its truth
    */
   "research_state",
+  /*
+   * THE STATE READINESS CONTROL PANEL'S DATA PLANE. (2026-09-03 — version 7.)
+   *
+   *   readiness_snapshots  one aggregate per state, keyed by two-letter state
+   *                        code — the whole materialized readiness table for
+   *                        that state at one instant, written by a publisher
+   *                        and read by the operator panel at one instant. Like
+   *                        owner_snapshots it is DERIVED, never authored: there
+   *                        is no admin-writable status field anywhere in it.
+   */
+  "readiness_snapshots",
 ] as const;
 
 export const APPEND_ONLY_LOGS = [

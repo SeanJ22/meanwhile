@@ -39,6 +39,18 @@ const STYLES = `
 .admin form { margin-top: .5rem; }
 .admin label { display: block; margin: .5rem 0; }
 .admin input[type="password"] { width: 100%; max-width: 28rem; padding: .5rem; font: inherit; }
+
+/* The unified console header, shared by pilot health and state readiness. */
+.console-nav { position: sticky; top: 0; z-index: 20; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1rem;
+  margin: 0 auto 1.25rem; max-width: 72rem; padding: .75rem 1.25rem; background: Canvas;
+  border-bottom: 1px solid rgba(128,128,128,.35); }
+.console-nav label { display: flex; flex-direction: column; gap: .2rem; margin: 0; font-size: .72rem;
+  text-transform: uppercase; letter-spacing: .05em; opacity: .7; }
+.console-nav select { font: inherit; font-size: .95rem; text-transform: none; letter-spacing: normal;
+  padding: .35rem .5rem; min-width: 11rem; }
+.console-nav-brand { margin-left: auto; align-self: center; font-size: .75rem; opacity: .5; }
+/* Readiness and pilot health share the wider console frame. */
+.readiness, .admin.console-page { max-width: 72rem; }
 `;
 
 export default function AdminLayout({ children }: { children: ReactNode }) {

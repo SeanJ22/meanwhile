@@ -61,8 +61,17 @@ import {
   verifySession,
 } from "@/lib/control-plane/admin-auth.ts";
 
-/** Everything the admin surface owns. Both are refused on the public host. */
-const ADMIN_PATH_PREFIXES = ["/admin", "/api/admin"] as const;
+/**
+ * Everything the admin surface owns. All are refused on the public host.
+ *
+ * `/readiness` is the State Readiness Control Panel (2026-09-03) — a second admin
+ * surface beside `/admin`, at the brief's linkable `/readiness/<state>` URL. It is
+ * declared HERE, next to the others, because this list is the one place an admin
+ * path is named: a surface that lived outside it would answer 200 on the public
+ * host and be reachable unauthenticated on the admin host, which is exactly the
+ * pair of failures rules 1 and 2 exist to prevent.
+ */
+const ADMIN_PATH_PREFIXES = ["/admin", "/api/admin", "/readiness"] as const;
 
 /**
  * What may be reached unauthenticated on the admin host, and nothing else:

@@ -65,6 +65,7 @@ import type {
   OwnerSnapshot,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
+import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
@@ -496,6 +497,11 @@ export async function createPgRepositories(
       sql,
       "OwnerSnapshot",
       "cp_owner_snapshots",
+    ),
+    readinessSnapshots: pgAggregateRepository<ReadinessStateSnapshot>(
+      sql,
+      "ReadinessStateSnapshot",
+      "cp_readiness_snapshots",
     ),
     runnerHeartbeat: pgAggregateRepository<RunnerHeartbeat>(
       sql,

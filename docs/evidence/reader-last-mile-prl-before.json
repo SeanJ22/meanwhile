@@ -1,0 +1,3234 @@
+{
+  "formatVersion": 1,
+  "datasetFamily": "prl",
+  "holding": "data/prl/prl-profiles.json",
+  "sha256": "960345fc8b1fdf244f213d78cca6ab37575fb34b7a83678debdd2b7c2321d85c",
+  "declaredSurfaces": [
+    "ballot",
+    "map"
+  ],
+  "readerEligible": 536,
+  "notEligible": 0,
+  "canonicalIdentity": "congress:<bioguideId>",
+  "consumer": "lib/sources/prl/index.ts normalization only; no runtime snapshot loader",
+  "falseNegativeRecords": 536,
+  "reason": "Held normalized counts/shares with required rhetoric attribution and direct bioguide identities never had a reader retrieval or rendering consumer.",
+  "records": [
+    {
+      "canonicalIdentity": "congress:A000055",
+      "statementCount": 3278,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:A000148",
+      "statementCount": 5811,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:A000369",
+      "statementCount": 2233,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:A000370",
+      "statementCount": 14952,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:A000371",
+      "statementCount": 3469,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:A000372",
+      "statementCount": 7268,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:A000375",
+      "statementCount": 9437,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:A000379",
+      "statementCount": 8476,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:A000380",
+      "statementCount": 3491,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:A000381",
+      "statementCount": 586,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:A000382",
+      "statementCount": 640,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:A000383",
+      "statementCount": 15,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B000490",
+      "statementCount": 5119,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B000668",
+      "statementCount": 3084,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B000740",
+      "statementCount": 6331,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B000825",
+      "statementCount": 10309,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001230",
+      "statementCount": 20114,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001236",
+      "statementCount": 12607,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001243",
+      "statementCount": 34871,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001257",
+      "statementCount": 12086,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001260",
+      "statementCount": 5827,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001261",
+      "statementCount": 18755,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001267",
+      "statementCount": 21190,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001277",
+      "statementCount": 21303,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001278",
+      "statementCount": 14451,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001281",
+      "statementCount": 13602,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001282",
+      "statementCount": 8237,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001285",
+      "statementCount": 10016,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001287",
+      "statementCount": 7668,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001288",
+      "statementCount": 19916,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001291",
+      "statementCount": 12720,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001292",
+      "statementCount": 40580,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001295",
+      "statementCount": 8997,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001296",
+      "statementCount": 12624,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001298",
+      "statementCount": 45400,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001299",
+      "statementCount": 18304,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001300",
+      "statementCount": 14123,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001301",
+      "statementCount": 7197,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001302",
+      "statementCount": 36625,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001303",
+      "statementCount": 10256,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001305",
+      "statementCount": 8787,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001306",
+      "statementCount": 5313,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001307",
+      "statementCount": 3550,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001309",
+      "statementCount": 16931,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001313",
+      "statementCount": 6933,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001314",
+      "statementCount": 3188,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001315",
+      "statementCount": 5198,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001316",
+      "statementCount": 7085,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001317",
+      "statementCount": 3733,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001318",
+      "statementCount": 4323,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001319",
+      "statementCount": 7958,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001321",
+      "statementCount": 306,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001322",
+      "statementCount": 1158,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001323",
+      "statementCount": 231,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001324",
+      "statementCount": 345,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001325",
+      "statementCount": 192,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001326",
+      "statementCount": 412,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:B001327",
+      "statementCount": 458,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C000059",
+      "statementCount": 7203,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C000127",
+      "statementCount": 16056,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C000537",
+      "statementCount": 8772,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C000880",
+      "statementCount": 10212,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001035",
+      "statementCount": 8221,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001039",
+      "statementCount": 11358,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001047",
+      "statementCount": 20111,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001051",
+      "statementCount": 7573,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001053",
+      "statementCount": 7054,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001055",
+      "statementCount": 6831,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001056",
+      "statementCount": 53067,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001059",
+      "statementCount": 8705,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001061",
+      "statementCount": 14276,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001063",
+      "statementCount": 11157,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001066",
+      "statementCount": 20572,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001067",
+      "statementCount": 10897,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001068",
+      "statementCount": 19232,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001069",
+      "statementCount": 12458,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001072",
+      "statementCount": 7195,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001075",
+      "statementCount": 20983,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001080",
+      "statementCount": 9364,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001087",
+      "statementCount": 6180,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001088",
+      "statementCount": 17457,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001091",
+      "statementCount": 31003,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001095",
+      "statementCount": 15343,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001096",
+      "statementCount": 12985,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001098",
+      "statementCount": 46003,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001101",
+      "statementCount": 13056,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001103",
+      "statementCount": 18306,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001108",
+      "statementCount": 8020,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001110",
+      "statementCount": 6921,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001112",
+      "statementCount": 11275,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001113",
+      "statementCount": 20463,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001114",
+      "statementCount": 8965,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001115",
+      "statementCount": 4941,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001116",
+      "statementCount": 8574,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001117",
+      "statementCount": 22931,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001118",
+      "statementCount": 9671,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001119",
+      "statementCount": 12232,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001120",
+      "statementCount": 8827,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001121",
+      "statementCount": 10025,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001123",
+      "statementCount": 4200,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001125",
+      "statementCount": 9948,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001126",
+      "statementCount": 3101,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001129",
+      "statementCount": 6608,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001130",
+      "statementCount": 5439,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001131",
+      "statementCount": 3656,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001132",
+      "statementCount": 7149,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001133",
+      "statementCount": 6875,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001136",
+      "statementCount": 137,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:C001137",
+      "statementCount": 773,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:D000032",
+      "statementCount": 14573,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:D000096",
+      "statementCount": 5107,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:D000197",
+      "statementCount": 7452,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:D000216",
+      "statementCount": 12225,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:D000230",
+      "statementCount": 6477,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:D000399",
+      "statementCount": 19200,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:D000530",
+      "statementCount": 4418,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:D000563",
+      "statementCount": 51736,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:D000594",
+      "statementCount": 4987,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:D000600",
+      "statementCount": 11339,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:D000616",
+      "statementCount": 3901,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:D000617",
+      "statementCount": 11884,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:D000618",
+      "statementCount": 11261,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:D000622",
+      "statementCount": 16407,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:D000623",
+      "statementCount": 14242,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:D000624",
+      "statementCount": 16074,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:D000626",
+      "statementCount": 16752,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:D000628",
+      "statementCount": 8577,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:D000629",
+      "statementCount": 10763,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:D000631",
+      "statementCount": 8115,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:D000634",
+      "statementCount": 310,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:D000635",
+      "statementCount": 775,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:E000071",
+      "statementCount": 2223,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:E000235",
+      "statementCount": 2986,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:E000246",
+      "statementCount": 3617,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:E000294",
+      "statementCount": 13447,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:E000295",
+      "statementCount": 23103,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:E000296",
+      "statementCount": 39099,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:E000297",
+      "statementCount": 32411,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:E000298",
+      "statementCount": 6070,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:E000299",
+      "statementCount": 16827,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:E000300",
+      "statementCount": 333,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:E000301",
+      "statementCount": 485,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000110",
+      "statementCount": 159,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000246",
+      "statementCount": 9274,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000446",
+      "statementCount": 12950,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000450",
+      "statementCount": 8516,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000454",
+      "statementCount": 8890,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000459",
+      "statementCount": 7318,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000462",
+      "statementCount": 11228,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000463",
+      "statementCount": 10296,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000466",
+      "statementCount": 15720,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000468",
+      "statementCount": 11005,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000469",
+      "statementCount": 4359,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000470",
+      "statementCount": 6808,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000471",
+      "statementCount": 4170,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000472",
+      "statementCount": 5741,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000474",
+      "statementCount": 3399,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000475",
+      "statementCount": 2302,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000476",
+      "statementCount": 2798,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000477",
+      "statementCount": 2713,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000478",
+      "statementCount": 3613,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000479",
+      "statementCount": 1508,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000480",
+      "statementCount": 1965,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000481",
+      "statementCount": 591,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000482",
+      "statementCount": 639,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000483",
+      "statementCount": 233,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000484",
+      "statementCount": 516,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:F000485",
+      "statementCount": 24,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000386",
+      "statementCount": 33222,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000546",
+      "statementCount": 5517,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000553",
+      "statementCount": 13414,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000555",
+      "statementCount": 16725,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000558",
+      "statementCount": 5852,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000559",
+      "statementCount": 12110,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000565",
+      "statementCount": 29803,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000568",
+      "statementCount": 12653,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000574",
+      "statementCount": 18792,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000576",
+      "statementCount": 15907,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000581",
+      "statementCount": 7632,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000583",
+      "statementCount": 20143,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000585",
+      "statementCount": 18845,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000586",
+      "statementCount": 15078,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000587",
+      "statementCount": 14461,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000589",
+      "statementCount": 7475,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000591",
+      "statementCount": 5972,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000592",
+      "statementCount": 3828,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000593",
+      "statementCount": 11730,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000597",
+      "statementCount": 4960,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000598",
+      "statementCount": 4828,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000599",
+      "statementCount": 7349,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000600",
+      "statementCount": 3620,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000601",
+      "statementCount": 250,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000602",
+      "statementCount": 297,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000603",
+      "statementCount": 697,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000604",
+      "statementCount": 191,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000605",
+      "statementCount": 161,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000606",
+      "statementCount": 290,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000607",
+      "statementCount": 29,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:G000608",
+      "statementCount": 4,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H000273",
+      "statementCount": 9927,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H000601",
+      "statementCount": 12855,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H000874",
+      "statementCount": 21639,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001042",
+      "statementCount": 8509,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001046",
+      "statementCount": 17509,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001047",
+      "statementCount": 8226,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001052",
+      "statementCount": 4653,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001058",
+      "statementCount": 9276,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001061",
+      "statementCount": 7414,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001066",
+      "statementCount": 12102,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001067",
+      "statementCount": 9515,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001068",
+      "statementCount": 21608,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001072",
+      "statementCount": 12632,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001076",
+      "statementCount": 14711,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001077",
+      "statementCount": 4325,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001079",
+      "statementCount": 9423,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001081",
+      "statementCount": 12453,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001082",
+      "statementCount": 5037,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001085",
+      "statementCount": 10316,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001086",
+      "statementCount": 5348,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001089",
+      "statementCount": 13019,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001090",
+      "statementCount": 7230,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001091",
+      "statementCount": 10507,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001093",
+      "statementCount": 2865,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001094",
+      "statementCount": 2525,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001095",
+      "statementCount": 3023,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001096",
+      "statementCount": 7091,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001098",
+      "statementCount": 182,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001099",
+      "statementCount": 1207,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001100",
+      "statementCount": 338,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001101",
+      "statementCount": 369,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001102",
+      "statementCount": 509,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001103",
+      "statementCount": 778,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:H001104",
+      "statementCount": 700,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:I000056",
+      "statementCount": 5631,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:I000058",
+      "statementCount": 3509,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:J000288",
+      "statementCount": 9726,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:J000289",
+      "statementCount": 13560,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:J000293",
+      "statementCount": 9016,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:J000294",
+      "statementCount": 8352,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:J000295",
+      "statementCount": 7742,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:J000298",
+      "statementCount": 44625,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:J000299",
+      "statementCount": 12605,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:J000301",
+      "statementCount": 6124,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:J000302",
+      "statementCount": 8043,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:J000304",
+      "statementCount": 5824,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:J000305",
+      "statementCount": 7928,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:J000307",
+      "statementCount": 3646,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:J000309",
+      "statementCount": 3848,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:J000310",
+      "statementCount": 569,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:J000311",
+      "statementCount": 401,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:J000312",
+      "statementCount": 341,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:K000009",
+      "statementCount": 12476,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:K000367",
+      "statementCount": 21077,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:K000375",
+      "statementCount": 2453,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:K000376",
+      "statementCount": 6178,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:K000377",
+      "statementCount": 7769,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:K000383",
+      "statementCount": 9374,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:K000384",
+      "statementCount": 13806,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:K000385",
+      "statementCount": 14993,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:K000388",
+      "statementCount": 4098,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:K000389",
+      "statementCount": 37023,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:K000391",
+      "statementCount": 21249,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:K000392",
+      "statementCount": 8662,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:K000393",
+      "statementCount": 15560,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:K000394",
+      "statementCount": 15452,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:K000397",
+      "statementCount": 10811,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:K000398",
+      "statementCount": 5846,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:K000399",
+      "statementCount": 7988,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:K000400",
+      "statementCount": 6025,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:K000401",
+      "statementCount": 6548,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:K000402",
+      "statementCount": 3747,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:K000403",
+      "statementCount": 581,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:K000404",
+      "statementCount": 155,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:K000405",
+      "statementCount": 314,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000273",
+      "statementCount": 8996,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000397",
+      "statementCount": 4016,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000491",
+      "statementCount": 3528,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000557",
+      "statementCount": 14126,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000560",
+      "statementCount": 14668,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000562",
+      "statementCount": 3786,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000566",
+      "statementCount": 8689,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000570",
+      "statementCount": 12905,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000571",
+      "statementCount": 8767,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000575",
+      "statementCount": 16819,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000577",
+      "statementCount": 14643,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000582",
+      "statementCount": 29812,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000583",
+      "statementCount": 7635,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000585",
+      "statementCount": 7101,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000590",
+      "statementCount": 13515,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000593",
+      "statementCount": 14118,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000595",
+      "statementCount": 4069,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000596",
+      "statementCount": 8106,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000597",
+      "statementCount": 3725,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000598",
+      "statementCount": 4343,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000599",
+      "statementCount": 13755,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000600",
+      "statementCount": 7469,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000601",
+      "statementCount": 6088,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000602",
+      "statementCount": 2648,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000603",
+      "statementCount": 2631,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000606",
+      "statementCount": 1239,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:L000607",
+      "statementCount": 428,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M000133",
+      "statementCount": 29089,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M000194",
+      "statementCount": 21384,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M000312",
+      "statementCount": 26501,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M000317",
+      "statementCount": 11304,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M000355",
+      "statementCount": 24105,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M000687",
+      "statementCount": 3607,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M000871",
+      "statementCount": 7929,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M000934",
+      "statementCount": 14329,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001111",
+      "statementCount": 29030,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001136",
+      "statementCount": 10750,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001137",
+      "statementCount": 9474,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001143",
+      "statementCount": 20964,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001153",
+      "statementCount": 14912,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001157",
+      "statementCount": 11371,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001160",
+      "statementCount": 14376,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001163",
+      "statementCount": 5415,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001169",
+      "statementCount": 22537,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001176",
+      "statementCount": 26942,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001177",
+      "statementCount": 4573,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001184",
+      "statementCount": 23109,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001188",
+      "statementCount": 18799,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001194",
+      "statementCount": 2859,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001196",
+      "statementCount": 11435,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001198",
+      "statementCount": 13320,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001199",
+      "statementCount": 17063,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001204",
+      "statementCount": 6867,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001205",
+      "statementCount": 6326,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001206",
+      "statementCount": 13410,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001208",
+      "statementCount": 6414,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001210",
+      "statementCount": 9369,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001211",
+      "statementCount": 6731,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001212",
+      "statementCount": 5537,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001213",
+      "statementCount": 9469,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001214",
+      "statementCount": 2059,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001215",
+      "statementCount": 12217,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001216",
+      "statementCount": 5214,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001217",
+      "statementCount": 3004,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001218",
+      "statementCount": 3530,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001219",
+      "statementCount": 1650,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001220",
+      "statementCount": 4984,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001222",
+      "statementCount": 3159,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001223",
+      "statementCount": 5715,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001224",
+      "statementCount": 5764,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001225",
+      "statementCount": 1907,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001226",
+      "statementCount": 3787,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001227",
+      "statementCount": 5502,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001228",
+      "statementCount": 2070,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001229",
+      "statementCount": 526,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001230",
+      "statementCount": 403,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001231",
+      "statementCount": 177,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001232",
+      "statementCount": 108,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001233",
+      "statementCount": 127,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001234",
+      "statementCount": 558,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001235",
+      "statementCount": 162,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001236",
+      "statementCount": 492,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001237",
+      "statementCount": 61,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001238",
+      "statementCount": 569,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001239",
+      "statementCount": 460,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001240",
+      "statementCount": 475,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001241",
+      "statementCount": 485,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001242",
+      "statementCount": 1520,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001243",
+      "statementCount": 505,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001244",
+      "statementCount": 584,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001245",
+      "statementCount": 215,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:M001246",
+      "statementCount": 68,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:N000002",
+      "statementCount": 13981,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:N000015",
+      "statementCount": 5962,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:N000026",
+      "statementCount": 8873,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:N000147",
+      "statementCount": 10883,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:N000188",
+      "statementCount": 10839,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:N000189",
+      "statementCount": 10193,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:N000190",
+      "statementCount": 7777,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:N000191",
+      "statementCount": 12460,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:N000193",
+      "statementCount": 5558,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:O000019",
+      "statementCount": 4444,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:O000086",
+      "statementCount": 8387,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:O000172",
+      "statementCount": 13561,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:O000173",
+      "statementCount": 20430,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:O000174",
+      "statementCount": 6754,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:O000175",
+      "statementCount": 5747,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:O000176",
+      "statementCount": 437,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:O000177",
+      "statementCount": 590,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:P000034",
+      "statementCount": 26795,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:P000048",
+      "statementCount": 11626,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:P000145",
+      "statementCount": 17239,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:P000197",
+      "statementCount": 28523,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:P000595",
+      "statementCount": 12950,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:P000597",
+      "statementCount": 9532,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:P000603",
+      "statementCount": 18604,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:P000605",
+      "statementCount": 7942,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:P000607",
+      "statementCount": 18271,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:P000608",
+      "statementCount": 14111,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:P000609",
+      "statementCount": 4611,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:P000610",
+      "statementCount": 7366,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:P000613",
+      "statementCount": 16518,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:P000614",
+      "statementCount": 12039,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:P000617",
+      "statementCount": 25642,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:P000620",
+      "statementCount": 5509,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:P000621",
+      "statementCount": 130,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:P000622",
+      "statementCount": 222,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:Q000023",
+      "statementCount": 16232,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:R000122",
+      "statementCount": 14068,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:R000305",
+      "statementCount": 6802,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:R000395",
+      "statementCount": 1848,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:R000575",
+      "statementCount": 6830,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:R000579",
+      "statementCount": 7695,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:R000584",
+      "statementCount": 11557,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:R000599",
+      "statementCount": 7036,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:R000600",
+      "statementCount": 2433,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:R000603",
+      "statementCount": 6092,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:R000605",
+      "statementCount": 8264,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:R000606",
+      "statementCount": 19027,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:R000608",
+      "statementCount": 20658,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:R000609",
+      "statementCount": 5432,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:R000610",
+      "statementCount": 10049,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:R000612",
+      "statementCount": 6436,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:R000614",
+      "statementCount": 61624,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:R000617",
+      "statementCount": 7366,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:R000618",
+      "statementCount": 5739,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:R000619",
+      "statementCount": 888,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:R000620",
+      "statementCount": 473,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:R000621",
+      "statementCount": 528,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:R000622",
+      "statementCount": 153,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S000033",
+      "statementCount": 29118,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S000148",
+      "statementCount": 40693,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S000168",
+      "statementCount": 9902,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S000185",
+      "statementCount": 10824,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S000250",
+      "statementCount": 7357,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S000344",
+      "statementCount": 8311,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S000510",
+      "statementCount": 13771,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S000522",
+      "statementCount": 5259,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S000929",
+      "statementCount": 3503,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001145",
+      "statementCount": 16435,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001148",
+      "statementCount": 8626,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001150",
+      "statementCount": 12743,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001156",
+      "statementCount": 9262,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001159",
+      "statementCount": 5600,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001172",
+      "statementCount": 7368,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001176",
+      "statementCount": 12958,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001181",
+      "statementCount": 19568,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001183",
+      "statementCount": 20622,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001184",
+      "statementCount": 14254,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001185",
+      "statementCount": 10655,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001188",
+      "statementCount": 296,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001189",
+      "statementCount": 5457,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001190",
+      "statementCount": 13678,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001194",
+      "statementCount": 24141,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001195",
+      "statementCount": 13428,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001196",
+      "statementCount": 32161,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001198",
+      "statementCount": 13144,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001199",
+      "statementCount": 9521,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001200",
+      "statementCount": 22082,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001201",
+      "statementCount": 6969,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001203",
+      "statementCount": 14283,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001205",
+      "statementCount": 16180,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001208",
+      "statementCount": 12013,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001211",
+      "statementCount": 8116,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001212",
+      "statementCount": 9730,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001213",
+      "statementCount": 9913,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001214",
+      "statementCount": 9941,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001215",
+      "statementCount": 15652,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001216",
+      "statementCount": 6021,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001217",
+      "statementCount": 34550,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001218",
+      "statementCount": 10871,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001220",
+      "statementCount": 1690,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001221",
+      "statementCount": 6806,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001223",
+      "statementCount": 7650,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001224",
+      "statementCount": 7514,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001225",
+      "statementCount": 2879,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001226",
+      "statementCount": 4685,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001227",
+      "statementCount": 8378,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001228",
+      "statementCount": 518,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001229",
+      "statementCount": 279,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001230",
+      "statementCount": 1579,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001231",
+      "statementCount": 395,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:S001232",
+      "statementCount": 190,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:T000165",
+      "statementCount": 9007,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:T000193",
+      "statementCount": 8273,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:T000250",
+      "statementCount": 20725,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:T000278",
+      "statementCount": 18586,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:T000460",
+      "statementCount": 20225,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:T000463",
+      "statementCount": 5364,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:T000467",
+      "statementCount": 10201,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:T000468",
+      "statementCount": 17929,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:T000469",
+      "statementCount": 19603,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:T000472",
+      "statementCount": 10075,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:T000474",
+      "statementCount": 14461,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:T000476",
+      "statementCount": 11045,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:T000478",
+      "statementCount": 25562,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:T000480",
+      "statementCount": 3523,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:T000481",
+      "statementCount": 21994,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:T000482",
+      "statementCount": 14547,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:T000486",
+      "statementCount": 6872,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:T000487",
+      "statementCount": 2867,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:T000488",
+      "statementCount": 3269,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:T000490",
+      "statementCount": 521,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:T000491",
+      "statementCount": 314,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:U000040",
+      "statementCount": 6235,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:V000081",
+      "statementCount": 19252,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:V000128",
+      "statementCount": 16238,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:V000129",
+      "statementCount": 9842,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:V000130",
+      "statementCount": 5260,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:V000131",
+      "statementCount": 8392,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:V000133",
+      "statementCount": 5254,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:V000134",
+      "statementCount": 11753,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:V000135",
+      "statementCount": 2152,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:V000136",
+      "statementCount": 3515,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:V000138",
+      "statementCount": 765,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000187",
+      "statementCount": 5656,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000437",
+      "statementCount": 17936,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000779",
+      "statementCount": 19177,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000788",
+      "statementCount": 8764,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000790",
+      "statementCount": 10468,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000795",
+      "statementCount": 8890,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000797",
+      "statementCount": 13732,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000798",
+      "statementCount": 7472,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000800",
+      "statementCount": 12475,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000802",
+      "statementCount": 34554,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000804",
+      "statementCount": 13689,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000805",
+      "statementCount": 15864,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000806",
+      "statementCount": 6725,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000808",
+      "statementCount": 13712,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000809",
+      "statementCount": 14661,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000812",
+      "statementCount": 7837,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000814",
+      "statementCount": 10378,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000816",
+      "statementCount": 11032,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000817",
+      "statementCount": 32865,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000821",
+      "statementCount": 12691,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000822",
+      "statementCount": 12713,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000829",
+      "statementCount": 512,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000830",
+      "statementCount": 195,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:W000831",
+      "statementCount": 715,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:Y000064",
+      "statementCount": 15355,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:Y000067",
+      "statementCount": 4493,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    },
+    {
+      "canonicalIdentity": "congress:Z000018",
+      "statementCount": 2560,
+      "readerEligible": true,
+      "status": "ELIGIBLE_BUT_NOT_RENDERED"
+    }
+  ]
+}

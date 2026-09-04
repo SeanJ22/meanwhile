@@ -1,0 +1,3539 @@
+{
+  "formatVersion": 1,
+  "evidenceKind": "DETERMINISTIC_PROJECTION_ONLY; rendered proof is separate",
+  "states": [
+    {
+      "state": "AZ",
+      "rows": [
+        {
+          "key": "ballot-az-pima:attorney-general:glassman-rodney",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:attorney-general:mayes-kris",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:attorney-general:petersen-warren",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:corporation-commissioner:hill",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:corporation-commissioner:myers",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:corporation-commissioner:pratte",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:corporation-commissioner:thompson",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:governor:biggs-andy",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:governor:hobbs-katie",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:governor:hourihan-teri-ann",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:governor:lombardo-risa",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:governor:lytle-hugh",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:governor:miceli-ken",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:governor:neely-scott",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:governor:schweikert-david",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:mine-inspector:matlock-brian",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:mine-inspector:presmyk-walter",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:secretary-of-state:collier-duwayne",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "102164",
+              "filingState": "REGISTERED_NO_ACTIVITY_REPORTED",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-az-pima:secretary-of-state:fontes-adrian",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:secretary-of-state:kolodin-alexander",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:secretary-of-state:swoboda-gina",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:state-house-17:keshel",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:state-house-17:lyon",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:state-house-17:volk",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:state-house-17:winchester",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:state-house-19:anderson-jackie-o-donnell",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:state-house-19:caswell-cheryl",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:state-house-19:diaz-lupe",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:state-house-19:gowan-david",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:state-house-19:swallow-aiden-nicholette",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:state-house-20:diaz-genoveva",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:state-house-20:gonzales-sally-ann",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:state-house-20:koehler-ben",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:state-house-20:villegas-betty",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:state-senate-17:king",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:state-senate-17:soto",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:state-senate-19:griffin-gail",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:state-senate-19:slawson-ryan",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:state-senate-20:hernandez-alma",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:state-senate-20:perez-rocque",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:state-treasurer:haley-katherine",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:state-treasurer:mansour-nick",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:state-treasurer:norton-elijah",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:state-treasurer:zepeda-michael",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:superintendent:butts-michael-d-",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:superintendent:horne-tom",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:superintendent:leyba-ruiz-teresa",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:superintendent:newby-brett-matthew",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-az-pima:superintendent:yee-kimberly",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        }
+      ]
+    },
+    {
+      "state": "NJ",
+      "rows": [
+        {
+          "key": "ballot-nj-morris:county-commissioner:selen",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506264",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:county-commissioner:russo",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506507",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-1-place-boonton:wrobel-mark-f",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506508",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-1-place-boonton:di-salvo-melissa",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-2-place-boonton:ezzi-robert",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506510",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-2-place-boonton:de-venezia-marie",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-3-place-boonton:murray-robert-j",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506512",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-3-place-boonton:nanda-rajat",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506513",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-4-place-boonton:flaherty-seamus-g",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-4-place-boonton:weisman-benjamin",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506515",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:honan-brian",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506516",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:haggart-brian",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506517",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:menard-raymond",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 2,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:moran-john",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 2,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:butler-borough-mayor-place-butler:martinez-ryan",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506520",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:butler-borough-member-of-the-borough-council-place-butler:verdonik-raymond",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506521",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:butler-borough-member-of-the-borough-council-place-butler:piccirillo-marc",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506522",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:chatham-borough-member-of-the-borough-council-place-chatham:barrette-joseph",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "504231",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:chatham-borough-member-of-the-borough-council-place-chatham:hull-arianna-sophia",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506524",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:chatham-borough-member-of-the-borough-council-place-chatham:eck-nicholas-c",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506525",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:chatham-township-member-of-the-township-committee-place-chatham-township:rubino-ronald",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506704",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:chatham-township-member-of-the-township-committee-place-chatham-township:rowland-jennifer",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "504254",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:chatham-township-member-of-the-township-committee-place-chatham-township:hugh-martin-mc",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:chester-borough-mayor-place-chester:goodwin-russell",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506529",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:chester-borough-member-of-the-borough-council-place-chester:marshuetz-gary",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506530",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:chester-borough-member-of-the-borough-council-place-chester:dominianni-michael",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506531",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:chester-borough-member-of-the-borough-council-place-chester:uhlik-allison",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:chester-borough-member-of-the-borough-council-place-chester:saracena-vanessa",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:chester-township-member-of-the-township-council-place-chester-township:di-paolo-joseph",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:chester-township-member-of-the-township-council-place-chester-township:schellhorn-tara",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "504260",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:chester-township-member-of-the-township-council-unexpired-term-place-chester-township:judd-andrew-b",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506534",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:chester-township-member-of-the-township-council-unexpired-term-place-chester-township:fitting-adam-e",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:dover-town-member-of-the-town-council-ward-1-place-dover:wittner-sandra",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 2,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:dover-town-member-of-the-town-council-ward-2-place-dover:seanor-krista",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 2,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:dover-town-member-of-the-town-council-ward-3-place-dover:plastoris-alice",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 2,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:dover-town-member-of-the-town-council-ward-4-place-dover:tapia-elizabeth",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 2,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:east-hanover-township-member-of-the-township-council-place-east-hanover-township:maio-jr-frank-a-de",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:east-hanover-township-member-of-the-township-council-place-east-hanover-township:martorelli-michael",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506563",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:florham-park-borough-member-of-the-borough-council-place-florham-park:ritrivi-nicholas",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506564",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:florham-park-borough-member-of-the-borough-council-place-florham-park:boer-marc-de",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:florham-park-borough-member-of-the-borough-council-place-florham-park:havens-ellsworth",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506567",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:florham-park-borough-member-of-the-borough-council-place-florham-park:upton-john-william",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "504266",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:hanover-township-member-of-the-township-committee-place-hanover-township:cahill-brian",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506568",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:hanover-township-member-of-the-township-committee-place-hanover-township:mihalko-michael",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506569",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:hanover-township-member-of-the-township-committee-place-hanover-township:saleh-ahmad",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 2,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:harding-township-member-of-the-township-committee-place-harding-township:chipperson-rita-c",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "505573",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:harding-township-member-of-the-township-committee-place-harding-township:yates-christopher-m",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "505572",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:harding-township-member-of-the-township-committee-place-harding-township:gray-ashley",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:jefferson-township-mayor-place-jefferson-township:wilsusen-eric-f",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "503099",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:jefferson-township-member-of-the-township-council-place-jefferson-township:senatore-melissa",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "505912",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:jefferson-township-member-of-the-township-council-place-jefferson-township:galfo-thomas-g",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "505913",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:jefferson-township-member-of-the-township-council-unexpired-term-place-jefferson-township:ioffredo-yvonne",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:jefferson-township-member-of-the-township-council-unexpired-term-place-jefferson-township:peters-christopher-a",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:jefferson-township-member-of-the-township-council-unexpired-term-place-jefferson-township:torres-alejandro",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:kinnelon-borough-mayor-place-kinnelon:freda-james-j",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506571",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:kinnelon-borough-member-of-the-borough-council-place-kinnelon:mabey-sean",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506572",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:kinnelon-borough-member-of-the-borough-council-place-kinnelon:frank-cynthia",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506573",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:lincoln-park-borough-mayor-place-lincoln-park:runfeldt-david",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506574",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park:foreman-kenneth-r",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "504281",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park:dubowsky-bruce",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506576",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park:cassidy-william-t",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "504283",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park:gibbons-john-c",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "505645",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park:walker-lisa",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "505646",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park:ottah-priscilla",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "505647",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison:landrigan-robert-e",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "502860",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison:forte-john-j",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "505737",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:mendham-borough-mayor-place-mendham:kelly-james-r",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 2,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:althoff-marilyn",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "504069",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:murphy-joseph-m",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506584",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:schreibman-dan",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:van-den-hende-mark",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:kapner-gary",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506587",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:duarte-amalia",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 2,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:kayne-matthew-s",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506589",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:witty-june-b",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506590",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:ryzuk-emily-k",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506591",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:seffer-shari",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:morris-plains-borough-mayor-place-morris-plains:verga-nancy",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "503720",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:morris-plains-borough-mayor-place-morris-plains:karr-jason-c",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:morris-plains-borough-member-of-the-borough-council-place-morris-plains:bruhn-jr-arthur-j-art",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506593",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:morris-plains-borough-member-of-the-borough-council-place-morris-plains:nichol-sheryl-mc",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:morris-plains-borough-member-of-the-borough-council-place-morris-plains:connor-lee-lusardi",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:morris-plains-borough-member-of-the-borough-council-place-morris-plains:denova-rosaria",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "503722",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:morris-township-member-of-the-township-committee-place-morris-township:talarico-george",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "503561",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:morris-township-member-of-the-township-committee-place-morris-township:grizzetti-joscelin",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "505865",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:morris-township-member-of-the-township-committee-place-morris-township:lyon-stephanie",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506595",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:morris-township-member-of-the-township-committee-place-morris-township:godwin-jeremy-b",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506596",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:morris-township-member-of-the-township-committee-unexpired-term-place-morris-township:biehl-john",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 2,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:morris-township-member-of-the-township-committee-unexpired-term-place-morris-township:rothman-samantha-g",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506597",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:mount-arlington-borough-mayor-place-mount-arlington:stanzilis-michael",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506598",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:fostle-melissa",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506599",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:delaney-john-jack",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506600",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:price-jessica",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "504471",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:decker-jay",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "504472",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes:stelling-lucas-a",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506603",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes:stuart-mark-a",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes:hilton-andrew",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "504476",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes:menard-thomas",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506606",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes:muilenburg-melissa",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "504474",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:netcong-borough-member-of-the-borough-council-place-netcong:sylvester-jr-john",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506608",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:netcong-borough-member-of-the-borough-council-place-netcong:nametko-joseph-a",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506609",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:netcong-borough-member-of-the-borough-council-place-netcong:franchi-ruocco-michele-a",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township:quigley-kimberley-r",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township:russell-kyle",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506613",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township:florance-lynch-melissa",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506614",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township:mancuso-michael",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506615",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township:anderson-vincent",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506616",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:forstenhausler-mark-h",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506617",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:nisivoccia-lou",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "503601",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:thornton-denise",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506619",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:ruffo-travis",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "503603",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:beecher-jr-stephen-w",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506621",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:rietzke-amy-l",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506622",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:sisco-howard",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:lynch-meghan",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506624",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:riverdale-borough-member-of-the-borough-council-place-riverdale:kheyfets-michael",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506625",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:riverdale-borough-member-of-the-borough-council-place-riverdale:pellegrini-vincent",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "504486",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway:burnside-melissa",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506627",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway:mcdonald-patrick",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506628",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway:dawkins-jr-clifford-d",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "504490",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway:natale-angelo",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506630",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:victory-gardens-borough-member-of-the-borough-council-place-victory-gardens:janone-james-m",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:victory-gardens-borough-member-of-the-borough-council-place-victory-gardens:hale-stuart",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506632",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:victory-gardens-borough-member-of-the-borough-council-place-victory-gardens:lorenzo-ismael",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506633",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:washington-township-member-of-the-township-committee-place-washington-township:drake-joshua-a",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:wharton-borough-mayor-place-wharton:binkoski-vincent",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506635",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:wharton-borough-mayor-place-wharton:ghebreal-robin",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506636",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:wharton-borough-member-of-the-borough-council-place-wharton:jones-ana",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506637",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:wharton-borough-member-of-the-borough-council-place-wharton:digennaro-mark",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 1,
+          "notDisplayed": [
+            {
+              "committeeId": "506638",
+              "filingState": "NO_REPORTS_ON_FILE",
+              "reason": "SUPERSEDED_SEARCH_ABSENCE_OR_REPEATED_CANDIDACY_ABSENCE"
+            }
+          ]
+        },
+        {
+          "key": "ballot-nj-morris:wharton-borough-member-of-the-borough-council-place-wharton:rogers-william-b",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:wharton-borough-member-of-the-borough-council-place-wharton:murphy-morris-jayne",
+          "heldRecords": 2,
+          "eligibleRecords": 2,
+          "projectedRecords": 2,
+          "displayedRecords": 2,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:boonton-town-member-of-the-board-of-education-school-district-boonton-town-school-district:o-halloran-brianna",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:boonton-town-member-of-the-board-of-education-school-district-boonton-town-school-district:darling-jennifer",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:boonton-township-member-of-the-board-of-education-school-district-boonton-township-school-district:cabana-christine",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:boonton-township-member-of-the-board-of-education-school-district-boonton-township-school-district:mills-benjamin",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:boonton-township-member-of-the-board-of-education-school-district-boonton-township-school-district:feldmann-jessica",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:butler-borough-member-of-the-board-of-education-school-district-butler-borough-school-district:gogel-michael",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:butler-borough-member-of-the-board-of-education-school-district-butler-borough-school-district:karpowich-jason",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:butler-borough-member-of-the-board-of-education-school-district-butler-borough-school-district:tadros-jane",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:butler-borough-member-of-the-board-of-education-school-district-butler-borough-school-district:meo-roberto-di",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:chatham-borough-member-of-the-board-of-education-place-chatham:ryan-michael",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:chatham-borough-member-of-the-board-of-education-place-chatham:weber-jill",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:chatham-township-member-of-the-board-of-education-place-chatham-township:smith-bradley",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:chester-borough-township-member-of-the-board-of-education-school-district-chester-township-school-district:byszewski-carolyn-cici",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:chester-borough-township-member-of-the-board-of-education-school-district-chester-township-school-district:dundon-suzanne",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:chester-borough-township-member-of-the-board-of-education-school-district-chester-township-school-district:fantin-angela",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:denville-township-member-of-the-board-of-education-school-district-denville-township-school-district:cappello-dino-f",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:denville-township-member-of-the-board-of-education-school-district-denville-township-school-district:andersen-michael-w",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:denville-township-member-of-the-board-of-education-school-district-denville-township-school-district:morissette-cameron",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:denville-township-member-of-the-board-of-education-school-district-denville-township-school-district:kim-won-james",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:dover-town-member-of-the-board-of-education-school-district-dover-town-school-district:frisk-jamie",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:dover-town-member-of-the-board-of-education-school-district-dover-town-school-district:bermudez-joshua",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:dover-town-member-of-the-board-of-education-school-district-dover-town-school-district:lazo-yonatan",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:east-hanover-township-member-of-the-board-of-education-school-district-east-hanover-township-school-district:soto-brittany",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:east-hanover-township-member-of-the-board-of-education-school-district-east-hanover-township-school-district:muscillo-cara",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:east-hanover-township-member-of-the-board-of-education-school-district-east-hanover-township-school-district:ucci-jr-vincent-a",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:east-hanover-township-member-of-the-board-of-education-school-district-east-hanover-township-school-district:mitchell-stephanie-a",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:east-hanover-township-member-of-the-board-of-education-school-district-east-hanover-township-school-district:gilmore-meghan",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:florham-park-borough-member-of-the-board-of-education-school-district-florham-park-borough-school-district:ratz-allen",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:florham-park-borough-member-of-the-board-of-education-school-district-florham-park-borough-school-district:morgese-erin",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:hanover-township-member-of-the-board-of-education-school-district-hanover-township-school-district:cabe-william-mc",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:hanover-township-member-of-the-board-of-education-school-district-hanover-township-school-district:mattessich-christopher",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:hanover-township-member-of-the-board-of-education-school-district-hanover-township-school-district:kowalski-joseph",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:harding-township-member-of-the-board-of-education-school-district-harding-township-school-district:anastasiou-alexander-h",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:harding-township-member-of-the-board-of-education-school-district-harding-township-school-district:singh-abhinov",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:jefferson-township-member-of-the-board-of-education-school-district-jefferson-township-school-district:phalon-patrick-a",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:jefferson-township-member-of-the-board-of-education-school-district-jefferson-township-school-district:poulas-stacey",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:jefferson-township-member-of-the-board-of-education-school-district-jefferson-township-school-district:grater-jaime",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:kinnelon-borough-member-of-the-board-of-education-school-district-kinnelon-borough-school-district:brino-matthew-d-di",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:kinnelon-borough-member-of-the-board-of-education-school-district-kinnelon-borough-school-district:donaldson-jean-t",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:kinnelon-borough-member-of-the-board-of-education-school-district-kinnelon-borough-school-district:schwartz-daniel",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:kinnelon-borough-member-of-the-board-of-education-school-district-kinnelon-borough-school-district:hodas-david",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:lincoln-park-borough-member-of-the-board-of-education-school-district-lincoln-park-borough-school-district:aiello-jennifer",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:lincoln-park-borough-member-of-the-board-of-education-school-district-lincoln-park-borough-school-district:vandervalk-elizabeth",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:madison-borough-member-of-the-board-of-education-school-district-madison-borough-school-district:duran-david",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:madison-borough-member-of-the-board-of-education-school-district-madison-borough-school-district:ellis-lisa",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:madison-borough-member-of-the-board-of-education-school-district-madison-borough-school-district:fontes-eric",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:mendham-borough-member-of-the-board-of-education-school-district-mendham-borough-school-district:mullany-ryan",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:mendham-borough-member-of-the-board-of-education-school-district-mendham-borough-school-district:nichol-michael",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:mendham-borough-member-of-the-board-of-education-school-district-mendham-borough-school-district:laud-stephen-mc",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:mendham-township-member-of-the-board-of-education-school-district-mendham-township-school-district:gondek-richard",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:mendham-township-member-of-the-board-of-education-school-district-mendham-township-school-district:kallianpurkar-namita",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district:daughtry-joseph",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district:pisano-ryan",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district:palma-michael-j",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district:shenkman-jennifer",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district:trivedi-ronak",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district:lieberman-susan",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:morris-plains-borough-member-of-the-board-of-education-school-district-morris-plains-borough-school-district:longo-shawna",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:morris-plains-borough-member-of-the-board-of-education-school-district-morris-plains-borough-school-district:piccirillo-anoli",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:morris-plains-borough-member-of-the-board-of-education-school-district-morris-plains-borough-school-district:rawding-denise",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:morris-plains-borough-member-of-the-board-of-education-school-district-morris-plains-borough-school-district:persak-steven",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:morris-plains-borough-member-of-the-board-of-education-school-district-morris-plains-borough-school-district:goscinski-steve",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:morris-township-member-of-the-board-of-education-school-district-morris-township-school-district:rowan-charles",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:morristown-town-member-of-the-board-of-education-place-morristown:wall-elisabeth-l",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:morristown-town-member-of-the-board-of-education-place-morristown:hernandez-jennifer",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:mount-arlington-borough-member-of-the-board-of-education-school-district-mount-arlington-borough-school-district:svenningsen-karl",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:mount-arlington-borough-member-of-the-board-of-education-school-district-mount-arlington-borough-school-district:eckert-melissa",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:mount-arlington-borough-member-of-the-board-of-education-school-district-mount-arlington-borough-school-district:byrne-rachel",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:mount-olive-township-member-of-the-board-of-education-school-district-mount-olive-township-school-district:oneill-jeannie",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:mount-olive-township-member-of-the-board-of-education-school-district-mount-olive-township-school-district:wetzel-alyssa",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:mount-olive-township-member-of-the-board-of-education-school-district-mount-olive-township-school-district:orzillo-marc",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district:bollenbach-jessica",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district:levin-erez",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district:forman-sara",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district:armani-megan",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district:parker-jennifer",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district:veigh-julia-mc",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:netcong-borough-member-of-the-board-of-education-school-district-netcong-borough-school-district:koster-jr-edward-j",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:netcong-borough-member-of-the-board-of-education-school-district-netcong-borough-school-district:albensi-kimberly",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:pequannock-township-member-of-the-board-of-education-school-district-pequannock-township-school-district:wiswesser-christina",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:pequannock-township-member-of-the-board-of-education-school-district-pequannock-township-school-district:trombetta-amanda",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:pequannock-township-member-of-the-board-of-education-school-district-pequannock-township-school-district:gitin-timothy",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district:lifshey-christina-nina",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district:adams-amanda",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district:bhatia-rachel",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district:weiner-joshua",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district:epstein-sheldon",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district:vo-lam",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:riverdale-borough-member-of-the-board-of-education-school-district-riverdale-borough-school-district:thomas-marybeth",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:rockaway-borough-member-of-the-board-of-education-school-district-rockaway-borough-school-district:graf-edward",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:rockaway-borough-member-of-the-board-of-education-school-district-rockaway-borough-school-district:long-jaclyn-d",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:rockaway-twp-boe:mezik",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:rockaway-twp-boe:nydegger",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:rockaway-twp-boe:mamoun",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:rockaway-twp-boe-unexpired:borno",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:roxbury-township-member-of-the-board-of-education-school-district-roxbury-township-school-district:colucci-anne-thereze",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:roxbury-township-member-of-the-board-of-education-school-district-roxbury-township-school-district:bonilla-camilo",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:roxbury-township-member-of-the-board-of-education-school-district-roxbury-township-school-district:galdieri-valerie",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township:moliterno-elizabeth-liz",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township:spadaccini-camillia",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township:bravo-laurie",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township:hare-padraig-sean",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township:dressler-peter",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township:whitney-nicholas-j",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:wharton-borough-member-of-the-board-of-education-school-district-wharton-borough-school-district:rice-cristina",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:wharton-borough-member-of-the-board-of-education-school-district-wharton-borough-school-district:astrologo-anthony",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:wharton-borough-member-of-the-board-of-education-school-district-wharton-borough-school-district:gonzalez-gabriel",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nj-morris:wharton-borough-member-of-the-board-of-education-unexpired-term-school-district-wharton-borough-school-district:pascale-colleen-f",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        }
+      ]
+    },
+    {
+      "state": "NH",
+      "rows": [
+        {
+          "key": "ballot-nh-merrimack:governor:warmington-cinde",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:governor:ayotte-kelly",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:governor:fife-shaun",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:governor:mcclory-bob-wayne",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:state-senate-7:harned-rebecca",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:state-senate-7:innis-daniel-e-",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:state-house-merrimack-7:rusis-cynthia",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:executive-council-2:liot-hill-karen",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:executive-council-2:menard-tobin",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:executive-council-2:strathdee-kim",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:county-commissioner-2:ribas-vincent-s-",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:county-commissioner-2:bilodeau-richard",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:county-commissioner-2:french-harold-f-",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:county-sheriff:shephard-peter",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:county-sheriff:cassidy-frank-t-",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:county-sheriff:gerhard-jason",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:county-sheriff:weir-ben",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:county-attorney:endres-steven",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:county-attorney:rogers-sarah",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:county-treasurer:donnelly-kathleen",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:county-treasurer:schuett-dianne-e-",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:register-of-deeds:davis-erica-s-",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:register-of-deeds:morse-samantha",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        },
+        {
+          "key": "ballot-nh-merrimack:register-of-probate:bradstreet-jane",
+          "heldRecords": 1,
+          "eligibleRecords": 1,
+          "projectedRecords": 1,
+          "displayedRecords": 1,
+          "notDisplayed": []
+        }
+      ]
+    }
+  ],
+  "officialRows": [
+    {
+      "officialId": "congress:B001302",
+      "name": "Andy Biggs",
+      "canonicalCandidacyId": "ballot-az-pima:governor:biggs-andy",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "congress:S001183",
+      "name": "David Schweikert",
+      "canonicalCandidacyId": "ballot-az-pima:governor:schweikert-david",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "plural:11b313a8-0f20-4d81-8060-4ec7e65f1a29",
+      "name": "Rachel Keshel",
+      "canonicalCandidacyId": "ballot-az-pima:state-house-17:keshel",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "plural:183af2d0-dd61-476d-873f-305ae591968f",
+      "name": "Kevin Volk",
+      "canonicalCandidacyId": "ballot-az-pima:state-house-17:volk",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "plural:1e39adcf-868d-4722-a07b-09fcd36ad9ed",
+      "name": "Gail Griffin",
+      "canonicalCandidacyId": "ballot-az-pima:state-senate-19:griffin-gail",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "plural:3c965e03-1e51-4f10-a037-4fb2f35292c5",
+      "name": "Sally Gonzales",
+      "canonicalCandidacyId": "ballot-az-pima:state-house-20:gonzales-sally-ann",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "plural:51520de4-0e87-475b-91d2-99aa18addf72",
+      "name": "David Gowan",
+      "canonicalCandidacyId": "ballot-az-pima:state-house-19:gowan-david",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "plural:6328e7f7-d952-4d28-98b8-75a9a6f50c8d",
+      "name": "Dan Innis",
+      "canonicalCandidacyId": "ballot-nh-merrimack:state-senate-7:innis-daniel-e-",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "plural:66e496a4-a407-4af1-add3-ef6899b89807",
+      "name": "Warren Petersen",
+      "canonicalCandidacyId": "ballot-az-pima:attorney-general:petersen-warren",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "plural:6dba6afa-b274-4273-b8c6-270d27214eee",
+      "name": "Alma Hernández",
+      "canonicalCandidacyId": "ballot-az-pima:state-senate-20:hernandez-alma",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "plural:81d12f3a-b635-4111-be8d-a71d2f7565f2",
+      "name": "Betty Villegas",
+      "canonicalCandidacyId": "ballot-az-pima:state-house-20:villegas-betty",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "plural:947e2e2b-04eb-4f92-9f83-aef8760517e0",
+      "name": "Karen Ebel",
+      "canonicalCandidacyId": "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "plural:bc52f516-a13b-4490-a12c-7b98fa3969e5",
+      "name": "Lupe Diaz",
+      "canonicalCandidacyId": "ballot-az-pima:state-house-19:diaz-lupe",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "plural:f1292af8-a209-4ff7-87b5-086acddcc10e",
+      "name": "Greg Sargent",
+      "canonicalCandidacyId": "ballot-nh-merrimack:state-house-merrimack-7:sargent-gregory-m-",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:merrimack-delegation#5",
+      "name": "Karen Ebel",
+      "canonicalCandidacyId": "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:morris#6",
+      "name": "Tayfun Selen",
+      "canonicalCandidacyId": "ballot-nj-morris:county-commissioner:selen",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-boonton_township#1",
+      "name": "Brian Honan",
+      "canonicalCandidacyId": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:honan-brian",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-boonton_township#2",
+      "name": "Brian Honan",
+      "canonicalCandidacyId": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:honan-brian",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-boonton#2",
+      "name": "Mark Wrobel",
+      "canonicalCandidacyId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-1-place-boonton:wrobel-mark-f",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-boonton#9",
+      "name": "Ben Weisman",
+      "canonicalCandidacyId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-4-place-boonton:weisman-benjamin",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-butler#1",
+      "name": "Ryan Martinez",
+      "canonicalCandidacyId": "ballot-nj-morris:butler-borough-mayor-place-butler:martinez-ryan",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-butler#2",
+      "name": "Raymond Verdonik",
+      "canonicalCandidacyId": "ballot-nj-morris:butler-borough-member-of-the-borough-council-place-butler:verdonik-raymond",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-butler#7",
+      "name": "Marc Piccirillo",
+      "canonicalCandidacyId": "ballot-nj-morris:butler-borough-member-of-the-borough-council-place-butler:piccirillo-marc",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-chatham_township#1",
+      "name": "Jennifer Rowland",
+      "canonicalCandidacyId": "ballot-nj-morris:chatham-township-member-of-the-township-committee-place-chatham-township:rowland-jennifer",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-chatham_township#2",
+      "name": "Jennifer Rowland",
+      "canonicalCandidacyId": "ballot-nj-morris:chatham-township-member-of-the-township-committee-place-chatham-township:rowland-jennifer",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-chester_borough#2",
+      "name": "Michael Dominianni",
+      "canonicalCandidacyId": "ballot-nj-morris:chester-borough-member-of-the-borough-council-place-chester:dominianni-michael",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-chester_borough#4",
+      "name": "Russell Goodwin",
+      "canonicalCandidacyId": "ballot-nj-morris:chester-borough-mayor-place-chester:goodwin-russell",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-chester_borough#7",
+      "name": "Gary W. Marshuetz",
+      "canonicalCandidacyId": "ballot-nj-morris:chester-borough-member-of-the-borough-council-place-chester:marshuetz-gary",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-harding_township#3",
+      "name": "Rita Chipperson",
+      "canonicalCandidacyId": "ballot-nj-morris:harding-township-member-of-the-township-committee-place-harding-township:chipperson-rita-c",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-harding_township#6",
+      "name": "Christopher M. Yates",
+      "canonicalCandidacyId": "ballot-nj-morris:harding-township-member-of-the-township-committee-place-harding-township:yates-christopher-m",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-kinnelon#1",
+      "name": "James J. Freda",
+      "canonicalCandidacyId": "ballot-nj-morris:kinnelon-borough-mayor-place-kinnelon:freda-james-j",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-kinnelon#2",
+      "name": "Sean Mabey",
+      "canonicalCandidacyId": "ballot-nj-morris:kinnelon-borough-member-of-the-borough-council-place-kinnelon:mabey-sean",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-lincoln_park#0",
+      "name": "David A. Runfeldt",
+      "canonicalCandidacyId": "ballot-nj-morris:lincoln-park-borough-mayor-place-lincoln-park:runfeldt-david",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-madison#1",
+      "name": "John Forte",
+      "canonicalCandidacyId": "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison:forte-john-j",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-madison#5",
+      "name": "Robert E. Landrigan",
+      "canonicalCandidacyId": "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison:landrigan-robert-e",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-morris_plains#1",
+      "name": "Jason Karr",
+      "canonicalCandidacyId": "ballot-nj-morris:morris-plains-borough-mayor-place-morris-plains:karr-jason-c",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-morris_plains#2",
+      "name": "Nancy Verga",
+      "canonicalCandidacyId": "ballot-nj-morris:morris-plains-borough-mayor-place-morris-plains:verga-nancy",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-morris_plains#3",
+      "name": "Art Bruhn, Jr.",
+      "canonicalCandidacyId": "ballot-nj-morris:morris-plains-borough-member-of-the-borough-council-place-morris-plains:bruhn-jr-arthur-j-art",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-morristown#3",
+      "name": "Christopher Russo",
+      "canonicalCandidacyId": "ballot-nj-morris:county-commissioner:russo",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-pequannock_township#4",
+      "name": "Melissa Florance-Lynch",
+      "canonicalCandidacyId": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township:florance-lynch-melissa",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-pequannock_township#5",
+      "name": "Kyle Russell",
+      "canonicalCandidacyId": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township:russell-kyle",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-rockaway#2",
+      "name": "Melissa Burnside",
+      "canonicalCandidacyId": "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway:burnside-melissa",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-rockaway#6",
+      "name": "Patrick McDonald",
+      "canonicalCandidacyId": "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway:mcdonald-patrick",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-wharton#2",
+      "name": "Vincent Binkoski",
+      "canonicalCandidacyId": "ballot-nj-morris:wharton-borough-mayor-place-wharton:binkoski-vincent",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:nj-morris-wharton#5",
+      "name": "Ana Jones",
+      "canonicalCandidacyId": "ballot-nj-morris:wharton-borough-member-of-the-borough-council-place-wharton:jones-ana",
+      "projectedRecords": 2,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "roster:rocktwp-boe#3",
+      "name": "Lisa Mezik",
+      "canonicalCandidacyId": "ballot-nj-morris:rockaway-twp-boe:mezik",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "statewide:az/attorney-general",
+      "name": "Kris Mayes",
+      "canonicalCandidacyId": "ballot-az-pima:attorney-general:mayes-kris",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "statewide:az/corporation-commissioner/myers",
+      "name": "Nick Myers",
+      "canonicalCandidacyId": "ballot-az-pima:corporation-commissioner:myers",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "statewide:az/corporation-commissioner/thompson",
+      "name": "Kevin Thompson",
+      "canonicalCandidacyId": "ballot-az-pima:corporation-commissioner:thompson",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "statewide:az/governor",
+      "name": "Katie Hobbs",
+      "canonicalCandidacyId": "ballot-az-pima:governor:hobbs-katie",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "statewide:az/secretary-of-state",
+      "name": "Adrian Fontes",
+      "canonicalCandidacyId": "ballot-az-pima:secretary-of-state:fontes-adrian",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "statewide:az/state-mine-inspector",
+      "name": "Les Presmyk",
+      "canonicalCandidacyId": "ballot-az-pima:mine-inspector:presmyk-walter",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "statewide:az/state-treasurer",
+      "name": "Kimberly Yee",
+      "canonicalCandidacyId": "ballot-az-pima:superintendent:yee-kimberly",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "statewide:az/superintendent-of-public-instruction",
+      "name": "Tom Horne",
+      "canonicalCandidacyId": "ballot-az-pima:superintendent:horne-tom",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    },
+    {
+      "officialId": "statewide:nh/governor",
+      "name": "Kelly Ayotte",
+      "canonicalCandidacyId": "ballot-nh-merrimack:governor:ayotte-kelly",
+      "projectedRecords": 1,
+      "displayedRecords": 1,
+      "identity": "RESOLVED"
+    }
+  ]
+}

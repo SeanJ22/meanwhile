@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 495,
-    "named": 5274,
+    "files": 509,
+    "named": 5320,
     "dynamic": 23
   },
   "files": {
@@ -5432,6 +5432,33 @@
       ],
       "dynamic": 0
     },
+    "tests/reader-agenda-representation.test.ts": {
+      "names": [
+        "every held agenda representation reaches real routes and the real meeting leaf without portal/binary promotion or topic tail loss"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-ballot-scope.test.ts": {
+      "names": [
+        "current certified scope retires obsolete filing notes in Ask and the shared ballot footer, retaining their dated source"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-candidate-profile-ask.test.ts": {
+      "names": [
+        "all held candidate bios, contacts, and verified links survive the actual Ask route with exact field provenance"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-candidate-profile.test.ts": {
+      "names": [
+        "contact source metadata is never borrowed from a biography or an unrelated link",
+        "every current native candidate bio and verified link reaches grounded profile records with exact provenance",
+        "official and candidacy profile answers share exact holdings without attaching a namesake's biography",
+        "profile fields without their verification/source remain withheld instead of becoming claims or publisher absence"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-civic-delivery.test.ts": {
       "names": [
         "an empty unbound engine cannot contradict a held civic answer, while identity and loader states remain visible",
@@ -5491,8 +5518,10 @@
         "an unmapped roster division cannot erase an explicitly resolved person's held candidacy",
         "every eligible normalized record survives the shared canonical target projection; leads stay withheld",
         "every resolved official, including NJ county and NH governor, preserves its full canonical finance answer",
+        "exact duplicate roster aliases preserve the canonical finance answer and requested identity",
         "federal finance answer remains identical for every existing FEC target",
         "federal officeholders' held state candidacies project without inventing federal records",
+        "malformed roster person identities remain unresolved before any finance fallback",
         "official finance identity bridge reproduces current canonical sources",
         "the canonical federal contest cannot manufacture an Arizona state-finance gap",
         "unverified extraction PASS and Auditor INCONCLUSIVE do not promote money",
@@ -5500,10 +5529,29 @@
       ],
       "dynamic": 0
     },
+    "tests/reader-incumbency-delivery.test.ts": {
+      "names": [
+        "a committed person link cannot establish incumbency in a different body, office, or unrecognized identity",
+        "a municipal place key cannot erase an explicitly different ward, seat, or position",
+        "all current committed candidacy relations retain exact same-office incumbents and refuse cross-office incumbency",
+        "the missing roster-index seam cannot hide a sourced positive or label unknown peers challengers",
+        "two displayed candidates claiming the same committed identity stay unresolved"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-key-votes-delivery.test.ts": {
       "names": [
         "missing held key-vote positions cannot become null positions or unacquired roll calls",
         "shared key-vote projection retains exact current member/chamber positions and source timestamp"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-last-mile-ask-ambiguous-context.test.ts": {
+      "names": [
+        "Hourihan's exact card corpus answers while the unresolved party/candidacy bridge stays withheld",
+        "focused candidate contact questions retrieve the same held profile and reject a wrong supplied ID",
+        "focused canonical context narrows a tied name only within that exact candidate set",
+        "generic contact words cannot masquerade as a named person or government"
       ],
       "dynamic": 0
     },
@@ -5525,6 +5573,12 @@
         "a held filing revision renders its exact statement and both source documents without resurrecting a candidacy",
         "a sourced explainer without a held URL retains its publisher and read date without an invented link",
         "map and ballot Ask share every held contact channel, exact rows and per-person provenance"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-last-mile-ask-roster-gap.test.ts": {
+      "names": [
+        "an incomplete sourced roster keeps four verified people and the same exact gap on body and linked-person Ask"
       ],
       "dynamic": 0
     },
@@ -5550,18 +5604,38 @@
       ],
       "dynamic": 1
     },
+    "tests/reader-last-mile-ballot-ask.test.ts": {
+      "names": [
+        "every held canonical ballot filing, contest, measure, absence and adopted analysis survives the real Ask route"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-last-mile-census.test.ts": {
       "names": [
         "applicability keeps source inputs distinct without erasing direct reader obligations",
+        "ballot scope cannot hide an eligible incumbent when the consumer join returns null",
         "committed autonomous negative controls preserve the exact AZ, NJ and NH lifecycle burdens",
+        "committed proof fingerprint rejects a vanished loader or changed holding, without requiring the same documentary HEAD",
         "composition requires actual per-record HTML, current source and an executed same-surface witness",
+        "current certified ballot truth retires obsolete filing qualification without deleting its dated source",
         "current normalized state-money records survive the canonical exact-key selector; leads never enter",
         "eligibility negative controls keep extraction and acquisition separate from civic verification",
         "every declared canonical dataset/surface edge has an executable consumer path",
+        "every held voting jurisdiction and site survives the real route into the actual panel leaf",
         "evidence packaging preserves the exact baseline JSON and deterministic archive",
         "graph control crosses actual API fetches and fails when the reader import is removed",
         "reader readback counts missing rows and refuses wrong-candidate identities, false counts, and unchecked evidence",
-        "render instrument rejects a vanished eligible fact, an inherited identity and a false row count"
+        "receipt EOL equivalence accepts only archived executed bytes and their exact Git LF form",
+        "render instrument rejects a vanished eligible fact, an inherited identity and a false row count",
+        "source fingerprint follows a directory index and imported reader CSS as files",
+        "the actual reader graph cannot consume autonomous staging merely because an artifact exists",
+        "the committed complete reader graph still matches its proved holdings, loaders and rendering receipt"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-last-mile-federal-money-ask.test.ts": {
+      "names": [
+        "all held FEC primary totals and sourced absences survive actual Ask with exact identity and provenance"
       ],
       "dynamic": 0
     },
@@ -5585,8 +5659,19 @@
       ],
       "dynamic": 0
     },
+    "tests/reader-last-mile-meeting-knowledge-ask.test.ts": {
+      "names": [
+        "every held minutes summary and public-comment rule survives real Ask with exact source fields",
+        "minutes paraphrases never attach to another body or supply a member roll call",
+        "missing or unreadable summary identity holdings stay explicit OURS gaps",
+        "notice summaries require the current exact content hash and cannot answer an outcome question",
+        "standing comment rules require the exact body and division and never inherit a sibling policy"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-last-mile-meetings-ask.test.ts": {
       "names": [
+        "a structured agenda never supplies an action or member vote, and no structured sitting does not erase another held agenda",
         "all held meetings and outcome sittings survive real dated Ask routes with exact record counts and provenance",
         "invalid, multiple and unheld dates never select a different sitting"
       ],
@@ -5615,6 +5700,12 @@
       ],
       "dynamic": 0
     },
+    "tests/reader-last-mile-officials-ask.test.ts": {
+      "names": [
+        "every canonical official and sourced roster term note reaches actual Ask without a geographic claim"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-last-mile-positions-parity.test.ts": {
       "names": [
         "Hobbs map, ballot and Ask use the held Governor passage while a foreign supplied key cannot supply it",
@@ -5631,6 +5722,7 @@
     "tests/reader-last-mile-trace.test.ts": {
       "names": [
         "every dynamic reader contract fails if one holding is removed from deployment tracing",
+        "postbuild checker rejects a removed dynamic holding in emitted route manifests",
         "the completed Next production bundle includes every declared runtime holding"
       ],
       "dynamic": 0
@@ -5686,6 +5778,29 @@
       "names": [
         "all14 held statewide executives reach the actual representation route only for their own state",
         "held governing-body and indexed division identities survive the representation route together"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-roster-completeness.test.ts": {
+      "names": [
+        "an incomplete roster cannot attach its gap or a fifth person's identity to another body",
+        "every partial verified roster keeps its members and exact sourced completeness gap through API and actual representation leaf"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-roster-eligibility.test.ts": {
+      "names": [
+        "a duplicate source row cannot conceal the unresolved fifth roster identity",
+        "all five identical sourced row aliases resolve to one current official",
+        "malformed roster identities stay held but cannot become an official or contact",
+        "same names with different fields never become row aliases; unrelated bodies remain separate"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-roster-term-note.test.ts": {
+      "names": [
+        "every eligible roster term note survives canonical holder lookup and the shared actual reader leaf verbatim",
+        "shared term-note leaf never derives a note from a date or attaches an unresolved roster row"
       ],
       "dynamic": 0
     },
@@ -6682,6 +6797,7 @@
         "dynamic filenames cannot reconstruct removed domain-first readers",
         "historical evidence allowances bind to an exact field and its hash",
         "new state's future legacy layout fails without appearing in the finite move plan",
+        "record JSON pointers retain exact file exemptions without hiding legacy holdings",
         "residual check accepts migrated data and rejects a planted old reference",
         "standalone residual command fails a planted violation without repairing it"
       ],

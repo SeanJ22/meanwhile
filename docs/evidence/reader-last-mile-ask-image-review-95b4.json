@@ -1,0 +1,241 @@
+{
+  "exactHead": "95b4e7b40eafd00ced55ec63eac70e01d7b30fdd",
+  "status": "PROVISIONAL_PENDING_REBUILD",
+  "reviewer": "ask_delivery",
+  "method": "Every listed screenshot was opened and read as an image through view_image; hashes bind the image bytes actually reviewed.",
+  "reviewedAt": "2026-09-04T12:21:32.411Z",
+  "findings": [
+    {
+      "id": "PHONE_DARK_CIVIC_PANEL",
+      "severity": "VISUAL_PARITY",
+      "status": "REPORTED_TO_INTEGRATOR",
+      "description": "All four dark phone civic images show a narrower detached Ask panel over the map. The map legend overlaps lower answer text; light phone uses a full-width scroll panel. The sourced service contact remains readable. Requires wrapper/portal inspection before final acceptance."
+    }
+  ],
+  "images": [
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/85701-desktop-dark-ballot-ask.png",
+      "surface": "ballot-ask",
+      "result": "PASS",
+      "observation": "Correct held campaign amounts and filing provenance; last-record companion proves finance remains reachable in the record list. NJ/NH do not inherit Arizona governor collection gaps.",
+      "sha256": "86a0c47434c62fedf7008b48d52f5a5bc46225481ead338f2c083a8a92745397",
+      "originalPath": "screenshots/reader-last-mile/85701-desktop-dark-ballot-ask.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/85701-desktop-dark-ballot-ask-last-record.png",
+      "surface": "ballot-ask",
+      "result": "PASS",
+      "observation": "Correct held campaign amounts and filing provenance; last-record companion proves finance remains reachable in the record list. NJ/NH do not inherit Arizona governor collection gaps.",
+      "sha256": "82cb8ea2ae85fa9f2de9f6ec3f6aa2fee1374ed9c75d3105f33720c9342d262e",
+      "originalPath": "screenshots/reader-last-mile/85701-desktop-dark-ballot-ask-last-record.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/85641-desktop-dark-ballot-ask.png",
+      "surface": "ballot-ask",
+      "result": "PASS",
+      "observation": "Correct held campaign amounts and filing provenance; last-record companion proves finance remains reachable in the record list. NJ/NH do not inherit Arizona governor collection gaps.",
+      "sha256": "4a02a1be7ab996b28db5f72e44093c341a8627902c2b032d7eaf53591c60b910",
+      "originalPath": "screenshots/reader-last-mile/85641-desktop-dark-ballot-ask.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/85641-desktop-dark-ballot-ask-last-record.png",
+      "surface": "ballot-ask",
+      "result": "PASS",
+      "observation": "Correct held campaign amounts and filing provenance; last-record companion proves finance remains reachable in the record list. NJ/NH do not inherit Arizona governor collection gaps.",
+      "sha256": "7ec702b29813bfd5e196333a69199aad39904b3f3bf2714abb87194034f32971",
+      "originalPath": "screenshots/reader-last-mile/85641-desktop-dark-ballot-ask-last-record.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/07866-desktop-dark-ballot-ask.png",
+      "surface": "ballot-ask",
+      "result": "PASS",
+      "observation": "Correct held campaign amounts and filing provenance; last-record companion proves finance remains reachable in the record list. NJ/NH do not inherit Arizona governor collection gaps.",
+      "sha256": "18e7d76979a9af01b9a43cf0cd7de58434096ec278ffaadb5dc39c7a6895216a",
+      "originalPath": "screenshots/reader-last-mile/07866-desktop-dark-ballot-ask.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/07866-desktop-dark-ballot-ask-last-record.png",
+      "surface": "ballot-ask",
+      "result": "PASS",
+      "observation": "Correct held campaign amounts and filing provenance; last-record companion proves finance remains reachable in the record list. NJ/NH do not inherit Arizona governor collection gaps.",
+      "sha256": "3e89f3952c462bfea5a352f7d79b80853a0f2bc6f280f355182b83a66f1684a5",
+      "originalPath": "screenshots/reader-last-mile/07866-desktop-dark-ballot-ask-last-record.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/03255-desktop-dark-ballot-ask.png",
+      "surface": "ballot-ask",
+      "result": "PASS",
+      "observation": "Correct held campaign amounts and filing provenance; last-record companion proves finance remains reachable in the record list. NJ/NH do not inherit Arizona governor collection gaps.",
+      "sha256": "8362aa1dd239d59d2962c9697c500d1aa3512f13aebe2f7bdd16b921f6008965",
+      "originalPath": "screenshots/reader-last-mile/03255-desktop-dark-ballot-ask.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/03255-desktop-dark-ballot-ask-last-record.png",
+      "surface": "ballot-ask",
+      "result": "PASS",
+      "observation": "Correct held campaign amounts and filing provenance; last-record companion proves finance remains reachable in the record list. NJ/NH do not inherit Arizona governor collection gaps.",
+      "sha256": "55c41e9ebef62c92b389ffa2abcf87acbaee2f905989d749d4c07e263c58b869",
+      "originalPath": "screenshots/reader-last-mile/03255-desktop-dark-ballot-ask-last-record.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/85701-phone-dark-ballot-positions.png",
+      "surface": "positions",
+      "result": "PASS",
+      "observation": "Same held Katie Hobbs transparency quote, campaign-site attribution and one-of-one passage count across two held pages on map and ballot; input and disclosure fit phone viewport in both themes.",
+      "sha256": "237cf66b80ce62b78f71221c6e7d69812b83f8d9d0f1758148c87d66967114b2",
+      "originalPath": "screenshots/reader-last-mile/85701-phone-dark-ballot-positions.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/85701-phone-dark-map-positions.png",
+      "surface": "positions",
+      "result": "PASS",
+      "observation": "Same held Katie Hobbs transparency quote, campaign-site attribution and one-of-one passage count across two held pages on map and ballot; input and disclosure fit phone viewport in both themes.",
+      "sha256": "446011379bcba2013f06b098ef478056ce206eee55a83ff4e4248de399a6edfb",
+      "originalPath": "screenshots/reader-last-mile/85701-phone-dark-map-positions.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/85701-phone-light-ballot-positions.png",
+      "surface": "positions",
+      "result": "PASS",
+      "observation": "Same held Katie Hobbs transparency quote, campaign-site attribution and one-of-one passage count across two held pages on map and ballot; input and disclosure fit phone viewport in both themes.",
+      "sha256": "d236e19290cadcc207ad24747b61753846679e957fe9b44633112dd65aab4616",
+      "originalPath": "screenshots/reader-last-mile/85701-phone-light-ballot-positions.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/85701-phone-light-map-positions.png",
+      "surface": "positions",
+      "result": "PASS",
+      "observation": "Same held Katie Hobbs transparency quote, campaign-site attribution and one-of-one passage count across two held pages on map and ballot; input and disclosure fit phone viewport in both themes.",
+      "sha256": "51894f66431481a9393a822bcb8ecd960a6a026d06b5e0d551c510396de77366",
+      "originalPath": "screenshots/reader-last-mile/85701-phone-light-map-positions.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/85701-desktop-dark-civic.png",
+      "surface": "civic-routing",
+      "result": "PASS",
+      "observation": "Sourced roads-service contact and geographic routing visible; no contradictory empty-grounding panel.",
+      "sha256": "fc4e9d5ee0862bd03335fd04771d5b25a57f2ec8d1c9740fa5cc6fb4d6cbe446",
+      "originalPath": "screenshots/reader-last-mile/85701-desktop-dark-civic.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/85701-desktop-light-civic.png",
+      "surface": "civic-routing",
+      "result": "PASS",
+      "observation": "Sourced roads-service contact and geographic routing visible; no contradictory empty-grounding panel.",
+      "sha256": "7f663205a562437ac7849f52a2c6f6678b91032b7f18dd37df4368c2bb66c96c",
+      "originalPath": "screenshots/reader-last-mile/85701-desktop-light-civic.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/85701-phone-dark-civic.png",
+      "surface": "civic-routing",
+      "result": "VISUAL_PARITY_REVIEW_REQUIRED",
+      "observation": "Sourced roads-service contact and geographic routing visible; no contradictory empty-grounding panel.",
+      "sha256": "0bef7a77b19b0382d414b4f190702dd8f4d6ed3439bee6c24d0cdc8d549e734b",
+      "originalPath": "screenshots/reader-last-mile/85701-phone-dark-civic.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/85701-phone-light-civic.png",
+      "surface": "civic-routing",
+      "result": "PASS",
+      "observation": "Sourced roads-service contact and geographic routing visible; no contradictory empty-grounding panel.",
+      "sha256": "887bcd603bdccfc6877afe4e6f9150d284e815e645ebe3f280491bc0c667c6d8",
+      "originalPath": "screenshots/reader-last-mile/85701-phone-light-civic.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/85641-desktop-dark-civic.png",
+      "surface": "civic-routing",
+      "result": "PASS",
+      "observation": "Sourced roads-service contact and geographic routing visible; no contradictory empty-grounding panel.",
+      "sha256": "c49ec70a182d644a45cf84e2302869b5141570ee06a8078171894110349b0f80",
+      "originalPath": "screenshots/reader-last-mile/85641-desktop-dark-civic.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/85641-desktop-light-civic.png",
+      "surface": "civic-routing",
+      "result": "PASS",
+      "observation": "Sourced roads-service contact and geographic routing visible; no contradictory empty-grounding panel.",
+      "sha256": "9690bc964688be2aaa5e51b1d0f9da431f544014602e471febe93d2d174e8e40",
+      "originalPath": "screenshots/reader-last-mile/85641-desktop-light-civic.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/85641-phone-dark-civic.png",
+      "surface": "civic-routing",
+      "result": "VISUAL_PARITY_REVIEW_REQUIRED",
+      "observation": "Sourced roads-service contact and geographic routing visible; no contradictory empty-grounding panel.",
+      "sha256": "6bdacbc1f214e1469f4e30e2ef293acc97c1d9f6a43489b6b38ab4b842d76100",
+      "originalPath": "screenshots/reader-last-mile/85641-phone-dark-civic.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/85641-phone-light-civic.png",
+      "surface": "civic-routing",
+      "result": "PASS",
+      "observation": "Sourced roads-service contact and geographic routing visible; no contradictory empty-grounding panel.",
+      "sha256": "90cbce5a473f3850b119a661b0f69ee52984eaa0636847bb31c8900718293724",
+      "originalPath": "screenshots/reader-last-mile/85641-phone-light-civic.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/07866-desktop-dark-civic.png",
+      "surface": "civic-routing",
+      "result": "PASS",
+      "observation": "Sourced roads-service contact and geographic routing visible; no contradictory empty-grounding panel.",
+      "sha256": "e89a981b5022886d3b2b7e13a25c97fad5388537ffb2d6719c15704434964ca1",
+      "originalPath": "screenshots/reader-last-mile/07866-desktop-dark-civic.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/07866-desktop-light-civic.png",
+      "surface": "civic-routing",
+      "result": "PASS",
+      "observation": "Sourced roads-service contact and geographic routing visible; no contradictory empty-grounding panel.",
+      "sha256": "7f655daa6d3aa35ffd3dd9a476535fe3eb2651f0ca5725c0785348edaf13c7e3",
+      "originalPath": "screenshots/reader-last-mile/07866-desktop-light-civic.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/07866-phone-dark-civic.png",
+      "surface": "civic-routing",
+      "result": "VISUAL_PARITY_REVIEW_REQUIRED",
+      "observation": "Sourced roads-service contact and geographic routing visible; no contradictory empty-grounding panel.",
+      "sha256": "af9147389a2f89d2024f5fe222cb4d904fac47f540d3e92998b08f75c69fdfd1",
+      "originalPath": "screenshots/reader-last-mile/07866-phone-dark-civic.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/07866-phone-light-civic.png",
+      "surface": "civic-routing",
+      "result": "PASS",
+      "observation": "Sourced roads-service contact and geographic routing visible; no contradictory empty-grounding panel.",
+      "sha256": "0c98883c264ac77ef3eef769425f720248cb6ff533f846d13a8fb0de94191345",
+      "originalPath": "screenshots/reader-last-mile/07866-phone-light-civic.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/03255-desktop-dark-civic.png",
+      "surface": "civic-routing",
+      "result": "PASS",
+      "observation": "Sourced roads-service contact and geographic routing visible; no contradictory empty-grounding panel.",
+      "sha256": "b6098c646a8aaeb4abc5ce24f3244637b3474150b6ae6c11636d61779b6de27b",
+      "originalPath": "screenshots/reader-last-mile/03255-desktop-dark-civic.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/03255-desktop-light-civic.png",
+      "surface": "civic-routing",
+      "result": "PASS",
+      "observation": "Sourced roads-service contact and geographic routing visible; no contradictory empty-grounding panel.",
+      "sha256": "509184ab9b9cb5f55234cd5b8a20c566ce0365dfd7dde775326ae088ca513596",
+      "originalPath": "screenshots/reader-last-mile/03255-desktop-light-civic.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/03255-phone-dark-civic.png",
+      "surface": "civic-routing",
+      "result": "VISUAL_PARITY_REVIEW_REQUIRED",
+      "observation": "Sourced roads-service contact and geographic routing visible; no contradictory empty-grounding panel.",
+      "sha256": "30f870087dd60430a37a499358a07d26e50384841415515be30f493a01e59eb7",
+      "originalPath": "screenshots/reader-last-mile/03255-phone-dark-civic.png"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/03255-phone-light-civic.png",
+      "surface": "civic-routing",
+      "result": "PASS",
+      "observation": "Sourced roads-service contact and geographic routing visible; no contradictory empty-grounding panel.",
+      "sha256": "88f137b803dbdf5c330aff3e3e7dca17f14ff9c2b3d353751932c904d73da580",
+      "originalPath": "screenshots/reader-last-mile/03255-phone-light-civic.png"
+    }
+  ]
+}

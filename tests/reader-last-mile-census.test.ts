@@ -16,9 +16,30 @@ import { ballotHolderObligationFailures } from "../lib/holdings/reader-census.ts
 import { validateReaderClosureReceipt, type ReaderClosureReceipt } from "../lib/holdings/reader-census.ts";
 import { readerAcquisitionBoundaryProblems } from "../lib/holdings/reader-census.ts";
 import { ballotQualificationFailures, type BallotQualificationObligation } from "../lib/holdings/reader-census.ts";
+import { sourceEolEquivalenceProblems, type ReaderSourceEolEquivalence } from "../lib/holdings/reader-census.ts";
+import ts from "typescript";
 
 const canonical: EligibilityFacts = { held: true, source: "CANONICAL_READER_SNAPSHOT", relationship: "CANONICAL_READER_RECORD", identity: "RESOLVED" };
 const staged: EligibilityFacts = { ...canonical, source: "AUTONOMOUS_STAGING", relationship: "ACQUISITION_INPUT" };
+
+test("receipt EOL equivalence accepts only archived executed bytes and their exact Git LF form",()=>{
+ const path="app/api/ask/grounded/route.ts" as const;
+ const raw=Buffer.from("export const held = 17;\r\nexport const source = 'canonical';\n");
+ const canonical=Buffer.from(raw.toString().replace(/\r\n/g,"\n"));
+ const archive=Buffer.from(JSON.stringify({path,rawSourceBase64:raw.toString("base64")}));
+ const emitted=ts.transpileModule(raw.toString(),{fileName:path,reportDiagnostics:true,compilerOptions:{jsx:ts.JsxEmit.ReactJSX,module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022,newLine:ts.NewLineKind.LineFeed,sourceMap:false,inlineSourceMap:false}});
+ const proof:ReaderSourceEolEquivalence={path,recordedSha256:sha256(raw),canonicalLfSha256:sha256(canonical),archivePath:"docs/evidence/reader-last-mile-executed-source-grounded.json",archiveSha256:sha256(archive),gitEol:"lf",typescriptVersion:ts.version,emittedJsSha256:sha256(emitted.outputText)};
+ assert.deepEqual(sourceEolEquivalenceProblems(proof,archive,raw,"lf"),[]);
+ assert.deepEqual(sourceEolEquivalenceProblems(proof,archive,canonical,"lf"),[]);
+ assert.ok(sourceEolEquivalenceProblems(proof,archive,Buffer.from(canonical.toString().replace("17","18")),"lf").some(row=>row.includes("neither the exact")),"A changed civic fact is never an EOL conversion");
+ const forged=Buffer.from(JSON.stringify({path,rawSourceBase64:raw.toString().replace("17","18")}));
+ assert.ok(sourceEolEquivalenceProblems(proof,forged,canonical,"lf").some(row=>row.includes("archive hash differs")));
+ assert.ok(sourceEolEquivalenceProblems({...proof,archiveSha256:sha256(forged)},forged,canonical,"lf").some(row=>row.includes("recorded hash")),"Rehashing a forged archive cannot replace the original execution hash");
+ assert.ok(sourceEolEquivalenceProblems({...proof,canonicalLfSha256:"0".repeat(64)},archive,canonical,"lf").some(row=>row.includes("CRLF-only")));
+ assert.ok(sourceEolEquivalenceProblems({...proof,emittedJsSha256:"0".repeat(64)},archive,canonical,"lf").some(row=>row.includes("JavaScript")));
+ assert.ok(sourceEolEquivalenceProblems(proof,archive,canonical,"unspecified").some(row=>row.includes("Git")));
+ assert.ok(sourceEolEquivalenceProblems({...proof,path:"lib/other.ts" as ReaderSourceEolEquivalence["path"]},archive,canonical,"lf").some(row=>row.includes("outside the two")));
+});
 
 test("the committed complete reader graph still matches its proved holdings, loaders and rendering receipt", () => {
   const root = process.cwd();

@@ -1,0 +1,3630 @@
+{
+  "exactHead": "d9dc2010f8a34766cd2a24ed672a64ac448619e9",
+  "buildId": "LjmqRhnryhXrC6Sq33cmp",
+  "sourceHashes": {
+    "lib/routing/everyday.ts": "5a87633ed1f41cb84a3e16256fc8a4b8387bb214cad3e77e396f7c820aa48c29",
+    "lib/routing/topics.ts": "7ce63572f885edc41e31df4a265971f6dc589c61588ccff70bbbd853ec28cc56",
+    "lib/routing/ask.ts": "c37bde8aa32e0cd3a04651b7fd601873c403135af2d1bb7f6b0209730f318525",
+    "components/ask/ask-box.tsx": "e821f54869ec61a7e2f98642660dd779c1d73fa16a52ec2820669fdf569d0896",
+    "components/shell/pill-cluster.tsx": "c31871fdc6840d07ae075d47274cdf204da99bf1196f12a5cab96003e9a8e399",
+    "app/globals.css": "d69a6432189f2abc378474bf4af7d5928dc1044b84978467eec18898b3482aa6"
+  },
+  "expectedCount": 34,
+  "renderedCount": 34,
+  "records": [
+    {
+      "surface": "civic-routing",
+      "zip": "85701",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 0,
+      "sourceUrl": "https://www.tucsonaz.gov/Departments/Transportation-Mobility/Street-Maintenance",
+      "sourceOrg": "City of Tucson",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "City of Tucson — Street Maintenance (Transportation & Mobility)",
+        "Potholes, streetlights, signs, debris — the city takes these through Tucson 311",
+        "311",
+        "The service line is the answer — this crew owns the fix. Pothole repairs and street light issues are on their own list.",
+        "This was sourced from City of Tucson."
+      ],
+      "returnedFields": [
+        "City of Tucson — Street Maintenance (Transportation & Mobility)",
+        "Potholes, streetlights, signs, debris — the city takes these through Tucson 311",
+        "311",
+        "The service line is the answer — this crew owns the fix. Pothole repairs and street light issues are on their own list.",
+        "This was sourced from City of Tucson."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "85701"
+        ],
+        "body": "City of Tucson — Street Maintenance (Transportation & Mobility)",
+        "service": "Potholes, streetlights, signs, debris — the city takes these through Tucson 311",
+        "phone": "311",
+        "email": null,
+        "requestUrl": "https://www.tucsonaz.gov/Residents/311-Service-Request-Portal",
+        "sourceUrl": "https://www.tucsonaz.gov/Departments/Transportation-Mobility/Street-Maintenance",
+        "sourceOrg": "City of Tucson",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "The service line is the answer — this crew owns the fix. Pothole repairs and street light issues are on their own list."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "c61934df285fbf3ae349597cadbf1210a5acba5baf911024d8f79bea4ba9e6e0",
+      "renderedTextSha256": "37428963b14c1528050eb523d98e1eaafa0eccd24ddf00b3d0aab8471f6764a7",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85701",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "trash-recycling",
+      "canonicalRecordIndex": 1,
+      "sourceUrl": "https://www.tucsonaz.gov/Shared-Contact-Content/Environmental-Services-Contact",
+      "sourceOrg": "City of Tucson",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "City of Tucson — Environmental Services",
+        "Trash and recycling collection, missed pickups, bulk items",
+        "520-791-3171",
+        "This was sourced from City of Tucson."
+      ],
+      "returnedFields": [
+        "City of Tucson — Environmental Services",
+        "Trash and recycling collection, missed pickups, bulk items",
+        "520-791-3171",
+        "This was sourced from City of Tucson."
+      ],
+      "returnedContact": {
+        "topicId": "trash-recycling",
+        "zips": [
+          "85701"
+        ],
+        "body": "City of Tucson — Environmental Services",
+        "service": "Trash and recycling collection, missed pickups, bulk items",
+        "phone": "520-791-3171",
+        "email": null,
+        "requestUrl": null,
+        "sourceUrl": "https://www.tucsonaz.gov/Shared-Contact-Content/Environmental-Services-Contact",
+        "sourceOrg": "City of Tucson",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": null
+      },
+      "question": "Who can help with missed garbage pickup and recycling schedule and bulk trash and illegal dumping?",
+      "canonicalAnswerSha256": "abe3ff83d784fcf88ca57b644bca490c0d09702aa1cb827e5db907ff1886dda2",
+      "renderedTextSha256": "0b53f10de22eb374590b99b781fce5a0ad852204116554a8f7383b79c0ad66d8",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85701",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "water-sewer",
+      "canonicalRecordIndex": 2,
+      "sourceUrl": "https://www.tucsonaz.gov/Departments/Water/Customer-Service/Contact-Tucson-Water",
+      "sourceOrg": "City of Tucson",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Tucson Water",
+        "Water service, bills, leaks",
+        "520-791-3242",
+        "For a broken main or emergency leak: 520-791-4133.",
+        "This was sourced from City of Tucson."
+      ],
+      "returnedFields": [
+        "Tucson Water",
+        "Water service, bills, leaks",
+        "520-791-3242",
+        "For a broken main or emergency leak: 520-791-4133.",
+        "This was sourced from City of Tucson."
+      ],
+      "returnedContact": {
+        "topicId": "water-sewer",
+        "zips": [
+          "85701"
+        ],
+        "body": "Tucson Water",
+        "service": "Water service, bills, leaks",
+        "phone": "520-791-3242",
+        "email": null,
+        "requestUrl": null,
+        "sourceUrl": "https://www.tucsonaz.gov/Departments/Water/Customer-Service/Contact-Tucson-Water",
+        "sourceOrg": "City of Tucson",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "For a broken main or emergency leak: 520-791-4133."
+      },
+      "question": "Who can help with water main break and sewer backup and water bill question and no water pressure?",
+      "canonicalAnswerSha256": "863ae1f6de6d10454786e5b9d3047b7d962a67c634a157e205b5dc12003ec944",
+      "renderedTextSha256": "2849db42e4f69c86a65b6fb3d62fdde56bca5d0e534814457f5c6d8175afef80",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85701",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "noise",
+      "canonicalRecordIndex": 3,
+      "sourceUrl": "https://www.tucsonaz.gov/Departments/Police/Contact-TPD",
+      "sourceOrg": "City of Tucson",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Tucson Police Department",
+        "Noise complaints — the non-emergency line",
+        "520-791-4444",
+        "This was sourced from City of Tucson."
+      ],
+      "returnedFields": [
+        "Tucson Police Department",
+        "Noise complaints — the non-emergency line",
+        "520-791-4444",
+        "This was sourced from City of Tucson."
+      ],
+      "returnedContact": {
+        "topicId": "noise",
+        "zips": [
+          "85701"
+        ],
+        "body": "Tucson Police Department",
+        "service": "Noise complaints — the non-emergency line",
+        "phone": "520-791-4444",
+        "email": null,
+        "requestUrl": null,
+        "sourceUrl": "https://www.tucsonaz.gov/Departments/Police/Contact-TPD",
+        "sourceOrg": "City of Tucson",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": null
+      },
+      "question": "Who can help with loud music at night and construction noise and noisy neighbors?",
+      "canonicalAnswerSha256": "bc4c4b3449df0d051e12d58b8a7a5b1727e890e7271a21e3bc5c21f6b647e069",
+      "renderedTextSha256": "5bfac6241f448454be5514d14fc7652c37d3cab50a4a93cf057e2595659a9efe",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85701",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "zoning-development",
+      "canonicalRecordIndex": 4,
+      "sourceUrl": "https://www.tucsonaz.gov/Departments/Planning-Development-Services",
+      "sourceOrg": "City of Tucson",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "City of Tucson — Planning & Development Services",
+        "Building permits, zoning questions inside city limits",
+        "520-791-5550",
+        "pdsdinquiries@tucsonaz.gov",
+        "This was sourced from City of Tucson."
+      ],
+      "returnedFields": [
+        "City of Tucson — Planning & Development Services",
+        "Building permits, zoning questions inside city limits",
+        "520-791-5550",
+        "pdsdinquiries@tucsonaz.gov",
+        "This was sourced from City of Tucson."
+      ],
+      "returnedContact": {
+        "topicId": "zoning-development",
+        "zips": [
+          "85701"
+        ],
+        "body": "City of Tucson — Planning & Development Services",
+        "service": "Building permits, zoning questions inside city limits",
+        "phone": "520-791-5550",
+        "email": "pdsdinquiries@tucsonaz.gov",
+        "requestUrl": null,
+        "sourceUrl": "https://www.tucsonaz.gov/Departments/Planning-Development-Services",
+        "sourceOrg": "City of Tucson",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": null
+      },
+      "question": "Who can help with rezoning next door and new development and data center coming and warehouse proposal?",
+      "canonicalAnswerSha256": "3dbdceaff680ac18590507f6491c91bfae692f9464e99dbbaa168b8cf686bb12",
+      "renderedTextSha256": "db2e22632b38c92d4c1159a55ab372cce3ae60e95e27bf40a49263c9bdaa0226",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85701",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "animals",
+      "canonicalRecordIndex": 6,
+      "sourceUrl": "https://www.pima.gov/2285/Animal-Care-Department-Directory",
+      "sourceOrg": "Pima County",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Pima Animal Care Center",
+        "Strays, animal complaints, licensing — the whole county",
+        "520-724-5900",
+        "This was sourced from Pima County."
+      ],
+      "returnedFields": [
+        "Pima Animal Care Center",
+        "Strays, animal complaints, licensing — the whole county",
+        "520-724-5900",
+        "This was sourced from Pima County."
+      ],
+      "returnedContact": {
+        "topicId": "animals",
+        "zips": [
+          "85701",
+          "85641"
+        ],
+        "body": "Pima Animal Care Center",
+        "service": "Strays, animal complaints, licensing — the whole county",
+        "phone": "520-724-5900",
+        "email": null,
+        "requestUrl": null,
+        "sourceUrl": "https://www.pima.gov/2285/Animal-Care-Department-Directory",
+        "sourceOrg": "Pima County",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": null
+      },
+      "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
+      "canonicalAnswerSha256": "ffdfa05eb4c008bc0fb0ba4641f5a961487fa900d38a6cffbbf9f19b828d9c01",
+      "renderedTextSha256": "41bffa05b5322347ed67171571d9e398fe271e0f17e4a39f0af3d1a4c86c770c",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85701",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "parks",
+      "canonicalRecordIndex": 5,
+      "sourceUrl": "https://www.tucsonaz.gov/Departments/Parks-and-Recreation/Contact-Parks-and-Recreation",
+      "sourceOrg": "City of Tucson",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "City of Tucson — Parks and Recreation",
+        "City parks, pools, programs, reservations",
+        "520-791-4873",
+        "This was sourced from City of Tucson."
+      ],
+      "returnedFields": [
+        "City of Tucson — Parks and Recreation",
+        "City parks, pools, programs, reservations",
+        "520-791-4873",
+        "This was sourced from City of Tucson."
+      ],
+      "returnedContact": {
+        "topicId": "parks",
+        "zips": [
+          "85701"
+        ],
+        "body": "City of Tucson — Parks and Recreation",
+        "service": "City parks, pools, programs, reservations",
+        "phone": "520-791-4873",
+        "email": null,
+        "requestUrl": null,
+        "sourceUrl": "https://www.tucsonaz.gov/Departments/Parks-and-Recreation/Contact-Parks-and-Recreation",
+        "sourceOrg": "City of Tucson",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": null
+      },
+      "question": "Who can help with broken playground equipment and park maintenance and pool hours and reserve a pavilion?",
+      "canonicalAnswerSha256": "686aff1d58972bf829210c46f25e7c5b38cec7632ecc2a270018e2f41fed38fe",
+      "renderedTextSha256": "c879181f1f9152e8f70118c177f4bd966486bdd270559009cafcee03b2b862a2",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85701",
+      "topicId": "snow-removal",
+      "disposition": "SOURCE/HOLDING_UNAVAILABLE",
+      "reason": "No dedicated snow-removal service exists to name — measurable snow in Tucson is rare enough that the city meets it through street maintenance, not a standing plow operation. Road problems route to roads-local.",
+      "expectedCount": 0,
+      "returnedCount": 0
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85701",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "property-taxes",
+      "canonicalRecordIndex": 7,
+      "sourceUrl": "https://www.asr.pima.gov/contact",
+      "sourceOrg": "Pima County",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Pima County Assessor",
+        "Valuations, exemptions, assessment questions",
+        "520-724-8630",
+        "asrPC@pima.gov",
+        "This was sourced from Pima County."
+      ],
+      "returnedFields": [
+        "Pima County Assessor",
+        "Valuations, exemptions, assessment questions",
+        "520-724-8630",
+        "asrPC@pima.gov",
+        "This was sourced from Pima County."
+      ],
+      "returnedContact": {
+        "topicId": "property-taxes",
+        "zips": [
+          "85701",
+          "85641"
+        ],
+        "body": "Pima County Assessor",
+        "service": "Valuations, exemptions, assessment questions",
+        "phone": "520-724-8630",
+        "email": "asrPC@pima.gov",
+        "requestUrl": null,
+        "sourceUrl": "https://www.asr.pima.gov/contact",
+        "sourceOrg": "Pima County",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": null
+      },
+      "question": "Who can help with property tax bill and assessment too high and tax rate?",
+      "canonicalAnswerSha256": "df9b2de2bbdc464068c2b9e54bb3dc7cd13a16c9e7b9ab16c433881dc0d1dccf",
+      "renderedTextSha256": "43d6d49d1fa05c3669e5a2422ba9a6dde8c715de3645d500492bbda35f89bf04",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85701",
+      "viewport": "desktop",
+      "theme": "light",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 0,
+      "sourceUrl": "https://www.tucsonaz.gov/Departments/Transportation-Mobility/Street-Maintenance",
+      "sourceOrg": "City of Tucson",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "City of Tucson — Street Maintenance (Transportation & Mobility)",
+        "Potholes, streetlights, signs, debris — the city takes these through Tucson 311",
+        "311",
+        "The service line is the answer — this crew owns the fix. Pothole repairs and street light issues are on their own list.",
+        "This was sourced from City of Tucson."
+      ],
+      "returnedFields": [
+        "City of Tucson — Street Maintenance (Transportation & Mobility)",
+        "Potholes, streetlights, signs, debris — the city takes these through Tucson 311",
+        "311",
+        "The service line is the answer — this crew owns the fix. Pothole repairs and street light issues are on their own list.",
+        "This was sourced from City of Tucson."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "85701"
+        ],
+        "body": "City of Tucson — Street Maintenance (Transportation & Mobility)",
+        "service": "Potholes, streetlights, signs, debris — the city takes these through Tucson 311",
+        "phone": "311",
+        "email": null,
+        "requestUrl": "https://www.tucsonaz.gov/Residents/311-Service-Request-Portal",
+        "sourceUrl": "https://www.tucsonaz.gov/Departments/Transportation-Mobility/Street-Maintenance",
+        "sourceOrg": "City of Tucson",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "The service line is the answer — this crew owns the fix. Pothole repairs and street light issues are on their own list."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "c61934df285fbf3ae349597cadbf1210a5acba5baf911024d8f79bea4ba9e6e0",
+      "renderedTextSha256": "37428963b14c1528050eb523d98e1eaafa0eccd24ddf00b3d0aab8471f6764a7",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85701",
+      "viewport": "phone",
+      "theme": "dark",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 0,
+      "sourceUrl": "https://www.tucsonaz.gov/Departments/Transportation-Mobility/Street-Maintenance",
+      "sourceOrg": "City of Tucson",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "City of Tucson — Street Maintenance (Transportation & Mobility)",
+        "Potholes, streetlights, signs, debris — the city takes these through Tucson 311",
+        "311",
+        "The service line is the answer — this crew owns the fix. Pothole repairs and street light issues are on their own list.",
+        "This was sourced from City of Tucson."
+      ],
+      "returnedFields": [
+        "City of Tucson — Street Maintenance (Transportation & Mobility)",
+        "Potholes, streetlights, signs, debris — the city takes these through Tucson 311",
+        "311",
+        "The service line is the answer — this crew owns the fix. Pothole repairs and street light issues are on their own list.",
+        "This was sourced from City of Tucson."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "85701"
+        ],
+        "body": "City of Tucson — Street Maintenance (Transportation & Mobility)",
+        "service": "Potholes, streetlights, signs, debris — the city takes these through Tucson 311",
+        "phone": "311",
+        "email": null,
+        "requestUrl": "https://www.tucsonaz.gov/Residents/311-Service-Request-Portal",
+        "sourceUrl": "https://www.tucsonaz.gov/Departments/Transportation-Mobility/Street-Maintenance",
+        "sourceOrg": "City of Tucson",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "The service line is the answer — this crew owns the fix. Pothole repairs and street light issues are on their own list."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "c61934df285fbf3ae349597cadbf1210a5acba5baf911024d8f79bea4ba9e6e0",
+      "renderedTextSha256": "37428963b14c1528050eb523d98e1eaafa0eccd24ddf00b3d0aab8471f6764a7",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85701",
+      "viewport": "phone",
+      "theme": "light",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 0,
+      "sourceUrl": "https://www.tucsonaz.gov/Departments/Transportation-Mobility/Street-Maintenance",
+      "sourceOrg": "City of Tucson",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "City of Tucson — Street Maintenance (Transportation & Mobility)",
+        "Potholes, streetlights, signs, debris — the city takes these through Tucson 311",
+        "311",
+        "The service line is the answer — this crew owns the fix. Pothole repairs and street light issues are on their own list.",
+        "This was sourced from City of Tucson."
+      ],
+      "returnedFields": [
+        "City of Tucson — Street Maintenance (Transportation & Mobility)",
+        "Potholes, streetlights, signs, debris — the city takes these through Tucson 311",
+        "311",
+        "The service line is the answer — this crew owns the fix. Pothole repairs and street light issues are on their own list.",
+        "This was sourced from City of Tucson."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "85701"
+        ],
+        "body": "City of Tucson — Street Maintenance (Transportation & Mobility)",
+        "service": "Potholes, streetlights, signs, debris — the city takes these through Tucson 311",
+        "phone": "311",
+        "email": null,
+        "requestUrl": "https://www.tucsonaz.gov/Residents/311-Service-Request-Portal",
+        "sourceUrl": "https://www.tucsonaz.gov/Departments/Transportation-Mobility/Street-Maintenance",
+        "sourceOrg": "City of Tucson",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "The service line is the answer — this crew owns the fix. Pothole repairs and street light issues are on their own list."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "c61934df285fbf3ae349597cadbf1210a5acba5baf911024d8f79bea4ba9e6e0",
+      "renderedTextSha256": "37428963b14c1528050eb523d98e1eaafa0eccd24ddf00b3d0aab8471f6764a7",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85701",
+      "viewport": "phone",
+      "theme": "dark",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 0,
+      "sourceUrl": "https://www.tucsonaz.gov/Departments/Transportation-Mobility/Street-Maintenance",
+      "sourceOrg": "City of Tucson",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "City of Tucson — Street Maintenance (Transportation & Mobility)",
+        "Potholes, streetlights, signs, debris — the city takes these through Tucson 311",
+        "311",
+        "The service line is the answer — this crew owns the fix. Pothole repairs and street light issues are on their own list.",
+        "This was sourced from City of Tucson."
+      ],
+      "returnedFields": [
+        "City of Tucson — Street Maintenance (Transportation & Mobility)",
+        "Potholes, streetlights, signs, debris — the city takes these through Tucson 311",
+        "311",
+        "The service line is the answer — this crew owns the fix. Pothole repairs and street light issues are on their own list.",
+        "This was sourced from City of Tucson."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "85701"
+        ],
+        "body": "City of Tucson — Street Maintenance (Transportation & Mobility)",
+        "service": "Potholes, streetlights, signs, debris — the city takes these through Tucson 311",
+        "phone": "311",
+        "email": null,
+        "requestUrl": "https://www.tucsonaz.gov/Residents/311-Service-Request-Portal",
+        "sourceUrl": "https://www.tucsonaz.gov/Departments/Transportation-Mobility/Street-Maintenance",
+        "sourceOrg": "City of Tucson",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "The service line is the answer — this crew owns the fix. Pothole repairs and street light issues are on their own list."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "c61934df285fbf3ae349597cadbf1210a5acba5baf911024d8f79bea4ba9e6e0",
+      "renderedTextSha256": "37428963b14c1528050eb523d98e1eaafa0eccd24ddf00b3d0aab8471f6764a7",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85701",
+      "viewport": "phone",
+      "theme": "light",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 0,
+      "sourceUrl": "https://www.tucsonaz.gov/Departments/Transportation-Mobility/Street-Maintenance",
+      "sourceOrg": "City of Tucson",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "City of Tucson — Street Maintenance (Transportation & Mobility)",
+        "Potholes, streetlights, signs, debris — the city takes these through Tucson 311",
+        "311",
+        "The service line is the answer — this crew owns the fix. Pothole repairs and street light issues are on their own list.",
+        "This was sourced from City of Tucson."
+      ],
+      "returnedFields": [
+        "City of Tucson — Street Maintenance (Transportation & Mobility)",
+        "Potholes, streetlights, signs, debris — the city takes these through Tucson 311",
+        "311",
+        "The service line is the answer — this crew owns the fix. Pothole repairs and street light issues are on their own list.",
+        "This was sourced from City of Tucson."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "85701"
+        ],
+        "body": "City of Tucson — Street Maintenance (Transportation & Mobility)",
+        "service": "Potholes, streetlights, signs, debris — the city takes these through Tucson 311",
+        "phone": "311",
+        "email": null,
+        "requestUrl": "https://www.tucsonaz.gov/Residents/311-Service-Request-Portal",
+        "sourceUrl": "https://www.tucsonaz.gov/Departments/Transportation-Mobility/Street-Maintenance",
+        "sourceOrg": "City of Tucson",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "The service line is the answer — this crew owns the fix. Pothole repairs and street light issues are on their own list."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "c61934df285fbf3ae349597cadbf1210a5acba5baf911024d8f79bea4ba9e6e0",
+      "renderedTextSha256": "37428963b14c1528050eb523d98e1eaafa0eccd24ddf00b3d0aab8471f6764a7",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85641",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 8,
+      "sourceUrl": "https://www.pima.gov/1012/Service-Request",
+      "sourceOrg": "Pima County",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Pima County Department of Transportation — Maintenance & Operations",
+        "Potholes and road problems on county-maintained roads",
+        "520-724-6410",
+        "The service line is the answer — this crew owns the fix.",
+        "This was sourced from Pima County."
+      ],
+      "returnedFields": [
+        "Pima County Department of Transportation — Maintenance & Operations",
+        "Potholes and road problems on county-maintained roads",
+        "520-724-6410",
+        "The service line is the answer — this crew owns the fix.",
+        "This was sourced from Pima County."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "85641"
+        ],
+        "body": "Pima County Department of Transportation — Maintenance & Operations",
+        "service": "Potholes and road problems on county-maintained roads",
+        "phone": "520-724-6410",
+        "email": null,
+        "requestUrl": "https://www.pima.gov/897/Report-a-Problem-Submit-Request",
+        "sourceUrl": "https://www.pima.gov/1012/Service-Request",
+        "sourceOrg": "Pima County",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "The service line is the answer — this crew owns the fix."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "7f6ecafca5cda5753c177262020233a575641b29c744d78840ca40287b1f9c2f",
+      "renderedTextSha256": "6536c053a8d3b2cb31b367593ce998a1ea6fb486e1dad22485d6842c8753b507",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85641",
+      "topicId": "trash-recycling",
+      "disposition": "SOURCE/HOLDING_UNAVAILABLE",
+      "reason": "No public collection owner found: unincorporated Pima County appears to rely on private subscription haulers, and no county page naming a collection service was found this session. Rungs: pima.gov searched (no residential-collection page); the claim of private-only service is NOT asserted to readers — the cell is a recorded gap.",
+      "expectedCount": 0,
+      "returnedCount": 0
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85641",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "water-sewer",
+      "canonicalRecordIndex": 9,
+      "sourceUrl": "https://sewerservicerequest.pima.gov/help",
+      "sourceOrg": "Pima County",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Pima County Regional Wastewater Reclamation",
+        "Sewer service and sewerage system help",
+        "520-724-3400",
+        "Drinking water here comes from private water companies that vary by address — check your water bill for yours.",
+        "This was sourced from Pima County."
+      ],
+      "returnedFields": [
+        "Pima County Regional Wastewater Reclamation",
+        "Sewer service and sewerage system help",
+        "520-724-3400",
+        "Drinking water here comes from private water companies that vary by address — check your water bill for yours.",
+        "This was sourced from Pima County."
+      ],
+      "returnedContact": {
+        "topicId": "water-sewer",
+        "zips": [
+          "85641"
+        ],
+        "body": "Pima County Regional Wastewater Reclamation",
+        "service": "Sewer service and sewerage system help",
+        "phone": "520-724-3400",
+        "email": null,
+        "requestUrl": "https://sewerservicerequest.pima.gov/",
+        "sourceUrl": "https://sewerservicerequest.pima.gov/help",
+        "sourceOrg": "Pima County",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "Drinking water here comes from private water companies that vary by address — check your water bill for yours."
+      },
+      "question": "Who can help with water main break and sewer backup and water bill question and no water pressure?",
+      "canonicalAnswerSha256": "1a36825c1b4df2b3200912d60fcfd72b731ae26aae47a50c611985bf01414959",
+      "renderedTextSha256": "d6d821f9c54a5ba85727c36f9fe0299d1ccb458737455a2f958f50f1a173b327",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85641",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "noise",
+      "canonicalRecordIndex": 10,
+      "sourceUrl": "https://pimasheriff.org/about-us/contact-us",
+      "sourceOrg": "Pima County Sheriff's Department",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Pima County Sheriff's Department",
+        "Noise complaints in unincorporated areas — the non-emergency line",
+        "520-351-4900",
+        "This was sourced from Pima County Sheriff's Department."
+      ],
+      "returnedFields": [
+        "Pima County Sheriff's Department",
+        "Noise complaints in unincorporated areas — the non-emergency line",
+        "520-351-4900",
+        "This was sourced from Pima County Sheriff's Department."
+      ],
+      "returnedContact": {
+        "topicId": "noise",
+        "zips": [
+          "85641"
+        ],
+        "body": "Pima County Sheriff's Department",
+        "service": "Noise complaints in unincorporated areas — the non-emergency line",
+        "phone": "520-351-4900",
+        "email": null,
+        "requestUrl": null,
+        "sourceUrl": "https://pimasheriff.org/about-us/contact-us",
+        "sourceOrg": "Pima County Sheriff's Department",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": null
+      },
+      "question": "Who can help with loud music at night and construction noise and noisy neighbors?",
+      "canonicalAnswerSha256": "34994d13a74d8e4dece435005c9e135a6139e595f1e4bbc1f33b3dbb233258ca",
+      "renderedTextSha256": "0b919e35ce78de5272c6bf44f7d4818c672b1a4fed5de9bee3c0da50ad9398b2",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85641",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "zoning-development",
+      "canonicalRecordIndex": 11,
+      "sourceUrl": "https://www.pima.gov/970/Development-Services",
+      "sourceOrg": "Pima County",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Pima County Development Services",
+        "Permits and zoning outside city limits",
+        "520-724-9000",
+        "Zoning and building-code complaints: 520-724-9970.",
+        "This was sourced from Pima County."
+      ],
+      "returnedFields": [
+        "Pima County Development Services",
+        "Permits and zoning outside city limits",
+        "520-724-9000",
+        "Zoning and building-code complaints: 520-724-9970.",
+        "This was sourced from Pima County."
+      ],
+      "returnedContact": {
+        "topicId": "zoning-development",
+        "zips": [
+          "85641"
+        ],
+        "body": "Pima County Development Services",
+        "service": "Permits and zoning outside city limits",
+        "phone": "520-724-9000",
+        "email": null,
+        "requestUrl": null,
+        "sourceUrl": "https://www.pima.gov/970/Development-Services",
+        "sourceOrg": "Pima County",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "Zoning and building-code complaints: 520-724-9970."
+      },
+      "question": "Who can help with rezoning next door and new development and data center coming and warehouse proposal?",
+      "canonicalAnswerSha256": "712c7051a1643bc8f66436fe31c9ddb03a4e16e99b6aa9bb9afdb13af95aea19",
+      "renderedTextSha256": "cf2ff41621bed5dec4959fe63c30fcb7ac3fe66d3373b324551d9b34f31cddcd",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85641",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "animals",
+      "canonicalRecordIndex": 6,
+      "sourceUrl": "https://www.pima.gov/2285/Animal-Care-Department-Directory",
+      "sourceOrg": "Pima County",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Pima Animal Care Center",
+        "Strays, animal complaints, licensing — the whole county",
+        "520-724-5900",
+        "This was sourced from Pima County."
+      ],
+      "returnedFields": [
+        "Pima Animal Care Center",
+        "Strays, animal complaints, licensing — the whole county",
+        "520-724-5900",
+        "This was sourced from Pima County."
+      ],
+      "returnedContact": {
+        "topicId": "animals",
+        "zips": [
+          "85701",
+          "85641"
+        ],
+        "body": "Pima Animal Care Center",
+        "service": "Strays, animal complaints, licensing — the whole county",
+        "phone": "520-724-5900",
+        "email": null,
+        "requestUrl": null,
+        "sourceUrl": "https://www.pima.gov/2285/Animal-Care-Department-Directory",
+        "sourceOrg": "Pima County",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": null
+      },
+      "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
+      "canonicalAnswerSha256": "fcacb93bbaacd8bc09d5293dec36f9a49be3ad27019eaded3bdbd98491c4feeb",
+      "renderedTextSha256": "de64e2a59d2192941ff4bd0b509826ebfb5ed07be376e34cfab8725a83fe5d21",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85641",
+      "topicId": "parks",
+      "disposition": "SOURCE/HOLDING_UNAVAILABLE",
+      "reason": "Pima County Natural Resources, Parks & Recreation is the owner, but its phone number conflicts between secondary sources (520-877-6000 vs 520-724-5000) and the county page fetched this session carried no number. Refusing to publish a number two sources disagree on — rung recorded, browser phase may resolve.",
+      "expectedCount": 0,
+      "returnedCount": 0
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85641",
+      "topicId": "snow-removal",
+      "disposition": "SOURCE/HOLDING_UNAVAILABLE",
+      "reason": "Same as 85701 — no standing snow operation in the Sonoran Desert lowlands; county road problems route to roads-local.",
+      "expectedCount": 0,
+      "returnedCount": 0
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85641",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "property-taxes",
+      "canonicalRecordIndex": 7,
+      "sourceUrl": "https://www.asr.pima.gov/contact",
+      "sourceOrg": "Pima County",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Pima County Assessor",
+        "Valuations, exemptions, assessment questions",
+        "520-724-8630",
+        "asrPC@pima.gov",
+        "This was sourced from Pima County."
+      ],
+      "returnedFields": [
+        "Pima County Assessor",
+        "Valuations, exemptions, assessment questions",
+        "520-724-8630",
+        "asrPC@pima.gov",
+        "This was sourced from Pima County."
+      ],
+      "returnedContact": {
+        "topicId": "property-taxes",
+        "zips": [
+          "85701",
+          "85641"
+        ],
+        "body": "Pima County Assessor",
+        "service": "Valuations, exemptions, assessment questions",
+        "phone": "520-724-8630",
+        "email": "asrPC@pima.gov",
+        "requestUrl": null,
+        "sourceUrl": "https://www.asr.pima.gov/contact",
+        "sourceOrg": "Pima County",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": null
+      },
+      "question": "Who can help with property tax bill and assessment too high and tax rate?",
+      "canonicalAnswerSha256": "009adaf8c0dbdcc26270a052d655fccf3c339994bcc1dce441b7e2cbfd966511",
+      "renderedTextSha256": "58487f9f7d4281a37998d0b3a6484a5ddeb703860efa90a87da5f87cbd269b92",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85641",
+      "viewport": "desktop",
+      "theme": "light",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 8,
+      "sourceUrl": "https://www.pima.gov/1012/Service-Request",
+      "sourceOrg": "Pima County",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Pima County Department of Transportation — Maintenance & Operations",
+        "Potholes and road problems on county-maintained roads",
+        "520-724-6410",
+        "The service line is the answer — this crew owns the fix.",
+        "This was sourced from Pima County."
+      ],
+      "returnedFields": [
+        "Pima County Department of Transportation — Maintenance & Operations",
+        "Potholes and road problems on county-maintained roads",
+        "520-724-6410",
+        "The service line is the answer — this crew owns the fix.",
+        "This was sourced from Pima County."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "85641"
+        ],
+        "body": "Pima County Department of Transportation — Maintenance & Operations",
+        "service": "Potholes and road problems on county-maintained roads",
+        "phone": "520-724-6410",
+        "email": null,
+        "requestUrl": "https://www.pima.gov/897/Report-a-Problem-Submit-Request",
+        "sourceUrl": "https://www.pima.gov/1012/Service-Request",
+        "sourceOrg": "Pima County",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "The service line is the answer — this crew owns the fix."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "7f6ecafca5cda5753c177262020233a575641b29c744d78840ca40287b1f9c2f",
+      "renderedTextSha256": "6536c053a8d3b2cb31b367593ce998a1ea6fb486e1dad22485d6842c8753b507",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85641",
+      "viewport": "phone",
+      "theme": "dark",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 8,
+      "sourceUrl": "https://www.pima.gov/1012/Service-Request",
+      "sourceOrg": "Pima County",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Pima County Department of Transportation — Maintenance & Operations",
+        "Potholes and road problems on county-maintained roads",
+        "520-724-6410",
+        "The service line is the answer — this crew owns the fix.",
+        "This was sourced from Pima County."
+      ],
+      "returnedFields": [
+        "Pima County Department of Transportation — Maintenance & Operations",
+        "Potholes and road problems on county-maintained roads",
+        "520-724-6410",
+        "The service line is the answer — this crew owns the fix.",
+        "This was sourced from Pima County."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "85641"
+        ],
+        "body": "Pima County Department of Transportation — Maintenance & Operations",
+        "service": "Potholes and road problems on county-maintained roads",
+        "phone": "520-724-6410",
+        "email": null,
+        "requestUrl": "https://www.pima.gov/897/Report-a-Problem-Submit-Request",
+        "sourceUrl": "https://www.pima.gov/1012/Service-Request",
+        "sourceOrg": "Pima County",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "The service line is the answer — this crew owns the fix."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "7f6ecafca5cda5753c177262020233a575641b29c744d78840ca40287b1f9c2f",
+      "renderedTextSha256": "6536c053a8d3b2cb31b367593ce998a1ea6fb486e1dad22485d6842c8753b507",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85641",
+      "viewport": "phone",
+      "theme": "light",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 8,
+      "sourceUrl": "https://www.pima.gov/1012/Service-Request",
+      "sourceOrg": "Pima County",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Pima County Department of Transportation — Maintenance & Operations",
+        "Potholes and road problems on county-maintained roads",
+        "520-724-6410",
+        "The service line is the answer — this crew owns the fix.",
+        "This was sourced from Pima County."
+      ],
+      "returnedFields": [
+        "Pima County Department of Transportation — Maintenance & Operations",
+        "Potholes and road problems on county-maintained roads",
+        "520-724-6410",
+        "The service line is the answer — this crew owns the fix.",
+        "This was sourced from Pima County."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "85641"
+        ],
+        "body": "Pima County Department of Transportation — Maintenance & Operations",
+        "service": "Potholes and road problems on county-maintained roads",
+        "phone": "520-724-6410",
+        "email": null,
+        "requestUrl": "https://www.pima.gov/897/Report-a-Problem-Submit-Request",
+        "sourceUrl": "https://www.pima.gov/1012/Service-Request",
+        "sourceOrg": "Pima County",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "The service line is the answer — this crew owns the fix."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "7f6ecafca5cda5753c177262020233a575641b29c744d78840ca40287b1f9c2f",
+      "renderedTextSha256": "6536c053a8d3b2cb31b367593ce998a1ea6fb486e1dad22485d6842c8753b507",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85641",
+      "viewport": "phone",
+      "theme": "dark",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 8,
+      "sourceUrl": "https://www.pima.gov/1012/Service-Request",
+      "sourceOrg": "Pima County",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Pima County Department of Transportation — Maintenance & Operations",
+        "Potholes and road problems on county-maintained roads",
+        "520-724-6410",
+        "The service line is the answer — this crew owns the fix.",
+        "This was sourced from Pima County."
+      ],
+      "returnedFields": [
+        "Pima County Department of Transportation — Maintenance & Operations",
+        "Potholes and road problems on county-maintained roads",
+        "520-724-6410",
+        "The service line is the answer — this crew owns the fix.",
+        "This was sourced from Pima County."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "85641"
+        ],
+        "body": "Pima County Department of Transportation — Maintenance & Operations",
+        "service": "Potholes and road problems on county-maintained roads",
+        "phone": "520-724-6410",
+        "email": null,
+        "requestUrl": "https://www.pima.gov/897/Report-a-Problem-Submit-Request",
+        "sourceUrl": "https://www.pima.gov/1012/Service-Request",
+        "sourceOrg": "Pima County",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "The service line is the answer — this crew owns the fix."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "7f6ecafca5cda5753c177262020233a575641b29c744d78840ca40287b1f9c2f",
+      "renderedTextSha256": "6536c053a8d3b2cb31b367593ce998a1ea6fb486e1dad22485d6842c8753b507",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "85641",
+      "viewport": "phone",
+      "theme": "light",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 8,
+      "sourceUrl": "https://www.pima.gov/1012/Service-Request",
+      "sourceOrg": "Pima County",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Pima County Department of Transportation — Maintenance & Operations",
+        "Potholes and road problems on county-maintained roads",
+        "520-724-6410",
+        "The service line is the answer — this crew owns the fix.",
+        "This was sourced from Pima County."
+      ],
+      "returnedFields": [
+        "Pima County Department of Transportation — Maintenance & Operations",
+        "Potholes and road problems on county-maintained roads",
+        "520-724-6410",
+        "The service line is the answer — this crew owns the fix.",
+        "This was sourced from Pima County."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "85641"
+        ],
+        "body": "Pima County Department of Transportation — Maintenance & Operations",
+        "service": "Potholes and road problems on county-maintained roads",
+        "phone": "520-724-6410",
+        "email": null,
+        "requestUrl": "https://www.pima.gov/897/Report-a-Problem-Submit-Request",
+        "sourceUrl": "https://www.pima.gov/1012/Service-Request",
+        "sourceOrg": "Pima County",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "The service line is the answer — this crew owns the fix."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "7f6ecafca5cda5753c177262020233a575641b29c744d78840ca40287b1f9c2f",
+      "renderedTextSha256": "6536c053a8d3b2cb31b367593ce998a1ea6fb486e1dad22485d6842c8753b507",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 12,
+      "sourceUrl": "https://www.rockawaytownship.org/187/Public-Works-Utilities",
+      "sourceOrg": "Rockaway Township",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Rockaway Township — Department of Public Works & Utilities",
+        "Township roads: potholes, snow, drainage",
+        "973-983-2891",
+        "dpw@rockawaytownship.org",
+        "For Rockaway Township addresses. Also answers at 973-627-1700.",
+        "This was sourced from Rockaway Township."
+      ],
+      "returnedFields": [
+        "Rockaway Township — Department of Public Works & Utilities",
+        "Township roads: potholes, snow, drainage",
+        "973-983-2891",
+        "dpw@rockawaytownship.org",
+        "For Rockaway Township addresses. Also answers at 973-627-1700.",
+        "This was sourced from Rockaway Township."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "07866"
+        ],
+        "body": "Rockaway Township — Department of Public Works & Utilities",
+        "service": "Township roads: potholes, snow, drainage",
+        "phone": "973-983-2891",
+        "email": "dpw@rockawaytownship.org",
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawaytownship.org/187/Public-Works-Utilities",
+        "sourceOrg": "Rockaway Township",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "For Rockaway Township addresses. Also answers at 973-627-1700."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "284ee64eeb30a522ff64e1c920f320a3c4f7b025045009abe194dbc28326d083",
+      "renderedTextSha256": "ae92a343ef9b8aa116c35fc4ed7cc2d4da48409c9c5d41d0a8d3d0e4f2d88b71",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 18,
+      "sourceUrl": "https://www.rockawayborough.org/departments/publicworks/",
+      "sourceOrg": "Borough of Rockaway",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Borough of Rockaway — Department of Public Works",
+        "Borough roads: potholes, storm drains, line painting",
+        "973-627-7025",
+        "dpwdirector@rockawayborough.org",
+        "After-hours emergencies: 973-627-1314.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedFields": [
+        "Borough of Rockaway — Department of Public Works",
+        "Borough roads: potholes, storm drains, line painting",
+        "973-627-7025",
+        "dpwdirector@rockawayborough.org",
+        "After-hours emergencies: 973-627-1314.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "07866"
+        ],
+        "body": "Borough of Rockaway — Department of Public Works",
+        "service": "Borough roads: potholes, storm drains, line painting",
+        "phone": "973-627-7025",
+        "email": "dpwdirector@rockawayborough.org",
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawayborough.org/departments/publicworks/",
+        "sourceOrg": "Borough of Rockaway",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "After-hours emergencies: 973-627-1314."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "284ee64eeb30a522ff64e1c920f320a3c4f7b025045009abe194dbc28326d083",
+      "renderedTextSha256": "ae92a343ef9b8aa116c35fc4ed7cc2d4da48409c9c5d41d0a8d3d0e4f2d88b71",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "trash-recycling",
+      "canonicalRecordIndex": 14,
+      "sourceUrl": "https://www.rockawaytownship.org/189/Recycle",
+      "sourceOrg": "Rockaway Township",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Rockaway Township — Department of Public Works",
+        "Recycling, bulk collection, and garbage questions",
+        "973-983-2891",
+        "dpw@rockawaytownship.org",
+        "For Rockaway Township addresses.",
+        "This was sourced from Rockaway Township."
+      ],
+      "returnedFields": [
+        "Rockaway Township — Department of Public Works",
+        "Recycling, bulk collection, and garbage questions",
+        "973-983-2891",
+        "dpw@rockawaytownship.org",
+        "For Rockaway Township addresses.",
+        "This was sourced from Rockaway Township."
+      ],
+      "returnedContact": {
+        "topicId": "trash-recycling",
+        "zips": [
+          "07866"
+        ],
+        "body": "Rockaway Township — Department of Public Works",
+        "service": "Recycling, bulk collection, and garbage questions",
+        "phone": "973-983-2891",
+        "email": "dpw@rockawaytownship.org",
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawaytownship.org/189/Recycle",
+        "sourceOrg": "Rockaway Township",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "For Rockaway Township addresses."
+      },
+      "question": "Who can help with missed garbage pickup and recycling schedule and bulk trash and illegal dumping?",
+      "canonicalAnswerSha256": "049c6032cac90c31b6610cf180dfe8e4e09019792ff13806d1cf21b202af61a7",
+      "renderedTextSha256": "9a73b1fb38760f4044fa1995aab87d46282837bb61fd1dc6fb63d8486e981161",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "trash-recycling",
+      "canonicalRecordIndex": 20,
+      "sourceUrl": "https://www.rockawayborough.org/departments/sanitation/",
+      "sourceOrg": "Borough of Rockaway",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Borough of Rockaway — Sanitation & Recycling",
+        "Weekly garbage, biweekly recycling, the Union St. depot",
+        "973-627-7025",
+        "dpwsupt@rockawayborough.org",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedFields": [
+        "Borough of Rockaway — Sanitation & Recycling",
+        "Weekly garbage, biweekly recycling, the Union St. depot",
+        "973-627-7025",
+        "dpwsupt@rockawayborough.org",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedContact": {
+        "topicId": "trash-recycling",
+        "zips": [
+          "07866"
+        ],
+        "body": "Borough of Rockaway — Sanitation & Recycling",
+        "service": "Weekly garbage, biweekly recycling, the Union St. depot",
+        "phone": "973-627-7025",
+        "email": "dpwsupt@rockawayborough.org",
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawayborough.org/departments/sanitation/",
+        "sourceOrg": "Borough of Rockaway",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": null
+      },
+      "question": "Who can help with missed garbage pickup and recycling schedule and bulk trash and illegal dumping?",
+      "canonicalAnswerSha256": "049c6032cac90c31b6610cf180dfe8e4e09019792ff13806d1cf21b202af61a7",
+      "renderedTextSha256": "9a73b1fb38760f4044fa1995aab87d46282837bb61fd1dc6fb63d8486e981161",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "water-sewer",
+      "canonicalRecordIndex": 15,
+      "sourceUrl": "https://www.rockawaytownship.org/187/Public-Works-Utilities",
+      "sourceOrg": "Rockaway Township",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Rockaway Township — Municipal Utility (Water & Sewer)",
+        "Water and sewer service, run through Public Works",
+        "973-983-2891",
+        "dpw@rockawaytownship.org",
+        "For Rockaway Township addresses.",
+        "This was sourced from Rockaway Township."
+      ],
+      "returnedFields": [
+        "Rockaway Township — Municipal Utility (Water & Sewer)",
+        "Water and sewer service, run through Public Works",
+        "973-983-2891",
+        "dpw@rockawaytownship.org",
+        "For Rockaway Township addresses.",
+        "This was sourced from Rockaway Township."
+      ],
+      "returnedContact": {
+        "topicId": "water-sewer",
+        "zips": [
+          "07866"
+        ],
+        "body": "Rockaway Township — Municipal Utility (Water & Sewer)",
+        "service": "Water and sewer service, run through Public Works",
+        "phone": "973-983-2891",
+        "email": "dpw@rockawaytownship.org",
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawaytownship.org/187/Public-Works-Utilities",
+        "sourceOrg": "Rockaway Township",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "For Rockaway Township addresses."
+      },
+      "question": "Who can help with water main break and sewer backup and water bill question and no water pressure?",
+      "canonicalAnswerSha256": "3a9384d3ff49569fb10df51a37d5872a74807e098f46d1d8fb9c8a2d4556e0d3",
+      "renderedTextSha256": "1e814cb4ac43845b028e04c1bc3e57cc3afb14526c9fce293b7828f4dee307b2",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "water-sewer",
+      "canonicalRecordIndex": 21,
+      "sourceUrl": "https://www.rockawayborough.org/departments/publicworks/water.shtml",
+      "sourceOrg": "Borough of Rockaway",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Borough of Rockaway — Water & Sewer Utility",
+        "Water service, bills, leaks",
+        "973-627-2000 ext 223",
+        "waterclerk@rockawayborough.org",
+        "After-hours emergencies: 973-627-1314.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedFields": [
+        "Borough of Rockaway — Water & Sewer Utility",
+        "Water service, bills, leaks",
+        "973-627-2000 ext 223",
+        "waterclerk@rockawayborough.org",
+        "After-hours emergencies: 973-627-1314.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedContact": {
+        "topicId": "water-sewer",
+        "zips": [
+          "07866"
+        ],
+        "body": "Borough of Rockaway — Water & Sewer Utility",
+        "service": "Water service, bills, leaks",
+        "phone": "973-627-2000 ext 223",
+        "email": "waterclerk@rockawayborough.org",
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawayborough.org/departments/publicworks/water.shtml",
+        "sourceOrg": "Borough of Rockaway",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "After-hours emergencies: 973-627-1314."
+      },
+      "question": "Who can help with water main break and sewer backup and water bill question and no water pressure?",
+      "canonicalAnswerSha256": "3a9384d3ff49569fb10df51a37d5872a74807e098f46d1d8fb9c8a2d4556e0d3",
+      "renderedTextSha256": "1e814cb4ac43845b028e04c1bc3e57cc3afb14526c9fce293b7828f4dee307b2",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "noise",
+      "canonicalRecordIndex": 16,
+      "sourceUrl": "https://www.rockawaytownship.org/231/Police",
+      "sourceOrg": "Rockaway Township",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Rockaway Township Police Department",
+        "Noise complaints — the non-emergency line",
+        "973-625-4000",
+        "For Rockaway Township addresses.",
+        "This was sourced from Rockaway Township."
+      ],
+      "returnedFields": [
+        "Rockaway Township Police Department",
+        "Noise complaints — the non-emergency line",
+        "973-625-4000",
+        "For Rockaway Township addresses.",
+        "This was sourced from Rockaway Township."
+      ],
+      "returnedContact": {
+        "topicId": "noise",
+        "zips": [
+          "07866"
+        ],
+        "body": "Rockaway Township Police Department",
+        "service": "Noise complaints — the non-emergency line",
+        "phone": "973-625-4000",
+        "email": null,
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawaytownship.org/231/Police",
+        "sourceOrg": "Rockaway Township",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "For Rockaway Township addresses."
+      },
+      "question": "Who can help with loud music at night and construction noise and noisy neighbors?",
+      "canonicalAnswerSha256": "bfce389646200d4e213609e3683d672bdd3b7bf9361f006a2e1aabbb485f71d5",
+      "renderedTextSha256": "9d752aa3455f11365987e187c2a23a3c4216d681ff11705c7b22a595f3562132",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "noise",
+      "canonicalRecordIndex": 22,
+      "sourceUrl": "https://www.rockawayborough.org/departments/police/",
+      "sourceOrg": "Borough of Rockaway",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Rockaway Borough Police Department",
+        "Noise complaints — the non-emergency line",
+        "973-627-1314",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedFields": [
+        "Rockaway Borough Police Department",
+        "Noise complaints — the non-emergency line",
+        "973-627-1314",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedContact": {
+        "topicId": "noise",
+        "zips": [
+          "07866"
+        ],
+        "body": "Rockaway Borough Police Department",
+        "service": "Noise complaints — the non-emergency line",
+        "phone": "973-627-1314",
+        "email": null,
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawayborough.org/departments/police/",
+        "sourceOrg": "Borough of Rockaway",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": null
+      },
+      "question": "Who can help with loud music at night and construction noise and noisy neighbors?",
+      "canonicalAnswerSha256": "bfce389646200d4e213609e3683d672bdd3b7bf9361f006a2e1aabbb485f71d5",
+      "renderedTextSha256": "9d752aa3455f11365987e187c2a23a3c4216d681ff11705c7b22a595f3562132",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "zoning-development",
+      "canonicalRecordIndex": 23,
+      "sourceUrl": "https://www.rockawayborough.org/departments/zoning/",
+      "sourceOrg": "Borough of Rockaway",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Borough of Rockaway — Zoning Officer",
+        "Zoning compliance, fence/sign/shed permits, code violations",
+        "973-627-2000 ext 218",
+        "zoning@rockawayborough.org",
+        "For Borough of Rockaway addresses. Rockaway Township addresses: the municipal complex routes zoning questions, 973-627-7200.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedFields": [
+        "Borough of Rockaway — Zoning Officer",
+        "Zoning compliance, fence/sign/shed permits, code violations",
+        "973-627-2000 ext 218",
+        "zoning@rockawayborough.org",
+        "For Borough of Rockaway addresses. Rockaway Township addresses: the municipal complex routes zoning questions, 973-627-7200.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedContact": {
+        "topicId": "zoning-development",
+        "zips": [
+          "07866"
+        ],
+        "body": "Borough of Rockaway — Zoning Officer",
+        "service": "Zoning compliance, fence/sign/shed permits, code violations",
+        "phone": "973-627-2000 ext 218",
+        "email": "zoning@rockawayborough.org",
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawayborough.org/departments/zoning/",
+        "sourceOrg": "Borough of Rockaway",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "For Borough of Rockaway addresses. Rockaway Township addresses: the municipal complex routes zoning questions, 973-627-7200."
+      },
+      "question": "Who can help with rezoning next door and new development and data center coming and warehouse proposal?",
+      "canonicalAnswerSha256": "f54cf87a11f823b527e5b05c59afb36c2bfd775c9acaae684f1c273d1726cbbc",
+      "renderedTextSha256": "278867d8200dfc93ead67ce8971a7d40c59c6104cfd97d8ce51efb04db322a87",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "animals",
+      "canonicalRecordIndex": 17,
+      "sourceUrl": "https://www.rockawaytownship.org/158/Animal-Control",
+      "sourceOrg": "Rockaway Township",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Rockaway Township — Animal Control",
+        "Animal complaints and humane law enforcement",
+        "973-983-2848",
+        "After 4:30 PM and weekends: Rockaway Township Police, 973-625-4000.",
+        "This was sourced from Rockaway Township."
+      ],
+      "returnedFields": [
+        "Rockaway Township — Animal Control",
+        "Animal complaints and humane law enforcement",
+        "973-983-2848",
+        "After 4:30 PM and weekends: Rockaway Township Police, 973-625-4000.",
+        "This was sourced from Rockaway Township."
+      ],
+      "returnedContact": {
+        "topicId": "animals",
+        "zips": [
+          "07866"
+        ],
+        "body": "Rockaway Township — Animal Control",
+        "service": "Animal complaints and humane law enforcement",
+        "phone": "973-983-2848",
+        "email": null,
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawaytownship.org/158/Animal-Control",
+        "sourceOrg": "Rockaway Township",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "After 4:30 PM and weekends: Rockaway Township Police, 973-625-4000."
+      },
+      "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
+      "canonicalAnswerSha256": "b0556ed6328c4f46e574f53dad3b9bc05326fec1cab09a6181d5022ab36d4231",
+      "renderedTextSha256": "407a23747754918bfb757a431267c039f6e3cec8667ad0077c645a7f5386dc76",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "animals",
+      "canonicalRecordIndex": 24,
+      "sourceUrl": "https://www.rockawayborough.org/departments/health/",
+      "sourceOrg": "Borough of Rockaway",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Borough of Rockaway — Animal Control",
+        "Strays, animal complaints; dog and cat licensing at borough hall",
+        "973-989-7050",
+        "After hours, call the police non-emergency line: 973-627-1314.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedFields": [
+        "Borough of Rockaway — Animal Control",
+        "Strays, animal complaints; dog and cat licensing at borough hall",
+        "973-989-7050",
+        "After hours, call the police non-emergency line: 973-627-1314.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedContact": {
+        "topicId": "animals",
+        "zips": [
+          "07866"
+        ],
+        "body": "Borough of Rockaway — Animal Control",
+        "service": "Strays, animal complaints; dog and cat licensing at borough hall",
+        "phone": "973-989-7050",
+        "email": null,
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawayborough.org/departments/health/",
+        "sourceOrg": "Borough of Rockaway",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "After hours, call the police non-emergency line: 973-627-1314."
+      },
+      "question": "Who can help with stray dog and barking dog next door and dog license and found a cat?",
+      "canonicalAnswerSha256": "b0556ed6328c4f46e574f53dad3b9bc05326fec1cab09a6181d5022ab36d4231",
+      "renderedTextSha256": "407a23747754918bfb757a431267c039f6e3cec8667ad0077c645a7f5386dc76",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "parks",
+      "canonicalRecordIndex": 25,
+      "sourceUrl": "https://www.rockawayborough.org/departments/publicworks/",
+      "sourceOrg": "Borough of Rockaway",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Borough of Rockaway — Department of Public Works",
+        "Borough recreational facilities and fields",
+        "973-627-7025",
+        "dpwdirector@rockawayborough.org",
+        "Rockaway Township addresses: the municipal complex routes recreation questions, 973-627-7200.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedFields": [
+        "Borough of Rockaway — Department of Public Works",
+        "Borough recreational facilities and fields",
+        "973-627-7025",
+        "dpwdirector@rockawayborough.org",
+        "Rockaway Township addresses: the municipal complex routes recreation questions, 973-627-7200.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedContact": {
+        "topicId": "parks",
+        "zips": [
+          "07866"
+        ],
+        "body": "Borough of Rockaway — Department of Public Works",
+        "service": "Borough recreational facilities and fields",
+        "phone": "973-627-7025",
+        "email": "dpwdirector@rockawayborough.org",
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawayborough.org/departments/publicworks/",
+        "sourceOrg": "Borough of Rockaway",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "Rockaway Township addresses: the municipal complex routes recreation questions, 973-627-7200."
+      },
+      "question": "Who can help with broken playground equipment and park maintenance and pool hours and reserve a pavilion?",
+      "canonicalAnswerSha256": "f1fa118c192072135175342bc520e7b3df167c24f0474537dfc12cbc1dfe7bad",
+      "renderedTextSha256": "a81a4ad7ec0b639a16f899ac812566d70632699a3ace958dc86af746858873eb",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "snow-removal",
+      "canonicalRecordIndex": 13,
+      "sourceUrl": "https://www.rockawaytownship.org/187/Public-Works-Utilities",
+      "sourceOrg": "Rockaway Township",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Rockaway Township — Department of Public Works & Utilities",
+        "Snow plowing on township roads",
+        "973-983-2891",
+        "dpw@rockawaytownship.org",
+        "For Rockaway Township addresses.",
+        "This was sourced from Rockaway Township."
+      ],
+      "returnedFields": [
+        "Rockaway Township — Department of Public Works & Utilities",
+        "Snow plowing on township roads",
+        "973-983-2891",
+        "dpw@rockawaytownship.org",
+        "For Rockaway Township addresses.",
+        "This was sourced from Rockaway Township."
+      ],
+      "returnedContact": {
+        "topicId": "snow-removal",
+        "zips": [
+          "07866"
+        ],
+        "body": "Rockaway Township — Department of Public Works & Utilities",
+        "service": "Snow plowing on township roads",
+        "phone": "973-983-2891",
+        "email": "dpw@rockawaytownship.org",
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawaytownship.org/187/Public-Works-Utilities",
+        "sourceOrg": "Rockaway Township",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "For Rockaway Township addresses."
+      },
+      "question": "Who can help with street not plowed and plow damage and ice on the road?",
+      "canonicalAnswerSha256": "f44efb955218836264eb26bf7c0db71af2fb20dd629521f4c37ff36067f8f42f",
+      "renderedTextSha256": "70ca6472c4267612eb5cfdbac884448d10e6d24170ed3a24777dbc849d290487",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "snow-removal",
+      "canonicalRecordIndex": 19,
+      "sourceUrl": "https://www.rockawayborough.org/departments/publicworks/",
+      "sourceOrg": "Borough of Rockaway",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Borough of Rockaway — Department of Public Works",
+        "Snow plowing and sanding on borough roads",
+        "973-627-7025",
+        "dpwdirector@rockawayborough.org",
+        "After-hours emergencies: 973-627-1314.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedFields": [
+        "Borough of Rockaway — Department of Public Works",
+        "Snow plowing and sanding on borough roads",
+        "973-627-7025",
+        "dpwdirector@rockawayborough.org",
+        "After-hours emergencies: 973-627-1314.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedContact": {
+        "topicId": "snow-removal",
+        "zips": [
+          "07866"
+        ],
+        "body": "Borough of Rockaway — Department of Public Works",
+        "service": "Snow plowing and sanding on borough roads",
+        "phone": "973-627-7025",
+        "email": "dpwdirector@rockawayborough.org",
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawayborough.org/departments/publicworks/",
+        "sourceOrg": "Borough of Rockaway",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "After-hours emergencies: 973-627-1314."
+      },
+      "question": "Who can help with street not plowed and plow damage and ice on the road?",
+      "canonicalAnswerSha256": "f44efb955218836264eb26bf7c0db71af2fb20dd629521f4c37ff36067f8f42f",
+      "renderedTextSha256": "70ca6472c4267612eb5cfdbac884448d10e6d24170ed3a24777dbc849d290487",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "property-taxes",
+      "canonicalRecordIndex": 26,
+      "sourceUrl": "https://www.rockawayborough.org/departments/tax/",
+      "sourceOrg": "Borough of Rockaway",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Borough of Rockaway — Tax Collector",
+        "Tax bills and payments; the assessor handles valuations",
+        "973-627-2000 ext 228",
+        "taxcollector@rockawayborough.org",
+        "Assessment questions: the Tax Assessor, 973-627-2000 ext 222. Rockaway Township addresses: the municipal complex routes tax questions, 973-627-7200.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedFields": [
+        "Borough of Rockaway — Tax Collector",
+        "Tax bills and payments; the assessor handles valuations",
+        "973-627-2000 ext 228",
+        "taxcollector@rockawayborough.org",
+        "Assessment questions: the Tax Assessor, 973-627-2000 ext 222. Rockaway Township addresses: the municipal complex routes tax questions, 973-627-7200.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedContact": {
+        "topicId": "property-taxes",
+        "zips": [
+          "07866"
+        ],
+        "body": "Borough of Rockaway — Tax Collector",
+        "service": "Tax bills and payments; the assessor handles valuations",
+        "phone": "973-627-2000 ext 228",
+        "email": "taxcollector@rockawayborough.org",
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawayborough.org/departments/tax/",
+        "sourceOrg": "Borough of Rockaway",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "Assessment questions: the Tax Assessor, 973-627-2000 ext 222. Rockaway Township addresses: the municipal complex routes tax questions, 973-627-7200."
+      },
+      "question": "Who can help with property tax bill and assessment too high and tax rate?",
+      "canonicalAnswerSha256": "06303c7a9136479776054de64825b66d8e1de608b9b3228983af00e7726ebc3c",
+      "renderedTextSha256": "b85b22553c508563df07948d53a5d65dd2df13e1dfad53517f848f7740ecfabb",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "desktop",
+      "theme": "light",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 12,
+      "sourceUrl": "https://www.rockawaytownship.org/187/Public-Works-Utilities",
+      "sourceOrg": "Rockaway Township",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Rockaway Township — Department of Public Works & Utilities",
+        "Township roads: potholes, snow, drainage",
+        "973-983-2891",
+        "dpw@rockawaytownship.org",
+        "For Rockaway Township addresses. Also answers at 973-627-1700.",
+        "This was sourced from Rockaway Township."
+      ],
+      "returnedFields": [
+        "Rockaway Township — Department of Public Works & Utilities",
+        "Township roads: potholes, snow, drainage",
+        "973-983-2891",
+        "dpw@rockawaytownship.org",
+        "For Rockaway Township addresses. Also answers at 973-627-1700.",
+        "This was sourced from Rockaway Township."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "07866"
+        ],
+        "body": "Rockaway Township — Department of Public Works & Utilities",
+        "service": "Township roads: potholes, snow, drainage",
+        "phone": "973-983-2891",
+        "email": "dpw@rockawaytownship.org",
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawaytownship.org/187/Public-Works-Utilities",
+        "sourceOrg": "Rockaway Township",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "For Rockaway Township addresses. Also answers at 973-627-1700."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "284ee64eeb30a522ff64e1c920f320a3c4f7b025045009abe194dbc28326d083",
+      "renderedTextSha256": "ae92a343ef9b8aa116c35fc4ed7cc2d4da48409c9c5d41d0a8d3d0e4f2d88b71",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "desktop",
+      "theme": "light",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 18,
+      "sourceUrl": "https://www.rockawayborough.org/departments/publicworks/",
+      "sourceOrg": "Borough of Rockaway",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Borough of Rockaway — Department of Public Works",
+        "Borough roads: potholes, storm drains, line painting",
+        "973-627-7025",
+        "dpwdirector@rockawayborough.org",
+        "After-hours emergencies: 973-627-1314.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedFields": [
+        "Borough of Rockaway — Department of Public Works",
+        "Borough roads: potholes, storm drains, line painting",
+        "973-627-7025",
+        "dpwdirector@rockawayborough.org",
+        "After-hours emergencies: 973-627-1314.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "07866"
+        ],
+        "body": "Borough of Rockaway — Department of Public Works",
+        "service": "Borough roads: potholes, storm drains, line painting",
+        "phone": "973-627-7025",
+        "email": "dpwdirector@rockawayborough.org",
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawayborough.org/departments/publicworks/",
+        "sourceOrg": "Borough of Rockaway",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "After-hours emergencies: 973-627-1314."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "284ee64eeb30a522ff64e1c920f320a3c4f7b025045009abe194dbc28326d083",
+      "renderedTextSha256": "ae92a343ef9b8aa116c35fc4ed7cc2d4da48409c9c5d41d0a8d3d0e4f2d88b71",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "phone",
+      "theme": "dark",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 12,
+      "sourceUrl": "https://www.rockawaytownship.org/187/Public-Works-Utilities",
+      "sourceOrg": "Rockaway Township",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Rockaway Township — Department of Public Works & Utilities",
+        "Township roads: potholes, snow, drainage",
+        "973-983-2891",
+        "dpw@rockawaytownship.org",
+        "For Rockaway Township addresses. Also answers at 973-627-1700.",
+        "This was sourced from Rockaway Township."
+      ],
+      "returnedFields": [
+        "Rockaway Township — Department of Public Works & Utilities",
+        "Township roads: potholes, snow, drainage",
+        "973-983-2891",
+        "dpw@rockawaytownship.org",
+        "For Rockaway Township addresses. Also answers at 973-627-1700.",
+        "This was sourced from Rockaway Township."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "07866"
+        ],
+        "body": "Rockaway Township — Department of Public Works & Utilities",
+        "service": "Township roads: potholes, snow, drainage",
+        "phone": "973-983-2891",
+        "email": "dpw@rockawaytownship.org",
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawaytownship.org/187/Public-Works-Utilities",
+        "sourceOrg": "Rockaway Township",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "For Rockaway Township addresses. Also answers at 973-627-1700."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "284ee64eeb30a522ff64e1c920f320a3c4f7b025045009abe194dbc28326d083",
+      "renderedTextSha256": "ae92a343ef9b8aa116c35fc4ed7cc2d4da48409c9c5d41d0a8d3d0e4f2d88b71",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "phone",
+      "theme": "dark",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 18,
+      "sourceUrl": "https://www.rockawayborough.org/departments/publicworks/",
+      "sourceOrg": "Borough of Rockaway",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Borough of Rockaway — Department of Public Works",
+        "Borough roads: potholes, storm drains, line painting",
+        "973-627-7025",
+        "dpwdirector@rockawayborough.org",
+        "After-hours emergencies: 973-627-1314.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedFields": [
+        "Borough of Rockaway — Department of Public Works",
+        "Borough roads: potholes, storm drains, line painting",
+        "973-627-7025",
+        "dpwdirector@rockawayborough.org",
+        "After-hours emergencies: 973-627-1314.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "07866"
+        ],
+        "body": "Borough of Rockaway — Department of Public Works",
+        "service": "Borough roads: potholes, storm drains, line painting",
+        "phone": "973-627-7025",
+        "email": "dpwdirector@rockawayborough.org",
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawayborough.org/departments/publicworks/",
+        "sourceOrg": "Borough of Rockaway",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "After-hours emergencies: 973-627-1314."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "284ee64eeb30a522ff64e1c920f320a3c4f7b025045009abe194dbc28326d083",
+      "renderedTextSha256": "ae92a343ef9b8aa116c35fc4ed7cc2d4da48409c9c5d41d0a8d3d0e4f2d88b71",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "phone",
+      "theme": "light",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 12,
+      "sourceUrl": "https://www.rockawaytownship.org/187/Public-Works-Utilities",
+      "sourceOrg": "Rockaway Township",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Rockaway Township — Department of Public Works & Utilities",
+        "Township roads: potholes, snow, drainage",
+        "973-983-2891",
+        "dpw@rockawaytownship.org",
+        "For Rockaway Township addresses. Also answers at 973-627-1700.",
+        "This was sourced from Rockaway Township."
+      ],
+      "returnedFields": [
+        "Rockaway Township — Department of Public Works & Utilities",
+        "Township roads: potholes, snow, drainage",
+        "973-983-2891",
+        "dpw@rockawaytownship.org",
+        "For Rockaway Township addresses. Also answers at 973-627-1700.",
+        "This was sourced from Rockaway Township."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "07866"
+        ],
+        "body": "Rockaway Township — Department of Public Works & Utilities",
+        "service": "Township roads: potholes, snow, drainage",
+        "phone": "973-983-2891",
+        "email": "dpw@rockawaytownship.org",
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawaytownship.org/187/Public-Works-Utilities",
+        "sourceOrg": "Rockaway Township",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "For Rockaway Township addresses. Also answers at 973-627-1700."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "284ee64eeb30a522ff64e1c920f320a3c4f7b025045009abe194dbc28326d083",
+      "renderedTextSha256": "ae92a343ef9b8aa116c35fc4ed7cc2d4da48409c9c5d41d0a8d3d0e4f2d88b71",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "phone",
+      "theme": "light",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 18,
+      "sourceUrl": "https://www.rockawayborough.org/departments/publicworks/",
+      "sourceOrg": "Borough of Rockaway",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Borough of Rockaway — Department of Public Works",
+        "Borough roads: potholes, storm drains, line painting",
+        "973-627-7025",
+        "dpwdirector@rockawayborough.org",
+        "After-hours emergencies: 973-627-1314.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedFields": [
+        "Borough of Rockaway — Department of Public Works",
+        "Borough roads: potholes, storm drains, line painting",
+        "973-627-7025",
+        "dpwdirector@rockawayborough.org",
+        "After-hours emergencies: 973-627-1314.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "07866"
+        ],
+        "body": "Borough of Rockaway — Department of Public Works",
+        "service": "Borough roads: potholes, storm drains, line painting",
+        "phone": "973-627-7025",
+        "email": "dpwdirector@rockawayborough.org",
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawayborough.org/departments/publicworks/",
+        "sourceOrg": "Borough of Rockaway",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "After-hours emergencies: 973-627-1314."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "284ee64eeb30a522ff64e1c920f320a3c4f7b025045009abe194dbc28326d083",
+      "renderedTextSha256": "ae92a343ef9b8aa116c35fc4ed7cc2d4da48409c9c5d41d0a8d3d0e4f2d88b71",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "phone",
+      "theme": "dark",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 12,
+      "sourceUrl": "https://www.rockawaytownship.org/187/Public-Works-Utilities",
+      "sourceOrg": "Rockaway Township",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Rockaway Township — Department of Public Works & Utilities",
+        "Township roads: potholes, snow, drainage",
+        "973-983-2891",
+        "dpw@rockawaytownship.org",
+        "For Rockaway Township addresses. Also answers at 973-627-1700.",
+        "This was sourced from Rockaway Township."
+      ],
+      "returnedFields": [
+        "Rockaway Township — Department of Public Works & Utilities",
+        "Township roads: potholes, snow, drainage",
+        "973-983-2891",
+        "dpw@rockawaytownship.org",
+        "For Rockaway Township addresses. Also answers at 973-627-1700.",
+        "This was sourced from Rockaway Township."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "07866"
+        ],
+        "body": "Rockaway Township — Department of Public Works & Utilities",
+        "service": "Township roads: potholes, snow, drainage",
+        "phone": "973-983-2891",
+        "email": "dpw@rockawaytownship.org",
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawaytownship.org/187/Public-Works-Utilities",
+        "sourceOrg": "Rockaway Township",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "For Rockaway Township addresses. Also answers at 973-627-1700."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "284ee64eeb30a522ff64e1c920f320a3c4f7b025045009abe194dbc28326d083",
+      "renderedTextSha256": "ae92a343ef9b8aa116c35fc4ed7cc2d4da48409c9c5d41d0a8d3d0e4f2d88b71",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "phone",
+      "theme": "dark",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 18,
+      "sourceUrl": "https://www.rockawayborough.org/departments/publicworks/",
+      "sourceOrg": "Borough of Rockaway",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Borough of Rockaway — Department of Public Works",
+        "Borough roads: potholes, storm drains, line painting",
+        "973-627-7025",
+        "dpwdirector@rockawayborough.org",
+        "After-hours emergencies: 973-627-1314.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedFields": [
+        "Borough of Rockaway — Department of Public Works",
+        "Borough roads: potholes, storm drains, line painting",
+        "973-627-7025",
+        "dpwdirector@rockawayborough.org",
+        "After-hours emergencies: 973-627-1314.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "07866"
+        ],
+        "body": "Borough of Rockaway — Department of Public Works",
+        "service": "Borough roads: potholes, storm drains, line painting",
+        "phone": "973-627-7025",
+        "email": "dpwdirector@rockawayborough.org",
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawayborough.org/departments/publicworks/",
+        "sourceOrg": "Borough of Rockaway",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "After-hours emergencies: 973-627-1314."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "284ee64eeb30a522ff64e1c920f320a3c4f7b025045009abe194dbc28326d083",
+      "renderedTextSha256": "ae92a343ef9b8aa116c35fc4ed7cc2d4da48409c9c5d41d0a8d3d0e4f2d88b71",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "phone",
+      "theme": "light",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 12,
+      "sourceUrl": "https://www.rockawaytownship.org/187/Public-Works-Utilities",
+      "sourceOrg": "Rockaway Township",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Rockaway Township — Department of Public Works & Utilities",
+        "Township roads: potholes, snow, drainage",
+        "973-983-2891",
+        "dpw@rockawaytownship.org",
+        "For Rockaway Township addresses. Also answers at 973-627-1700.",
+        "This was sourced from Rockaway Township."
+      ],
+      "returnedFields": [
+        "Rockaway Township — Department of Public Works & Utilities",
+        "Township roads: potholes, snow, drainage",
+        "973-983-2891",
+        "dpw@rockawaytownship.org",
+        "For Rockaway Township addresses. Also answers at 973-627-1700.",
+        "This was sourced from Rockaway Township."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "07866"
+        ],
+        "body": "Rockaway Township — Department of Public Works & Utilities",
+        "service": "Township roads: potholes, snow, drainage",
+        "phone": "973-983-2891",
+        "email": "dpw@rockawaytownship.org",
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawaytownship.org/187/Public-Works-Utilities",
+        "sourceOrg": "Rockaway Township",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "For Rockaway Township addresses. Also answers at 973-627-1700."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "284ee64eeb30a522ff64e1c920f320a3c4f7b025045009abe194dbc28326d083",
+      "renderedTextSha256": "ae92a343ef9b8aa116c35fc4ed7cc2d4da48409c9c5d41d0a8d3d0e4f2d88b71",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "07866",
+      "viewport": "phone",
+      "theme": "light",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 18,
+      "sourceUrl": "https://www.rockawayborough.org/departments/publicworks/",
+      "sourceOrg": "Borough of Rockaway",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Borough of Rockaway — Department of Public Works",
+        "Borough roads: potholes, storm drains, line painting",
+        "973-627-7025",
+        "dpwdirector@rockawayborough.org",
+        "After-hours emergencies: 973-627-1314.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedFields": [
+        "Borough of Rockaway — Department of Public Works",
+        "Borough roads: potholes, storm drains, line painting",
+        "973-627-7025",
+        "dpwdirector@rockawayborough.org",
+        "After-hours emergencies: 973-627-1314.",
+        "This was sourced from Borough of Rockaway."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "07866"
+        ],
+        "body": "Borough of Rockaway — Department of Public Works",
+        "service": "Borough roads: potholes, storm drains, line painting",
+        "phone": "973-627-7025",
+        "email": "dpwdirector@rockawayborough.org",
+        "requestUrl": null,
+        "sourceUrl": "https://www.rockawayborough.org/departments/publicworks/",
+        "sourceOrg": "Borough of Rockaway",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "After-hours emergencies: 973-627-1314."
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "284ee64eeb30a522ff64e1c920f320a3c4f7b025045009abe194dbc28326d083",
+      "renderedTextSha256": "ae92a343ef9b8aa116c35fc4ed7cc2d4da48409c9c5d41d0a8d3d0e4f2d88b71",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "03255",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 27,
+      "sourceUrl": "https://www.newbury.nh.gov/highway-department",
+      "sourceOrg": "Town of Newbury",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Town of Newbury — Highway Department",
+        "Town roads: potholes, grading, drainage",
+        "603-938-5494",
+        "bscanlon@newbury.nh.gov",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedFields": [
+        "Town of Newbury — Highway Department",
+        "Town roads: potholes, grading, drainage",
+        "603-938-5494",
+        "bscanlon@newbury.nh.gov",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "03255"
+        ],
+        "body": "Town of Newbury — Highway Department",
+        "service": "Town roads: potholes, grading, drainage",
+        "phone": "603-938-5494",
+        "email": "bscanlon@newbury.nh.gov",
+        "requestUrl": null,
+        "sourceUrl": "https://www.newbury.nh.gov/highway-department",
+        "sourceOrg": "Town of Newbury",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": null
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "5ed0b2147b6d5d1042870b11317ccff325c182a58fc77e24bc82b34b796648a4",
+      "renderedTextSha256": "da32534b7b80b9d2e1cc23778e14e7452927a9d9886e010657ba2ba02cc95835",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "03255",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "trash-recycling",
+      "canonicalRecordIndex": 29,
+      "sourceUrl": "https://www.newbury.nh.gov/departments",
+      "sourceOrg": "Town of Newbury",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Town of Newbury — Transfer Station",
+        "Household trash and recycling drop-off (no curbside pickup)",
+        "603-763-2289",
+        "A transfer-station permit is required — get one at the Town Office with proof of residency and your plate number.",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedFields": [
+        "Town of Newbury — Transfer Station",
+        "Household trash and recycling drop-off (no curbside pickup)",
+        "603-763-2289",
+        "A transfer-station permit is required — get one at the Town Office with proof of residency and your plate number.",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedContact": {
+        "topicId": "trash-recycling",
+        "zips": [
+          "03255"
+        ],
+        "body": "Town of Newbury — Transfer Station",
+        "service": "Household trash and recycling drop-off (no curbside pickup)",
+        "phone": "603-763-2289",
+        "email": null,
+        "requestUrl": null,
+        "sourceUrl": "https://www.newbury.nh.gov/departments",
+        "sourceOrg": "Town of Newbury",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "A transfer-station permit is required — get one at the Town Office with proof of residency and your plate number."
+      },
+      "question": "Who can help with missed garbage pickup and recycling schedule and bulk trash and illegal dumping?",
+      "canonicalAnswerSha256": "7ef9fa0de1537a7beebdf2aae9c6de5b8f2e55648176233c5bf851a109e27720",
+      "renderedTextSha256": "b2cd1440f24d9e899223cb9f2dc1e271c8d56754b11098136d091df13e6de4c7",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "03255",
+      "topicId": "water-sewer",
+      "disposition": "SOURCE/HOLDING_UNAVAILABLE",
+      "reason": "The town's own department directory (read in a real browser 2026-08-14) lists no water or sewer department — consistent with private wells and septic. Whether the Blodgett Landing sewer district serves any of 03255 remains unverified; recorded as a gap rather than asserted either way.",
+      "expectedCount": 0,
+      "returnedCount": 0
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "03255",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "noise",
+      "canonicalRecordIndex": 30,
+      "sourceUrl": "https://www.newbury.nh.gov/police-department",
+      "sourceOrg": "Town of Newbury",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Newbury Police Department",
+        "Noise complaints — the business line, or dispatch after hours",
+        "603-763-4104",
+        "Dispatch: 603-526-1961.",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedFields": [
+        "Newbury Police Department",
+        "Noise complaints — the business line, or dispatch after hours",
+        "603-763-4104",
+        "Dispatch: 603-526-1961.",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedContact": {
+        "topicId": "noise",
+        "zips": [
+          "03255"
+        ],
+        "body": "Newbury Police Department",
+        "service": "Noise complaints — the business line, or dispatch after hours",
+        "phone": "603-763-4104",
+        "email": null,
+        "requestUrl": null,
+        "sourceUrl": "https://www.newbury.nh.gov/police-department",
+        "sourceOrg": "Town of Newbury",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "Dispatch: 603-526-1961."
+      },
+      "question": "Who can help with loud music at night and construction noise and noisy neighbors?",
+      "canonicalAnswerSha256": "49c6e244828d9182da61fe5ac65e8edbabc1da6491abb5eb8e61219dcba67fd0",
+      "renderedTextSha256": "f0b7a8c14407b86dcf8e90b3015597a85214e2bb00d0e5bf0a90206d3ecfca7c",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "03255",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "zoning-development",
+      "canonicalRecordIndex": 32,
+      "sourceUrl": "https://www.newbury.nh.gov/departments",
+      "sourceOrg": "Town of Newbury",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Town of Newbury — Code Enforcement Officer",
+        "Building, zoning, and code questions",
+        "603-763-4940 ext. 203",
+        "codeenforcement@newbury.nh.gov",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedFields": [
+        "Town of Newbury — Code Enforcement Officer",
+        "Building, zoning, and code questions",
+        "603-763-4940 ext. 203",
+        "codeenforcement@newbury.nh.gov",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedContact": {
+        "topicId": "zoning-development",
+        "zips": [
+          "03255"
+        ],
+        "body": "Town of Newbury — Code Enforcement Officer",
+        "service": "Building, zoning, and code questions",
+        "phone": "603-763-4940 ext. 203",
+        "email": "codeenforcement@newbury.nh.gov",
+        "requestUrl": null,
+        "sourceUrl": "https://www.newbury.nh.gov/departments",
+        "sourceOrg": "Town of Newbury",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": null
+      },
+      "question": "Who can help with rezoning next door and new development and data center coming and warehouse proposal?",
+      "canonicalAnswerSha256": "1f4457e9cf7f6f8390708bda2f6f04ecaa10e4c8aa6ca165c19900da26cd364a",
+      "renderedTextSha256": "75184ba9c1a47f33bcb80f7208f2cf7bcedee94b7aa4c9fdbd6a7c8219ebff2b",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "03255",
+      "topicId": "animals",
+      "disposition": "SOURCE/HOLDING_UNAVAILABLE",
+      "reason": "The town's own department directory (read in a real browser 2026-08-14) lists no animal control; NH towns typically run it through the police and license dogs at the town clerk, but publishing that pattern as Newbury's answer without the town saying so is a guess. The police row under 'noise' is the practical fallback.",
+      "expectedCount": 0,
+      "returnedCount": 0
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "03255",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "parks",
+      "canonicalRecordIndex": 33,
+      "sourceUrl": "https://www.newbury.nh.gov/departments",
+      "sourceOrg": "Town of Newbury",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Town of Newbury — Recreation",
+        "Town recreation programs and facilities",
+        "603-763-4940",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedFields": [
+        "Town of Newbury — Recreation",
+        "Town recreation programs and facilities",
+        "603-763-4940",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedContact": {
+        "topicId": "parks",
+        "zips": [
+          "03255"
+        ],
+        "body": "Town of Newbury — Recreation",
+        "service": "Town recreation programs and facilities",
+        "phone": "603-763-4940",
+        "email": null,
+        "requestUrl": null,
+        "sourceUrl": "https://www.newbury.nh.gov/departments",
+        "sourceOrg": "Town of Newbury",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": null
+      },
+      "question": "Who can help with broken playground equipment and park maintenance and pool hours and reserve a pavilion?",
+      "canonicalAnswerSha256": "e6911e519654ab08efa816b77c3e6d84c5924afae4a999b61d3ad61a88ebf089",
+      "renderedTextSha256": "f7ba60f9d5195fc2b0e2f359956eecda50e010d8390f1bb9fdd23dd365b6b228",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "03255",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "snow-removal",
+      "canonicalRecordIndex": 28,
+      "sourceUrl": "https://www.newbury.nh.gov/highway-department",
+      "sourceOrg": "Town of Newbury",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Town of Newbury — Highway Department",
+        "Snow plowing and sanding on town roads",
+        "603-938-5494",
+        "bscanlon@newbury.nh.gov",
+        "Route 103 is the state's — NHDOT plows it, not the town crew.",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedFields": [
+        "Town of Newbury — Highway Department",
+        "Snow plowing and sanding on town roads",
+        "603-938-5494",
+        "bscanlon@newbury.nh.gov",
+        "Route 103 is the state's — NHDOT plows it, not the town crew.",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedContact": {
+        "topicId": "snow-removal",
+        "zips": [
+          "03255"
+        ],
+        "body": "Town of Newbury — Highway Department",
+        "service": "Snow plowing and sanding on town roads",
+        "phone": "603-938-5494",
+        "email": "bscanlon@newbury.nh.gov",
+        "requestUrl": null,
+        "sourceUrl": "https://www.newbury.nh.gov/highway-department",
+        "sourceOrg": "Town of Newbury",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "Route 103 is the state's — NHDOT plows it, not the town crew."
+      },
+      "question": "Who can help with street not plowed and plow damage and ice on the road?",
+      "canonicalAnswerSha256": "a20f09e7f42ecfb064e0fadbca5d297df5484ac9b8113a3c1f2c5907de75b93f",
+      "renderedTextSha256": "e651dc7574a11df4a0604c34ae13661d290aeaa54841d3071bb94bcecaf4e058",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "03255",
+      "viewport": "desktop",
+      "theme": "dark",
+      "topicId": "property-taxes",
+      "canonicalRecordIndex": 31,
+      "sourceUrl": "https://www.newbury.nh.gov/departments",
+      "sourceOrg": "Town of Newbury",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Town of Newbury — Tax Collector",
+        "Tax bills and payments",
+        "603-763-5326",
+        "Assessment questions: the Assessor at the Town Office, 603-763-4940 ext. 209.",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedFields": [
+        "Town of Newbury — Tax Collector",
+        "Tax bills and payments",
+        "603-763-5326",
+        "Assessment questions: the Assessor at the Town Office, 603-763-4940 ext. 209.",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedContact": {
+        "topicId": "property-taxes",
+        "zips": [
+          "03255"
+        ],
+        "body": "Town of Newbury — Tax Collector",
+        "service": "Tax bills and payments",
+        "phone": "603-763-5326",
+        "email": null,
+        "requestUrl": null,
+        "sourceUrl": "https://www.newbury.nh.gov/departments",
+        "sourceOrg": "Town of Newbury",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": "Assessment questions: the Assessor at the Town Office, 603-763-4940 ext. 209."
+      },
+      "question": "Who can help with property tax bill and assessment too high and tax rate?",
+      "canonicalAnswerSha256": "8644f8ed6dce8cd141da52281ae9063c41a0620ad37935b2b411c6ea6307a102",
+      "renderedTextSha256": "b5b9102f9c9794de766946986017928d943082dd104e785a9f1a7102b2e7b743",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "03255",
+      "viewport": "desktop",
+      "theme": "light",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 27,
+      "sourceUrl": "https://www.newbury.nh.gov/highway-department",
+      "sourceOrg": "Town of Newbury",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Town of Newbury — Highway Department",
+        "Town roads: potholes, grading, drainage",
+        "603-938-5494",
+        "bscanlon@newbury.nh.gov",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedFields": [
+        "Town of Newbury — Highway Department",
+        "Town roads: potholes, grading, drainage",
+        "603-938-5494",
+        "bscanlon@newbury.nh.gov",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "03255"
+        ],
+        "body": "Town of Newbury — Highway Department",
+        "service": "Town roads: potholes, grading, drainage",
+        "phone": "603-938-5494",
+        "email": "bscanlon@newbury.nh.gov",
+        "requestUrl": null,
+        "sourceUrl": "https://www.newbury.nh.gov/highway-department",
+        "sourceOrg": "Town of Newbury",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": null
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "5ed0b2147b6d5d1042870b11317ccff325c182a58fc77e24bc82b34b796648a4",
+      "renderedTextSha256": "da32534b7b80b9d2e1cc23778e14e7452927a9d9886e010657ba2ba02cc95835",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "03255",
+      "viewport": "phone",
+      "theme": "dark",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 27,
+      "sourceUrl": "https://www.newbury.nh.gov/highway-department",
+      "sourceOrg": "Town of Newbury",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Town of Newbury — Highway Department",
+        "Town roads: potholes, grading, drainage",
+        "603-938-5494",
+        "bscanlon@newbury.nh.gov",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedFields": [
+        "Town of Newbury — Highway Department",
+        "Town roads: potholes, grading, drainage",
+        "603-938-5494",
+        "bscanlon@newbury.nh.gov",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "03255"
+        ],
+        "body": "Town of Newbury — Highway Department",
+        "service": "Town roads: potholes, grading, drainage",
+        "phone": "603-938-5494",
+        "email": "bscanlon@newbury.nh.gov",
+        "requestUrl": null,
+        "sourceUrl": "https://www.newbury.nh.gov/highway-department",
+        "sourceOrg": "Town of Newbury",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": null
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "5ed0b2147b6d5d1042870b11317ccff325c182a58fc77e24bc82b34b796648a4",
+      "renderedTextSha256": "da32534b7b80b9d2e1cc23778e14e7452927a9d9886e010657ba2ba02cc95835",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "03255",
+      "viewport": "phone",
+      "theme": "light",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 27,
+      "sourceUrl": "https://www.newbury.nh.gov/highway-department",
+      "sourceOrg": "Town of Newbury",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Town of Newbury — Highway Department",
+        "Town roads: potholes, grading, drainage",
+        "603-938-5494",
+        "bscanlon@newbury.nh.gov",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedFields": [
+        "Town of Newbury — Highway Department",
+        "Town roads: potholes, grading, drainage",
+        "603-938-5494",
+        "bscanlon@newbury.nh.gov",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "03255"
+        ],
+        "body": "Town of Newbury — Highway Department",
+        "service": "Town roads: potholes, grading, drainage",
+        "phone": "603-938-5494",
+        "email": "bscanlon@newbury.nh.gov",
+        "requestUrl": null,
+        "sourceUrl": "https://www.newbury.nh.gov/highway-department",
+        "sourceOrg": "Town of Newbury",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": null
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "5ed0b2147b6d5d1042870b11317ccff325c182a58fc77e24bc82b34b796648a4",
+      "renderedTextSha256": "da32534b7b80b9d2e1cc23778e14e7452927a9d9886e010657ba2ba02cc95835",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "03255",
+      "viewport": "phone",
+      "theme": "dark",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 27,
+      "sourceUrl": "https://www.newbury.nh.gov/highway-department",
+      "sourceOrg": "Town of Newbury",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Town of Newbury — Highway Department",
+        "Town roads: potholes, grading, drainage",
+        "603-938-5494",
+        "bscanlon@newbury.nh.gov",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedFields": [
+        "Town of Newbury — Highway Department",
+        "Town roads: potholes, grading, drainage",
+        "603-938-5494",
+        "bscanlon@newbury.nh.gov",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "03255"
+        ],
+        "body": "Town of Newbury — Highway Department",
+        "service": "Town roads: potholes, grading, drainage",
+        "phone": "603-938-5494",
+        "email": "bscanlon@newbury.nh.gov",
+        "requestUrl": null,
+        "sourceUrl": "https://www.newbury.nh.gov/highway-department",
+        "sourceOrg": "Town of Newbury",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": null
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "5ed0b2147b6d5d1042870b11317ccff325c182a58fc77e24bc82b34b796648a4",
+      "renderedTextSha256": "da32534b7b80b9d2e1cc23778e14e7452927a9d9886e010657ba2ba02cc95835",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    },
+    {
+      "surface": "civic-routing",
+      "zip": "03255",
+      "viewport": "phone",
+      "theme": "light",
+      "topicId": "roads-local",
+      "canonicalRecordIndex": 27,
+      "sourceUrl": "https://www.newbury.nh.gov/highway-department",
+      "sourceOrg": "Town of Newbury",
+      "collectedAt": "2026-08-14",
+      "verification": "PAGE_FETCHED",
+      "expectedFields": [
+        "Town of Newbury — Highway Department",
+        "Town roads: potholes, grading, drainage",
+        "603-938-5494",
+        "bscanlon@newbury.nh.gov",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedFields": [
+        "Town of Newbury — Highway Department",
+        "Town roads: potholes, grading, drainage",
+        "603-938-5494",
+        "bscanlon@newbury.nh.gov",
+        "This was sourced from Town of Newbury."
+      ],
+      "returnedContact": {
+        "topicId": "roads-local",
+        "zips": [
+          "03255"
+        ],
+        "body": "Town of Newbury — Highway Department",
+        "service": "Town roads: potholes, grading, drainage",
+        "phone": "603-938-5494",
+        "email": "bscanlon@newbury.nh.gov",
+        "requestUrl": null,
+        "sourceUrl": "https://www.newbury.nh.gov/highway-department",
+        "sourceOrg": "Town of Newbury",
+        "collectedAt": "2026-08-14",
+        "verification": "PAGE_FETCHED",
+        "note": null
+      },
+      "question": "Who can help with pothole and speeding on my street and crosswalk and streetlight out?",
+      "canonicalAnswerSha256": "5ed0b2147b6d5d1042870b11317ccff325c182a58fc77e24bc82b34b796648a4",
+      "renderedTextSha256": "da32534b7b80b9d2e1cc23778e14e7452927a9d9886e010657ba2ba02cc95835",
+      "grounding": "Exact curated topic/ZIP selector; all factual contact fields checked against its holding, independent of model response."
+    }
+  ],
+  "layoutProofs": [
+    {
+      "zip": "85701",
+      "viewport": "desktop",
+      "theme": "dark",
+      "placement": "sidebar",
+      "geometry": {
+        "left": 35,
+        "right": 449,
+        "top": 204.40625,
+        "bottom": 918.53125,
+        "width": 414,
+        "height": 714.125,
+        "viewportWidth": 1440,
+        "viewportHeight": 1000,
+        "overflowX": false,
+        "overflowY": "visible",
+        "rowBottom": 196.40625,
+        "placement": "sidebar"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 85701 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 864.03125,
+        "bottom": 903.53125,
+        "viewportHeight": 1000,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    },
+    {
+      "zip": "85701",
+      "viewport": "desktop",
+      "theme": "light",
+      "placement": "sidebar",
+      "geometry": {
+        "left": 35,
+        "right": 449,
+        "top": 204.40625,
+        "bottom": 918.53125,
+        "width": 414,
+        "height": 714.125,
+        "viewportWidth": 1440,
+        "viewportHeight": 1000,
+        "overflowX": false,
+        "overflowY": "visible",
+        "rowBottom": 196.40625,
+        "placement": "sidebar"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 85701 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 864.03125,
+        "bottom": 903.53125,
+        "viewportHeight": 1000,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    },
+    {
+      "zip": "85701",
+      "viewport": "phone",
+      "theme": "dark",
+      "placement": "map",
+      "geometry": {
+        "left": 12,
+        "right": 378,
+        "top": 118.5,
+        "bottom": 832,
+        "width": 366,
+        "height": 713.5,
+        "viewportWidth": 390,
+        "viewportHeight": 844,
+        "overflowX": false,
+        "overflowY": "auto",
+        "rowBottom": 110.5,
+        "placement": "map"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 85701 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 785.25,
+        "bottom": 824.75,
+        "viewportHeight": 844,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    },
+    {
+      "zip": "85701",
+      "viewport": "phone",
+      "theme": "light",
+      "placement": "map",
+      "geometry": {
+        "left": 12,
+        "right": 378,
+        "top": 118.5,
+        "bottom": 832,
+        "width": 366,
+        "height": 713.5,
+        "viewportWidth": 390,
+        "viewportHeight": 844,
+        "overflowX": false,
+        "overflowY": "auto",
+        "rowBottom": 110.5,
+        "placement": "map"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 85701 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 785.25,
+        "bottom": 824.75,
+        "viewportHeight": 844,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    },
+    {
+      "zip": "85701",
+      "viewport": "phone",
+      "theme": "dark",
+      "placement": "sidebar",
+      "geometry": {
+        "left": 35,
+        "right": 355,
+        "top": 204.40625,
+        "bottom": 1016.03125,
+        "width": 320,
+        "height": 811.625,
+        "viewportWidth": 390,
+        "viewportHeight": 844,
+        "overflowX": false,
+        "overflowY": "visible",
+        "rowBottom": 196.40625,
+        "placement": "sidebar"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 85701 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 657.53125,
+        "bottom": 697.03125,
+        "viewportHeight": 844,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    },
+    {
+      "zip": "85701",
+      "viewport": "phone",
+      "theme": "light",
+      "placement": "sidebar",
+      "geometry": {
+        "left": 35,
+        "right": 355,
+        "top": 204.40625,
+        "bottom": 1016.03125,
+        "width": 320,
+        "height": 811.625,
+        "viewportWidth": 390,
+        "viewportHeight": 844,
+        "overflowX": false,
+        "overflowY": "visible",
+        "rowBottom": 196.40625,
+        "placement": "sidebar"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 85701 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 657.53125,
+        "bottom": 697.03125,
+        "viewportHeight": 844,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    },
+    {
+      "zip": "85641",
+      "viewport": "desktop",
+      "theme": "dark",
+      "placement": "sidebar",
+      "geometry": {
+        "left": 35,
+        "right": 449,
+        "top": 204.40625,
+        "bottom": 881.15625,
+        "width": 414,
+        "height": 676.75,
+        "viewportWidth": 1440,
+        "viewportHeight": 1000,
+        "overflowX": false,
+        "overflowY": "visible",
+        "rowBottom": 196.40625,
+        "placement": "sidebar"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 85641 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 826.65625,
+        "bottom": 866.15625,
+        "viewportHeight": 1000,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    },
+    {
+      "zip": "85641",
+      "viewport": "desktop",
+      "theme": "light",
+      "placement": "sidebar",
+      "geometry": {
+        "left": 35,
+        "right": 449,
+        "top": 204.40625,
+        "bottom": 881.15625,
+        "width": 414,
+        "height": 676.75,
+        "viewportWidth": 1440,
+        "viewportHeight": 1000,
+        "overflowX": false,
+        "overflowY": "visible",
+        "rowBottom": 196.40625,
+        "placement": "sidebar"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 85641 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 826.65625,
+        "bottom": 866.15625,
+        "viewportHeight": 1000,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    },
+    {
+      "zip": "85641",
+      "viewport": "phone",
+      "theme": "dark",
+      "placement": "map",
+      "geometry": {
+        "left": 12,
+        "right": 378,
+        "top": 118.5,
+        "bottom": 800.75,
+        "width": 366,
+        "height": 682.25,
+        "viewportWidth": 390,
+        "viewportHeight": 844,
+        "overflowX": false,
+        "overflowY": "auto",
+        "rowBottom": 110.5,
+        "placement": "map"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 85641 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 746.25,
+        "bottom": 785.75,
+        "viewportHeight": 844,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    },
+    {
+      "zip": "85641",
+      "viewport": "phone",
+      "theme": "light",
+      "placement": "map",
+      "geometry": {
+        "left": 12,
+        "right": 378,
+        "top": 118.5,
+        "bottom": 800.75,
+        "width": 366,
+        "height": 682.25,
+        "viewportWidth": 390,
+        "viewportHeight": 844,
+        "overflowX": false,
+        "overflowY": "auto",
+        "rowBottom": 110.5,
+        "placement": "map"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 85641 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 746.25,
+        "bottom": 785.75,
+        "viewportHeight": 844,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    },
+    {
+      "zip": "85641",
+      "viewport": "phone",
+      "theme": "dark",
+      "placement": "sidebar",
+      "geometry": {
+        "left": 35,
+        "right": 355,
+        "top": 204.40625,
+        "bottom": 998.03125,
+        "width": 320,
+        "height": 793.625,
+        "viewportWidth": 390,
+        "viewportHeight": 844,
+        "overflowX": false,
+        "overflowY": "visible",
+        "rowBottom": 196.40625,
+        "placement": "sidebar"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 85641 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 657.53125,
+        "bottom": 697.03125,
+        "viewportHeight": 844,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    },
+    {
+      "zip": "85641",
+      "viewport": "phone",
+      "theme": "light",
+      "placement": "sidebar",
+      "geometry": {
+        "left": 35,
+        "right": 355,
+        "top": 204.40625,
+        "bottom": 998.03125,
+        "width": 320,
+        "height": 793.625,
+        "viewportWidth": 390,
+        "viewportHeight": 844,
+        "overflowX": false,
+        "overflowY": "visible",
+        "rowBottom": 196.40625,
+        "placement": "sidebar"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 85641 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 657.53125,
+        "bottom": 697.03125,
+        "viewportHeight": 844,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    },
+    {
+      "zip": "07866",
+      "viewport": "desktop",
+      "theme": "dark",
+      "placement": "sidebar",
+      "geometry": {
+        "left": 35,
+        "right": 449,
+        "top": 204.40625,
+        "bottom": 1072.90625,
+        "width": 414,
+        "height": 868.5,
+        "viewportWidth": 1440,
+        "viewportHeight": 1000,
+        "overflowX": false,
+        "overflowY": "visible",
+        "rowBottom": 196.40625,
+        "placement": "sidebar"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 07866 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 813.40625,
+        "bottom": 852.90625,
+        "viewportHeight": 1000,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    },
+    {
+      "zip": "07866",
+      "viewport": "desktop",
+      "theme": "light",
+      "placement": "sidebar",
+      "geometry": {
+        "left": 35,
+        "right": 449,
+        "top": 204.40625,
+        "bottom": 1072.90625,
+        "width": 414,
+        "height": 868.5,
+        "viewportWidth": 1440,
+        "viewportHeight": 1000,
+        "overflowX": false,
+        "overflowY": "visible",
+        "rowBottom": 196.40625,
+        "placement": "sidebar"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 07866 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 813.40625,
+        "bottom": 852.90625,
+        "viewportHeight": 1000,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    },
+    {
+      "zip": "07866",
+      "viewport": "phone",
+      "theme": "dark",
+      "placement": "map",
+      "geometry": {
+        "left": 12,
+        "right": 378,
+        "top": 118.5,
+        "bottom": 832,
+        "width": 366,
+        "height": 713.5,
+        "viewportWidth": 390,
+        "viewportHeight": 844,
+        "overflowX": false,
+        "overflowY": "auto",
+        "rowBottom": 110.5,
+        "placement": "map"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 07866 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 778.375,
+        "bottom": 817.875,
+        "viewportHeight": 844,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    },
+    {
+      "zip": "07866",
+      "viewport": "phone",
+      "theme": "light",
+      "placement": "map",
+      "geometry": {
+        "left": 12,
+        "right": 378,
+        "top": 118.5,
+        "bottom": 832,
+        "width": 366,
+        "height": 713.5,
+        "viewportWidth": 390,
+        "viewportHeight": 844,
+        "overflowX": false,
+        "overflowY": "auto",
+        "rowBottom": 110.5,
+        "placement": "map"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 07866 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 778.375,
+        "bottom": 817.875,
+        "viewportHeight": 844,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    },
+    {
+      "zip": "07866",
+      "viewport": "phone",
+      "theme": "dark",
+      "placement": "sidebar",
+      "geometry": {
+        "left": 35,
+        "right": 355,
+        "top": 204.40625,
+        "bottom": 1233.78125,
+        "width": 320,
+        "height": 1029.375,
+        "viewportWidth": 390,
+        "viewportHeight": 844,
+        "overflowX": false,
+        "overflowY": "visible",
+        "rowBottom": 196.40625,
+        "placement": "sidebar"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 07866 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 657.28125,
+        "bottom": 696.78125,
+        "viewportHeight": 844,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    },
+    {
+      "zip": "07866",
+      "viewport": "phone",
+      "theme": "light",
+      "placement": "sidebar",
+      "geometry": {
+        "left": 35,
+        "right": 355,
+        "top": 204.40625,
+        "bottom": 1233.78125,
+        "width": 320,
+        "height": 1029.375,
+        "viewportWidth": 390,
+        "viewportHeight": 844,
+        "overflowX": false,
+        "overflowY": "visible",
+        "rowBottom": 196.40625,
+        "placement": "sidebar"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 07866 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 657.28125,
+        "bottom": 696.78125,
+        "viewportHeight": 844,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    },
+    {
+      "zip": "03255",
+      "viewport": "desktop",
+      "theme": "dark",
+      "placement": "sidebar",
+      "geometry": {
+        "left": 35,
+        "right": 449,
+        "top": 204.40625,
+        "bottom": 838.28125,
+        "width": 414,
+        "height": 633.875,
+        "viewportWidth": 1440,
+        "viewportHeight": 1000,
+        "overflowX": false,
+        "overflowY": "visible",
+        "rowBottom": 196.40625,
+        "placement": "sidebar"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 03255 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 783.78125,
+        "bottom": 823.28125,
+        "viewportHeight": 1000,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    },
+    {
+      "zip": "03255",
+      "viewport": "desktop",
+      "theme": "light",
+      "placement": "sidebar",
+      "geometry": {
+        "left": 35,
+        "right": 449,
+        "top": 204.40625,
+        "bottom": 838.28125,
+        "width": 414,
+        "height": 633.875,
+        "viewportWidth": 1440,
+        "viewportHeight": 1000,
+        "overflowX": false,
+        "overflowY": "visible",
+        "rowBottom": 196.40625,
+        "placement": "sidebar"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 03255 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 783.78125,
+        "bottom": 823.28125,
+        "viewportHeight": 1000,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    },
+    {
+      "zip": "03255",
+      "viewport": "phone",
+      "theme": "dark",
+      "placement": "map",
+      "geometry": {
+        "left": 12,
+        "right": 378,
+        "top": 118.5,
+        "bottom": 759.5,
+        "width": 366,
+        "height": 641,
+        "viewportWidth": 390,
+        "viewportHeight": 844,
+        "overflowX": false,
+        "overflowY": "auto",
+        "rowBottom": 110.5,
+        "placement": "map"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 03255 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 705,
+        "bottom": 744.5,
+        "viewportHeight": 844,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    },
+    {
+      "zip": "03255",
+      "viewport": "phone",
+      "theme": "light",
+      "placement": "map",
+      "geometry": {
+        "left": 12,
+        "right": 378,
+        "top": 118.5,
+        "bottom": 759.5,
+        "width": 366,
+        "height": 641,
+        "viewportWidth": 390,
+        "viewportHeight": 844,
+        "overflowX": false,
+        "overflowY": "auto",
+        "rowBottom": 110.5,
+        "placement": "map"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 03255 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 705,
+        "bottom": 744.5,
+        "viewportHeight": 844,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    },
+    {
+      "zip": "03255",
+      "viewport": "phone",
+      "theme": "dark",
+      "placement": "sidebar",
+      "geometry": {
+        "left": 35,
+        "right": 355,
+        "top": 204.40625,
+        "bottom": 960.90625,
+        "width": 320,
+        "height": 756.5,
+        "viewportWidth": 390,
+        "viewportHeight": 844,
+        "overflowX": false,
+        "overflowY": "visible",
+        "rowBottom": 196.40625,
+        "placement": "sidebar"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 03255 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 657.40625,
+        "bottom": 696.90625,
+        "viewportHeight": 844,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    },
+    {
+      "zip": "03255",
+      "viewport": "phone",
+      "theme": "light",
+      "placement": "sidebar",
+      "geometry": {
+        "left": 35,
+        "right": 355,
+        "top": 204.40625,
+        "bottom": 960.90625,
+        "width": 320,
+        "height": 756.5,
+        "viewportWidth": 390,
+        "viewportHeight": 844,
+        "overflowX": false,
+        "overflowY": "visible",
+        "rowBottom": 196.40625,
+        "placement": "sidebar"
+      },
+      "tailReadback": {
+        "text": "Based on what we track here around 03255 — 3 of 3 steps point at a body or person we can actually name.",
+        "top": 657.40625,
+        "bottom": 696.90625,
+        "viewportHeight": 844,
+        "unobscured": true,
+        "frontClass": "mt-2 border-t border-[var(--panel-border)] pt-1.5 text-[0.625rem] leading-relaxed text-muted"
+      },
+      "status": "PROVEN"
+    }
+  ],
+  "screenshots": [
+    "screenshots/reader-last-mile/85701-desktop-dark-civic.png",
+    "screenshots/reader-last-mile/85701-desktop-light-civic.png",
+    "screenshots/reader-last-mile/85701-phone-dark-civic.png",
+    "screenshots/reader-last-mile/85701-phone-light-civic.png",
+    "screenshots/reader-last-mile/85701-phone-dark-sidebar-civic.png",
+    "screenshots/reader-last-mile/85701-phone-light-sidebar-civic.png",
+    "screenshots/reader-last-mile/85641-desktop-dark-civic.png",
+    "screenshots/reader-last-mile/85641-desktop-light-civic.png",
+    "screenshots/reader-last-mile/85641-phone-dark-civic.png",
+    "screenshots/reader-last-mile/85641-phone-light-civic.png",
+    "screenshots/reader-last-mile/85641-phone-dark-sidebar-civic.png",
+    "screenshots/reader-last-mile/85641-phone-light-sidebar-civic.png",
+    "screenshots/reader-last-mile/07866-desktop-dark-civic.png",
+    "screenshots/reader-last-mile/07866-desktop-light-civic.png",
+    "screenshots/reader-last-mile/07866-phone-dark-civic.png",
+    "screenshots/reader-last-mile/07866-phone-light-civic.png",
+    "screenshots/reader-last-mile/07866-phone-dark-sidebar-civic.png",
+    "screenshots/reader-last-mile/07866-phone-light-sidebar-civic.png",
+    "screenshots/reader-last-mile/03255-desktop-dark-civic.png",
+    "screenshots/reader-last-mile/03255-desktop-light-civic.png",
+    "screenshots/reader-last-mile/03255-phone-dark-civic.png",
+    "screenshots/reader-last-mile/03255-phone-light-civic.png",
+    "screenshots/reader-last-mile/03255-phone-dark-sidebar-civic.png",
+    "screenshots/reader-last-mile/03255-phone-light-sidebar-civic.png"
+  ]
+}

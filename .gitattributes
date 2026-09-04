@@ -83,3 +83,8 @@ docs/deferred.xlsx   binary
 # is a byte comparison.
 tests/fixtures/**  -text
 data/reference/**  -text
+
+# Preserve the original bytes of provisional reader-proof receipts, including
+# their historical hashes. Current large receipts are already lossless gzip.
+docs/evidence/provisional-bde7497/*.json -text whitespace=cr-at-eol
+docs/evidence/provisional-e504/*.json -text whitespace=cr-at-eol

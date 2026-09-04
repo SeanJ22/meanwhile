@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
 import { relative } from "node:path";
+import { floored } from "../lib/ops/denominator-floor.ts";
 
 const hash = (path: string) => createHash("sha256").update(readFileSync(path)).digest("hex");
 const reportPath = "docs/evidence/reader-last-mile-render.json";
@@ -62,6 +63,8 @@ const witnesses = requirements.filter(row => row.importReach).flatMap(row => {
   if (leaf === "official-popup") assert.ok(independent.heldBillSummary?.visible, "Independent bill-summary leaf must be verified by this actual run");
   return [{ ...row, ...independent, exactHead: head, evidencePath, evidenceSha256: hash(evidencePath), resultPointer: `/results/${resultIndex}`, screenshots, status: "PROVEN", boundary: "Actual gestures and returned identity/value/count assertions. Component-class witness supplements exhaustive native-record and actual-leaf proof; it does not claim all records fit in one screenshot." }];
 });
-assert.equal(witnesses.length, requirements.filter(row => row.importReach && !row.component.endsWith("/candidate-card.tsx")).length);
+const requiredClasses = requirements.filter(row => row.importReach && !row.component.endsWith("/candidate-card.tsx")).length;
+floored("executed reader surface classes", "every reachable required class except parent-owned CandidateCard", requiredClasses, witnesses.length);
+assert.equal(witnesses.length, requiredClasses);
 writeFileSync("docs/evidence/reader-last-mile-finance-witnesses.json", JSON.stringify(witnesses, null, 2) + "\n");
 console.log(JSON.stringify({ exactHead: head, witnessedClasses: witnesses.length, parentOwnedClasses: ["ballot/components/ballot/candidate-card.tsx"] }));

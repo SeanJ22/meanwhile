@@ -1,0 +1,84 @@
+{
+  "exactHead": "95b4e7b40eafd00ced55ec63eac70e01d7b30fdd",
+  "executionLevel": "REAL_BROWSER_COMPUTED_STYLE",
+  "url": "http://localhost:3210",
+  "zip": "85641",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "dark",
+  "placement": "map",
+  "sourceHashes": [
+    {
+      "path": "components/shell/pill-cluster.tsx",
+      "sha256": "41811123df4825963069b2d2b32f764e0a9b191aba3f51a147518db23a7de81f"
+    },
+    {
+      "path": "app/globals.css",
+      "sha256": "94976d6ed928a2ea5015f295c35bfefc8d2a79a03f4e2a6be7799e041c671dff"
+    },
+    {
+      "path": "components/map/map-entry.tsx",
+      "sha256": "26e6c5c8be8c7aff8cd46058b738aa081a2de74e928464b77392daec28460a93"
+    }
+  ],
+  "observed": {
+    "answer": {
+      "x": 154.03125,
+      "y": 132.5,
+      "width": 179.96875,
+      "height": 283.125
+    },
+    "expansion": {
+      "x": 154.03125,
+      "y": 118.5,
+      "width": 179.96875,
+      "height": 297.125,
+      "position": "static",
+      "zIndex": "auto",
+      "overflow": "visible"
+    },
+    "pillRowParent": {
+      "x": 154.03125,
+      "y": 12,
+      "width": 179.96875,
+      "height": 403.625,
+      "position": "relative"
+    },
+    "topRow": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 484.265625,
+      "zIndex": "2"
+    },
+    "main": {
+      "width": 390,
+      "height": 844,
+      "overflow": "hidden"
+    },
+    "legendZIndex": "1100"
+  },
+  "finding": "The answer inherited the intrinsic floating-pill width and had no bounded scroll; the entire top-row stacking context sat below the ambient map legend.",
+  "images": [
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/85701-phone-dark-civic.png",
+      "sha256": "0bef7a77b19b0382d414b4f190702dd8f4d6ed3439bee6c24d0cdc8d549e734b"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/85641-phone-dark-civic.png",
+      "sha256": "6bdacbc1f214e1469f4e30e2ef293acc97c1d9f6a43489b6b38ab4b842d76100"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/07866-phone-dark-civic.png",
+      "sha256": "af9147389a2f89d2024f5fe222cb4d904fac47f540d3e92998b08f75c69fdfd1"
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-95b4e7b4/03255-phone-dark-civic.png",
+      "sha256": "30f870087dd60430a37a499358a07d26e50384841415515be30f493a01e59eb7"
+    }
+  ],
+  "proposedRepair": "Keep the expansion below its measured pill row, provide viewport gutters and bounded internal scrolling, raise the open Ask top-row context above ambient legend and below deliberately opened cards.",
+  "sourceHashScope": "Git source objects at the observed production build head; computed geometry and copied screenshots are the actual browser observations."
+}

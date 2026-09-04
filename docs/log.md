@@ -4,9 +4,9 @@
 (`scripts/tracker.mjs`) from the tracker's own attribution and description fields,
 plus one authored sentence per session in `docs/log-purposes.json`.
 
-Generated 2026-09-03 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-09-04 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **183 sessions.**
+Newest first. **185 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -24,6 +24,21 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **B08** — Read separation agreement before signing · deleted 2026-08-20 by Sean · authority: his note: "This has absolutely nothing to do with this project at all.  Delete this entirely"
 
 ---
+
+## reader-last-mile · 2026-09-04
+
+**What it finished.** 1 row(s).
+
+- **NH324** — Close reader delivery gaps across the canonical dataset-to-surface registry. Ballot, map, officials, meetings, funding and Ask must share eligible canonical truth; autonomous acquisitions and unresolved identities remain withheld. Prove the four pilot ZIPs, exhaustive census, deployment tracing and exact-head production shipment.
+
+**Needs Sean.** Nothing.
+
+## Codex reader last-mile closure · 2026-09-04
+
+**What it started.** 1 row(s) opened, 0 still open.
+
+
+**Needs Sean.** Nothing.
 
 ## 2026-09-03 Codex worker-fleet (RULING 227 auto-reconciliation)
 

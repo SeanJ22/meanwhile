@@ -1,0 +1,46 @@
+{
+  "description": "Reader eligibility and display selection are a separate post-normalization module. Entire acquisition generator source closure and existing held outputs remain unchanged; there is no source acquisition, regeneration stamp, or source-verification advancement.",
+  "readerBoundary": "lib/funding/state-money-reader.ts",
+  "closure": [
+    "lib/coverage/states.ts",
+    "lib/funding/state-money.ts",
+    "lib/geo/outbound-agent.ts",
+    "lib/identity/name-forms.ts",
+    "lib/identity/types.ts",
+    "lib/meetings/attribution.ts",
+    "lib/ocd/tiers.ts",
+    "lib/registry/types.ts",
+    "lib/sources/normalize-account.ts",
+    "lib/sources/types.ts",
+    "scripts/doc-dates.mjs",
+    "scripts/state-money-az.mts"
+  ],
+  "rows": [
+    {
+      "path": "data/states/az/campaign-finance/az-2026-statewide-corpus.json",
+      "generator": {
+        "path": "data/states/az/campaign-finance/az-2026-statewide-corpus.json",
+        "command": "corepack pnpm money:az",
+        "verdict": "CURRENT",
+        "recorded": "1e1582abf30ec628eb0c0c91eb9ac64ea15ee2aed3d20f55dcb7008afb9ea13b",
+        "current": "1e1582abf30ec628eb0c0c91eb9ac64ea15ee2aed3d20f55dcb7008afb9ea13b",
+        "files": 12
+      },
+      "currentBytes": "8fbad35ce5d0f1f9359531db8453d2d041edc019b7e3343092f23a2ee73ed6c3",
+      "mainBytes": "8fbad35ce5d0f1f9359531db8453d2d041edc019b7e3343092f23a2ee73ed6c3"
+    },
+    {
+      "path": "data/states/az/funding/state-money-az-2026.json",
+      "generator": {
+        "path": "data/states/az/funding/state-money-az-2026.json",
+        "command": "corepack pnpm money:az",
+        "verdict": "CURRENT",
+        "recorded": "1e1582abf30ec628eb0c0c91eb9ac64ea15ee2aed3d20f55dcb7008afb9ea13b",
+        "current": "1e1582abf30ec628eb0c0c91eb9ac64ea15ee2aed3d20f55dcb7008afb9ea13b",
+        "files": 12
+      },
+      "currentBytes": "f824de6ae961465f69f90802bbe697dead3eeaa0b33b4c1f4a275f7442deee44",
+      "mainBytes": "f824de6ae961465f69f90802bbe697dead3eeaa0b33b4c1f4a275f7442deee44"
+    }
+  ]
+}

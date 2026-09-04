@@ -455,6 +455,46 @@ export function readerSourceHashProblems(root: string, hashes: readonly ReaderSo
   return hashes.filter((source) => !existsSync(join(root, source.path)) || sha256(readFileSync(join(root, source.path))) !== source.sha256).map((source) => `Reader dependency changed after proof: ${source.path}`);
 }
 
+export interface ReaderSourceEolEquivalence {
+  readonly path: "app/api/ask/grounded/route.ts" | "scripts/lib/reader-ask-ballot-proof.ts";
+  readonly recordedSha256: string;
+  readonly canonicalLfSha256: string;
+  readonly archivePath: string;
+  readonly archiveSha256: string;
+  readonly gitEol: "lf";
+  readonly typescriptVersion: string;
+  readonly emittedJsSha256: string;
+}
+
+/** This receipt-only exception preserves two executed mixed-EOL source files.
+ * It admits Git's already-declared CRLF→LF conversion, never arbitrary source
+ * normalization, and does not change any original execution hash or head. */
+export function sourceEolEquivalenceProblems(equivalence: ReaderSourceEolEquivalence, archive: Buffer, current: Buffer, declaredGitEol: string): string[] {
+  const failures: string[] = [];
+  const fail = (reason: string) => failures.push(`${equivalence.path}: ${reason}`);
+  if (!["app/api/ask/grounded/route.ts", "scripts/lib/reader-ask-ballot-proof.ts"].includes(equivalence.path)) fail("file is outside the two recorded EOL equivalences");
+  if (equivalence.gitEol !== "lf" || declaredGitEol !== "lf") fail("Git does not declare eol=lf");
+  if (sha256(archive) !== equivalence.archiveSha256) fail("executed source archive hash differs");
+  let recorded: Buffer;
+  try {
+    const saved = JSON.parse(archive.toString("utf8")) as { path: string; rawSourceBase64: string };
+    if (saved.path !== equivalence.path) fail("executed source archive names another file");
+    recorded = Buffer.from(saved.rawSourceBase64, "base64");
+  } catch { fail("executed source archive is unreadable"); return failures; }
+  if (sha256(recorded) !== equivalence.recordedSha256) fail("executed source bytes do not match the recorded hash");
+  if (!recorded.equals(Buffer.from(recorded.toString("utf8")))) fail("invalid UTF-8 cannot be normalized as an EOL conversion");
+  const canonical = Buffer.from(recorded.toString("utf8").replace(/\r\n/g, "\n"));
+  if (recorded.equals(canonical)) fail("an EOL exception requires actual recorded CRLF bytes");
+  if (sha256(canonical) !== equivalence.canonicalLfSha256) fail("canonical LF hash is not the exact CRLF-only conversion");
+  if (!current.equals(recorded) && !current.equals(canonical)) fail("current source is neither the exact executed bytes nor their exact Git LF conversion");
+  if (ts.version !== equivalence.typescriptVersion) fail("TypeScript compiler version differs from the equivalence proof");
+  const emit = (bytes: Buffer) => ts.transpileModule(bytes.toString("utf8"), { fileName: equivalence.path, reportDiagnostics: true, compilerOptions: { jsx: ts.JsxEmit.ReactJSX, module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022, newLine: ts.NewLineKind.LineFeed, sourceMap: false, inlineSourceMap: false } });
+  const originalJs = emit(recorded), canonicalJs = emit(canonical);
+  if (originalJs.diagnostics?.length || canonicalJs.diagnostics?.length) fail("TypeScript reported diagnostics while proving EOL equivalence");
+  if (originalJs.outputText !== canonicalJs.outputText || sha256(originalJs.outputText) !== equivalence.emittedJsSha256) fail("CRLF and LF sources do not emit the same independently hashed JavaScript");
+  return failures;
+}
+
 export interface ReaderClosureReceipt {
   readonly formatVersion: 1;
   readonly censusPath: string;
@@ -463,10 +503,25 @@ export interface ReaderClosureReceipt {
   readonly registrySha256: string;
   readonly sourceHashes: readonly ReaderSourceHash[];
   readonly evidenceHashes: readonly ReaderSourceHash[];
+  readonly sourceEolEquivalences?: readonly ReaderSourceEolEquivalence[];
 }
 
 export function validateReaderClosureReceipt(root: string, receipt: ReaderClosureReceipt): string[] {
-  const failures = readerSourceHashProblems(root, receipt.sourceHashes);
+  const failures: string[] = [];
+  const equivalentPaths = new Set<string>();
+  for (const equivalence of receipt.sourceEolEquivalences ?? []) {
+    try {
+      const declared = execFileSync("git", ["check-attr", "eol", "--", equivalence.path], { cwd: root, encoding: "utf8" }).trim().split(": ").at(-1) ?? "";
+      const problems = sourceEolEquivalenceProblems(equivalence, readReaderEvidence(root, equivalence.archivePath), readFileSync(join(root, equivalence.path)), declared);
+      const originalHash = receipt.sourceHashes.find(source => source.path === equivalence.path)?.sha256;
+      if (originalHash && originalHash !== equivalence.recordedSha256) problems.push(`${equivalence.path}: equivalence does not bind the original execution fingerprint`);
+      if (equivalentPaths.has(equivalence.path)) problems.push(`${equivalence.path}: duplicate EOL equivalence`);
+      if (!receipt.evidenceHashes.some(evidence => evidence.path === equivalence.archivePath && evidence.sha256 === equivalence.archiveSha256)) problems.push(`${equivalence.path}: source archive is absent from the immutable evidence manifest`);
+      failures.push(...problems);
+      if (!problems.length) equivalentPaths.add(equivalence.path);
+    } catch { failures.push(`${equivalence.path}: cannot read the explicit source EOL equivalence`); }
+  }
+  failures.push(...readerSourceHashProblems(root, receipt.sourceHashes.filter(source => !equivalentPaths.has(source.path))));
   const bytes = readReaderEvidence(root, receipt.censusPath);
   if (sha256(bytes) !== receipt.censusSha256) failures.push("Committed closure census bytes changed");
   const proved = JSON.parse(bytes.toString("utf8")) as ReaderCensus;

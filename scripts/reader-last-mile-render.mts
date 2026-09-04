@@ -27,6 +27,7 @@ import { pollingLookupFallbacks } from "../lib/ballot/polling-lookup-fallback.ts
 import { unifiedCorpus } from "../lib/corpus/unified.ts";
 import { positionsFor, type PositionAnswer } from "../lib/corpus/positions.ts";
 import { readerPositionsFor } from "../lib/corpus/reader-positions.ts";
+import { getGeneralLineup } from "../lib/ballot/general-lineup.ts";
 
 const BASE = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
 assert.ok(["localhost", "127.0.0.1", "[::1]"].includes(new URL(BASE).hostname), "Rendered regression runs on local production build");
@@ -650,6 +651,21 @@ async function ballotAskMoney(page: Page, pilot: typeof pilots[number], label: s
   const actualRecordIds = await recordDisclosure.locator("li[data-ask-record-id]").evaluateAll(elements => elements.map(element => element.getAttribute("data-ask-record-id")));
   assert.deepEqual(actualRecordIds, expectedRecords.map((record: { id: string }) => record.id));
   const renderedText = await answer.innerText();
+  const certified = getGeneralLineup();
+  const certifiedIds = new Set(certified?.contests.filter(contest => contest.nominees.length > 0).map(contest => contest.contestId));
+  const currentScopeControls: { contestId: string; currentRecordId: string; sourceUrl: string; visible: boolean }[] = [];
+  for (const [index, record] of expectedRecords.entries()) {
+    if (record.kind !== "CONTEST" || !certifiedIds.has(record.id)) continue;
+    const obsoleteScope = /not yet published|when it publishes|everyone who filed|only the Democratic candidates/i;
+    assert.doesNotMatch(record.text, obsoleteScope, `${record.id}: Ask repeats superseded filing-scope copy`);
+    assert.doesNotMatch(await recordDisclosure.locator("li[data-ask-record-id]").nth(index).innerText(), obsoleteScope);
+    const current = expectedRecords.find((candidate: { id: string }) => candidate.id === `${record.id}#current-lineup`);
+    assert.ok(current, `${record.id}: certified qualification disappeared from Ask`);
+    assert.equal(current.text, "The current general-election nominees are recorded from the certified primary canvass.");
+    assert.equal(current.sourceUrl, certified!.canvass.url);
+    assert.ok(renderedText.includes(current.text), `${record.id}: current qualification is not visible`);
+    currentScopeControls.push({ contestId: record.id, currentRecordId: current.id, sourceUrl: current.sourceUrl, visible: true });
+  }
   if (["07866", "03255"].includes(pilot.zip)) {
     assert.doesNotMatch(renderedText, /Arizona.?s legislature|bills she signed|She also sent the legislature|Pima County/i, `${pilot.zip}: another jurisdiction or person's diagnostic was attached`);
   }
@@ -665,7 +681,29 @@ async function ballotAskMoney(page: Page, pilot: typeof pilots[number], label: s
   assert.ok(finance.every((record: { sourceUrl: string | null }) => record.sourceUrl && links.includes(record.sourceUrl)), `${pilot.zip}: rendered provenance differs from retrieved record`);
   await capture(page, `${label}-ballot-ask`, answer);
   await capture(page, `${label}-ballot-ask-last-record`, recordDisclosure.locator("li[data-ask-record-id]").last());
-  return { question, canonicalCandidacyId: pilot.key, renderedText, retrievedRecords: finance, links, mode: payload.mode, trace: payload.trace, answer: payload.answer, renderedRecordCount: expectedRecords.length, renderedRecordIds: actualRecordIds };
+  if (currentScopeControls.length) {
+    const index = expectedRecords.findIndex((record: { id: string }) => record.id === currentScopeControls[0]!.currentRecordId);
+    await capture(page, `${label}-ballot-ask-current-scope`, recordDisclosure.locator("li[data-ask-record-id]").nth(index));
+  }
+  return { question, canonicalCandidacyId: pilot.key, renderedText, retrievedRecords: finance, links, mode: payload.mode, trace: payload.trace, answer: payload.answer, renderedRecordCount: expectedRecords.length, renderedRecordIds: actualRecordIds, currentScopeControls };
+}
+
+async function ballotScopeWitness(page: Page, label: string) {
+  const ids = await page.locator("[data-contest-id]").evaluateAll(elements => elements.map(element => element.getAttribute("data-contest-id")));
+  const certifiedIds = getGeneralLineup()?.contests.filter(contest => contest.nominees.length > 0 && ids.includes(contest.contestId)).map(contest => contest.contestId) ?? [];
+  if (!certifiedIds.length) return null;
+  const text = await page.locator("body").innerText();
+  assert.doesNotMatch(text, /has not yet published the general-election candidate list|has not yet published the final ballot wording/i);
+  for (const id of certifiedIds) {
+    const card = page.locator(`[data-contest-id="${id}"]`);
+    assert.doesNotMatch(await card.innerText(), /everyone who filed|only the Democratic candidates/i, `${id}: certified current card repeats filing-scope copy`);
+  }
+  const footer = page.locator("#scope-notes");
+  await footer.waitFor({ state: "visible" });
+  const footerText = await footer.innerText();
+  assert.ok(footerText.includes("We have not recorded the final ballot wording"));
+  const screenshot = await capture(page, `${label}-ballot-current-scope`, footer);
+  return { certifiedIds, footerText, screenshot, obsoletePublisherAbsence: false };
 }
 
 try {
@@ -791,6 +829,7 @@ try {
         }
         const population = viewport.name === "desktop" && theme === "dark" ? await allBallotMoney(page) : null;
         if (population) console.log(`${label}: opened and checked ${population.cardsOpened} ballot cards`);
+        const ballotScope = await ballotScopeWitness(page, label);
         const ask = viewport.name === "desktop" && theme === "dark" ? await ballotAskMoney(page, pilot, label) : null;
         const ballotVoting = pilot.zip === "85701" ? await votingWitness(page, `${label}-ballot`) : null;
         const ballotVotingFallback = viewport.name === "phone" && ["85701", "07866"].includes(pilot.zip) ? await votingFallbackWitness(page, `${label}-ballot`, pilot.zip === "85701" ? "outside-coverage" : "assigned-unresolved") : null;
@@ -798,7 +837,7 @@ try {
         const incompleteRoster = pilot.zip === "07866" ? await incompleteRosterWitness({ width: viewport.width, height: viewport.height }, theme, label) : null;
         const layoutFailure = voting?.layoutFailure ?? ballotVoting?.layoutFailure;
         const result = layoutFailure ? "FAIL" : "PASS";
-        results.push({ label, result, error: layoutFailure ?? null, build, map: mapMoney.text, ballot: ballotMoney.text, canonicalCandidacyId: pilot.key, api, population, ask, meetings, termNote, incompleteRoster, candidateHolder, voting, votingFallback, ballotVoting, ballotVotingFallback, area, mapActions, ballotActions, mapPositions, ballotPositions, mapFederalRecords, ballotFederalRecords });
+        results.push({ label, result, error: layoutFailure ?? null, build, map: mapMoney.text, ballot: ballotMoney.text, canonicalCandidacyId: pilot.key, api, population, ask, ballotScope, meetings, termNote, incompleteRoster, candidateHolder, voting, votingFallback, ballotVoting, ballotVotingFallback, area, mapActions, ballotActions, mapPositions, ballotPositions, mapFederalRecords, ballotFederalRecords });
         console.log(`${result} ${label}${population ? `; ${population.cardsOpened} ballot cards individually opened` : ""}${voting?.layoutFailure ? `; ${voting.layoutFailure}` : ""}`);
       } catch (error) {
         await capture(page, `${label}-failure`).catch(() => {});

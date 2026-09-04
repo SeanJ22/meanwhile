@@ -1,0 +1,26 @@
+{
+  "exactHead": "d9dc2010f8a34766cd2a24ed672a64ac448619e9",
+  "rule": "Only the two archived executed sources and their exact Git-declared LF form are equivalent; emitted JavaScript is byte-identical with diagnostics checked. Original reader execution hashes, response facts and proved head remain unchanged.",
+  "equivalences": [
+    {
+      "path": "app/api/ask/grounded/route.ts",
+      "recordedSha256": "b9f82781575ec71c4084ec4a7c90953d5badab8ad3e285e49cf24a5d763676f2",
+      "canonicalLfSha256": "931bad92a53e0aa0d4365576c5286296beee21fefc1555e8d924a240a294a6d0",
+      "archivePath": "docs/evidence/reader-last-mile-executed-source-grounded.json",
+      "archiveSha256": "c3bd03411e971013d857ab1d5756021c8e7f689f8f962f68423b41f456e79c23",
+      "gitEol": "lf",
+      "typescriptVersion": "5.9.3",
+      "emittedJsSha256": "ccd7fc4a5acb57a632dd28cf7ea86bd59887c78db71b012e6f67fa9baaafcf73"
+    },
+    {
+      "path": "scripts/lib/reader-ask-ballot-proof.ts",
+      "recordedSha256": "4fea9ea8c35526ea6aa43b6f05ca49c0641dd46346c85f43b9edaa773871d77e",
+      "canonicalLfSha256": "c6f86cc787e58609dcfc081a7b00dd90b0d299a433c9b9a6b1b899b6ceec43cd",
+      "archivePath": "docs/evidence/reader-last-mile-executed-source-ballot-proof.json",
+      "archiveSha256": "5e524337c1a4661b7dc744164ffdfd3ef988974150f0f94c84a8d2042b466b95",
+      "gitEol": "lf",
+      "typescriptVersion": "5.9.3",
+      "emittedJsSha256": "808bc9dbb3cbaa89f3cc38090243b288a61d79fe24b464eefab91f1ba4f14a34"
+    }
+  ]
+}

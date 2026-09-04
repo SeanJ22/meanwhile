@@ -1,0 +1,41 @@
+{
+  "head": "95b4e7b40eafd00ced55ec63eac70e01d7b30fdd",
+  "reviewer": "finance_delivery",
+  "screenshotRoot": "screenshots/reader-last-mile/95b4e7b4",
+  "readAsImages": [
+    "85701-desktop-dark-map-money.png",
+    "85701-desktop-dark-map-official-actions.png",
+    "85701-desktop-dark-map-official-actions-last.png",
+    "85701-desktop-dark-ballot-money.png",
+    "85701-desktop-dark-ballot-official-actions.png",
+    "85701-desktop-dark-ballot-official-actions-last.png",
+    "85701-desktop-dark-legistar-pima-1825-agenda.png",
+    "85701-desktop-dark-legistar-pima-1825-actions.png",
+    "85701-desktop-dark-legistar-pima-1825-rollCalls.png",
+    "85701-desktop-dark-legistar-pima-1825-agenda-text.png",
+    "85701-desktop-dark-voting-sites.png",
+    "85701-desktop-dark-voting-sites-source.png",
+    "85701-desktop-dark-legistar-pima-1822-agenda.png",
+    "85701-desktop-dark-legistar-pima-1822-actions.png",
+    "85701-desktop-dark-legistar-pima-1822-rollCalls.png",
+    "85701-desktop-dark-legistar-pima-1822-minutes.png",
+    "85701-desktop-dark-legistar-pima-1822-agenda-text.png",
+    "85701-desktop-dark-legistar-pima-1827-agenda-text.png",
+    "85701-desktop-dark-legistar-pima-1827-comment-access.png",
+    "85701-desktop-dark-diligent-tusd1-493-publication-index.png",
+    "85701-desktop-dark-about-area.png",
+    "85641-desktop-dark-official-term-note.png",
+    "07866-desktop-dark-incomplete-roster.png",
+    "07866-desktop-dark-incomplete-roster-last-member.png",
+    "07866-desktop-dark-map-money.png",
+    "07866-desktop-dark-ballot-money.png",
+    "07866-desktop-dark-ballot-filed-contact.png",
+    "03255-desktop-dark-map-money.png",
+    "03255-desktop-dark-ballot-money.png",
+    "03255-desktop-dark-about-area.png"
+  ],
+  "findings": [
+    "All reviewed values and record rows were reachable and legible.",
+    "Selen's ballot incumbency chip was falsely unknown despite held matching roster; repaired afterward in canonical incumbency selector."
+  ]
+}

@@ -2,16 +2,27 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import test from "node:test";
 import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
+import { UPCOMING_HORIZON_DAYS } from "../lib/meetings/constants.ts";
 import { meetingListingIdentity } from "../lib/meetings/listing-identity.ts";
 import { readerMeetingCount } from "../lib/meetings/reader-listing-count.ts";
 import { readSnapshot } from "../lib/meetings/snapshot.ts";
 import { groupByVenue } from "../lib/meetings/venues.ts";
 import { renderedSignature, updateMarkerIcon } from "../lib/map/marker-pool.ts";
+import { applyFilters } from "../lib/state/derive.ts";
+import { INITIAL_STATE } from "../lib/state/defaults.ts";
 
 test("all current ambiguous listing pairs survive scope filtering without becoming distinct-event counts", () => {
   const snapshot = readSnapshot(); assert.ok(snapshot);
   const identity = meetingListingIdentity(snapshot.meetings, canonicalBodyIdentity);
   assert.equal(identity.groups.length, 3);
+  const ambiguousSourceIds = identity.groups.flatMap(group => group.sourceIds).sort();
+  const ambiguousMeetings = snapshot.meetings.filter(row => ambiguousSourceIds.includes(row.id));
+  assert.equal(INITIAL_STATE.filters.daysAhead, UPCOMING_HORIZON_DAYS);
+  assert.deepEqual(
+    applyFilters({ meetings: ambiguousMeetings, ui: INITIAL_STATE, center: null, now: Date.parse("2026-09-04T00:00:00.000Z") }).map(row => row.id).sort(),
+    ambiguousSourceIds,
+    "The reader's default filter must retain every eligible listing inside the canonical serving horizon",
+  );
   for (const group of identity.groups) {
     const rows = snapshot.meetings.filter(row => group.sourceIds.includes(row.id));
     const count = readerMeetingCount(rows, identity);
@@ -36,7 +47,7 @@ test("all current ambiguous listing pairs survive scope filtering without becomi
 });
 
 test("actual badge, stats, overlay and venue panel render every ambiguous listing source and honest units", () => {
-  const output = execFileSync(process.execPath, ["--import", "tsx", "--input-type=module", "-e", `
+  const output = execFileSync(process.execPath, ["--import", "data:text/javascript,process.geteuid=()=>0", "--import", "tsx", "--input-type=module", "-e", `
     import { createElement as h } from 'react';
     import { renderToStaticMarkup } from 'react-dom/server';
     import { DataProvider } from './lib/state/data.tsx';

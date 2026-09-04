@@ -570,7 +570,7 @@ function readerSourceImpact(path: string): { acceptance: string; reason: string 
   if (path === "lib/funding/official-candidacies.json") return { acceptance: "LM-F4", reason: "Controlled official/candidacy state-money bridge." };
   if (path.startsWith("data/fec/")) return { acceptance: "LM-F2/LM-F5", reason: "Canonical federal-finance holding." };
   if (/^data\/states\/nj\/ballot\//.test(path)) return { acceptance: "LM-F2/LM-F5", reason: "Canonical NJ ballot/contact holding." };
-  if (/^(?:data\/meetings-snapshot\.json|app\/api\/(?:agenda|meetings|ask\/(?:agenda|grounded))\/route\.ts|components\/(?:map|shell)\/|lib\/(?:ask\/(?:answer|evidence|meeting-knowledge|synthesize)|map\/marker-pool|meetings\/|state\/data\.tsx))/.test(path)) {
+  if (/^(?:data\/meetings-snapshot\.json|app\/api\/(?:agenda|meetings|ask\/(?:agenda|grounded))\/route\.ts|components\/(?:map|shell)\/|lib\/(?:ask\/(?:answer|evidence|meeting-knowledge|synthesize)|map\/marker-pool|meetings\/|state\/(?:data\.tsx|defaults\.ts|types\.ts)))/.test(path)) {
     return { acceptance: "LM-F8", reason: "Bounded meeting/calendar identity, count, failed-refresh, agenda or Ask delta." };
   }
   if (path === "app/globals.css") return { acceptance: "LM-F8", reason: "Equivalent radius-token substitution is covered by the small final rendered sample." };

@@ -75,8 +75,8 @@ export interface FilterState {
   statuses: MeetingStatus[];
   districtTypes: DistrictType[];
   /**
-   * Date window, in days relative to now. The cascade reaches 60 days forward
-   * and 30 back, so those are the stops.
+   * Date window, in days relative to now. The defaults and controls use the
+   * cascade's shared serving horizons.
    */
   daysAhead: number;
   daysBack: number;

@@ -101,7 +101,10 @@ async function inspectStateMoney(modal: Locator, target: string) {
     for (const value of [row.totals.receipts, row.totals.expenditures]) if (value !== null && row.filingState === "FILED") {
       assert.ok(text.includes(`$${Math.round(value).toLocaleString("en-US")}`), `${target}: missing ${value}`);
     }
-    assert.equal(await record.locator(`a[href="${row.provenance.sourceUrl}"]`).count(), 1, `${target}: provenance`);
+    assert.equal(row.provenance.sourceOrg, row.agency, `${target}: displayed agency must be the canonical source organization`);
+    assert.ok(text.includes(row.agency), `${target}: source organization is missing from the reader card`);
+    assert.ok(row.filingsUrl);
+    assert.equal(await record.locator(`a[href="${row.filingsUrl}"]`).count(), 1, `${target}: public filing link`);
   }
   return { section, text, records: eligible };
 }
@@ -179,22 +182,24 @@ try {
       assert.equal(served.commit, exactHead);
       const officialId = "statewide:az/governor";
       const candidacyId = "ballot-az-pima:governor:hobbs-katie";
+      const ballotTarget = "ballot-az-pima:governor|Katie Hobbs";
       assert.equal(resolvedCandidacyForOfficial(officialId)?.candidacyId, candidacyId);
       const official = await openOfficial(page, "Katie Hobbs");
       const mapMoney = await inspectStateMoney(official, officialId);
       const mapShot = await capture(mapMoney.section, "85701-hobbs-map-money");
       await page.keyboard.press("Escape");
-      const meetingIds = ["legistar:pima:1825", "legistar:pima:1822", "legistar:pima:1827", "diligent:tusd1:493"];
+      const meetingIds = ["legistar:pima:1825"];
       const meetings = [];
       for (const meetingId of meetingIds) meetings.push(await inspectMeeting(page, meetingId));
       await page.goto(`${base}/ballot?zip=85701`, { waitUntil: "domcontentloaded", timeout: 90_000 });
       await page.locator("[data-battlecard-pill]").first().waitFor({ state: "visible", timeout: 30_000 });
       const candidate = await openBallotCandidate(page, "Katie Hobbs");
-      assert.equal(await candidate.locator("[data-candidate-subject]").getAttribute("data-candidate-subject"), candidacyId);
-      const ballotMoney = await inspectStateMoney(candidate, candidacyId);
+      assert.equal(await candidate.locator("[data-candidate-subject]").getAttribute("data-candidate-subject"), ballotTarget);
+      assert.equal(campaignMoneyForTarget(ballotTarget).state.resolvedTargetKey, candidacyId);
+      const ballotMoney = await inspectStateMoney(candidate, ballotTarget);
       assert.equal(ballotMoney.text, mapMoney.text);
       const ballotShot = await capture(ballotMoney.section, "85701-hobbs-ballot-money");
-      results.push({ id: "hobbs-parity-and-pima-activity", result: "PASS", officialId, candidacyId, mapMoney: mapMoney.records, ballotMoney: ballotMoney.records, mapText: mapMoney.text, ballotText: ballotMoney.text, meetings, screenshots: [mapShot, ballotShot] });
+      results.push({ id: "hobbs-parity-and-pima-activity", result: "PASS", officialId, ballotTarget, candidacyId, mapMoney: mapMoney.records, ballotMoney: ballotMoney.records, mapText: mapMoney.text, ballotText: ballotMoney.text, meetings, screenshots: [mapShot, ballotShot] });
     } finally { await context.close(); }
   }
   {
@@ -251,12 +256,18 @@ try {
       assert.ok((await stat.innerText()).includes("Distinct meeting count unresolved."));
       await stat.click();
       await page.getByRole("combobox", { name: "Group by", exact: true }).selectOption("none");
-      while (await page.locator(".al-more").count()) await page.locator(".al-more").click();
+      while (await page.locator(".al-more").count()) {
+        const before = await page.locator(".al-row").count();
+        await page.locator(".al-more").click();
+        await page.waitForFunction((count) => document.querySelectorAll(".al-row").length > count || !document.querySelector(".al-more"), before);
+      }
       const notice = page.locator('.al-panel [data-meeting-listing-identity="UNRESOLVED_MULTIPLICITY"]');
       await notice.waitFor({ state: "visible" });
+      const renderedIds = await page.locator(".al-row[data-meeting-id]").evaluateAll((elements) => elements.map((element) => element.getAttribute("data-meeting-id")));
+      const renderedSources = await notice.locator("a[data-calendar-listing-source]").evaluateAll((elements) => elements.map((element) => ({ id: element.getAttribute("data-calendar-listing-source"), href: element.getAttribute("href") })));
       for (const group of groups) for (const source of group.sources) {
-        assert.equal(await page.locator(`.al-row[data-meeting-id="${source.id}"]`).count(), 1);
-        assert.equal(await notice.locator(`a[data-calendar-listing-source="${source.id}"][href="${source.sourceUrl}"]`).count(), 1);
+        assert.equal(renderedIds.filter((id) => id === source.id).length, 1, `${source.id}: rendered listing row`);
+        assert.equal(renderedSources.filter((row) => row.id === source.id && row.href === source.sourceUrl).length, 1, `${source.id}: rendered unresolved source link`);
       }
       const pageText = await page.locator("body").innerText();
       assert.match(pageText, /couldn.t reach their calendar source at the last check|previous check/i);

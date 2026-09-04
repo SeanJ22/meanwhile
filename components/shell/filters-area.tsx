@@ -4,6 +4,10 @@ import { useState } from "react";
 
 import { RadiusControl } from "@/components/shell/radius-control";
 import { useDistrictLayer } from "@/hooks/use-district-layer";
+import {
+  CONCLUDED_LOOKBACK_DAYS,
+  UPCOMING_HORIZON_DAYS,
+} from "@/lib/meetings/constants";
 import type { MeetingStatus } from "@/lib/sources/types";
 import { BODY_TYPE_LABEL } from "@/lib/state/derive";
 import {
@@ -228,8 +232,8 @@ export function FiltersArea({
           </Group>
 
           {/* Edia's dual-handle enrollment slider, measuring days instead of
-              students. The stops are the cascade's own horizons: 60 forward,
-              90 back (3g). The back slider counts NEGATIVE days so dragging
+              students. The stops are the cascade's own shared forward and
+              backward horizons. The back slider counts NEGATIVE days so dragging
               LEFT reaches further into the past — the intuitive direction —
               and older meetings render wherever their sources publish them. */}
           <Group
@@ -237,15 +241,17 @@ export function FiltersArea({
             collapsible
             badge={`${ui.filters.daysBack}d → ${ui.filters.daysAhead}d`}
             openWhenNarrowed={
-              ui.filters.daysAhead !== 60 || ui.filters.daysBack !== 90
+              ui.filters.daysAhead !== UPCOMING_HORIZON_DAYS ||
+              ui.filters.daysBack !== CONCLUDED_LOOKBACK_DAYS
             }
-            // 6f2 (2026-08-15): the default is 90 back → 60 ahead, matching
-            // the served window. The clear link appears only when the reader
+            // The defaults match the cascade's shared served window. The
+            // clear link appears only when the reader
             // has actually moved a handle away from it — comparing against
             // the old `daysBack === 0` would have shown a permanently active
             // "clear" on a fresh page, which is the M24 defect exactly.
             onClear={
-              ui.filters.daysAhead !== 60 || ui.filters.daysBack !== 90
+              ui.filters.daysAhead !== UPCOMING_HORIZON_DAYS ||
+              ui.filters.daysBack !== CONCLUDED_LOOKBACK_DAYS
                 ? () => dispatch({ type: "filter/clear", group: "daysAhead" })
                 : undefined
             }
@@ -259,7 +265,7 @@ export function FiltersArea({
               <input
                 className="prox-range"
                 type="range"
-                min={-90}
+                min={-CONCLUDED_LOOKBACK_DAYS}
                 max={0}
                 value={-ui.filters.daysBack}
                 aria-label="Days back"
@@ -274,7 +280,7 @@ export function FiltersArea({
                 className="prox-range"
                 type="range"
                 min={1}
-                max={60}
+                max={UPCOMING_HORIZON_DAYS}
                 value={ui.filters.daysAhead}
                 aria-label="Days ahead"
                 onChange={(e) =>

@@ -332,7 +332,7 @@ function eligibility(dataset: Dataset, raw: RawRecord, currentDocuments: Readonl
 function resolveImport(root: string, importer: string, specifier: string): string | null {
   if (!specifier.startsWith(".") && !specifier.startsWith("@/")) return null;
   const relative = specifier.startsWith("@/") ? specifier.slice(2) : posix.normalize(posix.join(posix.dirname(importer), specifier));
-  return [relative, `${relative}.ts`, `${relative}.tsx`, `${relative}.json`, `${relative}/index.ts`, `${relative}/index.tsx`].find((path) => existsSync(join(root, path))) ?? null;
+  return [relative, `${relative}.ts`, `${relative}.tsx`, `${relative}.json`, `${relative}/index.ts`, `${relative}/index.tsx`].find((path) => existsSync(join(root, path))&&fs.statSync(join(root,path)).isFile()) ?? null;
 }
 function literalPrefix(node: ts.Expression | undefined): string | null {
   if (!node) return null;
@@ -420,7 +420,7 @@ function evidenceSourceHashes(value: unknown): ReaderSourceHash[] {
   return Array.isArray(value) ? value.map(object).map((source) => ({ path: string(source.path), sha256: string(source.sha256) })) : Object.entries(object(value)).map(([path, hash]) => ({ path, sha256: string(hash) }));
 }
 /** Fingerprint executable reader dependencies; a documentation-only HEAD is irrelevant. */
-export function readerSourceFingerprint(root: string, entries: readonly string[] = READER_SURFACES.map((surface) => surface.path)): ReaderSourceHash[] {
+export function readerSourceFingerprint(root: string, entries: readonly string[] = [...READER_SURFACES.map((surface) => surface.path),"app/layout.tsx"]): ReaderSourceHash[] {
   const queue = [...entries];
   const seen = new Set<string>();
   const sources: ReaderSourceHash[] = [];
@@ -651,10 +651,26 @@ export interface ReaderProjectionReport {
   readonly projectorSha256?: string;
   readonly asOf?: string;
   readonly currentBallotHolderIds?: readonly string[];
+  readonly ballotHolderObligations?: readonly BallotHolderObligation[];
   readonly rule: string;
   readonly records: readonly ReaderRecordProjection[];
   readonly counts: Readonly<Record<string, number>>;
   readonly failures: readonly string[];
+}
+export interface BallotHolderObligation {
+  readonly officialId: string;
+  readonly target: string;
+  readonly contestId: string;
+  readonly officeMatch: boolean;
+  readonly divisionMatch: boolean;
+  readonly actualHolderId: string | null;
+  readonly standing?: string;
+}
+/** A broken selector cannot shrink its own expected candidacy/office denominator. */
+export function ballotHolderObligationFailures(rows: readonly BallotHolderObligation[]): string[] {
+  return rows.flatMap((row) => row.officeMatch && row.divisionMatch
+    ? row.actualHolderId !== row.officialId ? [`${row.target}: held same-office/division official ${row.officialId} disappeared from the ballot record-holder projection`] : []
+    : row.actualHolderId === row.officialId && row.standing === "INCUMBENT" ? [`${row.target}: person-only relation attached ${row.officialId} as incumbent of another office/division`] : []);
 }
 
 export function activePortraitInventory(census: ReaderCensus, projection: ReaderProjectionReport): { auditId: string; url: string; holdingPath: string; expectedSha256: string; sourceReadback: string; projectedIdentities: readonly string[] }[] {
@@ -735,6 +751,12 @@ export async function projectCanonicalReaderRecords(root: string, census: Reader
     const incumbent=await contestIncumbency({id:contest.id,title:contest.title,ocdId:contest.ocdId,candidates,federal:/:us-senate$|:us-house-\d+$/.test(contest.id),voteFor:contest.voteFor},incumbentHolderFor);
     for(const candidate of candidates) {const holder=await incumbentHolderFor(candidate.targetKey)??incumbent.holderFor.get(candidate.targetKey);if(holder)currentBallotHolderIds.add(holder.id);}
   }
+  const { readerIncumbencyProof } = await import("../../scripts/lib/reader-incumbency-proof.ts");
+  const ballotIncumbency = await readerIncumbencyProof();
+  const ballotHolderObligations = ballotIncumbency.rows;
+  // Expected same-seat relations remain applicable even if the actual selector
+  // returns null. The separate failure below then prevents closure.
+  for (const row of ballotHolderObligations) if (row.officeMatch && row.divisionMatch) currentBallotHolderIds.add(row.officialId);
   const allBodies = await registry.knownBodySubjectIds();
   const scopedDivisionIds = unique([...allBodies, ...[...sourceRows.values()].filter(({ raw }) => raw.unit === "divisions" && raw.value.officeholderId).map(({ raw }) => string(raw.value.ocdId)), ...[...sourceRows.values()].filter(({ dataset }) => dataset.family === "statewide-executives").map(({ raw }) => string(raw.value.stateOcdId))]);
   const scopedOfficialIds = new Set((await Promise.all(scopedDivisionIds.map((id) => registry.seatHoldersForDivision(id)))).flat().map((holder) => holder.id));
@@ -753,7 +775,7 @@ export async function projectCanonicalReaderRecords(root: string, census: Reader
   const executiveStore = executive.executiveActionStore();
   const bodyRosterHolders = new Map(rosters.BODY_ROSTERS.flatMap((r) => rosters.rosterHoldersForBody(r.bodyId)).map((r) => [r.id, r]));
   const records: ReaderRecordProjection[] = [];
-  const failures: string[] = [];
+  const failures: string[] = ballotHolderObligationFailures(ballotHolderObligations);
   const clean = (row: unknown): unknown => Array.isArray(row) ? row.map(clean) : row && typeof row === "object" ? Object.fromEntries(Object.entries(row).filter(([k]) => !k.startsWith("_manifest")).map(([k, v]) => [k, clean(v)])) : row;
   for (const record of census.records) {
     const input = sourceRows.get(record.auditId);
@@ -793,7 +815,20 @@ export async function projectCanonicalReaderRecords(root: string, census: Reader
         } else setResult("fundingForTarget", (raw.targetKeys as string[]).map((key) => federal.fundingForTarget(key)).find((row) => row?.fecCandidateId === raw.fecCandidateId));
         break;
       }
-      case "candidate-corpus": case "statement-corpus": setResult("unifiedCorpus", corpusById.get(string(raw.id))); break;
+      case "candidate-corpus": case "statement-corpus": {
+        const snapshot = corpusById.get(string(raw.id));
+        setResult("unifiedCorpus", snapshot);
+        if (snapshot?.text) {
+          const { positionsFor, searchTerms, PASSAGE_MAX_CHARS } = await import("../corpus/positions.ts");
+          const answer = positionsFor(snapshot.subjectId, searchTerms(snapshot.text).join(" "), { ...corpus.unifiedCorpus(), snapshots: [snapshot] });
+          if (!answer.passages.length) {
+            status = "INTENTIONALLY_OUT_OF_SCOPE";
+            selector = "unifiedCorpus → positionsFor over every canonical searchable source term";
+            reason = `This acquired readable snapshot has no quotable passage under the current canonical quotation rule (${PASSAGE_MAX_CHARS}-character maximum per source sentence). The exhaustive source-term query returned zero passages and ${answer.searched.presentButUnquotable} present-but-unquotable run(s). Its raw text, identity, provenance and acquisition remain held; navigation chrome or a refused long run cannot become a claimed position. This is a quotation-eligibility limitation, not an unacquired source or a publisher absence.`;
+          }
+        }
+        break;
+      }
       case "meetings": setResult("readSnapshot", record.unit === "agendaDocuments" ? snapshot.agendaDocuments?.find((row) => row.id === raw.id) : snapshot.meetings.find((row) => row.id === raw.id)); break;
       case "body-rosters": setResult("rosterForBody", rosters.rosterForBody(string(raw.bodyId))); break;
       case "body-compositions": {
@@ -978,9 +1013,11 @@ export async function projectCanonicalReaderRecords(root: string, census: Reader
         const hasCurrentCard = targets.some((target) => currentBallotTargets.has(target));
         const officialStates = targets.map((target) => moneyIdentity.candidacyOfficialIdentityStatus(target));
         if (!hasCurrentCard) surfaceDispositions.ballot = { status: "INTENTIONALLY_OUT_OF_SCOPE", selector: "BALLOT_SOURCES / lineupForContest / reconciledCandidacyIdForCard", reason: "This held historical candidacy is absent from the current certified/general ballot card set. Its finance remains available through the canonical funding endpoint and any separately resolved current official; it cannot create a current nominee." };
+        if(!hasCurrentCard&&officialStates.every((status)=>status==="NO_APPLICABLE_OFFICIAL")) surfaceDispositions["state-money"]={status:"INTENTIONALLY_OUT_OF_SCOPE",selector:"current candidate/official card identity → StateMoneySection",reason:"This historical filing has neither a current ballot card nor a resolved current official card. Its exact funding API and historical Ask answer remain applicable; the visual state-money section does not create a current person card merely to display a historical filing."};
         if (officialStates.every((status) => status === "NO_APPLICABLE_OFFICIAL")) surfaceDispositions.map = { status: "INTENTIONALLY_OUT_OF_SCOPE", selector: "candidacyOfficialIdentityStatus", reason: "The committed candidacy bridge names no current official for this candidacy. Its eligible finance remains on its applicable candidate card and funding/Ask surfaces; attaching it to an unrelated map official would be a false positive." };
       }
       if (record.family === "congress" && record.unit === "byMember") inputFor(["representation"], "The canonical directory module explicitly keeps district-office and committee details out of the representation coverage payload. They are fetched per member by the card's directory endpoint and retain direct map/ballot delivery obligations; this is not a second representation record.");
+      if (record.family === "votes" && record.holdingPath.endsWith("bill-summaries.json")) inputFor(["votes"], "The votes endpoint returns recorded roll calls and key-vote metadata, not the plain-language bill-summary field. The visual card reads this summary directly through summaryForBill/BillPlainSummary, and Ask reads the same canonical summary. Every summary retains direct ballot, map and Ask obligations; this API-specific relationship is not a second returned roll-call row.");
       if (record.family === "curated-body-identities") inputFor(["representation"], "This exact body identity supplies the representation lookup context; the representation endpoint returns sourced officeholders, not a list of body descriptions. The body itself retains its direct map card obligation.");
       if (record.family === "registry") {
         if (record.unit === "bodies") inputFor(["representation", "ballot", "meetings"], "A canonical body supplies government/office/meeting identity context to these consumers. It is not an extra person, contest or meeting row. Its own fields remain a direct map card obligation; resulting officials, ballots and meetings are separately inventoried.");
@@ -1012,7 +1049,7 @@ export async function projectCanonicalReaderRecords(root: string, census: Reader
     const childDispositions = record.family === "body-rosters" ? (Array.isArray(raw.members) ? raw.members : []).map((member)=>rosters.rosterMemberReaderDisposition(string(object(member).id))).filter((child):child is NonNullable<typeof child>=>Boolean(child)) : undefined;
     records.push({ auditId: record.auditId, family: record.family, status: finalStatus, selector, canonicalIdentities: record.canonicalIdentity, returnedIdentities: returnedIds, returnedCount: returned.length, payloadSha256: returned.length ? sha256(JSON.stringify(clean(returned))) : null, reason, ...(Object.keys(surfaceDispositions).length ? { surfaceDispositions } : {}), ...(childDispositions?.length ? { childDispositions } : {}) });
   }
-  return { formatVersion: 1, holdingsDigest: census.holdingsDigest, projectorSha256: sha256(readFileSync(join(root, "lib/holdings/reader-census.ts"))), asOf: asOf.toISOString(), currentBallotHolderIds:unique([...currentBallotHolderIds]), rule: "Executed local selectors prove holding-to-payload survival only. PROJECTED never claims browser rendering or deployed availability. Supporting inputs and current-lineup exclusions carry explicit record-specific scope reasons; unproved direct payloads remain failures.", records, counts: counts(records.map((r) => r.status)), failures };
+  return { formatVersion: 1, holdingsDigest: census.holdingsDigest, projectorSha256: sha256(readFileSync(join(root, "lib/holdings/reader-census.ts"))), asOf: asOf.toISOString(), currentBallotHolderIds:unique([...currentBallotHolderIds]), ballotHolderObligations, rule: "Executed local selectors prove holding-to-payload survival only. PROJECTED never claims browser rendering or deployed availability. Supporting inputs and current-lineup exclusions carry explicit record-specific scope reasons; unproved direct payloads remain failures. Current ballot holder scope also includes independently expected committed same-office/division relations; a failed incumbent join cannot erase its own obligation.", records, counts: counts(records.map((r) => r.status)), failures };
 }
 
 export interface ReaderComponentCase {
@@ -1195,7 +1232,10 @@ export function composeCanonicalRouteProofs(root: string, census: ReaderCensus, 
         if (record.kind === "MEASURE_QUESTION") add("ask", `measure:${record.id}`, [string(record.id)]);
         if (record.kind === "MEASURE_SUMMARY") add("ask", `measure-summary:${string(record.id).replace(/#summary$/, "")}`, [string(record.id).replace(/#summary$/, "")]);
         if (record.kind === "MEASURE_PROVISION") add("ask", `provision:${record.id}`, [string(record.id)]);
-        if (record.kind === "CONTACT") add("ask", `candidate-contact:${record.canonicalSubjectId ?? record.id}`, [string(record.canonicalSubjectId ?? record.id)]);
+        if (record.kind === "CONTACT") {
+          const nativeId = string(record.canonicalSubjectId ?? record.id).replace(/^candidate-contact:/, "");
+          add("ask", `candidate-contact:${nativeId}`, [nativeId]);
+        }
         if (["CANDIDATE_BIO", "CANDIDATE_LINK", "CANDIDATE_CONTACT"].includes(string(record.kind))) {
           const profile = object(record.candidateProfile);
           if (profile.holdingPath && profile.holdingKey) add("ask", `profile-field:${profile.holdingPath}:${profile.field}:${profile.value}`, [string(profile.holdingKey)]);
@@ -1203,7 +1243,16 @@ export function composeCanonicalRouteProofs(root: string, census: ReaderCensus, 
         if (record.kind === "MEASURE_ANALYSIS") add("ask", `analysis:${string(record.id).replace(/#analysis$/, "")}`, [string(record.id).replace(/#analysis$/, "")]);
         if (record.kind === "BALLOT_ABSENCE") {
           if (string(record.id).startsWith("absence:")) add("ask", string(record.id), [string(record.id).slice("absence:".length)]);
-          else add("ask", `removal:${record.id}`, [string(record.id)]);
+          else {
+            add("ask", `removal:${record.id}`, [string(record.id)]);
+            // A normalized removal and its legacy division-keyed absence may
+            // carry the identical sourced fact. Correlate the complete fact,
+            // not a name or the presence of an unrelated absence response.
+            for (const source of sourceRows.values()) if (source.unit === "absences") {
+              const provenance = object(source.value.provenance);
+              if (source.value.ocdId && source.value.statement === record.text && provenance.sourceUrl === record.sourceUrl && provenance.sourceOrg === record.sourceOrg && provenance.collectedAt === record.retrievedAt) add("ask", `absence:${source.value.ocdId}`, [string(source.value.ocdId)]);
+            }
+          }
         }
         if (record.kind === "KEY_VOTE_CONTEXT" && string(record.id).startsWith("key-vote-entry:")) add("ask", `key-entry:${string(record.id).slice("key-vote-entry:".length)}`, [string(record.id).slice("key-vote-entry:".length)]);
         if (record.kind === "BILL_SUMMARY" && string(record.id).startsWith("bill-summary:")) add("ask", `bill-summary:${string(record.id).slice("bill-summary:".length)}`, [string(record.id).slice("bill-summary:".length)]);
@@ -1316,7 +1365,7 @@ export function composeCanonicalRouteProofs(root: string, census: ReaderCensus, 
         else if (row.datasetFamily === "ballot-navigation") key = `navigation:${auditId.includes("election-dates") ? "dates" : "registration"}:${JSON.stringify(clean(raw))}`;
         else if (row.datasetFamily === "ballot") {
           if (row.readerSurface === "ask" && ["cards", "links"].includes(source.unit)) {
-            const fields = source.unit === "cards" ? ["bio", "phone", "email", "filedAddress"].filter((field)=>raw[field]).map((field)=>({field,value:string(raw[field]),path:auditId})) : ["official","campaign"].filter((field)=>object(raw[field]).url).map((field)=>({field,value:string(object(raw[field]).url),path:`${auditId}/${field}`}));
+            const fields = source.unit === "cards" ? ["bio", "phone", "email", "filedAddress"].filter((field)=>raw[field]).map((field)=>({field,value:string(raw[field]),path:field === "bio" ? auditId : `${auditId}/${field}`})) : ["official","campaign"].filter((field)=>object(raw[field]).url).map((field)=>({field,value:string(object(raw[field]).url),path:`${auditId}/${field}`}));
             if (fields.length && fields.every(({field,value,path})=>observations.has(`profile-field:${path}:${field}:${value}`))) { key = `profile:${auditId}`; observations.set(key,[source.identityKey!]); }
           } else if (source.unit === "contacts") key = `candidate-contact:${raw.candidacyId}`;
           else if (Array.isArray(raw.nominees) && raw.contestId && raw.nominees.map(object).every((nominee) => observations.has(`card-key:${raw.contestId}|${nominee.name}`))) { key = `lineup:${raw.contestId}`; observations.set(key, [string(raw.contestId)]); }

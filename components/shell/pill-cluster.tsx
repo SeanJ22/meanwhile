@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 
@@ -109,8 +109,26 @@ export function PillCluster({
    * INSIDE press and the pill's own toggle stays the explicit control.
    */
   const rootRef = useRef<HTMLDivElement>(null);
+  const rowRef = useRef<HTMLDivElement>(null);
+  const [expansionTop, setExpansionTop] = useState(0);
   const closeAsk = useCallback(() => onToggleAsk(false), [onToggleAsk]);
   useDismissOnOutside(rootRef, closeAsk, askOpen);
+
+  // The floating pill's intrinsic width is not the reading width. Keep the
+  // phone expansion below its actual row while giving it the viewport gutter.
+  useLayoutEffect(() => {
+    if (!askOpen || placement !== "map" || !rowRef.current) return;
+    const row = rowRef.current;
+    const measure = () => setExpansionTop(Math.max(12, row.getBoundingClientRect().bottom + 8));
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(row);
+    window.addEventListener("resize", measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [askOpen, placement]);
 
   if (!zip || !/^\d{5}$/.test(zip)) return null;
 
@@ -124,8 +142,8 @@ export function PillCluster({
   const pill = ASK_PILL_LABELS[placement];
 
   return (
-    <div className="map-floaters" data-pill-cluster={placement} ref={rootRef}>
-      <div className="map-floaters-row">
+    <div className="map-floaters" data-pill-cluster={placement} data-ask-open={askOpen || undefined} ref={rootRef} style={{ "--ask-expansion-top": `${expansionTop}px` } as CSSProperties}>
+      <div className="map-floaters-row" ref={rowRef}>
         <div className="ballot-pill">
           <Link
             href={`/ballot?zip=${zip}`}

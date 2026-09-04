@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { applyReaderApplicability, buildReaderCensus, censusClosureFailures, composeCanonicalRouteProofs, composeReaderComponentProofs, packReaderEvidence, readerBundleEvidence, readerCensusSummary, readerProofInventory, readReaderEvidence, projectCanonicalReaderRecords, reconcileDelivery, renderCanonicalReaderComponents, renderCensusMarkdown, sha256, type ReaderDeliveryProof, type ReaderProjectionReport, type ReaderSurfaceClassWitness } from "../lib/holdings/reader-census.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { readerSourceFingerprint, readerNestedFieldInventory, validateReaderClosureReceipt, type ReaderClosureReceipt } from "../lib/holdings/reader-census.ts";
+import { activePortraitInventory } from "../lib/holdings/reader-census.ts";
 
 const args = process.argv.slice(2);
 const option = (name: string) => { const i = args.indexOf(name); return i < 0 ? undefined : args[i + 1]; };
@@ -33,6 +34,7 @@ if (args.includes("--project") || projectionPath) {
   census = applyReaderApplicability(census, projection);
   const path = output.replace(/\.json$/, "-projection.json");
   if (!args.includes("--check") && !projectionPath) writeFileSync(join(root, path), `${JSON.stringify(projection, null, 2)}\n`);
+  if (!args.includes("--check")) writeFileSync(join(root,"docs/evidence/reader-last-mile-active-portraits.json"),`${JSON.stringify({holdingsDigest:census.holdingsDigest,records:activePortraitInventory(census,projection)},null,2)}\n`);
   console.log(JSON.stringify({ projection: path, counts: projection.counts, failureCount: projection.failures.length, firstFailures: projection.failures.slice(0, 20) }, null, 2));
   if (args.includes("--projection-closure")) problems.push(...projection.failures);
 }

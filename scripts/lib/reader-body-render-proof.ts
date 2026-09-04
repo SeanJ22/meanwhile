@@ -12,6 +12,7 @@ import type { SeatHolder } from "../../lib/officials/lookup.ts";
 import type { DistrictHit } from "../../lib/map/districts.ts";
 import type { ComponentType } from "react";
 import { membersOfBody } from "../../lib/registry/body-membership.ts";
+import { rosterGapForBody, type RosterReaderGap } from "../../lib/registry/body-rosters.ts";
 import { jurisdictionClaim, representationNoteForClaim } from "../../lib/meetings/jurisdiction-badge.ts";
 import { TIER_LABEL } from "../../lib/ocd/tiers.ts";
 import { districtCardSources } from "../../lib/officials/card-sources.ts";
@@ -39,13 +40,15 @@ export async function bodyRenderProof(root = process.cwd()) {
       // Export the existing private leaves, with their original bodies unchanged.
       // Collapsed CardSection intentionally does not SSR its children; this proves
       // those actual children independently and labels that scope explicitly.
-      const leafExports = fileURLToPath(url).replaceAll("\\", "/").endsWith(entityPath) ? "\nexport { DefinitionBlock, Representation };\n" : "";
-      const source = ts.transpileModule(readFileSync(fileURLToPath(url), "utf8") + leafExports, { fileName: fileURLToPath(url), compilerOptions: { jsx: ts.JsxEmit.ReactJSX, module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
+      const productSource = readFileSync(fileURLToPath(url), "utf8");
+      const privateLeaves = ["DefinitionBlock", "Representation"].filter((name) => !new RegExp(`export function ${name}\\b`).test(productSource));
+      const leafExports = fileURLToPath(url).replaceAll("\\", "/").endsWith(entityPath) && privateLeaves.length ? `\nexport { ${privateLeaves.join(", ")} };\n` : "";
+      const source = ts.transpileModule(productSource + leafExports, { fileName: fileURLToPath(url), compilerOptions: { jsx: ts.JsxEmit.ReactJSX, module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
       return { format: "module", source, shortCircuit: true };
     },
   });
   const [{ createElement, Fragment }, { renderToStaticMarkup }, entityModule, { DistrictPopup }] = await Promise.all([import("react"), import("react-dom/server"), import("../../components/map/popup/entity-modal.tsx"), import("../../components/map/popup/district-popup.tsx")]);
-  const { EntityModal, DefinitionBlock, Representation } = entityModule as typeof entityModule & { DefinitionBlock: ComponentType<{ definition: BodyDefinitionText }>; Representation: ComponentType<{ holders: SeatHolder[]; note: string }> };
+  const { EntityModal, DefinitionBlock, Representation } = entityModule as typeof entityModule & { DefinitionBlock: ComponentType<{ definition: BodyDefinitionText }>; Representation: ComponentType<{ holders: SeatHolder[]; note: string; gaps?: readonly RosterReaderGap[] }> };
   const { schoolDependency } = await import("../../lib/officials/school-dependency.ts");
   const { CardSourcesList } = await import("../../components/officials/card-sources-list.tsx");
   // Use the exact product selector AST, not a second implementation. Dependencies
@@ -57,9 +60,9 @@ export async function bodyRenderProof(root = process.cwd()) {
   if (nodes.length !== names.length) throw new Error("Canonical body selector functions changed; review the proof adapter.");
   const extracted = nodes.map((node) => node.getText(ast)).join("\n");
   const javascript = ts.transpileModule(extracted, { compilerOptions: { jsx: ts.JsxEmit.React, jsxFactory: "createElement", target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
-  const dependencies = { createElement, membersOfBody, jurisdictionClaim, representationNoteForClaim, TIER_LABEL, districtCardSources, definitionsForBody, schoolDependency, bodyClassLong };
+  const dependencies = { createElement, membersOfBody, rosterGapForBody, jurisdictionClaim, representationNoteForClaim, TIER_LABEL, districtCardSources, definitionsForBody, schoolDependency, bodyClassLong };
   const bodySubject = new Function(...Object.keys(dependencies), `${javascript}\nreturn bodySubject;`)(...Object.values(dependencies)) as (body: CoveredBody) => ModalSubject;
-  const census = JSON.parse(readReaderEvidence(root, "docs/evidence/reader-last-mile-current.json.gz").toString("utf8")) as ReaderCensus;
+  const census = JSON.parse(readReaderEvidence(root, "docs/evidence/reader-last-mile-current.json").toString("utf8")) as ReaderCensus;
   const registry = JSON.parse(readFileSync(join(root, "lib/registry/registry.json"), "utf8")) as Registry;
   const divisions = new Map(registry.divisions.map((row) => [row.ocdId, row]));
   const bodies = new Map(registry.bodies.map((row) => [row.id, row]));
@@ -79,9 +82,9 @@ export async function bodyRenderProof(root = process.cwd()) {
     const covered: CoveredBody = { bodyId: body.id, ocdId: body.ocdId, name: body.name, divisionLabel: division?.label ?? "", divisionType: division?.divisionType ?? null, lsad: division?.lsad ?? null, bodyClass: body.bodyClass, coverageStatus: body.coverageStatus, homepageUrl: body.homepageUrl, agendaSourceRef: body.agendaSourceRef, lookedAt: body.coverageStatus !== "NOT_ATTEMPTED", tier: division?.tier ?? "local" };
     const subject = bodySubject(covered);
     const definitions = [subject.bodyCard!.whatItDoes.classDefinition, subject.bodyCard!.whatItDoes.formDefinition].filter((definition): definition is BodyDefinitionText => definition !== null);
-    const markup = renderToStaticMarkup(createElement(Fragment, null, createElement(EntityModal, { subject, onClose: () => {} }), ...definitions.map((definition, index) => createElement(DefinitionBlock, { key: index, definition })), createElement(Representation, { holders: subject.representation, note: subject.representationNote }), createElement(CardSourcesList, { sources: subject.sources })));
-    const expected = [subject.title, subject.subtitle, ...definitions.flatMap((definition) => [definition.text, definition.basis, definition.readOn, ...(definition.basisUrl ? [definition.basisUrl] : [])]), ...subject.representation.flatMap((holder) => [holder.name, readerOfficeTitle(holder.officeTitle), holder.provenance?.sourceOrg ?? "", ...(holder.sourceUrl ? [holder.sourceUrl] : [])])].filter(Boolean);
-    const counts = { seatedMembers: { expected: subject.representation.length, actual: [...markup.matchAll(/class="account-modal-person /g)].length }, sourcedDefinitions: { expected: definitions.length, actual: [...markup.matchAll(/Powers defined in:/g)].length } };
+    const markup = renderToStaticMarkup(createElement(Fragment, null, createElement(EntityModal, { subject, onClose: () => {} }), ...definitions.map((definition, index) => createElement(DefinitionBlock, { key: index, definition })), createElement(Representation, { holders: subject.representation, note: subject.representationNote, gaps: subject.rosterGaps }), createElement(CardSourcesList, { sources: subject.sources })));
+    const expected = [subject.title, subject.subtitle, ...(subject.rosterGaps ?? []).flatMap((gap) => [gap.statement, gap.sourceUrl, gap.sourceOrg]), ...definitions.flatMap((definition) => [definition.text, definition.basis, definition.readOn, ...(definition.basisUrl ? [definition.basisUrl] : [])]), ...subject.representation.flatMap((holder) => [holder.name, readerOfficeTitle(holder.officeTitle), holder.provenance?.sourceOrg ?? "", ...(holder.sourceUrl ? [holder.sourceUrl] : [])])].filter(Boolean);
+    const counts = { seatedMembers: { expected: subject.representation.length, actual: [...markup.matchAll(/class="account-modal-person /g)].length }, sourcedDefinitions: { expected: definitions.length, actual: [...markup.matchAll(/Powers defined in:/g)].length }, rosterGaps: { expected: subject.rosterGaps?.length ?? 0, actual: [...markup.matchAll(/data-roster-completeness-gap=/g)].length } };
     const output = { subject, markup, expected, counts }; bodyOutput.set(id, output); return output;
   }
   const districtTypes: Record<string, DistrictHit["type"]> = { cd: "congressional", sldu: "state-senate", sldl: "state-house", county: "county", place: "municipal", school_district: "school-unified" };

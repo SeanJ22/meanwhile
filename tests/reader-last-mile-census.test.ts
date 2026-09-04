@@ -12,9 +12,42 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { proveVotingSites } from "../scripts/reader-last-mile-voting-sites.mts";
 import { registerReaderRenderHooks } from "../lib/holdings/reader-census.ts";
 import { readerSourceFingerprint, readerSourceHashProblems } from "../lib/holdings/reader-census.ts";
+import { ballotHolderObligationFailures } from "../lib/holdings/reader-census.ts";
+import { validateReaderClosureReceipt, type ReaderClosureReceipt } from "../lib/holdings/reader-census.ts";
 
 const canonical: EligibilityFacts = { held: true, source: "CANONICAL_READER_SNAPSHOT", relationship: "CANONICAL_READER_RECORD", identity: "RESOLVED" };
 const staged: EligibilityFacts = { ...canonical, source: "AUTONOMOUS_STAGING", relationship: "ACQUISITION_INPUT" };
+
+test("the committed complete reader graph still matches its proved holdings, loaders and rendering receipt", () => {
+  const root = process.cwd();
+  // Mandatory current evidence: a missing receipt is a failing gate, never a
+  // skipped check. Documentation-only commits need no new reader proof; changed
+  // holdings, identity joins, reader code or CSS invalidate this receipt.
+  const receipt = JSON.parse(readReaderEvidence(root, "docs/evidence/reader-last-mile-closure-receipt.json").toString("utf8")) as ReaderClosureReceipt;
+  assert.deepEqual(validateReaderClosureReceipt(root, receipt), []);
+});
+
+test("ballot scope cannot hide an eligible incumbent when the consumer join returns null", () => {
+  const held = { target: "candidate:one", contestId: "contest:one", officialId: "official:one", officeMatch: true, divisionMatch: true, actualHolderId: "official:one", standing: "INCUMBENT" };
+  assert.deepEqual(ballotHolderObligationFailures([held]), []);
+  assert.match(ballotHolderObligationFailures([{ ...held, actualHolderId: null }])[0], /disappeared/);
+  assert.match(ballotHolderObligationFailures([{ ...held, actualHolderId: "official:other" }])[0], /official:one/);
+  assert.match(ballotHolderObligationFailures([{ ...held, officeMatch: false }])[0], /another office/);
+  assert.deepEqual(ballotHolderObligationFailures([{ ...held, officeMatch: false, standing: "UNKNOWN", actualHolderId: null }]), []);
+});
+
+test("source fingerprint follows a directory index and imported reader CSS as files",(t)=>{
+  const root=mkdtempSync(join(tmpdir(),"wtp-reader-index-"));
+  t.after(()=>rmSync(root,{recursive:true,force:true}));
+  mkdirSync(join(root,"records"));
+  writeFileSync(join(root,"page.ts"),'import "./reader.css"; import { records } from "./records"; export const answer=records;');
+  writeFileSync(join(root,"records/index.ts"),'export const records=[{id:"canonical:one"}];');
+  writeFileSync(join(root,"reader.css"),'.reader { display:block; }');
+  const fingerprint=readerSourceFingerprint(root,["page.ts"]);
+  assert.deepEqual(fingerprint.map((row)=>row.path),["page.ts","reader.css","records/index.ts"]);
+  writeFileSync(join(root,"reader.css"),'.reader { display:none; }');
+  assert.ok(readerSourceHashProblems(root,fingerprint).some((problem)=>problem.endsWith("reader.css")));
+});
 
 test("committed proof fingerprint rejects a vanished loader or changed holding, without requiring the same documentary HEAD", (t) => {
   const root = mkdtempSync(join(tmpdir(), "wtp-reader-fingerprint-"));

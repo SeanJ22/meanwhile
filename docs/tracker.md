@@ -22,7 +22,7 @@ and when. Nothing is ever deleted.
   - New Jersey hunt — **1**
   - Arizona hunt — **2**
   - Visual feedback — **3**
-  - Data infrastructure — **3**
+  - Data infrastructure — **4**
   - Product / UI — **3**
   - Constitution & rules — **1**
   - Repo & ops — **10** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**

@@ -21,6 +21,7 @@ const outputPath = process.env.READER_PROOF_OUTPUT ?? "docs/evidence/reader-last
 const witnessPath = process.env.READER_WITNESS_OUTPUT ?? "docs/evidence/reader-last-mile-final-delta-witnesses.json";
 const ballotEvidencePath = process.env.READER_BALLOT_EVIDENCE ?? "docs/evidence/reader-last-mile-final-ballot.json";
 const proofSourcesPath = process.env.READER_PROOF_SOURCES;
+const refreshBaseline = process.argv.includes("--refresh-baseline");
 assert.ok(proofSourcesPath, "The frozen final census source fingerprint is required");
 const screenshotsDir = join(root, "screenshots", "reader-last-mile", "final");
 mkdirSync(screenshotsDir, { recursive: true });
@@ -189,7 +190,7 @@ try {
       const mapMoney = await inspectStateMoney(official, officialId);
       const mapShot = await capture(mapMoney.section, "85701-hobbs-map-money");
       await page.keyboard.press("Escape");
-      const meetingIds = ["legistar:pima:1825"];
+      const meetingIds = refreshBaseline ? [] : ["legistar:pima:1825"];
       const meetings = [];
       for (const meetingId of meetingIds) meetings.push(await inspectMeeting(page, meetingId));
       await page.goto(`${base}/ballot?zip=85701`, { waitUntil: "domcontentloaded", timeout: 90_000 });
@@ -203,7 +204,7 @@ try {
       results.push({ id: "hobbs-parity-and-pima-activity", result: "PASS", officialId, ballotTarget, candidacyId, mapMoney: mapMoney.records, ballotMoney: ballotMoney.records, mapText: mapMoney.text, ballotText: ballotMoney.text, meetings, screenshots: [mapShot, ballotShot] });
     } finally { await context.close(); }
   }
-  {
+  if (!refreshBaseline) {
     const { context, page } = await contextPage();
     try {
       await mapAt(page, "85641");
@@ -239,7 +240,7 @@ try {
       results.push({ id: "nj-filed-contact", result: "PASS", candidacyId, screenshot });
     } finally { await context.close(); }
   }
-  {
+  if (!refreshBaseline) {
     const { context, page } = await contextPage();
     try {
       await mapAt(page, "03255");
@@ -279,7 +280,7 @@ try {
   }
 } finally { await browser.close(); }
 
-assert.equal(screenshots.length, 4, "The bounded visual sample is exactly four screenshots");
+assert.equal(screenshots.length, refreshBaseline ? 3 : 4, `The bounded visual sample is exactly ${refreshBaseline ? 3 : 4} screenshots`);
 const resultFloor = floored(
   "passing final rendered proof results",
   outputPath,
@@ -299,7 +300,9 @@ const report = {
   base,
   runId: browser.runId,
   sourceHashes: JSON.parse(readFileSync(proofSourcesPath, "utf8")),
-  scope: "Four screenshots and DOM/API assertions only for Katie Hobbs parity, NJ filed contact, federal finance parity, and the changed Newbury/meeting seam.",
+  scope: refreshBaseline
+    ? "Three screenshots and DOM/API assertions only for the invalidated state-money surfaces and NJ filed contact."
+    : "Four screenshots and DOM/API assertions only for Katie Hobbs parity, NJ filed contact, federal finance parity, and the changed Newbury/meeting seam.",
   results,
   screenshots,
   denominatorFloors: [resultFloor, screenshotFloor],
@@ -309,7 +312,13 @@ writeFileSync(outputPath, `${JSON.stringify(report, null, 2)}\n`);
 const reportSha256 = hashBytes(outputPath);
 const ballotSha256 = hashBytes(ballotEvidencePath);
 const witness = (surface: string, component: string, evidencePath = outputPath, evidenceSha256 = reportSha256, included = screenshots) => ({ surface, component, exactHead, evidencePath, evidenceSha256, screenshots: included });
-const witnesses = [
+const witnesses = refreshBaseline ? [
+  witness("map", "components/funding/state-money-section.tsx", outputPath, reportSha256, screenshots.slice(0, 1)),
+  witness("ballot", "components/funding/state-money-section.tsx", outputPath, reportSha256, screenshots.slice(1, 2)),
+  witness("state-money", "components/funding/state-money-section.tsx", outputPath, reportSha256, screenshots.slice(0, 2)),
+  witness("ballot", "components/ballot/candidate-card.tsx", ballotEvidencePath, ballotSha256, []),
+  witness("ballot", "components/ballot/candidate-contact.tsx", outputPath, reportSha256, screenshots.slice(2, 3)),
+] : [
   witness("map", "components/funding/state-money-section.tsx", outputPath, reportSha256, screenshots.slice(0, 1)),
   witness("ballot", "components/funding/state-money-section.tsx", outputPath, reportSha256, screenshots.slice(1, 2)),
   witness("state-money", "components/funding/state-money-section.tsx", outputPath, reportSha256, screenshots.slice(0, 2)),

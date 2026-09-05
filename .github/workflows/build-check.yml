@@ -406,18 +406,7 @@ jobs:
       # can prove that the receipt's executed head is really in HEAD's history.
       - name: Reader closure proof ancestry
         shell: bash
-        run: |
-          reader_head=$(node -e "const fs=require('node:fs'),z=require('node:zlib');const receipt=JSON.parse(fs.readFileSync('docs/evidence/reader-last-mile-final-closure-receipt.json','utf8'));const reportPath=receipt.inheritance.reportPath;const bytes=fs.existsSync(reportPath)?fs.readFileSync(reportPath):z.gunzipSync(fs.readFileSync(JSON.parse(fs.readFileSync(reportPath+'.pack.json','utf8')).path));process.stdout.write(JSON.parse(bytes).currentReaderHead)")
-          [[ "$reader_head" =~ ^[0-9a-f]{40}$ ]] || exit 1
-          deepen=8
-          until git merge-base --is-ancestor "$reader_head" HEAD 2>/dev/null; do
-            if (( deepen > 256 )); then
-              echo "Reader proof head $reader_head is not reachable within the bounded shallow history." >&2
-              exit 1
-            fi
-            git fetch --no-tags --deepen="$deepen" origin "$GITHUB_REF"
-            deepen=$((deepen * 2))
-          done
+        run: node scripts/reader-proof-history.mjs
 
       # `if: always()` on the two that follow, so one red gate does not hide
       # the verdict of the others. A PR author gets all three answers from one

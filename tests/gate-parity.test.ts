@@ -61,6 +61,8 @@ const NOT_A_GATE = [
   `holdings_update=$(node --input-type=module -e "import{readFileSync}from'node:fs';console.log(JSON.parse(readFileSync('data/states/az/ballot/measure-summaries.json','utf8')).source.integratedUpdate.commit)")`,
   '[[ "$holdings_update" =~ ^[0-9a-f]{40}$ ]] || exit 1',
   'git cat-file -e "${holdings_update}^{commit}" 2>/dev/null || git fetch --no-tags --depth=1 origin "$holdings_update"',
+  // Shallow-checkout setup for the committed reader receipt's ancestry proof.
+  "node scripts/reader-proof-history.mjs",
 ];
 
 /*

@@ -694,7 +694,16 @@ const readerDeliveryFields = new Set([
   "falsePositiveCount", "evidencePaths", "deliveryReason",
 ]);
 export function readerRowStructuralSha256(row: CensusRow): string {
-  return sha256(JSON.stringify(Object.fromEntries(Object.entries(row).filter(([key]) => !readerDeliveryFields.has(key)))));
+  const structural = Object.fromEntries(Object.entries(row).filter(([key]) => !readerDeliveryFields.has(key))) as Record<string, unknown>;
+  // Applicability is structural, but the explanatory snapshot time is not. It
+  // must not invalidate an otherwise byte-identical meeting row on every run.
+  if (structural.applicabilityByRecord && typeof structural.applicabilityByRecord === "object") {
+    structural.applicabilityByRecord = Object.fromEntries(Object.entries(structural.applicabilityByRecord).map(([id, entry]) => {
+      if (!entry || typeof entry !== "object" || !("reason" in entry) || typeof entry.reason !== "string") return [id, entry];
+      return [id, { ...entry, reason: entry.reason.replace(/ at \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z\.(?= This is a current-calendar scope)/, " at <evaluation-time>.") }];
+    }));
+  }
+  return sha256(JSON.stringify(structural));
 }
 function readerSourceImpact(path: string): { acceptance: string; reason: string } | null {
   if (path === "lib/funding/official-candidacies.json") return { acceptance: "LM-F4", reason: "Controlled official/candidacy state-money bridge." };
@@ -705,6 +714,15 @@ function readerSourceImpact(path: string): { acceptance: string; reason: string 
   }
   if (path === "app/globals.css") return { acceptance: "LM-F8", reason: "Equivalent radius-token substitution is covered by the small final rendered sample." };
   return null;
+}
+function readerSourceInvalidatesFamily(path: string, family: string): boolean {
+  if (path === "lib/funding/official-candidacies.json") return family === "state-money";
+  if (path.startsWith("data/fec/")) return family === "federal-finance";
+  if (/^data\/states\/nj\/ballot\//.test(path)) return family === "ballot";
+  if (/^(?:data\/meetings-snapshot\.json|app\/api\/(?:agenda|meetings|ask\/(?:agenda|grounded))\/route\.ts|components\/(?:map|shell)\/|lib\/(?:ask\/(?:answer|evidence|meeting-knowledge|synthesize)|map\/marker-pool|meetings\/|state\/(?:data\.tsx|defaults\.ts|types\.ts)))/.test(path)) {
+    return ["meetings", "minutes-summaries", "notice-summaries", "comment-access", "outcomes"].includes(family);
+  }
+  return path === "app/globals.css" && readerLastMileInvalidatedFamilies.has(family);
 }
 function copyInheritedReaderDelivery(current: CensusRow, baseline: CensusRow, reportPath: string): CensusRow {
   return {
@@ -720,14 +738,14 @@ function copyInheritedReaderDelivery(current: CensusRow, baseline: CensusRow, re
     falseNegativeCount: baseline.falseNegativeCount,
     falsePositiveCount: baseline.falsePositiveCount,
     evidencePaths: unique([...baseline.evidencePaths, reportPath]),
-    deliveryReason: `Dependency-aware inheritance from ${READER_LAST_MILE_BASE_HEAD}: row structure, canonical identities and every holding byte for this row are unchanged. ${baseline.deliveryReason}`,
+    deliveryReason: `Dependency-aware inheritance from ${baseline.provedHead}: row structure, canonical identities and every holding byte for this row are unchanged. ${baseline.deliveryReason}`,
   };
 }
 
 /** Carry only unchanged, already-proved rows across the frozen last-mile delta.
  * Any changed row outside the declared family boundary stays unproved and is a
  * hard failure; this is deliberately more conservative than HEAD equality. */
-export function inheritReaderProofs(root: string, current: ReaderCensus, options: { baselineCensusPath: string; baselineReceiptPath: string; reportPath: string; currentReaderHead: string }): { census: ReaderCensus; report: ReaderProofInvalidationReport } {
+export function inheritReaderProofs(root: string, current: ReaderCensus, options: { baselineCensusPath: string; baselineReceiptPath: string; reportPath: string; currentReaderHead: string; onlyChangedDependencies?: boolean }): { census: ReaderCensus; report: ReaderProofInvalidationReport } {
   const baselineReceiptBytes = readReaderEvidence(root, options.baselineReceiptPath);
   const baselineReceipt = JSON.parse(baselineReceiptBytes.toString("utf8")) as ReaderClosureReceipt;
   const baselineCensusBytes = readReaderEvidence(root, options.baselineCensusPath);
@@ -738,6 +756,9 @@ export function inheritReaderProofs(root: string, current: ReaderCensus, options
   const baselineRows = new Map(baseline.rows.map((row) => [row.id, row]));
   const baselineHoldings = new Map(baseline.holdings.map((holding) => [holding.path, holding]));
   const currentHoldings = new Map(current.holdings.map((holding) => [holding.path, holding]));
+  const baselineSources = new Map(baselineReceipt.sourceHashes.map((source) => [source.path, source.sha256]));
+  const currentSources = new Map(readerSourceFingerprint(root).map((source) => [source.path, source.sha256]));
+  const changedReaderSourcePaths = unique([...baselineSources.keys(), ...currentSources.keys()]).filter((path) => baselineSources.get(path) !== currentSources.get(path));
   const rows: ReaderProofInvalidationRow[] = [];
   const inheritedRows = new Map<string, CensusRow>();
   for (const row of current.rows) {
@@ -747,18 +768,21 @@ export function inheritReaderProofs(root: string, current: ReaderCensus, options
     const holdingRows = row.holdingPaths.map((path) => ({ path, baselineSha256: baselineHoldings.get(path)?.sha256 ?? null, currentSha256: currentHoldings.get(path)?.sha256 ?? null }));
     const baselineStructuralSha256 = baselineRow ? readerRowStructuralSha256(baselineRow) : null;
     const currentStructuralSha256 = readerRowStructuralSha256(row);
+    const structuralMatches = Boolean(baselineRow && baselineStructuralSha256 === currentStructuralSha256);
+    const holdingsMatch = holdingRows.every((holding) => holding.baselineSha256 !== null && holding.baselineSha256 === holding.currentSha256);
+    const declaredDependencyChanged = !options.onlyChangedDependencies || !structuralMatches || !holdingsMatch
+      || changedReaderSourcePaths.some((path) => readerSourceInvalidatesFamily(path, row.datasetFamily));
     let disposition: ReaderProofDisposition;
     let acceptance: string;
     let reason: string;
     if (!applicable.length) {
       disposition = "RECOMPUTED"; acceptance = invalidation?.acceptance ?? "LM-F3/LM-F6";
       reason = "No direct eligible reader payload is applicable to this row; current eligibility/applicability is recomputed rather than inherited as rendered truth.";
-    } else if (invalidation) {
+    } else if (invalidation && declaredDependencyChanged) {
       disposition = "INVALIDATED"; acceptance = invalidation.acceptance; reason = invalidation.reason;
     } else {
-      const structuralMatches = baselineRow && baselineStructuralSha256 === currentStructuralSha256;
-      const holdingsMatch = holdingRows.every((holding) => holding.baselineSha256 !== null && holding.baselineSha256 === holding.currentSha256);
-      if (!baselineRow || !structuralMatches || !holdingsMatch || baselineRow.deliveryState !== "RENDERED" || baselineRow.provedHead !== READER_LAST_MILE_BASE_HEAD) {
+      const provedCheckpointMatches = options.onlyChangedDependencies ? Boolean(baselineRow?.provedHead) : baselineRow?.provedHead === READER_LAST_MILE_BASE_HEAD;
+      if (!baselineRow || !structuralMatches || !holdingsMatch || baselineRow.deliveryState !== "RENDERED" || !provedCheckpointMatches) {
         disposition = "INVALIDATED"; acceptance = "UNCLASSIFIED";
         reason = "An undeclared row, identity, applicability or holding dependency changed after the proved checkpoint.";
         failures.push(`${row.id}: changed outside the frozen invalidation boundary`);
@@ -771,9 +795,7 @@ export function inheritReaderProofs(root: string, current: ReaderCensus, options
     rows.push({ rowId: row.id, disposition, acceptance, reason, baselineStructuralSha256, currentStructuralSha256, holdings: holdingRows });
   }
   for (const row of baseline.rows) if (!current.rows.some((currentRow) => currentRow.id === row.id)) failures.push(`${row.id}: baseline reader row disappeared`);
-  const baselineSources = new Map(baselineReceipt.sourceHashes.map((source) => [source.path, source.sha256]));
-  const currentSources = new Map(readerSourceFingerprint(root).map((source) => [source.path, source.sha256]));
-  const changedReaderSources = unique([...baselineSources.keys(), ...currentSources.keys()]).flatMap((path) => {
+  const changedReaderSources = changedReaderSourcePaths.flatMap((path) => {
     const before = baselineSources.get(path) ?? null, after = currentSources.get(path) ?? null;
     if (before === after) return [];
     const impact = readerSourceImpact(path);
@@ -860,7 +882,7 @@ export function readerProofInheritanceProblems(root: string, census: ReaderCensu
     if (!final || row.currentStructuralSha256 !== readerRowStructuralSha256(final)) { failures.push(`${row.rowId}: final structural projection differs from invalidation report`); continue; }
     if (row.disposition === "INHERITED") {
       if (!base || row.baselineStructuralSha256 !== readerRowStructuralSha256(base) || row.currentStructuralSha256 !== row.baselineStructuralSha256) failures.push(`${row.rowId}: inherited structure differs from baseline`);
-      if (final.provedHead !== READER_LAST_MILE_BASE_HEAD || final.deliveryState !== "RENDERED" || final.falseNegativeCount !== 0 || final.falsePositiveCount !== 0) failures.push(`${row.rowId}: inherited delivery is not the proved closed result`);
+      if (!base || final.provedHead !== base.provedHead || final.deliveryState !== "RENDERED" || final.falseNegativeCount !== 0 || final.falsePositiveCount !== 0) failures.push(`${row.rowId}: inherited delivery is not the proved closed result`);
       if (row.holdings.some((holding) => !holding.baselineSha256 || holding.baselineSha256 !== holding.currentSha256)) failures.push(`${row.rowId}: inherited holding bytes changed`);
     } else if (row.disposition === "INVALIDATED" && (final.applicableEligibleRecordIds ?? final.eligibleRecordIds).length) {
       if (final.provedHead !== report.currentReaderHead || final.deliveryState !== "RENDERED" || final.falseNegativeCount !== 0 || final.falsePositiveCount !== 0) failures.push(`${row.rowId}: invalidated row lacks complete current-head delivery proof`);

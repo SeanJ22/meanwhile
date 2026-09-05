@@ -51,6 +51,14 @@ test("source-only reader renewal cannot inherit a changed canonical identity or 
   assert.notEqual(readerRowStructuralSha256(row), readerRowStructuralSha256({ ...row, applicableEligibleRecordIds: [] }));
 });
 
+test("reader structural identity ignores only the volatile calendar evaluation time", () => {
+  const reason = "Event event:one starts 2027-01-13T02:00:00.000Z, outside the canonical calendar window 90 days back / 120 days ahead at 2026-09-04T21:29:26.023Z. This is a current-calendar scope, not unheld data.";
+  const row = { id: "meetings:map:az", applicabilityByRecord: { "event:one": { status: "INTENTIONALLY_OUT_OF_SCOPE", selector: "searchMeetings", reason } } } as unknown as CensusRow;
+  const later = { ...row, applicabilityByRecord: { "event:one": { ...row.applicabilityByRecord!["event:one"], reason: reason.replace("2026-09-04T21:29:26.023Z", "2026-09-05T15:49:06.685Z") } } };
+  assert.equal(readerRowStructuralSha256(row), readerRowStructuralSha256(later));
+  assert.notEqual(readerRowStructuralSha256(row), readerRowStructuralSha256({ ...later, applicabilityByRecord: { "event:one": { ...later.applicabilityByRecord["event:one"], selector: "different" } } }));
+});
+
 test("source renewal accepts an exact removed dependency only beside current execution and complete graph absence", () => {
   const old = { path: "components/map/state-focus-overlay.tsx", sha256: sha256("committed former DOM overlay") };
   const current = { path: "components/map/map-canvas.tsx", sha256: sha256("current map layers") };

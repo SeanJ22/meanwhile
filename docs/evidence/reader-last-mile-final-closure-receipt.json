@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "censusPath": "docs/evidence/reader-last-mile-final-closure.json",
-  "censusSha256": "00561f84e6db6ef6d5aa75b6744b3d7e75127378f64f63f2235d548b623ffa6f",
-  "holdingsDigest": "c4204a7b3f800f2cdafe584ead0bba165f8eef47ec82e1ecf3e5f7b2f36e1407",
+  "censusSha256": "20ec31e9c6ea8c0bb14c1960430efe56d0c18e1287b31fc4e31e97b7fc6d93d1",
+  "holdingsDigest": "043a8c7289c568c1c6e1bbf1c7c5433ad5f2d457ed27f24db81481023e723293",
   "registrySha256": "a952b03c7198bcfe2914fdee3837772bdf6693f680ede01c148b639fc36984ad",
   "sourceHashes": [
     {
@@ -1027,7 +1027,7 @@
     },
     {
       "path": "lib/funding/official-candidacies.json",
-      "sha256": "5195994514b9e192488b93da6a227c4e2d1a010b939baf3193bb9e09ec6c14f7"
+      "sha256": "1439c039002c001855f96f086f452c5cfba9231ba93e0495db7dd4b7c81b9e03"
     },
     {
       "path": "lib/funding/pill-colors.ts",
@@ -1889,35 +1889,35 @@
     },
     {
       "path": "docs/evidence/reader-last-mile-final-ballot-ask.json",
-      "sha256": "2599966c4c1ff5239fb1d625b3335696c1adc3b3df86531d831075c1ccc7e331"
+      "sha256": "f590f66b98f3881c1311da8bc5457fc871e6c440096eed596be5e6f210cdaab5"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-ballot.json",
-      "sha256": "c572451dfb1551c9fe0033b9ab6cae479f21925888ea5bc2b618a5519f7d6578"
+      "sha256": "ee91c3765bce8664ee8406ac8ef69e6fca31165a8ef38c92d3aab114ad98dbdd"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-build-receipt.json",
-      "sha256": "7a58dc4e63e2f2850cda41199dcce4ba44e5f33da10a1803c574d10d7444484e"
+      "sha256": "493b160232688072a9b351350ce02ff3510ed24b47ecd44558dad90d398028b9"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-bundle.json",
-      "sha256": "33076a3dbff4dfa149ed206e06385f6a2c49286cf4187c8aa7aa2b1ddbd42817"
+      "sha256": "bfce6729dededbfba80e6cdb49670caebb36d42673c18f5365898a7bebb6fd44"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-candidate-profiles-ask.json",
-      "sha256": "653648686a57eebadf71d8d58f7c863b9031d824a38512330177ad1971823cb5"
+      "sha256": "af03a23861052ff247bfc0ea357dda153c1c11d5fb3a84b19176074cbb0f601c"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-delta-components.json",
-      "sha256": "41ddff9d27bdd98f3d9cb195e2b90ee3244d2b81a46471703089ccaa9190e71f"
+      "sha256": "ab04fdd484872263284c1b125c8d3a5170165449d3b3e3d0c65ed5d7183c0d3a"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-delta-routes.json",
-      "sha256": "dc5752976c553a890a07e2a2d4ad9202111ba92a6d8193029fbcfb774b0662a5"
+      "sha256": "0bfe6fbfba6eab8289074541a028b9291cda8d7b58c68c0d01b9f0d6b5f77e2e"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-delta-witnesses.json",
-      "sha256": "418e0e7a31e632e7d3f7910c2b458ac0d23c12b59ea6d3be96b9fc51303e2edb"
+      "sha256": "5f686432d88aeba00c35a75fb7f2d99db1028f5244d542d391e838a7236a6e88"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-federal-money-ask.json",
@@ -1925,7 +1925,7 @@
     },
     {
       "path": "docs/evidence/reader-last-mile-final-invalidation.json",
-      "sha256": "bdd67cb7b70df060cd5a2d3270d860f8a61e7dffdc468fb0336c43dc0ff63449"
+      "sha256": "65d74bb0dc8a194382533a4d28abce6a3fde505891207ae62ae71cc596326278"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-meeting-knowledge-ask.json",
@@ -1941,15 +1941,15 @@
     },
     {
       "path": "docs/evidence/reader-last-mile-final-money-ask.json",
-      "sha256": "573e705bd78055459af0beb34b8528ef5e54365d563d835a636482d645c4b77f"
+      "sha256": "5a88ab6f1f9512c72da2bcc9e7e45eaf1a7a3e7b43f34a07df07e56a264f2570"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-portraits.json",
-      "sha256": "499bdd424ee18d7478d2750edfe976695e2bdc46b05f7601a08edbb6b7439533"
+      "sha256": "e7ce318100800048486f6b60ed359d357a4cf8ef8239c69e2b7aa708a592e9af"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-render.json",
-      "sha256": "89f3daf40bf0e1e565cfff7179e2c64aa1bf4400f05ea9f9c9151331627d7345"
+      "sha256": "39f129fd0e6a0eef82329d7ad42026c6959213e81ab6a097df0a1ce48f0cb166"
     },
     {
       "path": "docs/evidence/reader-last-mile-key-votes-ask.json",
@@ -1972,44 +1972,12 @@
       "sha256": "1ff4f53e86ea0dfea395a5418033a9e02251863b2f41d1eb959c44453c2532b3"
     },
     {
-      "path": "docs/evidence/reader-last-mile-tester-9-4-prior-invalidation.json",
-      "sha256": "0651e5ca5f6010ee241533cecbec90ef1adff44d988b708a7ae634e95851762f"
-    },
-    {
-      "path": "docs/evidence/reader-last-mile-tester-9-4-prior-receipt.json",
-      "sha256": "95770b41a973cd57cad55f72d5f1d61fb03bd919597686260f112721cefca5af"
-    },
-    {
-      "path": "docs/evidence/reader-last-mile-tester-9-4-renewal.json",
-      "sha256": "58b251020e3a446ca12bb82d9058ead1fb1ea4561b85b258b7fb741b2f1fa535"
-    },
-    {
-      "path": "docs/evidence/reader-last-mile-tester-source-9-4.json",
-      "sha256": "612bdd1507ec40bacb7071bade176bd0b47034b502de86029531080c7d96f984"
-    },
-    {
-      "path": "docs/evidence/reader-last-mile-visual-prior-invalidation.json",
-      "sha256": "611b3bfa6d4762a80949ec5739086cd09bf768ad45e6281d0b0ed7cf0e63aaca"
-    },
-    {
-      "path": "docs/evidence/reader-last-mile-visual-prior-receipt.json",
-      "sha256": "1afa1d8448dc31f6c3a01c6f2a612a0b1bdde5e77b8501fa980557892f080a7a"
-    },
-    {
-      "path": "docs/evidence/reader-last-mile-visual-renewal-execution.json",
-      "sha256": "32b5ccfcdfc72b952006f5d0aa5cda244f2615a04678375013e966d1fa1b6cce"
-    },
-    {
-      "path": "docs/evidence/reader-last-mile-visual-renewal.json",
-      "sha256": "bc888e8e6335552ef24f4c918f54f0d8d98e249aaff54a93cf384107664387d6"
-    },
-    {
       "path": "docs/evidence/reader-last-mile-voting-sites.json",
       "sha256": "924d0f6f639c8b26bc910d597b88aa37be7d28feda3345a17e4e418f6f75089d"
     }
   ],
   "inheritance": {
     "reportPath": "docs/evidence/reader-last-mile-final-invalidation.json",
-    "reportSha256": "bdd67cb7b70df060cd5a2d3270d860f8a61e7dffdc468fb0336c43dc0ff63449"
+    "reportSha256": "65d74bb0dc8a194382533a4d28abce6a3fde505891207ae62ae71cc596326278"
   }
 }

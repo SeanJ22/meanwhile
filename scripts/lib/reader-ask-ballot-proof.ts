@@ -18,7 +18,7 @@ import type { EvidencePack, EvidenceRecord } from "../../lib/ask/evidence.ts";
 type Expected = Pick<EvidenceRecord, "kind" | "id" | "sourceUrl"> & Partial<Pick<EvidenceRecord, "sourceOrg" | "retrievedAt" | "text">>;
 const hash = (input: string | Buffer) => createHash("sha256").update(input).digest("hex");
 
-export async function ballotAskProof() {
+export async function ballotAskProof(options: { states?: readonly string[] } = {}) {
   delete process.env.ANTHROPIC_API_KEY;
   process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
   const { POST, resetGroundedState } = await import("../../app/api/ask/grounded/route.ts");
@@ -44,7 +44,7 @@ export async function ballotAskProof() {
     const scopeAgrees = obsoleteCurrentScope.length === 0;
     return { family, nativeIds, subjectId: subject?.id ?? null, executionLevel: "REAL_ROUTE_HANDLER", request, expectedRecords: expected, expectedRecordIds: expected.map((record) => record.id), returnedRecords: returned, returnedRecordIds: returned.map((record) => record.id), contacts: payload.contacts, httpStatus: response.status, mode: payload.mode, resolvedSubjectId: payload.subject?.id ?? null, payloadSha256: hash(raw), countAgrees, synthesisReceivesEveryRecord, actualRecordCount: payload.records.length, traceRecordCount: payload.trace.retrieval.recordCount, denominators: payload.denominators, gaps: payload.gaps, missing, ownCandidateOnly, scopeAgrees, obsoleteCurrentScope, modelAnswer: payload.answer, status: response.status === 200 && payload.answer === null && countAgrees && synthesisReceivesEveryRecord && ownCandidateOnly && scopeAgrees && !missing.length ? "PROVEN" : "ELIGIBLE_NOT_FULLY_DELIVERED" };
   }
-  for (const { source } of BALLOT_SOURCES) {
+  for (const { source } of BALLOT_SOURCES.filter(({ state }) => !options.states?.length || options.states.includes(state))) {
     const set = source.normalize(await source.fetch());
     denominator.contests += set.contests.length;
     denominator.candidacies += set.candidacies.length;

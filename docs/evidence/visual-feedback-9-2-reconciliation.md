@@ -54,3 +54,40 @@ reviewed separately as images; a passing capture command alone is not visual pro
 The obsolete BAL-25/SB0831 walk assertions were migrated from office columns to
 candidate columns within offices. This records the BAL-43 supersession; it does
 not run or enlarge the standing walk.
+
+## Final local production proof
+
+Implementation frozen and built at `1082e85040859dd04e6020b003f810f6da7e2d3f`.
+Final browser run: 2026-09-04 at 19:33:45 America/Phoenix, against
+`http://localhost:3210`. All 11 cases passed. All 10 final captures were opened
+and read as images, not merely generated. Evidence lives in the ignored
+`.scratch/visual-feedback-final/` directory with the complete `results.json`.
+This evidence-only closeout does not change the tested implementation.
+
+| Changed row | Measured final result | Image proof reviewed |
+| --- | --- | --- |
+| LAY-12 / row 2 | Municipal, unified-school and congressional selections at 85701 plus municipal at 07866: two default pills, one expanded panel, identity retained on minimize, 1.5s glow and reduced-motion suppression. Pill stack remains separate from the footnote; boundary stays exposed. Desktop reference preserved. | `LAY-12-desktop-reference.png`, `LAY-12-85701-municipal-900-dark.png`, `LAY-12-85701-school-390-light.png`, `LAY-12-85701-congressional-900-light.png`, `LAY-12-07866-municipal-390-dark.png` |
+| BAL-43 / row 7 | 85701: 10 offices / 24 candidates. 07866: 9 offices / 26 candidates. At 1440/900/390px, office blocks have equal full width, a maximum 12px inter-office gap, and zero horizontal overflow. Candidate columns are two on desktop and one below 1024px. | `BAL-43-85701-1440.png`, `BAL-43-85701-390.png`, `BAL-43-07866-1440.png`, `BAL-43-07866-390.png` |
+| ASK-24 / row 12 | Actual grounded route returns summary `ballot-az-pima:prop-141#summary`, six records and zero contacts, without model synthesis. Exact held summary and its source lead; Further records (5) is closed initially and reveals the five remaining records on expansion. | `ASK-24-held-summary.png` |
+
+Targeted tests: **36/36 passed**, covering the existing visual feedback,
+ballot composition/Ask entry, shared summary-first renderer, browser construction
+and label tracking. Post-build feedback checks: **16/16 passed**. Full lint:
+**zero errors**, 37 existing warnings. Typecheck passed. Build-output budgets
+passed; runtime trace check found **zero failures** across its existing 14 routes,
+35 requirements and 63 files.
+
+One production build completed successfully. Two earlier invocations failed on
+local setup (an external node_modules junction, then stale development-generated
+route types); neither required a product-code change. The successful build and
+final browser proof use the same frozen implementation. No large reader census,
+`walk:all`, civic acquisition, database verification, model synthesis or autonomous
+product worker was run. Current main was checked once at shipping and had not
+advanced from the reconciliation baseline.
+
+**Closure: all three frozen remaining rows resolved; the 11 previously-DONE rows
+were not reimplemented.** The canonical sweep proof is updated only for LAY-12,
+BAL-43 and ASK-24. Original screenshots, transcript and workbook remain untouched.
+
+NON-BLOCKING FOLLOW-UP: the existing NJ U.S. Senate tier label reads State; this
+is an unchanged civic identity/tier mapping, outside this visual-only denominator.

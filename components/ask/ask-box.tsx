@@ -1,5 +1,8 @@
 "use client";
 
+import { AskBodyConfirmation } from "./body-confirmation";
+import type { BodyConfirmation } from "@/lib/ask/body-confirmation";
+
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import { AskAnswerRecords } from "./answer-records";
@@ -438,7 +441,7 @@ export function AskBox({
    * worse of the two: it is indistinguishable from a working product with
    * nothing to say. `transportFailure()` is the shared constructor.
    */
-  const askGrounded = async (question: string): Promise<AskAnswerPayload> => {
+  const askGrounded = async (question: string, confirmation?: BodyConfirmation): Promise<AskAnswerPayload> => {
     const active: AskSubjectRef[] = [];
     if (ui.selectedDistrictOcdId) {
       active.push({
@@ -466,6 +469,7 @@ export function AskBox({
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           question,
+          confirmation,
           ocdIds,
           approximateLocation: zip,
           surface: "MAP",
@@ -520,9 +524,10 @@ export function AskBox({
    * each. Nothing this component used to say about it was lost; what was lost
    * is its standing as a rival answer.
    */
-  const ask = () => {
-    const question = text.trim();
+  const ask = (confirmation?: BodyConfirmation) => {
+    const question = confirmation?.question ?? text.trim();
     if (!question) return;
+    if (confirmation) setText(question);
 
     // The beat starts immediately — it now covers real work on the refusal
     // path (one network call) as well as the deterministic path, and the
@@ -577,7 +582,7 @@ export function AskBox({
        * exact-name navigation — that is the line that closed the PR #212
        * defect and nothing below may bypass it.
        */
-      const groundedAnswer = await askGrounded(question);
+      const groundedAnswer = await askGrounded(question, confirmation);
       setGrounded(groundedAnswer);
       /*
        * The bounded conversation advances only when something CANONICAL was
@@ -640,7 +645,7 @@ export function AskBox({
        * put a vaguer second reply under a specific first one, which is the
        * two-answers-on-one-screen problem this follow-up exists to end.
        */
-      if (result.answer.kind !== "ROUTED" && !groundedAnswer?.subject) {
+      if (result.answer.kind !== "ROUTED" && !groundedAnswer?.subject && groundedAnswer.mode !== "CLARIFY" && groundedAnswer.mode !== "UNRESOLVED") {
         const topic = await classify(question);
         if (topic) {
           result = answerQuestion(question, coverage, zip, {
@@ -914,7 +919,7 @@ export function AskBox({
         </div>
         <button
           type="button"
-          onClick={ask}
+          onClick={() => ask()}
           className="shrink-0 cursor-pointer rounded-md border border-[var(--action)] bg-[var(--action)] px-3.5 text-[0.8125rem] font-semibold text-[var(--action-on)] transition-opacity hover:opacity-90"
         >
           Ask
@@ -936,7 +941,7 @@ export function AskBox({
         </p>
       )}
 
-      {asked && digest && (
+      {asked && digest && !grounded?.subject && !grounded?.confirmation && !grounded?.clarification && (
         <DigestAnswer
           digest={digest}
           coverage={coverage}
@@ -945,7 +950,7 @@ export function AskBox({
         />
       )}
 
-      {asked && asked.destination && (
+      {asked && asked.destination && !grounded?.confirmation && !grounded?.clarification && (
         /*
           G05 rule 4d: the in-app destination. It rides ALONGSIDE the topic
           answer rather than replacing it — "when does the school board meet"
@@ -1107,7 +1112,7 @@ export function AskBox({
               type="button"
               data-ask-dismiss
               aria-label="Close this answer"
-              onClick={() => setGrounded(null)}
+              onClick={() => { setGrounded(null); setAsked(null); setDigest(null); }}
               className="shrink-0 cursor-pointer rounded px-1.5 py-0.5 text-[0.75rem] leading-none text-muted hover:text-paper"
             >
               Close
@@ -1115,7 +1120,13 @@ export function AskBox({
           </div>
 
           {/* Named, and more than one thing fits. ASKED — never chosen. */}
-          {grounded.mode === "CLARIFY" && (
+          <AskBodyConfirmation answer={grounded} working={working} onConfirm={ask} onClarify={() => {
+            setGrounded(null);
+            setAsked(null);
+            setDigest(null);
+            document.getElementById(inputId)?.focus();
+          }} />
+          {grounded.mode === "CLARIFY" && !grounded.confirmation && !grounded.clarification && (
             <p
               data-ask-grounded-state="CLARIFY"
               className="text-[0.8125rem] leading-relaxed text-voice"
@@ -1186,7 +1197,7 @@ export function AskBox({
           )}
 
           {/* The validated sentence, where one survived checking. */}
-          {grounded.answer && (
+          {grounded.answer && !grounded.agendaLead && (
             <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
               {grounded.answer}
             </p>
@@ -1270,7 +1281,7 @@ export function AskBox({
             </div>
           )}
 
-          <AskAnswerRecords records={grounded.records ?? []} initiallyOpen={!grounded.answer} />
+          <AskAnswerRecords records={grounded.records ?? []} initiallyOpen={!grounded.answer} agendaLead={grounded.agendaLead} prose={grounded.agendaLead ? grounded.answer : null} />
 
           {/* Each gap says whose it is. "We haven't recorded this" is a fact
               about us; "they haven't published it" is a fact about them, and
@@ -1513,7 +1524,7 @@ export function AskBox({
         being a second one.
       */}
 
-      {asked && asked.answer.kind === "ROUTED" && asked.answer.topic && (
+      {asked && asked.answer.kind === "ROUTED" && asked.answer.topic && !grounded?.subject && !grounded?.confirmation && !grounded?.clarification && grounded?.mode !== "UNRESOLVED" && (
         <div className="mt-3">
           {/* The answer's own header: eyebrow naming the register, the
               topic as the heading. Same data as before, dressed to be

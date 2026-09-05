@@ -135,9 +135,9 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
   county: {
     files: ["county-us.geojson"],
     label: "County",
-    // The widest thing the Local tier draws, so it gets the longest dash and
-    // the heaviest stroke.
-    dash: [7, 3],
+    // The widest Local shape keeps a strong stroke. Its long dash + two dots
+    // reads apart from Congress's long dashes even in the monochrome key.
+    dash: [7, 2, 1, 2, 1, 2],
     weight: 1.25,
     labelMinZoom: 6,
   },
@@ -177,7 +177,9 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
   "school-unified": {
     files: geoFilesFor("unsd"),
     label: "School (unified)",
-    dash: [2, 2],
+    // ACC-1: paired short dashes distinguish this from State House even when
+    // hue is unavailable. Every sample in the boundary key reads this spec.
+    dash: [2, 1, 2, 4],
     weight: 0.9,
     labelMinZoom: 10,
   },
@@ -208,6 +210,9 @@ export const SCHOOL_DISTRICT_TYPES = (
 ).filter((t) => t.startsWith("school-"));
 
 export const DISTRICT_TYPES = Object.keys(DISTRICT_LAYERS) as DistrictType[];
+
+// A modest contrast increase in both themes; keep the existing tier colors.
+export const DISTRICT_LINE_OPACITY = 0.82;
 
 const sourceId = (type: DistrictType) => `district-${type}`;
 export const fillLayerId = (type: DistrictType) => `district-${type}-fill`;
@@ -402,8 +407,7 @@ export function addDistrictLayer(
    */
   const filter = stateFilter(stateAbbr);
 
-  // Colour by tier, not by type. The dash pattern is the shared signature of
-  // "this is a district"; hue says which tier it belongs to.
+  // Hue says tier; dash pattern and weight distinguish jurisdiction types.
   const accent = token(TIER_ACCENT_VAR[DISTRICT_TYPE_TIER[type]], "#5f7a8a");
   const halo = token("--bg", "#0f1117");
 
@@ -469,7 +473,7 @@ export function addDistrictLayer(
           "case",
           ["boolean", ["feature-state", "selected"], false],
           1,
-          0.7,
+          DISTRICT_LINE_OPACITY,
         ],
         // Dash units are multiples of line width, so the pattern scales with
         // the stroke and stays dotted at both zoom extremes rather than turning
@@ -489,14 +493,14 @@ export function addDistrictLayer(
             "case",
             ["boolean", ["feature-state", "selected"], false],
             2.0 * spec.weight,
-            0.8 * spec.weight,
+            0.9 * spec.weight,
           ],
           12,
           [
             "case",
             ["boolean", ["feature-state", "selected"], false],
             3.2 * spec.weight,
-            1.5 * spec.weight,
+            1.65 * spec.weight,
           ],
         ],
       },

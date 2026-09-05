@@ -24,7 +24,7 @@ export function meetingOutcomeEvidenceFor(input: { bodyId: string; meetingId: st
   const sitting = sittingsForBody(input.bodyId).find((row) => row.meetingId === input.meetingId);
   const titles = new Map((sitting?.agenda ?? []).map((record) => [record.eventItemId, record.title]));
   for (const rec of evidence.records) if (rec.recordClass === "AGENDA") {
-    records.push({ kind: "AGENDA_ITEM", id: `${rec.eventItemId}#agenda`, bodyId: input.bodyId, text: rec.title, occurredAt: input.startsAt, sourceUrl: rec.provenance.endpoint, sourceOrg: rec.provenance.sourceOrg, retrievedAt: rec.provenance.readOn === "NEVER_READ" ? null : rec.provenance.readOn });
+    records.push({ kind: "AGENDA_ITEM", id: `${rec.eventItemId}#agenda`, bodyId: input.bodyId, meetingId: input.meetingId, text: rec.title, occurredAt: input.startsAt, sourceUrl: rec.provenance.endpoint, sourceOrg: rec.provenance.sourceOrg, retrievedAt: rec.provenance.readOn === "NEVER_READ" ? null : rec.provenance.readOn });
   }
   const questionTokens = [...new Set(input.question.toLowerCase().split(/[^a-z0-9]+/).filter((term) => term.length >= 5))];
   const rolls = evidence.records.filter((record) => record.recordClass === "ROLL_CALL");

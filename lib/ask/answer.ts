@@ -1,4 +1,5 @@
 import type { AskContact } from "./contacts.ts";
+import type { BodyConfirmation } from "./body-confirmation.ts";
 import type { Meeting } from "../sources/types.ts";
 import type { EvidenceGap, EvidencePack, EvidenceRecord, EvidenceSubject } from "./evidence.ts";
 import { emptyTrace, type AnswerMode, type AskTrace } from "./trace.ts";
@@ -80,6 +81,11 @@ export interface AskSitting {
 }
 
 export interface AskAnswerPayload {
+  /** One canonical body suggestion; contains no answer until confirmed. */
+  confirmation?: BodyConfirmation;
+  clarification?: string;
+  /** Held agenda records lead the reader answer, even when prose is available. */
+  agendaLead?: boolean;
   /**
    * **THE SITTINGS THIS ANSWER IS ABOUT, STRUCTURED.**
    * (Session B closure, ASK-20 / ASK-23 / ASK-24, 2026-08-31.)
@@ -305,6 +311,13 @@ export function readAskAnswer(raw: unknown): AskAnswerPayload | null {
         ? (value.denominators as Record<string, number>)
         : {},
     mention: typeof value.mention === "string" ? value.mention : undefined,
+    confirmation: value.confirmation && typeof value.confirmation === "object" &&
+      typeof (value.confirmation as BodyConfirmation).bodyId === "string" &&
+      typeof (value.confirmation as BodyConfirmation).name === "string" &&
+      typeof (value.confirmation as BodyConfirmation).question === "string"
+        ? value.confirmation as BodyConfirmation : undefined,
+    clarification: typeof value.clarification === "string" ? value.clarification : undefined,
+    agendaLead: value.agendaLead === true,
     candidates: Array.isArray(value.candidates)
       ? (value.candidates as string[])
       : undefined,

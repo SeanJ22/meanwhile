@@ -23,7 +23,7 @@
     },
     {
       "path": "app/api/ask/grounded/route.ts",
-      "sha256": "0f78a0e05a7d5d94ec66b9943eb4a95305c564dcabfea8f632e2ff67753e667e"
+      "sha256": "a29f7a292e818a5ecad5ef9d2d9c8366e7dc0717cc924d4b44ced30b34657454"
     },
     {
       "path": "app/api/demand-signal/route.ts",
@@ -115,15 +115,19 @@
     },
     {
       "path": "components/ask/answer-records.tsx",
-      "sha256": "cd96bdf9e057fce3309c6498c83adc4d152f53f42f3c7f9d8d43260e3aabc9c4"
+      "sha256": "8d1dd5906f24f4ed4666e4865ffdf0855cbd1a8501ee1a2ce83c36afe49e4688"
     },
     {
       "path": "components/ask/ask-box.tsx",
-      "sha256": "e821f54869ec61a7e2f98642660dd779c1d73fa16a52ec2820669fdf569d0896"
+      "sha256": "26dfbf49962318362929d9a32eadb5a02129cb7569732ffe59262468eca5954f"
     },
     {
       "path": "components/ask/ballot-ask.tsx",
-      "sha256": "a3f90e656a7bf40e2dfda9c29e6d5877c2114c7b6bfde5b8f146052e091f8809"
+      "sha256": "0636bc4d524ce3b17c2e09ef627d5bcdb079398d54cc6b54bfa47f9ad913eca5"
+    },
+    {
+      "path": "components/ask/body-confirmation.tsx",
+      "sha256": "78b94850a85843820b3101e46a1fbcdf86d890c56b506290766d88aeefa01f16"
     },
     {
       "path": "components/ballot/ballot-ask-pill.tsx",
@@ -218,6 +222,14 @@
       "sha256": "82d620f25b32b50f37eb9783658111f3e99e70b487c51e3d9a3afa0052d040e5"
     },
     {
+      "path": "components/map/boundary-legend.module.css",
+      "sha256": "9005c4bafbc452c88bae2d5e73db9d4e7510b2718ef9670e1a181d2b40831e3f"
+    },
+    {
+      "path": "components/map/boundary-legend.tsx",
+      "sha256": "0c92c24f1016c9473846ad6b509ca3ea9d9de1752fe231006c6a559afdc0d1da"
+    },
+    {
       "path": "components/map/count-badge.tsx",
       "sha256": "e51aed7553399d401d5488df191f3082da9b2185062a362dcb924f76663e19e9"
     },
@@ -238,6 +250,14 @@
       "sha256": "5075de477c3f82e0bf59ae60873f2ba55b3e190d9f6acd6cca544cbf4140592e"
     },
     {
+      "path": "components/map/governing-skeleton.module.css",
+      "sha256": "b2ea9c19638d9a98a65af70fd3045fac17a2b363c27434909733d556368eb816"
+    },
+    {
+      "path": "components/map/governing-skeleton.tsx",
+      "sha256": "e898a878abed5d75e216c46db106c1e08e35d1afa170a14993ea87c909a901c0"
+    },
+    {
       "path": "components/map/legend.tsx",
       "sha256": "7e6893ac03759ab9c9c0ff5103d4757d55eceecf79ec0f700ed90d8dbc6528bc"
     },
@@ -247,11 +267,15 @@
     },
     {
       "path": "components/map/map-canvas.tsx",
-      "sha256": "eebe3300b5d632f33cdccc86c8f743814a8eec7902c59312a9b43003dca1f032"
+      "sha256": "2dc15619d379f6faaa5fb1a1e73a81727378dbf153ecfce69cf905e6bb626fd2"
     },
     {
       "path": "components/map/map-entry.tsx",
-      "sha256": "3182c2423cecd8bc96e8a7ed47bd57ac8ef81f332cdbd507918d6c823882ce72"
+      "sha256": "c2d77625e3747c80f62c8f5ca5f70a53bbcb55ee21481b66dfc80da499ced1b2"
+    },
+    {
+      "path": "components/map/map-flight.module.css",
+      "sha256": "b020fbc3e4ae14202beea94e41eaf379f38ca9a362e5231e269d8e4717a298ed"
     },
     {
       "path": "components/map/meeting-listing-notice.tsx",
@@ -282,6 +306,10 @@
       "sha256": "5d88a239459c28e9d2a023b8fedfbd7c20133eba9d47946710cf79025ff6a6a2"
     },
     {
+      "path": "components/map/popup/lumen-popup.module.css",
+      "sha256": "0ab17e9e4ca8076583be09d9ca71d80a4dffba79ad2002f9234b89fedcbd351d"
+    },
+    {
       "path": "components/map/popup/meeting-popup.tsx",
       "sha256": "ecf615f356b5e5369ade98dc5b7f4d8a8653e704a82a39dc7fc18539f38d58ad"
     },
@@ -299,11 +327,7 @@
     },
     {
       "path": "components/map/popup/popup-card.tsx",
-      "sha256": "c6d7d5b7da8d5f8369d7e18415579591050f1f5c0b14f8ec3b7f95060a9188f5"
-    },
-    {
-      "path": "components/map/raster-capability.ts",
-      "sha256": "3cc821f29f57611b76cf67baa6037422d26255c5db9989d71266d1e3c50950d1"
+      "sha256": "bf466521255f317a7884b1023d9d06dcd415ad62726c824106180647e015d3c9"
     },
     {
       "path": "components/map/site-footnote.tsx",
@@ -314,12 +338,12 @@
       "sha256": "cb54f1d3018b5d6ba1bae27f8fc8817761af690b66639a342c47c31f4a45b5cc"
     },
     {
-      "path": "components/map/state-focus-overlay.tsx",
-      "sha256": "7b82db24197a4feb9fbfada462d2a86bc3f6e73db05d3ebd1b7845aa84124cbd"
+      "path": "components/map/tutorial-overlay.module.css",
+      "sha256": "3cba2e5079c016eecb9ea9fdb64795c422fed3f9bd5c37ba4682ec5b4e00f99e"
     },
     {
       "path": "components/map/tutorial-overlay.tsx",
-      "sha256": "584a1705190d9e5608c7b4c4d3f3f83e071671bb1502f93aca76fb073bedfff7"
+      "sha256": "b2aa1011c29a65391944ac8ee1ba971df5208090e8532d3617cfa3ec1fad1961"
     },
     {
       "path": "components/map/voting-sites-panel.tsx",
@@ -394,8 +418,12 @@
       "sha256": "726a671fc66cb5ffc0e3a4dc3cd84174b709f04f007bf50878973d962e69fe63"
     },
     {
+      "path": "components/shell/ask-pearl.module.css",
+      "sha256": "7f244b3a99e58465328759ace9b2cc1e8d920a5ad2415704b8a41ac0ef2355e3"
+    },
+    {
       "path": "components/shell/filters-area.tsx",
-      "sha256": "3c265333f51c7c5625a091d01f53592dd465ed89e34ad101fe275472071b7093"
+      "sha256": "613459491165c8c60d73dabccf9ada98ba42a01deee4ab3ffe9c1b41074964cf"
     },
     {
       "path": "components/shell/near-me-control.tsx",
@@ -403,7 +431,7 @@
     },
     {
       "path": "components/shell/pill-cluster.tsx",
-      "sha256": "c31871fdc6840d07ae075d47274cdf204da99bf1196f12a5cab96003e9a8e399"
+      "sha256": "e3007318b4a21950d5445846e17d8705c757896b4d448c30a559b94607195477"
     },
     {
       "path": "components/shell/radius-control.tsx",
@@ -555,11 +583,15 @@
     },
     {
       "path": "lib/ask/answer.ts",
-      "sha256": "f8b72b9982245531ec24af8fcaa1d06bd07b489ac7b693d2b5b51b5611ed7b9c"
+      "sha256": "0facc8e7f1a9ea01f2a4c7da7260211e39638f806ecbc5732f0476a8b19cf702"
     },
     {
       "path": "lib/ask/ballot-inventory.ts",
       "sha256": "b7ff62f2b8f18b75e98a3dd56e70d9c1302e522b5c6b31db32cdeedb00c5a125"
+    },
+    {
+      "path": "lib/ask/body-confirmation.ts",
+      "sha256": "ba90b28e2baa8801c79bf3def9da7fba9ada39bc01e3a1e5c72fe2c2c453600c"
     },
     {
       "path": "lib/ask/body-identity.ts",
@@ -583,7 +615,11 @@
     },
     {
       "path": "lib/ask/evidence.ts",
-      "sha256": "17caf9c39dd4c554972d844ee4a392b9572f7910c5efb381f83870410872c7dc"
+      "sha256": "b69fc67c1ed0936dc107140a67f0d0a7076c8f49b6a15a1dc08d50b1a5d2443d"
+    },
+    {
+      "path": "lib/ask/held-agenda.ts",
+      "sha256": "1821a246350b39c79f109dc2b27a9acdc088895c893c0af4bba505e8f8f7bb18"
     },
     {
       "path": "lib/ask/host.ts",
@@ -623,7 +659,7 @@
     },
     {
       "path": "lib/ask/meeting-outcomes.ts",
-      "sha256": "cf462bff4c156f60f034e020cc52d211c7837668d57937a404ceb089b0ed0484"
+      "sha256": "bdea0e01355e6eb20c6527f709eefbac208d9c17c49fda86e88e3874772b066a"
     },
     {
       "path": "lib/ask/meeting-time.ts",
@@ -663,7 +699,7 @@
     },
     {
       "path": "lib/ask/resolve.ts",
-      "sha256": "440f73d2f17bd940f5718a2802485ac2421682ab6a3ad2764aabeb2990653676"
+      "sha256": "1b62ab008630fe778104e2b77027227ca31c4fd40d2c26ae09df44185af242aa"
     },
     {
       "path": "lib/ask/roster-gaps.ts",
@@ -687,7 +723,7 @@
     },
     {
       "path": "lib/ask/synthesize.ts",
-      "sha256": "6b0fa121034867fd59580c62bc8ac998e283c3a887771bfb8d043ef352334692"
+      "sha256": "991c91700c023e002fe4e41e7f0e6a2a5943d50b39673371783896ead5496083"
     },
     {
       "path": "lib/ask/trace.ts",
@@ -1107,7 +1143,11 @@
     },
     {
       "path": "lib/map/districts.ts",
-      "sha256": "daf58896cdbd283b2bd1376651ed8b3fa8af6b892aec8faba5bc34adea1b9ab6"
+      "sha256": "0ed9aa138eed109254e803abb597ce0c26c6c578bcc1cf29f99330e51f5c19b0"
+    },
+    {
+      "path": "lib/map/flight-presentation.ts",
+      "sha256": "c5de728ca6f4fd2ca1c457c39d40c870e6d5dad398a2dfc660567c0676e879ad"
     },
     {
       "path": "lib/map/format.ts",
@@ -1128,6 +1168,10 @@
     {
       "path": "lib/map/state-focus.ts",
       "sha256": "0d4900770c4704e3efaaae6619cc921aab3f49edca4d543178d65d25a46f5441"
+    },
+    {
+      "path": "lib/map/state-relief.ts",
+      "sha256": "f9504e29ab392b0d2784e1508aee517f93d96209b1220b622d292da82b912eb9"
     },
     {
       "path": "lib/map/style.ts",
@@ -1503,7 +1547,7 @@
     },
     {
       "path": "lib/routing/named-entity.ts",
-      "sha256": "b0d750972a42dc016b31bd13e874ea2a3daadf1bb4ff57214e15fbbf3dad716e"
+      "sha256": "98dd03be4f1915c3fe5be7d4e42c24096c0c091a7acc901189ecb9dab2e83ee7"
     },
     {
       "path": "lib/routing/resolve.ts",
@@ -1881,7 +1925,7 @@
     },
     {
       "path": "docs/evidence/reader-last-mile-final-invalidation.json",
-      "sha256": "0651e5ca5f6010ee241533cecbec90ef1adff44d988b708a7ae634e95851762f"
+      "sha256": "bdd67cb7b70df060cd5a2d3270d860f8a61e7dffdc468fb0336c43dc0ff63449"
     },
     {
       "path": "docs/evidence/reader-last-mile-final-meeting-knowledge-ask.json",
@@ -1928,6 +1972,22 @@
       "sha256": "1ff4f53e86ea0dfea395a5418033a9e02251863b2f41d1eb959c44453c2532b3"
     },
     {
+      "path": "docs/evidence/reader-last-mile-tester-9-4-prior-invalidation.json",
+      "sha256": "0651e5ca5f6010ee241533cecbec90ef1adff44d988b708a7ae634e95851762f"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-tester-9-4-prior-receipt.json",
+      "sha256": "95770b41a973cd57cad55f72d5f1d61fb03bd919597686260f112721cefca5af"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-tester-9-4-renewal.json",
+      "sha256": "58b251020e3a446ca12bb82d9058ead1fb1ea4561b85b258b7fb741b2f1fa535"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-tester-source-9-4.json",
+      "sha256": "612bdd1507ec40bacb7071bade176bd0b47034b502de86029531080c7d96f984"
+    },
+    {
       "path": "docs/evidence/reader-last-mile-visual-prior-invalidation.json",
       "sha256": "611b3bfa6d4762a80949ec5739086cd09bf768ad45e6281d0b0ed7cf0e63aaca"
     },
@@ -1950,6 +2010,6 @@
   ],
   "inheritance": {
     "reportPath": "docs/evidence/reader-last-mile-final-invalidation.json",
-    "reportSha256": "0651e5ca5f6010ee241533cecbec90ef1adff44d988b708a7ae634e95851762f"
+    "reportSha256": "bdd67cb7b70df060cd5a2d3270d860f8a61e7dffdc468fb0336c43dc0ff63449"
   }
 }

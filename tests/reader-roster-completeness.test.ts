@@ -4,7 +4,7 @@ import { test } from "node:test";
 import { BODY_ROSTERS, rosterGapForBody, rosterGapsForDivision, rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
 import { GET } from "../app/api/representation/[...division]/route.ts";
 function renderRepresentation(payload: { holders: ReturnType<typeof rosterHoldersForBody>; rosterGaps: ReturnType<typeof rosterGapsForDivision> }): string {
-  const output = execFileSync(process.execPath, ["--import", "tsx", "--input-type=module", "-e", `
+  const output = execFileSync(process.execPath, ["--import", "tsx", "--import", "./scripts/register-test-loader.mjs", "--input-type=module", "-e", `
     import { readFileSync } from 'node:fs';
     import { createElement } from 'react';
     import { renderToStaticMarkup } from 'react-dom/server';

@@ -13,6 +13,8 @@ import {
   stripComments,
 } from "../lib/ops/duplicate-implementations.ts";
 import { census, sourceFiles } from "../scripts/duplicate-implementations.mts";
+import { decideNamedBody } from "../lib/ask/body-confirmation.ts";
+import { personInitials } from "../lib/officials/person-name.ts";
 
 /* ========================================================================== */
 /* RULING 103 — a class sweep covers duplicated implementations               */
@@ -109,8 +111,19 @@ test("a recorded group that has been consolidated leaves the baseline", () => {
 
 test("the named instance is fixed: ONE initials implementation, and it keeps the surname", () => {
   const all = census();
+  // Body-acronym resolution accepts a canonical entity and produces complete
+  // organization acronyms (VUSD). It never renders a person's avatar initials.
+  // Keep the narrow distinction executable; the separate shape-duplicate
+  // census above still scans this function and every other implementation.
+  const bodyAcronym = (i: { file: string; name: string }) => i.file === "lib/ask/body-confirmation.ts" && i.name === "initials";
+  const body = { id: "school:canonical", name: "Vail Unified District Governing Board", nameClass: "body" as const, level: "BODY" as const, divisionType: "school_district" };
+  const acronym = decideNamedBody("What's on the VUSD agenda?", [body]);
+  assert.equal(acronym.kind, "CONFIRM");
+  if (acronym.kind === "CONFIRM") assert.equal(acronym.candidate.id, body.id);
+  assert.notEqual(decideNamedBody("What's on the VUSD agenda?", [{ ...body, level: undefined, nameClass: "person" }]).kind, "CONFIRM", "body-acronym routing cannot become a person-initials renderer");
+  assert.equal(personInitials("Thomas J. Haynes III"), "TH");
   const initials = all.filter(
-    (i) => /initials/i.test(i.name) && i.file !== "lib/officials/person-name.ts",
+    (i) => /initials/i.test(i.name) && i.file !== "lib/officials/person-name.ts" && !bodyAcronym(i),
   );
   assert.deepEqual(
     initials.map((i) => `${i.file}#${i.name}`),

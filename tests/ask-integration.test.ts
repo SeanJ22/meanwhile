@@ -109,7 +109,7 @@ test("BLOCKER 1: the grounded call is AWAITED on every ask, so nothing can bypas
   const source = code(ASK_BOX);
   assert.match(
     source,
-    /const groundedAnswer = await askGrounded\(question\);/,
+    /const groundedAnswer = await askGrounded\(question, confirmation\);/,
     "the grounded engine must be awaited on the main submission path",
   );
   /* And it must not be behind a condition that could skip it. */

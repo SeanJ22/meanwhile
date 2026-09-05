@@ -1,0 +1,98 @@
+.replay {
+  flex: 0 0 auto;
+  padding: 6px 0;
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.replay:hover { color: var(--text); }
+.replay:focus-visible, .dialog button:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
+
+.dialog {
+  /* Educational demonstrations pause between actions; each move still reads
+     the app's motion scale, and no new global animation treatment is added. */
+  --dur-tour-demo: calc(var(--dur-slow) * 15);
+  width: min(26rem, calc(100vw - 24px));
+  max-height: calc(100dvh - 24px);
+  margin: auto;
+  padding: 20px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: var(--shadow-panel);
+}
+
+.dialog::backdrop { background: rgb(0 0 0 / 42%); }
+.header, .footer, .navigation { display: flex; align-items: center; }
+.header, .footer { justify-content: space-between; gap: 12px; }
+.progress { font-size: 0.6875rem; letter-spacing: 0.08em; color: var(--text-dim); }
+.close { width: 36px; height: 36px; font-size: 1.5rem; cursor: pointer; }
+.step { animation: stepIn var(--dur-slow) var(--ease-enter) both; }
+.step h2 { margin: 16px 0 8px; font-size: 1.125rem; font-weight: 600; }
+.step h2:focus { outline: none; }
+.body { min-height: 6.8em; font-size: 0.875rem; line-height: 1.65; color: var(--text-dim); }
+.footer { margin-top: 18px; }
+.footer button { min-height: 40px; cursor: pointer; font-size: 0.8125rem; }
+.skip { color: var(--text-dim); text-decoration: underline dotted; text-underline-offset: 3px; }
+.navigation { gap: 12px; }
+.next { border: 1px solid var(--panel-border); border-radius: var(--radius-pill); padding: 0 18px; }
+.next:hover { border-color: var(--signal); }
+.dots { display: flex; gap: 5px; }
+.dots span { width: 5px; height: 5px; border-radius: 50%; background: var(--panel-border); }
+.dots span[data-current="true"] { background: var(--text-dim); }
+.replayHint { margin-top: 12px; text-align: center; font-size: 0.6875rem; color: var(--text-dim); }
+
+.preview {
+  display: grid;
+  place-items: center;
+  position: relative;
+  height: 120px;
+  overflow: hidden;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+.previewAsk { display: flex; gap: 20px; padding: 12px 16px; border: 1px solid var(--panel-border); border-radius: var(--radius-pill); background: var(--panel); animation: askPress var(--dur-tour-demo) var(--ease-move) infinite; }
+.previewCard { width: 70%; display: grid; gap: 8px; padding: 12px; border: 1px solid var(--panel-border); border-radius: var(--radius); background: var(--panel); }
+.previewCard strong { font-weight: 500; font-size: 0.6875rem; }
+.previewCard > span { height: 5px; width: 85%; background: color-mix(in srgb, var(--text-muted) 35%, transparent); border-radius: 3px; animation: revealRow var(--dur-tour-demo) var(--ease-enter) infinite; }
+.previewCard > span:nth-child(3) { width: 65%; animation-delay: var(--dur-fast); }
+.previewCard > span:nth-child(4) { width: 75%; animation-delay: var(--dur-slow); }
+.previewLevels { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.previewLevels span { padding: 10px 12px; border: 1px solid var(--panel-border); border-radius: var(--radius-pill); background: var(--panel); animation: levelPress var(--dur-tour-demo) var(--ease-move) infinite; }
+.previewLevels span:nth-child(2) { animation-delay: calc(var(--dur-tour-demo) / 3); }
+.previewLevels span:nth-child(3) { animation-delay: calc(var(--dur-tour-demo) * 2 / 3); }
+.previewLines { position: absolute; inset: 10px 35px 38px; animation: linesOn var(--dur-tour-demo) var(--ease-move) infinite; }
+.previewLines i { position: absolute; inset: 5px 35px 5px 10px; border: 2px dashed var(--text-dim); border-radius: 28% 50% 32% 20%; }
+.previewLines i:nth-child(2) { inset: 15px 0 0 75px; border-style: dotted; border-radius: 42% 35% 45% 20%; }
+.previewLines i:nth-child(3) { inset: 0 60px 15px 105px; border-style: solid; border-width: 1px; border-radius: 25% 30% 15% 50%; }
+.previewSwitch { position: absolute; bottom: 10px; display: flex; gap: 8px; align-items: center; }
+.previewSwitch i { position: relative; width: 28px; height: 16px; border: 1px solid var(--text-muted); border-radius: var(--radius-pill); }
+.previewSwitch i::before { content: ""; position: absolute; top: 2px; left: 2px; width: 10px; height: 10px; background: var(--text-dim); border-radius: 50%; transform: translateX(12px); animation: switchOn var(--dur-tour-demo) var(--ease-move) infinite; }
+
+@keyframes stepIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes askPress { 0%, 45%, 100% { transform: translateY(0); } 55%, 65% { transform: translateY(2px); } }
+@keyframes revealRow { 0%, 10% { opacity: 0.3; } 30%, 100% { opacity: 1; } }
+@keyframes levelPress { 0%, 12%, 45%, 100% { opacity: 1; } 25%, 35% { opacity: 0.45; } }
+@keyframes linesOn { 0%, 25%, 75%, 100% { opacity: 1; } 40%, 60% { opacity: 0; } }
+@keyframes switchOn { 0%, 25%, 75%, 100% { transform: translateX(12px); } 40%, 60% { transform: none; } }
+
+@media (max-width: 639px) {
+  .dialog { margin: auto auto 12px; padding: 16px; }
+  .body { min-height: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .step, .previewAsk, .previewCard > span, .previewLevels span, .previewLines, .previewSwitch i::before { animation: none; }
+  .previewSwitch i::before { transform: translateX(12px); }
+}

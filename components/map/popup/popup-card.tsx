@@ -6,6 +6,7 @@ import { useRef, type ReactNode } from "react";
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 import type { Tier } from "@/lib/ocd/tiers";
 import { LevelTag } from "@/components/ui/level-tag";
+import lumenStyles from "./lumen-popup.module.css";
 
 /**
  * The port of EdiaStratMap's `.popup-card`, as React primitives.
@@ -15,7 +16,8 @@ import { LevelTag } from "@/components/ui/level-tag";
  * half is deliberately not ported: React escapes for us, and a real handler
  * cannot be broken by a body name containing a quote. What *is* ported exactly
  * is the visual grammar — the measurements live in `globals.css` under
- * `.popup-card`, since they are ported values rather than choices made here.
+ * `.popup-card`. DSN-2 adds the workbook's scoped surface treatment through
+ * `lumen-popup.module.css`; the fixed head, scrolling body and More stay.
  */
 
 const TIER_VAR: Record<Tier, string> = {
@@ -98,7 +100,7 @@ export function PopupCard({
   return (
     <div
       ref={rootRef}
-      className="popup-card pointer-events-auto"
+      className={`popup-card pointer-events-auto ${lumenStyles.card}`}
       role="dialog"
       aria-label={title}
     >

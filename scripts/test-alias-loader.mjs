@@ -6,9 +6,9 @@
  * mapping (tsconfig paths: at-slash to repo root) for the test runner,
  * nothing more.
  */
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = process.cwd();
 
@@ -58,4 +58,15 @@ export function resolve(specifier, context, nextResolve) {
   }
 
   return nextResolve(specifier, context);
+}
+
+/** Node SSR tests read real component content but cannot execute CSS. Export
+ * only class keys actually declared by the imported module; paint remains a
+ * browser assertion and an unknown class key still resolves to undefined. */
+export function load(url, context, nextLoad) {
+  if (!url.endsWith(".module.css")) return nextLoad(url, context);
+  const css = readFileSync(fileURLToPath(url), "utf8");
+  const classKeys = [...css.matchAll(/\.([a-zA-Z_][\w-]*)/g)].map(match => match[1]);
+  const exports = Object.fromEntries(classKeys.map(key => [key, key]));
+  return { format: "module", shortCircuit: true, source: `export default ${JSON.stringify(exports)};` };
 }

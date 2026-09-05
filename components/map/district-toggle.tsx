@@ -1,11 +1,12 @@
 "use client";
 
+import { BoundaryLegend } from "./boundary-legend";
+
 /**
  * The district overlay switch.
  *
- * Off by default, and it stays off until the stored preference resolves — the
- * hook renders `pending` on the server so a returning reader never sees the
- * control flip during hydration.
+ * On for a new reader, after the stored preference resolves. The hook renders
+ * `pending` on the server so a returning reader's choice does not flash.
  *
  * When the boundary file cannot be loaded the control disables itself and says
  * why. Leaving it switched on with nothing drawn would read as "this area has
@@ -46,6 +47,8 @@ export function DistrictToggle({
           Show districts
         </span>
       </label>
+
+      <BoundaryLegend />
 
       {failed && (
         <p className="mt-1.5 max-w-[15rem] text-[0.75rem] leading-relaxed text-muted">

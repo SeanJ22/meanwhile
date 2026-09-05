@@ -3,7 +3,7 @@ import { execFileSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import {
   readReaderEvidence, readerSourceFingerprint, readerRowStructuralSha256,
-  readerSourceRevalidationProblems, censusClosureFailures, packReaderEvidence, sha256,
+  readerProofInheritanceProblems, censusClosureFailures, packReaderEvidence, sha256,
   type ReaderCensus, type ReaderClosureReceipt, type ReaderProofInvalidationReport,
   type ReaderSourceRevalidation, type ReaderComponentCase,
 } from "../../lib/holdings/reader-census.ts";
@@ -79,7 +79,7 @@ export function finalizeReaderSources(root: string, prepared: ReaderCensus, opti
     })),
     sourceRevalidation: { priorReceiptPath, priorReceiptSha256: sha256(priorReceiptBytes), priorReportPath, priorReportSha256: sha256(priorReportBytes), proofPath, proofSha256: sha256(readFileSync(proofPath)) },
   };
-  assert.deepEqual(readerSourceRevalidationProblems(root, census, report), [], "Executed renewal must satisfy the receipt validator before publication");
+  assert.deepEqual(readerProofInheritanceProblems(root, census, report), [], "Executed renewal and inherited classifications must satisfy the receipt validator before publication");
   writeFileSync(options.reportPath, `${JSON.stringify(report, null, 2)}\n`);
   packReaderEvidence(root, options.reportPath);
   const evidencePaths = [...new Set([...prior.evidenceHashes.map(entry => entry.path), priorReceiptPath, priorReportPath, proofPath, options.executionPath])].sort();

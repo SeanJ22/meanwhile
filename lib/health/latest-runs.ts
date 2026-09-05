@@ -97,6 +97,32 @@ export function latestReaderRun(root: string = process.cwd()): ReaderRunSummary 
   return latestRecord<ReaderRunSummary>(join(root, "data", "health", "reader-suite-runs"));
 }
 
+/**
+ * The newest freshness-shadow cycle record on disk (9.4.26): the file the
+ * runner's child cycle writes under `data/health/freshness-shadow-runs/`.
+ * Shared by `pnpm owner:publish` and `pnpm pilot:health` so both read the
+ * SAME record for the FRESHNESS risk — one implementation, one answer per
+ * SHA. Null when the directory or a readable record does not exist; an
+ * unreadable newest file is null too, never a silently older one.
+ */
+export function latestFreshnessCycle(
+  root: string = process.cwd(),
+): { readonly file: string; readonly record: Record<string, unknown> } | null {
+  const dir = join(root, "data", "health", "freshness-shadow-runs");
+  if (!existsSync(dir)) return null;
+  const files = readdirSync(dir)
+    .filter((f) => f.endsWith(".json"))
+    .sort();
+  const newest = files.at(-1);
+  if (!newest) return null;
+  try {
+    const record = JSON.parse(readFileSync(join(dir, newest), "utf8")) as Record<string, unknown>;
+    return { file: newest, record };
+  } catch {
+    return null;
+  }
+}
+
 export function latestControlRun(root: string = process.cwd()): ControlRunSummary | null {
   return latestRecord<ControlRunSummary>(join(root, "data", "health", "control-set-runs"));
 }

@@ -34,6 +34,7 @@ import { join } from "node:path";
 
 import {
   freshnessContract,
+  freshnessRiskOf,
   pilotHealth,
   readerContract,
   truthContract,
@@ -44,6 +45,7 @@ import { loadJsonArray } from "../lib/health/json-store.ts";
 import {
   assessStaleness,
   latestControlRun,
+  latestFreshnessCycle,
   latestReaderRun,
   DEFAULT_MAX_AGE_HOURS,
 } from "../lib/health/latest-runs.ts";
@@ -124,7 +126,12 @@ const truth = truthContract({
           : `the newest control-set run cannot be read as current: ${controlStale?.why}`,
 });
 
-const freshness = freshnessContract();
+/*
+ * FRESHNESS reads the newest cycle's MEASURED risk through the same shared
+ * projection `pnpm owner:publish` uses (9.4.26), so the page and this script
+ * cannot disagree about the FRESHNESS sentence for one SHA.
+ */
+const freshness = freshnessContract(freshnessRiskOf(latestFreshnessCycle(ROOT)?.record ?? null));
 const rollup = pilotHealth(reader, truth, freshness);
 
 /* ----------------------------------------------------------------- report */

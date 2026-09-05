@@ -21,7 +21,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 
 ## Decisions waiting on you
 
-**69 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
+**70 row(s).** Each carries what is needed, the options, what each option costs, and how long it has been waiting.
 
 ### P1
 
@@ -519,6 +519,20 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 - **Also open published-minutes and routine-filings** — minutes and routine filings promote nightly too, more reader surface per window
 - **Open none yet** — the window stays in SHADOW after the gate is otherwise green, and every promotion remains a session's last mile
 
+#### NH325 — Let Deploy fleet reach a new state — Illinois first
+
+*Opened 2026-09-04 · opened today · NOT_MACHINE_VERIFIABLE — waits on your judgement, which no artifact can supply*
+
+**What is needed.** Approve enumerating a state on request, so that Deploy fleet has work to dispatch there — Illinois first.
+
+**Why no machine can decide it.** Deploy fleet reorders REGISTERED work and may never enlarge the registry: a button that added a state would be a session enlarging its own denominator (RULING 273). Enumerating a state registers its bodies' own sites as sources, and adding an external source is on CLAUDE.md's ask-before list by name. Which states, and whether any state the fleet is sent to should be enumerated automatically, is a scope decision only you make.
+
+**Your options.**
+
+- **Enumerate Illinois now** — a session runs the Census jurisdiction enumeration for Illinois, adds il to the registered states and a candidate universe, and reads every publisher's permission row before any own-site route opens; the next 'deep dive on Illinois' dispatches real units.
+- **Enumerate any state the fleet is sent to, under the same rule** — a dispatch naming an unregistered state becomes a standing instruction to enumerate it first; each new state still opens no own-site route until its permission rows exist, and each enumeration is reported.
+- **Keep the fleet to Arizona, New Hampshire and New Jersey until the pilot is green** — a dispatch naming another state keeps recording the honest sentence on the dashboard; nothing new is enumerated.
+
 ### P3
 
 #### D70 — Agenda-platform tenant enumeration crawler (replaces the h2 enumeration approach)
@@ -947,7 +961,7 @@ Nothing in this run. Every predicated row still open holds — and this is a sta
 append-only ledger of every id any session has ever claimed. It is never typed and
 never guessed.
 
-- 443 row(s) carry a date the ledger stamped directly.
+- 444 row(s) carry a date the ledger stamped directly.
 - 243 row(s) take the date from the session the ledger names, where the entry was reconstructed on 2026-08-21 without a stamp.
 - 225 row(s) read **UNKNOWN**. Their ledger entries were reconstructed with no stamped day and name a session that carries no date. The ledger bound around them is a multi-day range, and a range is not a date; this clone is also shallow at 2026-08-25, so git cannot answer for rows older than that either. **UNKNOWN is the honest reading and is never replaced by a guess.**
 
@@ -957,4 +971,4 @@ committed artifacts on EVERY tracker generation — not when a session remembers
 and auto-resolves the moment its blocker stops being true.
 
 - 2 row(s) carry a machine-verifiable predicate.
-- 71 row(s) are marked NOT_MACHINE_VERIFIABLE with a card.
+- 72 row(s) are marked NOT_MACHINE_VERIFIABLE with a card.

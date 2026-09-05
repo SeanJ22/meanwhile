@@ -43,8 +43,11 @@ import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
  * start and end, and at cycle end — lane state, the credential CONFIRMED BY
  * NAME, the bounds, the rolling spend, the queue, the Scouts running. A runner
  * heartbeat (`pilot-runner`). Pending RUN_CYCLE_NOW intents are marked
- * HONORED by this cycle. The admin Research view DERIVES its verdict from
- * these; none of them stores a verdict.
+ * HONORED by this cycle; so is a pending DISPATCH (ADM-8: the owner's target is
+ * parsed, the matching registered units go FIRST in both lanes, and the HONORED
+ * detail states what matched of what was registered), and the latest lane
+ * PAUSE / RESUME the cycle applied. The admin Research view DERIVES its verdict
+ * from these; none of them stores a verdict.
  *
  * ## Flags
  *
@@ -80,7 +83,13 @@ import {
   CONTROL_PLANE_URL_VAR,
 } from "../lib/control-plane/repository/pg-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
-import { digestLines, runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import { digestLines, placeFirstRows, runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import {
+  describeDispatchMatch,
+  parseDispatchTarget,
+  unitMatchesTarget,
+} from "../lib/control-plane/scheduler/dispatch-target.ts";
+import { REGISTERED_STATES } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
 import { WindowLockHeld, acquireWindowLease, releaseWindowLease } from "../lib/control-plane/promotion/window.ts";
 import { scheduleObligation, isScheduled, type ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
 import { retryable } from "../lib/control-plane/scheduler/debt.ts";
@@ -134,6 +143,7 @@ import {
   type HostSupervision,
   type RelaunchProof,
   type ResearchIntent,
+  type ResearchIntentRequest,
   type ResearchState,
   type RunningScout,
 } from "../lib/control-plane/scheduler/research-policy.ts";
@@ -433,10 +443,123 @@ for (const o of sync.all) {
   dueThisCycle.push({ obligation: o, nextDueAt: row.nextDueAt });
 }
 
-/* OLDEST FIRST for the deterministic lane, which is the dispatcher's own order. */
+/* ------------------------------------------------- the owner's intents --- */
+
+/*
+ * READ ONCE, BEFORE ANY ORDER IS DECIDED. The owner's DISPATCH (ADM-8)
+ * reorders both lanes, so the intent log is read before the deterministic
+ * sort and the reader-impact bands below. A log that cannot be read is a
+ * named runtime condition and the cycle proceeds as if the owner said
+ * nothing — an intent nobody can read is not an intent nobody sent, so the
+ * failure is on the record rather than in a guess.
+ */
+let intentLog: ResearchIntent[] = [];
+try {
+  intentLog = [...(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))];
+} catch (error) {
+  runtimeConditions.push(
+    `research intents could not be read (${error instanceof Error ? error.message : String(error)}); the lane treats the owner as not paused`,
+  );
+}
+const intents = readIntents(intentLog);
+const intentByTime = (a: ResearchIntentRequest, b: ResearchIntentRequest): number =>
+  a.requestedAt < b.requestedAt ? -1 : a.requestedAt > b.requestedAt ? 1 : 0;
+const honoredBefore = new Set(intentLog.filter((r) => r.kind === "HONORED").map((r) => r.honors));
+
+/**
+ * Append this cycle's HONORED record beside an intent. The runner never edits
+ * an intent; it acknowledges one with its own record. Returns false, with the
+ * failure named on the research state, when the append did not land.
+ */
+async function honorIntent(intent: ResearchIntentRequest, detail: string): Promise<boolean> {
+  const id = `${intent.intentId}:honored`;
+  try {
+    await repos.researchIntents.append(
+      RESEARCH_INTENT_LOG_KEY,
+      id,
+      {
+        formatVersion: RESEARCH_FORMAT_VERSION,
+        kind: "HONORED",
+        intentId: id,
+        honors: intent.intentId,
+        action: intent.action,
+        honoredAt: NOW,
+        honoredBy: `freshness-shadow@${HOST}#${process.pid}`,
+        detail,
+      },
+      NOW,
+    );
+    return true;
+  } catch (error) {
+    runtimeConditions.push(
+      `intent ${intent.intentId} (${intent.action}) could not be marked honored: ${error instanceof Error ? error.message : String(error)}`,
+    );
+    return false;
+  }
+}
+
+/* A pending RUN_CYCLE_NOW is honored by the cycle that runs. This is it. */
+const honoredIntents: string[] = [];
+for (const pending of intents.pendingRunNow) {
+  if (await honorIntent(pending, "a cycle ran; whether it started early or on the interval is the runner's record")) {
+    honoredIntents.push(pending.intentId);
+  }
+}
+
+/*
+ * **THE OWNER'S DISPATCH — "deploy the fleet".** (ADM-8, 9.4.26 admin
+ * feedback, 2026-09-04.)
+ *
+ * The owner's words ("deep dive on Illinois", "Pima County campaign finance")
+ * are parsed by the PURE `dispatch-target.ts` into state codes and terms and
+ * matched against the whole registered universe — `allUnits`, before any
+ * `--only` filter — and every matching unit goes FIRST in both lanes this
+ * cycle: ahead of the oldest-first deterministic order, ahead of the Scout
+ * lane's reader-impact bands, through the one `placeFirstRows` derivation the
+ * dispatcher itself applies. Nothing else changes: not the ceilings, not the
+ * budget, not per-host spacing, not a debt backoff, and not the universe — a
+ * dispatch reorders; it never creates an obligation. A target that matches
+ * nothing is honored with a sentence naming the missing registry, never with
+ * a manufactured unit.
+ */
+interface OwnerDispatchRecord {
+  readonly intentId: string;
+  readonly target: string;
+  readonly states: readonly string[];
+  readonly matched: number;
+  readonly registered: number;
+}
+const ownerDispatches: OwnerDispatchRecord[] = [];
+const honoredDispatch: string[] = [];
+const dispatchPriority = new Set<string>();
+for (const pending of intents.pendingDispatch) {
+  const target = parseDispatchTarget(pending.note ?? "");
+  const matched = allUnits.filter((u) =>
+    unitMatchesTarget(target, { id: u.obligation.id, subjectId: u.obligation.subjectId }),
+  );
+  const matchedIds = new Set(matched.map((u) => u.obligation.id));
+  for (const id of matchedIds) dispatchPriority.add(id);
+  const dueAmongMatched = dueThisCycle.filter((d) => matchedIds.has(d.obligation.id)).length;
+  const detail = describeDispatchMatch(target, matched.length, allUnits.length, REGISTERED_STATES);
+  ownerDispatches.push({
+    intentId: pending.intentId,
+    target: target.text,
+    states: [...target.states],
+    matched: matched.length,
+    registered: allUnits.length,
+  });
+  if (await honorIntent(pending, detail)) honoredDispatch.push(pending.intentId);
+  console.log(
+    `  owner dispatch: ${detail}` +
+      (matched.length > 0 ? ` ${dueAmongMatched} of the ${matched.length} are due this cycle; the rest keep their next-due.` : ""),
+  );
+}
+
+/* OLDEST FIRST for the deterministic lane, which is the dispatcher's own order — behind the owner's dispatch. */
 dueThisCycle.sort((a, b) => (a.nextDueAt < b.nextDueAt ? -1 : a.nextDueAt > b.nextDueAt ? 1 : 0));
-const dueModel = dueThisCycle.filter((d) => decisionFor(d.obligation.id, d.obligation.routeId).kind === "BOUNDED_MODEL_WORKER");
-const dueDeterministicRows = dueThisCycle.filter((d) => !dueModel.includes(d));
+const dueOrdered = placeFirstRows(dueThisCycle, dispatchPriority);
+const dueModel = dueOrdered.filter((d) => decisionFor(d.obligation.id, d.obligation.routeId).kind === "BOUNDED_MODEL_WORKER");
+const dueDeterministicRows = dueOrdered.filter((d) => !dueModel.includes(d));
 const dueDeterministic = dueDeterministicRows.length;
 
 /*
@@ -491,13 +614,21 @@ const modelOrder = orderByReaderImpact(
   orderingInputs,
 );
 const dispatchOrdering: DispatchOrdering | null = dueModel.length === 0 ? null : modelOrder.ordering;
-const openingOrder = [...dueDeterministicRows, ...modelOrder.ordered.map((b) => b.row.entry)];
+/* The owner's dispatch goes ahead of the bands (ADM-8); within each group the band order stands. */
+const scoutOrder = [
+  ...modelOrder.ordered.filter((b) => dispatchPriority.has(b.row.id)),
+  ...modelOrder.ordered.filter((b) => !dispatchPriority.has(b.row.id)),
+];
+const openingOrder = [...dueDeterministicRows, ...scoutOrder.map((b) => b.row.entry)];
 if (dispatchOrdering !== null) {
   console.log(
     `  Scout lane order: band 1 ${dispatchOrdering.bands[1]} · band 2 ${dispatchOrdering.bands[2]} · band 3 ${dispatchOrdering.bands[3]} of ${dueModel.length} due model-class ` +
-      `(open red reader questions ${redQuestions.count}${redQuestions.zips.length > 0 ? ` at ${redQuestions.zips.join(", ")}` : ""})`,
+      `(open red reader questions ${redQuestions.count}${redQuestions.zips.length > 0 ? ` at ${redQuestions.zips.join(", ")}` : ""})` +
+      (dispatchPriority.size > 0 ? ` · owner dispatch first: ${scoutOrder.filter((b) => dispatchPriority.has(b.row.id)).length} of them` : ""),
   );
-  for (const b of modelOrder.ordered.slice(0, SCOUT_MAX)) console.log(`      band ${b.band}  ${b.row.id}  — ${b.why}`);
+  for (const b of scoutOrder.slice(0, SCOUT_MAX)) {
+    console.log(`      ${dispatchPriority.has(b.row.id) ? "DISPATCH" : `band ${b.band}`}  ${b.row.id}  — ${b.why}`);
+  }
 }
 
 for (const { obligation: o, nextDueAt } of openingOrder) {
@@ -563,40 +694,8 @@ if (preOpenSkipped.length > 0) {
 const workerKey = (process.env[WORKER_CREDENTIAL_VAR] ?? "").trim();
 const credentialConfigured = workerKey.length > 0;
 
-let intentLog: ResearchIntent[] = [];
-try {
-  intentLog = [...(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))];
-} catch (error) {
-  runtimeConditions.push(
-    `research intents could not be read (${error instanceof Error ? error.message : String(error)}); the lane treats the owner as not paused`,
-  );
-}
-const intents = readIntents(intentLog);
-/* A pending RUN_CYCLE_NOW is honored by the cycle that runs. This is it. */
-const honoredIntents: string[] = [];
-for (const pending of intents.pendingRunNow) {
-  const id = `${pending.intentId}:honored`;
-  try {
-    await repos.researchIntents.append(
-      RESEARCH_INTENT_LOG_KEY,
-      id,
-      {
-        formatVersion: RESEARCH_FORMAT_VERSION,
-        kind: "HONORED",
-        intentId: id,
-        honors: pending.intentId,
-        action: pending.action,
-        honoredAt: NOW,
-        honoredBy: `freshness-shadow@${HOST}#${process.pid}`,
-        detail: "a cycle ran; whether it started early or on the interval is the runner's record",
-      },
-      NOW,
-    );
-    honoredIntents.push(pending.intentId);
-  } catch (error) {
-    runtimeConditions.push(`intent ${pending.intentId} could not be marked honored: ${error instanceof Error ? error.message : String(error)}`);
-  }
-}
+/* The intent log was read, and RUN_CYCLE_NOW / DISPATCH honored, above the
+   lane ordering — a DISPATCH has to reorder before anything is opened. */
 
 const laneDisabledCode = dry
   ? "LANE_DISABLED"
@@ -617,6 +716,32 @@ const laneDisabledReason = dry
         ? `paused by owner intent ${intents.pauseIntentId ?? "(id unrecorded)"}`
         : null;
 const modelLaneEnabled = laneDisabledReason === null;
+
+/*
+ * THE LANE PAUSE / RESUME GETS ITS HONORED RECORD. (9.4.26 admin feedback.)
+ * Before this, a PAUSE or RESUME of the research lane never received one and
+ * rendered PENDING forever on /admin/research, beside RUN_CYCLE_NOW rows that
+ * did. The cycle that applies the latest of them acknowledges it, once, and
+ * the detail says what the lane actually did — a RESUME over a lane that is
+ * closed for another reason (no credential, --dry) is acknowledged as applied
+ * and still closed, never as "reopened".
+ */
+const honoredLaneIntents: string[] = [];
+{
+  const laneIntents = intentLog
+    .filter((r): r is ResearchIntentRequest => r.kind === "INTENT" && (r.action === "PAUSE" || r.action === "RESUME"))
+    .sort(intentByTime);
+  const latest = laneIntents.at(-1);
+  if (latest !== undefined && !honoredBefore.has(latest.intentId)) {
+    const detail =
+      latest.action === "PAUSE"
+        ? "model lane closed for this cycle"
+        : modelLaneEnabled
+          ? "model lane reopened"
+          : `model lane reopened by the owner, but it stays closed this cycle: ${laneDisabledReason}`;
+    if (await honorIntent(latest, detail)) honoredLaneIntents.push(latest.intentId);
+  }
+}
 
 let costLedger: CostEntry[] = [];
 let ledgerUnreadable: string | null = null;
@@ -812,7 +937,16 @@ let laneCounts: { deterministicDispatched: number; modelDispatched: number; defe
 /** Computed once at cycle end; null on the start-of-cycle state. */
 let metrics: ResearchMetrics | null = null;
 
-function researchState(cycleFinishedAt: string | null): ResearchState {
+/**
+ * The research state this cycle writes, carrying the owner's dispatch it
+ * honored (ADM-8). `ownerDispatch` is the latest DISPATCH this cycle honored,
+ * or null; every one of them is on the run record. It rides as an extra field
+ * on `ResearchState` so the page can pick it up without this script deciding
+ * the page's contract.
+ */
+type CycleResearchState = ResearchState & { readonly ownerDispatch: OwnerDispatchRecord | null };
+
+function researchState(cycleFinishedAt: string | null): CycleResearchState {
   const window = spendWindow.windowUsd === null ? null : spendWindow.windowUsd + spentThisCycle;
   return {
     formatVersion: RESEARCH_FORMAT_VERSION,
@@ -861,6 +995,7 @@ function researchState(cycleFinishedAt: string | null): ResearchState {
     hostSupervision,
     dispatchOrdering,
     metrics,
+    ownerDispatch: ownerDispatches.at(-1) ?? null,
   };
 }
 
@@ -1005,6 +1140,8 @@ const cycle = await runCycle({
   },
   maxDispatches: MAX_DISPATCHES,
   budget: { deadlineMs: DISPATCH_DEADLINE_MS - fleetReserveMs, now: () => Date.now() },
+  /* ADM-8: the owner's dispatch goes first in the dispatcher's own due order too. */
+  placeFirst: dispatchPriority,
   research: {
     decide: (row) => decisionFor(row.obligation.id, row.obligation.routeId),
     admitScout: () => {
@@ -1197,6 +1334,8 @@ const heartbeat: RunnerHeartbeat = {
   lastCycleOk: true,
   testedSha: headSha(ROOT),
   host: HOST,
+  /* A working beat: the runner is not idling on a PAUSE_RUNNER (ADM-5). */
+  pause: null,
 };
 try {
   const beat = await repos.runnerHeartbeat.read(RUNNER_ID);
@@ -1231,7 +1370,11 @@ const researchLines = [
     ` · ${scoutDispatches.filter((d) => d.dispositionCommitted).length} disposition(s) committed`,
   `  candidates         ${candidateReports.reduce((n, r) => n + r.proposed.length, 0)} method candidate(s) proposed and validated (never admitted here)`,
   `  disagreements      ${decisionDisagreements.length} executor-decision disagreement(s) recorded in the run record, never reconciled`,
-  `  intents            ${honoredIntents.length} RUN_CYCLE_NOW honored · paused: ${intents.paused ? "yes" : "no"}`,
+  `  intents            ${honoredIntents.length} RUN_CYCLE_NOW honored · ${honoredDispatch.length} of ${intents.pendingDispatch.length} pending DISPATCH honored · ` +
+    `${honoredLaneIntents.length} lane PAUSE/RESUME acknowledged · paused: ${intents.paused ? "yes" : "no"}`,
+  ...ownerDispatches.map(
+    (d) => `  owner dispatch     ${d.intentId}: "${d.target}" -> ${d.matched} of ${d.registered} registered unit(s) placed first in both lanes`,
+  ),
   `  runtime            ${runtimeConditions.length === 0 ? "no condition prevents eligible Scout work" : runtimeConditions.join("; ")}`,
   `  supervision        ${hostSupervision.measurable ? `relaunch trigger ${hostSupervision.relaunchTrigger.present === null ? "UNKNOWN" : hostSupervision.relaunchTrigger.present ? "present" : "ABSENT"}` : hostSupervision.notMeasurableReason} · ` +
     `proof ${hostSupervision.proof === null ? `ABSENT at ${hostSupervision.proofPath}` : `${hostSupervision.proof.verdict} ${hostSupervision.proof.measuredAt} (${hostSupervision.proof.secondsToRelaunch ?? "?"}s)`} (RULING 246)`,
@@ -1365,9 +1508,19 @@ writeFileSync(
         candidateReports,
         decisionDisagreements,
         honoredIntents,
+        /* ADM-8: every DISPATCH this cycle acted on, what it matched, and which were honored. */
+        ownerDispatches,
+        honoredDispatch,
+        honoredLaneIntents,
         hostSupervision,
         dispatchOrdering,
-        orderedScoutQueue: modelOrder.ordered.map((b) => ({ obligationId: b.row.id, band: b.band, why: b.why, nextDueAt: b.row.nextDueAt })),
+        orderedScoutQueue: scoutOrder.map((b) => ({
+          obligationId: b.row.id,
+          band: b.band,
+          why: b.why,
+          nextDueAt: b.row.nextDueAt,
+          ownerDispatch: dispatchPriority.has(b.row.id),
+        })),
         metrics,
       },
       vaulted: [...vault.ledger.values()],

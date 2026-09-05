@@ -58,6 +58,32 @@ pnpm pilot:run                          until Ctrl+C, hourly
 pnpm pilot:run --provider=file          against the file store instead of Postgres
 ```
 
+## What the owner's dashboard does to the runner (9.4.26)
+
+Three things the control centre at `/admin` can now say to the runner, each a
+durable intent the runner reads once a minute and answers with its own
+HONORED record — never a direct edit of anything:
+
+- **Pause / resume the runner** (`PAUSE_RUNNER`, `RESUME_RUNNER`). A recorded
+  pause is what tells the dashboard's Runner line "Paused by you — reason"
+  from a red "Silent — no pause recorded". While it stands the runner idles:
+  no cycle, no nightly window, a heartbeat every thirty minutes carrying the
+  pause. `pnpm pilot:stop` and `pnpm pilot:disable` record the pause
+  themselves and `pnpm pilot:start` records the resume, best effort, so a
+  stop from the shell is visible on the page too. A reason typed by hand:
+  `pnpm pilot:pause-note --action=PAUSE_RUNNER --note="usage was heavy"`.
+- **Deploy fleet** (`DISPATCH`). The owner's words — "deep dive on Illinois",
+  "Pima County campaign finance" — are parsed into state codes and terms; the
+  next cycle puts every REGISTERED unit that matches first in both lanes and
+  records what matched of what. A dispatch reorders; it never enlarges the
+  registry. A state nothing is registered for is honored with a sentence
+  saying so by name, and enumerating it is the owner's scope decision.
+- **The console republishes itself.** After every cycle, success or failure,
+  the runner runs `pnpm owner:publish` and `pnpm readiness:publish`, so the
+  pilot-health snapshot and the readiness snapshots are never older than the
+  last cycle while the runner is on. Nothing else schedules them: a stale
+  console is a stopped runner.
+
 ---
 
 ## What a cycle does when it cannot finish

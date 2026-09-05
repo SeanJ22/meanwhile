@@ -365,6 +365,16 @@ export interface RunnerHeartbeat {
   /** The SHA the runner was executing at. */
   readonly testedSha: string | null;
   readonly host: string;
+  /**
+   * Set by the runner while it is idling on the owner's PAUSE_RUNNER intent
+   * (ADM-5): the beat says "alive, and deliberately doing nothing". Absent on
+   * every beat written before the field existed, and null on a working beat.
+   */
+  readonly pause?: {
+    readonly intentId: string;
+    readonly since: string;
+    readonly note: string | null;
+  } | null;
 }
 
 /**
@@ -554,7 +564,26 @@ export interface OwnerDecisionIntent {
    * not join to any collection store because it exists in neither.
    */
   readonly adminSessionRef: string;
+  /**
+   * The owner's answer in his own words (ADM-4, 9.4.26), when he typed one
+   * instead of — or as well as — picking an option. Absent on records written
+   * before the field existed; a reader treats absent as null. The name is
+   * deliberate: `answerText`/`freeText`/`comment` are refused by
+   * `assertAggregateOnly` because on a READER record they mean something else.
+   */
+  readonly ownerAnswer?: string | null;
 }
+
+/** The longest answer the dashboard accepts in the owner's own words. */
+export const OWNER_ANSWER_MAX_CHARS = 2000;
+
+/**
+ * The `chosenOption` recorded when the owner typed an answer and picked no
+ * option. A literal rather than an empty string, so a record can never look
+ * like a decision with nothing chosen, and so the tracker applier can tell
+ * the two shapes apart by reading one field.
+ */
+export const ANSWERED_IN_OWN_WORDS = "Answered in my own words";
 
 /* ------------------------------------------------------------------ *
  * 7. THE SNAPSHOT THE PAGE RENDERS
@@ -582,6 +611,17 @@ export interface OwnerZipRow {
   readonly failureClasses: readonly string[];
 }
 
+/**
+ * What kind of card this is (ADM-4, 9.4.26). The three are rendered
+ * differently because they ask the owner for different things:
+ *
+ *   DECISION       a fork — pick an option or answer in your own words
+ *   ACKNOWLEDGE    the work is done or the question answered; it closes on a read
+ *   BLOCKED_WHILE  a machine-verifiable wall, rechecked every tracker generation;
+ *                  it is not a decision and carries no buttons
+ */
+export type OwnerDecisionCardKind = "DECISION" | "ACKNOWLEDGE" | "BLOCKED_WHILE";
+
 /** One decision card in the Needs-Sean queue. */
 export interface OwnerDecisionCard {
   readonly rowId: string;
@@ -589,12 +629,31 @@ export interface OwnerDecisionCard {
   readonly whatIsNeeded: string;
   readonly whyNoMachineCanDecide: string;
   readonly options: readonly { readonly option: string; readonly consequence: string }[];
-  readonly blockedDescendants: number;
+  /**
+   * How many rows wait behind this one. NULL when nothing measured it — no
+   * tracker row carries the count today — and the page says so rather than
+   * printing a zero that would assert "nothing is blocked behind this".
+   */
+  readonly blockedDescendants: number | null;
   readonly openedOn: string | null;
   readonly ageDays: number | null;
   readonly priority: string;
-  /** RULING 227: the predicate, or an explicit NOT_MACHINE_VERIFIABLE marking. */
+  /** RULING 271: the predicate, or an explicit NOT_MACHINE_VERIFIABLE marking. */
   readonly verifiability: "PREDICATE" | "NOT_MACHINE_VERIFIABLE";
+  /** Absent on a snapshot published before 9.4.26; a reader treats absent as DECISION. */
+  readonly kind?: OwnerDecisionCardKind;
+  /** BLOCKED_WHILE only: the predicate's blocker sentence. */
+  readonly blocker?: string | null;
+  /** BLOCKED_WHILE only: what the last tracker generation found when it rechecked. */
+  readonly checkedThisRun?: string | null;
+  /** The tracker row's own "Last verified" stamp, when it carries one. */
+  readonly lastVerified?: string | null;
+}
+
+/** The kind of a card, tolerating a snapshot written before the field existed. */
+export function decisionCardKind(card: OwnerDecisionCard): OwnerDecisionCardKind {
+  if (card.kind) return card.kind;
+  return card.verifiability === "PREDICATE" ? "BLOCKED_WHILE" : "DECISION";
 }
 
 /**
@@ -630,12 +689,32 @@ export interface OwnerSnapshot {
     readonly oldestHours: number | null;
   }[];
 
-  /** Panel 5 — cost. */
-  readonly costByRole: readonly { readonly key: string; readonly usd: Held<Measured> }[];
-  readonly costByModel: readonly { readonly key: string; readonly usd: Held<Measured> }[];
+  /**
+   * Panel 5 — cost. Rows carry their measured/unmeasured attempt counts (ADM-6,
+   * 9.4.26); the counts are absent on a snapshot published before then.
+   */
+  readonly costByRole: readonly {
+    readonly key: string;
+    readonly usd: Held<Measured>;
+    readonly attemptsMeasured?: number;
+    readonly attemptsUnmeasured?: number;
+  }[];
+  readonly costByModel: readonly {
+    readonly key: string;
+    readonly usd: Held<Measured>;
+    readonly attemptsMeasured?: number;
+    readonly attemptsUnmeasured?: number;
+  }[];
   readonly cacheHitRateByCaller: readonly { readonly callerKey: string; readonly hitRate: Held<Measured> }[];
   readonly deterministicShare: Held<Measured>;
   readonly costPerVerifiedRecord: Held<Measured>;
+  /** The whole-ledger totals behind the rows. Absent before 9.4.26. */
+  readonly costSummary?: {
+    readonly measuredUsd: number | null;
+    readonly attemptsMeasured: number;
+    readonly attemptsUnmeasured: number;
+    readonly entries: number;
+  };
 
   /**
    * Panel 6 — the reader-suite grid by ZIP.

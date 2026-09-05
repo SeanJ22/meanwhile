@@ -1,17 +1,17 @@
 {
   "formatVersion": 1,
   "runDate": "2026-09-05",
-  "startedAt": "2026-09-05T20:09:34.661Z",
-  "finishedAt": "2026-09-05T20:43:41.281Z",
+  "startedAt": "2026-09-05T22:12:44.027Z",
+  "finishedAt": "2026-09-05T22:40:19.171Z",
   "mode": "ALL",
-  "exitCode": 2,
+  "exitCode": 0,
   "sources": [
     {
       "id": "meetings",
       "due": true,
       "ran": true,
-      "outcome": "ROUTE_UNREAD",
-      "reason": "the Reader proof renewal could not prove this source's change to data/meetings-snapshot.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1: AssertionError [ERR_ASSERTION]: The input did not match the regular expression /older than that: we last reached them/i. Input: |   code: 'ERR_ASSERTION', |     'ZBA Meeting As Needed\\n' + |     'Could govern you\\n' + |     'Wed, October 21st, 2'... 28518 more characters, |   expected: /older than that: we last reached them/i, |   operator: 'match', |   diff: ' — its governed paths are back at HEAD and it is owed until it lands",
+      "outcome": "INGESTED",
+      "reason": "ran clean; 1 governed path(s) changed and the gate passed — committed",
       "commands": [
         "ingest composite"
       ],
@@ -20,13 +20,15 @@
       "governs": [
         "data/meetings-snapshot.json"
       ],
-      "changedPaths": [],
+      "changedPaths": [
+        "data/meetings-snapshot.json"
+      ],
       "recoveredFrom": [],
       "nextDueAt": "2026-09-06",
       "observations": [
         {
           "path": "data/meetings-snapshot.json",
-          "observedAt": "2026-09-05T20:10:15.504Z",
+          "observedAt": "2026-09-05T22:13:22.749Z",
           "verdict": "FACTS_CHANGED",
           "written": true,
           "stampKeys": [
@@ -40,7 +42,7 @@
             "counts",
             "sources"
           ],
-          "factsSha256": "0ace643a1f8a208b3e428a74fa0ffeeaaea5717aa373b3aa1066fb8cc1c8eb6d"
+          "factsSha256": "0ccb394046317e258e339a2572550bbf3fd7703d1530e5e27b177dc4f0ba66f3"
         }
       ]
     },
@@ -49,7 +51,7 @@
       "due": true,
       "ran": true,
       "outcome": "UNCHANGED",
-      "reason": "ran clean; facts unchanged — 2 artifact(s) re-observed at 2026-09-05T20:10:20.631Z and left byte-identical (stamps not rewritten)",
+      "reason": "ran clean; facts unchanged — 2 artifact(s) re-observed at 2026-09-05T22:13:25.593Z and left byte-identical (stamps not rewritten)",
       "commands": [
         "nj:ballot --write",
         "nj:filing:check",
@@ -67,7 +69,7 @@
       "observations": [
         {
           "path": "data/states/nj/ballot/nj-morris-2026.json",
-          "observedAt": "2026-09-05T20:10:20.625Z",
+          "observedAt": "2026-09-05T22:13:25.585Z",
           "verdict": "FACTS_UNCHANGED",
           "written": false,
           "stampKeys": [
@@ -80,7 +82,7 @@
         },
         {
           "path": "data/states/nj/ballot/nj-morris-2026-contacts.json",
-          "observedAt": "2026-09-05T20:10:20.631Z",
+          "observedAt": "2026-09-05T22:13:25.593Z",
           "verdict": "FACTS_UNCHANGED",
           "written": false,
           "stampKeys": [
@@ -97,8 +99,8 @@
       "id": "fec",
       "due": true,
       "ran": true,
-      "outcome": "ROUTE_UNREAD",
-      "reason": "the Reader proof renewal could not prove this source's change to data/fec/fec-2026.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1: AssertionError [ERR_ASSERTION]: The input did not match the regular expression /older than that: we last reached them/i. Input: |   code: 'ERR_ASSERTION', |     'ZBA Meeting As Needed\\n' + |     'Could govern you\\n' + |     'Wed, October 21st, 2'... 28518 more characters, |   expected: /older than that: we last reached them/i, |   operator: 'match', |   diff: ' — its governed paths are back at HEAD and it is owed until it lands",
+      "outcome": "INGESTED",
+      "reason": "ran clean; 1 governed path(s) changed and the gate passed — committed",
       "commands": [
         "fec:fetch"
       ],
@@ -107,13 +109,15 @@
       "governs": [
         "data/fec/fec-2026.json"
       ],
-      "changedPaths": [],
+      "changedPaths": [
+        "data/fec/fec-2026.json"
+      ],
       "recoveredFrom": [],
-      "nextDueAt": "2026-09-06",
+      "nextDueAt": "2026-09-07",
       "observations": [
         {
           "path": "data/fec/fec-2026.json",
-          "observedAt": "2026-09-05T20:15:59.094Z",
+          "observedAt": "2026-09-05T22:17:53.071Z",
           "verdict": "FACTS_CHANGED",
           "written": true,
           "stampKeys": [
@@ -129,27 +133,41 @@
       "id": "legiscan",
       "due": true,
       "ran": true,
-      "outcome": "ROUTE_UNREAD",
-      "reason": "failed at `pnpm legiscan:fetch` (exit 1) — nothing usable was written; owed until it lands",
+      "outcome": "UNCHANGED",
+      "reason": "ran clean; facts unchanged — 1 artifact(s) re-observed at 2026-09-05T22:17:54.210Z and left byte-identical (stamps not rewritten)",
       "commands": [
         "legiscan:fetch"
       ],
-      "failedCommand": "legiscan:fetch",
-      "exitCode": 1,
+      "failedCommand": null,
+      "exitCode": 0,
       "governs": [
         "data/votes/state-votes-snapshot.json"
       ],
       "changedPaths": [],
       "recoveredFrom": [],
-      "nextDueAt": "2026-09-06",
-      "observations": []
+      "nextDueAt": "2026-09-07",
+      "observations": [
+        {
+          "path": "data/votes/state-votes-snapshot.json",
+          "observedAt": "2026-09-05T22:17:54.210Z",
+          "verdict": "FACTS_UNCHANGED",
+          "written": false,
+          "stampKeys": [
+            "generatedAt",
+            "downloadedAt",
+            "retrievedAt"
+          ],
+          "ignoredTopLevel": [],
+          "factsSha256": "3ea9fccb27cfb69ce342558a72fee3ca4f8815bc5d2f839f840d9c94eee402cb"
+        }
+      ]
     },
     {
       "id": "dotgov",
       "due": true,
       "ran": true,
       "outcome": "UNCHANGED",
-      "reason": "ran clean; facts unchanged — 1 artifact(s) re-observed at 2026-09-05T20:16:11.700Z and left byte-identical (stamps not rewritten)",
+      "reason": "ran clean; facts unchanged — 1 artifact(s) re-observed at 2026-09-05T22:17:55.383Z and left byte-identical (stamps not rewritten)",
       "commands": [
         "dotgov:fetch"
       ],
@@ -164,7 +182,7 @@
       "observations": [
         {
           "path": "data/dotgov/snapshot.json",
-          "observedAt": "2026-09-05T20:16:11.700Z",
+          "observedAt": "2026-09-05T22:17:55.383Z",
           "verdict": "FACTS_UNCHANGED",
           "written": false,
           "stampKeys": [
@@ -185,24 +203,16 @@
     "off": true
   },
   "gate": {
-    "verdict": "REFUSED",
-    "ranAt": "2026-09-05T20:35:21.211Z",
-    "failingFiles": [
-      "tests/generated-artifacts.test.ts"
-    ],
-    "attribution": [
-      {
-        "file": "tests/generated-artifacts.test.ts",
-        "sourceId": null,
-        "basis": "no single source's revert makes it pass, and the all-sources trial was not run"
-      }
-    ],
-    "note": "The suite is red independent of the refreshed data — tests/generated-artifacts.test.ts fail with every changed source at HEAD. That is a defect on main, not a source's; nothing commits under it, and every changed source is owed until the tree is green."
+    "verdict": "GREEN",
+    "ranAt": "2026-09-05T22:40:19.171Z",
+    "failingFiles": [],
+    "attribution": [],
+    "note": "The full suite passed over every changed source's data together. Everything that changed commits."
   },
   "renewal": {
-    "verdict": "FAILED",
-    "ranAt": "2026-09-05T20:19:26.681Z",
-    "exactHead": "742993c78f5ef56afe9d9bab2e52c31256326563",
+    "verdict": "RENEWED",
+    "ranAt": "2026-09-05T22:21:10.229Z",
+    "exactHead": "3341925c0bc93f644439b778f5b2a533a2de43f0",
     "changedHoldings": [
       "data/fec/fec-2026.json",
       "data/meetings-snapshot.json"
@@ -218,14 +228,14 @@
       {
         "name": "exact-head production build",
         "ok": true,
-        "secs": 67,
+        "secs": 70,
         "detail": "build log recorded"
       },
       {
         "name": "serve the build on localhost",
         "ok": true,
         "secs": 1,
-        "detail": "serving 742993c7"
+        "detail": "serving 3341925c"
       },
       {
         "name": "prepare the census",
@@ -236,7 +246,7 @@
       {
         "name": "active portrait inventory",
         "ok": true,
-        "secs": 71,
+        "secs": 72,
         "detail": null
       },
       {
@@ -260,13 +270,13 @@
       {
         "name": "ballot",
         "ok": true,
-        "secs": 33,
+        "secs": 35,
         "detail": null
       },
       {
         "name": "ballot ask",
         "ok": true,
-        "secs": 9,
+        "secs": 10,
         "detail": null
       },
       {
@@ -284,13 +294,13 @@
       {
         "name": "agenda",
         "ok": true,
-        "secs": 2,
+        "secs": 3,
         "detail": null
       },
       {
         "name": "meetings ask",
         "ok": true,
-        "secs": 19,
+        "secs": 20,
         "detail": null
       },
       {
@@ -313,27 +323,31 @@
       },
       {
         "name": "final render and witnesses",
-        "ok": false,
-        "secs": 38,
-        "detail": "final render and witnesses exited 1: AssertionError [ERR_ASSERTION]: The input did not match the regular expression /older than that: we last reached them/i. Input: |   code: 'ERR_ASSERTION', |     'ZBA Meeting As Needed\\n' + |     'Could govern you\\n' + |     'Wed, October 21st, 2'... 28518 more characters, |   expected: /older than that: we last reached them/i, |   operator: 'match', |   diff: 'simple' | } | Node.js v24.20.0"
-      }
-    ],
-    "refusedSources": [
-      {
-        "id": "meetings",
-        "paths": [
-          "data/meetings-snapshot.json"
-        ],
-        "why": "the Reader proof renewal could not prove this source's change to data/meetings-snapshot.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1: AssertionError [ERR_ASSERTION]: The input did not match the regular expression /older than that: we last reached them/i. Input: |   code: 'ERR_ASSERTION', |     'ZBA Meeting As Needed\\n' + |     'Could govern you\\n' + |     'Wed, October 21st, 2'... 28518 more characters, |   expected: /older than that: we last reached them/i, |   operator: 'match', |   diff: ' — its governed paths are back at HEAD and it is owed until it lands"
+        "ok": true,
+        "secs": 41,
+        "detail": null
       },
       {
-        "id": "fec",
-        "paths": [
-          "data/fec/fec-2026.json"
-        ],
-        "why": "the Reader proof renewal could not prove this source's change to data/fec/fec-2026.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1: AssertionError [ERR_ASSERTION]: The input did not match the regular expression /older than that: we last reached them/i. Input: |   code: 'ERR_ASSERTION', |     'ZBA Meeting As Needed\\n' + |     'Could govern you\\n' + |     'Wed, October 21st, 2'... 28518 more characters, |   expected: /older than that: we last reached them/i, |   operator: 'match', |   diff: ' — its governed paths are back at HEAD and it is owed until it lands"
+        "name": "finalize --renew-holdings",
+        "ok": true,
+        "secs": 87,
+        "detail": null
+      },
+      {
+        "name": "pack the executed evidence losslessly",
+        "ok": true,
+        "secs": 1,
+        "detail": "15 file(s) packed"
+      },
+      {
+        "name": "validate the renewed receipt",
+        "ok": true,
+        "secs": 40,
+        "detail": "holdings digest 7d0aa707, 461 sources bound"
       }
     ],
-    "failure": "final render and witnesses: final render and witnesses exited 1: AssertionError [ERR_ASSERTION]: The input did not match the regular expression /older than that: we last reached them/i. Input: |   code: 'ERR_ASSERTION', |     'ZBA Meeting As Needed\\n' + |     'Could govern you\\n' + |     'Wed, October 21st, 2'... 28518 more characters, |   expected: /older than that: we last reached them/i, |   operator: 'match', |   diff: '"
+    "refusedSources": [],
+    "failure": null,
+    "restore": null
   }
 }

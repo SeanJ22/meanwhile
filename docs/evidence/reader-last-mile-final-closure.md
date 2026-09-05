@@ -1,6 +1,6 @@
 # Reader last-mile census
 
-Registry-derived denominator: 35 reader dataset families; 93 declared family/surface edges; 1303 holdings; 48537 typed records; 1052 family/surface/state rows.
+Registry-derived denominator: 35 reader dataset families; 93 declared family/surface edges; 1303 holdings; 48541 typed records; 1052 family/surface/state rows.
 
 Records are typed container rows, not unique civic people. Units are kept separately; a sourced roster and its members, a meeting and agenda text, or a normalized snapshot and acquisition input must not be summed as unique facts. Reader eligibility is distinct from measured reader delivery. Unmeasured false-negative/positive counts are null, never zero.
 
@@ -159,22 +159,22 @@ This is internal evidence. DELIVERY_UNPROVEN is an open proof obligation, never 
 | campaign-finance-corpus | ballot | nh | 0 | 5738 | STAGED_NOT_ELIGIBLE | 0 | UNMEASURED | true |
 | campaign-finance-corpus | state-money | nj | 0 | 2 | STAGED_NOT_ELIGIBLE | 0 | UNMEASURED | true |
 | campaign-finance-corpus | ballot | nj | 0 | 2 | STAGED_NOT_ELIGIBLE | 0 | UNMEASURED | true |
-| meetings | meetings | az | 288 | 7 | RENDERED | 0 | 0 | true |
-| meetings | agenda | az | 288 | 7 | RENDERED | 0 | 0 | true |
-| meetings | ask | az | 288 | 7 | RENDERED | 0 | 0 | true |
-| meetings | map | az | 288 | 7 | RENDERED | 0 | 0 | true |
+| meetings | meetings | az | 287 | 7 | RENDERED | 0 | 0 | true |
+| meetings | agenda | az | 287 | 7 | RENDERED | 0 | 0 | true |
+| meetings | ask | az | 287 | 7 | RENDERED | 0 | 0 | true |
+| meetings | map | az | 287 | 7 | RENDERED | 0 | 0 | true |
 | meetings | meetings | national-unattributed | 5 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | meetings | agenda | national-unattributed | 5 | 0 | RENDERED | 0 | 0 | true |
 | meetings | ask | national-unattributed | 5 | 0 | RENDERED | 0 | 0 | true |
 | meetings | map | national-unattributed | 5 | 0 | RENDERED | 0 | 0 | true |
-| meetings | meetings | nh | 337 | 36 | RENDERED | 0 | 0 | true |
-| meetings | agenda | nh | 337 | 36 | RENDERED | 0 | 0 | true |
-| meetings | ask | nh | 337 | 36 | RENDERED | 0 | 0 | true |
-| meetings | map | nh | 337 | 36 | RENDERED | 0 | 0 | true |
-| meetings | meetings | nj | 137 | 1 | RENDERED | 0 | 0 | true |
-| meetings | agenda | nj | 137 | 1 | RENDERED | 0 | 0 | true |
-| meetings | ask | nj | 137 | 1 | RENDERED | 0 | 0 | true |
-| meetings | map | nj | 137 | 1 | RENDERED | 0 | 0 | true |
+| meetings | meetings | nh | 341 | 36 | RENDERED | 0 | 0 | true |
+| meetings | agenda | nh | 341 | 36 | RENDERED | 0 | 0 | true |
+| meetings | ask | nh | 341 | 36 | RENDERED | 0 | 0 | true |
+| meetings | map | nh | 341 | 36 | RENDERED | 0 | 0 | true |
+| meetings | meetings | nj | 138 | 1 | RENDERED | 0 | 0 | true |
+| meetings | agenda | nj | 138 | 1 | RENDERED | 0 | 0 | true |
+| meetings | ask | nj | 138 | 1 | RENDERED | 0 | 0 | true |
+| meetings | map | nj | 138 | 1 | RENDERED | 0 | 0 | true |
 | federal-finance | funding | az | 9 | 0 | RENDERED | 0 | 0 | true |
 | federal-finance | ballot | az | 9 | 0 | RENDERED | 0 | 0 | true |
 | federal-finance | map | az | 9 | 0 | RENDERED | 0 | 0 | true |

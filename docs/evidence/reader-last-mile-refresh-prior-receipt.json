@@ -1,0 +1,1983 @@
+{
+  "formatVersion": 1,
+  "censusPath": "docs/evidence/reader-last-mile-final-closure.json",
+  "censusSha256": "ee99a8ac742049086de3a3ed57ded52ae6ca8a02c596c8c31772e27ac28b4b6e",
+  "holdingsDigest": "043a8c7289c568c1c6e1bbf1c7c5433ad5f2d457ed27f24db81481023e723293",
+  "registrySha256": "a952b03c7198bcfe2914fdee3837772bdf6693f680ede01c148b639fc36984ad",
+  "sourceHashes": [
+    {
+      "path": "app/about-area/page.tsx",
+      "sha256": "f2fdcede6b503a2bc14afb35553bdf9fb4234b228577487636c4fc0606328a30"
+    },
+    {
+      "path": "app/api/address/resolve/route.ts",
+      "sha256": "f8065dfe8b99195197357cee9928aa15458e7405efae679e994376176d7ecfce"
+    },
+    {
+      "path": "app/api/agenda/route.ts",
+      "sha256": "3b59ef3c6d3425dd8668d9fb8dc45b46d7fba5af7aad967beded3d041be6fe85"
+    },
+    {
+      "path": "app/api/ask/classify/route.ts",
+      "sha256": "3bfb2f2a88e88db1f0600cc250b86a29e91307f6ee2ca2920509bd21b853d181"
+    },
+    {
+      "path": "app/api/ask/grounded/route.ts",
+      "sha256": "a29f7a292e818a5ecad5ef9d2d9c8366e7dc0717cc924d4b44ced30b34657454"
+    },
+    {
+      "path": "app/api/demand-signal/route.ts",
+      "sha256": "441581efa1b040227a50f3816e33eb04c61599b7bb35cb4ef55f5bb66cf3a893"
+    },
+    {
+      "path": "app/api/directory/route.ts",
+      "sha256": "f92b64cbd6ee5e1eff353fe02d20ba0df0a6978b8e58b77e48685248e3812da0"
+    },
+    {
+      "path": "app/api/funding/[target]/route.ts",
+      "sha256": "d07b147528d09e315c03c243ccf99ae385b8fb6ee7434b51259734571c8d6dd9"
+    },
+    {
+      "path": "app/api/log/route.ts",
+      "sha256": "77cc475e90dc320ea9e30bb42c030edbf5f44cb652c540c3e412522c8071ccf1"
+    },
+    {
+      "path": "app/api/meetings/route.ts",
+      "sha256": "628b840d2d1d008d469756bd0bbfca0edf728fd25656fb4a73ebb3949c4da0e2"
+    },
+    {
+      "path": "app/api/official-actions/[subject]/route.ts",
+      "sha256": "6c09aa4c492a69f92709efd8ee7db3ade13a03bc0a0ba4b01d87b6d9623983f0"
+    },
+    {
+      "path": "app/api/positions/[subject]/[topic]/route.ts",
+      "sha256": "af1eefb421272e44f645c32022fc7e59020cea0c706571ad8437eb6f3233f8bd"
+    },
+    {
+      "path": "app/api/profile/[subject]/route.ts",
+      "sha256": "8b66ff861fea52d28030ddcc5de2b38cbe20f5104788d3744f0d1b71776578d4"
+    },
+    {
+      "path": "app/api/reactions/route.ts",
+      "sha256": "394d56b22e84543a0c6127c31c5913ae1cecfd565daf23689734c12710459b19"
+    },
+    {
+      "path": "app/api/representation/[...division]/route.ts",
+      "sha256": "2f373b5c3f2a5c6157a44343eecdb005ae92360c27f9170bd93af5b5bb730323"
+    },
+    {
+      "path": "app/api/speak/route.ts",
+      "sha256": "de4e6e2565bc68ca6c7283e9ac9fd6c1900784bcb43ddb12dad14e56504eccdf"
+    },
+    {
+      "path": "app/api/votes/route.ts",
+      "sha256": "83d165928dab61937328928154ad8d855e661fab66e8c78af055369277a70bf5"
+    },
+    {
+      "path": "app/api/voting-sites/route.ts",
+      "sha256": "5b00572212b4971ac25a1838c0b21ca31999f41035c678ad542fc59f8b8abeb5"
+    },
+    {
+      "path": "app/ballot/page.tsx",
+      "sha256": "e5104495278111d360c193a06f053a3b3e6b4d4d96edc57e3ea8ce2871ecc92b"
+    },
+    {
+      "path": "app/globals.css",
+      "sha256": "5ea8070b355ebb34c5922aef638a4ff8d1697cf4e886b2878b4091b454eaa7a2"
+    },
+    {
+      "path": "app/layout.tsx",
+      "sha256": "9071ded1428234af9d40809c698025104b3cbe0295263c4c5effa272857f90d7"
+    },
+    {
+      "path": "components/address/address-prompt.tsx",
+      "sha256": "d8f055c3a7a89f0c773e16543239e2b0a5214dff6ec8879a41e1117d89ff1156"
+    },
+    {
+      "path": "components/address/address-resolution-context.tsx",
+      "sha256": "5a72868b0629f4d621b155e54855a649931a323d85ff8fd9f091a63993372441"
+    },
+    {
+      "path": "components/address/could-govern-notice.tsx",
+      "sha256": "0cd3ba94f08be74252f2c7474238e87835e984bf6a7d247b7387ad5a3709b5a7"
+    },
+    {
+      "path": "components/address/jurisdiction-pill.tsx",
+      "sha256": "c04c89775cd4c9a7b25d4c5ebd8b3b61b9b029533593296f102e1cf08f5446b1"
+    },
+    {
+      "path": "components/area/shuffled-facts.tsx",
+      "sha256": "724a386d42b2115619305d73fd60dc53ee0b4948e581198ecd3b9498c8353825"
+    },
+    {
+      "path": "components/ask/answer-contacts.tsx",
+      "sha256": "0c53c0c420e5901075183335145a402871f69b715d692406ef9e5ac01c038bca"
+    },
+    {
+      "path": "components/ask/answer-records.tsx",
+      "sha256": "8d1dd5906f24f4ed4666e4865ffdf0855cbd1a8501ee1a2ce83c36afe49e4688"
+    },
+    {
+      "path": "components/ask/ask-box.tsx",
+      "sha256": "26dfbf49962318362929d9a32eadb5a02129cb7569732ffe59262468eca5954f"
+    },
+    {
+      "path": "components/ask/ballot-ask.tsx",
+      "sha256": "0636bc4d524ce3b17c2e09ef627d5bcdb079398d54cc6b54bfa47f9ad913eca5"
+    },
+    {
+      "path": "components/ask/body-confirmation.tsx",
+      "sha256": "78b94850a85843820b3101e46a1fbcdf86d890c56b506290766d88aeefa01f16"
+    },
+    {
+      "path": "components/ballot/ballot-ask-pill.tsx",
+      "sha256": "ef45c42f90c9a91cc62ccf27a28aeb56350d3e9347edf7c74ff07e16a03f938d"
+    },
+    {
+      "path": "components/ballot/ballot-narrowing.tsx",
+      "sha256": "9b8725cea5f92e8d02ff18c7bd7704883585cf28bbe8903f1b4c00d9370b4a61"
+    },
+    {
+      "path": "components/ballot/candidate-battlecard.tsx",
+      "sha256": "b2ab0d7f2f945c95887616c190a6a8c7e4f7b29e9f7884258b071427f0fbf993"
+    },
+    {
+      "path": "components/ballot/candidate-card.tsx",
+      "sha256": "e76d8529f7c22de73d35e2b6b6879330287a4960ed0cfda4edaea9d138b32e28"
+    },
+    {
+      "path": "components/ballot/candidate-contact.tsx",
+      "sha256": "dd98e9cf940a78d115e4d7aaf64eafdc5127f0cec6ca18aa3cbe4ba9b88400d7"
+    },
+    {
+      "path": "components/ballot/candidate-positions.tsx",
+      "sha256": "ea9393c5e837d5d6660aa35bfb9dd77ba1b476fdb837f6456296fa020cafb8f0"
+    },
+    {
+      "path": "components/ballot/filing-changes.tsx",
+      "sha256": "7b43359bcc5a08199e0a7f50512be532a45efd0830775f170e810b993b0398f4"
+    },
+    {
+      "path": "components/ballot/filing-note.tsx",
+      "sha256": "12002837186632a6e67f7526005ad0ca1a8003eee607cdd3ea1c65f3d1ff7ef0"
+    },
+    {
+      "path": "components/ballot/incumbency-note.tsx",
+      "sha256": "5b1d4a979b7c38af622dc13fcfc458f4730edf8624479de2634147cfadebfa35"
+    },
+    {
+      "path": "components/ballot/incumbent-record-link.tsx",
+      "sha256": "ba84babeed982c37dc1c5beb715a474072a9527edc2497b8920157bbfab866a8"
+    },
+    {
+      "path": "components/ballot/jurisdiction-note.tsx",
+      "sha256": "4635dee18d894680210c5c1a4946a066cb1fadd8ec5ccb6357e3108efe950c15"
+    },
+    {
+      "path": "components/ballot/my-picks.tsx",
+      "sha256": "e18cf3ada9ce19043d129035aef55f58e34f01afa7ac80088e61a03a2a981c91"
+    },
+    {
+      "path": "components/ballot/pick-control.tsx",
+      "sha256": "03168301f71e31e883bbb9de4d2834812fc3d9cfb1d89185e98aed363c0538d8"
+    },
+    {
+      "path": "components/ballot/picks-card.tsx",
+      "sha256": "2748ddfb5927643d6a8aa6cd082c120ff0dff461c1155e215079e039f634aab7"
+    },
+    {
+      "path": "components/ballot/polling-lookup-fallback.tsx",
+      "sha256": "0c6da0a44f789f805d503a102859a442a3b1e991fba5291836b44765b032753c"
+    },
+    {
+      "path": "components/ballot/where-to-vote.tsx",
+      "sha256": "ac256d44ecd0ef8d37e1896e7edce869a75ca33804db7b9909a7abdea90013be"
+    },
+    {
+      "path": "components/brand/logo.tsx",
+      "sha256": "7610c413f4ab63baea88528e00888876fe82cfee2d3087bb61f192b7b9b585d9"
+    },
+    {
+      "path": "components/calendar/add-to-calendar.tsx",
+      "sha256": "230ec93f7510d6bd92bc9442a311fcaf8861d4415cc449ee33dbb8216f59bb4f"
+    },
+    {
+      "path": "components/calendar/calendar-marks.tsx",
+      "sha256": "3f94f8f63cad329c43298a1daab2f815e2fc6c5653ff56fed03d796d01a2c244"
+    },
+    {
+      "path": "components/demand/demand-pill.tsx",
+      "sha256": "0b269b1d4f9c370361025815a9991372e424d3f1f11c04e398ba3611bd0473e0"
+    },
+    {
+      "path": "components/funding/funding-block.tsx",
+      "sha256": "ba73e60f36d6344fa3ec874e0969c1ba4565e5e384be740543a665c15e026a99"
+    },
+    {
+      "path": "components/funding/funding-section.tsx",
+      "sha256": "1ed7b4a6505a5ce8e54120d8626c8c899d94b8ae42f02d38581d8044d722985a"
+    },
+    {
+      "path": "components/funding/state-money-section.tsx",
+      "sha256": "82d620f25b32b50f37eb9783658111f3e99e70b487c51e3d9a3afa0052d040e5"
+    },
+    {
+      "path": "components/map/boundary-legend.module.css",
+      "sha256": "9005c4bafbc452c88bae2d5e73db9d4e7510b2718ef9670e1a181d2b40831e3f"
+    },
+    {
+      "path": "components/map/boundary-legend.tsx",
+      "sha256": "0c92c24f1016c9473846ad6b509ca3ea9d9de1752fe231006c6a559afdc0d1da"
+    },
+    {
+      "path": "components/map/count-badge.tsx",
+      "sha256": "e51aed7553399d401d5488df191f3082da9b2185062a362dcb924f76663e19e9"
+    },
+    {
+      "path": "components/map/coverage-notice.tsx",
+      "sha256": "5ef54f1f55b34144a4d418c9c829c059ce39dc2040ce8eeebd4af675116db3da"
+    },
+    {
+      "path": "components/map/data-freshness.tsx",
+      "sha256": "9f3daa431d70632adbf1b7a8c72d2a68268a30abf282e96221d6403a378f5efb"
+    },
+    {
+      "path": "components/map/district-picker.tsx",
+      "sha256": "c66eb7250653e2396e030381f74bad5fe8c4dc8c0252a4d3805dc94a31a07afa"
+    },
+    {
+      "path": "components/map/door-overlay.tsx",
+      "sha256": "5075de477c3f82e0bf59ae60873f2ba55b3e190d9f6acd6cca544cbf4140592e"
+    },
+    {
+      "path": "components/map/governing-skeleton.module.css",
+      "sha256": "b2ea9c19638d9a98a65af70fd3045fac17a2b363c27434909733d556368eb816"
+    },
+    {
+      "path": "components/map/governing-skeleton.tsx",
+      "sha256": "e898a878abed5d75e216c46db106c1e08e35d1afa170a14993ea87c909a901c0"
+    },
+    {
+      "path": "components/map/legend.tsx",
+      "sha256": "7e6893ac03759ab9c9c0ff5103d4757d55eceecf79ec0f700ed90d8dbc6528bc"
+    },
+    {
+      "path": "components/map/list-overlay.tsx",
+      "sha256": "1fc947b40af3ed2d3eaece202b33061c65ec5fa6f8e46202d2c1edaa5f05bcaa"
+    },
+    {
+      "path": "components/map/map-canvas.tsx",
+      "sha256": "2dc15619d379f6faaa5fb1a1e73a81727378dbf153ecfce69cf905e6bb626fd2"
+    },
+    {
+      "path": "components/map/map-entry.tsx",
+      "sha256": "c2d77625e3747c80f62c8f5ca5f70a53bbcb55ee21481b66dfc80da499ced1b2"
+    },
+    {
+      "path": "components/map/map-flight.module.css",
+      "sha256": "b020fbc3e4ae14202beea94e41eaf379f38ca9a362e5231e269d8e4717a298ed"
+    },
+    {
+      "path": "components/map/meeting-listing-notice.tsx",
+      "sha256": "df85c94ece06ed4b6d25ad096e64029e941f5898c539d8813f373e3f963647de"
+    },
+    {
+      "path": "components/map/meeting-panel.tsx",
+      "sha256": "b4820260ed9628901697fd621bc4aa983c55be9d29e73040a4208284bb7dcc38"
+    },
+    {
+      "path": "components/map/meeting-status-pill.tsx",
+      "sha256": "149eda4a85883670f64a508443c72721f6420b58d9784a396cae010aae6ac76c"
+    },
+    {
+      "path": "components/map/popup/agenda-section.tsx",
+      "sha256": "abd0bf1fbf8c4c17d42673c809bdf7705f0103b4793a36eb7cba769d5d584b07"
+    },
+    {
+      "path": "components/map/popup/calendar-links.tsx",
+      "sha256": "5ff78434c6f2b591348fe255bcdec116355fc019ee207b257241f972f638f1ef"
+    },
+    {
+      "path": "components/map/popup/district-popup.tsx",
+      "sha256": "d47be5048cb420aefeb5b371ca5d23f5e08ff67bcab22e7b49eb646a8986c6c0"
+    },
+    {
+      "path": "components/map/popup/entity-modal.tsx",
+      "sha256": "5d88a239459c28e9d2a023b8fedfbd7c20133eba9d47946710cf79025ff6a6a2"
+    },
+    {
+      "path": "components/map/popup/lumen-popup.module.css",
+      "sha256": "0ab17e9e4ca8076583be09d9ca71d80a4dffba79ad2002f9234b89fedcbd351d"
+    },
+    {
+      "path": "components/map/popup/meeting-popup.tsx",
+      "sha256": "ecf615f356b5e5369ade98dc5b7f4d8a8653e704a82a39dc7fc18539f38d58ad"
+    },
+    {
+      "path": "components/map/popup/meeting-records.tsx",
+      "sha256": "a8308f47348b617587d150f2a7d03dc76a9fe01090780aaa57ccfd2a2f5d98b3"
+    },
+    {
+      "path": "components/map/popup/official-modal.tsx",
+      "sha256": "8cf61395ae7090d2bae16896a8f1d0db4430351d09ded2cffdf9e471f0e6679a"
+    },
+    {
+      "path": "components/map/popup/official-popup.tsx",
+      "sha256": "d280b76ae0a9675c6c4c3d48c58941f55e25ca23a638ff44fcee920a0378a052"
+    },
+    {
+      "path": "components/map/popup/popup-card.tsx",
+      "sha256": "bf466521255f317a7884b1023d9d06dcd415ad62726c824106180647e015d3c9"
+    },
+    {
+      "path": "components/map/site-footnote.tsx",
+      "sha256": "08e4a575f9f333d3bda7d9013ad8fedcc01425149ca21bfa7c890f1437e90e0a"
+    },
+    {
+      "path": "components/map/state-crossing-prompt.tsx",
+      "sha256": "cb54f1d3018b5d6ba1bae27f8fc8817761af690b66639a342c47c31f4a45b5cc"
+    },
+    {
+      "path": "components/map/tutorial-overlay.module.css",
+      "sha256": "3cba2e5079c016eecb9ea9fdb64795c422fed3f9bd5c37ba4682ec5b4e00f99e"
+    },
+    {
+      "path": "components/map/tutorial-overlay.tsx",
+      "sha256": "b2aa1011c29a65391944ac8ee1ba971df5208090e8532d3617cfa3ec1fad1961"
+    },
+    {
+      "path": "components/map/voting-sites-panel.tsx",
+      "sha256": "ea88630b55442350381e9f69e08f04658a12b0dd83d42f01a75b212c9290840a"
+    },
+    {
+      "path": "components/map/welcome-overlay.tsx",
+      "sha256": "3694b85f5dc625530084e5d0b365ddcfa541487a179cab90815afaef12f3b828"
+    },
+    {
+      "path": "components/map/zip-comb.tsx",
+      "sha256": "f7e2b542136e018b70d94db1ee7093644559b0f4d1caefb40b9d449e4b4a4a3c"
+    },
+    {
+      "path": "components/map/zip-switcher.tsx",
+      "sha256": "f0278312a8bc7f0fe6d79a706fad54dce9c87b8283ecbde2d364760a3d8c702c"
+    },
+    {
+      "path": "components/officials/card-section.tsx",
+      "sha256": "8d5301381a140a4f4d7d329bc0dd69dbc56dc3c20514eeb028a879088f8326ff"
+    },
+    {
+      "path": "components/officials/card-sources-list.tsx",
+      "sha256": "a198e7a9a2ddc6d4cb5d4481e4ee1cd2772595d148dfe48815d5d22f3f6d70ab"
+    },
+    {
+      "path": "components/officials/channel-marks.tsx",
+      "sha256": "feed5b8aaef1daa4bcaa11763b3869fd6155ad5c635595ba7cab9eb8d2bddad3"
+    },
+    {
+      "path": "components/officials/contact-pills.tsx",
+      "sha256": "6d8aaabae8a756f3624b85bc525bd6c714ad995604a7f2ae02719f2c3145b88a"
+    },
+    {
+      "path": "components/officials/key-votes-section.tsx",
+      "sha256": "a40d3465e2141aafd2f0ab72db4629c7c4b8373dd956144118d1c5e57c978ba6"
+    },
+    {
+      "path": "components/officials/member-directory.tsx",
+      "sha256": "e3089e38bd870de264f9621c9b0ca0ff4f68eb17de21309eb65cbcc3cad641f7"
+    },
+    {
+      "path": "components/officials/official-actions.tsx",
+      "sha256": "7cccc6671e63cd76aa3c8aed0ef55a2259d8e7ba08ccdbfbf9563d44c766c160"
+    },
+    {
+      "path": "components/officials/official-term-note.tsx",
+      "sha256": "1d6b4b3de075b600e3b89cc197ec8524c662d02ba19a9f7d38aee095926e7ea7"
+    },
+    {
+      "path": "components/officials/person-identity.tsx",
+      "sha256": "ddad244f8c12735dd32efae1632cb1ffb98c4fac7cb3b2556bf650959faea23c"
+    },
+    {
+      "path": "components/officials/phone-choice-modal.tsx",
+      "sha256": "80a92da2d099c6a3fc1c235c344f080a3165cf66e733c73ea45c002402ce157b"
+    },
+    {
+      "path": "components/officials/positions-section.tsx",
+      "sha256": "d282eed730ba20b2ae6b6dd2b6f36b03d34614cabfbe59900a6f99d183c12e5a"
+    },
+    {
+      "path": "components/officials/public-statements-profile.tsx",
+      "sha256": "563eb1f2af0a01445040edf43e02ae78205c59a4ea27aab6c0c05829764c9168"
+    },
+    {
+      "path": "components/officials/roster-completeness-gap.tsx",
+      "sha256": "03859f6159d16d5abe32dc0a8fd744408345d9d3242050604fd1347b3f1cc106"
+    },
+    {
+      "path": "components/reactions/reaction-control.tsx",
+      "sha256": "726a671fc66cb5ffc0e3a4dc3cd84174b709f04f007bf50878973d962e69fe63"
+    },
+    {
+      "path": "components/shell/ask-pearl.module.css",
+      "sha256": "7f244b3a99e58465328759ace9b2cc1e8d920a5ad2415704b8a41ac0ef2355e3"
+    },
+    {
+      "path": "components/shell/filters-area.tsx",
+      "sha256": "613459491165c8c60d73dabccf9ada98ba42a01deee4ab3ffe9c1b41074964cf"
+    },
+    {
+      "path": "components/shell/near-me-control.tsx",
+      "sha256": "38f4d43131ae7780e111a60bb5595d952f639b22ed0fbda316c3f3e5c4f02c4c"
+    },
+    {
+      "path": "components/shell/pill-cluster.tsx",
+      "sha256": "e3007318b4a21950d5445846e17d8705c757896b4d448c30a559b94607195477"
+    },
+    {
+      "path": "components/shell/radius-control.tsx",
+      "sha256": "0a62d87cd02a9f4cf911b77e43a4308cd70d1891b0938bd4bcdd0b319e08fdb7"
+    },
+    {
+      "path": "components/shell/scope-selectors.tsx",
+      "sha256": "962acbdc19b476e9f86db2803bb8b1d0975c121496cc827f69aaacf40b7f467a"
+    },
+    {
+      "path": "components/shell/sidebar.tsx",
+      "sha256": "e0201641faea16227bd642f1942ee4b1c0e4cb7e828edd9356500ff17d938f37"
+    },
+    {
+      "path": "components/shell/stats-bar.tsx",
+      "sha256": "12b4b25a49992d61f6e3b75f574f99354db3fadc2e25ad083d676dbad21ae04d"
+    },
+    {
+      "path": "components/shell/tier-style.ts",
+      "sha256": "b1a29620e0ab3ac0d9151063353f8711d262f001c6e2e798731261a2192872e9"
+    },
+    {
+      "path": "components/shell/view-toggle.tsx",
+      "sha256": "04f03ea840adde7eb84525a2f153affbe3417b280e979eb1d72b032a2290c1eb"
+    },
+    {
+      "path": "components/speak/speak-your-mind.tsx",
+      "sha256": "0216b688e0685c76d30726a4a51f797040235d30df88e06ddaaf7a40280c4b2b"
+    },
+    {
+      "path": "components/theme-toggle.tsx",
+      "sha256": "8c44a6b024ec0d63703b5604180e19167bfd11b84c2fcc72a85c5413bc9ca90e"
+    },
+    {
+      "path": "components/ui/level-tag.tsx",
+      "sha256": "730ffbb727aa9a2c3f552ddd86fb4d65a8c805651f2b75bf14303e604acbb06c"
+    },
+    {
+      "path": "data/derived/school-district-dependency.json",
+      "sha256": "ba7f54bad5d3945ca7b63997c50f21f9b9a4220c29779b192095df8f938a8c06"
+    },
+    {
+      "path": "data/states/az/ballot/measure-summaries.json",
+      "sha256": "7d781a97f82381d0de4e1dab156993e5f6673d39d2bc01fe18591e496fbd04f9"
+    },
+    {
+      "path": "data/states/az/meetings/insite-venues.json",
+      "sha256": "72782724f979c24292ff0b1261132961229c832602664427c79947b21735b07c"
+    },
+    {
+      "path": "data/states/az/meetings/legistar-venues.json",
+      "sha256": "30376c52111b243e0972366c3db06120df98a3e645913797ecb8c9ec211168de"
+    },
+    {
+      "path": "data/states/az/meetings/notice-summaries.json",
+      "sha256": "056603189b8e0e94e1dbe047a8be07bf191f9e0246b26c02de7c8bd516ecfa2d"
+    },
+    {
+      "path": "data/states/az/officials/body-compositions.json",
+      "sha256": "b03fde55f083c61f235d1dd84fbd8317f6eb98f9a12c5e710d38377bd048910e"
+    },
+    {
+      "path": "data/states/az/officials/cawcd-rosters.json",
+      "sha256": "06a5e5aca91d612d17e5c3c3d21c0383fb65f5cda3ade479d55752594093f36e"
+    },
+    {
+      "path": "data/states/az/reference/body-blurbs.json",
+      "sha256": "370fece708c2b8ecf51af2f0d20fecefc7a79a09b7dc079ac064040359aed452"
+    },
+    {
+      "path": "data/votes/bill-summaries.json",
+      "sha256": "044ce19582fd02a2b30c30b029cc98e6f5cdb50f3e4df3c764c9b04c684cada1"
+    },
+    {
+      "path": "hooks/use-compact-map.ts",
+      "sha256": "a8dbd003b6b11835d06961d766a638b74fe0cdc2b9c2211313e0f54ee3e7ed0a"
+    },
+    {
+      "path": "hooks/use-confirmed-divisions.ts",
+      "sha256": "2a210f86fc6f47269b22a5da89d8920fb8ac1eda1915bc7341c9c5400e19713a"
+    },
+    {
+      "path": "hooks/use-dismiss-on-outside.ts",
+      "sha256": "3cf0576329bea1b3b4deac78a3bf8324b391906bfc4504e33efdd48873903ba8"
+    },
+    {
+      "path": "hooks/use-district-layer.ts",
+      "sha256": "cd694c13d5ee784ff38523e02c6e689cdafc65f256abf7ade2de5216e2ed0099"
+    },
+    {
+      "path": "hooks/use-division-representation.ts",
+      "sha256": "a04da37e8826dccbec5bf0e4dbcd15c9471169e78834dbe0db763fda39d031a0"
+    },
+    {
+      "path": "hooks/use-member-directory.ts",
+      "sha256": "0a2fccdf6d1ca66b3f943d3bba1b1b3fdbf75e894401b7dc7d651dfab60d9a5d"
+    },
+    {
+      "path": "hooks/use-narrowing.ts",
+      "sha256": "49a9a306e37f144b800cd8e166f71e27d22337c93b365efab94edd3c76b31ead"
+    },
+    {
+      "path": "hooks/use-recent-zips.ts",
+      "sha256": "c5c1d4564c2c31b950a318e7fa992bc40341812ca70827c74ad1d82e76ec563d"
+    },
+    {
+      "path": "hooks/use-resolved-location.ts",
+      "sha256": "c72358492677d521a3c9ef6e758445ed8cf14eaf0b41ed95709cfc0a8a290490"
+    },
+    {
+      "path": "hooks/use-sidebar-visible.ts",
+      "sha256": "7f55eea105d86a108a6cf30ac7ea7b387d52c88725cc9f485b3186520d2b29af"
+    },
+    {
+      "path": "hooks/use-state-focus.ts",
+      "sha256": "82e04c59a358216c1a32aae47009c658baa015b056edf795662dc757a3159380"
+    },
+    {
+      "path": "hooks/use-stored-theme.ts",
+      "sha256": "e874fede1c47c7a221948697af3bb59550171fd5284a84fd49d5459b127c3b21"
+    },
+    {
+      "path": "hooks/use-stored-zip.ts",
+      "sha256": "933e47aac908a02463d6a23d9ff52bf28bba2b4ba141a24536f8d16c90311913"
+    },
+    {
+      "path": "lib/answerability/record-class.ts",
+      "sha256": "8c7aeba8562aed39d5e201cb6bf9543814bfb0308d0f28c4114a509b461f1ea6"
+    },
+    {
+      "path": "lib/api/params.ts",
+      "sha256": "2f968ddc54bbf40439bf0145c81fd6b807f77247dc9f5ea770225a9fe8c9ce44"
+    },
+    {
+      "path": "lib/area/facts.ts",
+      "sha256": "32bba090c96c8da80bdf15fde1d3bc91ca1af8441e63d7040c01f0ad931f39b9"
+    },
+    {
+      "path": "lib/ask/agenda-publication.ts",
+      "sha256": "4a9db8855a7ac64e3508f59f30406086334e7bbec74f7bf0437bc7fcad58630c"
+    },
+    {
+      "path": "lib/ask/agenda-sentence.ts",
+      "sha256": "429d7c9917c16c638ea8552ec8d408fc7c0b5891730f2e562a66428f5fccb10d"
+    },
+    {
+      "path": "lib/ask/agenda-topic.ts",
+      "sha256": "26cde6fe081488ba4a12e92db81a58ebbf7444df97bf15d1c7c6ac1bd50d19c0"
+    },
+    {
+      "path": "lib/ask/answer.ts",
+      "sha256": "0facc8e7f1a9ea01f2a4c7da7260211e39638f806ecbc5732f0476a8b19cf702"
+    },
+    {
+      "path": "lib/ask/ballot-inventory.ts",
+      "sha256": "b7ff62f2b8f18b75e98a3dd56e70d9c1302e522b5c6b31db32cdeedb00c5a125"
+    },
+    {
+      "path": "lib/ask/body-confirmation.ts",
+      "sha256": "ba90b28e2baa8801c79bf3def9da7fba9ada39bc01e3a1e5c72fe2c2c453600c"
+    },
+    {
+      "path": "lib/ask/body-identity.ts",
+      "sha256": "73a049ca9ef6255b47b7a76f0a3d874fee50ad559cc9effca4dd97b96d9b6513"
+    },
+    {
+      "path": "lib/ask/campaign-money.ts",
+      "sha256": "c6b2e0c23ad515fc9fa383d9a2b537e18282923cd69a0c08bea29406a1c05e28"
+    },
+    {
+      "path": "lib/ask/candidate-contact.ts",
+      "sha256": "fde549876880d1648f7b1510616b217cae305e593f8c9661599130f5ca941ea8"
+    },
+    {
+      "path": "lib/ask/candidate-profile.ts",
+      "sha256": "6522ef74f5863753e8231850e4f408558d115287bd8c95b8016ae4e08bd84071"
+    },
+    {
+      "path": "lib/ask/contacts.ts",
+      "sha256": "40c0c3cb05c88f9ed7a7999e84098e94c4c00a13bb6ecb6828263bb86cf5a22b"
+    },
+    {
+      "path": "lib/ask/evidence.ts",
+      "sha256": "b69fc67c1ed0936dc107140a67f0d0a7076c8f49b6a15a1dc08d50b1a5d2443d"
+    },
+    {
+      "path": "lib/ask/held-agenda.ts",
+      "sha256": "1821a246350b39c79f109dc2b27a9acdc088895c893c0af4bba505e8f8f7bb18"
+    },
+    {
+      "path": "lib/ask/host.ts",
+      "sha256": "e41d2e2a7c3782287b1f704b05c752307f351c512cc67d857d530447fbdeec3f"
+    },
+    {
+      "path": "lib/ask/intent.ts",
+      "sha256": "c6898c7b03756086df00c417b56999ac53edce3740476d4a4d64b134ed7a1033"
+    },
+    {
+      "path": "lib/ask/interpret.ts",
+      "sha256": "cafa45315084efc7990e49378a40cdda7961016d7888912f64d184e0fc0d6bf6"
+    },
+    {
+      "path": "lib/ask/inventory.ts",
+      "sha256": "fb00867cdbbcb0250b03b663985b186aedf6e47581726f3450e6ed246d6f7aa8"
+    },
+    {
+      "path": "lib/ask/key-votes.ts",
+      "sha256": "bcc7a998932f1e7af287e8991f1f03ebb4acd5ea8beb8fdbcfaf947db0d2d904"
+    },
+    {
+      "path": "lib/ask/length-contract.ts",
+      "sha256": "4037768f5d104bf64bdea7b6850d6a2182dd91d33b03df312e691590618800a1"
+    },
+    {
+      "path": "lib/ask/local-finance.ts",
+      "sha256": "aa97e86f0e3b4fc72c5ee55a5ca4b8d2d5501b730c25c5e93ba50ac4e7a033fd"
+    },
+    {
+      "path": "lib/ask/meeting-date.ts",
+      "sha256": "40ed1f360f23d01a8ba8fe7d0c3c78fa271b4c3ce9d090c0d5d69cb51e3b5611"
+    },
+    {
+      "path": "lib/ask/meeting-knowledge.ts",
+      "sha256": "11c165ef26779bf649b8e5ab59bdeb283865d9be3985684a193f2c6ce661c948"
+    },
+    {
+      "path": "lib/ask/meeting-outcomes.ts",
+      "sha256": "bdea0e01355e6eb20c6527f709eefbac208d9c17c49fda86e88e3874772b066a"
+    },
+    {
+      "path": "lib/ask/meeting-time.ts",
+      "sha256": "37113e16958cf79b2c4bb7f2c9a77d17b857768ac3db800caf85978f77b7d083"
+    },
+    {
+      "path": "lib/ask/model.ts",
+      "sha256": "b27e9e12f1fe078a623d97976499b88dca0be5cefb9d7419b88bbdd875f35e56"
+    },
+    {
+      "path": "lib/ask/office-question.ts",
+      "sha256": "1bd14338fcd977ede0b9d10e6c470f0733977f799cb04c269d2467af0a1c29da"
+    },
+    {
+      "path": "lib/ask/officeholder.ts",
+      "sha256": "bb83eb7c04b9b5189f657bcad7fb7a79b332c8e55ae6ccfc27787f9edb4b4044"
+    },
+    {
+      "path": "lib/ask/official-identity.ts",
+      "sha256": "bfa84dceb218b6d538db2e6311b19f92751e9b67ac51651e34920e173fec15bb"
+    },
+    {
+      "path": "lib/ask/outcome-question.ts",
+      "sha256": "9a990670c2c3ab28e45b56bf4280568648bf0d907f543ef123fc8895f3625b52"
+    },
+    {
+      "path": "lib/ask/prompt-cache.ts",
+      "sha256": "883278970ab40d47cfb15431c2f1f040aa3fdf94fc75842893b3a04dc5159d2f"
+    },
+    {
+      "path": "lib/ask/relevance.ts",
+      "sha256": "903b66e10d47cab19f81cf8781d3622530b7479c30c070afafc6c85e713d06b7"
+    },
+    {
+      "path": "lib/ask/residency.ts",
+      "sha256": "80f5dda41f2d092d0ddf7e2b42990eb542e301b8068bef96260d9fe24e2af1b0"
+    },
+    {
+      "path": "lib/ask/resolve.ts",
+      "sha256": "1b62ab008630fe778104e2b77027227ca31c4fd40d2c26ae09df44185af242aa"
+    },
+    {
+      "path": "lib/ask/roster-gaps.ts",
+      "sha256": "457587ae91ad290493bc9d9b99ed49d278ec106e0a04cb63d50b7f47ef5023c4"
+    },
+    {
+      "path": "lib/ask/select.ts",
+      "sha256": "44b3c7357fb9913057ce8120e42038fc914f58af16920bc1655949160ce9c8f6"
+    },
+    {
+      "path": "lib/ask/server-sources.ts",
+      "sha256": "1996f2126fc985302f9a4b8ecd0a02112c81cc4eddd6c0cccc783707676acec7"
+    },
+    {
+      "path": "lib/ask/statements.ts",
+      "sha256": "40a5b4fcd68bd0fbf7050fba4ee92ce5e677e482544c88e4a667c90f6803e94e"
+    },
+    {
+      "path": "lib/ask/subject.ts",
+      "sha256": "66a21acfdc8f7505cb524bd5cf1df4a2fcae611489fbc8bbf4d788629b3a2c20"
+    },
+    {
+      "path": "lib/ask/synthesize.ts",
+      "sha256": "991c91700c023e002fe4e41e7f0e6a2a5943d50b39673371783896ead5496083"
+    },
+    {
+      "path": "lib/ask/trace.ts",
+      "sha256": "70cdb73ff607e6ae33c6f543980b2cf53877d7887543654af272f082079d9355"
+    },
+    {
+      "path": "lib/ask/validate.ts",
+      "sha256": "bc0254d601ac5931d14d114179b3ff931ec32c8232095d660957d69c7755e0e9"
+    },
+    {
+      "path": "lib/ask/votes.ts",
+      "sha256": "b8799a0938d5d69f6024c500cac049c3ec0c760b906574cb5f9a93dfe487a386"
+    },
+    {
+      "path": "lib/ballot/absence-grouping.ts",
+      "sha256": "eec961b863de5bf138c2da969d165974d71b56188838bf4f09da0fc241825590"
+    },
+    {
+      "path": "lib/ballot/analyses.ts",
+      "sha256": "7eb27e794065ddb3f7df3d864993e9989d2f7832e3a14866621119250d6330de"
+    },
+    {
+      "path": "lib/ballot/battlecard-sections.ts",
+      "sha256": "073b0fbe73f4559d9ac3e02e447d0c788d7dab7b45e5efc5219c5ebc48070554"
+    },
+    {
+      "path": "lib/ballot/candidate-cards.ts",
+      "sha256": "d7535916cd52d769ab28e1d886eda9847031260462a397d29ef8e9680b82cee5"
+    },
+    {
+      "path": "lib/ballot/candidate-contacts.ts",
+      "sha256": "bbefb1c998095d271b467ff282661d6c3cbebe530bc8d3abc8350fa275bdd493"
+    },
+    {
+      "path": "lib/ballot/candidate-sites.ts",
+      "sha256": "42b2b52bd8f861d546d9196760ecd4995f80d6a64855ca847f43d018478a9bc0"
+    },
+    {
+      "path": "lib/ballot/candidate-targets.ts",
+      "sha256": "4fcd20415d9ff0b8ab0215c6976c1ae2ce8e6e5f267b2d6a6c4d70954842daf9"
+    },
+    {
+      "path": "lib/ballot/collection-note.ts",
+      "sha256": "5a779649884d21dae6ade930ecf1946c87e7a0b717483665254a0b44d1d0cb40"
+    },
+    {
+      "path": "lib/ballot/contest-universe.ts",
+      "sha256": "fcb469052f0b4345b612d11113c871cfeaf3c71558517fa6026304d1166506d5"
+    },
+    {
+      "path": "lib/ballot/could-govern.ts",
+      "sha256": "fd8f70affeef20fbce9735f83343073bb10265db0a165d86d28713cae36faaee"
+    },
+    {
+      "path": "lib/ballot/covered-states.ts",
+      "sha256": "d42f085494a2f073930e0dc493d018e6ce51441bd947275d00b012db71a823f4"
+    },
+    {
+      "path": "lib/ballot/dated-events.ts",
+      "sha256": "3219e5728801372218641c548a0b938a5b31ca3568017d2d6a2384e3ff37976d"
+    },
+    {
+      "path": "lib/ballot/derived-picks.ts",
+      "sha256": "1f6bc1a9a367d81fc781e74dfa043ddf8c036d6e82904853aaf50b9ba0f93ddc"
+    },
+    {
+      "path": "lib/ballot/election-dates.ts",
+      "sha256": "7f3b988807b18038bd8808213efd1a0f76cfb55bb1c708ae3bec92e1e2904787"
+    },
+    {
+      "path": "lib/ballot/general-lineup.ts",
+      "sha256": "322ce7e7b1fac55ab1cfec8e0222ed0d094e186e238715b675720e19b300bd9b"
+    },
+    {
+      "path": "lib/ballot/incumbency-resolve.ts",
+      "sha256": "29f4f36686693d83e164adf45aa85fb54008a640f4ce6ecd0c4b39a0e7079463"
+    },
+    {
+      "path": "lib/ballot/incumbency.ts",
+      "sha256": "256df29cb8373cddeb33cf5058d30013de883c822cc28e5ea79f1931f9a310df"
+    },
+    {
+      "path": "lib/ballot/incumbent-record.ts",
+      "sha256": "2e198e0cc37a6f6aaadb425f81f70ae3890b6d22e4b3f12bc4b29504e8424d4e"
+    },
+    {
+      "path": "lib/ballot/measure-order.ts",
+      "sha256": "3c8c50160a791aecf0e6f694a4446e91d937b0925e0a6ac72a18a5b4e1e959d8"
+    },
+    {
+      "path": "lib/ballot/measure-provisions.ts",
+      "sha256": "a00832ed15da765a81daf48ada17c2edabba9b8ffb99d614231b3ffae931eb2b"
+    },
+    {
+      "path": "lib/ballot/measure-summary.ts",
+      "sha256": "61ae63de9e67c3aa8cfb893dcc19224f9b7244bf325262fc7577d19b158f1a5c"
+    },
+    {
+      "path": "lib/ballot/name-case.ts",
+      "sha256": "14c55e80106e3a20b58ab9d49dd8910fc0132c612156786aa2231892438a7195"
+    },
+    {
+      "path": "lib/ballot/photo-order.ts",
+      "sha256": "fceed7f0f193d257818783bfb22b64a5220e691ae0590f7ca5bfad29d0f73dfc"
+    },
+    {
+      "path": "lib/ballot/pick-jurisdiction.ts",
+      "sha256": "198182e4b5c2fdb4ea2dc57518d10a797813f13ca962d575e433cc618cd72edc"
+    },
+    {
+      "path": "lib/ballot/pick-tally.ts",
+      "sha256": "f290606cac33d322738ce6cb31dbbfc7aa87313b14c8171d378d4d95b08bcf80"
+    },
+    {
+      "path": "lib/ballot/picks.ts",
+      "sha256": "a6a0de9844fb98104c8273ca805451ebb0b997454313f311f58e9ee83f37c6c0"
+    },
+    {
+      "path": "lib/ballot/placeholder-address.ts",
+      "sha256": "fe86dbc279668b1334241dfe7552254092a95122214af784148b3d48b9dfba44"
+    },
+    {
+      "path": "lib/ballot/polling-lookup-fallback.ts",
+      "sha256": "6b72430b37db6657f8893a295567179d96c71ab6eb51960103f7cdb832a35ab8"
+    },
+    {
+      "path": "lib/ballot/polling-place-links.ts",
+      "sha256": "68f58aac725b6ead2d813f193c89f8556df6c9f4d7f24d8d64facc9056ef1b87"
+    },
+    {
+      "path": "lib/ballot/reader-scope.ts",
+      "sha256": "01e54fd6368c77457a00cfac252667f74b106e39a4a8fd79a391cf90a7e0f832"
+    },
+    {
+      "path": "lib/ballot/registration-links.ts",
+      "sha256": "c7efb85af9c81c9db2b0300e50cb5c199deb97720f280d983f5c772c4e9624ff"
+    },
+    {
+      "path": "lib/ballot/registry.ts",
+      "sha256": "7a8bf0f687642c9aa1214ed4969d9c3c48f3d0f0977f2d8515c655b7b01b6af4"
+    },
+    {
+      "path": "lib/ballot/seat-holders.ts",
+      "sha256": "7568f2f1a6c756fc90614099a7b52224a174c89b63406950c48972ea9563b3cc"
+    },
+    {
+      "path": "lib/ballot/shared-notes.ts",
+      "sha256": "370feef3ea90c052009328a7cda4fec9835b46e38f1e6b04a33f1f3177bc3ce4"
+    },
+    {
+      "path": "lib/ballot/uncontested.ts",
+      "sha256": "7a05466c799394960aa44ffac4a87ba93aa53116af6224650e37fff3dd233f24"
+    },
+    {
+      "path": "lib/ballot/voting-sites-server.ts",
+      "sha256": "167c1c6157e8566eaad180a9e48a92abad745021201b2e53b880011213912dd3"
+    },
+    {
+      "path": "lib/ballot/voting-sites.ts",
+      "sha256": "3339f754e1cde5082fd41b0731eee7bde53e4bcb51915e77ce7c17ef232a4704"
+    },
+    {
+      "path": "lib/ballot/zip-divisions.ts",
+      "sha256": "20224e2a4f95a5fb98cdc06f4a0a6583dfa33f0ac0dbce971934a68b88843225"
+    },
+    {
+      "path": "lib/brand.ts",
+      "sha256": "ffc13318daf5a07b5cc6d9ffe83429e6dae25bee526696ad39699ecedb03f98b"
+    },
+    {
+      "path": "lib/calendar/event-links.ts",
+      "sha256": "470b521d831b704da95285c099a87e9bd317f4c167ff95a74c040ae219f705ac"
+    },
+    {
+      "path": "lib/candidates/blurbs.ts",
+      "sha256": "dc10885fefa86da84bb0369e7ebf39b55d272d3f388a75c72aedda1e98d7b091"
+    },
+    {
+      "path": "lib/candidates/corpus.ts",
+      "sha256": "4c1a762a3e569bad942b173cb3c61326682281d4bd6b2ce90af2e9d13cd34d9d"
+    },
+    {
+      "path": "lib/candidates/issues.ts",
+      "sha256": "5f64cf091932ef15ebc72a5a4c09aabe2a4b28aeade57d97754a58dc681cc1ba"
+    },
+    {
+      "path": "lib/candidates/positions.ts",
+      "sha256": "b9e6e2386fc15c330ad3269e7500ced62fee74d6abc6fddd00c39b8d704dc97d"
+    },
+    {
+      "path": "lib/control-plane/campaign-finance/held-records.ts",
+      "sha256": "2fc2fe81ceb4217851957f78674a06a2ece246fb43cf79b7ed0a7894a748f0dc"
+    },
+    {
+      "path": "lib/corpus/positions.ts",
+      "sha256": "d7107262397f28760901252b79122d387dee24cc1408a52b85b1c160b1ef3112"
+    },
+    {
+      "path": "lib/corpus/reader-positions.ts",
+      "sha256": "76269ac001db5e43b342c55acb5953aaa2885557a1c779f39cd8681ba3f78aef"
+    },
+    {
+      "path": "lib/corpus/unified.ts",
+      "sha256": "298fd0550f0c9c88c1c6c817eda41dc6c39370181edb082b5a07c63fce9d73f0"
+    },
+    {
+      "path": "lib/coverage/artifacts.ts",
+      "sha256": "a33c61e7f1f479abcac5b5feac5920d4c67b2ef97a1db16bea0128f42eb1445f"
+    },
+    {
+      "path": "lib/coverage/states.ts",
+      "sha256": "41adda0aba25fde8bcdf3b0e4b8f6d9149a8e94e397742ff845bbc5f89b70221"
+    },
+    {
+      "path": "lib/coverage/tier.ts",
+      "sha256": "053bb9aa97a3a3704309325cd6f31541215d6001009ad91bac90c87d4bcd23f0"
+    },
+    {
+      "path": "lib/coverage/zip-tier.ts",
+      "sha256": "06fa116ecf13594edc054596309fef9105e30eaf7ab0657ab28a3cffc4986b8d"
+    },
+    {
+      "path": "lib/db/ask-signal.ts",
+      "sha256": "28d8fa9b7b3ea87f982dd94a307bf626c7d1bbae5e8a58c8367f80638a841ead"
+    },
+    {
+      "path": "lib/db/demand-signal.ts",
+      "sha256": "0bc6fe55284e59dc9c59c756ef90ce424e9d97643764c2a5546ecfbcbb79c860"
+    },
+    {
+      "path": "lib/db/index.ts",
+      "sha256": "f96a8322bfd5dab68ae5cf4d1798213d0fd24a273f8b5f1448c801ef5af5acdc"
+    },
+    {
+      "path": "lib/db/intake-limiter.ts",
+      "sha256": "30d18a35f7ebb63ac32bb98ac6aa0912b8d32ab06f567fbec7f53c03957678c1"
+    },
+    {
+      "path": "lib/db/intake-windows.ts",
+      "sha256": "59c93739e6d0648dada96ad3ac4597d835796a2959748ece767cc42cd39e3cf7"
+    },
+    {
+      "path": "lib/db/reactions.ts",
+      "sha256": "46eb2a2ebdd62f0ba56a883aa35cdf99166e87ee76a3e8c329a2d2a82bff1799"
+    },
+    {
+      "path": "lib/db/run-marker.ts",
+      "sha256": "f5f60edeb1c73b375f488ed38330637ba4b09ebbf19edf3740dfc50fa34491a5"
+    },
+    {
+      "path": "lib/db/schema.ts",
+      "sha256": "fc1d0618db886a26d4c8654239104878d5ee1ddbdda5bc98da514fdc7598b6c2"
+    },
+    {
+      "path": "lib/db/search-log.ts",
+      "sha256": "e5c7ac82d42e39d8878b0a883d83fc853dc290df6fd48e254b5db27466b246b0"
+    },
+    {
+      "path": "lib/db/speak.ts",
+      "sha256": "7383b7693a558d51f38259649120e7da5daa9f7979f218693ecb26d013fd9aee"
+    },
+    {
+      "path": "lib/db/write-alarm.ts",
+      "sha256": "938fdf6f2cc574f66173a6953854235ce7e81b168e7156249ba2033872c6d61a"
+    },
+    {
+      "path": "lib/db/write-guard.ts",
+      "sha256": "53cb1d37b2256b1f8e950462ad1aebd6462887c71122d5230b9359981b4f089f"
+    },
+    {
+      "path": "lib/funding/campaign-money.ts",
+      "sha256": "738007775e5f59e525a6d8323dc0147c8a4fca4bb8bc55db79b6679b395964a2"
+    },
+    {
+      "path": "lib/funding/committee-types.ts",
+      "sha256": "722711642b2a2601526e8810edfaeb3864243cf9dcc599e6c1692fed3a8dd012"
+    },
+    {
+      "path": "lib/funding/concentration.ts",
+      "sha256": "c3e7f1ca7d88067e025983d3568664c0299bfc8a1041aa6e21e3602e8ca9fff0"
+    },
+    {
+      "path": "lib/funding/display.ts",
+      "sha256": "1c4ddd344cd8bf4b22a819ccc483871a371dad4f46a89dc6d5c4d55a68f3669b"
+    },
+    {
+      "path": "lib/funding/donor-privacy.ts",
+      "sha256": "cab45f3b054e6eb8cba2300c6e2b0af587a324277c453311aa9197cd44b8daaf"
+    },
+    {
+      "path": "lib/funding/grouping.ts",
+      "sha256": "b9485950786a075f48f87a7ee1d6254d245bae354d687a19f9c058113d0e6784"
+    },
+    {
+      "path": "lib/funding/labels.ts",
+      "sha256": "4d21bd66a12d8ab7d8a084ebc585954a53719e9cc6160c1ffa8aa7a101559b1c"
+    },
+    {
+      "path": "lib/funding/nominee-money.ts",
+      "sha256": "bfad88d79a791de524303c8281aa2d8de61a2674e336c4f2addd2bb3a436807e"
+    },
+    {
+      "path": "lib/funding/official-candidacies.json",
+      "sha256": "1439c039002c001855f96f086f452c5cfba9231ba93e0495db7dd4b7c81b9e03"
+    },
+    {
+      "path": "lib/funding/pill-colors.ts",
+      "sha256": "ecebf82069623d76a3f03fb7a6f773bb50625cf8422da174219cdf99a88254a0"
+    },
+    {
+      "path": "lib/funding/snapshot.ts",
+      "sha256": "f0814fa137ae8ece94fcf91260c5c7a2f2b7609ace4febeb88da661c4023953a"
+    },
+    {
+      "path": "lib/funding/state-money-reader.ts",
+      "sha256": "186ef9c572e57b7279e3fc8590c661ed926961fff346f9e9a1eaeaebd94c7eb1"
+    },
+    {
+      "path": "lib/funding/state-money.ts",
+      "sha256": "d25d63346a559334d7c1404267753a9890114de3107df6fe18c3c36024e2e4bf"
+    },
+    {
+      "path": "lib/funding/state-snapshot.ts",
+      "sha256": "b63bc5567b522375127bc4e458454a4a0b58d409f56e045544c8630e5037e818"
+    },
+    {
+      "path": "lib/funding/type-concentration.ts",
+      "sha256": "bb0edc32ace2ca494a2a3050ca74cfaee060b3e7b4e374541c5ca2968fee3234"
+    },
+    {
+      "path": "lib/geo/address-resolution.ts",
+      "sha256": "51f64bee341e79cb5ed17cd08048d307b70cae5a5268d763ec06a35d892e4ae9"
+    },
+    {
+      "path": "lib/geo/census-geocoder.ts",
+      "sha256": "c69367b1ba2896bcb283aa79b96a10de78962a70f93d948fe47b87469fd2e67a"
+    },
+    {
+      "path": "lib/geo/distance.ts",
+      "sha256": "464eb329a9afcb5e8e98ac3da04e1aaccea41d2316d73947113a59c57a67b6da"
+    },
+    {
+      "path": "lib/geo/outbound-agent.ts",
+      "sha256": "de91d8d1fe852ecc4fe5b5f38bd2e54b0f51638c714598f9e21612f360b51767"
+    },
+    {
+      "path": "lib/geo/polygon.ts",
+      "sha256": "f7ee8c6c6cfb56de7e5587bcc401e09fdc6c9e2b41e38ce8b41d9861205c4d6d"
+    },
+    {
+      "path": "lib/geo/session-address.ts",
+      "sha256": "ccfb93e7c8e70a018509eca784662db5bb7fcfed74dfcfb404cca9331b83795b"
+    },
+    {
+      "path": "lib/geo/zcta-centroids.json",
+      "sha256": "fe1e91d3a191228bbb815f6a575fb519c60c8b80edf61475faf5d99cdee43fbe"
+    },
+    {
+      "path": "lib/geo/zcta-core.ts",
+      "sha256": "58afbd0c053e9f12112c68f2269f65f156dada4abf3d28d690f8637a51c563ba"
+    },
+    {
+      "path": "lib/geo/zcta-table.ts",
+      "sha256": "38fb13d5f2ca961063ffcd44f4aa52f61a14bd6075c882c375334206ca5d31ab"
+    },
+    {
+      "path": "lib/geo/zcta.ts",
+      "sha256": "61d208ab905302a0259db03d9cba3cc61415a8b3794c223d0937a32d43e36cd9"
+    },
+    {
+      "path": "lib/geo/zip-certainty.ts",
+      "sha256": "90c9b57bd8519a99060cb02979337a108a472eeb689919808bc519ccffd2b7e7"
+    },
+    {
+      "path": "lib/holdings/paths.ts",
+      "sha256": "6de27c58f92031f9959846606f38598ab1478245855f1958ea94ce336fc407a7"
+    },
+    {
+      "path": "lib/holdings/runtime-paths.ts",
+      "sha256": "5bd942087a56f048794d8c37855559e17a18298b557eafceb54424372ac1a11f"
+    },
+    {
+      "path": "lib/identity/az-2026.ts",
+      "sha256": "48465348e523f87c9dafacadcdb0fa8e1bce115ead2ff2678d60d9d6cd1d21bd"
+    },
+    {
+      "path": "lib/identity/reader-person.ts",
+      "sha256": "3f64747d77584057bf7c7c84cd3e908effdef07b9ea95c427adbfc47f3376b57"
+    },
+    {
+      "path": "lib/log/after-response.ts",
+      "sha256": "b8ba715e0bd2de69f23cc48474ad83f5d0b1dcaf312e1058c843a2cc9dda7f85"
+    },
+    {
+      "path": "lib/log/client.ts",
+      "sha256": "92a8a3f984699829ca9360ae534014a919a1a56c4c770b1da8a57823a4f1b467"
+    },
+    {
+      "path": "lib/log/scrub.ts",
+      "sha256": "b7fb16245636072c72e9d51e1173ff69059211f140824af3716c2c574c5d0c54"
+    },
+    {
+      "path": "lib/map/anchor-in-viewport.ts",
+      "sha256": "c5dcc239ad2e5b20bb64c7a328301dc41dc36a9ef1864923d693436414a3482c"
+    },
+    {
+      "path": "lib/map/camera-memory.ts",
+      "sha256": "250be69c1799f9c4d5155445e9a10c345fc5184bb7b9da34ffd733694f2756b3"
+    },
+    {
+      "path": "lib/map/carry-pins.ts",
+      "sha256": "ecfb112f3239eb4a4b6d595e463b287b1383ca64f277556ab80aed4562027e8c"
+    },
+    {
+      "path": "lib/map/cluster-placement.ts",
+      "sha256": "52a6add3bca90b76adfe8b0e73d15d2466a5ffbba5110356ee4172617e4853bb"
+    },
+    {
+      "path": "lib/map/districts.ts",
+      "sha256": "0ed9aa138eed109254e803abb597ce0c26c6c578bcc1cf29f99330e51f5c19b0"
+    },
+    {
+      "path": "lib/map/flight-presentation.ts",
+      "sha256": "c5de728ca6f4fd2ca1c457c39d40c870e6d5dad398a2dfc660567c0676e879ad"
+    },
+    {
+      "path": "lib/map/format.ts",
+      "sha256": "ba2b34f3b1552003be3b46fe93f23c8a426f3f6d371c56d37305ed04ca74f939"
+    },
+    {
+      "path": "lib/map/initial-zoom.ts",
+      "sha256": "c3dfd496f67061a6288ce3f9cca7ffd9d7bb74809ab1edded4013d2e4fefd102"
+    },
+    {
+      "path": "lib/map/marker-pool.ts",
+      "sha256": "762be6267af530d9143a3157d87f14e44ee0c2e77f8535c178eff616307e2c5a"
+    },
+    {
+      "path": "lib/map/spiderfy.ts",
+      "sha256": "d81f99c147f37d2273ae17d9d512582ae4623fe19db953f4c88dd5a686acb9cf"
+    },
+    {
+      "path": "lib/map/state-focus.ts",
+      "sha256": "0d4900770c4704e3efaaae6619cc921aab3f49edca4d543178d65d25a46f5441"
+    },
+    {
+      "path": "lib/map/state-relief.ts",
+      "sha256": "f9504e29ab392b0d2784e1508aee517f93d96209b1220b622d292da82b912eb9"
+    },
+    {
+      "path": "lib/map/style.ts",
+      "sha256": "4d1de16824fe7228e63f40e8a80aa69f9f992ee6b562e4d6226c69778dc4ee3a"
+    },
+    {
+      "path": "lib/map/viewport-radius.ts",
+      "sha256": "ad9e32a10d73f46a1715c2b9c94b3911a6392b5f40e394550ac307aced9727fa"
+    },
+    {
+      "path": "lib/meetings/attribution.ts",
+      "sha256": "8bc5c037fd2d58a7b504025c7df9f7dc0fdb673bc42a8c21e45563ba55a1e955"
+    },
+    {
+      "path": "lib/meetings/constants.ts",
+      "sha256": "3152aa12020f268b68015f293612e279b13f588dc06855729055d6196e69ed89"
+    },
+    {
+      "path": "lib/meetings/freshness.ts",
+      "sha256": "d5a9784a14829da90c44992b4a3f731548ed84ed3d19f7854d215c827e6f0ae4"
+    },
+    {
+      "path": "lib/meetings/history-gaps.ts",
+      "sha256": "03cf163c38089ada4e419080f68ab03f593304c3796c612825bbb837cb9b6f64"
+    },
+    {
+      "path": "lib/meetings/jurisdiction-badge.ts",
+      "sha256": "ae74980bcb3af5edc16e94a8e5a4d3a830dacb540559e42fd4d97d37681e47e9"
+    },
+    {
+      "path": "lib/meetings/list-attribution.ts",
+      "sha256": "a8d1baaf229acf1e7ae0e8213078d781f639b137d174e2e18a2246d3e8f9bdc7"
+    },
+    {
+      "path": "lib/meetings/listing-identity.ts",
+      "sha256": "1d612a9a5812d4966979855785d19a00b8f56a8ebd3e884289dd2cc93f8d032e"
+    },
+    {
+      "path": "lib/meetings/minutes-summaries.ts",
+      "sha256": "57c6c620c08281b20b23702f805810201b3c699ec70faab063dd257ced670a90"
+    },
+    {
+      "path": "lib/meetings/notice-summary.ts",
+      "sha256": "beb266cfd0a40add774d95ea6d2332bc77c4a413a735faefb68168844599caf9"
+    },
+    {
+      "path": "lib/meetings/office-phone.ts",
+      "sha256": "873731267d0c823a445e437bcf5093260db53dde52b81e095fdb7a2bc49b5854"
+    },
+    {
+      "path": "lib/meetings/online.ts",
+      "sha256": "dca082c7b7ca4de4b3232755d47e09603b3170a13cbb123983928aacf15fabad"
+    },
+    {
+      "path": "lib/meetings/ordering.ts",
+      "sha256": "927b77daacf4f33bd35f411d69debf4bb699a171c52dc8deb582d1fc0e4b8874"
+    },
+    {
+      "path": "lib/meetings/query.ts",
+      "sha256": "a8492b4c67e0094e88ccfcfc331bde2ea4ec3584638c97d5cc26fcb7bfe304ed"
+    },
+    {
+      "path": "lib/meetings/reader-listing-count.ts",
+      "sha256": "8f1ef7d47e8d4de1223a5f4620818f9605de319f93c6400742c1b1e12def86bc"
+    },
+    {
+      "path": "lib/meetings/reader-records.ts",
+      "sha256": "5b3c8e8903cecd2b8c6ec12d2ca367496e13f4de2a2f462991b002e5b48c3736"
+    },
+    {
+      "path": "lib/meetings/registry.ts",
+      "sha256": "0631424db71df16a6e38f2cc17cc17ed347aec80a96fbb37538b0e07f49a144a"
+    },
+    {
+      "path": "lib/meetings/snapshot.ts",
+      "sha256": "0ce6e2cabc5e2885b82583d37171ac6c474db42bc5a2014ee1b7eee05debcc62"
+    },
+    {
+      "path": "lib/meetings/status-marks.ts",
+      "sha256": "ea0bc3faabcebdf5a734a6877689d0f930c5a939c19af56f356da16c39312308"
+    },
+    {
+      "path": "lib/meetings/venue-cache.ts",
+      "sha256": "6c14c5d643425fa874fb0e989e0608c93587603400a8e2cdcc77ed4f6cdbb64b"
+    },
+    {
+      "path": "lib/meetings/venues.ts",
+      "sha256": "9af9e5b93a7f60f79ed1ea492195e820c7f4312999af0b58785f3bba39e77e43"
+    },
+    {
+      "path": "lib/ocd/curated.ts",
+      "sha256": "93677bd3b16e7b51d0116c02534a0cebff5da21f8d6496b9921c6d860550c476"
+    },
+    {
+      "path": "lib/ocd/district-tiers.ts",
+      "sha256": "34c9fcfd6370eaff592816ee4a67f577519587a4c6b7cc01f96d4173e7b40b6b"
+    },
+    {
+      "path": "lib/ocd/fips.ts",
+      "sha256": "4d3c3fa13f48571f2727a394eba7292235d6bb2b73e56c0bc3f2d9824ffd93a1"
+    },
+    {
+      "path": "lib/ocd/tiers.ts",
+      "sha256": "2a96090dbe49fb76b0b346318be511df98a2dea51a9a7b0ce5117a80f79d9e06"
+    },
+    {
+      "path": "lib/officials/body-definitions.ts",
+      "sha256": "eebc58df48833efbd1cb6244cf53bbe773acbae143a921a85e632c9ed2f6317e"
+    },
+    {
+      "path": "lib/officials/body-description.ts",
+      "sha256": "78ba0ae6fb10bf7cdfce1406d9095201a2e2e0492a38aca844f9c785d92dfc91"
+    },
+    {
+      "path": "lib/officials/body-form.ts",
+      "sha256": "864bb4ff80a9188fe37ac92f82794f83c679b484295f471e0b53dcf51927f5af"
+    },
+    {
+      "path": "lib/officials/campaign-link-label.ts",
+      "sha256": "060e74ffc0eec8077b43fd52615a26c752a61a29a50c33d2551e0ddb6e6da24d"
+    },
+    {
+      "path": "lib/officials/campaign-sites.ts",
+      "sha256": "a5e18014ea8761fbdb4d919365aaed8a6c8c06a2df9914419fdf21ee4e8d51a7"
+    },
+    {
+      "path": "lib/officials/card-sources.ts",
+      "sha256": "190498668e95838b110cf09506c3c68c5647919445b2350de9502450a6659a63"
+    },
+    {
+      "path": "lib/officials/committee-tree.ts",
+      "sha256": "31584612e1bdaab4b9dbfe58d46622f76cf82200503355f348a9035fa2d9097f"
+    },
+    {
+      "path": "lib/officials/directory-source.ts",
+      "sha256": "abec0070729baf9f77ed32aba7b672bc241d44bc832bf25217331eb26ccfa9dd"
+    },
+    {
+      "path": "lib/officials/directory.ts",
+      "sha256": "e0e87398949d76357d7e35be63fbc9cd2eb3bc2a2f43d4b6e53585b9737025b3"
+    },
+    {
+      "path": "lib/officials/division-government.ts",
+      "sha256": "2942aeb2e2d49ef1f104f1bef396379857fd06188c6e000f6fddad666f24a885"
+    },
+    {
+      "path": "lib/officials/elected-role.ts",
+      "sha256": "7acc1b65a60bb3a565f7fcf2e70790dee3a38e0009aa8993da2b4152e81faec8"
+    },
+    {
+      "path": "lib/officials/executive-actions.ts",
+      "sha256": "2f75c790c30e7bad49cee4e94d8d9ea8f5c98008b7f93c9edfb61c63110d1c78"
+    },
+    {
+      "path": "lib/officials/form-definitions.ts",
+      "sha256": "e2d5cd76c99ed8ead5cf871f0332d21b074d7a8123f89a68afa6ea81c51bc3f7"
+    },
+    {
+      "path": "lib/officials/identity-chips.ts",
+      "sha256": "c3595bfcda2958c7e1d902c414dd1b2e77cc1c4d08f2b14e68cfdfbd216d33b8"
+    },
+    {
+      "path": "lib/officials/lookup.ts",
+      "sha256": "ec46d30dfd9fab45a540f9ec620290f394b4d941b4ec20fe64c40ed0f7df8285"
+    },
+    {
+      "path": "lib/officials/member-directory-scope.ts",
+      "sha256": "b9ee7f05d24d0956658a736acbd70a3d9004bcdd9943e3e803358e13c8d43963"
+    },
+    {
+      "path": "lib/officials/office-blurbs.ts",
+      "sha256": "9da64db3ce475445354fab6388127ae0715fb4648ac1f99ee5d8224ad3207060"
+    },
+    {
+      "path": "lib/officials/office-identity.ts",
+      "sha256": "a818646706d08dacf81036b4e13615e74e43228a2eb32793141e40a0972e60a8"
+    },
+    {
+      "path": "lib/officials/party-color.ts",
+      "sha256": "dfc99efdd296cc404730ca37b7e2ce43b57de131b0432968dce8157338264a8b"
+    },
+    {
+      "path": "lib/officials/person-name.ts",
+      "sha256": "8c9b37dae6957d9d9b439e7c82ba1358ca8b5b43ab5ed9b5d3624c19ebe7fd92"
+    },
+    {
+      "path": "lib/officials/phone-numbers.ts",
+      "sha256": "e61266dd2ff8eda4653be5ae8676be9aab0c884386218f545d2b158eaa81fbc8"
+    },
+    {
+      "path": "lib/officials/reader-actions.ts",
+      "sha256": "e327d8e2557dcdc1c089b724b8e808afa0c8c169ff97ad5fcc14267ee2822797"
+    },
+    {
+      "path": "lib/officials/reader-office-title.ts",
+      "sha256": "30b98d03b1ce32fb44348ff6c5c1a77a950e6aaf17651f5d2c2b52090bbb3561"
+    },
+    {
+      "path": "lib/officials/school-dependency.ts",
+      "sha256": "05d6ca86e0f76b6e86a52f5bcb1801bfc4a32c49ba4f5f306f3d141d63cbb9e0"
+    },
+    {
+      "path": "lib/officials/seat-grouping.ts",
+      "sha256": "748e25f3479a528dc16c1aef9fe54021e164ff17ba79bee8440ccd402101d8b5"
+    },
+    {
+      "path": "lib/officials/statewide-executives.ts",
+      "sha256": "8c280e3973b00da5380ce3a65b2dfbbe6df4a1482fe731b9890a85eb28b89083"
+    },
+    {
+      "path": "lib/officials/tenure.ts",
+      "sha256": "d116131330b301fe387482b9575a6f2aaf10ce3848b61196c782cfe50d9bdb5a"
+    },
+    {
+      "path": "lib/officials/tier-grouping.ts",
+      "sha256": "e30c5cc6273f16a3a2464da3702dfa22370f54c45bac853d8dcc926dc431996b"
+    },
+    {
+      "path": "lib/officials/top-offices.ts",
+      "sha256": "5579e4f4561e9003b83c8086813010c0bdc8f7fcb9260c975a3875f0e58ad46d"
+    },
+    {
+      "path": "lib/officials/verification.ts",
+      "sha256": "c6b34bde6ba1b54038f026d137a5ab9d188dbf5894a011b8af9be0bbfb7ef446"
+    },
+    {
+      "path": "lib/ops/freshness.ts",
+      "sha256": "2a2d40097284f969bf3f4b84dd4f28f77dc6d8a0dd8efbbcb0a6c9b993accbee"
+    },
+    {
+      "path": "lib/ops/origins.ts",
+      "sha256": "c21f5521fdec6d8c95c811c393c002468c5d1003c165352266080ecfe93719dd"
+    },
+    {
+      "path": "lib/outcomes/publication.ts",
+      "sha256": "f3930c85711166b5325da192a32585b1428febb30ab2665cea18060e869d67c4"
+    },
+    {
+      "path": "lib/outcomes/store.ts",
+      "sha256": "c2a0abbb6141ed9001dc908ffd6947a0a5c5fb863abe7c820939c9426d33f15c"
+    },
+    {
+      "path": "lib/photos/person.ts",
+      "sha256": "38da0b8f45b80883460ec0c647048514c087ca47039456a74c58ebf427310e53"
+    },
+    {
+      "path": "lib/photos/review.ts",
+      "sha256": "87cb8bfd5ca067c139028a288c4cef4b77e3763108eac1ae0ba32096e012b13d"
+    },
+    {
+      "path": "lib/questionnaire/positions-state.ts",
+      "sha256": "f483a78d30af489f87ad59cd151712983f459591c42c76c92c8b1531a3ce7f76"
+    },
+    {
+      "path": "lib/reactions/client.ts",
+      "sha256": "1cd85b5f47dc25f88bee3cc13012e5f1bab526e218b5ed1f8990744499899aa5"
+    },
+    {
+      "path": "lib/reactions/pill.ts",
+      "sha256": "e363fa9f0dded7b3068f622e488d9c6070005498184c4524eceff0f980e9cafb"
+    },
+    {
+      "path": "lib/registry/body-class-labels.ts",
+      "sha256": "0134db936b678e5474a265ce172ca02ba31b947143bdd8da86554010597c883a"
+    },
+    {
+      "path": "lib/registry/body-membership.ts",
+      "sha256": "1cdf6a8c961c668fefbd67fae79399cc14f7a171277e7c97d04a9c11ce0ceba8"
+    },
+    {
+      "path": "lib/registry/body-rosters.ts",
+      "sha256": "64ece452c842c6c5b7d54ff3d3b4842f946e597dd91ef011f97919e1271ef2c0"
+    },
+    {
+      "path": "lib/registry/body-territory.ts",
+      "sha256": "d974d61bd396cac22b81f0974190ef5fc3ffbc00e08d6b5190d85367fa874d71"
+    },
+    {
+      "path": "lib/registry/cawcd-rosters.ts",
+      "sha256": "5bc59eb303bb6d07e3d4c05ae7a074c0b0a8df74355cffaef73682803895263e"
+    },
+    {
+      "path": "lib/registry/comment-access.ts",
+      "sha256": "b3fd9884e1fd5101bc89fb314f9e94cbd2ffc7df2c437048e26cd815085362bf"
+    },
+    {
+      "path": "lib/registry/coverage.ts",
+      "sha256": "ccaade3ebbc9559d99baa9620e06cb5697d30e5f0ced7efbc88b57a24c903ba4"
+    },
+    {
+      "path": "lib/registry/curated-bodies.ts",
+      "sha256": "0fbae5fd61b5ce40af33fc5ede14b8a1d16c738f21511152823b046be3c2489f"
+    },
+    {
+      "path": "lib/registry/links.ts",
+      "sha256": "1a66b204d691be3a68f8b9bf857a0b841425e7ea5f3f29e5a1a7bb1640bac581"
+    },
+    {
+      "path": "lib/registry/representation.ts",
+      "sha256": "8722cd6bed88b5c249950bc639f836ec32dd39ca95af4945117bfa02b95d2151"
+    },
+    {
+      "path": "lib/registry/resolve.ts",
+      "sha256": "b3704f752b06447434c0f7cd183f0511befc90351796e8a1bd08f205a15dd4c6"
+    },
+    {
+      "path": "lib/registry/roster-photos.json",
+      "sha256": "9c6e21e7cfce357d75af748954c25105716e7fd7acc1c4419fa73713b7f6a383"
+    },
+    {
+      "path": "lib/registry/rosters-nj-morris.ts",
+      "sha256": "9c3d403b527f868aaff33198d24e0316bae63575474bd8bc915efd56d3232b54"
+    },
+    {
+      "path": "lib/registry/server.ts",
+      "sha256": "650d764e8abd2553f22e13d74facf0ea2fc63645873a1b1f1114f295c571d6ec"
+    },
+    {
+      "path": "lib/registry/source-wiring.ts",
+      "sha256": "735d22bb67fe9fe848ebd3f651c05585ebf67691f4d1ff8a1ff19ec0ff3f1f8c"
+    },
+    {
+      "path": "lib/registry/who-governs.ts",
+      "sha256": "3a1bde540ba225465247abf8d4d156f336ff98ab22b7090b681ee30d6f018c4c"
+    },
+    {
+      "path": "lib/registry/wording.ts",
+      "sha256": "0ee10e72cd3edacb2c91e614c76da71ba72b8aee45b51ad2f1aee33ae15fb4b5"
+    },
+    {
+      "path": "lib/ripcords.ts",
+      "sha256": "df6a1a3fb68b167639ad9e73f297591f35ec7a186b7b892429d70493e306e088"
+    },
+    {
+      "path": "lib/routing/agenda-search.ts",
+      "sha256": "d9eee07347cf4e506ec0d200d9d64b835d24fa37b206f1815c17d99228462d7e"
+    },
+    {
+      "path": "lib/routing/ask-beat-pool.ts",
+      "sha256": "f23f75543750c27c7ca959ad0f4794aa9e27ad7f4010ddac2306a016231316ed"
+    },
+    {
+      "path": "lib/routing/ask-pill-labels.ts",
+      "sha256": "895014afee06c6fddd8e80c38c79ca4afcff1e746f89c1a61148bea731c3c928"
+    },
+    {
+      "path": "lib/routing/ask.ts",
+      "sha256": "c37bde8aa32e0cd3a04651b7fd601873c403135af2d1bb7f6b0209730f318525"
+    },
+    {
+      "path": "lib/routing/classifier.ts",
+      "sha256": "26ed0964e0403f5d144189eab87fa0fc083a51bc6b539498ad28eee57f4e266d"
+    },
+    {
+      "path": "lib/routing/destinations.ts",
+      "sha256": "7359b305dbac3f40dde07b5d309b5756b5dcb755bfa09a7784020069be57f9d0"
+    },
+    {
+      "path": "lib/routing/digest.ts",
+      "sha256": "6e2c656ceab10f834d8b5c8f8b5618261761a4ca9de37bcffd902a3b941afb79"
+    },
+    {
+      "path": "lib/routing/everyday.ts",
+      "sha256": "5a87633ed1f41cb84a3e16256fc8a4b8387bb214cad3e77e396f7c820aa48c29"
+    },
+    {
+      "path": "lib/routing/exact-name.ts",
+      "sha256": "fcdbd6dbf6ffe805c6de90941c1037b126c971964536d408e029a90b5f4a7b18"
+    },
+    {
+      "path": "lib/routing/match.ts",
+      "sha256": "07be235fd80f3a350566c2e8fbd3164ee964ad345b8de2068846c5e81c47de95"
+    },
+    {
+      "path": "lib/routing/named-entity.ts",
+      "sha256": "98dd03be4f1915c3fe5be7d4e42c24096c0c091a7acc901189ecb9dab2e83ee7"
+    },
+    {
+      "path": "lib/routing/resolve.ts",
+      "sha256": "6832f89c42e15ae383f2eb29f70643a791919462fee647cfb85e36de77457d1d"
+    },
+    {
+      "path": "lib/routing/topics.ts",
+      "sha256": "7ce63572f885edc41e31df4a265971f6dc589c61588ccff70bbbd853ec28cc56"
+    },
+    {
+      "path": "lib/search/body-row.ts",
+      "sha256": "bbdee6d7eb2d7912a8048404cc6914294f501fc07da94e03fd3999b643d7629d"
+    },
+    {
+      "path": "lib/search/index.ts",
+      "sha256": "57b0c9ca3ac22aeb87213d73677be1b09a87aadedba8234c3eec9451e938e293"
+    },
+    {
+      "path": "lib/signal/intake-limits.ts",
+      "sha256": "b76f025f19412b62c865409328896f7dafa2b52e6683aeb8e0a20afafff26bbb"
+    },
+    {
+      "path": "lib/signal/rate-limit.ts",
+      "sha256": "24b6c1d662d42b969b11476b61d7500e31794c0ad9773ddb5dcee520cbd043a8"
+    },
+    {
+      "path": "lib/signal/reactions.ts",
+      "sha256": "5b3c4cfec76be65f3bf0195b91d86e63169d766e3295e2cd7c5528afe6b902cf"
+    },
+    {
+      "path": "lib/sources/apptegy/index.ts",
+      "sha256": "1cfc171de45a75f26f57bcc7d13576072e227ca53ddf527646e82bb1fd086a8c"
+    },
+    {
+      "path": "lib/sources/ballot-curated/index.ts",
+      "sha256": "f772e1dbdb00c81da201696f21370ad6bbf15b014db8a1495be32ac8552a4acb"
+    },
+    {
+      "path": "lib/sources/ballot-nj-morris/index.ts",
+      "sha256": "d23712c47d637d23e6394263985a2a15547bbb70ca9b58f85beacfaed9c0ca46"
+    },
+    {
+      "path": "lib/sources/boardbook/index.ts",
+      "sha256": "7ae4c63448a2ad6730eda8776fa090f5ef20be879e39b2d7b084bf5260a55619"
+    },
+    {
+      "path": "lib/sources/civicclerk/index.ts",
+      "sha256": "8f22bd3c7bf96b92c2b1cb0b080686dd8cd1ed7739029c57b2c76fdf525b0c15"
+    },
+    {
+      "path": "lib/sources/civicplus/index.ts",
+      "sha256": "9f5ee48d7bbb8c531006258a2349c9fbe620e82f0fb7a758620d823a8c87d732"
+    },
+    {
+      "path": "lib/sources/clerksboards/index.ts",
+      "sha256": "51ebd23767e60f4dcabd2a0a0104b553785ec420740505a6d889413bc22ea2a5"
+    },
+    {
+      "path": "lib/sources/composite/index.ts",
+      "sha256": "ff4d4e82b2bd4154c50bfbd8bc8dcd9bed29b306b8c6dbda3da5b15081fcba5a"
+    },
+    {
+      "path": "lib/sources/composite/wiring.ts",
+      "sha256": "daf7dcdd2da746e1ec1067fe7e4d2ac3a9936ec902a9e84e5d90fae20913b12d"
+    },
+    {
+      "path": "lib/sources/diligent/index.ts",
+      "sha256": "f624a4c16e515ec2bfc327ed6fc069d7b552d3965a624e7f9a5c1f16fe284bd1"
+    },
+    {
+      "path": "lib/sources/event-identity.ts",
+      "sha256": "f92e9a8000b8741e5147236169e391af53c57cb36a3f0b5c4bc484df12499619"
+    },
+    {
+      "path": "lib/sources/http.ts",
+      "sha256": "dc4a1f46b2205d05f3227bc36638d2c6d17177a46762691c0c1aa940d21982fb"
+    },
+    {
+      "path": "lib/sources/ical/index.ts",
+      "sha256": "4c3ca15a6bddc5f90e4ffcdf9d5d3214bff892f4047ec70781ffa6459214c4b0"
+    },
+    {
+      "path": "lib/sources/iqm2/index.ts",
+      "sha256": "854276244890f861b0ca0e1559fea3c74a62d08d35471f27087703b583d6f140"
+    },
+    {
+      "path": "lib/sources/legiscan/snapshot.ts",
+      "sha256": "0bba3b9416d804558dedd22f711c0f52489d89235ce95d522a62248195d7351a"
+    },
+    {
+      "path": "lib/sources/legiscan/types.ts",
+      "sha256": "2184c296fffcc6b589e9bfd9afd17e17e5b3938356fe6e62851cc3d36ff673ad"
+    },
+    {
+      "path": "lib/sources/legistar-insite/calendar.ts",
+      "sha256": "53e439cb192175feab5cd413166db1b835b7983aff05c4466ed9cee8497e304d"
+    },
+    {
+      "path": "lib/sources/legistar-insite/clerk-schedule.ts",
+      "sha256": "f5070891e3c62eb2e82c60f9e483880f60fcf6e2a680a0ef320571ddc58cd453"
+    },
+    {
+      "path": "lib/sources/legistar-insite/horizon.ts",
+      "sha256": "021888bdda672ec305ca74f9688e9e87868e1aaedb878b075bb87b9d6bf55c3c"
+    },
+    {
+      "path": "lib/sources/legistar-insite/http.ts",
+      "sha256": "aca3395436ea65eb59a2d72cbc6c366355f522a0b0463a17547530cde5e15b00"
+    },
+    {
+      "path": "lib/sources/legistar-insite/index.ts",
+      "sha256": "5b34585bfe6a03d29b5d28db9a030a18dd5d2d2aed3e93d7b210eea927b7f1c7"
+    },
+    {
+      "path": "lib/sources/legistar-insite/tenant-registry.ts",
+      "sha256": "b774e67b1e9afa2b1b1c888cb8855f4f14a12d701238686f971ed19f74d952da"
+    },
+    {
+      "path": "lib/sources/legistar/client-registry.ts",
+      "sha256": "25a909c48fdbb1d35f271742d283776cf2e2df18a9879f0c7f366702c9a39bec"
+    },
+    {
+      "path": "lib/sources/legistar/client.ts",
+      "sha256": "40a8dd0958f22ee6b1230aa773476a4079fd9bcd3c4655cdc6cb15d8b2c8147a"
+    },
+    {
+      "path": "lib/sources/legistar/index.ts",
+      "sha256": "8448e7a012db91c1510d3ffc6b31d78c725484076fd47a1433394ecb414fb2d6"
+    },
+    {
+      "path": "lib/sources/legistar/outcomes.ts",
+      "sha256": "795f9538a09223fae3e346ef2d0d336b11d0101c77f23d6d91b697b243485d83"
+    },
+    {
+      "path": "lib/sources/mock/fixtures.ts",
+      "sha256": "0bee36563e7aa03aebd68de74ddc7ed3269360aba2298d786e8cd8c56b9a40d7"
+    },
+    {
+      "path": "lib/sources/mock/index.ts",
+      "sha256": "deff3ca0855c2b314c8a05051f706b81c7a3e375819b4f66752f8c64ab58d8a0"
+    },
+    {
+      "path": "lib/sources/normalize-account.ts",
+      "sha256": "ffd204525321a9d1586fe79bf5a93c71bb695a0348c19314105f2aa8c7b41d59"
+    },
+    {
+      "path": "lib/sources/onbase/index.ts",
+      "sha256": "3adc0d959463960632fcf067313a83cb0396446b7cdbfecf3c721c09e3aa4c4b"
+    },
+    {
+      "path": "lib/sources/prl/index.ts",
+      "sha256": "839b10e1494321c445e105ec528e54ef1c2bb8c2f2e94545dc5de32746f5e443"
+    },
+    {
+      "path": "lib/sources/prl/snapshot.ts",
+      "sha256": "4ce01a074293319d3014b3c5436b294befc1c23ae958c2e93fdd59ee312ec519"
+    },
+    {
+      "path": "lib/sources/prl/types.ts",
+      "sha256": "4602f3789f7aaea158877b65907f5dace3cd71e4bbd5dd4a7d605126d005e12d"
+    },
+    {
+      "path": "lib/sources/revize/index.ts",
+      "sha256": "ccccf37cf52d33a735ce0624ed3cd99cd103c0139b3b349f5d7f88a7618910bc"
+    },
+    {
+      "path": "lib/sources/schedulepage/index.ts",
+      "sha256": "c68796e7c9bd870e296aa5b14b0ab6c79f6b86ca467a4d269357777a97bd93e9"
+    },
+    {
+      "path": "lib/sources/snapshot/index.ts",
+      "sha256": "76a49b1fe936125f30734e0c50c19b068ca3403bad82e813f085572095b25ff8"
+    },
+    {
+      "path": "lib/speak/client.ts",
+      "sha256": "96f1afd97680b66669eeb3f2b2c26f55d6dff1af6ddb691c62e2a1066c8d7e5e"
+    },
+    {
+      "path": "lib/speak/copy.ts",
+      "sha256": "8e53cfdfa175103a2d01bdeb82e8262615396e536c9f2d6a62854b288acd490b"
+    },
+    {
+      "path": "lib/speak/limits.ts",
+      "sha256": "be18a1cc2104a3b5cbdc7be8ebf420df2584b61cec6fe9c34da99798c7b1ed1a"
+    },
+    {
+      "path": "lib/speak/self-disclosure.ts",
+      "sha256": "3f25f87c4223ae26bd4a76e69c4694247e38e97261a808b8bac05b54c4ec8fba"
+    },
+    {
+      "path": "lib/speak/triage.ts",
+      "sha256": "bb4372a0e4d3cfe60041161c31ef0eae63a407952a7ebfabe9eeca2f6a5aa1fb"
+    },
+    {
+      "path": "lib/state/browser-key.ts",
+      "sha256": "dc32a4cca96da08eb6ca434a4a4288555c0a5cf5b02decb324016e72fbe79ace"
+    },
+    {
+      "path": "lib/state/data.tsx",
+      "sha256": "6732b906180cad448d55dea0f0c3f7d9f1221ae207decc2579664bdc425af4c0"
+    },
+    {
+      "path": "lib/state/defaults.ts",
+      "sha256": "cc8a86cf373320f7456051a92e2c98205b5af0564af0ca6035cdc3cb7c69c45d"
+    },
+    {
+      "path": "lib/state/derive.ts",
+      "sha256": "3d7035c782f72eb525aef25d822341eee1cf8562b8db0daaa829f104641e6885"
+    },
+    {
+      "path": "lib/state/district-intent.ts",
+      "sha256": "034c4657b0a63ee587bf36d1b5b1370825ceb40277f5e7106a6c8da2ad9c6028"
+    },
+    {
+      "path": "lib/state/division-levels.ts",
+      "sha256": "8879d379c24d569dd2ec9cadc70195f5c9fecc5038a20be54bdd116cfb591931"
+    },
+    {
+      "path": "lib/state/location-origin.ts",
+      "sha256": "67667a3bbecfbf35af4f8c6912a179bd29ff96ea0ed19d9f13fa105cee9bdef1"
+    },
+    {
+      "path": "lib/state/panel-seats.ts",
+      "sha256": "8e5ec13143102365c1948a1b5f7b31f932ef6608a4448356e0362ce55236b99e"
+    },
+    {
+      "path": "lib/state/provider.tsx",
+      "sha256": "722e62ee9b1b9a6bd6a696e4c1b4b8554bd1b52c1e8cb6f77bfdcdb151a4a814"
+    },
+    {
+      "path": "lib/state/reducer.ts",
+      "sha256": "1e4fa605ed47954bc61e8f0b8a366d2333c06f9eed92581e4beab2e68f939117"
+    },
+    {
+      "path": "lib/state/reset.ts",
+      "sha256": "1157d05b5728092aeefc51bc18cae1a23e2dd770c378dc5c0852fff2bcb8d9ab"
+    },
+    {
+      "path": "lib/state/resolved-location.ts",
+      "sha256": "178b85c01386c2b870f5365a5f9c5e9ae92f2913e123cfa471d3555b4f2a0e78"
+    },
+    {
+      "path": "lib/state/status-intent.ts",
+      "sha256": "ffb093f67fe255b56c7cbf1297eb66e867a8f6d23df28e6344e1a875211441e4"
+    },
+    {
+      "path": "lib/state/subscribe-to-storage.ts",
+      "sha256": "7962a8b1274e5f7b455725bfc64c1a91b6fa13ba85bb9c9c4f9cbad0931b7098"
+    },
+    {
+      "path": "lib/text/boilerplate.ts",
+      "sha256": "23c1b07f82759063f68e5603a6c453c43c03fe034250d40ba39ce1f5ae193e7e"
+    },
+    {
+      "path": "lib/text/format-date.ts",
+      "sha256": "5912e6a5cd4581a15bcf30ff52d0b90e2024ef18c46ed5dc4e3015f13698af76"
+    },
+    {
+      "path": "lib/time/zoned.ts",
+      "sha256": "e4a17e4f9affe6f4e7a5c57e02b341d8821fee49f487c0540c067a5f246490cc"
+    },
+    {
+      "path": "lib/utils.ts",
+      "sha256": "d1f1e0d62cb8d8d1e04c26e14de842d8a151f75812d81b046c65b5d1fe8e4b27"
+    },
+    {
+      "path": "lib/votes/bill-summaries.ts",
+      "sha256": "51e5f3006632b3117cd329edb90a2a45e619f050dbac792dc374c7bbed37b482"
+    },
+    {
+      "path": "lib/votes/key-vote-positions.ts",
+      "sha256": "1cd2f98231412acaecf9da6ba2ec1559bac1aabd59f78fad75a733716053c4c7"
+    },
+    {
+      "path": "lib/votes/key-votes-reader.ts",
+      "sha256": "d9822a7806cd933091d70647a49f0c5f22e790f3e87a7b622c66deadbf979419"
+    },
+    {
+      "path": "lib/votes/key-votes-rows.ts",
+      "sha256": "e45f9e5bf0ae180bb9204ffffd9cfee0f38f6bcc679946effb8c830b42b54011"
+    },
+    {
+      "path": "lib/votes/key-votes.ts",
+      "sha256": "8bc2d810fe020fd1512c08427788dc931f4b595c6167b7e92f886a21ad599df8"
+    },
+    {
+      "path": "lib/votes/participation.ts",
+      "sha256": "ef1b64061f7d1a5f3147de9411b8160e053ccf7456c76c57535444d0763458e2"
+    },
+    {
+      "path": "lib/votes/party-breakdown.ts",
+      "sha256": "7266ed7ed6f90d66e3b964f3bf35450acba9b71ef016c9aa4e02af2aed95a067"
+    },
+    {
+      "path": "lib/votes/snapshot.ts",
+      "sha256": "07cfb7577f137cb8828538bacacd995a3e5fcc541f60d1b9a5571290dcb8629f"
+    },
+    {
+      "path": "lib/votes/vote-explainers.ts",
+      "sha256": "9e7ef8087c93c1616a117037cb9d67d10eca3404e14ada2a072e5b79bc12c645"
+    }
+  ],
+  "evidenceHashes": [
+    {
+      "path": "docs/evidence/reader-last-mile-ask-exhaustive.json",
+      "sha256": "05dffa637a227867f5b883e0884988837871dc54fa06c623f9221c78da9d97ba"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-ask-route-proof.json",
+      "sha256": "b69fa0a2b1d6fe87deb628b12c9581d379e915c1e0d05e41ae330983bcccd285"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-ballot-ask.json",
+      "sha256": "4d91f8d26e038a5e2d2553c258aa0a6889c603d79abef05eb8b74dc67d1f2ee5"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-ballot.json",
+      "sha256": "67e1c299bfecaf2a4616ef633952537b4d597a6b2ab8cb8175069975a45ac64b"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-bodies.json",
+      "sha256": "48011fad8ed8b6c1d7b470119fc14d9b9e40d4585c8c9733aeffeb5c8d1b9218"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-bundle.json",
+      "sha256": "410af8c557be923bfdb52a1d0e92e40323ea9cf2675c12fd87c97e12aa474acf"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-civic.json",
+      "sha256": "2af13186fee4e0441c66283cbb95e9635794eaed9dfca29ec2700070eb6902fd"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-current-components.json",
+      "sha256": "ee0a67840e060b4def8515d1a1d82bf18aede377948dab6347856d8f02ed2ac5"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-agenda.json",
+      "sha256": "85325413b792d16963350aa1f165f5c651e8e2dfc0bf78541b6d992581a3b51b"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-ballot-ask.json",
+      "sha256": "389bd5266679e7923e8252c3468de899ef57c7d1f271e872b09e211c19548171"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-ballot.json",
+      "sha256": "08bb9b129e01cc0035b4047ffb5e41a964879d52e60ed0c5de984299d99cfa2e"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-build-receipt.json",
+      "sha256": "dcaa2c39f57514d6b162b2da09c92ca862c2f301f46cf1f0ec413eb2e5a05474"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-bundle.json",
+      "sha256": "14cba4ea02e77029eda97c4fd6a0b1a22c1ea362945925d9aee7d01cfe26ace7"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-candidate-profiles-ask.json",
+      "sha256": "57a32c82990b0c366767477515664b7b9af6ed8834ff6fe360ae81afcaf9abf9"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-delta-components.json",
+      "sha256": "5dcd7166ea4e39d5a3b9fcca0239eee7340f6a2037f1619f644f94bee165775b"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-delta-routes.json",
+      "sha256": "a2aa9b4d78fee4e8850fb81db86bb025d9be2e7507b0a89230219877d2b869a2"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-delta-witnesses.json",
+      "sha256": "21f056926bb5034d94e2154dd463cbe2f7fefdf547ab70fcf1f46f7c04af8f40"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-federal-money-ask.json",
+      "sha256": "4719909c8d15349a442efb4751d702dc40dd0b6bf2eca7cc4b409c1689e40086"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-invalidation.json",
+      "sha256": "a1d4ed20571bb49b6c0443ad2684fa6c9e20edbaf7cfa3216ad17fa2677c94ae"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-meeting-knowledge-ask.json",
+      "sha256": "f337fa20264561a79a3e0680472615c4928612ba66f9092333bbe3d30a66f0a1"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-meeting-routes.json",
+      "sha256": "021f24a1b17a4639e875b1d8e22a897a111b38b094c000a5813d60f0e7f3c36e"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-meetings-ask.json",
+      "sha256": "955f5e6a8b3113808e66099e5ff3eb435b8847bed3696fa46a5eae9e488ba38e"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-money-ask.json",
+      "sha256": "14de2c3c5a22cf5b63367165bfcc3ec9ebb2bf690c7429b02b375f61dd32d467"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-portraits.json",
+      "sha256": "00836cc5f45c5d0d1b6c15a12f23a1dba40a18acc202cb8ebc44a124088908ed"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-final-render.json",
+      "sha256": "6ecab1306f1dc633a812d0a433bff3cba856984861d6aeea170580262c66d562"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-key-votes-ask.json",
+      "sha256": "4d8b056c1eb7d0059efe40a33dc0c27bed574d8741ba102d3e639dbb54d0f6e8"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-officials-ask.json",
+      "sha256": "0390b62a1a749b56c66aca19bf63d2bbd6fb8b39b815ad1d3838b52343465768"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-positions.json",
+      "sha256": "b3a204c4a5b340c53b520111ad0bf66a4414d0427bbb4edb219b2a255b8d7f2a"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-render.json",
+      "sha256": "3a5d72dcc78084819b2fd56074ace0ad83bc94f8e3f0c38f84d56b284714e30d"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-routes.json",
+      "sha256": "1ff4f53e86ea0dfea395a5418033a9e02251863b2f41d1eb959c44453c2532b3"
+    },
+    {
+      "path": "docs/evidence/reader-last-mile-voting-sites.json",
+      "sha256": "924d0f6f639c8b26bc910d597b88aa37be7d28feda3345a17e4e418f6f75089d"
+    }
+  ],
+  "inheritance": {
+    "reportPath": "docs/evidence/reader-last-mile-final-invalidation.json",
+    "reportSha256": "a1d4ed20571bb49b6c0443ad2684fa6c9e20edbaf7cfa3216ad17fa2677c94ae"
+  }
+}

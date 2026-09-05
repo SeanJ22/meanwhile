@@ -35,6 +35,7 @@ import type { ControlPlaneRepositories } from "./repository/types.ts";
 import type { Attempt } from "./attempt.ts";
 import type { RouteTask } from "./route-task.ts";
 import type { WorkItem } from "./work-item.ts";
+import { RESEARCH_STATE_ID, type ResearchState } from "./scheduler/research-policy.ts";
 import {
   assertAggregateOnly,
   type CacheObservationRecord,
@@ -212,6 +213,11 @@ export async function readFleetInputs(repos: ControlPlaneRepositories): Promise<
   } catch (error) {
     return unreachable("the fleet's Attempts, WorkItems and RouteTasks", error);
   }
+}
+
+/** One targeted aggregate read for the runner's current safety projection. */
+export async function readFleetSafety(repos: ControlPlaneRepositories): Promise<ReadOutcome<ResearchState>> {
+  return readAggregate(repos, "the Fleet safety state", () => repos.researchState.read(RESEARCH_STATE_ID));
 }
 
 export async function readDecisions(

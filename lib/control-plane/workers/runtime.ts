@@ -216,7 +216,12 @@ export async function reauthorizeWorkerTask(runtime: FleetRuntime, task: RouteTa
     policyReauthorizations: [...(task.policyReauthorizations ?? []), { at: now, denial, reason }] }, now)).value;
 }
 
-export async function drainWorkerQueue(runtime: FleetRuntime, maximum = 3, accepts: (task: RouteTask) => boolean = () => true): Promise<readonly DispatchResult[]> {
+export async function drainWorkerQueue(
+  runtime: FleetRuntime,
+  maximum = 3,
+  accepts: (task: RouteTask) => boolean = () => true,
+  admitDispatch: (task: RouteTask) => { readonly admit: true } | { readonly admit: false; readonly code: string; readonly why: string } = () => ({ admit: true }),
+): Promise<readonly DispatchResult[]> {
   await reconcileWorkerCompletions(runtime.repos);
   const out: DispatchResult[] = [];
   const attempts = (await runtime.repos.attempts.list()).map(a => a.value);
@@ -232,6 +237,7 @@ export async function drainWorkerQueue(runtime: FleetRuntime, maximum = 3, accep
       if (!reauthorized) continue;
       task = reauthorized;
     }
+    if (!admitDispatch(task).admit) continue;
     out.push(await dispatchWorkerTask(runtime, task));
   }
   return out;

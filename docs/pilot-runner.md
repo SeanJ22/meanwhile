@@ -103,9 +103,52 @@ record, and every restart re-hit the same state.)*
   `crashed: true` with the error, prints the `run record:` line, and exits
   non-zero; the digest then says a cycle CRASHED rather than "0 providers".
 - **A cycle stops starting work at its dispatch budget** (`--budget-min`,
-  default 15 from process start) and finishes cleanly inside the runner's
-  20-minute backstop, deferring the rest by name. A cycle killed mid-write is
+  hard maximum 15 minutes from process start, with the last 2 minutes reserved
+  for record closure and state publication) and finishes inside the runner's
+  15-minute hard backstop, deferring the rest by name. A cycle killed mid-write is
   not recoverable state; a cycle that ends on its own budget is.
+
+## Aggregate unattended-Fleet safety
+
+Every standing-runner role shares one admission controller over the existing
+canonical cost ledger. These are hard ceilings, not dashboard targets:
+
+| Scope | Hard ceiling |
+| --- | ---: |
+| model spend per cycle | $2.00 |
+| model spend per operational night (18:00–06:00 America/Phoenix) | $10.00 |
+| model spend per rolling 24 hours | $25.00 |
+| public/provider requests per cycle | 24 |
+| application payload bytes sent plus consumed per cycle | 16,777,216 (16 MiB) |
+| Fleet work dispatches per cycle | 10 |
+| total Fleet cycle wall time | 900,000 ms (15 minutes) |
+
+The established Scout constraints remain additional: two concurrent Scouts,
+three Scout dispatches per cycle, and the per-Attempt turn/tool/wall/token/host
+request bounds below. A worst-case cost reservation is taken before each model
+request so concurrent requests cannot both spend the same remaining allowance.
+Every refusal records the work by name and leaves it owed.
+
+HTTP 402, exhausted quota or transfer allowance, billing/account restrictions,
+and equivalent hard refusals latch that provider off until the end of the
+Phoenix operational night. There is no paid-provider or model substitution.
+429, transient 5xx and network instability receive no implicit retry here; the
+existing bounded caller behavior applies, then the named work remains owed.
+If Neon itself hard-refuses, a minimal host-local emergency latch exists only
+because the unavailable database cannot persist its own circuit; it prevents
+the very next query and every hourly process from probing again until the
+operational night ends. It does not become a budget ledger or alternate
+control plane.
+
+Saturday 18:00 through Sunday 06:00 America/Phoenix is a **SCHEDULED BLACKOUT**.
+The process may heartbeat, publish Admin state, and perform zero-cost local
+bookkeeping, but it dispatches no model or public/network research. The
+Sunday-morning nightly window that belongs to Saturday night is suppressed and
+is excluded from later catch-up dates. Skipped work remains owed.
+
+The standing path deliberately does not expose the browser tool: browser
+subrequests cannot yet be completely metered against the aggregate request and
+byte ceilings. Public retrieval uses the bounded streaming HTTP seams instead.
 
 ## How it survives a reboot
 

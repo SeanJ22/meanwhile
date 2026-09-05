@@ -30,6 +30,7 @@ import { HEARTBEAT_LATE_MINUTES } from "../owner-surface.ts";
 import type { CostEntry } from "../cost.ts";
 import { MODEL_WORKER_MODEL } from "../model-cost.ts";
 import type { DispatchOrdering, ResearchMetrics } from "../research-metrics.ts";
+import type { FleetSafetySnapshot } from "../fleet-safety.ts";
 
 /* ------------------------------------------------------------------ bounds */
 
@@ -195,6 +196,8 @@ export interface ResearchState {
   readonly metrics?: ResearchMetrics | null;
   /** ADM-8: what the cycle did with the owner's DISPATCH, when one was pending. */
   readonly ownerDispatch?: OwnerDispatchRecord | null;
+  /** Aggregate safety across every paid/network Fleet role, not only Scouts. */
+  readonly fleetSafety?: FleetSafetySnapshot | null;
 }
 
 /**

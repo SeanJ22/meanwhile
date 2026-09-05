@@ -230,12 +230,15 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
 }
 
 /** Independent obligations run concurrently; leases provide process-independent ownership. */
-export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRuntime, options:{maximum?:number;concurrency?:number;deadlineMs?:number;maxScoutDispatches?:number}={}) {
+export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRuntime, options:{
+  maximum?:number; concurrency?:number; deadlineMs?:number; maxScoutDispatches?:number;
+  admitDispatch?:(work:string)=>{admit:true}|{admit:false;code:string;why:string};
+}={}) {
   const now = runtime.now ?? (()=>new Date().toISOString());
   const recovery=await sweepExpiredLeases(runtime.repos,{now:now(),observedBy:"autonomous-coordinator"});
   const ids=(await runtime.repos.workItems.list()).filter(i=>i.value.autonomousPlan).map(i=>i.id);
   const decisions:AutonomousDecision[]=[]; const dispatches:DispatchResult[]=[];
-  const deferred:{workItemId:string;reason:"REPOSITORY_LOCK_HELD";detail:string}[]=[];
+  const deferred:{workItemId:string;reason:string;detail:string}[]=[];
   const maximum=Math.min(options.maximum??3,20); const concurrency=Math.min(options.concurrency??2,2);
   const maxScoutDispatches=Math.min(options.maxScoutDispatches??RESEARCH_BOUNDS.maxScoutDispatchesPerCycle,RESEARCH_BOUNDS.maxScoutDispatchesPerCycle);
   if (!Number.isSafeInteger(maximum)||maximum<0||!Number.isSafeInteger(concurrency)||concurrency<1||!Number.isSafeInteger(maxScoutDispatches)||maxScoutDispatches<0) throw new Error("AUTONOMOUS_COORDINATOR_BOUND_INVALID");
@@ -245,15 +248,27 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
       const id=ids[cursor++];
       try {
       const d=await nextAutonomousOperation(runtime,id); decisions.push(d);
-      if (!d.task || !["WORKER","SCOUT"].includes(d.action) || admitted>=maximum) continue;
+      if (!d.task || !["WORKER","SCOUT"].includes(d.action)) continue;
+      if (admitted>=maximum) { deferred.push({workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached; work remains owed`}); continue; }
       const wall=d.action==="SCOUT"?RESEARCH_BOUNDS.perDispatch.maxWallMs:120_000;
-      if(Date.now()+wall>(options.deadlineMs??Infinity) || (d.action==="SCOUT"&&scoutsAdmitted>=maxScoutDispatches)) continue;
-      admitted++;
-      if (d.action==="WORKER") { dispatches.push(await dispatchWorkerTask(runtime,d.task)); continue; }
+      if(Date.now()+wall>(options.deadlineMs??Infinity)) { deferred.push({workItemId:id,reason:"WALL_CLOCK_CEILING",detail:"insufficient cycle wall time remained; work remains owed"}); continue; }
+      if(d.action==="SCOUT"&&scoutsAdmitted>=maxScoutDispatches) { deferred.push({workItemId:id,reason:"SCOUT_CYCLE_MAX",detail:`Scout maximum ${maxScoutDispatches} reached; work remains owed`}); continue; }
+      if (d.action==="WORKER") {
+        const aggregate=options.admitDispatch?.(d.task.id)??{admit:true as const};
+        if(!aggregate.admit) { deferred.push({workItemId:id,reason:aggregate.code,detail:`${aggregate.why}; work remains owed`}); continue; }
+        admitted++;
+        dispatches.push(await dispatchWorkerTask(runtime,d.task));
+        continue;
+      }
       // Serialize model admission and completion so another fleet Scout cannot spend the same uncommitted allowance.
       await runtime.repos.locks.withLock("autonomous-model-admission",async()=>{
-        if(scoutsAdmitted>=maxScoutDispatches || Date.now()+RESEARCH_BOUNDS.perDispatch.maxWallMs>(options.deadlineMs??Infinity)) return;
+        if(admitted>=maximum) { deferred.push({workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached; work remains owed`}); return; }
+        if(scoutsAdmitted>=maxScoutDispatches) { deferred.push({workItemId:id,reason:"SCOUT_CYCLE_MAX",detail:`Scout maximum ${maxScoutDispatches} reached; work remains owed`}); return; }
+        if(Date.now()+RESEARCH_BOUNDS.perDispatch.maxWallMs>(options.deadlineMs??Infinity)) { deferred.push({workItemId:id,reason:"WALL_CLOCK_CEILING",detail:"insufficient cycle wall time remained; work remains owed"}); return; }
+        const aggregate=options.admitDispatch?.(d.task!.id)??{admit:true as const};
+        if(!aggregate.admit) { deferred.push({workItemId:id,reason:aggregate.code,detail:`${aggregate.why}; work remains owed`}); return; }
         const spend=researchSpendInWindow(await runtime.repos.costs.readAll(),now());
+        admitted++;
         scoutsAdmitted++;
         const item=(await runtime.repos.workItems.mustRead(id)).value; const plan=item.autonomousPlan!;
         const denial=!runtime.scoutFor?"SCOUT_MODEL_TRANSPORT_UNAVAILABLE":!ceilingPermits(spend.windowUsd,RESEARCH_BOUNDS.dailyCeilingUsd).permits?"SCOUT_COST_CEILING":null;
@@ -271,5 +286,6 @@ export async function runAutonomousCoordinator(runtime: AutonomousCoordinatorRun
       }
     }
   }));
+  for (const id of ids.slice(cursor)) deferred.push({workItemId:id,reason:"COORDINATOR_CYCLE_MAX",detail:`cycle maximum ${maximum} reached before this registered work item; work remains owed`});
   return {recovery,decisions,dispatches,scoutsAdmitted,deferred};
 }

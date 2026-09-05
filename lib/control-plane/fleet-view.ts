@@ -26,6 +26,7 @@ import type { Attempt, WorkerRole } from "./attempt.ts";
 import { measured, type Measured } from "./owner-surface.ts";
 import { US_STATES } from "./readiness/catalog.ts";
 import type { RouteTask } from "./route-task.ts";
+import { unitCarriesState } from "./scheduler/dispatch-target.ts";
 import type { ResearchIntent } from "./scheduler/research-policy.ts";
 import type { WorkItem } from "./work-item.ts";
 
@@ -124,16 +125,16 @@ const STATE_NAME: ReadonlyMap<string, string> = new Map(US_STATES.map((s) => [s.
  * when the WorkItem is not on record — never a guess.
  */
 export function whereOf(subject: string | null, planJurisdiction: string | null): string | null {
-  const hay = `${subject ?? ""} ${planJurisdiction ?? ""}`.toLowerCase();
-  const ocd = hay.match(/state:([a-z]{2})\b/);
-  if (ocd) return STATE_NAME.get(ocd[1]) ?? ocd[1].toUpperCase();
   const jur = (planJurisdiction ?? "").trim();
   if (jur !== "") {
     const code = jur.toLowerCase();
     return STATE_NAME.get(code) ?? jur;
   }
-  const prefix = (subject ?? "").match(/^([a-z]{2})[-_:]/i);
-  if (prefix && STATE_NAME.has(prefix[1].toLowerCase())) return STATE_NAME.get(prefix[1].toLowerCase())!;
+  const hay = (subject ?? "").toLowerCase();
+  // The same state-token rule the dispatch matcher and the publisher use —
+  // one reading of "which state is this", never three.
+  const state = US_STATES.find((s) => unitCarriesState(hay, s.code));
+  if (state) return state.name;
   return subject && subject.trim() !== "" ? subject : null;
 }
 

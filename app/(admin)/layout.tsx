@@ -134,7 +134,10 @@ const STYLES = `
 .admin .queue-card .options button { display: block; width: 100%; text-align: left; margin: .3rem 0; padding: .45rem .6rem; cursor: pointer; font: inherit; border: 1px solid rgba(128,128,128,.55); border-radius: .3rem; background: rgba(128,128,128,.08); color: inherit; }
 .admin .queue-card .options button:hover { background: rgba(128,128,128,.18); }
 .admin .queue-card .options button .consequence { display: block; font-size: .8rem; opacity: .75; font-weight: 400; }
-.admin .queue-card .own-words textarea { width: 100%; max-width: 40rem; min-height: 3.5rem; font: inherit; padding: .45rem; color-scheme: inherit; background-color: Canvas; color: CanvasText; border: 1px solid rgba(128,128,128,.5); border-radius: .3rem; }
+.admin .queue-card .own-words label { font-size: .85rem; opacity: .85; margin: .5rem 0 0; }
+.admin .queue-card .own-words textarea { display: block; margin-top: .3rem; width: 100%; max-width: 40rem; min-height: 3.5rem; font: inherit; padding: .45rem; color-scheme: inherit; background-color: Canvas; color: CanvasText; border: 1px solid rgba(128,128,128,.5); border-radius: .3rem; }
+.admin .deploy label { font-size: .9rem; margin: 0; }
+.admin .deploy textarea { display: block; margin-top: .3rem; }
 .admin .queue-card .own-words button { width: auto; display: inline-block; margin: .35rem 0 0; }
 .admin .queue-card .decided { border: 1px solid #4c9a5a; border-radius: .3rem; padding: .45rem .6rem; margin-top: .4rem; font-size: .9rem; }
 .admin .queue-card.acknowledge { opacity: .9; }

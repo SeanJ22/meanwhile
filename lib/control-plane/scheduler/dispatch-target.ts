@@ -107,11 +107,17 @@ export function parseDispatchTarget(raw: string): DispatchTarget {
 /**
  * Does a registered unit (its id and subject) carry a state code? Ids take
  * several shapes — `az-sos-cfs-bulk-ftp`, `AZ_SEETHEMONEY_PLAIN_FETCH`,
- * `ocd-division/country:us/state:az/...` — so the code is matched as a
- * bounded token, never as a substring of a word ("in" inside "transaction").
+ * `freshness:candidate-enrichment:nh:2026:...`, `state-az-sldl-11`,
+ * `ocd-division/country:us/state:az/...` — so a code counts only where an id
+ * puts a state: after `state:` or `state-`, at the very start, or as a whole
+ * colon- or slash-delimited segment. A hyphen-bounded token in the middle of a
+ * slug is NOT a state: "representative-in-congress" is not Indiana and
+ * "de-los-santos" is not Delaware, which is exactly what a looser rule read
+ * into the by-state panel. `hay` is lower-cased by the caller.
  */
 export function unitCarriesState(hay: string, code: string): boolean {
-  return new RegExp(`(^|[^a-z])${code}([^a-z]|$)`).test(hay);
+  if (new RegExp(`state[:-]${code}(?![a-z])`).test(hay)) return true;
+  return new RegExp(`(^|[:/ ])${code}(?=[-_:/ ]|$)`).test(hay);
 }
 
 /**

@@ -5,10 +5,13 @@
  */
 import test from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import type { CheckRunner } from "../lib/ops/generated-freshness.ts";
+import type { GeneratedArtifact } from "../lib/ops/generated-register.ts";
 import { REFRESH_SOURCES } from "../lib/ops/refresh-cadence.ts";
+import { restoreRefusedChange, type GitRunner } from "../scripts/lib/refresh-revert.ts";
 import {
   changedHoldings,
   failedRenewal,
@@ -126,4 +129,145 @@ test("the run record round-trips RL-1 observations and the renewal, and the Mark
   assert.match(md, /`legiscan` \| `data\/votes\/state-votes-snapshot\.json` \| FACTS_UNCHANGED \| 2026-09-05T19:55:00\.000Z \| no \|/);
   assert.match(md, /## Reader proof renewal \(RL-2 \/ RL-3\)/);
   assert.match(md, /Reader proof renewal: RENEWED at 2026-09-05T20:00:00\.000Z on aaaaaaaa/);
+});
+
+/* ========================================================================== */
+/* RLC-2 (2026-09-05) — a refusal restores ONE coherent tree, dependents too   */
+/* ========================================================================== */
+
+/**
+ * Refresh run #25 (head 742993c7) refused meetings and fec at the final render,
+ * put both holdings back at HEAD, and left the 56 state manifests the
+ * orchestrator had regenerated from the CHANGED tree in place. The suite then
+ * failed `tests/generated-artifacts.test.ts` on `state-manifest --check` —
+ * STALE docs/states/ak.md … — against a tree the refusal itself had made
+ * incoherent. The shared move below restores first and regenerates second,
+ * through the same registry the gate and the push door use.
+ */
+const SAMPLE: GeneratedArtifact[] = [
+  { path: "docs/states/nh.md", command: "corepack pnpm state-manifest", checkCommand: "corepack pnpm state-manifest --check", pure: true },
+  { path: "docs/states/az.md", command: "corepack pnpm state-manifest", checkCommand: "corepack pnpm state-manifest --check", pure: true },
+  { path: "data/questionnaire/invitations-nj-morris-2026.json", command: "corepack pnpm questionnaire:invitations --write", checkCommand: "corepack pnpm questionnaire:invitations --check", pure: true },
+];
+
+/** A Git that answers `status` for the refused groups and records every move it is asked to make. */
+function fakeGit(calls: string[]): GitRunner {
+  return (args) => {
+    calls.push(args.join(" "));
+    if (args[0] !== "status") return "";
+    const under = args.slice(args.indexOf("--") + 1);
+    if (under.includes("docs/evidence")) {
+      return " M docs/evidence/reader-last-mile-final-closure-receipt.json\0?? docs/evidence/reader-last-mile-refresh-prior-receipt.json\0";
+    }
+    if (under.includes("data/meetings-snapshot.json")) return " M data/meetings-snapshot.json\0";
+    return "";
+  };
+}
+
+test("RLC-2: a refused change goes back to HEAD and THEN the PURE dependents regenerate from the restored tree, in that order, through the registry", () => {
+  const root = mkdtempSync(join(tmpdir(), "refresh-revert-"));
+  mkdirSync(join(root, "docs/evidence"), { recursive: true });
+  const leaked = join(root, "docs/evidence/reader-last-mile-refresh-prior-receipt.json");
+  writeFileSync(leaked, "{}");
+  const calls: string[] = [];
+  // The manifests read STALE until the generator has run — the world after run #25's revert.
+  let manifestsCurrent = false;
+  const runCheck: CheckRunner = (command) => {
+    calls.push(`check ${command}`);
+    return command.includes("state-manifest") && !manifestsCurrent
+      ? { ok: false, output: "state-manifest: STALE docs/states/nh.md\nSTALE docs/states/az.md" }
+      : { ok: true, output: "CURRENT" };
+  };
+  const runGen = (command: string) => {
+    calls.push(`gen ${command}`);
+    if (command.includes("state-manifest")) manifestsCurrent = true;
+    return { ok: true, output: "wrote" };
+  };
+  const restore = restoreRefusedChange({
+    git: fakeGit(calls),
+    root,
+    groups: [
+      { id: "committed Reader evidence", paths: ["docs/evidence"] },
+      { id: "meetings", paths: ["data/meetings-snapshot.json"] },
+    ],
+    runCheck,
+    runGen,
+    generated: SAMPLE,
+    log: () => {},
+  });
+  // Every group is back at HEAD by name — including the untracked evidence a failed renewal wrote.
+  assert.deepEqual(restore.restored, [
+    { id: "committed Reader evidence", paths: ["docs/evidence/reader-last-mile-final-closure-receipt.json", "docs/evidence/reader-last-mile-refresh-prior-receipt.json"] },
+    { id: "meetings", paths: ["data/meetings-snapshot.json"] },
+  ]);
+  assert.ok(!existsSync(leaked), "the failed renewal's untracked evidence is gone");
+  assert.ok(calls.includes("checkout HEAD -- docs/evidence/reader-last-mile-final-closure-receipt.json"));
+  assert.ok(calls.includes("checkout HEAD -- data/meetings-snapshot.json"));
+  // THE ORDER IS THE FIX: the last checkout precedes the first freshness check.
+  const lastCheckout = calls.reduce((last, call, index) => (call.startsWith("checkout") ? index : last), -1);
+  const firstCheck = calls.findIndex((call) => call.startsWith("check "));
+  assert.ok(firstCheck > lastCheckout && lastCheckout >= 0, `regeneration must follow the restore: ${calls.join(" | ")}`);
+  // Only the stale generator ran, by its generator command, and the tree is now coherent.
+  assert.deepEqual(calls.filter((call) => call.startsWith("gen ")), ["gen corepack pnpm state-manifest"]);
+  assert.deepEqual(restore.regenerated, ["docs/states/nh.md", "docs/states/az.md"]);
+  assert.deepEqual(restore.regenerationFailed, []);
+  assert.ok(runCheck("corepack pnpm state-manifest --check").ok);
+});
+
+test("RLC-2: a generator that cannot regenerate after the restore is reported, never passed off as coherent", () => {
+  const root = mkdtempSync(join(tmpdir(), "refresh-revert-fail-"));
+  const calls: string[] = [];
+  const restore = restoreRefusedChange({
+    git: fakeGit(calls),
+    root,
+    groups: [{ id: "meetings", paths: ["data/meetings-snapshot.json"] }],
+    runCheck: (command) => (command.includes("state-manifest") ? { ok: false, output: "STALE docs/states/nh.md" } : { ok: true, output: "ok" }),
+    runGen: () => ({ ok: false, output: "generator crashed\nat somewhere" }),
+    generated: SAMPLE,
+    log: () => {},
+  });
+  assert.deepEqual(restore.regenerated, []);
+  assert.equal(restore.regenerationFailed.length, 1);
+  assert.match(restore.regenerationFailed[0].command, /state-manifest/);
+});
+
+test("RLC-2: the FAILED record carries what the refusal put back and regenerated, and the summary states it beside the refusal", () => {
+  const restore = {
+    restored: [
+      { id: "committed Reader evidence", paths: ["docs/evidence/reader-last-mile-final-closure-receipt.json"] },
+      { id: "meetings", paths: ["data/meetings-snapshot.json"] },
+    ],
+    regenerated: ["docs/states/nh.md", "docs/states/az.md"],
+    regenerationFailed: [] as { command: string; output: string }[],
+  };
+  const renewal = failedRenewal({
+    exactHead: "742993c78f5ef56afe9d9bab2e52c31256326563",
+    ranAt: "2026-09-05T20:19:26.681Z",
+    changedHoldings: ["data/meetings-snapshot.json"],
+    prefix: "docs/evidence/reader-last-mile-refresh",
+    steps: [{ name: "final render and witnesses", ok: false, secs: 38, detail: "exited 1" }],
+    failure: "final render and witnesses: exited 1",
+    sources: REFRESH_SOURCES,
+    restore,
+  });
+  assert.deepEqual(renewal.restore, restore);
+  const lines = renewalSummary(renewal);
+  assert.ok(lines.includes("  restored committed Reader evidence: 1 path(s) back at HEAD"));
+  assert.ok(lines.includes("  restored meetings: 1 path(s) back at HEAD"));
+  assert.ok(lines.includes("  regenerated 2 PURE dependent path(s) from the restored tree"));
+  // The refusal's attribution is untouched by the restore: the step named is the one that failed.
+  assert.match(renewal.refusedSources[0].why, /at final render and witnesses:/);
+  const broken = failedRenewal({ ...renewal, prefix: renewal.prefix, failure: renewal.failure!, sources: REFRESH_SOURCES, restore: { ...restore, regenerated: [], regenerationFailed: [{ command: "corepack pnpm state-manifest", output: "generator crashed\nat somewhere" }] } });
+  assert.ok(renewalSummary(broken).includes("  regeneration FAILED: `corepack pnpm state-manifest` — generator crashed"));
+  // A renewal that refused nothing restored nothing, and says so by shape.
+  assert.equal(notNeededRenewal("a".repeat(40), "2026-09-05T20:00:00.000Z").restore, null);
+});
+
+test("RLC-2: the orchestrator refuses through the shared restore, and the refresh workflow never arms the forced-refusal seam", () => {
+  const orchestrator = readFileSync(join(process.cwd(), "scripts/refresh-reader-renewal.mts"), "utf8");
+  assert.ok(orchestrator.includes("restoreRefusedChange("), "the refusal path restores through scripts/lib/refresh-revert.ts");
+  assert.ok(!/revertFilesToHead\(/.test(orchestrator), "no second revert path in the orchestrator");
+  assert.ok(orchestrator.includes("process.env.READER_RENEWAL_REFUSE_AT"), "the proof seam exists, named exactly");
+  const workflow = readFileSync(join(process.cwd(), ".github/workflows/refresh-daily.yml"), "utf8");
+  assert.ok(!workflow.includes("READER_RENEWAL_REFUSE_AT"), "a scheduled refresh can never be told to refuse on purpose");
 });

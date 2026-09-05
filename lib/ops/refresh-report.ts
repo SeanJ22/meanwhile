@@ -89,6 +89,20 @@ export interface RefreshRenewalStep {
 }
 
 /**
+ * What a refused renewal did to the tree (RLC-2, 2026-09-05): each group put
+ * back at HEAD, and the registered PURE dependents regenerated from the
+ * restored tree so the suite validates ONE coherent tree. Absent on records
+ * written before this field existed; null on a renewal that refused nothing.
+ */
+export interface RefreshRenewalRestore {
+  restored: { id: string; paths: string[] }[];
+  /** Regenerated output paths, from the same registry the gate and push door use. */
+  regenerated: string[];
+  /** A generator that could not regenerate: the tree is NOT coherent and the record says so. */
+  regenerationFailed: { command: string; output: string }[];
+}
+
+/**
  * Additive (RL-2/RL-3, 2026-09-05): what the refresh did about the Reader
  * Last-Mile closure receipt when a canonical holding changed. NOT_NEEDED when
  * no holding's bytes moved; RENEWED when the existing dependency-aware
@@ -108,6 +122,8 @@ export interface RefreshRenewal {
   /** Sources refused because their holding change could not be proved; empty unless FAILED. */
   refusedSources: { id: string; paths: string[]; why: string }[];
   failure: string | null;
+  /** What the refusal put back and regenerated (RLC-2); null unless FAILED, absent before 2026-09-05. */
+  restore?: RefreshRenewalRestore | null;
 }
 
 export type GateVerdict = "NOT_RUN" | "GREEN" | "REFUSED" | "CANNOT_RUN";

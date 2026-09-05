@@ -9,10 +9,12 @@ import { launchGuarded } from "./browser.mts";
 import { campaignMoneyForTarget, resolvedCandidacyForOfficial } from "../lib/funding/campaign-money.ts";
 import { stateMoneyRecordsForDisplay } from "../lib/funding/state-money-reader.ts";
 import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
+import type { SnapshotStatus } from "../lib/meetings/freshness.ts";
 import { meetingListingIdentity } from "../lib/meetings/listing-identity.ts";
 import { formatMeetingDate } from "../lib/map/format.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import type { Meeting } from "../lib/sources/types.ts";
+import { freshnessDisclosureProblems } from "./lib/reader-freshness-disclosure.ts";
 
 const root = process.cwd();
 const base = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
@@ -243,7 +245,18 @@ try {
   if (!refreshBaseline) {
     const { context, page } = await contextPage();
     try {
+      // RLC-1 (2026-09-05): the footer's disclosure is required in the form the
+      // SERVED snapshot status demands, from the one contract the footer renders
+      // (lib/meetings/freshness.ts) — never from a sentence kept here. The status
+      // is the page's own /api/meetings answer, captured as the map loads, so the
+      // requirement and the rendering come from the same served bytes.
+      const servedMeetings = page.waitForResponse(
+        (response) => new URL(response.url()).pathname === "/api/meetings" && response.status() === 200,
+        { timeout: 60_000 },
+      );
       await mapAt(page, "03255");
+      const served = (await (await servedMeetings).json()) as { snapshot: SnapshotStatus | null };
+      assert.ok(served.snapshot, "the meetings route served no snapshot status, so the footer has nothing to disclose and this case cannot run");
       const identity = meetingListingIdentity(snapshot.meetings, canonicalBodyIdentity);
       const groups = identity.groups.filter((group) => group.sourceIds.some((id) => {
         const meeting = snapshot.meetings.find((row) => row.id === id);
@@ -272,10 +285,10 @@ try {
         assert.equal(renderedSources.filter((row) => row.id === source.id && row.href === source.sourceUrl).length, 1, `${source.id}: rendered unresolved source link`);
       }
       const pageText = await page.locator("body").innerText();
-      assert.match(pageText, /couldn.t reach .*some calendars may be missing/i);
-      assert.match(pageText, /older than that: we last reached them/i);
+      const disclosure = freshnessDisclosureProblems(pageText, served.snapshot);
+      assert.deepEqual(disclosure.problems, [], "the footer does not disclose what the served snapshot requires");
       const screenshot = await capture(notice, "03255-newbury-unresolved-listings");
-      results.push({ id: "newbury-unresolved-listings", result: "PASS", groups, renderedListingRows: await page.locator(".al-row").count(), failedRefreshDisclosure: true, screenshot });
+      results.push({ id: "newbury-unresolved-listings", result: "PASS", groups, renderedListingRows: await page.locator(".al-row").count(), failedRefreshDisclosure: disclosure.required, screenshot });
     } finally { await context.close(); }
   }
 } finally { await browser.close(); }

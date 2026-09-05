@@ -53,3 +53,72 @@ export function relativeAge(iso: string, now: Date = new Date()): string {
   const days = Math.floor(hours / 24);
   return days === 1 ? "1 day ago" : `${days} days ago`;
 }
+
+/*
+ * THE FOOTER'S DISCLOSURE, AS ONE CONTRACT (RLC-1, 2026-09-05).
+ *
+ * `components/map/data-freshness.tsx` renders these sentences, and the final
+ * rendered Reader proof (`scripts/reader-last-mile-final-render.mts`, through
+ * `scripts/lib/reader-freshness-disclosure.ts`) requires them — both from the
+ * functions below, neither from a copy. Refresh run #25 refused two genuine
+ * holding changes because the proof kept its own sentence, "we last reached
+ * them", while the refreshed snapshot's carried rows disagreed on a day and
+ * the footer rightly said "each one says when we last reached it". A proof
+ * that owns a second copy of reader prose is stale the day the prose moves;
+ * this is the only copy, and the proof follows it.
+ */
+
+/** Which carried-rows sentence the rows support. */
+export type CarriedListingsForm = "REACHED_TOGETHER" | "EACH_ON_ITS_OWN";
+
+export interface CarriedListingsDisclosure {
+  /** How many rows this refresh carried forward rather than fetched. */
+  count: number;
+  /** "74 calendar listings are older than that:" / "1 calendar listing is older than that:" */
+  lead: string;
+  form: CarriedListingsForm;
+  /**
+   * REACHED_TOGETHER: "we last reached them" — the footer appends the relative
+   * age of `lastFreshAt` as a `<time>`. EACH_ON_ITS_OWN: "each one says when we
+   * last reached it" — no single date is true of every carried row.
+   */
+  reached: string;
+  /** The one instant true of every carried row; null when no single date is. */
+  lastFreshAt: string | null;
+}
+
+/** The sentence a form renders after the lead, for this many carried rows. */
+export function carriedListingsSentence(form: CarriedListingsForm, count: number): string {
+  return form === "REACHED_TOGETHER"
+    ? `we last reached ${count === 1 ? "it" : "them"}`
+    : "each one says when we last reached it";
+}
+
+export function carriedListingsDisclosure(carried: SnapshotCarriedNote): CarriedListingsDisclosure {
+  const form: CarriedListingsForm = carried.lastFreshAt ? "REACHED_TOGETHER" : "EACH_ON_ITS_OWN";
+  return {
+    count: carried.count,
+    lead: `${carried.count === 1 ? "1 calendar listing is" : `${carried.count} calendar listings are`} older than that:`,
+    form,
+    reached: carriedListingsSentence(form, carried.count),
+    lastFreshAt: carried.lastFreshAt,
+  };
+}
+
+export interface FreshnessDisclosure {
+  /** "couldn't reach schedulepage, ical — some calendars may be missing"; null when every source was reached. */
+  unreachable: string | null;
+  /** The carried-rows sentence; null when the snapshot carries no rows. */
+  carried: CarriedListingsDisclosure | null;
+}
+
+/** Everything the footer must say beyond the snapshot's own age, given what the route served. */
+export function freshnessDisclosure(status: Pick<SnapshotStatus, "failed" | "carried">): FreshnessDisclosure {
+  return {
+    unreachable:
+      status.failed.length > 0
+        ? `couldn't reach ${status.failed.map((f) => f.source).join(", ")} — some calendars may be missing`
+        : null,
+    carried: status.carried && status.carried.count > 0 ? carriedListingsDisclosure(status.carried) : null,
+  };
+}

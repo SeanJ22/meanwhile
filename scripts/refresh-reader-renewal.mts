@@ -24,10 +24,13 @@
  *    in-process before it is called RENEWED.
  * 3. If any step fails, the committed evidence is restored byte-for-byte, the
  *    governed paths of every source whose change touched a holding go back to
- *    HEAD, and the record says which source, which step, and why. The gate
- *    then records the debt and the run goes red with that attribution. Nothing
- *    is hand-edited, the census validator is not weakened, and `walk:all` is
- *    never run.
+ *    HEAD, the registered PURE dependents are regenerated from that RESTORED
+ *    tree (RLC-2, 2026-09-05: run #25 left 56 state manifests derived from
+ *    the change under holdings back at HEAD, and the suite refused the
+ *    survivors for it), and the record says which source, which step, why,
+ *    and what was put back. The gate then records the debt and the run goes
+ *    red with that attribution. Nothing is hand-edited, the census validator
+ *    is not weakened, and `walk:all` is never run.
  */
 import { spawn, spawnSync, type ChildProcess } from "node:child_process";
 import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
@@ -54,7 +57,7 @@ import {
   unownedHoldings,
 } from "../lib/ops/refresh-renewal.ts";
 import { readRefreshRun, writeRefreshRun, type RefreshRenewal, type RefreshRenewalStep } from "../lib/ops/refresh-report.ts";
-import { changedFilesUnder, revertFilesToHead } from "./lib/refresh-revert.ts";
+import { restoreRefusedChange } from "./lib/refresh-revert.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const RECEIPT_PATH = "docs/evidence/reader-last-mile-final-closure-receipt.json";
@@ -141,28 +144,44 @@ function stopServer(): void {
     /* already gone */
   }
 }
-function restoreCommittedEvidence(): void {
-  const files = changedFilesUnder(git, ["docs/evidence"]);
-  revertFilesToHead(git, ROOT, files);
-  console.log(`  restored docs/evidence to HEAD (${files.length} path(s))`);
-}
 function refuse(failure: string): never {
   stopServer();
-  restoreCommittedEvidence();
-  for (const source of touching) {
-    const files = changedFilesUnder(git, REFRESH_SOURCES.find((s) => s.id === source.id)!.governs);
-    revertFilesToHead(git, ROOT, files);
-    console.log(`  ${source.id}: governed paths back at HEAD (${files.length} path(s))`);
-  }
-  record(failedRenewal({ exactHead, ranAt, changedHoldings: changed, prefix: steps.length ? prefix : null, steps, failure, sources: REFRESH_SOURCES }));
+  // RLC-2 (2026-09-05): the refused change goes back to HEAD — the committed
+  // Reader evidence first, then every touching source's governed paths — and
+  // the registered PURE dependents are regenerated from the RESTORED tree
+  // before the gate's suite validates it. Run #25 reverted the holdings alone
+  // and left 56 state manifests regenerated from the changed tree; the suite
+  // then refused the survivors for a staleness the refusal itself had made.
+  // One shared move (scripts/lib/refresh-revert.ts), the same registry and
+  // runner the gate and the push door use, for whichever source is refused.
+  const runner = spawningRunner(ROOT);
+  const restore = restoreRefusedChange({
+    git,
+    root: ROOT,
+    groups: [
+      { id: "committed Reader evidence", paths: ["docs/evidence"] },
+      ...touching.map((source) => ({ id: source.id, paths: REFRESH_SOURCES.find((s) => s.id === source.id)!.governs })),
+    ],
+    runCheck: runner,
+    runGen: (command) => runner(command),
+    log: (line) => console.log(`  ${line}`),
+  });
+  record(failedRenewal({ exactHead, ranAt, changedHoldings: changed, prefix: steps.length ? prefix : null, steps, failure, sources: REFRESH_SOURCES, restore }));
   // The refusal is recorded, attributed and reverted: the gate now runs over the
   // survivors. A non-zero exit here would hide the survivors' own verdict.
   process.exit(0);
 }
+// RLC-2's proof seam (2026-09-05): READER_RENEWAL_REFUSE_AT names a step that
+// must fail on purpose AFTER its work, so the refusal path — restore,
+// regenerate, record — is exercised end to end without planting a defect.
+// refresh-daily.yml never sets it (tests/refresh-renewal.test.ts pins that);
+// a run that sets it can only refuse, never renew.
+const refuseAt = process.env.READER_RENEWAL_REFUSE_AT?.trim() || null;
 async function step(name: string, work: () => Promise<string | void> | string | void): Promise<void> {
   const started = Date.now();
   try {
     const detail = await work();
+    if (refuseAt === name) throw new Error(`refused on purpose: READER_RENEWAL_REFUSE_AT=${name}`);
     steps.push({ name, ok: true, secs: Math.round((Date.now() - started) / 1000), detail: detail ? String(detail).slice(0, 300) : null });
     console.log(`  ok   ${name} (${steps[steps.length - 1].secs}s)`);
   } catch (error) {

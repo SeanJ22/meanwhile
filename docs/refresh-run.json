@@ -1,9 +1,9 @@
 {
   "formatVersion": 1,
   "runDate": "2026-09-05",
-  "startedAt": "2026-09-05T12:39:22.883Z",
-  "finishedAt": "2026-09-05T12:57:16.871Z",
-  "mode": "CADENCE",
+  "startedAt": "2026-09-05T17:18:01.987Z",
+  "finishedAt": "2026-09-05T17:46:39.415Z",
+  "mode": "ALL",
   "exitCode": 0,
   "sources": [
     {
@@ -11,7 +11,7 @@
       "due": true,
       "ran": true,
       "outcome": "ROUTE_UNREAD",
-      "reason": "the suite is red independent of any source's data (tests/reader-last-mile-census.test.ts) — nothing commits under a red the refresh did not cause; its governed paths are back at HEAD and it is owed until it lands",
+      "reason": "the gate refused this source's data: tests/reader-last-mile-census.test.ts — its governed paths are back at HEAD and it is owed until it lands",
       "commands": [
         "ingest composite"
       ],
@@ -28,8 +28,8 @@
       "id": "nj-filing",
       "due": true,
       "ran": true,
-      "outcome": "ROUTE_UNREAD",
-      "reason": "the suite is red independent of any source's data (tests/reader-last-mile-census.test.ts) — nothing commits under a red the refresh did not cause; its governed paths are back at HEAD and it is owed until it lands",
+      "outcome": "UNCHANGED",
+      "reason": "ran clean; every governed path is byte-identical to HEAD",
       "commands": [
         "nj:ballot --write",
         "nj:filing:check",
@@ -47,80 +47,95 @@
     },
     {
       "id": "fec",
-      "due": false,
-      "ran": false,
-      "outcome": "NOT_DUE",
-      "reason": "weekly, not due on 2026-09-05 or on any uncovered day since the last landed refresh, and carrying no debt",
+      "due": true,
+      "ran": true,
+      "outcome": "ROUTE_UNREAD",
+      "reason": "the gate refused this source's data: tests/reader-last-mile-census.test.ts — its governed paths are back at HEAD and it is owed until it lands",
       "commands": [
         "fec:fetch"
       ],
       "failedCommand": null,
-      "exitCode": null,
+      "exitCode": 0,
       "governs": [
         "data/fec/fec-2026.json"
       ],
       "changedPaths": [],
       "recoveredFrom": [],
-      "nextDueAt": "2026-09-07"
+      "nextDueAt": "2026-09-06"
     },
     {
       "id": "legiscan",
-      "due": false,
-      "ran": false,
-      "outcome": "NOT_DUE",
-      "reason": "weekly, not due on 2026-09-05 or on any uncovered day since the last landed refresh, and carrying no debt",
+      "due": true,
+      "ran": true,
+      "outcome": "ROUTE_UNREAD",
+      "reason": "the gate refused this source's data: tests/reader-last-mile-census.test.ts — its governed paths are back at HEAD and it is owed until it lands",
       "commands": [
         "legiscan:fetch"
       ],
       "failedCommand": null,
-      "exitCode": null,
+      "exitCode": 0,
       "governs": [
         "data/votes/state-votes-snapshot.json"
       ],
       "changedPaths": [],
       "recoveredFrom": [],
-      "nextDueAt": "2026-09-07"
+      "nextDueAt": "2026-09-06"
     },
     {
       "id": "dotgov",
-      "due": false,
-      "ran": false,
-      "outcome": "NOT_DUE",
-      "reason": "monthly, not due on 2026-09-05 or on any uncovered day since the last landed refresh, and carrying no debt",
+      "due": true,
+      "ran": true,
+      "outcome": "ROUTE_UNREAD",
+      "reason": "the gate refused this source's data: tests/reader-last-mile-census.test.ts — its governed paths are back at HEAD and it is owed until it lands",
       "commands": [
         "dotgov:fetch"
       ],
       "failedCommand": null,
-      "exitCode": null,
+      "exitCode": 0,
       "governs": [
         "data/dotgov/snapshot.json"
       ],
       "changedPaths": [],
       "recoveredFrom": [],
-      "nextDueAt": "2026-10-01"
+      "nextDueAt": "2026-09-06"
     }
   ],
   "catchUp": {
-    "lastLanded": "docs/refresh-run.md, run date 2026-09-04",
+    "lastLanded": "catch-up off",
     "days": [
       "2026-09-05"
     ],
     "cap": 8,
-    "off": false
+    "off": true
   },
   "gate": {
     "verdict": "REFUSED",
-    "ranAt": "2026-09-05T12:49:13.641Z",
+    "ranAt": "2026-09-05T17:35:08.425Z",
     "failingFiles": [
       "tests/reader-last-mile-census.test.ts"
     ],
     "attribution": [
       {
         "file": "tests/reader-last-mile-census.test.ts",
-        "sourceId": null,
-        "basis": "fails with every changed source's governed paths at HEAD — the tree's, not any source's data"
+        "sourceId": "meetings",
+        "basis": "passes only with every changed source's governed paths at HEAD — the refresh's jointly"
+      },
+      {
+        "file": "tests/reader-last-mile-census.test.ts",
+        "sourceId": "fec",
+        "basis": "passes only with every changed source's governed paths at HEAD — the refresh's jointly"
+      },
+      {
+        "file": "tests/reader-last-mile-census.test.ts",
+        "sourceId": "legiscan",
+        "basis": "passes only with every changed source's governed paths at HEAD — the refresh's jointly"
+      },
+      {
+        "file": "tests/reader-last-mile-census.test.ts",
+        "sourceId": "dotgov",
+        "basis": "passes only with every changed source's governed paths at HEAD — the refresh's jointly"
       }
     ],
-    "note": "The suite is red independent of the refreshed data — tests/reader-last-mile-census.test.ts fail with every changed source at HEAD. That is a defect on main, not a source's; nothing commits under it, and every changed source is owed until the tree is green."
+    "note": "The suite refused 4 source(s): meetings, fec, legiscan, dotgov. Their governed paths are back at HEAD and they are owed (data/ops/refresh-debt.json). 0 survivor(s) commit: none."
   }
 }

@@ -1,0 +1,23 @@
+[
+  {
+    "surface": "ballot",
+    "component": "components/ballot/candidate-card.tsx",
+    "exactHead": "d9dc2010f8a34766cd2a24ed672a64ac448619e9",
+    "evidencePath": "docs/evidence/reader-last-mile-ballot.json",
+    "evidenceSha256": "67e1c299bfecaf2a4616ef633952537b4d597a6b2ab8cb8175069975a45ac64b"
+  },
+  {
+    "surface": "ballot",
+    "component": "components/officials/positions-section.tsx",
+    "exactHead": "d9dc2010f8a34766cd2a24ed672a64ac448619e9",
+    "evidencePath": "docs/evidence/reader-last-mile-positions.json",
+    "evidenceSha256": "b3a204c4a5b340c53b520111ad0bf66a4414d0427bbb4edb219b2a255b8d7f2a"
+  },
+  {
+    "surface": "civic-routing",
+    "component": "components/ask/ask-box.tsx",
+    "exactHead": "d9dc2010f8a34766cd2a24ed672a64ac448619e9",
+    "evidencePath": "docs/evidence/reader-last-mile-civic.json",
+    "evidenceSha256": "2af13186fee4e0441c66283cbb95e9635794eaed9dfca29ec2700070eb6902fd"
+  }
+]

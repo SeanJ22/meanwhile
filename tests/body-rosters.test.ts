@@ -21,7 +21,7 @@ import { normalizeName } from "../lib/routing/exact-name.ts";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 /**
- * The committed retrieval ledgers, concatenated once.
+ * The committed retrieval ledgers, read once without a corpus-sized string.
  *
  * A ledger line is the bytes a public body actually sent us, with the URL, the
  * date, the HTTP status and the ladder rung it took to get them. An address
@@ -30,15 +30,14 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
  */
 const EVIDENCE = (() => {
   const dir = join(ROOT, "docs", "evidence");
-  if (!existsSync(dir)) return "";
+  if (!existsSync(dir)) return [];
   return readdirSync(dir)
     .filter((f) => f.endsWith(".jsonl") || f.endsWith(".json"))
-    .map((f) => readFileSync(join(dir, f), "utf8"))
-    .join("\n");
+    .map((f) => readFileSync(join(dir, f), "utf8"));
 })();
 
 function publishedInEvidence(email: string): boolean {
-  return EVIDENCE.includes(email);
+  return EVIDENCE.some(ledger => ledger.includes(email));
 }
 
 test("every roster keys to a real body — a roster for nothing is a curation error", () => {

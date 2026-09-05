@@ -38,6 +38,8 @@ export interface SeatHolder {
    * product cannot survive. No sourced term, nothing renders.
    */
   termEnd: string | null;
+  /** Verbatim sourced term/appointment wording; never parsed into a term date. */
+  termNote?: string | null;
   /**
    * 6d: the ONLY basis on which an age may render, and it is a DATE rather
    * than an age so the number is computed fresh at every render and cannot
@@ -92,6 +94,15 @@ export interface SeatHolder {
 }
 
 export type OfficeholderIndex = Map<string, SeatHolder[]>;
+
+/** Person lookup is independent of whether their district geometry is held. */
+export function indexByOfficeholderId(sets: readonly OfficeholderSet[], photos?: PhotoIndex): Map<string, SeatHolder> {
+  const out = new Map<string, SeatHolder>();
+  for (const set of sets) for (const person of set.officeholders) {
+    if (!out.has(person.id)) out.set(person.id, toSeatHolder(person, photos));
+  }
+  return out;
+}
 
 /** officeholderId → path on our origin, from official-photos.json. */
 export type PhotoIndex = Map<string, string>;

@@ -2,7 +2,7 @@
  "formatVersion": 1,
  "state": "AZ",
  "cycle": 2026,
- "generatedAt": "2026-09-01",
+ "generatedAt": "2026-09-04",
  "generatedBy": "pnpm identity:az (scripts/identity-az-2026.mts)",
  "sources": [
   {

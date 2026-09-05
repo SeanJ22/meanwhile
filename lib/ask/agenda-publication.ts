@@ -332,6 +332,8 @@ export interface AgendaPublicationReading {
   readonly state: `${PublisherPublicationStatus}/${AgendaAcquisitionState}`;
   readonly publication: PublisherPublicationStatus;
   readonly acquisition: AgendaAcquisitionState;
+  /** The same held link is attached to more than one canonical government. */
+  readonly documentSharedAcrossGovernments?: boolean;
   /** The observation the publication status rests on. Null when UNKNOWN. */
   readonly observation: PublisherAgendaObservation | null;
   /** The named gap, or null when items are reader-ready and nothing is owed. */
@@ -367,6 +369,8 @@ export interface AgendaPublicationReading {
 }
 
 export interface AgendaPublicationInput {
+  /** Canonical meeting identities; no government is inferred from page text. */
+  readonly meetingsAcrossCorpus?: readonly { id: string; ocdId: string | null }[];
   /** The body as a reader named it. Reader-safe plain language only. */
   readonly bodyName: string;
   readonly meetingId: string;
@@ -452,6 +456,42 @@ function governingObservation(
 }
 
 /**
+ * The stored extraction label is not evidence that its bytes are an agenda.
+ * Older HTML readers stored document-viewer shells, portal navigation, and
+ * even ZIP/DOCX bytes as text. These are representation facts, not a claim
+ * about whether the publisher has posted an agenda. Keep the original bytes;
+ * classify their reader use here, for both Ask and the meeting card.
+ */
+export function agendaDocumentRepresentation(document: AgendaDocumentLike):
+  "TEXT" | "PUBLICATION_PORTAL" | "UNREADABLE" {
+  const text = document.text;
+  if (!text?.trim() || /^(?:PK\u0003\u0004|%PDF-)/.test(text) || text.includes("\u0000")) {
+    return "UNREADABLE";
+  }
+  if (document.extraction !== "html") return "TEXT";
+  let url: URL;
+  try { url = new URL(document.documentUrl); } catch { return "TEXT"; }
+
+  // Diligent/iCompass's meeting-specific URL is still a portal, even when
+  // no other sitting shares the URL. Its accessible agenda is a linked file.
+  if (/\/Portal\/(?:MeetingInformation\.aspx)?\/?$/i.test(url.pathname)
+      && /Skip Navigation\s+Jump to SideBar\s+Quick Menu/i.test(text)
+      && /(?:Board Application:|Schedule of Meetings|Upcoming Meetings)/i.test(text)) {
+    return "PUBLICATION_PORTAL";
+  }
+  // The browser application has not loaded a document into these shells.
+  if (/Public Portal\s*[•·-]?\s*CivicClerk/i.test(text)
+      && /(?:need to enable|requires?) JavaScript/i.test(text)) return "PUBLICATION_PORTAL";
+  if (url.hostname === "drive.google.com" && /^\/file\/d\/[^/]+\/view\/?$/.test(url.pathname)
+      && /Google Drive\s+Loading(?:&hellip;|\.{3}|…)?\s+Sign in/i.test(text)) return "PUBLICATION_PORTAL";
+  // A board's meeting directory is not an individual meeting's notice.
+  if (/Skip to content/i.test(text)
+      && /Board (?:and|&) Committee Meetings\s+View Meetings\s+Get Notifications/i.test(text)
+      && /(?:Cancel\s+Continue\s*){1,}/i.test(text)) return "PUBLICATION_PORTAL";
+  return "TEXT";
+}
+
+/**
  * **The reading. This is the only place `whose: "THEIRS"` can be produced for
  * an agenda, and it is produced from an observation or not at all.**
  */
@@ -466,6 +506,7 @@ export function classifyAgendaPublication(
     discoveredDocumentUrl = null,
     observations = [],
     routeAttempts = [],
+    meetingsAcrossCorpus = [],
     now,
   } = input;
 
@@ -493,7 +534,13 @@ export function classifyAgendaPublication(
           .map((d) => d.meetingId),
       ).size
     : 0;
-  const items = newest?.text ? agendaItems(newest.text) : [];
+  const representation = newest ? agendaDocumentRepresentation(newest) : null;
+  const governmentByMeeting = new Map(meetingsAcrossCorpus.map(meeting => [meeting.id, meeting.ocdId]));
+  const documentSharedAcrossGovernments = newest ? new Set(documentsAcrossCorpus
+    .filter(document => document.documentUrl === newest.documentUrl)
+    .map(document => governmentByMeeting.get(document.meetingId))
+    .filter((id): id is string => Boolean(id))).size > 1 : false;
+  const items = !documentSharedAcrossGovernments && representation === "TEXT" && newest?.text ? agendaItems(newest.text) : [];
   const attempts = routeAttempts.filter((a) => a.meetingId === meetingId);
   const blocked = attempts.some((a) => a.outcome === "BLOCKED" || a.outcome === "FAILED");
 
@@ -503,9 +550,9 @@ export function classifyAgendaPublication(
       : discoveredDocumentUrl
         ? "REPRESENTATION_DISCOVERED"
         : "NOT_ACQUIRED"
-    : !newest.text
+    : representation === "UNREADABLE"
       ? "ACQUIRED_NOT_READABLE"
-      : sharedWith > 1 && items.length === 0
+      : documentSharedAcrossGovernments || representation === "PUBLICATION_PORTAL" || (sharedWith > 1 && items.length === 0)
         ? "ACQUIRED_IS_PUBLICATION_INDEX"
         : items.length === 0
           ? "READ_NO_ITEMS_EXTRACTED"
@@ -519,8 +566,9 @@ export function classifyAgendaPublication(
     state: `${publication}/${acquisition}`,
     publication,
     acquisition,
+    documentSharedAcrossGovernments,
     observation,
-    gap: gapFor({ publication, acquisition, observation, fresh, bodyName }),
+    gap: gapFor({ publication, acquisition, observation, fresh, bodyName, documentSharedAcrossGovernments }),
     obligationOpen,
     recheckDueAt,
     alternateSearchOpen: obligationOpen,
@@ -556,6 +604,7 @@ function gapFor(args: {
   observation: PublisherAgendaObservation | null;
   fresh: boolean;
   bodyName: string;
+  documentSharedAcrossGovernments: boolean;
 }): EvidenceGap | null {
   const { publication, acquisition, observation, bodyName } = args;
 
@@ -570,7 +619,9 @@ function gapFor(args: {
     case "ACQUIRED_IS_PUBLICATION_INDEX":
       return {
         whose: "OURS",
-        statement: `The link we hold for that meeting is ${bodyName}'s agenda portal rather than the agenda itself.`,
+        statement: args.documentSharedAcrossGovernments
+          ? "The stored link is shared by meeting records for more than one government. It has not been verified as this body's agenda."
+          : `The link we hold for that meeting is ${bodyName}'s agenda portal rather than the agenda itself.`,
       };
     case "READ_NO_ITEMS_EXTRACTED":
       return {

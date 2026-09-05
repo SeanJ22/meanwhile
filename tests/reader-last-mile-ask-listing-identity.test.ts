@@ -1,0 +1,102 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { POST, resetGroundedState } from "../app/api/ask/grounded/route.ts";
+import { POST as agendaPOST } from "../app/api/ask/agenda/route.ts";
+import { GET as agendaGET } from "../app/api/agenda/route.ts";
+import { readSnapshot } from "../lib/meetings/snapshot.ts";
+import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
+import { meetingListingIdentity } from "../lib/meetings/listing-identity.ts";
+import { meetingListingKnowledgeFor, minutesSummaryEvidenceFor, noticeSummaryEvidenceFor } from "../lib/ask/meeting-knowledge.ts";
+import { MINUTES_SUMMARIES } from "../lib/meetings/minutes-summaries.ts";
+import { NOTICE_SUMMARIES } from "../lib/meetings/notice-summary.ts";
+import type { AskAnswerPayload } from "../lib/ask/answer.ts";
+
+delete process.env.ANTHROPIC_API_KEY;
+process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
+const headers = { "content-type": "application/json", origin: "https://wtp.test", "x-wtp-synthetic-run": "reader-listing-identity-control" };
+
+test("all three measured Newbury dates retain two listings with unresolved distinct-meeting counts in real Ask", async () => {
+  const snapshot = readSnapshot()!;
+  const expectedPairs = [["2026-10-13", "43886", "42306"], ["2026-11-10", "43891", "42311"], ["2026-12-08", "43896", "42316"]];
+  assert.equal(meetingListingIdentity(snapshot.meetings, canonicalBodyIdentity).groups.length, expectedPairs.length);
+  for (const [date, first, second] of expectedPairs) {
+    const ids = [first, second].map(id => `ical:newbury-ical-conservation-commission:calendar.${id}.field_date_and_time.0@www.newbury.nh.gov`);
+    const held = snapshot.meetings.filter(meeting => ids.includes(meeting.id));
+    assert.equal(held.length, 2, date);
+    const body = canonicalBodyIdentity(held[0].bodyId)!;
+    assert.ok(body);
+    const group = meetingListingIdentity(held, canonicalBodyIdentity).groups[0];
+    assert.ok(group, date);
+    resetGroundedState();
+    const response = await POST(new Request("https://wtp.test/api/ask/grounded", { method: "POST", headers,
+      body: JSON.stringify({ question: `What is on this body's agenda on ${date}?`, surface: "MAP", ocdIds: [held[0].ocdId], activeSubjects: [{ id: body.bodyId, name: body.name, kind: "BODY", focused: true }] }) }));
+    const payload = await response.json() as AskAnswerPayload;
+    assert.equal(response.status, 200);
+    assert.equal(payload.answer, null, "No model supplies the known answer");
+    assert.equal(payload.subject?.id, body.bodyId);
+    const records = payload.records.filter(record => record.kind === "MEETING");
+    assert.deepEqual(records.map(record => record.id).sort(), ids.sort());
+    for (const source of held) {
+      const record = records.find(record => record.id === source.id)!;
+      assert.equal(record.sourceUrl, source.provenance.sourceUrl);
+      assert.equal(record.sourceOrg, source.provenance.sourceOrg);
+      assert.equal(record.retrievedAt, source.provenance.collectedAt);
+      assert.match(record.text, /^Calendar listing:/);
+      assert.deepEqual(record.meetingListingIdentity, group);
+    }
+    assert.ok(payload.gaps.some(gap => gap.whose === "OURS" && gap.statement === group.reason));
+    assert.equal(payload.denominators.calendarListingsThatLocalDay, 2);
+    assert.equal(payload.denominators.uniqueMeetingCountUnresolvedGroups, 1);
+    assert.equal(payload.denominators.sittingsThatLocalDay, undefined);
+    assert.equal(payload.denominators.meetingsHeldForThisBody, undefined);
+    assert.equal(payload.meetingListingIdentity?.sourceListingCount, 2);
+    assert.equal(payload.meetingListingIdentity?.groups[0].uniqueMeetingCount, null);
+    assert.equal(payload.trace.retrieval.recordCount, payload.records.length);
+    assert.deepEqual(payload.meetings.map(meeting => meeting.id).sort(), ids.sort());
+    for (const id of ids) {
+      const answer = await agendaPOST(new Request("https://wtp.test/api/ask/agenda", { method: "POST", headers, body: JSON.stringify({ meetingId: id }) }));
+      const agenda = await answer.json();
+      assert.equal(answer.status, 200);
+      assert.equal(agenda.meetingId, id);
+      assert.deepEqual(agenda.listingIdentity.groups, [group]);
+      const documents = snapshot.agendaDocuments?.filter(document => document.meetingId === id) ?? [];
+      assert.equal(agenda.documentsHeld, documents.length, "Equal listing fields never copy a sibling's attachment");
+      if (!documents.length) { assert.deepEqual(agenda.items, []); assert.equal(agenda.documentUrl, null); }
+      const readerResponse = await agendaGET(new Request(`https://wtp.test/api/agenda?meetingId=${encodeURIComponent(id)}`));
+      const reader = await readerResponse.json();
+      assert.equal(readerResponse.status, 200);
+      assert.equal(reader.meetingId, id);
+      assert.deepEqual(reader.listingIdentity.groups, [group]);
+      assert.deepEqual(reader.documents.map((document: { id: string }) => document.id).sort(), documents.map(document => document.id).sort());
+    }
+  }
+});
+
+test("date-only listing identities remain date-only records without an invented shared time or multiplicity claim", () => {
+  const snapshot = readSnapshot()!;
+  const dateOnly = snapshot.meetings.filter(meeting => meeting.startPrecision === "DAY");
+  assert.equal(dateOnly.length, 51);
+  const reading = meetingListingKnowledgeFor(snapshot.meetings, dateOnly.map(meeting => meeting.id)).readback;
+  assert.equal(reading.sourceListingCount, dateOnly.length);
+  assert.deepEqual(reading.groups, []);
+  assert.deepEqual([...reading.unresolvedTimeSourceIds].sort(), dateOnly.map(meeting => meeting.id).sort());
+});
+
+test("listing knowledge cannot borrow a summary or notice through equal body/time fields", () => {
+  const snapshot = readSnapshot()!;
+  for (const [id, question, readEvidence] of [
+    [MINUTES_SUMMARIES[0].meetingId, "What happened?", minutesSummaryEvidenceFor],
+    [NOTICE_SUMMARIES[0].meetingId, "What is in the notice?", noticeSummaryEvidenceFor],
+  ] as const) {
+    const source = snapshot.meetings.find(meeting => meeting.id === id)!;
+    assert.ok(source);
+    const unrelated = { ...source, id: `${source.id}:distinct-publisher-listing` };
+    const planted = { ...snapshot, meetings: [source, unrelated] };
+    assert.equal(readEvidence(source.bodyId!, unrelated.id, question, () => planted).records.length, 0);
+    assert.equal(meetingListingKnowledgeFor(planted.meetings, [unrelated.id]).readback.sourceListingCount, 2);
+    const original = readEvidence(source.bodyId!, source.id, question, () => planted);
+    assert.equal(original.records.length, 1, "The original exact source summary remains available");
+    assert.ok(original.gaps.some(gap => gap.whose === "OURS"));
+  }
+  assert.equal(meetingListingKnowledgeFor(snapshot.meetings, ["unheld-listing-id"]).readback.sourceListingCount, 0);
+});

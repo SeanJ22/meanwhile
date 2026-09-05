@@ -1,6 +1,7 @@
 import { haversineKm } from "../geo/distance.ts";
 import type { CoverageSummary } from "../registry/coverage.ts";
 import type { Meeting } from "../sources/types.ts";
+import type { MeetingListingIdentityReadback } from "./listing-identity.ts";
 
 import {
   CONCLUDED_LOOKBACK_DAYS,
@@ -32,6 +33,8 @@ export type { CoverageTier } from "./constants.ts";
 
 export interface MeetingSearchResult {
   meetings: Meeting[];
+  /** Route readback of exact canonical body/listing identity, before UI filters. */
+  listingIdentity?: MeetingListingIdentityReadback;
   tier: CoverageTier;
   /** Radius the returned meetings were found in. */
   radiusKm: number;

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
@@ -660,9 +661,20 @@ test("ASK04: the ballot surface renders records even when synthesis produced non
   );
   assert.match(
     source,
-    /\{!reply\.answer && records\.length > 0 && \(/,
-    "records must render when prose did not",
+    /<AskAnswerRecords records=\{records\} initiallyOpen=\{!reply\.answer\} \/>/,
+    "the ballot must reach the same complete record renderer as map Ask",
   );
+  const markup = execFileSync(process.execPath, ["--import", "tsx", "--input-type=module", "-e", `
+    import { createElement } from 'react';
+    import { renderToStaticMarkup } from 'react-dom/server';
+    import { AskAnswerRecords } from './components/ask/answer-records.tsx';
+    const records = Array.from({length: 17}, (_, i) => ({ kind: 'VOTE', id: 'held:' + i, text: 'Held vote ' + i }));
+    console.log(renderToStaticMarkup(createElement(AskAnswerRecords, { records, initiallyOpen: true })));
+  `], { encoding: "utf8", timeout: 30_000 });
+  assert.match(markup, /data-ask-record-count="17"/);
+  assert.equal([...markup.matchAll(/data-ask-record-id=/g)].length, 17);
+  assert.ok(markup.includes('data-ask-record-id="held:16"'));
+  assert.ok(markup.includes('open=""'), "all structured records remain reachable when synthesis is absent");
 });
 
 test("ASK04: the ballot surface posts to the ONE engine, with its own surface", () => {

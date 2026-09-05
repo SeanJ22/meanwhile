@@ -2,12 +2,17 @@ import type {
   BallotAbsence,
   BallotSet,
   Candidacy,
+  CandidacyRemoval,
   Contest,
   Measure,
 } from "../ballot/types.ts";
 import type { BindableEntity } from "../routing/named-entity.ts";
-import { COMMON_QUESTION_NOUNS } from "../routing/named-entity.ts";
+import { bindNamedEntity, COMMON_QUESTION_NOUNS } from "../routing/named-entity.ts";
 import { formatDateLong } from "../text/format-date.ts";
+import { officeIdentity } from "../officials/office-identity.ts";
+import { reconciledCandidacyIdForCard } from "../identity/az-2026.ts";
+import type { MeasureAnalysis } from "../ballot/analyses.ts";
+import { readerContestScope } from "../ballot/reader-scope.ts";
 
 import type { EvidenceRecord, EvidenceSubject } from "./evidence.ts";
 
@@ -80,6 +85,10 @@ export interface BallotSubjectRecord {
    * becoming a clarification the reader cannot possibly answer.
    */
   candidacyId?: string | null;
+  /** A sourced former filing, never a currently listed candidate. */
+  removedFromFiling?: boolean;
+  /** A held source filing queried directly, outside the current certified lineup. */
+  historicalFiling?: boolean;
 }
 
 export interface BallotAskInventory {
@@ -145,6 +154,7 @@ export function ballotAskInventory(
   set: BallotSet | null,
   contests: readonly Contest[],
   nomineesFor: (contestId: string) => readonly { name: string; partyLabel?: string | null }[] = () => [],
+  requestedFilingIds: readonly string[] = [],
 ): BallotAskInventory {
   const entities: BindableEntity[] = [];
   const subjects = new Map<string, BallotSubjectRecord>();
@@ -187,6 +197,28 @@ export function ballotAskInventory(
 
     if (isMeasure) continue;
 
+    for (const removal of set.removals ?? []) if (removal.contestId === contest.id) {
+      const name = [removal.givenName, removal.familyName].filter(Boolean).join(" ");
+      add(removal.id, name, "person", "person", {
+        kind: "PERSON", id: removal.id, name, contestId: contest.id,
+        contestTitle: contest.title, ocdId: contest.ocdId, removedFromFiling: true,
+      });
+    }
+
+    // Office vocabulary varies by filing authority; the district's canonical
+    // OCD key supplies the number. These are names for one existing contest,
+    // never a name-based join between different people or governments.
+    const cd = /\/cd:(\d+)$/.exec(contest.ocdId)?.[1];
+    if (cd && officeIdentity(contest.title) === "us_representative") {
+      const n = Number(cd);
+      const suffix = n % 100 >= 11 && n % 100 <= 13 ? "th" : ({ 1: "st", 2: "nd", 3: "rd" } as Record<number, string>)[n % 10] ?? "th";
+      for (const number of [cd, `${cd}${suffix}`]) {
+        for (const office of ["U.S. House", "U.S. Representative", "Congress"]) {
+          add(contest.id, `${office} District ${number}`, "body", "contest", record);
+        }
+      }
+    }
+
     const filed = set.candidacies.filter((c) => c.contestId === contest.id);
     const nominees = nomineesFor(contest.id);
 
@@ -215,10 +247,8 @@ export function ballotAskInventory(
         if (!nominee.name) continue;
         const id = candidateTargetKey(contest.id, nominee.name);
         if (subjects.has(id)) continue;
-        const wanted = nominee.name.trim().toLowerCase();
-        const match = filed.find(
-          (c) => candidacyDisplayName(c).trim().toLowerCase() === wanted,
-        );
+        const candidacyId = reconciledCandidacyIdForCard(id);
+        const match = filed.find((c) => c.id === candidacyId);
         const surname = match?.familyName ?? nominee.name.trim().split(/\s+/).pop() ?? "";
         const personRecord: BallotSubjectRecord = {
           kind: "PERSON",
@@ -257,7 +287,23 @@ export function ballotAskInventory(
     }
   }
 
+  // Exact held filings remain answerable without becoming current ballot cards.
+  const requested = new Set(requestedFilingIds);
+  for (const candidacy of set.candidacies) {
+    if (!requested.has(candidacy.id) || [...subjects.values()].some((subject) => subject.id === candidacy.id || subject.candidacyId === candidacy.id)) continue;
+    const contest = contests.find((row) => row.id === candidacy.contestId);
+    if (!contest) continue;
+    const name = candidacyDisplayName(candidacy);
+    add(candidacy.id, name, "person", "person", { kind: "PERSON", id: candidacy.id, candidacyId: candidacy.id, name, contestId: contest.id, contestTitle: contest.title, ocdId: contest.ocdId, historicalFiling: true });
+  }
   return { entities, subjects };
+}
+
+/** Bind the reader's words to a held filing; never join one civic record by a name. */
+export function namedSourceFilingIds(question: string, set: BallotSet | null): string[] {
+  if (!set) return [];
+  const binding = bindNamedEntity(question, set.candidacies.map((candidacy) => ({ id: candidacy.id, name: candidacyDisplayName(candidacy), nameClass: "person" as const, divisionType: "person" })));
+  return binding.kind === "BOUND" ? [binding.entity.id] : binding.kind === "AMBIGUOUS" ? binding.candidates.map((candidate) => candidate.id) : [];
 }
 
 /** The evidence subject for a resolved ballot entity. */
@@ -266,11 +312,12 @@ export function ballotSubject(record: BallotSubjectRecord): EvidenceSubject {
     kind: record.kind === "PERSON" ? "PERSON" : record.kind,
     id: record.id,
     name: record.name,
-    office: record.kind === "PERSON" ? record.contestTitle : null,
+    office: record.kind === "PERSON" && !record.removedFromFiling ? record.contestTitle : null,
   };
 }
 
 export interface BallotRetrievalDeps {
+  measureAnalysis?: (contestId: string) => MeasureAnalysis | null;
   set: BallotSet;
   contests: readonly Contest[];
   absences: readonly BallotAbsence[];
@@ -291,7 +338,22 @@ export interface BallotRetrievalDeps {
     citesUrl: string;
   }[];
   /** General-election nominees for a contest, where the source has them. */
-  nominees?: (contestId: string) => readonly { name: string; partyLabel?: string | null }[];
+  nominees?: (contestId: string) => readonly AskNominee[];
+}
+
+export interface AskNominee {
+  name: string;
+  partyLabel?: string | null;
+  note?: string | null;
+  sourceUrl?: string | null;
+  sourceOrg?: string | null;
+  retrievedAt?: string | null;
+}
+
+function nomineeRecord(contestId: string, contestTitle: string, nominee: AskNominee): EvidenceRecord {
+  return { kind: "CANDIDACY", id: candidateTargetKey(contestId, nominee.name),
+    text: `${nominee.name} is on the general-election ballot for ${contestTitle}${nominee.partyLabel ? `, filed as ${nominee.partyLabel}` : ""}.${nominee.note ? ` ${nominee.note}` : ""}`,
+    sourceUrl: nominee.sourceUrl ?? null, sourceOrg: nominee.sourceOrg ?? null, retrievedAt: nominee.retrievedAt ?? null };
 }
 
 /**
@@ -310,8 +372,20 @@ export function ballotRecordsFor(
   const records: EvidenceRecord[] = [];
   const denominators: Record<string, number> = {};
   const contest = deps.contests.find((c) => c.id === record.contestId) ?? null;
+  if (record.removedFromFiling) {
+    const removal = deps.set.removals?.find((entry) => entry.id === record.id && entry.contestId === record.contestId);
+    return { records: removal ? removalRecords(removal) : [], denominators: { removedFilingsForThisSubject: removal ? 1 : 0 } };
+  }
 
-  if (contest) {
+  if (contest && !record.historicalFiling) {
+    const nominees = deps.nominees?.(contest.id) ?? [];
+    const certified = nominees[0];
+    const scope = readerContestScope(contest, {
+      certified: certified?.sourceUrl && certified.sourceOrg && certified.retrievedAt ? {
+        count: nominees.length, sourceUrl: certified.sourceUrl, sourceOrg: certified.sourceOrg, readAt: certified.retrievedAt,
+      } : null,
+      questionTextHeld: deps.set.measures.some((measure) => measure.contestId === contest.id && Boolean(measure.questionText.trim())),
+    });
     records.push({
       kind: "CONTEST",
       id: contest.id,
@@ -324,18 +398,24 @@ export function ballotRecordsFor(
         ` on ${formatDateLong(deps.set.election.date) ?? deps.set.election.date}.` +
         ` Voters choose ${contest.voteFor}` +
         `${contest.termYears ? `, for a term of ${contest.termYears} years` : ""}.` +
-        (contest.scopeNote ? ` ${contest.scopeNote}` : ""),
+        (scope.currentNote ? ` ${scope.currentNote}` : ""),
       occurredAt: deps.set.election.date,
       sourceUrl: contest.provenance?.sourceUrl ?? null,
       sourceOrg: contest.provenance?.sourceOrg ?? null,
       retrievedAt: contest.provenance?.collectedAt ?? null,
     });
+    if (scope.qualification) records.push({ kind: "CONTEST", id: `${contest.id}#current-lineup`,
+      text: scope.qualification.text, sourceUrl: scope.qualification.sourceUrl,
+      sourceOrg: scope.qualification.sourceOrg, retrievedAt: scope.qualification.readAt });
   }
 
   if (record.kind === "MEASURE") {
     const measures = deps.set.measures.filter((m) => m.contestId === record.contestId);
     denominators.measureRecordsForThisQuestion = measures.length;
     for (const measure of measures) records.push(...measureRecords(measure));
+    const analysis = deps.measureAnalysis?.(record.contestId);
+    if (analysis?.text && analysis.extraction !== "failed") records.push({ kind: "MEASURE_ANALYSIS", id: `${analysis.contestId}#analysis`, text: analysis.text, sourceUrl: analysis.analysisUrl, sourceOrg: analysis.sourceOrg, retrievedAt: analysis.retrievedAt });
+    denominators.readableMeasureAnalyses = analysis?.text && analysis.extraction !== "failed" ? 1 : 0;
 
     const summary = deps.measureSummary?.(record.contestId) ?? null;
     if (summary) {
@@ -379,16 +459,12 @@ export function ballotRecordsFor(
     const nominees = deps.nominees?.(record.contestId) ?? [];
     denominators.generalElectionNominees = nominees.length;
     for (const nominee of nominees) {
-      records.push({
-        kind: "CANDIDACY",
-        id: candidateTargetKey(record.contestId, nominee.name),
-        text:
-          `${nominee.name} is on the general-election ballot for ${record.contestTitle}` +
-          `${nominee.partyLabel ? `, filed as ${nominee.partyLabel}` : ""}.`,
-        sourceUrl: null,
-      });
+      records.push(nomineeRecord(record.contestId, record.contestTitle, nominee));
     }
-    records.push(...absenceRecords(record.ocdId, deps.absences));
+    const removals = (deps.set.removals ?? []).filter((entry) => entry.contestId === record.contestId);
+    for (const removal of removals) records.push(...removalRecords(removal));
+    denominators.removedFilingsForThisContest = removals.length;
+    records.push(...absenceRecords(record.ocdId, absencesWithoutRemovals(deps.absences, deps.set.removals ?? [])));
     return { records, denominators };
   }
 
@@ -397,10 +473,11 @@ export function ballotRecordsFor(
      the page renders, and through the id itself otherwise. */
   const wantedCandidacy = record.candidacyId ?? record.id;
   const candidacy = deps.set.candidacies.find((c) => c.id === wantedCandidacy) ?? null;
+  const nominee = deps.nominees?.(record.contestId).find((entry) => candidateTargetKey(record.contestId, entry.name) === record.id);
   if (candidacy) {
     records.push(candidacyRecord(candidacy, record.contestTitle));
     denominators.filingRecordsForThisCandidate = 1;
-  } else {
+  } else if (!nominee) {
     records.push({
       kind: "CANDIDACY",
       id: record.id,
@@ -408,8 +485,12 @@ export function ballotRecordsFor(
       sourceUrl: null,
     });
   }
+  if (nominee) records.push(nomineeRecord(record.contestId, record.contestTitle, nominee));
 
-  const positions = deps.positions?.(record.id) ?? [];
+  const positions = [...new Map(
+    [...new Set([record.id, wantedCandidacy])].flatMap((key) => deps.positions?.(key) ?? [])
+      .map((position) => [`${position.documentUrl}|${position.quote}`, position]),
+  ).values()];
   denominators.sourcedPositionPassages = positions.length;
   for (const [index, position] of positions.entries()) {
     records.push({
@@ -518,6 +599,22 @@ function absenceRecords(
       sourceOrg: a.provenance?.sourceOrg ?? null,
       retrievedAt: a.provenance?.collectedAt ?? null,
     }));
+}
+
+/** A removal has its own canonical identity and both source documents. */
+export function removalRecords(removal: CandidacyRemoval): EvidenceRecord[] {
+  return [
+    { kind: "BALLOT_ABSENCE", id: removal.id, canonicalSubjectId: removal.id, text: removal.statement,
+      sourceUrl: removal.absentFrom.sourceUrl, sourceOrg: removal.absentFrom.sourceOrg, retrievedAt: removal.absentFrom.collectedAt },
+    { kind: "BALLOT_ABSENCE", id: `${removal.id}#last-listed`, canonicalSubjectId: removal.id,
+      text: `${removal.givenName} ${removal.familyName} appeared in the earlier filing read ${formatDateLong(removal.lastListed.collectedAt) ?? removal.lastListed.collectedAt}.`,
+      sourceUrl: removal.lastListed.sourceUrl, sourceOrg: removal.lastListed.sourceOrg, retrievedAt: removal.lastListed.collectedAt },
+  ];
+}
+
+/** The same filing change must not become an absence attached to a different candidate. */
+export function absencesWithoutRemovals(absences: readonly BallotAbsence[], removals: readonly CandidacyRemoval[]): BallotAbsence[] {
+  return absences.filter((absence) => !removals.some((removal) => removal.statement === absence.statement && removal.absentFrom.sourceUrl === absence.provenance.sourceUrl));
 }
 
 /** Every absence the reader's own divisions carry, for a question about them. */

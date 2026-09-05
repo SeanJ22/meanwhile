@@ -236,6 +236,8 @@ test("no reader surface reaches a body's members through a division roster", () 
     "tests/card-sources.test.ts",
     "tests/division-representation.test.ts",
     "tests/representation.test.ts",
+    /* Exact division/officeholder projection regression; it renders no body. */
+    "tests/reader-representation-delivery.test.ts",
   ]);
 
   const offenders: string[] = [];

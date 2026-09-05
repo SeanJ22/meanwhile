@@ -23,8 +23,8 @@ import {
   localFinanceEvidenceFor,
 } from "../lib/ask/local-finance.ts";
 import type { EvidenceSubject } from "../lib/ask/evidence.ts";
+import type { AskAnswerPayload } from "../lib/ask/answer.ts";
 
-const ROUTE = readFileSync("app/api/ask/grounded/route.ts", "utf8");
 const ASK_BOX = readFileSync("components/ask/ask-box.tsx", "utf8");
 
 function subject(over: Partial<EvidenceSubject> = {}): EvidenceSubject {
@@ -95,26 +95,32 @@ test("OWN-Q5: THE SEEDED FAILURE — a subject this pipeline holds nothing for s
 test("OWN-Q5: a contest is answered as a contest, not as an absence", () => {
   const gap = financeScopeGapFor(subject({ kind: "CONTEST", name: "Governor" }));
   assert.equal(gap.whose, "OURS");
-  assert.match(gap.statement, /links a committee to an individual candidacy/i);
+  assert.match(gap.statement, /does not combine their filings into a total/i);
 });
 
-test("OWN-Q5 WIRING: the route pushes the regimes on EVERY money question", () => {
-  /*
-   * Following the call rather than a string, and specifically following the
-   * ELSE branch — the null path is the one that used to say nothing at all.
-   */
-  const block = ROUTE.slice(
-    ROUTE.indexOf("if (subject && financeQuestionAsked(question))"),
-  ).slice(0, 900);
-  assert.match(block, /gaps\.push\(financeScopeGapFor\(subject\)\)/, "the null path now speaks");
-  assert.match(
-    block,
-    /for \(const note of financeRegimeNotesFor\(subject\)\) gaps\.push\(note\.gap\)/,
-    "the regimes are pushed OUTSIDE the found/not-found branch, so records do not suppress them",
-  );
-  const found = block.indexOf("records.push(...finance.records)");
-  const regimes = block.indexOf("financeRegimeNotesFor");
-  assert.ok(found !== -1 && regimes > found, "the regime loop runs after both branches");
+test("OWN-Q5 WIRING: real money answers name all regimes with and without applicable records", async () => {
+  delete process.env.ANTHROPIC_API_KEY;
+  const { POST, resetGroundedState } = await import("../app/api/ask/grounded/route.ts");
+  for (const control of [
+    { question: "How much campaign money has Katie Hobbs raised?", hasMoney: true },
+    { question: "What campaign money is recorded for the Pima County Board of Supervisors?", hasMoney: false },
+  ]) {
+    resetGroundedState();
+    const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
+      method: "POST", headers: { "content-type": "application/json", origin: "https://wtp.test", "x-wtp-synthetic-run": "owner-amendment-regimes" },
+      body: JSON.stringify({ question: control.question, ocdIds: ["ocd-division/country:us/state:az", "ocd-division/country:us/state:az/county:pima"], today: "2026-09-04" }),
+    }));
+    assert.equal(response.status, 200);
+    const body = await response.json() as AskAnswerPayload;
+    assert.equal(body.records.some((record) => record.kind.startsWith("FINANCE_")), control.hasMoney);
+    const regimes = body.gaps.filter((gap) => /^(County|State|Federal) filings:/.test(gap.statement));
+    assert.equal(regimes.length, 3, "no regime's silence may answer for the other two");
+    assert.equal(body.denominators.financeRegimesNamed, 3);
+    assert.ok(regimes.every((gap) => gap.whose === "OURS"));
+    const state = regimes.find((gap) => gap.statement.startsWith("State filings:"))!;
+    assert.match(state.statement, control.hasMoney ? /uses the same state campaign-money records/ : /have not linked a verified state filing/);
+    assert.ok(!regimes.some((gap) => /no (?:filings?|records?) exist/i.test(gap.statement)));
+  }
 });
 
 /* ─────────────────────────────── OWN-Q9 ─────────────────────────────────── */

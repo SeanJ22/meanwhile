@@ -124,7 +124,8 @@ test("BAL-45/46/47: the summary leads on the face; the verbatim serif ballot tex
 test("BAL-48: extended election-mechanics text collapses behind a disclosure by default", () => {
   const page = read("app/ballot/page.tsx");
   assert.match(page, /const EXTENDED_MECHANICS_CHARS = \d+/);
-  assert.match(page, /contest\.scopeNote\.length > EXTENDED_MECHANICS_CHARS \? \(/);
+  assert.match(page, /const scope = readerContestScope\(contest,/);
+  assert.match(page, /\(readerScopeNotes\.get\(contest\.id\)\?\.length \?\? 0\) > EXTENDED_MECHANICS_CHARS \? \(/);
   const idx = page.indexOf("data-scope-note-collapsed");
   assert.ok(idx > 0, "the collapsed mechanics note is addressable");
   const block = page.slice(idx - 120, idx + 200);

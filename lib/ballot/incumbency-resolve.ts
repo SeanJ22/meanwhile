@@ -24,8 +24,11 @@
  */
 
 import type { SeatHolder } from "../officials/lookup.ts";
-import { seatHoldersForOffice } from "../registry/server.ts";
+import { seatHoldersForOffice, seatHolderById } from "../registry/server.ts";
 import { standingChipMayAttach } from "../officials/elected-role.ts";
+import { officeIdentity } from "../officials/office-identity.ts";
+import { readerPersonKeys } from "../identity/reader-person.ts";
+import { currentOfficialIdentity } from "../funding/campaign-money.ts";
 
 import {
   candidateUniverse,
@@ -153,6 +156,45 @@ export interface ContestIncumbencyResult {
   readonly holderFor: Map<string, SeatHolder>;
 }
 
+/** Preserve seat qualifiers that an office key intentionally strips. A town is not one ward. */
+export function sameSeatDiscriminators(contestTitle: string, holderTitle: string, ocdId: string): boolean {
+  const qualifiers = (title: string) => {
+    const found = new Map<string, string>();
+    for (const match of title.matchAll(/\b(ward|seat|position|division|district)\s*(?:no\.?\s*)?[:#]?\s*(\d+|[ivxlc]+)\b/gi)) found.set(match[1].toLowerCase(), match[2].toLowerCase());
+    for (const match of title.matchAll(/\b(\d+)(?:st|nd|rd|th)?\s+(?:congressional\s+)?district\b/gi)) found.set("district", match[1]);
+    if (/\bat[-\s]large\b/i.test(title)) found.set("at-large", "true");
+    return found;
+  };
+  const left = qualifiers(contestTitle), right = qualifiers(holderTitle);
+  for (const kind of new Set([...left.keys(), ...right.keys()])) {
+    const a = left.get(kind), b = right.get(kind);
+    if (a && b) { if (a !== b) return false; continue; }
+    // Legislative district identity is already the exact OCD division (NH
+    // uses composite county/district numbers); a missing title suffix is not
+    // a missing seat. Municipal wards on a place division lack that key.
+    if (kind === "district" && /\/(?:cd|sldl|sldu):[^/]+$/.test(ocdId)) continue;
+    if (kind !== "at-large" && ocdId.endsWith(`/${kind}:${a ?? b}`)) continue;
+    return false;
+  }
+  return true;
+}
+
+/** Person identity is necessary but insufficient: incumbency also requires the exact current office and division. */
+export async function committedIncumbentHolderFor(
+  contest: Pick<ContestForIncumbency, "ocdId" | "title">,
+  targetKey: string,
+): Promise<SeatHolder | null> {
+  const office = officeIdentity(contest.title);
+  if (!office || !standingChipMayAttach(contest.title)) return null;
+  const matches = readerPersonKeys(targetKey).keys.flatMap(key => {
+    const current = currentOfficialIdentity(key);
+    return current && current.divisions.includes(contest.ocdId) && officeIdentity(current.officeTitle) === office
+      && sameSeatDiscriminators(contest.title, current.officeTitle, contest.ocdId) ? [current.id] : [];
+  });
+  const ids = [...new Set(matches)];
+  return ids.length === 1 ? seatHolderById(ids[0]) : null;
+}
+
 /**
  * The federal route, kept behind a declared seam.
  *
@@ -260,6 +302,7 @@ export async function contestIncumbency(
   universeSources: {
     enumeratedHolders?: (contest: { title: string; ocdId: string }) => SeatHolderRef[];
     certifiedNominees?: (contestId: string) => { source: string; names: readonly string[] } | null;
+    committedHolder?: typeof committedIncumbentHolderFor;
   } = {},
 ): Promise<ContestIncumbencyResult> {
   const candidates = contest.candidates.map((c) => ({
@@ -360,6 +403,23 @@ export async function contestIncumbency(
 
   const resolved = resolveContestIncumbency({ candidates, holders, officeIsElected });
 
+  // The body rosters are reader truth even where the legislative division
+  // index contains no row. Reuse the committed person bridge, scoped to this
+  // exact office, to recover positive facts without declaring peers absent.
+  const committed = new Map<string, SeatHolder>();
+  for (const candidate of contest.candidates) {
+    const holder = await (universeSources.committedHolder ?? committedIncumbentHolderFor)(contest, candidate.targetKey);
+    if (holder) committed.set(candidate.key, holder);
+  }
+  for (const [key, holder] of committed) {
+    if ([...committed.values()].filter(other => other.id === holder.id).length !== 1) continue;
+    resolved.set(key, { standing: "INCUMBENT", basis: "The committed candidacy/person identity and current sourced officeholder agree on this exact division and office.", source: holder.sourceUrl ?? holder.provenance?.sourceOrg ?? holder.id });
+    if (shape !== "ENUMERATES_THE_SEAT" && !holders.some(row => row.personKey === holder.id)) {
+      holders.push({ ...splitDisplayName(holder.name), personKey: holder.id, source: holder.sourceUrl ?? holder.provenance?.sourceOrg ?? holder.id });
+      shape = "COLLECTED_PERSON_BY_PERSON";
+    }
+  }
+
   /*
    * THE OFFICEHOLDER BEHIND EACH INCUMBENT, so the voting-record panel can be
    * gated on whether records EXIST rather than on a federal-only join.
@@ -370,6 +430,11 @@ export async function contestIncumbency(
   const holderFor = new Map<string, SeatHolder>();
   for (const c of contest.candidates) {
     if (resolved.get(c.key)?.standing !== "INCUMBENT") continue;
+    const exact = committed.get(c.key);
+    if (exact && [...committed.values()].filter(other => other.id === exact.id).length === 1) {
+      holderFor.set(c.key, exact);
+      continue;
+    }
     const cand = nameParts(splitDisplayName(c.display).givenName, splitDisplayName(c.display).familyName);
     const hit = registryHolders.find((h) => {
       const parts = splitDisplayName(h.name);

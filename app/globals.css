@@ -1709,6 +1709,30 @@ label:has(> input[type="checkbox"]) {
   width: 100%;
 }
 
+/* Ask is foreground reading content. Its top-row stacking context must clear
+   the ambient legend, while remaining below a deliberately opened card. */
+.map-top-row:has([data-pill-cluster="map"][data-ask-open="true"]) {
+  z-index: 1120;
+}
+
+@media (max-width: 639px) {
+  [data-pill-cluster="map"] .ask-expansion {
+    position: fixed;
+    top: var(--ask-expansion-top);
+    right: 12px;
+    left: 12px;
+    width: auto;
+    max-height: calc(100dvh - var(--ask-expansion-top) - 12px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border-radius: var(--radius);
+  }
+
+  [data-pill-cluster="map"] .ask-expansion [data-ask-panel] {
+    margin-top: 0;
+  }
+}
+
 @media (min-width: 640px) {
   .ask-expansion {
     max-width: 30rem;
@@ -3455,7 +3479,8 @@ button.jurisdiction-badge-action:focus-visible {
 }
 
 .voting-panel {
-  width: min(23rem, calc(100vw - 2rem));
+  /* The map band reserves 3.5rem for zoom controls and .75rem at left. */
+  width: min(23rem, calc(100vw - 4.25rem));
   max-height: min(32rem, calc(100vh - 8rem));
   overflow-y: auto;
   background: var(--surface);

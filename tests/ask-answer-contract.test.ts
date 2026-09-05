@@ -299,7 +299,7 @@ test("the contact's provenance is declared AND reachable from a render", () => {
     null,
   );
 
-  const box = readFileSync(join(ROOT, "components", "ask", "ask-box.tsx"), "utf8");
+  const box = readFileSync(join(ROOT, "components", "ask", "answer-contacts.tsx"), "utf8");
   assert.match(box, /contactReadLine\(c\)/, "the read line must actually render");
   /* The BASIS stays machine-readable and off the page: `BODY_MEMBER` is an
      enum value and no enum value reaches a reader. Its plain-language form is

@@ -11,12 +11,15 @@ import {
 } from "@/lib/ballot/battlecard-sections";
 import { CardSection, CardSectionGroup } from "@/components/officials/card-section";
 import { ContactPills } from "@/components/officials/contact-pills";
+import { OfficialTermNote } from "@/components/officials/official-term-note";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { IdentityChip, IdentityPortrait } from "@/components/officials/person-identity";
 import { incumbencyLabel, type Incumbency, type IncumbencyGap } from "@/lib/ballot/incumbency";
 import { SpeakYourMind } from "@/components/speak/speak-your-mind";
 import { partyColorVar } from "@/lib/officials/party-color";
 import { PositionsSection } from "@/components/officials/positions-section";
+import { PublicStatementsProfile } from "@/components/officials/public-statements-profile";
+import { OfficialActions } from "@/components/officials/official-actions";
 import { DemandPill } from "@/components/demand/demand-pill";
 import {
   positionsEmptyLine,
@@ -299,7 +302,7 @@ export function CandidateBattlecard({
             if (event.target === event.currentTarget) setOpen(false);
           }}
         >
-          <div className="account-modal" data-candidate-battlecard>
+          <div className="account-modal" data-candidate-battlecard data-candidate-subject={subjectId}>
             <header className="account-modal-header">
               {/*
                 **BAL-17, BAL-18 and BAL-20 — the ballot card's header is the
@@ -396,6 +399,7 @@ export function CandidateBattlecard({
               {contactHolder && (
                 <div className="mb-3" data-ballot-contact-row>
                   <ContactPills holder={contactHolder} scope="primary" />
+                  <OfficialTermNote holder={contactHolder} />
                 </div>
               )}
               {/*
@@ -451,11 +455,13 @@ export function CandidateBattlecard({
                         to search before knowing there is anything to search.
                       */}
                       {spec.id === "positions" && (
-                        <PositionsSection subjectId={subjectId} subjectName={name} />
+                        <PositionsSection subjectId={subjectId} subjectName={name} contentOnly />
                       )}
                     </CardSection>
                   );
                 })}
+                {contactHolder && <PublicStatementsProfile subjectId={contactHolder.id} />}
+                <OfficialActions subjectId={subjectId} />
               </CardSectionGroup>
 
               {/*

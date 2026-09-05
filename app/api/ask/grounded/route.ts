@@ -2,7 +2,9 @@ import { readSnapshot } from "@/lib/meetings/snapshot";
 import type { Meeting } from "@/lib/sources/types";
 import type { AskSitting } from "@/lib/ask/answer";
 import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
-import { statewideExecutivesFor } from "@/lib/officials/statewide-executives";
+import { seatHolderById } from "@/lib/registry/server";
+import { officialIdsForCandidacy } from "@/lib/funding/campaign-money";
+import { canonicalOfficialAliases } from "@/lib/ask/official-identity";
 import {
   actionsFor,
   actionText,
@@ -25,9 +27,17 @@ import {
   type EvidenceSubject,
 } from "@/lib/ask/evidence";
 import { snapshotEntities, titleCaseName } from "@/lib/ask/inventory";
-import { canonicalBodyIdentity } from "@/lib/ask/body-identity";
-import { outcomeGapStatement, outcomeQuestionClass } from "@/lib/ask/outcome-question";
-import { ruleOnQuestion } from "@/lib/answerability/record-class";
+import { bodyIdentityIndex, canonicalBodyIdentity } from "@/lib/ask/body-identity";
+import { statementEvidenceFor } from "@/lib/ask/statements";
+import { campaignMoneyEvidenceFor } from "@/lib/ask/campaign-money";
+import { candidateProfileEvidenceFor } from "@/lib/ask/candidate-profile";
+import type { SeatHolder } from "@/lib/officials/lookup";
+import { reconciledCandidacyIdForCard } from "@/lib/identity/az-2026";
+import { meetingOutcomeEvidenceFor, outcomeSittingsOnDate, meetingRecordQuestionClass } from "@/lib/ask/meeting-outcomes";
+import { minutesSummaryEvidenceFor, commentAccessEvidenceFor, noticeSummaryEvidenceFor, meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
+import { officeholderEvidence } from "@/lib/ask/officeholder";
+import { rosterGapEvidenceFor } from "@/lib/ask/roster-gaps";
+import { formatDateLong } from "@/lib/text/format-date";
 import { unavailableInterpretation, type AskInterpretation } from "@/lib/ask/intent";
 import { asksWhatAnOfficeDoes, officeInQuestion } from "@/lib/ask/office-question";
 import { interpretQuestion, interpretWithoutModel } from "@/lib/ask/interpret";
@@ -40,14 +50,17 @@ import {
   contactsForBody,
   contactsForDivision,
   contactsForRepresentatives,
-  MAX_ASK_CONTACTS,
   type AskContact,
 } from "@/lib/ask/contacts";
+import { contactForCandidate } from "@/lib/ask/candidate-contact";
+import { keyVoteEvidenceFor } from "@/lib/ask/key-votes";
 import {
   absencesForDivisions,
+  absencesWithoutRemovals,
   ballotAskInventory,
   ballotRecordsFor,
   ballotSubject,
+  namedSourceFilingIds,
   type BallotSubjectRecord,
 } from "@/lib/ask/ballot-inventory";
 import { readLocationOrigin, stampResidency } from "@/lib/ask/residency";
@@ -56,20 +69,18 @@ import { askCallerKey, cacheCallLine } from "@/lib/ask/prompt-cache";
 import { askModelStartupLine } from "@/lib/ask/model";
 import { synthesizeAnswer } from "@/lib/ask/synthesize";
 import { sittingsOnSameLocalDay, selectSitting, type AgendaSelection } from "@/lib/ask/select";
+import { meetingDateInQuestion } from "@/lib/ask/meeting-date";
 import {
   classifyAgendaPublication,
   publisherAgendaObservationsFor,
   observationFromMeetingRecord,
 } from "@/lib/ask/agenda-publication";
 import {
-  outcomeEvidenceFor,
-  outcomeGapWhose,
   publicationObservationsFor,
-  sittingsForBody,
 } from "@/lib/outcomes/store";
 import { emptyTrace, type AnswerMode, type AskTrace } from "@/lib/ask/trace";
 import { validateAnswer } from "@/lib/ask/validate";
-import { loadBallotForDivisions, readerRepresentatives } from "@/lib/ask/server-sources";
+import { loadBallotForDivisions, namedOfficeholders, readerOfficeholders, readerRepresentatives } from "@/lib/ask/server-sources";
 import {
   askAnswer,
   clarifyAnswer,
@@ -359,22 +370,26 @@ function officeholderActionEvidence(
     /* No store is a STATE and is reported as one, never as "they did nothing". */
     gaps.push({
       whose: "OURS",
-      statement: `We have not recorded any actions in office for ${personName}.`,
+      statement: `Our canonical action records could not be read for this answer about ${personName}. This is a holding failure, not a finding that no actions occurred.`,
     });
     denominators.actionRecordsHeld = 0;
     return;
   }
 
   const from = trailingMonths ? monthsBefore(today, trailingMonths) : null;
-  const windowed = actionsFor(seatId, { from, to: today });
+  const windowed = trailingMonths ? actionsFor(seatId, { from, to: today }) : actionsFor(seatId);
   const held = actionsFor(seatId);
 
-  denominators.actionRecordsHeld = held.length;
-  denominators.actionRecordsInAskedWindow = windowed.length;
+  denominators.actionRecordsHeld = (denominators.actionRecordsHeld ?? 0) + held.length;
+  denominators.actionRecordsInAskedWindow = (denominators.actionRecordsInAskedWindow ?? 0) + windowed.length;
+  if (held.length === 0) {
+    gaps.push({ whose: "OURS", statement: `We have not recorded any actions in office for ${personName}.` });
+    return;
+  }
   denominators.executiveOrdersIndexedAtCollection = store.denominator.indexedAcrossPagesWalked;
   denominators.executiveOrdersReadAtCollection = store.denominator.detailPagesRead;
 
-  for (const action of windowed.slice(0, 25)) {
+  for (const action of windowed) {
     records.push({
       kind: "OFFICIAL_ACTION",
       id: action.id,
@@ -487,7 +502,7 @@ function officeholderActionEvidence(
 }
 
 /** Officeholders the reader can name — statewide executives, today. */
-function personEntities(ocdIds: readonly string[]): BindableEntity[] {
+function personEntities(seats: readonly SeatHolder[]): BindableEntity[] {
   const out: BindableEntity[] = [];
   /*
    * **PASS THE DIVISIONS STRAIGHT THROUGH.** (Corrected 2026-08-27, found by
@@ -505,10 +520,10 @@ function personEntities(ocdIds: readonly string[]): BindableEntity[] {
    * card do it. Re-deriving it here, differently and more strictly, was a
    * second answer to a question that already had one.
    */
-  for (const seat of statewideExecutivesFor([...new Set(ocdIds)])) {
+  for (const seat of seats) {
     if (!seat.name) continue;
     out.push({
-      id: `person:${seat.name.toLowerCase().replace(/\s+/g, "_")}`,
+      id: seat.id,
       name: seat.name,
       nameClass: "person",
       divisionType: "person",
@@ -573,17 +588,9 @@ export async function POST(request: Request) {
   const question = body.question.slice(0, MAX_QUESTION_CHARS);
 
   const snapshot = readSnapshot();
-  if (!snapshot) {
-    /* No corpus is a STATE and is reported as one, never as "nothing found" —
-       the same absence-as-assertion rule the agenda route follows. */
-    return Response.json(
-      { error: "the meetings corpus is not available right now" },
-      { status: 503 },
-    );
-  }
-
-  const meetings = snapshot.meetings as MeetingLike[];
-  const documents = (snapshot.agendaDocuments ?? []) as AgendaDocumentLike[];
+  // A failed meeting read must not withhold an unrelated eligible ballot or money record.
+  const meetings = (snapshot?.meetings ?? []) as MeetingLike[];
+  const documents = (snapshot?.agendaDocuments ?? []) as AgendaDocumentLike[];
   const ocdIds = Array.isArray(body.ocdIds)
     ? body.ocdIds.filter((v): v is string => typeof v === "string").slice(0, 40)
     : [];
@@ -595,8 +602,23 @@ export async function POST(request: Request) {
    * one government rather than a geography several of them share. See
    * `lib/ask/inventory.ts` for the defect this closes.
    */
-  const bodies = snapshotEntities(meetings, (bodyId) => canonicalBodyIdentity(bodyId));
-  const people = personEntities(ocdIds);
+  const explicitBodyIds = new Set([...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)]
+    .filter((ref) => ref.kind === "BODY").flatMap((ref) => ref.id ? [ref.id] : []));
+  const scopedBodies = [...bodyIdentityIndex().values()].filter((entry) =>
+    (entry.ocdId && ocdIds.includes(entry.ocdId)) || explicitBodyIds.has(entry.bodyId));
+  const bodies = snapshotEntities([...meetings, ...scopedBodies], (bodyId) => canonicalBodyIdentity(bodyId));
+  const officeholders = await readerOfficeholders(ocdIds, scopedBodies.map((body) => body.bodyId));
+  try {
+    const explicitIds = [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)]
+      .flatMap((ref) => ref.id ? [ref.id] : []);
+    const named = await namedOfficeholders(question, explicitIds);
+    for (const seat of named) if (!officeholders.seats.some((held) => held.id === seat.id)) officeholders.seats.push(seat);
+  } catch {
+    officeholders.loaderFailures += 1;
+  }
+  const people = personEntities(officeholders.seats);
+  const preferredOfficialIds = [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)].flatMap((ref) => ref.id ? [ref.id] : []);
+  const officialAliases = canonicalOfficialAliases(people.map((person) => person.id), preferredOfficialIds);
 
   /*
    * **THE BALLOT'S OWN ENTITIES, ON EVERY SURFACE.**
@@ -609,7 +631,10 @@ export async function POST(request: Request) {
    * `app/ballot/page.tsx` renders from, through the same source registry.
    */
   const ballot = await loadBallotForDivisions(ocdIds);
-  const ballotInventory = ballotAskInventory(ballot.set, ballot.contests, ballot.nominees);
+  const ballotLoadGaps: EvidenceGap[] = ballot.loaderFailures.length ? [{ whose: "OURS", statement: "The canonical ballot records for this area could not be read for this answer. That is a failure of our holding, not a statement that no candidates or ballot items exist." }] : [];
+  const holdingLoadGaps: EvidenceGap[] = [...ballotLoadGaps, ...(officeholders.loaderFailures ? [{ whose: "OURS" as const, statement: "Our canonical officeholder records could not be read for this answer. This is a holding failure, not a finding that there are no officials for this place or person." }] : [])];
+  const ballotInventory = ballotAskInventory(ballot.set, ballot.contests, ballot.nominees,
+    [...preferredOfficialIds, ...namedSourceFilingIds(question, ballot.set)]);
 
   /*
    * **ONE HUMAN IS ONE SUBJECT, EVEN WHEN TWO STORES HOLD HER.**
@@ -623,23 +648,24 @@ export async function POST(request: Request) {
    * was unclear when it was not, about a distinction that exists only in our
    * storage.
    *
-   * The ballot row wins, because it is the one whose id retrieves — a filing,
-   * a party, sourced positions — and because the officeholder record is
-   * attached to it below by the same name match. The match is EXACT on the
-   * normalized name within one state's inventory, which is the conservative
-   * form: two different people of the same name holding and seeking office in
-   * one state is possible and vanishingly rare, and the cost of not merging is
-   * a clarification on every question about a sitting officeholder who is
-   * running again.
+   * The committed person/candidacy bridge supplies the aliases. A matching
+   * display name alone never suppresses an official or attaches their record.
+   * An officeholder with no resolved bridge keeps their own canonical ID.
    */
-  const ballotPersonNames = new Set(
-    [...ballotInventory.subjects.values()]
-      .filter((s) => s.kind === "PERSON")
-      .map((s) => s.name.trim().toLowerCase()),
-  );
+  const ballotOfficialIds = new Map<string, string[]>();
+  const officialToBallot = new Map<string, string>();
+  const filingToBallot = new Map<string, string>();
+  for (const candidate of ballotInventory.subjects.values()) if (candidate.kind === "PERSON") {
+    const candidacyId = reconciledCandidacyIdForCard(candidate.id) ?? candidate.candidacyId;
+    if (!candidacyId) continue;
+    filingToBallot.set(candidacyId, candidate.id);
+    const officialIds = officialIdsForCandidacy(candidacyId);
+    ballotOfficialIds.set(candidate.id, officialIds);
+    for (const officialId of officialIds) officialToBallot.set(officialId, candidate.id);
+  }
   const inventory = [
     ...bodies,
-    ...people.filter((p) => !ballotPersonNames.has(p.name.trim().toLowerCase())),
+    ...people.map((person) => ({ ...person, id: officialToBallot.get(person.id) ?? officialAliases.get(person.id) ?? person.id })),
     ...ballotInventory.entities,
   ];
 
@@ -658,8 +684,9 @@ export async function POST(request: Request) {
    * strings — canonical ids where the surface holds them, so a pronoun can
    * resolve to a person the binder actually verified. See `lib/ask/subject.ts`.
    */
-  const activeSubjects: AskSubjectRef[] = readSubjectRefs(body.activeSubjects);
-  const priorSubjects: AskSubjectRef[] = readSubjectRefs(body.priorSubjects, 8);
+  const canonicalReference = (ref: AskSubjectRef): AskSubjectRef => ({ ...ref, id: ref.id ? filingToBallot.get(ref.id) ?? officialToBallot.get(ref.id) ?? officialAliases.get(ref.id) ?? ref.id : ref.id });
+  const activeSubjects: AskSubjectRef[] = readSubjectRefs(body.activeSubjects).map(canonicalReference);
+  const priorSubjects: AskSubjectRef[] = readSubjectRefs(body.priorSubjects, 8).map(canonicalReference);
 
   // ── 1. INTERPRETATION ────────────────────────────────────────────────
   let interpretation: AskInterpretation = unavailableInterpretation();
@@ -708,6 +735,13 @@ export async function POST(request: Request) {
       temporal: interpretation.temporal,
       fellBackToDeterministic: true,
     };
+  }
+
+  // A literal reader date outranks inferred tense, including a model's reading.
+  const requestedMeetingDate = meetingDateInQuestion(question);
+  if (requestedMeetingDate) {
+    interpretation.temporal = { kind: "DATE", localDate: requestedMeetingDate.date };
+    trace.interpretation.temporal = interpretation.temporal;
   }
 
   // ── 2. CANONICAL RESOLUTION ──────────────────────────────────────────
@@ -774,26 +808,36 @@ export async function POST(request: Request) {
       null,
       null,
       [],
-      [],
+      holdingLoadGaps,
     );
-    return Response.json(
-      clarifyAnswer(
+    const answer = clarifyAnswer(
         resolution.binding.mention,
         resolution.binding.candidates.map((c) => titleCaseName(c.name)),
         trace,
-      ),
-    );
+      );
+    answer.gaps.push(...holdingLoadGaps);
+    answer.denominators.ballotLoaderFailures = ballot.loaderFailures.length;
+    answer.denominators.officeholderLoaderFailures = officeholders.loaderFailures;
+    return Response.json(answer);
   }
   if (resolution.binding.kind === "UNRESOLVED") {
     trace.answerMode = "UNRESOLVED";
     trace.totalMs = Date.now() - started;
-    await capture("UNRESOLVED", [], null, null, null, [], []);
-    return Response.json(unresolvedAnswer(resolution.binding.mention, trace));
+    await capture("UNRESOLVED", [], null, null, null, [], holdingLoadGaps);
+    const answer = unresolvedAnswer(resolution.binding.mention, trace);
+    if (resolution.unresolvedCanonicalId) {
+      answer.denominators.identityUnresolved = 1;
+      answer.gaps.push({ whose: "OURS", statement: `The supplied identity for ${resolution.binding.mention} could not be resolved to a current canonical record, so no same-name person's records have been attached.` });
+    }
+    answer.gaps.push(...holdingLoadGaps);
+    answer.denominators.ballotLoaderFailures = ballot.loaderFailures.length;
+    answer.denominators.officeholderLoaderFailures = officeholders.loaderFailures;
+    return Response.json(answer);
   }
 
   // ── 3. DETERMINISTIC RETRIEVAL ───────────────────────────────────────
   const selection: AgendaSelection =
-    interpretation.temporal.kind === "LAST"
+    requestedMeetingDate ? "DATE" : interpretation.temporal.kind === "LAST"
       ? "LAST"
       : interpretation.temporal.kind === "NEXT"
         ? "NEXT"
@@ -821,9 +865,37 @@ export async function POST(request: Request) {
   const records: EvidenceRecord[] = [];
   /** The sittings this request resolved, for the structured half of the payload. */
   const resolvedSittings: AskSitting[] = [];
-  const gaps: EvidenceGap[] = [];
-  const denominators: Record<string, number> = {};
+  const gaps: EvidenceGap[] = [...holdingLoadGaps];
+  const denominators: Record<string, number> = { ballotLoaderFailures: ballot.loaderFailures.length };
   const contacts: AskContact[] = [];
+  const canonicalSubjectKeys = new Set<string>(subject ? [subject.id] : []);
+  if (subject?.kind === "PERSON") for (const [id, canonicalId] of officialAliases) {
+    if (canonicalId === subject.id) canonicalSubjectKeys.add(id);
+  }
+  if (subject?.kind === "PERSON") {
+    const profile = candidateProfileEvidenceFor(subject);
+    records.push(...profile.records);
+    gaps.push(...profile.gaps);
+    Object.assign(denominators, profile.denominators);
+  }
+  const candidateSeats = ballotRecord?.kind === "PERSON"
+    ? (await Promise.allSettled((ballotOfficialIds.get(ballotRecord.id) ?? []).map(seatHolderById)))
+      .flatMap((result) => result.status === "fulfilled" && result.value ? [result.value] : [])
+    : [];
+  for (const seat of candidateSeats) canonicalSubjectKeys.add(seat.id);
+  if (ballotRecord?.kind === "PERSON") {
+    const candidacyId = reconciledCandidacyIdForCard(ballotRecord.id) ?? ballotRecord.candidacyId;
+    if (candidacyId) canonicalSubjectKeys.add(candidacyId);
+    try {
+      const contact = contactForCandidate(candidacyId ?? ballotRecord.id, ballotRecord.name, ballotRecord.contestTitle);
+      if (contact) contacts.push(contact);
+    } catch {
+      gaps.push({ whose: "OURS", statement: `The filed contact for ${ballotRecord.name} could not be read for this answer.` });
+      denominators.candidateContactLoaderFailures = 1;
+    }
+  }
+  denominators.meetingLoaderFailures = snapshot ? 0 : 1;
+  denominators.officeholderLoaderFailures = officeholders.loaderFailures;
 
   if (ballotRecord && ballot.set) {
     /* ── A BALLOT SUBJECT ── contest, candidate or measure, selected by its
@@ -834,11 +906,16 @@ export async function POST(request: Request) {
       absences: ballot.absences,
       positions: ballot.positions,
       measureSummary: ballot.measureSummary,
+      measureAnalysis: ballot.measureAnalysis,
       measureProvisions: ballot.measureProvisions,
       nominees: ballot.nominees,
     });
     records.push(...retrieved.records);
     Object.assign(denominators, retrieved.denominators);
+    if (ballotRecord.kind === "MEASURE" && ballot.analysisLoaderFailed) {
+      denominators.measureAnalysisLoaderFailures = 1;
+      gaps.push({ whose: "OURS", statement: "The held official measure analysis could not be read for this answer. This is a holding failure, not a finding that the authority has no analysis." });
+    }
 
     if (retrieved.records.length === 0) {
       gaps.push({
@@ -860,21 +937,9 @@ export async function POST(request: Request) {
      * they have DONE, and silence there would read as "she has done nothing".
      */
     if (ballotRecord.kind === "PERSON") {
-      const seat = statewideExecutivesFor([...new Set(ocdIds)]).find(
-        (s) => s.name.trim().toLowerCase() === ballotRecord.name.trim().toLowerCase(),
-      );
-      if (seat) {
-        records.push({
-          kind: "OFFICEHOLDER",
-          id: `office:${seat.id}`,
-          text: `${seat.name} holds the office of ${seat.officeTitle}${
-            seat.partyLabel ? `, ${seat.partyLabel}` : ""
-          }${seat.termEnd ? `, in seat until ${seat.termEnd}` : ""}.`,
-          sourceUrl: seat.sourceUrl,
-          sourceOrg: seat.provenance?.sourceOrg ?? null,
-          retrievedAt: seat.provenance?.collectedAt ?? null,
-        });
-        denominators.officeholderRecords = 1;
+      for (const seat of candidateSeats) {
+        records.push(officeholderEvidence(seat, `office:${seat.id}`));
+        denominators.officeholderRecords = (denominators.officeholderRecords ?? 0) + 1;
         /* The office the question is ABOUT — the most relevant contact there
            is, and the one an answer about the Governor was missing while it
            listed the reader's state senator. */
@@ -923,12 +988,6 @@ export async function POST(request: Request) {
      * Silence there reads as "they have said nothing", which is a claim about
      * a person made out of our own collection state.
      */
-    if (ballotRecord.kind === "PERSON" && (denominators.sourcedPositionPassages ?? 0) === 0) {
-      gaps.push({
-        whose: "OURS",
-        statement: `We have not recorded any sourced statement of ${ballotRecord.name}'s positions.`,
-      });
-    }
 
     /*
      * ── ASK-06 ── **HOW THEY HAVE ACTUALLY VOTED.** (2026-08-28.)
@@ -937,43 +996,71 @@ export async function POST(request: Request) {
      * DID, and this product held 12,234 recorded positions that the grounded
      * engine could not reach.
      *
-     * Reached through EXACT identity and nothing looser: person → seat by
-     * exact normalized full name, unique within the reader's own states; seat
-     * → votes by the publisher's own stable officeholder id. Where the name
-     * form differs across the join — *Sally Ann Gonzales* on a House ballot
-     * line against *Sally Gonzales* the sitting SENATOR — it fails closed to a
-     * named gap rather than attaching one chamber's votes to another
-     * chamber's candidacy. `lib/ask/votes.ts` holds the whole rule and the
-     * measured cost of it.
+     * Candidacy → officeholder uses the committed person relationship above;
+     * officeholder → votes uses the publisher's stable key. An unresolved
+     * relationship produces an identity gap without a runtime name search.
      *
      * The office on every record is the one they HOLD, never the one they are
      * running for.
      */
     if (ballotRecord.kind === "PERSON") {
-      const votes = voteEvidenceFor(ballotRecord.name, { withinStates: statesOf(ocdIds) });
-      records.push(...votes.records);
-      gaps.push(...votes.gaps);
-      Object.assign(denominators, votes.denominators);
+      const candidates = candidateSeats.map((seat) => voteEvidenceFor(ballotRecord.name, { officeholderId: seat.id }));
+      const joined = candidates.filter((votes) => votes.identity.kind === "JOINED");
+      for (const votes of joined) {
+        records.push(...votes.records);
+        gaps.push(...votes.gaps);
+        for (const [key, count] of Object.entries(votes.denominators)) denominators[key] = (denominators[key] ?? 0) + count;
+      }
+      if (!joined.length) gaps.push({ whose: "OURS", statement: `We have not established a canonical voting-office identity for ${ballotRecord.name}, so no other person's voting record has been attached.` });
     }
   } else if (subject?.kind === "BODY") {
+    const identity = canonicalBodyIdentity(subject.id);
+    const access = commentAccessEvidenceFor(subject.id, bound?.ocdId ?? null, subject.name);
+    records.push(...access.records);
+    gaps.push(...access.gaps);
+    denominators.publicCommentAccessRecordsReturned = access.records.length;
+    if (identity?.nameIsBodysOwn && identity.sourceUrl) {
+      records.push({ kind: "BODY", id: subject.id, bodyId: subject.id,
+        text: `${identity.name}${identity.divisionLabel && !identity.name.includes(identity.divisionLabel) ? ` — ${identity.divisionLabel}` : ""}.`,
+        sourceUrl: identity.sourceUrl, retrievedAt: identity.retrievedAt });
+    }
     const forBody = meetingsForBody(meetings, bound);
-    denominators.meetingsHeldForThisBody = forBody.length;
+    const bodyListingIdentity = meetingListingKnowledgeFor(snapshot?.meetings ?? [], forBody.map(meeting => meeting.id)).readback;
+    denominators.calendarListingsHeldForThisBody = forBody.length;
+    if (!bodyListingIdentity.groups.length) denominators.meetingsHeldForThisBody = forBody.length;
     /* The SAME selection the deterministic agenda route uses — one rule, two
        callers, so the two surfaces can never disagree about which meeting a
        tensed question meant. */
-    const chosen = selectSitting(selection, forBody, Date.now());
+    const chosen = selectSitting(selection, forBody, Date.now(), requestedMeetingDate?.date);
+    const calendarIds = new Set(forBody.map((meeting) => meeting.id));
+    const archivedOutcomes = requestedMeetingDate?.date && meetingRecordQuestionClass(question)
+      ? outcomeSittingsOnDate(subject.id, requestedMeetingDate.date).filter((sitting) => !calendarIds.has(sitting.meetingId)) : [];
+    for (const sitting of archivedOutcomes) {
+      records.push({ kind: "MEETING", id: sitting.meetingId, bodyId: sitting.bodyId, text: `Held meeting records for ${subject.name}'s ${formatDateLong(requestedMeetingDate!.date!) ?? requestedMeetingDate!.date} sitting.`, occurredAt: sitting.startsAt, sourceUrl: sitting.sourceUrl, sourceOrg: sitting.sourceOrg, retrievedAt: sitting.publication.observedAt });
+      const outcome = meetingOutcomeEvidenceFor({ bodyId: subject.id, meetingId: sitting.meetingId, startsAt: sitting.startsAt!, question });
+      records.push(...outcome.records);
+      gaps.push(...outcome.gaps);
+      for (const [key, count] of Object.entries(outcome.denominators)) denominators[key] = (denominators[key] ?? 0) + count;
+    }
+    denominators.archivedOutcomeSittingsForThatDate = archivedOutcomes.length;
 
-    if (!chosen) {
+    if (!chosen && archivedOutcomes.length === 0) {
       gaps.push({
         whose: "OURS",
         statement:
-          forBody.length === 0
+          !snapshot
+            ? `The held meeting records for ${subject.name} could not be read for this answer.`
+            : requestedMeetingDate
+              ? requestedMeetingDate.date
+                ? `We have not recorded a meeting for ${subject.name} on ${formatDateLong(requestedMeetingDate.date) ?? requestedMeetingDate.date}. No different date's meeting has been substituted.`
+                : `The requested meeting date is invalid or names more than one day. Specify one calendar date to retrieve that body's sitting.`
+            : forBody.length === 0
             ? `We have not recorded any meetings for ${subject.name} yet.`
             : selection === "LAST"
               ? `We hold meetings for ${subject.name} but none that have already happened.`
               : `We hold meetings for ${subject.name} but none scheduled in the future.`,
       });
-    } else {
+    } else if (chosen) {
       /*
        * **THE SITTING IS PRINTED IN THE BODY'S OWN ZONE, SPELLED OUT.**
        *
@@ -992,6 +1079,10 @@ export async function POST(request: Request) {
         chosen.bodyName && chosen.bodyName !== chosen.title
           ? `${chosen.title} of ${chosen.bodyName}`
           : chosen.title;
+      const sameDay = sittingsOnSameLocalDay(chosen, forBody).filter((m) => m.id !== chosen.id);
+      const listingKnowledge = meetingListingKnowledgeFor(snapshot?.meetings ?? [], [chosen.id, ...sameDay.map(meeting => meeting.id)]);
+      const listingGroupFor = (id: string) => listingKnowledge.readback.groups.find(group => group.sourceIds.includes(id));
+      gaps.push(...listingKnowledge.gaps);
       records.push({
         kind: "MEETING",
         id: chosen.id,
@@ -999,9 +1090,12 @@ export async function POST(request: Request) {
            from the subject — so the validator is checking the record against
            the subject rather than checking the subject against itself. */
         bodyId: chosen.bodyId,
-        text: `${subject.name}: ${label}, ${readableSitting(chosen)}.`,
+        text: `${listingGroupFor(chosen.id) ? "Calendar listing: " : ""}${subject.name}: ${label}, ${readableSitting(chosen)}.`,
+        meetingListingIdentity: listingGroupFor(chosen.id),
         occurredAt: chosen.startsAt,
-        sourceUrl: chosen.agendaUrl ?? null,
+        sourceUrl: chosen.provenance?.sourceUrl ?? chosen.agendaUrl ?? null,
+        sourceOrg: chosen.provenance?.sourceOrg ?? null,
+        retrievedAt: chosen.provenance?.collectedAt ?? null,
       });
 
       /*
@@ -1027,8 +1121,9 @@ export async function POST(request: Request) {
          the prose, so an answer can offer the same Add-to-calendar control the
          map card does and a jurisdiction card can lead with the right one. */
       resolvedSittings.push(chosen);
-      const sameDay = sittingsOnSameLocalDay(chosen, forBody).filter((m) => m.id !== chosen.id);
-      denominators.sittingsThatLocalDay = sameDay.length + 1;
+      denominators.calendarListingsThatLocalDay = sameDay.length + 1;
+      denominators.uniqueMeetingCountUnresolvedGroups = listingKnowledge.readback.groups.length;
+      if (!listingKnowledge.readback.groups.length) denominators.sittingsThatLocalDay = sameDay.length + 1;
       for (const sibling of sameDay) {
         const siblingLabel =
           sibling.bodyName && sibling.bodyName !== sibling.title
@@ -1040,15 +1135,22 @@ export async function POST(request: Request) {
           id: sibling.id,
           bodyId: sibling.bodyId,
           text:
-            `${subject.name}: ${siblingLabel}, ${readableSitting(sibling)} — the same day as ` +
-            `the ${label}.`,
+            listingGroupFor(sibling.id)
+              ? `Calendar listing: ${subject.name}: ${siblingLabel}, ${readableSitting(sibling)}.`
+              : `${subject.name}: ${siblingLabel}, ${readableSitting(sibling)} — the same day as the ${label}.`,
+          meetingListingIdentity: listingGroupFor(sibling.id),
           occurredAt: sibling.startsAt,
-          sourceUrl: sibling.agendaUrl ?? null,
+          sourceUrl: sibling.provenance?.sourceUrl ?? sibling.agendaUrl ?? null,
+          sourceOrg: sibling.provenance?.sourceOrg ?? null,
+          retrievedAt: sibling.provenance?.collectedAt ?? null,
         });
       }
 
+      // Each same-day sitting keeps its own document/outcome identity.
+      for (const sitting of [chosen, ...sameDay]) {
+      const chosen = sitting;
       const forMeeting = documents.filter((d) => d.meetingId === chosen.id);
-      denominators.agendaDocumentsForThatMeeting = forMeeting.length;
+      denominators.agendaDocumentsForThatMeeting = (denominators.agendaDocumentsForThatMeeting ?? 0) + forMeeting.length;
 
       /*
        * ── ASK-07 ── **WHOSE GAP AN ABSENT AGENDA IS.** (2026-08-29.)
@@ -1135,13 +1237,19 @@ export async function POST(request: Request) {
         meetingId: chosen.id,
         documentsForMeeting: forMeeting,
         documentsAcrossCorpus: documents,
+        meetingsAcrossCorpus: meetings,
         discoveredDocumentUrl: chosen.agendaUrl ?? null,
         observations: publisherObservations,
         now: Date.now(),
       });
       denominators.publisherPublicationObservationsForThatMeeting =
-        publisherObservations.length;
-      if (publication.gap) gaps.push(publication.gap);
+        (denominators.publisherPublicationObservationsForThatMeeting ?? 0) + publisherObservations.length;
+      const outcome = meetingOutcomeEvidenceFor({ bodyId: subject.id, meetingId: chosen.id, startsAt: chosen.startsAt, question });
+      const minutes = minutesSummaryEvidenceFor(subject.id, chosen.id, question);
+      const notice = noticeSummaryEvidenceFor(subject.id, chosen.id, question);
+      // A document extraction gap is not an absence of the separately held
+      // structured agenda for this exact sitting.
+      if (publication.gap && !outcome.records.some((record) => record.kind === "AGENDA_ITEM")) gaps.push(publication.gap);
 
       const newest = [...forMeeting].sort((a, b) => (a.retrievedAt < b.retrievedAt ? 1 : -1))[0];
       const items = publication.items;
@@ -1161,14 +1269,16 @@ export async function POST(request: Request) {
           /* A document inherits body identity THROUGH the meeting it is
              attached to, never from its own title text. */
           bodyId: chosen.bodyId,
-          text: `An agenda portal page for ${subject.name}, not a single meeting's agenda.`,
+          text: publication.documentSharedAcrossGovernments
+            ? "A stored source link shared across governments; it has not been verified as this body's agenda."
+            : `An agenda portal page for ${subject.name}, not a single meeting's agenda.`,
           sourceUrl: newest.documentUrl,
-          sourceOrg: newest.sourceOrg ?? null,
+          sourceOrg: publication.documentSharedAcrossGovernments ? null : newest.sourceOrg ?? null,
           retrievedAt: newest.retrievedAt,
         });
       } else if (publication.acquisition === "ITEMS_READER_READY" && newest) {
-        denominators.agendaItemsExtracted = items.length;
-        for (const [index, item] of items.slice(0, 40).entries()) {
+        denominators.agendaItemsExtracted = (denominators.agendaItemsExtracted ?? 0) + items.length;
+        for (const [index, item] of items.entries()) {
           records.push({
             kind: "AGENDA_ITEM",
             id: `${chosen.id}#${index}`,
@@ -1208,210 +1318,17 @@ export async function POST(request: Request) {
        * the allow-list; this route only supplies which question was asked, which
        * is the one thing that module says it cannot decide for itself.
        */
-      const outcomeClass = outcomeQuestionClass(question);
-      if (outcomeClass) {
-        /*
-         * **THE OUTCOME RECORDS, WHICH USED TO EXIST ONLY IN A PROBE SCRIPT.**
-         * (2026-08-29.)
-         *
-         * The measurement that motivated this: 20 Pima Board sittings carry
-         * 1,360 agenda items, 525 recorded actions and 2,083 per-person vote
-         * rows on the publisher's own API — and the reader could answer an
-         * outcome question about ZERO of 30 held sittings, because the harvest
-         * lived in a side script and never reached an evidence pack.
-         *
-         * `outcomeEvidenceFor` is the durable store's contract. It class-filters
-         * before it returns, so an AGENDA record is structurally unable to reach
-         * a `WHAT_WAS_DECIDED` answer, and what it refused comes back NAMED
-         * rather than dropped — which is what lets the answer say "we hold 135
-         * agenda records and no outcome record" instead of quietly answering
-         * from the agendas.
-         */
-        const evidence = outcomeEvidenceFor({
-          bodyId: subject.id,
-          meetingId: chosen.id,
-          questionClass: outcomeClass,
-        });
-        denominators.outcomeRecordsForThatMeeting = evidence.records.length;
-        denominators.outcomeRecordClassesRefused = evidence.refused.length;
-        denominators.personVotesHeldForThatMeeting = evidence.records.reduce(
-          (n, r) => n + (r.recordClass === "ROLL_CALL" ? r.votes.length : 0),
-          0,
-        );
-
-        /*
-         * **WHAT THE ITEM WAS, carried onto every vote row.**
-         *
-         * A per-member row reading "Rex Scott voted Aye." says who and how and
-         * never WHAT. Measured on production 2026-08-29: a sitting produces 285
-         * of them, they outnumbered every other record in the pack better than
-         * eight to one, and the synthesis rung wrote prose about the votes that
-         * never named the body — so `validateAnswer` refused it on
-         * `answer-does-not-name-resolved-subject` and the reader got the records
-         * with no prose at all. The evidence was right and unusable.
-         */
-        const itemTitleFor = new Map<number, string>();
-        for (const rec of evidence.records) {
-          if (rec.recordClass === "AGENDA") itemTitleFor.set(rec.eventItemId, rec.title);
-        }
-        if (itemTitleFor.size === 0) {
-          /*
-           * For HOW_DID_THEY_VOTE the class filter returns ROLL_CALL and
-           * nothing else - correctly, since an agenda may not answer it - so
-           * the titles are not in the evidence and are read off the sitting
-           * itself. They are used ONLY to say what a vote was cast on; no
-           * agenda record enters the pack for this question class, which is
-           * what the filter is protecting.
-           */
-          const sitting = sittingsForBody(subject.id).find((x) => x.meetingId === chosen.id);
-          for (const rec of sitting?.agenda ?? []) itemTitleFor.set(rec.eventItemId, rec.title);
-        }
-        /*
-         * **WHICH SIXTY, AND WHAT BECOMES OF THE REST.** (2026-08-30.)
-         *
-         * The bound itself is honest — a pack is what the synthesis rung can
-         * read, and the denominators report the truncation. What the first
-         * version got wrong is WHICH rows spent the budget: a bare first-N in
-         * store order, so the answer's substance was shaped by an accident of
-         * ingestion sequence. A hard cap that silently decides which votes a
-         * reader hears about is still an editorial choice; this makes it an
-         * explainable one:
-         *
-         *   1. An item the QUESTION itself names goes first. Matching is
-         *      deliberately conservative — at least two distinct question
-         *      tokens of five or more characters found in the item's title —
-         *      because a false match would spend the whole budget answering a
-         *      question the reader did not ask.
-         *   2. DIVIDED roll calls next. A 3-2 is the vote a reader asking
-         *      "how did they vote" most needs the members' own rows for; a
-         *      unanimous roll is faithfully summarized by its action record.
-         *      Division is more than one distinct recorded value — a
-         *      selection heuristic over held rows, never a claim in the pack.
-         *   3. Store order last, as the stable tail.
-         *
-         * And WHOLE ITEMS ONLY: a roll call either brings every valid member
-         * row or waits. Three members of a five-member roll reads as an
-         * absence for the other two, which is a manufactured claim about
-         * people who voted. An item that no longer fits is skipped and a
-         * later, smaller one may still be taken — coverage, not prefix.
-         *
-         * One record PER MEMBER, unchanged: a single record listing five
-         * names is one claim the validator cannot check a name against. The
-         * items-level split is REPORTED in the denominators beside the
-         * row-level one, so "60 of 285 rows, 12 of 57 items" is a sentence
-         * the synthesis rung can actually write.
-         */
-        const VOTE_ROWS_MAX = 60;
-        let voteRows = 0;
-
-        const rollCalls = evidence.records.filter(
-          (r): r is Extract<typeof evidence.records[number], { recordClass: "ROLL_CALL" }> =>
-            r.recordClass === "ROLL_CALL",
-        );
-        const questionTokens = [
-          ...new Set(question.toLowerCase().split(/[^a-z0-9]+/).filter((t) => t.length >= 5)),
-        ];
-        const namedByQuestion = (eventItemId: number): boolean => {
-          const title = (itemTitleFor.get(eventItemId) ?? "").toLowerCase();
-          if (!title) return false;
-          return questionTokens.filter((t) => title.includes(t)).length >= 2;
-        };
-        const ranked = rollCalls
-          .map((rec, index) => {
-            const votes = rec.votes.filter((v) => v.personName && v.value);
-            return {
-              rec,
-              index,
-              votes,
-              named: namedByQuestion(rec.eventItemId),
-              divided: new Set(votes.map((v) => v.value)).size > 1,
-            };
-          })
-          .filter((r) => r.votes.length > 0)
-          .sort(
-            (a, b) =>
-              Number(b.named) - Number(a.named) ||
-              Number(b.divided) - Number(a.divided) ||
-              a.index - b.index,
-          );
-
-        let rollCallItemsInPack = 0;
-        for (const { rec, votes } of ranked) {
-          if (voteRows + votes.length > VOTE_ROWS_MAX) continue;
-          rollCallItemsInPack += 1;
-          for (const vote of votes) {
-            voteRows += 1;
-            const on = itemTitleFor.get(rec.eventItemId);
-            records.push({
-              kind: "MEETING_MEMBER_VOTE",
-              id: `${rec.eventItemId}#${vote.personId ?? vote.personName}`,
-              bodyId: chosen.bodyId,
-              text: on
-                ? `On "${on}", ${vote.personName} voted ${vote.value}.`
-                : `${vote.personName} voted ${vote.value}.`,
-              occurredAt: chosen.startsAt,
-              sourceUrl: rec.provenance.endpoint,
-              sourceOrg: rec.provenance.sourceOrg,
-            });
-          }
-        }
-        denominators.rollCallItemsHeldForThatMeeting = rollCalls.length;
-        denominators.rollCallItemsInPack = rollCallItemsInPack;
-
-        for (const rec of evidence.records) {
-          if (rec.recordClass === "ACTION_SUMMARY") {
-            /*
-             * `tallyText` is the clerk's prose and travels VERBATIM as their
-             * sentence. It is never split into members — that join is the one
-             * step between a real record and five fabricated positions.
-             */
-            const parts = [
-              rec.action ? `The board's recorded action was "${rec.action}".` : null,
-              rec.mover ? `Moved by ${rec.mover}${rec.seconder ? `, seconded by ${rec.seconder}` : ""}.` : null,
-              rec.tallyText ? `The clerk recorded: "${rec.tallyText}"` : null,
-              rec.rollCall === "OUTCOME_WITHOUT_ROLL_CALL"
-                ? "No per-member roll call was published for this item."
-                : null,
-            ].filter(Boolean);
-            records.push({
-              kind: "MEETING_ACTION",
-              id: `${rec.eventItemId}#action`,
-              bodyId: chosen.bodyId,
-              text: `${rec.matterFile ? `${rec.matterFile}: ` : ""}${parts.join(" ")}`,
-              occurredAt: chosen.startsAt,
-              sourceUrl: rec.provenance.endpoint,
-              sourceOrg: rec.provenance.sourceOrg,
-            });
-          }
-        }
-
-        /*
-         * The gap. `evidence.gap` is null only on HELD, and its `whose` is
-         * derived from the STATE rather than asserted here: `NO_ACTION_RECORDED`
-         * and `ACTION_WITHOUT_ROLL_CALL` are facts about a government that we
-         * measured from their records; `NOT_YET_INGESTED` and
-         * `EXTRACTION_FAILED` are ours. The older sentence stays as the fallback
-         * for a body the outcome store holds nothing for at all.
-         */
-        denominators.personVoteRowsInPack = voteRows;
-
-        if (evidence.gap) {
-          gaps.push({ whose: outcomeGapWhose(evidence.state), statement: evidence.gap });
-        } else if (!evidence.answerable) {
-          const heldClasses = records.some(
-            (r) => r.kind === "AGENDA_ITEM" || r.kind === "AGENDA_DOCUMENT",
-          )
-            ? ["AGENDA"]
-            : [];
-          const ruling = ruleOnQuestion(outcomeClass, heldClasses);
-          denominators.outcomeRecordsHeld = ruling.satisfiedBy.length;
-          if (!ruling.answerable) {
-            gaps.push({
-              whose: "OURS",
-              statement: outcomeGapStatement(subject.name, outcomeClass, heldClasses.length > 0),
-            });
-          }
-        }
+      records.push(...outcome.records);
+      records.push(...minutes.records);
+      records.push(...notice.records);
+      gaps.push(...notice.gaps);
+      gaps.push(...minutes.gaps);
+      // A sourced summary answers what happened without pretending it records
+      // each member's vote. No outcome-store absence may erase that answer.
+      if (!minutes.records.length) gaps.push(...outcome.gaps);
+      denominators.minutesSummaryRecordsReturned = (denominators.minutesSummaryRecordsReturned ?? 0) + minutes.records.length;
+      denominators.noticeSummaryRecordsReturned = (denominators.noticeSummaryRecordsReturned ?? 0) + notice.records.length;
+      for (const [key, count] of Object.entries(outcome.denominators)) denominators[key] = (denominators[key] ?? 0) + count;
       }
     }
 
@@ -1455,23 +1372,9 @@ export async function POST(request: Request) {
      * damaging thing this route could do, and it is why synthesis is given a
      * pack rather than a question. AZ03 holds the hunt.
      */
-    const seat = statewideExecutivesFor([...new Set(ocdIds)]).find(
-      (s) => s.name.toLowerCase() === subject.name.toLowerCase(),
-    );
+    const seat = officeholders.seats.find((s) => s.id === subject.id);
     if (seat) {
-      records.push({
-        kind: "OFFICEHOLDER",
-        id: subject.id,
-        /* Identity is person AND office, never either alone — the exact-office
-           rule PR #211 landed. A record naming only the person would let a
-           later sentence attach an action to the wrong seat. */
-        text: `${seat.name} holds the office of ${seat.officeTitle}${
-          seat.partyLabel ? `, ${seat.partyLabel}` : ""
-        }${seat.termEnd ? `, in seat until ${seat.termEnd}` : ""}.`,
-        sourceUrl: seat.sourceUrl,
-        sourceOrg: seat.provenance?.sourceOrg ?? null,
-        retrievedAt: seat.provenance?.collectedAt ?? null,
-      });
+      records.push(officeholderEvidence(seat));
       denominators.officeholderRecords = 1;
       subject.office = seat.officeTitle;
       contacts.push(contactForOfficeholder(seat));
@@ -1504,10 +1407,18 @@ export async function POST(request: Request) {
     /* ── ASK-06 ── the same exact identity chain on the officeholder path. A
        sitting legislator asked about by name reaches their own roll calls; a
        governor reaches the honest gap, because a governor casts none. */
-    const votes = voteEvidenceFor(subject.name, { withinStates: statesOf(ocdIds) });
+    const votes = voteEvidenceFor(subject.name, { withinStates: statesOf(ocdIds), officeholderId: seat?.id });
+    if (votes.identity.kind === "JOINED") canonicalSubjectKeys.add(votes.identity.seat.officeholderId);
     records.push(...votes.records);
     gaps.push(...votes.gaps);
     Object.assign(denominators, votes.denominators);
+  }
+
+  if (subject?.kind === "PERSON") {
+    const statements = statementEvidenceFor(subject, question, [...canonicalSubjectKeys]);
+    records.push(...statements.records);
+    gaps.push(...statements.gaps);
+    Object.assign(denominators, statements.denominators);
   }
 
   /*
@@ -1551,17 +1462,32 @@ export async function POST(request: Request) {
    * subject this pipeline holds nothing for gets a scope gap that says which
    * store it would be in rather than a bare nothing.
    */
+  if (subject?.kind === "PERSON") {
+    const keyVotes = await keyVoteEvidenceFor(subject, [...canonicalSubjectKeys]);
+    records.push(...keyVotes.records);
+    gaps.push(...keyVotes.gaps);
+    Object.assign(denominators, keyVotes.denominators);
+  }
+
   if (subject && financeQuestionAsked(question)) {
-    const finance = localFinanceEvidenceFor(subject);
+    const normalized = campaignMoneyEvidenceFor(subject, ballotRecord?.id ?? subject.id, ballotRecord?.contestId);
+    records.push(...normalized.records);
+    gaps.push(...normalized.gaps);
+    Object.assign(denominators, normalized.denominators);
+    const finance = localFinanceEvidenceFor(subject, [...canonicalSubjectKeys]);
     if (finance) {
       records.push(...finance.records);
       gaps.push(...finance.gaps);
       Object.assign(denominators, finance.denominators);
-    } else {
+    } else if (normalized.records.length === 0 && normalized.gaps.length === 0) {
       gaps.push(financeScopeGapFor(subject));
     }
     // Every regime, on every money answer, whether or not records were found.
-    for (const note of financeRegimeNotesFor(subject)) gaps.push(note.gap);
+    for (const note of financeRegimeNotesFor(subject, {
+      state: normalized.denominators.stateFinanceRecordsReturned > 0,
+      federal: normalized.denominators.federalFinanceRecordsReturned > 0,
+      county: Boolean(finance?.records.length),
+    })) gaps.push(note.gap);
     denominators.financeRegimesNamed = 3;
   }
 
@@ -1600,11 +1526,15 @@ export async function POST(request: Request) {
    * can never be one the panel shows.
    */
   const shownContacts = gateContactsToSubject(subject, contacts).contacts;
+  const rosterGaps = rosterGapEvidenceFor(subject, shownContacts, canonicalSubjectKeys);
+  records.push(...rosterGaps.records);
+  gaps.push(...rosterGaps.gaps);
+  Object.assign(denominators, rosterGaps.denominators);
   denominators.contactsExcludedOffSubject = contacts.length - shownContacts.length;
-  for (const contact of shownContacts.slice(0, MAX_ASK_CONTACTS)) {
+  for (const contact of shownContacts) {
     records.push(contactRecord(contact));
   }
-  denominators.verifiedContacts = Math.min(shownContacts.length, MAX_ASK_CONTACTS);
+  denominators.verifiedContacts = shownContacts.length;
 
   /*
    * **THE AUTHORITY'S OWN STATEMENTS OF ABSENCE — for the SUBJECT's division.**
@@ -1625,9 +1555,9 @@ export async function POST(request: Request) {
        authority saying a race is not on it answers exactly that. A question
        about a PERSON is not a question about the ballot lineup, so an absence
        under it is a document the answer did not rest on. */
-    records.push(...absencesForDivisions([ballotRecord.ocdId], ballot.absences));
+    records.push(...absencesForDivisions([ballotRecord.ocdId], absencesWithoutRemovals(ballot.absences, ballot.set?.removals ?? [])));
   } else if (surface === "BALLOT" && !subject) {
-    records.push(...absencesForDivisions(ocdIds, ballot.absences));
+    records.push(...absencesForDivisions(ocdIds, absencesWithoutRemovals(ballot.absences, ballot.set?.removals ?? [])));
   }
 
   /*
@@ -1885,7 +1815,7 @@ export async function POST(request: Request) {
     mode,
     pack,
     answer,
-    contacts: shownContacts.slice(0, MAX_ASK_CONTACTS),
+    contacts: shownContacts,
     /*
      * ASK-20 / ASK-23 / ASK-24. In start order and de-duplicated by id: the
      * chosen sitting first, then any other sitting the body holds on the same
@@ -1897,6 +1827,7 @@ export async function POST(request: Request) {
       .sort((a, b) => (a.startsAt < b.startsAt ? -1 : a.startsAt > b.startsAt ? 1 : 0)),
     trace,
   });
+  payload.meetingListingIdentity = meetingListingKnowledgeFor(snapshot?.meetings ?? [], resolvedSittings.map(meeting => meeting.id)).readback;
   return Response.json(payload);
 }
 

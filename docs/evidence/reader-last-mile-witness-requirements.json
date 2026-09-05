@@ -1,0 +1,755 @@
+{
+  "rule": "Actual component classes needing in-situ execution. Non-reachable API/Ask classes need their actual route record proofs instead of a manufactured visual witness. Counts use current applicability and will refresh after final selector repair.",
+  "requirements": [
+    {
+      "surface": "map",
+      "component": "components/officials/person-identity.tsx",
+      "families": [
+        "body-rosters",
+        "statewide-executives",
+        "registry",
+        "state-officeholders",
+        "portraits"
+      ],
+      "recordObligations": 1382,
+      "selectorClasses": [
+        "seatHolderById / rosterForBody / rosterHoldersForBody → PersonIdentity",
+        "canonical person/card portrait → IdentityPortrait"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "map",
+      "component": "components/officials/contact-pills.tsx",
+      "families": [
+        "body-rosters",
+        "statewide-executives",
+        "campaign-sites",
+        "registry",
+        "state-officeholders"
+      ],
+      "recordObligations": 732,
+      "selectorClasses": [
+        "seatHolderById / rosterForBody / rosterHoldersForBody → ContactPills"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "map",
+      "component": "components/officials/official-term-note.tsx",
+      "families": [
+        "body-rosters"
+      ],
+      "recordObligations": 34,
+      "selectorClasses": [
+        "rosterHoldersForBody → OfficialTermNote"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "ask",
+      "component": "components/officials/person-identity.tsx",
+      "families": [
+        "body-rosters",
+        "statewide-executives",
+        "state-officeholders"
+      ],
+      "recordObligations": 679,
+      "selectorClasses": [
+        "seatHolderById / rosterForBody / rosterHoldersForBody → PersonIdentity"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "ask",
+      "component": "components/officials/contact-pills.tsx",
+      "families": [
+        "body-rosters",
+        "statewide-executives",
+        "state-officeholders"
+      ],
+      "recordObligations": 679,
+      "selectorClasses": [
+        "seatHolderById / rosterForBody / rosterHoldersForBody → ContactPills"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "ask",
+      "component": "components/officials/official-term-note.tsx",
+      "families": [
+        "body-rosters"
+      ],
+      "recordObligations": 34,
+      "selectorClasses": [
+        "rosterHoldersForBody → OfficialTermNote"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "map",
+      "component": "components/officials/roster-completeness-gap.tsx",
+      "families": [
+        "body-rosters"
+      ],
+      "recordObligations": 1,
+      "selectorClasses": [
+        "rosterGapForBody → RosterCompletenessGaps"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "ask",
+      "component": "components/officials/roster-completeness-gap.tsx",
+      "families": [
+        "body-rosters"
+      ],
+      "recordObligations": 1,
+      "selectorClasses": [
+        "rosterGapForBody → RosterCompletenessGaps"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "representation",
+      "component": "components/officials/person-identity.tsx",
+      "families": [
+        "statewide-executives",
+        "registry",
+        "state-officeholders",
+        "portraits"
+      ],
+      "recordObligations": 1337,
+      "selectorClasses": [
+        "seatHolderById / rosterForBody / rosterHoldersForBody → PersonIdentity",
+        "canonical person/card portrait → IdentityPortrait"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "representation",
+      "component": "components/officials/contact-pills.tsx",
+      "families": [
+        "statewide-executives",
+        "campaign-sites",
+        "registry",
+        "state-officeholders"
+      ],
+      "recordObligations": 687,
+      "selectorClasses": [
+        "seatHolderById / rosterForBody / rosterHoldersForBody → ContactPills"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "ballot",
+      "component": "components/officials/person-identity.tsx",
+      "families": [
+        "statewide-executives",
+        "registry",
+        "state-officeholders",
+        "portraits"
+      ],
+      "recordObligations": 40,
+      "selectorClasses": [
+        "seatHolderById / rosterForBody / rosterHoldersForBody → PersonIdentity",
+        "canonical person/card portrait → IdentityPortrait"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "ballot",
+      "component": "components/officials/contact-pills.tsx",
+      "families": [
+        "statewide-executives",
+        "campaign-sites",
+        "registry",
+        "state-officeholders"
+      ],
+      "recordObligations": 27,
+      "selectorClasses": [
+        "seatHolderById / rosterForBody / rosterHoldersForBody → ContactPills"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "map",
+      "component": "components/map/popup/entity-modal.tsx",
+      "families": [
+        "curated-body-identities",
+        "sourced-definitions",
+        "body-compositions",
+        "registry"
+      ],
+      "recordObligations": 3002,
+      "selectorClasses": [
+        "exact map-entry bodySubject AST → actual EntityModal header and private DefinitionBlock/Representation leaves (collapsed children rendered independently)",
+        "canonical definitionsForBody selected on exact current body → actual DefinitionBlock"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "map",
+      "component": "components/map/meeting-panel.tsx",
+      "families": [
+        "comment-access"
+      ],
+      "recordObligations": 18,
+      "selectorClasses": [
+        "commentAccessFor → HowToBeHeard"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "ask",
+      "component": "components/map/meeting-panel.tsx",
+      "families": [
+        "comment-access"
+      ],
+      "recordObligations": 18,
+      "selectorClasses": [
+        "commentAccessFor → HowToBeHeard"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "about-area",
+      "component": "components/area/shuffled-facts.tsx",
+      "families": [
+        "area-facts"
+      ],
+      "recordObligations": 27,
+      "selectorClasses": [
+        "areaFactsForState → ShuffledFacts"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "ballot",
+      "component": "components/ballot/polling-lookup-fallback.tsx",
+      "families": [
+        "ballot-navigation"
+      ],
+      "recordObligations": 3,
+      "selectorClasses": [
+        "pollingPlaceLinkFor → PollingLookupFallback"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "map",
+      "component": "components/map/popup/meeting-popup.tsx",
+      "families": [
+        "minutes-summaries",
+        "meetings"
+      ],
+      "recordObligations": 578,
+      "selectorClasses": [
+        "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting → MeetingPopup"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "ask",
+      "component": "components/map/popup/meeting-popup.tsx",
+      "families": [
+        "minutes-summaries",
+        "meetings"
+      ],
+      "recordObligations": 626,
+      "selectorClasses": [
+        "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting → MeetingPopup"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "map",
+      "component": "components/map/popup/agenda-section.tsx",
+      "families": [
+        "notice-summaries",
+        "meetings"
+      ],
+      "recordObligations": 128,
+      "selectorClasses": [
+        "actual GET /api/agenda newest-first → AgendaDocuments / exact-hash noticeSummaryFor"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "ask",
+      "component": "components/map/popup/agenda-section.tsx",
+      "families": [
+        "notice-summaries",
+        "meetings"
+      ],
+      "recordObligations": 155,
+      "selectorClasses": [
+        "actual GET /api/agenda newest-first → AgendaDocuments / exact-hash noticeSummaryFor"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "ballot",
+      "component": "components/funding/state-money-section.tsx",
+      "families": [
+        "state-money"
+      ],
+      "recordObligations": 308,
+      "selectorClasses": [
+        "stateMoneyForTarget → StateMoneySection"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "state-money",
+      "component": "components/funding/state-money-section.tsx",
+      "families": [
+        "state-money"
+      ],
+      "recordObligations": 310,
+      "selectorClasses": [
+        "stateMoneyForTarget → StateMoneySection"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "map",
+      "component": "components/funding/state-money-section.tsx",
+      "families": [
+        "state-money"
+      ],
+      "recordObligations": 52,
+      "selectorClasses": [
+        "stateMoneyForTarget → StateMoneySection"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "funding",
+      "component": "components/funding/state-money-section.tsx",
+      "families": [
+        "state-money"
+      ],
+      "recordObligations": 325,
+      "selectorClasses": [
+        "stateMoneyForTarget → StateMoneySection"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "ask",
+      "component": "components/funding/state-money-section.tsx",
+      "families": [
+        "state-money"
+      ],
+      "recordObligations": 325,
+      "selectorClasses": [
+        "stateMoneyForTarget → StateMoneySection"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "ballot",
+      "component": "components/ballot/candidate-card.tsx",
+      "families": [
+        "ballot"
+      ],
+      "recordObligations": 233,
+      "selectorClasses": [
+        "cardForCandidacy / cardForNominee → CandidateCard"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "ballot",
+      "component": "components/ballot/candidate-contact.tsx",
+      "families": [
+        "ballot"
+      ],
+      "recordObligations": 508,
+      "selectorClasses": [
+        "cardForCandidacy / linksForCandidacy → CandidateContact",
+        "candidateContactForCandidacy → CandidateContact"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "ask",
+      "component": "components/ballot/candidate-card.tsx",
+      "families": [
+        "ballot"
+      ],
+      "recordObligations": 184,
+      "selectorClasses": [
+        "cardForCandidacy / cardForNominee → CandidateCard"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "ask",
+      "component": "components/ballot/candidate-contact.tsx",
+      "families": [
+        "ballot"
+      ],
+      "recordObligations": 459,
+      "selectorClasses": [
+        "cardForCandidacy / linksForCandidacy → CandidateContact",
+        "candidateContactForCandidacy → CandidateContact"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "meetings",
+      "component": "components/map/popup/meeting-popup.tsx",
+      "families": [
+        "meetings"
+      ],
+      "recordObligations": 576,
+      "selectorClasses": [
+        "makeSnapshotSource.fetch / normalize / minutesSummaryForMeeting → MeetingPopup"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "agenda",
+      "component": "components/map/popup/agenda-section.tsx",
+      "families": [
+        "meetings"
+      ],
+      "recordObligations": 154,
+      "selectorClasses": [
+        "actual GET /api/agenda newest-first → AgendaDocuments / exact-hash noticeSummaryFor"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "funding",
+      "component": "components/funding/funding-section.tsx",
+      "families": [
+        "federal-finance"
+      ],
+      "recordObligations": 38,
+      "selectorClasses": [
+        "fundingAnswerForTarget → FundingDisplay / FundingAbsence"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "ballot",
+      "component": "components/funding/funding-section.tsx",
+      "families": [
+        "federal-finance"
+      ],
+      "recordObligations": 32,
+      "selectorClasses": [
+        "fundingAnswerForTarget → FundingDisplay / FundingAbsence"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "map",
+      "component": "components/funding/funding-section.tsx",
+      "families": [
+        "federal-finance"
+      ],
+      "recordObligations": 10,
+      "selectorClasses": [
+        "fundingAnswerForTarget → FundingDisplay / FundingAbsence"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "ask",
+      "component": "components/funding/funding-section.tsx",
+      "families": [
+        "federal-finance"
+      ],
+      "recordObligations": 38,
+      "selectorClasses": [
+        "fundingAnswerForTarget → FundingDisplay / FundingAbsence"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "map",
+      "component": "components/officials/member-directory.tsx",
+      "families": [
+        "congress"
+      ],
+      "recordObligations": 531,
+      "selectorClasses": [
+        "actual GET /api/directory → DirectoryRecordsContent"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "ballot",
+      "component": "components/officials/member-directory.tsx",
+      "families": [
+        "congress"
+      ],
+      "recordObligations": 6,
+      "selectorClasses": [
+        "actual GET /api/directory → DirectoryRecordsContent"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "map",
+      "component": "components/map/popup/district-popup.tsx",
+      "families": [
+        "registry"
+      ],
+      "recordObligations": 2267,
+      "selectorClasses": [
+        "canonical registry division → seatHoldersForDivision → actual DistrictPopup"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "representation",
+      "component": "components/map/popup/district-popup.tsx",
+      "families": [
+        "registry"
+      ],
+      "recordObligations": 531,
+      "selectorClasses": [],
+      "importReach": false
+    },
+    {
+      "surface": "votes",
+      "component": "components/map/popup/official-popup.tsx",
+      "families": [
+        "votes"
+      ],
+      "recordObligations": 12346,
+      "selectorClasses": [
+        "actual GET /api/votes exact member → RecentVoteRecords (same uncapped Show all leaf)"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "ballot",
+      "component": "components/map/popup/official-popup.tsx",
+      "families": [
+        "votes"
+      ],
+      "recordObligations": 291,
+      "selectorClasses": [
+        "summaryForBill → BillPlainSummary",
+        "actual GET /api/votes exact member → RecentVoteRecords (same uncapped Show all leaf)"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "ask",
+      "component": "components/map/popup/official-popup.tsx",
+      "families": [
+        "votes"
+      ],
+      "recordObligations": 12357,
+      "selectorClasses": [
+        "summaryForBill → BillPlainSummary",
+        "actual GET /api/votes exact member → RecentVoteRecords (same uncapped Show all leaf)"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "map",
+      "component": "components/map/popup/official-popup.tsx",
+      "families": [
+        "votes"
+      ],
+      "recordObligations": 12357,
+      "selectorClasses": [
+        "summaryForBill → BillPlainSummary",
+        "actual GET /api/votes exact member → RecentVoteRecords (same uncapped Show all leaf)"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "votes",
+      "component": "components/officials/key-votes-section.tsx",
+      "families": [
+        "votes"
+      ],
+      "recordObligations": 91,
+      "selectorClasses": [
+        "keyVotesForMember shared actual route selector → KeyVoteGroupBlock",
+        "keyVotesForMember shared actual route selector → KeyVoteGroupBlock, both chambers"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "ballot",
+      "component": "components/officials/key-votes-section.tsx",
+      "families": [
+        "votes"
+      ],
+      "recordObligations": 91,
+      "selectorClasses": [
+        "keyVotesForMember shared actual route selector → KeyVoteGroupBlock",
+        "keyVotesForMember shared actual route selector → KeyVoteGroupBlock, both chambers"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "ask",
+      "component": "components/officials/key-votes-section.tsx",
+      "families": [
+        "votes"
+      ],
+      "recordObligations": 91,
+      "selectorClasses": [
+        "keyVotesForMember shared actual route selector → KeyVoteGroupBlock",
+        "keyVotesForMember shared actual route selector → KeyVoteGroupBlock, both chambers"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "map",
+      "component": "components/officials/key-votes-section.tsx",
+      "families": [
+        "votes"
+      ],
+      "recordObligations": 91,
+      "selectorClasses": [
+        "keyVotesForMember shared actual route selector → KeyVoteGroupBlock",
+        "keyVotesForMember shared actual route selector → KeyVoteGroupBlock, both chambers"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "voting-sites",
+      "component": "components/map/voting-sites-panel.tsx",
+      "families": [
+        "voting-sites"
+      ],
+      "recordObligations": 44,
+      "selectorClasses": [
+        "real POST /api/voting-sites with held-geometry geocoder fixture → VotingJurisdictionRecords"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "ballot",
+      "component": "components/map/voting-sites-panel.tsx",
+      "families": [
+        "voting-sites"
+      ],
+      "recordObligations": 44,
+      "selectorClasses": [
+        "real POST /api/voting-sites with held-geometry geocoder fixture → VotingJurisdictionRecords"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "map",
+      "component": "components/map/voting-sites-panel.tsx",
+      "families": [
+        "voting-sites"
+      ],
+      "recordObligations": 44,
+      "selectorClasses": [
+        "real POST /api/voting-sites with held-geometry geocoder fixture → VotingJurisdictionRecords"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "ballot",
+      "component": "components/officials/official-actions.tsx",
+      "families": [
+        "official-actions"
+      ],
+      "recordObligations": 42,
+      "selectorClasses": [
+        "officialActionsForTarget → OfficialActionsContent"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "map",
+      "component": "components/officials/official-actions.tsx",
+      "families": [
+        "official-actions"
+      ],
+      "recordObligations": 42,
+      "selectorClasses": [
+        "officialActionsForTarget → OfficialActionsContent"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "ask",
+      "component": "components/officials/official-actions.tsx",
+      "families": [
+        "official-actions"
+      ],
+      "recordObligations": 42,
+      "selectorClasses": [
+        "officialActionsForTarget → OfficialActionsContent"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "agenda",
+      "component": "components/map/popup/meeting-records.tsx",
+      "families": [
+        "outcomes"
+      ],
+      "recordObligations": 20,
+      "selectorClasses": [
+        "meetingReaderRecords → MeetingRecords"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "ask",
+      "component": "components/map/popup/meeting-records.tsx",
+      "families": [
+        "outcomes"
+      ],
+      "recordObligations": 20,
+      "selectorClasses": [
+        "meetingReaderRecords → MeetingRecords"
+      ],
+      "importReach": false
+    },
+    {
+      "surface": "map",
+      "component": "components/map/popup/meeting-records.tsx",
+      "families": [
+        "outcomes"
+      ],
+      "recordObligations": 20,
+      "selectorClasses": [
+        "meetingReaderRecords → MeetingRecords"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "ballot",
+      "component": "components/officials/public-statements-profile.tsx",
+      "families": [
+        "prl"
+      ],
+      "recordObligations": 6,
+      "selectorClasses": [
+        "prlProfileForSubject → PublicStatementsProfileContent"
+      ],
+      "importReach": true
+    },
+    {
+      "surface": "map",
+      "component": "components/officials/public-statements-profile.tsx",
+      "families": [
+        "prl"
+      ],
+      "recordObligations": 530,
+      "selectorClasses": [
+        "prlProfileForSubject → PublicStatementsProfileContent"
+      ],
+      "importReach": true
+    }
+  ]
+}

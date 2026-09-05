@@ -52,7 +52,12 @@ export function GET(request: Request) {
   }
   const member = read.value as string;
 
-  const found = directoryFor(member);
+  let found;
+  try { found = directoryFor(member); }
+  catch {
+    return Response.json({ holdingStatus: "HOLDING_UNAVAILABLE", error: "We couldn’t load the directory records just now." },
+      { status: 503, headers: { "Cache-Control": "private, no-store" } });
+  }
   if (!found) {
     return Response.json(
       { source: null, districtOffices: [], committees: [] },

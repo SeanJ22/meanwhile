@@ -3,6 +3,7 @@
 import { createContext, useContext, type ReactNode } from "react";
 
 import type { MeetingSearchResult } from "@/lib/meetings/query";
+import type { MeetingListingIdentityReadback } from "@/lib/meetings/listing-identity";
 import type { Venue } from "@/lib/meetings/venues";
 import type { Meeting } from "@/lib/sources/types";
 import type { StoredLocation } from "@/hooks/use-stored-zip";
@@ -22,6 +23,8 @@ export interface ShellData {
   allMeetings: Meeting[];
   /** After the active tier, scope, chips, date window and radius. */
   meetings: Meeting[];
+  /** Identity diagnostic belonging to these rows, including same-area carry-forward. */
+  listingIdentity?: MeetingListingIdentityReadback;
   /** Venues for the filtered set — one pin per venue, not per meeting. */
   venues: Venue[];
   result: MeetingSearchResult | null;
@@ -88,4 +91,9 @@ export function useShellData(): ShellData {
   const data = useContext(DataContext);
   if (!data) throw new Error("useShellData must be used inside <DataProvider>");
   return data;
+}
+
+export function useMeetingListingIdentity(): MeetingListingIdentityReadback | undefined {
+  const data = useShellData();
+  return data.listingIdentity ?? data.result?.listingIdentity;
 }

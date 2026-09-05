@@ -1,4 +1,8 @@
-import { RADIUS_LADDER_KM } from "../meetings/constants.ts";
+import {
+  CONCLUDED_LOOKBACK_DAYS,
+  RADIUS_LADDER_KM,
+  UPCOMING_HORIZON_DAYS,
+} from "../meetings/constants.ts";
 import { TIERS } from "../ocd/tiers.ts";
 
 import type { DistrictType, FilterState, UiState } from "./types.ts";
@@ -46,7 +50,7 @@ export const INITIAL_FILTERS: FilterState = {
   bodyTypes: [],
   statuses: [],
   districtTypes: [...DEFAULT_DISTRICT_TYPES],
-  daysAhead: 60,
+  daysAhead: UPCOMING_HORIZON_DAYS,
   /**
    * 6f2 (2026-08-15, the author): 0 → 90. The served window has reached 90
    * days back since M76, and the sidebar's own default was still `now`, so
@@ -55,7 +59,7 @@ export const INITIAL_FILTERS: FilterState = {
    * was telling the truth about itself while hiding three months of what the
    * app holds. The default now matches the window it filters.
    */
-  daysBack: 90,
+  daysBack: CONCLUDED_LOOKBACK_DAYS,
   hideUncovered: true,
 };
 

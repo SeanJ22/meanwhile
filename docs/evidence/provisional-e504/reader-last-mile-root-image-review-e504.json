@@ -1,0 +1,178 @@
+{
+  "exactHead": "e5040bce10a48c712758f5c97fe5b065bcaa9ff3",
+  "reviewer": "root",
+  "method": "Each of 28 original images opened with view_image and read independently",
+  "scope": "85641 phone, dark/light, map/ballot: public statements, committees, offices, recent votes and key votes including tail screenshots",
+  "result": "PASS",
+  "images": [
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-dark-map-profile.png",
+      "sha256": "5863f810886daea23d314ba123118a91f9f35eb11c6f72060a1f729b592b219c",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-dark-map-committees.png",
+      "sha256": "b60eb0f19c424283f237aef56bb847ac8acbbd53841bb546e41dc345b0512cae",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-dark-map-offices.png",
+      "sha256": "7cfbe9e584e841ca7f2ca29ae934be060d93ae7e68a0cbae8da6281c11ce3f5e",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-dark-map-recent-votes.png",
+      "sha256": "6e65f9acd3550a1d43b638d4b35c09992bef529e6ec4a92239cef712272910a3",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-dark-map-recent-votes-last.png",
+      "sha256": "6de97415cf292ca4bf30c6febee5794f0122eaaef55925fbf43b91d687206902",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-dark-map-key-votes.png",
+      "sha256": "11a0392792ee787ab1b03d940829399a0f888b3dc10a96e725b112c09ced6fff",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-dark-map-key-votes-last.png",
+      "sha256": "74b1d25676b8eaeb4e23b1a3bed18ec46f3db665df2bb2ee1ddc7f0d8fd7934a",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-dark-ballot-profile.png",
+      "sha256": "e9b73d87467835bee5ad829f0d518d92eb15d8d56dd90069a9b03cca36253ee0",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-dark-ballot-committees.png",
+      "sha256": "ba58b1b3438b799a2e5dfc32341d573502f9f0b0b1f358e0048fccf950d932a3",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-dark-ballot-offices.png",
+      "sha256": "d1b1f1da6e3c2980e48962b1e2546bbcb85e07424d2a4528fdf1cd12ce32327f",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-dark-ballot-recent-votes.png",
+      "sha256": "574c78b235fb63fb10cfceec89ad1d900f72bb5397bebe52481674848214caff",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-dark-ballot-recent-votes-last.png",
+      "sha256": "05ab7256d585e73b74ac067a00aa633aa62d72e53004f81ad16e81464e762631",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-dark-ballot-key-votes.png",
+      "sha256": "1edc28716ac69a40f3cc923b075d4375b88963754dbe7dd71a1129a6ae01dc86",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-dark-ballot-key-votes-last.png",
+      "sha256": "1fcab149be28f981bc855479922ce0b1284f20edb0872cffc903c79504b29a91",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-light-map-profile.png",
+      "sha256": "f8585105c3a98b486b890faff9206eee12e64d5e107d81f06876f9c58ae969be",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-light-map-committees.png",
+      "sha256": "6aa28311f06ca5eb80ed4aaca0a2def6348d68d00d4bb752614021133718cd4b",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-light-map-offices.png",
+      "sha256": "a9abfc9d3b6099edab653e2b24f289a4ea05d02ed92caf8991e201ced1123171",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-light-map-recent-votes.png",
+      "sha256": "f93ffadda103bab92f6e534035f4e1ca7574d9050f36f28404355597d6139fd5",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-light-map-recent-votes-last.png",
+      "sha256": "8fa3a054c892f438fc173710b0f3a0f504271bb8554561364b7a18bd6c1d0adf",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-light-map-key-votes.png",
+      "sha256": "8ed8a28c2f2a7e56b2260e206097228c918964acb3fcad1c55d0d16a0ddd7d0b",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-light-map-key-votes-last.png",
+      "sha256": "247f54dabd0d9cbe99696d577cc2d37790cdd0a60987f7bc1cc81780ce8693a0",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-light-ballot-profile.png",
+      "sha256": "a71b62d76b4c149d7e0b75f434b411be37a8347897f39589495b2829fee76cd6",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-light-ballot-committees.png",
+      "sha256": "fc96efef5fd31a541cf3689dd218d6049331f33112758a3e1ef5b72be84d85f9",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-light-ballot-offices.png",
+      "sha256": "51aa5772104d9facf6766b27590075deca7cadf56a6830b07fbff52a6f4d2d7b",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-light-ballot-recent-votes.png",
+      "sha256": "15c0f9aaf479e8658b3dd97e2842b09e162d761b478b25b85b1269441a993cf3",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-light-ballot-recent-votes-last.png",
+      "sha256": "6d1241a8f791f23ba1493879d0beffc30df6f2eb50d41d9b4516b3da1a181123",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-light-ballot-key-votes.png",
+      "sha256": "e3b4035814a183294c30b35cf0f3a99f10f5dda8dcb3ca3196b9be3723a2bffc",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-light-ballot-key-votes-last.png",
+      "sha256": "9eea211c95f364d57eccdb5ca9abb47414987a30e13a605f56d515729ca86500",
+      "result": "PASS",
+      "observation": "Opened and read as an image. Sourced content, disclosure labels, provenance, reachable record tails and viewport bounds are legible in this actual captured state."
+    }
+  ],
+  "limits": "This receipt covers only these images and their observed e504 build. It does not certify Newbury agenda text, final CI or deployment."
+}

@@ -1,0 +1,132 @@
+{
+  "exactHead": "e5040bce10a48c712758f5c97fe5b065bcaa9ff3",
+  "scope": "Provisional semantic review, superseded by bde7497 runtime. Only these18images were actually read; this does not certify all NJ/NH captures.",
+  "images": [
+    {
+      "path": "screenshots/reader-last-mile/provisional-e504/07866-desktop-dark-map-money.png",
+      "sha256": "ac91ec8062165874685ac1912314b0cecc95a43b1d8ac7cca65316b25b9abb04",
+      "readAsImage": true,
+      "status": "PASS",
+      "finding": "Visible held subject, source, counts and fields agree within the captured scope; no clipping or wrong-subject attachment observed."
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-e504/07866-desktop-dark-iqm2-morriscountynj-2236-minutes.png",
+      "sha256": "35b0df9702573ac30f887311f7ee13ec4572535bf017a19b03b9e41782ebc324",
+      "readAsImage": true,
+      "status": "PASS",
+      "finding": "Visible held subject, source, counts and fields agree within the captured scope; no clipping or wrong-subject attachment observed."
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-e504/07866-desktop-dark-iqm2-morriscountynj-2236-agenda-text.png",
+      "sha256": "44af58b43161be34e04de547c5f0e8b505e887dc13e1279d5a3a390e1860cc33",
+      "readAsImage": true,
+      "status": "PASS",
+      "finding": "Visible held subject, source, counts and fields agree within the captured scope; no clipping or wrong-subject attachment observed."
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-e504/07866-desktop-dark-candidate-holder.png",
+      "sha256": "9458fbe779c59d8bc72bb4de61bbbba4173ae3cac9c76fb81c06e29282513d3d",
+      "readAsImage": true,
+      "status": "PASS",
+      "finding": "Visible held subject, source, counts and fields agree within the captured scope; no clipping or wrong-subject attachment observed."
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-e504/07866-desktop-dark-ballot-money.png",
+      "sha256": "41ea31cc04097a65b1419406ca2d71ff778140c82ac3662a73c5e9b99d8343be",
+      "readAsImage": true,
+      "status": "PASS",
+      "finding": "Visible held subject, source, counts and fields agree within the captured scope; no clipping or wrong-subject attachment observed."
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-e504/07866-desktop-dark-ballot-filed-contact.png",
+      "sha256": "04b64d1b6f79d9ece361664723b17e4b9c4c4555234711ae2c71d2871c2508b8",
+      "readAsImage": true,
+      "status": "PASS",
+      "finding": "Visible held subject, source, counts and fields agree within the captured scope; no clipping or wrong-subject attachment observed."
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-e504/07866-desktop-dark-ballot-ask.png",
+      "sha256": "3977821cebea455d5fb71c19e7f2a88ad51cb04f23d29efac97c9d680d1a178f",
+      "readAsImage": true,
+      "status": "PASS",
+      "finding": "Visible held subject, source, counts and fields agree within the captured scope; no clipping or wrong-subject attachment observed."
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-e504/07866-desktop-dark-ballot-ask-last-record.png",
+      "sha256": "c1c418638de42b336a28c4d6b7428186201e4c52af34dc6a98d2c9c865b95299",
+      "readAsImage": true,
+      "status": "PASS",
+      "finding": "Visible held subject, source, counts and fields agree within the captured scope; no clipping or wrong-subject attachment observed."
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-e504/07866-desktop-dark-about-area.png",
+      "sha256": "6ef3d688d4f5c5b794cd908cb7ab4b7c4769607411e1d381fa390125e430e481",
+      "readAsImage": true,
+      "status": "PASS",
+      "finding": "Visible held subject, source, counts and fields agree within the captured scope; no clipping or wrong-subject attachment observed."
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-e504/07866-desktop-dark-incomplete-roster.png",
+      "sha256": "643a0261a27181b3b0df0d1c77b27e68cdef7ed535a9d48d0d90d0af44410779",
+      "readAsImage": true,
+      "status": "PASS",
+      "finding": "Visible held subject, source, counts and fields agree within the captured scope; no clipping or wrong-subject attachment observed."
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-e504/07866-desktop-dark-incomplete-roster-last-member.png",
+      "sha256": "305376bff8d2d69f4f227c522b5b5f7424c727dc5af39286ccca5548a0631f1b",
+      "readAsImage": true,
+      "status": "PASS",
+      "finding": "Visible held subject, source, counts and fields agree within the captured scope; no clipping or wrong-subject attachment observed."
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-e504/07866-desktop-dark-district-popup.png",
+      "sha256": "875edca72cabcad5adbfdf548a0a525bce41e7c6ba4807e5ec15e514a3b36fdf",
+      "readAsImage": true,
+      "status": "PASS",
+      "finding": "Visible held subject, source, counts and fields agree within the captured scope; no clipping or wrong-subject attachment observed."
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-e504/07866-desktop-dark-pequannock-candidate-holder.png",
+      "sha256": "0d32c6fb8876f81d61584b400fb4ccd0de3be95e7c7d0102bb1df4a9be68749d",
+      "readAsImage": true,
+      "status": "PASS",
+      "finding": "Visible held subject, source, counts and fields agree within the captured scope; no clipping or wrong-subject attachment observed."
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-e504/07866-desktop-light-map-money.png",
+      "sha256": "4ca5826307c33fc8e4605c53ea182690cc58d4452809a3d56429cdc62c5b52dc",
+      "readAsImage": true,
+      "status": "PASS",
+      "finding": "Visible held subject, source, counts and fields agree within the captured scope; no clipping or wrong-subject attachment observed."
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-e504/03255-desktop-dark-map-money.png",
+      "sha256": "122df670c64c36494ffd92c26cca11e61dbd2039c6083f1b316e5187d85672ff",
+      "readAsImage": true,
+      "status": "PASS",
+      "finding": "Visible held subject, source, counts and fields agree within the captured scope; no clipping or wrong-subject attachment observed."
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-e504/03255-desktop-dark-ballot-money.png",
+      "sha256": "2dfd92849a1a1fd40279ec36e96fbbe21791905a20a3e2276ff25730297a166d",
+      "readAsImage": true,
+      "status": "PASS",
+      "finding": "Visible held subject, source, counts and fields agree within the captured scope; no clipping or wrong-subject attachment observed."
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-e504/03255-desktop-dark-diligent-newburynh-3367-agenda-text.png",
+      "sha256": "c9217b7dc0cd990015b782ebb00045baa0c5e5d44a7096f1e480f026bd464651",
+      "readAsImage": true,
+      "status": "FAIL",
+      "finding": "Publisher portal navigation and raw JavaScript appear under What this meeting is about. This measured defect is repaired in bde7497; this screenshot proves the prior failure."
+    },
+    {
+      "path": "screenshots/reader-last-mile/provisional-e504/03255-desktop-dark-about-area.png",
+      "sha256": "d66c35ae21b2a7d469fee6e66aaa1392b24d4c9d0f502fff8771c8363e0d8332",
+      "readAsImage": true,
+      "status": "PASS",
+      "finding": "Visible held subject, source, counts and fields agree within the captured scope; no clipping or wrong-subject attachment observed."
+    }
+  ]
+}

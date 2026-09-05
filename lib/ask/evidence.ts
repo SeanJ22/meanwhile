@@ -43,9 +43,13 @@ export interface EvidenceRecord {
        resolve a single one. */
     | "CONTEST"
     | "CANDIDACY"
+    | "CANDIDATE_BIO"
+    | "CANDIDATE_LINK"
+    | "CANDIDATE_CONTACT"
     | "POSITION"
     | "MEASURE_QUESTION"
     | "MEASURE_STATEMENT"
+    | "MEASURE_ANALYSIS"
     | "MEASURE_SUMMARY"
     | "MEASURE_PROVISION"
     | "BALLOT_ABSENCE"
@@ -84,6 +88,10 @@ export interface EvidenceRecord {
      * of that module's doc block.
      */
     | "ROLL_CALL_VOTE"
+    /** Curated question context is separate from a member's recorded position. */
+    | "KEY_VOTE_CONTEXT"
+    | "KEY_VOTE_POSITION"
+    | "BILL_SUMMARY"
     /*
      * **WHAT A BODY DID TO ONE AGENDA ITEM.** (2026-08-29.)
      *
@@ -118,6 +126,10 @@ export interface EvidenceRecord {
      * one of them. A tally is never expanded into these.
      */
     | "MEETING_MEMBER_VOTE"
+    | "MEETING_MINUTES_SUMMARY"
+    | "MEETING_NOTICE_SUMMARY"
+    | "PUBLIC_COMMENT_ACCESS"
+    | "ROSTER_IDENTITY_GAP"
     /*
      * **A COMMITTEE'S ROW IN A FILING OFFICER'S OWN REGISTER.** (2026-08-30.)
      *
@@ -145,9 +157,32 @@ export interface EvidenceRecord {
      * or against a candidate is not money a campaign received, and collapsing
      * the two would be a false claim built from real rows.
      */
-    | "FINANCE_TRANSACTION";
+    | "FINANCE_TRANSACTION"
+    | "FINANCE_SUMMARY";
   /** Stable id where one exists — the validation rung matches on it. */
   id: string;
+  /** Canonical holding subject when the reader's question uses a bridged card identity. */
+  canonicalSubjectId?: string;
+  officeholder?: { officialId: string; termNote: string | null };
+  rosterGap?: import("../registry/body-rosters.ts").RosterReaderGap;
+  /** A source-listing group is not a verified count of distinct meetings. */
+  meetingListingIdentity?: import("../meetings/listing-identity.ts").MeetingListingIdentityReadback["groups"][number];
+  noticeSummary?: { documentId: string; contentHash: string; writtenAt: string };
+  /** Published body-wide rules, not an inferred event-specific instruction. */
+  accessRule?: { field: "commentPeriod" | "commentPeriodDetail" | "timeLimit" | "signup" | "writtenComment" | "attend"; value: string; standingRule: true };
+  /** Exact candidate-card field and source label, without a name-based join. */
+  candidateProfile?: {
+    field: "bio" | "official" | "campaign" | "email" | "phone" | "filedAddress";
+    value: string;
+    label: string;
+    holdingPath: string;
+    holdingKey: string;
+    verification?: string;
+    sourceNote?: string | null;
+    provenanceLimitation?: string | null;
+  };
+  /** Exact normalized totals accompany the grounded prose for cross-surface parity. */
+  finance?: { jurisdiction: string; filingState: string; totals: { receipts: number | null; expenditures: number | null; cashOnHand: number | null; reportCount: number | null; coveringPeriod: string | null } };
   /**
    * **WHOSE RECORD THIS IS — the canonical body id.** (2026-08-29.)
    *
@@ -190,6 +225,16 @@ export interface EvidenceRecord {
    * kind-scoped rules it holds, and a null is never treated as a foreign stamp.
    */
   subjectId?: string | null;
+  keyVote?: {
+    entryIds: string[];
+    positionKeys: string[];
+    chamber: "house" | "senate";
+    congress: number;
+    session: number;
+    rollNumber: number;
+    position: string;
+    referenceVerifiedAt: string;
+  };
   /** The record's own words, or a mechanical read of its fields. Never a summary. */
   text: string;
   /** ISO date this record is ABOUT, where that is meaningful. */

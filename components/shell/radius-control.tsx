@@ -2,7 +2,8 @@
 
 import { RADIUS_LADDER_KM } from "@/lib/meetings/constants";
 import { formatMiles } from "@/lib/map/format";
-import { useShellData } from "@/lib/state/data";
+import { useShellData, useMeetingListingIdentity } from "@/lib/state/data";
+import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import { useUi, useUiDispatch } from "@/lib/state/provider";
 
 /**
@@ -36,6 +37,7 @@ export function RadiusControl() {
   const ui = useUi();
   const dispatch = useUiDispatch();
   const { meetings, result } = useShellData();
+  const listingCount = readerMeetingCount(meetings, useMeetingListingIdentity());
 
   const enabled = ui.radiusOverridden;
   const km = ui.radiusKm;
@@ -102,7 +104,7 @@ export function RadiusControl() {
           <span className="prox-unit">km</span>
 
           <p className="prox-count">
-            {meetings.length} within {formatMiles(km)} mi
+            {meetings.length}{listingCount.unresolved ? ` ${listingCount.unit}` : ""} within {formatMiles(km)} mi
           </p>
 
           {rung !== null && (

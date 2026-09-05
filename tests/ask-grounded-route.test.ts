@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { allCandidateCards } from "../lib/ballot/candidate-cards.ts";
+import type { EvidenceRecord } from "../lib/ask/evidence.ts";
 
 /**
  * **THE GROUNDED ROUTE, EXERCISED END TO END AGAINST THE COMMITTED CORPUS.**
@@ -55,6 +57,8 @@ interface GroundedBody {
     text: string;
     occurredAt?: string | null;
     sourceUrl?: string | null;
+    canonicalSubjectId?: string;
+    candidateProfile?: EvidenceRecord["candidateProfile"];
   }[];
   gaps?: { whose: string; statement: string }[];
   contacts?: { id: string; name: string; relationship: string; sourceUrl: string | null }[];
@@ -386,13 +390,29 @@ test("RED CONTROL: nothing in the Hobbs reply is an action the corpus does not h
   /*
    * The structural half of "cannot use model memory". With no key the model
    * never runs, so there is no prose at all — and every record that DOES travel
-   * carries a source URL that came out of the corpus. A record with no source
-   * is a record the answer may not assert.
+   * carries its corpus provenance. Existing curated contact fields may lack a
+   * recorded URL, just as CONTACT may; that exception must prove the exact
+   * native held value and explicitly disclose the provenance limitation.
+   * It never applies to an action, biography, link, or other civic claim.
    */
   const body = await ask("What did Katie Hobbs do for the state of Arizona in the last 12 months?");
   assert.equal(body.answer ?? null, null, "no model, no prose — never a plausible substitute");
   for (const record of body.records ?? []) {
     if (record.kind === "CONTACT") continue;
+    if (record.kind === "CANDIDATE_CONTACT" && !record.sourceUrl) {
+      const profile = record.candidateProfile;
+      assert.ok(profile);
+      assert.ok(["email", "phone", "filedAddress"].includes(profile.field));
+      const field = profile.field as "email" | "phone" | "filedAddress";
+      const held = allCandidateCards().cards[profile.holdingKey];
+      assert.ok(held, "contact exception requires an exact curated card holding");
+      assert.equal(profile.value, held[field], "contact must be the native held field, never a generated substitute");
+      assert.equal(record.canonicalSubjectId, profile.holdingKey);
+      const pointer = profile.holdingKey.replaceAll("~", "~0").replaceAll("/", "~1");
+      assert.equal(profile.holdingPath, `data/ballot/candidate-cards-2026.json#/cards/${pointer}/${field}`);
+      assert.ok(profile.provenanceLimitation && record.text.includes(profile.provenanceLimitation), "missing contact provenance is disclosed with the actual field");
+      continue;
+    }
     assert.ok(record.sourceUrl, `${record.kind}:${record.id} reached the pack with no source`);
   }
 });
@@ -631,7 +651,7 @@ test("CONTACTS: the reader's own legislators are the FALLBACK, and they still ap
    * inside these districts — which makes them the right answer when nothing
    * closer exists.
    */
-  const body = await ask("What do we know about Andy Biggs?", { surface: "BALLOT" });
+  const body = await ask("Who is running for Governor?", { surface: "BALLOT" });
   const names = (body.contacts ?? []).map((c) => c.name);
   assert.ok(
     names.includes("David Gowan"),
@@ -842,51 +862,27 @@ test("ASK-06 (b): a candidate with no held voting record gets a NAMED gap, never
   assert.doesNotMatch(gap.statement, /did not vote|has not voted|no votes cast/i);
 });
 
-test("ASK-06 (c): THE ADVERSARIAL CASE — Sally Ann Gonzales gets no senator's votes", async () => {
-  /*
-   * The ballot's District 20 State REPRESENTATIVE line carries *Sally Ann
-   * Gonzales*. The roster carries *Sally Gonzales*, a State SENATOR, holding
-   * twelve recorded roll calls. Joining them attaches votes cast in one
-   * chamber to a candidacy in another — a false claim about a named person's
-   * record. Refusing loses twelve real public votes — an honest gap.
-   *
-   * It fails closed, through the real handler, against the real ballot.
-   */
+test("ASK-06 (c): the committed person bridge preserves the held Senate office beside a House candidacy", async () => {
+  // The previous name-only join correctly refused this variant. The committed
+  // person relationship now resolves it; it does not change which office cast
+  // the votes. The unbridged name-only helper must continue to refuse.
   const body = await ask("How has Sally Ann Gonzales voted?", {
     ocdIds: [AZ, PIMA, SLDL20],
   });
 
   assert.equal(body.subject?.name, "Sally Ann Gonzales", "the person still resolves");
-  assert.deepEqual(
-    (body.records ?? []).filter((r) => r.kind === "ROLL_CALL_VOTE"),
-    [],
-    "NOT ONE roll call may be attached across a name-form gap",
-  );
-
-  const gap = (body.gaps ?? []).find((g) => /voting record/i.test(g.statement));
-  assert.ok(gap, "the refusal must be SAID");
-  assert.equal(gap.whose, "OURS");
-  assert.match(gap.statement, /could not confirm .* it is the same person/);
-  /* And it does not name the near miss, count her votes, or imply either
-     answer — every one of those would be the claim we cannot source. */
-  assert.doesNotMatch(gap.statement, /Senator|12|twelve/);
-
-  /*
-   * **CONTROL: the record it refused really exists.** Without this the test
-   * above proves only that we hold nothing for anybody called Gonzales, which
-   * is a much weaker and much less interesting claim than the one being made.
-   *
-   * It is taken at the module rather than through the handler on purpose: the
-   * senator is not on this reader's ballot — the District 20 House line is
-   * where the name appears — so she is correctly not an entity the binder can
-   * resolve here. The store is what has to be shown to be non-empty.
-   */
+  const votes = (body.records ?? []).filter((r) => r.kind === "ROLL_CALL_VOTE");
+  assert.equal(votes.length, 12);
+  assert.ok(votes.every((vote) => vote.id.startsWith("plural:3c965e03-1e51-4f10-a037-4fb2f35292c5#")));
+  assert.ok(votes.every((vote) => /Sally Gonzales, State Senator: voted/.test(vote.text)));
+  assert.ok(votes.every((vote) => !/State Representative: voted/.test(vote.text)));
   const { voteEvidenceFor } = await import("../lib/ask/votes.ts");
-  const senator = voteEvidenceFor("Sally Gonzales", { withinStates: ["AZ"] });
+  assert.equal(voteEvidenceFor("Sally Ann Gonzales", { withinStates: ["AZ"] }).identity.kind, "NAME_FORM_UNCONFIRMED");
+  const senator = voteEvidenceFor("display name is not used", { officeholderId: "plural:3c965e03-1e51-4f10-a037-4fb2f35292c5" });
   assert.equal(senator.identity.kind, "JOINED");
   assert.equal(
     senator.denominators.rollCallVotesRecorded,
     12,
-    "the senator's twelve votes are genuinely held — the refusal above cost something real",
+    "only the committed identity can carry these held votes into the candidate answer",
   );
 });

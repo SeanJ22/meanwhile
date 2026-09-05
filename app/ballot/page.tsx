@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FilingChanges } from "@/components/ballot/filing-changes";
 
 import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
 import { BALLOT_SOURCES } from "@/lib/ballot/registry";
@@ -95,8 +96,11 @@ import type {
   Measure,
 } from "@/lib/ballot/types";
 import { CandidateContact, TAGLINE_SOURCE_NOTE } from "@/components/ballot/candidate-contact";
+import { candidateContactForCandidacy } from "@/lib/ballot/candidate-contacts";
+import { reconciledCandidacyIdForCard } from "@/lib/identity/az-2026";
 import { groupAbsences } from "@/lib/ballot/absence-grouping";
 import { sharedNotesFor } from "@/lib/ballot/shared-notes";
+import { readerContestScope } from "@/lib/ballot/reader-scope";
 import { resolveZip } from "@/lib/geo/zcta";
 import { divisionsAt } from "@/lib/registry/server";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -514,6 +518,8 @@ async function BallotBattlecard({
    * OURS-gap state rather than as silence.
    */
   const stateMoney = stateMoneyForCard(targetKey, contestId).records;
+  const contactCandidacyId = targetKey.includes("|") ? reconciledCandidacyIdForCard(targetKey) : targetKey;
+  const filingContact = contactCandidacyId ? candidateContactForCandidacy(contactCandidacyId) : null;
 
   return (
     <CandidateBattlecard
@@ -644,7 +650,7 @@ async function BallotBattlecard({
          * positions in the snapshot.
          */
         record: recordHolder ? (
-          <RecentVotes holder={recordHolder} reactionContext={context} />
+          <RecentVotes holder={recordHolder} reactionContext={context} contentOnly />
         ) : null,
         /*
          * **BAL-15 (2026-08-25).** Sources now carries three things the ballot
@@ -660,7 +666,7 @@ async function BallotBattlecard({
         sources: (
           <>
             {holder && <CandidateSources holder={holder} />}
-            <CandidateContact card={card ?? null} links={links} />
+            <CandidateContact card={card ?? null} links={links} filing={filingContact} />
             <p className="mt-2 text-[0.6875rem] leading-relaxed text-muted">
               {TAGLINE_SOURCE_NOTE}
             </p>
@@ -991,8 +997,17 @@ export default async function BallotPage({
    * eleven the author happened to be looking at would be the instance rather
    * than the class.
    */
+  const readerScopeNotes = new Map((matched?.contests ?? []).map((contest) => {
+    const lineup = lineupForContest(contest.id);
+    const canvass = lineup ? getGeneralLineup()?.canvass : null;
+    const scope = readerContestScope(contest, {
+      certified: lineup && canvass ? { count: lineup.nominees.length, sourceUrl: canvass.url, sourceOrg: canvass.issuedBy, readAt: canvass.readAt } : null,
+      questionTextHeld: set?.measures.some((measure) => measure.contestId === contest.id && Boolean(measure.questionText.trim())),
+    });
+    return [contest.id, scope.currentNote] as const;
+  }));
   const scopeNotes = sharedNotesFor(
-    matched?.contests ?? [],
+    (matched?.contests ?? []).map((contest) => ({ id: contest.id, scopeNote: readerScopeNotes.get(contest.id) ?? null })),
     MARKER_START + sharedSources.length,
   );
 
@@ -1374,7 +1389,7 @@ export default async function BallotPage({
                     state tool, correctly recorded, and it stops RENDERING here
                     rather than being deleted.
                   */}
-                  {polls && <WhereToVote fallback={polls} />}
+                  {polls && <WhereToVote />}
               {/*
                 **ONE PILL, AT THE MOMENT OF NEED** (AZ-4 and AZ-5, the
                 author's ruling, 2026-08-23).
@@ -1814,6 +1829,8 @@ export default async function BallotPage({
                 </FilingNote>
               )}
 
+              <FilingChanges removals={(set.removals ?? []).filter((record) => record.contestId === contest.id)} />
+
               {/* The certified lineup retires the filing-list fallback (6a):
                   what a November voter actually chooses among. */}
               {lineup ? (
@@ -1822,6 +1839,7 @@ export default async function BallotPage({
                   {photosFirst(lineup.nominees, (n) => Boolean(cardForNominee(contest.id, n.name)?.photoUrl)).map((nominee) => (
                     <li
                       key={nominee.name}
+                      data-candidate-target={`${contest.id}|${nominee.name}`}
                       className="border-b border-[var(--panel-border)] pb-3 last:border-0 last:pb-0"
                     >
                       <CandidateCard
@@ -1938,7 +1956,7 @@ export default async function BallotPage({
                 <>
                   {/* F01 11.1: inline when this note is this contest's alone;
                       a marker when it is the same note eleven contests carry. */}
-                  {contest.scopeNote &&
+                  {readerScopeNotes.get(contest.id) &&
                     (scopeNotes.isShared(contest.id) ? (
                       <p className="mt-1.5 font-mono text-[0.6875rem] text-muted">
                         <a
@@ -1948,7 +1966,7 @@ export default async function BallotPage({
                           {scopeNotes.markerFor(contest.id)} see note
                         </a>
                       </p>
-                    ) : contest.scopeNote.length > EXTENDED_MECHANICS_CHARS ? (
+                    ) : (readerScopeNotes.get(contest.id)?.length ?? 0) > EXTENDED_MECHANICS_CHARS ? (
                       /* BAL-48: extended election-mechanics text collapses
                          behind "More info", by default, on every viewport — the
                          office explainer above stays open. Same disclosure
@@ -1958,18 +1976,19 @@ export default async function BallotPage({
                           More info
                         </summary>
                         <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
-                          {contest.scopeNote}
+                          {readerScopeNotes.get(contest.id)}
                         </p>
                       </details>
                     ) : (
                       <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
-                        {contest.scopeNote}
+                        {readerScopeNotes.get(contest.id)}
                       </p>
                     ))}
                   <ul className="mt-3.5 space-y-3">
                     {photosFirst(candidatesOf(set, contest), (x) => Boolean(cardForCandidacy(x.id)?.photoUrl)).map((cand) => (
                       <li
                         key={cand.id}
+                        data-candidate-target={cand.id}
                         className="border-b border-[var(--panel-border)] pb-3 last:border-0 last:pb-0"
                       >
                         <CandidateCard
@@ -2432,10 +2451,7 @@ export default async function BallotPage({
                           data-measure-statement="GAP_OURS"
                         >
                           We have not recorded an official statement for this
-                          question
-                          {contest.scopeNote
-                            ? " — the note below names the document we have not read."
-                            : "."}
+                          question.
                         </p>
                       )}
                     </div>
@@ -2491,11 +2507,10 @@ export default async function BallotPage({
                   )
                 )}
 
-                {/* F01 11.1 — the author's named instance: eleven Arizona
-                    measures each carrying the identical "the Secretary of State
-                    has not yet published the final ballot wording" paragraph.
-                    Marker here, the note once at the page's foot. */}
-                {contest.scopeNote &&
+                {/* F01 11.1: identical current reader qualifications share one
+                    page note. The reader-scope selector distinguishes our held
+                    wording gap from the earlier source's publication claim. */}
+                {readerScopeNotes.get(contest.id) &&
                   (scopeNotes.isShared(contest.id) ? (
                     <p className="mt-2 font-mono text-[0.6875rem] text-muted">
                       <a
@@ -2507,7 +2522,7 @@ export default async function BallotPage({
                     </p>
                   ) : (
                     <p className="mt-2 text-[0.75rem] leading-relaxed text-muted">
-                      {contest.scopeNote}
+                      {readerScopeNotes.get(contest.id)}
                     </p>
                   ))}
 
@@ -2615,6 +2630,7 @@ export default async function BallotPage({
               key={absence.key}
               className="mt-5 rounded-[10px] border border-[var(--panel-border)] p-4 lg:max-w-2xl"
               data-absence-count={absence.members.length}
+              data-absence-ocd-ids={absence.members.map((record) => record.ocdId).join(" ")}
             >
               <p className="text-[0.8125rem] leading-relaxed text-paper-dim">
                 {absence.statement}

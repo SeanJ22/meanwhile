@@ -245,6 +245,9 @@ export function classPhraseIn(text: string): string | null {
  * it may not do is capture a question by owning a common noun.
  */
 export const COMMON_QUESTION_NOUNS: ReadonlySet<string> = new Set([
+  // Contact/navigation labels do not name a person or government. A reader
+  // asking how to contact an open official has not named "Contact Us".
+  "contact", "contacts", "information",
   "agenda", "agendas", "docket", "calendar", "minutes", "record", "records",
   "document", "documents", "meeting", "meetings", "session", "hearing",
   "budget", "tax", "taxes", "vote", "votes", "voting", "election", "elections",

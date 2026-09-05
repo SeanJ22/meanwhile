@@ -1,0 +1,10 @@
+{
+  "formatVersion": 1,
+  "encoding": "gzip",
+  "rule": "Lossless original UTF-8 JSON bytes; zero gzip modification time. The baseline byte hash survives packaging.",
+  "path": "docs/evidence/reader-last-mile-finance-image-review-d9dc2010.json.gz",
+  "originalSha256": "1d6a03d072853945c872d082b709c3ae0a456c9f5926710e89cbe6d6ce43795e",
+  "bytes": 41587,
+  "packedBytes": 7473,
+  "packedSha256": "ae64b80c3272909e81fbf995cb4931221ba45c1fd7dc3b0368299acaa73f27f9"
+}

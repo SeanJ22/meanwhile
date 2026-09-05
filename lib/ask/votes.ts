@@ -301,8 +301,12 @@ export type VoteIdentity =
  */
 export function resolveVoteIdentity(
   personName: string,
-  options: { withinStates?: readonly string[] } = {},
+  options: { withinStates?: readonly string[]; officeholderId?: string } = {},
 ): VoteIdentity {
+  if (options.officeholderId) {
+    const seat = loadRoster().find((row) => row.officeholderId === options.officeholderId);
+    return seat ? { kind: "JOINED", seat } : { kind: "NO_ROSTER_ROW" };
+  }
   const key = identityKey(personName);
   if (!key) return { kind: "NO_ROSTER_ROW" };
 
@@ -360,9 +364,6 @@ function stateSnapshot(): StateVotesSnapshot | null {
 /* -------------------------------------------------------------------------- */
 /* THE RECORD                                                                  */
 /* -------------------------------------------------------------------------- */
-
-/** Enough to answer, few enough to read. The denominator states the rest. */
-export const MAX_VOTE_RECORDS = 12;
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -429,7 +430,7 @@ export interface VoteEvidence {
  */
 export function voteEvidenceFor(
   personName: string,
-  options: { withinStates?: readonly string[] } = {},
+  options: { withinStates?: readonly string[]; officeholderId?: string } = {},
 ): VoteEvidence {
   const identity = resolveVoteIdentity(personName, options);
   const records: EvidenceRecord[] = [];
@@ -497,7 +498,7 @@ export function voteEvidenceFor(
       .flatMap((x) => (x.vote ? [{ position: x.position as string, vote: x.vote }] : []))
       .sort((a, b) => ((isoDateOf(a.vote.date) ?? "") < (isoDateOf(b.vote.date) ?? "") ? 1 : -1));
 
-    for (const { position, vote } of ordered.slice(0, MAX_VOTE_RECORDS)) {
+    for (const { position, vote } of ordered) {
       records.push({
         kind: "ROLL_CALL_VOTE",
         id: `${seat.officeholderId}#${vote.id}`,
@@ -521,11 +522,6 @@ export function voteEvidenceFor(
       gaps.push({
         whose: "OURS",
         statement: `We hold ${seat.name} as ${seat.officeTitle}. None of the ${chamberRolls.length} roll call${chamberRolls.length === 1 ? "" : "s"} we have recorded for that chamber carries a vote by them, so we have no voting record to show yet.`,
-      });
-    } else if (ordered.length > records.length) {
-      gaps.push({
-        whose: "OURS",
-        statement: `We hold ${ordered.length} recorded votes for ${seat.name}; the ${records.length} most recent are shown.`,
       });
     }
     return { identity, records, gaps, denominators };
@@ -554,7 +550,7 @@ export function voteEvidenceFor(
     .flatMap((x) => (x.roll ? [{ position: x.position as string, roll: x.roll }] : []))
     .sort((a, b) => (a.roll.date < b.roll.date ? 1 : -1));
 
-  for (const { position, roll } of ordered.slice(0, MAX_VOTE_RECORDS)) {
+  for (const { position, roll } of ordered) {
     records.push({
       kind: "ROLL_CALL_VOTE",
       id: `${seat.officeholderId}#${roll.id}`,
@@ -574,11 +570,6 @@ export function voteEvidenceFor(
     gaps.push({
       whose: "OURS",
       statement: `We hold ${seat.name} as ${seat.officeTitle}. None of the ${stateRolls.length} roll call${stateRolls.length === 1 ? "" : "s"} we have recorded for that legislature carries a vote by them, so we have no voting record to show yet.`,
-    });
-  } else if (ordered.length > records.length) {
-    gaps.push({
-      whose: "OURS",
-      statement: `We hold ${ordered.length} recorded votes for ${seat.name}; the ${records.length} most recent are shown.`,
     });
   }
   return { identity, records, gaps, denominators };

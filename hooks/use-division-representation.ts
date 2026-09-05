@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { CoverageSummary } from "@/lib/registry/coverage";
 import { representationForDivision } from "@/lib/registry/representation";
+import { rosterGapsForDivision, type RosterReaderGap } from "@/lib/registry/body-rosters";
 
 /**
  * **Who represents a division the reader is not standing in** (M112,
@@ -48,6 +49,7 @@ export type RepresentationStatus =
 export interface DivisionRepresentation {
   holders: SeatHolder[];
   status: RepresentationStatus;
+  rosterGaps?: RosterReaderGap[];
 }
 
 interface Answer {
@@ -55,6 +57,7 @@ interface Answer {
   holders: SeatHolder[];
   /** The lookup itself failed — not an answer about the division. */
   failed: boolean;
+  rosterGaps?: RosterReaderGap[];
 }
 
 export function useDivisionRepresentation(
@@ -78,7 +81,7 @@ export function useDivisionRepresentation(
       .join("/");
     fetch(`/api/representation/${path}`, { signal: controller.signal })
       .then((response) => (response.ok ? response.json() : null))
-      .then((body: { ocdId?: string; holders?: SeatHolder[] } | null) => {
+      .then((body: { ocdId?: string; holders?: SeatHolder[]; rosterGaps?: RosterReaderGap[] } | null) => {
         if (controller.signal.aborted) return;
         // Bind the answer to the key it was asked for. A response naming a
         // different division is not this division's answer — the uniqueness
@@ -87,7 +90,7 @@ export function useDivisionRepresentation(
           setAnswer({ ocdId, holders: [], failed: true });
           return;
         }
-        setAnswer({ ocdId, holders: body.holders ?? [], failed: false });
+        setAnswer({ ocdId, holders: body.holders ?? [], rosterGaps: body.rosterGaps ?? [], failed: false });
       })
       .catch(() => {
         if (!controller.signal.aborted) {
@@ -99,7 +102,7 @@ export function useDivisionRepresentation(
     // every render and the identity would restart the fetch forever.
   }, [ocdId, localCount]);
 
-  if (localCount > 0) return { holders: local, status: "resolved" };
+  if (localCount > 0) return { holders: local, status: "resolved", rosterGaps: rosterGapsForDivision(ocdId) };
   // No division to ask about is an honest empty for a caller, not a pending
   // question.
   if (!ocdId) return { holders: [], status: "unsourced" };
@@ -108,6 +111,7 @@ export function useDivisionRepresentation(
   if (answer.failed) return { holders: [], status: "unavailable" };
   return {
     holders: answer.holders,
+    rosterGaps: answer.rosterGaps ?? [],
     status: answer.holders.length > 0 ? "resolved" : "unsourced",
   };
 }

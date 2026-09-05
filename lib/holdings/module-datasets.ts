@@ -20,7 +20,7 @@ import { CAMPAIGN_SITES } from "../officials/campaign-sites.ts";
 import { FORM_DEFINITIONS } from "../officials/form-definitions.ts";
 import { OFFICE_BLURBS, DIVISION_OFFICE_BLURBS, STATE_OFFICE_BLURBS } from "../officials/office-blurbs.ts";
 import { STATEWIDE_EXECUTIVES } from "../officials/statewide-executives.ts";
-import { BODY_ROSTERS } from "../registry/body-rosters.ts";
+import { HELD_BODY_ROSTERS } from "../registry/body-rosters.ts";
 import { COMMENT_ACCESS } from "../registry/comment-access.ts";
 import { CURATED_BODIES } from "../registry/curated-bodies.ts";
 import { TRIBAL_NATIONS } from "../registry/tribal-nations.ts";
@@ -50,7 +50,7 @@ export const MODULE_DATASETS: readonly ModuleDataset[] = [
   { path: "lib/officials/form-definitions.ts", exports: ["FORM_DEFINITIONS"], dependencies: [], unit: "sourced government-form definitions", records: definitions(FORM_DEFINITIONS, "FORM_DEFINITIONS") },
   { path: "lib/officials/office-blurbs.ts", exports: ["OFFICE_BLURBS", "DIVISION_OFFICE_BLURBS", "STATE_OFFICE_BLURBS"], dependencies: [], unit: "office-description records", records: [...Object.entries(OFFICE_BLURBS).map(([id, row]) => ({ id, ...row, recordExport: "OFFICE_BLURBS" })), ...DIVISION_OFFICE_BLURBS.map((row) => ({ ...row, ...row.blurb, recordExport: "DIVISION_OFFICE_BLURBS" })), ...STATE_OFFICE_BLURBS.map((row) => ({ ...row, ...row.blurb, recordExport: "STATE_OFFICE_BLURBS" }))] },
   { path: "lib/officials/statewide-executives.ts", exports: ["STATEWIDE_EXECUTIVES"], dependencies: ["lib/officials/lookup.ts", "lib/officials/campaign-sites.ts"], unit: "statewide executive officeholders", records: STATEWIDE_EXECUTIVES.map((row) => ({ ...row, ...row.holder })) },
-  { path: "lib/registry/body-rosters.ts", exports: ["BODY_ROSTERS"], dependencies: ["lib/registry/roster-photos.json", "lib/registry/cawcd-rosters.ts", "data/states/az/officials/cawcd-rosters.json", "lib/registry/rosters-nj-morris.ts"], unit: "assembled body rosters", records: rows(BODY_ROSTERS) },
+  { path: "lib/registry/body-rosters.ts", exports: ["HELD_BODY_ROSTERS"], dependencies: ["lib/registry/roster-photos.json", "lib/registry/cawcd-rosters.ts", "data/states/az/officials/cawcd-rosters.json", "lib/registry/rosters-nj-morris.ts"], unit: "assembled body rosters", records: rows(HELD_BODY_ROSTERS) },
   { path: "lib/registry/comment-access.ts", exports: ["COMMENT_ACCESS"], dependencies: [], unit: "body public-comment rules", records: rows(COMMENT_ACCESS) },
   { path: "lib/registry/curated-bodies.ts", exports: ["CURATED_BODIES"], dependencies: [], unit: "curated body identities", records: rows(CURATED_BODIES) },
   { path: "lib/registry/tribal-nations.ts", exports: ["TRIBAL_NATIONS"], dependencies: [], unit: "named sovereign tribal nations", records: rows(TRIBAL_NATIONS) },

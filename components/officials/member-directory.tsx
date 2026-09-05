@@ -3,7 +3,7 @@
 
 import { ExternalLink } from "lucide-react";
 
-import { useMemberDirectory } from "@/hooks/use-member-directory";
+import { useMemberDirectory, type MemberDirectory as DirectoryPayload } from "@/hooks/use-member-directory";
 import {
   buildCommitteeTree,
   type CommitteeNode,
@@ -101,6 +101,16 @@ function DirectoryContent({
   only: "committees" | "offices";
 }) {
   const { directory, failed } = useMemberDirectory(holder.id);
+  return <DirectoryRecordsContent holderId={holder.id} only={only} directory={directory} failed={failed} />;
+}
+
+/** The exact fetched body, also executable for every canonical directory slice. */
+export function DirectoryRecordsContent({ holderId, only, directory, failed }: {
+  holderId: string;
+  only: "committees" | "offices";
+  directory: DirectoryPayload | null;
+  failed: boolean;
+}) {
   const offices = directory?.districtOffices ?? null;
   const committees = directory?.committees ?? null;
 
@@ -112,7 +122,7 @@ function DirectoryContent({
   // ONE copy: a caller that does not ask it hands this component a slot that
   // looks filled and renders blank, which is what a reader met on the ballot
   // battlecard (Part C, 2026-08-31).
-  if (!memberDirectoryReaches(holder.id)) return null;
+  if (!memberDirectoryReaches(holderId)) return null;
 
   if (only === "committees") {
     return (
@@ -141,13 +151,14 @@ function DirectoryContent({
             {buildCommitteeTree(committees).map((node) => (
               <li
                 key={node.seat.committeeId}
+                data-committee-seat={node.seat.committeeId}
                 className="border-b border-[var(--panel-border)] py-2 last:border-0"
               >
                 <CommitteeRow node={node} />
                 {node.children.length > 0 && (
                   <ul className="mt-1.5 border-l border-[var(--panel-border)] pl-3">
                     {node.children.map((child) => (
-                      <li key={child.seat.committeeId} className="py-1.5">
+                      <li key={child.seat.committeeId} data-committee-seat={child.seat.committeeId} className="py-1.5">
                         <CommitteeRow node={child} sub />
                       </li>
                     ))}
@@ -182,6 +193,7 @@ function DirectoryContent({
               {offices.map((office, i) => (
                 <li
                   key={`${office.city}-${i}`}
+                  data-directory-office={i}
                   className="border-b border-[var(--panel-border)] py-2 last:border-0"
                 >
                   <p className="text-[0.8125rem] font-medium text-paper">

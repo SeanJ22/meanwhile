@@ -4,6 +4,8 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { MapPin, X } from "lucide-react";
 
 import { PLACEHOLDER_ADDRESS } from "@/lib/ballot/placeholder-address";
+import { pollingLookupFallbacks } from "@/lib/ballot/polling-lookup-fallback";
+import { PollingLookupFallback } from "@/components/ballot/polling-lookup-fallback";
 import {
   directionsUrl,
   isPinnable,
@@ -212,9 +214,19 @@ export function VotingSitesPanel({
           </p>
         )}
 
-      {state.kind === "answered" &&
-        state.answer.jurisdictions.map((j) => (
-          <article key={j.ocdId} className="voting-jurisdiction">
+      <PollingLookupFallback links={pollingLookupFallbacks(state.kind, state.kind === "answered" ? state.answer : undefined)} />
+
+      {state.kind === "answered" && <VotingJurisdictionRecords answer={state.answer} selectedSiteId={selectedSiteId} onSelectSite={onSelectSite} />}
+    </section>
+  );
+}
+
+
+/** The actual answered jurisdiction/site body shared by both panel entry paths. */
+export function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite }: { answer: VotingSitesAnswer; selectedSiteId: string | null; onSelectSite: (id: string | null) => void }) {
+  return <>
+      {answer.jurisdictions.map((j) => (
+          <article key={j.ocdId} className="voting-jurisdiction" data-voting-jurisdiction={j.ocdId}>
             <h3 className="voting-jurisdiction-name">{j.name}</h3>
             <p className="voting-model">{j.modelSentence}</p>
             {/* B16 — which of these is yours, or why we will not say. A
@@ -281,7 +293,7 @@ export function VotingSitesPanel({
             */}
             {j.sites.length > 0 && (
               <ul className="voting-sites">
-                {sitesNearestFirst(j.sites, state.answer.point).map(({ site, miles }) => (
+                {sitesNearestFirst(j.sites, answer.point).map(({ site, miles }) => (
                   <SiteRow
                     key={site.id}
                     site={site}
@@ -304,8 +316,7 @@ export function VotingSitesPanel({
             </p>
           </article>
         ))}
-    </section>
-  );
+  </>;
 }
 
 const KIND_LABEL: Record<VotingSite["kind"], string> = {
@@ -327,7 +338,7 @@ function SiteRow({
   onSelect: () => void;
 }) {
   return (
-    <li className="voting-site" data-selected={selected}>
+    <li className="voting-site" data-selected={selected} data-voting-site={site.id}>
       <button type="button" className="voting-site-head" onClick={onSelect}>
         <MapPin aria-hidden size={14} className="voting-site-icon" />
         <span className="voting-site-name">{site.name}</span>

@@ -14,6 +14,8 @@ import {
 import { CONGRESS_DIRECTORY_SOURCE } from "@/lib/officials/directory-source";
 
 import { FundingBlock } from "@/components/funding/funding-block";
+import { PublicStatementsProfile } from "@/components/officials/public-statements-profile";
+import { OfficialActions } from "@/components/officials/official-actions";
 import {
   CardSection,
   CardSectionGroup,
@@ -23,6 +25,7 @@ import { SpeakYourMind } from "@/components/speak/speak-your-mind";
 
 import { identityChipsFor } from "@/lib/officials/identity-chips";
 import { ContactPills } from "@/components/officials/contact-pills";
+import { OfficialTermNote } from "@/components/officials/official-term-note";
 import { MemberDirectory } from "@/components/officials/member-directory";
 import { PersonIdentity } from "@/components/officials/person-identity";
 import { PositionsSection } from "@/components/officials/positions-section";
@@ -196,6 +199,7 @@ export function OfficialModal({
             officeholder's card. Render what is held, only what is held.
           */}
           <ContactPills holder={holder} />
+          <OfficialTermNote holder={holder} />
 
           <CardSection title="What this office does">
             <OfficeBlurb holder={holder} bare />
@@ -241,6 +245,8 @@ export function OfficialModal({
           <CardSection title="Campaign money">
             <FundingBlock holder={holder} reactionContext={reactionContext} bare />
           </CardSection>
+          <PublicStatementsProfile subjectId={holder.id} />
+          <OfficialActions subjectId={holder.id} />
 
           {/* Item 6b: two columns inside, each its own collapsed section. */}
           <RecentVotes

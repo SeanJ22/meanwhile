@@ -1,0 +1,162 @@
+[
+  {
+    "bodyId": "ocd-division/country:us/state:nj/county:morris/place:boonton_township#governing",
+    "sourceUrl": "https://www.boontontownship.com/township-committee",
+    "sourceOrg": "Boonton township, New Jersey (the body's own page)",
+    "collectedAt": "2026-08-24",
+    "first": {
+      "id": "roster:nj-morris-boonton_township#1",
+      "name": "Brian Honan",
+      "officeTitle": "Mayor",
+      "termNote": "Term ends 2026",
+      "email": "brianh@pfcompass.com",
+      "phone": null,
+      "websiteUrl": "https://www.boontontownship.com/township-committee",
+      "partyLabel": "Republican",
+      "partySourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/past-results/2023-general-winners.pdf",
+      "partySourceOrg": "Morris County Clerk (certified general election winners)",
+      "partyCollectedAt": "2026-08-22"
+    },
+    "second": {
+      "id": "roster:nj-morris-boonton_township#2",
+      "name": "Brian Honan",
+      "officeTitle": "Mayor",
+      "termNote": "Term ends 2026",
+      "email": "brianh@pfcompass.com",
+      "phone": null,
+      "websiteUrl": "https://www.boontontownship.com/township-committee",
+      "partyLabel": "Republican",
+      "partySourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/past-results/2023-general-winners.pdf",
+      "partySourceOrg": "Morris County Clerk (certified general election winners)",
+      "partyCollectedAt": "2026-08-22"
+    }
+  },
+  {
+    "bodyId": "ocd-division/country:us/state:nj/county:morris/place:chatham_township#governing",
+    "sourceUrl": "https://chathamtownship.org/government/mayor-township-committee/",
+    "sourceOrg": "Chatham township, New Jersey (the body's own page)",
+    "collectedAt": "2026-08-24",
+    "first": {
+      "id": "roster:nj-morris-chatham_township#1",
+      "name": "Jennifer Rowland",
+      "officeTitle": "Mayor",
+      "termNote": "Term ends 2026",
+      "email": "rowlandandmchugh23@gmail.com",
+      "phone": null,
+      "websiteUrl": "https://chathamtownship.org/government/mayor-township-committee/",
+      "partyLabel": "Democratic",
+      "partySourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/past-results/2023-general-winners.pdf",
+      "partySourceOrg": "Morris County Clerk (certified general election winners)",
+      "partyCollectedAt": "2026-08-22"
+    },
+    "second": {
+      "id": "roster:nj-morris-chatham_township#2",
+      "name": "Jennifer Rowland",
+      "officeTitle": "Mayor",
+      "termNote": "Term ends 2026",
+      "email": "rowlandandmchugh23@gmail.com",
+      "phone": null,
+      "websiteUrl": "https://chathamtownship.org/government/mayor-township-committee/",
+      "partyLabel": "Democratic",
+      "partySourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/past-results/2023-general-winners.pdf",
+      "partySourceOrg": "Morris County Clerk (certified general election winners)",
+      "partyCollectedAt": "2026-08-22"
+    }
+  },
+  {
+    "bodyId": "ocd-division/country:us/state:nj/county:morris/place:harding_township#governing",
+    "sourceUrl": "https://www.hardingnj.org/government/mayor",
+    "sourceOrg": "Harding township, New Jersey (the body's own page)",
+    "collectedAt": "2026-08-24",
+    "first": {
+      "id": "roster:nj-morris-harding_township#1",
+      "name": "Timothy D. Jones",
+      "officeTitle": "Mayor",
+      "termNote": "Term ends 2024",
+      "email": "tjones@hardingnj.org",
+      "phone": null,
+      "websiteUrl": "https://www.hardingnj.org/government/mayor",
+      "partyLabel": "Republican",
+      "partySourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/past-results/2024-general-winners.pdf",
+      "partySourceOrg": "Morris County Clerk (certified general election winners)",
+      "partyCollectedAt": "2026-08-22"
+    },
+    "second": {
+      "id": "roster:nj-morris-harding_township#2",
+      "name": "Timothy D. Jones",
+      "officeTitle": "Mayor",
+      "termNote": "Term ends 2024",
+      "email": "tjones@hardingnj.org",
+      "phone": null,
+      "websiteUrl": "https://www.hardingnj.org/government/mayor",
+      "partyLabel": "Republican",
+      "partySourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/past-results/2024-general-winners.pdf",
+      "partySourceOrg": "Morris County Clerk (certified general election winners)",
+      "partyCollectedAt": "2026-08-22"
+    }
+  },
+  {
+    "bodyId": "ocd-division/country:us/state:nj/county:morris/place:morris_township#governing",
+    "sourceUrl": "https://www.morristwp.com/240/Township-Committee",
+    "sourceOrg": "Morris township, New Jersey (the body's own page)",
+    "collectedAt": "2026-08-24",
+    "first": {
+      "id": "roster:nj-morris-morris_township#1",
+      "name": "Donna J. Guariglia",
+      "officeTitle": "Mayor",
+      "termNote": "Term ends 2027",
+      "email": "Donna4mt@gmail.com",
+      "phone": null,
+      "websiteUrl": "https://www.morristwp.com/240/Township-Committee",
+      "partyLabel": "Democratic",
+      "partySourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/past-results/2024-general-winners.pdf",
+      "partySourceOrg": "Morris County Clerk (certified general election winners)",
+      "partyCollectedAt": "2026-08-22"
+    },
+    "second": {
+      "id": "roster:nj-morris-morris_township#2",
+      "name": "Donna J. Guariglia",
+      "officeTitle": "Mayor",
+      "termNote": "Term ends 2027",
+      "email": "Donna4mt@gmail.com",
+      "phone": null,
+      "websiteUrl": "https://www.morristwp.com/240/Township-Committee",
+      "partyLabel": "Democratic",
+      "partySourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/past-results/2024-general-winners.pdf",
+      "partySourceOrg": "Morris County Clerk (certified general election winners)",
+      "partyCollectedAt": "2026-08-22"
+    }
+  },
+  {
+    "bodyId": "ocd-division/country:us/state:nj/county:morris/place:pequannock_township#governing",
+    "sourceUrl": "https://www.peqtwp.org/243/Township-Council",
+    "sourceOrg": "Pequannock township, New Jersey (the body's own page)",
+    "collectedAt": "2026-08-24",
+    "first": {
+      "id": "roster:nj-morris-pequannock_township#1",
+      "name": "David G. Kohle",
+      "officeTitle": "Mayor",
+      "termNote": "Term ends 2024",
+      "email": "kohle4@optonline.net",
+      "phone": null,
+      "websiteUrl": "https://www.peqtwp.org/243/Township-Council",
+      "partyLabel": "Republican",
+      "partySourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/past-results/2024-general-winners.pdf",
+      "partySourceOrg": "Morris County Clerk (certified general election winners)",
+      "partyCollectedAt": "2026-08-22"
+    },
+    "second": {
+      "id": "roster:nj-morris-pequannock_township#2",
+      "name": "David G. Kohle",
+      "officeTitle": "Mayor",
+      "termNote": "Term ends 2024",
+      "email": "kohle4@optonline.net",
+      "phone": null,
+      "websiteUrl": "https://www.peqtwp.org/243/Township-Council",
+      "partyLabel": "Republican",
+      "partySourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/past-results/2024-general-winners.pdf",
+      "partySourceOrg": "Morris County Clerk (certified general election winners)",
+      "partyCollectedAt": "2026-08-22"
+    }
+  }
+]

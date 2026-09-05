@@ -1,6 +1,8 @@
 "use client";
 
 import { TIER_LABEL } from "@/lib/ocd/tiers";
+import type { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
+import { MeetingListingNotice } from "../meeting-listing-notice";
 import { useResolvedLocation } from "@/hooks/use-resolved-location";
 import { browsingSubject } from "@/lib/state/resolved-location";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
@@ -11,6 +13,8 @@ import { TOP_OFFICES_GAP, runsSomething, topOfficesFor,
 import { displayPersonName } from "@/lib/officials/person-name";
 import type { DistrictHit } from "@/lib/map/districts";
 import { representationNoteFor } from "@/lib/registry/representation";
+import { rosterGapsForDivision } from "@/lib/registry/body-rosters";
+import { RosterCompletenessGaps } from "@/components/officials/roster-completeness-gap";
 
 import {
   NoValue,
@@ -189,6 +193,7 @@ interface DistrictPopupProps {
    * would answer failed — "couldn't check" and 0 are different facts (2a).
    */
   upcomingMeetings: number | null;
+  listingCount?: ReturnType<typeof readerMeetingCount>;
   /**
    * **WGH-15.** The zip the reader told us about — their HOME question — so
    * this card can say how their home stands relative to the district they
@@ -218,6 +223,7 @@ export function DistrictPopup({
   representation = [],
   representationNoteState = "gap",
   upcomingMeetings,
+  listingCount,
   homeZip = null,
   onOpenOfficial,
   onShowMeetings,
@@ -262,6 +268,7 @@ export function DistrictPopup({
           The identifier still keys everything behind this card. */}
       <PopupRow label="Type">{district.typeLabel}</PopupRow>
       <PopupRow label="Tier">{TIER_LABEL[district.tier]}</PopupRow>
+      <RosterCompletenessGaps gaps={rosterGapsForDivision(district.ocdId)} />
 
       {/*
         **BC-8 (2026-08-24) — THE COUNT IS A DOOR.**
@@ -276,7 +283,7 @@ export function DistrictPopup({
         "Couldn't check" is not a door either, for a stronger reason — a failed
         fetch may not be dressed as a browsable result (2a).
       */}
-      <PopupRow label="Upcoming" mono>
+      <PopupRow label={listingCount?.unresolved ? "Upcoming calendar listings" : "Upcoming"} mono>
         {upcomingMeetings === null ? (
           <NoValue>couldn&apos;t check</NoValue>
         ) : onShowMeetings && upcomingMeetings > 0 ? (
@@ -284,7 +291,7 @@ export function DistrictPopup({
             type="button"
             onClick={onShowMeetings}
             className="cursor-pointer text-link underline decoration-dotted underline-offset-2 hover:text-paper"
-            aria-label={`Show the ${upcomingMeetings} upcoming meetings for ${district.label}`}
+            aria-label={`Show the ${upcomingMeetings} upcoming ${listingCount?.unresolved ? "calendar listings" : "meetings"} for ${district.label}`}
           >
             {upcomingMeetings}
           </button>
@@ -292,6 +299,7 @@ export function DistrictPopup({
           upcomingMeetings
         )}
       </PopupRow>
+      <MeetingListingNotice groups={listingCount?.groups ?? []} />
 
       {/*
         **F01 1.2 (2026-08-19, the author)** — WHO RUNS IT, AT THE TOP.

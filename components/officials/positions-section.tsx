@@ -37,10 +37,13 @@ import { formatDateMDY } from "@/lib/map/format";
 export function PositionsSection({
   subjectId,
   subjectName,
+  contentOnly = false,
 }: {
   subjectId: string;
   /** Used only in the honest-gap sentences, so they read as English. */
   subjectName: string;
+  /** The ballot already owns the Positions disclosure. */
+  contentOnly?: boolean;
 }) {
   const [topic, setTopic] = useState("");
   const [answer, setAnswer] = useState<
@@ -93,8 +96,7 @@ export function PositionsSection({
     }
   };
 
-  return (
-    <CardSection title="Positions">
+  const content = (
       <div data-positions-section>
         {/* The register here is PLAYFUL — this is an interaction surface, and
             everything it produces below is level. The seam is the rule. */}
@@ -310,6 +312,6 @@ export function PositionsSection({
           </div>
         )}
       </div>
-    </CardSection>
   );
+  return contentOnly ? content : <CardSection title="Positions">{content}</CardSection>;
 }

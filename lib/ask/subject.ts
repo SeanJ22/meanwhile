@@ -146,8 +146,9 @@ export function resolveSubjectRef(
   entities: readonly BindableEntity[],
 ): BindableEntity | null {
   if (ref.id) {
-    const exact = entities.find((e) => e.id === ref.id);
-    if (exact) return exact;
+    // A stale or unresolved canonical reference is not authorization to attach
+    // a different record that happens to carry the same display name.
+    return entities.find((e) => e.id === ref.id) ?? null;
   }
   if (!ref.name) return null;
   const binding = bindNamedEntity(ref.name, entities);

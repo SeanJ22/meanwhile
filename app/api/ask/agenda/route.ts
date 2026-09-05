@@ -1,8 +1,10 @@
 import { readSnapshot } from "@/lib/meetings/snapshot";
-import { agendaItems, type AgendaDocumentLike } from "@/lib/routing/agenda-search";
+import type { AgendaDocumentLike } from "@/lib/routing/agenda-search";
+import { classifyAgendaPublication, type AgendaPublicationReading } from "@/lib/ask/agenda-publication";
 import { intakeLimits, isSameOriginSubmission } from "@/lib/signal/intake-limits";
 import { ripcordPulled } from "@/lib/ripcords";
 import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
+import { meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
 
 /**
  * POST /api/ask/agenda — **A05, and nothing else.** (Narrowed by ASK-05,
@@ -83,6 +85,8 @@ export interface AgendaMeetingReply {
   items: string[];
   documentsHeld: number;
   readable: number;
+  publication: AgendaPublicationReading;
+  listingIdentity: ReturnType<typeof meetingListingKnowledgeFor>["readback"];
 }
 
 const MAX_BODY_BYTES = 2048;
@@ -169,17 +173,11 @@ export async function POST(request: Request) {
      * is reported for what it is rather than as this meeting's agenda. The
      * underlying attachment is an ingest defect and is NH255.
      */
-    const otherGovernments = newest
-      ? new Set(
-          documents
-            .filter((d) => d.documentUrl === newest.documentUrl)
-            .map((d) => snapshot.meetings.find((m) => m.id === d.meetingId)?.ocdId ?? null)
-            .filter((id): id is string => id !== null),
-        )
-      : new Set<string>();
-    const sharedAcrossGovernments = otherGovernments.size > 1;
-
-    const items = newest && !sharedAcrossGovernments ? agendaItems(newest.text) : [];
+    const publication = classifyAgendaPublication({ meetingId, bodyName: meeting.bodyName,
+      documentsForMeeting: forMeeting, documentsAcrossCorpus: documents, meetingsAcrossCorpus: snapshot.meetings,
+      discoveredDocumentUrl: meeting.agendaUrl, now: Date.now() });
+    const sharedAcrossGovernments = publication.documentSharedAcrossGovernments === true;
+    const items = newest && !sharedAcrossGovernments ? [...publication.items] : [];
     const reply: AgendaMeetingReply = {
       mode: "meeting",
       meetingId,
@@ -202,7 +200,9 @@ export async function POST(request: Request) {
       // The denominators. `documentsHeld` 0 and `items` 0 mean different
       // things and the client says which.
       documentsHeld: forMeeting.length,
-      readable: newest?.text ? 1 : 0,
+      readable: publication.acquisition === "ITEMS_READER_READY" || publication.acquisition === "READ_NO_ITEMS_EXTRACTED" ? 1 : 0,
+      publication,
+      listingIdentity: meetingListingKnowledgeFor(snapshot.meetings, [meetingId]).readback,
     };
     return Response.json(reply);
   }
@@ -242,4 +242,3 @@ export async function POST(request: Request) {
     { status: 400 },
   );
 }
-

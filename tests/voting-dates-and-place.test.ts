@@ -12,6 +12,8 @@ import {
 import { googleCalendarUrl, icsDataHref } from "../lib/calendar/event-links.ts";
 import { ELECTION_DATES } from "../lib/ballot/election-dates.ts";
 import { PLACEHOLDER_ADDRESS } from "../lib/ballot/placeholder-address.ts";
+import { pollingLookupFallbacks } from "../lib/ballot/polling-lookup-fallback.ts";
+import { POLLING_PLACE_LINKS } from "../lib/ballot/polling-place-links.ts";
 
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 
@@ -251,13 +253,15 @@ test("BAL-2: the state's tool is reached through the pill, not offered beside it
     "this component renders an outbound anchor again",
   );
 
-  // But the handoff itself is intact: the fallback is still part of the
-  // contract and still reaches the shared panel.
+  // The shared panel owns the fallback. The old caller prop was discarded,
+  // so asserting its type proved a promise while no link reached the reader.
   assert.match(
-    where,
-    /fallback: \{ label: string; url: string; sourceOrg: string \} \| null;/,
+    read("components", "map", "voting-sites-panel.tsx"),
+    /<PollingLookupFallback links=\{pollingLookupFallbacks\(/,
     "the fallback left the contract — a jurisdiction we do not hold now reaches nothing",
   );
+  assert.deepEqual(pollingLookupFallbacks("failed"), [...POLLING_PLACE_LINKS]);
+  assert.deepEqual(pollingLookupFallbacks("idle"), []);
   assert.match(
     where,
     /<VotingSitesPanel/,

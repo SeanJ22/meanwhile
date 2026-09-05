@@ -1,0 +1,10 @@
+{
+  "formatVersion": 1,
+  "encoding": "gzip",
+  "rule": "Lossless original UTF-8 JSON bytes; zero gzip modification time. The baseline byte hash survives packaging.",
+  "path": "docs/evidence/reader-last-mile-root-image-review-e504.json.gz",
+  "originalSha256": "2b2849349017ec2b0624af92ae62f31e9a9b40fd331f059f41a9c7a63af3e715",
+  "bytes": 11654,
+  "packedBytes": 1836,
+  "packedSha256": "168cf3196133e0f9a93ff14d9da977f92a5c073d1d9443f41db78871af0f37aa"
+}

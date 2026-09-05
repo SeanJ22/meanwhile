@@ -1,0 +1,179 @@
+{
+  "exactHead": "d9dc2010f8a34766cd2a24ed672a64ac448619e9",
+  "reviewer": "ask_delivery",
+  "status": "PASS",
+  "readAsImages": true,
+  "sourceArtifact": "docs/evidence/reader-last-mile-civic.json",
+  "sourceArtifactSha256": "2af13186fee4e0441c66283cbb95e9635794eaed9dfca29ec2700070eb6902fd",
+  "scope": "Actual visual read of all 24 final civic contact captures: four pilot ZIPs, desktop and phone, both themes, map and sidebar placement. Returned-record/count and geometric assertions are recorded separately in the source artifact. No visual claim is inferred solely from DOM assertions.",
+  "images": [
+    {
+      "name": "85701-desktop-dark-civic.png",
+      "result": "PASS",
+      "scope": "Tucson Street Maintenance311/request/source, all3routing steps and named state contacts readable. Desktop and phone map/sidebar both themes bounded; last links visible, no ambient legend overlap or false empty-grounded absence.",
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-civic.png",
+      "sha256": "fd2a4f8f21a6aeaadea812b187b7fc2090075b93622b2b9146f4265451d61091"
+    },
+    {
+      "name": "85701-desktop-light-civic.png",
+      "result": "PASS",
+      "scope": "Tucson Street Maintenance311/request/source, all3routing steps and named state contacts readable. Desktop and phone map/sidebar both themes bounded; last links visible, no ambient legend overlap or false empty-grounded absence.",
+      "path": "screenshots/reader-last-mile/85701-desktop-light-civic.png",
+      "sha256": "7f663205a562437ac7849f52a2c6f6678b91032b7f18dd37df4368c2bb66c96c"
+    },
+    {
+      "name": "85701-phone-dark-civic.png",
+      "result": "PASS",
+      "scope": "Tucson Street Maintenance311/request/source, all3routing steps and named state contacts readable. Desktop and phone map/sidebar both themes bounded; last links visible, no ambient legend overlap or false empty-grounded absence.",
+      "path": "screenshots/reader-last-mile/85701-phone-dark-civic.png",
+      "sha256": "7ea98af5b44925b714c08f3184c48403302677a69750196c75db087357af465c"
+    },
+    {
+      "name": "85701-phone-light-civic.png",
+      "result": "PASS",
+      "scope": "Tucson Street Maintenance311/request/source, all3routing steps and named state contacts readable. Desktop and phone map/sidebar both themes bounded; last links visible, no ambient legend overlap or false empty-grounded absence.",
+      "path": "screenshots/reader-last-mile/85701-phone-light-civic.png",
+      "sha256": "c602752847b11228db4183706acd5bc5b920692032bc7f9180ee800cd1d6e9b0"
+    },
+    {
+      "name": "85701-phone-dark-sidebar-civic.png",
+      "result": "PASS",
+      "scope": "Tucson Street Maintenance311/request/source, all3routing steps and named state contacts readable. Desktop and phone map/sidebar both themes bounded; last links visible, no ambient legend overlap or false empty-grounded absence.",
+      "path": "screenshots/reader-last-mile/85701-phone-dark-sidebar-civic.png",
+      "sha256": "7d23433ceee578fe1062e25ba2a363241f4f15ee89a871baf01888eef8a344df"
+    },
+    {
+      "name": "85701-phone-light-sidebar-civic.png",
+      "result": "PASS",
+      "scope": "Tucson Street Maintenance311/request/source, all3routing steps and named state contacts readable. Desktop and phone map/sidebar both themes bounded; last links visible, no ambient legend overlap or false empty-grounded absence.",
+      "path": "screenshots/reader-last-mile/85701-phone-light-sidebar-civic.png",
+      "sha256": "e7efe9c5623d7162a69805631c46ce556162198784660435f1179fe548d78930"
+    },
+    {
+      "name": "85641-desktop-dark-civic.png",
+      "result": "PASS",
+      "scope": "Pima transportation520-724-6410/request/source and3of3routing steps with state contacts fully readable. Phone map/sidebar both themes bounded with no legend overanswer or false empty holdings gap.",
+      "path": "screenshots/reader-last-mile/85641-desktop-dark-civic.png",
+      "sha256": "45b5a54949d9a75cf55cb5f12e22d926221c7f3bf7d32f8d3c533089bf71a23d"
+    },
+    {
+      "name": "85641-desktop-light-civic.png",
+      "result": "PASS",
+      "scope": "Pima transportation520-724-6410/request/source and3of3routing steps with state contacts fully readable. Phone map/sidebar both themes bounded with no legend overanswer or false empty holdings gap.",
+      "path": "screenshots/reader-last-mile/85641-desktop-light-civic.png",
+      "sha256": "29645164503af3faa8ff41a7ccb9f1870568d4345fab85e354496304466fa1a7"
+    },
+    {
+      "name": "85641-phone-dark-civic.png",
+      "result": "PASS",
+      "scope": "Pima transportation520-724-6410/request/source and3of3routing steps with state contacts fully readable. Phone map/sidebar both themes bounded with no legend overanswer or false empty holdings gap.",
+      "path": "screenshots/reader-last-mile/85641-phone-dark-civic.png",
+      "sha256": "8c97e638d70db71705d14e005321f1087f94c52fd415b026e7d6ba2e1935eab9"
+    },
+    {
+      "name": "85641-phone-light-civic.png",
+      "result": "PASS",
+      "scope": "Pima transportation520-724-6410/request/source and3of3routing steps with state contacts fully readable. Phone map/sidebar both themes bounded with no legend overanswer or false empty holdings gap.",
+      "path": "screenshots/reader-last-mile/85641-phone-light-civic.png",
+      "sha256": "b36ba9058034793c5e6e5c731404ae3d0d6b06f9b80e557ed31cec72a37a22bb"
+    },
+    {
+      "name": "85641-phone-dark-sidebar-civic.png",
+      "result": "PASS",
+      "scope": "Pima transportation520-724-6410/request/source and3of3routing steps with state contacts fully readable. Phone map/sidebar both themes bounded with no legend overanswer or false empty holdings gap.",
+      "path": "screenshots/reader-last-mile/85641-phone-dark-sidebar-civic.png",
+      "sha256": "62e81d29ba761a0635f60711a025ee3f68e46c073ce68f100ee25bde0f893344"
+    },
+    {
+      "name": "85641-phone-light-sidebar-civic.png",
+      "result": "PASS",
+      "scope": "Pima transportation520-724-6410/request/source and3of3routing steps with state contacts fully readable. Phone map/sidebar both themes bounded with no legend overanswer or false empty holdings gap.",
+      "path": "screenshots/reader-last-mile/85641-phone-light-sidebar-civic.png",
+      "sha256": "b69d173e03d2faebfdb79bea67e2bcb4da70c8f74378d3f1ff78d96aa6f1899e"
+    },
+    {
+      "name": "07866-desktop-dark-civic.png",
+      "result": "PASS",
+      "scope": "Two distinct Rockaway township/borough sourced road contacts and exact phone/email channels; readable bounded panel and routing links; no false empty grounded answer.",
+      "path": "screenshots/reader-last-mile/07866-desktop-dark-civic.png",
+      "sha256": "4c30b759bbc5d217454276060293aa8abef10284f234849b7f697fa9b81943ea"
+    },
+    {
+      "name": "07866-desktop-light-civic.png",
+      "result": "PASS",
+      "scope": "Two distinct Rockaway township/borough sourced road contacts and exact phone/email channels; readable bounded panel and routing links; no false empty grounded answer.",
+      "path": "screenshots/reader-last-mile/07866-desktop-light-civic.png",
+      "sha256": "686bc7b47a3eb736fbdeddbbc3f1d045ae42e0737346f67eb86c6f38f0a07bcd"
+    },
+    {
+      "name": "07866-phone-dark-civic.png",
+      "result": "PASS",
+      "scope": "Two distinct Rockaway township/borough sourced road contacts and exact phone/email channels; readable bounded panel and routing links; no false empty grounded answer.",
+      "path": "screenshots/reader-last-mile/07866-phone-dark-civic.png",
+      "sha256": "34b8edd9cfd385cc2630933af9b9cf777706cc71ead2132b595679e227ac6b5c"
+    },
+    {
+      "name": "07866-phone-light-civic.png",
+      "result": "PASS",
+      "scope": "Distinct Rockaway township and borough road contacts with phones/emails/source; map and sidebar placement remain viewport-bounded, readable, and above map legend. Sidebar tail requires scrolling as intended.",
+      "path": "screenshots/reader-last-mile/07866-phone-light-civic.png",
+      "sha256": "f7a2ee805d32e908a913e4050ae8f31cc65af04767dc58383bd06631c4869a89"
+    },
+    {
+      "name": "07866-phone-dark-sidebar-civic.png",
+      "result": "PASS",
+      "scope": "Distinct Rockaway township and borough road contacts with phones/emails/source; map and sidebar placement remain viewport-bounded, readable, and above map legend. Sidebar tail requires scrolling as intended.",
+      "path": "screenshots/reader-last-mile/07866-phone-dark-sidebar-civic.png",
+      "sha256": "ee6a875710f8323716e1556326970722a78ed937f0a7666506a3d23b678e9367"
+    },
+    {
+      "name": "07866-phone-light-sidebar-civic.png",
+      "result": "PASS",
+      "scope": "Distinct Rockaway township and borough road contacts with phones/emails/source; map and sidebar placement remain viewport-bounded, readable, and above map legend. Sidebar tail requires scrolling as intended.",
+      "path": "screenshots/reader-last-mile/07866-phone-light-sidebar-civic.png",
+      "sha256": "a5a424c0f3c88745b6fd17356b874137d343249afee33d2b3eb59a553abc876a"
+    },
+    {
+      "name": "03255-desktop-dark-civic.png",
+      "result": "PASS",
+      "scope": "Town of Newbury Highway Department exact 603-938-5494 and bscanlon@newbury.nh.gov with source; all three routing steps and Greg Sargent/Karen Ebel links readable. No map legend overlap or false empty grounded answer.",
+      "path": "screenshots/reader-last-mile/03255-desktop-dark-civic.png",
+      "sha256": "37f0db4bd57718bc182480516480e85fa8b92756d1458f42deb2e2359e2ff8cb"
+    },
+    {
+      "name": "03255-desktop-light-civic.png",
+      "result": "PASS",
+      "scope": "Town of Newbury Highway Department exact 603-938-5494 and bscanlon@newbury.nh.gov with source; all three routing steps and Greg Sargent/Karen Ebel links readable. No map legend overlap or false empty grounded answer.",
+      "path": "screenshots/reader-last-mile/03255-desktop-light-civic.png",
+      "sha256": "af18133cd70fe3672de7d118f3a09c83b0c744bb6a751aa18ed4fa627f9aeb78"
+    },
+    {
+      "name": "03255-phone-dark-civic.png",
+      "result": "PASS",
+      "scope": "Town of Newbury Highway Department exact 603-938-5494 and bscanlon@newbury.nh.gov with source; all three routing steps and Greg Sargent/Karen Ebel links readable. No map legend overlap or false empty grounded answer.",
+      "path": "screenshots/reader-last-mile/03255-phone-dark-civic.png",
+      "sha256": "4ffc850af5eb39b60fa5789c0551e0c7ba20372fc02795009a34f9fb41916078"
+    },
+    {
+      "name": "03255-phone-light-civic.png",
+      "result": "PASS",
+      "scope": "Newbury exact sourced highway phone/email and all routing links; phone map and scrolled sidebar bounded within viewport with no legend obstruction, both themes.",
+      "path": "screenshots/reader-last-mile/03255-phone-light-civic.png",
+      "sha256": "db78bee8eddb57f18effe114a1a58bd051150a91932dfb604c951f22bcef440f"
+    },
+    {
+      "name": "03255-phone-dark-sidebar-civic.png",
+      "result": "PASS",
+      "scope": "Newbury exact sourced highway phone/email and all routing links; phone map and scrolled sidebar bounded within viewport with no legend obstruction, both themes.",
+      "path": "screenshots/reader-last-mile/03255-phone-dark-sidebar-civic.png",
+      "sha256": "21456116238769524a67b3b560520b1602d2d133225ecc469a5af469ed0a3fbe"
+    },
+    {
+      "name": "03255-phone-light-sidebar-civic.png",
+      "result": "PASS",
+      "scope": "Newbury exact sourced highway phone/email and all routing links; phone map and scrolled sidebar bounded within viewport with no legend obstruction, both themes.",
+      "path": "screenshots/reader-last-mile/03255-phone-light-sidebar-civic.png",
+      "sha256": "f567936253053a41cc6970b01d01b769e2561e65cecccce112d92f89bf8dad6a"
+    }
+  ]
+}

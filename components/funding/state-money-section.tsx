@@ -36,6 +36,8 @@
  */
 
 import type { StateMoneyRecord } from "@/lib/funding/state-money";
+import { stateMoneyRecordsForDisplay } from "@/lib/funding/state-money-reader";
+import { formatDateLong } from "@/lib/text/format-date";
 
 const SECTION_LABEL_CLASS = "text-xs font-medium uppercase tracking-wide text-muted-foreground";
 
@@ -44,15 +46,9 @@ function dollars(n: number): string {
   return `$${Math.round(n).toLocaleString("en-US")}`;
 }
 
-/** `2026-08-24` → `24 August 2026`. Never a raw identifier on a reader surface. */
+/** Dates use the same canonical formatter as other reader surfaces. */
 function readableDate(iso: string): string {
-  const [y, m, d] = iso.split("-").map(Number);
-  if (!y || !m || !d) return iso;
-  const month = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December",
-  ][m - 1];
-  return `${d} ${month} ${y}`;
+  return formatDateLong(iso) ?? "";
 }
 
 /**
@@ -286,13 +282,6 @@ export function StateMoneySection({
 }) {
   if (records.length === 0) return null;
 
-  const filed = records.filter((r) => r.filingState === "FILED");
-  const registered = records.filter(
-    (r) => r.filingState === "REGISTERED_NO_ACTIVITY_REPORTED",
-  );
-  const absent = records.filter((r) => r.filingState === "NO_REPORTS_ON_FILE");
-  const gaps = records.filter((r) => r.filingState === "OURS_GAP");
-
   /*
    * A candidate with a real filing does not also show the absence note: the
    * absence was written for a location pass that another committee answered,
@@ -306,29 +295,27 @@ export function StateMoneySection({
    * what renders when the agency has made no statement we can carry, and never
    * alongside one we can. It replaces silence, never a fact.
    */
-  const shown =
-    filed.length > 0
-      ? filed
-      : registered.length > 0
-        ? registered
-        : absent.length > 0
-          ? absent.slice(0, 1)
-          : gaps.slice(0, 1);
+  const shown = stateMoneyRecordsForDisplay(records);
   const agency = shown[0]?.agency ?? "";
 
   return (
-    <div>
+    <div data-state-money-targets={[...new Set(shown.flatMap(r => r.targetKeys))].join(" ")} data-state-money-record-count={shown.length}>
       {!bare && (
         <p className={SECTION_LABEL_CLASS}>
           Campaign money{agency ? ` · ${agency}` : ""}
         </p>
       )}
       {shown.map((record, i) => {
+        const heading = (
+          <p className="mt-3 text-xs text-muted-foreground">
+            {record.match.officeOnBallot ?? record.officeSought ?? "Campaign"} · {record.electionYear} election
+          </p>
+        );
         if (record.filingState === "FILED") {
-          return <FiledRecord key={record.committeeId ?? i} record={record} />;
+          return <div key={record.committeeId ?? i}>{heading}<FiledRecord record={record} /></div>;
         }
         if (record.filingState === "REGISTERED_NO_ACTIVITY_REPORTED") {
-          return <RegisteredNoActivityRecord key={record.committeeId ?? i} record={record} />;
+          return <div key={record.committeeId ?? i}>{heading}<RegisteredNoActivityRecord record={record} /></div>;
         }
         if (record.filingState === "OURS_GAP") {
           return <OurGapRecord key={record.committeeId ?? i} record={record} />;

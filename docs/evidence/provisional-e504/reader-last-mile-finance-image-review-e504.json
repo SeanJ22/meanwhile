@@ -1,0 +1,1016 @@
+{
+  "exactHead": "e5040bce10a48c712758f5c97fe5b065bcaa9ff3",
+  "reviewer": "finance_delivery",
+  "reviewedImages": 168,
+  "scope": "All160 assigned Arizona main-run images plus8 FEC images were opened and read as original images. No factual, clipping, wrong-identity, count or provenance defect found in these frames. Newbury is outside this receipt and remains a separately reported semantic blocker.",
+  "images": [
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-dark-map-profile.png",
+      "sha256": "39d0b72151d0efb8ce8e43acef95ffa88fc41820abd17b15ab619cf4a22cc5f3",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-dark-map-committees.png",
+      "sha256": "1abba0672f88add5629b7fbab8515c86b37261bd0df77de84a7bfe9c6fdf00d4",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-dark-map-offices.png",
+      "sha256": "d96efee3b6e7c91504ad44f3acd4f4ac7e8bb704142a5839cd6cf04eefc07eac",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-dark-map-recent-votes.png",
+      "sha256": "1508c3c635790289f468f562cc8932565207532eb48317e60012e1fb19f18858",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-dark-map-recent-votes-last.png",
+      "sha256": "f14104defc4d412b2257c3075bf9a978666c7370a15a06d4a72c33096d74d50c",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-dark-map-key-votes.png",
+      "sha256": "9a8fc689e196162b50754071be26751f6c2d3a6be3013b976449c293b24cbe91",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-dark-map-key-votes-last.png",
+      "sha256": "14b5682ef0c9f00d81340bc2b436f191ee4ea4b01365d7e27bdc84aab890676e",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-dark-apptegy-vail-60703698-publication-index.png",
+      "sha256": "27a2ed03d525809ff1b755d1275eb0f80955582de1833f774e679d4492f96f4a",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-dark-apptegy-vail-60703698-comment-access.png",
+      "sha256": "46a9da94d380fb4d67c4ed1c28877ab5c31dad9353aa5c2c3be2bfeb7fa4307f",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-dark-official-term-note.png",
+      "sha256": "830409313c6a734cdf6c5cada8148c86c5100bb1cd4319412c27ed94ec8dd798",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-dark-ballot-money.png",
+      "sha256": "8dd826b2f520ce89f2e5c76ba38ba939b4a971cb77db4746402c1de9b57b79b8",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-dark-ballot-profile.png",
+      "sha256": "b9e5cba7fd97d32716def33f7340891dc5ea1e6b880884eba7e52663f1d424e1",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-dark-ballot-committees.png",
+      "sha256": "6c2fd01cc81357c70a1dd8aad723c28b36720597b394aad215ed3e64d0d14ac4",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-dark-ballot-offices.png",
+      "sha256": "cf9070292a13260bc8156cec7a830aba29874b5d3a1e221e1314c795cdc7a02e",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-dark-ballot-recent-votes.png",
+      "sha256": "d76e0915eafa60fa81642c6432b0288d57cedbb658176ac3da33e7cdc2bce742",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-dark-ballot-recent-votes-last.png",
+      "sha256": "5af22a42876b919a9c5690a476156e7654f4730e9bcceb031e233e1a70fa504e",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-dark-ballot-key-votes.png",
+      "sha256": "4cc837f408bdac7103112a013842d948f2b7c86404d17c3d17ae1f669aac471d",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-dark-ballot-key-votes-last.png",
+      "sha256": "d1044fd2e5d7adba3e7a07f9824df55fd384ae0b17f6703165fb416901fc05ad",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-dark-about-area.png",
+      "sha256": "e6be6cd5c9fbc135386a7b409f2265015323c5cf1e71e15e92ac25c2b29e986e",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-dark-map-money.png",
+      "sha256": "0d2118af240dbb6002b2567b2fb4aa30d4a3f075b3743913fb0ef26cf1a328aa",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-light-map-money.png",
+      "sha256": "8d8e8baa4126f44ecfedd11489fba9ef2f60998482b2a97ba60726f13c1095ae",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-light-map-profile.png",
+      "sha256": "99bd4c2053f8ea68a686622241f185972762defa62cd40292796231cf725f3bb",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-light-map-committees.png",
+      "sha256": "c00a67ad2e73feeb9a5952ff5d07e42ea2b8afbfee9f81630f87a0c39f808aaf",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-light-map-offices.png",
+      "sha256": "fb2afea3d8dc1967c0976a8602b085ff8749c9b1f0b600d6a0ed200e3875453c",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-light-map-recent-votes.png",
+      "sha256": "285bc704e0233e60e5044260233d75f240fda185a5d535406191adf08372f14f",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-light-map-recent-votes-last.png",
+      "sha256": "b9b7f6c2537c4e01467372ba86cdcafdbe41bd5f3201eba86719783b517d258d",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-light-map-key-votes.png",
+      "sha256": "bdea39570195c026a2d1b150e595c7ca47648b0dbb9deb1170e25ae0b31715a8",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-light-map-key-votes-last.png",
+      "sha256": "e7cc3e2e19874c5651571b7bdaa89d10719afb05d19fc9de8553d5feea933b3a",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-light-apptegy-vail-60703698-publication-index.png",
+      "sha256": "9594f8ab01a94e7cce098244afd700aebb599975c2005dbbc606eb6eb8417022",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-light-apptegy-vail-60703698-comment-access.png",
+      "sha256": "44b494b3ae5c6e26f7dab839233dbeb86dd058d69f82e43d7f922199f3e11db4",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-light-official-term-note.png",
+      "sha256": "44791a7572e9955772b51cb04a5d59c997cb7528690c1b09029991c12cfeaafc",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-light-ballot-money.png",
+      "sha256": "d07237ebeb01f1c54c7ecef0a80705f686604fa033a258ed4ea5765982cc8b87",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-light-ballot-profile.png",
+      "sha256": "0c03b092d182f28e5e1c7195b8caac7c7663d02de1a8da14631c8ce8837a58a8",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-light-ballot-committees.png",
+      "sha256": "a928df1ee88e61d3d958ea3bfa924e377d38dbf4683c92032b7b0c9057b48647",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-light-ballot-offices.png",
+      "sha256": "505c56297360f2471f00781c26acba7ca935ca01139f4fd68d347119614a47f3",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-light-ballot-recent-votes.png",
+      "sha256": "c6aa09f3c56d65e617c47673a5cdee77be91db5bc38cc1a4d5d78ca0597e6fcb",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-map-money.png",
+      "sha256": "b62fa354e495e22382ffedc72cadb7221b7c6f2d4b80d91ae9996f2b5c25b0ca",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-map-official-actions.png",
+      "sha256": "72fb4a6cf284cd46ec519b348df2c960219dfa164a51aa7f104eb00925082e3c",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-map-official-actions-last.png",
+      "sha256": "599f3120652d893187f8aa7757904540d67c73b652555b3499300a3a9ea3af52",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-venue-meeting-panel.png",
+      "sha256": "dcf5db419a1cad94f30d67b61fc3fe2e5d189b53b325e9fed3c55de58361dc2d",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-meeting-popup.png",
+      "sha256": "9cb6cdbed2e5e3e5ad6121be809c2c50bf60b9d7e0073b71a0498991383e6b59",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1825-agenda.png",
+      "sha256": "2c0e67b6d119d3b5d51ff25dec7aa3d3351be97577b531fced6089805043e4c2",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1825-actions.png",
+      "sha256": "53f243edf99d394ba86f87a47c60b8f70c1e33e2ca9461da885027620a9e66d4",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1825-rollCalls.png",
+      "sha256": "d2f24a3df8ccf0b44739c91272618c20150cd49b98a965b5aa2a744cc06fa1f2",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1825-agenda-text.png",
+      "sha256": "31ae3e282acad288e7c2873f266f4b8e797a9b8aea9e06e7977a831d18511f28",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1822-agenda.png",
+      "sha256": "fff14e4c2163e898ab8963b47c232a7fa4202a7209d2c77b8814ad64d6ab8da2",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1822-actions.png",
+      "sha256": "7708865f70d76e567b9fc8d75355e1b2b4a85483468b61b8a3078f662c7b4ec6",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1822-rollCalls.png",
+      "sha256": "ec3f114a6757902a1ee9f9a201b08b9d3f307c992ed26dacc6bc9ec3f504e565",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1822-minutes.png",
+      "sha256": "2c905c403055f427d96a5db927d2f4f6a47366a168f83c9acbdf57df36c13cd8",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1822-agenda-text.png",
+      "sha256": "999571a35aaea63915a3c5faf95db4c11eab11be1deff932d16630ab8ced2967",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1827-agenda-text.png",
+      "sha256": "0445956b9836c9de465d31fbe87fe6e9c2c3d3b0c5e513600dc03e159c7d6599",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-legistar-pima-1827-comment-access.png",
+      "sha256": "2e6703d8549a1dcac2eb8fa2d7d37cb5af9d101d1ee2d8b0cde14ea3a581efec",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-diligent-tusd1-493-publication-index.png",
+      "sha256": "5dfd353901c811470bfe3d882ef72509a57746c36209dfb3763c7d8e0b91da1f",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-voting-sites.png",
+      "sha256": "bd219b596b912e8c2be1aeb3d95d9448f1b5655013c02e7d55279c7aeb305f1b",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-voting-sites-source.png",
+      "sha256": "edd15ff57bad4a8e38b8644ecf33cd559d9573b0e3964ded80b26edb15376151",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-ballot-money.png",
+      "sha256": "fe4d5dcaf7b56a173663afec76945b5f71cba9f6b82119c91545cfad3988f03b",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-ballot-official-actions.png",
+      "sha256": "0c2a343528e07b83e4957c654e86fb8e8ca5c97cd7d1d74e01394e952453ac3b",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-ballot-official-actions-last.png",
+      "sha256": "bbf6d98feef12a6c3d7165121f2996ad034c7a36c1e5756a3fbc9e553f7b1885",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-ballot-voting-sites.png",
+      "sha256": "aad3b95594a6b754de4fdff0d89138f068059fcf3ad4b48ffa3ec9cadc706778",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-ballot-voting-sites-source.png",
+      "sha256": "6ee695536b0f1fe637c40380467ab21b2247f2fd9720cd7f5165a56babbf08d4",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-light-about-area.png",
+      "sha256": "c68da133c1e2a30621f659bfccab7709f8def81a0fbafad5fad133ecb07c7c0b",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-light-ballot-recent-votes-last.png",
+      "sha256": "7ab2b38daab0ed46343a919969400938c2ea6757ed450679769b130c11ffe990",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-light-ballot-key-votes.png",
+      "sha256": "7ee006824dd42db1bc9463bc18a4ab4862716b504024e221b7702f86eba3a822",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-light-ballot-key-votes-last.png",
+      "sha256": "a4defe64b2061fd7ad4f2fde3d00fa8261e6e90cdb0a89e3e46d90ec7da330af",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-light-about-area.png",
+      "sha256": "af4133db23254ae8c58f6d9456efda92b6ba10e523b792a62fee8fef590a7bbc",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-map-money.png",
+      "sha256": "5872aa7cc3ba25b2901e47280b5e69f7fcbf6ad5ecc2f849efdbffbb9b2d633d",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-map-official-actions.png",
+      "sha256": "32778b6ed60ae34794d6a789d6cde3d1557a7f362b1d3b3b602caf8706410699",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-map-official-actions-last.png",
+      "sha256": "c58c4100bb6428e0095250f9a5bfa6194056b87d1c5eb57ee881ee89e2cfb5f7",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-venue-meeting-panel.png",
+      "sha256": "ea741975db1f4be75ac47bde733fc9ca4fc5623cb9bc4851f5e4e7bc249d1387",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-meeting-popup.png",
+      "sha256": "d8998546e9e6a77aef9c7ee22efb9cb3ab7968c53ae3566462fef8a5d17f124d",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1825-agenda.png",
+      "sha256": "4a14c53aee97b9be5fd874b12579e0b09d2f23bcf1eeb32171062bf72c29d73d",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1825-actions.png",
+      "sha256": "75cc39a262579faf4add8f0f455c3e512731c133bf74b8312548dd099818b621",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1825-rollCalls.png",
+      "sha256": "35a83fb3b0836677b6347ad9667d579ec29c58c688b1b6fc8c99932365be4dc9",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1825-agenda-text.png",
+      "sha256": "c43591fd3e0abffab5e34b64c58a5f3005361313f425fdc934aaa66b0ef4a979",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1822-agenda.png",
+      "sha256": "736bd531c949ff5d5fd767caddbb45527fb8b8170ecd8b7e793a7fb8ed6560b6",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1822-actions.png",
+      "sha256": "43cc14f6560d6c9e97d56a3b029fd86aee827ce482a86ca9cac0e652b6952fcb",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1822-rollCalls.png",
+      "sha256": "a8d3010d0d675f78f004856267d85a1c2c8555984aa297a5991e77c8ae1a5da7",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1822-minutes.png",
+      "sha256": "881457fe67ea1ba74116c97f53dc9c1cbdf0c782ab798ddc8d04298a03ba2568",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1822-agenda-text.png",
+      "sha256": "38888bb57458a2430ff71cb1b5ad863591ea9efb26c647f3239fcd64a6a047ac",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1827-agenda-text.png",
+      "sha256": "69541158929d66ac68832d8196340e8c2dba604f490c9499cfc5dd64f7f0870e",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-legistar-pima-1827-comment-access.png",
+      "sha256": "f33c3f1b5e43a2667ad83aae07096552f6f99b7bbf607b1d53cca3410c75326a",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-diligent-tusd1-493-publication-index.png",
+      "sha256": "8dd7a3f2dc84c5c04fce06606c2415dc9ac1f344994a5f81ed6f496773e8e3cb",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-voting-sites.png",
+      "sha256": "af3bbde8ccaaac00eb413549378fab93e11cfba9caad8dd57136e3974391b4fc",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-voting-sites-source.png",
+      "sha256": "bab18d68f8bce92f59380c640402a6342e88ad4c7f079732f50bd0f5c3657cef",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-voting-outside-coverage.png",
+      "sha256": "e5a3ed32f63e2f39f4f810631cf70ef8932249d4cc52f0e74e543403b404b23f",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-voting-outside-coverage-last.png",
+      "sha256": "e5a3ed32f63e2f39f4f810631cf70ef8932249d4cc52f0e74e543403b404b23f",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-ballot-money.png",
+      "sha256": "160c5e6ea51ab96c2783e49bb3f400b19f8030c387f2714bb41849fc5de435d0",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-ballot-official-actions.png",
+      "sha256": "76068c9c81334561a9ec0617f837f5e809e33cf70b7b979408c73ed493d7bfe6",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-ballot-official-actions-last.png",
+      "sha256": "bdbf022ae12c9b2fa1219d8c3322f00c1205c8eef739916a296b211d3856cad3",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-ballot-voting-sites.png",
+      "sha256": "05ba172587b0f0b52fbc6c4169ede14416c022a173b31f9b5dd30f267e4f7924",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-ballot-voting-sites-source.png",
+      "sha256": "ee408f3e0aee48fabe048aa6db415037f218b62c1bdea4647f17061c712bab51",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-ballot-voting-outside-coverage.png",
+      "sha256": "49399fd388425d5cc9cd9c4a5d63fa9be97ceb6d85455b991bfebeb883f76e4d",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-ballot-voting-outside-coverage-last.png",
+      "sha256": "49399fd388425d5cc9cd9c4a5d63fa9be97ceb6d85455b991bfebeb883f76e4d",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-dark-about-area.png",
+      "sha256": "1e766f9236709f435f155384764b7e4bcdfb34e6fcd92dafa245eaaf6066c600",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-dark-map-money.png",
+      "sha256": "3e257cd3882d81d29f3206a24864af6bacfe4ae13097ae106c120f365a674806",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-dark-apptegy-vail-60703698-publication-index.png",
+      "sha256": "656ba46b6d9974e4ea8733b62ee51d182f6e2a6c714fe4a9846e930aa4eb9d2f",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-dark-apptegy-vail-60703698-comment-access.png",
+      "sha256": "28afa56e6feeef49bc946c6250a558da2ee52fd8a8040285bda915116c44b5a3",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-dark-official-term-note.png",
+      "sha256": "ed832ad3741550a4ce4e5e958e93ebac7c89b1853e5f4ceccf4da42722f6554e",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-dark-ballot-money.png",
+      "sha256": "160c5e6ea51ab96c2783e49bb3f400b19f8030c387f2714bb41849fc5de435d0",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-dark-about-area.png",
+      "sha256": "b62bc8e65c2540248314352c73a0cdbf449c2fa640d5be0265436ddf9251d275",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-map-money.png",
+      "sha256": "f4a048d79057a925202983f50f2ac22deaee3b36b437918669f9eed1c0d0f9b3",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-map-official-actions.png",
+      "sha256": "ccb48653cf169d66aa0f269ebc5e744f4f47f2d8f6d5ef5993bc4197674d30fc",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-map-official-actions-last.png",
+      "sha256": "fa45c6239bb12620f1a3f20a53a383bc4f6b007fe10895a1fe9f570c3571e1dd",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-venue-meeting-panel.png",
+      "sha256": "f324d390cfd297abe6e9433c262b7ad4a929457806fc25dca52676dcbf9666f8",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-meeting-popup.png",
+      "sha256": "9c2bcd6d65d9aa0c35062c4439a96f121296fc6ff2a9f5ccd6423c34d1d7be42",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-legistar-pima-1825-agenda.png",
+      "sha256": "578bcd3860d9d6a704d9856172c8174d081a1896d17a3e7ba7af22c4a9ca653a",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-legistar-pima-1825-actions.png",
+      "sha256": "9f1e3f4bf3bee1ffd854ca7f588ddc9cf529870b04a85f5fb70ccf513ca7fd69",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-legistar-pima-1825-rollCalls.png",
+      "sha256": "25a1b1a86a9965eb6ef50b332fb6e84e069ddfee05d5581c3703d1d0125455f1",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-legistar-pima-1825-agenda-text.png",
+      "sha256": "440896ccd1e3bbaafdf74a6cf11f3edf60f05a0d6a2c6ae1dbab37e60c82749c",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-legistar-pima-1822-agenda.png",
+      "sha256": "9aff1fe55dbfc5175f3798872e9f4b9d05e464e515b3481cae2ac69fe24f6887",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-legistar-pima-1822-actions.png",
+      "sha256": "d68a066a414468ebb7ad11443edce044b56569d9efcf1a9617f4f2d1ab147d0d",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-legistar-pima-1822-rollCalls.png",
+      "sha256": "9be5b91abc7d83f7523f23ad46850a311266b9c63201c649ef8124ee46ff358f",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-legistar-pima-1822-minutes.png",
+      "sha256": "9a18bf18559a09be910599bea05ef6bb33cc55bae80345c1586b86524c70d64c",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-legistar-pima-1822-agenda-text.png",
+      "sha256": "c3b5feeeb4b637a585d0ec596d13885eee852be55b15946bd830f81318a55f32",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-legistar-pima-1827-agenda-text.png",
+      "sha256": "84bb94541fb0a588af8afde59c6a41dcf891c046cda4688735640dba81b60c48",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-legistar-pima-1827-comment-access.png",
+      "sha256": "5e347f6c17acd868750fac1e014e7226c9f24cdc49fe7fc41880170f1c2e01f2",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-diligent-tusd1-493-publication-index.png",
+      "sha256": "6c0975dfb7c871004fbbfb4a4a5f738a8674a0825d6fd8381bec0a24186cffd8",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-voting-sites.png",
+      "sha256": "9f1508c6be63c4254f3ed0373fb64fa8054a66ef24aacdf09a98f918353b7a11",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-voting-sites-source.png",
+      "sha256": "436216fa69ab4c787b1020239c8db2f8dc53f666e65a9a17be29cec5a331b5c8",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-voting-outside-coverage.png",
+      "sha256": "fb7ba5a40f0279b26ed43598c40e9a57367e0b3b110fc4e36e582b05ed6e91a4",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-voting-outside-coverage-last.png",
+      "sha256": "fb7ba5a40f0279b26ed43598c40e9a57367e0b3b110fc4e36e582b05ed6e91a4",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-ballot-money.png",
+      "sha256": "ff95f06ca9c3867c76f36a9f542020e488a86c39ff13e8d94f04abde20986e3d",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-ballot-official-actions.png",
+      "sha256": "febb14eccd9f9d21c75750e305b44051e0e1b3ac21600b5aa27f766dee21ab6d",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-ballot-official-actions-last.png",
+      "sha256": "c16e71eab4e8fecdd9d058a2e0d708f5ca126076f6e1c5a916de61d2489a4a57",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-ballot-voting-sites.png",
+      "sha256": "298981b3fbccf75289e0a93f57a3ea3449e4085f91c1aad09e5f85bad30d6e87",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-ballot-voting-sites-source.png",
+      "sha256": "e468d10fd191dd9a78be499f0da944eeb2856e388c7a5ec63d71a6f7bd14f85c",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-ballot-voting-outside-coverage.png",
+      "sha256": "dae23904b31b8a3f28a6d2b9963fc0e7f817d06e823dc891a0da1aff39e25521",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-ballot-voting-outside-coverage-last.png",
+      "sha256": "dae23904b31b8a3f28a6d2b9963fc0e7f817d06e823dc891a0da1aff39e25521",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-phone-light-about-area.png",
+      "sha256": "4e80b71dbf41d97a4cb3d6387146a16762a17ceb7fda6642e003b984d3478caa",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-light-map-money.png",
+      "sha256": "b7cefc8751e71f91afa8ef4a8ea6eb194b6f549933f371d01e72e84644070b78",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-light-apptegy-vail-60703698-publication-index.png",
+      "sha256": "c9d2c36ab124bc8dec61077adeac614c48c12a67bdcc6e59fcd3e4a6ef724177",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-light-apptegy-vail-60703698-comment-access.png",
+      "sha256": "70e5a404cd842263fd8349d13a6d687787ba1ff5cc8de37984004edede6a0b3d",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-light-official-term-note.png",
+      "sha256": "c22fa8dfd63010521bf1c79769e4bf1b863a30e8c2badcc9054c37168edead68",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-light-ballot-money.png",
+      "sha256": "ff95f06ca9c3867c76f36a9f542020e488a86c39ff13e8d94f04abde20986e3d",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-light-about-area.png",
+      "sha256": "2a25d7edc9f9863cdea0defa89b472bbc059a504754a0fb9157ec28bfa312f0b",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-map-money.png",
+      "sha256": "0deef07667ba9f6d8e6a2aa0131000ff6c6fc421530a54737c4ddb01b6ffbdda",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-map-official-actions.png",
+      "sha256": "0c44efb0d6d7138d011ad9e77d2f6d0175c2da8f27c4422a1ec1427e5d95f374",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-map-official-actions-last.png",
+      "sha256": "ba3d42c71b80a6b951a325bef181245cc6d9387c3a87dbba36cc91ad5b02f01a",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-venue-meeting-panel.png",
+      "sha256": "769bdcd08341687b81d72e5e9aac7658f500fd4d4435aecbe31a699f0cc4fae3",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-meeting-popup.png",
+      "sha256": "461dd9ac106cc88959991de4fe19782ceb1864a05429b1cfb77472d8f5bcbe3b",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1825-agenda.png",
+      "sha256": "7cb26357dfbeb71373d8101c844deafb7a7681f09adf51794f2e71bc71c3a2b3",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1825-actions.png",
+      "sha256": "69ba1ffd6cd42dc8fae078e7d1be0914720e973c2abe46b9686c7e15dc9a9faa",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1825-rollCalls.png",
+      "sha256": "97b2c3d8e65fadde8f69301d4a6d2502e3a9a3c664a2ffd498dd180345d7a01f",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1825-agenda-text.png",
+      "sha256": "40fc4013317ac74ec433f2dc376801a885b4db8a93530bf241812ac176dbc274",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1822-agenda.png",
+      "sha256": "6901b596a062ecd5752a1010c9ee41708f2f1c1b7becb0e126b83e11e4a5a73d",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1822-actions.png",
+      "sha256": "fe2c9e39ec639d258d8f10ac4a9d9c7d58894a821c0b73d8d86a7fe87b208064",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1822-rollCalls.png",
+      "sha256": "16ad3c0f3133a16a20f84a1c1edb291163d6f3d77c114d624ccef147d1f6de0a",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1822-minutes.png",
+      "sha256": "5d3a2a19fde2d130866d0fb74c9d720b042f528b8f83b2aacff494f50729f0ed",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1822-agenda-text.png",
+      "sha256": "a6524042fbdd37cb814d08423f02cef2744a803067eee12e5bf6c04d97d4905e",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1827-agenda-text.png",
+      "sha256": "7c29ecc32af1bce9f16c9748dd04a96fba6ca4cc9e6968fcca42b2d3f3de4f93",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-legistar-pima-1827-comment-access.png",
+      "sha256": "813d4a9f9dc60e0b39828678f4964dbb2a16153629bc60496ac88ff82ea236a1",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-diligent-tusd1-493-publication-index.png",
+      "sha256": "492255817f7c47a23bdaff831acaeb404b1f1e8b875dfc46f359c8eb9516c1f3",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-voting-sites.png",
+      "sha256": "cc1c99b06648d456002a0ce6ff21d017a7cdb989ee6fd51bd3c9e350ab807056",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-voting-sites-source.png",
+      "sha256": "a3387635affeab20fe77c0972bf5f947cf2fc81f2b4ab820e6bc0d659b82b24a",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-ballot-money.png",
+      "sha256": "089e274c86e787130090cf0e18ddd1f477c6f613b6e4c342e5f52227971cffca",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-ballot-official-actions.png",
+      "sha256": "df4255aa58f519f9753e302c37823f94b06576344f3d3c8d15e3d552e681d2be",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-ballot-official-actions-last.png",
+      "sha256": "78be859113474487fe8b21d7744c28a5b65305b922f4227008b4a69b2efc98c9",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-ballot-voting-sites.png",
+      "sha256": "01e4b0f8b5f2c6bd222722d5ba9fd02b481bcdc684ed6c455f40ec43c59ae256",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-ballot-voting-sites-source.png",
+      "sha256": "839ba0407787e42d6b5115785399266946dc938a4a30ed278ace3f055247a8d7",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85701-desktop-dark-about-area.png",
+      "sha256": "ca20b0ebbfeb6919d2cbfab6b829b73a57058d649a5d216f7f5f09e9187cb52e",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-dark-map-federal-money.png",
+      "sha256": "cce99a866ca58b4543307da704747869753c275ba5644908b2d5db9479fd2ff3",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-dark-ballot-federal-money.png",
+      "sha256": "149208791e7f2900cd0d5c7454f45bd6d8604d9ad1587a066715ea8fac549bbf",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-light-map-federal-money.png",
+      "sha256": "54f215e89c23e1ad58f9417160a2af0c73723b4a3e7e3b195d0ac5cbbdf8bb40",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-desktop-light-ballot-federal-money.png",
+      "sha256": "b7740be7460bf7b454b0cbd852c73438e27f838d148eebeb3505f7c0a5050fb5",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-dark-map-federal-money.png",
+      "sha256": "34347f4001695250c90fb7a3bf88feceed2230b7e0f916e4adf0efe1068466f6",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-dark-ballot-federal-money.png",
+      "sha256": "1132a0f17231281efc5df47cc1b43e947fbb5e0141fe2dffe10cc0e92679e5e6",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-light-map-federal-money.png",
+      "sha256": "829b5dfa0c9a66445fb56503ced3794914699d9d230f915c0c3888ef888a3138",
+      "readAsImage": true,
+      "result": "PASS"
+    },
+    {
+      "path": "screenshots/reader-last-mile/85641-phone-light-ballot-federal-money.png",
+      "sha256": "8e47626dc2db0348404525749314245315a94756d5972a4b2f5b0d2da2fb6411",
+      "readAsImage": true,
+      "result": "PASS"
+    }
+  ]
+}

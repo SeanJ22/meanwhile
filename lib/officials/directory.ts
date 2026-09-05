@@ -91,12 +91,8 @@ export function directoryFor(holderId: string): {
   if (!holderId.startsWith("congress:")) return null;
   const bioguide = holderId.slice("congress:".length);
 
-  let file: DirectoryFile;
-  try {
-    file = load();
-  } catch {
-    return null;
-  }
+  // An unavailable normalized holding is a failed read, never an empty member.
+  const file = load();
 
   const entry = file.byMember[bioguide];
   if (!entry) return null;

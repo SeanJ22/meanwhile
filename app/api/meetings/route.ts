@@ -1,4 +1,6 @@
 import { haversineKm } from "@/lib/geo/distance";
+import { canonicalBodyIdentity } from "@/lib/ask/body-identity";
+import { meetingListingIdentity } from "@/lib/meetings/listing-identity";
 import { nearestZcta } from "@/lib/geo/zcta";
 import { logSearchEvent } from "@/lib/db/search-log";
 import { afterResponse } from "@/lib/log/after-response";
@@ -457,6 +459,7 @@ export async function GET(request: Request) {
 
   return Response.json({
     ...result,
+    listingIdentity: meetingListingIdentity(result.meetings, canonicalBodyIdentity),
     coverage,
     snapshot,
     nearZip,

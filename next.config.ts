@@ -6,7 +6,10 @@ const registryHoldingsTrace = [
   "./data/states/*/officials/officeholders-*.json",
   "./data/derived/resolver-geometry.json",
   "./public/geo/*.geojson",
-  "./lib/registry/*.json",
+  // The legacy street-index summary is an acquisition diagnostic; no reader
+  // loader opens it. Roster photos are statically imported into compiled code.
+  // These are the registry inputs that need filesystem delivery.
+  "./lib/registry/{officeholders-us,official-photos,promoted-bodies,registry}.json",
 ];
 
 const nextConfig: NextConfig = {
@@ -47,6 +50,11 @@ const nextConfig: NextConfig = {
   // so on a serverless host the files would silently be absent from the
   // function bundle without this. Locally it changes nothing.
   outputFileTracingIncludes: {
+    "/api/positions/**": ["./data/states/az/identity/*.json", "./data/states/*/officials/officeholders-*.json", "./lib/registry/officeholders-us.json"],
+    "/api/funding/**": ["./data/states/*/funding/state-money-??-????.json", "./data/states/az/identity/*.json", "./data/states/*/officials/officeholders-*.json"],
+    "/api/agenda": ["./data/meetings-snapshot.json", "./data/states/*/outcomes/*.json"],
+    "/api/profile/**": ["./data/prl/prl-profiles.json"],
+    "/api/official-actions/**": ["./data/states/az/officials/az-governor-actions.json", "./data/states/az/identity/*.json", "./data/states/*/officials/officeholders-*.json", "./lib/registry/officeholders-us.json"],
     "/api/{address/resolve,ballot/scope,demand-signal,meetings,reactions,representation/**,speak,votes,voting-sites}": registryHoldingsTrace,
     "/{ballot,about-area}": registryHoldingsTrace,
     "/api/meetings": [
@@ -157,13 +165,16 @@ const nextConfig: NextConfig = {
      * Named per route that reaches them, as every other entry here is.
      */
     "/api/ask/grounded": [
+      "./data/states/*/funding/state-money-??-????.json",
+      "./data/states/az/identity/*.json",
       ...registryHoldingsTrace,
-      "./data/*.json",
-      "./data/ballot/*.json", "./data/states/*/ballot/*.json",
-      "./data/officials/*.json", "./data/states/*/officials/*.json",
+      // Literal ballot/contact, corpus, meeting, outcome and local-finance
+      // reads are traced by Next.
+      // The independent postbuild reader-trace contract verifies each required
+      // file; broad directory includes duplicated them and bundled acquisition
+      // metadata that this route never reads.
       "./data/derived/zip-coverage-tiers-runtime.json",
       "./data/derived/zip-division-ids.json",
-      "./lib/registry/*.json",
       /*
        * **THE ROLL-CALL SNAPSHOTS (ASK-06, 2026-08-28).**
        *
@@ -175,7 +186,6 @@ const nextConfig: NextConfig = {
        * is indistinguishable from honest missing data, which is the exact
        * reason this list exists.
        */
-      "./data/votes/*.json", "./data/states/*/votes/*.json",
       /*
        * The Legistar outcome store (2026-08-29). Same reasoning as the votes
        * snapshot immediately above, and the same failure mode if it is left
@@ -188,18 +198,6 @@ const nextConfig: NextConfig = {
        * tracer can see it; this is the other half, and neither works alone.
        */
       "./data/outcomes/*.json", "./data/states/*/outcomes/*.json",
-      /*
-       * The held campaign-finance stores (2026-08-30). Same two-half rule as
-       * the votes and outcome entries above: `lib/control-plane/campaign-
-       * finance/held-records.ts` reads both files through `process.cwd()`
-       * (its original `import.meta.dirname` is undefined inside Next's build
-       * and failed page-data collection outright), so the tracer cannot see
-       * the read, and without this line the deployed route would tell a
-       * reader we hold no finance records while the repo holds 1,484 filed
-       * money rows — the exact false sentence lib/ask/local-finance.ts was
-       * built to retire.
-       */
-      "./data/campaign-finance/*.json", "./data/states/*/campaign-finance/*.json",
     ],
     "/api/ask/agenda": ["./data/*.json"],
   },

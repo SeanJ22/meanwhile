@@ -1,4 +1,7 @@
 import { readSnapshot } from "@/lib/meetings/snapshot";
+import { meetingReaderRecords } from "@/lib/meetings/reader-records";
+import { classifyAgendaPublication, observationFromMeetingRecord, publisherAgendaObservationsFor } from "@/lib/ask/agenda-publication";
+import { meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
 
 /**
  * GET /api/agenda?meetingId=<source-namespaced id>
@@ -21,16 +24,27 @@ export async function GET(request: Request) {
     return Response.json({ error: "meetingId required" }, { status: 400 });
   }
 
-  const snapshot = readSnapshot();
-  if (!snapshot) {
-    // No snapshot is an honest empty, not a 500.
-    return Response.json({ documents: [] });
-  }
+  let snapshot;
+  try { snapshot = readSnapshot(); } catch { snapshot = null; }
+  const meeting = snapshot?.meetings.find((row) => row.id === meetingId);
+  const records = meetingReaderRecords(meetingId, meeting?.bodyId);
+  const observation = meeting ? observationFromMeetingRecord(meeting) : null;
+  const heldDocuments = (snapshot?.agendaDocuments ?? []).filter(doc => doc.meetingId === meetingId);
+  const bodyName = meeting?.bodyName ?? heldDocuments[0]?.sourceOrg;
+  const publication = snapshot && bodyName ? classifyAgendaPublication({
+    meetingId, bodyName,
+    documentsForMeeting: heldDocuments,
+    meetingsAcrossCorpus: snapshot.meetings,
+    documentsAcrossCorpus: snapshot.agendaDocuments ?? [], discoveredDocumentUrl: meeting?.agendaUrl,
+    observations: [...publisherAgendaObservationsFor(meetingId), ...(observation ? [observation] : [])],
+    now: Date.now(),
+  }) : null;
 
-  const documents = snapshot.agendaDocuments
+  const documents = (snapshot?.agendaDocuments ?? [])
     .filter((doc) => doc.meetingId === meetingId)
     .sort((a, b) => Date.parse(b.retrievedAt) - Date.parse(a.retrievedAt))
     .map((doc) => ({
+      id: doc.id,
       documentUrl: doc.documentUrl,
       /** Cited by curated notice summaries — an exact-version key. */
       contentHash: doc.contentHash,
@@ -42,5 +56,7 @@ export async function GET(request: Request) {
       sourceOrg: doc.sourceOrg,
     }));
 
-  return Response.json({ documents });
+  return Response.json({ meetingId, documents, documentCount: documents.length,
+    holdingStatus: snapshot ? "HELD" : "HOLDING_UNAVAILABLE", records, publication,
+    listingIdentity: snapshot ? meetingListingKnowledgeFor(snapshot.meetings, [meetingId]).readback : null });
 }

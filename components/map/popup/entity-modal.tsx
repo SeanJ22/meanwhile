@@ -7,6 +7,9 @@ import { Fragment, useEffect, useState, type ReactNode } from "react";
 
 import { formatMeetingDate, formatMeetingTime } from "@/lib/map/format";
 import { sourceCreditFor } from "@/lib/meetings/list-attribution";
+import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
+import { useMeetingListingIdentity } from "@/lib/state/data";
+import { MeetingListingNotice } from "../meeting-listing-notice";
 import {
   groupMeetingsForReading,
   hasConcluded,
@@ -34,6 +37,8 @@ import { CardSourcesList } from "@/components/officials/card-sources-list";
 import { IdentityPortrait } from "@/components/officials/person-identity";
 import { SpeakYourMind } from "@/components/speak/speak-your-mind";
 import { DemandPill } from "@/components/demand/demand-pill";
+import { RosterCompletenessGaps } from "@/components/officials/roster-completeness-gap";
+import type { RosterReaderGap } from "@/lib/registry/body-rosters";
 
 import { HowToBeHeard, MeetingSourceCredit } from "../meeting-panel";
 import { venueLink } from "@/lib/registry/links";
@@ -280,7 +285,7 @@ export interface ModalSubject {
     carried?: unknown;
   } | null;
   /** How to actually speak at it (D25), when the subject is a meeting. */
-  commentAccess?: { ocdId: string | null; bodyName: string } | null;
+  commentAccess?: { ocdId: string | null; bodyName: string; bodyId?: string | null } | null;
   /**
    * 6f2 (2026-08-15, the author): a district battlecard's overview rendered
    * type/tier/state and nothing else — three identifiers where a stranger
@@ -296,6 +301,7 @@ export interface ModalSubject {
    */
   representedByOfficeTitle?: string | null;
   representation: SeatHolder[];
+  rosterGaps?: RosterReaderGap[];
   /** Why representation is empty, when it is. */
   representationNote: string;
   /**
@@ -438,6 +444,7 @@ function BodySections({
   onOpenHolder?: (holder: SeatHolder) => void;
 }) {
   const card = subject.bodyCard!;
+  const listingCount = readerMeetingCount(subject.meetings, useMeetingListingIdentity());
   /*
    * One `now` for the whole card (item 11's rule): the ordering and the
    * "upcoming" count below are computed from the same instant, so the number
@@ -507,6 +514,7 @@ function BodySections({
           <>
             <Representation
               holders={subject.representation}
+              gaps={subject.rosterGaps}
               note={subject.representationNote}
               onOpenHolder={onOpenHolder}
               /* LBL-1: removed, not renamed, where nothing is run. */
@@ -541,8 +549,8 @@ function BodySections({
     },
     {
       id: "meetings",
-      title: "Meetings",
-      meta: meetings.length > 0 ? `${upcoming} upcoming` : undefined,
+      title: listingCount.heading,
+      meta: meetings.length > 0 ? `${upcoming} upcoming${listingCount.unresolved ? " listings" : ""}` : undefined,
       content: meetings.length > 0 ? <Meetings meetings={meetings} /> : null,
       absence:
         "No meetings on file for this body. That is our coverage, not a statement that nothing is scheduled.",
@@ -656,6 +664,7 @@ export function EntityModal({
   homeZip = null,
 }: EntityModalProps) {
   const [tab, setTab] = useState<ModalTab>(initialTab);
+  const listingCount = readerMeetingCount(subject.meetings, useMeetingListingIdentity());
   const sourceCount = sourceCountLabel(subject.sources);
 
   useEffect(() => {
@@ -746,7 +755,7 @@ export function EntityModal({
               data-active={String(tab === entry.id)}
               onClick={() => setTab(entry.id)}
             >
-              {entry.label}
+              {entry.id === "meetings" ? listingCount.heading : entry.label}
               {/* Item 1 (2026-08-16): the stated N, computed from the SAME
                   array the tab maps over. A count derived a second way is how
                   a number comes to disagree with what is on screen. */}
@@ -760,6 +769,7 @@ export function EntityModal({
         <div className="account-modal-body" role="tabpanel">
           {tab === "overview" && (
             <>
+              {subject.agenda && <MeetingListingNotice groups={listingCount.groups} />}
               {subject.facts.map((fact) => (
                 <PopupRow key={fact.label} label={fact.label} mono={fact.mono}>
                   {fact.value}
@@ -861,6 +871,7 @@ export function EntityModal({
                 <HowToBeHeard
                   ocdId={subject.commentAccess.ocdId}
                   bodyName={subject.commentAccess.bodyName}
+                  bodyId={subject.commentAccess.bodyId}
                 />
               )}
             </>
@@ -869,6 +880,7 @@ export function EntityModal({
           {tab === "representation" && (
             <Representation
               holders={subject.representation}
+              gaps={subject.rosterGaps}
               note={subject.representationNote}
               onOpenHolder={onOpenHolder}
               /* LBL-1: removed, not renamed, where nothing is run. */
@@ -1010,9 +1022,10 @@ export function EntityModal({
   );
 }
 
-function Representation({
+export function Representation({
   holders,
   note,
+  gaps = [],
   onOpenHolder,
   /**
    * F01 2.2 (2026-08-19): lead with WHO RUNS IT.
@@ -1027,10 +1040,11 @@ function Representation({
 }: {
   holders: SeatHolder[];
   note: string;
+  gaps?: readonly RosterReaderGap[];
   onOpenHolder?: (holder: SeatHolder) => void;
   showTopOffices?: boolean;
 }) {
-  if (holders.length === 0) return <Empty>{note}</Empty>;
+  if (holders.length === 0) return <><RosterCompletenessGaps gaps={gaps} /><Empty>{note}</Empty></>;
 
   // OFF-4 (2026-08-24): the appointed executive leads the list. See
   // rosterInReadingOrder for why it reuses the precedence table above.
@@ -1042,6 +1056,7 @@ function Representation({
 
   return (
     <>
+      <RosterCompletenessGaps gaps={gaps} />
       {/*
         F01 2.2 — the same question the small card answers, answered the same
         way, from the same precedence table. *"When I look at representation, as
@@ -1084,7 +1099,7 @@ function Representation({
         </p>
       )}
       {ordered.map((holder) => (
-        <div key={holder.id} className="account-modal-person flex items-start gap-3">
+        <div key={holder.id} data-roster-holder={holder.id} className="account-modal-person flex items-start gap-3">
           {/*
             F01 2.3 (2026-08-19, the author): *"On AZ-6, when I look at
             Representation, we should have the picture of that person — we
@@ -1186,6 +1201,7 @@ function Representation({
  * used by half its callers is not a shared function.
  */
 function Meetings({ meetings }: { meetings: Meeting[] }) {
+  const listingCount = readerMeetingCount(meetings, useMeetingListingIdentity());
   // Pinned at mount — never a clock read in a render body (item 11's rule).
   const [now] = useState(() => Date.now());
 
@@ -1206,6 +1222,7 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
 
   return (
     <>
+      <MeetingListingNotice groups={listingCount.groups} />
       {groups.map((group) => (
         <section key={group.id}>
           <p className="t-structure mt-3 mb-1 text-label first:mt-0">

@@ -30,6 +30,8 @@ export interface CandidateCardData {
   bioSourceLabel: string | null;
   email: string | null;
   phone: string | null;
+  /** Field-level publication note retained by the municipal contact collector. */
+  phoneSource?: string | null;
   /**
    * **WHOSE LINE THIS IS, WHEN IT IS NOT THE CANDIDATE'S OWN** (RULING 64,
    * adopted 2026-08-21, the author's ruling; applied 2026-08-22, NJ Hunt item

@@ -4,12 +4,48 @@ import { join } from "node:path";
 
 import { BALLOT_SOURCES } from "../ballot/registry.ts";
 import { contestsForDivisions } from "../sources/ballot-nj-morris/index.ts";
-import { lineupForContest } from "../ballot/general-lineup.ts";
+import { getGeneralLineup } from "../ballot/general-lineup.ts";
 import { summaryForContest } from "../ballot/measure-summary.ts";
 import { provisionsForContest } from "../ballot/measure-provisions.ts";
+import { getMeasureAnalyses, type MeasureAnalysis } from "../ballot/analyses.ts";
 import { positionsFor } from "../candidates/positions.ts";
 import { ROSTER_FILES } from "../coverage/artifacts.ts";
 import type { BallotAbsence, BallotSet, Contest } from "../ballot/types.ts";
+import { allSeatHolders, seatHoldersForDivision } from "../registry/server.ts";
+import { statewideExecutivesFor } from "../officials/statewide-executives.ts";
+import type { SeatHolder } from "../officials/lookup.ts";
+import { membersOfBody } from "../registry/body-membership.ts";
+import { bindNamedEntity } from "../routing/named-entity.ts";
+import type { AskNominee } from "./ballot-inventory.ts";
+
+/**
+ * A reader may ask about a held person outside our mapped divisions. Match the
+ * question using the existing entity binder, then retrieve only exact held IDs.
+ * This adds subjects to an answer, never representatives to a geography.
+ */
+export async function namedOfficeholders(question: string, explicitIds: readonly string[]): Promise<SeatHolder[]> {
+  const held = await allSeatHolders();
+  const binding = bindNamedEntity(question, held.map((seat) => ({
+    id: seat.id, name: seat.name, nameClass: "person" as const, divisionType: "person",
+  })));
+  const wanted = new Set(explicitIds);
+  if (binding.kind === "BOUND") wanted.add(binding.entity.id);
+  if (binding.kind === "AMBIGUOUS") for (const entity of binding.candidates) wanted.add(entity.id);
+  return held.filter((seat) => wanted.has(seat.id));
+}
+
+/** The representation selector supplies Ask's officials, with the same IDs and provenance. */
+export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: readonly string[] = []): Promise<{ seats: SeatHolder[]; loaderFailures: number }> {
+  const seats = new Map(statewideExecutivesFor([...ocdIds]).map((seat) => [seat.id, seat]));
+  for (const bodyId of bodyIds) {
+    for (const seat of membersOfBody(bodyId).members) seats.set(seat.id, seat);
+  }
+  const results = await Promise.allSettled([...new Set(ocdIds)].map(seatHoldersForDivision));
+  for (const result of results) if (result.status === "fulfilled") {
+    for (const seat of result.value) seats.set(seat.id, seat);
+  }
+  return { seats: [...seats.values()], loaderFailures: results.filter((result) => result.status === "rejected").length };
+}
 
 /**
  * **THE SERVER-SIDE READS ASK NEEDS, IN ONE PLACE.**
@@ -31,10 +67,14 @@ import type { BallotAbsence, BallotSet, Contest } from "../ballot/types.ts";
  */
 
 export interface BallotForDivisions {
+  /** Applicable canonical state holdings that could not be read or validated. */
+  loaderFailures: string[];
+  analysisLoaderFailed: boolean;
+  measureAnalysis: (contestId: string) => MeasureAnalysis | null;
   set: BallotSet | null;
   contests: Contest[];
   absences: BallotAbsence[];
-  nominees: (contestId: string) => readonly { name: string; partyLabel?: string | null }[];
+  nominees: (contestId: string) => readonly AskNominee[];
   positions: (targetKey: string) => readonly {
     issueLabel: string;
     quote: string;
@@ -51,6 +91,9 @@ export interface BallotForDivisions {
 }
 
 const EMPTY: BallotForDivisions = {
+  loaderFailures: [],
+  analysisLoaderFailed: false,
+  measureAnalysis: () => null,
   set: null,
   contests: [],
   absences: [],
@@ -72,16 +115,24 @@ export async function loadBallotForDivisions(
   ocdIds: readonly string[],
 ): Promise<BallotForDivisions> {
   if (ocdIds.length === 0) return EMPTY;
-  for (const { source } of BALLOT_SOURCES) {
+  const states = new Set(ocdIds.flatMap((id) => /\/state:([a-z]{2})(?:\/|$)/.exec(id)?.[1] ?? []));
+  const loaderFailures: string[] = [];
+  for (const { state, source } of BALLOT_SOURCES) {
+    if (!states.has(state)) continue;
     try {
       const candidate = source.normalize(await source.fetch());
       const hit = contestsForDivisions(candidate, ocdIds);
       if (hit.contests.length === 0 && hit.absences.length === 0) continue;
+      const analyses = state === "az" ? getMeasureAnalyses() : null;
+      const lineup = state === "az" ? getGeneralLineup() : null;
       return {
+        loaderFailures,
+        analysisLoaderFailed: state === "az" && analyses === null,
+        measureAnalysis: (contestId) => analyses?.analyses.find((analysis) => analysis.contestId === contestId) ?? null,
         set: candidate,
         contests: hit.contests,
         absences: hit.absences,
-        nominees: (contestId) => lineupForContest(contestId)?.nominees ?? [],
+        nominees: (contestId) => (lineup?.contests.find((contest) => contest.contestId === contestId)?.nominees ?? []).map((nominee) => ({ ...nominee, sourceUrl: lineup!.canvass.url, sourceOrg: lineup!.canvass.issuedBy, retrievedAt: lineup!.canvass.readAt })),
         positions: sourcedPositions,
         measureSummary: (contestId) => {
           const summary = summaryForContest(contestId);
@@ -98,11 +149,10 @@ export async function loadBallotForDivisions(
           })),
       };
     } catch {
-      /* A source that cannot be read contributes nothing and the next is
-         tried. Never a fabricated ballot, and never a 500 for the reader. */
+      loaderFailures.push(state);
     }
   }
-  return EMPTY;
+  return { ...EMPTY, loaderFailures };
 }
 
 /**

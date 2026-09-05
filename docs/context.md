@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-03.
-Session day 2026-09-03 (America/Phoenix, from `pnpm stamp`).
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-09-04 10:16:34 EDT.
+Session day 2026-09-04 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1313 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1314 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 Repository holding paths resolve through the committed move plan; source records stay unchanged.
@@ -367,5 +367,19 @@ _No status change recovered in the commits walked._
 
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
-_No git facts available this run._
-
+```
+generated: 2026-09-04 10:16:34 EDT
+branch: codex/reader-last-mile
+head sha: 74f748cff379df2181785ad4e5f487d3dccac7c9
+head subject: Record complete reader delivery proof and permanent closure controls
+origin/main sha: bee7dabcd60cad8be0b4cbd28b03ff47d562bb30
+origin/main subject: Post-deploy integrity reading: 2026-09-04T13:48Z
+local main sha: a6f7fd4da9dc692c5d7bcdb0153a0d58f4865ab7
+local main matches origin/main: no — 7 commit(s) behind
+working tree: clean
+open prs: none
+last recorded tests: 094 (pass)
+last recorded lint: pass
+last recorded build: pass
+last recorded status from: docs/state.md:23452
+```

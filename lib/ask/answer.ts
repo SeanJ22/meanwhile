@@ -101,6 +101,8 @@ export interface AskAnswerPayload {
    * whole array for a day that holds more than one (ASK-24).
    */
   meetings: AskSitting[];
+  /** Exact listing identities; a null unique count must never become array.length. */
+  meetingListingIdentity?: import("../meetings/listing-identity.ts").MeetingListingIdentityReadback;
   /** How the reader's answer was produced. Never inferred — see `AnswerMode`. */
   mode: AnswerMode;
   /** What the question resolved to, or null. Never a substitute. */
@@ -213,6 +215,12 @@ export function clarifyAnswer(
 /** A government was named and we hold no such thing. Said, never swapped. */
 export function unresolvedAnswer(mention: string, trace: AskTrace): AskAnswerPayload {
   return { ...base("UNRESOLVED", trace), mention };
+}
+
+export function unresolvedReadLine(answer: { mention?: string; denominators?: Record<string, number> }): string {
+  return answer.denominators?.identityUnresolved
+    ? `We could not resolve the supplied identity for “${answer.mention ?? "this subject"}”.`
+    : `We don't have anything recorded under “${answer.mention ?? "that name"}”.`;
 }
 
 /**

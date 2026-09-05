@@ -9,6 +9,7 @@ import {
   type CandidateDocument,
 } from "./corpus.ts";
 import { CANDIDATE_ISSUES, type CandidateIssue } from "./issues.ts";
+import { verifiedReaderPersonKeys } from "../identity/reader-person.ts";
 
 /**
  * **P02's reader-facing shape** — one candidate, the same issue list,
@@ -41,8 +42,9 @@ export function getCandidateCorpus(): CandidateCorpus {
 }
 
 export function documentsFor(candidateKey: string): CandidateDocument[] {
+  const keys = verifiedReaderPersonKeys(candidateKey);
   return getCandidateCorpus().documents.filter(
-    (d) => d.candidateKey === candidateKey,
+    (d) => keys.includes(d.candidateKey),
   );
 }
 
@@ -54,8 +56,9 @@ export function documentsFor(candidateKey: string): CandidateDocument[] {
  * the documents cannot tell the reader which happened.
  */
 export function failuresFor(candidateKey: string) {
+  const keys = verifiedReaderPersonKeys(candidateKey);
   return getCandidateCorpus().failures.filter(
-    (f) => f.candidateKey === candidateKey,
+    (f) => keys.includes(f.candidateKey),
   );
 }
 

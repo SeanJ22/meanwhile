@@ -1,14 +1,9 @@
 import type { VotesSnapshot } from "@/lib/votes/types";
 import { getVotesSnapshot } from "@/lib/votes/snapshot";
 import { partyBreakdownFor } from "@/lib/votes/party-breakdown";
-import { keyVoteRowsFor } from "@/lib/votes/key-votes-rows";
+import { keyVotesForMember, type MemberKeyVotes } from "@/lib/votes/key-votes-reader";
 import { KEY_VOTES_CRITERIA } from "@/lib/votes/key-votes";
-import {
-  keyVotePositionFor,
-  keyVotePositionKey,
-  keyVoteRollCallHeld,
-} from "@/lib/votes/key-vote-positions";
-import { chamberForOfficeholder, partyByOfficeholderId } from "@/lib/registry/server";
+import { partyByOfficeholderId } from "@/lib/registry/server";
 import { getStateVotesSnapshot } from "@/lib/sources/legiscan/snapshot";
 import { LEGISCAN_ATTRIBUTION } from "@/lib/sources/legiscan/types";
 
@@ -37,7 +32,7 @@ function stateVotes(member: string) {
   try {
     snap = getStateVotesSnapshot();
   } catch {
-    return Response.json({ generatedAt: null, votes: [] });
+    return Response.json({ generatedAt: null, member, holdingStatus: "HOLDING_UNAVAILABLE", votes: [] }, { status: 503 });
   }
 
   const positions = new Map(
@@ -72,6 +67,9 @@ function stateVotes(member: string) {
     }));
 
   return Response.json({
+    member,
+    holdingStatus: "HELD",
+    count: votes.length,
     generatedAt: snap.generatedAt,
     attribution: LEGISCAN_ATTRIBUTION,
     votes,
@@ -93,9 +91,7 @@ export async function GET(request: Request) {
   try {
     snap = getVotesSnapshot();
   } catch {
-    // No snapshot is an honest empty state, not a 500 — the popup renders
-    // "no recorded votes on file yet".
-    return Response.json({ generatedAt: null, votes: [] });
+    return Response.json({ generatedAt: null, member, holdingStatus: "HOLDING_UNAVAILABLE", votes: [] }, { status: 503 });
   }
 
   const positions = new Map(
@@ -132,32 +128,18 @@ export async function GET(request: Request) {
    * chamber (nobody outside Congress) gets an empty list and the column does
    * not render at all, rather than a header over nothing.
    */
-  const chamber = await chamberForOfficeholder(member);
-  const keyVotes = chamber
-    ? keyVoteRowsFor(chamber, (ref) => {
-        const key = keyVotePositionKey(
-          ref.entryId,
-          chamber,
-          ref.congress,
-          ref.session,
-          ref.rollNumber,
-        );
-        return {
-          // null is a REAL answer here and travels as null. The card says
-          // the gap is ours; it never renders "did not vote" for it.
-          position: keyVotePositionFor(key, member),
-          held: keyVoteRollCallHeld(key),
-          // The party split is refused for these deliberately: we hold
-          // positions for the sitting members only, so any breakdown we
-          // computed would be a fraction of the chamber's and could never
-          // sum to the recorded tally — the same condition the recent-votes
-          // breakdown refuses on.
-          breakdown: null,
-        };
-      })
-    : [];
+  let curated: MemberKeyVotes;
+  try { curated = await keyVotesForMember(member); }
+  catch {
+    return Response.json({ member, holdingStatus: "HOLDING_UNAVAILABLE", error: "We couldn’t load the held key-vote records just now." },
+      { status: 503, headers: { "Cache-Control": "no-store" } });
+  }
+  const { chamber, rows: keyVotes } = curated;
 
   return Response.json({
+    member,
+    holdingStatus: "HELD",
+    count: votes.length,
     generatedAt: snap.generatedAt,
     votes,
     chamber,

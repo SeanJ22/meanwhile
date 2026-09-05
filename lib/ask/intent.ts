@@ -75,7 +75,9 @@ export const ASK_INTENTS: AskIntent[] = [
  * window a question like *"in the last 12 months"* asks for.
  */
 export interface AskTemporal {
-  kind: "NEXT" | "LAST" | "RANGE" | "NONE";
+  kind: "NEXT" | "LAST" | "RANGE" | "NONE" | "DATE";
+  /** A date copied from the reader's question, resolved in the body's own zone. */
+  localDate?: string | null;
   /** For RANGE only: how many months back from now the reader asked about. */
   trailingMonths?: number;
 }

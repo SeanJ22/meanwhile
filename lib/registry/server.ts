@@ -5,6 +5,7 @@ import { join } from "node:path";
 import {
   holdersFor,
   indexByDivision,
+  indexByOfficeholderId,
   stateOcdIdFrom,
   type OfficeholderIndex,
   type PhotoIndex,
@@ -13,7 +14,8 @@ import {
 import { ROSTER_FILES } from "../coverage/artifacts.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
 import { BODY_TERRITORY_FILE, type BodyTerritoryFile } from "./body-territory.ts";
-import { statewideExecutivesFor } from "../officials/statewide-executives.ts";
+import { STATEWIDE_EXECUTIVES, statewideExecutivesFor } from "../officials/statewide-executives.ts";
+import { BODY_ROSTERS, rosterHoldersForBody, rosterMemberReaderDisposition } from "./body-rosters.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
 import { collapsePhotoIndexByPerson } from "../photos/person.ts";
 
@@ -43,6 +45,8 @@ interface Loaded {
   divisionsById: Map<string, Division>;
   registry: Registry;
   officials: OfficeholderIndex;
+  /** Every held person, including people whose divisions are not in our geometry. */
+  officialsById: Map<string, SeatHolder>;
 }
 
 /**
@@ -54,6 +58,16 @@ interface Loaded {
  * too, which is exactly the omission the manifest exists to make impossible.
  */
 const ROSTERS = ROSTER_FILES;
+
+export class RegistryHoldingReadError extends Error {
+  readonly code = "REGISTRY_HOLDING_UNAVAILABLE";
+  readonly holdingPath: string;
+  constructor(holdingPath: string, cause: unknown) {
+    super(`The required canonical registry holding could not be read: ${holdingPath}`, { cause });
+    this.name = "RegistryHoldingReadError";
+    this.holdingPath = holdingPath;
+  }
+}
 
 let cache: Promise<Loaded> | null = null;
 
@@ -120,10 +134,8 @@ async function load(): Promise<Loaded> {
     await readFile(join(root, "lib", "registry", "registry.json"), "utf8"),
   ) as Registry;
 
-  // A missing or unreadable roster degrades to no names rather than failing the
-  // whole coverage answer. The pre-roster copy is still true — it just says
-  // less — whereas a 500 here would take the map's only data dependency down
-  // over a file that is nice to have.
+  // A required roster failure is an OURS loading failure, never an empty roster.
+  // Do not cache a partial registry as if those officials were not held.
   const sets: OfficeholderSet[] = [];
   for (const name of ROSTERS) {
     const fips = /^officeholders-(\d{2})\.json$/.exec(name)?.[1];
@@ -138,7 +150,9 @@ async function load(): Promise<Loaded> {
         ) as OfficeholderSet,
       );
     } catch (error) {
-      console.error(`officeholder roster ${name} could not be read`, error);
+      throw new RegistryHoldingReadError(name === "officeholders-us.json"
+        ? "lib/registry/officeholders-us.json"
+        : `data/states/${state}/officials/${name}`, error);
     }
   }
 
@@ -181,11 +195,8 @@ async function load(): Promise<Loaded> {
   /*
    * **NH233 — the territory file, loaded beside the boundary files.**
    *
-   * A missing or unreadable file degrades to null, which means those bodies
-   * reach no reader — the state they were already in. It does NOT degrade to
-   * an empty answer for the divisions, and it is reported rather than
-   * swallowed: a territory file that silently stopped loading would un-govern
-   * a real district with no symptom, which is the NH232 shape.
+   * This is a required held relationship. Its loading failure must remain
+   * distinguishable from a body having no applicable territorial relationship.
    */
   let territory: BodyTerritoryFile | null = null;
   try {
@@ -206,15 +217,23 @@ async function load(): Promise<Loaded> {
       await readFile(join(root, "data", "states", "az", "geo", "body-territories.geojson"), "utf8"),
     ) as BodyTerritoryFile;
   } catch (error) {
-    console.error(`body territories (${BODY_TERRITORY_FILE}) could not be read`, error);
+    throw new RegistryHoldingReadError(BODY_TERRITORY_FILE, error);
   }
 
+  const officialsById = indexByOfficeholderId(sets, photos);
+  for (const holder of statewideExecutivesFor(STATEWIDE_EXECUTIVES.map((executive) => executive.stateOcdId))) {
+    officialsById.set(holder.id, holder);
+  }
+  for (const roster of BODY_ROSTERS) for (const holder of rosterHoldersForBody(roster.bodyId)) {
+    if (!officialsById.has(holder.id)) officialsById.set(holder.id, holder);
+  }
   return {
     features,
     territory,
     divisionsById: new Map(registry.divisions.map((d) => [d.ocdId, d])),
     registry,
     officials: indexByDivision(sets, photos),
+    officialsById,
   };
 }
 
@@ -305,13 +324,14 @@ export async function divisionsByOcdIds(ocdIds: readonly string[]): Promise<Divi
  * returns null — no link rather than a wrong one.
  */
 export async function seatHolderById(id: string): Promise<SeatHolder | null> {
-  const { officials } = await loaded();
-  for (const holders of officials.values()) {
-    for (const holder of holders) {
-      if (holder.id === id) return holder;
-    }
-  }
-  return null;
+  const rosterIdentity = rosterMemberReaderDisposition(id);
+  if (rosterIdentity?.state === "IDENTITY_UNRESOLVED") return null;
+  return (await loaded()).officialsById.get(rosterIdentity?.canonicalId ?? id) ?? null;
+}
+
+/** Exact named-person answers only; this list asserts no relationship to a reader's location. */
+export async function allSeatHolders(): Promise<SeatHolder[]> {
+  return [...(await loaded()).officialsById.values()];
 }
 
 /**
@@ -323,13 +343,9 @@ export async function seatHolderById(id: string): Promise<SeatHolder | null> {
 export async function partyByOfficeholderId(): Promise<
   Map<string, string | null>
 > {
-  const { officials } = await loaded();
+  const { officialsById } = await loaded();
   const map = new Map<string, string | null>();
-  for (const holders of officials.values()) {
-    for (const holder of holders) {
-      if (!map.has(holder.id)) map.set(holder.id, holder.partyLabel);
-    }
-  }
+  for (const holder of officialsById.values()) map.set(holder.id, holder.partyLabel);
   return map;
 }
 
@@ -348,15 +364,9 @@ export async function partyByOfficeholderId(): Promise<
 export async function chamberForOfficeholder(
   id: string,
 ): Promise<"house" | "senate" | null> {
-  const { officials } = await loaded();
-  for (const holders of officials.values()) {
-    for (const holder of holders) {
-      if (holder.id !== id) continue;
-      if (holder.officeTitle === "U.S. Senator") return "senate";
-      if (holder.officeTitle === "U.S. Representative") return "house";
-      return null;
-    }
-  }
+  const holder = await seatHolderById(id);
+  if (holder?.officeTitle === "U.S. Senator") return "senate";
+  if (holder?.officeTitle === "U.S. Representative") return "house";
   return null;
 }
 

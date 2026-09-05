@@ -2,6 +2,11 @@
 
 import { useRef, useState } from "react";
 
+import { AskAnswerRecords } from "@/components/ask/answer-records";
+import { AskAnswerContacts } from "./answer-contacts";
+import { unresolvedReadLine } from "@/lib/ask/answer";
+import type { AskContact } from "@/lib/ask/contacts";
+import type { EvidenceRecord } from "@/lib/ask/evidence";
 import { sourceLinks } from "@/lib/ask/host";
 import { readBrowserKey } from "@/lib/state/browser-key";
 import { readLocationOriginFor } from "@/lib/state/location-origin";
@@ -56,38 +61,19 @@ import type { AskSubjectRef } from "@/lib/ask/subject";
  * response shape this route returns.
  */
 
-interface GroundedRecord {
-  kind: string;
-  id: string;
-  text: string;
-  sourceUrl?: string | null;
-  sourceOrg?: string | null;
-}
-
 interface GroundedGap {
   whose: "OURS" | "THEIRS";
   statement: string;
 }
 
-interface GroundedContact {
-  id: string;
-  name: string;
-  officeTitle: string;
-  relationship: string;
-  email: string | null;
-  phone: string | null;
-  websiteUrl: string | null;
-  sourceUrl: string | null;
-  sourceOrg: string | null;
-}
-
 interface GroundedReply {
+  denominators?: Record<string, number>;
   mode: string;
   subject?: { kind: string; id: string; name: string; office?: string | null } | null;
   answer?: string | null;
-  records?: GroundedRecord[];
+  records?: EvidenceRecord[];
   gaps?: GroundedGap[];
-  contacts?: GroundedContact[];
+  contacts?: AskContact[];
   mention?: string;
   candidates?: string[];
 }
@@ -313,7 +299,7 @@ export function BallotAsk({
             sentence may not name one of the three.
           */}
           {reply.mode === "UNRESOLVED" && (
-            <p>We don&rsquo;t have anything recorded under &ldquo;{reply.mention}&rdquo;.</p>
+            <p>{unresolvedReadLine(reply)}</p>
           )}
 
           {reply.subject && (
@@ -338,19 +324,7 @@ export function BallotAsk({
             carries everything needed to answer truthfully, and throwing it away
             because `answer` is null is the exact defect class this guards.
           */}
-          {!reply.answer && records.length > 0 && (
-            <ul className="mt-2 list-disc pl-5">
-              {records
-                /* Contacts render in their own block below with the
-                   relationship spelled out; listing them here as well would
-                   print every board member twice. */
-                .filter((r) => r.kind !== "CONTACT")
-                .slice(0, 8)
-                .map((r) => (
-                  <li key={r.id}>{r.text}</li>
-                ))}
-            </ul>
-          )}
+          <AskAnswerRecords records={records} initiallyOpen={!reply.answer} />
 
           {/* Named gaps, each one saying whose gap it is. */}
           {gaps.map((g) => (
@@ -395,28 +369,7 @@ export function BallotAsk({
             people by influence. Each line states the sourced RELATIONSHIP
             between that person and what the reader asked about, and stops.
           */}
-          {(reply.contacts?.length ?? 0) > 0 && (
-            <div className="mt-3" data-ask-contacts={reply.contacts?.length}>
-              <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">
-                Who this is
-              </p>
-              <ul className="mt-1 space-y-0.5">
-                {(reply.contacts ?? []).map((c) => (
-                  <li key={c.id}>
-                    <span className="font-medium">{c.name}</span> — {c.relationship}
-                    {c.email ? (
-                      <>
-                        {" · "}
-                        <a className="underline" href={`mailto:${c.email}`}>
-                          {c.email}
-                        </a>
-                      </>
-                    ) : null}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <AskAnswerContacts contacts={reply.contacts ?? []} />
 
           {sources.length > 0 && (
             <p className="mt-3 text-xs text-[var(--text-muted)]">

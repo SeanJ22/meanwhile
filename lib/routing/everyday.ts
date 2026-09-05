@@ -632,8 +632,13 @@ export function everydayContactsFor(
 ): EverydayContact[] {
   if (!zip) return [];
   return EVERYDAY_CONTACTS.filter(
-    (c) => c.topicId === topicId && c.zips.includes(zip),
+    (c) => readerEligibleEverydayContact(c) && c.topicId === topicId && c.zips.includes(zip),
   );
+}
+
+/** Acquisition or a search snippet is not a verified reader contact. */
+export function readerEligibleEverydayContact(contact: EverydayContact): boolean {
+  return contact.verification === "PAGE_FETCHED";
 }
 
 /** The denominator, stated: topics × zips, split into covered and missed. */

@@ -50,15 +50,7 @@ import { VotingSitesPanel } from "@/components/map/voting-sites-panel";
  * it is named honestly at the point of the link rather than being silently a
  * different behaviour from its neighbour.
  */
-export function WhereToVote({}: {
-  /**
-   * The state's own lookup, for the reader we cannot answer in-app.
-   *
-   * Always rendered, never as a substitute: the in-app panel is the primary
-   * answer and this is the authority's own tool beside it, labelled.
-   */
-  fallback: { label: string; url: string; sourceOrg: string } | null;
-}) {
+export function WhereToVote() {
   const [open, setOpen] = useState(false);
   // No map on this surface, so there is nowhere to drop pins. The callback
   // stays because the shared panel's contract does.
@@ -98,11 +90,10 @@ export function WhereToVote({}: {
         the same destination is the duplicate-entry friction `CLAUDE.md` counts
         as a defect.
 
-        **`fallback` is NOT removed from the contract.** The prop is still what
-        the caller resolves and still what the panel behind the pill falls back
-        to for a jurisdiction we do not hold — item 15's honest handoff is
-        intact, and it is a behaviour rather than a paragraph. What the author
-        struck is the paragraph.
+        The shared panel now reads the canonical lookup registry itself, on
+        both map and ballot, only when its answer is unavailable or cannot
+        resolve the voter's assignment. A discarded caller prop previously
+        promised this fallback without ever rendering it.
       */}
     </div>
   );

@@ -1,0 +1,1017 @@
+[
+  {
+    "family": "body-rosters",
+    "surfaces": [
+      "map",
+      "ballot",
+      "ask"
+    ],
+    "heldTypedRecords": 45,
+    "readerEligibleRecords": 45,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 45,
+    "applicableSurfaceRecordPairs": 90,
+    "observedSurfaceRecordPairs": 90,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "statewide-executives",
+    "surfaces": [
+      "representation",
+      "map",
+      "ballot",
+      "ask"
+    ],
+    "heldTypedRecords": 14,
+    "readerEligibleRecords": 14,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 14,
+    "applicableSurfaceRecordPairs": 49,
+    "observedSurfaceRecordPairs": 49,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "curated-body-identities",
+    "surfaces": [
+      "map",
+      "representation"
+    ],
+    "heldTypedRecords": 259,
+    "readerEligibleRecords": 259,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 259,
+    "applicableSurfaceRecordPairs": 259,
+    "observedSurfaceRecordPairs": 259,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "comment-access",
+    "surfaces": [
+      "map",
+      "ask"
+    ],
+    "heldTypedRecords": 18,
+    "readerEligibleRecords": 18,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 18,
+    "applicableSurfaceRecordPairs": 36,
+    "observedSurfaceRecordPairs": 36,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "area-facts",
+    "surfaces": [
+      "about-area"
+    ],
+    "heldTypedRecords": 27,
+    "readerEligibleRecords": 27,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 27,
+    "applicableSurfaceRecordPairs": 27,
+    "observedSurfaceRecordPairs": 27,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "ballot-navigation",
+    "surfaces": [
+      "ballot"
+    ],
+    "heldTypedRecords": 9,
+    "readerEligibleRecords": 9,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 9,
+    "applicableSurfaceRecordPairs": 9,
+    "observedSurfaceRecordPairs": 9,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "minutes-summaries",
+    "surfaces": [
+      "map",
+      "ask"
+    ],
+    "heldTypedRecords": 2,
+    "readerEligibleRecords": 2,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 2,
+    "applicableSurfaceRecordPairs": 4,
+    "observedSurfaceRecordPairs": 4,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "venue-records",
+    "surfaces": [
+      "meetings",
+      "map"
+    ],
+    "heldTypedRecords": 69,
+    "readerEligibleRecords": 69,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 0,
+    "applicableSurfaceRecordPairs": 0,
+    "observedSurfaceRecordPairs": 0,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "campaign-sites",
+    "surfaces": [
+      "map",
+      "ballot",
+      "representation"
+    ],
+    "heldTypedRecords": 12,
+    "readerEligibleRecords": 12,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 12,
+    "applicableSurfaceRecordPairs": 31,
+    "observedSurfaceRecordPairs": 31,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "everyday-routing",
+    "surfaces": [
+      "civic-routing"
+    ],
+    "heldTypedRecords": 40,
+    "readerEligibleRecords": 40,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 34,
+    "applicableSurfaceRecordPairs": 34,
+    "observedSurfaceRecordPairs": 34,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "sourced-definitions",
+    "surfaces": [
+      "map",
+      "ballot"
+    ],
+    "heldTypedRecords": 77,
+    "readerEligibleRecords": 77,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 8,
+    "applicableSurfaceRecordPairs": 8,
+    "observedSurfaceRecordPairs": 8,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "national-unattributed",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "body-compositions",
+    "surfaces": [
+      "map",
+      "civic-routing"
+    ],
+    "heldTypedRecords": 6,
+    "readerEligibleRecords": 6,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 6,
+    "applicableSurfaceRecordPairs": 6,
+    "observedSurfaceRecordPairs": 6,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "measure-summaries",
+    "surfaces": [
+      "ballot",
+      "ask"
+    ],
+    "heldTypedRecords": 67,
+    "readerEligibleRecords": 67,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 67,
+    "applicableSurfaceRecordPairs": 134,
+    "observedSurfaceRecordPairs": 134,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "notice-summaries",
+    "surfaces": [
+      "map",
+      "ask"
+    ],
+    "heldTypedRecords": 1,
+    "readerEligibleRecords": 1,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 1,
+    "applicableSurfaceRecordPairs": 2,
+    "observedSurfaceRecordPairs": 2,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "state-money",
+    "surfaces": [
+      "ballot",
+      "state-money",
+      "map",
+      "funding",
+      "ask"
+    ],
+    "heldTypedRecords": 422,
+    "readerEligibleRecords": 419,
+    "withheldRecords": 3,
+    "applicableUniqueRecords": 325,
+    "applicableSurfaceRecordPairs": 1320,
+    "observedSurfaceRecordPairs": 1320,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "identity",
+    "surfaces": [
+      "ballot",
+      "state-money",
+      "map",
+      "funding",
+      "ask"
+    ],
+    "heldTypedRecords": 298,
+    "readerEligibleRecords": 295,
+    "withheldRecords": 3,
+    "applicableUniqueRecords": 0,
+    "applicableSurfaceRecordPairs": 0,
+    "observedSurfaceRecordPairs": 0,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "ballot",
+    "surfaces": [
+      "ballot",
+      "ask"
+    ],
+    "heldTypedRecords": 1069,
+    "readerEligibleRecords": 1069,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 1051,
+    "applicableSurfaceRecordPairs": 2053,
+    "observedSurfaceRecordPairs": 2053,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "candidate-corpus",
+    "surfaces": [
+      "positions",
+      "ballot",
+      "ask"
+    ],
+    "heldTypedRecords": 96,
+    "readerEligibleRecords": 49,
+    "withheldRecords": 47,
+    "applicableUniqueRecords": 49,
+    "applicableSurfaceRecordPairs": 147,
+    "observedSurfaceRecordPairs": 147,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "candidate-acquisitions",
+    "surfaces": [
+      "ballot",
+      "state-money"
+    ],
+    "heldTypedRecords": 266,
+    "readerEligibleRecords": 0,
+    "withheldRecords": 266,
+    "applicableUniqueRecords": 0,
+    "applicableSurfaceRecordPairs": 0,
+    "observedSurfaceRecordPairs": 0,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "local-finance",
+    "surfaces": [
+      "ask"
+    ],
+    "heldTypedRecords": 1533,
+    "readerEligibleRecords": 10,
+    "withheldRecords": 1523,
+    "applicableUniqueRecords": 10,
+    "applicableSurfaceRecordPairs": 10,
+    "observedSurfaceRecordPairs": 10,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "campaign-finance-corpus",
+    "surfaces": [
+      "state-money",
+      "ballot"
+    ],
+    "heldTypedRecords": 6474,
+    "readerEligibleRecords": 0,
+    "withheldRecords": 6474,
+    "applicableUniqueRecords": 0,
+    "applicableSurfaceRecordPairs": 0,
+    "observedSurfaceRecordPairs": 0,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "national-unattributed",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "meetings",
+    "surfaces": [
+      "meetings",
+      "agenda",
+      "ask",
+      "map"
+    ],
+    "heldTypedRecords": 811,
+    "readerEligibleRecords": 767,
+    "withheldRecords": 44,
+    "applicableUniqueRecords": 767,
+    "applicableSurfaceRecordPairs": 2207,
+    "observedSurfaceRecordPairs": 2207,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "national-unattributed",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "federal-finance",
+    "surfaces": [
+      "funding",
+      "ballot",
+      "map",
+      "ask"
+    ],
+    "heldTypedRecords": 79,
+    "readerEligibleRecords": 79,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 38,
+    "applicableSurfaceRecordPairs": 118,
+    "observedSurfaceRecordPairs": 118,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "national-unattributed",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "statement-corpus",
+    "surfaces": [
+      "positions",
+      "ask"
+    ],
+    "heldTypedRecords": 32,
+    "readerEligibleRecords": 30,
+    "withheldRecords": 2,
+    "applicableUniqueRecords": 29,
+    "applicableSurfaceRecordPairs": 58,
+    "observedSurfaceRecordPairs": 58,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "national-unattributed",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "congress",
+    "surfaces": [
+      "map",
+      "representation",
+      "ballot"
+    ],
+    "heldTypedRecords": 1074,
+    "readerEligibleRecords": 1074,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 531,
+    "applicableSurfaceRecordPairs": 537,
+    "observedSurfaceRecordPairs": 537,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "ak",
+      "al",
+      "ar",
+      "as",
+      "az",
+      "ca",
+      "co",
+      "ct",
+      "dc",
+      "de",
+      "fl",
+      "ga",
+      "gu",
+      "hi",
+      "ia",
+      "id",
+      "il",
+      "in",
+      "ks",
+      "ky",
+      "la",
+      "ma",
+      "md",
+      "me",
+      "mi",
+      "mn",
+      "mo",
+      "mp",
+      "ms",
+      "mt",
+      "national-unattributed",
+      "nc",
+      "nd",
+      "ne",
+      "nh",
+      "nj",
+      "nm",
+      "nv",
+      "ny",
+      "oh",
+      "ok",
+      "or",
+      "pa",
+      "pr",
+      "ri",
+      "sc",
+      "sd",
+      "tn",
+      "tx",
+      "ut",
+      "va",
+      "vi",
+      "vt",
+      "wa",
+      "wi",
+      "wv",
+      "wy"
+    ]
+  },
+  {
+    "family": "registry",
+    "surfaces": [
+      "map",
+      "representation",
+      "ballot",
+      "meetings"
+    ],
+    "heldTypedRecords": 7080,
+    "readerEligibleRecords": 7080,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 6058,
+    "applicableSurfaceRecordPairs": 6595,
+    "observedSurfaceRecordPairs": 6595,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "ak",
+      "al",
+      "ar",
+      "as",
+      "az",
+      "ca",
+      "co",
+      "ct",
+      "dc",
+      "de",
+      "fl",
+      "ga",
+      "gu",
+      "hi",
+      "ia",
+      "id",
+      "il",
+      "in",
+      "ks",
+      "ky",
+      "la",
+      "ma",
+      "md",
+      "me",
+      "mi",
+      "mn",
+      "mo",
+      "mp",
+      "ms",
+      "mt",
+      "national-unattributed",
+      "nc",
+      "nd",
+      "ne",
+      "nh",
+      "nj",
+      "nm",
+      "nv",
+      "ny",
+      "oh",
+      "ok",
+      "or",
+      "pa",
+      "pr",
+      "ri",
+      "sc",
+      "sd",
+      "tn",
+      "tx",
+      "ut",
+      "va",
+      "vi",
+      "vt",
+      "wa",
+      "wi",
+      "wv",
+      "wy"
+    ]
+  },
+  {
+    "family": "votes",
+    "surfaces": [
+      "votes",
+      "ballot",
+      "ask",
+      "map"
+    ],
+    "heldTypedRecords": 12449,
+    "readerEligibleRecords": 12449,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 12448,
+    "applicableSurfaceRecordPairs": 37715,
+    "observedSurfaceRecordPairs": 37715,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "national-unattributed",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "voting-sites",
+    "surfaces": [
+      "voting-sites",
+      "ballot",
+      "map"
+    ],
+    "heldTypedRecords": 44,
+    "readerEligibleRecords": 44,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 44,
+    "applicableSurfaceRecordPairs": 132,
+    "observedSurfaceRecordPairs": 132,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "geography",
+    "surfaces": [
+      "map",
+      "ballot",
+      "representation",
+      "meetings"
+    ],
+    "heldTypedRecords": 13471,
+    "readerEligibleRecords": 13468,
+    "withheldRecords": 3,
+    "applicableUniqueRecords": 0,
+    "applicableSurfaceRecordPairs": 0,
+    "observedSurfaceRecordPairs": 0,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "ak",
+      "al",
+      "ar",
+      "as",
+      "az",
+      "ca",
+      "co",
+      "ct",
+      "dc",
+      "de",
+      "fl",
+      "ga",
+      "gu",
+      "hi",
+      "ia",
+      "id",
+      "il",
+      "in",
+      "ks",
+      "ky",
+      "la",
+      "ma",
+      "md",
+      "me",
+      "mi",
+      "mn",
+      "mo",
+      "mp",
+      "ms",
+      "mt",
+      "national-unattributed",
+      "nc",
+      "nd",
+      "ne",
+      "nh",
+      "nj",
+      "nm",
+      "nv",
+      "ny",
+      "oh",
+      "ok",
+      "or",
+      "pa",
+      "pr",
+      "ri",
+      "sc",
+      "sd",
+      "tn",
+      "tx",
+      "ut",
+      "va",
+      "vi",
+      "vt",
+      "wa",
+      "wi",
+      "wv",
+      "wy"
+    ]
+  },
+  {
+    "family": "nh-legislative-members",
+    "surfaces": [
+      "ballot"
+    ],
+    "heldTypedRecords": 408,
+    "readerEligibleRecords": 408,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 0,
+    "applicableSurfaceRecordPairs": 0,
+    "observedSurfaceRecordPairs": 0,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "state-officeholders",
+    "surfaces": [
+      "ballot",
+      "map",
+      "representation",
+      "ask"
+    ],
+    "heldTypedRecords": 620,
+    "readerEligibleRecords": 620,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 620,
+    "applicableSurfaceRecordPairs": 887,
+    "observedSurfaceRecordPairs": 887,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "official-actions",
+    "surfaces": [
+      "ballot",
+      "map",
+      "ask"
+    ],
+    "heldTypedRecords": 43,
+    "readerEligibleRecords": 43,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 42,
+    "applicableSurfaceRecordPairs": 126,
+    "observedSurfaceRecordPairs": 126,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "outcomes",
+    "surfaces": [
+      "agenda",
+      "ask",
+      "map"
+    ],
+    "heldTypedRecords": 20,
+    "readerEligibleRecords": 20,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 20,
+    "applicableSurfaceRecordPairs": 60,
+    "observedSurfaceRecordPairs": 60,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "nh",
+      "nj"
+    ]
+  },
+  {
+    "family": "portraits",
+    "surfaces": [
+      "ballot",
+      "map",
+      "representation"
+    ],
+    "heldTypedRecords": 1066,
+    "readerEligibleRecords": 1014,
+    "withheldRecords": 52,
+    "applicableUniqueRecords": 662,
+    "applicableSurfaceRecordPairs": 1344,
+    "observedSurfaceRecordPairs": 1344,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "ak",
+      "al",
+      "ar",
+      "as",
+      "az",
+      "ca",
+      "co",
+      "ct",
+      "dc",
+      "de",
+      "fl",
+      "ga",
+      "gu",
+      "hi",
+      "ia",
+      "id",
+      "il",
+      "in",
+      "ks",
+      "ky",
+      "la",
+      "ma",
+      "md",
+      "me",
+      "mi",
+      "mn",
+      "mo",
+      "mp",
+      "ms",
+      "mt",
+      "nc",
+      "nd",
+      "ne",
+      "nh",
+      "nj",
+      "nm",
+      "nv",
+      "ny",
+      "oh",
+      "ok",
+      "or",
+      "pa",
+      "pr",
+      "ri",
+      "sc",
+      "sd",
+      "tn",
+      "tx",
+      "ut",
+      "va",
+      "vi",
+      "vt",
+      "wa",
+      "wi",
+      "wv",
+      "wy"
+    ]
+  },
+  {
+    "family": "prl",
+    "surfaces": [
+      "ballot",
+      "map"
+    ],
+    "heldTypedRecords": 536,
+    "readerEligibleRecords": 536,
+    "withheldRecords": 0,
+    "applicableUniqueRecords": 530,
+    "applicableSurfaceRecordPairs": 536,
+    "observedSurfaceRecordPairs": 536,
+    "remainingUnprovedSurfaceRecordPairs": 0,
+    "measuredFalseNegativesAfter": 0,
+    "measuredFalsePositivesAfter": 0,
+    "before": "The frozen baseline has unmeasured full-graph reader counts. Report only independently measured before-controls as lower bounds; never replace unknown with zero.",
+    "states": [
+      "az",
+      "national-unattributed",
+      "nh",
+      "nj"
+    ]
+  }
+]

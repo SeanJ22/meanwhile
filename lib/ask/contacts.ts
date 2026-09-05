@@ -40,6 +40,7 @@ import type { EvidenceRecord } from "./evidence.ts";
 import { formatDateLong } from "../text/format-date.ts";
 import { rosterForBody } from "../registry/body-rosters.ts";
 import { representationForDivision } from "../registry/representation.ts";
+import { membersOfBody } from "../registry/body-membership.ts";
 import type { SeatHolder } from "../officials/lookup.ts";
 import { isDivisionsOwnGovernment } from "../officials/division-government.ts";
 import type { BodyDivisionType } from "../officials/body-description.ts";
@@ -65,6 +66,8 @@ export interface AskContact {
   email: string | null;
   phone: string | null;
   websiteUrl: string | null;
+  /** Public mailing address the candidate submitted on the cited filing. */
+  filedAddress?: string | null;
   sourceUrl: string | null;
   sourceOrg: string | null;
   retrievedAt: string | null;
@@ -155,12 +158,10 @@ export function contactsForDivision(ocdId: string, bodyName: string): AskContact
  * Mayor and Council as its membership*. The ban was right; the division
  * question simply arrived through a different door.
  *
- * **So the division's representatives are offered ONLY for the body that IS
- * that division's government**, decided by the registry's own derivation rule
- * (`isDivisionsOwnGovernment`) rather than by a suffix guessed here. For every
- * other body the honest answer is none, and the caller already turns that into
- * a named gap that says whose gap it is: *"We have not recorded who sits on X
- * or how to reach them."* True about us, and silent about them.
+ * The canonical `membersOfBody` selector supplies direct rosters and explicitly
+ * sourced legal aliases, exactly as on the map. A division's representatives
+ * are offered only for the body that is that division's own government. A
+ * neighboring advisory body inherits no contact from that geography.
  *
  * Returning nothing is the conservative direction and it is a REAL answer. The
  * alternative on offer is not "more contacts", it is wrong contacts.
@@ -170,6 +171,22 @@ export function contactsForBody(
   bodyName: string,
 ): AskContact[] {
   const { bodyId, ocdId, divisionType } = body;
+  const composition = membersOfBody(bodyId);
+  if (!composition.unknown) {
+    return composition.members.map((holder): AskContact => ({
+      id: holder.id,
+      name: holder.name,
+      officeTitle: holder.officeTitle,
+      relationship: `${holder.officeTitle} ${isStaff(holder) ? "of" : "on"} ${bodyName}`,
+      basis: isStaff(holder) ? "BODY_STAFF" : "BODY_MEMBER",
+      email: holder.email,
+      phone: holder.phone,
+      websiteUrl: holder.websiteUrl,
+      sourceUrl: composition.authority?.sourceUrl ?? holder.sourceUrl,
+      sourceOrg: composition.authority?.sourceOrg ?? holder.provenance.sourceOrg,
+      retrievedAt: composition.authority?.collectedAt ?? holder.provenance.collectedAt,
+    })).sort((a, b) => a.name.localeCompare(b.name));
+  }
   if (!ocdId || !divisionType) return [];
   /*
    * The cast is to the registry's own vocabulary and it is safe in the only
@@ -275,6 +292,7 @@ export function contactRecord(contact: AskContact): EvidenceRecord {
   const channels: string[] = [];
   if (contact.email) channels.push(`email ${contact.email}`);
   if (contact.phone) channels.push(`phone ${contact.phone}`);
+  if (contact.filedAddress) channels.push(`filed mailing address ${contact.filedAddress}`);
   const tail = channels.length > 0 ? ` Published contact: ${channels.join(", ")}.` : "";
   return {
     kind: "CONTACT",
@@ -285,9 +303,6 @@ export function contactRecord(contact: AskContact): EvidenceRecord {
     retrievedAt: contact.retrievedAt,
   };
 }
-
-/** How many contacts one answer may carry. A directory is not an answer. */
-export const MAX_ASK_CONTACTS = 8;
 
 /**
  * **THE PROVENANCE OF A SOURCED RELATIONSHIP, AS A READER-SAFE LINE.**

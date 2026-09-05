@@ -1,4 +1,5 @@
-import { positionsFor, positionMatchCount } from "@/lib/corpus/positions";
+import { readerPositionsFor } from "@/lib/corpus/reader-positions";
+import { ReaderPersonIdentityError } from "@/lib/identity/reader-person";
 import { unifiedCorpus } from "@/lib/corpus/unified";
 import type { StatementCorpus } from "@/lib/corpus/types";
 
@@ -62,8 +63,9 @@ export async function GET(
 
   let answer;
   try {
-    answer = positionsFor(subject, topic, corpus());
-  } catch {
+    answer = readerPositionsFor(subject, topic, corpus());
+  } catch (error) {
+    if (error instanceof ReaderPersonIdentityError) return Response.json({ error: error.message, holdingStatus: "IDENTITY_UNRESOLVED" }, { status: 409 });
     // A failed read is reported as a failed read. It is never rendered as an
     // absence — "we have not collected this" would be a claim about a person
     // made because a file would not open.
@@ -77,10 +79,7 @@ export async function GET(
     {
       ...answer,
       // Stated N equals rendered rows, and the denominator rides with it.
-      totalMatches:
-        answer.kind === "MATCHED"
-          ? positionMatchCount(subject, topic, corpus())
-          : 0,
+      totalMatches: answer.passages.length,
     },
     {
       status: 200,

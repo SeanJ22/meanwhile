@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **424 open**, 486 resolved.
+- **424 open**, 487 resolved.
 - **73 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
@@ -805,7 +805,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**48 open · 141 resolved.**
+**48 open · 142 resolved.**
 
 ### P1
 

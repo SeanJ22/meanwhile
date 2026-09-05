@@ -1,4 +1,4 @@
-import { governingRosterHoldersForDivision } from "@/lib/registry/body-rosters";
+import { governingRosterHoldersForDivision, rosterGapsForDivision } from "@/lib/registry/body-rosters";
 import { divisionsByOcdIds, seatHoldersForDivision } from "@/lib/registry/server";
 
 /**
@@ -77,6 +77,7 @@ export async function GET(
       divisionType: known?.divisionType ?? null,
       tier: known?.tier ?? null,
       holders,
+      rosterGaps: rosterGapsForDivision(ocdId),
     },
     {
       headers: {

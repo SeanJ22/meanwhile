@@ -235,7 +235,7 @@ export function KeyVotesSection({
   );
 }
 
-function KeyVoteGroupBlock({
+export function KeyVoteGroupBlock({
   chamber,
   rows,
 }: {

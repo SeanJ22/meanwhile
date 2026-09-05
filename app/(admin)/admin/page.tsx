@@ -1,7 +1,7 @@
 /**
  * **THE OWNER CONTROL CENTRE — PILOT HEALTH AS THE FLEET VIEW.**
  * (Session C final, ITEM H, 2026-09-01; rebuilt for the 9.4.26 admin feedback,
- * ADM-3 through ADM-8.)
+ * ADM-3 through ADM-8; the evening pass, ADM-12/16/17/18/19/20/22, 2026-09-05.)
  *
  * Reachable only on `ADMIN_ORIGIN`, only with a valid session — both enforced
  * upstream in `middleware.ts`, which returns 404 for this path on the public
@@ -17,6 +17,15 @@
  * from a failure, and costs with numbers in them. Plain words first; every
  * instrument's own sentence is one disclosure away, never hidden and never
  * leading.
+ *
+ * ## The evening pass: the page acts, and shows what happened
+ *
+ * A decision he records leaves "waiting on you" AT ONCE and moves to a
+ * decided list carrying a three-step receipt — recorded, closed in the
+ * tracker, work opened — each step's state read live from the decision log
+ * (ADM-16). Every gap carries "Add this to the queue", and the queue has a
+ * "Go fix these" (ADM-20). Keys render as names (ADM-12), stamps as Eastern
+ * time (ADM-22), and a gap is "not measured", with no possessive on it (ADM-19).
  *
  * ## Everything here comes from the durable control plane
  *
@@ -50,7 +59,11 @@ import {
   readSnapshot,
   type ReadOutcome,
 } from "@/lib/control-plane/admin-data.ts";
-import { collapseDecisionLog, latestDecisionFor } from "@/lib/control-plane/decision-log.ts";
+import { bytesText, costRowKind, durationText } from "@/lib/control-plane/cost-panel.ts";
+import { collapseDecisionLog } from "@/lib/control-plane/decision-log.ts";
+import { SYNC_CADENCE, receiptHeadline, splitDecided, type DecidedEntry } from "@/lib/control-plane/decision-receipt.ts";
+import { EASTERN_ZONE } from "@/lib/control-plane/eastern-time.ts";
+import { FIX_QUEUE_SUBJECT, GO_FIX_OPTION, fixQueueView, type FixQueueItem } from "@/lib/control-plane/fix-queue.ts";
 import {
   buildFleetView,
   dispatchHistory,
@@ -58,7 +71,6 @@ import {
   type FleetGroupView,
 } from "@/lib/control-plane/fleet-view.ts";
 import {
-  ANSWERED_IN_OWN_WORDS,
   OWNER_ANSWER_MAX_CHARS,
   auditRenderedNumbers,
   checkStatedEqualsRendered,
@@ -70,7 +82,6 @@ import {
   type Held,
   type Measured,
   type OwnerDecisionCard,
-  type OwnerDecisionIntent,
   type OwnerSnapshot,
   type RenderedNumber,
 } from "@/lib/control-plane/owner-surface.ts";
@@ -79,8 +90,26 @@ import { readResearchIntents } from "@/lib/control-plane/research-view.ts";
 import { runnerStanding } from "@/lib/control-plane/runner-standing.ts";
 import { INTENT_NOTE_MAX_CHARS } from "@/lib/control-plane/scheduler/research-policy.ts";
 
+import { BarChart, DayBars, Ring } from "../charts.tsx";
 import { ConsoleNav } from "../console-nav.tsx";
-import { Band, GapNote, HealthScale, HeldNum, Num, Tile, agoText, usd } from "../console-ui.tsx";
+import {
+  Band,
+  DECISION_ROUTE,
+  GapNote,
+  HealthScale,
+  HeldNum,
+  LevelLegend,
+  Name,
+  Num,
+  QueueButton,
+  QueueForm,
+  Said,
+  Tile,
+  When,
+  agoText,
+  usd,
+  usdShort,
+} from "../console-ui.tsx";
 import { DeployFleet } from "./deploy-fleet.tsx";
 
 /**
@@ -95,7 +124,6 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 const INTENT_ROUTE = "/api/admin/research";
-const DECISION_ROUTE = "/api/admin/decision";
 const HERE = "/admin";
 
 function outcomeNote<T>(outcome: ReadOutcome<T>): string | null {
@@ -106,9 +134,17 @@ function outcomeNote<T>(outcome: ReadOutcome<T>): string | null {
  * THE FLEET
  * ------------------------------------------------------------------ */
 
-function FleetGroupCard({ group, nowIso }: { group: FleetGroupView; nowIso: string }) {
+function FleetGroupCard({
+  group,
+  nowIso,
+  candidateNames,
+}: {
+  group: FleetGroupView;
+  nowIso: string;
+  candidateNames: Readonly<Record<string, string>> | undefined;
+}) {
   return (
-    <section className="fleet-card" aria-labelledby={`fleet-${group.key}`}>
+    <section className="fleet-card card" aria-labelledby={`fleet-${group.key}`}>
       <h3 id={`fleet-${group.key}`}>
         {group.name} <span className="fleet-roles">{group.roles.join(" · ")}</span>
       </h3>
@@ -125,8 +161,9 @@ function FleetGroupCard({ group, nowIso }: { group: FleetGroupView; nowIso: stri
           <span className="gap">nowhere yet — no Attempt on record for these roles</span>
         ) : (
           group.deployedAt.map((d) => (
-            <span key={d.label} className="where" title={`${d.attempts} attempt(s)`}>
-              {d.label} · {d.attempts}
+            <span key={d.label} className="where-wrap" title={`${d.attempts} attempt(s)`}>
+              <Name raw={d.label} candidateNames={candidateNames} short pill />
+              <span className="where-count">{d.attempts}</span>
             </span>
           ))
         )}
@@ -135,8 +172,8 @@ function FleetGroupCard({ group, nowIso }: { group: FleetGroupView; nowIso: stri
         <ul className="fleet-latest">
           {group.latest.map((l) => (
             <li key={`${l.role}:${l.at}:${l.subject}`}>
-              {agoText(l.at, nowIso)} · {l.role} · {l.subject}
-              {l.where ? ` (${l.where})` : ""} — {l.outcome}
+              {agoText(l.at, nowIso)} · {l.role} · <Name raw={l.subject} candidateNames={candidateNames} /> —{" "}
+              <span className={`outcome outcome-${l.outcome.toLowerCase()}`}>{l.outcome.toLowerCase()}</span>
             </li>
           ))}
         </ul>
@@ -145,31 +182,31 @@ function FleetGroupCard({ group, nowIso }: { group: FleetGroupView; nowIso: stri
   );
 }
 
+/** Attempts started per Eastern day over the trailing fortnight, from the live Attempts. */
+function attemptsByDay(attempts: readonly { readonly startedAt: string }[], nowIso: string): { label: string; day: string; value: number }[] {
+  const fmt = new Intl.DateTimeFormat("en-CA", { timeZone: EASTERN_ZONE, year: "numeric", month: "2-digit", day: "2-digit" });
+  const short = new Intl.DateTimeFormat("en-US", { timeZone: EASTERN_ZONE, month: "short", day: "numeric" });
+  const now = Date.parse(nowIso);
+  const days: { label: string; day: string; value: number }[] = [];
+  for (let i = 13; i >= 0; i -= 1) {
+    const at = new Date(now - i * 86_400_000);
+    days.push({ day: fmt.format(at), label: short.format(at), value: 0 });
+  }
+  const byDay = new Map(days.map((d) => [d.day, d]));
+  for (const a of attempts) {
+    const t = Date.parse(a.startedAt);
+    if (!Number.isFinite(t)) continue;
+    const hit = byDay.get(fmt.format(new Date(t)));
+    if (hit) hit.value += 1;
+  }
+  return days;
+}
+
 /* ------------------------------------------------------------------ *
  * THE DECISION QUEUE
  * ------------------------------------------------------------------ */
 
-function decidedSentence(d: OwnerDecisionIntent): string {
-  const what =
-    d.chosenOption === ANSWERED_IN_OWN_WORDS
-      ? `you answered: "${d.ownerAnswer ?? ""}"`
-      : `you chose "${d.chosenOption}"${d.ownerAnswer ? ` and wrote: "${d.ownerAnswer}"` : ""}`;
-  const became =
-    d.state === "CANONICALIZED"
-      ? `applied${d.canonicalRef ? ` as ${d.canonicalRef}` : ""}`
-      : d.state === "REJECTED_BY_GATES"
-        ? `refused by the gates${d.refusedReason ? `: ${d.refusedReason}` : ""}`
-        : "recorded here; it reaches the tracker at the next sync and this card leaves the queue then";
-  return `Decided ${d.decidedAt.slice(0, 16).replace("T", " ")}: ${what} — ${became}.`;
-}
-
-function DecisionCard({
-  card,
-  decided,
-}: {
-  card: OwnerDecisionCard;
-  decided: OwnerDecisionIntent | null;
-}) {
+function DecisionCard({ card }: { card: OwnerDecisionCard }) {
   const kind = decisionCardKind(card);
   const meta = [
     card.priority,
@@ -178,7 +215,7 @@ function DecisionCard({
     card.blockedDescendants === null ? null : `${card.blockedDescendants} waiting behind it`,
   ].filter((s): s is string => s !== null);
   return (
-    <section className={`queue-card ${kind.toLowerCase().replace("_", "-")}`} id={`row-${card.rowId}`}>
+    <section className={`queue-card card ${kind.toLowerCase().replace("_", "-")}`} id={`row-${card.rowId}`}>
       <div className="queue-head">
         <span className="queue-id">{card.rowId}</span>
         <h3>{card.title}</h3>
@@ -209,38 +246,128 @@ function DecisionCard({
             <summary>Why no machine can decide it</summary>
             <p>{card.whyNoMachineCanDecide}</p>
           </details>
+          <div className="options">
+            {card.options.map((o) => (
+              <form method="post" action={DECISION_ROUTE} key={o.option}>
+                <input type="hidden" name="subjectId" value={card.rowId} />
+                <input type="hidden" name="chosenOption" value={o.option} />
+                <input type="hidden" name="consequenceShown" value={o.consequence} />
+                <input type="hidden" name="returnTo" value={HERE} />
+                <button type="submit" className="option">
+                  {o.option}
+                  <span className="consequence">{o.consequence}</span>
+                </button>
+              </form>
+            ))}
+            {kind === "DECISION" && (
+              <form method="post" action={DECISION_ROUTE} className="own-words">
+                <input type="hidden" name="subjectId" value={card.rowId} />
+                <input type="hidden" name="returnTo" value={HERE} />
+                <label>
+                  Or answer in your own words
+                  <textarea name="ownerAnswer" maxLength={OWNER_ANSWER_MAX_CHARS} />
+                </label>
+                <button type="submit" className="primary">
+                  Record my answer
+                </button>
+              </form>
+            )}
+          </div>
         </>
       )}
+    </section>
+  );
+}
 
-      {decided ? (
-        <p className="decided">{decidedSentence(decided)}</p>
-      ) : kind === "BLOCKED_WHILE" ? null : (
-        <div className="options">
-          {card.options.map((o) => (
-            <form method="post" action={DECISION_ROUTE} key={o.option}>
-              <input type="hidden" name="subjectId" value={card.rowId} />
-              <input type="hidden" name="chosenOption" value={o.option} />
-              <input type="hidden" name="consequenceShown" value={o.consequence} />
-              <button type="submit">
-                {o.option}
-                <span className="consequence">{o.consequence}</span>
-              </button>
-            </form>
+/** A decided row: the receipt the owner asked for — recorded, in the tracker, work opened. */
+function DecidedCard({ entry }: { entry: DecidedEntry }) {
+  const { card, decision, steps } = entry;
+  const title = card?.title ?? decision.subjectTitle ?? decision.subjectId;
+  return (
+    <section className="queue-card card decided-card" id={`row-${decision.subjectId}`}>
+      <div className="queue-head">
+        <span className="queue-id">{decision.subjectId}</span>
+        <h3>{title}</h3>
+        <span className={`chip receipt-${steps.every((s) => s.state === "DONE") ? "done" : steps.some((s) => s.state === "REFUSED") ? "refused" : "waiting"}`}>
+          {receiptHeadline(steps)}
+        </span>
+      </div>
+      <p className="queue-meta">
+        Decided <When iso={decision.decidedAt} />
+        {card ? ` · ${card.priority}` : ""}
+      </p>
+      <ol className="receipt">
+        {steps.map((s) => (
+          <li key={s.key} className={`receipt-step step-${s.state.toLowerCase()}`}>
+            <i className="receipt-mark" aria-hidden="true" />
+            <span>
+              <strong>{s.label}</strong> — {s.says}
+            </span>
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
+function FixQueue({ items, counts, lastGo }: { items: readonly FixQueueItem[]; counts: ReturnType<typeof fixQueueView>["counts"]; lastGo: ReturnType<typeof fixQueueView>["lastGo"] }) {
+  const stateWords: Record<FixQueueItem["state"], string> = {
+    QUEUED: "queued — waiting for you to send the queue",
+    SENT: "sent — a tracker row opens at the next sync",
+    OPENED: "opened for a session",
+    REFUSED: "refused by the sync",
+  };
+  return (
+    <section className="fix-queue card" id="fix-queue" aria-labelledby="fix-queue-heading">
+      <div className="queue-head">
+        <h3 id="fix-queue-heading">Fix queue — {items.length}</h3>
+        <span className="chip">
+          {counts.queued} queued · {counts.sent} sent · {counts.opened} opened{counts.refused > 0 ? ` · ${counts.refused} refused` : ""}
+        </span>
+      </div>
+      <p className="note">
+        Every gap on the console carries <em>Add this to the queue</em>. <strong>Go fix these</strong> sends
+        everything queued: the next sync opens one tracker row per gap, in the section a session works
+        from, and each row is listed here once it exists.{" "}
+        {lastGo ? (
+          <>
+            Last sent <When iso={lastGo.decidedAt} />.
+          </>
+        ) : (
+          "Nothing has been sent yet."
+        )}
+      </p>
+      {items.length === 0 ? (
+        <p className="note">The queue is empty. Add a gap from anywhere on the console.</p>
+      ) : (
+        <ul className="fix-items">
+          {items.map((i) => (
+            <li key={i.subjectId} className={`fix-item fix-${i.state.toLowerCase()}`}>
+              <i className="receipt-mark" aria-hidden="true" />
+              <span>
+                <strong>{i.where}</strong> — {i.says}
+                <small>
+                  {stateWords[i.state]} · added <When iso={i.queuedAt} />
+                  {i.openedWork.length > 0 ? ` · ${i.openedWork.map((w) => `${w.id} — ${w.title}`).join("; ")}` : ""}
+                  {i.refusedReason ? ` · ${i.refusedReason}` : ""}
+                </small>
+              </span>
+            </li>
           ))}
-          {kind === "DECISION" && (
-            <form method="post" action={DECISION_ROUTE} className="own-words">
-              <input type="hidden" name="subjectId" value={card.rowId} />
-              <label>
-                Or answer in your own words
-                <textarea name="ownerAnswer" maxLength={OWNER_ANSWER_MAX_CHARS} />
-              </label>
-              <button type="submit" className="primary">
-                Record my answer
-              </button>
-            </form>
-          )}
-        </div>
+        </ul>
       )}
+      <form method="post" action={DECISION_ROUTE} className="go-fix">
+        <input type="hidden" name="subjectId" value={FIX_QUEUE_SUBJECT} />
+        <input type="hidden" name="chosenOption" value={GO_FIX_OPTION} />
+        <input type="hidden" name="consequenceShown" value={`${counts.queued} queued gap(s) sent for a session to fix`} />
+        <input type="hidden" name="returnTo" value={HERE} />
+        <button type="submit" className="primary" disabled={counts.queued === 0}>
+          {GO_FIX_OPTION}
+        </button>
+        <span className="note">
+          {counts.queued === 0 ? "Nothing queued to send." : `Sends ${counts.queued} queued gap${counts.queued === 1 ? "" : "s"}; ${SYNC_CADENCE}.`}
+        </span>
+      </form>
     </section>
   );
 }
@@ -289,6 +416,7 @@ export default async function AdminPage() {
   const nowIso = new Date().toISOString();
   const intentLog = intentsOut.kind === "HELD" ? intentsOut.value : [];
   const decisions = decisionsOut.kind === "HELD" ? decisionsOut.value : [];
+  const candidateNames = snapshot?.candidateNames;
 
   // The compact, act-on-it projection of pilot health (pure; changes presentation,
   // never the health truth). GREEN/AMBER/RED/UNKNOWN + one reason + three cards.
@@ -298,13 +426,22 @@ export default async function AdminPage() {
     return reading ? plainContract(card, reading) : null;
   });
   const fleet = fleetOut.kind === "HELD" ? buildFleetView({ nowIso, ...fleetOut.value }) : null;
+  const perDay = fleetOut.kind === "HELD" ? attemptsByDay(fleetOut.value.attempts, nowIso) : null;
   const deployments = dispatchHistory(intentLog);
   const standing = runnerStanding(heartbeatOut.kind === "HELD" ? heartbeatOut.value : null, intentLog, nowIso);
   const cards = snapshot ? snapshot.decisionCards : [];
-  const decisionCards = cards.filter((c) => decisionCardKind(c) === "DECISION");
-  const acknowledgeCards = cards.filter((c) => decisionCardKind(c) === "ACKNOWLEDGE");
-  const blockedCards = cards.filter((c) => decisionCardKind(c) === "BLOCKED_WHILE");
   const collapsedDecisions = collapseDecisionLog(decisions);
+
+  /*
+   * ADM-16: a card with a recorded decision is DECIDED and leaves "waiting on
+   * you" at once; what the sync has done since is the receipt on the decided
+   * card. ADM-20: queued gaps are their own list.
+   */
+  const { waiting, decided } = splitDecided(cards, collapsedDecisions);
+  const decisionCards = waiting.filter((c) => decisionCardKind(c) === "DECISION");
+  const acknowledgeCards = waiting.filter((c) => decisionCardKind(c) === "ACKNOWLEDGE");
+  const blockedCards = waiting.filter((c) => decisionCardKind(c) === "BLOCKED_WHILE");
+  const queue = fixQueueView(collapsedDecisions);
 
   /* ---------------------------------------------------------------- *
    * THE PAGE'S AUDIT OF ITSELF.
@@ -329,6 +466,11 @@ export default async function AdminPage() {
       numbers.push({ label: "fleet", value: m.value, denominator: m.denominator, contract: m.contract });
     }
   }
+  if (perDay && fleet) {
+    for (const d of perDay) {
+      numbers.push({ label: `attempts on ${d.day}`, value: d.value, denominator: fleet.totalAttempts, contract: "Attempts started on this Eastern day, of every Attempt on record" });
+    }
+  }
   if (snapshot) {
     for (const row of snapshot.obligationsByState) {
       numbers.push({ label: `obligations ${row.state}`, value: row.count.value, denominator: row.count.denominator, contract: row.count.contract });
@@ -345,6 +487,9 @@ export default async function AdminPage() {
     for (const c of snapshot.costByRole) push(`cost by role ${c.key}`, c.usd);
     for (const c of snapshot.costByModel) push(`cost by model ${c.key}`, c.usd);
     for (const c of snapshot.cacheHitRateByCaller) push(`cache hit rate ${c.callerKey}`, c.hitRate);
+    for (const d of snapshot.spendByDay ?? []) {
+      numbers.push({ label: `spend on ${d.day}`, value: d.usd, denominator: Math.max(snapshot.costSummary?.measuredUsd ?? d.usd, d.usd), contract: "measured dollars recorded on this Eastern day, of all measured dollars in the ledger" });
+    }
   }
   const numberAudit = auditRenderedNumbers(numbers);
 
@@ -352,8 +497,10 @@ export default async function AdminPage() {
   claims.push({
     label: "decision cards by kind",
     stated: cards.length,
-    rendered: decisionCards.length + acknowledgeCards.length + blockedCards.length,
+    rendered: decisionCards.length + acknowledgeCards.length + blockedCards.length + decided.filter((d) => d.card !== null).length,
   });
+  claims.push({ label: "decided", stated: decided.length, rendered: decided.length });
+  claims.push({ label: "fix queue", stated: queue.items.length, rendered: queue.items.length });
   if (fleet) claims.push({ label: "fleet groups", stated: 5, rendered: fleet.groups.length });
   claims.push({ label: "deployments", stated: deployments.length, rendered: deployments.length });
   if (digestsOut.kind === "HELD") {
@@ -382,10 +529,16 @@ export default async function AdminPage() {
   const cacheLine = renderCacheObservation(cacheOut.kind === "HELD" ? cacheOut.value : null);
   const heartbeat = heartbeatOut.kind === "HELD" ? heartbeatOut.value : null;
   const costSummary = snapshot?.costSummary;
+  const spendRows = (snapshot?.costByRole ?? []).filter((c) => c.usd.held && c.usd.value.value > 0);
+  const freeRows = (snapshot?.costByRole ?? []).filter((c) => costRowKind(c) === "FREE_BY_DESIGN");
+  const unmeasuredRows = (snapshot?.costByRole ?? []).filter((c) => costRowKind(c) === "UNMEASURED");
+  const spendByDay = snapshot?.spendByDay ?? [];
+  const dayShort = new Intl.DateTimeFormat("en-US", { timeZone: "UTC", month: "short", day: "numeric" });
 
   return (
     <main className="admin console-page">
       {nav}
+      <QueueForm returnTo={HERE} />
 
       {/* 1 — PILOT HEALTH, plain, with the scale */}
       <h1>
@@ -402,7 +555,7 @@ export default async function AdminPage() {
               const p = plain[i];
               const reading = snapshot.contracts.find((c) => c.contract === card.contract);
               return (
-                <div className={`ph-card ph-l-${card.level}`} key={card.contract}>
+                <div className={`ph-card card ph-l-${card.level}`} key={card.contract}>
                   <h3>
                     {card.contract}
                     <span className="ph-chip">{card.headline}</span>
@@ -410,10 +563,10 @@ export default async function AdminPage() {
                   {p && (
                     <>
                       <p className="ph-reason">
-                        <strong>{p.status}</strong> {p.why}
+                        <strong>{p.status}</strong> <Said text={p.why} />
                       </p>
                       <p className="ph-next">
-                        <strong>Next:</strong> {p.next}
+                        <strong>Next:</strong> <Said text={p.next} />
                       </p>
                       <p className="ph-meta">{p.what}</p>
                     </>
@@ -424,17 +577,26 @@ export default async function AdminPage() {
                   </p>
                   <details className="ph-evidence">
                     <summary>Instrument detail</summary>
-                    <p className="note">{card.reason}</p>
+                    <p className="note">
+                      <Said text={card.reason} />
+                    </p>
                     {reading && (
                       <p className="note">
                         Proof class {reading.proofClass}; run {reading.runSha ? reading.runSha.slice(0, 8) : "unrecorded"}{" "}
-                        {reading.runAt ? `at ${reading.runAt}` : ""}.{" "}
+                        {reading.runAt ? (
+                          <>
+                            at <When iso={reading.runAt} />
+                          </>
+                        ) : (
+                          ""
+                        )}
+                        .{" "}
                         {reading.denominator.held ? (
                           <>
                             Denominator: <Num m={reading.denominator.value} />.
                           </>
                         ) : (
-                          <GapNote gap={reading.denominator.gap} />
+                          <GapNote gap={reading.denominator.gap} where={`Pilot health · ${card.contract}`} returnTo={HERE} />
                         )}
                       </p>
                     )}
@@ -444,7 +606,7 @@ export default async function AdminPage() {
             })}
           </div>
           <p className="note">
-            Published {snapshot.publishedAt} by {snapshot.publisher}
+            Last updated <When iso={snapshot.publishedAt} /> by {snapshot.publisher}
             {snapshot.publishedFromSha ? ` at ${snapshot.publishedFromSha.slice(0, 8)}` : ""}. The runner
             republishes this after every cycle while it is running.
           </p>
@@ -460,6 +622,7 @@ export default async function AdminPage() {
         <a href="/admin/research">Instrument detail</a> has every Attempt and every number behind
         these.
       </p>
+      <LevelLegend />
       <DeployFleet returnTo={HERE} maxChars={INTENT_NOTE_MAX_CHARS} />
       {fleet ? (
         <>
@@ -473,9 +636,15 @@ export default async function AdminPage() {
               : ""}
             .
           </p>
+          {perDay && (
+            <DayBars
+              days={perDay.map((d) => ({ label: d.label, value: d.value }))}
+              caption={`Attempts started per day, last 14 days (${perDay.reduce((n, d) => n + d.value, 0)} of ${fleet.totalAttempts} on record)`}
+            />
+          )}
           <div className="fleet">
             {fleet.groups.map((g) => (
-              <FleetGroupCard key={g.key} group={g} nowIso={nowIso} />
+              <FleetGroupCard key={g.key} group={g} nowIso={nowIso} candidateNames={candidateNames} />
             ))}
           </div>
         </>
@@ -497,7 +666,7 @@ export default async function AdminPage() {
               {d.status === "HONORED" ? (
                 <span>
                   <span className="state-green">Dispatched</span> {agoText(d.honoredAt, nowIso)}
-                  {d.honoredBy ? ` by ${d.honoredBy}` : ""}: {d.detail}
+                  {d.honoredBy ? ` by ${d.honoredBy}` : ""}: <Said text={d.detail} />
                 </span>
               ) : (
                 <span className="state-amber">
@@ -515,21 +684,23 @@ export default async function AdminPage() {
 
       {/* 3 — THE RUNNER */}
       <h2>Runner</h2>
-      <div className={`runner-card l-${standing.level}`}>
+      <div className={`runner-card card l-${standing.level}`}>
         <p>
           <Band level={standing.level}>{standing.headline}</Band>
         </p>
-        <p>{standing.detail}</p>
+        <p>
+          <Said text={standing.detail} />
+        </p>
         {outcomeNote(heartbeatOut) && <p className="note">{outcomeNote(heartbeatOut)}</p>}
         {heartbeat && (
           <p className="note">
-            Last cycle {heartbeat.lastCycleStartedAt ?? "—"} → {heartbeat.lastCycleFinishedAt ?? "—"}; next due{" "}
+            Last cycle <When iso={heartbeat.lastCycleStartedAt} /> → <When iso={heartbeat.lastCycleFinishedAt} />; next due{" "}
             {/*
               NOT "not scheduled". A null `nextCycleDueAt` means the runner did
               not RECORD a next-due time, and the runner not recording one is not
               evidence that nothing is scheduled.
             */}
-            {heartbeat.nextCycleDueAt ?? "not recorded in this heartbeat"}; at SHA{" "}
+            {heartbeat.nextCycleDueAt ? <When iso={heartbeat.nextCycleDueAt} /> : "not recorded in this heartbeat"}; at SHA{" "}
             {heartbeat.testedSha ? heartbeat.testedSha.slice(0, 8) : "unrecorded"}; host {heartbeat.host}.
           </p>
         )}
@@ -565,6 +736,7 @@ export default async function AdminPage() {
                 : "freshness debt"
             }
             held={snapshot.freshnessDebtRows}
+            where="Runner · freshness debt"
           />
           <Tile figure={String(snapshot.incidents.length)} caption="open incidents by root cause" />
           <Tile
@@ -578,8 +750,11 @@ export default async function AdminPage() {
           <h3>Obligations by state</h3>
           <p className="fleet-where">
             {snapshot.obligationsByState.map((r) => (
-              <span key={r.state} className="where" title={r.count.contract}>
-                {r.state} · {r.count.value} of {r.count.denominator}
+              <span key={r.state} className="where-wrap" title={r.count.contract}>
+                <Name raw={r.state} pill short />
+                <span className="where-count">
+                  {r.count.value} of {r.count.denominator}
+                </span>
               </span>
             ))}
           </p>
@@ -590,8 +765,11 @@ export default async function AdminPage() {
           <h3>Obligations by provider</h3>
           <p className="fleet-where">
             {snapshot.obligationsByProvider.map((r) => (
-              <span key={r.provider} className="where" title={r.count.contract}>
-                {r.provider} · {r.count.value} of {r.count.denominator}
+              <span key={r.provider} className="where-wrap" title={r.count.contract}>
+                <span className="where">{r.provider.replace(/-/g, " ")}</span>
+                <span className="where-count">
+                  {r.count.value} of {r.count.denominator}
+                </span>
               </span>
             ))}
           </p>
@@ -603,7 +781,7 @@ export default async function AdminPage() {
           <ul>
             {snapshot.incidents.map((i) => (
               <li key={`${i.cause}:${i.target}`}>
-                {i.cause} at {i.target} — {i.obligationsAffected} obligation(s),
+                {i.cause.replace(/_/g, " ").toLowerCase()} at <Name raw={i.target} candidateNames={candidateNames} /> — {i.obligationsAffected} obligation(s),
                 {i.oldestHours === null ? " age unknown" : ` oldest ${Math.round(i.oldestHours)} h`}
               </li>
             ))}
@@ -612,22 +790,23 @@ export default async function AdminPage() {
       )}
 
       {/* 4 — DECISIONS */}
-      <h2>Decisions waiting on you — {cards.length}</h2>
+      <h2 id="decisions">Decisions waiting on you — {waiting.length}</h2>
       <p className="note">
         {decisionCards.length} need a decision, {acknowledgeCards.length} need only a read, and{" "}
-        {blockedCards.length} are machine-checked walls. Pick an option or answer in your own words;
-        the answer is recorded here at once and carried into the tracker at the next sync, where the
-        row closes and the work it implies is opened for a session.
+        {blockedCards.length} are machine-checked walls. Pick an option or answer in your own words.
+        The answer is recorded at once and the card moves to <a href="#decided">Decided</a> below,
+        where each step shows as it lands: recorded here, closed in the tracker in your name, and the
+        work it implies opened for a session. {SYNC_CADENCE[0].toUpperCase() + SYNC_CADENCE.slice(1)}.
       </p>
       {outcomeNote(decisionsOut) && <p className="note">{outcomeNote(decisionsOut)}</p>}
       {decisionCards.map((card) => (
-        <DecisionCard key={card.rowId} card={card} decided={latestDecisionFor(decisions, card.rowId)} />
+        <DecisionCard key={card.rowId} card={card} />
       ))}
       {acknowledgeCards.length > 0 && (
         <>
           <h3>For your information — {acknowledgeCards.length}</h3>
           {acknowledgeCards.map((card) => (
-            <DecisionCard key={card.rowId} card={card} decided={latestDecisionFor(decisions, card.rowId)} />
+            <DecisionCard key={card.rowId} card={card} />
           ))}
         </>
       )}
@@ -635,25 +814,26 @@ export default async function AdminPage() {
         <>
           <h3>Blocked while — {blockedCards.length}</h3>
           {blockedCards.map((card) => (
-            <DecisionCard key={card.rowId} card={card} decided={null} />
+            <DecisionCard key={card.rowId} card={card} />
           ))}
         </>
       )}
-      {collapsedDecisions.length > 0 && (
-        <details className="ph-evidence">
-          <summary>Decisions recorded — {collapsedDecisions.length}</summary>
-          <ul>
-            {collapsedDecisions.map((d) => (
-              <li key={d.intentId}>
-                {d.subjectId} · {decidedSentence(d)}
-              </li>
-            ))}
-          </ul>
-        </details>
+
+      <h2 id="decided">Decided — {decided.length}</h2>
+      <p className="note" id="recorded">
+        What became of each answer you recorded, step by step. A card stays here after its row has left
+        the queue, so the receipt outlives the card.
+      </p>
+      {decided.length === 0 ? (
+        <p className="note">Nothing decided yet. The first answer you record appears here at once.</p>
+      ) : (
+        decided.map((entry) => <DecidedCard key={entry.decision.intentId} entry={entry} />)
       )}
 
+      <FixQueue items={queue.items} counts={queue.counts} lastGo={queue.lastGo} />
+
       {/* 5 — COST */}
-      <h2>Cost</h2>
+      <h2 id="cost">Cost</h2>
       {snapshot && (
         <>
           <p className="cost-summary">
@@ -665,36 +845,101 @@ export default async function AdminPage() {
               ) : (
                 <span>
                   <strong>{usd(costSummary.measuredUsd)}</strong> measured across {costSummary.attemptsMeasured} attempt
-                  {costSummary.attemptsMeasured === 1 ? "" : "s"}; {costSummary.attemptsUnmeasured} more reported no cost
-                  (deterministic work, not free by assumption).
+                  {costSummary.attemptsMeasured === 1 ? "" : "s"}; {costSummary.attemptsUnmeasured} more ran without a paid model
+                  {unmeasuredRows.length === 0 ? " ($0 by design, not a gap)" : ""}.
+                  {freeRows.length > 0 && (
+                    <>
+                      {" "}
+                      Free by design: {freeRows.map((r) => r.key).join(", ")}.
+                    </>
+                  )}
+                  {unmeasuredRows.length > 0 && (
+                    <>
+                      {" "}
+                      Not measured: {unmeasuredRows.map((r) => r.key).join(", ")}.
+                    </>
+                  )}
                 </span>
               )
             ) : (
               <span className="gap">This snapshot predates the cost ledger read; republish to see totals.</span>
             )}
           </p>
+          <div className="chart-row">
+            {spendRows.length > 0 && (
+              <BarChart
+                caption="Spend by role — measured dollars"
+                rows={spendRows.map((c) => ({
+                  label: c.key,
+                  value: c.usd.held ? c.usd.value.value : 0,
+                  max: c.usd.held ? c.usd.value.denominator : 0,
+                  shown: c.usd.held ? usd(c.usd.value.value) : "—",
+                  hint: `${c.attemptsMeasured} measured attempt${c.attemptsMeasured === 1 ? "" : "s"}`,
+                }))}
+              />
+            )}
+            {spendByDay.length > 0 && (
+              <BarChart
+                caption="Spend by day — last 14 days"
+                rows={spendByDay.map((d) => ({
+                  label: dayShort.format(new Date(`${d.day}T12:00:00Z`)),
+                  value: d.usd,
+                  shown: usdShort(d.usd),
+                  hint: `${d.attempts} attempt${d.attempts === 1 ? "" : "s"}`,
+                }))}
+              />
+            )}
+            {snapshot.deterministicShare.held && (
+              <Ring
+                value={snapshot.deterministicShare.value.value}
+                total={snapshot.deterministicShare.value.denominator}
+                label="deterministic share of dispatches"
+                shown={`${Math.round((snapshot.deterministicShare.value.value / Math.max(snapshot.deterministicShare.value.denominator, 1)) * 100)}%`}
+              />
+            )}
+            {snapshot.cacheHitRateByCaller
+              .filter((c) => c.hitRate.held)
+              .map((c) => (
+                <Ring
+                  key={c.callerKey}
+                  value={c.hitRate.held ? c.hitRate.value.value : 0}
+                  total={c.hitRate.held ? c.hitRate.value.denominator : 1}
+                  label={`cache hit rate · ${c.callerKey.replace(/ \(.*\)$/, "")}`}
+                  shown={`${c.hitRate.held ? Math.round((c.hitRate.value.value / Math.max(c.hitRate.value.denominator, 1)) * 100) : 0}%`}
+                />
+              ))}
+          </div>
           <table className="cost">
             <thead>
               <tr>
                 <th>By caller role</th>
                 <th className="n">Spend</th>
                 <th className="n">Attempts measured / not</th>
+                <th>Also measured</th>
               </tr>
             </thead>
             <tbody>
               {snapshot.costByRole.length === 0 && (
                 <tr>
-                  <td colSpan={3} className="gap">not read — republish the snapshot to fill this table.</td>
+                  <td colSpan={4} className="gap">not read — republish the snapshot to fill this table.</td>
                 </tr>
               )}
               {snapshot.costByRole.map((c) => (
-                <tr key={c.key}>
-                  <td>{c.key}</td>
+                <tr key={c.key} className={`cost-${costRowKind(c).toLowerCase().replace(/_/g, "-")}`}>
+                  <td>
+                    {c.key}
+                    {c.meaning && <div className="note">{c.meaning}</div>}
+                  </td>
                   <td className="n">
-                    <HeldNum h={c.usd} format={usd} />
+                    {costRowKind(c) === "FREE_BY_DESIGN" ? <span className="free">$0 by design</span> : <HeldNum h={c.usd} format={usd} where={`Cost · ${c.key}`} returnTo={HERE} />}
                   </td>
                   <td className="n">
                     {c.attemptsMeasured ?? "—"} / {c.attemptsUnmeasured ?? "—"}
+                  </td>
+                  <td className="note">
+                    {c.nonDollar && c.nonDollar.entries > 0
+                      ? `${c.nonDollar.requests} request${c.nonDollar.requests === 1 ? "" : "s"} · ${bytesText(c.nonDollar.bytes)} · ${durationText(c.nonDollar.durationMs)}`
+                      : "—"}
                   </td>
                 </tr>
               ))}
@@ -715,10 +960,13 @@ export default async function AdminPage() {
                 </tr>
               )}
               {snapshot.costByModel.map((c) => (
-                <tr key={c.key}>
-                  <td>{c.key}</td>
+                <tr key={c.key} className={`cost-${costRowKind(c).toLowerCase().replace(/_/g, "-")}`}>
+                  <td>
+                    {c.key}
+                    {c.meaning && <div className="note">{c.meaning}</div>}
+                  </td>
                   <td className="n">
-                    <HeldNum h={c.usd} format={usd} />
+                    {costRowKind(c) === "FREE_BY_DESIGN" ? <span className="free">$0 by design</span> : <HeldNum h={c.usd} format={usd} where={`Cost · ${c.key}`} returnTo={HERE} />}
                   </td>
                   <td className="n">
                     {c.attemptsMeasured ?? "—"} / {c.attemptsUnmeasured ?? "—"}
@@ -739,14 +987,14 @@ export default async function AdminPage() {
                 <tr key={c.callerKey}>
                   <td>{c.callerKey}</td>
                   <td className="n">
-                    <HeldNum h={c.hitRate} />
+                    <HeldNum h={c.hitRate} where={`Cost · cache hit rate · ${c.callerKey}`} returnTo={HERE} />
                   </td>
                 </tr>
               ))}
               <tr>
                 <td>Deterministic share of dispatches</td>
                 <td className="n">
-                  <HeldNum h={snapshot.deterministicShare} />
+                  <HeldNum h={snapshot.deterministicShare} where="Cost · deterministic share" returnTo={HERE} />
                 </td>
               </tr>
               <tr>
@@ -758,7 +1006,7 @@ export default async function AdminPage() {
                       <span className="denom"> per record over {snapshot.costPerVerifiedRecord.value.denominator} verified</span>
                     </span>
                   ) : (
-                    <GapNote gap={snapshot.costPerVerifiedRecord.gap} />
+                    <GapNote gap={snapshot.costPerVerifiedRecord.gap} where="Cost · cost per verified record" returnTo={HERE} />
                   )}
                 </td>
               </tr>
@@ -772,17 +1020,25 @@ export default async function AdminPage() {
         claim about our RECORD, and it is only honest if the recording path is
         wired. If it is not, we have observed nothing — not an absence.
       */}
-      <p className={`note ${cacheLine.state === "OBSERVED" ? "state-green" : ""}`}>{cacheLine.says}</p>
+      <p className={`note ${cacheLine.state === "OBSERVED" ? "state-green" : ""}`}>
+        <Said text={cacheLine.says} />
+        {cacheLine.state !== "OBSERVED" && <QueueButton where="Cost · organic prod-ask cache read" says={cacheLine.says} returnTo={HERE} compact />}
+      </p>
       {outcomeNote(cacheOut) && <p className="note">{outcomeNote(cacheOut)}</p>}
 
-      {/* 6 — READER SUITE BY ZIP */}
+      {/* 6 — READER SUITE BY ZIP (ADM-18: say what it is, or one line) */}
       <h2>
-        Reader suite by ZIP —{" "}
-        {snapshot && snapshot.zipRows.held ? `${snapshot.zipRows.value.length} ZIP(s)` : "no grid"}
+        Reader suite by ZIP
+        {snapshot && snapshot.zipRows.held ? ` — ${snapshot.zipRows.value.length} ZIP(s)` : ""}
       </h2>
+      <p className="note">
+        The reader suite asks the live site the questions a resident would ask about a pilot ZIP and
+        scores each answer green, red or not evaluable; this table would show that score per ZIP, which
+        is how a ZIP earns the right to be called ready.
+      </p>
       {snapshot && !snapshot.zipRows.held && (
-        <p>
-          <GapNote gap={snapshot.zipRows.gap} />
+        <p className="note">
+          <strong>Not available yet</strong> — <GapNote gap={snapshot.zipRows.gap} where="Reader suite by ZIP" returnTo={HERE} />
         </p>
       )}
       {snapshot?.zipRows.held && (
@@ -815,7 +1071,7 @@ export default async function AdminPage() {
       {snapshot && (
         <p>
           Latest folder swept:{" "}
-          {snapshot.intakeFolder.held ? <code>{snapshot.intakeFolder.value}</code> : <GapNote gap={snapshot.intakeFolder.gap} />}
+          {snapshot.intakeFolder.held ? <code>{snapshot.intakeFolder.value}</code> : <GapNote gap={snapshot.intakeFolder.gap} where="Owner intake" returnTo={HERE} />}
           {" · found "}
           <HeldNum h={snapshot.intakeItemsFound} />
           {" · processed "}
@@ -828,14 +1084,14 @@ export default async function AdminPage() {
       {digestsOut.kind === "HELD" && digestsOut.value[0] && (
         <details className="ph-evidence">
           <summary>
-            Latest digest — {digestsOut.value[0].headline}, written {digestsOut.value[0].writtenAt} ·{" "}
+            Latest digest — {digestsOut.value[0].headline}, written <When iso={digestsOut.value[0].writtenAt} /> ·{" "}
             {digestsOut.value.length} recorded
           </summary>
           <pre>{digestsOut.value[0].lines.join("\n")}</pre>
           <ul>
             {digestsOut.value.map((d) => (
               <li key={d.digestId}>
-                {d.writtenAt} — {d.headline}
+                <When iso={d.writtenAt} /> — {d.headline}
               </li>
             ))}
           </ul>
@@ -844,7 +1100,8 @@ export default async function AdminPage() {
 
       <hr />
       <p className="note">
-        {numberAudit.detail} {countAudit.detail} Read at {nowIso}.
+        {numberAudit.detail} {countAudit.detail} Read at <When iso={nowIso} />. Names are the reader map&rsquo;s
+        colours by level; a key&rsquo;s raw form is on hover.
         {hasSession ? "" : " Session cookie absent — this render should not have been reached."}
       </p>
     </main>

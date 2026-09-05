@@ -40,6 +40,8 @@ import {
   verifySession,
 } from "@/lib/control-plane/admin-auth.ts";
 import { appendDecisionIntent, openControlPlane } from "@/lib/control-plane/admin-data.ts";
+import { consoleReturnPath } from "@/lib/control-plane/console-paths.ts";
+import { ADD_TO_QUEUE_OPTION, parseFixField } from "@/lib/control-plane/fix-queue.ts";
 import {
   ANSWERED_IN_OWN_WORDS,
   OWNER_ANSWER_MAX_CHARS,
@@ -72,9 +74,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 
   const form = await request.formData();
-  const subjectId = String(form.get("subjectId") ?? "").trim();
-  const chosenOption = String(form.get("chosenOption") ?? "").trim();
-  const consequenceShown = String(form.get("consequenceShown") ?? "").trim();
+  /*
+   * ADM-20 (9.4.26 evening): a queue button carries the gap as one `fix`
+   * value ("where — what it said") and the subject and consequence are
+   * derived here, so the button can be phrasing content inside a sentence.
+   */
+  const fix = parseFixField(String(form.get("fix") ?? ""));
+  const subjectId = fix ? fix.subjectId : String(form.get("subjectId") ?? "").trim();
+  const chosenOption = fix ? ADD_TO_QUEUE_OPTION : String(form.get("chosenOption") ?? "").trim();
+  const consequenceShown = fix ? fix.consequenceShown : String(form.get("consequenceShown") ?? "").trim();
   /*
    * ADM-4 (9.4.26): the owner may answer in his own words instead of, or as
    * well as, picking an option. Whitespace is normalised and the length is
@@ -132,5 +140,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: "not recorded", detail: wrote.detail }, { status: 500 });
   }
 
-  return NextResponse.redirect(new URL("/admin", request.url), 303);
+  /*
+   * Where to land after the record (ADM-20, the 9.4.26 evening feedback): the
+   * "Add this to the queue" button sits beside a gap on any console view, and
+   * the owner should come back to the page he was reading. The destination is
+   * validated against the console's own paths — never an arbitrary URL out
+   * of the form body — and falls back to the decision queue.
+   */
+  const destination = consoleReturnPath(String(form.get("returnTo") ?? ""), "/admin");
+  return NextResponse.redirect(new URL(`${destination}#recorded`, request.url), 303);
 }

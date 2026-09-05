@@ -6,9 +6,9 @@
       "reason": "Not a claim about data. `why` is a REJECTION CLASS from middleware and this is the prompt shown when there is no rejection to explain — the owner simply arrived at the login. It asserts nothing about any record."
     },
     {
-      "file": "app/(admin)/admin/page.tsx",
-      "text": "not recorded in this heartbeat",
-      "reason": "The FIX for a prior `not scheduled` default, recorded rather than removed because the sweep matches any sentence-shaped fallback. A null nextCycleDueAt means the heartbeat did not carry one; the wording attributes the gap to our record and never claims the scheduler has nothing due."
+      "file": "app/(admin)/admin/research/worker-fleet-panel.tsx",
+      "text": "No — nothing here needs a decision from you.",
+      "reason": "Not an absence. `needsYou` is null only when no shown attempt's work item is in an owner-gated state (AWAITING_OWNER, AUTHOR_DECISION_REQUIRED, RECORDS_REQUEST_REQUIRED, HUMAN_INTERACTION_REQUIRED) — a measured fact about the states on record, derived by roleLead from the same readback the table beneath renders, so the sentence and the table cannot disagree. It is the line the owner asked for in ADM-10 (\"if nothing needs him, say that in the first line so he can move on\") and claims nothing about any record's content; when a work item IS waiting on him the same slot names it."
     },
     {
       "file": "components/ballot/candidate-card.tsx",

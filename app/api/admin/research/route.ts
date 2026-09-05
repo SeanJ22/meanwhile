@@ -22,6 +22,7 @@ import {
   verifySession,
 } from "@/lib/control-plane/admin-auth.ts";
 import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
+import { consoleReturnPath } from "@/lib/control-plane/console-paths.ts";
 import {
   appendResearchIntent,
   buildResearchIntent,
@@ -72,8 +73,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
   // Where to land after the record: the page the form came from, from a
   // closed list — never an arbitrary URL out of the form body.
-  const returnTo = String(form.get("returnTo") ?? "");
-  const destination = RETURN_PATHS.includes(returnTo) ? returnTo : "/admin/research";
+  // ADM-15 (9.4.26 evening): "Deploy fleet here" on a readiness row returns to that state's page.
+  const destination = consoleReturnPath(String(form.get("returnTo") ?? ""), "/admin/research");
 
   const opened = await openControlPlane();
   if (!opened.ok) {
@@ -91,6 +92,3 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   return NextResponse.redirect(new URL(destination, request.url), 303);
 }
-
-/** The pages an intent form may return to. A closed list, by design. */
-const RETURN_PATHS: readonly string[] = ["/admin", "/admin/research"];

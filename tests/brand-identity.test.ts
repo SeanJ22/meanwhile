@@ -232,7 +232,15 @@ test("the Ask positioning token is set on its cluster from initialized state", (
 });
 
 test("every var(--token) reference resolves to a declared token", () => {
-  const css = readFileSync(CSS, "utf8");
+  /*
+   * Two theme sources, not one. The reader's tokens live in `app/globals.css`;
+   * the owner control centre carries its OWN dark and light blocks in
+   * `app/(admin)/layout.tsx` (the Lumen Edge pass, ADM-21, 2026-09-05), and
+   * keeps them out of the reader stylesheet on purpose — the console is not
+   * the product. A token declared in either place resolves; one declared in
+   * neither is the defect this guard exists for.
+   */
+  const css = readFileSync(CSS, "utf8") + "\n" + readFileSync(join(ROOT, "app", "(admin)", "layout.tsx"), "utf8");
   const declared = new Set<string>();
   for (const m of css.matchAll(/(^|[;{\s])(--[a-zA-Z0-9_-]+)\s*:/g)) declared.add(m[2]);
 

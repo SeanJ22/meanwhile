@@ -58,10 +58,12 @@ import {
   CLOSING_RESOLUTIONS,
   DASHBOARD_OPENER,
   DELETIONS_JSON,
+  FIX_OPENER,
   OPENED_JSON,
   OWNER_DECISIONS_JSON,
   dashboardCloser,
   planDeletions,
+  planFixQueue,
   planOwnerDecisions,
   RESOLVED_CSV,
   ROOT,
@@ -690,11 +692,34 @@ function planDashboardDecisions({ working, resolved, sections }) {
   const decisions = Array.isArray(file?.intents) ? file.intents : [];
   const plan = planOwnerDecisions({ working, resolved, decisions, registry: REGISTRY });
   const minted = mintRows(plan.followUps, { working, resolved, sections, label: DASHBOARD_OPENER });
-  return { decisions, plan, minted };
+  /*
+   * ADM-20: the gaps he queued and sent with "Go fix these" open as rows too,
+   * minted through the SAME validation, after the decision follow-ups so the
+   * ids do not collide, and attributed to the fix queue.
+   */
+  const fixes = planFixQueue({ working, resolved, decisions });
+  const mintedFixes = mintRows(fixes.opens.map((o) => o.row), {
+    working,
+    resolved: [...resolved, ...minted.added],
+    sections,
+    label: FIX_OPENER,
+  });
+  return { decisions, plan, minted, fixes, mintedFixes };
 }
 
+/**
+ * `--only=dashboard` (ADM-16, the 9.4.26 evening feedback): apply the owner's
+ * recorded dashboard decisions and queued fixes WITHOUT importing the
+ * workbook. The standing runner runs this after every cycle
+ * (`scripts/apply-owner-decisions.mts`); importing his workbook edits is a
+ * session's deliberate act at a session's start, not something a machine does
+ * every twenty minutes while he may be typing in it.
+ */
+const ONLY_DASHBOARD = process.argv.includes("--only=dashboard");
+
 function modeMove(working, resolved, sections) {
-  const book = readWorkbookRows();
+  const book = ONLY_DASHBOARD ? null : readWorkbookRows();
+  if (ONLY_DASHBOARD) console.log("\n  --only=dashboard: the workbook is not imported on this run");
   const refusals = [];
   const notes = [];
   const resolutionAuthor = {};
@@ -749,8 +774,16 @@ function modeMove(working, resolved, sections) {
    * decides, on that path, whether the row may move.
    */
   const dashboard = planDashboardDecisions({ working, resolved, sections });
-  const dashboardRows = dashboard ? dashboard.minted.added : [];
+  const dashboardRows = dashboard ? [...dashboard.minted.added, ...dashboard.mintedFixes.added] : [];
   if (dashboard) {
+    refusals.push(...dashboard.mintedFixes.refusals);
+    console.log(`\nfix queue (ADM-20) — ${OWNER_DECISIONS_JSON}`);
+    console.log(
+      `  ${dashboard.fixes.go ? `newest "Go fix these" ${dashboard.fixes.go.intentId} at ${dashboard.fixes.go.decidedAt}` : 'no "Go fix these" recorded yet'}` +
+        `; rows opened ${dashboard.mintedFixes.added.length ? dashboard.mintedFixes.added.map((r) => `${r.ID} (${r.Title})`).join(", ") : "none"}` +
+        `; waiting ${dashboard.fixes.waiting.length}` +
+        (dashboard.fixes.refusals.length ? `; refused ${dashboard.fixes.refusals.length}: ${dashboard.fixes.refusals.map((r) => r.line).join("; ")}` : ""),
+    );
     for (const close of dashboard.plan.closes) {
       const row = working.find((r) => (r.ID ?? "").trim() === close.id);
       if (!(row.Resolution ?? "").trim()) row.Resolution = "Resolved";
@@ -1056,16 +1089,29 @@ session closes (RULING 37): ${sessionCloses.join(", ")}`);
   if (dashboardRows.length) {
     const ledgerPath = join(ROOT, OPENED_JSON);
     const ledger = readLedger();
-    ledger.push({
-      session: DASHBOARD_OPENER,
-      opened: STAMP,
-      ids: dashboardRows.map((r) => r.ID),
-      dashboardDecisions: dashboard.plan.closes
-        .filter((c) => c.followUp)
-        .map((c) => ({ actsOn: c.id, intentId: c.intentId })),
-    });
+    if (dashboard.minted.added.length) {
+      ledger.push({
+        session: DASHBOARD_OPENER,
+        opened: STAMP,
+        ids: dashboard.minted.added.map((r) => r.ID),
+        dashboardDecisions: dashboard.plan.closes
+          .filter((c) => c.followUp)
+          .map((c) => ({ actsOn: c.id, intentId: c.intentId })),
+      });
+    }
+    // ADM-20: fix rows are claimed under their own session, so attribution stays exact.
+    if (dashboard.mintedFixes.added.length) {
+      ledger.push({
+        session: FIX_OPENER,
+        opened: STAMP,
+        ids: dashboard.mintedFixes.added.map((r) => r.ID),
+        fixQueue: dashboard.fixes.opens.map((o) => ({ subjectId: o.subjectId, intentId: o.intentId, sentBy: o.goIntentId })),
+      });
+    }
     writeFileSync(ledgerPath, JSON.stringify(ledger, null, 2) + "\n", "utf8");
-    console.log(`\n  written  ${OPENED_JSON} (${dashboardRows.length} id(s) claimed by ${DASHBOARD_OPENER})`);
+    console.log(
+      `\n  written  ${OPENED_JSON} (${dashboard.minted.added.length} id(s) claimed by ${DASHBOARD_OPENER}, ${dashboard.mintedFixes.added.length} by ${FIX_OPENER})`,
+    );
   }
 
   writeFileSync(join(ROOT, WORKING_CSV), writeStore(nextWorking), "utf8");

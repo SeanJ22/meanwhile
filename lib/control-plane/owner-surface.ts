@@ -572,6 +572,21 @@ export interface OwnerDecisionIntent {
    * `assertAggregateOnly` because on a READER record they mean something else.
    */
   readonly ownerAnswer?: string | null;
+  /**
+   * What the tracker did with it (ADM-16, the 9.4.26 evening feedback): the
+   * follow-up row(s) the applier opened for this decision, recorded on the
+   * `#resolved` twin by `scripts/canonicalize-owner-decisions.mts` from the
+   * working store, so the receipt on the card can name them. Absent on a
+   * record written before the field existed; empty when the choice implied
+   * no work.
+   */
+  readonly openedWork?: readonly { readonly id: string; readonly title: string }[];
+  /**
+   * The tracker row's title at the moment it closed, carried on the twin so
+   * the decided list can still name the row after its card has left the
+   * published snapshot. Absent before the field existed.
+   */
+  readonly subjectTitle?: string | null;
 }
 
 /** The longest answer the dashboard accepts in the owner's own words. */
@@ -657,6 +672,29 @@ export function decisionCardKind(card: OwnerDecisionCard): OwnerDecisionCardKind
 }
 
 /**
+ * One cost row as published (ADM-6; the kind, the non-dollar measures and the
+ * meaning added for ADM-17). The optional fields are absent on a snapshot
+ * published before they existed, and the page treats absent as unknown.
+ */
+export interface OwnerCostRow {
+  readonly key: string;
+  readonly usd: Held<Measured>;
+  readonly attemptsMeasured?: number;
+  readonly attemptsUnmeasured?: number;
+  /** MEASURED, FREE_BY_DESIGN (ran without a paid model) or UNMEASURED (a model ran and reported no dollars). */
+  readonly kind?: "MEASURED" | "FREE_BY_DESIGN" | "UNMEASURED";
+  /** What a deterministic role does carry: requests, bytes and time. */
+  readonly nonDollar?: {
+    readonly requests: number;
+    readonly bytes: number;
+    readonly durationMs: number;
+    readonly entries: number;
+  };
+  /** One plain sentence about the row. */
+  readonly meaning?: string;
+}
+
+/**
  * The whole control centre, as one durable aggregate the runner publishes.
  *
  * One record rather than seven, because the panels must agree with each other:
@@ -693,18 +731,8 @@ export interface OwnerSnapshot {
    * Panel 5 — cost. Rows carry their measured/unmeasured attempt counts (ADM-6,
    * 9.4.26); the counts are absent on a snapshot published before then.
    */
-  readonly costByRole: readonly {
-    readonly key: string;
-    readonly usd: Held<Measured>;
-    readonly attemptsMeasured?: number;
-    readonly attemptsUnmeasured?: number;
-  }[];
-  readonly costByModel: readonly {
-    readonly key: string;
-    readonly usd: Held<Measured>;
-    readonly attemptsMeasured?: number;
-    readonly attemptsUnmeasured?: number;
-  }[];
+  readonly costByRole: readonly OwnerCostRow[];
+  readonly costByModel: readonly OwnerCostRow[];
   readonly cacheHitRateByCaller: readonly { readonly callerKey: string; readonly hitRate: Held<Measured> }[];
   readonly deterministicShare: Held<Measured>;
   readonly costPerVerifiedRecord: Held<Measured>;
@@ -732,6 +760,22 @@ export interface OwnerSnapshot {
   readonly intakeItemsFound: Held<Measured>;
   readonly intakeItemsProcessed: Held<Measured>;
   readonly intakeUnidentifiable: Held<Measured>;
+
+  /**
+   * Candidate slug → the name as filed, from the committed candidate cards
+   * (ADM-12, the 9.4.26 evening feedback). The page renders a candidacy key
+   * by this map and NEVER re-derives a person's name from a slug. Absent on a
+   * snapshot published before the field existed; a slug not in the map
+   * renders as the office and the slug, honestly.
+   */
+  readonly candidateNames?: Readonly<Record<string, string>>;
+
+  /**
+   * Measured spend by Eastern calendar day over the trailing fortnight
+   * (ADM-17): the cost ledger's measured usd, summed per day, with the
+   * attempt count beside it. Absent before the field existed.
+   */
+  readonly spendByDay?: readonly { readonly day: string; readonly usd: number; readonly attempts: number }[];
 }
 
 /**

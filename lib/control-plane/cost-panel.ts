@@ -1,5 +1,7 @@
 /**
- * **THE COST PANEL, WITH NUMBERS IN IT.** (ADM-6, 9.4.26 admin feedback.)
+ * **THE COST PANEL, WITH NUMBERS IN IT.** (ADM-6, 9.4.26 admin feedback;
+ * free-by-design rows and non-dollar measures added for the evening pass,
+ * ADM-17.)
  *
  * The owner's words: "there are no numbers next to cost, by caller role, by
  * model, cache hits. None of it really makes sense." The section rendered
@@ -14,13 +16,34 @@
  * joins them into the five panel figures. PURE: records in, `Held<Measured>`
  * rows out, so a test pins every row without a store.
  *
- * Where a figure is genuinely not measured, the row is a short named gap —
- * one line, whose gap it is — not a paragraph. The section is for reading
- * costs, not for reading about why costs cannot be read.
+ * ## Free by design is not a gap (ADM-17)
+ *
+ * The evening pass found 5 of 7 roles reading "not measured", and the owner
+ * was surprised only two were measured. The ledger had told the truth badly:
+ * a role whose every attempt ran deterministic code has no dollar cost BY
+ * DESIGN, and rendering that as a gap invited a hunt for a measurement that
+ * does not exist. So a role is now one of three things, decided from the
+ * attempts' own worker identity, never assumed:
+ *
+ *   MEASURED        model attempts reported dollars — a real figure
+ *   FREE_BY_DESIGN  every attempt ran without a paid model — $0, measured in
+ *                   time, requests and bytes instead, which ARE recorded
+ *   UNMEASURED      model attempts exist and reported no dollars — a gap of
+ *                   ours, named as such, one short line
  */
 import type { CostEntry } from "./cost.ts";
 import { gap, held, measured, type Held, type Measured } from "./owner-surface.ts";
 import type { CacheHitRate, ShareTrend } from "./research-metrics.ts";
+
+export type CostRowKind = "MEASURED" | "FREE_BY_DESIGN" | "UNMEASURED";
+
+export interface NonDollarMeasures {
+  readonly requests: number;
+  readonly bytes: number;
+  readonly durationMs: number;
+  /** Entries that carried at least one of the three. */
+  readonly entries: number;
+}
 
 export interface CostRow {
   readonly key: string;
@@ -28,6 +51,12 @@ export interface CostRow {
   /** Attempts whose usd was reported / not reported. Never coerced to zero. */
   readonly attemptsMeasured: number;
   readonly attemptsUnmeasured: number;
+  /** Absent on a snapshot published before ADM-17. */
+  readonly kind?: CostRowKind;
+  /** The measures a deterministic role does carry. Absent before ADM-17. */
+  readonly nonDollar?: NonDollarMeasures;
+  /** One plain sentence about the row. Absent before ADM-17. */
+  readonly meaning?: string;
 }
 
 export interface CostPanel {
@@ -66,23 +95,80 @@ export function modelKeyOf(worker: { readonly version: string; readonly provider
   return /^claude-/i.test(worker.version) || worker.provider === "anthropic" ? worker.version : NO_MODEL_KEY;
 }
 
+/**
+ * The kind of a published cost row, tolerating a snapshot written before the
+ * field existed: the old publisher's gap sentence for a deterministic role
+ * said in so many words that the work "runs without a paid model", and that
+ * sentence is the fact the kind now names.
+ */
+export function costRowKind(row: { readonly kind?: CostRowKind; readonly usd: Held<Measured> }): CostRowKind {
+  if (row.kind) return row.kind;
+  if (row.usd.held) return "MEASURED";
+  return /without a paid model/.test(row.usd.gap.says) ? "FREE_BY_DESIGN" : "UNMEASURED";
+}
+
+function nonDollarOf(entries: readonly CostEntry[]): NonDollarMeasures {
+  let requests = 0;
+  let bytes = 0;
+  let durationMs = 0;
+  let carrying = 0;
+  for (const e of entries) {
+    const r = e.cost.requestCount ?? 0;
+    const b = e.cost.bytesFetched ?? 0;
+    const d = e.cost.durationMs ?? 0;
+    if (r > 0 || b > 0 || d > 0) carrying += 1;
+    requests += Number.isFinite(r) ? r : 0;
+    bytes += Number.isFinite(b) ? b : 0;
+    durationMs += Number.isFinite(d) ? d : 0;
+  }
+  return { requests, bytes, durationMs, entries: carrying };
+}
+
 function usdRow(
   key: string,
   entries: readonly CostEntry[],
   grandTotal: number | null,
+  modelOf: ReadonlyMap<string, string>,
 ): CostRow {
   const measuredCount = entries.filter((e) => typeof e.cost.usd === "number").length;
   const unmeasuredCount = entries.length - measuredCount;
   const total = measuredCount === 0 ? null : entries.reduce((n, e) => n + (e.cost.usd ?? 0), 0);
+  const modelAttempts = entries.filter((e) => (modelOf.get(e.attemptId) ?? NO_MODEL_KEY) !== NO_MODEL_KEY).length;
+  const nonDollar = nonDollarOf(entries);
+  const n = entries.length;
+  const plural = n === 1 ? "" : "s";
+
   if (total === null || grandTotal === null) {
+    if (modelAttempts === 0 && key !== PROD_ASK_KEY) {
+      // Every attempt ran without a paid model: $0 by design, not a gap.
+      return {
+        key,
+        usd: held(
+          measured(
+            0,
+            grandTotal ?? 0,
+            "this work runs without a paid model, so its dollar cost is $0 by design; it is measured in time, requests and bytes instead",
+            LEDGER,
+          ),
+        ),
+        attemptsMeasured: measuredCount,
+        attemptsUnmeasured: unmeasuredCount,
+        kind: "FREE_BY_DESIGN",
+        nonDollar,
+        meaning: `$0 by design — ${n} attempt${plural} ran deterministic code with no paid model. Not a gap: there is nothing in dollars to measure here.`,
+      };
+    }
     return {
       key,
       usd: gap(
         "OURS",
-        `not measured — ${entries.length} attempt${entries.length === 1 ? "" : "s"}, none reported a dollar cost (this work runs without a paid model).`,
+        `${modelAttempts} model attempt${modelAttempts === 1 ? "" : "s"} of ${n} reported no dollar cost.`,
       ),
       attemptsMeasured: measuredCount,
       attemptsUnmeasured: unmeasuredCount,
+      kind: "UNMEASURED",
+      nonDollar,
+      meaning: `${modelAttempts} attempt${modelAttempts === 1 ? "" : "s"} used a paid model and reported no dollar figure, so this cost is unmeasured — not zero, and not free.`,
     };
   }
   return {
@@ -97,6 +183,12 @@ function usdRow(
     ),
     attemptsMeasured: measuredCount,
     attemptsUnmeasured: unmeasuredCount,
+    kind: "MEASURED",
+    nonDollar,
+    meaning:
+      unmeasuredCount === 0
+        ? `Every one of the ${n} attempt${plural} reported its dollar cost.`
+        : `${measuredCount} of ${n} attempt${plural} reported a dollar cost; ${unmeasuredCount} reported none${modelAttempts <= measuredCount ? " (deterministic steps, $0 by design)" : ""}.`,
   };
 }
 
@@ -107,16 +199,16 @@ function round(usd: number): number {
 export function buildCostPanel(input: CostPanelInput): CostPanel {
   const measuredEntries = input.costs.filter((e) => typeof e.cost.usd === "number");
   const grandTotal = measuredEntries.length === 0 ? null : measuredEntries.reduce((n, e) => n + (e.cost.usd ?? 0), 0);
+  const modelOf = new Map(input.attempts.map((a) => [a.id, modelKeyOf(a.worker)]));
 
   /* ---- by role, from the ledger's own role field ---- */
   const byRole = new Map<string, CostEntry[]>();
   for (const e of input.costs) byRole.set(e.role, [...(byRole.get(e.role) ?? []), e]);
   const costByRole = [...byRole.entries()]
     .sort((a, b) => a[0].localeCompare(b[0]))
-    .map(([role, entries]) => usdRow(role, entries, grandTotal));
+    .map(([role, entries]) => usdRow(role, entries, grandTotal, modelOf));
 
   /* ---- by model, joined through the Attempt's worker version ---- */
-  const modelOf = new Map(input.attempts.map((a) => [a.id, modelKeyOf(a.worker)]));
   const byModel = new Map<string, CostEntry[]>();
   for (const e of input.costs) {
     const key = modelOf.get(e.attemptId) ?? "(attempt not on record)";
@@ -124,7 +216,7 @@ export function buildCostPanel(input: CostPanelInput): CostPanel {
   }
   const costByModel = [...byModel.entries()]
     .sort((a, b) => a[0].localeCompare(b[0]))
-    .map(([model, entries]) => usdRow(model, entries, grandTotal));
+    .map(([model, entries]) => usdRow(model, entries, grandTotal, modelOf));
 
   /* ---- cache hit rate: model workers from the cycle metrics; the reader path is a named gap ---- */
   const cacheRows = (input.cacheByRole ?? []).map((c) => {
@@ -133,7 +225,7 @@ export function buildCostPanel(input: CostPanelInput): CostPanel {
       callerKey: `${c.role} (control-plane model workers)`,
       hitRate:
         denominator === 0
-          ? gap<Measured>("OURS", `not measured — ${c.attempts} attempt${c.attempts === 1 ? "" : "s"} reported no input tokens.`)
+          ? gap<Measured>("OURS", `${c.attempts} attempt${c.attempts === 1 ? "" : "s"} reported no input tokens.`)
           : held(
               measured(
                 c.cacheRead,
@@ -150,7 +242,7 @@ export function buildCostPanel(input: CostPanelInput): CostPanel {
       callerKey: PROD_ASK_KEY,
       hitRate: gap<Measured>(
         "OURS",
-        "not measured yet — the reader Ask path records no cache observation to the control plane.",
+        "the reader Ask path records no cache observation to the control plane yet.",
       ),
     },
   ];
@@ -159,7 +251,7 @@ export function buildCostPanel(input: CostPanelInput): CostPanel {
   const share = input.share?.thisCycle ?? null;
   const deterministicShare: Held<Measured> =
     share === null
-      ? gap("OURS", "not measured yet — no cycle has recorded its lane split.")
+      ? gap("OURS", "no cycle has recorded its lane split yet.")
       : share.deterministic + share.model === 0
         ? gap("OURS", "the newest cycle dispatched nothing, so there is no split to show.")
         : held(
@@ -174,9 +266,9 @@ export function buildCostPanel(input: CostPanelInput): CostPanel {
   /* ---- cost per verified record ---- */
   const costPerVerifiedRecord: Held<Measured> =
     input.verifiedRecords === null
-      ? gap("OURS", "not measured yet — the promotion pipeline could not be read.")
+      ? gap("OURS", "the promotion pipeline could not be read.")
       : grandTotal === null
-        ? gap("OURS", "not measured — no attempt in the ledger reported a dollar cost.")
+        ? gap("OURS", "no attempt in the ledger reported a dollar cost.")
         : input.verifiedRecords === 0
           ? gap("OURS", "no record has reached VERIFIED yet; a cost over zero records is not a number.")
           : held({
@@ -202,4 +294,19 @@ export function buildCostPanel(input: CostPanelInput): CostPanel {
       entries: input.costs.length,
     },
   };
+}
+
+/** "3.2 MB", "412 KB", "9 B". */
+export function bytesText(bytes: number): string {
+  if (bytes >= 1_048_576) return `${(bytes / 1_048_576).toFixed(1)} MB`;
+  if (bytes >= 1024) return `${Math.round(bytes / 1024)} KB`;
+  return `${bytes} B`;
+}
+
+/** "2 h 14 min", "38 min", "12 s". */
+export function durationText(ms: number): string {
+  const s = Math.round(ms / 1000);
+  if (s >= 3600) return `${Math.floor(s / 3600)} h ${Math.round((s % 3600) / 60)} min`;
+  if (s >= 60) return `${Math.round(s / 60)} min`;
+  return `${s} s`;
 }

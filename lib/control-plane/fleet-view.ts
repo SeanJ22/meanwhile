@@ -23,6 +23,7 @@
  * state in OCD form), never typed. PURE: canonical records in, view out.
  */
 import type { Attempt, WorkerRole } from "./attempt.ts";
+import { displayNameOf } from "./display-name.ts";
 import { measured, type Measured } from "./owner-surface.ts";
 import { US_STATES } from "./readiness/catalog.ts";
 import type { RouteTask } from "./route-task.ts";
@@ -189,7 +190,8 @@ export function buildFleetView(input: FleetViewInput): FleetView {
         : `${working === 0 ? "None working right now" : `${plural(working, "attempt")} open right now`}; ` +
           `${plural(pending, "task")} waiting of ${tasks.length} registered; ` +
           `${completed} of ${attempts.length} recorded attempts finished` +
-          (deployedAt.length > 0 ? `; worked in ${deployedAt.slice(0, 3).map((d) => d.label).join(", ")}` : "") +
+          // ADM-12: a place is named, never keyed, in the sentence the owner reads.
+          (deployedAt.length > 0 ? `; worked in ${deployedAt.slice(0, 3).map((d) => displayNameOf(d.label).short).join(", ")}` : "") +
           ".";
 
     return {

@@ -1,6 +1,7 @@
 /**
  * **THE RESEARCH DIGEST — the lines the runner prints and the rows the admin
- * page renders, from `ResearchMetrics`.** (Work Item 5 and 6, 2026-09-02.)
+ * page renders, from `ResearchMetrics`.** (Work Item 5 and 6, 2026-09-02;
+ * plain meanings added for the 9.4.26 evening feedback, ADM-11.)
  *
  * Pure functions over the metrics record. `researchDigestLines` returns the
  * markdown-shaped lines `scripts/pilot-runner.mts` and the cycle script print
@@ -10,6 +11,12 @@
  *
  * Every number is printed WITH its denominator or rule, and an unmeasured
  * value prints as its named gap — never as zero and never as a dash.
+ *
+ * Every row also carries a MEANING (ADM-11): one plain sentence saying what
+ * the number is and why the owner would care, before the rule. His words on
+ * "model share, trailing window 9.1%": *"I don't even know what that number
+ * represents."* The denominator column stays — it is why the number can be
+ * trusted — but it cannot be the only explanation.
  */
 
 import type { ResearchMetrics } from "./research-metrics.ts";
@@ -70,6 +77,8 @@ export interface DigestRow {
   readonly label: string;
   readonly value: string;
   readonly denominator: string;
+  /** One plain sentence: what this number is, and why it matters (ADM-11). */
+  readonly meaning: string;
 }
 
 export interface ResearchDigestRows {
@@ -81,7 +90,28 @@ export interface ResearchDigestRows {
   readonly costPerOutcome: readonly DigestRow[];
 }
 
-/** Typed rows for the admin research page's panels. One row per number, each with its denominator. */
+/** What each group of measures is FOR, in one sentence, for the section lead. */
+export const METRIC_GROUP_MEANING: Readonly<Record<keyof ResearchDigestRows, string>> = {
+  capacity: "How much scouting the daily budget buys: at what each scout attempt has been costing, this is how many attempts a day the ceiling allows.",
+  queueBands: "What is waiting, sorted by who it helps first: band 1 feeds a pilot ZIP or an open red reader question, band 2 completes a source universe, band 3 is everything else.",
+  funnel: "How far found records have travelled toward being trusted: scouted, then confirmed, verified, audited and approved; beside it, how many scout-found methods were validated and admitted into the toolbox.",
+  share: "How much of the work needed a paid model versus plain code: a low model share means the fleet is mostly running cheap deterministic routes.",
+  cache: "How much of what the model reads is a repeat it already cached: a high hit rate means the same prefix is being reused instead of paid for again.",
+  costPerOutcome: "What each useful result has cost: the whole measured scout spend divided by how many results of each kind it produced.",
+};
+
+const FUNNEL_MEANING: Readonly<Record<string, string>> = {
+  SCOUTED: "Obligations where a scout found something real — a route or evidence — rather than refusing.",
+  CONFIRMED: "Scouted records a second, independent step confirmed.",
+  VERIFIED: "Confirmed records a verifier checked against the contract and an outside authority.",
+  AUDITED: "Verified records an adversarial auditor tried and failed to break.",
+  APPROVED: "Audited records approved for the nightly window to promote to readers.",
+  VALIDATED: "Scout-proposed methods that passed validation and await a session's admission into the method store.",
+  ADMITTED: "Methods a session admitted; deterministic code can now walk that route without a model.",
+  DETERMINISTIC_REPLAYS: "Times plain code re-walked a route an admitted method taught it — the payoff of the funnel.",
+};
+
+/** Typed rows for the admin research page's panels. One row per number, each with its denominator and meaning. */
 export function researchDigestRows(m: ResearchMetrics): ResearchDigestRows {
   const c = m.capacity;
   const capacity: DigestRow[] = [
@@ -89,36 +119,77 @@ export function researchDigestRows(m: ResearchMetrics): ResearchDigestRows {
       label: "Attempts per day the ceiling supports",
       value: c.attemptsPerDayAtCap === null ? "UNMEASURED" : String(c.attemptsPerDayAtCap),
       denominator: `$${c.ceilingUsd} ceiling at the measured mean cost; ${c.denominator}`,
+      meaning: `How many scout attempts a day the $${c.ceilingUsd} daily ceiling buys at what an attempt has been costing. More means the budget goes further; the number moves when the mean cost moves.`,
     },
-    { label: "Mean cost per Attempt", value: usd(c.meanUsdPerAttempt), denominator: c.denominator },
+    {
+      label: "Mean cost per Attempt",
+      value: usd(c.meanUsdPerAttempt),
+      denominator: c.denominator,
+      meaning: "What one scout attempt has cost on average, over the attempts that reported a dollar figure in the trailing day. Attempts that reported no cost are counted beside it, never as free.",
+    },
   ];
   const queueBands: DigestRow[] =
     m.ordering === null
-      ? [{ label: "Queue by band", value: "NOT ORDERED", denominator: "no model-class work was due this cycle, or the order was not computed" }]
+      ? [{ label: "Queue by band", value: "NOT ORDERED", denominator: "no model-class work was due this cycle, or the order was not computed", meaning: "Nothing model-class was due this cycle, so there was no queue to sort." }]
       : ([1, 2, 3] as const).map((b) => ({
           label: `Band ${b}`,
           value: String(m.ordering?.bands[b] ?? 0),
           denominator: m.ordering?.rule ?? "",
+          meaning:
+            b === 1
+              ? "Due work that feeds a pilot ZIP or an open red reader question — dispatched first, because a reader is waiting on it."
+              : b === 2
+                ? "Due work that completes a source universe (candidate enrichment, local jurisdictions, campaign finance) — dispatched second."
+                : "Everything else that is due — the long tail, dispatched last.",
         }));
-  const funnel: DigestRow[] = m.funnel.stages.map((s) => ({ label: s.stage, value: String(s.count), denominator: s.source }));
+  const funnel: DigestRow[] = m.funnel.stages.map((s) => ({
+    label: s.stage,
+    value: String(s.count),
+    denominator: s.source,
+    meaning: FUNNEL_MEANING[s.stage] ?? `Records at the ${s.stage.toLowerCase()} stage.`,
+  }));
   const s = m.share;
   const share: DigestRow[] = [
-    { label: "Model share this cycle", value: pct(s.thisCycle.modelShare), denominator: `${s.thisCycle.model} model of ${s.thisCycle.model + s.thisCycle.deterministic} dispatched this cycle` },
-    { label: "Model share, trailing window", value: pct(s.window.modelShare), denominator: `${s.window.model} model of ${s.window.model + s.window.deterministic} dispatched over ${s.window.cycles} cycle(s)` },
+    {
+      label: "Model share this cycle",
+      value: pct(s.thisCycle.modelShare),
+      denominator: `${s.thisCycle.model} model of ${s.thisCycle.model + s.thisCycle.deterministic} dispatched this cycle`,
+      meaning: "Of everything the last cycle dispatched, the share that needed a paid model. The rest ran as plain code at no model cost.",
+    },
+    {
+      label: "Model share, trailing window",
+      value: pct(s.window.modelShare),
+      denominator: `${s.window.model} model of ${s.window.model + s.window.deterministic} dispatched over ${s.window.cycles} cycle(s)`,
+      meaning: `The same share over the last ${s.window.cycles} cycle(s), so one unusual cycle does not mislead. A falling share means learned methods are replacing model calls.`,
+    },
   ];
   const cache: DigestRow[] =
     m.cacheByRole.length === 0
-      ? [{ label: "Cache hit rate", value: "NOT MEASURED", denominator: "no Scout result reports usage" }]
-      : m.cacheByRole.map((r) => ({ label: `Cache hit rate · ${r.role}`, value: pct(r.hitRate), denominator: r.denominator }));
+      ? [{ label: "Cache hit rate", value: "NOT MEASURED", denominator: "no Scout result reports usage", meaning: "No scout result has reported token usage yet, so there is nothing to compute a hit rate from." }]
+      : m.cacheByRole.map((r) => ({
+          label: `Cache hit rate · ${r.role}`,
+          value: pct(r.hitRate),
+          denominator: r.denominator,
+          meaning: `Of every input token ${r.role} workers sent to the model, the share served from the prompt cache. Cached tokens cost about a tenth of fresh ones, so higher is cheaper.`,
+        }));
   cache.push({
     label: "Cache defects",
     value: `${m.cacheDefects.defective} of ${m.cacheDefects.instrumented}`,
     denominator: "results carrying per-turn steps that recorded a repeated-prefix turn with zero cache reads",
+    meaning: "Attempts where a later turn should have hit the cache and did not — each one is money spent twice on the same text. Zero is the goal.",
   });
   const costPerOutcome: DigestRow[] = m.costPerOutcome.map((o) => ({
     label: `Cost per ${o.outcome}`,
     value: `${usd(o.usdPerOutcome)} (${o.count})`,
     denominator: o.denominator,
+    meaning:
+      o.outcome === "ROUTE_CANDIDATE"
+        ? "What each newly found route has cost, spreading the whole measured scout spend over the routes found."
+        : o.outcome === "EVIDENCE_FOUND"
+          ? "What each piece of found evidence has cost, over the whole measured scout spend."
+          : o.outcome === "CONFIRMED"
+            ? "What each confirmed record has cost. Not recorded until the promotion pipeline confirms something."
+            : "What each method that graduated into the toolbox has cost — the spend that keeps paying back.",
   }));
   return { capacity, queueBands, funnel, share, cache, costPerOutcome };
 }

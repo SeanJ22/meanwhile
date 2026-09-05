@@ -31,7 +31,14 @@ import {
 
 // The swatches, legend and tiles are the console's shared primitives (9.4.26):
 // one implementation for this panel and for Pilot Health.
-import { STATE_CLASS, STATE_HUMAN, ReadinessLegend, Tile, heldFigure } from "../../console-ui.tsx";
+import { INTENT_NOTE_MAX_CHARS } from "@/lib/control-plane/scheduler/research-policy.ts";
+import { LEVEL_CLASS, type JurisdictionLevel as ColourLevel } from "@/lib/control-plane/display-name.ts";
+
+import { LevelLegend, QueueButton, STATE_CLASS, STATE_HUMAN, ReadinessLegend, Tile, When, heldFigure } from "../../console-ui.tsx";
+
+/** The console's four colours for the readiness taxonomy's six levels (ADM-21): county, municipal and special are local. */
+const COLOUR_LEVEL: Record<JurisdictionLevel, ColourLevel> = { federal: "federal", state: "state", county: "local", municipal: "local", school: "school", special: "local" };
+const INTENT_ROUTE = "/api/admin/research";
 /** The panel's own display label for a coverage tier (introduced here — §5.4). */
 const TIER_DISPLAY: Record<string, string> = {
   TIER_0: "Level 0",
@@ -119,9 +126,15 @@ export function ReadinessPanel(props: {
       <h1>
         State readiness — {snapshot.stateName}{" "}
         <span className="note" style={{ fontSize: ".8rem", fontWeight: 400 }}>
-          {props.published
-            ? `published ${snapshot.publishedAt} by ${snapshot.publisher}`
-            : `no published snapshot — rendered at ${snapshot.publishedAt}`}
+          {props.published ? (
+            <>
+              last updated <When iso={snapshot.publishedAt} /> by {snapshot.publisher}
+            </>
+          ) : (
+            <>
+              no published snapshot — rendered <When iso={snapshot.publishedAt} />
+            </>
+          )}
         </span>
       </h1>
 
@@ -162,6 +175,7 @@ export function ReadinessPanel(props: {
 
       <h2>Capabilities</h2>
       <ReadinessLegend />
+      <LevelLegend />
       <div className="rq-gridwrap">
         <table className="rq-grid">
           <thead>
@@ -213,7 +227,7 @@ export function ReadinessPanel(props: {
       )}
 
       <h2>Zip codes in {snapshot.stateName}</h2>
-      <ZipTable zips={zips} sort={zipSort} onSort={setZipSort} />
+      <ZipTable zips={zips} sort={zipSort} onSort={setZipSort} stateCode={snapshot.state} stateName={snapshot.stateName} />
       <p className="note">
         Two different measures, kept apart. <strong>Resident readiness</strong> is worst-of every
         governing body overlapping the zip, never an average: a zip is complete for a resident only
@@ -248,7 +262,7 @@ function RowsForDomain(props: {
       {props.rows.map((row) => (
         <tr key={row.capabilityId}>
           <td>
-            {row.label} <span className="rq-level">· {row.level}</span>
+            {row.label} <span className={`rq-level ${LEVEL_CLASS[COLOUR_LEVEL[row.level]]}`}><i className="lvl-dot" aria-hidden="true" />{row.level}</span>
           </td>
           {row.gates.map((cell) => (
             <td key={cell.gate} className="rq-gatecell">
@@ -299,6 +313,8 @@ function ZipTable(props: {
   zips: readonly ZipRow[];
   sort: ZipSort;
   onSort: (s: ZipSort) => void;
+  stateCode: string;
+  stateName: string;
 }) {
   const hdr = (key: ZipSort, label: string) => (
     <button type="button" onClick={() => props.onSort(key)} aria-pressed={props.sort === key}>
@@ -317,12 +333,13 @@ function ZipTable(props: {
             <th>Level</th>
             <th>Resident readiness</th>
             <th>{hdr("readiness", "Progress")}</th>
+            <th>Next step</th>
           </tr>
         </thead>
         <tbody>
           {props.zips.length === 0 && (
             <tr>
-              <td colSpan={6} className="note">
+              <td colSpan={7} className="note">
                 No zip readiness computed for this state yet.
               </td>
             </tr>
@@ -342,9 +359,13 @@ function ZipTable(props: {
               <td>
                 {z.place.held ? z.place.value : <span className="gap">{z.place.gap.says}</span>}
                 <div className="rq-worstgap">
-                  {z.population.held
-                    ? `${z.population.value.toLocaleString()} people`
-                    : "population not on file"}
+                  {z.population.held ? (
+                    <span title={`${z.population.value.contract} — ${z.population.value.denominatorSource}`}>
+                      {z.population.value.value.toLocaleString()} people
+                    </span>
+                  ) : (
+                    <span className="gap">{z.population.gap.says}</span>
+                  )}
                 </div>
               </td>
               <td>{z.bodyCount}</td>
@@ -371,6 +392,9 @@ function ZipTable(props: {
                   <span className="rq-pct">{Math.round(fraction(z.completeness) * 100)}%</span>
                 </div>
                 <div className="rq-worstgap">how far along, weighted by readiness</div>
+              </td>
+              <td className="rq-next">
+                <NextStep zip={z} residentComplete={residentComplete} stateCode={props.stateCode} stateName={props.stateName} />
               </td>
             </tr>
             );
@@ -464,6 +488,79 @@ function EvidenceDrawer(props: {
       </aside>
     </div>
   );
+}
+
+/**
+ * **WHAT TO DO ABOUT THIS ZIP, ONE STEP PAST WHAT THE ROW ALREADY KNOWS.**
+ * (ADM-15, the 9.4.26 evening admin feedback.)
+ *
+ * The owner's words: *"maybe it suggests \"Deploy Fleet Here\" or specific
+ * pointers, like \"Hey go get this one thing\""*. The row already names its
+ * least-ready body and its worst state; the suggestion is that pair read as an
+ * instruction, and the button is the existing Deploy-fleet intent aimed at this
+ * ZIP — it reorders registered work, it never invents any (ADM-8).
+ */
+function NextStep({ zip, residentComplete, stateCode, stateName }: { zip: ZipRow; residentComplete: boolean; stateCode: string; stateName: string }) {
+  const place = zip.place.held ? zip.place.value : zip.zip;
+  const target = `${zip.zip} ${place}, ${stateName}: ${zip.worstGap}`.slice(0, INTENT_NOTE_MAX_CHARS);
+  const deploy = (label: string) => (
+    <form method="post" action={INTENT_ROUTE} className="deploy-here">
+      <input type="hidden" name="action" value="DISPATCH" />
+      <input type="hidden" name="note" value={target} />
+      <input type="hidden" name="returnTo" value={`/readiness/${stateCode}`} />
+      <button type="submit" className="primary" title={`Records a Deploy-fleet intent: ${target}`}>
+        {label}
+      </button>
+    </form>
+  );
+  if (residentComplete) return <span className="note">Nothing to do — every governing body a resident belongs to is resolved.</span>;
+  const body = plainGap(zip.worstGap);
+  switch (zip.worstState) {
+    case "BLOCKED":
+      return (
+        <>
+          <strong>Go get this one thing:</strong> {body} — the route we walked hit a wall, so it needs another path.
+          {deploy("Deploy fleet here")}
+        </>
+      );
+    case "NOT_WALKED":
+      return (
+        <>
+          <strong>Nobody has looked yet:</strong> {body} has not been walked.
+          {deploy("Deploy fleet here")}
+        </>
+      );
+    case "PARTIAL_OR_STALE":
+      return (
+        <>
+          <strong>Refresh:</strong> {body} is partial or stale; a re-walk brings it current.
+          {deploy("Deploy fleet here")}
+        </>
+      );
+    case "GATED_ON_OPERATOR":
+      return (
+        <>
+          <strong>Waiting on you:</strong> {body} is gated on your decision — see <a href="/admin#decisions">Decisions</a> on Pilot health.
+          <QueueButton where={`State readiness · ${stateName} ${zip.zip}`} says={`${body} is gated on the operator`} returnTo={`/readiness/${stateCode}`} compact />
+        </>
+      );
+    default:
+      return <span className="note">{body}</span>;
+  }
+}
+
+/**
+ * A least-ready-body descriptor the publisher could only key, read as words:
+ * `GOVERNING (NOT_ATTEMPTED)` is a governing body nobody has tried yet. A
+ * named body passes through untouched.
+ */
+function plainGap(gap: string): string {
+  if (!/^[A-Z_]+( \([A-Z_]+\))?$/.test(gap.trim())) return gap;
+  return gap
+    .replace(/^GOVERNING/, "the governing body")
+    .replace(/_/g, " ")
+    .replace(/\(([A-Z ]+)\)/, (_, code: string) => `(${code.toLowerCase()})`)
+    .replace(/^([A-Z][A-Z ]*)(?= \()/, (code) => code.toLowerCase());
 }
 
 /* --------------------------------------------------------------- helpers */

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 520,
-    "named": 5426,
+    "files": 521,
+    "named": 5450,
     "dynamic": 23
   },
   "files": {
@@ -95,6 +95,35 @@
         "the login page, the Google start and callback, and the session route are reachable unauthenticated on the admin host",
         "the session cookie carries every attribute that makes it safe",
         "timingSafeEqual folds length in rather than short-circuiting on it"
+      ],
+      "dynamic": 0
+    },
+    "tests/admin-feedback-9-4-pm.test.ts": {
+      "names": [
+        "ADM-10: a role lead says what is happening, says plainly when nothing needs the owner, and names the work item when something does",
+        "ADM-11: every research metric row carries a plain meaning, every group has one, and the page draws the funnel, the share and the cache",
+        "ADM-12: a candidate is named from the record and never re-derived from the slug",
+        "ADM-12: every console surface renders keys through <Name>, raw key on hover",
+        "ADM-12: jurisdiction, OCD, ballot, curated and record keys render as display names with their level",
+        "ADM-13: the window reads as one sentence, a stage strip and a split; definitions stay behind a disclosure",
+        "ADM-14: the research page issues its reads in one round and the header still acknowledges the choice at once",
+        "ADM-15: every readiness ZIP row carries a next step and a Deploy-fleet-here intent that returns to the state's page",
+        "ADM-16: a card with a recorded decision leaves 'waiting on you' at once; a decision whose card has left the snapshot is still listed",
+        "ADM-16: a fresh decision is recorded and WAITING on the tracker and the work; an applied one names the row and the work opened",
+        "ADM-16: the page renders the split and the receipt, the routes return to the console page the form came from, and the sync is scheduled on the runner",
+        "ADM-16: the whole way out, on a file-backed control plane: record → pull → the applied tracker rows → canonicalize → a receipt with every step DONE",
+        "ADM-17: a role whose attempts all ran without a paid model is $0 by design with its non-dollar measures; a model role with no dollars is unmeasured",
+        "ADM-18: the reader-suite section leads with what it measures and collapses to one line when there is no grid",
+        "ADM-19: a gap of ours reads 'not measured', never OUR GAP, on every console surface",
+        "ADM-20: a gap's subject is stable per surface and sentence, and the queue folds intents into QUEUED / SENT / OPENED / REFUSED",
+        "ADM-20: every gap on the console carries the queue button, and the page has the queue with Go fix these",
+        "ADM-20: the applier opens a FIX row only for a gap queued at or before a Go, marks it by intent, and refuses one with no session",
+        "ADM-21: the admin stylesheet carries the four Lumen signals, the reader legend's level colours in both themes, and no font import",
+        "ADM-22: an ISO stamp reads as Eastern time spelled out, with the year only when asked; a missing or unreadable stamp says so",
+        "ADM-22: no console page prints a raw ISO stamp where the owner reads; every one goes through <When>",
+        "ADM-23: population-weighted completeness is a measured share of the state's ACS total, and its gaps are named",
+        "ADM-23: the ACS tables are on file with their pinned counts, the pilot ZIPs and states resolve, and the adapter refuses a non-count",
+        "the sweep gate accepts a second same-day owner folder (9.4.26.2) and still refuses a non-date"
       ],
       "dynamic": 0
     },
@@ -5988,7 +6017,7 @@
         "2d: no module reads reference data from any path outside data/reference",
         "2d: the loader resolves every dataset inside data/reference",
         "Open States reconciles: 7,439 state/territory/DC + 537 federal = 7,976",
-        "data/reference holds 20 files: 10 data files and 10 provenance notes",
+        "data/reference holds 24 files: 12 data files and 12 provenance notes",
         "every provenance note says something about its data file",
         "every reference data file is paired with its provenance note, both ways",
         "every reference file holds the row count it is expected to",

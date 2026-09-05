@@ -60,6 +60,7 @@ function azAuthorities(over: Partial<StateAuthorities> = {}): StateAuthorities {
     ballotFilings: { covered: 27, total: 30, authority: "AZ SoS certified canvass", asOf: "2026-09-01" },
     stateDisclosure: { covered: 716, total: 716, authority: "AZ SeeTheMoney", asOf: "2026-09-01" },
     officialsClosedWalk: null,
+    statePopulation: 7_268_175,
     ...over,
   };
 }

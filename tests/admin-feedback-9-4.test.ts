@@ -118,7 +118,8 @@ test("ADM-4: the decision route accepts an answer in the owner's own words, and 
   const page = src("app/(admin)/admin/page.tsx");
   assert.match(page, /name="consequenceShown"/);
   assert.match(page, /name="ownerAnswer"/);
-  assert.match(page, /latestDecisionFor\(/, "a decided card shows its decision instead of buttons");
+  // ADM-16 (evening): a decided card leaves the queue and shows its receipt; the split is the live log's.
+  assert.match(page, /splitDecided\(/, "a decided card shows its decision instead of buttons");
 });
 
 const INTENT = (over: Partial<OwnerDecisionIntent>): OwnerDecisionIntent => ({
@@ -386,7 +387,9 @@ test("ADM-6: the ledger rolls up by role and by model with measured/unmeasured b
   assert.ok(scout.usd.held && scout.usd.value.value === 0.75 && scout.usd.value.denominator === 0.75);
   assert.equal(scout.attemptsMeasured, 2);
   const acq = panel.costByRole.find((r) => r.key === "ACQUIRER")!;
-  assert.ok(!acq.usd.held && /not measured/.test(acq.usd.gap.says));
+  // ADM-17 (evening): a role whose attempts all ran without a paid model is $0 by design, not a gap.
+  assert.equal(acq.kind, "FREE_BY_DESIGN");
+  assert.ok(acq.usd.held && acq.usd.value.value === 0);
   assert.equal(acq.attemptsUnmeasured, 1);
   assert.deepEqual(panel.costByModel.map((r) => r.key), ["claude-opus-5", NO_MODEL_KEY]);
   const cache = panel.cacheHitRateByCaller.find((r) => r.callerKey.startsWith("SCOUT"))!;

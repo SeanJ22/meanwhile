@@ -1,6 +1,6 @@
 "use client";
 
-import { Maximize2, X } from "lucide-react";
+import { Maximize2, Minus, X } from "lucide-react";
 import { useRef, type ReactNode } from "react";
 
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
@@ -42,6 +42,8 @@ interface PopupCardProps {
   /** What "More" opens, for the screen reader and the tooltip. */
   expandLabel?: string;
   onClose?: () => void;
+  /** Keeps a selected boundary while returning its details to a pill. */
+  onMinimize?: () => void;
   /**
    * The body renders the title itself (item 2, 2026-08-16) — the person
    * card's identity block leads with the name as its dominant type, and the
@@ -85,12 +87,13 @@ export function PopupCard({
   onExpand,
   expandLabel,
   onClose,
+  onMinimize,
   titleInBody = false,
   levelTier,
   children,
 }: PopupCardProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
-  useDismissOnOutside(rootRef, onClose ?? (() => {}), Boolean(onClose));
+  useDismissOnOutside(rootRef, onMinimize ?? onClose ?? (() => {}), Boolean(onMinimize ?? onClose));
 
   return (
     <div
@@ -99,6 +102,12 @@ export function PopupCard({
       role="dialog"
       aria-label={title}
     >
+      {onMinimize && (
+        <button type="button" className="popup-expand-btn popup-minimize-btn"
+          onClick={onMinimize} aria-label="Minimize district details">
+          <Minus className="size-3.5" />
+        </button>
+      )}
       {onClose && (
         <button
           type="button"

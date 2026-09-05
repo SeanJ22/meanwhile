@@ -33,6 +33,7 @@ import type { VotingSitePin } from "./map-canvas";
 import { PillCluster } from "@/components/shell/pill-cluster";
 import { clusterPlacement } from "@/lib/map/cluster-placement";
 import { useSidebarVisible } from "@/hooks/use-sidebar-visible";
+import { useCompactMap } from "@/hooks/use-compact-map";
 import { UiProvider, useUi, useUiDispatch } from "@/lib/state/provider";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
 import type { SnapshotStatus } from "@/lib/meetings/freshness";
@@ -268,6 +269,9 @@ function MapEntryInner() {
    * which is why the first paint carried both surfaces at once.
    */
   const [noticeCollapsed, setNoticeCollapsed] = useState(true);
+  const compactMap = useCompactMap();
+  const [districtExpanded, setDistrictExpanded] = useState(false);
+  const compactBoundary = compactMap && Boolean(ui.selectedDistrictOcdId);
 
   /*
    * Popup state, in the two-tier architecture (3). Declared before the
@@ -651,6 +655,7 @@ function MapEntryInner() {
     (surface: "sidebar" | "wgh" | "large") => {
       setSidebarState(surface === "sidebar" ? "open" : "closed");
       setNoticeCollapsed(surface !== "wgh");
+      setDistrictExpanded(false);
       if (surface !== "large") setLarge(null);
     },
     [setLarge],
@@ -952,18 +957,18 @@ function MapEntryInner() {
     }
   }
 
-  // Clicking INTO a new district is a question about who governs there —
-  // the card answers. Re-selecting the same district changes nothing.
-  const lastExpandedDistrict = useRef<string | null>(null);
-  useEffect(() => {
-    if (
-      ui.selectedDistrictOcdId &&
-      ui.selectedDistrictOcdId !== lastExpandedDistrict.current
-    ) {
-      setNoticeCollapsed(false);
+  // LAY-12: selected boundaries keep both details one tap away on smaller
+  // screens. The desktop reference still opens Who Governs Here.
+  const districtLayoutKey = `${compactMap}:${ui.selectedDistrictOcdId ?? ""}`;
+  const [lastDistrictLayout, setLastDistrictLayout] = useState(districtLayoutKey);
+  if (districtLayoutKey !== lastDistrictLayout) {
+    setLastDistrictLayout(districtLayoutKey);
+    if (ui.selectedDistrictOcdId) {
+      setNoticeCollapsed(compactMap);
+      setDistrictExpanded(false);
+      if (compactMap) setSidebarState("closed");
     }
-    lastExpandedDistrict.current = ui.selectedDistrictOcdId;
-  }, [ui.selectedDistrictOcdId]);
+  }
 
   /*
    * The engagement signals that shrink the who-governs card (2h): a pin, a
@@ -1780,8 +1785,9 @@ function MapEntryInner() {
            */
           <button
             type="button"
-            className="notice-fab pointer-events-auto"
+            className={`notice-fab pointer-events-auto${compactBoundary ? " boundary-info-pill" : ""}`}
             aria-label="Show who governs here"
+            aria-expanded={false}
             /* 4c: opening WGH closes the rail and any battlecard. */
             onClick={() => openSurface("wgh")}
           >
@@ -1845,6 +1851,24 @@ function MapEntryInner() {
           />
         ))}
 
+      {compactMap && districtPopup && !districtExpanded && !officialPopup && !large && (
+        <button
+          type="button"
+          className="boundary-info-pill district-info-pill pointer-events-auto"
+          data-boundary-details={districtPopup.ocdId}
+          aria-label={`Show ${districtPopup.label} details`}
+          aria-expanded={false}
+          onClick={() => {
+            setNoticeCollapsed(true);
+            setSidebarState("closed");
+            setDistrictExpanded(true);
+          }}
+        >
+          <span>{districtPopup.label}</span>
+          <span aria-hidden="true">↗</span>
+        </button>
+      )}
+
       {/* Provenance, not headline (3): "Last checked" demotes to a
           footnote below the who-governs card — and LAY-8 (2026-08-25) sends
           the rail’s "What this site collects / Feedback" block down to sit
@@ -1873,6 +1897,7 @@ function MapEntryInner() {
            Every CSS rule that hides the rail keys on this, so the exclusion is
            true in the stylesheet as well as in the tree. */
         data-sidebar={wghOpen ? "closed" : sidebarState}
+        data-compact-boundary={compactBoundary ? "true" : undefined}
       >
         {/*
           **LAY-4 / LAY-3 — the rail and its floaters are ONE fixed column.**
@@ -2179,7 +2204,7 @@ function MapEntryInner() {
             and the meeting panel owns top-right. A first attempt put them at
             bottom-left and they landed on top of the coverage notice, which a
             screenshot caught. */}
-        <div className="pointer-events-none absolute right-2 bottom-2 left-2 z-[1200] flex items-end justify-end gap-3 sm:right-5 sm:bottom-5 sm:left-auto">
+        <div className={`pointer-events-none absolute right-2 bottom-2 left-2 z-[1200] flex items-end justify-end gap-3 sm:right-5 sm:bottom-5 sm:left-auto${compactBoundary ? " boundary-details-corner" : ""}`}>
           {officialPopup && !large && (
             <OfficialPopup
               holder={officialPopup.holder}
@@ -2192,9 +2217,10 @@ function MapEntryInner() {
             />
           )}
 
-          {districtPopup && !officialPopup && !large && (
+          {districtPopup && !officialPopup && !large && (!compactMap || districtExpanded) && (
             <DistrictPopup
               district={districtPopup}
+              onMinimize={compactMap ? () => setDistrictExpanded(false) : undefined}
               onOpenOfficial={(holder) =>
                 openOfficial(
                   holder,

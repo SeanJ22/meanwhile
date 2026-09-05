@@ -1679,13 +1679,11 @@ export default async function BallotPage({
         />
       )}
 
-      {/* BAL-25: the desktop's second column. One class, defined once in
-          `app/globals.css`, shared with the measure groups below — it is a
-          single column everywhere until there is room for two, so the phone
-          render is byte-identical to what it was. */}
+      {/* BAL-43: offices read top to bottom. Desktop columns compare the
+          candidates within one office, with the same ballot order below. */}
       {set && matched && (
-      <div className="ballot-card-grid">
-      {candidacyContests.map((contest) => {
+      <div className="ballot-office-list">
+      {candidacyContests.map((contest, contestIndex) => {
           const lineup = lineupForContest(contest.id);
           const canvass = lineup ? getGeneralLineup()?.canvass : null;
           // Item 5 (design pass): a source line identical across contests
@@ -1714,12 +1712,18 @@ export default async function BallotPage({
                * without reading pixels.
                */
               data-ocd-id={contest.ocdId}
+              data-office-tier-start={
+                contestIndex > 0 &&
+                tierForOcdId(contest.ocdId) !== tierForOcdId(candidacyContests[contestIndex - 1].ocdId)
+                  ? "true"
+                  : undefined
+              }
               data-could-govern={
                 certainty && needsPill(certainty.certaintyOf(contest.ocdId))
                   ? "true"
                   : undefined
               }
-              className="mt-5 rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-5 shadow-[var(--shadow-panel)]"
+              className="ballot-office-card rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-5 shadow-[var(--shadow-panel)]"
             >
               <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
                 <h2 className="text-[1.0625rem] font-semibold tracking-tight">
@@ -1835,12 +1839,11 @@ export default async function BallotPage({
                   what a November voter actually chooses among. */}
               {lineup ? (
                 <>
-                <ul className="mt-3.5 space-y-3">
+                <ul className="ballot-candidate-grid mt-3.5">
                   {photosFirst(lineup.nominees, (n) => Boolean(cardForNominee(contest.id, n.name)?.photoUrl)).map((nominee) => (
                     <li
                       key={nominee.name}
                       data-candidate-target={`${contest.id}|${nominee.name}`}
-                      className="border-b border-[var(--panel-border)] pb-3 last:border-0 last:pb-0"
                     >
                       <CandidateCard
                         name={nominee.name}
@@ -1984,12 +1987,11 @@ export default async function BallotPage({
                         {readerScopeNotes.get(contest.id)}
                       </p>
                     ))}
-                  <ul className="mt-3.5 space-y-3">
+                  <ul className="ballot-candidate-grid mt-3.5">
                     {photosFirst(candidatesOf(set, contest), (x) => Boolean(cardForCandidacy(x.id)?.photoUrl)).map((cand) => (
                       <li
                         key={cand.id}
                         data-candidate-target={cand.id}
-                        className="border-b border-[var(--panel-border)] pb-3 last:border-0 last:pb-0"
                       >
                         <CandidateCard
                           name={`${cand.givenName} ${surnameDisplayCase(cand.familyName)}`}

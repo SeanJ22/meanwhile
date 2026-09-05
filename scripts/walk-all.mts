@@ -5766,8 +5766,9 @@ interface BallotSurfaceRead {
   overflow: number;
   mainWidth: number;
   proseWidth: number;
-  contestLefts: number[];
-  contestCount: number;
+  officeLefts: number[];
+  candidateLefts: number[];
+  candidateCount: number;
   firstContestTop: number;
   pillTop: number;
   statewideIds: string[];
@@ -5787,6 +5788,8 @@ const READ_BALLOT_SURFACE = `(() => {
   const main = document.querySelector('main');
   const prose = document.querySelector('main p.text-voice') || document.querySelector('main p');
   const contests = Array.from(document.querySelectorAll('[data-contest-id]'));
+  const offices = Array.from(document.querySelectorAll('.ballot-office-list > [data-contest-id]'));
+  const candidates = Array.from(document.querySelectorAll('.ballot-candidate-grid > [data-candidate-target]'));
   const pill = document.querySelector('[data-ballot-ask-pill]');
   const scoped = (scope) => Array.from(
     document.querySelectorAll('[data-measure-scope="' + scope + '"] [data-contest-id]'),
@@ -5798,8 +5801,9 @@ const READ_BALLOT_SURFACE = `(() => {
     overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
     mainWidth: main ? round(main.getBoundingClientRect().width) : 0,
     proseWidth: prose ? round(prose.getBoundingClientRect().width) : 0,
-    contestLefts: contests.map((c) => round(c.getBoundingClientRect().left)),
-    contestCount: contests.length,
+    officeLefts: offices.map((c) => round(c.getBoundingClientRect().left)),
+    candidateLefts: candidates.map((c) => round(c.getBoundingClientRect().left)),
+    candidateCount: candidates.length,
     firstContestTop: contests.length
       ? round(contests[0].getBoundingClientRect().top + window.scrollY)
       : -1,
@@ -5832,7 +5836,7 @@ const READ_BALLOT_SURFACE = `(() => {
 for (const zip of ["85629", "07866"]) {
   const WIDE_CHECKS: [string, string][] = [
     ["BAL25", `${zip}: the ballot fills the desktop width rather than a 672px column`],
-    ["BAL25", `${zip}: the contest grid really is two columns at 1280`],
+    ["BAL25", `${zip}: offices stack and candidates use two columns at 1280`],
     ["BAL25", `${zip}: the ballot does not scroll sideways at 1280`],
     ["BAL25", `${zip}: prose keeps a readable measure while the container widens`],
     ["BAL26", `${zip}: the Ask affordance sits ABOVE the contests at 1280`],
@@ -5870,23 +5874,23 @@ for (const zip of ["85629", "07866"]) {
       );
 
       /*
-       * ITEM 2 — and it spends the width on a SECOND COLUMN OF CARDS rather
-       * than on longer lines. Two distinct left edges among the contest cards
-       * is the mechanical read of that; one edge means the grid did not apply.
+       * BAL-43: the second column is now within an office, while whole office
+       * blocks stay in a single top-to-bottom sequence.
        */
-      const lefts = [...new Set(read.contestLefts)];
-      if (read.contestCount < 2) {
+      const lefts = [...new Set(read.candidateLefts)];
+      const officeLefts = [...new Set(read.officeLefts)];
+      if (read.candidateCount < 2) {
         cannotRun(
           "BAL25",
-          `${zip}: the contest grid really is two columns at 1280`,
-          `${read.contestCount} contest(s) on the page — a second column needs a second card, and this is a failure to reach the subject rather than a zero result`,
+          `${zip}: offices stack and candidates use two columns at 1280`,
+          `${read.candidateCount} candidate(s) on the page — a second column needs a second card, and this is a failure to reach the subject rather than a zero result`,
         );
       } else {
         check(
           "BAL25",
-          `${zip}: the contest grid really is two columns at 1280`,
-          lefts.length >= 2,
-          `${read.contestCount} cards across ${lefts.length} column position(s): ${lefts.join(", ")}`,
+          `${zip}: offices stack and candidates use two columns at 1280`,
+          officeLefts.length === 1 && lefts.length === 2,
+          `${officeLefts.length} office column; ${read.candidateCount} candidates across ${lefts.length} column position(s): ${lefts.join(", ")}`,
         );
       }
 
@@ -6138,11 +6142,11 @@ const BALLOT_GAP_CEILING_PX = 60;
 
 const BALLOT_COLUMNS_READ = `(() => {
   const out = [];
-  for (const grid of document.querySelectorAll('.ballot-card-grid')) {
-    const cards = [...grid.querySelectorAll('[data-contest-id]')].map((el) => {
+  for (const grid of document.querySelectorAll('.ballot-card-grid, .ballot-candidate-grid')) {
+    const cards = [...grid.querySelectorAll(':scope > [data-contest-id], :scope > [data-candidate-target]')].map((el) => {
       const r = el.getBoundingClientRect();
       return {
-        id: el.getAttribute('data-contest-id'),
+        id: el.getAttribute('data-contest-id') || el.getAttribute('data-candidate-target'),
         x: Math.round(r.x),
         y: Math.round(r.y + window.scrollY),
         h: Math.round(r.height),
@@ -6229,13 +6233,14 @@ for (const zip of ["85701", "07866"]) {
       `column tops per grid: ${tops.map((t) => t.join("/")).join(" · ")}`,
     );
 
-    /* And they are still two columns of one width — a fix that collapsed the
-       layout to one column would satisfy the gap check trivially. */
+    /* BAL-43 puts candidates inside full-width offices. Each pair must still
+       have equal widths; measure cards have their own narrower envelope. */
     const widths = multi.flatMap((g) => g.columns.flatMap((c) => c.widths));
     check(
       "SB0831",
       BLOCK[2][1],
-      multi.every((g) => g.columns.length === 2) && new Set(widths).size === 1,
+      multi.every((g) => g.columns.length === 2 &&
+        new Set(g.columns.flatMap((c) => c.widths)).size === 1),
       `${multi.map((g) => g.columns.length).join("/")} column(s) per grid, ` +
         `width(s) ${[...new Set(widths)].join(",")}`,
     );

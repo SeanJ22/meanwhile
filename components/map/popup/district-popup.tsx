@@ -216,6 +216,7 @@ interface DistrictPopupProps {
   onShowMeetings?: () => void;
   onExpand?: () => void;
   onClose?: () => void;
+  onMinimize?: () => void;
 }
 
 export function DistrictPopup({
@@ -229,6 +230,7 @@ export function DistrictPopup({
   onShowMeetings,
   onExpand,
   onClose,
+  onMinimize,
 }: DistrictPopupProps) {
   // F01 1.2: derived from the same roster the list below renders, so the two
   // can never name a different set of people.
@@ -253,6 +255,7 @@ export function DistrictPopup({
       onExpand={onExpand}
       expandLabel={`More about ${district.label}`}
       onClose={onClose}
+      onMinimize={onMinimize}
     >
       {/*
         WGH-15: the subject line comes FIRST, above the facts, because it is

@@ -3,15 +3,18 @@ import assert from "node:assert/strict";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { launchGuarded } from "./browser.mts";
+import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 
 const base = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
 assert.ok(["localhost", "127.0.0.1"].includes(new URL(base).hostname), "visual verification uses the isolated local server");
 const out = process.env.VISUAL_FEEDBACK_OUTPUT ?? ".scratch/visual-feedback-final";
+const rows = new Set((process.env.VISUAL_FEEDBACK_ROWS ?? "BAL-43,ASK-24,LAY-12").split(","));
+assert.ok(rows.size > 0 && [...rows].every(row => ["BAL-43", "ASK-24", "LAY-12"].includes(row)), "select only the frozen feedback rows");
+const expectedChecks = (rows.has("BAL-43") || rows.has("ASK-24") ? 6 : 0) + (rows.has("ASK-24") ? 1 : 0) + (rows.has("LAY-12") ? 4 : 0);
 await mkdir(out, { recursive: true });
 const browser = await launchGuarded({ label: "visual-feedback-9-2" });
 const results: object[] = [];
 const captures: string[] = [];
-const rows = new Set((process.env.VISUAL_FEEDBACK_ROWS ?? "BAL-43,ASK-24,LAY-12").split(","));
 
 try {
   // BAL-43: all rendered office/candidate blocks on two current ballots,
@@ -137,6 +140,9 @@ try {
     results.push({ row: "LAY-12", zip, kind, width, theme, identity, defaultPills: 2, singlePanel: true, reducedMotion: true, glowSeconds: 1.5 });
     await context.close();
   }
+  const checked = floored("visual feedback checks", "selected frozen feedback rows", expectedChecks, results.length);
+  assert.equal(results.length, expectedChecks, "every selected visual check reported");
   await writeFile(join(out, "results.json"), JSON.stringify({ base, runId: browser.runId, results, captures }, null, 2) + "\n");
+  console.log(floorLine(checked));
   console.log(JSON.stringify({ result: "PASS", checks: results.length, captures, out }));
 } finally { await browser.close(); }

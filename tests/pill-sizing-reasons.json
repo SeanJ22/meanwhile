@@ -47,6 +47,11 @@
       "selector": ".ballot-top-pill:has(> .address-prompt-trigger)",
       "props": ["padding"],
       "reason": "Zero padding on purpose: the wrapper hands its whole box to the trigger inside it, so padding here would double the inset."
+    },
+    {
+      "selector": ".district-info-pill",
+      "props": ["padding", "font-size"],
+      "reason": "LAY-12 replaces the expanded boundary card with an ACTION control on tablet and phone. It inherits the 44px minimum tap target and uses 13px text with 10px vertical/16px horizontal insets to stay compact beside Who Governs Here while naming the selected district. These component tokens derive from the spacing and detail/body scales; the smaller non-tappable vote tag is not its size reference."
     }
   ]
 }

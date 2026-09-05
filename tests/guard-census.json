@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 515,
-    "named": 5364,
+    "files": 516,
+    "named": 5366,
     "dynamic": 23
   },
   "files": {
@@ -1013,7 +1013,8 @@
         "BAL-25: the ballot surface has responsive utilities at all",
         "BAL-25: the container widens on desktop and the reading measure does not",
         "BAL-25: the loading skeleton hands over without moving the heading",
-        "BAL-25: the second column is a grid of CARDS, and it is one class"
+        "BAL-43: measure cards keep their prior independent two-column flow",
+        "BAL-43: offices read top to bottom; both candidate paths share the desktop columns"
       ],
       "dynamic": 0
     },
@@ -7316,6 +7317,12 @@
         "WI1.7: overlapping painted boxes fail overlap; disjoint boxes pass",
         "WI1.7: prominence with no surrounding band inside the capture is refused, not passed",
         "WI1.7: two boxes intersecting on both axes are refused as a spacing question"
+      ],
+      "dynamic": 0
+    },
+    "tests/visual-feedback-9-2-ask.test.ts": {
+      "names": [
+        "ASK-24: structured measure answers lead with the held definition and keep each sourced record exactly once"
       ],
       "dynamic": 0
     },

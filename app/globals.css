@@ -213,6 +213,10 @@
   --dur-base: 200ms;
   --dur-slow: 320ms;
   --dur-pulse: 1100ms;
+  /* LAY-12 explicitly specifies a 1.5-second boundary-control glow. It is a
+     navigation affordance, separate from the loading-only pulse above. */
+  --dur-boundary-glow: 1500ms;
+  --ease-boundary-glow: ease-in-out;
   --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
   --ease-move: cubic-bezier(0.4, 0, 0.2, 1);
@@ -5848,15 +5852,19 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   border-radius: var(--radius-pill);
   background: var(--panel);
   color: var(--text);
-  animation: boundaryPillGlow 1.5s ease-in-out infinite;
+  animation: boundaryPillGlow var(--dur-boundary-glow) var(--ease-boundary-glow) infinite;
 }
 .district-info-pill {
+  /* Compact action text sits between detail/body, matching the neighboring
+     Who Governs Here control. Its inset preserves the reviewed 44px target. */
+  --text-boundary-control: calc((var(--text-detail) + var(--text-body)) / 2);
+  --space-boundary-inset: calc((var(--space-2) + var(--space-3)) / 2);
   display: inline-flex;
   align-items: center;
   gap: 12px;
   max-width: min(300px, calc(100vw - 24px));
-  padding: 10px 16px;
-  font-size: 0.8125rem;
+  padding: var(--space-boundary-inset) var(--space-4);
+  font-size: var(--text-boundary-control);
   cursor: pointer;
 }
 .district-info-pill > span:first-child {
@@ -5869,7 +5877,7 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   outline-offset: 3px;
 }
 .popup-minimize-btn { right: 38px; }
-.popup-card:has(.popup-minimize-btn) .popup-card-head { padding-right: 44px; }
+.popup-card:has(.popup-minimize-btn) .popup-card-head { padding-right: calc(var(--space-8) + var(--space-3)); }
 @media (max-width: 1023px) {
   main[data-compact-boundary="true"] .rail-floaters { justify-content: flex-start; }
   .boundary-details-corner { bottom: calc(var(--map-legend-bottom) + var(--map-legend-height) + 12px); }

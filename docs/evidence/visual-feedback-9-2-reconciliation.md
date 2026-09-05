@@ -91,3 +91,40 @@ BAL-43 and ASK-24. Original screenshots, transcript and workbook remain untouche
 
 NON-BLOCKING FOLLOW-UP: the existing NJ U.S. Senate tier label reads State; this
 is an unchanged civic identity/tier mapping, outside this visual-only denominator.
+
+## CI closeout and scope boundary
+
+PR #277's first CI run, `33939645841`, passed both production-build modes. The
+test step reported 5,397 passed, seven failed and five skipped. Test was the only
+failed gate step. Six test failures were branch bookkeeping/token
+issues and were repaired within the frozen visual scope:
+
+- The browser check now floors its selected-case denominator and refuses unknown
+  feedback IDs before launching a browser.
+- The canonical guard inventory records the intentional BAL-25 to BAL-43
+  supersession and the new shared Ask renderer control.
+- The boundary glow uses named motion tokens. The reviewed 13px text, 10px
+  vertical inset and 44px header clearance derive from existing scale tokens;
+  the action-pill size difference is explicitly documented. No baseline grew.
+
+The six affected test files pass **35/35** targeted checks. Typecheck passes. An
+isolated browser comparison of the built implementation's source CSS and the
+token-compliant source CSS gives identical duration (1.5s), easing, font size
+(13px), padding (10px 16px), minimum height (44px), and header clearance (44px).
+The earlier ten reviewed screenshots therefore retain their visual claim. This
+repair ran no additional production build, screenshot campaign or full suite.
+
+**Merge remains blocked by an existing proof-policy boundary**, not an unresolved
+original visual row. `tests/reader-last-mile-census.test.ts` requires the prior
+complete reader receipt to match the current source hashes and its frozen
+LM-F1..LM-F10 invalidation report. It rejects the six deliberately changed visual
+reader files: `app/ballot/page.tsx`, `app/globals.css`,
+`components/ask/answer-records.tsx`, `components/map/map-entry.tsx`,
+`components/map/popup/district-popup.tsx`, and
+`components/map/popup/popup-card.tsx`.
+
+The current owner directive forbids reopening Reader Last-Mile or running its
+large census. Its validator and frozen evidence remain untouched; no hash was
+rewritten to claim unexecuted proof and no gate was bypassed. The completed visual
+work is preserved on the PR for a separately authorized resolution of that
+shipping-contract conflict. No production deploy is claimed.

@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
-  "runDate": "2026-09-04",
-  "startedAt": "2026-09-04T13:30:17.312Z",
-  "finishedAt": "2026-09-04T13:44:58.967Z",
+  "runDate": "2026-09-05",
+  "startedAt": "2026-09-05T12:39:22.883Z",
+  "finishedAt": "2026-09-05T12:57:16.871Z",
   "mode": "CADENCE",
   "exitCode": 0,
   "sources": [
@@ -10,8 +10,8 @@
       "id": "meetings",
       "due": true,
       "ran": true,
-      "outcome": "INGESTED",
-      "reason": "ran clean; 1 governed path(s) changed and the gate passed — committed",
+      "outcome": "ROUTE_UNREAD",
+      "reason": "the suite is red independent of any source's data (tests/reader-last-mile-census.test.ts) — nothing commits under a red the refresh did not cause; its governed paths are back at HEAD and it is owed until it lands",
       "commands": [
         "ingest composite"
       ],
@@ -20,18 +20,16 @@
       "governs": [
         "data/meetings-snapshot.json"
       ],
-      "changedPaths": [
-        "data/meetings-snapshot.json"
-      ],
+      "changedPaths": [],
       "recoveredFrom": [],
-      "nextDueAt": "2026-09-05"
+      "nextDueAt": "2026-09-06"
     },
     {
       "id": "nj-filing",
       "due": true,
       "ran": true,
-      "outcome": "INGESTED",
-      "reason": "ran clean; 1 governed path(s) changed and the gate passed — committed",
+      "outcome": "ROUTE_UNREAD",
+      "reason": "the suite is red independent of any source's data (tests/reader-last-mile-census.test.ts) — nothing commits under a red the refresh did not cause; its governed paths are back at HEAD and it is owed until it lands",
       "commands": [
         "nj:ballot --write",
         "nj:filing:check",
@@ -43,29 +41,25 @@
         "data/ballot/",
         "data/questionnaire/"
       ],
-      "changedPaths": [
-        "data/questionnaire/invitations-nj-morris-2026.json"
-      ],
+      "changedPaths": [],
       "recoveredFrom": [],
-      "nextDueAt": "2026-09-05"
+      "nextDueAt": "2026-09-06"
     },
     {
       "id": "fec",
-      "due": true,
-      "ran": true,
-      "outcome": "INGESTED",
-      "reason": "ran clean; 1 governed path(s) changed and the gate passed — committed",
+      "due": false,
+      "ran": false,
+      "outcome": "NOT_DUE",
+      "reason": "weekly, not due on 2026-09-05 or on any uncovered day since the last landed refresh, and carrying no debt",
       "commands": [
         "fec:fetch"
       ],
       "failedCommand": null,
-      "exitCode": 0,
+      "exitCode": null,
       "governs": [
         "data/fec/fec-2026.json"
       ],
-      "changedPaths": [
-        "data/fec/fec-2026.json"
-      ],
+      "changedPaths": [],
       "recoveredFrom": [],
       "nextDueAt": "2026-09-07"
     },
@@ -74,7 +68,7 @@
       "due": false,
       "ran": false,
       "outcome": "NOT_DUE",
-      "reason": "weekly, not due on 2026-09-04 or on any uncovered day since the last landed refresh, and carrying no debt",
+      "reason": "weekly, not due on 2026-09-05 or on any uncovered day since the last landed refresh, and carrying no debt",
       "commands": [
         "legiscan:fetch"
       ],
@@ -92,7 +86,7 @@
       "due": false,
       "ran": false,
       "outcome": "NOT_DUE",
-      "reason": "monthly, not due on 2026-09-04 or on any uncovered day since the last landed refresh, and carrying no debt",
+      "reason": "monthly, not due on 2026-09-05 or on any uncovered day since the last landed refresh, and carrying no debt",
       "commands": [
         "dotgov:fetch"
       ],
@@ -107,18 +101,26 @@
     }
   ],
   "catchUp": {
-    "lastLanded": "docs/refresh-run.md, run date 2026-09-03",
+    "lastLanded": "docs/refresh-run.md, run date 2026-09-04",
     "days": [
-      "2026-09-04"
+      "2026-09-05"
     ],
     "cap": 8,
     "off": false
   },
   "gate": {
-    "verdict": "GREEN",
-    "ranAt": "2026-09-04T13:44:58.966Z",
-    "failingFiles": [],
-    "attribution": [],
-    "note": "The full suite passed over every changed source's data together. Everything that changed commits."
+    "verdict": "REFUSED",
+    "ranAt": "2026-09-05T12:49:13.641Z",
+    "failingFiles": [
+      "tests/reader-last-mile-census.test.ts"
+    ],
+    "attribution": [
+      {
+        "file": "tests/reader-last-mile-census.test.ts",
+        "sourceId": null,
+        "basis": "fails with every changed source's governed paths at HEAD — the tree's, not any source's data"
+      }
+    ],
+    "note": "The suite is red independent of the refreshed data — tests/reader-last-mile-census.test.ts fail with every changed source at HEAD. That is a defect on main, not a source's; nothing commits under it, and every changed source is owed until the tree is green."
   }
 }

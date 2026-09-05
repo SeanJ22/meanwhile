@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **431 open**, 487 resolved.
+- **430 open**, 488 resolved.
 - **75 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **5**
@@ -22,7 +22,7 @@ and when. Nothing is ever deleted.
   - New Jersey hunt — **1**
   - Arizona hunt — **2**
   - Visual feedback — **3**
-  - Data infrastructure — **4**
+  - Data infrastructure — **3**
   - Product / UI — **3**
   - Constitution & rules — **1**
   - Repo & ops — **10** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
@@ -562,7 +562,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**108 open · 114 resolved.**
+**107 open · 115 resolved.**
 
 ### P1
 
@@ -571,10 +571,6 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH270** — A definition tells a reader what a body actually does. definitionsForBody is keyed on the DIVISION rather than the BODY, so every body sharing the Pima County division resolves to the Arizona county class definition.
 
 **NH45** — data/ballot/candidate-hunt-state.json holds 136 candidate keys in TWO formats for the same people: a slug form, ballot-az-pima:governor:hobbs-katie, and a pipe-and-display-name form, ballot-az-pima:governor|Katie Hobbs. Thirty of the 136 are the pipe form and every one names somebody the slug form already names. candidate-cards-2026.json carries 20 of the same duplicates.
-
-**NH327** — Sean's decision on NH326, in chat on 2026-09-05, in his words: "A repeated observation with unchanged normalized civic facts must not rewrite canonical reader-source bytes; record the new observation in operational refresh history. Preserve exact-byte Reader Last-Mile proof; factual changes must still invalidate it." The class: every writer of a canonical holding that the daily refresh runs (nj:ballot --write rewrote 762 collectedAt/verifiedAt lines and curatedAt in data/states/nj/ballot/nj-morris-2026.json and nj-morris-2026-contacts.json on 2026-09-05 with no record changed; find every sibling writer that stamps a holding on re-observation). Done means: a refresh whose normalized records are byte-identical to the committed holding leaves the holding's bytes untouched and records the observation (source, time, unchanged verdict) in the operational refresh history (docs/refresh-run.json / data/ops/refresh-debt.json or their successor), the reader closure receipt keeps binding holdings by exact byte, and a refresh that changes a fact still changes the bytes and still invalidates the receipt. Prove it on a real refresh: two runs on the same day leave the receipt test green; a seeded record change turns it red.
-
-  Waiting on decide how the reader closure receipt survives a daily refresh that rewrites only provenance stamps (NH326).
 
 ### P2
 

@@ -44,7 +44,8 @@
  */
 
 import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -73,6 +74,7 @@ import {
   type SourceOutcome,
 } from "../lib/ops/refresh-report.ts";
 import { today } from "./doc-dates.mjs";
+import { OBSERVATIONS_ENV, readObservations } from "../lib/ops/stamp-stable.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const REPORT = join(ROOT, REFRESH_REPORT_PATH);
@@ -248,6 +250,13 @@ if (debtFile.debts.length > 0) {
 }
 console.log("");
 
+// RL-1 (NH326/NH327): every writer this run spawns reports its re-observations
+// here, and the runner folds them into the run record. A day that found
+// nothing new records that it looked, without touching a reader-bound byte.
+const observationsPath = join(tmpdir(), `wtp-refresh-observations-${process.pid}.jsonl`);
+rmSync(observationsPath, { force: true });
+process.env[OBSERVATIONS_ENV] = observationsPath;
+
 const outcomes: Outcome[] = [];
 
 for (const source of REFRESH_SOURCES) {
@@ -329,9 +338,13 @@ const exitCode: 0 | 1 | 2 =
 /* -------------------------------------------------------------------------- */
 
 let debt = debtFile;
+const observationsAll = readObservations(observationsPath);
 const rows: RefreshSourceRun[] = outcomes.map((o) => {
   const governs = [...o.source.governs];
   const changedPaths = o.ran ? changedUnder(governs) : [];
+  const observations = o.ran
+    ? observationsAll.filter((ob) => governs.some((g) => (g.endsWith("/") ? ob.path.startsWith(g) : ob.path === g)))
+    : [];
   let outcome: SourceOutcome;
   let reason: string;
   if (!o.ran) {
@@ -348,7 +361,11 @@ const rows: RefreshSourceRun[] = outcomes.map((o) => {
     reason = `ran clean; ${changedPaths.length} governed path(s) changed — awaiting the gate`;
   } else {
     outcome = "UNCHANGED";
-    reason = "ran clean; every governed path is byte-identical to HEAD";
+    const unchanged = observations.filter((ob) => ob.verdict === "FACTS_UNCHANGED");
+    reason =
+      unchanged.length > 0
+        ? `ran clean; facts unchanged — ${unchanged.length} artifact(s) re-observed at ${unchanged[unchanged.length - 1].observedAt} and left byte-identical (stamps not rewritten)`
+        : "ran clean; every governed path is byte-identical to HEAD";
   }
   if (o.debtSince) reason += ` (open debt since ${o.debtSince})`;
   if (dryRun && o.ran) reason += " (dry run — nothing executed, paths not compared)";
@@ -380,6 +397,7 @@ const rows: RefreshSourceRun[] = outcomes.map((o) => {
     changedPaths,
     recoveredFrom: [...o.recoveredFrom],
     nextDueAt,
+    observations,
   };
 });
 

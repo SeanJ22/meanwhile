@@ -59,11 +59,12 @@
  *   pnpm dotgov:fetch
  */
 
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 
 import { stamp } from "./stamp.mts";
 
+import { writeStampStable } from "../lib/ops/stamp-stable.ts";
 /**
  * The pin. Read from the GitHub commits API on 2026-08-16; the commit itself
  * is the zone-file update dated 2026-08-16T07:38:32Z.
@@ -221,11 +222,15 @@ async function main() {
   const snapshot = await fetchDotGov();
   const dir = join(process.cwd(), "data", "dotgov");
   mkdirSync(dir, { recursive: true });
-  writeFileSync(
-    join(dir, "snapshot.json"),
-    `${JSON.stringify(snapshot, null, 2)}\n`,
-    "utf8",
-  );
+  // RL-1 (NH326/NH327): the registry is SHA-pinned, so a re-read that found
+  // the same domains leaves the bytes alone; the read time is operational history.
+  writeStampStable({
+    absolutePath: join(dir, "snapshot.json"),
+    path: "data/dotgov/snapshot.json",
+    next: snapshot,
+    serialize: (value) => `${JSON.stringify(value, null, 2)}\n`,
+    stampKeys: ["readAt"],
+  });
   // Every count, stated. A run that says nothing about what it fetched is
   // indistinguishable from one that fetched nothing.
   console.log(`dotgov: ${snapshot.counts.domains} domains at ${SHA}`);

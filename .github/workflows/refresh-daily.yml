@@ -240,6 +240,28 @@ jobs:
         if: steps.diff.outputs.changed == 'true'
         run: corepack pnpm exec tsx scripts/assert-browser.mts
 
+      # RL-2 / RL-3 (2026-09-05, the refresh-liveness addendum). A refreshed
+      # canonical holding invalidates the Reader Last-Mile closure receipt by
+      # design: the receipt binds every holding by exact byte. Before the suite
+      # validates, the EXISTING dependency-aware renewal re-proves only the
+      # invalidated rows at this head (scripts/refresh-reader-renewal.mts): the
+      # PURE dependents regenerate, one exact-head production build serves the
+      # tree on localhost, every route executor re-executes, and the finalizer's
+      # --renew-holdings inherits the unaffected rows from the committed closure.
+      # A change it cannot prove is refused BY NAME before the gate: the
+      # committed evidence is restored, that source's governed paths go back to
+      # HEAD, and refresh-gate records the debt and goes red for it. No hash is
+      # hand-edited, the census validator is not weakened, and walk:all never
+      # runs. A day whose holdings did not move records NOT_NEEDED and costs
+      # nothing here.
+      - name: Renew the Reader proof for changed canonical holdings
+        id: renewal
+        if: steps.diff.outputs.changed == 'true' && steps.diff.outputs.simulated != 'true'
+        timeout-minutes: 45
+        env:
+          READER_RENEWAL_TEMP: ${{ runner.temp }}
+        run: corepack pnpm exec tsx scripts/refresh-reader-renewal.mts
+
       # PER-SOURCE GATE ISOLATION (2026-09-02, Work Item 1.3).
       #
       # This step was `corepack pnpm test`, and on 2026-09-01 and 2026-09-02 it
@@ -304,13 +326,34 @@ jobs:
           # regenerated manifest must land in the SAME commit as the data that
           # moved it. docs/ is non-shipping (lib/ops/deploy-paths.ts) — this costs
           # no build.
-          if git diff --quiet -- data/ docs/states/; then
+          # docs/evidence/ joined the diff and the add list on 2026-09-05 (RL-2):
+          # a renewed Reader proof lands in the SAME commit as the holding that
+          # invalidated it, or neither lands. The renewal writes only the named
+          # last-mile evidence files the push door grants by exact path.
+          if [ -z "$(git status --porcelain -- data/ docs/states/ docs/evidence/)" ]; then
             echo "unchanged at commit time — nothing to commit"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/ docs/states/ docs/refresh-run.md docs/refresh-run.json
+          # The renewed Reader proof: exact files, so the push-door audit
+          # (lib/ops/push-allowlist.ts) can read every staged path. All of
+          # these exist on main; the three archived-prior files exist only
+          # after a renewal has run, so they are added when present.
+          git add docs/evidence/reader-last-mile-final-agenda.json.gz docs/evidence/reader-last-mile-final-agenda.json.pack.json docs/evidence/reader-last-mile-final-ballot.json.gz docs/evidence/reader-last-mile-final-ballot.json.pack.json
+          git add docs/evidence/reader-last-mile-final-ballot-ask.json.gz docs/evidence/reader-last-mile-final-ballot-ask.json.pack.json docs/evidence/reader-last-mile-final-build-receipt.json.gz docs/evidence/reader-last-mile-final-build-receipt.json.pack.json
+          git add docs/evidence/reader-last-mile-final-bundle.json.gz docs/evidence/reader-last-mile-final-bundle.json.pack.json docs/evidence/reader-last-mile-final-candidate-profiles-ask.json.gz docs/evidence/reader-last-mile-final-candidate-profiles-ask.json.pack.json
+          git add docs/evidence/reader-last-mile-final-closure.json.gz docs/evidence/reader-last-mile-final-closure.json.pack.json docs/evidence/reader-last-mile-final-delta-components.json.gz docs/evidence/reader-last-mile-final-delta-components.json.pack.json
+          git add docs/evidence/reader-last-mile-final-delta-routes.json.gz docs/evidence/reader-last-mile-final-delta-routes.json.pack.json docs/evidence/reader-last-mile-final-federal-money-ask.json.gz docs/evidence/reader-last-mile-final-federal-money-ask.json.pack.json
+          git add docs/evidence/reader-last-mile-final-invalidation.json.gz docs/evidence/reader-last-mile-final-invalidation.json.pack.json docs/evidence/reader-last-mile-final-meeting-knowledge-ask.json.gz docs/evidence/reader-last-mile-final-meeting-knowledge-ask.json.pack.json
+          git add docs/evidence/reader-last-mile-final-meeting-routes.json.gz docs/evidence/reader-last-mile-final-meeting-routes.json.pack.json docs/evidence/reader-last-mile-final-meetings-ask.json.gz docs/evidence/reader-last-mile-final-meetings-ask.json.pack.json
+          git add docs/evidence/reader-last-mile-final-money-ask.json.gz docs/evidence/reader-last-mile-final-money-ask.json.pack.json docs/evidence/reader-last-mile-final-portraits.json.gz docs/evidence/reader-last-mile-final-portraits.json.pack.json
+          git add docs/evidence/reader-last-mile-final-render.json.gz docs/evidence/reader-last-mile-final-render.json.pack.json docs/evidence/reader-last-mile-final-closure-receipt.json docs/evidence/reader-last-mile-final-closure.md
+          git add docs/evidence/reader-last-mile-final-closure-summary.json docs/evidence/reader-last-mile-final-delta-summary.json docs/evidence/reader-last-mile-final-delta-witnesses.json docs/evidence/reader-last-mile-active-portraits.json
+          if [ -e docs/evidence/reader-last-mile-refresh-prior-receipt.json ]; then git add docs/evidence/reader-last-mile-refresh-prior-receipt.json; fi
+          if [ -e docs/evidence/reader-last-mile-refresh-prior-census.json.gz ]; then git add docs/evidence/reader-last-mile-refresh-prior-census.json.gz; fi
+          if [ -e docs/evidence/reader-last-mile-refresh-prior-census.json.pack.json ]; then git add docs/evidence/reader-last-mile-refresh-prior-census.json.pack.json; fi
           git commit -m "Daily refresh: $(date -u +%Y-%m-%dT%H:%MZ)"
           node scripts/push-main.mjs --workflow refresh-daily
 

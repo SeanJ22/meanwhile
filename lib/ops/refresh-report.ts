@@ -46,6 +46,8 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
 import { CATCH_UP_MAX_DAYS, cadenceOn, isDue, utcDay, type RefreshSource } from "./refresh-cadence.ts";
+import { renewalSummary } from "./refresh-renewal.ts";
+import type { RefreshObservation } from "./stamp-stable.ts";
 
 export const REFRESH_RUN_PATH = "docs/refresh-run.json";
 export const REFRESH_REPORT_PATH = "docs/refresh-run.md";
@@ -70,6 +72,42 @@ export interface RefreshSourceRun {
   /** Earlier calendar days this run recovered for the source, `YYYY-MM-DD`. */
   recoveredFrom: string[];
   nextDueAt: string | null;
+  /**
+   * Additive (RL-1, 2026-09-05): what each of this source's writers observed —
+   * facts unchanged and bytes left alone, or facts changed and written. A
+   * no-op day's "we looked at HH:MM" lives here, never in the artifact.
+   */
+  observations?: RefreshObservation[];
+}
+
+/** One step of the Reader proof renewal, timed, so a red run names where it stopped. */
+export interface RefreshRenewalStep {
+  name: string;
+  ok: boolean;
+  secs: number;
+  detail: string | null;
+}
+
+/**
+ * Additive (RL-2/RL-3, 2026-09-05): what the refresh did about the Reader
+ * Last-Mile closure receipt when a canonical holding changed. NOT_NEEDED when
+ * no holding's bytes moved; RENEWED when the existing dependency-aware
+ * finalizer re-proved the invalidated rows at this head; FAILED when it could
+ * not, in which case every source whose changed paths include a holding is
+ * refused, its paths are back at HEAD, and the gate records the debt.
+ */
+export interface RefreshRenewal {
+  verdict: "NOT_NEEDED" | "RENEWED" | "FAILED";
+  ranAt: string;
+  exactHead: string;
+  /** Canonical holdings whose bytes differ from the committed closure census. */
+  changedHoldings: string[];
+  /** The evidence prefix the renewal archived the prior receipt under, when it ran. */
+  prefix: string | null;
+  steps: RefreshRenewalStep[];
+  /** Sources refused because their holding change could not be proved; empty unless FAILED. */
+  refusedSources: { id: string; paths: string[]; why: string }[];
+  failure: string | null;
 }
 
 export type GateVerdict = "NOT_RUN" | "GREEN" | "REFUSED" | "CANNOT_RUN";
@@ -105,6 +143,8 @@ export interface RefreshRun {
     attribution: GateAttribution[];
     note: string;
   };
+  /** Additive (RL-2/RL-3, 2026-09-05): what the refresh did about the Reader proof when a holding changed. */
+  renewal?: RefreshRenewal;
 }
 
 export interface RefreshDebt {
@@ -309,6 +349,20 @@ export function renderRefreshRunMarkdown(run: RefreshRun, sources: readonly Refr
       ),
     );
   }
+  // RL-1: a re-observation that changed no fact is history, not an artifact edit.
+  const observed = run.sources.flatMap((s) => (s.observations ?? []).map((o) => ({ id: s.id, ...o })));
+  if (observed.length > 0) {
+    lines.push("");
+    lines.push("## What the writers observed (RL-1)");
+    lines.push("");
+    lines.push("A re-observation whose facts were unchanged left its file byte-identical; the check time is recorded here, never in the artifact.");
+    lines.push("");
+    lines.push("| Source | Artifact | Verdict | Observed at | Bytes moved | Stamps left alone |");
+    lines.push("|---|---|---|---|:---:|---|");
+    for (const o of observed) {
+      lines.push(`| \`${o.id}\` | \`${o.path}\` | ${o.verdict} | ${o.observedAt} | ${o.written ? "yes" : "no"} | ${o.stampKeys.map((k) => `\`${k}\``).join(", ") || "—"} |`);
+    }
+  }
   lines.push("");
   lines.push("## What the gate did");
   lines.push("");
@@ -320,6 +374,12 @@ export function renderRefreshRunMarkdown(run: RefreshRun, sources: readonly Refr
     for (const a of run.gate.attribution) {
       lines.push(`| \`${a.file}\` | ${a.sourceId ? `\`${a.sourceId}\`` : "the tree, not any source's data"} | ${a.basis} |`);
     }
+  }
+  if (run.renewal) {
+    lines.push("");
+    lines.push("## Reader proof renewal (RL-2 / RL-3)");
+    lines.push("");
+    for (const line of renewalSummary(run.renewal)) lines.push(line.startsWith("  ") ? `- ${line.trim()}` : line);
   }
   lines.push("");
   lines.push("## Which days this run answered for");

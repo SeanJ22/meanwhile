@@ -33,7 +33,7 @@ import { rosterPath } from "../lib/holdings/files.ts";
  */
 
 import { config as loadEnv } from "dotenv";
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -53,6 +53,7 @@ import { readZip } from "../lib/sources/legiscan/zip.ts";
 
 import { COVERED_USPS, ROSTER_BY_USPS } from "../lib/coverage/artifacts.ts";
 
+import { writeStampStable } from "../lib/ops/stamp-stable.ts";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 loadEnv({ path: join(ROOT, ".env.local") });
 
@@ -368,9 +369,17 @@ async function main() {
     positions,
   };
 
-  await writeFile(SNAPSHOT, `${JSON.stringify(snapshot, null, 1)}\n`, "utf8");
+  // RL-1 (NH326/NH327): a re-read that changed no roll call or position
+  // leaves the reader-bound bytes alone; the read time is operational history.
+  const stampWrite = writeStampStable({
+    absolutePath: SNAPSHOT,
+    path: "data/votes/state-votes-snapshot.json",
+    next: snapshot,
+    serialize: (value) => `${JSON.stringify(value, null, 1)}\n`,
+    stampKeys: ["generatedAt", "downloadedAt", "retrievedAt"],
+  });
   console.log(
-    `\nwrote ${SNAPSHOT}\n  ${rollCalls.length} roll calls, ${positions.length} recorded positions, ` +
+    `\n${stampWrite.written ? "wrote" : "facts unchanged, left untouched:"} ${SNAPSHOT}\n  ${rollCalls.length} roll calls, ${positions.length} recorded positions, ` +
       `${matchedRosterIds.size} officeholders with a voting record`,
   );
 }

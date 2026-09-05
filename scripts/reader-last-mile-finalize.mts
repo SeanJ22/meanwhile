@@ -40,7 +40,7 @@ const receiptPath = "docs/evidence/reader-last-mile-final-closure-receipt.json";
 let baselineCensusPath = "docs/evidence/reader-last-mile-closure.json";
 let baselineReceiptPath = "docs/evidence/reader-last-mile-closure-receipt.json";
 let archivedBaselineCensusPath: string | null = null;
-let routePaths = [
+const routePaths = [
   "docs/evidence/reader-last-mile-final-delta-routes.json",
   "docs/evidence/reader-last-mile-final-ballot.json",
   "docs/evidence/reader-last-mile-final-ballot-ask.json",
@@ -76,13 +76,12 @@ if (process.argv.includes("--renew-holdings")) {
   writeFileSync(baselineReceiptPath, priorReceiptBytes);
   writeFileSync(archivedBaselineCensusPath, priorCensusBytes);
   packReaderEvidence(root, archivedBaselineCensusPath);
-  routePaths = [
-    "docs/evidence/reader-last-mile-final-delta-routes.json",
-    "docs/evidence/reader-last-mile-final-ballot.json",
-    "docs/evidence/reader-last-mile-final-ballot-ask.json",
-    "docs/evidence/reader-last-mile-final-candidate-profiles-ask.json",
-    "docs/evidence/reader-last-mile-final-money-ask.json",
-  ];
+  // Every route proof is composed, so every route executor must have been
+  // re-executed at this head before a holding renewal (the refresh's renewal,
+  // scripts/refresh-reader-renewal.mts, runs all of them). A renewal that
+  // re-ran only the ballot executors would leave an invalidated meeting or
+  // federal-finance row without a current-head proof, and the finalizer
+  // below refuses exactly that.
 }
 
 if (process.argv.includes("--prepare")) {

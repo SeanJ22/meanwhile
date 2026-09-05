@@ -41,7 +41,7 @@
  * honoured, ~4 requests per candidate over ~40 candidates.
  */
 import { config as loadEnv } from "dotenv";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir } from "node:fs/promises";
 import { readFileSync } from "node:fs";
 import { ballotPath } from "../lib/holdings/files.ts";
 import { join, dirname } from "node:path";
@@ -57,6 +57,7 @@ import type {
 import { findShrinkRegressions } from "../lib/funding/guard.ts";
 import { stamp } from "./stamp.mts";
 
+import { writeStampStable } from "../lib/ops/stamp-stable.ts";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 loadEnv({ path: join(ROOT, ".env.local") });
 
@@ -892,10 +893,18 @@ if (prior) {
 }
 
 await mkdir(dirname(OUT), { recursive: true });
-await writeFile(OUT, `${JSON.stringify(snapshot, null, 1)}\n`);
+// RL-1 (NH326/NH327): a re-read that changed no filing, receipt or absence
+// leaves the reader-bound bytes alone; when the FEC was asked is operational history.
+const stampWrite = writeStampStable({
+  absolutePath: OUT,
+  path: "data/fec/fec-2026.json",
+  next: snapshot,
+  serialize: (value) => `${JSON.stringify(value, null, 1)}\n`,
+  stampKeys: ["fetchedAt", "checkedAt"],
+});
 
 console.log("");
-console.log("=== snapshot written ===");
+console.log(stampWrite.written ? "=== snapshot written ===" : "=== snapshot facts unchanged; file left untouched ===");
 console.log(`candidates with totals: ${totalsHits}/${byFecId.size} matched FEC ids (${totalsEmpty} registered-but-no-filings)`);
 console.log(`contributor rows: ${candidates.reduce((n, c) => n + c.topContributions.length, 0)} across ${candidates.filter((c) => c.topContributions.length > 0).length} candidates`);
 console.log(

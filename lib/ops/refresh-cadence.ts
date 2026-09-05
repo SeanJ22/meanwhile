@@ -159,7 +159,11 @@ export const REFRESH_SOURCES: readonly RefreshSource[] = [
       "nj:filing:check",
       "questionnaire:invitations --write",
     ],
-    governs: ["data/ballot/", "data/questionnaire/"],
+    // `data/ballot/` was the pre-2026-09-03 home; the writer (`nj:ballot --write`)
+    // has written `data/states/nj/ballot/` since the state-holdings reorg. The
+    // stale prefix left the 2026-09-05 rewrite of both NJ files attributed to
+    // nobody, so nothing could be refused or owed by name.
+    governs: ["data/states/nj/ballot/", "data/questionnaire/"],
     cadence: "weekly",
     // The election is 2026-11-03. expected-future-date: the general election.
     elevatedUntil: { cadence: "daily", until: "2026-11-03" },

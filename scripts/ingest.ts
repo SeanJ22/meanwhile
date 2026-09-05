@@ -35,9 +35,9 @@ import {
 import {
   readSnapshot,
   snapshotCounts,
-  writeSnapshot,
   type MeetingsSnapshot,
 } from "../lib/meetings/snapshot.ts";
+import { writeMeetingsSnapshotStampStable } from "./lib/meetings-snapshot-write.ts";
 import { makeApptegySource } from "../lib/sources/apptegy/index.ts";
 import { makeCivicPlusSource } from "../lib/sources/civicplus/index.ts";
 import {
@@ -631,11 +631,14 @@ function writeMeetingsSnapshot(
     ),
   };
 
-  const path = writeSnapshot(snapshot);
+  // RL-1 (NH326/NH327): unchanged civic facts leave the reader-bound file's
+  // bytes alone; the observation goes to the run record. The comparison lives
+  // in scripts/lib so the reader-side snapshot module stays as proved.
+  const { path, observation: snapshotWrite } = writeMeetingsSnapshotStampStable(snapshot);
   const failedNames = snapshot.sources.filter((s) => !s.ok).map((s) => s.source);
   const carriedTotal = [...carried.values()].reduce((a, b) => a + b, 0);
   console.log(
-    `snapshot written: ${path}\n` +
+    `${snapshotWrite?.written === false ? "snapshot facts unchanged, file left untouched (observed " + snapshotWrite.observedAt + "):" : "snapshot written:"} ${path}\n` +
       `  ${snapshot.meetings.length} meetings from ${okCount}/${snapshot.sources.length} sources, ` +
       `${snapshot.agendaDocuments.length} agenda document version(s)` +
       (failedNames.length > 0 ? `, failed: ${failedNames.join(", ")}` : ""),

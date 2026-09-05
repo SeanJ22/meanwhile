@@ -1264,7 +1264,8 @@ test("thin guard: the fetch script runs it before writing and keeps the prior sn
   // override is an explicit human flag — assert the wiring, not vibes.
   assert.match(script, /findShrinkRegressions\(prior, snapshot\)/);
   const guardAt = script.indexOf("findShrinkRegressions(prior, snapshot)");
-  const writeAt = script.indexOf("await writeFile(OUT");
+  // The write is stamp-stable since 2026-09-05 (RL-1): writeStampStable({ absolutePath: OUT, … }).
+  const writeAt = script.indexOf("absolutePath: OUT");
   assert.ok(guardAt > 0 && writeAt > guardAt, "the guard must run BEFORE the snapshot write");
   assert.match(script, /process\.exit\(1\)/);
   assert.match(script, /--allow-shrink/);

@@ -472,6 +472,19 @@ export async function bootstrap(sql: Sql, nowIso: string): Promise<void> {
 export async function createPgRepositories(
   connectionString: string,
   nowIso: string = new Date().toISOString(),
+  options: {
+    /**
+     * Skip the schema bootstrap. (ADM-2, 9.4.26.) The bootstrap replays every
+     * DDL statement and a version upsert — nine sequential Neon round trips —
+     * and the admin PAGES were paying it on every request before their first
+     * SELECT, which is most of the two-second lag the owner felt choosing a
+     * state. A page never owns the schema: the runner and the publishers
+     * bootstrap, the deploy only reads. On a database whose schema is behind,
+     * a read then fails and the page says STORE_UNREACHABLE, which is the
+     * honest reading — never a silent CREATE from a web request.
+     */
+    readonly skipBootstrap?: boolean;
+  } = {},
 ): Promise<ControlPlaneRepositories> {
   if (typeof connectionString !== "string" || connectionString.trim().length === 0) {
     throw new Error(
@@ -482,7 +495,7 @@ export async function createPgRepositories(
     );
   }
   const sql = neon(connectionString);
-  await bootstrap(sql, nowIso);
+  if (!options.skipBootstrap) await bootstrap(sql, nowIso);
   const locks = pgLockManager(sql);
 
   return {

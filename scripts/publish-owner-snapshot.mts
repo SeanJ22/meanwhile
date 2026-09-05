@@ -44,6 +44,7 @@ import { join } from "node:path";
 
 import {
   freshnessContract,
+  freshnessRiskOf,
   pilotHealth,
   readerContract,
   truthContract,
@@ -54,6 +55,7 @@ import { loadJsonArray } from "../lib/health/json-store.ts";
 import {
   assessStaleness,
   latestControlRun,
+  latestFreshnessCycle,
   latestReaderRun,
   DEFAULT_MAX_AGE_HOURS,
 } from "../lib/health/latest-runs.ts";
@@ -68,7 +70,6 @@ import {
   CACHE_OBSERVATION_ID,
   DECISION_LOG_KEY,
   DIGEST_LOG_KEY,
-  RUNNER_ID,
   SNAPSHOT_ID,
 } from "../lib/control-plane/admin-data.ts";
 import {
@@ -83,8 +84,16 @@ import {
   type OwnerDigestRecord,
   type OwnerSnapshot,
   type OwnerZipRow,
-  type RunnerHeartbeat,
 } from "../lib/control-plane/owner-surface.ts";
+import { buildDecisionCards } from "../lib/control-plane/decision-cards.ts";
+import { buildCostPanel } from "../lib/control-plane/cost-panel.ts";
+import { readPipelineStates, stageCounts } from "../lib/control-plane/promotion/pipeline.ts";
+import { RESEARCH_STATE_ID } from "../lib/control-plane/scheduler/research-policy.ts";
+import { unitCarriesState } from "../lib/control-plane/scheduler/dispatch-target.ts";
+import { US_STATES } from "../lib/control-plane/readiness/catalog.ts";
+import { REGISTRY } from "../lib/tracker/registry.mjs";
+import { readStore, WORKING_CSV } from "./tracker-core.mjs";
+import { today } from "./doc-dates.mjs";
 
 const ROOT = process.cwd();
 const NOW = new Date();
@@ -161,7 +170,15 @@ const truth = truthContract({
           : `the newest control-set run cannot be read as current: ${controlStale?.why}`,
 });
 
-const freshness = freshnessContract();
+/*
+ * FRESHNESS reads the newest cycle's MEASURED risk (9.4.26). Both this
+ * publisher and `scripts/pilot-health.mts` call the contract the same way, so
+ * the page and `pnpm pilot:health` keep matching for the same SHA — that
+ * acceptance clause is structural, and it is why the risk projection below
+ * is `freshnessRiskOf` in one shared module rather than typed twice.
+ */
+const newestCycle = latestCycle();
+const freshness = freshnessContract(freshnessRiskOf(newestCycle?.record ?? null));
 const rollup = pilotHealth(reader, truth, freshness);
 
 /**
@@ -220,80 +237,88 @@ function truthDenominator(): Held<Measured> {
  * PANEL 3 — THE NEEDS-SEAN QUEUE
  * ------------------------------------------------------------------ */
 
+/**
+ * ADM-4 (9.4.26): the cards are the JOIN of the working store (title,
+ * priority, opened date), the RULING 271 registry (what is needed, why no
+ * machine can decide it, the options) and the reconciliation outcomes (what
+ * the last generation found for a predicated row) — the same join
+ * `docs/tracker-owner-view.md` makes. Before this the publisher read the
+ * reconciliation file alone, which carries none of those fields, and every
+ * card rendered its unrecorded fallback with no buttons.
+ */
 function decisionCards(): OwnerDecisionCard[] {
-  const path = join(ROOT, "docs", "tracker-reconciliation.json");
-  if (!existsSync(path)) return [];
+  let rows: Readonly<Record<string, string>>[];
   try {
-    const parsed = JSON.parse(readFileSync(path, "utf8")) as {
-      outcomes?: Array<Record<string, unknown>>;
-    };
-    const rows = Array.isArray(parsed.outcomes) ? parsed.outcomes : [];
-    return rows
-      .filter((r) => String(r.verdict ?? r.marking ?? "") !== "RESOLVED_BY_EVIDENCE")
-      .map((r): OwnerDecisionCard => {
-        const options = Array.isArray(r.options)
-          ? (r.options as Array<Record<string, unknown>>).map((o) => ({
-              option: String(o.option ?? ""),
-              consequence: String(o.consequence ?? ""),
-            }))
-          : [];
-        const age = r.ageDays;
-        return {
-          rowId: String(r.id ?? r.rowId ?? "unknown"),
-          title: String(r.title ?? ""),
-          whatIsNeeded: String(r.whatIsNeeded ?? r.blocker ?? "not recorded on this row"),
-          whyNoMachineCanDecide: String(
-            r.whyNoMachineCanDecide ?? "not recorded on this row",
-          ),
-          options,
-          // RULING 221's blocked-descendant count lives on the feedback-sweep
-          // item type, not on tracker rows. Publishing 0 where the field does
-          // not exist would be asserting "nothing is blocked behind this",
-          // which we have not measured — so it is -1 nowhere and 0 only when
-          // the row genuinely carries it.
-          blockedDescendants: typeof r.blockedDescendants === "number" ? r.blockedDescendants : 0,
-          openedOn: typeof r.openedOn === "string" ? r.openedOn : null,
-          ageDays: typeof age === "number" ? age : null,
-          priority: String(r.priority ?? "unset"),
-          verifiability:
-            String(r.kind ?? r.marking ?? "") === "predicate"
-              ? "PREDICATE"
-              : "NOT_MACHINE_VERIFIABLE",
-        };
-      });
+    rows = readStore(WORKING_CSV, ROOT) as Readonly<Record<string, string>>[];
   } catch (error) {
-    log(`could not read the tracker reconciliation (${(error as Error).message}) — publishing none`);
+    log(`could not read ${WORKING_CSV} (${(error as Error).message}) — publishing no cards`);
     return [];
   }
+  let outcomes: { rowId: string; kind: string; verdict: string; why: string }[] = [];
+  const reconciliation = join(ROOT, "docs", "tracker-reconciliation.json");
+  if (existsSync(reconciliation)) {
+    try {
+      const parsed = JSON.parse(readFileSync(reconciliation, "utf8")) as { outcomes?: unknown };
+      if (Array.isArray(parsed.outcomes)) {
+        outcomes = parsed.outcomes as { rowId: string; kind: string; verdict: string; why: string }[];
+      }
+    } catch (error) {
+      log(`could not read the tracker reconciliation (${(error as Error).message}) — cards carry no recheck`);
+    }
+  }
+  return buildDecisionCards({
+    rows,
+    registry: REGISTRY as Parameters<typeof buildDecisionCards>[0]["registry"],
+    outcomes,
+    stamp: today(NOW),
+  });
 }
 
 /* ------------------------------------------------------------------ *
  * PANEL 4 / 6 — RUNNER CYCLE AND THE ZIP GRID
  * ------------------------------------------------------------------ */
 
+/**
+ * The run record's REAL shapes, as `scripts/freshness-shadow.mts` writes them
+ * (9.4.26 fix): `scheduled` is a NUMBER, `unscheduled` an array of named
+ * units, `registry.providers` an ARRAY of provider rows carrying `units`, and
+ * `registry.registeredUnits` the whole denominator. The previous interface
+ * guessed at these and produced an empty "by state" panel, five "0 of 0"
+ * provider rows keyed 0..4, and a debt figure of "180 of 180".
+ */
 interface CycleRecord {
   startedAt?: string;
   finishedAt?: string;
   testedSha?: string;
   digest?: string[];
-  risk?: Record<string, unknown>;
+  risk?: {
+    obligationsScheduled?: number;
+    obligationsUnscheduled?: number;
+    obligationsOverdue?: number;
+    debtRows?: number;
+    incidents?: number;
+    oldestDebtHours?: number;
+    activation?: string;
+  };
   incidents?: Array<Record<string, unknown>>;
-  scheduled?: unknown[];
-  unscheduled?: unknown[];
-  registry?: { providers?: Record<string, number> };
+  scheduled?: number;
+  unscheduled?: Array<{ id?: string; reason?: string }>;
+  registry?: {
+    providers?: Array<{ providerId?: string; units?: number; records?: number; readFailure?: string | null }>;
+    registeredUnits?: number;
+  };
+  research?: {
+    lanes?: {
+      deterministic?: { due?: number; dispatched?: number };
+      model?: { due?: number; dispatched?: number };
+    } | null;
+  };
 }
 
+/** The newest cycle record, through the shared reader `pnpm pilot:health` also uses. */
 function latestCycle(): { record: CycleRecord; file: string } | null {
-  const dir = join(ROOT, "data", "health", "freshness-shadow-runs");
-  if (!existsSync(dir)) return null;
-  const files = readdirSync(dir).filter((f) => f.endsWith(".json")).sort();
-  const newest = files.at(-1);
-  if (!newest) return null;
-  try {
-    return { record: JSON.parse(readFileSync(join(dir, newest), "utf8")), file: newest };
-  } catch {
-    return null;
-  }
+  const newest = latestFreshnessCycle(ROOT);
+  return newest ? { record: newest.record as CycleRecord, file: newest.file } : null;
 }
 
 /**
@@ -447,169 +472,212 @@ function intake(): {
  * BUILD AND PUBLISH
  * ------------------------------------------------------------------ */
 
-const cycle = latestCycle();
+const cycle = newestCycle;
 const cards = decisionCards();
 const zips = zipRows();
 const intakeCounts = intake();
 
-const providers = cycle?.record.registry?.providers ?? {};
-const providerTotal = Object.values(providers).reduce((a, b) => a + (Number(b) || 0), 0);
+/*
+ * The run record's registry rows (9.4.26). `registeredUnits` is the whole
+ * denominator the cycle scheduled over; each provider row carries its own
+ * `units`. The old publisher treated the array as a Record<string, number>
+ * and published five "0 of 0" rows keyed "0".."4".
+ */
+const providerRows = Array.isArray(cycle?.record.registry?.providers) ? cycle.record.registry.providers : [];
+const registeredUnits =
+  typeof cycle?.record.registry?.registeredUnits === "number"
+    ? cycle.record.registry.registeredUnits
+    : providerRows.reduce((n, p) => n + (typeof p.units === "number" ? p.units : 0), 0);
+const cycleSource = `freshness-shadow run ${cycle?.file ?? "unknown"}`;
 
-const scheduledCount = Array.isArray(cycle?.record.scheduled) ? cycle.record.scheduled.length : 0;
-const unscheduledCount = Array.isArray(cycle?.record.unscheduled)
-  ? cycle.record.unscheduled.length
-  : 0;
-const obligationTotal = scheduledCount + unscheduledCount;
+/**
+ * What the control plane holds, read once so every cost row and the by-state
+ * deployment come from ONE instant. Null when the store was not opened (a
+ * dry run without a store): every dependent panel then publishes its named
+ * gap rather than a zero.
+ */
+interface ControlPlaneReads {
+  readonly costs: Awaited<ReturnType<ControlPlaneRepositories["costs"]["readAll"]>>;
+  readonly attempts: { readonly id: string; readonly worker: { readonly version: string; readonly provider: string } }[];
+  readonly obligations: { readonly id: string; readonly subjectId: string }[];
+  readonly cacheByRole: Parameters<typeof buildCostPanel>[0]["cacheByRole"];
+  readonly share: Parameters<typeof buildCostPanel>[0]["share"];
+  readonly verifiedRecords: number | null;
+}
 
-const risk = (cycle?.record.risk ?? {}) as Record<string, number>;
+async function readControlPlane(repos: ControlPlaneRepositories): Promise<ControlPlaneReads> {
+  const [costs, attempts, obligations, research] = await Promise.all([
+    repos.costs.readAll(),
+    repos.attempts.list(),
+    repos.obligations.list(),
+    repos.researchState.read(RESEARCH_STATE_ID),
+  ]);
+  let verifiedRecords: number | null = null;
+  try {
+    verifiedRecords = stageCounts(await readPipelineStates(repos)).byStage.VERIFIED;
+  } catch (error) {
+    log(`the promotion pipeline could not be read (${(error as Error).message}) — cost per verified record is a gap`);
+  }
+  const metrics = research?.value.metrics ?? null;
+  return {
+    costs,
+    attempts: attempts.map((a) => ({ id: a.value.id, worker: a.value.worker })),
+    obligations: obligations.map((o) => ({ id: o.value.id, subjectId: o.value.subjectId })),
+    cacheByRole: metrics?.cacheByRole ?? null,
+    share: metrics?.share ?? null,
+    verifiedRecords,
+  };
+}
 
-const snapshot: OwnerSnapshot = {
-  formatVersion: OWNER_SURFACE_FORMAT_VERSION,
-  publishedAt: NOW_ISO,
-  publishedFromSha: HEAD,
-  publisher: "pnpm owner:publish",
-
-  pilotGreen: rollup.green,
-  contracts: rollup.readings.map((r) => ({
-    contract: r.contract,
-    state: r.state,
-    reason: r.reason,
-    denominator:
-      r.contract === "READER"
-        ? readerDenominator()
-        : r.contract === "TRUTH"
-          ? truthDenominator()
-          : gap<Measured>(
-              "OURS",
-              "The freshness contract is NOT_READY by construction while the scheduler is in " +
-                "shadow: it has a risk reading, not a denominator it can be scored against.",
-            ),
-    proofClass:
-      r.contract === "READER" && readerRun
-        ? String((readerRun as unknown as { proofClass?: string }).proofClass ?? "SESSION_MEASURED")
-        : "SESSION_MEASURED",
-    runSha:
-      r.contract === "READER"
-        ? (readerRun?.testedSha ?? null)
-        : r.contract === "TRUTH"
-          ? (controlRun?.testedSha ?? null)
-          : (cycle?.record.testedSha ?? null),
-    runAt:
-      r.contract === "READER"
-        ? (readerRun?.finishedAt ?? null)
-        : r.contract === "TRUTH"
-          ? (controlRun?.finishedAt ?? null)
-          : (cycle?.record.finishedAt ?? null),
-  })),
-
-  decisionCards: cards,
-
-  obligationsByState:
-    obligationTotal === 0
-      ? []
-      : [
-          {
-            state: "scheduled",
-            count: measured(
-              scheduledCount,
-              obligationTotal,
-              "standing obligations with a computed next-due time, out of all registered obligations",
-              `freshness-shadow run ${cycle?.file ?? "unknown"}`,
-            ),
-          },
-          {
-            state: "unscheduled",
-            count: measured(
-              unscheduledCount,
-              obligationTotal,
-              "registered obligations the scheduler could not place, out of all registered obligations",
-              `freshness-shadow run ${cycle?.file ?? "unknown"}`,
-            ),
-          },
-        ],
-
-  obligationsByProvider: Object.entries(providers).map(([provider, count]) => ({
-    provider,
-    count: measured(
-      Number(count) || 0,
-      providerTotal,
-      "registered units for this provider, out of all registered units across every provider",
-      `freshness-shadow run ${cycle?.file ?? "unknown"}`,
-    ),
-  })),
-
-  freshnessDebtRows:
-    cycle === null
-      ? gap(
-          "OURS",
-          "No freshness-shadow cycle record exists, so debt has not been counted. Not counted " +
-            "is not zero.",
-        )
-      : held(
-          measured(
-            Number(risk.debtRows ?? 0),
-            Math.max(obligationTotal, Number(risk.debtRows ?? 0)),
-            "obligations carrying a freshness debt row, out of all registered obligations",
-            `freshness-shadow run ${cycle.file}`,
-          ),
-        ),
-
-  incidents: (cycle?.record.incidents ?? []).map((i) => ({
-    cause: String(i.cause ?? "unknown"),
-    target: String(i.target ?? "unknown"),
-    obligationsAffected: Number(i.obligationsAffected ?? 0),
-    oldestHours: typeof i.oldestHours === "number" ? i.oldestHours : null,
-  })),
-
-  /*
-   * COST. The attempt-cost ledger is in the control plane and is genuinely
-   * queryable; the CALLER-KEY and CACHE-HIT-RATE ledger is not — it lives in
-   * `lib/ask/prompt-cache.ts`, is accumulated per process, and has no field in
-   * `AttemptCost` at all. So the digest reports the cycle cache hit rate as NOT
-   * MEASURED and so does this. Publishing a zero here would be inventing a
-   * measurement, which is the one thing the cost panel must not do.
-   */
-  costByRole: [],
-  costByModel: [],
-  cacheHitRateByCaller: [
-    {
-      callerKey: "prod-ask",
-      hitRate: gap(
-        "OURS",
-        "Cache hit rate by caller key is not recorded to the control plane: the ledger is " +
-          "per-process and AttemptCost carries no cache fields. Not measured, not zero.",
+/**
+ * Standing obligations by STATE, from the control plane's own obligation
+ * ids (9.4.26). This is the one per-state deployment figure the console has;
+ * an obligation naming no state lands in "other", named, never dropped.
+ */
+function obligationsByState(reads: ControlPlaneReads | null): OwnerSnapshot["obligationsByState"] {
+  if (reads === null || reads.obligations.length === 0) return [];
+  const counts = new Map<string, number>();
+  for (const o of reads.obligations) {
+    const hay = `${o.id} ${o.subjectId}`.toLowerCase();
+    const state = US_STATES.find((s) => unitCarriesState(hay, s.code));
+    const key = state ? state.name : "other";
+    counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+  const total = reads.obligations.length;
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .map(([state, count]) => ({
+      state,
+      count: measured(
+        count,
+        total,
+        "standing obligations whose id or subject names this state, out of every standing obligation in the control plane",
+        "cp_obligations (control-plane standing obligations)",
       ),
-    },
-  ],
-  deterministicShare: gap(
-    "OURS",
-    "The deterministic-versus-model lane share is computed inside the cycle digest and is not " +
-      "yet published as a structured number.",
-  ),
-  costPerVerifiedRecord: gap(
-    "OURS",
-    "Cost per verified record needs a verified-record denominator the reader suite does not yet " +
-      "publish. Inventing one would make the ratio meaningless.",
-  ),
+    }));
+}
 
-  zipRows: zips,
+function buildSnapshot(reads: ControlPlaneReads | null): OwnerSnapshot {
+  const risk = cycle?.record.risk ?? {};
+  const debtRows = typeof risk.debtRows === "number" ? risk.debtRows : null;
+  const cost = reads
+    ? buildCostPanel({
+        costs: reads.costs,
+        attempts: reads.attempts,
+        cacheByRole: reads.cacheByRole,
+        share: reads.share,
+        verifiedRecords: reads.verifiedRecords,
+      })
+    : null;
+  const notOpened = gap<Measured>("OURS", "not read — the control plane was not opened for this publish.");
 
-  intakeFolder: intakeCounts.folder,
-  intakeItemsFound: intakeCounts.found,
-  intakeItemsProcessed: intakeCounts.processed,
-  intakeUnidentifiable: intakeCounts.unidentifiable,
-};
+  return {
+    formatVersion: OWNER_SURFACE_FORMAT_VERSION,
+    publishedAt: NOW_ISO,
+    publishedFromSha: HEAD,
+    publisher: "pnpm owner:publish",
 
-const heartbeat: RunnerHeartbeat = {
-  formatVersion: OWNER_SURFACE_FORMAT_VERSION,
-  beatAt: NOW_ISO,
-  lastCycleStartedAt: cycle?.record.startedAt ?? null,
-  lastCycleFinishedAt: cycle?.record.finishedAt ?? null,
-  nextCycleDueAt: null,
-  lastCycleOk: cycle === null ? null : true,
-  testedSha: cycle?.record.testedSha ?? HEAD,
-  host: "runner",
-};
+    pilotGreen: rollup.green,
+    contracts: rollup.readings.map((r) => ({
+      contract: r.contract,
+      state: r.state,
+      reason: r.reason,
+      denominator:
+        r.contract === "READER"
+          ? readerDenominator()
+          : r.contract === "TRUTH"
+            ? truthDenominator()
+            : gap<Measured>(
+                "OURS",
+                "The freshness contract is NOT_READY by construction while the scheduler is in " +
+                  "shadow: it has a risk reading, not a denominator it can be scored against.",
+              ),
+      proofClass:
+        r.contract === "READER" && readerRun
+          ? String((readerRun as unknown as { proofClass?: string }).proofClass ?? "SESSION_MEASURED")
+          : "SESSION_MEASURED",
+      runSha:
+        r.contract === "READER"
+          ? (readerRun?.testedSha ?? null)
+          : r.contract === "TRUTH"
+            ? (controlRun?.testedSha ?? null)
+            : (cycle?.record.testedSha ?? null),
+      runAt:
+        r.contract === "READER"
+          ? (readerRun?.finishedAt ?? null)
+          : r.contract === "TRUTH"
+            ? (controlRun?.finishedAt ?? null)
+            : (cycle?.record.finishedAt ?? null),
+    })),
+
+    decisionCards: cards,
+
+    obligationsByState: obligationsByState(reads),
+
+    obligationsByProvider: providerRows
+      .filter((p) => typeof p.providerId === "string")
+      .map((p) => ({
+        provider: String(p.providerId),
+        count: measured(
+          typeof p.units === "number" ? p.units : 0,
+          Math.max(registeredUnits, typeof p.units === "number" ? p.units : 0),
+          "route units this provider registered in the newest cycle, out of every unit registered across all providers",
+          cycleSource,
+        ),
+      })),
+
+    freshnessDebtRows:
+      cycle === null || debtRows === null
+        ? gap(
+            "OURS",
+            "No freshness-shadow cycle record carries a debt count, so debt has not been counted. Not counted is not zero.",
+          )
+        : held(
+            measured(
+              debtRows,
+              Math.max(registeredUnits, debtRows),
+              "route units carrying a freshness debt row, out of every unit the newest cycle registered",
+              cycleSource,
+            ),
+          ),
+
+    incidents: (cycle?.record.incidents ?? []).map((i) => ({
+      cause: String(i.cause ?? "unknown"),
+      target: String(i.target ?? "unknown"),
+      obligationsAffected: Number(i.obligationsAffected ?? 0),
+      oldestHours: typeof i.oldestHours === "number" ? i.oldestHours : null,
+    })),
+
+    /*
+     * COST (ADM-6, 9.4.26): read from the control plane's own ledger,
+     * attempts, research metrics and promotion pipeline, joined in
+     * `lib/control-plane/cost-panel.ts`. A store that was not opened publishes
+     * a named gap per row rather than an empty list — an empty list rendered
+     * as a heading over nothing, which reads as "nothing to report".
+     */
+    costByRole: cost ? cost.costByRole : [{ key: "every role", usd: notOpened, attemptsMeasured: 0, attemptsUnmeasured: 0 }],
+    costByModel: cost ? cost.costByModel : [{ key: "every model", usd: notOpened, attemptsMeasured: 0, attemptsUnmeasured: 0 }],
+    cacheHitRateByCaller: cost ? cost.cacheHitRateByCaller : [{ callerKey: "every caller", hitRate: notOpened }],
+    deterministicShare: cost ? cost.deterministicShare : notOpened,
+    costPerVerifiedRecord: cost ? cost.costPerVerifiedRecord : notOpened,
+    costSummary: cost ? cost.summary : undefined,
+
+    zipRows: zips,
+
+    intakeFolder: intakeCounts.folder,
+    intakeItemsFound: intakeCounts.found,
+    intakeItemsProcessed: intakeCounts.processed,
+    intakeUnidentifiable: intakeCounts.unidentifiable,
+  };
+}
+
+/*
+ * THE HEARTBEAT IS THE RUNNER'S TO WRITE, AND ONLY THE RUNNER'S (ADM-5,
+ * 9.4.26). This publisher used to overwrite `pilot-runner` with beatAt = the
+ * publish moment, so a hand-run `pnpm owner:publish` made a stopped runner
+ * read ALIVE for ninety minutes. Liveness is derived from the beat; a beat
+ * the runner did not write is a false liveness. It is not written here.
+ */
 
 const digest: OwnerDigestRecord | null = cycle
   ? {
@@ -623,12 +691,7 @@ const digest: OwnerDigestRecord | null = cycle
     }
   : null;
 
-/* The cheapest place to catch an aggregate-only violation is before it is durable. */
-assertAggregateOnly(snapshot, "owner snapshot");
-assertAggregateOnly(heartbeat, "runner heartbeat");
-if (digest) assertAggregateOnly(digest, "owner digest");
-
-async function repositories(): Promise<ControlPlaneRepositories> {
+async function repositories(): Promise<ControlPlaneRepositories | null> {
   const override = arg("file-store");
   if (override) {
     log(`writing to the FILE store at ${override} (a local proof, not the deployed plane)`);
@@ -636,6 +699,10 @@ async function repositories(): Promise<ControlPlaneRepositories> {
   }
   const url = controlPlaneUrlFromEnv();
   if (url === null) {
+    if (DRY_RUN) {
+      log(`${CONTROL_PLANE_URL_VAR} is not set — dry run builds the snapshot with every control-plane panel as a named gap`);
+      return null;
+    }
     throw new Error(
       `${CONTROL_PLANE_URL_VAR} is not set. Reading or writing a different store would be ` +
         "evidence about a different store than the claim is about. Refusing.",
@@ -647,6 +714,18 @@ async function repositories(): Promise<ControlPlaneRepositories> {
 async function main(): Promise<void> {
   log(`HEAD ${HEAD?.slice(0, 8) ?? "unknown"} · pilot ${rollup.green ? "GREEN" : "NOT GREEN"}`);
   for (const r of rollup.readings) log(`  ${r.contract.padEnd(9)} ${r.state}`);
+
+  // Opened FIRST so the cost panel and the by-state deployment read the same
+  // instant the snapshot is stamped with.
+  const repos = await repositories();
+  if (repos) log(repos.describe());
+  const reads = repos ? await readControlPlane(repos) : null;
+  const snapshot = buildSnapshot(reads);
+
+  /* The cheapest place to catch an aggregate-only violation is before it is durable. */
+  assertAggregateOnly(snapshot, "owner snapshot");
+  if (digest) assertAggregateOnly(digest, "owner digest");
+
   /*
    * RULING 159. Every count printed here carries its population, and a ZERO is
    * only printable when it was EARNED — when the population was actually
@@ -659,13 +738,18 @@ async function main(): Promise<void> {
     floorLine(
       floored(
         "decision cards",
-        "docs/tracker-reconciliation.json",
+        `open Needs-Sean rows in ${WORKING_CSV}`,
         Math.max(cards.length, 1),
         cards.length,
-        cards.length === 0 ? "the tracker reconciliation names no open Needs-Sean rows" : undefined,
+        cards.length === 0 ? "the working store holds no open Needs-Sean row" : undefined,
       ),
     ),
   );
+  const decisionKinds = cards.reduce<Record<string, number>>((acc, c) => {
+    acc[c.kind ?? "DECISION"] = (acc[c.kind ?? "DECISION"] ?? 0) + 1;
+    return acc;
+  }, {});
+  log(`  card kinds: ${Object.entries(decisionKinds).map(([k, n]) => `${k} ${n}`).join(", ") || "none"}`);
   log(
     floorLine(
       zips.held
@@ -686,14 +770,30 @@ async function main(): Promise<void> {
       ),
     ),
   );
+  log(
+    floorLine(
+      floored(
+        "obligations by state",
+        "cp_obligations",
+        reads ? reads.obligations.length : 0,
+        snapshot.obligationsByState.reduce((n, r) => n + r.count.value, 0),
+        reads === null ? "the control plane was not opened" : reads.obligations.length === 0 ? "the control plane holds no standing obligation" : undefined,
+      ),
+    ),
+  );
+  if (reads) {
+    const s = snapshot.costSummary;
+    log(
+      `  cost ledger: ${reads.costs.length} entr${reads.costs.length === 1 ? "y" : "ies"}; ` +
+        `${s?.attemptsMeasured ?? 0} measured ($${(s?.measuredUsd ?? 0).toFixed(4)}), ${s?.attemptsUnmeasured ?? 0} unmeasured; ` +
+        `${snapshot.costByRole.length} role row(s), ${snapshot.costByModel.length} model row(s)`,
+    );
+  }
 
-  if (DRY_RUN) {
+  if (DRY_RUN || repos === null) {
     log("--dry-run: nothing written");
     return;
   }
-
-  const repos = await repositories();
-  log(repos.describe());
 
   // The snapshot is a SINGLE aggregate that moves, so a put on an existing id
   // is a no-op — compare-and-set is the write that actually replaces it.
@@ -702,13 +802,6 @@ async function main(): Promise<void> {
     await repos.ownerSnapshots.put(SNAPSHOT_ID, snapshot, NOW_ISO);
   } else {
     await repos.ownerSnapshots.compareAndSet(SNAPSHOT_ID, existing.revision, snapshot, NOW_ISO);
-  }
-
-  const beat = await repos.runnerHeartbeat.read(RUNNER_ID);
-  if (beat === null) {
-    await repos.runnerHeartbeat.put(RUNNER_ID, heartbeat, NOW_ISO);
-  } else {
-    await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, beat.revision, heartbeat, NOW_ISO);
   }
 
   if (digest) {
@@ -739,7 +832,7 @@ async function main(): Promise<void> {
 
   const decisions = await repos.ownerDecisions.read(DECISION_LOG_KEY);
   log(
-    `published: snapshot, heartbeat${digest ? ", digest" : " (no cycle record — no digest)"}; ` +
+    `published: snapshot${digest ? ", digest" : " (no cycle record — no digest)"}; the heartbeat is the runner's own; ` +
       `${decisions.length} owner decision intent(s) on record`,
   );
 }

@@ -32,6 +32,9 @@ import {
 } from "./repository/pg-store.ts";
 import { assertDurableRepositories } from "./repository/types.ts";
 import type { ControlPlaneRepositories } from "./repository/types.ts";
+import type { Attempt } from "./attempt.ts";
+import type { RouteTask } from "./route-task.ts";
+import type { WorkItem } from "./work-item.ts";
 import {
   assertAggregateOnly,
   type CacheObservationRecord,
@@ -90,7 +93,10 @@ export async function openControlPlane(): Promise<
     };
   }
   try {
-    const repos = await createPgRepositories(url);
+    // The page only reads (and appends intents); it never owns the schema, so
+    // it skips the per-request bootstrap replay (ADM-2). The runner and the
+    // publishers bootstrap.
+    const repos = await createPgRepositories(url, new Date().toISOString(), { skipBootstrap: true });
     assertDurableRepositories(repos, "the owner control centre");
     return { ok: true, repos };
   } catch (error) {
@@ -174,6 +180,37 @@ export async function readDigests(
       kind: "STORE_UNREACHABLE",
       detail: `Reading the digest log failed (${(error as Error)?.name ?? "error"}). We could not ask.`,
     };
+  }
+}
+
+/**
+ * The canonical records the fleet view is projected from (ADM-7, 9.4.26):
+ * every Attempt, WorkItem and RouteTask. Read together so the three agree
+ * about one instant; a failed read is STORE_UNREACHABLE, never a zero fleet.
+ */
+export async function readFleetInputs(repos: ControlPlaneRepositories): Promise<
+  ReadOutcome<{
+    readonly attempts: readonly Attempt[];
+    readonly workItems: readonly WorkItem[];
+    readonly routeTasks: readonly RouteTask[];
+  }>
+> {
+  try {
+    const [attempts, workItems, routeTasks] = await Promise.all([
+      repos.attempts.list(),
+      repos.workItems.list(),
+      repos.routeTasks.list(),
+    ]);
+    return {
+      kind: "HELD",
+      value: {
+        attempts: attempts.map((r) => r.value),
+        workItems: workItems.map((r) => r.value),
+        routeTasks: routeTasks.map((r) => r.value),
+      },
+    };
+  } catch (error) {
+    return unreachable("the fleet's Attempts, WorkItems and RouteTasks", error);
   }
 }
 

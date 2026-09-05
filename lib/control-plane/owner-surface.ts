@@ -689,12 +689,32 @@ export interface OwnerSnapshot {
     readonly oldestHours: number | null;
   }[];
 
-  /** Panel 5 — cost. */
-  readonly costByRole: readonly { readonly key: string; readonly usd: Held<Measured> }[];
-  readonly costByModel: readonly { readonly key: string; readonly usd: Held<Measured> }[];
+  /**
+   * Panel 5 — cost. Rows carry their measured/unmeasured attempt counts (ADM-6,
+   * 9.4.26); the counts are absent on a snapshot published before then.
+   */
+  readonly costByRole: readonly {
+    readonly key: string;
+    readonly usd: Held<Measured>;
+    readonly attemptsMeasured?: number;
+    readonly attemptsUnmeasured?: number;
+  }[];
+  readonly costByModel: readonly {
+    readonly key: string;
+    readonly usd: Held<Measured>;
+    readonly attemptsMeasured?: number;
+    readonly attemptsUnmeasured?: number;
+  }[];
   readonly cacheHitRateByCaller: readonly { readonly callerKey: string; readonly hitRate: Held<Measured> }[];
   readonly deterministicShare: Held<Measured>;
   readonly costPerVerifiedRecord: Held<Measured>;
+  /** The whole-ledger totals behind the rows. Absent before 9.4.26. */
+  readonly costSummary?: {
+    readonly measuredUsd: number | null;
+    readonly attemptsMeasured: number;
+    readonly attemptsUnmeasured: number;
+    readonly entries: number;
+  };
 
   /**
    * Panel 6 — the reader-suite grid by ZIP.

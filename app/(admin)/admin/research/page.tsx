@@ -1,4 +1,6 @@
 import { readWorkerFleet } from "@/lib/control-plane/workers/readback.ts";
+import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
+import { ConsoleNav } from "../../console-nav.tsx";
 import { WorkerFleetPanel } from "./worker-fleet-panel";
 /**
  * **RESEARCH — LEVEL 1.** (Level 1 activation, 2026-09-01. RULING 240, RULING 241.)
@@ -166,9 +168,12 @@ export default async function ResearchPage() {
     view.verdict === "ACTIVE" ? "state-green" : view.verdict === "DEGRADED" ? "state-unknown" : "state-red";
 
   return (
-    <main className="admin">
+    <main className="admin console-page">
+      {/* The one console header (9.4.26): this is the instrument-detail view of the same console. */}
+      <ConsoleNav view="research" currentState={null} states={US_STATES} />
       <p className="note">
-        <a href="/admin">← Control centre</a>
+        <a href="/admin">← Pilot health</a> — this page is the instrument detail behind the fleet view:
+        every Attempt, every intent, every number with its denominator.
       </p>
       <h1>
         Research — Level 1 <span className={verdictClass}>{view.verdict}</span>

@@ -37,20 +37,26 @@ import type { OwnerDecisionCard, OwnerDecisionCardKind } from "./owner-surface.t
 /** A row of `docs/tracker-working.csv`, as `readStore` returns it. */
 export type TrackerRow = Readonly<Record<string, string>>;
 
-/** A `lib/tracker/registry.mjs` entry, either shape. */
-export type RegistryEntry =
-  | {
-      readonly rowId: string;
-      readonly kind: "predicate";
-      readonly blocker: string;
-    }
-  | {
-      readonly rowId: string;
-      readonly kind: string;
-      readonly whatIsNeeded: string;
-      readonly whyNoMachineCanDecide: string;
-      readonly options: readonly { readonly option: string; readonly consequence: string }[];
-    };
+/** A `lib/tracker/registry.mjs` predicate entry: a machine-checked wall. */
+export interface RegistryPredicate {
+  readonly rowId: string;
+  readonly kind: "predicate";
+  readonly blocker: string;
+}
+/** A `lib/tracker/registry.mjs` card entry: a decision for the owner. */
+export interface RegistryCard {
+  readonly rowId: string;
+  readonly kind: string;
+  readonly whatIsNeeded: string;
+  readonly whyNoMachineCanDecide: string;
+  readonly options: readonly { readonly option: string; readonly consequence: string }[];
+}
+export type RegistryEntry = RegistryPredicate | RegistryCard;
+
+/** The registry marks a predicate by kind AND by carrying a blocker; both are checked. */
+export function isRegistryPredicate(entry: RegistryEntry): entry is RegistryPredicate {
+  return entry.kind === "predicate" && "blocker" in entry;
+}
 
 /** One outcome from `docs/tracker-reconciliation.json`. */
 export interface ReconciliationOutcome {
@@ -113,7 +119,7 @@ export function buildDecisionCards(input: {
       lastVerified: blank(row["Last verified"]),
     };
 
-    if (entry !== null && entry.kind === "predicate") {
+    if (entry !== null && isRegistryPredicate(entry)) {
       const kind: OwnerDecisionCardKind = "BLOCKED_WHILE";
       return {
         ...base,

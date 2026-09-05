@@ -114,17 +114,50 @@ token-compliant source CSS gives identical duration (1.5s), easing, font size
 The earlier ten reviewed screenshots therefore retain their visual claim. This
 repair ran no additional production build, screenshot campaign or full suite.
 
-**Merge remains blocked by an existing proof-policy boundary**, not an unresolved
-original visual row. `tests/reader-last-mile-census.test.ts` requires the prior
-complete reader receipt to match the current source hashes and its frozen
-LM-F1..LM-F10 invalidation report. It rejects the six deliberately changed visual
-reader files: `app/ballot/page.tsx`, `app/globals.css`,
-`components/ask/answer-records.tsx`, `components/map/map-entry.tsx`,
-`components/map/popup/district-popup.tsx`, and
-`components/map/popup/popup-card.tsx`.
+## Authorized receipt renewal — VF-S1 through VF-S4
 
-The current owner directive forbids reopening Reader Last-Mile or running its
-large census. Its validator and frozen evidence remain untouched; no hash was
-rewritten to claim unexecuted proof and no gate was bypassed. The completed visual
-work is preserved on the PR for a separately authorized resolution of that
-shipping-contract conflict. No production deploy is claimed.
+The owner's subsequent PR #277 directive authorized dependency-aware proof
+renewal for the three closed visual rows. No additional product work entered.
+
+| Changed dependency | Invalidated presentation | Re-proof |
+| --- | --- | --- |
+| `app/ballot/page.tsx` | BAL-43 ballot layout | Existing production DOM instrument: all 141 canonical contests and 15 sourced absences; 295 contest observations across the deterministic ZIP plan |
+| `components/ask/answer-records.tsx` | ASK-24 record presentation | 90 actual renderer cases using previously retrieved canonical evidence; text, identities, sources and record counts conserved |
+| `components/map/popup/district-popup.tsx` | LAY-12 district card | 71 canonical state/type rendering classes through the existing district proof helper |
+| `components/map/popup/popup-card.tsx` | LAY-12 shared wrapper | Six opt-in/default and tier cases preserve child facts and control presence |
+| `components/map/map-entry.tsx`, `hooks/use-compact-map.ts` | LAY-12 boundary interaction | Exact source identity with the previously reviewed implementation; existing visual proof inherited |
+| `app/globals.css` | LAY-12/BAL-43 geometry | Reviewed visual proof plus executed exact computed-value equivalence for the later token substitution |
+
+One authorized `reader-last-mile-finalize.mts --prepare` pass established the
+same holdings digest and registry. All **1,052 canonical rows** retain their
+prior identities, eligibility and delivery evidence: **373 rendered**, **679
+correctly non-reader obligations**. The closed census itself is byte-identical
+(`00561f84e6db6ef6d5aa75b6744b3d7e75127378f64f63f2235d548b623ffa6f`),
+with zero unexplained eligible delivery failures. Only the evaluator timestamp
+inside six out-of-window calendar explanations differed; statuses, dates,
+selectors, windows and applicable populations remained identical.
+
+The existing finalizer's source-only branch pins the prior committed receipt
+and invalidation report, verifies unchanged census structure, binds every changed
+reader dependency to the executed renewal, and retains original historical proof
+heads. It generated `reader-last-mile-final-closure-receipt.json` from **462
+rendered cases**, with the **11 existing visual cases / 10 reviewed screenshots**
+inherited. Canonical eligibility, identities, retrieval and unrelated row proofs
+were not restarted. Large evidence uses the existing lossless packaging contract.
+
+The unchanged `reader-last-mile-census.test.ts` and new renewal negative controls
+pass **20/20**. Targeted visual/renderer checks and typecheck pass. New controls
+reject empty observations, altered markup, missing canonical facts, wrong
+identities, changed eligibility projections and false counts. Current component
+hashes and all execution inputs are checked; no source hash was hand-edited.
+
+One local default production build passed, including the existing output budgets
+and reader trace proof (14 routes, 35 requirements, 63 required files, zero
+failures). A pnpm launcher aborted before starting a build; the unchanged package
+lifecycle was then executed directly. The final PR head must pass the canonical
+GitHub default build, standalone build and gates before merging.
+
+Receipt renewal ran **zero `walk:all`**, zero new screenshots, zero production
+control-plane reads/writes, zero autonomous/model workers, and no acquisition or
+readiness publication. Pilot Runner was not started. Production deployment is
+not asserted by these local proof artifacts.

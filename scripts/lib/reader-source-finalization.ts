@@ -3,7 +3,7 @@ import { execFileSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import {
   readReaderEvidence, readerSourceFingerprint, readerRowStructuralSha256,
-  readerSourceRevalidationProblems, censusClosureFailures, sha256,
+  readerSourceRevalidationProblems, censusClosureFailures, packReaderEvidence, sha256,
   type ReaderCensus, type ReaderClosureReceipt, type ReaderProofInvalidationReport,
   type ReaderSourceRevalidation, type ReaderComponentCase,
 } from "../../lib/holdings/reader-census.ts";
@@ -57,6 +57,7 @@ export function finalizeReaderSources(root: string, prepared: ReaderCensus, opti
   const proofPath = `${options.outputPrefix}-renewal.json`;
   writeFileSync(priorReceiptPath, priorReceiptBytes);
   writeFileSync(priorReportPath, priorReportBytes);
+  packReaderEvidence(root, priorReportPath);
   const proof: ReaderSourceRevalidation = {
     exactHead: execution.exactHead, baselineCommit: options.baselineCommit,
     baselineReceiptPath: options.receiptPath, baselineReceiptSha256: sha256(priorReceiptBytes),
@@ -80,6 +81,7 @@ export function finalizeReaderSources(root: string, prepared: ReaderCensus, opti
   };
   assert.deepEqual(readerSourceRevalidationProblems(root, census, report), [], "Executed renewal must satisfy the receipt validator before publication");
   writeFileSync(options.reportPath, `${JSON.stringify(report, null, 2)}\n`);
+  packReaderEvidence(root, options.reportPath);
   const evidencePaths = [...new Set([...prior.evidenceHashes.map(entry => entry.path), priorReceiptPath, priorReportPath, proofPath, options.executionPath])].sort();
   const receipt: ReaderClosureReceipt = {
     formatVersion: 1, censusPath: prior.censusPath, censusSha256: prior.censusSha256,

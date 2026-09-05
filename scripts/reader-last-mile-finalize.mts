@@ -29,8 +29,6 @@ import { finalizeReaderSources } from "./lib/reader-source-finalization.ts";
 
 const root = process.cwd();
 const codeHead = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
-const baselineCensusPath = "docs/evidence/reader-last-mile-closure.json";
-const baselineReceiptPath = "docs/evidence/reader-last-mile-closure-receipt.json";
 const invalidationPath = "docs/evidence/reader-last-mile-final-invalidation.json";
 const componentPath = "docs/evidence/reader-last-mile-final-delta-components.json";
 const witnessPath = "docs/evidence/reader-last-mile-final-delta-witnesses.json";
@@ -39,7 +37,10 @@ const buildReceiptPath = "docs/evidence/reader-last-mile-final-build-receipt.jso
 const portraitProofPath = "docs/evidence/reader-last-mile-final-portraits.json";
 const censusPath = "docs/evidence/reader-last-mile-final-closure.json";
 const receiptPath = "docs/evidence/reader-last-mile-final-closure-receipt.json";
-const routePaths = [
+let baselineCensusPath = "docs/evidence/reader-last-mile-closure.json";
+let baselineReceiptPath = "docs/evidence/reader-last-mile-closure-receipt.json";
+let archivedBaselineCensusPath: string | null = null;
+let routePaths = [
   "docs/evidence/reader-last-mile-final-delta-routes.json",
   "docs/evidence/reader-last-mile-final-ballot.json",
   "docs/evidence/reader-last-mile-final-ballot-ask.json",
@@ -53,6 +54,36 @@ const routePaths = [
 ];
 const preparedCensusPath = process.env.READER_FINAL_PREPARED_CENSUS ?? "../reader-last-mile-final-prepared-census.json";
 const proofSourcesPath = process.env.READER_PROOF_SOURCES ?? "../reader-last-mile-final-proof-sources.json";
+
+// A later canonical holding refresh starts from the latest committed closure,
+// not from the historical first closure. Archive those exact committed bytes
+// before the normal dependency-aware finalizer overwrites the stable output
+// paths. All validation, invalidation and current-head proof requirements below
+// remain unchanged.
+if (process.argv.includes("--renew-holdings")) {
+  const prefix = process.env.READER_HOLDING_RENEWAL_PREFIX;
+  assert.ok(prefix, "Holding renewal requires READER_HOLDING_RENEWAL_PREFIX");
+  assert.match(prefix, /^docs\/evidence\/reader-last-mile-[a-z0-9-]+$/);
+  const priorReceiptBytes = readReaderEvidence(root, receiptPath);
+  const committedReceiptBytes = execFileSync("git", ["show", `HEAD:${receiptPath}`], { cwd: root });
+  assert.equal(sha256(committedReceiptBytes), sha256(priorReceiptBytes), "Holding renewal must start from the committed prior receipt");
+  const priorReceipt = JSON.parse(priorReceiptBytes.toString("utf8")) as ReaderClosureReceipt;
+  const priorCensusBytes = readReaderEvidence(root, priorReceipt.censusPath);
+  assert.equal(sha256(priorCensusBytes), priorReceipt.censusSha256, "Committed prior receipt does not bind its census bytes");
+  baselineReceiptPath = `${prefix}-prior-receipt.json`;
+  baselineCensusPath = priorReceipt.censusPath;
+  archivedBaselineCensusPath = `${prefix}-prior-census.json`;
+  writeFileSync(baselineReceiptPath, priorReceiptBytes);
+  writeFileSync(archivedBaselineCensusPath, priorCensusBytes);
+  packReaderEvidence(root, archivedBaselineCensusPath);
+  routePaths = [
+    "docs/evidence/reader-last-mile-final-delta-routes.json",
+    "docs/evidence/reader-last-mile-final-ballot.json",
+    "docs/evidence/reader-last-mile-final-ballot-ask.json",
+    "docs/evidence/reader-last-mile-final-candidate-profiles-ask.json",
+    "docs/evidence/reader-last-mile-final-money-ask.json",
+  ];
+}
 
 if (process.argv.includes("--prepare")) {
   const baseCensus = buildReaderCensus(root);
@@ -78,12 +109,16 @@ const inherited = inheritReaderProofs(root, census, {
   baselineReceiptPath,
   reportPath: invalidationPath,
   currentReaderHead: codeHead,
+  onlyChangedDependencies: archivedBaselineCensusPath !== null,
 });
 census = inherited.census;
-writeFileSync(invalidationPath, `${JSON.stringify(inherited.report, null, 2)}\n`);
-assert.deepEqual(inherited.report.failures, [], "The reader delta contains an unclassified change");
+const inheritanceReport = archivedBaselineCensusPath
+  ? { ...inherited.report, baselineCensusPath: archivedBaselineCensusPath }
+  : inherited.report;
+writeFileSync(invalidationPath, `${JSON.stringify(inheritanceReport, null, 2)}\n`);
+assert.deepEqual(inheritanceReport.failures, [], "The reader delta contains an unclassified change");
 
-const invalidatedRows = new Set(inherited.report.rows.filter((row) => row.disposition === "INVALIDATED").map((row) => row.rowId));
+const invalidatedRows = new Set(inheritanceReport.rows.filter((row) => row.disposition === "INVALIDATED").map((row) => row.rowId));
 const invalidatedAuditIds = new Set(census.rows.filter((row) => invalidatedRows.has(row.id)).flatMap((row) => row.applicableEligibleRecordIds ?? row.eligibleRecordIds));
 const componentCensus = { ...census, records: census.records.filter((record) => invalidatedAuditIds.has(record.auditId)) };
 const components = await renderCanonicalReaderComponents(root, componentCensus);
@@ -131,9 +166,9 @@ writeFileSync(censusPath.replace(/\.json$/, "-summary.json"), `${JSON.stringify(
 writeFileSync("docs/evidence/reader-last-mile-final-delta-summary.json", `${JSON.stringify({
   formatVersion: 1,
   exactReaderHead: codeHead,
-  inheritedRows: inherited.report.counts.INHERITED,
-  invalidatedRows: inherited.report.counts.INVALIDATED,
-  recomputedRows: inherited.report.counts.RECOMPUTED,
+  inheritedRows: inheritanceReport.counts.INHERITED,
+  invalidatedRows: inheritanceReport.counts.INVALIDATED,
+  recomputedRows: inheritanceReport.counts.RECOMPUTED,
   invalidatedApplicableRecords: invalidatedAuditIds.size,
   routeProofs: routeComposition.proofs.length,
   componentProofs: componentComposition.proofs.length,
@@ -173,7 +208,7 @@ console.log(JSON.stringify({
   censusPath,
   receiptPath,
   denominator: census.denominator,
-  inherited: inherited.report.counts,
+  inherited: inheritanceReport.counts,
   invalidatedApplicableRecords: invalidatedAuditIds.size,
   routeProofs: routeComposition.proofs.length,
   componentProofs: componentComposition.proofs.length,

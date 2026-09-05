@@ -27,7 +27,8 @@ const outputPath = process.env.READER_PROOF_OUTPUT ?? "docs/evidence/reader-last
 const planOutputPath = process.env.READER_BALLOT_PLAN_OUTPUT ?? "docs/evidence/reader-last-mile-ballot-plan.json";
 const proofSourcesPath = process.env.READER_PROOF_SOURCES;
 assert.match(new URL(base).hostname, /^(localhost|127\.0\.0\.1)$/);
-const sets = await Promise.all(BALLOT_SOURCES.map(async ({ state, source }) => ({ state, set: source.normalize(await source.fetch()) })));
+const requestedStates = process.env.READER_BALLOT_STATES?.split(",").map((state) => state.trim()).filter(Boolean);
+const sets = await Promise.all(BALLOT_SOURCES.filter(({ state }) => !requestedStates?.length || requestedStates.includes(state)).map(async ({ state, source }) => ({ state, set: source.normalize(await source.fetch()) })));
 const zipIndex = JSON.parse(readFileSync("data/derived/zip-division-ids.json", "utf8")) as { zips: Record<string, string[]> };
 type BallotPlan = { zip: string; state: typeof sets[number]["state"]; set: typeof sets[number]["set"] } & ReturnType<typeof contestsForDivisions>;
 const plans: BallotPlan[] = [];

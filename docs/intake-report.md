@@ -1,6 +1,6 @@
 # Intake tripwire report
 
-Generated 2026-09-04T14:31:45.786Z by `scripts/intake-tripwire.mts` (T08 1f).
+Generated 2026-09-05T17:53:58.629Z by `scripts/intake-tripwire.mts` (T08 1f).
 Everything in this file is a date, a count, or a threshold — never an
 identifier. Flags are flagged, never auto-acted-on: the author decides.
 
@@ -28,6 +28,7 @@ Thresholds: a day flags on volume at max(30, 4× the trailing
 
 | Day (UTC) | Rows |
 |---|---|
+| 2026-09-05 | 71 |
 | 2026-09-04 | 8 |
 | 2026-09-03 | 47 |
 | 2026-09-02 | 41 |

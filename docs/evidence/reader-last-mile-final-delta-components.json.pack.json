@@ -3,8 +3,8 @@
   "encoding": "gzip",
   "rule": "Lossless original UTF-8 JSON bytes; zero gzip modification time. The baseline byte hash survives packaging.",
   "path": "docs/evidence/reader-last-mile-final-delta-components.json.gz",
-  "originalSha256": "41ddff9d27bdd98f3d9cb195e2b90ee3244d2b81a46471703089ccaa9190e71f",
-  "bytes": 9504340,
-  "packedBytes": 935679,
-  "packedSha256": "015a767d13ec980fc990ad3915f02e582421777accbf96e3847e1b147bfe9f3d"
+  "originalSha256": "ab04fdd484872263284c1b125c8d3a5170165449d3b3e3d0c65ed5d7183c0d3a",
+  "bytes": 1560238,
+  "packedBytes": 135301,
+  "packedSha256": "f236d02ca41a2dfc148d24f9afcb787edfa8fa42a3e6c66122f255e1d25d24d3"
 }

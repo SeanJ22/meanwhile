@@ -451,7 +451,9 @@ test("H1: the system prompt is one string with every rule, and its size is pinne
    * breakpoint on the reader's question, and the token recount is owed to the
    * next `count_tokens` run before a second marker is added.
    */
-  const prompt = synthesisPrompt(zipPack());
+  // ASK-27 gives agenda questions their own lead; the definition-first branch
+  // remains byte-identical for the questions that ask what something means.
+  const prompt = synthesisPrompt(zipPack({ intent: "CIVICS" }));
   assert.equal(typeof prompt, "string");
   assert.match(prompt, /ONLY the records supplied/);
   assert.match(prompt, /Never tell the reader how to vote/);

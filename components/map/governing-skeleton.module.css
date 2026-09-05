@@ -1,0 +1,11 @@
+.skeleton {
+  width: min(100%, 22rem);
+  padding: 1rem;
+  border-radius: var(--radius);
+  background: var(--panel);
+  box-shadow: var(--shadow-card);
+}
+.heading { margin: 0 0 0.8rem; font-size: 0.8125rem; color: var(--text-muted); }
+.line { display: block; height: 0.7rem; margin-block: 0.65rem; width: 78%; border-radius: 0.2rem; background: #929292; opacity: 0.35; }
+.line:nth-child(2) { width: 55%; height: 1rem; }
+.line:nth-child(4) { width: 65%; }

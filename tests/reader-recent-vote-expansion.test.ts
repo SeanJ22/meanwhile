@@ -27,17 +27,24 @@ test("actual map and ballot vote components expose a planted held tail beyond tw
         </>);`,
       resolveDir: process.cwd(), sourcefile: "reader-vote-expansion-fixture.tsx", loader: "tsx",
     },
-    bundle: true, write: false, platform: "browser", format: "iife", jsx: "automatic",
+    bundle: true, write: false, outfile: ".scratch/reader-vote-expansion-fixture.js",
+    platform: "browser", format: "iife", jsx: "automatic",
     define: { "process.env.NODE_ENV": '"production"' }, logLevel: "silent",
   });
-  const javascript = output.outputFiles[0].text;
+  // esbuild needs an output name to assemble CSS Modules. Serve that actual
+  // stylesheet beside the fixture JS; no product component or CSS is stubbed.
+  const javascript = output.outputFiles.find(file => file.path.endsWith(".js"))?.text;
+  const stylesheet = output.outputFiles.find(file => file.path.endsWith(".css"))?.text;
+  assert.ok(javascript && stylesheet, "the real component bundle must include its JS and CSS Modules");
   const server = createServer((request, response) => {
     if (request.url?.startsWith("/api/votes?")) {
       response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ member, votes, chamber: "house", keyVotes: [] }));
     } else if (request.url === "/fixture.js") {
       response.writeHead(200, { "content-type": "application/javascript" }).end(javascript);
+    } else if (request.url === "/fixture.css") {
+      response.writeHead(200, { "content-type": "text/css" }).end(stylesheet);
     } else if (request.url === "/") {
-      response.writeHead(200, { "content-type": "text/html" }).end('<!doctype html><div id="root"></div><script src="/fixture.js"></script>');
+      response.writeHead(200, { "content-type": "text/html" }).end('<!doctype html><link rel="stylesheet" href="/fixture.css"><div id="root"></div><script src="/fixture.js"></script>');
     } else {
       response.writeHead(200, { "content-type": "application/json" }).end("{}");
     }

@@ -196,7 +196,7 @@ export interface BindableEntity extends NameableEntity {
  * place called Vail. Where the question carries no class phrase, there is no
  * class evidence and the tie stands as `AMBIGUOUS`.
  */
-const CLASS_PHRASE_DIVISIONS: Readonly<Record<string, readonly string[]>> = {
+export const CLASS_PHRASE_DIVISIONS: Readonly<Record<string, readonly string[]>> = {
   "unified school district": ["school_district"],
   "school district": ["school_district"],
   "school board": ["school_district"],

@@ -1,0 +1,7 @@
+.legend { margin-top: 8px; color: var(--text-dim); }
+.legend summary { width: fit-content; padding: 6px 0; cursor: pointer; font-size: 0.75rem; text-decoration: underline dotted; text-underline-offset: 3px; }
+.legend summary:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+.legend p { margin: 8px 0; font-size: 0.6875rem; line-height: 1.5; }
+.legend ul { display: grid; gap: 8px; margin: 0; padding: 8px 0; list-style: none; }
+.legend li { display: flex; align-items: center; gap: 12px; font-size: 0.75rem; }
+.sample { flex-shrink: 0; overflow: visible; }

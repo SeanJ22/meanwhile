@@ -83,6 +83,17 @@ test("the window is due once per local date, and a missed date is caught up BY N
   assert.equal(windowDue({ nowIso: "2026-09-02T12:00:00.000Z", lastWindowLocalDate: "2026-09-02" }).due, false);
 });
 
+test("the Sunday-morning window corresponding to Saturday night is suppressed and never caught up", () => {
+  const during = windowDue({ nowIso: "2026-09-06T09:00:00.000Z", lastWindowLocalDate: "2026-09-05" });
+  assert.equal(during.due, false);
+  assert.match(during.reason, /SCHEDULED BLACKOUT/);
+
+  const monday = windowDue({ nowIso: "2026-09-07T15:00:00.000Z", lastWindowLocalDate: "2026-09-05" });
+  assert.equal(monday.due, true);
+  assert.deepEqual(monday.caughtUp, []);
+  assert.doesNotMatch(monday.reason, /2026-09-06.*unanswered/);
+});
+
 /* -------------------------------------------------------------- the lock */
 
 test("the lease refuses a second window, and a released or expired lease can be re-claimed", async () => {

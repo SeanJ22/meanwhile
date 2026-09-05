@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
+import { isDeepStrictEqual } from "node:util";
 import { readSnapshot } from "../../lib/meetings/snapshot.ts";
 import { canonicalBodyIdentity } from "../../lib/ask/body-identity.ts";
 import { snapshotEntities, titleCaseName } from "../../lib/ask/inventory.ts";
@@ -13,7 +14,7 @@ import type { AskAnswerPayload } from "../../lib/ask/answer.ts";
 import type { Meeting } from "../../lib/sources/types.ts";
 import { meetingListingIdentity } from "../../lib/meetings/listing-identity.ts";
 
-type Expected = Pick<EvidenceRecord, "id" | "kind" | "bodyId" | "sourceUrl" | "sourceOrg" | "retrievedAt"> & Partial<Pick<EvidenceRecord, "text" | "occurredAt">>;
+type Expected = Pick<EvidenceRecord, "id" | "kind" | "bodyId" | "sourceUrl" | "sourceOrg" | "retrievedAt"> & Partial<Pick<EvidenceRecord, "text" | "occurredAt" | "meetingId" | "documentId" | "agendaDocument">>;
 const hash = (value: string | Buffer) => createHash("sha256").update(value).digest("hex");
 
 export async function meetingsAskProof(progress: (message: string) => void = () => {}) {
@@ -45,7 +46,7 @@ export async function meetingsAskProof(progress: (message: string) => void = () 
     const raw = await response.text();
     const payload = JSON.parse(raw) as AskAnswerPayload;
     const actual = payload.records.filter((record) => kinds.includes(record.kind) && (!structuredAgendaOnly || record.id.endsWith("#agenda")));
-    const missing = expected.filter((record) => !actual.some((row) => Object.entries(record).every(([key, value]) => row[key as keyof EvidenceRecord] === value)));
+    const missing = expected.filter((record) => !actual.some((row) => Object.entries(record).every(([key, value]) => isDeepStrictEqual(row[key as keyof EvidenceRecord], value))));
     const expectedKeys = new Set(expected.map((record) => `${record.kind}:${record.id}`));
     const unexpected = actual.filter((record) => !expectedKeys.has(`${record.kind}:${record.id}`));
     const countAgrees = payload.trace.retrieval.recordCount === payload.records.length &&
@@ -80,7 +81,24 @@ export async function meetingsAskProof(progress: (message: string) => void = () 
         recordIds.push(newest.documentUrl);
         expected.push({ kind: "AGENDA_DOCUMENT", id: newest.documentUrl, bodyId: meeting.bodyId, sourceUrl: newest.documentUrl, sourceOrg: publication.documentSharedAcrossGovernments ? null : newest.sourceOrg ?? null, retrievedAt: newest.retrievedAt });
       }
-      for (const document of held) documentDispositions.push({ id: document.id, meetingId: meeting.id, documentUrl: document.documentUrl, sourceUrl: document.sourceUrl, sourceOrg: document.sourceOrg, contentHash: document.contentHash, retrievedAt: document.retrievedAt, acquisition: document === newest ? publication.acquisition : "SUPERSEDED_REVISION", expectedRecordIds: document === newest ? recordIds : [], reason: document === newest ? publication.gap?.statement ?? null : "The canonical meeting projection selects the latest held revision, preserving the older acquisition as inventory." });
+      // ASK-27 carries every native held document/version, exactly like the
+      // meeting route. The newest version still drives extracted item text;
+      // retaining earlier document identities does not infer extra items.
+      for (const document of held) {
+        const reading = classifyAgendaPublication({ bodyName: bodyNames.get(meeting.bodyId!)!, meetingId: meeting.id, documentsForMeeting: [document], documentsAcrossCorpus: documents, meetingsAcrossCorpus: snapshot.meetings, now: Date.now() });
+        const publicationIndex = reading.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX";
+        const title = "title" in document && typeof document.title === "string" ? document.title : null;
+        expected.push({ kind: "AGENDA_DOCUMENT", id: document.id, documentId: document.id, meetingId: meeting.id,
+          bodyId: meeting.bodyId, occurredAt: meeting.startsAt, sourceUrl: document.documentUrl,
+          sourceOrg: reading.documentSharedAcrossGovernments ? null : document.sourceOrg, retrievedAt: document.retrievedAt,
+          agendaDocument: { contentHash: document.contentHash, title, publicationIndex },
+          text: reading.documentSharedAcrossGovernments ? "A stored source link shared across governments; it has not been verified as this body's agenda."
+            : publicationIndex ? `A publication index for ${meeting.title}; this is not a single meeting's agenda.`
+              : title ?? `${meeting.title} — held agenda document` });
+        documentDispositions.push({ id: document.id, meetingId: meeting.id, documentUrl: document.documentUrl, sourceUrl: document.sourceUrl, sourceOrg: document.sourceOrg, contentHash: document.contentHash, retrievedAt: document.retrievedAt,
+          acquisition: reading.acquisition, expectedRecordIds: [document.id, ...(document === newest ? recordIds : [])],
+          reason: document === newest ? reading.gap?.statement ?? null : "The native held document/version remains visible; the latest held revision alone supplies extracted agenda items." });
+      }
     }
     proofs.push(await prove("meetings-and-agendas", group, `What was on this body's agenda on ${localDate(group[0])}?`, ["MEETING", "AGENDA_ITEM", "AGENDA_DOCUMENT"], expected));
     if (proofs.length % 100 === 0) progress(`Executed ${proofs.length}/${groups.size} local body-date meeting queries`);

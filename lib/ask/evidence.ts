@@ -25,6 +25,10 @@ import type { AskIntent, AskTemporal } from "./intent.ts";
  */
 
 export interface EvidenceRecord {
+  /** Native meeting/document identity survives the Ask path unchanged. */
+  meetingId?: string;
+  documentId?: string;
+  agendaDocument?: { contentHash: string; title: string | null; publicationIndex: boolean };
   kind:
     | "MEETING"
     | "AGENDA_ITEM"

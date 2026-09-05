@@ -105,6 +105,14 @@ import {
 import type { ResearchMetrics } from "../lib/control-plane/research-metrics.ts";
 import { researchDigestLines } from "../lib/control-plane/research-digest.ts";
 import { today } from "./doc-dates.mjs";
+import {
+  FLEET_SAFETY_BOUNDS,
+  classifyProviderFailure,
+  scheduledBlackoutAt,
+  type FleetSafetySnapshot,
+  type ProviderCircuit,
+} from "../lib/control-plane/fleet-safety.ts";
+import { installNeonCircuitBreaker, latchNeonCircuit, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 
 const ROOT = process.cwd();
 const argv = process.argv.slice(2);
@@ -114,9 +122,15 @@ const CYCLES = cyclesArg ? Number(cyclesArg.slice("--cycles=".length)) : Infinit
 const intervalArg = argv.find((a) => a.startsWith("--interval="));
 const INTERVAL_MIN = intervalArg ? Number(intervalArg.slice("--interval=".length)) : 60;
 const maxArg = argv.find((a) => a.startsWith("--max="));
-const MAX = maxArg ? maxArg.slice("--max=".length) : "100";
+const requestedMax = maxArg ? Number(maxArg.slice("--max=".length)) : FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle;
+const MAX = String(Number.isFinite(requestedMax) && requestedMax >= 0
+  ? Math.min(requestedMax, FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle)
+  : FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle);
 const provider = argv.includes("--provider=file") ? "file" : "postgres";
 const onlyArg = argv.find((a) => a.startsWith("--only="));
+const idsArg = argv.find((a) => a.startsWith("--ids="));
+const scoutMaxArg = argv.find((a) => a.startsWith("--scout-max="));
+const canary = argv.includes("--canary");
 
 /**
  * The Drive mirror. A SYNCED FOLDER, not an API — writing a file into it IS the
@@ -125,7 +139,13 @@ const onlyArg = argv.find((a) => a.startsWith("--only="));
 const MIRROR = process.env.WTP_MIRROR ?? "G:/My Drive/we-the-people";
 const FALLBACK = join(ROOT, ".mirror");
 const RUNS_DIR = join(ROOT, "data", "health", "freshness-shadow-runs");
-
+if (provider === "postgres") installNeonCircuitBreaker(ROOT);
+/**
+ * Emergency recovery only: if Neon itself refuses billing/quota, it cannot
+ * persist its own circuit. This host-local latch prevents an hourly retry
+ * storm across runner restarts. It is not a spend ledger or control-plane
+ * substitute; normal provider circuits remain in `research_state`.
+ */
 interface RunRecord {
   readonly startedAt?: string;
   readonly finishedAt?: string;
@@ -172,6 +192,7 @@ interface RunRecord {
       readonly bounds?: { readonly dailyCeilingUsd?: number; readonly maxConcurrentScouts?: number; readonly maxScoutDispatchesPerCycle?: number };
       readonly queue?: { readonly modelClassDue?: number; readonly modelClassUnits?: number; readonly modelClassDispatchedThisCycle?: number };
       readonly runtimeConditions?: readonly string[];
+      readonly fleetSafety?: FleetSafetySnapshot | null;
     };
     readonly lanes?: {
       readonly deterministic?: { readonly due?: number; readonly dispatched?: number };
@@ -210,7 +231,10 @@ interface RunRecord {
  * next cycle must resume and pay for again.
  */
 const budgetArg = argv.find((a) => a.startsWith("--budget-min="));
-const BUDGET_MIN = budgetArg ? Number(budgetArg.slice("--budget-min=".length)) : 15;
+const requestedBudgetMin = budgetArg ? Number(budgetArg.slice("--budget-min=".length)) : FLEET_SAFETY_BOUNDS.maxWallMsPerCycle / 60_000;
+const BUDGET_MIN = Number.isFinite(requestedBudgetMin) && requestedBudgetMin >= 0
+  ? Math.min(requestedBudgetMin, FLEET_SAFETY_BOUNDS.maxWallMsPerCycle / 60_000)
+  : FLEET_SAFETY_BOUNDS.maxWallMsPerCycle / 60_000;
 
 function runOneCycle(): {
   readonly ok: boolean;
@@ -219,9 +243,15 @@ function runOneCycle(): {
   /** The last lines the child wrote to stderr. The diagnosis of a failed cycle. */
   readonly stderrTail: string;
   readonly signal: string | null;
+  readonly circuit: ProviderCircuit | null;
 } {
+  const before = new Date().toISOString();
+  const latched = provider === "postgres" ? readNeonCircuit(ROOT, before) : null;
+  if (latched) {
+    return { ok: false, recordPath: null, stdout: "", stderrTail: `${latched.provider}: ${latched.condition}; no automated retry before ${latched.eligibleAt}`, signal: null, circuit: latched };
+  }
   const args = [
-    "--env-file=.env.local",
+    ...(canary && !existsSync(".env.local") ? [] : ["--env-file=.env.local"]),
     "--experimental-strip-types",
     "scripts/freshness-shadow.mts",
     `--provider=${provider}`,
@@ -230,24 +260,32 @@ function runOneCycle(): {
     /* So the child's heartbeat can state when the next cycle is due. */
     `--interval=${INTERVAL_MIN}`,
     ...(onlyArg ? [onlyArg] : []),
+    ...(idsArg ? [idsArg] : []),
+    ...(scoutMaxArg ? [scoutMaxArg] : []),
+    ...(canary ? ["--canary"] : []),
   ];
   const run = spawnSync(process.execPath, args, {
     cwd: ROOT,
     encoding: "utf8",
-    /* Twenty minutes: the BACKSTOP for a hung child. A healthy cycle ends on
-       its own dispatch budget (above) well inside this. */
-    timeout: 20 * 60_000,
+    /* The supervisor is the aggregate wall-clock backstop. */
+    timeout: FLEET_SAFETY_BOUNDS.maxWallMsPerCycle,
     maxBuffer: 64 * 1024 * 1024,
   });
   const stdout = `${run.stdout ?? ""}${run.stderr ?? ""}`;
   const match = stdout.match(/run record: (.+\.json)/);
   const stderrLines = (run.stderr ?? "").split("\n").filter((l) => l.trim() !== "");
+  const failure = classifyProviderFailure(new Error(`${run.stderr ?? ""}\n${run.stdout ?? ""}`));
+  const databaseNamed = /neon|postgres|database|control plane|transfer allowance|compute quota|storage quota/i.test(failure.condition);
+  const circuit = provider === "postgres" && run.status !== 0 && failure.class === "HARD" && databaseNamed
+    ? latchNeonCircuit(ROOT, failure.condition, new Date().toISOString())
+    : null;
   return {
     ok: run.status === 0,
     recordPath: match ? match[1].trim() : null,
     stdout,
     stderrTail: stderrLines.slice(-12).join("\n"),
     signal: run.signal ?? null,
+    circuit,
   };
 }
 
@@ -319,6 +357,23 @@ function laneShare(record: RunRecord): string[] {
   if (!research) {
     out.push("- this record was written before Level 1 — Research was wired; it carries no Scout lane");
     return out;
+  }
+  const safety = state?.fleetSafety;
+  out.push("", "## FLEET SAFETY", "");
+  if (!safety) {
+    out.push("- no aggregate safety snapshot was recorded; this is not a zero-use reading");
+  } else {
+    out.push(
+      `- state: **${safety.status}**`,
+      `- model spend: cycle ${safety.cycle.modelUsd === null ? "UNMEASURED" : `$${safety.cycle.modelUsd.toFixed(4)}`} / $${safety.bounds.cycleModelUsd.toFixed(2)}; ` +
+        `operational night ${safety.operationalNight.modelUsd === null ? "UNMEASURED" : `$${safety.operationalNight.modelUsd.toFixed(4)}`} / $${safety.bounds.operationalNightModelUsd.toFixed(2)}; ` +
+        `rolling 24h ${safety.rolling24Hours.modelUsd === null ? "UNMEASURED" : `$${safety.rolling24Hours.modelUsd.toFixed(4)}`} / $${safety.bounds.rolling24HourModelUsd.toFixed(2)}`,
+      `- aggregate: requests ${safety.cycle.requests}/${safety.bounds.maxProviderRequestsPerCycle}; payload bytes ${safety.cycle.payloadBytes}/${safety.bounds.maxPayloadBytesPerCycle}; ` +
+        `dispatches ${safety.cycle.dispatches}/${safety.bounds.maxDispatchesPerCycle}; wall ${safety.cycle.elapsedMs}/${safety.bounds.maxWallMsPerCycle}ms`,
+      `- stopped because: ${safety.stoppedBecause.join("; ") || "no ceiling or circuit stopped work"}`,
+      `- provider circuits: ${safety.providerCircuits.map(c => `${c.provider} until ${c.eligibleAt}: ${c.condition}`).join("; ") || "none"}`,
+      `- last successful Fleet activity: ${safety.lastSuccessfulActivity ?? "none recorded"}`,
+    );
   }
   out.push(
     `- deterministic lane: ${lanes?.deterministic?.dispatched ?? 0} dispatched of ${lanes?.deterministic?.due ?? 0} due`,
@@ -778,6 +833,11 @@ let windowCheckFailed = false;
 
 async function windowDecision(): Promise<{ readonly run: boolean; readonly trigger: string; readonly reason: string }> {
   if (provider !== "postgres") return { run: false, trigger: "", reason: "file provider" };
+  if (canary) return { run: false, trigger: "", reason: "live canary is scoped to its one named cycle" };
+  const checkedAt = new Date().toISOString();
+  if (scheduledBlackoutAt(checkedAt)) {
+    return { run: false, trigger: "", reason: "SCHEDULED BLACKOUT — nightly work and wakeups are suppressed" };
+  }
   try {
     if (intentRepos === null) {
       const url = controlPlaneUrlFromEnv();
@@ -807,6 +867,10 @@ async function windowDecision(): Promise<{ readonly run: boolean; readonly trigg
 
 function runNightlyWindow(trigger: string): void {
   const startedAt = new Date().toISOString();
+  if (scheduledBlackoutAt(startedAt)) {
+    console.log("\npilot:run · SCHEDULED BLACKOUT — nightly window refused before process launch");
+    return;
+  }
   console.log(`\npilot:run · nightly window (${trigger}) started ${startedAt} — SHADOW`);
   const run = spawnSync(
     process.execPath,
@@ -843,6 +907,7 @@ async function sleepUnlessRunNow(totalMs: number): Promise<void> {
  * run, not this clock).
  */
 async function holdWhilePaused(): Promise<void> {
+  if (canary) return;
   while ((await ownerSays()) === "HOLD") {
     await sleep(POLL_MS);
   }
@@ -863,6 +928,22 @@ while (cycle < CYCLES) {
   console.log(`\npilot:run · cycle ${cycle} started ${startedAt}`);
 
   const result = runOneCycle();
+  if (result.circuit) {
+    const c = result.circuit;
+    const headline = `${new Date().toISOString()} - cycle ${cycle} - CIRCUIT BROKEN - ${c.provider} latched until ${c.eligibleAt}`;
+    const digest =
+      `# Pilot digest — cycle ${cycle}, ${today()}\n\n` +
+      `## FLEET SAFETY\n\n- **CIRCUIT BROKEN**\n- provider: ${c.provider}\n- exact condition: ${c.condition}\n` +
+      `- first observed: ${c.firstObservedAt}\n- work deferred: ${c.workDeferred.join("; ")}\n` +
+      `- next automated eligibility: ${c.eligibleAt}\n- no provider probe, paid substitution, control-plane test write, or promotion was attempted\n`;
+    const delivered = deliver(digest, headline);
+    console.error(`  ${headline}`);
+    console.log(`  digest: ${delivered.where}${delivered.mirrored ? "" : "  (MIRROR NOT REACHABLE — repo fallback)"}`);
+    if (cycle >= CYCLES) break;
+    // The latched provider is not polled through owner/window bookkeeping.
+    await sleep(INTERVAL_MIN * 60_000);
+    continue;
+  }
   let record: RunRecord = {};
   if (result.recordPath !== null && existsSync(result.recordPath)) {
     try {

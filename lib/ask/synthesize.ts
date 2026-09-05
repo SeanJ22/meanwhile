@@ -151,6 +151,7 @@ export function synthesisSchema(): Record<string, unknown> {
  * about what may never be said has to be true of THIS call.
  */
 export function synthesisPrompt(pack: EvidencePack): string {
+  const agenda = pack.subject?.kind === "BODY" && pack.intent === "UPCOMING_AGENDA";
   return [
     "You are answering one resident's question about their government, using ONLY the records supplied below.",
     "",
@@ -176,10 +177,16 @@ export function synthesisPrompt(pack: EvidencePack): string {
      * upstream of this line too — this restates it because a rule the model can
      * read is one more wall than a filter it cannot.
      */
-    "- LEAD WITH THE PLAIN DEFINITION: begin with one or two short sentences saying, in the simplest words, what the thing the reader asked about actually MEANS. Say what it is before you say anything else about it.",
-    "- After the definition, add only the most important supporting facts, in DESCENDING order of relevance — most important first, and stop when the important part is said. Do not list everything in the records.",
+    agenda
+      ? "- LEAD WITH THE HELD AGENDA: answer what is on this body's selected meeting agenda using its held agenda item titles and documents. Keep each item attached to its own meeting. A publication index is not a meeting agenda. If no agenda is held, lead with the named holding gap; never infer an empty docket or publisher absence. A sourced body-purpose explanation may be brief fallback context only when no agenda is held."
+      : "- LEAD WITH THE PLAIN DEFINITION: begin with one or two short sentences saying, in the simplest words, what the thing the reader asked about actually MEANS. Say what it is before you say anything else about it.",
+    agenda
+      ? "- After the agenda information, add only supporting facts that answer the agenda question. Do not replace held agenda information with generic civics education."
+      : "- After the definition, add only the most important supporting facts, in DESCENDING order of relevance — most important first, and stop when the important part is said. Do not list everything in the records.",
     "- Everything you write is about the ONE thing the reader asked about. Nothing about any other race, office, measure or person on the ballot belongs in the answer, even if a record mentions it.",
-    "- Any procedural caveat — wording not final, an analysis still pending, where a title came from — comes AFTER the definition, briefly, once, and only when a record states it. It is never the lead.",
+    agenda
+      ? "- Preserve the source's meeting date and the named scope of every holding gap. Never describe missing extraction as nothing on the agenda."
+      : "- Any procedural caveat — wording not final, an analysis still pending, where a title came from — comes AFTER the definition, briefly, once, and only when a record states it. It is never the lead.",
     /*
      * ASK-19: the budget, generated from `lib/ask/length-contract.ts`, so the
      * rule the model is given and the rule the validator enforces are one

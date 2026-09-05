@@ -13,6 +13,10 @@ import {
   undatedFor,
 } from "@/lib/officials/executive-actions";
 import type { BindableEntity } from "@/lib/routing/named-entity";
+import { asksForBodyAgenda, classPhraseIn, mentionBeforeClassPhrase } from "@/lib/routing/named-entity";
+import { applyNamedBodyDecision, decideNamedBody } from "@/lib/ask/body-confirmation";
+import { heldAgendaDocumentRecords } from "@/lib/ask/held-agenda";
+import { outcomeQuestionClass } from "@/lib/ask/outcome-question";
 import { ripcordPulled } from "@/lib/ripcords";
 import { intakeLimits, isSameOriginSubmission } from "@/lib/signal/intake-limits";
 import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
@@ -576,6 +580,7 @@ export async function POST(request: Request) {
     locationOrigin?: unknown;
     continuityKey?: unknown;
     today?: unknown;
+    confirmation?: unknown;
   };
   try {
     body = JSON.parse(raw);
@@ -745,10 +750,21 @@ export async function POST(request: Request) {
   }
 
   // ── 2. CANONICAL RESOLUTION ──────────────────────────────────────────
-  const resolution = resolveInterpretation(interpretation, question, inventory, {
+  const initialResolution = resolveInterpretation(interpretation, question, inventory, {
     activeSubjects,
     priorSubjects,
   });
+  const explicitBodyClass = classPhraseIn(question) && mentionBeforeClassPhrase(question);
+  const namedBodies = explicitBodyClass ? snapshotEntities([...bodyIdentityIndex().values()], canonicalBodyIdentity) : bodies;
+  let bodyDecision = decideNamedBody(question, namedBodies, body.confirmation,
+    initialResolution.binding.kind === "BOUND" && initialResolution.binding.entity.level === "BODY"
+      ? interpretation.entityMentions : []);
+  if (!explicitBodyClass && initialResolution.binding.kind === "BOUND" && initialResolution.binding.entity.level !== "BODY") bodyDecision = { kind: "NONE" };
+  // Model expansions cannot silently convert a named body hypothesis into an
+  // answer. No lexical candidate means a neutral clarification, not a default.
+  if (bodyDecision.kind === "NONE" && initialResolution.binding.kind === "BOUND" &&
+    initialResolution.binding.entity.level === "BODY" && initialResolution.basis.startsWith("MODEL_EXPANSION")) bodyDecision = { kind: "CLARIFY" };
+  const resolution = applyNamedBodyDecision(bodyDecision, initialResolution, question);
   trace.resolution = {
     state: resolution.binding.kind,
     basis: resolution.basis,
@@ -785,6 +801,20 @@ export async function POST(request: Request) {
     residency,
     continuityKey: typeof body.continuityKey === "string" ? body.continuityKey : "",
   });
+
+  if (bodyDecision.kind === "CONFIRM" || bodyDecision.kind === "CLARIFY") {
+    trace.answerMode = "CLARIFY";
+    trace.totalMs = Date.now() - started;
+    const answer = clarifyAnswer(question, [], trace);
+    // A suggestion is not the subject of an answer or of an attributed record.
+    delete answer.candidates;
+    if (bodyDecision.kind === "CONFIRM") answer.confirmation = {
+      bodyId: bodyDecision.candidate.id, name: titleCaseName(bodyDecision.candidate.name), question,
+    };
+    else answer.clarification = "Which government do you mean? A city or state can help me identify it.";
+    await capture("CLARIFY", [], null, null, null, [], []);
+    return Response.json(answer);
+  }
 
   /*
    * Two verdicts end the request before any retrieval, and both are answers
@@ -836,6 +866,8 @@ export async function POST(request: Request) {
   }
 
   // ── 3. DETERMINISTIC RETRIEVAL ───────────────────────────────────────
+  const agendaQuestion = resolution.binding.kind === "BOUND" && resolution.binding.entity.level === "BODY" && asksForBodyAgenda(question) && !outcomeQuestionClass(question);
+  if (agendaQuestion) interpretation.intent = "UPCOMING_AGENDA";
   const selection: AgendaSelection =
     requestedMeetingDate ? "DATE" : interpretation.temporal.kind === "LAST"
       ? "LAST"
@@ -1150,6 +1182,7 @@ export async function POST(request: Request) {
       for (const sitting of [chosen, ...sameDay]) {
       const chosen = sitting;
       const forMeeting = documents.filter((d) => d.meetingId === chosen.id);
+      records.push(...heldAgendaDocumentRecords(chosen, snapshot?.agendaDocuments ?? [], meetings));
       denominators.agendaDocumentsForThatMeeting = (denominators.agendaDocumentsForThatMeeting ?? 0) + forMeeting.length;
 
       /*
@@ -1286,6 +1319,8 @@ export async function POST(request: Request) {
                body. The chain is BODY -> MEETING -> DOCUMENT -> ITEM and every
                link is an id, not an inference from a heading. */
             bodyId: chosen.bodyId,
+            meetingId: chosen.id,
+            documentId: (snapshot?.agendaDocuments ?? []).find(document => document.meetingId === chosen.id && document.documentUrl === newest.documentUrl)?.id,
             text: item,
             occurredAt: chosen.startsAt,
             sourceUrl: newest.documentUrl,
@@ -1827,6 +1862,7 @@ export async function POST(request: Request) {
       .sort((a, b) => (a.startsAt < b.startsAt ? -1 : a.startsAt > b.startsAt ? 1 : 0)),
     trace,
   });
+  payload.agendaLead = Boolean(agendaQuestion);
   payload.meetingListingIdentity = meetingListingKnowledgeFor(snapshot?.meetings ?? [], resolvedSittings.map(meeting => meeting.id)).readback;
   return Response.json(payload);
 }

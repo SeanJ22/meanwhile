@@ -293,12 +293,13 @@ test("P-001 · the canvas rebuilds on DATA and applies visibility on KEYS, in se
   const between = canvas.slice(rebuildAt, visibilityAt);
   assert.match(
     between,
-    /\}, \[venues\]\);/,
+    /\}, \[venues, presentationReady\]\);/,
     "rebuild and applyVisibility are in the SAME effect, so a filter change reaches the pool",
   );
 
   // And the visibility effect depends on the keys.
-  assert.match(canvas, /\}, \[venues, visibleVenueKeys\]\);/);
+  assert.match(canvas, /\}, \[venues, visibleVenueKeys, presentationReady\]\);/);
+  assert.match(canvas.slice(canvas.lastIndexOf("useEffect(() =>", rebuildAt), rebuildAt), /mapPresentationHeld\(map\)/, "pool creation must remain deferred during camera motion");
 
   // P-004: selection no longer re-runs on every data change.
   assert.match(canvas, /\}, \[selectedVenueKey\]\);/);

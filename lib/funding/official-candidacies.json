@@ -45,11 +45,11 @@
     },
     {
       "path": "data/states/nj/ballot/nj-morris-2026-contacts.json",
-      "sha256": "b70d2f5a23e7c199a75074dd20fdf918803c5e53e328fda24aac664f418c7474"
+      "sha256": "5e3c92a961e1be6d40b849f94f31c10ce3f358b6ba654fb6f37b71d36635ed1f"
     },
     {
       "path": "data/states/nj/ballot/nj-morris-2026.json",
-      "sha256": "d3f58c9cb544fc4d96656e72b5b6d98d2bfc07e82301c175d3dc807699622f2c"
+      "sha256": "85596c68b7221251634262afbcc56e09eae6a40330762d2adcd8c9ed2864c43e"
     },
     {
       "path": "data/states/nj/funding/state-money-nj-2026.json",

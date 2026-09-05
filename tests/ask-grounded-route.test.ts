@@ -65,6 +65,7 @@ interface GroundedBody {
   denominators?: Record<string, number>;
   mention?: string;
   candidates?: string[];
+  clarification?: string;
   trace?: {
     resolution: { state: string; basis?: string; subjectId?: string | null };
     retrieval: { selection: string; recordCount: number };
@@ -210,8 +211,9 @@ test("a question about a government we do not hold says so, and never substitute
        to come from the reader's own words — which is exactly the floor the
        deterministic path is supposed to hold on its own. */
   });
-  assert.equal(body.mode, "UNRESOLVED");
-  assert.equal(body.mention, "cienega");
+  assert.equal(body.mode, "CLARIFY");
+  assert.match(body.clarification ?? "", /Which government/);
+  assert.equal(body.candidates, undefined);
   assert.equal(body.subject ?? null, null, "nothing is bound, so nothing is answered about");
 });
 

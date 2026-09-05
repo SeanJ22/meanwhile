@@ -111,6 +111,16 @@ export interface CycleInput {
   /** A ceiling on how many due items one cycle dispatches. Stated, not implied. */
   readonly maxDispatches?: number;
   /**
+   * Aggregate Fleet admission, shared with the worker lanes that follow this
+   * scheduler. A refusal is durably named in `deferred`; it never becomes an
+   * Attempt and can never be mistaken for completed work.
+   */
+  readonly admitDispatch?: (
+    row: ScheduledObligation,
+  ) => { readonly admit: true } | { readonly admit: false; readonly code: string; readonly why: string };
+  /** A tightly scoped canary may skip the whole lease sweep; normal cycles never do. */
+  readonly skipReclaim?: boolean;
+  /**
    * **A WALL-CLOCK BUDGET FOR DISPATCH, SO THE CYCLE FINISHES CLEANLY.**
    * (Autonomy-recovery session, 2026-09-01.)
    *
@@ -161,7 +171,7 @@ export interface ResearchLanes {
   readonly admitScout: (
     row: ScheduledObligation,
   ) => { readonly admit: true } | { readonly admit: false; readonly code: string; readonly why: string };
-  readonly modelExecutor: DeclaredExecutor;
+  readonly modelExecutor: DeclaredExecutor | ((row: ScheduledObligation) => DeclaredExecutor);
   readonly maxConcurrentScouts: number;
   readonly scoutLeaseTtlMs: number;
   /** A Scout is not STARTED when it could not finish inside the dispatch budget. */
@@ -249,10 +259,12 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
    * scheduling means a worker that died since the last cycle costs one cycle
    * of latency rather than a lease TTL every cycle forever.
    */
-  const reclaim = await sweepExpiredLeases(input.repos, {
-    now: input.now,
-    observedBy: input.holder,
-  });
+  const reclaim = input.skipReclaim
+    ? { reclaimed: [], stillLive: [], refused: [] }
+    : await sweepExpiredLeases(input.repos, {
+        now: input.now,
+        observedBy: input.holder,
+      });
 
   /* 2 · SCHEDULE. Both lists; the unscheduled are named, never defaulted. */
   const schedule = scheduleAll(input.obligations, nowMs);
@@ -472,6 +484,16 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
   let modelDispatched = 0;
   let modelDeferred = 0;
 
+  const aggregateAdmits = (row: ScheduledObligation): boolean => {
+    const admission = input.admitDispatch?.(row) ?? { admit: true as const };
+    if (admission.admit) return true;
+    deferred.push({
+      obligationId: row.obligation.id,
+      why: `${admission.code}: ${admission.why}. Deferred with its next-due, never dropped and never reported complete.`,
+    });
+    return false;
+  };
+
   /* THE DETERMINISTIC LANE — the serial queue, exactly as before. */
   const deterministicLane = async (): Promise<void> => {
     for (const [i, row] of deterministicRows.entries()) {
@@ -490,6 +512,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         });
         continue;
       }
+      if (!aggregateAdmits(row)) continue;
       const result = await dispatchRow(row, {
         executor: typeof input.executor === "function" ? input.executor(row) : input.executor,
         leaseTtlMs: input.leaseTtlMs,
@@ -529,9 +552,14 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         deferredBy[admit.code] = (deferredBy[admit.code] ?? 0) + 1;
         return;
       }
+      if (!aggregateAdmits(row)) {
+        modelDeferred += 1;
+        deferredBy.AGGREGATE = (deferredBy.AGGREGATE ?? 0) + 1;
+        return;
+      }
       modelDispatched += 1;
       const result = await dispatchRow(row, {
-        executor: research.modelExecutor,
+        executor: typeof research.modelExecutor === "function" ? research.modelExecutor(row) : research.modelExecutor,
         leaseTtlMs: research.scoutLeaseTtlMs,
         decision: decisions.get(row.obligation.id),
       });

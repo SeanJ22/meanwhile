@@ -18,11 +18,10 @@ import {
 } from "maplibre-gl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import {
-  StateFocusOverlay,
-  type ProjectPoint,
-} from "@/components/map/state-focus-overlay";
-import { detectRaster } from "@/components/map/raster-capability";
+import { ensureStateRelief } from "@/lib/map/state-relief";
+import { holdMapPresentation, releaseMapPresentation, mapPresentationHeld, setPresentationVisible } from "@/lib/map/flight-presentation";
+import flightStyles from "./map-flight.module.css";
+type ProjectPoint = (point: [number, number]) => { x: number; y: number };
 
 import {
   CONUS_BOUNDS,
@@ -104,6 +103,7 @@ interface CameraProbe {
 }
 
 interface MapCanvasProps {
+  onPresentationReadyChange?: (ready: boolean) => void;
   /**
    * **EVERY venue the DATA contains** — P-001, 2026-08-24.
    *
@@ -273,54 +273,8 @@ function createHereElement(zipLabel: string): HTMLDivElement {
   return element;
 }
 
-/**
- * **RUN THIS WHEN THE SOURCES CHANGE — NOT 170 TIMES INSIDE ONE FLY-IN.**
- * (W6 H3, 2026-08-31. `pnpm measure:flyin` is the instrument; the numbers below
- * are its output, not an estimate.)
- *
- * Two effects in this file need to re-read the map after its GeoJSON sources
- * change: the narrowed-division shading, and the report of which districts are
- * currently drawn. Both were subscribed directly to `sourcedata` and `idle`,
- * and both had to be, for a reason that is still true — **`idle` never fires
- * under the MapTiler styles this product ships**. The note on `ensureDistricts`
- * has the account: those styles declare a `maptiler_attribution` source with
- * nothing to fetch, so it never reports loaded, `map.loaded()` is never true,
- * and the `idle` that everything else would have keyed on never arrives.
- * `sourcedata` was the only signal left.
- *
- * **The cost of that, measured through the fly-in:**
- *
- * ```
- * 170 sourcedata events inside a 2837ms flight
- * 170 queryRenderedFeatures calls costing 555ms of MAIN THREAD
- * sustained 12.1 fps (p95 frame interval) against a 55.6 fps control
- * ```
- *
- * `drawnDistrictsOn` runs a full-viewport rasterised query across eight
- * district line layers. A fly-to crossing eight zoom levels makes every one of
- * those eight GeoJSON sources re-tile repeatedly, each re-tile fires
- * `sourcedata`, and each `sourcedata` ran the query again — a fifth of the
- * entire flight spent computing answers that were thrown away by the next
- * frame. **Not one of those 170 answers could reach a reader**: they feed a
- * count on a card, and the only value that survives an animation is the one at
- * the end of it.
- *
- * So this coalesces on the two axes that were being ignored:
- *
- * 1. **A moving camera is not asked at all.** `map.isMoving()` is true for the
- *    whole of a fly-to, a pan and a pinch. The work is marked pending and
- *    `moveend` runs it once — which is the arrival, and the arrival is the only
- *    frame whose answer a reader ever sees.
- * 2. **A burst is one run.** Eight sources landing in the same tick used to be
- *    eight full passes; they are now coalesced onto a single animation frame.
- *
- * **NOTHING ABOUT THE STATIONARY CASE CHANGES, AND THAT IS THE POINT.** The
- * standing invariant these effects exist for — *the shading appears the moment
- * the polygon does* — is a claim about a map at rest waiting for a boundary
- * file, and a map at rest still runs on the very next frame after the source
- * lands. `moveend` is added rather than substituted, so a camera that stops
- * with sources still arriving is answered by both.
- */
+/** Coalesce source-driven queries, and defer them through post-motion idle.
+ * No continuous move/zoom/render handler drives React or boundary queries. */
 function onSettledSourceChange(map: MapLibreMap, run: () => void): () => void {
   let frame: number | null = null;
   let disposed = false;
@@ -333,7 +287,7 @@ function onSettledSourceChange(map: MapLibreMap, run: () => void): () => void {
      * is watching. Nothing is lost by dropping it — `moveend` schedules
      * another, and every camera move MapLibre makes ends in exactly one.
      */
-    if (map.isMoving()) return;
+    if (map.isMoving() || mapPresentationHeld(map)) return;
     run();
   };
 
@@ -342,10 +296,8 @@ function onSettledSourceChange(map: MapLibreMap, run: () => void): () => void {
     frame = requestAnimationFrame(flush);
   };
 
-  // The first pass is immediate and unconditional, exactly as it was before:
-  // a mount is not an animation, and deferring it would leave the card empty
-  // for a frame it never used to be empty for.
-  run();
+  // A ready map can answer immediately. An arriving map waits for idle.
+  if (!mapPresentationHeld(map)) run();
   map.on("sourcedata", schedule);
   map.on("idle", schedule);
   // A move that consumed no sourcedata still has to report: a camera arriving
@@ -368,6 +320,7 @@ function onSettledSourceChange(map: MapLibreMap, run: () => void): () => void {
 }
 
 export function MapCanvas({
+  onPresentationReadyChange,
   venues,
   visibleVenueKeys = null,
   camera,
@@ -394,16 +347,11 @@ export function MapCanvas({
   onSelectVotingSite,
   selectedVotingSiteId = null,
 }: MapCanvasProps) {
+  const [presentationReady, setPresentationReady] = useState(false);
+  const presentationCallbackRef = useRef(onPresentationReadyChange);
+  useEffect(() => { presentationCallbackRef.current = onPresentationReadyChange; }, [onPresentationReadyChange]);
   const containerRef = useRef<HTMLDivElement>(null);
-  /**
-   * The wrapper the MapLibre container and the state-focus layer both sit in.
-   *
-   * It carries the two data attributes the software-rasteriser degradation is
-   * expressed through — `data-wtp-raster` and `data-camera-moving` — because
-   * both the CSS selector and the scrim it selects have to be inside one
-   * subtree, and this is the only element that contains both. Nothing else
-   * reads it.
-   */
+  /** The motion attribute hides map markers while camera presentation is held. */
   const shellRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   // The style currently applied to the map. Seeded with the one the mount
@@ -497,7 +445,7 @@ export function MapCanvas({
 
   const ensureDistricts = useCallback(() => {
     const map = mapRef.current;
-    if (!map || !map.getStyle()?.layers?.length) return;
+    if (!map || mapPresentationHeld(map) || !map.getStyle()?.layers?.length) return;
 
     const abbr = focusAbbrRef.current;
     /*
@@ -534,7 +482,7 @@ export function MapCanvas({
         .then((data) => {
           // Re-check: the fetch is async and the style may have moved on.
           const live = mapRef.current;
-          if (!live) return;
+          if (!live || mapPresentationHeld(live)) return;
           if (!districtTypesRef.current.includes(type)) return;
           if (!live.getStyle()?.layers?.length) return;
           // ...and the ACTIVE STATE may have moved on too. Without this the
@@ -604,6 +552,8 @@ export function MapCanvas({
       pitchWithRotate: false,
       dragRotate: false,
     });
+
+    holdMapPresentation(map);
 
     // The legend owns the bottom-right corner (Edia puts it there and the port
     // keeps it), so the map's own controls move out of its way rather than
@@ -727,122 +677,24 @@ export function MapCanvas({
      * a new gesture inside the window cancels the pending settle, so nothing
      * ever fires mid-gesture.
      */
-    /* ═══════════════════════════════════════════════════════════════════════
-       THE SOFTWARE-RASTERISER DEGRADATION (Session C, 2026-09-01)
-       ═══════════════════════════════════════════════════════════════════════
-
-       ## The measurement, first, because the design change needs one
-
-       W6 H3's host-normalized criterion is PASS on hardware — 99.7% of a bare
-       MapLibre map — and that is not reopened by anything here. Pointed at the
-       SOFTWARE rasteriser, the identical instrument on the identical host in
-       the same minutes measured:
-
-       ```
-       application  17.2 fps median   189 of 194 frames over 33.4ms
-       bare map     59.9 fps median     0 of 672 frames over 33.4ms   = 28.8%
-       ```
-
-       **The bare map reaches 60 fps there.** SwiftShader is not too slow to fly
-       a map; it is too slow to fly THIS map, and that makes the deficit ours.
-
-       ## What costs it, from the rotated ablation table rather than from theory
-
-       Twenty-eight flights, every arm flown once per round with the rotation
-       order advanced each round so no arm sat under reliably worse host load
-       than another (`pnpm measure:flyin --rotate`, evidence in
-       `docs/evidence/flyin-rotation-software.json`):
-
-       ```
-       none (full application)   16.4 fps    —
-       no-scrim                  31.2 fps    +14.8    the whole state-focus layer
-       no-backdrop               30.4 fps    +13.9    its backdrop-filter ALONE
-       no-districts              22.8 fps     +6.3    24 district layers
-       no-svg-art                20.2 fps     +3.8    the silhouettes and masks
-       no-markers                17.1 fps     +0.6    inside the spread; nothing
-       bare                      59.8 fps    +43.3
-       ```
-
-       `backdrop-filter` alone is 13.9 of the 14.8 that removing the entire
-       state-focus layer buys — 94% of that layer's cost is one CSS property.
-       A CPU-side profile of the same flight agrees and names the same thing
-       from the other direction: 1762 ms of `(program)` self time inside a
-       2768 ms window, with every named JavaScript function under 40 ms. The
-       deficit is not our JavaScript. It is per-frame raster and composite work,
-       and a full-viewport backdrop readback plus blur plus saturate is the
-       single largest piece of it.
-
-       ## What this does about it, and what it deliberately does not
-
-       While the camera is MOVING, and only on a rasteriser that NAMES itself as
-       software, two things change:
-
-       1. The scrim's `backdrop-filter` is dropped (in CSS, keyed off the two
-          data attributes set below).
-       2. The district fill, line and label layers are set to
-          `visibility: none`.
-
-       Both come back on `moveend`. Nothing is removed and nothing is destroyed:
-       the SVG mute rect and both rise silhouettes keep drawing throughout, so
-       the state still reads as raised during the flight, and every district
-       SOURCE keeps its tiled geometry so the layers return without re-tiling.
-       `visibility` rather than `removeLayer` for exactly that reason, and
-       because removing a layer provokes `syncDistrictLayer` into re-adding it.
-
-       **A READER ON A GPU IS UNTOUCHED, BY CONSTRUCTION.** `detectRaster()`
-       returns `"unknown"` for a browser that will not identify its adapter and
-       `"unknown"` is treated as hardware, so the degradation requires a POSITIVE
-       identification of the CPU rasteriser. That is the same rule the product
-       applies to its own data: a failure to read something is a fact about the
-       read, never a fact about the thing.
-
-       Measured after wiring, on the same host, same instrument:
-       `docs/evidence/flyin-normalized-software.json` and
-       `docs/evidence/flyin-normalized.json`. */
-    const raster = detectRaster();
-    if (shellRef.current) shellRef.current.dataset.wtpRaster = raster.kind;
-    const degradeInMotion = raster.kind === "software";
-    /** Every district layer currently on the style — fill, line and label. */
-    const districtLayerIds = (): string[] =>
-      (map.getStyle()?.layers ?? [])
-        .map((layer) => layer.id)
-        .filter((id) => id.startsWith("district-"));
-    /*
-     * Guarded by its own flag rather than by reading the DOM back: `movestart`
-     * can fire again before `moveend` when one camera move interrupts another,
-     * and a second entry must not re-hide layers that are already hidden or
-     * leave the restore owing twice.
-     */
-    let motionDegraded = false;
-    const setDistrictVisibility = (visibility: "none" | "visible") => {
-      for (const id of districtLayerIds()) {
-        try {
-          map.setLayoutProperty(id, "visibility", visibility);
-        } catch {
-          /* A layer removed between the read and the write is not an error
-             worth failing a camera move over; the next pass covers it. */
-        }
-      }
-    };
+    // Hold every application overlay on every renderer until post-motion idle.
     const enterMotionDegrade = () => {
-      if (!degradeInMotion || motionDegraded) return;
-      motionDegraded = true;
+      holdMapPresentation(map);
       shellRef.current?.setAttribute("data-camera-moving", "1");
-      setDistrictVisibility("none");
+      setPresentationVisible(map, false);
+      setPresentationReady(false);
+      presentationCallbackRef.current?.(false);
     };
-    /*
-     * **THE RESTORE IS SYNCHRONOUS ON `moveend`, NOT ON THE SETTLE TIMER.**
-     * The settle below is debounced by 650 ms, and putting the restore in it
-     * would leave a reader looking at a landed map with no district boundaries
-     * on it for two thirds of a second — trading a slow fly-in for a map that
-     * arrives wrong.
-     */
-    const leaveMotionDegrade = () => {
-      if (!motionDegraded) return;
-      motionDegraded = false;
+    const onPresentationIdle = () => {
+      if (map.isMoving() || !mapPresentationHeld(map)) return;
+      releaseMapPresentation(map);
+      setPresentationVisible(map, true);
       shellRef.current?.removeAttribute("data-camera-moving");
-      setDistrictVisibility("visible");
+      ensureDistricts();
+      setPresentationReady(true);
+      presentationCallbackRef.current?.(true);
     };
+    map.on("idle", onPresentationIdle);
 
     let userMoved = false;
     let settleTimer: number | undefined;
@@ -884,9 +736,7 @@ export function MapCanvas({
        * one re-queries the server, and firing it on our own camera moves would
        * be a query loop.
        */
-      // FIRST, and synchronously: the districts and the blur come back the
-      // moment the camera stops. See the note on `leaveMotionDegrade`.
-      leaveMotionDegrade();
+      // Movement ending does not imply tiles have settled; idle owns reveal.
       const wasUserMove = userMoved;
       userMoved = false;
       window.clearTimeout(settleTimer);
@@ -1081,6 +931,7 @@ export function MapCanvas({
 
     return () => {
       window.clearTimeout(settleTimer);
+      map.off("idle", onPresentationIdle);
       map.off("movestart", onMoveStart);
       map.off("moveend", onMoveEnd);
       map.off("click", onClick);
@@ -1103,7 +954,7 @@ export function MapCanvas({
   // the nearest pin is the honest picture of how far away the meetings are.
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !camera) return;
+    if (!map || !camera || !presentationReady) return;
 
     if (!hereRef.current) {
       hereRef.current = new Marker({
@@ -1119,7 +970,7 @@ export function MapCanvas({
     hereRef.current
       .getElement()
       .setAttribute("aria-label", `Center of zip code ${camera.zip}`);
-  }, [camera]);
+  }, [camera, presentationReady]);
 
   /*
    * Voting-site pins (B19).
@@ -1133,7 +984,7 @@ export function MapCanvas({
    */
   useEffect(() => {
     const map = mapRef.current;
-    if (!map) return;
+    if (!map || mapPresentationHeld(map)) return;
     const pins = votePinsRef.current;
     const wanted = new Map((votingSites ?? []).map((s) => [s.id, s]));
 
@@ -1166,7 +1017,7 @@ export function MapCanvas({
         .addTo(map);
       pins.set(id, marker);
     }
-  }, [votingSites]);
+  }, [votingSites, presentationReady]);
 
   /*
    * **VOT-1 (2026-08-25) — THE TEN-MILE RING AROUND THE ENTERED ADDRESS.**
@@ -1194,6 +1045,7 @@ export function MapCanvas({
     const SOURCE = "voting-address-ring";
     const FILL = "voting-address-ring-fill";
     const LINE = "voting-address-ring-line";
+    if (mapPresentationHeld(map)) return;
 
     const clear = () => {
       if (map.getLayer(LINE)) map.removeLayer(LINE);
@@ -1256,8 +1108,8 @@ export function MapCanvas({
       // a surface whose job is to answer where somebody votes.
     }
 
-    return clear;
-  }, [votingAddressPoint]);
+    // Retain the hidden ring during motion; update it after the idle reveal.
+  }, [votingAddressPoint, presentationReady]);
 
   // Selection is a data attribute on the element, so it survives re-renders.
   useEffect(() => {
@@ -1338,6 +1190,7 @@ export function MapCanvas({
      * selection. Nothing else in the app changes: a pin that never collides
      * behaves exactly as it always did, in one press.
      */
+    if (mapPresentationHeld(map)) return;
     rebuildMarkerPool(poolRef.current, map, venues, (venue) => {
       const pool = poolRef.current;
 
@@ -1393,7 +1246,7 @@ export function MapCanvas({
       [...poolRef.current.entries.values()].filter(
         (entry) => entry.element.dataset.hidden !== "true",
       ).length;
-  }, [venues]);
+  }, [venues, presentationReady]);
 
   /*
    * **P-001 · VISIBILITY IS ITS OWN EFFECT, WITH ITS OWN DEPENDENCY.**
@@ -1410,105 +1263,36 @@ export function MapCanvas({
    * which would hide every pin on a caller that has not opted in.
    */
   useEffect(() => {
-    if (!mapRef.current) return;
+    if (!mapRef.current || mapPresentationHeld(mapRef.current)) return;
     applyVisibility(
       poolRef.current,
       visibleVenueKeys ? new Set(visibleVenueKeys) : new Set(venues.map((v) => v.key)),
     );
-  }, [venues, visibleVenueKeys]);
+  }, [venues, visibleVenueKeys, presentationReady]);
 
-  /*
-   * THE STATE FOCUS (g3 item 10, M91) — the author's design, against his
-   * neumorphism reference.
-   *
-   * Two halves, and they live apart for a reason the reference forces: the
-   * raised EDGE is map layers (a light NW edge and a dark SE edge, one light
-   * source at top-left, per `lib/map/state-focus.ts`), while the MUTE AND
-   * BLUR outside is a DOM scrim, because no WebGL paint property can blur
-   * what is painted underneath it. Inside the border nothing is touched at
-   * all — that is what makes it an extrusion rather than a card.
-   *
-   * The outlines load once, lazily, and a failure is silent by design: this
-   * is ambient decoration carrying no information, and a map that draws
-   * without it is a working map. Anything louder would be an outage over a
-   * shadow.
-   */
   const [outlines, setOutlines] = useState<StateOutlines | null>(null);
+  const heldOutlines = useRef<StateOutlines | null>(null);
   useEffect(() => {
+    if (!presentationReady || outlines) return;
     let live = true;
     void (async () => {
       try {
-        const response = await fetch(STATE_OUTLINES_URL);
-        if (!response.ok) return;
-        const data = (await response.json()) as StateOutlines;
-        if (live) setOutlines(data);
-      } catch {
-        // Ambient only. The map is fine without it.
-      }
+        const data = heldOutlines.current ?? await fetch(STATE_OUTLINES_URL).then(response => {
+          if (!response.ok) throw new Error("State outline unavailable");
+          return response.json() as Promise<StateOutlines>;
+        });
+        heldOutlines.current = data;
+        if (live && mapRef.current && !mapPresentationHeld(mapRef.current)) setOutlines(data);
+      } catch { /* Ambient relief may fail without hiding any civic information. */ }
     })();
-    return () => {
-      live = false;
-    };
-  }, []);
-
-  const focusOutline = useMemo(
-    () => outlineFor(outlines, focusStateOcdId ?? null),
-    [outlines, focusStateOcdId],
-  );
-
-  /*
-   * THE CURRENT ZIP IS NOT DRAWN ON THE MAP (g5 item 1, the author's ruling).
-   *
-   * g4 item 4 tinted the reader's own ZCTA polygon here, fetched one polygon
-   * at a time from a route built for it. The author removed it from the
-   * product: the zip chooses the active state and centres the camera, and
-   * that is all it does. The tint, its layer, its source, its geometry fetch
-   * and the route that served it are gone — not flagged off, gone — so a
-   * reader's zip now costs the map no request and no layer at all.
-   *
-   * The committed ZCTA geometry stays in the repository, unused.
-   */
-
-  /*
-   * The projection, handed to the scrim as a STABLE function.
-   *
-   * `map.project` is bound to the map instance and the map instance is
-   * created once, so this identity never changes — which matters because the
-   * scrim's effect depends on it, and a new function every render would
-   * rebuild the clip path on every render instead of on every camera move.
-   */
-  const [projectFn, setProjectFn] = useState<ProjectPoint | null>(null);
-  const [subscribeMove, setSubscribeMove] = useState<
-    ((onMove: () => void) => () => void) | null
-  >(null);
-  /**
-   * The camera's zoom, read at DRAW time (g4 item 2).
-   *
-   * The rise is sized in screen pixels and its size scales with zoom, so the
-   * overlay needs the zoom on every frame of a pinch. Passed as a getter
-   * rather than a number: a prop would re-render this whole subtree sixty
-   * times a second to change two filter radii.
-   */
-  const [zoomOf, setZoomOf] = useState<(() => number) | null>(null);
-
+    return () => { live = false; };
+  }, [presentationReady, outlines]);
+  const focusOutline = useMemo(() => outlineFor(outlines, focusStateOcdId ?? null), [outlines, focusStateOcdId]);
   useEffect(() => {
     const map = mapRef.current;
-    if (!map) return;
-    // `setState` with a function argument would CALL it, so all three are
-    // wrapped.
-    setProjectFn(() => (lngLat: [number, number]) => map.project(lngLat));
-    setZoomOf(() => () => map.getZoom());
-    setSubscribeMove(() => (onMove: () => void) => {
-      map.on("move", onMove);
-      map.on("zoom", onMove);
-      map.on("resize", onMove);
-      return () => {
-        map.off("move", onMove);
-        map.off("zoom", onMove);
-        map.off("resize", onMove);
-      };
-    });
-  }, [outlines]);
+    if (!map || !presentationReady || mapPresentationHeld(map)) return;
+    ensureStateRelief(map, overlayOpen ? null : focusOutline, theme === "light" ? "light" : "dark");
+  }, [focusOutline, theme, overlayOpen, presentationReady]);
 
   // Swap the basemap when the theme changes. The listener above puts the
   // districts back once the new style lands.
@@ -1527,26 +1311,14 @@ export function MapCanvas({
     if (appliedStyleRef.current === basemap.styleUrl) return;
     appliedStyleRef.current = basemap.styleUrl;
 
+    holdMapPresentation(map);
+    setPresentationReady(false);
+    presentationCallbackRef.current?.(false);
     map.setStyle(basemap.styleUrl);
   }, [theme]);
 
-  /*
-   * The district overlay follows the toggle.
-   *
-   * The boundary file is only fetched when a reader first asks for it — most
-   * never will, and it is the largest thing this screen can download.
-   *
-   * Attaching is delegated to `ensureDistricts`, which is also subscribed to
-   * `styledata`. That matters for readiness as much as for restyles: addLayer
-   * needs the stylesheet parsed, and `getStyle().layers` is the public signal
-   * for exactly that. It must not be `isStyleLoaded()` or `idle`, both of which
-   * are `style.loaded()` — that additionally requires every source to have
-   * loaded, and the MapTiler styles declare a `maptiler_attribution` source
-   * that is a vector source carrying only an attribution string: no `url`, no
-   * `tiles`, no layer referencing it. Nothing to fetch, so it never reports
-   * loaded, `map.loaded()` is never true, and `idle` never fires. Gating here
-   * on either one hung forever, leaving the toggle enabled and the map empty.
-   */
+  // Reconcile the reader's chosen district types after style changes and idle.
+  // Current styles reach idle; the live V94 instrument verifies this signal.
   /*
    * M139 (2026-08-18) — `focusStateOcdId` is in these deps, and leaving it out
    * was the half-load.
@@ -1777,66 +1549,9 @@ export function MapCanvas({
   // with the same specificity as a Tailwind utility, and loads after it — so
   // positioning the container itself collapses it to zero height.
   return (
-    /* `data-wtp-raster` and `data-camera-moving` are written onto this element
-       imperatively by the mount effect rather than rendered from state — see
-       the long note there. They must not go through React: they change on
-       every `movestart` and `moveend`, and re-rendering this subtree sixty
-       times through a fly-in to set an attribute would cost more than the
-       attribute saves. */
-    <div ref={shellRef} className="absolute inset-0">
+    // Marker visibility changes once at motion start and once at idle.
+    <div ref={shellRef} className={`absolute inset-0 ${flightStyles.shell}`}>
       <div ref={containerRef} className="size-full" />
-      {/* g3 item 10 (M91): the mute-and-blur half of the state extrusion.
-          Inside the wrapper so it sits over the canvas; `pointer-events:
-          none` keeps the map underneath fully draggable. */}
-      {/*
-        SUSPENDED WHILE A FULL-SCREEN OVERLAY IS OPEN (g5 item 2).
-
-        The author opened the meetings panel at 85701 and got a header reading
-        "86 meetings" above an empty box; moving the mouse over it made the
-        rows appear. A phone has no hover, so a mobile reader taps meetings,
-        sees a count above nothing, and concludes we hold nothing — a stated-N
-        versus rendered-rows violation produced by a paint bug.
-
-        Measured on production rather than guessed at. The DOM and the layout
-        were always complete: the panel's group headers were present, at real
-        coordinates, with counts summing to the header's own number. What was
-        missing was PIXELS, and the missing subset varied run to run — the
-        signature of a compositor that never painted a layer rather than of a
-        component that never rendered.
-
-        The cause is item 1, one layer down. This scrim carries
-        `backdrop-filter`, and while its clip was being dropped it covered the
-        entire viewport; the list overlay carries a `backdrop-filter` of its
-        own and stacks directly on top of it, over the map's WebGL canvas.
-        Two backdrop surfaces deep, Chromium did not paint the upper one's
-        contents until something dirtied the layer — which a pointer move is.
-        With the scrim removed first and nothing else changed, the panel
-        painted; with it present, the panel's own ground never did (header
-        luminance 25 against 16 at 1280px, and 26 against 10 at 390px).
-
-        Item 1's fix is therefore most of item 2's — but only while the reader
-        is INSIDE the active state. Pan into New Mexico with Arizona active
-        and a full-viewport scrim is correct and back, and the panel would go
-        blank again. So the suspension is the rule and not the workaround: a
-        reader looking at a modal cannot see the map through it, the scrim has
-        nothing to say to them while it is open, and the one thing it can
-        still do is cost them the content they opened.
-
-        Removing the overlay's own `backdrop-filter` was tried first and
-        measured: 0 of 4 at 390px, no better than the control. It is not the
-        upper surface that has to go.
-      */}
-      {overlayOpen ? null : (
-      <StateFocusOverlay
-        outline={focusOutline}
-        project={projectFn}
-        subscribe={subscribeMove}
-        zoomOf={zoomOf}
-        // The rise stands on the basemap, so its light and shade are sized
-        // against that ground — see riseAlphasFor.
-        theme={theme === "light" ? "light" : "dark"}
-      />
-      )}
     </div>
   );
 }

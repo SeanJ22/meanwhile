@@ -1,0 +1,134 @@
+/* DSN-1: the supplied Pearl Button CSS worksheet, scaled to the existing
+   44px Ask pill. Reference: Uiverse / marcelodolza, pretty-goose-7 (MIT).
+   The rounded form, two curved highlights, five shadow layers and press
+   remain. No label replacement or text mask: the existing words stay legible.
+   This module is attached ONLY at the collapsed-sidebar map placement. */
+.pearl[data-ask-pill="map"] {
+  --ask-pearl-lavender: var(--online);
+  --ask-pearl-ink: var(--bg);
+  --ask-pearl-soft-highlight: rgba(255, 255, 255, 0.07);
+  --dur-pearl-highlight: 300ms;
+  --ease-pearl: ease;
+  --shadow-pearl-outer:
+    0 16px 24px rgba(0, 0, 0, 0.22),
+    0 8px 8px -5px rgba(0, 0, 0, 0.5);
+  --shadow-pearl-inset:
+    inset 0 3px 8px rgba(255, 255, 255, 0.13),
+    inset 0 -1px 3px rgba(0, 0, 0, 0.38),
+    inset 0 -3px 8px rgba(255, 255, 255, 0.18);
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  /* Keep the inherited 1px border width, padding, gap, type and min-height:
+     the Pearl test must occupy exactly the pill's previous footprint. */
+  border-color: transparent;
+  border-radius: var(--radius-pill);
+  background: var(--ask-pearl-lavender);
+  color: var(--ask-pearl-ink);
+  box-shadow: var(--shadow-pearl-inset), var(--shadow-pearl-outer);
+  transition:
+    transform var(--dur-base) var(--ease-pearl),
+    box-shadow var(--dur-base) var(--ease-pearl);
+}
+
+.pearl[data-ask-pill="map"]::before,
+.pearl[data-ask-pill="map"]::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  z-index: -1;
+  transition:
+    transform var(--dur-pearl-highlight) var(--ease-pearl),
+    opacity var(--dur-pearl-highlight) var(--ease-pearl);
+}
+
+.pearl[data-ask-pill="map"]::before {
+  left: -15%;
+  right: -15%;
+  bottom: 25%;
+  top: -100%;
+  border-radius: var(--radius-circle);
+  background-color: var(--ask-pearl-soft-highlight);
+}
+
+.pearl[data-ask-pill="map"]::after {
+  left: 6%;
+  right: 6%;
+  top: 12%;
+  bottom: 40%;
+  border-radius: var(--radius-pill) var(--radius-pill) 0 0;
+  box-shadow: inset 0 5px 4px -5px rgba(255, 255, 255, 0.4);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+.pearl[data-ask-pill="map"] svg {
+  color: currentColor;
+}
+
+.pearl[data-ask-pill="map"]:hover {
+  --shadow-pearl-inset:
+    inset 0 3px 5px rgba(255, 255, 255, 0.18),
+    inset 0 -1px 3px rgba(0, 0, 0, 0.38),
+    inset 0 -3px 8px rgba(255, 255, 255, 0.24);
+  border-color: transparent;
+  color: var(--ask-pearl-ink);
+}
+
+.pearl[data-ask-pill="map"]:hover::before {
+  transform: translateY(-5%);
+}
+
+.pearl[data-ask-pill="map"]:hover::after {
+  opacity: 0.4;
+  transform: translateY(5%);
+}
+
+.pearl[data-ask-pill="map"]:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+
+.pearl[data-ask-pill="map"]:active {
+  --shadow-pearl-inset:
+    inset 0 3px 5px rgba(255, 255, 255, 0.2),
+    inset 0 -1px 3px rgba(0, 0, 0, 0.45),
+    inset 0 -3px 8px rgba(255, 255, 255, 0.15);
+  --shadow-pearl-outer:
+    0 8px 16px rgba(0, 0, 0, 0.18),
+    0 3px 5px -3px rgba(0, 0, 0, 0.45);
+  transform: translateY(2px);
+}
+
+:global([data-theme="light"]) .pearl[data-ask-pill="map"] {
+  --ask-pearl-ink: var(--panel);
+  --ask-pearl-soft-highlight: rgba(255, 255, 255, 0.04);
+  --shadow-pearl-outer:
+    0 16px 24px rgba(0, 0, 0, 0.11),
+    0 8px 8px -5px rgba(0, 0, 0, 0.25);
+}
+
+:global([data-theme="light"]) .pearl[data-ask-pill="map"]:active {
+  --shadow-pearl-outer:
+    0 8px 16px rgba(0, 0, 0, 0.09),
+    0 3px 5px -3px rgba(0, 0, 0, 0.22);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pearl[data-ask-pill="map"],
+  .pearl[data-ask-pill="map"]::before,
+  .pearl[data-ask-pill="map"]::after {
+    --dur-pearl-reduced: 1ms;
+    transition-duration: var(--dur-pearl-reduced);
+  }
+
+  .pearl[data-ask-pill="map"]:hover::before,
+  .pearl[data-ask-pill="map"]:hover::after {
+    transform: none;
+  }
+}

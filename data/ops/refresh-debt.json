@@ -1,5 +1,22 @@
 {
   "formatVersion": 1,
-  "updatedOn": "2026-09-04",
-  "debts": []
+  "updatedOn": "2026-09-05",
+  "debts": [
+    {
+      "sourceId": "meetings",
+      "firstFailedOn": "2026-09-05",
+      "lastFailedOn": "2026-09-05",
+      "consecutiveFailures": 1,
+      "reason": "the suite is red independent of any source's data (tests/reader-last-mile-census.test.ts) — nothing commits under a red the refresh did not cause; its governed paths are back at HEAD and it is owed until it lands",
+      "nextDueAt": "2026-09-06"
+    },
+    {
+      "sourceId": "nj-filing",
+      "firstFailedOn": "2026-09-05",
+      "lastFailedOn": "2026-09-05",
+      "consecutiveFailures": 1,
+      "reason": "the suite is red independent of any source's data (tests/reader-last-mile-census.test.ts) — nothing commits under a red the refresh did not cause; its governed paths are back at HEAD and it is owed until it lands",
+      "nextDueAt": "2026-09-06"
+    }
+  ]
 }

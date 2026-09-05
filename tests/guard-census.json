@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 525,
-    "named": 5474,
+    "files": 528,
+    "named": 5493,
     "dynamic": 23
   },
   "files": {
@@ -5661,6 +5661,15 @@
       ],
       "dynamic": 0
     },
+    "tests/reader-freshness-disclosure.test.ts": {
+      "names": [
+        "RLC-1 NEGATIVE: a page missing the disclosure, or carrying the form the rows do not support, is refused by name",
+        "RLC-1 SEEDED run #25: the old proof's own sentence refused the honest footer; the contract check passes it and refuses the stale claim",
+        "RLC-1: neither the footer nor the proof keeps a second copy of the disclosure prose",
+        "RLC-1: the actual footer satisfies the proof's check in every form the snapshot can take — one contract on both sides"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-incumbency-delivery.test.ts": {
       "names": [
         "a committed person link cannot establish incumbency in a different body, office, or unrecognized identity",
@@ -5955,6 +5964,7 @@
     "tests/reader-source-renewal.test.ts": {
       "names": [
         "reader source renewal rechecks rendered facts instead of trusting a PASS label",
+        "reader structural identity ignores only the volatile calendar evaluation time",
         "source renewal accepts an exact removed dependency only beside current execution and complete graph absence",
         "source-only reader renewal cannot inherit a changed canonical identity or eligibility projection",
         "successive source renewal inherits only byte-identical already-classified dependencies"
@@ -6124,6 +6134,20 @@
         "no failing file is GREEN, and every changed source survives",
         "the debt file is written only when its debts move — a quiet day stays quiet",
         "the run record round-trips, keeps the contract's field names, and the Markdown is rendered from it"
+      ],
+      "dynamic": 0
+    },
+    "tests/refresh-renewal.test.ts": {
+      "names": [
+        "NOT_NEEDED and RENEWED carry no refusal, and the summary leads with the verdict and the head",
+        "RLC-2: a generator that cannot regenerate after the restore is reported, never passed off as coherent",
+        "RLC-2: a refused change goes back to HEAD and THEN the PURE dependents regenerate from the restored tree, in that order, through the registry",
+        "RLC-2: the FAILED record carries what the refusal put back and regenerated, and the summary states it beside the refusal",
+        "RLC-2: the orchestrator refuses through the shared restore, and the refresh workflow never arms the forced-refusal seam",
+        "a changed holding is attributed to the refresh source whose governed prefix covers it — including the NJ files at their post-reorg home",
+        "a failed renewal refuses only the sources whose change touched a holding, names the step, and says the paths are back at HEAD",
+        "changedHoldings names a holding whose bytes moved, appeared or vanished, and nothing else",
+        "the run record round-trips RL-1 observations and the renewal, and the Markdown states both"
       ],
       "dynamic": 0
     },
@@ -6949,6 +6973,16 @@
         "the eligible verdict prints as eligible and lists nothing to fix",
         "the never-evaluated default is deliberately not green",
         "the required contexts are the imported ones, never re-typed here"
+      ],
+      "dynamic": 0
+    },
+    "tests/stamp-stable.test.ts": {
+      "names": [
+        "compareFacts: a new file, an unchanged re-observation, a changed fact, and unreadable bytes",
+        "factsOf drops a stamp key at every depth and nothing else",
+        "ignoreTopLevel drops a run-accounting block only at the top",
+        "key order is not a fact; array order is",
+        "writeStampStable leaves unchanged facts byte-identical and records the observation; changed facts write"
       ],
       "dynamic": 0
     },

@@ -10,7 +10,7 @@
  * network or the proof machinery; `tests/refresh-renewal.test.ts` pins it.
  */
 import type { RefreshSource } from "./refresh-cadence.ts";
-import type { RefreshRenewal, RefreshRenewalStep } from "./refresh-report.ts";
+import type { RefreshRenewal, RefreshRenewalRestore, RefreshRenewalStep } from "./refresh-report.ts";
 
 export interface HoldingDigest {
   readonly path: string;
@@ -48,17 +48,20 @@ export function unownedHoldings(sources: readonly RefreshSource[], holdings: rea
 }
 
 export function notNeededRenewal(exactHead: string, ranAt: string): RefreshRenewal {
-  return { verdict: "NOT_NEEDED", ranAt, exactHead, changedHoldings: [], prefix: null, steps: [], refusedSources: [], failure: null };
+  return { verdict: "NOT_NEEDED", ranAt, exactHead, changedHoldings: [], prefix: null, steps: [], refusedSources: [], failure: null, restore: null };
 }
 
 export function renewedRenewal(input: { exactHead: string; ranAt: string; changedHoldings: string[]; prefix: string; steps: RefreshRenewalStep[] }): RefreshRenewal {
-  return { verdict: "RENEWED", ranAt: input.ranAt, exactHead: input.exactHead, changedHoldings: input.changedHoldings, prefix: input.prefix, steps: input.steps, refusedSources: [], failure: null };
+  return { verdict: "RENEWED", ranAt: input.ranAt, exactHead: input.exactHead, changedHoldings: input.changedHoldings, prefix: input.prefix, steps: input.steps, refusedSources: [], failure: null, restore: null };
 }
 
 /**
  * A failed renewal refuses every source whose changed paths include a holding,
  * and says which step stopped it. Sources that changed only non-holding paths
- * are not refused here: the suite still gates them.
+ * are not refused here: the suite still gates them. `restore` is what the
+ * refusal did to the tree (RLC-2): the groups put back at HEAD and the PURE
+ * dependents regenerated from the restored tree, so the record can say the
+ * gate validated one coherent tree — or name the generator that would not.
  */
 export function failedRenewal(input: {
   exactHead: string;
@@ -68,6 +71,7 @@ export function failedRenewal(input: {
   steps: RefreshRenewalStep[];
   failure: string;
   sources: readonly RefreshSource[];
+  restore?: RefreshRenewalRestore | null;
 }): RefreshRenewal {
   const touching = sourcesTouchingHoldings(input.sources, input.changedHoldings);
   const failedStep = [...input.steps].reverse().find((step) => !step.ok)?.name ?? "renewal";
@@ -86,6 +90,7 @@ export function failedRenewal(input: {
         "its governed paths are back at HEAD and it is owed until it lands",
     })),
     failure: input.failure,
+    restore: input.restore ?? null,
   };
 }
 
@@ -95,6 +100,11 @@ export function renewalSummary(renewal: RefreshRenewal): string[] {
   if (renewal.changedHoldings.length) lines.push(`  changed holdings: ${renewal.changedHoldings.join(", ")}`);
   for (const step of renewal.steps) lines.push(`  ${step.ok ? "ok  " : "FAIL"} ${step.name} (${step.secs}s)${step.detail ? ` — ${step.detail}` : ""}`);
   for (const refused of renewal.refusedSources) lines.push(`  refused ${refused.id}: ${refused.why}`);
+  if (renewal.restore) {
+    for (const group of renewal.restore.restored) lines.push(`  restored ${group.id}: ${group.paths.length} path(s) back at HEAD`);
+    lines.push(`  regenerated ${renewal.restore.regenerated.length} PURE dependent path(s) from the restored tree`);
+    for (const failed of renewal.restore.regenerationFailed) lines.push(`  regeneration FAILED: \`${failed.command}\` — ${failed.output.split("\n")[0]}`);
+  }
   if (renewal.failure) lines.push(`  failure: ${renewal.failure}`);
   return lines;
 }

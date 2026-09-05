@@ -20,6 +20,7 @@ import { registrationLinkFor } from "../lib/ballot/registration-links.ts";
 import { pollingPlaceLinkFor } from "../lib/ballot/polling-place-links.ts";
 import { formatDateMDY } from "../lib/map/format.ts";
 import { groupAbsences } from "../lib/ballot/absence-grouping.ts";
+import { inspectReaderMarkup, sha256, type ReaderComponentCase } from "../lib/holdings/reader-census.ts";
 
 const base = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
 const outputPath = process.env.READER_PROOF_OUTPUT ?? "docs/evidence/reader-last-mile-ballot.json";
@@ -62,6 +63,7 @@ const browser = await launchGuarded({ label: "reader-last-mile-all-ballots" });
 const context = await browser.context({ viewport: { width: 1440, height: 1000 } });
 const page = await context.newPage();
 const rows = [];
+const cases: ReaderComponentCase[] = [];
 const normalize = (value: string) => value.replace(/\s+/g, " ").trim();
 try {
   for (const plan of chosen) {
@@ -119,6 +121,12 @@ try {
       assert.equal(await section.locator("[data-filing-change-id]").count(), removals.length);
       for (const record of removals) assert.ok(text.includes(normalize(record.statement)), `${record.id}: filing change missing`);
       proofs.push({ contestId: contest.id, candidacyIds: expectedKeys.map((key) => reconciledCandidacyIdForCard(key) ?? key), actualCardKeys: actualKeys, measureIds: plan.set.measures.filter((measure) => measure.contestId === contest.id).map((measure) => measure.id), provisionIds: provisions.map((provision) => provision.id), removalIds: removals.map((record) => record.id), summaryHeld: Boolean(summary), textSha256: createHash("sha256").update(text).digest("hex"), sourceUrls: await section.locator("a[href]").evaluateAll((elements) => elements.map((element) => element.getAttribute("href"))) });
+      if (process.argv.includes("--source-renewal")) {
+        const markup = await section.evaluate(element => element.outerHTML);
+        const expectedFragments = [contest.id, ...expectedKeys, ...(summary ? [summary.summary] : [])];
+        const rowCounts = { candidates: { expected: expectedKeys.length, actual: actualKeys.length } };
+        cases.push({ auditId: `${plan.zip}:${contest.id}`, component: "app/ballot/page.tsx", componentSha256: sha256(readFileSync("app/ballot/page.tsx")), selector: "canonical ZIP/division ballot selection → actual production DOM", actualCanonicalIdentities: [contest.id, ...expectedKeys], payloadSha256: sha256(JSON.stringify(proofs.at(-1))), markup, markupSha256: sha256(markup), expectedFragments, forbiddenFragments: [], rowCounts, failures: inspectReaderMarkup(markup, expectedFragments, [], rowCounts) });
+      }
     }
     const actualAbsences = await page.locator("[data-absence-ocd-ids]").evaluateAll((elements) => elements.flatMap((element) => (element.getAttribute("data-absence-ocd-ids") ?? "").split(" ")));
     assert.deepEqual(actualAbsences.sort(), plan.absences.map((absence) => absence.ocdId).sort(), `${plan.zip}: sourced absences`);
@@ -139,4 +147,4 @@ try {
     console.log(JSON.stringify({ zip: plan.zip, contests: plan.contests.length, result: "PROVEN" }));
   }
 } finally { await context.close(); await browser.close(); }
-writeFileSync(outputPath, JSON.stringify({ exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), buildId: readFileSync(".next/BUILD_ID", "utf8").trim(), sourceHashes: proofSourcesPath ? JSON.parse(readFileSync(proofSourcesPath, "utf8")) : readerProofSources(), plan: planEvidence, execution: "Actual local production ballot navigation and rendered DOM; complete normalized contest population across deterministic committed ZIP coverage, including explicit disclosure gestures.", rows }, null, 2) + "\n");
+writeFileSync(outputPath, JSON.stringify({ exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), buildId: readFileSync(".next/BUILD_ID", "utf8").trim(), sourceHashes: proofSourcesPath ? JSON.parse(readFileSync(proofSourcesPath, "utf8")) : readerProofSources(), plan: planEvidence, execution: "Actual local production ballot navigation and rendered DOM; complete normalized contest population across deterministic committed ZIP coverage, including explicit disclosure gestures.", rows, ...(cases.length ? { cases } : {}) }, null, 2) + "\n");

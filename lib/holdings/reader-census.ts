@@ -544,6 +544,101 @@ export interface ReaderProofInvalidationReport {
   readonly rows: readonly ReaderProofInvalidationRow[];
   readonly counts: Readonly<Record<ReaderProofDisposition, number>>;
   readonly failures: readonly string[];
+  /** Executed presentation renewal over an unchanged, previously closed census.
+   * The historical row proofs and their original execution heads are retained. */
+  readonly sourceRevalidation?: {
+    readonly priorReceiptPath: string;
+    readonly priorReceiptSha256: string;
+    readonly priorReportPath: string;
+    readonly priorReportSha256: string;
+    readonly proofPath: string;
+    readonly proofSha256: string;
+  };
+}
+
+export interface ReaderSourceRevalidation {
+  readonly exactHead: string;
+  readonly baselineCommit: string;
+  readonly baselineReceiptPath: string;
+  readonly baselineReceiptSha256: string;
+  readonly holdingsDigest: string;
+  readonly registrySha256: string;
+  readonly sourceHashes: readonly ReaderSourceHash[];
+  readonly changedSources: readonly string[];
+  readonly rows: readonly { rowId: string; structuralSha256: string; deliverySha256: string }[];
+  readonly executions: readonly {
+    id: string; sourcePaths: readonly string[]; evidencePath: string;
+    evidenceSha256: string; expected: number; passed: number;
+  }[];
+  readonly failures: readonly string[];
+}
+
+/** Recheck stored DOM/SSR observations, rather than trusting a PASS label. */
+export function sourceRenewalCaseProblems(cases: readonly ReaderComponentCase[]): string[] {
+  const failures: string[] = [];
+  if (!cases.length) failures.push("Source renewal requires nonempty rendered cases");
+  for (const entry of cases) {
+    if (!entry.markup || sha256(entry.markup) !== entry.markupSha256 || !entry.expectedFragments?.length || !entry.actualCanonicalIdentities?.length) failures.push(`${entry.auditId}: incomplete rendered observation`);
+    failures.push(...(entry.failures ?? ["missing execution conclusion"]));
+    failures.push(...inspectReaderMarkup(entry.markup ?? "", entry.expectedFragments ?? [], entry.forbiddenFragments ?? [], entry.rowCounts ?? {}));
+  }
+  return unique(failures);
+}
+
+/** Renew executable-source evidence without rewriting a historical execution.
+ * The unchanged census and previous report are pinned to committed evidence;
+ * every changed dependency needs nonempty current-head execution evidence. */
+export function readerSourceRevalidationProblems(root: string, census: ReaderCensus, report: ReaderProofInvalidationReport): string[] {
+  const renewal = report.sourceRevalidation;
+  if (!renewal) return [];
+  const failures: string[] = [];
+  const read = <T>(path: string, hash: string): T => {
+    const bytes = readReaderEvidence(root, path);
+    if (sha256(bytes) !== hash) failures.push(`Reader source renewal bytes changed: ${path}`);
+    return JSON.parse(bytes.toString("utf8")) as T;
+  };
+  const prior = read<ReaderClosureReceipt>(renewal.priorReceiptPath, renewal.priorReceiptSha256);
+  const previousReport = read<ReaderProofInvalidationReport>(renewal.priorReportPath, renewal.priorReportSha256);
+  const proof = read<ReaderSourceRevalidation>(renewal.proofPath, renewal.proofSha256);
+  if (!/^[a-f0-9]{40}$/.test(proof.baselineCommit) || !/^[a-f0-9]{40}$/.test(proof.exactHead)) return [...failures, "Reader source renewal requires exact committed heads"];
+  try {
+    execFileSync("git", ["merge-base", "--is-ancestor", proof.baselineCommit, proof.exactHead], { cwd: root, stdio: "pipe" });
+    execFileSync("git", ["merge-base", "--is-ancestor", proof.exactHead, "HEAD"], { cwd: root, stdio: "pipe" });
+    const committed = execFileSync("git", ["show", `${proof.baselineCommit}:${proof.baselineReceiptPath}`], { cwd: root, maxBuffer: 16 * 1024 * 1024 });
+    if (sha256(committed) !== renewal.priorReceiptSha256 || proof.baselineReceiptSha256 !== renewal.priorReceiptSha256) failures.push("Reader source renewal does not bind the committed prior receipt");
+  } catch { failures.push("Reader source renewal cannot establish its committed baseline or execution ancestry"); }
+  if (prior.censusSha256 !== sha256(readReaderEvidence(root, prior.censusPath)) || prior.holdingsDigest !== proof.holdingsDigest || prior.registrySha256 !== proof.registrySha256 || census.holdingsDigest !== proof.holdingsDigest || census.registrySha256 !== proof.registrySha256) failures.push("Source-only renewal cannot change canonical holdings or its closed census");
+  if (!prior.inheritance || prior.inheritance.reportSha256 !== renewal.priorReportSha256) failures.push("Reader source renewal does not bind the prior invalidation report");
+  for (const key of ["rows", "counts", "changedHoldings", "currentReaderHead", "baselineReaderHead", "baselineProofCommit"] as const) if (JSON.stringify(report[key]) !== JSON.stringify(previousReport[key])) failures.push(`Source renewal rewrote historical ${key}`);
+  failures.push(...proof.failures, ...readerSourceHashProblems(root, proof.sourceHashes));
+  const current = readerSourceFingerprint(root);
+  if (JSON.stringify(current) !== JSON.stringify(proof.sourceHashes)) failures.push("Source renewal does not fingerprint the complete current reader dependency graph");
+  const priorHashes = new Map(prior.sourceHashes.map(source => [source.path, source.sha256]));
+  for (const equivalent of prior.sourceEolEquivalences ?? []) priorHashes.set(equivalent.path, equivalent.canonicalLfSha256);
+  const currentHashes = new Map(current.map(source => [source.path, source.sha256]));
+  const changed = unique([...priorHashes.keys(), ...currentHashes.keys()]).filter(path => priorHashes.get(path) !== currentHashes.get(path));
+  if (JSON.stringify(changed) !== JSON.stringify([...proof.changedSources].sort())) failures.push("Source renewal omits or invents a changed reader dependency");
+  const covered = new Set<string>();
+  for (const execution of proof.executions) {
+    if (!execution.expected || execution.passed !== execution.expected || !readerEvidenceHashMatches(root, execution.evidencePath, execution.evidenceSha256)) { failures.push(`Source renewal execution is missing, empty or failed: ${execution.id}`); continue; }
+    const evidence = object(JSON.parse(readReaderEvidence(root, execution.evidencePath).toString("utf8")));
+    if (evidence.exactHead !== proof.exactHead || !Array.isArray(evidence.failures) || evidence.failures.length || !Array.isArray(evidence.sourceHashes) || readerSourceHashProblems(root, evidence.sourceHashes as ReaderSourceHash[]).length) { failures.push(`Source renewal execution is stale or unbound: ${execution.id}`); continue; }
+    const cases = Array.isArray(evidence.cases) ? evidence.cases as ReaderComponentCase[] : [];
+    if (cases.length !== execution.expected || sourceRenewalCaseProblems(cases).length) { failures.push(`Source renewal execution has missing or invalid rendered cases: ${execution.id}`); continue; }
+    if (!Array.isArray(evidence.inputs) || !evidence.inputs.length || (evidence.inputs as ReaderSourceHash[]).some(input => !readerEvidenceHashMatches(root, input.path, input.sha256))) { failures.push(`Source renewal execution inputs changed: ${execution.id}`); continue; }
+    for (const path of execution.sourcePaths) {
+      if (!changed.includes(path) || !evidenceSourceHashes(evidence.sourceHashes).some(source => source.path === path && source.sha256 === currentHashes.get(path))) failures.push(`Source renewal execution does not bind ${path}`);
+      else covered.add(path);
+    }
+  }
+  for (const path of changed) if (!covered.has(path)) failures.push(`Reader dependency has no executed renewal: ${path}`);
+  const baselineRows = new Map(census.rows.map(row => [row.id, row]));
+  if (proof.rows.length !== baselineRows.size || new Set(proof.rows.map(row => row.rowId)).size !== baselineRows.size) failures.push("Source renewal must compare every prior row exactly once");
+  for (const row of proof.rows) {
+    const baseline = baselineRows.get(row.rowId);
+    if (!baseline || row.structuralSha256 !== readerRowStructuralSha256(baseline) || row.deliverySha256 !== sha256(JSON.stringify(baseline))) failures.push(`Source renewal changed or lost a canonical row: ${row.rowId}`);
+  }
+  return unique(failures);
 }
 
 export const READER_LAST_MILE_BASE_HEAD = "d9dc2010f8a34766cd2a24ed672a64ac448619e9";
@@ -563,7 +658,7 @@ const readerDeliveryFields = new Set([
   "loaderCanReadHolding", "eligibleRecordsProjected", "deployedBundleProved", "deliveryState", "falseNegativeCount",
   "falsePositiveCount", "evidencePaths", "deliveryReason",
 ]);
-function readerRowStructuralSha256(row: CensusRow): string {
+export function readerRowStructuralSha256(row: CensusRow): string {
   return sha256(JSON.stringify(Object.fromEntries(Object.entries(row).filter(([key]) => !readerDeliveryFields.has(key)))));
 }
 function readerSourceImpact(path: string): { acceptance: string; reason: string } | null {
@@ -683,6 +778,11 @@ export function inheritReaderProofs(root: string, current: ReaderCensus, options
 
 export function readerProofInheritanceProblems(root: string, census: ReaderCensus, report: ReaderProofInvalidationReport): string[] {
   const failures = [...report.failures];
+  const renewalFailures = readerSourceRevalidationProblems(root, census, report);
+  failures.push(...renewalFailures);
+  const renewedSources = report.sourceRevalidation && !renewalFailures.length
+    ? new Set((JSON.parse(readReaderEvidence(root, report.sourceRevalidation.proofPath).toString("utf8")) as ReaderSourceRevalidation).changedSources)
+    : new Set<string>();
   if (report.baselineReaderHead !== READER_LAST_MILE_BASE_HEAD || report.baselineProofCommit !== READER_LAST_MILE_BASE_PROOF_COMMIT) failures.push("Inherited reader checkpoint changed");
   const baselineReceiptBytes = readReaderEvidence(root, report.baselineReceiptPath);
   const baselineCensusBytes = readReaderEvidence(root, report.baselineCensusPath);
@@ -711,7 +811,7 @@ export function readerProofInheritanceProblems(root: string, census: ReaderCensu
   const currentSources = new Map(readerSourceFingerprint(root).map((source) => [source.path, source.sha256]));
   const changed = unique([...baselineSources.keys(), ...currentSources.keys()]).filter((path) => (baselineSources.get(path) ?? null) !== (currentSources.get(path) ?? null));
   if (JSON.stringify(changed) !== JSON.stringify(report.changedReaderSources.map((source) => source.path).sort())) failures.push("Reader dependency delta differs from the frozen invalidation report");
-  for (const source of report.changedReaderSources) if ((currentSources.get(source.path) ?? null) !== source.currentSha256 || !readerSourceImpact(source.path)) failures.push(`Reader dependency is unbound or unclassified: ${source.path}`);
+  for (const source of report.changedReaderSources) if ((currentSources.get(source.path) ?? null) !== source.currentSha256 || (!readerSourceImpact(source.path) && !renewedSources.has(source.path))) failures.push(`Reader dependency is unbound or unclassified: ${source.path}`);
   return unique(failures);
 }
 

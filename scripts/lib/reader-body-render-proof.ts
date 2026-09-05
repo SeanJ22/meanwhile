@@ -30,7 +30,7 @@ import { readerOfficeTitle } from "../../lib/officials/reader-office-title.ts";
 import { runsSomething, topOfficesFor } from "../../lib/officials/top-offices.ts";
 
 /** Actual product leaves, compiled in memory. This makes no in-situ or build claim. */
-export async function bodyRenderProof(root = process.cwd()) {
+export async function bodyRenderProof(root = process.cwd(), preparedCensus?: ReaderCensus) {
   const moduleApi = await import("node:module") as unknown as { registerHooks: (hooks: { resolve: (specifier: string, context: { parentURL?: string }, next: (specifier: string, context: unknown) => unknown) => unknown; load: (url: string, context: unknown, next: (url: string, context: unknown) => unknown) => unknown }) => { deregister: () => void } };
   const entityPath = "components/map/popup/entity-modal.tsx";
   const districtPath = "components/map/popup/district-popup.tsx";
@@ -82,7 +82,7 @@ export async function bodyRenderProof(root = process.cwd()) {
   const javascript = ts.transpileModule(extracted, { compilerOptions: { jsx: ts.JsxEmit.React, jsxFactory: "createElement", target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
   const dependencies = { createElement, membersOfBody, rosterGapForBody, jurisdictionClaim, representationNoteForClaim, TIER_LABEL, districtCardSources, definitionsForBody, schoolDependency, bodyClassLong };
   const bodySubject = new Function(...Object.keys(dependencies), `${javascript}\nreturn bodySubject;`)(...Object.values(dependencies)) as (body: CoveredBody, meetings: Meeting[]) => ModalSubject;
-  const census = JSON.parse(readReaderEvidence(root, "docs/evidence/reader-last-mile-current.json").toString("utf8")) as ReaderCensus;
+  const census = preparedCensus ?? JSON.parse(readReaderEvidence(root, "docs/evidence/reader-last-mile-current.json").toString("utf8")) as ReaderCensus;
   const registry = JSON.parse(readFileSync(join(root, "lib/registry/registry.json"), "utf8")) as Registry;
   const divisions = new Map(registry.divisions.map((row) => [row.ocdId, row]));
   const bodies = new Map(registry.bodies.map((row) => [row.id, row]));

@@ -25,6 +25,7 @@ import {
 } from "../lib/holdings/reader-census.ts";
 import { readerProofSources } from "./lib/reader-proof-sources.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
+import { finalizeReaderSources } from "./lib/reader-source-finalization.ts";
 
 const root = process.cwd();
 const codeHead = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
@@ -64,6 +65,14 @@ if (process.argv.includes("--prepare")) {
 }
 
 let census = JSON.parse(readFileSync(preparedCensusPath, "utf8")) as ReaderCensus;
+if (process.argv.includes("--revalidate-source")) {
+  const baselineCommit = process.env.READER_RENEWAL_BASELINE;
+  const executionPath = process.env.READER_RENEWAL_EXECUTION;
+  const outputPrefix = process.env.READER_RENEWAL_PREFIX;
+  assert.ok(baselineCommit && executionPath && outputPrefix, "Source renewal requires a committed baseline, executed proof and evidence prefix");
+  console.log(JSON.stringify(finalizeReaderSources(root, census, { receiptPath, reportPath: invalidationPath, baselineCommit, executionPath, outputPrefix }), null, 2));
+  process.exit(0);
+}
 const inherited = inheritReaderProofs(root, census, {
   baselineCensusPath,
   baselineReceiptPath,

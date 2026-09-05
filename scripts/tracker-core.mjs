@@ -599,3 +599,259 @@ export function p1Census(working, sections) {
     };
   });
 }
+
+/* ------------------------------------------- RULING 271: dashboard decisions --- */
+
+/**
+ * **A DECISION MADE ON THE DASHBOARD FLOWS OUT TO THE TRACKER.**
+ * (ADM-4, the 9.4.26 admin feedback. Lane C.)
+ *
+ * The owner decides on the control centre; the button appends a durable
+ * `OwnerDecisionIntent` to the control plane. Until this existed nothing
+ * carried that decision into `docs/tracker-working.csv`, so the Needs Sean
+ * queue never emptied from the page — he decided, and then had to go and
+ * find the same row in a spreadsheet and decide it again. His words: *"I want
+ * to use this dashboard where I can resolve these and then it can go out and
+ * be fixed."*
+ *
+ * `pnpm owner:decisions:pull` exports the collapsed decision log to
+ * `docs/tracker-owner-decisions.json`. This function reads that export and
+ * decides — PURELY, so a test can hand it any stores it likes — which open
+ * Needs Sean rows the owner's recorded decisions close, what work each close
+ * implies, and which decisions must be refused and why.
+ *
+ * ## What earns a close (RULING 271: only the author closes a Needs Sean row)
+ *
+ * - the intent's subject is an OPEN row in `needs-sean` in the working store;
+ * - the intent has not already been applied — no row's `Closed by` carries the
+ *   intent id — and it is the LATEST decision about that subject, because a
+ *   later decision supersedes an earlier one and applying both would close a
+ *   row on an answer he had already changed;
+ * - `adminSessionRef` is non-empty: the decision was made in his own
+ *   authenticated session, which is what makes it his handwriting rather than
+ *   a session's;
+ * - and EITHER the chosen option is one of the row's decision-card options,
+ *   verbatim, OR he answered in his own words (`ownerAnswer`), in which case
+ *   the chosen option may be the `Answered in my own words` literal.
+ *
+ * A predicate row is REFUSED. Its blocker is a machine-checked wall, not a
+ * question; it closes when the wall goes down (RULING 227) and a decision
+ * cannot knock it down.
+ *
+ * ## What a close never does
+ *
+ * It never closes the OBLIGATION the row was about. Closing a Needs Sean row
+ * records that the question was answered; the work the answer implies is
+ * opened as a row in the `decided` section, which a session then does and
+ * resolves in the ordinary way. A "Decline"/"Defer" answer implies no work
+ * and opens nothing.
+ *
+ * The caller (`scripts/tracker.mjs move`) registers each close as a
+ * resolution in the author's hand — `resolutionAuthor[id] = "sean"` — and
+ * hands it to `planMoves` on that existing path. There is no bypass here:
+ * `planMoves` still decides whether the row may move.
+ */
+
+/** The committed export `pnpm owner:decisions:pull` writes and `move` reads. */
+export const OWNER_DECISIONS_JSON = "docs/tracker-owner-decisions.json";
+/** The section a follow-up row opens in (`docs/tracker-sections.json`). */
+export const DECIDED_SECTION = "decided";
+/** `Opened by` on every follow-up row, and the ledger session that claims it. */
+export const DASHBOARD_OPENER = "dashboard-decision";
+/** The id prefix follow-up rows are minted under. */
+export const FOLLOW_UP_PREFIX = "DEC";
+/**
+ * The `chosenOption` literal the dashboard records for an own-words answer.
+ * The same string as `ANSWERED_IN_OWN_WORDS` in `lib/control-plane/owner-surface.ts`;
+ * repeated here because a `.mjs` run under plain node cannot import TypeScript,
+ * and `tests/owner-decisions-outflow.test.ts` asserts the two agree.
+ */
+export const ANSWERED_IN_OWN_WORDS = "Answered in my own words";
+/**
+ * An option that begins with one of these implies no work: the row closes on
+ * the decision and no follow-up opens. Case-insensitive, matched at the start.
+ */
+export const NO_FOLLOW_UP_OPTION =
+  /^(decline|defer|refuse|open none|say it is no longer|acknowledge|confirm)\b/i;
+
+/** How a dashboard close is attributed in `Closed by`. */
+export function dashboardCloser(intentId) {
+  return `${SEAN_AUTHOR} (dashboard ${intentId})`;
+}
+
+/** The sentence appended to the row's Notes, so the close is traceable on the row itself. */
+export function dashboardNote({ intentId, decidedAt, option, consequence, ownerAnswer, ownWords }) {
+  if (ownWords) {
+    return `Answered on the dashboard ${decidedAt} (intent ${intentId}): "${ownerAnswer}".`;
+  }
+  const tail = consequence ? ` — ${consequence}` : "";
+  return `Decided on the dashboard ${decidedAt} (intent ${intentId}): ${option}${tail}.`;
+}
+
+/**
+ * The row a session acts on after a close. `What this is` restates the
+ * original question, his choice and his words, because the Needs Sean row it
+ * came from has left the working view by the time anyone reads this.
+ */
+export function followUpRowFor({ row, close }) {
+  const id = (row.ID ?? "").trim();
+  const words = close.ownerAnswer ? close.ownerAnswer : "none";
+  const consequence = close.consequence ? ` — ${close.consequence}` : "";
+  return {
+    prefix: FOLLOW_UP_PREFIX,
+    Section: DECIDED_SECTION,
+    Priority: "P2",
+    Title: `Act on ${id}: ${close.option}`,
+    "What this is":
+      `${(row.Title ?? "").trim()}. Sean chose: ${close.option}${consequence}. ` +
+      `Sean's words: ${words}. Do the work this choice implies, then resolve this row; ` +
+      `the Needs Sean row ${id} is closed on his decision and the obligation it concerned ` +
+      "stays live (RULING 271).",
+    "Depends on": id,
+    "Opened by": DASHBOARD_OPENER,
+  };
+}
+
+/**
+ * @param {{
+ *   working: TrackerRow[],
+ *   resolved: TrackerRow[],
+ *   decisions: {intentId: string, subjectId: string, chosenOption: string, consequenceShown?: string, decidedAt: string, adminSessionRef?: string, ownerAnswer?: string|null}[],
+ *   registry: {rowId: string, kind: string, options?: {option: string, consequence: string}[]}[],
+ * }} input
+ * @returns {{
+ *   closes: {id: string, intentId: string, option: string, consequence: string, ownerAnswer: string|null, adminSessionRef: string, decidedAt: string, ownWords: boolean, note: string, followUp: boolean}[],
+ *   followUps: Record<string, string>[],
+ *   refusals: {intentId: string, id: string, reason: string, line: string}[],
+ * }}
+ */
+export function planOwnerDecisions({ working, resolved, decisions, registry }) {
+  const closes = [];
+  const followUps = [];
+  const refusals = [];
+  const refuse = (intent, reason) => {
+    const id = (intent.subjectId ?? "").trim() || "(no subject)";
+    refusals.push({ intentId: intent.intentId, id, reason, line: `${intent.intentId} · ${id} — ${reason}` });
+  };
+
+  const workingById = new Map(working.map((r) => [(r.ID ?? "").trim(), r]));
+  const resolvedById = new Map(resolved.map((r) => [(r.ID ?? "").trim(), r]));
+  const entryById = new Map(registry.map((e) => [e.rowId, e]));
+  const appliedIntent = (intentId) =>
+    [...resolved, ...working].find((r) => (r["Closed by"] ?? "").includes(intentId));
+
+  /*
+   * Only the LATEST decision per subject applies. Grouping first, before any
+   * row is looked at, so an earlier decision is refused as superseded rather
+   * than as whatever else happens to be wrong with it.
+   */
+  const bySubject = new Map();
+  for (const intent of decisions) {
+    const subject = (intent.subjectId ?? "").trim();
+    const list = bySubject.get(subject) ?? [];
+    list.push(intent);
+    bySubject.set(subject, list);
+  }
+
+  for (const [subject, list] of bySubject) {
+    const ordered = [...list].sort((a, b) => {
+      if (a.decidedAt !== b.decidedAt) return a.decidedAt < b.decidedAt ? 1 : -1;
+      return a.intentId < b.intentId ? 1 : -1;
+    });
+    const latest = ordered[0];
+    for (const earlier of ordered.slice(1)) {
+      refuse(
+        earlier,
+        `superseded by ${latest.intentId}, a later decision about the same row; only the latest decision applies`,
+      );
+    }
+
+    const already = appliedIntent(latest.intentId);
+    if (already) {
+      refuse(latest, `already applied: ${(already.ID ?? "").trim()} is closed by "${already["Closed by"]}"`);
+      continue;
+    }
+    const row = workingById.get(subject);
+    if (!row) {
+      const done = resolvedById.get(subject);
+      refuse(
+        latest,
+        done
+          ? `${subject} is already in the resolved store, closed by "${done["Closed by"]}" on ` +
+              `${done["Resolved on"] || "an unrecorded date"}; this decision did not close it`
+          : `${subject} is not a row in either store`,
+      );
+      continue;
+    }
+    if ((row.Section ?? "").trim() !== "needs-sean") {
+      refuse(
+        latest,
+        `${subject} is in "${row.Section}", and the dashboard applier reaches only Needs Sean (RULING 271)`,
+      );
+      continue;
+    }
+    if (!isOpen(row)) {
+      refuse(latest, `${subject} already carries "${(row.Resolution ?? "").trim()}" and is not open`);
+      continue;
+    }
+    if (!(latest.adminSessionRef ?? "").trim()) {
+      refuse(latest, "no admin session is recorded on the decision, so it cannot be shown to be his");
+      continue;
+    }
+    const entry = entryById.get(subject);
+    if (entry && entry.kind === "predicate") {
+      refuse(
+        latest,
+        `${subject} is a machine-checked wall, not a decision: it closes when its predicate goes ` +
+          "false (RULING 227), never on a button",
+      );
+      continue;
+    }
+
+    const chosen = (latest.chosenOption ?? "").trim();
+    const answer = typeof latest.ownerAnswer === "string" ? latest.ownerAnswer.trim() : "";
+    const options = Array.isArray(entry?.options) ? entry.options : [];
+    const picked = options.find((o) => (o.option ?? "").trim() === chosen);
+
+    let close;
+    if (picked) {
+      close = {
+        id: subject,
+        intentId: latest.intentId,
+        option: picked.option.trim(),
+        consequence: (latest.consequenceShown ?? "").trim() || (picked.consequence ?? "").trim(),
+        ownerAnswer: answer || null,
+        adminSessionRef: latest.adminSessionRef.trim(),
+        decidedAt: latest.decidedAt,
+        ownWords: false,
+      };
+    } else if (answer) {
+      close = {
+        id: subject,
+        intentId: latest.intentId,
+        option: chosen || ANSWERED_IN_OWN_WORDS,
+        consequence: "",
+        ownerAnswer: answer,
+        adminSessionRef: latest.adminSessionRef.trim(),
+        decidedAt: latest.decidedAt,
+        ownWords: true,
+      };
+    } else {
+      refuse(
+        latest,
+        entry
+          ? `"${chosen}" is none of the ${options.length} option(s) on ${subject}'s decision card ` +
+              "and no answer in his own words was given"
+          : `${subject} has no decision card in lib/tracker/registry.mjs and no answer in his own ` +
+              "words was given, so there is nothing to check the option against",
+      );
+      continue;
+    }
+    close.note = dashboardNote(close);
+    close.followUp = !NO_FOLLOW_UP_OPTION.test(close.option);
+    closes.push(close);
+    if (close.followUp) followUps.push(followUpRowFor({ row, close }));
+  }
+
+  return { closes, followUps, refusals };
+}

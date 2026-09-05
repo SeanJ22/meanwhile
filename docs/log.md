@@ -4,9 +4,9 @@
 (`scripts/tracker.mjs`) from the tracker's own attribution and description fields,
 plus one authored sentence per session in `docs/log-purposes.json`.
 
-Generated 2026-09-04 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-09-05 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **186 sessions.**
+Newest first. **187 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -24,6 +24,14 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **B08** — Read separation agreement before signing · deleted 2026-08-20 by Sean · authority: his note: "This has absolutely nothing to do with this project at all.  Delete this entirely"
 
 ---
+
+## admin-feedback-9-4-pm-nonhunt · 2026-09-05
+
+**What it started.** 1 row(s) opened, 1 still open.
+
+- **NH326** — Found at ship time by the 9.4.26 part-2 admin feedback session. The daily refresh of 2026-09-05 12:59Z (commit b36c7360) rewrote two canonical NJ ballot holdings, data/states/nj/ballot/nj-morris-2026.json and nj-morris-2026-contacts.json: 762 collectedAt/verifiedAt lines and the curatedAt stamp changed, and no record did. The reader closure receipt (docs/evidence/reader-last-mile-final-closure-receipt.json, closed 2026-09-04) binds every canonical holding by byte hash, so tests/reader-last-mile-census.test.ts now fails on main and on every PR that integrates main: 'Canonical holding inventory changed after closure proof'. The same refresh left lib/funding/official-candidacies.json stale, which made the generated-artifact guard refuse the observer's own HELD reading for b36c7360 (run 33967633467), so no bot can advance main until a gated PR lands. The machinery has no sanctioned repair for this shape: the source-only renewal asserts the holdings digest is unchanged, and a full re-proof from the 2026-09-04 baseline fails on the 15 reader sources the tester session absorbed through its V94 renewal, because they sit outside readerSourceImpact. Tomorrow's refresh will do it again. WHAT IS NEEDED: your ruling on which side of the seam moves: the refresh, the proof, or the renewal machinery. WHY THE MACHINE CANNOT PROCEED: each remedy changes what a closure proof means or what a refresh may rewrite, and the proof's own rule says no unclassified change may close, so a session widening the frozen boundary by hand would be closing an unclassified change itself. *(open)*
+
+**Needs Sean.** NH326
 
 ## reader-last-mile-nonhunt · 2026-09-04
 

@@ -2053,6 +2053,15 @@ export async function registerReaderRenderHooks(root: string): Promise<void> {
       return next(specifier, context);
     },
     load(url, context, next) {
+      // A CSS module loads as its class names, exactly as the V94 source proof
+      // (scripts/lib/reader-v94-source-proof.ts) and the test alias loader load
+      // it: content-only SSR observes no paint, and a popup or legend that the
+      // tester session gave a CSS module still renders its held facts here.
+      if (url.endsWith(".module.css")) {
+        const css = readFileSync(fileURLToPath(url), "utf8");
+        const names = [...new Set([...css.matchAll(/\.([a-zA-Z_][\w-]*)/g)].map((match) => match[1]))];
+        return { format: "module", shortCircuit: true, source: `export default ${JSON.stringify(Object.fromEntries(names.map((name) => [name, name])))};` };
+      }
       if (!url.endsWith(".tsx")) return next(url, context);
       const source = ts.transpileModule(readFileSync(fileURLToPath(url), "utf8"), { fileName: fileURLToPath(url), compilerOptions: { jsx: ts.JsxEmit.ReactJSX, module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
       return { format: "module", source, shortCircuit: true };

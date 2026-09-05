@@ -43,6 +43,10 @@
  * one file in it. See `TRACKER_ROW_GRANT` below.
  */
 
+/** Why the refresh may push the Reader proof it renewed — one sentence, shared by every exact file it names. */
+const READER_EVIDENCE_WHY =
+  "the Reader Last-Mile closure evidence the refresh's own renewal rewrites (RL-2, 2026-09-05): exact files, never a directory, because docs/evidence also holds executor code; scripts/refresh-reader-renewal.mts writes nothing else there, and tests/reader-last-mile-census.test.ts refuses any receipt whose hashes do not bind the tree";
+
 /** One allowed path. A value ending in `/` is a directory prefix; anything else is an exact file. */
 export interface AllowedPath {
   readonly path: string;
@@ -176,6 +180,49 @@ export const PUSHER_PROFILES: readonly PusherProfile[] = [
           "this grant can only ever carry a manifest that is byte-current against its committed inputs. " +
           "docs/states is non-shipping and costs no build.",
       },
+      { path: "docs/evidence/reader-last-mile-final-agenda.json.gz", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-agenda.json.pack.json", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-ballot.json.gz", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-ballot.json.pack.json", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-ballot-ask.json.gz", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-ballot-ask.json.pack.json", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-build-receipt.json.gz", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-build-receipt.json.pack.json", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-bundle.json.gz", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-bundle.json.pack.json", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-candidate-profiles-ask.json.gz", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-candidate-profiles-ask.json.pack.json", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-closure.json.gz", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-closure.json.pack.json", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-delta-components.json.gz", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-delta-components.json.pack.json", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-delta-routes.json.gz", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-delta-routes.json.pack.json", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-federal-money-ask.json.gz", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-federal-money-ask.json.pack.json", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-invalidation.json.gz", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-invalidation.json.pack.json", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-meeting-knowledge-ask.json.gz", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-meeting-knowledge-ask.json.pack.json", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-meeting-routes.json.gz", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-meeting-routes.json.pack.json", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-meetings-ask.json.gz", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-meetings-ask.json.pack.json", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-money-ask.json.gz", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-money-ask.json.pack.json", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-portraits.json.gz", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-portraits.json.pack.json", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-render.json.gz", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-render.json.pack.json", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-closure-receipt.json", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-closure.md", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-closure-summary.json", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-delta-summary.json", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-final-delta-witnesses.json", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-active-portraits.json", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-refresh-prior-receipt.json", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-refresh-prior-census.json.gz", why: READER_EVIDENCE_WHY },
+      { path: "docs/evidence/reader-last-mile-refresh-prior-census.json.pack.json", why: READER_EVIDENCE_WHY },
     ],
   },
   {

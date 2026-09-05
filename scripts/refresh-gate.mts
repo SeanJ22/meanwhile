@@ -50,6 +50,7 @@ import {
   type RefreshRun,
 } from "../lib/ops/refresh-report.ts";
 import { today } from "./doc-dates.mjs";
+import { changedFilesUnder, revertFilesToHead } from "./lib/refresh-revert.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const argv = process.argv.slice(2);
@@ -100,11 +101,7 @@ function git(args: string[]): string {
 
 /** Governed paths that differ from HEAD: tracked modifications and untracked additions, each marked. */
 function changedUnder(paths: readonly string[]): { path: string; untracked: boolean }[] {
-  return git(["status", "--porcelain", "-z", "--untracked-files=all", "--", ...paths])
-    .split("\0")
-    .filter((line) => line.length > 3)
-    .map((line) => ({ path: line.slice(3).replace(/\\/g, "/"), untracked: line.startsWith("??") }))
-    .sort((a, b) => a.path.localeCompare(b.path));
+  return changedFilesUnder(git, paths);
 }
 
 /** A source's refreshed bytes, set aside so its paths can be put back after a trial. */
@@ -127,9 +124,7 @@ function stashAway(files: { path: string; untracked: boolean }[]): Stash {
 
 /** Put a source's governed paths at HEAD: tracked files checked out, untracked ones removed. */
 function revertToHead(files: { path: string; untracked: boolean }[]): void {
-  const tracked = files.filter((f) => !f.untracked).map((f) => f.path);
-  if (tracked.length > 0) git(["checkout", "HEAD", "--", ...tracked]);
-  for (const f of files.filter((f) => f.untracked)) rmSync(join(ROOT, f.path), { force: true });
+  revertFilesToHead(git, ROOT, files);
 }
 
 function restore(stash: Stash): void {
@@ -219,6 +214,28 @@ if (suiteExit !== null && suiteExit !== 0 && !existsSync(suiteLog)) {
 }
 let debt = readDebt(ROOT, dayName);
 
+/*
+ * RL-3 (2026-09-05): a source whose holding change the Reader proof renewal
+ * could not prove was refused BEFORE the suite ran (scripts/refresh-reader-
+ * renewal.mts); its governed paths are already at HEAD. It is recorded here
+ * — ROUTE_UNREAD, owed, by name — on the green path and the red path alike,
+ * so the survivors' verdict never hides the refusal and the run goes red.
+ */
+const runRecord = run;
+const renewalRefused = runRecord.renewal?.verdict === "FAILED" ? runRecord.renewal.refusedSources : [];
+function applyRenewalRefusals(): void {
+  for (const refused of renewalRefused) {
+    const s = runRecord.sources.find((row) => row.id === refused.id);
+    if (!s) continue;
+    s.outcome = "ROUTE_UNREAD";
+    s.reason = refused.why;
+    s.changedPaths = [];
+    s.nextDueAt = dayAfter(utcToday);
+    debt = recordDebt(debt, { sourceId: s.id, reason: refused.why, today: dayName, nextDueAt: dayAfter(utcToday) });
+  }
+  if (renewalRefused.length > 0) console.log(`\nrefresh-gate · the Reader proof renewal refused ${renewalRefused.length} source(s): ${renewalRefused.map((r) => r.id).join(", ")}`);
+}
+
 const finalise = (next: RefreshRun, refused: boolean): void => {
   // REGENERATE STALE PURE DEPENDENTS OF THE FINAL SURVIVOR TREE (2026-09-03).
   //
@@ -272,10 +289,11 @@ if (suite.code === 0) {
     ranAt,
     failingFiles: [],
     attribution: [],
-    note: "The full suite passed over every changed source's data together. Everything that changed commits.",
+    note: "The full suite passed over every changed source's data together. Everything that changed commits." + (renewalRefused.length > 0 ? ` The Reader proof renewal refused ${renewalRefused.length} source(s) before the suite ran; see the renewal section.` : ""),
   };
+  applyRenewalRefusals();
   run.finishedAt = new Date().toISOString();
-  finalise(run, false);
+  finalise(run, renewalRefused.length > 0);
   process.exit(0);
 }
 
@@ -364,6 +382,7 @@ run.gate = {
         ? `The suite failed (exit ${suite.code}) and named no failing test file. Nothing could be attributed, so every changed source is refused and owed.`
         : `The suite is red independent of the refreshed data — ${verdict.treeFiles.join(", ")} fail with every changed source at HEAD. That is a defect on main, not a source's; nothing commits under it, and every changed source is owed until the tree is green.`,
 };
+applyRenewalRefusals();
 run.finishedAt = new Date().toISOString();
 finalise(run, true);
 process.exit(0);

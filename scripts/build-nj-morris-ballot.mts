@@ -42,7 +42,7 @@
  * a generator that produces nothing has told you about itself.
  */
 
-import { readFileSync, writeFileSync, readdirSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 import type { CandidacyRemoval } from "../lib/ballot/types.ts";
@@ -57,6 +57,7 @@ import {
 } from "../lib/hunt/nj-filing.ts";
 import { today } from "./doc-dates.mjs";
 
+import { writeStampStable } from "../lib/ops/stamp-stable.ts";
 const WRITE = process.argv.includes("--write");
 const ROOT = process.cwd();
 const STAMP = today();
@@ -660,29 +661,36 @@ console.log(
 );
 
 if (WRITE) {
-  writeFileSync(
-    join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"),
-    `${JSON.stringify(out, null, 2)}\n`,
-    "utf8",
+  // RL-1 (NH326/NH327): the clerk's document re-read with the same candidates
+  // on it leaves both reader-bound files byte-identical; the read date is
+  // operational history, not a new civic fact.
+  const ballotWrite = writeStampStable({
+    absolutePath: join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"),
+    path: "data/states/nj/ballot/nj-morris-2026.json",
+    next: out,
+    serialize: (value) => `${JSON.stringify(value, null, 2)}\n`,
+    stampKeys: ["collectedAt", "verifiedAt", "curatedAt"],
+  });
+  const contactsDocument = {
+    generatedAt: STAMP,
+    route: "filing-county",
+    note:
+      "Filed contact for Morris County candidates, from the county clerk's own filed-candidate PDFs. " +
+      "A filed STREET ADDRESS is a home address in most of these rows and is held for hunt use, never " +
+      "rendered.",
+    contacts,
+  };
+  const contactsWrite = writeStampStable({
+    absolutePath: join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026-contacts.json"),
+    path: "data/states/nj/ballot/nj-morris-2026-contacts.json",
+    next: contactsDocument,
+    serialize: (value) => `${JSON.stringify(value, null, 2)}\n`,
+    stampKeys: ["generatedAt", "collectedAt", "verifiedAt"],
+  });
+  console.log(
+    `\n  ${ballotWrite.written ? "written" : "facts unchanged, left untouched:"} data/states/nj/ballot/nj-morris-2026.json; ` +
+      `${contactsWrite.written ? "written" : "facts unchanged, left untouched:"} nj-morris-2026-contacts.json`,
   );
-  writeFileSync(
-    join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026-contacts.json"),
-    `${JSON.stringify(
-      {
-        generatedAt: STAMP,
-        route: "filing-county",
-        note:
-          "Filed contact for Morris County candidates, from the county clerk's own filed-candidate PDFs. " +
-          "A filed STREET ADDRESS is a home address in most of these rows and is held for hunt use, never " +
-          "rendered.",
-        contacts,
-      },
-      null,
-      2,
-    )}\n`,
-    "utf8",
-  );
-  console.log("\n  written data/states/nj/ballot/nj-morris-2026.json and nj-morris-2026-contacts.json");
 } else {
   console.log("\n  dry run — pass --write to update the committed files");
 }

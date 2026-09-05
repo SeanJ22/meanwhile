@@ -213,10 +213,13 @@ test("NH31: the proof harness cannot fire on a scheduled run", () => {
  * because the run is telling the truth about the part it noticed.
  */
 test("NH31 class sweep: no other refresh writes its artifact and then exits non-zero", () => {
+  // Each artifact write is stamp-stable since 2026-09-05 (RL-1, NH326/NH327):
+  // writeStampStable({ absolutePath: <artifact>, … }). The anchor is the
+  // artifact argument, so the claim below still reads everything AFTER the write.
   const others = {
-    "scripts/fetch-dotgov.mts": ["writeFileSync("],
-    "scripts/fetch-fec.mts": ["await writeFile(OUT"],
-    "scripts/fetch-legiscan.mts": ["await writeFile(SNAPSHOT"],
+    "scripts/fetch-dotgov.mts": ['absolutePath: join(dir, "snapshot.json")'],
+    "scripts/fetch-fec.mts": ["absolutePath: OUT"],
+    "scripts/fetch-legiscan.mts": ["absolutePath: SNAPSHOT"],
   };
   for (const [path, writes] of Object.entries(others)) {
     const src = readFileSync(path, "utf8");

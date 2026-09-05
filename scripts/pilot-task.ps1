@@ -46,6 +46,12 @@
         pnpm pilot:disable     stop it AND stop it coming back at logon
         pnpm pilot:uninstall   remove both mechanisms entirely
 
+    stop, disable and start ALSO write the owner's PAUSE_RUNNER / RESUME_RUNNER
+    note through scripts/runner-pause-note.mts (ADM-5, 9.4.26 admin feedback),
+    so the admin dashboard can tell a deliberate stop from a crash. Best
+    effort: the note never changes an action's exit code, and a note that could
+    not be recorded is printed, never thrown.
+
     Without pnpm, from any shell in the repository:
 
         powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pilot-task.ps1 -Action status
@@ -276,6 +282,49 @@ function Invoke-Schtasks {
     return $code
 }
 
+function Invoke-PauseNote {
+    # THE RUNNER'S OWN RECORD THAT IT WAS STOPPED (OR STARTED) ON PURPOSE.
+    # (ADM-5, 9.4.26 admin feedback.) Appends a PAUSE_RUNNER / RESUME_RUNNER
+    # intent through scripts/runner-pause-note.mts so the dashboard can tell a
+    # deliberate stop from a crash. BEST EFFORT: it runs after the action's
+    # real work, every failure is printed, and nothing here changes the
+    # action's exit code - a stop is never blocked by a note about the stop.
+    # ErrorActionPreference is Continue for the call so a stderr line cannot be
+    # promoted to a terminating error, exactly as Invoke-Schtasks does.
+    param([string]$IntentAction, [string]$Note, [string]$By)
+    $prev = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    try {
+        $node = Get-NodePath
+        $noteArgs = @(
+            "--env-file=.env.local",
+            "--experimental-strip-types",
+            "scripts/runner-pause-note.mts",
+            "--action=$IntentAction",
+            "--note=$Note",
+            "--by=$By"
+        )
+        Push-Location $RepoPath
+        try {
+            $lines = & $node @noteArgs
+            $code = if ($null -eq $LASTEXITCODE) { 0 } else { [int]$LASTEXITCODE }
+        }
+        finally {
+            Pop-Location
+        }
+        foreach ($line in @($lines)) { Write-Output "  $line" }
+        if ($code -ne 0) {
+            Write-Output "  pause note exited $code ($IntentAction); the note is best effort and the action above stands."
+        }
+    }
+    catch {
+        Write-Output "  pause note NOT recorded ($IntentAction): $($_.Exception.Message). Best effort; the action above stands."
+    }
+    finally {
+        $ErrorActionPreference = $prev
+    }
+}
+
 function Write-TriggerLines {
     param($Facts)
     if (-not $Facts.taskPresent) { return }
@@ -423,6 +472,9 @@ switch ($Action) {
     }
 
     "start" {
+        # The RESUME_RUNNER note goes in BEFORE the launch so the runner's first
+        # poll finds it and honors it; a runner already alive starts a cycle now.
+        Invoke-PauseNote -IntentAction "RESUME_RUNNER" -Note "pnpm pilot:start on $env:COMPUTERNAME" -By "pilot:start"
         if (Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue) {
             schtasks /Run /TN $TaskName
         }
@@ -438,6 +490,7 @@ switch ($Action) {
     "stop" {
         if (Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue) { schtasks /End /TN $TaskName }
         Get-RunnerProcesses | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }
+        Invoke-PauseNote -IntentAction "PAUSE_RUNNER" -Note "pnpm pilot:stop on $env:COMPUTERNAME" -By "pilot:stop"
         Write-Output "stopped. It comes back at the next logon unless you also run pnpm pilot:disable."
     }
 
@@ -472,6 +525,10 @@ switch ($Action) {
             try { Remove-Item $StartupFile -Force -ErrorAction Stop }
             catch { $killProblems += "could not remove the startup entry $StartupFile : $($_.Exception.Message)" }
         }
+
+        # The owner's own record that this stop was deliberate (ADM-5). Best
+        # effort; the verdict below is measured, never inferred from this.
+        Invoke-PauseNote -IntentAction "PAUSE_RUNNER" -Note "pnpm pilot:disable on $env:COMPUTERNAME" -By "pilot:disable"
 
         # Re-derive the live state AFTER acting, and judge on that alone.
         $facts = Get-TaskFacts

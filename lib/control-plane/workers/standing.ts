@@ -359,11 +359,25 @@ export async function advanceHeldWorkerFleet(root: string, runtime: FleetRuntime
   }
 }
 
-export async function runHeldWorkerFleetCycle(root: string, runtime: FleetRuntime, legacyOnly = false) {
+export async function runHeldWorkerFleetCycle(
+  root: string,
+  runtime: FleetRuntime,
+  legacyOnly = false,
+  options: {
+    readonly maximumDispatches?: number;
+    readonly admitDispatch?: (work: string) => { readonly admit: true } | { readonly admit: false; readonly code: string; readonly why: string };
+  } = {},
+) {
   const results = [];
-  for (let stage = 0; stage < 3; stage++) {
+  const maximum = Math.max(0, Math.min(options.maximumDispatches ?? 3, 3));
+  for (let stage = 0; stage < maximum; stage++) {
     await advanceHeldWorkerFleet(root, runtime, 1, legacyOnly);
-    results.push(...await drainWorkerQueue(runtime, 1, task => !legacyOnly || task.workerTask?.contract.schemaVersion === 1));
+    results.push(...await drainWorkerQueue(
+      runtime,
+      1,
+      task => !legacyOnly || task.workerTask?.contract.schemaVersion === 1,
+      task => options.admitDispatch?.(task.id) ?? { admit: true as const },
+    ));
   }
   return results;
 }

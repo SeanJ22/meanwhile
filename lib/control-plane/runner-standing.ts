@@ -24,8 +24,9 @@
  */
 import { livenessOf, type HealthLevel, type RunnerHeartbeat, type RunnerLiveness } from "./owner-surface.ts";
 import { readIntents, type ResearchIntent } from "./scheduler/research-policy.ts";
+import { operationalNightAt, scheduledBlackoutAt, type FleetSafetySnapshot } from "./fleet-safety.ts";
 
-export type RunnerStandingState = RunnerLiveness | "PAUSED";
+export type RunnerStandingState = RunnerLiveness | "ACTIVE" | "PAUSED" | "SCHEDULED BLACKOUT" | "CIRCUIT BROKEN";
 
 export interface RunnerStanding {
   readonly state: RunnerStandingState;
@@ -63,6 +64,7 @@ export function runnerStanding(
   heartbeat: RunnerHeartbeat | null,
   intentLog: readonly ResearchIntent[],
   nowIso: string,
+  safety: FleetSafetySnapshot | null = null,
 ): RunnerStanding {
   const liveness = livenessOf(heartbeat, nowIso);
   const { runnerPause } = readIntents(intentLog);
@@ -70,6 +72,45 @@ export function runnerStanding(
     heartbeat === null
       ? "No heartbeat has ever been recorded."
       : `Last beat ${ago(heartbeat.beatAt, nowIso)}.`;
+
+  if (scheduledBlackoutAt(nowIso)) {
+    const blackout = operationalNightAt(nowIso);
+    return {
+      state: "SCHEDULED BLACKOUT",
+      level: "AMBER",
+      headline: "SCHEDULED BLACKOUT",
+      detail: `${beatSentence} The runner may heartbeat and publish state, but Saturday-night model and network research is disabled until ${blackout.end}.`,
+      sinceBeatMinutes: liveness.sinceMinutes,
+      pause: null,
+      control: "PAUSE_RUNNER",
+    };
+  }
+
+  const activeCircuits = safety?.providerCircuits.filter((c) => Date.parse(c.eligibleAt) > Date.parse(nowIso)) ?? [];
+  if (activeCircuits.length > 0) {
+    const circuits = activeCircuits.map((c) => `${c.provider} until ${c.eligibleAt}: ${c.condition}`).join("; ");
+    return {
+      state: "CIRCUIT BROKEN",
+      level: "RED",
+      headline: "CIRCUIT BROKEN",
+      detail: `${beatSentence} Automated affected work is deferred without retrying. ${circuits}`,
+      sinceBeatMinutes: liveness.sinceMinutes,
+      pause: null,
+      control: "PAUSE_RUNNER",
+    };
+  }
+
+  if (safety?.status === "PAUSED" && !runnerPause.paused) {
+    return {
+      state: "PAUSED",
+      level: "AMBER",
+      headline: "PAUSED",
+      detail: `${beatSentence} The latest Fleet safety snapshot records the standing runner paused; its detailed owner intent was not readable here.`,
+      sinceBeatMinutes: liveness.sinceMinutes,
+      pause: null,
+      control: "RESUME_RUNNER",
+    };
+  }
 
   if (runnerPause.paused && runnerPause.intent) {
     const intent = runnerPause.intent;
@@ -102,9 +143,9 @@ export function runnerStanding(
   switch (liveness.state) {
     case "ALIVE":
       return {
-        state: "ALIVE",
+        state: safety?.status === "ACTIVE" ? "ACTIVE" : "ALIVE",
         level: "GREEN",
-        headline: "Running",
+        headline: safety?.status === "ACTIVE" ? "ACTIVE" : "Running",
         detail: `${beatSentence} Cycles are on schedule.`,
         sinceBeatMinutes: liveness.sinceMinutes,
         pause: null,

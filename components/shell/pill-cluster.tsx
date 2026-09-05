@@ -16,6 +16,7 @@ import type { SeatHolder } from "@/lib/officials/lookup";
 import { ASK_PILL_LABELS } from "@/lib/routing/ask-pill-labels";
 import type { AskPillPlacement } from "@/lib/map/cluster-placement";
 import type { SearchItem } from "@/lib/search";
+import pearlStyles from "./ask-pearl.module.css";
 
 /**
  * THE PILL CLUSTER — G05 rules 4a, 4e and G07, in one component.
@@ -200,7 +201,7 @@ export function PillCluster({
 
         <button
           type="button"
-          className="ask-pill"
+          className={`ask-pill${placement === "map" ? ` ${pearlStyles.pearl}` : ""}`}
           data-ask-pill={placement}
           aria-expanded={askOpen}
           aria-label={pill.ariaLabel}

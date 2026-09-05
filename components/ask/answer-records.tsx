@@ -18,15 +18,17 @@ function RecordContents({ record }: { record: EvidenceRecord }) {
 }
 
 /** Every grounded record remains reachable, including when prose is available. */
-export function AskAnswerRecords({ records, initiallyOpen }: { records: readonly EvidenceRecord[]; initiallyOpen: boolean }) {
+export function AskAnswerRecords({ records, initiallyOpen, agendaLead = false, prose }: { records: readonly EvidenceRecord[]; initiallyOpen: boolean; agendaLead?: boolean; prose?: string | null }) {
   const visible = records.filter((record) => record.kind !== "CONTACT");
   if (!visible.length) return null;
+  const agenda = agendaLead ? visible.filter(record => ["MEETING", "AGENDA_ITEM", "AGENDA_DOCUMENT", "MEETING_NOTICE_SUMMARY"].includes(record.kind)) : [];
+  const remaining = visible.filter(record => !agenda.includes(record));
 
   // ASK-24: when there is no generated answer, the held plain-language
   // definition leads. Move its record out of the detail list without copying
   // or rewriting it; procedure and official text remain one disclosure away.
-  const summaries = initiallyOpen ? visible.filter((record) => record.kind === "MEASURE_SUMMARY") : [];
-  const detailRecords = summaries.length ? visible.filter((record) => record.kind !== "MEASURE_SUMMARY") : visible;
+  const summaries = initiallyOpen ? remaining.filter((record) => record.kind === "MEASURE_SUMMARY") : [];
+  const detailRecords = summaries.length ? remaining.filter((record) => record.kind !== "MEASURE_SUMMARY") : remaining;
   const disclosure = detailRecords.length > 0 ? (
     <details className="mt-2" open={initiallyOpen && summaries.length === 0}
       data-ask-record-count={summaries.length ? undefined : visible.length}
@@ -45,6 +47,21 @@ export function AskAnswerRecords({ records, initiallyOpen }: { records: readonly
     </details>
   ) : null;
 
+  if (agendaLead) return <div data-ask-record-count={visible.length}>
+    {agenda.length > 0 && <section data-ask-agenda-lead className="mt-2">
+      <p className="t-eyebrow mb-2 text-muted">Held meeting and agenda records</p>
+      <ul className="max-h-80 space-y-2 overflow-y-auto overscroll-contain">
+        {agenda.map((record, index) => <li key={`${record.kind}:${record.id}:${index}`} data-ask-record-id={record.id}
+          data-ask-meeting-id={record.meetingId ?? (record.kind === "MEETING" ? record.id : undefined)}
+          data-ask-document-id={record.documentId}
+          className="border-l-2 border-[var(--panel-border)] pl-3 text-[0.8125rem] leading-relaxed text-paper">
+          <RecordContents record={record} />
+        </li>)}
+      </ul>
+    </section>}
+    {prose && <p className="mt-2 text-[0.8125rem] leading-relaxed text-paper-dim">{prose}</p>}
+    {disclosure}
+  </div>;
   if (!summaries.length) return disclosure;
   return (
     <div data-ask-record-count={visible.length}>

@@ -1,12 +1,13 @@
 "use client";
 
+import { AskBodyConfirmation } from "./body-confirmation";
+import type { BodyConfirmation } from "@/lib/ask/body-confirmation";
+
 import { useRef, useState } from "react";
 
 import { AskAnswerRecords } from "@/components/ask/answer-records";
 import { AskAnswerContacts } from "./answer-contacts";
-import { unresolvedReadLine } from "@/lib/ask/answer";
-import type { AskContact } from "@/lib/ask/contacts";
-import type { EvidenceRecord } from "@/lib/ask/evidence";
+import { readAskAnswer, unresolvedReadLine, type AskAnswerPayload } from "@/lib/ask/answer";
 import { sourceLinks } from "@/lib/ask/host";
 import { readBrowserKey } from "@/lib/state/browser-key";
 import { readLocationOriginFor } from "@/lib/state/location-origin";
@@ -61,22 +62,7 @@ import type { AskSubjectRef } from "@/lib/ask/subject";
  * response shape this route returns.
  */
 
-interface GroundedGap {
-  whose: "OURS" | "THEIRS";
-  statement: string;
-}
-
-interface GroundedReply {
-  denominators?: Record<string, number>;
-  mode: string;
-  subject?: { kind: string; id: string; name: string; office?: string | null } | null;
-  answer?: string | null;
-  records?: EvidenceRecord[];
-  gaps?: GroundedGap[];
-  contacts?: AskContact[];
-  mention?: string;
-  candidates?: string[];
-}
+type GroundedReply = AskAnswerPayload;
 
 export function BallotAsk({
   zip,
@@ -111,9 +97,10 @@ export function BallotAsk({
   >([]);
   const inFlight = useRef<AbortController | null>(null);
 
-  async function ask() {
-    const question = text.trim();
+  async function ask(confirmation?: BodyConfirmation) {
+    const question = confirmation?.question ?? text.trim();
     if (!question || working) return;
+    if (confirmation) setText(question);
     inFlight.current?.abort();
     const controller = new AbortController();
     inFlight.current = controller;
@@ -142,6 +129,7 @@ export function BallotAsk({
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           question,
+          confirmation,
           ocdIds,
           approximateLocation: zip,
           surface: "BALLOT",
@@ -165,7 +153,8 @@ export function BallotAsk({
         setReply(null);
         return;
       }
-      const body = (await res.json()) as GroundedReply;
+      const body = readAskAnswer(await res.json());
+      if (!body) { setFailed(true); return; }
       setReply(body);
       setAnswered(question);
       /* The conversation advances only on a CANONICAL resolution: a turn that
@@ -258,7 +247,7 @@ export function BallotAsk({
           type="button"
           data-ask-submit
           className="rounded-[10px] border border-[var(--panel-border)] px-3 py-2 text-sm disabled:opacity-50"
-          onClick={ask}
+          onClick={() => ask()}
           disabled={working || text.trim().length === 0}
         >
           {working ? "Looking…" : "Ask"}
@@ -279,7 +268,11 @@ export function BallotAsk({
       {reply && (
         <div className="mt-4 text-sm" data-ask-mode={reply.mode} data-ask-question={answered}>
           {/* A named government that fits more than one thing: ASKED, never chosen. */}
-          {reply.mode === "CLARIFY" && (
+          <AskBodyConfirmation answer={reply} working={working} onConfirm={ask} onClarify={() => {
+            setReply(null);
+            document.getElementById("ballot-ask-input")?.focus();
+          }} />
+          {reply.mode === "CLARIFY" && !reply.confirmation && !reply.clarification && (
             <p>
               More than one government here matches &ldquo;{reply.mention}&rdquo;
               {reply.candidates?.length ? `: ${reply.candidates.join(", ")}.` : "."} Which did you
@@ -315,7 +308,7 @@ export function BallotAsk({
           )}
 
           {/* The grounded sentence, when there is one that passed validation. */}
-          {reply.answer && <p className="mt-2">{reply.answer}</p>}
+          {reply.answer && !reply.agendaLead && <p className="mt-2">{reply.answer}</p>}
 
           {/*
             THE RECORDS RENDER WHETHER OR NOT PROSE DID. This is the structured
@@ -324,7 +317,7 @@ export function BallotAsk({
             carries everything needed to answer truthfully, and throwing it away
             because `answer` is null is the exact defect class this guards.
           */}
-          <AskAnswerRecords records={records} initiallyOpen={!reply.answer} />
+          <AskAnswerRecords records={records} initiallyOpen={!reply.answer} agendaLead={reply.agendaLead} prose={reply.agendaLead ? reply.answer : null} />
 
           {/* Named gaps, each one saying whose gap it is. */}
           {gaps.map((g) => (

@@ -79,6 +79,7 @@ import { resolveSubjectRefs, type AskSubjectRef } from "./subject.ts";
  */
 
 export type ResolutionBasis =
+  | "READER_CONFIRMATION"
   | "READER_WORDS"
   | "WHOLE_QUESTION"
   | "MODEL_EXPANSION"

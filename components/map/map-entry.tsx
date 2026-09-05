@@ -75,6 +75,7 @@ import type { DistrictType } from "@/lib/state/types";
 import { jurisdictionClaim, representationNoteForClaim } from "@/lib/meetings/jurisdiction-badge";
 
 import { CoverageNotice } from "./coverage-notice";
+import { GoverningSkeleton } from "./governing-skeleton";
 import { SiteFootnote } from "./site-footnote";
 import { DistrictPicker } from "./district-picker";
 import { MapCanvas, type CameraTarget, type MapFocus } from "./map-canvas";
@@ -214,6 +215,12 @@ function MapEntryInner() {
     dispatch({ type: "select/district", ocdId: null, districtType: null });
   }, [dispatch]);
 
+  const [mapPresentationReady, setMapPresentationReady] = useState(false);
+  const mapPresentationReadyRef = useRef(false);
+  const onMapPresentationReady = useCallback((ready: boolean) => {
+    mapPresentationReadyRef.current = ready;
+    setMapPresentationReady(ready);
+  }, []);
   const [result, setResult] = useState<TaggedResult | null>(null);
   /**
    * How the meetings fetch failed, when it did: the HTTP status the service
@@ -383,7 +390,7 @@ function MapEntryInner() {
       : zipView;
 
   useEffect(() => {
-    if (!view) return;
+    if (!view || !mapPresentationReady || !mapPresentationReadyRef.current) return;
 
     const controller = new AbortController();
     const { key, zip, lat, lng, radiusKm } = view;
@@ -405,6 +412,7 @@ function MapEntryInner() {
             signal: controller.signal,
           },
         );
+        if (controller.signal.aborted || !mapPresentationReadyRef.current) return;
         if (!response.ok) {
           // Let the failure name itself — the status distinguishes "the
           // service is broken" (5xx) from "the request was rejected" (4xx)
@@ -420,6 +428,7 @@ function MapEntryInner() {
 
         const payload: MeetingSearchResult & { nearZip?: string | null } =
           await response.json();
+        if (controller.signal.aborted || !mapPresentationReadyRef.current) return;
         setResult({
           ...payload,
           // The label the notices speak: the typed zip, the settled area's
@@ -429,7 +438,7 @@ function MapEntryInner() {
         });
         setFailure(null);
       } catch {
-        if (controller.signal.aborted) return;
+        if (controller.signal.aborted || !mapPresentationReadyRef.current) return;
         console.error(`meetings fetch got no answer for ${view.kind} view`);
         setResult(null);
         setFailure({ status: null });
@@ -437,7 +446,7 @@ function MapEntryInner() {
     })();
 
     return () => controller.abort();
-  }, [view, retryNonce]);
+  }, [view, retryNonce, mapPresentationReady]);
 
   const search = useCallback(
     (zip: string, lat: number, lng: number) => {
@@ -1775,7 +1784,7 @@ function MapEntryInner() {
         />
       )}
 
-      {shown &&
+      {location && (!mapPresentationReady || (!shown && !failure)) ? <GoverningSkeleton /> : shown &&
         (noticeCollapsed ? (
           /*
            * Shrunk out of the way (2h), not gone: one tap brings the full
@@ -2034,6 +2043,7 @@ function MapEntryInner() {
             from a click on the canvas and the two must share one space. */}
         <div className="absolute inset-0">
           <MapCanvas
+            onPresentationReadyChange={onMapPresentationReady}
             venues={allVenues}
             visibleVenueKeys={visibleVenueKeys}
             camera={camera}
@@ -2448,7 +2458,7 @@ function MapEntryInner() {
             device, after the zip resolves and the welcome overlay is out
             of the way. Skippable at every step. */}
         {restored && (
-          <TutorialOverlay active={Boolean(location) && !welcomeRequested} />
+          <TutorialOverlay active={Boolean(location) && !welcomeRequested && mapPresentationReady} />
         )}
       </main>
       </AddressResolutionProvider>

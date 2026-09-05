@@ -16,6 +16,14 @@ import type { EvidenceRecord } from "../lib/ask/evidence.ts";
 const root = process.cwd();
 const exactHead = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
 const output = process.env.READER_RENEWAL_EXECUTION!;
+if (process.env.READER_RENEWAL_SESSION === "V94") {
+  const { executeV94ReaderSourceProof } = await import("./lib/reader-v94-source-proof.ts");
+  assert.ok(output && process.env.READER_FINAL_PREPARED_CENSUS && process.env.READER_RENEWAL_VISUAL);
+  if (process.env.READER_RENEWAL_EXPECTED_HEAD) assert.equal(exactHead, process.env.READER_RENEWAL_EXPECTED_HEAD);
+  console.log(JSON.stringify(await executeV94ReaderSourceProof({ root, exactHead, output,
+    preparedCensusPath: process.env.READER_FINAL_PREPARED_CENSUS, visualPath: process.env.READER_RENEWAL_VISUAL })));
+  process.exit(0);
+}
 assert.ok(output && process.env.READER_FINAL_PREPARED_CENSUS && process.env.READER_RENEWAL_BALLOT);
 const census = JSON.parse(readFileSync(process.env.READER_FINAL_PREPARED_CENSUS, "utf8")) as ReaderCensus;
 const receipt = JSON.parse(readReaderEvidence(root, "docs/evidence/reader-last-mile-final-closure-receipt.json").toString("utf8")) as ReaderClosureReceipt;

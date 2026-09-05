@@ -585,6 +585,39 @@ export function sourceRenewalCaseProblems(cases: readonly ReaderComponentCase[])
   return unique(failures);
 }
 
+/** A removed import is proved by its committed old bytes AND absence from the
+ * complete current graph. It cannot masquerade as executed current source. */
+export function sourceRenewalDependencyProblems(input: {
+  changedSources: readonly string[]; executionSourcePaths: readonly string[];
+  priorSources: readonly ReaderSourceHash[]; currentSources: readonly ReaderSourceHash[];
+  executedSources: readonly ReaderSourceHash[]; removedSourceHashes: readonly ReaderSourceHash[];
+  renderedComponents: readonly string[];
+}): { failures: string[]; covered: string[] } {
+  const failures: string[] = [];
+  const covered: string[] = [];
+  const prior = new Map(input.priorSources.map(source => [source.path, source.sha256]));
+  const current = new Map(input.currentSources.map(source => [source.path, source.sha256]));
+  const executed = new Map(input.executedSources.map(source => [source.path, source.sha256]));
+  const removed = new Map(input.removedSourceHashes.map(source => [source.path, source.sha256]));
+  if (removed.size !== input.removedSourceHashes.length) failures.push("Reader source removal repeats a dependency");
+  for (const source of input.removedSourceHashes) {
+    if (!input.changedSources.includes(source.path) || !input.executionSourcePaths.includes(source.path) ||
+      !prior.has(source.path) || prior.get(source.path) !== source.sha256 || current.has(source.path) ||
+      executed.has(source.path) || input.renderedComponents.includes(source.path)) {
+      failures.push(`Reader source removal lacks exact prior bytes and current graph absence: ${source.path}`);
+    }
+  }
+  for (const path of input.executionSourcePaths) {
+    if (!input.changedSources.includes(path)) { failures.push(`Source renewal invents changed dependency: ${path}`); continue; }
+    if (current.has(path)) {
+      if (executed.get(path) !== current.get(path)) failures.push(`Source renewal execution does not bind ${path}`);
+      else covered.push(path);
+    } else if (prior.has(path) && removed.get(path) === prior.get(path) && !executed.has(path) && !input.renderedComponents.includes(path)) covered.push(path);
+    else failures.push(`Removed reader dependency has no exact committed removal evidence: ${path}`);
+  }
+  return { failures: unique(failures), covered: unique(covered) };
+}
+
 /** Renew executable-source evidence without rewriting a historical execution.
  * The unchanged census and previous report are pinned to committed evidence;
  * every changed dependency needs nonempty current-head execution evidence. */
@@ -626,10 +659,12 @@ export function readerSourceRevalidationProblems(root: string, census: ReaderCen
     const cases = Array.isArray(evidence.cases) ? evidence.cases as ReaderComponentCase[] : [];
     if (cases.length !== execution.expected || sourceRenewalCaseProblems(cases).length || cases.some(entry => currentHashes.get(entry.component) !== entry.componentSha256)) { failures.push(`Source renewal execution has missing, stale or invalid rendered cases: ${execution.id}`); continue; }
     if (!Array.isArray(evidence.inputs) || !evidence.inputs.length || (evidence.inputs as ReaderSourceHash[]).some(input => !readerEvidenceHashMatches(root, input.path, input.sha256))) { failures.push(`Source renewal execution inputs changed: ${execution.id}`); continue; }
-    for (const path of execution.sourcePaths) {
-      if (!changed.includes(path) || !evidenceSourceHashes(evidence.sourceHashes).some(source => source.path === path && source.sha256 === currentHashes.get(path))) failures.push(`Source renewal execution does not bind ${path}`);
-      else covered.add(path);
-    }
+    const dependencies = sourceRenewalDependencyProblems({ changedSources: changed, executionSourcePaths: execution.sourcePaths,
+      priorSources: [...priorHashes].map(([path, sha256]) => ({ path, sha256 })), currentSources: current,
+      executedSources: evidenceSourceHashes(evidence.sourceHashes), removedSourceHashes: evidenceSourceHashes(evidence.removedSourceHashes),
+      renderedComponents: cases.map(entry => entry.component) });
+    failures.push(...dependencies.failures);
+    for (const path of dependencies.covered) covered.add(path);
   }
   for (const path of changed) if (!covered.has(path)) failures.push(`Reader dependency has no executed renewal: ${path}`);
   const baselineRows = new Map(census.rows.map(row => [row.id, row]));

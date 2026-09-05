@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { BoundaryLegend } from "@/components/map/boundary-legend";
+import { TutorialReplayButton } from "@/components/map/tutorial-overlay";
 import { RadiusControl } from "@/components/shell/radius-control";
 import { useDistrictLayer } from "@/hooks/use-district-layer";
 import {
@@ -124,6 +126,8 @@ export function FiltersArea({
           {count > 0 && <span className="filters-count">{count}</span>}
         </button>
 
+        <TutorialReplayButton />
+
         {count > 0 && (
           <button
             type="button"
@@ -153,6 +157,7 @@ export function FiltersArea({
               <span className="prox-slider" />
               <span className="prox-label">Show districts</span>
             </label>
+            <BoundaryLegend />
             {districtsFailed && (
               <p className="prox-note" style={{ color: "var(--danger)" }}>
                 Boundary file didn&apos;t load.

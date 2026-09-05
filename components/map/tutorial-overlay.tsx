@@ -1,49 +1,46 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import {
   commitStorageWrite,
   publishToListeners,
   subscribeToStorage,
 } from "@/lib/state/subscribe-to-storage";
+import styles from "./tutorial-overlay.module.css";
 
-/**
- * First-run tutorial, v1 (6c, wall clock 2026-08-14 second session): a
- * skippable five-step walkthrough shown once, on the first visit after
- * the reader's zip resolves — map, who-governs, a meeting, the ballot,
- * the ask box. Skippable at EVERY step; the seen-flag is device-local
- * (`wtp.tutorial_seen`) and nothing about the walkthrough is logged or
- * transmitted. Friction check: this renders once per device, ever, and
- * every step has two ways out (Skip, ×).
- */
-
+// Keep the existing device-local preference: returning readers are not forced
+// through a new tour. Replaying never resets the reader's map or filter choices.
 const STORAGE_KEY = "wtp.tutorial_seen";
 
-const STEPS: { title: string; body: string }[] = [
+const STEPS = [
   {
-    title: "This is your map",
-    body: "Enter a zip and upcoming local government meetings appear as pins — city councils, school boards, county boards. The governments nobody watches are the nearest ones; that's what this app is for.",
+    id: "ask",
+    title: "Ask",
+    body: "Open Ask to ask a question in your own words. You can name a government, ask about a meeting, or find who handles an everyday concern.",
   },
   {
-    title: "Who governs here",
-    body: "The card on the map lists every body that governs the spot you're looking at — local first, then state, then federal — with the real people and real contact info behind each one.",
+    id: "who-governs",
+    title: "Who Governs Here",
+    body: "Open Who Governs Here on the map to explore the governments for the place you’re viewing. Choose a body to see the people, contact information and meeting records we hold.",
   },
   {
-    title: "Meetings you can attend",
-    body: "Tap a pin to see who's meeting, when, and what's on the agenda — plus how to make your voice heard there, and a one-tap add-to-calendar.",
+    id: "levels",
+    title: "Local / State / Federal",
+    body: "Open the menu to find the Local, State and Federal controls. Turn a level on or off to choose which meetings appear. You can keep more than one level on.",
   },
   {
-    title: "What's on your ballot",
-    body: "The ballot page shows everyone running near you, with a source behind every claim. We never suggest how to vote — we show what's filed and let you decide.",
+    id: "boundaries",
+    title: "Boundary lines",
+    body: "Open the menu, then Filters. Use Show districts to turn boundary lines off or on, or expand District types to choose individual kinds. The Boundary line key explains their patterns. All types start on.",
   },
-  {
-    title: "Just ask",
-    body: "The \"Who do I talk to about…?\" box routes everyday questions — a pothole, trash pickup, a noisy neighbor — to the office that actually owns the fix.",
-  },
-];
+] as const;
 
 const listeners = new Set<() => void>();
-
+let seenWithoutStorage = false;
+const INITIAL_REPLAY = { version: 0, pending: false };
+let replayRequest = INITIAL_REPLAY;
+const readReplay = () => replayRequest;
+const serverReplay = () => INITIAL_REPLAY;
 const subscribe = (onStoreChange: () => void) =>
   subscribeToStorage(listeners, onStoreChange);
 
@@ -51,93 +48,152 @@ function readSeen(): boolean {
   try {
     return window.localStorage.getItem(STORAGE_KEY) === "1";
   } catch {
-    // No storage: treat as seen — never show on every visit.
-    return true;
+    return seenWithoutStorage;
   }
 }
 
 function markSeen() {
-  // Can't remember: the local override in the component still dismisses, and
-  // the publish runs either way.
   commitStorageWrite(
     () => window.localStorage.setItem(STORAGE_KEY, "1"),
     () => publishToListeners(listeners),
+    () => { seenWithoutStorage = true; },
+  );
+}
+
+/** Persistent replay door in the menu, outside the collapsed filter contents. */
+export function TutorialReplayButton() {
+  // A visible SSR button must not accept a click before its client handler
+  // exists. The server snapshot keeps that tiny hydration interval explicit.
+  const hydrated = useSyncExternalStore(subscribe, () => true, () => false);
+  return (
+    <button
+      type="button"
+      className={styles.replay}
+      aria-label="Replay quick tour"
+      disabled={!hydrated}
+      onClick={() => {
+        // The menu can become usable before the lazy tutorial mounts. Keep
+        // this request until it is dismissed, rather than losing a DOM event.
+        replayRequest = { version: replayRequest.version + 1, pending: true };
+        publishToListeners(listeners);
+      }}
+    >
+      Quick tour
+    </button>
+  );
+}
+
+/** A schematic of the control being taught, never an invented civic record. */
+function StepPreview({ id }: { id: (typeof STEPS)[number]["id"] }) {
+  return (
+    <div className={styles.preview} data-preview={id} aria-hidden="true">
+      {id === "ask" && (
+        <div className={styles.previewAsk}>
+          <span>Ask about a meeting, a school…</span><span>↗</span>
+        </div>
+      )}
+      {id === "who-governs" && (
+        <div className={styles.previewCard}>
+          <strong>Who Governs Here</strong>
+          <span /><span /><span />
+        </div>
+      )}
+      {id === "levels" && (
+        <div className={styles.previewLevels}>
+          {["Local", "State", "Federal"].map((label) => <span key={label}>{label}</span>)}
+        </div>
+      )}
+      {id === "boundaries" && (
+        <>
+          <div className={styles.previewLines}><i /><i /><i /></div>
+          <div className={styles.previewSwitch}><i />Show districts</div>
+        </>
+      )}
+    </div>
   );
 }
 
 export function TutorialOverlay({ active }: { active: boolean }) {
-  const [step, setStep] = useState(0);
-  // The server snapshot says "seen", so the overlay never flashes for a
-  // returning reader before hydration — the use-stored-zip pattern.
+  const [progress, setProgress] = useState({ version: 0, step: 0 });
   const seen = useSyncExternalStore(subscribe, readSeen, () => true);
-  // Storage-less fallback: dismissing must stick for this session even
-  // when localStorage can't hold the flag.
+  const replay = useSyncExternalStore(subscribe, readReplay, serverReplay);
   const [dismissed, setDismissed] = useState(false);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const visible = active && (replay.pending || (!seen && !dismissed));
+  const step = progress.version === replay.version ? progress.step : 0;
+  const setStep = (next: number) => setProgress({ version: replay.version, step: next });
 
-  if (seen || dismissed || !active) return null;
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!visible || !dialog) return;
+    const previous = document.activeElement;
+    // Native modality supplies the focus trap and makes the background inert.
+    dialog.showModal();
+    // A first display counts as seen even if the reader reloads mid-walk.
+    // Keep this displayed request open before publishing the stored flag, so
+    // remembering it does not dismiss the walk that is already on screen.
+    replayRequest = { ...replayRequest, pending: true };
+    markSeen();
+    return () => {
+      dialog.close();
+      // Leaving this mounted surface must not carry an unfinished request to
+      // a later visit. Deliberate replay always creates its own fresh request.
+      replayRequest = { ...replayRequest, pending: false };
+      publishToListeners(listeners);
+      if (previous instanceof HTMLElement && previous.isConnected && previous.getClientRects().length) {
+        previous.focus();
+      }
+    };
+  }, [visible]);
+
+  useEffect(() => {
+    if (visible) titleRef.current?.focus();
+  }, [step, visible]);
 
   const dismiss = () => {
     setDismissed(true);
+    replayRequest = { ...replayRequest, pending: false };
     markSeen();
   };
-
   const current = STEPS[step];
   const last = step === STEPS.length - 1;
 
   return (
-    <div
-      className="pointer-events-auto fixed inset-0 z-[1300] flex items-end justify-center bg-black/30 p-4 sm:items-center"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Quick tour"
-      onClick={dismiss}
+    <dialog
+      ref={dialogRef}
+      className={styles.dialog}
+      data-tour-ready={active}
+      data-tour-requested={replay.pending}
+      aria-labelledby="quick-tour-title"
+      aria-describedby="quick-tour-body"
+      onCancel={(event) => { event.preventDefault(); dismiss(); }}
+      onClick={(event) => {
+        if (event.target !== event.currentTarget) return;
+        const rect = event.currentTarget.getBoundingClientRect();
+        if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dismiss();
+      }}
     >
-      <div
-        className="panel w-full max-w-sm p-4"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-start justify-between gap-3">
-          <p className="font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-signal">
-            Quick tour · {step + 1} of {STEPS.length}
-          </p>
-          <button
-            type="button"
-            onClick={dismiss}
-            aria-label="Skip the tour"
-            className="cursor-pointer p-0.5 text-muted hover:text-paper"
-          >
-            ✕
-          </button>
-        </div>
-        <h2 className="mt-1.5 text-[0.9375rem] font-semibold">{current.title}</h2>
-        <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
-          {current.body}
-        </p>
-        <div className="mt-3 flex items-center justify-between">
-          <button
-            type="button"
-            onClick={dismiss}
-            className="cursor-pointer text-[0.75rem] text-muted underline decoration-dotted hover:text-paper"
-          >
-            Skip
-          </button>
-          <span aria-hidden="true" className="flex gap-1">
-            {STEPS.map((_, i) => (
-              <span
-                key={i}
-                className={`h-1.5 w-1.5 rounded-full ${i === step ? "bg-[var(--signal)]" : "bg-[var(--panel-border)]"}`}
-              />
-            ))}
-          </span>
-          <button
-            type="button"
-            onClick={() => (last ? dismiss() : setStep(step + 1))}
-            className="cursor-pointer rounded border border-[var(--panel-border)] px-3 py-1 text-[0.8125rem] text-paper hover:border-[var(--signal)]"
-          >
-            {last ? "Done" : "Next"}
-          </button>
+      <div className={styles.header}>
+        <p className={styles.progress} aria-live="polite">Quick tour · {step + 1} of {STEPS.length}</p>
+        <button type="button" className={styles.close} onClick={dismiss} aria-label="Skip the tour">×</button>
+      </div>
+      <div key={current.id} className={styles.step} data-tour-step={current.id}>
+        <StepPreview id={current.id} />
+        <h2 id="quick-tour-title" ref={titleRef} tabIndex={-1}>{current.title}</h2>
+        <p id="quick-tour-body" className={styles.body}>{current.body}</p>
+      </div>
+      <div className={styles.footer}>
+        <button type="button" className={styles.skip} onClick={dismiss}>Skip</button>
+        <span className={styles.dots} aria-hidden="true">
+          {STEPS.map(({ id }, index) => <span key={id} data-current={index === step} />)}
+        </span>
+        <div className={styles.navigation}>
+          {step > 0 && <button type="button" onClick={() => setStep(step - 1)}>Back</button>}
+          <button type="button" className={styles.next} onClick={() => last ? dismiss() : setStep(step + 1)}>{last ? "Done" : "Next"}</button>
         </div>
       </div>
-    </div>
+      <p className={styles.replayHint}>Replay anytime: menu → Quick tour</p>
+    </dialog>
   );
 }

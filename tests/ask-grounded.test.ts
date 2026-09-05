@@ -659,11 +659,9 @@ test("ASK04: the ballot surface renders records even when synthesis produced non
     join(process.cwd(), "components/ask/ballot-ask.tsx"),
     "utf8",
   );
-  assert.match(
-    source,
-    /<AskAnswerRecords records=\{records\} initiallyOpen=\{!reply\.answer\} \/>/,
-    "the ballot must reach the same complete record renderer as map Ask",
-  );
+  const renderer = source.match(/<AskAnswerRecords\b[^>]*\/>/)?.[0] ?? "";
+  assert.match(renderer, /\brecords=\{records\}/, "the ballot must reach the same complete record renderer as map Ask");
+  assert.match(renderer, /\binitiallyOpen=\{!reply\.answer\}/, "records must remain visible when synthesis is absent");
   const markup = execFileSync(process.execPath, ["--import", "tsx", "--input-type=module", "-e", `
     import { createElement } from 'react';
     import { renderToStaticMarkup } from 'react-dom/server';

@@ -31,8 +31,8 @@ const probe = String.raw`(() => {
   const fetch = window.fetch;
   window.fetch = async function(input, init) {
     const url = String(typeof input === 'string' ? input : input?.url || input);
-    const pathname = new URL(url, location.href).pathname;
-    const request = {url:pathname, start:clock(), end:null}; p.requests.push(request);
+    const requestUrl = new URL(url, location.href);
+    const request = {url:requestUrl.pathname, start:clock(), end:null}; p.requests.push(request);
     try {return await fetch.call(this,input,init);} finally {request.end=clock();}
   };
   new PerformanceObserver(list => {

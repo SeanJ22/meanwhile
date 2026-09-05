@@ -59,5 +59,10 @@ are unchanged.
   modules purge; direct `node node_modules/eslint/bin/eslint.js` then passed.
 - The existing motion scanner reports zero raw transition durations in both
   new modules. `git diff --check` passes.
-- Browser evidence remains part of the combined session's small representative
-  visual set. This source/test record does not certify rendered appearance.
+- The final production verifier passes all 13 scoped observations. The root
+  integration owner reviewed four map/popup images with real basemap tiles,
+  in both themes at zooms 5.4 and 7.5. The Ask pill's unchanged text/footprint,
+  mouse press displacement and absence from expanded/sidebar buttons were
+  checked. Popup gradient, rim, 70% horizon, elevation, weighted curve and
+  reduced motion were checked through actual computed styles and interaction.
+  The hash-bound receipt is `reader-last-mile-tester-visual-9-4.json` (gzip).

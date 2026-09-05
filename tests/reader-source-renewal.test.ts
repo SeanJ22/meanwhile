@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { sha256, sourceRenewalCaseProblems, sourceRenewalDependencyProblems, readerRowStructuralSha256, type ReaderComponentCase, type CensusRow } from "../lib/holdings/reader-census.ts";
+import { sha256, sourceRenewalCaseProblems, sourceRenewalDependencyProblems, inheritedReaderSourceClassifications, readerRowStructuralSha256, type ReaderComponentCase, type CensusRow } from "../lib/holdings/reader-census.ts";
 
 const markup = '<p data-record-id="canonical:one">Held statement</p>';
 const rendered: ReaderComponentCase = {
@@ -9,6 +9,25 @@ const rendered: ReaderComponentCase = {
   payloadSha256: sha256("payload"), markup, markupSha256: sha256(markup), expectedFragments: ["canonical:one", "Held statement"],
   forbiddenFragments: ["Wrong person's statement"], rowCounts: { records: { expected: 1, actual: 1 } }, failures: [],
 };
+
+test("successive source renewal inherits only byte-identical already-classified dependencies", () => {
+  const source = { path: "app/ballot/page.tsx", sha256: sha256("previously executed page") };
+  const entry = { path: source.path, baselineSha256: sha256("original"), currentSha256: source.sha256, acceptance: "VF-S1", reason: "Bound executed presentation" };
+  const report = { changedReaderSources: [entry] };
+  const prior = { ...report, failures: [] as string[] };
+  assert.deepEqual(inheritedReaderSourceClassifications(report, prior, [source], [source]), [source.path]);
+  for (const [next, old, before, current] of [
+    [report, { ...prior, failures: ["Failed prior proof"] }, [source], [source]],
+    [report, { ...prior, changedReaderSources: [] }, [source], [source]],
+    [report, prior, [], [source]],
+    [report, prior, [source], []],
+    [report, prior, [source], [{ ...source, sha256: sha256("unexecuted changes") }]],
+    [{ changedReaderSources: [{ ...entry, reason: "rewritten" }] }, prior, [source], [source]],
+    [{ changedReaderSources: [{ ...entry, acceptance: "invented" }] }, prior, [source], [source]],
+    [{ changedReaderSources: [{ ...entry, currentSha256: null }] }, prior, [source], [source]],
+    [report, { ...prior, changedReaderSources: [{ ...entry, acceptance: "UNCLASSIFIED" }] }, [source], [source]],
+  ] as const) assert.deepEqual(inheritedReaderSourceClassifications(next, old, before, current), []);
+});
 
 test("reader source renewal rechecks rendered facts instead of trusting a PASS label", () => {
   assert.deepEqual(sourceRenewalCaseProblems([rendered]), []);

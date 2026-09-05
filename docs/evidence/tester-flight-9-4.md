@@ -73,3 +73,20 @@ Targeted geometry, motion wiring and existing state-focus controls: 30 passed.
 The superseded software-only/moveend source assertions now enforce all-renderer
 holding and idle reveal; the original renderer classifier and normalized
 software performance floors remain protected.
+
+The single final production build was also measured as a confirmation, not
+mixed into the paired development comparison. First/repeat p95 intervals were
+16.8/16.8/16.7 ms; >32 ms frame counts were 2/0/1; application map mutations
+were 0/0/0. The first flight retained one 50 ms Long Task and a 199.9 ms maximum
+frame. Three framework `/ballot` prefetches and base-map glyphs ran on first
+entry; no boundary, district, relief or Who Governs Here work ran during motion.
+Repeats made no application requests. Production component names are minified,
+so the named React observations above come from the paired development probe.
+The isolated first-flight spike remains a non-blocking follow-up; its cause is
+not attributed. Production observations are bound in
+`reader-last-mile-tester-visual-9-4.json` (lossless gzip).
+
+Seven final production images were reviewed, including real basemap tiles in
+both themes at zooms 5.4 and 7.5. All five relief layers use the exact canonical
+border coordinates; the river-border closeups retain the bends. No additional
+production build or whole-app walk was run.

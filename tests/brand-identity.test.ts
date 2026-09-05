@@ -231,10 +231,24 @@ test("the Ask positioning token is set on its cluster from initialized state", (
     "the token must be set in pixels on the ancestor that contains .ask-expansion");
 });
 
-test("every var(--token) reference resolves to a declared token", () => {
-  const css = readFileSync(CSS, "utf8");
+function declaredCssTokens(css: string): Set<string> {
   const declared = new Set<string>();
-  for (const m of css.matchAll(/(^|[;{\s])(--[a-zA-Z0-9_-]+)\s*:/g)) declared.add(m[2]);
+  for (const m of css.replace(/\/\*[\s\S]*?\*\//g, "").matchAll(/(^|[;{\s])(--[a-zA-Z0-9_-]+)\s*:/g)) declared.add(m[2]);
+  return declared;
+}
+
+test("CSS Module declarations resolve locally without lending tokens to unrelated modules", () => {
+  const moduleCss = ".card { --local-rim: white; box-shadow: inset 0 0 0 1px var(--local-rim); color: var(--misspelled); }";
+  const declared = declaredCssTokens(moduleCss);
+  const missing = [...moduleCss.matchAll(/var\((--[\w-]+)\)/g)].map(match => match[1]).filter(token => !declared.has(token));
+  assert.deepEqual(missing, ["--misspelled"], "an undeclared reference still fails inside a CSS Module");
+  assert.equal(declaredCssTokens(".other { color: var(--local-rim); }").has("--local-rim"), false,
+    "a token declared by a different module cannot hide an unresolved local reference");
+  assert.equal(declaredCssTokens("/* --only-in-comment: white; */").size, 0);
+});
+
+test("every var(--token) reference resolves to a declared token", () => {
+  const declared = declaredCssTokens(readFileSync(CSS, "utf8"));
 
   const offenders: string[] = [];
   for (const file of styledSources()) {
@@ -246,10 +260,13 @@ test("every var(--token) reference resolves to a declared token", () => {
       .split("\n")
       .map((l) => (l.trim().startsWith("//") || l.trim().startsWith("*") ? "" : l))
       .join("\n");
+    // CSS Modules own scoped design tokens. Read declarations from the SAME
+    // module only; collecting every module's tokens globally would mask leaks.
+    const localDeclared = file.endsWith(".module.css") ? declaredCssTokens(code) : new Set<string>();
     code.split(/\r?\n/).forEach((line, i) => {
       for (const m of line.matchAll(/var\(\s*(--[a-zA-Z0-9_-]+)\s*([,)])/g)) {
         const token = m[1];
-        if (declared.has(token)) continue;
+        if (declared.has(token) || localDeclared.has(token)) continue;
         if (token in RUNTIME_DECLARED) continue;
         if (token.startsWith("--tw-")) continue;
         /* A var() carrying its own fallback still renders something. It is
@@ -265,7 +282,7 @@ test("every var(--token) reference resolves to a declared token", () => {
   assert.deepEqual(
     offenders,
     [],
-    "these var() references name a token declared in NEITHER theme block and " +
+    "these var() references name a token declared in neither the theme CSS nor its own CSS Module and " +
       "carry no fallback. A shorthand containing one drops entirely (no border " +
       "at all); a longhand falls back to currentColor (the border paints in the " +
       "text colour). Fix at the shared point — usually --panel-border:\n  " +

@@ -12,6 +12,7 @@ import { ASK_PILL_LABELS } from "../lib/routing/ask-pill-labels.ts";
 import { directionalStateEdges, RELIEF_LAYERS, RELIEF_THEME } from "../lib/map/state-relief.ts";
 import type { StateOutlines } from "../lib/map/state-focus.ts";
 import { readerSourceFingerprint } from "../lib/holdings/reader-census.ts";
+import { floored } from "../lib/ops/denominator-floor.ts";
 
 const base = process.env.SHOOT_BASE_URL ?? "http://127.0.0.1:3244";
 assert.ok(["localhost", "127.0.0.1"].includes(new URL(base).hostname), "V94 proof uses an isolated local server");
@@ -361,6 +362,7 @@ try {
     } finally { await context.close(); }
   }
   assert.equal(results.length, 13, "the frozen script denominator is 13 cases");
+  floored("V94 visual observations", "the frozen 13-case local visual proof", 13, results.length);
   assert.equal(screenshots.length, 4, "the representative set is exactly four captures");
   assert.deepEqual(browserErrors.filter(error => error.kind === "pageerror"), [], "no script or product runtime error may invalidate the browser proof");
 } catch (error) {

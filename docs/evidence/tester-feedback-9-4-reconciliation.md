@@ -71,9 +71,10 @@ no validator weakening, hand-edited hashes, or historical proof campaign.
 
 ## Run accounting (updated as work completes)
 
-- Local production builds: 0.
-- Census prepare passes: 0; `walk:all`: 0.
-- Reviewed screenshots: 0.
+- Local production builds: 1 (successful; build ID `GwK7Qhutsh16xzAMTEicD`).
+- Reader census prepare passes: 1; `walk:all`: 0.
+- Reviewed final production screenshots: 7/7 (four map/Pearl/Lumen, two tutorial,
+  one compact monochrome boundary key).
 - Autonomous/product-model workers: 0.
 - Production control-plane reads/writes/scans: 0/0/0.
 - Baseline tests: existing body-agenda and exact-body controls executed; the

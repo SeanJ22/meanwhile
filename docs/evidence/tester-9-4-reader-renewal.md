@@ -64,7 +64,7 @@ scratch paths for `READER_FINAL_PREPARED_CENSUS` and `READER_PROOF_SOURCES`:
 
 ```text
 node --experimental-strip-types scripts/reader-last-mile-finalize.mts --prepare
-node --experimental-strip-types scripts/reader-last-mile-source-proof.mts
+node --import tsx scripts/reader-last-mile-source-proof.mts
 node --experimental-strip-types scripts/reader-last-mile-finalize.mts --revalidate-source
 node --import tsx --test tests/reader-last-mile-census.test.ts tests/reader-source-renewal.test.ts
 ```
@@ -75,6 +75,24 @@ same execution/prepared paths. The finalizer itself verifies the prior receipt
 against Git, recomputes changed dependencies, compares every canonical row,
 validates current execution, and only then writes the canonical receipt.
 
-The implementation lane ran no prepare/census, production build, `walk:all`,
-acquisition, autonomous/model worker, or production control-plane operation.
-Actual renewal counts and results are recorded by the integration owner.
+The integration owner completed one prepare/census and one production build.
+The renewal inherits all 1,052 canonical rows (373 RENDERED and 679 non-reader
+rows), with unchanged census hash
+`00561f84e6db6ef6d5aa75b6744b3d7e75127378f64f63f2235d548b623ffa6f`.
+It invalidates 32 reader dependencies, including two removed imports, and
+recomputes 187 presentation cases: 71 district, 90 previously held record,
+20 fresh Ask rendering and six popup cases. Thirteen fresh deterministic Ask
+requests and 18 current production browser/performance observations are bound
+to the execution. The seven final production screenshots were reviewed.
+
+The mandatory complete receipt test caught a successive-renewal classification
+handoff: a later renewal must retain unaffected sources proved by its committed
+predecessor. Inheritance now requires the same source hash in the prior receipt,
+prior report and current graph, plus the byte-identical classification entry;
+a failed/unclassified prior report, missing source, changed bytes or rewritten
+acceptance/reason cannot inherit. The finalizer now runs the complete inheritance
+validator before publishing, in addition to its existing source execution checks.
+This preserves prior proof without re-executing unaffected reader surfaces.
+
+`walk:all`, acquisition, autonomous/product-model workers and production
+control-plane operations remain zero. No hash was hand-edited.

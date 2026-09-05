@@ -811,6 +811,25 @@ export function inheritReaderProofs(root: string, current: ReaderCensus, options
   return { census: { ...current, rows: current.rows.map((row) => inheritedRows.get(row.id) ?? row), failures: unique([...current.failures, ...failures]) }, report };
 }
 
+/** Called only after the renewal has bound its prior receipt/report to Git.
+ * An unchanged dependency keeps its exact previous classification; neither a
+ * new hash nor a rewritten acceptance/reason can inherit that proof. */
+export function inheritedReaderSourceClassifications(
+  report: Pick<ReaderProofInvalidationReport, "changedReaderSources">,
+  priorReport: Pick<ReaderProofInvalidationReport, "changedReaderSources" | "failures">,
+  priorSources: readonly ReaderSourceHash[], currentSources: readonly ReaderSourceHash[],
+): string[] {
+  if (priorReport.failures.length) return [];
+  const prior = new Map(priorSources.map(source => [source.path, source.sha256]));
+  const current = new Map(currentSources.map(source => [source.path, source.sha256]));
+  return report.changedReaderSources.filter(source => {
+    const old = priorReport.changedReaderSources.find(entry => entry.path === source.path);
+    return old && old.acceptance !== "UNCLASSIFIED" && old.currentSha256 !== null
+      && prior.get(source.path) === old.currentSha256 && current.get(source.path) === old.currentSha256
+      && JSON.stringify(source) === JSON.stringify(old);
+  }).map(source => source.path);
+}
+
 export function readerProofInheritanceProblems(root: string, census: ReaderCensus, report: ReaderProofInvalidationReport): string[] {
   const failures = [...report.failures];
   const renewalFailures = readerSourceRevalidationProblems(root, census, report);
@@ -818,6 +837,11 @@ export function readerProofInheritanceProblems(root: string, census: ReaderCensu
   const renewedSources = report.sourceRevalidation && !renewalFailures.length
     ? new Set((JSON.parse(readReaderEvidence(root, report.sourceRevalidation.proofPath).toString("utf8")) as ReaderSourceRevalidation).changedSources)
     : new Set<string>();
+  if (report.sourceRevalidation && !renewalFailures.length) {
+    const prior = JSON.parse(readReaderEvidence(root, report.sourceRevalidation.priorReceiptPath).toString("utf8")) as ReaderClosureReceipt;
+    const previous = JSON.parse(readReaderEvidence(root, report.sourceRevalidation.priorReportPath).toString("utf8")) as ReaderProofInvalidationReport;
+    for (const path of inheritedReaderSourceClassifications(report, previous, prior.sourceHashes, readerSourceFingerprint(root))) renewedSources.add(path);
+  }
   if (report.baselineReaderHead !== READER_LAST_MILE_BASE_HEAD || report.baselineProofCommit !== READER_LAST_MILE_BASE_PROOF_COMMIT) failures.push("Inherited reader checkpoint changed");
   const baselineReceiptBytes = readReaderEvidence(root, report.baselineReceiptPath);
   const baselineCensusBytes = readReaderEvidence(root, report.baselineCensusPath);

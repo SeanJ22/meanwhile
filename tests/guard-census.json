@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 520,
-    "named": 5426,
+    "files": 523,
+    "named": 5436,
     "dynamic": 23
   },
   "files": {
@@ -1359,6 +1359,7 @@
     "tests/brand-identity.test.ts": {
       "names": [
         "--mark is referenced only by its declaration and the logo square",
+        "CSS Module declarations resolve locally without lending tokens to unrelated modules",
         "app/favicon.ico is the generated mark, not the create-next-app default",
         "app/icon.svg carries the dark theme's --bg and --mark, and the square is filled",
         "every var(--token) reference resolves to a declared token",
@@ -2962,18 +2963,12 @@
       "names": [
         "a real GPU classifies as hardware and is therefore left alone",
         "an unreadable renderer is unknown, and unknown is NOT software",
-        "both attributes are written to one element, which is the CSS's own requirement",
-        "neither motion rule writes an explicit -webkit- prefix beside the standard property",
-        "the decision is an equality against software, never an inequality",
-        "the degradation is entered on movestart and left on moveend",
-        "the district layers are hidden by visibility, never removed",
+        "every renderer holds overlays at motion start and reveals only on post-motion idle",
+        "holding keeps sources cached, hides application layers, and removes the DOM state art from the map",
         "the renderer strings this was measured through classify as software",
-        "the restore runs BEFORE the debounced settle, not inside it",
-        "the scrim's backdrop-filter stands down under the two motion attributes",
         "the software floor and the jank ceiling are the stated numbers",
         "the software verdict refuses an arm that measured nothing",
-        "the software verdict requires BOTH the ratio and the jank share",
-        "the state-focus SVG art stands down under the same two attributes"
+        "the software verdict requires BOTH the ratio and the jank share"
       ],
       "dynamic": 0
     },
@@ -5912,7 +5907,9 @@
     "tests/reader-source-renewal.test.ts": {
       "names": [
         "reader source renewal rechecks rendered facts instead of trusting a PASS label",
-        "source-only reader renewal cannot inherit a changed canonical identity or eligibility projection"
+        "source renewal accepts an exact removed dependency only beside current execution and complete graph absence",
+        "source-only reader renewal cannot inherit a changed canonical identity or eligibility projection",
+        "successive source renewal inherits only byte-identical already-classified dependencies"
       ],
       "dynamic": 0
     },
@@ -7158,6 +7155,34 @@
         "no adapter carries a body id outside the serving-tenant denominator",
         "the denominator is not empty, and it covers more than the shared table",
         "the printed table lists every tenant, bound or faulted"
+      ],
+      "dynamic": 0
+    },
+    "tests/tester-9-4-ask.test.ts": {
+      "names": [
+        "ASK-26 Vail and its clean canonical name bind outside the reader's nearby coverage",
+        "ASK-26 tie chooses one stable canonical suggestion without treating an ordering as identity proof",
+        "ASK-26 typo and mechanical acronym offer ONE guess, no answer, then bind the original question",
+        "ASK-26 unknown named body asks neutrally; another nearby body cannot inherit the question",
+        "ASK-27 an unavailable agenda remains an OURS holding gap, never an empty docket claim",
+        "ASK-27 real Ask and meeting route retain identical document/version IDs and agenda titles across school and county bodies"
+      ],
+      "dynamic": 0
+    },
+    "tests/tester-boundary-accessibility.test.ts": {
+      "names": [
+        "ACC-1: every boundary type has a distinct non-hue signature, including State House and unified schools",
+        "ACC-1: map style uses the key's exact dash and weight specification without modifying geometry",
+        "ACC-1: opacity raises luminance contrast for every existing tier color in both themes",
+        "TUT-1 / ACC-1: all eight boundary types stay selected and Filters stays collapsed for a new reader"
+      ],
+      "dynamic": 0
+    },
+    "tests/tester-flight-relief.test.ts": {
+      "names": [
+        "every directional segment preserves the canonical state's exact border and river vertices",
+        "presentation hold covers boundary and relief classes without changing base tiles",
+        "top/left edges face the light in either ring winding; bottom/right face shade"
       ],
       "dynamic": 0
     },

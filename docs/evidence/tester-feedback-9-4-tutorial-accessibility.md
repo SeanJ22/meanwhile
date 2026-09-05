@@ -56,19 +56,22 @@ patterns, compare the stronger opacity against every existing tier color in
 both themes, and protect all-on/collapsed defaults. Targeted ESLint and diff
 whitespace checks are clean.
 
-Development browser proof ran on September 4 at 23:09 Arizona time,
-against the isolated local app at `http://127.0.0.1:3244`. Its precise UTC run
+Final production-build browser proof ran on September 4 at 23:35 Arizona time,
+against the isolated local app at `http://127.0.0.1:3244`. The integration owner
+ran this proof after the session's one production build; its precise UTC run
 identifier remains in the browser JSON.
 Reproduce with `node --experimental-strip-types scripts/verify-tutorial-accessibility-9-4.mts`.
 
 Both 1366×900 dark/normal-motion and 390×844 light/reduced-motion pass first
-visit, returning-visit suppression, all four approved steps, skip at each step,
+visit, seen-on-first-display persistence, midway-reload suppression,
+returning-visit suppression, all four approved steps, skip at each step,
 replay, Escape, close, keyboard focus trap/return, viewport fit, all-eight-on,
 initially collapsed Filters, keyboard boundary toggle round trip, and the
 keyboard-operated key. No actual map preferences are changed by the tour.
 
 The final JSON is `.scratch/tester-tutorial-accessibility/proof.json`.
-**Three of three final screenshots were opened and reviewed as images**:
+**The integration owner opened and reviewed three of three final production
+screenshots as images**:
 
 - `tutorial-desktop-dark.png`: centered tour, legible content and controls,
   persistent replay visible in the collapsed Filters header behind it.
@@ -86,9 +89,12 @@ This lane ran no production build, census, `walk:all`, civic acquisition, model
 worker, operational control-plane write, or production scan. Root owns final
 integration, the one production build, receipt renewal and shipping.
 
-The final requirement audit added the first-display persistence control after
-the development run above. The same browser script now advances to step 2,
-asserts the seen flag before any dismissal, reloads, waits for post-flight
-readiness, requires the automatic tour to remain absent, then exercises replay.
-Root owns its final production-build execution; the development receipt above
-does not claim that additional check ran before it was added.
+The completed production run advances to step 2, asserts the seen flag before
+any dismissal, reloads, waits for post-flight readiness, requires the automatic
+tour to remain absent, then successfully exercises replay. Both scenario rows
+record `seenOnFirstDisplay: true` and `midWalkReloadSuppressed: true`.
+
+The script's result floor is the fixed intended population of two scenarios:
+desktop dark and compact light. It rejects a missing, duplicate or unexpected
+scenario before reporting success. This reporting guard was added after the
+production capture; it does not change the product or require another build.

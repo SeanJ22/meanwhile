@@ -456,7 +456,7 @@ test("no server reply is discarded on the way to the reader", () => {
    */
   const groundedFetch = box.slice(
     box.indexOf('const askGrounded = async'),
-    box.indexOf('const ask = () => {'),
+    box.indexOf('const ask = ('),
   );
   assert.ok(groundedFetch.length > 0, "the grounded rung must be findable");
   assert.ok(

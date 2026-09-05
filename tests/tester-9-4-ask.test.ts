@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { tsImport } from "tsx/esm/api";
 import { decideNamedBody, applyNamedBodyDecision, type BodyConfirmation } from "../lib/ask/body-confirmation.ts";
 import { readAskAnswer, type AskAnswerPayload } from "../lib/ask/answer.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
@@ -13,8 +14,10 @@ import { synthesisPrompt } from "../lib/ask/synthesize.ts";
 import { readSnapshot } from "../lib/meetings/snapshot.ts";
 import { classifyAgendaPublication } from "../lib/ask/agenda-publication.ts";
 import { nameAReaderCanSay } from "../lib/routing/named-entity.ts";
-import { AskAnswerRecords } from "../components/ask/answer-records.tsx";
-import { AskBodyConfirmation } from "../components/ask/body-confirmation.tsx";
+// The canonical native runner strips TypeScript but does not compile TSX.
+// Compile only these actual reader leaves through the existing tsx runtime.
+const { AskAnswerRecords } = await tsImport("../components/ask/answer-records.tsx", import.meta.url) as typeof import("../components/ask/answer-records.tsx");
+const { AskBodyConfirmation } = await tsImport("../components/ask/body-confirmation.tsx", import.meta.url) as typeof import("../components/ask/body-confirmation.tsx");
 
 // Offline actual handler, with no model, database, acquisition or signal writes.
 for (const key of ["ANTHROPIC_API_KEY", "DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL"]) delete process.env[key];

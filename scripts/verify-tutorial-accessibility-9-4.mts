@@ -2,6 +2,7 @@
 import assert from "node:assert/strict";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { launchGuarded } from "./browser.mts";
 
 const base = process.env.SHOOT_BASE_URL ?? "http://127.0.0.1:3244";
@@ -128,8 +129,14 @@ try {
     results.push({ scenario: scenario.name, firstVisit: true, seenOnFirstDisplay: true, midWalkReloadSuppressed: true, returningVisitSuppressed: true, approvedSteps: expectedSteps, skipAtEveryStep: true, replay: true, escapeAndClose: true, focusTrapAndReturn: true, fitsViewport: insideViewport, reducedMotion: scenario.reducedMotion, allEightBoundaryTypesOn: true, filtersInitiallyCollapsed: true, toggleRoundTrip: true, keyboardLegend: true, uniqueNonHuePatterns: patterns.length });
     await page.close();
   }
-  const receipt = { runId: browser.runId, base, results, screenshots: ["tutorial-desktop-dark.png", "tutorial-compact-light.png", "boundary-key-compact-light-monochrome.png"], productionWrites: 0, modelCalls: 0 };
+  // This is the intended V94-F8 population, not the number of cases that
+  // happened to execute. Missing, duplicate or unexpected scenarios must fail.
+  const scenarioProof = floored("tutorial/accessibility scenarios passed", "V94-F8 desktop dark and compact light", 2, results.length);
+  assert.equal(scenarioProof.matched, scenarioProof.denominator, "Both required layouts must finish every assertion");
+  assert.deepEqual(results.map((result) => result.scenario), ["desktop-dark", "compact-light"], "Each required layout must run exactly once");
+  const receipt = { runId: browser.runId, base, scenarioProof, results, screenshots: ["tutorial-desktop-dark.png", "tutorial-compact-light.png", "boundary-key-compact-light-monochrome.png"], productionWrites: 0, modelCalls: 0 };
   writeFileSync(resolve(output, "proof.json"), JSON.stringify(receipt, null, 2) + "\n");
+  console.log(floorLine(scenarioProof));
   console.log(JSON.stringify(receipt, null, 2));
 } finally {
   await browser.close();

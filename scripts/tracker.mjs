@@ -56,9 +56,13 @@ import {
   COLUMNS,
   ALL_RESOLUTIONS,
   CLOSING_RESOLUTIONS,
+  DASHBOARD_OPENER,
   DELETIONS_JSON,
   OPENED_JSON,
+  OWNER_DECISIONS_JSON,
+  dashboardCloser,
   planDeletions,
+  planOwnerDecisions,
   RESOLVED_CSV,
   ROOT,
   SEAN_AUTHOR,
@@ -79,6 +83,7 @@ import {
   writeStore,
 } from "./tracker-core.mjs";
 import { buildWorkbook, readWorkbook } from "./xlsx.mjs";
+import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import { reconcileTracker, reconciliationReport } from "../lib/ops/tracker-transaction.ts";
 import { REGISTRY } from "../lib/tracker/registry.mjs";
 import { RESOLVED_BY_EVIDENCE, auditCoverage, evaluateEntry } from "../lib/tracker/predicates.mjs";
@@ -175,7 +180,7 @@ const GUIDE = [
   ["Notes", "Anything you want to say. A session reads every note on a row resolved since it last ran, and reports what it did about each one. A note is an instruction, not a comment."],
   ["", ""],
   ["Adding a row", "Type into a blank line at the bottom of Working. Fill in Section, Priority, Title and What this is. LEAVE THE ID BLANK — the script assigns one and tells you which. A session may work your row and may never reword or delete it."],
-  ["Section", "One of: needs-sean, nh-hunt, nj-hunt, az-hunt, visual-feedback, data-infrastructure, product-ui, constitution-rules, repo-ops. There is no miscellaneous."],
+  ["Section", "One of: needs-sean, nh-hunt, nj-hunt, az-hunt, visual-feedback, data-infrastructure, product-ui, constitution-rules, repo-ops, decided. There is no miscellaneous. (decided is where the work behind a dashboard decision waits; a session opens those rows, not you.)"],
   ["Priority", "P1 broken or blocking. P2 needed before this section is done. P3 wanted, not needed. Priorities are ranked inside a section and mean nothing across sections."],
   ["", ""],
   ["Needs Sean", "Only you close a row in that section. A session can open one and can work it; it can never mark it resolved or move it out, and the build fails if it tries."],
@@ -664,6 +669,30 @@ function normalizeResolution(id, raw) {
   return value;
 }
 
+/**
+ * **RULING 271 — the decisions he made on the dashboard, read into the move.**
+ * (ADM-4, the 9.4.26 admin feedback. Lane C.)
+ *
+ * `pnpm owner:decisions:pull` writes `docs/tracker-owner-decisions.json`; this
+ * reads it and asks `planOwnerDecisions` (in `tracker-core.mjs`, pure, tested
+ * against synthetic stores) which open Needs Sean rows the owner's recorded
+ * decisions close and what work each close implies. The follow-up rows go
+ * through `mintRows` — the SAME validation `add` applies — attributed to
+ * `dashboard-decision`.
+ *
+ * Nothing here asks a question, deletes a row, or rewords one. Absent file:
+ * nothing to apply, and the block says so rather than printing zeros.
+ */
+function planDashboardDecisions({ working, resolved, sections }) {
+  const path = join(ROOT, OWNER_DECISIONS_JSON);
+  if (!existsSync(path)) return null;
+  const file = JSON.parse(readFileSync(path, "utf8"));
+  const decisions = Array.isArray(file?.intents) ? file.intents : [];
+  const plan = planOwnerDecisions({ working, resolved, decisions, registry: REGISTRY });
+  const minted = mintRows(plan.followUps, { working, resolved, sections, label: DASHBOARD_OPENER });
+  return { decisions, plan, minted };
+}
+
 function modeMove(working, resolved, sections) {
   const book = readWorkbookRows();
   const refusals = [];
@@ -709,6 +738,58 @@ function modeMove(working, resolved, sections) {
         }
       }
     }
+  }
+
+  /*
+   * **RULING 271 — the owner's dashboard decisions, applied before anything
+   * is planned.** A close here is in HIS handwriting: the decision was made
+   * in his authenticated admin session and pulled from the control plane, so
+   * it registers as `resolutionAuthor = "sean"` — the same path a resolution
+   * read out of his workbook takes. `planMoves` is not bypassed: it still
+   * decides, on that path, whether the row may move.
+   */
+  const dashboard = planDashboardDecisions({ working, resolved, sections });
+  const dashboardRows = dashboard ? dashboard.minted.added : [];
+  if (dashboard) {
+    for (const close of dashboard.plan.closes) {
+      const row = working.find((r) => (r.ID ?? "").trim() === close.id);
+      if (!(row.Resolution ?? "").trim()) row.Resolution = "Resolved";
+      row.Notes = [(row.Notes ?? "").trim(), close.note].filter(Boolean).join(" ");
+      row["Closed by"] = dashboardCloser(close.intentId);
+      resolutionAuthor[close.id] = "sean";
+    }
+    refusals.push(...dashboard.minted.refusals);
+
+    console.log(`\ndashboard decisions (RULING 271) — ${OWNER_DECISIONS_JSON}`);
+    console.log(
+      `  ${floorLine(
+        floored(
+          "intents applied as Needs Sean closes",
+          OWNER_DECISIONS_JSON,
+          dashboard.decisions.length,
+          dashboard.plan.closes.length,
+          dashboard.decisions.length === 0
+            ? "the export holds no intent — nothing has been decided on the dashboard, or pnpm owner:decisions:pull has not run"
+            : undefined,
+        ),
+      )}`,
+    );
+    for (const c of dashboard.plan.closes) {
+      console.log(`  ${c.id} ← ${c.ownWords ? `answered in his own words` : c.option} (intent ${c.intentId})`);
+    }
+    console.log(
+      `  follow-ups opened      ${
+        dashboardRows.length
+          ? dashboardRows.map((r) => `${r.ID} (acts on ${r["Depends on"]})`).join(", ")
+          : "none"
+      }`,
+    );
+    if (dashboard.plan.refusals.length) {
+      console.log(`  not applied            ${dashboard.plan.refusals.length} of ${dashboard.decisions.length}, each by reason:`);
+      for (const r of dashboard.plan.refusals) console.log(`    ${r.line}`);
+    }
+  } else {
+    console.log(`\ndashboard decisions (RULING 271) — ${OWNER_DECISIONS_JSON} is not present; nothing to apply`);
   }
 
   /*
@@ -851,9 +932,12 @@ session closes (RULING 37): ${sessionCloses.join(", ")}`);
   refusals.push(...moveRefusals);
 
   const moved = new Set(moves.map((r) => r.ID));
-  const nextWorking = working.filter(
-    (r) => !moved.has(r.ID) && !deletedIds.has((r.ID ?? "").trim()),
-  );
+  /* The RULING 271 follow-up rows join the working store here, already
+   * validated and minted by `mintRows` with the ledger's claims in the pool. */
+  const nextWorking = [
+    ...working.filter((r) => !moved.has(r.ID) && !deletedIds.has((r.ID ?? "").trim())),
+    ...dashboardRows,
+  ];
   for (const r of moves) {
     // RULING 39: the stamp is the script's, never a formula's, and a date Sean
     // entered by hand survives.
@@ -903,6 +987,9 @@ session closes (RULING 37): ${sessionCloses.join(", ")}`);
   console.log(
     `  rows DELETED (RULING 46) ${deletions.length ? deletions.map((d) => d.row.ID).join(", ") : "none"}`,
   );
+  console.log(
+    `  rows opened (RULING 271) ${dashboardRows.length ? dashboardRows.map((r) => r.ID).join(", ") : "none"}`,
+  );
   console.log(`  working store          ${working.length} -> ${nextWorking.length}`);
   console.log(`  resolved store         ${resolved.length} -> ${nextResolved.length}`);
   console.log(
@@ -911,12 +998,13 @@ session closes (RULING 37): ${sessionCloses.join(", ")}`);
 
   if (
     nextWorking.length + nextResolved.length !==
-    before.length + assignedIds.length - deletedIds.size
+    before.length + assignedIds.length + dashboardRows.length - deletedIds.size
   ) {
     refusals.push(
       `the pair does not reconcile: ${nextWorking.length} + ${nextResolved.length} against ` +
-        `${before.length} before, plus ${assignedIds.length} new, less ` +
-        `${deletedIds.size} deleted under RULING 46. Nothing else is ever deleted.`,
+        `${before.length} before, plus ${assignedIds.length} new, plus ${dashboardRows.length} ` +
+        `opened on dashboard decisions (RULING 271), less ${deletedIds.size} deleted under ` +
+        "RULING 46. Nothing else is ever deleted.",
     );
   }
 
@@ -958,6 +1046,26 @@ session closes (RULING 37): ${sessionCloses.join(", ")}`);
     }
     writeFileSync(path, `${JSON.stringify(record, null, 2)}\n`, "utf8");
     console.log(`\n  written  ${DELETIONS_JSON}`);
+  }
+
+  /*
+   * RULING 271 follow-ups are claimed in the opened ledger in the SAME run
+   * that mints them, exactly as `add` does — `tests/tracker-stores.test.ts`
+   * fails the build on a row in a store that no ledger entry claims.
+   */
+  if (dashboardRows.length) {
+    const ledgerPath = join(ROOT, OPENED_JSON);
+    const ledger = readLedger();
+    ledger.push({
+      session: DASHBOARD_OPENER,
+      opened: STAMP,
+      ids: dashboardRows.map((r) => r.ID),
+      dashboardDecisions: dashboard.plan.closes
+        .filter((c) => c.followUp)
+        .map((c) => ({ actsOn: c.id, intentId: c.intentId })),
+    });
+    writeFileSync(ledgerPath, JSON.stringify(ledger, null, 2) + "\n", "utf8");
+    console.log(`\n  written  ${OPENED_JSON} (${dashboardRows.length} id(s) claimed by ${DASHBOARD_OPENER})`);
   }
 
   writeFileSync(join(ROOT, WORKING_CSV), writeStore(nextWorking), "utf8");
@@ -1016,14 +1124,18 @@ function claimedInLedger() {
   );
 }
 
-function modeAdd(working, resolved, sections) {
-  const path = process.argv[3];
-  if (!path || !existsSync(path)) {
-    console.error("usage: node scripts/tracker.mjs add <rows.json>");
-    process.exit(2);
-  }
-  const input = JSON.parse(readFileSync(path, "utf8"));
-  const requested = Array.isArray(input) ? input : [input];
+/**
+ * **THE ONE PLACE A NEW ROW IS VALIDATED AND MINTED.**
+ *
+ * `add` has always applied these guards. The dashboard-decision applier in
+ * `move` (RULING 271) opens follow-up rows too, and a second copy of the
+ * guards would be a second place for them to drift — so both call this.
+ * `label` is the session the rows are attributed to when a row names none.
+ *
+ * Returns `{ added, refusals, duplicates }`; the caller writes NOTHING when
+ * `refusals` is non-empty.
+ */
+function mintRows(requested, { working, resolved, sections, label }) {
   const slugs = new Set(sections.map((x) => x.slug));
   const refusals = [];
   const added = [];
@@ -1045,7 +1157,7 @@ function modeAdd(working, resolved, sections) {
       refusals.push(`"${where}": no title.`);
       continue;
     }
-    if (!(row["Opened by"] ?? "").trim() && !SESSION_LABEL) {
+    if (!(row["Opened by"] ?? "").trim() && !label) {
       refusals.push(
         `"${where}": no opening session named — pass --session=<label>. ` +
           "RULING 40: attribution has no soft landing.",
@@ -1092,7 +1204,7 @@ function modeAdd(working, resolved, sections) {
     ]);
     const built = Object.fromEntries(COLUMNS.map((c) => [c, row[c] ?? ""]));
     built.ID = id;
-    built["Opened by"] = (row["Opened by"] ?? "").trim() || SESSION_LABEL;
+    built["Opened by"] = (row["Opened by"] ?? "").trim() || label;
     added.push(built);
   }
 
@@ -1128,6 +1240,23 @@ function modeAdd(working, resolved, sections) {
         "the title or the description so the two can be told apart.",
     );
   }
+  return { added, refusals, duplicates };
+}
+
+function modeAdd(working, resolved, sections) {
+  const path = process.argv[3];
+  if (!path || !existsSync(path)) {
+    console.error("usage: node scripts/tracker.mjs add <rows.json>");
+    process.exit(2);
+  }
+  const input = JSON.parse(readFileSync(path, "utf8"));
+  const requested = Array.isArray(input) ? input : [input];
+  const { added, refusals, duplicates } = mintRows(requested, {
+    working,
+    resolved,
+    sections,
+    label: SESSION_LABEL,
+  });
 
   console.log(`\ntracker add — ${STAMP}\n`);
   console.log(`  requested              ${requested.length}`);

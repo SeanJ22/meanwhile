@@ -48,6 +48,8 @@
  * was not resolved against the store it names is not a reference.
  */
 
+import { isAbsolute } from "node:path";
+
 import { loadIndex } from "../lib/governance/ledger.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import {
@@ -58,11 +60,13 @@ import {
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { DECISION_LOG_KEY } from "../lib/control-plane/admin-data.ts";
+import { isResolutionRecord, resolvedIntentId } from "../lib/control-plane/decision-log.ts";
 import {
   OWNER_SURFACE_FORMAT_VERSION,
   type OwnerDecisionIntent,
   type OwnerDecisionState,
 } from "../lib/control-plane/owner-surface.ts";
+import { RESOLVED_CSV, ROOT, readStore } from "./tracker-core.mjs";
 
 const NOW_ISO = new Date().toISOString();
 
@@ -74,6 +78,41 @@ const DRY_RUN = process.argv.includes("--dry-run");
 
 function log(line: string): void {
   console.log(`owner:canonicalize · ${line}`);
+}
+
+/**
+ * **THE TRACKER IS A CANONICAL RECORD TOO.** (ADM-4, the 9.4.26 admin feedback.)
+ *
+ * A decision on a Needs Sean row does not become a ruling; it becomes a row in
+ * `docs/tracker-resolved.csv` whose `Closed by` carries the intent id — that is
+ * what `pnpm tracker:move` writes when it applies the decision (RULING 271).
+ * Until this branch existed such a decision stayed `PENDING_CANONICALIZATION`
+ * forever, because the only record this script knew how to resolve against
+ * was the governance ledger, and the card kept telling the owner a decision
+ * he had watched land had not.
+ *
+ * The resolution is against the STORE, not against anything the intent says
+ * about itself: the row must exist, be resolved, and name this intent in the
+ * column the move script writes. `--resolved=<path>` points the check at a
+ * different CSV for proofs (`tests/owner-decisions-outflow.test.ts`); the
+ * reference then names that path, because a reference names the store it was
+ * checked against.
+ */
+const RESOLVED_STORE = arg("resolved") ?? RESOLVED_CSV;
+
+function trackerCloses(): Map<string, string> {
+  const rows = readStore(RESOLVED_STORE, isAbsolute(RESOLVED_STORE) ? "" : ROOT);
+  const refs = new Map<string, string>();
+  for (const row of rows) {
+    const closedBy = row["Closed by"] ?? "";
+    const hit = /\(dashboard ([^)]+)\)/.exec(closedBy);
+    if (!hit) continue;
+    refs.set(
+      hit[1].trim(),
+      `${RESOLVED_STORE}#${(row.ID ?? "").trim()} (resolved ${(row["Resolved on"] ?? "").trim() || "on an unrecorded date"})`,
+    );
+  }
+  return refs;
 }
 
 async function repositories(): Promise<ControlPlaneRepositories> {
@@ -125,20 +164,49 @@ async function main(): Promise<void> {
     ),
   );
 
+  const tracker = trackerCloses();
+  log(`tracker: ${RESOLVED_STORE} names ${tracker.size} dashboard close(s) in its Closed by column`);
+
+  /*
+   * A decision that has already been resolved is SKIPPED, by looking for its
+   * `#resolved` twin in the log. Until 2026-09-04 this loop looked only at the
+   * original's own `state` — which never changes, because the log is
+   * append-only — so every run re-derived the same resolution and tried to
+   * append the same twin again, forever. The store's idempotent append
+   * swallowed the byte-identical ones and would have THROWN on the first that
+   * differed, which is a script that fails on the day the resolution changes.
+   */
+  const ids = new Set(intents.map((i) => i.intentId));
   let moved = 0;
+  let skipped = 0;
   for (const intent of intents) {
+    if (isResolutionRecord(intent)) {
+      skipped += 1;
+      continue;
+    }
+    if (ids.has(resolvedIntentId(intent.intentId))) {
+      log(`  ${intent.intentId} already resolved (its #resolved record is in the log)`);
+      skipped += 1;
+      continue;
+    }
     if (intent.state === "CANONICALIZED" || intent.state === "REJECTED_BY_GATES") {
       log(`  ${intent.intentId} already ${intent.state} (${intent.canonicalRef ?? "-"})`);
       continue;
     }
-    const ref = claimedRef(intent);
     let state: OwnerDecisionState = "PENDING_CANONICALIZATION";
     let canonicalRef: string | null = null;
     let refusedReason: string | null = null;
 
-    if (ref === null) {
+    const trackerRef = tracker.get(intent.intentId) ?? null;
+    const ref = trackerRef === null ? claimedRef(intent) : null;
+    if (trackerRef !== null) {
+      // The tracker applied it: the row is resolved and names this intent.
+      state = "CANONICALIZED";
+      canonicalRef = trackerRef;
+    } else if (ref === null) {
       refusedReason =
-        "the chosen option names no governance record, so there is nothing to resolve yet";
+        "the chosen option names no governance record and no resolved tracker row names " +
+        "this intent yet, so there is nothing to resolve against";
     } else {
       const record = index.resolve(ref);
       if (!record) {
@@ -185,7 +253,10 @@ async function main(): Promise<void> {
     moved += 1;
   }
 
-  log(DRY_RUN ? `--dry-run: ${moved} would move` : `${moved} intent(s) resolved`);
+  log(
+    `${DRY_RUN ? `--dry-run: ${moved} would move` : `${moved} intent(s) resolved`}; ` +
+      `${skipped} of ${intents.length} log row(s) were resolution records or already-resolved originals`,
+  );
 }
 
 await main();

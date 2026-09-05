@@ -26,6 +26,7 @@ and when. Nothing is ever deleted.
   - Product / UI — **3**
   - Constitution & rules — **1**
   - Repo & ops — **9** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
+  - Decided by Sean — act on it — **0**
 
 **1 section(s) over the cap.** A section over five P1 rows is STOPPED, and that is reported as a fact. Nothing is relabelled to fit — a demotion changes the label and not the situation.
 
@@ -1305,6 +1306,14 @@ OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshn
 **PE02** — The short summary file generated at the end of every session still reads the frozen pre-rebuild tracker, so it reports a priority count on a scale that no longer exists. Nothing a reader sees is affected; the next session opens on a number that means nothing.
 
 **RO02** — Found 2026-08-23 while running the gates. pnpm exec node scripts/check-lint-allowlist.mjs refused with five unlisted warnings, and stashing every change in this session proved all five were already on main: scripts/guard-history.mjs (unused sep), scripts/tier-directory.mts (unused readFileSync), and three in tests/coverage.test.ts. All five were unused imports or an unused local and all five are fixed here. THE ROW IS FOR THE SHAPE, not the fix: this check is not part of build-check.yml, so a gate that a session is expected to run by hand had been red for an unknown number of sessions with nothing reporting it. Worth deciding whether it joins the CI gate or the handoff gate, remembering RULING 78 — a gate that runs three times for one merge is one gate and two copies of it.
+
+## Decided by Sean — act on it
+
+Rows the dashboard decision applier opens: Sean chose an option on a Needs Sean row and the work that option implies waits here until a session does it and resolves it.
+
+**0 open · 0 resolved.**
+
+Nothing open. This section is clear.
 
 ---
 

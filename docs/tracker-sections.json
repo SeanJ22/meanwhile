@@ -51,6 +51,11 @@
       "slug": "repo-ops",
       "title": "Repo & ops",
       "what": "CI, tests, workflows, storage, the machinery the project runs on."
+    },
+    {
+      "slug": "decided",
+      "title": "Decided by Sean — act on it",
+      "what": "Rows the dashboard decision applier opens: Sean chose an option on a Needs Sean row and the work that option implies waits here until a session does it and resolves it."
     }
   ]
 }

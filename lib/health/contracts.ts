@@ -260,14 +260,48 @@ export function truthContract(input: TruthContractInput): ContractReading {
  * measured this" are different sentences, and until Session B only the second
  * was available.
  */
-export function freshnessContract(risk?: {
+export interface FreshnessRisk {
   readonly obligationsScheduled: number;
   readonly obligationsUnscheduled: number;
   readonly obligationsOverdue: number;
   readonly debtRows: number;
   readonly incidents: number;
   readonly activation: "SHADOW_NOT_ACTIVATED";
-}): ContractReading {
+}
+
+/**
+ * The risk a freshness-shadow run record carries, projected for the contract
+ * — ONE implementation shared by `pnpm owner:publish` and `pnpm pilot:health`
+ * so the page and the script keep reading the same FRESHNESS sentence for the
+ * same SHA (9.4.26). Undefined when the record carries no measured risk, or
+ * an activation this contract does not know, so the contract falls back to
+ * its "no instrument" reading rather than a guessed number.
+ */
+export function freshnessRiskOf(
+  record: { readonly risk?: Record<string, unknown> | null } | null,
+): FreshnessRisk | undefined {
+  const r = record?.risk;
+  if (!r || r.activation !== "SHADOW_NOT_ACTIVATED") return undefined;
+  const n = (v: unknown): number | null => (typeof v === "number" && Number.isFinite(v) ? v : null);
+  const scheduled = n(r.obligationsScheduled);
+  const unscheduled = n(r.obligationsUnscheduled);
+  const overdue = n(r.obligationsOverdue);
+  const debtRows = n(r.debtRows);
+  const incidents = n(r.incidents);
+  if (scheduled === null || unscheduled === null || overdue === null || debtRows === null || incidents === null) {
+    return undefined;
+  }
+  return {
+    obligationsScheduled: scheduled,
+    obligationsUnscheduled: unscheduled,
+    obligationsOverdue: overdue,
+    debtRows,
+    incidents,
+    activation: "SHADOW_NOT_ACTIVATED",
+  };
+}
+
+export function freshnessContract(risk?: FreshnessRisk): ContractReading {
   if (!risk) {
     return {
       contract: "FRESHNESS",

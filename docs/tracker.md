@@ -14,8 +14,8 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **424 open**, 487 resolved.
-- **73 waiting on Sean** — the first section below.
+- **425 open**, 487 resolved.
+- **74 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
   - New Hampshire hunt — **2**
@@ -26,6 +26,7 @@ and when. Nothing is ever deleted.
   - Product / UI — **3**
   - Constitution & rules — **1**
   - Repo & ops — **9** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
+  - Decided by Sean — act on it — **0**
 
 **1 section(s) over the cap.** A section over five P1 rows is STOPPED, and that is reported as a fact. Nothing is relabelled to fit — a demotion changes the label and not the situation.
 
@@ -35,7 +36,7 @@ and when. Nothing is ever deleted.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**73 open · 74 resolved.**
+**74 open · 74 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -86,6 +87,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH299** — docs/Meanwhile-Owner-Checklist.xlsx holds three rows with Status CONFIRMED — EX, F1 and F5 — of which EX is the workbook's own documented example row. So the answer key is two facts, both known_present. The Adversarial questions tab has Keep? blank on all twelve rows, so zero questions load. The READER contract therefore reads AWAITING_OWNER_DATA and TRUTH cannot score a false-presence rate for want of a known_absence denominator.
 
 **NH304** — WHAT IS NEEDED: your ruling on ONE word. RULING 233 (alias R-C10), in your verbatim text, says "staging is the integration branch and deploys to test.meanwhileusa.com". Netlify derives a branch deploy's hostname as <branch-name>.<suffix>, so the branch name IS the subdomain label, and the two halves cannot both be true. WHY NO MACHINE CAN DECIDE IT: both options work; which one you meant is a judgement about your own words, and a session may not amend your law. OPTION A - amend the BRANCH to 'test', keep the host test.meanwhileusa.com. Consequence: the host you named twice is preserved, STAGING_RENDER_ORIGIN in lib/ops/origins.ts is unchanged, and the git ref name (which appears on no reader-facing or owner-facing surface) moves. This is what the session shipped under, because RULING 233 is not operative until the session after Session C closes. OPTION B - keep the BRANCH 'staging', move the host to staging.meanwhileusa.com. Consequence: the ref name is preserved and the host you specified changes, along with STAGING_RENDER_ORIGIN and every reference to it. MEASURED, four ways, against the live API on 2026-09-01: branch_deploy_custom_domain is a SUFFIX not a per-branch map; GET /sites/<id>/domains and /branch_domains both 404; a managed NETLIFY DNS record pointing the subdomain at a branch deploy is refused 422 'invalid site'; a plain CNAME is accepted but reads back site_id null and managed false, so it is unregistered at the edge and uncovered by the certificate. Positive control: https://nosuchbranch.meanwhileusa.com/api/build resolves on the wildcard certificate and returns 404, which is the provider answering 'no branch deploy by that name'. RULING 235 records the measurement as a FACT and deliberately does NOT amend your ruling.
+
+**NH325** — From the owner's 9.4.26 admin feedback (ADM-8). The Deploy fleet control on Pilot health takes plain words such as 'deep dive on Illinois' and the runner puts every REGISTERED unit that matches first. Nothing is registered for Illinois: no data/states/il/jurisdictions/il.json, no candidate universe, and REGISTERED_STATES in lib/control-plane/scheduler/providers/local-jurisdictions.ts names az, nh and nj only. So a dispatch to Illinois is honored with the sentence 'Illinois is not enumerated yet' and moves nothing. WHAT IS NEEDED: your approval to enumerate a state on request, and the rule for it. WHY THE MACHINE CANNOT PROCEED: enumerating a state registers its bodies' own sites as sources, and CLAUDE.md puts adding an external source on the ask-before list by name; a button may reorder registered work but may not enlarge the denominator (RULING 273). WHAT CONTINUES WITHOUT IT: every dispatch naming AZ, NH or NJ works today; a dispatch naming another state records the honest sentence on the dashboard.
 
 **NH43** — RULING 60's residual. NH Hunt 5 hand-worked every un-held unit at 03255 and holds 48 of 48. Three bodies inside those units were reached by nothing, and each is listed below with every branch already walked and what each returned. The ruling asks you to hunt one or two yourself and return the process, which then gets built as a branch the same way the six in zip-playbook.md section 8 were.
 
@@ -1305,6 +1308,14 @@ OPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the freshn
 **PE02** — The short summary file generated at the end of every session still reads the frozen pre-rebuild tracker, so it reports a priority count on a scale that no longer exists. Nothing a reader sees is affected; the next session opens on a number that means nothing.
 
 **RO02** — Found 2026-08-23 while running the gates. pnpm exec node scripts/check-lint-allowlist.mjs refused with five unlisted warnings, and stashing every change in this session proved all five were already on main: scripts/guard-history.mjs (unused sep), scripts/tier-directory.mts (unused readFileSync), and three in tests/coverage.test.ts. All five were unused imports or an unused local and all five are fixed here. THE ROW IS FOR THE SHAPE, not the fix: this check is not part of build-check.yml, so a gate that a session is expected to run by hand had been red for an unknown number of sessions with nothing reporting it. Worth deciding whether it joins the CI gate or the handoff gate, remembering RULING 78 — a gate that runs three times for one merge is one gate and two copies of it.
+
+## Decided by Sean — act on it
+
+Rows the dashboard decision applier opens: Sean chose an option on a Needs Sean row and the work that option implies waits here until a session does it and resolves it.
+
+**0 open · 0 resolved.**
+
+Nothing open. This section is clear.
 
 ---
 

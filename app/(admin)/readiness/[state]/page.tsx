@@ -63,12 +63,14 @@ export default async function ReadinessStatePage({
   const stateCode = state.trim().toLowerCase();
   const nav = <ConsoleNav view="readiness" currentState={stateCode} states={readinessStates()} />;
 
+  const stateName = readinessStates().find((s) => s.code === stateCode)?.name ?? stateCode.toUpperCase();
+
   if (outcome.kind === "UNAVAILABLE") {
     return (
       <main className="admin readiness">
         <style dangerouslySetInnerHTML={{ __html: READINESS_STYLES }} />
         {nav}
-        <h1>State readiness</h1>
+        <h1>State readiness — {stateName}</h1>
         <p className="refusal">
           <strong>We could not ask.</strong> {outcome.detail}
         </p>
@@ -80,23 +82,56 @@ export default async function ReadinessStatePage({
     );
   }
 
-  // CC-F6: a snapshot produced under a retired derivation contract is quarantined.
-  // Its old cells are NEVER rendered and NEVER audited-as-trusted; this is neither
-  // NOT_WALKED (we did look) nor missing (a record exists) — it is stale-by-contract.
+  /*
+   * CC-F6: a snapshot produced under a retired derivation contract is quarantined.
+   * Its old cells are NEVER rendered and NEVER audited-as-trusted; this is neither
+   * NOT_WALKED (we did look) nor missing (a record exists) — it is stale-by-contract.
+   *
+   * ADM-1 (9.4.26): the refusal alone left the owner unable to tell whether a
+   * republish had happened or what to run. So the page now says what IS on
+   * record (when it was published, by what, at which revision), what it must
+   * become, exactly how it clears, and who clears it unattended.
+   */
   if (outcome.kind === "REQUIRES_REPUBLISH") {
+    const legacy = outcome.legacy;
     return (
       <main className="admin readiness">
         <style dangerouslySetInnerHTML={{ __html: READINESS_STYLES }} />
         {nav}
-        <h1>State readiness</h1>
+        <h1>State readiness — {stateName}</h1>
         <p className="refusal">
-          <strong>READINESS SNAPSHOT REQUIRES REPUBLISH.</strong> {outcome.detail}
+          <strong>This snapshot is older than the way we now derive readiness, so its cells are not shown.</strong>{" "}
+          {outcome.detail}
+        </p>
+        <div className="rq-summary">
+          <div className="rq-tile">
+            <div className="rq-figure">{legacy.publishedAt ? legacy.publishedAt.slice(0, 16).replace("T", " ") : "unknown"}</div>
+            <div className="rq-caption">
+              when the record on file was published
+              {legacy.publisher ? `, by ${legacy.publisher}` : ""}
+              {legacy.publishedFromSha ? ` at ${legacy.publishedFromSha.slice(0, 8)}` : ""}
+            </div>
+          </div>
+          <div className="rq-tile">
+            <div className="rq-figure">{legacy.revision === null ? "—" : `r${legacy.revision}`}</div>
+            <div className="rq-caption">
+              store revision{legacy.updatedAt ? `, last written ${legacy.updatedAt.slice(0, 16).replace("T", " ")}` : ""}
+            </div>
+          </div>
+          <div className="rq-tile">
+            <div className="rq-figure">{outcome.snapshotContract ?? "none"}</div>
+            <div className="rq-caption">contract the record carries; the current one is {outcome.currentContract}</div>
+          </div>
+        </div>
+        <p>
+          <strong>What clears it:</strong> a publish under the current contract. On the runner machine, run{" "}
+          <code>{outcome.clearedBy.command}</code>; {outcome.clearedBy.unattended}. If this state is still shown
+          after a cycle, the runner is not running — check the Runner line on Pilot health.
         </p>
         <p className="note">
-          A record exists but was produced by a retired publisher, so its cells are not shown — a
-          snapshot under a superseded derivation contract cannot be trusted as current. This is not
-          &ldquo;not walked&rdquo; and not &ldquo;no snapshot&rdquo;; it clears on the next
-          instrument-derived publish. Source: {outcome.source}.
+          This is not &ldquo;not walked&rdquo; and not &ldquo;no snapshot&rdquo;: a record exists, and what
+          is retired is the derivation behind that record, not the data for the state. Source:{" "}
+          {outcome.source}.
         </p>
       </main>
     );

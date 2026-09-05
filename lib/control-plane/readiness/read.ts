@@ -42,19 +42,47 @@ export type ReadinessReadOutcome =
       readonly detail: string;
       readonly source: string;
       readonly snapshotContract: string | null;
+      /** The current contract, so the page can show what the record must become. */
+      readonly currentContract: string;
+      /**
+       * What IS on record about the quarantined snapshot (ADM-1, 9.4.26): its
+       * publish time, publisher and SHA, and the store's own revision and
+       * write time. Its CELLS are still never rendered; these are facts about
+       * the record, and they are what tells the operator whether a republish
+       * has happened since and what to run.
+       */
+      readonly legacy: {
+        readonly publishedAt: string | null;
+        readonly publisher: string | null;
+        readonly publishedFromSha: string | null;
+        readonly revision: number | null;
+        readonly updatedAt: string | null;
+      };
+      /** The exact command that clears the state, and who runs it unattended. */
+      readonly clearedBy: {
+        readonly command: string;
+        readonly unattended: string;
+      };
     }
   | { readonly kind: "UNAVAILABLE"; readonly detail: string };
+
+/** How a quarantined readiness record is cleared. One place, quoted by the page. */
+export const READINESS_REPUBLISH_COMMAND = "pnpm readiness:publish";
+export const READINESS_REPUBLISH_UNATTENDED =
+  "the standing runner republishes the console after every cycle while it is running";
 
 /**
  * Classify a read row against the current derivation contract (CC-F6). PURE: no
  * fs/db/clock — so a test can pin the quarantine without a control plane. A
  * snapshot is trusted (HELD) ONLY when its marker strictly equals the current
  * contract; absent or older marker → REQUIRES_REPUBLISH; a null row → NOT_RECORDED.
+ * `persisted` carries the store's revision and write time when the caller has them.
  */
 export function readinessRowOutcome(
   value: ReadinessStateSnapshot | null,
   source: string,
   stateName: string,
+  persisted: { readonly revision: number; readonly updatedAt: string } | null = null,
 ): ReadinessReadOutcome {
   if (value === null) {
     return {
@@ -67,15 +95,30 @@ export function readinessRowOutcome(
   }
   const contract = (value as { readonly derivationContract?: unknown }).derivationContract;
   if (contract !== READINESS_DERIVATION_CONTRACT) {
+    const loose = value as {
+      readonly publishedAt?: unknown;
+      readonly publisher?: unknown;
+      readonly publishedFromSha?: unknown;
+    };
+    const str = (v: unknown): string | null => (typeof v === "string" && v.trim() !== "" ? v : null);
     return {
       kind: "REQUIRES_REPUBLISH",
       snapshotContract: typeof contract === "string" ? contract : null,
+      currentContract: READINESS_DERIVATION_CONTRACT,
       detail:
         `A readiness snapshot for ${stateName} exists but was produced under a superseded ` +
         `derivation contract (${typeof contract === "string" ? contract : "no contract marker"}). ` +
         "It must be republished under the current instrument-derived contract before its cells " +
         "can be trusted — its old values are not shown.",
       source,
+      legacy: {
+        publishedAt: str(loose.publishedAt),
+        publisher: str(loose.publisher),
+        publishedFromSha: str(loose.publishedFromSha),
+        revision: persisted?.revision ?? null,
+        updatedAt: persisted?.updatedAt ?? null,
+      },
+      clearedBy: { command: READINESS_REPUBLISH_COMMAND, unattended: READINESS_REPUBLISH_UNATTENDED },
     };
   }
   return { kind: "HELD", snapshot: value, source };
@@ -107,7 +150,9 @@ export async function openReadinessRepositories(): Promise<
     };
   }
   try {
-    const repos = await createPgRepositories(url);
+    // A pure read: the panel never owns the schema, so it skips the
+    // per-request bootstrap replay (ADM-2 — most of the selection lag).
+    const repos = await createPgRepositories(url, new Date().toISOString(), { skipBootstrap: true });
     assertDurableRepositories(repos, "the readiness control panel");
     return { ok: true, repos, source: "control plane (Postgres)" };
   } catch (error) {
@@ -134,7 +179,12 @@ export async function readReadinessSnapshot(state: string): Promise<ReadinessRea
 
   try {
     const row = await opened.repos.readinessSnapshots.read(entry.code);
-    return readinessRowOutcome(row?.value ?? null, opened.source, entry.name);
+    return readinessRowOutcome(
+      row?.value ?? null,
+      opened.source,
+      entry.name,
+      row ? { revision: row.revision, updatedAt: row.updatedAt } : null,
+    );
   } catch (error) {
     return {
       kind: "UNAVAILABLE",

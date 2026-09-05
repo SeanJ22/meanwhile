@@ -26,6 +26,7 @@ import {
   appendResearchIntent,
   buildResearchIntent,
   parseResearchIntentAction,
+  validateIntentNote,
 } from "@/lib/control-plane/research-view.ts";
 import { RESEARCH_INTENT_ACTIONS } from "@/lib/control-plane/scheduler/research-policy.ts";
 
@@ -60,6 +61,19 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       { status: 400 },
     );
   }
+  /*
+   * ADM-8 / ADM-5 (9.4.26): a DISPATCH carries the owner's target and a
+   * PAUSE_RUNNER may carry his reason. Validated here, before the store is
+   * opened, so a bad request never costs a connection.
+   */
+  const note = validateIntentNote(action, form.get("note"));
+  if (!note.ok) {
+    return NextResponse.json({ error: note.detail }, { status: 400 });
+  }
+  // Where to land after the record: the page the form came from, from a
+  // closed list — never an arbitrary URL out of the form body.
+  const returnTo = String(form.get("returnTo") ?? "");
+  const destination = RETURN_PATHS.includes(returnTo) ? returnTo : "/admin/research";
 
   const opened = await openControlPlane();
   if (!opened.ok) {
@@ -69,11 +83,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 
   const requestedAt = new Date().toISOString();
-  const intent = buildResearchIntent(action, requestedAt, verdict.session.sid);
+  const intent = buildResearchIntent(action, requestedAt, verdict.session.sid, note.note);
   const wrote = await appendResearchIntent(opened.repos, intent, requestedAt);
   if (!wrote.ok) {
     return NextResponse.json({ error: "not recorded", detail: wrote.detail }, { status: 500 });
   }
 
-  return NextResponse.redirect(new URL("/admin/research", request.url), 303);
+  return NextResponse.redirect(new URL(destination, request.url), 303);
 }
+
+/** The pages an intent form may return to. A closed list, by design. */
+const RETURN_PATHS: readonly string[] = ["/admin", "/admin/research"];

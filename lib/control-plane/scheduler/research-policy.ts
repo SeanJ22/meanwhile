@@ -193,10 +193,52 @@ export interface ResearchState {
   readonly dispatchOrdering?: DispatchOrdering | null;
   /** Capacity, queue bands, funnel, share, cache hit rate, cost per outcome — computed at cycle end. */
   readonly metrics?: ResearchMetrics | null;
+  /** ADM-8: what the cycle did with the owner's DISPATCH, when one was pending. */
+  readonly ownerDispatch?: OwnerDispatchRecord | null;
 }
 
-export const RESEARCH_INTENT_ACTIONS = ["PAUSE", "RESUME", "RUN_CYCLE_NOW"] as const;
+/**
+ * The owner's intent vocabulary. (Extended for the 9.4.26 admin feedback,
+ * ADM-5 and ADM-8.)
+ *
+ *   PAUSE / RESUME         the research (model) lane only; the runner keeps cycling
+ *   RUN_CYCLE_NOW          end the inter-cycle sleep early
+ *   DISPATCH               "deploy the fleet": the owner's words in `note`, e.g.
+ *                          "deep dive on Illinois"; the cycle puts every registered
+ *                          unit that matches the target first and records what
+ *                          matched — it never invents an obligation
+ *   PAUSE_RUNNER           the owner's own record that the WHOLE runner is stopped on
+ *                          purpose (`note` = the reason). Written by the dashboard or
+ *                          by `pnpm pilot:stop`, so a red SILENT can be told from a
+ *                          deliberate pause without leaving the page
+ *   RESUME_RUNNER          the pause is over
+ */
+/**
+ * What the newest cycle did with the owner's DISPATCH (ADM-8): the intent it
+ * honored, the target as parsed, and how many registered units matched of
+ * how many were registered. Absent on a state written before the field
+ * existed; null when no dispatch was pending.
+ */
+export interface OwnerDispatchRecord {
+  readonly intentId: string;
+  readonly target: string;
+  readonly states: readonly string[];
+  readonly matched: number;
+  readonly registered: number;
+}
+
+export const RESEARCH_INTENT_ACTIONS = [
+  "PAUSE",
+  "RESUME",
+  "RUN_CYCLE_NOW",
+  "DISPATCH",
+  "PAUSE_RUNNER",
+  "RESUME_RUNNER",
+] as const;
 export type ResearchIntentAction = (typeof RESEARCH_INTENT_ACTIONS)[number];
+
+/** The longest owner note an intent carries (a dispatch target or a pause reason). */
+export const INTENT_NOTE_MAX_CHARS = 280;
 
 /**
  * An owner intent the control plane honors. Appended by the admin API under
@@ -213,6 +255,7 @@ export type ResearchIntent =
       /** Provenance: who, through what. The admin session id — never a reader identity. */
       readonly actor: string;
       readonly adminSessionRef: string;
+      /** The owner's words: a DISPATCH target or a PAUSE_RUNNER reason. Null otherwise. */
       readonly note: string | null;
     }
   | {
@@ -227,24 +270,57 @@ export type ResearchIntent =
       readonly detail: string;
     };
 
-/** The latest PAUSE/RESUME decides; RUN_CYCLE_NOW is pending until a HONORED record names it. */
+export type ResearchIntentRequest = Extract<ResearchIntent, { kind: "INTENT" }>;
+export type ResearchIntentHonored = Extract<ResearchIntent, { kind: "HONORED" }>;
+
+/**
+ * The owner's standing statement about the whole runner (ADM-5). `paused` is
+ * true while the latest PAUSE_RUNNER has no later RESUME_RUNNER. `honored` is
+ * the runner's own acknowledgement of that intent, when it has written one —
+ * a pause the runner never acknowledged is still the owner's pause, and the
+ * page says both facts.
+ */
+export interface RunnerPauseReading {
+  readonly paused: boolean;
+  readonly intent: ResearchIntentRequest | null;
+  readonly honored: ResearchIntentHonored | null;
+}
+
+/**
+ * The latest PAUSE/RESUME decides the research lane; the latest
+ * PAUSE_RUNNER/RESUME_RUNNER decides the runner; RUN_CYCLE_NOW and DISPATCH are
+ * pending until a HONORED record names them.
+ */
 export function readIntents(log: readonly ResearchIntent[]): {
   readonly paused: boolean;
   readonly pauseIntentId: string | null;
-  readonly pendingRunNow: readonly Extract<ResearchIntent, { kind: "INTENT" }>[];
+  readonly pendingRunNow: readonly ResearchIntentRequest[];
+  /** DISPATCH intents no cycle has honored yet, oldest first. */
+  readonly pendingDispatch: readonly ResearchIntentRequest[];
+  readonly runnerPause: RunnerPauseReading;
 } {
-  const intents = log.filter((r): r is Extract<ResearchIntent, { kind: "INTENT" }> => r.kind === "INTENT");
-  const honored = new Set(
-    log.filter((r): r is Extract<ResearchIntent, { kind: "HONORED" }> => r.kind === "HONORED").map((r) => r.honors),
-  );
-  const pauses = intents
-    .filter((i) => i.action === "PAUSE" || i.action === "RESUME")
-    .sort((a, b) => (a.requestedAt < b.requestedAt ? -1 : a.requestedAt > b.requestedAt ? 1 : 0));
+  const intents = log.filter((r): r is ResearchIntentRequest => r.kind === "INTENT");
+  const honoredRecords = log.filter((r): r is ResearchIntentHonored => r.kind === "HONORED");
+  const honored = new Set(honoredRecords.map((r) => r.honors));
+  const byTime = (a: ResearchIntentRequest, b: ResearchIntentRequest) =>
+    a.requestedAt < b.requestedAt ? -1 : a.requestedAt > b.requestedAt ? 1 : 0;
+  const pauses = intents.filter((i) => i.action === "PAUSE" || i.action === "RESUME").sort(byTime);
   const last = pauses.at(-1) ?? null;
+  const runnerPauses = intents
+    .filter((i) => i.action === "PAUSE_RUNNER" || i.action === "RESUME_RUNNER")
+    .sort(byTime);
+  const lastRunner = runnerPauses.at(-1) ?? null;
+  const runnerPaused = lastRunner?.action === "PAUSE_RUNNER";
   return {
     paused: last?.action === "PAUSE",
     pauseIntentId: last?.action === "PAUSE" ? last.intentId : null,
     pendingRunNow: intents.filter((i) => i.action === "RUN_CYCLE_NOW" && !honored.has(i.intentId)),
+    pendingDispatch: intents.filter((i) => i.action === "DISPATCH" && !honored.has(i.intentId)).sort(byTime),
+    runnerPause: {
+      paused: runnerPaused,
+      intent: runnerPaused ? lastRunner : null,
+      honored: runnerPaused ? (honoredRecords.find((h) => h.honors === lastRunner!.intentId) ?? null) : null,
+    },
   };
 }
 

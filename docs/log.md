@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-09-04 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **185 sessions.**
+Newest first. **186 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -32,6 +32,14 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NH324** — Close reader delivery gaps across the canonical dataset-to-surface registry. Ballot, map, officials, meetings, funding and Ask must share eligible canonical truth; autonomous acquisitions and unresolved identities remain withheld. Prove the four pilot ZIPs, exhaustive census, deployment tracing and exact-head production shipment.
 
 **Needs Sean.** Nothing.
+
+## admin-feedback-9-4-nonhunt · 2026-09-04
+
+**What it started.** 1 row(s) opened, 1 still open.
+
+- **NH325** — From the owner's 9.4.26 admin feedback (ADM-8). The Deploy fleet control on Pilot health takes plain words such as 'deep dive on Illinois' and the runner puts every REGISTERED unit that matches first. Nothing is registered for Illinois: no data/states/il/jurisdictions/il.json, no candidate universe, and REGISTERED_STATES in lib/control-plane/scheduler/providers/local-jurisdictions.ts names az, nh and nj only. So a dispatch to Illinois is honored with the sentence 'Illinois is not enumerated yet' and moves nothing. WHAT IS NEEDED: your approval to enumerate a state on request, and the rule for it. WHY THE MACHINE CANNOT PROCEED: enumerating a state registers its bodies' own sites as sources, and CLAUDE.md puts adding an external source on the ask-before list by name; a button may reorder registered work but may not enlarge the denominator (RULING 273). WHAT CONTINUES WITHOUT IT: every dispatch naming AZ, NH or NJ works today; a dispatch naming another state records the honest sentence on the dashboard. *(open)*
+
+**Needs Sean.** NH325
 
 ## Codex reader last-mile closure · 2026-09-04
 

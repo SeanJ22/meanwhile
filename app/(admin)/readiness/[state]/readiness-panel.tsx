@@ -10,7 +10,7 @@
  */
 import { useMemo, useState } from "react";
 
-import type { Held, Measured } from "@/lib/control-plane/owner-surface.ts";
+import type { Measured } from "@/lib/control-plane/owner-surface.ts";
 import {
   GATE_DEFINITION,
   GATE_LABEL,
@@ -29,22 +29,9 @@ import {
   rowIsGatedOnOperator,
 } from "@/lib/control-plane/readiness/model.ts";
 
-const STATE_CLASS: Record<CellState, string> = {
-  CURRENT: "rq-current",
-  PARTIAL_OR_STALE: "rq-partial",
-  NOT_WALKED: "rq-notwalked",
-  ARGUED_ABSENT: "rq-argued",
-  BLOCKED: "rq-blocked",
-  GATED_ON_OPERATOR: "rq-gated",
-};
-const STATE_HUMAN: Record<CellState, string> = {
-  CURRENT: "current",
-  PARTIAL_OR_STALE: "partial or stale",
-  NOT_WALKED: "not walked",
-  ARGUED_ABSENT: "argued absent",
-  BLOCKED: "blocked",
-  GATED_ON_OPERATOR: "gated on you",
-};
+// The swatches, legend and tiles are the console's shared primitives (9.4.26):
+// one implementation for this panel and for Pilot Health.
+import { STATE_CLASS, STATE_HUMAN, ReadinessLegend, Tile, heldFigure } from "../../console-ui.tsx";
 /** The panel's own display label for a coverage tier (introduced here — §5.4). */
 const TIER_DISPLAY: Record<string, string> = {
   TIER_0: "Level 0",
@@ -174,7 +161,7 @@ export function ReadinessPanel(props: {
       <SummaryBand snapshot={snapshot} />
 
       <h2>Capabilities</h2>
-      <Legend />
+      <ReadinessLegend />
       <div className="rq-gridwrap">
         <table className="rq-grid">
           <thead>
@@ -248,26 +235,6 @@ export function ReadinessPanel(props: {
   );
 }
 
-function Legend() {
-  const items: [CellState, string][] = [
-    ["CURRENT", "current"],
-    ["PARTIAL_OR_STALE", "partial or stale"],
-    ["NOT_WALKED", "not walked"],
-    ["ARGUED_ABSENT", "argued absent"],
-    ["BLOCKED", "blocked"],
-    ["GATED_ON_OPERATOR", "gated on you"],
-  ];
-  return (
-    <div className="rq-legend">
-      {items.map(([s, label]) => (
-        <span key={s}>
-          <i className={`rq-cell ${STATE_CLASS[s]}`} /> {label}
-        </span>
-      ))}
-    </div>
-  );
-}
-
 function RowsForDomain(props: {
   domain: string;
   rows: readonly CapabilityRow[];
@@ -324,22 +291,6 @@ function SummaryBand({ snapshot }: { snapshot: ReadinessStateSnapshot }) {
         gapText={s.timeSinceLastFullPass.held ? null : s.timeSinceLastFullPass.gap.says}
       />
       <Tile figure={String(s.gatedOnOperatorCount)} caption="Cells gated on you" />
-    </div>
-  );
-}
-
-function Tile(props: {
-  figure: string;
-  caption: string;
-  held?: Held<Measured>;
-  gapText?: string | null;
-}) {
-  const gapText =
-    props.gapText ?? (props.held && !props.held.held ? props.held.gap.says : null);
-  return (
-    <div className="rq-tile">
-      <div className="rq-figure">{props.figure}</div>
-      <div className="rq-caption">{gapText ?? props.caption}</div>
     </div>
   );
 }
@@ -536,9 +487,6 @@ function sortZips(zips: readonly ZipRow[], sort: ZipSort): ZipRow[] {
 }
 function popValue(z: ZipRow): number {
   return z.population.held ? z.population.value.value : -1;
-}
-function heldFigure(h: Held<Measured>): string {
-  return h.held ? `${h.value.value} / ${h.value.denominator}` : "—";
 }
 function shortDate(iso: string): string {
   const d = new Date(iso);

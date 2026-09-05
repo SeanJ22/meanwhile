@@ -1,34 +1,14 @@
 {
   "entries": [
     {
-      "file": "components/map/popup/meeting-records.tsx",
-      "text": "Member name unavailable",
-      "reason": "Names only a missing member-name field in our held roll-call projection. It never claims the clerk omitted the name, never substitutes another person, and preserves the recorded vote value independently. This is an OURS field gap under R254."
-    },
-    {
-      "file": "components/map/popup/meeting-records.tsx",
-      "text": "Vote value unavailable",
-      "reason": "Names only a missing value in our held roll-call projection. It never infers an abstention, nonattendance, a failed motion or a publisher absence from null, preserving the separate member identity under R254."
-    },
-    {
       "file": "app/(admin)/admin/login/page.tsx",
       "text": "Sign in to continue.",
       "reason": "Not a claim about data. `why` is a REJECTION CLASS from middleware and this is the prompt shown when there is no rejection to explain — the owner simply arrived at the login. It asserts nothing about any record."
     },
     {
       "file": "app/(admin)/admin/page.tsx",
-      "text": "an unrecorded SHA",
-      "reason": "Names OUR gap and says so. A snapshot published without a resolvable HEAD is a fact about our publisher, and the wording puts it there rather than implying the SHA does not exist."
-    },
-    {
-      "file": "app/(admin)/admin/page.tsx",
       "text": "not recorded in this heartbeat",
       "reason": "The FIX for a prior `not scheduled` default, recorded rather than removed because the sweep matches any sentence-shaped fallback. A null nextCycleDueAt means the heartbeat did not carry one; the wording attributes the gap to our record and never claims the scheduler has nothing due."
-    },
-    {
-      "file": "app/(admin)/admin/page.tsx",
-      "text": "on an unrecorded date",
-      "reason": "Names OUR gap. `openedOn` is null when the tracker never captured an opened date (docs/tracker-opened.json records 225 unrecoverable), so this says we did not record it — never that the row has no age."
     },
     {
       "file": "components/ballot/candidate-card.tsx",
@@ -46,14 +26,24 @@
       "reason": "Not a claim about any government. The zip is unknown, so the sentence names the MAP VIEW instead of naming a place we have not established — which is the opposite of the defect: it refuses to put a place name where we have none."
     },
     {
-      "file": "components/officials/official-term-note.tsx",
-      "text": "Published roster",
-      "reason": "Labels an existing roster-source link only when the holder already carries a verbatim sourced term note and sourceUrl. It does not supply a missing note, organization, read date or civic finding. When sourceOrg is absent the link keeps its exact held URL with this record-class label; when the note or URL is absent the fallback never renders. Actual leaf controls in reader-roster-term-note.test.ts prove those boundaries."
+      "file": "components/map/popup/meeting-records.tsx",
+      "text": "Member name unavailable",
+      "reason": "Names only a missing member-name field in our held roll-call projection. It never claims the clerk omitted the name, never substitutes another person, and preserves the recorded vote value independently. This is an OURS field gap under R254."
+    },
+    {
+      "file": "components/map/popup/meeting-records.tsx",
+      "text": "Vote value unavailable",
+      "reason": "Names only a missing value in our held roll-call projection. It never infers an abstention, nonattendance, a failed motion or a publisher absence from null, preserving the separate member identity under R254."
     },
     {
       "file": "components/map/zip-switcher.tsx",
       "text": "zip code",
       "reason": "An input PLACEHOLDER, not rendered prose about a subject. It tells the reader what to type; it asserts nothing about anything we hold."
+    },
+    {
+      "file": "components/officials/official-term-note.tsx",
+      "text": "Published roster",
+      "reason": "Labels an existing roster-source link only when the holder already carries a verbatim sourced term note and sourceUrl. It does not supply a missing note, organization, read date or civic finding. When sourceOrg is absent the link keeps its exact held URL with this record-class label; when the note or URL is absent the fallback never renders. Actual leaf controls in reader-roster-term-note.test.ts prove those boundaries."
     }
   ]
 }

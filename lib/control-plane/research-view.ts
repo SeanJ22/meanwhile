@@ -39,6 +39,7 @@ import {
 } from "./owner-surface.ts";
 import type { ControlPlaneRepositories } from "./repository/types.ts";
 import {
+  INTENT_NOTE_MAX_CHARS,
   RESEARCH_BOUNDS,
   RESEARCH_FORMAT_VERSION,
   RESEARCH_INTENT_ACTIONS,
@@ -198,11 +199,17 @@ export function parseResearchIntentAction(raw: unknown): ResearchIntentAction | 
     : null;
 }
 
-/** The intent the admin route appends. The session id is provenance, never a reader identity. */
+/**
+ * The intent the admin route appends. The session id is provenance, never a
+ * reader identity. `note` is the owner's own words — a DISPATCH target or a
+ * PAUSE_RUNNER reason — and is null for every other action.
+ */
 export function buildResearchIntent(
   action: ResearchIntentAction,
   requestedAt: string,
   adminSessionRef: string,
+  note: string | null = null,
+  actor = "owner (admin session)",
 ): ResearchIntentRecord {
   return {
     formatVersion: RESEARCH_FORMAT_VERSION,
@@ -210,10 +217,33 @@ export function buildResearchIntent(
     intentId: `${action}:${requestedAt}`,
     action,
     requestedAt,
-    actor: "owner (admin session)",
+    actor,
     adminSessionRef,
-    note: null,
+    note,
   };
+}
+
+/**
+ * Validate the owner's note for an action (ADM-8 dispatch target, ADM-5 pause
+ * reason). A DISPATCH without words is refused: "deploy the fleet" to nowhere
+ * is not an instruction. Everything else may carry a note or not. Returns the
+ * trimmed note, or a refusal sentence.
+ */
+export function validateIntentNote(
+  action: ResearchIntentAction,
+  raw: unknown,
+): { readonly ok: true; readonly note: string | null } | { readonly ok: false; readonly detail: string } {
+  const text = typeof raw === "string" ? raw.replace(/\s+/g, " ").trim() : "";
+  if (text.length > INTENT_NOTE_MAX_CHARS) {
+    return { ok: false, detail: `the note is longer than ${INTENT_NOTE_MAX_CHARS} characters` };
+  }
+  if (action === "DISPATCH" && text.length === 0) {
+    return { ok: false, detail: "a DISPATCH needs a target — say what the fleet should go do" };
+  }
+  if (action !== "DISPATCH" && action !== "PAUSE_RUNNER" && action !== "RESUME_RUNNER") {
+    return { ok: true, note: null };
+  }
+  return { ok: true, note: text.length === 0 ? null : text };
 }
 
 export async function appendResearchIntent(

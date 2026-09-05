@@ -41,6 +41,8 @@ import {
 } from "@/lib/control-plane/admin-auth.ts";
 import { appendDecisionIntent, openControlPlane } from "@/lib/control-plane/admin-data.ts";
 import {
+  ANSWERED_IN_OWN_WORDS,
+  OWNER_ANSWER_MAX_CHARS,
   OWNER_SURFACE_FORMAT_VERSION,
   type OwnerDecisionIntent,
 } from "@/lib/control-plane/owner-surface.ts";
@@ -73,9 +75,28 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const subjectId = String(form.get("subjectId") ?? "").trim();
   const chosenOption = String(form.get("chosenOption") ?? "").trim();
   const consequenceShown = String(form.get("consequenceShown") ?? "").trim();
+  /*
+   * ADM-4 (9.4.26): the owner may answer in his own words instead of, or as
+   * well as, picking an option. Whitespace is normalised and the length is
+   * bounded; the field name is `ownerAnswer` because the reader-level names
+   * (`answerText`, `freeText`, `comment`) are refused at append time.
+   */
+  const ownerAnswerRaw = String(form.get("ownerAnswer") ?? "")
+    .replace(/\r\n/g, "\n")
+    .trim();
+  if (ownerAnswerRaw.length > OWNER_ANSWER_MAX_CHARS) {
+    return NextResponse.json(
+      { error: `ownerAnswer is longer than ${OWNER_ANSWER_MAX_CHARS} characters` },
+      { status: 400 },
+    );
+  }
+  const ownerAnswer = ownerAnswerRaw === "" ? null : ownerAnswerRaw;
 
-  if (subjectId === "" || chosenOption === "") {
-    return NextResponse.json({ error: "subjectId and chosenOption are required" }, { status: 400 });
+  if (subjectId === "" || (chosenOption === "" && ownerAnswer === null)) {
+    return NextResponse.json(
+      { error: "subjectId and either chosenOption or ownerAnswer are required" },
+      { status: 400 },
+    );
   }
 
   const opened = await openControlPlane();
@@ -94,13 +115,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // repositories treat a byte-identical retry as a no-op success.
     intentId: `${subjectId}:${decidedAt}`,
     subjectId,
-    chosenOption,
+    // An answer typed with no option picked is recorded under this literal so
+    // the applier can tell "he chose option X" from "he wrote his own answer".
+    chosenOption: chosenOption === "" ? ANSWERED_IN_OWN_WORDS : chosenOption,
     consequenceShown,
     decidedAt,
     state: "PENDING_CANONICALIZATION",
     canonicalRef: null,
     refusedReason: null,
     adminSessionRef: verdict.session.sid,
+    ownerAnswer,
   };
 
   const wrote = await appendDecisionIntent(opened.repos, intent, decidedAt);

@@ -1,0 +1,489 @@
+import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { hostname, tmpdir } from "node:os";
+import { join } from "node:path";
+import test from "node:test";
+
+import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
+import { buildResearchIntent } from "../lib/control-plane/research-view.ts";
+import {
+  RESEARCH_FORMAT_VERSION,
+  RESEARCH_INTENT_LOG_KEY,
+  readIntents,
+  type ResearchIntentAction,
+  type ResearchIntentHonored,
+  type ResearchIntentRequest,
+} from "../lib/control-plane/scheduler/research-policy.ts";
+import {
+  describeDispatchMatch,
+  parseDispatchTarget,
+  unitMatchesTarget,
+} from "../lib/control-plane/scheduler/dispatch-target.ts";
+import { REGISTERED_STATES } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
+import { placeFirstRows } from "../lib/control-plane/scheduler/shadow-loop.ts";
+
+/**
+ * **THE STANDING RUNNER HONORS THE OWNER'S NEW INTENTS.** (ADM-1, ADM-5,
+ * ADM-8 of the 9.4.26 admin feedback, 2026-09-04.)
+ *
+ * Three defects, one lane:
+ *
+ *   ADM-1  nothing scheduled `pnpm owner:publish` / `pnpm readiness:publish`,
+ *          so the deployed console went stale whenever a person stopped
+ *          running them. The runner now publishes after every digest.
+ *   ADM-5  the owner disabled the runner's scheduled task on purpose and the
+ *          dashboard could only show a red SILENT. PAUSE_RUNNER / RESUME_RUNNER
+ *          are the owner's record; the runner idles on them, acknowledges
+ *          them, and keeps its heartbeat honest with `pause` set.
+ *   ADM-8  "deploy the fleet": the owner's words are parsed into a target and
+ *          the matching registered units go FIRST in both lanes — a reorder,
+ *          never a new obligation.
+ *
+ * The pure contracts are pinned by value. The scripts are long-running or
+ * host-bound (a Windows task, a control plane), so they are pinned as SOURCE
+ * TEXT with positive controls, exactly as `pilot-task-installer.test.ts` pins
+ * the installer; and `runner-pause-note.mts` is PROVEN by spawning it against
+ * a throwaway file store — never the deployed plane.
+ */
+
+const ROOT = process.cwd();
+const source = (rel: string): string => readFileSync(join(ROOT, rel), "utf8").replace(/\r\n/g, "\n");
+
+const intent = (action: ResearchIntentAction, at: string, note: string | null = null): ResearchIntentRequest =>
+  buildResearchIntent(action, at, "session:test", note, "owner (test)");
+
+const honored = (of: ResearchIntentRequest, at: string, detail = "acknowledged"): ResearchIntentHonored => ({
+  formatVersion: RESEARCH_FORMAT_VERSION,
+  kind: "HONORED",
+  intentId: `${of.intentId}:honored`,
+  honors: of.intentId,
+  action: of.action,
+  honoredAt: at,
+  honoredBy: "pilot-runner@test#1",
+  detail,
+});
+
+function fails(fn: () => void): boolean {
+  try {
+    fn();
+    return false;
+  } catch {
+    return true;
+  }
+}
+
+/* ------------------------------------------------------------- readIntents */
+
+test("readIntents: pendingDispatch lists the unhonored DISPATCH intents oldest first and drops the honored ones", () => {
+  const later = intent("DISPATCH", "2026-09-04T10:00:00.000Z", "deep dive on Illinois");
+  const earlier = intent("DISPATCH", "2026-09-04T09:00:00.000Z", "NH");
+  const done = intent("DISPATCH", "2026-09-04T11:00:00.000Z", "Arizona");
+  const reading = readIntents([later, done, earlier, honored(done, "2026-09-04T11:05:00.000Z")]);
+  assert.deepEqual(
+    reading.pendingDispatch.map((i) => i.intentId),
+    [earlier.intentId, later.intentId],
+    "oldest first, honored excluded",
+  );
+  assert.deepEqual(
+    reading.pendingDispatch.map((i) => i.note),
+    ["NH", "deep dive on Illinois"],
+    "the owner's words travel on the pending intent",
+  );
+  assert.equal(reading.pendingRunNow.length, 0);
+  assert.equal(reading.runnerPause.paused, false, "a DISPATCH is not a pause");
+});
+
+test("readIntents: runnerPause reads paused, then honored, then cleared by RESUME_RUNNER, then paused again", () => {
+  const pause = intent("PAUSE_RUNNER", "2026-09-04T10:00:00.000Z", "pnpm pilot:stop on HOST");
+
+  const unacknowledged = readIntents([pause]).runnerPause;
+  assert.equal(unacknowledged.paused, true);
+  assert.equal(unacknowledged.intent?.intentId, pause.intentId);
+  assert.equal(unacknowledged.intent?.note, "pnpm pilot:stop on HOST");
+  assert.equal(unacknowledged.honored, null, "the runner has not acknowledged it yet, and the page says so");
+
+  const ack = honored(pause, "2026-09-04T10:01:00.000Z", "idling on the owner's pause; no cycle starts until RESUME_RUNNER");
+  const acknowledged = readIntents([pause, ack]).runnerPause;
+  assert.equal(acknowledged.paused, true);
+  assert.equal(acknowledged.honored?.honors, pause.intentId, "the honored lookup finds the runner's record");
+  assert.equal(acknowledged.honored?.detail, ack.detail);
+
+  const resume = intent("RESUME_RUNNER", "2026-09-04T10:30:00.000Z", "pnpm pilot:start on HOST");
+  const resumed = readIntents([pause, ack, resume]);
+  assert.equal(resumed.runnerPause.paused, false, "RESUME_RUNNER clears the pause");
+  assert.equal(resumed.runnerPause.intent, null);
+  assert.equal(resumed.runnerPause.honored, null);
+  assert.equal(resumed.pendingRunNow.length, 0, "a resume is not a RUN_CYCLE_NOW");
+  assert.equal(resumed.pendingDispatch.length, 0);
+
+  const again = intent("PAUSE_RUNNER", "2026-09-04T11:00:00.000Z", "maintenance");
+  const repaused = readIntents([pause, ack, resume, again]).runnerPause;
+  assert.equal(repaused.paused, true);
+  assert.equal(repaused.intent?.intentId, again.intentId, "the LATEST pause/resume decides");
+  assert.equal(repaused.honored, null, "the new pause has its own acknowledgement to earn");
+
+  /* The research-lane PAUSE and the runner pause are different statements. */
+  const lane = readIntents([intent("PAUSE", "2026-09-04T12:00:00.000Z")]);
+  assert.equal(lane.paused, true);
+  assert.equal(lane.runnerPause.paused, false, "a research-lane PAUSE never pauses the runner");
+});
+
+/* ------------------------------------------------------ the dispatch target */
+
+test("parseDispatchTarget reads the owner's words into state codes and terms", () => {
+  const illinois = parseDispatchTarget("deep dive on Illinois");
+  assert.deepEqual(illinois.states, ["il"]);
+  assert.deepEqual(illinois.stateNames, ["Illinois"]);
+  assert.deepEqual(illinois.terms, [], "deep / dive / on carry no target");
+
+  assert.deepEqual(parseDispatchTarget("NH").states, ["nh"], "an upper-case two-letter code is a state");
+
+  const arizona = parseDispatchTarget("in Arizona");
+  assert.deepEqual(arizona.states, ["az"], "'in' is a preposition here, never Indiana");
+  assert.deepEqual(arizona.terms, []);
+
+  const pima = parseDispatchTarget("Pima County campaign finance");
+  assert.deepEqual(pima.states, [], "no state named");
+  for (const term of ["pima", "campaign", "finance"]) assert.ok(pima.terms.includes(term), `terms carry ${term}`);
+  assert.ok(!pima.terms.includes("county"), "'county' is filler");
+
+  const both = parseDispatchTarget("Arizona and New Hampshire");
+  assert.deepEqual([...both.states].sort(), ["az", "nh"], "both states, whichever was seen first");
+  assert.deepEqual([...both.stateNames].sort(), ["Arizona", "New Hampshire"]);
+  assert.deepEqual(both.terms, [], "'and' is filler");
+});
+
+test("unitMatchesTarget matches state codes as bounded tokens in every id shape, and terms as words", () => {
+  const unit = (id: string, subjectId = "") => ({ id, subjectId });
+  const arizona = parseDispatchTarget("Arizona");
+  assert.equal(unitMatchesTarget(arizona, unit("az-sos-cfs-bulk-ftp", "ocd-division/country:us/state:az")), true);
+  assert.equal(unitMatchesTarget(arizona, unit("AZ_SEETHEMONEY_PLAIN_FETCH", "ocd-division/country:us/state:az")), true);
+  assert.equal(unitMatchesTarget(arizona, unit("ocd-division/country:us/state:az/county:pima", "ocd-division/country:us/state:az/county:pima")), true);
+  assert.equal(unitMatchesTarget(arizona, unit("nh-cfs-transaction-detail", "ocd-division/country:us/state:nh")), false);
+
+  const illinois = parseDispatchTarget("deep dive on Illinois");
+  assert.equal(unitMatchesTarget(illinois, unit("nh-cfs-transaction-detail", "ocd-division/country:us/state:nh")), false, "il matches nothing registered for nh");
+  assert.equal(unitMatchesTarget(illinois, unit("az-sos-cfs-bulk-ftp", "ocd-division/country:us/state:az")), false);
+
+  const indiana = parseDispatchTarget("IN");
+  assert.deepEqual(indiana.states, ["in"]);
+  assert.equal(
+    unitMatchesTarget(indiana, unit("nh-cfs-transaction-detail", "ocd-division/country:us/state:nh")),
+    false,
+    "'in' inside 'transaction' is not a state token",
+  );
+
+  const pima = parseDispatchTarget("Pima County campaign finance");
+  assert.equal(unitMatchesTarget(pima, unit("ocd-division/country:us/state:az/county:pima")), true, "the term pima matches");
+  assert.equal(unitMatchesTarget(pima, unit("AZ_CAMPAIGN_FINANCE_BULK")), true, "the term campaign matches");
+  assert.equal(unitMatchesTarget(pima, unit("nh-cfs-transaction-detail", "ocd-division/country:us/state:nh")), false);
+
+  const scoped = parseDispatchTarget("Arizona campaign finance");
+  assert.equal(unitMatchesTarget(scoped, unit("AZ_CAMPAIGN_FINANCE_BULK")), true, "state and a term");
+  assert.equal(unitMatchesTarget(scoped, unit("az-sos-cfs-bulk-ftp", "ocd-division/country:us/state:az")), false, "state but no term");
+  assert.equal(unitMatchesTarget(scoped, unit("NH_CAMPAIGN_FINANCE_BULK", "ocd-division/country:us/state:nh")), false, "term but the wrong state");
+});
+
+test("describeDispatchMatch names the missing registry, the registry failure, and the placement — with the denominator", () => {
+  assert.deepEqual([...REGISTERED_STATES], ["az", "nh", "nj"], "the premise: Illinois has no jurisdiction registry yet");
+
+  const illinois = describeDispatchMatch(parseDispatchTarget("deep dive on Illinois"), 0, 120, REGISTERED_STATES);
+  assert.match(illinois, /matched 0 of 120 registered units/);
+  assert.match(illinois, /Illinois is not enumerated yet: no jurisdiction registry exists for it/);
+  assert.match(illinois, /goes to you as a row, never a button/);
+
+  const nothing = describeDispatchMatch(parseDispatchTarget("Arizona"), 0, 0, REGISTERED_STATES);
+  assert.match(nothing, /registry failure, not an idle fleet/);
+
+  const words = describeDispatchMatch(parseDispatchTarget("Pima County campaign finance"), 0, 120, REGISTERED_STATES);
+  assert.match(words, /matched 0 of 120 registered units\. Nothing registered carries those words\./);
+
+  const placed = describeDispatchMatch(parseDispatchTarget("Arizona"), 4, 120, REGISTERED_STATES);
+  assert.match(placed, /matched 4 of 120 registered units for Arizona; they were placed first in both lanes this cycle/);
+});
+
+test("placeFirstRows moves the dispatched rows to the front, keeps both groups' order, and is a no-op with nothing dispatched", () => {
+  const row = (id: string) => ({ obligation: { id }, nextDueAt: id });
+  const rows = [row("a"), row("b"), row("c"), row("d")];
+  assert.deepEqual(
+    placeFirstRows(rows, new Set(["c", "a"])).map((r) => r.obligation.id),
+    ["a", "c", "b", "d"],
+    "dispatched first, in their original relative order; the rest untouched",
+  );
+  assert.equal(placeFirstRows(rows, new Set()), rows, "an empty set returns the rows as they were");
+  assert.equal(placeFirstRows(rows, undefined), rows);
+  assert.deepEqual(
+    placeFirstRows(rows, new Set(["zzz"])).map((r) => r.obligation.id),
+    ["a", "b", "c", "d"],
+    "a dispatch that matches nothing due changes nothing — it never adds a row",
+  );
+});
+
+/* ------------------------------------------------- pilot-runner.mts, as text */
+
+/** ADM-1: the console is published after the digest, by two children, and a failure is printed. */
+function checkRunnerPublishesConsole(src: string): void {
+  const list = src.match(/const CONSOLE_PUBLISHERS[^\n]*\n[\s\S]*?\n\];/);
+  assert.ok(list, "pilot-runner.mts names no CONSOLE_PUBLISHERS list");
+  const snapshot = list[0].indexOf("scripts/publish-owner-snapshot.mts");
+  const readiness = list[0].indexOf("scripts/readiness-refresh.mts");
+  assert.ok(snapshot >= 0, "publishConsole does not run publish-owner-snapshot.mts");
+  assert.ok(readiness >= 0, "publishConsole does not run readiness-refresh.mts");
+  assert.ok(snapshot < readiness, "the owner snapshot must publish before readiness");
+  assert.match(list[0], /"scripts\/readiness-refresh\.mts", "--target=control-plane"/, "readiness-refresh.mts is not asked to publish to the control plane");
+
+  const fn = src.match(/function publishConsole\(\): void \{[\s\S]*?\n\}/);
+  assert.ok(fn, "pilot-runner.mts has no publishConsole()");
+  const body = fn[0];
+  assert.match(body, /for \(const publisher of CONSOLE_PUBLISHERS\)/, "publishConsole does not run every listed publisher");
+  assert.match(body, /spawnSync\(/, "each publisher is a child process");
+  assert.match(body, /"--env-file=\.env\.local", "--experimental-strip-types", \.\.\.publisher\.args/, "a publisher is not run the way the runner's own scripts are");
+  assert.match(body, /timeout: PUBLISH_TIMEOUT_MS/, "no ceiling on a publisher");
+  assert.match(src, /const PUBLISH_TIMEOUT_MS = 5 \* 60_000/, "the publisher ceiling is not five minutes");
+  assert.match(body, /console publish: \$\{publisher\.name\} OK/, "no OK line");
+  assert.match(body, /console publish: \$\{publisher\.name\} FAILED exit/, "no FAILED line");
+  assert.doesNotMatch(body, /\bthrow\b/, "a publish failure is printed, never thrown");
+
+  const call = src.indexOf("\n  publishConsole();");
+  assert.ok(call >= 0, "the loop never calls publishConsole()");
+  const delivered = src.indexOf("const delivered = deliver(");
+  const sleep = src.indexOf("await sleepUnlessRunNow(");
+  assert.ok(delivered >= 0 && sleep >= 0, "the loop's delivery and sleep anchors moved");
+  assert.ok(call > delivered, "publishConsole() runs BEFORE the digest is delivered");
+  assert.ok(call < sleep, "publishConsole() runs after the inter-cycle sleep, not after the digest");
+  assert.ok(call > src.indexOf("console.log(`  ${headline}`)"), "publishConsole() runs before the headline log");
+}
+
+/** ADM-5 / ADM-8: the runner reads every owner intent between cycles from one read. */
+function checkRunnerHonorsOwnerIntents(src: string): void {
+  const says = src.match(/async function ownerSays\(\): Promise<OwnerSays> \{[\s\S]*?\n\}/);
+  assert.ok(says, "pilot-runner.mts has no ownerSays()");
+  const body = says[0];
+  assert.match(body, /readIntents\(log\)/, "ownerSays does not read the intent log through readIntents");
+  assert.equal((body.match(/researchIntents\.read\(/g) ?? []).length, 1, "ownerSays must read the log exactly once");
+  assert.match(body, /\.runnerPause\b/, "ownerSays never looks at runnerPause");
+  assert.match(body, /\.pendingRunNow\.length > 0/, "a pending RUN_CYCLE_NOW no longer ends the sleep");
+  assert.match(body, /\.pendingDispatch\.length > 0/, "a pending DISPATCH does not end the sleep early");
+  assert.match(body, /return "HOLD"/, "a standing pause does not hold the cycle");
+  assert.match(body, /idling on the owner's pause; no cycle starts until RESUME_RUNNER/, "the pause's HONORED detail is missing");
+  assert.match(body, /resumed; next cycle starts now/, "the resume's HONORED detail is missing");
+  assert.match(body, /runner paused by owner since \$\{pause\.intent\.requestedAt\}: /, "the pause is not printed with its reason");
+
+  const beat = src.match(/async function beatWhilePaused\([\s\S]*?\n\}/);
+  assert.ok(beat, "no beatWhilePaused()");
+  assert.match(beat[0], /pause: \{ intentId: intent\.intentId, since: intent\.requestedAt, note: intent\.note \}/, "the paused beat does not carry the pause");
+  assert.match(beat[0], /runnerHeartbeat\.put\(RUNNER_ID/, "no create path for a first beat");
+  assert.match(beat[0], /runnerHeartbeat\.compareAndSet\(RUNNER_ID, current\.revision/, "an existing beat is not moved by compareAndSet");
+  assert.match(beat[0], /\.\.\.base,\s*beatAt: now/, "the paused beat does not keep the last beat's fields");
+  assert.match(src, /const PAUSE_BEAT_MS = 30 \* 60_000/, "the paused beat cadence is not thirty minutes");
+  assert.match(src, /const POLL_MS = 60_000/, "the poll is no longer once a minute");
+
+  const honor = src.match(/async function honorRunnerIntent\([\s\S]*?\n\}/);
+  assert.ok(honor, "no honorRunnerIntent()");
+  assert.match(honor[0], /kind: "HONORED"/);
+  assert.match(honor[0], /intentId: id,\s*honors: intent\.intentId/);
+  assert.match(honor[0], /honoredBy: `pilot-runner@\$\{hostname\(\)\}#\$\{process\.pid\}`/, "honoredBy does not name pilot-runner@host#pid");
+
+  assert.match(src, /\n  await holdWhilePaused\(\);\n  cycle \+= 1;/, "the loop does not hold on the owner's pause before a cycle");
+  assert.match(src, /if \(\(await ownerSays\(\)\) === "START_NOW"\) return;/, "the sleep does not end on the owner's word");
+}
+
+test("pilot-runner.mts publishes the console after every digest (ADM-1)", () => {
+  checkRunnerPublishesConsole(source("scripts/pilot-runner.mts"));
+});
+
+test("pilot-runner.mts honors PAUSE_RUNNER / RESUME_RUNNER and ends the sleep on a pending DISPATCH (ADM-5, ADM-8)", () => {
+  checkRunnerHonorsOwnerIntents(source("scripts/pilot-runner.mts"));
+});
+
+test("POSITIVE CONTROL: a runner that drops the publish call, the readiness target, or the dispatch check fails its checker", () => {
+  const src = source("scripts/pilot-runner.mts");
+
+  const noCall = src.replace("\n  publishConsole();", "\n  /* not published */");
+  assert.notEqual(noCall, src, "the mutation did not apply; the test would prove nothing");
+  assert.ok(fails(() => checkRunnerPublishesConsole(noCall)), "a loop that never publishes passed");
+
+  const noTarget = src.replace('"scripts/readiness-refresh.mts", "--target=control-plane"', '"scripts/readiness-refresh.mts"');
+  assert.notEqual(noTarget, src);
+  assert.ok(fails(() => checkRunnerPublishesConsole(noTarget)), "a readiness refresh that publishes nowhere passed");
+
+  const noDispatch = src.replace("reading.pendingDispatch.length > 0", "false");
+  assert.notEqual(noDispatch, src);
+  assert.ok(fails(() => checkRunnerHonorsOwnerIntents(noDispatch)), "a runner blind to DISPATCH passed");
+
+  const noHold = src.replace("\n  await holdWhilePaused();\n  cycle += 1;", "\n  cycle += 1;");
+  assert.notEqual(noHold, src);
+  assert.ok(fails(() => checkRunnerHonorsOwnerIntents(noHold)), "a runner that cycles through a pause passed");
+});
+
+/* --------------------------------------------- freshness-shadow.mts, as text */
+
+function checkCycleHonorsDispatch(src: string): void {
+  assert.match(src, /for \(const pending of intents\.pendingDispatch\)/, "the cycle never walks pendingDispatch");
+  assert.match(src, /parseDispatchTarget\(pending\.note \?\? ""\)/, "the target is not parsed from the owner's note");
+  assert.match(src, /allUnits\.filter\(\(u\) =>\s*unitMatchesTarget\(target, \{ id: u\.obligation\.id, subjectId: u\.obligation\.subjectId \}\)/, "matching does not run over the whole registered universe");
+  assert.match(src, /describeDispatchMatch\(target, matched\.length, allUnits\.length, REGISTERED_STATES\)/, "the HONORED detail is not the shared sentence");
+  assert.match(src, /placeFirstRows\(dueThisCycle, dispatchPriority\)/, "the deterministic lane is not reordered behind the dispatch");
+  assert.match(src, /modelOrder\.ordered\.filter\(\(b\) => dispatchPriority\.has\(b\.row\.id\)\)/, "the Scout lane is not reordered behind the dispatch");
+  assert.match(src, /placeFirst: dispatchPriority,/, "the dispatcher itself is not told to place the dispatch first");
+  assert.match(src, /owner dispatch: \$\{detail\}/, "the dispatch line is not printed");
+  assert.match(src, /ownerDispatch: ownerDispatches\.at\(-1\) \?\? null/, "the research state does not carry ownerDispatch");
+
+  const read = src.indexOf("const intents = readIntents(intentLog);");
+  const sort = src.indexOf("dueThisCycle.sort(");
+  const bands = src.indexOf("orderByReaderImpact(");
+  assert.ok(read >= 0 && sort >= 0 && bands >= 0, "an anchor moved");
+  assert.ok(read < sort, "the intent log is read AFTER the deterministic sort, so a dispatch cannot reorder it");
+  assert.ok(sort < bands, "the reader-impact bands come before the deterministic order");
+
+  assert.match(src, /"model lane closed for this cycle"/, "a lane PAUSE gets no HONORED record");
+  assert.match(src, /"model lane reopened"/, "a lane RESUME gets no HONORED record");
+  assert.match(src, /pause: null,/, "the working heartbeat does not say it is not paused");
+}
+
+test("freshness-shadow.mts honors DISPATCH before ordering both lanes and acknowledges the lane PAUSE / RESUME", () => {
+  checkCycleHonorsDispatch(source("scripts/freshness-shadow.mts"));
+  const loop = source("lib/control-plane/scheduler/shadow-loop.ts");
+  assert.match(loop, /placeFirstRows\(\[\.\.\.due, \.\.\.alsoDue\], input\.placeFirst\)/, "runCycle does not apply placeFirst to its own due order");
+  assert.match(loop, /readonly placeFirst\?: ReadonlySet<string>;/, "CycleInput has no optional placeFirst");
+});
+
+test("POSITIVE CONTROL: a cycle that reads intents after the sort, or drops the dispatcher's placeFirst, fails the checker", () => {
+  const src = source("scripts/freshness-shadow.mts");
+  const noPlace = src.replace("placeFirst: dispatchPriority,", "");
+  assert.notEqual(noPlace, src);
+  assert.ok(fails(() => checkCycleHonorsDispatch(noPlace)), "a cycle whose dispatcher ignores the dispatch passed");
+
+  const late = src.replace("const intents = readIntents(intentLog);", "").replace("const dueOrdered = ", "const intents = readIntents(intentLog);\nconst dueOrdered = ");
+  assert.notEqual(late, src);
+  assert.ok(fails(() => checkCycleHonorsDispatch(late)), "a cycle that reads intents after the sort passed");
+});
+
+/* ------------------------------------------------- pilot-task.ps1, as text */
+
+/** The body of one `"<name>" { ... }` case in the script's switch. */
+function caseBody(src: string, name: string): string {
+  const open = src.indexOf(`\n    "${name}" {`);
+  assert.ok(open >= 0, `no "${name}" case in the switch`);
+  const from = open + 1;
+  const nextCase = src.indexOf('\n    "', from);
+  const closing = src.indexOf("\n}", from);
+  const end = [nextCase, closing].filter((i) => i > from).sort((a, b) => a - b)[0];
+  assert.ok(end !== undefined, `"${name}" case never ends`);
+  return src.slice(from, end);
+}
+
+function checkTaskWritesPauseNotes(src: string): void {
+  const fn = src.match(/function Invoke-PauseNote \{[\s\S]*?\n\}/);
+  assert.ok(fn, "pilot-task.ps1 has no Invoke-PauseNote function");
+  const body = fn[0];
+  assert.match(body, /scripts\/runner-pause-note\.mts/, "the note function does not run runner-pause-note.mts");
+  assert.match(body, /"--action=\$IntentAction"/);
+  assert.match(body, /"--note=\$Note"/);
+  assert.match(body, /"--by=\$By"/);
+  assert.match(body, /catch \{/, "the note is not wrapped in try/catch");
+  assert.doesNotMatch(body, /\n\s*exit\b|\bthrow\b/, "the note function must never change an action's exit semantics");
+  assert.match(body, /\$ErrorActionPreference = "Continue"/, "a stderr line could be promoted to a terminating error");
+  for (const ch of body) assert.ok(ch.charCodeAt(0) < 128, `non-ASCII character in Invoke-PauseNote: U+${ch.charCodeAt(0).toString(16)}`);
+
+  const stop = caseBody(src, "stop");
+  assert.match(stop, /Invoke-PauseNote -IntentAction "PAUSE_RUNNER" -Note "pnpm pilot:stop on \$env:COMPUTERNAME" -By "pilot:stop"/, "stop writes no PAUSE_RUNNER note");
+  assert.ok(stop.indexOf("Invoke-PauseNote") > stop.indexOf("Stop-Process"), "stop writes the note before the process is stopped");
+
+  const disable = caseBody(src, "disable");
+  assert.match(disable, /Invoke-PauseNote -IntentAction "PAUSE_RUNNER" -Note "pnpm pilot:disable on \$env:COMPUTERNAME" -By "pilot:disable"/, "disable writes no PAUSE_RUNNER note");
+  assert.ok(disable.indexOf("Invoke-PauseNote") > disable.indexOf("Stop-Process"), "disable writes the note before the process is stopped");
+  assert.ok(disable.indexOf("Invoke-PauseNote") < disable.indexOf("$facts = Get-TaskFacts"), "disable's verdict is measured before the note, not after");
+
+  const start = caseBody(src, "start");
+  assert.match(start, /Invoke-PauseNote -IntentAction "RESUME_RUNNER" -Note "pnpm pilot:start on \$env:COMPUTERNAME" -By "pilot:start"/, "start writes no RESUME_RUNNER note");
+
+  /* Every double-quoted string in the script is ASCII: an em-dash inside one breaks PowerShell's parse. */
+  for (const [n, line] of src.split("\n").entries()) {
+    assert.doesNotMatch(line, /"[^"\n]*[^\x00-\x7f][^"\n]*"/, `line ${n + 1} carries a non-ASCII character inside a double-quoted string`);
+  }
+}
+
+test("pilot-task.ps1 stop / disable write PAUSE_RUNNER and start writes RESUME_RUNNER through runner-pause-note.mts, best effort, in ASCII", () => {
+  checkTaskWritesPauseNotes(source("scripts/pilot-task.ps1"));
+});
+
+test("POSITIVE CONTROL: a task script that drops a note call, or lets the note exit the action, fails the checker", () => {
+  const src = source("scripts/pilot-task.ps1");
+  const noStop = src.replace(/\n\s*Invoke-PauseNote -IntentAction "PAUSE_RUNNER" -Note "pnpm pilot:stop[^\n]*/, "");
+  assert.notEqual(noStop, src, "the mutation did not apply; the test would prove nothing");
+  assert.ok(fails(() => checkTaskWritesPauseNotes(noStop)), "a stop that writes no note passed");
+
+  const noStart = src.replace(/\n\s*Invoke-PauseNote -IntentAction "RESUME_RUNNER"[^\n]*/, "");
+  assert.notEqual(noStart, src);
+  assert.ok(fails(() => checkTaskWritesPauseNotes(noStart)), "a start that writes no note passed");
+
+  const exits = src.replace(/(function Invoke-PauseNote \{[\s\S]*?)(\n    catch \{)/, "$1\n        exit 1$2");
+  assert.notEqual(exits, src);
+  assert.ok(fails(() => checkTaskWritesPauseNotes(exits)), "a note that can exit the action passed");
+
+  const dash = src.replace('-Note "pnpm pilot:stop on $env:COMPUTERNAME"', '-Note "pnpm pilot:stop — on $env:COMPUTERNAME"');
+  assert.notEqual(dash, src);
+  assert.ok(fails(() => checkTaskWritesPauseNotes(dash)), "an em-dash inside a PowerShell string passed");
+});
+
+/* -------------------------------------------- runner-pause-note.mts, proven */
+
+function runNote(args: readonly string[]): { readonly status: number | null; readonly stdout: string; readonly stderr: string } {
+  const run = spawnSync(
+    process.execPath,
+    ["--experimental-strip-types", join(ROOT, "scripts", "runner-pause-note.mts"), ...args],
+    {
+      cwd: ROOT,
+      encoding: "utf8",
+      maxBuffer: 16 * 1024 * 1024,
+      /* No deployed plane can be reached from here: the variable is blank, which the reader treats as unset. */
+      env: { ...process.env, WTP_CONTROL_PLANE_DATABASE_URL: "" },
+    },
+  );
+  return { status: run.status, stdout: run.stdout ?? "", stderr: run.stderr ?? "" };
+}
+
+test("runner-pause-note.mts appends PAUSE_RUNNER then RESUME_RUNNER to a file store, naming the command and the host", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "wtp-pause-note-"));
+  try {
+    const paused = runNote(["--action=PAUSE_RUNNER", "--note=pnpm pilot:stop on TESTHOST", "--by=pilot:stop", `--file-store=${dir}`]);
+    assert.equal(paused.status, 0, `pause note exited ${paused.status}: ${paused.stdout}${paused.stderr}`);
+    assert.match(paused.stdout, /pause note recorded: PAUSE_RUNNER:/, "the intent id is not printed");
+
+    const repos = await createFileRepositories(dir);
+    const afterPause = await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY);
+    assert.equal(afterPause.length, 1, "exactly one record was appended");
+    const record = afterPause[0];
+    assert.equal(record.kind, "INTENT");
+    if (record.kind !== "INTENT") return;
+    assert.equal(record.action, "PAUSE_RUNNER");
+    assert.equal(record.note, "pnpm pilot:stop on TESTHOST");
+    assert.equal(record.actor, `pilot:stop on ${hostname()}`, "--by names the calling command, on this host");
+    assert.equal(record.adminSessionRef, `host:${hostname()}`);
+    assert.equal(record.intentId, `PAUSE_RUNNER:${record.requestedAt}`);
+    const pausedReading = readIntents(afterPause).runnerPause;
+    assert.equal(pausedReading.paused, true, "the runner reads the stop as a pause");
+    assert.equal(pausedReading.honored, null, "no runner has acknowledged it — and none ran here");
+
+    const resumed = runNote(["--action=RESUME_RUNNER", "--note=pnpm pilot:start on TESTHOST", "--by=pilot:start", `--file-store=${dir}`]);
+    assert.equal(resumed.status, 0, `resume note exited ${resumed.status}: ${resumed.stdout}${resumed.stderr}`);
+    assert.match(resumed.stdout, /resume note recorded: RESUME_RUNNER:/);
+    const afterResume = await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY);
+    assert.equal(afterResume.length, 2);
+    assert.equal(readIntents(afterResume).runnerPause.paused, false, "RESUME_RUNNER lifts the pause");
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("runner-pause-note.mts exits 2 on a bad action, and never blocks when the plane cannot be opened", () => {
+  const bad = runNote(["--action=NOPE", "--note=x"]);
+  assert.equal(bad.status, 2);
+  assert.match(bad.stderr, /PAUSE_RUNNER or RESUME_RUNNER/);
+
+  const unopened = runNote(["--action=PAUSE_RUNNER", "--note=pnpm pilot:stop on TESTHOST"]);
+  assert.equal(unopened.status, 0, "a note that cannot land must not fail the stop");
+  assert.match(unopened.stdout, /pause note NOT recorded: WTP_CONTROL_PLANE_DATABASE_URL is not set/);
+});

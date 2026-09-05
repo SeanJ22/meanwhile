@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 517,
-    "named": 5368,
+    "files": 520,
+    "named": 5426,
     "dynamic": 23
   },
   "files": {
@@ -95,6 +95,35 @@
         "the login page, the Google start and callback, and the session route are reachable unauthenticated on the admin host",
         "the session cookie carries every attribute that makes it safe",
         "timingSafeEqual folds length in rather than short-circuiting on it"
+      ],
+      "dynamic": 0
+    },
+    "tests/admin-feedback-9-4.test.ts": {
+      "names": [
+        "ADM-1: REQUIRES_REPUBLISH carries the record's publish facts, the current contract and the clearing command",
+        "ADM-2: the console header navigates inside a transition, shows the choice at once, and the read path skips the schema bootstrap",
+        "ADM-3: FRESHNESS reads the measured shadow risk through one shared projection in both scripts",
+        "ADM-3: a stale reader check reads as one plain sentence, and the scale names all four grades",
+        "ADM-4: a predicate row is a BLOCKED_WHILE wall with no options and its last recheck; an acknowledgement row is ACKNOWLEDGE",
+        "ADM-4: a snapshot written before the kind field existed still classifies by verifiability",
+        "ADM-4: closed rows and rows outside Needs Sean never become cards",
+        "ADM-4: every open Needs-Sean row publishes a card carrying title, priority, opened date, age and the registry text",
+        "ADM-4: the decision log collapses to one row per decision, the #resolved twin winning",
+        "ADM-4: the decision route accepts an answer in the owner's own words, and the page posts the consequence it showed",
+        "ADM-4: the publisher joins the working store and the registry, and no longer overwrites the runner heartbeat",
+        "ADM-5: SILENT with no pause recorded is red and says no pause is recorded; the control offered is to record one",
+        "ADM-5: a HONORED record or a pause-carrying beat marks the pause acknowledged; RESUME_RUNNER ends it",
+        "ADM-5: an ALIVE beat with no pause is green and offers to record a pause",
+        "ADM-5: the owner's PAUSE_RUNNER turns the same silence amber, names who, when and why, and offers RESUME",
+        "ADM-6: nothing measured is a gap in every row, never a zero",
+        "ADM-6: the ledger rolls up by role and by model with measured/unmeasured beside every row; the reader path is one short gap",
+        "ADM-7: the five groups cover the roles, with counts that carry denominators and a where-deployed derived from the WorkItem",
+        "ADM-7: the page organises Pilot Health around the fleet and keeps the instrument-detail link",
+        "ADM-8: a DISPATCH needs words; the intent carries them; the page lists deployments with their outcome",
+        "ADM-8: the owner's words become state codes and terms",
+        "ADM-8: units match by bounded state token or by term; a dispatch to an unenumerated state is honored by name",
+        "ADM-9: the map's own ThemeToggle is mounted in the console header, and the research page carries the header too",
+        "the readiness legend, tiles and swatch classes are one shared implementation"
       ],
       "dynamic": 0
     },
@@ -4852,6 +4881,30 @@
       ],
       "dynamic": 0
     },
+    "tests/owner-decisions-outflow.test.ts": {
+      "names": [
+        "RULING 227: a predicate row is a machine-checked wall and refuses a decision",
+        "RULING 271: a Decline option closes the row and opens NO follow-up",
+        "RULING 271: a later decision about the same row supersedes an earlier one; only the latest applies",
+        "RULING 271: a row with no decision card closes only on his own words",
+        "RULING 271: a valid card option closes the row, carries the consequence, and opens the work",
+        "RULING 271: an answer in his own words closes the row and the work carries his words",
+        "RULING 271: an intent already applied is refused, so a second move never closes twice",
+        "RULING 271: an option that is not on the card, with no answer, is refused by name",
+        "RULING 271: no admin session on the decision means it cannot be shown to be his",
+        "RULING 271: the applier never touches a row outside Needs Sean, and never a closed or missing one",
+        "RULING 271: the consequence he was SHOWN wins over the registry's text when both exist",
+        "RULING 37: a dashboard close moves through planMoves as Sean's own resolution, with no bypass",
+        "canonicalize: a resolved tracker row naming the intent marks it CANONICALIZED, once",
+        "collapseDecisionLog: a #resolved twin wins over its original, and the owner's words survive",
+        "collapseDecisionLog: newest decidedAt first, whatever order the store handed them over in",
+        "file-store round trip: appendDecisionIntent -> owner-decisions-pull -> the export holds the intent",
+        "latestDecisionFor: the newest decision about a subject, by decidedAt and never by position",
+        "the committed export exists, names its only writer, and is the shape move reads",
+        "the decided section exists, is not first, and the two own-words literals agree"
+      ],
+      "dynamic": 0
+    },
     "tests/owner-intake.test.ts": {
       "names": [
         "SEEDED: a NEW workbook row the sweep never accounted for fails the gate",
@@ -6257,6 +6310,26 @@
         "RULING 59: the deleted coverage note has not come back",
         "RULING 59: the sanctioned line is exactly one sentence and unchanged",
         "RULING 59: the tier prose is internal-only and reaches no reader"
+      ],
+      "dynamic": 0
+    },
+    "tests/runner-owner-intents.test.ts": {
+      "names": [
+        "POSITIVE CONTROL: a cycle that reads intents after the sort, or drops the dispatcher's placeFirst, fails the checker",
+        "POSITIVE CONTROL: a runner that drops the publish call, the readiness target, or the dispatch check fails its checker",
+        "POSITIVE CONTROL: a task script that drops a note call, or lets the note exit the action, fails the checker",
+        "describeDispatchMatch names the missing registry, the registry failure, and the placement — with the denominator",
+        "freshness-shadow.mts honors DISPATCH before ordering both lanes and acknowledges the lane PAUSE / RESUME",
+        "parseDispatchTarget reads the owner's words into state codes and terms",
+        "pilot-runner.mts honors PAUSE_RUNNER / RESUME_RUNNER and ends the sleep on a pending DISPATCH (ADM-5, ADM-8)",
+        "pilot-runner.mts publishes the console after every digest (ADM-1)",
+        "pilot-task.ps1 stop / disable write PAUSE_RUNNER and start writes RESUME_RUNNER through runner-pause-note.mts, best effort, in ASCII",
+        "placeFirstRows moves the dispatched rows to the front, keeps both groups' order, and is a no-op with nothing dispatched",
+        "readIntents: pendingDispatch lists the unhonored DISPATCH intents oldest first and drops the honored ones",
+        "readIntents: runnerPause reads paused, then honored, then cleared by RESUME_RUNNER, then paused again",
+        "runner-pause-note.mts appends PAUSE_RUNNER then RESUME_RUNNER to a file store, naming the command and the host",
+        "runner-pause-note.mts exits 2 on a bad action, and never blocks when the plane cannot be opened",
+        "unitMatchesTarget matches state codes as bounded tokens in every id shape, and terms as words"
       ],
       "dynamic": 0
     },

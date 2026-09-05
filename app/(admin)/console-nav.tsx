@@ -1,54 +1,122 @@
 "use client";
 
 /**
- * **THE ONE HEADER ON EVERY CONTROL-CENTRE PAGE.** (Unified console, 2026-09-04.)
+ * **THE ONE HEADER ON EVERY CONTROL-CENTRE PAGE.** (Unified console, 2026-09-04;
+ * selection acknowledgement and the theme switch added for the 9.4.26 feedback.)
  *
- * Two dropdowns, present on both views, so the whole control centre is one
+ * Three dropdown views, present everywhere, so the whole control centre is one
  * surface on the admin host and nothing is a "different site":
- *   - View: Pilot health ⇄ State readiness.
+ *   - View: Pilot health (the fleet) ⇄ State readiness ⇄ Research detail.
  *   - State: every state/DC/territory; picking one shows its readiness inline.
  *
- * Switching is a CLIENT navigation (`router.push`) — the Next App Router swaps
- * the server-rendered view without a full reload, so a state change is instant
- * and same-origin. History belongs to the router; this never touches it directly.
+ * Switching is a CLIENT navigation (`router.push`) inside a transition
+ * (ADM-2): the chosen value shows the instant it is chosen, a status line says
+ * what is loading, and the current page stays on screen until the server has
+ * rendered the new one. Before this, nothing changed for the whole server
+ * round trip, which read as broken. History belongs to the router; this never
+ * touches it directly.
+ *
+ * The theme switch (ADM-9) is the map's own `ThemeToggle` — one component, one
+ * storage key, one pre-paint script — so the choice persists exactly as it
+ * does on the reader surfaces.
  */
 import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
+
+import { ThemeToggle } from "@/components/theme-toggle";
+
+export type ConsoleView = "pilot-health" | "readiness" | "research";
+
+/** The path each view lives at. The readiness view is per state. */
+function pathFor(view: ConsoleView, state: string): string {
+  switch (view) {
+    case "readiness":
+      return `/readiness/${state}`;
+    case "research":
+      return "/admin/research";
+    default:
+      return "/admin";
+  }
+}
+
+const VIEW_LABEL: Record<ConsoleView, string> = {
+  "pilot-health": "Pilot health",
+  readiness: "State readiness",
+  research: "Research detail",
+};
 
 export function ConsoleNav(props: {
-  view: "pilot-health" | "readiness";
-  /** The state the readiness view is showing, or null on pilot health. */
+  view: ConsoleView;
+  /** The state the readiness view is showing, or null on the other views. */
   currentState: string | null;
   states: readonly { readonly code: string; readonly name: string }[];
 }) {
   const router = useRouter();
-  const stateForReadiness = props.currentState ?? "az";
+  const [isPending, startTransition] = useTransition();
+  /*
+   * What the owner just chose, shown at once. It is stamped with the props it
+   * was chosen under, so it applies only until the router delivers a page
+   * with different props — no effect, no setState-in-render: a stale choice is
+   * simply ignored by comparison.
+   */
+  const signature = `${props.view}|${props.currentState ?? ""}`;
+  const [choice, setChoice] = useState<{
+    view: ConsoleView;
+    state: string | null;
+    under: string;
+  } | null>(null);
+  const chosen = choice !== null && choice.under === signature && isPending ? choice : null;
+
+  const view = chosen?.view ?? props.view;
+  const currentState = chosen ? chosen.state : props.currentState;
+  const stateForReadiness = currentState ?? props.currentState ?? "az";
+  const chosenStateName = chosen?.state ? props.states.find((s) => s.code === chosen.state)?.name : undefined;
+  const loadingLabel =
+    chosen === null
+      ? null
+      : chosen.view === "readiness"
+        ? chosenStateName
+          ? `Loading ${chosenStateName}…`
+          : "Loading…"
+        : `Loading ${VIEW_LABEL[chosen.view]}…`;
+
+  function go(next: ConsoleView, state: string | null) {
+    const target = pathFor(next, state ?? stateForReadiness);
+    if (target === pathFor(props.view, props.currentState ?? "az")) return;
+    setChoice({ view: next, state, under: signature });
+    startTransition(() => {
+      router.push(target);
+    });
+  }
 
   return (
-    <nav className="console-nav" aria-label="Control centre">
+    <nav className="console-nav" aria-label="Control centre" aria-busy={chosen !== null}>
       <label>
         View
         <select
-          value={props.view}
+          value={view}
           aria-label="Choose a view"
           onChange={(e) => {
-            router.push(e.target.value === "pilot-health" ? "/admin" : `/readiness/${stateForReadiness}`);
+            const next = e.target.value as ConsoleView;
+            go(next, next === "readiness" ? stateForReadiness : null);
           }}
         >
-          <option value="pilot-health">Pilot health</option>
-          <option value="readiness">State readiness</option>
+          <option value="pilot-health">{VIEW_LABEL["pilot-health"]}</option>
+          <option value="readiness">{VIEW_LABEL.readiness}</option>
+          <option value="research">{VIEW_LABEL.research}</option>
         </select>
       </label>
 
       <label>
         State
         <select
-          value={props.currentState ?? ""}
+          value={currentState ?? ""}
           aria-label="Choose a state"
           onChange={(e) => {
-            if (e.target.value) router.push(`/readiness/${e.target.value}`);
+            if (e.target.value) go("readiness", e.target.value);
           }}
         >
-          {props.view !== "readiness" && <option value="">— select a state —</option>}
+          {view !== "readiness" && <option value="">— select a state —</option>}
           {props.states.map((s) => (
             <option key={s.code} value={s.code}>
               {s.name}
@@ -57,7 +125,14 @@ export function ConsoleNav(props: {
         </select>
       </label>
 
+      {loadingLabel && (
+        <span className="console-nav-pending" role="status" aria-live="polite">
+          {loadingLabel}
+        </span>
+      )}
+
       <span className="console-nav-brand">Control centre</span>
+      <ThemeToggle className="shrink-0" />
     </nav>
   );
 }

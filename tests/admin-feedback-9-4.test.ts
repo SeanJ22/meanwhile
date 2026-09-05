@@ -12,7 +12,7 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { buildCostPanel, NO_MODEL_KEY, PROD_ASK_KEY } from "../lib/control-plane/cost-panel.ts";
-import { buildDecisionCards, openNeedsSeanRows } from "../lib/control-plane/decision-cards.ts";
+import { buildDecisionCards, openNeedsSeanRows, type RegistryEntry } from "../lib/control-plane/decision-cards.ts";
 import { collapseDecisionLog, latestDecisionFor } from "../lib/control-plane/decision-log.ts";
 import { buildFleetView, dispatchHistory, whereOf } from "../lib/control-plane/fleet-view.ts";
 import { freshnessContract, freshnessRiskOf } from "../lib/health/contracts.ts";
@@ -28,7 +28,12 @@ import { READINESS_REPUBLISH_COMMAND, readinessRowOutcome } from "../lib/control
 import { validateIntentNote } from "../lib/control-plane/research-view.ts";
 import { runnerStanding } from "../lib/control-plane/runner-standing.ts";
 import { describeDispatchMatch, parseDispatchTarget, unitMatchesTarget } from "../lib/control-plane/scheduler/dispatch-target.ts";
-import { readIntents, type ResearchIntent } from "../lib/control-plane/scheduler/research-policy.ts";
+import {
+  readIntents,
+  type ResearchIntent,
+  type ResearchIntentAction,
+  type ResearchIntentRequest,
+} from "../lib/control-plane/scheduler/research-policy.ts";
 import type { Attempt } from "../lib/control-plane/attempt.ts";
 
 const ROOT = process.cwd();
@@ -46,7 +51,7 @@ const ROWS = [
   { ID: "DONE1", Section: "needs-sean", Priority: "P2", Title: "Closed", "What this is": "…", Resolution: "Resolved", "Opened on": "2026-08-20", "Last verified": "" },
   { ID: "AZ9", Section: "az-hunt", Priority: "P2", Title: "Not needs sean", "What this is": "…", Resolution: "", "Opened on": "2026-08-20", "Last verified": "" },
 ];
-const REGISTRY = [
+const REGISTRY: RegistryEntry[] = [
   { rowId: "OWN01", kind: "NOT_MACHINE_VERIFIABLE", whatIsNeeded: "Send the capture you saw.", whyNoMachineCanDecide: "It does not reproduce.", options: [{ option: "Send it", consequence: "placed against a build" }, { option: "Close it", consequence: "closes as unreproducible" }] },
   { rowId: "NH306", kind: "predicate", blocker: "the secret is not in the environment" },
   { rowId: "NH208", kind: "NOT_MACHINE_VERIFIABLE", whatIsNeeded: "Acknowledge the correction: nothing is wrong.", whyNoMachineCanDecide: "the title says otherwise", options: [{ option: "Acknowledge", consequence: "closes" }] },
@@ -157,7 +162,7 @@ const BEAT: RunnerHeartbeat = {
   testedSha: "a6f7fd4d",
   host: "runner",
 };
-const intent = (action: ResearchIntent extends { action: infer A } ? A : never, requestedAt: string, note: string | null = null): ResearchIntent => ({
+const intent = (action: ResearchIntentAction, requestedAt: string, note: string | null = null): ResearchIntentRequest => ({
   formatVersion: 1,
   kind: "INTENT",
   intentId: `${action}:${requestedAt}`,

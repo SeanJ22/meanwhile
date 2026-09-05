@@ -193,6 +193,8 @@ export interface ResearchState {
   readonly dispatchOrdering?: DispatchOrdering | null;
   /** Capacity, queue bands, funnel, share, cache hit rate, cost per outcome — computed at cycle end. */
   readonly metrics?: ResearchMetrics | null;
+  /** ADM-8: what the cycle did with the owner's DISPATCH, when one was pending. */
+  readonly ownerDispatch?: OwnerDispatchRecord | null;
 }
 
 /**
@@ -211,6 +213,20 @@ export interface ResearchState {
  *                          deliberate pause without leaving the page
  *   RESUME_RUNNER          the pause is over
  */
+/**
+ * What the newest cycle did with the owner's DISPATCH (ADM-8): the intent it
+ * honored, the target as parsed, and how many registered units matched of
+ * how many were registered. Absent on a state written before the field
+ * existed; null when no dispatch was pending.
+ */
+export interface OwnerDispatchRecord {
+  readonly intentId: string;
+  readonly target: string;
+  readonly states: readonly string[];
+  readonly matched: number;
+  readonly registered: number;
+}
+
 export const RESEARCH_INTENT_ACTIONS = [
   "PAUSE",
   "RESUME",

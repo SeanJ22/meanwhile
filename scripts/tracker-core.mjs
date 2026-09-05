@@ -657,7 +657,12 @@ export const OWNER_DECISIONS_JSON = "docs/tracker-owner-decisions.json";
 /** The section a follow-up row opens in (`docs/tracker-sections.json`). */
 export const DECIDED_SECTION = "decided";
 /** `Opened by` on every follow-up row, and the ledger session that claims it. */
-export const DASHBOARD_OPENER = "dashboard-decision";
+/*
+ * The `-nonhunt` suffix is the expansion-log convention (tests/expansion-log.test.ts):
+ * a session heading in docs/log.md carrying it owes no expansion entry, and a
+ * dashboard decision hunts nothing — it records what the owner chose.
+ */
+export const DASHBOARD_OPENER = "dashboard-decision-nonhunt";
 /** The id prefix follow-up rows are minted under. */
 export const FOLLOW_UP_PREFIX = "DEC";
 /**

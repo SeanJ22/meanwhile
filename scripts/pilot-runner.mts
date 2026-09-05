@@ -828,12 +828,16 @@ async function sleepUnlessRunNow(totalMs: number): Promise<void> {
  * Before a cycle starts: while the owner's PAUSE_RUNNER stands, idle here —
  * polling once a minute, beating every thirty — and return the moment it is
  * lifted. Not paused, or unreadable: return at once and the cycle starts.
+ *
+ * The nightly window is held too. "I paused the runner" means the WHOLE
+ * runner: the owner's stated reason on 9.4.26 was usage, and the shadow window
+ * spends exactly as a cycle does. A window skipped while paused is caught up
+ * by the next window decision after RESUME_RUNNER (it reads the last window
+ * run, not this clock).
  */
 async function holdWhilePaused(): Promise<void> {
   while ((await ownerSays()) === "HOLD") {
     await sleep(POLL_MS);
-    const decision = await windowDecision();
-    if (decision.run) runNightlyWindow(decision.trigger);
   }
 }
 

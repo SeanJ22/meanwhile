@@ -14,15 +14,15 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **429 open**, 487 resolved.
-- **74 waiting on Sean** — the first section below.
+- **431 open**, 487 resolved.
+- **75 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **4**
+  - Needs Sean — **5**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **1**
   - Arizona hunt — **2**
   - Visual feedback — **3**
-  - Data infrastructure — **3**
+  - Data infrastructure — **4**
   - Product / UI — **3**
   - Constitution & rules — **1**
   - Repo & ops — **10** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
@@ -36,7 +36,7 @@ and when. Nothing is ever deleted.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**74 open · 74 resolved.**
+**75 open · 74 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -47,6 +47,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH306** — PREDICATE: resolves itself when data/ops/credential-events.jsonl records a rotation event for BOTH names. WHAT IS NEEDED: two credential rotations, by the owner or under RULING 238 with an owner copy first. THE FINDING: pnpm secrets:sweep --transcripts, run from the main checkout on 2026-09-02 by the Level 1 activation session, found the VALUES of DATA_GOV_API_KEY and NETLIFY_AUTH_TOKEN in a subagent transcript of the earlier session 771dfc3d-591d-4a39-9cb2-2c028431acdd (agent-a5abb86c7d4cf8d7a.jsonl, line 24). The file was scrubbed in place (8 values replaced, 0 remaining on re-read) and the repository and the Drive mirror read 0 secret occurrences. RULING 127: a credential that has appeared in a transcript is COMPROMISED and is ROTATED; scrubbing is necessary and not sufficient. OPTIONS: (A) rotate both now - regenerate the api.data.gov key and the Netlify personal access token, place the owner copies in .env.local first, then record each rotation in data/ops/credential-events.jsonl by name, provider, context, scope, actor and owner-copy location; (B) rotate only the Netlify token (the higher-privilege one: it can deploy and read site settings) and accept the data.gov key as low-risk; (C) do nothing - both values stay valid for whoever read that transcript. CONSEQUENCE OF NOT DECIDING: (C) stands and the row ages.
 
 **NH310** — PREDICATE: resolves itself when data/ops/admin-login-readback.json records googleConfigured true on a readback taken on or after 2026-09-02 against the admin origin. WHAT IS NEEDED: two environment variables and one sign-in. The Google sign-in path (RULING 245) is merged and proven by 45 seeded tests, but a live readback of the Netlify environment on 2026-09-02 (both sites, account level, by name) found NO GOOGLE_OAUTH_CLIENT_ID and NO GOOGLE_OAUTH_CLIENT_SECRET, so the deployed login page will report NOT_CONFIGURED by name and the only working door is the flag-gated break-glass. Steps, in this order: (1) confirm the Google Cloud OAuth client's authorized redirect URI is exactly https://admin.meanwhileusa.com/admin/auth/callback; (2) RULING 238 custody FIRST — copy the client id and secret into .env.local under those two names; (3) add both to Netlify site sparkwtp, context Production, scope Functions; (4) append two CREATED lines to data/ops/credential-events.jsonl (kind, reportedAt, name, provider, context, scope, actor, ownerCopyLocation — never a value; the shape is in docs/admin-sign-in.md); (5) after the deploy carrying this head, run pnpm admin:login-readback from the main checkout (it records googleConfigured, missingVariables and googleRoutesDeployed, names only) and sign in once in a browser: /admin then /admin/research. OPTIONS AND CONSEQUENCES: do it — the owner's identity becomes the login and the break-glass can be turned off (WTP_ADMIN_BREAK_GLASS unset); do not do it — the admin host stays reachable only through the shared-secret break-glass, every use of which is logged as an incident, and RULING 245 stays adopted but unproven live. AGE is measured from the Opened on date.
+
+**NH326** — Found at ship time by the 9.4.26 part-2 admin feedback session. The daily refresh of 2026-09-05 12:59Z (commit b36c7360) rewrote two canonical NJ ballot holdings, data/states/nj/ballot/nj-morris-2026.json and nj-morris-2026-contacts.json: 762 collectedAt/verifiedAt lines and the curatedAt stamp changed, and no record did. The reader closure receipt (docs/evidence/reader-last-mile-final-closure-receipt.json, closed 2026-09-04) binds every canonical holding by byte hash, so tests/reader-last-mile-census.test.ts now fails on main and on every PR that integrates main: 'Canonical holding inventory changed after closure proof'. The same refresh left lib/funding/official-candidacies.json stale, which made the generated-artifact guard refuse the observer's own HELD reading for b36c7360 (run 33967633467), so no bot can advance main until a gated PR lands. The machinery has no sanctioned repair for this shape: the source-only renewal asserts the holdings digest is unchanged, and a full re-proof from the 2026-09-04 baseline fails on the 15 reader sources the tester session absorbed through its V94 renewal, because they sit outside readerSourceImpact. Tomorrow's refresh will do it again. WHAT IS NEEDED: your ruling on which side of the seam moves: the refresh, the proof, or the renewal machinery. WHY THE MACHINE CANNOT PROCEED: each remedy changes what a closure proof means or what a refresh may rewrite, and the proof's own rule says no unclassified change may close, so a session widening the frozen boundary by hand would be closing an unclassified change itself.
 
 **T05** — The abuse policy is written but the review path behind it does not exist. No free-text answer can be accepted until somebody can actually act on a threat.
 
@@ -560,7 +562,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**107 open · 114 resolved.**
+**108 open · 114 resolved.**
 
 ### P1
 
@@ -569,6 +571,10 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH270** — A definition tells a reader what a body actually does. definitionsForBody is keyed on the DIVISION rather than the BODY, so every body sharing the Pima County division resolves to the Arizona county class definition.
 
 **NH45** — data/ballot/candidate-hunt-state.json holds 136 candidate keys in TWO formats for the same people: a slug form, ballot-az-pima:governor:hobbs-katie, and a pipe-and-display-name form, ballot-az-pima:governor|Katie Hobbs. Thirty of the 136 are the pipe form and every one names somebody the slug form already names. candidate-cards-2026.json carries 20 of the same duplicates.
+
+**NH327** — Sean's decision on NH326, in chat on 2026-09-05, in his words: "A repeated observation with unchanged normalized civic facts must not rewrite canonical reader-source bytes; record the new observation in operational refresh history. Preserve exact-byte Reader Last-Mile proof; factual changes must still invalidate it." The class: every writer of a canonical holding that the daily refresh runs (nj:ballot --write rewrote 762 collectedAt/verifiedAt lines and curatedAt in data/states/nj/ballot/nj-morris-2026.json and nj-morris-2026-contacts.json on 2026-09-05 with no record changed; find every sibling writer that stamps a holding on re-observation). Done means: a refresh whose normalized records are byte-identical to the committed holding leaves the holding's bytes untouched and records the observation (source, time, unchanged verdict) in the operational refresh history (docs/refresh-run.json / data/ops/refresh-debt.json or their successor), the reader closure receipt keeps binding holdings by exact byte, and a refresh that changes a fact still changes the bytes and still invalidates the receipt. Prove it on a real refresh: two runs on the same day leave the receipt test green; a seeded record change turns it red.
+
+  Waiting on decide how the reader closure receipt survives a daily refresh that rewrites only provenance stamps (NH326).
 
 ### P2
 

@@ -93,6 +93,10 @@ export function collapseDecisionLog(
       canonicalRef: latest.canonicalRef,
       refusedReason: latest.refusedReason,
       ownerAnswer: base.ownerAnswer ?? null,
+      // What the tracker did with it travels on the resolution (ADM-16), so
+      // the later fact wins here too; absent on records written before it.
+      openedWork: latest.openedWork ?? base.openedWork,
+      subjectTitle: latest.subjectTitle ?? base.subjectTitle ?? null,
     });
   }
   return out.sort(compareNewestFirst);

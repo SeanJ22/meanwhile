@@ -37,7 +37,7 @@
  * Governments counts (R-D); a class with no legitimately-established external
  * denominator renders a named gap, never "we found N therefore N of N".
  */
-import { gap, type Held, type Measured } from "../owner-surface.ts";
+import { gap, held, measured, type Held, type Measured } from "../owner-surface.ts";
 import { CAPABILITY_TAXONOMY } from "./catalog.ts";
 import type { Gate, GateEvidence } from "./gates.ts";
 import type { CapabilityInput, ReadinessInputs } from "./compute.ts";
@@ -138,6 +138,14 @@ export interface StateAuthorities {
   readonly stateDisclosure: ReconInstrument | null;
   /** A NH/NJ closed argued-absence walk behind officials.state-federal-seats. */
   readonly officialsClosedWalk: ClosedWalkInstrument | null;
+  /**
+   * The state's total population from the committed Census ACS 5-Year 2023
+   * table (B01003, `data/reference/acs5_2023_b01003_state.csv`), the
+   * EXTERNAL denominator of the population-weighted completeness figure
+   * (ADM-23). Null when the table carries no row for the state, which is a
+   * named gap and never a zero.
+   */
+  readonly statePopulation: number | null;
 }
 
 /* ------------------------------------------------------------- gate helpers */
@@ -422,6 +430,41 @@ function capabilityInput(
  * committed instruments. `nowIso`/`sha`/`publisher` are carried through; the
  * summary figures are derived (or named gaps) — never authored.
  */
+/**
+ * **POPULATION IN A READER-COMPLETE ZIP, OF THE STATE'S POPULATION.**
+ * (ADM-23, the 9.4.26 evening admin feedback.)
+ *
+ * The numerator sums the ACS population of every researched ZIP whose
+ * governing bodies are ALL resolved (CURRENT or ARGUED_ABSENT — the same
+ * worst-of rule `computeZipRow` applies); the denominator is the Bureau's
+ * state total, external to us. Until a ZIP is complete the figure is
+ * honestly 0 of the state — a measured zero, which is a different fact from
+ * "not on file". Three named gaps, never a zero standing in for them:
+ * no state total on file; no researched ZIP; every researched ZIP without a
+ * tabulation area.
+ */
+export function populationInCompleteZip(a: StateAuthorities, zips: ReadinessInputs["zips"]): Held<Measured> {
+  if (a.statePopulation === null) {
+    return gap<Measured>("OURS", `no state population on file for ${a.name} in data/reference/acs5_2023_b01003_state.csv, so a population-weighted completeness cannot be computed`);
+  }
+  if (zips.length === 0) return gap<Measured>("OURS", `no ZIP has been researched in ${a.name} yet, so no population can be counted as complete`);
+  const withPopulation = zips.filter((z) => z.population.held);
+  if (withPopulation.length === 0) {
+    return gap<Measured>("OURS", `none of the ${zips.length} researched ZIP(s) in ${a.name} has a Census tabulation area on file, so no population can be counted`);
+  }
+  const resolved = (state: string) => state === "CURRENT" || state === "ARGUED_ABSENT";
+  const complete = withPopulation.filter((z) => z.bodies.length > 0 && z.bodies.every((b) => resolved(b.state)));
+  const value = complete.reduce((n, z) => n + (z.population.held ? z.population.value.value : 0), 0);
+  return held(
+    measured(
+      Math.min(value, a.statePopulation),
+      a.statePopulation,
+      `residents of researched ZIPs whose every governing body is resolved (${complete.length} of ${withPopulation.length} researched ZIP(s) with a population on file), of the state's ACS 5-Year 2023 total population`,
+      "Census ACS 5-Year 2023 B01003 (data/reference/acs5_2023_b01003_state.csv and _zcta.csv)",
+    ),
+  );
+}
+
 export function deriveStateInputs(
   a: StateAuthorities,
   meta: { readonly nowIso: string; readonly sha: string | null; readonly publisher: string },
@@ -459,11 +502,7 @@ export function deriveStateInputs(
     zips,
     evidenceWalks,
     readerVisibleJurisdictions,
-    // Population weighting needs Census ACS B01003, not yet ingested — a named gap.
-    populationInCompleteZip: gap<Measured>(
-      "OURS",
-      "population not on file — Census ACS (B01003) not yet ingested, so a population-weighted completeness cannot be computed",
-    ),
+    populationInCompleteZip: populationInCompleteZip(a, zips),
     // No full readiness pass is recorded as an instrument yet — a named gap, not "0 days".
     timeSinceLastFullPass: gap<string>("OURS", `no full readiness pass is recorded for ${a.name} yet`),
   };

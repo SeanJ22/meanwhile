@@ -564,6 +564,13 @@ function deliver(body: string, headline: string): { readonly where: string; read
  */
 const PUBLISH_TIMEOUT_MS = 5 * 60_000;
 const CONSOLE_PUBLISHERS: readonly { readonly name: string; readonly args: readonly string[] }[] = [
+  /*
+   * ADM-16 (9.4.26 evening): the owner's recorded decisions are applied to the
+   * tracker BEFORE the snapshot is republished, so the cards he answered leave
+   * the queue on the same cycle. `scripts/apply-owner-decisions.mts` runs the
+   * pull → move --only=dashboard → canonicalize legs and is idempotent.
+   */
+  { name: "decision sync", args: ["scripts/apply-owner-decisions.mts"] },
   { name: "owner snapshot", args: ["scripts/publish-owner-snapshot.mts"] },
   { name: "readiness", args: ["scripts/readiness-refresh.mts", "--target=control-plane"] },
 ];

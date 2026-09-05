@@ -34,6 +34,8 @@ import {
 } from "../lib/control-plane/repository/pg-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { coverageTierForZip } from "../lib/coverage/zip-tier.ts";
+import { ACS_VINTAGE, statePopulation, zipPopulation } from "../lib/reference/acs-population.ts";
+import { held as heldValue, measured } from "../lib/control-plane/owner-surface.ts";
 import {
   type BodyLevelStat,
   type ReconInstrument,
@@ -246,6 +248,30 @@ function bodyCellState(coverageStatus: string | undefined) {
   }
 }
 
+/**
+ * The ZIP's resident population from the committed ACS table (ADM-23): a
+ * Measured against the state's own total so the number carries what it is out
+ * of, or the named gap for a ZIP with no Census tabulation area — a post-office
+ * box or single-site ZIP, which is not "nobody lives here".
+ */
+function zipPopulationCell(zip: string): ZipInput["population"] {
+  const population = zipPopulation(zip);
+  if (population === null) {
+    return gap("OURS", "no Census tabulation area (ZCTA) for this ZIP — a post-office-box or single-site ZIP has no resident population on file");
+  }
+  const ocdIds = ZIP_DIVISION_IDS.zips?.[zip] ?? [];
+  const stateCode = ocdIds.map((id) => /state:([a-z]{2})/.exec(id)?.[1] ?? null).find((c) => c !== null) ?? null;
+  const stateTotal = stateCode === null ? null : statePopulation(stateCode);
+  return heldValue(
+    measured(
+      population,
+      stateTotal === null ? population : Math.max(stateTotal, population),
+      `residents of this ZIP's Census tabulation area, of the state's total population (${ACS_VINTAGE})`,
+      "data/reference/acs5_2023_b01003_zcta.csv and _state.csv (Census Data API, acquired 2026-09-05)",
+    ),
+  );
+}
+
 /** A zip row derived from REAL committed data: its overlapping registry bodies. */
 function realZip(zip: string): ZipInput {
   const ocdIds = ZIP_DIVISION_IDS.zips?.[zip] ?? [];
@@ -264,7 +290,7 @@ function realZip(zip: string): ZipInput {
   return {
     zip,
     place: held(placeFor(zip)),
-    population: gap("OURS", "population not on file"),
+    population: zipPopulationCell(zip),
     bodies: bodyInputs,
     tierLabel: tier === "UNKNOWN" ? null : tier,
   };
@@ -311,6 +337,8 @@ function authoritiesFor(spec: StateSpec): StateAuthorities {
     stateDisclosure: spec.code === "az" ? azStateDisclosure() : null,
     // No correctly-scoped, unexpired officials-seat closed walk exists (CC-F1).
     officialsClosedWalk: null,
+    // ADM-23: the external denominator for population-weighted completeness.
+    statePopulation: statePopulation(spec.code),
   };
 }
 

@@ -274,6 +274,60 @@ function decisionCards(): OwnerDecisionCard[] {
   });
 }
 
+/**
+ * **A CANDIDATE IS NAMED FROM THE RECORD, NEVER FROM A SLUG.** (ADM-12, the
+ * 9.4.26 evening feedback.)
+ *
+ * The console renders candidacy keys (`…:anderson-jackie-o-donnell`) as the
+ * office in words plus the person — and the person's name comes from the
+ * committed candidate cards, keyed by the slug the key ends in. A slug cannot
+ * give back "O'Donnell", so the page never tries; a slug not in this map
+ * renders as the slug, honestly. The map is bounded to the hunts the cards
+ * file records (a few hundred rows) and travels on the snapshot.
+ */
+function candidateNames(): Record<string, string> {
+  const path = join(ROOT, "data", "ballot", "candidate-cards-2026.json");
+  if (!existsSync(path)) return {};
+  try {
+    const parsed = JSON.parse(readFileSync(path, "utf8")) as {
+      hunts?: { key?: string; name?: string }[];
+      cards?: Record<string, { name?: string }>;
+    };
+    const names: Record<string, string> = {};
+    const take = (key: string | undefined, name: string | undefined) => {
+      if (typeof key !== "string" || typeof name !== "string" || name.trim() === "") return;
+      const slug = key.split(":").at(-1)?.trim().toLowerCase();
+      if (slug && !(slug in names)) names[slug] = name.trim();
+    };
+    for (const h of parsed.hunts ?? []) take(h.key, h.name);
+    for (const [key, card] of Object.entries(parsed.cards ?? {})) take(key, card?.name);
+    return names;
+  } catch (error) {
+    log(`could not read the candidate cards (${(error as Error).message}) — candidacy keys render by office and slug`);
+    return {};
+  }
+}
+
+/** Measured spend per Eastern calendar day over the trailing fortnight (ADM-17). */
+function spendByDay(reads: ControlPlaneReads | null): OwnerSnapshot["spendByDay"] {
+  if (reads === null) return [];
+  const day = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit" });
+  const since = NOW.getTime() - 14 * 86_400_000;
+  const byDay = new Map<string, { usd: number; attempts: number }>();
+  for (const entry of reads.costs) {
+    const at = Date.parse(entry.recordedAt);
+    if (!Number.isFinite(at) || at < since) continue;
+    const key = day.format(new Date(at));
+    const acc = byDay.get(key) ?? { usd: 0, attempts: 0 };
+    if (typeof entry.cost.usd === "number" && Number.isFinite(entry.cost.usd)) acc.usd += entry.cost.usd;
+    acc.attempts += 1;
+    byDay.set(key, acc);
+  }
+  return [...byDay.entries()]
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([d, v]) => ({ day: d, usd: Math.round(v.usd * 10_000) / 10_000, attempts: v.attempts }));
+}
+
 /* ------------------------------------------------------------------ *
  * PANEL 4 / 6 — RUNNER CYCLE AND THE ZIP GRID
  * ------------------------------------------------------------------ */
@@ -352,7 +406,7 @@ function zipRows(): Held<readonly OwnerZipRow[]> {
   if (attributed.length === 0) {
     return gap(
       "OURS",
-      `The newest reader-suite run (${readerRun.runId}) records ${results.length} result(s) and ` +
+      `The newest reader-suite run, finished ${readerRun.finishedAt ?? "at an unrecorded time"}, records ${results.length} result(s) and ` +
         "attributes none of them to a ZIP: instance ids are hashes, and the run record does not " +
         "store the instances that carry the ZIP. We cannot break these results down by ZIP yet — " +
         "that is a gap in what the suite RECORDS, not a finding about any ZIP.",
@@ -611,6 +665,8 @@ function buildSnapshot(reads: ControlPlaneReads | null): OwnerSnapshot {
     })),
 
     decisionCards: cards,
+    candidateNames: candidateNames(),
+    spendByDay: spendByDay(reads),
 
     obligationsByState: obligationsByState(reads),
 

@@ -66,7 +66,17 @@ import {
   type OwnerDecisionIntent,
   type OwnerDecisionState,
 } from "../lib/control-plane/owner-surface.ts";
-import { RESOLVED_CSV, ROOT, readStore } from "./tracker-core.mjs";
+import {
+  DASHBOARD_OPENER,
+  FIX_QUEUE_SUBJECT,
+  FIX_SUBJECT_PREFIX,
+  RESOLVED_CSV,
+  ROOT,
+  WORKING_CSV,
+  fixRowMarker,
+  goRowMarker,
+  readStore,
+} from "./tracker-core.mjs";
 
 const NOW_ISO = new Date().toISOString();
 
@@ -93,26 +103,68 @@ function log(line: string): void {
  *
  * The resolution is against the STORE, not against anything the intent says
  * about itself: the row must exist, be resolved, and name this intent in the
- * column the move script writes. `--resolved=<path>` points the check at a
- * different CSV for proofs (`tests/owner-decisions-outflow.test.ts`); the
- * reference then names that path, because a reference names the store it was
- * checked against.
+ * column the move script writes. `--resolved=<path>` and `--working=<path>`
+ * point the check at different CSVs for proofs
+ * (`tests/owner-decisions-outflow.test.ts`); the reference then names that
+ * path, because a reference names the store it was checked against.
+ *
+ * **AND THE RECEIPT NAMES THE WORK.** (ADM-16, the 9.4.26 evening feedback.)
+ * The owner asked where his answer goes. The resolution record now carries the
+ * follow-up row(s) the applier opened for the decision (`openedWork`, from the
+ * working store: rows opened by the dashboard applier that depend on the row
+ * he decided) and the row's title (`subjectTitle`), so the card can say
+ * "closed as …, work opened as DEC03 — Act on T05: …" after the card itself has
+ * left the snapshot. A queued gap (`fix:<hash>`, ADM-20) resolves against the
+ * FIX row the applier minted for it, found by the intent marker in `Detail`;
+ * a "Go fix these" resolves to the rows it sent.
  */
 const RESOLVED_STORE = arg("resolved") ?? RESOLVED_CSV;
+const WORKING_STORE = arg("working") ?? WORKING_CSV;
 
-function trackerCloses(): Map<string, string> {
-  const rows = readStore(RESOLVED_STORE, isAbsolute(RESOLVED_STORE) ? "" : ROOT);
-  const refs = new Map<string, string>();
-  for (const row of rows) {
+type Row = Readonly<Record<string, string>>;
+
+function rowsOf(store: string): Row[] {
+  try {
+    return readStore(store, isAbsolute(store) ? "" : ROOT) as Row[];
+  } catch {
+    return [];
+  }
+}
+
+interface TrackerClose {
+  readonly ref: string;
+  readonly subject: string;
+  readonly title: string;
+}
+
+function trackerCloses(resolved: readonly Row[]): Map<string, TrackerClose> {
+  const refs = new Map<string, TrackerClose>();
+  for (const row of resolved) {
     const closedBy = row["Closed by"] ?? "";
     const hit = /\(dashboard ([^)]+)\)/.exec(closedBy);
     if (!hit) continue;
-    refs.set(
-      hit[1].trim(),
-      `${RESOLVED_STORE}#${(row.ID ?? "").trim()} (resolved ${(row["Resolved on"] ?? "").trim() || "on an unrecorded date"})`,
-    );
+    const id = (row.ID ?? "").trim();
+    refs.set(hit[1].trim(), {
+      ref: `${RESOLVED_STORE}#${id} (resolved ${(row["Resolved on"] ?? "").trim() || "on an unrecorded date"})`,
+      subject: id,
+      title: (row.Title ?? "").trim(),
+    });
   }
   return refs;
+}
+
+/** The follow-up rows the applier opened for a decided row: opened by the dashboard, depending on it. */
+function openedFor(subject: string, working: readonly Row[], resolved: readonly Row[]): { id: string; title: string }[] {
+  return [...working, ...resolved]
+    .filter((r) => (r["Opened by"] ?? "").trim() === DASHBOARD_OPENER && (r["Depends on"] ?? "").trim() === subject)
+    .map((r) => ({ id: (r.ID ?? "").trim(), title: (r.Title ?? "").trim() }));
+}
+
+/** Rows carrying a marker in `Detail` — the fix queue's own linkage. */
+function rowsMarked(marker: string, working: readonly Row[], resolved: readonly Row[]): { id: string; title: string; store: string }[] {
+  const tag = (rows: readonly Row[], store: string) =>
+    rows.filter((r) => (r.Detail ?? "").includes(marker)).map((r) => ({ id: (r.ID ?? "").trim(), title: (r.Title ?? "").trim(), store }));
+  return [...tag(working, WORKING_STORE), ...tag(resolved, RESOLVED_STORE)];
 }
 
 async function repositories(): Promise<ControlPlaneRepositories> {
@@ -142,6 +194,90 @@ function claimedRef(intent: OwnerDecisionIntent): string | null {
   return hit ? hit[1].trim() : null;
 }
 
+interface Resolution {
+  readonly state: OwnerDecisionState;
+  readonly canonicalRef: string | null;
+  readonly refusedReason: string | null;
+  readonly openedWork: readonly { readonly id: string; readonly title: string }[];
+  readonly subjectTitle: string | null;
+}
+
+const PENDING = (reason: string): Resolution => ({ state: "PENDING_CANONICALIZATION", canonicalRef: null, refusedReason: reason, openedWork: [], subjectTitle: null });
+
+function resolveFix(intent: OwnerDecisionIntent, working: readonly Row[], resolved: readonly Row[]): Resolution {
+  const rows = rowsMarked(fixRowMarker(intent.intentId), working, resolved);
+  if (rows.length === 0) return PENDING('queued; no tracker row has been opened for it yet (it opens on the sync after a "Go fix these")');
+  const first = rows[0];
+  return {
+    state: "CANONICALIZED",
+    canonicalRef: `${first.store}#${first.id}`,
+    refusedReason: null,
+    openedWork: rows.map((r) => ({ id: r.id, title: r.title })),
+    subjectTitle: first.title,
+  };
+}
+
+function resolveGo(intent: OwnerDecisionIntent, all: readonly OwnerDecisionIntent[], working: readonly Row[], resolved: readonly Row[]): Resolution {
+  const rows = rowsMarked(goRowMarker(intent.intentId), working, resolved);
+  if (rows.length > 0) {
+    return {
+      state: "CANONICALIZED",
+      canonicalRef: `opened ${rows.length} fix row(s): ${rows.map((r) => r.id).join(", ")}`,
+      refusedReason: null,
+      openedWork: rows.map((r) => ({ id: r.id, title: r.title })),
+      subjectTitle: "Go fix these",
+    };
+  }
+  const queuedBefore = all.filter(
+    (i) => !isResolutionRecord(i) && i.subjectId.startsWith(FIX_SUBJECT_PREFIX) && i.decidedAt <= intent.decidedAt,
+  );
+  if (queuedBefore.length === 0) {
+    return { state: "CANONICALIZED", canonicalRef: "the queue was empty when it was sent; nothing to open", refusedReason: null, openedWork: [], subjectTitle: "Go fix these" };
+  }
+  return PENDING(`${queuedBefore.length} queued gap(s) precede it and the sync has not opened their rows yet`);
+}
+
+function resolveRow(
+  intent: OwnerDecisionIntent,
+  index: ReturnType<typeof loadIndex>,
+  closes: Map<string, TrackerClose>,
+  working: readonly Row[],
+  resolved: readonly Row[],
+): Resolution {
+  const close = closes.get(intent.intentId) ?? null;
+  if (close !== null) {
+    // The tracker applied it: the row is resolved and names this intent.
+    return {
+      state: "CANONICALIZED",
+      canonicalRef: close.ref,
+      refusedReason: null,
+      openedWork: openedFor(close.subject, working, resolved),
+      subjectTitle: close.title,
+    };
+  }
+  const ref = claimedRef(intent);
+  if (ref === null) {
+    return PENDING(
+      "the chosen option names no governance record and no resolved tracker row names " +
+        "this intent yet, so there is nothing to resolve against",
+    );
+  }
+  const record = index.resolve(ref);
+  if (!record) {
+    return PENDING(`${ref} does not exist in the canonical ledger yet. The governance change has not been made — the decision stands and is waiting for it.`);
+  }
+  if (!index.current().some((r) => r.id === record.id)) {
+    return {
+      state: "REJECTED_BY_GATES",
+      canonicalRef: null,
+      refusedReason: `${ref} resolves to ${record.id}, whose status is ${record.status}. An owner decision may not be recorded against law that is no longer current.`,
+      openedWork: [],
+      subjectTitle: null,
+    };
+  }
+  return { state: "CANONICALIZED", canonicalRef: record.id, refusedReason: null, openedWork: [], subjectTitle: null };
+}
+
 async function main(): Promise<void> {
   const index = loadIndex();
   const repos = await repositories();
@@ -164,8 +300,10 @@ async function main(): Promise<void> {
     ),
   );
 
-  const tracker = trackerCloses();
-  log(`tracker: ${RESOLVED_STORE} names ${tracker.size} dashboard close(s) in its Closed by column`);
+  const working = rowsOf(WORKING_STORE);
+  const resolved = rowsOf(RESOLVED_STORE);
+  const closes = trackerCloses(resolved);
+  log(`tracker: ${RESOLVED_STORE} names ${closes.size} dashboard close(s) in its Closed by column; ${WORKING_STORE} holds ${working.length} open row(s)`);
 
   /*
    * A decision that has already been resolved is SKIPPED, by looking for its
@@ -193,43 +331,21 @@ async function main(): Promise<void> {
       log(`  ${intent.intentId} already ${intent.state} (${intent.canonicalRef ?? "-"})`);
       continue;
     }
-    let state: OwnerDecisionState = "PENDING_CANONICALIZATION";
-    let canonicalRef: string | null = null;
-    let refusedReason: string | null = null;
 
-    const trackerRef = tracker.get(intent.intentId) ?? null;
-    const ref = trackerRef === null ? claimedRef(intent) : null;
-    if (trackerRef !== null) {
-      // The tracker applied it: the row is resolved and names this intent.
-      state = "CANONICALIZED";
-      canonicalRef = trackerRef;
-    } else if (ref === null) {
-      refusedReason =
-        "the chosen option names no governance record and no resolved tracker row names " +
-        "this intent yet, so there is nothing to resolve against";
-    } else {
-      const record = index.resolve(ref);
-      if (!record) {
-        refusedReason =
-          `${ref} does not exist in the canonical ledger yet. The governance change has not ` +
-          "been made — the decision stands and is waiting for it.";
-      } else if (!index.current().some((r) => r.id === record.id)) {
-        state = "REJECTED_BY_GATES";
-        refusedReason =
-          `${ref} resolves to ${record.id}, whose status is ${record.status}. An owner decision ` +
-          "may not be recorded against law that is no longer current.";
-      } else {
-        state = "CANONICALIZED";
-        canonicalRef = record.id;
-      }
-    }
+    const resolution: Resolution = intent.subjectId.startsWith(FIX_SUBJECT_PREFIX)
+      ? resolveFix(intent, working, resolved)
+      : intent.subjectId === FIX_QUEUE_SUBJECT
+        ? resolveGo(intent, intents, working, resolved)
+        : resolveRow(intent, index, closes, working, resolved);
 
     log(
-      `  ${intent.intentId} ${intent.subjectId} -> ${state}` +
-        `${canonicalRef ? ` as ${canonicalRef}` : ""}${refusedReason ? ` (${refusedReason})` : ""}`,
+      `  ${intent.intentId} ${intent.subjectId} -> ${resolution.state}` +
+        `${resolution.canonicalRef ? ` as ${resolution.canonicalRef}` : ""}` +
+        `${resolution.openedWork.length > 0 ? ` (work opened: ${resolution.openedWork.map((w) => w.id).join(", ")})` : ""}` +
+        `${resolution.refusedReason ? ` (${resolution.refusedReason})` : ""}`,
     );
 
-    if (state === "PENDING_CANONICALIZATION" && intent.state === "PENDING_CANONICALIZATION") {
+    if (resolution.state === "PENDING_CANONICALIZATION" && intent.state === "PENDING_CANONICALIZATION") {
       // Nothing changed; do not rewrite the log for a no-op.
       continue;
     }
@@ -241,15 +357,17 @@ async function main(): Promise<void> {
      * RESOLUTION is a new record carrying the same intent id plus a suffix, so
      * the original decision and what became of it both survive, in order.
      */
-    const resolved: OwnerDecisionIntent = {
+    const twin: OwnerDecisionIntent = {
       ...intent,
       formatVersion: OWNER_SURFACE_FORMAT_VERSION,
       intentId: `${intent.intentId}#resolved`,
-      state,
-      canonicalRef,
-      refusedReason,
+      state: resolution.state,
+      canonicalRef: resolution.canonicalRef,
+      refusedReason: resolution.refusedReason,
+      openedWork: resolution.openedWork,
+      subjectTitle: resolution.subjectTitle,
     };
-    await repos.ownerDecisions.append(DECISION_LOG_KEY, resolved.intentId, resolved, NOW_ISO);
+    await repos.ownerDecisions.append(DECISION_LOG_KEY, twin.intentId, twin, NOW_ISO);
     moved += 1;
   }
 

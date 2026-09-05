@@ -28,6 +28,7 @@ import {
 import type { ReadinessStateSnapshot } from "@/lib/control-plane/readiness/model.ts";
 
 import { ConsoleNav } from "../../console-nav.tsx";
+import { QueueForm } from "../../console-ui.tsx";
 import { ReadinessPanel } from "./readiness-panel.tsx";
 import { READINESS_STYLES } from "./styles.ts";
 
@@ -169,6 +170,7 @@ export default async function ReadinessStatePage({
     <main className="admin readiness">
       <style dangerouslySetInnerHTML={{ __html: READINESS_STYLES }} />
       {nav}
+      <QueueForm returnTo={`/readiness/${stateCode}`} />
       <ReadinessPanel
         snapshot={snapshot}
         notice={notice}

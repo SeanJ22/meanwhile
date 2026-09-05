@@ -63,6 +63,15 @@ export const REFERENCE_DATASETS = [
    */
   "fec_state_election_offices",
   "fec_combined_federal_state_disclosure_directory",
+  /*
+   * ADM-23 (the 9.4.26 evening admin feedback). Census ACS 5-Year 2023 total
+   * population (B01003_001E) by ZIP Code Tabulation Area and by state, acquired
+   * through the Census Data API by lib/sources/census-acs-population. The
+   * readiness publisher weights completeness by these; a ZIP with no ZCTA row
+   * is a named gap downstream, never a zero.
+   */
+  "acs5_2023_b01003_zcta",
+  "acs5_2023_b01003_state",
 ] as const;
 
 export type ReferenceDataset = (typeof REFERENCE_DATASETS)[number];
@@ -90,6 +99,13 @@ export const REFERENCE_ROW_COUNTS: Record<ReferenceDataset, number> = {
    * publishes a new edition covering a different set of jurisdictions.
    */
   "state-cf-agencies": 56,
+  /*
+   * Verified against the API on 2026-09-05: every ZCTA the 2023 5-year
+   * release tabulates (33,772) and the 50 states, DC and Puerto Rico (52).
+   * These move only with a new ACS vintage.
+   */
+  acs5_2023_b01003_zcta: 33_772,
+  acs5_2023_b01003_state: 52,
 };
 
 export function dataPath(dataset: ReferenceDataset): string {

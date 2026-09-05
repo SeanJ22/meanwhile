@@ -248,7 +248,18 @@ test("CSS Module declarations resolve locally without lending tokens to unrelate
 });
 
 test("every var(--token) reference resolves to a declared token", () => {
-  const declared = declaredCssTokens(readFileSync(CSS, "utf8"));
+  /*
+   * Two theme sources, not one. The reader's tokens live in `app/globals.css`;
+   * the owner control centre carries its OWN dark and light blocks in
+   * `app/(admin)/layout.tsx` (the Lumen Edge pass, ADM-21, 2026-09-05), and
+   * keeps them out of the reader stylesheet on purpose — the console is not
+   * the product. A token declared in either place resolves; one declared in
+   * neither is the defect this guard exists for.
+   */
+  const declared = new Set<string>([
+    ...declaredCssTokens(readFileSync(CSS, "utf8")),
+    ...declaredCssTokens(readFileSync(join(ROOT, "app", "(admin)", "layout.tsx"), "utf8")),
+  ]);
 
   const offenders: string[] = [];
   for (const file of styledSources()) {

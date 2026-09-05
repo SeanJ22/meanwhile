@@ -3,7 +3,7 @@
 
 The generated answer to “what do we hold for this state?” Registries, acquisitions, snapshots, databases and vaults remain authoritative. This page is a deterministic view of the inputs below, never a second source of truth.
 
-Session base: `3f9a138fd39f6160659329e17c496d2dd99cee00`. Current input digest: `08028cbe97c06bcd17c4a21fdc56dd3c9fffcec4b884fb24bff2e246ab5169ff`.
+Session base: `3f9a138fd39f6160659329e17c496d2dd99cee00`. Current input digest: `e061bf25661f20f40621060445187cde46ed218022e2869d68d26ec032fd7e58`.
 Manifest obligation: within the frozen session denominator.
 Byte-current means current against committed inputs. External observations keep their own observed_at stamps; generation never refreshes them.
 
@@ -49,7 +49,7 @@ Byte-current means current against committed inputs. External observations keep 
 
 ### Shared holdings without a state partition
 
-12 of 12 canonical shared inputs without a state partition; every table row is rendered below.
+14 of 14 canonical shared inputs without a state partition; every table row is rendered below.
 
 | Holding | Held file denominator | Reader relationship / attribution owed |
 | --- | --- | --- |
@@ -57,6 +57,8 @@ Byte-current means current against committed inputs. External observations keep 
 | [data/audit/gus-2022-clip-counties.json](../../data/audit/gus-2022-clip-counties.json) | 1 of 1 dataset objects | Authoritative reference/enumeration input for acquisition and registry construction; a tenant/domain lead is not a verified government. This input has no state identity partition; no share is assigned to MT by inference. |
 | [data/hunt/tier-directories.json](../../data/hunt/tier-directories.json) | 1 of 1 dataset objects | Canonical acquisition/discovery holdings. A found record feeds a reader only after the typed promotion path; this inventory does not assert promotion. This input has no state identity partition; no share is assigned to MT by inference. |
 | [data/prl/prl-profiles.json](../../data/prl/prl-profiles.json) | 1 of 1 dataset objects | Normalized sourced official profile aggregates, joined by exact Bioguide identity. Shares retain PRL attribution and the source statement-count denominator; no ranking or inferred position is projected. This input has no state identity partition; no share is assigned to MT by inference. |
+| [data/reference/acs5_2023_b01003_state.csv](../../data/reference/acs5_2023_b01003_state.csv) | 52 of 52 records | Authoritative reference/enumeration input for acquisition and registry construction; a tenant/domain lead is not a verified government. This input has no state identity partition; no share is assigned to MT by inference. |
+| [data/reference/acs5_2023_b01003_zcta.csv](../../data/reference/acs5_2023_b01003_zcta.csv) | 33772 of 33772 records | Authoritative reference/enumeration input for acquisition and registry construction; a tenant/domain lead is not a verified government. This input has no state identity partition; no share is assigned to MT by inference. |
 | [data/reference/boarddocs_tenants.csv](../../data/reference/boarddocs_tenants.csv) | 0 of 0 records | Authoritative reference/enumeration input for acquisition and registry construction; a tenant/domain lead is not a verified government. This input has no state identity partition; no share is assigned to MT by inference. |
 | [data/reference/granicus_legistar_tenants.csv](../../data/reference/granicus_legistar_tenants.csv) | 39 of 39 records | Authoritative reference/enumeration input for acquisition and registry construction; a tenant/domain lead is not a verified government. This input has no state identity partition; no share is assigned to MT by inference. |
 | [data/votes/bill-summaries.json](../../data/votes/bill-summaries.json) | 1 of 1 dataset objects | Recorded votes and cited summaries; no inferred candidate positions. The map and ballot use the same VotingRecordViews; the API and Ask reach the same federal and state vote snapshot loaders. This input has no state identity partition; no share is assigned to MT by inference. |

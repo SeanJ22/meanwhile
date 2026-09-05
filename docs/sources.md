@@ -40,7 +40,7 @@ key nothing reads leaves no trace in the code.
 | 10 | `PLURAL_API_KEY` | `lib/sources/plural/index.ts` | **WIRED** | 2026-08-23 |
 | 11 | `LEGISCAN_API_KEY` | `scripts/fetch-legiscan.mts`, `refresh-legiscan-snapshot.yml` | **WIRED** | 2026-08-23 |
 | 12 | `ANTHROPIC_API_KEY` | `lib/routing/classifier.ts` | **WIRED** | 2026-08-23 |
-| 13 | `CENSUS_API_KEY` | **nothing** | **NOT IN USE** — row `SRC01` | 2026-08-23 |
+| 13 | `CENSUS_API_KEY` | `lib/sources/census-acs-population/index.ts`, `pnpm acs:population` | **WIRED** — ACS 5-Year B01003 population by ZCTA and state, committed under `data/reference/acs5_2023_b01003_*` (ADM-23) | 2026-09-05 |
 | 14 | `LDA_API_KEY` | **nothing** | **NOT IN USE** — row `SRC02` (`PB12` is the client) | 2026-08-23 |
 | 15 | `DATA_GOV_API_KEY` | **nothing** — named only in `PB13`'s own prose | **NOT IN USE** — row `SRC03` | 2026-08-23 |
 
@@ -73,7 +73,7 @@ was accurate. What it could not tell anyone is whether the credentials work.
 | `PLURAL_API_KEY` | `lib/sources/plural/index.ts` — **WIRED** | not needed | The **committed BULK file** `data/reference/openstates_legislators.csv` holds 7,976 state legislators with official emails; **61** of them serve these two zips. No API call, no quota spent. | **61** | 2026-08-22 |
 | `LEGISCAN_API_KEY` | `scripts/fetch-legiscan.mts`, `refresh-legiscan-snapshot.yml` — **WIRED**, daily | not re-walked | Bills and roll calls. Closes no Kelly field about a person; it is a positions source. | 0 | 2026-08-22 |
 | `DATA_GOV_API_KEY` | **nothing** — `SRC03` | HTTP 200 | **42 govinfo collections.** The `CDIR` collection is the Congressional Directory and carries member offices, phones and staff — a real contact route, and the reason this key is worth keeping. | 0 | 2026-08-22 |
-| `CENSUS_API_KEY` | **nothing** — `SRC01` | **HTTP 302, `X-DataWebAPI-KeyError: 1`** | **THE KEY IS INVALID.** The host redirects to `invalid_key.html`. A call with NO key redirects to `missing_key.html`, so the API cannot be reached at all until the credential is replaced. `NS06`. | 0 | 2026-08-22 |
+| `CENSUS_API_KEY` | `lib/sources/census-acs-population/index.ts` — **WIRED** 2026-09-05 | **HTTP 200 with real data** (2026-09-05) | **THE KEY WORKS NOW.** On 2026-08-22 the host redirected to `invalid_key.html` (`X-DataWebAPI-KeyError: 1`); re-measured 2026-09-05 the same key answers `["ZCTA5 85701","5169","85701"]`, and one keyed call each returned every ZCTA (33,772) and every state (52) for ACS 5-Year 2023 B01003. A keyless call is still a 302 to `missing_key.html`. `api.census.gov/robots.txt` answers a WAF "Request Rejected" page (HTTP 200, HTML), so the robots read is CANNOT_TELL and the API's own terms of service (a key, and a citation) govern the route. Closes no Kelly field about a person; it is the readiness panel's population source (ADM-23). | 0 | 2026-09-05 |
 | `LDA_API_KEY` | **nothing** — `SRC02` | HTTP 200 | The API answers, and it closes **nothing** at either zip. Stated plainly rather than softened: the LDA database is FEDERAL lobbying only — registrants, clients, and the House and Senate offices they lobby. It has no county, municipal or school-district layer. Where it would earn its place is a later who-is-lobbying-my-delegation surface, which is not a hunt question. | 0 | 2026-08-22 |
 
 **119 owed fields closed from credentials alone, in one run.** Every one of them

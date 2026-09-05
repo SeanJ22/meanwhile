@@ -81,6 +81,15 @@ export type ItemDisposition = (typeof ITEM_DISPOSITIONS)[number];
 export const ITEM_SOURCES = ["DICTATION", "SPREADSHEET", "SCREENSHOT", "OWNER_WORKBOOK"] as const;
 export type ItemSource = (typeof ITEM_SOURCES)[number];
 
+/**
+ * An owner date folder: `M.D.YY`, or `M.D.YY.N` when the owner files a second
+ * pass on the same day. Shared with `scripts/feedback-sweep.mts`, which lists
+ * the folders on disk with it, so the gate and the record agree on what a
+ * folder is — a folder the lister skipped would be exactly the silence the
+ * gate exists to refuse.
+ */
+export const OWNER_FOLDER = /^\d{1,2}\.\d{1,2}\.\d{2}(?:\.\d{1,2})?$/;
+
 export interface SweptItem {
   /** The owner's own id where they gave one, else one assigned by the sweep. */
   readonly id: string;
@@ -163,7 +172,10 @@ export interface CheckDebtEntry {
 }
 
 export interface SweepRecord {
-  /** The owner's folder name, exactly: `M.D.YY`. */
+  /**
+   * The owner's folder name, exactly: `M.D.YY`, or `M.D.YY.N` for a second pass
+   * on the same day (the owner named the 2026-09-04 evening pass `9.4.26.2`).
+   */
   readonly folder: string;
   /** Every file the sweep inventoried, by name. Stated N equals rendered rows. */
   readonly filesInventoried: readonly string[];
@@ -177,8 +189,8 @@ export interface SweepRecord {
 /** A problem with a sweep. Empty means the sweep is well-formed. */
 export function validateSweep(sweep: SweepRecord): string[] {
   const problems: string[] = [];
-  if (!/^\d{1,2}\.\d{1,2}\.\d{2}$/.test(sweep.folder)) {
-    problems.push(`folder ${JSON.stringify(sweep.folder)} is not an M.D.YY owner date folder`);
+  if (!OWNER_FOLDER.test(sweep.folder)) {
+    problems.push(`folder ${JSON.stringify(sweep.folder)} is not an M.D.YY (or M.D.YY.N) owner date folder`);
   }
   if (sweep.filesInventoried.length === 0) {
     problems.push("no files inventoried — a sweep that read nothing swept nothing");

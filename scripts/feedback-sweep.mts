@@ -35,6 +35,7 @@ import { join } from "node:path";
 
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import {
+  OWNER_FOLDER,
   checkSweepGate,
   countSweep,
   type SweepRecord,
@@ -49,7 +50,7 @@ const CHECK = process.argv.includes("--check");
 function ownerFolders(): string[] {
   if (!existsSync(FEEDBACK)) return [];
   return readdirSync(FEEDBACK, { withFileTypes: true })
-    .filter((e) => e.isDirectory() && /^\d{1,2}\.\d{1,2}\.\d{2}$/.test(e.name))
+    .filter((e) => e.isDirectory() && OWNER_FOLDER.test(e.name))
     .map((e) => e.name)
     .sort();
 }

@@ -46,6 +46,7 @@ import {
   readDecisions,
   readDigests,
   readFleetInputs,
+  readFleetSafety,
   readHeartbeat,
   readSnapshot,
   type ReadOutcome,
@@ -274,7 +275,7 @@ export default async function AdminPage() {
     );
   }
 
-  const [snapshotOut, heartbeatOut, digestsOut, decisionsOut, cacheOut, intentsOut, fleetOut] =
+  const [snapshotOut, heartbeatOut, digestsOut, decisionsOut, cacheOut, intentsOut, fleetOut, fleetSafetyOut] =
     await Promise.all([
       readSnapshot(opened.repos),
       readHeartbeat(opened.repos),
@@ -283,6 +284,7 @@ export default async function AdminPage() {
       readCacheObservation(opened.repos),
       readResearchIntents(opened.repos),
       readFleetInputs(opened.repos),
+      readFleetSafety(opened.repos),
     ]);
 
   const snapshot: OwnerSnapshot | null = snapshotOut.kind === "HELD" ? snapshotOut.value : null;
@@ -299,7 +301,8 @@ export default async function AdminPage() {
   });
   const fleet = fleetOut.kind === "HELD" ? buildFleetView({ nowIso, ...fleetOut.value }) : null;
   const deployments = dispatchHistory(intentLog);
-  const standing = runnerStanding(heartbeatOut.kind === "HELD" ? heartbeatOut.value : null, intentLog, nowIso);
+  const fleetSafety = fleetSafetyOut.kind === "HELD" ? fleetSafetyOut.value.fleetSafety ?? null : null;
+  const standing = runnerStanding(heartbeatOut.kind === "HELD" ? heartbeatOut.value : null, intentLog, nowIso, fleetSafety);
   const cards = snapshot ? snapshot.decisionCards : [];
   const decisionCards = cards.filter((c) => decisionCardKind(c) === "DECISION");
   const acknowledgeCards = cards.filter((c) => decisionCardKind(c) === "ACKNOWLEDGE");
@@ -328,6 +331,17 @@ export default async function AdminPage() {
     for (const m of fleetRenderedNumbers(fleet)) {
       numbers.push({ label: "fleet", value: m.value, denominator: m.denominator, contract: m.contract });
     }
+  }
+  if (fleetSafety) {
+    numbers.push(
+      { label: "Fleet requests", value: fleetSafety.cycle.requests, denominator: fleetSafety.bounds.maxProviderRequestsPerCycle, contract: "Public/provider requests admitted this cycle against the hard ceiling." },
+      { label: "Fleet payload bytes", value: fleetSafety.cycle.payloadBytes, denominator: fleetSafety.bounds.maxPayloadBytesPerCycle, contract: "Application payload bytes sent and consumed this cycle against the hard ceiling." },
+      { label: "Fleet dispatches", value: fleetSafety.cycle.dispatches, denominator: fleetSafety.bounds.maxDispatchesPerCycle, contract: "Fleet work dispatches admitted this cycle against the hard ceiling." },
+      { label: "Fleet wall time", value: fleetSafety.cycle.elapsedMs, denominator: fleetSafety.bounds.maxWallMsPerCycle, contract: "Elapsed Fleet cycle wall time against the hard ceiling." },
+    );
+    if (fleetSafety.cycle.modelUsd !== null) numbers.push({ label: "Fleet cycle spend", value: fleetSafety.cycle.modelUsd, denominator: fleetSafety.bounds.cycleModelUsd, contract: "Measured model spend admitted in this cycle against its hard ceiling." });
+    if (fleetSafety.operationalNight.modelUsd !== null) numbers.push({ label: "Fleet operational-night spend", value: fleetSafety.operationalNight.modelUsd, denominator: fleetSafety.bounds.operationalNightModelUsd, contract: "Measured model spend in the Phoenix operational night against its hard ceiling." });
+    if (fleetSafety.rolling24Hours.modelUsd !== null) numbers.push({ label: "Fleet rolling spend", value: fleetSafety.rolling24Hours.modelUsd, denominator: fleetSafety.bounds.rolling24HourModelUsd, contract: "Measured model spend in the rolling 24-hour window against the absolute ceiling." });
   }
   if (snapshot) {
     for (const row of snapshot.obligationsByState) {
@@ -532,6 +546,49 @@ export default async function AdminPage() {
             {heartbeat.nextCycleDueAt ?? "not recorded in this heartbeat"}; at SHA{" "}
             {heartbeat.testedSha ? heartbeat.testedSha.slice(0, 8) : "unrecorded"}; host {heartbeat.host}.
           </p>
+        )}
+        {fleetSafety ? (
+          <div className="note">
+            <p>
+              <strong>Fleet safety state: {standing.state}</strong>
+            </p>
+            <p>
+              Model spend — cycle {fleetSafety.cycle.modelUsd === null ? "UNMEASURED" : usd(fleetSafety.cycle.modelUsd)} of {usd(fleetSafety.bounds.cycleModelUsd)}; operational night{" "}
+              {fleetSafety.operationalNight.modelUsd === null ? "UNMEASURED" : usd(fleetSafety.operationalNight.modelUsd)} of {usd(fleetSafety.bounds.operationalNightModelUsd)}; rolling 24 hours{" "}
+              {fleetSafety.rolling24Hours.modelUsd === null ? "UNMEASURED" : usd(fleetSafety.rolling24Hours.modelUsd)} of {usd(fleetSafety.bounds.rolling24HourModelUsd)}.
+            </p>
+            <p>
+              Requests {fleetSafety.cycle.requests} of {fleetSafety.bounds.maxProviderRequestsPerCycle}; payload bytes{" "}
+              {fleetSafety.cycle.payloadBytes} of {fleetSafety.bounds.maxPayloadBytesPerCycle}; work dispatched{" "}
+              {fleetSafety.cycle.dispatches} of {fleetSafety.bounds.maxDispatchesPerCycle}; wall time{" "}
+              {fleetSafety.cycle.elapsedMs} ms of {fleetSafety.bounds.maxWallMsPerCycle} ms.
+            </p>
+            <p>
+              Last successful Fleet activity: {fleetSafety.lastSuccessfulActivity === null ? "not recorded by Fleet yet" : fleetSafety.lastSuccessfulActivity}. Current runner heartbeat: {heartbeat === null ? "not recorded by the runner yet" : heartbeat.beatAt}.
+            </p>
+            <p>Why work stopped: {fleetSafety.stoppedBecause.length === 0 ? "no stop reason recorded for this cycle" : fleetSafety.stoppedBecause.join("; ")}.</p>
+            <p>
+              Provider circuit breakers:{" "}
+              {fleetSafety.providerCircuits.length === 0
+                ? "none"
+                : fleetSafety.providerCircuits.map((c) => `${c.provider} — ${c.condition}; first observed ${c.firstObservedAt}; eligible ${c.eligibleAt}`).join("; ")}.
+            </p>
+            {fleetSafety.deferred.length > 0 && (
+              <details>
+                <summary>Deferred by name — {fleetSafety.deferred.length}</summary>
+                <ul>
+                  {fleetSafety.deferred.map((d) => (
+                    <li key={`${d.work}:${d.code}`}>
+                      <code>{d.work}</code> — {d.code}: {d.why}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            )}
+            <p>Promotion: <strong>OFF</strong>.</p>
+          </div>
+        ) : (
+          <p className="note">Fleet safety state is not recorded. {outcomeNote(fleetSafetyOut)}</p>
         )}
         {standing.control === "PAUSE_RUNNER" ? (
           <form method="post" action={INTENT_ROUTE}>

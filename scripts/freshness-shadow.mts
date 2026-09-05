@@ -166,7 +166,13 @@ import { PILOT_ZIPS } from "../lib/health/owner-corpus-compile.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 import { RUNNER_ID } from "../lib/control-plane/admin-data.ts";
 import { OWNER_SURFACE_FORMAT_VERSION, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
-import { browseWithPlaywright } from "./scout-browse.mts";
+import {
+  FLEET_SAFETY_BOUNDS,
+  FleetSafetyController,
+  scheduledBlackoutAt,
+  type ProviderCircuit,
+} from "../lib/control-plane/fleet-safety.ts";
+import { installNeonCircuitBreaker } from "../lib/control-plane/neon-circuit.ts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { nextRunRecordPath } from "../lib/health/run-records.ts";
@@ -239,12 +245,26 @@ const argv = process.argv.slice(2);
 const wantsPostgres = argv.includes("--provider=postgres");
 const dry = argv.includes("--dry");
 const noModel = argv.includes("--no-model");
+const canary = argv.includes("--canary");
+const boundedNumber = (raw: string | undefined, fallback: number, maximum: number): number => {
+  const parsed = raw === undefined ? fallback : Number(raw);
+  return Number.isFinite(parsed) && parsed >= 0 ? Math.min(parsed, maximum) : fallback;
+};
 const ceilingArg = argv.find((a) => a.startsWith("--max="));
-const MAX_DISPATCHES = ceilingArg ? Number(ceilingArg.slice("--max=".length)) : 50;
+const requestedMaxDispatches = boundedNumber(
+  ceilingArg?.slice("--max=".length),
+  FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle,
+  FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle,
+);
+const MAX_DISPATCHES = canary
+  ? 1
+  : Math.min(requestedMaxDispatches, FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle);
 const scoutMaxArg = argv.find((a) => a.startsWith("--scout-max="));
-const SCOUT_MAX = scoutMaxArg
-  ? Number(scoutMaxArg.slice("--scout-max=".length))
-  : RESEARCH_BOUNDS.maxScoutDispatchesPerCycle;
+const SCOUT_MAX = boundedNumber(
+  scoutMaxArg?.slice("--scout-max=".length),
+  canary ? 1 : RESEARCH_BOUNDS.maxScoutDispatchesPerCycle,
+  canary ? 1 : RESEARCH_BOUNDS.maxScoutDispatchesPerCycle,
+);
 const intervalArg = argv.find((a) => a.startsWith("--interval="));
 const INTERVAL_MIN = intervalArg ? Number(intervalArg.slice("--interval=".length)) : null;
 const onlyArg = argv.find((a) => a.startsWith("--only="));
@@ -252,22 +272,34 @@ const ONLY = onlyArg ? onlyArg.slice("--only=".length) : null;
 /* Exact obligation ids, comma-separated. A DIAGNOSTIC filter like --only, for a proof run. */
 const idsArg = argv.find((a) => a.startsWith("--ids="));
 const IDS = idsArg ? new Set(idsArg.slice("--ids=".length).split(",").map((s) => s.trim()).filter(Boolean)) : null;
+if (canary && (IDS === null || IDS.size !== 1)) {
+  console.error("freshness:shadow · --canary requires exactly one registered obligation via --ids=<id>.");
+  process.exit(1);
+}
 /*
- * The dispatch budget, in minutes from PROCESS START. The runner kills a child
- * at twenty minutes; this stops the cycle starting new work well inside that,
+ * The hard wall budget, in minutes from PROCESS START. The runner kills a child
+ * at fifteen minutes; dispatch admission stops two minutes earlier,
  * so it finishes cleanly — record written, occurrences closable — instead of
  * dying mid-write. Measured from process start because that is what the
  * supervisor's ceiling is measured from.
  */
 const budgetArg = argv.find((a) => a.startsWith("--budget-min="));
-const BUDGET_MIN = budgetArg ? Number(budgetArg.slice("--budget-min=".length)) : 15;
+const BUDGET_MIN = boundedNumber(
+  budgetArg?.slice("--budget-min=".length),
+  FLEET_SAFETY_BOUNDS.maxWallMsPerCycle / 60_000,
+  FLEET_SAFETY_BOUNDS.maxWallMsPerCycle / 60_000,
+);
 const CYCLE_STARTED_MS = Date.now();
-const DISPATCH_DEADLINE_MS = CYCLE_STARTED_MS + BUDGET_MIN * 60_000;
+/** Leave two minutes inside the 15-minute hard process ceiling to close records and publish state. */
+const FINALIZATION_RESERVE_MS = 2 * 60_000;
+const DISPATCH_DEADLINE_MS = CYCLE_STARTED_MS + Math.max(0, BUDGET_MIN * 60_000 - FINALIZATION_RESERVE_MS);
+const scheduledBlackout = scheduledBlackoutAt(NOW);
 
 /* ------------------------------------------------------------- provider --- */
 
 let repos: ControlPlaneRepositories;
 if (wantsPostgres) {
+  installNeonCircuitBreaker(ROOT, nowIso);
   const url = controlPlaneUrlFromEnv();
   if (url === null) {
     console.error(
@@ -358,7 +390,7 @@ console.log(
   )}`,
 );
 
-const sync = await syncObligations(repos, corpus, NOW);
+const sync = await syncObligations(repos, corpus, NOW, { exactReads: canary });
 console.log(
   `  ${floorLine(
     floored(
@@ -420,7 +452,11 @@ let resumedCount = 0;
 const preOpenSkipped: { obligationId: string; why: string }[] = [];
 const dueThisCycle: { obligation: (typeof sync.all)[number]; nextDueAt: string }[] = [];
 
-const debtsIn = await loadDebts(repos);
+const debtsIn = canary
+  ? (await Promise.all(corpus.map((obligation) => repos.debts.read(obligation.id))))
+      .filter((row) => row !== null)
+      .map((row) => row.value)
+  : await loadDebts(repos);
 const debtIds = new Set(debtsIn.filter((d) => d.consecutiveFailures > 0).map((d) => d.obligationId));
 const retryNow = new Set(retryable(debtsIn, nowMs).map((d) => d.obligationId));
 const backedOff = new Set([...debtIds].filter((id) => !retryNow.has(id)));
@@ -548,7 +584,10 @@ for (const pending of intents.pendingDispatch) {
     matched: matched.length,
     registered: allUnits.length,
   });
-  if (await honorIntent(pending, detail)) honoredDispatch.push(pending.intentId);
+  if (!scheduledBlackout && await honorIntent(pending, detail)) honoredDispatch.push(pending.intentId);
+  if (scheduledBlackout) {
+    console.log("  owner dispatch: SCHEDULED BLACKOUT; intent remains pending for the next eligible cycle.");
+  }
   console.log(
     `  owner dispatch: ${detail}` +
       (matched.length > 0 ? ` ${dueAmongMatched} of the ${matched.length} are due this cycle; the rest keep their next-due.` : ""),
@@ -641,7 +680,8 @@ for (const { obligation: o, nextDueAt } of openingOrder) {
   const lane = decisionFor(o.id, o.routeId).kind;
   const opened = lane === "BOUNDED_MODEL_WORKER" ? openedModel : openedDeterministic;
   const laneCeiling = lane === "BOUNDED_MODEL_WORKER" ? SCOUT_MAX : MAX_DISPATCHES;
-  if (opened >= laneCeiling) {
+  const aggregateOpeningCeiling = canary ? 1 : FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle;
+  if (scheduledBlackout || opened >= laneCeiling || openedDeterministic + openedModel >= aggregateOpeningCeiling) {
     deferredForCeiling += 1;
     continue;
   }
@@ -697,7 +737,9 @@ const credentialConfigured = workerKey.length > 0;
 /* The intent log was read, and RUN_CYCLE_NOW / DISPATCH honored, above the
    lane ordering — a DISPATCH has to reorder before anything is opened. */
 
-const laneDisabledCode = dry
+const laneDisabledCode = scheduledBlackout
+  ? "SCHEDULED_BLACKOUT"
+  : dry
   ? "LANE_DISABLED"
   : noModel
     ? "LANE_DISABLED"
@@ -706,7 +748,9 @@ const laneDisabledCode = dry
       : intents.paused
         ? "PAUSED"
         : null;
-const laneDisabledReason = dry
+const laneDisabledReason = scheduledBlackout
+  ? "SCHEDULED BLACKOUT: Saturday 18:00 through Sunday 06:00 America/Phoenix permits no model or network research"
+  : dry
   ? "--dry: no retrieval of any kind runs, so no Scout runs"
   : noModel
     ? "--no-model: the Scout lane is held closed for this diagnostic cycle"
@@ -754,13 +798,36 @@ try {
 const spendWindow = researchSpendInWindow(costLedger, NOW);
 let spentThisCycle = 0;
 let scoutsAdmittedThisCycle = 0;
+let priorCircuits: readonly ProviderCircuit[] = [];
+let priorLastSuccessfulActivity: string | null = null;
+try {
+  const previous = await repos.researchState.read(RESEARCH_STATE_ID);
+  priorCircuits = previous?.value.fleetSafety?.providerCircuits ?? [];
+  priorLastSuccessfulActivity = previous?.value.fleetSafety?.lastSuccessfulActivity ?? null;
+} catch (error) {
+  runtimeConditions.push(`prior Fleet safety state could not be read: ${error instanceof Error ? error.message : String(error)}`);
+}
+const fleetSafety = new FleetSafetyController({
+  now: NOW,
+  costs: costLedger,
+  costLedgerReadable: ledgerUnreadable === null,
+  paused: intents.runnerPause.paused,
+  circuits: priorCircuits,
+  lastSuccessfulActivity: priorLastSuccessfulActivity,
+});
+if (ledgerUnreadable !== null) {
+  fleetSafety.defer("all model-backed Fleet work", "UNMEASURED_MODEL_SPEND", `the canonical cost ledger could not be read: ${ledgerUnreadable}`);
+}
 
 /* Prior context the Scout may inherit — read once, only when a Scout can run. */
 const priorScoutResults = new Map<string, ScoutResult[]>();
 const priorDispositionsByObligation = new Map<string, { disposition: string; permission: string; transport: string; note: string; at: string }[]>();
 if (modelLaneEnabled && dueModel.length > 0) {
   try {
-    for (const r of await repos.scoutResults.readAll()) {
+    const priorResults = canary
+      ? (await Promise.all(dueModel.map((row) => repos.scoutResults.read(row.obligation.id)))).flat()
+      : await repos.scoutResults.readAll();
+    for (const r of priorResults) {
       const list = priorScoutResults.get(r.obligationId) ?? [];
       list.push(r);
       priorScoutResults.set(r.obligationId, list);
@@ -770,8 +837,21 @@ if (modelLaneEnabled && dueModel.length > 0) {
   }
   try {
     const routeTaskToObligation = new Map<string, string>();
-    for (const occ of await repos.occurrences.list()) routeTaskToObligation.set(occ.value.routeTaskId, occ.value.obligationId);
-    for (const c of await repos.dispositions.readAll()) {
+    const priorDispositions: (Awaited<ReturnType<typeof repos.dispositions.readAll>>)[number][] = [];
+    if (canary) {
+      for (const row of dueModel) {
+        const standing = sync.all.find((entry) => entry.id === row.obligation.id);
+        if (!standing?.openOccurrenceId) continue;
+        const occurrence = await repos.occurrences.read(standing.openOccurrenceId);
+        if (!occurrence) continue;
+        routeTaskToObligation.set(occurrence.value.routeTaskId, occurrence.value.obligationId);
+        priorDispositions.push(...await repos.dispositions.read(occurrence.value.routeTaskId));
+      }
+    } else {
+      for (const occ of await repos.occurrences.list()) routeTaskToObligation.set(occ.value.routeTaskId, occ.value.obligationId);
+      priorDispositions.push(...await repos.dispositions.readAll());
+    }
+    for (const c of priorDispositions) {
       const obligationId = routeTaskToObligation.get(c.routeTaskId);
       if (obligationId === undefined) continue;
       const list = priorDispositionsByObligation.get(obligationId) ?? [];
@@ -996,6 +1076,7 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
     dispatchOrdering,
     metrics,
     ownerDispatch: ownerDispatches.at(-1) ?? null,
+    fleetSafety: fleetSafety.snapshot(cycleFinishedAt ?? nowIso()),
   };
 }
 
@@ -1028,12 +1109,6 @@ const simulated: RunWork = async ({ executor, routeTaskId }) => ({
   detail: `--dry: ${executor} decided route task ${routeTaskId.slice(0, 12)} — no retrieval ran`,
 });
 
-const walk = routeExecutor({
-  routeFor: (id) => registry.routeFor(id),
-  spaceOut: spacer,
-  vault: vault.put,
-});
-
 /** The deterministic lane: an HTTP GET or POST from a committed descriptor. Never a model. */
 const executorFor = (obligation: { obligation: { id: string } }): DeclaredExecutor => {
   const route = registry.routeFor(obligation.obligation.id);
@@ -1045,7 +1120,14 @@ const executorFor = (obligation: { obligation: { id: string } }): DeclaredExecut
       version: dry ? "shadow-decision/1.0" : `route-executor/1.0 (${route?.routeId ?? "unrouted"})`,
       instance: holder,
     }),
-    run: dry ? simulated : walk,
+    run: dry
+      ? simulated
+      : routeExecutor({
+          routeFor: (id) => registry.routeFor(id),
+          spaceOut: spacer,
+          vault: vault.put,
+          openOne: fleetSafety.guardedOpenOne("public-web", obligation.obligation.id),
+        }),
   };
 };
 
@@ -1056,9 +1138,9 @@ const executorFor = (obligation: { obligation: { id: string } }): DeclaredExecut
  * lane is enabled; otherwise a refusing stand-in that `admitScout` never
  * reaches.
  */
-const scout: DeclaredExecutor = modelLaneEnabled
+const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLaneEnabled
   ? scoutExecutor({
-      transport: anthropicTransport(workerKey),
+      transport: fleetSafety.guardedModelTransport("anthropic", scheduled.obligation.id, anthropicTransport(workerKey)),
       toolkitFor: buildScoutToolkit,
       contextFor: (row) => ({
         route: registry.routeFor(row.obligation.id),
@@ -1067,7 +1149,13 @@ const scout: DeclaredExecutor = modelLaneEnabled
         /* RULING 244: a DETERMINISTIC decision reaching the Scout is refused before any request. */
         decision: decisionFor(row.obligation.id, row.obligation.routeId).kind,
         inherited: inheritedFor(row),
-        tools: { vault: vault.put, vaultBytes: vault.putBytes, spaceOut: spacer, browse: browseWithPlaywright },
+        tools: {
+          vault: vault.put,
+          vaultBytes: vault.putBytes,
+          spaceOut: spacer,
+          openOne: fleetSafety.guardedOpenOne("public-web", scheduled.obligation.id),
+          openBytes: fleetSafety.guardedOpenBytes("public-web", scheduled.obligation.id),
+        },
       }),
       onStart: async ({ attemptId, obligationId, startedAt }) => {
         running.push({ attemptId, obligationId, startedAt });
@@ -1109,9 +1197,9 @@ const scout: DeclaredExecutor = modelLaneEnabled
 
 // Keep a bounded share of the existing cycle for registered multi-worker work.
 // Otherwise an always-full refresh queue could starve the fleet indefinitely.
-const plannedWork = (await repos.workItems.list()).filter(item => item.value.autonomousPlan);
-const fleetReserveMs = !dry && plannedWork.length ? Math.min(360_000, BUDGET_MIN * 30_000) : 0;
-const fleetScoutReserve = !dry && plannedWork.some(item => {
+const plannedWork = canary || scheduledBlackout ? [] : (await repos.workItems.list()).filter(item => item.value.autonomousPlan);
+const fleetReserveMs = !dry && !canary && plannedWork.length ? Math.min(360_000, BUDGET_MIN * 30_000) : 0;
+const fleetScoutReserve = !dry && !canary && plannedWork.some(item => {
   const plan = item.value.autonomousPlan!;
   return plan.seedUrls.length > 0 && !plan.sources.length && !plan.acquisition.length;
 }) ? Math.min(1, SCOUT_MAX) : 0;
@@ -1139,6 +1227,8 @@ const cycle = await runCycle({
     reason: "not computed by this run; the truth contract is the control set's to state",
   },
   maxDispatches: MAX_DISPATCHES,
+  skipReclaim: canary,
+  admitDispatch: (row) => fleetSafety.admitDispatch(row.obligation.id),
   budget: { deadlineMs: DISPATCH_DEADLINE_MS - fleetReserveMs, now: () => Date.now() },
   /* ADM-8: the owner's dispatch goes first in the dispatcher's own due order too. */
   placeFirst: dispatchPriority,
@@ -1154,11 +1244,12 @@ const cycle = await runCycle({
       scoutsAdmittedThisCycle += 1;
       return { admit: true };
     },
-    modelExecutor: scout,
+    modelExecutor: scoutFor,
     maxConcurrentScouts: RESEARCH_BOUNDS.maxConcurrentScouts,
     scoutLeaseTtlMs: RESEARCH_BOUNDS.perDispatch.maxWallMs + 120_000,
     scoutWallMs: RESEARCH_BOUNDS.perDispatch.maxWallMs,
     onDispatched: async (result: DispatchResult, lane) => {
+      if (result.outcome === "WORKED") fleetSafety.recordSuccessfulActivity(nowIso());
       if (lane === "BOUNDED_MODEL_WORKER") {
         spentThisCycle += result.cost?.usd ?? 0;
         const at = running.findIndex((r) => r.attemptId === result.attemptId);
@@ -1176,10 +1267,14 @@ laneCounts = {
   modelDispatched: cycle.lanes?.model.dispatched ?? laneCounts.modelDispatched,
   deferredBy: { ...(cycle.lanes?.model.deferredBy ?? {}) },
 };
+for (const row of cycle.deferred) {
+  const code = /^([A-Z][A-Z0-9_]+)/.exec(row.why)?.[1] ?? "CYCLE_DEFERRED";
+  fleetSafety.defer(row.obligationId, code, row.why);
+}
 
 const budgetDeferred = cycle.deferred.filter((d) => d.why.includes("dispatch budget was spent")).length;
 console.log(
-  `\n  dispatch budget: ${BUDGET_MIN} min from process start` +
+  `\n  dispatch budget: ${Math.max(0, BUDGET_MIN - FINALIZATION_RESERVE_MS / 60_000)} min; hard cycle wall ${BUDGET_MIN} min` +
     (budgetDeferred > 0
       ? ` — SPENT; ${budgetDeferred} due item(s) deferred to a later cycle rather than run past the ` +
         "runner's ceiling and be killed mid-write"
@@ -1203,23 +1298,30 @@ for (const result of cycle.dispatched) {
   });
 }
 
-const persisted = await persistDebts(repos, cycle.debts, NOW);
+const persisted = await persistDebts(repos, cycle.debts, NOW, canary ? corpus.map((obligation) => obligation.id) : null);
 console.log(
   `\n  debt persisted: ${persisted.written} row(s) written, ${persisted.cleared.length} cleared`,
 );
 
 // Registered autonomous plans use the same dispatcher, vault, host spacing and
 // rolling model ceiling. Discovery shares this cycle's existing Scout allowance.
-if (!dry && Date.now() + 150_000 < DISPATCH_DEADLINE_MS) {
+if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEADLINE_MS) {
   try {
     const fleet = await autonomousStandingRuntime({ root: ROOT, repos, now: nowIso,
-      spaceOut: spacer, browse: browseWithPlaywright,
-      ...(modelLaneEnabled ? { transport: boundedAuditTransport(workerKey) } : {}) });
+      spaceOut: spacer,
+      openBytes: fleetSafety.guardedOpenBytes("public-web", "registered autonomous Fleet acquisition"),
+      ...(modelLaneEnabled ? { transport: fleetSafety.guardedModelTransport("anthropic", "registered autonomous Fleet audit", boundedAuditTransport(workerKey)) } : {}) });
     const autonomous = await runAutonomousCoordinator(fleet, { maximum: 3, concurrency: 2,
-      deadlineMs: DISPATCH_DEADLINE_MS, maxScoutDispatches: Math.max(0, SCOUT_MAX - scoutsAdmittedThisCycle) });
+      deadlineMs: DISPATCH_DEADLINE_MS, maxScoutDispatches: Math.max(0, SCOUT_MAX - scoutsAdmittedThisCycle),
+      admitDispatch: work => fleetSafety.admitDispatch(work) });
+    for (const row of autonomous.deferred) fleetSafety.defer(row.workItemId, row.reason, row.detail);
     scoutsAdmittedThisCycle += autonomous.scoutsAdmitted;
-    const legacy = Date.now() + 150_000 < DISPATCH_DEADLINE_MS ? await runHeldWorkerFleetCycle(ROOT, fleet, true) : [];
+    const remaining = Math.max(0, FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle - fleetSafety.snapshot().cycle.dispatches);
+    const legacy = Date.now() + 150_000 < DISPATCH_DEADLINE_MS
+      ? await runHeldWorkerFleetCycle(ROOT, fleet, true, { maximumDispatches: remaining, admitDispatch: work => fleetSafety.admitDispatch(work) })
+      : [];
     const fleetDispatches = [...autonomous.dispatches, ...legacy];
+    if (fleetDispatches.some(row => row.outcome === "WORKED")) fleetSafety.recordSuccessfulActivity(nowIso());
     await projectFleetPipeline(repos);
     for (const row of fleetDispatches) console.log(`  worker fleet: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
   } catch (error) {
@@ -1317,7 +1419,12 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
     cacheDefects: cacheDefectCounts(results),
   };
 }
-metrics = await computeMetrics();
+if (canary) {
+  runtimeConditions.push("live canary: whole-store metrics scans were intentionally skipped");
+  metrics = null;
+} else {
+  metrics = await computeMetrics();
+}
 
 /* -------------------------------------------- research state, heartbeat --- */
 
@@ -1356,7 +1463,19 @@ for (const r of scoutResultsThisCycle) {
 const deferredByLine = Object.entries(laneCounts.deferredBy)
   .map(([k, v]) => `${k} ${v}`)
   .join(", ");
+const safety = finalState.fleetSafety!;
 const researchLines = [
+  "FLEET SAFETY",
+  `  state              ${safety.status}`,
+  `  model spend        cycle ${safety.cycle.modelUsd === null ? "UNMEASURED" : `$${safety.cycle.modelUsd.toFixed(4)}`} / $${safety.bounds.cycleModelUsd.toFixed(2)} · ` +
+    `operational night ${safety.operationalNight.modelUsd === null ? "UNMEASURED" : `$${safety.operationalNight.modelUsd.toFixed(4)}`} / $${safety.bounds.operationalNightModelUsd.toFixed(2)} · ` +
+    `rolling 24h ${safety.rolling24Hours.modelUsd === null ? "UNMEASURED" : `$${safety.rolling24Hours.modelUsd.toFixed(4)}`} / $${safety.bounds.rolling24HourModelUsd.toFixed(2)}`,
+  `  aggregate          requests ${safety.cycle.requests}/${safety.bounds.maxProviderRequestsPerCycle} · payload bytes ${safety.cycle.payloadBytes}/${safety.bounds.maxPayloadBytesPerCycle} · ` +
+    `dispatches ${safety.cycle.dispatches}/${safety.bounds.maxDispatchesPerCycle} · wall ${safety.cycle.elapsedMs}/${safety.bounds.maxWallMsPerCycle}ms`,
+  `  stopped/deferred   ${safety.stoppedBecause.length === 0 ? "none" : safety.stoppedBecause.join("; ")}`,
+  `  circuits           ${safety.providerCircuits.length === 0 ? "none" : safety.providerCircuits.map(c => `${c.provider}: ${c.condition} (latched until ${c.eligibleAt})`).join("; ")}`,
+  `  last success       ${safety.lastSuccessfulActivity ?? "none recorded"}`,
+  "",
   "RESEARCH — LEVEL 1 (RULING 240)",
   `  lane               ${modelLaneEnabled ? "ENABLED" : `CLOSED — ${laneDisabledReason}`}`,
   `  credential         ${WORKER_CREDENTIAL_VAR} configured in this process: ${credentialConfigured ? "yes" : "NO"} (by name; the value reaches only the provider request)`,
@@ -1404,7 +1523,7 @@ const lines = [
   "",
   ...promotionLines(staged),
   `  staging manifest   ${manifest.total} entry(ies) held, ${manifest.written} written this cycle`,
-  `  dispatch budget    ${BUDGET_MIN} min from process start — ${
+  `  dispatch budget    ${Math.max(0, BUDGET_MIN - FINALIZATION_RESERVE_MS / 60_000)} min admission + ${FINALIZATION_RESERVE_MS / 60_000} min finalization reserve inside ${BUDGET_MIN} min hard wall — ${
     budgetDeferred > 0
       ? `SPENT; ${budgetDeferred} due item(s) deferred to a later cycle rather than run past the runner's ceiling`
       : "not reached"
@@ -1475,6 +1594,7 @@ writeFileSync(
       })),
       research: {
         state: finalState,
+        fleetSafety: safety,
         lanes: cycle.lanes,
         scouts: scoutDispatches.map((d) => ({
           obligationId: d.obligationId,

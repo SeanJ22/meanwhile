@@ -12,10 +12,10 @@ import type { AutonomousCoordinatorRuntime } from "./coordinator.ts";
 
 /** One runtime over the same stores and bounded Scout infrastructure used by the standing runner. */
 export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:string;repos:ControlPlaneRepositories;transport?:ModelTransport;
-  now?:()=>string;spaceOut?:ScoutToolContext["spaceOut"];browse?:ScoutToolContext["browse"]}):Promise<AutonomousCoordinatorRuntime> {
+  now?:()=>string;spaceOut?:ScoutToolContext["spaceOut"];browse?:ScoutToolContext["browse"];openBytes?:ScoutToolContext["openBytes"]}):Promise<AutonomousCoordinatorRuntime> {
   const now=input.now??(()=>new Date().toISOString());
   const tools:ResearchRuntimeTools={repos:input.repos,store:new DurableEvidenceStore(input.vaultRoot??join(input.root,...VAULT_DIR)),now,
-    spaceOut:input.spaceOut??hostSpacer(),...(input.browse?{browse:input.browse}:{})};
+    spaceOut:input.spaceOut??hostSpacer(),...(input.browse?{browse:input.browse}:{}),...(input.openBytes?{openBytes:input.openBytes}:{})};
   const prior=await input.repos.scoutResults.readAll();
   const runtime:AutonomousCoordinatorRuntime={...standingFleetRuntime(input),roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder),
     ...(input.transport?{scoutFor:(item,task,currentHistory)=>scoutExecutor({transport:input.transport!,now,

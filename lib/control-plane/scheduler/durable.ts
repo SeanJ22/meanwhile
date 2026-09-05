@@ -178,6 +178,7 @@ export async function syncObligations(
   repos: ControlPlaneRepositories,
   corpus: readonly FreshnessObligation[],
   now: string,
+  options: { readonly exactReads?: boolean } = {},
 ): Promise<{
   readonly all: readonly StandingObligation[];
   readonly registered: readonly string[];
@@ -208,8 +209,15 @@ export async function syncObligations(
    * moved is WHERE the existing row is found.
    */
   const existingById = new Map<string, { id: string; revision: number; value: StandingObligation }>();
-  for (const row of await repos.obligations.list()) {
-    existingById.set(row.id, { id: row.id, revision: row.revision, value: row.value });
+  if (options.exactReads) {
+    for (const obligation of corpus) {
+      const row = await repos.obligations.read(obligation.id);
+      if (row !== null) existingById.set(row.id, { id: row.id, revision: row.revision, value: row.value });
+    }
+  } else {
+    for (const row of await repos.obligations.list()) {
+      existingById.set(row.id, { id: row.id, revision: row.revision, value: row.value });
+    }
   }
 
   for (const o of corpus) {
@@ -453,9 +461,12 @@ export async function persistDebts(
   repos: ControlPlaneRepositories,
   next: readonly FreshnessDebt[],
   now: string,
+  scope: readonly string[] | null = null,
 ): Promise<{ readonly written: number; readonly cleared: readonly string[] }> {
   const byId = new Map(next.map((d) => [d.obligationId, d]));
-  const existing = await repos.debts.list();
+  const existing = scope === null
+    ? await repos.debts.list()
+    : (await Promise.all(scope.map((id) => repos.debts.read(id)))).filter((row) => row !== null);
   const cleared: string[] = [];
 
   for (const row of existing) {

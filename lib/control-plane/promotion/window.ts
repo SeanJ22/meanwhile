@@ -34,6 +34,7 @@ import type {
 } from "./types.ts";
 import { WINDOW_FORMAT_VERSION } from "./types.ts";
 import { legacyRefreshLines } from "./legacy-refresh.ts";
+import { scheduledBlackoutAt } from "../fleet-safety.ts";
 
 export const WINDOW_ZONE = "America/New_York";
 export const WINDOW_HOUR = 4;
@@ -126,6 +127,18 @@ export function windowDue(input: {
   const todayBoundary = zonedInstant(today, hour, zone);
   const owed = Date.parse(input.nowIso) >= Date.parse(todayBoundary) ? today : shiftLocalDate(today, -1);
   const boundary = zonedInstant(owed, hour, zone);
+  if (scheduledBlackoutAt(boundary)) {
+    return {
+      due: false,
+      localDate: owed,
+      boundary,
+      trigger: "RUNNER_CLOCK",
+      caughtUp: [],
+      reason:
+        `SCHEDULED BLACKOUT: the ${owed} nightly window falls inside Saturday 18:00 through ` +
+        "Sunday 06:00 America/Phoenix and is intentionally suppressed, not failed or caught up later",
+    };
+  }
   if (input.lastWindowLocalDate !== null && input.lastWindowLocalDate >= owed) {
     return {
       due: false,
@@ -138,7 +151,9 @@ export function windowDue(input: {
   }
   const caughtUp: string[] = [];
   if (input.lastWindowLocalDate !== null) {
-    for (let d = shiftLocalDate(input.lastWindowLocalDate, 1); d < owed; d = shiftLocalDate(d, 1)) caughtUp.push(d);
+    for (let d = shiftLocalDate(input.lastWindowLocalDate, 1); d < owed; d = shiftLocalDate(d, 1)) {
+      if (!scheduledBlackoutAt(zonedInstant(d, hour, zone))) caughtUp.push(d);
+    }
   }
   const late = Date.parse(input.nowIso) - Date.parse(boundary) > CATCH_UP_GRACE_MS;
   const trigger: WindowTrigger = late || caughtUp.length > 0 ? "CATCH_UP" : "RUNNER_CLOCK";

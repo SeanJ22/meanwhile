@@ -28,8 +28,14 @@ const input = (path: string) => { const bytes = readReaderEvidence(root, path); 
 const registry = JSON.parse(readFileSync("lib/registry/registry.json", "utf8"));
 const divisions = new Map<string, { divisionType: string; state: string }>(registry.divisions.map((row: { ocdId: string; divisionType: string; state: string }) => [row.ocdId, row]));
 const seenDistrictClasses = new Set<string>();
+const holdingValues = new Map<string, unknown>();
 const selected = census.records.filter(record => {
   if (record.family !== "registry" || record.unit !== "divisions" || record.eligibility.state !== "READER_ELIGIBLE") return false;
+  if (!holdingValues.has(record.holdingPath)) holdingValues.set(record.holdingPath, JSON.parse(readFileSync(record.holdingPath, "utf8")));
+  let raw = holdingValues.get(record.holdingPath);
+  for (const key of record.pointer.split("/").slice(1)) raw = (raw as Record<string, unknown> | undefined)?.[key.replaceAll("~1", "/").replaceAll("~0", "~")];
+  // Officeholder/division bridges feed the official card, not DistrictPopup.
+  if ((raw as { officeholderId?: string } | undefined)?.officeholderId) return false;
   const division = record.canonicalIdentity.map(id => divisions.get(id)).find(Boolean);
   if (!division || !["cd", "sldu", "sldl", "county", "place", "school_district"].includes(division.divisionType)) return false;
   const key = `${division.state}:${division.divisionType}`;

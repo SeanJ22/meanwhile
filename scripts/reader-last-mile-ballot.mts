@@ -122,7 +122,9 @@ try {
       for (const record of removals) assert.ok(text.includes(normalize(record.statement)), `${record.id}: filing change missing`);
       proofs.push({ contestId: contest.id, candidacyIds: expectedKeys.map((key) => reconciledCandidacyIdForCard(key) ?? key), actualCardKeys: actualKeys, measureIds: plan.set.measures.filter((measure) => measure.contestId === contest.id).map((measure) => measure.id), provisionIds: provisions.map((provision) => provision.id), removalIds: removals.map((record) => record.id), summaryHeld: Boolean(summary), textSha256: createHash("sha256").update(text).digest("hex"), sourceUrls: await section.locator("a[href]").evaluateAll((elements) => elements.map((element) => element.getAttribute("href"))) });
       if (process.argv.includes("--source-renewal")) {
-        const markup = await section.evaluate(element => element.outerHTML);
+        // Browser outerHTML leaves apostrophes literal; the existing React SSR
+        // inspector expects their equivalent HTML character reference.
+        const markup = (await section.evaluate(element => element.outerHTML)).replaceAll("'", "&#x27;");
         const expectedFragments = [contest.id, ...expectedKeys, ...(summary ? [summary.summary] : [])];
         const rowCounts = { candidates: { expected: expectedKeys.length, actual: actualKeys.length } };
         cases.push({ auditId: `${plan.zip}:${contest.id}`, component: "app/ballot/page.tsx", componentSha256: sha256(readFileSync("app/ballot/page.tsx")), selector: "canonical ZIP/division ballot selection → actual production DOM", actualCanonicalIdentities: [contest.id, ...expectedKeys], payloadSha256: sha256(JSON.stringify(proofs.at(-1))), markup, markupSha256: sha256(markup), expectedFragments, forbiddenFragments: [], rowCounts, failures: inspectReaderMarkup(markup, expectedFragments, [], rowCounts) });

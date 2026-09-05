@@ -624,7 +624,7 @@ export function readerSourceRevalidationProblems(root: string, census: ReaderCen
     const evidence = object(JSON.parse(readReaderEvidence(root, execution.evidencePath).toString("utf8")));
     if (evidence.exactHead !== proof.exactHead || !Array.isArray(evidence.failures) || evidence.failures.length || !Array.isArray(evidence.sourceHashes) || readerSourceHashProblems(root, evidence.sourceHashes as ReaderSourceHash[]).length) { failures.push(`Source renewal execution is stale or unbound: ${execution.id}`); continue; }
     const cases = Array.isArray(evidence.cases) ? evidence.cases as ReaderComponentCase[] : [];
-    if (cases.length !== execution.expected || sourceRenewalCaseProblems(cases).length) { failures.push(`Source renewal execution has missing or invalid rendered cases: ${execution.id}`); continue; }
+    if (cases.length !== execution.expected || sourceRenewalCaseProblems(cases).length || cases.some(entry => currentHashes.get(entry.component) !== entry.componentSha256)) { failures.push(`Source renewal execution has missing, stale or invalid rendered cases: ${execution.id}`); continue; }
     if (!Array.isArray(evidence.inputs) || !evidence.inputs.length || (evidence.inputs as ReaderSourceHash[]).some(input => !readerEvidenceHashMatches(root, input.path, input.sha256))) { failures.push(`Source renewal execution inputs changed: ${execution.id}`); continue; }
     for (const path of execution.sourcePaths) {
       if (!changed.includes(path) || !evidenceSourceHashes(evidence.sourceHashes).some(source => source.path === path && source.sha256 === currentHashes.get(path))) failures.push(`Source renewal execution does not bind ${path}`);

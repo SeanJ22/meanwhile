@@ -130,6 +130,18 @@ export interface CycleInput {
    */
   readonly budget?: { readonly deadlineMs: number; readonly now: () => number };
   /**
+   * **THE OWNER'S DISPATCH REORDERS THE DUE SET.** (ADM-8, 9.4.26 admin
+   * feedback, 2026-09-04.)
+   *
+   * Obligation ids the owner dispatched the fleet at this cycle. They are
+   * placed FIRST in the due set — ahead of the oldest-first order — in BOTH
+   * lanes, with their relative order otherwise untouched. A dispatch reorders
+   * and nothing else: it does not add a row, does not make an undue row due,
+   * does not lift a debt backoff, and does not change any ceiling or budget.
+   * Absent or empty, the due set is exactly the oldest-first order it was.
+   */
+  readonly placeFirst?: ReadonlySet<string>;
+  /**
    * **LEVEL 1 — TWO LANES IN ONE CYCLE.** (Level 1 activation, 2026-09-01.)
    *
    * Absent, the cycle runs exactly as before: one serial queue. Present, the
@@ -205,6 +217,21 @@ async function runPool<T>(items: readonly T[], limit: number, fn: (item: T) => P
 }
 
 /**
+ * Move the rows whose obligation id is in `first` to the front, keeping the
+ * relative order of both groups. Pure and stable, so the cycle script's
+ * opening order and the dispatcher's due order are the SAME derivation of the
+ * owner's dispatch (ADM-8) — two surfaces, one ordering. An empty set returns
+ * the rows as they were.
+ */
+export function placeFirstRows<T extends { readonly obligation: { readonly id: string } }>(
+  rows: readonly T[],
+  first: ReadonlySet<string> | undefined,
+): readonly T[] {
+  if (first === undefined || first.size === 0) return rows;
+  return [...rows.filter((r) => first.has(r.obligation.id)), ...rows.filter((r) => !first.has(r.obligation.id))];
+}
+
+/**
  * Run one full cycle. Unattended: nothing here can ask a question.
  *
  * A cycle that could block on an answer is a cycle that stops the loop, and
@@ -262,7 +289,8 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
   const alsoDue = schedule.scheduled.filter(
     (row) => retryIds.has(row.obligation.id) && !due.includes(row),
   );
-  const workNow = [...due, ...alsoDue];
+  /* The owner's dispatch (ADM-8) goes first; everything else keeps the oldest-first order above. */
+  const workNow = placeFirstRows([...due, ...alsoDue], input.placeFirst);
 
   /* 4 · DISPATCH, under a stated ceiling. Anything beyond it is DEFERRED with
         a reason rather than dropped — a queue that silently truncates reports

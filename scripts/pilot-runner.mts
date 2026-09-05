@@ -62,6 +62,20 @@
  *   pnpm pilot:start / pnpm pilot:stop / pnpm pilot:status
  * ```
  *
+ * ## The owner's intents, and the console (9.4.26 admin feedback)
+ *
+ * Between cycles the runner reads the owner's intent log once a minute.
+ * PAUSE_RUNNER holds cycles and keeps the heartbeat alive with `pause` set,
+ * so a deliberate pause reads as one and not as a red SILENT (ADM-5);
+ * RESUME_RUNNER, RUN_CYCLE_NOW and a DISPATCH end the sleep early, and the
+ * cycle puts the dispatched units first in both lanes (ADM-8). After every
+ * cycle's digest the runner publishes the admin console ITSELF —
+ * `publish-owner-snapshot.mts`, then `readiness-refresh.mts
+ * --target=control-plane` — so the deployed pages never again wait on a
+ * person (ADM-1). `pnpm pilot:stop` / `pilot:disable` / `pilot:start` write
+ * the matching PAUSE_RUNNER / RESUME_RUNNER note through
+ * `scripts/runner-pause-note.mts`, best effort.
+ *
  * `scripts/pilot-task.ps1` registers a Scheduled Task that runs AT LOGON with
  * a restart-on-failure policy, which is what makes this survive a reboot of
  * this Windows 11 host. The exact commands are in that file's header and in
@@ -72,12 +86,22 @@
 
 import { spawnSync } from "node:child_process";
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { hostname } from "node:os";
 import { join } from "node:path";
 
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
+import { headSha } from "../lib/ops/git-facts.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
-import { RESEARCH_INTENT_LOG_KEY, readIntents } from "../lib/control-plane/scheduler/research-policy.ts";
+import { RUNNER_ID } from "../lib/control-plane/admin-data.ts";
+import { OWNER_SURFACE_FORMAT_VERSION, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
+import {
+  RESEARCH_FORMAT_VERSION,
+  RESEARCH_INTENT_LOG_KEY,
+  readIntents,
+  type ResearchIntent,
+  type ResearchIntentRequest,
+} from "../lib/control-plane/scheduler/research-policy.ts";
 import type { ResearchMetrics } from "../lib/control-plane/research-metrics.ts";
 import { researchDigestLines } from "../lib/control-plane/research-digest.ts";
 import { today } from "./doc-dates.mjs";
@@ -459,33 +483,209 @@ function deliver(body: string, headline: string): { readonly where: string; read
   return { where: path, mirrored };
 }
 
+/* -------------------------------------------------------- console publish --- */
+
+/**
+ * **THE ADMIN CONSOLE IS PUBLISHED BY THE MACHINE, EVERY CYCLE.** (ADM-1,
+ * 9.4.26 admin feedback, 2026-09-04.)
+ *
+ * The deployed admin pages read a PUBLISHED control-plane record, never this
+ * host's files — and until now nothing scheduled `pnpm owner:publish` or
+ * `pnpm readiness:publish`. They ran when a person ran them, so the console
+ * went stale the moment a person stopped: the readiness panel read
+ * REQUIRES_REPUBLISH for a day while the runner cycled underneath it, doing
+ * work the console could not show. The standing runner is the one process
+ * that is always here, so it publishes after every cycle's digest, succeeded
+ * or failed — a failed cycle is exactly the reading the console must carry.
+ *
+ * Each publisher is its own child process under its own five-minute ceiling.
+ * A failure is PRINTED with its exit and last stderr line, never thrown and
+ * never silent, and never stops the loop: a console one cycle stale is a
+ * defect the next cycle repairs; a runner that stopped cycling because the
+ * console could not publish would be two defects.
+ *
+ * The file provider is a local proof with no deployed console to publish to;
+ * it says so rather than publishing a proof run over production.
+ */
+const PUBLISH_TIMEOUT_MS = 5 * 60_000;
+const CONSOLE_PUBLISHERS: readonly { readonly name: string; readonly args: readonly string[] }[] = [
+  { name: "owner snapshot", args: ["scripts/publish-owner-snapshot.mts"] },
+  { name: "readiness", args: ["scripts/readiness-refresh.mts", "--target=control-plane"] },
+];
+
+function publishConsole(): void {
+  if (provider !== "postgres") {
+    console.log("  console publish: skipped — the file provider is a local proof with no deployed console to publish to");
+    return;
+  }
+  for (const publisher of CONSOLE_PUBLISHERS) {
+    const started = Date.now();
+    const run = spawnSync(
+      process.execPath,
+      ["--env-file=.env.local", "--experimental-strip-types", ...publisher.args],
+      { cwd: ROOT, encoding: "utf8", timeout: PUBLISH_TIMEOUT_MS, maxBuffer: 16 * 1024 * 1024 },
+    );
+    const seconds = Math.round((Date.now() - started) / 1000);
+    if (run.status === 0) {
+      console.log(`  console publish: ${publisher.name} OK (${seconds}s)`);
+      continue;
+    }
+    const stderrLines = (run.stderr ?? "").split("\n").map((l) => l.trimEnd()).filter((l) => l.trim() !== "");
+    const last = stderrLines.at(-1) ?? (run.error ? run.error.message : "(nothing on stderr)");
+    const exit = run.status === null ? `signal ${run.signal ?? "none"}` : String(run.status);
+    console.error(`  console publish: ${publisher.name} FAILED exit ${exit} — ${last}`);
+  }
+}
+
 /* -------------------------------------------------------------- the loop --- */
 
 const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
 
 /**
- * **THE OWNER'S "RUN RESEARCH CYCLE NOW" IS HONORED BETWEEN CYCLES.**
- * (Level 1 activation, 2026-09-01.)
+ * **THE OWNER'S STANDING INTENTS ARE READ BETWEEN CYCLES.** (Level 1
+ * activation, 2026-09-01. PAUSE_RUNNER / RESUME_RUNNER and DISPATCH added for
+ * the 9.4.26 admin feedback, ADM-5 and ADM-8, 2026-09-04.)
  *
- * The interval sleep is taken in one-minute slices; each minute the
- * research-intents log is read, and a pending RUN_CYCLE_NOW ends the sleep so
- * the next cycle starts at once. The cycle itself appends the HONORED record.
- * A store that cannot be read keeps the ordinary interval — an intent nobody
- * can read is not an intent nobody sent, so the failure is printed, once.
+ * The interval sleep is taken in one-minute slices. Each minute the research
+ * intent log is read ONCE and asked three things, in this order:
+ *
+ * ```
+ *   HOLD       a PAUSE_RUNNER stands (no later RESUME_RUNNER). No cycle
+ *              starts. The first time it is seen the runner prints the owner's
+ *              reason and appends its own HONORED record beside the pause; every
+ *              thirty minutes it re-writes the heartbeat with `pause` set, so
+ *              the dashboard reads "alive, deliberately idle" rather than a red
+ *              SILENT that cannot be told from a crash. The owner disabled the
+ *              scheduled task on purpose once and the page called it a failure
+ *              for a day; that is the defect this closes.
+ *   START_NOW  a RESUME_RUNNER with no HONORED record (the pause is over, or
+ *              `pnpm pilot:start` just wrote one), a pending RUN_CYCLE_NOW, or
+ *              a pending DISPATCH. The sleep ends and the next cycle starts at
+ *              once. RUN_CYCLE_NOW and DISPATCH are honored by the cycle that
+ *              runs; RESUME_RUNNER is honored HERE, by the runner, because a
+ *              resume is about the runner and not about any cycle.
+ *   NOTHING    the ordinary interval stands.
+ * ```
+ *
+ * A store that cannot be read keeps the ordinary behaviour — an intent nobody
+ * can read is not an intent nobody sent, so the failure is printed, once. The
+ * file provider is a local proof and carries no owner intents.
+ *
+ * The nightly window (RULING 242) keeps its own clock through a pause: a pause
+ * holds CYCLES; the reader-truth door runs in shadow and catches up on its own.
  */
 const POLL_MS = 60_000;
+const PAUSE_BEAT_MS = 30 * 60_000;
 let intentRepos: ControlPlaneRepositories | null = null;
 let intentReadFailed = false;
-async function pendingRunNow(): Promise<boolean> {
-  if (provider !== "postgres") return false;
+let pauseBeatFailed = false;
+/** The PAUSE_RUNNER intent whose reason was printed; null while not paused. */
+let announcedPause: string | null = null;
+let lastPauseBeatMs = 0;
+/** Intent ids this process already acted on, so a failed HONORED append is retried but never re-triggers a cycle. */
+const actedOn = new Set<string>();
+const honorFailurePrinted = new Set<string>();
+
+async function ownerRepositories(): Promise<ControlPlaneRepositories | null> {
+  if (provider !== "postgres") return null;
+  if (intentRepos === null) {
+    const url = controlPlaneUrlFromEnv();
+    if (url === null) return null;
+    intentRepos = await createPgRepositories(url, new Date().toISOString());
+  }
+  return intentRepos;
+}
+
+/** The latest RESUME_RUNNER with no HONORED record beside it, or null. */
+function unhonoredResume(log: readonly ResearchIntent[]): ResearchIntentRequest | null {
+  const honored = new Set(log.filter((r) => r.kind === "HONORED").map((r) => r.honors));
+  const resumes = log
+    .filter((r): r is ResearchIntentRequest => r.kind === "INTENT" && r.action === "RESUME_RUNNER")
+    .sort((a, b) => (a.requestedAt < b.requestedAt ? -1 : a.requestedAt > b.requestedAt ? 1 : 0));
+  const latest = resumes.at(-1) ?? null;
+  return latest !== null && !honored.has(latest.intentId) ? latest : null;
+}
+
+/**
+ * The runner's own HONORED record beside an owner intent — the same shape the
+ * cycle writes for RUN_CYCLE_NOW. Never edits the intent. A failed append is
+ * printed once per intent and retried at the next poll.
+ */
+async function honorRunnerIntent(
+  repos: ControlPlaneRepositories,
+  intent: ResearchIntentRequest,
+  detail: string,
+): Promise<boolean> {
+  const id = `${intent.intentId}:honored`;
+  const at = new Date().toISOString();
   try {
-    if (intentRepos === null) {
-      const url = controlPlaneUrlFromEnv();
-      if (url === null) return false;
-      intentRepos = await createPgRepositories(url, new Date().toISOString());
+    await repos.researchIntents.append(
+      RESEARCH_INTENT_LOG_KEY,
+      id,
+      {
+        formatVersion: RESEARCH_FORMAT_VERSION,
+        kind: "HONORED",
+        intentId: id,
+        honors: intent.intentId,
+        action: intent.action,
+        honoredAt: at,
+        honoredBy: `pilot-runner@${hostname()}#${process.pid}`,
+        detail,
+      },
+      at,
+    );
+    return true;
+  } catch (error) {
+    if (!honorFailurePrinted.has(intent.intentId)) {
+      honorFailurePrinted.add(intent.intentId);
+      console.error(
+        `  intent ${intent.intentId} (${intent.action}) could not be marked honored ` +
+          `(${error instanceof Error ? error.message : String(error)}); retried at the next poll. This is printed once.`,
+      );
     }
-    const log = await intentRepos.researchIntents.read(RESEARCH_INTENT_LOG_KEY);
-    return readIntents(log).pendingRunNow.length > 0;
+    return false;
+  }
+}
+
+/**
+ * Keep the heartbeat alive while idling on the owner's pause (ADM-5): the SAME
+ * fields as the last beat — or a minimal one naming this host and SHA when no
+ * beat exists — with `beatAt` now and `pause` naming the intent. `put` is
+ * create-only, so an existing beat is moved by `compareAndSet` against the
+ * revision just read.
+ */
+async function beatWhilePaused(repos: ControlPlaneRepositories, intent: ResearchIntentRequest): Promise<void> {
+  const now = new Date().toISOString();
+  const current = await repos.runnerHeartbeat.read(RUNNER_ID);
+  const base: RunnerHeartbeat = current?.value ?? {
+    formatVersion: OWNER_SURFACE_FORMAT_VERSION,
+    beatAt: now,
+    lastCycleStartedAt: null,
+    lastCycleFinishedAt: null,
+    nextCycleDueAt: null,
+    lastCycleOk: null,
+    testedSha: headSha(ROOT),
+    host: hostname(),
+  };
+  const next: RunnerHeartbeat = {
+    ...base,
+    beatAt: now,
+    pause: { intentId: intent.intentId, since: intent.requestedAt, note: intent.note },
+  };
+  if (current === null) await repos.runnerHeartbeat.put(RUNNER_ID, next, now);
+  else await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, current.revision, next, now);
+}
+
+type OwnerSays = "HOLD" | "START_NOW" | "NOTHING";
+
+/** ONE read of the intent log; every check above is answered from it. */
+async function ownerSays(): Promise<OwnerSays> {
+  let repos: ControlPlaneRepositories | null;
+  let log: readonly ResearchIntent[];
+  try {
+    repos = await ownerRepositories();
+    if (repos === null) return "NOTHING";
+    log = await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY);
   } catch (error) {
     if (!intentReadFailed) {
       intentReadFailed = true;
@@ -494,8 +694,64 @@ async function pendingRunNow(): Promise<boolean> {
           "the ordinary interval stands. This is printed once.",
       );
     }
-    return false;
+    return "NOTHING";
   }
+  const reading = readIntents(log);
+  const pause = reading.runnerPause;
+
+  if (pause.paused && pause.intent !== null) {
+    if (announcedPause !== pause.intent.intentId) {
+      announcedPause = pause.intent.intentId;
+      lastPauseBeatMs = 0;
+      console.log(`  runner paused by owner since ${pause.intent.requestedAt}: ${pause.intent.note ?? "(no reason given)"}`);
+    }
+    if (pause.honored === null) {
+      await honorRunnerIntent(repos, pause.intent, "idling on the owner's pause; no cycle starts until RESUME_RUNNER");
+    }
+    if (Date.now() - lastPauseBeatMs >= PAUSE_BEAT_MS) {
+      try {
+        await beatWhilePaused(repos, pause.intent);
+        lastPauseBeatMs = Date.now();
+      } catch (error) {
+        if (!pauseBeatFailed) {
+          pauseBeatFailed = true;
+          console.error(
+            `  the paused heartbeat could not be written (${error instanceof Error ? error.message : String(error)}); ` +
+              "the dashboard may read this deliberate pause as SILENT. Retried at the next poll; this is printed once.",
+          );
+        }
+      }
+    }
+    return "HOLD";
+  }
+  announcedPause = null;
+
+  const resume = unhonoredResume(log);
+  if (resume !== null) {
+    const first = !actedOn.has(resume.intentId);
+    actedOn.add(resume.intentId);
+    await honorRunnerIntent(repos, resume, "resumed; next cycle starts now");
+    if (first) {
+      console.log(
+        `  runner resumed by owner (${resume.requestedAt}${resume.note ? `: ${resume.note}` : ""}) — ` +
+          `starting the next cycle now at ${new Date().toISOString()}`,
+      );
+      return "START_NOW";
+    }
+  }
+  if (reading.pendingRunNow.length > 0) {
+    console.log(`  a RUN_CYCLE_NOW intent is pending — starting the next cycle early at ${new Date().toISOString()}`);
+    return "START_NOW";
+  }
+  if (reading.pendingDispatch.length > 0) {
+    const first = reading.pendingDispatch[0];
+    console.log(
+      `  ${reading.pendingDispatch.length} DISPATCH intent(s) pending (oldest: "${first.note ?? ""}") — ` +
+        `starting the next cycle early at ${new Date().toISOString()}`,
+    );
+    return "START_NOW";
+  }
+  return "NOTHING";
 }
 /* ===================== LANE E — THE NIGHTLY WINDOW (RULING 242) — begin =====================
  *
@@ -560,11 +816,22 @@ async function sleepUnlessRunNow(totalMs: number): Promise<void> {
   const until = Date.now() + totalMs;
   while (Date.now() < until) {
     await sleep(Math.min(POLL_MS, until - Date.now()));
-    if (await pendingRunNow()) {
-      console.log(`  a RUN_CYCLE_NOW intent is pending — starting the next cycle early at ${new Date().toISOString()}`);
-      return;
-    }
+    /* One read: a pause holds, a resume / RUN_CYCLE_NOW / DISPATCH ends the sleep early. */
+    if ((await ownerSays()) === "START_NOW") return;
     /* LANE E — the nightly window runs between cycles, on this clock. */
+    const decision = await windowDecision();
+    if (decision.run) runNightlyWindow(decision.trigger);
+  }
+}
+
+/**
+ * Before a cycle starts: while the owner's PAUSE_RUNNER stands, idle here —
+ * polling once a minute, beating every thirty — and return the moment it is
+ * lifted. Not paused, or unreadable: return at once and the cycle starts.
+ */
+async function holdWhilePaused(): Promise<void> {
+  while ((await ownerSays()) === "HOLD") {
+    await sleep(POLL_MS);
     const decision = await windowDecision();
     if (decision.run) runNightlyWindow(decision.trigger);
   }
@@ -578,6 +845,8 @@ console.log(
 
 let cycle = 0;
 while (cycle < CYCLES) {
+  /* ADM-5: the owner's PAUSE_RUNNER holds the next cycle until RESUME_RUNNER. */
+  await holdWhilePaused();
   cycle += 1;
   const startedAt = new Date().toISOString();
   console.log(`\npilot:run · cycle ${cycle} started ${startedAt}`);
@@ -666,6 +935,9 @@ while (cycle < CYCLES) {
   const delivered = deliver(buildDigest(record, cycle, today(), result.ok) + failureSection, headline);
   console.log(`  digest: ${delivered.where}${delivered.mirrored ? "" : "  (MIRROR NOT REACHABLE — repo fallback)"}`);
   console.log(`  ${headline}`);
+
+  /* ADM-1: the console is published by the machine after every digest, succeeded or failed. */
+  publishConsole();
 
   if (cycle >= CYCLES) break;
   await sleepUnlessRunNow(INTERVAL_MIN * 60_000);

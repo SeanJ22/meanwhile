@@ -213,6 +213,10 @@
   --dur-base: 200ms;
   --dur-slow: 320ms;
   --dur-pulse: 1100ms;
+  /* LAY-12 explicitly specifies a 1.5-second boundary-control glow. It is a
+     navigation affordance, separate from the loading-only pulse above. */
+  --dur-boundary-glow: 1500ms;
+  --ease-boundary-glow: ease-in-out;
   --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
   --ease-move: cubic-bezier(0.4, 0, 0.2, 1);
@@ -5634,11 +5638,49 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
  * gaps on the rendered DOM, because this is a defect the DOM shows and a
  * stylesheet reading cannot.
  */
+/* BAL-43: office blocks stay in ballot order from top to bottom. The second
+   desktop column belongs to candidates within each office, not other offices. */
+.ballot-office-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.ballot-office-card[data-office-tier-start="true"] {
+  border-top-width: 3px;
+}
+
+.ballot-candidate-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3) var(--space-6);
+}
+
+.ballot-candidate-grid > li {
+  min-width: 0;
+}
+
+.ballot-candidate-grid > li + li {
+  border-top: 1px solid var(--panel-border);
+  padding-top: var(--space-3);
+}
+
+/* Measure cards retain their independent two-column composition. */
 .ballot-card-grid {
   display: block;
 }
 
 @media (min-width: 1024px) {
+  .ballot-candidate-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ballot-candidate-grid > li:nth-child(2) {
+    border-top: 0;
+    padding-top: 0;
+  }
+
   .ballot-card-grid {
     columns: 2;
     column-gap: 22px;
@@ -5797,4 +5839,49 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   font-size: 0.75rem;
   line-height: 1;
   white-space: nowrap;
+}
+
+/* LAY-12: selected-boundary details stay reachable without covering the map. */
+@keyframes boundaryPillGlow {
+  0%, 100% { box-shadow: var(--shadow-panel); }
+  50% { box-shadow: var(--shadow-panel), 0 0 12px color-mix(in srgb, var(--link) 28%, transparent); }
+}
+.boundary-info-pill {
+  min-height: 44px;
+  border: 1px solid color-mix(in srgb, var(--link) 60%, var(--panel-border));
+  border-radius: var(--radius-pill);
+  background: var(--panel);
+  color: var(--text);
+  animation: boundaryPillGlow var(--dur-boundary-glow) var(--ease-boundary-glow) infinite;
+}
+.district-info-pill {
+  /* Compact action text sits between detail/body, matching the neighboring
+     Who Governs Here control. Its inset preserves the reviewed 44px target. */
+  --text-boundary-control: calc((var(--text-detail) + var(--text-body)) / 2);
+  --space-boundary-inset: calc((var(--space-2) + var(--space-3)) / 2);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  max-width: min(300px, calc(100vw - 24px));
+  padding: var(--space-boundary-inset) var(--space-4);
+  font-size: var(--text-boundary-control);
+  cursor: pointer;
+}
+.district-info-pill > span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.boundary-info-pill:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 3px;
+}
+.popup-minimize-btn { right: 38px; }
+.popup-card:has(.popup-minimize-btn) .popup-card-head { padding-right: calc(var(--space-8) + var(--space-3)); }
+@media (max-width: 1023px) {
+  main[data-compact-boundary="true"] .rail-floaters { justify-content: flex-start; }
+  .boundary-details-corner { bottom: calc(var(--map-legend-bottom) + var(--map-legend-height) + 12px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .boundary-info-pill { animation: none; }
 }

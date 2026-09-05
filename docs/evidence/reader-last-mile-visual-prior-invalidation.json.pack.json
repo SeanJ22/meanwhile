@@ -1,0 +1,10 @@
+{
+  "formatVersion": 1,
+  "encoding": "gzip",
+  "rule": "Lossless original UTF-8 JSON bytes; zero gzip modification time. The baseline byte hash survives packaging.",
+  "path": "docs/evidence/reader-last-mile-visual-prior-invalidation.json.gz",
+  "originalSha256": "611b3bfa6d4762a80949ec5739086cd09bf768ad45e6281d0b0ed7cf0e63aaca",
+  "bytes": 2039503,
+  "packedBytes": 211829,
+  "packedSha256": "68a18a6bf2ea4b593e23e104d2fe8abcbfc1e9f9b236c0091322b99b0e9f0237"
+}

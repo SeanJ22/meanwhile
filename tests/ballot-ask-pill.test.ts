@@ -60,7 +60,7 @@ test("BAL-26: Ask is reachable from the pill row under the heading, and mounted 
   assert.match(src, /<BallotAskPill/, "the pill is on the page");
 
   const inPillRow = src.indexOf("<BallotAskPill");
-  const contests = src.indexOf("ballot-card-grid");
+  const contests = src.indexOf("ballot-office-list");
   assert.ok(
     inPillRow > 0 && inPillRow < contests,
     "the affordance must sit ABOVE the contest list, not below it",

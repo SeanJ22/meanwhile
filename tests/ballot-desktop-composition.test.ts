@@ -13,7 +13,7 @@ import { join } from "node:path";
  *
  * The composition these tests hold is deliberately narrow in what it changes:
  * the reading measure does not move, and the extra width buys a second column
- * of WHOLE CARDS. `docs/DESIGN.md`'s "two-column trap" is why — a row that puts
+ * of WHOLE CANDIDATES within an office (BAL-43). `docs/DESIGN.md`'s "two-column trap" is why — a row that puts
  * a `nowrap` label and a value in competition for a fixed width starves the
  * value, and a contest heading is an arbitrarily long office title. So the
  * columns divide cards, never fields.
@@ -87,40 +87,28 @@ test("BAL-25: the loading skeleton hands over without moving the heading", () =>
   assert.match(code(LOADING), /Back to the map/);
 });
 
-test("BAL-25: the second column is a grid of CARDS, and it is one class", () => {
+test("BAL-43: offices read top to bottom; both candidate paths share the desktop columns", () => {
   const src = code(PAGE);
-  const uses = src.split("ballot-card-grid").length - 1;
-  assert.equal(
-    uses,
-    2,
-    "the contests and the measure groups share one grid; a third use is a new pattern",
-  );
+  assert.equal(src.split('className="ballot-office-list"').length - 1, 1);
+  assert.equal(src.split('className="ballot-candidate-grid mt-3.5"').length - 1, 2,
+    "certified nominees and filed candidacies use the same layout");
+  assert.match(src, /className="ballot-office-list">\s*\{candidacyContests\.map\(/,
+    "office order remains the existing contest order");
+  assert.match(CSS, /\.ballot-office-list \{[^}]*grid-template-columns:\s*minmax\(0, 1fr\)[^}]*gap:\s*var\(--space-3\)/);
+  assert.match(CSS, /\.ballot-candidate-grid \{[^}]*grid-template-columns:\s*minmax\(0, 1fr\)/,
+    "phone and tablet candidates remain one column");
+  assert.match(CSS, /@media \(min-width: 1024px\) \{\s*\.ballot-candidate-grid \{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/,
+    "only desktop uses two candidate columns");
+  assert.doesNotMatch(CSS, /\.ballot-office-list \{[^}]*[;{]\s*columns:/,
+    "offices cannot flow into a second column");
+  assert.match(src, /data-office-tier-start=/);
+  assert.match(CSS, /\.ballot-office-card\[data-office-tier-start="true"\] \{[^}]*border-top-width:\s*3px/,
+    "tier transitions have a clear divider without reordering offices");
+});
 
-  assert.match(CSS, /\.ballot-card-grid \{/, "the class is defined in the stylesheet");
-
-  /*
-   * Single column below the breakpoint, so the phone render is unchanged by
-   * construction rather than by inspection. `1024px` is Tailwind's `lg`, which
-   * is the breakpoint every utility above uses — two breakpoints for one
-   * composition would tear at whichever width they disagreed on.
-   *
-   * **BAL-39 (2026-08-31) — THE MECHANISM CHANGED AND THE PROPERTY DID NOT.**
-   *
-   * This asserted a two-column GRID, which is what BAL-25 shipped and what
-   * BAL-39 measured as the cause of the owner's holes: a grid places in ROWS,
-   * a row's height is its tallest card, and every shorter card leaves a hole
-   * whose size is set by its row-mate. Gaps ran 13px to 689px at 85701.
-   *
-   * Column FLOW lays each card under the previous one in its own column, so a
-   * tall card pushes only what is below it. The properties this test actually
-   * cares about are unchanged and are asserted below: one column on a phone,
-   * two at `lg`, one class for both surfaces. What is gone is the assertion
-   * that the mechanism is `grid-template-columns`, because pinning a mechanism
-   * is how a test outlives the reason it was written.
-   *
-   * The GAPS themselves are measured on the rendered DOM by the SB0831 block
-   * in `walk-all.mts`; a stylesheet reading cannot see a hole.
-   */
+test("BAL-43: measure cards keep their prior independent two-column flow", () => {
+  assert.equal(code(PAGE).split("ballot-card-grid").length - 1, 1,
+    "only measure groups retain the card-column layout");
   assert.match(CSS, /\.ballot-card-grid \{[^}]*display:\s*block/, "the base rule is one column");
   assert.doesNotMatch(
     CSS,
@@ -129,7 +117,7 @@ test("BAL-25: the second column is a grid of CARDS, and it is one class", () => 
   );
   assert.match(
     CSS,
-    /@media \(min-width: 1024px\) \{\s*\.ballot-card-grid \{[^}]*columns:\s*2/,
+    /@media \(min-width: 1024px\) \{[\s\S]*?\.ballot-card-grid \{[^}]*columns:\s*2/,
     "and two columns arrive at lg, the same breakpoint the container widens at",
   );
   assert.match(

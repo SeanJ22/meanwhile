@@ -27,13 +27,13 @@
       "reported": "On tablet and phone, the Who Governs Here panel and the small district card cover the selected boundary; on phone the map is effectively invisible.",
       "correctState": "On tablet and phone, when a boundary is selected, both cards minimize to softly-glowing pills; tapping one expands it and collapses the other; the boundary stays visible at every width. Desktop is unchanged (POS-4).",
       "failureClass": "rendering",
-      "disposition": "OPEN_BLOCKED",
+      "disposition": "FIXED_VERIFIED",
       "workItemId": "wi:feedback:9.2.26:LAY-12",
-      "instancesFound": 0,
-      "instancesFixed": 0,
-      "checkId": null,
-      "checkResult": null,
-      "blocker": "EXECUTABLE, NOT BEGUN THIS SESSION — a session-scope handoff, not an external block. The finite denominator prioritised the ballot/tag/measure cluster (BAL-40/41/45/46/47/48, MTG-15) and the Ask contract to verified completion and one clean merge. Resume point: (1) add a `boundarySelected` derivation in components/map/map-entry.tsx from the district/venue selection state; (2) a tablet/phone-only pill mode for <CoverageNotice> and the small district card, glow at a 1.5s cycle honouring prefers-reduced-motion (a static affordance instead), one pill open at a time, close returns to the pill; (3) desktop path unchanged (POS-4 guard already committed in tests/visual-feedback-9-2.test.ts); (4) IMAGE-evaluated checks (property `overlap`, using visual-suite `evaluateOverlap` with the boundary box as `against`) across desktop/tablet/phone for at least three boundary types across two ZIPs, since coverage is a pixel relationship DOM presence cannot certify."
+      "instancesFound": 2,
+      "instancesFixed": 2,
+      "checkId": "scripts/verify-visual-feedback-9-2.mts::LAY-12",
+      "checkResult": "GREEN on local production implementation 1082e85040859dd04e6020b003f810f6da7e2d3f, 2026-09-05T02:33Z. Both shared map cards collapse into separate pills below 1024px. Four actual boundary selections across 85701/07866 and municipal/school/congressional types passed: two default pills, one expanded panel, selected identity retained on minimize, 1.5s glow, reduced-motion suppression. All five final map captures were opened and IMAGE-reviewed, including the preserved 1440px desktop reference and 900/390px dark/light compact views. Boundary detail is visible behind compact controls; pills and footnote do not overlap. Compact proof: docs/evidence/visual-feedback-9-2-reconciliation.md; final captures/results: .scratch/visual-feedback-final/.",
+      "blocker": null
     },
     {
       "id": "MTG-15",
@@ -112,13 +112,13 @@
       "reported": "On desktop the two independent columns run off-kilter; by the bottom the page is lopsided with a large empty space and the ballot notes crumpled on the left.",
       "correctState": "Desktop only: group by office top-to-bottom in ballot order, each office a full-width block with its candidates in two columns inside it, a labelled header and a dividing line between blocks, minimal empty space between sections. Tablet and mobile keep the single column and gain only the dividing lines and the BAL-41 tags.",
       "failureClass": "rendering",
-      "disposition": "OPEN_BLOCKED",
+      "disposition": "FIXED_VERIFIED",
       "workItemId": "wi:feedback:9.2.26:BAL-43",
-      "instancesFound": 0,
-      "instancesFixed": 0,
-      "checkId": null,
-      "checkResult": null,
-      "blocker": "EXECUTABLE, NOT BEGUN THIS SESSION — a session-scope handoff, not an external block. This is a third-pass restructure that REPLACES the BAL-25/BAL-39 two-column approach, and it is entangled with the append-only regression net: scripts/walk-all.mts's BAL25 checks assert the contest grid renders TWO columns (lefts.length >= 2), which the office-block single column would flip to red. Resume point: (1) change app/globals.css .ballot-card-grid on the CANDIDATE contests from CSS `columns: 2` to a single column of full-width office blocks, and add an INNER two-column grid for the candidate cards within each contest section; (2) add labelled headers + dividers between office blocks and between/around Statewide/Local measures; (3) tablet/mobile stay single-column with only dividers + tags; (4) MIGRATE the superseded BAL25 walk checks (they encode the retired contract) — retire them with the removal recorded per RULING 62's --allow-removals path and add a BAL-43 check asserting office-block structure + a measured maximum vertical gap bound; (5) IMAGE-evaluated checks (property `responsive_hierarchy` / `spacing`) for the block structure and the gap bound at desktop for 85701, 85641 and one NH/NJ ZIP."
+      "instancesFound": 2,
+      "instancesFixed": 2,
+      "checkId": "scripts/verify-visual-feedback-9-2.mts::BAL-43",
+      "checkResult": "GREEN on local production implementation 1082e85040859dd04e6020b003f810f6da7e2d3f, 2026-09-05T02:33Z. Both candidate rendering branches use sequential full-width office blocks with two candidate columns at 1440px and one at 900/390px. Real-route DOM checks at 85701 (10 offices/24 candidates) and 07866 (9 offices/26 candidates) preserve every rendered row, measure a maximum 12px office gap and zero horizontal overflow at all six ZIP/width combinations. All four final desktop/phone captures were opened and IMAGE-reviewed. The obsolete BAL25/SB0831 column assertions were migrated to the new inner-candidate contract; walk:all was not run under the current owner directive. Compact proof: docs/evidence/visual-feedback-9-2-reconciliation.md; final captures/results: .scratch/visual-feedback-final/.",
+      "blocker": null
     },
     {
       "id": "BAL-45",
@@ -201,8 +201,8 @@
       "workItemId": "wi:feedback:9.2.26:ASK-24",
       "instancesFound": 1,
       "instancesFixed": 1,
-      "checkId": "tests/ask-relevance.test.ts::CORPUS: a correct, grounded Prop 141 answer evaluates GREEN",
-      "checkResult": "GREEN — a relevance gate (lib/ask/relevance.ts) drops any record not stamped for the asked subject BEFORE synthesis; for Prop 141 it removed the U.S. Senate absence and the three unconnected legislators (contacts 3 -> 0). A definition-first answer contract is pinned in the system prompt. Q10 (Explain Prop 141 to me) is in the reader corpus and evaluates GREEN; a seeded test asserts an off-subject record cannot enter a measure's pack; tests/ask-grounded-route.test.ts asserts the Prop 141 answer carries nothing off the measure. All green under the strip-types loader.",
+      "checkId": "scripts/verify-visual-feedback-9-2.mts::ASK-24",
+      "checkResult": "GREEN on local production implementation 1082e85040859dd04e6020b003f810f6da7e2d3f, 2026-09-05T02:33Z. The shared structured-answer renderer leads with the exact held Prop 141 plain-language summary and its own source. The real grounded route returns six records with no model synthesis and zero contacts; the visible summary precedes a closed Further records (5) disclosure, which opens to the five remaining records without loss or duplication. The final answer capture was opened and IMAGE-reviewed. Targeted server-render control preserves generated-answer and non-measure behavior. Compact proof: docs/evidence/visual-feedback-9-2-reconciliation.md; final captures/results: .scratch/visual-feedback-final/.",
       "blocker": null
     },
     {

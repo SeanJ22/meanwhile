@@ -1,17 +1,17 @@
 {
   "formatVersion": 1,
   "runDate": "2026-09-05",
-  "startedAt": "2026-09-05T17:18:01.987Z",
-  "finishedAt": "2026-09-05T17:46:39.415Z",
+  "startedAt": "2026-09-05T20:09:34.661Z",
+  "finishedAt": "2026-09-05T20:43:41.281Z",
   "mode": "ALL",
-  "exitCode": 0,
+  "exitCode": 2,
   "sources": [
     {
       "id": "meetings",
       "due": true,
       "ran": true,
       "outcome": "ROUTE_UNREAD",
-      "reason": "the gate refused this source's data: tests/reader-last-mile-census.test.ts — its governed paths are back at HEAD and it is owed until it lands",
+      "reason": "the Reader proof renewal could not prove this source's change to data/meetings-snapshot.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1: AssertionError [ERR_ASSERTION]: The input did not match the regular expression /older than that: we last reached them/i. Input: |   code: 'ERR_ASSERTION', |     'ZBA Meeting As Needed\\n' + |     'Could govern you\\n' + |     'Wed, October 21st, 2'... 28518 more characters, |   expected: /older than that: we last reached them/i, |   operator: 'match', |   diff: ' — its governed paths are back at HEAD and it is owed until it lands",
       "commands": [
         "ingest composite"
       ],
@@ -22,14 +22,34 @@
       ],
       "changedPaths": [],
       "recoveredFrom": [],
-      "nextDueAt": "2026-09-06"
+      "nextDueAt": "2026-09-06",
+      "observations": [
+        {
+          "path": "data/meetings-snapshot.json",
+          "observedAt": "2026-09-05T20:10:15.504Z",
+          "verdict": "FACTS_CHANGED",
+          "written": true,
+          "stampKeys": [
+            "generatedAt",
+            "collectedAt",
+            "verifiedAt",
+            "retrievedAt",
+            "lastFreshAt"
+          ],
+          "ignoredTopLevel": [
+            "counts",
+            "sources"
+          ],
+          "factsSha256": "0ace643a1f8a208b3e428a74fa0ffeeaaea5717aa373b3aa1066fb8cc1c8eb6d"
+        }
+      ]
     },
     {
       "id": "nj-filing",
       "due": true,
       "ran": true,
       "outcome": "UNCHANGED",
-      "reason": "ran clean; every governed path is byte-identical to HEAD",
+      "reason": "ran clean; facts unchanged — 2 artifact(s) re-observed at 2026-09-05T20:10:20.631Z and left byte-identical (stamps not rewritten)",
       "commands": [
         "nj:ballot --write",
         "nj:filing:check",
@@ -38,19 +58,47 @@
       "failedCommand": null,
       "exitCode": 0,
       "governs": [
-        "data/ballot/",
+        "data/states/nj/ballot/",
         "data/questionnaire/"
       ],
       "changedPaths": [],
       "recoveredFrom": [],
-      "nextDueAt": "2026-09-06"
+      "nextDueAt": "2026-09-06",
+      "observations": [
+        {
+          "path": "data/states/nj/ballot/nj-morris-2026.json",
+          "observedAt": "2026-09-05T20:10:20.625Z",
+          "verdict": "FACTS_UNCHANGED",
+          "written": false,
+          "stampKeys": [
+            "collectedAt",
+            "verifiedAt",
+            "curatedAt"
+          ],
+          "ignoredTopLevel": [],
+          "factsSha256": "40180b2f617deb9c54674fdfcdd691938533abde619887dc3d44985240da1bb0"
+        },
+        {
+          "path": "data/states/nj/ballot/nj-morris-2026-contacts.json",
+          "observedAt": "2026-09-05T20:10:20.631Z",
+          "verdict": "FACTS_UNCHANGED",
+          "written": false,
+          "stampKeys": [
+            "generatedAt",
+            "collectedAt",
+            "verifiedAt"
+          ],
+          "ignoredTopLevel": [],
+          "factsSha256": "f48843b3c0ce70e641ab804c2be23b8e1f269e0d4a513c45260cc7fcecccfdba"
+        }
+      ]
     },
     {
       "id": "fec",
       "due": true,
       "ran": true,
       "outcome": "ROUTE_UNREAD",
-      "reason": "the gate refused this source's data: tests/reader-last-mile-census.test.ts — its governed paths are back at HEAD and it is owed until it lands",
+      "reason": "the Reader proof renewal could not prove this source's change to data/fec/fec-2026.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1: AssertionError [ERR_ASSERTION]: The input did not match the regular expression /older than that: we last reached them/i. Input: |   code: 'ERR_ASSERTION', |     'ZBA Meeting As Needed\\n' + |     'Could govern you\\n' + |     'Wed, October 21st, 2'... 28518 more characters, |   expected: /older than that: we last reached them/i, |   operator: 'match', |   diff: ' — its governed paths are back at HEAD and it is owed until it lands",
       "commands": [
         "fec:fetch"
       ],
@@ -61,32 +109,47 @@
       ],
       "changedPaths": [],
       "recoveredFrom": [],
-      "nextDueAt": "2026-09-06"
+      "nextDueAt": "2026-09-06",
+      "observations": [
+        {
+          "path": "data/fec/fec-2026.json",
+          "observedAt": "2026-09-05T20:15:59.094Z",
+          "verdict": "FACTS_CHANGED",
+          "written": true,
+          "stampKeys": [
+            "fetchedAt",
+            "checkedAt"
+          ],
+          "ignoredTopLevel": [],
+          "factsSha256": "a9d200984723f0dc5504529ab1baecea2007bc8deeb9c7b53f967253d0484460"
+        }
+      ]
     },
     {
       "id": "legiscan",
       "due": true,
       "ran": true,
       "outcome": "ROUTE_UNREAD",
-      "reason": "the gate refused this source's data: tests/reader-last-mile-census.test.ts — its governed paths are back at HEAD and it is owed until it lands",
+      "reason": "failed at `pnpm legiscan:fetch` (exit 1) — nothing usable was written; owed until it lands",
       "commands": [
         "legiscan:fetch"
       ],
-      "failedCommand": null,
-      "exitCode": 0,
+      "failedCommand": "legiscan:fetch",
+      "exitCode": 1,
       "governs": [
         "data/votes/state-votes-snapshot.json"
       ],
       "changedPaths": [],
       "recoveredFrom": [],
-      "nextDueAt": "2026-09-06"
+      "nextDueAt": "2026-09-06",
+      "observations": []
     },
     {
       "id": "dotgov",
       "due": true,
       "ran": true,
-      "outcome": "ROUTE_UNREAD",
-      "reason": "the gate refused this source's data: tests/reader-last-mile-census.test.ts — its governed paths are back at HEAD and it is owed until it lands",
+      "outcome": "UNCHANGED",
+      "reason": "ran clean; facts unchanged — 1 artifact(s) re-observed at 2026-09-05T20:16:11.700Z and left byte-identical (stamps not rewritten)",
       "commands": [
         "dotgov:fetch"
       ],
@@ -97,7 +160,20 @@
       ],
       "changedPaths": [],
       "recoveredFrom": [],
-      "nextDueAt": "2026-09-06"
+      "nextDueAt": "2026-10-01",
+      "observations": [
+        {
+          "path": "data/dotgov/snapshot.json",
+          "observedAt": "2026-09-05T20:16:11.700Z",
+          "verdict": "FACTS_UNCHANGED",
+          "written": false,
+          "stampKeys": [
+            "readAt"
+          ],
+          "ignoredTopLevel": [],
+          "factsSha256": "fe27d8f4af2b42936856e782609442f1a6ff4376fd4334e21c244ee0887d1aea"
+        }
+      ]
     }
   ],
   "catchUp": {
@@ -110,32 +186,154 @@
   },
   "gate": {
     "verdict": "REFUSED",
-    "ranAt": "2026-09-05T17:35:08.425Z",
+    "ranAt": "2026-09-05T20:35:21.211Z",
     "failingFiles": [
-      "tests/reader-last-mile-census.test.ts"
+      "tests/generated-artifacts.test.ts"
     ],
     "attribution": [
       {
-        "file": "tests/reader-last-mile-census.test.ts",
-        "sourceId": "meetings",
-        "basis": "passes only with every changed source's governed paths at HEAD — the refresh's jointly"
-      },
-      {
-        "file": "tests/reader-last-mile-census.test.ts",
-        "sourceId": "fec",
-        "basis": "passes only with every changed source's governed paths at HEAD — the refresh's jointly"
-      },
-      {
-        "file": "tests/reader-last-mile-census.test.ts",
-        "sourceId": "legiscan",
-        "basis": "passes only with every changed source's governed paths at HEAD — the refresh's jointly"
-      },
-      {
-        "file": "tests/reader-last-mile-census.test.ts",
-        "sourceId": "dotgov",
-        "basis": "passes only with every changed source's governed paths at HEAD — the refresh's jointly"
+        "file": "tests/generated-artifacts.test.ts",
+        "sourceId": null,
+        "basis": "no single source's revert makes it pass, and the all-sources trial was not run"
       }
     ],
-    "note": "The suite refused 4 source(s): meetings, fec, legiscan, dotgov. Their governed paths are back at HEAD and they are owed (data/ops/refresh-debt.json). 0 survivor(s) commit: none."
+    "note": "The suite is red independent of the refreshed data — tests/generated-artifacts.test.ts fail with every changed source at HEAD. That is a defect on main, not a source's; nothing commits under it, and every changed source is owed until the tree is green."
+  },
+  "renewal": {
+    "verdict": "FAILED",
+    "ranAt": "2026-09-05T20:19:26.681Z",
+    "exactHead": "742993c78f5ef56afe9d9bab2e52c31256326563",
+    "changedHoldings": [
+      "data/fec/fec-2026.json",
+      "data/meetings-snapshot.json"
+    ],
+    "prefix": "docs/evidence/reader-last-mile-refresh",
+    "steps": [
+      {
+        "name": "regenerate stale PURE dependents",
+        "ok": true,
+        "secs": 84,
+        "detail": "0 regenerated"
+      },
+      {
+        "name": "exact-head production build",
+        "ok": true,
+        "secs": 67,
+        "detail": "build log recorded"
+      },
+      {
+        "name": "serve the build on localhost",
+        "ok": true,
+        "secs": 1,
+        "detail": "serving 742993c7"
+      },
+      {
+        "name": "prepare the census",
+        "ok": true,
+        "secs": 72,
+        "detail": null
+      },
+      {
+        "name": "active portrait inventory",
+        "ok": true,
+        "secs": 71,
+        "detail": null
+      },
+      {
+        "name": "build receipt",
+        "ok": true,
+        "secs": 1,
+        "detail": null
+      },
+      {
+        "name": "portraits",
+        "ok": true,
+        "secs": 3,
+        "detail": null
+      },
+      {
+        "name": "delta routes",
+        "ok": true,
+        "secs": 2,
+        "detail": null
+      },
+      {
+        "name": "ballot",
+        "ok": true,
+        "secs": 33,
+        "detail": null
+      },
+      {
+        "name": "ballot ask",
+        "ok": true,
+        "secs": 9,
+        "detail": null
+      },
+      {
+        "name": "candidate profiles ask",
+        "ok": true,
+        "secs": 4,
+        "detail": null
+      },
+      {
+        "name": "meeting routes",
+        "ok": true,
+        "secs": 1,
+        "detail": null
+      },
+      {
+        "name": "agenda",
+        "ok": true,
+        "secs": 2,
+        "detail": null
+      },
+      {
+        "name": "meetings ask",
+        "ok": true,
+        "secs": 19,
+        "detail": null
+      },
+      {
+        "name": "meeting knowledge ask",
+        "ok": true,
+        "secs": 2,
+        "detail": null
+      },
+      {
+        "name": "money ask",
+        "ok": true,
+        "secs": 6,
+        "detail": null
+      },
+      {
+        "name": "federal money ask",
+        "ok": true,
+        "secs": 2,
+        "detail": null
+      },
+      {
+        "name": "final render and witnesses",
+        "ok": false,
+        "secs": 38,
+        "detail": "final render and witnesses exited 1: AssertionError [ERR_ASSERTION]: The input did not match the regular expression /older than that: we last reached them/i. Input: |   code: 'ERR_ASSERTION', |     'ZBA Meeting As Needed\\n' + |     'Could govern you\\n' + |     'Wed, October 21st, 2'... 28518 more characters, |   expected: /older than that: we last reached them/i, |   operator: 'match', |   diff: 'simple' | } | Node.js v24.20.0"
+      }
+    ],
+    "refusedSources": [
+      {
+        "id": "meetings",
+        "paths": [
+          "data/meetings-snapshot.json"
+        ],
+        "why": "the Reader proof renewal could not prove this source's change to data/meetings-snapshot.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1: AssertionError [ERR_ASSERTION]: The input did not match the regular expression /older than that: we last reached them/i. Input: |   code: 'ERR_ASSERTION', |     'ZBA Meeting As Needed\\n' + |     'Could govern you\\n' + |     'Wed, October 21st, 2'... 28518 more characters, |   expected: /older than that: we last reached them/i, |   operator: 'match', |   diff: ' — its governed paths are back at HEAD and it is owed until it lands"
+      },
+      {
+        "id": "fec",
+        "paths": [
+          "data/fec/fec-2026.json"
+        ],
+        "why": "the Reader proof renewal could not prove this source's change to data/fec/fec-2026.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1: AssertionError [ERR_ASSERTION]: The input did not match the regular expression /older than that: we last reached them/i. Input: |   code: 'ERR_ASSERTION', |     'ZBA Meeting As Needed\\n' + |     'Could govern you\\n' + |     'Wed, October 21st, 2'... 28518 more characters, |   expected: /older than that: we last reached them/i, |   operator: 'match', |   diff: ' — its governed paths are back at HEAD and it is owed until it lands"
+      }
+    ],
+    "failure": "final render and witnesses: final render and witnesses exited 1: AssertionError [ERR_ASSERTION]: The input did not match the regular expression /older than that: we last reached them/i. Input: |   code: 'ERR_ASSERTION', |     'ZBA Meeting As Needed\\n' + |     'Could govern you\\n' + |     'Wed, October 21st, 2'... 28518 more characters, |   expected: /older than that: we last reached them/i, |   operator: 'match', |   diff: '"
   }
 }

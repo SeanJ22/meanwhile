@@ -6,26 +6,61 @@ Run date: **2026-09-05** (UTC).
 
 One scheduled run a day, one commit at most, and nothing committed when nothing moved — RULING 124. Cadence per source and the reason for each is `lib/ops/refresh-cadence.ts`.
 
-## 1 landed · 4 not landed · 0 not due · gate REFUSED
+## 2 landed · 3 not landed · 0 not due · gate REFUSED
 
 | Source | Cadence today | Ran | Why | Outcome | Changed paths | Next due | Governs |
 |---|---|:---:|---|---|---|---|---|
-| `meetings` | daily | yes | `--all` | **ROUTE_UNREAD** — the gate refused this source's data: tests/reader-last-mile-census.test.ts — its governed paths are back at HEAD and it is owed until it lands | — | 2026-09-06 | `data/meetings-snapshot.json` | <!-- expected-future: 2026-09-06 — the next calendar day this source's cadence calls for it, computed from the run date -->
-| `nj-filing` | daily | yes | `--all` | UNCHANGED — ran clean; every governed path is byte-identical to HEAD | — | 2026-09-06 | `data/ballot/`, `data/questionnaire/` | <!-- expected-future: 2026-09-06 — the next calendar day this source's cadence calls for it, computed from the run date -->
-| `fec` | weekly | yes | `--all` | **ROUTE_UNREAD** — the gate refused this source's data: tests/reader-last-mile-census.test.ts — its governed paths are back at HEAD and it is owed until it lands | — | 2026-09-06 | `data/fec/fec-2026.json` | <!-- expected-future: 2026-09-06 — the next calendar day this source's cadence calls for it, computed from the run date -->
-| `legiscan` | weekly | yes | `--all` | **ROUTE_UNREAD** — the gate refused this source's data: tests/reader-last-mile-census.test.ts — its governed paths are back at HEAD and it is owed until it lands | — | 2026-09-06 | `data/votes/state-votes-snapshot.json` | <!-- expected-future: 2026-09-06 — the next calendar day this source's cadence calls for it, computed from the run date -->
-| `dotgov` | monthly | yes | `--all` | **ROUTE_UNREAD** — the gate refused this source's data: tests/reader-last-mile-census.test.ts — its governed paths are back at HEAD and it is owed until it lands | — | 2026-09-06 | `data/dotgov/snapshot.json` | <!-- expected-future: 2026-09-06 — the next calendar day this source's cadence calls for it, computed from the run date -->
+| `meetings` | daily | yes | `--all` | **ROUTE_UNREAD** — the Reader proof renewal could not prove this source's change to data/meetings-snapshot.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1: AssertionError [ERR_ASSERTION]: The input did not match the regular expression /older than that: we last reached them/i. Input: |   code: 'ERR_ASSERTION', |     'ZBA Meeting As Needed\n' + |     'Could govern you\n' + |     'Wed, October 21st, 2'... 28518 more characters, |   expected: /older than that: we last reached them/i, |   operator: 'match', |   diff: ' — its governed paths are back at HEAD and it is owed until it lands | — | 2026-09-06 | `data/meetings-snapshot.json` | <!-- expected-future: 2026-09-06 — the next calendar day this source's cadence calls for it, computed from the run date -->
+| `nj-filing` | daily | yes | `--all` | UNCHANGED — ran clean; facts unchanged — 2 artifact(s) re-observed at 2026-09-05T20:10:20.631Z and left byte-identical (stamps not rewritten) | — | 2026-09-06 | `data/states/nj/ballot/`, `data/questionnaire/` | <!-- expected-future: 2026-09-06 — the next calendar day this source's cadence calls for it, computed from the run date -->
+| `fec` | weekly | yes | `--all` | **ROUTE_UNREAD** — the Reader proof renewal could not prove this source's change to data/fec/fec-2026.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1: AssertionError [ERR_ASSERTION]: The input did not match the regular expression /older than that: we last reached them/i. Input: |   code: 'ERR_ASSERTION', |     'ZBA Meeting As Needed\n' + |     'Could govern you\n' + |     'Wed, October 21st, 2'... 28518 more characters, |   expected: /older than that: we last reached them/i, |   operator: 'match', |   diff: ' — its governed paths are back at HEAD and it is owed until it lands | — | 2026-09-06 | `data/fec/fec-2026.json` | <!-- expected-future: 2026-09-06 — the next calendar day this source's cadence calls for it, computed from the run date -->
+| `legiscan` | weekly | yes | `--all` | **ROUTE_UNREAD** — failed at `pnpm legiscan:fetch` (exit 1) — nothing usable was written; owed until it lands | — | 2026-09-06 | `data/votes/state-votes-snapshot.json` | <!-- expected-future: 2026-09-06 — the next calendar day this source's cadence calls for it, computed from the run date -->
+| `dotgov` | monthly | yes | `--all` | UNCHANGED — ran clean; facts unchanged — 1 artifact(s) re-observed at 2026-09-05T20:16:11.700Z and left byte-identical (stamps not rewritten) | — | 2026-10-01 | `data/dotgov/snapshot.json` | <!-- expected-future: 2026-10-01 — the next calendar day this source's cadence calls for it, computed from the run date -->
+
+## What the writers observed (RL-1)
+
+A re-observation whose facts were unchanged left its file byte-identical; the check time is recorded here, never in the artifact.
+
+| Source | Artifact | Verdict | Observed at | Bytes moved | Stamps left alone |
+|---|---|---|---|:---:|---|
+| `meetings` | `data/meetings-snapshot.json` | FACTS_CHANGED | 2026-09-05T20:10:15.504Z | yes | `generatedAt`, `collectedAt`, `verifiedAt`, `retrievedAt`, `lastFreshAt` |
+| `nj-filing` | `data/states/nj/ballot/nj-morris-2026.json` | FACTS_UNCHANGED | 2026-09-05T20:10:20.625Z | no | `collectedAt`, `verifiedAt`, `curatedAt` |
+| `nj-filing` | `data/states/nj/ballot/nj-morris-2026-contacts.json` | FACTS_UNCHANGED | 2026-09-05T20:10:20.631Z | no | `generatedAt`, `collectedAt`, `verifiedAt` |
+| `fec` | `data/fec/fec-2026.json` | FACTS_CHANGED | 2026-09-05T20:15:59.094Z | yes | `fetchedAt`, `checkedAt` |
+| `dotgov` | `data/dotgov/snapshot.json` | FACTS_UNCHANGED | 2026-09-05T20:16:11.700Z | no | `readAt` |
 
 ## What the gate did
 
-Verdict: **REFUSED** at 2026-09-05T17:35:08.425Z. The suite refused 4 source(s): meetings, fec, legiscan, dotgov. Their governed paths are back at HEAD and they are owed (data/ops/refresh-debt.json). 0 survivor(s) commit: none.
+Verdict: **REFUSED** at 2026-09-05T20:35:21.211Z. The suite is red independent of the refreshed data — tests/generated-artifacts.test.ts fail with every changed source at HEAD. That is a defect on main, not a source's; nothing commits under it, and every changed source is owed until the tree is green.
 
 | Failing test file | Attributed to | Basis |
 |---|---|---|
-| `tests/reader-last-mile-census.test.ts` | `meetings` | passes only with every changed source's governed paths at HEAD — the refresh's jointly |
-| `tests/reader-last-mile-census.test.ts` | `fec` | passes only with every changed source's governed paths at HEAD — the refresh's jointly |
-| `tests/reader-last-mile-census.test.ts` | `legiscan` | passes only with every changed source's governed paths at HEAD — the refresh's jointly |
-| `tests/reader-last-mile-census.test.ts` | `dotgov` | passes only with every changed source's governed paths at HEAD — the refresh's jointly |
+| `tests/generated-artifacts.test.ts` | the tree, not any source's data | no single source's revert makes it pass, and the all-sources trial was not run |
+
+## Reader proof renewal (RL-2 / RL-3)
+
+Reader proof renewal: FAILED at 2026-09-05T20:19:26.681Z on 742993c7
+- changed holdings: data/fec/fec-2026.json, data/meetings-snapshot.json
+- ok   regenerate stale PURE dependents (84s) — 0 regenerated
+- ok   exact-head production build (67s) — build log recorded
+- ok   serve the build on localhost (1s) — serving 742993c7
+- ok   prepare the census (72s)
+- ok   active portrait inventory (71s)
+- ok   build receipt (1s)
+- ok   portraits (3s)
+- ok   delta routes (2s)
+- ok   ballot (33s)
+- ok   ballot ask (9s)
+- ok   candidate profiles ask (4s)
+- ok   meeting routes (1s)
+- ok   agenda (2s)
+- ok   meetings ask (19s)
+- ok   meeting knowledge ask (2s)
+- ok   money ask (6s)
+- ok   federal money ask (2s)
+- FAIL final render and witnesses (38s) — final render and witnesses exited 1: AssertionError [ERR_ASSERTION]: The input did not match the regular expression /older than that: we last reached them/i. Input: |   code: 'ERR_ASSERTION', |     'ZBA Meeting As Needed\n' + |     'Could govern you\n' + |     'Wed, October 21st, 2'... 28518 more characters, |   expected: /older than that: we last reached them/i, |   operator: 'match', |   diff: 'simple' | } | Node.js v24.20.0
+- refused meetings: the Reader proof renewal could not prove this source's change to data/meetings-snapshot.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1: AssertionError [ERR_ASSERTION]: The input did not match the regular expression /older than that: we last reached them/i. Input: |   code: 'ERR_ASSERTION', |     'ZBA Meeting As Needed\n' + |     'Could govern you\n' + |     'Wed, October 21st, 2'... 28518 more characters, |   expected: /older than that: we last reached them/i, |   operator: 'match', |   diff: ' — its governed paths are back at HEAD and it is owed until it lands
+- refused fec: the Reader proof renewal could not prove this source's change to data/fec/fec-2026.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1: AssertionError [ERR_ASSERTION]: The input did not match the regular expression /older than that: we last reached them/i. Input: |   code: 'ERR_ASSERTION', |     'ZBA Meeting As Needed\n' + |     'Could govern you\n' + |     'Wed, October 21st, 2'... 28518 more characters, |   expected: /older than that: we last reached them/i, |   operator: 'match', |   diff: ' — its governed paths are back at HEAD and it is owed until it lands
+- failure: final render and witnesses: final render and witnesses exited 1: AssertionError [ERR_ASSERTION]: The input did not match the regular expression /older than that: we last reached them/i. Input: |   code: 'ERR_ASSERTION', |     'ZBA Meeting As Needed\n' + |     'Could govern you\n' + |     'Wed, October 21st, 2'... 28518 more characters, |   expected: /older than that: we last reached them/i, |   operator: 'match', |   diff: '
 
 ## Which days this run answered for
 

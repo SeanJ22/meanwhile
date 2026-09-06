@@ -1,9 +1,9 @@
 {
   "formatVersion": 1,
-  "runDate": "2026-09-05",
-  "startedAt": "2026-09-05T22:12:44.027Z",
-  "finishedAt": "2026-09-05T22:40:19.171Z",
-  "mode": "ALL",
+  "runDate": "2026-09-06",
+  "startedAt": "2026-09-06T12:52:32.806Z",
+  "finishedAt": "2026-09-06T13:14:36.754Z",
+  "mode": "CADENCE",
   "exitCode": 0,
   "sources": [
     {
@@ -24,11 +24,11 @@
         "data/meetings-snapshot.json"
       ],
       "recoveredFrom": [],
-      "nextDueAt": "2026-09-06",
+      "nextDueAt": "2026-09-07",
       "observations": [
         {
           "path": "data/meetings-snapshot.json",
-          "observedAt": "2026-09-05T22:13:22.749Z",
+          "observedAt": "2026-09-06T12:53:03.182Z",
           "verdict": "FACTS_CHANGED",
           "written": true,
           "stampKeys": [
@@ -42,7 +42,7 @@
             "counts",
             "sources"
           ],
-          "factsSha256": "0ccb394046317e258e339a2572550bbf3fd7703d1530e5e27b177dc4f0ba66f3"
+          "factsSha256": "a80ad16164e1db6c947ccdc8ff067209dc317df6c3c69f6627ff53fed8968f17"
         }
       ]
     },
@@ -50,8 +50,8 @@
       "id": "nj-filing",
       "due": true,
       "ran": true,
-      "outcome": "UNCHANGED",
-      "reason": "ran clean; facts unchanged — 2 artifact(s) re-observed at 2026-09-05T22:13:25.593Z and left byte-identical (stamps not rewritten)",
+      "outcome": "INGESTED",
+      "reason": "ran clean; 1 governed path(s) changed and the gate passed — committed",
       "commands": [
         "nj:ballot --write",
         "nj:filing:check",
@@ -63,26 +63,28 @@
         "data/states/nj/ballot/",
         "data/questionnaire/"
       ],
-      "changedPaths": [],
+      "changedPaths": [
+        "data/states/nj/ballot/nj-morris-2026.json"
+      ],
       "recoveredFrom": [],
-      "nextDueAt": "2026-09-06",
+      "nextDueAt": "2026-09-07",
       "observations": [
         {
           "path": "data/states/nj/ballot/nj-morris-2026.json",
-          "observedAt": "2026-09-05T22:13:25.585Z",
-          "verdict": "FACTS_UNCHANGED",
-          "written": false,
+          "observedAt": "2026-09-06T12:53:06.133Z",
+          "verdict": "FACTS_CHANGED",
+          "written": true,
           "stampKeys": [
             "collectedAt",
             "verifiedAt",
             "curatedAt"
           ],
           "ignoredTopLevel": [],
-          "factsSha256": "40180b2f617deb9c54674fdfcdd691938533abde619887dc3d44985240da1bb0"
+          "factsSha256": "68021d3bcf5cc814657fb021f44d521a296bb653e4e0ef0fb7de45c5c43e24a0"
         },
         {
           "path": "data/states/nj/ballot/nj-morris-2026-contacts.json",
-          "observedAt": "2026-09-05T22:13:25.593Z",
+          "observedAt": "2026-09-06T12:53:06.141Z",
           "verdict": "FACTS_UNCHANGED",
           "written": false,
           "stampKeys": [
@@ -97,150 +99,109 @@
     },
     {
       "id": "fec",
-      "due": true,
-      "ran": true,
-      "outcome": "INGESTED",
-      "reason": "ran clean; 1 governed path(s) changed and the gate passed — committed",
+      "due": false,
+      "ran": false,
+      "outcome": "NOT_DUE",
+      "reason": "weekly, not due on 2026-09-06 or on any uncovered day since the last landed refresh, and carrying no debt",
       "commands": [
         "fec:fetch"
       ],
       "failedCommand": null,
-      "exitCode": 0,
+      "exitCode": null,
       "governs": [
         "data/fec/fec-2026.json"
       ],
-      "changedPaths": [
-        "data/fec/fec-2026.json"
-      ],
+      "changedPaths": [],
       "recoveredFrom": [],
       "nextDueAt": "2026-09-07",
-      "observations": [
-        {
-          "path": "data/fec/fec-2026.json",
-          "observedAt": "2026-09-05T22:17:53.071Z",
-          "verdict": "FACTS_CHANGED",
-          "written": true,
-          "stampKeys": [
-            "fetchedAt",
-            "checkedAt"
-          ],
-          "ignoredTopLevel": [],
-          "factsSha256": "a9d200984723f0dc5504529ab1baecea2007bc8deeb9c7b53f967253d0484460"
-        }
-      ]
+      "observations": []
     },
     {
       "id": "legiscan",
-      "due": true,
-      "ran": true,
-      "outcome": "UNCHANGED",
-      "reason": "ran clean; facts unchanged — 1 artifact(s) re-observed at 2026-09-05T22:17:54.210Z and left byte-identical (stamps not rewritten)",
+      "due": false,
+      "ran": false,
+      "outcome": "NOT_DUE",
+      "reason": "weekly, not due on 2026-09-06 or on any uncovered day since the last landed refresh, and carrying no debt",
       "commands": [
         "legiscan:fetch"
       ],
       "failedCommand": null,
-      "exitCode": 0,
+      "exitCode": null,
       "governs": [
         "data/votes/state-votes-snapshot.json"
       ],
       "changedPaths": [],
       "recoveredFrom": [],
       "nextDueAt": "2026-09-07",
-      "observations": [
-        {
-          "path": "data/votes/state-votes-snapshot.json",
-          "observedAt": "2026-09-05T22:17:54.210Z",
-          "verdict": "FACTS_UNCHANGED",
-          "written": false,
-          "stampKeys": [
-            "generatedAt",
-            "downloadedAt",
-            "retrievedAt"
-          ],
-          "ignoredTopLevel": [],
-          "factsSha256": "3ea9fccb27cfb69ce342558a72fee3ca4f8815bc5d2f839f840d9c94eee402cb"
-        }
-      ]
+      "observations": []
     },
     {
       "id": "dotgov",
-      "due": true,
-      "ran": true,
-      "outcome": "UNCHANGED",
-      "reason": "ran clean; facts unchanged — 1 artifact(s) re-observed at 2026-09-05T22:17:55.383Z and left byte-identical (stamps not rewritten)",
+      "due": false,
+      "ran": false,
+      "outcome": "NOT_DUE",
+      "reason": "monthly, not due on 2026-09-06 or on any uncovered day since the last landed refresh, and carrying no debt",
       "commands": [
         "dotgov:fetch"
       ],
       "failedCommand": null,
-      "exitCode": 0,
+      "exitCode": null,
       "governs": [
         "data/dotgov/snapshot.json"
       ],
       "changedPaths": [],
       "recoveredFrom": [],
       "nextDueAt": "2026-10-01",
-      "observations": [
-        {
-          "path": "data/dotgov/snapshot.json",
-          "observedAt": "2026-09-05T22:17:55.383Z",
-          "verdict": "FACTS_UNCHANGED",
-          "written": false,
-          "stampKeys": [
-            "readAt"
-          ],
-          "ignoredTopLevel": [],
-          "factsSha256": "fe27d8f4af2b42936856e782609442f1a6ff4376fd4334e21c244ee0887d1aea"
-        }
-      ]
+      "observations": []
     }
   ],
   "catchUp": {
-    "lastLanded": "catch-up off",
+    "lastLanded": "docs/refresh-run.md, run date 2026-09-05",
     "days": [
-      "2026-09-05"
+      "2026-09-06"
     ],
     "cap": 8,
-    "off": true
+    "off": false
   },
   "gate": {
     "verdict": "GREEN",
-    "ranAt": "2026-09-05T22:40:19.171Z",
+    "ranAt": "2026-09-06T13:14:36.753Z",
     "failingFiles": [],
     "attribution": [],
     "note": "The full suite passed over every changed source's data together. Everything that changed commits."
   },
   "renewal": {
     "verdict": "RENEWED",
-    "ranAt": "2026-09-05T22:21:10.229Z",
-    "exactHead": "3341925c0bc93f644439b778f5b2a533a2de43f0",
+    "ranAt": "2026-09-06T12:56:25.271Z",
+    "exactHead": "deabf0f8ac6ac91478a7b3f9edbc9d9f59a5cf3c",
     "changedHoldings": [
-      "data/fec/fec-2026.json",
-      "data/meetings-snapshot.json"
+      "data/meetings-snapshot.json",
+      "data/states/nj/ballot/nj-morris-2026.json"
     ],
     "prefix": "docs/evidence/reader-last-mile-refresh",
     "steps": [
       {
         "name": "regenerate stale PURE dependents",
         "ok": true,
-        "secs": 84,
+        "secs": 83,
         "detail": "0 regenerated"
       },
       {
         "name": "exact-head production build",
         "ok": true,
-        "secs": 70,
+        "secs": 64,
         "detail": "build log recorded"
       },
       {
         "name": "serve the build on localhost",
         "ok": true,
         "secs": 1,
-        "detail": "serving 3341925c"
+        "detail": "serving deabf0f8"
       },
       {
         "name": "prepare the census",
         "ok": true,
-        "secs": 72,
+        "secs": 71,
         "detail": null
       },
       {
@@ -270,13 +231,13 @@
       {
         "name": "ballot",
         "ok": true,
-        "secs": 35,
+        "secs": 31,
         "detail": null
       },
       {
         "name": "ballot ask",
         "ok": true,
-        "secs": 10,
+        "secs": 9,
         "detail": null
       },
       {
@@ -294,13 +255,13 @@
       {
         "name": "agenda",
         "ok": true,
-        "secs": 3,
+        "secs": 2,
         "detail": null
       },
       {
         "name": "meetings ask",
         "ok": true,
-        "secs": 20,
+        "secs": 18,
         "detail": null
       },
       {
@@ -324,7 +285,7 @@
       {
         "name": "final render and witnesses",
         "ok": true,
-        "secs": 41,
+        "secs": 39,
         "detail": null
       },
       {
@@ -342,8 +303,8 @@
       {
         "name": "validate the renewed receipt",
         "ok": true,
-        "secs": 40,
-        "detail": "holdings digest 7d0aa707, 461 sources bound"
+        "secs": 41,
+        "detail": "holdings digest 294baf9b, 461 sources bound"
       }
     ],
     "refusedSources": [],

@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 534,
-    "named": 5542,
+    "named": 5543,
     "dynamic": 23
   },
   "files": {
@@ -7351,6 +7351,7 @@
     },
     "tests/theme-precedence.test.ts": {
       "names": [
+        "a toggle on a shared review link survives reload and preserves its popup and raised-state selection",
         "shared staging theme URLs are explicit choices that survive reload, while production ignores review overrides",
         "the synchronous first-paint script works for first-time light/dark systems and unavailable storage or media",
         "theme precedence honors explicit choices before system preference and light fallback"

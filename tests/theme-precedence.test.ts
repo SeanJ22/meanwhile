@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import vm from "node:vm";
-import { resolveTheme, themeBootstrapScript } from "../lib/state/theme.ts";
+import { resolveTheme, themeBootstrapScript, updatedReviewThemeUrl } from "../lib/state/theme.ts";
 
 test("theme precedence honors explicit choices before system preference and light fallback", () => {
   for (const system of [true, false, undefined]) {
@@ -47,4 +47,20 @@ test("shared staging theme URLs are explicit choices that survive reload, while 
   const refused = paint(null, true, true, "?theme=light", true);
   assert.equal(refused.theme, "light");
   assert.equal(refused.choice, "light");
+});
+
+test("a toggle on a shared review link survives reload and preserves its popup and raised-state selection", () => {
+  for (const before of ["light", "dark"] as const) {
+    const next = before === "light" ? "dark" : "light";
+    const href = `https://test.meanwhileusa.com/?zip=07866&popup=body&raisedState=B_MATERIAL_LIFT&theme=${before}#review`;
+    const updated = new URL(updatedReviewThemeUrl(href, next, true)!);
+    assert.equal(updated.searchParams.get("zip"), "07866");
+    assert.equal(updated.searchParams.get("popup"), "body");
+    assert.equal(updated.searchParams.get("raisedState"), "B_MATERIAL_LIFT");
+    assert.equal(updated.hash, "#review");
+    for (const blocked of [false, true]) assert.equal(paint(next, before === "dark", blocked, updated.search, true).theme, next);
+    assert.equal(updatedReviewThemeUrl(updated.href, next, true), null, "no redundant history mutation");
+    assert.equal(updatedReviewThemeUrl(href, next, false), null, "production URLs are untouched");
+  }
+  assert.equal(updatedReviewThemeUrl("https://test.meanwhileusa.com/?zip=85701", "dark", true), null);
 });

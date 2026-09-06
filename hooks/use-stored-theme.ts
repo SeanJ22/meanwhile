@@ -2,7 +2,7 @@
 
 import { useCallback, useSyncExternalStore } from "react";
 import { commitStorageWrite, publishToListeners, subscribeToStorage } from "@/lib/state/subscribe-to-storage";
-import { resolveTheme, THEME_STORAGE_KEY, type Theme } from "@/lib/state/theme";
+import { resolveTheme, updatedReviewThemeUrl, THEME_STORAGE_KEY, type Theme } from "@/lib/state/theme";
 
 export type { Theme } from "@/lib/state/theme";
 export type ThemeSnapshot = { restored: boolean; theme: Theme };
@@ -50,6 +50,9 @@ export function useStoredTheme() {
   const snapshot = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const setTheme = useCallback((next: Theme) => {
     apply(next);
+    const reviewUrl = updatedReviewThemeUrl(window.location.href, next,
+      process.env.WTP_BUILD_CONTEXT === "branch-deploy" && process.env.WTP_BUILD_BRANCH === "test");
+    if (reviewUrl) window.history.replaceState(window.history.state, "", reviewUrl);
     commitStorageWrite(
       () => {
         window.localStorage.setItem(THEME_STORAGE_KEY, next);

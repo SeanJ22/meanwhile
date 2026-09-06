@@ -300,10 +300,9 @@ test("the surfaces render the rosters — the register is not shelf-ware", () =>
     join(process.cwd(), "components", "map", "map-entry.tsx"),
     "utf8",
   );
-  assert.ok(
-    mapEntry.includes("rosterHoldersForBody"),
-    "map-entry must wire rosters into the meeting surfaces",
-  );
+  assert.match(mapEntry,
+    /representation=\{\s*membersOfBody\(bodyForMeeting\(popupMeeting\)\?\.bodyId \?\? null\)\.members\s*\}/,
+    "the meeting popup receives the explicit body's sourced membership, not an unused import or a same-division roster");
 });
 
 test("the division lookup finds both registry suffixes — school boards are #board", () => {

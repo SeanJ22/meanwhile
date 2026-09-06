@@ -3034,7 +3034,7 @@
       "names": [
         "a real GPU classifies as hardware and is therefore left alone",
         "an unreadable renderer is unknown, and unknown is NOT software",
-        "every renderer holds overlays at motion start and reveals only on post-motion idle",
+        "every renderer routes camera intent through flight sequencing and reveals a held flight only on idle",
         "holding keeps sources cached, hides application layers, and removes the DOM state art from the map",
         "the renderer strings this was measured through classify as software",
         "the software floor and the jank ceiling are the stated numbers",

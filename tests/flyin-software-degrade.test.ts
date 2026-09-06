@@ -1,6 +1,6 @@
 /** Renderer classification and normalized performance floors remain valid.
- * V94 replaces software-only motion wiring with a hold on every renderer
- * until post-motion idle. Runtime frame evidence is recorded separately. */
+ * Every renderer shares explicit flight sequencing. Normal manual movement
+ * retains presentation; map-movement-modes.test.ts exercises those semantics. */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -67,12 +67,14 @@ test("an unreadable renderer is unknown, and unknown is NOT software", () => {
 
 const PRESENTATION = readFileSync(join(ROOT, "lib", "map", "flight-presentation.ts"), "utf8");
 
-test("every renderer holds overlays at motion start and reveals only on post-motion idle", () => {
+test("every renderer routes camera intent through flight sequencing and reveals a held flight only on idle", () => {
   assert.match(CANVAS, /map\.on\("movestart", onMoveStart\);/);
   assert.match(CANVAS, /map\.on\("idle", onPresentationIdle\);/);
   const idle = CANVAS.slice(CANVAS.indexOf("const onPresentationIdle"), CANVAS.indexOf('map.on("idle", onPresentationIdle)'));
-  assert.match(idle, /map\.isMoving\(\) \|\| !mapPresentationHeld\(map\)/);
-  assert.match(idle, /releaseMapPresentation\(map\)/);
+  assert.match(idle, /if \(!settleMapPresentation\(map\)\) return/);
+  assert.match(PRESENTATION, /map\.isMoving\(\) \|\| !mapPresentationHeld\(map\)/);
+  assert.match(CANVAS, /enterFlight\(event\.originalEvent \? "manual" : event\.presentationMode \?\? "camera-adjustment"\)/);
+  assert.match(CANVAS, /if \(!startMapMovement\(map, mode\)\) return/);
   assert.match(idle, /ensureDistricts\(\)/);
   const end = CANVAS.slice(CANVAS.indexOf("const onMoveEnd"), CANVAS.indexOf('map.on("movestart", onMoveStart)'));
   assert.ok(!end.includes("releaseMapPresentation(") && !end.includes("setPresentationVisible("));
@@ -84,8 +86,9 @@ test("holding keeps sources cached, hides application layers, and removes the DO
   assert.ok(!PRESENTATION.includes("removeLayer") && !PRESENTATION.includes("removeSource"));
   assert.ok(!CANVAS.includes("<StateFocusOverlay"));
   assert.match(CANVAS, /if \(!map \|\| mapPresentationHeld\(map\)/);
-  assert.match(CANVAS, /shellRef\.current\?\.setAttribute\("data-camera-moving", "1"\)/);
-  assert.match(CANVAS, /shellRef\.current\?\.removeAttribute\("data-camera-moving"\)/);
+  assert.match(CANVAS, /shellRef\.current\?\.setAttribute\("data-presentation-mode", "flight"\)/);
+  assert.match(CANVAS, /shellRef\.current\?\.setAttribute\("data-presentation-mode", "ready"\)/);
+  assert.ok(!CANVAS.includes('"data-camera-moving"'), "gesture events cannot hide marker presentation");
 });
 
 /* ------------------------------------------- 4: the software verdict --- */

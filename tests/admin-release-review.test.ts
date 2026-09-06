@@ -125,7 +125,7 @@ test("B2: the full manifest parses to the observed contract, and VISUAL_WORK_IN_
   assert.equal(m.deployId, DEPLOY_X);
   assert.equal(m.prompt3Status, "VISUAL_WORK_IN_PROGRESS");
   assert.equal(m.reviewReady, false);
-  assert.equal(m.readinessKeyedOn, "prompt3Status");
+  assert.equal(m.readinessKeyedOn, "reviewState");
   assert.equal(m.sections?.length, 5);
   assert.equal(m.raisedState?.candidates?.length, 3);
   assert.deepEqual(m.unknownFields, []);
@@ -163,6 +163,41 @@ test("B2: an unknown status, missing sections, missing URLs and unknown fields a
   assert.equal(parseManifest("not an object"), null);
   assert.equal(parseManifest([1, 2]), null);
   assert.equal(parseManifest(manifestFixture({ sha: "unknown", build: undefined }))?.sha, null, "a non-SHA is never treated as an identity");
+});
+
+test("AR-1: the accepted Prompt 3 lifecycle and review status remain raw, with readiness keyed on reviewState", () => {
+  const sha = "f609f62f2cb485954f920f98e1efd3d8b7064e91";
+  const reading = observed(manifestFixture({ prompt3Status: "STAGING_READY_FOR_OWNER_REVIEW", reviewState: "READY_FOR_REVIEW" }, sha));
+  assert.equal(reading.kind, "OBSERVED");
+  if (reading.kind !== "OBSERVED") return;
+  assert.equal(reading.manifest.sha, sha);
+  assert.equal(reading.manifest.prompt3Status, "STAGING_READY_FOR_OWNER_REVIEW");
+  assert.equal(reading.manifest.reviewState, "READY_FOR_REVIEW");
+  assert.equal(reading.manifest.reviewReady, true);
+  assert.equal(reading.manifest.readinessKeyedOn, "reviewState");
+  const model = buildReviewModel({ reading, production: null, rows: [], store: { ok: true } });
+  assert.deepEqual(model.status, { prompt3Status: "STAGING_READY_FOR_OWNER_REVIEW", reviewState: "READY_FOR_REVIEW", reviewReady: true, keyedOn: "reviewState" });
+  assert.deepEqual(model.composite.conditions.find((c) => c.name === `manifest status is ${REVIEW_READY_STATUS}`), {
+    name: `manifest status is ${REVIEW_READY_STATUS}`, ok: true, detail: "reviewState = READY_FOR_REVIEW",
+  });
+  assert.equal(model.composite.recordable, false, "readiness alone never approves a build");
+});
+
+test("AR-1: explicit reviewState fails closed; only an absent reviewState uses the legacy status", () => {
+  for (const prompt3Status of ["STAGING_READY_FOR_OWNER_REVIEW", "READY_FOR_REVIEW"]) {
+    for (const reviewState of ["BLOCKED", "UNKNOWN", " READY_FOR_REVIEW ", "", null, 42]) {
+      const manifest = parseManifest(manifestFixture({ prompt3Status, reviewState }));
+      assert.equal(manifest?.readinessKeyedOn, "reviewState");
+      assert.equal(manifest?.reviewReady, false, `${prompt3Status} cannot override ${String(reviewState)}`);
+    }
+  }
+  const legacy = parseManifest({ prompt3Status: "READY_FOR_REVIEW" });
+  assert.equal(legacy?.reviewReady, true);
+  assert.equal(legacy?.readinessKeyedOn, "prompt3Status");
+  assert.equal(legacy?.reviewState, null, "no reviewState is synthesized");
+  const missing = parseManifest({});
+  assert.equal(missing?.reviewReady, false);
+  assert.equal(missing?.readinessKeyedOn, null);
 });
 
 test("B2: only staging-origin https URLs are ever rendered as links", () => {
@@ -408,7 +443,7 @@ test("B6: OWNER_APPROVED_FOR_PRODUCTION names every failing condition and is ref
   assert.equal(reApproved.ok, true);
   const notReady = await recordReview(d, { action: "RECORD_OWNER_APPROVAL", stagingSha: SHA_X, section: null, decision: null, feedback: null, choice: null });
   assert.equal(notReady.ok ? "" : notReady.code, "NOT_RECORDABLE");
-  assert.match(notReady.ok ? "" : notReady.detail, /manifest status is READY_FOR_REVIEW \(prompt3Status = VISUAL_WORK_IN_PROGRESS\)/);
+  assert.match(notReady.ok ? "" : notReady.detail, /manifest status is READY_FOR_REVIEW \(reviewState = VISUAL_WORK_IN_PROGRESS\)/);
   const modelNotReady = buildReviewModel({ reading: live, production: null, rows: await repos.softwareReleaseReviews.readAll(), store: { ok: true } });
   assert.equal(modelNotReady.composite.recordable, false);
   assert.deepEqual(
@@ -422,7 +457,7 @@ test("B6: OWNER_APPROVED_FOR_PRODUCTION names every failing condition and is ref
 test("B6: the passing path records once, on an explicit request, composed from the five approvals and the variant row, and appends nothing else", async () => {
   const repos = createMemoryRepositories();
   const now = ticking();
-  const live = observed(manifestFixture({ prompt3Status: REVIEW_READY_STATUS, reviewState: REVIEW_READY_STATUS }));
+  const live = observed(manifestFixture({ prompt3Status: "STAGING_READY_FOR_OWNER_REVIEW", reviewState: REVIEW_READY_STATUS }));
   const d = deps(repos.softwareReleaseReviews, () => live, now);
   await approveAll(d, SHA_X);
   const before = await repos.softwareReleaseReviews.readAll();
@@ -465,6 +500,56 @@ test("B6: the passing path records once, on an explicit request, composed from t
 });
 
 /* ================================================================== B7 */
+
+test("AR-2: every existing composite condition gates independently and approvals never migrate to another full SHA", async () => {
+  const repos = createMemoryRepositories();
+  const readyPair = { prompt3Status: "STAGING_READY_FOR_OWNER_REVIEW", reviewState: "READY_FOR_REVIEW" };
+  let live = observed(manifestFixture(readyPair));
+  const d = deps(repos.softwareReleaseReviews, () => live);
+  await approveAll(d, SHA_X);
+  const rows = await repos.softwareReleaseReviews.readAll();
+  const model = (reading = live, currentRows = rows, store: { ok: true } | { ok: false; detail: string } = { ok: true }) =>
+    buildReviewModel({ reading, production: null, rows: currentRows, store });
+  assert.equal(model().composite.conditions.length, 10, "the existing composite denominator is unchanged");
+  assert.equal(model().composite.recordable, true);
+  for (const row of rows) {
+    const incomplete = model(live, rows.filter((r) => r.id !== row.id));
+    assert.equal(incomplete.composite.recordable, false, `${row.decision} for ${row.section} is required`);
+    assert.equal(incomplete.composite.conditions.filter((c) => !c.ok).length, 1);
+  }
+  assert.equal(model(unavailable()).composite.recordable, false);
+  for (const sha of [SHA_X.slice(0, 8), SHA_X.toUpperCase(), `${SHA_X}0`]) {
+    const invalid = model(observed(manifestFixture(readyPair, sha)));
+    assert.equal(invalid.liveSha, null);
+    assert.equal(invalid.composite.recordable, false);
+  }
+  assert.equal(model(live, rows, { ok: false, detail: "store unavailable" }).composite.recordable, false);
+  live = observed(manifestFixture({ ...readyPair, reviewState: "BLOCKED" }));
+  assert.deepEqual(model().composite.conditions.filter((c) => !c.ok).map((c) => c.detail), ["reviewState = BLOCKED"]);
+  const refused = await recordReview(d, { action: "RECORD_OWNER_APPROVAL", stagingSha: SHA_X, section: null, decision: null, feedback: null, choice: null });
+  assert.equal(refused.ok ? "" : refused.code, "NOT_RECORDABLE");
+  assert.equal((await repos.softwareReleaseReviews.readAll()).length, 6, "a blocked composite writes nothing");
+  live = observed(manifestFixture(readyPair));
+  const recorded = await recordReview(d, { action: "RECORD_OWNER_APPROVAL", stagingSha: SHA_X, section: null, decision: null, feedback: null, choice: null });
+  assert.equal(recorded.ok, true);
+  const allRows = await repos.softwareReleaseReviews.readAll();
+  assert.equal(model(live, allRows).composite.recordable, false, "already recorded still blocks");
+  // Even a shared short prefix cannot carry exact-SHA approvals to the next build.
+  const nextSha = `${SHA_X.slice(0, 39)}b`;
+  live = observed(manifestFixture(readyPair, nextSha));
+  const next = model(live, allRows);
+  assert.equal(next.status.reviewReady, true);
+  assert.equal(next.composite.recordable, false);
+  assert.equal(next.composite.recorded, null);
+  assert.deepEqual(next.composite.composedFrom, []);
+  assert.equal(next.raisedState.choice, null);
+  for (const section of next.sections) assert.equal(section.current.decision, null);
+  assert.deepEqual(next.history.map((entry) => [entry.sha, entry.rows.length]), [[SHA_X, 7]]);
+  const stale = await recordReview(d, { action: "RECORD_OWNER_APPROVAL", stagingSha: SHA_X, section: null, decision: null, feedback: null, choice: null });
+  assert.equal(stale.ok ? "" : stale.code, "STALE_SHA");
+  assert.deepEqual(await repos.softwareReleaseReviews.read(nextSha), []);
+  assert.deepEqual(await repos.softwareReleaseReviews.read(SHA_X), allRows);
+});
 
 test("B7: the one additive table is declared at schema v8 and every provider bundle carries the log", async () => {
   assert.equal(BOOTSTRAP_VERSION, 8);

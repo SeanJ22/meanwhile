@@ -214,6 +214,7 @@ body:has(main.admin) { background: #1b1c22; }
 .admin button.queue-add { margin: 0 0 0 .5rem; vertical-align: baseline; }
 .admin button.queue-add.compact { padding: .1rem .5rem; font-size: .72rem; min-width: 0; color: var(--ce-muted); background: var(--ce-panel); }
 .admin button.queue-add.compact:hover { color: var(--ce-fg); transform: translateY(-1px); }
+.admin button.copy { padding: .1rem .5rem; font-size: .72rem; min-width: 0; color: var(--ce-muted); background: var(--ce-panel); vertical-align: baseline; margin-left: .35rem; }
 
 /* ---- fields and selects ---- */
 .admin textarea, .admin input[type="text"], .admin input[type="password"] {
@@ -479,6 +480,26 @@ body:has(main.admin) { background: #1b1c22; }
 .admin .controls-row { display: flex; flex-wrap: wrap; gap: .6rem; }
 .admin .controls-row form { margin: 0; }
 .admin .worker-fleet-metric summary { font-size: .85rem; color: var(--ce-fg); }
+
+/* ---- Software release review (Admin Pass B). ---- */
+/* A status word is one unbreakable token (VISUAL_WORK_IN_PROGRESS measured 386px at a 390px viewport); it may break anywhere rather than push the page sideways. */
+.admin .rr-status { overflow-wrap: anywhere; display: inline; }
+.admin .rr-identity { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr)); gap: .8rem; margin: .5rem 0 .75rem; }
+.admin .rr-sha { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: .3rem; }
+.admin .rr-sha code { overflow-wrap: anywhere; }
+.admin .rr-sections { display: grid; gap: .8rem; margin: .5rem 0 1rem; }
+.admin .rr-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem; }
+.admin .rr-head h3 { margin: 0; }
+.admin .rr-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-top: .5rem; }
+.admin .rr-decide textarea { width: 100%; max-width: 40rem; min-height: 3rem; display: block; margin-top: .3rem; }
+.admin .rr-decide label { font-size: .85rem; color: var(--ce-muted); margin: .5rem 0 0; }
+.admin .rr-conditions { list-style: none; margin: .5rem 0; padding: 0; display: grid; gap: .3rem; font-size: .9rem; }
+.admin .rr-ok { color: var(--ce-text-ok); }
+.admin .rr-fail { color: var(--ce-text-bad); }
+.admin .rr-history { font-size: .85rem; }
+.admin .chip.rr-approve { color: var(--ce-text-ok); }
+.admin .chip.rr-needs { color: var(--ce-text-warn); }
+.admin .chip.rr-discard { color: var(--ce-text-bad); }
 
 /* ============================================================ the console header */
 .console-nav {

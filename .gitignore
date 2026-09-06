@@ -205,3 +205,4 @@ data/photos/staged/
 # report reads are PNGs, binaries do not go in git (RULING 20), and they live in the
 # worktree at this stable path; the measurements they illustrate are in the report.
 /docs/evidence/admin-pass-a/*.png
+/docs/evidence/admin-pass-b/*.png

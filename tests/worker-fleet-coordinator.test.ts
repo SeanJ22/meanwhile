@@ -38,7 +38,7 @@ test("a newly observed Scout route flows to Hunter without rewriting its extract
   const planBefore=JSON.stringify(h.item.autonomousPlan); await acceptRecordedScout(h);
   const hunter=await nextAutonomousOperation(h.runtime,h.item.id); assert.equal(hunter.task?.workerTask?.role,"ACQUIRER"); assert.equal(hunter.task?.workerTask?.acquisition?.route.url,FIXTURE_URL);
   const dispatched=await dispatchWorkerTask(h.runtime,hunter.task!); assert.equal(dispatched.outcome,"WORKED",dispatched.detail);
-  const next=await nextAutonomousOperation(h.runtime,h.item.id); assert.equal(next.action,"BLOCKED"); assert.match(next.reason,/EXTRACTION_SCOPE_UNESTABLISHED/);
+  const next=await nextAutonomousOperation(h.runtime,h.item.id); assert.equal(next.action,"SCOUT"); assert.match(next.reason,/EXTRACTION_SCOPE_UNESTABLISHED/);
   assert.equal(JSON.stringify((await h.repos.workItems.mustRead(h.item.id)).value.autonomousPlan),planBefore);
   assert.ok(!(await h.repos.routeTasks.list()).some(task=>task.value.workerTask?.role==="PARSER"));
 });
@@ -132,8 +132,14 @@ test("Hunter transport failure is durable OPEN evidence and retry reuses the can
   const result=await dispatchWorkerTask(h.runtime,first.task!); assert.equal(result.outcome,"WORKED",result.detail);
   const record=(await h.repos.workerResults.readAll())[0]; assert.equal(record.result.role,"ACQUIRER"); if(record.result.role!=="ACQUIRER") throw new Error("wrong role");
   assert.equal(record.result.verdict,"BLOCKED"); assert.equal(record.result.walkState.state,"OPEN"); assert.equal(record.result.artifacts.length,0); assert.equal(record.result.walk.at(-1)?.transport,"TIMEOUT");
-  assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"BLOCKED");
+  const novelty=await nextAutonomousOperation(h.runtime,h.item.id);
+  assert.equal(novelty.action,"SCOUT"); assert.match(novelty.task!.routeId,/autonomous:novelty:/);
+  assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).task?.id,novelty.task?.id,"restart reuses the same novelty task");
+  // Even after retry becomes due, the old route cannot starve the branch.
   h.advanceTo(new Date(Date.parse(record.endedAt)+16*60_000).toISOString());
+  assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"SCOUT");
+  const scout=await runAutonomousCoordinator(h.runtime,{maximum:1,maxScoutDispatches:1});
+  assert.equal((await h.repos.attempts.mustRead(scout.dispatches[0].attemptId!)).value.outcome,"DENIED_BY_POLICY","offline fixture has no model transport; denial stays attributable");
   const retry=await nextAutonomousOperation(h.runtime,h.item.id); assert.equal(retry.task?.workerTask?.role,"ACQUIRER"); assert.notEqual(retry.task?.id,first.task?.id);
   const restart=await nextAutonomousOperation(h.runtime,h.item.id); assert.equal(restart.task?.id,retry.task?.id);
   assert.ok(!(await h.repos.routeTasks.list()).some(t=>t.value.workerTask?.role==="PARSER"));
@@ -179,7 +185,7 @@ test("an independent Auditor break remains blocked and never becomes staged inve
   }};
   const run=await runAutonomousCoordinator(runtime,{maximum:1,concurrency:1}); assert.equal(run.dispatches[0].outcome,"WORKED",run.dispatches[0].detail);
   const audit=(await h.repos.workerResults.readAll()).find(r=>r.result.role==="ADVERSARIAL_AUDITOR"); assert.equal(audit?.result.verdict,"BROKE");
-  assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"BLOCKED");
+  assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"SCOUT");
   assert.equal((await h.repos.workItems.mustRead(h.item.id)).value.state,"REOPENED");
 });
 
@@ -190,6 +196,29 @@ test("explicitly required external verification remains missing while the diagno
   }
   const records=await h.repos.workerResults.readAll(); assert.equal(records.find(r=>r.result.role==="VALIDATOR")?.result.verdict,"INCONCLUSIVE");
   assert.equal(records.find(r=>r.result.role==="ADVERSARIAL_AUDITOR")?.result.verdict,"INCONCLUSIVE");
-  assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"BLOCKED");
+  assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"SCOUT");
   assert.ok(Date.parse(FIXTURE_NOW)<Date.parse(h.now()));
+});
+
+test("unresolved identity permits independent diagnosis but never staging", async () => {
+  const h=await autonomousHarness({plan:plan=>{
+    const source=plan.sources[0]; const span=source.observation;
+    return {...plan,detective:[{artifactIds:[span.artifactId],walk:[],walkState:{state:"OPEN",nextRouteIds:["independent-identity-register"]},question:{
+      id:"fixture-identity-disagreement",text:"Which canonical identity does this publisher evidence establish?",subjectId:plan.contract.subjectId,
+      jurisdiction:"NH",recordClass:plan.contract.recordClass,kind:"IDENTITY",populationDefinition:null,denominator:null,
+      authorities:[{artifactId:span.artifactId,organization:source.publisher,type:"PUBLISHER_DIRECTORY",observedAt:source.observedAt}],
+      alternatives:[plan.contract.subjectId,"fixture:nh:other-county"].map((id,index)=>({id:`alternative-${index}`,statement:`The evidence identifies ${id}.`,canonicalIdentity:id,tests:[{artifactId:span.artifactId,predicate:{kind:"EXACT_TEXT" as const,quote:span.quote}}]})),
+      nextAction:"Acquire the independent identity register.",falsificationCondition:"An independent authority contradicts the proposed identity."
+    }}]};
+  }});
+  const roles:string[]=[];
+  for(let index=0;index<5;index++) {
+    const run=await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});
+    roles.push(run.decisions[0].task!.workerTask!.role);
+    assert.equal(run.dispatches[0]?.outcome,"WORKED",run.dispatches[0]?.detail);
+  }
+  assert.deepEqual(roles,["ACQUIRER","PARSER","DETECTIVE","VALIDATOR","ADVERSARIAL_AUDITOR"]);
+  assert.equal((await h.repos.workerResults.readAll()).find(r=>r.result.role==="DETECTIVE")?.result.verdict,"UNRESOLVED");
+  assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"SCOUT");
+  assert.equal((await h.repos.promotionPipeline.readAll()).length,0);
 });

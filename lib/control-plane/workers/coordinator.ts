@@ -99,10 +99,13 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
   const sources = [...plan.sources,...await scoutSources(runtime,item)];
   const acquisitions: AcquirerTaskSpec[] = [...plan.acquisition];
   for (const source of sources) if (!acquisitions.some(a=>a.route.id===source.id && a.route.url===source.url)) acquisitions.push({route:source,held:[]});
-  if (!acquisitions.length) {
+  const scoutOperation = async (novelty: boolean): Promise<AutonomousDecision> => {
     const signature = fingerprint([item.id,canonicalJson(plan.seedUrls),String(runtime.methodVersion)]);
-    const baseRouteId=`autonomous:scout:${signature}`;
-    const created = createRouteTask({workItemId:item.id,routeId:baseRouteId,routeLabel:"Discover an observed authoritative public route",
+    const baseRouteId=`autonomous:${novelty ? "novelty" : "scout"}:${signature}`;
+    const scope = novelty
+      ? "UNRESOLVED_INVESTIGATION: inherited computations have not settled the obligation. Walk remaining applicable methods, then investigate new public representations or methods; preserve the live obligation."
+      : "Discover an observed authoritative public route";
+    const created = createRouteTask({workItemId:item.id,routeId:baseRouteId,routeLabel:scope,
       target:plan.seedUrls.join(" "),inherited:false,now});
     const prior = await repos.routeTasks.read(created.id);
     let task = prior?.value ?? (await registerRouteTask(repos,created,now)).value;
@@ -119,10 +122,10 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     while(task.state==="DISPOSED" && latest?.outcome==="COMPLETED") {
       const lastScout=scoutHistory.find(result=>result.attemptId===latest!.id);
       const continuation=createRouteTask({workItemId:item.id,routeId:`${baseRouteId}:continue:${latest.id}`,
-        routeLabel:`Continue source discovery after ${latest.id}; next: ${lastScout?.nextRungs.join("; ") || "reassess the remaining authoritative source ladder"}`,
+        routeLabel:`${scope} Continue after ${latest.id}; next: ${lastScout?.nextRungs.join("; ") || "reassess the remaining authoritative source methods"}`,
         target:created.target,inherited:false,now});
       const existing=await repos.routeTasks.read(continuation.id);
-      if(!existing && debt && Date.parse(debt.retryAt)>Date.parse(now)) return decision("BLOCKED",`Scout completed without a grounded source; its next rungs remain owed after ${debt.retryAt}.`,task);
+      if(!existing && debt && Date.parse(debt.retryAt)>Date.parse(now)) return decision("BLOCKED",`Scout completed without settling the obligation; its next rungs remain owed after ${debt.retryAt}.`,task);
       task=existing?.value??(await registerRouteTask(repos,continuation,now)).value;
       latest=history.filter(attempt=>attempt.routeTaskId===task.id).at(-1);
     }
@@ -135,9 +138,10 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
         task=(await repos.routeTasks.compareAndSet(task.id,row.revision,{...rest,state:"RECLAIMABLE",policyReauthorizations:[...(task.policyReauthorizations??[]),{at:now,denial:policyDenial!,reason:"The named Scout transport or rolling-cost condition changed; current policy will be checked again."}]},now)).value;
       }
     }
-    if (["PENDING","RECLAIMABLE"].includes(task.state) && (!debt||Date.parse(debt.retryAt)<=Date.parse(now))) return decision("SCOUT","Source is not yet observed; the existing Scout lane owns discovery.",task);
+    if (["PENDING","RECLAIMABLE"].includes(task.state) && (!debt||Date.parse(debt.retryAt)<=Date.parse(now))) return decision("SCOUT",scope,task);
     return decision("BLOCKED","Scout has no accepted grounded route; preserve its next rungs and retry state.",task);
-  }
+  };
+  if (!acquisitions.length) return scoutOperation(false);
   let staged = false;
   let unresolved = false;
   let outsideExtractionScope=false;
@@ -170,7 +174,10 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       if (failed.result.verdict === "ACQUIRED") { debt = null; continue; }
       debt = recordFailure(debt,{obligationId:item.id,cause:"TRANSPORT_FAILED",detail:`ACQUIRER ${failed.result.verdict}`,target:acquisition.route.url,dueAt:failed.startedAt,now:failed.endedAt});
     }
-    if (debt && Date.parse(debt.retryAt) <= Date.parse(now)) {
+    // An hourly runner must not spend every pass retrying the same failed URL
+    // before the unresolved investigation ever gets a Scout turn.
+    const scoutTriedAfterFailure = attempts.some(a => a.workItemId === item.id && a.worker.role === "SCOUT" && a.endedAt !== null && Date.parse(a.endedAt) >= Date.parse(latest.endedAt));
+    if (debt && Date.parse(debt.retryAt) <= Date.parse(now) && scoutTriedAfterFailure) {
       const next = await taskFor({workItemId:item.id,contract:plan.contract,now,role:"ACQUIRER",artifactId:acquisition.route.observation.artifactId,acquisition,replayLabel:`retry-after:${latest.id}`});
       if (next) return next;
     }
@@ -200,7 +207,9 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
         else if(finding.result.role!=="DETECTIVE" || finding.result.verdict!=="SUPPORTED" ||
           (detective.question.kind==="IDENTITY" && (finding.result.identity.state!=="CANDIDATE" || finding.result.identity.canonicalId!==plan.contract.subjectId))) identityUnresolved=true;
       }
-      if(identityUnresolved) { unresolved=true; continue; }
+      // Independent checking can diagnose held extraction while identity work
+      // remains open. An unresolved Detective still prevents staging below.
+      if(identityUnresolved) unresolved=true;
       if (plan.contract.schemaVersion===2) {
         const heldIds=new Set((await repos.artifacts.readAll()).map(artifact=>artifact.artifactId));
         if(plan.contract.verification.authorities.some(authority=>[...authority.artifactIds,...authority.authorityEvidenceArtifactIds].some(id=>!heldIds.has(id)))) { unresolved=true; continue; }
@@ -213,7 +222,7 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
       if (!records.some(r=>r.routeTaskId===auditTask.id)) { const next=await taskFor({...spec,role:"ADVERSARIAL_AUDITOR",producerResultId:parser.id,validatorResultId:validator.id,auditScope:plan.auditScope}); if(next)return next; unresolved=true; }
       else {
         const audit=records.find(r=>r.routeTaskId===auditTask.id);
-        if (validator.result.verdict==="PASS" && audit?.result.role==="ADVERSARIAL_AUDITOR" && audit.result.verdict==="SURVIVED") staged=true;
+        if (!identityUnresolved && validator.result.verdict==="PASS" && audit?.result.role==="ADVERSARIAL_AUDITOR" && audit.result.verdict==="SURVIVED") staged=true;
         else unresolved=true;
       }
     }
@@ -226,7 +235,9 @@ export async function nextAutonomousOperation(runtime: AutonomousCoordinatorRunt
     const next=await taskFor({workItemId:item.id,contract:plan.contract,now,role:"ENGINEERING",artifactId:engineering.methodArtifactId,engineering});
     if(next)return next;
   }
-  return decision(staged&&!unresolved?"STAGED":"BLOCKED",staged&&!unresolved?"Scoped reviewed results are retained. Reader/Ask and promotion gates remain independent.":outsideExtractionScope?"EXTRACTION_SCOPE_UNESTABLISHED: Scout's newly observed route was acquired; a compatible source extraction contract is required.":"No currently admissible computation; evidence gaps, failed verification, blockers and retry history remain owed.");
+  if (staged && !unresolved) return decision("STAGED","Scoped reviewed results are retained. Reader/Ask and promotion gates remain independent.");
+  const novelty = await scoutOperation(true);
+  return outsideExtractionScope ? {...novelty,reason:`EXTRACTION_SCOPE_UNESTABLISHED: the acquired representation needs a compatible extraction contract. ${novelty.reason}`} : novelty;
 }
 
 /** Independent obligations run concurrently; leases provide process-independent ownership. */

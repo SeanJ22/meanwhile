@@ -1022,6 +1022,7 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         ranAs: "BOUNDED_MODEL_WORKER" as const,
         artifacts: distinctArtifacts,
         cost,
+        endedAt: clock(),
       };
       if (persisted.refusal !== null) {
         return {

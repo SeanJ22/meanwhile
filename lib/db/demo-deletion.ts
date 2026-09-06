@@ -24,7 +24,7 @@
  */
 import { and, gte, lte, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-http";
-import { neon } from "@neondatabase/serverless";
+import { createGuardedNeon } from "./guarded-neon.ts";
 
 import { reactions, searchLog } from "./schema.ts";
 import { WriteHandleRefused, resolveProductionWriteHandle } from "./write-handle.ts";
@@ -63,7 +63,7 @@ export async function deleteDemoWindowRows(
     );
   }
 
-  const db = drizzle(neon(handle.connection));
+  const db = drizzle(createGuardedNeon(handle.connection));
   /*
    * STRINGS, because `occurred_at` is declared `mode: "string"`. Passing a
    * `Date` type-errors, and the reason is worth keeping: the column's mode is

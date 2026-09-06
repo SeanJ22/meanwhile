@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 529,
-    "named": 5511,
+    "files": 531,
+    "named": 5530,
     "dynamic": 23
   },
   "files": {
@@ -1740,6 +1740,7 @@
         "RULING 278 — every ops-only artifact names guards the cheap path actually runs",
         "RULING 278 — every ops-only entry is an exact file, on disk, with its reason stated",
         "RULING 278 — every ops-only file is written to main by the scheduled pusher that declares it",
+        "RULING 278 — every step needing an install is gated on the CLASSIFICATION, not on a step output",
         "RULING 278 — neither workflow keeps a second path-classification truth table",
         "RULING 278 — no directory-wide skip may be resurrected",
         "RULING 278 — the COMMITTED ops-only artifacts still hold their shape",
@@ -6746,6 +6747,25 @@
       ],
       "dynamic": 0
     },
+    "tests/shared-write-boundary.test.ts": {
+      "names": [
+        "PLANTED shared SQL: HTTP options cannot replace the body, destination or read-only header",
+        "PLANTED shared SQL: exposed query data and execute still use the guarded dispatch",
+        "PLANTED structural bypass: direct import, re-export, dynamic import and require are detected",
+        "SISO-3 Next runtime binds only sanitized hosts and statically reads the build context",
+        "SISO-3 driver construction never exposes a malformed connection credential",
+        "SISO-3 endpoint aliases: pooled/direct Neon spelling cannot hide a production collision",
+        "SISO-3 shared SQL: CTE and SELECT-function mutations receive database refusal as named guard error",
+        "SISO-3 shared SQL: branch production writes cannot dispatch through query, tagged SQL or batch",
+        "SISO-3 shared SQL: control-plane uses the same boundary and its actual destination",
+        "SISO-3 shared SQL: correct staging/production pairings dispatch writes",
+        "SISO-3 shared SQL: denied writers retain reads only inside forced READ ONLY",
+        "SISO-3 shared SQL: pinned connection and fresh context prevent cache/env laundering",
+        "SISO-3 shared SQL: raw Drizzle execute cannot bypass the guard",
+        "SISO-3 structural boundary: app/lib can construct database drivers only through guarded-neon"
+      ],
+      "dynamic": 0
+    },
     "tests/ship-pr-checks.test.ts": {
       "names": [
         "a different remote head is refused before waiting or merging",
@@ -6944,6 +6964,18 @@
       ],
       "dynamic": 0
     },
+    "tests/staging-build-isolation.test.ts": {
+      "names": [
+        "a production control-plane collision refuses even when the application is isolated",
+        "malformed connection strings fail safe without exposing parser input",
+        "missing control-plane build scope is unmeasured and refuses before Next",
+        "the actual branch command reaches build only after both staging destinations pass",
+        "the actual branch command refuses a planted production collision before build",
+        "the real Netlify branch command gates before Next and keeps previews disabled",
+        "unknown deploy context is refused by the executable gate"
+      ],
+      "dynamic": 0
+    },
     "tests/staging-isolation.test.ts": {
       "names": [
         "STAGING_RENDER is a recorded target and NOT an activation-gating one",
@@ -6961,7 +6993,7 @@
         "production must serve production — the mirror-image misconfiguration",
         "the ROLE rule refuses on its own, with no collision measurement to lean on",
         "the collision outranks the labels — same endpoint, whatever either is called",
-        "the isolation gate prints variable NAMES, and never reads a value into a message",
+        "the isolation gate never formats a raw connection string into a message",
         "the module returns only the role vocabulary — never a value derived from the URL",
         "the observer never files a PRODUCTION database reading under staging",
         "the staging observer refuses structurally, and takes the staging origin BY NAME",
@@ -8077,26 +8109,23 @@
     },
     "tests/write-guard.test.ts": {
       "names": [
-        "NODE_ENV values that are not exactly production do not count as production",
+        "PLANTED SISO-3: a built branch deploy pointed at production refuses loudly",
         "PLANTED g13: a sanction nobody has named is refused, and says so",
         "PLANTED g13: an unrelated script WITH the declaration is still refused",
         "PLANTED g13: the declaration does not stand in for a destination",
         "PLANTED g13: the same script WITHOUT the declaration is still refused",
-        "a local database may be written from a local runtime",
-        "a typo in WTP_DB_ROLE fails safe rather than opening the gate",
-        "an undeclared database is assumed to be production, not local",
-        "assertWriteAllowed is silent when the pairing is legitimate",
-        "assertWriteAllowed throws a named error, not a generic one",
-        "every database write path asserts the guard",
+        "SISO-3: a built branch deploy may write to the measured staging destination",
+        "SISO-3: control-plane classification measures its own connection and anchors",
+        "SISO-3: measured production runtime and production destination preserve writes",
+        "SISO-3: runtime CONTEXT is usable when build context is unavailable",
+        "SISO-3: unmeasured destinations, contexts and conflicting contexts fail safe",
+        "a refusal exposes neither connection string nor planted credentials",
         "g13 audit: every scheduled workflow that writes carries a sanction",
         "g13: the refusal names the sanctioned path, not only .env.local",
         "g13: the sanction table is a closed list, and the purge is on it",
         "g13: the scheduled purge, declared as the workflow declares it, is allowed",
         "g13: the workflow declares exactly what the guard requires",
-        "no write path outside the guarded set has appeared",
-        "the defect that caused this: a dev server pointed at production is refused",
-        "the production runtime writing to the production database is allowed",
-        "the refusal explains itself in words a person can act on"
+        "local writes require both measured loopback destination and local development"
       ],
       "dynamic": 0
     },

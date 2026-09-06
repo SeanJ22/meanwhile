@@ -304,7 +304,7 @@ test("the module returns only the role vocabulary — never a value derived from
   }
 });
 
-test("the isolation gate prints variable NAMES, and never reads a value into a message", () => {
+test("the isolation gate never formats a raw connection string into a message", () => {
   /*
    * Read as TEXT rather than executed, because the failure being guarded is a
    * line of source that formats a secret — and a run that happens not to have
@@ -326,8 +326,8 @@ test("the isolation gate prints variable NAMES, and never reads a value into a m
   ]) {
     assert.ok(!code.includes(forbidden), `the gate formats a connection string: ${forbidden}`);
   }
-  // Set-ness is reported as a boolean beside the NAME, which is the only shape
-  // that says what a reader needs without saying what the value is.
+  // Presence is a boolean beside the variable name. Sanitized endpoint evidence
+  // is covered by the executable build tests; raw connection strings stay private.
   assert.ok(
     code.includes('value === null ? "NO" : "yes"'),
     "the gate no longer reports set-ness as a boolean beside the variable name",

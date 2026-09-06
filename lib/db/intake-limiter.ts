@@ -129,7 +129,7 @@ export async function purgeExpiredLimiterState(
   if (!process.env.DATABASE_URL) return 0;
   assertWriteAllowed("an intake limiter purge");
   const cutoff = new Date(now.getTime() - 48 * 3600 * 1000).toISOString();
-  const deleted = await getDb()
+  const deleted = await getDb("an intake limiter purge")
     .delete(intakeLimiter)
     .where(lt(intakeLimiter.updatedAt, cutoff))
     .returning({ digest: intakeLimiter.digest });

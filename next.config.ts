@@ -1,4 +1,14 @@
 import type { NextConfig } from "next";
+import { databaseDestinationHints, sanitizedDatabaseDestination } from "./lib/ops/staging-isolation.ts";
+
+// Compile the same non-secret endpoint identities measured by the gate, including
+// Neon routing options and pooler aliases. Credentials can never be inlined.
+const databaseAnchor = (value: string | null | undefined): string =>
+  sanitizedDatabaseDestination(value && /^[a-z0-9.-]+$/i.test(value)
+    ? `postgres://${value}/anchor`
+    : value)?.endpointIdentity ?? "";
+const applicationDatabaseHints = databaseDestinationHints(process.env, "application");
+const controlPlaneDatabaseHints = databaseDestinationHints(process.env, "control-plane");
 
 // Dynamic registry reads must retain their canonical inputs in every consuming route.
 const registryHoldingsTrace = [
@@ -43,6 +53,10 @@ const nextConfig: NextConfig = {
     WTP_BUILD_CONTEXT: process.env.CONTEXT ?? "",
     WTP_BUILD_DEPLOY_ID: process.env.DEPLOY_ID ?? "",
     WTP_BUILD_ON_NETLIFY: process.env.NETLIFY ?? "",
+    WTP_BUILD_PRODUCTION_DATABASE_HOST: databaseAnchor(applicationDatabaseHints.productionHostHint),
+    WTP_BUILD_STAGING_DATABASE_HOST: databaseAnchor(applicationDatabaseHints.stagingHostHint),
+    WTP_BUILD_PRODUCTION_CONTROL_PLANE_HOST: databaseAnchor(controlPlaneDatabaseHints.productionHostHint),
+    WTP_BUILD_STAGING_CONTROL_PLANE_HOST: databaseAnchor(controlPlaneDatabaseHints.stagingHostHint),
   },
   // The API route reads committed data files off the filesystem at runtime —
   // the boundary GeoJSON, the registry, the officeholder rosters, and the

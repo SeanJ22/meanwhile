@@ -20,19 +20,11 @@
  * no error, no alarm and no reader-visible symptom. It is discovered, if it is
  * ever discovered, in an aggregate somebody sold.
  *
- * `lib/db/write-guard.ts` is the closest existing protection and it does not
- * reach this: it asks whether the RUNTIME is production, and a Netlify branch
- * deploy is a built Next server, so `NODE_ENV` is `"production"` there exactly
- * as it is on the real site. That module names this hole itself — *"`NODE_ENV`
- * cannot tell the production deployment apart from a LOCAL production build"* —
- * and this is the same hole one host over. The two guards are deliberately
- * independent and answer different questions:
- *
- * ```
- *   write-guard.ts      MAY this process write?          runtime + declaration
- *   staging-isolation   is this deploy pointed at the    endpoint identity
- *                       store readers are served from?
- * ```
+ * `NODE_ENV=production` alone cannot distinguish production from a built branch
+ * deploy. Both the branch build and `lib/db/write-guard.ts` now use this module's
+ * measured deployment context and endpoint identities. Runtime SQL dispatch is
+ * guarded at `lib/db/guarded-neon.ts`, including raw queries and control-plane
+ * persistence, so a forgotten business-level assertion cannot reopen the hole.
  *
  * ## This module is PURE, and that is a security property
  *
@@ -92,6 +84,22 @@ export interface ClassifyHints {
   readonly productionHostHint?: string | null;
   /** The connection string or host this project treats as staging. */
   readonly stagingHostHint?: string | null;
+}
+
+export type DatabaseDestination = "application" | "control-plane";
+
+/** The gate and runtime resolve the same build-bound anchors; values never leave the caller. */
+export function databaseDestinationHints(
+  env: Readonly<Record<string, string | undefined>>,
+  destination: DatabaseDestination = "application",
+): ClassifyHints {
+  return destination === "application" ? {
+    productionHostHint: env.WTP_BUILD_PRODUCTION_DATABASE_HOST || env.WTP_PRODUCTION_DATABASE_URL_READONLY,
+    stagingHostHint: env.WTP_BUILD_STAGING_DATABASE_HOST || env.WTP_STAGING_DATABASE_URL_READONLY,
+  } : {
+    productionHostHint: env.WTP_BUILD_PRODUCTION_CONTROL_PLANE_HOST || env.WTP_PRODUCTION_CONTROL_PLANE_DATABASE_URL_READONLY,
+    stagingHostHint: env.WTP_BUILD_STAGING_CONTROL_PLANE_HOST || env.WTP_STAGING_CONTROL_PLANE_DATABASE_URL_READONLY,
+  };
 }
 
 /** Hosts that cannot be a shared store, whatever else is true of them. */
@@ -157,10 +165,10 @@ function endpointIdentityOf(value: string | null | undefined): string | null {
   host = host.toLowerCase().replace(/^\[/, "").replace(/\]$/, "");
 
   const pooled = /(?:^|[;\s])endpoint=(ep-[a-z0-9-]+)/i.exec(options ?? "");
-  if (pooled) return pooled[1].toLowerCase();
+  if (pooled) return pooled[1].toLowerCase().replace(/-pooler$/, "");
 
   const direct = /^(ep-[a-z0-9-]+)\./.exec(host);
-  if (direct) return direct[1];
+  if (direct) return direct[1].replace(/-pooler$/, "");
 
   return host;
 }
@@ -190,6 +198,29 @@ function databaseNameOf(value: string): string | null {
     return name === "" ? null : name.toLowerCase();
   } catch {
     /* See `endpointIdentityOf`: nothing is read from the error. */
+    return null;
+  }
+}
+
+/** Provider proof may expose only a credential-free endpoint, host and simple database name. */
+export function sanitizedDatabaseDestination(
+  value: string | null | undefined,
+): { endpointIdentity: string; host: string; database: string | null } | null {
+  if (typeof value !== "string") return null;
+  try {
+    const parsed = new URL(value);
+    if (parsed.protocol !== "postgres:" && parsed.protocol !== "postgresql:") return null;
+    const host = parsed.hostname.toLowerCase();
+    if (!/^[a-z0-9.-]+$/i.test(host) && host !== "[::1]") return null;
+    const endpointIdentity = endpointIdentityOf(value);
+    if (!endpointIdentity) return null;
+    const database = databaseNameOf(value);
+    return {
+      endpointIdentity,
+      host,
+      database: database !== null && /^[a-z0-9_-]+$/i.test(database) ? database : null,
+    };
+  } catch {
     return null;
   }
 }
@@ -275,6 +306,33 @@ export function sameEndpointIdentity(
   const ib = endpointIdentityOf(b);
   if (ia === null || ib === null) return null;
   return ia === ib;
+}
+
+/** One measured destination decision shared by the build gate and write boundary. */
+export function evaluateDatabaseDestination(input: ClassifyHints & {
+  readonly context: string;
+  readonly databaseUrl: string | null | undefined;
+}): IsolationVerdict {
+  // The classifier's weak "prod" naming evidence may refuse staging, but
+  // cannot grant production writes without a measured production anchor.
+  if (input.context.trim().toLowerCase() === "production" &&
+    sameEndpointIdentity(input.databaseUrl, input.productionHostHint) !== true) {
+    return {
+      ok: false,
+      role: "unknown",
+      context: input.context,
+      reason: "the production destination has not been measured equal to the production anchor.",
+    };
+  }
+  return evaluateIsolation({
+    context: input.context,
+    role: sanitizedDatabaseDestination(input.databaseUrl) === null
+      ? "unknown" : classifyDatabaseUrl(input.databaseUrl, input),
+    productionRole: classifyDatabaseUrl(input.productionHostHint, {
+      productionHostHint: input.productionHostHint,
+    }),
+    sameEndpointAsProduction: sameEndpointIdentity(input.databaseUrl, input.productionHostHint),
+  });
 }
 
 /* --------------------------------------------------------------- verdicts */

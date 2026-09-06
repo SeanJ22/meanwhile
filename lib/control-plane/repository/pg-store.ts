@@ -57,7 +57,7 @@ import type { WorkerResultRecord } from "../workers/types.ts";
  * rather than passing.
  */
 
-import { neon } from "@neondatabase/serverless";
+import { createGuardedNeon } from "../../db/guarded-neon.ts";
 import type {
   CacheObservationRecord,
   OwnerDecisionIntent,
@@ -494,7 +494,7 @@ export async function createPgRepositories(
         "RULING 220 separates on purpose.",
     );
   }
-  const sql = neon(connectionString);
+  const sql = createGuardedNeon(connectionString, { destination: "control-plane" });
   if (!options.skipBootstrap) await bootstrap(sql, nowIso);
   const locks = pgLockManager(sql);
 

@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { createGuardedNeon } from "@/lib/db/guarded-neon";
 
 import {
   compareSchemaState,
@@ -83,7 +83,7 @@ export async function GET() {
 
   let appliedWhen: number[];
   try {
-    const sql = neon(url);
+    const sql = createGuardedNeon(url);
     const rows = (await sql`
       SELECT created_at FROM drizzle.__drizzle_migrations
     `) as { created_at: string | number }[];

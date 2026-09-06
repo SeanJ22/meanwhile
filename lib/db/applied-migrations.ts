@@ -35,7 +35,7 @@
  * because there is no field to read until it has checked `ok`.
  */
 
-import { neon } from "@neondatabase/serverless";
+import { createGuardedNeon } from "./guarded-neon.ts";
 
 /** What a database says it has applied, or why that could not be established. */
 export type AppliedMigrations =
@@ -86,7 +86,7 @@ export type AppliedMigrations =
  */
 export async function readAppliedMigrationWhen(connection: string): Promise<AppliedMigrations> {
   try {
-    const sql = neon(connection);
+    const sql = createGuardedNeon(connection);
     const rows = (await sql`
       SELECT hash, created_at FROM drizzle.__drizzle_migrations
     `) as { hash: string; created_at: string | number }[];

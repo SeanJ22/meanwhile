@@ -1,5 +1,5 @@
-import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
+import { createGuardedNeon } from "./guarded-neon.ts";
 
 // Extension explicit so the file also loads under `node --test`'s
 // strip-types resolver, which the search-log tests run through.
@@ -12,8 +12,8 @@ import * as schema from "./schema.ts";
 */
 let cached: ReturnType<typeof drizzle<typeof schema>> | null = null;
 
-export function getDb() {
-  if (cached) return cached;
+export function getDb(operation?: string) {
+  if (cached && !operation) return cached;
 
   const url = process.env.DATABASE_URL;
   if (!url) {
@@ -22,6 +22,7 @@ export function getDb() {
     );
   }
 
-  cached = drizzle(neon(url), { schema });
-  return cached;
+  const db = drizzle(createGuardedNeon(url, { operation }), { schema });
+  if (!operation) cached = db;
+  return db;
 }

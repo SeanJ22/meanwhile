@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
-
 import {
   ProductionWriteRefused,
   SANCTIONED_WRITES,
@@ -9,155 +8,95 @@ import {
   describeWriteContext,
 } from "@/lib/db/write-guard";
 
-/*
-  The P0 of 2026-08-17: `pnpm dev` reads .env.local, .env.local carried the
-  production DATABASE_URL, and opening a browser at localhost:3000 wrote an
-  unmarked ORGANIC row into the store the business sells from.
+const production = "postgres://owner:planted-secret@ep-live-123.example/neondb";
+const staging = "postgres://owner:planted-secret@ep-stage-456.example/neondb";
+const anchors = {
+  WTP_BUILD_PRODUCTION_DATABASE_HOST: "ep-live-123.example",
+  WTP_BUILD_STAGING_DATABASE_HOST: "ep-stage-456.example",
+  WTP_BUILD_PRODUCTION_CONTROL_PLANE_HOST: "ep-control-live-123.example",
+  WTP_BUILD_STAGING_CONTROL_PLANE_HOST: "ep-control-stage-456.example",
+};
+const deploy = (context: string, url: string) => ({
+  ...anchors, NODE_ENV: "production", WTP_BUILD_CONTEXT: context, DATABASE_URL: url,
+});
 
-  These tests pin the DECISION TABLE rather than the implementation, because
-  the property that matters is which of the four (runtime x database) pairings
-  may write. Every case below is a pairing, and the one that caused the defect
-  is asserted by name.
-*/
+test("SISO-3: measured production runtime and production destination preserve writes", () => {
+  assert.equal(describeWriteContext(deploy("production", production)).allowed, true);
+  assert.doesNotThrow(() => assertWriteAllowed("a reaction", deploy("production", production)));
+});
 
-test("the defect that caused this: a dev server pointed at production is refused", () => {
-  const context = describeWriteContext({ NODE_ENV: "development" });
-  assert.equal(context.allowed, false);
-  assert.equal(context.dbRole, "production");
+test("SISO-3: a built branch deploy may write to the measured staging destination", () => {
+  const context = describeWriteContext(deploy("branch-deploy", staging));
+  assert.equal(context.allowed, true);
+  assert.equal(context.dbRole, "staging");
   assert.equal(context.isProductionRuntime, false);
 });
 
-test("the production runtime writing to the production database is allowed", () => {
-  const context = describeWriteContext({ NODE_ENV: "production" });
-  assert.equal(context.allowed, true);
-  assert.equal(context.dbRole, "production");
-});
-
-test("a local database may be written from a local runtime", () => {
-  const context = describeWriteContext({
-    NODE_ENV: "development",
-    WTP_DB_ROLE: "local",
-  });
-  assert.equal(context.allowed, true);
-  assert.equal(context.dbRole, "local");
-});
-
-test("an undeclared database is assumed to be production, not local", () => {
-  // The whole design. A new checkout, a forgotten variable, a fresh CI box and
-  // a script nobody thought about all land here, and all are refused.
-  const context = describeWriteContext({ NODE_ENV: "development" });
-  assert.equal(context.dbRole, "production");
-  assert.equal(context.allowed, false);
-});
-
-test("a typo in WTP_DB_ROLE fails safe rather than opening the gate", () => {
-  for (const typo of ["locl", "Local", " local", "LOCAL", "true", ""]) {
-    const context = describeWriteContext({ NODE_ENV: "development", WTP_DB_ROLE: typo });
-    assert.equal(
-      context.dbRole,
-      "production",
-      `WTP_DB_ROLE=${JSON.stringify(typo)} must not read as local`,
-    );
-    assert.equal(context.allowed, false);
+test("PLANTED SISO-3: a built branch deploy pointed at production refuses loudly", () => {
+  for (const url of [production, production.replace("ep-live-123.", "ep-live-123-pooler.")]) {
+    const env = deploy("branch-deploy", url);
+    assert.equal(describeWriteContext(env).allowed, false);
+    assert.throws(() => assertWriteAllowed("a search log event", env), ProductionWriteRefused);
+    assert.equal(describeWriteContext({ ...env, WTP_DB_ROLE: "local" }).allowed, false);
+    assert.equal(describeWriteContext({
+      ...env, WTP_SANCTIONED_WRITE: "intake-limiter-purge", WTP_PRODUCTION_DATABASE_URL_WRITE: url,
+    }, "an intake limiter purge").allowed, false);
   }
 });
 
-test("NODE_ENV values that are not exactly production do not count as production", () => {
-  for (const value of ["Production", "prod", "test", "", undefined]) {
-    const context = describeWriteContext({ NODE_ENV: value });
-    assert.equal(context.isProductionRuntime, false, `NODE_ENV=${String(value)}`);
-    assert.equal(context.allowed, false);
+test("SISO-3: unmeasured destinations, contexts and conflicting contexts fail safe", () => {
+  for (const env of [
+    { NODE_ENV: "production", DATABASE_URL: production },
+    { NODE_ENV: "production", WTP_BUILD_CONTEXT: "production", DATABASE_URL: "postgres://owner:secret@unmeasured.example/production" },
+    { NODE_ENV: "production", WTP_BUILD_CONTEXT: "production", DATABASE_URL: "postgres://owner:secret@production-unmeasured.example/db" },
+    { ...deploy("production", "postgres://owner:secret@production-unmeasured.example/db") },
+    { ...anchors, NODE_ENV: "production", DATABASE_URL: production },
+    deploy("unexpected", staging),
+    deploy("", staging),
+    deploy("branch-deploy", "postgres://owner:secret@ep-unmeasured.example/neondb"),
+    deploy("branch-deploy", "ep-stage-456.example"),
+    deploy("branch-deploy", "https://ep-stage-456.example/neondb"),
+    { ...deploy("branch-deploy", staging), WTP_BUILD_PRODUCTION_DATABASE_HOST: "" },
+    { ...deploy("branch-deploy", staging), WTP_BUILD_STAGING_DATABASE_HOST: "" },
+    { ...deploy("branch-deploy", staging), CONTEXT: "production" },
+    { ...deploy("production", production), CONTEXT: "branch-deploy" },
+    { ...deploy("production", production), WTP_BUILD_STAGING_DATABASE_HOST: anchors.WTP_BUILD_PRODUCTION_DATABASE_HOST },
+    { ...deploy("branch-deploy", staging), NODE_ENV: "development" },
+  ]) assert.equal(describeWriteContext(env).allowed, false);
+});
+
+test("SISO-3: runtime CONTEXT is usable when build context is unavailable", () => {
+  const env = { ...deploy("", staging), CONTEXT: "branch-deploy" };
+  assert.equal(describeWriteContext(env).allowed, true);
+});
+
+test("SISO-3: control-plane classification measures its own connection and anchors", () => {
+  const env = {
+    ...deploy("branch-deploy", staging),
+    WTP_CONTROL_PLANE_DATABASE_URL: "postgres://owner:secret@ep-control-stage-456.example/controlplane",
+  };
+  assert.equal(describeWriteContext(env, "a repository mutation", "control-plane").allowed, true);
+  assert.equal(describeWriteContext({
+    ...env, WTP_CONTROL_PLANE_DATABASE_URL: "postgres://owner:secret@ep-control-live-123-pooler.example/controlplane",
+  }, "a repository mutation", "control-plane").allowed, false);
+});
+
+test("local writes require both measured loopback destination and local development", () => {
+  const env = { NODE_ENV: "development", WTP_DB_ROLE: "local", DATABASE_URL: "postgres://dev:pw@localhost/dev" };
+  assert.equal(describeWriteContext(env).allowed, true);
+  assert.equal(describeWriteContext({ ...env, DATABASE_URL: production }).allowed, false);
+  assert.equal(describeWriteContext({ ...env, NODE_ENV: "production" }).allowed, false);
+  assert.equal(describeWriteContext({ ...env, WTP_DB_ROLE: "Local" }).allowed, false);
+});
+
+test("a refusal exposes neither connection string nor planted credentials", () => {
+  try {
+    assertWriteAllowed("a reaction", deploy("branch-deploy", production));
+    assert.fail("the planted production collision was allowed");
+  } catch (error) {
+    assert.ok(error instanceof ProductionWriteRefused);
+    assert.doesNotMatch(JSON.stringify(error) + error.message, /planted-secret|postgres:\/\//);
   }
-});
-
-test("assertWriteAllowed throws a named error, not a generic one", () => {
-  // A refusal must be distinguishable from the database being down: one is a
-  // misconfiguration to fix, the other is an outage to wait out.
-  assert.throws(
-    () => assertWriteAllowed("a reaction", { NODE_ENV: "development" }),
-    (error: unknown) => {
-      assert.ok(error instanceof ProductionWriteRefused);
-      assert.equal((error as ProductionWriteRefused).name, "ProductionWriteRefused");
-      assert.match((error as Error).message, /a reaction/);
-      assert.match((error as Error).message, /WTP_DB_ROLE=local/);
-      assert.equal((error as ProductionWriteRefused).context.allowed, false);
-      return true;
-    },
-  );
-});
-
-test("assertWriteAllowed is silent when the pairing is legitimate", () => {
-  assert.doesNotThrow(() => assertWriteAllowed("a reaction", { NODE_ENV: "production" }));
-  assert.doesNotThrow(() =>
-    assertWriteAllowed("a reaction", { NODE_ENV: "development", WTP_DB_ROLE: "local" }),
-  );
-});
-
-test("the refusal explains itself in words a person can act on", () => {
-  const context = describeWriteContext({ NODE_ENV: "development" });
-  assert.match(context.reason, /NODE_ENV/);
-  assert.match(context.reason, /WTP_DB_ROLE/);
-});
-
-/*
-  The coverage half. The guard is only worth anything if EVERY write path calls
-  it — a new table added next month with no assert is the defect returning
-  under a different name. So this reads the source and requires the call,
-  rather than trusting that the three known paths stay the only three.
-*/
-test("every database write path asserts the guard", () => {
-  const writePaths = [
-    "lib/db/search-log.ts",
-    "lib/db/reactions.ts",
-    "lib/db/intake-limiter.ts",
-    "lib/db/feedback.ts",
-    // Prompt D item 6.2: the alarm is a write like any other, and the rule it
-    // exists to protect does not exempt it from the rule beside it.
-    "lib/db/write-alarm.ts",
-    // The questionnaire store (2026-08-23, NH104). A candidate's answer is
-    // published civic content rather than reader data, which changes which
-    // STORE it lands in and changes nothing about the guard: a write to
-    // production from a non-production runtime is refused here exactly as it
-    // is everywhere else.
-    "lib/db/questionnaire.ts",
-  ];
-  for (const path of writePaths) {
-    const source = readFileSync(path, "utf8");
-    assert.match(
-      source,
-      /assertWriteAllowed\(/,
-      `${path} performs writes and must call assertWriteAllowed`,
-    );
-  }
-});
-
-test("no write path outside the guarded set has appeared", () => {
-  // Catches the real regression: someone adds lib/db/subscriptions.ts with an
-  // .insert() and no guard. Scanning lib/db keeps the list honest instead of
-  // letting the test above pass against a stale set.
-  const guarded = new Set([
-    "search-log.ts",
-    "reactions.ts",
-    "intake-limiter.ts",
-    "feedback.ts",
-    "write-alarm.ts",
-    "questionnaire.ts",
-  ]);
-  const unguarded: string[] = [];
-  for (const name of readdirSync("lib/db")) {
-    if (!name.endsWith(".ts") || guarded.has(name)) continue;
-    const source = readFileSync(`lib/db/${name}`, "utf8");
-    // `.delete(` and `.update(` also appear on Map and crypto Hash, so the
-    // match is anchored on drizzle's builder entry points only.
-    if (/\.insert\(|getDb\(\)\s*\n?\s*\.(delete|update)\(/.test(source)) {
-      if (!/assertWriteAllowed\(/.test(source)) unguarded.push(name);
-    }
-  }
-  assert.deepEqual(
-    unguarded,
-    [],
-    `these lib/db modules write without calling assertWriteAllowed: ${unguarded.join(", ")}`,
-  );
 });
 
 /* --------------------------------------------- g13: the named sanction --- */

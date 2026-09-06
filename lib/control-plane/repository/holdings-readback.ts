@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { createGuardedNeon } from "../../db/guarded-neon.ts";
 import type { StandingObligation, FreshnessOccurrence } from "../scheduler/durable.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { RouteTask } from "../route-task.ts";
@@ -64,6 +64,6 @@ export function decodeHoldingsReadback(rows: Record<string, unknown>[]): Holding
 }
 
 export async function readHoldingsControlPlane(connectionString: string): Promise<HoldingsReadback> {
-  const sql = neon(connectionString);
+  const sql = createGuardedNeon(connectionString, { destination: "control-plane" });
   return decodeHoldingsReadback(await sql.query(HOLDINGS_READBACK_SQL) as Record<string, unknown>[]);
 }

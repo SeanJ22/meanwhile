@@ -7,7 +7,7 @@
   height: 26px;
   display: flex;
   align-items: center;
-  z-index: 1000;
+  z-index: 1401;
   font: 500 10px var(--font-jetbrains-mono), monospace;
   letter-spacing: 0.06em;
   padding: 0 12px;
@@ -15,6 +15,11 @@
   background: var(--panel);
 }
 .staging-review-marker a:focus-visible { outline: 2px solid var(--text); outline-offset: 4px; }
+
+main[data-staging-review="true"] .rail-column {
+  top: calc(26px + var(--rail-inset) + env(safe-area-inset-top, 0px));
+  height: calc(100dvh - 26px - (var(--rail-inset) * 2) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+}
 
 /* Design tokens, ported from EdiaStratMap's src/styles/main.css — docs/globals-css-notes.md#design-tokens-ported-from-ediastratmap-s-src-styles-main-css-1 */
 

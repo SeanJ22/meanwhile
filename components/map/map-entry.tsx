@@ -1968,6 +1968,7 @@ function MapEntryInner() {
         value={{ onPoint: onStreetPoint, onResolved: onNarrowApplied }}
       >
       <main
+        data-staging-review={review.enabled ? "true" : undefined}
         className="relative h-dvh w-full overflow-hidden"
         style={review.enabled ? { height: "calc(100dvh - 26px)", marginTop: 26 } : undefined}
         /* WGH-8: the attribute carries the DERIVED state, not the raw one.

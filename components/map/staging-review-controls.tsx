@@ -31,7 +31,7 @@ export function useStagingReview() {
 export function StagingReviewControls({ candidate, zip }: { candidate: RaisedStateCandidate; zip: string | null }) {
   if (!enabled) return null;
   return (
-    <details style={{ position: "fixed", right: 12, top: 0, zIndex: 1001,
+    <details style={{ position: "fixed", right: 12, top: 0, zIndex: 1402,
       background: "var(--panel)", color: "var(--text)", borderRadius: 6, padding: "5px 8px", maxWidth: 240, fontSize: 11 }}>
       <summary>Visual review</summary>
       <label style={{ display: "block", marginTop: 10 }} htmlFor="staging-raised-state">Raised state · awaiting owner choice</label>

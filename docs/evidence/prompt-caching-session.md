@@ -1,6 +1,6 @@
 # Prompt caching and the Batch API across every Anthropic call site — session evidence
 
-<!-- FILL:STATUS -->
+**FINISHED SESSION.** Every acceptance row is MET (PC-7's audit half NOT_APPLICABLE by the API's own refusal; PC-13 by the gate runs named in §11). The full gate set passed at the integrated head `9e5fc081`. The branch ships through a pull request to `main`; its number and the merge commit are in the session's final report, which pastes this document whole.
 
 Session of 2026-09-06 (America/Phoenix), branch `claude/anthropic-caching-batch-api-b5afb0`, based on `main` at `251c43d0`. Every number below is read off a real API response, a persisted control-plane record or a test run named beside it. Nothing in this session fetched from a public body; every verification Attempt was served from artifacts already in the evidence vault.
 
@@ -196,7 +196,7 @@ RULING 277: the batch code is merged inert; switching `WTP_ASK_COMPARE_BATCH` on
 | PC-10 | Pricing correct, no double-count | MET | `tests/model-cost-metered.test.ts` |
 | PC-11 | Digest reports the new lines, denominators stated | MET | §6 (the render); `tests/pilot-cost-digest.test.ts`; `tests/research-metrics.test.ts` |
 | PC-12 | New detector fires on the defect shape and not on the healthy shape | MET | `tests/cache-defects.test.ts` (recorded sequences); `tests/scout-lane.test.ts` test 14 (through the executor) |
-| PC-13 | No regression from this session's own changes | <!-- FILL:PC13 --> | |
+| PC-13 | No regression from this session's own changes | MET | §11 (gate runs): the second run at `9e5fc081` passed all 17 gates with 5,620 tests, 5,619 pass, 0 fail, 1 skipped; the session's start count was 5,577 (record 2026-09-06-03 at `712c526d`), and the +43 is 32 tests this session added (31 in six new files, one in `tests/ask-prompt-cache.test.ts`) plus 11 from main's own Admin work; no test was removed, and the first run's two failures were this session's own, both fixed |
 | PC-14 | Verification spend stated | MET | §8 |
 
 ## 8. Verification spend (PC-14)
@@ -211,7 +211,7 @@ Every request this session sent to the API, at Opus 5 list prices computed from 
 | single-request sites, twice each | 13 | 0.1498 |
 | **total** | **29** | **1.0812** |
 
-The rolling research ceiling ($25 / 24 h) read $0.4394 in the window at 21:38Z before this session's requests (run record 2026-09-06-13, `research.state.spend`). This session's Attempts ran through in-memory repositories and wrote no row into the shared append-only ledger (a session's proof runs are not a runner cycle, and the production control plane is not a test fixture), so the ceiling's reading is unchanged by them; the organization dashboard counts the $1.08 regardless. <!-- FILL:CEILING_AFTER -->
+The rolling research ceiling ($25 / 24 h) read $0.4394 in the window at 21:38Z before this session's requests (run record 2026-09-06-13, `research.state.spend`). This session's Attempts ran through in-memory repositories and wrote no row into the shared append-only ledger (a session's proof runs are not a runner cycle, and the production control plane is not a test fixture), so the ceiling's reading is unchanged by them; the organization dashboard counts the $1.08 regardless. Read again after every request this session sent: the runner's latest cycle record (2026-09-06-14, cycle started 22:38:46Z, spend as of 22:50:50Z) shows the same $0.4394 in the window, 2 measured Attempts, 0 unmeasured — identical to the reading before the session's requests, which is what a session that wrote no ledger row should leave behind.
 
 ## 9. Pre-existing failures and conditions, not this session's
 
@@ -220,7 +220,7 @@ The rolling research ceiling ($25 / 24 h) read $0.4394 in the window at 21:38Z b
 - Three Scout Attempts of 2026-09-04 (at-08ac386b, at-60aba2fe, at-becbfe04) ended with 0 turns and null costs — a transport failure before any usage, recorded as UNMEASURED by the ledger of that day.
 - `tests/mirror-workbook-guard.test.ts` fails on this machine whenever the Drive workbook is out of sync (skips on CI); reported if it shows in the gate run.
 - This session's own cosmetic defect, kept: commit `4649b4bb`'s subject begins with a UTF-8 byte-order mark (`EF BB BF`) because its message file was written by PowerShell's `Set-Content -Encoding utf8`. It was not amended: the Reader receipt renewal ran at that head and binds it, and rewriting the commit would orphan the proof head.
-- <!-- FILL:PREEXISTING -->
+- The two gate runs at the integrated head found nothing pre-existing: the first run's two test failures (§11) were this session's own — ASK01 asserted the date sentence's old position, and the status ledger's generator closure includes `lib/control-plane/attempt.ts`, which this session changed. `tests/mirror-workbook-guard.test.ts` did not fail in either run.
 
 ## 10. For the owner, and one sentence per lane on model choice (no change made)
 
@@ -232,7 +232,30 @@ The rolling research ceiling ($25 / 24 h) read $0.4394 in the window at 21:38Z b
 
 ## 11. Git
 
-<!-- FILL:GIT -->
+Branch `claude/anthropic-caching-batch-api-b5afb0`, based on `main` at `251c43d0`. Commits, oldest first:
+
+| commit | what |
+|---|---|
+| `4e67cd86` | the session's change set: metered ledger, moving breakpoint, pre-warm, inert batch route, the detector, the digest, the Grounded Ask prefix, tests |
+| `4649b4bb` | optional ledger columns on the persisted row type, a plain env type for the batch flag, the ledger read-back assertion (its subject carries a byte-order mark, §9) |
+| `c2814936` | the Reader closure receipt renewed for the Grounded Ask synthesis prefix (`finalize --renew-holdings` at `4649b4bb`; 461 sources bound, holdings digest `294baf9b`), plus the guard census |
+| `ffcba912` | integration: `origin/main` at `e888a9ef` (PR #291's Admin-B release-review fix and the post-deploy integrity readings) merged in, no file touched by both sides, no conflict |
+| `a5fce416` | this document as a draft, so the gate run's sweeps covered it |
+| `9e5fc081` | the first gate run's record (04) and its two findings fixed: ASK01 reads the date from the first user turn; `docs/status-ledger.md` regenerated and its generator digest recorded |
+| the commit that carries this text | the passing gate record (05), the status ledger regenerated to read it, and the five fills; its SHA is the head the pull request ships |
+
+`git diff --stat 251c43d0..9e5fc081`: 91 files changed, 5335 insertions(+), 598 deletions(-). Of those, 42 files changed, 2634 insertions(+), 446 deletions(-) are this session's code, tests, the guard census and the generator digests; the rest are the renewal's evidence files (38 files plus the archived prior census and receipt), the six files main's own commits brought in, the two gate records, the status ledger and this document.
+
+New files: `lib/control-plane/cache-defects.ts`, `lib/control-plane/model-batch.ts`, `lib/control-plane/pilot-cost-digest.ts`, and six test files (`cache-defects`, `model-batch`, `model-cost-metered`, `pilot-cost-digest`, `prompt-prefix-stability`, `scout-prewarm`). Nothing under `components/`, nothing in staging or Netlify configuration, no Admin surface, no Admin release-review file, no release manifest, no migration, no model string, no scheduler budget, no spend ceiling, no promotion state.
+
+### Gate runs (RULING 267: the exact set CI requires, each named)
+
+| record | head | result |
+|---|---|---|
+| `data/ops/gate-runs/2026-09-06-04.json` | `a5fce416` | 16 PASS, `test` FAIL on two tests: **ASK01** (asserted `Today is …` inside the synthesis system prompt, where 4a moved it out of) and **RULING 102** (`docs/status-ledger.md` owed a regeneration: its generator's 28-file source closure includes `lib/control-plane/attempt.ts`, changed for the six cost fields). Suite: 5,620 tests, 5,617 pass, 2 fail, 1 skipped. |
+| `data/ops/gate-runs/2026-09-06-05.json` | `9e5fc081` | all 17 PASS (record `gates@2026-09-06T23:17:10.256Z`). Suite: 5,620 tests, 5,619 pass, 0 fail, 1 skipped. |
+
+Both findings were this session's, fixed at `9e5fc081`: ASK01 keeps its four rule assertions on the system prompt and reads the date from `synthesisDateBlock` (the request-shape update 4h names); the ledger was regenerated at `a5fce416`, diffed, and its generator digest recorded with `pnpm regen --write`, then regenerated again after the passing run so it reads that run. The failed record is committed as it ran.
 
 ## Appendix A — the request shapes the API accepted or refused, verbatim
 

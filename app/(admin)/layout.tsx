@@ -36,6 +36,21 @@
  * grades and readiness cell states keep their legend colours: those are a
  * scale the owner reads, not decoration.
  *
+ * ## The recipe layer (Admin Pass A, 2026-09-06)
+ *
+ * Every GENERIC rule — an element under `.admin`, the card, the button, the
+ * field, the select — lives in `@layer ce-recipe`. A cascade layer ranks below
+ * every unlayered rule whatever its specificity, so a state or semantic class
+ * declared outside the layer (a readiness swatch, a health band, a grade
+ * colour, a violation ring) can never be outranked by a recipe, however
+ * specific a later restyle makes one. The first restyle proved the
+ * alternative: `.admin button.rq-cell { background: none }` beat
+ * `.admin .rq-current` on specificity alone, and every readiness cell rendered
+ * blank while its legend swatch kept its colour. The rule is structural now
+ * and `tests/admin-readiness-cell-state.test.ts` holds it: a control rule
+ * outside the layer may not declare a background or a box-shadow, the swatch
+ * classes may not move in, and the computed colours are read from Chromium.
+ *
  * `noindex` is belt to `netlify.toml`'s braces. The admin host should never be
  * crawled, and the one thing worse than a crawler finding it is a crawler
  * finding it and caching what it saw.
@@ -63,7 +78,17 @@ const STYLES = `
   --ce-lumen: #cfd8e6;
   --ce-alpha-hairline: rgba(255,255,255,.10);
   --ce-alpha-hairline-strong: rgba(255,255,255,.16);
-  --ce-fg-66: rgba(255,255,255,.66);
+  /* .72, not .66: at .66 the recipe's button text measured 4.47:1 against the
+     brightest stop of the raised surface (#47515c), under AA's 4.5 (Admin Pass A). */
+  --ce-fg-66: rgba(255,255,255,.72);
+  /* Grade colours AS TEXT. The swatch fills (#4c9a5a, #d99a3a, #cc4b4b) are a
+     legend the owner reads, and they stay; but the same values as 12–16px text
+     measured 3.1–4.0:1 on the cards in dark and 2.1–4.0:1 on the light ground
+     (Admin Pass A, 28 failing groups). Text gets its own lifted/darkened
+     values, ≥5.7:1 against the card's brightest stop in each theme. */
+  --ce-text-ok: #74c986;
+  --ce-text-warn: #d99a3a;
+  --ce-text-bad: #ef8a8a;
   --ce-surface-gradient: radial-gradient(ellipse at bottom, rgba(71,81,92,1) 0%, rgba(11,21,30,1) 45%);
   --ce-surface-gradient-soft: radial-gradient(ellipse at bottom, rgba(71,81,92,.55) 0%, rgba(11,21,30,.95) 55%);
   --ce-surface-panel-gradient: radial-gradient(ellipse at bottom, rgba(47,52,65,.6) 0%, rgba(20,22,30,1) 65%);
@@ -106,6 +131,9 @@ const STYLES = `
   --ce-shadow-card: 0 1px 1px rgba(0,0,0,.2), 0 12px 32px -12px rgba(0,0,0,.3);
   --ce-shadow-raised: 0 2px 4px rgba(0,0,0,.25), 0 24px 48px -16px rgba(0,0,0,.35);
   --ce-focus: 0 0 0 1px var(--ce-lumen), 0 0 16px rgba(61,95,158,.25);
+  --ce-text-ok: #176f36;
+  --ce-text-warn: #7f5400;
+  --ce-text-bad: #b3261e;
   --lvl-local: #b8860b;
   --lvl-state: #00896e;
   --lvl-school: #c2185b;
@@ -115,7 +143,12 @@ const STYLES = `
 body:has(main.admin) { background: #1b1c22; }
 [data-theme="light"] body:has(main.admin) { background: #eef0f3; }
 
-/* ============================================================ base */
+/* ============================================================ the recipe layer
+   Generic rules only: elements under .admin, the card, the button, the field,
+   the select. Unlayered rules below beat everything in here regardless of
+   specificity — that is the whole point (see the header). A control rule that
+   declares a background or box-shadow belongs in here or nowhere. */
+@layer ce-recipe {
 .admin { max-width: 60rem; margin: 0 auto; padding: 1.5rem 1.25rem 6rem; line-height: 1.5; color: var(--ce-fg); background: var(--ce-void); }
 .admin h1 { font-size: 1.7rem; margin: 0 0 .25rem; letter-spacing: -.02em; line-height: 1.15; }
 .admin h2 { font-size: 1.25rem; margin: 2.5rem 0 .6rem; padding-top: .9rem; letter-spacing: -.01em; position: relative; border: 0; }
@@ -129,31 +162,13 @@ body:has(main.admin) { background: #1b1c22; }
 .admin tbody th { color: var(--ce-fg); font-weight: 600; font-size: inherit; letter-spacing: 0; text-transform: none; }
 .admin td.n, .admin th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .admin pre { overflow-x: auto; padding: .75rem; background: var(--ce-panel); box-shadow: var(--ce-rim); border-radius: var(--ce-radius-md); font-size: .85rem; }
-.admin code { font-size: .86em; }
-.admin .note { color: var(--ce-muted); font-size: .85rem; margin: .25rem 0; }
-.admin small.note { display: inline; }
-.admin .denom { color: var(--ce-muted); font-weight: 400; }
-.admin .gap { font-style: italic; color: var(--ce-muted); }
-.admin .gap-whose { text-transform: uppercase; font-size: .68rem; letter-spacing: .06em; color: var(--ce-muted); font-style: normal; }
-.admin .refusal { padding: .75rem 1rem; box-shadow: inset 0 0 0 2px #b3261e, var(--ce-shadow-card); border-radius: var(--ce-radius-md); background: var(--ce-panel); }
-.admin .state-green { color: #4c9a5a; font-weight: 600; }
-.admin .state-red { color: #cc4b4b; font-weight: 600; }
-.admin .state-amber { color: #d99a3a; font-weight: 600; }
-.admin .state-unknown { color: var(--ce-muted); font-weight: 600; }
-.admin .plain { font-size: 1.05rem; margin: .35rem 0 .75rem; }
-.admin .free { color: var(--ce-muted); font-variant-numeric: tabular-nums; }
-.admin .when { font-variant-numeric: tabular-nums; }
+.admin code { font-size: .86em; overflow-wrap: anywhere; }
 .admin details summary { cursor: pointer; color: var(--ce-muted); font-size: .85rem; }
-.admin details.ph-evidence { margin: .5rem 0 1rem; }
-.admin details.raw-ids { margin-top: .2rem; }
-.admin details.raw-ids summary { font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; }
 .admin hr { border: 0; height: 1px; background: var(--ce-hairline); margin: 2rem 0 1rem; }
-.admin .outcome { text-transform: capitalize; }
-.admin .outcome-completed { color: #4c9a5a; }
-.admin .outcome-aborted, .admin .outcome-failed { color: #cc4b4b; }
-.admin .outcome-running { color: var(--ce-lumen); }
+.admin form { margin-top: .5rem; }
+.admin label { display: block; margin: .5rem 0; }
 
-/* ============================================================ the card recipe (signal 1 + 2 + 3 + 4) */
+/* ---- the card recipe (signal 1 + 2 + 3 + 4) ---- */
 .admin .card {
   position: relative;
   background-color: var(--ce-panel);
@@ -174,13 +189,7 @@ body:has(main.admin) { background: #1b1c22; }
 .admin .card:hover { box-shadow: var(--ce-rim-strong), var(--ce-shadow-card); }
 .admin .card:hover::after { opacity: .45; }
 .admin .card:focus-within::after { opacity: .85; background: var(--ce-horizon-lumen); }
-/* THE ADMIN COLOUR HOOK: a level-carrying card's horizon takes the level's hue. */
-.admin .card.lvl-local::after { background: linear-gradient(90deg, transparent 0%, var(--lvl-local) 50%, transparent 100%); opacity: .85; }
-.admin .card.lvl-state::after { background: linear-gradient(90deg, transparent 0%, var(--lvl-state) 50%, transparent 100%); opacity: .85; }
-.admin .card.lvl-school::after { background: linear-gradient(90deg, transparent 0%, var(--lvl-school) 50%, transparent 100%); opacity: .85; }
-.admin .card.lvl-federal::after { background: linear-gradient(90deg, transparent 0%, var(--lvl-federal) 50%, transparent 100%); opacity: .85; }
-
-/* ============================================================ controls: the button recipe */
+/* ---- the button recipe ---- */
 .admin button, .console-nav button {
   position: relative; display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
   padding: .5rem .9rem; border: 0; border-radius: var(--ce-radius-md);
@@ -199,9 +208,14 @@ body:has(main.admin) { background: #1b1c22; }
 .admin button:active { transform: translateY(-1px) scale(1.01); transition-duration: 240ms; }
 .admin button[disabled] { opacity: .45; cursor: not-allowed; transform: none; }
 .admin button.primary { color: var(--ce-fg); font-weight: 600; }
-.admin button.rq-cell { padding: 0; border-radius: .25rem; background: none; box-shadow: none; }
-.admin button.rq-cell::before { display: none; }
-.admin button.rq-cell:hover { transform: scale(1.15); box-shadow: 0 0 0 1px var(--ce-alpha-hairline-strong); }
+/* The recipe at other sizes: a decision option, and the queue button a gap carries. */
+.admin .queue-card .options button.option { display: flex; flex-direction: column; align-items: flex-start; width: 100%; text-align: left; margin: .3rem 0; padding: .5rem .7rem; background: var(--ce-panel); color: var(--ce-fg); }
+.admin .queue-card .options button.option:hover { background: var(--ce-panel-raised); }
+.admin button.queue-add { margin: 0 0 0 .5rem; vertical-align: baseline; }
+.admin button.queue-add.compact { padding: .1rem .5rem; font-size: .72rem; min-width: 0; color: var(--ce-muted); background: var(--ce-panel); }
+.admin button.queue-add.compact:hover { color: var(--ce-fg); transform: translateY(-1px); }
+
+/* ---- fields and selects ---- */
 .admin textarea, .admin input[type="text"], .admin input[type="password"] {
   font: inherit; color: var(--ce-fg); background: var(--ce-panel); border: 0; border-radius: var(--ce-radius-md);
   box-shadow: var(--ce-rim); padding: .5rem .65rem; color-scheme: inherit;
@@ -221,9 +235,40 @@ body:has(main.admin) { background: #1b1c22; }
 .admin textarea:hover, .admin input:hover, .admin select:hover, .console-nav select:hover { box-shadow: var(--ce-rim-strong); }
 .admin textarea:focus, .admin input:focus, .admin select:focus, .console-nav select:focus { outline: none; box-shadow: var(--ce-rim-strong), var(--ce-focus); }
 .admin textarea:focus, .admin input:focus { background: var(--ce-panel-raised); }
-.admin form { margin-top: .5rem; }
-.admin label { display: block; margin: .5rem 0; }
 .admin input[type="password"] { width: 100%; max-width: 28rem; }
+/* The console header's own controls: the label is a caption, the select is the recipe one size down. */
+.console-nav label { display: flex; flex-direction: column; gap: .2rem; margin: 0; font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ce-muted); }
+.console-nav select { font-size: .95rem; text-transform: none; letter-spacing: normal; padding: .35rem .5rem; min-width: 11rem; }
+}
+
+/* ============================================================ semantic text (unlayered: meaning a recipe may never override) */
+.admin .note { color: var(--ce-muted); font-size: .85rem; margin: .25rem 0; }
+.admin small.note { display: inline; }
+.admin .denom { color: var(--ce-muted); font-weight: 400; }
+.admin .gap { font-style: italic; color: var(--ce-muted); }
+.admin .gap-whose { text-transform: uppercase; font-size: .68rem; letter-spacing: .06em; color: var(--ce-muted); font-style: normal; }
+.admin .refusal { padding: .75rem 1rem; box-shadow: inset 0 0 0 2px #b3261e, var(--ce-shadow-card); border-radius: var(--ce-radius-md); background: var(--ce-panel); }
+.admin .state-green { color: var(--ce-text-ok); font-weight: 600; }
+.admin .state-red { color: var(--ce-text-bad); font-weight: 600; }
+.admin .state-amber { color: var(--ce-text-warn); font-weight: 600; }
+.admin .state-unknown { color: var(--ce-muted); font-weight: 600; }
+.admin .plain { font-size: 1.05rem; margin: .35rem 0 .75rem; }
+.admin .free { color: var(--ce-muted); font-variant-numeric: tabular-nums; }
+.admin .when { font-variant-numeric: tabular-nums; }
+.admin details.ph-evidence { margin: .5rem 0 1rem; }
+.admin details.raw-ids { margin-top: .2rem; }
+.admin details.raw-ids summary { font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; }
+.admin .outcome { text-transform: capitalize; }
+.admin .outcome-completed { color: var(--ce-text-ok); }
+.admin .outcome-aborted, .admin .outcome-failed { color: var(--ce-text-bad); }
+.admin .outcome-running { color: var(--ce-lumen); }
+/* Wide tables scroll inside their own box; the page never scrolls sideways (measured at 390px, Admin Pass A). */
+.admin .scroll-x { overflow-x: auto; max-width: 100%; }
+/* THE ADMIN COLOUR HOOK: a level-carrying card's horizon takes the level's hue. */
+.admin .card.lvl-local::after { background: linear-gradient(90deg, transparent 0%, var(--lvl-local) 50%, transparent 100%); opacity: .85; }
+.admin .card.lvl-state::after { background: linear-gradient(90deg, transparent 0%, var(--lvl-state) 50%, transparent 100%); opacity: .85; }
+.admin .card.lvl-school::after { background: linear-gradient(90deg, transparent 0%, var(--lvl-school) 50%, transparent 100%); opacity: .85; }
+.admin .card.lvl-federal::after { background: linear-gradient(90deg, transparent 0%, var(--lvl-federal) 50%, transparent 100%); opacity: .85; }
 
 /* ============================================================ pilot health */
 .admin .ph-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: .75rem; margin: .5rem 0 1.25rem; }
@@ -237,7 +282,7 @@ body:has(main.admin) { background: #1b1c22; }
 .admin .ph-l-GREEN::after { background: linear-gradient(90deg, transparent, #4c9a5a, transparent); opacity: .9; }
 .admin .ph-l-AMBER::after { background: linear-gradient(90deg, transparent, #d99a3a, transparent); opacity: .9; }
 .admin .ph-l-RED::after { background: linear-gradient(90deg, transparent, #cc4b4b, transparent); opacity: .9; }
-.admin .ph-l-GREEN .ph-chip { color: #4c9a5a; } .admin .ph-l-AMBER .ph-chip { color: #d99a3a; } .admin .ph-l-RED .ph-chip { color: #cc4b4b; } .admin .ph-l-UNKNOWN .ph-chip { color: var(--ce-muted); }
+.admin .ph-l-GREEN .ph-chip { color: var(--ce-text-ok); } .admin .ph-l-AMBER .ph-chip { color: var(--ce-text-warn); } .admin .ph-l-RED .ph-chip { color: var(--ce-text-bad); } .admin .ph-l-UNKNOWN .ph-chip { color: var(--ce-muted); }
 
 /* ---- The one visual language both console views share: tiles, legend, swatches. ---- */
 .admin .rq-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: .6rem; margin: .5rem 0 1.5rem; }
@@ -255,6 +300,17 @@ body:has(main.admin) { background: #1b1c22; }
 .admin .rq-blocked { background: #cc4b4b; }
 .admin .rq-gated { background: #8b7fd6; }
 .admin .rq-violation { box-shadow: 0 0 0 2px #cc4b4b, 0 0 0 3px var(--ce-void); }
+/* A readiness cell is a swatch first and a button second. The swatch, its state
+   and its violation ring own background and box-shadow (unlayered, above); the
+   button loses only its padding and gains keyboard affordances. Never declare a
+   background or a box-shadow here: the reset that did was the #281 regression,
+   and tests/admin-readiness-cell-state.test.ts refuses it. The focus ring is an
+   outline, drawn outside the box, so it can never paint over the state. */
+.admin button.rq-cell { padding: 0; }
+.admin button.rq-cell::before { display: none; }
+.admin button.rq-cell:hover { transform: scale(1.15); }
+.admin button.rq-cell:active { transform: scale(1.05); }
+.admin button.rq-cell:focus-visible { outline: 2px solid var(--ce-lumen); outline-offset: 2px; }
 .admin .hl-GREEN { background: #4c9a5a; } .admin .hl-AMBER { background: #d99a3a; } .admin .hl-RED { background: #cc4b4b; } .admin .hl-UNKNOWN { background: transparent; }
 .admin .band { display: inline-flex; align-items: center; gap: .35rem; font-size: .95rem; }
 .admin h1 .band { font-size: 1.1rem; vertical-align: middle; }
@@ -301,6 +357,8 @@ body:has(main.admin) { background: #1b1c22; }
   background: var(--ce-surface-gradient); box-shadow: var(--ce-rim), var(--ce-shadow-raised); isolation: isolate; overflow: hidden;
 }
 .admin .deploy::before { content: ""; position: absolute; bottom: 0; left: 15%; width: 70%; height: 1px; background: var(--ce-horizon-lumen); opacity: .9; pointer-events: none; }
+/* The raised surface is brightest at its base, where the note sits: muted text measured 3.63:1 there (Admin Pass A); the note reads in the foreground colour instead. */
+.admin .deploy .note { color: var(--ce-fg); opacity: .85; }
 .admin .deploy textarea { width: 100%; max-width: 40rem; min-height: 4.5rem; display: block; margin-top: .3rem; }
 .admin .deploy .actions { display: flex; gap: .5rem; align-items: center; margin-top: .5rem; }
 .admin .deploy label { font-size: .9rem; margin: 0; }
@@ -322,13 +380,12 @@ body:has(main.admin) { background: #1b1c22; }
 .admin .queue-card .queue-id { font-family: var(--font-jetbrains-mono), ui-monospace, monospace; font-size: .8rem; color: var(--ce-muted); }
 .admin .queue-card .queue-meta { font-size: .78rem; color: var(--ce-muted); margin: 0 0 .45rem; }
 .admin .chip { text-transform: uppercase; font-size: .66rem; letter-spacing: .05em; }
-.admin .chip.receipt-done { color: #4c9a5a; }
+.admin .chip.receipt-done { color: var(--ce-text-ok); }
 .admin .chip.receipt-waiting { color: var(--ce-lumen); }
-.admin .chip.receipt-refused { color: #cc4b4b; }
+.admin .chip.receipt-refused { color: var(--ce-text-bad); }
 .admin .queue-card p { margin: .3rem 0; }
 .admin .queue-card .options form { margin: .35rem 0 0; }
-.admin .queue-card .options button.option { display: flex; flex-direction: column; align-items: flex-start; width: 100%; text-align: left; margin: .3rem 0; padding: .5rem .7rem; background: var(--ce-panel); color: var(--ce-fg); }
-.admin .queue-card .options button.option:hover { background: var(--ce-panel-raised); }
+/* button.option itself is the button recipe at another size — declared in the recipe layer. */
 .admin .queue-card .options button .consequence { display: block; font-size: .8rem; color: var(--ce-muted); font-weight: 400; }
 .admin .queue-card .own-words label { font-size: .85rem; color: var(--ce-muted); margin: .5rem 0 0; }
 .admin .queue-card .own-words textarea { display: block; margin-top: .3rem; width: 100%; max-width: 40rem; min-height: 3.5rem; }
@@ -349,9 +406,7 @@ body:has(main.admin) { background: #1b1c22; }
 .admin .fix-item { display: flex; gap: .55rem; align-items: flex-start; font-size: .9rem; }
 .admin .fix-item small { display: block; color: var(--ce-muted); font-size: .78rem; }
 .admin .go-fix { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin-top: .6rem; }
-.admin button.queue-add { margin: 0 0 0 .5rem; vertical-align: baseline; }
-.admin button.queue-add.compact { padding: .1rem .5rem; font-size: .72rem; min-width: 0; color: var(--ce-muted); background: var(--ce-panel); }
-.admin button.queue-add.compact:hover { color: var(--ce-fg); transform: translateY(-1px); }
+/* button.queue-add is the recipe one size down — declared in the recipe layer; only its placement is here. */
 .admin .rq-caption button.queue-add { display: inline-flex; margin: .3rem 0 0; }
 
 /* ---- Cost (ADM-6/17): a table of numbers, gaps as one short line, charts beside. ---- */
@@ -381,12 +436,15 @@ body:has(main.admin) { background: #1b1c22; }
 .admin .stack-track { display: flex; height: .8rem; }
 .admin .stack-part { display: block; height: 100%; background: var(--ce-slate-rise); }
 .admin .stack-part + .stack-part { box-shadow: -1px 0 0 var(--ce-void); }
-.admin .part-model { background: var(--ce-lumen); }
-.admin .part-deterministic { background: var(--ce-slate-rise); }
-.admin .part-promoted { background: #4c9a5a; }
-.admin .part-would { background: var(--ce-lumen); }
-.admin .part-refused { background: var(--ce-slate-rise); }
-.admin .part-deferred { background: #d99a3a; }
+/* The part colours belong to the BAR SEGMENT only. Unscoped, .part-* also
+   matched the legend's li.part-* and painted every legend item as a solid
+   coloured box with muted text on it — 1.09:1 to 3.6:1 (Admin Pass A). */
+.admin .stack-part.part-model { background: var(--ce-lumen); }
+.admin .stack-part.part-deterministic { background: var(--ce-slate-rise); }
+.admin .stack-part.part-promoted { background: #4c9a5a; }
+.admin .stack-part.part-would { background: var(--ce-lumen); }
+.admin .stack-part.part-refused { background: var(--ce-slate-rise); }
+.admin .stack-part.part-deferred { background: #d99a3a; }
 .admin .stack-legend { display: flex; flex-wrap: wrap; gap: .3rem 1rem; font-size: .8rem; margin-top: .35rem; color: var(--ce-muted); }
 .admin .stack-legend li { display: inline-flex; align-items: center; gap: .35rem; }
 .admin .swatch { width: .6rem; height: .6rem; border-radius: 2px; background: var(--ce-slate-rise); display: inline-block; }
@@ -428,8 +486,7 @@ body:has(main.admin) { background: #1b1c22; }
   margin: 0 auto 1.25rem; max-width: 72rem; padding: .75rem 1.25rem; background: var(--ce-void); color: var(--ce-fg);
   box-shadow: 0 1px 0 var(--ce-hairline);
 }
-.console-nav label { display: flex; flex-direction: column; gap: .2rem; margin: 0; font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ce-muted); }
-.console-nav select { font-size: .95rem; text-transform: none; letter-spacing: normal; padding: .35rem .5rem; min-width: 11rem; }
+/* .console-nav label and select are in the recipe layer with the other controls. */
 .console-nav-brand { margin-left: auto; align-self: center; font-size: .75rem; color: var(--ce-muted); }
 .console-nav .icon-btn { align-self: center; }
 .console-nav-pending { align-self: center; font-size: .8rem; color: var(--ce-lumen); }

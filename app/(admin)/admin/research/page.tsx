@@ -111,6 +111,7 @@ function MetricGroup({ title, meaning, rows, children }: { title: string; meanin
       <h3>{title}</h3>
       <p className="fleet-what">{meaning}</p>
       {children}
+      <div className="scroll-x">
       <table className="metrics">
         <thead>
           <tr>
@@ -124,7 +125,8 @@ function MetricGroup({ title, meaning, rows, children }: { title: string; meanin
             <tr key={row.label}>
               <td>{row.label}</td>
               <td className="n">
-                <strong>{row.value}</strong>
+                {/* The digest's UNMEASURED sentinel reads as words; the code stays on hover (Admin Pass A). */}
+                <strong title={row.value === "UNMEASURED" ? row.value : undefined}>{row.value === "UNMEASURED" ? "not measured" : row.value}</strong>
               </td>
               <td>
                 {row.meaning}
@@ -134,6 +136,7 @@ function MetricGroup({ title, meaning, rows, children }: { title: string; meanin
           ))}
         </tbody>
       </table>
+      </div>
     </section>
   );
 }
@@ -512,7 +515,11 @@ export default async function ResearchPage() {
         Scout Attempts —{" "}
         {view.results.held ? <Count m={view.results.value.shown} /> : <GapNote gap={view.results.gap} where="Scout attempts" returnTo={HERE} />}
       </h2>
+      {view.results.held && view.results.value.rows.length === 0 && (
+        <p className="note">No typed Scout result is on record in this control plane, so there is no row to list.</p>
+      )}
       {view.results.held && view.results.value.rows.length > 0 && (
+        <div className="scroll-x">
         <table>
           <thead>
             <tr>
@@ -535,7 +542,7 @@ export default async function ResearchPage() {
                   </div>
                 </td>
                 <td>{row.reason}</td>
-                <td>{row.model}</td>
+                <td>{row.model === "DETERMINISTIC_NO_MODEL" ? <span title={row.model}>plain code, no model</span> : row.model}</td>
                 <td>{seconds(row.elapsedMs)}</td>
                 <td>{row.usd === null ? <span className="gap">unmeasured</span> : usd(row.usd)}</td>
                 <td>
@@ -554,6 +561,7 @@ export default async function ResearchPage() {
             ))}
           </tbody>
         </table>
+        </div>
       )}
 
       {/* EVIDENCE AND METHOD CANDIDATES */}
@@ -620,6 +628,7 @@ export default async function ResearchPage() {
         />
       )}
       {windowPlain.classes.length > 0 && (
+        <div className="scroll-x">
         <table className="window-classes">
           <thead>
             <tr>
@@ -642,6 +651,7 @@ export default async function ResearchPage() {
             ))}
           </tbody>
         </table>
+        </div>
       )}
       <details className="ph-evidence">
         <summary>Window detail — definitions, the gate, the legacy refresh, controls, proof</summary>
@@ -785,6 +795,9 @@ export default async function ResearchPage() {
         Intents recorded —{" "}
         {view.intents.held ? <Count m={view.intents.value.shown} /> : <GapNote gap={view.intents.gap} where="Intents recorded" returnTo={HERE} />}
       </h3>
+      {view.intents.held && view.intents.value.rows.length === 0 && (
+        <p className="note">No owner intent has been recorded in this control plane yet; the first one you send appears here.</p>
+      )}
       {view.intents.held && view.intents.value.rows.length > 0 && (
         <ul>
           {view.intents.value.rows.map((intent) => (

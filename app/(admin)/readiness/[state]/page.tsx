@@ -28,7 +28,7 @@ import {
 import type { ReadinessStateSnapshot } from "@/lib/control-plane/readiness/model.ts";
 
 import { ConsoleNav } from "../../console-nav.tsx";
-import { QueueForm } from "../../console-ui.tsx";
+import { QueueForm, When } from "../../console-ui.tsx";
 import { ReadinessPanel } from "./readiness-panel.tsx";
 import { READINESS_STYLES } from "./styles.ts";
 
@@ -106,17 +106,24 @@ export default async function ReadinessStatePage({
         </p>
         <div className="rq-summary">
           <div className="rq-tile">
-            <div className="rq-figure">{legacy.publishedAt ? legacy.publishedAt.slice(0, 16).replace("T", " ") : "unknown"}</div>
+            <div className="rq-figure">{legacy.publishedAt ? <When iso={legacy.publishedAt} year /> : "unknown"}</div>
             <div className="rq-caption">
               when the record on file was published
               {legacy.publisher ? `, by ${legacy.publisher}` : ""}
-              {legacy.publishedFromSha ? ` at ${legacy.publishedFromSha.slice(0, 8)}` : ""}
+              {legacy.publishedFromSha ? ` at commit ${legacy.publishedFromSha.slice(0, 8)}` : ""}
             </div>
           </div>
           <div className="rq-tile">
-            <div className="rq-figure">{legacy.revision === null ? "—" : `r${legacy.revision}`}</div>
+            <div className="rq-figure">{legacy.revision === null ? "—" : `revision ${legacy.revision}`}</div>
             <div className="rq-caption">
-              store revision{legacy.updatedAt ? `, last written ${legacy.updatedAt.slice(0, 16).replace("T", " ")}` : ""}
+              store revision
+              {legacy.updatedAt ? (
+                <>
+                  , last written <When iso={legacy.updatedAt} year />
+                </>
+              ) : (
+                ""
+              )}
             </div>
           </div>
           <div className="rq-tile">
@@ -175,7 +182,7 @@ export default async function ReadinessStatePage({
         snapshot={snapshot}
         notice={notice}
         published={outcome.kind === "HELD"}
-        source={outcome.kind === "HELD" ? outcome.source : "not published — rendered NOT_WALKED at read time"}
+        source={outcome.kind === "HELD" ? outcome.source : "not published — every cell rendered as “not walked” at read time"}
       />
       <hr />
       <p className="note">

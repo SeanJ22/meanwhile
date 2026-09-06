@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import vm from "node:vm";
+import { STAGING_RENDER_ORIGIN } from "../lib/ops/origins.ts";
 import { resolveTheme, themeBootstrapScript, updatedReviewThemeUrl } from "../lib/state/theme.ts";
 
 test("theme precedence honors explicit choices before system preference and light fallback", () => {
@@ -52,7 +53,7 @@ test("shared staging theme URLs are explicit choices that survive reload, while 
 test("a toggle on a shared review link survives reload and preserves its popup and raised-state selection", () => {
   for (const before of ["light", "dark"] as const) {
     const next = before === "light" ? "dark" : "light";
-    const href = `https://test.meanwhileusa.com/?zip=07866&popup=body&raisedState=B_MATERIAL_LIFT&theme=${before}#review`;
+    const href = `${STAGING_RENDER_ORIGIN}/?zip=07866&popup=body&raisedState=B_MATERIAL_LIFT&theme=${before}#review`;
     const updated = new URL(updatedReviewThemeUrl(href, next, true)!);
     assert.equal(updated.searchParams.get("zip"), "07866");
     assert.equal(updated.searchParams.get("popup"), "body");
@@ -62,5 +63,5 @@ test("a toggle on a shared review link survives reload and preserves its popup a
     assert.equal(updatedReviewThemeUrl(updated.href, next, true), null, "no redundant history mutation");
     assert.equal(updatedReviewThemeUrl(href, next, false), null, "production URLs are untouched");
   }
-  assert.equal(updatedReviewThemeUrl("https://test.meanwhileusa.com/?zip=85701", "dark", true), null);
+  assert.equal(updatedReviewThemeUrl(`${STAGING_RENDER_ORIGIN}/?zip=85701`, "dark", true), null);
 });

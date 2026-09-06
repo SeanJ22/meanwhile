@@ -18,8 +18,9 @@ import {
 } from "maplibre-gl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { ensureStateRelief } from "@/lib/map/state-relief";
-import { holdMapPresentation, releaseMapPresentation, mapPresentationHeld, setPresentationVisible } from "@/lib/map/flight-presentation";
+import { canonicalStateBounds, ensureStateRelief } from "@/lib/map/state-relief";
+import { holdMapPresentation, mapPresentationHeld, mapPresentationCanRefresh, startMapMovement, settleMapPresentation, type MovementMode } from "@/lib/map/flight-presentation";
+import type { RaisedStateCandidate } from "@/lib/review/contract";
 import flightStyles from "./map-flight.module.css";
 type ProjectPoint = (point: [number, number]) => { x: number; y: number };
 
@@ -82,6 +83,8 @@ export interface CameraTarget {
   zip: string;
   lat: number;
   lng: number;
+  /** Later intentional journeys may explicitly hold expensive presentation. */
+  presentation?: "flight";
 }
 
 /**
@@ -95,6 +98,7 @@ export interface MapFocus {
   lng: number;
   zoom?: number;
   key: string;
+  presentation?: "flight";
 }
 
 /** The cheap read-only camera probe (g5 item 1). See where it is installed. */
@@ -104,6 +108,10 @@ interface CameraProbe {
 
 interface MapCanvasProps {
   onPresentationReadyChange?: (ready: boolean) => void;
+  /** Staging's A/B/C review choice; omitted preserves the existing treatment. */
+  raisedStateCandidate?: RaisedStateCandidate;
+  /** Staging review only: frame the whole canonical state once per request. */
+  reviewStateFraming?: boolean;
   /**
    * **EVERY venue the DATA contains** — P-001, 2026-08-24.
    *
@@ -287,7 +295,7 @@ function onSettledSourceChange(map: MapLibreMap, run: () => void): () => void {
      * is watching. Nothing is lost by dropping it — `moveend` schedules
      * another, and every camera move MapLibre makes ends in exactly one.
      */
-    if (map.isMoving() || mapPresentationHeld(map)) return;
+    if (!mapPresentationCanRefresh(map)) return;
     run();
   };
 
@@ -297,7 +305,7 @@ function onSettledSourceChange(map: MapLibreMap, run: () => void): () => void {
   };
 
   // A ready map can answer immediately. An arriving map waits for idle.
-  if (!mapPresentationHeld(map)) run();
+  if (mapPresentationCanRefresh(map)) run();
   map.on("sourcedata", schedule);
   map.on("idle", schedule);
   // A move that consumed no sourcedata still has to report: a camera arriving
@@ -321,6 +329,8 @@ function onSettledSourceChange(map: MapLibreMap, run: () => void): () => void {
 
 export function MapCanvas({
   onPresentationReadyChange,
+  raisedStateCandidate,
+  reviewStateFraming = false,
   venues,
   visibleVenueKeys = null,
   camera,
@@ -351,8 +361,10 @@ export function MapCanvas({
   const presentationCallbackRef = useRef(onPresentationReadyChange);
   useEffect(() => { presentationCallbackRef.current = onPresentationReadyChange; }, [onPresentationReadyChange]);
   const containerRef = useRef<HTMLDivElement>(null);
-  /** The motion attribute hides map markers while camera presentation is held. */
+  /** Only flight mode hides markers; ordinary movement leaves MapLibre in charge. */
   const shellRef = useRef<HTMLDivElement>(null);
+  const firstCameraFlightRef = useRef(false);
+  const framedReviewStateRef = useRef<string | null>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   // The style currently applied to the map. Seeded with the one the mount
   // effect builds with, so the restyle effect below never re-applies it — see
@@ -554,6 +566,8 @@ export function MapCanvas({
     });
 
     holdMapPresentation(map);
+    firstCameraFlightRef.current = false;
+    shellRef.current?.setAttribute("data-presentation-mode", "flight");
 
     // The legend owns the bottom-right corner (Edia puts it there and the port
     // keeps it), so the map's own controls move out of its way rather than
@@ -677,19 +691,17 @@ export function MapCanvas({
      * a new gesture inside the window cancels the pending settle, so nothing
      * ever fires mid-gesture.
      */
-    // Hold every application overlay on every renderer until post-motion idle.
-    const enterMotionDegrade = () => {
-      holdMapPresentation(map);
-      shellRef.current?.setAttribute("data-camera-moving", "1");
-      setPresentationVisible(map, false);
+    // First arrival and explicitly requested flights may hold presentation.
+    // Manual drag/wheel/touch and routine framing preserve the last-good view.
+    const enterFlight = (mode: MovementMode) => {
+      if (!startMapMovement(map, mode)) return;
+      shellRef.current?.setAttribute("data-presentation-mode", "flight");
       setPresentationReady(false);
       presentationCallbackRef.current?.(false);
     };
     const onPresentationIdle = () => {
-      if (map.isMoving() || !mapPresentationHeld(map)) return;
-      releaseMapPresentation(map);
-      setPresentationVisible(map, true);
-      shellRef.current?.removeAttribute("data-camera-moving");
+      if (!settleMapPresentation(map)) return;
+      shellRef.current?.setAttribute("data-presentation-mode", "ready");
       ensureDistricts();
       setPresentationReady(true);
       presentationCallbackRef.current?.(true);
@@ -698,8 +710,8 @@ export function MapCanvas({
 
     let userMoved = false;
     let settleTimer: number | undefined;
-    const onMoveStart = (event: { originalEvent?: unknown }) => {
-      enterMotionDegrade();
+    const onMoveStart = (event: { originalEvent?: unknown; presentationMode?: MovementMode }) => {
+      enterFlight(event.originalEvent ? "manual" : event.presentationMode ?? "camera-adjustment");
       if (event.originalEvent) {
         userMoved = true;
         // g4 item 5: the reader has taken the camera. It stays theirs until
@@ -1149,10 +1161,15 @@ export function MapCanvas({
       zoom: initialZoomForZip(camera.zip),
     };
 
+    const presentationMode: MovementMode = !firstCameraFlightRef.current
+      ? "initial-flight"
+      : camera.presentation === "flight" ? "programmatic-flight" : "camera-adjustment";
+    firstCameraFlightRef.current = true;
+
     if (prefersReducedMotion()) {
-      map.jumpTo(options);
+      map.jumpTo(options, { presentationMode });
     } else {
-      map.flyTo({ ...options, duration: 2600, essential: true, curve: 1.5 });
+      map.flyTo({ ...options, duration: 2600, essential: true, curve: 1.5 }, { presentationMode });
     }
   }, [camera]);
 
@@ -1291,8 +1308,22 @@ export function MapCanvas({
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !presentationReady || mapPresentationHeld(map)) return;
-    ensureStateRelief(map, overlayOpen ? null : focusOutline, theme === "light" ? "light" : "dark");
-  }, [focusOutline, theme, overlayOpen, presentationReady]);
+    ensureStateRelief(map, overlayOpen ? null : focusOutline, theme === "light" ? "light" : "dark", raisedStateCandidate);
+  }, [focusOutline, theme, overlayOpen, presentationReady, raisedStateCandidate]);
+
+  useEffect(() => {
+    if (!reviewStateFraming) { framedReviewStateRef.current = null; return; }
+    const map = mapRef.current;
+    if (!map || !focusOutline || !presentationReady) return;
+    const state = focusOutline.properties.ocdId;
+    if (framedReviewStateRef.current === state) return;
+    framedReviewStateRef.current = state;
+    const padding = map.getPadding();
+    map.fitBounds(canonicalStateBounds(focusOutline), {
+      padding: { top: Math.max(padding.top ?? 0, 96), bottom: Math.max(padding.bottom ?? 0, 128), left: (padding.left ?? 0) + 56, right: (padding.right ?? 0) + 56 },
+      duration: prefersReducedMotion() ? 0 : 900,
+    }, { presentationMode: "camera-adjustment" });
+  }, [focusOutline, presentationReady, reviewStateFraming]);
 
   // Swap the basemap when the theme changes. The listener above puts the
   // districts back once the new style lands.
@@ -1312,6 +1343,7 @@ export function MapCanvas({
     appliedStyleRef.current = basemap.styleUrl;
 
     holdMapPresentation(map);
+    shellRef.current?.setAttribute("data-presentation-mode", "flight");
     setPresentationReady(false);
     presentationCallbackRef.current?.(false);
     map.setStyle(basemap.styleUrl);
@@ -1424,8 +1456,9 @@ export function MapCanvas({
       zoom: focus.zoom ?? 13,
     };
 
-    if (prefersReducedMotion()) map.jumpTo(options);
-    else map.flyTo({ ...options, duration: 900, essential: true });
+    const presentationMode: MovementMode = focus.presentation === "flight" ? "programmatic-flight" : "camera-adjustment";
+    if (prefersReducedMotion()) map.jumpTo(options, { presentationMode });
+    else map.flyTo({ ...options, duration: 900, essential: true }, { presentationMode });
   }, [focus]);
 
   // Report the districts currently drawn, for the stats card AND the
@@ -1437,12 +1470,15 @@ export function MapCanvas({
     const map = mapRef.current;
     if (!map) return;
 
+    let lastDrawnSignature: string | undefined;
     return onSettledSourceChange(map, () => {
       const live = mapRef.current;
       if (!live) return;
-      onDrawnDistrictsRef.current(
-        drawnDistrictsOn(live, districtTypesRef.current),
-      );
+      const replacement = drawnDistrictsOn(live, districtTypesRef.current);
+      const signature = replacement.map(district => JSON.stringify(district)).sort().join("\n");
+      if (signature === lastDrawnSignature) return;
+      lastDrawnSignature = signature;
+      onDrawnDistrictsRef.current(replacement);
     });
   }, [districtTypes]);
 
@@ -1491,7 +1527,7 @@ export function MapCanvas({
 
     // A settle-driven result must never move the camera — the reader put the
     // viewport where they wanted it (2i).
-    if (!allowAutoFrame) return;
+    if (!allowAutoFrame || reviewStateFraming) return;
 
     /*
      * g4 item 5 — "the map stops dragging the reader back".
@@ -1542,14 +1578,14 @@ export function MapCanvas({
     }, 2800);
 
     return () => window.clearTimeout(timer);
-  }, [framed, camera, frameAllVenues, allowAutoFrame]);
+  }, [framed, camera, frameAllVenues, allowAutoFrame, reviewStateFraming]);
 
   // The inner div is the MapLibre container and gets its size from this
   // wrapper. maplibre-gl.css sets `position: relative` on `.maplibregl-map`
   // with the same specificity as a Tailwind utility, and loads after it — so
   // positioning the container itself collapses it to zero height.
   return (
-    // Marker visibility changes once at motion start and once at idle.
+    // A manual gesture never changes marker visibility or restores a skeleton.
     <div ref={shellRef} className={`absolute inset-0 ${flightStyles.shell}`}>
       <div ref={containerRef} className="size-full" />
     </div>

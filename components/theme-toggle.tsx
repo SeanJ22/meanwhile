@@ -53,7 +53,7 @@ function MoonIcon() {
 }
 
 export function ThemeToggle({ className = "" }: { className?: string }) {
-  const { theme, toggle } = useStoredTheme();
+  const { theme, restored, toggle } = useStoredTheme();
   const next = theme === "light" ? "dark" : "light";
 
   return (
@@ -61,10 +61,10 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
       type="button"
       className={`icon-btn ${className}`}
       onClick={toggle}
-      title={`Switch to ${next} mode`}
-      aria-label={`Switch to ${next} mode`}
+      title={restored ? `Switch to ${next} mode` : "Change color theme"}
+      aria-label={restored ? `Switch to ${next} mode` : "Change color theme"}
     >
-      {theme === "light" ? <MoonIcon /> : <SunIcon />}
+      {restored ? (theme === "light" ? <MoonIcon /> : <SunIcon />) : <span aria-hidden="true" style={{ width: 14, height: 14 }} />}
     </button>
   );
 }

@@ -160,7 +160,7 @@ export function FundingDisplay({
       */}
       {data.contributorsShown && data.concentrationSentences.length > 0 && (
         <details className="mt-3" data-money-origin>
-          <summary className="provisions-summary">
+          <summary className="provisions-summary" data-pearl>
             <span aria-hidden="true" className="provisions-caret">
               ›
             </span>
@@ -216,7 +216,7 @@ export function FundingDisplay({
       */}
       {data.contributorsShown && data.typeConcentrationSentences.length > 0 && (
         <details className="mt-3" data-money-kind>
-          <summary className="provisions-summary">
+          <summary className="provisions-summary" data-pearl>
             <span aria-hidden="true" className="provisions-caret">
               ›
             </span>
@@ -449,8 +449,8 @@ function ContributorRow({
         // family comes from lib/funding/pill-colors.ts and never the party
         // palette.
         <details className="funding-type mt-0.5">
-          <summary>
-            <span className={pillClassFor(typeLabel)}>{typeLabel.label}</span>
+          <summary className={pillClassFor(typeLabel)} data-pearl>
+            {typeLabel.label}
           </summary>
           <p className="mt-1 text-[0.6875rem] leading-relaxed text-voice">
             {typeLabel.explainer}{" "}

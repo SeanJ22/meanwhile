@@ -1157,7 +1157,7 @@ export default async function BallotPage({
       {zip && (
         <div className="ballot-top-pills">
           <BallotNarrowing zip={zip} className="ballot-top-pill" />
-          <Link href={`/about-area?zip=${zip}`} className="ballot-top-pill">
+          <Link href={`/about-area?zip=${zip}`} className="ballot-top-pill" data-pearl>
             {/* 3c: the author's line, verbatim. Marijuana stays in the
                 section; it left the teaser. */}
             Moving here? Know the basics →
@@ -1442,6 +1442,7 @@ export default async function BallotPage({
                         data-leaves-app
                         data-registration-pill
                         className="voting-open-button"
+                        data-pearl
                         title={`The ${reg.sourceOrg} is the only place this can be checked — that opens in a new tab and leaves this app.`}
                         aria-label={`${reg.label} — the ${reg.sourceOrg} is the only place this can be checked, and that opens in a new tab and leaves this app`}
                       >
@@ -2327,7 +2328,7 @@ export default async function BallotPage({
                     {/* Styled as the voting pills are — the author named them
                         as the pattern: light-purple, bolded, a right-pointing
                         arrow that turns down when open. */}
-                    <summary className="provisions-summary">
+                    <summary className="provisions-summary" data-pearl>
                       <span aria-hidden="true" className="provisions-caret">
                         ›
                       </span>

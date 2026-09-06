@@ -138,6 +138,7 @@ export function BallotAskPill({
         aria-label={BALLOT_ASK_PILL_ARIA}
         onClick={toggle}
         className="ballot-top-pill ballot-ask-pill"
+        data-pearl
       >
         <span aria-hidden="true" className="ballot-ask-caret">
           ›

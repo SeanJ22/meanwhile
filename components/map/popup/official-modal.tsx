@@ -31,6 +31,7 @@ import { PersonIdentity } from "@/components/officials/person-identity";
 import { PositionsSection } from "@/components/officials/positions-section";
 
 import { OfficeBlurb, RecentVotes } from "./official-popup";
+import lumenStyles from "./lumen-popup.module.css";
 
 /**
  * The rep surface's large tier (3): the full record in the strat-map
@@ -112,7 +113,7 @@ export function OfficialModal({
         if (event.target === event.currentTarget) onClose();
       }}
     >
-      <div className="account-modal">
+      <div className={`account-modal ${lumenStyles.surface}`} data-lumen-surface="detail">
         {/*
           Item 3 (2026-08-16): the header carries the TIER EYEBROW and the
           close control, and nothing else.

@@ -23,6 +23,17 @@ export const REVIEW_SECTIONS = [
   { id: "theme", name: "Theme behavior", url: reviewUrl({ zip: "85701", review: "theme" }) },
 ] as const;
 
+export const LUMEN_REVIEW_EXAMPLES = [
+  { id: "district", name: "District" },
+  { id: "school", name: "School district" },
+  { id: "body", name: "Governing body" },
+  { id: "meeting", name: "Meeting" },
+  { id: "official", name: "Official" },
+].map(example => ({ ...example,
+  dark: reviewUrl({ zip: "85701", review: "lumen", popup: example.id, theme: "dark" }),
+  light: reviewUrl({ zip: "85701", review: "lumen", popup: example.id, theme: "light" }),
+}));
+
 export const STAGING_OWNERSHIP = {
   prompt3: ["test", "Netlify staging deployment", "reader components", "visual code", "/api/release-manifest", "visual proof"],
   prompt4: ["Fleet/runtime/research/control-plane work", "method learning", "civic promotion pipeline"],

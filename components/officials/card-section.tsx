@@ -160,6 +160,7 @@ export function CardSection({
       <button
         type="button"
         className="card-section-header"
+        data-pearl={level === "top" || undefined}
         aria-expanded={open}
         aria-controls={id}
         onClick={toggle}

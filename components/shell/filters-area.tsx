@@ -188,6 +188,7 @@ export function FiltersArea({
                   key={type}
                   type="button"
                   className="filter-chip"
+                  data-pearl
                   data-active={ui.filters.bodyTypes.includes(type)}
                   aria-pressed={ui.filters.bodyTypes.includes(type)}
                   onClick={() =>
@@ -221,6 +222,7 @@ export function FiltersArea({
                   key={status.value}
                   type="button"
                   className="filter-chip"
+                  data-pearl
                   data-active={ui.filters.statuses.includes(status.value)}
                   aria-pressed={ui.filters.statuses.includes(status.value)}
                   style={

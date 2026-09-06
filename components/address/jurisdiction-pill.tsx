@@ -109,6 +109,7 @@ export function JurisdictionPill({
       <button
         type="button"
         className="jurisdiction-badge jurisdiction-badge-action"
+        data-pearl
         data-badge={badge}
         data-could-govern="true"
         onClick={() => setOpen(true)}

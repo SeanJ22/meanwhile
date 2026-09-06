@@ -121,6 +121,7 @@ export function PositionsSection({
             <button
               key={t}
               type="button"
+              data-pearl
               onClick={() => void look(t)}
               className="cursor-pointer rounded-full border border-[var(--panel-border)] px-2.5 py-1 text-[0.6875rem] text-voice hover:border-[var(--signal)] hover:text-signal"
             >

@@ -47,6 +47,7 @@ import { BrowsingSubjectLine } from "./district-popup";
 import { CalendarLinks } from "./calendar-links";
 import { AgendaSection } from "./agenda-section";
 import { NoValue, PopupRow, PopupSectionLabel } from "./popup-card";
+import lumenStyles from "./lumen-popup.module.css";
 
 /**
  * The port of EdiaStratMap's `.account-modal`.
@@ -693,7 +694,7 @@ export function EntityModal({
         if (event.target === event.currentTarget) onClose();
       }}
     >
-      <div className="account-modal">
+      <div className={`account-modal ${lumenStyles.surface}`} data-lumen-surface="detail">
         <header className="account-modal-header">
           <div className="min-w-0">
             <p

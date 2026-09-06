@@ -83,6 +83,7 @@ export function CouldGovernNotice({
         <button
           type="button"
           className="could-govern-notice-pill"
+          data-pearl
           onClick={() => setOpen(true)}
         >
           <span aria-hidden="true" className="could-govern-notice-mark">

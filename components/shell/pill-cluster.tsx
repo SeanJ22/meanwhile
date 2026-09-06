@@ -16,7 +16,6 @@ import type { SeatHolder } from "@/lib/officials/lookup";
 import { ASK_PILL_LABELS } from "@/lib/routing/ask-pill-labels";
 import type { AskPillPlacement } from "@/lib/map/cluster-placement";
 import type { SearchItem } from "@/lib/search";
-import pearlStyles from "./ask-pearl.module.css";
 
 /**
  * THE PILL CLUSTER — G05 rules 4a, 4e and G07, in one component.
@@ -149,6 +148,7 @@ export function PillCluster({
           <Link
             href={`/ballot?zip=${zip}`}
             className="ballot-pill-main"
+            data-pearl
             title={
               covered
                 ? `What's on the ballot near ${zip}`
@@ -173,6 +173,7 @@ export function PillCluster({
           <button
             type="button"
             className="ballot-pill-zip"
+            data-pearl
             aria-label={`Showing ${zip} — change`}
             aria-expanded={switching}
             onClick={() => setSwitching((v) => !v)}
@@ -201,7 +202,8 @@ export function PillCluster({
 
         <button
           type="button"
-          className={`ask-pill${placement === "map" ? ` ${pearlStyles.pearl}` : ""}`}
+          className="ask-pill"
+          data-pearl
           data-ask-pill={placement}
           aria-expanded={askOpen}
           aria-label={pill.ariaLabel}

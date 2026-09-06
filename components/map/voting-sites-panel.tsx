@@ -163,6 +163,7 @@ export function VotingSitesPanel({
         <input
           id={inputId}
           className="voting-panel-input"
+          data-pearl
           value={address}
           onChange={(e) => setAddress(e.target.value)}
           placeholder={PLACEHOLDER_ADDRESS}
@@ -181,7 +182,7 @@ export function VotingSitesPanel({
           our server to the Census Bureau&rsquo;s geocoder, which turns it into
           a point on the map.
         </p>
-        <button type="submit" className="voting-panel-submit">
+        <button type="submit" className="voting-panel-submit" data-pearl>
           Show me
         </button>
       </form>

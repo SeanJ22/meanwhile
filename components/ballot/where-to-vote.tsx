@@ -69,6 +69,7 @@ export function WhereToVote() {
         <button
           type="button"
           className="voting-open-button"
+          data-pearl
           data-where-to-vote-pill
           onClick={() => setOpen(true)}
         >

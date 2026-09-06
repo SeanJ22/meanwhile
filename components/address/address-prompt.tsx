@@ -319,7 +319,7 @@ export function AddressPrompt({
   if (phase === "IDLE") {
     return (
       <p className={triggerClassName}>
-        <button type="button" className="address-prompt-trigger" onClick={() => setPhase("ASKING")}>
+        <button type="button" className="address-prompt-trigger" data-pearl={triggerClassName?.split(/\s+/).includes("ballot-top-pill") || undefined} onClick={() => setPhase("ASKING")}>
           {trigger} <span aria-hidden="true">→</span>
         </button>
       </p>

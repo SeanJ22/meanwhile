@@ -100,7 +100,8 @@ export function PopupCard({
   return (
     <div
       ref={rootRef}
-      className={`popup-card pointer-events-auto ${lumenStyles.card}`}
+      className={`popup-card pointer-events-auto ${lumenStyles.surface}`}
+      data-lumen-surface="compact"
       role="dialog"
       aria-label={title}
     >

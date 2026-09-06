@@ -1,5 +1,5 @@
 import { describeWriteContext, type WriteEnvironment } from "../db/write-guard.ts";
-import { RAISED_STATE_CANDIDATES, REVIEW_CONTRACT_VERSION, REVIEW_SECTIONS, STAGING_OWNERSHIP, reviewUrl } from "./contract.ts";
+import { LUMEN_REVIEW_EXAMPLES, RAISED_STATE_CANDIDATES, REVIEW_CONTRACT_VERSION, REVIEW_SECTIONS, STAGING_OWNERSHIP, reviewUrl } from "./contract.ts";
 
 export interface ReviewBuildIdentity {
   sha: string;
@@ -26,11 +26,12 @@ export function softwareReleaseManifest(identity: ReviewBuildIdentity, environme
     reportedAt,
     stagingBoundary: stable ? "STABLE" : "INVALID",
     milestone: stable ? "STAGING_BOUNDARY_STABLE" : "STAGING_BOUNDARY_INVALID",
-    prompt3Status: stable ? "VISUAL_WORK_IN_PROGRESS" : "BLOCKED_STAGING_BOUNDARY",
-    reviewState: stable ? "VISUAL_WORK_IN_PROGRESS" : "BLOCKED",
+    prompt3Status: stable ? "STAGING_READY_FOR_OWNER_REVIEW" : "BLOCKED_STAGING_BOUNDARY",
+    reviewState: stable ? "READY_FOR_REVIEW" : "BLOCKED",
     boundaryReason: !identified ? "BUILD_IDENTITY_UNPROVEN" : !isolated ? "MUTABLE_RESOURCE_ISOLATION_UNPROVEN" : null,
     isolation: { application: application.dbRole, controlPlane: controlPlane.dbRole, productionWritesAllowed: false },
     reviewSections: REVIEW_SECTIONS,
+    lumen: { examples: LUMEN_REVIEW_EXAMPLES },
     raisedState: {
       status: "AWAITING_OWNER_CHOICE",
       candidates: RAISED_STATE_CANDIDATES.map(candidate => ({ ...candidate,

@@ -3,16 +3,16 @@
 /* Only emitted by the canonical test build's root layout. */
 .staging-review-marker {
   position: fixed;
-  top: calc(env(safe-area-inset-top, 0px) + 66px);
-  left: 12px;
-  z-index: 80;
-  font: 500 9px var(--font-jetbrains-mono), monospace;
+  inset: 0 0 auto;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+  font: 500 10px var(--font-jetbrains-mono), monospace;
   letter-spacing: 0.06em;
-  padding: 4px 6px;
+  padding: 0 12px;
   color: var(--text);
   background: var(--panel);
-  border-radius: 4px;
-  opacity: 0.86;
 }
 .staging-review-marker a:focus-visible { outline: 2px solid var(--text); outline-offset: 4px; }
 
@@ -5900,4 +5900,92 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
 }
 @media (prefers-reduced-motion: reduce) {
   .boundary-info-pill { animation: none; }
+}
+
+/* Pearl is an explicit promise of interaction. Opt in on the native control,
+   never on a passive badge or on the wrapper around a control. The two curved
+   highlights and five shadow layers derive from the accepted Ask Pearl
+   worksheet (Uiverse / marcelodolza, pretty-goose-7, MIT). Neutral light adds
+   material without replacing a control's semantic hue, border, type or shape.
+   Background layers also work on inputs and leave disclosure carets intact. */
+:root :is(button, a[href], summary, input)[data-pearl] {
+  --pearl-shine: rgba(255, 255, 255, 0.12);
+  --pearl-curve: rgba(255, 255, 255, 0.075);
+  --pearl-rim: rgba(255, 255, 255, 0.28);
+  --pearl-inner-shade: rgba(0, 0, 0, 0.25);
+  --pearl-lower-light: rgba(255, 255, 255, 0.10);
+  --pearl-shadow: rgba(0, 0, 0, 0.18);
+  --pearl-contact: rgba(0, 0, 0, 0.30);
+  background-image:
+    radial-gradient(ellipse 110% 125% at 50% -78%, var(--pearl-curve) 0% 82%, transparent 83%),
+    radial-gradient(ellipse 90% 90% at 50% -15%, var(--pearl-shine), transparent 75%);
+  box-shadow:
+    inset 0 1px 2px var(--pearl-rim),
+    inset 0 -1px 3px var(--pearl-inner-shade),
+    inset 0 -3px 7px var(--pearl-lower-light),
+    0 5px 12px var(--pearl-shadow),
+    0 3px 5px -3px var(--pearl-contact);
+  transition:
+    translate var(--dur-fast) var(--ease-move),
+    box-shadow var(--dur-fast) var(--ease-move),
+    background-color var(--dur-fast) var(--ease-move),
+    border-color var(--dur-fast) var(--ease-move),
+    color var(--dur-fast) var(--ease-move);
+  -webkit-tap-highlight-color: transparent;
+}
+
+[data-theme="light"] :is(button, a[href], summary, input)[data-pearl] {
+  --pearl-shine: rgba(255, 255, 255, 0.24);
+  --pearl-curve: rgba(255, 255, 255, 0.16);
+  --pearl-rim: rgba(255, 255, 255, 0.65);
+  --pearl-inner-shade: rgba(0, 0, 0, 0.13);
+  --pearl-lower-light: rgba(255, 255, 255, 0.30);
+  --pearl-shadow: rgba(0, 0, 0, 0.08);
+  --pearl-contact: rgba(0, 0, 0, 0.17);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :root :is(button, a[href], summary)[data-pearl]:not(:disabled):not([aria-disabled="true"]):hover {
+    --pearl-shine: rgba(255, 255, 255, 0.20);
+  }
+}
+
+:root :is(button, a[href], summary, input)[data-pearl]:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+
+:root :is(button, a[href], summary)[data-pearl]:not(:disabled):not([aria-disabled="true"]):active {
+  translate: 0 1px;
+  box-shadow:
+    inset 0 2px 4px var(--pearl-inner-shade),
+    inset 0 -1px 2px var(--pearl-lower-light),
+    0 1px 3px var(--pearl-shadow);
+}
+
+/* Preserve the accepted map Ask's own lavender. Other placements retain
+   their existing neutral or action hue; Pearl itself supplies no hue. */
+.ask-pill[data-ask-pill="map"] {
+  background-color: var(--online);
+  border-color: transparent;
+  color: var(--bg);
+}
+.ask-pill[data-ask-pill="map"] svg { color: currentColor; }
+[data-theme="light"] .ask-pill[data-ask-pill="map"] { color: var(--panel); }
+
+/* The semantic type family now belongs to the summary that actually acts,
+   so its caret shares the hue and its keyboard outline encloses the pill. */
+.funding-type > summary.pill { color: var(--pill-text); }
+
+/* The Ballot pill is two legal sibling controls with complementary curves.
+   Expose their outlines when focused instead of clipping them at the shell. */
+.ballot-pill:has(:focus-visible) { overflow: visible; }
+
+/* The boundary control's former box-shadow pulse would erase Pearl on every
+   animation frame. Its material surface now remains present at rest. */
+.boundary-info-pill[data-pearl] { animation: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  :root :is(button, a[href], summary, input)[data-pearl] { transition: none; }
+  :root :is(button, a[href], summary)[data-pearl]:active { translate: none; }
 }

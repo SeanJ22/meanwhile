@@ -1,79 +1,68 @@
-/* DSN-2: assembled from the Lumen Edge Shading worksheet's six signals.
-   Only PopupCard (the compact district, official and meeting cards) imports
-   this module. App fonts, card radius, content bands and spacing stay intact.
-   The map-floating cards use the worksheet's raised elevation variant. */
-.card:global(.popup-card) {
+/* Lumen belongs to the map popup family, including its expanded surfaces.
+   An explicit semantic marker keeps this surface out of ordinary page cards,
+   navigation and passive badges. Layout and each card's content bands stay
+   with their existing component; only the material is shared here. */
+.surface:global([data-lumen-surface]) {
   --dur-lumen-slow: 1s;
   --ease-lumen-weighted: cubic-bezier(0.15, 0.83, 0.66, 1);
   --lumen-peak: color-mix(in srgb, var(--panel) 82%, white);
   --lumen-floor: var(--panel);
   --lumen-rim: rgba(255, 255, 255, 0.10);
   --lumen-rim-strong: rgba(255, 255, 255, 0.16);
-  --lumen-horizon: white;
+  --lumen-horizon: rgba(255, 255, 255, 0.32);
+  --lumen-edge-light: inset 0 0 transparent;
   --shadow-lumen-raised:
     0 2px 4px rgba(0, 0, 0, 0.5),
     0 24px 48px -16px rgba(0, 0, 0, 0.7);
 
-  position: relative;
+  position: var(--lumen-position, relative);
   isolation: isolate;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: var(--lumen-overflow-y, hidden);
   background-color: var(--panel);
-  background-image: radial-gradient(
-    ellipse at bottom,
-    var(--lumen-peak) 0%,
-    var(--lumen-floor) 65%
-  );
+  /* Background layers stay on the card edge even when the card itself
+     scrolls. A positioned pseudo-element would scroll away with its rows. */
+  background-image:
+    linear-gradient(90deg, transparent, var(--lumen-horizon), transparent),
+    radial-gradient(ellipse at bottom, var(--lumen-peak) 0%, var(--lumen-floor) 65%);
+  background-position: center bottom, center;
+  background-size: 70% 1px, 100% 100%;
+  background-repeat: no-repeat;
   border: 0;
   border-radius: var(--radius);
-  box-shadow: inset 0 0 0 1px var(--lumen-rim), var(--shadow-lumen-raised);
+  box-shadow: inset 0 0 0 1px var(--lumen-rim), var(--lumen-edge-light), var(--shadow-lumen-raised);
   transition:
-    box-shadow var(--dur-lumen-slow) var(--ease-lumen-weighted),
-    transform var(--dur-lumen-slow) var(--ease-lumen-weighted);
+    box-shadow var(--dur-lumen-slow) var(--ease-lumen-weighted);
 }
 
-.card:global(.popup-card)::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 15%;
-  width: 70%;
-  height: 1px;
-  z-index: 1;
-  pointer-events: none;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--lumen-horizon) 50%,
-    transparent 100%
-  );
-  opacity: 0.18;
-  transition: opacity var(--dur-lumen-slow) var(--ease-lumen-weighted);
+.surface:global([data-lumen-surface="district-picker"]) {
+  --lumen-position: absolute;
+  --lumen-overflow-y: auto;
 }
 
-.card:global(.popup-card):hover,
-.card:global(.popup-card):focus-within {
-  box-shadow: inset 0 0 0 1px var(--lumen-rim-strong), var(--shadow-lumen-raised);
+.surface:global([data-lumen-surface="door"]) {
+  --lumen-overflow-y: auto;
 }
 
-.card:global(.popup-card):hover::after,
-.card:global(.popup-card):focus-within::after {
-  opacity: 1;
+.surface:global([data-lumen-surface]):hover,
+.surface:global([data-lumen-surface]):focus-within {
+  box-shadow: inset 0 0 0 1px var(--lumen-rim-strong), var(--lumen-edge-light), var(--shadow-lumen-raised);
 }
 
-:global([data-theme="light"]) .card:global(.popup-card) {
+:global([data-theme="light"]) .surface:global([data-lumen-surface]) {
   --lumen-peak: var(--panel);
-  --lumen-floor: color-mix(in srgb, var(--panel) 93%, black);
-  --lumen-rim: rgba(0, 0, 0, 0.08);
-  --lumen-rim-strong: rgba(0, 0, 0, 0.14);
-  --lumen-horizon: color-mix(in srgb, var(--online) 60%, transparent);
+  --lumen-floor: var(--panel-bg);
+  --lumen-rim: rgba(37, 44, 61, 0.11);
+  --lumen-rim-strong: rgba(37, 44, 61, 0.16);
+  --lumen-horizon: white;
+  --lumen-edge-light: inset 0 -12px 16px -12px rgba(255, 255, 255, 0.9);
   --shadow-lumen-raised:
-    0 2px 4px rgba(0, 0, 0, 0.25),
-    0 24px 48px -16px rgba(0, 0, 0, 0.35);
+    0 2px 4px rgba(37, 44, 61, 0.13),
+    0 24px 48px -16px rgba(37, 44, 61, 0.25);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card:global(.popup-card),
-  .card:global(.popup-card)::after {
+  .surface:global([data-lumen-surface]) {
     --dur-lumen-slow: 1ms;
     transition-duration: var(--dur-lumen-slow);
   }

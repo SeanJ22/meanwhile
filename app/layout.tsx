@@ -5,6 +5,7 @@ import { DM_Sans, EB_Garamond, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { titleFor } from "@/lib/brand";
 import { PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins";
+import { themeBootstrapScript } from "@/lib/state/theme";
 
 // All UI text. Loaded as a variable font, which covers the 300–700 range the
 // design uses without four separate downloads.
@@ -89,7 +90,7 @@ export const viewport: Viewport = {
   localStorage throws outright in some privacy modes, and a theme preference is
   never worth breaking the page over.
 */
-const THEME_SCRIPT = `try{if(localStorage.getItem("wtp.theme")==="light")document.documentElement.setAttribute("data-theme","light")}catch(e){}`;
+const THEME_SCRIPT = themeBootstrapScript(process.env.WTP_BUILD_CONTEXT === "branch-deploy" && process.env.WTP_BUILD_BRANCH === "test");
 
 /*
   `LayoutProps<"/">` — the global Next generates into `.next/types` during a

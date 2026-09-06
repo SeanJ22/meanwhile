@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 532,
-    "named": 5533,
+    "files": 534,
+    "named": 5542,
     "dynamic": 23
   },
   "files": {
@@ -4086,6 +4086,15 @@
       ],
       "dynamic": 0
     },
+    "tests/map-movement-modes.test.ts": {
+      "names": [
+        "initial flight reveals its first complete presentation only at settled idle",
+        "mouse drag, wheel zoom, touch pan and pinch retain every last-good application layer after arrival",
+        "ordinary camera adjustments retain presentation; a later explicit flight can opt into one hold/reveal",
+        "viewport replacement waits for settled tiles while the last-good presentation remains visible"
+      ],
+      "dynamic": 0
+    },
     "tests/marker-pool-ops.test.ts": {
       "names": [
         "P-001 · REVERSING the filter is another 20 writes, not 20 constructions",
@@ -7325,6 +7334,8 @@
     },
     "tests/tester-flight-relief.test.ts": {
       "names": [
+        "Arizona and irregular New Jersey relief retain sources through settle, candidate and theme changes",
+        "Raised State A/B/C vary only restrained flat paints on the same canonical sources in both themes",
         "every directional segment preserves the canonical state's exact border and river vertices",
         "presentation hold covers boundary and relief classes without changing base tiles",
         "top/left edges face the light in either ring winding; bottom/right face shade"
@@ -7335,6 +7346,14 @@
       "names": [
         "app/globals.css authors every literal colour in both themes",
         "the parity classifier reads literal vs derived correctly (RULING 110)"
+      ],
+      "dynamic": 0
+    },
+    "tests/theme-precedence.test.ts": {
+      "names": [
+        "shared staging theme URLs are explicit choices that survive reload, while production ignores review overrides",
+        "the synchronous first-paint script works for first-time light/dark systems and unavailable storage or media",
+        "theme precedence honors explicit choices before system preference and light fallback"
       ],
       "dynamic": 0
     },

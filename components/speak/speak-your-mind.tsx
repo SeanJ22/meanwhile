@@ -171,6 +171,7 @@ export function SpeakYourMind({
       <button
         type="button"
         className="speak-pill"
+        data-pearl
         data-speak-pill
         aria-expanded={open}
         onClick={() => setOpen((wasOpen) => !wasOpen)}
@@ -227,6 +228,7 @@ export function SpeakYourMind({
         <button
           type="button"
           className="speak-send"
+          data-pearl
           data-speak-send
           disabled={sending || text.trim().length === 0}
           onClick={() => void send()}

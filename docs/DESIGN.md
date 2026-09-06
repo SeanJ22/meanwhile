@@ -860,6 +860,16 @@ no borrowed tier colour (`--mark` stays in the logo), and **motion never implies
 status** — a surface may move because it is interesting, never because it is
 urgent, because urgency is an editorial claim about a government.
 
+## Prompt 3 software staging review
+
+The test build uses one semantic Pearl treatment: `data-pearl` on native interactive pill controls. Neutral curved highlights, inset and outer depth, focus and press response preserve each control's existing hue, meaning, size and shape. Passive badges and chips, circular icons and rectangular panels are outside this treatment.
+
+Lumen is the explicitly marked map popup family: compact civic popups, their expanded records, venue cards and map-driven pickers/lists. The shared surface carries a resting lower horizon, thin separating rim and controlled shadows in both themes. Persistent page panels and navigation retain their own surfaces.
+
+Raised-state review retains the flat map and exact canonical geometry. The staging selector exposes A_SOFT_LIFT, B_MATERIAL_LIFT and C_DEEP_LIFT; all three remain awaiting the owner's choice. A query parameter identifies a comparison candidate, not an approved winner.
+
+The theme follows an explicit saved Meanwhile choice, otherwise the system preference, otherwise light. A synchronous head script resolves that choice before paint. Staging dark/light review URLs express a new explicit choice and persist it; they never affect the production deployment.
+
 ## Motion — one duration scale, one easing family
 
 Every transition and animation reads from `app/globals.css`:

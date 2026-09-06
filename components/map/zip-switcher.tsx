@@ -121,7 +121,7 @@ export function ZipSwitcher({
           <div className="zip-switcher-recents">
             {others.map((zip) => (
               /* Recents mix origins and nothing recorded which. UNKNOWN. */
-              <button key={zip} type="button" onClick={() => void take(zip, "UNKNOWN")}>
+              <button key={zip} type="button" data-pearl onClick={() => void take(zip, "UNKNOWN")}>
                 {zip}
               </button>
             ))}

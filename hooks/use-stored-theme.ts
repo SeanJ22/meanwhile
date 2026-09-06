@@ -1,113 +1,64 @@
 "use client";
 
 import { useCallback, useSyncExternalStore } from "react";
-import {
-  commitStorageWrite,
-  publishToListeners,
-  subscribeToStorage,
-} from "@/lib/state/subscribe-to-storage";
+import { commitStorageWrite, publishToListeners, subscribeToStorage } from "@/lib/state/subscribe-to-storage";
+import { resolveTheme, THEME_STORAGE_KEY, type Theme } from "@/lib/state/theme";
 
-/**
- * The chosen theme.
- *
- * Same shape as hooks/use-stored-zip.ts, deliberately: localStorage is an
- * external store, so it is read through useSyncExternalStore with a frozen
- * pending snapshot on the server and cached snapshots keyed on the raw stored
- * string. Snapshots are compared by identity, so returning a fresh object every
- * call loops forever.
- *
- * The paint-blocking half of this lives in app/layout.tsx: an inline script sets
- * `data-theme` before first paint, because a hook cannot run early enough to
- * stop a light-theme reader seeing a dark flash. This hook exists so the toggle
- * button knows which icon to show, and it reports `restored: false` until
- * hydration so the button never renders the wrong state and then swaps.
- */
-
-const STORAGE_KEY = "wtp.theme";
-
-export type Theme = "dark" | "light";
-
-export type ThemeSnapshot =
-  | { restored: false; theme: Theme }
-  | { restored: true; theme: Theme };
-
-/** Dark is the product default, so it is also the pre-hydration answer. */
-const PENDING: ThemeSnapshot = Object.freeze({
-  restored: false,
-  theme: "dark",
-});
-
+export type { Theme } from "@/lib/state/theme";
+export type ThemeSnapshot = { restored: boolean; theme: Theme };
+const PENDING: ThemeSnapshot = Object.freeze({ restored: false, theme: "light" });
 const listeners = new Set<() => void>();
-
-let cachedRaw: string | null | undefined;
 let cachedSnapshot: ThemeSnapshot = PENDING;
 
-function readRaw(): string | null {
-  try {
-    return window.localStorage.getItem(STORAGE_KEY);
-  } catch {
-    // Private mode or storage disabled. Falling back to dark is survivable.
-    return null;
-  }
+function readChoice(): string | null {
+  // A refused storage write still honors the explicit choice for this document.
+  const session = document.documentElement.getAttribute("data-theme-choice");
+  if (session === "light" || session === "dark") return session;
+  try { return window.localStorage.getItem(THEME_STORAGE_KEY); } catch { return null; }
 }
 
-function parse(raw: string | null): Theme {
-  return raw === "light" ? "light" : "dark";
+function systemQuery(): MediaQueryList | null {
+  try { return window.matchMedia("(prefers-color-scheme: dark)"); } catch { return null; }
 }
 
-const subscribe = (onStoreChange: () => void) =>
-  subscribeToStorage(listeners, onStoreChange);
+function currentTheme(): Theme {
+  return resolveTheme(readChoice(), systemQuery()?.matches);
+}
+
+function apply(theme: Theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  document.documentElement.style.colorScheme = theme;
+}
+
+function subscribe(onStoreChange: () => void) {
+  const update = () => { apply(currentTheme()); onStoreChange(); };
+  const unsubscribe = subscribeToStorage(listeners, update);
+  const query = systemQuery();
+  query?.addEventListener("change", update);
+  return () => { unsubscribe(); query?.removeEventListener("change", update); };
+}
 
 function getSnapshot(): ThemeSnapshot {
-  const raw = readRaw();
-
-  if (raw !== cachedRaw || cachedSnapshot === PENDING) {
-    cachedRaw = raw;
-    cachedSnapshot = { restored: true, theme: parse(raw) };
-  }
-
+  const theme = currentTheme();
+  if (cachedSnapshot === PENDING || cachedSnapshot.theme !== theme) cachedSnapshot = { restored: true, theme };
   return cachedSnapshot;
 }
 
-function getServerSnapshot(): ThemeSnapshot {
-  return PENDING;
-}
-
-/** Write the attribute the tokens key off. */
-function apply(theme: Theme) {
-  const root = document.documentElement;
-  if (theme === "light") {
-    root.setAttribute("data-theme", "light");
-  } else {
-    root.removeAttribute("data-theme");
-  }
-}
+const getServerSnapshot = () => PENDING;
 
 export function useStoredTheme() {
-  const snapshot = useSyncExternalStore(
-    subscribe,
-    getSnapshot,
-    getServerSnapshot,
-  );
-
+  const snapshot = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const setTheme = useCallback((next: Theme) => {
     apply(next);
-
     commitStorageWrite(
-      () => window.localStorage.setItem(STORAGE_KEY, next),
-      () => publishToListeners(listeners),
       () => {
-        // Not being able to remember the choice is survivable; not honouring it
-        // for this session is not. The publish runs either way.
-        cachedRaw = next;
-        cachedSnapshot = { restored: true, theme: next };
+        window.localStorage.setItem(THEME_STORAGE_KEY, next);
+        document.documentElement.removeAttribute("data-theme-choice");
       },
+      () => publishToListeners(listeners),
+      () => document.documentElement.setAttribute("data-theme-choice", next),
     );
   }, []);
-
-  const toggle = useCallback(() => {
-    setTheme(snapshot.theme === "light" ? "dark" : "light");
-  }, [setTheme, snapshot.theme]);
-
+  const toggle = useCallback(() => setTheme(currentTheme() === "light" ? "dark" : "light"), [setTheme]);
   return { ...snapshot, setTheme, toggle };
 }

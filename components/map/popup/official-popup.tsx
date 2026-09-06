@@ -479,6 +479,7 @@ function VotingRecordViews({
         <button
           type="button"
           className="vote-view-btn"
+          data-pearl
           data-selected={view === "recent" || undefined}
           aria-pressed={view === "recent"}
           onClick={() => setView("recent")}
@@ -490,6 +491,7 @@ function VotingRecordViews({
           <button
             type="button"
             className="vote-view-btn"
+            data-pearl
             data-selected={view === "key" || undefined}
             aria-pressed={view === "key"}
             onClick={() => setView("key")}

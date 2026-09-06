@@ -18,11 +18,17 @@ test("software manifest names the exact staging build and five review sections w
   const manifest = softwareReleaseManifest(identity, environment, now);
   assert.equal(manifest.sha, identity.sha);
   assert.equal(manifest.stagingBoundary, "STABLE");
-  assert.equal(manifest.prompt3Status, "VISUAL_WORK_IN_PROGRESS");
+  assert.equal(manifest.prompt3Status, "STAGING_READY_FOR_OWNER_REVIEW");
+  assert.equal(manifest.reviewState, "READY_FOR_REVIEW");
   assert.equal(manifest.prompt4MayBeginInSeparateSession, true);
   assert.equal(manifest.reviewSections.length, 5);
   assert.deepEqual(manifest.raisedState.candidates.map(row => row.id), ["A_SOFT_LIFT", "B_MATERIAL_LIFT", "C_DEEP_LIFT"]);
   assert.equal(manifest.raisedState.status, "AWAITING_OWNER_CHOICE");
+  assert.deepEqual(manifest.lumen.examples.map(row => row.id), ["district", "school", "body", "meeting", "official"]);
+  for (const example of manifest.lumen.examples) {
+    assert.equal(new URL(example.dark).searchParams.get("theme"), "dark");
+    assert.equal(new URL(example.light).searchParams.get("theme"), "light");
+  }
   assert.doesNotMatch(JSON.stringify(manifest), /planted-secret|postgres:|DATABASE_URL|civicFindings|ownerApproval|adminDecisions/);
 });
 

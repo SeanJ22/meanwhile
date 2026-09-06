@@ -29,6 +29,7 @@ import type { ListGroupBy, ListSort } from "@/lib/state/types";
 import type { Meeting } from "@/lib/sources/types";
 
 import { tierVars } from "../shell/tier-style";
+import lumenStyles from "./popup/lumen-popup.module.css";
 
 /**
  * The full-panel list of what is currently on the map.
@@ -243,7 +244,7 @@ export function ListOverlay({
           dispatch({ type: "list/open", open: false });
       }}
     >
-      <div className="al-panel">
+      <div className={`al-panel ${lumenStyles.surface}`} data-lumen-surface="meeting-list">
       <div className="al-overlay-header">
         <span className="al-overlay-count">
           {sorted.length} {listingCount.unit}
@@ -253,6 +254,7 @@ export function ListOverlay({
           <button
             type="button"
             data-list-focus-clear
+            data-pearl
             className="al-focus-chip"
             aria-label={`Showing only ${ui.listFocusBodyName}. Show every meeting.`}
             onClick={() =>

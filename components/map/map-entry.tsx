@@ -16,6 +16,8 @@ import {
 import { useNarrowing } from "@/hooks/use-narrowing";
 import { useStoredTheme } from "@/hooks/use-stored-theme";
 import { useStoredZip } from "@/hooks/use-stored-zip";
+import { lookupZctaAsync } from "@/lib/geo/zcta-table";
+import { StagingReviewControls, useStagingReview, type ReviewPopup } from "./staging-review-controls";
 import type { SearchItem } from "@/lib/search";
 import { bodyFromRow, resolveBodyRow, sameName } from "@/lib/search/body-row";
 import { AddressResolutionProvider } from "@/components/address/address-resolution-context";
@@ -50,7 +52,7 @@ import {
 } from "@/lib/officials/card-sources";
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
 import { bodyClassLong } from "@/lib/registry/body-class-labels";
-import { rosterHoldersForBody, rosterGapForBody, rosterGapsForDivision } from "@/lib/registry/body-rosters";
+import { rosterGapForBody, rosterGapsForDivision } from "@/lib/registry/body-rosters";
 import { membersOfBody } from "@/lib/registry/body-membership";
 import {
   noteStateFor,
@@ -182,8 +184,12 @@ export function MapEntry() {
 }
 
 function MapEntryInner() {
-  const { location, restored, remember } = useStoredZip();
-  const { theme } = useStoredTheme();
+  const review = useStagingReview();
+  const { location: storedLocation, restored, remember } = useStoredZip();
+  const location = review.enabled && review.zip && storedLocation?.zip !== review.zip ? null : storedLocation;
+  const [reviewLoadedZip, setReviewLoadedZip] = useState<string | null>(null);
+  const reviewLocationReady = !review.enabled || !review.zip || reviewLoadedZip === review.zip;
+  const { theme, restored: themeRestored } = useStoredTheme();
   const ui = useUi();
   const dispatch = useUiDispatch();
 
@@ -479,6 +485,22 @@ function MapEntryInner() {
    * handler further down — because both read it. A hook declared after its
    * first reader is a temporal-dead-zone error, not a style preference.
    */
+  const reviewZipApplied = useRef<string | null>(null);
+  useEffect(() => {
+    if (!review.enabled || !restored || !review.zip || reviewZipApplied.current === review.zip) return;
+    let live = true;
+    const zip = review.zip;
+    lookupZctaAsync(zip).then(point => {
+      if (!live || !point) return;
+      reviewZipApplied.current = zip;
+      forgetCamera();
+      search(zip, point.lat, point.lng);
+      setReviewLoadedZip(zip);
+      if (review.frameState) { setNoticeCollapsed(true); setSidebarState("closed"); }
+    });
+    return () => { live = false; };
+  }, [review.enabled, review.zip, review.frameState, restored, search]);
+
   const focusState = useStateFocus();
 
   /*
@@ -974,7 +996,7 @@ function MapEntryInner() {
     setLastDistrictLayout(districtLayoutKey);
     if (ui.selectedDistrictOcdId) {
       setNoticeCollapsed(compactMap);
-      setDistrictExpanded(false);
+      setDistrictExpanded(Boolean(review.enabled && (review.popup === "district" || review.popup === "school")));
       if (compactMap) setSidebarState("closed");
     }
   }
@@ -1795,6 +1817,7 @@ function MapEntryInner() {
           <button
             type="button"
             className={`notice-fab pointer-events-auto${compactBoundary ? " boundary-info-pill" : ""}`}
+            data-pearl={compactBoundary || undefined}
             aria-label="Show who governs here"
             aria-expanded={false}
             /* 4c: opening WGH closes the rail and any battlecard. */
@@ -1864,6 +1887,7 @@ function MapEntryInner() {
         <button
           type="button"
           className="boundary-info-pill district-info-pill pointer-events-auto"
+          data-pearl
           data-boundary-details={districtPopup.ocdId}
           aria-label={`Show ${districtPopup.label} details`}
           aria-expanded={false}
@@ -1886,8 +1910,51 @@ function MapEntryInner() {
     </>
   );
 
+  const openReviewPopup = useCallback((kind: ReviewPopup): boolean => {
+    if (!shown || !mapPresentationReady) return false;
+    if (kind === "district" || kind === "school") {
+      const candidates = drawnDistricts.filter(district => kind === "school"
+        ? SCHOOL_DISTRICT_TYPES.includes(district.type)
+        : !SCHOOL_DISTRICT_TYPES.includes(district.type));
+      const drawn = candidates.sort((a, b) => Number(shown.governingOcdIds?.includes(b.ocdId)) - Number(shown.governingOcdIds?.includes(a.ocdId)) || a.ocdId.localeCompare(b.ocdId))[0];
+      const state = drawn?.ocdId.match(/\/state:([^/]+)/)?.[1];
+      if (!drawn || !state) return false;
+      setLastHits([{ ...drawn, state }]);
+      dispatch({ type: "select/district", ocdId: drawn.ocdId, districtType: drawn.type });
+      setDistrictExpanded(true);
+      setNoticeCollapsed(true);
+      setSidebarState("closed");
+      return true;
+    }
+    if (kind === "meeting") {
+      const meeting = shown.meetings[0];
+      if (!meeting) return false;
+      openMeeting(meeting);
+      return true;
+    }
+    if (kind === "body") {
+      const body = shown.coverage?.bodies[0];
+      if (!body) return false;
+      openLarge({ kind: "entity", subject: bodySubject(body, shown.meetings) });
+      return true;
+    }
+    for (const body of shown.coverage?.bodies ?? []) {
+      const holder = membersOfBody(body.bodyId).members[0];
+      if (holder) { openOfficial(holder, body.name, "local", body.ocdId); return true; }
+    }
+    return false;
+  }, [shown, mapPresentationReady, drawnDistricts, dispatch, openMeeting, openLarge, openOfficial]);
+  const reviewPopupApplied = useRef<string | null>(null);
+  useEffect(() => {
+    if (!review.enabled || !review.popup || (review.zip && location?.zip !== review.zip)) return;
+    const key = `${review.zip}:${review.popup}`;
+    if (reviewPopupApplied.current === key) return;
+    if (openReviewPopup(review.popup)) reviewPopupApplied.current = key;
+  }, [review.enabled, review.popup, review.zip, location?.zip, openReviewPopup]);
+
   return (
     <DataProvider value={data}>
+      <StagingReviewControls candidate={review.candidate} zip={location?.zip ?? review.zip} />
       {/*
         `JUR-2` (2026-08-23). The jurisdiction badge renders on three surfaces,
         every one of them several components deep, and until now it could only
@@ -1902,6 +1969,7 @@ function MapEntryInner() {
       >
       <main
         className="relative h-dvh w-full overflow-hidden"
+        style={review.enabled ? { height: "calc(100dvh - 26px)", marginTop: 26 } : undefined}
         /* WGH-8: the attribute carries the DERIVED state, not the raw one.
            Every CSS rule that hides the rail keys on this, so the exclusion is
            true in the stylesheet as well as in the tree. */
@@ -2042,7 +2110,9 @@ function MapEntryInner() {
             district picker follows the canvas, because its coordinates come
             from a click on the canvas and the two must share one space. */}
         <div className="absolute inset-0">
-          <MapCanvas
+          {themeRestored && reviewLocationReady && <MapCanvas
+            raisedStateCandidate={review.enabled ? review.candidate : undefined}
+            reviewStateFraming={review.frameState}
             onPresentationReadyChange={onMapPresentationReady}
             venues={allVenues}
             visibleVenueKeys={visibleVenueKeys}
@@ -2087,7 +2157,7 @@ function MapEntryInner() {
             votingAddressPoint={votingAddressPoint}
             onSelectVotingSite={setSelectedVotingSiteId}
             selectedVotingSiteId={selectedVotingSiteId}
-          />
+          />}
           {/* e's 6b2, built in g3 item 10: quiet within a state, explicit
               between states. Once per ordered border pair per session. */}
           {focusState.crossing && (
@@ -2139,6 +2209,7 @@ function MapEntryInner() {
                 <button
                   type="button"
                   className="voting-open-button"
+                  data-pearl
                   onClick={() => {
                     takeForeground(); // MTG-11
                     setVotingOpen(true);

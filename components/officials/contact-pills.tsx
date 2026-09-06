@@ -70,6 +70,7 @@ function Pill({ href, label, mark, external = true, title }: PillProps) {
       href={href}
       title={title ?? label}
       className="contact-pill"
+      data-pearl
       {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
     >
       {mark}
@@ -101,6 +102,7 @@ function PillButton({
       type="button"
       title={title ?? label}
       className="contact-pill"
+      data-pearl
       onClick={onPress}
     >
       {mark}

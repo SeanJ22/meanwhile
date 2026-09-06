@@ -27,8 +27,10 @@ export function ManifestReview() {
       <p>Visual review: <strong>{manifest.reviewState}</strong></p>
       <p>Staging boundary: <strong>{manifest.stagingBoundary}</strong></p>
       <ol>{manifest.reviewSections.map(section => <li key={section.id}><a href={section.url}>{section.name}</a></li>)}</ol>
+      <p>Lumen popup family</p>
+      <ul>{manifest.lumen.examples.map(example => <li key={example.id}>{example.name}: <a href={example.dark}>Dark</a> · <a href={example.light}>Light</a></li>)}</ul>
       <p>Raised state: {manifest.raisedState.status}</p>
-      <ul>{manifest.raisedState.candidates.map(candidate => <li key={candidate.id}><a href={candidate.url}>{candidate.label}</a></li>)}</ul>
+      <ul>{manifest.raisedState.candidates.map(candidate => <li key={candidate.id}><a href={candidate.url}>{candidate.label}</a> — Arizona <a href={candidate.arizona.dark}>dark</a> / <a href={candidate.arizona.light}>light</a>; New Jersey <a href={candidate.newJersey.dark}>dark</a> / <a href={candidate.newJersey.light}>light</a></li>)}</ul>
       <details open>
         <summary>Exact live software manifest</summary>
         <pre style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere", fontSize: 12 }} data-release-manifest>{JSON.stringify(manifest, null, 2)}</pre>

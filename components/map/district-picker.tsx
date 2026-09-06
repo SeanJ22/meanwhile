@@ -1,5 +1,7 @@
 "use client";
 
+import lumenStyles from "./popup/lumen-popup.module.css";
+
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { anchorInViewport, type AnchorPosition } from "@/lib/map/anchor-in-viewport";
@@ -95,7 +97,8 @@ export function DistrictPicker() {
   return (
     <div
       ref={boxRef}
-      className="district-picker"
+      className={`district-picker ${lumenStyles.surface}`}
+      data-lumen-surface="district-picker"
       /* F01 9.1 (2026-08-19): the box lands WHOLE, wherever the reader clicked.
          `left: at.x; top: at.y` anchored its top-left corner to the click,
          which put most of the box below the fold on any click near the bottom

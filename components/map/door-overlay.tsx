@@ -22,6 +22,7 @@ import {
 import { formatMeetingDate } from "@/lib/map/format";
 import { isOnlineOnly } from "@/lib/meetings/online";
 import { MeetingStatusPill } from "@/components/map/meeting-status-pill";
+import lumenStyles from "./popup/lumen-popup.module.css";
 
 /**
  * The sidebar-count doors (8a, 2026-08-17): tapping a stat number opens the
@@ -117,7 +118,8 @@ export function DoorOverlay({
       onClick={onClose}
     >
       <div
-        className="door-panel panel max-h-[80vh] w-full max-w-md overflow-y-auto p-4"
+        className={`door-panel panel max-h-[80vh] w-full max-w-md overflow-y-auto p-4 ${lumenStyles.surface}`}
+        data-lumen-surface="door"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">

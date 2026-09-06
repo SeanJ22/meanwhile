@@ -190,7 +190,7 @@ export function TutorialOverlay({ active }: { active: boolean }) {
         </span>
         <div className={styles.navigation}>
           {step > 0 && <button type="button" onClick={() => setStep(step - 1)}>Back</button>}
-          <button type="button" className={styles.next} onClick={() => last ? dismiss() : setStep(step + 1)}>{last ? "Done" : "Next"}</button>
+          <button type="button" className={styles.next} data-pearl onClick={() => last ? dismiss() : setStep(step + 1)}>{last ? "Done" : "Next"}</button>
         </div>
       </div>
       <p className={styles.replayHint}>Replay anytime: menu → Quick tour</p>

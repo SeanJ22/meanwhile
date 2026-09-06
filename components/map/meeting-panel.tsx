@@ -32,6 +32,7 @@ import type { Meeting } from "@/lib/sources/types";
 import { agendaSentenceFor } from "@/lib/ask/agenda-sentence";
 
 import { CalendarLinks } from "./popup/calendar-links";
+import lumenStyles from "./popup/lumen-popup.module.css";
 
 /**
  * What sits behind a pin.
@@ -81,7 +82,8 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
   return (
     <aside
       aria-label={`${listingCount.heading} at ${venue.name}`}
-      className="panel pointer-events-auto flex max-h-[60vh] w-full flex-col sm:max-h-[calc(100dvh-8rem)] sm:w-[23rem]"
+      className={`panel pointer-events-auto flex max-h-[60vh] w-full flex-col sm:max-h-[calc(100dvh-8rem)] sm:w-[23rem] ${lumenStyles.surface}`}
+      data-lumen-surface="venue"
     >
       <header className="flex items-start justify-between gap-3 border-b border-rule px-5 py-4">
         <div className="min-w-0">

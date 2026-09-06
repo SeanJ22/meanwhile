@@ -112,6 +112,7 @@ function StatePills({
             key={usps}
             href={keep(usps)}
             data-state-pill
+            data-pearl
             data-selected="true"
             className="inline-flex items-center gap-1.5 rounded-full border border-[var(--link)] bg-[color-mix(in_srgb,var(--link)_10%,transparent)] px-3 py-1 text-[0.75rem] text-paper hover:bg-[color-mix(in_srgb,var(--link)_18%,transparent)]"
           >
@@ -127,6 +128,7 @@ function StatePills({
             key={state.usps}
             href={add(state.usps)}
             data-state-pill
+            data-pearl
             className="inline-flex items-center gap-1.5 rounded-full border border-[var(--panel-border)] px-3 py-1 text-[0.75rem] text-muted hover:text-paper"
           >
             <span aria-hidden="true">+</span>

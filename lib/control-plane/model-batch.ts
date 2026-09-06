@@ -50,7 +50,7 @@ export type BatchLane = keyof typeof BATCH_LANES;
 const ON = new Set(["1", "true", "on"]);
 
 /** Whether a registered lane's batch routing is switched on. OFF unless the flag says otherwise. */
-export function batchEnabledFor(lane: BatchLane, env: NodeJS.ProcessEnv = process.env): boolean {
+export function batchEnabledFor(lane: BatchLane, env: Readonly<Record<string, string | undefined>> = process.env): boolean {
   const entry = BATCH_LANES[lane];
   if (!entry || entry.readerFacing) return false;
   const value = env[entry.flag];

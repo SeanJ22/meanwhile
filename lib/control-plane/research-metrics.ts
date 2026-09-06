@@ -317,22 +317,28 @@ export interface CacheHitRate {
   /** Turns after the first that read zero cached tokens, over turns after the first. Null before per-turn steps exist. */
   readonly repeatedPrefixTurns: number | null;
   readonly repeatedPrefixMisses: number | null;
-  /** Turns after the first whose uncached input exceeded what they appended by more than the model minimum — the stationary-breakpoint signature. Null before per-turn steps exist. */
-  readonly stationaryTurns: number | null;
-  /** Ledger rows in the window for this role: measured, predating the cache fields, and reported null by the provider. */
   readonly attempts: number;
-  readonly measuredRows: number;
-  readonly predatingRows: number;
-  readonly unreportedRows: number;
-  /** Uncached input tokens per measured Attempt. Null when nothing was measured. */
-  readonly uncachedPerAttempt: { readonly mean: number; readonly max: number } | null;
-  /** Requests served through the Batches API, over requests, on measured rows. Null when nothing was measured. */
-  readonly batchShare: number | null;
-  /** read tokens × (base input price − cache read price) at the role's model rate. Null when the role has no stated model. */
-  readonly savedUsd: number | null;
-  /** Measured rows whose cache write was priced from the aggregate at the requested TTL because the response carried no split. */
-  readonly aggregatePricedRows: number;
   readonly denominator: string;
+  /*
+   * ---- the ledger columns (2026-09-06). Always set by `cacheHitRateByRole`;
+   * OPTIONAL on the type because a row persisted on a research-state record
+   * before that date carries none of them, and the digest prints such a row
+   * as it always did rather than crashing on it. ----
+   */
+  /** Turns after the first whose uncached input exceeded what they appended by more than the model minimum — the stationary-breakpoint signature. Null before per-turn steps exist. */
+  readonly stationaryTurns?: number | null;
+  /** Ledger rows in the window for this role: measured, predating the cache fields, and reported null by the provider. */
+  readonly measuredRows?: number;
+  readonly predatingRows?: number;
+  readonly unreportedRows?: number;
+  /** Uncached input tokens per measured Attempt. Null when nothing was measured. */
+  readonly uncachedPerAttempt?: { readonly mean: number; readonly max: number } | null;
+  /** Requests served through the Batches API, over requests, on measured rows. Null when nothing was measured. */
+  readonly batchShare?: number | null;
+  /** read tokens × (base input price − cache read price) at the role's model rate. Null when the role has no stated model. */
+  readonly savedUsd?: number | null;
+  /** Measured rows whose cache write was priced from the aggregate at the requested TTL because the response carried no split. */
+  readonly aggregatePricedRows?: number;
 }
 
 /**

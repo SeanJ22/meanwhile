@@ -586,6 +586,19 @@ test("8. a ROUTE_CANDIDATE grounded in vaulted evidence disposes DISCOVERED with
   assert.equal(attempt.cost.inputTokens, 3 * 1500, "input tokens include cache reads, summed over turns");
   assert.equal(attempt.cost.outputTokens, 300);
   assert.ok((attempt.cost.usd ?? 0) > 0);
+  /* PC-9 (2026-09-06): the six metering fields land on the persisted Attempt and on the ledger row, read back. */
+  assert.equal(attempt.cost.cacheReadInputTokens, 3 * 500);
+  assert.equal(attempt.cost.cacheCreationInputTokens, 0);
+  assert.equal(attempt.cost.uncachedInputTokens, 3 * 1000);
+  assert.equal(attempt.cost.cacheCreation5mInputTokens, null, "the scripted response carries no cache_creation split: null, never zero");
+  assert.equal(attempt.cost.cacheCreation1hInputTokens, null);
+  assert.equal(attempt.cost.batch, false);
+  const ledgerRow = (await repos.costs.readAll()).find((c) => c.attemptId === attempt.id);
+  assert.ok(ledgerRow, "the Attempt's cost reached the ledger");
+  assert.deepEqual(
+    { read: ledgerRow.cost.cacheReadInputTokens, write: ledgerRow.cost.cacheCreationInputTokens, uncached: ledgerRow.cost.uncachedInputTokens, batch: ledgerRow.cost.batch },
+    { read: 1500, write: 0, uncached: 3000, batch: false },
+  );
   const r = results[0];
   assert.equal(r.outcome, "ROUTE_CANDIDATE");
   assert.equal(r.rungs[1].note, "meetings page", "the model's per-rung note travels; the rung itself is machine-derived");

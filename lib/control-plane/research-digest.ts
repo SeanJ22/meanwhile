@@ -84,12 +84,14 @@ export function cacheRoleLines(r: CacheHitRate): string[] {
   }
   if (r.measuredRows === 0) {
     return [
-      `${head}NOT MEASURED — ${r.attempts} ledger row(s), ${r.predatingRows} predate the cache fields` +
-        (r.unreportedRows > 0 ? `, ${r.unreportedRows} reported no usage` : "") +
+      `${head}NOT MEASURED — ${r.attempts} ledger row(s), ${r.predatingRows ?? 0} predate the cache fields` +
+        ((r.unreportedRows ?? 0) > 0 ? `, ${r.unreportedRows} reported no usage` : "") +
         "; a row written before the fields existed says nothing about its cache behaviour",
     ];
   }
-  const perAttempt = r.uncachedPerAttempt === null ? "UNMEASURED" : `mean ${Math.round(r.uncachedPerAttempt.mean)} · max ${r.uncachedPerAttempt.max}`;
+  const per = r.uncachedPerAttempt ?? null;
+  const perAttempt = per === null ? "UNMEASURED" : `mean ${Math.round(per.mean)} · max ${per.max}`;
+  const aggregatePriced = r.aggregatePricedRows ?? 0;
   return [
     `${head}${pct(r.hitRate)} (read ${r.cacheRead} · write ${r.cacheWrite} · uncached ${r.uncachedInput}` +
       (r.repeatedPrefixTurns === null
@@ -97,9 +99,9 @@ export function cacheRoleLines(r: CacheHitRate): string[] {
         : `; zero-read turns ${r.repeatedPrefixMisses} of ${r.repeatedPrefixTurns}; stationary-breakpoint turns ${r.stationaryTurns ?? 0}`) +
       `; ${r.denominator})`,
     `                     ${r.role} uncached input per Attempt ${perAttempt} over ${r.measuredRows} measured row(s)` +
-      ` · batch share ${pct(r.batchShare)} of requests` +
-      ` · caching saved ${usd(r.savedUsd)} (read tokens × (base − read price))` +
-      (r.aggregatePricedRows > 0 ? ` · ${r.aggregatePricedRows} row(s) priced the cache write from the aggregate at the requested TTL (no split on the response)` : ""),
+      ` · batch share ${pct(r.batchShare ?? null)} of requests` +
+      ` · caching saved ${usd(r.savedUsd ?? null)} (read tokens × (base − read price))` +
+      (aggregatePriced > 0 ? ` · ${aggregatePriced} row(s) priced the cache write from the aggregate at the requested TTL (no split on the response)` : ""),
   ];
 }
 

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 538,
-    "named": 5570,
+    "files": 539,
+    "named": 5572,
     "dynamic": 24
   },
   "files": {
@@ -5230,6 +5230,13 @@
         "BAL-12: the ACTION pills share one inset and one tap target",
         "BAL-12: the TAG pills carry the reference treatment exactly",
         "BAL-12: the census reaches the stylesheet at all"
+      ],
+      "dynamic": 0
+    },
+    "tests/pilot-cost-digest.test.ts": {
+      "names": [
+        "PC-11: a record with ledger cache rows prints the rate with its three counts, uncached per Attempt, batch share, the dollar effect, and the pre-warm",
+        "PC-11: an older record says why the cache lines are not there, and a cycle that admitted no Scout says nothing was warmed"
       ],
       "dynamic": 0
     },

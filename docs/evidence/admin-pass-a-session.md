@@ -2,7 +2,7 @@
 
 ```text
 ADMIN PASS A — CLOSED
-ADMIN PASS B — NOT STARTED (Pass A closure commit lands first; the Pass B section is appended below it)
+ADMIN PASS B — CLOSED (ADM-B2 live-match sub-proof DEFERRED — MANIFEST UNREACHABLE AT 2026-09-06T08:27:39Z; Pass B commit b93d2ad3)
 ```
 
 Stamp: 2026-09-06 (`pnpm stamp`). Bootstrap clock 2026-09-06T07:00Z. Base: `main` at `deabf0f8ac6ac91478a7b3f9edbc9d9f59a5cf3c` (the merge of PR #287; identical to `origin/main` at bootstrap). Branch `admin/pass-a`, worktree `.claude/worktrees/control-centre-resource-safety-aed753`. Implementation owner: Claude Code (Fable 5.1). Owner absent; standing rulings for the unattended session applied, and every default taken is under OBSERVATION.
@@ -423,3 +423,229 @@ Tabbing through every focusable on `/admin` (393), `/admin/research` (111) and `
 ## 8. PR and HEAD
 
 PR: https://github.com/SeanJ22/meanwhile/pull/288. HEAD: `the closure commit that carries this report (listed on PR #288; recorded verbatim in the Pass B section)`. Code commit: `bd491da6c95ba0f66d6ddf88a767f132d4110d8b`. Base: `deabf0f8ac6ac91478a7b3f9edbc9d9f59a5cf3c`. Not merged. Nothing pushed to `test`.
+
+---
+# Admin Pass B — software release review against Prompt 3's manifest
+
+```text
+ADMIN PASS B — CLOSED — every row proven; ADM-B2's live-match sub-proof DEFERRED — MANIFEST UNREACHABLE AT 2026-09-06T08:27:39Z (standing ruling 5)
+```
+
+Same worktree, same branch (`admin/pass-a`), same PR (#288). Pass A closed first: its seam is commit `712c526d` (`ADMIN PASS A — CLOSED: …`), and no Pass A item was relabeled or deferred into this pass. Stamp: 2026-09-06. Owner absent; the standing rulings for the unattended session apply and every default is under OBSERVATION (§B6).
+
+## B1. Manifest contract as observed
+
+**Observed at 2026-09-06T08:27:39Z** — `GET https://test.meanwhileusa.com/api/release-manifest` (curl, `accept: application/json`, the synthetic-run header) answered **HTTP 401** with Netlify's edge password page, verbatim headers:
+
+```text
+HTTP/1.1 401 Unauthorized
+Content-Type: text/html
+Date: Sun, 06 Sep 2026 08:27:40 GMT
+Server: Netlify
+Strict-Transport-Security: max-age=31536000
+X-Nf-Request-Id: 01M1TX94CF5AYM7DP52H270K2E
+```
+
+and a 3,551-byte HTML body titled `Password Protection` ("Password protected site — Please enter your password to get access"). `https://test.meanwhileusa.com/review` answered the same 401 page. So the known facts at issue time — test SHA `ed48937e9f89d7cd0dcb8af15e2bd9bf85b7e1f6`, deploy `6a9d113734fa000008c61ff9`, `prompt3Status = VISUAL_WORK_IN_PROGRESS` — were **neither confirmed nor contradicted by the live endpoint**: it is behind a site password this Admin does not hold. Per standing ruling 5 the live-match sub-proof of ADM-B2 is **DEFERRED — MANIFEST UNREACHABLE AT 2026-09-06T08:27:39Z**; nothing polled.
+
+**The contract, from the endpoint's source (read only).** `/api/release-manifest` does not exist on `main`; it is Prompt 3's on `test` (`origin/test` at `ed48937e9f89d7cd0dcb8af15e2bd9bf85b7e1f6`, the SHA the brief names). `app/api/release-manifest/route.ts` answers 404 unless `WTP_BUILD_CONTEXT=branch-deploy` and `WTP_BUILD_BRANCH=test`, and otherwise returns `softwareReleaseManifest(identity, runtimeWriteEnvironment(), now)` from `lib/review/release-manifest.ts` with `cache-control: no-store`. Every field that function can emit, none renamed:
+
+| Field | Values the source emits |
+| --- | --- |
+| `contractVersion` | `1` (`REVIEW_CONTRACT_VERSION`) |
+| `kind` | `"SOFTWARE_VISUAL_REVIEW"` |
+| `sha` | `WTP_BUILD_COMMIT` (or `"unknown"`) |
+| `build` | `{ sha, branch, context, deployId, builtAt }` from the `WTP_BUILD_*` variables |
+| `reportedAt` | the server clock |
+| `stagingBoundary` | `"STABLE"` \| `"INVALID"` |
+| `milestone` | `"STAGING_BOUNDARY_STABLE"` \| `"STAGING_BOUNDARY_INVALID"` |
+| `prompt3Status` | `"VISUAL_WORK_IN_PROGRESS"` \| `"BLOCKED_STAGING_BOUNDARY"` — the source emits no `READY_FOR_REVIEW` yet |
+| `reviewState` | `"VISUAL_WORK_IN_PROGRESS"` \| `"BLOCKED"` |
+| `boundaryReason` | `null` \| `"BUILD_IDENTITY_UNPROVEN"` \| `"MUTABLE_RESOURCE_ISOLATION_UNPROVEN"` |
+| `isolation` | `{ application, controlPlane, productionWritesAllowed: false }` |
+| `reviewSections` | `REVIEW_SECTIONS` from `lib/review/contract.ts`: `map-movement` "Map movement", `pearl` "Pearl interactive pills", `lumen` "Lumen popup family + theme parity", `raised-state` "Raised state", `theme` "Theme behavior", each with a `url` on the staging origin (`?zip=85701&review=…`) |
+| `raisedState` | `{ status: "AWAITING_OWNER_CHOICE", candidates: [A_SOFT_LIFT, B_MATERIAL_LIFT, C_DEEP_LIFT] }`, each candidate with `label`, `url`, and `arizona`/`newJersey` dark/light URLs |
+| `ownership` | `STAGING_OWNERSHIP` (prompt3 / prompt4 / baselineChangeProtocol) |
+| `prompt4MayBeginInSeparateSession` | `true` iff the boundary is stable |
+
+No production identity is carried, so production's SHA comes from `/api/build` (§B2). The Admin reader models exactly these fields; anything else a future manifest carries renders raw under "Unrecognized manifest fields".
+
+## B2. Identity sources used
+
+| Identity | Source | Observed value |
+| --- | --- | --- |
+| Staging (test) | the live manifest — unreachable (401) at every read this session; for the local rendered-DOM proof, a stub serving the contract's shape with the brief's SHA `ed48937e…` and deploy `6a9d1137…` (the constant `MANIFEST_URL` was pointed at `127.0.0.1:3199` for that local build only and reverted before the gate run and the commit) | staging SHA as displayed: `ed48937e9f89d7cd0dcb8af15e2bd9bf85b7e1f6` (stub) — live: DEFERRED |
+| Production | `https://meanwhileusa.com/api/build` (read only; its `dbRole: "production"` label is the known FOLLOW-UP owned elsewhere and untouched) | `commit deabf0f8ac6ac91478a7b3f9edbc9d9f59a5cf3c`, `deployId 6a9ce414776d0d0b83e29201`, `branch main`, `context production` — HTTP 200 at 2026-09-06T08:27Z and again at every page render |
+
+Both render as full SHA with a copy control, short SHA, deploy id and observed-at (capture `observed-dark-1280-identity.png` on the evidence sheet).
+
+## B3. The seven-row ledger — Pass B
+
+| Row | Verdict | Proof |
+| --- | --- | --- |
+| ADM-B1 | PASS | Pass A closed with all seven rows proven before any Pass B file existed; `git log --oneline`: `712c526d ADMIN PASS A — CLOSED …` precedes every Pass B commit (`b93d2ad3` Admin Pass B: the software release review against Prompt 3’s manifest, then the report commit that follows it) |
+| ADM-B2 | PASS, with the live-match sub-proof DEFERRED | contract recorded verbatim (§B1); staging and production identities displayed with source named (§B2); tolerated states — full contract, `VISUAL_WORK_IN_PROGRESS`, an unknown status, missing sections, missing URLs, unknown fields, a non-JSON body, HTTP 401, a network error — each a labeled state by fixture (tests B2, 5 tests) and two of them in the rendered DOM (§B4); manifest source untouched (the diff carries no `app/api/release-manifest`, no `lib/review`) |
+| ADM-B3 | PASS | five required sections render per exact SHA with a review-page link (the manifest's own section link when supplied, else the review page); a section the manifest has not exposed reads `NOT_YET_REVIEWABLE` with its controls disabled and the reason printed; a manifest-only section renders as an optional non-gating extra (test B3; rendered DOM: 4 REVIEWABLE + Theme NOT_YET_REVIEWABLE against the stub) |
+| ADM-B4 | PASS | rows persist keyed by the exact SHA with actor `session:<sid>` and the server clock; a new SHA has zero decisions on every section while the old SHA's rows sit under history; a write against the old SHA is refused `STALE_SHA — staging moved to bbbbbbbb …`; a later decision supersedes for gating and the earlier row stays; a rewrite of a row id is an `AppendOnlyViolation` (tests B4, 2 tests; rows shown in §B5) |
+| ADM-B5 | PASS | `APPROVE` on Raised State without a variant on that SHA is refused `RAISED_STATE_CHOICE_REQUIRED` naming the three variants; after `RAISED_STATE_CHOICE` it is accepted; a choice on X says nothing about Y; the diff stat (§B7) carries no reader path — the choice is a row and nothing else (test B5) |
+| ADM-B6 | PASS | each failing condition named (`Map Movement approved on this SHA`, … , `Raised State variant chosen on this SHA`, `manifest status is READY_FOR_REVIEW`); four-of-five and status-not-ready paths refused `NOT_RECORDABLE`; the passing path records exactly one row on an explicit request with `composedFrom` = the five section-approval row ids + the variant row; a second request is `ALREADY_RECORDED`; every other repository in the bundle is empty afterwards (tests B6, 2 tests); the grep for side effects in §B7 returns nothing |
+| ADM-B7 | PASS | diff stat (§B7) = ADMIN-OWNED paths + the one additive table set; final DDL in §B5; build tail and gate table in §B7; auth-rejection test output (404 public host, 307 unauthenticated page, 401 no session on GET and POST, 403 foreign origin) in §B7; PR #288 updated, not merged; nothing pushed to `test` |
+
+## B4. Rendered DOM — the page in both states (local production build, real auth, Playwright)
+
+Read from `document` at 1280 and 390, dark and light (8 renders per phase; `.scratch/rr-observed2/results.json` and `.scratch/rr-unavailable/results.json`, copied to `docs/evidence/admin-pass-b/results-observed.json` and `results-unavailable.json` beside the captures; the unavailable run predates the status-word fix, which changed nothing it measured — its 390 px reading was already 390):
+
+- **Observed (stub manifest, status `VISUAL_WORK_IN_PROGRESS`, `theme` omitted, one unknown field `prompt3Note`):** heading "Software release review VISUAL_WORK_IN_PROGRESS"; identity cards as in §B2 with 4 copy controls; 5 section cards — Map Movement / Pearl / Lumen / Raised State A/B/C `REVIEWABLE` with the manifest's own `?zip=85701&review=…` links, Theme `NOT_YET_REVIEWABLE` linking to the review page; every decision button, the feedback field, the three variant radios and the composite button disabled, each with the printed reason — the live control plane is at schema v7, so the `software_release_reviews` log reads as unavailable until the runner bootstraps (`relation "cp_log_software_release_reviews" does not exist`), which the page names as such; the composite lists 10 conditions (2 ✓, 8 ✗ by name); "Unrecognized manifest fields — 1"; the console View select carries the fourth view; no `undefined`/`NaN`/`[object Object]`; the API read (`GET /api/admin/release-review`) answers 200 with the model (6,276 bytes). Layout: 1280 and 390 wide without sideways scroll after the status-word fix (scroll width 390 = client 390 at 390 px, dark and light, and 1280 = 1280; readings in `.scratch/rr-observed2/results.json`, the run after the fix — the first run measured 406 at 390 px before the status word was allowed to wrap).
+- **Unavailable (stub stopped):** heading "Software release review MANIFEST_UNAVAILABLE"; the refusal banner `MANIFEST_UNAVAILABLE. TypeError: fetch failed. Observed …` and "No manifest has ever been observed by this Admin; there is no last-observed SHA. Decision writes are disabled while the manifest cannot be read." (the last-observed SHA comes from the store, which is at v7 — with the table present it would name the SHA and time, as test B2 proves); all 5 sections `MANIFEST_UNAVAILABLE`, every control disabled; the API read answers 200 with `reading.kind = "UNAVAILABLE"`.
+- **Refresh manifest:** the control posts `action=REFRESH`, opens no store, and lands back on the page with `notice=REFRESHED` (landed on `/admin/release-review?notice=REFRESHED` with the status line "The manifest was fetched again.").
+
+Captures (worktree, gitignored like Pass A's, and on the evidence sheet): `observed-dark-1280.png`, `observed-dark-1280-identity.png`, `observed-dark-1280-section.png`, `observed-dark-1280-composite.png`, `observed-dark-390.png`, `unavailable-dark-1280-banner.png`, `unavailable-light-1280.png`.
+
+## B5. Persistence — the one additive table
+
+Store: the control plane (`WTP_CONTROL_PLANE_DATABASE_URL`, Neon Postgres) through the repository pattern the owner records already use; the control plane's "migration management" is `lib/control-plane/repository/pg-schema.ts` — a versioned bootstrap DDL replayed by the runner and the publishers (`CREATE TABLE IF NOT EXISTS …`), never by the admin pages (they open with `skipBootstrap`). No Drizzle migration was generated: the brief's fallback to `lib/db/schema.ts` applies only when the control plane has no mechanism, and it has one.
+
+- **Log name:** `software_release_reviews` → table `cp_log_software_release_reviews`, appended to `APPEND_ONLY_LOGS`; `BOOTSTRAP_VERSION` 7 → 8 (the invariant: the version moves when the DDL moves). `DECLARED_TABLES` derives the table name.
+- **Final DDL** (exactly what `appendOnlyTable("software_release_reviews")` emits; the same shape as every other log, additive, no `ALTER`, no `DROP`):
+
+```sql
+CREATE TABLE IF NOT EXISTS cp_log_software_release_reviews (
+  log_key     text NOT NULL,        -- the exact staging SHA the row was made against
+  record_id   text NOT NULL,        -- "<sha>:<kind>:<section or ->:<createdAt>"
+  position    bigint NOT NULL,
+  recorded_at timestamptz NOT NULL,
+  record      jsonb NOT NULL,       -- SoftwareReleaseReviewRecord, below
+  PRIMARY KEY (log_key, record_id)
+);
+CREATE UNIQUE INDEX IF NOT EXISTS cp_log_software_release_reviews_order
+  ON cp_log_software_release_reviews (log_key, position);
+```
+
+- **The record (`lib/control-plane/software-release-review.ts`, `formatVersion 1`):** `id`, `stagingSha`, `deployId | null`, `section | null`, `decision` ∈ `APPROVE | NEEDS_CHANGES | DISCARD | FEEDBACK_ONLY | RAISED_STATE_CHOICE | OWNER_APPROVED_FOR_PRODUCTION | MANIFEST_OBSERVED`, `raisedStateChoice | null`, `feedback | null`, `actor`, `composedFrom: string[] | null`, `createdAt`, `manifest { prompt3Status, reviewState, stagingBoundary, reportedAt }`. `MANIFEST_OBSERVED` rows are the Admin's own note that it saw a manifest (one per SHA × status change) so "last observed" survives a restart; they never gate. No foreign key, no join, no OCD id, nothing reader-visible.
+- **Files of the additive set:** `lib/control-plane/software-release-review.ts` (new), `repository/types.ts` (+1 field), `repository/pg-schema.ts` (+1 log, version 8), `repository/memory.ts`, `repository/file-store.ts`, `repository/pg-store.ts` (+1 line each), `tests/control-plane-conformance.test.ts` (the version pin 7 → 8 and the new log in its loops). Every other table and statement is byte-identical.
+- **Rows, as written by the tests (memory lane; the file lane wrote the same bytes to a temp directory):**
+
+```text
+key aaaaaaaa…  id aaaa…:APPROVE:map-movement:2026-09-06T09:00:01.000Z  decision APPROVE  feedback "looks right"  actor session:adm_test  manifest.prompt3Status VISUAL_WORK_IN_PROGRESS
+key aaaaaaaa…  id aaaa…:FEEDBACK_ONLY:pearl:2026-09-06T09:00:02.000Z    decision FEEDBACK_ONLY  feedback "pill contrast"
+key aaaaaaaa…  id aaaa…:NEEDS_CHANGES:map-movement:2026-09-06T09:00:03.000Z  decision NEEDS_CHANGES  (supersedes the APPROVE for gating; the APPROVE row stays)
+key aaaaaaaa…  id aaaa…:OWNER_APPROVED_FOR_PRODUCTION:-:…  decision OWNER_APPROVED_FOR_PRODUCTION  raisedStateChoice A_SOFT_LIFT  composedFrom [5 APPROVE row ids, 1 RAISED_STATE_CHOICE row id]
+```
+
+- **Where it was proven, honestly:** the memory and file lanes of the conformance suite and the Pass B tests (append, read by SHA, `keys()`, `readAll()`, idempotent retry, `AppendOnlyViolation` on a rewrite). The Postgres lane is **NOT RUN** on this machine — the repository's own pattern runs it only against `WTP_CONTROL_PLANE_TEST_DATABASE_URL`, which `.env.local` does not name; `psql` and `docker` are absent and no embedded Postgres is a dependency, so no ephemeral local database could be stood up without adding a dependency outside the boundary. The DDL is proven statically (the schema module's own tests and the B7 test read the emitted statements). **Not applied** to any Neon endpoint: applying happens when the runner bootstraps after the owner's merge.
+
+## B6. FOLLOW-UP and OBSERVATION — Pass B
+
+FOLLOW-UP (recorded, not done):
+
+1. **Staging is password-gated at Netlify's edge**, so the Admin cannot read the manifest at all until either the gate is lifted for the manifest path or the Admin is given the gate's cookie. The reader supports an optional `WTP_STAGING_MANIFEST_COOKIE` (a Cookie header sent to the staging origin only, read by name, never rendered) as the smallest hook; whether to set it, or to exempt `/api/release-manifest` from the password, is Prompt 3's and the owner's call. Until then the page reads `MANIFEST_UNAVAILABLE` in production. Capture: `unavailable-dark-1280-banner.png`.
+2. **The control plane must reach schema v8** before the review store can be written: the runner's next bootstrap after the merge creates the table. Until then the page names the missing table and disables every write. The local `control-plane:gate` reads the live database at v7 against the code's v8 and REFUSES (`control-plane:gate · REFUSED — 2 problem(s): 1 declared table(s) are absent: cp_log_software_release_reviews … the database is at schema version 7 and this module declares 8`, run with `.env.local` loaded at 2026-09-06T09:12Z (`.scratch/cp-gate-passb.log`); inside `pnpm gates` the same gate prints NOT_CONFIGURED and exits 0, because the gate runner's shell carries no control-plane URL — a state, not a pass, and the record says so); CI's gate has no control-plane URL and reports NOT_CONFIGURED. RULING 277: an unmet proof blocks activation, not merge, when the code is inert and guarded — and it is.
+3. **The review-ready value is not emitted yet.** The composite keys on `prompt3Status === "READY_FOR_REVIEW"` (falling back to `reviewState`) — the brief's value; the source on `test` emits only `VISUAL_WORK_IN_PROGRESS` / `BLOCKED_STAGING_BOUNDARY`. When Prompt 3 adds the terminal value, the page needs no change if it is that string; if a different string is chosen, one constant (`REVIEW_READY_STATUS`) moves. Reported to Prompt 3 via this section.
+
+OBSERVATION (for Prompt 3 and the owner; reported, not acted on):
+
+- The manifest's section named `theme` is enumerated in `lib/review/contract.ts` on `test` ("Theme behavior"), so all five required sections are exposed by the real contract; the local stub omitted it deliberately to render the `NOT_YET_REVIEWABLE` state.
+- `raisedState.candidates[*].arizona/newJersey` dark/light deep links exist in the contract; the Admin renders only each candidate's primary `url` (staging origin only) and the section links — no fabricated deep links, and the extra per-state links are visible under the raw manifest disclosure only when the manifest carries something the page does not model.
+- `ownership.baselineChangeProtocol` on `test` asks that Prompt 3 be notified before a `main` merge changes the reader/staging dependency set. This PR changes no reader or staging file; it adds one control-plane table and admin surfaces.
+- Default taken (standing ruling 2): persistence in the control-plane store through its bootstrap-DDL pattern, not a Drizzle migration.
+- Default taken (standing ruling 5): the observed-state rendered-DOM proof used a local stub of the contract because the live manifest is unreachable; the committed code points only at `https://test.meanwhileusa.com/api/release-manifest`.
+- The local "Refresh manifest" click was refused by the route's origin check when Chromium sent `http://localhost:3100` as the Origin (the check wants the admin origin, as it should); the walk then sent the admin origin explicitly (landed on `/admin/release-review?notice=REFRESHED` with the status line "The manifest was fetched again."), and the route's own test proves the 303 redirect.
+- No code path in Pass B invokes `git`, `gh`, GitHub's API, Netlify's API or a deploy hook. Grep of the Pass B diff for `child_process|execSync|spawn|octokit|api.github.com|netlify|deploy|git ` returns: nothing for `child_process|execSync|spawn|octokit|api.github.com|netlify`; the words `deploy` and `git` occur only as the `deployId` field, the doc comments "a full 40-hex git SHA" and "merges, pushes, deploys and promotes nothing", and the test constant `DEPLOY_X`.
+
+## B7. Boundary, build, gates, PR
+
+Verbatim `git diff --stat main...admin/pass-a` after the Pass B commit:
+
+```text
+ .gitignore                                         |   6 +
+ app/(admin)/admin/page.tsx                         |  90 +++-
+ app/(admin)/admin/release-review/contract.ts       |  84 ++++
+ app/(admin)/admin/release-review/copy-button.tsx   |  27 +
+ .../admin/release-review/manifest-source.ts        | 125 +++++
+ app/(admin)/admin/release-review/manifest.ts       | 194 ++++++++
+ app/(admin)/admin/release-review/page.tsx          | 495 +++++++++++++++++++
+ app/(admin)/admin/release-review/review-model.ts   | 257 ++++++++++
+ app/(admin)/admin/release-review/write.ts          | 224 +++++++++
+ app/(admin)/admin/research/page.tsx                |  17 +-
+ app/(admin)/admin/research/worker-fleet-panel.tsx  |  22 +-
+ app/(admin)/charts.tsx                             |  12 +-
+ app/(admin)/console-nav.tsx                        |   6 +-
+ app/(admin)/fleet-wording.ts                       |  93 ++++
+ app/(admin)/layout.tsx                             | 182 +++++--
+ app/(admin)/readiness/[state]/page.tsx             |  19 +-
+ app/(admin)/readiness/[state]/readiness-panel.tsx  |  31 +-
+ app/(admin)/readiness/[state]/styles.ts            |  37 +-
+ app/api/admin/release-review/route.ts              | 102 ++++
+ data/ops/gate-runs/2026-09-06-01.json              | 228 +++++++++
+ data/ops/gate-runs/2026-09-06-02.json              | 226 +++++++++
+ data/ops/gate-runs/2026-09-06-03.json              | 226 +++++++++
+ docs/evidence/admin-pass-a-session.md              | 425 ++++++++++++++++
+ docs/log.md                                        |  15 +-
+ docs/tracker-opened.json                           |  10 +
+ docs/tracker-owner-view.md                         | 207 +++++---
+ docs/tracker-reconciliation.json                   |  42 +-
+ docs/tracker-working.csv                           |   8 +-
+ docs/tracker.md                                    |  16 +-
+ docs/tracker.xlsx                                  | Bin 822999 -> 824562 bytes
+ lib/control-plane/repository/file-store.ts         |   3 +
+ lib/control-plane/repository/memory.ts             |   3 +
+ lib/control-plane/repository/pg-schema.ts          |  17 +-
+ lib/control-plane/repository/pg-store.ts           |   3 +
+ lib/control-plane/repository/types.ts              |  11 +
+ lib/control-plane/software-release-review.ts       |  70 +++
+ lib/tracker/registry.mjs                           |  74 +++
+ tests/admin-readiness-cell-state.test.ts           | 424 ++++++++++++++++
+ tests/admin-release-review.test.ts                 | 550 +++++++++++++++++++++
+ tests/control-plane-conformance.test.ts            |   6 +-
+ tests/guard-census.json                            |  19 +-
+ 41 files changed, 4402 insertions(+), 204 deletions(-)
+```
+
+Build (`pnpm build`, the last full build of the branch): `build` PASS (22 s) and `build:standalone` PASS (31 s) inside the gate set at 2026-09-06T09:08–09:14Z on the committed code (`MANIFEST_URL` = the staging origin); the earlier local-proof build (`.scratch/build-passb2.log`, `Compiled successfully`) is the one the rendered-DOM captures came from.
+
+Gate set (`pnpm gates`):
+
+```text
+local gates — the set CI requires (RULING 155) · 2026-09-06T09:08:16Z → 09:14:54Z · record data/ops/gate-runs/2026-09-06-03.json
+
+  gate                 CI job                        result
+  lint                 gates (test · lint · tsc)     PASS (46s)
+  tsc                  gates (test · lint · tsc)     PASS (33s)
+  governance:check     gates (test · lint · tsc)     PASS (3s)
+  orchestration:check  gates (test · lint · tsc)     PASS (1s)
+  method:check         gates (test · lint · tsc)     PASS (1s)
+  control-plane:gate   gates (test · lint · tsc)     PASS (1s)   ← NOT_CONFIGURED in the runner's shell; with .env.local loaded: REFUSED, applied 7 vs declared 8 (§B6 item 2)
+  state-holdings:check gates (test · lint · tsc)     PASS (5s)
+  state-manifest       gates (test · lint · tsc)     PASS (62s)
+  feedback:sweep       gates (test · lint · tsc)     PASS (1s)
+  assert:browser       gates (test · lint · tsc)     PASS (1s)
+  test                 gates (test · lint · tsc)     PASS (181s)
+  db:gate              gates (test · lint · tsc)     PASS (2s)
+  release:freeze       gates (test · lint · tsc)     PASS (3s)
+  build                build (default)               PASS (22s)
+  test:bundle          build (default)               PASS (2s)
+  build:standalone     build (standalone)            PASS (31s)
+
+16 of 16 gates green
+  suite denominator: 5577 tests registered (5576 pass, 0 fail, 1 skipped) — this run, this environment
+```
+
+Auth-rejection test output (verbatim from `tests/admin-release-review.test.ts`):
+
+```text
+✔ B7: the review page and route are 404 on the public host and refuse a missing session and a foreign origin
+ℹ tests 36 · pass 36 · fail 0   (tests/admin-release-review.test.ts + tests/control-plane-conformance.test.ts, run alone)
+
+asserted, in order:
+  GET  /admin/release-review        host meanwhileusa.com                       → 404
+  GET  /api/admin/release-review    host meanwhileusa.com                       → 404
+  GET  /admin/release-review        admin host, no session                      → 307 → /admin/login
+  POST /api/admin/release-review    public host, session + admin origin         → 404
+  POST /api/admin/release-review    admin host, session, origin meanwhileusa.com → 403  (a foreign origin is refused)
+  POST /api/admin/release-review    admin host, admin origin, no session        → 401  (no session is refused inside the handler too)
+  GET  /api/admin/release-review    admin host, no session                      → 401  (the read route needs the session as well)
+  GET  /api/admin/release-review    public host                                 → 404
+  POST action=REFRESH               admin host, session, admin origin           → 303 → /admin/release-review?notice=REFRESHED
+```
+
+PR: https://github.com/SeanJ22/meanwhile/pull/288 — updated, not merged. Pass B commit: `b93d2ad3f08f086d638f3a597f2b775c8a4cdd3f`. Nothing pushed to `test`. Merging remains the owner's action: a `main` push deploys production and, at the runner's next bootstrap, applies the v8 DDL.

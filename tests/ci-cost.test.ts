@@ -272,16 +272,34 @@ const EXPENSIVE_STEPS: readonly string[] = [
   "- name: Release freeze (refuses a release on a DEGRADED production reading)",
 ];
 
-/** The `if:` of the step whose `- name:` line is `header`, or null when it has none. */
+/**
+ * The `if:` of the step whose `- name:` line is `header`, or null when it has none.
+ *
+ * A folded scalar (`if: >-` and continuation lines) is joined back into one
+ * expression. Reading only the first line returned the literal `>-`, which
+ * silently made a real condition look absent — the shape this file exists to
+ * refuse, committed by its own reader.
+ */
 function conditionOf(source: string, header: string): string | null {
   const at = source.indexOf(header);
   if (at < 0) return null;
-  const block = source.slice(at, at + 600);
-  const line = block.split("\n").slice(1).find((l) => l.trimStart().startsWith("if:"));
+  const block = source.slice(at, at + 900);
+  const lines = block.split("\n").slice(1);
   // Stop at the next step rather than reading into it.
-  const nextStep = block.indexOf("\n      - ", 1);
-  if (line && nextStep > 0 && block.indexOf(line) > nextStep) return null;
-  return line ? line.trim().slice(3).trim() : null;
+  const end = lines.findIndex((l) => /^ {6}- /.test(l));
+  const own = end >= 0 ? lines.slice(0, end) : lines;
+  const i = own.findIndex((l) => l.trimStart().startsWith("if:"));
+  if (i < 0) return null;
+  const first = own[i].trim().slice(3).trim();
+  if (!/^[>|][-+]?$/.test(first)) return first;
+  const indent = own[i].length - own[i].trimStart().length;
+  const folded: string[] = [];
+  for (const l of own.slice(i + 1)) {
+    if (l.trim() === "") continue;
+    if (l.length - l.trimStart().length <= indent) break;
+    folded.push(l.trim());
+  }
+  return folded.join(" ");
 }
 
 test("RULING 278 — Build Check classifies before any expensive step, in every job", () => {
@@ -353,6 +371,52 @@ test("RULING 278 — the post-deploy observer consumes the same classifier, befo
   assert.ok(
     text.includes("- name: Non-shipping commit — no deployment can result"),
     "the observer must SAY it classified the commit and exited, not vanish",
+  );
+});
+
+test("RULING 278 — every step needing an install is gated on the CLASSIFICATION, not on a step output", () => {
+  /*
+   * MEASURED ON RUN 34001422006, and this is why the assertion exists rather
+   * than a comment. `Commit the reading` was guarded only by
+   * `steps.observe.outputs.observer_exit == '0'`. GitHub coerces `==` operands
+   * to NUMBERS where it can, a SKIPPED step's output is the empty string, and
+   * `'' == '0'` is TRUE — so on the cheap path, with the observer skipped, the
+   * step RAN. It exited at `git diff --quiet` and cost nothing that time; the
+   * next line was `pnpm status:ledger`, in a job that had deliberately not
+   * installed.
+   *
+   * The rule this pins: a step that cannot run without `node_modules` is gated
+   * on the classifier's own output, never on the output of a step that may not
+   * have run.
+   */
+  const text = workflow(POST_DEPLOY);
+  const needsInstall = [
+    "- name: Enable corepack (pnpm pinned by packageManager)",
+    "- name: Install",
+    "- name: Observe the deploy and take the post-deploy reading",
+    "- name: Commit the reading",
+  ];
+  const naked: string[] = [];
+  for (const step of needsInstall) {
+    const cond = conditionOf(text, step);
+    if (!cond || !cond.includes("steps.cost.outputs.deploy != 'cancel'")) {
+      naked.push(`${step} → ${cond ?? "(no if:)"}`);
+    }
+  }
+  assert.deepEqual(
+    naked,
+    [],
+    "these steps need node_modules and are not gated on the classification, so they would run " +
+      `on the cheap path where nothing was installed:\n${naked.join("\n")}`,
+  );
+
+  // `Name the cause` is the one exception, and it is gated on the OUTCOME of a
+  // step rather than its output — `skipped` is a real value there, so the
+  // coercion trap above does not apply.
+  const diagnose = conditionOf(text, "- name: Name the cause");
+  assert.ok(
+    diagnose && diagnose.includes("steps.observe.outcome != 'skipped'"),
+    `the diagnoser must not run when there was no observation (if: ${diagnose ?? "none"})`,
   );
 });
 

@@ -224,8 +224,23 @@ jobs:
       # The diff is re-checked at commit time, so an unchanged record never
       # produces an empty commit — and a run whose reading did not move costs no
       # commit, no push and no build.
+      #
+      # `steps.cost.outputs.deploy != 'cancel'` IS LOAD-BEARING, and it is here
+      # because run 34001422006 proved it is. (RULING 278, measured 2026-09-06.)
+      #
+      # **GitHub coerces `==` operands to NUMBERS when it can.** A SKIPPED step's
+      # output is the empty string, and `'' == '0'` is therefore TRUE — so with
+      # the observer skipped on the cheap path, this step RAN. It survived only
+      # because `git diff --quiet` found nothing and exited first; had the tree
+      # differed at all it would have reached `pnpm status:ledger` in a job that
+      # deliberately never installed, and turned a correct cheap skip into a red
+      # observer. A guard on a step output is not a guard against that step being
+      # skipped.
       - name: Commit the reading
-        if: steps.observe.outputs.observer_exit == '0' && inputs.dry_run != true
+        if: >-
+          steps.cost.outputs.deploy != 'cancel' &&
+          steps.observe.outputs.observer_exit == '0' &&
+          inputs.dry_run != true
         env:
           PUSH_DEPLOY_KEY: ${{ secrets.PUSH_DEPLOY_KEY }}
         run: |

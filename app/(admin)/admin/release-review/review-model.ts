@@ -203,7 +203,7 @@ export function buildReviewModel(input: ModelInput): ReviewModel {
       detail: manifest
         ? keyedOn === null
           ? "the manifest carries neither prompt3Status nor reviewState"
-          : `${keyedOn} = ${manifest.prompt3Status ?? manifest.reviewState ?? "absent"}`
+          : `${keyedOn} = ${manifest[keyedOn] ?? "absent"}`
         : "no manifest observed",
     },
     { name: "review store reachable", ok: store.ok, detail: store.ok ? "rows read" : store.detail },

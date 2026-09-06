@@ -64,7 +64,7 @@ export interface ObservedManifest {
   readonly sections: readonly ManifestSection[] | null;
   readonly raisedState: { readonly status: string | null; readonly candidates: readonly ManifestCandidate[] | null } | null;
   readonly unknownFields: readonly UnknownField[];
-  /** True when `prompt3Status` (or, failing that, `reviewState`) equals the review-ready value. */
+  /** True when `reviewState` (or, when absent, `prompt3Status`) equals the review-ready value. */
   readonly reviewReady: boolean;
   /** Which field the readiness was read from. */
   readonly readinessKeyedOn: "prompt3Status" | "reviewState" | null;
@@ -150,8 +150,8 @@ export function parseManifest(raw: unknown): ObservedManifest | null {
   const shaValue = str(root.sha) ?? (build ? str(build.sha) : null);
   const prompt3Status = str(root.prompt3Status);
   const reviewState = str(root.reviewState);
-  const readinessKeyedOn = prompt3Status !== null ? "prompt3Status" : reviewState !== null ? "reviewState" : null;
-  const readiness = readinessKeyedOn === "prompt3Status" ? prompt3Status : readinessKeyedOn === "reviewState" ? reviewState : null;
+  const readinessKeyedOn = root.reviewState !== undefined ? "reviewState" : prompt3Status !== null ? "prompt3Status" : null;
+  const readiness = readinessKeyedOn === "reviewState" ? reviewState : readinessKeyedOn === "prompt3Status" ? prompt3Status : null;
   const isolation = obj(root.isolation);
   const raised = obj(root.raisedState);
   const unknownFields: UnknownField[] = [];

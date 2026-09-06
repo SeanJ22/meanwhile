@@ -25,7 +25,7 @@ import { useState, useTransition } from "react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
 
-export type ConsoleView = "pilot-health" | "readiness" | "research";
+export type ConsoleView = "pilot-health" | "readiness" | "research" | "release-review";
 
 /** The path each view lives at. The readiness view is per state. */
 function pathFor(view: ConsoleView, state: string): string {
@@ -34,6 +34,8 @@ function pathFor(view: ConsoleView, state: string): string {
       return `/readiness/${state}`;
     case "research":
       return "/admin/research";
+    case "release-review":
+      return "/admin/release-review";
     default:
       return "/admin";
   }
@@ -43,6 +45,7 @@ const VIEW_LABEL: Record<ConsoleView, string> = {
   "pilot-health": "Pilot health",
   readiness: "State readiness",
   research: "Research detail",
+  "release-review": "Software release review",
 };
 
 export function ConsoleNav(props: {
@@ -104,6 +107,7 @@ export function ConsoleNav(props: {
           <option value="pilot-health">{VIEW_LABEL["pilot-health"]}</option>
           <option value="readiness">{VIEW_LABEL.readiness}</option>
           <option value="research">{VIEW_LABEL.research}</option>
+          <option value="release-review">{VIEW_LABEL["release-review"]}</option>
         </select>
       </label>
 

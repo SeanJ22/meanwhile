@@ -1,8 +1,8 @@
 {
-  "generated": "2026-09-05",
+  "generated": "2026-09-06",
   "ruling": "RULING 227",
   "openedDateProvenance": {
-    "opened-ledger": 450,
+    "opened-ledger": 457,
     "session-label": 243,
     "unrecoverable": 225
   },
@@ -60,6 +60,10 @@
       "NS19",
       "NS22",
       "NS23",
+      "NS24",
+      "NS25",
+      "NS26",
+      "NS27",
       "NW11",
       "OWN01",
       "OWN02",
@@ -97,7 +101,7 @@
   },
   "summary": {
     "predicates": 2,
-    "notMachineVerifiable": 73,
+    "notMachineVerifiable": 77,
     "holds": 1,
     "resolved": 0,
     "cannotTell": 1
@@ -536,6 +540,38 @@
       "kind": "NOT_MACHINE_VERIFIABLE",
       "verdict": "HOLDS",
       "why": "NS23 is marked NOT_MACHINE_VERIFIABLE and carries a decision card. It waits on the author's judgement, which no artifact can supply.",
+      "read": [],
+      "evidence": []
+    },
+    {
+      "rowId": "NS24",
+      "kind": "NOT_MACHINE_VERIFIABLE",
+      "verdict": "HOLDS",
+      "why": "NS24 is marked NOT_MACHINE_VERIFIABLE and carries a decision card. It waits on the author's judgement, which no artifact can supply.",
+      "read": [],
+      "evidence": []
+    },
+    {
+      "rowId": "NS25",
+      "kind": "NOT_MACHINE_VERIFIABLE",
+      "verdict": "HOLDS",
+      "why": "NS25 is marked NOT_MACHINE_VERIFIABLE and carries a decision card. It waits on the author's judgement, which no artifact can supply.",
+      "read": [],
+      "evidence": []
+    },
+    {
+      "rowId": "NS26",
+      "kind": "NOT_MACHINE_VERIFIABLE",
+      "verdict": "HOLDS",
+      "why": "NS26 is marked NOT_MACHINE_VERIFIABLE and carries a decision card. It waits on the author's judgement, which no artifact can supply.",
+      "read": [],
+      "evidence": []
+    },
+    {
+      "rowId": "NS27",
+      "kind": "NOT_MACHINE_VERIFIABLE",
+      "verdict": "HOLDS",
+      "why": "NS27 is marked NOT_MACHINE_VERIFIABLE and carries a decision card. It waits on the author's judgement, which no artifact can supply.",
       "read": [],
       "evidence": []
     },

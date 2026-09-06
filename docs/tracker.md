@@ -14,8 +14,8 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **433 open**, 488 resolved.
-- **75 waiting on Sean** — the first section below.
+- **437 open**, 488 resolved.
+- **79 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **5**
   - New Hampshire hunt — **2**
@@ -36,7 +36,7 @@ and when. Nothing is ever deleted.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**75 open · 74 resolved.**
+**79 open · 74 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -173,6 +173,14 @@ Only Sean closes a row here. A session may open one and may work it.
 **NS18** — You asked whether Mark Kelly's two sources are capped or filtered. NEITHER. sourceCountLabel is computed from the same array the tab maps over, so the stated N equals the rendered rows by construction; mergeSources merges by (org, url), which is a dedupe of identical publishers rather than a cap; and there is no slice, limit or threshold anywhere in the path. The 2 is a true count of what the tab was handed, and personCardSources is handed exactly two things: the identity spine, and the congress-legislators directory. THE GAP, and it is a design question rather than a defect: his card also renders CAMPAIGN MONEY from the FEC and a VOTING RECORD from roll calls, and both cite their own publisher inline at the claim rather than joining the Sources tab. So the tab is honest about what it was given and is not a complete list of what the card is sourced from. THE QUESTION: should the Sources tab be (a) the card's COMPLETE citation list, which means passing the FEC and the roll-call publishers into it, or (b) what it is now — the identity sources, with each section citing its own? (a) makes the count larger and more useful; (b) keeps every citation next to the claim it supports.
 
 **NS19** — Built nothing, as the brief directs. THE EVIDENCE: the ballot page at 07866 now carries THREE pill treatments in one screen. (1) The two top pills — Narrow this to where you live, Moving here? Know the basics — at 40px tall, lavender-tinted, 1px border, semibold, added this session for BAL-11. (2) The election-box pills — Where can I vote?, Check whether you're registered — taller, more saturated lavender, and set on their own lines rather than in a row. (3) View Battlecard, now deep navy and filled, 522px wide, one per candidate. A fourth exists on the map: the two map pills, which this session made agree with each other for WGH-9 at 224x42 with a mono face. THE PROPOSAL: one pill scale with three named roles — PRIMARY (filled, the one thing a surface most wants done: View Battlecard, Speak Your Mind), SECONDARY (tinted outline, a real action that is not the main one: the top two, the election box's two), and COUNT (mono, a readout that happens to be pressable: the map's meetings and who-governs pills). Same height and padding within a role, at every surface. THE QUESTION: is that the right three roles, and do you want the election-box pair to become a ROW like the top two, or stay stacked?
+
+**NS24** — On State readiness the summary tile for reader-visible jurisdictions says, in the publisher's words, that SHOWN_TO_READER is NOT_WALKED. Those are machine codes on the owner's primary surface. The sentence is written by the readiness publisher (lib/control-plane/readiness), outside the Admin boundary, so Admin Pass A recorded it rather than rewording it.
+
+**NS25** — The Decisions section renders all waiting cards in full — 74 at the time of the walk — so the page is 35,425 px tall at 1280 px wide and 56,419 px at 390 px. Every count reconciles and nothing is broken; the question is hierarchy: a collapsed list with one card open, or a priority filter, would shorten the read. That is a taste call, not a defect, so Admin Pass A recorded it.
+
+**NS26** — At 390 px the attempt tables, the metric tables and the zip table now scroll horizontally inside their own containers (Admin Pass A wrapped them so the page itself never scrolls sideways). A stacked, one-record-per-card layout at narrow widths would read better on a phone. That is a redesign, not a breakage, so it is recorded for a ruling.
+
+**NS27** — Pilot health shows obligations by state summing to 2,996 and by provider summing to 2,991, both from the published owner snapshot, with nothing on the page explaining the five. The fleet cards' 'Deployed in' pills also name a ballot measure (Pima County Prop 423) and a proof run as places, because the control plane's whereOf falls back to the work item's subject. Both come from control-plane code outside the Admin boundary; Admin Pass A recorded them.
 
 **RO08** — NOT_MACHINE_VERIFIABLE. Decision card. WHAT IS NEEDED: a choice of dispatch ceiling and cycle interval for the pilot runner. THE STATE: 2,996 standing obligations, roughly 2,900 due at any moment because most have never been discharged, and 1,144 with open occurrences; each cycle starts at most 100 (scripts/pilot-runner.mts --max, default 100) and cycles are 60 minutes apart, so the backlog drains at about 100 per hour and a full first pass over the corpus takes more than a day of unattended cycles. OPTIONS: (A) keep 100/hour - lowest load on publishers and on Neon, slowest drain; (B) raise --max to 300 with the same interval - three times the drain, three times the Neon round trips and publisher requests per cycle, cycle time roughly triples and must stay inside the 20-minute child ceiling; (C) shorten --interval to 30 minutes at 100 - same per-cycle cost, twice the drain. CONSEQUENCE OF NOT DECIDING: (A) stands; nothing is stuck, only slow. The per-host spacing and the debt backoff apply under every option, so no choice here can hot-loop a publisher.
 

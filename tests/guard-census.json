@@ -1,9 +1,9 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 529,
-    "named": 5511,
-    "dynamic": 23
+    "files": 530,
+    "named": 5519,
+    "dynamic": 24
   },
   "files": {
     "tests/absence-defaults.test.ts": {
@@ -205,6 +205,18 @@
         "with the flag on, an unreachable incident log REFUSES the break-glass — a correct secret issues nothing"
       ],
       "dynamic": 0
+    },
+    "tests/admin-readiness-cell-state.test.ts": {
+      "names": [
+        "POSITIVE CONTROL: re-appending the #281 reset makes the state check fail",
+        "a cell is keyboard-operable, and its focus ring does not erase the state box",
+        "a monotonicity-violation ring survives on a button cell, over the state fill",
+        "class-wide: a health card's grade band keeps its colour on hover and while focus is inside it",
+        "class-wide: every focusable console control shows a keyboard focus indicator",
+        "every generic control reset lives in the recipe layer; the state classes never do",
+        "the six cell states are one class each, and the grid renders them on a <button>"
+      ],
+      "dynamic": 1
     },
     "tests/admin-research.test.ts": {
       "names": [
@@ -1740,6 +1752,7 @@
         "RULING 278 — every ops-only artifact names guards the cheap path actually runs",
         "RULING 278 — every ops-only entry is an exact file, on disk, with its reason stated",
         "RULING 278 — every ops-only file is written to main by the scheduled pusher that declares it",
+        "RULING 278 — every step needing an install is gated on the CLASSIFICATION, not on a step output",
         "RULING 278 — neither workflow keeps a second path-classification truth table",
         "RULING 278 — no directory-wide skip may be resurrected",
         "RULING 278 — the COMMITTED ops-only artifacts still hold their shape",

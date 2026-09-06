@@ -15,12 +15,14 @@
 import { auditWorkerFleetView, type WorkerFleetMetric, type WorkerFleetReadback } from "@/lib/control-plane/workers/readback.ts";
 import { findingPlain, roleLead, verdictPlain, workItemStatePlain } from "@/lib/control-plane/workers/plain-roles.ts";
 
-import { Name, When } from "../../console-ui.tsx";
+import { Name, When, usd } from "../../console-ui.tsx";
+import { FLEET_GROUP_WORDING, ROLE_GROUP, ROLE_WORDS } from "../../fleet-wording.ts";
 
 function Metric({ value }: { value: WorkerFleetMetric }) {
+  // A dollar figure reads to four places, never as the float it was stored as ($0.09661750000000001 measured on the live page, Admin Pass A).
   return (
     <details className="worker-fleet-metric">
-      <summary>{value.unit === "USD" ? `$${value.value}` : `${value.value} ${value.unit}`} / {value.denominator}</summary>
+      <summary>{value.unit === "USD" ? usd(value.value) : `${value.value} ${value.unit}`} / {value.denominator}</summary>
       <small className="note">
         {value.contract}<br />
         Source: {value.source}<br />
@@ -59,10 +61,19 @@ export function WorkerFleetPanel({ view, candidateNames }: { readonly view: Work
       </p>
       <p className="note">Canonical Attempts, results and queue state, observed <When iso={view.observedAt} />. Open any measurement for its definition and source. Worker verdicts do not authorize reader promotion.</p>
       {view.notices.length > 0 && <ul>{view.notices.map((notice) => <li key={notice}>{notice}</li>)}</ul>}
-      {leads.map(({ role, lead }) => (
+      {leads.map(({ role, lead }) => {
+        // The role as a name, and the fleet group it reports under on Pilot health (Admin Pass A).
+        const roleName = (ROLE_WORDS as Record<string, string>)[role.role] ?? role.role;
+        const groupKey = (ROLE_GROUP as Record<string, keyof typeof FLEET_GROUP_WORDING | null>)[role.role] ?? null;
+        const group = groupKey ? FLEET_GROUP_WORDING[groupKey] : null;
+        return (
         <section key={role.role} className="role-section card" aria-labelledby={`role-${role.role}`}>
           <h3 id={`role-${role.role}`}>
-            {lead.title} <span className="fleet-roles">{role.role.replaceAll("_", " ")}</span>
+            {lead.title}{" "}
+            <span className="fleet-roles" title={role.role}>
+              {roleName}
+              {group ? ` · ${group.name}` : ""}
+            </span>
           </h3>
           <p className="fleet-what">They {lead.job}.</p>
           <p className="role-lead">
@@ -128,7 +139,8 @@ export function WorkerFleetPanel({ view, candidateNames }: { readonly view: Work
             </div>
           )}
         </section>
-      ))}
+        );
+      })}
     </section>
   );
 }

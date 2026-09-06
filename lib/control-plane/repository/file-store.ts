@@ -1,4 +1,5 @@
 import type { WorkerResultRecord } from "../workers/types.ts";
+import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 /**
  * THE DURABLE FILESYSTEM STORE — where "the worker may die" stops being a
  * design intention.
@@ -713,6 +714,8 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     windowRuns: fileAppendOnlyRepository<WindowRunRecord>(resolved, "window-runs"),
     windowIncidents: fileAppendOnlyRepository<WindowIncident>(resolved, "window-incidents"),
     windowIntents: fileAppendOnlyRepository<WindowIntent>(resolved, "window-intents"),
+    /* Software release review (Admin Pass B, schema v8). */
+    softwareReleaseReviews: fileAppendOnlyRepository<SoftwareReleaseReviewRecord>(resolved, "software-release-reviews"),
     budget: budgetRepositoryFrom(
       fileAggregateRepository<BudgetLedger>(resolved, "BudgetLedger", "budget"),
       locks,

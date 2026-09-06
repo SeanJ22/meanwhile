@@ -377,14 +377,14 @@ test("schema v5 declares the four nightly-door logs, and every provider bundle c
   const { APPEND_ONLY_LOGS, BOOTSTRAP_VERSION, DECLARED_TABLES } = await import(
     "../lib/control-plane/repository/pg-schema.ts"
   );
-  assert.equal(BOOTSTRAP_VERSION, 7, "the readiness-snapshots aggregate is an additive schema move");
-  for (const log of ["promotion_pipeline", "window_runs", "window_incidents", "window_intents", "worker_results"]) {
+  assert.equal(BOOTSTRAP_VERSION, 8, "the software-release-reviews log (Admin Pass B, 2026-09-06) is an additive schema move");
+  for (const log of ["promotion_pipeline", "window_runs", "window_incidents", "window_intents", "worker_results", "software_release_reviews"]) {
     assert.ok((APPEND_ONLY_LOGS as readonly string[]).includes(log), `${log} is not declared`);
     assert.ok(DECLARED_TABLES.includes(`cp_log_${log}`), `cp_log_${log} is not a declared table`);
   }
   for (const provider of providers) {
     const repos = await provider.open();
-    for (const field of ["promotionPipeline", "windowRuns", "windowIncidents", "windowIntents", "workerResults"] as const) {
+    for (const field of ["promotionPipeline", "windowRuns", "windowIncidents", "windowIntents", "workerResults", "softwareReleaseReviews"] as const) {
       assert.equal(typeof repos[field]?.append, "function", `${provider.name} bundle lacks ${field}`);
     }
   }

@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-09-06 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **188 sessions.**
+Newest first. **189 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -24,6 +24,17 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **B08** — Read separation agreement before signing · deleted 2026-08-20 by Sean · authority: his note: "This has absolutely nothing to do with this project at all.  Delete this entirely"
 
 ---
+
+## Admin Pass A (2026-09-06) · 2026-09-06
+
+**What it started.** 4 row(s) opened, 4 still open.
+
+- **NS24** — On State readiness the summary tile for reader-visible jurisdictions says, in the publisher's words, that SHOWN_TO_READER is NOT_WALKED. Those are machine codes on the owner's primary surface. The sentence is written by the readiness publisher (lib/control-plane/readiness), outside the Admin boundary, so Admin Pass A recorded it rather than rewording it. *(open)*
+- **NS25** — The Decisions section renders all waiting cards in full — 74 at the time of the walk — so the page is 35,425 px tall at 1280 px wide and 56,419 px at 390 px. Every count reconciles and nothing is broken; the question is hierarchy: a collapsed list with one card open, or a priority filter, would shorten the read. That is a taste call, not a defect, so Admin Pass A recorded it. *(open)*
+- **NS26** — At 390 px the attempt tables, the metric tables and the zip table now scroll horizontally inside their own containers (Admin Pass A wrapped them so the page itself never scrolls sideways). A stacked, one-record-per-card layout at narrow widths would read better on a phone. That is a redesign, not a breakage, so it is recorded for a ruling. *(open)*
+- **NS27** — Pilot health shows obligations by state summing to 2,996 and by provider summing to 2,991, both from the published owner snapshot, with nothing on the page explaining the five. The fleet cards' 'Deployed in' pills also name a ballot measure (Pima County Prop 423) and a proof run as places, because the control plane's whereOf falls back to the work item's subject. Both come from control-plane code outside the Admin boundary; Admin Pass A recorded them. *(open)*
+
+**Needs Sean.** NS24, NS25, NS26, NS27
 
 ## refresh-liveness-closure-nonhunt · 2026-09-05
 

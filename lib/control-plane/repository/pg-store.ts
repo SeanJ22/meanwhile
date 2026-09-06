@@ -1,4 +1,5 @@
 import type { WorkerResultRecord } from "../workers/types.ts";
+import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 /**
  * **THE POSTGRES CONTROL-PLANE PROVIDER.** (Session B, W3.1. RULING 220.)
  *
@@ -552,6 +553,8 @@ export async function createPgRepositories(
     windowRuns: pgAppendOnlyRepository<WindowRunRecord>(sql, "window_runs"),
     windowIncidents: pgAppendOnlyRepository<WindowIncident>(sql, "window_incidents"),
     windowIntents: pgAppendOnlyRepository<WindowIntent>(sql, "window_intents"),
+    /* Software release review (Admin Pass B, schema v8). */
+    softwareReleaseReviews: pgAppendOnlyRepository<SoftwareReleaseReviewRecord>(sql, "software_release_reviews"),
     budget: budgetRepositoryFrom(
       pgAggregateRepository<BudgetLedger>(sql, "BudgetLedger", "cp_budget"),
       locks,

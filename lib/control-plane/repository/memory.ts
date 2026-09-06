@@ -1,4 +1,5 @@
 import type { WorkerResultRecord } from "../workers/types.ts";
+import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 /**
  * THE IN-PROCESS DOUBLE.
  *
@@ -242,6 +243,8 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     windowRuns: memoryAppendOnlyRepository<WindowRunRecord>("window_runs"),
     windowIncidents: memoryAppendOnlyRepository<WindowIncident>("window_incidents"),
     windowIntents: memoryAppendOnlyRepository<WindowIntent>("window_intents"),
+    /* Software release review (Admin Pass B, schema v8). */
+    softwareReleaseReviews: memoryAppendOnlyRepository<SoftwareReleaseReviewRecord>("software_release_reviews"),
     budget: budgetRepositoryFrom(budgetAggregate, locks),
     locks,
     describe: () => "in-memory control-plane repositories (lost when this process ends)",

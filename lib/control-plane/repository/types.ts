@@ -1,3 +1,4 @@
+import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 /**
  * THE CONTROL-PLANE REPOSITORIES — provider-neutral persistence for the state
@@ -602,6 +603,16 @@ export interface ControlPlaneRepositories {
   readonly windowRuns: AppendOnlyRepository<WindowRunRecord>;
   readonly windowIncidents: AppendOnlyRepository<WindowIncident>;
   readonly windowIntents: AppendOnlyRepository<WindowIntent>;
+  /**
+   * SOFTWARE RELEASE REVIEW. (Admin Pass B, 2026-09-06 — schema v8.)
+   *
+   *   softwareReleaseReviews  the owner's decisions on a SOFTWARE BUILD, keyed
+   *                           by the exact staging SHA each was made against.
+   *                           Append-only: a later decision supersedes an
+   *                           earlier one for gating and never deletes it; a
+   *                           new SHA starts with no rows. Joins nothing civic.
+   */
+  readonly softwareReleaseReviews: AppendOnlyRepository<SoftwareReleaseReviewRecord>;
   readonly budget: BudgetRepository;
   readonly locks: LockManager;
   /** What this store is, for a report that must say where the state lives. */

@@ -200,3 +200,9 @@ data/photos/staged/
 # a stable path so the integration owner and the author can open them.
 /docs/evidence/brand-2026-09-01/*.png
 /docs/evidence/brand-2026-09-01/**/*.png
+
+# Admin Pass A (2026-09-06) — the same convention as ITEM J above: the captures the
+# report reads are PNGs, binaries do not go in git (RULING 20), and they live in the
+# worktree at this stable path; the measurements they illustrate are in the report.
+/docs/evidence/admin-pass-a/*.png
+/docs/evidence/admin-pass-b/*.png

@@ -140,10 +140,20 @@ export function DayBars({ days, caption }: { days: readonly { readonly label: st
   const gapPx = 4;
   const h = 48;
   const width = days.length * (w + gapPx);
+  // The end labels are centred on 12px bars and are wider than a bar, so the
+  // drawing gets a margin either side or the last label is cut at the edge
+  // (measured: "Aug 24" 29px wide in a 20px slot, Admin Pass A).
+  const margin = 16;
   return (
     <figure className="chart daybars">
       {caption && <figcaption>{caption}</figcaption>}
-      <svg viewBox={`0 0 ${Math.max(width, 1)} ${h + 14}`} width={Math.max(width, 1)} height={h + 14} role="img" aria-label={days.map((d) => `${d.label} ${d.value}`).join(", ")}>
+      <svg
+        viewBox={`${-margin} 0 ${Math.max(width, 1) + margin * 2} ${h + 14}`}
+        width={Math.max(width, 1) + margin * 2}
+        height={h + 14}
+        role="img"
+        aria-label={days.map((d) => `${d.label} ${d.value}`).join(", ")}
+      >
         {days.map((d, i) => {
           const bh = max === 0 ? 0 : Math.max(1, Math.round((d.value / max) * h));
           return (

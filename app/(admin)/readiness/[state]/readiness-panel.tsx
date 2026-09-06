@@ -8,8 +8,9 @@
  * touches history, because the Next router owns history and an overlay that pushes
  * to it remounts this island and dies on open.
  */
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 
+import { formatCalendarDate } from "@/lib/control-plane/eastern-time.ts";
 import type { Measured } from "@/lib/control-plane/owner-surface.ts";
 import {
   GATE_DEFINITION,
@@ -219,7 +220,8 @@ export function ReadinessPanel(props: {
           <ul>
             {snapshot.monotonicityViolations.map((v, i) => (
               <li key={`${v.capabilityId}:${v.gate}:${i}`}>
-                <code>{v.capabilityId}</code> · {v.gate} — {v.detail}
+                {snapshot.capabilities.find((c) => c.capabilityId === v.capabilityId)?.label ?? v.capabilityId} (
+                <code>{v.capabilityId}</code>) · {(GATE_LABEL as Record<string, string>)[v.gate] ?? v.gate} — {v.detail}
               </li>
             ))}
           </ul>
@@ -304,7 +306,10 @@ function SummaryBand({ snapshot }: { snapshot: ReadinessStateSnapshot }) {
         caption="Since the last full pass"
         gapText={s.timeSinceLastFullPass.held ? null : s.timeSinceLastFullPass.gap.says}
       />
-      <Tile figure={String(s.gatedOnOperatorCount)} caption="Cells gated on you" />
+      <Tile
+        figure={String(s.gatedOnOperatorCount)}
+        caption={`Cells gated on you, of ${snapshot.capabilities.length * GATE_ORDER.length} cells in the grid`}
+      />
     </div>
   );
 }
@@ -378,7 +383,7 @@ function ZipTable(props: {
                 <div className="rq-worstgap">
                   {residentComplete
                     ? "every governing body a resident belongs to is resolved (worst-of)"
-                    : `worst-of: ${STATE_HUMAN[z.worstState]} · least-ready body: ${z.worstGap}`}
+                    : `worst-of: ${STATE_HUMAN[z.worstState]} · least-ready body: ${plainGap(z.worstGap)}`}
                 </div>
               </td>
               <td>
@@ -389,7 +394,12 @@ function ZipTable(props: {
                       style={{ width: `${Math.round(fraction(z.completeness) * 100)}%` }}
                     />
                   </div>
-                  <span className="rq-pct">{Math.round(fraction(z.completeness) * 100)}%</span>
+                  <span
+                    className="rq-pct"
+                    title={`${z.completeness.value} of ${z.completeness.denominator} — ${z.completeness.contract}; denominator from ${z.completeness.denominatorSource}`}
+                  >
+                    {Math.round(fraction(z.completeness) * 100)}%
+                  </span>
                 </div>
                 <div className="rq-worstgap">how far along, weighted by readiness</div>
               </td>
@@ -452,7 +462,7 @@ function EvidenceDrawer(props: {
             {walk.rungs.map((r, i) => (
               <div key={`${r.at}:${i}`} className={`rq-rung ${RUNG_CLASS[r.outcome]}`}>
                 <span className="rq-rung-mark" />
-                <div className="rq-rung-when">{r.at}</div>
+                <div className="rq-rung-when">{rungWhen(r.at)}</div>
                 <div>
                   <strong>{r.path}</strong>
                 </div>
@@ -564,6 +574,15 @@ function plainGap(gap: string): string {
 }
 
 /* --------------------------------------------------------------- helpers */
+
+/**
+ * A rung's stamp as the owner reads it: a bare date is the calendar day it
+ * names, never shifted through UTC; an instant is Eastern time with its year.
+ */
+function rungWhen(at: string): ReactNode {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(at.trim())) return formatCalendarDate(at);
+  return <When iso={at} year />;
+}
 
 function sortZips(zips: readonly ZipRow[], sort: ZipSort): ZipRow[] {
   const arr = [...zips];

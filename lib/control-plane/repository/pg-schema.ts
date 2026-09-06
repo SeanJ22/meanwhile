@@ -36,7 +36,7 @@
  */
 
 /** Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it. */
-export const BOOTSTRAP_VERSION = 7;
+export const BOOTSTRAP_VERSION = 8;
 
 /**
  * The tables, and the shape each one carries.
@@ -171,6 +171,21 @@ export const APPEND_ONLY_LOGS = [
   "window_runs",
   "window_incidents",
   "window_intents",
+  /*
+   * SOFTWARE RELEASE REVIEW. (Admin Pass B, 2026-09-06 — version 8.)
+   *
+   *   software_release_reviews  the owner's decisions on a SOFTWARE BUILD
+   *                             (APPROVE / NEEDS_CHANGES / DISCARD / feedback /
+   *                             the Raised State variant / the composite
+   *                             OWNER_APPROVED_FOR_PRODUCTION), keyed by the
+   *                             exact staging SHA each was made against, plus
+   *                             the Admin's own note that it observed a
+   *                             manifest for that SHA. Append-only, never
+   *                             updated, never deleted, joined to nothing
+   *                             civic. Additive: no existing table or
+   *                             statement moved.
+   */
+  "software_release_reviews",
 ] as const;
 
 /** Every table this schema declares, for the drift check. */

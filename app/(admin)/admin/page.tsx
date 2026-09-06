@@ -111,6 +111,7 @@ import {
   usd,
   usdShort,
 } from "../console-ui.tsx";
+import { FLEET_GROUP_WORDING, ROLE_WORDS, codeWords, roleWords } from "../fleet-wording.ts";
 import { DeployFleet } from "./deploy-fleet.tsx";
 
 /**
@@ -144,12 +145,19 @@ function FleetGroupCard({
   nowIso: string;
   candidateNames: Readonly<Record<string, string>> | undefined;
 }) {
+  // The canonical grouping's own words (Admin Pass A); the control plane's longer sentence stays on hover.
+  const wording = FLEET_GROUP_WORDING[group.key];
   return (
     <section className="fleet-card card" aria-labelledby={`fleet-${group.key}`}>
       <h3 id={`fleet-${group.key}`}>
-        {group.name} <span className="fleet-roles">{group.roles.join(" · ")}</span>
+        {wording.name}{" "}
+        <span className="fleet-roles" title={group.roles.join(" · ")}>
+          {wording.roles}
+        </span>
       </h3>
-      <p className="fleet-what">{group.what}</p>
+      <p className="fleet-what" title={group.what}>
+        {wording.does}
+      </p>
       <div className="fleet-nums">
         <Tile figure={String(group.working.value)} caption={`working now of ${group.working.denominator} recorded`} />
         <Tile figure={String(group.queued.value)} caption={`waiting of ${group.queued.denominator} registered`} />
@@ -173,7 +181,7 @@ function FleetGroupCard({
         <ul className="fleet-latest">
           {group.latest.map((l) => (
             <li key={`${l.role}:${l.at}:${l.subject}`}>
-              {agoText(l.at, nowIso)} · {l.role} · <Name raw={l.subject} candidateNames={candidateNames} /> —{" "}
+              {agoText(l.at, nowIso)} · <span title={l.role}>{ROLE_WORDS[l.role]}</span> · <Name raw={l.subject} candidateNames={candidateNames} /> —{" "}
               <span className={`outcome outcome-${l.outcome.toLowerCase()}`}>{l.outcome.toLowerCase()}</span>
             </li>
           ))}
@@ -210,7 +218,7 @@ function attemptsByDay(attempts: readonly { readonly startedAt: string }[], nowI
 function DecisionCard({ card }: { card: OwnerDecisionCard }) {
   const kind = decisionCardKind(card);
   const meta = [
-    card.priority,
+    `priority ${card.priority}`,
     card.openedOn ? `opened ${card.openedOn}` : "opened on a date the ledger could not recover",
     card.ageDays === null ? "age unknown" : `${card.ageDays} day${card.ageDays === 1 ? "" : "s"} waiting`,
     card.blockedDescendants === null ? null : `${card.blockedDescendants} waiting behind it`,
@@ -621,7 +629,7 @@ export default async function AdminPage() {
           </div>
           <p className="note">
             Last updated <When iso={snapshot.publishedAt} /> by {snapshot.publisher}
-            {snapshot.publishedFromSha ? ` at ${snapshot.publishedFromSha.slice(0, 8)}` : ""}. The runner
+            {snapshot.publishedFromSha ? ` at commit ${snapshot.publishedFromSha.slice(0, 8)}` : ""}. The runner
             republishes this after every cycle while it is running.
           </p>
         </>
@@ -630,9 +638,8 @@ export default async function AdminPage() {
       {/* 2 — THE FLEET */}
       <h2>The fleet — what the workers are doing</h2>
       <p className="note">
-        Hunters are the Scout and Acquirer workers; Detectives are the Detective and Parser
-        workers; Verifiers are Validators; Auditors are the adversarial auditors; Engineers are
-        their own line. Counts are read live from the control plane.{" "}
+        Five groups, each named for what it does: every card says who is in it and what they do.
+        Counts are read live from the control plane.{" "}
         <a href="/admin/research">Instrument detail</a> has every Attempt and every number behind
         these.
       </p>
@@ -721,28 +728,47 @@ export default async function AdminPage() {
         {fleetSafety ? (
           <div className="note">
             <p>
-              <strong>Fleet safety state: {standing.state}</strong>
+              <strong>
+                Fleet safety state: <span title={standing.state}>{codeWords(standing.state)}</span>
+              </strong>
             </p>
             <p>
-              Model spend — cycle {fleetSafety.cycle.modelUsd === null ? "UNMEASURED" : usd(fleetSafety.cycle.modelUsd)} of {usd(fleetSafety.bounds.cycleModelUsd)}; operational night{" "}
-              {fleetSafety.operationalNight.modelUsd === null ? "UNMEASURED" : usd(fleetSafety.operationalNight.modelUsd)} of {usd(fleetSafety.bounds.operationalNightModelUsd)}; rolling 24 hours{" "}
-              {fleetSafety.rolling24Hours.modelUsd === null ? "UNMEASURED" : usd(fleetSafety.rolling24Hours.modelUsd)} of {usd(fleetSafety.bounds.rolling24HourModelUsd)}.
+              Model spend — cycle {fleetSafety.cycle.modelUsd === null ? "not measured" : usd(fleetSafety.cycle.modelUsd)} of {usd(fleetSafety.bounds.cycleModelUsd)}; operational night{" "}
+              {fleetSafety.operationalNight.modelUsd === null ? "not measured" : usd(fleetSafety.operationalNight.modelUsd)} of {usd(fleetSafety.bounds.operationalNightModelUsd)}; rolling 24 hours{" "}
+              {fleetSafety.rolling24Hours.modelUsd === null ? "not measured" : usd(fleetSafety.rolling24Hours.modelUsd)} of {usd(fleetSafety.bounds.rolling24HourModelUsd)}.
             </p>
             <p>
-              Requests {fleetSafety.cycle.requests} of {fleetSafety.bounds.maxProviderRequestsPerCycle}; payload bytes{" "}
-              {fleetSafety.cycle.payloadBytes} of {fleetSafety.bounds.maxPayloadBytesPerCycle}; work dispatched{" "}
-              {fleetSafety.cycle.dispatches} of {fleetSafety.bounds.maxDispatchesPerCycle}; wall time{" "}
-              {fleetSafety.cycle.elapsedMs} ms of {fleetSafety.bounds.maxWallMsPerCycle} ms.
+              Requests {fleetSafety.cycle.requests} of {fleetSafety.bounds.maxProviderRequestsPerCycle}; payload{" "}
+              <span title={`${fleetSafety.cycle.payloadBytes} of ${fleetSafety.bounds.maxPayloadBytesPerCycle} bytes`}>
+                {bytesText(fleetSafety.cycle.payloadBytes)} of {bytesText(fleetSafety.bounds.maxPayloadBytesPerCycle)}
+              </span>
+              ; work dispatched {fleetSafety.cycle.dispatches} of {fleetSafety.bounds.maxDispatchesPerCycle}; wall time{" "}
+              <span title={`${fleetSafety.cycle.elapsedMs} of ${fleetSafety.bounds.maxWallMsPerCycle} ms`}>
+                {durationText(fleetSafety.cycle.elapsedMs)} of {durationText(fleetSafety.bounds.maxWallMsPerCycle)}
+              </span>
+              .
             </p>
             <p>
-              Last successful Fleet activity: {fleetSafety.lastSuccessfulActivity === null ? "not recorded by Fleet yet" : fleetSafety.lastSuccessfulActivity}. Current runner heartbeat: {heartbeat === null ? "not recorded by the runner yet" : heartbeat.beatAt}.
+              Last successful Fleet activity:{" "}
+              {fleetSafety.lastSuccessfulActivity === null ? "not recorded by Fleet yet" : <Said text={fleetSafety.lastSuccessfulActivity} />}. Current
+              runner heartbeat: {heartbeat === null ? "not recorded by the runner yet" : <When iso={heartbeat.beatAt} />}.
             </p>
-            <p>Why work stopped: {fleetSafety.stoppedBecause.length === 0 ? "no stop reason recorded for this cycle" : fleetSafety.stoppedBecause.join("; ")}.</p>
+            <p>
+              Why work stopped:{" "}
+              {fleetSafety.stoppedBecause.length === 0 ? "no stop reason recorded for this cycle" : <Said text={fleetSafety.stoppedBecause.join("; ")} />}.
+            </p>
             <p>
               Provider circuit breakers:{" "}
-              {fleetSafety.providerCircuits.length === 0
-                ? "none"
-                : fleetSafety.providerCircuits.map((c) => `${c.provider} — ${c.condition}; first observed ${c.firstObservedAt}; eligible ${c.eligibleAt}`).join("; ")}.
+              {fleetSafety.providerCircuits.length === 0 ? (
+                "none"
+              ) : (
+                <Said
+                  text={fleetSafety.providerCircuits
+                    .map((c) => `${c.provider} — ${c.condition}; first observed ${c.firstObservedAt}; eligible ${c.eligibleAt}`)
+                    .join("; ")}
+                />
+              )}
+              .
             </p>
             {fleetSafety.deferred.length > 0 && (
               <details>
@@ -907,13 +933,13 @@ export default async function AdminPage() {
                   {freeRows.length > 0 && (
                     <>
                       {" "}
-                      Free by design: {freeRows.map((r) => r.key).join(", ")}.
+                      Free by design: {freeRows.map((r) => roleWords(r.key)).join(", ")}.
                     </>
                   )}
                   {unmeasuredRows.length > 0 && (
                     <>
                       {" "}
-                      Not measured: {unmeasuredRows.map((r) => r.key).join(", ")}.
+                      Not measured: {unmeasuredRows.map((r) => roleWords(r.key)).join(", ")}.
                     </>
                   )}
                 </span>
@@ -927,7 +953,7 @@ export default async function AdminPage() {
               <BarChart
                 caption="Spend by role — measured dollars"
                 rows={spendRows.map((c) => ({
-                  label: c.key,
+                  label: roleWords(c.key),
                   value: c.usd.held ? c.usd.value.value : 0,
                   max: c.usd.held ? c.usd.value.denominator : 0,
                   shown: c.usd.held ? usd(c.usd.value.value) : "—",
@@ -961,11 +987,12 @@ export default async function AdminPage() {
                   key={c.callerKey}
                   value={c.hitRate.held ? c.hitRate.value.value : 0}
                   total={c.hitRate.held ? c.hitRate.value.denominator : 1}
-                  label={`cache hit rate · ${c.callerKey.replace(/ \(.*\)$/, "")}`}
+                  label={`cache hit rate · ${roleWords(c.callerKey.replace(/ \(.*\)$/, ""))}`}
                   shown={`${c.hitRate.held ? Math.round((c.hitRate.value.value / Math.max(c.hitRate.value.denominator, 1)) * 100) : 0}%`}
                 />
               ))}
           </div>
+          <div className="scroll-x">
           <table className="cost">
             <thead>
               <tr>
@@ -984,7 +1011,7 @@ export default async function AdminPage() {
               {snapshot.costByRole.map((c) => (
                 <tr key={c.key} className={`cost-${costRowKind(c).toLowerCase().replace(/_/g, "-")}`}>
                   <td>
-                    {c.key}
+                    <span title={roleWords(c.key) === c.key ? undefined : c.key}>{roleWords(c.key)}</span>
                     {c.meaning && <div className="note">{c.meaning}</div>}
                   </td>
                   <td className="n">
@@ -1002,6 +1029,8 @@ export default async function AdminPage() {
               ))}
             </tbody>
           </table>
+          </div>
+          <div className="scroll-x">
           <table className="cost">
             <thead>
               <tr>
@@ -1032,6 +1061,8 @@ export default async function AdminPage() {
               ))}
             </tbody>
           </table>
+          </div>
+          <div className="scroll-x">
           <table className="cost">
             <thead>
               <tr>
@@ -1042,7 +1073,9 @@ export default async function AdminPage() {
             <tbody>
               {snapshot.cacheHitRateByCaller.map((c) => (
                 <tr key={c.callerKey}>
-                  <td>{c.callerKey}</td>
+                  <td>
+                    <span title={roleWords(c.callerKey) === c.callerKey ? undefined : c.callerKey}>{roleWords(c.callerKey)}</span>
+                  </td>
                   <td className="n">
                     <HeldNum h={c.hitRate} where={`Cost · cache hit rate · ${c.callerKey}`} returnTo={HERE} />
                   </td>
@@ -1069,6 +1102,7 @@ export default async function AdminPage() {
               </tr>
             </tbody>
           </table>
+          </div>
         </>
       )}
       {/*
@@ -1099,6 +1133,7 @@ export default async function AdminPage() {
         </p>
       )}
       {snapshot?.zipRows.held && (
+        <div className="scroll-x">
         <table>
           <thead>
             <tr>
@@ -1121,6 +1156,7 @@ export default async function AdminPage() {
             ))}
           </tbody>
         </table>
+        </div>
       )}
 
       {/* 7 — OWNER INTAKE AND THE DIGEST */}

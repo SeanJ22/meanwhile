@@ -51,7 +51,7 @@ function cost(usd: number | null, recordedAt: string): CostEntry {
     jurisdiction: null,
     project: "fleet",
     role: "ADVERSARIAL_AUDITOR",
-    cost: { inputTokens: 1, outputTokens: 1, usd, durationMs: 1, bytesFetched: null, requestCount: 1 },
+    cost: { inputTokens: 1, outputTokens: 1, usd, durationMs: 1, bytesFetched: null, requestCount: 1, cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null, batch: false },
     recordedAt,
   };
 }

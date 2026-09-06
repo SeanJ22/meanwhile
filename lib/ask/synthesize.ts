@@ -155,8 +155,6 @@ export function synthesisPrompt(pack: EvidencePack): string {
   return [
     "You are answering one resident's question about their government, using ONLY the records supplied below.",
     "",
-    `Today is ${pack.today}.`,
-    "",
     "Rules, all of them absolute:",
     "- Use only the supplied records. You have no other source. If something is not in the records, you do not know it.",
     "- Never state a fact about a government that the records do not contain. Do not fill a gap with what is likely, typical, or what you may remember.",
@@ -272,6 +270,20 @@ export function synthesisQuestionPayload(pack: EvidencePack): string {
 }
 
 /**
+ * **TODAY'S DATE, AS ITS OWN BLOCK AFTER THE LAST BREAKPOINT.** (Prompt-caching
+ * session, 2026-09-06.)
+ *
+ * The sentence is the one the system prompt used to carry, word for word.
+ * It moved because it is the one per-request value that sat in front of every
+ * breakpoint: the system prefix could never be shared across a midnight, and
+ * every cached entry died with the calendar. Nothing about what the model is
+ * told changed — only where in the request the date is said.
+ */
+export function synthesisDateBlock(pack: EvidencePack): string {
+  return `Today is ${pack.today}.`;
+}
+
+/**
  * The pre-caching single blob, kept as the EQUIVALENCE REFERENCE and called by
  * nothing on the live path.
  *
@@ -323,43 +335,43 @@ export function synthesisRequestBody(
     text: synthesisContextPayload(pack),
   };
   /*
-   * **THE BREAKPOINT, AND WHY IT SITS HERE.**
+   * **THE TWO BREAKPOINTS, AND WHY THEY SIT WHERE THEY DO.** (Prompt-caching
+   * session, 2026-09-06.)
    *
    * The cached prefix is `model` + `system` + this first content block:
-   * the constitutional rules, today's date, and the ZIP civic context —
-   * the bound subject, the retrieved records, the named gaps and the
-   * denominators. The reader's QUESTION is the second block, AFTER the
-   * breakpoint, which is the whole mechanism: it is what lets two
-   * questions about one government share a prefix at all.
+   * the constitutional rules, then the ZIP civic context — the bound
+   * subject, the retrieved records, the named gaps and the denominators.
+   * The reader's QUESTION is the last block, AFTER both breakpoints, which
+   * is the whole mechanism: it is what lets two questions about one
+   * government share a prefix at all. Today's date rides with the question
+   * (`synthesisDateBlock`), so the prefix no longer dies at midnight.
    *
-   * There is exactly ONE breakpoint. On 2026-09-01 a second one on the
-   * system block would never fire — the system prompt rendered 1,503
-   * characters = 471 tokens, counted at Anthropic's `count_tokens` endpoint
-   * and identical on `claude-opus-5` and `claude-sonnet-5`, below the
-   * minimum cacheable prefix of BOTH models (512 and 1024), and a prefix
-   * under the minimum caches silently and reports nothing.
+   * The FIRST breakpoint is on the system block. On 2026-09-01 that would
+   * have fired never: the prompt rendered 471 tokens at Anthropic's
+   * `count_tokens` endpoint, under the 512-token minimum of `claude-opus-5`.
+   * ASK-24 (2026-09-02) grew it, and on 2026-09-06 the same endpoint counted
+   * **731 tokens** on `claude-opus-5` — above the floor with room to spare —
+   * so the marker is real: a question that binds a DIFFERENT subject in the
+   * same window still reads the rules from the cache instead of paying for
+   * them. The SECOND breakpoint, at the end of the civic context, is the one
+   * that has been here since H1 and is unchanged.
    *
-   * **ASK-24 (2026-09-02) grew the system prompt to 2,347 characters** — the
-   * definition-first answer contract — which is ~56% larger by character
-   * count and, against the Opus-5 floor of 512, likely now ABOVE it. A
-   * system-block breakpoint could begin to fire on the incumbent model, so
-   * this is a cost OPPORTUNITY; it is still not added, because the
-   * `count_tokens` recount is owed first and a marker that only sometimes
-   * clears the floor reads as a guarantee in the other direction. The one
-   * breakpoint on the reader's question is unchanged.
+   * ITEM K, 2026-09-01: the minimum is a property of the MODEL (1,024 on
+   * `claude-sonnet-5`), which is why the marker on the context block does
+   * not fire for the product's smallest packs on that model. The measurement
+   * and its consequence are in `lib/ask/prompt-cache.ts`; it is a cost fact,
+   * not a correctness one, and it is not fixed here.
    *
-   * ITEM K, 2026-09-01: the minimum is a property of the MODEL and it
-   * doubled when Ask moved to Sonnet 5, which is why the one breakpoint
-   * that survives no longer fires for the product's smallest packs. The
-   * measurement and its consequence are in `lib/ask/prompt-cache.ts`;
-   * it is a cost fact, not a correctness one, and it is not fixed here.
-   *
-   * The marker is ADDED rather than set to a falsy value when caching is off:
-   * `cache_control: undefined` would serialise away in JSON and read the same
-   * on the wire, but it would leave a key in the object that a later reader
-   * could believe was doing something.
+   * The markers are ADDED rather than set to a falsy value when caching is
+   * off: `cache_control: undefined` would serialise away in JSON and read
+   * the same on the wire, but it would leave a key in the object that a
+   * later reader could believe was doing something. With caching off the
+   * system field stays the plain string the comparison seam measures.
    */
   if (shape.cached) context.cache_control = SYNTHESIS_CACHE_TTL.cacheControl;
+  const system: string | { type: "text"; text: string; cache_control: typeof SYNTHESIS_CACHE_TTL.cacheControl }[] = shape.cached
+    ? [{ type: "text", text: synthesisPrompt(pack), cache_control: SYNTHESIS_CACHE_TTL.cacheControl }]
+    : synthesisPrompt(pack);
 
   return {
     model: shape.model,
@@ -419,18 +431,19 @@ export function synthesisRequestBody(
       format: { type: "json_schema", schema: synthesisSchema() },
     },
     /*
-     * **UNCHANGED, BYTE FOR BYTE.** The system field is the front of the
-     * cached prefix and the one thing in this request that must not move.
-     * `thinking` and `output_config.effort` are likewise pinned per route
-     * rather than varied per request — changing either invalidates the
-     * messages cache on every model, and on some models the system cache
-     * with it.
+     * **UNCHANGED, BYTE FOR BYTE, FROM ONE REQUEST TO THE NEXT.** The system
+     * field is the front of the cached prefix and the one thing in this
+     * request that must not move; since 2026-09-06 it carries nothing that
+     * varies by the day. `thinking` and `output_config.effort` are likewise
+     * pinned per route rather than varied per request — changing either
+     * invalidates the messages cache on every model, and on some models the
+     * system cache with it.
      */
-    system: synthesisPrompt(pack),
+    system,
     messages: [
       {
         role: "user",
-        content: [context, { type: "text", text: synthesisQuestionPayload(pack) }],
+        content: [context, { type: "text", text: synthesisDateBlock(pack) }, { type: "text", text: synthesisQuestionPayload(pack) }],
       },
     ],
   };

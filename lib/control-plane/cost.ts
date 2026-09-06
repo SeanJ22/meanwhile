@@ -50,8 +50,62 @@ export const COST_METRICS = [
   "durationMs",
   "bytesFetched",
   "requestCount",
+  /* The prompt-cache metering (2026-09-06). Absent on rows recorded before, which `sumMetric` counts as unmeasured. */
+  "cacheReadInputTokens",
+  "cacheCreationInputTokens",
+  "cacheCreation5mInputTokens",
+  "cacheCreation1hInputTokens",
+  "uncachedInputTokens",
 ] as const;
 export type CostMetric = (typeof COST_METRICS)[number];
+
+/**
+ * **THE PARSER FOR THE CACHE FIELDS, AND THE THREE THINGS A ROW CAN SAY.**
+ * (2026-09-06.)
+ *
+ * The ledger is JSON in an append-only log, so a row written before the cache
+ * fields existed simply lacks the keys. That row is `PREDATES_FIELDS`: nothing
+ * about its cache behaviour was measured, and a digest prints NOT MEASURED for
+ * it by name. A row that carries the keys with `null` values is `UNREPORTED`:
+ * the request ran and the provider reported no usage (a refusal before any
+ * completion). Only a `MEASURED` row contributes token counts to a rate.
+ */
+export type CacheMetering =
+  | { readonly status: "PREDATES_FIELDS" }
+  | { readonly status: "UNREPORTED" }
+  | {
+      readonly status: "MEASURED";
+      readonly cacheReadInputTokens: number;
+      readonly cacheCreationInputTokens: number;
+      /** Null when the response carried the aggregate but no split. */
+      readonly cacheCreation5mInputTokens: number | null;
+      readonly cacheCreation1hInputTokens: number | null;
+      readonly uncachedInputTokens: number;
+      readonly batch: boolean;
+    };
+
+export function cacheMeteringOf(cost: AttemptCost): CacheMetering {
+  const c = cost as Partial<AttemptCost>;
+  if (
+    c.cacheReadInputTokens === undefined ||
+    c.cacheCreationInputTokens === undefined ||
+    c.uncachedInputTokens === undefined
+  ) {
+    return { status: "PREDATES_FIELDS" };
+  }
+  if (c.cacheReadInputTokens === null || c.cacheCreationInputTokens === null || c.uncachedInputTokens === null) {
+    return { status: "UNREPORTED" };
+  }
+  return {
+    status: "MEASURED",
+    cacheReadInputTokens: c.cacheReadInputTokens,
+    cacheCreationInputTokens: c.cacheCreationInputTokens,
+    cacheCreation5mInputTokens: c.cacheCreation5mInputTokens ?? null,
+    cacheCreation1hInputTokens: c.cacheCreation1hInputTokens ?? null,
+    uncachedInputTokens: c.uncachedInputTokens,
+    batch: c.batch === true,
+  };
+}
 
 export interface CostEntry {
   readonly attemptId: string;

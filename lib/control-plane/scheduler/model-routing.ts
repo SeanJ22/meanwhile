@@ -245,23 +245,47 @@ export function fitRepresentation(tool: string, text: string, artifactIds: reado
  * fits this traffic unchanged; the wire form is the bare ephemeral marker.
  */
 export const SCOUT_CACHE_POLICY = {
+  /**
+   * The TTL of every breakpoint this lane sends. Measured 2026-09-06 against
+   * the ledger and the cycle records (prompt-caching session): consecutive
+   * Scout cycles start 70–76 minutes apart (median 76.2 min between the
+   * SCOUT ledger rows of consecutive cycles, 71 min start-to-start between
+   * the runner's cycle records), so a 1-hour entry written by one cycle has
+   * expired before the next cycle could read it; the 2× write price would buy
+   * no cross-cycle read. Inside a cycle the turns are seconds apart and the
+   * concurrent Attempts start together, which the 5-minute entry covers. The
+   * ordering rule the API enforces when a 1h entry IS used — every 1h marker
+   * must precede every 5m marker across tools → system → messages — is
+   * asserted by `tests/scout-prewarm.test.ts` against the message the API
+   * returned that day.
+   */
   ttl: "5m",
   cacheControl: { type: "ephemeral" } as const,
   /**
-   * The four breakpoints, in render order. Explicit rather than the top-level
-   * automatic marker because the prompt has three stability boundaries (tools
-   * never change; the system prompt never changes; the brief changes per
-   * Attempt; the conversation changes per turn) and automatic caching places
-   * exactly one.
+   * WHERE THE MOVING BREAKPOINT LIVES (2026-09-06). `TOP_LEVEL`: the request
+   * carries `cache_control` at the top level and the API places the
+   * breakpoint on the last cacheable block and moves it forward each turn
+   * (accepted HTTP 200 on 2026-09-06, `tests/scout-prewarm.test.ts` records
+   * the shape). `LAST_BLOCK`: the fallback for a platform that rejects the
+   * top-level field — the executor marks the last content block of the newest
+   * user turn itself, which is what this lane did from 2026-09-02 to
+   * 2026-09-06 and what the five instrumented Attempts of that window proved
+   * to read the prefix turn over turn.
+   */
+  movingBreakpoint: "TOP_LEVEL" as "TOP_LEVEL" | "LAST_BLOCK",
+  /**
+   * The breakpoints, in render order. The static prefix (tools + system)
+   * carries explicit markers so it is re-written on the next request if the
+   * cache evicts it and so the pre-warm request can target exactly it; the
+   * conversation carries the moving one.
    */
   breakpoints: [
     "the last tool definition (tools render first; a stable tool list is the widest prefix)",
-    "the system block (tools + system cached together)",
-    "the brief — the first user message, stable for the whole Attempt",
-    "the last content block of the newest user turn, moved forward every turn so turn N reads turns 1..N-1",
+    "the system block (tools + system cached together; the pre-warm's target)",
+    "the moving breakpoint — top-level cache_control, placed by the API on the last cacheable block and moved forward every turn so turn N reads turns 1..N-1",
   ],
-  /** Provider limit; the four above use it exactly. */
+  /** Provider limit; the three above leave one slot spare. */
   maxBreakpoints: 4,
-  /** Below this the provider silently never caches (claude-opus-5, per the reference). Tools + system alone exceed it. */
+  /** Below this the provider silently never caches (claude-opus-5, per the reference). Tools + system alone exceed it (4,586 tokens measured 2026-09-06). */
   minimumCacheablePrefixTokens: 512,
 } as const;

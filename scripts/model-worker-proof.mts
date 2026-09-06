@@ -79,8 +79,11 @@ import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import {
   MODEL_WORKER_MODEL,
   MODEL_WORKER_RATES,
-  usdForUsage,
+  meteredCostFields,
+  priceMeteredUsage,
+  readMeteredUsage,
 } from "../lib/control-plane/model-cost.ts";
+import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 
 loadEnv({ path: join(process.cwd(), ".env.local") });
 
@@ -195,9 +198,7 @@ const modelWorker: DeclaredExecutor = {
           cost: {
             /* The call FAILED, so no usage was reported. Null, not zero — an
                unmeasured field is not a measurement of nothing. */
-            inputTokens: null,
-            outputTokens: null,
-            usd: null,
+            ...ZERO_COST,
             durationMs,
             bytesFetched: body.length,
             requestCount: 1,
@@ -211,10 +212,13 @@ const modelWorker: DeclaredExecutor = {
         usage?: { input_tokens?: number; output_tokens?: number };
         content?: { type?: string; text?: string }[];
       };
+      /* The provider's usage block through the one parser every lane reads it with (2026-09-06). */
+      const metered = readMeteredUsage(body.usage);
       const inputTokens =
-        typeof body.usage?.input_tokens === "number" ? body.usage.input_tokens : null;
-      const outputTokens =
-        typeof body.usage?.output_tokens === "number" ? body.usage.output_tokens : null;
+        metered.uncachedInputTokens === null
+          ? null
+          : metered.uncachedInputTokens + (metered.cacheReadInputTokens ?? 0) + (metered.cacheCreationInputTokens ?? 0);
+      const outputTokens = metered.outputTokens;
       observed = {
         model: body.model ?? "unreported",
         inputTokens,
@@ -250,13 +254,14 @@ const modelWorker: DeclaredExecutor = {
         cost: {
           inputTokens,
           outputTokens,
-          /* Computed from the PROVIDER's counts and a stated rate. Null when
-             the provider reported no usage — a cost over nothing measured is
-             not zero, it is unknown. */
-          usd: usdForUsage(inputTokens, outputTokens),
+          /* Computed from the PROVIDER's five billed quantities and a stated
+             rate (2026-09-06). Null when the provider reported no usage — a
+             cost over nothing measured is not zero, it is unknown. */
+          usd: priceMeteredUsage(MODEL_WORKER_MODEL, metered, "5m").usd,
           durationMs,
           bytesFetched: null,
           requestCount: 1,
+          ...meteredCostFields(metered),
         },
         detail: `the model answered in ${durationMs}ms`,
       };
@@ -266,9 +271,7 @@ const modelWorker: DeclaredExecutor = {
         ranAs: "BOUNDED_MODEL_WORKER" as const,
         kind: "ABORTED" as const,
         cost: {
-          inputTokens: null,
-          outputTokens: null,
-          usd: null,
+          ...ZERO_COST,
           durationMs: Date.now() - started,
           bytesFetched: null,
           requestCount: 1,

@@ -359,7 +359,7 @@ const record: EfficiencyRecord = {
     usdIfPrefixCached,
     denominator: `${measured.length} Attempt(s) with reported usage of ${rows.length} in scope; cache hit rate = cacheRead / (cacheRead + cacheWrite + uncachedInput); usdIfPrefixCached reprices every uncached repeated-prefix token as a cache read at ${frontier?.inputUsdPerMillion ?? "?"} x ${CACHE_RATE_MULTIPLIERS.cacheRead}`,
   },
-  cacheByRole: cacheHitRateByRole(shown),
+  cacheByRole: cacheHitRateByRole({ costs, results: shown }),
   costPerOutcome: costPerUsefulOutcome({
     results: shown,
     candidateCounts: (() => {

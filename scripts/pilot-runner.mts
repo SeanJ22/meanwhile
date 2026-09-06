@@ -45,12 +45,14 @@
  *   WHAT ADVANCED       dispositions, staged entries, and the walls by name
  * ```
  *
- * **The cache hit rate is reported as NOT MEASURED, and that is the honest
- * reading.** `AttemptCost` carries `inputTokens`, `outputTokens`, `usd`,
- * `durationMs`, `bytesFetched` and `requestCount` — there is no field for cache
- * reads or cache writes anywhere in the cost ledger, so no process can compute
- * one. Printing `0%` would assert that every model read missed the cache, which
- * is a measurement nobody took. The digest names the missing field.
+ * **The cache lines come from the cost ledger (2026-09-06).** `AttemptCost`
+ * carries `cacheReadInputTokens`, `cacheCreationInputTokens` with its 5-minute
+ * and 1-hour split, `uncachedInputTokens` and `batch`; the cycle computes the
+ * hit rate, the uncached input per Attempt, the batch share and the dollar
+ * effect of caching per role from its own ledger rows, and the window metrics
+ * compute the same from the same ledger. A row written before the fields
+ * existed prints NOT MEASURED by name — printing `0%` for it would assert that
+ * every model read missed the cache, which is a measurement nobody took.
  *
  * ## Start and stop
  *
@@ -102,8 +104,10 @@ import {
   type ResearchIntent,
   type ResearchIntentRequest,
 } from "../lib/control-plane/scheduler/research-policy.ts";
-import type { ResearchMetrics } from "../lib/control-plane/research-metrics.ts";
+import type { CacheHitRate, ResearchMetrics } from "../lib/control-plane/research-metrics.ts";
+import type { PrewarmOutcome } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import { researchDigestLines } from "../lib/control-plane/research-digest.ts";
+import { costSection } from "../lib/control-plane/pilot-cost-digest.ts";
 import { today } from "./doc-dates.mjs";
 import {
   FLEET_SAFETY_BOUNDS,
@@ -196,8 +200,19 @@ interface RunRecord {
     };
     readonly lanes?: {
       readonly deterministic?: { readonly due?: number; readonly dispatched?: number };
-      readonly model?: { readonly due?: number; readonly dispatched?: number; readonly deferred?: number; readonly deferredBy?: Readonly<Record<string, number>> };
+      readonly model?: {
+        readonly due?: number; readonly dispatched?: number; readonly deferred?: number; readonly deferredBy?: Readonly<Record<string, number>>;
+        /** The cycle's pre-warm of the Scout static prefix (2026-09-06). Null when no Scout was admitted; absent on older records. */
+        readonly prewarm?: PrewarmOutcome | null;
+      };
     } | null;
+    /**
+     * The cache-by-role rows for THIS cycle's cost-ledger rows (2026-09-06),
+     * computed by the cycle from the same ledger the window metrics read, so the
+     * COST section and the RESEARCH METRICS section cannot disagree. Absent on a
+     * record written before.
+     */
+    readonly cacheThisCycle?: readonly CacheHitRate[] | null;
     readonly scouts?: readonly {
       readonly obligationId: string;
       readonly attemptId: string | null;
@@ -291,55 +306,7 @@ function runOneCycle(): {
 
 /* --------------------------------------------------------------- the cost --- */
 
-interface CostLines {
-  readonly lines: readonly string[];
-}
-
-/**
- * The cost section.
- *
- * Read from the run record's own digest lines rather than recomputed, so the
- * console, the run record and the mirrored digest cannot disagree about what a
- * cycle spent — three surfaces, one derivation.
- */
-function costSection(record: RunRecord): CostLines {
-  const digest = record.digest ?? [];
-  const grab = (needle: string): string[] =>
-    digest.filter((l) => l.includes(needle)).map((l) => l.trim());
-
-  const lines: string[] = [];
-  lines.push("## COST");
-  lines.push("");
-  const cost = grab("cost               ");
-  const lanes = digest
-    .filter((l) => /^ {6}(DETERMINISTIC|BOUNDED_MODEL_WORKER)/.test(l))
-    .map((l) => l.trim());
-  lines.push(cost.length > 0 ? `- TOTAL — ${cost[0].replace(/^cost\s+/, "")}` : "- TOTAL — the cycle recorded no cost line, which is a defect in the run record and not a zero");
-  /*
-   * BY ROLE is READ from the record, never asserted. Before Level 1 this line
-   * stated that no SCOUT ran, as a constant; a constant cannot notice the day
-   * it stops being true.
-   */
-  const scouts = record.research?.scouts ?? [];
-  const scoutUsd = scouts.reduce((n, s) => n + (s.cost?.usd ?? 0), 0);
-  const unmeasured = scouts.filter((s) => s.cost?.usd === null || s.cost?.usd === undefined).length;
-  lines.push(
-    scouts.length === 0
-      ? "- BY ROLE — every Attempt this cycle opened under role ACQUIRER (deterministic); no SCOUT Attempt ran this cycle" +
-          (record.research ? "" : " (a record written before Level 1 carries no research section)")
-      : `- BY ROLE — SCOUT ${scouts.length} Attempt(s), $${scoutUsd.toFixed(4)} measured` +
-          (unmeasured > 0 ? ` (${unmeasured} unmeasured — NOT zero)` : "") +
-          `; the rest ACQUIRER (deterministic)`,
-  );
-  for (const lane of lanes) lines.push(`- BY MODEL — ${lane}`);
-  lines.push(
-    "- CACHE HIT RATE — **NOT MEASURED.** `AttemptCost` carries inputTokens, outputTokens, usd, " +
-      "durationMs, bytesFetched and requestCount, and no field anywhere in the cost ledger records " +
-      "a cache read or a cache write. Printing 0% would assert that every model read missed the " +
-      "cache, which is a measurement nobody took. Adding the field is the next move.",
-  );
-  return { lines };
-}
+/* The COST section moved to lib/control-plane/pilot-cost-digest.ts (2026-09-06) so it can be rendered over any run record and tested. */
 
 function laneShare(record: RunRecord): string[] {
   const digest = record.digest ?? [];

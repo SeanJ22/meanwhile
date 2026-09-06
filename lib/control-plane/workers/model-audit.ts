@@ -1,7 +1,7 @@
 import { performance } from "node:perf_hooks";
 import { contentHash } from "../ids.ts";
 import { canonicalJson, type ControlPlaneRepositories } from "../repository/types.ts";
-import { usdForModelUsage } from "../model-cost.ts";
+import { meteredCostFields, priceMeteredUsage, readMeteredUsage, type MeteredUsage } from "../model-cost.ts";
 import { assertStepMayInvokeModel } from "../scheduler/model-routing.ts";
 import { ceilingPermits, RESEARCH_BOUNDS, researchSpendInWindow } from "../scheduler/research-policy.ts";
 import { anthropicTransport, type ModelRequest, type ModelResponse, type ModelTransport } from "../scheduler/scout-executor.ts";
@@ -243,10 +243,16 @@ export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: M
       throw new Error(`AUDIT_PROVIDER_FAILURE:${status}; usage NOT MEASURED`);
     });
     signal.throwIfAborted();
-    const count = (value: unknown): number | null => typeof value === "number" && Number.isSafeInteger(value) && value >= 0 ? value : null;
-    const usage = { inputTokens: count(response.usage?.input_tokens), outputTokens: count(response.usage?.output_tokens),
-      cacheReadInputTokens: count(response.usage?.cache_read_input_tokens), cacheCreationInputTokens: count(response.usage?.cache_creation_input_tokens),
-      uncachedInputTokens: count(response.usage?.input_tokens) };
+    /*
+     * The provider's usage block, read once through the shared parser (2026-09-06):
+     * the five billed quantities with the cache-write split, priced by the one
+     * pricing function and carried onto the cost ledger by `meteredCostFields`.
+     * `inputTokens` on the worker usage stays the UNCACHED remainder, as before.
+     */
+    const metered: MeteredUsage = readMeteredUsage(response.usage);
+    const usage = { inputTokens: metered.uncachedInputTokens, outputTokens: metered.outputTokens,
+      cacheReadInputTokens: metered.cacheReadInputTokens, cacheCreationInputTokens: metered.cacheCreationInputTokens,
+      uncachedInputTokens: metered.uncachedInputTokens };
     const raw = rawResponse(response);
     const overBound = Buffer.byteLength(raw) > AUDIT_RESPONSE_MAX_BYTES;
     const responseText = overBound ? `${fit(raw, AUDIT_RESPONSE_MAX_BYTES - 64)}\n[AUDIT RESPONSE TRUNCATED AT STORAGE BOUND]` : raw;
@@ -262,6 +268,6 @@ export function modelAuditReasoner(repos: ControlPlaneRepositories, transport: M
     }
     return { review: { step: "adversarial-audit", model: response.model, effort: route.effort, contextHash: contentHash(body),
       verdict, challenges, validationError, responseText, elapsedMs: Math.round(performance.now() - started) },
-      usage, usd: usdForModelUsage(response.model, usage) };
+      usage, usd: priceMeteredUsage(response.model, metered, "5m").usd, metering: meteredCostFields(metered) };
   }, timeoutMs) };
 }

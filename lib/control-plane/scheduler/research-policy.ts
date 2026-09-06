@@ -37,6 +37,9 @@ import type { FleetSafetySnapshot } from "../fleet-safety.ts";
 /** The workers' dedicated credential. NAME only; no value is ever read into a record. */
 export const WORKER_CREDENTIAL_VAR = "WTP_WORKERS_ANTHROPIC_API_KEY";
 
+/** The ledger route id a pre-warm request's cost entry carries (2026-09-06), so the rolling ceiling sees the spend and capacity never counts it as an Attempt. */
+export const SCOUT_PREWARM_ROUTE_ID = "scout:prewarm";
+
 export interface ScoutBound {
   /** Model turns (requests) per Attempt. */
   readonly maxTurns: number;

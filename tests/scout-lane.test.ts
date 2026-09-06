@@ -31,6 +31,8 @@ import { decideExecutor, dispatchOne, type DeclaredExecutor } from "../lib/contr
 import { scheduleObligation, isScheduled, type FreshnessObligation, type ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
 import { runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import {
+  cacheTtlOrderProblems,
+  withCacheBreakpoints,
   scoutExecutor,
   dispositionForScout,
   type ModelRequest,
@@ -484,9 +486,9 @@ test("6. SEEDED: the rolling ceiling DEFERS model work by name and disposes noth
 
   const spend = scoutSpendInWindow(
     [
-      { attemptId: "a", workItemId: "w", routeTaskId: null, routeId: null, source: null, jurisdiction: null, project: "freshness", role: "SCOUT", cost: { inputTokens: 1, outputTokens: 1, usd: 2, durationMs: 1, bytesFetched: null, requestCount: 1 }, recordedAt: NOW },
-      { attemptId: "b", workItemId: "w", routeTaskId: null, routeId: null, source: null, jurisdiction: null, project: "freshness", role: "ACQUIRER", cost: { inputTokens: null, outputTokens: null, usd: 5, durationMs: 1, bytesFetched: null, requestCount: 1 }, recordedAt: NOW },
-      { attemptId: "c", workItemId: "w", routeTaskId: null, routeId: null, source: null, jurisdiction: null, project: "freshness", role: "SCOUT", cost: { inputTokens: 1, outputTokens: 1, usd: 3, durationMs: 1, bytesFetched: null, requestCount: 1 }, recordedAt: "2026-08-30T00:00:00.000Z" },
+      { attemptId: "a", workItemId: "w", routeTaskId: null, routeId: null, source: null, jurisdiction: null, project: "freshness", role: "SCOUT", cost: { inputTokens: 1, outputTokens: 1, usd: 2, durationMs: 1, bytesFetched: null, requestCount: 1, cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null, batch: false }, recordedAt: NOW },
+      { attemptId: "b", workItemId: "w", routeTaskId: null, routeId: null, source: null, jurisdiction: null, project: "freshness", role: "ACQUIRER", cost: { inputTokens: null, outputTokens: null, usd: 5, durationMs: 1, bytesFetched: null, requestCount: 1, cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null, batch: false }, recordedAt: NOW },
+      { attemptId: "c", workItemId: "w", routeTaskId: null, routeId: null, source: null, jurisdiction: null, project: "freshness", role: "SCOUT", cost: { inputTokens: 1, outputTokens: 1, usd: 3, durationMs: 1, bytesFetched: null, requestCount: 1, cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null, batch: false }, recordedAt: "2026-08-30T00:00:00.000Z" },
     ],
     NOW,
   );
@@ -809,7 +811,7 @@ test("13. SEEDED (v): a route the decision rule sent DETERMINISTIC reaching the 
   assert.equal(noDescriptor.kind, "DETERMINISTIC");
 });
 
-test("14. SEEDED (i): a repeated-prefix turn with zero cache-read tokens is recorded as a cacheDefect; the request carries the four breakpoints", async () => {
+test("14. SEEDED (i): a repeated-prefix turn with zero cache-read tokens is recorded as a cacheDefect; the request carries the static markers and the top-level moving breakpoint", async () => {
   const toolkit = fakeToolkit();
   const turns = [
     [toolUse("u1", "read_permission", { url: "https://a.gov/", rung: "primary-site-navigation", why: "p" })],
@@ -818,42 +820,80 @@ test("14. SEEDED (i): a repeated-prefix turn with zero cache-read tokens is reco
   ];
   let i = 0;
   const requests: ModelRequest[] = [];
+  /* A growing loop whose turn 2 finds nothing in the cache and re-writes the prefix plus what it appended; the uncached tail stays tiny. */
   const coldOnTurnTwo: ModelTransport = async (request) => {
     requests.push(request);
     const content = turns[Math.min(i, turns.length - 1)];
     i += 1;
-    return { model: "claude-opus-5", stop_reason: "tool_use", content, usage: { input_tokens: 5000, output_tokens: 100, cache_read_input_tokens: i === 2 ? 0 : 4000, cache_creation_input_tokens: i === 2 ? 4000 : 0 } };
+    const usage = [
+      { input_tokens: 2, output_tokens: 100, cache_read_input_tokens: 0, cache_creation_input_tokens: 4000 },
+      { input_tokens: 2, output_tokens: 100, cache_read_input_tokens: 0, cache_creation_input_tokens: 5000 },
+      { input_tokens: 2, output_tokens: 100, cache_read_input_tokens: 5000, cache_creation_input_tokens: 1000 },
+    ][i - 1];
+    return { model: "claude-opus-5", stop_reason: "tool_use", content, usage };
   };
   const { exec, results } = executorWith(coldOnTurnTwo, toolkit);
   const { result } = await dispatchScout(exec);
   assert.equal(result.outcome, "WORKED", result.detail);
   assert.deepEqual(results[0].cacheDefect?.turns, [2], "turn 2 re-sent an identical prefix and read nothing from the cache");
+  assert.deepEqual(results[0].cacheDefect?.zeroReadTurns, [2]);
+  assert.deepEqual(results[0].cacheDefect?.stationaryTurns, [], "a zero read whose uncached input did not grow past what it appended is not the stationary signature");
   assert.match(results[0].cacheDefect?.detail ?? "", /RULING 244/);
   assert.match(result.detail, /CACHE DEFECT on turn\(s\) 2/);
 
-  /* POSITIVE CONTROL: a transport that reads the prefix on every later turn records no defect. */
-  const warm = scriptedTransport(turns);
+  /* POSITIVE CONTROL: a healthy loop — reads grow, writes are the appended turn, the uncached tail is two tokens — records no defect. */
+  let w = 0;
+  const warm: ModelTransport = async () => {
+    const content = turns[Math.min(w, turns.length - 1)];
+    w += 1;
+    return { model: "claude-opus-5", stop_reason: "tool_use", content, usage: { input_tokens: 2, output_tokens: 100, cache_read_input_tokens: w === 1 ? 0 : 4000 + 1500 * (w - 2), cache_creation_input_tokens: w === 1 ? 4000 : 1500 } };
+  };
   const { exec: exec2, results: results2 } = executorWith(warm, fakeToolkit());
   await dispatchScout(exec2);
   assert.equal(results2[0].cacheDefect, null);
 
-  /* The request shape: tools-last, system, the brief, and the newest user turn's last block. */
+  /*
+   * THE STATIONARY SIGNATURE (2026-09-06): reads flat at the static prefix,
+   * uncached input growing by the whole conversation every turn — the shape
+   * every 2026-09-02 Attempt showed while the old detector reported clean.
+   */
+  let k = 0;
+  const stationary: ModelTransport = async () => {
+    const content = turns[Math.min(k, turns.length - 1)];
+    k += 1;
+    return { model: "claude-opus-5", stop_reason: "tool_use", content, usage: { input_tokens: [6000, 14000, 25000][k - 1], output_tokens: 300, cache_read_input_tokens: k === 1 ? 0 : 4082, cache_creation_input_tokens: k === 1 ? 4082 : 0 } };
+  };
+  const { exec: exec3, results: results3 } = executorWith(stationary, fakeToolkit());
+  await dispatchScout(exec3);
+  assert.deepEqual(results3[0].cacheDefect?.stationaryTurns, [2, 3], "turns 2 and 3 paid for the whole conversation uncached");
+  assert.deepEqual(results3[0].cacheDefect?.zeroReadTurns, [], "the static prefix was read every turn, which is exactly what hid the defect from the old detector");
+  assert.match(results3[0].cacheDefect?.detail ?? "", /STATIONARY-BREAKPOINT/);
+
+  /* The request shape: tools-last, system, NO message-level marker, and the top-level moving breakpoint. */
   const third = requests[2];
   assert.deepEqual(third.tools.at(-1)?.cache_control, { type: "ephemeral" }, "the last tool definition is a breakpoint");
   assert.equal(third.tools[0].cache_control, undefined, "only the last tool carries the marker");
   assert.deepEqual(third.system[0].cache_control, { type: "ephemeral" });
-  const first = third.messages[0].content as { cache_control?: unknown }[];
-  assert.deepEqual(first[0].cache_control, { type: "ephemeral" }, "the brief is a breakpoint");
-  const last = third.messages.at(-1)!.content as { cache_control?: unknown }[];
-  assert.deepEqual(last.at(-1)?.cache_control, { type: "ephemeral" }, "the newest user turn's last block is a breakpoint");
   const markers = third.messages.flatMap((m) => (Array.isArray(m.content) ? (m.content as { cache_control?: unknown }[]).filter((b) => b.cache_control !== undefined) : []));
-  assert.equal(markers.length, 2, "exactly two message breakpoints: the brief and the moving one (four in all with tools and system)");
-  const second = requests[1].messages.at(-1)!.content as { cache_control?: unknown }[];
-  assert.deepEqual(second.at(-1)?.cache_control, { type: "ephemeral" });
-  const secondInThird = third.messages[2].content as { cache_control?: unknown }[];
-  assert.equal(secondInThird.at(-1)?.cache_control, undefined, "the marker MOVED: the previous turn's block no longer carries it");
+  assert.equal(markers.length, 0, "no message-level marker: the API places and moves the breakpoint from the top-level field");
+  assert.deepEqual(third.cache_control, { type: "ephemeral" }, "the top-level moving breakpoint is on every turn's request");
+  assert.deepEqual(requests[0].cache_control, { type: "ephemeral" });
+  assert.equal(cacheTtlOrderProblems(third).length, 0, "the request's markers are in the order the API requires");
   assert.equal(third.output_config?.effort, "medium", "effort is the SCOUT role's, recorded per request");
   assert.equal(results[0].effort, "medium");
+
+  /* The LAST_BLOCK fallback (a platform that rejects the top-level field) marks only the newest user turn's last block. */
+  const fallback = withCacheBreakpoints(third.messages, "LAST_BLOCK");
+  const fallbackMarkers = fallback.flatMap((m, idx) => (Array.isArray(m.content) ? (m.content as { cache_control?: unknown }[]).map((b, j) => (b.cache_control ? `${idx}.${j}` : null)).filter((x) => x !== null) : []));
+  const lastUser = fallback.reduce((at, m, idx) => (m.role === "user" ? idx : at), -1);
+  const lastLen = (fallback[lastUser].content as unknown[]).length;
+  assert.deepEqual(fallbackMarkers, [`${lastUser}.${lastLen - 1}`], "exactly one message marker, on the last block of the newest user turn");
+
+  /* The per-turn steps carry the cache-write split and the pricing basis (2026-09-06). */
+  const step = (results[0].steps ?? []).find((s) => s.kind === "MODEL" && s.turn === 2);
+  assert.deepEqual(step?.cacheWriteSplit, { ephemeral5m: null, ephemeral1h: null }, "a response with no cache_creation split records null, never zero");
+  assert.equal(step?.cacheWritePricedFrom, "AGGREGATE", "the aggregate write was priced at the requested TTL because the response carried no split");
+  assert.equal(results[0].usage.cacheCreation5mInputTokens, null);
 });
 
 test("15. SEEDED (ii): a deterministic-capable step routed to a model is REFUSED by the step registry; model steps route to the cheapest class and escalate on record", () => {

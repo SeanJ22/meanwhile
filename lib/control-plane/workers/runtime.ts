@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { performance } from "node:perf_hooks";
-import { ZERO_COST, type WorkerRef } from "../attempt.ts";
+import { ZERO_COST, type AttemptCost, type WorkerRef } from "../attempt.ts";
 import { defaultGrant, requireCapability, type CapabilityGrant } from "../capability.ts";
 import { contentHash, fingerprint } from "../ids.ts";
 import { isParserInput, type ParserInput } from "../evidence/parser-boundary.ts";
@@ -20,6 +20,12 @@ import { assertFleetResult, type AuditCandidate, type AuditorResult, type CivicE
 export const FLEET_IMPLEMENTATION_VERSION = "civic-record-workers/2.0.0";
 export const FLEET_POLICY_VERSION = "worker-fleet/2; R248 R252 R263 R264 R268";
 const NULL_USAGE: WorkerUsage = { inputTokens: null, outputTokens: null, cacheReadInputTokens: null, cacheCreationInputTokens: null, uncachedInputTokens: null };
+
+/** The whole prompt a worker usage describes: uncached remainder plus cache reads and writes. Null when the base count is unmeasured. */
+function wholePrompt(usage: WorkerUsage): number | null {
+  if (usage.inputTokens === null) return null;
+  return usage.inputTokens + (usage.cacheReadInputTokens ?? 0) + (usage.cacheCreationInputTokens ?? 0);
+}
 
 export function fleetGrant(role: FleetRole, project: string, now: string): CapabilityGrant {
   const base = defaultGrant({ role, project, policyVersion: FLEET_POLICY_VERSION, grantedAt: now });
@@ -46,6 +52,8 @@ export interface FleetRuntime {
     readonly workerVersion: string;
     readonly review: (context: IndependentAuditContext, attemptId: string) => Promise<{
       review: NonNullable<WorkerResultRecord["modelReview"]>; usage: WorkerUsage; usd: number | null;
+      /** The six ledger fields from the provider's usage block (2026-09-06). Absent from an older reasoner: the row reads UNREPORTED. */
+      metering?: Pick<AttemptCost, "cacheReadInputTokens" | "cacheCreationInputTokens" | "cacheCreation5mInputTokens" | "cacheCreation1hInputTokens" | "uncachedInputTokens" | "batch">;
     }>;
   };
 }
@@ -145,7 +153,14 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
     assertFleetResult(result, role, attemptId);
     const durationMs = Math.round(performance.now() - started);
     const usage = model?.usage ?? NULL_USAGE;
-    const cost = { ...ZERO_COST, durationMs, inputTokens: usage.inputTokens, outputTokens: usage.outputTokens, usd: model?.usd ?? null, requestCount: model ? 1 : 0 };
+    /*
+     * The ledger row (2026-09-06): `inputTokens` is the WHOLE prompt — the
+     * uncached remainder plus the cache reads and writes — as it is on every
+     * other lane's row, and the six metering fields split it the way the
+     * provider bills it. The worker usage keeps `inputTokens` as the uncached
+     * remainder, which is what its own `uncachedInputTokens` restates.
+     */
+    const cost = { ...ZERO_COST, durationMs, inputTokens: wholePrompt(usage), outputTokens: usage.outputTokens, usd: model?.usd ?? null, requestCount: model ? 1 : 0, ...(model?.metering ?? {}) };
     const workerResult: UncommittedWorkerResult = { id: `wr-${fingerprint([attemptId])}`, schemaVersion: 1,
       workItemId, routeTaskId, attemptId, worker, grant, methodVersion: attempt.methodVersion, policyVersion: attempt.policyVersion,
       startedAt: attempt.startedAt, endedAt: now(), executionMode: assisted ? "MODEL_ASSISTED" : "DETERMINISTIC", cost, usage,
@@ -167,8 +182,8 @@ export function fleetExecutor(runtime: FleetRuntime, task: RouteTask, holder: st
       const usage = model?.usage ?? NULL_USAGE;
       return { kind: "ABORTED", ranAs: lane, endedAt: now(), detail,
         failureOutcome: denied ? "DENIED_BY_POLICY" : detail.includes("BOUND_EXCEEDED") ? "TIMED_OUT" : detail.includes("PROCESS_CRASHED") ? "CRASHED" : "ABORTED",
-        cost: { ...ZERO_COST, durationMs: Math.round(performance.now() - started), inputTokens: usage.inputTokens, outputTokens: usage.outputTokens,
-          usd: model?.usd ?? null, requestCount: modelRequested && !denied ? 1 : 0 } };
+        cost: { ...ZERO_COST, durationMs: Math.round(performance.now() - started), inputTokens: wholePrompt(usage), outputTokens: usage.outputTokens,
+          usd: model?.usd ?? null, requestCount: modelRequested && !denied ? 1 : 0, ...(model?.metering ?? {}) } };
     }
   } };
 }

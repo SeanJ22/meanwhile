@@ -32,24 +32,39 @@
  * and permission records; the model's statements about them are recorded as
  * CLAIMS and checked, never written into durable provenance (RULING 243).
  *
- * ## The request shape, and why every byte of it is where it is (RULING 244)
+ * ## The request shape, and why every byte of it is where it is (RULING 244;
+ * the prompt-caching session of 2026-09-06)
  *
  * ```
  *   tools     stable per process   breakpoint on the LAST definition
- *   system    stable per process   breakpoint on the block
- *   brief     stable per Attempt   breakpoint on the first user block
- *   turns     grow per turn        breakpoint on the LAST block of the newest
- *                                  user turn, moved forward every turn, so
- *                                  turn N reads turns 1..N-1 from the cache
+ *   system    stable per process   breakpoint on the block — the pre-warm's
+ *                                  target (`scoutPrewarmRequest`)
+ *   brief     stable per Attempt   the first user block; nothing per-request
+ *                                  sits before it
+ *   turns     grow per turn        the MOVING breakpoint: top-level
+ *                                  `cache_control` on the request, which the
+ *                                  API places on the last cacheable block and
+ *                                  moves forward every turn, so turn N reads
+ *                                  turns 1..N-1 from the cache
  * ```
  *
- * Four breakpoints, the provider's maximum, five-minute TTL (turns are seconds
- * apart; `SCOUT_CACHE_POLICY` states the argument). Every turn's usage is
- * recorded as a STEP with the model, the effort, the four token categories and
- * the cost at that model's rate; a turn after the first that reads ZERO cached
- * tokens over an identical prefix is recorded as a `cacheDefect` — a fact
- * about our request assembly, never hidden in a total. Effort is set per role
- * and never varies inside an Attempt (a change would invalidate the cache).
+ * Three breakpoints of the provider's four, five-minute TTL (turns are seconds
+ * apart; `SCOUT_CACHE_POLICY` states the argument and the measured cycle gap
+ * that rules the 1-hour TTL out). Nothing that varies per request — no
+ * timestamp, Attempt id, obligation id or cycle id — appears before the last
+ * breakpoint; the brief carries the obligation and it sits after the static
+ * prefix.
+ *
+ * Every turn's usage is recorded as a STEP with the model, the effort, the
+ * five billed token quantities (the cache-write split by TTL beside the
+ * aggregate) and the cost at that model's rate from exactly those quantities.
+ * Two cache-defect signatures are read over the steps at the end of the
+ * Attempt (`lib/control-plane/cache-defects.ts`): a turn after the first that
+ * paid for more uncached input than it appended — the STATIONARY breakpoint
+ * the 2026-09-02 Attempts showed — and a turn that read ZERO cached tokens.
+ * Either is a `cacheDefect`, a fact about our request assembly, never hidden
+ * in a total. Effort is set per role and never varies inside an Attempt (a
+ * change would invalidate the cache).
  *
  * ## Bounds, and every one is stated on the result
  *
@@ -64,12 +79,14 @@
  */
 
 import type { AttemptCost } from "../attempt.ts";
-import { usdForModelUsage } from "../model-cost.ts";
+import { describeCacheDefects, detectCacheDefects } from "../cache-defects.ts";
+import { meteredCostFields, priceMeteredUsage, readMeteredUsage, sumMeteredUsage, type MeteredUsage } from "../model-cost.ts";
 import type { Disposition, PermissionState, TransportState } from "../../workstate/types.ts";
 import type { DeclaredExecutor, ExecutorKind, WorkArtifact, WorkDisposition, WorkOutcome } from "./dispatch.ts";
 import type { ScheduledObligation } from "./obligation.ts";
 import type { RouteDescriptor } from "./registry.ts";
-import { RESEARCH_BOUNDS, SCOUT_MODEL, type ScoutBound } from "./research-policy.ts";
+import { RESEARCH_BOUNDS, SCOUT_MODEL, SCOUT_PREWARM_ROUTE_ID, type ScoutBound } from "./research-policy.ts";
+export { SCOUT_PREWARM_ROUTE_ID };
 import {
   SCOUT_CACHE_POLICY,
   assertStepMayInvokeModel,
@@ -128,7 +145,7 @@ export interface ModelResponse {
   readonly usage: ModelUsage;
 }
 
-export type CacheControl = { readonly type: "ephemeral" };
+export type CacheControl = { readonly type: "ephemeral"; readonly ttl?: "5m" | "1h" };
 
 export interface ModelRequest {
   readonly model: string;
@@ -139,6 +156,12 @@ export interface ModelRequest {
   /** Effort per role (`ROLE_EFFORT`); the cap is economic, never a truth judgement. */
   readonly output_config?: { readonly effort: ModelEffort };
   readonly messages: readonly { readonly role: "user" | "assistant"; readonly content: unknown }[];
+  /**
+   * The MOVING breakpoint (2026-09-06): the API places it on the last
+   * cacheable block and moves it forward each turn. Sent when
+   * `SCOUT_CACHE_POLICY.movingBreakpoint` is `TOP_LEVEL`.
+   */
+  readonly cache_control?: CacheControl;
 }
 
 export type ModelTransport = (request: ModelRequest) => Promise<ModelResponse>;
@@ -439,13 +462,17 @@ function normalizedUrl(raw: string): string {
 }
 
 /**
- * Place the four breakpoints on a copy of the conversation. The first user
- * block (the brief) and the last block of the newest user turn carry the
- * marker; every other block is sent bare, so the moving marker never leaves a
- * stale one behind. Assistant turns are the provider's own content, echoed.
+ * The conversation as sent, on a copy. Every user block is sent BARE — the
+ * moving breakpoint is the request's top-level `cache_control`, placed by the
+ * API on the last cacheable block — so no stale marker is ever left behind
+ * and no message-level marker competes with it. Under the `LAST_BLOCK`
+ * fallback the last block of the newest user turn carries the marker instead,
+ * which is what this lane sent from 2026-09-02 to 2026-09-06. Assistant turns
+ * are the provider's own content, echoed.
  */
 export function withCacheBreakpoints(
   messages: readonly { readonly role: "user" | "assistant"; readonly content: unknown }[],
+  movingBreakpoint: "TOP_LEVEL" | "LAST_BLOCK" = SCOUT_CACHE_POLICY.movingBreakpoint,
 ): { readonly role: "user" | "assistant"; readonly content: unknown }[] {
   const cc = SCOUT_CACHE_POLICY.cacheControl;
   const lastUser = messages.reduce((at, m, i) => (m.role === "user" ? i : at), -1);
@@ -455,11 +482,9 @@ export function withCacheBreakpoints(
       const { cache_control: _dropped, ...bare } = b as TextBlock & { cache_control?: CacheControl };
       return bare as TextBlock | ToolResultBlock;
     });
-    const mark = (idx: number): void => {
-      if (idx >= 0 && idx < blocks.length) blocks[idx] = { ...blocks[idx], cache_control: cc };
-    };
-    if (i === 0) mark(0);
-    if (i === lastUser) mark(blocks.length - 1);
+    if (movingBreakpoint === "LAST_BLOCK" && i === lastUser && blocks.length > 0) {
+      blocks[blocks.length - 1] = { ...blocks[blocks.length - 1], cache_control: cc };
+    }
     return { role: m.role, content: blocks };
   });
 }
@@ -470,6 +495,87 @@ export function withToolBreakpoint(specs: readonly ScoutToolSpec[]): ScoutToolSp
     const { cache_control: _dropped, ...bare } = s;
     return i === specs.length - 1 ? { ...bare, cache_control: SCOUT_CACHE_POLICY.cacheControl } : bare;
   });
+}
+
+/**
+ * **THE STATIC PREFIX — tools then system, exactly as every Attempt sends
+ * them, built in one place.** (2026-09-06.) The executor and the pre-warm
+ * request both call this, so the pre-warm's bytes cannot drift from the
+ * Attempts' and the entry it writes is the entry they read.
+ */
+export function scoutStaticPrefix(input: {
+  readonly toolkitSpecs: readonly ScoutToolSpec[];
+  readonly bound: ScoutBound;
+  readonly minRungs: number;
+}): { readonly tools: readonly ScoutToolSpec[]; readonly system: ModelRequest["system"] } {
+  return {
+    tools: withToolBreakpoint([...input.toolkitSpecs, RECORD_RUNG_SPEC, FINISH_SPEC]),
+    system: [{ type: "text", text: scoutSystemPrompt(input.bound, input.minRungs), cache_control: SCOUT_CACHE_POLICY.cacheControl }],
+  };
+}
+
+/**
+ * **THE TTL ORDER THE API ENFORCES, CHECKED BEFORE A BYTE IS SENT.**
+ * (2026-09-06.) Blocks are processed tools → system → messages, and a
+ * 1-hour marker may never come after a 5-minute one. Measured that day with a
+ * planted request: HTTP 400, `system.0.cache_control.ttl: a ttl='1h'
+ * cache_control block must not come after a ttl='5m' cache_control block.
+ * Note that blocks are processed in the following order: tools, system,
+ * messages.` A request that would earn that answer is refused here by name
+ * instead of costing a round trip; the executor and the pre-warm both call it.
+ */
+export function cacheTtlOrderProblems(request: Pick<ModelRequest, "tools" | "system" | "messages"> & { readonly cache_control?: CacheControl }): string[] {
+  const markers: { readonly where: string; readonly ttl: "5m" | "1h" }[] = [];
+  request.tools.forEach((t, i) => { if (t.cache_control) markers.push({ where: `tools[${i}]`, ttl: (t.cache_control as CacheControl).ttl ?? "5m" }); });
+  request.system.forEach((s, i) => { if (s.cache_control) markers.push({ where: `system[${i}]`, ttl: s.cache_control.ttl ?? "5m" }); });
+  request.messages.forEach((m, i) => {
+    if (!Array.isArray(m.content)) return;
+    (m.content as { cache_control?: CacheControl }[]).forEach((b, j) => { if (b.cache_control) markers.push({ where: `messages[${i}].content[${j}]`, ttl: b.cache_control.ttl ?? "5m" }); });
+  });
+  if (request.cache_control) markers.push({ where: "top-level", ttl: request.cache_control.ttl ?? "5m" });
+  const problems: string[] = [];
+  let seen5m: string | null = null;
+  for (const m of markers) {
+    if (m.ttl === "5m" && seen5m === null) seen5m = m.where;
+    if (m.ttl === "1h" && seen5m !== null) problems.push(`${m.where}: a ttl='1h' cache_control block must not come after the ttl='5m' block at ${seen5m} (blocks are processed tools, system, messages)`);
+  }
+  if (markers.length > 4) problems.push(`${markers.length} cache_control markers exceed the provider's limit of 4`);
+  return problems;
+}
+
+/** The one-word placeholder a pre-warm sends. Read during prefill, never answered, never marked. */
+export const SCOUT_PREWARM_PLACEHOLDER = "warmup";
+
+
+/**
+ * **THE PRE-WARM REQUEST.** (2026-09-06.) `max_tokens: 0` runs prefill only:
+ * the API writes the cache at the static prefix's breakpoint and returns
+ * `content: []` with a usage block, billing the cache write and no output.
+ * The same tools, system, `tool_choice: auto` and effort the Attempts' first
+ * turns send; the breakpoint stays on the system block, never on the
+ * placeholder. Measured 2026-09-06: HTTP 200, `cache_creation_input_tokens`
+ * 4,586 on the first call and `cache_read_input_tokens` 4,586 on the second.
+ * A forced `tool_choice` is refused with `max_tokens: 0` (HTTP 400,
+ * "tool_choice: type \"tool\" or \"any\" cannot be used when max_tokens is 0"),
+ * which is why the bound turn's forced finish never pre-warms.
+ */
+export function scoutPrewarmRequest(input: {
+  readonly model: string;
+  readonly effort: ModelEffort;
+  readonly toolkitSpecs: readonly ScoutToolSpec[];
+  readonly bound: ScoutBound;
+  readonly minRungs: number;
+}): ModelRequest {
+  const prefix = scoutStaticPrefix(input);
+  return {
+    model: input.model,
+    max_tokens: 0,
+    system: prefix.system,
+    tools: prefix.tools,
+    tool_choice: { type: "auto" },
+    output_config: { effort: input.effort },
+    messages: [{ role: "user", content: [{ type: "text", text: SCOUT_PREWARM_PLACEHOLDER }] }],
+  };
 }
 
 /**
@@ -557,7 +663,6 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
   const bound = deps.bound ?? RESEARCH_BOUNDS.perDispatch;
   const minRungs = deps.minRungs ?? MIN_DISTINCT_RUNGS;
   const clock = deps.now ?? (() => new Date().toISOString());
-  const system = scoutSystemPrompt(bound, minRungs);
   /* The routing decides the model and the effort; an injected model (tests, a proof) overrides the id only. */
   const routed = assertStepMayInvokeModel(SCOUT_LOOP_STEP);
   const model = deps.model ?? (routed.model === SCOUT_MODEL ? SCOUT_MODEL : routed.model);
@@ -589,13 +694,16 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       const priorRungs: readonly PriorRung[] = ctx.inherited.priorRungs ?? [];
       if (deps.onStart) await deps.onStart({ attemptId, obligationId: row.obligation.id, startedAt }).catch(() => undefined);
 
-      const specs: ScoutToolSpec[] = withToolBreakpoint([...toolkit.specs, RECORD_RUNG_SPEC, FINISH_SPEC]);
+      /* The static prefix, from the one builder the pre-warm also calls. */
+      const prefix = scoutStaticPrefix({ toolkitSpecs: toolkit.specs, bound, minRungs });
       const rungs: ScoutRung[] = [];
       const artifacts: WorkArtifact[] = [];
       const messages: { role: "user" | "assistant"; content: unknown }[] = [
         { role: "user", content: [{ type: "text", text: scoutBrief(row, ctx.route, ctx.providerId, ctx.reason, ctx.inherited) }] satisfies UserContent },
       ];
       const usage = { input: 0, output: 0, cacheRead: 0, cacheCreate: 0, reported: false };
+      /** Every turn's metered usage, in order; the ledger fields are their sum. */
+      const meteredTurns: MeteredUsage[] = [];
       const steps: ScoutStep[] = [];
       const deterministic = new Map<string, { count: number; bytes: number }>();
       const runDeterministic = (step: string, bytes: number): void => {
@@ -607,6 +715,8 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
       const overruns: ScoutRepresentationOverrun[] = [];
       /** (tool | normalized url) -> artifact ids vaulted by it this Attempt. The no-re-read set. */
       const vaultedByCall = new Map<string, string[]>();
+      /** The API's cache TTL for the writes this lane asks for; the aggregate fallback prices at it. */
+      const requestedTtl = SCOUT_CACHE_POLICY.ttl;
       let turns = 0;
       let modelReported: string | null = null;
       let finish: ScoutFinishInput | null = null;
@@ -704,33 +814,40 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         const step = assertStepMayInvokeModel(SCOUT_LOOP_STEP);
         let response: ModelResponse;
         try {
-          response = await deps.transport({
+          const request: ModelRequest = {
             model,
             max_tokens: bound.maxOutputTokensPerTurn,
-            system: [{ type: "text", text: system, cache_control: SCOUT_CACHE_POLICY.cacheControl }],
-            tools: specs,
+            system: prefix.system,
+            tools: prefix.tools,
             tool_choice: boundNotice !== null ? { type: "tool", name: "finish" } : { type: "auto" },
             output_config: { effort: step.effort },
             messages: withCacheBreakpoints(messages),
-          });
+            ...(SCOUT_CACHE_POLICY.movingBreakpoint === "TOP_LEVEL" ? { cache_control: SCOUT_CACHE_POLICY.cacheControl } : {}),
+          };
+          const order = cacheTtlOrderProblems(request);
+          if (order.length > 0) throw new ModelTransportError(`cache_control order refused before sending: ${order.join("; ")}`, null);
+          response = await deps.transport(request);
         } catch (error) {
           transportFailure = error instanceof Error ? error.message : String(error);
           break;
         }
         turns += 1;
         modelReported = response.model ?? modelReported;
-        const u = response.usage ?? {};
-        if (num(u.input_tokens) !== null || num(u.output_tokens) !== null) usage.reported = true;
+        /* The provider's usage block, through the one parser every lane reads it with. */
+        const metered = readMeteredUsage(response.usage ?? {});
+        if (metered.uncachedInputTokens !== null || metered.outputTokens !== null) usage.reported = true;
+        meteredTurns.push(metered);
         const turnTokens = {
-          uncachedInput: num(u.input_tokens) ?? 0,
-          output: num(u.output_tokens) ?? 0,
-          cacheRead: num(u.cache_read_input_tokens) ?? 0,
-          cacheWrite: num(u.cache_creation_input_tokens) ?? 0,
+          uncachedInput: metered.uncachedInputTokens ?? 0,
+          output: metered.outputTokens ?? 0,
+          cacheRead: metered.cacheReadInputTokens ?? 0,
+          cacheWrite: metered.cacheCreationInputTokens ?? 0,
         };
         usage.input += turnTokens.uncachedInput;
         usage.output += turnTokens.output;
         usage.cacheRead += turnTokens.cacheRead;
         usage.cacheCreate += turnTokens.cacheWrite;
+        const priced = usage.reported ? priceMeteredUsage(model, metered, requestedTtl) : null;
         steps.push({
           step: SCOUT_LOOP_STEP,
           kind: "MODEL",
@@ -738,25 +855,13 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           model: response.model ?? model,
           effort: step.effort,
           tokens: turnTokens,
-          usd: usage.reported
-            ? usdForModelUsage(model, {
-                inputTokens: turnTokens.uncachedInput,
-                outputTokens: turnTokens.output,
-                cacheReadInputTokens: turnTokens.cacheRead,
-                cacheCreationInputTokens: turnTokens.cacheWrite,
-              })
-            : null,
+          usd: priced?.usd ?? null,
           representationBytes: representationBytesThisTurn,
           count: 1,
+          cacheWriteSplit: { ephemeral5m: metered.cacheCreation5mInputTokens, ephemeral1h: metered.cacheCreation1hInputTokens },
+          cacheWritePricedFrom: priced?.cacheWritePricedFrom ?? "NONE",
         });
         representationBytesThisTurn = 0;
-        /*
-         * RULING 244: turn N's prefix (tools, system, brief, turns 1..N-1) is
-         * byte-identical to what turn N-1 sent, so turn N must read it from
-         * the cache. Zero cache-read tokens on such a turn is a defect in OUR
-         * request assembly — recorded, never averaged away.
-         */
-        if (turns >= 2 && usage.reported && turnTokens.cacheRead === 0) defectTurns.push(turns);
 
         messages.push({ role: "assistant", content: response.content });
         const uses = response.content.filter(isToolUse);
@@ -916,6 +1021,18 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         : refusedBeforeAnyUsage
           ? 0
           : null;
+      /*
+       * The five billed quantities on the ledger row (2026-09-06): the turns'
+       * metered usage summed. A refusal before any completion is a measured
+       * zero on every one of them, for the same reason `usd` is; a failure
+       * after usage was reported keeps the reported usage.
+       */
+      const summed = sumMeteredUsage(meteredTurns);
+      const metering = usage.reported
+        ? meteredCostFields(summed)
+        : refusedBeforeAnyUsage
+          ? { cacheReadInputTokens: 0, cacheCreationInputTokens: 0, cacheCreation5mInputTokens: 0, cacheCreation1hInputTokens: 0, uncachedInputTokens: 0, batch: false }
+          : { cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null, batch: false };
       const cost: AttemptCost = {
         inputTokens,
         outputTokens,
@@ -923,7 +1040,20 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         durationMs: elapsedMs,
         bytesFetched: toolkit.bytesFetched,
         requestCount: turns + toolkit.requestCount,
+        ...metering,
       };
+      /*
+       * The two cache-defect signatures, read over the recorded turns
+       * (`cache-defects.ts`): the stationary breakpoint the 2026-09-02
+       * Attempts showed, and the zero read RULING 244 named.
+       */
+      const defectReading = usage.reported
+        ? detectCacheDefects(
+            modelSteps.map((s) => ({ turn: s.turn ?? 0, uncachedInput: s.tokens.uncachedInput, cacheRead: s.tokens.cacheRead, cacheWrite: s.tokens.cacheWrite })),
+            SCOUT_CACHE_POLICY.minimumCacheablePrefixTokens,
+          )
+        : null;
+      if (defectReading) defectTurns.push(...defectReading.turns);
 
       let refusal: ScoutIssue[] | null = null;
       if (finish === null) {
@@ -943,13 +1073,13 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
         return note === undefined ? r : { ...r, note: note === null ? null : String(note).slice(0, 400) };
       });
       const cacheDefect: ScoutCacheDefect | null =
-        defectTurns.length === 0
+        defectReading === null || defectTurns.length === 0
           ? null
           : {
               turns: defectTurns,
-              detail:
-                `turn(s) ${defectTurns.join(", ")} read ZERO cached tokens over a prefix identical to the previous turn's; ` +
-                "a repeated-prefix turn with no cache read is a defect in our request assembly (RULING 244)",
+              detail: describeCacheDefects(defectReading),
+              stationaryTurns: defectReading.stationaryTurns,
+              zeroReadTurns: defectReading.zeroReadTurns,
             };
       const result: ScoutResult = {
         formatVersion: 1,
@@ -979,6 +1109,8 @@ export function scoutExecutor(deps: ScoutExecutorDeps): DeclaredExecutor {
           cacheCreationInputTokens: usage.reported ? usage.cacheCreate : null,
           turns,
           toolCalls: toolkit.toolCalls,
+          cacheCreation5mInputTokens: usage.reported ? summed.cacheCreation5mInputTokens : null,
+          cacheCreation1hInputTokens: usage.reported ? summed.cacheCreation1hInputTokens : null,
         },
         usd,
         elapsedMs,

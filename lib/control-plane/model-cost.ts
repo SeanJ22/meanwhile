@@ -100,17 +100,187 @@ export function rateFor(model: string): ModelRate | null {
  * base rate so a later session can check both against the same price list.
  */
 export const CACHE_RATE_MULTIPLIERS = {
+  /** A 5-minute cache write. */
   cacheCreation: 1.25,
+  /** A 1-hour cache write (2026-09-06; the reference's prompt-caching page: "2× for 1-hour TTL"). */
+  cacheCreation1h: 2,
   cacheRead: 0.1,
-  statedOn: "2026-09-01",
-  source: "Anthropic first-party API rates, read from the claude-api reference (prompt caching)",
+  /** The Message Batches API: 50% of standard prices on every token category (2026-09-06). */
+  batch: 0.5,
+  statedOn: "2026-09-06",
+  source: "Anthropic first-party API rates, read from the claude-api reference (prompt caching; Message Batches)",
 } as const;
+
+/* -------------------------------------------------- the metered usage (2026-09-06) */
+
+/**
+ * **THE FIVE QUANTITIES THE PROVIDER BILLS, AS ONE RECORD.**
+ *
+ * `uncachedInputTokens` is the API's `input_tokens` — the remainder after
+ * cache reads and writes, at the base price. `cacheCreationInputTokens` is
+ * the AGGREGATE the API defines as `ephemeral_5m_input_tokens +
+ * ephemeral_1h_input_tokens`; the split is carried beside it because the two
+ * TTLs bill at different multipliers, and the aggregate is never priced on top
+ * of its split. A response that carries the aggregate and no split leaves the
+ * split null, and `priceMeteredUsage` then prices the aggregate at the TTL the
+ * request asked for and says so on its result.
+ */
+export interface MeteredUsage {
+  readonly uncachedInputTokens: number | null;
+  readonly outputTokens: number | null;
+  readonly cacheReadInputTokens: number | null;
+  readonly cacheCreationInputTokens: number | null;
+  readonly cacheCreation5mInputTokens: number | null;
+  readonly cacheCreation1hInputTokens: number | null;
+  readonly batch: boolean;
+}
+
+export type CacheWriteTtl = "5m" | "1h";
+
+/**
+ * Read the API's `usage` block. Every field is read from the response and
+ * never inferred from the request: a missing base count is null (unmeasured),
+ * a missing cache field beside a reported base count is a measured zero (a
+ * provider that reported `input_tokens` and omitted the cache fields reported
+ * no cache use), and a missing `cache_creation` split leaves the split null.
+ */
+export function readMeteredUsage(usage: unknown, batch = false): MeteredUsage {
+  const u = usage && typeof usage === "object" ? (usage as Record<string, unknown>) : {};
+  const num = (v: unknown): number | null => (typeof v === "number" && Number.isFinite(v) ? v : null);
+  const base = num(u.input_tokens);
+  const output = num(u.output_tokens);
+  const reported = base !== null || output !== null;
+  const split = u.cache_creation && typeof u.cache_creation === "object" ? (u.cache_creation as Record<string, unknown>) : null;
+  return {
+    uncachedInputTokens: base,
+    outputTokens: output,
+    cacheReadInputTokens: reported ? (num(u.cache_read_input_tokens) ?? 0) : null,
+    cacheCreationInputTokens: reported ? (num(u.cache_creation_input_tokens) ?? 0) : null,
+    cacheCreation5mInputTokens: split ? (num(split.ephemeral_5m_input_tokens) ?? 0) : null,
+    cacheCreation1hInputTokens: split ? (num(split.ephemeral_1h_input_tokens) ?? 0) : null,
+    batch,
+  };
+}
+
+export interface PricedUsage {
+  readonly usd: number | null;
+  /**
+   * SPLIT: the two TTL writes were priced at their own multipliers.
+   * AGGREGATE: the response carried no split, so the aggregate was priced at
+   * the multiplier of the TTL the request asked for (`aggregateTtl`).
+   * NONE: nothing was written to the cache, or nothing was measured.
+   */
+  readonly cacheWritePricedFrom: "SPLIT" | "AGGREGATE" | "NONE";
+  readonly aggregateTtl: CacheWriteTtl | null;
+}
+
+/**
+ * **THE PRICE, FROM EXACTLY FIVE TOKEN QUANTITIES AND THE OUTPUT.**
+ * (2026-09-06. This replaces pricing the whole prompt at the base rate.)
+ *
+ *   uncached input                       × base input price
+ *   5-minute cache writes                × base × 1.25
+ *   1-hour cache writes                  × base × 2
+ *   cache reads                          × base × 0.1
+ *   output                               × output price
+ *   then, once, × 0.5 when the request went through the Batches API
+ *
+ * The aggregate `cacheCreationInputTokens` contributes NOTHING on top of its
+ * split; it is priced only when the split is absent, at `requestedTtl`.
+ * Null when the model has no stated rate or the base counts are absent — a
+ * number that looks measured and is not is worse than a named gap.
+ */
+export function priceMeteredUsage(
+  model: string,
+  usage: MeteredUsage,
+  requestedTtl: CacheWriteTtl = "5m",
+  /** An explicit rate row, for a caller that already resolved one. Defaults to the table's row for `model`. */
+  rateOverride: ModelRate | null = null,
+): PricedUsage {
+  const rate = rateOverride ?? rateFor(model);
+  if (rate === null || usage.uncachedInputTokens === null || usage.outputTokens === null) {
+    return { usd: null, cacheWritePricedFrom: "NONE", aggregateTtl: null };
+  }
+  const base = rate.inputUsdPerMillion / 1_000_000;
+  const read = usage.cacheReadInputTokens ?? 0;
+  const aggregate = usage.cacheCreationInputTokens ?? 0;
+  const hasSplit = usage.cacheCreation5mInputTokens !== null && usage.cacheCreation1hInputTokens !== null;
+  let writes: number;
+  let pricedFrom: PricedUsage["cacheWritePricedFrom"];
+  let aggregateTtl: CacheWriteTtl | null = null;
+  if (hasSplit) {
+    writes =
+      (usage.cacheCreation5mInputTokens ?? 0) * base * CACHE_RATE_MULTIPLIERS.cacheCreation +
+      (usage.cacheCreation1hInputTokens ?? 0) * base * CACHE_RATE_MULTIPLIERS.cacheCreation1h;
+    pricedFrom = (usage.cacheCreation5mInputTokens ?? 0) + (usage.cacheCreation1hInputTokens ?? 0) > 0 ? "SPLIT" : "NONE";
+  } else if (aggregate > 0) {
+    const multiplier = requestedTtl === "1h" ? CACHE_RATE_MULTIPLIERS.cacheCreation1h : CACHE_RATE_MULTIPLIERS.cacheCreation;
+    writes = aggregate * base * multiplier;
+    pricedFrom = "AGGREGATE";
+    aggregateTtl = requestedTtl;
+  } else {
+    writes = 0;
+    pricedFrom = "NONE";
+  }
+  const full =
+    usage.uncachedInputTokens * base +
+    writes +
+    read * base * CACHE_RATE_MULTIPLIERS.cacheRead +
+    (usage.outputTokens / 1_000_000) * rate.outputUsdPerMillion;
+  return { usd: usage.batch ? full * CACHE_RATE_MULTIPLIERS.batch : full, cacheWritePricedFrom: pricedFrom, aggregateTtl };
+}
+
+/** The six ledger fields, from one metered usage. The shape `AttemptCost` carries. */
+export function meteredCostFields(usage: MeteredUsage): {
+  readonly cacheReadInputTokens: number | null;
+  readonly cacheCreationInputTokens: number | null;
+  readonly cacheCreation5mInputTokens: number | null;
+  readonly cacheCreation1hInputTokens: number | null;
+  readonly uncachedInputTokens: number | null;
+  readonly batch: boolean;
+} {
+  return {
+    cacheReadInputTokens: usage.cacheReadInputTokens,
+    cacheCreationInputTokens: usage.cacheCreationInputTokens,
+    cacheCreation5mInputTokens: usage.cacheCreation5mInputTokens,
+    cacheCreation1hInputTokens: usage.cacheCreation1hInputTokens,
+    uncachedInputTokens: usage.uncachedInputTokens,
+    batch: usage.batch,
+  };
+}
+
+/** Sum metered usages turn by turn. A null in any turn's base count makes that field null (unmeasured), never zero. */
+export function sumMeteredUsage(turns: readonly MeteredUsage[]): MeteredUsage {
+  const add = (pick: (u: MeteredUsage) => number | null): number | null => {
+    let total = 0;
+    for (const t of turns) {
+      const v = pick(t);
+      if (v === null) return null;
+      total += v;
+    }
+    return turns.length === 0 ? null : total;
+  };
+  return {
+    uncachedInputTokens: add((u) => u.uncachedInputTokens),
+    outputTokens: add((u) => u.outputTokens),
+    cacheReadInputTokens: add((u) => u.cacheReadInputTokens),
+    cacheCreationInputTokens: add((u) => u.cacheCreationInputTokens),
+    cacheCreation5mInputTokens: add((u) => u.cacheCreation5mInputTokens),
+    cacheCreation1hInputTokens: add((u) => u.cacheCreation1hInputTokens),
+    batch: turns.length > 0 && turns.every((u) => u.batch),
+  };
+}
 
 /**
  * The dollar cost of a run whose provider usage split cached from uncached
  * input. Null when the base counts are absent; cached counts default to zero
  * ONLY when the provider reported the base counts, because a provider that
  * reported `input_tokens` and omitted the cache fields reported no cache use.
+ *
+ * Since 2026-09-06 this is `priceMeteredUsage` over a usage with no TTL split:
+ * the aggregate cache write is priced at the 5-minute multiplier, which is
+ * every request this lane has ever sent. Callers that hold the split call
+ * `priceMeteredUsage` directly.
  */
 export function usdForUsageWithCache(
   usage: {
@@ -121,15 +291,20 @@ export function usdForUsageWithCache(
   },
   rate: ModelRate = MODEL_WORKER_RATES,
 ): number | null {
-  if (usage.inputTokens === null || usage.outputTokens === null) return null;
-  const read = usage.cacheReadInputTokens ?? 0;
-  const created = usage.cacheCreationInputTokens ?? 0;
-  return (
-    (usage.inputTokens / 1_000_000) * rate.inputUsdPerMillion +
-    (created / 1_000_000) * rate.inputUsdPerMillion * CACHE_RATE_MULTIPLIERS.cacheCreation +
-    (read / 1_000_000) * rate.inputUsdPerMillion * CACHE_RATE_MULTIPLIERS.cacheRead +
-    (usage.outputTokens / 1_000_000) * rate.outputUsdPerMillion
-  );
+  return priceMeteredUsage(
+    rate.model,
+    {
+      uncachedInputTokens: usage.inputTokens,
+      outputTokens: usage.outputTokens,
+      cacheReadInputTokens: usage.cacheReadInputTokens ?? 0,
+      cacheCreationInputTokens: usage.cacheCreationInputTokens ?? 0,
+      cacheCreation5mInputTokens: null,
+      cacheCreation1hInputTokens: null,
+      batch: false,
+    },
+    "5m",
+    rate,
+  ).usd;
 }
 
 /**

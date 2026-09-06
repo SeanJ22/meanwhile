@@ -104,6 +104,12 @@ const walk: RunWork = async () => ({
     durationMs: 120,
     bytesFetched: 4096,
     requestCount: 1,
+    cacheReadInputTokens: null,
+    cacheCreationInputTokens: null,
+    cacheCreation5mInputTokens: null,
+    cacheCreation1hInputTokens: null,
+    uncachedInputTokens: null,
+    batch: false,
   },
   detail: "walked",
 });

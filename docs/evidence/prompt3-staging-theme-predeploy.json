@@ -1,0 +1,81 @@
+{
+  "recordedAt": "2026-09-06T09:32:11.177Z",
+  "phase": "VERIFIED_LOCAL_STAGING_CANDIDATE",
+  "testedHead": "e91e914ae9c435728d1ade3f122d3287ec29ff6e",
+  "sourceProofHead": "cc7b5f3367456d25e5abff152d36f995e75c7c18",
+  "sourceGraphFiles": 465,
+  "sourceGraphIdentical": true,
+  "executionPath": "docs/evidence/reader-last-mile-prompt3-theme-source-execution.json.gz",
+  "executionCases": 187,
+  "executionFailures": 0,
+  "gatePath": "data/ops/gate-runs/2026-09-06-06.json",
+  "aggregateGateStatus": "FAIL",
+  "gatePass": 15,
+  "gateCount": 16,
+  "suiteTotals": {
+    "tests": 5586,
+    "pass": 5584,
+    "fail": 1,
+    "suites": 32,
+    "skipped": 1,
+    "todo": 0,
+    "cancelled": 0
+  },
+  "frozenRows": [
+    "STG-F1",
+    "STG-F2",
+    "STG-F3",
+    "STG-F4",
+    "STG-F5",
+    "STG-F6",
+    "STG-F7"
+  ],
+  "raisedState": "AWAITING_OWNER_CHOICE",
+  "followUp": {
+    "test": "the committed complete reader graph still matches its proved holdings, loaders and rendering receipt",
+    "disposition": "EXCLUDED_FOLLOW_UP_BY_EXPLICIT_OWNER_DIRECTIVE",
+    "reason": "The inherited receipt was already invalidated by Prompt 3A. Current source-only execution independently passes; receipt renewal refuses one unchanged held event crossing the existing 90-day calendar window. No civic fact, selector, receipt hash or validator was changed to bypass it.",
+    "calendarDiff": [
+      {
+        "id": "meetings:meetings:nh",
+        "ceasedApplicable": [
+          {
+            "id": "data/meetings-snapshot.json#/meetings/321",
+            "reason": {
+              "status": "INTENTIONALLY_OUT_OF_SCOPE",
+              "selector": "searchMeetings / CONCLUDED_LOOKBACK_DAYS / UPCOMING_HORIZON_DAYS",
+              "reason": "Event revize:merrimack:2026-06-08 starts 2026-06-08T00:00:00-04:00, outside the canonical calendar window 90 days back / 120 days ahead at 2026-09-06T07:40:35.283Z. This is a current-calendar scope, not unheld data or publisher absence. Held historical records retain applicable dated Ask/agenda obligations."
+            }
+          }
+        ],
+        "becameApplicable": [],
+        "holdingsUnchanged": true
+      },
+      {
+        "id": "meetings:map:nh",
+        "ceasedApplicable": [
+          {
+            "id": "data/meetings-snapshot.json#/meetings/321",
+            "reason": {
+              "status": "INTENTIONALLY_OUT_OF_SCOPE",
+              "selector": "searchMeetings / CONCLUDED_LOOKBACK_DAYS / UPCOMING_HORIZON_DAYS",
+              "reason": "Event revize:merrimack:2026-06-08 starts 2026-06-08T00:00:00-04:00, outside the canonical calendar window 90 days back / 120 days ahead at 2026-09-06T07:40:35.283Z. This is a current-calendar scope, not unheld data or publisher absence. Held historical records retain applicable dated Ask/agenda obligations."
+            }
+          }
+        ],
+        "becameApplicable": [],
+        "holdingsUnchanged": true
+      }
+    ]
+  },
+  "unchangedPaths": [
+    "netlify.toml",
+    ".github/workflows",
+    "lib/db",
+    "lib/control-plane",
+    "data/meetings-snapshot.json",
+    "public/geo/state-outlines.geojson"
+  ],
+  "releaseScope": "test only; no production promotion; no civic-data approval policy changes",
+  "liveProof": "Pending deployment; this record does not claim that the final candidate is live."
+}

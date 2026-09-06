@@ -1,5 +1,21 @@
 @import "tailwindcss";
 
+/* Only emitted by the canonical test build's root layout. */
+.staging-review-marker {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 66px);
+  left: 12px;
+  z-index: 80;
+  font: 500 9px var(--font-jetbrains-mono), monospace;
+  letter-spacing: 0.06em;
+  padding: 4px 6px;
+  color: var(--text);
+  background: var(--panel);
+  border-radius: 4px;
+  opacity: 0.86;
+}
+.staging-review-marker a:focus-visible { outline: 2px solid var(--text); outline-offset: 4px; }
+
 /* Design tokens, ported from EdiaStratMap's src/styles/main.css — docs/globals-css-notes.md#design-tokens-ported-from-ediastratmap-s-src-styles-main-css-1 */
 
 :root {

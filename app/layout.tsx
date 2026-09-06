@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { DM_Sans, EB_Garamond, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
@@ -116,7 +117,16 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">
+        {process.env.WTP_BUILD_CONTEXT === "branch-deploy" && process.env.WTP_BUILD_BRANCH === "test" && (
+          <aside className="staging-review-marker" aria-label="Software staging">
+            <Link href="/review" title={`Test build ${process.env.WTP_BUILD_COMMIT}; deploy ${process.env.WTP_BUILD_DEPLOY_ID}`}>
+              TEST / STAGING
+            </Link>
+          </aside>
+        )}
+        {children}
+      </body>
     </html>
   );
 }

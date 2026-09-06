@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 531,
-    "named": 5530,
+    "files": 532,
+    "named": 5533,
     "dynamic": 23
   },
   "files": {
@@ -6838,6 +6838,14 @@
         "the snapshot source refuses to serve when no snapshot exists",
         "the stated total must be the number of rows actually present",
         "write then read round-trips, and the reader validates what it reads"
+      ],
+      "dynamic": 0
+    },
+    "tests/software-release-manifest.test.ts": {
+      "names": [
+        "software manifest cannot call an unknown build or production deployment a stable staging boundary",
+        "software manifest names the exact staging build and five review sections without civic approvals or secrets",
+        "software manifest withdraws the boundary if either mutable store points at production or is unmeasured"
       ],
       "dynamic": 0
     },

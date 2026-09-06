@@ -53,6 +53,7 @@ const nextConfig: NextConfig = {
     WTP_BUILD_CONTEXT: process.env.CONTEXT ?? "",
     WTP_BUILD_DEPLOY_ID: process.env.DEPLOY_ID ?? "",
     WTP_BUILD_ON_NETLIFY: process.env.NETLIFY ?? "",
+    WTP_BUILD_CREATED_AT: new Date().toISOString(),
     WTP_BUILD_PRODUCTION_DATABASE_HOST: databaseAnchor(applicationDatabaseHints.productionHostHint),
     WTP_BUILD_STAGING_DATABASE_HOST: databaseAnchor(applicationDatabaseHints.stagingHostHint),
     WTP_BUILD_PRODUCTION_CONTROL_PLANE_HOST: databaseAnchor(controlPlaneDatabaseHints.productionHostHint),

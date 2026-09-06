@@ -94,6 +94,7 @@
     "freshness:audit": "tsx scripts/freshness-audit.mts",
     "freshness:shadow": "tsx scripts/freshness-shadow.mts",
     "freshness:shadow:pg": "node --env-file=.env.local --experimental-strip-types scripts/freshness-shadow.mts --provider=postgres",
+    "ci:cost": "node scripts/ci-cost.mjs",
     "gates": "node scripts/gates.mjs",
     "geocode": "tsx scripts/geocode.mts",
     "gop:shape": "tsx scripts/gop-municipal-shape-0825.mts",

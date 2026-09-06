@@ -1,11 +1,11 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "bd60a61ad38da7f5",
+  "snapshot": "d28cbf56a2e04cdd",
   "counts": {
-    "records": 314,
-    "current": 45,
-    "law": 32,
+    "records": 315,
+    "current": 46,
+    "law": 33,
     "decisions": 13,
     "historical": 269
   },
@@ -7371,6 +7371,25 @@
       "relations": [],
       "uncertain": [],
       "sourceRef": "docs/governance/policies/shipping-ci.md"
+    },
+    {
+      "id": "R-0278",
+      "aliases": [
+        "RULING 278",
+        "R278",
+        "R-278"
+      ],
+      "title": "RULING 278 — workflow cost follows the canonical shipping classification",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-09-05",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/ops/deploy-paths.ts"
     },
     {
       "id": "R-C-commands-package-json-s-scripts-block-is-the-list",

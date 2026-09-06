@@ -63,6 +63,27 @@ const NOT_A_GATE = [
   'git cat-file -e "${holdings_update}^{commit}" 2>/dev/null || git fetch --no-tags --depth=1 origin "$holdings_update"',
   // Shallow-checkout setup for the committed reader receipt's ancestry proof.
   "node scripts/reader-proof-history.mjs",
+  /*
+   * RULING 278 — THE CLASSIFIER IS NOT A GATE, AND THE CHEAP PROOF IS NOT ONE
+   * EITHER. Both are named here rather than pattern-matched away, and both have
+   * a reason a reader can disagree with.
+   *
+   * `ci-cost.mjs` with no flag DECIDES WHAT RUNS. It never fails a commit — its
+   * every failure path answers FULL — so there is nothing for a local door to
+   * pre-run. `--attest` prints the receipt of what was skipped.
+   *
+   * `--prove` DOES run guards and DOES fail the job, and it is still not a
+   * local gate: it refuses outright on any commit classified FULL, and a
+   * session's own head is a pull request, which is always FULL. Putting it in
+   * `GATES` would make `pnpm gates` invoke a command that exits 1 by design on
+   * every tree a session ever has. What it runs is `CHEAP_PATH_PROOFS` — four
+   * of this repository's own test files, every one of which `pnpm test` (which
+   * IS a gate) already runs in full.
+   */
+  "node scripts/ci-cost.mjs",
+  "node scripts/ci-cost.mjs --attest=build",
+  "node scripts/ci-cost.mjs --attest=gates",
+  "node scripts/ci-cost.mjs --prove",
 ];
 
 /*

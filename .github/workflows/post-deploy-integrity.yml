@@ -39,13 +39,17 @@
 #
 # ## It cannot start a deploy loop
 #
-# The only file it commits is `data/ops/production-integrity.json`, and
-# `data/ops/` is in `NON_SHIPPING_PREFIXES` (`lib/ops/deploy-paths.ts`, commit
-# `6e591077` — "an ops record must not cost a build"). `classifyDeploy` returns
-# `cancel` for a commit carrying only that file, so the observer's own output can
-# never trigger the deploy the observer exists to observe.
-# `tests/post-deploy-observer.test.ts` asserts that through `classifyDeploy`
-# rather than trusting this sentence.
+# The only file it commits is `data/ops/production-integrity.json` and the
+# generated view of it, and `data/ops/` is in `NON_SHIPPING_PREFIXES`
+# (`lib/ops/deploy-paths.ts`, commit `6e591077` — "an ops record must not cost a
+# build"). `classifyDeploy` returns `cancel` for a commit carrying only those, so
+# the observer's own output can never trigger the deploy the observer exists to
+# observe. `tests/post-deploy-observer.test.ts` asserts that through
+# `classifyDeploy` rather than trusting this sentence.
+#
+# SINCE RULING 278 THE SKIP IS ALSO CHEAP. That verdict is now read BEFORE the
+# install rather than after it, from the same canonical table, so a bookkeeping
+# commit costs a checkout and one git call instead of a full dependency install.
 
 name: Post-deploy integrity
 
@@ -113,10 +117,48 @@ jobs:
           node-version: 24
           package-manager-cache: false
 
+      # ══ CLASSIFY FIRST, SPEND SECOND (RULING 278) ══
+      #
+      # `scripts/post-deploy-observer.mts` has always asked `classifyDeploy`
+      # whether the pushed commit could change what production serves, and has
+      # always exited NOT_A_RELEASE when it could not. It asked AFTER the install
+      # — so the observer's own bookkeeping commit still cost a checkout, a
+      # corepack bootstrap and a full `pnpm install` before it could say the one
+      # thing it already knew.
+      #
+      # The same canonical answer, from the same table, now arrives before any
+      # of that: `scripts/ci-cost.mjs` prints `deploy=` from `classifyDeploy` —
+      # the DEPLOY question, not the cost question, because the observer must
+      # skip exactly the commits Netlify was told to cancel and no others. THERE
+      # IS NO PATH LIST IN THIS FILE and `tests/ci-cost.test.ts` fails if one
+      # appears. `cannot-tell` builds, so an unreadable commit is still observed.
+      - name: Could this commit have deployed at all?
+        id: cost
+        run: node scripts/ci-cost.mjs --sha=${{ inputs.sha || github.sha }}
+
+      # THE OBSERVER DOES NOT FAN OUT INTO ITSELF.
+      #
+      # Its own commit is `data/ops/production-integrity.json` plus the generated
+      # view of it, both non-shipping, so Netlify cancels that build and no
+      # deployment can result. Polling production for ten minutes waiting for a
+      # deploy that was correctly cancelled would time out on every quiet push
+      # and report PRODUCTION_BEHIND about nothing — an alarm that is wrong every
+      # night is an alarm nobody reads (RULING 115).
+      - name: Non-shipping commit — no deployment can result
+        if: steps.cost.outputs.deploy == 'cancel'
+        run: |
+          echo "NOT_A_RELEASE — ${{ steps.cost.outputs.class }}."
+          echo "Every changed path is non-shipping, so Netlify cancels this build and production"
+          echo "cannot move. No deploy is owed for this commit, so no post-deploy reading is owed"
+          echo "either: nothing is recorded and the previous reading stands unchanged."
+          echo "No install was run, no production poll was started, and no commit was made."
+
       - name: Enable corepack (pnpm pinned by packageManager)
+        if: steps.cost.outputs.deploy != 'cancel'
         run: corepack enable
 
       - name: Install
+        if: steps.cost.outputs.deploy != 'cancel'
         run: corepack pnpm install --frozen-lockfile
 
       # THE OBSERVATION AND THE READING, IN ONE STEP.
@@ -143,6 +185,7 @@ jobs:
       # reading and an unaskable production are both things a person must see.
       - name: Observe the deploy and take the post-deploy reading
         id: observe
+        if: steps.cost.outputs.deploy != 'cancel'
         timeout-minutes: 15
         env:
           WTP_PRODUCTION_DATABASE_URL_READONLY: ${{ secrets.WTP_PRODUCTION_DATABASE_URL_READONLY }}
@@ -218,8 +261,14 @@ jobs:
       # about PRODUCTION — a schema that disagrees with the deployed code, a
       # credential that stopped resolving — and those are exactly the failures
       # nobody should have to reconstruct from a bare exit code the next morning.
+      #
+      # `steps.observe.outcome != 'skipped'` (RULING 278): on the cheap path
+      # there is no install, so `pnpm diagnose` could not run — and a diagnoser
+      # that turns a red run into a differently-red run hides the cause it
+      # exists to name. It diagnoses the observation, so it runs only when the
+      # observation was attempted.
       - name: Name the cause
-        if: failure()
+        if: failure() && steps.observe.outcome != 'skipped'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: corepack pnpm diagnose

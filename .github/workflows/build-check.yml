@@ -131,6 +131,17 @@ permissions:
 # RULING 124 a normal night is ONE orchestrated commit; the five above were a
 # manual fleet proof. The bound is the number of commits, and every one of them
 # is a commit somebody chose to make.
+#
+# AND THAT COST CAME DUE (RULING 278, 2026-09-05). Three post-deploy readings
+# landed on `main` on one afternoon and bought 12m 09s, 9m 57s and 12m 01s of
+# shipping-grade proof each, for commits carrying `data/ops/
+# production-integrity.json` and its generated view. The `data/**` skip rejected
+# above is STILL rejected, and for the reason given. What was adopted instead is
+# an EXACT-FILE allowlist in `lib/ops/deploy-paths.ts` — six files, each written
+# by exactly one scheduled pusher under a grant that cannot carry code, each
+# with the guards that read it named and RUN on the cheap path. Classification
+# happens before any expensive step in every job below, and UNKNOWN, MIXED and
+# every pull request answer FULL.
 concurrency:
   group: build-check-${{ github.ref }}${{ github.event_name == 'push' && format('-{0}', github.sha) || '' }}
   cancel-in-progress: true
@@ -154,17 +165,43 @@ jobs:
         mode: [standalone, default]
     name: build (${{ matrix.mode }})
     steps:
+      # Depth 2 rather than 1: `scripts/ci-cost.mjs` reads this commit's own
+      # changed-path list with `git show`, which needs a parent. Still a shallow
+      # clone, so nothing that depends on shallowness changes.
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
 
       # v7 targets Node 24 natively; package-manager-cache off because pnpm is
       # not on PATH until corepack enable. Same reasoning as
       # intake-tripwire.yml, where R45 worked it out.
+      #
+      # It also has to come BEFORE the classifier below, which imports a `.ts`
+      # module and therefore needs a Node that strips types. The runner image's
+      # preinstalled Node does not, and the classifier would answer FULL on the
+      # import failure — safe, and permanently useless.
       - uses: actions/setup-node@v7
         with:
           node-version: 24
           package-manager-cache: false
 
+      # ══ CLASSIFY FIRST, SPEND SECOND (RULING 278) ══
+      #
+      # The canonical answer comes from `lib/ops/deploy-paths.ts` through
+      # `scripts/ci-cost.mjs`. THERE IS NO PATH LIST IN THIS FILE and there may
+      # never be one — `tests/ci-cost.test.ts` reads this workflow and fails if
+      # a second truth table appears here, because two lists are two answers
+      # free to disagree about whether a commit was proved.
+      #
+      # It needs no install: bare Node, one git call, one import. UNKNOWN and
+      # MIXED both answer FULL, so every step below runs unless the commit was
+      # POSITIVELY proven to be a scheduled job's operational bookkeeping.
+      - name: Classify the commit (canonical shipping classifier)
+        id: cost
+        run: node scripts/ci-cost.mjs
+
       - name: Enable corepack (pnpm pinned by packageManager)
+        if: steps.cost.outputs.cost != 'CHEAP'
         run: corepack enable
 
       # P-006 · THE STORE, CACHED — and cached AFTER corepack, deliberately.
@@ -178,9 +215,11 @@ jobs:
       # the question can be answered.
       - name: Where is the pnpm store
         id: pnpm-store
+        if: steps.cost.outputs.cost != 'CHEAP'
         run: echo "path=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
 
       - uses: actions/cache@v4
+        if: steps.cost.outputs.cost != 'CHEAP'
         with:
           path: ${{ steps.pnpm-store.outputs.path }}
           key: pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
@@ -191,6 +230,7 @@ jobs:
             pnpm-${{ runner.os }}-
 
       - name: Install
+        if: steps.cost.outputs.cost != 'CHEAP'
         run: corepack pnpm install --frozen-lockfile
 
       # P-006 · Next's own build cache. The build log read "No build cache
@@ -204,6 +244,7 @@ jobs:
       # because the two legs compile differently and sharing one key would have
       # them evict each other every run.
       - uses: actions/cache@v4
+        if: steps.cost.outputs.cost != 'CHEAP'
         with:
           path: ${{ github.workspace }}/.next/cache
           key: next-${{ runner.os }}-${{ matrix.mode }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
@@ -216,6 +257,7 @@ jobs:
       # this job stops standing in for the deploy, so they are named together
       # here and in netlify.toml's header.
       - name: Build (the command netlify.toml gives Netlify)
+        if: steps.cost.outputs.cost != 'CHEAP'
         env:
           # Netlify's @netlify/plugin-nextjs sets this in its onPreBuild, so a
           # deploy is always a standalone build even though netlify.toml never
@@ -239,21 +281,32 @@ jobs:
       # the same file the gates job already ran; the one test that skipped
       # there is the one that matters here.
       - name: Bundle-scanning checks (need the build above)
-        if: matrix.mode == 'default'
+        if: matrix.mode == 'default' && steps.cost.outputs.cost != 'CHEAP'
         timeout-minutes: 10
         run: corepack pnpm run test:bundle
 
       - name: Trace census
-        if: always()
+        if: always() && steps.cost.outputs.cost != 'CHEAP'
         run: node scripts/trace-census.mjs --files trace-files.txt
 
       - name: Keep the trace list
-        if: always()
+        if: always() && steps.cost.outputs.cost != 'CHEAP'
         uses: actions/upload-artifact@v5
         with:
           name: trace-files-${{ matrix.mode }}-${{ github.sha }}
           path: trace-files.txt
           if-no-files-found: warn
+
+      # THE CHEAP PATH IS EXPLICIT, NOT AN ABSENCE (RULING 278).
+      #
+      # A skipped job vanishes from the Actions page and a required context that
+      # never arrives disarms branch protection rather than blocking it
+      # (RULING 156). So this job still runs, still reports `build (<mode>)`,
+      # and says in as many words what it decided and why. "Nothing happened" and
+      # "nothing needed to happen, and here is the proof" are different claims.
+      - name: Cheap attestation — nothing here could differ
+        if: steps.cost.outputs.cost == 'CHEAP'
+        run: node scripts/ci-cost.mjs --attest=build
 
   # ---------------------------------------------------------------------------
   # THE SUITE, ON LINUX, ON EVERY PR (Prompt B item 1c, 2026-08-20).
@@ -285,9 +338,35 @@ jobs:
         with:
           fetch-depth: 3
 
+      # SETUP-NODE MOVED ABOVE THE HOLDINGS FETCH (RULING 278), because the
+      # classifier below imports a `.ts` module and needs a Node that strips
+      # types; the runner image's preinstalled Node does not, and the classifier
+      # would answer FULL on the import failure — safe, and permanently useless.
+      # The holdings fetch is git only and does not care where it sits.
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      # ══ CLASSIFY FIRST, SPEND SECOND (RULING 278) ══
+      #
+      # The canonical answer comes from `lib/ops/deploy-paths.ts` through
+      # `scripts/ci-cost.mjs`. THERE IS NO PATH LIST IN THIS FILE and there may
+      # never be one — `tests/ci-cost.test.ts` reads this workflow and fails if
+      # a second truth table appears here.
+      #
+      # UNKNOWN, MIXED and every pull request answer FULL, so the whole gate set
+      # below runs unless the commit was POSITIVELY proven to be a scheduled
+      # job's operational bookkeeping. The cheap path is not "run nothing": the
+      # guards that read those artifacts from disk still run, further down.
+      - name: Classify the commit (canonical shipping classifier)
+        id: cost
+        run: node scripts/ci-cost.mjs
+
       # Exact historical data equality is a migration proof, not a live-source query.
       # Fetch the frozen base and the pinned integration source; keep checkout shallow.
       - name: Frozen holdings base for extraction proofs
+        if: steps.cost.outputs.cost != 'CHEAP'
         shell: bash
         run: |
           holdings_base=$(node --input-type=module -e "import{readFileSync}from'node:fs';console.log(JSON.parse(readFileSync('data/state-holdings/move-plan.json','utf8')).baseSha)")
@@ -296,11 +375,6 @@ jobs:
           holdings_update=$(node --input-type=module -e "import{readFileSync}from'node:fs';console.log(JSON.parse(readFileSync('data/states/az/ballot/measure-summaries.json','utf8')).source.integratedUpdate.commit)")
           [[ "$holdings_update" =~ ^[0-9a-f]{40}$ ]] || exit 1
           git cat-file -e "${holdings_update}^{commit}" 2>/dev/null || git fetch --no-tags --depth=1 origin "$holdings_update"
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 24
-          package-manager-cache: false
 
       - name: Enable corepack (pnpm pinned by packageManager)
         run: corepack enable
@@ -369,11 +443,13 @@ jobs:
       # direction to be wrong in. A key that invalidates too eagerly costs one
       # download; a key that invalidates too rarely serves a stale browser.
       - uses: actions/cache@v4
+        if: steps.cost.outputs.cost != 'CHEAP'
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
 
       - name: Install the browser the suite needs
+        if: steps.cost.outputs.cost != 'CHEAP'
         timeout-minutes: 15
         run: corepack pnpm exec playwright install --with-deps chromium
 
@@ -398,6 +474,7 @@ jobs:
       # meaning anything, and letting the guard pass with no browser is the one
       # "fix" `scripts/browser.mts` forbids in as many words.
       - name: Prove the browser is actually there
+        if: steps.cost.outputs.cost != 'CHEAP'
         timeout-minutes: 5
         run: corepack pnpm run assert:browser
 
@@ -405,6 +482,7 @@ jobs:
       # commits. Keep the checkout shallow, but deepen this one ref until Git
       # can prove that the receipt's executed head is really in HEAD's history.
       - name: Reader closure proof ancestry
+        if: steps.cost.outputs.cost != 'CHEAP'
         shell: bash
         run: node scripts/reader-proof-history.mjs
 
@@ -412,11 +490,12 @@ jobs:
       # the verdict of the others. A PR author gets all three answers from one
       # run rather than three round trips.
       - name: Test
+        if: steps.cost.outputs.cost != 'CHEAP'
         timeout-minutes: 15
         run: corepack pnpm test
 
       - name: Lint
-        if: always()
+        if: always() && steps.cost.outputs.cost != 'CHEAP'
         timeout-minutes: 10
         run: corepack pnpm lint
 
@@ -437,7 +516,7 @@ jobs:
       # deliberately does NOT build — tests/push-main.test.ts asserts that, so
       # a future "just add a build step" cannot quietly restore the old lie.
       - name: Types (fresh checkout, no build)
-        if: always()
+        if: always() && steps.cost.outputs.cost != 'CHEAP'
         timeout-minutes: 10
         run: corepack pnpm exec tsc --noEmit
 
@@ -471,27 +550,27 @@ jobs:
       # `scripts/gates.mjs` carries the same three, and
       # `tests/gate-parity.test.ts` fails if this file and that one ever drift.
       - name: Governance ledger and its generated views
-        if: always()
+        if: always() && steps.cost.outputs.cost != 'CHEAP'
         timeout-minutes: 10
         run: corepack pnpm governance:check
 
       - name: Orchestration plans (RULING 190)
-        if: always()
+        if: always() && steps.cost.outputs.cost != 'CHEAP'
         timeout-minutes: 5
         run: corepack pnpm orchestration:check
 
       - name: Method knowledge store
-        if: always()
+        if: always() && steps.cost.outputs.cost != 'CHEAP'
         timeout-minutes: 5
         run: corepack pnpm method:check
 
       - name: Canonical state holdings and residual paths
-        if: always()
+        if: always() && steps.cost.outputs.cost != 'CHEAP'
         timeout-minutes: 5
         run: corepack pnpm state-holdings:check
 
       - name: Generated state manifests against committed observations
-        if: always()
+        if: always() && steps.cost.outputs.cost != 'CHEAP'
         timeout-minutes: 5
         run: corepack pnpm state-manifest --check
 
@@ -532,7 +611,7 @@ jobs:
       # table — and it fails the step. An unreadable answer must never print
       # like a passing one (RULING 24).
       - name: Schema shipping gate (only when the schema contract moved)
-        if: always()
+        if: always() && steps.cost.outputs.cost != 'CHEAP'
         timeout-minutes: 5
       #
       # AN ESTABLISHED MIGRATION IS IMMUTABLE, and that half runs with NO
@@ -600,6 +679,27 @@ jobs:
       # ever fired here and a workflow listening for one would never run. A gate
       # that never executes reports nothing and reads as covered.
       - name: Release freeze (refuses a release on a DEGRADED production reading)
-        if: always()
+        if: always() && steps.cost.outputs.cost != 'CHEAP'
         timeout-minutes: 5
         run: corepack pnpm exec tsx scripts/release-freeze-gate.mts
+
+      # ══ THE CHEAP PATH IS A PROOF, NOT AN ABSENCE (RULING 278) ══
+      #
+      # Everything above is skipped on a positively-proven operational commit
+      # because none of it could reach a different verdict. What COULD differ is
+      # the bytes the scheduled job just wrote — and those have guards, four of
+      # them, which read the files from disk. `ci-cost --prove` runs exactly the
+      # guards that `lib/ops/deploy-paths.ts` names for the artifacts that
+      # actually changed, and refuses to run at all on a commit classified FULL.
+      #
+      # This is why `Install` above is NOT gated: the proofs are the repository's
+      # own test files and they need `node_modules`. With the store cache warm
+      # that install is four seconds, measured on run 33996825942.
+      - name: Cheap path — the guards that read what changed
+        if: steps.cost.outputs.cost == 'CHEAP'
+        timeout-minutes: 5
+        run: node scripts/ci-cost.mjs --prove
+
+      - name: Cheap attestation — nothing else could differ
+        if: steps.cost.outputs.cost == 'CHEAP'
+        run: node scripts/ci-cost.mjs --attest=gates

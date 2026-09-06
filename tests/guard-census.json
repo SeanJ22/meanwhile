@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 528,
-    "named": 5493,
+    "files": 529,
+    "named": 5511,
     "dynamic": 23
   },
   "files": {
@@ -1724,6 +1724,29 @@
         "the browsers root honours the environment's override",
         "the committed revision is the one playwright actually wants",
         "what this repo resolves is the file playwright would actually launch"
+      ],
+      "dynamic": 0
+    },
+    "tests/ci-cost.test.ts": {
+      "names": [
+        "RULING 278 — Build Check answers cheaply and EXPLICITLY rather than disappearing",
+        "RULING 278 — Build Check classifies before any expensive step, in every job",
+        "RULING 278 — UNKNOWN is FULL, and an unreadable list is not an empty one",
+        "RULING 278 — a `paths-ignore:` filter added to Build Check is caught",
+        "RULING 278 — a hand-rolled path condition is caught",
+        "RULING 278 — an ops-only entry no pusher is granted is caught",
+        "RULING 278 — dropping the condition from an expensive step is caught",
+        "RULING 278 — every expensive step in Build Check consumes the classifier's verdict",
+        "RULING 278 — every ops-only artifact names guards the cheap path actually runs",
+        "RULING 278 — every ops-only entry is an exact file, on disk, with its reason stated",
+        "RULING 278 — every ops-only file is written to main by the scheduled pusher that declares it",
+        "RULING 278 — neither workflow keeps a second path-classification truth table",
+        "RULING 278 — no directory-wide skip may be resurrected",
+        "RULING 278 — the COMMITTED ops-only artifacts still hold their shape",
+        "RULING 278 — the class table: only a positively proven ops-only commit is cheap",
+        "RULING 278 — the ops-only set is a STRICT SUBSET of the non-shipping set",
+        "RULING 278 — the post-deploy observer consumes the same classifier, before it installs",
+        "RULING 278 — the shape check is shown catching a real malformation"
       ],
       "dynamic": 0
     },

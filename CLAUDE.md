@@ -144,6 +144,7 @@ One line each. The clauses are in the policy named.
 - Reader-facing truth changes through exactly one door, the nightly window, in shadow until READER, TRUTH and FRESHNESS are independently reproduced. (268)
 - An operation that can return nothing is asked what it returned; a zero-row extraction is a failed extraction. (269)
 - A session checks a prerequisite once and never polls; an unmet proof blocks activation, not merge, when the code is inert and guarded; one session at a time touches shared infrastructure. (277)
+- Classify first, spend second: only a positively proven non-shipping commit takes the cheap path, and it attests rather than disappears; shipping, mixed and unknown take the full proof; no workflow keeps a second path table. (278)
 
 **Sessions**
 - A session runs unattended; nothing it runs may ask it a question; a decision that is the author's becomes a row and the session continues. (271)

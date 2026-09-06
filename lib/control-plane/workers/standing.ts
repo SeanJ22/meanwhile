@@ -137,12 +137,13 @@ function linkedHosts(evidence: WorkerEvidence): readonly string[] {
 }
 
 /** Capability vocabulary maps to the method registry's existing singular field vocabulary. */
-function methodFields(capability: string, contract: GeneralizedCivicExtractionContract): readonly string[] {
+export function methodFields(capability: string, contract: GeneralizedCivicExtractionContract): readonly string[] {
   const known: Record<string, readonly string[]> = {
     meetings: ["meeting", "agenda", "minutes"], meetings_agendas: ["meeting", "agenda", "minutes"],
     officials: ["officeholder", "roster"], officials_offices: ["officeholder", "roster"],
     districts: ["body", "jurisdiction", "boundary"], districts_geography: ["body", "jurisdiction", "boundary"],
     elections: ["contest", "candidate"], elections_ballot: ["contest", "candidate"],
+    ballot_and_candidates: ["contest", "candidate", "filing"],
     campaign_finance: ["filing", "document", "source"],
   };
   const normalized = capability.toLowerCase().replace(/[ /-]+/g, "_");

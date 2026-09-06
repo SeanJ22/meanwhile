@@ -198,6 +198,8 @@ export interface ResearchState {
   readonly ownerDispatch?: OwnerDispatchRecord | null;
   /** Aggregate safety across every paid/network Fleet role, not only Scouts. */
   readonly fleetSafety?: FleetSafetySnapshot | null;
+  /** Last completed research-window projection, retained while a later cycle is running. */
+  readonly researchProgression?: import("../research-progression.ts").ResearchWindowProgression | null;
 }
 
 /**

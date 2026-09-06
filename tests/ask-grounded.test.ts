@@ -10,7 +10,7 @@ import { readInterpretation, unavailableInterpretation } from "../lib/ask/intent
 import { interpretPrompt, interpretWithoutModel, MAX_INVENTORY } from "../lib/ask/interpret.ts";
 import { resolveInterpretation } from "../lib/ask/resolve.ts";
 import { emptySelectionState, selectSitting } from "../lib/ask/select.ts";
-import { synthesizeAnswer, synthesisPrompt } from "../lib/ask/synthesize.ts";
+import { synthesizeAnswer, synthesisPrompt, synthesisDateBlock } from "../lib/ask/synthesize.ts";
 import { validateAnswer } from "../lib/ask/validate.ts";
 import { statewideExecutivesFor } from "../lib/officials/statewide-executives.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
@@ -558,7 +558,11 @@ test("ASK01: the synthesis prompt restates every rule it could break", () => {
   assert.match(prompt, /Never tell the reader how to vote/i);
   assert.match(prompt, /rank or score candidates/i);
   assert.match(prompt, /gap marked OURS is about us/i);
-  assert.match(prompt, /Today is 2026-08-27/);
+  // The date sentence is the same words, but it no longer sits in the cacheable
+  // system prefix: it is a block of the first user turn, so the instructions
+  // above are byte-stable across a midnight (request shape, prompt caching 4a).
+  assert.doesNotMatch(prompt, /Today is/);
+  assert.equal(synthesisDateBlock(pack()), "Today is 2026-08-27.");
 });
 
 test("ASK01: the pack's source allow-list is exactly its records' URLs", () => {

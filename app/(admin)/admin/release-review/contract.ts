@@ -32,9 +32,9 @@ export const FEEDBACK_MAX_CHARS = 2_000;
 /**
  * The manifest status value that makes a SHA review-ready. The source on
  * `test` (lib/review/release-manifest.ts) emits `prompt3Status` and
- * `reviewState`; both are read, `prompt3Status` first, and the composite keys
- * on either reading exactly this value. The brief names it; the observed
- * contract does not emit it yet (VISUAL_WORK_IN_PROGRESS at observation).
+ * `reviewState`; both are read, and review readiness keys on `reviewState`
+ * when present. Legacy manifests without it fall back to `prompt3Status`.
+ * The selected field must equal this value exactly.
  */
 export const REVIEW_READY_STATUS = "READY_FOR_REVIEW";
 

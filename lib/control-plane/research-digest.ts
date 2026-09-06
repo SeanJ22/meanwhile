@@ -19,7 +19,7 @@
  * trusted — but it cannot be the only explanation.
  */
 
-import type { ResearchMetrics } from "./research-metrics.ts";
+import type { CacheHitRate, ResearchMetrics } from "./research-metrics.ts";
 
 const pct = (v: number | null): string => (v === null ? "UNMEASURED" : `${(v * 100).toFixed(1)}%`);
 const usd = (v: number | null): string => (v === null ? "UNMEASURED" : `$${v.toFixed(4)}`);
@@ -50,25 +50,59 @@ export function researchDigestLines(m: ResearchMetrics): string[] {
       ` · trailing window ${pct(s.window.modelShare)} over ${s.window.cycles} cycle(s)${s.window.since ? ` since ${s.window.since}` : ""}` +
       ` · delta ${s.delta === null ? "UNMEASURED" : `${s.delta >= 0 ? "+" : ""}${(s.delta * 100).toFixed(1)} pt`}`,
   );
+  const window = m.cacheWindow ? ` in the window ${m.cacheWindow.sinceIso ?? "(open)"} → ${m.cacheWindow.untilIso ?? "(now)"}` : "";
   if (m.cacheByRole.length === 0) {
-    lines.push("  cache hit rate     NOT MEASURED — no Scout result reports usage");
+    lines.push(`  cache hit rate     NOT MEASURED — no cost-ledger row for a model role${window}`);
   } else {
-    for (const r of m.cacheByRole) {
-      lines.push(
-        `  cache hit rate     ${r.role} ${pct(r.hitRate)} (read ${r.cacheRead} · write ${r.cacheWrite} · uncached ${r.uncachedInput}` +
-          (r.repeatedPrefixTurns === null
-            ? "; per-turn misses NOT INSTRUMENTED on these results"
-            : `; repeated-prefix turns with zero reads ${r.repeatedPrefixMisses} of ${r.repeatedPrefixTurns}`) +
-          `; ${r.attempts} Attempt(s))`,
-      );
-    }
+    for (const r of m.cacheByRole) lines.push(...cacheRoleLines(r));
   }
+  const d = m.cacheDefects;
   lines.push(
-    `  cache defects      ${m.cacheDefects.defective} of ${m.cacheDefects.instrumented} instrumented result(s) recorded a repeated-prefix turn with zero cache reads`,
+    `  cache defects      ${d.defective} of ${d.instrumented} instrumented result(s) recorded a cache defect` +
+      (d.stationary === undefined ? "" : ` (stationary breakpoint ${d.stationary}; zero reads ${d.zeroRead ?? 0})`),
     `  cost per outcome   ${m.costPerOutcome.map((o) => `${o.outcome} ${usd(o.usdPerOutcome)} (${o.count})`).join(" · ")}`,
     `                     ${m.costPerOutcome[0]?.denominator ?? "no outcome recorded"}`,
   );
   return lines;
+}
+
+/**
+ * The cache lines for one role (2026-09-06): the rate with its three counts,
+ * uncached input per Attempt, the batch share, and the dollar effect of
+ * caching — each with its denominator. A role whose rows all predate the cache
+ * fields prints NOT MEASURED and says why.
+ */
+export function cacheRoleLines(r: CacheHitRate): string[] {
+  const head = `  cache hit rate     ${r.role} `;
+  /* A row computed before 2026-09-06 (a persisted metrics record) carries none of the ledger columns; it prints as it always did. */
+  if (typeof r.measuredRows !== "number") {
+    return [
+      `${head}${pct(r.hitRate)} (read ${r.cacheRead} · write ${r.cacheWrite} · uncached ${r.uncachedInput}` +
+        (r.repeatedPrefixTurns === null ? "; per-turn misses NOT INSTRUMENTED on these results" : `; repeated-prefix turns with zero reads ${r.repeatedPrefixMisses} of ${r.repeatedPrefixTurns}`) +
+        `; ${r.attempts} Attempt(s); computed before the ledger carried cache fields — per-Attempt uncached, batch share and saving NOT MEASURED)`,
+    ];
+  }
+  if (r.measuredRows === 0) {
+    return [
+      `${head}NOT MEASURED — ${r.attempts} ledger row(s), ${r.predatingRows ?? 0} predate the cache fields` +
+        ((r.unreportedRows ?? 0) > 0 ? `, ${r.unreportedRows} reported no usage` : "") +
+        "; a row written before the fields existed says nothing about its cache behaviour",
+    ];
+  }
+  const per = r.uncachedPerAttempt ?? null;
+  const perAttempt = per === null ? "UNMEASURED" : `mean ${Math.round(per.mean)} · max ${per.max}`;
+  const aggregatePriced = r.aggregatePricedRows ?? 0;
+  return [
+    `${head}${pct(r.hitRate)} (read ${r.cacheRead} · write ${r.cacheWrite} · uncached ${r.uncachedInput}` +
+      (r.repeatedPrefixTurns === null
+        ? "; per-turn columns NOT INSTRUMENTED on these results"
+        : `; zero-read turns ${r.repeatedPrefixMisses} of ${r.repeatedPrefixTurns}; stationary-breakpoint turns ${r.stationaryTurns ?? 0}`) +
+      `; ${r.denominator})`,
+    `                     ${r.role} uncached input per Attempt ${perAttempt} over ${r.measuredRows} measured row(s)` +
+      ` · batch share ${pct(r.batchShare ?? null)} of requests` +
+      ` · caching saved ${usd(r.savedUsd ?? null)} (read tokens × (base − read price))` +
+      (aggregatePriced > 0 ? ` · ${aggregatePriced} row(s) priced the cache write from the aggregate at the requested TTL (no split on the response)` : ""),
+  ];
 }
 
 /* ------------------------------------------------------------------ rows */
@@ -165,17 +199,43 @@ export function researchDigestRows(m: ResearchMetrics): ResearchDigestRows {
   ];
   const cache: DigestRow[] =
     m.cacheByRole.length === 0
-      ? [{ label: "Cache hit rate", value: "NOT MEASURED", denominator: "no Scout result reports usage", meaning: "No scout result has reported token usage yet, so there is nothing to compute a hit rate from." }]
-      : m.cacheByRole.map((r) => ({
-          label: `Cache hit rate · ${r.role}`,
-          value: pct(r.hitRate),
-          denominator: r.denominator,
-          meaning: `Of every input token ${r.role} workers sent to the model, the share served from the prompt cache. Cached tokens cost about a tenth of fresh ones, so higher is cheaper.`,
-        }));
+      ? [{ label: "Cache hit rate", value: "NOT MEASURED", denominator: "no cost-ledger row for a model role in the window", meaning: "No model request has left a cost-ledger row in this window, so there is nothing to compute a hit rate from." }]
+      : m.cacheByRole.flatMap((r) => {
+          /* A row computed before 2026-09-06 carries no ledger columns: the rate row only, as before. */
+          const metered = typeof r.measuredRows === "number";
+          const rate: DigestRow = {
+            label: `Cache hit rate · ${r.role}`,
+            value: metered && r.measuredRows === 0 ? "NOT MEASURED" : pct(r.hitRate),
+            denominator: metered && r.measuredRows === 0 ? `${r.attempts} ledger row(s) predate the cache fields or reported no usage` : r.denominator,
+            meaning: `Of every input token ${r.role} workers sent to the model, the share served from the prompt cache. Cached tokens cost about a tenth of fresh ones, so higher is cheaper.`,
+          };
+          if (!metered) return [rate];
+          return [
+            rate,
+            {
+              label: `Uncached input per Attempt · ${r.role}`,
+              value: r.uncachedPerAttempt === null || r.uncachedPerAttempt === undefined ? "NOT MEASURED" : `mean ${Math.round(r.uncachedPerAttempt.mean)} · max ${r.uncachedPerAttempt.max}`,
+              denominator: `${r.measuredRows} measured ledger row(s)`,
+              meaning: "How many tokens each attempt paid for at the full price. With the moving breakpoint working this is a few tokens per turn; a growing number is the conversation being re-sent.",
+            },
+            {
+              label: `Caching saved · ${r.role}`,
+              value: usd(r.savedUsd ?? null),
+              denominator: "read tokens × (base input price − cache read price) at the role's model rate",
+              meaning: "What the cache reads would have cost at the full input price, minus what they cost as reads. The dollar effect of caching in this window.",
+            },
+            {
+              label: `Batch share · ${r.role}`,
+              value: pct(r.batchShare ?? null),
+              denominator: "requests served through the Message Batches API, over requests, on measured rows",
+              meaning: "The share of this role's requests that went through the half-price Batches API. Zero until a lane's batch flag is switched on.",
+            },
+          ];
+        });
   cache.push({
     label: "Cache defects",
-    value: `${m.cacheDefects.defective} of ${m.cacheDefects.instrumented}`,
-    denominator: "results carrying per-turn steps that recorded a repeated-prefix turn with zero cache reads",
+    value: `${m.cacheDefects.defective} of ${m.cacheDefects.instrumented}` + (m.cacheDefects.stationary === undefined ? "" : ` (stationary ${m.cacheDefects.stationary}, zero-read ${m.cacheDefects.zeroRead ?? 0})`),
+    denominator: "results carrying per-turn steps that recorded a stationary-breakpoint turn or a zero-read turn",
     meaning: "Attempts where a later turn should have hit the cache and did not — each one is money spent twice on the same text. Zero is the goal.",
   });
   const costPerOutcome: DigestRow[] = m.costPerOutcome.map((o) => ({

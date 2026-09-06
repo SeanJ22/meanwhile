@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 
-import type { ModelRate } from "../control-plane/model-cost.ts";
+import { priceMeteredUsage, type ModelRate } from "../control-plane/model-cost.ts";
+import { runSingleRequestBatch } from "../control-plane/model-batch.ts";
 
 import { packHasEvidence, type EvidencePack } from "./evidence.ts";
 import { ASK_MODEL_RATES } from "./model-economics.ts";
@@ -9,6 +10,7 @@ import { readCacheUsage, type CacheUsage } from "./prompt-cache.ts";
 import {
   SYNTHESIS_MESSAGES_URL,
   synthesisContextPayload,
+  synthesisDateBlock,
   synthesisPrompt,
   synthesisQuestionPayload,
   synthesisRequestBody,
@@ -107,6 +109,9 @@ export function shownPromptDigest(pack: EvidencePack): string {
     .update(SEPARATOR)
     .update(synthesisContextPayload(pack))
     .update(SEPARATOR)
+    /* The date block (2026-09-06): shown to the model after the context, so it is in the digest too. */
+    .update(synthesisDateBlock(pack))
+    .update(SEPARATOR)
     .update(synthesisQuestionPayload(pack))
     .digest("hex");
 }
@@ -123,6 +128,8 @@ export type ComparisonOutcome =
       /** Input-side tokens, read off the API's own usage block. */
       usage: CacheUsage;
       outputTokens: number;
+      /** True when the request went through the Message Batches API (every price halved once). */
+      batch: boolean;
     }
   | {
       kind: "UNAVAILABLE";
@@ -151,6 +158,20 @@ export interface ComparisonOptions {
    * passes one, and effort is part of the cached prefix's request shape.
    */
   effort?: AskEffort;
+  /**
+   * **THE BATCH ROUTE.** (2026-09-06; RULING 277 — integrated, inert.) When
+   * true the identical request body is submitted through the Message Batches
+   * API and the harness waits for the batch to end; the answer, the usage and
+   * the prompt digest are read exactly as from the synchronous path, and the
+   * cost is halved once by `callUsd`. Off by default; the harness switches it
+   * on only under `WTP_ASK_COMPARE_BATCH` (`lib/control-plane/model-batch.ts`).
+   * A comparison arm is offline and independent, which is what makes it
+   * batchable; the production Ask path is reader-facing and never is.
+   */
+  batch?: boolean;
+  /** Batch polling cadence and ceiling, for the harness and its tests. */
+  batchPollIntervalMs?: number;
+  batchDeadlineMs?: number;
 }
 
 /**
@@ -180,32 +201,43 @@ export async function synthesizeForComparison(
 
   const impl = options.fetchImpl ?? fetch;
   try {
-    const response = await impl(SYNTHESIS_MESSAGES_URL, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-      },
-      /* The product's own request, with the model named and the cache marker
-         absent. Nothing else about it differs from what a reader's question
-         sends. */
-      body: JSON.stringify(
-        synthesisRequestBody(pack, { model, cached: false, effort: options.effort }),
-      ),
-    });
-    if (!response.ok) {
-      /* The status is CARRIED. "It failed" is not a measurement, and a
-         comparison that reports a model as unavailable without saying why
-         invites the next session to read it as a property of the model. */
-      const detail = `HTTP ${response.status}: ${(await response.text()).slice(0, 300)}`;
-      return { kind: "UNAVAILABLE", model, why: "error", detail, ms: elapsed() };
-    }
-
-    const body = (await response.json()) as {
+    /* The product's own request, with the model named and the cache marker
+       absent. Nothing else about it differs from what a reader's question
+       sends. */
+    const requestBody = synthesisRequestBody(pack, { model, cached: false, effort: options.effort });
+    let body: {
       content?: Array<{ type?: string; text?: string }>;
       usage?: { output_tokens?: number };
     };
+    if (options.batch === true) {
+      /* The same body, through the Batches API; the message comes back in the Messages API's shape. */
+      const batched = await runSingleRequestBatch(requestBody, {
+        apiKey,
+        fetchImpl: impl,
+        pollIntervalMs: options.batchPollIntervalMs,
+        deadlineMs: options.batchDeadlineMs,
+        customId: `compare-${model}`,
+      });
+      body = batched.message as typeof body;
+    } else {
+      const response = await impl(SYNTHESIS_MESSAGES_URL, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-api-key": apiKey,
+          "anthropic-version": "2023-06-01",
+        },
+        body: JSON.stringify(requestBody),
+      });
+      if (!response.ok) {
+        /* The status is CARRIED. "It failed" is not a measurement, and a
+           comparison that reports a model as unavailable without saying why
+           invites the next session to read it as a property of the model. */
+        const detail = `HTTP ${response.status}: ${(await response.text()).slice(0, 300)}`;
+        return { kind: "UNAVAILABLE", model, why: "error", detail, ms: elapsed() };
+      }
+      body = (await response.json()) as typeof body;
+    }
     const text = body.content?.find((b) => b.type === "text")?.text ?? "";
     if (!text) {
       return {
@@ -237,6 +269,7 @@ export async function synthesizeForComparison(
       usage: readCacheUsage(body),
       outputTokens:
         typeof body.usage?.output_tokens === "number" ? body.usage.output_tokens : 0,
+      batch: options.batch === true,
     };
   } catch (error) {
     return {
@@ -269,19 +302,29 @@ export function callUsd(
   model: string,
   usage: CacheUsage,
   outputTokens: number,
+  /** Halves every price once (2026-09-06). True only for an arm that ran through the Batches API. */
+  batch = false,
 ): number | null {
   const rate: ModelRate | undefined = ASK_MODEL_RATES[model];
   if (!rate) return null;
-  const perInput = rate.inputUsdPerMillion / 1_000_000;
-  const perOutput = rate.outputUsdPerMillion / 1_000_000;
-  return (
-    usage.inputTokens * perInput +
-    /* The documented multipliers: a 5-minute write bills 1.25x base, a read
-       bills 0.1x. Both are zero on this seam and neither is a guess. */
-    usage.cacheCreationInputTokens * perInput * 1.25 +
-    usage.cacheReadInputTokens * perInput * 0.1 +
-    outputTokens * perOutput
-  );
+  /* The one pricing function (2026-09-06): the same five quantities every
+     ledger row is priced from. This seam sends no marker, so the cache write
+     is the aggregate with no split and is priced at the 5-minute multiplier
+     it would have carried. */
+  return priceMeteredUsage(
+    model,
+    {
+      uncachedInputTokens: usage.inputTokens,
+      outputTokens,
+      cacheReadInputTokens: usage.cacheReadInputTokens,
+      cacheCreationInputTokens: usage.cacheCreationInputTokens,
+      cacheCreation5mInputTokens: null,
+      cacheCreation1hInputTokens: null,
+      batch,
+    },
+    "5m",
+    rate,
+  ).usd;
 }
 
 /* ========================================================================== */

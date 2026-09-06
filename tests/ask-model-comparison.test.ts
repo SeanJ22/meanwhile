@@ -156,14 +156,25 @@ test("the comparison request is the production request with the model named and 
   const production = synthesisRequestBody(p, { model: ASK_SYNTHESIS_MODEL, cached: true });
   const comparison = synthesisRequestBody(p, { model: ASK_CHALLENGER_MODEL, cached: false });
 
-  /* The whole request, minus the two things that are SUPPOSED to differ. */
-  const strip = (body: Record<string, unknown>) =>
-    JSON.stringify(body).replace(/"model":"[^"]+",/, "").replace(/,"cache_control":\{[^}]*\}/, "");
+  /*
+   * The whole request, minus the things that are SUPPOSED to differ: the
+   * model, the cache markers, and — since the prompt-caching session of
+   * 2026-09-06 — the shape of the system field, which is one marked text
+   * block on the production arm and the same text as a plain string on the
+   * comparison arm (a marker needs a block to sit on). The TEXT is compared
+   * byte for byte; the wrapper is the marker's, not the prompt's.
+   */
+  const strip = (body: Record<string, unknown>) => {
+    const system = Array.isArray(body.system) ? (body.system as { text: string }[]).map((b) => b.text).join("") : body.system;
+    return JSON.stringify({ ...body, system }).replace(/"model":"[^"]+",/, "").replace(/,"cache_control":\{[^}]*\}/g, "");
+  };
   assert.equal(
     strip(production),
     strip(comparison),
     "the two arms must be one contract; a drifted copy grades a prompt the product does not ship",
   );
+  assert.ok(Array.isArray(production.system) && (production.system as unknown[]).length === 1, "the production system prefix is one marked block");
+  assert.equal(typeof comparison.system, "string", "the comparison arm's system prompt is the same text, unmarked");
 
   assert.equal(production.model, ASK_SYNTHESIS_MODEL);
   assert.equal(comparison.model, ASK_CHALLENGER_MODEL);

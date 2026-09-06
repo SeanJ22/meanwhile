@@ -357,6 +357,12 @@ const SHADOW_COST: AttemptCost = {
   durationMs: null,
   bytesFetched: null,
   requestCount: 0,
+  cacheReadInputTokens: null,
+  cacheCreationInputTokens: null,
+  cacheCreation5mInputTokens: null,
+  cacheCreation1hInputTokens: null,
+  uncachedInputTokens: null,
+  batch: false,
 };
 
 export interface ShadowRunInput {

@@ -275,7 +275,7 @@ const attempt = (over: Partial<Attempt> & { id: string; role: Attempt["worker"][
     artifactIds: [],
     methodVersion: "m",
     policyVersion: "p",
-    cost: { inputTokens: null, outputTokens: null, usd: null, durationMs: null, bytesFetched: null, requestCount: null },
+    cost: { inputTokens: null, outputTokens: null, usd: null, durationMs: null, bytesFetched: null, requestCount: null, cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null, batch: false },
     ...over,
     worker: { role: over.role, provider: "we-the-people", version: "deterministic-walker", instance: "i" },
   }) as unknown as Attempt;
@@ -368,9 +368,9 @@ test("ADM-3: FRESHNESS reads the measured shadow risk through one shared project
 
 test("ADM-6: the ledger rolls up by role and by model with measured/unmeasured beside every row; the reader path is one short gap", () => {
   const costs = [
-    { attemptId: "a1", workItemId: "w", routeTaskId: null, routeId: null, source: null, jurisdiction: null, project: "f", role: "SCOUT" as const, cost: { inputTokens: 10, outputTokens: 5, usd: 0.5, durationMs: 1, bytesFetched: null, requestCount: 1 }, recordedAt: NOW },
-    { attemptId: "a2", workItemId: "w", routeTaskId: null, routeId: null, source: null, jurisdiction: null, project: "f", role: "SCOUT" as const, cost: { inputTokens: 10, outputTokens: 5, usd: 0.25, durationMs: 1, bytesFetched: null, requestCount: 1 }, recordedAt: NOW },
-    { attemptId: "a3", workItemId: "w", routeTaskId: null, routeId: null, source: null, jurisdiction: null, project: "f", role: "ACQUIRER" as const, cost: { inputTokens: null, outputTokens: null, usd: null, durationMs: 4, bytesFetched: 9, requestCount: 1 }, recordedAt: NOW },
+    { attemptId: "a1", workItemId: "w", routeTaskId: null, routeId: null, source: null, jurisdiction: null, project: "f", role: "SCOUT" as const, cost: { inputTokens: 10, outputTokens: 5, usd: 0.5, durationMs: 1, bytesFetched: null, requestCount: 1, cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null, batch: false }, recordedAt: NOW },
+    { attemptId: "a2", workItemId: "w", routeTaskId: null, routeId: null, source: null, jurisdiction: null, project: "f", role: "SCOUT" as const, cost: { inputTokens: 10, outputTokens: 5, usd: 0.25, durationMs: 1, bytesFetched: null, requestCount: 1, cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null, batch: false }, recordedAt: NOW },
+    { attemptId: "a3", workItemId: "w", routeTaskId: null, routeId: null, source: null, jurisdiction: null, project: "f", role: "ACQUIRER" as const, cost: { inputTokens: null, outputTokens: null, usd: null, durationMs: 4, bytesFetched: 9, requestCount: 1, cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null, batch: false }, recordedAt: NOW },
   ];
   const panel = buildCostPanel({
     costs,

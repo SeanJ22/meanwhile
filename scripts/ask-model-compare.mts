@@ -88,6 +88,7 @@ import {
   type SwitchVerdict,
 } from "../lib/ask/model-economics.ts";
 import { ASK_EFFORT_LEVELS, resolveAskEffort, type AskEffort } from "../lib/ask/model.ts";
+import { batchEnabledFor } from "../lib/control-plane/model-batch.ts";
 import { validateAnswer, type KnownSubjectName } from "../lib/ask/validate.ts";
 import {
   evaluateAnswer,
@@ -208,6 +209,17 @@ const SWEEP_EFFORT = (() => {
  * ordinary run.
  */
 const NO_RECORD = process.argv.slice(2).includes("--no-record");
+
+/**
+ * **THE BATCH FLAG.** (2026-09-06.) `WTP_ASK_COMPARE_BATCH=1` routes every arm
+ * through the Message Batches API at half price and waits for the batch to
+ * end; anything else keeps the synchronous transport. The lane is registered
+ * in `lib/control-plane/model-batch.ts`; activation is the owner's decision
+ * (RULING 277), which is why the default is off and the run record says
+ * which route ran.
+ */
+const COMPARE_BATCH = batchEnabledFor("ask-model-comparison");
+if (COMPARE_BATCH) console.log("ask:model-compare · BATCH route ON (WTP_ASK_COMPARE_BATCH): every arm goes through /v1/messages/batches at half price and waits for the batch to end");
 
 /* A run whose arms are the same model measures nothing and would print a
    verdict about a comparison that did not happen. Refused by name. */
@@ -420,6 +432,8 @@ async function runArmOnce(
   const digest = shownPromptDigest(pack);
   const outcome: ComparisonOutcome = await synthesizeForComparison(pack, model, {
     effort: SWEEP_EFFORT,
+    /* The batch route (2026-09-06): OFF unless WTP_ASK_COMPARE_BATCH says otherwise; RULING 277 keeps activation the owner's. */
+    batch: COMPARE_BATCH,
   });
   if (outcome.kind !== "WROTE") {
     return {
@@ -469,7 +483,7 @@ async function runArmOnce(
     outputTokens: outcome.outputTokens,
     cacheReadInputTokens: outcome.usage.cacheReadInputTokens,
     cacheCreationInputTokens: outcome.usage.cacheCreationInputTokens,
-    usd: callUsd(model, outcome.usage, outcome.outputTokens),
+    usd: callUsd(model, outcome.usage, outcome.outputTokens, outcome.batch),
   };
 }
 

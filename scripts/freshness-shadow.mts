@@ -126,10 +126,10 @@ import {
   type RunWork,
   type WorkArtifact,
 } from "../lib/control-plane/scheduler/dispatch.ts";
-import { anthropicTransport, scoutExecutor } from "../lib/control-plane/scheduler/scout-executor.ts";
-import { buildScoutToolkit } from "../lib/control-plane/scheduler/scout-tools.ts";
+import { SCOUT_LOOP_STEP, SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutExecutor, scoutPrewarmRequest } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { SCOUT_TOOL_SPECS, buildScoutToolkit } from "../lib/control-plane/scheduler/scout-tools.ts";
 import type { ArtifactProvenance, InheritedEvidence, PriorRung } from "../lib/control-plane/scheduler/scout-contract.ts";
-import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
+import { MIN_DISTINCT_RUNGS, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import {
   RESEARCH_BOUNDS,
   RESEARCH_FORMAT_VERSION,
@@ -168,6 +168,12 @@ import {
 import { researchDigestLines } from "../lib/control-plane/research-digest.ts";
 import { PILOT_ZIPS } from "../lib/health/owner-corpus-compile.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
+import type { AttemptCost } from "../lib/control-plane/attempt.ts";
+import { meteredCostFields, priceMeteredUsage, readMeteredUsage } from "../lib/control-plane/model-cost.ts";
+import { assertStepMayInvokeModel } from "../lib/control-plane/scheduler/model-routing.ts";
+import { recordCost } from "../lib/control-plane/repository/coordinator.ts";
+import type { PrewarmOutcome } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import type { CacheHitRate } from "../lib/control-plane/research-metrics.ts";
 import { RUNNER_ID } from "../lib/control-plane/admin-data.ts";
 import { OWNER_SURFACE_FORMAT_VERSION, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
 import {
@@ -1142,6 +1148,49 @@ const executorFor = (obligation: { obligation: { id: string } }): DeclaredExecut
 };
 
 /**
+ * THE PRE-WARM (2026-09-06). Once per cycle, before the first admitted Scout
+ * is dispatched: one `max_tokens: 0` request carrying the exact tools and
+ * system the Attempts send, through the same guarded transport, so the static
+ * prefix is written once and every Attempt this cycle — including the two
+ * that start together — reads it. Its cost is a SCOUT ledger row under
+ * `SCOUT_PREWARM_ROUTE_ID`, so the rolling ceiling sees it and capacity does
+ * not count it as an Attempt. A failure is recorded on the lane counts and
+ * the Attempts still run.
+ */
+const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
+  const at = nowIso();
+  const started = Date.now();
+  try {
+    const route = assertStepMayInvokeModel(SCOUT_LOOP_STEP);
+    const model = route.model === SCOUT_MODEL ? SCOUT_MODEL : route.model;
+    const request = scoutPrewarmRequest({ model, effort: route.effort, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
+    const transport = fleetSafety.guardedModelTransport("anthropic", "scout-prewarm", anthropicTransport(workerKey));
+    const response = await transport(request);
+    const metered = readMeteredUsage(response.usage ?? {});
+    const priced = priceMeteredUsage(model, metered, "5m");
+    const durationMs = Date.now() - started;
+    const cost: AttemptCost = {
+      inputTokens: metered.uncachedInputTokens === null ? null : metered.uncachedInputTokens + (metered.cacheReadInputTokens ?? 0) + (metered.cacheCreationInputTokens ?? 0),
+      outputTokens: metered.outputTokens,
+      usd: priced.usd,
+      durationMs,
+      bytesFetched: null,
+      requestCount: 1,
+      ...meteredCostFields(metered),
+    };
+    await recordCost(
+      repos,
+      { attemptId: `scout-prewarm:${NOW}`, workItemId: "scout-prewarm", routeTaskId: null, routeId: SCOUT_PREWARM_ROUTE_ID, source: "api.anthropic.com", jurisdiction: null, project: "freshness", role: "SCOUT", cost, recordedAt: at },
+      at,
+    ).catch(() => undefined);
+    if (priced.usd !== null) spentThisCycle += priced.usd;
+    return { status: "WARMED", at, cacheCreationInputTokens: metered.cacheCreationInputTokens, cacheReadInputTokens: metered.cacheReadInputTokens, uncachedInputTokens: metered.uncachedInputTokens, usd: priced.usd, durationMs };
+  } catch (error) {
+    return { status: "FAILED", at, detail: error instanceof Error ? error.message : String(error), durationMs: Date.now() - started };
+  }
+};
+
+/**
  * THE SCOUT LANE. A real bounded model worker: role SCOUT, provider
  * anthropic, the model named, provider-reported usage and computed cost on
  * the Attempt, research through tools that vault first. Built only when the
@@ -1257,6 +1306,8 @@ const cycle = await runCycle({
     maxConcurrentScouts: RESEARCH_BOUNDS.maxConcurrentScouts,
     scoutLeaseTtlMs: RESEARCH_BOUNDS.perDispatch.maxWallMs + 120_000,
     scoutWallMs: RESEARCH_BOUNDS.perDispatch.maxWallMs,
+    /* The pre-warm of the static prefix, once per cycle before the first admitted Scout (2026-09-06). Never in a dry cycle. */
+    ...(modelLaneEnabled && !dry ? { prewarm: prewarmScoutPrefix } : {}),
     onDispatched: async (result: DispatchResult, lane) => {
       if (result.outcome === "WORKED") fleetSafety.recordSuccessfulActivity(nowIso());
       if (lane === "BOUNDED_MODEL_WORKER") {
@@ -1411,6 +1462,13 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
   const counts = candidateStoreCounts(ROOT);
   const candidateCounts = counts === null ? null : { proposed: counts.PROPOSED, validated: counts.VALIDATED, admitted: counts.ADMITTED, rejected: counts.REJECTED };
   const pipeline = await NO_PIPELINE_RECORDED();
+  /*
+   * The cache rows (2026-09-06), from the COST LEDGER — the same rows the
+   * rolling ceiling reads — over the ceiling's own trailing window, and
+   * separately over this cycle's rows for the COST section of the digest.
+   */
+  const windowSince = new Date(Date.parse(at) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString();
+  cacheThisCycle = cacheHitRateByRole({ costs: costsNow, results, sinceIso: NOW, untilIso: at });
   return {
     computedAt: at,
     capacity: scoutCapacity({ costs: costsNow, nowIso: at, windowHours: RESEARCH_BOUNDS.windowHours, ceilingUsd: RESEARCH_BOUNDS.dailyCeilingUsd }),
@@ -1423,11 +1481,14 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
       deterministicReplays: 0,
     }),
     share: modelShareTrend({ thisCycle: { deterministic: laneCounts.deterministicDispatched, model: laneCounts.modelDispatched }, windowCycles }),
-    cacheByRole: cacheHitRateByRole(results),
+    cacheByRole: cacheHitRateByRole({ costs: costsNow, results, sinceIso: windowSince, untilIso: at }),
+    cacheWindow: { sinceIso: windowSince, untilIso: at },
     costPerOutcome: costPerUsefulOutcome({ results, candidateCounts, confirmed: null }),
     cacheDefects: cacheDefectCounts(results),
   };
 }
+/** This cycle's cache rows, for the run record's COST section (null until computed, or when the ledger could not be re-read). */
+let cacheThisCycle: CacheHitRate[] | null = null;
 if (canary) {
   runtimeConditions.push("live canary: whole-store metrics scans were intentionally skipped");
   metrics = null;
@@ -1624,6 +1685,8 @@ writeFileSync(
         state: finalState,
         fleetSafety: safety,
         lanes: cycle.lanes,
+        /* This cycle's cache rows from the cost ledger (2026-09-06), read by the digest's COST section. */
+        cacheThisCycle,
         scouts: scoutDispatches.map((d) => ({
           obligationId: d.obligationId,
           attemptId: d.attemptId,

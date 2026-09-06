@@ -444,6 +444,12 @@ const NO_COST: AttemptCost = {
   durationMs: null,
   bytesFetched: null,
   requestCount: null,
+  cacheReadInputTokens: null,
+  cacheCreationInputTokens: null,
+  cacheCreation5mInputTokens: null,
+  cacheCreation1hInputTokens: null,
+  uncachedInputTokens: null,
+  batch: false,
 };
 
 test("an UNMEASURED token count is reported as unmeasured, never as zero", () => {

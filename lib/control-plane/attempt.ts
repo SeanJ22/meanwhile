@@ -95,7 +95,23 @@ export interface WorkerRef {
   readonly instance: string;
 }
 
-/** Measured, never estimated. An unmeasurable field is null, not a guess. */
+/**
+ * Measured, never estimated. An unmeasurable field is null, not a guess.
+ *
+ * **The prompt-cache metering (2026-09-06).** `inputTokens` is the whole prompt
+ * — uncached plus cache reads plus cache writes — and it is what the fleet
+ * safety bounds and the capacity figures have always read. The five fields
+ * below split it the way the provider bills it, and `batch` says whether the
+ * request went through the Message Batches API (every price halved). Dollars
+ * in `usd` are computed from exactly these five token quantities plus
+ * `outputTokens` (`priceMeteredUsage` in `model-cost.ts`), never from
+ * `inputTokens` at the base price.
+ *
+ * A row persisted before this date carries NONE of the six: a reader must
+ * treat an absent field as UNMEASURED (`cacheMeteringOf` in `cost.ts`), never
+ * as zero — a zero would assert that every read missed the cache, which is a
+ * measurement nobody took.
+ */
 export interface AttemptCost {
   readonly inputTokens: number | null;
   readonly outputTokens: number | null;
@@ -103,6 +119,18 @@ export interface AttemptCost {
   readonly durationMs: number | null;
   readonly bytesFetched: number | null;
   readonly requestCount: number | null;
+  /** The provider's `cache_read_input_tokens`. */
+  readonly cacheReadInputTokens: number | null;
+  /** The provider's `cache_creation_input_tokens` — the AGGREGATE, defined as the 5m split plus the 1h split. Never priced on top of the split. */
+  readonly cacheCreationInputTokens: number | null;
+  /** `usage.cache_creation.ephemeral_5m_input_tokens`; null when the response carried no split. */
+  readonly cacheCreation5mInputTokens: number | null;
+  /** `usage.cache_creation.ephemeral_1h_input_tokens`; null when the response carried no split. */
+  readonly cacheCreation1hInputTokens: number | null;
+  /** The provider's `input_tokens`: the uncached remainder, billed at the base input price. */
+  readonly uncachedInputTokens: number | null;
+  /** True when the request was served through the Message Batches API. */
+  readonly batch: boolean;
 }
 
 export const ZERO_COST: AttemptCost = {
@@ -112,6 +140,12 @@ export const ZERO_COST: AttemptCost = {
   durationMs: null,
   bytesFetched: null,
   requestCount: null,
+  cacheReadInputTokens: null,
+  cacheCreationInputTokens: null,
+  cacheCreation5mInputTokens: null,
+  cacheCreation1hInputTokens: null,
+  uncachedInputTokens: null,
+  batch: false,
 };
 
 export interface Attempt {

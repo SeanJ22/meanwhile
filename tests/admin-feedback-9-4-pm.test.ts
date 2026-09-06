@@ -123,7 +123,7 @@ test("ADM-12: jurisdiction, OCD, ballot, curated and record keys render as displ
   const fleet = buildFleetView({
     nowIso: "2026-09-05T03:00:00.000Z",
     attempts: [
-      { id: "a1", routeTaskId: "r", leaseId: "l", workItemId: "w1", startedAt: "2026-09-04T10:00:00.000Z", endedAt: "2026-09-04T10:05:00.000Z", outcome: "COMPLETED", abortReason: null, artifactIds: [], methodVersion: "m", policyVersion: "p", cost: { inputTokens: null, outputTokens: null, usd: null, durationMs: null, bytesFetched: null, requestCount: null }, worker: { role: "SCOUT", provider: "we-the-people", version: "deterministic-walker", instance: "i" } },
+      { id: "a1", routeTaskId: "r", leaseId: "l", workItemId: "w1", startedAt: "2026-09-04T10:00:00.000Z", endedAt: "2026-09-04T10:05:00.000Z", outcome: "COMPLETED", abortReason: null, artifactIds: [], methodVersion: "m", policyVersion: "p", cost: { inputTokens: null, outputTokens: null, usd: null, durationMs: null, bytesFetched: null, requestCount: null, cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null, batch: false }, worker: { role: "SCOUT", provider: "we-the-people", version: "deterministic-walker", instance: "i" } },
     ] as never,
     workItems: [{ id: "w1", subject: "ballot-az-pima:prop-423" }] as never,
     routeTasks: [],
@@ -569,7 +569,7 @@ test("ADM-13: the window reads as one sentence, a stage strip and a split; defin
 test("ADM-17: a role whose attempts all ran without a paid model is $0 by design with its non-dollar measures; a model role with no dollars is unmeasured", () => {
   const entry = (attemptId: string, role: string, usd: number | null, extra: Partial<{ durationMs: number; bytesFetched: number; requestCount: number }> = {}) => ({
     attemptId, workItemId: "w", routeTaskId: null, routeId: null, source: null, jurisdiction: null, project: "f", role: role as never,
-    cost: { inputTokens: null, outputTokens: null, usd, durationMs: extra.durationMs ?? null, bytesFetched: extra.bytesFetched ?? null, requestCount: extra.requestCount ?? null }, recordedAt: "2026-09-05T02:00:00.000Z",
+    cost: { inputTokens: null, outputTokens: null, usd, durationMs: extra.durationMs ?? null, bytesFetched: extra.bytesFetched ?? null, requestCount: extra.requestCount ?? null, cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null, batch: false }, recordedAt: "2026-09-05T02:00:00.000Z",
   });
   const panel = buildCostPanel({
     costs: [

@@ -1,0 +1,10 @@
+{
+  "formatVersion": 1,
+  "encoding": "gzip",
+  "rule": "Lossless original UTF-8 JSON bytes; zero gzip modification time. The baseline byte hash survives packaging.",
+  "path": "docs/evidence/reader-last-mile-prompt-caching-prior-census.json.gz",
+  "originalSha256": "0c51eac878fa624a22fd48085ee129b47b6a97ee62947380ca387e6e90274e13",
+  "bytes": 137758958,
+  "packedBytes": 5001858,
+  "packedSha256": "daacea7857fd8906090c8dcfe618a13b492aa63c69c99f40f7e20c18da583239"
+}

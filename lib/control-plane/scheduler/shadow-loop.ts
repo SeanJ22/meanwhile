@@ -177,7 +177,32 @@ export interface ResearchLanes {
   /** A Scout is not STARTED when it could not finish inside the dispatch budget. */
   readonly scoutWallMs: number;
   readonly onDispatched?: (result: DispatchResult, lane: ExecutorKind) => void | Promise<void>;
+  /**
+   * **THE PRE-WARM.** (2026-09-06.) Called ONCE per cycle, before the first
+   * admitted Scout is dispatched and after nothing else: it writes the static
+   * prefix (tools + system) to the prompt cache so every Attempt this cycle
+   * — including the two that start together under the concurrency bound —
+   * reads it instead of each paying the write. Every admitted row awaits the
+   * same promise, so no Attempt starts before the entry exists. Never called
+   * when no Scout is admitted: a cycle that dispatches nothing warms nothing.
+   * The outcome travels on `LaneCounts.model.prewarm`; a failure is recorded
+   * there and the Attempts still run.
+   */
+  readonly prewarm?: () => Promise<PrewarmOutcome>;
 }
+
+/** What the cycle's pre-warm request reported, for the run record and the digest. */
+export type PrewarmOutcome =
+  | {
+      readonly status: "WARMED";
+      readonly at: string;
+      readonly cacheCreationInputTokens: number | null;
+      readonly cacheReadInputTokens: number | null;
+      readonly uncachedInputTokens: number | null;
+      readonly usd: number | null;
+      readonly durationMs: number;
+    }
+  | { readonly status: "FAILED"; readonly at: string; readonly detail: string; readonly durationMs: number };
 
 export interface LaneCounts {
   readonly deterministic: { readonly due: number; readonly dispatched: number };
@@ -187,6 +212,8 @@ export interface LaneCounts {
     readonly deferred: number;
     /** Deferral counts by the admit code, so a cap reads as a cap and a pause as a pause. */
     readonly deferredBy: Readonly<Record<string, number>>;
+    /** The cycle's pre-warm, when a Scout was admitted and the lane has one. Null when no Scout was admitted. */
+    readonly prewarm?: PrewarmOutcome | null;
   };
 }
 
@@ -529,6 +556,23 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
    * budget is not started at all: a Scout killed mid-walk by the supervisor
    * leaves an Attempt with no outcome and a lease to reclaim.
    */
+  /**
+   * The cycle's one pre-warm (2026-09-06). Created by the first admitted
+   * Scout and awaited by every admitted Scout, so the two that start together
+   * under the concurrency bound both find the static prefix written.
+   */
+  let prewarmOnce: Promise<PrewarmOutcome> | null = null;
+  let prewarmOutcome: PrewarmOutcome | null = null;
+  const warmStaticPrefix = async (): Promise<void> => {
+    if (research?.prewarm === undefined) return;
+    if (prewarmOnce === null) {
+      prewarmOnce = research.prewarm().catch(
+        (error): PrewarmOutcome => ({ status: "FAILED", at: new Date(nowMs).toISOString(), detail: error instanceof Error ? error.message : String(error), durationMs: 0 }),
+      );
+    }
+    prewarmOutcome = await prewarmOnce;
+  };
+
   const modelLane = async (): Promise<void> => {
     if (research === undefined) return;
     await runPool(modelRows, research.maxConcurrentScouts, async (row) => {
@@ -557,6 +601,8 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
         deferredBy.AGGREGATE = (deferredBy.AGGREGATE ?? 0) + 1;
         return;
       }
+      /* Admitted: the static prefix is warmed once, before the first dispatch, and every dispatch waits for it. */
+      await warmStaticPrefix();
       modelDispatched += 1;
       const result = await dispatchRow(row, {
         executor: typeof research.modelExecutor === "function" ? research.modelExecutor(row) : research.modelExecutor,
@@ -577,7 +623,7 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
             due: deterministicRows.length,
             dispatched: dispatched.filter((d) => d.executor !== "BOUNDED_MODEL_WORKER" && d.executorChosen !== "BOUNDED_MODEL_WORKER").length,
           },
-          model: { due: modelRows.length, dispatched: modelDispatched, deferred: modelDeferred, deferredBy },
+          model: { due: modelRows.length, dispatched: modelDispatched, deferred: modelDeferred, deferredBy, prewarm: prewarmOutcome },
         };
 
   const debts = [...debtsById.values()];

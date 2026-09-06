@@ -31,8 +31,11 @@
  * state.
  */
 
-import type { CostEntry } from "./cost.ts";
+import { cacheMeteringOf, type CostEntry } from "./cost.ts";
+import type { WorkerRole } from "./attempt.ts";
+import { CACHE_RATE_MULTIPLIERS, rateFor } from "./model-cost.ts";
 import type { ScoutResult, ScoutStep } from "./scheduler/scout-result.ts";
+import { SCOUT_PREWARM_ROUTE_ID } from "./scheduler/research-policy.ts";
 
 /* ------------------------------------------------------------- capacity */
 
@@ -65,6 +68,8 @@ export function scoutCapacity(input: {
   let unmeasured = 0;
   for (const c of input.costs) {
     if (c.role !== "SCOUT") continue;
+    /* A pre-warm request is a cache write for the cycle's Attempts, never an Attempt itself (2026-09-06). */
+    if (c.routeId === SCOUT_PREWARM_ROUTE_ID) continue;
     if (Date.parse(c.recordedAt) < since) continue;
     if (c.cost.usd === null || c.cost.usd === undefined || Number.isNaN(c.cost.usd)) {
       unmeasured += 1;
@@ -291,6 +296,17 @@ export function modelShareTrend(input: {
 
 /* ----------------------------------------------------------------- cache */
 
+
+/**
+ * The model each role's requests run on, for the dollar effect of caching.
+ * A role not named here reports its saving as UNMEASURED rather than at a
+ * guessed rate.
+ */
+export const ROLE_MODEL: Readonly<Partial<Record<WorkerRole, string>>> = {
+  SCOUT: "claude-opus-5",
+  ADVERSARIAL_AUDITOR: "claude-opus-5",
+};
+
 export interface CacheHitRate {
   readonly role: string;
   readonly cacheRead: number;
@@ -303,45 +319,103 @@ export interface CacheHitRate {
   readonly repeatedPrefixMisses: number | null;
   readonly attempts: number;
   readonly denominator: string;
+  /*
+   * ---- the ledger columns (2026-09-06). Always set by `cacheHitRateByRole`;
+   * OPTIONAL on the type because a row persisted on a research-state record
+   * before that date carries none of them, and the digest prints such a row
+   * as it always did rather than crashing on it. ----
+   */
+  /** Turns after the first whose uncached input exceeded what they appended by more than the model minimum — the stationary-breakpoint signature. Null before per-turn steps exist. */
+  readonly stationaryTurns?: number | null;
+  /** Ledger rows in the window for this role: measured, predating the cache fields, and reported null by the provider. */
+  readonly measuredRows?: number;
+  readonly predatingRows?: number;
+  readonly unreportedRows?: number;
+  /** Uncached input tokens per measured Attempt. Null when nothing was measured. */
+  readonly uncachedPerAttempt?: { readonly mean: number; readonly max: number } | null;
+  /** Requests served through the Batches API, over requests, on measured rows. Null when nothing was measured. */
+  readonly batchShare?: number | null;
+  /** read tokens × (base input price − cache read price) at the role's model rate. Null when the role has no stated model. */
+  readonly savedUsd?: number | null;
+  /** Measured rows whose cache write was priced from the aggregate at the requested TTL because the response carried no split. */
+  readonly aggregatePricedRows?: number;
 }
 
 /**
- * The cache hit rate BY ROLE, from the Scout results' usage (the ledger's
- * AttemptCost carries no cache fields). Per-turn misses come from `steps`,
- * which results recorded before RULING 244 do not carry; for those the
- * per-turn columns are null rather than zero.
+ * **THE CACHE HIT RATE BY ROLE, FROM THE COST LEDGER.** (2026-09-06.)
+ *
+ * Until this session the rate was computed from the Scout results' own usage
+ * block — a parallel store of the same quantities the ledger should have
+ * carried, which is why one instrument printed 18.6% while the digest's COST
+ * section printed NOT MEASURED. Both now read the ledger: every row inside the
+ * window, per role, through `cacheMeteringOf`. A row that predates the cache
+ * fields counts as PREDATING and contributes no tokens; a row the provider
+ * left null counts as UNREPORTED. The per-turn columns still come from the
+ * Scout results' `steps`, which is the only per-turn record there is; the
+ * results are matched to the window by their attempt ids.
  */
-export function cacheHitRateByRole(results: readonly ScoutResult[]): CacheHitRate[] {
-  const byRole = new Map<string, { read: number; write: number; uncached: number; attempts: number; turns: number | null; misses: number | null }>();
+export function cacheHitRateByRole(input: {
+  readonly costs: readonly CostEntry[];
+  readonly results: readonly ScoutResult[];
+  /** Rows recorded at or after this instant. Omit for every row. */
+  readonly sinceIso?: string;
+  readonly untilIso?: string;
+}): CacheHitRate[] {
+  const since = input.sinceIso === undefined ? -Infinity : Date.parse(input.sinceIso);
+  const until = input.untilIso === undefined ? Infinity : Date.parse(input.untilIso);
+  interface Acc {
+    read: number; write: number; uncached: number; attempts: number; measured: number; predating: number; unreported: number;
+    uncachedPerRow: number[]; batched: number; requests: number; aggregatePriced: number;
+    turns: number | null; misses: number | null; stationary: number | null;
+  }
+  const byRole = new Map<string, Acc>();
+  const fresh = (): Acc => ({ read: 0, write: 0, uncached: 0, attempts: 0, measured: 0, predating: 0, unreported: 0, uncachedPerRow: [], batched: 0, requests: 0, aggregatePriced: 0, turns: null, misses: null, stationary: null });
+  const inWindow = new Set<string>();
+  for (const c of input.costs) {
+    const at = Date.parse(c.recordedAt);
+    if (at < since || at > until) continue;
+    if (c.routeId === SCOUT_PREWARM_ROUTE_ID) continue;
+    /* Only the roles that invoke a model have a cache to measure; a deterministic lane's row is not a missing measurement. */
+    if (ROLE_MODEL[c.role] === undefined) continue;
+    const acc = byRole.get(c.role) ?? fresh();
+    acc.attempts += 1;
+    inWindow.add(c.attemptId);
+    const m = cacheMeteringOf(c.cost);
+    if (m.status === "PREDATES_FIELDS") acc.predating += 1;
+    else if (m.status === "UNREPORTED") acc.unreported += 1;
+    else {
+      acc.measured += 1;
+      acc.read += m.cacheReadInputTokens;
+      acc.write += m.cacheCreationInputTokens;
+      acc.uncached += m.uncachedInputTokens;
+      acc.uncachedPerRow.push(m.uncachedInputTokens);
+      const requests = c.cost.requestCount ?? 1;
+      acc.requests += requests;
+      if (m.batch) acc.batched += requests;
+      if (m.cacheCreationInputTokens > 0 && m.cacheCreation5mInputTokens === null && m.cacheCreation1hInputTokens === null) acc.aggregatePriced += 1;
+    }
+    byRole.set(c.role, acc);
+  }
+  /* Per-turn columns: the Scout results' steps, for the Attempts the window holds. */
   const roleOf = (step: ScoutStep): string => (step.step === "scout-research-loop" ? "SCOUT" : "SUB_STEP");
-  for (const r of results) {
-    const u = r.usage;
-    const read = u.cacheReadInputTokens ?? 0;
-    const write = u.cacheCreationInputTokens ?? 0;
-    const uncached = u.inputTokens ?? 0;
+  for (const r of input.results) {
+    if (!inWindow.has(r.attemptId)) continue;
     const modelSteps = (r.steps ?? []).filter((s) => s.kind === "MODEL");
-    const roles = modelSteps.length > 0 ? [...new Set(modelSteps.map(roleOf))] : ["SCOUT"];
-    for (const role of roles) {
-      const acc = byRole.get(role) ?? { read: 0, write: 0, uncached: 0, attempts: 0, turns: null, misses: null };
-      if (modelSteps.length > 0) {
-        const own = modelSteps.filter((s) => roleOf(s) === role);
-        acc.read += own.reduce((n, s) => n + s.tokens.cacheRead, 0);
-        acc.write += own.reduce((n, s) => n + s.tokens.cacheWrite, 0);
-        acc.uncached += own.reduce((n, s) => n + s.tokens.uncachedInput, 0);
-        const later = own.filter((s) => (s.turn ?? 0) >= 2);
-        acc.turns = (acc.turns ?? 0) + later.length;
-        acc.misses = (acc.misses ?? 0) + later.filter((s) => s.tokens.cacheRead === 0).length;
-      } else {
-        acc.read += read;
-        acc.write += write;
-        acc.uncached += uncached;
-      }
-      acc.attempts += 1;
+    if (modelSteps.length === 0) continue;
+    for (const role of new Set(modelSteps.map(roleOf))) {
+      const acc = byRole.get(role) ?? fresh();
+      const later = modelSteps.filter((s) => roleOf(s) === role && (s.turn ?? 0) >= 2);
+      acc.turns = (acc.turns ?? 0) + later.length;
+      acc.misses = (acc.misses ?? 0) + later.filter((s) => s.tokens.cacheRead === 0).length;
+      const stationary = r.cacheDefect?.stationaryTurns?.length ?? 0;
+      acc.stationary = (acc.stationary ?? 0) + stationary;
       byRole.set(role, acc);
     }
   }
-  return [...byRole.entries()].map(([role, a]) => {
+  return [...byRole.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([role, a]) => {
     const total = a.read + a.write + a.uncached;
+    const rate = ROLE_MODEL[role as WorkerRole] === undefined ? null : rateFor(ROLE_MODEL[role as WorkerRole]!);
+    const mean = a.uncachedPerRow.length === 0 ? null : a.uncachedPerRow.reduce((n, v) => n + v, 0) / a.uncachedPerRow.length;
     return {
       role,
       cacheRead: a.read,
@@ -350,8 +424,20 @@ export function cacheHitRateByRole(results: readonly ScoutResult[]): CacheHitRat
       hitRate: total === 0 ? null : a.read / total,
       repeatedPrefixTurns: a.turns,
       repeatedPrefixMisses: a.misses,
+      stationaryTurns: a.stationary,
       attempts: a.attempts,
-      denominator: `cacheRead over cacheRead + cacheWrite + uncachedInput across ${a.attempts} ${role} Attempt(s); per-turn misses from steps where recorded`,
+      measuredRows: a.measured,
+      predatingRows: a.predating,
+      unreportedRows: a.unreported,
+      uncachedPerAttempt: mean === null ? null : { mean, max: Math.max(...a.uncachedPerRow) },
+      batchShare: a.requests === 0 ? null : a.batched / a.requests,
+      savedUsd: rate === null ? null : (a.read / 1_000_000) * rate.inputUsdPerMillion * (1 - CACHE_RATE_MULTIPLIERS.cacheRead),
+      aggregatePricedRows: a.aggregatePriced,
+      denominator:
+        `cacheRead over cacheRead + cacheWrite + uncachedInput across ${a.measured} measured ${role} ledger row(s) of ${a.attempts} in the window` +
+        (a.predating > 0 ? ` (${a.predating} predate the cache fields and are NOT MEASURED)` : "") +
+        (a.unreported > 0 ? ` (${a.unreported} reported no usage)` : "") +
+        "; per-turn columns from Scout steps where recorded",
     };
   });
 }
@@ -407,11 +493,25 @@ export interface ResearchMetrics {
   readonly share: ShareTrend;
   readonly cacheByRole: readonly CacheHitRate[];
   readonly costPerOutcome: readonly CostPerOutcome[];
-  /** Results with a recorded cache defect, of results carrying steps. */
-  readonly cacheDefects: { readonly defective: number; readonly instrumented: number };
+  /**
+   * Results with a recorded cache defect, of results carrying steps; and the
+   * two signatures counted apart (2026-09-06). A result carries `stationary`
+   * when a turn paid for more uncached input than it appended, `zeroRead`
+   * when a turn read nothing; one result can carry both.
+   */
+  readonly cacheDefects: { readonly defective: number; readonly instrumented: number; readonly stationary?: number; readonly zeroRead?: number };
+  /** The window the cache-by-role rows were computed over (2026-09-06). Absent on a record computed before. */
+  readonly cacheWindow?: { readonly sinceIso: string | null; readonly untilIso: string | null };
 }
 
 export function cacheDefectCounts(results: readonly ScoutResult[]): ResearchMetrics["cacheDefects"] {
   const instrumented = results.filter((r) => r.steps !== undefined);
-  return { defective: instrumented.filter((r) => r.cacheDefect !== null && r.cacheDefect !== undefined).length, instrumented: instrumented.length };
+  const defective = instrumented.filter((r) => r.cacheDefect !== null && r.cacheDefect !== undefined);
+  return {
+    defective: defective.length,
+    instrumented: instrumented.length,
+    stationary: defective.filter((r) => (r.cacheDefect?.stationaryTurns?.length ?? 0) > 0).length,
+    /* A result recorded before 2026-09-06 carries only `turns`, which were zero-read turns by construction. */
+    zeroRead: defective.filter((r) => (r.cacheDefect?.zeroReadTurns?.length ?? (r.cacheDefect?.stationaryTurns === undefined ? r.cacheDefect?.turns.length ?? 0 : 0)) > 0).length,
+  };
 }

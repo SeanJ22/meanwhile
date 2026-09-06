@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 530,
-    "named": 5519,
+    "files": 539,
+    "named": 5572,
     "dynamic": 24
   },
   "files": {
@@ -217,6 +217,24 @@
         "the six cell states are one class each, and the grid renders them on a <button>"
       ],
       "dynamic": 1
+    },
+    "tests/admin-release-review.test.ts": {
+      "names": [
+        "B2: MANIFEST_UNAVAILABLE disables every write and names the last observed SHA and time",
+        "B2: an unknown status, missing sections, missing URLs and unknown fields are labeled states, never throws",
+        "B2: only staging-origin https URLs are ever rendered as links",
+        "B2: the full manifest parses to the observed contract, and VISUAL_WORK_IN_PROGRESS is tolerated as not-yet-ready",
+        "B2: the server-side source turns HTTP 401, a non-JSON body and a network error into MANIFEST_UNAVAILABLE, and caches a reading for seconds",
+        "B3: the five required sections reconcile by id or name; an unexposed one is NOT_YET_REVIEWABLE; an extra does not gate",
+        "B4: decisions persist keyed by the exact SHA with actor and server time; a new SHA has zero decisions; a write against the old SHA is STALE_SHA",
+        "B4: the log is append-only — the same row id with a different record is refused",
+        "B5: APPROVE on Raised State is refused until a variant is chosen on that SHA; the choice touches nothing else",
+        "B6: OWNER_APPROVED_FOR_PRODUCTION names every failing condition and is refused until all pass",
+        "B6: the passing path records once, on an explicit request, composed from the five approvals and the variant row, and appends nothing else",
+        "B7: the one additive table is declared at schema v8 and every provider bundle carries the log",
+        "B7: the review page and route are 404 on the public host and refuse a missing session and a foreign origin"
+      ],
+      "dynamic": 0
     },
     "tests/admin-research.test.ts": {
       "names": [
@@ -820,7 +838,8 @@
         "H1: the saving is computed from the published multipliers, and one read repays the write",
         "H1: the system prompt is one string with every rule, and its size is pinned",
         "H1: the two payloads are a PARTITION of the pre-caching payload",
-        "H1: usage is read from the API's own usage block, absent fields as zero"
+        "H1: usage is read from the API's own usage block, absent fields as zero",
+        "PC-5 (2026-09-06): the request carries TWO breakpoints — the system block and the civic context — and the date and the question sit after both"
       ],
       "dynamic": 0
     },
@@ -1469,6 +1488,17 @@
         "no BUILD constant is assigned from a Netlify variable directly",
         "the runtime block still reports what the serving process sees",
         "the stamp is never cached"
+      ],
+      "dynamic": 0
+    },
+    "tests/cache-defects.test.ts": {
+      "names": [
+        "PC-12: a zero read over an identical prefix is the second signature, counted apart",
+        "PC-12: the bound turn's forced tool_choice rewrite (harness 2026-09-06, turn 4) is a write, not a stationary breakpoint and not a zero read",
+        "PC-12: the healthy shape (recorded 2026-09-06, at-6ba0dac8) fires neither signature",
+        "PC-12: the slack is exactly one model minimum — an uncached remainder inside it is a legitimate sub-minimum increment",
+        "PC-12: the stationary-breakpoint shape (every 2026-09-02 Attempt) fires on every later turn while the zero-read check stays silent",
+        "PC-12: turns arrive in any order and a single turn has nothing to compare"
       ],
       "dynamic": 0
     },
@@ -4518,6 +4548,29 @@
       ],
       "dynamic": 0
     },
+    "tests/model-batch.test.ts": {
+      "names": [
+        "PC-8: every registered lane defaults OFF, and only its own flag switches it on",
+        "PC-8: no reader-facing path reaches the batch module — nothing under app/, and none of the reader-facing Ask call sites",
+        "PC-8: results are JSON Lines keyed by custom_id in any order; an errored, canceled or expired request throws by name",
+        "PC-8: the comparison seam routes through the batch only under the option, and reports the route on its outcome",
+        "PC-8: the submission is one POST to /v1/messages/batches carrying {requests: [{custom_id, params}]} with the Messages headers"
+      ],
+      "dynamic": 0
+    },
+    "tests/model-cost-metered.test.ts": {
+      "names": [
+        "PC-10: a known usage with a 5m/1h split prices to known dollars at Claude Opus 5's multipliers",
+        "PC-10: an unmeasured base count or an unpriced model is null, never zero",
+        "PC-10: the aggregate cache_creation_input_tokens contributes NOTHING on top of its split",
+        "PC-10: the same usage through the Batches API is exactly half, applied once",
+        "PC-10: with no split the aggregate is priced at the TTL the request asked for, and the result says so",
+        "PC-9: a ledger row predating the fields reads UNMEASURED by name; a null row reads UNREPORTED; a measured row reads its numbers",
+        "PC-9: the parser reads the API's usage block, the split included, and never infers from the request",
+        "PC-9: the six ledger fields come from one usage, and summing turns keeps a null unmeasured"
+      ],
+      "dynamic": 0
+    },
     "tests/mojibake.test.ts": {
       "names": [
         "M60: every candidate card's blurb and source line is clean",
@@ -5180,6 +5233,13 @@
       ],
       "dynamic": 0
     },
+    "tests/pilot-cost-digest.test.ts": {
+      "names": [
+        "PC-11: a record with ledger cache rows prints the rate with its three counts, uncached per Attempt, batch share, the dollar effect, and the pre-warm",
+        "PC-11: an older record says why the cache lines are not there, and a cycle that admitted no Scout says nothing was warmed"
+      ],
+      "dynamic": 0
+    },
     "tests/pilot-health-view.test.ts": {
       "names": [
         "a measured failure is RED, and it is named as the blocker",
@@ -5398,6 +5458,17 @@
         "mapping: ROUTE_CANDIDATE and EVIDENCE_FOUND become SCOUTED; refused and absence-shaped results map to nothing",
         "mapping: a VALIDATED method candidate is SCOUTED, not VERIFIED",
         "the full chain is ACCEPTED when every burden is met — the positive control for every refusal below"
+      ],
+      "dynamic": 0
+    },
+    "tests/prompt-prefix-stability.test.ts": {
+      "names": [
+        "PC-3 Ask classify and the unsourced fallback: the system prompt is static and the question is the message (both unmarked, under the minimum)",
+        "PC-3 Ask interpret: the system prompt is identical for the same ZIP context; the question and the conversation are messages (unmarked at 406 static tokens)",
+        "PC-3 Grounded Ask: system + evidence block are identical for two questions about one subject, and the question and the date sit after both breakpoints",
+        "PC-3 Scout: tools + system are byte-identical across Attempts and carry no Attempt id, obligation id or timestamp; the brief follows them",
+        "PC-3 adversarial audit: tools + system are identical across audits and carry nothing per request; the evidence is the user message",
+        "PC-3 model-worker proof: the request body is a static literal with no interpolated value"
       ],
       "dynamic": 0
     },
@@ -6256,13 +6327,24 @@
     },
     "tests/research-metrics.test.ts": {
       "names": [
-        "cache hit rate by role: totals-only results give a rate with per-turn columns null; instrumented results count repeated-prefix misses",
+        "cache hit rate by role reads the COST LEDGER: a row predating the cache fields is NOT MEASURED by name, a measured row gives the rate, per-Attempt uncached, batch share and the dollar effect",
         "capacity: Attempts per day the ceiling supports at the measured mean, with unmeasured counted beside and the window honoured",
         "cost per useful outcome shares the whole measured spend across classes and names an unrecorded pipeline stage",
         "funnel: SCOUTED counts distinct non-refused obligations; pipeline stages read 'none recorded' by default; candidate stages come from the store counts",
         "ordering: band 1 for a reader signal, band 2 for a universe provider, band 3 for the tail; oldest due first within a band; every input named",
         "share: this cycle against the trailing window, with the delta in points and null when nothing dispatched",
         "the digest lines and rows print every number with its denominator, and an unmeasured value as its named gap"
+      ],
+      "dynamic": 0
+    },
+    "tests/research-progression.test.ts": {
+      "names": [
+        "a real worker wall remains a reusable bottleneck with its obligation and history retained",
+        "actual worker results are counted once; extraction and legacy PASS do not certify independent civic truth",
+        "completed research cycles use their own previous boundary without opening a promotion window",
+        "method admission, repeated inheritance, candidates and date-only reopening retain distinct meanings",
+        "reopening is interval-scoped, and an active gate cannot invent promoted or reader-visible counts",
+        "uncommitted output and later evidence never manufacture earlier-window progress"
       ],
       "dynamic": 0
     },
@@ -6587,7 +6669,7 @@
         "11. SEEDED (RULING 243): a finish whose observedOn disagrees with the artifact record is REFUSED; the corrected claim is accepted and the candidate carries machine-owned provenance",
         "12. SEEDED (RULING 243): a permission claim the record contradicts, a citation of robots documents only, and an absent claim are each refused by name",
         "13. SEEDED (v): a route the decision rule sent DETERMINISTIC reaching the model executor makes NO request and aborts by name; decideExecutor names the graduation",
-        "14. SEEDED (i): a repeated-prefix turn with zero cache-read tokens is recorded as a cacheDefect; the request carries the four breakpoints",
+        "14. SEEDED (i): a repeated-prefix turn with zero cache-read tokens is recorded as a cacheDefect; the request carries the static markers and the top-level moving breakpoint",
         "15. SEEDED (ii): a deterministic-capable step routed to a model is REFUSED by the step registry; model steps route to the cheapest class and escalate on record",
         "16. SEEDED (iii): a representation past its step budget is truncated with a stated notice naming the artifact, and the overrun is recorded",
         "17. SEEDED (iv): a rung a prior Attempt recorded as durably FAILED is not re-walked — refused with the prior observation quoted; a transient failure and a different client are not refused",
@@ -6601,6 +6683,15 @@
         "7. SEEDED: a manually asserted ACTIVE flag is ignored — the verdict is DERIVED",
         "8. a ROUTE_CANDIDATE grounded in vaulted evidence disposes DISCOVERED with identity, usage and cost on the Attempt",
         "9. SEEDED (measured live): an artifact the log refuses does not leave the Attempt open"
+      ],
+      "dynamic": 0
+    },
+    "tests/scout-prewarm.test.ts": {
+      "names": [
+        "PC-6: the TTL decision is the measured 5 minutes, and a 1h marker after a 5m one is refused before sending with the API's own rule",
+        "PC-7: no admitted Scout, no pre-warm; and a failed pre-warm is recorded while the Attempts still run",
+        "PC-7: the cycle pre-warms ONCE, before the first admitted Scout, and both concurrent Scouts start after the entry exists",
+        "PC-7: the pre-warm request is the Attempts' static prefix with max_tokens 0, tool_choice auto, the breakpoint on the system block and none on the placeholder"
       ],
       "dynamic": 0
     },
@@ -7825,7 +7916,8 @@
         "missing Scout transport creates one attributable policy denial; retry requires both elapsed backoff and actual availability",
         "shared model admission contention defers Scout without an Attempt and releases for a later cycle",
         "the same coordinator advances real procedures Hunter → Parser → Validator → Auditor and preserves canonical accounting",
-        "unknown source routes to existing Scout and restart deduplicates the durable task without asserting absence"
+        "unknown source routes to existing Scout and restart deduplicates the durable task without asserting absence",
+        "unresolved identity permits independent diagnosis but never staging"
       ],
       "dynamic": 0
     },
@@ -7887,6 +7979,12 @@
         "provider outage is a named execution failure with no guessed usage or leaked transport body",
         "strict JSON end_turn compatibility remains accepted and missing usage remains null",
         "typed record_audit output preserves grounded challenge, actual model usage and existing cost calculation"
+      ],
+      "dynamic": 0
+    },
+    "tests/worker-fleet-novelty.test.ts": {
+      "names": [
+        "the actual Scout request inherits a learned method and the failed Hunter route before novelty"
       ],
       "dynamic": 0
     },

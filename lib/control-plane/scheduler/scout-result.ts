@@ -194,7 +194,7 @@ export interface ScoutFinding {
   readonly kind: "RECORD" | "POINTER";
 }
 
-/** Provider-reported usage, summed over the Attempt's model turns. Null where unreported. */
+/** Provider-reported usage, summed over the Attempt's model turns. Null where unreported. `inputTokens` is the UNCACHED remainder. */
 export interface ScoutUsage {
   readonly inputTokens: number | null;
   readonly outputTokens: number | null;
@@ -202,6 +202,9 @@ export interface ScoutUsage {
   readonly cacheCreationInputTokens: number | null;
   readonly turns: number;
   readonly toolCalls: number;
+  /* ---- the cache-write split by TTL (2026-09-06). Absent on results recorded before; null when no response carried a split. ---- */
+  readonly cacheCreation5mInputTokens?: number | null;
+  readonly cacheCreation1hInputTokens?: number | null;
 }
 
 /** Token counts by category for one step. Zero, never null: a step that ran reported its counts or ran no model. */
@@ -233,12 +236,28 @@ export interface ScoutStep {
   readonly representationBytes: number;
   /** How many times a deterministic step ran; 1 for a model turn. */
   readonly count: number;
+  /**
+   * The cache-write split by TTL for a MODEL step (2026-09-06), read from the
+   * response's `usage.cache_creation`. Absent on steps recorded before; null
+   * members when the response carried the aggregate and no split.
+   */
+  readonly cacheWriteSplit?: { readonly ephemeral5m: number | null; readonly ephemeral1h: number | null };
+  /** Whether `usd` priced the aggregate cache write at the requested TTL because the response carried no split. */
+  readonly cacheWritePricedFrom?: "SPLIT" | "AGGREGATE" | "NONE";
 }
 
-/** A turn after the first with zero cache-read tokens over an identical prefix. A defect, recorded. */
+/**
+ * A cache defect on a turn after the first, recorded. Two signatures
+ * (`lib/control-plane/cache-defects.ts`): a STATIONARY breakpoint — the turn
+ * paid for more uncached input than it appended — and a ZERO READ over an
+ * identical prefix. `turns` is the union; the two lists name which.
+ */
 export interface ScoutCacheDefect {
   readonly turns: readonly number[];
   readonly detail: string;
+  /** Absent on results recorded before 2026-09-06, whose detector read only the zero-read signature. */
+  readonly stationaryTurns?: readonly number[];
+  readonly zeroReadTurns?: readonly number[];
 }
 
 /** A research call the executor refused under the no re-read / no re-walk rule. */

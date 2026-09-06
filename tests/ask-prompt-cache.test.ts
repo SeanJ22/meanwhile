@@ -24,6 +24,7 @@ import {
   synthesisPrompt,
   synthesisQuestionPayload,
   synthesizeAnswer,
+  synthesisRequestBody,
 } from "../lib/ask/synthesize.ts";
 
 /**
@@ -120,6 +121,8 @@ interface SeenCall {
   callerPrefix: string;
   cacheRead: number;
   cacheCreation: number;
+  /** The request body as sent (2026-09-06), so a test can assert its shape. */
+  body: Record<string, unknown>;
 }
 
 /**
@@ -134,7 +137,11 @@ function renderedPrefix(body: Record<string, unknown>): string | null {
     | undefined;
   if (!messages) return null;
 
-  const parts: string[] = [String(body.model), "\u0000", String(body.system ?? ""), "\u0000"];
+  /* The system field is a string with caching off and, since 2026-09-06, an array of text blocks with it on. */
+  const system = Array.isArray(body.system)
+    ? (body.system as { text?: string }[]).map((b) => b.text ?? "").join("")
+    : String(body.system ?? "");
+  const parts: string[] = [String(body.model), "\u0000", system, "\u0000"];
   let sawBreakpoint = false;
   for (const message of messages) {
     if (typeof message.content === "string") {
@@ -185,7 +192,7 @@ function anthropicWithCache(clock: FakeClock, seen: SeenCall[]): typeof fetch {
       }
     }
 
-    seen.push({ callerPrefix: prefix ?? "", cacheRead, cacheCreation });
+    seen.push({ callerPrefix: prefix ?? "", cacheRead, cacheCreation, body });
 
     return {
       ok: true,
@@ -457,9 +464,42 @@ test("H1: the system prompt is one string with every rule, and its size is pinne
   assert.equal(typeof prompt, "string");
   assert.match(prompt, /ONLY the records supplied/);
   assert.match(prompt, /Never tell the reader how to vote/);
-  assert.match(prompt, /Today is 2026-08-31\./);
+  /*
+   * Prompt-caching session, 2026-09-06: the date LEFT the system prompt. It
+   * was the one per-request value ahead of every breakpoint, so the system
+   * prefix could never be shared across a midnight. The sentence is unchanged
+   * and now rides as its own block after the last breakpoint
+   * (`synthesisDateBlock`); the prompt shrank by exactly that line and its
+   * blank line — 2,347 → 2,325 characters — and was counted at Anthropic's
+   * `count_tokens` endpoint that day at 731 tokens on `claude-opus-5`, above
+   * the 512-token floor, which is what makes the system breakpoint real.
+   */
+  assert.doesNotMatch(prompt, /Today is/, "the date is no longer in the system prompt");
   assert.match(prompt, /LEAD WITH THE PLAIN DEFINITION/, "the definition-first contract is in the prompt");
-  assert.equal(prompt.length, 2347, "the system prompt changed size — re-measure the cache floor");
+  assert.equal(prompt.length, 2325, "the system prompt changed size — re-measure the cache floor");
+});
+
+test("PC-5 (2026-09-06): the request carries TWO breakpoints — the system block and the civic context — and the date and the question sit after both", async () => {
+  const seen: SeenCall[] = [];
+  const clock: FakeClock = { now: 0 };
+  await synthesizeAnswer(zipPack(), { apiKey: "k", fetchImpl: anthropicWithCache(clock, seen), callerKey: "synthetic-run" });
+  const body = seen[0].body as { system: { type: string; text: string; cache_control?: unknown }[]; messages: { content: { type: string; text: string; cache_control?: unknown }[] }[] };
+  assert.ok(Array.isArray(body.system) && body.system.length === 1, "the system prefix is one text block");
+  assert.deepEqual(body.system[0].cache_control, { type: "ephemeral" }, "the first breakpoint is on the system block");
+  assert.equal(body.system[0].text, synthesisPrompt(zipPack()));
+  const blocks = body.messages[0].content;
+  assert.equal(blocks.length, 3, "context, date, question");
+  assert.deepEqual(blocks[0].cache_control, { type: "ephemeral" }, "the second breakpoint is at the end of the civic context");
+  assert.equal(blocks[1].text, "Today is 2026-08-31.");
+  assert.equal(blocks[1].cache_control, undefined);
+  assert.equal(blocks[2].cache_control, undefined);
+  assert.match(blocks[2].text, /what is on the agenda/);
+  /* The records carry their own retrieval stamps, which are evidence; the DATE SENTENCE is what must not sit before the last breakpoint. */
+  assert.doesNotMatch(body.system[0].text + blocks[0].text, /Today is/, "no date sentence before the last breakpoint");
+  /* With caching off (the comparison seam) the system field is the plain string and nothing is marked. */
+  const cold = synthesisRequestBody(zipPack(), { model: "claude-opus-5", cached: false, effort: "medium" });
+  assert.equal(typeof cold.system, "string");
+  assert.ok(!JSON.stringify(cold).includes("cache_control"));
 });
 
 /* ── the caller key ──────────────────────────────────────────────────────── */

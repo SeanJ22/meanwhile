@@ -31,7 +31,7 @@ import type { ScoutResult, ScoutStep } from "../lib/control-plane/scheduler/scou
 const NOW = "2026-09-02T16:00:00.000Z";
 
 function cost(attemptId: string, usd: number | null, recordedAt = NOW, role: CostEntry["role"] = "SCOUT"): CostEntry {
-  return { attemptId, workItemId: "w", routeTaskId: null, routeId: null, source: null, jurisdiction: null, project: "freshness", role, cost: { inputTokens: 1, outputTokens: 1, usd, durationMs: 1, bytesFetched: null, requestCount: 1 }, recordedAt };
+  return { attemptId, workItemId: "w", routeTaskId: null, routeId: null, source: null, jurisdiction: null, project: "freshness", role, cost: { inputTokens: 1, outputTokens: 1, usd, durationMs: 1, bytesFetched: null, requestCount: 1, cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null, batch: false }, recordedAt };
 }
 
 function result(over: Partial<ScoutResult> & { readonly attemptId: string }): ScoutResult {
@@ -159,18 +159,64 @@ test("share: this cycle against the trailing window, with the delta in points an
   assert.equal(empty.delta, null);
 });
 
-test("cache hit rate by role: totals-only results give a rate with per-turn columns null; instrumented results count repeated-prefix misses", () => {
-  const totalsOnly = cacheHitRateByRole([result({ attemptId: "a" })]);
-  assert.equal(totalsOnly.length, 1);
-  assert.equal(totalsOnly[0].role, "SCOUT");
-  assert.equal(totalsOnly[0].hitRate, 500 / 1600);
-  assert.equal(totalsOnly[0].repeatedPrefixTurns, null);
-  const instrumented = cacheHitRateByRole([result({ attemptId: "b", steps: [modelStep(1, 0), modelStep(2, 0), modelStep(3, 900)], cacheDefect: { turns: [2], detail: "d" } })]);
-  assert.equal(instrumented[0].repeatedPrefixTurns, 2);
-  assert.equal(instrumented[0].repeatedPrefixMisses, 1);
-  assert.equal(instrumented[0].cacheRead, 900);
-  assert.equal(instrumented[0].uncachedInput, 300);
-  assert.deepEqual(cacheDefectCounts([result({ attemptId: "a" }), result({ attemptId: "b", steps: [modelStep(1, 0)], cacheDefect: { turns: [2], detail: "d" } }), result({ attemptId: "c", steps: [modelStep(1, 0)], cacheDefect: null })]), { defective: 1, instrumented: 2 });
+/** A ledger row carrying the cache metering (2026-09-06). */
+function meteredCost(attemptId: string, m: { read: number; write: number; uncached: number; split?: boolean; batch?: boolean; requests?: number }, role: CostEntry["role"] = "SCOUT", recordedAt = NOW): CostEntry {
+  return {
+    ...cost(attemptId, 1, recordedAt, role),
+    cost: {
+      inputTokens: m.read + m.write + m.uncached, outputTokens: 10, usd: 1, durationMs: 1, bytesFetched: null, requestCount: m.requests ?? 1,
+      cacheReadInputTokens: m.read, cacheCreationInputTokens: m.write,
+      cacheCreation5mInputTokens: m.split === false ? null : m.write, cacheCreation1hInputTokens: m.split === false ? null : 0,
+      uncachedInputTokens: m.uncached, batch: m.batch ?? false,
+    },
+  };
+}
+
+test("cache hit rate by role reads the COST LEDGER: a row predating the cache fields is NOT MEASURED by name, a measured row gives the rate, per-Attempt uncached, batch share and the dollar effect", () => {
+  /* The `cost()` helper's rows carry the fields as null: the provider reported nothing. A row with the keys absent predates them. */
+  const predating = { ...cost("old", 1), cost: { inputTokens: 1, outputTokens: 1, usd: 1, durationMs: 1, bytesFetched: null, requestCount: 1 } as unknown as CostEntry["cost"] };
+  const rows = cacheHitRateByRole({ costs: [predating, cost("unreported", 1)], results: [] });
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].role, "SCOUT");
+  assert.equal(rows[0].measuredRows, 0);
+  assert.equal(rows[0].predatingRows, 1);
+  assert.equal(rows[0].unreportedRows, 1);
+  assert.equal(rows[0].hitRate, null, "no measured row: no rate, never 0%");
+  assert.match(rows[0].denominator, /1 predate the cache fields and are NOT MEASURED/);
+
+  const measured = cacheHitRateByRole({
+    costs: [meteredCost("a", { read: 900, write: 100, uncached: 200 }), meteredCost("b", { read: 300, write: 0, uncached: 600, batch: true, requests: 2 }), meteredCost("audit", { read: 50, write: 50, uncached: 0, split: false }, "ADVERSARIAL_AUDITOR")],
+    results: [result({ attemptId: "a", steps: [modelStep(1, 0), modelStep(2, 0), modelStep(3, 900)], cacheDefect: { turns: [2, 3], detail: "d", stationaryTurns: [3], zeroReadTurns: [2] } })],
+  });
+  const scout = measured.find((r) => r.role === "SCOUT")!;
+  assert.equal(scout.measuredRows, 2);
+  assert.equal(scout.cacheRead, 1200);
+  assert.equal(scout.cacheWrite, 100);
+  assert.equal(scout.uncachedInput, 800);
+  assert.equal(scout.hitRate, 1200 / 2100, "read over read + write + uncached");
+  assert.deepEqual(scout.uncachedPerAttempt, { mean: 400, max: 600 });
+  assert.equal(scout.batchShare, 2 / 3, "two of three requests went through the Batches API");
+  assert.equal(scout.repeatedPrefixTurns, 2);
+  assert.equal(scout.repeatedPrefixMisses, 1);
+  assert.equal(scout.stationaryTurns, 1);
+  assert.ok(Math.abs((scout.savedUsd ?? 0) - (1200 / 1_000_000) * 5 * 0.9) < 1e-12, "read tokens × (base − read price) at claude-opus-5's rate");
+  const audit = measured.find((r) => r.role === "ADVERSARIAL_AUDITOR")!;
+  assert.equal(audit.aggregatePricedRows, 1, "a row with the aggregate and no split is counted by name");
+  assert.equal(audit.hitRate, 0.5);
+
+  /* The window: a row outside it is not in the denominator. */
+  const windowed = cacheHitRateByRole({ costs: [meteredCost("a", { read: 900, write: 100, uncached: 200 }), meteredCost("stale", { read: 1, write: 1, uncached: 1 }, "SCOUT", "2026-08-01T00:00:00.000Z")], results: [], sinceIso: "2026-09-01T00:00:00.000Z" });
+  assert.equal(windowed[0].attempts, 1);
+
+  /* A pre-warm row is a cache write for the cycle, never an Attempt. */
+  const prewarmed = cacheHitRateByRole({ costs: [{ ...meteredCost("pw", { read: 0, write: 4586, uncached: 77 }), routeId: "scout:prewarm" }], results: [] });
+  assert.equal(prewarmed.length, 0);
+
+  assert.deepEqual(
+    cacheDefectCounts([result({ attemptId: "a" }), result({ attemptId: "b", steps: [modelStep(1, 0)], cacheDefect: { turns: [2], detail: "d", stationaryTurns: [2], zeroReadTurns: [] } }), result({ attemptId: "c", steps: [modelStep(1, 0)], cacheDefect: null }), result({ attemptId: "d", steps: [modelStep(1, 0)], cacheDefect: { turns: [2], detail: "old detector" } })]),
+    { defective: 2, instrumented: 3, stationary: 1, zeroRead: 1 },
+    "the two signatures are counted apart; an old-detector defect (turns only) was a zero read by construction",
+  );
 });
 
 test("cost per useful outcome shares the whole measured spend across classes and names an unrecorded pipeline stage", () => {

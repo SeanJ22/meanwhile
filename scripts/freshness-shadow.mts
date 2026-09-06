@@ -147,7 +147,11 @@ import {
   type ResearchState,
   type RunningScout,
 } from "../lib/control-plane/scheduler/research-policy.ts";
-import { candidateStoreCounts, proposeScoutCandidates, type ProposalReport } from "../lib/control-plane/scheduler/scout-candidates.ts";
+import { candidateStoreCounts, proposeScoutCandidates, METHOD_STORE, type ProposalReport } from "../lib/control-plane/scheduler/scout-candidates.ts";
+import { readResearchProgression } from "../lib/control-plane/research-progression.ts";
+import { readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
+import { readCandidateStore, readMethodStore } from "../lib/method/candidate.ts";
+import { readConclusionStore } from "../lib/method/conclusions.ts";
 import {
   NO_PIPELINE_RECORDED,
   cacheDefectCounts,
@@ -800,8 +804,10 @@ let spentThisCycle = 0;
 let scoutsAdmittedThisCycle = 0;
 let priorCircuits: readonly ProviderCircuit[] = [];
 let priorLastSuccessfulActivity: string | null = null;
+let priorResearchState: ResearchState | null = null;
 try {
   const previous = await repos.researchState.read(RESEARCH_STATE_ID);
+  priorResearchState = previous?.value ?? null;
   priorCircuits = previous?.value.fleetSafety?.providerCircuits ?? [];
   priorLastSuccessfulActivity = previous?.value.fleetSafety?.lastSuccessfulActivity ?? null;
 } catch (error) {
@@ -1016,6 +1022,9 @@ let laneCounts: { deterministicDispatched: number; modelDispatched: number; defe
 };
 /** Computed once at cycle end; null on the start-of-cycle state. */
 let metrics: ResearchMetrics | null = null;
+const researchWindowId = `research:${HOST}:${NOW}`;
+let researchProgression = priorResearchState?.researchProgression ?? null;
+let researchProgressionFailure: string | null = null;
 
 /**
  * The research state this cycle writes, carrying the owner's dispatch it
@@ -1077,6 +1086,7 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
     metrics,
     ownerDispatch: ownerDispatches.at(-1) ?? null,
     fleetSafety: fleetSafety.snapshot(cycleFinishedAt ?? nowIso()),
+    researchProgression,
   };
 }
 
@@ -1199,10 +1209,9 @@ const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLane
 // Otherwise an always-full refresh queue could starve the fleet indefinitely.
 const plannedWork = canary || scheduledBlackout ? [] : (await repos.workItems.list()).filter(item => item.value.autonomousPlan);
 const fleetReserveMs = !dry && !canary && plannedWork.length ? Math.min(360_000, BUDGET_MIN * 30_000) : 0;
-const fleetScoutReserve = !dry && !canary && plannedWork.some(item => {
-  const plan = item.value.autonomousPlan!;
-  return plan.seedUrls.length > 0 && !plan.sources.length && !plan.acquisition.length;
-}) ? Math.min(1, SCOUT_MAX) : 0;
+// Registered investigations also need Scout after a known source fails or leaves
+// verification unresolved; initial source discovery is not the only model work.
+const fleetScoutReserve = !dry && !canary && plannedWork.length ? Math.min(1, SCOUT_MAX) : 0;
 
 const cycle = await runCycle({
   repos,
@@ -1429,6 +1438,23 @@ if (canary) {
 /* -------------------------------------------- research state, heartbeat --- */
 
 const finishedAt = nowIso();
+if (!dry && !canary) {
+  try {
+    researchProgression = await readResearchProgression(repos, {
+      windowId: researchWindowId, through: finishedAt, gate: readActivationGate(ROOT),
+      candidates: readCandidateStore(join(ROOT,"data","method","candidates.json")).candidates,
+      knowledge: readMethodStore(join(ROOT,...METHOD_STORE)),
+      conclusions: readConclusionStore(join(ROOT,"data","method","conclusions.json")),
+      researchBoundary: {
+        since: priorResearchState?.researchProgression?.through ?? priorResearchState?.cycleFinishedAt ?? NOW,
+        previousCompletedWindowId: priorResearchState?.researchProgression?.windowId ?? (priorResearchState?.cycleFinishedAt ? `research:${priorResearchState.host}:${priorResearchState.cycleStartedAt}` : null),
+      },
+    });
+  } catch (error) {
+    researchProgressionFailure = error instanceof Error ? error.message : String(error);
+    runtimeConditions.push(`RESEARCH_PROGRESSION_UNAVAILABLE: ${researchProgressionFailure}; no zero-progress claim was produced`);
+  }
+}
 await writeResearchState(finishedAt);
 const finalState = researchState(finishedAt);
 
@@ -1541,7 +1567,9 @@ writeFileSync(
   `${JSON.stringify(
     {
       startedAt: cycle.startedAt,
-      finishedAt: cycle.finishedAt,
+      finishedAt,
+      researchProgression: researchProgression?.windowId === researchWindowId ? researchProgression : null,
+      researchProgressionFailure,
       testedSha: headSha(ROOT),
       provider: repos.describe(),
       durable: repos.durable,

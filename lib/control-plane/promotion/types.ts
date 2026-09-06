@@ -367,6 +367,8 @@ export interface WindowRunRecord {
     readonly verdicts: readonly ItemVerdict[];
     readonly byRecordClass: readonly RecordClassTally[];
   };
+  /** Canonical research progression; absent on windows recorded before this contract existed. */
+  readonly researchProgression?: import("../research-progression.ts").ResearchWindowProgression;
   /** Always 0 in SHADOW. */
   readonly promoted: number;
   readonly postPromotionVerification: {

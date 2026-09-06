@@ -72,6 +72,10 @@ import { headSha } from "../lib/ops/git-facts.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import { nextRunRecordPath } from "../lib/health/run-records.ts";
 import { today } from "./doc-dates.mjs";
+import { readResearchProgression } from "../lib/control-plane/research-progression.ts";
+import { readCandidateStore, readMethodStore } from "../lib/method/candidate.ts";
+import { METHOD_STORE } from "../lib/control-plane/scheduler/scout-candidates.ts";
+import { readConclusionStore } from "../lib/method/conclusions.ts";
 
 const ROOT = process.cwd();
 const HOST = hostname();
@@ -389,6 +393,20 @@ try {
       const s4 = nowIso();
       const recordPath = nextRunRecordPath(RUNS_DIR, today());
       const target = existsSync(MIRROR) ? MIRROR : FALLBACK;
+      const finishedAt = nowIso();
+      let researchProgression: WindowRunRecord["researchProgression"];
+      try {
+        researchProgression = await readResearchProgression(repos, {
+          windowId, through: finishedAt, gate,
+          candidates: readCandidateStore(join(ROOT,"data","method","candidates.json")).candidates,
+          knowledge: readMethodStore(join(ROOT,...METHOD_STORE)),
+          conclusions: readConclusionStore(join(ROOT,"data","method","conclusions.json")),
+        });
+      } catch (error) {
+        const detail = error instanceof Error ? error.message : String(error);
+        incident("DIGEST", "RESEARCH_PROGRESSION_UNAVAILABLE", detail, ["research advancement and bottleneck facts for this completed window"]);
+        exitCode = 2;
+      }
       const record: WindowRunRecord = {
         formatVersion: WINDOW_FORMAT_VERSION,
         windowId,
@@ -398,7 +416,7 @@ try {
         trigger,
         mode: "SHADOW",
         startedAt,
-        finishedAt: nowIso(),
+        finishedAt,
         host: HOST,
         testedSha: headSha(ROOT),
         provider: repos.describe(),
@@ -408,6 +426,7 @@ try {
         stages: [...stages, { stage: "DIGEST", outcome: "COMPLETED", startedAt: s4, finishedAt: nowIso(), reason: null }],
         legacyRefresh: legacy,
         pipeline: { items: counts.items, byStage: counts.byStage, refused: counts.refused, verdicts: evaluation.verdicts, byRecordClass: evaluation.byRecordClass },
+        ...(researchProgression ? {researchProgression} : {}),
         promoted: 0,
         postPromotionVerification: verification,
         controls: null,

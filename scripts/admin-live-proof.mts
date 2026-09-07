@@ -150,26 +150,42 @@ const legs: { leg: string; ok: boolean; says: string }[] = [];
  */
 let deployedSha: string | null = null;
 if (DEPLOYED) {
+  /*
+   * ASKED OF THE ADMIN HOST ITSELF, not of the reader host.
+   *
+   * `/api/build` is the SITE's build-identity endpoint and the admin origin
+   * correctly 404s it — the middleware confines that origin to admin paths, and
+   * reading the identity from the public host instead would prove which build
+   * the READER is serving and then infer the admin's from it. The shipping page
+   * renders the code identity the admin host is itself running, which is the
+   * thing this leg is supposed to observe rather than deduce.
+   */
   try {
-    const build = await fetch(`${BASE}/api/build`, { headers: { accept: "application/json", "cache-control": "no-cache" } });
-    const body = (await build.json()) as { readonly commit?: string; readonly sha?: string };
-    deployedSha = body.commit ?? body.sha ?? null;
+    const shipping = await fetch(`${BASE}/admin/steward`, {
+      headers: { cookie: `${ADMIN_SESSION_COOKIE}=${cookie}`, accept: "text/html", "cache-control": "no-cache" },
+      redirect: "manual",
+    });
+    const html = shipping.status === 200 ? await shipping.text() : "";
     const expected = process.env.WTP_EXPECT_SHA ?? null;
+    const found = [...new Set(html.match(/\b[0-9a-f]{40}\b/g) ?? [])];
+    deployedSha = expected !== null && found.includes(expected) ? expected : (found[0] ?? null);
     legs.push({
       leg: "the deployed host names the build it is serving",
-      ok: deployedSha !== null && (expected === null || deployedSha.startsWith(expected) || expected.startsWith(deployedSha)),
+      ok: shipping.status === 200 && (expected === null ? deployedSha !== null : found.includes(expected)),
       says:
-        deployedSha === null
-          ? `${BASE}/api/build returned no commit, so this proof cannot say which build answered it.`
+        shipping.status !== 200
+          ? `GET ${BASE}/admin/steward returned ${shipping.status}, so the host said nothing about its build.`
           : expected === null
-            ? `${BASE} is serving ${deployedSha}. Nothing asserted it should be a particular one.`
-            : `${BASE} is serving ${deployedSha}, and ${expected} was expected.`,
+            ? `The shipping page on ${BASE} names ${found.length} build identit(ies); the first is ${deployedSha ?? "none"}.`
+            : found.includes(expected)
+              ? `The shipping page on ${BASE} carries ${expected}, which is the build this proof is about.`
+              : `The shipping page on ${BASE} does not carry ${expected}. It names: ${found.join(", ") || "no 40-hex identity at all"}.`,
     });
   } catch (error) {
     legs.push({
       leg: "the deployed host names the build it is serving",
       ok: false,
-      says: `${BASE}/api/build could not be read (${(error as Error)?.message ?? "error"}).`,
+      says: `GET ${BASE}/admin/steward could not be read (${(error as Error)?.message ?? "error"}).`,
     });
   }
 

@@ -2406,5 +2406,15 @@
       "NS26",
       "NS27"
     ]
+  },
+  {
+    "session": "job-watch",
+    "opened": "2026-09-07",
+    "ids": [
+      "JOB58",
+      "JOB59",
+      "JOB60",
+      "JOB61"
+    ]
   }
 ]

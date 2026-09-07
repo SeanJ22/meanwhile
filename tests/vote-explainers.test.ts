@@ -5,9 +5,14 @@ import { test } from "node:test";
 
 import {
   VOTE_EXPLAINERS,
+  STATE_VOTE_EXPLAINERS,
   explainVoteQuestion,
+  type VoteJurisdiction,
 } from "../lib/votes/vote-explainers.ts";
 import { NOTICE_SUMMARIES } from "../lib/meetings/notice-summary.ts";
+
+const FEDERAL = { level: "federal" } as const satisfies VoteJurisdiction;
+const NH = { level: "state", state: "NH" } as const satisfies VoteJurisdiction;
 
 /**
  * The vote-type explainers (4b) and notice summaries (4d), held to their
@@ -32,15 +37,15 @@ test("every common vote type the chambers cast has a plain-words explainer", () 
   ];
   for (const question of questions) {
     if (question.startsWith("Passed, Objections")) continue; // covered below as a known miss
-    const explainer = explainVoteQuestion(question);
+    const explainer = explainVoteQuestion(question, FEDERAL);
     assert.ok(explainer, `no explainer for "${question}"`);
     assert.ok(explainer.plain.length > 40, `"${question}": explainer too thin`);
   }
 });
 
 test("an unmatched question renders no explainer — never a guessed one", () => {
-  assert.equal(explainVoteQuestion("On the Quorum Call"), null);
-  assert.equal(explainVoteQuestion(""), null);
+  assert.equal(explainVoteQuestion("On the Quorum Call", FEDERAL), null);
+  assert.equal(explainVoteQuestion("", FEDERAL), null);
 });
 
 test("every explainer cites its parliamentary definition in the data file", () => {
@@ -87,6 +92,48 @@ test("the vote surface actually renders the explainers", () => {
     source.includes("explainVoteQuestion"),
     "official-popup must render the vote-type explainer on each row",
   );
+});
+
+test("state veto override names the governor only when the motion establishes an override", () => {
+  for (const question of ["Veto Override", "On Overriding the Veto"]) {
+    const explainer = explainVoteQuestion(question, NH);
+    assert.ok(explainer);
+    assert.match(explainer.plain, /override the governor's veto/);
+    assert.equal(explainer.noMeans, "A No vote here was a vote against overriding the veto.");
+    assert.doesNotMatch(explainer.plain, /President|two-thirds|became law|signed/i);
+  }
+  const message = explainVoteQuestion("VETO MESSAGE - Roll Call Required", NH);
+  assert.ok(message);
+  assert.match(message.plain, /governor's objections/);
+  assert.doesNotMatch(message.plain, /President|override|became law|signed/i);
+  assert.equal(message.noMeans, null, "a veto message does not establish the direction of the motion");
+});
+
+test("state concurrence and passage do not invent an executive action or later stage", () => {
+  for (const state of ["NH", "NJ", "AZ"]) {
+    for (const question of ["Assembly Floor: Concur in Senate Amendments", "On Concurring in the Senate Amendment", "Senate Floor: Third Reading - Final Passage", "On Passage"]) {
+      const explainer = explainVoteQuestion(question, { level: "state", state });
+      assert.ok(explainer, `${state}: ${question}`);
+      assert.doesNotMatch(`${explainer.plain} ${explainer.noMeans}`, /President|governor|signed|veto|became law/i);
+    }
+  }
+});
+
+test("a jurisdiction mismatch or ambiguous state procedure never borrows a federal explainer", () => {
+  for (const question of ["On the Nomination", "On Cloture", "Veto", "On Passage of a bill about veto powers", "Motion to Table the Veto Override", "Reconsider Veto Override", "Motion to Sustain the Veto", "Motion Not to Concur in Senate Amendments", "On the Quorum Call", ""]) {
+    assert.equal(explainVoteQuestion(question, NH), null, question);
+  }
+  // Missing jurisdiction is also an honest gap at runtime, never a federal default.
+  assert.equal(explainVoteQuestion("Veto Override", undefined as unknown as VoteJurisdiction), null);
+  assert.match(explainVoteQuestion("On Overriding the Veto", FEDERAL)!.plain, /President's veto/);
+  assert.match(explainVoteQuestion("On the Nomination", FEDERAL)!.plain, /President's nominee/);
+});
+
+test("state definitions remain neutral and source-backed without federal procedure leakage", () => {
+  for (const explainer of STATE_VOTE_EXPLAINERS) {
+    assert.match(explainer.basis, /https:\/\/gc\.nh\.gov\//);
+    assert.doesNotMatch(`${explainer.plain} ${explainer.noMeans}`, /President|60 votes|two-thirds|\bshould\b|\bgood\b|\bbad\b|we recommend/i);
+  }
 });
 
 // ── Notice summaries (4d) — same contract as the measure summaries ───────

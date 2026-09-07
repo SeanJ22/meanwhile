@@ -16,6 +16,11 @@
  * explainer — never a guessed one.
  */
 
+/** The record's jurisdiction, never the candidate's contested office. */
+export type VoteJurisdiction =
+  | { level: "federal" }
+  | { level: "state"; state: string };
+
 export interface VoteExplainer {
   /** Keyword the chamber's question line must contain (case-insensitive). */
   match: RegExp;
@@ -24,15 +29,16 @@ export interface VoteExplainer {
   /**
    * 5b (2026-08-17): what a No vote mechanically did on this vote type —
    * one line, mechanical, never evaluative. Derived from the same
-   * parliamentary definition as `plain`; rendered on every vote row.
+   * parliamentary definition as `plain`. Null when the source motion does
+   * not establish the direction of a No vote.
    */
-  noMeans: string;
+  noMeans: string | null;
   /** Where the parliamentary definition lives. Data-file citation only. */
   basis: string;
 }
 
 /**
- * Order matters: more specific phrases first, so "Motion to Recommit"
+ * Federal procedure only. Order matters: more specific phrases first, so "Motion to Recommit"
  * matches before a generic "Passage" ever could.
  */
 export const VOTE_EXPLAINERS: VoteExplainer[] = [
@@ -145,11 +151,62 @@ export const VOTE_EXPLAINERS: VoteExplainer[] = [
   },
 ];
 
-/** The explainer for a chamber question line, or null — never a guess. */
+/**
+ * State procedure has its own definitions. Only explain what the motion
+ * establishes: a concurrence does not establish executive action, and a
+ * veto message alone does not identify the question put to the chamber.
+ * Thresholds and later legislative outcomes vary and are not inferred here.
+ * An unrecognized state motion never falls back to the federal table.
+ */
+export const STATE_VOTE_EXPLAINERS: VoteExplainer[] = [
+  {
+    match: /^(?:veto override|on (?:the )?veto override|on overriding (?:the )?veto)$/i,
+    plain:
+      "This vote was on whether to override the governor's veto of the bill.",
+    noMeans:
+      "A No vote here was a vote against overriding the veto.",
+    basis:
+      "State legislative veto procedure; NH New Legislator Orientation Manual, Gubernatorial Action — https://gc.nh.gov/orientation/documents/handbooks/New%20Legislator%20Orientation%20Manual.pdf",
+  },
+  {
+    match: /^veto message(?:\s*-\s*roll call required)?$/i,
+    plain:
+      "This roll call concerned the governor's objections to a bill.",
+    // The source identifies a veto message, but not the direction of the
+    // motion. Do not turn a vote on that message into a guessed override.
+    noMeans: null,
+    basis:
+      "State legislative veto messages; NH New Legislator Orientation Manual, Gubernatorial Action — https://gc.nh.gov/orientation/documents/handbooks/New%20Legislator%20Orientation%20Manual.pdf",
+  },
+  {
+    match: /^(?:(?:house|senate|assembly)(?: floor)?\s*[-:]\s*)?(?:on )?(?:motion to )?concur(?:ring)? (?:in|with) (?:the )?(?:senate|house|assembly) amendments?$/i,
+    plain:
+      "This vote was on whether to accept the other chamber's changes to the bill.",
+    noMeans:
+      "A No vote here was a vote against accepting those changes.",
+    basis:
+      "State legislative concurrence; NH New Legislator Orientation Manual, Glossary: Concur — https://gc.nh.gov/orientation/documents/handbooks/New%20Legislator%20Orientation%20Manual.pdf",
+  },
+  {
+    match: /^(?:(?:house|senate|assembly)(?: floor)?\s*[-:]\s*)?(?:third reading - final passage|on (?:the )?(?:final )?passage|on the bill)$/i,
+    plain: "This vote was on whether to pass the bill in this chamber.",
+    noMeans: "A No vote here was a vote against passing the bill.",
+    basis:
+      "State legislative passage; NH New Legislator Orientation Manual, The Legislative Process — https://gc.nh.gov/orientation/documents/handbooks/New%20Legislator%20Orientation%20Manual.pdf",
+  },
+];
+
+/** The explainer for a question in its explicit jurisdiction, or null. */
 export function explainVoteQuestion(
   question: string,
+  jurisdiction: VoteJurisdiction,
 ): VoteExplainer | null {
-  for (const explainer of VOTE_EXPLAINERS) {
+  const explainers = jurisdiction?.level === "federal"
+    ? VOTE_EXPLAINERS
+    : jurisdiction?.level === "state"
+      ? STATE_VOTE_EXPLAINERS
+      : [];
+  for (const explainer of explainers) {
     if (explainer.match.test(question)) return explainer;
   }
   return null;

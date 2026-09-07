@@ -21,7 +21,7 @@ import {
   type KeyVoteRow,
 } from "@/components/officials/key-votes-section";
 import { votedCount } from "@/lib/votes/participation";
-import { explainVoteQuestion } from "@/lib/votes/vote-explainers";
+import { explainVoteQuestion, type VoteJurisdiction } from "@/lib/votes/vote-explainers";
 import {
   summaryForBill,
   summaryPendingForBill,
@@ -92,7 +92,11 @@ export function VotePill({
   return <span className={`vote-pill vote-pill--${tone}`}>{children}</span>;
 }
 
-export type MemberRollCall = RollCallVote & {
+export type MemberRollCall = Pick<RollCallVote,
+  "id" | "title" | "titleSource" | "question" | "result" | "legisNum" |
+  "billUrl" | "rollCallUrl" | "date"
+> & {
+  jurisdiction: VoteJurisdiction;
   position: VotePosition;
   /** Item 3: per-party for/against, or null when it wouldn't sum to the
    *  chamber's recorded tally — the honest unavailable state. */
@@ -345,7 +349,7 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
             </p>
           )}
           {votes.map((vote) => {
-            const explainer = explainVoteQuestion(vote.question);
+            const explainer = explainVoteQuestion(vote.question, vote.jurisdiction);
             return (
               <div
                 key={vote.id}
@@ -394,7 +398,7 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
                   // evaluative.
                   <p className="mt-1 text-[0.6875rem] leading-relaxed text-paper-dim">
                     {explainer.plain}{" "}
-                    <span className="text-muted">{explainer.noMeans}</span>
+                    {explainer.noMeans && <span className="text-muted">{explainer.noMeans}</span>}
                   </p>
                 )}
                 <BillPlainSummary billUrl={vote.billUrl} />

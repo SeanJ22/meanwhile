@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 559,
-    "named": 5933,
+    "files": 569,
+    "named": 6049,
     "dynamic": 24
   },
   "files": {
@@ -221,6 +221,30 @@
         "ADM-8: units match by bounded state token or by term; a dispatch to an unenumerated state is honored by name",
         "ADM-9: the map's own ThemeToggle is mounted in the console header, and the research page carries the header too",
         "the readiness legend, tiles and swatch classes are one shared implementation"
+      ],
+      "dynamic": 0
+    },
+    "tests/admin-feedback-9-6.test.ts": {
+      "names": [
+        "a count agrees with its noun, and a duration is in seconds",
+        "a fragment target clears the sticky header rather than landing under it",
+        "a superseded readiness snapshot says what happened in owner language, and needs nobody",
+        "a verdict is not glossed with the same word it already is",
+        "an unmapped finding code returns null rather than a plausible-sounding invention",
+        "every fragment the command centre can send the owner to is an id something renders",
+        "every owner sentence for a finding is free of machine vocabulary and is a whole sentence",
+        "the banner's 'Take me there' and the card's 'Open' cannot disagree — they are the same value",
+        "the blocked card's destination is one region carrying BOTH halves of what it counts",
+        "the build identity is a disclosure, and every identifier is still inside it",
+        "the console is published before the first cycle, not only after one",
+        "the destination opens what is collapsed inside it, in both mechanisms",
+        "the raw instrument sentence moved off the face and is still on the page",
+        "the readiness page puts the machine facts one disclosure down, and keeps them",
+        "the release manifest's status words have owner translations",
+        "the release review answers the owner's questions before it shows an identifier",
+        "the release review is swept for plain English like every other admin page",
+        "the route targets the command centre can send the owner to are real pages",
+        "the two codes the owner actually read now say what happened in ordinary English"
       ],
       "dynamic": 0
     },
@@ -580,6 +604,36 @@
         "every declaration states a basis — a bare state is a guess about a vendor",
         "ical is ABSENT, and that is an ANSWER rather than outstanding work",
         "legistar is PRESENT, and its basis names the field that makes it observable"
+      ],
+      "dynamic": 0
+    },
+    "tests/agent-bridge-execution.test.ts": {
+      "names": [
+        "OFF is the default, survives an absent or corrupt config, and REFUSES rather than billing",
+        "ON permits a paid path only where one exists, is configured, and is under its ceiling",
+        "a PAID_API path with nothing to meter it REFUSES rather than becoming an unrecorded spend",
+        "a delegated job may only ever be opened at an agent authority",
+        "a failure on the paid path never claims the call was free",
+        "a paid call whose ledger write fails is still reported as spent",
+        "a paid run that DOES happen is recorded in the ledger before the job is closed",
+        "a provider that starts and does not finish leaves a FAILED job, not a silent one",
+        "a reviewer that echoes the WRONG hash is recorded as it answered, not corrected",
+        "a reviewer's prompt carries the frozen bytes and its hash, and nothing about the other seat",
+        "a subscription is available only when all three observations say so",
+        "a subscription run completes, costs nothing, and says so",
+        "a well-formed answer becomes a conclusion, and an unreadable one becomes a thrown FAILED",
+        "a working subscription always wins, even with paid spending switched ON",
+        "an answer that is not the shape we asked for is REFUSED, never summarised",
+        "an execution path this bridge cannot classify runs nothing at all (§3.6)",
+        "each run argv is the provider's own read-only, non-interactive mode, and takes its prompt on stdin",
+        "every trusted install directory is declared with a reason, and none is configurable",
+        "nothing in the decision can turn a refusal into a spend",
+        "the closed tables cannot be mutated in place, outer object included",
+        "the newest installed version wins, and a partly-removed one does not shadow it",
+        "the outermost JSON object is found even inside a CLI's own chrome",
+        "the output bound is the context bound — a provider that prints a novel is not answering",
+        "the run table is closed, and nothing outside it is permitted",
+        "with the setting OFF and no subscription, the job is REFUSED and no paid runner is ever called"
       ],
       "dynamic": 0
     },
@@ -2057,6 +2111,25 @@
         "RULING 278 — the ops-only set is a STRICT SUBSET of the non-shipping set",
         "RULING 278 — the post-deploy observer consumes the same classifier, before it installs",
         "RULING 278 — the shape check is shown catching a real malformation"
+      ],
+      "dynamic": 0
+    },
+    "tests/ci-preflight.test.ts": {
+      "names": [
+        "a red preflight makes every required job fail loudly, and skips nothing into looking green",
+        "every required job runs the preflight before it buys anything",
+        "nothing the preflight imports needs node_modules",
+        "one step decides whether the expensive tier runs, and every expensive step asks it",
+        "the browser and the suite are bought only on a head whose cheap tier is green",
+        "the duplicate check reuses the one census and agrees with the suite's baseline",
+        "the gates job runs the cheap checks before it fetches a browser or runs the suite",
+        "the local door runs the preflight before the gate loop, and refuses rather than continuing",
+        "the preflight checks are cheap, named, and both report",
+        "the preflight is declared as something the local door runs, not exempted from parity",
+        "the preflight needs no dependency install — it runs on the bare checkout",
+        "the preflight never stages, commits or otherwise mutates the tree",
+        "the three required contexts are exactly what the workflow still produces",
+        "visible-tree passes on a tree whose files are all tracked, and names the ones that are not"
       ],
       "dynamic": 0
     },
@@ -3678,6 +3751,25 @@
       ],
       "dynamic": 0
     },
+    "tests/governing-record-identity.test.ts": {
+      "names": [
+        "a canonical person's delegation role does not hide the legislative record",
+        "a vanished holder record cannot be replaced by a similar name",
+        "conflicting canonical and federal person bridges stay a gap; repeated identical identity is safe",
+        "multiple legislative records still require reconciliation even if a candidacy key agrees",
+        "record identity follows the committed person across chambers without conferring incumbency",
+        "similar and identical display names without committed keys cannot borrow a record",
+        "two distinct canonical officials are an ambiguous identity, independent of link order",
+        "unresolved and stale person relationships cannot fall through to a federal or other valid link"
+      ],
+      "dynamic": 0
+    },
+    "tests/governing-record-reader.test.ts": {
+      "names": [
+        "actual Arizona candidate cards preserve held records across chambers and an ordinary exact-seat incumbent"
+      ],
+      "dynamic": 0
+    },
     "tests/guard-census.test.ts": {
       "names": [
         "RULING 62 — a dynamically-named guard is counted, not named",
@@ -4451,6 +4543,53 @@
         "the first-load bounds are the continental US, the right way round",
         "two levels in one building draw an equal-slice ring, never one standing in for both",
         "widening back writes only the pins that came back"
+      ],
+      "dynamic": 0
+    },
+    "tests/maptiler-barrier.test.ts": {
+      "names": [
+        "THE BARRIER: the same page, the same key, and nothing reaches the provider",
+        "THE PLANT: a guarded synthetic browser with a configured key does reach MapTiler",
+        "the ceiling is hard, and a run that blows it fails rather than reporting a result",
+        "the environment alone cannot open the barrier, and neither can the option alone"
+      ],
+      "dynamic": 0
+    },
+    "tests/maptiler-key-matrix.test.ts": {
+      "names": [
+        "every deploy context is served by exactly one key identity",
+        "local, CI and preview deploys carry no browser key at all",
+        "no two identities share a deploy context — a key cannot cross environments",
+        "production allows the exact Reader origins and never a wildcard",
+        "staging is one origin, and it is not a production origin",
+        "the smoke asks the real provider, on the URL shape the app builds",
+        "the smoke key is restricted to the smoke's own origin and ships nowhere else",
+        "the smoke refuses to spend the production key",
+        "with no key configured the app already draws its fallback, which is the expected local picture"
+      ],
+      "dynamic": 0
+    },
+    "tests/maptiler-usage.test.ts": {
+      "names": [
+        "a 200 records enough provenance to audit the number back to the bytes",
+        "a key label is matched exactly, and anything else is UNCLASSIFIED",
+        "a non-200 is a failed read with its provenance, never an empty timeline",
+        "a published snapshot carries no reader-level field",
+        "a synthetic run that reached the provider is a defect, not a ratio",
+        "a token never survives a message",
+        "an unasked question declares no numbers at all",
+        "burn is measured over a stated window and never over the provider's own projection",
+        "every declared key gets a row even at zero — that is how a stopped spend is visible",
+        "every number the panel renders carries a denominator and a contract",
+        "no service token is NOT CONNECTED, and it is never zero usage",
+        "services stay separable — Tiles and Rendered maps never collapse",
+        "the admin page audits the map panel from the same projection it renders",
+        "the allowance is stated as assumed until somebody confirms it",
+        "the analytics URL asks by api_keys and by services, and carries no credential",
+        "the panel answers each of MAPQ-6's questions with a number or a named gap",
+        "the panel never calls production-key usage a count of people",
+        "the panel's face-rendered prose carries no machine constant, command or code path",
+        "the provider's own vocabulary survives normalization"
       ],
       "dynamic": 0
     },
@@ -5903,6 +6042,22 @@
         "RULING 165: the LIVE ruleset read from the API on 2026-08-26 is INTACT",
         "RULING 165: the bypass must be Deploy keys — an Actions-app grant is DRIFT, not agreement",
         "RULING 24 + 164: an UNREAD deploy-key list is cannot-tell, never a pass"
+      ],
+      "dynamic": 0
+    },
+    "tests/provider-access.test.ts": {
+      "names": [
+        "a blocked policy is blocked whatever the request looks like",
+        "a ceiling nobody can raise past the maximum, and a nonsense one falls back to the default",
+        "a lookalike hostname is somebody else's host",
+        "a subdomain nobody has added yet is blocked the day it appears",
+        "both gates are required, and neither alone opens the door",
+        "every OTHER third party this product's pages reach is untouched by the barrier",
+        "every named MapTiler host is a provider host, and is blocked by default",
+        "only http and https can reach a provider; everything else is not a provider host",
+        "the ceiling is hard, and the request that crosses it is refused rather than counted",
+        "the ledger records what a run spent, and never a key",
+        "the shared browser site enforces the barrier, and enforces it first"
       ],
       "dynamic": 0
     },
@@ -8118,12 +8273,23 @@
     "tests/vote-explainers.test.ts": {
       "names": [
         "5b: every vote type states what a No vote mechanically did — never evaluatively",
+        "a jurisdiction mismatch or ambiguous state procedure never borrows a federal explainer",
         "an unmatched question renders no explainer — never a guessed one",
         "every common vote type the chambers cast has a plain-words explainer",
         "every explainer cites its parliamentary definition in the data file",
         "every notice summary cites an exact document version in the snapshot",
         "explainers pass the register test: plain words, no advocacy",
+        "state concurrence and passage do not invent an executive action or later stage",
+        "state definitions remain neutral and source-backed without federal procedure leakage",
+        "state veto override names the governor only when the motion establishes an override",
         "the vote surface actually renders the explainers"
+      ],
+      "dynamic": 0
+    },
+    "tests/vote-jurisdiction-reader.test.ts": {
+      "names": [
+        "held NH override and veto-message records reach the actual Reader leaf with state semantics",
+        "held federal nomination keeps the President explainer through API and Reader rendering"
       ],
       "dynamic": 0
     },

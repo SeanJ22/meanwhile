@@ -46,6 +46,7 @@ function stateVotes(member: string) {
     .sort((a, b) => b.date.localeCompare(a.date))
     .map((r) => ({
       id: r.id,
+      jurisdiction: { level: "state" as const, state: r.state },
       // The bill's official title, as the legislature published it. Never
       // ours — the same rule the federal rows ship under.
       title: r.billTitle,
@@ -114,6 +115,7 @@ export async function GET(request: Request) {
     .sort((a, b) => b.rollNumber - a.rollNumber)
     .map((v) => ({
       ...v,
+      jurisdiction: { level: "federal" as const },
       position: positions.get(v.id),
       partyBreakdown: partyBreakdownFor(v.id, v.result, snap.positions, parties),
     }));

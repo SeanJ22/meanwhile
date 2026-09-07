@@ -44,6 +44,7 @@ import {
 } from "@/components/officials/member-directory";
 import { CardSourcesList } from "@/components/officials/card-sources-list";
 import { RecentVotes } from "@/components/map/popup/official-popup";
+import { governingRecordHolderFor } from "@/lib/ballot/governing-record";
 import { personCardSources } from "@/lib/officials/card-sources";
 import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
 import type { SeatHolder } from "@/lib/officials/lookup";
@@ -477,12 +478,9 @@ async function BallotBattlecard({
     source: null,
   };
 
-  /*
-   * The officeholder record to READ VOTES FROM. The federal join first,
-   * because it is exact; otherwise the officeholder the contest resolution
-   * matched to this candidate by seat.
-   */
-  const recordHolder = holder ?? incumbency.holderFor.get(targetKey) ?? null;
+  // A person's record survives a chamber or seat change. The standing above
+  // still answers only whether this candidate holds the contested office.
+  const recordHolder = await governingRecordHolderFor(targetKey);
 
   const officeBlurb = blurbForContestTitle(contestTitle, contestOcdId);
   const positions = positionsFor(targetKey);
@@ -594,9 +592,9 @@ async function BallotBattlecard({
          * inside one object literal: *if the defect exists at that instance it
          * exists at the class.*
          *
-         * `recordHolder` is the federal join OR the officeholder the contest
-         * resolution matched to this candidate by seat — the same record the
-         * map battlecard renders from.
+         * `recordHolder` resolves the committed person relationship — the
+         * same official record the map battlecard renders from, including
+         * when the candidacy contests a different seat.
          */
         /*
          * **AND THE SLOT IS NULL WHERE THE SOURCE DOES NOT REACH THEM.**
@@ -644,13 +642,18 @@ async function BallotBattlecard({
          * Deputy Speaker rendered blank while her votes sat in a committed
          * file.
          *
-         * `recordHolder` is the federal join OR the officeholder the contest
-         * resolution matched by seat. Verified 2026-08-26: Karen Ebel resolves
+         * `recordHolder` follows canonical person identity independently of
+         * the contested seat. Verified 2026-08-26: Karen Ebel resolves
          * to `plural:947e2e2b-04eb-4f92-9f83-aef8760517e0`, which carries
          * positions in the snapshot.
          */
         record: recordHolder ? (
-          <RecentVotes holder={recordHolder} reactionContext={context} contentOnly />
+          <>
+            <p className="text-[0.6875rem] leading-relaxed text-muted" data-governing-record-office={recordHolder.officeTitle}>
+              Record from service as {recordHolder.officeTitle}.
+            </p>
+            <RecentVotes holder={recordHolder} reactionContext={context} contentOnly />
+          </>
         ) : null,
         /*
          * **BAL-15 (2026-08-25).** Sources now carries three things the ballot

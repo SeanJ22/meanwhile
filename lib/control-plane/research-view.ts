@@ -24,6 +24,8 @@
 
 import { unreachable, type ReadOutcome } from "./admin-data.ts";
 import type { CostEntry } from "./cost.ts";
+import type { FleetSafetySnapshot } from "./fleet-safety.ts";
+import { runnerStanding, type RunnerStanding } from "./runner-standing.ts";
 import {
   assertAggregateOnly,
   gap,
@@ -272,6 +274,13 @@ export async function appendResearchIntent(
 export interface ScoutRow {
   readonly subject: string;
   readonly obligationId: string;
+  /**
+   * The executor's own sentence for why a MODEL was spent on this unit. It
+   * explains the dispatch, never the goal — the owner read it and said *"I
+   * have no idea how to translate the reason at all."* It stays on the row as
+   * disclosure detail; the face is built by `scoutStory` in
+   * `lib/control-plane/plain-work.ts` from the typed fields beneath.
+   */
   readonly reason: string;
   readonly model: string;
   readonly elapsedMs: number;
@@ -283,6 +292,17 @@ export interface ScoutRow {
   readonly artifactCount: number;
   readonly candidateCount: number;
   readonly recordedAt: string;
+  /* ---- the typed facts the plain sentences are built from (ADM-48) ---- */
+  /** What class of record the obligation is about. */
+  readonly recordClass: string;
+  /** The route the obligation names, or null when it names none. */
+  readonly routeId: string | null;
+  /** The executor's refusal codes; empty when it accepted the Scout's finish. */
+  readonly refusalCodes: readonly string[];
+  /** Distinct evidence-backed rungs the Scout walked. */
+  readonly evidenceRungs: number;
+  /** The rungs the Scout said it would try next — the proof there IS a next route. */
+  readonly nextRungs: readonly string[];
 }
 
 export interface IntentRow {
@@ -307,11 +327,32 @@ export interface ResearchView {
   readonly reading: Level1Reading;
   /** Each input the store could not answer, by name. */
   readonly storeNotes: readonly string[];
+  /**
+   * What the runner is doing, and the facts the card needs to say what it did
+   * and when it runs again (ADM-24 wording, applied here by ADM-42's item 9).
+   * `standing` is `runner-standing.ts` — the ONE place a human sentence for
+   * runner state is generated — so this page and Pilot health cannot disagree
+   * about whether the runner is paused, late or in a blackout.
+   */
   readonly runner: {
     readonly state: RunnerLiveness;
     readonly detail: string;
     readonly note: string | null;
+    readonly standing: RunnerStanding;
+    readonly host: string | null;
+    readonly lastBeatAt: string | null;
+    readonly lastCycleStartedAt: string | null;
+    readonly lastCycleFinishedAt: string | null;
+    /** When the runner itself believes the next cycle is due. Null when it was started without an interval. */
+    readonly nextCycleDueAt: string | null;
+    readonly testedSha: string | null;
   };
+  /**
+   * The last cycle's Fleet safety snapshot: what stopped work early, what was
+   * pushed to a later cycle, and which providers are paused. A gap when the
+   * cycle that wrote this state predates the field.
+   */
+  readonly safety: Held<FleetSafetySnapshot>;
   readonly cycle: Held<{
     readonly beatAt: string;
     readonly cycleStartedAt: string;
@@ -447,6 +488,11 @@ function scoutRowOf(r: ScoutResult): ScoutRow {
     artifactCount: r.artifactIds.length,
     candidateCount: r.candidates.length,
     recordedAt: r.recordedAt,
+    recordClass: r.recordClass,
+    routeId: r.routeId,
+    refusalCodes: (r.refusal ?? []).map((issue) => issue.code),
+    evidenceRungs: r.distinctEvidenceRungs,
+    nextRungs: r.nextRungs,
   };
 }
 
@@ -766,13 +812,34 @@ export function buildResearchView(input: ResearchViewInput): ResearchView {
       ? gap("OURS", "the last cycle recorded no research metrics; the numbers exist only once a cycle computes them")
       : held({ record: state.metrics, rows: researchDigestRows(state.metrics) });
 
+  const safety: ResearchView["safety"] = !state
+    ? stateGap()
+    : state.fleetSafety === undefined || state.fleetSafety === null
+      ? gap(
+          "OURS",
+          "the last cycle recorded no Fleet safety snapshot, so this page cannot say what stopped work early; the cycle that wrote this state predates the field",
+        )
+      : held(state.fleetSafety);
+
   return {
     nowIso: input.nowIso,
     verdict,
     reasons,
     reading,
     storeNotes,
-    runner: { state: liveness.state, detail: liveness.detail, note: noteOf(input.heartbeat) },
+    runner: {
+      state: liveness.state,
+      detail: liveness.detail,
+      note: noteOf(input.heartbeat),
+      standing: runnerStanding(heartbeat, intentLog ?? [], input.nowIso, state?.fleetSafety ?? null),
+      host: heartbeat?.host ?? state?.host ?? null,
+      lastBeatAt: heartbeat?.beatAt ?? null,
+      lastCycleStartedAt: heartbeat?.lastCycleStartedAt ?? state?.cycleStartedAt ?? null,
+      lastCycleFinishedAt: heartbeat?.lastCycleFinishedAt ?? state?.cycleFinishedAt ?? null,
+      nextCycleDueAt: heartbeat?.nextCycleDueAt ?? null,
+      testedSha: heartbeat?.testedSha ?? state?.testedSha ?? null,
+    },
+    safety,
     cycle,
     workerCredential,
     bounds,

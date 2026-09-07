@@ -12,7 +12,17 @@
  * the console is.
  */
 
-export const CONSOLE_VIEWS: readonly string[] = ["/admin", "/admin/research"];
+export const CONSOLE_VIEWS: readonly string[] = [
+  "/admin",
+  "/admin/research",
+  "/admin/release-review",
+  "/admin/steward",
+  "/admin/sources",
+  "/admin/reader",
+  "/admin/feedback",
+  "/admin/agents",
+  "/admin/chat",
+];
 
 /** A state readiness page: `/readiness/az`. */
 const READINESS_PATH = /^\/readiness\/[a-z]{2}$/;

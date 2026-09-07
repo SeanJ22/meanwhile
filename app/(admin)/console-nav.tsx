@@ -25,7 +25,17 @@ import { useState, useTransition } from "react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
 
-export type ConsoleView = "pilot-health" | "readiness" | "research" | "release-review";
+export type ConsoleView =
+  | "pilot-health"
+  | "readiness"
+  | "research"
+  | "release-review"
+  | "steward"
+  | "sources"
+  | "reader"
+  | "feedback"
+  | "agents"
+  | "chat";
 
 /** The path each view lives at. The readiness view is per state. */
 function pathFor(view: ConsoleView, state: string): string {
@@ -36,6 +46,18 @@ function pathFor(view: ConsoleView, state: string): string {
       return "/admin/research";
     case "release-review":
       return "/admin/release-review";
+    case "steward":
+      return "/admin/steward";
+    case "sources":
+      return "/admin/sources";
+    case "reader":
+      return "/admin/reader";
+    case "feedback":
+      return "/admin/feedback";
+    case "agents":
+      return "/admin/agents";
+    case "chat":
+      return "/admin/chat";
     default:
       return "/admin";
   }
@@ -46,6 +68,12 @@ const VIEW_LABEL: Record<ConsoleView, string> = {
   readiness: "State readiness",
   research: "Research detail",
   "release-review": "Software release review",
+  steward: "Shipping and integration",
+  sources: "Sources and APIs",
+  reader: "What readers are doing",
+  feedback: "Feedback",
+  agents: "Delegated work",
+  chat: "Ask the console",
 };
 
 export function ConsoleNav(props: {

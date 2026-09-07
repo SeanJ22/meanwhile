@@ -8,6 +8,7 @@ import {
   computeReadinessSnapshot,
   computeZipRow,
 } from "../lib/control-plane/readiness/compute.ts";
+import { NO_EVIDENCE } from "../lib/control-plane/readiness/gates.ts";
 import {
   readinessCountClaims,
   rowIsCurrent,
@@ -44,6 +45,7 @@ function congressional(): CapabilityInput {
       contract: "AZ congressional districts with confirmed geometry over the state's districts",
       label: "9 of 9",
       asOf: "2026-08-30",
+      says: null,
     },
     gates: {
       SOURCE_KNOWN: g(9, 9, "2026-08-30", 365),
@@ -68,6 +70,7 @@ function specialDistricts(): CapabilityInput {
       contract: "AZ special districts we have enumerated over the census universe",
       label: "0 of 327",
       asOf: null,
+      says: null,
     },
     gates: {}, // nothing walked -> all NOT_WALKED
   };
@@ -88,6 +91,7 @@ function municipalFinanceVail(): CapabilityInput {
       contract: "AZ municipalities with a walked campaign-finance route over the municipal universe",
       label: "walk closed · absence argued",
       asOf: "2026-09-01",
+      says: null,
     },
     gates: {
       SOURCE_KNOWN: g(91, 91, "2026-08-29", 90),
@@ -100,28 +104,10 @@ function municipalFinanceVail(): CapabilityInput {
 }
 
 function g(covered: number, total: number, asOf: string, staleAfterDays: number) {
-  return {
-    covered,
-    total,
-    asOf,
-    staleAfterDays,
-    walkClosed: false,
-    blockedReason: null,
-    gatedReason: null,
-    evidenceRef: null,
-  };
+  return { ...NO_EVIDENCE, covered, total, asOf, staleAfterDays };
 }
 function closedWalk(ref: string) {
-  return {
-    covered: 0,
-    total: 0,
-    asOf: "2026-09-01",
-    staleAfterDays: null,
-    walkClosed: true,
-    blockedReason: null,
-    gatedReason: null,
-    evidenceRef: ref,
-  };
+  return { ...NO_EVIDENCE, asOf: "2026-09-01", walkClosed: true, evidenceRef: ref };
 }
 
 function inputs(caps: CapabilityInput[], zips: ZipInput[]) {
@@ -133,14 +119,26 @@ function inputs(caps: CapabilityInput[], zips: ZipInput[]) {
     publisher: "readiness-refresh (test)",
     capabilities: caps,
     zips,
-    readerVisibleJurisdictions: held({
-      value: 9,
-      denominator: 9,
-      contract: "reader-visible AZ congressional districts over the census universe",
-      denominatorSource: "cd119",
+    capabilitiesServedToReaders: held({
+      value: 1,
+      denominator: 23,
+      contract: "capability rows whose committed holdings for this state are a declared input to a Reader surface",
+      denominatorSource: "lib/holdings/datasets.ts and lib/holdings/reader-trace.ts",
     }),
-    populationInCompleteZip: noPop("population not on file — Census ACS not yet ingested"),
-    timeSinceLastFullPass: held("2 days"),
+    populationInCompleteZip: noPop("no state population is on file, so a population-weighted completeness cannot be computed"),
+    oldestEvidence: held("2026-08-30"),
+    delivery: [
+      {
+        capabilityId: "districts.congressional",
+        holding: "lib/registry/registry.json",
+        rows: 9,
+        unit: "congressional district boundaries",
+        surfaces: ["map", "ballot"],
+        routes: ["ballot/page"],
+        askAnswers: false,
+        asOf: "2026-08-30",
+      },
+    ],
   };
 }
 
@@ -196,7 +194,7 @@ test("R-B: a monotonicity violation in the inputs is surfaced on the snapshot, n
     domain: "Officials and offices",
     label: "Municipal offices",
     level: "municipal",
-    coverage: { covered: 11, total: 91, authority: "registry", contract: "x", label: "11 of 91", asOf: "2026-08-22" },
+    coverage: { covered: 11, total: 91, authority: "registry", contract: "x", label: "11 of 91", asOf: "2026-08-22", says: null },
     gates: {
       SOURCE_KNOWN: g(91, 91, "2026-08-22", 365),
       ACQUIRED: g(11, 91, "2026-08-22", 365), // partial (gap)
@@ -223,6 +221,8 @@ test("R-F: a zip's state is worst-of its bodies, even when the worst differs fro
     zip: "85701",
     place: held("Tucson · downtown"),
     population: noPop("population not on file"),
+    populationBasis: "NO_TABULATION_AREA" as const,
+    populationMargin: null,
     tierLabel: "TIER_2",
     bodies: [
       body("CURRENT", "county"),
@@ -244,6 +244,8 @@ test("R-F: a zip with an UNKNOWN tier renders a named gap for its level, never L
     zip: "86301",
     place: held("Prescott"),
     population: noPop("population not on file"),
+    populationBasis: "NO_TABULATION_AREA" as const,
+    populationMargin: null,
     tierLabel: null, // UNKNOWN
     bodies: [body("NOT_WALKED", "no source walked")],
   };
@@ -259,6 +261,8 @@ test("R-10: the four pilot zips are identifiable at a glance", () => {
       zip: z,
       place: held("x"),
       population: noPop("n/a"),
+      populationBasis: "NO_TABULATION_AREA" as const,
+      populationMargin: null,
       tierLabel: "TIER_0",
       bodies: [body("NOT_WALKED", "x")],
     });
@@ -268,6 +272,8 @@ test("R-10: the four pilot zips are identifiable at a glance", () => {
     zip: "99999",
     place: held("x"),
     population: noPop("n/a"),
+    populationBasis: "NO_TABULATION_AREA" as const,
+    populationMargin: null,
     tierLabel: "TIER_0",
     bodies: [body("NOT_WALKED", "x")],
   });

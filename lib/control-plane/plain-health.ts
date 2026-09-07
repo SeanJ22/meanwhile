@@ -51,11 +51,60 @@ const WHAT: Record<string, string> = {
     "Is it up to date? The scheduler's clock: whether every record we owe is refreshed on time.",
 };
 
-const NEXT_COMMAND: Record<string, string> = {
-  READER: "run the reader suite again (`pnpm reader:suite`)",
-  TRUTH: "run the control set again (`pnpm truth:controls`)",
-  FRESHNESS: "let the runner cycle; the scheduler leaves shadow when its results are independently reproduced",
+/**
+ * What has to happen next, in ordinary words — **never a command** (ADM-37).
+ *
+ * The owner read `Next: To prove it: run the reader suite again (\`pnpm
+ * reader:suite\`)` and answered: *"What has to happen? Think of someone who is
+ * not an engineer and not a coder at all."* A shell command on the face of an
+ * operator console is an instruction he cannot carry out and a fact he cannot
+ * use.
+ *
+ * So each contract states the next step as a thing that happens, and the page
+ * puts the control beside it. `control` names which control that is:
+ *
+ * ```
+ *   RUN_CYCLE   a real, existing owner intent the runner honours
+ *   QUEUE       there is no admin-side execution seam for this check; the
+ *               honest control is to put it on the fix queue for a session
+ * ```
+ *
+ * FRESHNESS is the one that can be advanced from here today. The reader suite
+ * and the control set are produced by a work session on the runner machine and
+ * nothing schedules them, so this module says that rather than inventing a
+ * button that would do nothing, or promising a "next scheduled check" that no
+ * scheduler runs.
+ */
+export type HealthControl = "RUN_CYCLE" | "QUEUE";
+
+const NEXT_STEP: Record<string, { readonly says: string; readonly control: HealthControl; readonly expectation: string }> = {
+  READER: {
+    says: "The reader check has to be run again on the machine that runs it. Nothing schedules it today, so it happens when a work session runs it.",
+    control: "QUEUE",
+    expectation: "Putting it on the queue is what gets a session to run it; this card turns green once a fresh run passes.",
+  },
+  TRUTH: {
+    says: "The hidden answer key has to be checked against the product again. Nothing schedules it today, so it happens when a work session runs it.",
+    control: "QUEUE",
+    expectation: "Putting it on the queue is what gets a session to run it; this card turns green once a fresh run passes.",
+  },
+  FRESHNESS: {
+    says: "The runner has to cycle, and the scheduler leaves shadow once its results are reproduced independently.",
+    control: "RUN_CYCLE",
+    expectation: "A cycle takes about fifteen minutes. This card turns green once the scheduler's results have been independently reproduced.",
+  },
 };
+
+/** What has to happen next for a contract, and which control does it. */
+export function nextStepFor(contract: string): { readonly says: string; readonly control: HealthControl; readonly expectation: string } {
+  return (
+    NEXT_STEP[contract] ?? {
+      says: "This check has to be run again.",
+      control: "QUEUE",
+      expectation: "Putting it on the queue is what gets a session to run it.",
+    }
+  );
+}
 
 function hoursText(h: number): string {
   if (h < 1) return "under an hour";
@@ -121,13 +170,13 @@ export function plainContract(card: ContractCard, reading: OwnerContractReading)
       next = "Nothing to do; the next check keeps it current.";
       break;
     case "RED":
-      next = `Investigate the failures, then ${NEXT_COMMAND[card.contract] ?? "run the check again"}.`;
+      next = `Investigate the failures. ${nextStepFor(card.contract).says}`;
       break;
     case "AMBER":
       next =
         reading.state === "AWAITING_OWNER_DATA"
           ? "Load the owner corpus or answer key this contract measures against."
-          : `To prove it: ${NEXT_COMMAND[card.contract] ?? "run the check again"}.`;
+          : nextStepFor(card.contract).says;
       break;
     default:
       next = "Publish a snapshot so there is something to read.";

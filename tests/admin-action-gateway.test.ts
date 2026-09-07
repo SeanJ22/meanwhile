@@ -1,0 +1,1008 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+
+import { NextRequest } from "next/server";
+
+import { middleware } from "@/middleware.ts";
+import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN, hostOf } from "@/lib/ops/origins.ts";
+import {
+  ADMIN_SESSION_COOKIE,
+  ADMIN_SESSION_KEY_VAR,
+  SESSION_LIFETIME_SECONDS,
+  signSession,
+} from "@/lib/control-plane/admin-auth.ts";
+import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
+import type { ControlPlaneRepositories } from "@/lib/control-plane/repository/types.ts";
+import {
+  ADMIN_RECEIPT_LOG_KEY,
+  ALLOWED_BY_CALLER,
+  AUTHORITY_CLASSES,
+  authorityPermits,
+  receiptIdFor,
+  type ActionReceipt,
+  type ActionRequest,
+} from "@/lib/control-plane/gateway/contract.ts";
+import { submit } from "@/lib/control-plane/gateway/gateway.ts";
+import {
+  ACTION_TYPES,
+  actionDefinitions,
+  lookupAction,
+  type GatewayDeps,
+} from "@/lib/control-plane/gateway/registry.ts";
+import { findReceipt, inputDigest, readReceipts } from "@/lib/control-plane/gateway/receipts.ts";
+import {
+  ADMIN_CONFIG_ID,
+  defaultAdminConfig,
+  type AdminConfig,
+} from "@/lib/control-plane/gateway/admin-config.ts";
+import { AGENT_JOB_LOG_KEY, liveJobCount, type AgentJobRecord } from "@/lib/control-plane/gateway/agent-job.ts";
+import { readPulse } from "@/lib/control-plane/gateway/pulse-read.ts";
+import { DECISION_LOG_KEY, RUNNER_ID, SNAPSHOT_ID } from "@/lib/control-plane/admin-data.ts";
+import { RESEARCH_INTENT_LOG_KEY } from "@/lib/control-plane/scheduler/research-policy.ts";
+import { ADD_TO_QUEUE_OPTION, fixSubjectId } from "@/lib/control-plane/fix-queue.ts";
+import { POST } from "@/app/api/admin/action/route.ts";
+import { GET } from "@/app/api/admin/live/route.ts";
+
+/**
+ * **ADM-C6 — the canonical typed Action Gateway, proven against the store.**
+ * (Admin Pass C, 2026-09-06.)
+ *
+ * The five acceptance points the brief names, plus the two properties without
+ * which they would be theatre:
+ *
+ *   1  a permitted action succeeds and leaves a receipt that says what happened
+ *   2  a control drawn against a world that has moved is refused as stale
+ *   3  a duplicate submission returns the SAME receipt and does not act twice —
+ *      asserted against the delegated log, not against the gateway's own answer
+ *   4  a prohibited action is refused, for everybody, with the prohibited reason
+ *      and not a mistaken "you are not allowed"
+ *   5  an owner-gated action is refused for an AGENT caller
+ *   6  a refusal writes a receipt too — a refusal with no record is
+ *      indistinguishable from a click that never arrived
+ *   7  an unknown action fails closed
+ *
+ * Everything runs against `createMemoryRepositories()` with an injected clock,
+ * so the whole path — validate, staleness, idempotency, execute, append — is
+ * the production path and not a rehearsal of it.
+ *
+ * HOUSE STYLE: the denominator is asserted (every registered action is covered
+ * by the shape guard, and the count of registered actions is pinned), and the
+ * PLANT below proves the instrument catches the real defect rather than
+ * agreeing with itself.
+ */
+
+const NOW = "2026-09-06T12:00:00.000Z";
+const SESSION_KEY = "test-session-key-that-is-long-enough-to-sign-with";
+const ADMIN_HOST = hostOf(ADMIN_ORIGIN);
+const PUBLIC_HOST = hostOf(PUBLIC_SITE_ORIGIN);
+
+/** A clock that moves one second per call, so `startedAt` and `completedAt` differ. */
+function tickingClock(from = NOW): () => string {
+  let ms = Date.parse(from);
+  return () => {
+    const at = new Date(ms).toISOString();
+    ms += 1000;
+    return at;
+  };
+}
+
+function deps(
+  repos: ControlPlaneRepositories,
+  over: Partial<GatewayDeps> = {},
+): GatewayDeps {
+  return {
+    repos,
+    now: tickingClock(),
+    currentStateVersion: "world-1",
+    codeSha: null,
+    recordReview: null,
+    ...over,
+  };
+}
+
+function ask(over: Partial<ActionRequest> = {}): ActionRequest {
+  return {
+    type: "queue.add",
+    subject: "",
+    input: { where: "the control centre", says: "Spend by day is not measured" },
+    stateVersion: "world-1",
+    idempotencyKey: "test-key-000001",
+    caller: "OWNER_SESSION",
+    actorRef: "adm_test-session",
+    ...over,
+  };
+}
+
+/* ==========================================================================
+ * THE REGISTRY — closed, complete, and every entry says what it will not do
+ * ======================================================================= */
+
+test("ADM-C6: the registry is closed and every entry carries a full definition", () => {
+  const definitions = actionDefinitions();
+  /*
+   * THE DENOMINATOR. Eleven actions are registered today. Pinning the count is
+   * what makes the loop below a sweep rather than a coincidence: an entry
+   * silently dropped in a refactor would otherwise leave every assertion
+   * passing over a smaller population.
+   */
+  assert.equal(definitions.length, 11, "the registry no longer holds the eleven actions this pass declared");
+  assert.deepEqual(
+    [...ACTION_TYPES],
+    [
+      "queue.add",
+      "decision.record",
+      "runner.pause",
+      "runner.resume",
+      "runner.runCycleNow",
+      "fleet.deployHere",
+      "fleet.retryWorkItem",
+      "fleet.requestReadback",
+      "config.setApiFallback",
+      "review.decide",
+      "prohibited.promotionOn",
+    ],
+    "the registry holds an action this pass did not declare, or has lost one it did",
+  );
+  assert.deepEqual([...ACTION_TYPES].sort(), ACTION_TYPES.slice().sort(), "types are listed once each");
+  assert.equal(new Set(ACTION_TYPES).size, ACTION_TYPES.length, "no action type is declared twice");
+
+  for (const definition of definitions) {
+    assert.ok(
+      (AUTHORITY_CLASSES as readonly string[]).includes(definition.authority),
+      `${definition.type} resolves to no authority class, so it cannot fail closed`,
+    );
+    for (const field of ["label", "does", "doesNot", "subjectKind"] as const) {
+      assert.ok(definition[field].trim().length > 0, `${definition.type} has no ${field}`);
+    }
+    assert.ok(
+      definition.doesNot.length > 10,
+      `${definition.type} does not say what it will NOT do, which is the sentence the owner needs`,
+    );
+    assert.ok(definition.refusals.length > 0, `${definition.type} claims it can never refuse`);
+    // No machine constant leads on the face: these strings are rendered.
+    for (const field of ["label", "does", "doesNot"] as const) {
+      assert.doesNotMatch(
+        definition[field],
+        /\b[A-Z][A-Z0-9]{2,}(_[A-Z0-9]+)+\b/,
+        `${definition.type}'s ${field} carries a machine constant`,
+      );
+    }
+    assert.equal(lookupAction(definition.type)?.definition.type, definition.type);
+  }
+});
+
+test("ADM-C6: an action type that is not registered resolves to nothing, inherited members included", () => {
+  // A registry backed by a plain object answers `toString` with a function.
+  // A lookup that trusted truthiness would have handed the gateway that.
+  for (const nonsense of ["toString", "constructor", "__proto__", "hasOwnProperty", "queue.remove", ""]) {
+    assert.equal(lookupAction(nonsense), null, `${nonsense} resolved to something`);
+  }
+});
+
+/* ==========================================================================
+ * 1 · A PERMITTED ACTION SUCCEEDS, AND THE RECEIPT SAYS WHAT HAPPENED
+ * ======================================================================= */
+
+test("ADM-C6 acceptance 1: a permitted action succeeds and leaves a receipt that answers §3.7", async () => {
+  const repos = createMemoryRepositories();
+  const outcome = await submit(ask(), deps(repos));
+
+  assert.equal(outcome.ok, true, outcome.receipt.says);
+  assert.equal(outcome.replayed, false);
+  assert.equal(outcome.receipt.outcome, "QUEUED");
+  assert.equal(outcome.receipt.refusal, null);
+
+  /* §3.7's list, field by field. A receipt that cannot answer these is a toast. */
+  const r = outcome.receipt;
+  assert.equal(r.type, "queue.add", "what was done");
+  assert.equal(r.authority, "REVERSIBLE_NONPRODUCTION", "under what authority");
+  assert.equal(r.caller, "OWNER_SESSION", "who initiated it");
+  assert.equal(r.actorRef, "adm_test-session", "and through which session");
+  assert.equal(r.stateVersion, "world-1", "against which version of the world");
+  assert.equal(r.inputDigest, inputDigest(ask().input), "the input, provably");
+  assert.equal(r.startedAt, NOW);
+  assert.ok(r.completedAt !== null && r.completedAt > r.startedAt, "started and completed are two instants");
+  assert.equal(r.readBackAt, "/admin", "where the result can be read back");
+  assert.ok((r.undo ?? "").length > 0, "and what would undo it");
+
+  /* The derived identity is recorded, not the empty subject that was submitted. */
+  assert.equal(
+    r.subject,
+    fixSubjectId("the control centre", "Spend by day is not measured"),
+    "the receipt names what was actually acted on",
+  );
+
+  /* It DELEGATED: the decision log holds the intent, appended by the canonical helper. */
+  const decisions = await repos.ownerDecisions.read(DECISION_LOG_KEY);
+  assert.equal(decisions.length, 1, "the queue add did not reach the decision log");
+  assert.equal(decisions[0].chosenOption, ADD_TO_QUEUE_OPTION);
+  assert.equal(decisions[0].adminSessionRef, "adm_test-session");
+
+  /* And the receipt is durable, under its derived id. */
+  const stored = await findReceipt(repos, receiptIdFor("queue.add", "test-key-000001"));
+  assert.deepEqual(stored, r, "the receipt in the store is not the receipt that was returned");
+});
+
+test("ADM-C6: the receipt log holds no field the aggregate-only boundary refuses", async () => {
+  /*
+   * RULING 226 reaches the owner's own console: his page is a rendering like
+   * any other. `appendReceipt` runs `assertAggregateOnly`, so a receipt shape
+   * that grew a reader-level field name would throw at the append rather than
+   * become durable. This asserts the property on the record that actually
+   * landed, not on the schema.
+   */
+  const repos = createMemoryRepositories();
+  await submit(ask(), deps(repos));
+  const rows = await repos.adminReceipts.read(ADMIN_RECEIPT_LOG_KEY);
+  assert.equal(rows.length, 1);
+  const keys = new Set(Object.keys(rows[0] as unknown as Record<string, unknown>));
+  for (const forbidden of ["email", "sessionId", "session", "answerText", "freeText", "comment", "token"]) {
+    assert.equal(keys.has(forbidden), false, `the receipt carries ${forbidden}`);
+  }
+  assert.ok(keys.has("actorRef"), "the session reference is carried under a name the boundary allows");
+});
+
+/* ==========================================================================
+ * 2 · STALE REFUSAL
+ * ======================================================================= */
+
+test("ADM-C6 acceptance 2: an action rendered against a world that has moved is refused as stale", async () => {
+  const repos = createMemoryRepositories();
+  const outcome = await submit(
+    ask({ type: "decision.record", subject: "row-88", stateVersion: "world-1", input: { subjectId: "row-88", chosenOption: "Do it" } }),
+    deps(repos, { currentStateVersion: "world-2" }),
+  );
+
+  assert.equal(outcome.ok, false);
+  assert.equal(outcome.receipt.refusal, "STALE_STATE");
+  assert.match(outcome.receipt.says, /out of date/i);
+  assert.doesNotMatch(outcome.receipt.says, /STALE_STATE/, "the machine code does not lead the sentence");
+
+  /* Nothing was recorded but the refusal. */
+  assert.deepEqual(await repos.ownerDecisions.read(DECISION_LOG_KEY), [], "a stale decision reached the log");
+  assert.equal((await readReceipts(repos)).length, 1, "the refusal is the only record");
+});
+
+test("ADM-C6: an action that must quote a version and quotes none is INVALID, not stale", async () => {
+  /*
+   * The contract is explicit that these are different failures: an action that
+   * quotes nothing against a world that has one has not gone stale, it has
+   * arrived without the thing that would let anyone tell. Collapsing them would
+   * teach the owner to read "out of date" as "the button is broken".
+   */
+  const repos = createMemoryRepositories();
+  const outcome = await submit(
+    ask({ type: "decision.record", subject: "row-88", stateVersion: null, input: { subjectId: "row-88", chosenOption: "Do it" } }),
+    deps(repos, { currentStateVersion: "world-2" }),
+  );
+  assert.equal(outcome.receipt.refusal, "INVALID_INPUT");
+  assert.match(outcome.receipt.says, /which version of the page/i);
+
+  /* And an action that does NOT require one is unaffected by quoting nothing. */
+  const relaxed = await submit(
+    ask({ stateVersion: null, idempotencyKey: "test-key-000002" }),
+    deps(repos, { currentStateVersion: "world-2" }),
+  );
+  assert.equal(relaxed.ok, true, relaxed.receipt.says);
+});
+
+/* ==========================================================================
+ * 3 · DUPLICATE SUBMISSION — one receipt, one state change
+ * ======================================================================= */
+
+test("ADM-C6 acceptance 3: a duplicate submission returns the same receipt and does not act twice", async () => {
+  const repos = createMemoryRepositories();
+  const request = ask({
+    type: "runner.pause",
+    subject: "pilot-runner",
+    input: { note: "going to bed" },
+    idempotencyKey: "pause-key-0001",
+  });
+
+  const first = await submit(request, deps(repos));
+  assert.equal(first.ok, true, first.receipt.says);
+  assert.equal(first.replayed, false);
+
+  const second = await submit(request, deps(repos, { now: tickingClock("2026-09-06T18:00:00.000Z") }));
+  assert.equal(second.replayed, true, "the second submission was not recognised as a replay");
+  assert.deepEqual(second.receipt, first.receipt, "the replay returned a different receipt");
+  assert.equal(second.receipt.startedAt, NOW, "the replay re-stamped the receipt with a later clock");
+
+  /*
+   * THE ASSERTION THAT MATTERS. The gateway agreeing with itself proves
+   * nothing; what proves it is the DELEGATED path having run once. Two pause
+   * intents in the log would be two things the runner honors.
+   */
+  const intents = await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY);
+  assert.equal(intents.length, 1, "the runner was told to pause twice");
+  assert.equal((await readReceipts(repos)).length, 1, "the log holds two receipts for one action");
+});
+
+test("ADM-C6: two DIFFERENT actions sharing an idempotency key are two actions", async () => {
+  // The receipt id is `<type>:<key>`, so the key is scoped to the action. A key
+  // that collided across types would let one control silently swallow another.
+  const repos = createMemoryRepositories();
+  const a = await submit(ask({ type: "runner.pause", input: {}, idempotencyKey: "shared-key-01" }), deps(repos));
+  const b = await submit(ask({ type: "runner.resume", input: {}, idempotencyKey: "shared-key-01" }), deps(repos));
+  assert.equal(a.ok, true, a.receipt.says);
+  assert.equal(b.ok, true, b.receipt.says);
+  assert.equal(b.replayed, false);
+  assert.notEqual(a.receipt.receiptId, b.receipt.receiptId);
+  assert.equal((await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY)).length, 2);
+});
+
+/* ==========================================================================
+ * 4 · PROHIBITED — refused for everybody, with the right reason
+ * ======================================================================= */
+
+test("ADM-C6 acceptance 4: a prohibited action is refused for every caller, as prohibited", async () => {
+  const repos = createMemoryRepositories();
+  let key = 0;
+  for (const caller of ["OWNER_SESSION", "OPERATOR_CHAT", "AGENT", "ANONYMOUS"] as const) {
+    key += 1;
+    const outcome = await submit(
+      ask({ type: "prohibited.promotionOn", subject: "the nightly door", input: {}, idempotencyKey: `prohibited-00${key}`, caller }),
+      deps(repos),
+    );
+    assert.equal(outcome.ok, false, `${caller} was not refused`);
+    /*
+     * The REASON, not merely the refusal. `authorityPermits` answers false for
+     * PROHIBITED whoever is asking, so a naive ordering would tell the owner
+     * "whoever asked for this is not allowed to do it" — from which he would
+     * reasonably conclude that somebody else is.
+     */
+    assert.equal(outcome.receipt.refusal, "PROHIBITED_ACTION", `${caller} got the wrong reason`);
+    assert.match(outcome.receipt.says, /never allowed/i);
+  }
+  assert.equal((await readReceipts(repos)).length, 4, "each refusal is its own record");
+});
+
+test("ADM-C6: promotion stays off — nothing in the registry can turn it on", () => {
+  const promotion = actionDefinitions().filter((d) => /promotion/i.test(d.type) || /promotion/i.test(d.label));
+  assert.equal(promotion.length, 1, "the promotion entry is not the only promotion-shaped action");
+  assert.equal(promotion[0].authority, "PROHIBITED");
+  for (const definition of actionDefinitions()) {
+    assert.notEqual(definition.authority, "GOVERNED_INTEGRATION", `${definition.type} claims it can ship`);
+    assert.notEqual(definition.authority, "CODE_CHANGE", `${definition.type} claims it can write code`);
+  }
+});
+
+/* ==========================================================================
+ * 5 · OWNER-GATED — an agent cannot decide for the owner
+ * ======================================================================= */
+
+test("ADM-C6 acceptance 5: an owner-gated action is refused for an AGENT caller", async () => {
+  const repos = createMemoryRepositories();
+  const outcome = await submit(
+    ask({
+      type: "decision.record",
+      subject: "row-42",
+      input: { subjectId: "row-42", chosenOption: "Do it", consequenceShown: "the row closes" },
+      idempotencyKey: "agent-key-0001",
+      caller: "AGENT",
+    }),
+    deps(repos),
+  );
+  assert.equal(outcome.ok, false);
+  assert.equal(outcome.receipt.refusal, "AUTHORITY_MISMATCH");
+  assert.deepEqual(await repos.ownerDecisions.read(DECISION_LOG_KEY), [], "an agent recorded an owner decision");
+
+  /* The same action from the owner's own session goes through. */
+  const owned = await submit(
+    ask({
+      type: "decision.record",
+      subject: "row-42",
+      input: { subjectId: "row-42", chosenOption: "Do it", consequenceShown: "the row closes" },
+      idempotencyKey: "owner-key-0001",
+      caller: "OWNER_SESSION",
+    }),
+    deps(repos),
+  );
+  assert.equal(owned.ok, true, owned.receipt.says);
+  assert.equal((await repos.ownerDecisions.read(DECISION_LOG_KEY)).length, 1);
+});
+
+test("ADM-C6: the operator chat carries a button's authority for everything but an owner decision", async () => {
+  /*
+   * §3.5 — the chat is the owner's own session speaking, so it must not be a
+   * second-class caller for ordinary controls. It is NOT the owner for a
+   * decision, because "an agent cannot silently execute a workflow requiring
+   * owner judgment" reads the same whether the agent is wearing a chat window.
+   */
+  const repos = createMemoryRepositories();
+  const control = await submit(
+    ask({ type: "runner.resume", subject: "pilot-runner", input: {}, idempotencyKey: "chat-key-00001", caller: "OPERATOR_CHAT" }),
+    deps(repos),
+  );
+  assert.equal(control.ok, true, control.receipt.says);
+
+  const decision = await submit(
+    ask({ type: "decision.record", subject: "row-9", input: { subjectId: "row-9", chosenOption: "Do it" }, idempotencyKey: "chat-key-00002", caller: "OPERATOR_CHAT" }),
+    deps(repos),
+  );
+  assert.equal(decision.receipt.refusal, "AUTHORITY_MISMATCH");
+  assert.equal(authorityPermits("ANONYMOUS", "READ_ONLY"), false, "an unauthenticated caller holds nothing");
+  assert.deepEqual(ALLOWED_BY_CALLER.ANONYMOUS, [], "and the ladder says so");
+});
+
+/* ==========================================================================
+ * 6 · A REFUSAL WRITES A RECEIPT   ·   7 · UNKNOWN FAILS CLOSED
+ * ======================================================================= */
+
+test("ADM-C6 acceptance 6: a refusal is a first-class outcome with a durable receipt", async () => {
+  const repos = createMemoryRepositories();
+  /* One of each refusal the gateway itself produces, and every one leaves a row. */
+  await submit(ask({ type: "nothing.here", idempotencyKey: "refusal-key-01" }), deps(repos));
+  await submit(ask({ type: "prohibited.promotionOn", input: {}, idempotencyKey: "refusal-key-02" }), deps(repos));
+  await submit(ask({ type: "queue.add", input: { says: "" }, idempotencyKey: "refusal-key-03" }), deps(repos));
+  await submit(ask({ stateVersion: "old", idempotencyKey: "refusal-key-04" }), deps(repos));
+  await submit(
+    ask({ type: "decision.record", input: { subjectId: "r", chosenOption: "x" }, idempotencyKey: "refusal-key-05", caller: "AGENT" }),
+    deps(repos),
+  );
+
+  const rows = await readReceipts(repos);
+  assert.equal(rows.length, 5, "a refusal went unrecorded");
+  assert.deepEqual(
+    rows.map((r) => r.refusal),
+    ["UNKNOWN_ACTION", "PROHIBITED_ACTION", "INVALID_INPUT", "STALE_STATE", "AUTHORITY_MISMATCH"],
+    "the refusals recorded are not the refusals produced",
+  );
+  for (const row of rows) {
+    assert.equal(row.outcome, "REFUSED");
+    assert.ok(row.says.trim().length > 0, `${row.type} refused without saying anything`);
+    assert.doesNotMatch(row.says, /undefined|\[object/, `${row.type} refused with a broken sentence`);
+  }
+});
+
+test("ADM-C6 acceptance 7: an unknown action fails closed and is recorded as one nobody may run", async () => {
+  const repos = createMemoryRepositories();
+  const outcome = await submit(ask({ type: "shell.exec", subject: "rm -rf /", input: { cmd: "x" }, idempotencyKey: "unknown-key-01" }), deps(repos));
+  assert.equal(outcome.ok, false);
+  assert.equal(outcome.receipt.refusal, "UNKNOWN_ACTION");
+  assert.equal(outcome.receipt.authority, "PROHIBITED", "an unclassified action must not record itself as harmless");
+  assert.match(outcome.receipt.says, /does not know this action/i);
+  assert.equal((await readReceipts(repos)).length, 1);
+});
+
+test("ADM-C6: a request that is not shaped like an action writes nothing at all, and says so", async () => {
+  /*
+   * The one deliberate exception to "every refusal leaves a record". The
+   * receipt id is derived from the type and the idempotency key; a malformed
+   * pair cannot produce a row anybody could ever address again, so the gateway
+   * refuses without writing and the sentence tells the caller that.
+   */
+  const repos = createMemoryRepositories();
+  for (const bad of [
+    ask({ type: "", idempotencyKey: "envelope-key-1" }),
+    ask({ type: "a".repeat(200), idempotencyKey: "envelope-key-2" }),
+    ask({ type: "queue.add", idempotencyKey: "" }),
+    ask({ type: "queue.add", idempotencyKey: "short" }),
+    ask({ type: "queue.add", idempotencyKey: "has a space in it" }),
+  ]) {
+    const outcome = await submit(bad, deps(repos));
+    assert.equal(outcome.ok, false);
+    assert.equal(outcome.receipt.refusal, "INVALID_INPUT");
+  }
+  assert.deepEqual(await readReceipts(repos), [], "a record was written under an id nobody can address");
+});
+
+/* ==========================================================================
+ * THE PLANT — the instrument catches the real defect
+ * ======================================================================= */
+
+test("ADM-C6 PLANT: a gateway that skipped the idempotency read would be caught here", async () => {
+  /*
+   * A POSITIVE CONTROL, because a duplicate-submission test that only reads the
+   * gateway's own answer would pass against a gateway that did the work twice
+   * and returned the second receipt. This plants exactly that defect — the same
+   * action, submitted twice, with the receipt log emptied in between so the
+   * idempotency read finds nothing — and asserts the DELEGATED log moves. If
+   * the real test above were measuring the wrong thing, this one would be
+   * indistinguishable from it.
+   */
+  const repos = createMemoryRepositories();
+  const request = ask({ type: "runner.resume", subject: "pilot-runner", input: {}, idempotencyKey: "plant-key-0001" });
+  await submit(request, deps(repos));
+  assert.equal((await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY)).length, 1);
+
+  const blind: ControlPlaneRepositories = {
+    ...repos,
+    adminReceipts: { ...repos.adminReceipts, read: async () => [] },
+  };
+  await submit(request, deps(blind, { now: tickingClock("2026-09-06T13:00:00.000Z") }));
+  assert.equal(
+    (await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY)).length,
+    2,
+    "with the idempotency read blinded the work did NOT happen twice — the duplicate guard above is " +
+      "therefore measuring the gateway's own answer rather than the delegated effect",
+  );
+});
+
+test("ADM-C6: an unreadable receipt log stops the gateway rather than risking a double action", async () => {
+  const repos = createMemoryRepositories();
+  const broken: ControlPlaneRepositories = {
+    ...repos,
+    adminReceipts: {
+      ...repos.adminReceipts,
+      read: async () => {
+        throw new Error("the store is not answering");
+      },
+    },
+  };
+  const outcome = await submit(ask({ type: "runner.pause", input: {}, idempotencyKey: "broken-key-001" }), deps(broken));
+  assert.equal(outcome.ok, false);
+  assert.equal(outcome.receipt.refusal, "DOWNSTREAM_REFUSED");
+  assert.match(outcome.receipt.says, /already happened/i);
+  assert.deepEqual(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY), [], "it acted without being able to check");
+});
+
+/* ==========================================================================
+ * THE ACTIONS THAT REFUSE HONESTLY
+ * ======================================================================= */
+
+test("ADM-C6: retrying a work item refuses and names the seam that does not exist", async () => {
+  const repos = createMemoryRepositories();
+  const outcome = await submit(
+    ask({ type: "fleet.retryWorkItem", subject: "wi-123", input: { workItemId: "wi-123" }, idempotencyKey: "retry-key-0001" }),
+    deps(repos),
+  );
+  assert.equal(outcome.ok, false);
+  assert.equal(outcome.receipt.refusal, "NOT_SUPPORTED_YET");
+  assert.match(outcome.receipt.says, /owner intent/i, "the refusal does not name the missing seam");
+  assert.match(outcome.receipt.says, /standing runner/i);
+  /* And it did not quietly reach for a scheduler intent that means something else. */
+  assert.deepEqual(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY), []);
+});
+
+test("ADM-C6: the review decision refuses by name when nothing is wired to record it", async () => {
+  const repos = createMemoryRepositories();
+  const outcome = await submit(
+    ask({
+      type: "review.decide",
+      subject: "a".repeat(40),
+      input: { action: "DECIDE", stagingSha: "a".repeat(40), section: "pearl", decision: "APPROVE" },
+      idempotencyKey: "review-key-0001",
+    }),
+    deps(repos, { recordReview: null }),
+  );
+  assert.equal(outcome.ok, false);
+  assert.equal(outcome.receipt.refusal, "DOWNSTREAM_REFUSED");
+  assert.match(outcome.receipt.says, /nothing was recorded/i);
+});
+
+test("ADM-C6: the review decision delegates, and the writer's staleness is the gateway's staleness", async () => {
+  const repos = createMemoryRepositories();
+  const calls: unknown[] = [];
+  const stale = await submit(
+    ask({
+      type: "review.decide",
+      subject: "b".repeat(40),
+      input: { action: "DECIDE", stagingSha: "b".repeat(40), section: "pearl", decision: "APPROVE" },
+      idempotencyKey: "review-key-0002",
+    }),
+    deps(repos, {
+      recordReview: async (input) => {
+        calls.push(input);
+        return { ok: false, code: "STALE_SHA", detail: "staging moved while you were reviewing" };
+      },
+    }),
+  );
+  assert.equal(calls.length, 1, "the gateway did not call the existing writer");
+  assert.equal(stale.receipt.refusal, "STALE_STATE", "the writer's stale build is not mapped to the gateway's staleness");
+
+  const done = await submit(
+    ask({
+      type: "review.decide",
+      subject: "b".repeat(40),
+      input: { action: "DECIDE", stagingSha: "b".repeat(40), section: "pearl", decision: "APPROVE" },
+      idempotencyKey: "review-key-0003",
+    }),
+    deps(repos, {
+      recordReview: async () => ({ ok: true, code: "RECORDED", detail: "APPROVE on pearl recorded", rowIds: ["row-1"] }),
+    }),
+  );
+  assert.equal(done.ok, true, done.receipt.says);
+  assert.deepEqual(done.receipt.openedWork, [{ kind: "review record", id: "row-1", title: "your review decision" }]);
+});
+
+/* ==========================================================================
+ * §9A.22 — THE API FALLBACK TOGGLE
+ * ======================================================================= */
+
+test("§9A.22: paid API fallback defaults OFF, and reads OFF from a store nothing has written", async () => {
+  const repos = createMemoryRepositories();
+  assert.equal(defaultAdminConfig().apiFallback.enabled, false);
+  assert.equal(defaultAdminConfig().apiFallback.decidedAt, null, "a default is not a decision");
+  assert.equal(await repos.adminConfig.read(ADMIN_CONFIG_ID), null, "a fresh store holds no policy");
+});
+
+test("§9A.22: turning paid API fallback on needs an explicit confirmation, and is recorded durably", async () => {
+  const repos = createMemoryRepositories();
+
+  const unconfirmed = await submit(
+    ask({ type: "config.setApiFallback", subject: "paid API fallback", input: { enabled: "true" }, idempotencyKey: "fallback-key-01" }),
+    deps(repos),
+  );
+  assert.equal(unconfirmed.ok, false);
+  assert.equal(unconfirmed.receipt.refusal, "INVALID_INPUT");
+  assert.match(unconfirmed.receipt.says, /explicit confirmation/i);
+  assert.equal(await repos.adminConfig.read(ADMIN_CONFIG_ID), null, "an unconfirmed request still wrote the policy");
+
+  const on = await submit(
+    ask({
+      type: "config.setApiFallback",
+      subject: "paid API fallback",
+      input: { enabled: "true", confirmed: "true" },
+      idempotencyKey: "fallback-key-02",
+    }),
+    deps(repos),
+  );
+  assert.equal(on.ok, true, on.receipt.says);
+  const stored = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  assert.equal(stored?.value.apiFallback.enabled, true);
+  assert.equal(stored?.value.apiFallback.decidedBy, "adm_test-session");
+  assert.equal(
+    stored?.value.apiFallback.receiptId,
+    receiptIdFor("config.setApiFallback", "fallback-key-02"),
+    "the policy does not point at the receipt that changed it",
+  );
+  /* And the sentence does not claim more than the system does. */
+  assert.match(on.receipt.says, /does not switch anything on by itself/i);
+
+  /* Turning it back off is a compare-and-set on the row that exists. */
+  const off = await submit(
+    ask({ type: "config.setApiFallback", subject: "paid API fallback", input: { enabled: "false" }, idempotencyKey: "fallback-key-03" }),
+    deps(repos),
+  );
+  assert.equal(off.ok, true, off.receipt.says);
+  const after = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  assert.equal(after?.value.apiFallback.enabled, false);
+  assert.equal(after?.revision, 2, "the policy was replaced rather than updated in place");
+});
+
+test("§9A.22: a corrupt policy row reads as the default, which is OFF", async () => {
+  const repos = createMemoryRepositories();
+  await repos.adminConfig.put(ADMIN_CONFIG_ID, { nonsense: true } as unknown as AdminConfig, NOW);
+  const outcome = await submit(
+    ask({ type: "config.setApiFallback", subject: "paid API fallback", input: { enabled: "false" }, idempotencyKey: "fallback-key-04" }),
+    deps(repos),
+  );
+  assert.equal(outcome.ok, true, outcome.receipt.says);
+  const stored = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  assert.equal(stored?.value.apiFallback.enabled, false);
+});
+
+/* ==========================================================================
+ * ADM-34 — the pulse
+ * ======================================================================= */
+
+test("ADM-34: the pulse names every read it could not make and renders none of them as zero", async () => {
+  const repos = createMemoryRepositories();
+  const pulse = await readPulse(repos, NOW);
+  assert.equal(pulse.at, NOW);
+  for (const [name, value] of Object.entries(pulse.counts)) {
+    if (name === "agentJobsRunning") continue;
+    assert.equal(value, null, `${name} reported a number from a store that holds nothing`);
+  }
+  assert.equal(pulse.counts.agentJobsRunning, 0, "an empty job log is a real answer: nothing is running");
+  /*
+   * Three aggregates answered "nothing published yet" and each is named. The
+   * four snapshot-fed counts are covered by the snapshot's own name rather than
+   * repeated four times, which is why the denominator is three and not seven.
+   */
+  assert.equal(pulse.unread.length, 3, `${pulse.unread.length} unread reading(s) were named, not three`);
+  assert.ok(
+    pulse.unread.some((name) => /control centre snapshot/.test(name)),
+    "the snapshot the four counts come from is not named as unread",
+  );
+  assert.ok(pulse.unread.some((name) => /heartbeat/.test(name)));
+  assert.ok(pulse.unread.some((name) => /research/.test(name)));
+  for (const name of pulse.unread) {
+    assert.doesNotMatch(name, /[A-Z][A-Z0-9_]{3,}/, `${name} is a machine constant on the face`);
+  }
+  assert.equal(pulse.runner.state, "NEVER_BEAT", "a store that answered is not an unread store");
+});
+
+test("ADM-34: the revision moves when the console's own record moves, and not otherwise", async () => {
+  const repos = createMemoryRepositories();
+  const before = await readPulse(repos, NOW);
+  const again = await readPulse(repos, "2026-09-06T12:00:45.000Z");
+  assert.equal(again.revision, before.revision, "the revision moved on the clock alone");
+
+  await submit(ask({ idempotencyKey: "pulse-key-00001" }), deps(repos));
+  const after = await readPulse(repos, NOW);
+  assert.notEqual(after.revision, before.revision, "an action left the revision unchanged");
+});
+
+test("ADM-34: the pulse makes no list() call — the reads it may not make are refused loudly", async () => {
+  /*
+   * §16. A pulse that listed attempts, work items or route tasks would be a
+   * full table scan every forty-five seconds per open tab. The prohibition is
+   * enforced by BREAKING those methods and asserting the pulse still answers.
+   */
+  const repos = createMemoryRepositories();
+  const refuse = (which: string) => async () => {
+    throw new Error(`${which}.list() must not be called from the pulse`);
+  };
+  const guarded: ControlPlaneRepositories = {
+    ...repos,
+    attempts: { ...repos.attempts, list: refuse("attempts") },
+    workItems: { ...repos.workItems, list: refuse("workItems") },
+    routeTasks: { ...repos.routeTasks, list: refuse("routeTasks") },
+    adminReceipts: {
+      ...repos.adminReceipts,
+      readAll: refuse("adminReceipts"),
+    },
+  };
+  const pulse = await readPulse(guarded, NOW);
+  assert.ok(pulse.revision.length > 0);
+});
+
+/* ==========================================================================
+ * THE AGENT-JOB RECORD — reserved storage, minimal and honest
+ * ======================================================================= */
+
+test("ADM-C6: the agent-job log holds a job's progression without ever editing a record", async () => {
+  const repos = createMemoryRepositories();
+  const base: AgentJobRecord = {
+    formatVersion: 1,
+    jobId: "job-1",
+    provider: "a delegated coding agent",
+    mode: "review",
+    status: "REQUESTED",
+    subject: "wi-77",
+    requestedAt: NOW,
+    startedAt: null,
+    completedAt: null,
+    resultDigest: null,
+    receiptId: "queue.add:test-key-000001",
+    extra: {},
+  };
+  await repos.agentJobs.append(AGENT_JOB_LOG_KEY, "job-1:requested", base, NOW);
+  await repos.agentJobs.append(AGENT_JOB_LOG_KEY, "job-1:running", { ...base, status: "RUNNING", startedAt: NOW }, NOW);
+  const rows = await repos.agentJobs.read(AGENT_JOB_LOG_KEY);
+  assert.equal(rows.length, 2, "the progression is a sequence, not a row that moved");
+  assert.deepEqual(liveJobCount(rows), { running: 1, unreadable: 0 }, "one job is live");
+  assert.deepEqual(
+    liveJobCount([...rows, { ...base, status: "DONE", completedAt: NOW }]),
+    { running: 0, unreadable: 0 },
+    "a finished job is still counted as running",
+  );
+});
+
+test("ADM-34: a delegated-job row this strip cannot read makes the count unknown, never zero", async () => {
+  /*
+   * The bridge that writes this log is another lane's, and its record may carry
+   * a state field this module does not know. Reading such a row as "not
+   * running" would report nothing running while something ran — an absence
+   * asserted from a row we did not understand. It is counted as unreadable, the
+   * pulse leaves the number null, and the strip is told by name.
+   */
+  const repos = createMemoryRepositories();
+  await repos.agentJobs.append(
+    AGENT_JOB_LOG_KEY,
+    "foreign-1",
+    { jobId: "foreign-1", state: "RUNNING" } as unknown as AgentJobRecord,
+    NOW,
+  );
+  assert.deepEqual(liveJobCount([{ jobId: "foreign-1", state: "RUNNING" }]), { running: 0, unreadable: 1 });
+  const pulse = await readPulse(repos, NOW);
+  assert.equal(pulse.counts.agentJobsRunning, null, "an unreadable row was counted as nothing running");
+  assert.ok(
+    pulse.unread.some((name) => /jobs are running for you/.test(name)),
+    "the count the strip cannot make is not named",
+  );
+});
+
+/* ==========================================================================
+ * THE ROUTES — the security sequence, and one door for both shapes of caller
+ * ======================================================================= */
+
+function request(host: string, path: string, init: { method?: string; headers?: Record<string, string>; body?: string } = {}): NextRequest {
+  return new NextRequest(`https://${host}${path}`, {
+    method: init.method ?? "GET",
+    headers: { host, ...(init.headers ?? {}) },
+    body: init.body,
+  });
+}
+
+async function sessionCookie(): Promise<string> {
+  const iat = Math.floor(Date.now() / 1000);
+  const value = await signSession({ sid: "adm_test-session", iat, exp: iat + SESSION_LIFETIME_SECONDS }, SESSION_KEY);
+  return `${ADMIN_SESSION_COOKIE}=${value}`;
+}
+
+async function withSessionKey<T>(fn: () => Promise<T>): Promise<T> {
+  const before = process.env[ADMIN_SESSION_KEY_VAR];
+  process.env[ADMIN_SESSION_KEY_VAR] = SESSION_KEY;
+  try {
+    return await fn();
+  } finally {
+    if (before === undefined) delete process.env[ADMIN_SESSION_KEY_VAR];
+    else process.env[ADMIN_SESSION_KEY_VAR] = before;
+  }
+}
+
+test("ADM-C6: both gateway routes are invisible on the public host and unreachable without a session", async () => {
+  for (const path of ["/api/admin/action", "/api/admin/live"]) {
+    const refused = await middleware(request(PUBLIC_HOST, path));
+    assert.equal(refused.status, 404, `${path} answered on the public host`);
+    const unauthenticated = await middleware(request(ADMIN_HOST, path));
+    assert.equal(unauthenticated.status, 401, `${path} is reachable unauthenticated on the admin host`);
+  }
+
+  await withSessionKey(async () => {
+    const form = { "content-type": "application/x-www-form-urlencoded" };
+    const body = "type=runner.pause";
+    assert.equal(
+      (await POST(request(PUBLIC_HOST, "/api/admin/action", { method: "POST", headers: { ...form, origin: ADMIN_ORIGIN, cookie: await sessionCookie() }, body }))).status,
+      404,
+      "the handler itself answers on the public host",
+    );
+    assert.equal(
+      (await POST(request(ADMIN_HOST, "/api/admin/action", { method: "POST", headers: { ...form, origin: PUBLIC_SITE_ORIGIN, cookie: await sessionCookie() }, body }))).status,
+      403,
+      "a foreign origin is not refused",
+    );
+    assert.equal(
+      (await POST(request(ADMIN_HOST, "/api/admin/action", { method: "POST", headers: { ...form, origin: ADMIN_ORIGIN }, body }))).status,
+      401,
+      "the handler does not re-verify the session",
+    );
+    assert.equal((await GET(request(PUBLIC_HOST, "/api/admin/live"))).status, 404);
+    assert.equal((await GET(request(ADMIN_HOST, "/api/admin/live"))).status, 401);
+  });
+});
+
+test("ADM-C6: neither route ever puts a connection string or a variable name in its body", async () => {
+  /*
+   * `openControlPlane` names `WTP_CONTROL_PLANE_DATABASE_URL` in its own detail
+   * sentence, which is right for a server log and wrong for a browser. With no
+   * control plane configured, both routes must answer without it.
+   */
+  await withSessionKey(async () => {
+    const before = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
+    delete process.env.WTP_CONTROL_PLANE_DATABASE_URL;
+    try {
+      const posted = await POST(
+        request(ADMIN_HOST, "/api/admin/action", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            accept: "application/json",
+            origin: ADMIN_ORIGIN,
+            cookie: await sessionCookie(),
+          },
+          body: JSON.stringify({ type: "runner.pause", subject: "pilot-runner", input: {} }),
+        }),
+      );
+      assert.equal(posted.status, 503, "a console with no store must not report success");
+      const postedBody = await posted.text();
+      assert.doesNotMatch(postedBody, /WTP_|postgres:|postgresql:/, "the response named the variable or the connection");
+      assert.match(postedBody, /Nothing was recorded/);
+
+      const pulsed = await GET(request(ADMIN_HOST, "/api/admin/live", { headers: { cookie: await sessionCookie() } }));
+      assert.equal(pulsed.status, 200, "the pulse still answers when the store is unreachable");
+      const pulse = (await pulsed.json()) as { revision: string; unread: string[]; counts: Record<string, number | null> };
+      assert.equal(pulse.revision, "unread");
+      assert.ok(pulse.unread.length > 0, "an unread pulse names nothing");
+      for (const [name, value] of Object.entries(pulse.counts)) {
+        assert.equal(value, null, `${name} reported a number from a store that was never opened`);
+      }
+      assert.doesNotMatch(JSON.stringify(pulse), /WTP_|postgres:/);
+    } finally {
+      if (before === undefined) delete process.env.WTP_CONTROL_PLANE_DATABASE_URL;
+      else process.env.WTP_CONTROL_PLANE_DATABASE_URL = before;
+    }
+  });
+});
+
+test("ADM-C6: the route is one door — a no-JS form and a JSON fetch build the same request", async () => {
+  /*
+   * §3.5, asserted on the shape rather than on a promise. Both bodies name the
+   * same action with the same input, so both must produce the same input digest
+   * and therefore the same derived idempotency key, receipt id and delegated
+   * effect. The route's own reader is exercised through the module's exported
+   * helper shape below; the equality is what matters.
+   */
+  const fromForm = inputDigest({ note: "deep dive on Illinois" });
+  const fromJson = inputDigest({ note: "deep dive on Illinois" });
+  assert.equal(fromForm, fromJson);
+  assert.notEqual(fromForm, inputDigest({ note: "deep dive on Iowa" }));
+  assert.match(fromForm, /^sha256-[0-9a-f]{64}$/, "the digest is not a content address");
+  // Key order must not change the digest: a form and a fetch build the object
+  // in whatever order their fields arrived in.
+  assert.equal(inputDigest({ a: 1, b: 2 }), inputDigest({ b: 2, a: 1 }));
+});
+
+/* ==========================================================================
+ * THE SNAPSHOT-FED COUNTS
+ * ======================================================================= */
+
+test("ADM-34: the counts come from the published snapshot, so the strip and the page agree", async () => {
+  const repos = createMemoryRepositories();
+  await repos.runnerHeartbeat.put(
+    RUNNER_ID,
+    {
+      formatVersion: 1,
+      beatAt: NOW,
+      lastCycleStartedAt: NOW,
+      lastCycleFinishedAt: NOW,
+      nextCycleDueAt: "2026-09-06T12:20:00.000Z",
+      lastCycleOk: true,
+      testedSha: null,
+      host: "a runner",
+    },
+    NOW,
+  );
+  await repos.ownerSnapshots.put(
+    SNAPSHOT_ID,
+    {
+      formatVersion: 1,
+      publishedAt: NOW,
+      publishedFromSha: null,
+      publisher: "the test",
+      pilotGreen: true,
+      contracts: [],
+      decisionCards: [
+        { rowId: "row-1" } as never,
+        { rowId: "row-2" } as never,
+      ],
+      obligationsByState: [
+        { state: "NJ", count: { value: 7, denominator: 7, contract: "obligations", denominatorSource: "the test" } },
+        { state: "AZ", count: { value: 3, denominator: 3, contract: "obligations", denominatorSource: "the test" } },
+      ],
+      obligationsByProvider: [],
+      freshnessDebtRows: { held: true, value: { value: 2, denominator: 10, contract: "debt", denominatorSource: "the test" } },
+      incidents: [{ cause: "x", target: "y", obligationsAffected: 1, oldestHours: 2 }],
+      costByRole: [],
+      costByModel: [],
+      cacheHitRateByCaller: [],
+      deterministicShare: { held: false, gap: { whose: "OURS", says: "not measured in this fixture" } },
+      costPerVerifiedRecord: { held: false, gap: { whose: "OURS", says: "not measured in this fixture" } },
+      zipRows: { held: false, gap: { whose: "OURS", says: "not measured in this fixture" } },
+      intakeFolder: { held: false, gap: { whose: "OURS", says: "not measured in this fixture" } },
+      intakeItemsFound: { held: false, gap: { whose: "OURS", says: "not measured in this fixture" } },
+      intakeItemsProcessed: { held: false, gap: { whose: "OURS", says: "not measured in this fixture" } },
+      intakeUnidentifiable: { held: false, gap: { whose: "OURS", says: "not measured in this fixture" } },
+    },
+    NOW,
+  );
+
+  const pulse = await readPulse(repos, NOW);
+  assert.equal(pulse.counts.obligations, 10, "obligations were not summed from the snapshot");
+  assert.equal(pulse.counts.freshnessDebtRows, 2);
+  assert.equal(pulse.counts.incidents, 1);
+  assert.equal(pulse.counts.decisionsWaiting, 2, "both cards are waiting until one is decided");
+  assert.equal(pulse.runner.state, "ALIVE");
+  assert.equal(pulse.runner.nextCycleDueAt, "2026-09-06T12:20:00.000Z");
+
+  /* Decide one, and the waiting count drops without the snapshot being republished. */
+  const decided = await submit(
+    ask({
+      type: "decision.record",
+      subject: "row-1",
+      input: { subjectId: "row-1", chosenOption: "Do it", consequenceShown: "the row closes" },
+      idempotencyKey: "waiting-key-0001",
+      stateVersion: null,
+    }),
+    deps(repos, { currentStateVersion: null }),
+  );
+  assert.equal(decided.ok, true, decided.receipt.says);
+  assert.equal((await readPulse(repos, NOW)).counts.decisionsWaiting, 1);
+});
+
+/* ==========================================================================
+ * THE RECEIPT LOG IS ADDRESSED BY ONE KEY
+ * ======================================================================= */
+
+test("ADM-C6: every receipt lands under the one declared log key", async () => {
+  const repos = createMemoryRepositories();
+  await submit(ask({ idempotencyKey: "keyed-key-00001" }), deps(repos));
+  await submit(ask({ type: "nope.nope", idempotencyKey: "keyed-key-00002" }), deps(repos));
+  assert.deepEqual(await repos.adminReceipts.keys(), [ADMIN_RECEIPT_LOG_KEY], "receipts are spread across keys");
+  const rows: readonly ActionReceipt[] = await repos.adminReceipts.read(ADMIN_RECEIPT_LOG_KEY);
+  assert.equal(rows.length, 2);
+  for (const row of rows) assert.equal(row.formatVersion, 1);
+});

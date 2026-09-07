@@ -14,6 +14,7 @@ import { ZERO_COST, type AttemptCost } from "../lib/control-plane/attempt.ts";
 import { COST_METRICS, cacheMeteringOf, sumMetric, type CostEntry } from "../lib/control-plane/cost.ts";
 import {
   CACHE_RATE_MULTIPLIERS,
+  cacheSavingUsd,
   meteredCostFields,
   priceMeteredUsage,
   readMeteredUsage,
@@ -73,6 +74,26 @@ test("PC-10: an unmeasured base count or an unpriced model is null, never zero",
   assert.equal(priceMeteredUsage("some-model-nobody-priced", known, "5m").usd, null);
   /* The older entry point prices the aggregate at 5m and agrees with the new one. */
   assert.equal(usdForModelUsage("claude-opus-5", { inputTokens: 1_000_000, outputTokens: 100_000, cacheReadInputTokens: 2_000_000, cacheCreationInputTokens: 300_000 }), priceMeteredUsage("claude-opus-5", { ...known, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null }, "5m").usd);
+});
+
+/**
+ * §9A.23 (2026-09-06) asks the monthly window for "cache savings where
+ * measurable". The saving is a COUNTERFACTUAL at list price — what the same
+ * tokens would have cost uncached — and it is priced through the one rate
+ * table, so a model with no stated rate saves an unmeasured amount rather than
+ * a plausible one.
+ */
+test("§9A.23: a cache read saved 0.9 of the base input rate, and an unpriced model saves null rather than a guess", () => {
+  /* 2,000,000 read tokens on Claude Opus 5: $5/MTok × 2 × (1 − 0.1) = $9.00. */
+  assert.equal(cacheSavingUsd(2_000_000, "claude-opus-5"), 9);
+  assert.equal(cacheSavingUsd(0, "claude-opus-5"), 0, "reading nothing saved nothing, and that IS measured");
+  assert.equal(cacheSavingUsd(1_000_000, "claude-haiku-4-5"), 0.9, "the cheaper model saves less, at its own rate");
+  assert.equal(cacheSavingUsd(1_000_000, "some-model-nobody-priced"), null);
+  assert.equal(cacheSavingUsd(Number.NaN, "claude-opus-5"), null);
+  /* The saving and the charge agree: reads are billed at the tenth that is left. */
+  const readsOnly: MeteredUsage = { uncachedInputTokens: 0, outputTokens: 0, cacheReadInputTokens: 2_000_000, cacheCreationInputTokens: 0, cacheCreation5mInputTokens: 0, cacheCreation1hInputTokens: 0, batch: false };
+  const charged = priceMeteredUsage("claude-opus-5", readsOnly, "5m").usd ?? 0;
+  assert.ok(Math.abs(charged + (cacheSavingUsd(2_000_000, "claude-opus-5") ?? 0) - 10) < 1e-9, "charged plus saved is the uncached price");
 });
 
 test("PC-9: the parser reads the API's usage block, the split included, and never infers from the request", () => {

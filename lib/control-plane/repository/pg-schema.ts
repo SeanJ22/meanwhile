@@ -35,8 +35,44 @@
  * process, every time.
  */
 
-/** Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it. */
-export const BOOTSTRAP_VERSION = 8;
+/**
+ * Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it.
+ *
+ * ## What version 9 adds, and why (Admin Pass C, ADM-C6, 2026-09-06)
+ *
+ * The Operator Control Room routes every state-changing thing the owner can do
+ * — a button, a chat instruction, a delegated agent job — through ONE typed
+ * Action Gateway. Three tables are what make that gateway more than a helper:
+ *
+ * ```
+ *   cp_log_admin_receipts   §3.7 — every action, permitted or refused, leaves a
+ *                           durable append-only receipt. "A toast is not proof."
+ *                           It is also the IDEMPOTENCY INDEX: the gateway looks
+ *                           for `<type>:<idempotencyKey>` before it does any
+ *                           work, so a double-click, a retried fetch and a
+ *                           replayed chat tool call are one action with one
+ *                           receipt rather than two state changes
+ *   cp_log_agent_jobs       the delegated-agent bridge's own history — one
+ *                           append per state a job reaches. Reserved: the
+ *                           record shape is declared in
+ *                           `lib/control-plane/gateway/agent-job.ts` and the
+ *                           bridge that writes it lands beside it
+ *   cp_admin_config         the owner's operational policy, one aggregate at id
+ *                           "current". Today it carries exactly one clause: may
+ *                           paid API fallback be used (§9A.22). It is an
+ *                           AGGREGATE and not a log because the question the
+ *                           executor asks is "what is the policy NOW", and a
+ *                           policy assembled by folding a log is a policy two
+ *                           readers can disagree about. Its history is not
+ *                           lost: every change is made by a gateway action and
+ *                           the receipt log holds the change
+ * ```
+ *
+ * Additive: no existing table, column or statement moved, so a store at v8
+ * reads exactly as it did and the three new tables are created on the next
+ * `pnpm control-plane:bootstrap`.
+ */
+export const BOOTSTRAP_VERSION = 9;
 
 /**
  * The tables, and the shape each one carries.
@@ -117,6 +153,25 @@ export const AGGREGATE_KINDS = [
    *                        is no admin-writable status field anywhere in it.
    */
   "readiness_snapshots",
+  /*
+   * THE OWNER'S OPERATIONAL POLICY. (Admin Pass C, ADM-C6 — version 9.)
+   *
+   *   admin_config  one aggregate, id "current" — what the owner has decided
+   *                 about how the system may operate, as opposed to what it
+   *                 has measured. Today that is one clause: whether paid API
+   *                 fallback is permitted (§9A.22), which defaults OFF and
+   *                 must still read OFF after a deploy or a restart. That
+   *                 requirement is the whole reason it is here rather than in
+   *                 browser state: a toggle stored in a tab is a toggle that
+   *                 silently resets, and one stored in an env var is a toggle
+   *                 the owner cannot move.
+   *
+   *                 An AGGREGATE, so the executor's question — "what is the
+   *                 policy now" — has exactly one answer. The history of the
+   *                 policy lives in the receipt log, where every change was
+   *                 made.
+   */
+  "admin_config",
 ] as const;
 
 export const APPEND_ONLY_LOGS = [
@@ -186,6 +241,46 @@ export const APPEND_ONLY_LOGS = [
    *                             statement moved.
    */
   "software_release_reviews",
+  /*
+   * THE ACTION GATEWAY. (Admin Pass C, ADM-C6 — version 9.)
+   *
+   *   admin_receipts  every action the console submitted and what came of it,
+   *                   keyed under one log key ("admin-action") with the record
+   *                   id `<action type>:<idempotency key>`. Two jobs, and the
+   *                   second is the load-bearing one:
+   *
+   *                     PROOF        §3.7 — who initiated it, what it was, its
+   *                                  authority class, the target, the input
+   *                                  digest, the code SHA and state revision it
+   *                                  was rendered against, started, completed,
+   *                                  outcome, refusal, downstream work ids,
+   *                                  where to read the result back, what would
+   *                                  undo it. A refusal is a receipt too: a
+   *                                  refusal that leaves no record is
+   *                                  indistinguishable from a click that never
+   *                                  arrived
+   *                     IDEMPOTENCY  the gateway reads this log BEFORE it does
+   *                                  any work and returns the existing receipt
+   *                                  when the id is already present, so a
+   *                                  double-click, a retried fetch and a
+   *                                  replayed chat tool call are one action
+   *
+   *                   Deriving the record id from the action rather than from
+   *                   the clock is what makes the second job work: the store's
+   *                   own append idempotency then does the deduplication, and
+   *                   a differing record under one id is refused rather than
+   *                   silently accepted.
+   *
+   *   agent_jobs      the delegated-agent bridge's history — one append per
+   *                   state a job reaches (requested, started, finished), never
+   *                   an edit, so a job that died is still visibly a job that
+   *                   was requested. Declared here with its record shape in
+   *                   `lib/control-plane/gateway/agent-job.ts` so the storage
+   *                   is in place and versioned before the bridge that writes
+   *                   it, rather than arriving as a second schema move later.
+   */
+  "admin_receipts",
+  "agent_jobs",
 ] as const;
 
 /** Every table this schema declares, for the drift check. */

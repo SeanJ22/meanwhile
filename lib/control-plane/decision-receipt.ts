@@ -28,6 +28,7 @@
  *
  * PURE: one decision in, three steps out. The clock is a parameter.
  */
+import { isFeedbackTriageIntent } from "./feedback-inbox.ts";
 import { isRowDecision } from "./fix-queue.ts";
 import { ANSWERED_IN_OWN_WORDS, type OwnerDecisionCard, type OwnerDecisionIntent } from "./owner-surface.ts";
 
@@ -159,7 +160,14 @@ export function splitDecided(
 ): { readonly waiting: readonly OwnerDecisionCard[]; readonly decided: readonly DecidedEntry[] } {
   const latestBySubject = new Map<string, OwnerDecisionIntent>();
   for (const d of collapsed) {
-    if (!isRowDecision(d)) continue;
+    /*
+     * A feedback triage record is an owner decision on a READER MESSAGE, not on
+     * a tracker row (ADM-C13). It travels the same append-only door because
+     * that is the one authenticated write the console has, and it must not
+     * surface in the home page's Decided list, where it would bury the tracker
+     * decisions under every message he has ever triaged.
+     */
+    if (!isRowDecision(d) || isFeedbackTriageIntent(d)) continue;
     const held = latestBySubject.get(d.subjectId);
     if (!held || held.decidedAt < d.decidedAt) latestBySubject.set(d.subjectId, d);
   }

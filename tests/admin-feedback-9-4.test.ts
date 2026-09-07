@@ -7,6 +7,8 @@
  * same way the other admin guards do it.
  */
 import assert from "node:assert/strict";
+import { codeOf } from "./read-code.ts";
+import { surfaceSource } from "./admin-surface.ts";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
@@ -115,9 +117,18 @@ test("ADM-4: the decision route accepts an answer in the owner's own words, and 
   assert.match(route, /ownerAnswer/);
   assert.match(route, /ANSWERED_IN_OWN_WORDS/);
   assert.match(route, /chosenOption === "" && ownerAnswer === null/);
+  /*
+   * ADM-32 (9.6.26) moved the submit from a per-option `<form method="post">`
+   * to a fetch through the one Action Gateway, so the card can change BEFORE
+   * the network answers. The fields the owner was shown still travel — that is
+   * what this guard is about — they travel as a JSON body rather than as form
+   * inputs.
+   */
+  const island = src("app/(admin)/admin/decisions.tsx");
+  assert.match(island, /consequenceShown:/, "the consequence the owner READ travels with his answer");
+  assert.match(island, /ownerAnswer/, "an answer in his own words travels too");
+  assert.match(island, /type: "decision\.record"/, "the decision goes through the one typed gateway, same as every other action");
   const page = src("app/(admin)/admin/page.tsx");
-  assert.match(page, /name="consequenceShown"/);
-  assert.match(page, /name="ownerAnswer"/);
   // ADM-16 (evening): a decided card leaves the queue and shows its receipt; the split is the live log's.
   assert.match(page, /splitDecided\(/, "a decided card shows its decision instead of buttons");
 });
@@ -257,7 +268,17 @@ test("ADM-8: a DISPATCH needs words; the intent carries them; the page lists dep
   const page = src("app/(admin)/admin/page.tsx");
   assert.match(page, /<DeployFleet/);
   assert.match(page, /dispatchHistory\(/);
-  assert.match(src("app/(admin)/admin/deploy-fleet.tsx"), /value="DISPATCH"/);
+  /*
+   * §9A.16 (9.6.26): the owner had never pressed this button, because it did
+   * not say what it would do. The control now shows a preview first and sends
+   * through the one typed Action Gateway — the same DISPATCH intent lands, and
+   * `dispatchHistory` above still reads it. The guard follows the action.
+   */
+  const control = src("app/(admin)/admin/deploy-fleet.tsx");
+  assert.match(control, /type: "fleet.deployHere"/, "the button posts the typed action that appends the DISPATCH intent");
+  assert.match(control, /Show me what this would do/, "§9A.16: it explains itself before it acts");
+  assert.match(control, /What it will not do/, "and says what it will NOT do");
+  assert.doesNotMatch(control, /<form/, "no second write path beside the gateway");
 });
 
 /* ================================================================== *
@@ -313,14 +334,27 @@ test("ADM-7: the five groups cover the roles, with counts that carry denominator
 });
 
 test("ADM-7: the page organises Pilot Health around the fleet and keeps the instrument-detail link", () => {
-  const page = src("app/(admin)/admin/page.tsx");
+  /*
+   * ADM-38 (9.6.26) moved the fleet into its own streamed component: the read
+   * is 1,225 ms and 6.62 MB, five times everything else on the page put
+   * together, and it used to hold pilot health, the runner, the obligations and
+   * the decision queue behind it. So the guard reads the SURFACE — the page and
+   * its sections — and additionally pins the property that made the move safe:
+   * a streamed section audits ITS OWN numbers, because the page cannot audit a
+   * section it did not wait for.
+   */
+  const page = surfaceSource(ROOT, "home");
   assert.match(page, /buildFleetView\(/);
   assert.match(page, /The fleet — what the workers are doing/);
   assert.match(page, /href="\/admin\/research"/);
-  assert.match(page, /fleetRenderedNumbers\(/, "fleet numbers enter the page's own audit");
+  assert.match(page, /fleetRenderedNumbers\(/, "fleet numbers enter an audit");
   assert.match(page, /auditRenderedNumbers\(/);
   assert.match(page, /checkStatedEqualsRendered\(/);
-  assert.match(page, /export const dynamic = "force-dynamic"/);
+  assert.match(src("app/(admin)/admin/page.tsx"), /export const dynamic = "force-dynamic"/);
+  const fleet = src("app/(admin)/admin/sections/fleet.tsx");
+  assert.match(fleet, /auditRenderedNumbers\(numbers\)/, "the streamed section audits its own numbers");
+  assert.match(fleet, /refused to render its own numbers/, "and refuses itself rather than the whole console");
+  assert.match(src("app/(admin)/admin/page.tsx"), /<Suspense fallback=\{<FleetLoading \/>\}>/, "the fleet does not block the rest of the page");
 });
 
 /* ================================================================== *
@@ -343,13 +377,27 @@ test("ADM-3: a stale reader check reads as one plain sentence, and the scale nam
   );
   assert.match(plain.status, /Not proven yet — the last check scored 1 of 7/);
   assert.equal(plain.why, "The newest check is 27 hours old, past the 24-hour limit, so it does not count as current.");
-  assert.match(plain.next, /pnpm reader:suite/);
+  /*
+   * ADM-37 (9.6.26): the next step used to BE the command — "run the reader
+   * suite again (`pnpm reader:suite`)" — and the owner's answer was "what has
+   * to happen? Think of someone who is not an engineer and not a coder at all."
+   * A shell command is not an answer to a person who cannot run one, so the
+   * next step is now a thing that happens and the page puts the control beside
+   * it. This guard was the one pinning the command in place; it now pins its
+   * absence.
+   */
+  assert.doesNotMatch(plain.next, /pnpm |`/, "no shell command on the face of the page");
+  assert.match(plain.next, /has to be run again/);
   assert.match(plain.what, /Can a reader get a right answer/);
   assert.deepEqual(HEALTH_SCALE.map((s) => s.level), ["GREEN", "AMBER", "RED", "UNKNOWN"]);
   assert.equal(plainOverall("AMBER", [plain, { ...plain, contract: "TRUTH" }, { ...plain, contract: "FRESHNESS" }]), "Nothing is failing, but READER, TRUTH, FRESHNESS are not proven yet.");
-  const page = src("app/(admin)/admin/page.tsx");
-  assert.match(page, /<HealthScale \/>/);
-  assert.match(page, /Instrument detail<\/summary>/, "the instrument's own sentence is one disclosure away");
+  const page = src("app/(admin)/admin/sections/health.tsx");
+  assert.match(page, /<HealthScale \/>/, "POS-13: the scale legend the owner likes stays");
+  assert.match(page, /Technical details<\/summary>/, "the instrument's own sentence is one disclosure away");
+  // Against the CODE, never the prose beside it: this file's own header quotes
+  // the command it removed, and a sweep of the raw text would fail on its
+  // explanation (`tests/read-code.ts` carries the argument).
+  assert.doesNotMatch(codeOf("app/(admin)/admin/sections/health.tsx"), /pnpm [a-z:]+/, "ADM-37: no CLI command reaches the face of the health card");
 });
 
 test("ADM-3: FRESHNESS reads the measured shadow risk through one shared projection in both scripts", () => {

@@ -552,7 +552,16 @@ test("AR-2: every existing composite condition gates independently and approvals
 });
 
 test("B7: the one additive table is declared at schema v8 and every provider bundle carries the log", async () => {
-  assert.equal(BOOTSTRAP_VERSION, 8);
+  /*
+   * Pass B landed `software_release_reviews` AT v8. Admin Pass C's Action
+   * Gateway then moved the declared version to 9 (ADM-C6, three additive
+   * tables), so what this guard can still assert is the invariant Pass B
+   * actually cared about: this log was declared no later than v8 and is still
+   * declared, and its DDL is still exactly two additive statements. Pinning the
+   * equality would have turned every later additive migration into a red on a
+   * guard about a different table.
+   */
+  assert.ok(BOOTSTRAP_VERSION >= 8, "the declared schema version never moves backwards");
   assert.ok((APPEND_ONLY_LOGS as readonly string[]).includes("software_release_reviews"));
   assert.ok(DECLARED_TABLES.includes("cp_log_software_release_reviews"));
   const ddl = BOOTSTRAP_DDL.filter((s) => s.includes("cp_log_software_release_reviews"));

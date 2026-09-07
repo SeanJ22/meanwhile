@@ -67,6 +67,9 @@ import type {
   RunnerHeartbeat,
 } from "../owner-surface.ts";
 import type { ReadinessStateSnapshot } from "../readiness/model.ts";
+import type { ActionReceipt } from "../gateway/contract.ts";
+import type { AgentJobRecord } from "../gateway/agent-job.ts";
+import type { AdminConfig } from "../gateway/admin-config.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
@@ -555,6 +558,10 @@ export async function createPgRepositories(
     windowIntents: pgAppendOnlyRepository<WindowIntent>(sql, "window_intents"),
     /* Software release review (Admin Pass B, schema v8). */
     softwareReleaseReviews: pgAppendOnlyRepository<SoftwareReleaseReviewRecord>(sql, "software_release_reviews"),
+    /* The Action Gateway (Admin Pass C, ADM-C6, schema v9). */
+    adminReceipts: pgAppendOnlyRepository<ActionReceipt>(sql, "admin_receipts"),
+    agentJobs: pgAppendOnlyRepository<AgentJobRecord>(sql, "agent_jobs"),
+    adminConfig: pgAggregateRepository<AdminConfig>(sql, "AdminConfig", "cp_admin_config"),
     budget: budgetRepositoryFrom(
       pgAggregateRepository<BudgetLedger>(sql, "BudgetLedger", "cp_budget"),
       locks,

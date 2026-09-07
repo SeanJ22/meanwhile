@@ -32,12 +32,21 @@ async function main(): Promise<void> {
     const path = dataPath(dataset);
     const bytes = upsert(rows, scope, path);
     const zeroes = rows.filter((r) => r.population === 0).length;
+    // An estimate no larger than its own published margin is not distinguishable
+    // from zero. Reported here so a vintage that suddenly loses its margins, or
+    // gains a wave of unusable estimates, is visible at acquisition rather than
+    // discovered on the panel (ADM-41).
+    const fragile = rows.filter((r) => r.population > 0 && r.marginOfError !== null && r.marginOfError >= r.population).length;
+    const unmargined = rows.filter((r) => r.marginOfError === null).length;
     const returned = fetched.rows.length - 1;
     // RULING 159: every count is reported against what it was taken over.
     const written = floored(`${scope} rows written`, "the Census Data API response", returned, rows.length);
     const empty = floored(`${scope} rows with a population of 0`, "the rows written", rows.length, zeroes);
+    const inside = floored(`${scope} rows whose estimate is inside its own margin`, "the rows written", rows.length, fragile);
+    const jammed = floored(`${scope} rows where the Bureau published no margin`, "the rows written", rows.length, unmargined);
     say(
       `${scope}: ${describeUrl(scope)} → HTTP ${fetched.status}; ${floorLine(written)}; ${floorLine(empty)}; ` +
+        `${floorLine(inside)}; ${floorLine(jammed)}; ` +
         `${path.replace(`${join(ROOT)}\\`, "").replace(`${ROOT}/`, "")} (${bytes} bytes) in ${Math.round((Date.now() - started) / 1000)}s`,
     );
   }

@@ -1,0 +1,87 @@
+/**
+ * **THE CHEAP QUESTION: HAS ANYTHING CHANGED SINCE THE PAGE RENDERED?**
+ * (ADM-34 and §9A.17 — *"do I have to manually refresh the site to get more
+ * information? Is it going to auto-update if I just simply leave it open?"*)
+ *
+ * The console must not make the owner wonder whether he is reading something
+ * stale. It also must not answer that by re-reading the whole control plane
+ * every thirty seconds — §16 of the brief is explicit that repeated broad
+ * control-plane reads are the scaling concern this pass may not make worse.
+ *
+ * So the loop is two-step:
+ *
+ * ```
+ *   every ~45s   ask /api/admin/live for a PULSE — a handful of aggregate
+ *                reads, no list() of anything, one small JSON body
+ *   only if the  pulse's revision differs from the one the page rendered with,
+ *                ask the router for a fresh render
+ * ```
+ *
+ * A quiet console therefore costs one small query a minute and re-renders
+ * nothing; a console watching a live cycle re-renders exactly when the cycle
+ * moves. The freshness indicator updates from the pulse either way, so
+ * "Updated 20 seconds ago" is a fact about a real successful read, never about
+ * when the tab happened to be opened.
+ *
+ * PURE. The revision is derived here so the page and the endpoint cannot
+ * disagree about what "changed" means.
+ */
+
+/** The small body the live endpoint returns. */
+export interface LivePulse {
+  /** Changes exactly when something the console renders has moved. */
+  readonly revision: string;
+  /** When the pulse was taken, ISO. */
+  readonly at: string;
+  /** Runner heartbeat, for the one-line strip. */
+  readonly runner: {
+    readonly beatAt: string | null;
+    readonly lastCycleFinishedAt: string | null;
+    readonly nextCycleDueAt: string | null;
+    readonly state: string | null;
+  };
+  /** Counts the owner watches. Each is a plain integer or null when unread. */
+  readonly counts: {
+    readonly decisionsWaiting: number | null;
+    readonly freshnessDebtRows: number | null;
+    readonly incidents: number | null;
+    readonly obligations: number | null;
+    readonly agentJobsRunning: number | null;
+  };
+  /** A read we could not make, named. Never rendered as a zero. */
+  readonly unread: readonly string[];
+}
+
+/**
+ * The revision string: every field that, when it moves, means the rendered page
+ * is out of date. Deliberately coarse — a revision that changes on every clock
+ * tick would re-render the page every poll and defeat the whole design.
+ */
+export function pulseRevision(input: {
+  readonly beatAt: string | null;
+  readonly snapshotRevision: number | null;
+  readonly decisionCount: number | null;
+  readonly researchRevision: number | null;
+  readonly receiptCount: number | null;
+}): string {
+  return [
+    input.beatAt ?? "-",
+    input.snapshotRevision ?? "-",
+    input.decisionCount ?? "-",
+    input.researchRevision ?? "-",
+    input.receiptCount ?? "-",
+  ].join("|");
+}
+
+/** How often the console asks. Slow enough to be free, fast enough to feel live. */
+export const PULSE_INTERVAL_MS = 45_000;
+
+/**
+ * How long after the last successful pulse the indicator calls itself stale.
+ * Three missed polls: one miss is a hiccup, three is a broken loop and the
+ * owner should be told rather than shown a confident old number.
+ */
+export const PULSE_STALE_MS = PULSE_INTERVAL_MS * 3;
+
+/** While an owner-triggered job is visibly running, ask more often (§9A.17). */
+export const PULSE_ACTIVE_INTERVAL_MS = 8_000;

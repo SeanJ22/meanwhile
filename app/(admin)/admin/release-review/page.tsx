@@ -45,6 +45,10 @@ import {
   shortSha,
 } from "./contract.ts";
 import { CopyButton } from "./copy-button.tsx";
+import { Suspense } from "react";
+
+import type { ProductionIdentity } from "./review-model.ts";
+
 import { readManifest, readProductionIdentity } from "./manifest-source.ts";
 import { buildReviewModel, type ReviewModel, type SectionView } from "./review-model.ts";
 import { noteObservation } from "./write.ts";
@@ -181,13 +185,64 @@ function SectionCard({ section, model }: { readonly section: SectionView; readon
   );
 }
 
+/**
+ * What production is serving, read live and streamed (ADM-38).
+ *
+ * Its own async component so the fetch that takes three and a half seconds
+ * cannot hold the rest of the page behind it.
+ */
+async function ProductionCard() {
+  const production = await readProductionIdentity();
+  return (
+    <section className="card">
+      <h3>Production</h3>
+      <p>
+        SHA: <Sha sha={production?.sha ?? null} raw={production?.shaRaw ?? null} what="production SHA" />
+      </p>
+      <p>
+        Deploy id: {production?.deployId ? <><code>{production.deployId}</code> <CopyButton value={production.deployId} what="production deploy id" /></> : <span className="gap">not observed</span>}
+      </p>
+      <p className="note">
+        Source: {production ? production.source : <span className="gap">not read</span>} · branch {production?.branch ?? "unrecorded"} · context{" "}
+        {production?.context ?? "unrecorded"} · observed {production ? <When iso={production.observedAt} /> : "never"}
+        {production?.detail ? ` · ${production.detail}` : ""}
+      </p>
+    </section>
+  );
+}
+
+/** The same card while the reading is still in flight. Never a blank. */
+function ProductionCardLoading() {
+  return (
+    <section className="card">
+      <h3>Production</h3>
+      <p className="note">Asking the live site what it is serving…</p>
+      <p className="note">This is one live request to production and it usually takes a few seconds. Nothing else on this page is waiting for it.</p>
+    </section>
+  );
+}
+
 export default async function ReleaseReviewPage({ searchParams }: { searchParams: Promise<{ notice?: string; detail?: string }> }) {
   const { notice, detail } = await searchParams;
   const jar = await cookies();
   const hasSession = jar.has(ADMIN_SESSION_COOKIE);
   const nav = <ConsoleNav view="release-review" currentState={null} states={US_STATES} />;
 
-  const [reading, production] = await Promise.all([readManifest(), readProductionIdentity()]);
+  /*
+   * ADM-38, measured 2026-09-06: this page took 5.8 s to be ready, and 3.4 s of
+   * that was ONE live cross-internet fetch of production's own build stamp. The
+   * staging manifest answers in 310 ms; production's /api/build does not.
+   *
+   * That fetch is not the page's spine — it fills one card, "what production is
+   * serving", and nothing downstream reads it. So the page no longer waits for
+   * it: the manifest and the review log render at once and the production card
+   * streams in behind a Suspense boundary. §9A.12's rule, exactly: do not block
+   * the whole route on an unrelated read, and keep the shell while a live panel
+   * fills. The card that is still loading SAYS it is still loading, so an empty
+   * one is never mistaken for "production is not deployed".
+   */
+  const reading = await readManifest();
+  const production: ProductionIdentity | null = null;
   const nowIso = new Date().toISOString();
 
   let rows: readonly SoftwareReleaseReviewRecord[] = [];
@@ -281,20 +336,9 @@ export default async function ReleaseReviewPage({ searchParams }: { searchParams
             {manifest?.boundaryReason ? ` · boundary reason ${manifest.boundaryReason}` : ""}
           </p>
         </section>
-        <section className="card">
-          <h3>Production</h3>
-          <p>
-            SHA: <Sha sha={production?.sha ?? null} raw={production?.shaRaw ?? null} what="production SHA" />
-          </p>
-          <p>
-            Deploy id: {production?.deployId ? <><code>{production.deployId}</code> <CopyButton value={production.deployId} what="production deploy id" /></> : <span className="gap">not observed</span>}
-          </p>
-          <p className="note">
-            Source: {production ? production.source : <span className="gap">not read</span>} · branch {production?.branch ?? "unrecorded"} · context{" "}
-            {production?.context ?? "unrecorded"} · observed {production ? <When iso={production.observedAt} /> : "never"}
-            {production?.detail ? ` · ${production.detail}` : ""}
-          </p>
-        </section>
+        <Suspense fallback={<ProductionCardLoading />}>
+          <ProductionCard />
+        </Suspense>
       </div>
       <form method="post" action={WRITE_ROUTE} className="rr-actions">
         <input type="hidden" name="action" value="REFRESH" />

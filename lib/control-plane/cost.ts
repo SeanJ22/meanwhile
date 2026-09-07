@@ -408,6 +408,89 @@ export function shouldScheduleMoreWork(input: {
   };
 }
 
+/** ------------------------------------------------------- calendar windows */
+
+/**
+ * **THE UTC CALENDAR MONTH, AS A LEDGER WINDOW.** (§9A.23 of the Admin C
+ * brief, 2026-09-06.)
+ *
+ * The owner's Claude API funds reset on the first day of each month **UTC**,
+ * and no other window in this codebase is that window. The three enforced
+ * spend windows are a per-cycle counter, a Phoenix 18:00→06:00 operational
+ * night and a *sliding* 24 hours (`fleet-safety.ts`); the console's spend bars
+ * are bucketed by EASTERN calendar day; the politeness ledger rolls its
+ * request counts over at UTC midnight. None of them is a calendar month, and
+ * three of them are in the wrong zone, so this had to be its own window rather
+ * than a reuse of any of them.
+ *
+ * PURE, with the clock as a parameter — the whole reason this is testable at a
+ * month boundary and across the UTC/Eastern day edge, where "today" in New York
+ * and "today" in UTC name different months for five hours of every month's
+ * first day.
+ *
+ * `until` is INCLUSIVE and is the moment the reading was taken for the current
+ * month, or the last millisecond of the month for a past one. Adjacent months
+ * therefore neither overlap nor leave a gap, and a row stamped exactly at `now`
+ * is counted rather than lost to an exclusive bound.
+ */
+export interface LedgerWindow {
+  /** 00:00:00.000Z on the 1st. Inclusive. */
+  readonly since: string;
+  /** Inclusive: `nowIso` for the open month, the month's last millisecond for a closed one. */
+  readonly until: string;
+  /** 00:00:00.000Z on the 1st of the FOLLOWING month — when the funds reset. */
+  readonly resetsAt: string;
+  /** "September 2026". */
+  readonly label: string;
+  /** False while the month is still running: a total from it is a running total, not a final one. */
+  readonly complete: boolean;
+}
+
+const UTC_MONTH_LABEL = new Intl.DateTimeFormat("en-US", { timeZone: "UTC", month: "long", year: "numeric" });
+
+/**
+ * The UTC calendar month containing `nowIso`, or one `monthsBack` before it
+ * (1 = the previous month). Throws on an unreadable stamp rather than
+ * returning a window over the epoch, which would render as a confident total
+ * for a month nobody asked about.
+ */
+export function utcMonthWindow(nowIso: string, monthsBack = 0): LedgerWindow {
+  const now = Date.parse(nowIso);
+  if (!Number.isFinite(now)) {
+    throw new Error(`utcMonthWindow() cannot read the stamp "${nowIso}". A spend window over an unreadable clock is a total nobody can check.`);
+  }
+  if (!Number.isInteger(monthsBack) || monthsBack < 0) {
+    throw new Error(`utcMonthWindow() counts months BACK from the current one and got ${monthsBack}. There is no spend to report from a month that has not happened.`);
+  }
+  const d = new Date(now);
+  const start = Date.UTC(d.getUTCFullYear(), d.getUTCMonth() - monthsBack, 1);
+  const next = Date.UTC(d.getUTCFullYear(), d.getUTCMonth() - monthsBack + 1, 1);
+  const open = monthsBack === 0;
+  return {
+    since: new Date(start).toISOString(),
+    until: open ? new Date(now).toISOString() : new Date(next - 1).toISOString(),
+    resetsAt: new Date(next).toISOString(),
+    label: UTC_MONTH_LABEL.format(new Date(start)),
+    complete: !open,
+  };
+}
+
+/**
+ * The ledger rows recorded inside a window, both bounds inclusive.
+ *
+ * A row whose `recordedAt` cannot be parsed is DROPPED and never silently
+ * counted at the epoch — an unreadable stamp is an unattributable row, and
+ * placing it in January 1970 would quietly deflate every month that has one.
+ */
+export function entriesInWindow(entries: readonly CostEntry[], window: Pick<LedgerWindow, "since" | "until">): readonly CostEntry[] {
+  const since = Date.parse(window.since);
+  const until = Date.parse(window.until);
+  return entries.filter((e) => {
+    const at = Date.parse(e.recordedAt);
+    return Number.isFinite(at) && at >= since && at <= until;
+  });
+}
+
 /** ----------------------------------------------------------------- report */
 
 export function describeRollup(buckets: readonly RollupBucket[]): string {

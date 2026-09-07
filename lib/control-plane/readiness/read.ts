@@ -206,14 +206,22 @@ export function unwalkedStateSnapshot(state: string, nowIso: string): ReadinessS
     domain: t.domain,
     label: t.label,
     level: t.level,
-    coverage: { covered: 0, total: null, authority: null, contract: `${t.label} coverage`, label: "never", asOf: null },
+    coverage: {
+      covered: 0,
+      total: null,
+      authority: null,
+      contract: `${t.label} coverage`,
+      label: "nothing checked yet",
+      asOf: null,
+      says: "No readiness run has ever measured this state, so nothing is known about this row either way.",
+    },
     gates: {},
   }));
   return emptyStateSnapshot({
     state: entry.code,
     stateName: entry.name,
     publishedAt: nowIso,
-    publisher: "no snapshot published — rendered NOT_WALKED at read time",
+    publisher: "no readiness run has measured this state; every cell below is rendered as “not checked yet” at read time",
     capabilities,
   });
 }

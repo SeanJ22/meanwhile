@@ -13,6 +13,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 
+import { surfaceSource } from "./admin-surface.ts";
 import { consoleReturnPath, isConsolePath } from "../lib/control-plane/console-paths.ts";
 import { buildCostPanel, costRowKind } from "../lib/control-plane/cost-panel.ts";
 import { NO_FOLLOW_UP_OPTION as RECEIPT_NO_WORK, decisionReceipt, impliesNoWork, receiptHeadline, splitDecided } from "../lib/control-plane/decision-receipt.ts";
@@ -60,6 +61,14 @@ import {
 
 const ROOT = process.cwd();
 const src = (rel: string): string => readFileSync(join(ROOT, rel), "utf8");
+/*
+ * Admin C split the 1,236-line home page into section components. A guard that
+ * names ONE file would have gone green-by-absence on a section that moved, so
+ * the guards below read the SURFACE — every file that composes it, walked from
+ * the directory rather than hand-listed. `tests/admin-surface.ts` carries the
+ * argument in full.
+ */
+const surface = (which: "home" | "research" | "readiness"): string => surfaceSource(ROOT, which);
 
 /* ================================================================== *
  * ADM-22 — every stamp is Eastern, spelled out
@@ -81,15 +90,15 @@ test("ADM-22: an ISO stamp reads as Eastern time spelled out, with the year only
 });
 
 test("ADM-22: no console page prints a raw ISO stamp where the owner reads; every one goes through <When>", () => {
-  for (const rel of ["app/(admin)/admin/page.tsx", "app/(admin)/admin/research/page.tsx", "app/(admin)/admin/research/worker-fleet-panel.tsx", "app/(admin)/readiness/[state]/readiness-panel.tsx"]) {
-    const page = src(rel);
-    assert.match(page, /<When iso=/, `${rel} renders stamps through When`);
-    assert.doesNotMatch(page, /[^=$]\{(snapshot\.publishedAt|heartbeat\.lastCycleStartedAt|d\.writtenAt|intent\.requestedAt|row\.recordedAt|attempt\.startedAt)\}/, `${rel} prints no bare ISO stamp`);
+  for (const which of ["home", "research", "readiness"] as const) {
+    const page = surface(which);
+    assert.match(page, /<When iso=/, `the ${which} surface renders stamps through When`);
+    assert.doesNotMatch(page, /[^=$]\{(snapshot\.publishedAt|heartbeat\.lastCycleStartedAt|d\.writtenAt|intent\.requestedAt|row\.recordedAt|attempt\.startedAt)\}/, `the ${which} surface prints no bare ISO stamp`);
   }
   assert.match(src("app/(admin)/console-ui.tsx"), /dateTime=\{iso\} title=\{iso\}/, "the ISO string stays on the element for the machine and the hover");
   assert.match(src("app/(admin)/console-ui.tsx"), /<span className="gap-whose">\{gapLabel\(gap\)\}<\/span> \{easternize\(gap\.says\)\}/, "a published gap sentence is quoted with its stamps in Eastern time");
-  for (const rel of ["app/(admin)/admin/page.tsx", "app/(admin)/admin/research/page.tsx"]) {
-    assert.ok((src(rel).match(/<Said text=/g) ?? []).length >= 5, `${rel} quotes instrument sentences through Said`);
+  for (const which of ["home", "research"] as const) {
+    assert.ok((surface(which).match(/<Said text=/g) ?? []).length >= 5, `the ${which} surface quotes instrument sentences through Said`);
   }
 });
 
@@ -149,10 +158,10 @@ test("ADM-12: a candidate is named from the record and never re-derived from the
 });
 
 test("ADM-12: every console surface renders keys through <Name>, raw key on hover", () => {
-  const nameUses = [["app/(admin)/admin/page.tsx", 3], ["app/(admin)/admin/research/page.tsx", 3], ["app/(admin)/admin/research/worker-fleet-panel.tsx", 2]] as const;
-  for (const [rel, least] of nameUses) {
-    const n = (src(rel).match(/<Name raw=/g) ?? []).length;
-    assert.ok(n >= least, `${rel} renders at least ${least} keys through Name (found ${n})`);
+  const nameUses = [["home", 3], ["research", 3]] as const;
+  for (const [which, least] of nameUses) {
+    const n = (surface(which).match(/<Name raw=/g) ?? []).length;
+    assert.ok(n >= least, `the ${which} surface renders at least ${least} keys through Name (found ${n})`);
   }
   const ui = src("app/(admin)/console-ui.tsx");
   assert.match(ui, /title=\{d\.raw === d\.name \? undefined : d\.raw\}/, "the raw key is the hover title");
@@ -221,12 +230,17 @@ test("ADM-16: a card with a recorded decision leaves 'waiting on you' at once; a
 });
 
 test("ADM-16: the page renders the split and the receipt, the routes return to the console page the form came from, and the sync is scheduled on the runner", () => {
-  const page = src("app/(admin)/admin/page.tsx");
+  const page = surface("home");
   assert.match(page, /splitDecided\(/);
-  assert.match(page, /Decisions waiting on you — \{waiting\.length\}/, "the count is the WAITING cards, not every card");
-  assert.match(page, /<DecidedCard /);
+  assert.match(page, /total=\{waiting\.length\}/, "the count is the WAITING cards, not every card");
+  assert.match(
+    src("app/(admin)/admin/decisions.tsx"),
+    /const waitingNow = total - goneRows\.size;/,
+    "ADM-32: the count drops the moment a decision is recorded, before the network answers",
+  );
+  assert.match(page, /<DecidedSection /);
   assert.match(page, /className="receipt"/);
-  assert.match(page, /name="returnTo" value=\{HERE\}/);
+  assert.match(page, /returnTo=\{HERE\}/);
   assert.doesNotMatch(page, /carried into the tracker at the next sync, where the row closes/, "the old one-sentence promise is gone; the receipt shows each leg");
   assert.equal(consoleReturnPath("/readiness/az", "/admin"), "/readiness/az");
   assert.equal(consoleReturnPath("https://evil.example/", "/admin"), "/admin");
@@ -402,8 +416,8 @@ test("ADM-20: every gap on the console carries the queue button, and the page ha
     assert.match(src(rel), /<QueueForm returnTo=/, `${rel} renders the one queue form`);
   }
   assert.match(ui, /where && <QueueButton where=\{where\} says=\{gap\.says\}/, "GapNote carries the button whenever the page says where it is");
-  const page = src("app/(admin)/admin/page.tsx");
-  assert.match(page, /<FixQueue /);
+  const page = surface("home");
+  assert.match(page, /<FixQueueSection /);
   assert.match(page, /value=\{GO_FIX_OPTION\}/);
   assert.match(page, /value=\{FIX_QUEUE_SUBJECT\}/);
   for (const rel of ["app/(admin)/admin/page.tsx", "app/(admin)/admin/research/page.tsx"]) {
@@ -606,10 +620,20 @@ test("ADM-17: a role whose attempts all ran without a paid model is $0 by design
   const scout = panel.costByRole.find((r) => r.key === "SCOUT")!;
   assert.equal(scout.kind, "MEASURED");
   assert.match(scout.meaning ?? "", /1 of 2 attempts reported a dollar cost; 1 reported none/);
-  const page = src("app/(admin)/admin/page.tsx");
+  const page = surface("home");
+  // POS-12: the two charts the owner said he likes are still drawn.
   assert.match(page, /Spend by role — measured dollars/);
   assert.match(page, /Spend by day — last 14 days/);
-  assert.match(page, /\$0 by design/);
+  /*
+   * ADM-33 (9.6.26) struck the blanket "$0 by design" claim: the owner did not
+   * believe the Detective was free, and he was right to ask — absence of a cost
+   * record was being read as proof that a role never spends. The section now
+   * classifies each row from the EXECUTION POLICY, so "Plain code" is a reading
+   * of the code that runs the role and "$0 this run" is a reading of the ledger,
+   * and the two are never the same sentence. This guard now pins that split.
+   */
+  assert.doesNotMatch(page, /free by design/i, "the blanket claim is gone");
+  assert.match(page, /costClassOf|cost-class/, "each row carries its own cost class");
   assert.match(src("scripts/publish-owner-snapshot.mts"), /spendByDay: spendByDay\(reads\)/);
 });
 
@@ -618,9 +642,9 @@ test("ADM-17: a role whose attempts all ran without a paid model is $0 by design
  * ================================================================== */
 
 test("ADM-18: the reader-suite section leads with what it measures and collapses to one line when there is no grid", () => {
-  const page = src("app/(admin)/admin/page.tsx");
-  assert.match(page, /The reader suite asks the live site the questions a resident would ask/);
-  assert.match(page, /<strong>Not available yet<\/strong>/);
+  const page = surface("home");
+  assert.match(page, /The reader check asks the live site the questions a resident would ask/);
+  assert.match(page, /<GapNote gap=\{snapshot\.zipRows\.gap\}/, "no grid renders as a NAMED gap with its queue button, never as an empty table");
   assert.doesNotMatch(page, /"no grid"/);
 });
 
@@ -632,47 +656,63 @@ test("ADM-23: the ACS tables are on file with their pinned counts, the pilot ZIP
   assert.equal(REFERENCE_ROW_COUNTS[ACS_ZCTA_DATASET], 33_772);
   assert.equal(REFERENCE_ROW_COUNTS[ACS_STATE_DATASET], 52);
   assert.equal(readTable(ACS_ZCTA_DATASET).count, 33_772);
-  assert.equal(zipPopulation("85701"), 5169);
-  assert.equal(zipPopulation("03255"), 1957);
-  assert.equal(zipPopulation("07866"), 22632);
-  assert.equal(zipPopulation("85641"), 31665);
+  /*
+   * ADM-41 (9.6.26): re-acquired at the ACS 5-Year 2024 release, the newest the
+   * API serves — `/data/2025/acs/acs5` answers 404, measured 2026-09-06. Every
+   * value below was verified by an independent live call before the tables were
+   * committed. The 2023 figures they replace were 5,169 / 1,957 / 22,632 /
+   * 31,665 and 7,268,175 / 1,387,834 / 9,267,014.
+   */
+  assert.equal(zipPopulation("85701"), 5498);
+  assert.equal(zipPopulation("03255"), 2015);
+  assert.equal(zipPopulation("07866"), 22663);
+  assert.equal(zipPopulation("85641"), 34752);
   assert.equal(zipPopulation("00000"), null, "a ZIP with no tabulation area is null, never zero");
-  assert.equal(statePopulation("az"), 7_268_175);
-  assert.equal(statePopulation("nh"), 1_387_834);
-  assert.equal(statePopulation("nj"), 9_267_014);
+  assert.equal(statePopulation("az"), 7_378_838);
+  assert.equal(statePopulation("nh"), 1_394_868);
+  assert.equal(statePopulation("nj"), 9_343_809);
   assert.equal(statePopulation("zz"), null);
-  const fetched: AcsFetch = { scope: "zcta", url: "u", status: 200, fetchedAt: "t", rows: [["NAME", "B01003_001E", "zip code tabulation area"], ["ZCTA5 85701", "5169", "85701"], ["ZCTA5 00601", "16721", "00601"]] };
+  const fetched: AcsFetch = { scope: "zcta", url: "u", status: 200, fetchedAt: "t", rows: [["NAME", "B01003_001E", "B01003_001M", "zip code tabulation area"], ["ZCTA5 85701", "5498", "734", "85701"], ["ZCTA5 00601", "16721", "-555555555", "00601"]] };
   assert.deepEqual(normalize(fetched).map((r) => r.code), ["00601", "85701"]);
-  assert.equal(toCsv(normalize(fetched), "zcta"), "zcta,name,population\n00601,ZCTA5 00601,16721\n85701,ZCTA5 85701,5169\n");
-  assert.throws(() => normalize({ ...fetched, rows: [fetched.rows[0], ["ZCTA5 1", "-1", "00001"]] }), /not a count/);
-  assert.throws(() => normalize({ ...fetched, rows: [fetched.rows[0], ["ZCTA5 1", null, "00001"]] }), /not a count/);
+  /*
+   * The Bureau answers a margin it cannot compute with a NEGATIVE jam value
+   * (`-555555555` — "the estimate is controlled; a statistical test is not
+   * appropriate"). That is "no margin stated" and is written as an EMPTY cell,
+   * never as a margin of zero, which would claim the estimate is exact.
+   */
+  assert.equal(toCsv(normalize(fetched), "zcta"), "zcta,name,population,margin_of_error\n00601,ZCTA5 00601,16721,\n85701,ZCTA5 85701,5498,734\n");
+  assert.throws(() => normalize({ ...fetched, rows: [fetched.rows[0], ["ZCTA5 1", "-1", "0", "00001"]] }), /not a count/);
+  assert.throws(() => normalize({ ...fetched, rows: [fetched.rows[0], ["ZCTA5 1", null, "0", "00001"]] }), /not a count/);
   assert.ok(existsSync(join(ROOT, "data", "reference", `${ACS_ZCTA_DATASET}.md`)));
 });
 
 test("ADM-23: population-weighted completeness is a measured share of the state's ACS total, and its gaps are named", () => {
-  const a = { code: "az", name: "Arizona", statePopulation: 7_268_175 } as StateAuthorities;
+  // ADM-41: the state total is the 2024 release's, in the same run as the ZIPs.
+  const a = { code: "az", name: "Arizona", statePopulation: 7_378_838 } as StateAuthorities;
   const zip = (zip: string, population: number | null, states: string[]) => ({
     zip,
     place: held(zip),
-    population: population === null ? { held: false as const, gap: { whose: "OURS" as const, says: "no ZCTA" } } : held(measured(population, 7_268_175, "c", "s")),
+    population: population === null ? { held: false as const, gap: { whose: "OURS" as const, says: "no ZCTA" } } : held(measured(population, 7_378_838, "c", "s")),
+    populationBasis: population === null ? ("NO_TABULATION_AREA" as const) : ("COUNTED" as const),
+    populationMargin: null,
     bodies: states.map((state) => ({ state: state as never, gap: "g" })),
     tierLabel: null,
   });
-  const complete = populationInCompleteZip(a, [zip("85701", 5169, ["CURRENT", "ARGUED_ABSENT"]), zip("85641", 31665, ["CURRENT", "BLOCKED"]), zip("85700", null, ["CURRENT"])]);
+  const complete = populationInCompleteZip(a, [zip("85701", 5498, ["CURRENT", "ARGUED_ABSENT"]), zip("85641", 34752, ["CURRENT", "BLOCKED"]), zip("85700", null, ["CURRENT"])]);
   assert.ok(complete.held);
-  assert.equal(complete.value.value, 5169);
-  assert.equal(complete.value.denominator, 7_268_175);
+  assert.equal(complete.value.value, 5498);
+  assert.equal(complete.value.denominator, 7_378_838);
   assert.match(complete.value.contract, /1 of 2 researched ZIP\(s\) with a population on file/);
-  const none = populationInCompleteZip(a, [zip("85641", 31665, ["BLOCKED"])]);
+  const none = populationInCompleteZip(a, [zip("85641", 34752, ["BLOCKED"])]);
   assert.ok(none.held && none.value.value === 0, "a measured zero: nothing is complete yet, and that is a fact");
-  assert.ok(!populationInCompleteZip({ ...a, statePopulation: null }, [zip("85701", 5169, ["CURRENT"])]).held);
+  assert.ok(!populationInCompleteZip({ ...a, statePopulation: null }, [zip("85701", 5498, ["CURRENT"])]).held);
   assert.ok(!populationInCompleteZip(a, []).held);
   assert.ok(!populationInCompleteZip(a, [zip("85700", null, ["CURRENT"])]).held);
   const refresh = src("scripts/readiness-refresh.mts");
-  assert.match(refresh, /population: zipPopulationCell\(zip\)/);
+  assert.match(refresh, /population: population\.population/);
   assert.match(refresh, /statePopulation: statePopulation\(spec\.code\)/);
   assert.doesNotMatch(src("lib/control-plane/readiness/extract.ts"), /not yet ingested/);
-  assert.match(refresh, /no Census tabulation area \(ZCTA\) for this ZIP/, "the publisher names the gap a PO-box ZIP is");
+  assert.match(refresh, /no Census tabulation area/, "the publisher names the gap a PO-box ZIP is");
   const panel = src("app/(admin)/readiness/[state]/readiness-panel.tsx");
   assert.match(panel, /\{z\.population\.gap\.says\}/, "the panel renders the published gap sentence, never a hardcoded one");
   assert.doesNotMatch(panel, /"population not on file"/);
@@ -688,8 +728,14 @@ test("ADM-15: every readiness ZIP row carries a next step and a Deploy-fleet-her
   assert.match(panel, /<th>Next step<\/th>/);
   assert.match(panel, /Go get this one thing:/);
   assert.match(panel, /Deploy fleet here/);
-  assert.match(panel, /name="action" value="DISPATCH"/);
-  assert.match(panel, /name="returnTo" value=\{`\/readiness\/\$\{stateCode\}`\}/);
+  /*
+   * §9A.16 (9.6.26): the row's button is the SAME control as the console
+   * home's, so it explains itself before acting and sends through the one typed
+   * gateway. It still carries the row's own target and still comes back here.
+   */
+  assert.match(panel, /<DeployFleet returnTo=\{`\/readiness\/\$\{stateCode\}`\}/);
+  assert.match(panel, /prefill=\{target\}/, "the row already knows which ZIP and which gap, so he does not retype it");
+  assert.match(src("app/(admin)/admin/deploy-fleet.tsx"), /type: "fleet\.deployHere"/);
   assert.match(panel, /Nothing to do — every governing body a resident belongs to is resolved\./);
   assert.match(panel, /GATED_ON_OPERATOR/);
 });

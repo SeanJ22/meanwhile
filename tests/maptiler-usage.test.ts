@@ -13,6 +13,7 @@ import {
 } from "../lib/control-plane/maptiler/client.ts";
 import {
   allowanceFrom,
+  maptilerSectionNumbers,
   burnFrom,
   classifyKeyLabel,
   normalizeTimeline,
@@ -25,7 +26,7 @@ import {
   type MapTilerUsageDay,
   type MapTilerUsageSnapshot,
 } from "../lib/control-plane/maptiler/types.ts";
-import { assertAggregateOnly } from "../lib/control-plane/owner-surface.ts";
+import { assertAggregateOnly, auditRenderedNumbers } from "../lib/control-plane/owner-surface.ts";
 
 /**
  * **THE BILL, READ BACK** (MAPQ-5 through MAPQ-7, 2026-09-07).
@@ -101,8 +102,70 @@ test("no service token is NOT CONNECTED, and it is never zero usage", async () =
   const panel = projectPanel({ snapshot: await snapshot({ connection: "NOT_CONNECTED", detail: null }) });
   assert.equal(panel.used, null, "an unasked question must never render as a measured zero");
   assert.match(panel.says, /NOT CONNECTED/);
-  assert.match(panel.needsOwner.join(" "), new RegExp(MAPTILER_SERVICE_TOKEN_VAR));
-  assert.match(panel.needsOwner.join(" "), /NOT a reading of zero/);
+  assert.match(
+    panel.needsOwner.join(" "),
+    /not a reading of zero/i,
+    "the owner must be told the difference between an unasked question and a measured zero",
+  );
+  assert.match(panel.needsOwner.join(" "), /credential/i, "and what is missing, in plain words");
+});
+
+/**
+ * **NOTHING THIS PANEL PUTS ON THE FACE IS A MACHINE CONSTANT.** (ADM-25/ADM-37/ADM-46,
+ * caught at integration 2026-09-07.)
+ *
+ * `scripts/admin-plain-sweep.mts` sweeps `/admin` — the page this panel is on —
+ * for four shapes that must never reach the owner's eye without a disclosure
+ * between them: an UPPER_SNAKE machine constant, a `pnpm …` shell command, a
+ * `lib/…` source path, and a bare long hash. This panel shipped naming two
+ * environment variables and a test file in prose that renders on the face.
+ *
+ * The variable names still exist — they moved one disclosure down, into the
+ * component's Technical details, which is exactly where the rule puts them.
+ */
+test("the panel's face-rendered prose carries no machine constant, command or code path", async () => {
+  for (const snap of [await snapshot(), await snapshot({ connection: "NOT_CONNECTED", days: [] })]) {
+    const panel = projectPanel({ snapshot: snap });
+    /* Every string the component renders OUTSIDE its <details> block. */
+    const face = [
+      panel.says,
+      panel.automationSays,
+      panel.actors?.says ?? "",
+      ...panel.actors?.defects ?? [],
+      ...panel.byKey.map((r) => `${r.label} ${r.says}`),
+      ...panel.byService.map((r) => r.service),
+      ...panel.needsOwner,
+      panel.burn?.says ?? "",
+    ].join("  ");
+
+    /*
+     * The first three patterns are the sweep's own
+     * (`scripts/admin-plain-sweep.mts` OFFENCES), so this test and that guard
+     * cannot drift into disagreeing about what an offence is. The fourth is
+     * the same rule one directory wider: the sweep's source-path pattern
+     * matches only lib, and this panel put a tests path on the face — the
+     * same ADM-46 offence wearing a different prefix.
+     *
+     * Written with [/] and [.] rather than escapes: identical meaning, and
+     * immune to the backslash-eating that mangled an earlier attempt.
+     */
+    assert.doesNotMatch(
+      face,
+      /[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+/,
+      "ADM-25: an underscore standing for a space is not English — move it into Technical details",
+    );
+    assert.doesNotMatch(face, /pnpm [a-z]/, "ADM-37: the owner is not a coder and cannot run one");
+    assert.doesNotMatch(
+      face,
+      /lib[/][a-z0-9-]+[/][a-z0-9-]+/,
+      "ADM-46: a code path is not an explanation",
+    );
+    assert.doesNotMatch(
+      face,
+      /tests[/][a-z0-9-]+[.]test[.]ts/,
+      "a test file is not an explanation either",
+    );
+  }
 });
 
 test("a non-200 is a failed read with its provenance, never an empty timeline", async () => {
@@ -348,4 +411,87 @@ test("a published snapshot carries no reader-level field", async () => {
   });
   assertAggregateOnly(snap, "maptiler usage snapshot");
   assertAggregateOnly(projectPanel({ snapshot: snap }), "maptiler panel");
+});
+
+/* ------------------------------------------------- the page's own audit */
+
+/**
+ * **THE PANEL'S NUMBERS GO THROUGH THE DOOR EVERY OTHER PANEL'S GO THROUGH.**
+ * (Caught at integration, 2026-09-07, by two independent review dimensions.)
+ *
+ * `app/(admin)/admin/page.tsx` collects every section's figures, runs
+ * `auditRenderedNumbers` over them, and REFUSES TO RENDER THE WHOLE PAGE if any
+ * lacks a denominator or an interpretation contract. This panel shipped feeding
+ * that array nothing, which made it the only section on the owner's home page
+ * emitting numbers outside the guarantee the page is built on.
+ */
+test("every number the panel renders carries a denominator and a contract", async () => {
+  const panel = projectPanel({ snapshot: await snapshot() });
+  const numbers = maptilerSectionNumbers(panel);
+
+  /* The denominator, stated: an empty array passes auditRenderedNumbers
+   * vacuously, which is exactly what the un-wired panel did. */
+  assert.ok(
+    numbers.length >= 8,
+    `the panel declared only ${numbers.length} number(s) — the fixture has one total, ` +
+      "three key rows, two service rows and a burn window, so a smaller count means " +
+      "figures are reaching the owner outside the audit again",
+  );
+
+  const verdict = auditRenderedNumbers([...numbers]);
+  assert.equal(verdict.ok, true, verdict.detail);
+  assert.equal(verdict.checked, numbers.length);
+
+  for (const number of numbers) {
+    assert.ok(number.denominator !== null && number.denominator !== undefined, `${number.label} has no denominator`);
+    assert.ok((number.contract ?? "").trim().length > 20, `${number.label} has no real contract`);
+  }
+
+  /* Every key row is represented, including the undeclared one — that row is
+   * the finding, and a number the audit never saw is a number nobody checked. */
+  for (const row of panel.byKey) {
+    assert.ok(
+      numbers.some((num) => num.label.includes(row.label)),
+      `key row ${row.label} renders a number that never reaches the audit`,
+    );
+  }
+});
+
+test("an unasked question declares no numbers at all", async () => {
+  const panel = projectPanel({ snapshot: await snapshot({ connection: "NOT_CONNECTED", days: [] }) });
+  assert.deepEqual(
+    maptilerSectionNumbers(panel),
+    [],
+    "NOT CONNECTED renders no figures, so it must declare none — a declared zero here would be " +
+      "the measured-zero lie this whole panel exists to avoid",
+  );
+});
+
+/**
+ * The structural half. The helper above is only real if the page CALLS it —
+ * and calls it on the same projection it renders from, because two projections
+ * would let the page audit one set of numbers and show another.
+ */
+test("the admin page audits the map panel from the same projection it renders", async () => {
+  const src = await readFile(join(process.cwd(), "app", "(admin)", "admin", "page.tsx"), "utf8");
+
+  assert.match(src, /maptilerSectionNumbers[(]/, "the page must feed the panel's numbers to the audit");
+  assert.match(src, /numbers[.]push[(][.][.][.]maptilerSectionNumbers[(]/, "they must land in the audited array");
+
+  /* ONE projection, shared. */
+  const projections = [...src.matchAll(/projectPanel[(]/g)].length;
+  assert.equal(
+    projections,
+    1,
+    `the page projects the map panel ${projections} time(s); it must project once and hand the ` +
+      "same object to both the audit and the component, or it can audit one set of numbers " +
+      "and render another",
+  );
+  assert.match(src, /<MapTilerSection panel=[{]maptilerPanel[}]/, "the component must render the audited projection");
+
+  /* And the audit must still run AFTER the numbers are pushed. */
+  const pushAt = src.indexOf("maptilerSectionNumbers(");
+  const auditAt = src.indexOf("auditRenderedNumbers(numbers)");
+  assert.ok(pushAt > 0 && auditAt > 0, "both the push and the audit must be present");
+  assert.ok(pushAt < auditAt, "the numbers must be pushed before the audit reads the array");
 });

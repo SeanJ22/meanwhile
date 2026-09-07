@@ -25,10 +25,10 @@
  */
 
 import { KEY_MATRIX, type KeyIdentityName } from "../../map/key-matrix.ts";
+import type { RenderedNumber } from "../owner-surface.ts";
 import type { MapTilerClassifier, MapTilerGroup } from "./types.ts";
 import {
   DEFAULT_MAPTILER_ALLOWANCE,
-  MAPTILER_SERVICE_TOKEN_VAR,
   type MapTilerActorCounts,
   type MapTilerUsageDay,
   type MapTilerUsageSnapshot,
@@ -331,18 +331,18 @@ export function projectPanel(input: {
   /* No leading "Yes." — the panel puts the verdict in front of this sentence,
    * and the two together read "Yes. Yes." if this one answers as well. */
   const automationSays =
-    "Every browser this project opens goes through one construction site, and that site " +
-    "refuses MapTiler unless a command explicitly asks AND the process explicitly allows it. " +
-    "tests/maptiler-barrier.test.ts proves a guarded browser with a configured key reaches the " +
-    "provider with the barrier open, and reaches nothing with it closed.";
+    "Every browser this project opens goes through one place, and that place refuses the map " +
+    "provider unless a command explicitly asks for it and the machine running it explicitly " +
+    "allows it. Both are required, so a routine job cannot spend the allowance by accident.";
 
   if (snap.connection !== "CONNECTED") {
     needsOwner.push(
       snap.connection === "NOT_CONNECTED"
-        ? `No MapTiler service credential is installed, so nobody has asked the provider what we ` +
-          `spent. Set ${MAPTILER_SERVICE_TOKEN_VAR} from the MapTiler account's Credentials page. ` +
-          "This is NOT a reading of zero."
-        : "We asked MapTiler and could not get an answer. This is NOT a reading of zero.",
+        ? "Nobody has asked MapTiler what this account spent, because the read-only credential " +
+          "that would let us ask has not been created yet. That is a gap in our setup, not a " +
+          "reading of zero — see the technical details below for exactly what to create."
+        : "We asked MapTiler and could not get an answer, so there is no reading. That is not " +
+          "the same as spending nothing.",
     );
     return {
       connection: snap.connection,
@@ -430,8 +430,9 @@ export function projectPanel(input: {
 
   if (snap.allowanceIsAssumed) {
     needsOwner.push(
-      "The allowance is an assumption, not a reading: MapTiler's analytics endpoint does not " +
-        "return the plan ceiling. Confirm the plan and set MAPTILER_MONTHLY_ALLOWANCE.",
+      "The allowance shown is an assumption, not a reading — MapTiler does not tell us the plan " +
+        "ceiling, so we assume the free tier. Confirm which plan the account is on and the " +
+        "figure can be recorded; until then every percentage here is measured against a guess.",
     );
   }
   for (const row of byKey) {
@@ -476,6 +477,87 @@ export function projectPanel(input: {
     actors: compareActors({ counts: snap.actors, byKey }),
     needsOwner,
   };
+}
+
+/**
+ * **THE PANEL'S NUMBERS, HANDED TO THE AUDIT THE REST OF THE CONSOLE USES.**
+ * (Found at integration, 2026-09-07, by two independent review dimensions.)
+ *
+ * `app/(admin)/admin/page.tsx` collects every section's figures into one array,
+ * runs `auditRenderedNumbers` over it, and REFUSES TO RENDER THE WHOLE PAGE if
+ * any of them lacks a denominator or an interpretation contract. Cost,
+ * obligations, intake and the Fleet all feed it. This panel shipped without
+ * feeding it, which made it the only section on the owner's home page emitting
+ * numbers outside the guarantee the page is built on — a parallel version of a
+ * rule that already exists, which `lib/control-plane/owner-surface.ts` says
+ * never to build.
+ *
+ * The contract on each is the sentence the owner is entitled to read the number
+ * BY. "9,541 requests" is not information: 9,541 of 100,000 is a Tuesday and
+ * 9,541 of 10,000 is an emergency.
+ *
+ * **A denominator here may be smaller than its value, and that is deliberate.**
+ * `auditRenderedNumbers` checks that a denominator EXISTS, not that it bounds
+ * the value — and it must not, because the measurement that started all of this
+ * was 101,863 requests against an allowance of 100,000. A panel that could not
+ * represent an overrun would be useless exactly when it mattered.
+ */
+export function maptilerSectionNumbers(panel: MapTilerPanel): readonly RenderedNumber[] {
+  /* Nothing is rendered as a number when there is no reading, so nothing is
+   * declared. An unasked question has no denominator because it has no value. */
+  if (panel.connection !== "CONNECTED" || panel.used === null) return [];
+  const numbers: RenderedNumber[] = [];
+  const used = panel.used;
+
+  if (panel.allowance !== null) {
+    numbers.push({
+      label: "map provider requests this billing period",
+      value: used,
+      denominator: panel.allowance,
+      contract:
+        `requests MapTiler counted in this billing period, against the allowance the plan ` +
+        `carries${panel.allowanceIsAssumed ? " — which nobody has confirmed, so it is an assumption" : ""}. ` +
+        "A value above the denominator is an overrun, not an error.",
+    });
+  }
+
+  for (const row of panel.byKey) {
+    numbers.push({
+      label: `map provider key ${row.label}`,
+      value: row.requests,
+      denominator: used,
+      contract:
+        `requests billed to this key, out of every request this billing period. ` +
+        (row.expectedZero
+          ? "This key is not declared by this project and is expected to be zero."
+          : "Attribution is by the key the provider billed, never by who we think sent it."),
+    });
+  }
+
+  for (const row of panel.byService) {
+    numbers.push({
+      label: `map provider service ${row.service}`,
+      value: row.requests,
+      denominator: used,
+      contract:
+        "requests this provider service accounted for, out of every request this billing " +
+        "period. Services are billed differently and are never summed together.",
+    });
+  }
+
+  if (panel.burn) {
+    numbers.push({
+      label: `map provider requests in the last ${panel.burn.windowDays} day(s)`,
+      value: Math.round(panel.burn.perDay * panel.burn.windowDays),
+      denominator: used,
+      contract:
+        `measured requests in the ${panel.burn.windowDays} day(s) to ${panel.burn.windowUntil}, ` +
+        "out of the period total. The daily average and the exhaustion date are derived from " +
+        "this window and from measured days only — never from the provider's own projection.",
+    });
+  }
+
+  return numbers;
 }
 
 /** The allowance the reading was taken against, and whether anybody confirmed it. */

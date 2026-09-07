@@ -88,7 +88,7 @@ import {
   type OwnerSnapshot,
   type RenderedNumber,
 } from "@/lib/control-plane/owner-surface.ts";
-import { projectPanel } from "@/lib/control-plane/maptiler/usage.ts";
+import { maptilerSectionNumbers, projectPanel } from "@/lib/control-plane/maptiler/usage.ts";
 import {
   MAPTILER_USAGE_FORMAT_VERSION,
   type MapTilerUsageSnapshot,
@@ -338,12 +338,32 @@ export default async function AdminPage() {
    * them and they are audited with the rest.
    */
   numbers.push(...costSectionNumbers({ monthly: snapshot?.monthlySpend ?? null, windows: spendWindows, capacity: snapshot?.costCapacity ?? null }));
+
+  /*
+   * THE MAP PROVIDER'S FIGURES GO THROUGH THE SAME DOOR AS EVERY OTHER PANEL'S.
+   *
+   * Projected ONCE, here, and handed to both the audit and the component — two
+   * projections would let the page audit one set of numbers and render another,
+   * which is the shape of the failure this audit exists to catch. The panel
+   * shipped bypassing this and was caught at integration; a section emitting
+   * numbers outside `auditRenderedNumbers` is a parallel version of a rule the
+   * console already has.
+   */
+  const maptilerPanel = snapshot ? projectPanel({ snapshot: snapshot.maptiler ?? notConnectedMapTiler() }) : null;
+  if (maptilerPanel) numbers.push(...maptilerSectionNumbers(maptilerPanel));
+
   const numberAudit = auditRenderedNumbers(numbers);
 
   const claims: CountClaim[] = snapshot ? [...countClaimsFor(snapshot)] : [];
   claims.push({ label: "decision cards by kind", stated: cards.length, rendered: waiting.length + decided.filter((d) => d.card !== null).length });
   claims.push({ label: "decided", stated: decided.length, rendered: decided.length });
   claims.push({ label: "fix queue", stated: queue.items.length, rendered: queue.items.length });
+  if (maptilerPanel) {
+    /* The panel states a per-key breakdown and renders one row each; the count
+     * the headline implies and the rows beneath it must be the same number. */
+    claims.push({ label: "map provider keys", stated: maptilerPanel.byKey.length, rendered: maptilerPanel.byKey.length });
+    claims.push({ label: "map provider services", stated: maptilerPanel.byService.length, rendered: maptilerPanel.byService.length });
+  }
   claims.push({ label: "deployments", stated: deployments.length, rendered: deployments.length });
   if (digestsOut.kind === "HELD") {
     claims.push({ label: "digest history", stated: digestsOut.value.length, rendered: digestsOut.value.length });
@@ -561,7 +581,7 @@ export default async function AdminPage() {
       )}
 
       {/* 6b — THE MAP PROVIDER'S BILL (MAPQ-6) */}
-      {snapshot && <MapTilerSection panel={projectPanel({ snapshot: snapshot.maptiler ?? notConnectedMapTiler() })} />}
+      {maptilerPanel && <MapTilerSection panel={maptilerPanel} />}
 
       {/* 7 — READER SUITE BY ZIP */}
       <h2 id="reader-suite">Can a reader get a right answer, ZIP by ZIP?</h2>

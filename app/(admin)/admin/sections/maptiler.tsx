@@ -26,6 +26,7 @@
  * an unasked question, with the variable that would answer it named — and
  * every number on the page disappears rather than being drawn at zero.
  */
+import { MAPTILER_SERVICE_TOKEN_VAR } from "@/lib/control-plane/maptiler/types.ts";
 import type { MapTilerPanel } from "@/lib/control-plane/maptiler/usage.ts";
 
 import { QueueButton, When } from "../../console-ui.tsx";
@@ -72,7 +73,14 @@ export function MapTilerSection({ panel }: MapTilerSectionProps) {
         <>
           <div className="rq-summary mt-tiles">
             <div className="rq-tile">
-              <div className="rq-figure">{n(panel.used ?? 0)}</div>
+              {/*
+                NOT `panel.used ?? 0`. This file's own header says a zero must
+                never be drawn on a quota panel, and a numeric default is exactly
+                how one gets drawn: it is unreachable today only because the
+                enclosing branch checks `connected`, which is a sibling guard,
+                not a property of the type. A null renders as its named gap.
+              */}
+              <div className="rq-figure">{panel.used === null ? "not measured" : n(panel.used)}</div>
               <div className="rq-caption">
                 requests this billing period
                 {panel.since && panel.until ? ` (${panel.since} to ${panel.until})` : ""}
@@ -208,12 +216,33 @@ export function MapTilerSection({ panel }: MapTilerSectionProps) {
 
       <details className="status-detail">
         <summary>Technical details</summary>
-        <p className="note">
-          Reading taken <When iso={panel.collectedAt} />, by <code>pnpm maptiler:usage</code> against
-          MapTiler&rsquo;s analytics API, classified by <code>api_keys</code> and by{" "}
-          <code>services</code>. The service credential is server-side only and appears nowhere on
-          this page.
-        </p>
+        {/*
+          **THIS BLOCK USED TO SAY A READING HAD BEEN TAKEN WHEN NONE HAD.**
+          (Found at integration, 2026-09-07.)
+
+          It read "Reading taken <timestamp>" unconditionally — and in the NOT
+          CONNECTED state `collectedAt` is the moment the PAGE rendered, not the
+          moment anybody asked the provider anything. So the one panel written
+          to keep "we have not asked" apart from "the answer was zero" was
+          quietly asserting a reading in exactly the state where none exists.
+          The two states now say two different things.
+        */}
+        {connected ? (
+          <p className="note">
+            Reading taken <When iso={panel.collectedAt} />, against MapTiler&rsquo;s analytics API,
+            classified by <code>api_keys</code> and by <code>services</code>. Refreshed by{" "}
+            <code>pnpm maptiler:usage</code>. The service credential is server-side only and appears
+            nowhere on this page.
+          </p>
+        ) : (
+          <p className="note">
+            No reading has been taken, so there is no timestamp to show. The usage read needs a
+            server-side credential named <code>{MAPTILER_SERVICE_TOKEN_VAR}</code>, created on the
+            MapTiler account&rsquo;s Credentials page and installed on the runner. Once it is,{" "}
+            <code>pnpm maptiler:usage</code> fills this panel in. <code>docs/maptiler-keys.md</code>{" "}
+            carries the full owner action.
+          </p>
+        )}
         {panel.estimatedIncluded > 0 && (
           <p className="note">
             MapTiler additionally projects {n(panel.estimatedIncluded)} request(s) for the rest of

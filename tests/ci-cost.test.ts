@@ -326,11 +326,24 @@ test("RULING 278 — Build Check classifies before any expensive step, in every 
 
 test("RULING 278 — every expensive step in Build Check consumes the classifier's verdict", () => {
   const text = workflow(BUILD_CHECK);
+  /*
+   * RULING 279 put ONE decision step between the classifier and the steps that
+   * read it, so that the cheap preflight and the classification are answered in
+   * a single place rather than by two conditions on every step (RULING 278's
+   * "no workflow keeps a second path table"). The property this test defends is
+   * unchanged — an expensive step may not run regardless of the classification
+   * — and it is now checked in two halves: every expensive step asks the
+   * decision, and the decision reads the classifier.
+   */
   const naked: string[] = [];
   for (const step of EXPENSIVE_STEPS) {
     const cond = conditionOf(text, step);
-    if (!cond || !cond.includes("steps.cost.outputs.cost != 'CHEAP'")) naked.push(`${step} → ${cond ?? "(no if:)"}`);
+    if (!cond || !cond.includes("steps.tier.outputs.expensive")) naked.push(`${step} → ${cond ?? "(no if:)"}`);
   }
+  assert.ok(
+    text.includes("steps.cost.outputs.cost") && text.includes("id: tier"),
+    "the decision step is gone, or no longer reads the classifier — the chain from classification to spending is broken",
+  );
   assert.deepEqual(
     naked,
     [],
@@ -457,13 +470,13 @@ test("RULING 278 — neither workflow keeps a second path-classification truth t
 test("RULING 278 — dropping the condition from an expensive step is caught", () => {
   const text = workflow(BUILD_CHECK);
   const planted = text.replace(
-    "      - name: Test\n        if: steps.cost.outputs.cost != 'CHEAP'\n",
+    "      - name: Test\n        if: success() && steps.tier.outputs.expensive == 'yes'\n",
     "      - name: Test\n",
   );
   assert.notEqual(planted, text, "the plant did not apply — the Test step has moved");
   const cond = conditionOf(planted, "- name: Test");
   assert.ok(
-    !cond || !cond.includes("steps.cost.outputs.cost"),
+    !cond || !cond.includes("steps.tier.outputs.expensive"),
     "the reader must see the Test step running unconditionally once the condition is removed",
   );
 });
@@ -481,7 +494,7 @@ test("RULING 278 — a `paths-ignore:` filter added to Build Check is caught", (
 
 test("RULING 278 — a hand-rolled path condition is caught", () => {
   const planted = workflow(BUILD_CHECK).replace(
-    "      - name: Test\n        if: steps.cost.outputs.cost != 'CHEAP'\n",
+    "      - name: Test\n        if: success() && steps.tier.outputs.expensive == 'yes'\n",
     "      - name: Test\n        if: \"!contains(github.event.head_commit.message, 'docs/')\"\n",
   );
   const handRolled = planted

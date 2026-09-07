@@ -41,6 +41,7 @@ import { mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
+import { runPreflight } from "./preflight.mjs";
 import { today } from "./doc-dates.mjs";
 
 /**
@@ -254,6 +255,31 @@ const GATES = [
 export { GATES };
 
 /**
+ * **WHAT THE DOOR RUNS BEFORE THE GATE SET, AND CI RUNS BEFORE ANYTHING.**
+ * (RULING 279.)
+ *
+ * Not a gate, and declared rather than exempted. `tests/gate-parity.test.ts`
+ * exists to catch the RO04 hole — a check CI requires that the local door does
+ * not run — and the preflight would look exactly like that hole to it: a
+ * command in the workflow with no entry here. It is not one. The same checks
+ * run locally, from the same module, before the loop below starts; what differs
+ * is only that CI spells it as a command and this file calls the function.
+ *
+ * It is kept OUT of `GATES` because `GATES` is a list of things that all run
+ * and all report, and the whole point of the preflight is that a failure stops
+ * the run. Putting it in the loop would make it one more gate reported among
+ * sixteen, which is what it was — inside `pnpm test`, eight minutes in.
+ */
+export const PRECONDITIONS = [
+  {
+    id: "preflight",
+    ciJob: "every required job, before its first expensive step",
+    command: "node scripts/preflight.mjs",
+    why: "the cheap deterministic checks: a tree the sweeps can see, and no unrecorded duplicate implementation",
+  },
+];
+
+/**
  * **THE ENVIRONMENT VARIABLES THAT CHANGE HOW MANY TESTS EXIST.**
  * (Session C final, Item C.4, 2026-09-01.)
  *
@@ -340,6 +366,50 @@ try {
 }
 
 console.log("local gates — the set CI requires (RULING 155)\n");
+
+/*
+ * **THE CHEAP TIER RUNS FIRST, AND THE EXPENSIVE TIER IS NOT BOUGHT ON A HEAD
+ * THAT FAILED IT.** (RULING 279. CIE-2, CIE-5.)
+ *
+ * This is the one place the door's own rule — "every gate runs, even after one
+ * fails" — is deliberately not applied, and the tier boundary is why. RULING
+ * 155's reason for running everything is that a session should get all the
+ * answers from one run rather than discovering them one merge at a time. That
+ * reason is about ANSWERS, and the preflight has already given every answer it
+ * has: both of its checks run, and both report by name, before this decides
+ * anything.
+ *
+ * What follows is not more answers, it is fifteen minutes of verification of a
+ * tree we already know is not shippable. And one of the two preflight checks
+ * is specifically that the tree the gates are about to judge is the tree that
+ * would be committed — so running them past a red `visible-tree` would produce
+ * a confident green about a different tree, which is the PR #294 defect
+ * exactly.
+ *
+ * The corrected head runs the whole expensive tier. Nothing is waived: this
+ * moves when the spending happens, never whether it happens.
+ */
+{
+  const started = Date.now();
+  const preflight = runPreflight();
+  const failed = preflight.filter((c) => !c.ok);
+  const seconds = Math.round((Date.now() - started) / 10) / 100;
+  if (failed.length > 0) {
+    console.log(
+      `\n  preflight REFUSED in ${seconds}s — ${failed.map((c) => c.id).join(", ")}.\n` +
+        "  The expensive tier was not run on this tree. Fix the above and run `pnpm gates` again;\n" +
+        "  the corrected tree runs every gate before anything may ship.\n",
+    );
+    /*
+     * NO GATE RUN RECORD. A record is a record of the gate set having run, and
+     * it did not. Writing one here would put a row on disk that the status
+     * ledger would render as a measurement of this tree.
+     */
+    process.exitCode = 1;
+    return;
+  }
+  console.log(`  preflight … PASS (${seconds}s) — ${preflight.length} cheap check(s) clean\n`);
+}
 
 const results = [];
 for (const gate of GATES) {

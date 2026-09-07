@@ -37,6 +37,7 @@
  *   it produces right now.
  */
 import test from "node:test";
+import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 import assert from "node:assert/strict";
 import { execSync } from "node:child_process";
 import { withTreeLock } from "./tree-lock.ts";
@@ -75,8 +76,7 @@ test("RULING 92: a file declaring itself GENERATED is registered here", () => {
    * does not skip a hidden path the way ripgrep does. `-z` keeps names with
    * spaces whole.
    */
-  const tracked = execSync("git ls-files -z", { cwd: ROOT, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 })
-    .split("\0")
+  const tracked = filesThatWouldBeCommitted({ cwd: ROOT })
     .filter((f) => /\.(?:ts|mts|tsx|md|json|jsonl|csv)$/.test(f));
 
   const registered = new Set(GENERATED.map((a) => a.path));

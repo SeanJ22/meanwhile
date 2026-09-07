@@ -200,8 +200,49 @@ jobs:
         id: cost
         run: node scripts/ci-cost.mjs
 
-      - name: Enable corepack (pnpm pinned by packageManager)
+      # THE CHEAP TIER, BEFORE ANYTHING IS BOUGHT. (RULING 279.)
+      #
+      # Bare `node` on the bare checkout: no corepack, no pnpm store, no
+      # install, no browser, no build. `scripts/preflight.mjs` and everything it
+      # reaches import only node builtins and type-strippable local modules, so
+      # this runs here and costs seconds.
+      #
+      # Run 34097010100 is why it is here. A committed duplicate helper — two
+      # seconds to detect — surfaced 8m46s into the test step, after a browser
+      # install it never used, and the job then ran three more minutes past a
+      # failure it already knew about. Seventeen billed runner-minutes for an
+      # answer this step has before the first dependency is fetched.
+      #
+      # It is skipped on the classifier's CHEAP path for the same reason every
+      # other step is: a positively proven non-shipping commit has nothing to
+      # verify (RULING 278).
+      - name: Preflight — the cheap deterministic checks (RULING 279)
+        id: preflight
         if: steps.cost.outputs.cost != 'CHEAP'
+        run: node scripts/preflight.mjs
+
+      # ONE PLACE DECIDES WHETHER THE EXPENSIVE TIER RUNS, AND THERE IS NO
+      # SECOND TABLE (RULING 278). Three outcomes, and every later step reads
+      # this one output rather than re-deriving the decision from its parts:
+      #
+      #   yes            verify this head fully
+      #   no-cheap       the classifier proved it ships nothing; attest and stop
+      #   no-preflight   a cheap check failed; fail loudly and buy nothing more
+      - name: Decide whether the expensive tier runs
+        id: tier
+        if: always()
+        shell: bash
+        run: |
+          if [ "${{ steps.cost.outputs.cost }}" = "CHEAP" ]; then
+            echo "expensive=no-cheap" >> "$GITHUB_OUTPUT"
+          elif [ "${{ steps.preflight.outcome }}" != "success" ]; then
+            echo "expensive=no-preflight" >> "$GITHUB_OUTPUT"
+          else
+            echo "expensive=yes" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Enable corepack (pnpm pinned by packageManager)
+        if: steps.tier.outputs.expensive == 'yes'
         run: corepack enable
 
       # P-006 · THE STORE, CACHED — and cached AFTER corepack, deliberately.
@@ -215,11 +256,11 @@ jobs:
       # the question can be answered.
       - name: Where is the pnpm store
         id: pnpm-store
-        if: steps.cost.outputs.cost != 'CHEAP'
+        if: steps.tier.outputs.expensive == 'yes'
         run: echo "path=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
 
       - uses: actions/cache@v4
-        if: steps.cost.outputs.cost != 'CHEAP'
+        if: steps.tier.outputs.expensive == 'yes'
         with:
           path: ${{ steps.pnpm-store.outputs.path }}
           key: pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
@@ -230,7 +271,7 @@ jobs:
             pnpm-${{ runner.os }}-
 
       - name: Install
-        if: steps.cost.outputs.cost != 'CHEAP'
+        if: steps.tier.outputs.expensive == 'yes'
         run: corepack pnpm install --frozen-lockfile
 
       # P-006 · Next's own build cache. The build log read "No build cache
@@ -244,7 +285,7 @@ jobs:
       # because the two legs compile differently and sharing one key would have
       # them evict each other every run.
       - uses: actions/cache@v4
-        if: steps.cost.outputs.cost != 'CHEAP'
+        if: steps.tier.outputs.expensive == 'yes'
         with:
           path: ${{ github.workspace }}/.next/cache
           key: next-${{ runner.os }}-${{ matrix.mode }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
@@ -257,7 +298,7 @@ jobs:
       # this job stops standing in for the deploy, so they are named together
       # here and in netlify.toml's header.
       - name: Build (the command netlify.toml gives Netlify)
-        if: steps.cost.outputs.cost != 'CHEAP'
+        if: steps.tier.outputs.expensive == 'yes'
         env:
           # Netlify's @netlify/plugin-nextjs sets this in its onPreBuild, so a
           # deploy is always a standalone build even though netlify.toml never
@@ -281,16 +322,16 @@ jobs:
       # the same file the gates job already ran; the one test that skipped
       # there is the one that matters here.
       - name: Bundle-scanning checks (need the build above)
-        if: matrix.mode == 'default' && steps.cost.outputs.cost != 'CHEAP'
+        if: matrix.mode == 'default' && steps.tier.outputs.expensive == 'yes'
         timeout-minutes: 10
         run: corepack pnpm run test:bundle
 
       - name: Trace census
-        if: always() && steps.cost.outputs.cost != 'CHEAP'
+        if: always() && steps.tier.outputs.expensive == 'yes'
         run: node scripts/trace-census.mjs --files trace-files.txt
 
       - name: Keep the trace list
-        if: always() && steps.cost.outputs.cost != 'CHEAP'
+        if: always() && steps.tier.outputs.expensive == 'yes'
         uses: actions/upload-artifact@v5
         with:
           name: trace-files-${{ matrix.mode }}-${{ github.sha }}
@@ -304,8 +345,25 @@ jobs:
       # (RULING 156). So this job still runs, still reports `build (<mode>)`,
       # and says in as many words what it decided and why. "Nothing happened" and
       # "nothing needed to happen, and here is the proof" are different claims.
+# THE RED PATH SAYS WHY, IN THIS JOB'S OWN LOG. (RULING 279.)
+      #
+      # The preflight step has already failed the job by this point — this adds
+      # no gate, it adds the sentence. Without it the build log ends in a run
+      # of skipped steps, and "skipped" is what a job that had nothing to do
+      # looks like too. A required check must never be ambiguous about which of
+      # those happened.
+      - name: Preflight was red — nothing expensive was bought
+        if: always() && steps.tier.outputs.expensive == 'no-preflight'
+        run: |
+          echo "The cheap preflight failed on this head, so the browser install, the" >&2
+          echo "full suite and the builds were not run for it. Nothing is waived: fix" >&2
+          echo "what preflight named, push again, and the corrected head runs the whole" >&2
+          echo "verification before it may ship. Run it yourself with:" >&2
+          echo "    node scripts/preflight.mjs" >&2
+          exit 1
+
       - name: Cheap attestation — nothing here could differ
-        if: steps.cost.outputs.cost == 'CHEAP'
+        if: steps.tier.outputs.expensive == 'no-cheap'
         run: node scripts/ci-cost.mjs --attest=build
 
   # ---------------------------------------------------------------------------
@@ -363,19 +421,49 @@ jobs:
         id: cost
         run: node scripts/ci-cost.mjs
 
-      # Exact historical data equality is a migration proof, not a live-source query.
-      # Fetch the frozen base and the pinned integration source; keep checkout shallow.
-      - name: Frozen holdings base for extraction proofs
+      # THE CHEAP TIER, BEFORE ANYTHING IS BOUGHT. (RULING 279.)
+      #
+      # Bare `node` on the bare checkout: no corepack, no pnpm store, no
+      # install, no browser, no build. `scripts/preflight.mjs` and everything it
+      # reaches import only node builtins and type-strippable local modules, so
+      # this runs here and costs seconds.
+      #
+      # Run 34097010100 is why it is here. A committed duplicate helper — two
+      # seconds to detect — surfaced 8m46s into the test step, after a browser
+      # install it never used, and the job then ran three more minutes past a
+      # failure it already knew about. Seventeen billed runner-minutes for an
+      # answer this step has before the first dependency is fetched.
+      #
+      # It is skipped on the classifier's CHEAP path for the same reason every
+      # other step is: a positively proven non-shipping commit has nothing to
+      # verify (RULING 278).
+      - name: Preflight — the cheap deterministic checks (RULING 279)
+        id: preflight
         if: steps.cost.outputs.cost != 'CHEAP'
+        run: node scripts/preflight.mjs
+
+      # ONE PLACE DECIDES WHETHER THE EXPENSIVE TIER RUNS, AND THERE IS NO
+      # SECOND TABLE (RULING 278). Three outcomes, and every later step reads
+      # this one output rather than re-deriving the decision from its parts:
+      #
+      #   yes            verify this head fully
+      #   no-cheap       the classifier proved it ships nothing; attest and stop
+      #   no-preflight   a cheap check failed; fail loudly and buy nothing more
+      - name: Decide whether the expensive tier runs
+        id: tier
+        if: always()
         shell: bash
         run: |
-          holdings_base=$(node --input-type=module -e "import{readFileSync}from'node:fs';console.log(JSON.parse(readFileSync('data/state-holdings/move-plan.json','utf8')).baseSha)")
-          [[ "$holdings_base" =~ ^[0-9a-f]{40}$ ]] || exit 1
-          git cat-file -e "${holdings_base}^{commit}" 2>/dev/null || git fetch --no-tags --depth=1 origin "$holdings_base"
-          holdings_update=$(node --input-type=module -e "import{readFileSync}from'node:fs';console.log(JSON.parse(readFileSync('data/states/az/ballot/measure-summaries.json','utf8')).source.integratedUpdate.commit)")
-          [[ "$holdings_update" =~ ^[0-9a-f]{40}$ ]] || exit 1
-          git cat-file -e "${holdings_update}^{commit}" 2>/dev/null || git fetch --no-tags --depth=1 origin "$holdings_update"
+          if [ "${{ steps.cost.outputs.cost }}" = "CHEAP" ]; then
+            echo "expensive=no-cheap" >> "$GITHUB_OUTPUT"
+          elif [ "${{ steps.preflight.outcome }}" != "success" ]; then
+            echo "expensive=no-preflight" >> "$GITHUB_OUTPUT"
+          else
+            echo "expensive=yes" >> "$GITHUB_OUTPUT"
+          fi
 
+      # Exact historical data equality is a migration proof, not a live-source query.
+      # Fetch the frozen base and the pinned integration source; keep checkout shallow.
       - name: Enable corepack (pnpm pinned by packageManager)
         run: corepack enable
 
@@ -442,60 +530,8 @@ jobs:
       # browser cache away more often than strictly necessary — and that is the
       # direction to be wrong in. A key that invalidates too eagerly costs one
       # download; a key that invalidates too rarely serves a stale browser.
-      - uses: actions/cache@v4
-        if: steps.cost.outputs.cost != 'CHEAP'
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-
-      - name: Install the browser the suite needs
-        if: steps.cost.outputs.cost != 'CHEAP'
-        timeout-minutes: 15
-        run: corepack pnpm exec playwright install --with-deps chromium
-
-      # WHERE A STEP'S PRODUCT CAN BE OBSERVED, OBSERVE IT AT THE STEP
-      # (`NH106`, RULING 113, 2026-08-23).
-      #
-      # The step above reported SUCCESS IN 27 SECONDS at `3d453fd` and the suite
-      # then failed four times on `NO CHROMIUM INSTALLED ... searched
-      # /home/runner/.cache/ms-playwright` — a directory the install log, two
-      # screens earlier, said it had downloaded Chromium into. The install was
-      # fine; `lib/ops/chromium-pin.ts` was looking for the binary at the legacy
-      # `chrome-linux/chrome` while Chrome for Testing puts it at
-      # `chrome-linux64/chrome`.
-      #
-      # Eighty seconds and a 2,000-line suite stood between the install exiting
-      # and anyone learning that. This asks the question at the step: it lists
-      # the browsers root, every build directory in it and the contents of each,
-      # compares our resolution against Playwright's own `executablePath()`, and
-      # exits non-zero on either an absence or a disagreement.
-      #
-      # It has NO skip flag. An escape hatch on a gate is how the gate stops
-      # meaning anything, and letting the guard pass with no browser is the one
-      # "fix" `scripts/browser.mts` forbids in as many words.
-      - name: Prove the browser is actually there
-        if: steps.cost.outputs.cost != 'CHEAP'
-        timeout-minutes: 5
-        run: corepack pnpm run assert:browser
-
-      # The final reader receipt may deliberately sit behind documentary-only
-      # commits. Keep the checkout shallow, but deepen this one ref until Git
-      # can prove that the receipt's executed head is really in HEAD's history.
-      - name: Reader closure proof ancestry
-        if: steps.cost.outputs.cost != 'CHEAP'
-        shell: bash
-        run: node scripts/reader-proof-history.mjs
-
-      # `if: always()` on the two that follow, so one red gate does not hide
-      # the verdict of the others. A PR author gets all three answers from one
-      # run rather than three round trips.
-      - name: Test
-        if: steps.cost.outputs.cost != 'CHEAP'
-        timeout-minutes: 15
-        run: corepack pnpm test
-
       - name: Lint
-        if: always() && steps.cost.outputs.cost != 'CHEAP'
+        if: always() && steps.tier.outputs.expensive == 'yes'
         timeout-minutes: 10
         run: corepack pnpm lint
 
@@ -516,7 +552,7 @@ jobs:
       # deliberately does NOT build — tests/push-main.test.ts asserts that, so
       # a future "just add a build step" cannot quietly restore the old lie.
       - name: Types (fresh checkout, no build)
-        if: always() && steps.cost.outputs.cost != 'CHEAP'
+        if: always() && steps.tier.outputs.expensive == 'yes'
         timeout-minutes: 10
         run: corepack pnpm exec tsc --noEmit
 
@@ -550,27 +586,27 @@ jobs:
       # `scripts/gates.mjs` carries the same three, and
       # `tests/gate-parity.test.ts` fails if this file and that one ever drift.
       - name: Governance ledger and its generated views
-        if: always() && steps.cost.outputs.cost != 'CHEAP'
+        if: always() && steps.tier.outputs.expensive == 'yes'
         timeout-minutes: 10
         run: corepack pnpm governance:check
 
       - name: Orchestration plans (RULING 190)
-        if: always() && steps.cost.outputs.cost != 'CHEAP'
+        if: always() && steps.tier.outputs.expensive == 'yes'
         timeout-minutes: 5
         run: corepack pnpm orchestration:check
 
       - name: Method knowledge store
-        if: always() && steps.cost.outputs.cost != 'CHEAP'
+        if: always() && steps.tier.outputs.expensive == 'yes'
         timeout-minutes: 5
         run: corepack pnpm method:check
 
       - name: Canonical state holdings and residual paths
-        if: always() && steps.cost.outputs.cost != 'CHEAP'
+        if: always() && steps.tier.outputs.expensive == 'yes'
         timeout-minutes: 5
         run: corepack pnpm state-holdings:check
 
       - name: Generated state manifests against committed observations
-        if: always() && steps.cost.outputs.cost != 'CHEAP'
+        if: always() && steps.tier.outputs.expensive == 'yes'
         timeout-minutes: 5
         run: corepack pnpm state-manifest --check
 
@@ -610,8 +646,71 @@ jobs:
       # Exit 2 is COULD NOT TELL — no credential, or an unreadable migrations
       # table — and it fails the step. An unreadable answer must never print
       # like a passing one (RULING 24).
+      - name: Frozen holdings base for extraction proofs
+        if: success() && steps.tier.outputs.expensive == 'yes'
+        shell: bash
+        run: |
+          holdings_base=$(node --input-type=module -e "import{readFileSync}from'node:fs';console.log(JSON.parse(readFileSync('data/state-holdings/move-plan.json','utf8')).baseSha)")
+          [[ "$holdings_base" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          git cat-file -e "${holdings_base}^{commit}" 2>/dev/null || git fetch --no-tags --depth=1 origin "$holdings_base"
+          holdings_update=$(node --input-type=module -e "import{readFileSync}from'node:fs';console.log(JSON.parse(readFileSync('data/states/az/ballot/measure-summaries.json','utf8')).source.integratedUpdate.commit)")
+          [[ "$holdings_update" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          git cat-file -e "${holdings_update}^{commit}" 2>/dev/null || git fetch --no-tags --depth=1 origin "$holdings_update"
+
+      - name: Reader closure proof ancestry
+        if: success() && steps.tier.outputs.expensive == 'yes'
+        shell: bash
+        run: node scripts/reader-proof-history.mjs
+
+      # `if: always()` on the two that follow, so one red gate does not hide
+      # the verdict of the others. A PR author gets all three answers from one
+      # run rather than three round trips.
+      - uses: actions/cache@v4
+        if: steps.tier.outputs.expensive == 'yes'
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install the browser the suite needs
+        if: success() && steps.tier.outputs.expensive == 'yes'
+        timeout-minutes: 15
+        run: corepack pnpm exec playwright install --with-deps chromium
+
+      # WHERE A STEP'S PRODUCT CAN BE OBSERVED, OBSERVE IT AT THE STEP
+      # (`NH106`, RULING 113, 2026-08-23).
+      #
+      # The step above reported SUCCESS IN 27 SECONDS at `3d453fd` and the suite
+      # then failed four times on `NO CHROMIUM INSTALLED ... searched
+      # /home/runner/.cache/ms-playwright` — a directory the install log, two
+      # screens earlier, said it had downloaded Chromium into. The install was
+      # fine; `lib/ops/chromium-pin.ts` was looking for the binary at the legacy
+      # `chrome-linux/chrome` while Chrome for Testing puts it at
+      # `chrome-linux64/chrome`.
+      #
+      # Eighty seconds and a 2,000-line suite stood between the install exiting
+      # and anyone learning that. This asks the question at the step: it lists
+      # the browsers root, every build directory in it and the contents of each,
+      # compares our resolution against Playwright's own `executablePath()`, and
+      # exits non-zero on either an absence or a disagreement.
+      #
+      # It has NO skip flag. An escape hatch on a gate is how the gate stops
+      # meaning anything, and letting the guard pass with no browser is the one
+      # "fix" `scripts/browser.mts` forbids in as many words.
+      - name: Prove the browser is actually there
+        if: success() && steps.tier.outputs.expensive == 'yes'
+        timeout-minutes: 5
+        run: corepack pnpm run assert:browser
+
+      # The final reader receipt may deliberately sit behind documentary-only
+      # commits. Keep the checkout shallow, but deepen this one ref until Git
+      # can prove that the receipt's executed head is really in HEAD's history.
+      - name: Test
+        if: success() && steps.tier.outputs.expensive == 'yes'
+        timeout-minutes: 15
+        run: corepack pnpm test
+
       - name: Schema shipping gate (only when the schema contract moved)
-        if: always() && steps.cost.outputs.cost != 'CHEAP'
+        if: always() && steps.tier.outputs.expensive == 'yes'
         timeout-minutes: 5
       #
       # AN ESTABLISHED MIGRATION IS IMMUTABLE, and that half runs with NO
@@ -679,7 +778,7 @@ jobs:
       # ever fired here and a workflow listening for one would never run. A gate
       # that never executes reports nothing and reads as covered.
       - name: Release freeze (refuses a release on a DEGRADED production reading)
-        if: always() && steps.cost.outputs.cost != 'CHEAP'
+        if: always() && steps.tier.outputs.expensive == 'yes'
         timeout-minutes: 5
         run: corepack pnpm exec tsx scripts/release-freeze-gate.mts
 
@@ -695,11 +794,28 @@ jobs:
       # This is why `Install` above is NOT gated: the proofs are the repository's
       # own test files and they need `node_modules`. With the store cache warm
       # that install is four seconds, measured on run 33996825942.
+      - name: Preflight was red — nothing expensive was bought
+        if: always() && steps.tier.outputs.expensive == 'no-preflight'
+        run: |
+          echo "The cheap preflight failed on this head, so the browser install, the" >&2
+          echo "full suite and the builds were not run for it. Nothing is waived: fix" >&2
+          echo "what preflight named, push again, and the corrected head runs the whole" >&2
+          echo "verification before it may ship. Run it yourself with:" >&2
+          echo "    node scripts/preflight.mjs" >&2
+          exit 1
+
       - name: Cheap path — the guards that read what changed
-        if: steps.cost.outputs.cost == 'CHEAP'
+        if: steps.tier.outputs.expensive == 'no-cheap'
         timeout-minutes: 5
         run: node scripts/ci-cost.mjs --prove
 
+# THE RED PATH SAYS WHY, IN THIS JOB'S OWN LOG. (RULING 279.)
+      #
+      # The preflight step has already failed the job by this point — this adds
+      # no gate, it adds the sentence. Without it the gates log ends in a run
+      # of skipped steps, and "skipped" is what a job that had nothing to do
+      # looks like too. A required check must never be ambiguous about which of
+      # those happened.
       - name: Cheap attestation — nothing else could differ
-        if: steps.cost.outputs.cost == 'CHEAP'
+        if: steps.tier.outputs.expensive == 'no-cheap'
         run: node scripts/ci-cost.mjs --attest=gates

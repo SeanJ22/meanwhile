@@ -1,11 +1,11 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "d28cbf56a2e04cdd",
+  "snapshot": "13c39513ca948e38",
   "counts": {
-    "records": 315,
-    "current": 46,
-    "law": 33,
+    "records": 316,
+    "current": 47,
+    "law": 34,
     "decisions": 13,
     "historical": 269
   },
@@ -7390,6 +7390,34 @@
       "relations": [],
       "uncertain": [],
       "sourceRef": "lib/ops/deploy-paths.ts"
+    },
+    {
+      "id": "R-0279",
+      "aliases": [
+        "RULING 279",
+        "R279",
+        "R-279"
+      ],
+      "title": "RULING 279 — cheap deterministic checks run before expensive verification, and a red cheap tier buys nothing more on that head",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-09-07",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "related_to",
+          "target": "R-0278"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0267"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "scripts/preflight.mjs"
     },
     {
       "id": "R-C-commands-package-json-s-scripts-block-is-the-list",

@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
+import { stripComments } from "../lib/ops/duplicate-implementations.ts";
 
 /**
  * **A GATE READS WHAT WOULD BE COMMITTED, NEVER ONLY WHAT ALREADY WAS.**
@@ -37,8 +38,34 @@ const ROOT = join(HERE, "..");
 /**
  * `git ls-files` with no `--others` lists only what is already committed. A
  * gate built on it cannot see the change it is being run to judge.
+ *
+ * **THE PATTERN WIDENED, BECAUSE IT MISSED ONE (CIE-2, 2026-09-07).** It used
+ * to require a quote character IMMEDIATELY on both sides of `ls-files`, which
+ * recognises the ARGV form — `["ls-files", "-z", …]` — and nothing else. The
+ * SHELL-STRING form puts the quotes at the ends of the whole command:
+ *
+ * ```
+ *   execSync("git ls-files -z", …)     ← not flagged, because the character
+ *                                        before `ls-files` is a space
+ * ```
+ *
+ * `scripts/duplicate-implementations.mts` was written that way, so the guard
+ * that exists to stop an eighth tracked-only sweep watched the eighth one land
+ * and said nothing — and PR #294 shipped a local "16 of 16 green" that had not
+ * seen the files it was judging.
+ *
+ * So the pattern now matches `ls-files` wherever it appears in CODE, and the
+ * `--others` lookahead is what decides. A guard keyed on the shape of the
+ * quoting was keyed on the wrong thing: the defect is asking git for tracked
+ * files, and it is the same defect in either syntax.
+ *
+ * **Comments are stripped before the scan**, using the same length- and
+ * newline-preserving stripper the duplicate census uses. Widening the pattern
+ * without that turned every doc block that DISCUSSES this defect — including
+ * the one you are reading — into an offender, which is how a guard teaches
+ * people to stop explaining themselves.
  */
-const TRACKED_ONLY = /["'`]ls-files["'`](?![\s\S]{0,200}?--others)/;
+const TRACKED_ONLY = /\bls-files\b(?![\s\S]{0,200}?--others)/;
 
 test("no gate reads tracked-only repository state", () => {
   const offenders: string[] = [];
@@ -68,8 +95,15 @@ test("no gate reads tracked-only repository state", () => {
        */
       if (full.endsWith(join("lib", "ops", "repo-files.ts"))) continue;
       if (full.endsWith(join("tests", "gate-ordering.test.ts"))) continue;
+      /*
+       * - `scripts/preflight.mjs` asks for the TRACKED set on purpose: its whole
+       *   job is to compare it against what would be committed and refuse when
+       *   the two differ. It is the check, not an instance of the defect.
+       */
+      if (full.endsWith(join("scripts", "preflight.mjs"))) continue;
       read++;
-      const body = readFileSync(full, "utf8");
+      // Prose about the defect is not the defect. Strip comments first.
+      const body = stripComments(readFileSync(full, "utf8"));
       if (!body.includes("ls-files")) continue;
       asking++;
       if (TRACKED_ONLY.test(body)) offenders.push(relative(ROOT, full).replace(/\\/g, "/"));

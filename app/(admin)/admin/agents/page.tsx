@@ -149,9 +149,20 @@ export default async function AgentsPage() {
           }}
           detail={
             <>
+              {/*
+                This used to say "Nothing in the running system reads the setting
+                yet". ACLOSE-2 made that false: the Agent Bridge now reads this
+                policy on every delegated job and refuses rather than billing
+                when it is off. Leaving the old sentence up would have been a
+                false claim about money in the safe direction, which is still a
+                false claim — and the one thing a spending control may not do is
+                misdescribe what it controls.
+              */}
               <p className="note">
-                Recording this decision records the decision. Nothing in the running system reads the setting yet, so
-                turning it on does not by itself permit a single paid call. The exact piece that is missing:{" "}
+                Every delegated job reads this setting before it runs. With it off, a job a subscription cannot
+                take is refused and its receipt says nothing was sent and nothing was charged. Turning it on does
+                not on its own make a paid call possible: the provider also has to have a paid path here, a
+                credential configured, and room under its spend ceiling. What this setting does NOT reach:{" "}
                 {view.fallback.missingSeam}
               </p>
               <p className="plain">

@@ -98,6 +98,7 @@ import { INTENT_NOTE_MAX_CHARS } from "@/lib/control-plane/scheduler/research-po
 import { ConsoleNav } from "../console-nav.tsx";
 import { GapNote, LevelLegend, QueueForm, Said, When, agoText } from "../console-ui.tsx";
 import { LiveRefresh } from "../live-refresh.tsx";
+import { RevealTarget } from "../reveal.tsx";
 import { NeedsYouLine } from "../status-ui.tsx";
 import { DeployFleet } from "./deploy-fleet.tsx";
 import { DecisionQueue, type PriorityGroupView, type WaitingCardView } from "./decisions.tsx";
@@ -463,27 +464,43 @@ export default async function AdminPage() {
         noteMaxChars={INTENT_NOTE_MAX_CHARS}
       />
 
-      {/* 4 — WHAT THE SYSTEM OWES, AND WHY SOME OF IT IS HELD UP */}
-      {snapshot && (
-        <ObligationsSection
-          freshnessDebtRows={snapshot.freshnessDebtRows}
-          incidents={snapshot.incidents}
-          obligationsByState={snapshot.obligationsByState}
-          obligationsByProvider={snapshot.obligationsByProvider}
-          candidateNames={candidateNames}
-        />
-      )}
+      {/*
+        4 and 5 — WHAT THE SYSTEM OWES, WHY SOME OF IT IS HELD UP, AND THE
+        DECISIONS WAITING ON HIM. ONE DESTINATION, because the command centre
+        counts them as one thing: "What is blocked?" says `77 decisions and 27
+        stuck sources`, and its Open must land somewhere both are visible
+        (9.6.26 owner feedback, ACLOSE-6). `RevealTarget` is the anchor that
+        card points at; it scrolls here, takes focus, and opens the disclosures
+        inside — the stuck-source groups are closed `<details>` and the decision
+        queue opens collapsed by design (ADM-31), so arriving is not the same as
+        being able to read it.
+      */}
+      {/* `decisions` and `incidents` are the names other surfaces already use
+          for the two halves of this region, so both land here. `receipts` is
+          deliberately NOT one of them: that content is the Decided section
+          below, and an alias that sent it here would be a wrong answer rather
+          than a missing one. */}
+      <RevealTarget id="blocked" also={["decisions", "incidents"]}>
+        {snapshot && (
+          <ObligationsSection
+            freshnessDebtRows={snapshot.freshnessDebtRows}
+            incidents={snapshot.incidents}
+            obligationsByState={snapshot.obligationsByState}
+            obligationsByProvider={snapshot.obligationsByProvider}
+            candidateNames={candidateNames}
+          />
+        )}
 
-      {/* 5 — DECISIONS */}
-      {outcomeNote(decisionsOut) && <p className="note">{outcomeNote(decisionsOut)}</p>}
-      <DecisionQueue
-        groups={priorityGroups}
-        total={waiting.length}
-        summary={waitingSummary(groupWaiting(waiting))}
-        actionRoute={ACTION_ROUTE}
-        returnTo={HERE}
-        stateVersion={revision}
-      />
+        {outcomeNote(decisionsOut) && <p className="note">{outcomeNote(decisionsOut)}</p>}
+        <DecisionQueue
+          groups={priorityGroups}
+          total={waiting.length}
+          summary={waitingSummary(groupWaiting(waiting))}
+          actionRoute={ACTION_ROUTE}
+          returnTo={HERE}
+          stateVersion={revision}
+        />
+      </RevealTarget>
       <DecidedSection decided={decided} />
       <FixQueueSection items={queue.items} counts={queue.counts} lastGo={queue.lastGo} returnTo={HERE} />
 

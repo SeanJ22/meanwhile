@@ -179,7 +179,20 @@ export function commandCentre(input: CommandCentreInput): readonly Answer[] {
     level: blocked === 0 ? "GREEN" : "AMBER",
     needsYou: blocked > 0,
     action: blocked > 0 ? "open the decision list, and the stuck sources under Why some of it is held up" : null,
-    where: "#decisions",
+    /*
+     * `#blocked`, and it is a real element (9.6.26 owner feedback, ACLOSE-6).
+     *
+     * This said `#decisions` and nothing in the whole application carried that
+     * id, so Open and the banner's "Take me there" both did exactly nothing —
+     * the browser has no indicated part to scroll to and stays where it is. A
+     * control that looks actionable and is not is worse than no control.
+     *
+     * The destination is ONE region holding BOTH halves of what this card
+     * counts, because the card counts both: `page.tsx` wraps "Why some of it is
+     * held up" and the decision queue in `<RevealTarget id="blocked">`, which
+     * scrolls to itself, takes focus, and opens what is collapsed inside it.
+     */
+    where: "#blocked",
     exact: null,
   });
 
@@ -211,13 +224,16 @@ export function commandCentre(input: CommandCentreInput): readonly Answer[] {
           level: "GREEN",
           needsYou: false,
           action: null,
-          where: "#receipts",
+          // `#decided` is the section that actually carries the receipts
+          // (`DecidedSection`, id="decided"). `#receipts` was carried here and
+          // in the gap branch below, and no element anywhere had that id.
+          where: "#decided",
           exact: input.latestReceipt.id,
         }
       : NO(
           "What did the system most recently do?",
           input.receiptGap ?? "No console action has been recorded yet, so there is no receipt to show.",
-          "#receipts",
+          "#decided",
         ),
   );
 

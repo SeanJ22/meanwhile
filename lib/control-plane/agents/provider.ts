@@ -221,7 +221,7 @@ export interface LauncherSpec {
   readonly savedSignInFile: string;
 }
 
-export const LAUNCHERS: Readonly<Record<AgentProviderId, LauncherSpec>> = {
+export const LAUNCHERS: Readonly<Record<AgentProviderId, LauncherSpec>> = Object.freeze({
   CODEX_SUBSCRIPTION: Object.freeze({
     launcher: "codex",
     versionArgv: Object.freeze(["codex", "--version"]),
@@ -234,7 +234,7 @@ export const LAUNCHERS: Readonly<Record<AgentProviderId, LauncherSpec>> = {
     homeDirName: ".claude",
     savedSignInFile: ".claude.json",
   }),
-};
+});
 
 /**
  * The host a probe runs against, injected so the whole detection path is
@@ -414,6 +414,17 @@ export function chooseExecutionPath(
 
 /* ------------------------------------------------------- the descriptor */
 
+/**
+ * Would a job on this provider actually fall through to a paid API right now?
+ *
+ * Only when the owner has turned paid spending on. Kept as one named predicate
+ * so the two sentences that depend on it cannot drift apart from each other or
+ * from `chooseExecutionPath`, which is the drift the reviewer caught.
+ */
+function fallbackFallsThrough(input: { readonly fallback: ApiFallbackPolicy }): boolean {
+  return input.fallback.enabled;
+}
+
 /** What the descriptor builder needs beyond the probe itself. */
 export interface DescribeInput {
   readonly probe: ProviderProbe;
@@ -485,12 +496,30 @@ export function describeProvider(input: DescribeInput): AgentProviderDescriptor 
   } else if (!starts) {
     blocker = "EXTERNAL";
     happened = `${words.name} is installed but did not answer when asked what version it is.`;
-    next = "Jobs for this provider are refused until it answers.";
+    /*
+     * WHAT HAPPENS WHEN THE SUBSCRIPTION CANNOT TAKE IT DEPENDS ON THE OWNER'S
+     * SETTING, AND THIS CARD USED TO ANSWER AS IF IT DID NOT.
+     *
+     * Found by the Claude Code reviewer on the ACLOSE-3 job against these
+     * bytes: both of these branches stated flatly that a job is refused and
+     * that "nothing falls through to a paid API", while `fallback` was in scope
+     * and unread. With the owner's durable setting ON, `chooseExecutionPath`
+     * returns PAID_API for exactly this state — so one card told him two
+     * opposite things about whether money can be spent, and the router agreed
+     * with the policy rather than with the sentence.
+     *
+     * A card that is wrong about money is the one thing this surface may not be.
+     */
+    next = fallbackFallsThrough(input)
+      ? `Jobs for this provider fall through to a paid API until it answers, because you have turned paid spending on.`
+      : "Jobs for this provider are refused until it answers, and nothing falls through to a paid API.";
     needsYouAction = `check ${words.name} on the runner machine`;
   } else if (!probe.home.savedSignIn) {
     blocker = "OWNER_GATED";
     happened = `${words.name} starts, but nobody has signed in to it on this machine.`;
-    next = "Jobs are refused until it is signed in; nothing falls through to a paid API.";
+    next = fallbackFallsThrough(input)
+      ? "Jobs fall through to a paid API until it is signed in, because you have turned paid spending on."
+      : "Jobs are refused until it is signed in, and nothing falls through to a paid API.";
     needsYouAction = `sign in to ${words.name} with ${words.paidBy}`;
   } else {
     happened = `${words.name} starts on the runner machine and has a saved sign-in. Whether ${words.paidBy} is still good is only proven when a job runs.`;

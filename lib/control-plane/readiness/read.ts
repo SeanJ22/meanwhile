@@ -39,6 +39,30 @@ export type ReadinessReadOutcome =
    */
   | {
       readonly kind: "REQUIRES_REPUBLISH";
+      /**
+       * THE FACE, in the owner's words (9.6.26 feedback, ACLOSE-6).
+       *
+       * This state used to render `detail` at the top — a sentence naming a
+       * derivation contract by its identifier — over three tiles, one of which
+       * was `readiness/instrument-derived@1`, above a paragraph telling the
+       * owner to run `pnpm readiness:publish`. Every one of those is a machine
+       * fact, and the owner is not a coder: what he needed to know is that the
+       * summary is being rebuilt and that it is not his to fix.
+       *
+       * `detail`, the contract ids, the revision, the publisher and the command
+       * are all still here and all still rendered — one disclosure down, which
+       * is where the brief has always put the machine's own words.
+       */
+      readonly says: string;
+      /** What happens next, and by what. Plain, and true: the runner does this unattended. */
+      readonly next: string;
+      /**
+       * Always false. A republish is the standing runner's job every cycle; the
+       * owner has never been the mechanism, and the page said otherwise only
+       * because it printed the recovery command rather than the fact.
+       */
+      readonly needsYou: false;
+      /** The machine's own sentence. Technical, and kept: it names the exact contract. */
       readonly detail: string;
       readonly source: string;
       readonly snapshotContract: string | null;
@@ -103,6 +127,14 @@ export function readinessRowOutcome(
     const str = (v: unknown): string | null => (typeof v === "string" && v.trim() !== "" ? v : null);
     return {
       kind: "REQUIRES_REPUBLISH",
+      says:
+        `${stateName}'s readiness summary was built using an older set of checks, so its grades are not ` +
+        "shown. Nothing about the state has been lost — this is about how the summary was worked out, " +
+        "not about the data behind it.",
+      next:
+        "The system rebuilds this summary by itself, every cycle, and the new one appears here as soon as " +
+        "it does. Nothing needs you.",
+      needsYou: false,
       snapshotContract: typeof contract === "string" ? contract : null,
       currentContract: READINESS_DERIVATION_CONTRACT,
       detail:

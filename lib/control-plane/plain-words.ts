@@ -202,6 +202,31 @@ export const PLAIN_WORDS: Readonly<Record<string, PlainWord>> = {
   GOVERNED_INTEGRATION: { words: "Ships through the usual gates", means: "Goes through the merge queue, the checks and the deploy proof like every other change." },
   OWNER_DECISION_REQUIRED: { words: "Needs your decision", means: "No machine may make this call." },
   PROHIBITED: { words: "Not allowed", means: "The system refuses this outright." },
+
+  /* --------------------------------- the release manifest's own status words
+   * (9.6.26 owner feedback, ACLOSE-6). These were the HEADLINE of the release
+   * review page — the owner opened it and read STAGING_READY_FOR_OWNER_REVIEW
+   * in the title and STAGING_BOUNDARY_STABLE in the identity block, and said he
+   * did not know what to do with any of it. They are the manifest's own words
+   * and they stay available under Build identity; these are what the page says
+   * instead. */
+  STAGING_READY_FOR_OWNER_REVIEW: {
+    words: "Ready for your review",
+    means: "The test site has finished building and is waiting for you to look at it.",
+  },
+  READY_FOR_REVIEW: { words: "Ready for your review", means: "The test site is built and waiting for you." },
+  STAGING_BOUNDARY_STABLE: {
+    words: "The test site is settled",
+    means: "The test site is not mid-change, so what you review now is what you decide on.",
+  },
+  MANIFEST_UNAVAILABLE: {
+    words: "We could not read the test site",
+    means: "The test site did not answer when we asked what it is running, so nothing on this page is a claim about it.",
+  },
+  OWNER_APPROVED_FOR_PRODUCTION: {
+    words: "You approved it",
+    means: "You recorded that this build is good to ship. Recording it does not ship it.",
+  },
 };
 
 /**
@@ -335,6 +360,33 @@ export function usdOf(value: number, ceiling: number): string {
 /** `2,985` — a count with thousands separators, which is how a person reads it. */
 export function count(value: number): string {
   return Number.isFinite(value) ? value.toLocaleString("en-US") : "—";
+}
+
+/**
+ * `1 document`, `2 documents` — a count with a noun that agrees with it.
+ * (9.6.26 owner feedback, ACLOSE-6.)
+ *
+ * The fleet panel rendered `1 artifacts / 1`, which is the unit union member
+ * printed verbatim beside a number. A plural on a one is the tell that nobody
+ * is reading the sentence, and it appeared on every attempt row.
+ */
+export function plainCount(value: number, one: string, many: string): string {
+  return `${count(value)} ${value === 1 ? one : many}`;
+}
+
+/**
+ * A duration in words: `1552` → `1.6 seconds`, `839` → `0.8 seconds`.
+ *
+ * Milliseconds are the instrument's unit and seconds are the owner's. The exact
+ * millisecond figure stays in the disclosure beside the contract that produced
+ * it, exactly like every other raw number on the console.
+ */
+export function plainDuration(ms: number): string {
+  if (!Number.isFinite(ms) || ms < 0) return "—";
+  if (ms < 1000) return `${(ms / 1000).toFixed(1)} seconds`;
+  if (ms < 60_000) return `${(ms / 1000).toFixed(1)} seconds`;
+  const minutes = ms / 60_000;
+  return minutes < 60 ? `${minutes.toFixed(1)} minutes` : `${(minutes / 60).toFixed(1)} hours`;
 }
 
 /**

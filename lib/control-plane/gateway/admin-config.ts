@@ -145,12 +145,29 @@ export function isAdminConfig(value: unknown): value is AdminConfig {
  * control; this constant exists so the surface and the gateway cannot disagree
  * about which state we are in.
  */
-export const API_FALLBACK_ENFORCEMENT = "READY_FOR_NEXT_PASS";
+export const API_FALLBACK_ENFORCEMENT = "ACTIVE_IN_THE_AGENT_BRIDGE";
 
-/** The exact seam that is missing, named rather than left to be rediscovered. */
+/**
+ * The exact seam that is STILL missing, named rather than left to be rediscovered.
+ *
+ * ACLOSE-2 closed the half this toggle was written for: `liveExecutionChoice`
+ * in `lib/control-plane/agents/execution.ts` reads this policy through
+ * `apiFallbackPolicy`, and every delegated job now takes its path from it —
+ * subscription first, REFUSE when the setting is off, and a paid adapter only
+ * when the setting is on AND that provider has a governed one AND its
+ * credential is present AND its ceiling permits. `runSingleJob` refuses rather
+ * than running a paid path it cannot meter.
+ *
+ * What remains is a DIFFERENT consumer of the same word: the autonomous worker
+ * runtime (`lib/control-plane/workers/runtime.ts`, `research-runtime.ts`) spends
+ * against the credential named by `WORKER_CREDENTIAL_VAR` under its own
+ * `RESEARCH_BOUNDS` ceiling and does not consult this owner setting. That is
+ * governed spending rather than ungoverned spending — but it is not governed by
+ * THIS switch, and saying so is the difference between a scope and a gap.
+ */
 export const API_FALLBACK_MISSING_SEAM =
-  "No executor reads this policy yet. The seam is a check inside the worker runtime's " +
-  "model-call path (lib/control-plane/workers/runtime.ts and research-runtime.ts, where the " +
-  "credential named by WORKER_CREDENTIAL_VAR is used) that reads adminConfig.apiFallback.enabled " +
-  "and refuses a paid call when it is false. Until that check exists, recording this decision " +
-  "records the decision and permits nothing.";
+  "The Agent Bridge enforces this setting: lib/control-plane/agents/execution.ts reads it on every " +
+  "delegated job and refuses rather than billing when it is off. The autonomous worker runtime " +
+  "(lib/control-plane/workers/runtime.ts and research-runtime.ts, where the credential named by " +
+  "WORKER_CREDENTIAL_VAR is used) is a separate spender under its own RESEARCH_BOUNDS ceiling and " +
+  "does not consult this switch; turning this off does not stop that.";

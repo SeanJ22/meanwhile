@@ -29,6 +29,7 @@ import { cookies } from "next/headers";
 
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
 import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
+import { plainCode, plainMeaning } from "@/lib/control-plane/plain-words.ts";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 import { RAISED_STATE_CHOICES, type SoftwareReleaseReviewRecord } from "@/lib/control-plane/software-release-review.ts";
 
@@ -211,6 +212,28 @@ async function ProductionCard() {
   );
 }
 
+/**
+ * What is live right now, as one sentence for the face. (ACLOSE-6.)
+ *
+ * The identity card below carries the SHA, the deploy id, the branch and the
+ * context. This is the owner's third question — *"what is live in production
+ * right now?"* — and its answer is a sentence, not four fields. The short
+ * commit is named because it is the one identifier that is genuinely useful in
+ * a sentence; everything else stays under Build identity.
+ */
+async function ProductionPlainLine() {
+  const production = await readProductionIdentity();
+  if (production === null || production.sha === null) {
+    return <>We could not read what the live site is running, so we are not saying. Nothing here claims otherwise.</>;
+  }
+  return (
+    <>
+      The live site is running build <code>{shortSha(production.sha)}</code>, last checked{" "}
+      <When iso={production.observedAt} />. Reviewing this page changes nothing about it.
+    </>
+  );
+}
+
 /** The same card while the reading is still in flight. Never a blank. */
 function ProductionCardLoading() {
   return (
@@ -277,16 +300,90 @@ export default async function ReleaseReviewPage({ searchParams }: { searchParams
   return (
     <main className="admin console-page">
       {nav}
+      {/*
+        THE FACE ANSWERS THE OWNER'S SEVEN QUESTIONS, IN HIS ORDER.
+        (9.6.26 owner feedback, ACLOSE-6.)
+
+        It used to lead with `STAGING_READY_FOR_OWNER_REVIEW` in the `<h1>`,
+        then a "Build identities" block of two SHAs, two deploy ids, branch and
+        context strings, and a line reading `prompt3Status … · reviewState … ·
+        staging boundary … · milestone …`. The owner's words were that he does
+        not know what to do with any of it. None of it is wrong and none of it
+        is the first thing he needs.
+
+        So: what am I reviewing, is the review site ready, what is live right
+        now, does anything need me, what can I decide, what happens after, and
+        what does NOT happen. Every SHA, deploy id, branch, timestamp and
+        manifest code is still on the page with its Copy control — under Build
+        identity, one disclosure down. A SHA is for auditing, not for reading.
+      */}
       <h1>
         Software release review{" "}
         <span className={`rr-status ${model.status.reviewReady ? "state-green" : reading.kind === "OBSERVED" ? "state-amber" : "state-red"}`}>
-          {reading.kind === "OBSERVED" ? status : "MANIFEST_UNAVAILABLE"}
+          {reading.kind === "OBSERVED" ? plainCode(status) : plainCode("MANIFEST_UNAVAILABLE")}
         </span>
       </h1>
       <p className="plain">
-        One exact staging build, reviewed section by section. Every decision below is keyed to the staging SHA shown at the moment you click; a
-        new SHA starts with no decisions. This page reviews SOFTWARE — it never approves a civic fact, and recording a decision merges,
-        deploys and promotes nothing.
+        You are reviewing one exact build of the software on the test site — not the live site, and not any civic
+        fact. It is reviewed section by section below.
+      </p>
+      <dl className="rr-plain">
+        <dt>Review site</dt>
+        <dd>
+          {reading.kind === "OBSERVED" ? (
+            <>
+              {plainCode(status)}.
+              {/*
+                The meaning is rendered ONLY when the dictionary has one. It used
+                to fall back to a sentence saying the test site had answered,
+                which is a claim manufactured out of a missing translation —
+                exactly the absence-to-assertion shape `absence-defaults` exists
+                to refuse. A status we have no words for gets the status and
+                nothing else.
+              */}
+              {plainMeaning(status) === null ? null : ` ${plainMeaning(status)}`}
+            </>
+          ) : (
+            <>We could not read it. {reading.reason}. Nothing on this page is a claim about the test site until it answers.</>
+          )}
+        </dd>
+        <dt>Live site</dt>
+        <dd>
+          <Suspense fallback={<>Reading what the live site is running…</>}>
+            <ProductionPlainLine />
+          </Suspense>
+        </dd>
+        <dt>Needs you</dt>
+        <dd>
+          {model.writesEnabled ? (
+            `Yes — read the ${model.sections.length} sections below and record what you think of each.`
+          ) : (
+            <>
+              No — nothing can be recorded here right now.{" "}
+              {/*
+                The REASON is rendered only when the model carries one. It used
+                to fall back to "Decision writes are disabled.", which restates
+                the branch as though it were an explanation and tells the owner
+                nothing he did not already read. A missing reason is a named gap.
+              */}
+              {model.writesDisabledBecause === null ? (
+                <span className="gap">why is not recorded on this reading</span>
+              ) : (
+                model.writesDisabledBecause
+              )}
+            </>
+          )}
+        </dd>
+        <dt>What your decision does</dt>
+        <dd>
+          It is written down here, against this exact build, and that is all it does.{" "}
+          <strong>It does not merge code, it does not deploy anything, and it does not publish anything to readers.</strong>{" "}
+          Shipping stays a separate, ordinary step through the usual gates.
+        </dd>
+      </dl>
+      <p className="note">
+        Every decision is keyed to the build shown at the moment you click; a new build starts with no decisions,
+        and a later decision replaces an earlier one without deleting it.
       </p>
       {notice && (
         <p className={`note ${notice === "RECORDED" || notice === "REFRESHED" ? "state-green" : "state-amber"}`} role="status">
@@ -309,7 +406,12 @@ export default async function ReleaseReviewPage({ searchParams }: { searchParams
         </div>
       )}
 
-      <h2>Build identities</h2>
+      <details className="rr-build-identity">
+        <summary>Build identity — the exact SHAs, deploy ids and manifest codes</summary>
+        <p className="note">
+          Everything a person auditing this later needs to pin down exactly which bytes were reviewed. Each
+          identifier has a Copy control beside it.
+        </p>
       <div className="rr-identity">
         <section className="card">
           <h3>Staging (test)</h3>
@@ -340,6 +442,7 @@ export default async function ReleaseReviewPage({ searchParams }: { searchParams
           <ProductionCard />
         </Suspense>
       </div>
+      </details>
       <form method="post" action={WRITE_ROUTE} className="rr-actions">
         <input type="hidden" name="action" value="REFRESH" />
         <button type="submit">Refresh manifest</button>

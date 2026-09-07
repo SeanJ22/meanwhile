@@ -105,7 +105,9 @@ export const ROLE_WORDS: Record<WorkerRole, string> = Object.fromEntries(
 export const ROLE_ONE_LINER: Record<WorkerRole, string> = {
   SCOUT: "Goes looking for the official source, or a promising route to it, when the system does not yet have one.",
   ACQUIRER: "Fetches the public record through a route that is already known, and files the bytes as evidence.",
-  PARSER: "Pulls the structured civic facts out of a document that has already been fetched. It never goes to the internet itself.",
+  // "structured civic facts" was the phrase the owner read and could not use
+  // (9.6.26, ACLOSE-6). The role is unchanged; the sentence is his.
+  PARSER: "Pulls the useful facts out of a document that has already been fetched. It never goes to the internet itself.",
   DETECTIVE:
     "When the obvious route is missing, blocked, ambiguous or incomplete, investigates other legitimate ways to answer the same question — and has to test at least two explanations against real evidence.",
   VALIDATOR: "Checks that the extracted information matches the source and the rules before anything is trusted.",

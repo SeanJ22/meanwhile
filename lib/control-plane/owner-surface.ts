@@ -69,6 +69,7 @@
 import type { CodeIdentity } from "./code-identity.ts";
 import type { CacheCallerHealth, MeteringCounts, MonthlySpendView } from "./cost-panel.ts";
 import type { ScoutCapacity } from "./research-metrics.ts";
+import type { MapTilerUsageSnapshot } from "./maptiler/types.ts";
 
 export interface Measured {
   readonly value: number;
@@ -806,6 +807,28 @@ export interface OwnerSnapshot {
    * attempt count beside it. Absent before the field existed.
    */
   readonly spendByDay?: readonly { readonly day: string; readonly usd: number; readonly attempts: number }[];
+
+  /**
+   * **Panel 8 — the map provider's bill** (MAPQ-5 and MAPQ-6, 2026-09-07).
+   *
+   * The first MapTiler billing period closed at 101,863 requests against a
+   * 100,000-request free allowance while public readership was tiny, and
+   * nothing in this system could say which requests were readers and which were
+   * ours. This is the provider's own analytics, read with a server-side service
+   * credential by `pnpm maptiler:usage`, folded onto the snapshot so the
+   * console shows one instant rather than seven.
+   *
+   * It rides on this snapshot rather than in an aggregate of its own on
+   * purpose: the console already reads exactly one record for exactly this
+   * reason, and a second aggregate would need a DDL change and a
+   * `BOOTSTRAP_VERSION` bump to add a panel that is a projection of a file the
+   * runner already writes.
+   *
+   * **Absent means the publisher never had a reading**, which is a fact about
+   * our configuration. `null` and a `NOT_CONNECTED` record both render as NOT
+   * CONNECTED — never as zero usage, which would read as headroom.
+   */
+  readonly maptiler?: MapTilerUsageSnapshot | null;
 }
 
 /**

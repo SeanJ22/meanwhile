@@ -67,6 +67,10 @@ import {
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import {
+  MAPTILER_USAGE_FORMAT_VERSION,
+  type MapTilerUsageSnapshot,
+} from "../lib/control-plane/maptiler/types.ts";
+import {
   CACHE_OBSERVATION_ID,
   DECISION_LOG_KEY,
   DIGEST_LOG_KEY,
@@ -305,6 +309,59 @@ function candidateNames(): Record<string, string> {
   } catch (error) {
     log(`could not read the candidate cards (${(error as Error).message}) — candidacy keys render by office and slug`);
     return {};
+  }
+}
+
+/**
+ * **THE MAP PROVIDER'S BILL, AS THE CONSOLE WILL SEE IT** (MAPQ-6, 2026-09-07).
+ *
+ * `pnpm maptiler:usage` asks MapTiler's analytics API with a server-side
+ * service credential and writes the reading to `data/ops/maptiler-usage.json`.
+ * This folds it onto the snapshot, exactly as the reader-suite runs and the
+ * intake sweeps are folded on: a deployed Netlify bundle has no working tree,
+ * so anything the console renders has to be published by a machine that does.
+ *
+ * A missing or unreadable file is NOT CONNECTED with the reason named — never
+ * a zero, which on a quota panel would read as headroom.
+ */
+function maptilerUsage(): OwnerSnapshot["maptiler"] {
+  const path = join(ROOT, "data", "ops", "maptiler-usage.json");
+  const notConnected = (says: string): OwnerSnapshot["maptiler"] => ({
+    formatVersion: MAPTILER_USAGE_FORMAT_VERSION,
+    collectedAt: NOW_ISO,
+    publisher: "pnpm owner:publish",
+    connection: "NOT_CONNECTED",
+    detail: says,
+    period: "current_billing_period",
+    since: null,
+    until: null,
+    allowance: null,
+    allowanceIsAssumed: true,
+    days: [],
+    provenance: [],
+    actors: null,
+  });
+
+  if (!existsSync(path)) {
+    return notConnected(
+      "NOT CONNECTED — no MapTiler usage reading has been taken on this machine. Run " +
+        "`pnpm maptiler:usage` with MAPTILER_SERVICE_TOKEN set. This is not a reading of zero.",
+    );
+  }
+  try {
+    const parsed = JSON.parse(readFileSync(path, "utf8")) as MapTilerUsageSnapshot;
+    if (typeof parsed?.connection !== "string" || !Array.isArray(parsed?.days)) {
+      return notConnected(
+        "NOT CONNECTED — data/ops/maptiler-usage.json is not a usage reading. A file we cannot " +
+          "read is a failed read, never an empty one.",
+      );
+    }
+    return parsed;
+  } catch (error) {
+    return notConnected(
+      `NOT CONNECTED — data/ops/maptiler-usage.json could not be read ` +
+        `(${(error as Error)?.name ?? "error"}). This is not a reading of zero.`,
+    );
   }
 }
 
@@ -675,6 +732,7 @@ function buildSnapshot(reads: ControlPlaneReads | null): OwnerSnapshot {
     decisionCards: cards,
     candidateNames: candidateNames(),
     spendByDay: spendByDay(reads),
+    maptiler: maptilerUsage(),
 
     obligationsByState: obligationsByState(reads),
 

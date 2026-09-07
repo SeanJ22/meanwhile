@@ -1,0 +1,33 @@
+{
+  "_fixture_note": "SHAPED, NOT RECORDED. Same provenance as maptiler-timeline-api-keys.json. It exists so Tiles and Rendered maps cannot silently collapse into one unexplained bucket: the two are billed differently and the classifier=services view is the only place the split is visible.",
+  "since": "2026-09-01",
+  "until": "2026-09-30",
+  "datasets": [
+    {
+      "group_id": "request",
+      "item_id": "tiles",
+      "data": [
+        { "date": "2026-09-01", "value": 1100 },
+        { "date": "2026-09-02", "value": 1400 },
+        { "date": "2026-09-03", "value": 1280 },
+        { "date": "2026-09-04", "value": 940 },
+        { "date": "2026-09-05", "value": 1540 },
+        { "date": "2026-09-06", "value": 1450 },
+        { "date": "2026-09-07", "value": 1320 }
+      ]
+    },
+    {
+      "group_id": "request",
+      "item_id": "static-maps",
+      "data": [
+        { "date": "2026-09-02", "value": 145 },
+        { "date": "2026-09-04", "value": 46 },
+        { "date": "2026-09-06", "value": 68 }
+      ]
+    }
+  ],
+  "legend": [
+    { "item_id": "tiles", "label": "Tiles", "description": null },
+    { "item_id": "static-maps", "label": "Rendered maps", "description": null }
+  ]
+}

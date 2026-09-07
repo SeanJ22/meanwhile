@@ -59,7 +59,7 @@ import type { LegistarEvent } from "../../sources/legistar/types.ts";
 import type { Meeting, NormalizeDropCounts } from "../../sources/types.ts";
 import { contentHash } from "../ids.ts";
 import type { ArtifactRecord } from "../repository/types.ts";
-import type { FieldValue, LegacyCivicExtractionContract, WorkerResultRecord } from "../workers/types.ts";
+import { isFieldValue, type LegacyCivicExtractionContract, type WorkerResultRecord } from "../workers/types.ts";
 
 export const MEETING_FACT_BRIDGE_VERSION = "meeting-facts/1";
 
@@ -199,10 +199,6 @@ function sourceIdFor(recordClass: MeetingFactSourceClass): "legistar" | "civiccl
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
-}
-
-function isScalar(value: unknown): value is FieldValue {
-  return value === null || typeof value === "string" || typeof value === "boolean" || (typeof value === "number" && Number.isFinite(value));
 }
 
 /** Rows as the artifact publishes them: a bare array or an OData `value` array. */
@@ -400,7 +396,7 @@ export function bridgeMeetingFacts(input: FactBridgeInput): FactBridge {
     }
     const mismatched: string[] = [];
     for (const [field, value] of Object.entries(row)) {
-      if (!isScalar(value)) continue;
+      if (!isFieldValue(value)) continue;
       if (!Object.hasOwn(record.fields, field)) { mismatched.push(`${field} (not extracted)`); continue; }
       if (record.fields[field] !== value) mismatched.push(field);
     }

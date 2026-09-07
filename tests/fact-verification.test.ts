@@ -1,11 +1,10 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
+
+import { PIMA_EVENTS_TEXT, pimaArtifact } from "./pima-fact-fixtures.ts";
 
 import { parseLegistarEvents, PARSER_VERSION } from "../lib/control-plane/workers/parser.ts";
 import type { LegacyCivicExtractionContract, ParserResult, ParserWorkerInput } from "../lib/control-plane/workers/types.ts";
-import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
-import { contentHash } from "../lib/control-plane/ids.ts";
 import { bridgeMeetingFacts, normalizeFactsFromBytes, type MeetingFact } from "../lib/control-plane/promotion/meeting-facts.ts";
 import {
   controlsClean,
@@ -26,7 +25,8 @@ import { validateSnapshot } from "../lib/meetings/snapshot.ts";
  * NOT_IMPLEMENTED.
  */
 
-const TEXT = readFileSync(new URL("./fixtures/legistar-pima-events.json", import.meta.url), "utf8");
+const TEXT = PIMA_EVENTS_TEXT;
+const artifact = pimaArtifact;
 const NOW = "2026-09-06T12:00:00.000Z";
 const CONTRACT: LegacyCivicExtractionContract = {
   recordClass: "LEGISTAR_EVENTS", schemaVersion: 1,
@@ -37,15 +37,6 @@ const CONTRACT: LegacyCivicExtractionContract = {
   expectedSourceDate: null,
 };
 const REGISTRY_BODIES = new Set(["ocd-division/country:us/state:az/county:pima#governing"]);
-
-function artifact(text = TEXT, overrides: Partial<ArtifactRecord> = {}): ArtifactRecord {
-  return {
-    artifactId: "ar-pima-events", workItemId: "wi-pima", routeTaskId: "rt-pima", attemptId: "at-acquire-1",
-    tier: "A1" as never, contentHash: contentHash(text), byteLength: Buffer.byteLength(text), contentType: "application/json",
-    canonicalUrl: "https://webapi.legistar.com/v1/pima/events", partial: false, recordedAt: "2026-09-05T18:00:00.000Z",
-    ...overrides,
-  };
-}
 
 function parse(text = TEXT, art = artifact(text)): ParserResult {
   const input: ParserWorkerInput = {

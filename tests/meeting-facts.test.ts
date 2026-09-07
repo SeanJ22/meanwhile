@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
+
+import { PIMA_EVENTS_TEXT, pimaArtifact } from "./pima-fact-fixtures.ts";
 
 import { parseLegistarEvents, PARSER_VERSION } from "../lib/control-plane/workers/parser.ts";
 import type { LegacyCivicExtractionContract, ParserWorkerInput, WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
-import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import { contentHash } from "../lib/control-plane/ids.ts";
 import {
   agendaFactKey,
@@ -26,7 +26,8 @@ import type { BodySourceWiring } from "../lib/registry/source-wiring.ts";
  * shape — yields no fact and a named refusal.
  */
 
-const TEXT = readFileSync(new URL("./fixtures/legistar-pima-events.json", import.meta.url), "utf8");
+const TEXT = PIMA_EVENTS_TEXT;
+const artifact = pimaArtifact;
 const HASH = contentHash(TEXT);
 const NOW = "2026-09-06T12:00:00.000Z";
 const CONTRACT: LegacyCivicExtractionContract = {
@@ -37,15 +38,6 @@ const CONTRACT: LegacyCivicExtractionContract = {
   completenessScope: "The 18 Event rows in the already-held capture; no claim about all future meetings.",
   expectedSourceDate: null,
 };
-
-function artifact(text = TEXT, overrides: Partial<ArtifactRecord> = {}): ArtifactRecord {
-  return {
-    artifactId: "ar-pima-events", workItemId: "wi-pima", routeTaskId: "rt-pima", attemptId: "at-acquire-1",
-    tier: "A1" as never, contentHash: contentHash(text), byteLength: Buffer.byteLength(text), contentType: "application/json",
-    canonicalUrl: "https://webapi.legistar.com/v1/pima/events", partial: false, recordedAt: "2026-09-05T18:00:00.000Z",
-    ...overrides,
-  };
-}
 
 function parserRecord(text = TEXT, contract: LegacyCivicExtractionContract = CONTRACT, art = artifact(text)): WorkerResultRecord {
   const input: ParserWorkerInput = {

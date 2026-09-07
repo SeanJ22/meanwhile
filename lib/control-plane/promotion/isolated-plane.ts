@@ -133,11 +133,13 @@ export async function isolatedFactPlane(options: IsolatedPlaneOptions = {}): Pro
     return record;
   };
 
-  const readEvidence: FleetRuntime["readEvidence"] = async (artifactId) => {
+  /* One lookup for both readers: the fleet runtime refuses an unknown id, the text reader answers null. */
+  const heldArtifact = (artifactId: string): Artifact => {
     const artifact = artifacts.get(artifactId);
     if (!artifact) throw new Error("ISOLATED_PLANE_ARTIFACT_MISSING");
-    return (await readForParser(store, ISOLATED_PLANE_PROJECT, artifact)).input;
+    return artifact;
   };
+  const readEvidence: FleetRuntime["readEvidence"] = async (artifactId) => (await readForParser(store, ISOLATED_PLANE_PROJECT, heldArtifact(artifactId))).input;
   const independentContext: FleetRuntime["independentContext"] = async (scope) => {
     const held = [...artifacts.values()];
     const routes: OfficialRouteExpectation[] = held.map((artifact) => ({ routeId: artifact.methodRouteId, canonicalUrl: artifact.canonicalUrl, applicable: true,
@@ -186,11 +188,8 @@ export async function isolatedFactPlane(options: IsolatedPlaneOptions = {}): Pro
     return { parser, validator, auditor };
   };
 
-  const readArtifactText = async (artifactId: string): Promise<string | null> => {
-    const artifact = artifacts.get(artifactId);
-    if (!artifact) return null;
-    return (await readForParser(store, ISOLATED_PLANE_PROJECT, artifact)).input.text;
-  };
+  const readArtifactText = async (artifactId: string): Promise<string | null> =>
+    artifacts.has(artifactId) ? (await readForParser(store, ISOLATED_PLANE_PROJECT, heldArtifact(artifactId))).input.text : null;
 
   return { repos, vaultRoot, itemId: item.id, contract, feedUrl, methodVersion, runtime, now, hold, run, chain, readArtifactText, heldArtifacts: () => [...artifacts.values()] };
 }

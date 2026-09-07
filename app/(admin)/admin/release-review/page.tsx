@@ -29,6 +29,7 @@ import { cookies } from "next/headers";
 
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
 import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
+import { plainCode, plainMeaning } from "@/lib/control-plane/plain-words.ts";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 import { RAISED_STATE_CHOICES, type SoftwareReleaseReviewRecord } from "@/lib/control-plane/software-release-review.ts";
 
@@ -60,12 +61,12 @@ export const revalidate = 0;
 const NOTICE: Record<string, string> = {
   RECORDED: "Recorded.",
   REFRESHED: "The manifest was fetched again.",
-  STALE_SHA: "STALE_SHA — staging moved while you were reviewing; your decision was not recorded.",
-  MANIFEST_UNAVAILABLE: "MANIFEST_UNAVAILABLE — a decision cannot be recorded against a SHA the Admin cannot currently see.",
+  STALE_SHA: "The test site moved while you were reviewing, so your decision was not recorded against it.",
+  MANIFEST_UNAVAILABLE: "A decision cannot be recorded against a build the console cannot currently see.",
   NOT_REVIEWABLE: "That section is not reviewable on this SHA; nothing was recorded.",
-  RAISED_STATE_CHOICE_REQUIRED: "APPROVE on Raised State needs a variant chosen on this SHA first; nothing was recorded.",
-  NOT_RECORDABLE: "OWNER_APPROVED_FOR_PRODUCTION is not recordable yet; the failing conditions are listed below.",
-  ALREADY_RECORDED: "OWNER_APPROVED_FOR_PRODUCTION is already recorded for this SHA.",
+  RAISED_STATE_CHOICE_REQUIRED: "Approving Raised State needs a variant chosen on this build first, so nothing was recorded.",
+  NOT_RECORDABLE: "Approving the whole build is not possible yet; what is missing is listed below.",
+  ALREADY_RECORDED: "You have already approved this build.",
   STORE_UNAVAILABLE: "The review store could not be written; nothing was recorded.",
   BAD_REQUEST: "The request was not understood; nothing was recorded.",
 };
@@ -110,9 +111,9 @@ function SectionCard({ section, model }: { readonly section: SectionView; readon
     !model.writesEnabled
       ? model.writesDisabledBecause
       : section.availability === "NOT_YET_REVIEWABLE"
-        ? "NOT_YET_REVIEWABLE — the manifest has not exposed this section yet; its controls wait for staging"
+        ? "The test site has not shown us this section yet, so its controls wait for it"
         : section.availability === "MANIFEST_UNAVAILABLE"
-          ? "MANIFEST_UNAVAILABLE"
+          ? "The console cannot currently see the test build"
           : null;
   const current = section.current;
   const sha = model.liveSha ?? "";
@@ -120,7 +121,7 @@ function SectionCard({ section, model }: { readonly section: SectionView; readon
     <section className="card rr-section" aria-labelledby={`rr-${section.id}`}>
       <div className="rr-head">
         <h3 id={`rr-${section.id}`}>{section.name}</h3>
-        <span className={`chip ${section.availability === "REVIEWABLE" ? "receipt-done" : "receipt-waiting"}`}>{section.availability}</span>
+        <span className={`chip ${section.availability === "REVIEWABLE" ? "receipt-done" : "receipt-waiting"}`} title={section.availability}>{plainCode(section.availability)}</span>
         <span className={`chip ${current.decision ? DECISION_CHIP[current.decision] : ""}`}>
           {current.decision ? DECISION_WORDS[current.decision] : "no decision on this SHA"}
         </span>
@@ -211,6 +212,28 @@ async function ProductionCard() {
   );
 }
 
+/**
+ * What is live right now, as one sentence for the face. (ACLOSE-6.)
+ *
+ * The identity card below carries the SHA, the deploy id, the branch and the
+ * context. This is the owner's third question — *"what is live in production
+ * right now?"* — and its answer is a sentence, not four fields. The short
+ * commit is named because it is the one identifier that is genuinely useful in
+ * a sentence; everything else stays under Build identity.
+ */
+async function ProductionPlainLine() {
+  const production = await readProductionIdentity();
+  if (production === null || production.sha === null) {
+    return <>We could not read what the live site is running, so we are not saying. Nothing here claims otherwise.</>;
+  }
+  return (
+    <>
+      The live site is running build <code>{shortSha(production.sha)}</code>, last checked{" "}
+      <When iso={production.observedAt} />. Reviewing this page changes nothing about it.
+    </>
+  );
+}
+
 /** The same card while the reading is still in flight. Never a blank. */
 function ProductionCardLoading() {
   return (
@@ -277,16 +300,90 @@ export default async function ReleaseReviewPage({ searchParams }: { searchParams
   return (
     <main className="admin console-page">
       {nav}
+      {/*
+        THE FACE ANSWERS THE OWNER'S SEVEN QUESTIONS, IN HIS ORDER.
+        (9.6.26 owner feedback, ACLOSE-6.)
+
+        It used to lead with `STAGING_READY_FOR_OWNER_REVIEW` in the `<h1>`,
+        then a "Build identities" block of two SHAs, two deploy ids, branch and
+        context strings, and a line reading `prompt3Status … · reviewState … ·
+        staging boundary … · milestone …`. The owner's words were that he does
+        not know what to do with any of it. None of it is wrong and none of it
+        is the first thing he needs.
+
+        So: what am I reviewing, is the review site ready, what is live right
+        now, does anything need me, what can I decide, what happens after, and
+        what does NOT happen. Every SHA, deploy id, branch, timestamp and
+        manifest code is still on the page with its Copy control — under Build
+        identity, one disclosure down. A SHA is for auditing, not for reading.
+      */}
       <h1>
         Software release review{" "}
         <span className={`rr-status ${model.status.reviewReady ? "state-green" : reading.kind === "OBSERVED" ? "state-amber" : "state-red"}`}>
-          {reading.kind === "OBSERVED" ? status : "MANIFEST_UNAVAILABLE"}
+          {reading.kind === "OBSERVED" ? plainCode(status) : plainCode("MANIFEST_UNAVAILABLE")}
         </span>
       </h1>
       <p className="plain">
-        One exact staging build, reviewed section by section. Every decision below is keyed to the staging SHA shown at the moment you click; a
-        new SHA starts with no decisions. This page reviews SOFTWARE — it never approves a civic fact, and recording a decision merges,
-        deploys and promotes nothing.
+        You are reviewing one exact build of the software on the test site — not the live site, and not any civic
+        fact. It is reviewed section by section below.
+      </p>
+      <dl className="rr-plain">
+        <dt>Review site</dt>
+        <dd>
+          {reading.kind === "OBSERVED" ? (
+            <>
+              {plainCode(status)}.
+              {/*
+                The meaning is rendered ONLY when the dictionary has one. It used
+                to fall back to a sentence saying the test site had answered,
+                which is a claim manufactured out of a missing translation —
+                exactly the absence-to-assertion shape `absence-defaults` exists
+                to refuse. A status we have no words for gets the status and
+                nothing else.
+              */}
+              {plainMeaning(status) === null ? null : ` ${plainMeaning(status)}`}
+            </>
+          ) : (
+            <>We could not read it. {reading.reason}. Nothing on this page is a claim about the test site until it answers.</>
+          )}
+        </dd>
+        <dt>Live site</dt>
+        <dd>
+          <Suspense fallback={<>Reading what the live site is running…</>}>
+            <ProductionPlainLine />
+          </Suspense>
+        </dd>
+        <dt>Needs you</dt>
+        <dd>
+          {model.writesEnabled ? (
+            `Yes — read the ${model.sections.length} sections below and record what you think of each.`
+          ) : (
+            <>
+              No — nothing can be recorded here right now.{" "}
+              {/*
+                The REASON is rendered only when the model carries one. It used
+                to fall back to "Decision writes are disabled.", which restates
+                the branch as though it were an explanation and tells the owner
+                nothing he did not already read. A missing reason is a named gap.
+              */}
+              {model.writesDisabledBecause === null ? (
+                <span className="gap">why is not recorded on this reading</span>
+              ) : (
+                model.writesDisabledBecause
+              )}
+            </>
+          )}
+        </dd>
+        <dt>What your decision does</dt>
+        <dd>
+          It is written down here, against this exact build, and that is all it does.{" "}
+          <strong>It does not merge code, it does not deploy anything, and it does not publish anything to readers.</strong>{" "}
+          Shipping stays a separate, ordinary step through the usual gates.
+        </dd>
+      </dl>
+      <p className="note">
+        Every decision is keyed to the build shown at the moment you click; a new build starts with no decisions,
+        and a later decision replaces an earlier one without deleting it.
       </p>
       {notice && (
         <p className={`note ${notice === "RECORDED" || notice === "REFRESHED" ? "state-green" : "state-amber"}`} role="status">
@@ -298,18 +395,23 @@ export default async function ReleaseReviewPage({ searchParams }: { searchParams
       {reading.kind === "UNAVAILABLE" && (
         <div className="refusal">
           <p>
-            <strong>MANIFEST_UNAVAILABLE.</strong> {reading.reason}. Observed <When iso={reading.observedAt} />.
+            <strong>{plainCode("MANIFEST_UNAVAILABLE")}.</strong> {reading.reason}. Observed <When iso={reading.observedAt} />.
           </p>
           <p className="note">
             {model.lastObserved
-              ? <>Last successfully observed staging SHA <code>{model.lastObserved.sha}</code> ({shortSha(model.lastObserved.sha)}) with status {model.lastObserved.prompt3Status ?? "unrecorded"}, <When iso={model.lastObserved.at} year />.</>
+              ? <>Last build we could read: <code title={model.lastObserved.sha}>{shortSha(model.lastObserved.sha)}</code>, {model.lastObserved.prompt3Status === null ? "status unrecorded" : plainCode(model.lastObserved.prompt3Status)}, <When iso={model.lastObserved.at} year />.</>
               : "No manifest has ever been observed by this Admin; there is no last-observed SHA."}{" "}
             Decision writes are disabled while the manifest cannot be read.
           </p>
         </div>
       )}
 
-      <h2>Build identities</h2>
+      <details className="rr-build-identity">
+        <summary>Build identity — the exact SHAs, deploy ids and manifest codes</summary>
+        <p className="note">
+          Everything a person auditing this later needs to pin down exactly which bytes were reviewed. Each
+          identifier has a Copy control beside it.
+        </p>
       <div className="rr-identity">
         <section className="card">
           <h3>Staging (test)</h3>
@@ -340,6 +442,7 @@ export default async function ReleaseReviewPage({ searchParams }: { searchParams
           <ProductionCard />
         </Suspense>
       </div>
+      </details>
       <form method="post" action={WRITE_ROUTE} className="rr-actions">
         <input type="hidden" name="action" value="REFRESH" />
         <button type="submit">Refresh manifest</button>
@@ -348,7 +451,7 @@ export default async function ReleaseReviewPage({ searchParams }: { searchParams
 
       <h2>Review sections on {model.liveSha ? shortSha(model.liveSha) : "no SHA"}</h2>
       <p className="note">
-        Five sections are required regardless of what the manifest enumerates; a section the manifest has not exposed is NOT_YET_REVIEWABLE. A
+        Five sections are required regardless of what the manifest enumerates; a section the test site has not shown us is not reviewable yet. A
         later decision supersedes an earlier one for gating and never deletes it. Prior SHAs are under History.
       </p>
       <div className="rr-sections">
@@ -360,7 +463,7 @@ export default async function ReleaseReviewPage({ searchParams }: { searchParams
       <h3>Raised State variant</h3>
       <section className="card">
         <p>
-          Status: <strong>{model.raisedState.status}</strong>
+          Status: <strong title={model.raisedState.status}>{plainCode(model.raisedState.status)}</strong>
           {model.raisedState.choice ? (
             <>
               {" "}
@@ -411,11 +514,11 @@ export default async function ReleaseReviewPage({ searchParams }: { searchParams
         </>
       )}
 
-      <h2>OWNER_APPROVED_FOR_PRODUCTION</h2>
+      <h2>Approving the whole build</h2>
       <section className="card">
         <p className="note">
           Recordable when, and only when, all five required sections carry a current APPROVE on one exact staging SHA, Raised State has a chosen variant
-          on that SHA, and the manifest status for that SHA is {REVIEW_READY_STATUS} (keyed on {model.status.keyedOn ?? "prompt3Status"}). It is
+          on that SHA, and the test site reports itself {plainCode(REVIEW_READY_STATUS).toLowerCase()} (keyed on {model.status.keyedOn ?? "prompt3Status"}). It is
           recorded only by the button below, never on the last approval. The record is the end of the line: it does not merge, push, call GitHub or
           Netlify, run git, promote, or notify.
         </p>
@@ -436,7 +539,7 @@ export default async function ReleaseReviewPage({ searchParams }: { searchParams
             <input type="hidden" name="action" value="RECORD_OWNER_APPROVAL" />
             <input type="hidden" name="stagingSha" value={model.liveSha ?? ""} />
             <button type="submit" className="primary" disabled={!composite.recordable} title={composite.recordable ? undefined : "not recordable until every condition above holds"}>
-              Record OWNER_APPROVED_FOR_PRODUCTION for {model.liveSha ? shortSha(model.liveSha) : "this SHA"}
+              Approve this whole build ({model.liveSha ? shortSha(model.liveSha) : "this SHA"})
             </button>
             {!composite.recordable && <span className="note">Not recordable: {composite.conditions.filter((c) => !c.ok).length} condition(s) fail.</span>}
           </form>

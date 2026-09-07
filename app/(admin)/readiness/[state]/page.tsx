@@ -106,47 +106,62 @@ export default async function ReadinessStatePage({
         <style dangerouslySetInnerHTML={{ __html: READINESS_STYLES }} />
         {nav}
         <h1>State readiness — {stateName}</h1>
+        {/*
+          THE FACE IS FOUR SENTENCES AND NO MACHINE WORDS (9.6.26 feedback,
+          ACLOSE-6). It used to lead with the contract identifier, put
+          `readiness/instrument-derived@1` in a tile, and end by telling the
+          owner to run a shell command. He is not a coder and this is not his
+          repair: the standing runner republishes the console every cycle. Every
+          machine fact that was on the face is still on the page, under
+          Technical details — demoted, never deleted.
+        */}
         <p className="refusal">
-          <strong>This snapshot is older than the way we now derive readiness, so its cells are not shown.</strong>{" "}
-          {outcome.detail}
+          <strong>{outcome.says}</strong>
         </p>
-        <div className="rq-summary">
-          <div className="rq-tile">
-            <div className="rq-figure">{legacy.publishedAt ? <When iso={legacy.publishedAt} year /> : "unknown"}</div>
-            <div className="rq-caption">
-              when the record on file was published
-              {legacy.publisher ? `, by ${legacy.publisher}` : ""}
-              {legacy.publishedFromSha ? ` at commit ${legacy.publishedFromSha.slice(0, 8)}` : ""}
-            </div>
-          </div>
-          <div className="rq-tile">
-            <div className="rq-figure">{legacy.revision === null ? "—" : `revision ${legacy.revision}`}</div>
-            <div className="rq-caption">
-              store revision
-              {legacy.updatedAt ? (
-                <>
-                  , last written <When iso={legacy.updatedAt} year />
-                </>
-              ) : (
-                ""
-              )}
-            </div>
-          </div>
-          <div className="rq-tile">
-            <div className="rq-figure">{outcome.snapshotContract ?? "none"}</div>
-            <div className="rq-caption">contract the record carries; the current one is {outcome.currentContract}</div>
-          </div>
-        </div>
-        <p>
-          <strong>What clears it:</strong> a publish under the current contract. On the runner machine, run{" "}
-          <code>{outcome.clearedBy.command}</code>; {outcome.clearedBy.unattended}. If this state is still shown
-          after a cycle, the runner is not running — check the Runner line on Pilot health.
-        </p>
+        <p>{outcome.next}</p>
         <p className="note">
-          This is not &ldquo;not walked&rdquo; and not &ldquo;no snapshot&rdquo;: a record exists, and what
-          is retired is the derivation behind that record, not the data for the state. Source:{" "}
-          {outcome.source}.
+          This is not &ldquo;we have not looked at {stateName}&rdquo; and not &ldquo;we have nothing for{" "}
+          {stateName}&rdquo;. We have a summary; it was worked out an older way, so we are not showing you
+          grades we would not stand behind.
         </p>
+        <details className="rq-technical">
+          <summary>Technical details</summary>
+          <div className="rq-summary">
+            <div className="rq-tile">
+              <div className="rq-figure">{legacy.publishedAt ? <When iso={legacy.publishedAt} year /> : "unknown"}</div>
+              <div className="rq-caption">
+                when the record on file was published
+                {legacy.publisher ? `, by ${legacy.publisher}` : ""}
+                {legacy.publishedFromSha ? ` at commit ${legacy.publishedFromSha.slice(0, 8)}` : ""}
+              </div>
+            </div>
+            <div className="rq-tile">
+              <div className="rq-figure">{legacy.revision === null ? "—" : `revision ${legacy.revision}`}</div>
+              <div className="rq-caption">
+                store revision
+                {legacy.updatedAt ? (
+                  <>
+                    , last written <When iso={legacy.updatedAt} year />
+                  </>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+            <div className="rq-tile">
+              <div className="rq-figure">{outcome.snapshotContract ?? "none"}</div>
+              <div className="rq-caption">contract the record carries; the current one is {outcome.currentContract}</div>
+            </div>
+          </div>
+          <p>{outcome.detail}</p>
+          <p>
+            <strong>What clears it:</strong> a publish under the current contract.{" "}
+            {outcome.clearedBy.unattended}, so this clears itself. To force it on the runner machine, run{" "}
+            <code>{outcome.clearedBy.command}</code>. If this state is still shown after a cycle, the runner is
+            not running — check the Runner line on Pilot health.
+          </p>
+          <p className="note">Source: {outcome.source}.</p>
+        </details>
       </main>
     );
   }

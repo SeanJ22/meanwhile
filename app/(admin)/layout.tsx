@@ -485,6 +485,16 @@ body:has(main.admin) { background: #1b1c22; }
 /* A status word is one unbreakable token (VISUAL_WORK_IN_PROGRESS measured 386px at a 390px viewport); it may break anywhere rather than push the page sideways. */
 .admin .rr-status { overflow-wrap: anywhere; display: inline; }
 .admin .rr-identity { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr)); gap: .8rem; margin: .5rem 0 .75rem; }
+/*
+ * THE FOUR PLAIN ANSWERS AT THE TOP OF THE RELEASE REVIEW (ACLOSE-6).
+ * A definition list, because that is what it is: a question and its answer.
+ */
+.admin .rr-plain { display: grid; grid-template-columns: minmax(9rem, max-content) 1fr; gap: .35rem 1rem; margin: .75rem 0; }
+.admin .rr-plain dt { font-size: .78rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ce-muted); }
+.admin .rr-plain dd { margin: 0; }
+@media (max-width: 34rem) { .admin .rr-plain { grid-template-columns: 1fr; } .admin .rr-plain dd { margin-bottom: .4rem; } }
+.admin details.rr-build-identity { margin: .75rem 0; }
+.admin details.rr-build-identity > summary { cursor: pointer; font-size: .78rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ce-muted); }
 .admin .rr-sha { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: .3rem; }
 .admin .rr-sha code { overflow-wrap: anywhere; }
 .admin .rr-sections { display: grid; gap: .8rem; margin: .5rem 0 1rem; }
@@ -507,6 +517,23 @@ body:has(main.admin) { background: #1b1c22; }
   margin: 0 auto 1.25rem; max-width: 72rem; padding: .75rem 1.25rem; background: var(--ce-void); color: var(--ce-fg);
   box-shadow: 0 1px 0 var(--ce-hairline);
 }
+/*
+ * ANYTHING A FRAGMENT LINK LANDS ON CLEARS THE STICKY HEADER.
+ * (9.6.26 owner feedback, ACLOSE-6.)
+ *
+ * .console-nav above is position:sticky top:0, and this repository had no
+ * scroll-margin-top anywhere — so every in-page anchor scrolled its target to
+ * y=0 and the header then sat on top of it. The one live fragment on the
+ * console (#runner) landed underneath the navigation for exactly this reason,
+ * and the two dead ones would have done the same once they existed.
+ *
+ * The value is the header's own height: .75rem padding, top and bottom, around
+ * a control row, plus the gap the heading needs to read as a heading.
+ */
+.admin .reveal-target, .admin [id]:target { scroll-margin-top: 5.5rem; }
+.admin .reveal-target { outline: none; }
+/* The keyboard user is told where they landed; the mouse user is not shouted at. */
+.admin .reveal-target:focus-visible { outline: 2px solid var(--ce-lumen); outline-offset: .5rem; border-radius: .25rem; }
 /* .console-nav label and select are in the recipe layer with the other controls. */
 .console-nav-brand { margin-left: auto; align-self: center; font-size: .75rem; color: var(--ce-muted); }
 .console-nav .icon-btn { align-self: center; }

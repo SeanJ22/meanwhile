@@ -30,10 +30,10 @@
  * store.
  */
 import { auditWorkerFleetView, type WorkerFleetMetric, type WorkerFleetReadback } from "@/lib/control-plane/workers/readback.ts";
-import { findingPlain, roleLead, verdictPlain, workItemStatePlain } from "@/lib/control-plane/workers/plain-roles.ts";
+import { findingMeaning, findingPlain, roleLead, verdictPlain, workItemStatePlain } from "@/lib/control-plane/workers/plain-roles.ts";
 import { workerAttemptStory } from "@/lib/control-plane/plain-work.ts";
 import { displayNameOf } from "@/lib/control-plane/display-name.ts";
-import { modelName, plainCode, usdCents } from "@/lib/control-plane/plain-words.ts";
+import { modelName, plainCode, plainCount, plainDuration, usdCents } from "@/lib/control-plane/plain-words.ts";
 
 import { CopyButton } from "../release-review/copy-button";
 import { Identity } from "./identity";
@@ -41,13 +41,31 @@ import { NeedsYouLine } from "../../status-ui.tsx";
 import { Name, When } from "../../console-ui.tsx";
 import { roleGroupNote, roleOneLiner, roleTitle } from "../../fleet-wording.ts";
 
+/**
+ * The unit as the owner says it. (9.6.26 owner feedback, ACLOSE-6.)
+ *
+ * `unit` is a union member off the readback and it was printed verbatim, so
+ * every attempt row read `1 artifacts / 1` and `1552 ms / 1`. The exact
+ * millisecond figure and the raw unit are still one disclosure down, with the
+ * contract that produced them.
+ */
+function metricFace(value: WorkerFleetMetric): string {
+  if (value.unit === "USD") return usdCents(value.value);
+  if (value.unit === "ms") return plainDuration(value.value);
+  if (value.unit === "artifacts") return plainCount(value.value, "document kept", "documents kept");
+  if (value.unit === "attempts") return plainCount(value.value, "attempt", "attempts");
+  if (value.unit === "tasks") return plainCount(value.value, "task", "tasks");
+  return `${value.value} ${value.unit}`;
+}
+
 function Metric({ value }: { value: WorkerFleetMetric }) {
   // Dollars to the cent on the face (ADM-26); the stored float and its contract stay in the disclosure.
   return (
     <details className="worker-fleet-metric">
-      <summary>{value.unit === "USD" ? usdCents(value.value) : `${value.value} ${value.unit}`} / {value.denominator}</summary>
+      <summary>{metricFace(value)} of {value.denominator}</summary>
       <small className="note">
         {value.contract}<br />
+        {value.unit === "ms" ? <>Exactly {value.value} ms.<br /></> : null}
         Source: {value.source}<br />
         Observed: <When iso={value.observedAt} />
       </small>
@@ -166,7 +184,40 @@ export function WorkerFleetPanel({ view, candidateNames }: { readonly view: Work
                         sentence, and the raw state stays in the technical disclosure beside it.
                       */}
                       <div className="note">On <Name raw={attempt.workItemId} candidateNames={candidateNames} />{attempt.reopenedByResult ? ", which this result reopened" : ""}.</div>
-                      {attempt.findings.length > 0 && <ul className="findings">{attempt.findings.map((finding, index) => <li key={`${finding.code}:${index}`}><strong>{findingPlain(finding.code)}</strong><small className="note"> — {finding.detail}</small></li>)}</ul>}
+                      {/*
+                        THE FINDINGS WERE THE ONE THING ON THIS ROW THAT WAS
+                        NEITHER TRANSLATED NOR BEHIND A DISCLOSURE. (9.6.26
+                        owner feedback, ACLOSE-6.)
+
+                        It rendered `findingPlain(code)` — a de-underscored noun
+                        phrase — followed by the instrument's raw engineering
+                        sentence, on the face: "source scope mismatch — The held
+                        artifact must bind to the exact observed publisher,
+                        source, route, and URL scope." Both halves are correct
+                        and neither tells the owner what happened.
+
+                        Now the face carries the whole sentence from
+                        `findingMeaning`, and `finding.detail` — the instrument's
+                        own words, unchanged — moved into the disclosure beside
+                        the code. A code with no owner sentence written for it
+                        yet keeps the noun phrase rather than getting a made-up
+                        explanation.
+                      */}
+                      {attempt.findings.length > 0 && <ul className="findings">{attempt.findings.map((finding, index) => {
+                        const meaning = findingMeaning(finding.code);
+                        return (
+                          <li key={`${finding.code}:${index}`}>
+                            {meaning ?? <><strong>{findingPlain(finding.code)}</strong><small className="note"> — the instrument&rsquo;s own words for this are in Cost and effort.</small></>}
+                          </li>
+                        );
+                      })}</ul>}
+                      {/*
+                        "DID WE GET ANYTHING USEFUL?" — the owner's third
+                        question, which no column answered. The verdict and the
+                        artifact count were both on the row and neither said it
+                        outright.
+                      */}
+                      <div className="note">{attempt.artifacts.value > 0 ? `We kept ${plainCount(attempt.artifacts.value, "document", "documents")} from this run.` : "Nothing was kept from this run."}</div>
                     </td>
                     <td>{story.next}</td>
                     <td className={story.needsYou.needed ? "needs-yes" : "needs-no"}>{story.needsYou.needed ? `Yes — ${story.needsYou.action}` : "No"}</td>
@@ -185,7 +236,8 @@ export function WorkerFleetPanel({ view, candidateNames }: { readonly view: Work
                           Execution outcome <code>{attempt.outcome}</code>; verdict <code>{attempt.verdict ?? attempt.resultStatus}</code> ({verdictPlain(attempt.verdict)}); worker {attempt.worker.provider} {attempt.worker.version}, instance <code>{attempt.worker.instance}</code>.<br />
                           Work item <Name raw={attempt.workItemId} candidateNames={candidateNames} /> — <code>{attempt.workItemId}</code>, state <code>{attempt.workItemState}</code> ({workItemStatePlain(attempt.workItemState)})
                           <CopyButton value={attempt.workItemId} what="work item id" />
-                          {attempt.findings.map((f) => <span key={f.code}><br /><code>{f.code}</code></span>)}
+                          {/* The instrument's raw sentence, moved off the face and kept whole. */}
+                          {attempt.findings.map((f, i) => <span key={`${f.code}:${i}`}><br /><code>{f.code}</code> ({f.severity}) — {f.detail}</span>)}
                         </small>
                       </details>
                     </td>

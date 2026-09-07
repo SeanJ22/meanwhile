@@ -36,11 +36,22 @@
  *
  * ## Usage
  *
- *   pnpm admin:live-proof          # against a local production build on :3100
+ *   pnpm admin:live-proof                                    # a local production build on :3100
+ *   ADMIN_PROOF_BASE=$ADMIN_ORIGIN pnpm admin:live-proof              # the deployed Admin host
  *
- * The server must be the local production build; the CONTROL PLANE it reads is
- * production's, which is the point — the proof is about the data plane, and a
- * local reader is how a session drives the console without a browser.
+ * The deployed base must equal ADMIN_ORIGIN exactly. It is not written out here:
+ * the production host is named in lib/ops/origins.ts and nowhere else, so that
+ * changing it is one edit rather than a search.
+ *
+ * On the LOCAL run the server must be the local production build, and the
+ * CONTROL PLANE it reads is production's — that was the point of ADM-C10: the
+ * proof is about the data plane, and a local reader is how a session drives the
+ * console without a browser.
+ *
+ * On the DEPLOYED run every part is production's: the host, the route code the
+ * host is serving, the session, and the plane. It additionally asks the host
+ * which build it is serving and reads one authenticated page over real HTTPS —
+ * the two things a local server structurally cannot prove.
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { ADMIN_ORIGIN } from "../lib/ops/origins.ts";
@@ -55,8 +66,30 @@ import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 const ADMIN_HOST = new URL(ADMIN_ORIGIN).host;
 
 const BASE = process.env.ADMIN_PROOF_BASE ?? "http://localhost:3100";
-if (!/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(BASE)) {
-  throw new Error(`admin:live-proof refuses ${BASE}: it drives a LOCAL server. The control plane it reads is production's.`);
+
+/**
+ * **TWO HOSTS, AND NO THIRD.** (ACLOSE-5.)
+ *
+ * ADM-C10's proof drove the real Admin route code, a real signed session and
+ * the real production control plane — and the application server was a local
+ * production build. That is a genuine proof of the data plane and it leaves one
+ * gap open: nothing had exercised the door on the machine that actually serves
+ * it. So this now accepts exactly one more base, the canonical Admin origin,
+ * and still nothing else.
+ *
+ * The allowlist is two exact shapes rather than a pattern, because a pattern is
+ * how "any host that looks admin-ish" gets in. `ADMIN_ORIGIN` comes from the
+ * one origins module; there is no way to name a proof host from the command
+ * line that is not one of these two.
+ */
+const LOCAL = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
+const DEPLOYED = BASE === ADMIN_ORIGIN;
+if (!LOCAL.test(BASE) && !DEPLOYED) {
+  throw new Error(
+    `admin:live-proof refuses ${BASE}. It drives either a LOCAL production build ` +
+      `(localhost or 127.0.0.1) or the canonical Admin origin ${ADMIN_ORIGIN}, and nothing else. ` +
+      "An arbitrary proof host is a proof about a host nobody named.",
+  );
 }
 const key = process.env.WTP_ADMIN_SESSION_KEY;
 if (!key) throw new Error("WTP_ADMIN_SESSION_KEY is not set, so no admin session can be signed and the door would refuse.");
@@ -75,8 +108,18 @@ async function submit(envelope: Record<string, unknown>): Promise<{ status: numb
       "content-type": "application/json",
       accept: "application/json",
       cookie: `${ADMIN_SESSION_COOKIE}=${cookie}`,
-      // The host gate reads this; undici will not send a bare Host header.
-      "x-forwarded-host": ADMIN_HOST,
+      /*
+       * `x-forwarded-host` is sent ONLY against a local build, and it is not a
+       * spoof there: it is how a local server is told which of its own hosts
+       * this request is for, because undici will not send a bare Host header.
+       *
+       * Against the deployed Admin it is deliberately ABSENT. The request goes
+       * to the canonical Admin origin over HTTPS and the host gate reads the real
+       * host. Sending a forwarded-host header there would be asserting the very
+       * thing the deployed proof exists to observe, which would make the proof
+       * about our header rather than about the host (ACLOSE-5).
+       */
+      ...(DEPLOYED ? {} : { "x-forwarded-host": ADMIN_HOST }),
       origin: ADMIN_ORIGIN,
     },
     body: JSON.stringify(envelope),
@@ -94,6 +137,69 @@ async function submit(envelope: Record<string, unknown>): Promise<{ status: numb
 const startedAt = new Date().toISOString();
 const idempotencyKey = `live-proof-${startedAt}`;
 const legs: { leg: string; ok: boolean; says: string }[] = [];
+
+/**
+ * 0 — WHAT IS THIS HOST ACTUALLY SERVING, before anything is asked of it.
+ * (ACLOSE-5.)
+ *
+ * Only on the deployed run, and first, because every leg after it is a claim
+ * about a particular build and a proof that never asked which build it was
+ * talking to is a proof about an unknown. `WTP_EXPECT_SHA`, when set, turns the
+ * reading into an assertion; without it the SHA is recorded and not judged,
+ * which is still the difference between naming the build and assuming it.
+ */
+let deployedSha: string | null = null;
+if (DEPLOYED) {
+  try {
+    const build = await fetch(`${BASE}/api/build`, { headers: { accept: "application/json", "cache-control": "no-cache" } });
+    const body = (await build.json()) as { readonly commit?: string; readonly sha?: string };
+    deployedSha = body.commit ?? body.sha ?? null;
+    const expected = process.env.WTP_EXPECT_SHA ?? null;
+    legs.push({
+      leg: "the deployed host names the build it is serving",
+      ok: deployedSha !== null && (expected === null || deployedSha.startsWith(expected) || expected.startsWith(deployedSha)),
+      says:
+        deployedSha === null
+          ? `${BASE}/api/build returned no commit, so this proof cannot say which build answered it.`
+          : expected === null
+            ? `${BASE} is serving ${deployedSha}. Nothing asserted it should be a particular one.`
+            : `${BASE} is serving ${deployedSha}, and ${expected} was expected.`,
+    });
+  } catch (error) {
+    legs.push({
+      leg: "the deployed host names the build it is serving",
+      ok: false,
+      says: `${BASE}/api/build could not be read (${(error as Error)?.message ?? "error"}).`,
+    });
+  }
+
+  /*
+   * And an AUTHENTICATED page, over real HTTPS, with a real session — the half
+   * ADM-C10 could not do from a local server. A 200 here proves the deployed
+   * host's own middleware admitted this session on its own hostname.
+   */
+  try {
+    const page = await fetch(`${BASE}/admin/agents`, {
+      headers: { cookie: `${ADMIN_SESSION_COOKIE}=${cookie}`, accept: "text/html", "cache-control": "no-cache" },
+      redirect: "manual",
+    });
+    const html = page.status === 200 ? await page.text() : "";
+    legs.push({
+      leg: "an authenticated admin page is served by the deployed host",
+      ok: page.status === 200 && html.includes("Agents"),
+      says:
+        page.status === 200
+          ? `GET ${BASE}/admin/agents returned 200 and ${html.length} bytes of the Agents page to a signed session.`
+          : `GET ${BASE}/admin/agents returned ${page.status}, so no authenticated page was served.`,
+    });
+  } catch (error) {
+    legs.push({
+      leg: "an authenticated admin page is served by the deployed host",
+      ok: false,
+      says: `GET ${BASE}/admin/agents failed (${(error as Error)?.message ?? "error"}).`,
+    });
+  }
+}
 
 /* 1–5 — a real permitted action through the real door. */
 const first = await submit({
@@ -187,6 +293,8 @@ const record = {
   startedAt,
   finishedAt,
   base: BASE,
+  mode: DEPLOYED ? "DEPLOYED_ADMIN_HOST" : "LOCAL_PRODUCTION_BUILD",
+  deployedSha,
   controlPlane: "the production control plane named by WTP_CONTROL_PLANE_DATABASE_URL",
   adminSessionRef: sid,
   idempotencyKey,

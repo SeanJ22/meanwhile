@@ -49,8 +49,10 @@
  * click. Nothing is removed — seventy-eight cards are still all there.
  */
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+
+import { addresses, currentFragment } from "../reveal.tsx";
 
 import {
   OWNER_TYPE_WORDS,
@@ -125,6 +127,29 @@ export function DecisionQueue({
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+
+  /**
+   * OPEN WHEN THIS IS WHERE HE WAS SENT. (9.6.26 owner feedback, ACLOSE-6.)
+   *
+   * Collapsed by default is deliberate (ADM-31) and stays that way. But the
+   * command centre's *"What is blocked?"* card counts these rows and its Open
+   * control now lands on `#blocked`, the region this queue sits inside — and
+   * arriving at a shut disclosure that shows only a count is the same no-op the
+   * dead anchor was. `RevealTarget` opens the plain `<details>` around it
+   * through the DOM; this queue owns its open state in React, so it watches the
+   * fragment itself rather than being reached into.
+   *
+   * It only ever opens. A hash change never re-collapses a queue the owner
+   * opened himself.
+   */
+  useEffect(() => {
+    const reveal = (): void => {
+      if (addresses("blocked", ["decisions"], currentFragment())) setOpen(true);
+    };
+    reveal();
+    window.addEventListener("hashchange", reveal);
+    return () => window.removeEventListener("hashchange", reveal);
+  }, []);
   const [decided, setDecided] = useState<readonly JustDecided[]>([]);
   const [openCard, setOpenCard] = useState<string | null>(null);
   const [answers, setAnswers] = useState<Readonly<Record<string, string>>>({});

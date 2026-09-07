@@ -891,6 +891,33 @@ console.log(
     `  mirror: ${MIRROR}${existsSync(MIRROR) ? "" : " (NOT PRESENT — digests fall back to .mirror/ and say so)"}`,
 );
 
+/**
+ * **THE CONSOLE IS PUBLISHED BEFORE THE FIRST CYCLE, NOT ONLY AFTER ONE.**
+ * (9.6.26 owner feedback, ACLOSE-6.)
+ *
+ * ADM-1 put `publishConsole()` after every cycle's digest, which fixed a
+ * console that went stale for a day. It left one window open, and the owner
+ * walked straight into it: the readiness derivation contract was bumped to `@2`
+ * and merged at 08:32Z, this host's working tree fast-forwarded onto that code
+ * at 08:53Z, and the newest published readiness record was the one the PREVIOUS
+ * cycle wrote at 08:25Z under `@1`. Every state therefore read
+ * "REQUIRES REPUBLISH" — correctly, and for up to a whole cycle, because the
+ * only thing that would republish was the END of a cycle that had just started.
+ *
+ * Publishing once at startup and then after every cycle bounds that window by
+ * the gap between cycles rather than by the length of one. It costs a single
+ * pass of three cheap child processes, it is idempotent (each publisher is a
+ * read-derive-compare-and-set), and it means a runner that has just been
+ * restarted onto new code says so on the console immediately instead of
+ * fifteen minutes into its first cycle.
+ *
+ * The copy on the panel is the other half of this and lives with the panel: a
+ * state in this window now reads as "the system is rebuilding this summary
+ * automatically", not as a shell command the owner is expected to run.
+ */
+console.log("\npilot:run · publishing the console before the first cycle (the runner may have just come up on new code)");
+publishConsole();
+
 let cycle = 0;
 while (cycle < CYCLES) {
   /* ADM-5: the owner's PAUSE_RUNNER holds the next cycle until RESUME_RUNNER. */

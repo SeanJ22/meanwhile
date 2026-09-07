@@ -1151,8 +1151,24 @@ test("ADM-C8: the paid-API switch is the gateway's action, needs saying twice to
   assert.ok(code.includes('name="confirmed"'), "turning it on carries an explicit confirmation");
   assert.ok(code.includes('<summary>Allow paid API spending</summary>'), "the on direction sits behind a disclosure");
   assert.ok(code.includes('value="false"'), "turning it off needs no ceremony");
-  assert.ok(code.includes("view.fallback.missingSeam"), "the page names the exact piece that is missing");
-  assert.ok(code.includes("Nothing in the running system reads the setting yet"), "and says plainly that recording it permits nothing");
+  assert.ok(code.includes("view.fallback.missingSeam"), "the page names the exact piece this setting does not reach");
+  /*
+   * ACLOSE-2 closed the seam this used to assert was open. The page said
+   * "Nothing in the running system reads the setting yet"; every delegated job
+   * now does, so that sentence became a false claim about money and had to go
+   * with the change that falsified it. What replaces it is the same discipline
+   * pointed the other way: say what the switch DOES reach, and name what it
+   * does not.
+   */
+  assert.ok(
+    code.includes("Every delegated job reads this setting before it runs"),
+    "the page must say that the setting is enforced, now that it is",
+  );
+  assert.ok(
+    !code.includes("Nothing in the running system reads the setting yet"),
+    "the page still claims nothing reads the setting, which ACLOSE-2 made false",
+  );
+  assert.ok(code.includes("What this setting does NOT reach"), "and it must still name the spender this switch does not govern");
   const policy = apiFallbackPolicy(null);
   assert.ok(policy.missingSeam.length > 80, "the missing seam is a real sentence, taken from the module that owns the setting");
   assert.ok(policy.enforcement.length > 0);

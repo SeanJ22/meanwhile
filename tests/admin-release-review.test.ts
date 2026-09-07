@@ -174,8 +174,10 @@ test("AR-1: the accepted Prompt 3 lifecycle and review status remain raw, with r
   assert.equal(reading.manifest.readinessKeyedOn, "reviewState");
   const model = buildReviewModel({ reading, production: null, rows: [], store: { ok: true } });
   assert.deepEqual(model.status, { prompt3Status: "STAGING_READY_FOR_OWNER_REVIEW", reviewState: "READY_FOR_REVIEW", reviewReady: true, keyedOn: "reviewState" });
-  assert.deepEqual(model.composite.conditions.find((c) => c.name === `manifest status is ${REVIEW_READY_STATUS}`), {
-    name: `manifest status is ${REVIEW_READY_STATUS}`, ok: true, detail: "reviewState = READY_FOR_REVIEW",
+  assert.deepEqual(model.composite.conditions.find((c) => c.name === "the test site says it is ready for your review"), {
+    // The condition NAME is in the owner's words (9.6.26, ACLOSE-6); the DETAIL still
+    // carries the raw constant actually compared, which is what this test guards.
+    name: "the test site says it is ready for your review", ok: true, detail: "reviewState = READY_FOR_REVIEW",
   });
   assert.equal(model.composite.recordable, false, "readiness alone never approves a build");
 });
@@ -213,7 +215,10 @@ test("B2: MANIFEST_UNAVAILABLE disables every write and names the last observed 
   assert.equal(rows[0].decision, "MANIFEST_OBSERVED");
   const model = buildReviewModel({ reading: unavailable(), production: null, rows, store: { ok: true } });
   assert.equal(model.writesEnabled, false);
-  assert.match(model.writesDisabledBecause ?? "", /MANIFEST_UNAVAILABLE/);
+  // The reason is a sentence now, not a constant. What it must still do is say
+  // WHY writes are off and carry the underlying reason (9.6.26, ACLOSE-6).
+  assert.match(model.writesDisabledBecause ?? "", /cannot be recorded against a build the console cannot currently see/);
+  assert.match(model.writesDisabledBecause ?? "", /HTTP 401/);
   assert.equal(model.lastObserved?.sha, SHA_X);
   assert.equal(model.lastObserved?.at, rows[0].createdAt);
   assert.equal(model.composite.recordable, false);
@@ -300,7 +305,9 @@ test("B3: the five required sections reconcile by id or name; an unexposed one i
   assert.equal(model.sections.length, 5, "exactly the five required sections, regardless of the manifest");
   const theme = model.composite.conditions.find((c) => c.name.startsWith("Theme approved"));
   assert.equal(theme?.ok, false);
-  assert.match(theme?.detail ?? "", /NOT_YET_REVIEWABLE/);
+  // The condition's DETAIL is a sentence now; the section's STATE above is still
+  // the machine constant, which is what the rest of the model keys on.
+  assert.match(theme?.detail ?? "", /the test site has not shown us this section/);
   assert.ok(!model.composite.conditions.some((c) => /Onboarding/.test(c.name)), "the extra never becomes a gating condition");
 });
 
@@ -421,7 +428,7 @@ test("B6: OWNER_APPROVED_FOR_PRODUCTION names every failing condition and is ref
   const empty = await recordReview(d, { action: "RECORD_OWNER_APPROVAL", stagingSha: SHA_X, section: null, decision: null, feedback: null, choice: null });
   assert.equal(empty.ok, false);
   assert.equal(empty.ok ? "" : empty.code, "NOT_RECORDABLE");
-  for (const name of ["Map Movement approved", "Pearl approved", "Lumen approved", "Theme approved", "Raised State A/B/C approved", "Raised State variant chosen", `manifest status is ${REVIEW_READY_STATUS}`]) {
+  for (const name of ["Map Movement approved", "Pearl approved", "Lumen approved", "Theme approved", "Raised State A/B/C approved", "Raised State variant chosen", "the test site says it is ready for your review"]) {
     assert.match(empty.ok ? "" : empty.detail, new RegExp(name.replace(/[/]/g, "\\/")), `names the failing condition: ${name}`);
   }
   assert.equal((await repos.softwareReleaseReviews.readAll()).length, 0);
@@ -440,12 +447,14 @@ test("B6: OWNER_APPROVED_FOR_PRODUCTION names every failing condition and is ref
   assert.equal(reApproved.ok, true);
   const notReady = await recordReview(d, { action: "RECORD_OWNER_APPROVAL", stagingSha: SHA_X, section: null, decision: null, feedback: null, choice: null });
   assert.equal(notReady.ok ? "" : notReady.code, "NOT_RECORDABLE");
-  assert.match(notReady.ok ? "" : notReady.detail, /manifest status is READY_FOR_REVIEW \(reviewState = VISUAL_WORK_IN_PROGRESS\)/);
+  // The condition reads in the owner's words and still carries the raw state it
+  // actually compared, in brackets (9.6.26, ACLOSE-6).
+  assert.match(notReady.ok ? "" : notReady.detail, /the test site says it is ready for your review \(reviewState = VISUAL_WORK_IN_PROGRESS\)/);
   const modelNotReady = buildReviewModel({ reading: live, production: null, rows: await repos.softwareReleaseReviews.readAll(), store: { ok: true } });
   assert.equal(modelNotReady.composite.recordable, false);
   assert.deepEqual(
     modelNotReady.composite.conditions.filter((c) => !c.ok).map((c) => c.name),
-    [`manifest status is ${REVIEW_READY_STATUS}`],
+    ["the test site says it is ready for your review"],
     "exactly one condition fails and it is named",
   );
   assert.equal((await repos.softwareReleaseReviews.readAll()).filter((r) => r.decision === "OWNER_APPROVED_FOR_PRODUCTION").length, 0, "never auto-recorded on the last approval");

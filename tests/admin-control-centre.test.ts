@@ -54,10 +54,8 @@ import {
   measured,
   renderCacheObservation,
 } from "@/lib/control-plane/owner-surface.ts";
+import { ADMIN_HOST, PUBLIC_HOST, SESSION_KEY } from "./admin-session.ts";
 
-const ADMIN_HOST = hostOf(ADMIN_ORIGIN);
-const PUBLIC_HOST = hostOf(PUBLIC_SITE_ORIGIN);
-const SESSION_KEY = "test-session-key-that-is-long-enough-to-sign-with";
 
 function request(host: string, path: string, cookie?: string): NextRequest {
   const headers = new Headers({ host });

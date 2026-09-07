@@ -27,13 +27,7 @@ import { NextRequest } from "next/server";
 
 import { middleware } from "@/middleware.ts";
 import { POST } from "@/app/api/admin/research/route.ts";
-import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN, hostOf } from "@/lib/ops/origins.ts";
-import {
-  ADMIN_SESSION_COOKIE,
-  ADMIN_SESSION_KEY_VAR,
-  SESSION_LIFETIME_SECONDS,
-  signSession,
-} from "@/lib/control-plane/admin-auth.ts";
+import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins.ts";
 import type { ReadOutcome } from "@/lib/control-plane/admin-data.ts";
 import type { CostEntry } from "@/lib/control-plane/cost.ts";
 import {
@@ -71,11 +65,9 @@ import {
   type ResearchState,
 } from "@/lib/control-plane/scheduler/research-policy.ts";
 import type { ScoutResult } from "@/lib/control-plane/scheduler/scout-result.ts";
+import { ADMIN_HOST, PUBLIC_HOST, adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
 
 const ROOT = process.cwd();
-const ADMIN_HOST = hostOf(ADMIN_ORIGIN);
-const PUBLIC_HOST = hostOf(PUBLIC_SITE_ORIGIN);
-const SESSION_KEY = "test-session-key-that-is-long-enough-to-sign-with";
 
 /* ------------------------------------------------------------------ fixtures */
 
@@ -261,15 +253,6 @@ function post(host: string, body: string, headers: Record<string, string> = {}):
   });
 }
 
-async function sessionCookie(): Promise<string> {
-  const iat = Math.floor(Date.now() / 1000);
-  const value = await signSession(
-    { sid: "adm_test-session", iat, exp: iat + SESSION_LIFETIME_SECONDS },
-    SESSION_KEY,
-  );
-  return `${ADMIN_SESSION_COOKIE}=${value}`;
-}
-
 async function withEnv<T>(name: string, value: string | undefined, fn: () => Promise<T>): Promise<T> {
   const before = process.env[name];
   if (value === undefined) delete process.env[name];
@@ -282,9 +265,6 @@ async function withEnv<T>(name: string, value: string | undefined, fn: () => Pro
   }
 }
 
-function withSessionKey<T>(fn: () => Promise<T>): Promise<T> {
-  return withEnv(ADMIN_SESSION_KEY_VAR, SESSION_KEY, fn);
-}
 
 /* ================================================================== *
  * SEEDED FAILURE 1 — host and session boundaries, through the real middleware
@@ -317,16 +297,16 @@ test("SEEDED: an unauthenticated /api/admin/research request on the ADMIN host i
  * ================================================================== */
 
 test("the handler re-verifies the host: a public-host request is 404 even with everything else valid", async () => {
-  await withSessionKey(async () => {
-    const cookie = await sessionCookie();
+  await withAdminSessionKey(async () => {
+    const cookie = await adminSessionCookie();
     const response = await POST(post(PUBLIC_HOST, "action=PAUSE", { origin: ADMIN_ORIGIN, cookie }));
     assert.equal(response.status, 404);
   });
 });
 
 test("SEEDED: a missing or cross-site Origin is refused with 403", async () => {
-  await withSessionKey(async () => {
-    const cookie = await sessionCookie();
+  await withAdminSessionKey(async () => {
+    const cookie = await adminSessionCookie();
     const missing = await POST(post(ADMIN_HOST, "action=PAUSE", { cookie }));
     assert.equal(missing.status, 403, "a MISSING Origin is refused, not allowed");
     const cross = await POST(post(ADMIN_HOST, "action=PAUSE", { origin: PUBLIC_SITE_ORIGIN, cookie }));
@@ -335,15 +315,15 @@ test("SEEDED: a missing or cross-site Origin is refused with 403", async () => {
 });
 
 test("the handler re-verifies the session: no cookie is 401 inside the handler too", async () => {
-  await withSessionKey(async () => {
+  await withAdminSessionKey(async () => {
     const response = await POST(post(ADMIN_HOST, "action=PAUSE", { origin: ADMIN_ORIGIN }));
     assert.equal(response.status, 401);
   });
 });
 
 test("SEEDED: an unknown or missing action is 400 and names the allowed actions", async () => {
-  await withSessionKey(async () => {
-    const cookie = await sessionCookie();
+  await withAdminSessionKey(async () => {
+    const cookie = await adminSessionCookie();
     for (const body of ["action=DELETE_EVERYTHING", "action=pause", "action=", ""]) {
       const response = await POST(post(ADMIN_HOST, body, { origin: ADMIN_ORIGIN, cookie }));
       assert.equal(response.status, 400, `${JSON.stringify(body)} must be 400, not ${response.status}`);
@@ -357,9 +337,9 @@ test("POSITIVE CONTROL and SEEDED: a valid action passes validation, and a contr
   // With the control-plane variable unset the handler cannot reach a store, so
   // the ONLY status past validation is 503. That both proves the 400 above was
   // the action's fault and proves a failed open is never a redirect.
-  await withSessionKey(() =>
+  await withAdminSessionKey(() =>
     withEnv(CONTROL_PLANE_URL_VAR, undefined, async () => {
-      const cookie = await sessionCookie();
+      const cookie = await adminSessionCookie();
       for (const action of RESEARCH_INTENT_ACTIONS) {
         // A DISPATCH is the one action that needs the owner's words (ADM-8):
         // "deploy the fleet" to nowhere is refused at validation, so the

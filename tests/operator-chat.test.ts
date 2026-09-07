@@ -7,13 +7,7 @@ import { NextRequest } from "next/server";
 
 import { middleware } from "@/middleware.ts";
 import { CHAT_PAGE } from "@/app/(admin)/admin/chat/contract.ts";
-import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN, hostOf } from "@/lib/ops/origins.ts";
-import {
-  ADMIN_SESSION_COOKIE,
-  ADMIN_SESSION_KEY_VAR,
-  SESSION_LIFETIME_SECONDS,
-  signSession,
-} from "@/lib/control-plane/admin-auth.ts";
+import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins.ts";
 import {
   AUTHORITY_CLASSES,
   REFUSAL_WORDS,
@@ -56,6 +50,7 @@ import { readsFor, respondToOperator } from "@/lib/control-plane/operator-chat/t
 import { everyControl, operatorChatGateway } from "@/lib/control-plane/operator-chat/gateway-binding.ts";
 import { actionDefinitions } from "@/lib/control-plane/gateway/registry.ts";
 import { POST } from "@/app/api/admin/chat/route.ts";
+import { ADMIN_HOST, PUBLIC_HOST, adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
 
 /**
  * **ADM-C7 — the contextual operator chat, proven without a model.**
@@ -81,9 +76,6 @@ import { POST } from "@/app/api/admin/chat/route.ts";
  */
 
 const ROOT = join(import.meta.dirname, "..");
-const ADMIN_HOST = hostOf(ADMIN_ORIGIN);
-const PUBLIC_HOST = hostOf(PUBLIC_SITE_ORIGIN);
-const SESSION_KEY = "test-session-key-that-is-long-enough-to-sign-with";
 const NOW = "2026-09-06T18:00:00.000Z";
 
 /* ========================================================================== */
@@ -1008,11 +1000,6 @@ function request(host: string, init: { headers?: Record<string, string>; body?: 
   });
 }
 
-async function sessionCookie(): Promise<string> {
-  const iat = Math.floor(Date.now() / 1000);
-  return `${ADMIN_SESSION_COOKIE}=${await signSession({ sid: "adm_test-session", iat, exp: iat + SESSION_LIFETIME_SECONDS }, SESSION_KEY)}`;
-}
-
 test("both new paths are inside the admin boundary: invisible publicly, signed in privately", async () => {
   for (const path of [CHAT_PAGE, "/api/admin/chat"]) {
     const publicly = await middleware(new NextRequest(`https://${PUBLIC_HOST}${path}`, { headers: { host: PUBLIC_HOST } }));
@@ -1024,11 +1011,9 @@ test("both new paths are inside the admin boundary: invisible publicly, signed i
 });
 
 test("the chat route is invisible on the public host and refuses a foreign origin and a missing session", async () => {
-  const before = process.env[ADMIN_SESSION_KEY_VAR];
-  process.env[ADMIN_SESSION_KEY_VAR] = SESSION_KEY;
-  try {
-    assert.equal((await POST(request(PUBLIC_HOST, { headers: { origin: ADMIN_ORIGIN, cookie: await sessionCookie() } }))).status, 404);
-    assert.equal((await POST(request(ADMIN_HOST, { headers: { origin: PUBLIC_SITE_ORIGIN, cookie: await sessionCookie() } }))).status, 403);
+  await withAdminSessionKey(async () => {
+    assert.equal((await POST(request(PUBLIC_HOST, { headers: { origin: ADMIN_ORIGIN, cookie: await adminSessionCookie() } }))).status, 404);
+    assert.equal((await POST(request(ADMIN_HOST, { headers: { origin: PUBLIC_SITE_ORIGIN, cookie: await adminSessionCookie() } }))).status, 403);
     assert.equal((await POST(request(ADMIN_HOST, { headers: { origin: ADMIN_ORIGIN } }))).status, 401);
 
     // A refusal comes back as a SENTENCE the page prints, never a machine code.
@@ -1036,19 +1021,14 @@ test("the chat route is invisible on the public host and refuses a foreign origi
     const body = (await refused.json()) as { says?: string };
     assert.ok((body.says ?? "").length > 20, "the refusal is a sentence");
     assert.doesNotMatch(body.says ?? "", /[A-Z]{3,}_[A-Z]{3,}/, "no machine constant in the refusal");
-  } finally {
-    if (before === undefined) delete process.env[ADMIN_SESSION_KEY_VAR];
-    else process.env[ADMIN_SESSION_KEY_VAR] = before;
-  }
+  });
 });
 
 test("a message the console refuses outright never opens the control plane", async () => {
-  const before = process.env[ADMIN_SESSION_KEY_VAR];
-  process.env[ADMIN_SESSION_KEY_VAR] = SESSION_KEY;
-  try {
+  await withAdminSessionKey(async () => {
     const response = await POST(
       request(ADMIN_HOST, {
-        headers: { origin: ADMIN_ORIGIN, cookie: await sessionCookie() },
+        headers: { origin: ADMIN_ORIGIN, cookie: await adminSessionCookie() },
         body: JSON.stringify({ text: "run pnpm gates" }),
       }),
     );
@@ -1057,8 +1037,5 @@ test("a message the console refuses outright never opens the control plane", asy
     assert.equal(body.turn.kind, "PROHIBITED");
     assert.equal(body.turn.code, "ARBITRARY_COMMAND");
     assert.equal(body.storeRefusedBecause, null, "the store was never opened, so there is nothing to report about it");
-  } finally {
-    if (before === undefined) delete process.env[ADMIN_SESSION_KEY_VAR];
-    else process.env[ADMIN_SESSION_KEY_VAR] = before;
-  }
+  });
 });

@@ -7,8 +7,7 @@ import test from "node:test";
 import { NextRequest } from "next/server";
 
 import { middleware } from "@/middleware.ts";
-import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN, STAGING_RENDER_ORIGIN, hostOf } from "@/lib/ops/origins.ts";
-import { ADMIN_SESSION_COOKIE, ADMIN_SESSION_KEY_VAR, SESSION_LIFETIME_SECONDS, signSession } from "@/lib/control-plane/admin-auth.ts";
+import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN, STAGING_RENDER_ORIGIN } from "@/lib/ops/origins.ts";
 import { createFileRepositories } from "@/lib/control-plane/repository/file-store.ts";
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
 import { APPEND_ONLY_LOGS, BOOTSTRAP_DDL, BOOTSTRAP_VERSION, DECLARED_TABLES } from "@/lib/control-plane/repository/pg-schema.ts";
@@ -21,6 +20,7 @@ import { readManifest, readProductionIdentity, refreshManifest } from "@/app/(ad
 import { buildReviewModel, type ManifestReading } from "@/app/(admin)/admin/release-review/review-model.ts";
 import { noteObservation, recordReview, type WriteDeps } from "@/app/(admin)/admin/release-review/write.ts";
 import { GET, POST } from "@/app/api/admin/release-review/route.ts";
+import { ADMIN_HOST, PUBLIC_HOST, adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
 
 /**
  * **ADMIN PASS B — the software release review, proven by fixture.**
@@ -50,9 +50,6 @@ import { GET, POST } from "@/app/api/admin/release-review/route.ts";
 const SHA_X = "a".repeat(40);
 const SHA_Y = "b".repeat(40);
 const DEPLOY_X = "1".repeat(24);
-const SESSION_KEY = "test-session-key-that-is-long-enough-to-sign-with";
-const ADMIN_HOST = hostOf(ADMIN_ORIGIN);
-const PUBLIC_HOST = hostOf(PUBLIC_SITE_ORIGIN);
 
 /** The manifest exactly as `softwareReleaseManifest` on `test` shapes it, with overrides. */
 function manifestFixture(overrides: Record<string, unknown> = {}, sha = SHA_X): Record<string, unknown> {
@@ -602,23 +599,6 @@ function request(host: string, path: string, init: { method?: string; headers?: 
   return new NextRequest(`https://${host}${path}`, { method: init.method ?? "GET", headers: { host, ...(init.headers ?? {}) }, body: init.body });
 }
 
-async function sessionCookie(): Promise<string> {
-  const iat = Math.floor(Date.now() / 1000);
-  const value = await signSession({ sid: "adm_test-session", iat, exp: iat + SESSION_LIFETIME_SECONDS }, SESSION_KEY);
-  return `${ADMIN_SESSION_COOKIE}=${value}`;
-}
-
-async function withSessionKey<T>(fn: () => Promise<T>): Promise<T> {
-  const before = process.env[ADMIN_SESSION_KEY_VAR];
-  process.env[ADMIN_SESSION_KEY_VAR] = SESSION_KEY;
-  try {
-    return await fn();
-  } finally {
-    if (before === undefined) delete process.env[ADMIN_SESSION_KEY_VAR];
-    else process.env[ADMIN_SESSION_KEY_VAR] = before;
-  }
-}
-
 test("B7: the review page and route are 404 on the public host and refuse a missing session and a foreign origin", async () => {
   for (const path of ["/admin/release-review", "/api/admin/release-review"]) {
     const response = await middleware(request(PUBLIC_HOST, path));
@@ -628,16 +608,16 @@ test("B7: the review page and route are 404 on the public host and refuse a miss
   assert.equal(redirected.status, 307, "an unauthenticated page request redirects to the login");
   assert.match(redirected.headers.get("location") ?? "", /\/admin\/login/);
 
-  await withSessionKey(async () => {
+  await withAdminSessionKey(async () => {
     const body = `action=DECIDE&stagingSha=${SHA_X}&section=pearl&decision=APPROVE`;
     const form = { "content-type": "application/x-www-form-urlencoded" };
-    assert.equal((await POST(request(PUBLIC_HOST, "/api/admin/release-review", { method: "POST", headers: { ...form, origin: ADMIN_ORIGIN, cookie: await sessionCookie() }, body }))).status, 404);
-    assert.equal((await POST(request(ADMIN_HOST, "/api/admin/release-review", { method: "POST", headers: { ...form, origin: PUBLIC_SITE_ORIGIN, cookie: await sessionCookie() }, body }))).status, 403, "a foreign origin is refused");
+    assert.equal((await POST(request(PUBLIC_HOST, "/api/admin/release-review", { method: "POST", headers: { ...form, origin: ADMIN_ORIGIN, cookie: await adminSessionCookie() }, body }))).status, 404);
+    assert.equal((await POST(request(ADMIN_HOST, "/api/admin/release-review", { method: "POST", headers: { ...form, origin: PUBLIC_SITE_ORIGIN, cookie: await adminSessionCookie() }, body }))).status, 403, "a foreign origin is refused");
     assert.equal((await POST(request(ADMIN_HOST, "/api/admin/release-review", { method: "POST", headers: { ...form, origin: ADMIN_ORIGIN }, body }))).status, 401, "no session is refused inside the handler too");
     assert.equal((await GET(request(ADMIN_HOST, "/api/admin/release-review"))).status, 401, "the read route needs the session as well");
     assert.equal((await GET(request(PUBLIC_HOST, "/api/admin/release-review"))).status, 404);
     // A refresh needs no store and lands back on the page.
-    const refreshed = await POST(request(ADMIN_HOST, "/api/admin/release-review", { method: "POST", headers: { ...form, origin: ADMIN_ORIGIN, cookie: await sessionCookie() }, body: "action=REFRESH" }));
+    const refreshed = await POST(request(ADMIN_HOST, "/api/admin/release-review", { method: "POST", headers: { ...form, origin: ADMIN_ORIGIN, cookie: await adminSessionCookie() }, body: "action=REFRESH" }));
     assert.equal(refreshed.status, 303);
     assert.match(refreshed.headers.get("location") ?? "", /\/admin\/release-review\?notice=REFRESHED/);
   });

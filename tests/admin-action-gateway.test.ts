@@ -4,13 +4,7 @@ import test from "node:test";
 import { NextRequest } from "next/server";
 
 import { middleware } from "@/middleware.ts";
-import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN, hostOf } from "@/lib/ops/origins.ts";
-import {
-  ADMIN_SESSION_COOKIE,
-  ADMIN_SESSION_KEY_VAR,
-  SESSION_LIFETIME_SECONDS,
-  signSession,
-} from "@/lib/control-plane/admin-auth.ts";
+import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins.ts";
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
 import type { ControlPlaneRepositories } from "@/lib/control-plane/repository/types.ts";
 import {
@@ -42,6 +36,7 @@ import { RESEARCH_INTENT_LOG_KEY } from "@/lib/control-plane/scheduler/research-
 import { ADD_TO_QUEUE_OPTION, fixSubjectId } from "@/lib/control-plane/fix-queue.ts";
 import { POST } from "@/app/api/admin/action/route.ts";
 import { GET } from "@/app/api/admin/live/route.ts";
+import { ADMIN_HOST, PUBLIC_HOST, adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
 
 /**
  * **ADM-C6 — the canonical typed Action Gateway, proven against the store.**
@@ -72,9 +67,6 @@ import { GET } from "@/app/api/admin/live/route.ts";
  */
 
 const NOW = "2026-09-06T12:00:00.000Z";
-const SESSION_KEY = "test-session-key-that-is-long-enough-to-sign-with";
-const ADMIN_HOST = hostOf(ADMIN_ORIGIN);
-const PUBLIC_HOST = hostOf(PUBLIC_SITE_ORIGIN);
 
 /** A clock that moves one second per call, so `startedAt` and `completedAt` differ. */
 function tickingClock(from = NOW): () => string {
@@ -807,23 +799,6 @@ function request(host: string, path: string, init: { method?: string; headers?: 
   });
 }
 
-async function sessionCookie(): Promise<string> {
-  const iat = Math.floor(Date.now() / 1000);
-  const value = await signSession({ sid: "adm_test-session", iat, exp: iat + SESSION_LIFETIME_SECONDS }, SESSION_KEY);
-  return `${ADMIN_SESSION_COOKIE}=${value}`;
-}
-
-async function withSessionKey<T>(fn: () => Promise<T>): Promise<T> {
-  const before = process.env[ADMIN_SESSION_KEY_VAR];
-  process.env[ADMIN_SESSION_KEY_VAR] = SESSION_KEY;
-  try {
-    return await fn();
-  } finally {
-    if (before === undefined) delete process.env[ADMIN_SESSION_KEY_VAR];
-    else process.env[ADMIN_SESSION_KEY_VAR] = before;
-  }
-}
-
 test("ADM-C6: both gateway routes are invisible on the public host and unreachable without a session", async () => {
   for (const path of ["/api/admin/action", "/api/admin/live"]) {
     const refused = await middleware(request(PUBLIC_HOST, path));
@@ -832,16 +807,16 @@ test("ADM-C6: both gateway routes are invisible on the public host and unreachab
     assert.equal(unauthenticated.status, 401, `${path} is reachable unauthenticated on the admin host`);
   }
 
-  await withSessionKey(async () => {
+  await withAdminSessionKey(async () => {
     const form = { "content-type": "application/x-www-form-urlencoded" };
     const body = "type=runner.pause";
     assert.equal(
-      (await POST(request(PUBLIC_HOST, "/api/admin/action", { method: "POST", headers: { ...form, origin: ADMIN_ORIGIN, cookie: await sessionCookie() }, body }))).status,
+      (await POST(request(PUBLIC_HOST, "/api/admin/action", { method: "POST", headers: { ...form, origin: ADMIN_ORIGIN, cookie: await adminSessionCookie() }, body }))).status,
       404,
       "the handler itself answers on the public host",
     );
     assert.equal(
-      (await POST(request(ADMIN_HOST, "/api/admin/action", { method: "POST", headers: { ...form, origin: PUBLIC_SITE_ORIGIN, cookie: await sessionCookie() }, body }))).status,
+      (await POST(request(ADMIN_HOST, "/api/admin/action", { method: "POST", headers: { ...form, origin: PUBLIC_SITE_ORIGIN, cookie: await adminSessionCookie() }, body }))).status,
       403,
       "a foreign origin is not refused",
     );
@@ -861,7 +836,7 @@ test("ADM-C6: neither route ever puts a connection string or a variable name in 
    * sentence, which is right for a server log and wrong for a browser. With no
    * control plane configured, both routes must answer without it.
    */
-  await withSessionKey(async () => {
+  await withAdminSessionKey(async () => {
     const before = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
     delete process.env.WTP_CONTROL_PLANE_DATABASE_URL;
     try {
@@ -872,7 +847,7 @@ test("ADM-C6: neither route ever puts a connection string or a variable name in 
             "content-type": "application/json",
             accept: "application/json",
             origin: ADMIN_ORIGIN,
-            cookie: await sessionCookie(),
+            cookie: await adminSessionCookie(),
           },
           body: JSON.stringify({ type: "runner.pause", subject: "pilot-runner", input: {} }),
         }),
@@ -882,7 +857,7 @@ test("ADM-C6: neither route ever puts a connection string or a variable name in 
       assert.doesNotMatch(postedBody, /WTP_|postgres:|postgresql:/, "the response named the variable or the connection");
       assert.match(postedBody, /Nothing was recorded/);
 
-      const pulsed = await GET(request(ADMIN_HOST, "/api/admin/live", { headers: { cookie: await sessionCookie() } }));
+      const pulsed = await GET(request(ADMIN_HOST, "/api/admin/live", { headers: { cookie: await adminSessionCookie() } }));
       assert.equal(pulsed.status, 200, "the pulse still answers when the store is unreachable");
       const pulse = (await pulsed.json()) as { revision: string; unread: string[]; counts: Record<string, number | null> };
       assert.equal(pulse.revision, "unread");

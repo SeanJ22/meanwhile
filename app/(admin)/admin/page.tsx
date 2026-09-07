@@ -60,6 +60,7 @@ import {
   readSnapshot,
   type ReadOutcome,
 } from "@/lib/control-plane/admin-data.ts";
+import { codeIdentityLine } from "@/lib/control-plane/code-identity.ts";
 import { bytesText, costRowKind, durationText } from "@/lib/control-plane/cost-panel.ts";
 import { collapseDecisionLog } from "@/lib/control-plane/decision-log.ts";
 import { SYNC_CADENCE, receiptHeadline, splitDecided, type DecidedEntry } from "@/lib/control-plane/decision-receipt.ts";
@@ -723,6 +724,39 @@ export default async function AdminPage() {
             */}
             {heartbeat.nextCycleDueAt ? <When iso={heartbeat.nextCycleDueAt} /> : "not recorded in this heartbeat"}; at SHA{" "}
             {heartbeat.testedSha ? heartbeat.testedSha.slice(0, 8) : "unrecorded"}; host {heartbeat.host}.
+          </p>
+        )}
+        {heartbeat && (
+          <p className="note">
+            {/*
+              PRDY-1: the SHA above is what the runner executed. Whether that is
+              CURRENT is a separate fact with three parts — raw main, the
+              executable head under the canonical shipping classification, and
+              the runner's SHA — because an observer-only commit moves main
+              without changing executable code (ACT-1). The verdict is the
+              runner's own record, re-derivable by `pnpm code-identity:readback`.
+            */}
+            Code identity:{" "}
+            {heartbeat.codeIdentity ? (
+              <>
+                <span
+                  className={
+                    heartbeat.codeIdentity.verdict === "CONSISTENT"
+                      ? "state-green"
+                      : heartbeat.codeIdentity.verdict === "CANNOT_TELL"
+                        ? "state-amber"
+                        : "state-red"
+                  }
+                  title={heartbeat.codeIdentity.verdict}
+                >
+                  {codeWords(heartbeat.codeIdentity.verdict)}
+                </span>
+                {" — "}
+                {codeIdentityLine(heartbeat.codeIdentity)}. <Said text={heartbeat.codeIdentity.detail} />
+              </>
+            ) : (
+              "not recorded in this heartbeat — a beat written before the runner recorded code identity, or a runner that could not read git; neither is evidence that the runner is current."
+            )}
           </p>
         )}
         {fleetSafety ? (

@@ -99,6 +99,9 @@ import { campaignFinanceProvider } from "../lib/control-plane/scheduler/provider
 import { trackerIntakeProvider } from "../lib/control-plane/scheduler/providers/tracker-intake.ts";
 import { localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
 import { candidateEnrichmentProvider } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
+import { promotedFactsProvider } from "../lib/control-plane/scheduler/providers/promoted-facts.ts";
+import { factChainLines, factSubjectsFromRepositories } from "../lib/control-plane/promotion/fact-chain.ts";
+import type { FactSubject } from "../lib/control-plane/promotion/fact-freshness.ts";
 import { methodMaturityFrom } from "../lib/control-plane/scheduler/maturity.ts";
 import {
   closeOccurrence,
@@ -185,6 +188,7 @@ import {
 import { installNeonCircuitBreaker } from "../lib/control-plane/neon-circuit.ts";
 import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
+import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
 import { nextRunRecordPath } from "../lib/health/run-records.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import { today } from "./doc-dates.mjs";
@@ -354,6 +358,22 @@ try {
  * ACQUISITION DENOMINATOR — labelled by `lib/candidates/population-label.ts`,
  * never assumed statewide (R-C9).
  */
+/*
+ * A SIXTH, FACT-SHAPED (PRDY-5, 2026-09-06). `promoted-facts` gives every
+ * (record class, canonical body) the promotion pipeline holds a bridged
+ * meeting-time or agenda fact for its own clock — `freshness:meeting-times:<bodyId>`,
+ * `freshness:agendas:<bodyId>` — enumerated from the pipeline's own records
+ * before the registry is built. A corpus obligation or a local-jurisdiction
+ * route obligation for the same body stays a separate row: neither is the
+ * freshness of a fact.
+ */
+let factSubjects: readonly FactSubject[] = [];
+let factSubjectsFailure: string | null = null;
+try {
+  factSubjects = await factSubjectsFromRepositories(repos, NOW);
+} catch (error) {
+  factSubjectsFailure = error instanceof Error ? error.message : String(error);
+}
 const registry = buildRegistry(
   [
     meetingsProvider(),
@@ -361,6 +381,7 @@ const registry = buildRegistry(
     trackerIntakeProvider(),
     localJurisdictionsProvider(),
     candidateEnrichmentProvider(),
+    promotedFactsProvider(factSubjects),
   ],
   { root: ROOT, nowIso: NOW },
 );
@@ -450,6 +471,9 @@ const decisionDisagreements = units
 const nowMs = Date.parse(NOW);
 /** Named runtime conditions, accumulated from here on; the research state carries them. */
 const runtimeConditions: string[] = [];
+if (factSubjectsFailure !== null) {
+  runtimeConditions.push(`fact subjects could not be read from the pipeline: ${factSubjectsFailure}; no fact-class obligation was enumerated this cycle`);
+}
 const occurrenceByObligation = new Map<string, { id: string; routeTaskId: string }>();
 const nextDueByObligation = new Map<string, string>();
 let openedDeterministic = 0;
@@ -1382,7 +1406,9 @@ if (!dry && !canary && !scheduledBlackout && Date.now() + 150_000 < DISPATCH_DEA
       : [];
     const fleetDispatches = [...autonomous.dispatches, ...legacy];
     if (fleetDispatches.some(row => row.outcome === "WORKED")) fleetSafety.recordSuccessfulActivity(nowIso());
-    await projectFleetPipeline(repos);
+    /* PRDY-3: meeting-fact chains are bridged and measured against the immutable vault bytes; every other result keeps the generic offer. */
+    const factReport = await projectFleetPipeline(repos, { readArtifactText: async (id) => (await fleet.readEvidence(id)).text, now: nowIso(), root: ROOT });
+    if (factReport !== null) for (const line of factChainLines(factReport)) console.log(line);
     for (const row of fleetDispatches) console.log(`  worker fleet: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
   } catch (error) {
     runtimeConditions.push(`worker fleet could not complete this bounded pass: ${error instanceof Error ? error.message : "WORKER_FLEET_FAILED"}`);
@@ -1519,6 +1545,22 @@ if (!dry && !canary) {
 await writeResearchState(finishedAt);
 const finalState = researchState(finishedAt);
 
+/*
+ * PRDY-1 (2026-09-06): the three code identities, read once per cycle. A live
+ * cycle refreshes origin/main with a bounded fetch; a dry or canary cycle reads
+ * the refs as last seen so no test reaches the network. A read that throws
+ * leaves the field null — the beat still says the cycle ran; it never says the
+ * code identity is consistent.
+ */
+const codeIdentity = (() => {
+  try {
+    return readCodeIdentity({ cwd: ROOT, runnerTestedSha: headSha(ROOT), now: finishedAt, fetch: !dry && !canary });
+  } catch (error) {
+    runtimeConditions.push(`the code identity could not be read: ${error instanceof Error ? error.message : String(error)}`);
+    return null;
+  }
+})();
+
 const heartbeat: RunnerHeartbeat = {
   formatVersion: OWNER_SURFACE_FORMAT_VERSION,
   beatAt: finishedAt,
@@ -1530,6 +1572,7 @@ const heartbeat: RunnerHeartbeat = {
   host: HOST,
   /* A working beat: the runner is not idling on a PAUSE_RUNNER (ADM-5). */
   pause: null,
+  codeIdentity,
 };
 try {
   const beat = await repos.runnerHeartbeat.read(RUNNER_ID);
@@ -1747,6 +1790,7 @@ writeFileSync(
       promotedToReaderTruth: cycle.promotedToReaderTruth,
       digest: lines,
       provenance: readRunProvenance(headSha(ROOT), ROOT),
+      codeIdentity,
     },
     null,
     2,

@@ -66,6 +66,8 @@
  * `contract` is the interpretation — the sentence that says what a reader of
  * this number is entitled to conclude. It is not a label and not a unit.
  */
+import type { CodeIdentity } from "./code-identity.ts";
+
 export interface Measured {
   readonly value: number;
   /** What the value is out of. Never omitted, never inferred, never guessed. */
@@ -375,6 +377,16 @@ export interface RunnerHeartbeat {
     readonly since: string;
     readonly note: string | null;
   } | null;
+  /**
+   * PRDY-1 (2026-09-06): the three code identities — raw main, the executable
+   * head under the canonical shipping classification (RULING 278), and the SHA
+   * this runner executed — with the consistency verdict between them. `testedSha`
+   * alone cannot say whether the runner is current, because an observer-only
+   * commit legitimately moves main without changing executable code (ACT-1).
+   * Absent on every beat written before the field existed; null when the runner
+   * could not read git.
+   */
+  readonly codeIdentity?: CodeIdentity | null;
 }
 
 /**

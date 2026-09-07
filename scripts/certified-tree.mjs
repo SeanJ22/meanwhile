@@ -159,7 +159,12 @@ async function main() {
   let floorLine;
   try {
     ({ judgeTreeEquivalence } = await import("../lib/control-plane/shipping/tree-equivalence.ts"));
-    ({ REQUIRED_CONTEXTS } = await import("../lib/ops/required-checks.ts"));
+    /*
+     * required-contexts.ts, NOT required-checks.ts. The latter imports `yaml`
+     * to parse the workflow, and this step runs before `pnpm install` — run
+     * 34160631768 answered FULL on exactly that and the attestation was inert.
+     */
+    ({ REQUIRED_CONTEXTS } = await import("../lib/ops/required-contexts.ts"));
     ({ floored, floorLine } = await import("../lib/ops/denominator-floor.ts"));
   } catch (error) {
     log(`the predicate would not load (${error.message}) — answering FULL`);
@@ -227,13 +232,36 @@ async function main() {
       { cwd: ROOT, encoding: "utf8" },
     );
     /*
-     * git exits 0 for yes and 1 for no. ANY OTHER STATUS IS NOT AN ANSWER —
-     * 128 is what a shallow clone returns when it cannot see far enough, and
-     * reading that as "no" would be honest but reading it as "yes" would ship
-     * an unproved tree. Null keeps the two apart.
+     * **A SHALLOW CLONE ANSWERS "NO" WHEN IT MEANS "I CANNOT SEE".**
+     * (Measured 2026-09-07, emulating actions/checkout at fetch-depth 2 on
+     * merge c6fa9e88.)
+     *
+     * git exits 0 for yes and 1 for no, and the first draft of this file read
+     * those two literally. In a shallow clone the walk from the candidate hits
+     * the graft boundary before it reaches the base and git exits **1** — not
+     * 128 — so a missing commit is indistinguishable from a real answer.
+     *
+     * Exit 0 is always trustworthy: git found a path, and it cannot invent one.
+     * Exit 1 is trustworthy only when the repository can see its whole history.
+     * So a "no" from a still-shallow clone becomes CANNOT_TELL, which is the
+     * full proof. The deepen above usually makes the clone deep enough to
+     * answer honestly; when it does not, this is the difference between a
+     * wrong answer and no answer.
      */
+    const stillShallow =
+      (git("rev-parse", "--is-shallow-repository") ?? "true").trim() !== "false";
     baseIsAncestorOfCandidate =
-      ancestry.status === 0 ? true : ancestry.status === 1 ? false : null;
+      ancestry.status === 0
+        ? true
+        : ancestry.status === 1 && !stillShallow
+          ? false
+          : null;
+    if (ancestry.status === 1 && stillShallow) {
+      log(
+        "the clone is still shallow and git answered \"not an ancestor\" — which is what it also " +
+          "says when it cannot see far enough, so this is CANNOT_TELL rather than a no",
+      );
+    }
     headTree = git("rev-parse", `${headSha}^{tree}`);
     candidateTree = git("rev-parse", `${candidate}^{tree}`);
   }

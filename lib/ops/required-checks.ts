@@ -37,20 +37,17 @@ import { parse } from "yaml";
 export const REQUIRED_CHECKS_WORKFLOW = ".github/workflows/build-check.yml";
 
 /**
- * The contexts branch protection on `main` actually requires.
+ * The contexts branch protection requires, re-exported so every existing
+ * importer is unchanged.
  *
- * READ BACK FROM THE GITHUB API on 2026-08-25 —
- * `repos/SeanJ22/meanwhile/branches/main/protection`, whose
- * `required_status_checks.contexts` returned exactly these three. It is a
- * transcription of a server fact, not a wish: if the branch is changed, this
- * is updated to match what the branch says, and the test below then tells you
- * whether the workflow still produces it.
+ * THE LIST LIVES IN `required-contexts.ts`, which imports nothing, because
+ * `scripts/certified-tree.mjs` reads it BEFORE `pnpm install` and this module
+ * imports `yaml`. Run 34160631768 is the measurement: the tree-equivalence
+ * step answered FULL on `Cannot find package yaml` and the attestation could
+ * never have fired. Splitting the data from the parser is not a second table —
+ * there is one list, and it has one home.
  */
-export const REQUIRED_CONTEXTS: readonly string[] = [
-  "build (default)",
-  "build (standalone)",
-  "gates (test · lint · tsc)",
-];
+export { REQUIRED_CONTEXTS } from "./required-contexts.ts";
 
 type JobSpec = {
   name?: unknown;

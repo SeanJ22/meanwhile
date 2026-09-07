@@ -246,39 +246,141 @@ test("the duplicate check reuses the one census and agrees with the suite's base
 /**
  * THE CLAIM THE WHOLE ORDERING RESTS ON, MADE EXECUTABLE.
  *
- * "The preflight runs before `pnpm install`" is only true while nothing it
- * reaches imports a package. One bare specifier anywhere in the closure — a
- * `yaml`, a `zod`, a test helper that pulls one in — and the CI step fails on a
- * bare checkout, which would look like the preflight being broken rather than
- * the import being new.
+ * "This step runs before `pnpm install`" is only true while nothing it reaches
+ * imports a package. One bare specifier anywhere in the closure — a `yaml`, a
+ * `zod`, a test helper that pulls one in — and the CI step fails on a bare
+ * checkout, which looks like the step being broken rather than the import being
+ * new.
+ *
+ * ## Two things this guard could not see, and both cost a real run
+ *
+ * **It walked only STATIC imports.** `scripts/certified-tree.mjs` and
+ * `scripts/backup-wakeup.mjs` are `.mjs` files that reach their `.ts` modules
+ * through `await import(…)`, exactly as `scripts/ci-cost.mjs` does, so their
+ * whole closure was invisible here.
+ *
+ * **It watched one script.** Three now run before the install.
+ *
+ * Run 34160631768, 2026-09-07 — the first main-side run of the tree-equivalence
+ * check — printed `the predicate would not load (Cannot find package 'yaml'
+ * imported from lib/ops/required-checks.ts) — answering FULL`. It failed in the
+ * safe direction and named its own cause, which is the design working; it also
+ * meant the attestation could never fire on any head. A feature that is
+ * permanently inert while reporting itself correctly is the failure this guard
+ * exists to make loud, and it was silent because of the two gaps above.
  */
-test("nothing the preflight imports needs node_modules", () => {
-  const seen = new Set<string>();
-  const bare: string[] = [];
-  const visit = (from: string): void => {
-    if (seen.has(from)) return;
-    seen.add(from);
-    const src = readFileSync(from, "utf8");
-    for (const m of src.matchAll(/^\s*(?:import|export)[\s\S]*?from\s+"([^"]+)"/gm)) {
-      const spec = m[1];
-      if (spec.startsWith("node:")) continue;
-      if (!spec.startsWith(".")) {
-        bare.push(`${from} → ${spec}`);
-        continue;
-      }
-      visit(join(dirname(from), spec));
-    }
-  };
-  visit(join(ROOT, "scripts", "preflight.mjs"));
 
-  assert.ok(seen.size >= 4, `the walk only reached ${seen.size} file(s); it is not following the imports`);
-  assert.deepEqual(
-    bare,
-    [],
-    `the preflight's import closure reaches a package:\n  ${bare.join("\n  ")}\n\n` +
-      "CI runs this on a bare checkout before `pnpm install`, so a package here would fail the step\n" +
-      "on every head and read as the preflight being broken rather than as one new import.",
-  );
+/** Every script CI runs before `pnpm install`, and why it is on the list. */
+const BEFORE_INSTALL: ReadonlyArray<{ script: string; why: string }> = [
+  {
+    script: "scripts/preflight.mjs",
+    why: "RULING 279's cheap tier — it answers from the tree before anything is bought",
+  },
+  {
+    script: "scripts/ci-cost.mjs",
+    why: "RULING 278's classifier — it decides how much the rest of the job may spend",
+  },
+  {
+    script: "scripts/certified-tree.mjs",
+    why: "RULING 281's tree-equivalence adapter — it decides whether the expensive tier runs at all",
+  },
+  {
+    script: "scripts/backup-wakeup.mjs",
+    why: "the refresh's cost gate — the whole point is that it answers before the install",
+  },
+];
+
+for (const { script, why } of BEFORE_INSTALL) {
+  test(`nothing ${script} imports needs node_modules`, () => {
+    const seen = new Set<string>();
+    const bare: string[] = [];
+    const visit = (from: string): void => {
+      if (seen.has(from)) return;
+      seen.add(from);
+      let raw: string;
+      try {
+        raw = readFileSync(from, "utf8");
+      } catch {
+        bare.push(`${from} → (unreadable; an import that does not resolve is not a proof)`);
+        return;
+      }
+      /*
+       * COMMENTS COME OUT FIRST, and this is not tidiness.
+       *
+       * The static-import pattern spans lines so it can read a multi-line
+       * import list, which means it will happily start at the word "export" in
+       * a doc comment and run on until it finds a quoted string somewhere
+       * below. This repository's modules carry long prose headers, so the
+       * widened walk immediately produced a page of "packages" that were
+       * sentences — `route-task.ts → this is not published`.
+       *
+       * The narrow walk never hit this because it only ever reached four
+       * files. A guard that reports a defect per paragraph is a guard nobody
+       * will keep.
+       */
+      const src = raw
+        .replace(/\/\*[\s\S]*?\*\//g, "")
+        .replace(/(^|[\s;])\/\/[^\n]*/g, "$1");
+      const specs: string[] = [];
+      /*
+       * Static `import … from "x"` and `export … from "x"`.
+       *
+       * `[^;]*?` rather than an unbounded span: an import list may run over
+       * several lines but carries no semicolon before its `from`, while an
+       * exported function body carries plenty. Unbounded, the pattern started
+       * at an `export` and ran on into a concatenated string, reporting
+       * `refresh-report.ts -> " +` as a package. The narrow walk never hit
+       * this because it only ever reached four files; widening the walk is
+       * what made the sloppiness visible.
+       */
+      for (const m of src.matchAll(/^\s*(?:import|export)[^;]*?from\s+"([^"]+)"/gm)) {
+        specs.push(m[1]);
+      }
+      /* Bare side-effect import: `import "x"`. */
+      for (const m of src.matchAll(/^\s*import\s+"([^"]+)"/gm)) specs.push(m[1]);
+      /*
+       * DYNAMIC `import("x")`. The gap that hid run 34160631768: an `.mjs`
+       * adapter reaching a `.ts` module this way had its entire closure
+       * unexamined.
+       */
+      for (const m of src.matchAll(/\bimport\(\s*"([^"]+)"\s*\)/g)) specs.push(m[1]);
+
+      for (const spec of specs) {
+        if (spec.startsWith("node:")) continue;
+        if (!spec.startsWith(".")) {
+          bare.push(`${from} → ${spec}`);
+          continue;
+        }
+        visit(join(dirname(from), spec));
+      }
+    };
+    visit(join(ROOT, script));
+
+    assert.ok(
+      seen.size >= 2,
+      `the walk only reached ${seen.size} file(s) from ${script}; it is not following the imports`,
+    );
+    assert.deepEqual(
+      bare,
+      [],
+      `${script}'s import closure reaches a package:\n  ${bare.join("\n  ")}\n\n` +
+        `CI runs it on a bare checkout before \`pnpm install\` — ${why} — so a package here fails\n` +
+        "the step on every head. It fails SAFE, which is worse than loud: the step keeps reporting\n" +
+        "correctly while the thing it decides can never happen (run 34160631768).",
+    );
+  });
+}
+
+test("the closure walk actually follows a dynamic import", () => {
+  /*
+   * THE PLANT. The guard above is only worth anything if its new half works, so
+   * the shape that hid the defect is shown being caught — a bare specifier
+   * reachable ONLY through `await import(...)`.
+   */
+  const src = 'const x = await import("yaml");\n';
+  const found: string[] = [];
+  for (const m of src.matchAll(/\bimport\(\s*"([^"]+)"\s*\)/g)) found.push(m[1]);
+  assert.deepEqual(found, ["yaml"], "the dynamic-import pattern no longer matches");
 });
 
 test("the preflight never stages, commits or otherwise mutates the tree", () => {

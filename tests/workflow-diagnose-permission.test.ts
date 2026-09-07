@@ -102,11 +102,28 @@ test("granting actions: read did not weaken anything else", () => {
 
   const buildCheck = workflows().find((w) => w.name === "build-check.yml")!;
   const permissions = (parse(buildCheck.text) as { permissions?: Record<string, string> }).permissions;
+  /*
+   * `checks: read` joined this on 2026-09-07 (RULING 281). The tree-equivalence
+   * step asks what the required contexts reported at the candidate head, and
+   * that endpoint needs it — with `contents: read` alone GitHub answers 403,
+   * `scripts/certified-tree.mjs` reads that as CANNOT_TELL and takes the full
+   * proof. Safe, and permanently useless, because a token that cannot see a
+   * certification looks exactly like a head that did not qualify.
+   *
+   * THE ASSERTION STAYS EXACT, and that is the point of it. The property this
+   * guards is that `build-check.yml` stays READ-ONLY: it deploys nothing and
+   * pushes nothing, so no `write` scope may ever appear here. An exact map is
+   * what makes adding one a diff somebody has to defend rather than a line
+   * nobody notices.
+   */
   assert.deepEqual(
     permissions,
-    { contents: "read" },
+    { contents: "read", checks: "read" },
     "build-check.yml deploys nothing and pushes nothing; its token stays read-only",
   );
+  for (const [scope, level] of Object.entries(permissions ?? {})) {
+    assert.equal(level, "read", `build-check.yml granted ${scope}: ${level} — it may only read`);
+  }
 });
 
 test("THE PLANT: the guard catches a diagnoser with no Actions read", () => {

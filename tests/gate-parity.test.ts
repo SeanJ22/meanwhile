@@ -110,6 +110,31 @@ const NOT_A_GATE = [
   "node scripts/ci-cost.mjs --attest=build",
   "node scripts/ci-cost.mjs --attest=gates",
   "node scripts/ci-cost.mjs --prove",
+  /*
+   * RULING 281 — THE TREE-EQUIVALENCE ADAPTER IS NOT A GATE EITHER, and it is
+   * here for exactly the reason `ci-cost.mjs` above is.
+   *
+   * `certified-tree.mjs` answers ONE question — is the tree on `main` the tree
+   * that already passed? — and every path through it exits 0. It cannot fail a
+   * commit: an unreadable ancestry, an unreachable API, a missing or red
+   * required context and any tree difference all print `certified=no`, and the
+   * full proof runs. There is nothing for a local door to pre-run, which is the
+   * test this list applies.
+   *
+   * It could not be a local gate even in principle: the relation it evaluates is
+   * defined only for a push to the integration ref, and a session's own head is
+   * a pull request. `pnpm gates` would be invoking a command that answers "not
+   * applicable" on every tree a session ever has.
+   *
+   * `--attest` prints the receipt of what was reused. The relation itself is
+   * `lib/control-plane/shipping/tree-equivalence.ts`, and THAT is covered by a
+   * gate: `tests/tree-equivalence.test.ts` runs inside `pnpm test`.
+   */
+  "node scripts/certified-tree.mjs",
+  "node scripts/certified-tree.mjs --attest=build",
+  "node scripts/certified-tree.mjs --attest=gates",
+  'elif [ "${{ steps.certified.outputs.certified }}" = "yes" ]; then',
+  'echo "expensive=no-certified" >> "$GITHUB_OUTPUT"',
 ];
 
 /*

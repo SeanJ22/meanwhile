@@ -227,6 +227,23 @@ export const PLAIN_WORDS: Readonly<Record<string, PlainWord>> = {
     words: "You approved it",
     means: "You recorded that this build is good to ship. Recording it does not ship it.",
   },
+  REVIEWABLE: { words: "Ready to review", means: "This section is on the test build and you can record what you think of it." },
+  NOT_YET_REVIEWABLE: {
+    words: "Not on this build yet",
+    means: "The test site has not shown us this section, so there is nothing here to judge.",
+  },
+  AWAITING_OWNER_CHOICE: { words: "Waiting on a choice from you", means: "This one needs you to pick between the options before it can go further." },
+  STALE_SHA: {
+    words: "The test site moved",
+    means: "The build changed while you were reading, so what you were about to decide on is no longer what is there.",
+  },
+  NOT_REVIEWABLE: { words: "Not reviewable" },
+  NOT_RECORDABLE: { words: "Cannot be recorded yet" },
+  ALREADY_RECORDED: { words: "Already recorded" },
+  STORE_UNAVAILABLE: { words: "The record could not be written" },
+  RAISED_STATE_CHOICE_REQUIRED: { words: "A variant has to be chosen first" },
+  RECORDED: { words: "Recorded" },
+  REFRESHED: { words: "Read again" },
 };
 
 /**

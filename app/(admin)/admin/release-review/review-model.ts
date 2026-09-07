@@ -15,6 +15,7 @@ import {
   type SoftwareReleaseReviewRecord,
 } from "@/lib/control-plane/software-release-review.ts";
 
+import { plainCode } from "@/lib/control-plane/plain-words.ts";
 import { RAISED_STATE_SECTION_ID, REQUIRED_SECTIONS, REVIEW_PAGE_URL, REVIEW_READY_STATUS, shortSha } from "./contract.ts";
 import type { ManifestCandidate, ManifestSection, ObservedManifest } from "./manifest.ts";
 
@@ -180,14 +181,14 @@ export function buildReviewModel(input: ModelInput): ReviewModel {
     {
       name: "manifest observed with a full staging SHA",
       ok: liveSha !== null,
-      detail: liveSha ? `staging SHA ${shortSha(liveSha)} observed ${reading.observedAt}` : reading.kind === "UNAVAILABLE" ? `MANIFEST_UNAVAILABLE — ${reading.reason}` : "the manifest carries no full 40-hex SHA",
+      detail: liveSha ? `staging SHA ${shortSha(liveSha)} observed ${reading.observedAt}` : reading.kind === "UNAVAILABLE" ? `the test site could not be read — ${reading.reason}` : "the manifest carries no full 40-hex SHA",
     },
     ...sections.map((s) => ({
       name: `${s.name} approved on this SHA`,
       ok: s.current.decision === "APPROVE",
       detail:
         s.availability === "NOT_YET_REVIEWABLE"
-          ? "NOT_YET_REVIEWABLE — the manifest has not exposed this section"
+          ? "the test site has not shown us this section"
           : s.current.decision === null
             ? "no decision recorded on this SHA"
             : `current decision ${s.current.decision} at ${s.current.at}`,
@@ -195,10 +196,12 @@ export function buildReviewModel(input: ModelInput): ReviewModel {
     {
       name: "Raised State variant chosen on this SHA",
       ok: raisedState.choice !== null,
-      detail: raisedState.choice ? `${raisedState.choice} chosen at ${raisedState.at}` : "AWAITING_OWNER_CHOICE",
+      detail: raisedState.choice ? `${raisedState.choice} chosen at ${raisedState.at}` : "waiting on a choice from you",
     },
     {
-      name: `manifest status is ${REVIEW_READY_STATUS}`,
+      // The status word in the owner's language; the raw constant stays the
+      // thing actually compared, one line below.
+      name: `the test site says it is ${plainCode(REVIEW_READY_STATUS).toLowerCase()}`,
       ok: manifest?.reviewReady === true,
       detail: manifest
         ? keyedOn === null
@@ -224,7 +227,7 @@ export function buildReviewModel(input: ModelInput): ReviewModel {
 
   const writesDisabledBecause =
     reading.kind === "UNAVAILABLE"
-      ? `MANIFEST_UNAVAILABLE — a decision cannot be recorded against a SHA the Admin cannot currently see (${reading.reason})`
+      ? `a decision cannot be recorded against a build the console cannot currently see (${reading.reason})`
       : liveSha === null
         ? "the manifest carries no full staging SHA to record a decision against"
         : !store.ok

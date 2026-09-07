@@ -61,12 +61,12 @@ export const revalidate = 0;
 const NOTICE: Record<string, string> = {
   RECORDED: "Recorded.",
   REFRESHED: "The manifest was fetched again.",
-  STALE_SHA: "STALE_SHA — staging moved while you were reviewing; your decision was not recorded.",
-  MANIFEST_UNAVAILABLE: "MANIFEST_UNAVAILABLE — a decision cannot be recorded against a SHA the Admin cannot currently see.",
+  STALE_SHA: "The test site moved while you were reviewing, so your decision was not recorded against it.",
+  MANIFEST_UNAVAILABLE: "A decision cannot be recorded against a build the console cannot currently see.",
   NOT_REVIEWABLE: "That section is not reviewable on this SHA; nothing was recorded.",
-  RAISED_STATE_CHOICE_REQUIRED: "APPROVE on Raised State needs a variant chosen on this SHA first; nothing was recorded.",
-  NOT_RECORDABLE: "OWNER_APPROVED_FOR_PRODUCTION is not recordable yet; the failing conditions are listed below.",
-  ALREADY_RECORDED: "OWNER_APPROVED_FOR_PRODUCTION is already recorded for this SHA.",
+  RAISED_STATE_CHOICE_REQUIRED: "Approving Raised State needs a variant chosen on this build first, so nothing was recorded.",
+  NOT_RECORDABLE: "Approving the whole build is not possible yet; what is missing is listed below.",
+  ALREADY_RECORDED: "You have already approved this build.",
   STORE_UNAVAILABLE: "The review store could not be written; nothing was recorded.",
   BAD_REQUEST: "The request was not understood; nothing was recorded.",
 };
@@ -111,9 +111,9 @@ function SectionCard({ section, model }: { readonly section: SectionView; readon
     !model.writesEnabled
       ? model.writesDisabledBecause
       : section.availability === "NOT_YET_REVIEWABLE"
-        ? "NOT_YET_REVIEWABLE — the manifest has not exposed this section yet; its controls wait for staging"
+        ? "The test site has not shown us this section yet, so its controls wait for it"
         : section.availability === "MANIFEST_UNAVAILABLE"
-          ? "MANIFEST_UNAVAILABLE"
+          ? "The console cannot currently see the test build"
           : null;
   const current = section.current;
   const sha = model.liveSha ?? "";
@@ -121,7 +121,7 @@ function SectionCard({ section, model }: { readonly section: SectionView; readon
     <section className="card rr-section" aria-labelledby={`rr-${section.id}`}>
       <div className="rr-head">
         <h3 id={`rr-${section.id}`}>{section.name}</h3>
-        <span className={`chip ${section.availability === "REVIEWABLE" ? "receipt-done" : "receipt-waiting"}`}>{section.availability}</span>
+        <span className={`chip ${section.availability === "REVIEWABLE" ? "receipt-done" : "receipt-waiting"}`} title={section.availability}>{plainCode(section.availability)}</span>
         <span className={`chip ${current.decision ? DECISION_CHIP[current.decision] : ""}`}>
           {current.decision ? DECISION_WORDS[current.decision] : "no decision on this SHA"}
         </span>
@@ -395,11 +395,11 @@ export default async function ReleaseReviewPage({ searchParams }: { searchParams
       {reading.kind === "UNAVAILABLE" && (
         <div className="refusal">
           <p>
-            <strong>MANIFEST_UNAVAILABLE.</strong> {reading.reason}. Observed <When iso={reading.observedAt} />.
+            <strong>{plainCode("MANIFEST_UNAVAILABLE")}.</strong> {reading.reason}. Observed <When iso={reading.observedAt} />.
           </p>
           <p className="note">
             {model.lastObserved
-              ? <>Last successfully observed staging SHA <code>{model.lastObserved.sha}</code> ({shortSha(model.lastObserved.sha)}) with status {model.lastObserved.prompt3Status ?? "unrecorded"}, <When iso={model.lastObserved.at} year />.</>
+              ? <>Last build we could read: <code title={model.lastObserved.sha}>{shortSha(model.lastObserved.sha)}</code>, {model.lastObserved.prompt3Status === null ? "status unrecorded" : plainCode(model.lastObserved.prompt3Status)}, <When iso={model.lastObserved.at} year />.</>
               : "No manifest has ever been observed by this Admin; there is no last-observed SHA."}{" "}
             Decision writes are disabled while the manifest cannot be read.
           </p>
@@ -451,7 +451,7 @@ export default async function ReleaseReviewPage({ searchParams }: { searchParams
 
       <h2>Review sections on {model.liveSha ? shortSha(model.liveSha) : "no SHA"}</h2>
       <p className="note">
-        Five sections are required regardless of what the manifest enumerates; a section the manifest has not exposed is NOT_YET_REVIEWABLE. A
+        Five sections are required regardless of what the manifest enumerates; a section the test site has not shown us is not reviewable yet. A
         later decision supersedes an earlier one for gating and never deletes it. Prior SHAs are under History.
       </p>
       <div className="rr-sections">
@@ -463,7 +463,7 @@ export default async function ReleaseReviewPage({ searchParams }: { searchParams
       <h3>Raised State variant</h3>
       <section className="card">
         <p>
-          Status: <strong>{model.raisedState.status}</strong>
+          Status: <strong title={model.raisedState.status}>{plainCode(model.raisedState.status)}</strong>
           {model.raisedState.choice ? (
             <>
               {" "}
@@ -514,11 +514,11 @@ export default async function ReleaseReviewPage({ searchParams }: { searchParams
         </>
       )}
 
-      <h2>OWNER_APPROVED_FOR_PRODUCTION</h2>
+      <h2>Approving the whole build</h2>
       <section className="card">
         <p className="note">
           Recordable when, and only when, all five required sections carry a current APPROVE on one exact staging SHA, Raised State has a chosen variant
-          on that SHA, and the manifest status for that SHA is {REVIEW_READY_STATUS} (keyed on {model.status.keyedOn ?? "prompt3Status"}). It is
+          on that SHA, and the test site reports itself {plainCode(REVIEW_READY_STATUS).toLowerCase()} (keyed on {model.status.keyedOn ?? "prompt3Status"}). It is
           recorded only by the button below, never on the last approval. The record is the end of the line: it does not merge, push, call GitHub or
           Netlify, run git, promote, or notify.
         </p>
@@ -539,7 +539,7 @@ export default async function ReleaseReviewPage({ searchParams }: { searchParams
             <input type="hidden" name="action" value="RECORD_OWNER_APPROVAL" />
             <input type="hidden" name="stagingSha" value={model.liveSha ?? ""} />
             <button type="submit" className="primary" disabled={!composite.recordable} title={composite.recordable ? undefined : "not recordable until every condition above holds"}>
-              Record OWNER_APPROVED_FOR_PRODUCTION for {model.liveSha ? shortSha(model.liveSha) : "this SHA"}
+              Approve this whole build ({model.liveSha ? shortSha(model.liveSha) : "this SHA"})
             </button>
             {!composite.recordable && <span className="note">Not recordable: {composite.conditions.filter((c) => !c.ok).length} condition(s) fail.</span>}
           </form>

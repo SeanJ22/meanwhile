@@ -24,10 +24,19 @@
  * when it is off.** The setting is read from the durable admin configuration
  * and rendered with its source and the moment it was decided. The switch is the
  * gateway's own `config.setApiFallback` action, posted to the one door — this
- * page holds no second copy of the rule and no second way to change it. And it
- * says plainly what recording that decision does today: nothing in the running
- * system reads the policy yet, so allowing paid spending records the permission
- * and permits nothing, and the exact missing seam is named on the card.
+ * page holds no second copy of the rule and no second way to change it. Since
+ * ACLOSE-2 the setting is ENFORCED: every delegated job reads it and refuses
+ * rather than billing when it is off, so the card says that, and names the one
+ * spender this switch does not govern rather than implying it governs all.
+ *
+ * ## A reviewer's sentence is an instrument's sentence
+ *
+ * The two providers write prose, and their prose quotes the code they were
+ * asked to review — `READ_ONLY`, `PAID_API`, `AGENT_BOUNDS`. The first real
+ * independent review put all of those on the face of this page. Agent-authored
+ * text therefore goes through `plainText` on the face, exactly as any other
+ * instrument's sentence does, with the raw form kept in the hover and the
+ * disclosure.
  *
  * Everything computed lives in `lib/control-plane/agents/view.ts`, which
  * `node --test` can import — a `.tsx` cannot be — so the page holds no
@@ -51,6 +60,7 @@ import {
   type ReviewRow,
 } from "@/lib/control-plane/agents/view.ts";
 import { gap, type Held } from "@/lib/control-plane/owner-surface.ts";
+import { plainText } from "@/lib/control-plane/plain-words.ts";
 import type { AgentProviderDescriptor } from "@/lib/control-plane/agents/provider.ts";
 
 import { DECISION_ROUTE, GapNote, HeldNum, QueueForm, When } from "../../console-ui.tsx";
@@ -430,7 +440,7 @@ function ReviewCard({ r }: { r: ReviewRow }) {
       </p>
       <p className="plain">
         They were asked for: {r.asked}. They read <span title={r.snapshot.hash}>{r.snapshot.describes}</span>, frozen{" "}
-        <When iso={r.snapshot.frozenAt} /> at {r.snapshot.bytes} bytes (copy <code>{r.snapshotShort}</code>).
+        <When iso={r.snapshot.frozenAt} /> at {r.snapshot.bytes} bytes.
       </p>
 
       <dl className="ab-seats">
@@ -440,7 +450,7 @@ function ReviewCard({ r }: { r: ReviewRow }) {
               {s.slot}: {s.providerName}
             </dt>
             <dd>
-              <span className="chip">{s.stateWords}</span> {s.says}
+              <span className="chip">{s.stateWords}</span> {plainText(s.says)}
             </dd>
           </div>
         ))}
@@ -473,7 +483,7 @@ function ReviewCard({ r }: { r: ReviewRow }) {
 
       {r.comparison.held ? (
         <>
-          <p className="plain">{r.comparison.value.says}</p>
+          <p className="plain">{plainText(r.comparison.value.says)}</p>
           {r.comparison.value.disagreements.length > 0 && (
             <>
               <h4>Where they disagreed</h4>
@@ -504,8 +514,8 @@ function ReviewCard({ r }: { r: ReviewRow }) {
                   <div key={a.topic} className="ab-point">
                     <dt>{a.topic}</dt>
                     <dd>
-                      {a.aSays} <span className="chip">{confidenceWords(a.confidence)}</span>{" "}
-                      <span className="ab-evidence">Pointed at: {a.aEvidence}; and {a.bEvidence}</span>
+                      {plainText(a.aSays)} <span className="chip">{confidenceWords(a.confidence)}</span>{" "}
+                      <span className="ab-evidence">Pointed at: {plainText(a.aEvidence)}; and {plainText(a.bEvidence)}</span>
                     </dd>
                   </div>
                 ))}
@@ -517,10 +527,10 @@ function ReviewCard({ r }: { r: ReviewRow }) {
               <h4>Raised by one of them only</h4>
               <ul className="ab-points-one">
                 {r.comparison.value.onlyA.map((p) => (
-                  <li key={`a-${p.topic}`}>First reviewer only &mdash; {p.topic}: {p.says}</li>
+                  <li key={`a-${p.topic}`}>First reviewer only &mdash; {plainText(p.topic)}: {plainText(p.says)}</li>
                 ))}
                 {r.comparison.value.onlyB.map((p) => (
-                  <li key={`b-${p.topic}`}>Second reviewer only &mdash; {p.topic}: {p.says}</li>
+                  <li key={`b-${p.topic}`}>Second reviewer only &mdash; {plainText(p.topic)}: {plainText(p.says)}</li>
                 ))}
               </ul>
             </>

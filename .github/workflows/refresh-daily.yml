@@ -150,10 +150,76 @@ jobs:
           node-version: 24
           package-manager-cache: false
 
+      # ══ DOES THIS RUN HAVE ANYTHING TO DO? (FCP-5, 2026-09-07) ══
+      #
+      # FCP-5's cost law: a quiet day costs ZERO GitHub Actions minutes for
+      # freshness. Everything below this step — the install, the source sweep,
+      # the gate, the commit — used to run before anything could discover that
+      # no source was due and none was owed. On a night like that the whole job
+      # buys an answer this step already has, from a calendar function and two
+      # committed JSON files, with bare Node, in about a second.
+      #
+      # It also carries the AUTHORITY question, and carries it inertly for now.
+      # `lib/control-plane/freshness/authority.ts` holds the four transfer
+      # conditions (RULING 216, RULING 268); until they are met this workflow IS
+      # the freshness clock and does its own full work, exactly as before. When
+      # a canonical run this repository did not author reproduces the contracts,
+      # the same step becomes a liveness probe and a night the standing runner
+      # has already served costs a checkout instead of a sweep — with nobody
+      # having to remember to change anything.
+      #
+      # EVERY UNANSWERABLE QUESTION DOES THE WORK. An unreadable debt file, a
+      # module that will not import, an unreadable activation gate: all print
+      # run_the_work=yes. A backup that skipped on its own confusion would
+      # silently stop being a backup, and the failure would look exactly like a
+      # quiet night.
+      #
+      # Bare `node`: no corepack, no install. That is what lets it run first.
+      - name: Is there anything to do tonight?
+        id: wakeup
+        run: node scripts/backup-wakeup.mjs
+
+      # EVERY JOB NAMES ITS OWN CAUSE BEFORE IT DIES (RULING 164), and the
+      # wakeup step is now the first thing that can kill this job.
+      #
+      # `pnpm diagnose` at the bottom of this file needs the install, and on a
+      # night the wakeup refuses there is no install — so a crash HERE would
+      # leave a red job whose whole log is "Process completed with exit code 1",
+      # which is the absence of an error message rather than one. This step is
+      # the sentence. It adds no gate: the job is already red by the time it
+      # runs.
+      - name: The wakeup itself failed — say so, since the diagnoser cannot
+        if: failure() && steps.wakeup.outcome == 'failure'
+        run: |
+          echo "scripts/backup-wakeup.mjs exited non-zero." >&2
+          echo "" >&2
+          echo "It is written to exit 0 on EVERY path — an unreadable debt file, a module that" >&2
+          echo "will not import and an unreadable activation gate all print run_the_work=yes and" >&2
+          echo "let the full refresh run. So this is a crash, not a decision, and no source has" >&2
+          echo "been refreshed tonight." >&2
+          echo "" >&2
+          echo "Nothing was installed, so pnpm diagnose cannot run here. Reproduce it with:" >&2
+          echo "    node scripts/backup-wakeup.mjs" >&2
+          exit 1
+
+      - name: Nothing was due — stating what was skipped and why
+        if: steps.wakeup.outputs.run_the_work != 'yes' && steps.wakeup.outcome == 'success'
+        run: |
+          echo "No source is due by the cadence and none is carrying debt."
+          echo ""
+          echo "SKIPPED: the install, every source, the browser, the gate and the commit."
+          echo "COMMITS THIS RUN: 0.  PRODUCTION BUILDS THIS RUN: 0."
+          echo ""
+          echo "This is a stated early exit, not a silent one, and it is not a pass of the"
+          echo "gate: the gate did not run because there was nothing to gate. A quiet day"
+          echo "costs nothing — RULING 124, and FCP-5's cost law."
+
       - name: Enable corepack (pnpm pinned by packageManager)
+        if: steps.wakeup.outputs.run_the_work == 'yes'
         run: corepack enable
 
       - name: Install
+        if: steps.wakeup.outputs.run_the_work == 'yes'
         run: corepack pnpm install --frozen-lockfile
 
       # PER-SOURCE ISOLATION (NH31, one size larger).
@@ -167,6 +233,7 @@ jobs:
       #   2  written WITH named failures — commit the survivors, THEN go red
       - name: Refresh every due source
         id: refresh
+        if: steps.wakeup.outputs.run_the_work == 'yes'
         env:
           INGEST_CONTACT_EMAIL: ${{ vars.INGEST_CONTACT_EMAIL }}
           LEGISCAN_API_KEY: ${{ secrets.LEGISCAN_API_KEY }}
@@ -201,6 +268,7 @@ jobs:
       # build.
       - name: Diff the governed artifacts
         id: diff
+        if: steps.wakeup.outputs.run_the_work == 'yes'
         run: |
           if [ "${{ inputs.simulate_change }}" = "true" ]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -218,7 +286,7 @@ jobs:
           fi
 
       - name: Unchanged — stating what was skipped and why
-        if: steps.diff.outputs.changed != 'true'
+        if: steps.wakeup.outputs.run_the_work == 'yes' && steps.diff.outputs.changed != 'true'
         run: |
           echo "Every due source ran and no governed artifact moved."
           echo ""
@@ -382,13 +450,13 @@ jobs:
       # ended. `WTP_RUN_ID` is not set here: this step writes to the runner temp
       # and makes no network request that could count as reader signal.
       - name: Emit the canonical execution result
-        if: always()
+        if: always() && steps.wakeup.outputs.run_the_work == 'yes'
         env:
           GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
         run: corepack pnpm exec tsx scripts/emit-execution-result.mts --out "${{ runner.temp }}/exec-result"
 
       - name: Upload the execution result
-        if: always()
+        if: always() && steps.wakeup.outputs.run_the_work == 'yes'
         uses: actions/upload-artifact@v4
         with:
           name: refresh-execution-result-${{ github.run_id }}-${{ github.run_attempt }}
@@ -411,7 +479,7 @@ jobs:
       # cannot fetch its own log while it is the job. The file is read first;
       # the API stays as the fallback for a failure before the gate ran.
       - name: Name the cause
-        if: failure()
+        if: failure() && steps.wakeup.outputs.run_the_work == 'yes'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WTP_JOB_LOG: ${{ runner.temp }}/gate.log

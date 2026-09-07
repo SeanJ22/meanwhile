@@ -94,6 +94,21 @@ on:
 
 permissions:
   contents: read
+  # CHECKS READ — the tree-equivalence step asks what the required contexts
+  # reported at the candidate head (FCP-9C).
+  #
+  # Declaring `permissions:` at all switches the token from the repository
+  # default to exactly what is listed, so every scope not named here is `none`.
+  # With `contents: read` alone, `GET /repos/{owner}/{repo}/commits/{sha}/
+  # check-runs` answers 403 — and `scripts/certified-tree.mjs` would read that
+  # as CANNOT_TELL and take the full proof. Safe, and permanently useless: the
+  # attestation could never fire and nobody would see why, because the failure
+  # looks exactly like a head that did not qualify. `refresh-daily.yml` carries
+  # `actions: read` for the same class of reason, recorded there.
+  #
+  # This is the minimum that endpoint needs. Nothing else is widened, and the
+  # token still cannot write anything.
+  checks: read
 
 # NO COMMIT ON `main` MAY END WITH A CANCELLED CHECK. (2026-08-26.)
 #
@@ -200,6 +215,31 @@ jobs:
         id: cost
         run: node scripts/ci-cost.mjs
 
+      # ══ IS THIS THE TREE THAT ALREADY PASSED? (FCP-9C) ══
+      #
+      # RULING 278 asks what CHANGED. This asks a second question the SHA hides:
+      # has this exact tree already been certified?
+      #
+      # Run #807 of 2026-09-07 is why. It bought a full shipping-grade proof of
+      # merge commit 0251d145, whose tree is dc3bee39 — the identical git object
+      # run #806 had certified on be6e41ff minutes earlier. Same bytes, different
+      # commit SHA, seventeen more billed minutes and another slice of the
+      # forty-five the owner spent unable to proceed.
+      #
+      # `scripts/certified-tree.mjs` is an ADAPTER, exactly as ci-cost.mjs is:
+      # the relation lives in lib/control-plane/shipping/tree-equivalence.ts and
+      # there is no second table here. It answers `yes` only when the pushed head
+      # is a two-parent merge, main's tip is an ancestor of the candidate, the
+      # trees are the same object, and every required context is GREEN at the
+      # candidate. Every unanswerable question answers `no` and the full proof
+      # runs. It needs no install — bare node, git, and one `gh api` call.
+      - name: Is this the tree that already passed? (FCP-9C)
+        id: certified
+        if: steps.cost.outputs.cost != 'CHEAP'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/certified-tree.mjs
+
       # THE CHEAP TIER, BEFORE ANYTHING IS BOUGHT. (RULING 279.)
       #
       # Bare `node` on the bare checkout: no corepack, no pnpm store, no
@@ -218,7 +258,7 @@ jobs:
       # verify (RULING 278).
       - name: Preflight — the cheap deterministic checks (RULING 279)
         id: preflight
-        if: steps.cost.outputs.cost != 'CHEAP'
+        if: steps.cost.outputs.cost != 'CHEAP' && steps.certified.outputs.certified != 'yes'
         run: node scripts/preflight.mjs
 
       # ONE PLACE DECIDES WHETHER THE EXPENSIVE TIER RUNS, AND THERE IS NO
@@ -227,7 +267,17 @@ jobs:
       #
       #   yes            verify this head fully
       #   no-cheap       the classifier proved it ships nothing; attest and stop
+      #   no-certified   this exact tree already passed; attest and stop (FCP-9C)
       #   no-preflight   a cheap check failed; fail loudly and buy nothing more
+      #
+      # `no-certified` sits BELOW `no-cheap` and ABOVE `no-preflight`, and the
+      # order is the argument: a positively proven non-shipping commit is
+      # cheapest, a tree already proved needs no second proof, and a head that
+      # has neither answer must pass the cheap tier before it buys the expensive
+      # one. A tree that already passed also already passed this preflight, on
+      # the same bytes, which is why the preflight step is skipped rather than
+      # re-run — the same reasoning, and the same fail-closed direction, as the
+      # classifier's cheap path.
       - name: Decide whether the expensive tier runs
         id: tier
         if: always()
@@ -235,6 +285,8 @@ jobs:
         run: |
           if [ "${{ steps.cost.outputs.cost }}" = "CHEAP" ]; then
             echo "expensive=no-cheap" >> "$GITHUB_OUTPUT"
+          elif [ "${{ steps.certified.outputs.certified }}" = "yes" ]; then
+            echo "expensive=no-certified" >> "$GITHUB_OUTPUT"
           elif [ "${{ steps.preflight.outcome }}" != "success" ]; then
             echo "expensive=no-preflight" >> "$GITHUB_OUTPUT"
           else
@@ -366,6 +418,15 @@ jobs:
         if: steps.tier.outputs.expensive == 'no-cheap'
         run: node scripts/ci-cost.mjs --attest=build
 
+      # THE REQUIRED CONTEXT STILL ARRIVES, AND IT SAYS WHAT IT REUSED.
+      # (FCP-9C. RULING 156: a required check that does not report disarms
+      # protection rather than blocking it, so this job runs, reports
+      # `build (<mode>)` and states its receipt.) Nothing is waived: the proof
+      # that ran is the proof for these exact bytes.
+      - name: Certified tree reused — this tree already passed
+        if: steps.tier.outputs.expensive == 'no-certified'
+        run: node scripts/certified-tree.mjs --attest=build
+
   # ---------------------------------------------------------------------------
   # THE SUITE, ON LINUX, ON EVERY PR (Prompt B item 1c, 2026-08-20).
   #
@@ -421,6 +482,31 @@ jobs:
         id: cost
         run: node scripts/ci-cost.mjs
 
+      # ══ IS THIS THE TREE THAT ALREADY PASSED? (FCP-9C) ══
+      #
+      # RULING 278 asks what CHANGED. This asks a second question the SHA hides:
+      # has this exact tree already been certified?
+      #
+      # Run #807 of 2026-09-07 is why. It bought a full shipping-grade proof of
+      # merge commit 0251d145, whose tree is dc3bee39 — the identical git object
+      # run #806 had certified on be6e41ff minutes earlier. Same bytes, different
+      # commit SHA, seventeen more billed minutes and another slice of the
+      # forty-five the owner spent unable to proceed.
+      #
+      # `scripts/certified-tree.mjs` is an ADAPTER, exactly as ci-cost.mjs is:
+      # the relation lives in lib/control-plane/shipping/tree-equivalence.ts and
+      # there is no second table here. It answers `yes` only when the pushed head
+      # is a two-parent merge, main's tip is an ancestor of the candidate, the
+      # trees are the same object, and every required context is GREEN at the
+      # candidate. Every unanswerable question answers `no` and the full proof
+      # runs. It needs no install — bare node, git, and one `gh api` call.
+      - name: Is this the tree that already passed? (FCP-9C)
+        id: certified
+        if: steps.cost.outputs.cost != 'CHEAP'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/certified-tree.mjs
+
       # THE CHEAP TIER, BEFORE ANYTHING IS BOUGHT. (RULING 279.)
       #
       # Bare `node` on the bare checkout: no corepack, no pnpm store, no
@@ -439,7 +525,7 @@ jobs:
       # verify (RULING 278).
       - name: Preflight — the cheap deterministic checks (RULING 279)
         id: preflight
-        if: steps.cost.outputs.cost != 'CHEAP'
+        if: steps.cost.outputs.cost != 'CHEAP' && steps.certified.outputs.certified != 'yes'
         run: node scripts/preflight.mjs
 
       # ONE PLACE DECIDES WHETHER THE EXPENSIVE TIER RUNS, AND THERE IS NO
@@ -448,7 +534,17 @@ jobs:
       #
       #   yes            verify this head fully
       #   no-cheap       the classifier proved it ships nothing; attest and stop
+      #   no-certified   this exact tree already passed; attest and stop (FCP-9C)
       #   no-preflight   a cheap check failed; fail loudly and buy nothing more
+      #
+      # `no-certified` sits BELOW `no-cheap` and ABOVE `no-preflight`, and the
+      # order is the argument: a positively proven non-shipping commit is
+      # cheapest, a tree already proved needs no second proof, and a head that
+      # has neither answer must pass the cheap tier before it buys the expensive
+      # one. A tree that already passed also already passed this preflight, on
+      # the same bytes, which is why the preflight step is skipped rather than
+      # re-run — the same reasoning, and the same fail-closed direction, as the
+      # classifier's cheap path.
       - name: Decide whether the expensive tier runs
         id: tier
         if: always()
@@ -456,6 +552,8 @@ jobs:
         run: |
           if [ "${{ steps.cost.outputs.cost }}" = "CHEAP" ]; then
             echo "expensive=no-cheap" >> "$GITHUB_OUTPUT"
+          elif [ "${{ steps.certified.outputs.certified }}" = "yes" ]; then
+            echo "expensive=no-certified" >> "$GITHUB_OUTPUT"
           elif [ "${{ steps.preflight.outcome }}" != "success" ]; then
             echo "expensive=no-preflight" >> "$GITHUB_OUTPUT"
           else
@@ -465,6 +563,10 @@ jobs:
       # Exact historical data equality is a migration proof, not a live-source query.
       # Fetch the frozen base and the pinned integration source; keep checkout shallow.
       - name: Enable corepack (pnpm pinned by packageManager)
+        # A certified tree (FCP-9C) needs none of this: the attestation is bare
+        # node. The RULING 278 cheap path DOES need it — `ci-cost.mjs --prove`
+        # runs the guard test files, which import from node_modules.
+        if: steps.tier.outputs.expensive != 'no-certified'
         run: corepack enable
 
       # P-006 · THE STORE, CACHED — and cached AFTER corepack, deliberately.
@@ -478,9 +580,17 @@ jobs:
       # the question can be answered.
       - name: Where is the pnpm store
         id: pnpm-store
+        # A certified tree (FCP-9C) needs none of this: the attestation is bare
+        # node. The RULING 278 cheap path DOES need it — `ci-cost.mjs --prove`
+        # runs the guard test files, which import from node_modules.
+        if: steps.tier.outputs.expensive != 'no-certified'
         run: echo "path=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
 
       - uses: actions/cache@v4
+        # A certified tree (FCP-9C) needs none of this: the attestation is bare
+        # node. The RULING 278 cheap path DOES need it — `ci-cost.mjs --prove`
+        # runs the guard test files, which import from node_modules.
+        if: steps.tier.outputs.expensive != 'no-certified'
         with:
           path: ${{ steps.pnpm-store.outputs.path }}
           key: pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
@@ -491,6 +601,10 @@ jobs:
             pnpm-${{ runner.os }}-
 
       - name: Install
+        # A certified tree (FCP-9C) needs none of this: the attestation is bare
+        # node. The RULING 278 cheap path DOES need it — `ci-cost.mjs --prove`
+        # runs the guard test files, which import from node_modules.
+        if: steps.tier.outputs.expensive != 'no-certified'
         run: corepack pnpm install --frozen-lockfile
 
       # P-006 · the browser, cached. This install carries a 15-minute timeout
@@ -819,3 +933,12 @@ jobs:
       - name: Cheap attestation — nothing else could differ
         if: steps.tier.outputs.expensive == 'no-cheap'
         run: node scripts/ci-cost.mjs --attest=gates
+
+      # THE REQUIRED CONTEXT STILL ARRIVES, AND IT SAYS WHAT IT REUSED.
+      # (FCP-9C. RULING 156: a required check that does not report disarms
+      # protection rather than blocking it, so this job runs, reports
+      # `gates (test · lint · tsc)` and states its receipt.) The suite that ran
+      # on the candidate ran on these exact bytes; no check is waived.
+      - name: Certified tree reused — this tree already passed
+        if: steps.tier.outputs.expensive == 'no-certified'
+        run: node scripts/certified-tree.mjs --attest=gates

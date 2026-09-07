@@ -1,11 +1,11 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "13c39513ca948e38",
+  "snapshot": "c39d7e12f3f5b868",
   "counts": {
-    "records": 316,
-    "current": 47,
-    "law": 34,
+    "records": 318,
+    "current": 49,
+    "law": 36,
     "decisions": 13,
     "historical": 269
   },
@@ -7418,6 +7418,70 @@
       ],
       "uncertain": [],
       "sourceRef": "scripts/preflight.mjs"
+    },
+    {
+      "id": "R-0280",
+      "aliases": [
+        "RULING 280",
+        "R280",
+        "R-280"
+      ],
+      "title": "RULING 280 — runtime freshness is a local control plane of typed stages, and GitHub Actions is CI rather than the runtime loop",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-09-07",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "related_to",
+          "target": "R-0268"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0269"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0278"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/control-plane/freshness/"
+    },
+    {
+      "id": "R-0281",
+      "aliases": [
+        "RULING 281",
+        "R281",
+        "R-281"
+      ],
+      "title": "RULING 281 — one logical change is one shipping transaction, and the subject of a certification is a tree",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-09-07",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "related_to",
+          "target": "R-0266"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0278"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0279"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/control-plane/shipping/"
     },
     {
       "id": "R-C-commands-package-json-s-scripts-block-is-the-list",

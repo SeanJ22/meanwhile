@@ -27,7 +27,7 @@ import { displayNameOf } from "./display-name.ts";
 import { measured, type Measured } from "./owner-surface.ts";
 import { US_STATES } from "./readiness/catalog.ts";
 import type { RouteTask } from "./route-task.ts";
-import { unitCarriesState } from "./scheduler/dispatch-target.ts";
+import { stateOfSubjectPlace } from "./unit-state.ts";
 import type { ResearchIntent } from "./scheduler/research-policy.ts";
 import type { WorkItem } from "./work-item.ts";
 
@@ -131,11 +131,12 @@ export function whereOf(subject: string | null, planJurisdiction: string | null)
     const code = jur.toLowerCase();
     return STATE_NAME.get(code) ?? jur;
   }
-  const hay = (subject ?? "").toLowerCase();
-  // The same state-token rule the dispatch matcher and the publisher use —
-  // one reading of "which state is this", never three.
-  const state = US_STATES.find((s) => unitCarriesState(hay, s.code));
-  if (state) return state.name;
+  // The same structural state rule the dispatch matcher and the publisher use
+  // (`lib/control-plane/unit-state.ts`) — one reading of "which state is
+  // this", never three — in its PLACE variant, which leaves a ballot subject
+  // its own name rather than collapsing "Pima County Prop 423" to "Arizona".
+  const code = stateOfSubjectPlace(subject ?? "");
+  if (code) return STATE_NAME.get(code) ?? code;
   return subject && subject.trim() !== "" ? subject : null;
 }
 

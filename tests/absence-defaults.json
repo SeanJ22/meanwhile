@@ -6,11 +6,6 @@
       "reason": "Not a claim about data. `why` is a REJECTION CLASS from middleware and this is the prompt shown when there is no rejection to explain — the owner simply arrived at the login. It asserts nothing about any record."
     },
     {
-      "file": "app/(admin)/admin/research/worker-fleet-panel.tsx",
-      "text": "No — nothing here needs a decision from you.",
-      "reason": "Not an absence. `needsYou` is null only when no shown attempt's work item is in an owner-gated state (AWAITING_OWNER, AUTHOR_DECISION_REQUIRED, RECORDS_REQUEST_REQUIRED, HUMAN_INTERACTION_REQUIRED) — a measured fact about the states on record, derived by roleLead from the same readback the table beneath renders, so the sentence and the table cannot disagree. It is the line the owner asked for in ADM-10 (\"if nothing needs him, say that in the first line so he can move on\") and claims nothing about any record's content; when a work item IS waiting on him the same slot names it."
-    },
-    {
       "file": "components/ballot/candidate-card.tsx",
       "text": "official site",
       "reason": "Not an absence. The default fires when a link carries no LABEL, and a link with no label is one on the candidate's own domain — where \"official site\" and \"campaign site\" describe exactly the thing that IS present. The label exists for the two cases where those words would be false: RULING 122's page a party publishes about a candidate, and RULING 145's campaign presence on a platform, both of which name their host instead. So the ?? is choosing between two true descriptions of a link that is there, never standing in front of one that is missing — and when there is no link, neither branch renders at all."
@@ -44,6 +39,36 @@
       "file": "components/officials/official-term-note.tsx",
       "text": "Published roster",
       "reason": "Labels an existing roster-source link only when the holder already carries a verbatim sourced term note and sourceUrl. It does not supply a missing note, organization, read date or civic finding. When sourceOrg is absent the link keeps its exact held URL with this record-class label; when the note or URL is absent the fallback never renders. Actual leaf controls in reader-roster-term-note.test.ts prove those boundaries."
+    },
+    {
+      "file": "app/(admin)/status-ui.tsx",
+      "text": "Technical details",
+      "reason": "Not an absence. This is the LABEL on the disclosure that holds the machine's own words, and the `??` chooses between a caller's own label and the console's standard one. It asserts nothing about any record; a card with nothing to disclose renders no disclosure at all, because the component takes `detail` and returns null when it is absent. The words are the ones §9A.2 names for this slot on every surface."
+    },
+    {
+      "file": "app/(admin)/status-ui.tsx",
+      "text": "a decision from you",
+      "reason": "Not an absence. `needsYou.needed` is already TRUE at this point — the caller has asserted the card needs the owner — and the `??` only chooses wording when the caller named no specific action. So it stands in front of a known YES, never in front of an unknown, and 'Needs you: Yes — a decision from you' is the least specific TRUE sentence rather than a guess about a record. Appears twice: once in NeedsYouLine, once in DefinedTile, which render the same fact in two shapes."
+    },
+    {
+      "file": "app/(admin)/admin/sections/runner.tsx",
+      "text": "no stop reason recorded for this cycle",
+      "reason": "Not an absence about the world; an absence about the RECORD, stated as one. `fleetSafety.stoppedBecause` is empty when the cycle stopped for no reason it names, and the sentence says exactly that — the runner recorded no reason — rather than 'nothing stopped it', which would be a claim about the cycle. It sits inside Technical details beside the instrument's own words, and the face of the card carries the derived stop sentence or nothing at all."
+    },
+    {
+      "file": "app/(admin)/admin/deploy-fleet.tsx",
+      "text": "Deploy fleet",
+      "reason": "Not an absence. It is the button's own words, and the `??` chooses between a surface's own label ('Deploy fleet here' on a readiness row) and the console home's. Both describe the same control; neither stands in front of missing data."
+    },
+    {
+      "file": "app/(admin)/admin/deploy-fleet.tsx",
+      "text": "The fleet has been told where to go.",
+      "reason": "Not an absence. The `??` fires only after the gateway answered ok, so the action DID happen; the fallback is the sentence to read when the receipt came back without one of its own. It reports a completed write, never a missing record."
+    },
+    {
+      "file": "app/(admin)/admin/deploy-fleet.tsx",
+      "text": "Working out what this would do…",
+      "reason": "Not an absence. It is the in-flight state of the preview request — the panel is open and the answer has not arrived — and it is replaced by the preview or by the named reason the preview could not be built. A pending read says it is pending; it never stands in for one that failed."
     }
   ]
 }

@@ -33,6 +33,7 @@
  * "everything registered for Illinois", not a guess at what deep means.
  */
 import { US_STATES } from "../readiness/catalog.ts";
+import { stateCodeOf } from "../unit-state.ts";
 
 export interface DispatchTarget {
   /** The owner's words, whitespace-normalised. */
@@ -112,12 +113,20 @@ export function parseDispatchTarget(raw: string): DispatchTarget {
  * puts a state: after `state:` or `state-`, at the very start, or as a whole
  * colon- or slash-delimited segment. A hyphen-bounded token in the middle of a
  * slug is NOT a state: "representative-in-congress" is not Indiana and
- * "de-los-santos" is not Delaware, which is exactly what a looser rule read
- * into the by-state panel. `hay` is lower-cased by the caller.
+ * "de-los-santos" is not Delaware.
+ *
+ * That last sentence was the INTENT and the regex did not honour it: the
+ * lookahead admitted a following hyphen, so `…:de-venezia-marie` — a New Jersey
+ * town-council candidate — carried Delaware, and `ballot-az-pima` carried no
+ * state at all because the hyphen BEFORE the code was not admitted. Both were
+ * read back from the production control plane on 2026-09-06 (ADM-29). The rule
+ * now lives in one place, `lib/control-plane/unit-state.ts`, which reads the
+ * id's structure and attributes a unit to at most one state; this function is
+ * the predicate shape the target matcher and the two publishers already call.
+ * `hay` is lower-cased by the caller.
  */
 export function unitCarriesState(hay: string, code: string): boolean {
-  if (new RegExp(`state[:-]${code}(?![a-z])`).test(hay)) return true;
-  return new RegExp(`(^|[:/ ])${code}(?=[-_:/ ]|$)`).test(hay);
+  return stateCodeOf(hay, "") === code;
 }
 
 /**

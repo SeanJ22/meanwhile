@@ -104,6 +104,9 @@ import type {
   WindowRunRecord,
 } from "../promotion/types.ts";
 import type { ReadinessStateSnapshot } from "../readiness/model.ts";
+import type { ActionReceipt } from "../gateway/contract.ts";
+import type { AgentJobRecord } from "../gateway/agent-job.ts";
+import type { AdminConfig } from "../gateway/admin-config.ts";
 
 /** ------------------------------------------------------------- envelopes */
 
@@ -613,6 +616,34 @@ export interface ControlPlaneRepositories {
    *                           new SHA starts with no rows. Joins nothing civic.
    */
   readonly softwareReleaseReviews: AppendOnlyRepository<SoftwareReleaseReviewRecord>;
+  /**
+   * THE ACTION GATEWAY. (Admin Pass C, ADM-C6 — schema v9.)
+   *
+   *   adminReceipts  every action the console submitted and what came of it,
+   *                  under one log key, with the record id derived from the
+   *                  action type and the caller's idempotency key. Two jobs:
+   *                  it is the durable proof §3.7 requires, and it is the
+   *                  idempotency index the gateway consults BEFORE it does any
+   *                  work — so a double-click, a retried fetch and a replayed
+   *                  chat tool call return one receipt instead of making two
+   *                  state changes. A refusal is appended too: a refusal that
+   *                  left no record would be indistinguishable from a click
+   *                  that never arrived
+   *   agentJobs      the delegated-agent bridge's history, one append per state
+   *                  a job reaches. The record shape is declared in
+   *                  `lib/control-plane/gateway/agent-job.ts`; the bridge that
+   *                  writes it lands beside it. Declared now so the storage is
+   *                  one versioned move rather than two
+   *   adminConfig    the owner's operational policy at id "current" — today,
+   *                  whether paid API fallback is permitted (§9A.22). An
+   *                  AGGREGATE because the executor's question is "what is the
+   *                  policy now", and a policy folded out of a log is a policy
+   *                  two readers can disagree about. Its absence reads as the
+   *                  default, which is OFF, so no failure path turns it on
+   */
+  readonly adminReceipts: AppendOnlyRepository<ActionReceipt>;
+  readonly agentJobs: AppendOnlyRepository<AgentJobRecord>;
+  readonly adminConfig: AggregateRepository<AdminConfig>;
   readonly budget: BudgetRepository;
   readonly locks: LockManager;
   /** What this store is, for a report that must say where the state lives. */

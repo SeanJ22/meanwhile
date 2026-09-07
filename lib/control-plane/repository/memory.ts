@@ -42,6 +42,9 @@ import type {
   RunnerHeartbeat,
 } from "../owner-surface.ts";
 import type { ReadinessStateSnapshot } from "../readiness/model.ts";
+import type { ActionReceipt } from "../gateway/contract.ts";
+import type { AgentJobRecord } from "../gateway/agent-job.ts";
+import type { AdminConfig } from "../gateway/admin-config.ts";
 import { budgetRepositoryFrom, jsonCopy } from "./shared.ts";
 import {
   ConcurrentModification,
@@ -245,6 +248,10 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     windowIntents: memoryAppendOnlyRepository<WindowIntent>("window_intents"),
     /* Software release review (Admin Pass B, schema v8). */
     softwareReleaseReviews: memoryAppendOnlyRepository<SoftwareReleaseReviewRecord>("software_release_reviews"),
+    /* The Action Gateway (Admin Pass C, ADM-C6, schema v9). */
+    adminReceipts: memoryAppendOnlyRepository<ActionReceipt>("admin_receipts"),
+    agentJobs: memoryAppendOnlyRepository<AgentJobRecord>("agent_jobs"),
+    adminConfig: memoryAggregateRepository<AdminConfig>("AdminConfig"),
     budget: budgetRepositoryFrom(budgetAggregate, locks),
     locks,
     describe: () => "in-memory control-plane repositories (lost when this process ends)",

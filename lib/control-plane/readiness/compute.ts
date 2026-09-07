@@ -26,8 +26,10 @@ import {
   type EvidenceWalk,
   type JurisdictionLevel,
   READINESS_SNAPSHOT_FORMAT_VERSION,
+  type ReaderDelivery,
   type ReadinessStateSnapshot,
   type SummaryBand,
+  type ZipPopulationBasis,
   type ZipRow,
   READINESS_DERIVATION_CONTRACT,
   gatedOnOperatorCount,
@@ -50,9 +52,11 @@ export interface CapabilityInput {
     readonly total: number | null;
     readonly authority: string | null;
     readonly contract: string;
-    /** The short coverage phrase the grid prints ("15 of 15", "statewide", "never"). */
+    /** The short coverage phrase the grid prints ("15 of 15", "47 filings"). */
     readonly label: string;
     readonly asOf: string | null;
+    /** Why there is no fraction, when there is none. Never a bare "none". */
+    readonly says: string | null;
   };
   /** Per-gate evidence; a missing gate is treated as NOT_WALKED. */
   readonly gates: Partial<Record<Gate, GateEvidence>>;
@@ -70,6 +74,10 @@ export interface ZipInput {
   readonly zip: string;
   readonly place: Held<string>;
   readonly population: Held<Measured>;
+  /** How that estimate may honestly be read (ADM-41). */
+  readonly populationBasis: ZipPopulationBasis;
+  /** The Bureau's published 90% margin on it, or null where it published none. */
+  readonly populationMargin: number | null;
   readonly bodies: readonly ZipBodyInput[];
   /** The stamped coverage-tier label ("TIER_0".."TIER_3"), or null when UNKNOWN. */
   readonly tierLabel: string | null;
@@ -84,14 +92,16 @@ export interface ReadinessInputs {
   readonly publisher: string;
   readonly capabilities: readonly CapabilityInput[];
   readonly zips: readonly ZipInput[];
-  /** Reader-visible jurisdictions over an external denominator (summary). */
-  readonly readerVisibleJurisdictions: Held<Measured>;
+  /** Capability rows the Reader is declared to be served from (summary). */
+  readonly capabilitiesServedToReaders: Held<Measured>;
   /** Share of state population in a reader-complete zip; gap until ACS ingested. */
   readonly populationInCompleteZip: Held<Measured>;
-  /** Time since the last full pass, plain language, or the named gap. */
-  readonly timeSinceLastFullPass: Held<string>;
+  /** The oldest as-of behind any walked cell, or the named gap. */
+  readonly oldestEvidence: Held<string>;
   /** Walks behind cells, from real records only. Optional; defaults to none. */
   readonly evidenceWalks?: readonly EvidenceWalk[];
+  /** What the Reader is declared to be served, per capability. Optional. */
+  readonly delivery?: readonly ReaderDelivery[];
 }
 
 /* ------------------------------------------------------------------ zips */
@@ -150,6 +160,8 @@ export function computeZipRow(input: ZipInput): ZipRow {
     zip: input.zip,
     place: input.place,
     population: input.population,
+    populationBasis: input.populationBasis,
+    populationMargin: input.populationMargin,
     bodyCount: total,
     level,
     completeness,
@@ -185,6 +197,7 @@ export function computeCapabilityRow(
     total: input.coverage.total,
     authority: input.coverage.authority,
     contract: input.coverage.contract,
+    noDenominatorSays: input.coverage.says,
   });
   const row: CapabilityRow = {
     capabilityId: input.capabilityId,
@@ -194,6 +207,7 @@ export function computeCapabilityRow(
     gates,
     coverage,
     coverageLabel: input.coverage.label,
+    coverageSays: input.coverage.says,
     asOf: input.coverage.asOf,
   };
   return { row, violations };
@@ -222,9 +236,9 @@ export function computeReadinessSnapshot(
   const zips = inputs.zips.map(computeZipRow);
 
   const summary: SummaryBand = {
-    readerVisibleJurisdictions: inputs.readerVisibleJurisdictions,
+    capabilitiesServedToReaders: inputs.capabilitiesServedToReaders,
     populationInCompleteZip: inputs.populationInCompleteZip,
-    timeSinceLastFullPass: inputs.timeSinceLastFullPass,
+    oldestEvidence: inputs.oldestEvidence,
     gatedOnOperatorCount: gatedOnOperatorCount(rows),
   };
 
@@ -242,6 +256,7 @@ export function computeReadinessSnapshot(
     capabilities: rows,
     zips,
     evidenceWalks: inputs.evidenceWalks ?? [],
+    delivery: inputs.delivery ?? [],
     monotonicityViolations: violations,
   };
 }
@@ -270,12 +285,15 @@ export function emptyStateSnapshot(input: {
       publisher: input.publisher,
       capabilities: bare,
       zips: [],
-      readerVisibleJurisdictions: gap(
+      capabilitiesServedToReaders: gap(
         "OURS",
-        "no jurisdiction has been walked in this state yet",
+        "no committed holding has been checked for this state yet, so nothing can be said about what a reader is served here",
       ),
       populationInCompleteZip: gap("OURS", "no zip readiness computed for this state yet"),
-      timeSinceLastFullPass: gap("OURS", "no full pass has run for this state"),
+      oldestEvidence: gap(
+        "OURS",
+        "no cell on this grid carries a dated instrument yet, so there is no oldest evidence to report",
+      ),
     },
     input.publishedAt,
   );

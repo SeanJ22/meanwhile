@@ -45,9 +45,15 @@ export const READINESS_STYLES = `
 
 .readiness .rq-grid { width: 100%; border-collapse: collapse; font-size: .85rem; }
 .readiness .rq-grid th, .readiness .rq-grid td { padding: .3rem .5rem; border-bottom: 1px solid var(--ce-alpha-hairline); text-align: left; vertical-align: middle; }
-.readiness .rq-grid th.rq-gatecol { text-align: center; font-weight: 500; font-size: .74rem; width: 5.5rem; }
-.readiness .rq-grid td.rq-gatecell { text-align: center; }
-.readiness .rq-grid td.rq-cov { text-align: right; white-space: nowrap; color: var(--ce-muted); }
+.readiness .rq-grid th.rq-gatecol { text-align: center; font-weight: 500; font-size: .74rem; width: 8.5rem; }
+.readiness .rq-grid td.rq-gatecell { text-align: center; vertical-align: top; padding-top: .45rem; }
+.readiness .rq-grid td.rq-cov { text-align: right; color: var(--ce-muted); max-width: 16rem; }
+/* Why a row has no fraction, beside the counts it does hold (ADM-40). */
+.readiness .rq-grid td.rq-cov .rq-covsays { font-size: .72rem; opacity: .85; margin-top: .15rem; text-align: right; white-space: normal; }
+/* The words under a cell's swatch. The swatch says which state; these say WHICH
+   state in language, so "no data" and "live, proof stale" can never read alike
+   (§9A.9). The full sentence is on the hover and in the drawer. */
+.readiness .rq-grid td.rq-gatecell .rq-cellword { display: block; font-size: .66rem; line-height: 1.15; color: var(--ce-muted); margin-top: .2rem; max-width: 7.5rem; margin-inline: auto; overflow-wrap: anywhere; }
 .readiness .rq-domain td { padding-top: 1rem; font-size: .72rem; letter-spacing: .05em; text-transform: uppercase; color: var(--ce-muted); border-bottom: none; }
 .readiness .rq-gridwrap { overflow-x: auto; }
 
@@ -67,6 +73,13 @@ export const READINESS_STYLES = `
 
 .readiness .rq-level { font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--ce-muted); white-space: nowrap; }
 .readiness .rq-level .lvl-dot { width: .45rem; height: .45rem; }
+
+/* What the Reader is declared to be served (ADM-40). Deliberately a plain list
+   and not a card grid: it is read once, top to bottom, against the grid above. */
+.readiness .rq-delivery { list-style: none; padding: 0; margin: .5rem 0 1.5rem; display: grid; gap: .5rem; }
+.readiness .rq-delivery li { box-shadow: var(--ce-rim); border-radius: var(--ce-radius-md); padding: .5rem .75rem; font-size: .85rem; }
+.readiness .rq-delivery .rq-delivery-where { color: var(--ce-muted); }
+.readiness .rq-delivery .rq-delivery-src { font-size: .75rem; color: var(--ce-muted); margin-top: .2rem; }
 
 .readiness .rq-violations { box-shadow: inset 0 0 0 1px #cc4b4b; border-radius: var(--ce-radius-md); padding: .5rem .75rem; margin: 1rem 0; }
 .readiness .rq-violations h3 { margin: 0 0 .35rem; color: var(--ce-text-bad); }

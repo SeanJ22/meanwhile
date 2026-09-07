@@ -27,13 +27,7 @@ import { NextRequest } from "next/server";
 
 import { middleware } from "@/middleware.ts";
 import { POST } from "@/app/api/admin/research/route.ts";
-import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN, hostOf } from "@/lib/ops/origins.ts";
-import {
-  ADMIN_SESSION_COOKIE,
-  ADMIN_SESSION_KEY_VAR,
-  SESSION_LIFETIME_SECONDS,
-  signSession,
-} from "@/lib/control-plane/admin-auth.ts";
+import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins.ts";
 import type { ReadOutcome } from "@/lib/control-plane/admin-data.ts";
 import type { CostEntry } from "@/lib/control-plane/cost.ts";
 import {
@@ -71,11 +65,9 @@ import {
   type ResearchState,
 } from "@/lib/control-plane/scheduler/research-policy.ts";
 import type { ScoutResult } from "@/lib/control-plane/scheduler/scout-result.ts";
+import { ADMIN_HOST, PUBLIC_HOST, adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
 
 const ROOT = process.cwd();
-const ADMIN_HOST = hostOf(ADMIN_ORIGIN);
-const PUBLIC_HOST = hostOf(PUBLIC_SITE_ORIGIN);
-const SESSION_KEY = "test-session-key-that-is-long-enough-to-sign-with";
 
 /* ------------------------------------------------------------------ fixtures */
 
@@ -261,15 +253,6 @@ function post(host: string, body: string, headers: Record<string, string> = {}):
   });
 }
 
-async function sessionCookie(): Promise<string> {
-  const iat = Math.floor(Date.now() / 1000);
-  const value = await signSession(
-    { sid: "adm_test-session", iat, exp: iat + SESSION_LIFETIME_SECONDS },
-    SESSION_KEY,
-  );
-  return `${ADMIN_SESSION_COOKIE}=${value}`;
-}
-
 async function withEnv<T>(name: string, value: string | undefined, fn: () => Promise<T>): Promise<T> {
   const before = process.env[name];
   if (value === undefined) delete process.env[name];
@@ -282,9 +265,6 @@ async function withEnv<T>(name: string, value: string | undefined, fn: () => Pro
   }
 }
 
-function withSessionKey<T>(fn: () => Promise<T>): Promise<T> {
-  return withEnv(ADMIN_SESSION_KEY_VAR, SESSION_KEY, fn);
-}
 
 /* ================================================================== *
  * SEEDED FAILURE 1 — host and session boundaries, through the real middleware
@@ -317,16 +297,16 @@ test("SEEDED: an unauthenticated /api/admin/research request on the ADMIN host i
  * ================================================================== */
 
 test("the handler re-verifies the host: a public-host request is 404 even with everything else valid", async () => {
-  await withSessionKey(async () => {
-    const cookie = await sessionCookie();
+  await withAdminSessionKey(async () => {
+    const cookie = await adminSessionCookie();
     const response = await POST(post(PUBLIC_HOST, "action=PAUSE", { origin: ADMIN_ORIGIN, cookie }));
     assert.equal(response.status, 404);
   });
 });
 
 test("SEEDED: a missing or cross-site Origin is refused with 403", async () => {
-  await withSessionKey(async () => {
-    const cookie = await sessionCookie();
+  await withAdminSessionKey(async () => {
+    const cookie = await adminSessionCookie();
     const missing = await POST(post(ADMIN_HOST, "action=PAUSE", { cookie }));
     assert.equal(missing.status, 403, "a MISSING Origin is refused, not allowed");
     const cross = await POST(post(ADMIN_HOST, "action=PAUSE", { origin: PUBLIC_SITE_ORIGIN, cookie }));
@@ -335,15 +315,15 @@ test("SEEDED: a missing or cross-site Origin is refused with 403", async () => {
 });
 
 test("the handler re-verifies the session: no cookie is 401 inside the handler too", async () => {
-  await withSessionKey(async () => {
+  await withAdminSessionKey(async () => {
     const response = await POST(post(ADMIN_HOST, "action=PAUSE", { origin: ADMIN_ORIGIN }));
     assert.equal(response.status, 401);
   });
 });
 
 test("SEEDED: an unknown or missing action is 400 and names the allowed actions", async () => {
-  await withSessionKey(async () => {
-    const cookie = await sessionCookie();
+  await withAdminSessionKey(async () => {
+    const cookie = await adminSessionCookie();
     for (const body of ["action=DELETE_EVERYTHING", "action=pause", "action=", ""]) {
       const response = await POST(post(ADMIN_HOST, body, { origin: ADMIN_ORIGIN, cookie }));
       assert.equal(response.status, 400, `${JSON.stringify(body)} must be 400, not ${response.status}`);
@@ -357,9 +337,9 @@ test("POSITIVE CONTROL and SEEDED: a valid action passes validation, and a contr
   // With the control-plane variable unset the handler cannot reach a store, so
   // the ONLY status past validation is 503. That both proves the 400 above was
   // the action's fault and proves a failed open is never a redirect.
-  await withSessionKey(() =>
+  await withAdminSessionKey(() =>
     withEnv(CONTROL_PLANE_URL_VAR, undefined, async () => {
-      const cookie = await sessionCookie();
+      const cookie = await adminSessionCookie();
       for (const action of RESEARCH_INTENT_ACTIONS) {
         // A DISPATCH is the one action that needs the owner's words (ADM-8):
         // "deploy the fleet" to nowhere is refused at validation, so the
@@ -756,10 +736,119 @@ test("the page reads no environment and posts both intents to the research route
   assert.match(source, /value="RUN_CYCLE_NOW"/);
   assert.match(source, /value=\{view\.pauseAction\}/);
   assert.match(source, /"\/api\/admin\/research"/);
-  assert.match(source, /Research — Level 1/);
   // The control centre links here.
   const centre = readFileSync(join(ROOT, "app", "(admin)", "admin", "page.tsx"), "utf8");
   assert.match(centre, /href="\/admin\/research"/);
+});
+
+/* ================================================================== *
+ * ADM-42 — the heading is the STATE, and the level is explained
+ * ================================================================== */
+
+test("ADM-42: the heading reads Research — <state>, the back-link is gone, and the activation levels are explained from governance", () => {
+  const source = readFileSync(join(ROOT, "app", "(admin)", "admin", "research", "page.tsx"), "utf8");
+  // The owner: "Research Level 1 Active: out of how many levels? What does that mean?"
+  assert.doesNotMatch(source, /Research — Level 1/, "the heading no longer prints a level number as the state");
+  assert.match(source, /Research — <span className=\{verdictClass\}>\{plainCode\(view\.verdict\)\}<\/span>/, "the heading is the derived state in words");
+  assert.match(source, /The research lane is running within its bounds\./, "the ACTIVE sentence the owner kept is kept");
+  // "I don't need a back section to go back to Pilot Health. I have the dropdown."
+  assert.doesNotMatch(source, /← Pilot health/, "no back-link duplicating the View dropdown");
+  assert.doesNotMatch(source, /this page is the instrument detail behind the fleet view/);
+  assert.match(source, /<ConsoleNav view="research"/, "the dropdown that replaced it is still there");
+  // The level copy is governance's, and it does not invent levels 2 and 3.
+  assert.match(source, /activation <strong>Level 1<\/strong>/);
+  assert.match(source, /RULING 268/);
+  assert.match(source, /RULING 215/);
+  assert.match(source, /Nothing between Level 1 and Level 4 is defined in current governance/);
+  const decisions = readFileSync(join(ROOT, "docs", "governance", "current-decisions.md"), "utf8");
+  assert.match(decisions, /activation Level 5 is removed from the architecture; Level 4 automatic publishing is deferred/, "the level copy on the page matches the ruling it cites");
+});
+
+/* ================================================================== *
+ * ADM-42 item 9 / §3 — the credential name never reaches the browser
+ * ================================================================== */
+
+test("ADM-42: the runner block leads with what the runner is, and the worker credential's variable name is never rendered", () => {
+  const source = readFileSync(join(ROOT, "app", "(admin)", "admin", "research", "page.tsx"), "utf8");
+  // "what is a runner? I'm sorry I just don't know what a runner is."
+  assert.match(source, /is the always-on program on the research machine/);
+  assert.match(source, /It runs again <When iso=\{view\.runner\.nextCycleDueAt\}/, "when it runs again is on the face");
+  assert.match(source, /detailLabel="Technical details"/, "host, SHA and model are behind Technical details");
+  // The env var name is not rendered — not on the face, not on hover, not in a disclosure.
+  assert.doesNotMatch(source, /workerCredential\.value\.name/, "the credential's variable name never reaches a rendered expression");
+  assert.doesNotMatch(source, /WTP_WORKERS_ANTHROPIC_API_KEY/);
+  assert.match(source, /Its value and its name stay on the server\./);
+  // The view still carries it, because the view is not the browser.
+  const withState = buildResearchView(healthyInput());
+  assert.ok(withState.workerCredential.held);
+  if (withState.workerCredential.held) assert.equal(withState.workerCredential.value.name, WORKER_CREDENTIAL_VAR);
+});
+
+/* ================================================================== *
+ * ADM-48 — the runner's own facts travel to the view
+ * ================================================================== */
+
+test("ADM-48: the view carries the runner's standing, its next cycle time and the last cycle's safety snapshot", () => {
+  const view = buildResearchView(healthyInput());
+  assert.equal(view.runner.standing.state, "ALIVE", "the one canonical runner projection is shared with Pilot health");
+  assert.equal(view.runner.nextCycleDueAt, null, "a heartbeat written without an interval carries no next-cycle time");
+  assert.equal(view.runner.host, "test-host");
+  assert.equal(view.safety.held, false, "a cycle that recorded no safety snapshot is a named gap, never an empty list");
+  if (!view.safety.held) {
+    assert.equal(view.safety.gap.whose, "OURS");
+    assert.match(view.safety.gap.says, /no Fleet safety snapshot/);
+  }
+  // A paused runner reads as paused here exactly as it does on Pilot health.
+  const paused = buildResearchView(
+    healthyInput({
+      intents: heldOut([
+        { formatVersion: 1, kind: "INTENT", intentId: "PAUSE_RUNNER:x", action: "PAUSE_RUNNER", requestedAt: FRESH, actor: "owner (admin session)", adminSessionRef: "adm", note: "swapping the disk" },
+      ] as unknown as readonly ResearchIntent[]),
+    }),
+  );
+  assert.equal(paused.runner.standing.state, "PAUSED");
+  assert.match(paused.runner.standing.detail, /swapping the disk/);
+});
+
+/* ================================================================== *
+ * ADM-48 — the typed facts a plain sentence needs travel on the row
+ * ================================================================== */
+
+test("ADM-48: a Scout row carries the record class, the route, the refusals and the rungs it still owes", () => {
+  const view = buildResearchView(
+    healthyInput({
+      results: heldOut({
+        total: 1,
+        latest: [
+          scoutResult({
+            outcome: "NO_PROGRESS",
+            stoppedBy: "BOUND",
+            recordClass: "candidate-enrichment",
+            routeId: "candidate-marginalia-index",
+            distinctEvidenceRungs: 4,
+            nextRungs: ["public-archive", "records-request-disclosure-log"],
+          }),
+        ],
+      }),
+    }),
+  );
+  assert.ok(view.results.held);
+  if (!view.results.held) return;
+  const row = view.results.value.rows[0];
+  assert.equal(row.recordClass, "candidate-enrichment");
+  assert.equal(row.routeId, "candidate-marginalia-index");
+  assert.deepEqual(row.refusalCodes, []);
+  assert.equal(row.evidenceRungs, 4);
+  assert.deepEqual(row.nextRungs, ["public-archive", "records-request-disclosure-log"]);
+  // The executor's own sentence survives as disclosure detail, never as the face.
+  assert.equal(row.reason, "no deterministic route opens this representation");
+  const refused = buildResearchView(
+    healthyInput({
+      results: heldOut({ total: 1, latest: [scoutResult({ refusal: [{ code: "SCOUT_EARLY_ABSENCE", detail: "d" }] })] }),
+    }),
+  );
+  assert.ok(refused.results.held);
+  if (refused.results.held) assert.deepEqual(refused.results.value.rows[0].refusalCodes, ["SCOUT_EARLY_ABSENCE"]);
 });
 
 /* ================================================================== *

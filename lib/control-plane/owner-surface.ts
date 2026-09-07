@@ -67,6 +67,8 @@
  * this number is entitled to conclude. It is not a label and not a unit.
  */
 import type { CodeIdentity } from "./code-identity.ts";
+import type { CacheCallerHealth, MeteringCounts, MonthlySpendView } from "./cost-panel.ts";
+import type { ScoutCapacity } from "./research-metrics.ts";
 
 export interface Measured {
   readonly value: number;
@@ -691,6 +693,13 @@ export function decisionCardKind(card: OwnerDecisionCard): OwnerDecisionCardKind
 export interface OwnerCostRow {
   readonly key: string;
   readonly usd: Held<Measured>;
+  /**
+   * Requests, tokens and the cache split behind the dollars (§9A.23). Already
+   * serialised by the publisher — the cost panel builds it and this snapshot
+   * spreads the row straight through — so this is a type declaration catching
+   * up with the data, not a new write path.
+   */
+  readonly metering?: MeteringCounts;
   readonly attemptsMeasured?: number;
   readonly attemptsUnmeasured?: number;
   /** MEASURED, FREE_BY_DESIGN (ran without a paid model) or UNMEASURED (a model ran and reported no dollars). */
@@ -745,9 +754,18 @@ export interface OwnerSnapshot {
    */
   readonly costByRole: readonly OwnerCostRow[];
   readonly costByModel: readonly OwnerCostRow[];
-  readonly cacheHitRateByCaller: readonly { readonly callerKey: string; readonly hitRate: Held<Measured> }[];
+  readonly cacheHitRateByCaller: readonly { readonly callerKey: string; readonly hitRate: Held<Measured>; readonly health?: CacheCallerHealth }[];
   readonly deterministicShare: Held<Measured>;
   readonly costPerVerifiedRecord: Held<Measured>;
+  /**
+   * What the daily research ceiling buys at the measured mean (§9A.4), and the
+   * UTC calendar month's spend (§9A.23). Both need an instant the cost panel
+   * may not read for itself, so both are NULL on a snapshot published before
+   * the publisher passed its clock — and the console says so rather than
+   * drawing an undated window.
+   */
+  readonly costCapacity?: ScoutCapacity | null;
+  readonly monthlySpend?: MonthlySpendView | null;
   /** The whole-ledger totals behind the rows. Absent before 9.4.26. */
   readonly costSummary?: {
     readonly measuredUsd: number | null;

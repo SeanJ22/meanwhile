@@ -419,8 +419,28 @@ test("aggregate output can never carry a contributor name", () => {
 
 // ── The key stays in the fetch script ────────────────────────────────────
 
+/**
+ * The subject is a READ that yields the VALUE — never the variable's NAME.
+ *
+ * This used to be a substring scan for `FEC_API_KEY` anywhere under `app`,
+ * `components`, `lib` or `hooks`, and the Source/API Capability Registry
+ * (ADM-C11, 2026-09-06) tripped it by naming the variable in a presence table:
+ * the console has to be able to say *"this key is configured"* without ever
+ * holding, printing or spending it, and a table mapping a route to the name of
+ * the variable that carries its key is how it does that.
+ *
+ * Naming a variable is not reading one. So the predicate is now the read
+ * SHAPES — `process.env.FEC_API_KEY` and `process.env["FEC_API_KEY"]`, the two
+ * forms that hand you the value — and a positive control proves the instrument
+ * still catches the thing it exists for. The protection is unchanged: nothing
+ * under these directories can call the FEC.
+ */
 test("no runtime code reads FEC_API_KEY — fetch script only", () => {
+  const READ_SHAPES = [/process\s*\.\s*env\s*\.\s*FEC_API_KEY/, /process\s*\.\s*env\s*\[\s*["'`]FEC_API_KEY["'`]\s*\]/];
+  const reads = (source: string): boolean => READ_SHAPES.some((shape) => shape.test(source));
+
   const offenders: string[] = [];
+  let scanned = 0;
   const walk = (dir: string) => {
     for (const entry of readdirSync(dir)) {
       const full = join(dir, entry);
@@ -428,12 +448,19 @@ test("no runtime code reads FEC_API_KEY — fetch script only", () => {
         if (entry === "node_modules" || entry === ".next") continue;
         walk(full);
       } else if (/\.(ts|tsx|mts|js|mjs)$/.test(entry)) {
-        if (readFileSync(full, "utf8").includes("FEC_API_KEY")) offenders.push(full);
+        scanned += 1;
+        if (reads(readFileSync(full, "utf8"))) offenders.push(full);
       }
     }
   };
   for (const dir of ["app", "components", "lib", "hooks"]) walk(join(ROOT, dir));
-  assert.deepEqual(offenders, [], `FEC_API_KEY reachable from runtime code: ${offenders.join(", ")}`);
+  assert.ok(scanned > 100, `the sweep reached only ${scanned} files, so it did not reach the tree`);
+  assert.deepEqual(offenders, [], `FEC_API_KEY is READ by runtime code: ${offenders.join(", ")}`);
+
+  // POSITIVE CONTROL: the two real read shapes, and the one legitimate mention.
+  assert.ok(reads("const k = process.env.FEC_API_KEY;"));
+  assert.ok(reads('const k = process.env["FEC_API_KEY"];'));
+  assert.ok(!reads('const NAMES = { "fec-api": ["FEC_API_KEY"] };'), "naming the variable in a presence table is not reading it");
 });
 
 // ── The plain register ───────────────────────────────────────────────────

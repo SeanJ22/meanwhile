@@ -275,20 +275,13 @@ export function dayAfter(day: string): string {
   return utcDay(new Date(Date.UTC(y, m - 1, d + 1)));
 }
 
-/**
- * The next calendar day after `runDate` on which the source's cadence calls
- * for it, or null if none inside 62 days (which the three cadences here never
- * produce — stated rather than assumed, so a fourth cadence cannot inherit a
- * silent null).
+/*
+ * `nextCadenceDay` moved to `./refresh-cadence.ts` (Admin Pass C): it is a pure
+ * cadence question, and THIS module reads and writes files through computed
+ * paths, which makes Next's tracer pull the whole `lib/ops/` directory into any
+ * page that imports it. Re-exported so every existing caller keeps working.
  */
-export function nextCadenceDay(source: RefreshSource, runDate: Date): string | null {
-  const base = Date.UTC(runDate.getUTCFullYear(), runDate.getUTCMonth(), runDate.getUTCDate());
-  for (let i = 1; i <= 62; i++) {
-    const day = new Date(base + i * 86_400_000);
-    if (isDue(source, day)) return utcDay(day);
-  }
-  return null;
-}
+export { nextCadenceDay } from "./refresh-cadence.ts";
 
 /* -------------------------------------------------------------------------- */
 /* THE MARKDOWN VIEW                                                           */

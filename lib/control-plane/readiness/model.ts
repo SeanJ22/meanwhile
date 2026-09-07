@@ -29,8 +29,57 @@ export const READINESS_SNAPSHOT_FORMAT_VERSION = 1;
  * equals this constant, and quarantines every other as REQUIRES_REPUBLISH —
  * so a legacy production snapshot's old green cells can never be mistaken for
  * current truth after this ships, without contacting or mutating production.
+ *
+ * Bumped to `@2` on 2026-09-06 (ADM-40 / ADM-41). Snapshots written under `@1`
+ * carry cells derived WITHOUT the reader-delivery instrument and WITHOUT the
+ * per-state FEC and candidate-filing slices — that is, they carry the exact
+ * blank cells the owner disproved by opening the live site — and they carry ZIP
+ * populations from the superseded ACS 2023 vintage. They must not be shown as
+ * current truth for a moment after this ships, so the read path quarantines
+ * them until the runner republishes.
  */
-export const READINESS_DERIVATION_CONTRACT = "readiness/instrument-derived@1";
+export const READINESS_DERIVATION_CONTRACT = "readiness/instrument-derived@2";
+
+/**
+ * **WHAT THE READER IS DECLARED TO BE SERVED, FOR ONE CAPABILITY.** (ADM-40.)
+ *
+ * Derived from two standing declarations this repository already enforces —
+ * `lib/holdings/datasets.ts` (holdings path → reader surfaces) and
+ * `lib/holdings/reader-trace.ts` (reader route → the files its loader must be
+ * able to read). It proves this state's rows sit in a file a deployed Reader
+ * route is contractually required to read. It does NOT prove a rendered-row
+ * count, which is why every cell it drives says its proof needs a fresh check.
+ */
+export interface ReaderDelivery {
+  readonly capabilityId: string;
+  /** The canonical holdings path, e.g. "data/states/nh/ballot/nh-merrimack-2026.json". */
+  readonly holding: string;
+  /** Rows in that holding attributable to this state. */
+  readonly rows: number;
+  /** What a row is, e.g. "candidacies". */
+  readonly unit: string;
+  /** Declared reader surfaces, e.g. ["ballot", "ask"]. */
+  readonly surfaces: readonly string[];
+  /** Declared reader routes whose deployment traces must carry this file. */
+  readonly routes: readonly string[];
+  /** True when grounded Ask is one of the declared surfaces or routes. */
+  readonly askAnswers: boolean;
+  readonly asOf: string | null;
+}
+
+/**
+ * How a ZIP's ACS population estimate may honestly be read (ADM-41). Mirrors
+ * `PopulationBasis` in `lib/reference/acs-population.ts`; it is repeated in the
+ * published record because a snapshot must be readable without the reference
+ * tables that produced it.
+ */
+export const ZIP_POPULATION_BASES = [
+  "COUNTED",
+  "WITHIN_MARGIN_OF_ERROR",
+  "RECORDED_AS_NONE",
+  "NO_TABULATION_AREA",
+] as const;
+export type ZipPopulationBasis = (typeof ZIP_POPULATION_BASES)[number];
 
 /**
  * The jurisdiction levels a capability or body belongs to, for the level filter
@@ -76,8 +125,14 @@ export interface CapabilityRow {
   readonly gates: readonly GateCell[];
   /** Covered of total, external denominator (R-D), or the named gap (R-H). */
   readonly coverage: Held<Measured>;
-  /** A short coverage phrase, e.g. "15 of 15", "complete", "statewide", "never". */
+  /** A short coverage phrase, e.g. "15 of 15", "47 filings · 12 contests". */
   readonly coverageLabel: string;
+  /**
+   * Why there is no fraction, when there is none — in words, beside the count
+   * that IS held. "no external denominator" alone reads as "nothing here",
+   * which is the misreading ADM-40 exists to end.
+   */
+  readonly coverageSays: string | null;
   /** ISO date the coverage was last established, or null. Shown per R-G. */
   readonly asOf: string | null;
 }
@@ -112,6 +167,17 @@ export interface ZipRow {
   readonly place: Held<string>;
   /** Resident population, external (Census ACS), or the named gap until acquired. */
   readonly population: Held<Measured>;
+  /**
+   * How that estimate may honestly be read (ADM-41). The owner saw `0 people`
+   * and `32 people` printed as facts about places where people plainly live.
+   * An ACS 5-year figure for a very small area is an estimate with a published
+   * interval, and a zero is the tabulation area recording no residents — never
+   * "nobody lives here" and never a collection failure.
+   */
+  readonly populationBasis: ZipPopulationBasis;
+  /** The Bureau's own 90% margin of error on that estimate, or null where it
+   *  published none (it jams the state rows, which are controlled totals). */
+  readonly populationMargin: number | null;
   /** Count of governing bodies overlapping the zip. */
   readonly bodyCount: number;
   /** The level tag: a coverage-tier label, or the named gap when the tier is UNKNOWN. */
@@ -170,14 +236,24 @@ export interface EvidenceWalk {
   readonly rungs: readonly EvidenceRung[];
 }
 
-/** The four derived figures of the summary band (§5.2). Each computed, none hardcoded. */
+/**
+ * The four derived figures of the summary band (§5.2). Each computed, none
+ * hardcoded — and, since ADM-39, each one an instrument can actually fill.
+ *
+ * Two of the four used to render a bare em dash on every state on every load,
+ * because no instrument could ever supply them: "reader-visible jurisdictions"
+ * had no reader-visible count, and "since the last full pass" had no recorded
+ * full pass. §9A.7 is explicit that a dash is not a metric — either say what
+ * number belongs there and what fills it, or remove it. Both were replaced by
+ * the question they were reaching for, each with an instrument behind it.
+ */
 export interface SummaryBand {
-  /** Reader-visible jurisdictions over an external denominator. */
-  readonly readerVisibleJurisdictions: Held<Measured>;
+  /** Capability rows the Reader is declared to be served from, of the rows tracked. */
+  readonly capabilitiesServedToReaders: Held<Measured>;
   /** Share of state population living in a reader-complete zip. Gap until ACS. */
   readonly populationInCompleteZip: Held<Measured>;
-  /** Time since the last full pass, in plain language, or the named gap. */
-  readonly timeSinceLastFullPass: Held<string>;
+  /** The oldest as-of (YYYY-MM-DD) behind any walked cell, or the named gap. */
+  readonly oldestEvidence: Held<string>;
   /** Count of gate cells in GATED_ON_OPERATOR across the whole state. */
   readonly gatedOnOperatorCount: number;
 }
@@ -202,6 +278,8 @@ export interface ReadinessStateSnapshot {
   readonly zips: readonly ZipRow[];
   /** Walks behind cells, keyed by ref, populated only from real records. */
   readonly evidenceWalks: readonly EvidenceWalk[];
+  /** What the Reader is declared to be served for this state, per capability. */
+  readonly delivery: readonly ReaderDelivery[];
   /** Every place the underlying data violates gate monotonicity (R-B), surfaced. */
   readonly monotonicityViolations: readonly MonotonicityViolation[];
 }
@@ -228,6 +306,18 @@ export function readinessCountClaims(
       label: "monotonicity violations",
       stated: snapshot.monotonicityViolations.length,
       rendered: snapshot.monotonicityViolations.length,
+    },
+    // The summary tile states how many capability rows the Reader is served
+    // from; the block beneath the grid renders one line per delivered holding.
+    // A tile that says 6 over a list of 5 is exactly the R-K failure.
+    {
+      label: "reader-delivery rows",
+      stated: snapshot.summary.capabilitiesServedToReaders.held
+        ? new Set(snapshot.delivery.map((d) => d.capabilityId)).size
+        : snapshot.delivery.length,
+      rendered: snapshot.summary.capabilitiesServedToReaders.held
+        ? snapshot.summary.capabilitiesServedToReaders.value.value
+        : snapshot.delivery.length,
     },
   ];
 }

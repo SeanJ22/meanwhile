@@ -34,6 +34,59 @@ export type CredentialReportField = (typeof CREDENTIAL_REPORT_FIELDS)[number];
 export const CREDENTIAL_EVENT_KINDS = ["CREATED", "ROTATED", "SCOPE_CHANGED"] as const;
 export type CredentialEventKind = (typeof CREDENTIAL_EVENT_KINDS)[number];
 
+/**
+ * **WHICH STORE A RUNNING CONSUMER READS THIS CREDENTIAL FROM.**
+ * (ADM-C11, the Source/API Capability Registry, 2026-09-06.)
+ *
+ * `ownerCopyLocation` above answers where the OWNER can find the plaintext, in
+ * prose. That is a different question from which store a PROCESS reads, and
+ * conflating them is what the source registry had to be built around: the
+ * deployed console runs as the website, so it can see the website's own
+ * settings and nothing else. A key that lives in the repository's saved
+ * secrets is absent from that process every time, and a page that read
+ * `process.env` and printed "not configured" would be stating a falsehood with
+ * a tick beside it.
+ *
+ * The vocabulary is declared HERE, in the module that owns credentials, and
+ * consumed by `lib/control-plane/source-registry.ts` — one list, not two
+ * (RULING 103). The registry adds one member of its own, for a route that
+ * needs no credential at all; that member is meaningless in an event log and
+ * is deliberately not in this list.
+ *
+ * Optional on a report, because the field arrived after the log did and an
+ * event written before it is not retroactively incomplete. When it IS present
+ * it is checked, because a store nobody can name is not a store.
+ */
+/*
+ * The three names and their words now live in `lib/ops/credential-stores.ts`,
+ * which has no filesystem in it. This module reads files through a computed
+ * path, and Next's tracer answers a path it cannot evaluate by including the
+ * whole directory — so an admin page that wanted three strings pulled fifty-two
+ * modules into its deploy, one of them a fixture carrying a credential-shaped
+ * value, and the build refused. Re-exported here so every existing caller keeps
+ * working and there is still exactly one list.
+ */
+import { CREDENTIAL_STORES, CREDENTIAL_STORE_SAYS, type CredentialStore } from "./credential-stores.ts";
+export { CREDENTIAL_STORES, CREDENTIAL_STORE_SAYS, type CredentialStore };
+
+/**
+ * A `stores` field that is present and usable, or the reason it is not.
+ *
+ * Exported so a caller can validate a store list without building a whole
+ * report around it — the registry does exactly that when it declares where a
+ * route's key belongs.
+ */
+export function readCredentialStores(value: unknown): { ok: true; stores: CredentialStore[] } | { ok: false } {
+  if (!Array.isArray(value) || value.length === 0) return { ok: false };
+  const known: CredentialStore[] = [];
+  for (const entry of value) {
+    if (typeof entry !== "string") return { ok: false };
+    if (!(CREDENTIAL_STORES as readonly string[]).includes(entry)) return { ok: false };
+    known.push(entry as CredentialStore);
+  }
+  return { ok: true, stores: known };
+}
+
 export interface CredentialReport {
   readonly kind: CredentialEventKind;
   /** ISO date (or date-time) the event was reported. */
@@ -45,6 +98,12 @@ export interface CredentialReport {
   readonly actor: string;
   /** Where the owner can find the plaintext, e.g. `.env.local (VAR_NAME)`. */
   readonly ownerCopyLocation: string;
+  /**
+   * Which running stores a consumer reads this credential from. Optional; see
+   * {@link CREDENTIAL_STORES} for why it is a different question from
+   * `ownerCopyLocation`.
+   */
+  readonly stores?: readonly CredentialStore[];
   readonly note?: string;
 }
 
@@ -117,6 +176,14 @@ export function checkCredentialReport(report: unknown): CredentialReportCheck {
   }
   // The note is optional, but it is committed like everything else.
   if (typeof r.note === "string" && looksLikeSecretValue(r.note)) refused.push("note");
+
+  /*
+   * `stores` is optional and checked only when it is there: an event written
+   * before the field existed is not retroactively incomplete, and a store list
+   * naming somewhere nobody can point at is worse than none at all — it would
+   * let a surface say where a key lives on the strength of a typo.
+   */
+  if (r.stores !== undefined && !readCredentialStores(r.stores).ok) missing.push("stores");
 
   return missing.length === 0 && refused.length === 0 ? { ok: true } : { ok: false, missing, refused };
 }

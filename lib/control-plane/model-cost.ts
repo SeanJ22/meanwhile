@@ -230,6 +230,26 @@ export function priceMeteredUsage(
   return { usd: usage.batch ? full * CACHE_RATE_MULTIPLIERS.batch : full, cacheWritePricedFrom: pricedFrom, aggregateTtl };
 }
 
+/**
+ * **WHAT READING A TOKEN FROM THE CACHE SAVED, IN DOLLARS.** (§9A.23, the
+ * monthly spend window, 2026-09-06.)
+ *
+ * A cache read bills at 0.1× the base input rate, so every token read from the
+ * cache cost 0.9 of the base rate LESS than sending it uncached would have.
+ * That is the whole arithmetic, and it is a counterfactual rather than a
+ * measurement: it says what the alternative would have cost at the same list
+ * price, not what any invoice says.
+ *
+ * Null when the model has no stated rate — a saving computed at a price nobody
+ * read is a number that looks measured and is not, exactly as with
+ * {@link priceMeteredUsage}.
+ */
+export function cacheSavingUsd(cacheReadInputTokens: number, model: string, rateOverride: ModelRate | null = null): number | null {
+  const rate = rateOverride ?? rateFor(model);
+  if (rate === null || !Number.isFinite(cacheReadInputTokens)) return null;
+  return (cacheReadInputTokens / 1_000_000) * rate.inputUsdPerMillion * (1 - CACHE_RATE_MULTIPLIERS.cacheRead);
+}
+
 /** The six ledger fields, from one metered usage. The shape `AttemptCost` carries. */
 export function meteredCostFields(usage: MeteredUsage): {
   readonly cacheReadInputTokens: number | null;

@@ -87,6 +87,9 @@ import type {
   RunnerHeartbeat,
 } from "../owner-surface.ts";
 import type { ReadinessStateSnapshot } from "../readiness/model.ts";
+import type { ActionReceipt } from "../gateway/contract.ts";
+import type { AgentJobRecord } from "../gateway/agent-job.ts";
+import type { AdminConfig } from "../gateway/admin-config.ts";
 import { budgetRepositoryFrom } from "./shared.ts";
 import {
   AppendOnlyViolation,
@@ -716,6 +719,10 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     windowIntents: fileAppendOnlyRepository<WindowIntent>(resolved, "window-intents"),
     /* Software release review (Admin Pass B, schema v8). */
     softwareReleaseReviews: fileAppendOnlyRepository<SoftwareReleaseReviewRecord>(resolved, "software-release-reviews"),
+    /* The Action Gateway (Admin Pass C, ADM-C6, schema v9). */
+    adminReceipts: fileAppendOnlyRepository<ActionReceipt>(resolved, "admin-receipts"),
+    agentJobs: fileAppendOnlyRepository<AgentJobRecord>(resolved, "agent-jobs"),
+    adminConfig: fileAggregateRepository<AdminConfig>(resolved, "AdminConfig", "admin-config"),
     budget: budgetRepositoryFrom(
       fileAggregateRepository<BudgetLedger>(resolved, "BudgetLedger", "budget"),
       locks,

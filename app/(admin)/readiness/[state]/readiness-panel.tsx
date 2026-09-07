@@ -12,6 +12,14 @@ import { useMemo, useState, type ReactNode } from "react";
 
 import { formatCalendarDate } from "@/lib/control-plane/eastern-time.ts";
 import type { Measured } from "@/lib/control-plane/owner-surface.ts";
+// The source, vintage and geography the population figures come from, named on
+// the face because §9A.19 requires it and because a ZCTA is not a town.
+import {
+  ACS_SOURCE_LABEL,
+  ACS_VINTAGE_LABEL,
+  ACS_ZCTA_GEOGRAPHY_LABEL,
+} from "@/lib/reference/acs-labels.ts";
+import { count, plainCode, plainMeaning } from "@/lib/control-plane/plain-words.ts";
 import {
   GATE_DEFINITION,
   GATE_LABEL,
@@ -23,8 +31,10 @@ import {
   type CapabilityRow,
   type EvidenceWalk,
   type JurisdictionLevel,
+  type ReaderDelivery,
   type ReadinessStateSnapshot,
   type RungOutcome,
+  type ZipPopulationBasis,
   type ZipRow,
   rowIsCurrent,
   rowIsGatedOnOperator,
@@ -33,16 +43,39 @@ import {
 // The swatches, legend and tiles are the console's shared primitives (9.4.26):
 // one implementation for this panel and for Pilot Health.
 import { INTENT_NOTE_MAX_CHARS } from "@/lib/control-plane/scheduler/research-policy.ts";
+import { DeployFleet } from "@/app/(admin)/admin/deploy-fleet.tsx";
 import { LEVEL_CLASS, type JurisdictionLevel as ColourLevel } from "@/lib/control-plane/display-name.ts";
 
-import { LevelLegend, QueueButton, STATE_CLASS, STATE_HUMAN, ReadinessLegend, Tile, When, heldFigure } from "../../console-ui.tsx";
+import { LevelLegend, QueueButton, STATE_CLASS, ReadinessLegend, Tile, When, heldFigure } from "../../console-ui.tsx";
 
 /** The console's four colours for the readiness taxonomy's six levels (ADM-21): county, municipal and special are local. */
 const COLOUR_LEVEL: Record<JurisdictionLevel, ColourLevel> = { federal: "federal", state: "state", county: "local", municipal: "local", school: "school", special: "local" };
-const INTENT_ROUTE = "/api/admin/research";
-/** The panel's own display label for a coverage tier (introduced here — §5.4). */
+/** The level tag beside a capability, in words rather than the raw enum. */
+const LEVEL_WORDS: Record<JurisdictionLevel, string> = {
+  federal: "federal",
+  state: "statewide",
+  county: "county",
+  municipal: "city and town",
+  school: "school",
+  special: "special district",
+};
+/*
+ * Every cell state on this page renders through `plainCode` — `NOT_WALKED`
+ * reads "Not checked yet", `ARGUED_ABSENT` reads "Looked for, does not exist" —
+ * and the raw constant survives on the hover and in the drawer. The console's
+ * shared per-state word map is Pilot Health's vocabulary and is deliberately not
+ * reached into from here: this panel passes its own words, from the one
+ * dictionary, so a second drifting list of state words cannot appear.
+ */
+/**
+ * The panel's own display label for a coverage tier (§5.4). One word for one
+ * scale: this map used to call the floor a Level and everything above it a
+ * Tier, which reads as two different scales — and the floor's old wording is
+ * the exact phrase the ZIP row's own gap sentence says must never be printed
+ * for a ZIP whose tier was never stamped.
+ */
 const TIER_DISPLAY: Record<string, string> = {
-  TIER_0: "Level 0",
+  TIER_0: "Tier 0",
   TIER_1: "Tier 1",
   TIER_2: "Tier 2",
   TIER_3: "Tier 3",
@@ -130,6 +163,7 @@ export function ReadinessPanel(props: {
           {props.published ? (
             <>
               last updated <When iso={snapshot.publishedAt} /> by {snapshot.publisher}
+              {snapshot.publishedFromSha ? <span title={snapshot.publishedFromSha}> at commit {snapshot.publishedFromSha.slice(0, 8)}</span> : null}
             </>
           ) : (
             <>
@@ -141,10 +175,11 @@ export function ReadinessPanel(props: {
 
       {!props.published && (
         <div className="rq-unpublished" role="status">
-          <strong>NO PUBLISHED READINESS SNAPSHOT for {snapshot.stateName}.</strong> No readiness run
-          has ever measured this state. The grid below is rendered <code>NOT_WALKED</code> at read
-          time — the <em>absence of a measurement</em>, not a run that measured every cell and found
-          nothing. Publish one with <code>pnpm readiness:refresh</code>.
+          <strong>Nobody has measured {snapshot.stateName} yet.</strong> No readiness run has ever
+          looked at this state, so every cell below reads &ldquo;not checked yet&rdquo; — the{" "}
+          <em>absence of a measurement</em>, not a run that looked everywhere and found nothing.{" "}
+          <strong>Needs you: No.</strong> The standing runner measures a state once it is added to
+          the readiness publisher&rsquo;s list; nothing here is waiting on a decision from you.
         </div>
       )}
 
@@ -210,18 +245,32 @@ export function ReadinessPanel(props: {
         </table>
       </div>
 
+      <ReaderDeliveryBlock
+        delivery={snapshot.delivery}
+        capabilities={snapshot.capabilities}
+        stateName={snapshot.stateName}
+      />
+
       {snapshot.monotonicityViolations.length > 0 && (
         <div className="rq-violations">
-          <h3>Gate monotonicity violations — {snapshot.monotonicityViolations.length}</h3>
+          <h3>
+            {snapshot.monotonicityViolations.length === 1
+              ? "One step is finished ahead of the step before it"
+              : `${snapshot.monotonicityViolations.length} steps are finished ahead of the step before them`}
+          </h3>
           <p className="note">
-            A gate cannot be current past a gap to its left. These cells claim it anyway; they are
-            surfaced here rather than silently rendered as current.
+            A step cannot be finished past a gap to its left. These have direct evidence anyway —
+            usually because the two steps were measured over different things. They are shown here
+            rather than silently rendered as done. <strong>Needs you: No.</strong> Each one is a
+            measurement to reconcile, not a decision.
           </p>
           <ul>
             {snapshot.monotonicityViolations.map((v, i) => (
               <li key={`${v.capabilityId}:${v.gate}:${i}`}>
-                {snapshot.capabilities.find((c) => c.capabilityId === v.capabilityId)?.label ?? v.capabilityId} (
-                <code>{v.capabilityId}</code>) · {(GATE_LABEL as Record<string, string>)[v.gate] ?? v.gate} — {v.detail}
+                <span title={v.capabilityId}>
+                  {snapshot.capabilities.find((c) => c.capabilityId === v.capabilityId)?.label ?? v.capabilityId}
+                </span>{" "}
+                · {(GATE_LABEL as Record<string, string>)[v.gate] ?? v.gate} — {v.detail}
               </li>
             ))}
           </ul>
@@ -230,6 +279,23 @@ export function ReadinessPanel(props: {
 
       <h2>Zip codes in {snapshot.stateName}</h2>
       <ZipTable zips={zips} sort={zipSort} onSort={setZipSort} stateCode={snapshot.state} stateName={snapshot.stateName} />
+      {/*
+        §9A.10 / §9A.19: the population number must name its source, its year and
+        its geography on the face. It is a ZIP Code Tabulation Area estimate —
+        not a city or town estimate, not a county figure, and not a Population
+        Estimates Program value, and a ZCTA boundary is not a town's boundary.
+      */}
+      <p className="note">
+        <strong>Where the population comes from.</strong> Each figure is the{" "}
+        {ACS_SOURCE_LABEL}, {ACS_VINTAGE_LABEL} (table B01003), for that ZIP&rsquo;s{" "}
+        {ACS_ZCTA_GEOGRAPHY_LABEL} — the Census Bureau&rsquo;s own approximation of the ZIP, built
+        from census blocks. It is not a city or town estimate, not a county figure, and not a
+        Population Estimates Program value, and the tabulation area&rsquo;s boundary is not the
+        town&rsquo;s. 2024 is the newest 5-year release the Bureau publishes for this geography.
+        These are survey estimates, so each carries the Bureau&rsquo;s own 90% margin of error where
+        it published one; an estimate that its margin reaches is reported as such rather than as a
+        count.
+      </p>
       <p className="note">
         Two different measures, kept apart. <strong>Resident readiness</strong> is worst-of every
         governing body overlapping the zip, never an average: a zip is complete for a resident only
@@ -264,22 +330,38 @@ function RowsForDomain(props: {
       {props.rows.map((row) => (
         <tr key={row.capabilityId}>
           <td>
-            {row.label} <span className={`rq-level ${LEVEL_CLASS[COLOUR_LEVEL[row.level]]}`}><i className="lvl-dot" aria-hidden="true" />{row.level}</span>
+            {row.label}{" "}
+            <span className={`rq-level ${LEVEL_CLASS[COLOUR_LEVEL[row.level]]}`} title={row.capabilityId}>
+              <i className="lvl-dot" aria-hidden="true" />
+              {LEVEL_WORDS[row.level]}
+            </span>
           </td>
           {row.gates.map((cell) => (
             <td key={cell.gate} className="rq-gatecell">
+              {/*
+                The swatch alone could not tell "there is no data" from "this is
+                live and the proof is stale" — both are the amber state, and the
+                owner read the amber as nothing (§9A.9). So every cell carries
+                its own words: the cell's `says` when the derivation has a
+                sentence for it, otherwise the state's short word. The full
+                phrase and the raw state stay on the hover.
+              */}
               <button
                 type="button"
                 className={`rq-cell ${STATE_CLASS[cell.state]}${cell.monotonicityOk ? "" : " rq-violation"}`}
-                title={`${GATE_LABEL[cell.gate]}: ${STATE_HUMAN[cell.state]}${cell.asOf ? ` · as of ${cell.asOf}` : ""} — ${cell.detail}`}
-                aria-label={`${row.label} — ${GATE_LABEL[cell.gate]}: ${STATE_HUMAN[cell.state]}`}
+                title={`${GATE_LABEL[cell.gate]} — ${cell.says}${cell.asOf ? ` · as of ${cell.asOf}` : ""}. ${cell.detail} [${cell.state}]`}
+                aria-label={`${row.label} — ${GATE_LABEL[cell.gate]}: ${cell.says}`}
                 onClick={() => props.onCell(row, cell)}
               />
+              <span className="rq-cellword" aria-hidden="true">
+                {cellWord(cell)}
+              </span>
             </td>
           ))}
           <td className="rq-cov">
             {row.coverageLabel}
-            {row.asOf ? ` · ${shortDate(row.asOf)}` : " · never"}
+            {row.asOf ? ` · ${shortDate(row.asOf)}` : ""}
+            {row.coverageSays && <div className="rq-covsays">{row.coverageSays}</div>}
           </td>
         </tr>
       ))}
@@ -287,30 +369,117 @@ function RowsForDomain(props: {
   );
 }
 
+/**
+ * **THE FOUR TILES, EACH WITH AN INSTRUMENT BEHIND IT.** (ADM-39, §9A.7.)
+ *
+ * Two of these used to render a bare em dash on every load, because nothing
+ * could ever fill them: there was no reader-visible count of jurisdictions, and
+ * no recorded full research pass. *Do not render a dash as though it were a
+ * metric* — so both were replaced by the question they were reaching for, each
+ * answerable from a committed instrument, and each tile now says what fills it.
+ */
 function SummaryBand({ snapshot }: { snapshot: ReadinessStateSnapshot }) {
   const s = snapshot.summary;
+  const oldest = s.oldestEvidence;
   return (
     <div className="rq-summary">
       <Tile
-        figure={heldFigure(s.readerVisibleJurisdictions)}
-        caption="Reader-visible jurisdictions"
-        held={s.readerVisibleJurisdictions}
+        figure={s.capabilitiesServedToReaders.held ? heldFigure(s.capabilitiesServedToReaders) : "Not checked yet"}
+        caption="Rows below the Reader is served from — the rest are held, blocked, or not looked at yet"
+        held={s.capabilitiesServedToReaders}
       />
       <Tile
-        figure={heldFigure(s.populationInCompleteZip)}
-        caption="Population in a reader-complete zip"
+        figure={
+          s.populationInCompleteZip.held
+            ? `${count(s.populationInCompleteZip.value.value)} / ${count(s.populationInCompleteZip.value.denominator)}`
+            : "Not checked yet"
+        }
+        caption="People living in a ZIP where every one of their governments is resolved"
         held={s.populationInCompleteZip}
       />
+      {/* Never a bare dash: an unfilled figure says what it is (§9A.7). */}
       <Tile
-        figure={s.timeSinceLastFullPass.held ? s.timeSinceLastFullPass.value : "—"}
-        caption="Since the last full pass"
-        gapText={s.timeSinceLastFullPass.held ? null : s.timeSinceLastFullPass.gap.says}
+        figure={oldest.held ? formatCalendarDate(oldest.value) : "Not checked yet"}
+        caption="Oldest evidence on this grid — a re-walk of that source is what moves it"
+        gapText={oldest.held ? null : oldest.gap.says}
       />
       <Tile
         figure={String(s.gatedOnOperatorCount)}
-        caption={`Cells gated on you, of ${snapshot.capabilities.length * GATE_ORDER.length} cells in the grid`}
+        caption={
+          s.gatedOnOperatorCount === 0
+            ? `Nothing here is waiting on a decision from you, of ${snapshot.capabilities.length * GATE_ORDER.length} cells in the grid`
+            : `Cells waiting on a decision from you, of ${snapshot.capabilities.length * GATE_ORDER.length} cells in the grid`
+        }
       />
     </div>
+  );
+}
+
+/**
+ * **WHAT THE READER IS BEING SERVED, IN ONE PLACE.** (ADM-40, §9A.9.)
+ *
+ * The owner's finding was that the Admin claimed nothing where the live site
+ * plainly had something. The grid now says so per cell; this block says it in
+ * full sentences, per holding, with the counts and the declaration behind them —
+ * so "we have candidate listings in New Hampshire, live right now" can be
+ * checked against this page in one read rather than disproved by opening the
+ * site.
+ *
+ * Every line is derived. Nothing here asserts a rendering: the last sentence of
+ * each line is what the declaration does NOT prove.
+ */
+function ReaderDeliveryBlock({
+  delivery,
+  capabilities,
+  stateName,
+}: {
+  delivery: readonly ReaderDelivery[];
+  capabilities: readonly CapabilityRow[];
+  stateName: string;
+}) {
+  const labelOf = (id: string) => capabilities.find((c) => c.capabilityId === id)?.label ?? id;
+  if (delivery.length === 0) {
+    return (
+      <>
+        <h2>What the Reader is being served</h2>
+        <p className="note">
+          No committed holding for {stateName} is declared an input to a reader surface yet, so
+          nothing on this page claims the site is serving anything here. That is a gap in what has
+          been checked, not a finding that the site shows nothing.
+        </p>
+      </>
+    );
+  }
+  return (
+    <>
+      <h2>What the Reader is being served</h2>
+      <p className="note">
+        Each line is a committed holding this state&rsquo;s rows live in, and the reader surface the
+        canonical dataset contract declares reads it. That is a standing declaration and not a count
+        of rows a reader saw today, so each of those cells in the grid above reads{" "}
+        <strong>Shown on the Reader · verification proof needs a fresh check</strong> — never
+        &ldquo;no data&rdquo; and never an empty cell for something that is live.{" "}
+        <strong>Needs you: No.</strong> A fresh reader readback is what turns those cells green;
+        nothing here is waiting on a decision from you.
+      </p>
+      <ul className="rq-delivery">
+        {delivery.map((d) => (
+          <li key={`${d.capabilityId}:${d.holding}`}>
+            <strong>{labelOf(d.capabilityId)}</strong> — {count(d.rows)} {d.unit} held for {stateName}
+            {d.asOf ? <>, as of {formatCalendarDate(d.asOf)}</> : null}.{" "}
+            <span className="rq-delivery-where">
+              Served on: {d.surfaces.length > 0 ? d.surfaces.join(", ") : "a reader route"}
+              {d.askAnswers ? " · Ask answers from it" : ""}
+            </span>
+            <div className="rq-delivery-src" title={d.holding}>
+              {d.routes.length > 0
+                ? `The ${d.routes.join(" and ")} route(s) must be able to read this holding, and the build fails when they cannot.`
+                : "The dataset contract names the reader surface for this holding; no route trace is declared for it."}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }
 
@@ -366,7 +535,7 @@ function ZipTable(props: {
                 <div className="rq-worstgap">
                   {z.population.held ? (
                     <span title={`${z.population.value.contract} — ${z.population.value.denominatorSource}`}>
-                      {z.population.value.value.toLocaleString()} people
+                      {populationSentence(z)}
                     </span>
                   ) : (
                     <span className="gap">{z.population.gap.says}</span>
@@ -375,7 +544,11 @@ function ZipTable(props: {
               </td>
               <td>{z.bodyCount}</td>
               <td className="rq-level">
-                {z.level.held ? (TIER_DISPLAY[z.level.value] ?? z.level.value) : <span className="gap">tier not stamped</span>}
+                {z.level.held ? (
+                  <span title={z.level.value}>{TIER_DISPLAY[z.level.value] ?? plainCode(z.level.value)}</span>
+                ) : (
+                  <span className="gap">{z.level.gap.says}</span>
+                )}
               </td>
               <td>
                 <span className={`rq-cell ${STATE_CLASS[z.worstState]}`} />{" "}
@@ -383,7 +556,7 @@ function ZipTable(props: {
                 <div className="rq-worstgap">
                   {residentComplete
                     ? "every governing body a resident belongs to is resolved (worst-of)"
-                    : `worst-of: ${STATE_HUMAN[z.worstState]} · least-ready body: ${plainGap(z.worstGap)}`}
+                    : `least ready of this ZIP's governments: ${plainGap(z.worstGap)} — ${plainCode(z.worstState).toLowerCase()}`}
                 </div>
               </td>
               <td>
@@ -449,13 +622,18 @@ function EvidenceDrawer(props: {
           {row.label} · {GATE_LABEL[cell.gate]}
         </h2>
         <p className="rq-drawer-meta">
-          {STATE_HUMAN[cell.state]}
+          <span title={cell.state}>{cell.says}</span>
           {cell.asOf ? ` · as of ${shortDate(cell.asOf)}` : ""}
           {walk ? ` · ${walk.rungCount} rungs · ${walk.sessionCount} sessions · vault ${walk.vaultId}` : ""}
         </p>
 
         <p className="note">{GATE_DEFINITION[cell.gate]}</p>
         <p>{cell.detail}</p>
+        {plainMeaning(cell.state) && (
+          <p className="note">
+            <strong>{plainCode(cell.state)}</strong> — {plainMeaning(cell.state)}
+          </p>
+        )}
 
         {walk ? (
           <>
@@ -513,15 +691,15 @@ function EvidenceDrawer(props: {
 function NextStep({ zip, residentComplete, stateCode, stateName }: { zip: ZipRow; residentComplete: boolean; stateCode: string; stateName: string }) {
   const place = zip.place.held ? zip.place.value : zip.zip;
   const target = `${zip.zip} ${place}, ${stateName}: ${zip.worstGap}`.slice(0, INTENT_NOTE_MAX_CHARS);
+  /*
+   * §9A.16: the owner has deliberately never pressed this button, because it
+   * did not say what it would do. It now opens the same preview the console
+   * home uses — what this means, how many owed records match, what it will NOT
+   * do, and what happens after — and sends through the one typed Action
+   * Gateway. Same component, same explanation, wherever the button appears.
+   */
   const deploy = (label: string) => (
-    <form method="post" action={INTENT_ROUTE} className="deploy-here">
-      <input type="hidden" name="action" value="DISPATCH" />
-      <input type="hidden" name="note" value={target} />
-      <input type="hidden" name="returnTo" value={`/readiness/${stateCode}`} />
-      <button type="submit" className="primary" title={`Records a Deploy-fleet intent: ${target}`}>
-        {label}
-      </button>
-    </form>
+    <DeployFleet returnTo={`/readiness/${stateCode}`} maxChars={INTENT_NOTE_MAX_CHARS} prefill={target} label={label} />
   );
   if (residentComplete) return <span className="note">Nothing to do — every governing body a resident belongs to is resolved.</span>;
   const body = plainGap(zip.worstGap);
@@ -574,6 +752,54 @@ function plainGap(gap: string): string {
 }
 
 /* --------------------------------------------------------------- helpers */
+
+/**
+ * **THE WORDS UNDER A GRID CELL.**
+ *
+ * The swatch alone could not tell "there is no data here" from "this is live on
+ * the Reader and the formal proof is stale": both are the amber state, and the
+ * owner read the amber as nothing. So every cell carries words. A cell whose
+ * derivation supplied its own sentence uses its leading clause — that is how
+ * "Shown on the Reader" reaches the face — and everything else gets the state's
+ * short word. The whole sentence, including the half after the middle dot, is on
+ * the hover, in the evidence drawer, and spelled out in the delivery block below
+ * the grid; a column five wide cannot carry a full sentence and stay readable.
+ */
+function cellWord(cell: GateCell): string {
+  const derived = (cell.says ?? "").trim();
+  return (derived === "" ? plainCode(cell.state) : derived).split(" · ")[0];
+}
+
+/**
+ * **THE ZIP'S POPULATION AS A SENTENCE, NOT A BARE NUMBER.** (ADM-41, §9A.10.)
+ *
+ * The owner's objection was seeing `0 people` presented as a fact about a place
+ * where people live, and `32 people` beside a town's name. Both were faithful
+ * American Community Survey values and both said more than the Bureau does. So:
+ *
+ *   - an estimate of zero says the tabulation area records no residents, with
+ *     the year, and never "0 people";
+ *   - an estimate its own margin of error reaches says so, because it is not
+ *     distinguishable from zero at the Bureau's 90% confidence;
+ *   - every other estimate carries its ± margin, so no estimate is ever printed
+ *     as an exact count.
+ */
+function populationSentence(z: ZipRow): string {
+  if (!z.population.held) return z.population.gap.says;
+  const people = z.population.value.value;
+  const margin = z.populationMargin;
+  const year = ACS_VINTAGE_LABEL;
+  const basis: ZipPopulationBasis = z.populationBasis;
+  if (basis === "RECORDED_AS_NONE") {
+    return `No residents are recorded in this ZIP's Census tabulation area (${year}${margin === null ? "" : `, margin of error ±${count(margin)}`})`;
+  }
+  if (basis === "WITHIN_MARGIN_OF_ERROR") {
+    return `About ${count(people)} people — but the Census margin of error is ±${count(margin ?? 0)}, so this estimate is not distinguishable from zero (${year})`;
+  }
+  return margin === null
+    ? `${count(people)} people (${year})`
+    : `${count(people)} ± ${count(margin)} people (${year})`;
+}
 
 /**
  * A rung's stamp as the owner reads it: a bare date is the calendar day it

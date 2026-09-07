@@ -514,6 +514,401 @@ body:has(main.admin) { background: #1b1c22; }
 .console-nav[aria-busy="true"] select { opacity: .7; }
 .readiness, .admin.console-page { max-width: 72rem; }
 
+
+/* ============================================================ Admin C — the four-layer status shape (§9A.2) */
+.admin .status-block { display: grid; gap: .35rem; }
+.admin .status-what { font-weight: 600; margin: 0; }
+.admin .status-happened, .admin .status-next { margin: 0; color: var(--ce-fg-66); }
+.admin .status-detail { margin-top: .6rem; font-size: .85rem; }
+.admin .status-detail > summary { color: var(--ce-muted); cursor: pointer; }
+.admin .needs-you { margin: .35rem 0 0; font-size: .9rem; }
+.admin .needs-no { color: var(--ce-text-ok); }
+.admin .needs-yes { color: var(--ce-text-warn); }
+.admin .plain-code { border-bottom: 1px dotted var(--ce-hairline); }
+.admin .plain-means { color: var(--ce-fg-66); }
+.admin .gap-inline { color: var(--ce-muted); font-style: italic; }
+.admin .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* the defined tile: a number, its label, what it MEANS, and whether it needs you (ADM-28) */
+.admin .defined-tile .rq-caption { display: grid; gap: .25rem; }
+.admin .tile-label { color: var(--ce-fg); font-weight: 600; }
+.admin .tile-means { color: var(--ce-fg-66); font-size: .82rem; line-height: 1.35; }
+.admin .tile-needs { font-size: .78rem; letter-spacing: .02em; }
+.admin .tile-needs.needs-no { color: var(--ce-text-ok); }
+.admin .tile-needs.needs-yes { color: var(--ce-text-warn); }
+.admin .tile-gap { color: var(--ce-muted); font-size: .82rem; }
+
+/* bars: how much is done, waiting and blocked, in one glance (§9A.15) */
+.admin .sbar { display: inline-flex; align-items: center; gap: .5rem; min-width: 6rem; }
+.admin .sbar-track { position: relative; display: inline-block; flex: 1 1 auto; height: .45rem; border-radius: 999px; background: var(--ce-hairline); overflow: hidden; }
+.admin .sbar-fill, .admin .sbar-seg { display: block; height: 100%; float: left; }
+.admin .sbar-ok .sbar-fill, .admin .seg-ok { background: var(--ce-text-ok); }
+.admin .sbar-warn .sbar-fill, .admin .seg-warn { background: var(--ce-text-warn); }
+.admin .sbar-bad .sbar-fill, .admin .seg-bad { background: var(--ce-text-bad); }
+.admin .sbar-info .sbar-fill, .admin .seg-info { background: var(--ce-lumen); }
+.admin .sbar-none .sbar-fill, .admin .seg-none { background: var(--ce-muted); }
+.admin .sbar-label { font-size: .78rem; color: var(--ce-muted); white-space: nowrap; }
+
+/* ============================================================ Admin C — the live-update strip (ADM-34) */
+.console-strip { max-width: 72rem; margin: 0 auto .75rem; padding: 0 1.25rem; display: flex; justify-content: flex-end; }
+.live-refresh { display: inline-flex; align-items: center; gap: .5rem; font-size: .8rem; color: var(--ce-muted); }
+.live-dot { width: .5rem; height: .5rem; border-radius: 999px; display: inline-block; }
+.live-dot-ok { background: var(--ce-text-ok); }
+.live-dot-bad { background: var(--ce-text-bad); }
+.live-stopped .live-words { color: var(--ce-text-bad); }
+.live-now { font: inherit; color: var(--ce-lumen); background: none; border: 0; padding: .1rem .35rem; cursor: pointer; text-decoration: underline; }
+.live-now[disabled] { opacity: .6; cursor: default; }
+
+/* ============================================================ Admin C — the runner card in four lines (ADM-24) */
+.admin .runner-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .6rem; margin: 0 0 .4rem; }
+.admin .runner-what { color: var(--ce-fg-66); font-size: .9rem; }
+.admin .runner-when { margin: .2rem 0; }
+.admin .runner-did { margin: .2rem 0; font-weight: 600; }
+.admin .runner-stopped { margin: .2rem 0; }
+.admin .runner-circuits { margin: .5rem 0 .2rem; color: var(--ce-fg-66); font-size: .9rem; }
+.admin .runner-deferred { font-size: .85rem; }
+.admin .runner-deferred > summary { cursor: pointer; }
+.admin .runner-control { margin-top: .75rem; display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.admin .spend-table { width: 100%; border-collapse: collapse; margin: .75rem 0; font-size: .88rem; }
+.admin .spend-table caption { text-align: left; color: var(--ce-muted); font-size: .8rem; padding-bottom: .3rem; }
+.admin .spend-table th, .admin .spend-table td { text-align: left; padding: .3rem .5rem .3rem 0; border-bottom: 1px solid var(--ce-hairline); vertical-align: top; }
+.admin .spend-table thead th { color: var(--ce-muted); font-weight: 500; font-size: .78rem; }
+.admin .spend-table tbody th { font-weight: 600; }
+.admin .spend-means { display: block; font-weight: 400; color: var(--ce-fg-66); font-size: .78rem; }
+.admin .spend-figure { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.admin .spend-bar-col { width: 8rem; }
+
+/* ============================================================ Admin C — incidents as groups (ADM-30) */
+.admin .incident-group { border-left: 2px solid var(--ce-hairline); padding-left: .75rem; margin: .6rem 0; }
+.admin .incident-group > summary { cursor: pointer; display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem; }
+.admin .ig-needs-you { border-left-color: var(--ce-text-warn); }
+.admin .ig-will-retry { border-left-color: var(--ce-text-ok); }
+.admin .ig-waiting { border-left-color: var(--ce-lumen); }
+.admin .ig-not-reached { border-left-color: var(--ce-muted); }
+.admin .ig-count { font-variant-numeric: tabular-nums; color: var(--ce-fg); font-weight: 600; }
+.admin .ig-says { color: var(--ce-fg-66); font-size: .85rem; }
+.admin .incident-list { list-style: none; margin: .4rem 0; padding: 0; display: grid; gap: .3rem; font-size: .88rem; }
+.admin .incident-says { color: var(--ce-fg-66); }
+
+/* ============================================================ Admin C — pilot health cards (ADM-37) */
+.admin .ph-overall { font-size: 1.05rem; margin: .5rem 0 1rem; }
+.admin .ph-head { display: flex; align-items: baseline; justify-content: space-between; gap: .75rem; }
+.admin .ph-head h2 { margin: 0; font-size: 1rem; letter-spacing: .06em; }
+.admin .ph-what { color: var(--ce-fg-66); font-size: .85rem; margin: .35rem 0; }
+.admin .ph-status { margin: .35rem 0; }
+.admin .ph-next { margin: .35rem 0; }
+.admin .ph-control { margin: .5rem 0; display: grid; gap: .3rem; }
+.admin .ph-age { color: var(--ce-muted); font-size: .8rem; margin: .35rem 0 0; }
+.admin .ph-published { margin-top: .75rem; }
+
+/* ============================================================ Admin C — the decision queue (ADM-31, ADM-32) */
+.admin .dq { margin: 1.5rem 0; }
+.admin .dq-header { display: flex; flex-wrap: wrap; align-items: baseline; gap: .6rem; width: 100%; text-align: left; font: inherit; color: inherit; background: none; border: 0; padding: .4rem 0; cursor: pointer; }
+.admin .dq-header h2 { margin: 0; }
+.admin .dq-caret { color: var(--ce-muted); }
+.admin .dq-count { font-variant-numeric: tabular-nums; color: var(--ce-lumen); font-weight: 700; }
+.admin .dq-summary { color: var(--ce-fg-66); font-size: .85rem; }
+.admin .dq-just { list-style: none; margin: .5rem 0; padding: 0; display: grid; gap: .4rem; }
+.admin .dq-just-row { display: flex; align-items: flex-start; gap: .5rem; padding: .5rem .6rem; border-radius: .4rem; background: var(--ce-panel-raised); }
+.admin .dq-just-text { display: grid; gap: .2rem; flex: 1 1 auto; }
+.admin .dq-next { color: var(--ce-fg-66); font-size: .85rem; }
+.admin .dq-detail { color: var(--ce-muted); font-size: .8rem; }
+.admin .dq-mark { width: .55rem; height: .55rem; border-radius: 999px; margin-top: .35rem; background: var(--ce-text-ok); flex: 0 0 auto; }
+.admin .dq-saving .dq-mark { background: var(--ce-lumen); }
+.admin .dq-failed .dq-mark { background: var(--ce-text-bad); }
+.admin .dq-undone .dq-mark { background: var(--ce-text-warn); }
+.admin .dq-undo { font: inherit; font-size: .8rem; color: var(--ce-lumen); background: none; border: 0; cursor: pointer; text-decoration: underline; }
+.admin .dq-priority { margin: 1rem 0 0; }
+.admin .dq-priority > h3 { margin: .5rem 0 .25rem; }
+.admin .dq-type { margin: .5rem 0 .5rem 1rem; }
+.admin .dq-type > h4 { margin: .35rem 0; font-size: .9rem; display: flex; flex-wrap: wrap; gap: .5rem; align-items: baseline; }
+.admin .dq-type-means { font-weight: 400; color: var(--ce-fg-66); font-size: .8rem; }
+.admin .dq-cards { list-style: none; margin: 0; padding: 0; display: grid; gap: .25rem; }
+.admin .dq-card { border-bottom: 1px solid var(--ce-hairline); }
+.admin .dq-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: .6rem; width: 100%; text-align: left; font: inherit; color: inherit; background: none; border: 0; padding: .45rem 0; cursor: pointer; }
+.admin .dq-rowid { font-size: .75rem; letter-spacing: .06em; color: var(--ce-muted); min-width: 3.5rem; }
+.admin .dq-card-title { flex: 1 1 16rem; }
+.admin .dq-meta { font-size: .78rem; color: var(--ce-muted); }
+.admin .dq-body { padding: .35rem 0 .75rem 4.1rem; display: grid; gap: .5rem; }
+.admin .dq-options { display: grid; gap: .4rem; }
+.admin .dq-card-open { background: var(--ce-panel-raised); }
+
+/* the decided list and its lifecycle chips (§9A.18) */
+.admin .decided > details > summary { cursor: pointer; display: flex; flex-wrap: wrap; align-items: baseline; gap: .6rem; }
+.admin .decided > details > summary h2 { margin: 0; display: inline; }
+.admin .decided-says { margin: .35rem 0; }
+.admin .decided-next { margin: .35rem 0; color: var(--ce-fg-66); }
+.admin .chip.stage-decided { color: var(--ce-text-warn); }
+.admin .chip.stage-queued { color: var(--ce-lumen); }
+.admin .chip.stage-implemented, .admin .chip.stage-on_main, .admin .chip.stage-live, .admin .chip.stage-verified { color: var(--ce-text-ok); }
+
+/* ============================================================ Admin C — misc */
+.admin .fleet-does { display: block; font-weight: 400; font-size: .82rem; color: var(--ce-fg-66); margin-top: .2rem; }
+.admin .fleet-nums { display: flex; flex-wrap: wrap; gap: 1rem; margin: .4rem 0; font-size: .85rem; }
+.admin .fleet-says { margin: .35rem 0; color: var(--ce-fg-66); font-size: .88rem; }
+.admin .zip-rows { list-style: none; margin: .5rem 0; padding: 0; display: grid; gap: .3rem; font-size: .9rem; }
+.admin pre.digest { white-space: pre-wrap; word-break: break-word; font-size: .78rem; color: var(--ce-fg-66); max-height: 28rem; overflow: auto; }
+.admin .audit-footer { font-size: .78rem; }
+
+
+/* ============================================================ Admin C — the command centre strip (ADM-C1) */
+.admin .cc { margin: 0 0 1.5rem; }
+.admin .cc-next { margin: .25rem 0 .75rem; padding: .6rem .8rem; border-radius: .4rem; background: var(--ce-panel-raised); box-shadow: var(--ce-rim); }
+.admin .cc-next-yes { border-left: 3px solid var(--ce-text-warn); }
+.admin .cc-next-no { border-left: 3px solid var(--ce-text-ok); }
+.admin .cc-cards { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+.admin .cc-card { display: grid; gap: .25rem; padding: .6rem .7rem; border-radius: .4rem; background: var(--ce-panel); box-shadow: var(--ce-rim); }
+.admin .cc-needs { box-shadow: var(--ce-rim-strong); }
+.admin .cc-q { font-size: .78rem; color: var(--ce-muted); }
+.admin .cc-a { font-size: .95rem; font-weight: 600; }
+.admin .cc-gap { font-size: .8rem; color: var(--ce-fg-66); }
+.admin .cc-foot { display: flex; align-items: center; justify-content: space-between; gap: .5rem; font-size: .75rem; }
+
+
+/* ============================================================ Admin C — the shipping and integration view (ADM-C2) */
+.admin .st-identity-grid { display: grid; gap: .5rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); margin: .5rem 0 1rem; }
+.admin .st-identity-cell { display: grid; gap: .2rem; padding: .55rem .65rem; border-radius: .4rem; background: var(--ce-panel); box-shadow: var(--ce-rim); }
+.admin .st-identity-label { font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ce-muted); }
+.admin .st-identity-means { font-size: .78rem; color: var(--ce-fg-66); }
+.admin code.st-commit, .admin .st-commit { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .82rem; white-space: nowrap; padding: .05rem .3rem; border-radius: .2rem; background: var(--ce-panel-raised); }
+.admin .st-check { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .78rem; white-space: nowrap; padding: .05rem .3rem; border-radius: .2rem; background: var(--ce-panel-raised); margin-inline-end: .35rem; }
+.admin .st-candidate { margin: .75rem 0; }
+.admin .st-candidate-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem; }
+.admin .st-candidate-head h3 { margin: 0; }
+.admin .st-position { font-variant-numeric: tabular-nums; color: var(--ce-muted); font-size: .8rem; }
+.admin .st-farthest { opacity: .8; }
+.admin .st-stages { list-style: none; margin: .6rem 0; padding: 0; display: flex; flex-wrap: wrap; gap: .75rem; }
+.admin .st-stage { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: .35rem; row-gap: 0; font-size: .82rem; }
+.admin .st-stage-mark { width: .55rem; height: .55rem; border-radius: 999px; background: var(--ce-hairline); grid-row: span 2; }
+.admin .st-stage-reached .st-stage-mark { background: var(--ce-text-ok); }
+.admin .st-stage-not-reached .st-stage-mark { background: var(--ce-hairline); box-shadow: inset 0 0 0 1px var(--ce-muted); }
+.admin .st-stage-cannot-tell .st-stage-mark { background: transparent; box-shadow: inset 0 0 0 2px var(--ce-lumen); }
+.admin .st-stage-label { color: var(--ce-fg); }
+.admin .st-stage-state { grid-column: 2; font-size: .74rem; color: var(--ce-muted); }
+.admin .st-facts, .admin .st-detail { display: grid; grid-template-columns: max-content 1fr; gap: .2rem .6rem; margin: .5rem 0; font-size: .86rem; }
+.admin .st-facts dt, .admin .st-detail dt { font-size: .74rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ce-muted); }
+.admin .st-facts dd, .admin .st-detail dd { margin: 0; }
+.admin .st-blocked { color: var(--ce-text-warn); }
+.admin .st-responsible { color: var(--ce-muted); }
+.admin .st-controls { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-top: .6rem; }
+.admin .st-link { color: var(--ce-lumen); text-decoration: underline; }
+.admin .st-current { margin: .5rem 0; font-weight: 600; }
+.admin .st-action-list, .admin .st-refused-list { list-style: none; margin: .5rem 0; padding: 0; display: grid; gap: .4rem; }
+.admin .st-action-list > li, .admin .st-refused-list > li { padding: .5rem .6rem; border-radius: .4rem; box-shadow: var(--ce-rim); }
+.admin .st-refused-list > li { opacity: .78; }
+.admin .st-doesnot { color: var(--ce-muted); }
+.admin .st-seam > summary { font-size: .78rem; color: var(--ce-muted); cursor: pointer; }
+
+/* ============================================================ Admin C — the feedback inbox (ADM-C13) */
+.admin .fi-privacy { margin: .25rem 0 1rem; padding-inline-start: .75rem; border-inline-start: 2px solid var(--ce-hairline); color: var(--ce-fg-66); font-size: .85rem; }
+.admin .fi-tiles { display: grid; gap: .5rem; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); margin: .75rem 0; }
+.admin .fi-spread { margin: .75rem 0; }
+.admin .fi-legend { list-style: none; display: flex; flex-wrap: wrap; gap: .75rem; margin: .4rem 0 0; padding: 0; font-size: .8rem; }
+.admin .fi-legend > li { padding-inline-start: .55rem; border-inline-start: 3px solid var(--ce-hairline); }
+.admin .fi-legend-ok { border-inline-start-color: var(--ce-text-ok); }
+.admin .fi-legend-warn { border-inline-start-color: var(--ce-text-warn); }
+.admin .fi-legend-bad { border-inline-start-color: var(--ce-text-bad); }
+.admin .fi-legend-info { border-inline-start-color: var(--ce-lumen); }
+.admin .fi-environments { display: grid; gap: .6rem; margin: .75rem 0; }
+.admin .fi-env-production { border-inline-start: 3px solid var(--ce-text-ok); }
+.admin .fi-env-staging { border-inline-start: 3px solid var(--ce-lumen); }
+.admin .fi-census { list-style: none; margin: .4rem 0; padding: 0; font-variant-numeric: tabular-nums; line-height: 1.35; font-size: .84rem; }
+.admin .fi-list-section { margin-top: 1.25rem; }
+.admin .fi-count { color: var(--ce-muted); font-size: .8rem; font-weight: 400; margin-inline-start: .4rem; }
+.admin .fi-list { list-style: none; margin: .5rem 0; padding: 0; display: grid; gap: .75rem; }
+.admin .fi-item { padding: .7rem .8rem; border-radius: .45rem; background: var(--ce-panel); box-shadow: var(--ce-rim); }
+.admin .fi-head { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; font-size: .8rem; }
+.admin .fi-head .when { margin-inline-start: auto; }
+.admin .fi-badge { font-size: .68rem; letter-spacing: .05em; text-transform: uppercase; padding: .05rem .35rem; border-radius: .25rem; box-shadow: inset 0 0 0 1px currentColor; }
+.admin .fi-badge-production { color: var(--ce-text-ok); }
+.admin .fi-badge-staging { color: var(--ce-lumen); }
+.admin .fi-state { font-size: .68rem; letter-spacing: .05em; text-transform: uppercase; padding: .05rem .35rem; border-radius: .25rem; }
+.admin .fi-state-ok { color: var(--ce-text-ok); }
+.admin .fi-state-warn { color: var(--ce-text-warn); }
+.admin .fi-state-bad { color: var(--ce-text-bad); }
+.admin .fi-state-info { color: var(--ce-lumen); }
+.admin .fi-context { color: var(--ce-muted); font-size: .82rem; margin: .35rem 0; }
+.admin .fi-message { margin: .5rem 0; padding-inline-start: .75rem; border-inline-start: 3px solid var(--ce-hairline); line-height: 1.55; overflow-wrap: anywhere; }
+.admin .fi-held { color: var(--ce-text-warn); font-size: .84rem; }
+.admin .fi-mark { color: var(--ce-muted); font-size: .82rem; }
+.admin .fi-triage { margin-top: .6rem; padding-top: .6rem; border-top: 1px solid var(--ce-hairline); display: grid; gap: .35rem; }
+.admin .fi-note-label { font-size: .78rem; color: var(--ce-muted); }
+.admin .fi-note { width: 100%; resize: vertical; }
+.admin .fi-actions { display: flex; flex-wrap: wrap; gap: .4rem; }
+.admin .fi-set-ok { color: var(--ce-text-ok); }
+.admin .fi-set-warn { color: var(--ce-text-warn); }
+.admin .fi-set-bad { color: var(--ce-text-bad); }
+.admin .fi-set-info { color: var(--ce-lumen); }
+.admin .fi-consequence { color: var(--ce-muted); font-size: .78rem; }
+.admin .fi-technical code { overflow-wrap: anywhere; }
+.admin .fi-queue { margin: .4rem 0; }
+.admin .fi-warn { color: var(--ce-text-warn); }
+.admin .fi-empty { color: var(--ce-muted); }
+
+/* ============================================================ Admin C — cost classes and role colours (ADM-33, ADM-36) */
+.admin table.cost tr.group-head th { font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ce-muted); padding-top: .6rem; border-bottom: 0; text-align: left; }
+.admin .cost-class { display: inline-block; font-size: .68rem; letter-spacing: .04em; text-transform: uppercase; padding: 0 .35rem; border-radius: .25rem; box-shadow: inset 0 0 0 1px currentColor; white-space: nowrap; }
+.admin .cost-class-paid-model { color: var(--ce-lumen); }
+.admin .cost-class-plain-code { color: var(--ce-text-ok); }
+.admin .cost-class-subscription-job { color: var(--ce-text-ok); }
+.admin .cost-class-zero-this-run { color: var(--ce-muted); }
+.admin .cost-class-not-measured { color: var(--ce-text-warn); }
+.admin .cost-class-predates-measurement { color: var(--ce-muted); }
+.admin tr.cost-plain-code td, .admin tr.cost-zero-this-run td, .admin tr.cost-predates-measurement td { color: var(--ce-muted); }
+.admin tr.cost-not-measured td, .admin tr.cost-unmeasured td { color: var(--ce-text-warn); }
+.admin .role-scout .bar-fill { background: linear-gradient(90deg, color-mix(in srgb, var(--lvl-state) 45%, var(--ce-slate-rise)), var(--lvl-state)); }
+.admin .role-acquirer .bar-fill { background: linear-gradient(90deg, color-mix(in srgb, var(--lvl-local) 45%, var(--ce-slate-rise)), var(--lvl-local)); }
+.admin .role-detective .bar-fill { background: linear-gradient(90deg, color-mix(in srgb, var(--lvl-school) 45%, var(--ce-slate-rise)), var(--lvl-school)); }
+.admin .role-parser .bar-fill { background: linear-gradient(90deg, color-mix(in srgb, var(--lvl-school) 45%, var(--ce-slate-rise)), var(--lvl-school)); }
+.admin .role-validator .bar-fill { background: linear-gradient(90deg, color-mix(in srgb, var(--lvl-federal) 45%, var(--ce-slate-rise)), var(--lvl-federal)); }
+.admin .role-adversarial-auditor .bar-fill { background: linear-gradient(90deg, color-mix(in srgb, var(--ce-text-warn) 45%, var(--ce-slate-rise)), var(--ce-text-warn)); }
+.admin .role-engineering .bar-fill { background: linear-gradient(90deg, color-mix(in srgb, var(--ce-lumen) 45%, var(--ce-slate-rise)), var(--ce-lumen)); }
+.admin .role-release-orchestrator .bar-fill { background: linear-gradient(90deg, color-mix(in srgb, var(--ce-lumen) 45%, var(--ce-slate-rise)), var(--ce-lumen)); }
+.admin .subscription-block { margin-top: 1.25rem; padding-top: .75rem; border-top: 1px solid var(--ce-hairline); }
+.admin table.cost.billed td, .admin table.cost.billed th { white-space: nowrap; }
+
+
+/* ============================================================ Admin C — research detail (ADM-42..48) */
+.admin .wf-id { display: inline-block; max-width: 100%; white-space: normal; }
+.admin .wf-id .raw-ids { display: inline-block; margin-inline-start: .35rem; }
+.admin table.scout-attempts td, .admin table.wf-attempts td { vertical-align: top; }
+.admin table.scout-attempts td:nth-child(2) { min-width: 24rem; }
+.admin table.scout-attempts td:last-child { white-space: normal; min-width: 12rem; }
+.admin table.wf-attempts td:nth-child(2), .admin table.wf-attempts td:nth-child(3) { min-width: 18rem; }
+.admin .scout-trying { font-weight: 500; color: var(--ce-fg); margin-bottom: .2rem; }
+.admin td.needs-no { color: var(--ce-muted); }
+.admin td.needs-yes { color: var(--ce-text-warn); font-weight: 600; }
+
+/* ============================================================ Admin C — the source and API registry (ADM-C11) */
+.admin .src-summary { display: grid; gap: .5rem; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); margin: .75rem 0; }
+.admin .src-family { margin-top: 1.5rem; }
+.admin .src-count { font-size: .78rem; font-weight: 400; color: var(--ce-muted); margin-inline-start: .4rem; }
+.admin .src-table-scroll { overflow-x: auto; }
+.admin table.src-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+.admin table.src-table th, .admin table.src-table td { text-align: left; vertical-align: top; padding: .35rem .5rem; border-bottom: 1px solid var(--ce-hairline); }
+.admin table.src-table thead th { position: sticky; top: 0; background: var(--ce-void); font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ce-muted); font-weight: 500; }
+.admin .src-row { border-inline-start: 3px solid transparent; }
+.admin .src-ok { border-inline-start-color: var(--ce-text-ok); }
+.admin .src-warn { border-inline-start-color: var(--ce-text-warn); }
+.admin .src-bad { border-inline-start-color: var(--ce-text-bad); }
+.admin .src-info { border-inline-start-color: var(--ce-lumen); }
+.admin .src-none { border-inline-start-color: var(--ce-muted); }
+.admin .src-name { width: 22ch; font-weight: 400; }
+.admin .src-source { display: block; font-weight: 600; }
+.admin .src-provider { display: block; font-size: .76rem; color: var(--ce-muted); }
+.admin .src-detail > summary { font-size: .76rem; color: var(--ce-muted); cursor: pointer; }
+.admin .src-detail dl { display: grid; grid-template-columns: max-content 1fr; gap: .15rem .5rem; margin: .3rem 0; }
+.admin .src-detail dt { font-size: .72rem; color: var(--ce-muted); }
+.admin .src-detail dd { margin: 0; }
+.admin .src-evidence { list-style: none; margin: .3rem 0; padding: 0; }
+.admin .src-evidence code { font-size: .74rem; }
+.admin .src-note { display: block; font-size: .76rem; color: var(--ce-muted); }
+.admin .src-key { display: block; }
+.admin .src-key-yes { color: var(--ce-text-ok); }
+.admin .src-key-no { color: var(--ce-text-warn); }
+.admin .src-key-unknown, .admin .src-key-none { color: var(--ce-muted); }
+.admin .src-last, .admin .src-next, .admin .src-health, .admin .src-coverage { white-space: nowrap; }
+.admin .src-gap { color: var(--ce-muted); font-style: italic; border-bottom: 1px dotted var(--ce-hairline); }
+.admin .src-blocker { font-size: .76rem; padding-inline-start: .6rem; margin: .2rem 0; }
+.admin .src-blocker-whose { font-size: .7rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ce-muted); margin-inline-end: .3rem; }
+.admin .src-needs-list, .admin .src-legacy { list-style: none; margin: .4rem 0; padding: 0; display: grid; gap: .25rem; }
+.admin .src-legacy code { font-size: .76rem; }
+.admin .src-disagreements { line-height: 1.6; }
+.admin .src-legend, .admin .src-grades { display: grid; grid-template-columns: 16ch 1fr; gap: .2rem .6rem; font-size: .82rem; margin: .5rem 0; }
+.admin .src-legend dt, .admin .src-grades dt { color: var(--ce-muted); }
+.admin .src-legend dd, .admin .src-grades dd { margin: 0; }
+.admin .src-legend-item { padding-inline-start: .5rem; border-inline-start: 3px solid transparent; }
+.admin .src-limits > li { margin-bottom: .4rem; }
+
+/* ============================================================ Admin C — ask the console (ADM-C7) */
+.admin .chat-console { display: grid; gap: 1.25rem; }
+.admin .chat-transcript { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.25rem; }
+.admin .chat-exchange { padding-top: 1rem; border-top: 1px solid var(--ce-hairline); }
+.admin .chat-exchange:first-child { border-top: 0; padding-top: 0; }
+.admin .chat-asked { color: var(--ce-muted); font-size: .9rem; margin: 0 0 .5rem; }
+.admin .chat-waiting { color: var(--ce-muted); font-style: italic; }
+.admin .chat-line { margin: .35rem 0; }
+.admin .chat-denominator { margin: .5rem 0; padding-inline-start: .75rem; border-inline-start: 3px solid var(--ce-lumen); font-size: .88rem; }
+.admin .chat-denominator-source { display: block; font-size: .76rem; color: var(--ce-muted); }
+.admin .chat-gap, .admin .chat-gaps > li { color: var(--ce-text-warn); font-size: .86rem; }
+.admin .chat-gaps, .admin .chat-sources, .admin .chat-detail, .admin .chat-suggestions, .admin .chat-reads { list-style: none; margin: .4rem 0; padding: 0; display: grid; gap: .25rem; }
+.admin .chat-sources > li { font-size: .78rem; color: var(--ce-muted); }
+.admin .chat-detail { overflow-x: auto; }
+.admin .chat-detail code { font-size: .76rem; }
+.admin .chat-suggestions { display: flex; flex-wrap: wrap; gap: .4rem; }
+.admin .chat-subject { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .82rem; padding: .05rem .3rem; border-radius: .2rem; background: var(--ce-panel-raised); }
+.admin .chat-refusals { font-size: .78rem; color: var(--ce-muted); }
+.admin .chat-composer { display: flex; flex-wrap: wrap; align-items: flex-end; gap: .5rem; margin-top: 1rem; }
+.admin .chat-label { font-size: .78rem; color: var(--ce-muted); display: block; }
+.admin .chat-input { flex: 1 1 22rem; resize: vertical; font: inherit; }
+.admin .chat-limits, .admin .chat-controls { margin-top: 1.5rem; }
+.admin .chat-limits ul, .admin .chat-controls ul { line-height: 1.6; }
+
+
+/* ============================================================ Admin C — the agent bridge (ADM-C8, ADM-C9) */
+.admin .ab-providers, .admin .ab-reviews { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr)); }
+.admin .ab-provider, .admin .ab-review, .admin .ab-fallback { margin-block: 1rem; }
+.admin .ab-review h3, .admin .ab-review h4 { margin: .4rem 0 .2rem; }
+.admin .ab-fields { display: grid; grid-template-columns: max-content 1fr; gap: .35rem .75rem; margin: .4rem 0; font-size: .85rem; }
+.admin .ab-fields dt { color: var(--ce-muted); font-size: .78rem; white-space: nowrap; }
+.admin .ab-fields dd { color: var(--ce-fg); margin-inline-start: 0; }
+.admin .ab-seats { display: grid; gap: .6rem; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); }
+.admin .ab-seat { padding: .5rem; border-radius: var(--ce-radius-md); box-shadow: inset 0 0 0 1px var(--ce-hairline); }
+.admin .ab-independence { margin: .6rem 0; padding: .75rem; background: var(--ce-panel-raised); box-shadow: var(--ce-rim); border-radius: var(--ce-radius-md); }
+.admin .ab-checks, .admin .ab-points-one { list-style: none; margin: .4rem 0; padding: 0; font-size: .84rem; line-height: 1.4; color: var(--ce-muted); }
+.admin .ab-holds { color: var(--ce-text-ok); }
+.admin .ab-points { display: grid; gap: .5rem; margin: .5rem 0; }
+.admin .ab-point dt, .admin .ab-points dt { font-weight: 600; font-size: .86rem; }
+.admin .ab-point-split { display: grid; gap: .35rem; }
+.admin .ab-point-split > p + p { padding-top: .35rem; border-top: 1px solid var(--ce-hairline); }
+.admin .ab-evidence { display: block; font-size: .78rem; color: var(--ce-muted); }
+.admin .ab-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-block-start: .5rem; }
+.admin .ab-arm { margin-block-start: .5rem; }
+.admin .ab-arm > summary { display: inline-block; cursor: pointer; padding: .4rem .8rem; border-radius: var(--ce-radius-md); box-shadow: inset 0 0 0 1px var(--ce-lumen); color: var(--ce-lumen); }
+.admin .ab-arm > div, .admin .ab-arm > form, .admin .ab-arm > p { padding: .5rem 0 0; }
+.admin .ab-decide { margin-block-start: .5rem; }
+.admin table.ab-jobs { width: 100%; border-collapse: collapse; font-size: .84rem; }
+.admin table.ab-jobs th, .admin table.ab-jobs td { text-align: start; vertical-align: top; padding: .35rem .5rem; border-block-end: 1px solid var(--ce-hairline); }
+.admin .ab-asked, .admin .ab-why { display: block; font-size: .78rem; color: var(--ce-muted); }
+.admin .ab-why-refused { color: var(--ce-text-warn); }
+.admin .ab-detail > summary { font-size: .78rem; color: var(--ce-muted); cursor: pointer; }
+.admin .ab-detail > * { max-width: 28rem; }
+.admin .ab-unreadable { color: var(--ce-text-warn); }
+
+/* ============================================================ Admin C — reader intelligence (ADM-C12) */
+/*
+ * The four traffic classes on the census bar. Scoped to the SEGMENT and to the
+ * legend swatch separately — the layout's own comment records that the
+ * unscoped form was a 1.09:1 contrast defect. ORGANIC is the lit tone because
+ * it is the only one that is a demand figure; UNKNOWN is deliberately the
+ * dullest, because an unattributable row is neither a reader nor a finding.
+ */
+.admin .stack-part.part-readers { background: var(--ce-lumen); }
+.admin .part-readers .swatch { background: var(--ce-lumen); }
+.admin .stack-part.part-author { background: #4c9a5a; }
+.admin .part-author .swatch { background: #4c9a5a; }
+.admin .stack-part.part-automated { background: #d99a3a; }
+.admin .part-automated .swatch { background: #d99a3a; }
+.admin .stack-part.part-unattributed { background: var(--ce-slate-rise); }
+.admin .part-unattributed .swatch { background: var(--ce-slate-rise); }
+
+
+/* ============================================================ Admin C — the deploy-fleet preview (§9A.16) */
+.admin .deploy { margin: .75rem 0; display: grid; gap: .4rem; }
+.admin .deploy-preview { padding: .8rem 1rem; border-radius: var(--ce-radius-md); background: var(--ce-panel); box-shadow: var(--ce-rim); }
+.admin .deploy-preview h4 { margin: 0 0 .4rem; }
+.admin .deploy-preview h5 { margin: .7rem 0 .2rem; font-size: .78rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ce-muted); }
+.admin .dp-means { margin: .2rem 0 .5rem; font-weight: 600; }
+.admin .dp-list, .admin .dp-after { margin: .2rem 0; padding-inline-start: 1.1rem; font-size: .88rem; line-height: 1.5; }
+.admin .dp-list { list-style: disc; }
+.admin .dp-will-not > li { color: var(--ce-fg-66); }
+.admin .dp-unmeasured { color: var(--ce-text-warn); }
+.admin .dp-after { list-style: decimal; color: var(--ce-fg-66); }
+.admin .deploy .actions { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-top: .6rem; }
+.admin .deploy textarea { width: 100%; min-height: 3.5rem; resize: vertical; }
+.admin .deploy-sent .state-green, .admin .deploy-failed .refusal { margin: 0; }
+.admin .console-loading { opacity: .85; }
+
 /* ============================================================ motion guard */
 @media (prefers-reduced-motion: reduce) {
   .admin *, .admin *::before, .admin *::after, .console-nav *, .console-nav *::before { transition-duration: 1ms !important; animation-duration: 1ms !important; animation-iteration-count: 1 !important; }

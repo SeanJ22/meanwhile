@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   CELL_STATES,
   GATE_ORDER,
+  NO_EVIDENCE,
   READINESS_RANK,
   type Gate,
   type GateCell,
@@ -29,17 +30,7 @@ import {
 const NOW = "2026-09-03T12:00:00.000Z";
 
 function ev(partial: Partial<GateEvidence>): GateEvidence {
-  return {
-    covered: 0,
-    total: 0,
-    asOf: null,
-    staleAfterDays: null,
-    walkClosed: false,
-    blockedReason: null,
-    gatedReason: null,
-    evidenceRef: null,
-    ...partial,
-  };
+  return { ...NO_EVIDENCE, ...partial };
 }
 
 /* ------------------------------------------------------------------ R-A */
@@ -165,8 +156,91 @@ test("R-G: freshness is per-capability; a null as-of is unknown, never fresh", (
 /* ------------------------------------------------------------------ R-B monotonicity */
 
 function cellOf(gate: Gate, state: GateCell["state"]): GateCell {
-  return { gate, state, asOf: null, detail: "", evidenceRef: null, monotonicityOk: true };
+  return { gate, state, says: "", asOf: null, detail: "", evidenceRef: null, monotonicityOk: true };
 }
+
+/* ------------------------------------------------------------------ ADM-40 §9A.9 */
+
+/**
+ * The seven facts §9A.9 requires the grid to keep apart. The two that used to
+ * collapse are the ones the owner caught: "there is no data" and "this is live
+ * on the Reader and the formal proof is stale" were the same blank amber cell.
+ */
+test("§9A.9: a DECLARATION-backed gate is never CURRENT, and says so in words", () => {
+  const cell = deriveGateCell(
+    "SHOWN_TO_READER",
+    ev({
+      covered: 47,
+      total: 47,
+      asOf: "2026-09-01",
+      staleAfterDays: 365,
+      of: "candidacies",
+      pendingProof: {
+        says: "Shown on the Reader · verification proof needs a fresh check",
+        detail: "47 candidacies are held in a holding the ballot route is required to read.",
+      },
+    }),
+    NOW,
+  );
+  // Complete and fresh — and STILL not current, because a standing declaration
+  // is not a rendered-row readback.
+  assert.equal(cell.state, "PARTIAL_OR_STALE");
+  assert.equal(cell.says, "Shown on the Reader · verification proof needs a fresh check");
+  assert.match(cell.detail, /47 candidacies/);
+});
+
+test("§9A.9: a cell with nothing behind it says 'not checked yet', never 'no data'", () => {
+  const cell = deriveGateCell("SHOWN_TO_READER", ev({}), NOW);
+  assert.equal(cell.state, "NOT_WALKED");
+  assert.equal(cell.says, "Not checked yet");
+  assert.doesNotMatch(cell.detail, /NOT_WALKED|no data/i);
+  assert.match(cell.detail, /Nobody has looked/);
+});
+
+test("every cell carries its own words, and they are never the raw constant", () => {
+  const cases: GateEvidence[] = [
+    ev({ covered: 15, total: 15, asOf: "2026-09-01", staleAfterDays: 30 }),
+    ev({ covered: 3, total: 15, asOf: "2026-09-01", staleAfterDays: 30 }),
+    ev({}),
+    ev({ walkClosed: true, asOf: "2026-09-01", evidenceRef: "r" }),
+    ev({ blockedReason: "a wall" }),
+    ev({ gatedReason: "a decision" }),
+  ];
+  const seen = new Set<string>();
+  for (const e of cases) {
+    const cell = deriveGateCell("ACQUIRED", e, NOW);
+    assert.ok(cell.says.trim() !== "", "a cell rendered with no words");
+    assert.doesNotMatch(cell.says, /[A-Z]{2,}_[A-Z]/, `the raw constant reached the face: ${cell.says}`);
+    seen.add(cell.says);
+  }
+  assert.equal(seen.size, cases.length, "two different cell states render the same words");
+});
+
+test("a fraction names what it counts, so '47 of 47' can never be read as a claim it does not make", () => {
+  const cell = deriveGateCell(
+    "SOURCE_KNOWN",
+    ev({ covered: 47, total: 47, asOf: "2026-09-01", staleAfterDays: 45, of: "held candidacies citing a named government filing document" }),
+    NOW,
+  );
+  assert.equal(cell.state, "CURRENT");
+  assert.match(cell.detail, /47 of 47 held candidacies citing a named government filing document/);
+});
+
+test("R-I: an argued absence carries the AUTHORITY's own sentence when it has one", () => {
+  const cell = deriveGateCell(
+    "ACQUIRED",
+    ev({
+      walkClosed: true,
+      asOf: "2026-08-14",
+      evidenceRef: "https://www.sos.nh.gov/2026-election-details",
+      absenceStatement: "New Hampshire Secretary of State: No statewide ballot question is on the November 3, 2026 ballot.",
+    }),
+    NOW,
+  );
+  assert.equal(cell.state, "ARGUED_ABSENT");
+  assert.match(cell.detail, /No statewide ballot question/);
+  assert.equal(cell.says, "Looked for, does not exist");
+});
 
 test("R-B: a clean ladder raises no violation", () => {
   const cells = [
@@ -196,11 +270,17 @@ test("R-B: a CURRENT past a non-CURRENT gate to its left is DOWNGRADED to its ef
   assert.equal(verified?.monotonicityOk, false); // marked, not hidden
   // The EFFECTIVE state is NOT CURRENT: a right-hand gate cannot stand past an
   // unmet prerequisite. It reads PARTIAL_OR_STALE, the raw signal is preserved
-  // in the detail, and the unmet prerequisite (ACQUIRED) is named.
+  // in the detail, and the unmet prerequisite is named — in the gate's own
+  // rendered LABEL, not its constant: nothing that reaches the owner's screen
+  // may be machine speech (§9A.1), and this detail is quoted straight onto the
+  // cell's hover and into the evidence drawer.
   assert.equal(verified?.state, "PARTIAL_OR_STALE");
-  assert.match(verified?.detail ?? "", /ACQUIRED/);
+  assert.match(verified?.detail ?? "", /Acquired/);
+  assert.doesNotMatch(verified?.detail ?? "", /ACQUIRED|SOURCE_KNOWN|PARTIAL_OR_STALE/);
+  assert.match(verified?.says ?? "", /Acquired/);
   assert.match(verified?.detail ?? "", /Raw signal/);
-  assert.match(violations[0].detail, /ACQUIRED/);
+  assert.match(violations[0].detail, /Acquired/);
+  assert.doesNotMatch(violations[0].detail, /ACQUIRED|VERIFIED/);
 });
 
 test("R-B NEGATIVE CONTROL (permanent): an ACQUIRED gap then a nominal VERIFIED success can NEVER render VERIFIED CURRENT", () => {

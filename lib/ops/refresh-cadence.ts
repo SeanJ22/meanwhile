@@ -396,3 +396,22 @@ export function maxScheduledBuildsPerMonth(): number {
   // One run a day, and the run commits at most once however many sources moved.
   return 30;
 }
+
+/**
+ * The next calendar day after `runDate` on which the source's cadence calls for
+ * it, or null if none inside 62 days (which the three cadences here never
+ * produce — stated rather than assumed, so a fourth cadence cannot inherit a
+ * silent null).
+ *
+ * Lives here rather than in `refresh-report.ts` because it is a question about
+ * the CADENCE and nothing else: an admin page asking "when is this source next
+ * due?" should not have to import a module that reads and writes files.
+ */
+export function nextCadenceDay(source: RefreshSource, runDate: Date): string | null {
+  const base = Date.UTC(runDate.getUTCFullYear(), runDate.getUTCMonth(), runDate.getUTCDate());
+  for (let i = 1; i <= 62; i++) {
+    const day = new Date(base + i * 86_400_000);
+    if (isDue(source, day)) return utcDay(day);
+  }
+  return null;
+}

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 539,
-    "named": 5572,
+    "files": 559,
+    "named": 5933,
     "dynamic": 24
   },
   "files": {
@@ -57,6 +57,74 @@
         "RULING 222: no reader surface renders a row it knows is ELSEWHERE_IN_ZIP",
         "RULING 222: the who-governs card scopes its lists to the address",
         "RULING 222: without a confirmed address nothing is removed"
+      ],
+      "dynamic": 0
+    },
+    "tests/admin-action-gateway.test.ts": {
+      "names": [
+        "ADM-34: a delegated-job row this strip cannot read makes the count unknown, never zero",
+        "ADM-34: the counts come from the published snapshot, so the strip and the page agree",
+        "ADM-34: the pulse makes no list() call — the reads it may not make are refused loudly",
+        "ADM-34: the pulse names every read it could not make and renders none of them as zero",
+        "ADM-34: the revision moves when the console's own record moves, and not otherwise",
+        "ADM-C6 PLANT: a gateway that skipped the idempotency read would be caught here",
+        "ADM-C6 acceptance 1: a permitted action succeeds and leaves a receipt that answers §3.7",
+        "ADM-C6 acceptance 2: an action rendered against a world that has moved is refused as stale",
+        "ADM-C6 acceptance 3: a duplicate submission returns the same receipt and does not act twice",
+        "ADM-C6 acceptance 4: a prohibited action is refused for every caller, as prohibited",
+        "ADM-C6 acceptance 5: an owner-gated action is refused for an AGENT caller",
+        "ADM-C6 acceptance 6: a refusal is a first-class outcome with a durable receipt",
+        "ADM-C6 acceptance 7: an unknown action fails closed and is recorded as one nobody may run",
+        "ADM-C6: a request that is not shaped like an action writes nothing at all, and says so",
+        "ADM-C6: an action that must quote a version and quotes none is INVALID, not stale",
+        "ADM-C6: an action type that is not registered resolves to nothing, inherited members included",
+        "ADM-C6: an unreadable receipt log stops the gateway rather than risking a double action",
+        "ADM-C6: both gateway routes are invisible on the public host and unreachable without a session",
+        "ADM-C6: every receipt lands under the one declared log key",
+        "ADM-C6: neither route ever puts a connection string or a variable name in its body",
+        "ADM-C6: promotion stays off — nothing in the registry can turn it on",
+        "ADM-C6: retrying a work item refuses and names the seam that does not exist",
+        "ADM-C6: the agent-job log holds a job's progression without ever editing a record",
+        "ADM-C6: the operator chat carries a button's authority for everything but an owner decision",
+        "ADM-C6: the receipt log holds no field the aggregate-only boundary refuses",
+        "ADM-C6: the registry is closed and every entry carries a full definition",
+        "ADM-C6: the review decision delegates, and the writer's staleness is the gateway's staleness",
+        "ADM-C6: the review decision refuses by name when nothing is wired to record it",
+        "ADM-C6: the route is one door — a no-JS form and a JSON fetch build the same request",
+        "ADM-C6: two DIFFERENT actions sharing an idempotency key are two actions",
+        "§9A.22: a corrupt policy row reads as the default, which is OFF",
+        "§9A.22: paid API fallback defaults OFF, and reads OFF from a store nothing has written",
+        "§9A.22: turning paid API fallback on needs an explicit confirmation, and is recorded durably"
+      ],
+      "dynamic": 0
+    },
+    "tests/admin-c-plain-words.test.ts": {
+      "names": [
+        "ADM-24 · a budget ceiling does not need the owner; a silent runner does",
+        "ADM-24 · the runner card says what a runner IS",
+        "ADM-24 · the stop reason leads with budget, and the time comes out of the prose",
+        "ADM-25 · POSITIVE CONTROL — the runner's own stop sentence loses every code",
+        "ADM-25 · an environment variable never renders its own name",
+        "ADM-25 · an unknown constant still loses its underscores",
+        "ADM-25 · no constant the owner photographed renders with an underscore",
+        "ADM-25 · text that is not a machine constant is left alone",
+        "ADM-26 · dollars render to the cent, never to four places",
+        "ADM-26 · the spend windows are a three-row table to the cent, each defined",
+        "ADM-27 · deferred work is a count and a sentence, never a list of thousands",
+        "ADM-28 · the three headline words are defined once, in plain English",
+        "ADM-29 · Arizona ballot campaign finance is Arizona, not 'other'",
+        "ADM-29 · POSITIVE CONTROL — a New Jersey candidate named De Venezia is not Delaware",
+        "ADM-29 · every real id shape in the store attributes correctly",
+        "ADM-29 · the dispatch matcher and the attribution agree, by construction",
+        "ADM-30 · an age in hours reads as ordinary time",
+        "ADM-30 · one incident line answers what happened, not what the code is",
+        "ADM-30 · the escalation threshold is age, not cause",
+        "ADM-30 · thirty incident lines become owner groups with actions",
+        "ADM-33 · a model id renders as a name",
+        "a cause the owner will read has a meaning, not only a label",
+        "an unmeasured window says so instead of showing $0.00",
+        "counts read as a person reads them",
+        "every dictionary entry is sentence case and free of underscores"
       ],
       "dynamic": 0
     },
@@ -156,6 +224,44 @@
       ],
       "dynamic": 0
     },
+    "tests/admin-feedback-inbox.test.ts": {
+      "names": [
+        "a console with no store connected states nothing rather than zero readers",
+        "a decision that is not about a message, or names an option we do not know, is ignored",
+        "a message's source environment comes from the store it was read from",
+        "a projected row carries the presence of a reply handle and never its value",
+        "a read-only handle on its own branch opens — the positive control",
+        "a reading returns the rows, the census and the rows it could not read",
+        "a review-site connection whose isolation cannot be established is refused, not read",
+        "a review-site handle that IS the live handle is refused as the bypass it would be",
+        "a review-site handle that can write is refused before a query runs",
+        "a store that throws reports that it could not be asked, and holds no rows",
+        "an unread review store leaves the inbox owner-gated, never silently active",
+        "an unset live store is an ordinary state, told plainly and with nothing to do",
+        "assertInboxRowIsSafe refuses a row that carries a contact value — planted",
+        "every button's option maps back to exactly one state, and nothing else does",
+        "every number this view prints carries a denominator and a contract",
+        "no refusal the owner reads names a credential or a variable",
+        "quarantine and triage are separate facts, and neither hides the other",
+        "the console reads the staging credential this repository already declares",
+        "the decision recorded about a message carries none of the reader's words",
+        "the denominator sentence reconciles, and says so when it cannot",
+        "the five triage states are the ones the system can actually stand behind",
+        "the list query asks the database for a boolean, never for the handle",
+        "the module can only read — no write statement exists in it",
+        "the module opens no other collection store and joins nothing",
+        "the newest decision about a message wins, and an older one does not resurface",
+        "the page is uncached and reads on every request",
+        "the page keeps no credential, no cookie and nothing in the browser",
+        "the page names both environments in the owner's words",
+        "the page never says our, and never leads with a machine constant",
+        "the page records decisions through the console's existing door and defines no new one",
+        "the page renders the four layers, Eastern time, and writes no CSS",
+        "the stated-equals-rendered check really would catch a drift — planted",
+        "with no connection the review site is a named gap, with the owner action spelled out"
+      ],
+      "dynamic": 0
+    },
     "tests/admin-google-signin.test.ts": {
       "names": [
         "BAD_SIGNATURE: another key under the same kid, a tampered payload, alg=none, and an unknown kid",
@@ -206,6 +312,41 @@
       ],
       "dynamic": 0
     },
+    "tests/admin-reader-intel.test.ts": {
+      "names": [
+        "ADM-C12: 500 synthetic rows never reach a figure the page prints",
+        "ADM-C12: PLANT — a bare number and an impossible one are both caught",
+        "ADM-C12: PLANT — a list rendered short of what the database counted is caught",
+        "ADM-C12: PLANT — a reader-level field anywhere in the reading refuses the render",
+        "ADM-C12: a missing handle names the variable and never a value",
+        "ADM-C12: a rate states its exact denominator, and a zero denominator is a named gap",
+        "ADM-C12: a store that cannot be reached is not a store that holds nothing",
+        "ADM-C12: a top list says how many exist behind it, so it never implies it showed everything",
+        "ADM-C12: an empty window is NOT_RECORDED, and says the store answered",
+        "ADM-C12: every aggregate carries a run-class filter, and only the census does not",
+        "ADM-C12: every card answers the owner's four questions",
+        "ADM-C12: every number the page prints carries a denominator and a contract",
+        "ADM-C12: every query is bounded by that window and cut inside the database",
+        "ADM-C12: every stored constant this page can print has owner words",
+        "ADM-C12: nothing on the page is a raw environment variable or a connection string",
+        "ADM-C12: selecting another class binds THAT class, and says it is not a demand figure",
+        "ADM-C12: stated N equals the rows actually rendered, and a mismatch is caught",
+        "ADM-C12: the ask store's emptiness is reported as a switch, never as a silence from readers",
+        "ADM-C12: the census is checked for reconciliation rather than assumed to sum",
+        "ADM-C12: the detail-key map and the SQL that reads it cannot drift apart",
+        "ADM-C12: the page and its cards never name one either",
+        "ADM-C12: the page is dynamic, host-gated by path, and refuses its own bad numbers",
+        "ADM-C12: the page never editorialises about itself, and never says 'our'",
+        "ADM-C12: the read model never names a column that could key back to one reader",
+        "ADM-C12: the run class and the window are on the face, not implied",
+        "ADM-C12: the shared denominator sentence is quoted, not reworded — and it is the one 'our'",
+        "ADM-C12: the two databases are not conflated — this page opens the application's own handle",
+        "ADM-C12: the view defaults to ORGANIC and nothing a request says widens it",
+        "ADM-C12: the window is bounded, stated, and computed once for every panel",
+        "ADM-C12: zero in the selected class is HELD with a zero, not an empty store"
+      ],
+      "dynamic": 0
+    },
     "tests/admin-readiness-cell-state.test.ts": {
       "names": [
         "POSITIVE CONTROL: re-appending the #281 reset makes the state check fail",
@@ -220,6 +361,9 @@
     },
     "tests/admin-release-review.test.ts": {
       "names": [
+        "AR-1: explicit reviewState fails closed; only an absent reviewState uses the legacy status",
+        "AR-1: the accepted Prompt 3 lifecycle and review status remain raw, with readiness keyed on reviewState",
+        "AR-2: every existing composite condition gates independently and approvals never migrate to another full SHA",
         "B2: MANIFEST_UNAVAILABLE disables every write and names the last observed SHA and time",
         "B2: an unknown status, missing sections, missing URLs and unknown fields are labeled states, never throws",
         "B2: only staging-origin https URLs are ever rendered as links",
@@ -238,6 +382,10 @@
     },
     "tests/admin-research.test.ts": {
       "names": [
+        "ADM-42: the heading reads Research — <state>, the back-link is gone, and the activation levels are explained from governance",
+        "ADM-42: the runner block leads with what the runner is, and the worker credential's variable name is never rendered",
+        "ADM-48: a Scout row carries the record class, the route, the refusals and the rungs it still owes",
+        "ADM-48: the view carries the runner's standing, its next cycle time and the last cycle's safety snapshot",
         "POSITIVE CONTROL (RULING 246): a fresh RELAUNCHED proof with the trigger live holds the supervision panel and keeps ACTIVE",
         "POSITIVE CONTROL and SEEDED: a valid action passes validation, and a control plane that cannot open is 503 NOT RECORDED",
         "POSITIVE CONTROL: a fresh heartbeat, current state, no pause and permitted spend derive ACTIVE",
@@ -277,6 +425,83 @@
         "POSITIVE CONTROL: stripping the themed surface fails the checker",
         "the console-nav View and State dropdowns are theme-pinned (dark and light)",
         "the readiness controls (level, rows, ZIP sort) are theme-pinned (dark and light)"
+      ],
+      "dynamic": 0
+    },
+    "tests/admin-source-registry.test.ts": {
+      "names": [
+        "ADM-C11: a NOT_APPLICABLE row states its justification",
+        "ADM-C11: a credential event may say which store it landed in, and a store nobody can name is refused",
+        "ADM-C11: a disagreement between two registers is reported rather than settled quietly",
+        "ADM-C11: a route nothing calls is never graded green, and never graded red either",
+        "ADM-C11: every adapter the composite registers gets a row, derived rather than typed",
+        "ADM-C11: every number carries a denominator and an interpretation",
+        "ADM-C11: every row answers the owner's four questions",
+        "ADM-C11: every standing renders as words, and none of them leaks a constant",
+        "ADM-C11: every stated N equals the rows beneath it",
+        "ADM-C11: meeting coverage is counted in one unit on both sides",
+        "ADM-C11: neither the registry nor the page calls a source or reads a file",
+        "ADM-C11: no built row carries an environment-variable name",
+        "ADM-C11: the audit catches a number with no denominator",
+        "ADM-C11: the name detector catches a planted one",
+        "ADM-C11: the no-call detector catches a call",
+        "ADM-C11: the owner can tell all seven standings apart, and each one is reachable",
+        "ADM-C11: the page never prints a variable name and reads the environment once",
+        "ADM-C11: the page renders every field the brief asks for",
+        "ADM-C11: the registry names every store the credential module declares, and one of its own",
+        "§6: a key held somewhere this page cannot see is a named gap, never a No",
+        "§6: a route NOT called absent is one the code really does name",
+        "§6: a route called absent from this repository really is absent from it",
+        "§6: a route that needs no key never claims a reading of one",
+        "§6: a route the last run did not read has no last-read date, and says whose gap that is",
+        "§6: an open debt turns the grade red and says since when",
+        "§6: no run record at all is a gap, never a zero and never a green",
+        "§6: presence anywhere is presence, and it needs every part of a pair",
+        "§7: every route that says it rides the nightly run names a real refresh source",
+        "§7: exactly one refresh workflow runs on a clock, and it is the one the page names",
+        "§7: the cron detector catches a schedule when there is one",
+        "§7: the five per-source refreshes are press-only, and none has grown a schedule back"
+      ],
+      "dynamic": 0
+    },
+    "tests/admin-steward.test.ts": {
+      "names": [
+        "ADM-C2: every field the read model was asked for is present, or is a named gap",
+        "SEEDED: a build the owner sent back is blocked, but its blocker class is a named gap (§3.9)",
+        "SEEDED: a commit that is not main's head is NEVER reported unmerged",
+        "SEEDED: a store that could not be read never renders as a queue of zero",
+        "SEEDED: an approved build is never labelled live without a production commit that matches",
+        "SEEDED: the four controls with no canonical seam are refused by name, each with the seam",
+        "SEEDED: the page has no way to merge, deploy or bypass the shipping door",
+        "a build discarded on every section is discarded; nothing further is claimed about it",
+        "a build nobody has decided about is waiting on the owner, and says what to do",
+        "a build that is main's head reads as on main; one that is the executable head does too",
+        "a build with only console notes has no receipt, and the gap says why",
+        "an agent caller may not record an owner decision",
+        "an empty review log is an empty queue and says so, with nothing invented",
+        "an owner-approved build waits at the shipping door, and the console says the door is elsewhere",
+        "every card on the page states whether it needs the owner",
+        "every number this model offers carries a denominator and an interpretation",
+        "every offered control is a well-formed gateway action the owner may invoke",
+        "every stage key appears exactly once, in the declared order",
+        "every vocabulary constant this console renders becomes ordinary words",
+        "farthestReached returns the last stage actually reached, never a hopeful one",
+        "no offered control ships anything, so the release-execution verdict still stands",
+        "no sentence the model produces carries a machine constant or the word our",
+        "the commit production was built from reads as live, and that outranks the decision on it",
+        "the fixture the page validates its heartbeat reading with is a real code identity",
+        "the page is uncached and reads the model rather than deriving one",
+        "the page must not fork the exact-commit review writer",
+        "the page reads only the build stamp from the environment, and never names it on the face",
+        "the page renders machine constants through the one translation layer",
+        "the page states its list counts from the lists themselves, never from a typed word",
+        "the production check is always unanswerable from here, and names what would answer it",
+        "the queue is the order the builds were first recorded in, oldest first",
+        "the read model is pure: no store, clock, environment, filesystem or network",
+        "the receipt is the newest state-changing row, and a console note is not one",
+        "the required checks are the committed contract, never a second list",
+        "times sent back is counted against every decision recorded on the build",
+        "with no runner reading, the walk above the executable head is a gap and never a zero"
       ],
       "dynamic": 0
     },
@@ -355,6 +580,48 @@
         "every declaration states a basis — a bare state is a guess about a vendor",
         "ical is ABSENT, and that is an ANSWER rather than outstanding work",
         "legistar is PRESENT, and its basis names the field that makes it observable"
+      ],
+      "dynamic": 0
+    },
+    "tests/agent-bridge.test.ts": {
+      "names": [
+        "ADM-C8 honesty: an unavailable provider produces a refusal record, never a claimed completion",
+        "ADM-C8 · §3.1: a probe can only ever run a frozen argv from the closed launcher table",
+        "ADM-C8: a control plane we could not reach renders as a named gap, never as zero jobs",
+        "ADM-C8: a delegated job may only read or propose; anything that could ship is refused at construction",
+        "ADM-C8: a job id is derived from what makes it that job, so a retry collides instead of forking",
+        "ADM-C8: a probe takes three independent readings and never runs a launcher it could not find",
+        "ADM-C8: a provider is never reported authenticated — the strongest reading is a saved sign-in",
+        "ADM-C8: a refusal is an ending with no result; a completion is an ending with one",
+        "ADM-C8: a row in the shared log this bridge did not write is counted, never dropped",
+        "ADM-C8: an exhausted subscription is refused, never silently billed",
+        "ADM-C8: capacity is free slots OF total, and busy is derived from work in flight",
+        "ADM-C8: from the website nothing about a provider is claimed — every field is a named gap, classified EXTERNAL",
+        "ADM-C8: no machine constant leads on the agent page — the raw form lives in the hover",
+        "ADM-C8: not installed is the owner's to fix; installed-but-silent is outside this system",
+        "ADM-C8: nothing that decides policy reads an environment variable, so a restart cannot turn spending on",
+        "ADM-C8: on the website both provider cards are gaps classified EXTERNAL, and neither can run",
+        "ADM-C8: paid API fallback is OFF by default and fails closed on every not-exactly-true value",
+        "ADM-C8: stated N equals rendered rows on the job table",
+        "ADM-C8: the bridge stores its job in the control plane's own record, output digested rather than kept",
+        "ADM-C8: the log records every transition, and every projection reads the CURRENT state of a job",
+        "ADM-C8: the page renders every stamp through <When>, mints no route, and writes only an intent",
+        "ADM-C8: the paid-API switch is the gateway's action, needs saying twice to turn on, and claims no enforcement",
+        "ADM-C8: the provider list is the two canonical subscription types and nothing else",
+        "ADM-C8: the record carries a content hash of the snapshot, never the snapshot",
+        "ADM-C9: ASK_BOTH claims no independence, and its outcome is not an independent review's",
+        "ADM-C9: a comparison recorded in a form the page cannot read is a named gap, not an empty agreement",
+        "ADM-C9: a decision log we could not read never makes the page say the owner decided nothing",
+        "ADM-C9: a reviewer that dies is FAILED, not refused, and stops the comparison",
+        "ADM-C9: a reviewer's brief has no field through which the other's conclusion could arrive",
+        "ADM-C9: a sealed conclusion opens only as a pair, and there is no single-conclusion opener",
+        "ADM-C9: agreement is by topic and stance; a topic one of them raised alone is neither",
+        "ADM-C9: neither reviewer can reach the other's conclusion, even after the other has finished",
+        "ADM-C9: the isolation proof is computed from the run's own stamps, and fails when it should",
+        "ADM-C9: the view reconstructs a review from the log and never calls an ask-both run independent",
+        "§3.1: the host adapter can only ever run one of the declared version checks",
+        "§3.4: nothing in the bridge iframes, scrapes or replays a consumer AI session",
+        "§9A.1: the bridge never says 'our' to the owner, and never prints a credential's name"
       ],
       "dynamic": 0
     },
@@ -1833,6 +2100,17 @@
       ],
       "dynamic": 0
     },
+    "tests/code-identity.test.ts": {
+      "names": [
+        "PRDY-1: a missing SHA or an unanswerable git is CANNOT_TELL; ahead-of-main and off-main are named, never called current",
+        "PRDY-1: a stored record that is not a code identity is refused, never read as consistent",
+        "PRDY-1: an observer-only child of the executable head does not make a current runner look stale (ACT-1)",
+        "PRDY-1: executable code above the runner is the real stale case, undiminished",
+        "PRDY-1: readCodeIdentity derives the three SHAs and the verdict from a real repository, with no network",
+        "PRDY-1: unclassifiable and mixed commits are executable; the walk bound refuses rather than guesses"
+      ],
+      "dynamic": 0
+    },
     "tests/comment-access.test.ts": {
       "names": [
         "a YES row states where the period falls, in the body's own terms",
@@ -2039,6 +2317,7 @@
         "controlPlaneUrlFromEnv refuses an empty value rather than defaulting",
         "createPgRepositories refuses an empty connection string",
         "schema v5 declares the four nightly-door logs, and every provider bundle carries them",
+        "schema v9 declares the Action Gateway's three tables, and every provider bundle carries them",
         "the advisory lock key is STABLE — two machines computing it must agree",
         "the conformance suite states WHICH providers it ran, and which it did not",
         "the two control-plane variables are DISTINCT names, so one can never stand in for the other"
@@ -2255,6 +2534,26 @@
         "no artifact class claims a field it cannot answer",
         "staleness is null when it cannot be told, never false",
         "the contract asks different things of RETRIEVED, DERIVED and CURATED"
+      ],
+      "dynamic": 0
+    },
+    "tests/cost-section-adm-c14.test.ts": {
+      "names": [
+        "ADM-26: the three windows render as the brief's own rows, to the cent, and an unmeasured window is never $0.00",
+        "ADM-33: a model attempt with no dollars is 'Not measured'; rows predating the fields say so; a missing Attempt is a named join gap",
+        "ADM-33: a role that can spend and did not reads '$0 this run'; only a role the policy proves reads 'Plain code'",
+        "ADM-36 and ADM-33: a role bar carries a role class and a model renders as its name",
+        "ADM-47: each of the three zeroes on the model share says which zero it is",
+        "ADM-C14: subscription jobs are three different readings, and an absent log never reads as an empty one",
+        "ADM-C14: the cache row carries the defect counts, the batch share and the saving the cycle measured",
+        "every number the cost section draws itself carries a denominator and a contract",
+        "the cost section renders dollars to the cent, keeps both charts, and no longer claims a role is free by design",
+        "§9A.23: an empty month is a month with nothing measured, never a month that cost $0.00",
+        "§9A.23: rows are counted into their own month, both bounds inclusive, and an unreadable stamp is dropped rather than filed at the epoch",
+        "§9A.23: the month totals by provider, model and role, prices the savings once, and keeps unmeasured rows out of the dollars",
+        "§9A.23: the window is the UTC calendar month, and the UTC/Eastern day edge does not move it",
+        "§9A.4: every role the cost policy calls plain code is one no executor hands a model to, re-read from the code",
+        "§9A.4: the capacity sentence is computed from the ledger and matches the owner's shape; an unmeasured window says so"
       ],
       "dynamic": 0
     },
@@ -2871,6 +3170,23 @@
       ],
       "dynamic": 0
     },
+    "tests/fact-chain.test.ts": {
+      "names": [
+        "PRDY-3: a second acquisition that moves a sitting is a CONFIRMATION_FACT_CONFLICT hold for that fact and confirms the others; a stale class is refused at approval; a malformed capture bridges nothing",
+        "PRDY-3: two independent acquisitions plus a validated and audited extraction carry 36 facts to AUDITED; approval waits for the governed freshness obligation and then lands"
+      ],
+      "dynamic": 0
+    },
+    "tests/fact-verification.test.ts": {
+      "names": [
+        "PRDY-3: FALSE_ZERO refuses a partial capture and a row count the publisher contradicts",
+        "PRDY-3: a newer reading of the same source that moves the sitting supersedes the fact; one that merely no longer carries it does not",
+        "PRDY-3: a tampered byte fails the span check by offset, a foreign body fails identity, a bad zone fails the class burdens, and a wrong clock fails rendering symmetry",
+        "PRDY-3: controls are planted from an independent parse and scored — clean on the real chain, a false absence when a record is dropped, a false presence when a null is filled",
+        "PRDY-3: the real Pima capture passes all five checks for a meeting-time fact and an agenda fact, each detail naming what was measured"
+      ],
+      "dynamic": 0
+    },
     "tests/failure-diagnosis.test.ts": {
       "names": [
         "a credential refusal is POLICY — every retry presents the same credential",
@@ -3020,6 +3336,16 @@
         "fails then passes on an unchanged tree is FLAKY, in either order",
         "quarantine matches an identity EXACTLY, never loosely",
         "walk:all prints the quarantined count on every run"
+      ],
+      "dynamic": 0
+    },
+    "tests/fleet-role-wording.test.ts": {
+      "names": [
+        "ADM-43: the role card prints one name, one sentence, Needs you at the top, and no code in its heading",
+        "SEEDED: codeWords is plainCode itself, not a second implementation of the same rule (RULING 103)",
+        "SEEDED: each role's sentence describes its own canonical contract, not its group's summary line",
+        "SEEDED: every worker role has exactly ONE owner-facing name, and it is the console's one dictionary",
+        "SEEDED: the fleet grouping is said in a sentence, not printed as a second code beside the first"
       ],
       "dynamic": 0
     },
@@ -4225,6 +4551,17 @@
       ],
       "dynamic": 0
     },
+    "tests/meeting-facts.test.ts": {
+      "names": [
+        "PRDY-2: a CivicClerk tenant with no wiring row (the live Avondale shape) yields no fact and BODY_IDENTITY_UNRESOLVED",
+        "PRDY-2: a URL inventory class, an ambiguous extraction, and mismatched bytes are refused by name — nothing is renamed into a meeting",
+        "PRDY-2: a later reading of the same source confirms the same fact, contradicts a changed one, and says nothing about a row it no longer carries",
+        "PRDY-2: a row the canonical adapter drops is a refusal with the adapter's own accounting, never a fact with a guessed venue",
+        "PRDY-2: real Pima bytes become meeting-time and agenda facts through the canonical adapter, cross-checked against the validated extraction",
+        "PRDY-2: with a wiring row the CivicClerk adapter decides — no venue on the row is a dropped row, and a placed row is a fact whose agenda link is the adapter's own derivation"
+      ],
+      "dynamic": 0
+    },
     "tests/meeting-list-attribution.test.ts": {
       "names": [
         "F01 3.1: every meetings list renders the three groups, not a raw array",
@@ -4567,7 +4904,8 @@
         "PC-10: with no split the aggregate is priced at the TTL the request asked for, and the result says so",
         "PC-9: a ledger row predating the fields reads UNMEASURED by name; a null row reads UNREPORTED; a measured row reads its numbers",
         "PC-9: the parser reads the API's usage block, the split included, and never infers from the request",
-        "PC-9: the six ledger fields come from one usage, and summing turns keeps a null unmeasured"
+        "PC-9: the six ledger fields come from one usage, and summing turns keeps a null unmeasured",
+        "§9A.23: a cache read saved 0.9 of the base input rate, and an unpriced model saves null rather than a guess"
       ],
       "dynamic": 0
     },
@@ -4890,6 +5228,49 @@
         "MTG-11: the voting control dismisses BEFORE it opens",
         "WGH-15: selecting a district writes SELECTION and never the reader's home",
         "WGH-15: the map shell reads the home store, and never writes it"
+      ],
+      "dynamic": 0
+    },
+    "tests/operator-chat.test.ts": {
+      "names": [
+        "'deploy the fleet' is a control and 'deploy to production' is not",
+        "a PROHIBITED action is refused, and every authority class is decided by the shared ladder",
+        "a confirmation whose token does not match what the console proposed submits nothing",
+        "a confirmed action goes through the console's one door, not a second caller of it",
+        "a decision already recorded leaves the waiting count at once",
+        "a message the console refuses outright never opens the control plane",
+        "a prohibition wins over every other route, so no phrasing reaches a capability by wording",
+        "a question the console does not answer says so and lists what it does answer",
+        "a reading that failed becomes a named gap, and never a zero",
+        "a reading this question never asked for is a named gap that says so, not an absence finding",
+        "acceptance 1: a status question is answered from the records, with a denominator, and without a model",
+        "acceptance 2: 'what is blocking the Fleet' crosses four domains in one answer",
+        "acceptance 3: a permitted typed action is PROPOSED and nothing is submitted until it is confirmed",
+        "acceptance 4: the receipt is the gateway's own object, returned unedited",
+        "an action is matched from the gateway's own registry, so a registry change changes what chat offers",
+        "an attempt that is still running is not counted as a failure",
+        "both new paths are inside the admin boundary: invisible publicly, signed in privately",
+        "chat may not bypass action authority: an owner-gated action is refused in the gateway's own words",
+        "comparing the environments counts five identities and names each one it could not read",
+        "confirming one proposal twice is one action; asking again later is a new one",
+        "every answer carries usedModel false, a needs-you line, and a source or a named gap",
+        "no environment variable's name can reach the browser through the chat",
+        "only the records a question needs are read",
+        "the chat builds no receipt of its own — that is what makes the receipt semantics the gateway's",
+        "the chat calls no model, names no credential, and reaches no provider",
+        "the chat route is invisible on the public host and refuses a foreign origin and a missing session",
+        "the chat runs no command and builds no SQL",
+        "the chat's controls ARE the gateway's registry, matched by the words the gateway itself uses",
+        "the four prohibitions refuse an instruction and let the matching QUESTION through",
+        "the four prose prohibitions never reach the gateway and never read a record",
+        "the gateway's registry declares no way to delegate work to an agent, so the chat offers none",
+        "the integration question never invents a pull request status, and names the missing seam",
+        "the owner's own phrasings route, not only the canonical ones",
+        "the route refuses the public host, a foreign origin and a missing session before it reads anything",
+        "the seven questions the brief names each route to their own topic, and the set is closed",
+        "the subject is extracted without reading a work-item id as a commit",
+        "the vocabulary an action is known by comes from its own type and label",
+        "with no door supplied nothing is addressable, and the console offers no control of its own"
       ],
       "dynamic": 0
     },
@@ -5269,6 +5650,22 @@
       ],
       "dynamic": 0
     },
+    "tests/plain-work.test.ts": {
+      "names": [
+        "HUMAN_REQUIRED is the one Scout outcome that needs the owner, and it names the act",
+        "SEEDED: a funnel zero says which kind of zero it is, and no row prints a code path (ADM-46)",
+        "SEEDED: a zero share says WHY, and the two reasons for a zero are told apart (ADM-47)",
+        "SEEDED: an attempt that ran to the end while the goal stayed open says so, and still owes the record",
+        "SEEDED: every Scout outcome produces a next step, and none of them says the record cannot be had",
+        "SEEDED: the capacity lead is COMPUTED from the record, to the cent, and becomes a named gap when nothing was measured",
+        "a caller that holds a scheduled retry gets it in the sentence; a caller that does not is never given a time",
+        "a record class reads as the record, and an unknown one still reads as words",
+        "a state only the owner can move says Yes AND names the action; everything else says No",
+        "the plain rows carry dollars to the cent, never four decimal places",
+        "the rungs a Scout still owes are named, which is the proof another route exists"
+      ],
+      "dynamic": 0
+    },
     "tests/plural.test.ts": {
       "names": [
         "CSV parsing handles quoted fields with embedded commas",
@@ -5436,6 +5833,20 @@
         "the freeze gate runs in build-check.yml's gates job and is bounded",
         "the freshness bound has no environment escape hatch and no skip flag",
         "the freshness split is by EVENT, and the pull-request half is untouched"
+      ],
+      "dynamic": 0
+    },
+    "tests/promoter.test.ts": {
+      "names": [
+        "PRDY-6: a failed post-promotion verification reverts the exact before-state bytes and opens an incident; an unanswerable one opens an incident without a revert",
+        "PRDY-6: an as-if authority on an isolated SHADOW root materializes PROMOTE_WOULD meeting facts through writeSnapshot, refuses closed classes, holds and non-verdicts by name, and leaves a receipt with before/after hashes",
+        "PRDY-6: with the LIVE gate the promoter refuses everything PROMOTION_OFF and writes nothing; runPromotionStep never even calls it"
+      ],
+      "dynamic": 0
+    },
+    "tests/promotion-canary.test.ts": {
+      "names": [
+        "PRDY-6: the canary proves positive, refusal and rollback canaries on an isolated root and leaves reader truth and the gate untouched"
       ],
       "dynamic": 0
     },
@@ -6020,6 +6431,13 @@
       ],
       "dynamic": 0
     },
+    "tests/reader-projection.test.ts": {
+      "names": [
+        "PRDY-4: a moved sitting is a REPLACE naming the changed fields; an online sitting renders its label and never a pin; a missing agenda is OUR gap unless the publisher's slot was observed empty",
+        "PRDY-4: over the real committed snapshot, the 17 held Pima sittings project UNCHANGED (fact equals the Reader's own row) and the 18th is ADDED through validateSnapshot"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-question.test.ts": {
       "names": [
         "RULING 9: a Census/NCES denominator is refused for the body layer",
@@ -6094,11 +6512,19 @@
     },
     "tests/readiness-extract.test.ts": {
       "names": [
+        "ADM-39: the summary figures are measurements, not em dashes",
+        "ADM-40: NH/NJ candidate filings derive from the committed ballot holding, at §8 authority",
+        "ADM-40: a government's own statement of absence renders ARGUED_ABSENT with its sentence",
+        "ADM-40: a sourced absence scoped to a DIFFERENT capability argues nothing here (CC-F1)",
+        "ADM-40: candidate filings with no held candidacies claim nothing at all",
+        "ADM-40: held agenda material — not registry status — is what makes meetings ACQUIRED (CC-F4 superseded)",
+        "ADM-40: the FEC slice says what it looked up, and never puts verification ahead of acquisition",
+        "ADM-40: the delivery declarations reach the published record, and zero-row ones do not",
         "AZ candidate filings and state disclosure verify against their external authorities",
         "CC-F1 #1/#2: a candidate-field / wrong-capability closed walk satisfies NOTHING and is NOT projected",
         "CC-F1 #3: an EXPIRED correctly-scoped closed walk cannot render ARGUED_ABSENT and is NOT projected",
         "CC-F1 #4: an UNEXPIRED, correctly-scoped closed walk still renders ARGUED_ABSENT and is projected",
-        "CC-F2 also covers the summary: reader-visible jurisdictions is a named gap, not held/held",
+        "CC-F2 also covers the summary: with nothing declared served, the count is a measured ZERO of the rows tracked",
         "CC-F2: congressional uses the INDEPENDENT cd119 universe, never held/held",
         "CC-F2: congressional with NO external universe is a named gap, never held/held",
         "CC-F2: state-legislative has no committed statewide denominator → named gap, no gate CURRENT",
@@ -6109,8 +6535,10 @@
         "CC-F6: a legacy or marker-less snapshot is QUARANTINED (REQUIRES_REPUBLISH), never trusted",
         "CC-F6: a null row is NOT_RECORDED (no snapshot), distinct from a quarantined one",
         "CC-F6: a snapshot under the current derivation contract is HELD",
-        "SHOWN_TO_READER and ASK_ANSWERS are NOT_WALKED for EVERY capability",
-        "external Census denominators drive county/school/special/municipal-wards"
+        "external Census denominators drive county/school/special/municipal-wards",
+        "§9A.9: a declaration with ZERO rows for this state claims nothing",
+        "§9A.9: a declared reader delivery renders 'Shown on the Reader', never a blank and never CURRENT",
+        "§9A.9: with NO delivery declaration, SHOWN_TO_READER and ASK_ANSWERS stay NOT_WALKED"
       ],
       "dynamic": 0
     },
@@ -6132,11 +6560,44 @@
         "R-G: freshness is per-capability; a null as-of is unknown, never fresh",
         "R-I: ARGUED_ABSENT requires a closed walk on record",
         "R-I: a zero with NO recorded walk is NOT_WALKED, never ARGUED_ABSENT",
+        "R-I: an argued absence carries the AUTHORITY's own sentence when it has one",
+        "a fraction names what it counts, so '47 of 47' can never be read as a claim it does not make",
         "a never-established (null) as-of with no coverage is NOT_WALKED and carries no date",
         "deriveGateCells always yields exactly five cells in GATE_ORDER and fills gaps with NOT_WALKED",
         "derives CURRENT only when complete and fresh",
+        "every cell carries its own words, and they are never the raw constant",
         "isCurrent is exact — only CURRENT is current",
-        "some-but-not-all is PARTIAL_OR_STALE"
+        "some-but-not-all is PARTIAL_OR_STALE",
+        "§9A.9: a DECLARATION-backed gate is never CURRENT, and says so in words",
+        "§9A.9: a cell with nothing behind it says 'not checked yet', never 'no data'"
+      ],
+      "dynamic": 0
+    },
+    "tests/readiness-panel-copy.test.ts": {
+      "names": [
+        "ADM-39: no summary tile renders a bare dash as though it were a metric",
+        "ADM-41: the per-ZIP population is inside the page's own number audit",
+        "POS-18 and the lines the owner asked to keep are still there",
+        "the panel's own stylesheet carries the classes its markup uses",
+        "§9A.10 / §9A.19: the population names its source, its vintage and its geography on the face",
+        "§9A.1: every cell state reaches the face through plainCode, raw state on the hover",
+        "§9A.1: no machine constant leads on the readiness page",
+        "§9A.9: the page renders the required wording for something live whose proof is stale"
+      ],
+      "dynamic": 0
+    },
+    "tests/readiness-reader-delivery.test.ts": {
+      "names": [
+        "ADM-39: neither summary tile is a dash — both hold a measurement with a denominator",
+        "ADM-40: Arizona, New Hampshire and New Jersey do NOT produce the same breakdown",
+        "ADM-40: Federal · FEC carries a REAL per-state denominator, never the national one",
+        "ADM-40: New Hampshire and New Jersey candidate filings are no longer blank, and carry their real counts",
+        "ADM-41: a Census county division is not rendered as though it were the town",
+        "ADM-41: the ZIP population is the ACS 2024 estimate, and a zero is never asserted as a count",
+        "ADM-41: the state denominators are the 2024 release, in the same run as the ZIP numerators",
+        "the publisher writes all three pilot states under the CURRENT derivation contract",
+        "§9A.9: every cell says something, and no cell says a machine constant",
+        "§9A.9: something the Reader is served says so — never 'no data' and never an empty cell"
       ],
       "dynamic": 0
     },

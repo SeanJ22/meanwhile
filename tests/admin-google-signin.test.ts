@@ -32,7 +32,7 @@ import { middleware } from "@/middleware.ts";
 import { GET as startGET } from "@/app/(admin)/admin/auth/google/route.ts";
 import { GET as callbackGET } from "@/app/(admin)/admin/auth/callback/route.ts";
 import { POST as breakGlassPOST } from "@/app/api/admin/session/route.ts";
-import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN, hostOf } from "@/lib/ops/origins.ts";
+import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins.ts";
 import {
   ADMIN_SECRET_VAR,
   ADMIN_SESSION_COOKIE,
@@ -83,11 +83,9 @@ import {
 import { assertAggregateOnly } from "@/lib/control-plane/owner-surface.ts";
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
 import { CONTROL_PLANE_URL_VAR } from "@/lib/control-plane/repository/pg-store.ts";
+import { ADMIN_HOST, PUBLIC_HOST, SESSION_KEY } from "./admin-session.ts";
 
 const ROOT = process.cwd();
-const ADMIN_HOST = hostOf(ADMIN_ORIGIN);
-const PUBLIC_HOST = hostOf(PUBLIC_SITE_ORIGIN);
-const SESSION_KEY = "test-session-key-that-is-long-enough-to-sign-with";
 const CLIENT_ID = "test-client-id.apps.googleusercontent.com";
 const CLIENT_SECRET = "test-client-secret-value-never-logged";
 const REDIRECT_URI = `${ADMIN_ORIGIN}${OAUTH_CALLBACK_PATH}`;

@@ -621,6 +621,14 @@ function buildSnapshot(reads: ControlPlaneReads | null): OwnerSnapshot {
         cacheByRole: reads.cacheByRole,
         share: reads.share,
         verifiedRecords: reads.verifiedRecords,
+        /*
+         * §9A.23 and §9A.4: the capacity reading and the UTC monthly window
+         * each need an instant, and the cost panel may not read a clock for
+         * itself. The publisher has one — this publish's own — so it hands it
+         * over. Without it both figures publish as null and the console says
+         * the publisher is not wired, which was true until now.
+         */
+        nowIso: NOW_ISO,
       })
     : null;
   const notOpened = gap<Measured>("OURS", "not read — the control plane was not opened for this publish.");
@@ -717,6 +725,9 @@ function buildSnapshot(reads: ControlPlaneReads | null): OwnerSnapshot {
     deterministicShare: cost ? cost.deterministicShare : notOpened,
     costPerVerifiedRecord: cost ? cost.costPerVerifiedRecord : notOpened,
     costSummary: cost ? cost.summary : undefined,
+    /* §9A.4 capacity and §9A.23 monthly spend, both dated by this publish. */
+    costCapacity: cost ? cost.capacity : null,
+    monthlySpend: cost ? cost.monthlySpend : null,
 
     zipRows: zips,
 

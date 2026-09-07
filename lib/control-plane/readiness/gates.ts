@@ -13,6 +13,7 @@
  * six states instead of two is that they can never render as the same thing.
  */
 import { type Held, type Measured, gap, held, measured } from "../owner-surface.ts";
+import { plainCode } from "../plain-words.ts";
 
 /* ------------------------------------------------------------------ *
  * R-A — SIX CELL STATES, NEVER TWO.
@@ -155,6 +156,23 @@ export interface GateCell {
   readonly gate: Gate;
   /** The truthful EFFECTIVE state — never CURRENT past an unmet gate to its left. */
   readonly state: CellState;
+  /**
+   * **THE CELL IN ORDINARY WORDS** (§9A.9, ADM-40).
+   *
+   * The state alone cannot distinguish "there is no data" from "this is live on
+   * the Reader and the formal proof is stale". Both are `PARTIAL_OR_STALE` and
+   * an operator who reads them as one acts on a false picture — which is
+   * exactly what happened: the owner saw blank cells for candidate listings and
+   * federal money that the live site was serving at that moment.
+   *
+   * So every cell carries its own short sentence. It defaults to the cell
+   * state's plain words (`NOT_WALKED` → "Not checked yet") and is replaced by
+   * the evidence's own phrase where the evidence has one to say
+   * ("Shown on the Reader · verification proof needs a fresh check"). The raw
+   * state stays on the cell for the hover; nothing is hidden, it just does not
+   * lead.
+   */
+  readonly says: string;
   /** ISO date (YYYY-MM-DD) this gate was last established, or null when NOT_WALKED. */
   readonly asOf: string | null;
   /** Plain language: why this state, for the drawer and hover. */
@@ -222,7 +240,55 @@ export interface GateEvidence {
   readonly gatedReason: string | null;
   /** A walk / vault reference to open in the drawer, or null. */
   readonly evidenceRef: string | null;
+  /**
+   * The noun phrase `covered` and `total` count, so a fraction can never be
+   * read as a claim it does not make. "47 of 47" is meaningless and "47 of 47
+   * held candidacies carrying a named official source" cannot be misread as
+   * "every candidacy in New Hampshire". Null falls back to the bare fraction.
+   */
+  readonly of: string | null;
+  /**
+   * The authority's OWN sentence for an argued absence, when the closed walk
+   * is a government saying the thing does not exist rather than a ladder we
+   * walked to its end. Ignored unless `walkClosed`.
+   */
+  readonly absenceStatement: string | null;
+  /**
+   * **SATISFIED BY A COMMITTED DECLARATION, NOT BY A FRESH READBACK.**
+   *
+   * A gate whose evidence is a standing contract — "this canonical holding is a
+   * declared, trace-checked input to the Reader route that renders it" — is not
+   * nothing and is not a verified rendering either. Set this and the cell reads
+   * `PARTIAL_OR_STALE` with the supplied words, no matter how complete the
+   * fraction is: a declaration may never compute CURRENT. (§9A.9: the Admin
+   * must say `Shown on the Reader · verification proof needs a fresh check`,
+   * never `No data` and never an empty cell, for something that is live.)
+   */
+  readonly pendingProof: PendingProof | null;
 }
+
+/** The words a declaration-backed gate says, short then long. */
+export interface PendingProof {
+  /** The cell's own short sentence, e.g. "Shown on the Reader · verification proof needs a fresh check". */
+  readonly says: string;
+  /** What the declaration is and what would settle it, for the hover and drawer. */
+  readonly detail: string;
+}
+
+/** The zero evidence a gate with no instrument carries: no claim, in any direction. */
+export const NO_EVIDENCE: GateEvidence = {
+  covered: 0,
+  total: 0,
+  asOf: null,
+  staleAfterDays: null,
+  walkClosed: false,
+  blockedReason: null,
+  gatedReason: null,
+  evidenceRef: null,
+  of: null,
+  absenceStatement: null,
+  pendingProof: null,
+};
 
 /**
  * Derive ONE gate cell from its evidence, against a supplied clock, before
@@ -236,53 +302,72 @@ export interface GateEvidence {
  *      requires `walkClosed`; a bare zero with no walk is NOT_WALKED, never
  *      absent (R-I: no absence from our own empty record).
  *   4. NOT_WALKED — covered 0 with no walk and no as-of.
- *   5. PARTIAL_OR_STALE — some but not all, OR complete but past its freshness.
- *   6. CURRENT — complete and fresh.
+ *   5. PARTIAL_OR_STALE by declaration — the evidence is a standing contract
+ *      rather than a fresh readback (`pendingProof`). A declaration may never
+ *      compute CURRENT, however complete its fraction (§9A.9).
+ *   6. PARTIAL_OR_STALE — some but not all, OR complete but past its freshness.
+ *   7. CURRENT — complete and fresh.
  *
  * A total of 0 is a special case: with a closed walk it is ARGUED_ABSENT; without
  * one it is NOT_WALKED. A zero denominator is never a vacuous CURRENT.
  */
 export function deriveGateCell(gate: Gate, ev: GateEvidence, nowIso: string): GateCell {
-  const base = { gate, evidenceRef: ev.evidenceRef, monotonicityOk: true };
+  const base = { gate, evidenceRef: ev.evidenceRef ?? null, monotonicityOk: true };
+  // The three fields added for ADM-40 are read defensively: evidence reaches
+  // this function from fixtures and from callers written before they existed,
+  // and a missing optional must degrade to "no extra words", never to a crash
+  // that takes the whole console publish down with it.
+  const ofText = typeof ev.of === "string" ? ev.of.trim() : "";
+  const of = ofText === "" ? "" : ` ${ofText}`;
+  const pendingProof = ev.pendingProof ?? null;
+  const words = (state: CellState): string => plainCode(state);
   if (ev.gatedReason) {
-    return { ...base, state: "GATED_ON_OPERATOR", asOf: ev.asOf, detail: ev.gatedReason };
+    return { ...base, state: "GATED_ON_OPERATOR", says: words("GATED_ON_OPERATOR"), asOf: ev.asOf, detail: ev.gatedReason };
   }
   if (ev.blockedReason) {
-    return { ...base, state: "BLOCKED", asOf: ev.asOf, detail: ev.blockedReason };
+    return { ...base, state: "BLOCKED", says: words("BLOCKED"), asOf: ev.asOf, detail: ev.blockedReason };
   }
   if (ev.walkClosed) {
     return {
       ...base,
       state: "ARGUED_ABSENT",
+      says: words("ARGUED_ABSENT"),
       asOf: ev.asOf,
       detail:
+        (ev.absenceStatement ?? null) ??
         "The full ladder was walked, every rung recorded, and the thing does not exist. Open the evidence to read the argument.",
     };
   }
   // Nothing acquired and no walk on record: we have not looked. No claim.
   if (ev.covered <= 0 && ev.asOf === null) {
-    return { ...base, state: "NOT_WALKED", asOf: null, detail: "Not walked. No claim is made." };
+    return { ...base, state: "NOT_WALKED", says: words("NOT_WALKED"), asOf: null, detail: "Nobody has looked at this yet. That is not a finding that anything is missing." };
   }
   const fresh = freshnessOf(ev.asOf, ev.staleAfterDays, nowIso);
+  // A standing declaration. Real, and not a verified rendering — so it reads as
+  // itself and never climbs to CURRENT on the strength of its own fraction.
+  if (pendingProof) {
+    return { ...base, state: "PARTIAL_OR_STALE", says: pendingProof.says, asOf: ev.asOf, detail: pendingProof.detail };
+  }
   // Complete, and fresh.
   if (ev.total > 0 && ev.covered >= ev.total && fresh.fresh) {
     return {
       ...base,
       state: "CURRENT",
+      says: words("CURRENT"),
       asOf: ev.asOf,
-      detail: `Complete: ${ev.covered} of ${ev.total}, within its freshness threshold.`,
+      detail: `Complete: ${ev.covered} of ${ev.total}${of}, within its freshness threshold.`,
     };
   }
   // Everything else with any evidence at all is partial or stale.
   const why =
     ev.total > 0 && ev.covered >= ev.total
       ? fresh.ageDays === null
-        ? "Complete, but its as-of date could not be read for freshness."
-        : `Complete, but ${fresh.ageDays} days old and its threshold is ${fresh.staleAfterDays} days.`
+        ? `Complete (${ev.covered} of ${ev.total}${of}), but its as-of date could not be read for freshness.`
+        : `Complete (${ev.covered} of ${ev.total}${of}), but ${fresh.ageDays} days old and its threshold is ${fresh.staleAfterDays} days.`
       : ev.total > 0
-        ? `${ev.covered} of ${ev.total} — satisfied for some jurisdictions, not all.`
-        : `${ev.covered} recorded against an unestablished denominator.`;
-  return { ...base, state: "PARTIAL_OR_STALE", asOf: ev.asOf, detail: why };
+        ? `${ev.covered} of ${ev.total}${of} — satisfied for some, not all.`
+        : `${ev.covered}${of} recorded against an unestablished denominator.`;
+  return { ...base, state: "PARTIAL_OR_STALE", says: words("PARTIAL_OR_STALE"), asOf: ev.asOf, detail: why };
 }
 
 /* ------------------------------------------------------------------ *
@@ -325,20 +410,22 @@ export function enforceMonotonicity(
     const currentPastGap = cell.state === "CURRENT" && !allLeftCurrent;
     let out = cell;
     if (currentPastGap) {
-      const prereq: string = firstUnmetLeft ?? "an earlier gate";
+      const unmet: Gate | null = firstUnmetLeft;
+      const prereq: string = unmet === null ? "an earlier step" : GATE_LABEL[unmet];
       violations.push({
         capabilityId,
         gate: cell.gate,
-        detail: `${cell.gate} has direct evidence but its prerequisite ${prereq} is not current. A gate cannot be current past a gap to its left, so ${cell.gate} reads PARTIAL_OR_STALE until ${prereq} is resolved.`,
+        detail: `${GATE_LABEL[cell.gate]} has direct evidence but the step before it — ${prereq} — is not done. A step cannot be finished past a gap to its left, so ${GATE_LABEL[cell.gate]} reads as partly done until ${prereq} is resolved.`,
       });
       out = {
         ...cell,
         // The truthful effective state — never left CURRENT past a gap.
         state: "PARTIAL_OR_STALE",
+        says: `Done, but ${prereq} is not`,
         monotonicityOk: false,
         detail:
-          `Direct evidence for ${cell.gate} is complete, but its prerequisite ${prereq} is not current, ` +
-          `so its effective readiness is PARTIAL_OR_STALE until ${prereq} is resolved. ` +
+          `Direct evidence for ${GATE_LABEL[cell.gate]} is complete, but the step before it — ${prereq} — is not, ` +
+          `so its effective readiness is partly done until that step is resolved. ` +
           `Raw signal: ${cell.detail}`,
       };
     }
@@ -362,19 +449,7 @@ export function deriveGateCells(
   evidence: Partial<Record<Gate, GateEvidence>>,
   nowIso: string,
 ): { readonly gates: readonly GateCell[]; readonly violations: readonly MonotonicityViolation[] } {
-  const cells = GATE_ORDER.map((gate) => {
-    const ev = evidence[gate] ?? {
-      covered: 0,
-      total: 0,
-      asOf: null,
-      staleAfterDays: null,
-      walkClosed: false,
-      blockedReason: null,
-      gatedReason: null,
-      evidenceRef: null,
-    };
-    return deriveGateCell(gate, ev, nowIso);
-  });
+  const cells = GATE_ORDER.map((gate) => deriveGateCell(gate, evidence[gate] ?? NO_EVIDENCE, nowIso));
   return enforceMonotonicity(capabilityId, cells);
 }
 
@@ -397,11 +472,14 @@ export function coverageCell(input: {
   readonly total: number | null;
   readonly authority: string | null;
   readonly contract: string;
+  /** What to say instead of the generic sentence when there is no denominator. */
+  readonly noDenominatorSays?: string | null;
 }): Held<Measured> {
   if (input.total === null || input.authority === null) {
     return gap(
       "OURS",
-      "No external denominator is established for this capability yet, so a coverage fraction would be our own count checking itself.",
+      input.noDenominatorSays ??
+        "No external denominator is established for this capability yet, so a coverage fraction would be a count checking itself.",
     );
   }
   return held(measured(input.covered, input.total, input.contract, input.authority));

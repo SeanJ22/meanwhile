@@ -377,7 +377,7 @@ test("schema v5 declares the four nightly-door logs, and every provider bundle c
   const { APPEND_ONLY_LOGS, BOOTSTRAP_VERSION, DECLARED_TABLES } = await import(
     "../lib/control-plane/repository/pg-schema.ts"
   );
-  assert.equal(BOOTSTRAP_VERSION, 8, "the software-release-reviews log (Admin Pass B, 2026-09-06) is an additive schema move");
+  assert.equal(BOOTSTRAP_VERSION, 9, "the Action Gateway's three tables (Admin Pass C, ADM-C6, 2026-09-06) are an additive schema move");
   for (const log of ["promotion_pipeline", "window_runs", "window_incidents", "window_intents", "worker_results", "software_release_reviews"]) {
     assert.ok((APPEND_ONLY_LOGS as readonly string[]).includes(log), `${log} is not declared`);
     assert.ok(DECLARED_TABLES.includes(`cp_log_${log}`), `cp_log_${log} is not a declared table`);
@@ -387,6 +387,40 @@ test("schema v5 declares the four nightly-door logs, and every provider bundle c
     for (const field of ["promotionPipeline", "windowRuns", "windowIncidents", "windowIntents", "workerResults", "softwareReleaseReviews"] as const) {
       assert.equal(typeof repos[field]?.append, "function", `${provider.name} bundle lacks ${field}`);
     }
+  }
+});
+
+test("schema v9 declares the Action Gateway's three tables, and every provider bundle carries them", async () => {
+  /*
+   * ADM-C6. The failure this catches is the one the map warns about: a log
+   * declared in `APPEND_ONLY_LOGS` but missing from a provider lets the gateway
+   * write into nothing on that provider and report a clean action. The memory
+   * and file doubles would stay green while the deploy lost every receipt.
+   *
+   * `adminConfig` is asserted by a DIFFERENT method (`read`), because it is an
+   * aggregate and a `typeof append === "function"` check would pass on any
+   * object that happened to have one.
+   */
+  const { AGGREGATE_KINDS, APPEND_ONLY_LOGS, DECLARED_TABLES } = await import(
+    "../lib/control-plane/repository/pg-schema.ts"
+  );
+  for (const log of ["admin_receipts", "agent_jobs"]) {
+    assert.ok((APPEND_ONLY_LOGS as readonly string[]).includes(log), `${log} is not declared`);
+    assert.ok(DECLARED_TABLES.includes(`cp_log_${log}`), `cp_log_${log} is not a declared table`);
+  }
+  assert.ok((AGGREGATE_KINDS as readonly string[]).includes("admin_config"), "admin_config is not declared");
+  assert.ok(DECLARED_TABLES.includes("cp_admin_config"), "cp_admin_config is not a declared table");
+  for (const provider of providers) {
+    const repos = await provider.open();
+    for (const field of ["adminReceipts", "agentJobs"] as const) {
+      assert.equal(typeof repos[field]?.append, "function", `${provider.name} bundle lacks ${field}`);
+    }
+    assert.equal(typeof repos.adminConfig?.compareAndSet, "function", `${provider.name} bundle lacks adminConfig`);
+    assert.equal(
+      await repos.adminConfig.read("a-config-id-nothing-ever-wrote"),
+      null,
+      `${provider.name} answers something for a config id nothing wrote`,
+    );
   }
 });
 

@@ -44,13 +44,19 @@ function renderedNumbers(snapshot: ReadinessStateSnapshot): RenderedNumber[] {
   for (const row of snapshot.capabilities) {
     if (row.coverage.held) push(`coverage ${row.capabilityId}`, row.coverage.value);
   }
-  if (snapshot.summary.readerVisibleJurisdictions.held) {
-    push("reader-visible jurisdictions", snapshot.summary.readerVisibleJurisdictions.value);
+  if (snapshot.summary.capabilitiesServedToReaders.held) {
+    push("capabilities served to readers", snapshot.summary.capabilitiesServedToReaders.value);
   }
   if (snapshot.summary.populationInCompleteZip.held) {
     push("population in a complete zip", snapshot.summary.populationInCompleteZip.value);
   }
   for (const z of snapshot.zips) push(`zip completeness ${z.zip}`, z.completeness);
+  // ADM-41: the per-ZIP population is rendered on every row and was NOT audited
+  // before — a wrong population passed the R-D audit untouched, which is exactly
+  // how a stale vintage and a bare "0 people" reached the owner's screen.
+  for (const z of snapshot.zips) {
+    if (z.population.held) push(`zip population ${z.zip}`, z.population.value);
+  }
   return numbers;
 }
 

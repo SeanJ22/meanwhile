@@ -84,6 +84,36 @@ export function words(slug: string): string {
     .join(" ");
 }
 
+/**
+ * An unrecognised key as words — with a machine identifier left as an
+ * identifier rather than spelled out. (ADM-44, 2026-09-06.)
+ *
+ * `words()` turns hyphenated slugs into a title, which is right for
+ * `city-of-avondale` and wrong for a UUID: the reader-intelligence page rendered
+ * `plural:3c965e03-1e51-4f10-a037-4fb2f35292c5` as **"Plural 3c965e03 1e51 4f10
+ * A037 4fb2f35292c5"** — a hash, capitalised, spread across five words, in the
+ * place a body's name belongs. The owner's rule is a human name on the face and
+ * the exact id in the hover, and where there is no name to be had the honest
+ * face is a SHORT identifier, not a long one pretending to be prose.
+ *
+ * So a segment that looks like a machine identifier — a UUID, or eight or more
+ * hex characters — is shortened rather than worded. Nothing is invented; the
+ * whole key is still on the element's `title`.
+ */
+export function unrecognisedWords(key: string): string {
+  const parts = key
+    .replace(/[:/#]+/g, " ")
+    .split(/\s+/)
+    .filter((p) => p !== "");
+  return parts
+    .map((part) => {
+      const bare = part.replace(/-/g, "");
+      const machine = /^[0-9a-f]{8,}$/i.test(bare) && /[0-9]/.test(bare);
+      return machine ? bare.slice(0, 8) : words(part);
+    })
+    .join(" ");
+}
+
 function stateName(code: string | null | undefined): string | null {
   if (!code) return null;
   return STATE_NAME.get(code.toLowerCase()) ?? null;
@@ -288,7 +318,7 @@ export function displayNameOf(
     recordId(key) ??
     unitId(key) ??
     // Unrecognised: its own segments as words, level unknown, and flagged so.
-    done(key, words(key.replace(/[:/#]+/g, " ")), null, null, false)
+    done(key, unrecognisedWords(key), null, null, false)
   );
 }
 

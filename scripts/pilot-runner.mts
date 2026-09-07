@@ -93,6 +93,7 @@ import { join } from "node:path";
 
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
+import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { RUNNER_ID } from "../lib/control-plane/admin-data.ts";
@@ -268,6 +269,8 @@ function runOneCycle(): {
   const args = [
     ...(canary && !existsSync(".env.local") ? [] : ["--env-file=.env.local"]),
     "--experimental-strip-types",
+    /* PRDY-3: the fact bridge reaches the Reader's own renderer, which imports by the `@/` alias the loader resolves. */
+    "--import", "./scripts/register-test-loader.mjs",
     "scripts/freshness-shadow.mts",
     `--provider=${provider}`,
     `--max=${MAX}`,
@@ -695,6 +698,8 @@ async function beatWhilePaused(repos: ControlPlaneRepositories, intent: Research
     lastCycleOk: null,
     testedSha: headSha(ROOT),
     host: hostname(),
+    /* PRDY-1: a paused runner still says which code it holds; no fetch while idling. */
+    codeIdentity: readCodeIdentity({ cwd: ROOT, runnerTestedSha: headSha(ROOT), now, fetch: false }),
   };
   const next: RunnerHeartbeat = {
     ...base,
@@ -841,7 +846,7 @@ function runNightlyWindow(trigger: string): void {
   console.log(`\npilot:run · nightly window (${trigger}) started ${startedAt} — SHADOW`);
   const run = spawnSync(
     process.execPath,
-    ["--env-file=.env.local", "--experimental-strip-types", "scripts/nightly-window.mts", "--shadow", trigger === "WAKEUP" ? "--force" : "", `--trigger=${trigger}`].filter((a) => a !== ""),
+    ["--env-file=.env.local", "--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "scripts/nightly-window.mts", "--shadow", trigger === "WAKEUP" ? "--force" : "", `--trigger=${trigger}`].filter((a) => a !== ""),
     { cwd: ROOT, encoding: "utf8", timeout: WINDOW_TIMEOUT_MS, maxBuffer: 64 * 1024 * 1024 },
   );
   const lines = `${run.stdout ?? ""}${run.stderr ?? ""}`.split("\n").filter((l) => l.trim() !== "");

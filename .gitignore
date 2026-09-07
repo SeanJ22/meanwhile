@@ -206,3 +206,8 @@ data/photos/staged/
 # worktree at this stable path; the measurements they illustrate are in the report.
 /docs/evidence/admin-pass-a/*.png
 /docs/evidence/admin-pass-b/*.png
+
+# PRDY-6 (2026-09-06): a promotion receipt keeps the exact before-state bytes of the
+# reader snapshot beside it for a deterministic reversal. The receipt itself is
+# small and stays; the byte copy is a whole snapshot per promotion and does not.
+/data/health/promotion-receipts/*.before.json

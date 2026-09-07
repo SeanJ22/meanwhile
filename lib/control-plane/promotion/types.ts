@@ -65,6 +65,8 @@ export const PIPELINE_REFUSALS = [
   "CONFIRMATION_URL_MISMATCH",
   /** A second route names no fact it shares with the scouted one. */
   "CONFIRMATION_SECOND_ROUTE_UNNAMED",
+  /** PRDY-3 (2026-09-06): the confirming acquisition states a DIFFERENT fact about the same meeting; the item holds. */
+  "CONFIRMATION_FACT_CONFLICT",
   /** A required verification check is absent from the record. */
   "VERIFICATION_CHECK_MISSING",
   /** A verification check FAILED. */
@@ -81,6 +83,8 @@ export const PIPELINE_REFUSALS = [
   "AUDIT_DID_NOT_SURVIVE",
   /** The approval names a chain record the log does not hold. */
   "APPROVAL_CHAIN_INCOMPLETE",
+  /** PRDY-3/5 (2026-09-06): a deterministic approval burden beyond the chain — freshness, currency, measured controls, checks — FAILED. */
+  "APPROVAL_BURDEN_FAILED",
   "WORKER_RESULT_NOT_VERIFIED",
   "WORKER_AUDIT_BLOCKS_PROMOTION",
 ] as const;
@@ -130,6 +134,30 @@ export type ScoutedSource =
       readonly attemptId: string;
       readonly lifecycle: "PROPOSED" | "VALIDATED";
       readonly routeId: string;
+    }
+  | {
+      /**
+       * PRDY-2/3 (2026-09-06): one civic FACT — a meeting time or an agenda —
+       * bridged from a completed worker extraction chain over an immutable
+       * artifact. The item is the fact, not the artifact: a re-acquisition that
+       * states the same fact confirms it, one that states a different fact is a
+       * different item, and the older one is superseded rather than rewritten.
+       */
+      readonly kind: "FLEET_EXTRACTION";
+      readonly workItemId: string;
+      /** The Attempt that acquired the artifact — the actor the SCOUTED record names, and what activity views join on. */
+      readonly attemptId: string;
+      readonly parserResultId: string;
+      readonly artifactId: string;
+      readonly extractedRecordId: string;
+      /** `<meetingId>@<startsAt>` for a meeting time; `<meetingId>#agenda@<urlHash>` for an agenda. */
+      readonly factKey: string;
+      /** The worker contract's record class the fact was extracted under (LEGISTAR_EVENTS, CIVICCLERK_EVENTS). */
+      readonly sourceRecordClass: string;
+      /** `<sourceId>:<publisherSlug>` — the feed the fact came from, for freshness grouping. */
+      readonly sourceKey: string;
+      /** The instant the fact is about: the meeting start. */
+      readonly applicableAt: string;
     };
 
 export interface ScoutedRecord extends RecordBase {
@@ -153,6 +181,13 @@ export interface ConfirmedRecord extends RecordBase {
   readonly confirmingArtifactIds: readonly string[];
   /** For SECOND_ROUTE: the fact both representations establish. Null for SECOND_ACQUISITION. */
   readonly sameFact: string | null;
+  /**
+   * PRDY-3 (2026-09-06): whether the confirming acquisition, normalized through
+   * the same canonical adapter, states the SAME fact. Measured by the fact
+   * bridge; a disagreement is appended as a CONFIRMATION_FACT_CONFLICT refusal
+   * and the item holds. Absent on records written before the field existed.
+   */
+  readonly factAgreement?: { readonly sameFact: boolean; readonly detail: string };
 }
 
 export const VERIFICATION_CHECKS = [
@@ -188,6 +223,31 @@ export interface AuditedRecord extends RecordBase {
   readonly findings: readonly string[];
 }
 
+/**
+ * PRDY-3/5 (2026-09-06): the deterministic burdens an approval must carry
+ * beyond the chain itself. Each is measured when the approval is offered and
+ * kept on the record; a FAIL is refused as APPROVAL_BURDEN_FAILED.
+ */
+export const APPROVAL_BURDENS = [
+  /** Every VERIFIED check on the item's record is PASS. */
+  "CHAIN_CHECKS_PASS",
+  /** The AUDITED record's measured controls show no false absence, no false presence, nothing unobserved. */
+  "CONTROLS_MEASURED_CLEAN",
+  /** The newest acquisition of the same source does not contradict the fact. */
+  "FACT_CURRENT",
+  /** The fact class's governed freshness obligation is not stale and holds no source failure. */
+  "FRESHNESS_NOT_STALE",
+  /** The record class is one the owner may activate (the candidate set), never a class outside it. */
+  "RECORD_CLASS_CANDIDATE",
+] as const;
+export type ApprovalBurdenName = (typeof APPROVAL_BURDENS)[number];
+
+export interface ApprovalBurden {
+  readonly name: ApprovalBurdenName;
+  readonly result: "PASS" | "FAIL";
+  readonly detail: string;
+}
+
 export interface ApprovedRecord extends RecordBase {
   readonly stage: "APPROVED_FOR_PROMOTION";
   readonly chain: {
@@ -197,6 +257,8 @@ export interface ApprovedRecord extends RecordBase {
     readonly audited: string;
   };
   readonly recordClass: string;
+  /** PRDY-3/5: measured at offer time; absent on approvals written before the burdens existed. */
+  readonly burdens?: readonly ApprovalBurden[];
 }
 
 export interface RefusedRecord extends RecordBase {
@@ -383,6 +445,20 @@ export interface WindowRunRecord {
   readonly digestPath: string | null;
   readonly mirrored: boolean | null;
   readonly recordPath: string | null;
+  /**
+   * PRDY-6 (2026-09-06): receipts the governed promoter wrote during this
+   * window. Empty while promotion is OFF (the promoter is never called);
+   * absent on windows recorded before the promoter existed.
+   */
+  readonly promotionReceipts?: readonly {
+    readonly receiptId: string;
+    readonly target: "SHADOW" | "READER";
+    readonly promoted: number;
+    readonly refused: number;
+    readonly reverted: boolean;
+    readonly incidentId: string | null;
+    readonly path: string | null;
+  }[];
 }
 
 export const WINDOW_INTENT_ACTIONS = ["RUN_WINDOW_NOW"] as const;

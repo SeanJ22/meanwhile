@@ -49,6 +49,14 @@ export interface PipelineContext {
   readonly workerAuditBlocks?: (artifactIds: readonly string[]) => boolean;
   readonly artifactById: (artifactId: string) => ArtifactRecord | null;
   readonly attemptRoleById: (attemptId: string) => WorkerRole | null;
+  /**
+   * PRDY-3 (2026-09-06): the artifact ids a COMPLETED Attempt recorded. An
+   * Attempt that retrieved byte-identical content re-observes the artifact
+   * the log already holds (the artifact log is idempotent on content), so a
+   * second acquisition of the same representation is evidenced by the second
+   * Attempt naming the same artifact id, not by a second artifact row.
+   */
+  readonly attemptArtifactIds?: (attemptId: string) => readonly string[] | null;
 }
 
 /* ---------------------------------------------------------------- state */
@@ -105,9 +113,17 @@ export function deriveItemState(itemId: string, records: readonly PromotionPipel
 /* ------------------------------------------------------------ decisions */
 
 function refuse(offered: TransitionRecord, reasons: readonly PipelineRefusalReason[]): RefusedRecord {
+  /*
+   * PRDY-3 (2026-09-06): the refusal id is derived from the OFFER'S CONTENT as
+   * well as the reason codes. An approval re-offered after its measured
+   * burdens moved (a class that was NOT_SCHEDULED and is now STALE) is a
+   * different refusal, appended beside the first; an identical re-offer is the
+   * same refusal, deduped. Deriving from codes alone made the second offer a
+   * history rewrite the append-only log rightly threw on.
+   */
   return {
     formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION,
-    recordId: `${offered.recordId}:refused:${fingerprint([offered.at, ...reasons.map((r) => r.code)])}`,
+    recordId: `${offered.recordId}:refused:${fingerprint([offered.at, ...reasons.map((r) => r.code), canonicalJson(offered)])}`,
     itemId: offered.itemId,
     at: offered.at,
     actor: offered.actor,
@@ -138,28 +154,48 @@ function confirmationReasons(
       detail: "a second route must name the fact it shares with the scouted representation",
     });
   }
+  /* PRDY-3: a second acquisition that states a different fact confirms nothing; the item holds. */
+  if (offered.factAgreement !== undefined && !offered.factAgreement.sameFact) {
+    reasons.push({ code: "CONFIRMATION_FACT_CONFLICT", detail: offered.factAgreement.detail });
+  }
   for (const id of offered.confirmingArtifactIds) {
     const artifact = ctx.artifactById(id);
     if (artifact === null) {
       reasons.push({ code: "CONFIRMATION_ARTIFACT_UNKNOWN", detail: `artifact ${id} is not in the artifact log` });
       continue;
     }
-    if (scouted !== undefined && artifact.attemptId === scouted.scoutAttemptId) {
+    /*
+     * PRDY-3: byte-identical re-acquisition. The artifact log keeps ONE row per
+     * content, attributed to the first observer, so a second Attempt that
+     * retrieved the same bytes is evidenced by that Attempt's own recorded
+     * artifact ids. The offered actor must be that Attempt, and it is the
+     * Attempt whose role is then judged.
+     */
+    const reobservedBy =
+      scouted !== undefined &&
+      artifact.attemptId === scouted.scoutAttemptId &&
+      offered.actor.instance !== scouted.scoutAttemptId &&
+      ctx.attemptRoleById(offered.actor.instance) === "ACQUIRER" &&
+      (ctx.attemptArtifactIds?.(offered.actor.instance)?.includes(id) ?? false)
+        ? offered.actor.instance
+        : null;
+    if (scouted !== undefined && artifact.attemptId === scouted.scoutAttemptId && reobservedBy === null) {
       reasons.push({
         code: "CONFIRMATION_SAME_ATTEMPT",
         detail: `artifact ${id} was vaulted by the Scout's own Attempt ${artifact.attemptId}`,
       });
     }
-    const role = ctx.attemptRoleById(artifact.attemptId);
+    const acquiringAttempt = reobservedBy ?? artifact.attemptId;
+    const role = ctx.attemptRoleById(acquiringAttempt);
     if (role === null) {
       reasons.push({
         code: "CONFIRMATION_ATTEMPT_UNKNOWN",
-        detail: `artifact ${id} names Attempt ${artifact.attemptId}, which the attempts aggregate does not hold`,
+        detail: `artifact ${id} names Attempt ${acquiringAttempt}, which the attempts aggregate does not hold`,
       });
     } else if (role === "SCOUT") {
       reasons.push({
         code: "CONFIRMATION_BY_SCOUT_ROLE",
-        detail: `artifact ${id} was vaulted by SCOUT-role Attempt ${artifact.attemptId}`,
+        detail: `artifact ${id} was vaulted by SCOUT-role Attempt ${acquiringAttempt}`,
       });
     }
     if (offered.basis === "SECOND_ACQUISITION" && scouted !== undefined) {
@@ -237,6 +273,10 @@ function approvalReasons(state: PipelineItemState, offered: ApprovedRecord): Pip
         detail: `chain.${stage.toLowerCase()} names ${id}; the item's ${stage} record is ${held?.recordId ?? "absent"}`,
       });
     }
+  }
+  /* PRDY-3/5: the burdens the offer measured travel on the record; a FAIL refuses. */
+  for (const burden of offered.burdens ?? []) {
+    if (burden.result === "FAIL") reasons.push({ code: "APPROVAL_BURDEN_FAILED", detail: `${burden.name}: ${burden.detail}` });
   }
   return reasons;
 }
@@ -369,6 +409,10 @@ export async function contextFromRepositories(repos: ControlPlaneRepositories): 
   return {
     artifactById: (id) => artifacts.get(id) ?? null,
     attemptRoleById: (id) => roles.get(id) ?? null,
+    attemptArtifactIds: (id) => {
+      const attempt = attempts.get(id);
+      return attempt === undefined || attempt.outcome !== "COMPLETED" ? null : attempt.artifactIds;
+    },
     workerResultById: (id) => {
       const result = results.find(r => r.id === id);
       if (!result || attempts.get(result.attemptId)?.outcome !== "COMPLETED" ||

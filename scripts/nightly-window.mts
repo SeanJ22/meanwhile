@@ -43,6 +43,10 @@ import { livenessOf } from "../lib/control-plane/owner-surface.ts";
 import { ACTIVATION_GATE, readActivationGate } from "../lib/control-plane/promotion/activation-gate.ts";
 import { parseRefreshRunJson, parseRefreshRunMarkdown } from "../lib/control-plane/promotion/legacy-refresh.ts";
 import { mapEvidenceIntoPipeline, mappingLines } from "../lib/control-plane/promotion/mapping.ts";
+import { collectFactChains } from "../lib/control-plane/promotion/fact-chain.ts";
+import { factAgreementIn } from "../lib/control-plane/promotion/meeting-facts.ts";
+import { liveAuthority, promoteFacts, receiptSummary, verifyMaterialization, type PromotionReceipt } from "../lib/control-plane/promotion/promoter.ts";
+import { standingFleetRuntime } from "../lib/control-plane/workers/standing.ts";
 import {
   WINDOW_LEASE_TTL_MS,
   WINDOW_ZONE,
@@ -61,6 +65,7 @@ import {
 import {
   WINDOW_FORMAT_VERSION,
   WINDOW_TRIGGERS,
+  type ItemVerdict,
   type LegacyRefreshReading,
   type WindowIncident,
   type WindowIntent,
@@ -180,6 +185,33 @@ function incident(stage: WindowIncident["stage"], code: string, detail: string, 
   const i = openIncident({ windowId, stage, code, detail, openedAt: nowIso(), missedScope });
   incidents.push(i);
   console.error(`  INCIDENT ${i.incidentId} at ${stage}: ${code} — ${detail}`);
+}
+
+/*
+ * PRDY-6 (2026-09-06): THE GOVERNED PROMOTER, WIRED AND UNREACHABLE.
+ *
+ * `runPromotionStep` calls `promote` only when the live gate is ON. It is OFF,
+ * so the batch below stays empty, no fact is loaded from the vault, and this
+ * function is never entered. When it is entered, the promoter accepts only
+ * PROMOTE_WOULD items of an open record class, refuses a fact a later reading
+ * of its source superseded, materializes through the Reader's own snapshot
+ * writer into this checkout, keeps the before-state bytes beside its receipt,
+ * runs the local half of the verification contract, and reverts on a failure.
+ * Carrying that materialization to main stays with the existing allowlisted
+ * door; this script still writes no history and moves no branch.
+ */
+const promotionReceipts: NonNullable<WindowRunRecord["promotionReceipts"]>[number][] = [];
+async function promoteBatch(batch: readonly ItemVerdict[], gate: ReturnType<typeof readActivationGate>): Promise<PromotionReceipt> {
+  const fleet = standingFleetRuntime({ root: ROOT, repos, now: nowIso });
+  const collected = await collectFactChains(repos, { readArtifactText: async (id) => (await fleet.readEvidence(id)).text, now: nowIso(), root: ROOT });
+  const facts = new Map(collected.items.map((item) => [item.itemId, item.fact]));
+  const holds = new Map<string, string>();
+  for (const item of collected.items) {
+    if (item.newerSameSource === null) continue;
+    const agreement = factAgreementIn(item.fact, item.newerSameSource);
+    if (agreement.present && !agreement.sameFact) holds.set(item.itemId, `FACT_SUPERSEDED: ${agreement.detail}`);
+  }
+  return promoteFacts({ target: { kind: "READER", root: ROOT }, authority: liveAuthority(gate), verdicts: batch, facts, holds, now: nowIso(), windowId, verify: verifyMaterialization });
 }
 
 function git(args: readonly string[], cwd: string): { ok: boolean; out: string } {
@@ -348,14 +380,19 @@ try {
         for (const line of mappingLines(mapping)) console.log(line);
         counts = { items: mapping.counts.items, byStage: mapping.counts.byStage, refused: mapping.counts.refused };
         evaluation = evaluateItems(mapping.states, gate);
+        const batch: ItemVerdict[] = [];
         const step = await runPromotionStep({
           gate: { promotionEnabled: ACTIVATION_GATE.promotionEnabled && stage1Failed === null },
           verdicts: evaluation.verdicts,
-          promote: async (v) => {
-            throw new Error(`the promoter was called for ${v.itemId} while promotion is OFF`);
-          },
+          promote: async (v) => { batch.push(v); },
         });
         console.log(`  promotion step: ${step.reason}`);
+        if (batch.length > 0) {
+          const receipt = await promoteBatch(batch, gate);
+          promotionReceipts.push(receiptSummary(receipt));
+          for (const line of receipt.lines) console.log(line);
+          if (receipt.incident) incidents.push(receipt.incident);
+        }
         const none = mapping.counts.items === 0 ? "the pipeline holds no item; a zero here is the mapped state, not an empty read" : undefined;
         for (const [subject, verdict] of [["items the window WOULD promote", "PROMOTE_WOULD"], ["items REFUSED with a stated reason", "REFUSE_WOULD"], ["items DEFERRED with a stated reason", "DEFER"]] as const) {
           console.log(
@@ -427,10 +464,11 @@ try {
         legacyRefresh: legacy,
         pipeline: { items: counts.items, byStage: counts.byStage, refused: counts.refused, verdicts: evaluation.verdicts, byRecordClass: evaluation.byRecordClass },
         ...(researchProgression ? {researchProgression} : {}),
-        promoted: 0,
+        promoted: promotionReceipts.reduce((sum, receipt) => sum + receipt.promoted, 0),
         postPromotionVerification: verification,
         controls: null,
         incidents,
+        promotionReceipts,
         digestPath: join(target, "nightly-window-digest.md"),
         mirrored: target === MIRROR,
         recordPath,

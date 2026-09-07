@@ -88,6 +88,39 @@ export function runClassCensusQuery(): SQL {
 }
 
 /**
+ * **THE SAME CENSUS, OVER A DATE WINDOW, AS RAW SQL** (MAPQ-7, 2026-09-07).
+ *
+ * The MapTiler usage panel compares what the provider billed us for against
+ * what OUR OWN declared actor classes did over the same billing window. That
+ * comparison needs the census restricted to a window, and it needs it as a
+ * string because `scripts/maptiler-usage.mts` speaks to the production replica
+ * through the Neon HTTP driver rather than through Drizzle.
+ *
+ * It lives HERE, beside `runClassCensusQuery`, because this module is the only
+ * door into this table and `tests/search-log-exclusion.test.ts` enforces that.
+ * A windowed census hand-written inside a script would be a second reader of
+ * `search_log` that nothing checks — which is exactly the shape of forgetting
+ * the guard exists to prevent, even though a census is a report rather than a
+ * sold number.
+ *
+ * Like `runClassCensusQuery`, it is deliberately NOT filtered: its job is to
+ * describe the whole window, including the part that is ours. Nothing it
+ * returns may be presented as a reader count without the exclusions stated
+ * beside it, and `organicDenominatorSentence` is how that is said.
+ *
+ * Two positional parameters: the inclusive start and the exclusive end, as ISO
+ * timestamps. Parameterised rather than interpolated, so a window can never
+ * become SQL.
+ */
+export const RUN_CLASS_CENSUS_WINDOW_SQL = `
+  SELECT run_class, COUNT(*)::int AS n
+    FROM search_log
+   WHERE occurred_at >= $1
+     AND occurred_at <  $2
+   GROUP BY run_class
+`;
+
+/**
  * The sentence that must accompany any rendered or exported figure drawn from
  * this table. Stating the denominator in words is the rule; this makes the
  * words impossible to get wrong.

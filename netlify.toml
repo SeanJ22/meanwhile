@@ -123,7 +123,16 @@
 #
 #   DATABASE_URL                       scoped branch-deploy -> the Neon STAGING branch
 #   WTP_CONTROL_PLANE_DATABASE_URL     scoped branch-deploy -> the staging control plane
-#   NEXT_PUBLIC_MAPTILER_KEY           scoped branch-deploy -> the staging tile key
+#   NEXT_PUBLIC_MAPTILER_KEY           scoped branch-deploy -> meanwhile-staging-browser
+#
+# THAT MAPTILER KEY IS SCOPED, AND THE SCOPE IS THE POINT (MAPQ-3, 2026-09-07).
+# The staging context carries meanwhile-staging-browser, restricted in the
+# MapTiler account to test.meanwhileusa.com; production carries
+# meanwhile-prod-browser, restricted to the production Reader origins and NEVER
+# to *.meanwhileusa.com. Deploy previews and every other branch deploy carry NO
+# key at all and draw the fallback basemap. One key across all of them is how
+# 101,863 requests against a 100,000 allowance became unattributable; see
+# docs/maptiler-keys.md.
 #
 # `lib/ops/staging-isolation.ts` is the seeded failure that makes this real: a
 # staging build whose resolved `DATABASE_URL` is the production database fails

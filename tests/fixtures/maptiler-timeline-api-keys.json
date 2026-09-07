@@ -1,0 +1,49 @@
+{
+  "_fixture_note": "SHAPED, NOT RECORDED. Built from MapTiler's published schema for GET /v1/analytics/api_usage/timeline (docs.maptiler.com/cloud/admin-api/analytics/) because this repository holds no MapTiler service token and could not record a real response. It exercises the shape the normalizer must survive: two named keys, one undeclared key, a projected tail, and a legend that labels every item. If a real response is ever recorded, replace this file and delete this note rather than keeping both.",
+  "since": "2026-09-01",
+  "until": "2026-09-30",
+  "datasets": [
+    {
+      "group_id": "request",
+      "item_id": "key-aaaa1111",
+      "data": [
+        { "date": "2026-09-01", "value": 1200 },
+        { "date": "2026-09-02", "value": 1450 },
+        { "date": "2026-09-03", "value": 1310 },
+        { "date": "2026-09-04", "value": 980 },
+        { "date": "2026-09-05", "value": 1600 },
+        { "date": "2026-09-06", "value": 1500 },
+        { "date": "2026-09-07", "value": 1360 }
+      ],
+      "estimated_data": [{ "date": "2026-09-30", "value": 31000 }]
+    },
+    {
+      "group_id": "request",
+      "item_id": "key-bbbb2222",
+      "data": [
+        { "date": "2026-09-03", "value": 40 },
+        { "date": "2026-09-06", "value": 18 }
+      ]
+    },
+    {
+      "group_id": "request",
+      "item_id": "key-cccc3333",
+      "data": [
+        { "date": "2026-09-04", "value": 6 }
+      ]
+    },
+    {
+      "group_id": "request",
+      "item_id": "key-dddd4444",
+      "data": [
+        { "date": "2026-09-02", "value": 77 }
+      ]
+    }
+  ],
+  "legend": [
+    { "item_id": "key-aaaa1111", "label": "meanwhile-prod-browser", "description": null },
+    { "item_id": "key-bbbb2222", "label": "meanwhile-staging-browser", "description": null },
+    { "item_id": "key-cccc3333", "label": "meanwhile-synthetic-provider-smoke", "description": null },
+    { "item_id": "key-dddd4444", "label": "old-shared-key", "description": null }
+  ]
+}

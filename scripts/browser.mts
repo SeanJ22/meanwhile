@@ -37,6 +37,16 @@
  *    env, and `{}` means ORGANIC — a silent, total leak available to anyone who
  *    forgot one export. The declaration is no longer optional.
  *
+ * 4. Every context is FAIL-CLOSED against external map-provider hosts
+ *    (MAPQ-1, 2026-09-07). The first MapTiler billing period closed at 101,863
+ *    requests against a 100,000 allowance while public readership was tiny,
+ *    and the strongest correlation in this repository is that this harness was
+ *    repaired on 2026-08-22 so synthetic sessions could reach MapTiler again.
+ *    A local page carrying the real public key spends the real allowance, so
+ *    "local" is not evidence of "offline". Opting in takes TWO gates — the
+ *    `spendsProviderQuota` option here AND `WTP_PROVIDER_ACCESS` in the
+ *    process — and an opted-in run prints that it is spending and is capped.
+ *
  * THE COST, STATED RATHER THAN HIDDEN: a run through this file does not
  * exercise the beacon transport at all. That is the right trade — a suite that
  * pollutes the sold store on every run is worse than one that tests a
@@ -54,11 +64,21 @@ import type {
   BrowserContextOptions,
   LaunchOptions,
   Page,
+  Route,
 } from "playwright";
 
 import { describeChromium, resolveChromium } from "../lib/ops/chromium-pin.ts";
 import { makeRunId, syntheticRunHeaders, SYNTHETIC_RUN_HEADER } from "../lib/db/run-marker.ts";
 import { confine } from "../lib/ops/origin-confinement.ts";
+import {
+  decideProviderRequest,
+  describeLedger,
+  newProviderLedger,
+  providerHostOf,
+  resolveProviderPolicy,
+  type ExternalProvider,
+  type ProviderLedger,
+} from "../lib/ops/provider-access.ts";
 
 /**
  * The init script, as a string rather than a function.
@@ -101,6 +121,22 @@ export interface GuardedOptions extends LaunchOptions {
   label: string;
   /** The clock, passed in so the run id is reproducible in a test. */
   now?: () => Date;
+  /**
+   * **THE SECOND GATE ON SPENDING A THIRD PARTY'S QUOTA** (MAPQ-2, 2026-09-07).
+   *
+   * Absent — which is every ordinary run — means the browser cannot reach
+   * MapTiler at all, and the app draws the plain-ground fallback it already
+   * draws for a reader with no basemap. Present means this launch is asking to
+   * spend real money, and it still only spends if the PROCESS also declared
+   * `WTP_PROVIDER_ACCESS`. Two gates, because one environment variable
+   * exported in a shell would otherwise be inherited by every sweep started in
+   * it, and a broad visual sweep silently spending the tile allowance is the
+   * defect this whole barrier exists to make impossible.
+   *
+   * `lib/ops/provider-access.ts` holds the policy and the measurement that
+   * produced it.
+   */
+  spendsProviderQuota?: ExternalProvider;
 }
 
 /**
@@ -114,6 +150,13 @@ export interface GuardedOptions extends LaunchOptions {
 export interface GuardedBrowser {
   /** The run id every context of this browser declares. Print it; name it in reports. */
   readonly runId: string;
+  /**
+   * What this run has spent, blocked and refused at an external map provider
+   * (MAPQ-1). LIVE and shared by every context of this browser: a ceiling that
+   * reset per context would be a ceiling a caller could raise by opening
+   * another one. Read it at the end of a run and put the numbers in the report.
+   */
+  readonly provider: ProviderLedger;
   /**
    * Named `context`, not `newContext`, and `page`, not `newPage`.
    *
@@ -144,8 +187,29 @@ export function runIdFor(label: string, now: () => Date = () => new Date()): str
  * ```
  */
 export async function launchGuarded(options: GuardedOptions): Promise<GuardedBrowser> {
-  const { label, now, ...launchOptions } = options;
+  const { label, now, spendsProviderQuota, ...launchOptions } = options;
   const runId = runIdFor(label, now);
+
+  /*
+   * **THE QUOTA GATE IS DECIDED ONCE, HERE, FOR THE WHOLE RUN** (MAPQ-1/MAPQ-2).
+   *
+   * The first MapTiler billing period closed at 101,863 requests against a
+   * 100,000 allowance while public readership was tiny, and the strongest
+   * correlation in this repository is that synthetic browser sessions could
+   * reach MapTiler again from 2026-08-22. A local page carrying the real
+   * public key spends the real allowance: "local" is not evidence of
+   * "offline". So the default is that no browser opened through this file can
+   * reach the provider at all, and an opted-in run says so on stdout before it
+   * spends a request — a run that quietly costs money is a run nobody can
+   * separate from a reader afterwards.
+   */
+  const providerPolicy = resolveProviderPolicy({
+    requested: spendsProviderQuota ?? null,
+    env: process.env as Record<string, string | undefined>,
+  });
+  const provider = newProviderLedger(providerPolicy);
+  if (providerPolicy.mode === "ALLOWED_BOUNDED") console.log(`  ${providerPolicy.says}`);
+  if (providerPolicy.mode === "REFUSED_NOT_OPTED_IN") console.warn(`  ${providerPolicy.says}`);
   const headers = syntheticRunHeaders({ WTP_RUN_ID: runId });
   /* Belt and braces: a header set that somehow lost the marker is a leak with
    * no symptom, so it is refused here rather than discovered in the store. */
@@ -249,8 +313,53 @@ export async function launchGuarded(options: GuardedOptions): Promise<GuardedBro
       }
     };
 
+    /**
+     * **THE MAPTILER BARRIER** (MAPQ-1, 2026-09-07). True when the request was
+     * aborted and the caller must stop.
+     *
+     * The decision itself lives in `lib/ops/provider-access.ts`, for the same
+     * reason `confine` does — four lines inside a harness are remembered
+     * rather than enforced, and a pure function is one a unit test can walk
+     * across every provider host without launching a browser. This is the
+     * bookkeeping, and it is a named function rather than an inline block so
+     * the route handler below stays one decision followed by another.
+     *
+     * `route.abort` rather than a fulfilled empty body: MapLibre's `error`
+     * handler in `components/map/map-canvas.tsx` already drops the map to
+     * `FALLBACK_STYLE` and raises the reader's own "Basemap unavailable"
+     * notice on a failed style request, so a blocked request produces the
+     * app's EXISTING no-basemap behaviour. Overlays, markers, popups, district
+     * layers and layout all keep rendering, which is what keeps the visual
+     * suite testable while the quota stays ours.
+     */
+    const refusedByBarrier = async (route: Route): Promise<boolean> => {
+      const url = route.request().url();
+      const spend = decideProviderRequest(url, providerPolicy, provider.spent);
+      if (spend.verdict === "NOT_A_PROVIDER") return false;
+
+      provider.hosts.add(providerHostOf(url));
+      if (spend.verdict === "ALLOWED_UNDER_CEILING") {
+        provider.spent += 1;
+        return false;
+      }
+      if (spend.verdict === "REFUSED_CEILING_EXCEEDED") {
+        provider.refused += 1;
+        /* Loud at the moment of the breach, and again from close(): a ceiling
+         * only reported at the end is a ceiling a run can blow through while
+         * its operator watches it look fine. */
+        if (!provider.exceeded) console.error(`\n  !! ${spend.says}\n`);
+        provider.exceeded = true;
+      } else {
+        provider.blocked += 1;
+      }
+      await route.abort("blockedbyclient");
+      return true;
+    };
+
     await context.route("**/*", async (route) => {
       const request = route.request();
+      // MAPQ-1 first: a request that is not going to leave needs no headers.
+      if (await refusedByBarrier(route)) return;
       const decision = confine(request.url(), frameUrlOf(request), request.headers(), headers);
       if (decision.verdict === "SAME_ORIGIN_KEPT") {
         await route.continue();
@@ -280,12 +389,31 @@ export async function launchGuarded(options: GuardedOptions): Promise<GuardedBro
 
   return {
     runId,
+    provider,
     context: guardedContext,
     async page(contextOptions?: BrowserContextOptions): Promise<Page> {
       const context = await guardedContext(contextOptions);
       return context.newPage();
     },
-    close: () => browser.close(),
+    /**
+     * **A RUN THAT BLEW ITS CEILING ENDS NON-ZERO** (MAPQ-2).
+     *
+     * The browser is closed FIRST and the throw comes after, so a breach never
+     * leaks a Chromium process. The throw is the loud half of "fails loudly":
+     * the banner at the moment of the breach can scroll off a long run's
+     * output, and a script whose ceiling was decorative would otherwise report
+     * success. Every ordinary run reaches this line with `exceeded` false and
+     * nothing changes for it.
+     */
+    async close(): Promise<void> {
+      await browser.close();
+      if (provider.exceeded) {
+        throw new Error(
+          `launchGuarded(${label}): ${describeLedger(provider)}. The run asked for more ` +
+            "external provider quota than it was allowed, so it is a failure, not a result.",
+        );
+      }
+    },
   };
 }
 

@@ -28,7 +28,9 @@ key nothing reads leaves no trace in the code.
 
 | # | Key | Reads it | Status | Last walked |
 |---|---|---|---|---|
-| 1 | `NEXT_PUBLIC_MAPTILER_KEY` | `lib/map/style.ts`, `components/map/map-entry.tsx` | **WIRED** | 2026-08-23 |
+| 1 | `NEXT_PUBLIC_MAPTILER_KEY` | `lib/map/style.ts`, `components/map/map-entry.tsx` | **WIRED** — production and staging only; empty locally, in CI and on previews (MAPQ-3) | 2026-09-07 |
+| 1a | `WTP_MAPTILER_SMOKE_KEY` | `scripts/provider-smoke.mts` | **NEEDS OWNER** — the key is not issued yet (MAPQ-3) | 2026-09-07 |
+| 1b | `MAPTILER_SERVICE_TOKEN` | `lib/control-plane/maptiler/client.ts`, `scripts/maptiler-usage.mts` | **NEEDS OWNER** — the service credential is not issued yet, so usage reads NOT CONNECTED (MAPQ-5) | 2026-09-07 |
 | 2 | `NEXT_PUBLIC_MAPTILER_STYLE` | `lib/map/style.ts` | **WIRED** | 2026-08-23 |
 | 3 | `NEXT_PUBLIC_MAPTILER_STYLE_LIGHT` | `lib/map/style.ts` | **WIRED** | 2026-08-23 |
 | 4 | `DATABASE_URL` | the whole app, via `lib/db/index.ts` | **WIRED** | 2026-08-23 |
@@ -304,9 +306,22 @@ parse as data*, never *did the call succeed*.
   never-generate rule binds here exactly as everywhere else.
 
 ### MapTiler — vector tiles
-- **Last walked:** 2026-08-20
+- **Last walked:** 2026-09-07
 - **Status:** WIRED. Not Google Maps.
 - **Auth:** `NEXT_PUBLIC_MAPTILER_KEY` (public by design — it is a tile key).
+- **Quota is bounded, and our robots are outside it (MAPQ-1, 2026-09-07).** The
+  first billing period closed at 101,863 requests against a 100,000-request free
+  allowance while readership was tiny. `scripts/browser.mts` — the one place
+  this repository opens a browser — is now fail-closed against every
+  `maptiler.com` host. Spending takes two gates, prints that it is spending,
+  and is capped; `pnpm provider:smoke` is the only command that asks. A blocked
+  style request produces the app's existing no-basemap fallback, so captures and
+  walks stay testable. `lib/ops/provider-access.ts` holds the policy;
+  `docs/maptiler-keys.md` holds the key matrix and the owner actions.
+- **Reading the bill:** MapTiler's Service API,
+  `GET https://service.maptiler.com/v1/analytics/api_usage/timeline`, read-only
+  with a server-side service token, classified by `api_keys` and by
+  `services`. `pnpm maptiler:usage`.
 
 ### The agenda vendors — Legistar, OnBase, NovusAgenda, Diligent/BoardDocs, iCompass/CivicWeb, Apptegy, BoardBook, IQM2, Revize, CivicPlus, clerksboards
 - **Last walked:** 2026-08-20

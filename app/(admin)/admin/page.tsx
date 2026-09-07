@@ -88,6 +88,11 @@ import {
   type OwnerSnapshot,
   type RenderedNumber,
 } from "@/lib/control-plane/owner-surface.ts";
+import { projectPanel } from "@/lib/control-plane/maptiler/usage.ts";
+import {
+  MAPTILER_USAGE_FORMAT_VERSION,
+  type MapTilerUsageSnapshot,
+} from "@/lib/control-plane/maptiler/types.ts";
 import { plainContract, plainOverall } from "@/lib/control-plane/plain-health.ts";
 import { count, plainCode, plainText } from "@/lib/control-plane/plain-words.ts";
 import { readResearchIntents } from "@/lib/control-plane/research-view.ts";
@@ -103,6 +108,7 @@ import { NeedsYouLine } from "../status-ui.tsx";
 import { DeployFleet } from "./deploy-fleet.tsx";
 import { DecisionQueue, type PriorityGroupView, type WaitingCardView } from "./decisions.tsx";
 import { CostSection } from "./sections/cost.tsx";
+import { MapTilerSection } from "./sections/maptiler.tsx";
 import { DecidedSection, FixQueueSection } from "./sections/decided.tsx";
 import { HealthSection, type HealthCardView } from "./sections/health.tsx";
 import { ObligationsSection } from "./sections/obligations.tsx";
@@ -124,6 +130,36 @@ export const revalidate = 0;
 const INTENT_ROUTE = "/api/admin/research";
 const ACTION_ROUTE = "/api/admin/action";
 const HERE = "/admin";
+
+/**
+ * **A SNAPSHOT PUBLISHED BEFORE THE MAP PANEL EXISTED IS NOT A ZERO BILL**
+ * (MAPQ-6, 2026-09-07).
+ *
+ * `maptiler` is optional on `OwnerSnapshot`, exactly as every other field
+ * added after the record shipped. An absent field means the publisher had no
+ * reading — not that the provider counted nothing — and on a quota panel a
+ * zero reads as headroom, which is the most expensive wrong answer this
+ * surface could give. So the absence renders as the unasked question it is.
+ */
+function notConnectedMapTiler(): MapTilerUsageSnapshot {
+  return {
+    formatVersion: MAPTILER_USAGE_FORMAT_VERSION,
+    collectedAt: new Date().toISOString(),
+    publisher: "the admin console",
+    connection: "NOT_CONNECTED",
+    detail:
+      "NOT CONNECTED — the published snapshot carries no MapTiler reading, so nobody has asked " +
+      "the provider what this account spent. That is not the same as spending nothing.",
+    period: "current_billing_period",
+    since: null,
+    until: null,
+    allowance: null,
+    allowanceIsAssumed: true,
+    days: [],
+    provenance: [],
+    actors: null,
+  };
+}
 
 function outcomeNote<T>(outcome: ReadOutcome<T>): string | null {
   if (outcome.kind === "HELD") return null;
@@ -523,6 +559,9 @@ export default async function AdminPage() {
           returnTo={HERE}
         />
       )}
+
+      {/* 6b — THE MAP PROVIDER'S BILL (MAPQ-6) */}
+      {snapshot && <MapTilerSection panel={projectPanel({ snapshot: snapshot.maptiler ?? notConnectedMapTiler() })} />}
 
       {/* 7 — READER SUITE BY ZIP */}
       <h2 id="reader-suite">Can a reader get a right answer, ZIP by ZIP?</h2>

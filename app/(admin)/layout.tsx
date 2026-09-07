@@ -248,6 +248,18 @@ body:has(main.admin) { background: #1b1c22; }
 .admin .denom { color: var(--ce-muted); font-weight: 400; }
 .admin .gap { font-style: italic; color: var(--ce-muted); }
 .admin .gap-whose { text-transform: uppercase; font-size: .68rem; letter-spacing: .06em; color: var(--ce-muted); font-style: normal; }
+/* ---- MAP PROVIDER (MAPQ-6): the bill, and the row that must be visible when it is not zero. ---- */
+.admin .mt-panel .mt-what { color: var(--ce-muted); font-size: .85rem; margin: .1rem 0 .4rem; }
+.admin .mt-panel .mt-status { margin: .2rem 0 .8rem; }
+.admin .mt-panel h3 { font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ce-muted); margin: 1rem 0 .2rem; font-weight: 500; }
+.admin .mt-panel .mt-tiles { margin-bottom: 1rem; }
+.admin .mt-panel table th[scope="row"] { color: var(--ce-fg); text-transform: none; letter-spacing: 0; font-size: .85rem; font-weight: 500; }
+.admin .mt-panel .mt-next { font-size: .85rem; margin: .25rem 0; }
+.admin .mt-panel .mt-blocked { font-size: .85rem; color: var(--ce-muted); margin-top: 1rem; }
+/* An undeclared key with traffic is the finding, so it is not a subtle row. */
+.admin .mt-panel tr.mt-unexpected th, .admin .mt-panel tr.mt-unexpected td { box-shadow: inset 3px 0 0 0 #b3261e; }
+.admin .mt-panel tr.mt-unexpected td.n { color: var(--ce-text-bad); font-weight: 600; }
+.admin .mt-panel .mt-flag { display: block; font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ce-text-bad); font-weight: 500; }
 .admin .refusal { padding: .75rem 1rem; box-shadow: inset 0 0 0 2px #b3261e, var(--ce-shadow-card); border-radius: var(--ce-radius-md); background: var(--ce-panel); }
 .admin .state-green { color: var(--ce-text-ok); font-weight: 600; }
 .admin .state-red { color: var(--ce-text-bad); font-weight: 600; }

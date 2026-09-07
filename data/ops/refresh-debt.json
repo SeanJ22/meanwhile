@@ -1,5 +1,38 @@
 {
   "formatVersion": 1,
-  "updatedOn": "2026-09-05",
-  "debts": []
+  "updatedOn": "2026-09-07",
+  "debts": [
+    {
+      "sourceId": "fec",
+      "firstFailedOn": "2026-09-07",
+      "lastFailedOn": "2026-09-07",
+      "consecutiveFailures": 1,
+      "reason": "the Reader proof renewal could not prove this source's change to data/fec/fec-2026.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1:   name: 'TimeoutError' |   log: [ |     \"  - waiting for locator('.door-panel button').filter({ hasText: 'Katie Hobbs' }).first() to be visible\" |   ], | } | Node.js v24.20.0 — its governed paths are back at HEAD and it is owed until it lands",
+      "nextDueAt": "2026-09-08"
+    },
+    {
+      "sourceId": "legiscan",
+      "firstFailedOn": "2026-09-07",
+      "lastFailedOn": "2026-09-07",
+      "consecutiveFailures": 1,
+      "reason": "the Reader proof renewal could not prove this source's change to data/votes/state-votes-snapshot.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1:   name: 'TimeoutError' |   log: [ |     \"  - waiting for locator('.door-panel button').filter({ hasText: 'Katie Hobbs' }).first() to be visible\" |   ], | } | Node.js v24.20.0 — its governed paths are back at HEAD and it is owed until it lands",
+      "nextDueAt": "2026-09-08"
+    },
+    {
+      "sourceId": "meetings",
+      "firstFailedOn": "2026-09-07",
+      "lastFailedOn": "2026-09-07",
+      "consecutiveFailures": 1,
+      "reason": "the Reader proof renewal could not prove this source's change to data/meetings-snapshot.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1:   name: 'TimeoutError' |   log: [ |     \"  - waiting for locator('.door-panel button').filter({ hasText: 'Katie Hobbs' }).first() to be visible\" |   ], | } | Node.js v24.20.0 — its governed paths are back at HEAD and it is owed until it lands",
+      "nextDueAt": "2026-09-08"
+    },
+    {
+      "sourceId": "nj-filing",
+      "firstFailedOn": "2026-09-07",
+      "lastFailedOn": "2026-09-07",
+      "consecutiveFailures": 1,
+      "reason": "the Reader proof renewal could not prove this source's change to data/states/nj/ballot/nj-morris-2026.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1:   name: 'TimeoutError' |   log: [ |     \"  - waiting for locator('.door-panel button').filter({ hasText: 'Katie Hobbs' }).first() to be visible\" |   ], | } | Node.js v24.20.0 — its governed paths are back at HEAD and it is owed until it lands",
+      "nextDueAt": "2026-09-08"
+    }
+  ]
 }

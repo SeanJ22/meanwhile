@@ -27,9 +27,9 @@
  */
 
 import test from "node:test";
+import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { execSync } from "node:child_process";
 
 const css = () => readFileSync("app/globals.css", "utf8");
 
@@ -118,8 +118,7 @@ test("ALIGN-1: no OTHER rule right-justifies a person row", () => {
     }
   }
 
-  const files = execSync("git ls-files -z", { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 })
-    .split("\0")
+  const files = filesThatWouldBeCommitted({ cwd: process.cwd() })
     .filter((f) => /^(?:app|components)\/.*\.tsx$/.test(f));
   for (const file of files) {
     for (const line of readFileSync(file, "utf8").split("\n")) {

@@ -31,9 +31,9 @@
  */
 
 import test from "node:test";
+import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { execSync } from "node:child_process";
 
 const PROMPT = "components/address/address-prompt.tsx";
 const prompt = () => readFileSync(PROMPT, "utf8");
@@ -89,8 +89,7 @@ test("BAL-23: every consumer passes its class to the slot it belongs in", () => 
    * passing a pill as `className` would reintroduce this without touching the
    * component. Any `className` whose value names a pill is refused by name.
    */
-  const files = execSync("git ls-files -z", { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 })
-    .split("\0")
+  const files = filesThatWouldBeCommitted({ cwd: process.cwd() })
     .filter((f) => /^(?:app|components)\/.*\.tsx$/.test(f) && f !== PROMPT);
 
   let consumers = 0;

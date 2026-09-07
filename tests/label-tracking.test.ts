@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { execSync } from "node:child_process";
+import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
@@ -54,8 +54,7 @@ const ROOT = process.cwd();
 const TRACKING = /tracking-\[0\.[0-9]+em\]/;
 
 function sourceFiles(): string[] {
-  return execSync("git ls-files -z", { cwd: ROOT, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 })
-    .split("\0")
+  return filesThatWouldBeCommitted({ cwd: ROOT })
     .filter((f) => /^(?:app|components)\/.*\.tsx$/.test(f));
 }
 

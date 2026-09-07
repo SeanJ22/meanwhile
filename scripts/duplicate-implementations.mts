@@ -18,9 +18,10 @@
  *   pnpm dupes --exact    — exact copies only
  */
 
-import { execSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+
+import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 
 import {
   duplicates,
@@ -38,13 +39,25 @@ const ONLY = process.argv.includes("--shape")
     : null;
 
 /**
- * `git ls-files -z` rather than a directory walk. **ripgrep skips a hidden
- * path and a file carrying a NUL byte, and reports nothing found without
- * having looked** — the sweep instrument in this repo is the tracked set.
+ * Git rather than a directory walk. **ripgrep skips a hidden path and a file
+ * carrying a NUL byte, and reports nothing found without having looked** — so
+ * the sweep instrument in this repo is what git says the tree holds.
+ *
+ * **WHAT GIT IS ASKED CHANGED (CIE-2, 2026-09-07).** This asked `git ls-files`,
+ * which lists TRACKED files, and that is the whole of the PR #294 defect: the
+ * session added new files, ran the local gates, was told 16 of 16 green, and CI
+ * then found a duplicate helper in one of them. Nothing was out of order in the
+ * session's steps — the scanner was reading a view of the repository that had
+ * not caught up with the change it was scanning.
+ *
+ * `filesThatWouldBeCommitted` is the same shared path RULING 103 moved seven
+ * other call sites onto in 2026-08; this was the eighth and it was missed
+ * because `tests/gate-ordering.test.ts` only recognised the argv form of the
+ * mistake. Both halves are fixed together: the call site here, and the guard's
+ * pattern there.
  */
 export function sourceFiles(): string[] {
-  return execSync("git ls-files -z", { cwd: ROOT, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 })
-    .split("\0")
+  return filesThatWouldBeCommitted({ cwd: ROOT })
     .filter((f) => /\.(?:ts|tsx|mts|mjs|js|cjs)$/.test(f))
     .filter((f) => !f.startsWith("tests/fixtures/"));
 }

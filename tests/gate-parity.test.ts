@@ -22,7 +22,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { parse } from "yaml";
-import { GATES } from "../scripts/gates.mjs";
+import { GATES, PRECONDITIONS } from "../scripts/gates.mjs";
 
 const WORKFLOW = ".github/workflows/build-check.yml";
 
@@ -63,6 +63,32 @@ const NOT_A_GATE = [
   'git cat-file -e "${holdings_update}^{commit}" 2>/dev/null || git fetch --no-tags --depth=1 origin "$holdings_update"',
   // Shallow-checkout setup for the committed reader receipt's ancestry proof.
   "node scripts/reader-proof-history.mjs",
+  /*
+   * RULING 279 — THE TIER DECISION IS NOT A CHECK, AND NEITHER IS SAYING SO.
+   *
+   * These lines are the shell of the one step that decides whether the
+   * expensive tier runs, and of the step that explains the red path in the
+   * job's own log. Neither can fail a tree on its own findings: the first
+   * only reads two earlier outcomes, the second only prints and exits 1 on a
+   * head the preflight has ALREADY failed. There is nothing here for a local
+   * door to pre-run, which is the test for this list.
+   *
+   * The preflight itself is deliberately NOT here — it is a real check, and it
+   * is declared in `PRECONDITIONS` so parity holds rather than being waived.
+   */
+  'if [ "${{ steps.cost.outputs.cost }}" = "CHEAP" ]; then',
+  'echo "expensive=no-cheap" >> "$GITHUB_OUTPUT"',
+  'elif [ "${{ steps.preflight.outcome }}" != "success" ]; then',
+  'echo "expensive=no-preflight" >> "$GITHUB_OUTPUT"',
+  "else",
+  'echo "expensive=yes" >> "$GITHUB_OUTPUT"',
+  "fi",
+  'echo "The cheap preflight failed on this head, so the browser install, the" >&2',
+  'echo "full suite and the builds were not run for it. Nothing is waived: fix" >&2',
+  'echo "what preflight named, push again, and the corrected head runs the whole" >&2',
+  'echo "verification before it may ship. Run it yourself with:" >&2',
+  'echo "    node scripts/preflight.mjs" >&2',
+  "exit 1",
   /*
    * RULING 278 — THE CLASSIFIER IS NOT A GATE, AND THE CHEAP PROOF IS NOT ONE
    * EITHER. Both are named here rather than pattern-matched away, and both have
@@ -136,7 +162,14 @@ function normalise(command: string): string {
 
 test("gate parity · every command CI runs as a gate is in the local gate set", () => {
   const ci = ciCommands().map(normalise);
-  const local = GATES.map((g) => normalise(g.command));
+  /*
+   * RULING 279: the local door runs the preflight BEFORE the gate loop, so it
+   * belongs on this side of the comparison. It is declared in
+   * `PRECONDITIONS` rather than exempted in `NOT_A_GATE`, because it is not
+   * setup — it is a check that fails a head, and the property this test
+   * defends is that CI never requires a check the door does not run.
+   */
+  const local = [...GATES, ...PRECONDITIONS].map((g) => normalise(g.command));
 
   const missing = ci.filter((c) => !local.includes(c));
   assert.deepEqual(

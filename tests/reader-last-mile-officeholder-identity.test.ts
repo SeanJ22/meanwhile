@@ -12,7 +12,7 @@ const rawPeople = sets.flatMap(({ set }) => set.officeholders);
 
 test("every committed officeholder survives exact-ID lookup, independent of held geometry", async () => {
   const all = new Map((await allSeatHolders()).map((holder) => [holder.id, holder]));
-  assert.equal(rawPeople.length, 1157, "finite current canonical roster denominator");
+  assert.equal(rawPeople.length, 1159, "finite current canonical roster denominator");
   for (const raw of rawPeople) {
     const holder = await seatHolderById(raw.id);
     assert.ok(holder, `${raw.id} ${raw.name}`);

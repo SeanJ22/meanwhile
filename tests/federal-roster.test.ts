@@ -8,7 +8,9 @@ import test from "node:test";
  * **THE FEDERAL ROSTER RECONCILES, AND THE DIFFERENCE IS NAMED ROWS** (Prompt
  * D item 5, 2026-08-20).
  *
- * `docs/officials-audit.md` has stated "531 division-linked of 537" since
+ * `docs/officials-audit.md` once stated "531 division-linked of 537"; this
+ * fixture now reconciles the current 533-of-539 roster after two special
+ * elections seated new voting members.
  * 2026-08-14 and nothing said what the six were. A stated number with an
  * unexplained remainder is a margin, and a margin is where a real loss hides:
  * six people could have been six delegates, or six members our own join
@@ -40,14 +42,14 @@ import test from "node:test";
  * one, and it is not fixed here — the join is not broken, the divisions do not
  * exist.
  *
- * ## The rest of the arithmetic, so 537 is not a bare number either
+ * ## The rest of the arithmetic, so 539 is not a bare number either
  *
- *   537 held = 100 senators + 437 House members
- *   437 House = 431 voting representatives + the 6 non-voting below
- *   531 division-linked = 100 + 431
+ *   539 held = 100 senators + 439 House members
+ *   439 House = 433 voting representatives + the 6 non-voting below
+ *   533 division-linked = 100 + 433
  *
- * The House floor is 435 voting seats and the roster holds 431 sitting ones,
- * so four seats are vacant on the read date. That is checked as a RANGE rather
+ * The House floor is 435 voting seats and the roster holds 433 sitting ones,
+ * so two seats are vacant on the read date. That is checked as a RANGE rather
  * than a constant, because a special election moves it and a test that failed
  * on a real-world election would be a test people delete.
  */
@@ -113,7 +115,7 @@ test("item 5: every federal officeholder is division-linked or a NAMED non-votin
   assert.equal(unlinked.length, NON_VOTING.size, "the remainder is exactly the named six");
 });
 
-test("item 5: the counts reconcile — 531 + 6 = 537, stated as a pair", () => {
+test("item 5: the counts reconcile — 533 + 6 = 539, stated as a pair", () => {
   const linked = new Set(set.divisions.map((d) => d.officeholderId));
   const linkedCount = set.officeholders.filter((o) => linked.has(o.id)).length;
 

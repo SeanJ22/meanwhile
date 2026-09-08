@@ -49,5 +49,5 @@ test("current certified scope retires obsolete filing notes in Ask and the share
   }
   assert.equal(certifiedCount, 12);
   assert.equal(wordingGaps, 11);
-  assert.equal(heldQuestions, 4);
+  assert.equal(heldQuestions, 5, "CACR13 is now held from the Secretary and General Court, not a false absence");
 });

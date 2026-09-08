@@ -17,7 +17,7 @@ import { notADocument, sourceUserAgent } from "../http.ts";
  * reproducible artifact. The Congress.gov API is still the right source for
  * portraits (§5.0b), which this adapter deliberately does not fetch yet.
  *
- * Scope is the whole country. The entire Congress is 537 people — smaller than
+ * Scope is the whole country. The current Congress snapshot is 539 people — smaller than
  * a single district polygon in this repo — so filtering to one state would cost
  * more code than it saves bytes.
  *

@@ -548,14 +548,17 @@ test("B15 g20: D68's overwrite is repaired — every House ref is distinct and d
   assert.deepEqual(rolls, [145, 146, 151, 152], "an April 2024 House roll call moved");
 
   // House coverage, exact rather than "at least" — the floor a total hid.
-  // F01 5.6 (2026-08-19): 19 → 20. `funding-fight` was the one row without a
-  // House roll call; the author unparked it and the Clerk's own 2025 index
-  // resolved it to H.R. 5371, roll 285.
+  // Nineteen laws have a recorded House roll. CARES is deliberately the one
+  // exception: the House agreed to the Senate amendment by voice on March 27,
+  // 2020, so its unrelated 2019 House vehicle roll may not be counted here.
   assert.equal(
     laws.filter((e) => e.house.length > 0).length,
-    20,
+    19,
     "House coverage across the LAWS list",
   );
+  const cares = laws.find((entry) => entry.id === "cares-act")!;
+  assert.deepEqual(cares.house, []);
+  assert.match(cares.houseNote ?? "", /voice vote on March 27, 2020/i);
 });
 
 test("B15 g20 / F01 5.6: the park MECHANISM still holds, with the map now empty", async () => {

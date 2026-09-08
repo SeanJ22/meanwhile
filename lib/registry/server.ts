@@ -18,6 +18,8 @@ import { STATEWIDE_EXECUTIVES, statewideExecutivesFor } from "../officials/state
 import { BODY_ROSTERS, rosterHoldersForBody, rosterMemberReaderDisposition } from "./body-rosters.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
 import { collapsePhotoIndexByPerson } from "../photos/person.ts";
+import { promotedReadModel } from "../civic-data/read-model.ts";
+import type { PromotedCensusGeography } from "../civic-data/candidate-builders.ts";
 
 import { summarizeCoverage, type CoverageSummary } from "./coverage.ts";
 import { divisionsAt as resolveDivisionsAt, type GeoFeature } from "./resolve.ts";
@@ -26,10 +28,10 @@ import type { Division, Registry } from "./types.ts";
 /**
  * Server-side access to the registry and the geometry it resolves against.
  *
- * Both are read from disk once per process and cached. They are static build
- * outputs — the boundary files and `registry.json` are committed exactly like
- * the ZCTA centroids — so nothing here needs a database, which matters because
- * `lib/db/schema.ts` is still `export {}`.
+ * The committed boundary files and registry are bootstrap last-known-good
+ * values. A validated Census promotion replaces geometry and division identity
+ * together from the operational store; source retrieval never runs on a Reader
+ * request, and a missing store leaves the bootstrap projection intact.
  *
  * **This does not scale, and it is not meant to.** 1.9 MB of GeoJSON parsed into
  * server memory is fine for three counties and untenable for the 90,837 local
@@ -130,9 +132,20 @@ async function load(): Promise<Loaded> {
     features.push(...(parsed.features as GeoFeature[]));
   }
 
-  const registry = JSON.parse(
+  let registry = JSON.parse(
     await readFile(join(root, "lib", "registry", "registry.json"), "utf8"),
   ) as Registry;
+
+  /*
+   * The committed files are the bootstrap LKG only. Once a validated Census
+   * geography version exists, both polygon and division identity switch to
+   * its one atomic projection; a partial candidate can never reach this read.
+   */
+  const promotedGeography = await promotedReadModel<PromotedCensusGeography>("CENSUS_GEOGRAPHY", "reader-resolver");
+  if (promotedGeography) {
+    features.splice(0, features.length, ...promotedGeography.payload.features);
+    registry = { ...registry, divisions: [...promotedGeography.payload.divisions] };
+  }
 
   // A required roster failure is an OURS loading failure, never an empty roster.
   // Do not cache a partial registry as if those officials were not held.

@@ -229,6 +229,18 @@ test("item 8.4: every write path into a sold store states a tier", () => {
     inserts.sort(),
     [
       /*
+       * **RULED ON, RCD-3/RCD-4 (2026-09-07): `lib/civic-data/store.ts`
+       * is NOT a sold aggregate record and carries no coverage tier.**
+       *
+       * It stores authoritative public civic candidate versions, validation
+       * receipts, and the one promoted read model. It contains no reader
+       * collection event and is classified OPERATIONAL by the exhaustive
+       * identity-domain census. Coverage tier describes the research depth
+       * behind a sold reader aggregate; applying it here would conflate source
+       * validity with audience coverage.
+       */
+      "lib/civic-data/store.ts",
+      /*
        * **RULED ON, OWN-Q6 (2026-08-31): `demand_signals` is NOT a sold
        * aggregate record and carries no coverage tier.**
        *

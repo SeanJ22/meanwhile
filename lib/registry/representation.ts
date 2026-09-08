@@ -14,7 +14,7 @@ import type { CoverageSummary } from "./coverage.ts";
  * renders who governs and represents a point. That coupling was invisible
  * while the demo zips sat on the widened rung; the moment the composite
  * served real meetings everywhere, every zip went `exact` and the entire
- * representation surface — 537 federal officials, three state rosters, the
+ * representation surface — the current 539 federal officials, three state rosters, the
  * governing-body list — vanished from the product while every test stayed
  * green. Success in meetings silently deleted representation.
  *

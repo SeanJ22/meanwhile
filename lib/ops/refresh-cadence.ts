@@ -170,20 +170,6 @@ export const REFRESH_SOURCES: readonly RefreshSource[] = [
     why: "A clerk's certified filing moves in HOURS near a deadline — this is the RULING 53 one-day clock the meetings cadence change deliberately left alone.",
   },
   {
-    id: "fec",
-    commands: ["fec:fetch"],
-    governs: ["data/fec/fec-2026.json"],
-    cadence: "weekly",
-    why: "Federal committees file monthly or quarterly; the FEC's own processing lag is measured in days, so a daily read returns yesterday's answer six times out of seven.",
-  },
-  {
-    id: "legiscan",
-    commands: ["legiscan:fetch"],
-    governs: ["data/votes/state-votes-snapshot.json"],
-    cadence: "weekly",
-    why: "LegiScan rebuilds its dataset once a week on Sundays and the fetch is dataset_hash-gated — reading it more often cannot produce a different hash.",
-  },
-  {
     id: "dotgov",
     commands: ["dotgov:fetch"],
     governs: ["data/dotgov/snapshot.json"],
@@ -248,12 +234,12 @@ export function dueSources(runDate: Date): RefreshSource[] {
  * behind its 2026-08-27 slot still asked the correct question for 2026-08-27
  * and got the correct answer. Lateness costs nothing here.
  *
- * **Absence costs everything.** `fec` and `legiscan` are MONDAY-ONLY. If the
- * Monday slot produces no run — or produces one that fails before those sources
- * execute — Tuesday's run asks "is it Monday?", answers no, and skips them.
- * Nothing anywhere retries. **One missed Monday is a fourteen-day data gap in
- * federal committee filings and state roll-call votes**, and no instrument in
- * this repository would report it as anything but a normal Tuesday.
+ * **Absence costs everything.** A weekly legacy source is MONDAY-ONLY. If the
+ * Monday slot produces no run — or fails before that source executes —
+ * Tuesday's run asks "is it Monday?", answers no, and skips it. The catch-up
+ * union below prevents that gap for the legacy file-refresh portfolio. FEC,
+ * Census and state-legislature routine truth have a separate standing data
+ * plane with source-local retry and are deliberately absent from this table.
  *
  * The fix is not a second cron. `tests/refresh-cadence.test.ts` asserts exactly
  * one cron per workflow on purpose — more than one schedule on one workflow is

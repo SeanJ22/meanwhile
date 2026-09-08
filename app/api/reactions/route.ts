@@ -26,6 +26,7 @@ import { getSingleCandidateTargetIds } from "@/lib/ballot/uncontested";
 import {
   getContributorReactionTargetIds,
   getFundingTargetIds,
+  refreshFundingFromPromoted,
 } from "@/lib/funding/snapshot";
 import { getVoteIds } from "@/lib/votes/snapshot";
 
@@ -71,6 +72,7 @@ export const runtime = "nodejs";
 const MAX_BODY_BYTES = 4096;
 
 export async function POST(request: Request) {
+  await refreshFundingFromPromoted();
   // The master ripcord (T08): intake closed means every write refused
   // before anything is read or counted. The reader's tap renders the
   // honest not-counted line; nothing silently records.

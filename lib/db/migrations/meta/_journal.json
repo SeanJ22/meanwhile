@@ -176,6 +176,13 @@
       "when": 1788291910497,
       "tag": "0024_living_invaders",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1788819929630,
+      "tag": "0025_typical_fixer",
+      "breakpoints": true
     }
   ]
 }

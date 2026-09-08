@@ -109,6 +109,8 @@ export type DbRole = "production" | "local";
 export const SANCTIONED_WRITES: Record<string, string> = {
   /** `scripts/intake-tripwire.mts`, via `purgeExpiredLimiterState`. */
   "intake-limiter-purge": "an intake limiter purge",
+  /** Standing data-plane runner; changes civic data versions, never code. */
+  "routine-civic-data-promotion": "a routine civic data candidate/version promotion",
 };
 
 /** The variable a sanctioned writer must connect through. */

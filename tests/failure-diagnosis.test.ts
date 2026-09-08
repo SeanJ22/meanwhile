@@ -136,8 +136,15 @@ test("every failure class carries at least one shape and a remedy that is not a 
 
 test("every scheduled pusher ends with the diagnosing step", () => {
   const dir = join(ROOT, ".github/workflows");
-  const files = readdirSync(dir).filter((f) => f.endsWith(".yml") && f !== "build-check.yml");
-  assert.ok(files.length >= 8, `expected the eight pushers, saw ${files.length}`);
+  const files = readdirSync(dir).filter((f) => {
+    if (!f.endsWith(".yml") || f === "build-check.yml") return false;
+    const body = readFileSync(join(dir, f), "utf8")
+      .split(/\r?\n/)
+      .filter((line) => !/^\s*#/.test(line))
+      .join("\n");
+    return /node\s+scripts\/push-main\.mjs/.test(body);
+  });
+  assert.equal(files.length, 7, `expected the seven remaining pushers, saw ${files.length}`);
   const missing = files.filter((f) => !readFileSync(join(dir, f), "utf8").includes("corepack pnpm diagnose"));
   assert.deepEqual(
     missing,

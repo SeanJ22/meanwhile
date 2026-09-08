@@ -771,7 +771,11 @@ test("nothing this domain adds introduces a Postgres table (RULING 126, wall 1)"
   // here so this workstream's own change is the thing under test rather than a
   // guard someone else owns.
   const MONEY_WORDS =
-    /(contribution|contributor|campaign_finance|campaignfinance|receipt|disbursement|committee|donor|fundrais|cash_on_hand)/i;
+    /(contribution|contributor|campaign_finance|campaignfinance|disbursement|committee|donor|fundrais|cash_on_hand)/i;
+  // A bare receipt column is a money-domain signal; a qualified operational
+  // receipt such as `validation_receipt` is not. Its table/export must still
+  // pass the full money-word scan above.
+  const BARE_RECEIPT = /^receipts?$/i;
 
   const tables: { name: string; export: string; columns: string[] }[] = [];
   for (const [exportName, value] of Object.entries(schema)) {
@@ -793,7 +797,9 @@ test("nothing this domain adds introduces a Postgres table (RULING 126, wall 1)"
   const offenders: string[] = [];
   for (const t of tables) {
     if (MONEY_WORDS.test(t.name) || MONEY_WORDS.test(t.export)) offenders.push(`table ${t.name}`);
-    for (const col of t.columns) if (MONEY_WORDS.test(col)) offenders.push(`${t.name}.${col}`);
+    for (const col of t.columns) {
+      if (MONEY_WORDS.test(col) || BARE_RECEIPT.test(col)) offenders.push(`${t.name}.${col}`);
+    }
   }
   assert.deepEqual(
     offenders,

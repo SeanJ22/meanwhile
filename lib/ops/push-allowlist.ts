@@ -231,18 +231,6 @@ export const PUSHER_PROFILES: readonly PusherProfile[] = [
     allow: [{ path: "data/meetings-snapshot.json", why: "the one governed artifact this refresher produces" }],
   },
   {
-    id: "refresh-fec-snapshot",
-    workflow: ".github/workflows/refresh-fec-snapshot.yml",
-    allow: [{ path: "data/fec/fec-2026.json", why: "the one governed artifact this refresher produces" }],
-  },
-  {
-    id: "refresh-legiscan-snapshot",
-    workflow: ".github/workflows/refresh-legiscan-snapshot.yml",
-    allow: [
-      { path: "data/votes/state-votes-snapshot.json", why: "the one governed artifact this refresher produces" },
-    ],
-  },
-  {
     id: "refresh-dotgov-snapshot",
     workflow: ".github/workflows/refresh-dotgov-snapshot.yml",
     allow: [{ path: "data/dotgov/snapshot.json", why: "the one governed artifact this refresher produces" }],

@@ -98,7 +98,7 @@ test("the publisher writes all three pilot states under the CURRENT derivation c
 test("ADM-40: New Hampshire and New Jersey candidate filings are no longer blank, and carry their real counts", () => {
   // 47 candidacies from sos.nh.gov; 275 from the Morris County Clerk. Both were
   // on disk and both rendered as nothing.
-  for (const [state, filings, contests] of [["nh", 47, 12], ["nj", 275, 99]] as const) {
+  for (const [state, filings, contests] of [["nh", 47, 13], ["nj", 275, 99]] as const) {
     const row = snap(state).capabilities.find((r) => r.capabilityId === "ballot.candidate-filings")!;
     assert.equal(row.coverageLabel, `${filings} filings · ${contests} contests`);
     assert.equal(cell(state, "ballot.candidate-filings", "SOURCE_KNOWN").state, "CURRENT");
@@ -190,8 +190,11 @@ test("ADM-40: Arizona, New Hampshire and New Jersey do NOT produce the same brea
   assert.notEqual(pattern("az"), pattern("nh"));
 
   // And name one difference each, so the test explains itself when it fails.
-  // NH: the Secretary of State publishes that there is no statewide question.
-  assert.equal(cell("nh", "ballot.statewide-propositions", "VERIFIED").state, "ARGUED_ABSENT");
+  // NH: the Secretary of State now publishes one statewide question. The
+  // source and question are held; an external reconciliation remains open.
+  assert.equal(cell("nh", "ballot.statewide-propositions", "SOURCE_KNOWN").state, "CURRENT");
+  assert.equal(cell("nh", "ballot.statewide-propositions", "ACQUIRED").state, "CURRENT");
+  assert.equal(cell("nh", "ballot.statewide-propositions", "VERIFIED").state, "NOT_WALKED");
   // NJ: no such statement exists, so nobody has looked. A different fact.
   assert.equal(cell("nj", "ballot.statewide-propositions", "VERIFIED").state, "NOT_WALKED");
   // AZ: eleven statewide measure contests are known and none has question text.

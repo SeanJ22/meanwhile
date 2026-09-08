@@ -627,6 +627,53 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
     },
   },
 
+  civic_data_candidates: {
+    storeClass: "OPERATIONAL",
+    columns: {
+      ...nonIdentifying(
+        "source_id",
+        "record_class",
+        "scope",
+        "state",
+        "acquisition_succeeded",
+        "raw_hash",
+        "normalized_hash",
+        "retrieved_at",
+        "source_through",
+        "parser_version",
+        "failure_code",
+      ),
+      id: { space: "OPAQUE_HANDLE", why: "A source/scope/content/version handle minted by the routine data plane." },
+      identity: { space: "CIVIC_IDENTIFIER", why: "Exact public-record identifiers for the officials or geographies in the candidate." },
+      candidate: { space: "CIVIC_IDENTIFIER", why: "The authoritative civic candidate envelope; public officials and public geographies, never readers." },
+      validation_receipt: { space: "NON_IDENTIFYING", why: "Machine verdicts, hashes, source routes and check details about one candidate." },
+      promoted_version_id: { space: "OPAQUE_HANDLE" },
+      last_known_good_version_id: { space: "OPAQUE_HANDLE" },
+      failure_detail: { space: "PROSE", why: "Operational acquisition or validation detail, never reader-authored text." },
+    },
+  },
+
+  civic_data_candidate_events: {
+    storeClass: "OPERATIONAL",
+    columns: {
+      ...nonIdentifying("sequence", "state", "at"),
+      id: { space: "OPAQUE_HANDLE" },
+      candidate_id: { space: "OPAQUE_HANDLE" },
+      detail: { space: "PROSE", why: "Append-only transition detail about public-source processing." },
+    },
+  },
+
+  civic_data_promotions: {
+    storeClass: "OPERATIONAL",
+    columns: {
+      ...nonIdentifying("source_id", "record_class", "scope", "promoted_at", "validation_receipt"),
+      key: { space: "OPAQUE_HANDLE", why: "A record-class/scope projection key minted by the routine data plane." },
+      current_version_id: { space: "OPAQUE_HANDLE" },
+      last_known_good_version_id: { space: "OPAQUE_HANDLE" },
+      payload: { space: "CIVIC_IDENTIFIER", why: "The promoted public civic read model; it contains no reader data." },
+    },
+  },
+
 };
 
 /**

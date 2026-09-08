@@ -58,6 +58,8 @@ import {
 } from "@/lib/ask/contacts";
 import { contactForCandidate } from "@/lib/ask/candidate-contact";
 import { keyVoteEvidenceFor } from "@/lib/ask/key-votes";
+import { refreshFundingFromPromoted } from "@/lib/funding/snapshot";
+import { refreshStateVotesFromPromoted } from "@/lib/sources/legiscan/snapshot";
 import {
   absencesForDivisions,
   absencesWithoutRemovals,
@@ -537,6 +539,7 @@ function personEntities(seats: readonly SeatHolder[]): BindableEntity[] {
 }
 
 export async function POST(request: Request) {
+  await Promise.all([refreshFundingFromPromoted(), refreshStateVotesFromPromoted()]);
   const started = Date.now();
   const trace: AskTrace = emptyTrace();
 

@@ -293,10 +293,10 @@ test("a Newbury voter (03255) sees the November slate, and March is stated, not 
   assert.equal(set.election.state, "NH");
 
   // Denominator: governor, US senate, CD2, state senate 7, Merrimack 7,
-  // Executive Council 2, county commissioner 2, and five county offices = 12
-  // contests — the full November slate (2026-08-16 correction: the thin-
+  // Executive Council 2, county commissioner 2, five county offices, and
+  // the statewide CACR 13 question = 13 contests — the full November slate (2026-08-16 correction: the thin-
   // ballot finding held only for town/school offices, which decide in March).
-  assert.equal(contests.length, 12, contests.map((c) => c.id).join(", "));
+  assert.equal(contests.length, 13, contests.map((c) => c.id).join(", "));
 
   const ids = new Set(contests.map((c) => c.id));
   assert.ok(ids.has("ballot-nh-merrimack:us-senate"));
@@ -320,16 +320,18 @@ test("a Newbury voter (03255) sees the November slate, and March is stated, not 
   assert.equal(senate.length, 13, "13 filed for the open Senate seat");
 
   // The town-meeting finding renders as the authority's own structure — the
-  // March town election — for both the town and the school district. 2a
-  // (2026-08-17) added the third: the earned statewide-measure absence.
-  assert.equal(absences.length, 3, absences.map((a) => a.ocdId).join(", "));
+  // March town election — for both the town and the school district.
+  assert.equal(absences.length, 2, absences.map((a) => a.ocdId).join(", "));
   const march = absences.filter((a) => /March/.test(a.statement));
   assert.equal(march.length, 2, "both March town-meeting absences stand");
-  const noQuestion = absences.find((a) =>
-    /No statewide ballot question/.test(a.statement),
+  assert.ok(
+    contests.some((contest) => contest.id === "ballot-nh-merrimack:cacr-13" && contest.type === "MEASURE"),
+    "the Secretary of State's current statewide question must render as a measure",
   );
-  assert.ok(noQuestion, "the statewide-measure absence is stated and cited");
-  assert.match(noQuestion.provenance.sourceUrl ?? "", /sos\.nh\.gov/);
+  assert.ok(
+    set.measures.some((measure) => measure.contestId === "ballot-nh-merrimack:cacr-13"),
+    "the CACR 13 contest must carry the General Court's official question text",
+  );
 
   // Our unmapped-districts gap is stated, never smoothed over.
   assert.ok((set.coverageNotes ?? []).length > 0);

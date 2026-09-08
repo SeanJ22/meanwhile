@@ -407,9 +407,11 @@ test("ADM-C11: a route nothing calls is never graded green, and never graded red
 
 test("§6: a route the last run did not read has no last-read date, and says whose gap that is", () => {
   const notDue = rowOf(VIEW, "fec-api");
-  assert.equal(notDue.lastSuccess.held, false, "the fixture run did not read FEC, so there is no date to show");
+  assert.equal(notDue.lastSuccess.held, false, "the nightly fixture does not observe the standing FEC runner, so there is no date to show");
   if (!notDue.lastSuccess.held) assert.equal(notDue.lastSuccess.gap.whose, "OURS");
-  assert.equal(notDue.health, "AMBER", "a route the run skipped is not proven working and is not failing");
+  assert.equal(notDue.refresh.onNightlyRefresh, false, "FEC routine promotion must not ride the GitHub nightly software/data-file run");
+  assert.equal(notDue.health, "UNKNOWN", "an unrelated run receipt cannot grade the standing production data-plane runner");
+  assert.match(notDue.refresh.says, /standing local civic-data runner/);
 
   const read = rowOf(VIEW, "nj-morris-clerk");
   assert.equal(read.lastSuccess.held, true, "the fixture run read this one clean");

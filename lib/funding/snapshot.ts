@@ -10,12 +10,12 @@ import type {
   FundingSnapshot,
   SecondHopCommittee,
 } from "./types.ts";
+import { promotedReadModel } from "../civic-data/read-model.ts";
 
 /**
- * Server-side reader over the committed FEC snapshot (`data/fec/fec-2026.json`,
- * written by `pnpm fec:fetch`). No live FEC call happens at request time,
- * and the FEC API key never reaches runtime code — it exists only in the
- * fetch script's environment (guard-tested in tests/funding.test.ts).
+ * Server-side reader over the promoted operational FEC projection, with the
+ * committed `data/fec/fec-2026.json` retained as bootstrap LKG. No live FEC
+ * call happens at request time, and the FEC API key never reaches runtime code.
  *
  * The contributor accessor is the ripcord's enforcement point: when
  * `ripcord.fecContributorDisplay` is pulled, contributor rows do not leave
@@ -23,6 +23,18 @@ import type {
  */
 
 let cache: FundingSnapshot | null = null;
+
+/** Load the promoted operational projection, retaining the bundled bootstrap LKG when absent. */
+export async function refreshFundingFromPromoted(): Promise<string | null> {
+  const promoted = await promotedReadModel<FundingSnapshot>("FEC_FUNDING", "federal-supported");
+  if (!promoted) return null;
+  const payload = promoted.payload;
+  if (payload.formatVersion !== 1 || !Array.isArray(payload.candidates) || !Array.isArray(payload.absences)) {
+    throw new Error(`Promoted FEC projection ${promoted.versionId} does not satisfy FundingSnapshot.`);
+  }
+  cache = payload;
+  return promoted.versionId;
+}
 
 export function getFundingSnapshot(): FundingSnapshot {
   if (!cache) {

@@ -10,17 +10,8 @@
    "explainer": "The first pandemic relief law: $1,200 payments to most adults, expanded unemployment benefits, and forgivable loans to keep small businesses paying staff.",
    "explainerSource": "congress.gov bill text and official summary",
    "explainerReadAt": "2026-08-15",
-   "house": [
-    {
-     "congress": 116,
-     "session": 1,
-     "rollNumber": 493,
-     "question": "On motion to suspend the rules and pass the bill, as amended Agreed to by the Yeas and Nays: (2/3 required): 419 - 6 (Roll no. 493). (text: CR H5958-5959)",
-     "url": "https://clerk.house.gov/evs/2019/roll493.xml",
-     "tally": "419-6",
-     "verifiedAt": "2026-08-15"
-    }
-   ],
+   "house": [],
+   "houseNote": "The House agreed to the Senate amendment by voice vote on March 27, 2020, so there is no House roll-call position for an individual member.",
    "senate": [
     {
      "congress": 116,

@@ -232,8 +232,8 @@ test("R-I: an argued absence carries the AUTHORITY's own sentence when it has on
     ev({
       walkClosed: true,
       asOf: "2026-08-14",
-      evidenceRef: "https://www.sos.nh.gov/2026-election-details",
-      absenceStatement: "New Hampshire Secretary of State: No statewide ballot question is on the November 3, 2026 ballot.",
+      evidenceRef: "https://elections.example.gov/2026-election-details",
+      absenceStatement: "Example State Secretary of State: No statewide ballot question is on the November 3, 2026 ballot.",
     }),
     NOW,
   );

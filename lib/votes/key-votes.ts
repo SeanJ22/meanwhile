@@ -344,6 +344,7 @@ export const KEY_VOTES_LAWS: KeyVoteEntry[] = [
     "cares-act",
     "The CARES Act (March 2020)",
     "The first pandemic relief law: $1,200 payments to most adults, expanded unemployment benefits, and forgivable loans to keep small businesses paying staff.",
+    { houseNote: "The House agreed to the Senate amendment by voice vote on March 27, 2020, so there is no House roll-call position for an individual member." },
   ),
   law(
     "american-rescue-plan",

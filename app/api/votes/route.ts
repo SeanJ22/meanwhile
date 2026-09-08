@@ -4,21 +4,20 @@ import { partyBreakdownFor } from "@/lib/votes/party-breakdown";
 import { keyVotesForMember, type MemberKeyVotes } from "@/lib/votes/key-votes-reader";
 import { KEY_VOTES_CRITERIA } from "@/lib/votes/key-votes";
 import { partyByOfficeholderId } from "@/lib/registry/server";
-import { getStateVotesSnapshot } from "@/lib/sources/legiscan/snapshot";
-import { LEGISCAN_ATTRIBUTION } from "@/lib/sources/legiscan/types";
+import { getStateVotesSnapshot, refreshStateVotesFromPromoted } from "@/lib/sources/legiscan/snapshot";
+import { stateRollAttribution } from "@/lib/sources/legiscan/types";
 
 /**
  * GET /api/votes?member=congress:C001133 — a federal member
  * GET /api/votes?member=plural:<uuid>    — a state legislator (D49)
  *
- * A member's recent recorded votes, from a committed snapshot — never a live
- * fetch against the chambers or LegiScan. Returns the votes newest-first with
+ * A member's recent recorded votes, from the promoted projection or bundled
+ * bootstrap LKG — never a live fetch against a publisher. Returns newest-first with
  * the member's position attached, plus the snapshot's generatedAt so the
  * surface can say how fresh "recent" is.
  *
- * State rows carry `attribution` because LegiScan's data is CC BY 4.0 and the
- * licence requires it wherever the data appears. Federal rows do not: those
- * come from the chambers' own public-domain XML.
+ * Legacy state rows carry LegiScan's required CC BY attribution. Official
+ * promoted state rows do not inherit that vendor attribution.
  */
 
 export const runtime = "nodejs";
@@ -41,9 +40,10 @@ function stateVotes(member: string) {
       .map((p) => [p.rollCallId, p.position]),
   );
 
-  const votes = snap.rollCalls
+  const matchedRolls = snap.rollCalls
     .filter((r) => positions.has(r.id))
-    .sort((a, b) => b.date.localeCompare(a.date))
+    .sort((a, b) => b.date.localeCompare(a.date));
+  const votes = matchedRolls
     .map((r) => ({
       id: r.id,
       // The bill's official title, as the legislature published it. Never
@@ -71,7 +71,7 @@ function stateVotes(member: string) {
     holdingStatus: "HELD",
     count: votes.length,
     generatedAt: snap.generatedAt,
-    attribution: LEGISCAN_ATTRIBUTION,
+    attribution: stateRollAttribution(matchedRolls),
     votes,
   });
 }
@@ -85,7 +85,10 @@ export async function GET(request: Request) {
     );
   }
 
-  if (STATE_ID.test(member)) return stateVotes(member);
+  if (STATE_ID.test(member)) {
+    await refreshStateVotesFromPromoted();
+    return stateVotes(member);
+  }
 
   let snap: VotesSnapshot;
   try {

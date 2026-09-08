@@ -8,7 +8,7 @@ const subject = { kind: "PERSON" as const, id: "congress:K000377", name: "Mark K
 
 test("every current federal official's key-vote answer preserves all exact source maps, entries and linked summaries through real POST", async () => {
   const result = await keyVotesAskProof();
-  assert.equal(result.proofs.length, 537);
+  assert.equal(result.proofs.length, 539);
   assert.deepEqual(result.proofs.filter((proof) => proof.status !== "PROVEN").map((proof) => ({ id: proof.subjectId, missing: proof.missing, entries: proof.missingEntries, bills: proof.missingBills, unexpected: proof.unexpectedKeys })), []);
   assert.equal(new Set(result.proofs.flatMap((proof) => proof.expectedEntryIds)).size, result.keyEntryCount);
   assert.equal(new Set(result.proofs.flatMap((proof) => proof.expectedNativePositionKeys)).size, result.nativePositionMapCount);

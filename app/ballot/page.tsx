@@ -74,6 +74,7 @@ import {
   STATE_FUNDING_NOTE,
   type FundingAnswer,
 } from "@/lib/funding/display";
+import { refreshFundingFromPromoted } from "@/lib/funding/snapshot";
 import {
   FundingAbsence,
   FundingDisplay,
@@ -698,6 +699,7 @@ export default async function BallotPage({
 }: {
   searchParams: Promise<{ zip?: string }>;
 }) {
+  await refreshFundingFromPromoted();
   const { zip: zipParam } = await searchParams;
   const zip = zipParam && /^\d{5}$/.test(zipParam) ? zipParam : null;
 

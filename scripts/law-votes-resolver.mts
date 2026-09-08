@@ -171,42 +171,58 @@ function tallyIn(text: string): string | null {
  * concurrence has its final say last, and that is the vote a reader means.
  * The choice is stated here rather than left to array order.
  */
-export async function decidingVotes(
-  law: LawRecord,
-  apiKey: string,
-): Promise<{ votes: ResolvedVote[]; considered: number }> {
-  const page = await get<{
-    actions?: {
-      actionDate: string;
-      text: string;
-      type?: string;
-      recordedVotes?: {
-        chamber: string;
-        congress: number;
-        sessionNumber: number;
-        rollNumber: number;
-        url: string;
-      }[];
-    }[];
-  }>(`/bill/${law.congress}/${law.type}/${law.number}/actions?limit=250`, apiKey);
+export interface BillAction {
+  readonly actionDate: string;
+  readonly text: string;
+  readonly type?: string;
+  readonly recordedVotes?: readonly {
+    readonly chamber: string;
+    readonly congress: number;
+    readonly sessionNumber: number;
+    readonly rollNumber: number;
+    readonly url: string;
+  }[];
+}
 
-  const actions = page?.actions ?? [];
+function actionChambers(action: BillAction): readonly ("House" | "Senate")[] {
+  const recorded = new Set<"House" | "Senate">();
+  for (const vote of action.recordedVotes ?? []) recorded.add(vote.chamber === "House" ? "House" : "Senate");
+  if (recorded.size > 0) return [...recorded];
+  const chambers: ("House" | "Senate")[] = [];
+  if (/\b(?:passed house|house (?:agreed|concurred|passed))\b/i.test(action.text)) chambers.push("House");
+  if (/\b(?:passed senate|senate (?:agreed|concurred|passed))\b/i.test(action.text)) chambers.push("Senate");
+  return chambers;
+}
+
+/**
+ * Resolve from a complete action list, including voice/unanimous-consent
+ * decisions. The final deciding action wins even when it has no roll number:
+ * an older recorded vote on earlier text must never stand in for that action.
+ */
+export function decidingVotesFromActions(actions: readonly BillAction[]): ResolvedVote[] {
   const eligible = actions.filter(
     (a) =>
-      (a.recordedVotes?.length ?? 0) > 0 &&
       DECIDING_TYPES.has(a.type ?? "") &&
       PASSAGE_TEXT.test(a.text ?? "") &&
-      !NOT_PASSAGE.test(a.text ?? ""),
+      !NOT_PASSAGE.test(a.text ?? "") &&
+      actionChambers(a).length > 0,
   );
 
-  const byChamber = new Map<"House" | "Senate", ResolvedVote>();
-  // Oldest first, so the last eligible action per chamber wins.
+  const finalByChamber = new Map<"House" | "Senate", BillAction>();
+  // Oldest first, so the last deciding action per chamber wins whether that
+  // action was recorded, voice, or unanimous consent.
   const ordered = [...eligible].sort((a, b) =>
     a.actionDate < b.actionDate ? -1 : a.actionDate > b.actionDate ? 1 : 0,
   );
   for (const action of ordered) {
+    for (const chamber of actionChambers(action)) finalByChamber.set(chamber, action);
+  }
+
+  const byChamber = new Map<"House" | "Senate", ResolvedVote>();
+  for (const [expectedChamber, action] of finalByChamber) {
     for (const vote of action.recordedVotes ?? []) {
       const chamber = vote.chamber === "House" ? "House" : "Senate";
+      if (chamber !== expectedChamber) continue;
       const tally = tallyIn(action.text);
       // No tally in the chamber's own words means nothing to verify
       // against, so the vote is not accepted at all.
@@ -223,8 +239,19 @@ export async function decidingVotes(
       });
     }
   }
+  return [...byChamber.values()];
+}
 
-  return { votes: [...byChamber.values()], considered: actions.length };
+export async function decidingVotes(
+  law: LawRecord,
+  apiKey: string,
+): Promise<{ votes: ResolvedVote[]; considered: number }> {
+  const page = await get<{ actions?: BillAction[] }>(
+    `/bill/${law.congress}/${law.type}/${law.number}/actions?limit=250`,
+    apiKey,
+  );
+  const actions = page?.actions ?? [];
+  return { votes: decidingVotesFromActions(actions), considered: actions.length };
 }
 
 

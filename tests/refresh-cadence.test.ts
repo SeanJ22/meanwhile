@@ -38,10 +38,10 @@ test("every source states a cadence reason and what it governs", () => {
 });
 
 test("weekly runs on Monday only; monthly on the 1st only", () => {
-  const fec = REFRESH_SOURCES.find((s) => s.id === "fec")!;
-  assert.equal(isDue(fec, day("2026-08-31")), true, "2026-08-31 is a Monday");
-  for (const d of ["2026-08-25", "2026-08-26", "2026-08-27", "2026-08-28", "2026-08-29", "2026-08-30"]) {
-    assert.equal(isDue(fec, day(d)), false, `${d} is not a Monday`);
+  const meetings = REFRESH_SOURCES.find((s) => s.id === "meetings")!;
+  assert.equal(isDue(meetings, day("2026-11-09")), true, "2026-11-09 is a post-election Monday");
+  for (const d of ["2026-11-04", "2026-11-05", "2026-11-06", "2026-11-07", "2026-11-08"]) {
+    assert.equal(isDue(meetings, day(d)), false, `${d} is not a Monday after elevation ended`);
   }
 
   const dotgov = REFRESH_SOURCES.find((s) => s.id === "dotgov")!;
@@ -61,7 +61,7 @@ test("the election elevation expires ON its stated date, not around it", () => {
   // A Wednesday after the election is a genuinely empty run — no source is due,
   // and that is the cadence working rather than a defect.
   assert.equal(dueSources(day("2026-11-04")).length, 0);
-  assert.equal(dueSources(day("2026-11-09")).length, 4, "the Monday after picks up all four weeklies");
+  assert.equal(dueSources(day("2026-11-09")).length, 2, "the Monday after picks up both remaining legacy weeklies");
 });
 
 test("a source with no elevation is unaffected by the election date", () => {
@@ -119,7 +119,7 @@ test("the five decronned refreshers keep workflow_dispatch and lost their schedu
     assert.doesNotMatch(
       text,
       /^\s*- cron:/m,
-      `${file} still has a cron — its source is refreshed by refresh-daily.yml`,
+      `${file} still has a cron — this shell must remain manual-only`,
     );
     assert.match(
       text,
@@ -131,6 +131,16 @@ test("the five decronned refreshers keep workflow_dispatch and lost their schedu
       /RULING 124/,
       `${file} lost the note saying why its cron went — a removal with no reason is one the next session reverses`,
     );
+  }
+});
+
+test("FEC and state-roll routines are absent from the scheduled commit-and-build orchestrator", () => {
+  assert.equal(REFRESH_SOURCES.some((source) => source.id === "fec" || source.id === "legiscan"), false);
+  const daily = readFileSync(join(WORKFLOWS, "refresh-daily.yml"), "utf8");
+  assert.doesNotMatch(daily, /\b(?:fec:fetch|legiscan:fetch)\b/);
+  for (const file of ["refresh-fec-snapshot.yml", "refresh-legiscan-snapshot.yml"]) {
+    const retired = readFileSync(join(WORKFLOWS, file), "utf8");
+    assert.doesNotMatch(retired, /pnpm (?:fec:fetch|legiscan:fetch)|git\s+(?:add|commit|push)|next\s+build|netlify/i);
   }
 });
 

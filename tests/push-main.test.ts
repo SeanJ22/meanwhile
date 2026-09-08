@@ -171,7 +171,7 @@ test("R48: every workflow that pushes main goes through the protected push", () 
   );
   assert.equal(
     pushers.length,
-    9,
+    7,
     // NINE as of 2026-08-29 (NH273): post-deploy-integrity.yml joined the set.
     // It pushes exactly ONE non-shipping file — data/ops/production-integrity.json
     // — so the reading it records costs no build and cannot start the very deploy
@@ -192,7 +192,7 @@ test("R48: every workflow that pushes main goes through the protected push", () 
     // Six as of NH Hunt 3 (2026-08-21): the five refresh/tripwire jobs plus
     // job-watch.yml, which commits the Needs Sean row RULING 56 raises and so
     // needs the same rebase-and-retry protection as any other main pusher.
-    `expected the six main-pushing workflows to use scripts/push-main.mjs, found ${pushers.length}: ${pushers.join(", ")}`,
+    `expected the seven remaining main-pushing workflows to use scripts/push-main.mjs, found ${pushers.length}: ${pushers.join(", ")}`,
   );
 });
 

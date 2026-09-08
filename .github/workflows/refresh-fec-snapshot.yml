@@ -1,188 +1,21 @@
-# The scheduled refresh behind data/fec/fec-2026.json (D34).
+# RETIRED DATA-FILE REFRESH — RULING 124 history retained.
 #
-# The app reads the committed snapshot; no page load ever calls the FEC.
-# Weekly is the right cadence: campaign-finance filings land on statutory
-# deadlines (quarterly, pre-election), not continuously, and the surface
-# states "reported through" and "read" dates so staleness is visible, never
-# silent.
-#
-# The FEC key lives ONLY in fetch-script environments — .env.local on the
-# workstation, the FEC_API_KEY repository secret here. It is never set in
-# Netlify and never reaches client code (guard-tested in
-# tests/funding.test.ts). Until the secret is added, this workflow fails
-# visibly rather than committing an unrefreshed file.
-#
-# Failure semantics: the fetch script exits nonzero without writing when it
-# cannot proceed; a partial FEC outage shows up as recorded absences in the
-# snapshot, attributed per candidate. Tests run before any commit.
-
-name: Refresh FEC snapshot
-
-# CRON REMOVED 2026-08-24 — RULING 124 item 3.
-#
-# This workflow no longer runs on a schedule. Its source is refreshed by
-# `.github/workflows/refresh-daily.yml`, the ONE daily orchestrated run, which
-# runs every source that is due, gates once, and COMMITS ONCE however many
-# sources moved. Five separate schedules committing separately is what produced
-# three commits, three production builds and three deploys before 5 AM on
-# 2026-08-24, all shipping the same application.
-#
-# The workflow is KEPT, and `workflow_dispatch` is kept with it, so this one
-# source can still be run and debugged by hand without waiting for the
-# orchestrator's window. Deleting it would delete that, and would delete the
-# reasoning recorded above it — which is the rung this repo does not spend.
-#
-# Cadence for this source, with its stated reason, is `lib/ops/refresh-cadence.ts`.
+# FEC routine truth now moves through the production candidate/version store:
+# scripts/routine-civic-data-runner.mts -> scripts/fetch-fec.mts --promote.
+# The standing local runner owns its clock. This manual shell intentionally has
+# no checkout, credential, fetch, write, commit, build, push, or deploy step.
+name: Refresh FEC snapshot (retired)
 
 on:
   workflow_dispatch:
-    inputs:
-      simulate_change:
-        description: >-
-          Exercise the CHANGED path — run the full gate as though the snapshot
-          had moved, and commit nothing. Exists so the branch that guards real
-          data can be proven to execute without waiting for the data to move.
-        type: boolean
-        default: false
 
 permissions:
-  contents: write
-  # ACTIONS READ — the diagnoser reads THIS run (2026-08-28, run 33211710028).
-  #
-  # Declaring `permissions:` at all switches the token from the repository
-  # default to exactly what is listed, so every scope not named here is
-  # `none`. With `contents: write` alone, the `Name the cause` step below hit
-  # `gh: Resource not accessible by integration (HTTP 403)` on
-  # `GET /actions/runs/{id}` and printed `diagnose: CANNOT RUN` — correctly,
-  # and uselessly. `actions: read` is the minimum that endpoint needs; nothing
-  # else is widened. job-watch.yml already carried it for the same reason.
-  actions: read
-
-concurrency:
-  group: refresh-fec-snapshot
-  cancel-in-progress: false
+  contents: read
 
 jobs:
-  refresh:
+  retired:
     runs-on: ubuntu-latest
-    # F25: the platform default is 360 minutes. Runs #25 and #26 sat at the
-    # gate until GitHub killed them at six hours and reported no step name. A
-    # job that overruns this fails loudly, named, while a human is awake.
-    timeout-minutes: 60
+    timeout-minutes: 1
     steps:
-      - uses: actions/checkout@v7
-        with:
-          ref: main
-
-      # R45 (2026-08-18): checkout and setup-node were pinned at v4, which
-      # target Node 20 — GitHub forces them onto Node 24 and warns on every
-      # run. v7 targets Node 24 natively. setup-node v5 was NOT the landing
-      # spot: v5 auto-caches whenever package.json names a packageManager,
-      # and pnpm is not on PATH until corepack enable below, so v5 would
-      # have broken this step. v6 narrowed auto-caching to npm only; the
-      # explicit false below pins that off regardless of a later default.
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 24
-          package-manager-cache: false
-
-      - name: Enable corepack (pnpm pinned by packageManager)
-        run: corepack enable
-
-      - name: Install
-        run: corepack pnpm install --frozen-lockfile
-
-      - name: Refresh the snapshot
-        env:
-          FEC_API_KEY: ${{ secrets.FEC_API_KEY }}
-        run: corepack pnpm fec:fetch
-
-      # AUD-07 (2026-08-18, applied here by g17): the diff moves AHEAD of the
-      # gate. The audit named the meetings and dotgov refreshes; this workflow
-      # has the identical shape and the identical waste, and a defect found at
-      # one site is audited across every site that shares the code path.
-      #
-      # Nothing about the CHANGED path weakens. When the artifact moves, the
-      # full existing gate runs exactly as it did before, and it still stands
-      # between the new data and the commit.
-      - name: Diff the governed artifact
-        id: diff
-        run: |
-          if [ "${{ inputs.simulate_change }}" = "true" ]; then
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-            echo "simulated=true" >> "$GITHUB_OUTPUT"
-            echo "SIMULATED CHANGE (dispatch input): the gate below runs in full."
-            echo "Nothing will be committed — this exists to prove the changed path executes."
-            exit 0
-          fi
-          if git diff --quiet -- data/fec/fec-2026.json; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "data/fec/fec-2026.json is UNCHANGED by this refresh."
-          else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-            echo "data/fec/fec-2026.json CHANGED — the full gate runs before anything commits."
-            git diff --stat -- data/fec/fec-2026.json
-          fi
-
-      - name: Unchanged — stating what was skipped and why
-        if: steps.diff.outputs.changed != 'true'
-        run: |
-          echo "The refresh ran and the governed artifact did not move."
-          echo ""
-          echo "SKIPPED: corepack pnpm test, and the commit."
-          echo "The snapshot on main is byte-identical to the one this run produced, and it was already validated by the run that committed it."
-          echo ""
-          echo "This is a stated early exit, not a silent one, and it is not a pass"
-          echo "of the gate: the gate did not run because there was nothing to gate."
-
-      # THE GATE NEEDS A BROWSER (g17, 2026-08-18).
-      #
-      # R50 added tests/beacon-guard.test.ts, which proves the synthetic-run
-      # guard by RUNNING a real Chromium — a source scan was the guard that
-      # was green through two live leaks. No refresh workflow installed a
-      # browser, so from R50 onward every changed-data run failed at the gate
-      # with "Executable doesn't exist" and committed nothing. Caught by
-      # dispatching the changed path on purpose (run 32202786858); it would
-      # otherwise have surfaced as a snapshot that quietly stopped moving.
-      #
-      # Chromium only, and only on the path that runs the suite: a no-op run
-      # pays nothing, which is the whole point of the ordering above.
-      - name: Install the browser the gate needs
-        if: steps.diff.outputs.changed == 'true'
-        timeout-minutes: 15
-        run: corepack pnpm exec playwright install --with-deps chromium
-      - name: Validate before committing
-        if: steps.diff.outputs.changed == 'true'
-        timeout-minutes: 15
-        run: corepack pnpm test
-
-      - name: Commit if changed
-        # A simulated run reaches the gate and stops here: it must never commit.
-        if: steps.diff.outputs.changed == 'true' && steps.diff.outputs.simulated != 'true'
-        env:
-          PUSH_DEPLOY_KEY: ${{ secrets.PUSH_DEPLOY_KEY }}
-        run: |
-          if git diff --quiet -- data/fec/fec-2026.json; then
-            echo "snapshot unchanged — nothing to commit"
-            exit 0
-          fi
-          git config user.name "snapshot-refresh[bot]"
-          git config user.email "noreply@github.com"
-          git add data/fec/fec-2026.json
-          git commit -m "FEC snapshot refresh: $(date -u +%Y-%m-%dT%H:%MZ)"
-          # R48: rebase-before-push with retry. A rejected push never exits zero.
-          node scripts/push-main.mjs --workflow refresh-fec-snapshot
-
-      # ITEM 8a (2026-08-26) — EVERY JOB NAMES ITS OWN CAUSE BEFORE IT DIES.
-      #
-      # `Error: Process completed with exit code 1` is not an error message; it
-      # is the absence of one. This reads the job's own log and prints the
-      # failure CLASS and its remedy in plain words, or says loudly that the
-      # failure is unrecognised and shows what it saw. It never fails the job it
-      # is diagnosing — the job is already red, and a diagnoser that could turn a
-      # red run into a differently-red run would hide the cause it exists to name.
-      - name: Name the cause
-        if: failure()
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: corepack pnpm diagnose
+      - name: Explain the replacement
+        run: echo "Retired. FEC routine data promotes directly through the standing production data plane."

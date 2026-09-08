@@ -68,8 +68,7 @@
  *                    ballot.candidate-filings -> AZ certified-lineup recon
  *                    finance.state-disclosure -> AZ SeeTheMoney recon
  *                  and a recorded CLOSED WALK renders ARGUED_ABSENT — including
- *                  a government's own statement that the thing does not exist
- *                  (NH: no statewide ballot question in 2026).
+ *                  a government's own statement that the thing does not exist.
  *   SHOWN_TO_READER / ASK_ANSWERS
  *                  the state's canonical holding for the capability is a
  *                  DECLARED reader input: `lib/holdings/datasets.ts` names the
@@ -582,7 +581,7 @@ function deriveCapability(
     }
     case "ballot.statewide-propositions": {
       const m = a.statewideMeasures;
-      // A government's own statement that no statewide question is on the ballot
+      // A government's own statement that no statewide question is on a ballot
       // is a stronger absence than any ladder we could walk, and it is a
       // completely different fact from "nobody looked" (R-I).
       if (absence && (m === null || m.contests === 0)) {

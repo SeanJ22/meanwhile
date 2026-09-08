@@ -11,13 +11,15 @@ import { isRenderable } from "../lib/funding/state-money-reader.ts";
  *
  * The three walls, in the order they would fail:
  *
- * 1. **No campaign-finance data is in Postgres at all.** The sold stores are
- *    database tables; the money is committed JSON. A join needs two tables.
+ * 1. **Campaign-finance data may exist only in the isolated operational civic
+ *    data plane.** The V2 routine-promotion contract supersedes the old
+ *    committed-JSON transport, while preserving the important boundary: no
+ *    reader collection/sold store can receive or join that public-source data.
  * 2. **The aggregation and export layer never imports the money.** Already true
  *    of the FEC corpus and asserted in `tests/funding.test.ts`; extended here to
  *    every campaign-finance module, present and future, by scanning the
  *    directory rather than a named list.
- * 3. **If money ever DOES enter the database**, it shares no joinable column
+ * 3. **The operational civic projection** shares no joinable identity domain
  *    with any collection store — the same predicate the n-stores rule already
  *    applies to the search log, the reactions store and the intake limiter.
  *
@@ -33,6 +35,7 @@ import { join, resolve } from "node:path";
 import { getTableConfig } from "drizzle-orm/pg-core";
 
 import * as schema from "../lib/db/schema.ts";
+import { tablesInClass } from "../lib/db/identity-domains.ts";
 import {
   computeSplit,
   judgeMatch,
@@ -44,7 +47,7 @@ import {
 
 const ROOT = resolve(import.meta.dirname, "..");
 
-/* ── WALL 1: the money is not in the database ─────────────────────────────── */
+/* ── WALL 1: money is confined to the operational civic data plane ───────── */
 
 /**
  * Every pgTable in the schema, enumerated through Drizzle's own
@@ -66,7 +69,7 @@ function allTables(): { name: string; export: string; columns: string[] }[] {
   return out;
 }
 
-test("RULING 126 wall 1: no database table holds campaign-finance data", () => {
+test("RULING 126 + RCD-4 wall 1: campaign finance is confined to isolated operational civic tables", () => {
   const MONEY_WORDS =
     /(contribution|contributor|campaign_finance|campaignfinance|receipt|disbursement|committee|donor|fundrais|cash_on_hand)/i;
 
@@ -80,8 +83,16 @@ test("RULING 126 wall 1: no database table holds campaign-finance data", () => {
     );
   }
 
+  const civicTables = ["civic_data_candidate_events", "civic_data_candidates", "civic_data_promotions"];
+  assert.deepEqual(
+    tablesInClass("OPERATIONAL").filter((name) => name.startsWith("civic_data_")),
+    civicTables,
+    "the routine data plane must remain explicitly classified as operational, never as a reader collection or sold store",
+  );
+  for (const name of civicTables) assert.ok(tables.some((table) => table.name === name), `${name} is not in the schema`);
+
   const offenders: string[] = [];
-  for (const t of tables) {
+  for (const t of tables.filter((table) => !civicTables.includes(table.name))) {
     if (MONEY_WORDS.test(t.name) || MONEY_WORDS.test(t.export)) offenders.push(`table ${t.name}`);
     for (const col of t.columns) if (MONEY_WORDS.test(col)) offenders.push(`${t.name}.${col}`);
   }
@@ -89,8 +100,8 @@ test("RULING 126 wall 1: no database table holds campaign-finance data", () => {
   assert.deepEqual(
     offenders,
     [],
-    "campaign-finance data appears to have entered the database, where the sold stores live. " +
-      "RULING 126 keeps it in the committed reader-content corpus precisely so no join is possible: " +
+    "campaign-finance vocabulary entered a table outside the isolated operational civic data plane. " +
+      "RULING 126 still forbids that data from reader collection and sold stores: " +
       offenders.join(", "),
   );
 });

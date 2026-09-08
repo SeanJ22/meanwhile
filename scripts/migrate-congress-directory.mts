@@ -6,7 +6,7 @@
  *
  * ## 1. It DIFFS, it does not overwrite
  *
- * The federal roster already carries a birthday and a term end for all 537
+ * The federal roster already carries a birthday and a term end for all 539
  * members, collected from the same upstream project through its unpinned
  * JSON mirror. The author's ruling demotes those prior rungs to
  * **fallback-and-audit**: where the pinned file and the store disagree, that
@@ -14,7 +14,7 @@
  * to `docs/congress-legislators-diff.md` for the author to rule on. Nothing
  * is silently replaced.
  *
- * A migration that quietly overwrote 537 birthdays with a second copy of the
+ * A migration that quietly overwrote 539 birthdays with a second copy of the
  * same claim would look like success and would destroy the only evidence
  * that the two rungs ever disagreed.
  *

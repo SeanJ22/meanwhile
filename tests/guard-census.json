@@ -1,9 +1,9 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 559,
-    "named": 5933,
-    "dynamic": 24
+    "files": 573,
+    "named": 6135,
+    "dynamic": 28
   },
   "files": {
     "tests/absence-defaults.test.ts": {
@@ -221,6 +221,30 @@
         "ADM-8: units match by bounded state token or by term; a dispatch to an unenumerated state is honored by name",
         "ADM-9: the map's own ThemeToggle is mounted in the console header, and the research page carries the header too",
         "the readiness legend, tiles and swatch classes are one shared implementation"
+      ],
+      "dynamic": 0
+    },
+    "tests/admin-feedback-9-6.test.ts": {
+      "names": [
+        "a count agrees with its noun, and a duration is in seconds",
+        "a fragment target clears the sticky header rather than landing under it",
+        "a superseded readiness snapshot says what happened in owner language, and needs nobody",
+        "a verdict is not glossed with the same word it already is",
+        "an unmapped finding code returns null rather than a plausible-sounding invention",
+        "every fragment the command centre can send the owner to is an id something renders",
+        "every owner sentence for a finding is free of machine vocabulary and is a whole sentence",
+        "the banner's 'Take me there' and the card's 'Open' cannot disagree — they are the same value",
+        "the blocked card's destination is one region carrying BOTH halves of what it counts",
+        "the build identity is a disclosure, and every identifier is still inside it",
+        "the console is published before the first cycle, not only after one",
+        "the destination opens what is collapsed inside it, in both mechanisms",
+        "the raw instrument sentence moved off the face and is still on the page",
+        "the readiness page puts the machine facts one disclosure down, and keeps them",
+        "the release manifest's status words have owner translations",
+        "the release review answers the owner's questions before it shows an identifier",
+        "the release review is swept for plain English like every other admin page",
+        "the route targets the command centre can send the owner to are real pages",
+        "the two codes the owner actually read now say what happened in ordinary English"
       ],
       "dynamic": 0
     },
@@ -580,6 +604,36 @@
         "every declaration states a basis — a bare state is a guess about a vendor",
         "ical is ABSENT, and that is an ANSWER rather than outstanding work",
         "legistar is PRESENT, and its basis names the field that makes it observable"
+      ],
+      "dynamic": 0
+    },
+    "tests/agent-bridge-execution.test.ts": {
+      "names": [
+        "OFF is the default, survives an absent or corrupt config, and REFUSES rather than billing",
+        "ON permits a paid path only where one exists, is configured, and is under its ceiling",
+        "a PAID_API path with nothing to meter it REFUSES rather than becoming an unrecorded spend",
+        "a delegated job may only ever be opened at an agent authority",
+        "a failure on the paid path never claims the call was free",
+        "a paid call whose ledger write fails is still reported as spent",
+        "a paid run that DOES happen is recorded in the ledger before the job is closed",
+        "a provider that starts and does not finish leaves a FAILED job, not a silent one",
+        "a reviewer that echoes the WRONG hash is recorded as it answered, not corrected",
+        "a reviewer's prompt carries the frozen bytes and its hash, and nothing about the other seat",
+        "a subscription is available only when all three observations say so",
+        "a subscription run completes, costs nothing, and says so",
+        "a well-formed answer becomes a conclusion, and an unreadable one becomes a thrown FAILED",
+        "a working subscription always wins, even with paid spending switched ON",
+        "an answer that is not the shape we asked for is REFUSED, never summarised",
+        "an execution path this bridge cannot classify runs nothing at all (§3.6)",
+        "each run argv is the provider's own read-only, non-interactive mode, and takes its prompt on stdin",
+        "every trusted install directory is declared with a reason, and none is configurable",
+        "nothing in the decision can turn a refusal into a spend",
+        "the closed tables cannot be mutated in place, outer object included",
+        "the newest installed version wins, and a partly-removed one does not shadow it",
+        "the outermost JSON object is found even inside a CLI's own chrome",
+        "the output bound is the context bound — a provider that prints a novel is not answering",
+        "the run table is closed, and nothing outside it is permitted",
+        "with the setting OFF and no subscription, the job is REFUSED and no paid runner is ever called"
       ],
       "dynamic": 0
     },
@@ -1827,7 +1881,7 @@
         "NH: Executive Council is a STATE office, not a town council",
         "NH: senate/senator and State Representative classify as STATE",
         "NH: the county row offices classify as COUNTY",
-        "RULING 126 wall 1: no database table holds campaign-finance data",
+        "RULING 126 + RCD-4 wall 1: campaign finance is confined to isolated operational civic tables",
         "RULING 126 wall 2: the aggregation layer imports no campaign-finance module",
         "RULING 126 wall 2: the sweep would catch a real import rather than reporting green about nothing",
         "RULING 126 wall 3: a future money table would share no column with a collection store",
@@ -2059,6 +2113,25 @@
         "RULING 278 — the shape check is shown catching a real malformation"
       ],
       "dynamic": 0
+    },
+    "tests/ci-preflight.test.ts": {
+      "names": [
+        "a red preflight makes every required job fail loudly, and skips nothing into looking green",
+        "every required job runs the preflight before it buys anything",
+        "one step decides whether the expensive tier runs, and every expensive step asks it",
+        "the browser and the suite are bought only on a head whose cheap tier is green",
+        "the closure walk actually follows a dynamic import",
+        "the duplicate check reuses the one census and agrees with the suite's baseline",
+        "the gates job runs the cheap checks before it fetches a browser or runs the suite",
+        "the local door runs the preflight before the gate loop, and refuses rather than continuing",
+        "the preflight checks are cheap, named, and both report",
+        "the preflight is declared as something the local door runs, not exempted from parity",
+        "the preflight needs no dependency install — it runs on the bare checkout",
+        "the preflight never stages, commits or otherwise mutates the tree",
+        "the three required contexts are exactly what the workflow still produces",
+        "visible-tree passes on a tree whose files are all tracked, and names the ones that are not"
+      ],
+      "dynamic": 1
     },
     "tests/class-stamp-sweep.test.ts": {
       "names": [
@@ -3206,7 +3279,7 @@
       "names": [
         "item 5: every dropped division is recorded with the id it could not find",
         "item 5: every federal officeholder is division-linked or a NAMED non-voting member",
-        "item 5: the counts reconcile — 531 + 6 = 537, stated as a pair"
+        "item 5: the counts reconcile — 533 + 6 = 539, stated as a pair"
       ],
       "dynamic": 0
     },
@@ -3426,6 +3499,41 @@
         "the address renders once when the source publishes it as the venue name"
       ],
       "dynamic": 0
+    },
+    "tests/freshness-control-plane.test.ts": {
+      "names": [
+        "FCP-8 row 1 · a quiet day: no commit, no build, no deploy, no hosted freshness run",
+        "FCP-8 row 10 · a restart loses no obligation and ships nothing twice",
+        "FCP-8 row 11 · a fully met gate DOES transfer, so the gate is not a permanent no",
+        "FCP-8 row 11 · the repository's CURRENT proof state does NOT transfer authority",
+        "FCP-8 row 11 · the transfer gate is four named conditions, not a judgement",
+        "FCP-8 row 12 · after transfer the GitHub cron is MANUAL_ONLY — it cannot run due work",
+        "FCP-8 row 12 · two authoritative clocks is refused, and so is zero",
+        "FCP-8 row 2 · four sources changed: one coalesced candidate, at most ONE commit",
+        "FCP-8 row 3 · one acquisition fails: the others continue, locally, with no extra hosted run",
+        "FCP-8 row 4 · one consumer proof fails: ONLY that holding is held",
+        "FCP-8 row 4b · an unrelated witness cannot select itself onto another record class",
+        "FCP-8 row 5 · the browser is down: acquisitions stay truthful and there are no N-source debts",
+        "FCP-8 row 6 · MapTiler is unavailable: no acquisition and no certification can even ask",
+        "FCP-8 row 7 · Actions exhausted: acquisition and local certification are unaffected",
+        "FCP-8 row 8 · push is refused: the candidate stays certified and queued, with no refetch",
+        "FCP-8 row 9 · recovery: the held holding certifies, debt clears, and shipping coalesces",
+        "a content defect outranks an infrastructure block",
+        "a record class no executor claims stays PENDING rather than certifying itself",
+        "a selected executor that reported nothing leaves the holding PENDING",
+        "an unclassified failure escalates — the opposite default from an unknown resource",
+        "an unknown resource and an unknown execution class are both REFUSED",
+        "crossing an execution-class boundary is reported, not silently permitted",
+        "every domain policy states its threshold's reason",
+        "every execution class states why its grant is that size, and no grant is empty",
+        "every proof executor declares at least one record class it actually reads",
+        "no downstream outcome, of any kind, can rewrite an acquisition verdict",
+        "no valid last-known-good escalates on sight; every other domain waits",
+        "the backup wakeup does no work while the authoritative clock is alive",
+        "the forbidden acquisition dependencies are named, and no executor smuggles one in",
+        "the only cross-holding coupling regenerates over the final set and ships nothing together"
+      ],
+      "dynamic": 1
     },
     "tests/freshness-provenance.test.ts": {
       "names": [
@@ -3718,6 +3826,23 @@
       "names": [
         "holdings instrument observes one database snapshot without schema initialization or mutations",
         "readback refuses an empty or structurally incomplete observed denominator"
+      ],
+      "dynamic": 0
+    },
+    "tests/hosted-cost-invariant.test.ts": {
+      "names": [
+        "FCP-9D · a broad data/** or docs/** change is still FULL",
+        "FCP-9D · every scheduled pusher's own output is cheap, so no pusher can recurse",
+        "FCP-9D · the chain terminates: the observer's commit cannot cause another observation",
+        "FCP-9D · the observer's own commit takes the CHEAP path",
+        "FCP-9D · the ops-only set stays EXACT FILES — no directory-wide skip",
+        "cost invariant · N source changes in one window cost AT MOST ONE shipping path",
+        "cost invariant · N source retries cost ZERO additional hosted runs, for every N",
+        "cost invariant · a quiet freshness day costs ZERO hosted runs",
+        "cost invariant · every scarce resource is refused by default until a class names it",
+        "cost invariant · exactly ONE execution class may spend hosted minutes, and it is not freshness",
+        "no workflow keeps a second path-classification table",
+        "the refresh workflow asks whether the authoritative clock ran before it spends"
       ],
       "dynamic": 0
     },
@@ -4451,6 +4576,53 @@
         "the first-load bounds are the continental US, the right way round",
         "two levels in one building draw an equal-slice ring, never one standing in for both",
         "widening back writes only the pins that came back"
+      ],
+      "dynamic": 0
+    },
+    "tests/maptiler-barrier.test.ts": {
+      "names": [
+        "THE BARRIER: the same page, the same key, and nothing reaches the provider",
+        "THE PLANT: a guarded synthetic browser with a configured key does reach MapTiler",
+        "the ceiling is hard, and a run that blows it fails rather than reporting a result",
+        "the environment alone cannot open the barrier, and neither can the option alone"
+      ],
+      "dynamic": 0
+    },
+    "tests/maptiler-key-matrix.test.ts": {
+      "names": [
+        "every deploy context is served by exactly one key identity",
+        "local, CI and preview deploys carry no browser key at all",
+        "no two identities share a deploy context — a key cannot cross environments",
+        "production allows the exact Reader origins and never a wildcard",
+        "staging is one origin, and it is not a production origin",
+        "the smoke asks the real provider, on the URL shape the app builds",
+        "the smoke key is restricted to the smoke's own origin and ships nowhere else",
+        "the smoke refuses to spend the production key",
+        "with no key configured the app already draws its fallback, which is the expected local picture"
+      ],
+      "dynamic": 0
+    },
+    "tests/maptiler-usage.test.ts": {
+      "names": [
+        "a 200 records enough provenance to audit the number back to the bytes",
+        "a key label is matched exactly, and anything else is UNCLASSIFIED",
+        "a non-200 is a failed read with its provenance, never an empty timeline",
+        "a published snapshot carries no reader-level field",
+        "a synthetic run that reached the provider is a defect, not a ratio",
+        "a token never survives a message",
+        "an unasked question declares no numbers at all",
+        "burn is measured over a stated window and never over the provider's own projection",
+        "every declared key gets a row even at zero — that is how a stopped spend is visible",
+        "every number the panel renders carries a denominator and a contract",
+        "no service token is NOT CONNECTED, and it is never zero usage",
+        "services stay separable — Tiles and Rendered maps never collapse",
+        "the admin page audits the map panel from the same projection it renders",
+        "the allowance is stated as assumed until somebody confirms it",
+        "the analytics URL asks by api_keys and by services, and carries no credential",
+        "the panel answers each of MAPQ-6's questions with a number or a named gap",
+        "the panel never calls production-key usage a count of people",
+        "the panel's face-rendered prose carries no machine constant, command or code path",
+        "the provider's own vocabulary survives normalization"
       ],
       "dynamic": 0
     },
@@ -5906,6 +6078,22 @@
       ],
       "dynamic": 0
     },
+    "tests/provider-access.test.ts": {
+      "names": [
+        "a blocked policy is blocked whatever the request looks like",
+        "a ceiling nobody can raise past the maximum, and a nonsense one falls back to the default",
+        "a lookalike hostname is somebody else's host",
+        "a subdomain nobody has added yet is blocked the day it appears",
+        "both gates are required, and neither alone opens the door",
+        "every OTHER third party this product's pages reach is untouched by the barrier",
+        "every named MapTiler host is a provider host, and is blocked by default",
+        "only http and https can reach a provider; everything else is not a provider host",
+        "the ceiling is hard, and the request that crosses it is refused rather than counted",
+        "the ledger records what a run spent, and never a key",
+        "the shared browser site enforces the barrier, and enforces it first"
+      ],
+      "dynamic": 0
+    },
     "tests/push-allowlist.test.ts": {
       "names": [
         "RULING 157: the audit catches a guardless pusher it was not derived from",
@@ -6623,6 +6811,7 @@
     },
     "tests/refresh-cadence.test.ts": {
       "names": [
+        "FEC and state-roll routines are absent from the scheduled commit-and-build orchestrator",
         "a source with no elevation is unaffected by the election date",
         "every source states a cadence reason and what it governs",
         "every source the orchestrator knows about governs a path under data/",
@@ -6712,9 +6901,9 @@
         "RLC-2: a refused change goes back to HEAD and THEN the PURE dependents regenerate from the restored tree, in that order, through the registry",
         "RLC-2: the FAILED record carries what the refusal put back and regenerated, and the summary states it beside the refusal",
         "RLC-2: the orchestrator refuses through the shared restore, and the refresh workflow never arms the forced-refusal seam",
-        "a changed holding is attributed to the refresh source whose governed prefix covers it — including the NJ files at their post-reorg home",
         "a failed renewal refuses only the sources whose change touched a holding, names the step, and says the paths are back at HEAD",
         "changedHoldings names a holding whose bytes moved, appeared or vanished, and nothing else",
+        "legacy renewal no longer owns FEC/state-roll data-plane holdings",
         "the run record round-trips RL-1 observations and the renewal, and the Markdown states both"
       ],
       "dynamic": 0
@@ -6932,6 +7121,50 @@
         "numeric() refuses absent, empty and malformed rather than coercing",
         "numericInRange() states the range it refused against",
         "rejectUnknown() names the parameter back and lists what is accepted"
+      ],
+      "dynamic": 0
+    },
+    "tests/routine-civic-data-promotion.test.ts": {
+      "names": [
+        "Census product/vintage/GEOID/cardinality can atomically replace resolver geography",
+        "GOOD is the only path that reaches PROMOTED",
+        "T4 intermediary bytes remain research-only and cannot auto-promote",
+        "a pre-parser source failure is one durable terminal event with a validation receipt",
+        "all destructive classes are enumerated by the contract",
+        "ambiguous FEC identity is refused",
+        "an incomplete claimed horizon is CANNOT_TELL and holds LKG",
+        "an unregistered redirect that also returns malformed bytes remains SOURCE_BLOCKED",
+        "blocked route is evidence of acquisition failure, never absence",
+        "explicit bounded authoritative absence can promote",
+        "freshly fetched stale FEC facts are refused",
+        "malformed FEC payload is persisted as PARSE_INVALID and holds LKG",
+        "official state roll identity, term, event and stage can promote directly",
+        "wrong Census schema is refused",
+        "wrong Census vintage is refused",
+        "wrong roll-call event/stage is refused without weakening exact roll identity",
+        "wrong state chamber/term identity is refused",
+        "zero without absence evidence is CANNOT_TELL and holds LKG"
+      ],
+      "dynamic": 0
+    },
+    "tests/routine-civic-data-regressions.test.ts": {
+      "names": [
+        "RCD-9: CARES has no fabricated House member positions for an unrelated 2019 vote",
+        "RCD-9: a blocked route remains our acquisition gap, never an official absence",
+        "RCD-9: a freshly fetched stale state roster is refused",
+        "RCD-9: a later voice decision suppresses an older recorded vote on earlier text",
+        "RCD-9: an agenda index can never answer what was decided",
+        "RCD-9: the current NH holding cannot regress to the disproved no-question absence",
+        "RCD-9: the recent House window reaches the official current roll 295"
+      ],
+      "dynamic": 0
+    },
+    "tests/routine-civic-data-runner.test.ts": {
+      "names": [
+        "cadence and retry are source-local",
+        "one canonical registry owns every supported authority and refuses arbitrary gov hosts",
+        "routine release-event receipt is the exact seven-zero contract",
+        "the standing portfolio invokes data-plane scripts only"
       ],
       "dynamic": 0
     },
@@ -7322,6 +7555,26 @@
         "shipping waits for checks and binds the merge to the tested head"
       ],
       "dynamic": 0
+    },
+    "tests/shipping-transaction.test.ts": {
+      "names": [
+        "a certification beyond the first with a REASON is not a defect",
+        "a rollup of nothing reports null rather than zero",
+        "a satisfied freeze moves the transaction to REVIEW_FROZEN and records the head",
+        "a transaction whose runs reported no minutes reports NOT MEASURED, not 0",
+        "a tree cannot merge before it is certified",
+        "an invalidation reason with no evidence is a code, and a code is not a reason",
+        "every certification beyond the first is a REDUNDANT_CERTIFICATION defect when unreasoned",
+        "every listed invalidation reason reopens a frozen head, with evidence",
+        "follow-up work is refused as an invalidation reason and named as follow-up",
+        "nothing can be reopened when nothing is frozen",
+        "owner wait is measured from the first certification start to merge-ready",
+        "stageAtLeast orders the whole lifecycle",
+        "the 2026-09-07 incident scores FOUR full certifications and is over budget",
+        "the incident's own repair table names what each fix removes, and what survives",
+        "the repaired transaction: one full certification, one attestation, no defects"
+      ],
+      "dynamic": 1
     },
     "tests/signal-taxonomy.test.ts": {
       "names": [
@@ -8000,6 +8253,25 @@
       ],
       "dynamic": 0
     },
+    "tests/tree-equivalence.test.ts": {
+      "names": [
+        "a pull request is FULL by construction, so a candidate's green was earned fully",
+        "both required jobs still report on the attested path",
+        "every declared verdict and reason is reachable from the matrix above",
+        "main's tip was an ancestor of the candidate, which is what collapses the three trees",
+        "no expensive step in either job runs on an attested head",
+        "reuse is unreachable for any event other than a push to the integration ref",
+        "the 2026-09-07 merge and the head run #806 certified are the SAME git tree",
+        "the certified step costs nothing on a pull request — it short-circuits before git",
+        "the observer commit that caused run #808 can never take the reuse path",
+        "the qualifying facts DO qualify — the matrix above is not vacuous",
+        "the real incident is judged CERTIFIED_TREE_REUSED from real git facts",
+        "the tier decision has a no-certified branch, and it reads the certified step",
+        "the workflow grants checks:read, without which the attestation can never fire",
+        "the workflow keeps no path list of its own for this decision either"
+      ],
+      "dynamic": 1
+    },
     "tests/unsourced-fallback.test.ts": {
       "names": [
         "ASK-12 — LAST, NEVER FIRST: a question the router ANSWERED never falls back",
@@ -8662,7 +8934,7 @@
         "every database write path asserts the guard",
         "g13 audit: every scheduled workflow that writes carries a sanction",
         "g13: the refusal names the sanctioned path, not only .env.local",
-        "g13: the sanction table is a closed list, and the purge is on it",
+        "g13: the sanction table is a closed list, and both narrow operations are on it",
         "g13: the scheduled purge, declared as the workflow declares it, is allowed",
         "g13: the workflow declares exactly what the guard requires",
         "no write path outside the guarded set has appeared",

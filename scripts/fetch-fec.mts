@@ -58,6 +58,12 @@ import { findShrinkRegressions } from "../lib/funding/guard.ts";
 import { stamp } from "./stamp.mts";
 
 import { writeStampStable } from "../lib/ops/stamp-stable.ts";
+import { fecFundingCandidate } from "../lib/civic-data/candidate-builders.ts";
+import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { processRoutineCandidate } from "../lib/civic-data/promotion.ts";
+import { assertWriteAllowed } from "../lib/db/write-guard.ts";
+import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
+import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 loadEnv({ path: join(ROOT, ".env.local") });
 
@@ -66,6 +72,7 @@ const API = "https://api.open.fec.gov/v1";
 const CYCLE = 2026;
 const UA = "we-the-people-civic-app/0.1 (contact: seanj22@gmail.com)";
 const MATCH_ONLY = process.argv.includes("--match-only");
+const PROMOTE = process.argv.includes("--promote");
 // The human override for a LEGITIMATE shrink (a committee amendment, a
 // candidate withdrawal). Using it is a recorded decision: rerun by hand,
 // note it in the tracker. The unattended weekly refresh never passes it.
@@ -167,6 +174,9 @@ const TOP_N = 5;
 const FETCH_N = 20;
 
 let requestCount = 0;
+/** Exact FEC response bodies. Only their aggregate hashes are persisted. */
+const rawFecBodies: string[] = [];
+let lastFecFinalUrl = API + "/";
 async function fecGet<T>(
   path: string,
   params: Record<string, string | number | boolean>,
@@ -196,8 +206,13 @@ async function fecGet<T>(
       continue;
     }
     if (!response.ok) throw new Error(`${path} -> HTTP ${response.status}`);
+    const text = await response.text();
+    rawFecBodies.push(text);
+    const credentialFree = new URL(response.url || url);
+    credentialFree.searchParams.delete("api_key");
+    lastFecFinalUrl = credentialFree.toString();
     await new Promise((r) => setTimeout(r, 250)); // serialize politely
-    return response.json() as Promise<{ results?: T[] }>;
+    return JSON.parse(text) as { results?: T[] };
   }
   throw new Error(`${path} -> rate-limited after retries`);
 }
@@ -869,7 +884,7 @@ try {
 } catch {
   prior = null; // First run ever — nothing to shrink from.
 }
-if (prior) {
+if (prior && !PROMOTE) {
   const regressions = findShrinkRegressions(prior, snapshot);
   if (regressions.length > 0) {
     console.error("");
@@ -890,6 +905,47 @@ if (prior) {
       "--allow-shrink passed: shipping the smaller snapshot on human authority. Record it in the tracker.",
     );
   }
+}
+
+if (PROMOTE) {
+  const handle = resolveProductionWriteHandle();
+  process.env.DATABASE_URL = handle.connection;
+  process.env.WTP_DB_ROLE = "production";
+  process.env.WTP_SANCTIONED_WRITE = "routine-civic-data-promotion";
+  assertWriteAllowed("a routine civic data candidate/version promotion");
+  const store = new PostgresRoutineDataStore();
+  const current = await store.readPromotion<FundingSnapshot>("FEC_FUNDING", "federal-supported");
+  const excludedFacts = misses.map((miss) => ({ code: "UNRESOLVED_FEC_FACT_EXCLUDED", detail: `${miss.targetKey}: ${miss.reason}` }));
+  let operational = { ...snapshot, absences: [] } satisfies FundingSnapshot;
+  if (current) {
+    const incoming = new Map(operational.candidates.map((row) => [row.fecCandidateId, row]));
+    for (const held of current.payload.candidates) {
+      const next = incoming.get(held.fecCandidateId);
+      const heldThrough = held.totals.coverageEndDate ?? "";
+      const nextThrough = next?.totals.coverageEndDate ?? "";
+      const regressedCoverage = heldThrough !== "" && (nextThrough === "" || nextThrough < heldThrough);
+      if (!next || next.topContributions.length < held.topContributions.length || regressedCoverage) {
+        incoming.set(held.fecCandidateId, held);
+        excludedFacts.push({
+          code: "LKG_FEC_RECORD_RETAINED",
+          detail: `${held.fecCandidateId}: the new candidate was absent, thinner, or regressed from coverage ${heldThrough || "unstated"} to ${nextThrough || "unstated"} without bounded replacement/deletion evidence.`,
+        });
+      }
+    }
+    const hops = new Map((operational.secondHop ?? []).map((row) => [row.committeeId, row]));
+    for (const held of current.payload.secondHop ?? []) {
+      const next = hops.get(held.committeeId);
+      if (!next || next.topContributions.length < held.topContributions.length) hops.set(held.committeeId, held);
+    }
+    operational = { ...operational, candidates: [...incoming.values()], secondHop: [...hops.values()] };
+  }
+  const candidate = fecFundingCandidate({ snapshot: operational, rawBodies: rawFecBodies, finalUrl: lastFecFinalUrl, retrievedAt: snapshot.fetchedAt, excludedFacts });
+  const outcome = await processRoutineCandidate(store, candidate, snapshot.fetchedAt);
+  console.log("");
+  console.log("=== routine production-data result ===");
+  console.log("RCD_RECEIPT=" + JSON.stringify({ source: "FEC OpenFEC", candidateId: candidate.id, acquisitionSucceeded: outcome.candidate.acquisitionSucceeded, state: outcome.candidate.state, decision: outcome.candidate.receipt?.decision ?? null, promotedVersion: outcome.promoted?.versionId ?? null, lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion, releaseEvents: ZERO_RELEASE_EVENTS }));
+  if (!outcome.promoted) process.exitCode = 2;
+  process.exit();
 }
 
 await mkdir(dirname(OUT), { recursive: true });

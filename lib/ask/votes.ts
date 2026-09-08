@@ -6,7 +6,7 @@ import { nameParts, splitDisplayName } from "../ballot/incumbency.ts";
 import { COVERED, rosterFile } from "../coverage/artifacts.ts";
 import { formatDateLong } from "../text/format-date.ts";
 import { getStateVotesSnapshot } from "../sources/legiscan/snapshot.ts";
-import { LEGISCAN_ATTRIBUTION } from "../sources/legiscan/types.ts";
+import { stateRollPublisher } from "../sources/legiscan/types.ts";
 import type { StateRollCall, StateVotesSnapshot } from "../sources/legiscan/types.ts";
 import { getVotesSnapshot } from "../votes/snapshot.ts";
 import type { RollCallVote, VotesSnapshot } from "../votes/types.ts";
@@ -21,7 +21,7 @@ import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
  *
  * Canonical roll-call records have been committed in this repository for
  * weeks — `data/votes/votes-snapshot.json` holds 40 federal roll calls and
- * 10,674 recorded positions across 537 members; `data/votes/state-votes-snapshot.json`
+ * 10,674 recorded positions across the then-current 537-member snapshot; `data/votes/state-votes-snapshot.json`
  * holds 72 Arizona, New Hampshire and New Jersey roll calls and 1,560
  * positions across 130 members — and **the grounded Ask engine could not reach
  * one of them.** Grepping the sixteen files of `lib/ask/` for `VOTE`,
@@ -557,10 +557,9 @@ export function voteEvidenceFor(
       text: stateVoteText(seat, roll, position),
       occurredAt: isoDateOf(roll.date),
       sourceUrl: roll.rollCallUrl,
-      /* **CC BY 4.0 REQUIRES ATTRIBUTION WHEREVER THE DATA APPEARS**, and the
-         source line is where it appears here. Derived from the one constant so
-         a second surface cannot ship a variant of the licence string. */
-      sourceOrg: `${LEGISCAN_ATTRIBUTION.text} (${LEGISCAN_ATTRIBUTION.licence})`,
+      // Official promoted rows retain their actual publisher. Legacy vendor
+      // rows retain the one CC BY attribution constant through this helper.
+      sourceOrg: stateRollPublisher(roll),
       retrievedAt: roll.retrievedAt,
     });
   }

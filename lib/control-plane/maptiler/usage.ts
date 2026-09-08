@@ -205,6 +205,63 @@ export interface MapTilerPanel {
   readonly actors: ActorComparison | null;
   /** Everything that needs the owner, as finished sentences. */
   readonly needsOwner: readonly string[];
+  /**
+   * **WHY THE READING IS ZERO, WHEN IT IS.** (ADM-58, the 9.7.26 feedback.)
+   *
+   * The owner read "0 requests this billing period of 500,000", liked the card,
+   * and did not believe it: *"I don't think it's pulling anything right now."*
+   *
+   * He was wrong about the cause and right to be suspicious. Both classifiers
+   * answered HTTP 200 with zero datasets and a 70-byte body, the token is
+   * installed and the 500,000 allowance is confirmed rather than assumed — so
+   * the connection is real. What the card never said is that **the billing
+   * period began the same day he was reading it.** A zero hours into a period
+   * is not the same fact as a zero a fortnight in, and the card was rendering
+   * them identically.
+   *
+   * `null` when the reading is not zero — there is nothing to explain.
+   */
+  readonly emptyReading: EmptyReading | null;
+  /**
+   * The provider's own words about the reading, when it had any, and the
+   * per-classifier evidence behind it.
+   *
+   * Carried because a CONNECTED panel used to render a confident zero even if
+   * one of the two classifiers had failed: the failure lived on the snapshot
+   * and never reached the face. That is a latent defect rather than what
+   * happened here, and it is closed in the same change.
+   */
+  readonly detail: string | null;
+  readonly classifiers: readonly ClassifierReading[];
+}
+
+/** Why a zero is a zero. Never "no data" — always which kind of nothing. */
+export type EmptyReading =
+  /** The billing period started so recently that a zero is expected. */
+  | "PERIOD_JUST_BEGAN"
+  /** The provider answered and reported no usage rows at all. */
+  | "NO_DATASETS"
+  /** Rows came back and none survived the key/service projection. */
+  | "ROWS_FILTERED_OUT"
+  /** At least one classifier failed, so the total is incomplete. */
+  | "PARTIAL";
+
+/** One classifier's answer, as the face needs it. */
+export interface ClassifierReading {
+  readonly classifier: MapTilerClassifier;
+  readonly status: number;
+  readonly datasets: number;
+  readonly error: string | null;
+  readonly requestedAt: string;
+}
+
+/** Whole days between two ISO dates, or null when either is unreadable. */
+function daysBetween(fromIso: string | null, toIso: string): number | null {
+  if (fromIso === null) return null;
+  const from = Date.parse(fromIso.length <= 10 ? `${fromIso}T00:00:00Z` : fromIso);
+  const to = Date.parse(toIso);
+  if (!Number.isFinite(from) || !Number.isFinite(to)) return null;
+  return Math.max(0, Math.floor((to - from) / 86_400_000));
 }
 
 /** Sum the measured rows of one classifier. Estimates are counted separately. */
@@ -365,6 +422,21 @@ export function projectPanel(input: {
       automationSays,
       actors: compareActors({ counts: snap.actors, byKey: [] }),
       needsOwner,
+      /*
+       * `used` is null here, not zero — nobody asked. So there is no zero to
+       * explain and `emptyReading` stays null: it answers "why is this zero",
+       * and the answer to "why is there no reading" is `connection` and
+       * `detail`, which are already on the panel.
+       */
+      emptyReading: null,
+      detail: snap.detail ?? null,
+      classifiers: snap.provenance.map((p) => ({
+        classifier: p.classifier,
+        status: p.status,
+        datasets: p.datasets,
+        error: p.error,
+        requestedAt: p.requestedAt,
+      })),
     };
   }
 
@@ -450,13 +522,65 @@ export function projectPanel(input: {
     );
   }
 
+  /*
+   * ADM-58 — SAY HOW OLD THE PERIOD IS, AND WHY A ZERO IS A ZERO.
+   *
+   * `0 of 500,000` with no age beside it invites exactly the reading the owner
+   * gave it: that the card is not pulling anything. Both readings are honest
+   * and they are different facts, so the sentence now carries the one that
+   * separates them.
+   */
+  const periodDays = daysBetween(snap.since, snap.collectedAt);
+  const classifiers: readonly ClassifierReading[] = snap.provenance.map((p) => ({
+    classifier: p.classifier,
+    status: p.status,
+    datasets: p.datasets,
+    error: p.error,
+    requestedAt: p.requestedAt,
+  }));
+  const anyFailed = classifiers.some((c) => c.error !== null || c.status < 200 || c.status >= 300);
+  const anyRows = classifiers.some((c) => c.datasets > 0);
+
+  const emptyReading: EmptyReading | null =
+    used !== 0
+      ? null
+      : anyFailed
+        ? "PARTIAL"
+        : anyRows
+          ? "ROWS_FILTERED_OUT"
+          : periodDays !== null && periodDays < 2
+            ? "PERIOD_JUST_BEGAN"
+            : "NO_DATASETS";
+
+  const periodAge =
+    periodDays === null
+      ? ""
+      : periodDays === 0
+        ? " The billing period began today."
+        : periodDays === 1
+          ? " The billing period began yesterday."
+          : ` The billing period is ${periodDays} days old.`;
+
+  const zeroBecause =
+    emptyReading === null
+      ? ""
+      : emptyReading === "PERIOD_JUST_BEGAN"
+        ? " A zero this early in a period is what an unused period looks like, not a broken reading — the provider answered."
+        : emptyReading === "NO_DATASETS"
+          ? " The provider answered and reported no usage at all for this period."
+          : emptyReading === "ROWS_FILTERED_OUT"
+            ? " The provider returned usage rows and none of them matched a key this account declares, so the total is zero and the rows are not."
+            : " At least one of the two readings failed, so this total is incomplete and the real figure is higher.";
+
   const says =
     `${used.toLocaleString("en-US")} request(s) this billing period` +
     (snap.allowance === null
       ? ", against an allowance nobody has confirmed."
       : ` of ${snap.allowance.toLocaleString("en-US")}` +
         (snap.allowanceIsAssumed ? " (assumed)" : "") +
-        `, leaving ${(remaining ?? 0).toLocaleString("en-US")}.`);
+        `, leaving ${(remaining ?? 0).toLocaleString("en-US")}.`) +
+    periodAge +
+    zeroBecause;
 
   return {
     connection: snap.connection,
@@ -476,6 +600,9 @@ export function projectPanel(input: {
     automationSays,
     actors: compareActors({ counts: snap.actors, byKey }),
     needsOwner,
+    emptyReading,
+    detail: snap.detail ?? null,
+    classifiers,
   };
 }
 

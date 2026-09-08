@@ -60,6 +60,49 @@ export function MapTilerSection({ panel }: MapTilerSectionProps) {
         <strong>{connected ? "Reading taken." : "No reading."}</strong> {panel.says}
       </p>
 
+      {/*
+        ADM-58 — HOW OLD THE READING IS, ON THE FACE.
+
+        The owner read a zero and concluded the panel was not pulling anything.
+        It was: both classifiers answered 200. What the card never told him is
+        WHEN it last asked, because the timestamp was two disclosures down under
+        Technical details. A figure with no age on a quota card is the one shape
+        that cannot be checked by looking at it.
+
+        The second sentence is the one that matters operationally: nothing
+        schedules the refresh. `pnpm maptiler:usage` is in no workflow, no
+        cadence entry and no publisher list, so this timestamp does not advance
+        on its own and a reading taken once will keep rendering as the current
+        one. Saying so is the difference between a stale number and a stale
+        number that admits it.
+      */}
+      {connected && (
+        <p className="note">
+          This reading was taken <When iso={panel.collectedAt} />, and nothing refreshes it on a schedule —
+          it advances only when the usage read is run again, so treat the figure as of that moment rather than
+          as of now.
+        </p>
+      )}
+
+      {/*
+        A CONNECTED panel used to render a confident total even when one of the
+        two classifier calls had failed: the failure sat on the snapshot and
+        never reached the face. That is not what happened on 9.7.26 — both
+        answered 200 — but a total that silently drops half its evidence is
+        worth closing while the file is open.
+      */}
+      {connected && panel.detail !== null && <p className="note gap">{panel.detail}</p>}
+      {connected && panel.classifiers.some((c) => c.error !== null || c.status < 200 || c.status >= 300) && (
+        <p className="note gap">
+          One of the two readings did not succeed, so this total is incomplete and the real figure is higher:{" "}
+          {panel.classifiers
+            .filter((c) => c.error !== null || c.status < 200 || c.status >= 300)
+            .map((c) => `${c.classifier} answered ${c.status}${c.error === null ? "" : ` (${c.error})`}`)
+            .join("; ")}
+          .
+        </p>
+      )}
+
       {!connected ? (
         <>
           <NeedsYouLine needs={{ needed: true, action: "connect the usage reading" }} />

@@ -158,7 +158,19 @@ export const PLAIN_WORDS: Readonly<Record<string, PlainWord>> = {
   ACQUIRER: { words: "Acquirer" },
   PARSER: { words: "Parser" },
   DETECTIVE: { words: "Detective" },
-  VALIDATOR: { words: "Validator" },
+  /*
+   * ADM-63: "Verifier", not "Validator". The owner's five names are Hunters,
+   * Detectives, Verifiers, Auditors and Engineers, and this dictionary is the
+   * console's ONE translation layer — so the word changes here and every
+   * surface follows, rather than being corrected on the one screen the
+   * feedback happened to name (RULING 262).
+   *
+   * It was already half-corrected and that was the visible defect: the role
+   * card's heading came from here and said "Validators" while the activity
+   * sentence directly beneath it came from a second dictionary and said
+   * "verifiers". Two words for one worker, on one card.
+   */
+  VALIDATOR: { words: "Verifier" },
   ADVERSARIAL_AUDITOR: { words: "Auditor" },
   ENGINEERING: { words: "Engineer" },
   RELEASE_ORCHESTRATOR: { words: "Release orchestrator" },

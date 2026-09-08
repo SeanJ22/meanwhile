@@ -25,17 +25,25 @@
  */
 import type { WorkItemState } from "../work-item.ts";
 import { words } from "../display-name.ts";
+import { plainCode } from "../plain-words.ts";
 import type { WorkerAttemptView, WorkerRoleView } from "./readback.ts";
-import type { FleetRole } from "./types.ts";
+import { FLEET_ROLES, type FleetRole } from "./types.ts";
 
-export const ROLE_PLURAL: Record<FleetRole, string> = {
-  PARSER: "Parsers",
-  VALIDATOR: "Verifiers",
-  ADVERSARIAL_AUDITOR: "Auditors",
-  ACQUIRER: "Acquirers",
-  DETECTIVE: "Detectives",
-  ENGINEERING: "Engineers",
-};
+/**
+ * The plural of each role, DERIVED from the console's one dictionary.
+ *
+ * ADM-63. This was a second hand-kept dictionary and it disagreed with the
+ * first on the same card: the heading read "Validators" from `plainCode` while
+ * the activity sentence beneath it read "verifiers" from here. Neither was
+ * dead code — both rendered, a few pixels apart.
+ *
+ * Deriving it means the disagreement cannot come back. A role whose singular
+ * changes takes its plural with it, and there is nowhere left for a second
+ * opinion to live.
+ */
+export const ROLE_PLURAL: Record<FleetRole, string> = Object.fromEntries(
+  FLEET_ROLES.map((role) => [role, `${plainCode(role)}s`]),
+) as Record<FleetRole, string>;
 
 export const ROLE_JOB: Record<FleetRole, string> = {
   PARSER: "pull typed records out of the documents the hunters fetched",

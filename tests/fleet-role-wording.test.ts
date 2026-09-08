@@ -51,7 +51,14 @@ test("SEEDED: every worker role has exactly ONE owner-facing name, and it is the
   // The card heading is that one name, plural, and nothing else.
   assert.deepEqual(
     FLEET_ROLES.map(roleTitle),
-    ["Parsers", "Validators", "Auditors", "Acquirers", "Detectives", "Engineers"],
+    /*
+     * ADM-63 (9.7.26): "Verifiers", not "Validators". This array pinned the
+     * DEFECT — the heading said Validators from this dictionary while the
+     * activity sentence beneath it said verifiers from a second one, on the
+     * same card. The owner asked for one vocabulary and named it: Hunters,
+     * Detectives, Verifiers, Auditors, Engineers. Superseded deliberately.
+     */
+    ["Parsers", "Verifiers", "Auditors", "Acquirers", "Detectives", "Engineers"],
   );
   assert.equal(roleTitle("SCOUT"), "Hunters");
   // A caller key keeps its parenthetical and gains the name.
@@ -100,7 +107,9 @@ test("SEEDED: the fleet grouping is said in a sentence, not printed as a second 
     roleGroupNote("ACQUIRER"),
     "On the fleet view, Acquirers and Hunters are counted together in one group called Hunters. They are still separate roles with different jobs.",
   );
-  assert.equal(roleGroupNote("VALIDATOR"), "On the fleet view, Validators are counted on their own, in a group called Verifiers.");
+  // ADM-63: with one vocabulary the role and its group share a name, so the
+  // sentence that used to reconcile two names has nothing left to reconcile.
+  assert.equal(roleGroupNote("VALIDATOR"), "On the fleet view, Verifiers are their own group.");
   assert.equal(roleGroupNote("ADVERSARIAL_AUDITOR"), "On the fleet view, Auditors are their own group.");
   assert.equal(roleGroupNote("RELEASE_ORCHESTRATOR"), "", "a role in no group says nothing rather than inventing one");
   // Every role's note is free of codes.
@@ -120,11 +129,28 @@ test("SEEDED: codeWords is plainCode itself, not a second implementation of the 
 
 test("ADM-43: the role card prints one name, one sentence, Needs you at the top, and no code in its heading", () => {
   const panel = src("app/(admin)/admin/research/worker-fleet-panel.tsx");
-  assert.match(panel, /<h3 id=\{`role-\$\{role\.role\}`\} title=\{role\.role\}>\{title\}<\/h3>/, "one name in the heading, the code on hover");
+  /*
+   * ADM-63 (9.7.26): the role heading dropped a level. The five FLEET GROUPS —
+   * the owner's five names — are the h3 sections now, and a role is an h4
+   * inside its group. That is what "sub-roles appear as a small label line
+   * under the group name, not as their own sections" means in markup. The
+   * assertion is unchanged in substance: one name in the heading, code on hover.
+   */
+  assert.match(panel, /<h4 id=\{`role-\$\{role\.role\}`\} title=\{role\.role\}>\{title\}<\/h4>/, "one name in the heading, the code on hover");
+  assert.match(panel, /FLEET_GROUPS\.map\(\(group\)/, "the five groups are the sections");
   assert.doesNotMatch(panel, /className="fleet-roles"/, "the uppercase code sublabel is gone");
   assert.doesNotMatch(panel, /FLEET_GROUP_WORDING/, "the group name is no longer printed beside the role name");
   assert.match(panel, /\{roleOneLiner\(role\.role\)\}/, "the sentence beside the name");
-  assert.match(panel, /\{roleGroupNote\(role\.role\)\}/, "the grouping in words");
+  /*
+   * ADM-63: `roleGroupNote` is gone from the panel, and its absence is the
+   * point rather than a regression. It existed to say "on the fleet view this
+   * role is counted under a different name" — a sentence apologising for two
+   * vocabularies. The group is the section heading above the role now, so
+   * there is no second name to reconcile. The grouping is still in words; it
+   * is just in the heading and its sub-line instead of a footnote.
+   */
+  assert.doesNotMatch(panel, /roleGroupNote/, "the note reconciling two vocabularies is gone with the second vocabulary");
+  assert.match(panel, /fleet-group-roles/, "the group says what it is and which roles it counts");
   // Needs you comes before what it is doing (POS-14: "I like that being at the top").
   const needsAt = panel.indexOf("<NeedsYouLine");
   const doingAt = panel.indexOf('className="role-doing"');

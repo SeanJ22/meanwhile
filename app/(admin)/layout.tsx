@@ -495,6 +495,12 @@ body:has(main.admin) { background: #1b1c22; }
 /* ---- Research detail (ADM-10/11/13). ---- */
 .admin .role-section { margin: .8rem 0; }
 .admin .role-section h3 { margin: 0 0 .2rem; font-size: 1.05rem; }
+/* ADM-63: the five groups are the sections; a role is a heading inside one. */
+.admin .fleet-group { margin: 1.6rem 0 0; }
+.admin .fleet-group-name { margin: 0 0 .15rem; font-size: 1.05rem; letter-spacing: .01em; }
+.admin .fleet-group-roles { margin: 0 0 .5rem; }
+.admin .fleet-group .role-section { margin-left: 1rem; }
+.admin .role-section h4 { margin: 0 0 .2rem; font-size: .98rem; }
 .admin .metric-group { margin: .8rem 0; }
 .admin .metric-group h3 { margin: 0 0 .2rem; }
 .admin table.metrics td { font-size: .88rem; }

@@ -39,7 +39,8 @@ import { CopyButton } from "../release-review/copy-button";
 import { Identity } from "./identity";
 import { NeedsYouLine } from "../../status-ui.tsx";
 import { Name, When } from "../../console-ui.tsx";
-import { roleGroupNote, roleOneLiner, roleTitle } from "../../fleet-wording.ts";
+import { roleOneLiner, roleTitle } from "../../fleet-wording.ts";
+import { FLEET_GROUPS } from "@/lib/control-plane/fleet-view.ts";
 
 /**
  * The unit as the owner says it. (9.6.26 owner feedback, ACLOSE-6.)
@@ -111,11 +112,39 @@ export function WorkerFleetPanel({ view, candidateNames }: { readonly view: Work
           ))}
         </ul>
       )}
-      {leads.map(({ role, lead }) => {
-        const title = roleTitle(role.role);
+      {/*
+        ADM-63 — ONE VOCABULARY, AND THE GROUP IS THE SECTION.
+
+        The owner: Pilot Health says Hunters, Detectives, Verifiers, Auditors,
+        Engineers; this page said Parsers, Validators, Auditors, Acquirers,
+        Detectives, Engineers. Six sections against five, from two different
+        projections, with "Hunters" already naming two different populations on
+        the same page.
+
+        So the five GROUPS are the sections now, in the canonical order Pilot
+        Health uses, and a role becomes a heading one level down inside its
+        group with its sub-role name as a small label. Nothing is removed —
+        every role's numbers and attempt table are exactly where they were, one
+        disclosure deeper — which is what the owner asked for: "Sub-roles
+        appear as a small label line under the group name, not as their own
+        sections."
+      */}
+      {FLEET_GROUPS.map((group) => {
+        const inGroup = leads.filter(({ role }) => group.roles.includes(role.role));
+        if (inGroup.length === 0) return null;
         return (
+          <section key={group.key} className="fleet-group" aria-labelledby={`group-${group.key}`}>
+            <h3 id={`group-${group.key}`} className="fleet-group-name">
+              {group.name}
+            </h3>
+            <p className="note fleet-group-roles">
+              {group.what} Counted here as {inGroup.map(({ role }) => roleTitle(role.role)).join(" and ")}.
+            </p>
+            {inGroup.map(({ role, lead }) => {
+              const title = roleTitle(role.role);
+              return (
         <section key={role.role} className="role-section card" aria-labelledby={`role-${role.role}`}>
-          <h3 id={`role-${role.role}`} title={role.role}>{title}</h3>
+          <h4 id={`role-${role.role}`} title={role.role}>{title}</h4>
           <p className="fleet-what">{roleOneLiner(role.role)}</p>
           {/* The role lead names its work item by raw id; every key on this console reads as a name (ADM-12). */}
           <NeedsYouLine
@@ -136,7 +165,14 @@ export function WorkerFleetPanel({ view, candidateNames }: { readonly view: Work
             <div className="rq-tile"><div className="rq-figure">{role.pending.value}</div><div className="rq-caption">tasks waiting of {role.pending.denominator} registered</div></div>
             <div className="rq-tile"><div className="rq-figure">{role.due.value}</div><div className="rq-caption">due now of {role.due.denominator} waiting</div></div>
           </div>
-          <p className="note">{roleGroupNote(role.role)}</p>
+          {/*
+            ADM-63: the group note is gone. It existed to explain that this
+            role is counted under a different name on the fleet view — "On the
+            fleet view, Parsers and Detectives are counted together in one
+            group called Detectives" — which was a sentence apologising for the
+            two vocabularies. The group IS the section heading above this one
+            now, so there is nothing left to reconcile.
+          */}
           {lead.glossary.length > 0 && (
             <details className="ph-evidence">
               <summary>The exact words the instrument used</summary>
@@ -248,6 +284,9 @@ export function WorkerFleetPanel({ view, candidateNames }: { readonly view: Work
             </div>
           )}
         </section>
+              );
+            })}
+          </section>
         );
       })}
     </section>

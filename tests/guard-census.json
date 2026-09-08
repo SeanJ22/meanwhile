@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 573,
-    "named": 6135,
+    "named": 6139,
     "dynamic": 28
   },
   "files": {
@@ -7127,12 +7127,16 @@
     "tests/routine-civic-data-promotion.test.ts": {
       "names": [
         "Census product/vintage/GEOID/cardinality can atomically replace resolver geography",
+        "FEC candidate identity accepts the official nine-character office forms and rejects a numeric congressional impostor",
         "GOOD is the only path that reaches PROMOTED",
         "T4 intermediary bytes remain research-only and cannot auto-promote",
+        "a FEC period that regresses behind the class LKG is refused",
         "a pre-parser source failure is one durable terminal event with a validation receipt",
+        "a state member whose chamber and term contradict the normalized seat is refused",
         "all destructive classes are enumerated by the contract",
         "ambiguous FEC identity is refused",
         "an incomplete claimed horizon is CANNOT_TELL and holds LKG",
+        "an incomplete state chamber/term identity is refused and holds the state LKG",
         "an unregistered redirect that also returns malformed bytes remains SOURCE_BLOCKED",
         "blocked route is evidence of acquisition failure, never absence",
         "explicit bounded authoritative absence can promote",
@@ -7142,7 +7146,6 @@
         "wrong Census schema is refused",
         "wrong Census vintage is refused",
         "wrong roll-call event/stage is refused without weakening exact roll identity",
-        "wrong state chamber/term identity is refused",
         "zero without absence evidence is CANNOT_TELL and holds LKG"
       ],
       "dynamic": 0
@@ -7155,6 +7158,7 @@
         "RCD-9: a later voice decision suppresses an older recorded vote on earlier text",
         "RCD-9: an agenda index can never answer what was decided",
         "RCD-9: the current NH holding cannot regress to the disproved no-question absence",
+        "RCD-9: the current NH parser expires before the next biennial roster",
         "RCD-9: the recent House window reaches the official current roll 295"
       ],
       "dynamic": 0
@@ -7163,7 +7167,7 @@
       "names": [
         "cadence and retry are source-local",
         "one canonical registry owns every supported authority and refuses arbitrary gov hosts",
-        "routine release-event receipt is the exact seven-zero contract",
+        "routine release output labels the seven-zero constant as structural, never observed",
         "the standing portfolio invokes data-plane scripts only"
       ],
       "dynamic": 0

@@ -132,6 +132,24 @@ export function DefinedTile(props: {
   readonly means: string;
   readonly needsYou: NeedsYou;
   readonly children?: ReactNode;
+  /**
+   * Where this number's MEMBERS are, when they are on the page (ADM-52).
+   *
+   * The owner: *"I can't click into 277, 30, or 2,996 so I'm not entirely sure
+   * what those are."* Every one of them had a definition and none of them had a
+   * way in, which is the second half of ADM-28 and the general rule APH-2
+   * states: no number may lead to a dead end.
+   */
+  readonly opensTo?: { readonly href: string; readonly says: string };
+  /**
+   * Why the members are NOT reachable, when they are not.
+   *
+   * This is not a softer version of `opensTo` — it is the honest other answer.
+   * A count published without its members cannot be opened, and inventing a
+   * destination that shows something else would be worse than saying so. The
+   * gap names what would have to carry them.
+   */
+  readonly membersGap?: string;
 }) {
   return (
     <div className="rq-tile defined-tile">
@@ -142,6 +160,12 @@ export function DefinedTile(props: {
         <span className={`tile-needs ${props.needsYou.needed ? "needs-yes" : "needs-no"}`}>
           {props.needsYou.needed ? `Needs you: Yes — ${props.needsYou.action ?? "a decision from you"}` : "Needs you: No"}
         </span>
+        {props.opensTo && (
+          <a className="tile-opens" href={props.opensTo.href}>
+            {props.opensTo.says}
+          </a>
+        )}
+        {props.membersGap && <span className="tile-gap">{props.membersGap}</span>}
         {props.children}
       </div>
     </div>

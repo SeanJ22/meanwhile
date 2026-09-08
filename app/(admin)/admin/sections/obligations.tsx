@@ -44,11 +44,30 @@ export function ObligationsSection(props: ObligationsSectionProps) {
   return (
     <>
       <div className="rq-summary">
+        {/*
+          ADM-52 / APH-2. The owner: *"I can't click into 277, 30, or 2,996 so
+          I'm not entirely sure what those are."*
+
+          Each tile now goes somewhere, and the three answers are deliberately
+          different because the three numbers are differently knowable. The
+          incidents card opens to the grouped list that already exists further
+          down this same section. The other two are published as COUNTS with a
+          per-state and per-provider breakdown and no per-record members, so
+          they open to the breakdown that exists and say plainly what is not
+          published — rather than pointing at a page that would show something
+          else and let the owner think he had drilled in.
+        */}
         <DefinedTile
           figure={debt.held ? count(debt.value.value) : "—"}
           label={debt.held ? `overdue, of ${count(debt.value.denominator)} scheduled` : "freshness debt"}
           means={FRESHNESS_DEBT_MEANS}
           needsYou={{ needed: false }}
+          opensTo={
+            props.obligationsByState.length > 0
+              ? { href: "#where-the-work-is", says: "See where that work is" }
+              : undefined
+          }
+          membersGap="The published record carries these as counts by state and by kind, not as a list of the individual overdue records, so there is no per-record list to open yet."
         >
           {debt.held && <Bar value={debt.value.value} of={debt.value.denominator} tone="warn" />}
           {!debt.held && (
@@ -67,18 +86,22 @@ export function ObligationsSection(props: ObligationsSectionProps) {
               ? { needed: true, action: `${count(needsYouGroup.incidents.length)} of them have been stuck long enough to need you` }
               : { needed: false }
           }
+          /* This one CAN be opened: the grouped list is rendered below. */
+          opensTo={props.incidents.length > 0 ? { href: "#incidents", says: "Open the reasons, grouped" } : undefined}
         />
         <DefinedTile
           figure={count(standing)}
           label="records the system is keeping current"
           means={OBLIGATION_MEANS}
           needsYou={{ needed: false }}
+          opensTo={props.obligationsByProvider.length > 0 ? { href: "#what-kind-of-work", says: "See what kind of work it is" } : undefined}
+          membersGap="Published as counts by state and by kind. The individual records behind them are not on this snapshot, so there is no list to open here."
         />
       </div>
 
       {props.obligationsByState.length > 0 && (
         <>
-          <h3>Where that work is</h3>
+          <h3 id="where-the-work-is">Where that work is</h3>
           <p className="fleet-where">
             {props.obligationsByState.map((r) => (
               <span
@@ -103,7 +126,7 @@ export function ObligationsSection(props: ObligationsSectionProps) {
 
       {props.obligationsByProvider.length > 0 && (
         <>
-          <h3>What kind of work it is</h3>
+          <h3 id="what-kind-of-work">What kind of work it is</h3>
           <p className="fleet-where">
             {props.obligationsByProvider.map((r) => (
               <span key={r.provider} className="where-wrap" title={r.count.contract}>

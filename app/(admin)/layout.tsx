@@ -601,6 +601,8 @@ body:has(main.admin) { background: #1b1c22; }
 .admin .tile-needs.needs-no { color: var(--ce-text-ok); }
 .admin .tile-needs.needs-yes { color: var(--ce-text-warn); }
 .admin .tile-gap { color: var(--ce-muted); font-size: .82rem; }
+/* ADM-52: the way in, when there is one. */
+.admin .tile-opens { display: inline-block; margin-top: .3rem; font-size: .82rem; font-weight: 600; }
 
 /* bars: how much is done, waiting and blocked, in one glance (§9A.15) */
 .admin .sbar { display: inline-flex; align-items: center; gap: .5rem; min-width: 6rem; }

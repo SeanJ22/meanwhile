@@ -10,9 +10,12 @@
  * records the lifecycle, runs RULING 224's promotion tail to a STAGED state,
  * and writes ONE DIGEST PER CYCLE to a place the owner reads WITHOUT the repo.
  *
- * **Promotion stays OFF.** Nothing this process does changes what a reader is
- * told; `runCycle` has no parameter that could, and the tail writes only under
- * `data/control-plane/staging/`.
+ * **Shadow research promotion stays OFF.** `runCycle` has no parameter that
+ * could change what a reader is told, and its tail writes only under
+ * `data/control-plane/staging/`. Separately, after that shadow cycle, the
+ * routine civic-data child may validate and promote its supported T1 sources
+ * directly through the production data plane; that path does not promote the
+ * shadow research output.
  *
  * ## The digest, and where it lands
  *
@@ -533,6 +536,7 @@ function deliver(body: string, headline: string): { readonly where: string; read
  * it says so rather than publishing a proof run over production.
  */
 const PUBLISH_TIMEOUT_MS = 5 * 60_000;
+const ROUTINE_DATA_TIMEOUT_MS = 35 * 60_000;
 const CONSOLE_PUBLISHERS: readonly { readonly name: string; readonly args: readonly string[] }[] = [
   /*
    * ADM-16 (9.4.26 evening): the owner's recorded decisions are applied to the
@@ -566,6 +570,24 @@ function publishConsole(): void {
     const last = stderrLines.at(-1) ?? (run.error ? run.error.message : "(nothing on stderr)");
     const exit = run.status === null ? `signal ${run.signal ?? "none"}` : String(run.status);
     console.error(`  console publish: ${publisher.name} FAILED exit ${exit} — ${last}`);
+  }
+}
+
+/** The same standing clock runs the production data plane after each cycle. */
+function runRoutineCivicData(): void {
+  if (provider !== "postgres" || canary) {
+    console.log("  routine civic data: skipped — only the standing production runner owns this data plane");
+    return;
+  }
+  const run = spawnSync(
+    process.execPath,
+    ["--env-file=.env.local", "--experimental-strip-types", "scripts/routine-civic-data-runner.mts"],
+    { cwd: ROOT, encoding: "utf8", timeout: ROUTINE_DATA_TIMEOUT_MS, maxBuffer: 64 * 1024 * 1024 },
+  );
+  const lines = `${run.stdout ?? ""}${run.stderr ?? ""}`.split("\n").filter((line) => /^(RCD_|RCD_RECEIPT=)/.test(line));
+  for (const line of lines) console.log(`  ${line}`);
+  if (run.status !== 0) {
+    console.error(`  routine civic data: one or more sources held LKG (exit ${run.status ?? `signal ${run.signal ?? "none"}`})`);
   }
 }
 
@@ -1029,6 +1051,9 @@ while (cycle < CYCLES) {
 
   /* ADM-1: the console is published by the machine after every digest, succeeded or failed. */
   publishConsole();
+
+  /* RCD-7: data-plane promotion has its own cadence and creates no software release. */
+  runRoutineCivicData();
 
   if (cycle >= CYCLES) break;
   await sleepUnlessRunNow(INTERVAL_MIN * 60_000);

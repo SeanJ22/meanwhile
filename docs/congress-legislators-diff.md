@@ -1,8 +1,8 @@
 # congress-legislators — the migration diff
 
-Written by `pnpm congress:migrate` on a run of 2026-08-23 — that is when the program ran, not when the data was read. The data below was read 2026-08-16.
+Written by `pnpm congress:migrate` on a run of 2026-09-07 — that is when the program ran, not when the data was read. The data below was read 2026-09-07.
 
-Snapshot pinned at `4458244308621d0570a15008f46888b7a87645eb`, read 2026-08-16.
+Snapshot pinned at `8a3c7e6987f890b32e56058f7ddbdf380860b4a3`, read 2026-09-07.
 
 ## What this file is
 
@@ -15,7 +15,7 @@ ours. **Nothing below was changed automatically.**
 
 ## Counts, with their denominators
 
-- Store rows matched to the pinned file by bioguide: **537** of 537
+- Store rows matched to the pinned file by bioguide: **539** of 539
 - Store rows the pinned file does not carry: **0**
 - Rows that gained official social accounts: **518**
 - Disagreements found: **0**

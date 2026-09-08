@@ -687,6 +687,29 @@ const readerLastMileInvalidatedFamilies = new Map<string, { acceptance: string; 
   ["notice-summaries", { acceptance: "LM-F8", reason: "Agenda publication and shared meeting popup/Ask knowledge behavior changed." }],
   ["comment-access", { acceptance: "LM-F8", reason: "The meeting panel and shared Ask meeting-knowledge path changed." }],
   ["outcomes", { acceptance: "LM-F8", reason: "Agenda/meeting identity context changed around the existing outcome reader payload." }],
+  ["congress", { acceptance: "LM-F10", reason: "The current official Congress roster and its canonical identity projection changed; every Congress Reader route is re-proved at the exact implementation head." }],
+  ["registry", { acceptance: "LM-F10", reason: "The canonical officeholder registry and promoted Census/legislative read boundary changed; every registry-backed Reader route is re-proved." }],
+  ["votes", { acceptance: "LM-F10", reason: "The official federal vote window, key-vote semantics and promoted state-vote read boundary changed; vote and grounded Ask routes are re-proved." }],
+]);
+const routineCivicDataReaderSources = new Map<string, ReadonlySet<string>>([
+  ["app/api/ask/grounded/route.ts", new Set(["federal-finance", "votes"])],
+  ["app/api/funding/[target]/route.ts", new Set(["federal-finance"])],
+  ["app/api/reactions/route.ts", new Set(["federal-finance"])],
+  ["app/api/votes/route.ts", new Set(["votes"])],
+  ["app/ballot/page.tsx", new Set(["federal-finance"])],
+  ["data/votes/bill-summaries.json", new Set(["votes"])],
+  ["lib/ask/votes.ts", new Set(["votes"])],
+  ["lib/civic-data/read-model.ts", new Set(["federal-finance", "registry", "votes"])],
+  ["lib/civic-data/store.ts", new Set(["federal-finance", "registry", "votes"])],
+  ["lib/db/schema.ts", new Set(["federal-finance", "registry", "votes"])],
+  ["lib/db/write-guard.ts", new Set(["federal-finance", "registry", "votes"])],
+  ["lib/funding/snapshot.ts", new Set(["federal-finance"])],
+  ["lib/officials/directory-source.ts", new Set(["congress"])],
+  ["lib/registry/representation.ts", new Set(["congress", "registry"])],
+  ["lib/registry/server.ts", new Set(["congress", "registry"])],
+  ["lib/sources/legiscan/snapshot.ts", new Set(["votes"])],
+  ["lib/sources/legiscan/types.ts", new Set(["votes"])],
+  ["lib/votes/key-votes.ts", new Set(["votes"])],
 ]);
 const readerDeliveryFields = new Set([
   "actualIdentityUsed", "provedHead", "observedExpectedRecordIds", "observedRenderedRecordIds", "bundleProvedRecordIds",
@@ -706,6 +729,7 @@ export function readerRowStructuralSha256(row: CensusRow): string {
   return sha256(JSON.stringify(structural));
 }
 function readerSourceImpact(path: string): { acceptance: string; reason: string } | null {
+  if (routineCivicDataReaderSources.has(path)) return { acceptance: "LM-F10", reason: "Routine civic-data runtime projection, refreshed official holding, or one of its Reader/Ask consumers." };
   if (path === "lib/funding/official-candidacies.json") return { acceptance: "LM-F4", reason: "Controlled official/candidacy state-money bridge." };
   if (path.startsWith("data/fec/")) return { acceptance: "LM-F2/LM-F5", reason: "Canonical federal-finance holding." };
   if (/^data\/states\/nj\/ballot\//.test(path)) return { acceptance: "LM-F2/LM-F5", reason: "Canonical NJ ballot/contact holding." };
@@ -716,6 +740,7 @@ function readerSourceImpact(path: string): { acceptance: string; reason: string 
   return null;
 }
 function readerSourceInvalidatesFamily(path: string, family: string): boolean {
+  if (routineCivicDataReaderSources.has(path)) return routineCivicDataReaderSources.get(path)!.has(family);
   if (path === "lib/funding/official-candidacies.json") return family === "state-money";
   if (path.startsWith("data/fec/")) return family === "federal-finance";
   if (/^data\/states\/nj\/ballot\//.test(path)) return family === "ballot";
@@ -2071,10 +2096,10 @@ export async function registerReaderRenderHooks(root: string): Promise<void> {
 
 export async function renderCanonicalReaderComponents(root: string, census: ReaderCensus): Promise<{ formatVersion: 1; exactHead: string; holdingsDigest: string; sourceHashes: ReaderSourceHash[]; rule: string; cases: ReaderComponentCase[]; failures: string[] }> {
   await registerReaderRenderHooks(root);
-  const [{ createElement, Fragment }, { renderToStaticMarkup }, { StateMoneySection }, { CandidateContact }, { MeetingRecords }, { ShuffledFacts }, finance, contacts, outcomes, meetingReader, area, { PublicStatementsProfileContent }, prl, { PersonIdentity, IdentityPortrait }, { ContactPills }, registry, rosters, { CandidateCard }, cards, sites, ballot, { MeetingPopup }, { DataProvider }, snapshotSource, meetingFormat, meetingLinks, memberships, minutes, { HowToBeHeard }, commentAccess] = await Promise.all([
+  const [{ createElement, Fragment }, { renderToStaticMarkup }, { StateMoneySection }, { CandidateContact }, { MeetingRecords }, { ShuffledFacts }, finance, contacts, outcomes, meetingReader, area, { PublicStatementsProfileContent }, prl, { PersonIdentity, IdentityPortrait }, { ContactPills }, registry, rosters, { CandidateCard }, cards, sites, ballot, { MeetingPopup }, { DistrictPopup }, { EntityModal }, { DataProvider }, snapshotSource, meetingFormat, meetingLinks, memberships, minutes, { HowToBeHeard }, commentAccess, stateLabels] = await Promise.all([
     import("react"), import("react-dom/server"), import("../../components/funding/state-money-section.tsx"),
     import("../../components/ballot/candidate-contact.tsx"), import("../../components/map/popup/meeting-records.tsx"), import("../../components/area/shuffled-facts.tsx"),
-    import("../funding/state-snapshot.ts"), import("../ballot/candidate-contacts.ts"), import("../outcomes/store.ts"), import("../meetings/reader-records.ts"), import("../area/facts.ts"), import("../../components/officials/public-statements-profile.tsx"), import("../sources/prl/snapshot.ts"), import("../../components/officials/person-identity.tsx"), import("../../components/officials/contact-pills.tsx"), import("../registry/server.ts"), import("../registry/body-rosters.ts"), import("../../components/ballot/candidate-card.tsx"), import("../ballot/candidate-cards.ts"), import("../ballot/candidate-sites.ts"), import("../ballot/registry.ts"), import("../../components/map/popup/meeting-popup.tsx"), import("../state/data.tsx"), import("../sources/snapshot/index.ts"), import("../map/format.ts"), import("../registry/links.ts"), import("../registry/body-membership.ts"), import("../meetings/minutes-summaries.ts"), import("../../components/map/meeting-panel.tsx"), import("../registry/comment-access.ts"),
+    import("../funding/state-snapshot.ts"), import("../ballot/candidate-contacts.ts"), import("../outcomes/store.ts"), import("../meetings/reader-records.ts"), import("../area/facts.ts"), import("../../components/officials/public-statements-profile.tsx"), import("../sources/prl/snapshot.ts"), import("../../components/officials/person-identity.tsx"), import("../../components/officials/contact-pills.tsx"), import("../registry/server.ts"), import("../registry/body-rosters.ts"), import("../../components/ballot/candidate-card.tsx"), import("../ballot/candidate-cards.ts"), import("../ballot/candidate-sites.ts"), import("../ballot/registry.ts"), import("../../components/map/popup/meeting-popup.tsx"), import("../../components/map/popup/district-popup.tsx"), import("../../components/map/popup/entity-modal.tsx"), import("../state/data.tsx"), import("../sources/snapshot/index.ts"), import("../map/format.ts"), import("../registry/links.ts"), import("../registry/body-membership.ts"), import("../meetings/minutes-summaries.ts"), import("../../components/map/meeting-panel.tsx"), import("../registry/comment-access.ts"), import("../state/derive.ts"),
   ]);
   const ballotSets = await Promise.all(ballot.BALLOT_SOURCES.map(async ({ source }) => source.normalize(await source.fetch())));
   const candidateNames = new Map(ballotSets.flatMap((set) => [...set.candidacies, ...(set.removals ?? [])]).map((candidate) => [candidate.id, `${candidate.givenName} ${candidate.familyName}`]));
@@ -2089,6 +2114,14 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
   const listingIdentity = meetingListingIdentity([...normalizedMeetings.values()], canonicalBodyIdentity);
   const context = loadManifestContext(root);
   const sourceRows = new Map(readerDatasets(context).flatMap((dataset) => extractRecords(dataset).map((raw) => [`${dataset.path}#${raw.pointer}` as string, raw] as const)));
+  const registryDivisionsById = new Map<string, ObjectRow>();
+  for (const record of census.records) {
+    if (record.holdingPath !== "lib/registry/registry.json" || record.unit !== "divisions") continue;
+    const division = sourceRows.get(record.auditId)?.value ?? {};
+    const ocdId = string(division.ocdId);
+    if (ocdId) registryDivisionsById.set(ocdId, division);
+  }
+  const emptyShellData = { allMeetings: [], meetings: [], venues: [], result: null, location: null, drawnDistricts: [], dropped: 0, searchFailed: false, atAddress: false, governing: null, zipPartial: null, basis: "ZIP" as const };
   const cases: ReaderComponentCase[] = [];
   const add = (record: CensusRecord, component: string, selector: string, payload: unknown, actualIds: string[], markup: string, expected: string[], forbidden: string[] = [], rowCounts: ReaderComponentCase["rowCounts"] = {}, sourceDispositions?: ReaderComponentCase["sourceDispositions"]) => {
     cases.push({ auditId: record.auditId, component, componentSha256: sha256(readFileSync(join(root, component))), selector,
@@ -2135,7 +2168,53 @@ export async function renderCanonicalReaderComponents(root: string, census: Read
   });
   for (const record of census.records) {
     const raw = sourceRows.get(record.auditId)?.value ?? {};
-    if (record.family === "voting-sites") {
+    if (record.holdingPath === "lib/registry/registry.json" && record.unit === "divisions") {
+      const divisionType = string(raw.divisionType);
+      const districtType = ({ cd: "congressional", sldu: "state-senate", sldl: "state-house", county: "county", place: "municipal", school_district: "school-unified" } as const)[divisionType as "cd" | "sldu" | "sldl" | "county" | "place" | "school_district"];
+      if (!districtType) throw new Error(`Registry division has no map district type ${record.auditId}`);
+      const tier = string(raw.tier) as "national" | "state" | "local";
+      if (!["national", "state", "local"].includes(tier)) throw new Error(`Registry division has no reader tier ${record.auditId}`);
+      const district = { type: districtType, tier, typeLabel: stateLabels.divisionTypeLabel(divisionType), ocdId: string(raw.ocdId), label: string(raw.label), state: string(raw.state) };
+      const markup = renderToStaticMarkup(createElement(DistrictPopup, { district, representation: [], representationNoteState: "gap", upcomingMeetings: 0 }));
+      add(record, "components/map/popup/district-popup.tsx", "canonical registry division → DistrictPopup", district, [district.ocdId], markup,
+        [district.label, district.typeLabel], [], { divisions: { expected: 1, actual: occurrences(markup, "data-browsing-standing") } });
+    } else if (["lib/registry/registry.json", "lib/registry/promoted-bodies.json"].includes(record.holdingPath) && record.unit === "bodies") {
+      const bodyId = string(raw.id);
+      const ocdId = string(raw.ocdId);
+      const division = registryDivisionsById.get(ocdId) ?? {};
+      const title = string(raw.name) || string(division.label) || bodyId;
+      const homepageUrl = string(raw.homepageUrl);
+      const divisionType = string(division.divisionType);
+      const tierValue = string(division.tier);
+      const tier = (["national", "state", "local"].includes(tierValue) ? tierValue : "local") as "national" | "state" | "local";
+      const subject = {
+        title,
+        subtitle: divisionType ? stateLabels.divisionTypeLabel(divisionType) : "Governing body",
+        tier,
+        subjectId: bodyId,
+        subjectKind: "BODY" as const,
+        divisionKind: divisionType || null,
+        divisionOcdId: null,
+        facts: [
+          { label: "Type", value: string(raw.bodyClass) || "Governing body" },
+          ...(homepageUrl ? [{ label: "Official site", value: homepageUrl }] : []),
+        ],
+        representation: [],
+        representationNote: "We haven't sourced who sits on this body.",
+        meetings: [],
+        sources: [],
+        bodyCard: {
+          whatItDoes: { classDefinition: null, formDefinition: null, unreadNote: null },
+          superintendent: null,
+          isSchoolDistrict: divisionType === "school_district",
+          contact: homepageUrl ? [{ label: "Official site", value: new URL(homepageUrl).hostname.replace(/^www\./, ""), href: homepageUrl }] : [],
+          jurisdiction: string(division.label) ? [{ label: "Area", value: string(division.label) }] : [],
+        },
+      };
+      const markup = renderToStaticMarkup(createElement(DataProvider, { value: emptyShellData, children: createElement(EntityModal, { subject, onClose: () => {} }) }));
+      add(record, "components/map/popup/entity-modal.tsx", "canonical registry body and exact division join → EntityModal", { body: raw, division }, [bodyId, ...(ocdId ? [ocdId] : [])], markup,
+        [title, homepageUrl].filter(Boolean), [], { bodies: { expected: 1, actual: occurrences(markup, "role") } });
+    } else if (record.family === "voting-sites") {
       const executed = votingAnswers.find((entry) => entry.jurisdictionId === raw.ocdId);
       if (!executed) throw new Error(`Actual voting-site route lost ${record.auditId}`);
       const jurisdiction = executed.answer.jurisdictions.find((row) => row.ocdId === raw.ocdId)!;

@@ -57,7 +57,7 @@ import {
 } from "../lib/control-plane/repository/pg-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { coverageTierForZip } from "../lib/coverage/zip-tier.ts";
-import { STATE_FIPS, statePopulation, zipPopulationReading } from "../lib/reference/acs-population.ts";
+import { STATE_FIPS, refreshPopulationFromPromoted, statePopulation, zipPopulationReading } from "../lib/reference/acs-population.ts";
 import { ACS_SOURCE_LABEL, ACS_VINTAGE_LABEL, ACS_ZCTA_GEOGRAPHY_LABEL } from "../lib/reference/acs-labels.ts";
 import { datasetFamily } from "../lib/holdings/datasets.ts";
 import { readerTraceRequirements } from "../lib/holdings/reader-trace.ts";
@@ -902,6 +902,7 @@ async function openStore(): Promise<{ repos: ControlPlaneRepositories; where: st
 }
 
 async function main() {
+  await refreshPopulationFromPromoted();
   const { repos, where } = await openStore();
   const only = args.get("state") as string | undefined;
   const chosen = only ? STATES.filter((s) => s.code === only) : STATES;

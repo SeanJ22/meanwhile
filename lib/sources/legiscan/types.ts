@@ -47,10 +47,34 @@ export const LEGISCAN_ATTRIBUTION = {
   licenceUrl: "https://creativecommons.org/licenses/by/4.0/",
 } as const;
 
+/** Publisher label for an official promoted roll; legacy/missing ids are LegiScan. */
+export function stateRollPublisher(roll: Pick<StateRollCall, "sourceId">): string {
+  if (roll.sourceId === "az-legislature") return "Arizona State Legislature";
+  if (roll.sourceId === "nh-general-court") return "New Hampshire General Court";
+  if (roll.sourceId === "nj-legislature") return "New Jersey Legislature / Office of Legislative Services";
+  return `${LEGISCAN_ATTRIBUTION.text} (${LEGISCAN_ATTRIBUTION.licence})`;
+}
+
+/** Official rows need no LegiScan licence notice; any legacy row still does. */
+export function stateRollAttribution(rolls: readonly Pick<StateRollCall, "sourceId">[]) {
+  return rolls.length > 0 && rolls.every((roll) =>
+    roll.sourceId === "az-legislature" || roll.sourceId === "nh-general-court" || roll.sourceId === "nj-legislature"
+  ) ? null : LEGISCAN_ATTRIBUTION;
+}
+
 /** One state-chamber roll call. */
 export interface StateRollCall {
-  /** `legiscan:<rollCallId>`. */
+  /** Stable source-scoped roll id; legacy snapshots use `legiscan:<id>`. */
   id: string;
+  /** Explicit publisher family for promoted official records. */
+  sourceId?: "az-legislature" | "nh-general-court" | "nj-legislature" | "legiscan";
+  /** Exact official identity/stage fields; mandatory at official promotion. */
+  officialRollCallId?: string;
+  eventId?: string;
+  chamber?: "House" | "Senate" | "Assembly";
+  term?: string;
+  session?: string;
+  actionStage?: string;
   /** `AZ` / `NJ` / `NH`. */
   state: string;
   /** LegiScan's session id — the join key back to the dataset. */
@@ -86,6 +110,8 @@ export interface StateMemberVote {
   officeholderId: string;
   /** LegiScan's own people id, kept so the join is auditable. */
   legiscanPeopleId: number;
+  /** State publisher's exact person identifier in official projections. */
+  officialPersonId?: string;
   rollCallId: string;
   position: StateVotePosition;
 }

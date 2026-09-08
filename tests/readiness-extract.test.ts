@@ -193,21 +193,21 @@ test("ADM-40: candidate filings with no held candidacies claim nothing at all", 
 });
 
 test("ADM-40: a government's own statement of absence renders ARGUED_ABSENT with its sentence", () => {
-  // NH publishes that no statewide ballot question is on the 2026 ballot. That
-  // is a stronger absence than any ladder we could walk, and it is a different
+  // A competent election authority can publish that no statewide question is
+  // on a bounded ballot. That is a stronger absence than any ladder we could walk, and it is a different
   // fact from "nobody looked" (R-I) — which is what NJ, with no such statement,
   // correctly still reads.
   const withStatement = snap(
     azAuthorities({
       code: "nh",
-      name: "New Hampshire",
+      name: "Example State",
       statewideMeasures: null,
       sourcedAbsences: [
         {
           capabilityId: "ballot.statewide-propositions",
           statement: "No statewide ballot question is on the November 3, 2026 ballot.",
-          authority: "New Hampshire Secretary of State",
-          ref: "https://www.sos.nh.gov/2026-election-details",
+          authority: "Example State Secretary of State",
+          ref: "https://elections.example.gov/2026-election-details",
           asOf: "2026-08-14",
         },
       ],
@@ -220,7 +220,7 @@ test("ADM-40: a government's own statement of absence renders ARGUED_ABSENT with
     .find((r) => r.capabilityId === "ballot.statewide-propositions")!
     .gates.find((g) => g.gate === "VERIFIED")!;
   assert.match(cell.detail, /No statewide ballot question/);
-  assert.equal(cell.evidenceRef, "https://www.sos.nh.gov/2026-election-details");
+  assert.equal(cell.evidenceRef, "https://elections.example.gov/2026-election-details");
 
   const without = snap(azAuthorities({ statewideMeasures: null, sourcedAbsences: [] })).capabilities;
   assert.equal(cellFor(without, "ballot.statewide-propositions", "ACQUIRED"), "NOT_WALKED");

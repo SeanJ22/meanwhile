@@ -75,8 +75,8 @@ test("RULING 162: an EMPTY diff refuses — zero is a result that must be earned
 
 test("RULING 162: a path outside the profile is refused and NAMED", () => {
   const d = classifyPushPaths({
-    profileId: "refresh-fec-snapshot",
-    changed: ["data/fec/fec-2026.json", "lib/ballot/candidate-cards.ts"],
+    profileId: "refresh-meetings-snapshot",
+    changed: ["data/meetings-snapshot.json", "lib/ballot/candidate-cards.ts"],
   });
   assert.equal(d.verdict, "refused");
   assert.deepEqual([...d.offenders], ["lib/ballot/candidate-cards.ts"]);
@@ -95,7 +95,7 @@ test("RULING 162: the happy path is allowed, and states its count", () => {
 
 test("RULING 162: one refresher may not write another's artifact", () => {
   const d = classifyPushPaths({
-    profileId: "refresh-fec-snapshot",
+    profileId: "refresh-meetings-snapshot",
     changed: ["data/states/nj/ballot/07866.json"],
   });
   assert.equal(d.verdict, "refused", "a per-workflow list is the point; a shared one would allow this");
@@ -146,8 +146,8 @@ test("RULING 162: every workflow that pushes main declares a profile and stages 
 
   // A floor, so a reader that matched nothing cannot report green (RULING 159).
   assert.ok(
-    pushers.length >= 8,
-    `expected at least the 8 known scheduled pushers, found ${pushers.length}. ` +
+    pushers.length >= 7,
+    `expected at least the 7 remaining pushers, found ${pushers.length}. ` +
       "If a pusher was retired, move this floor in the same diff.",
   );
 

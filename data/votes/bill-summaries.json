@@ -9,20 +9,6 @@
    "basis": "Congressional Research Service summary, version updated 2026-06-29, read at the bill page.",
    "curatedAt": "2026-08-13"
   },
-  "https://www.congress.gov/bill/119th-congress/house-bill/6955": {
-   "legisNum": "H R 6955",
-   "title": "Main Street Capital Access Act",
-   "summary": "Loosens rules on banks. New banks get three years to build up their required financial cushion, some rural banks can hold a smaller cushion, regulators must weigh how much their rules burden banks, and several size limits move up so more banks are exempt from fees, reports, and merger approvals — including letting some bank mergers go ahead without checking whether they reduce competition.",
-   "basis": "Congressional Research Service summary, version updated 2026-07-20, read at the bill page.",
-   "curatedAt": "2026-08-13"
-  },
-  "https://www.congress.gov/bill/119th-congress/house-bill/9770": {
-   "legisNum": "H R 9770",
-   "title": "Continuing Appropriations Act, 2027",
-   "summary": "A stop-gap spending bill. It keeps the federal government funded — mostly at last year's levels — until December 4, 2026, or until the regular spending bills pass, whichever comes first. Without it the government would shut down when the budget year starts October 1. It makes exceptions for a few programs (like WIC food aid, disaster relief, the Indian Health Service, and wildfire fighting) and extends several expiring programs, including flood insurance.",
-   "basis": "Congressional Research Service summary, version updated 2026-07-29, read at the bill page.",
-   "curatedAt": "2026-08-13"
-  },
   "https://www.congress.gov/bill/119th-congress/house-bill/7008": {
    "legisNum": "H R 7008",
    "title": "Stop Insider Trading Act",
@@ -81,6 +67,60 @@
   }
  },
  "pending": [
+  {
+   "billUrl": "https://www.congress.gov/bill/119th-congress/senate-bill/307",
+   "legisNum": "S. 307",
+   "title": "Prison Staff Safety Enhancement Act",
+   "reason": "This measure entered the rolling vote window on 2026-09-07. A CRS summary matched to the text voted on has not yet been reviewed for this reader artifact, so the official bill record remains linked while source-matched curation is pending."
+  },
+  {
+   "billUrl": "https://www.congress.gov/bill/119th-congress/senate-bill/32",
+   "legisNum": "S. 32",
+   "title": "LACA",
+   "reason": "This measure entered the rolling vote window on 2026-09-07. A CRS summary matched to the text voted on has not yet been reviewed for this reader artifact, so the official bill record remains linked while source-matched curation is pending."
+  },
+  {
+   "billUrl": "https://www.congress.gov/bill/119th-congress/house-resolution/1499",
+   "legisNum": "H.Res. 1499",
+   "title": "Providing for consideration of measures",
+   "reason": "This measure entered the rolling vote window on 2026-09-07. A CRS summary matched to the text voted on has not yet been reviewed for this reader artifact, so the official bill record remains linked while source-matched curation is pending."
+  },
+  {
+   "billUrl": "https://www.congress.gov/bill/119th-congress/house-resolution/1490",
+   "legisNum": "H.Res. 1490",
+   "title": "Providing for the condemnation and denouncement of political violence",
+   "reason": "This measure entered the rolling vote window on 2026-09-07. A CRS summary matched to the text voted on has not yet been reviewed for this reader artifact, so the official bill record remains linked while source-matched curation is pending."
+  },
+  {
+   "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/9436",
+   "legisNum": "H.R. 9436",
+   "title": "Northeast Lobsterman Protection Act of 2026",
+   "reason": "This measure entered the rolling vote window on 2026-09-07. A CRS summary matched to the text voted on has not yet been reviewed for this reader artifact, so the official bill record remains linked while source-matched curation is pending."
+  },
+  {
+   "billUrl": "https://www.congress.gov/bill/119th-congress/house-resolution/1498",
+   "legisNum": "H.Res. 1498",
+   "title": "In the matter of allegations relating to a Member of the House",
+   "reason": "This measure entered the rolling vote window on 2026-09-07. A CRS summary matched to the text voted on has not yet been reviewed for this reader artifact, so the official bill record remains linked while source-matched curation is pending."
+  },
+  {
+   "billUrl": "https://www.congress.gov/bill/119th-congress/house-joint-resolution/1",
+   "legisNum": "H.J.Res. 1",
+   "title": "Proposing an amendment to the Constitution of the United States",
+   "reason": "This measure entered the rolling vote window on 2026-09-07. A CRS summary matched to the text voted on has not yet been reviewed for this reader artifact, so the official bill record remains linked while source-matched curation is pending."
+  },
+  {
+   "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/1501",
+   "legisNum": "H.R. 1501",
+   "title": "Protecting Domestic Mining Act of 2025",
+   "reason": "This measure entered the rolling vote window on 2026-09-07. A CRS summary matched to the text voted on has not yet been reviewed for this reader artifact, so the official bill record remains linked while source-matched curation is pending."
+  },
+  {
+   "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/4795",
+   "legisNum": "H.R. 4795",
+   "title": "Protect Economic and Academic Freedom Act",
+   "reason": "This measure entered the rolling vote window on 2026-09-07. A CRS summary matched to the text voted on has not yet been reviewed for this reader artifact, so the official bill record remains linked while source-matched curation is pending."
+  },
   {
    "billUrl": "https://www.congress.gov/bill/119th-congress/house-bill/5334",
    "legisNum": "H.R. 5334",

@@ -552,7 +552,7 @@
     "regeneratedOn": "2026-09-07"
   },
   "lib/officials/directory-source.ts": {
-    "digest": "a37c4ecb873c9e6042fcfafa2a698ab7fd1743aff8afea92fb94faed2c92dd5e",
+    "digest": "42a8b53bbef20abc913e2f45f887652131808c7f0566ff6b89b72a94fa58e9d0",
     "files": 2,
     "entry": "scripts/migrate-congress-directory.mts",
     "regeneratedOn": "2026-09-07"

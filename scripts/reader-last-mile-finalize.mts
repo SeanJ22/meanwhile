@@ -41,6 +41,9 @@ let baselineCensusPath = "docs/evidence/reader-last-mile-closure.json";
 let baselineReceiptPath = "docs/evidence/reader-last-mile-closure-receipt.json";
 let archivedBaselineCensusPath: string | null = null;
 const routePaths = [
+  "docs/evidence/reader-last-mile-final-routes.json",
+  "docs/evidence/reader-last-mile-final-ask-exhaustive.json",
+  "docs/evidence/reader-last-mile-final-key-votes-ask.json",
   "docs/evidence/reader-last-mile-final-delta-routes.json",
   "docs/evidence/reader-last-mile-final-ballot.json",
   "docs/evidence/reader-last-mile-final-ballot-ask.json",

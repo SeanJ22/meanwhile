@@ -89,9 +89,10 @@ test("R45: no workflow pins an action major that targets Node 20", () => {
 
   assert.equal(
     pins,
-    22,
-    // 22 as of 2026-08-29 (NH273), when post-deploy-integrity.yml added its own
-    // checkout + setup-node pair.
+    18,
+    // 18 as of 2026-09-07: the FEC and LegiScan tracked-data refresh jobs were
+    // retired when routine data moved to direct production promotion. Their
+    // manual tombstones intentionally have no checkout or setup-node action.
     //
     // 20 as of 2026-08-24 (RULING 124), when refresh-daily.yml added its own
     // checkout + setup-node pair.
@@ -105,7 +106,7 @@ test("R45: no workflow pins an action major that targets Node 20", () => {
     // rather than assumed, so a new job without pins is caught.
     // TWENTY as of 2026-08-24 (RULING 124): refresh-daily.yml adds a checkout
     // and a setup-node, both pinned at the majors this guard requires.
-    `expected 20 Node-runtime action pins across the workflow set, found ${pins}`,
+    `expected 18 Node-runtime action pins across the active workflow set, found ${pins}`,
   );
   assert.deepEqual(
     stale,
@@ -250,8 +251,6 @@ const REFRESH_WORKFLOWS = [
   "refresh-daily.yml",
   "refresh-meetings-snapshot.yml",
   "refresh-dotgov-snapshot.yml",
-  "refresh-fec-snapshot.yml",
-  "refresh-legiscan-snapshot.yml",
   // NJ Hunt 3 (2026-08-22). The Morris County ballot is GENERATED from the
   // clerk's filed-candidate PDFs, and the clerk republishes on their own
   // schedule — one revision landed mid-session and the ballot was stale the day
@@ -259,16 +258,21 @@ const REFRESH_WORKFLOWS = [
   "refresh-nj-filing.yml",
 ];
 
+const RETIRED_DATA_REFRESH_WORKFLOWS = [
+  "refresh-fec-snapshot.yml",
+  "refresh-legiscan-snapshot.yml",
+];
+
 test("F22: every governed-artifact refresh gates on the same full suite", () => {
   const found = readdirSync(DIR).filter((f) => /^refresh-.*\.ya?ml$/.test(f)).sort();
   assert.deepEqual(
     found,
-    [...REFRESH_WORKFLOWS].sort(),
+    [...REFRESH_WORKFLOWS, ...RETIRED_DATA_REFRESH_WORKFLOWS].sort(),
     "the set of refresh workflows moved — a new one must be added to this guard WITH its gate",
   );
 
   const missing: string[] = [];
-  for (const file of found) {
+  for (const file of REFRESH_WORKFLOWS) {
     const text = readFileSync(join(DIR, file), "utf8");
     // The gate itself: the whole suite, not a narrower selection.
     if (!/run:\s*corepack pnpm test\s*$/m.test(text)) {
@@ -283,4 +287,14 @@ test("F22: every governed-artifact refresh gates on the same full suite", () => 
     }
   }
   assert.deepEqual(missing, [], "a governed artifact can commit without the full gate");
+
+  for (const file of RETIRED_DATA_REFRESH_WORKFLOWS) {
+    const text = readFileSync(join(DIR, file), "utf8");
+    assert.match(text, /^\s*workflow_dispatch:\s*$/m, `${file}: the tombstone stays manual-only`);
+    assert.doesNotMatch(text, /^\s*(?:schedule:|-\s*cron:|-\s*uses:|env:)\s*/m, `${file}: retired refresh gained an execution path`);
+    assert.doesNotMatch(text, /\$\{\{\s*secrets\./, `${file}: retired refresh gained credentials`);
+    const runSteps = [...text.matchAll(/^\s*run:\s*(.+)$/gm)].map((match) => match[1]);
+    assert.equal(runSteps.length, 1, `${file}: retired refresh has more than its explanatory step`);
+    assert.match(runSteps[0], /^echo\s+/, `${file}: retired refresh can do more than explain its replacement`);
+  }
 });

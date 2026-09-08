@@ -12,11 +12,11 @@
  */
 
 export const CONGRESS_DIRECTORY_SOURCE = {
-  sourceUrl: "https://github.com/unitedstates/congress-legislators/tree/4458244308621d0570a15008f46888b7a87645eb",
+  sourceUrl: "https://github.com/unitedstates/congress-legislators/tree/8a3c7e6987f890b32e56058f7ddbdf380860b4a3",
   sourceOrg: "unitedstates/congress-legislators (community project)",
-  collectedAt: "2026-08-16",
+  collectedAt: "2026-09-07",
   verifiedAt: null,
 } as const;
 
 /** The pinned commit, stated so a reader can reproduce the fetch. */
-export const CONGRESS_DIRECTORY_SHA = "4458244308621d0570a15008f46888b7a87645eb";
+export const CONGRESS_DIRECTORY_SHA = "8a3c7e6987f890b32e56058f7ddbdf380860b4a3";

@@ -1,6 +1,6 @@
 {
  "formatVersion": 1,
- "curatedAt": "2026-08-14",
+ "curatedAt": "2026-09-07",
  "curatorNote": "Transcribed from the NH Secretary of State's cumulative primary filing (cumulative-filings-7.16.26.pdf, both party sections) and the 2026-2027 political calendar. These are primary filings: the September 8 primary decides the general lineup. THE NOVEMBER FINDING, CORRECTED 2026-08-13: the original finding called the November ballot thin; that was true ONLY for town and school offices, which New Hampshire's town-meeting tradition decides in March (Town Election day March 10, 2026, per the political calendar). For state and federal offices the November ballot is one of the largest in the country - governor (two-year term, up every midterm), a U.S. Senate seat, U.S. House, all state senate and house seats, Executive Council, and county offices. The Executive Council and county commissioner contests were originally left in coverageNotes as unmappable; they are now listed as contests keyed to Newbury's town division, because the Secretary of State's own 2022-2032 district assignment documents place Newbury in Executive Council District 2 (2022-2032-executive-council-districts.pdf, Merrimack County section) and Merrimack County Commissioner Second District, which elects in 2026 to a 2-year term (2022-2032-county-commissioners-by-district_0.pdf). District BOUNDARIES are still not in our map data - only the town-to-district assignment is sourced. Newbury's House seat is District 7 (New London + Newbury, 2 seats) per 2022-2032-state-representative-and-delegate-districts.pdf, which also shows NO floterial district covering Newbury. County offices from the MERRIMACK County sections of both party filings.",
  "election": {
   "id": "nh-2026-11-03",
@@ -211,6 +211,23 @@
     "sourceOrg": "New Hampshire Secretary of State",
     "collectedAt": "2026-08-14",
     "verifiedAt": "2026-08-14"
+   }
+  },
+  {
+   "id": "ballot-nh-merrimack:cacr-13",
+   "electionId": "nh-2026-11-03",
+   "ocdId": "ocd-division/country:us/state:nh",
+   "divisionVintage": "TIGER_GENZ2025",
+   "title": "Question 1: Eliminate the Office of Register of Probate (CACR 13)",
+   "type": "MEASURE",
+   "voteFor": 1,
+   "termYears": null,
+   "scopeNote": "The Secretary of State's current 2026 Election Details page publishes Questions on the General Election Ballot. CACR 13 is the statewide question adopted by both legislative chambers.",
+   "provenance": {
+    "sourceUrl": "https://www.sos.nh.gov/2026-election-details",
+    "sourceOrg": "New Hampshire Secretary of State, Questions on the 2026 General Election Ballot",
+    "collectedAt": "2026-09-07",
+    "verifiedAt": "2026-09-07"
    }
   }
  ],
@@ -968,7 +985,20 @@
    }
   }
  ],
- "measures": [],
+ "measures": [
+  {
+   "id": "ballot-nh-merrimack:cacr-13:question",
+   "contestId": "ballot-nh-merrimack:cacr-13",
+   "questionText": "Are you in favor of eliminating the office of register of probate by amending articles 71 and 81 of the second part of the constitution to read as follows: [Art.] 71. [County Treasurers, County Attorneys, Sheriffs, and Registers of Deeds Elected.] The county treasurers, county attorneys, sheriffs and registers of deeds, shall be elected by the inhabitants of the several towns, in the several counties in the State, according to the method now practiced, and the laws of the state, provided nevertheless the legislature shall have authority to alter the manner of certifying the votes, and the mode of electing those officers; but not so as to deprive the people of the right they now have of electing them. [Art.] 81. [Judges Not to Act as Counsel.] No judge shall be of counsel, act as advocate, or receive any fees as advocate or counsel, in any probate business which is pending, or may be brought into any court of probate in the county of which he or she is judge.",
+   "officialStatement": "AT THE PRESENT TIME, the constitution references registers of probate while the office's duties were redistributed to circuit court clerks in 2011. IF THE AMENDMENT IS ADOPTED, the constitution will eliminate the position of register of probate.",
+   "provenance": {
+    "sourceUrl": "https://www.gc.nh.gov/lsr_search/billText.aspx?id=1803&type=4",
+    "sourceOrg": "New Hampshire General Court, CACR 13 version adopted by both bodies",
+    "collectedAt": "2026-09-07",
+    "verifiedAt": "2026-09-07"
+   }
+  }
+ ],
  "absences": [
   {
    "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
@@ -991,22 +1021,11 @@
     "collectedAt": "2026-08-14",
     "verifiedAt": "2026-08-14"
    }
-  },
-  {
-   "ocdId": "ocd-division/country:us/state:nh",
-   "divisionVintage": "TIGER_GENZ2025",
-   "statement": "No statewide ballot question is on the November 3, 2026 ballot. The Secretary of State's 2026 Election Details page (read August 17, 2026, in a browser — the host refuses automated clients) lists no constitutional amendment question, and no voters' guide for one exists the way 2024's did.",
-   "provenance": {
-    "sourceUrl": "https://www.sos.nh.gov/2026-election-details",
-    "sourceOrg": "New Hampshire Secretary of State",
-    "collectedAt": "2026-08-14",
-    "verifiedAt": "2026-08-14"
-   }
   }
  ],
  "coverageNotes": [
   "Executive Council and county commissioner district boundary lines aren't on our map yet. Those contests are listed here because the Secretary of State's own district assignments place Newbury in Executive Council District 2 and the county's Second Commissioner District — the town assignment is sourced even though the lines can't be drawn.",
   "Candidates can also reach the November ballot by nomination papers (the route independents and smaller parties use). The Secretary of State certifies those filings by September 2, 2026, so they can't be listed yet — the lists here show everyone who filed for the party primaries.",
-  "Why no question: putting a constitutional amendment (CACR) on the ballot takes a three-fifths vote of both chambers, and every CACR proposed in the 2025-2026 General Court fell short or was killed — CACR 6 (right to compute), 12 (tax supermajority), 14 (citizenship for office), 15 (hunt and fish), 21 (voting eligibility), 24 (parental privacy in education), and 28 (public protestant teachers). Vote records verified against legislative-tracking services 2026-08-14. CORRECTED 2026-08-21 under RULING 52: this note used to end 'the General Court's own site (gc.nh.gov) refuses every client this project has, browsers included — recorded in the source ladder.' That was true when it was written on 2026-08-14 and is FALSE now — re-walked 2026-08-21, gc.nh.gov answers a plain rung-2 fetch at HTTP 200. A wall is recorded with the date it was last tested, never as a standing property, and this sentence went unchecked for a week because it read as a fact rather than as a measurement. The CACR vote records above are unaffected and stand as verified."
+  "CORRECTED 2026-09-07: the prior file asserted that no statewide question was on the ballot. The Secretary of State's current 2026 Election Details page now publishes a Questions on the General Election Ballot item, and the General Court record shows CACR 13 adopted 325-15 in the House and 23-1 in the Senate. The old absence was removed and the official question is now a first-class measure."
  ]
 }

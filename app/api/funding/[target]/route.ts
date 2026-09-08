@@ -1,4 +1,5 @@
 import { campaignMoneyApiAnswer } from "@/lib/funding/campaign-money";
+import { refreshFundingFromPromoted } from "@/lib/funding/snapshot";
 
 /**
  * GET /api/funding/<app-side id> — the funding answer for one target (D34),
@@ -37,6 +38,7 @@ export async function GET(
     return Response.json({ error: "target must contain 1–512 characters" }, { status: 400 });
   }
   try {
+    await refreshFundingFromPromoted();
     return Response.json(campaignMoneyApiAnswer(target), {
       headers: { "cache-control": "public, max-age=3600" },
     });

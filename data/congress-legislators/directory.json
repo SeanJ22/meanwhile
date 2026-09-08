@@ -2,17 +2,17 @@
   "source": {
     "project": "unitedstates/congress-legislators",
     "repoUrl": "https://github.com/unitedstates/congress-legislators",
-    "sha": "4458244308621d0570a15008f46888b7a87645eb",
+    "sha": "8a3c7e6987f890b32e56058f7ddbdf380860b4a3",
     "licence": "CC0 1.0 Universal (public domain dedication)",
     "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
     "sourceOrg": "unitedstates/congress-legislators (community project)",
-    "collectedAt": "2026-08-16"
+    "collectedAt": "2026-09-07"
   },
   "counts": {
-    "members": 537,
+    "members": 539,
     "districtOffices": 1306,
     "committees": 230,
-    "membershipRows": 3891,
+    "membershipRows": 3895,
     "membersWithCommittee": 531
   },
   "committees": {
@@ -1554,7 +1554,7 @@
     },
     "SSEV15": {
       "id": "SSEV15",
-      "name": "Senate Committee on Environment and Public Works — Fisheries, Wildlife, and Water",
+      "name": "Senate Committee on Environment and Public Works — Fisheries, Water, and Wildlife",
       "type": "senate",
       "url": "http://www.epw.senate.gov/",
       "jurisdiction": null,
@@ -2179,7 +2179,7 @@
         },
         {
           "committeeId": "SSEV15",
-          "name": "Senate Committee on Environment and Public Works — Fisheries, Wildlife, and Water",
+          "name": "Senate Committee on Environment and Public Works — Fisheries, Water, and Wildlife",
           "rank": 2,
           "title": null
         },
@@ -2278,7 +2278,7 @@
         },
         {
           "committeeId": "SSEV15",
-          "name": "Senate Committee on Environment and Public Works — Fisheries, Wildlife, and Water",
+          "name": "Senate Committee on Environment and Public Works — Fisheries, Water, and Wildlife",
           "rank": 6,
           "title": "Ex Officio"
         },
@@ -2747,8 +2747,8 @@
         {
           "committeeId": "SSAP23",
           "name": "Senate Committee on Appropriations — Financial Services and General Government",
-          "rank": 3,
-          "title": null
+          "rank": 5,
+          "title": "Ex Officio"
         },
         {
           "committeeId": "SSAP14",
@@ -2783,8 +2783,8 @@
         {
           "committeeId": "SSAP20",
           "name": "Senate Committee on Appropriations — State, Foreign Operations, and Related Programs",
-          "rank": 7,
-          "title": "Ex Officio"
+          "rank": 1,
+          "title": "Chairman"
         },
         {
           "committeeId": "SSAP24",
@@ -3218,7 +3218,7 @@
         {
           "committeeId": "SSAP20",
           "name": "Senate Committee on Appropriations — State, Foreign Operations, and Related Programs",
-          "rank": 1,
+          "rank": 2,
           "title": null
         },
         {
@@ -5150,7 +5150,7 @@
         {
           "committeeId": "SSAP20",
           "name": "Senate Committee on Appropriations — State, Foreign Operations, and Related Programs",
-          "rank": 2,
+          "rank": 3,
           "title": null
         },
         {
@@ -5173,7 +5173,7 @@
         },
         {
           "committeeId": "SSEV15",
-          "name": "Senate Committee on Environment and Public Works — Fisheries, Wildlife, and Water",
+          "name": "Senate Committee on Environment and Public Works — Fisheries, Water, and Wildlife",
           "rank": 5,
           "title": null
         },
@@ -5425,7 +5425,7 @@
         },
         {
           "committeeId": "SSEV15",
-          "name": "Senate Committee on Environment and Public Works — Fisheries, Wildlife, and Water",
+          "name": "Senate Committee on Environment and Public Works — Fisheries, Water, and Wildlife",
           "rank": 7,
           "title": "Ex Officio"
         },
@@ -6275,7 +6275,7 @@
         {
           "committeeId": "SSBU",
           "name": "Senate Committee on the Budget",
-          "rank": 2,
+          "rank": 3,
           "title": null
         },
         {
@@ -7037,7 +7037,7 @@
         {
           "committeeId": "SSBU",
           "name": "Senate Committee on the Budget",
-          "rank": 1,
+          "rank": 2,
           "title": null
         },
         {
@@ -7892,7 +7892,7 @@
         {
           "committeeId": "HSJU13",
           "name": "House Committee on the Judiciary — Oversight",
-          "rank": 3,
+          "rank": 2,
           "title": null
         },
         {
@@ -7991,8 +7991,8 @@
         {
           "committeeId": "SSBU",
           "name": "Senate Committee on the Budget",
-          "rank": 3,
-          "title": null
+          "rank": 1,
+          "title": "Chairman"
         },
         {
           "committeeId": "SPAG",
@@ -8855,7 +8855,7 @@
         {
           "committeeId": "HSGO16",
           "name": "House Committee on Oversight and Government Reform — Delivering on Government Efficiency",
-          "rank": 3,
+          "rank": 2,
           "title": null
         }
       ]
@@ -9395,7 +9395,7 @@
         {
           "committeeId": "SSAP20",
           "name": "Senate Committee on Appropriations — State, Foreign Operations, and Related Programs",
-          "rank": 3,
+          "rank": 4,
           "title": null
         },
         {
@@ -10001,12 +10001,6 @@
         {
           "committeeId": "HSGO24",
           "name": "House Committee on Oversight and Government Reform — Government Operations",
-          "rank": 2,
-          "title": null
-        },
-        {
-          "committeeId": "HSGO16",
-          "name": "House Committee on Oversight and Government Reform — Delivering on Government Efficiency",
           "rank": 2,
           "title": null
         }
@@ -10676,7 +10670,7 @@
         },
         {
           "committeeId": "SSEV15",
-          "name": "Senate Committee on Environment and Public Works — Fisheries, Wildlife, and Water",
+          "name": "Senate Committee on Environment and Public Works — Fisheries, Water, and Wildlife",
           "rank": 1,
           "title": "Ranking Member"
         },
@@ -14630,7 +14624,7 @@
         },
         {
           "committeeId": "SSEV15",
-          "name": "Senate Committee on Environment and Public Works — Fisheries, Wildlife, and Water",
+          "name": "Senate Committee on Environment and Public Works — Fisheries, Water, and Wildlife",
           "rank": 2,
           "title": null
         },
@@ -14727,7 +14721,7 @@
         {
           "committeeId": "SSAP23",
           "name": "Senate Committee on Appropriations — Financial Services and General Government",
-          "rank": 4,
+          "rank": 3,
           "title": null
         },
         {
@@ -17751,7 +17745,7 @@
         },
         {
           "committeeId": "SSEV15",
-          "name": "Senate Committee on Environment and Public Works — Fisheries, Wildlife, and Water",
+          "name": "Senate Committee on Environment and Public Works — Fisheries, Water, and Wildlife",
           "rank": 4,
           "title": null
         },
@@ -21394,6 +21388,12 @@
           "title": null
         },
         {
+          "committeeId": "SSAP02",
+          "name": "Senate Committee on Appropriations — Department of Defense",
+          "rank": 9,
+          "title": null
+        },
+        {
           "committeeId": "SSAP22",
           "name": "Senate Committee on Appropriations — Energy and Water Development",
           "rank": 5,
@@ -21409,12 +21409,6 @@
           "committeeId": "SSAP18",
           "name": "Senate Committee on Appropriations — Departments of Labor, Health and Human Services, and Education, and Related Agencies",
           "rank": 4,
-          "title": null
-        },
-        {
-          "committeeId": "SSAP19",
-          "name": "Senate Committee on Appropriations — Military Construction, Veterans Affairs, and Related Agencies",
-          "rank": 9,
           "title": null
         },
         {
@@ -22618,12 +22612,6 @@
           "committeeId": "HSBA",
           "name": "House Committee on Financial Services",
           "rank": 15,
-          "title": null
-        },
-        {
-          "committeeId": "HSGO33",
-          "name": "House Committee on Oversight and Government Reform — Federal Law Enforcement",
-          "rank": 5,
           "title": null
         },
         {
@@ -25316,7 +25304,7 @@
         },
         {
           "committeeId": "SSEV15",
-          "name": "Senate Committee on Environment and Public Works — Fisheries, Wildlife, and Water",
+          "name": "Senate Committee on Environment and Public Works — Fisheries, Water, and Wildlife",
           "rank": 3,
           "title": null
         },
@@ -25451,7 +25439,7 @@
         },
         {
           "committeeId": "SSEV15",
-          "name": "Senate Committee on Environment and Public Works — Fisheries, Wildlife, and Water",
+          "name": "Senate Committee on Environment and Public Works — Fisheries, Water, and Wildlife",
           "rank": 3,
           "title": null
         },
@@ -26097,7 +26085,7 @@
         {
           "committeeId": "SSAP20",
           "name": "Senate Committee on Appropriations — State, Foreign Operations, and Related Programs",
-          "rank": 4,
+          "rank": 5,
           "title": null
         },
         {
@@ -28760,7 +28748,7 @@
         },
         {
           "committeeId": "SSEV15",
-          "name": "Senate Committee on Environment and Public Works — Fisheries, Wildlife, and Water",
+          "name": "Senate Committee on Environment and Public Works — Fisheries, Water, and Wildlife",
           "rank": 4,
           "title": null
         },
@@ -29904,7 +29892,7 @@
         {
           "committeeId": "SSAP20",
           "name": "Senate Committee on Appropriations — State, Foreign Operations, and Related Programs",
-          "rank": 5,
+          "rank": 6,
           "title": null
         },
         {
@@ -30454,6 +30442,12 @@
           "title": null
         },
         {
+          "committeeId": "HSJU08",
+          "name": "House Committee on the Judiciary — Crime and Federal Government Surveillance",
+          "rank": 6,
+          "title": null
+        },
+        {
           "committeeId": "HSED13",
           "name": "House Committee on Education and Workforce — Higher Education and Workforce Development",
           "rank": 8,
@@ -30464,6 +30458,12 @@
           "name": "House Committee on Education and Workforce — Early Childhood, Elementary, and Secondary Education",
           "rank": 1,
           "title": "Chairman"
+        },
+        {
+          "committeeId": "HSJU03",
+          "name": "House Committee on the Judiciary — Courts, Intellectual Property, Artificial Intelligence, and the Internet",
+          "rank": 8,
+          "title": null
         }
       ]
     },
@@ -30532,6 +30532,12 @@
           "title": null
         },
         {
+          "committeeId": "HSJU08",
+          "name": "House Committee on the Judiciary — Crime and Federal Government Surveillance",
+          "rank": 5,
+          "title": null
+        },
+        {
           "committeeId": "HSFA07",
           "name": "House Committee on Foreign Affairs — Western Hemisphere",
           "rank": 6,
@@ -30540,12 +30546,6 @@
         {
           "committeeId": "HSJU03",
           "name": "House Committee on the Judiciary — Courts, Intellectual Property, Artificial Intelligence, and the Internet",
-          "rank": 6,
-          "title": null
-        },
-        {
-          "committeeId": "HSJU10",
-          "name": "House Committee on the Judiciary — The Constitution and Limited Government",
           "rank": 6,
           "title": null
         },
@@ -30813,7 +30813,7 @@
         {
           "committeeId": "HSGO16",
           "name": "House Committee on Oversight and Government Reform — Delivering on Government Efficiency",
-          "rank": 4,
+          "rank": 3,
           "title": null
         }
       ]
@@ -31000,15 +31000,15 @@
           "title": null
         },
         {
-          "committeeId": "HSJU13",
-          "name": "House Committee on the Judiciary — Oversight",
-          "rank": 2,
-          "title": null
-        },
-        {
           "committeeId": "HSFA05",
           "name": "House Committee on Foreign Affairs — East Asia and Pacific",
           "rank": 4,
+          "title": null
+        },
+        {
+          "committeeId": "HSJU03",
+          "name": "House Committee on the Judiciary — Courts, Intellectual Property, Artificial Intelligence, and the Internet",
+          "rank": 7,
           "title": null
         },
         {
@@ -32616,7 +32616,7 @@
         {
           "committeeId": "HSJU10",
           "name": "House Committee on the Judiciary — The Constitution and Limited Government",
-          "rank": 7,
+          "rank": 6,
           "title": null
         },
         {
@@ -33157,9 +33157,21 @@
           "title": null
         },
         {
+          "committeeId": "HSJU01",
+          "name": "House Committee on the Judiciary — Immigration Integrity, Security, and Enforcement",
+          "rank": 10,
+          "title": null
+        },
+        {
           "committeeId": "HSED14",
           "name": "House Committee on Education and Workforce — Early Childhood, Elementary, and Secondary Education",
           "rank": 3,
+          "title": null
+        },
+        {
+          "committeeId": "HSJU10",
+          "name": "House Committee on the Judiciary — The Constitution and Limited Government",
+          "rank": 7,
           "title": null
         },
         {
@@ -33792,7 +33804,7 @@
         {
           "committeeId": "HSGO16",
           "name": "House Committee on Oversight and Government Reform — Delivering on Government Efficiency",
-          "rank": 6,
+          "rank": 5,
           "title": null
         },
         {
@@ -33844,6 +33856,12 @@
           "title": null
         },
         {
+          "committeeId": "HSGO33",
+          "name": "House Committee on Oversight and Government Reform — Federal Law Enforcement",
+          "rank": 1,
+          "title": "Ranking Member"
+        },
+        {
           "committeeId": "HSED02",
           "name": "House Committee on Education and Workforce — Health, Employment, Labor, and Pensions",
           "rank": 6,
@@ -33858,7 +33876,7 @@
         {
           "committeeId": "HSGO16",
           "name": "House Committee on Oversight and Government Reform — Delivering on Government Efficiency",
-          "rank": 5,
+          "rank": 4,
           "title": null
         }
       ]
@@ -34328,7 +34346,7 @@
         },
         {
           "committeeId": "SSEV15",
-          "name": "Senate Committee on Environment and Public Works — Fisheries, Wildlife, and Water",
+          "name": "Senate Committee on Environment and Public Works — Fisheries, Water, and Wildlife",
           "rank": 1,
           "title": "Chairman"
         },
@@ -34573,6 +34591,12 @@
           "committeeId": "HSWM",
           "name": "House Committee on Ways and Means",
           "rank": 19,
+          "title": null
+        },
+        {
+          "committeeId": "HSZS",
+          "name": "House Select Committee on the Strategic Competition Between the United States and the Chinese Communist Party",
+          "rank": 11,
           "title": null
         },
         {
@@ -35129,7 +35153,7 @@
         },
         {
           "committeeId": "SSEV15",
-          "name": "Senate Committee on Environment and Public Works — Fisheries, Wildlife, and Water",
+          "name": "Senate Committee on Environment and Public Works — Fisheries, Water, and Wildlife",
           "rank": 5,
           "title": null
         },
@@ -37692,7 +37716,7 @@
         {
           "committeeId": "HSJU08",
           "name": "House Committee on the Judiciary — Crime and Federal Government Surveillance",
-          "rank": 6,
+          "rank": 7,
           "title": null
         },
         {
@@ -37888,21 +37912,9 @@
           "title": null
         },
         {
-          "committeeId": "HSVR03",
-          "name": "House Committee on Veterans' Affairs — Health",
-          "rank": 5,
-          "title": null
-        },
-        {
           "committeeId": "HSAS02",
           "name": "House Committee on Armed Services — Military Personnel",
           "rank": 6,
-          "title": null
-        },
-        {
-          "committeeId": "HSVR11",
-          "name": "House Committee on Veterans' Affairs — Technology Modernization",
-          "rank": 2,
           "title": null
         }
       ]
@@ -39132,7 +39144,7 @@
         {
           "committeeId": "HSGO16",
           "name": "House Committee on Oversight and Government Reform — Delivering on Government Efficiency",
-          "rank": 7,
+          "rank": 6,
           "title": null
         }
       ]
@@ -39177,7 +39189,7 @@
         {
           "committeeId": "HSJU03",
           "name": "House Committee on the Judiciary — Courts, Intellectual Property, Artificial Intelligence, and the Internet",
-          "rank": 8,
+          "rank": 9,
           "title": null
         },
         {
@@ -39435,7 +39447,7 @@
         {
           "committeeId": "SSAP23",
           "name": "Senate Committee on Appropriations — Financial Services and General Government",
-          "rank": 5,
+          "rank": 4,
           "title": null
         },
         {
@@ -39459,7 +39471,7 @@
         {
           "committeeId": "SSAP20",
           "name": "Senate Committee on Appropriations — State, Foreign Operations, and Related Programs",
-          "rank": 6,
+          "rank": 7,
           "title": null
         },
         {
@@ -39482,7 +39494,7 @@
         },
         {
           "committeeId": "SSEV15",
-          "name": "Senate Committee on Environment and Public Works — Fisheries, Wildlife, and Water",
+          "name": "Senate Committee on Environment and Public Works — Fisheries, Water, and Wildlife",
           "rank": 6,
           "title": null
         },
@@ -39870,7 +39882,7 @@
         {
           "committeeId": "HSGO16",
           "name": "House Committee on Oversight and Government Reform — Delivering on Government Efficiency",
-          "rank": 8,
+          "rank": 7,
           "title": null
         }
       ]
@@ -40031,6 +40043,18 @@
           "name": "House Committee on Oversight and Government Reform",
           "rank": 19,
           "title": null
+        },
+        {
+          "committeeId": "HSGO33",
+          "name": "House Committee on Oversight and Government Reform — Federal Law Enforcement",
+          "rank": 5,
+          "title": null
+        },
+        {
+          "committeeId": "HSGO16",
+          "name": "House Committee on Oversight and Government Reform — Delivering on Government Efficiency",
+          "rank": 8,
+          "title": null
         }
       ]
     },
@@ -40169,6 +40193,14 @@
       ]
     },
     "G000608": {
+      "districtOffices": [],
+      "committees": []
+    },
+    "B001328": {
+      "districtOffices": [],
+      "committees": []
+    },
+    "W000832": {
       "districtOffices": [],
       "committees": []
     }

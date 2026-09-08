@@ -61,11 +61,11 @@ import { parse } from "yaml";
 import { stamp } from "./stamp.mts";
 
 /**
- * The pin. Read from the GitHub API on 2026-08-16; the commit itself is dated
- * 2026-07-15. Bumping this is a deliberate act with a diff, which is the
- * whole point of pinning.
+ * The pin. Re-read on 2026-09-07 after official House roll calls introduced
+ * B001328 and W000832, both absent from the prior directory pin. Bumping this
+ * is a deliberate act with a diff, which is the whole point of pinning.
  */
-const SHA = "4458244308621d0570a15008f46888b7a87645eb";
+const SHA = "8a3c7e6987f890b32e56058f7ddbdf380860b4a3";
 
 const RAW = `https://raw.githubusercontent.com/unitedstates/congress-legislators/${SHA}`;
 

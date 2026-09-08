@@ -1362,3 +1362,76 @@ export const demandSignals = pgTable(
     index("demand_signals_subject_idx").on(table.subjectType, table.subjectId),
   ],
 );
+
+/**
+ * Routine authoritative civic-data candidate versions. These rows are
+ * operational data, never repository snapshots. A failed candidate remains
+ * evidence that acquisition happened, while the promoted pointer stays on LKG.
+ */
+export const civicDataCandidates = pgTable(
+  "civic_data_candidates",
+  {
+    id: text("id").primaryKey(),
+    sourceId: text("source_id").notNull(),
+    recordClass: text("record_class").notNull(),
+    scope: text("scope").notNull(),
+    state: text("state").notNull(),
+    acquisitionSucceeded: boolean("acquisition_succeeded").notNull(),
+    rawHash: text("raw_hash"),
+    normalizedHash: text("normalized_hash"),
+    retrievedAt: timestamp("retrieved_at", { withTimezone: true, mode: "string" }).notNull(),
+    sourceThrough: text("source_through").notNull(),
+    parserVersion: text("parser_version").notNull(),
+    identity: jsonb("identity").notNull(),
+    /** Complete candidate envelope, including normalized evidence and read model. */
+    candidate: jsonb("candidate").notNull(),
+    validationReceipt: jsonb("validation_receipt"),
+    promotedVersionId: text("promoted_version_id"),
+    lastKnownGoodVersionId: text("last_known_good_version_id"),
+    failureCode: text("failure_code"),
+    failureDetail: text("failure_detail"),
+  },
+  (table) => [
+    index("civic_data_candidates_projection_idx").on(table.recordClass, table.scope, table.retrievedAt),
+    index("civic_data_candidates_source_idx").on(table.sourceId, table.retrievedAt),
+  ],
+);
+
+/** Append-only proof of every candidate state transition. */
+export const civicDataCandidateEvents = pgTable(
+  "civic_data_candidate_events",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    candidateId: text("candidate_id").notNull(),
+    sequence: integer("sequence").notNull(),
+    state: text("state").notNull(),
+    at: timestamp("at", { withTimezone: true, mode: "string" }).notNull(),
+    detail: text("detail").notNull(),
+  },
+  (table) => [
+    uniqueIndex("civic_data_candidate_events_sequence_idx").on(table.candidateId, table.sequence),
+  ],
+);
+
+/**
+ * One bounded Reader projection per record-class/scope. Promotion replaces
+ * this row atomically; candidates and raw validation evidence are never read
+ * by Reader requests.
+ */
+export const civicDataPromotions = pgTable(
+  "civic_data_promotions",
+  {
+    key: text("key").primaryKey(),
+    sourceId: text("source_id").notNull(),
+    recordClass: text("record_class").notNull(),
+    scope: text("scope").notNull(),
+    currentVersionId: text("current_version_id").notNull(),
+    lastKnownGoodVersionId: text("last_known_good_version_id").notNull(),
+    promotedAt: timestamp("promoted_at", { withTimezone: true, mode: "string" }).notNull(),
+    payload: jsonb("payload").notNull(),
+    validationReceipt: jsonb("validation_receipt").notNull(),
+  },
+  (table) => [
+    uniqueIndex("civic_data_promotions_record_scope_idx").on(table.recordClass, table.scope),
+  ],
+);

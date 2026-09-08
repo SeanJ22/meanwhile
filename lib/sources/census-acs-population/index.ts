@@ -106,6 +106,10 @@ export interface AcsFetch {
   readonly fetchedAt: string;
   /** The API's own header row followed by data rows, exactly as returned. */
   readonly rows: readonly (readonly (string | null)[])[];
+  /** Exact response bytes before parsing; persisted by the routine data ledger as a hash. */
+  readonly rawText?: string;
+  /** Credential-free final route used for authority-host validation. */
+  readonly finalUrl?: string;
 }
 
 function geography(scope: AcsScope): string {
@@ -143,7 +147,9 @@ export async function fetch(scope: AcsScope, key: string | undefined, fetcher: t
   if (!Array.isArray(parsed) || parsed.length < 2 || !Array.isArray(parsed[0])) {
     throw new Error(`Census ACS ${scope} answered 200 with a body that is not the API's row array: ${text.slice(0, 200)}`);
   }
-  return { scope, url: describeUrl(scope), status: response.status, fetchedAt, rows: parsed as (string | null)[][] };
+  const final = new URL(response.url || BASE);
+  final.searchParams.delete("key");
+  return { scope, url: describeUrl(scope), status: response.status, fetchedAt, rows: parsed as (string | null)[][], rawText: text, finalUrl: final.toString() };
 }
 
 /**

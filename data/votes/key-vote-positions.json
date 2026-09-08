@@ -2,8 +2,8 @@
  "formatVersion": 1,
  "fetchedAt": "2026-08-19T21:34:46.383Z",
  "note": "Per-roll-call positions for the SITTING members only, keyed <entryId>|<chamber>|<congress>-<session>:<roll>. Members who have left office are deliberately absent: their cards do not exist. An officeholder missing from a ref's map means we hold no position for them on that roll call — which the card must say as OUR gap, never as 'did not vote'.",
- "positions": {
-  "cares-act|house|116-1:493": {
+ "retiredMappings": {
+  "retired-wrong-event-stage|cares-act|house|116-1:493": {
    "congress:A000370": "YES",
    "congress:A000055": "YES",
    "congress:A000371": "YES",
@@ -246,7 +246,9 @@
    "congress:W000795": "YES",
    "congress:W000804": "YES",
    "congress:W000809": "YES"
-  },
+  }
+ },
+ "positions": {
   "cares-act|senate|116-2:80": {
    "congress:B001230": "YES",
    "congress:B001261": "YES",

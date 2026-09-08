@@ -276,17 +276,30 @@ test("g13: the refusal names the sanctioned path, not only .env.local", () => {
   assert.match(message, /NAMED SANCTION/);
 });
 
-test("g13: the sanction table is a closed list, and the purge is on it", () => {
+test("g13: the sanction table is a closed list, and both narrow operations are on it", () => {
   // The table is the audit surface: a reader asking "what may write to
   // production without being production" gets one enumerable answer.
-  assert.deepEqual(Object.keys(SANCTIONED_WRITES), ["intake-limiter-purge"]);
+  assert.deepEqual(Object.keys(SANCTIONED_WRITES), [
+    "intake-limiter-purge",
+    "routine-civic-data-promotion",
+  ]);
   assert.equal(SANCTIONED_WRITES["intake-limiter-purge"], PURGE);
+  assert.equal(
+    SANCTIONED_WRITES["routine-civic-data-promotion"],
+    "a routine civic data candidate/version promotion",
+  );
   // And it must match the string the purge actually passes, or the sanction
   // opens nothing and the job stays broken while every test here still passes.
   const limiter = readFileSync("lib/db/intake-limiter.ts", "utf8");
   assert.ok(
     limiter.includes(`assertWriteAllowed("${PURGE}")`),
     "purgeExpiredLimiterState no longer asks for the operation the sanction names",
+  );
+  const routine = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  assert.ok(
+    routine.includes('process.env.WTP_SANCTIONED_WRITE = "routine-civic-data-promotion"') &&
+      routine.includes('assertWriteAllowed("a routine civic data candidate/version promotion")'),
+    "the routine data-plane writer no longer asks for the exact operation its sanction names",
   );
 });
 

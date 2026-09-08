@@ -33,7 +33,7 @@
     },
     {
       "path": "data/states/nh/ballot/nh-merrimack-2026.json",
-      "sha256": "71c136b3c8af7428b9e875e4ce12ee932235acffe5c3b6481fff61d68da8ed90"
+      "sha256": "b7982aabfd88e7e499c54ad35a3dc1d1bb2963dd44848fca0914d6731cb68967"
     },
     {
       "path": "data/states/nh/funding/state-money-nh-2026.json",
@@ -77,7 +77,7 @@
     },
     {
       "path": "lib/registry/officeholders-us.json",
-      "sha256": "556db59e8277eeb0cb7d41e1ddb5e4977eae2078d19503dcaf27a3acde645d1f"
+      "sha256": "f0d392ab8f2de9af390c69612cded1ff3d723bda2804c1bbb89eef5086df2423"
     },
     {
       "path": "lib/registry/rosters-nj-morris.ts",
@@ -1022,6 +1022,22 @@
         "officeTitle": "U.S. Representative",
         "divisions": [
           "ocd-division/country:us/state:pa/cd:8"
+        ],
+        "sourcePath": "lib/registry/officeholders-us.json",
+        "sourceUrl": "https://unitedstates.github.io/congress-legislators/legislators-current.json"
+      },
+      "status": "NO_APPLICABLE_CANDIDACY",
+      "candidacy": null,
+      "reason": "No held ballot candidacy is resolved to this official. This is not a sourced absence of filings.",
+      "unresolvedCandidacyIds": []
+    },
+    {
+      "holder": {
+        "id": "congress:B001328",
+        "name": "Everton Blair Jr.",
+        "officeTitle": "U.S. Representative",
+        "divisions": [
+          "ocd-division/country:us/state:ga/cd:13"
         ],
         "sourcePath": "lib/registry/officeholders-us.json",
         "sourceUrl": "https://unitedstates.github.io/congress-legislators/legislators-current.json"
@@ -8689,6 +8705,22 @@
         "officeTitle": "U.S. Representative",
         "divisions": [
           "ocd-division/country:us/state:va/cd:11"
+        ],
+        "sourcePath": "lib/registry/officeholders-us.json",
+        "sourceUrl": "https://unitedstates.github.io/congress-legislators/legislators-current.json"
+      },
+      "status": "NO_APPLICABLE_CANDIDACY",
+      "candidacy": null,
+      "reason": "No held ballot candidacy is resolved to this official. This is not a sourced absence of filings.",
+      "unresolvedCandidacyIds": []
+    },
+    {
+      "holder": {
+        "id": "congress:W000832",
+        "name": "Aisha Wahab",
+        "officeTitle": "U.S. Representative",
+        "divisions": [
+          "ocd-division/country:us/state:ca/cd:14"
         ],
         "sourcePath": "lib/registry/officeholders-us.json",
         "sourceUrl": "https://unitedstates.github.io/congress-legislators/legislators-current.json"

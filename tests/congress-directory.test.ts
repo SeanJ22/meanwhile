@@ -68,10 +68,10 @@ test("the provenance tag names the PROJECT, not official records", () => {
 test("the counts match the denominators the brief stated", () => {
   // Each of these is a count WITH its denominator. A thin fetch, a redirect
   // to an error page, or a schema change all present as a smaller number.
-  assert.equal(snapshot.counts.members, 537);
-  assert.equal(snapshot.counts.membersWithBirthday, 537, "birthday on all 537");
-  assert.equal(snapshot.counts.membersWithFecId, 535, "FEC ids on 535 of 537");
-  assert.equal(snapshot.counts.membersWithTwitter, 505, "505 of 537 carry X");
+  assert.equal(snapshot.counts.members, 539);
+  assert.equal(snapshot.counts.membersWithBirthday, 539, "birthday on all 539");
+  assert.equal(snapshot.counts.membersWithFecId, 537, "FEC ids on 537 of 539");
+  assert.equal(snapshot.counts.membersWithTwitter, 505, "505 of 539 carry X");
   assert.equal(snapshot.counts.districtOffices, 1306);
   assert.equal(snapshot.counts.committees, 49);
   assert.equal(snapshot.counts.subcommittees, 181);
@@ -110,14 +110,14 @@ test("the join is by BIOGUIDE, never by name", () => {
     );
     joined += 1;
   }
-  assert.equal(joined, 518, "518 of 537 members publish at least one account");
+  assert.equal(joined, 518, "518 of 539 members publish at least one account");
 });
 
 test("state and chamber land on every federal row", () => {
   const withState = store.officeholders.filter((p) => p.state).length;
   const withChamber = store.officeholders.filter((p) => p.chamber).length;
-  assert.equal(withState, 537);
-  assert.equal(withChamber, 537);
+  assert.equal(withState, 539);
+  assert.equal(withChamber, 539);
 });
 
 test("a non-federal holder gets no directory slice, and that is a real answer", () => {

@@ -651,22 +651,16 @@ test("the window is CAPPED, and the cap keeps a quiet fortnight off a daily cade
 });
 
 test("A SKIPPED MONDAY IS RECOVERED — the fourteen-day gap this repair exists for", () => {
-  // 2026-08-31 is a Monday. fec and legiscan are Monday-only, so a slot that
-  // produces no run on that day would otherwise mean no federal committee data
-  // and no state roll-call data until 2026-09-07.
+  // FEC and LegiScan have left this hosted, repo-data scheduler. The monthly
+  // dotgov read remains a positive control for catch-up unioning.
   const wednesday = day("2026-09-02");
 
   // Today's cadence alone: neither weekly source runs.
   assert.deepEqual(ids(dueDecisions(null, wednesday)), ["meetings", "nj-filing"]);
 
-  // With Monday uncovered, both come back.
+  // With September 1 uncovered, the monthly source comes back.
   const caught = dueDecisions(day("2026-08-30"), wednesday);
-  assert.deepEqual(ids(caught), ["meetings", "nj-filing", "fec", "legiscan", "dotgov"]);
-
-  const fec = caught.find((d) => d.source.id === "fec")!;
-  assert.equal(fec.due, true);
-  assert.equal(fec.dueToday, false, "it is a Wednesday — it is NOT due today, and the report must not say it is");
-  assert.deepEqual(fec.recoveredFrom, ["2026-08-31"], "the row must name the Monday it is recovering");
+  assert.deepEqual(ids(caught), ["meetings", "nj-filing", "dotgov"]);
 
   // dotgov is monthly and 2026-09-01 is the 1st, so the same window recovers it.
   const dotgov = caught.find((d) => d.source.id === "dotgov")!;
@@ -680,15 +674,13 @@ test("a single skipped day unions that day's sources into the next run", () => {
   assert.deepEqual(ids(dueDecisions(day("2026-08-30"), tuesday)), [
     "meetings",
     "nj-filing",
-    "fec",
-    "legiscan",
     "dotgov",
   ]);
 });
 
 test("a source due TODAY is never reported as a catch-up", () => {
-  const monday = day("2026-08-31");
-  const d = dueDecisions(day("2026-08-29"), monday).find((x) => x.source.id === "fec")!;
+  const firstOfMonth = day("2026-09-01");
+  const d = dueDecisions(day("2026-08-29"), firstOfMonth).find((x) => x.source.id === "dotgov")!;
   assert.equal(d.dueToday, true);
   assert.deepEqual(d.recoveredFrom, [], "today's own cadence is not a recovery");
 });
@@ -708,8 +700,6 @@ test("the union is a UNION — it never runs a source no day asked for", () => {
   assert.deepEqual(ids(dueDecisions(day("2026-11-08"), day("2026-11-10"))), [
     "meetings",
     "nj-filing",
-    "fec",
-    "legiscan",
   ]);
 });
 

@@ -212,14 +212,14 @@ test("a red with no changed source at all is the tree's by construction", () => 
 test("a source in debt is DUE whatever its cadence says, and clears when it lands", () => {
   const wednesday = new Date("2026-09-02T00:00:00Z");
   const noDebt = dueDecisions(null, wednesday, 8, []);
-  const fec = noDebt.find((d) => d.source.id === "fec")!;
-  assert.equal(fec.due, false, "fec is weekly and Wednesday is not a Monday");
+  const dotgov = noDebt.find((d) => d.source.id === "dotgov")!;
+  assert.equal(dotgov.due, false, "dotgov is monthly and September 2 is not the first");
 
-  const inDebt = dueDecisions(null, wednesday, 8, [{ sourceId: "fec", firstFailedOn: "2026-08-31" }]);
-  const fecDebt = inDebt.find((d) => d.source.id === "fec")!;
-  assert.equal(fecDebt.due, true, "a source whose data was refused on Monday is owed now, not next Monday");
-  assert.equal(fecDebt.debtSince, "2026-08-31");
-  assert.deepEqual(fecDebt.recoveredFrom, [], "debt is not a catch-up day and is not written as one");
+  const inDebt = dueDecisions(null, wednesday, 8, [{ sourceId: "dotgov", firstFailedOn: "2026-09-01" }]);
+  const dotgovDebt = inDebt.find((d) => d.source.id === "dotgov")!;
+  assert.equal(dotgovDebt.due, true, "a source refused on the first is owed now, not next month");
+  assert.equal(dotgovDebt.debtSince, "2026-09-01");
+  assert.deepEqual(dotgovDebt.recoveredFrom, [], "debt is not a catch-up day and is not written as one");
 });
 
 test("debt counts consecutive failures, keeps the first day, and is discharged by name", () => {
@@ -238,12 +238,10 @@ test("debt counts consecutive failures, keeps the first day, and is discharged b
 
 test("nextCadenceDay and dayAfter agree with the cadence table", () => {
   const meetings = REFRESH_SOURCES.find((s) => s.id === "meetings")!;
-  const fec = REFRESH_SOURCES.find((s) => s.id === "fec")!;
   const dotgov = REFRESH_SOURCES.find((s) => s.id === "dotgov")!;
-  const wednesday = new Date("2026-09-02T00:00:00Z");
-  assert.equal(nextCadenceDay(meetings, wednesday), "2026-09-03", "daily through the election");
-  assert.equal(nextCadenceDay(fec, wednesday), "2026-09-07", "the next Monday");
-  assert.equal(nextCadenceDay(dotgov, wednesday), "2026-10-01", "the next 1st");
+  const wednesday = new Date("2026-11-04T00:00:00Z");
+  assert.equal(nextCadenceDay(meetings, wednesday), "2026-11-09", "the next post-election Monday");
+  assert.equal(nextCadenceDay(dotgov, wednesday), "2026-12-01", "the next 1st");
   assert.equal(dayAfter("2026-09-30"), "2026-10-01");
   assert.equal(dayAfter("2026-12-31"), "2027-01-01");
 });

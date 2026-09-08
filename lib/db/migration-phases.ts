@@ -363,6 +363,13 @@ export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
       "and a default would additionally have recorded an effort for the deterministic answer " +
       "modes, which never call a model at all.",
   },
+  "0025_typical_fixer": {
+    phase: "expand",
+    why:
+      "Creates the routine civic-data candidate, transition-event and promotion tables with " +
+      "their indexes. The migration is purely additive, so it is safe before the build that " +
+      "first reads or writes those tables.",
+  },
 };
 
 /** The declaration for a tag, or null when there is none. Never a default. */

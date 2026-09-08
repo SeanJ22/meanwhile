@@ -38,6 +38,8 @@ import { readFileSync } from "node:fs";
 
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import { dataPath, parseCsv } from "./index.ts";
+import { promotedReadModel } from "../civic-data/read-model.ts";
+import type { AcsPopulationRow } from "../sources/census-acs-population/index.ts";
 
 export const ACS_ZCTA_DATASET = "acs5_2024_b01003_zcta" as const;
 export const ACS_STATE_DATASET = "acs5_2024_b01003_state" as const;
@@ -82,6 +84,36 @@ function readTable(dataset: typeof ACS_ZCTA_DATASET | typeof ACS_STATE_DATASET):
 
 let zctaCache: PopulationTable | null = null;
 let stateCache: PopulationTable | null = null;
+
+export interface PromotedAcsPopulation {
+  readonly formatVersion: 1;
+  readonly vintage: number;
+  readonly zcta: readonly AcsPopulationRow[];
+  readonly state: readonly AcsPopulationRow[];
+}
+
+function populationTable(rows: readonly AcsPopulationRow[]): PopulationTable {
+  return {
+    rows: rows.length,
+    byCode: new Map(rows.map((row) => [row.code, { population: row.population, marginOfError: row.marginOfError }])),
+  };
+}
+
+/**
+ * Runtime preload of the single promoted ACS projection. The committed CSV is
+ * the bootstrap LKG until the one-time migration is seeded.
+ */
+export async function refreshPopulationFromPromoted(): Promise<string | null> {
+  const promoted = await promotedReadModel<PromotedAcsPopulation>("CENSUS_REFERENCE", "acs-population");
+  if (!promoted) return null;
+  const payload = promoted.payload;
+  if (payload.formatVersion !== 1 || payload.vintage !== 2024 || !Array.isArray(payload.zcta) || !Array.isArray(payload.state)) {
+    throw new Error(`Promoted ACS projection ${promoted.versionId} does not satisfy the supported Reader contract.`);
+  }
+  zctaCache = populationTable(payload.zcta);
+  stateCache = populationTable(payload.state);
+  return promoted.versionId;
+}
 
 /** Population by five-digit ZCTA. Cached per process. */
 export function populationByZcta(): PopulationTable {

@@ -1,6 +1,6 @@
 # Reader last-mile census
 
-Registry-derived denominator: 35 reader dataset families; 93 declared family/surface edges; 1303 holdings; 48541 typed records; 1052 family/surface/state rows.
+Registry-derived denominator: 35 reader dataset families; 93 declared family/surface edges; 1303 holdings; 48509 typed records; 1052 family/surface/state rows.
 
 Records are typed container rows, not unique civic people. Units are kept separately; a sourced roster and its members, a meeting and agenda text, or a normalized snapshot and acquisition input must not be summed as unique facts. Reader eligibility is distinct from measured reader delivery. Unmeasured false-negative/positive counts are null, never zero.
 
@@ -129,8 +129,8 @@ This is internal evidence. DELIVERY_UNPROVEN is an open proof obligation, never 
 | identity | ask | nj | 0 | 0 | SOURCE/HOLDING_UNAVAILABLE | 0 | UNMEASURED | true |
 | ballot | ballot | az | 187 | 0 | RENDERED | 0 | 0 | true |
 | ballot | ask | az | 187 | 0 | RENDERED | 0 | 0 | true |
-| ballot | ballot | nh | 142 | 0 | RENDERED | 0 | 0 | true |
-| ballot | ask | nh | 142 | 0 | RENDERED | 0 | 0 | true |
+| ballot | ballot | nh | 143 | 0 | RENDERED | 0 | 0 | true |
+| ballot | ask | nh | 143 | 0 | RENDERED | 0 | 0 | true |
 | ballot | ballot | nj | 740 | 0 | RENDERED | 0 | 0 | true |
 | ballot | ask | nj | 740 | 0 | RENDERED | 0 | 0 | true |
 | candidate-corpus | positions | az | 28 | 32 | RENDERED | 0 | 0 | true |
@@ -214,9 +214,9 @@ This is internal evidence. DELIVERY_UNPROVEN is an open proof obligation, never 
 | congress | map | az | 11 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | congress | representation | az | 11 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | congress | ballot | az | 11 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
-| congress | map | ca | 53 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
-| congress | representation | ca | 53 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
-| congress | ballot | ca | 53 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
+| congress | map | ca | 54 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
+| congress | representation | ca | 54 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
+| congress | ballot | ca | 54 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | congress | map | co | 10 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | congress | representation | co | 10 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | congress | ballot | co | 10 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
@@ -232,9 +232,9 @@ This is internal evidence. DELIVERY_UNPROVEN is an open proof obligation, never 
 | congress | map | fl | 29 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | congress | representation | fl | 29 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | congress | ballot | fl | 29 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
-| congress | map | ga | 15 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
-| congress | representation | ga | 15 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
-| congress | ballot | ga | 15 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
+| congress | map | ga | 16 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
+| congress | representation | ga | 16 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
+| congress | ballot | ga | 16 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | congress | map | gu | 1 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | congress | representation | gu | 1 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | congress | ballot | gu | 1 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
@@ -289,9 +289,9 @@ This is internal evidence. DELIVERY_UNPROVEN is an open proof obligation, never 
 | congress | map | mt | 4 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | congress | representation | mt | 4 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | congress | ballot | mt | 4 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
-| congress | map | national-unattributed | 537 | 0 | RENDERED | 0 | 0 | true |
-| congress | representation | national-unattributed | 537 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
-| congress | ballot | national-unattributed | 537 | 0 | RENDERED | 0 | 0 | true |
+| congress | map | national-unattributed | 539 | 0 | RENDERED | 0 | 0 | true |
+| congress | representation | national-unattributed | 539 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
+| congress | ballot | national-unattributed | 539 | 0 | RENDERED | 0 | 0 | true |
 | congress | map | nc | 16 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | congress | representation | nc | 16 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | congress | ballot | nc | 16 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
@@ -390,10 +390,10 @@ This is internal evidence. DELIVERY_UNPROVEN is an open proof obligation, never 
 | registry | representation | az | 1548 | 0 | RENDERED | 0 | 0 | true |
 | registry | ballot | az | 1548 | 0 | RENDERED | 0 | 0 | true |
 | registry | meetings | az | 1548 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
-| registry | map | ca | 211 | 0 | RENDERED | 0 | 0 | true |
-| registry | representation | ca | 211 | 0 | RENDERED | 0 | 0 | true |
-| registry | ballot | ca | 211 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
-| registry | meetings | ca | 211 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
+| registry | map | ca | 213 | 0 | RENDERED | 0 | 0 | true |
+| registry | representation | ca | 213 | 0 | RENDERED | 0 | 0 | true |
+| registry | ballot | ca | 213 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
+| registry | meetings | ca | 213 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | registry | map | co | 38 | 0 | RENDERED | 0 | 0 | true |
 | registry | representation | co | 38 | 0 | RENDERED | 0 | 0 | true |
 | registry | ballot | co | 38 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
@@ -414,10 +414,10 @@ This is internal evidence. DELIVERY_UNPROVEN is an open proof obligation, never 
 | registry | representation | fl | 115 | 0 | RENDERED | 0 | 0 | true |
 | registry | ballot | fl | 115 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | registry | meetings | fl | 115 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
-| registry | map | ga | 59 | 0 | RENDERED | 0 | 0 | true |
-| registry | representation | ga | 59 | 0 | RENDERED | 0 | 0 | true |
-| registry | ballot | ga | 59 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
-| registry | meetings | ga | 59 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
+| registry | map | ga | 61 | 0 | RENDERED | 0 | 0 | true |
+| registry | representation | ga | 61 | 0 | RENDERED | 0 | 0 | true |
+| registry | ballot | ga | 61 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
+| registry | meetings | ga | 61 | 0 | INTENTIONALLY_NOT_APPLICABLE | 0 | 0 | true |
 | registry | map | gu | 3 | 0 | RENDERED | 0 | 0 | true |
 | registry | representation | gu | 3 | 0 | IDENTITY_UNRESOLVED | 0 | 0 | true |
 | registry | ballot | gu | 3 | 0 | IDENTITY_UNRESOLVED | 0 | 0 | true |
@@ -602,10 +602,10 @@ This is internal evidence. DELIVERY_UNPROVEN is an open proof obligation, never 
 | votes | ballot | az | 24 | 0 | RENDERED | 0 | 0 | true |
 | votes | ask | az | 24 | 0 | RENDERED | 0 | 0 | true |
 | votes | map | az | 24 | 0 | RENDERED | 0 | 0 | true |
-| votes | votes | national-unattributed | 12377 | 0 | RENDERED | 0 | 0 | true |
-| votes | ballot | national-unattributed | 12377 | 0 | RENDERED | 0 | 0 | true |
-| votes | ask | national-unattributed | 12377 | 0 | RENDERED | 0 | 0 | true |
-| votes | map | national-unattributed | 12377 | 0 | RENDERED | 0 | 0 | true |
+| votes | votes | national-unattributed | 12336 | 0 | RENDERED | 0 | 0 | true |
+| votes | ballot | national-unattributed | 12336 | 0 | RENDERED | 0 | 0 | true |
+| votes | ask | national-unattributed | 12336 | 0 | RENDERED | 0 | 0 | true |
+| votes | map | national-unattributed | 12336 | 0 | RENDERED | 0 | 0 | true |
 | votes | votes | nh | 24 | 0 | RENDERED | 0 | 0 | true |
 | votes | ballot | nh | 24 | 0 | RENDERED | 0 | 0 | true |
 | votes | ask | nh | 24 | 0 | RENDERED | 0 | 0 | true |

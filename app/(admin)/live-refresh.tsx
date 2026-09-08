@@ -39,6 +39,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { PULSE_ACTIVE_INTERVAL_MS, PULSE_INTERVAL_MS, type LivePulse } from "@/lib/control-plane/live-pulse.ts";
+import { readRefusal } from "@/lib/control-plane/admin-refusal.ts";
 
 function agoWords(ms: number): string {
   const s = Math.max(0, Math.round(ms / 1000));
@@ -87,7 +88,18 @@ export function LiveRefresh({
       setBusy(true);
       try {
         const res = await fetch("/api/admin/live", { cache: "no-store", headers: { accept: "application/json" } });
-        if (!res.ok) throw new Error(`the console asked for an update and the server answered ${res.status}`);
+        if (!res.ok) {
+          /*
+           * ADM-49 (class): the live poll used to throw the status, so a signed
+           * -out console said "the server answered 401" every forty-five
+           * seconds without once saying that the sign-in had run out. The
+           * refusal names itself now.
+           */
+          const contentType = res.headers.get("content-type");
+          const body: unknown = await res.json().catch(() => null);
+          const refusal = readRefusal({ status: res.status, body, contentType });
+          throw new Error(refusal.whatToDo === null ? refusal.says : `${refusal.says} ${refusal.whatToDo}`);
+        }
         const pulse = (await res.json()) as LivePulse;
         setLastOk(Date.now());
         setError(null);

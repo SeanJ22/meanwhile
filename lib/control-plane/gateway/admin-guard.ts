@@ -38,7 +38,9 @@ import {
   ADMIN_SESSION_KEY_VAR,
   isAdminHostRequest,
   originAllowed,
+  rejectionWords,
   verifySession,
+  type SessionRejection,
 } from "../admin-auth.ts";
 import { ADMIN_ORIGIN } from "../../ops/origins.ts";
 
@@ -50,6 +52,29 @@ export type AdminGuardVerdict =
       readonly status: 404 | 403 | 401;
       /** The plain sentence the caller may show. Never a class name. */
       readonly says: string;
+      /**
+       * What the owner can DO about it, when there is something (ADM-49).
+       *
+       * Separate from `says` because they are different sentences with
+       * different lifetimes: what happened is a fact about this request, and
+       * what to do is advice that a surface may render as a control. A caller
+       * that only has room for one renders `says`.
+       */
+      readonly whatToDo?: string;
+      /**
+       * The refusal CLASS, for a log and for a surface that wants to offer the
+       * right control. Present only on a 401 — the other two statuses are about
+       * the host and the origin, which the owner cannot act on and which must
+       * not be described to a caller that should not know the surface exists.
+       *
+       * **This is the field whose absence was ADM-49.** `verifySession` has
+       * always named the reason; nothing carried it past this function, so the
+       * console printed the HTTP status instead and the owner read "401" as a
+       * verdict on his decision.
+       */
+      readonly rejection?: SessionRejection;
+      /** False when signing in again cannot fix it (a deployment fault). */
+      readonly fixedBySigningIn?: boolean;
     };
 
 /**
@@ -78,7 +103,22 @@ export async function guardAdminRequest(input: {
   const env = input.env ?? process.env;
   const verdict = await verifySession(input.cookie, env[ADMIN_SESSION_KEY_VAR], input.nowSeconds);
   if (!verdict.ok) {
-    return { ok: false, status: 401, says: "You need to be signed in for this. Nothing was done." };
+    /*
+     * ADM-49: the class travels. It was always known here and always thrown
+     * away, so "You need to be signed in" was told to an owner whose console
+     * had no signing key — advice that could not work, given as if it could.
+     * The sentence now comes from the class, and `fixedBySigningIn` lets the
+     * surface offer a sign-in control only when signing in is the answer.
+     */
+    const words = rejectionWords(verdict.rejection);
+    return {
+      ok: false,
+      status: 401,
+      says: words.says,
+      whatToDo: words.whatToDo,
+      rejection: verdict.rejection,
+      fixedBySigningIn: words.fixedBySigningIn,
+    };
   }
   return { ok: true, sessionRef: verdict.session.sid };
 }

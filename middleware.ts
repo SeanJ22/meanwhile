@@ -58,8 +58,10 @@ import {
   ADMIN_SESSION_COOKIE,
   ADMIN_SESSION_KEY_VAR,
   isAdminHostRequest,
+  rejectionWords,
   verifySession,
 } from "@/lib/control-plane/admin-auth.ts";
+import { adminRefusalBody } from "@/lib/control-plane/admin-refusal.ts";
 
 /**
  * Everything the admin surface owns. All are refused on the public host.
@@ -157,12 +159,44 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   );
 
   if (!verdict.ok) {
-    // An API path gets a JSON 401 rather than a redirect: a fetch that
-    // followed a redirect to an HTML login page would parse the page as
-    // data and report a confusing error far from its cause.
-    if (pathname.startsWith("/api/")) {
+    /*
+     * ADM-49: the CLASS, and nothing else — never the cookie and never the
+     * key's name. This is the only record that the refusal happened at all.
+     */
+    console.warn(`admin request refused at the door: 401 ${verdict.rejection} ${pathname}`);
+
+    /*
+     * ADM-49 — THE SPLIT IS ON HOW THE REQUEST WAS MADE, NOT ON WHAT IT ASKS FOR.
+     *
+     * The old rule was `pathname.startsWith("/api/")`, and the reasoning behind
+     * it was sound for a `fetch`: a fetch that followed a redirect to an HTML
+     * login page would parse the page as data and report a confusing error far
+     * from its cause. But it was applied to the PATH, and seventeen admin
+     * controls are plain `<form method="post" action="/api/admin/...">` with no
+     * JavaScript at all. Those are top-level NAVIGATIONS. The rule handed each
+     * of them a raw JSON body rendered as a page — the owner clicks a button
+     * and lands on `{"error":"authentication required"...}`, which is worse
+     * than the status code the console was already printing.
+     *
+     * So the question is not "is this an API path" but "will a human see the
+     * answer". A navigation gets the login page; a programmatic request gets
+     * JSON in the one shape every admin client now reads.
+     */
+    const dest = request.headers.get("sec-fetch-mode");
+    const accepts = request.headers.get("accept") ?? "";
+    const isNavigation = dest === "navigate" || (dest === null && accepts.includes("text/html"));
+
+    if (pathname.startsWith("/api/") && !isNavigation) {
+      const words = rejectionWords(verdict.rejection);
       return new NextResponse(
-        JSON.stringify({ error: "authentication required", rejection: verdict.rejection }),
+        JSON.stringify(
+          adminRefusalBody({
+            says: words.says,
+            whatToDo: words.whatToDo,
+            rejection: verdict.rejection,
+            fixedBySigningIn: words.fixedBySigningIn,
+          }),
+        ),
         { status: 401, headers: { "content-type": "application/json" } },
       );
     }

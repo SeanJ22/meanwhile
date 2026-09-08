@@ -657,6 +657,10 @@ body:has(main.admin) { background: #1b1c22; }
 .admin .dq-failed .dq-mark { background: var(--ce-text-bad); }
 .admin .dq-undone .dq-mark { background: var(--ce-text-warn); }
 .admin .dq-undo { font: inherit; font-size: .8rem; color: var(--ce-lumen); background: none; border: 0; cursor: pointer; text-decoration: underline; }
+/* ADM-49 — the doors a refusal offers. Never both when only one can work. */
+.admin .dq-fix { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-top: .35rem; }
+.admin .dq-signin { font-size: .8rem; font-weight: 600; }
+.admin .dq-retry { font-size: .8rem; padding: .3rem .7rem; }
 .admin .dq-priority { margin: 1rem 0 0; }
 .admin .dq-priority > h3 { margin: .5rem 0 .25rem; }
 .admin .dq-type { margin: .5rem 0 .5rem 1rem; }

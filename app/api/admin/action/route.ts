@@ -49,6 +49,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
+import { adminRefusalBody } from "@/lib/control-plane/admin-refusal.ts";
 import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
 import { consoleReturnPath } from "@/lib/control-plane/console-paths.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
@@ -139,9 +140,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     nowSeconds: Math.floor(Date.now() / 1000),
   });
   if (!guard.ok) {
-    return guard.status === 404
-      ? new NextResponse(null, { status: 404 })
-      : NextResponse.json({ ok: false, says: guard.says }, { status: guard.status });
+    if (guard.status === 404) return new NextResponse(null, { status: 404 });
+    /*
+     * ADM-49: the CLASS, and nothing else. Not the cookie, not the key, not the
+     * variable's name — the class alone, which is the one fact that was
+     * unrecoverable after the fact. No 401 on this route logged anything, so
+     * when the owner reported "nothing happens" three sessions running there
+     * was no record anywhere of which refusal it had been.
+     */
+    if (guard.rejection !== undefined) {
+      console.warn(`admin action refused before the gateway: 401 ${guard.rejection}`);
+    }
+    return NextResponse.json(adminRefusalBody(guard), { status: guard.status });
   }
 
   const body = await readBody(request);

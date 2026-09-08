@@ -58,6 +58,7 @@ import {
   OWNER_TYPE_WORDS,
   type OwnerType,
 } from "@/lib/control-plane/decision-queue.ts";
+import { readRefusal } from "@/lib/control-plane/admin-refusal.ts";
 
 /** One waiting card, flattened by the server into what the island needs. */
 export interface WaitingCardView {
@@ -90,6 +91,23 @@ interface JustDecided {
   readonly state: "SAVING" | "SAVED" | "FAILED" | "UNDOING" | "UNDONE";
   readonly says: string;
   readonly detail: string | null;
+  /**
+   * ADM-49. What the owner can DO about a refusal, and which control to offer.
+   *
+   * The old card had `detail` and nothing else, so a refusal it could not
+   * explain became `The server answered 401` — a number the owner read as a
+   * verdict on his decision. These three fields are what turns that into a
+   * sentence and a door.
+   */
+  readonly whatToDo: string | null;
+  /** Offer "Sign in again" — only when signing in is actually the fix. */
+  readonly offerSignIn: boolean;
+  /**
+   * The exact submission that failed, so Try again re-runs THAT and not a
+   * reconstruction of it. Held as its arguments rather than as a closure over
+   * `record`, which would make `record` depend on itself.
+   */
+  readonly retry: { readonly card: WaitingCardView; readonly chosenOption: string; readonly ownerAnswer: string | null } | null;
 }
 
 const ANSWER_MAX = 4000;
@@ -165,7 +183,17 @@ export function DecisionQueue({
       // The card leaves the list and says so BEFORE the network is asked. This
       // is the whole defect: the write was always fine; the silence was not.
       setDecided((was) => [
-        { rowId: card.rowId, title: card.title, chosen: chosenOption, state: "SAVING", says: nextStepFor(chosenOption), detail: null },
+        {
+          rowId: card.rowId,
+          title: card.title,
+          chosen: chosenOption,
+          state: "SAVING",
+          says: nextStepFor(chosenOption),
+          detail: null,
+          whatToDo: null,
+          offerSignIn: false,
+          retry: null,
+        },
         ...was.filter((d) => d.rowId !== card.rowId),
       ]);
       setOpenCard(null);
@@ -182,13 +210,41 @@ export function DecisionQueue({
             returnTo,
           }),
         });
+        /*
+         * ADM-49: the content type is read BEFORE the body, because the case
+         * that hurt most is the one where `res.json()` throws — a refusal from
+         * something in front of the console, which used to collapse into the
+         * same bare status as every other failure.
+         */
+        const contentType = res.headers.get("content-type");
         const body: unknown = await res.json().catch(() => null);
         const receipt = (body as { receipt?: { says?: string; outcome?: string } } | null)?.receipt;
         if (!res.ok || receipt?.outcome === "REFUSED") {
+          /*
+           * A receipt means the gateway LOOKED at the request and refused it on
+           * the merits — that is an answer about the decision, and it is the
+           * right sentence. Everything else is a refusal before the gateway,
+           * which is about the session or the console, and `readRefusal` is the
+           * one reader for those (RULING 103).
+           */
+          const resolved =
+            typeof receipt?.says === "string" && receipt.says.trim() !== ""
+              ? { says: receipt.says, whatToDo: null, offerSignIn: false, offerRetry: false }
+              : readRefusal({ status: res.status, body, contentType });
           setDecided((was) =>
             was.map((d) =>
               d.rowId === card.rowId
-                ? { ...d, state: "FAILED", says: "Not recorded.", detail: receipt?.says ?? `The server answered ${res.status}. Nothing was written, so the row is still waiting on you.` }
+                ? {
+                    ...d,
+                    state: "FAILED",
+                    says: "Not recorded.",
+                    detail: resolved.says,
+                    whatToDo: resolved.whatToDo,
+                    offerSignIn: resolved.offerSignIn,
+                    // Nothing was written, so re-running the identical
+                    // submission is safe: the gateway is idempotent on the key.
+                    retry: { card, chosenOption, ownerAnswer },
+                  }
                 : d,
             ),
           );
@@ -202,7 +258,24 @@ export function DecisionQueue({
         setDecided((was) =>
           was.map((d) =>
             d.rowId === card.rowId
-              ? { ...d, state: "FAILED", says: "Not recorded.", detail: e instanceof Error ? e.message : "The console could not reach the server. Nothing was written." }
+              ? {
+                  ...d,
+                  state: "FAILED",
+                  says: "Not recorded.",
+                  /*
+                   * ADM-49: a thrown fetch is a REACHABILITY failure, and its
+                   * `message` is browser text ("Failed to fetch") that means
+                   * nothing to the owner. Say the fact instead and keep the
+                   * machine's words in the disclosure below.
+                   */
+                  detail: "The console could not reach the server at all, so nothing was written.",
+                  whatToDo:
+                    e instanceof Error
+                      ? `Check the connection and try again. The browser said: ${e.message}`
+                      : "Check the connection and try again.",
+                  offerSignIn: false,
+                  retry: { card, chosenOption, ownerAnswer },
+                }
               : d,
           ),
         );
@@ -232,7 +305,18 @@ export function DecisionQueue({
             returnTo,
           }),
         });
-        if (!res.ok) throw new Error(`the server answered ${res.status}`);
+        if (!res.ok) {
+          /*
+           * ADM-49 (class): "Change my answer" had the same defect as the
+           * record path and was missed on the first pass — the class guard in
+           * tests/admin-refusal-adm49.test.ts found it. A superseding answer
+           * refused for a signed-out session must say so, not print a number.
+           */
+          const contentType = res.headers.get("content-type");
+          const body: unknown = await res.json().catch(() => null);
+          const refusal = readRefusal({ status: res.status, body, contentType });
+          throw new Error(refusal.whatToDo === null ? refusal.says : `${refusal.says} ${refusal.whatToDo}`);
+        }
         setDecided((was) =>
           was.map((d) =>
             d.rowId === entry.rowId
@@ -273,6 +357,33 @@ export function DecisionQueue({
                 </strong>
                 <span className="dq-next">{d.says}</span>
                 {d.detail && <span className="dq-detail">{d.detail}</span>}
+                {/*
+                  ADM-49: what to do about it, and the door. The owner read a red
+                  dot beside "401" as the console rejecting his decision; a
+                  refusal that offers no next step invites exactly that reading.
+                */}
+                {d.whatToDo && <span className="dq-detail">{d.whatToDo}</span>}
+                {(d.offerSignIn || d.retry) && (
+                  <span className="dq-fix">
+                    {d.offerSignIn && (
+                      <a className="dq-signin" href="/admin/login">
+                        Sign in again
+                      </a>
+                    )}
+                    {d.retry && (
+                      <button
+                        type="button"
+                        className="dq-retry"
+                        onClick={() => {
+                          const again = d.retry;
+                          if (again) void record(again.card, again.chosenOption, again.ownerAnswer);
+                        }}
+                      >
+                        Try again
+                      </button>
+                    )}
+                  </span>
+                )}
               </span>
               {(d.state === "SAVED" || d.state === "SAVING") && (
                 <button type="button" className="dq-undo" onClick={() => void undo(d)}>

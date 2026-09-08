@@ -330,6 +330,102 @@ export type SessionVerdict =
   | { readonly ok: true; readonly session: AdminSession }
   | { readonly ok: false; readonly rejection: SessionRejection };
 
+/**
+ * **WHAT A REFUSED SIGN-IN SAYS TO THE OWNER, AND WHAT HE CAN DO ABOUT IT.**
+ * (ADM-49, the 9.7.26 admin feedback. Critical.)
+ *
+ * ## The defect this exists to close
+ *
+ * The owner typed an answer on a decision card, clicked *Record my answer*, and
+ * read: *"Not recorded. The server answered 401. Nothing was written, so the row
+ * is still waiting on you."* He read the red dot as **"Not approved"** and could
+ * not understand how the console had decided that. Three sessions of "nothing
+ * happens" (ADM-4, ADM-16, ADM-32) were this.
+ *
+ * The machine was not confused. `verifySession` had already named the reason —
+ * one of five — and both 401 sites already carried it. **The console threw it
+ * away and printed the HTTP status instead.** A number between 400 and 499 is
+ * not a sentence the owner can act on, and "401" in particular reads to a
+ * non-engineer as a verdict about the DECISION rather than about the session.
+ *
+ * ## Why a `Record` over the union rather than an entry in `PLAIN_WORDS`
+ *
+ * `plain-words.ts` is the console's one translation layer and this is
+ * deliberately not a second one: it maps ARBITRARY machine constants to a label,
+ * keyed by a bare string, and `NOT_CONFIGURED` is ALREADY a key there meaning a
+ * health contract that was never set up. Two domains, one key, different
+ * sentences — a flat dictionary cannot hold both, and the one it would answer
+ * with is whichever was written last. So the closed union owns its own
+ * exhaustive map, here, beside the type it is total over. `Record<SessionRejection, …>`
+ * makes a new rejection class a COMPILE error rather than a missing sentence.
+ *
+ * ## The distinction that matters most
+ *
+ * Four of these five are fixed by signing in again. **`NOT_CONFIGURED` is not.**
+ * It means this deployment has no signing key, so it cannot check anybody — and
+ * telling the owner to sign in again would loop him forever through a door that
+ * cannot open. `fixedBySigningIn` carries that difference so a surface can offer
+ * the right control instead of guessing, and so the console never sends him to
+ * do something that cannot work.
+ *
+ * Nothing here names a variable, a header or a cookie. The owner gets the fact
+ * and the action; the class travels separately for the log.
+ */
+export interface RejectionWords {
+  /** What happened, in the owner's words. One sentence, no jargon. */
+  readonly says: string;
+  /** What he can do about it. One sentence. */
+  readonly whatToDo: string;
+  /** False when signing in again cannot fix it — this is a deployment fault. */
+  readonly fixedBySigningIn: boolean;
+}
+
+export const SESSION_REJECTION_WORDS: Readonly<Record<SessionRejection, RejectionWords>> = {
+  /*
+   * Also the class an ordinary time-out arrives as. The cookie's `Max-Age` is
+   * set from the same `SESSION_LIFETIME_SECONDS` as its `exp`, so the browser
+   * drops it at the moment it would have expired and the server never sees an
+   * EXPIRED cookie from a session that simply aged out — it sees no cookie at
+   * all. The sentence therefore has to cover both without guessing which.
+   */
+  NO_COOKIE: {
+    says: "You are not signed in on this tab — either the sign-in ran out, or this browser is not carrying it.",
+    whatToDo: "Sign in again, then use the button once more. Nothing you typed has been lost.",
+    fixedBySigningIn: true,
+  },
+  EXPIRED: {
+    says: "Your sign-in has run out. A sign-in lasts eight hours.",
+    whatToDo: "Sign in again, then use the button once more. Nothing you typed has been lost.",
+    fixedBySigningIn: true,
+  },
+  MALFORMED: {
+    says: "The sign-in this tab is carrying could not be read.",
+    whatToDo: "Sign in again. If it happens twice, say so — a sign-in should never arrive unreadable.",
+    fixedBySigningIn: true,
+  },
+  BAD_SIGNATURE: {
+    says: "The sign-in this tab is carrying was not issued by this console.",
+    whatToDo:
+      "Sign in again. If it happens twice, say so — it means the signing key changed underneath a live session.",
+    fixedBySigningIn: true,
+  },
+  /*
+   * The one that must never be dressed up as an expiry. Signing in again cannot
+   * help, because the console has nothing to check a sign-in against.
+   */
+  NOT_CONFIGURED: {
+    says: "This console has no signing key, so it cannot check anybody's sign-in — including yours.",
+    whatToDo:
+      "Signing in again will not fix this one; the deployment is missing a setting. Nothing was written, and nothing you typed has been lost.",
+    fixedBySigningIn: false,
+  },
+};
+
+/** The owner-facing sentence for a refused session. Total over the union. */
+export function rejectionWords(rejection: SessionRejection): RejectionWords {
+  return SESSION_REJECTION_WORDS[rejection];
+}
+
 /** Verify a session cookie value. */
 export async function verifySession(
   cookieValue: string | undefined | null,

@@ -41,6 +41,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
+import { adminRefusalBody } from "@/lib/control-plane/admin-refusal.ts";
 import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
 import { readPulse } from "@/lib/control-plane/gateway/pulse-read.ts";
@@ -84,9 +85,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     nowSeconds: Math.floor(Date.now() / 1000),
   });
   if (!guard.ok) {
-    return guard.status === 404
-      ? new NextResponse(null, { status: 404 })
-      : NextResponse.json({ says: guard.says }, { status: guard.status });
+    if (guard.status === 404) return new NextResponse(null, { status: 404 });
+    // ADM-49: the class only, never the credential (see the action route).
+    if (guard.rejection !== undefined) {
+      console.warn(`admin live pulse refused: 401 ${guard.rejection}`);
+    }
+    return NextResponse.json(adminRefusalBody(guard), { status: guard.status });
   }
 
   const at = new Date().toISOString();

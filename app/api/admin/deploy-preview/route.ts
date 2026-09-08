@@ -20,6 +20,7 @@ import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
 import { deployPreview } from "@/lib/control-plane/deploy-preview.ts";
 import { FLEET_SAFETY_BOUNDS } from "@/lib/control-plane/fleet-safety.ts";
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
+import { adminRefusalBody } from "@/lib/control-plane/admin-refusal.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
 
 export const dynamic = "force-dynamic";
@@ -34,7 +35,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     checkOrigin: false,
     nowSeconds: Math.floor(Date.now() / 1000),
   });
-  if (!guard.ok) return new NextResponse(guard.status === 404 ? null : JSON.stringify({ error: guard.says }), { status: guard.status });
+  if (!guard.ok) {
+    if (guard.status === 404) return new NextResponse(null, { status: 404 });
+    // ADM-49: the class only, never the credential (see the action route).
+    if (guard.rejection !== undefined) {
+      console.warn(`admin deploy preview refused: 401 ${guard.rejection}`);
+    }
+    return NextResponse.json(adminRefusalBody(guard), { status: guard.status });
+  }
 
   const note = (request.nextUrl.searchParams.get("note") ?? "").slice(0, NOTE_MAX).trim();
   if (note === "") {

@@ -37,6 +37,7 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import type { DeployPreview } from "@/lib/control-plane/deploy-preview.ts";
+import { readRefusal } from "@/lib/control-plane/admin-refusal.ts";
 
 type Step = "CLOSED" | "ASKING" | "PREVIEW" | "SENDING" | "SENT" | "FAILED";
 
@@ -70,7 +71,18 @@ export function DeployFleet(props: {
     setSays(null);
     try {
       const res = await fetch(`${previewRoute}?note=${encodeURIComponent(note)}`, { cache: "no-store", headers: { accept: "application/json" } });
-      if (!res.ok) throw new Error(`the console asked what this would do and the server answered ${res.status}`);
+      if (!res.ok) {
+        /*
+         * ADM-49 (class): this used to throw the status and render it. The
+         * refusal already carries its own sentence in the one admin refusal
+         * shape; read it rather than printing the number.
+         */
+        const contentType = res.headers.get("content-type");
+        const body: unknown = await res.json().catch(() => null);
+        const refusal = readRefusal({ status: res.status, body, contentType });
+        setSays(refusal.whatToDo === null ? refusal.says : `${refusal.says} ${refusal.whatToDo}`);
+        return;
+      }
       setPreview((await res.json()) as DeployPreview);
     } catch (e) {
       setSays(e instanceof Error ? e.message : "the console could not work out what this would do");
@@ -91,10 +103,21 @@ export function DeployFleet(props: {
           returnTo: props.returnTo,
         }),
       });
+      const contentType = res.headers.get("content-type");
       const body = (await res.json().catch(() => null)) as { ok?: boolean; receipt?: { says?: string } } | null;
       if (!res.ok || body?.ok === false) {
         setStep("FAILED");
-        setSays(body?.receipt?.says ?? `Nothing was sent. The server answered ${res.status}.`);
+        /*
+         * ADM-49 (class): a receipt means the gateway looked and refused on the
+         * merits; anything else is a refusal before it, which `readRefusal`
+         * turns into a sentence instead of a status code.
+         */
+        if (typeof body?.receipt?.says === "string" && body.receipt.says.trim() !== "") {
+          setSays(body.receipt.says);
+        } else {
+          const refusal = readRefusal({ status: res.status, body, contentType });
+          setSays(refusal.whatToDo === null ? refusal.says : `${refusal.says} ${refusal.whatToDo}`);
+        }
         return;
       }
       setStep("SENT");

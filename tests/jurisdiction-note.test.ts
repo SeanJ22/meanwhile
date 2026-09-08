@@ -85,24 +85,16 @@ test("JUR-4: UNKNOWN is counted and never named as partial", () => {
   assert.equal(needsPill("CERTAIN"), false);
 
   const page = readFileSync(join(ROOT, "app", "ballot", "page.tsx"), "utf8");
-  // The NAMED list is built from AMBIGUOUS only.
+  /* BAL-49 retires the lower named/counting box. UNKNOWN still participates
+     in the top narrowing contract through needsPill, but neither UNKNOWN nor
+     AMBIGUOUS is turned into a body name beside the contests. */
   assert.match(
     page,
-    /certainty\.certaintyOf\(contest\.ocdId\) === "AMBIGUOUS"/,
-    "the named jurisdiction list is no longer restricted to measured-partial divisions",
+    /data-could-govern=\{[\s\S]{0,160}?needsPill\(certainty\.certaintyOf\(contest\.ocdId\)\)/,
+    "uncertain divisions no longer participate in the address-narrowing contract",
   );
-  // The COUNT is built from UNKNOWN only.
-  assert.match(
-    page,
-    /certainty\.certaintyOf\(contest\.ocdId\) === "UNKNOWN"/,
-    "the unplaceable count is no longer restricted to divisions we hold no boundary for",
-  );
-  // And the block must not be fed by the collapsing helper.
-  assert.doesNotMatch(
-    page,
-    /jurisdictions=\{\[[\s\S]{0,400}?needsPill\(/,
-    "the named list is back on needsPill, which collapses UNKNOWN into AMBIGUOUS",
-  );
+  assert.doesNotMatch(page, /<JurisdictionNote/);
+  assert.doesNotMatch(page, /jurisdictionNameFromOcdId/);
 });
 
 /**
@@ -172,6 +164,15 @@ test("JUR-4: the full pill no longer renders per contest on the ballot page", ()
     /<CouldGovernPill/,
     "the eleven-word pill is back on every affected contest heading",
   );
-  assert.match(page, /<JurisdictionMark \/>/, "the short mark is gone");
-  assert.match(page, /<JurisdictionNote/, "the page-level block is gone");
+  /* BAL-49 supersedes JUR-4's duplicate lower box. Its address action already
+     exists in the top pill strip, so neither the block nor a dangling mark
+     remains on the ballot page. */
+  assert.doesNotMatch(page, /<JurisdictionMark \/>/, "the retired short mark returned");
+  assert.doesNotMatch(page, /<JurisdictionNote/, "the retired lower box returned");
+  assert.match(page, /<BallotNarrowing/);
+  assert.equal(
+    page.split("A zip code is orientation, not your exact ballot").length - 1,
+    1,
+    "the zip limitation should be one short line under the heading",
+  );
 });

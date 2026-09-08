@@ -1,0 +1,75 @@
+.list {
+  display: grid;
+  gap: 0.75rem;
+  max-height: 24rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 0.25rem;
+}
+
+.action {
+  background: color-mix(in srgb, var(--panel) 72%, transparent);
+  border: 1px solid var(--panel-border);
+  border-left: 3px solid color-mix(in srgb, var(--signal) 65%, var(--panel-border));
+  border-radius: 0.55rem;
+  padding: 0.7rem 0.75rem;
+}
+
+.heading {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.55rem;
+}
+
+.kind {
+  color: var(--muted);
+  font-size: 0.625rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.designation {
+  color: var(--text);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+
+.explanation {
+  color: var(--text);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  margin-top: 0.35rem;
+}
+
+.source {
+  color: var(--text-dim);
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  margin-top: 0.45rem;
+}
+
+.source a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.detail {
+  color: var(--muted);
+  font-size: 0.6875rem;
+  margin-top: 0.35rem;
+}
+
+.detail summary {
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
+}
+
+.detail p {
+  line-height: 1.45;
+  margin-top: 0.3rem;
+}

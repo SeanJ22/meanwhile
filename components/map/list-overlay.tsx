@@ -27,6 +27,8 @@ import { BODY_TYPE_LABEL, bodyTypeOf } from "@/lib/state/derive";
 import { useUi, useUiDispatch } from "@/lib/state/provider";
 import type { ListGroupBy, ListSort } from "@/lib/state/types";
 import type { Meeting } from "@/lib/sources/types";
+import { bodyPurposeIndex } from "@/lib/map/body-purpose";
+import { BodyPurposeLabel } from "./body-purpose-label";
 
 import { tierVars } from "../shell/tier-style";
 
@@ -89,6 +91,10 @@ export function ListOverlay({
   const ui = useUi();
   const dispatch = useUiDispatch();
   const [limit, setLimit] = useState(PAGE);
+  const bodyPurposes = useMemo(
+    () => bodyPurposeIndex(result?.coverage?.bodies ?? []),
+    [result?.coverage?.bodies],
+  );
 
   // M58: the honest line behind an empty Concluded filter.
   const gapNote = useMemo(
@@ -243,7 +249,7 @@ export function ListOverlay({
           dispatch({ type: "list/open", open: false });
       }}
     >
-      <div className="al-panel">
+      <div className="reader-lumen-surface al-panel">
       <div className="al-overlay-header">
         <span className="al-overlay-count">
           {sorted.length} {listingCount.unit}
@@ -409,20 +415,26 @@ export function ListOverlay({
                           meeting.location.lng,
                         )
                       : null;
+                  const purpose = meeting.bodyId
+                    ? bodyPurposes.get(meeting.bodyId)
+                    : null;
 
                   return (
-                    <button
+                    <div
                       key={meeting.id}
-                      type="button"
-                      className="al-row"
+                      className="al-row-shell"
                       data-meeting-id={meeting.id}
                       style={tierVars(tierForMeeting(meeting))}
-                      onClick={() => {
-                        onPickMeeting(meeting);
-                        dispatch({ type: "list/open", open: false });
-                      }}
                     >
-                      <span className="al-row-title">
+                      <button
+                        type="button"
+                        className="al-row"
+                        onClick={() => {
+                          onPickMeeting(meeting);
+                          dispatch({ type: "list/open", open: false });
+                        }}
+                      >
+                        <span className="al-row-title">
                         {/* 3a: what-first, said once — sources that title a
                             sitting with the body's own name must not read
                             the same words twice. */}
@@ -467,8 +479,8 @@ export function ListOverlay({
                             />
                           </span>
                         )}
-                      </span>
-                      <span className="al-row-meta">
+                        </span>
+                        <span className="al-row-meta">
                         {/*
                           g4 item 11: a finished sitting says so, and a
                           cancelled one says so in its own shade. A filled
@@ -513,8 +525,14 @@ export function ListOverlay({
                           // Anything under a mile rounds to 0, which reads as
                           // a missing value rather than "very close".
                           ` · ${formatMiles(km) < 1 ? "<1" : formatMiles(km)} mi`}
-                      </span>
-                    </button>
+                        </span>
+                      </button>
+                      {purpose && (
+                        <div className="al-row-purpose">
+                          <BodyPurposeLabel purpose={purpose} />
+                        </div>
+                      )}
+                    </div>
                   );
                 })}
             </div>

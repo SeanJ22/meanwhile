@@ -1,4 +1,4 @@
-import { actionsFor, actionText, executiveActionStore, type ExecutiveAction } from "./executive-actions.ts";
+import { actionsFor, actionText, executiveActionStore, plainActionExplanation, type ExecutiveAction } from "./executive-actions.ts";
 import { candidacyOfficialIdentityStatus, currentOfficialIdentity, currentOfficialIdentityStatus, officialIdsForCandidacy } from "../funding/campaign-money.ts";
 import { azLineupReconciliation, reconciledCandidacyIdForCard } from "../identity/az-2026.ts";
 
@@ -6,6 +6,7 @@ export interface ReaderOfficialAction {
   id: string;
   officialId: string;
   kind: ExecutiveAction["kind"];
+  explanation: string;
   text: string;
   sourceUrl: string;
   documentUrl: string | null;
@@ -48,7 +49,7 @@ export function officialActionsForTarget(subjectId: string): ReaderOfficialActio
       }
       if (!action.sourceUrl || !action.sourceOrg || !action.collectedAt) throw new Error("Held official-action provenance is unavailable");
       result.records.push({ id: action.id, officialId, kind: action.kind,
-        text: actionText(action), sourceUrl: action.sourceUrl, documentUrl: action.documentUrl,
+        explanation: plainActionExplanation(action), text: actionText(action), sourceUrl: action.sourceUrl, documentUrl: action.documentUrl,
         sourceOrg: action.sourceOrg, collectedAt: action.collectedAt });
     }
   }

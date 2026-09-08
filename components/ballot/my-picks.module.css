@@ -1,0 +1,68 @@
+.summary {
+  --lumen-peak: color-mix(in srgb, var(--panel-bg) 82%, white);
+  --lumen-floor: var(--panel-bg);
+  --lumen-horizon: white;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px dashed var(--panel-border);
+  border-radius: var(--radius);
+  background-color: var(--panel-bg);
+  background-image: radial-gradient(
+    ellipse at bottom,
+    var(--lumen-peak) 0%,
+    var(--lumen-floor) 68%
+  );
+  padding: 1rem;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    var(--shadow-panel);
+}
+
+.summary::after {
+  content: "";
+  position: absolute;
+  right: 15%;
+  bottom: 0;
+  left: 15%;
+  height: 1px;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--lumen-horizon),
+    transparent
+  );
+  opacity: 0.32;
+}
+
+.headingRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 0.75rem;
+}
+
+.deviceBadge {
+  display: inline-flex;
+  min-height: 1.75rem;
+  align-items: center;
+  border: 1px dashed var(--panel-border);
+  border-radius: var(--radius-pill);
+  padding: 0 0.65rem;
+  color: var(--text-muted);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+:global([data-theme="light"]) .summary {
+  --lumen-peak: var(--panel-bg);
+  --lumen-floor: color-mix(in srgb, var(--panel-bg) 94%, black);
+  --lumen-horizon: color-mix(in srgb, var(--online) 60%, transparent);
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.04),
+    var(--shadow-panel);
+}

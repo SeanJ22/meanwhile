@@ -70,6 +70,7 @@ export function PillCluster({
   onSearchPick,
   onOpenBody,
   onOpenPerson,
+  zipFirst = false,
 }: {
   placement: AskPillPlacement;
   /** The zip the viewport currently resolves to. Null hides the pills. */
@@ -87,6 +88,8 @@ export function PillCluster({
   onOpenBody?: (body: CoveredBody) => void;
   /** ASK-3/ASK-8: the who-governs card's own person opener. */
   onOpenPerson?: (holder: SeatHolder) => void;
+  /** LAY-14: phone presents ZIP before Ballot, so DOM and focus follow it. */
+  zipFirst?: boolean;
 }) {
   const [switching, setSwitching] = useState(false);
 
@@ -120,10 +123,16 @@ export function PillCluster({
   useLayoutEffect(() => {
     if (!askOpen || placement !== "map" || !rowRef.current) return;
     const row = rowRef.current;
-    const measure = () => setExpansionTop(Math.max(12, row.getBoundingClientRect().bottom + 8));
+    const commandBand = row.closest<HTMLElement>(".map-top-row");
+    const measure = () => {
+      const rowRect = row.getBoundingClientRect();
+      const anchorRect = rowRect.height > 0 ? rowRect : commandBand?.getBoundingClientRect();
+      setExpansionTop(Math.max(12, (anchorRect?.bottom ?? 4) + 8));
+    };
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(row);
+    if (commandBand) observer.observe(commandBand);
     window.addEventListener("resize", measure);
     return () => {
       observer.disconnect();
@@ -141,62 +150,64 @@ export function PillCluster({
     : null;
   const covered = state === null || ballotCoveredForState(state);
   const pill = ASK_PILL_LABELS[placement];
+  const ballotLink = (
+    <Link
+      href={`/ballot?zip=${zip}`}
+      className="ballot-pill-main"
+      title={
+        covered
+          ? `What's on the ballot near ${zip}`
+          : "Ballot for this area coming soon"
+      }
+    >
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        aria-hidden="true"
+      >
+        <path d="M5 12l4 4L19 6" />
+        <rect x="3" y="10" width="18" height="10" rx="1.5" />
+      </svg>
+      <span>Ballot</span>
+      {!covered && <span className="ballot-pill-soon">soon</span>}
+    </Link>
+  );
+  const zipButton = (
+    <button
+      type="button"
+      className="ballot-pill-zip"
+      aria-label={`Showing ${zip} — change`}
+      aria-expanded={switching}
+      onClick={() => setSwitching((v) => !v)}
+    >
+      {zip}
+      <svg
+        width="10"
+        height="10"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="3"
+        aria-hidden="true"
+        className="zip-chevron"
+        data-open={switching || undefined}
+      >
+        <polyline points="6 9 12 15 18 9" />
+      </svg>
+    </button>
+  );
 
   return (
     <div className="map-floaters" data-pill-cluster={placement} data-ask-open={askOpen || undefined} ref={rootRef} style={{ "--ask-expansion-top": `${expansionTop}px` } as CSSProperties}>
       <div className="map-floaters-row" ref={rowRef}>
         <div className="ballot-pill">
-          <Link
-            href={`/ballot?zip=${zip}`}
-            className="ballot-pill-main"
-            title={
-              covered
-                ? `What's on the ballot near ${zip}`
-                : "Ballot for this area coming soon"
-            }
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.2"
-              aria-hidden="true"
-            >
-              <path d="M5 12l4 4L19 6" />
-              <rect x="3" y="10" width="18" height="10" rx="1.5" />
-            </svg>
-            <span>Ballot</span>
-            {!covered && <span className="ballot-pill-soon">soon</span>}
-          </Link>
-          <button
-            type="button"
-            className="ballot-pill-zip"
-            aria-label={`Showing ${zip} — change`}
-            aria-expanded={switching}
-            onClick={() => setSwitching((v) => !v)}
-          >
-            {zip}
-            {/* Item 4's chevron audit (2026-08-16): this one never moved at
-                all. `aria-expanded` flipped and the arrow stayed pointing
-                down while the switcher was open — a state indicator that
-                does not indicate its state is worse than none, because the
-                reader learns the app's signals are noise. */}
-            <svg
-              width="10"
-              height="10"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="3"
-              aria-hidden="true"
-              className="zip-chevron"
-              data-open={switching || undefined}
-            >
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
-          </button>
+          {zipFirst && zipButton}
+          {ballotLink}
+          {!zipFirst && placement !== "wgh" && zipButton}
         </div>
 
         <button
@@ -222,6 +233,7 @@ export function PillCluster({
           </svg>
           <span>{pill.label}</span>
         </button>
+        {placement === "wgh" && zipButton}
       </div>
 
       {switching && (

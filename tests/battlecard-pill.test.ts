@@ -74,6 +74,13 @@ test("12: the long sections render inside the battlecard, not on the row", () =>
   }
 });
 
+test("BC-35: a holder without a supported vote store gets the named empty state", () => {
+  const page = read("app", "ballot", "page.tsx");
+  const votes = read("lib", "officials", "vote-record.ts");
+  assert.match(votes, /export function hasVoteRecord/);
+  assert.match(page, /recordHolder && hasVoteRecord\(recordHolder\.id\)/);
+});
+
 test("BC-1: every card carries the same seven sections, always", () => {
   /*
    * The author's complaint was that *"information is currently parsed onto
@@ -173,9 +180,23 @@ test("BC-2: an empty section is never a per-card completeness statement", () => 
 
 test("12: the pill is full width and reads as an invitation", () => {
   const card = read("components", "ballot", "candidate-battlecard.tsx");
+  const row = read("components", "ballot", "candidate-card.tsx");
+  const rowCss = read("components", "ballot", "candidate-card.module.css");
+  const page = read("app", "ballot", "page.tsx");
   assert.match(card, /data-battlecard-pill/, "the pill needs its marker for the walk");
   assert.match(card, /className="[^"]*\bw-full\b/, "the pill must span the ballot column");
   assert.match(card, />\s*View Battlecard\s*</, "the pill's words are fixed by the brief");
+
+  // BAL-50: the ballot-page face is pearl/full-width, while the shared modal
+  // remains owned by CandidateBattlecard. The quote is one visible line and
+  // its complete text and citation live in the card's Sources section.
+  assert.match(row, /data-candidate-quote/);
+  assert.match(rowCss, /\.quote\s*\{[\s\S]*?white-space:\s*nowrap/);
+  assert.match(rowCss, /\.quote\s*\{[\s\S]*?text-overflow:\s*ellipsis/);
+  assert.match(rowCss, /\.battlecardSlot\s+:global\(\[data-battlecard-pill\]\)[^{]*\{[\s\S]*?width:\s*100%/);
+  assert.match(rowCss, /\.battlecardSlot\s*\{[\s\S]*?grid-column:\s*1 \/ -1/);
+  assert.match(rowCss, /border-radius:\s*var\(--radius-pill\)/);
+  assert.match(page, /data-ballot-tagline-source/);
 });
 
 /**

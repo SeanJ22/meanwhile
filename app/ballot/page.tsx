@@ -30,8 +30,6 @@ import {
 } from "@/lib/ballot/candidate-cards";
 import { BallotAskPill } from "@/components/ballot/ballot-ask-pill";
 import { BallotNarrowing } from "@/components/ballot/ballot-narrowing";
-import { JurisdictionMark, JurisdictionNote } from "@/components/ballot/jurisdiction-note";
-import { jurisdictionNameFromOcdId } from "@/lib/ballot/could-govern";
 import { photosFirst } from "@/lib/ballot/photo-order";
 import { COLLECTION_NOTE } from "@/lib/ballot/collection-note";
 import { FilingNote } from "@/components/ballot/filing-note";
@@ -45,6 +43,7 @@ import {
 import { CardSourcesList } from "@/components/officials/card-sources-list";
 import { RecentVotes } from "@/components/map/popup/official-popup";
 import { personCardSources } from "@/lib/officials/card-sources";
+import { hasVoteRecord } from "@/lib/officials/vote-record";
 import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { CandidateCard } from "@/components/ballot/candidate-card";
@@ -96,7 +95,7 @@ import type {
   Contest,
   Measure,
 } from "@/lib/ballot/types";
-import { CandidateContact, TAGLINE_SOURCE_NOTE } from "@/components/ballot/candidate-contact";
+import { CandidateContact } from "@/components/ballot/candidate-contact";
 import { candidateContactForCandidacy } from "@/lib/ballot/candidate-contacts";
 import { reconciledCandidacyIdForCard } from "@/lib/identity/az-2026";
 import { groupAbsences } from "@/lib/ballot/absence-grouping";
@@ -109,6 +108,7 @@ import { LevelTag } from "@/components/ui/level-tag";
 import { tierForOcdId } from "@/lib/ocd/tiers";
 import { Logo } from "@/components/brand/logo";
 import { PRODUCT_NAME } from "@/lib/brand";
+import { hostOf } from "@/lib/officials/verification";
 import {
   IncumbencyFootnote,
   IncumbencyMarker,
@@ -521,6 +521,15 @@ async function BallotBattlecard({
   const stateMoney = stateMoneyForCard(targetKey, contestId).records;
   const contactCandidacyId = targetKey.includes("|") ? reconciledCandidacyIdForCard(targetKey) : targetKey;
   const filingContact = contactCandidacyId ? candidateContactForCandidacy(contactCandidacyId) : null;
+  const derivedTagline = card?.bio ? null : derivedBlurbFor(targetKey);
+  const tagline = card?.bio
+    ? {
+        text: card.bio,
+        sourceUrl: card.bioSourceUrl,
+        sourceLabel:
+          card.bioSourceLabel ?? hostOf(card.bioSourceUrl) ?? card.bioSourceUrl,
+      }
+    : derivedTagline;
 
   return (
     <CandidateBattlecard
@@ -650,7 +659,7 @@ async function BallotBattlecard({
          * to `plural:947e2e2b-04eb-4f92-9f83-aef8760517e0`, which carries
          * positions in the snapshot.
          */
-        record: recordHolder ? (
+        record: recordHolder && hasVoteRecord(recordHolder.id) ? (
           <RecentVotes holder={recordHolder} reactionContext={context} contentOnly />
         ) : null,
         /*
@@ -668,9 +677,33 @@ async function BallotBattlecard({
           <>
             {holder && <CandidateSources holder={holder} />}
             <CandidateContact card={card ?? null} links={links} filing={filingContact} />
-            <p className="mt-2 text-[0.6875rem] leading-relaxed text-muted">
-              {TAGLINE_SOURCE_NOTE}
-            </p>
+            {tagline && (
+              <div
+                className="mt-3 border-t border-[var(--panel-border)] pt-3"
+                data-ballot-tagline-source
+              >
+                <p className="t-eyebrow text-muted">Line shown on the ballot</p>
+                <blockquote className="mt-1 text-[0.8125rem] leading-relaxed text-paper-dim">
+                  &ldquo;{tagline.text}&rdquo;
+                </blockquote>
+                {tagline.sourceUrl && tagline.sourceLabel ? (
+                  <p className="mt-1 text-[0.6875rem] leading-relaxed text-muted">
+                    <a
+                      href={tagline.sourceUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+                    >
+                      {tagline.sourceLabel}
+                    </a>
+                  </p>
+                ) : tagline.sourceLabel ? (
+                  <p className="mt-1 text-[0.6875rem] leading-relaxed text-muted">
+                    {tagline.sourceLabel}
+                  </p>
+                ) : null}
+              </div>
+            )}
           </>
         ),
       }}
@@ -1103,9 +1136,7 @@ export default async function BallotPage({
           register, distinct from the filed record below. */}
       <p className="mt-3 text-[0.8125rem] leading-relaxed text-voice lg:max-w-2xl">
         A zip code is orientation, not your exact ballot — zip areas cross
-        town and district lines. Everything below is presented as filed with
-        election authorities, with the filing linked on every item.{" "}
-        <span className="font-medium">We never suggest how to vote.</span>
+        town and district lines.
       </p>
 
       {/* RULING 59 (2026-08-21) — THE COVERAGE NOTE IS DELETED, and this
@@ -1638,49 +1669,6 @@ export default async function BallotPage({
         </section>
       )}
 
-      {/*
-        JUR-4 (`NH84`, 2026-08-23): the jurisdiction answer ONCE, above the
-        contests, instead of eleven words repeated down the page. The list is
-        built from the same `needsPill` decision each contest heading uses, so
-        the block and the marks can never disagree about which contests are
-        affected — a second query would be free to.
-      */}
-      {set && matched && certainty && (
-        <JurisdictionNote
-          /*
-           * UNKNOWN is COUNTED, not named — see the component. Naming a
-           * division we hold no boundary for would turn our missing polygon
-           * into a claim about that district's geography.
-           */
-          unplaceable={
-            candidacyContests.filter(
-              (contest) => certainty.certaintyOf(contest.ocdId) === "UNKNOWN",
-            ).length
-          }
-          jurisdictions={[
-            ...new Set(
-              candidacyContests
-                .filter((contest) => certainty.certaintyOf(contest.ocdId) === "AMBIGUOUS")
-                /*
-                 * The BODY, not the OFFICE. The first version of this block
-                 * mapped `contest.title` and told the reader the governments
-                 * covering part of their zip were "Member of the Borough
-                 * Council, Member of the Board of Education, Member of the
-                 * Board of Education — Unexpired Term" — three job titles, two
-                 * of them identical, which a reader who knows their own town
-                 * cannot use. Naming the jurisdictions is the whole point of
-                 * the block; caught by reading the rendered page.
-                 */
-                .map((contest) => jurisdictionNameFromOcdId(contest.ocdId))
-                .filter((name): name is string => name !== null),
-            ),
-          ]}
-          /* BAL-7 (2026-08-24): the block ends with the address prompt itself.
-             The zip scopes the prompt to this page's area. */
-          zip={zip ?? ""}
-        />
-      )}
-
       {/* BAL-43: offices read top to bottom. Desktop columns compare the
           candidates within one office, with the same ballot order below. */}
       {set && matched && (
@@ -1734,19 +1722,6 @@ export default async function BallotPage({
                       last word of the race title, in the tier's accent. Tier
                       from the contest's OCD identity — never the office name. */}
                   <LevelTag tier={tierForOcdId(contest.ocdId)} />
-                  {/*
-                    RULING 71, as JUR-4 leaves it (2026-08-23). The full
-                    eleven-word pill rendered here twelve times across nine
-                    contests, which is the repetition the author named the
-                    headline UX problem of the New Jersey pass. It is one short
-                    mark now, tied to the single page-level block above. Still
-                    NOT a completeness marker: our data is complete and the
-                    reader's location is not. See the component for why that
-                    distinction is load-bearing.
-                  */}
-                  {certainty && needsPill(certainty.certaintyOf(contest.ocdId)) && (
-                    <JurisdictionMark />
-                  )}
                   {/* RULING 28: the one buried annotation, on contests that
                       actually render candidate cards. */}
                   {(lineup || candidatesOf(set, contest).length > 0) && (
@@ -1846,6 +1821,7 @@ export default async function BallotPage({
                     <li
                       key={nominee.name}
                       data-candidate-target={`${contest.id}|${nominee.name}`}
+                      className="flex min-w-0 flex-col"
                     >
                       <CandidateCard
                         name={nominee.name}
@@ -1926,6 +1902,15 @@ export default async function BallotPage({
                       <ReactionControl
                         targetType="CANDIDATE"
                         targetId={`${contest.id}|${nominee.name}`}
+                        pickContestId={contest.id}
+                        pickChoiceId={nominee.name}
+                        exclusiveYesTargetIds={
+                          contest.voteFor === 1
+                            ? pickOptionsFor(set, contest).flatMap((option) =>
+                                option.reactionTargetId ? [option.reactionTargetId] : [],
+                              )
+                            : undefined
+                        }
                         prompt="Would you vote for them?"
                         context={
                           centroid && zip
@@ -1994,6 +1979,7 @@ export default async function BallotPage({
                       <li
                         key={cand.id}
                         data-candidate-target={cand.id}
+                        className="flex min-w-0 flex-col"
                       >
                         <CandidateCard
                           name={`${cand.givenName} ${surnameDisplayCase(cand.familyName)}`}
@@ -2084,6 +2070,15 @@ export default async function BallotPage({
                         <ReactionControl
                           targetType="CANDIDATE"
                           targetId={cand.id}
+                          pickContestId={contest.id}
+                          pickChoiceId={cand.id}
+                          exclusiveYesTargetIds={
+                            contest.voteFor === 1
+                              ? pickOptionsFor(set, contest).flatMap((option) =>
+                                  option.reactionTargetId ? [option.reactionTargetId] : [],
+                                )
+                              : undefined
+                          }
                           prompt="Would you vote for them?"
                           context={
                             centroid && zip

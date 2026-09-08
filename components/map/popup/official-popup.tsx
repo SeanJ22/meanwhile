@@ -2,6 +2,7 @@
 
 import { personInitials } from "@/lib/officials/person-name";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
+import { hasVoteRecord } from "@/lib/officials/vote-record";
 import { useEffect, useState } from "react";
 
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
@@ -142,10 +143,6 @@ export type VoteAttribution = {
  * selectboard member, has no roll-call store, and the section renders nothing
  * rather than an empty heading.
  */
-function hasVoteRecord(id: string): boolean {
-  return id.startsWith("congress:") || id.startsWith("plural:");
-}
-
 export function RecentVotes(props: {
   holder: SeatHolder;
   reactionContext: ReactionViewContext | null;

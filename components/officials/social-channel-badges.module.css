@@ -1,0 +1,169 @@
+.badges {
+  align-items: center;
+  display: flex;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: flex-end;
+}
+
+.badge {
+  --social-color: var(--signal);
+
+  align-items: center;
+  backdrop-filter: blur(10px) saturate(135%);
+  background: color-mix(in srgb, var(--panel) 72%, transparent);
+  border: 1px solid color-mix(in srgb, var(--social-color) 45%, var(--panel-border));
+  border-radius: 20%;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 26%, transparent),
+    0 5px 14px color-mix(in srgb, var(--bg) 44%, transparent);
+  color: #fff;
+  display: inline-flex;
+  height: 2rem;
+  isolation: isolate;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+  width: 2rem;
+  -webkit-backdrop-filter: blur(10px) saturate(135%);
+}
+
+.badge::before {
+  animation: social-gradient-flow 4.8s ease-in-out infinite alternate;
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--social-color) 92%, white),
+      color-mix(in srgb, var(--social-color) 45%, transparent) 45%,
+      color-mix(in srgb, var(--social-color) 88%, black)
+    );
+  background-size: 220% 220%;
+  content: "";
+  inset: 0;
+  opacity: 0.78;
+  position: absolute;
+  z-index: -1;
+}
+
+.badge::after {
+  background: linear-gradient(150deg, color-mix(in srgb, white 34%, transparent), transparent 48%);
+  border-radius: inherit;
+  content: "";
+  inset: 1px;
+  pointer-events: none;
+  position: absolute;
+  z-index: -1;
+}
+
+.badge[data-social-channel="facebook"] { --social-color: #1877f2; }
+.badge[data-social-channel="instagram"] { --social-color: #c13584; }
+.badge[data-social-channel="linkedin"] { --social-color: #0a66c2; }
+.badge[data-social-channel="youtube"] { --social-color: #f03; }
+.badge[data-social-channel="tiktok"] { --social-color: #19cbd1; }
+.badge[data-social-channel="nextdoor"] { --social-color: #00b246; }
+.badge[data-social-channel="newsletter"] { --social-color: #147d86; }
+.badge[data-social-channel="mastodon"] { --social-color: #6364ff; }
+
+.badge[data-social-channel="x"] {
+  --social-color: #050505;
+
+  background: #050505;
+  border-color: #343434;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 18%),
+    0 0 10px rgb(255 255 255 / 22%);
+  color: #fff;
+}
+
+.badge[data-social-channel="x"]::before {
+  background: linear-gradient(135deg, #2b2b2b, #050505 55%, #000);
+}
+
+.badge:hover {
+  border-color: color-mix(in srgb, var(--social-color) 74%, white);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 38%, transparent),
+    0 7px 18px color-mix(in srgb, var(--social-color) 34%, transparent);
+  transform: translateY(-1px);
+}
+
+.badge:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+.badge svg {
+  height: 0.9rem;
+  position: relative;
+  width: 0.9rem;
+  z-index: 1;
+}
+
+/* LIGHT candidate: a quiet tile whose network colour rises from the bottom. */
+:global([data-theme="light"]) .badge {
+  backdrop-filter: none;
+  background: color-mix(in srgb, var(--panel) 94%, white);
+  border-color: color-mix(in srgb, var(--social-color) 35%, var(--panel-border));
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 78%),
+    0 2px 5px rgb(31 38 50 / 16%);
+  color: var(--social-color);
+  -webkit-backdrop-filter: none;
+}
+
+:global([data-theme="light"]) .badge::before {
+  animation: none;
+  background: linear-gradient(to top, var(--social-color), color-mix(in srgb, var(--social-color) 76%, white));
+  opacity: 1;
+  transform: scaleY(0);
+  transform-origin: center bottom;
+  transition: transform 220ms cubic-bezier(0.2, 0.78, 0.2, 1);
+}
+
+:global([data-theme="light"]) .badge:hover,
+:global([data-theme="light"]) .badge:focus-visible {
+  color: #fff;
+}
+
+:global([data-theme="light"]) .badge:hover::before,
+:global([data-theme="light"]) .badge:focus-visible::before {
+  transform: scaleY(1);
+}
+
+/* X remains a black tile with a white mark in either theme. */
+:global([data-theme="light"]) .badge[data-social-channel="x"] {
+  background: #050505;
+  border-color: #343434;
+  color: #fff;
+}
+
+:global([data-theme="light"]) .badge[data-social-channel="x"]::before {
+  transform: scaleY(1);
+}
+
+@keyframes social-gradient-flow {
+  from { background-position: 0% 20%; }
+  to { background-position: 100% 80%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .badge,
+  .badge::before {
+    animation: none;
+    transition-duration: 1ms;
+  }
+}
+
+@media (max-width: 430px) {
+  .badges {
+    gap: 0.25rem;
+    max-width: 7rem;
+  }
+
+  .badge {
+    height: 1.8rem;
+    width: 1.8rem;
+  }
+}

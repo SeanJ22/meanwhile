@@ -16,6 +16,11 @@ test("all held eligible PRL profiles survive exact bioguide reader projection", 
     assert.equal(answer.categories.length, PRL_CATEGORIES.filter(c => profile.shares[c.key] !== null).length);
     assert.equal(answer.attribution.citation, PRL_RHETORIC_ATTRIBUTION.citation);
     for (const category of answer.categories) {
+      const sourceCategory = PRL_CATEGORIES.find(entry => entry.key === category.id);
+      assert.ok(sourceCategory);
+      assert.equal(category.label, sourceCategory.label);
+      assert.equal(category.explainer, sourceCategory.explainer);
+      assert.equal(category.share, profile.shares[category.id as keyof typeof profile.shares]);
       assert.match(category.sentence, /Polarization Research Lab/);
       assert.ok(category.sentence.includes(profile.statementCount.toLocaleString("en-US")));
     }

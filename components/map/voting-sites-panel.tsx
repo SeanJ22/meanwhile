@@ -139,7 +139,7 @@ export function VotingSitesPanel({
 
   return (
     <section
-      className="voting-panel"
+      className="reader-lumen-surface voting-panel"
       role="dialog"
       aria-label="Where can I vote"
       aria-modal="false"

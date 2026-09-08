@@ -14,10 +14,8 @@ import type { StoredPick } from "./picks.ts";
  *    NOT ask again.
  * 2. It ASKS only when the reader has said Yes to nobody, or to more than the
  *    seat allows.
- * 3. A recorded pick is never silently overwritten. A reader who has a pick —
- *    derived or explicit — and then says Yes to somebody else does not have
- *    their pick flipped underneath them: the section surfaces the CONFLICT and
- *    asks which one. **An explicit pick always outranks a derived one.**
+ * 3. In a one-seat race, the newest Yes replaces the prior DERIVED choice.
+ *    An explicit pick still outranks a derived one and surfaces disagreement.
  * 4. Changing the pick alters no reaction. The two records stay separate.
  * 5. The same rule for measures: a Yes or No on the measure IS the pick.
  *
@@ -65,9 +63,9 @@ export interface PickResolution {
  * Resolve what the pick section should do, from the explicit pick file and the
  * device's own Yes answers in this contest.
  *
- * `yesChoiceIds` are pick-option ids, already mapped from reaction targets by
- * the caller — this module never knows how a reaction is keyed, which is what
- * keeps it free of the reaction store's shape.
+ * `yesChoiceIds` are pick-option ids in newest-answer-first order, already
+ * mapped from reaction targets by the caller. This module never knows how a
+ * reaction is keyed, which keeps it free of the reaction store's shape.
  */
 export function resolvePick(
   explicit: StoredPick | null,
@@ -89,16 +87,23 @@ export function resolvePick(
     };
   }
 
+  // BAL-51: a one-seat contest behaves like a radio group. New clients clear
+  // the earlier device-local Yes at capture; newest-first resolution also
+  // makes legacy files with multiple Yes values deterministic.
+  if (voteFor <= 1 && yes.length > 0) {
+    return { chosen: [yes[0]], basis: "DERIVED", conflicting: [], asks: false };
+  }
+
   // Rule 1: a Yes within the seat count IS the pick, and the race stops
   // asking. A multi-seat race derives the same way — up to what it allows.
-  if (yes.length >= 1 && yes.length <= Math.max(1, voteFor)) {
+  if (yes.length >= 1 && yes.length <= voteFor) {
     return { chosen: yes, basis: "DERIVED", conflicting: [], asks: false };
   }
 
   // Rule 2, second half: Yes to more than the seat allows is not a pick. The
   // section surfaces every one of them and asks which — it never picks the
   // first, the newest, or the alphabetically luckiest.
-  if (yes.length > Math.max(1, voteFor)) {
+  if (yes.length > voteFor) {
     return { chosen: [], basis: "NONE", conflicting: yes, asks: true };
   }
 

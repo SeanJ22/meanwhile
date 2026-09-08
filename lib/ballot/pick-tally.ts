@@ -71,6 +71,24 @@ export interface PickTally {
   foreign: StoredPick[];
 }
 
+/** Map newest-first reaction targets to this contest's choice ids. */
+function yesChoiceIdsFor(
+  contest: PickableContest,
+  yesTargetIds: ReadonlySet<string>,
+): string[] {
+  const choiceByTarget = new Map(
+    contest.options.flatMap((option) =>
+      option.reactionTargetId
+        ? [[option.reactionTargetId, option.id] as const]
+        : [],
+    ),
+  );
+  return [...yesTargetIds].flatMap((targetId) => {
+    const choiceId = choiceByTarget.get(targetId);
+    return choiceId ? [choiceId] : [];
+  });
+}
+
 /**
  * Resolve one contest's pick, honouring a clear.
  *
@@ -83,16 +101,17 @@ export function resolveWithSuppression(
   voteFor: number,
   suppressedDerived: readonly string[] | undefined,
 ): PickResolution {
-  const resolution = resolvePick(explicit, yesChoiceIds, voteFor);
-  if (resolution.basis !== "DERIVED") return resolution;
-  if (!suppressedDerived || suppressedDerived.length === 0) return resolution;
-  const same =
-    suppressedDerived.length === resolution.chosen.length &&
-    resolution.chosen.every((id) => suppressedDerived.includes(id));
-  if (!same) return resolution;
-  // Cleared, and not answered differently since. It asks again, exactly as it
-  // would if the reader had never given an answer here.
-  return { chosen: [], basis: "NONE", conflicting: [], asks: true };
+  const explicitResolution = resolvePick(explicit, yesChoiceIds, voteFor);
+  if (explicitResolution.basis === "EXPLICIT") return explicitResolution;
+  if (!suppressedDerived || suppressedDerived.length === 0) {
+    return explicitResolution;
+  }
+  const cleared = new Set(suppressedDerived);
+  return resolvePick(
+    null,
+    yesChoiceIds.filter((choiceId) => !cleared.has(choiceId)),
+    voteFor,
+  );
 }
 
 /**
@@ -113,9 +132,7 @@ export function tallyPicks(
   const rows: TalliedPick[] = [];
 
   for (const contest of pickable) {
-    const yes = contest.options
-      .filter((o) => o.reactionTargetId && yesTargetIds.has(o.reactionTargetId))
-      .map((o) => o.id);
+    const yes = yesChoiceIdsFor(contest, yesTargetIds);
     const resolution = resolveWithSuppression(
       byId.get(contest.contestId) ?? null,
       yes,
@@ -173,9 +190,7 @@ export function derivedToSuppress(
 ): Record<string, string[]> {
   const out: Record<string, string[]> = { ...suppressedDerived };
   for (const contest of pickable) {
-    const yes = contest.options
-      .filter((o) => o.reactionTargetId && yesTargetIds.has(o.reactionTargetId))
-      .map((o) => o.id);
+    const yes = yesChoiceIdsFor(contest, yesTargetIds);
     // No explicit pick, deliberately: see above.
     const resolution = resolvePick(null, yes, contest.voteFor);
     if (resolution.basis === "DERIVED" && resolution.chosen.length > 0) {

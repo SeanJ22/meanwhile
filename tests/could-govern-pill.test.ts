@@ -217,8 +217,12 @@ test("RULING 44: the pill attaches to a BODY, never to a candidate", () => {
    * `components/address/could-govern-notice.tsx`.
    */
   const page = codeOf("app", "ballot", "page.tsx");
-  assert.match(page, /<JurisdictionMark \/>/, "the body-level mark is not rendered by the ballot page");
-  assert.match(page, /<JurisdictionNote/, "the page-level block is not rendered by the ballot page");
+  /* BAL-49 retires the duplicate page-level box and its marks. The single
+     address-narrowing pill remains at the top, and every contest still
+     renders, so the rule's no-candidate/no-gating protections survive. */
+  assert.doesNotMatch(page, /<JurisdictionMark \/>/);
+  assert.doesNotMatch(page, /<JurisdictionNote/);
+  assert.match(page, /<BallotNarrowing/);
 
   const card = codeOf("components", "ballot", "candidate-card.tsx");
   assert.doesNotMatch(

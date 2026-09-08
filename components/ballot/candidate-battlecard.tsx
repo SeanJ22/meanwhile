@@ -20,7 +20,9 @@ import { partyColorVar } from "@/lib/officials/party-color";
 import { PositionsSection } from "@/components/officials/positions-section";
 import { PublicStatementsProfile } from "@/components/officials/public-statements-profile";
 import { OfficialActions } from "@/components/officials/official-actions";
+import { SocialChannelBadges } from "@/components/officials/social-channel-badges";
 import { DemandPill } from "@/components/demand/demand-pill";
+import battlecardStyles from "./candidate-battlecard.module.css";
 import {
   positionsEmptyLine,
   UNESTABLISHED,
@@ -302,7 +304,7 @@ export function CandidateBattlecard({
             if (event.target === event.currentTarget) setOpen(false);
           }}
         >
-          <div className="account-modal" data-candidate-battlecard data-candidate-subject={subjectId}>
+          <div className={`${battlecardStyles.lumen} reader-lumen-surface account-modal`} data-candidate-battlecard data-candidate-subject={subjectId}>
             <header className="account-modal-header">
               {/*
                 **BAL-17, BAL-18 and BAL-20 — the ballot card's header is the
@@ -356,6 +358,8 @@ export function CandidateBattlecard({
                 </div>
               </div>
 
+              <SocialChannelBadges social={contactHolder?.social} />
+
               <button
                 type="button"
                 onClick={() => setOpen(false)}
@@ -398,7 +402,7 @@ export function CandidateBattlecard({
               */}
               {contactHolder && (
                 <div className="mb-3" data-ballot-contact-row>
-                  <ContactPills holder={contactHolder} scope="primary" />
+                  <ContactPills holder={contactHolder} scope="primary" includeSocials={false} />
                   <OfficialTermNote holder={contactHolder} />
                 </div>
               )}

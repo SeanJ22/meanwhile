@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { PrlReaderProfile } from "@/lib/sources/prl/snapshot";
 import { formatDateLong } from "@/lib/text/format-date";
 import { CardSection } from "./card-section";
+import styles from "./public-statements-profile.module.css";
 
 /** Shared map and ballot presentation; the source's measurement stays attributed. */
 export function PublicStatementsProfile({ subjectId }: { subjectId: string }) {
@@ -30,14 +31,38 @@ function ProfileForIdentity({ subjectId }: { subjectId: string }) {
 /** The same measured, attributed reader body for fetched UI and census render proof. */
 export function PublicStatementsProfileContent({ profile }: { profile: PrlReaderProfile }) {
   return (
-      <div className="space-y-3 text-sm">
-        {profile.categories.map(category => <p key={category.id}>{category.sentence}</p>)}
-        <p className="text-xs text-muted-foreground">
-          Measured {formatDateLong(profile.measuredAt)}. Read {formatDateLong(profile.readAt.slice(0, 10))}.
+      <div data-public-statements-profile={profile.subjectId}>
+        <p className={styles.intro}>
+          {profile.statementCount.toLocaleString("en-US")} statements classified. Each bar is an independent classification, so the shares can overlap.
         </p>
-        <p className="break-words text-xs text-muted-foreground">
-          <a className="underline underline-offset-2" href={profile.attribution.url} target="_blank" rel="noreferrer">{profile.attribution.citation}</a>
-          {" · "}<a className="underline underline-offset-2" href={profile.attribution.licenceUrl} target="_blank" rel="noreferrer">{profile.attribution.licence}</a>
+        <div className={styles.bars}>
+          {profile.categories.map(category => {
+            const roundedShare = Math.round(category.share);
+            return (
+              <div className={styles.barRow} key={category.id} title={category.explainer}>
+                <div className={styles.barLabel}>
+                  <span className={styles.barName}>{category.label}</span>
+                  <span className={styles.barValue}>{category.share > 0 && category.share < 1 ? "<1%" : `${roundedShare}%`}</span>
+                </div>
+                <div
+                  className={styles.track}
+                  role="progressbar"
+                  aria-label={`${category.label}: ${category.share.toFixed(1)} percent`}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-valuenow={category.share}
+                >
+                  <div className={styles.fill} style={{ width: `${category.share}%` }} />
+                </div>
+                <p className={styles.explainer}>{category.explainer}</p>
+              </div>
+            );
+          })}
+        </div>
+        <p className={styles.source}>
+          Measured {formatDateLong(profile.measuredAt)} · read {formatDateLong(profile.readAt.slice(0, 10))}.{" "}
+          <a href={profile.attribution.url} target="_blank" rel="noreferrer">{profile.attribution.citation}</a>
+          {" · "}<a href={profile.attribution.licenceUrl} target="_blank" rel="noreferrer">{profile.attribution.licence}</a>
         </p>
       </div>
   );

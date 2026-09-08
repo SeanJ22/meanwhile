@@ -171,6 +171,29 @@ export function clearPick(contestId: string) {
   write(file);
 }
 
+/** Remove one currently-derived choice from the pick surface without
+ * rewriting the reaction answer it came from. Tapping it again creates an
+ * explicit pick and `togglePick` clears this marker. */
+export function clearDerivedPick(contestId: string, choiceId: string) {
+  const file = read();
+  const cleared = new Set(file.suppressedDerived[contestId] ?? []);
+  cleared.add(choiceId);
+  file.suppressedDerived[contestId] = [...cleared];
+  write(file);
+}
+
+/** A fresh affirmative answer is a new instruction, so a marker created by
+ * an earlier clear may not keep that same choice hidden. */
+export function restoreDerivedPick(contestId: string, choiceId: string) {
+  const file = read();
+  const existing = file.suppressedDerived[contestId];
+  if (!existing?.includes(choiceId)) return;
+  const remaining = existing.filter((id) => id !== choiceId);
+  if (remaining.length > 0) file.suppressedDerived[contestId] = remaining;
+  else delete file.suppressedDerived[contestId];
+  write(file);
+}
+
 /**
  * Clear every pick on this device (item 5, 2026-08-14 second session —
  * the tester's ask: most people can't reset browser storage). Callers

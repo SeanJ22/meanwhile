@@ -22,6 +22,8 @@ import {
 import { formatMeetingDate } from "@/lib/map/format";
 import { isOnlineOnly } from "@/lib/meetings/online";
 import { MeetingStatusPill } from "@/components/map/meeting-status-pill";
+import { bodyPurposeFor } from "@/lib/map/body-purpose";
+import { BodyPurposeLabel } from "./body-purpose-label";
 
 /**
  * The sidebar-count doors (8a, 2026-08-17): tapping a stat number opens the
@@ -117,7 +119,7 @@ export function DoorOverlay({
       onClick={onClose}
     >
       <div
-        className="door-panel panel max-h-[80vh] w-full max-w-md overflow-y-auto p-4"
+        className="reader-lumen-surface door-panel panel max-h-[80vh] w-full max-w-md overflow-y-auto p-4"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">
@@ -188,6 +190,7 @@ function BodiesDoor({
     <ul className="mt-3 space-y-2">
       {coverage.bodies.map((body) => {
         const label = body.name ?? body.divisionLabel;
+        const purpose = bodyPurposeFor(body);
         /*
          * PU02's class sweep (NJ Hunt 4 item 3, 2026-08-22). This is the same
          * defect as the autocomplete's: an EXACT string join between the
@@ -252,6 +255,11 @@ function BodiesDoor({
                 {bodyClassShort(body.bodyClass)}
               </span>
             </div>
+            {purpose && (
+              <p className="mt-1">
+                <BodyPurposeLabel purpose={purpose} />
+              </p>
+            )}
             {next && (
               <button
                 type="button"

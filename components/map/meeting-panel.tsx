@@ -30,6 +30,8 @@ import { commentAccessFor } from "@/lib/registry/comment-access";
 import { venueLink } from "@/lib/registry/links";
 import type { Meeting } from "@/lib/sources/types";
 import { agendaSentenceFor } from "@/lib/ask/agenda-sentence";
+import type { BodyPurpose } from "@/lib/map/body-purpose";
+import { BodyPurposeLabel } from "./body-purpose-label";
 
 import { CalendarLinks } from "./popup/calendar-links";
 
@@ -46,9 +48,16 @@ interface MeetingPanelProps {
   onClose: () => void;
   /** Opens the meeting popup. Omitted leaves the rows inert. */
   onOpenMeeting?: (meeting: Meeting) => void;
+  /** Source-backed short descriptions, keyed by the exact registry body. */
+  bodyPurposes?: ReadonlyMap<string, BodyPurpose>;
 }
 
-export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProps) {
+export function MeetingPanel({
+  venue,
+  onClose,
+  onOpenMeeting,
+  bodyPurposes,
+}: MeetingPanelProps) {
   // One `now` per mount, never read during render (item 11's rule): a clock
   // read in a render body would let a meeting crossing the 30-day line
   // reshuffle the list under a reader mid-scroll.
@@ -77,11 +86,23 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
   // has already been named.
   const cardTitle = venueBodyTitle(venue.meetings, venue.name);
   const listingCount = readerMeetingCount(venue.meetings, venue.listingIdentity);
+  const headerBodyIds = new Set(
+    venue.meetings.map((meeting) => meeting.bodyId),
+  );
+  /* A shared building can hold several bodies. Never let the first row's
+     purpose masquerade as a description of the whole venue card. */
+  const headerBodyId =
+    headerBodyIds.size === 1 && cardTitle.basis !== "venue"
+      ? [...headerBodyIds][0]
+      : null;
+  const headerPurpose = headerBodyId
+    ? bodyPurposes?.get(headerBodyId)
+    : undefined;
 
   return (
     <aside
       aria-label={`${listingCount.heading} at ${venue.name}`}
-      className="panel pointer-events-auto flex max-h-[60vh] w-full flex-col sm:max-h-[calc(100dvh-8rem)] sm:w-[23rem]"
+      className="reader-meeting-panel panel pointer-events-auto flex max-h-[60vh] w-full flex-col sm:max-h-[calc(100dvh-8rem)] sm:w-[23rem]"
     >
       <header className="flex items-start justify-between gap-3 border-b border-rule px-5 py-4">
         <div className="min-w-0">
@@ -100,18 +121,12 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
               shared `bodyName` turned out to name a sitting. */}
           <h2 className="font-display text-lg font-semibold leading-snug tracking-tight text-paper">
             {cardTitle.title}
-            {/* MTG-15 (2026-09-02): the level tag right after the body name, so
-                a reader knows whether this is a local, state or federal body
-                without reading the address. Tier from the meeting's OCD
-                identity via `tierForMeeting`, never the body name. */}
-            <LevelTag tier={first ? tierForMeeting(first) : null} />
           </h2>
           <p className="notice-eyebrow mt-1.5">
             {listingCount.unresolved ? `${listingCount.count} ${listingCount.unit}` : venue.meetings.length === 1
               ? "Public meeting"
               : `${venue.meetings.length} public meetings`}
           </p>
-          <MeetingListingNotice groups={listingCount.groups} />
           {/* MTG-6: venue name and address, in gray, beneath — the Parks and
               Recreation pattern the author named as the reference. Where the
               building IS the title there is nothing left to repeat under it,
@@ -129,18 +144,28 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
             built from coordinates we hold rather than a page anyone opened, so
             it is offered as a convenience and never as a citation.
           */}
-          {directions && (
-            <a
-              href={directions.url}
-              target="_blank"
-              rel="noreferrer"
-              title={directions.hint}
-              className="mt-1 inline-flex items-baseline gap-1 text-[0.75rem] text-signal hover:underline"
-            >
-              Directions
-              <ExternalLink className="size-3 translate-y-0.5" />
-            </a>
-          )}
+          <div className="reader-meeting-header-meta">
+            <span className="reader-meeting-labels">
+              <LevelTag
+                tier={first ? tierForMeeting(first) : null}
+                className="reader-meeting-level"
+              />
+              <BodyPurposeLabel purpose={headerPurpose} />
+            </span>
+            {directions && (
+              <a
+                href={directions.url}
+                target="_blank"
+                rel="noreferrer"
+                title={directions.hint}
+                className="reader-meeting-directions"
+              >
+                Directions
+                <ExternalLink className="size-3 translate-y-0.5" />
+              </a>
+            )}
+          </div>
+          <MeetingListingNotice groups={listingCount.groups} />
         </div>
 
         <button
@@ -183,6 +208,11 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
                      carries the sitting. False everywhere the card titled
                      itself with the building instead. */
                   bodyShown={cardTitle.basis !== "venue"}
+                  purpose={
+                    meeting.bodyId
+                      ? bodyPurposes?.get(meeting.bodyId)
+                      : undefined
+                  }
                 />
               ))}
             </div>
@@ -241,6 +271,7 @@ function MeetingEntry({
   meeting,
   onOpen,
   bodyShown = false,
+  purpose,
 }: {
   meeting: Meeting;
   onOpen?: (meeting: Meeting) => void;
@@ -251,6 +282,7 @@ function MeetingEntry({
    * has no such context.
    */
   bodyShown?: boolean;
+  purpose?: BodyPurpose;
 }) {
   const concluded = meeting.status === "CONCLUDED";
   /*
@@ -266,7 +298,7 @@ function MeetingEntry({
   const jurisdiction = badgeFor(meeting, governing, basis, zipPartial);
 
   return (
-    <article className="px-5 py-4" data-meeting-id={meeting.id}>
+    <article className="reader-meeting-entry px-5 py-4" data-meeting-id={meeting.id}>
       <div className="flex items-baseline gap-2.5">
         <span
           aria-hidden="true"
@@ -281,13 +313,13 @@ function MeetingEntry({
             <button
               type="button"
               onClick={() => onOpen(meeting)}
-              className="text-left font-display text-[0.95rem] font-semibold leading-snug tracking-tight text-paper hover:text-signal"
+              className="text-left text-[0.95rem] font-semibold leading-snug tracking-tight text-paper hover:text-signal"
             >
               {meetingEntryTitle(meeting, { bodyShown })}
             </button>
           </h3>
         ) : (
-          <h3 className="font-display text-[0.95rem] font-semibold leading-snug tracking-tight text-paper">
+          <h3 className="text-[0.95rem] font-semibold leading-snug tracking-tight text-paper">
             {meetingEntryTitle(meeting, { bodyShown })}
           </h3>
         )}
@@ -315,7 +347,8 @@ function MeetingEntry({
           claim and the way out of it cannot drift apart on one of them. The
           detail sentence is off here — this is a dense list of sittings, and
           the row already carries the body's name above it. */}
-      <p className="mt-2 pl-4">
+      <p className="reader-meeting-labels mt-2 pl-4">
+        <BodyPurposeLabel purpose={purpose} />
         <JurisdictionPill
           badge={jurisdiction}
           zip={location?.zip ?? null}
@@ -323,7 +356,7 @@ function MeetingEntry({
         />
       </p>
 
-      <dl className="mt-3 pl-4 font-mono text-[0.8125rem] tabular-nums">
+      <dl className="mt-3 pl-4 text-[0.8125rem] tabular-nums">
         <div className="flex gap-2">
           <dt className="sr-only">Date</dt>
           <dd className={concluded ? "text-concluded" : "text-signal"}>
@@ -347,13 +380,13 @@ function MeetingEntry({
             href={meeting.agendaUrl}
             target="_blank"
             rel="noreferrer noopener"
-            className="trailing-space-trimmed-14 inline-flex items-center gap-1.5 border-b border-signal-dim pb-0.5 font-mono text-[0.75rem] uppercase tracking-[0.14em] text-signal transition-colors hover:border-signal"
+            className="reader-agenda-bubble"
           >
             Read the agenda
             <ExternalLink className="size-3" aria-hidden="true" />
           </a>
         ) : (
-          <p className="trailing-space-trimmed-14 font-mono text-[0.75rem] uppercase tracking-[0.14em] text-muted">
+          <p className="reader-agenda-absent">
             {agendaState.sentence}
           </p>
         )}
@@ -363,7 +396,7 @@ function MeetingEntry({
           surface — they shipped 08-17 on the compact card alone, and a
           reader working from this list never saw them. */}
       {meeting.status === "SCHEDULED" && (
-        <div className="pl-4">
+        <div className="reader-meeting-calendar pl-4">
           <CalendarLinks meeting={meeting} />
         </div>
       )}
@@ -384,7 +417,7 @@ function MeetingEntry({
             the provenance that is genuinely PER ROW — second-hand sourcing and
             the carry-forward stamp — which varies from meeting to meeting and
             would be a lie if collapsed. */}
-        <p className="font-mono text-[0.6875rem] leading-relaxed text-muted">
+        <p className="text-[0.6875rem] leading-relaxed text-muted">
           {/*
             6f2 (2026-08-15, the author's ruling): "Not independently
             verified" is RETIRED where the source is the body's own site or
@@ -463,7 +496,7 @@ export function HowToBeHeard({
   if (access.commentPeriod === "UNKNOWN") {
     return (
       <div className="mt-3 pl-4">
-        <p className="font-mono text-[0.6875rem] leading-relaxed text-muted">
+        <p className="text-[0.6875rem] leading-relaxed text-muted">
           {/* Item 4 (2026-08-14 second session): renamed to a call to
               action — the tester's words, verbatim. */}
           <span className="trailing-space-trimmed-14 uppercase tracking-[0.14em] text-paper-dim">
@@ -522,7 +555,7 @@ export function HowToBeHeard({
    */
   return (
     <details className="how-to-be-heard mt-3 pl-4">
-      <summary className="trailing-space-trimmed-14 how-to-be-heard-summary font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-paper-dim">
+      <summary className="trailing-space-trimmed-14 how-to-be-heard-summary text-[0.6875rem] uppercase tracking-[0.14em] text-paper-dim">
         Make your voice heard
       </summary>
       <ul className="mt-1 space-y-1 text-[0.75rem] leading-relaxed text-paper-dim">
@@ -534,7 +567,7 @@ export function HowToBeHeard({
         href={access.sourceUrl}
         target="_blank"
         rel="noreferrer noopener"
-        className="trailing-space-trimmed-14 mt-1 inline-block font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted underline-offset-2 hover:text-signal"
+        className="trailing-space-trimmed-14 mt-1 inline-block text-[0.6875rem] uppercase tracking-[0.14em] text-muted underline-offset-2 hover:text-signal"
       >
         source
       </a>

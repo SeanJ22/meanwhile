@@ -33,7 +33,12 @@ import type { VotingSitePin } from "./map-canvas";
 import { PillCluster } from "@/components/shell/pill-cluster";
 import { clusterPlacement } from "@/lib/map/cluster-placement";
 import { useSidebarVisible } from "@/hooks/use-sidebar-visible";
-import { useCompactMap } from "@/hooks/use-compact-map";
+import {
+  useCompactMap,
+  usePhoneMap,
+  useTabletMap,
+} from "@/hooks/use-compact-map";
+import { useRaisedStateVariant } from "@/hooks/use-raised-state-variant";
 import { UiProvider, useUi, useUiDispatch } from "@/lib/state/provider";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
 import type { SnapshotStatus } from "@/lib/meetings/freshness";
@@ -50,7 +55,7 @@ import {
 } from "@/lib/officials/card-sources";
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
 import { bodyClassLong } from "@/lib/registry/body-class-labels";
-import { rosterHoldersForBody, rosterGapForBody, rosterGapsForDivision } from "@/lib/registry/body-rosters";
+import { rosterGapForBody, rosterGapsForDivision } from "@/lib/registry/body-rosters";
 import { membersOfBody } from "@/lib/registry/body-membership";
 import {
   noteStateFor,
@@ -73,6 +78,8 @@ import type { DistrictHit, DrawnDistrict } from "@/lib/map/districts";
 import type { DistrictType } from "@/lib/state/types";
 
 import { jurisdictionClaim, representationNoteForClaim } from "@/lib/meetings/jurisdiction-badge";
+import { bodyPurposeIndex } from "@/lib/map/body-purpose";
+import { meetingAreaLabel } from "@/lib/map/meeting-area-label";
 
 import { CoverageNotice } from "./coverage-notice";
 import { GoverningSkeleton } from "./governing-skeleton";
@@ -82,6 +89,7 @@ import { MapCanvas, type CameraTarget, type MapFocus } from "./map-canvas";
 import { MeetingPanel } from "./meeting-panel";
 import { DoorOverlay } from "./door-overlay";
 import type { ModalSubject } from "./popup/entity-modal";
+import styles from "./map-entry.module.css";
 
 /*
  * AUD-03 MEASUREMENT BRANCH (g17, 2026-08-18) — see docs/aud-03-prereg.md.
@@ -277,6 +285,10 @@ function MapEntryInner() {
    */
   const [noticeCollapsed, setNoticeCollapsed] = useState(true);
   const compactMap = useCompactMap();
+  const phoneMap = usePhoneMap();
+  const tabletMap = useTabletMap();
+  const responsiveMap = phoneMap || tabletMap;
+  const raisedStateVariant = useRaisedStateVariant();
   const [districtExpanded, setDistrictExpanded] = useState(false);
   const compactBoundary = compactMap && Boolean(ui.selectedDistrictOcdId);
 
@@ -1603,6 +1615,7 @@ function MapEntryInner() {
    * cluster is on the map.
    */
   const sidebarVisible = useSidebarVisible(sidebarState);
+  const sidebarDefaultVisible = useSidebarVisible("default");
   /*
    * F01 10.3 — is the rail a SIDE panel covering part of the map, or a
    * full-width drawer over all of it?
@@ -1613,7 +1626,8 @@ function MapEntryInner() {
    * the map around a rail that is not there once the drawer closes, so the
    * inset applies only where the rail is genuinely a 364px column.
    */
-  const railIsAColumn = useSidebarVisible("default") && sidebarVisible;
+  const railIsAColumn =
+    !responsiveMap && sidebarDefaultVisible && sidebarVisible;
   /**
    * **WGH-6 (2026-08-24) — the left REGION is a column even when the RAIL is
    * not in it.**
@@ -1633,7 +1647,7 @@ function MapEntryInner() {
    * is currently occupying it. `railIsAColumn` stays exactly as it was for the
    * camera inset, which genuinely is a question about what the rail covers.
    */
-  const railRegionIsAColumn = useSidebarVisible("default");
+  const railRegionIsAColumn = !responsiveMap && sidebarDefaultVisible;
   /*
    * **LAY-4 (2026-08-24, the author's annotated capture `11-55-29`) — THE
    * FLOATING CARDS ARE BACK, AND THEY BELONG UNDER THE RAIL.**
@@ -1681,14 +1695,23 @@ function MapEntryInner() {
    * true while the card is open, whatever route the state arrived by, and
    * there is no branch left where both can paint.
    */
-  const sidebarUp = sidebarVisible && !wghOpen;
-  const clusterAt = clusterPlacement({ wgh: wghOpen, sidebar: sidebarUp });
+  const responsiveSidebarState =
+    responsiveMap && sidebarState === "default" ? "closed" : sidebarState;
+  const effectiveSidebarState = wghOpen ? "closed" : responsiveSidebarState;
+  const sidebarUp = sidebarVisible && !wghOpen && !responsiveMap;
+  const naturalClusterAt = clusterPlacement({ wgh: wghOpen, sidebar: sidebarUp });
+  const clusterAt = responsiveMap ? "map" : naturalClusterAt;
   const clusterZip = shown
     ? /^\d{5}$/.test(shown.zip)
       ? shown.zip
       : (shown.nearZip ?? null)
     : (location?.zip ?? null);
   const clusterCoverage = shown?.coverage ?? result?.coverage ?? null;
+  const bodyPurposes = useMemo(
+    () => bodyPurposeIndex(clusterCoverage?.bodies ?? []),
+    [clusterCoverage?.bodies],
+  );
+  const compactMeetingsLabel = meetingAreaLabel(clusterCoverage, clusterZip);
   const cluster = (
     <PillCluster
       placement={clusterAt}
@@ -1733,6 +1756,7 @@ function MapEntryInner() {
         })
       }
       onOpenPerson={(holder) => openOfficial(holder, null, "local", null)}
+      zipFirst={phoneMap}
     />
   );
   /*
@@ -1772,9 +1796,11 @@ function MapEntryInner() {
    */
   const floaters = (
     <>
-      <div className="pointer-events-auto">
-        <CountBadge />
-      </div>
+      {!responsiveMap && (
+        <div className="pointer-events-auto">
+          <CountBadge />
+        </div>
+      )}
 
       {tilesFailed && <TileNotice />}
       {failure && (
@@ -1792,7 +1818,7 @@ function MapEntryInner() {
            * floated in** — never inside the rail, which is what
            * `.sidebar-wgh-pill` did and is why that class is deleted.
            */
-          <button
+          !responsiveMap && <button
             type="button"
             className={`notice-fab pointer-events-auto${compactBoundary ? " boundary-info-pill" : ""}`}
             aria-label="Show who governs here"
@@ -1860,24 +1886,6 @@ function MapEntryInner() {
           />
         ))}
 
-      {compactMap && districtPopup && !districtExpanded && !officialPopup && !large && (
-        <button
-          type="button"
-          className="boundary-info-pill district-info-pill pointer-events-auto"
-          data-boundary-details={districtPopup.ocdId}
-          aria-label={`Show ${districtPopup.label} details`}
-          aria-expanded={false}
-          onClick={() => {
-            setNoticeCollapsed(true);
-            setSidebarState("closed");
-            setDistrictExpanded(true);
-          }}
-        >
-          <span>{districtPopup.label}</span>
-          <span aria-hidden="true">↗</span>
-        </button>
-      )}
-
       {/* Provenance, not headline (3): "Last checked" demotes to a
           footnote below the who-governs card — and LAY-8 (2026-08-25) sends
           the rail’s "What this site collects / Feedback" block down to sit
@@ -1901,12 +1909,14 @@ function MapEntryInner() {
         value={{ onPoint: onStreetPoint, onResolved: onNarrowApplied }}
       >
       <main
-        className="relative h-dvh w-full overflow-hidden"
+        className={`${styles.readerMap} relative h-dvh w-full overflow-hidden`}
         /* WGH-8: the attribute carries the DERIVED state, not the raw one.
            Every CSS rule that hides the rail keys on this, so the exclusion is
            true in the stylesheet as well as in the tree. */
-        data-sidebar={wghOpen ? "closed" : sidebarState}
+        data-sidebar={effectiveSidebarState}
         data-compact-boundary={compactBoundary ? "true" : undefined}
+        data-responsive-map={phoneMap ? "phone" : tabletMap ? "tablet" : undefined}
+        data-raised-state={raisedStateVariant}
       >
         {/*
           **LAY-4 / LAY-3 — the rail and its floaters are ONE fixed column.**
@@ -2083,6 +2093,7 @@ function MapEntryInner() {
             onViewportSettle={onViewportSettle}
             allowAutoFrame={view?.kind !== "settled"}
             focusStateOcdId={focusState.activeOcdId}
+            raisedStateVariant={raisedStateVariant}
             votingSites={votingPins}
             votingAddressPoint={votingAddressPoint}
             onSelectVotingSite={setSelectedVotingSiteId}
@@ -2102,7 +2113,7 @@ function MapEntryInner() {
 
         <div
           className={`pointer-events-none absolute inset-y-0 right-0 left-0 ${
-            sidebarState === "closed" ? "" : "sm:left-[364px]"
+            effectiveSidebarState === "closed" ? "" : "sm:left-[364px]"
           } flex flex-col`}
         >
           {/* pr clears MapLibre's zoom control in the top-right corner. The
@@ -2115,18 +2126,21 @@ function MapEntryInner() {
               sibling, so a tall who-governs card painted straight over the
               ballot entry. Ordering this load-bearing is written down, not
               inferred. */}
-          <div className="map-top-row flex items-start justify-end gap-3 p-3 pr-14 sm:p-5 sm:pr-16">
+          <div className={`${styles.topCommandBand} map-top-row flex items-start justify-end gap-3 p-3 pr-14 sm:p-5 sm:pr-16`}>
             {/* 4e: the map slot. Occupied only when neither the sidebar nor
                 the who-governs card is on screen. */}
             {clusterAt === "map" && (
-              <div className="pointer-events-auto">{cluster}</div>
+              <div className={`${styles.clusterSlot} pointer-events-auto`}>{cluster}</div>
             )}
             {/* B19's entry point, in the top band beside the ballot cluster.
                 One tap, no menu to hunt through — a hidden entry point is
                 reader friction and friction is a defect. Playful register on
                 the button, because it is an INTERACTION surface; every word
                 inside the panel it opens is level. */}
-            <div className="pointer-events-auto">
+            <div
+              className={`${styles.voteSlot} pointer-events-auto`}
+              data-open={votingOpen ? "true" : undefined}
+            >
               {votingOpen ? (
                 <VotingSitesPanel
                   onSites={setVotingPins}
@@ -2144,14 +2158,30 @@ function MapEntryInner() {
                     setVotingOpen(true);
                   }}
                 >
-                  Where can I vote?
+                  <span className={styles.voteFull}>Where can I vote?</span>
+                  <span className={styles.voteShort}>Vote</span>
                 </button>
               )}
             </div>
+            {tabletMap && (
+              <nav className={styles.tabletQuickNav} aria-label="Map shortcuts">
+                <button type="button" onClick={() => openSurface("wgh")}>People</button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setNoticeCollapsed(true);
+                    dispatch({ type: "list/open", open: true });
+                  }}
+                >
+                  Meetings
+                </button>
+              </nav>
+            )}
             {selectedVenue && (
-              <div className="pointer-events-auto hidden sm:block">
+              <div className={`${styles.meetingPanelSlot} pointer-events-auto hidden sm:block`}>
                 <MeetingPanel
                   venue={selectedVenue}
+                  bodyPurposes={bodyPurposes}
                   onOpenMeeting={openMeeting}
                   onClose={() => dispatch({ type: "select/venue", key: null })}
                 />
@@ -2186,12 +2216,43 @@ function MapEntryInner() {
                 so the two can never drift into two different cards. */}
             {!railRegionIsAColumn && floaters}
 
+            {phoneMap && (
+              <nav className={styles.phoneContextNav} aria-label="Map context">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setNoticeCollapsed(true);
+                    dispatch({ type: "list/open", open: true });
+                  }}
+                >
+                  {compactMeetingsLabel}
+                </button>
+                <button type="button" onClick={() => openSurface("wgh")}>People</button>
+                <button
+                  type="button"
+                  title={districtPopup?.label ?? "Districts in view"}
+                  onClick={() => {
+                    if (districtPopup) {
+                      setNoticeCollapsed(true);
+                      setSidebarState("closed");
+                      setDistrictExpanded(true);
+                    } else {
+                      dispatch({ type: "door/open", door: "districts" });
+                    }
+                  }}
+                >
+                  {districtPopup?.label ?? "Districts"}
+                </button>
+              </nav>
+            )}
+
             {selectedVenue && (
               // The phone form of the meeting panel: a bottom sheet pinned to
               // the viewport edge, its own scroll, the map visible behind it.
               <div className="bottom-sheet pointer-events-auto sm:hidden">
                 <MeetingPanel
                   venue={selectedVenue}
+                  bodyPurposes={bodyPurposes}
                   onOpenMeeting={openMeeting}
                   onClose={() => dispatch({ type: "select/venue", key: null })}
                 />
@@ -2227,10 +2288,10 @@ function MapEntryInner() {
             />
           )}
 
-          {districtPopup && !officialPopup && !large && (!compactMap || districtExpanded) && (
+          {districtPopup && !officialPopup && !large && (!phoneMap || districtExpanded) && (
             <DistrictPopup
               district={districtPopup}
-              onMinimize={compactMap ? () => setDistrictExpanded(false) : undefined}
+              onMinimize={phoneMap ? () => setDistrictExpanded(false) : undefined}
               onOpenOfficial={(holder) =>
                 openOfficial(
                   holder,
@@ -3167,7 +3228,7 @@ function SearchFailedNotice({
   onRetry: () => void;
 }) {
   return (
-    <div className="panel pointer-events-auto max-w-md px-4 py-3.5">
+    <div className="reader-lumen-surface panel pointer-events-auto max-w-md px-4 py-3.5">
       <p className="font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-danger">
         Search failed
       </p>
@@ -3195,7 +3256,7 @@ function SearchFailedNotice({
 
 function TileNotice() {
   return (
-    <div className="panel pointer-events-auto max-w-md px-4 py-3.5">
+    <div className="reader-lumen-surface panel pointer-events-auto max-w-md px-4 py-3.5">
       <p className="font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-danger">
         Basemap unavailable
       </p>

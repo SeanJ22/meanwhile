@@ -1,7 +1,7 @@
-import { hostOf } from "@/lib/officials/verification";
 import { personInitials } from "@/lib/officials/person-name";
 import { type CandidateCardData } from "@/lib/ballot/candidate-cards";
 import type { CandidateLinks } from "@/lib/ballot/candidate-sites";
+import styles from "./candidate-card.module.css";
 
 /**
  * The Kelly-standard candidate card (2b): not a hyperlink — a card. Photo
@@ -130,7 +130,7 @@ export function CandidateCard({
      * the geometry fix does not satisfy the author's eye, ordering is HIS
      * decision to revisit, not a tidy-up.
      */
-    <div className="candidate-row">
+    <div className={`candidate-row ${styles.card}`}>
       <span className="candidate-avatar" aria-hidden={card?.photoUrl ? undefined : true}>
         {card?.photoUrl ? (
           // External campaign-site photo; next/image would require
@@ -154,7 +154,7 @@ export function CandidateCard({
         )}
       </span>
 
-      <div className="min-w-0 flex-1">
+      <div className={`min-w-0 flex-1 ${styles.content}`}>
         <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
           {nameSlot ?? (
             <span className="text-[0.9375rem] font-semibold tracking-tight">
@@ -167,27 +167,11 @@ export function CandidateCard({
         </div>
 
         {card?.bio && (
-          <p className="mt-1 text-[0.8125rem] leading-relaxed text-paper-dim">
-            &ldquo;{card.bio}&rdquo;{" "}
-            {card.bioSourceUrl && (
-              <a
-                href={card.bioSourceUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="text-muted underline decoration-dotted underline-offset-2 hover:text-link"
-              >
-                {/*
-                  **THE LINK NAMES WHERE IT CAME FROM** (2026-08-23, item 3).
-                  This read `?? "source"`, which is the shape of a source class
-                  without being one — the blurb rule requires prose about a
-                  real person to NAME where it came from, and the word
-                  "source" names nothing. The host is read off the URL that is
-                  already on the row, so it is derived from the evidence
-                  rather than supplied in place of it.
-                */}
-                {card.bioSourceLabel ?? hostOf(card.bioSourceUrl)}
-              </a>
-            )}
+          <p
+            className={`mt-1 text-[0.8125rem] text-paper-dim ${styles.quote}`}
+            data-candidate-quote
+          >
+            &ldquo;{card.bio}&rdquo;
           </p>
         )}
 
@@ -197,16 +181,11 @@ export function CandidateCard({
           // campaign's own words, quoted, with the page and the read date.
           // Rendered only where no curated bio exists — the gap is where the
           // information asymmetry lives, and filling it is the whole row.
-          <p className="mt-1 text-[0.8125rem] leading-relaxed text-paper-dim">
-            &ldquo;{derivedBlurb.text}&rdquo;{" "}
-            <a
-              href={derivedBlurb.sourceUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="text-muted underline decoration-dotted underline-offset-2 hover:text-link"
-            >
-              {derivedBlurb.sourceLabel}
-            </a>
+          <p
+            className={`mt-1 text-[0.8125rem] text-paper-dim ${styles.quote}`}
+            data-candidate-quote
+          >
+            &ldquo;{derivedBlurb.text}&rdquo;
           </p>
         )}
 
@@ -315,8 +294,10 @@ export function CandidateCard({
             the long sections went and a card without one would simply have
             lost them. (The thin line that used to sit above this went with
             RULING 42; the door did not move.) */}
-        {battlecardSlot}
       </div>
+      {battlecardSlot && (
+        <div className={styles.battlecardSlot}>{battlecardSlot}</div>
+      )}
     </div>
   );
 }

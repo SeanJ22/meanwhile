@@ -4,6 +4,7 @@ import { Fragment, useState, useSyncExternalStore } from "react";
 
 import {
   getStoredReaction,
+  clearStoredYesReactions,
   submitReaction,
   subscribeReactions,
   NOT_COUNTED_LINE,
@@ -25,6 +26,7 @@ import {
   SCALE_GROUP_LEADERS,
   reactionChoiceClass,
 } from "@/lib/reactions/pill";
+import { restoreDerivedPick } from "@/lib/ballot/picks";
 
 /**
  * The reaction control (P03) — one component, keyed by target type + id, so
@@ -95,6 +97,13 @@ interface ReactionControlProps {
    * record into a questionnaire.
    */
   frame?: "standing" | "compact";
+  /** Candidate targets in the same VOTE_FOR_1 contest. A new Yes clears the
+   * earlier device-local Yes so the controls behave as one selection group. */
+  exclusiveYesTargetIds?: readonly string[];
+  /** Optional ballot mapping so a repeated Yes can restore a pick the reader
+   * previously removed without changing the reaction itself. */
+  pickContestId?: string;
+  pickChoiceId?: string;
 }
 
 export function ReactionControl({
@@ -104,6 +113,9 @@ export function ReactionControl({
   context,
   singleCandidateContest = false,
   frame = "standing",
+  exclusiveYesTargetIds,
+  pickContestId,
+  pickChoiceId,
 }: ReactionControlProps) {
   // The scale the server will accept for this target, and nothing else.
   // SOMEONE_ELSE rides on top of the v1 scale in a one-candidate contest,
@@ -136,16 +148,17 @@ export function ReactionControl({
    * result: the store moved and a surface went on rendering what it read at
    * mount.
    *
-   * `override` stays, and it is not redundant — it is what makes the tap
-   * render instantly rather than after the `fetch` in `record` settles.
+   * The device record is written and published synchronously before the
+   * network request begins, so it is also the optimistic state. Keeping a
+   * second component-local override would strand an earlier Yes after a
+   * sibling candidate clears it in a one-seat contest.
    */
   const stored = useSyncExternalStore(
     subscribeReactions,
     () => getStoredReaction(targetType, targetId),
     () => null,
   );
-  const [override, setOverride] = useState<ReactionValue | null>(null);
-  const selected = override ?? stored;
+  const selected = stored;
   // A tap made before the one-time disclosure is acknowledged parks here
   // and applies on acknowledgment — the answer is never recorded first.
   const [pendingValue, setPendingValue] = useState<ReactionValue | null>(null);
@@ -178,7 +191,16 @@ export function ReactionControl({
   >(null);
 
   const record = async (value: ReactionValue) => {
-    setOverride(value);
+    if (
+      targetType === "CANDIDATE" &&
+      value === "YES" &&
+      exclusiveYesTargetIds
+    ) {
+      clearStoredYesReactions(targetType, exclusiveYesTargetIds, targetId);
+    }
+    if (value === "YES" && pickContestId && pickChoiceId) {
+      restoreDerivedPick(pickContestId, pickChoiceId);
+    }
     setOutcome("SAVING");
     // A changed answer re-sends whatever the reader has already written, so
     // switching from Yes to No does not silently discard their sentence.
@@ -294,7 +316,7 @@ export function ReactionControl({
           );
         })}
       </div>
-      {outcome === "NOT_COUNTED" && (
+      {selected && outcome === "NOT_COUNTED" && (
         // Anything short of the 204 — 500, network failure, or the
         // never-happens 202 — renders this line, never implied success.
         <p className="mt-1 text-[0.6875rem] leading-relaxed text-muted">
@@ -313,7 +335,7 @@ export function ReactionControl({
         commitment we cannot honour every time is worse than a reserved
         right.
       */}
-      {(outcome === "COUNTED" || outcome === "TEXT_DROPPED") && (
+      {selected && (outcome === "COUNTED" || outcome === "TEXT_DROPPED") && (
         <div className="mt-2">
           {!textOpen ? (
             <button

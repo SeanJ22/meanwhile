@@ -104,6 +104,17 @@ test("BAL-43: offices read top to bottom; both candidate paths share the desktop
   assert.match(src, /data-office-tier-start=/);
   assert.match(CSS, /\.ballot-office-card\[data-office-tier-start="true"\] \{[^}]*border-top-width:\s*3px/,
     "tier transitions have a clear divider without reordering offices");
+
+  // BAL-50 keeps each office as the comparison unit and stretches both
+  // candidate branches through the same flex-column geometry. CandidateCard
+  // itself flexes before the same-sized reaction block, aligning the rows.
+  assert.equal(
+    src.split('className="flex min-w-0 flex-col"').length - 1,
+    2,
+    "both candidate branches need the same equal-height cell",
+  );
+  const cardCss = readFileSync(join(ROOT, "components", "ballot", "candidate-card.module.css"), "utf8");
+  assert.match(cardCss, /\.card\s*\{[\s\S]*?flex:\s*1 1 auto/);
 });
 
 test("BAL-43: measure cards keep their prior independent two-column flow", () => {

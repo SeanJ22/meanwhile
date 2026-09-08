@@ -29,6 +29,7 @@ import { OfficialTermNote } from "@/components/officials/official-term-note";
 import { MemberDirectory } from "@/components/officials/member-directory";
 import { PersonIdentity } from "@/components/officials/person-identity";
 import { PositionsSection } from "@/components/officials/positions-section";
+import { SocialChannelBadges } from "@/components/officials/social-channel-badges";
 
 import { OfficeBlurb, RecentVotes } from "./official-popup";
 
@@ -112,7 +113,7 @@ export function OfficialModal({
         if (event.target === event.currentTarget) onClose();
       }}
     >
-      <div className="account-modal">
+      <div className="reader-lumen-surface account-modal">
         {/*
           Item 3 (2026-08-16): the header carries the TIER EYEBROW and the
           close control, and nothing else.
@@ -134,6 +135,8 @@ export function OfficialModal({
               {TIER_LABEL[tier]}
             </p>
           </div>
+
+          <SocialChannelBadges social={holder.social} />
 
           <button
             type="button"
@@ -198,7 +201,7 @@ export function OfficialModal({
             policy, which is the entire reason a social pill belongs on an
             officeholder's card. Render what is held, only what is held.
           */}
-          <ContactPills holder={holder} />
+          <ContactPills holder={holder} includeSocials={false} />
           <OfficialTermNote holder={holder} />
 
           <CardSection title="What this office does">

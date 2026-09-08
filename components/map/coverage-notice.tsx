@@ -13,6 +13,8 @@ import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 import { useNarrowing } from "@/hooks/use-narrowing";
 import { useResolvedLocation } from "@/hooks/use-resolved-location";
 import { formatMiles } from "@/lib/map/format";
+import { bodyPurposeFor } from "@/lib/map/body-purpose";
+import { BodyPurposeLabel } from "./body-purpose-label";
 
 
 import type { StreetPoint } from "@/lib/geo/census-geocoder";
@@ -33,7 +35,6 @@ import {
   leadKind,
   noteStateFor,
   noticeLabel,
-  representationForDivision,
   representationNoteFor,
   shouldRenderNotice,
 } from "@/lib/registry/representation";
@@ -897,7 +898,7 @@ function CoverageBody({
               <li
                 key={body.bodyId}
                 data-other-body-row=""
-                className="flex items-baseline justify-between gap-3 pb-1"
+                className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 pb-1"
               >
                 <button
                   type="button"
@@ -907,6 +908,7 @@ function CoverageBody({
                   {body.name ?? body.divisionLabel}
                 </button>
                 <span className={TYPE_LABEL_CLASS}>{bodyClassShort(body.bodyClass)}</span>
+                <BodyPurposeLabel purpose={bodyPurposeFor(body)} />
               </li>
             ))}
           </ul>
@@ -1004,7 +1006,7 @@ function CoverageBody({
                * that exists because this list once disagreed with itself.
                */
               data-governing-row=""
-              className="flex items-baseline justify-between gap-3 pb-1"
+              className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 pb-1"
             >
               {/*
                 ITEM 3 (2026-08-16, the author's ruling): A BODY ROW OPENS ITS
@@ -1092,6 +1094,7 @@ function CoverageBody({
                 */}
                 {marksOverlap(body.standing) && <OverlapMark zip={zip} />}
               </span>
+              <BodyPurposeLabel purpose={bodyPurposeFor(body)} />
               <span
                 className={`trailing-space-trimmed shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] ${TYPE_LABEL_CLASS}`}
               >
@@ -1665,7 +1668,7 @@ export function CoverageNotice({
     <div
       ref={rootRef}
       data-refreshing={refreshing ? "true" : undefined}
-      className="coverage-notice panel pointer-events-auto relative max-w-md px-4 py-3.5"
+      className="reader-lumen-surface coverage-notice panel pointer-events-auto relative max-w-md px-4 py-3.5"
     >
       {onMinimize && (
         // The explicit way out (3) — engagement still collapses it, but the

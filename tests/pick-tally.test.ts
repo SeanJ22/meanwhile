@@ -107,9 +107,10 @@ test("stated N equals rendered rows: rows.length is always picked", () => {
   }
 });
 
-test("Yes to more than the seat elects is not a pick — it asks", () => {
+test("a one-seat tally deterministically keeps the newest Yes", () => {
   const tally = tallyPicks(BALLOT, [], new Set(["cand-a", "cand-b"]), {});
-  assert.equal(tally.picked, 0, "two Yeses in a one-seat race resolve to no pick");
+  assert.equal(tally.picked, 1);
+  assert.deepEqual(tally.rows[0].chosen, ["Ada Alvarez"]);
 });
 
 // ── item 9: the clear ─────────────────────────────────────────────────────
@@ -168,6 +169,12 @@ test("resolveWithSuppression leaves an explicit pick alone", () => {
   const r = resolveWithSuppression(explicitCandidate, ["cand-a"], 1, ["cand-a"]);
   assert.equal(r.basis, "EXPLICIT");
   assert.deepEqual(r.chosen, ["cand-a"]);
+});
+
+test("a derived multi-seat choice toggles off without hiding the other choice", () => {
+  const r = resolveWithSuppression(null, ["cand-a", "cand-b"], 2, ["cand-a"]);
+  assert.equal(r.basis, "DERIVED");
+  assert.deepEqual(r.chosen, ["cand-b"]);
 });
 
 test("the count line names both kinds and reconciles with the numbers", () => {

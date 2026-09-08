@@ -122,6 +122,11 @@ export interface SocialAccounts {
   youtubeId?: string;
   instagram?: string;
   mastodon?: string;
+  /** Full official profile URLs where a handle alone would be ambiguous. */
+  linkedin?: string;
+  tiktok?: string;
+  nextdoor?: string;
+  newsletter?: string;
 }
 
 /**

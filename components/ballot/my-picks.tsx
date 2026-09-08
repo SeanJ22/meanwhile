@@ -17,8 +17,13 @@ import {
   isForeignPick,
   pickJurisdictionLabel,
 } from "@/lib/ballot/pick-jurisdiction";
-import { getStoredReaction, subscribeReactions } from "@/lib/reactions/client";
+import {
+  getStoredReaction,
+  getStoredReactionOrder,
+  subscribeReactions,
+} from "@/lib/reactions/client";
 import { PicksCardControls } from "@/components/ballot/picks-card";
+import styles from "./my-picks.module.css";
 
 /**
  * The election-day reference (4a): everything this device has marked,
@@ -94,14 +99,21 @@ export function MyPicks({
                 o.reactionTargetId &&
                 getStoredReaction("CANDIDATE", o.reactionTargetId) === "YES",
             )
-            .map((o) => o.reactionTargetId as string)
-            .sort(),
+            .map((o) => ({
+              targetId: o.reactionTargetId as string,
+              order: getStoredReactionOrder("CANDIDATE", o.reactionTargetId!),
+            }))
+            .sort((a, b) => b.order - a.order),
         ),
       [pickable],
     ),
     () => "[]",
   );
-  const yesTargets = new Set(JSON.parse(yesKey) as string[]);
+  const yesTargets = new Set(
+    (JSON.parse(yesKey) as { targetId: string; order: number }[]).map(
+      ({ targetId }) => targetId,
+    ),
+  );
 
   const tally = tallyPicks(pickable, picks, yesTargets, cleared);
 
@@ -128,10 +140,16 @@ export function MyPicks({
   ];
 
   return (
-    <section className="mt-6 rounded-[10px] border border-dashed border-[var(--panel-border)] p-4">
-      <h2 className="t-structure text-paper-dim">
-        My picks — this device only
-      </h2>
+    <section className={`mt-6 ${styles.summary}`} data-my-picks>
+      <div className={styles.headingRow}>
+        <h2 className="text-[1rem] font-semibold tracking-tight text-paper">
+          My picks
+        </h2>
+        <span className={styles.deviceBadge}>This device only</span>
+      </div>
+      <p className="mt-1 text-[0.75rem] leading-relaxed text-voice">
+        This pick list is saved only in this browser on this device.
+      </p>
       {/*
         The count. `data-pick-tally` carries both numbers so `walk:all` can
         assert the denominator against the pick controls it can actually count

@@ -71,6 +71,31 @@
     0 24px 48px -16px rgba(0, 0, 0, 0.35);
 }
 
+/* DSN-8: More uses the same compact, rounded control language as the links
+   inside the card. The footer remains pinned; the button itself is a pill. */
+.card :global(.popup-card-more) {
+  display: flex;
+  min-height: 2.75rem;
+  width: calc(100% - 2rem);
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  align-self: center;
+  margin: 0.75rem 1rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--signal) 45%, var(--panel-border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--signal) 7%, transparent);
+  color: var(--paper);
+  font-size: 0.75rem;
+  font-weight: 650;
+}
+
+.card :global(.popup-card-more):hover,
+.card :global(.popup-card-more):focus-visible {
+  border-color: var(--signal);
+  color: var(--signal);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .card:global(.popup-card),
   .card:global(.popup-card)::after {

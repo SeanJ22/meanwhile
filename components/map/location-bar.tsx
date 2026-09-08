@@ -61,7 +61,7 @@ export function LocationBar({ zip, meetingCount, onChange }: LocationBarProps) {
 
   if (!editing) {
     return (
-      <div className="panel pointer-events-auto flex items-stretch">
+      <div className="reader-lumen-surface panel pointer-events-auto flex items-stretch">
         <div className="px-4 py-2.5">
           <p className="font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-muted">
             Showing
@@ -102,7 +102,7 @@ export function LocationBar({ zip, meetingCount, onChange }: LocationBarProps) {
   }
 
   return (
-    <div className="panel pointer-events-auto w-[19rem] p-4">
+    <div className="reader-lumen-surface panel pointer-events-auto w-[19rem] p-4">
       <p className="trailing-space-trimmed-18 mb-2.5 font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-muted">
         New zip code
       </p>

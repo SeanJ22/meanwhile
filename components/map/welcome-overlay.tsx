@@ -153,7 +153,7 @@ export function WelcomeOverlay({
         if (e.key === "Escape" && onDismiss) onDismiss();
       }}
     >
-      <div className="welcome-card">
+      <div className="reader-lumen-surface welcome-card">
         {/*
           6e2 (2026-08-15, the author): "NOTICE OF PUBLIC MEETINGS" is gone.
           It undersold the mission text doing the real work below it —

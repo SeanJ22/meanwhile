@@ -88,7 +88,7 @@ export function ZipSwitcher({
   const others = recents.filter((z) => z !== current);
 
   return (
-    <div ref={rootRef} className="zip-switcher panel" role="dialog" aria-label="Change zip">
+    <div ref={rootRef} className="reader-lumen-surface zip-switcher panel" role="dialog" aria-label="Change zip">
       <p className="t-eyebrow text-paper-dim">Show me</p>
       <div className="zip-switcher-entry">
         <input

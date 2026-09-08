@@ -1,0 +1,276 @@
+.summaryActions,
+.cardActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.pill,
+.floatingPill {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  border: 1px solid color-mix(in srgb, var(--link) 42%, var(--panel-border));
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--link) 7%, var(--panel-bg));
+  color: var(--text);
+  padding: 0.55rem 0.9rem;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  line-height: 1;
+  text-decoration: none;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 5px 12px rgba(0, 0, 0, 0.12);
+  transition:
+    border-color var(--dur-fast) var(--ease-move),
+    background-color var(--dur-fast) var(--ease-move),
+    transform var(--dur-fast) var(--ease-move);
+}
+
+.pill svg,
+.floatingPill svg {
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+}
+
+.pill:hover,
+.pill:focus-visible,
+.floatingPill:hover,
+.floatingPill:focus-visible {
+  border-color: var(--link);
+  background: color-mix(in srgb, var(--link) 13%, var(--panel-bg));
+}
+
+.pill:focus-visible,
+.floatingPill:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+
+.pill:active,
+.floatingPill:active {
+  transform: translateY(1px);
+}
+
+.primaryPill {
+  border-color: var(--action);
+  background: var(--action);
+  color: var(--action-on);
+}
+
+.primaryPill:hover,
+.primaryPill:focus-visible {
+  border-color: var(--action);
+  background: color-mix(in srgb, var(--action) 88%, white);
+  color: var(--action-on);
+}
+
+.clearPill {
+  border-color: color-mix(in srgb, var(--danger) 62%, var(--panel-border));
+  background: color-mix(in srgb, var(--danger) 7%, var(--panel-bg));
+}
+
+.clearPill:hover,
+.clearPill:focus-visible {
+  border-color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 13%, var(--panel-bg));
+}
+
+.floatingPill {
+  --pearl-fill: var(--online);
+  --pearl-ink: var(--bg);
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: 60;
+  isolation: isolate;
+  overflow: hidden;
+  border-color: transparent;
+  background: var(--pearl-fill);
+  color: var(--pearl-ink);
+  box-shadow:
+    inset 0 3px 8px rgba(255, 255, 255, 0.14),
+    inset 0 -1px 3px rgba(0, 0, 0, 0.38),
+    inset 0 -3px 8px rgba(255, 255, 255, 0.18),
+    0 16px 24px rgba(0, 0, 0, 0.22),
+    0 8px 8px -5px rgba(0, 0, 0, 0.5);
+}
+
+.floatingPill::after {
+  content: "";
+  position: absolute;
+  top: 10%;
+  right: 7%;
+  bottom: 46%;
+  left: 7%;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: var(--radius-pill) var(--radius-pill) 0 0;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0)
+  );
+}
+
+.floatingPill:hover,
+.floatingPill:focus-visible {
+  border-color: transparent;
+  background: var(--pearl-fill);
+  color: var(--pearl-ink);
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right))
+    max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.38);
+  backdrop-filter: blur(3px);
+}
+
+.modalFrame {
+  position: relative;
+  display: flex;
+  width: min(100%, 48rem);
+  max-height: calc(100dvh - 2rem);
+  min-height: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.preview {
+  --lumen-peak: color-mix(in srgb, var(--panel) 82%, white);
+  --lumen-floor: var(--panel);
+  --lumen-rim: rgba(255, 255, 255, 0.12);
+  --lumen-horizon: white;
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  min-height: 0;
+  overflow: auto;
+  border-radius: clamp(1rem, 3vw, 2rem);
+  background-color: var(--panel);
+  background-image: radial-gradient(
+    ellipse at bottom,
+    var(--lumen-peak) 0%,
+    var(--lumen-floor) 66%
+  );
+  padding: clamp(0.5rem, 1.8vw, 0.9rem);
+  box-shadow:
+    inset 0 0 0 1px var(--lumen-rim),
+    0 2px 4px rgba(0, 0, 0, 0.48),
+    0 24px 48px -16px rgba(0, 0, 0, 0.68);
+  scrollbar-width: thin;
+}
+
+.preview::after {
+  content: "";
+  position: absolute;
+  right: 15%;
+  bottom: 0;
+  left: 15%;
+  height: 1px;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--lumen-horizon),
+    transparent
+  );
+  opacity: 0.7;
+}
+
+.cardImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: clamp(0.75rem, 2.4vw, 1.5rem);
+}
+
+.cardActions {
+  width: 100%;
+  justify-content: center;
+}
+
+.cardActions .pill {
+  flex: 1 1 9rem;
+}
+
+.deviceLine {
+  min-height: 1.25rem;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
+:global([data-theme="light"]) .floatingPill {
+  --pearl-ink: var(--panel);
+  box-shadow:
+    inset 0 3px 8px rgba(255, 255, 255, 0.12),
+    inset 0 -1px 3px rgba(0, 0, 0, 0.24),
+    inset 0 -3px 8px rgba(255, 255, 255, 0.16),
+    0 16px 24px rgba(0, 0, 0, 0.11),
+    0 8px 8px -5px rgba(0, 0, 0, 0.25);
+}
+
+:global([data-theme="light"]) .preview {
+  --lumen-peak: var(--panel);
+  --lumen-floor: color-mix(in srgb, var(--panel) 93%, black);
+  --lumen-rim: rgba(0, 0, 0, 0.09);
+  --lumen-horizon: color-mix(in srgb, var(--online) 60%, transparent);
+  box-shadow:
+    inset 0 0 0 1px var(--lumen-rim),
+    0 2px 4px rgba(0, 0, 0, 0.24),
+    0 24px 48px -16px rgba(0, 0, 0, 0.34);
+}
+
+@media (max-width: 420px) {
+  .overlay {
+    padding: 0.75rem;
+  }
+
+  .modalFrame {
+    max-height: calc(100dvh - 1.5rem);
+  }
+
+  .cardActions {
+    gap: 0.4rem;
+  }
+
+  .cardActions .pill {
+    min-width: 0;
+    flex: 1 1 0;
+    padding-right: 0.55rem;
+    padding-left: 0.55rem;
+    font-size: 0.75rem;
+  }
+
+  .cardActions .pill svg {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill,
+  .floatingPill {
+    transition-duration: 1ms;
+  }
+}

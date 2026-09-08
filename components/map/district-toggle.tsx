@@ -30,7 +30,7 @@ export function DistrictToggle({
   const disabled = failed || !restored;
 
   return (
-    <div className="panel pointer-events-auto px-3 py-2">
+    <div className="reader-lumen-surface panel pointer-events-auto px-3 py-2">
       <label
         className={`flex items-center gap-2.5 ${
           disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"

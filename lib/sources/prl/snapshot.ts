@@ -9,7 +9,13 @@ export interface PrlReaderProfile {
   statementCount: number;
   measuredAt: string;
   readAt: string;
-  categories: { id: string; sentence: string }[];
+  categories: {
+    id: string;
+    label: string;
+    explainer: string;
+    share: number;
+    sentence: string;
+  }[];
   attribution: typeof PRL_RHETORIC_ATTRIBUTION;
   sourceUrl: string;
 }
@@ -22,7 +28,13 @@ export function projectPrlProfile(profile: PrlMemberProfile, snapshot: Pick<PrlS
     const value = profile.shares[category.key];
     if (value === null || !Number.isFinite(value) || value < 0 || value > 100) return [];
     const sentence = shareSentence(profile, category.key);
-    return sentence ? [{ id: category.key, sentence }] : [];
+    return sentence ? [{
+      id: category.key,
+      label: category.label,
+      explainer: category.explainer,
+      share: value,
+      sentence,
+    }] : [];
   });
   return { subjectId: `congress:${profile.bioguideId}`, bioguideId: profile.bioguideId,
     statementCount: profile.statementCount, measuredAt: profile.measuredAt,

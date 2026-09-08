@@ -1,8 +1,9 @@
 "use client";
 
-import { useSyncExternalStore, useCallback } from "react";
+import { useCallback, useState, useSyncExternalStore } from "react";
 
 import {
+  clearDerivedPick,
   clearPick,
   getPick,
   getSuppressedDerived,
@@ -11,7 +12,16 @@ import {
 } from "@/lib/ballot/picks";
 import { DERIVED_PICK_LINE, conflictLine } from "@/lib/ballot/derived-picks";
 import { resolveWithSuppression } from "@/lib/ballot/pick-tally";
-import { getStoredReaction, subscribeReactions } from "@/lib/reactions/client";
+import {
+  applyContestSelection,
+  methodFromVoteFor,
+} from "@/lib/ballot/selection-method";
+import {
+  getStoredReaction,
+  getStoredReactionOrder,
+  subscribeReactions,
+} from "@/lib/reactions/client";
+import styles from "./pick-control.module.css";
 
 /**
  * The per-contest pick control (4a). One row per contest, listing every
@@ -42,6 +52,7 @@ export function PickControl({
    *  with visual weight — same words, bigger presence. It whispered. */
   prominent?: boolean;
 }) {
+  const [limitMessage, setLimitMessage] = useState<string | null>(null);
   const pick = useSyncExternalStore(
     subscribePicks,
     useCallback(
@@ -98,8 +109,12 @@ export function PickControl({
               o.reactionTargetId &&
               getStoredReaction("CANDIDATE", o.reactionTargetId) === "YES",
           )
-          .map((o) => o.id)
-          .sort()),
+          .map((o) => ({
+            id: o.id,
+            order: getStoredReactionOrder("CANDIDATE", o.reactionTargetId!),
+          }))
+          .sort((a, b) => b.order - a.order)
+          .map(({ id }) => id)),
       [options],
     ),
     () => "[]",
@@ -108,8 +123,31 @@ export function PickControl({
 
   const resolution = resolveWithSuppression(parsed, yesChoiceIds, voteFor, cleared);
   const selected = new Set(resolution.chosen);
+  const method = methodFromVoteFor(voteFor);
   const labelOf = (id: string) =>
     options.find((o) => o.id === id)?.label ?? parsed?.labels?.[id] ?? id;
+
+  const choose = (option: { id: string; label: string }) => {
+    if (resolution.basis === "DERIVED" && selected.has(option.id)) {
+      setLimitMessage(null);
+      clearDerivedPick(contestId, option.id);
+      return;
+    }
+    const transition = applyContestSelection(
+      method,
+      { orderedChoiceIds: resolution.chosen },
+      option.id,
+    );
+    if (transition.status === "LIMIT_REACHED") {
+      setLimitMessage(
+        `This race elects ${voteFor}. Remove one of your picks before adding another.`,
+      );
+      return;
+    }
+
+    setLimitMessage(null);
+    togglePick(contestId, contestTitle, option.id, option.label, voteFor);
+  };
 
   return (
     /*
@@ -153,9 +191,14 @@ export function PickControl({
         when there is nothing to state, or when the answers disagree.
       */}
       <p className={prominent ? "reaction-box-prompt text-link" : "reaction-box-prompt"}>
-        {resolution.asks
-          ? `Your pick for this race${voteFor > 1 ? ` (pick up to ${voteFor})` : ""}`
-          : `Your pick for this race: ${resolution.chosen.map(labelOf).join(", ")}`}
+        {resolution.asks ? (
+          `Your pick for this race${voteFor > 1 ? ` (pick up to ${voteFor})` : ""}`
+        ) : (
+          <span className={styles.pickBadge} data-your-pick-badge>
+            <span aria-hidden="true">✓</span>
+            Your pick for this race: {resolution.chosen.map(labelOf).join(", ")}
+          </span>
+        )}
       </p>
       {resolution.basis === "DERIVED" && (
         // Says WHERE the pick came from. A checkmark the reader does not
@@ -181,6 +224,15 @@ export function PickControl({
           )}
         </p>
       )}
+      {limitMessage && (
+        <p
+          className="mt-1 text-[0.75rem] leading-relaxed text-signal"
+          role="status"
+          data-pick-limit-message
+        >
+          {limitMessage}
+        </p>
+      )}
       {/* Playful register, on an interaction surface — and load-bearing: it
           is the one line that tells the reader this box goes nowhere. */}
       <p className="mt-0.5 text-[0.6875rem] leading-relaxed text-muted">
@@ -194,9 +246,7 @@ export function PickControl({
               key={option.id}
               type="button"
               aria-pressed={on}
-              onClick={() =>
-                togglePick(contestId, contestTitle, option.id, option.label, voteFor)
-              }
+              onClick={() => choose(option)}
               /*
                * g4 item 7: a MEASURE's Yes/No wears the vote grammar — green
                * fill for yes, red for no — while a CANDIDATE pick keeps the

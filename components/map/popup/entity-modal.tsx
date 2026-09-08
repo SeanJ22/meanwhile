@@ -35,10 +35,12 @@ import {
 } from "@/components/officials/card-section";
 import { CardSourcesList } from "@/components/officials/card-sources-list";
 import { IdentityPortrait } from "@/components/officials/person-identity";
+import { SocialChannelBadges } from "@/components/officials/social-channel-badges";
 import { SpeakYourMind } from "@/components/speak/speak-your-mind";
 import { DemandPill } from "@/components/demand/demand-pill";
 import { RosterCompletenessGaps } from "@/components/officials/roster-completeness-gap";
 import type { RosterReaderGap } from "@/lib/registry/body-rosters";
+import type { SocialAccounts } from "@/lib/officials/types";
 
 import { HowToBeHeard, MeetingSourceCredit } from "../meeting-panel";
 import { venueLink } from "@/lib/registry/links";
@@ -179,6 +181,8 @@ export interface BodyCardData {
   contact: { label: string; value: string; href: string | null }[];
   /** Section 6. Jurisdiction facts where held. */
   jurisdiction: { label: string; value: string }[];
+  /** Officially published body-level channels. Missing holdings render nothing. */
+  social?: SocialAccounts;
 }
 
 /**
@@ -693,7 +697,7 @@ export function EntityModal({
         if (event.target === event.currentTarget) onClose();
       }}
     >
-      <div className="account-modal">
+      <div className="reader-lumen-surface account-modal">
         <header className="account-modal-header">
           <div className="min-w-0">
             <p
@@ -728,14 +732,17 @@ export function EntityModal({
             )}
           </div>
 
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close"
-            className="popup-expand-btn !static shrink-0"
-          >
-            <X className="size-4" />
-          </button>
+          <div className="flex shrink-0 items-start gap-2">
+            <SocialChannelBadges social={subject.bodyCard?.social} />
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close"
+              className="popup-expand-btn !static shrink-0"
+            >
+              <X className="size-4" />
+            </button>
+          </div>
         </header>
 
         {subject.bodyCard ? (

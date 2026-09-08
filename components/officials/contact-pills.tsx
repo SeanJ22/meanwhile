@@ -12,14 +12,12 @@ import {
   FacebookMark,
   FormMark,
   GlobeMark,
-  InstagramMark,
   MailMark,
-  MastodonMark,
   OfficialMark,
   PhoneMark,
-  XMark,
-  YouTubeMark,
 } from "./channel-marks";
+import { socialChannelLinks } from "@/lib/officials/social-channels";
+import { SocialChannelMark } from "./social-channel-mark";
 
 /**
  * **The contact pill row** — items 2 and 8, 2026-08-16, the author's ruling.
@@ -129,11 +127,14 @@ export function ContactPills({
    * either way; an absent channel is still an absent pill.
    */
   scope = "all",
+  includeSocials = true,
 }: {
   holder: SeatHolder;
   compact?: boolean;
   layout?: "row" | "column";
   scope?: "all" | "primary";
+  /** Large cards render official channels as header badges. */
+  includeSocials?: boolean;
 }) {
   const social = holder.social ?? {};
   const pills: React.ReactNode[] = [];
@@ -299,65 +300,18 @@ export function ContactPills({
     );
   }
 
-  if (social.twitter) {
-    pills.push(
-      <Pill
-        key="x"
-        // The stored field is the source's `twitter`; it renders as X.
-        href={`https://x.com/${social.twitter}`}
-        label={`@${social.twitter}`}
-        mark={<XMark />}
-      />,
-    );
-  }
-
-  if (full && social.facebook) {
-    pills.push(
-      <Pill
-        key="facebook"
-        href={`https://facebook.com/${social.facebook}`}
-        label="Facebook"
-        mark={<FacebookMark />}
-      />,
-    );
-  }
-
-  if (full && (social.youtube || social.youtubeId)) {
-    pills.push(
-      <Pill
-        key="youtube"
-        href={
-          social.youtubeId
-            ? `https://youtube.com/channel/${social.youtubeId}`
-            : `https://youtube.com/${social.youtube}`
-        }
-        label="YouTube"
-        mark={<YouTubeMark />}
-      />,
-    );
-  }
-
-  if (full && social.instagram) {
-    pills.push(
-      <Pill
-        key="instagram"
-        href={`https://instagram.com/${social.instagram}`}
-        label="Instagram"
-        mark={<InstagramMark />}
-      />,
-    );
-  }
-
-  if (full && social.mastodon) {
-    pills.push(
-      <Pill
-        key="mastodon"
-        // The directory stores a full handle including the instance.
-        href={mastodonUrl(social.mastodon)}
-        label="Mastodon"
-        mark={<MastodonMark />}
-      />,
-    );
+  if (includeSocials) {
+    for (const channel of socialChannelLinks(social)) {
+      if (!full && channel.id !== "x") continue;
+      pills.push(
+        <Pill
+          key={channel.id}
+          href={channel.href}
+          label={channel.pillLabel}
+          mark={<SocialChannelMark channel={channel.id} />}
+        />,
+      );
+    }
   }
 
   if (pills.length === 0) {
@@ -397,11 +351,4 @@ function hostOf(url: string): string {
   } catch {
     return url;
   }
-}
-
-/** `@name@instance.tld` → the instance's own profile URL. */
-function mastodonUrl(handle: string): string {
-  const parts = handle.replace(/^@/, "").split("@");
-  if (parts.length === 2) return `https://${parts[1]}/@${parts[0]}`;
-  return handle.startsWith("http") ? handle : `https://mastodon.social/@${parts[0]}`;
 }

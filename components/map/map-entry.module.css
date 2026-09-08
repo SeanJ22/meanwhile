@@ -1,0 +1,520 @@
+.readerMap {
+  --reader-pearl-peak: color-mix(in srgb, var(--panel) 78%, white);
+  --reader-pearl-floor: color-mix(in srgb, var(--panel) 94%, black);
+  --reader-pearl-rim: rgba(255, 255, 255, 0.14);
+}
+
+/* DSN-4: the bottom-left controls keep their semantic colors while sharing
+   the same pearl lighting model as the command pills. */
+.readerMap :global(.notice-fab),
+.readerMap :global(.count-badge),
+.readerMap :global(.district-info-pill),
+.readerMap :global(.theme-toggle-btn) {
+  border-radius: 999px;
+  background-color: var(--panel);
+  background-image: radial-gradient(
+    ellipse at bottom,
+    var(--reader-pearl-peak) 0%,
+    var(--reader-pearl-floor) 72%
+  );
+  box-shadow:
+    inset 0 0 0 1px var(--reader-pearl-rim),
+    0 8px 20px -12px rgba(0, 0, 0, 0.72);
+}
+
+.readerMap :global(.district-info-pill) {
+  /* The legacy boundary glow animates box-shadow and would override the
+     shared pearl lighting above on every animation frame. */
+  animation: none;
+}
+
+/* MTG-16: this is an actionable unsettled state, not disabled gray chrome. */
+.readerMap :global(.jurisdiction-badge[data-badge="COULD_GOVERN"]) {
+  border-color: #796092;
+  background: #49345e;
+  color: #fbf7ef;
+}
+
+.readerMap :global(button.jurisdiction-badge-action:hover),
+.readerMap :global(button.jurisdiction-badge-action:focus-visible) {
+  border-color: #a98bc6;
+  background: #382748;
+  color: #fffdf8;
+}
+
+/* WGH-24/MTG-20: these labels render only when the registry has an exact,
+   source-backed purpose. Their compact treatment keeps provenance adjacent
+   without presenting an inferred description as body copy. */
+.readerMap :global(.reader-body-purpose) {
+  display: inline-flex;
+  min-height: 1.5rem;
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--accent-local) 45%, var(--panel-border));
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  background: color-mix(in srgb, var(--accent-local) 10%, var(--panel));
+  color: var(--paper-dim);
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 650;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+}
+
+.readerMap :global(.reader-body-purpose:hover),
+.readerMap :global(.reader-body-purpose:focus-visible) {
+  border-color: var(--accent-local);
+  color: var(--paper);
+  outline: none;
+}
+
+/* A meeting row and its purpose source are sibling controls. Keeping the
+   source outside the row button avoids nested interactive content while the
+   shared shell still reads as one list item. */
+.readerMap :global(.al-row-shell) {
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.readerMap :global(.al-row-shell > .al-row) {
+  border-bottom: 0;
+}
+
+.readerMap :global(.al-row-purpose) {
+  margin-top: -0.3rem;
+  padding: 0 22px 9px;
+}
+
+/* DSN-7: Reader map cards use the same Lumen edge language as compact
+   popups. These surfaces need to keep their own overflow behavior, so the
+   illumination is an overlay rather than a clipped wrapper. */
+.readerMap :global(.reader-lumen-surface),
+.readerMap :global(.reader-meeting-panel) {
+  --reader-lumen-peak: color-mix(in srgb, var(--panel) 82%, white);
+  --reader-lumen-floor: var(--panel);
+  --reader-lumen-rim: rgba(255, 255, 255, 0.1);
+  --reader-lumen-horizon: white;
+  --reader-lumen-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.5),
+    0 24px 48px -16px rgba(0, 0, 0, 0.7);
+
+  position: relative;
+  isolation: isolate;
+  border-color: transparent;
+  background-color: var(--panel);
+  background-image: radial-gradient(
+    ellipse at bottom,
+    var(--reader-lumen-peak) 0%,
+    var(--reader-lumen-floor) 66%
+  );
+  box-shadow: inset 0 0 0 1px var(--reader-lumen-rim), var(--reader-lumen-shadow);
+}
+
+.readerMap :global(.reader-lumen-surface)::after,
+.readerMap :global(.reader-meeting-panel)::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 15%;
+  z-index: 1;
+  width: 70%;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--reader-lumen-horizon),
+    transparent
+  );
+  opacity: 0.22;
+}
+
+/* MTG-18/19: the summary reads in one stable sequence: entity, count,
+   address, then the level/purpose and Directions row. */
+.readerMap :global(.reader-meeting-header-meta) {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.readerMap :global(.reader-meeting-labels) {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.readerMap :global(.reader-meeting-level.level-tag) {
+  margin-left: 0;
+}
+
+.readerMap :global(.reader-meeting-directions) {
+  display: inline-flex;
+  min-height: 2rem;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.3rem;
+  border: 1px solid color-mix(in srgb, var(--signal) 42%, var(--panel-border));
+  border-radius: 999px;
+  padding: 0.35rem 0.65rem;
+  color: var(--signal);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 650;
+}
+
+.readerMap :global(.reader-meeting-directions):hover,
+.readerMap :global(.reader-meeting-directions):focus-visible {
+  border-color: var(--signal);
+  color: var(--paper);
+}
+
+.readerMap :global(.reader-meeting-entry) {
+  font-family: var(--font-sans);
+}
+
+.readerMap :global(.reader-agenda-bubble) {
+  display: inline-flex;
+  min-height: 2.25rem;
+  align-items: center;
+  gap: 0.375rem;
+  border: 1px solid color-mix(in srgb, var(--signal) 48%, var(--panel-border));
+  border-radius: 999px;
+  padding: 0.45rem 0.75rem;
+  background: color-mix(in srgb, var(--signal) 8%, transparent);
+  color: var(--signal);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 650;
+  line-height: 1;
+}
+
+.readerMap :global(.reader-agenda-bubble):hover,
+.readerMap :global(.reader-agenda-bubble):focus-visible {
+  border-color: var(--signal);
+  background: color-mix(in srgb, var(--signal) 14%, transparent);
+  color: var(--paper);
+}
+
+.readerMap :global(.reader-agenda-absent) {
+  color: var(--muted);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.readerMap :global(.reader-meeting-calendar [data-add-to-calendar]) {
+  font-family: var(--font-sans);
+}
+
+/* WGH-23: one segmented row. CSS reflows the one shared cluster; it never
+   constructs a second Ask or Ballot control. */
+.readerMap :global([data-pill-cluster="wgh"] .map-floaters-row) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr) minmax(0, 0.8fr);
+  gap: 0;
+  align-items: stretch;
+}
+
+.readerMap :global([data-pill-cluster="wgh"] .ballot-pill) {
+  display: contents;
+}
+
+.readerMap :global([data-pill-cluster="wgh"] .ballot-pill-main) {
+  grid-column: 1;
+  justify-content: center;
+  border-radius: 999px 0 0 999px;
+}
+
+.readerMap :global([data-pill-cluster="wgh"] .ask-pill) {
+  grid-column: 2;
+  width: auto;
+  min-width: 0;
+  justify-content: center;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.readerMap :global([data-pill-cluster="wgh"] .ask-pill span) {
+  font-size: 0;
+}
+
+.readerMap :global([data-pill-cluster="wgh"] .ask-pill span::after) {
+  content: "Ask";
+  font-size: 0.875rem;
+}
+
+.readerMap :global([data-pill-cluster="wgh"] .ballot-pill-zip) {
+  grid-column: 3;
+  justify-content: center;
+  border-radius: 0 999px 999px 0;
+}
+
+.voteShort {
+  display: none;
+}
+
+.tabletQuickNav,
+.phoneContextNav {
+  pointer-events: auto;
+}
+
+@media (max-width: 1199px) {
+  .readerMap {
+    --responsive-segment: color-mix(in srgb, var(--action) 84%, var(--panel));
+    --responsive-divider: color-mix(in srgb, white 28%, transparent);
+  }
+
+  .readerMap .topCommandBand {
+    display: grid;
+    width: auto;
+    margin: 12px 12px 0 104px;
+    padding: 0 !important;
+    align-items: stretch;
+    justify-content: stretch;
+    gap: 0 !important;
+    border: 1px solid color-mix(in srgb, var(--signal) 55%, var(--panel-border));
+    border-radius: 999px;
+    background: var(--responsive-segment);
+    box-shadow:
+      inset 0 -1px 0 rgba(255, 255, 255, 0.13),
+      0 10px 24px -13px rgba(0, 0, 0, 0.78);
+  }
+
+  .clusterSlot,
+  .clusterSlot :global([data-pill-cluster="map"]),
+  .clusterSlot :global(.map-floaters-row),
+  .clusterSlot :global(.ballot-pill) {
+    display: contents;
+  }
+
+  .clusterSlot :global([data-pill-cluster="map"]) {
+    margin-left: 0;
+  }
+
+  .readerMap .topCommandBand :global(.ballot-pill-main),
+  .readerMap .topCommandBand :global(.ballot-pill-zip),
+  .readerMap .topCommandBand :global(.ask-pill),
+  .readerMap .topCommandBand :global(.voting-open-button),
+  .tabletQuickNav > button {
+    display: inline-flex;
+    min-width: 0;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 0;
+    border-right: 1px solid var(--responsive-divider);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 0 0.45rem;
+    color: var(--action-on);
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 650;
+    line-height: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .readerMap .topCommandBand :global(.ask-pill) {
+    background: #60477f;
+    color: #fffdf8;
+  }
+
+  .readerMap .topCommandBand :global(.ballot-pill-main svg),
+  .readerMap .topCommandBand :global(.ask-pill svg),
+  .readerMap .topCommandBand :global(.ballot-pill-zip svg),
+  .readerMap .topCommandBand :global(.ballot-pill-soon) {
+    display: none;
+  }
+
+  .readerMap .topCommandBand :global(.ask-pill span) {
+    overflow: hidden;
+    font-size: 0;
+    text-overflow: ellipsis;
+  }
+
+  .readerMap .topCommandBand :global(.ask-pill span::after) {
+    content: "Ask";
+    font-size: 0.8125rem;
+  }
+
+  .voteSlot :global(.voting-open-button) {
+    width: 100%;
+  }
+
+  .voteFull {
+    display: none;
+  }
+
+  .voteShort {
+    display: inline;
+  }
+
+  .voteSlot[data-open="true"] {
+    grid-column: 1 / -1;
+    grid-row: 4;
+    justify-self: end;
+    margin-top: 0.5rem;
+  }
+
+  .clusterSlot :global(.zip-switcher) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    z-index: 2;
+    justify-self: end;
+    margin-top: 0.5rem;
+  }
+
+  .clusterSlot :global(.ask-expansion) {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    z-index: 2;
+    justify-self: end;
+    margin-top: 0.5rem;
+  }
+
+  .meetingPanelSlot {
+    grid-column: 1 / -1;
+    grid-row: 5;
+    justify-self: end;
+    margin-top: 0.75rem;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1199px) {
+  .readerMap .topCommandBand {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .readerMap .topCommandBand :global(.ballot-pill-main) {
+    grid-column: 1;
+    border-radius: 999px 0 0 999px;
+  }
+
+  .readerMap .topCommandBand :global(.ballot-pill-zip) {
+    grid-column: 2;
+  }
+
+  .readerMap .topCommandBand :global(.ask-pill) {
+    grid-column: 3;
+  }
+
+  .voteSlot {
+    grid-column: 4;
+  }
+
+  .tabletQuickNav {
+    display: contents;
+  }
+
+  .tabletQuickNav > button:first-child {
+    grid-column: 5;
+  }
+
+  .tabletQuickNav > button:last-child {
+    grid-column: 6;
+    border-right: 0;
+    border-radius: 0 999px 999px 0;
+  }
+}
+
+@media (max-width: 639px) {
+  .readerMap .topCommandBand {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  /* LAY-14's accepted visual order: ZIP | Ballot | Ask | Vote. */
+  .readerMap .topCommandBand :global(.ballot-pill-zip) {
+    grid-column: 1;
+    grid-row: 1;
+    border-radius: 999px 0 0 999px;
+  }
+
+  .readerMap .topCommandBand :global(.ballot-pill-main) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .readerMap .topCommandBand :global(.ask-pill) {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .voteSlot {
+    grid-column: 4;
+    grid-row: 1;
+  }
+
+  .voteSlot :global(.voting-open-button) {
+    border-right: 0;
+    border-radius: 0 999px 999px 0;
+  }
+
+  .phoneContextNav {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 0.4rem;
+  }
+
+  .phoneContextNav > button {
+    min-width: 0;
+    min-height: 44px;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--link) 48%, var(--panel-border));
+    border-radius: 999px;
+    background-color: var(--panel);
+    background-image: radial-gradient(
+      ellipse at bottom,
+      var(--reader-pearl-peak),
+      var(--reader-pearl-floor) 72%
+    );
+    padding: 0 0.55rem;
+    box-shadow:
+      inset 0 0 0 1px var(--reader-pearl-rim),
+      0 8px 20px -12px rgba(0, 0, 0, 0.75);
+    color: var(--text);
+    font-size: 0.72rem;
+    font-weight: 650;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+}
+
+:global([data-theme="light"]) .readerMap {
+  --reader-pearl-peak: white;
+  --reader-pearl-floor: color-mix(in srgb, var(--panel) 91%, black);
+  --reader-pearl-rim: rgba(0, 0, 0, 0.09);
+}
+
+:global([data-theme="light"]) .readerMap :global(.jurisdiction-badge[data-badge="COULD_GOVERN"]) {
+  border-color: #66497f;
+  background: #5a3d73;
+  color: #fffdf8;
+}
+
+:global([data-theme="light"]) .readerMap :global(.reader-body-purpose) {
+  border-color: color-mix(in srgb, var(--accent-local) 42%, var(--panel-border));
+  background: color-mix(in srgb, var(--accent-local) 7%, var(--panel));
+  color: var(--text);
+}
+
+:global([data-theme="light"]) .readerMap :global(.reader-lumen-surface),
+:global([data-theme="light"]) .readerMap :global(.reader-meeting-panel) {
+  --reader-lumen-peak: var(--panel);
+  --reader-lumen-floor: color-mix(in srgb, var(--panel) 93%, black);
+  --reader-lumen-rim: rgba(0, 0, 0, 0.08);
+  --reader-lumen-horizon: color-mix(in srgb, var(--online) 60%, transparent);
+  --reader-lumen-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.25),
+    0 24px 48px -16px rgba(0, 0, 0, 0.35);
+}

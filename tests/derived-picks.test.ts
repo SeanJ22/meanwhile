@@ -8,6 +8,11 @@ import {
   conflictLine,
   resolvePick,
 } from "../lib/ballot/derived-picks.ts";
+import {
+  applyContestSelection,
+  methodFromVoteFor,
+  moveOrderedChoice,
+} from "../lib/ballot/selection-method.ts";
 import type { StoredPick } from "../lib/ballot/picks.ts";
 
 /**
@@ -35,25 +40,43 @@ test("M134 rule 1 — a Yes on one candidate IS the pick, and the race stops ask
   assert.equal(r.basis, "DERIVED");
   assert.equal(r.asks, false, "the section must state the pick, not ask again");
   assert.deepEqual(r.conflicting, []);
+
+  // BAL-51's current plurality contract: the newest direct selection replaces
+  // the prior one and records exactly what it displaced.
+  const replaced = applyContestSelection(
+    methodFromVoteFor(1),
+    { orderedChoiceIds: ["mayes"] },
+    "hamadeh",
+  );
+  assert.equal(replaced.status, "REPLACED");
+  assert.deepEqual(replaced.state.orderedChoiceIds, ["hamadeh"]);
+  assert.deepEqual(replaced.displacedChoiceIds, ["mayes"]);
 });
 
-test("M134 rule 2 — it asks when nobody was said Yes to, and when too many were", () => {
+test("M134 rule 2 — one-seat newest Yes wins; multi-seat over-limit asks", () => {
   const none = resolvePick(null, [], 1);
   assert.equal(none.asks, true);
   assert.equal(none.basis, "NONE");
   assert.deepEqual(none.chosen, []);
 
-  const many = resolvePick(null, ["a", "b"], 1);
-  assert.equal(many.asks, true);
-  assert.deepEqual(many.chosen, [], "two Yeses in a one-seat race is not a pick");
-  // Every one of them is surfaced. It never picks the first, the newest, or
-  // the alphabetically luckiest.
-  assert.deepEqual(many.conflicting, ["a", "b"]);
+  const newestFirst = resolvePick(null, ["b", "a"], 1);
+  assert.equal(newestFirst.asks, false);
+  assert.deepEqual(newestFirst.chosen, ["b"], "the newest Yes replaces the prior derived pick");
+  assert.deepEqual(newestFirst.conflicting, []);
 
   // A multi-seat race derives up to what it elects, and no further.
   assert.deepEqual(resolvePick(null, ["a", "b"], 2).chosen, ["a", "b"]);
   assert.equal(resolvePick(null, ["a", "b"], 2).asks, false);
   assert.equal(resolvePick(null, ["a", "b", "c"], 2).asks, true);
+
+  // Vote-for-N never silently throws away an earlier choice at its cap.
+  const overLimit = applyContestSelection(
+    methodFromVoteFor(2),
+    { orderedChoiceIds: ["a", "b"] },
+    "c",
+  );
+  assert.equal(overLimit.status, "LIMIT_REACHED");
+  assert.deepEqual(overLimit.state.orderedChoiceIds, ["a", "b"]);
 });
 
 test("M134 rule 3 — a recorded pick never flips, and EXPLICIT outranks DERIVED", () => {
@@ -72,6 +95,17 @@ test("M134 rule 3 — a recorded pick never flips, and EXPLICIT outranks DERIVED
 
   // Agreement is not a conflict.
   assert.deepEqual(resolvePick(explicit("a"), ["a"], 1).conflicting, []);
+
+  // Ordered state is ready for a future ranked-choice surface without making
+  // plurality positional or adding a ranked UI today.
+  const moved = moveOrderedChoice(
+    { kind: "RANKED_CHOICE", limit: 3 },
+    { orderedChoiceIds: ["a", "b", "c"] },
+    "c",
+    0,
+  );
+  assert.equal(moved.status, "MOVED");
+  assert.deepEqual(moved.state.orderedChoiceIds, ["c", "a", "b"]);
 });
 
 test("M134 rule 4 — resolving a pick cannot alter a reaction: this module writes nothing", () => {
@@ -104,6 +138,13 @@ test("M134 rule 4 — resolving a pick cannot alter a reaction: this module writ
     !/submitReaction|rememberReaction/.test(control),
     "the pick control must never write a reaction",
   );
+  assert.match(control, /data-your-pick-badge/, "the resolved pick needs its green check badge");
+  assert.match(control, /transition\.status === "LIMIT_REACHED"/);
+  const styles = readFileSync(
+    join(ROOT, "components", "ballot", "pick-control.module.css"),
+    "utf8",
+  );
+  assert.match(styles, /background:\s*var\(--vote-yes\)/);
 });
 
 test("M134 rule 5 — a measure's Yes/No derives the same way, through the same function", () => {
@@ -112,7 +153,26 @@ test("M134 rule 5 — a measure's Yes/No derives the same way, through the same 
   // needed no second code path.
   assert.deepEqual(resolvePick(null, ["Yes"], 1).chosen, ["Yes"]);
   assert.equal(resolvePick(null, ["Yes"], 1).basis, "DERIVED");
-  assert.equal(resolvePick(null, ["Yes", "No"], 1).asks, true);
+  assert.deepEqual(resolvePick(null, ["No", "Yes"], 1).chosen, ["No"]);
+});
+
+test("BAL-51 — tally preserves newest reaction order instead of ballot order", async () => {
+  const { tallyPicks } = await import("../lib/ballot/pick-tally.ts");
+  const tally = tallyPicks(
+    [{
+      contestId: "c1",
+      contestTitle: "A race",
+      voteFor: 1,
+      options: [
+        { id: "a", label: "A", reactionTargetId: "target-a" },
+        { id: "b", label: "B", reactionTargetId: "target-b" },
+      ],
+    }],
+    [],
+    new Set(["target-b", "target-a"]),
+    {},
+  );
+  assert.deepEqual(tally.rows[0]?.chosen, ["B"]);
 });
 
 test("M134 — a derived pick says where it came from, and stays on the device", () => {

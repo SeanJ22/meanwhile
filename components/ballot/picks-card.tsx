@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { formatDateLong } from "@/lib/text/format-date";
 import { createPortal } from "react-dom";
+import { Camera, Download, ListChecks, Trash2, X } from "lucide-react";
 
 import { useStoredTheme } from "@/hooks/use-stored-theme";
 import { clearAllPicks, type StoredPick } from "@/lib/ballot/picks";
@@ -11,6 +12,7 @@ import {
   type PickableContest,
 } from "@/lib/ballot/pick-tally";
 import { PRODUCT_NAME } from "@/lib/brand";
+import styles from "./picks-card.module.css";
 
 /**
  * The picks card (session item 5, wall clock 2026-08-14 second session,
@@ -31,9 +33,10 @@ import { PRODUCT_NAME } from "@/lib/brand";
  * downloading it transmits nothing.
  */
 
-const WIDTH = 360;
-const SCALE = 3; // crisp on a phone screen
-const PAD = 24;
+const CARD_MIN_WIDTH = 320;
+const CARD_MAX_WIDTH = 680;
+const SCALE = 2;
+const PAD = 28;
 
 /**
  * **THE CARD FOLLOWS THE THEME** — F01 12.2, 2026-08-19, the author.
@@ -68,6 +71,7 @@ const PAD = 24;
  */
 type CardPalette = {
   bg: string;
+  glow: string;
   rule: string;
   muted: string;
   paper: string;
@@ -77,6 +81,7 @@ type CardPalette = {
 const PALETTES: Record<"dark" | "light", CardPalette> = {
   dark: {
     bg: "#101418",
+    glow: "#252c33",
     rule: "#2a3138",
     muted: "#8a949e",
     paper: "#f2f4f6",
@@ -84,6 +89,7 @@ const PALETTES: Record<"dark" | "light", CardPalette> = {
   },
   light: {
     bg: "#fbfaf7",
+    glow: "#ece9e2",
     rule: "#dcd8d0",
     muted: "#6b7280",
     paper: "#14181c",
@@ -118,20 +124,22 @@ function drawCard(
   picks: StoredPick[],
   madeOn: string,
   colors: CardPalette,
+  width: number,
+  fontFamily: string,
 ): string {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
   if (!ctx) return "";
 
-  const inner = WIDTH - PAD * 2;
+  const inner = width - PAD * 2;
+  const font = fontFamily || "system-ui, sans-serif";
 
   // Measure pass: same fonts as the draw pass.
   type Block = { title: string[]; choices: string[] };
-  ctx.font = "11px ui-monospace, monospace";
   const blocks: Block[] = picks.map((pick) => {
-    ctx.font = "11px ui-monospace, monospace";
+    ctx.font = `600 13px ${font}`;
     const title = wrapLines(ctx, pick.contestTitle, inner);
-    ctx.font = "600 15px system-ui, sans-serif";
+    ctx.font = `650 18px ${font}`;
     const choices = wrapLines(
       ctx,
       pick.choiceIds.map((id) => pick.labels[id] ?? id).join(", "),
@@ -140,62 +148,114 @@ function drawCard(
     return { title, choices };
   });
 
-  const headerH = 58;
-  const footerH = 46;
+  ctx.font = `500 12px ${font}`;
+  const intro = wrapLines(
+    ctx,
+    "My own list, saved only in this browser on this device.",
+    inner,
+  );
+  const footer = wrapLines(ctx, `My picks — made with ${PRODUCT_NAME}, ${madeOn}`, inner);
+  const headerRuleY = PAD + 46 + intro.length * 18;
+  const headerH = headerRuleY + 20;
+  const footerH = 30 + footer.length * 17;
   const blockH = (b: Block) =>
-    b.title.length * 15 + b.choices.length * 20 + 18;
+    b.title.length * 18 + b.choices.length * 24 + 22;
   const height =
     headerH + blocks.reduce((n, b) => n + blockH(b), 0) + footerH + PAD;
 
-  canvas.width = WIDTH * SCALE;
+  canvas.width = width * SCALE;
   canvas.height = height * SCALE;
   ctx.scale(SCALE, SCALE);
 
   ctx.fillStyle = colors.bg;
-  ctx.fillRect(0, 0, WIDTH, height);
+  ctx.fillRect(0, 0, width, height);
+  const lumen = ctx.createRadialGradient(
+    width / 2,
+    height,
+    0,
+    width / 2,
+    height,
+    Math.max(width, height) * 0.78,
+  );
+  lumen.addColorStop(0, colors.glow);
+  lumen.addColorStop(0.7, colors.bg);
+  ctx.fillStyle = lumen;
+  ctx.fillRect(0, 0, width, height);
 
   // Header.
   ctx.fillStyle = colors.accent;
-  ctx.font = "600 11px ui-monospace, monospace";
-  ctx.fillText("MY PICKS", PAD, PAD + 10);
+  ctx.font = `700 20px ${font}`;
+  ctx.fillText("My picks", PAD, PAD + 18);
   ctx.fillStyle = colors.muted;
-  ctx.font = "10px ui-monospace, monospace";
-  ctx.fillText("This is my own list — written by me, not the app.", PAD, PAD + 26);
+  ctx.font = `500 12px ${font}`;
+  let introY = PAD + 42;
+  for (const line of intro) {
+    ctx.fillText(line, PAD, introY);
+    introY += 18;
+  }
   ctx.strokeStyle = colors.rule;
   ctx.beginPath();
-  ctx.moveTo(PAD, headerH);
-  ctx.lineTo(WIDTH - PAD, headerH);
+  ctx.moveTo(PAD, headerRuleY);
+  ctx.lineTo(width - PAD, headerRuleY);
   ctx.stroke();
 
   // Contest blocks.
-  let y = headerH + 22;
+  let y = headerH + 16;
   for (const block of blocks) {
     ctx.fillStyle = colors.muted;
-    ctx.font = "11px ui-monospace, monospace";
+    ctx.font = `600 13px ${font}`;
     for (const line of block.title) {
       ctx.fillText(line, PAD, y);
-      y += 15;
+      y += 18;
     }
     ctx.fillStyle = colors.paper;
-    ctx.font = "600 15px system-ui, sans-serif";
+    ctx.font = `650 18px ${font}`;
     for (const line of block.choices) {
-      ctx.fillText(line, PAD, y + 3);
-      y += 20;
+      ctx.fillText(line, PAD, y + 5);
+      y += 24;
     }
-    y += 18;
+    y += 22;
   }
 
   // Footer — the app name and the date, nothing evaluative.
   ctx.strokeStyle = colors.rule;
   ctx.beginPath();
   ctx.moveTo(PAD, y - 4);
-  ctx.lineTo(WIDTH - PAD, y - 4);
+  ctx.lineTo(width - PAD, y - 4);
   ctx.stroke();
   ctx.fillStyle = colors.muted;
-  ctx.font = "10px ui-monospace, monospace";
-  ctx.fillText(`My picks — made with ${PRODUCT_NAME}, ${madeOn}`, PAD, y + 14);
+  ctx.font = `500 12px ${font}`;
+  y += 17;
+  for (const line of footer) {
+    ctx.fillText(line, PAD, y);
+    y += 17;
+  }
+
+  const horizon = ctx.createLinearGradient(width * 0.15, 0, width * 0.85, 0);
+  horizon.addColorStop(0, "rgba(255,255,255,0)");
+  horizon.addColorStop(0.5, colors.accent);
+  horizon.addColorStop(1, "rgba(255,255,255,0)");
+  ctx.globalAlpha = 0.55;
+  ctx.fillStyle = horizon;
+  ctx.fillRect(width * 0.15, height - 2, width * 0.7, 1);
+  ctx.globalAlpha = 1;
 
   return canvas.toDataURL("image/png");
+}
+
+function viewportCardWidth(): number {
+  if (typeof window === "undefined") return CARD_MIN_WIDTH;
+  return Math.min(
+    CARD_MAX_WIDTH,
+    Math.max(CARD_MIN_WIDTH, Math.floor(window.innerWidth - 48)),
+  );
+}
+
+function pngBlob(dataUrl: string): Blob {
+  const payload = dataUrl.slice(dataUrl.indexOf(",") + 1);
+  const binary = window.atob(payload);
+  const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
+  return new Blob([bytes], { type: "image/png" });
 }
 
 export function PicksCardControls({
@@ -219,6 +279,10 @@ export function PicksCardControls({
 }) {
   const [showCard, setShowCard] = useState(false);
   const [confirmingClear, setConfirmingClear] = useState(false);
+  const [cardWidth, setCardWidth] = useState(CARD_MIN_WIDTH);
+  const [screenshotMessage, setScreenshotMessage] = useState<string | null>(null);
+  const cardDialogRef = useRef<HTMLDivElement>(null);
+  const cardOpenerRef = useRef<HTMLElement | null>(null);
 
   // Derived, never stored: the card re-draws from the CURRENT picks on
   // every change while open, so a stale card never sits behind a fresh
@@ -246,28 +310,110 @@ export function PicksCardControls({
      * one formatter takes.
      */
     const today = new Date().toLocaleDateString("en-CA");
-    return drawCard(picks, formatDateLong(today) ?? today, PALETTES[theme]);
+    const fontFamily = window.getComputedStyle(document.body).fontFamily;
+    return drawCard(
+      picks,
+      formatDateLong(today) ?? today,
+      PALETTES[theme],
+      cardWidth,
+      fontFamily,
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showCard, picksKey, theme]);
+  }, [showCard, picksKey, theme, cardWidth]);
+
+  const openCard = () => {
+    cardOpenerRef.current = document.activeElement as HTMLElement | null;
+    setCardWidth(viewportCardWidth());
+    setScreenshotMessage(null);
+    setShowCard(true);
+  };
+
+  useEffect(() => {
+    if (!showCard || !cardDialogRef.current) return;
+    const dialog = cardDialogRef.current;
+    const focusable = () =>
+      [...dialog.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      )].filter((element) => !element.hasAttribute("hidden"));
+    const controls = focusable();
+    controls[0]?.focus();
+    const trap = (event: KeyboardEvent) => {
+      if (event.key !== "Tab") return;
+      const items = focusable();
+      if (items.length === 0) {
+        event.preventDefault();
+        dialog.focus();
+        return;
+      }
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    dialog.addEventListener("keydown", trap);
+    return () => {
+      dialog.removeEventListener("keydown", trap);
+      cardOpenerRef.current?.focus();
+    };
+  }, [showCard]);
+
+  const copyScreenshot = async () => {
+    if (!cardUrl) return;
+    try {
+      if (!navigator.clipboard?.write || typeof ClipboardItem === "undefined") {
+        throw new Error("Image clipboard unavailable");
+      }
+      const image = pngBlob(cardUrl);
+      await navigator.clipboard.write([
+        new ClipboardItem({ [image.type]: image }),
+      ]);
+      setScreenshotMessage(
+        "Card copied as an image. Paste it wherever you keep screenshots.",
+      );
+    } catch {
+      setScreenshotMessage(
+        "Use your device’s screenshot shortcut while this card is open.",
+      );
+    }
+  };
 
   return (
-    <div className="mt-2.5">
-      <p className="flex flex-wrap gap-x-3 gap-y-1 text-[0.75rem]">
+    <div className="mt-3">
+      <div className={styles.summaryActions}>
         <button
           type="button"
-          onClick={() => setShowCard(true)}
-          className="cursor-pointer text-signal underline decoration-dotted hover:no-underline"
+          onClick={openCard}
+          className={`${styles.pill} ${styles.primaryPill}`}
         >
+          <ListChecks aria-hidden="true" />
           Create my card
         </button>
         <button
           type="button"
           onClick={() => setConfirmingClear(true)}
-          className="cursor-pointer text-muted underline decoration-dotted hover:text-paper"
+          className={`${styles.pill} ${styles.clearPill}`}
         >
+          <Trash2 aria-hidden="true" />
           Clear my picks
         </button>
-      </p>
+      </div>
+
+      <button
+        type="button"
+        onClick={openCard}
+        className={styles.floatingPill}
+        aria-haspopup="dialog"
+        aria-expanded={showCard}
+        data-your-picks-floating
+      >
+        <ListChecks aria-hidden="true" />
+        Your Picks
+      </button>
 
       {/* Item 8 (design pass): a real confirmation dialog — same question
           the inline line asked, in the app's dialog language. Portaled to
@@ -378,7 +524,9 @@ export function PicksCardControls({
             role="dialog"
             aria-modal="true"
             aria-label="My picks card"
-            className="fixed inset-0 z-[80] flex items-center justify-center p-4"
+            className={styles.overlay}
+            ref={cardDialogRef}
+            tabIndex={-1}
             onKeyDown={(e) => {
               if (e.key === "Escape") setShowCard(false);
             }}
@@ -387,41 +535,56 @@ export function PicksCardControls({
                 the reader can still see what they were looking at. */}
             <div
               aria-hidden="true"
-              className="absolute inset-0 bg-black/30 backdrop-blur-[2px]"
+              className={styles.backdrop}
               onClick={() => setShowCard(false)}
             />
 
-            <div className="relative flex max-h-full w-full max-w-[320px] flex-col items-center">
-              <div className="picks-phone">
+            <div className={styles.modalFrame}>
+              <div className={styles.preview}>
                 {/* A plain <img> inside the frame, so a long-press or a
                     screenshot works exactly as the reader expects. */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={cardUrl}
                   alt="My picks card — your own choices, drawn on this device"
-                  className="picks-phone-shot"
+                  className={styles.cardImage}
                 />
               </div>
 
-              <p className="mt-3 flex flex-wrap justify-center gap-x-3 gap-y-1 text-center text-[0.75rem]">
+              <div className={styles.cardActions} aria-label="Card actions">
                 <a
                   href={cardUrl}
                   download="my-picks.png"
-                  className="text-signal underline decoration-dotted hover:no-underline"
+                  className={`${styles.pill} ${styles.primaryPill}`}
                 >
-                  Download as image
+                  <Download aria-hidden="true" />
+                  Download
                 </a>
                 <button
                   type="button"
-                  onClick={() => setShowCard(false)}
-                  className="cursor-pointer text-muted underline decoration-dotted hover:text-paper"
+                  onClick={copyScreenshot}
+                  className={styles.pill}
                 >
+                  <Camera aria-hidden="true" />
+                  Screenshot
+                </button>
+                <button
+                  type="button"
+                  autoFocus
+                  onClick={() => setShowCard(false)}
+                  className={styles.pill}
+                >
+                  <X aria-hidden="true" />
                   Close
                 </button>
-              </p>
-              <p className="mt-1 text-center text-[0.6875rem] leading-relaxed text-muted">
-                Or just screenshot it. Drawn on your device; nothing is sent
-                anywhere.
+              </div>
+              <p
+                className={styles.deviceLine}
+                role="status"
+                aria-live="polite"
+              >
+                {screenshotMessage ??
+                  "Drawn on your device. Download or copy the image without sending it to us."}
               </p>
             </div>
           </div>,

@@ -36,6 +36,17 @@ test("the picks module never transmits — no fetch, no navigator.sendBeacon, no
   );
 });
 
+test("a fresh Yes restores a previously cleared derived pick", () => {
+  const picks = read("lib", "ballot", "picks.ts");
+  const reactions = read("components", "reactions", "reaction-control.tsx");
+  const ballot = read("app", "ballot", "page.tsx");
+  assert.match(picks, /export function restoreDerivedPick/);
+  assert.match(reactions, /value === "YES"[\s\S]*?restoreDerivedPick\(pickContestId, pickChoiceId\)/);
+  assert.match(ballot, /pickContestId=\{contest\.id\}/);
+  assert.match(ballot, /pickChoiceId=\{nominee\.name\}/);
+  assert.match(ballot, /pickChoiceId=\{cand\.id\}/);
+});
+
 test("3e: the picks disclosure is stated ONCE, on the ballot page, with the reaction distinction", () => {
   // The TOS pattern (author-ordered 2026-08-19): one statement at the
   // bottom of the ballot page, not a repeat under every contest. The
@@ -168,6 +179,27 @@ test("the picks card renders picks only and transmits nothing", () => {
     /clearAllPicks/.test(source) && /Really clear/.test(source),
     "clear-my-picks confirms before clearing",
   );
+
+  // BAL-52–54: the visible implementation, held beside the privacy boundary.
+  const myPicks = read("components", "ballot", "my-picks.tsx");
+  const cardCss = read("components", "ballot", "picks-card.module.css");
+  assert.match(myPicks, /This pick list is saved only in this browser on this device\./);
+  assert.match(source, /data-your-picks-floating/);
+  assert.match(cardCss, /\.floatingPill\s*\{[\s\S]*?position:\s*fixed/);
+  for (const action of ["Download", "Screenshot", "Close"]) {
+    assert.match(source, new RegExp(`${action}\\s*</(?:a|button)>`), `${action} is not a clear card action`);
+  }
+  assert.match(source, /navigator\.clipboard\.write/);
+  assert.match(cardCss, /\.modalFrame\s*\{[\s\S]*?width:\s*min\(100%, 48rem\)/);
+  assert.doesNotMatch(source, /ui-monospace|monospace/, "the generated card must use the site font");
+});
+
+test("the portaled picks card traps focus and returns it to its opener", () => {
+  const card = read("components", "ballot", "picks-card.tsx");
+  assert.match(card, /cardDialogRef/);
+  assert.match(card, /event\.key !== "Tab"/);
+  assert.match(card, /cardOpenerRef\.current\?\.focus\(\)/);
+  assert.match(card, /tabIndex=\{-1\}/);
 });
 
 test("the transparency page says the card is drawn on-device", () => {

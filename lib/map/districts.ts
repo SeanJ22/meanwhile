@@ -9,6 +9,7 @@ import { DISTRICT_TYPE_TIER } from "../ocd/district-tiers.ts";
 import { TIER_ACCENT_VAR, type Tier } from "../ocd/tiers.ts";
 import type { DistrictType } from "../state/types.ts";
 import { stateFilter } from "./state-focus.ts";
+import { RELIEF_EDGE_SEAL_LAYER } from "./state-relief.ts";
 
 /**
  * District overlays.
@@ -418,7 +419,14 @@ export function addDistrictLayer(
     map.addSource(source, { type: "geojson", data, promoteId: "ocdId" });
   }
 
-  const before = firstSymbolLayerId(map);
+  const symbolBefore = firstSymbolLayerId(map);
+  /* Relief may already be installed when a later district type finishes its
+     fetch. Paint goes under the canonical state seal while labels retain the
+     normal symbol stack. `raiseStateReliefEdges` repeats this normalization
+     after each add as a belt-and-suspenders guarantee for existing styles. */
+  const paintBefore = map.getLayer(RELIEF_EDGE_SEAL_LAYER)
+    ? RELIEF_EDGE_SEAL_LAYER
+    : symbolBefore;
 
   /*
    * Each layer is added only if absent, rather than gating all three on one of
@@ -431,6 +439,7 @@ export function addDistrictLayer(
   const addIfAbsent = (
     id: string,
     build: () => Parameters<MapLibreMap["addLayer"]>[0],
+    before = symbolBefore,
   ) => {
     if (map.getLayer(id)) return;
     map.addLayer(build(), before);
@@ -459,7 +468,7 @@ export function addDistrictLayer(
           0,
         ],
       },
-    }));
+    }), paintBefore);
 
   addIfAbsent(lineLayerId(type), () => ({
       id: lineLayerId(type),
@@ -504,7 +513,7 @@ export function addDistrictLayer(
           ],
         ],
       },
-    }));
+    }), paintBefore);
 
   addIfAbsent(labelLayerId(type), () => ({
       id: labelLayerId(type),

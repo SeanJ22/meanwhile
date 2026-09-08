@@ -63,6 +63,40 @@ export function MastodonMark() {
   );
 }
 
+export function LinkedInMark() {
+  return (
+    <svg {...S} fill="currentColor">
+      <path d="M5.2 7.7H1.8V21h3.4zM3.5 2A2 2 0 1 0 3.5 6a2 2 0 0 0 0-4M8 7.7h3.3v1.8h.1c.5-.9 1.7-2.2 3.9-2.2 4.1 0 4.9 2.7 4.9 6.3V21h-3.4v-6.5c0-1.6 0-3.6-2.2-3.6s-2.6 1.7-2.6 3.5V21H8z" />
+    </svg>
+  );
+}
+
+export function TikTokMark() {
+  return (
+    <svg {...S} fill="currentColor">
+      <path d="M14.4 2h3.1c.2 1.8 1.3 3.3 3 4.1v3.2a8 8 0 0 1-3-.8v6.2a6.7 6.7 0 1 1-6.7-6.6h.9v3.2a3.5 3.5 0 1 0 2.7 3.4z" />
+    </svg>
+  );
+}
+
+export function NextdoorMark() {
+  return (
+    <svg {...S} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M5 20V9l7-5 7 5v11M9 20v-6h6v6" />
+      <path d="M2.5 8.5 5 10M21.5 8.5 19 10" />
+    </svg>
+  );
+}
+
+export function NewsletterMark() {
+  return (
+    <svg {...S} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <path d="M7 8h10M7 12h6M7 16h4M16 12h1M16 16h1" />
+    </svg>
+  );
+}
+
 export function PhoneMark() {
   return (
     <svg {...S} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

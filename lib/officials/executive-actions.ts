@@ -444,3 +444,70 @@ export function actionText(action: ExecutiveAction): string {
       return `${action.designation},${title} proclaimed${on}.`;
   }
 }
+
+/**
+ * A one-line reader explanation derived only from the action's published
+ * title and disposition. It does not invent a mechanism or effect that the
+ * source title does not state; the fuller record wording remains available.
+ */
+export function plainActionExplanation(action: ExecutiveAction): string {
+  const title = action.title?.trim() ?? null;
+  switch (action.kind) {
+    case "EXECUTIVE_ORDER":
+      return title
+        ? `This order ${activeVerbPhrase(title)}.`
+        : `This order is recorded as ${action.designation}.`;
+    case "BILL_SIGNED":
+      return title
+        ? `The Governor signed ${action.designation}, covering ${topicPhrase(title)}.`
+        : `The Governor signed ${action.designation}.`;
+    case "VETO":
+      return title
+        ? `The Governor vetoed ${action.designation}, covering ${topicPhrase(title)}.`
+        : `The Governor vetoed ${action.designation}.`;
+    case "BILL_ENACTED":
+      return title
+        ? `${action.designation} became law, covering ${topicPhrase(title)}.`
+        : `${action.designation} became law.`;
+    case "BILL_LETTER_UNREAD":
+      return `A legislative letter about ${action.designation} is on file, but we have not read what it decided.`;
+    case "PROCLAMATION":
+      return title
+        ? `This proclamation concerns ${lowerFirst(title)}.`
+        : `This proclamation is recorded as ${action.designation}.`;
+  }
+}
+
+function activeVerbPhrase(title: string): string {
+  const replacements: ReadonlyArray<[RegExp, string]> = [
+    [/^Protecting /, "protects "],
+    [/^Cutting /, "cuts "],
+    [/^Granting /, "grants "],
+    [/^Removing /, "removes "],
+    [/^Rescinding /, "rescinds "],
+    [/^Lowering /, "lowers "],
+    [/^Continuing /, "continues "],
+    [/^Establishing /, "establishes "],
+    [/^Arizona Launching /, "launches Arizona’s "],
+  ];
+  for (const [pattern, replacement] of replacements) {
+    if (pattern.test(title)) return title.replace(pattern, replacement);
+  }
+  return `addresses ${lowerFirst(title)}`;
+}
+
+function topicPhrase(title: string): string {
+  const finalSubject = /\(\s*NOW:\s*(.*?)\s*\)/i.exec(title)?.[1] ?? title;
+  const topics = finalSubject
+    .replace(/[.]$/, "")
+    .split(";")
+    .map(topic => topic.trim())
+    .filter(Boolean);
+  if (topics.length <= 1) return lowerFirst(topics[0] ?? finalSubject);
+  if (topics.length === 2) return `${lowerFirst(topics[0])} and ${topics[1]}`;
+  return `${lowerFirst(topics[0])}, ${topics.slice(1, -1).join(", ")}, and ${topics.at(-1)}`;
+}
+
+function lowerFirst(text: string): string {
+  return text.length ? `${text[0].toLocaleLowerCase("en-US")}${text.slice(1)}` : text;
+}

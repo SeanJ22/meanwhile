@@ -25,6 +25,8 @@ import { useShellData, useMeetingListingIdentity } from "@/lib/state/data";
 import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import { MeetingListingNotice } from "../meeting-listing-notice";
 import type { Meeting } from "@/lib/sources/types";
+import { bodyPurposeFor } from "@/lib/map/body-purpose";
+import { BodyPurposeLabel } from "../body-purpose-label";
 
 import { CalendarLinks } from "./calendar-links";
 
@@ -124,6 +126,7 @@ export function MeetingPopup({
   );
   const minutes = concluded ? minutesSummaryForMeeting(meeting.id) : null;
   const officePhone = concluded ? officePhoneForBody(body?.bodyId ?? null) : null;
+  const purpose = body ? bodyPurposeFor(body) : null;
 
   return (
     <PopupCard
@@ -153,6 +156,12 @@ export function MeetingPopup({
       {/* And the sitting's own distinct name, where it has one. */}
       {meetingSubline(meeting) && (
         <PopupRow label="Sitting">{meetingSubline(meeting)}</PopupRow>
+      )}
+
+      {purpose && (
+        <PopupRow label="Purpose">
+          <BodyPurposeLabel purpose={purpose} />
+        </PopupRow>
       )}
 
       {/* M81. Geometry only — the badge says which area a body governs and

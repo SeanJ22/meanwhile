@@ -83,6 +83,7 @@ export function JurisdictionPill({
       <AddressPrompt
         zip={zip}
         startOpen
+        trigger={copy.label}
         className="jurisdiction-prompt"
         /*
          * The point is what makes everything re-resolve: it moves the QUERY

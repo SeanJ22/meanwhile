@@ -333,6 +333,36 @@ test("submitReaction: the device-local record writes even when the server is unr
   }
 });
 
+test("candidate reaction memory records a deterministic newest-answer order", async () => {
+  const {
+    submitReaction,
+    getStoredReactionOrder,
+    getStoredReaction,
+    clearStoredYesReactions,
+  } = await import("../lib/reactions/client.ts");
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = (async () => {
+    throw new Error("network down");
+  }) as typeof fetch;
+  try {
+    await submitReaction("CANDIDATE", "order:first", "YES", null);
+    await submitReaction("CANDIDATE", "order:second", "YES", null);
+    assert.ok(
+      getStoredReactionOrder("CANDIDATE", "order:second") >
+        getStoredReactionOrder("CANDIDATE", "order:first"),
+    );
+    clearStoredYesReactions(
+      "CANDIDATE",
+      ["order:first", "order:second"],
+      "order:second",
+    );
+    assert.equal(getStoredReaction("CANDIDATE", "order:first"), null);
+    assert.equal(getStoredReaction("CANDIDATE", "order:second"), "YES");
+  } finally {
+    globalThis.fetch = realFetch;
+  }
+});
+
 /**
  * The control's rendering contract spans two files since the correction
  * pass (2026-08-16): the component decides WHEN, `lib/reactions/pill.ts`

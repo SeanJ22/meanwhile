@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { ReaderOfficialActions } from "@/lib/officials/reader-actions";
 import { formatDateLong } from "@/lib/text/format-date";
 import { CardSection } from "./card-section";
+import styles from "./official-actions.module.css";
 
 export function OfficialActions({ subjectId }: { subjectId: string }) {
   return <ActionsForIdentity key={subjectId} subjectId={subjectId} />;
@@ -30,15 +31,38 @@ export function OfficialActionsContent({ answer }: { answer: ReaderOfficialActio
   return <div data-official-actions-subject={answer.subjectId} data-official-actions-target={answer.resolvedTargetId} data-official-actions-count={answer.count} className="space-y-3 text-sm">
     {answer.status === "IDENTITY_UNRESOLVED" && <p>We haven’t resolved which official these action records belong to.</p>}
     {answer.count > 0 && <p>{answer.count} records in our holdings. This is a partial record of published actions.</p>}
-    <ol className="max-h-96 space-y-4 overflow-y-auto overscroll-contain">
-      {answer.records.map(record => <li key={record.id} data-official-action-id={record.id} data-official-id={record.officialId}>
-        <p>{record.text}</p>
-        <p className="mt-1 text-xs text-muted-foreground">
+    <ol className={styles.list}>
+      {answer.records.map(record => <li className={styles.action} key={record.id} data-official-action-id={record.id} data-official-id={record.officialId}>
+        <div className={styles.heading}>
+          <span className={styles.kind}>{kindLabel(record.kind)}</span>
+          <span className={styles.designation}>{designationFrom(record.text)}</span>
+        </div>
+        <p className={styles.explanation}>{record.explanation}</p>
+        <p className={styles.source}>
           <a className="underline underline-offset-2" href={record.sourceUrl} target="_blank" rel="noreferrer">{record.sourceOrg}</a>
           {record.documentUrl && <> · <a className="underline underline-offset-2" href={record.documentUrl} target="_blank" rel="noreferrer">Source document</a></>}
           {" · "}Read {formatDateLong(record.collectedAt.slice(0, 10))}.
         </p>
+        <details className={styles.detail}>
+          <summary>Record detail</summary>
+          <p>{record.text}</p>
+        </details>
       </li>)}
     </ol>
   </div>;
+}
+
+function kindLabel(kind: ReaderOfficialActions["records"][number]["kind"]): string {
+  switch (kind) {
+    case "EXECUTIVE_ORDER": return "Executive order";
+    case "BILL_SIGNED": return "Signed bill";
+    case "VETO": return "Veto";
+    case "BILL_ENACTED": return "Enacted bill";
+    case "BILL_LETTER_UNREAD": return "Legislative letter";
+    case "PROCLAMATION": return "Proclamation";
+  }
+}
+
+function designationFrom(text: string): string {
+  return text.split(/[,—]/, 1)[0].trim();
 }

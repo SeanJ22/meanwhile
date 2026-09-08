@@ -34,7 +34,13 @@ import type {
 const KEY_STORAGE = "wtp.reaction_key";
 const SELECTION_STORAGE = "wtp.reactions";
 
-const memorySelections = new Map<string, ReactionValue>();
+interface StoredReactionSelection {
+  value: ReactionValue;
+  /** Device-local write order. Used only to resolve "newest Yes wins". */
+  order: number;
+}
+
+const memorySelections = new Map<string, StoredReactionSelection>();
 
 
 /** Minted on first use — call only from a reaction tap, never on load. */
@@ -49,12 +55,32 @@ function selectionKey(targetType: ReactionTargetType, targetId: string): string 
   return `${targetType}:${targetId}`;
 }
 
-function readSelections(): Record<string, ReactionValue> {
+function readSelections(): Record<string, StoredReactionSelection> {
   try {
     const raw = window.localStorage.getItem(SELECTION_STORAGE);
     if (!raw) return {};
-    const parsed = JSON.parse(raw) as Record<string, ReactionValue>;
-    return typeof parsed === "object" && parsed !== null ? parsed : {};
+    const parsed = JSON.parse(raw) as Record<
+      string,
+      ReactionValue | StoredReactionSelection
+    >;
+    if (typeof parsed !== "object" || parsed === null) return {};
+    return Object.fromEntries(
+      Object.entries(parsed).flatMap(([key, selection]) => {
+        // v1 stored the reaction string directly. It remains valid, with an
+        // unknown order that loses to the next answer this device records.
+        if (typeof selection === "string") {
+          return [[key, { value: selection as ReactionValue, order: 0 }]];
+        }
+        if (
+          typeof selection?.value === "string" &&
+          typeof selection.order === "number" &&
+          Number.isFinite(selection.order)
+        ) {
+          return [[key, selection]];
+        }
+        return [];
+      }),
+    );
   } catch {
     return Object.fromEntries(memorySelections);
   }
@@ -64,7 +90,53 @@ export function getStoredReaction(
   targetType: ReactionTargetType,
   targetId: string,
 ): ReactionValue | null {
-  return readSelections()[selectionKey(targetType, targetId)] ?? null;
+  return readSelections()[selectionKey(targetType, targetId)]?.value ?? null;
+}
+
+/**
+ * Device-local answer order, never sent to the server. Zero identifies a
+ * pre-ordering v1 entry; the first new tap deterministically outranks it.
+ */
+export function getStoredReactionOrder(
+  targetType: ReactionTargetType,
+  targetId: string,
+): number {
+  return readSelections()[selectionKey(targetType, targetId)]?.order ?? 0;
+}
+
+/**
+ * Clear earlier device-local Yes states in one single-winner contest.
+ *
+ * This changes only the browser's display record. The shared reaction totals
+ * are a separate, write-only product and cannot truthfully be described as
+ * deleted here; server-side pick persistence needs its own approved contract.
+ */
+export function clearStoredYesReactions(
+  targetType: ReactionTargetType,
+  targetIds: readonly string[],
+  keepTargetId: string,
+): void {
+  const clearedKeys = targetIds
+    .filter((targetId) => targetId !== keepTargetId)
+    .map((targetId) => selectionKey(targetType, targetId));
+  if (clearedKeys.length === 0) return;
+  commitStorageWrite(
+    () => {
+      const all = readSelections();
+      for (const key of clearedKeys) {
+        if (all[key]?.value === "YES") delete all[key];
+      }
+      window.localStorage.setItem(SELECTION_STORAGE, JSON.stringify(all));
+    },
+    () => publishStorageEvent(REACTIONS_EVENT),
+    () => {
+      for (const key of clearedKeys) {
+        if (memorySelections.get(key)?.value === "YES") {
+          memorySelections.delete(key);
+        }
+      }
+    },
+  );
 }
 
 /**
@@ -90,11 +162,27 @@ function rememberReaction(
   commitStorageWrite(
     () => {
       const all = readSelections();
-      all[key] = reaction;
+      const newest = Object.values(all).reduce(
+        (highest, selection) => Math.max(highest, selection.order),
+        0,
+      );
+      // Milliseconds alone can tie during quick taps. Scaling leaves room for
+      // a monotonic increment while staying below Number.MAX_SAFE_INTEGER.
+      const order = Math.max(Date.now() * 1_000, newest + 1);
+      all[key] = { value: reaction, order };
       window.localStorage.setItem(SELECTION_STORAGE, JSON.stringify(all));
     },
     () => publishStorageEvent(REACTIONS_EVENT),
-    () => memorySelections.set(key, reaction),
+    () => {
+      const newest = [...memorySelections.values()].reduce(
+        (highest, selection) => Math.max(highest, selection.order),
+        0,
+      );
+      memorySelections.set(key, {
+        value: reaction,
+        order: Math.max(Date.now() * 1_000, newest + 1),
+      });
+    },
   );
 }
 

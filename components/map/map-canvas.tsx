@@ -10,7 +10,6 @@ import {
   LngLatBounds,
   MapLibreMap,
   Marker,
-  NavigationControl,
   prewarm,
   setWorkerUrl,
   type ErrorEvent as MapErrorEvent,
@@ -18,7 +17,8 @@ import {
 } from "maplibre-gl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { ensureStateRelief } from "@/lib/map/state-relief";
+import { ensureStateRelief, raiseStateReliefEdges } from "@/lib/map/state-relief";
+import type { RaisedStateVariant } from "@/lib/map/raised-state-variants";
 import { holdMapPresentation, releaseMapPresentation, mapPresentationHeld, setPresentationVisible } from "@/lib/map/flight-presentation";
 import flightStyles from "./map-flight.module.css";
 type ProjectPoint = (point: [number, number]) => { x: number; y: number };
@@ -221,6 +221,8 @@ interface MapCanvasProps {
    * name string.
    */
   focusStateOcdId?: string | null;
+  /** Presentation-only review treatment for the raised state. */
+  raisedStateVariant: RaisedStateVariant;
   /**
    * Voting locations (B19), drawn as their OWN pin class.
    *
@@ -342,6 +344,7 @@ export function MapCanvas({
   onViewportSettle,
   allowAutoFrame,
   focusStateOcdId = null,
+  raisedStateVariant,
   votingSites,
   votingAddressPoint = null,
   onSelectVotingSite,
@@ -491,6 +494,7 @@ export function MapCanvas({
           // painted over Arizona, seconds after the map has flown.
           if (focusAbbrRef.current !== abbr) return;
           addDistrictLayer(live, type, data, abbr);
+          raiseStateReliefEdges(live);
         })
         .catch(() => onDistrictErrorRef.current());
     }
@@ -555,10 +559,6 @@ export function MapCanvas({
 
     holdMapPresentation(map);
 
-    // The legend owns the bottom-right corner (Edia puts it there and the port
-    // keeps it), so the map's own controls move out of its way rather than
-    // stacking on top of it.
-    map.addControl(new NavigationControl({ showCompass: false }), "top-right");
     map.addControl(new AttributionControl({ compact: true }), "bottom-left");
     map.touchZoomRotate.disableRotation();
 
@@ -1291,8 +1291,13 @@ export function MapCanvas({
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !presentationReady || mapPresentationHeld(map)) return;
-    ensureStateRelief(map, overlayOpen ? null : focusOutline, theme === "light" ? "light" : "dark");
-  }, [focusOutline, theme, overlayOpen, presentationReady]);
+    ensureStateRelief(
+      map,
+      overlayOpen ? null : focusOutline,
+      theme === "light" ? "light" : "dark",
+      raisedStateVariant,
+    );
+  }, [focusOutline, theme, overlayOpen, presentationReady, raisedStateVariant]);
 
   // Swap the basemap when the theme changes. The listener above puts the
   // districts back once the new style lands.

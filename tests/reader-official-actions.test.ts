@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { actionText, executiveActionStore } from "../lib/officials/executive-actions.ts";
+import { actionText, executiveActionStore, plainActionExplanation } from "../lib/officials/executive-actions.ts";
 import { officialActionsForTarget } from "../lib/officials/reader-actions.ts";
 import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
 
@@ -18,11 +18,20 @@ test("all42 held official actions reach map and canonical ballot projection with
   for (const action of held) {
     const projected = map.records.find(row => row.id === action.id)!;
     assert.equal(projected.text, actionText(action));
+    assert.equal(projected.explanation, plainActionExplanation(action));
     assert.equal(projected.sourceUrl, action.sourceUrl);
     assert.equal(projected.documentUrl, action.documentUrl);
     assert.equal(projected.officialId, action.officeholderId);
   }
   assert.match(map.records.find(row => row.kind === "BILL_LETTER_UNREAD")!.text, /have not read it yet/);
+});
+
+test("official actions add a plain one-line explanation without overstating unread letters", () => {
+  const records = officialActionsForTarget("statewide:az/governor").records;
+  assert.match(records.find(row => row.id.includes("2025-09"))!.explanation, /protects Arizonans from Heat Risk in the Workplace/i);
+  assert.match(records.find(row => row.kind === "BILL_SIGNED")!.explanation, /^The Governor signed /);
+  assert.match(records.find(row => row.kind === "BILL_LETTER_UNREAD")!.explanation, /have not read what it decided/);
+  assert.ok(records.every(row => !/\n/.test(row.explanation)));
 });
 
 test("unresolved certified identity is explicit and never becomes an absence", () => {

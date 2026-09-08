@@ -12,6 +12,7 @@ import {
   plainContributorLabel,
 } from "@/lib/funding/labels";
 import { pillClassFor } from "@/lib/funding/pill-colors";
+import { contributorEntityExplanation } from "@/lib/funding/contributor-entity";
 import type { SecondHopCommittee } from "@/lib/funding/types";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 import { ReactionControl } from "@/components/reactions/reaction-control";
@@ -423,6 +424,7 @@ function ContributorRow({
   // suffix with nothing to tap, because there is nothing more we honestly
   // know.
   const typeLabel = contributorTypeLabel(group);
+  const entityExplanation = contributorEntityExplanation(group, typeLabel, entityLabel);
   return (
     <li
       className="border-b border-[var(--panel-border)] py-1.5 text-[0.75rem] last:border-0"
@@ -442,28 +444,21 @@ function ContributorRow({
           ${Math.round(group.amount).toLocaleString("en-US")}
         </span>
       </div>
-      {typeLabel && (
-        // Expansion, never a new tab (CLAUDE.md's reader gesture).
-        // `<details>` so this stays a server-renderable component and costs
-        // no client JavaScript. The pill is the tap target (item 2b); its
-        // family comes from lib/funding/pill-colors.ts and never the party
-        // palette.
-        <details className="funding-type mt-0.5">
-          <summary>
-            <span className={pillClassFor(typeLabel)}>{typeLabel.label}</span>
-          </summary>
-          <p className="mt-1 text-[0.6875rem] leading-relaxed text-voice">
-            {typeLabel.explainer}{" "}
+      {entityExplanation && (
+        <div className="mt-1 flex items-start gap-1.5" data-contributor-explanation>
+          {typeLabel && <span className={`${pillClassFor(typeLabel)} shrink-0`}>{typeLabel.label}</span>}
+          <p className="min-w-0 text-[0.6875rem] leading-relaxed text-voice">
+            {entityExplanation.text}{" "}
             <a
-              href={typeLabel.sourceUrl}
+              href={entityExplanation.sourceUrl}
               target="_blank"
               rel="noreferrer"
               className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
             >
-              the FEC&apos;s own definition
+              {entityExplanation.sourceLabel}
             </a>
           </p>
-        </details>
+        </div>
       )}
 
       {group.count > 1 && (
@@ -533,7 +528,7 @@ function SecondHopPanel({ hop }: { hop: SecondHopCommittee }) {
   return (
     <details className="funding-type mt-1" data-second-hop={hop.committeeId}>
       <summary>
-        <span className="rounded-full border border-[var(--signal)]/40 bg-[var(--signal)]/10 px-2 py-0.5 text-[0.625rem] font-semibold text-signal">
+        <span className="pill pill--cyan">
           Give me the tea
         </span>
       </summary>

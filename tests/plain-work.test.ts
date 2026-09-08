@@ -179,11 +179,11 @@ const METRICS: ResearchMetrics = {
   ordering: null,
   funnel: {
     stages: [
-      { stage: "SCOUTED", count: 22, source: "distinct obligations with a non-refused Scout result in repos.scoutResults" },
-      { stage: "CONFIRMED", count: 0, source: "none recorded — the promotion pipeline (lib/control-plane/promotion) is another lane's; plug its reader in here (none recorded for CONFIRMED)" },
-      { stage: "VALIDATED", count: 7, source: "data/method/candidates.json lifecycle counts" },
-      { stage: "ADMITTED", count: 0, source: "data/method/candidates.json lifecycle counts" },
-      { stage: "DETERMINISTIC_REPLAYS", count: 0, source: "deterministic dispatches on routes an ADMITTED candidate learned, from the run records read" },
+      { stage: "SCOUTED", count: 22, source: "distinct obligations with a non-refused Scout result in repos.scoutResults", track: "OBLIGATIONS", unit: "obligation" },
+      { stage: "CONFIRMED", count: 0, source: "none recorded — the promotion pipeline (lib/control-plane/promotion) is another lane's; plug its reader in here (none recorded for CONFIRMED)", track: "PIPELINE", unit: "record" },
+      { stage: "VALIDATED", count: 7, source: "data/method/candidates.json lifecycle counts", track: "METHODS", unit: "method candidate" },
+      { stage: "ADMITTED", count: 0, source: "data/method/candidates.json lifecycle counts", track: "METHODS", unit: "method candidate" },
+      { stage: "DETERMINISTIC_REPLAYS", count: 0, source: "deterministic dispatches on routes an ADMITTED candidate learned, from the run records read", track: "METHODS", unit: "replay" },
     ],
     pipelineSource: "none recorded — the promotion pipeline (lib/control-plane/promotion) is another lane's; plug its reader in here",
   },

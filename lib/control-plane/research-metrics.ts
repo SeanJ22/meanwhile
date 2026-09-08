@@ -207,10 +207,45 @@ export function orderByReaderImpact<T extends OrderableObligation>(
 
 /* ---------------------------------------------------------------- funnel */
 
+/**
+ * **WHAT A FUNNEL STAGE IS COUNTING.** (ADM-65, the 9.7.26 admin feedback.)
+ *
+ * The owner, reading "found by a hunter 23" above "methods that passed
+ * validation 18": *"What about the other 5? Why did we not do any of the
+ * others?"*
+ *
+ * **There is no set of five.** The two numbers count different populations in
+ * different units and neither bounds the other:
+ *
+ * ```
+ *   SCOUTED    distinct OBLIGATIONS with a non-refused Scout result
+ *   VALIDATED  METHOD-CANDIDATE ROWS in data/method/candidates.json
+ * ```
+ *
+ * One Scout result can propose many candidates, so VALIDATED is not a subset of
+ * SCOUTED and 18 is not "23 minus 5". Rendered as one descending ladder they
+ * invite a subtraction that means nothing, and the owner did the subtraction
+ * because the chart told him to.
+ *
+ * So a stage now says which TRACK it belongs to and what one of its units is.
+ * Two tracks drawn apart cannot be subtracted from each other by eye.
+ */
+export type FunnelTrack =
+  /** Obligations the fleet went looking at. */
+  | "OBLIGATIONS"
+  /** Records moving through the promotion pipeline. */
+  | "PIPELINE"
+  /** Reusable methods learned, validated and admitted to the toolbox. */
+  | "METHODS";
+
 export interface FunnelStage {
   readonly stage: string;
   readonly count: number;
   readonly source: string;
+  /** Which population this counts. Stages of different tracks never subtract. */
+  readonly track: FunnelTrack;
+  /** What one of them IS, singular, e.g. "obligation". Never omitted. */
+  readonly unit: string;
 }
 
 /** The pipeline stages beyond SCOUTED, read from the promotion pipeline when one exists. */
@@ -244,15 +279,46 @@ export function graduationFunnel(input: {
   const scouted = new Set(input.results.filter((r) => r.refusal === null).map((r) => r.obligationId)).size;
   const byStage = new Map(input.pipeline.map((p) => [p.stage, p.count]));
   const stages: FunnelStage[] = [
-    { stage: "SCOUTED", count: scouted, source: "distinct obligations with a non-refused Scout result in repos.scoutResults" },
+    {
+      stage: "SCOUTED",
+      count: scouted,
+      source: "distinct obligations with a non-refused Scout result in repos.scoutResults",
+      track: "OBLIGATIONS",
+      unit: "obligation",
+    },
     ...PIPELINE_STAGES.map((stage) => ({
       stage,
       count: byStage.get(stage) ?? 0,
       source: byStage.has(stage) ? input.pipelineSource : `${input.pipelineSource} (none recorded for ${stage})`,
+      track: "PIPELINE" as const,
+      unit: "record",
     })),
-    { stage: "VALIDATED", count: input.candidateCounts?.validated ?? 0, source: "data/method/candidates.json lifecycle counts" },
-    { stage: "ADMITTED", count: input.candidateCounts?.admitted ?? 0, source: "data/method/candidates.json lifecycle counts" },
-    { stage: "DETERMINISTIC_REPLAYS", count: input.deterministicReplays, source: "deterministic dispatches on routes an ADMITTED candidate learned, from the run records read" },
+    /*
+     * ADM-65: these three are METHODS, not obligations. A single Scout result
+     * can propose many candidates, so nothing here is a remainder of SCOUTED
+     * and the two tracks may never be subtracted from one another.
+     */
+    {
+      stage: "VALIDATED",
+      count: input.candidateCounts?.validated ?? 0,
+      source: "data/method/candidates.json lifecycle counts",
+      track: "METHODS",
+      unit: "method candidate",
+    },
+    {
+      stage: "ADMITTED",
+      count: input.candidateCounts?.admitted ?? 0,
+      source: "data/method/candidates.json lifecycle counts",
+      track: "METHODS",
+      unit: "method candidate",
+    },
+    {
+      stage: "DETERMINISTIC_REPLAYS",
+      count: input.deterministicReplays,
+      source: "deterministic dispatches on routes an ADMITTED candidate learned, from the run records read",
+      track: "METHODS",
+      unit: "replay",
+    },
   ];
   return { stages, pipelineSource: input.pipelineSource };
 }

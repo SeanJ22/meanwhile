@@ -554,14 +554,54 @@ export default async function ResearchPage() {
             )}
           </MetricGroup>
           <MetricGroup title="Graduation funnel" meaning={METRIC_GROUP_MEANING.funnel} lead={leads?.funnel} rows={metrics.rows.funnel}>
-            <Funnel
-              caption="From found to trusted"
-              stages={metrics.record.funnel.stages.map((s, index) => ({
-                label: metrics.rows.funnel[index]?.label ?? s.stage.toLowerCase().replaceAll("_", " "),
-                count: s.count,
-                hint: metrics.rows.funnel[index]?.denominator ?? s.source,
-              }))}
-            />
+            {/*
+              ADM-65 — TWO TRACKS, DRAWN APART.
+
+              The owner, reading "found by a hunter 23" above "methods that
+              passed validation 18": *"What about the other 5? Why did we not do
+              any of the others?"*
+
+              There is no set of five. The two bars count different populations
+              in different units, and neither bounds the other: SCOUTED counts
+              distinct OBLIGATIONS with a non-refused Scout result, VALIDATED
+              counts METHOD-CANDIDATE ROWS, and one Scout result can propose
+              many candidates. 18 is not 23 minus 5.
+
+              Drawn as one descending ladder the chart invited a subtraction
+              that means nothing — and he did the subtraction because the chart
+              told him to. Each track is now its own bar group with its own
+              unit, and a sentence says outright that they do not subtract.
+            */}
+            {(["OBLIGATIONS", "PIPELINE", "METHODS"] as const).map((track) => {
+              const inTrack = metrics.record.funnel.stages
+                .map((s, index) => ({ s, index }))
+                .filter(({ s }) => s.track === track);
+              if (inTrack.length === 0) return null;
+              const unit = inTrack[0].s.unit;
+              return (
+                <Funnel
+                  key={track}
+                  caption={
+                    track === "OBLIGATIONS"
+                      ? `What the hunt looked at — counted in ${unit}s`
+                      : track === "PIPELINE"
+                        ? `Records moving toward readers — counted in ${unit}s`
+                        : `Methods learned and kept — counted in ${unit}s`
+                  }
+                  stages={inTrack.map(({ s, index }) => ({
+                    label: metrics.rows.funnel[index]?.label ?? s.stage.toLowerCase().replaceAll("_", " "),
+                    count: s.count,
+                    hint: metrics.rows.funnel[index]?.denominator ?? s.source,
+                  }))}
+                />
+              );
+            })}
+            <p className="note">
+              These three groups count different things, so a number in one never subtracts from a number in
+              another. One hunt can produce several method candidates, and a method can be reused on work it
+              never found — so &ldquo;found 23&rdquo; and &ldquo;18 passed validation&rdquo; are not 23 minus
+              5. They are two measurements of two populations.
+            </p>
           </MetricGroup>
           <MetricGroup title="Paid model versus plain code" meaning={METRIC_GROUP_MEANING.share} lead={leads?.share} rows={metrics.rows.share}>
             <div className="chart-row">

@@ -504,7 +504,7 @@ const METRICS: ResearchMetrics = {
   computedAt: "2026-09-04T16:57:00.000Z",
   capacity: { meanUsdPerAttempt: 0.3867, measuredAttempts: 1, unmeasuredAttempts: 3, windowHours: 24, ceilingUsd: 25, attemptsPerDayAtCap: 64, denominator: "d" },
   ordering: { rule: "r", scope: "s", inputs: { readerImpactAt: "FreshnessObligation.readerImpactAt", pilotJurisdictions: "p", openRedQuestions: { count: 0, zips: [], run: null }, universeProviders: [], tieBreak: "oldest nextDueAt first within a band" }, bands: { 1: 182, 2: 2151, 3: 0 }, appliesTo: "BOUNDED_MODEL_WORKER" },
-  funnel: { stages: [{ stage: "SCOUTED", count: 22, source: "s" }, { stage: "CONFIRMED", count: 0, source: "s" }, { stage: "VALIDATED", count: 18, source: "s" }], pipelineSource: "p" },
+  funnel: { stages: [{ stage: "SCOUTED", count: 22, source: "s", track: "OBLIGATIONS", unit: "obligation" }, { stage: "CONFIRMED", count: 0, source: "s", track: "PIPELINE", unit: "record" }, { stage: "VALIDATED", count: 18, source: "s", track: "METHODS", unit: "method candidate" }], pipelineSource: "p" },
   share: { thisCycle: { deterministic: 1, model: 0, modelShare: 0 }, window: { deterministic: 211, model: 21, modelShare: 21 / 232, cycles: 18, since: "2026-09-01T00:00:00.000Z" }, delta: -0.091 },
   cacheByRole: [{ role: "SCOUT", cacheRead: 955734, cacheWrite: 100, uncachedInput: 4540417, hitRate: 0.174, repeatedPrefixTurns: 4, repeatedPrefixMisses: 0, attempts: 27, denominator: "d" }],
   costPerOutcome: [{ outcome: "ROUTE_CANDIDATE", count: 12, usdPerOutcome: 2.2914, denominator: "d" }],

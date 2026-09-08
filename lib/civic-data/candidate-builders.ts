@@ -416,7 +416,12 @@ export function fecFundingCandidate(input: {
   const missing: string[] = [];
   const violations: string[] = [];
   for (const row of snapshot.candidates) {
-    if (!/^[HSP]\d{8}$/.test(row.fecCandidateId)) missing.push(`${row.name}:candidate_id`);
+    // FEC candidate ids are nine characters. Congressional ids carry the
+    // office, cycle digit, two-letter state and five digits (H8VA01233);
+    // presidential ids carry the office plus eight digits (P80001571).
+    // Requiring eight digits after every office letter rejects every real
+    // House/Senate identifier while accepting a shape the FEC does not issue.
+    if (!/^(?:[HS]\d[A-Z]{2}\d{5}|P\d{8})$/.test(row.fecCandidateId)) missing.push(`${row.name}:candidate_id`);
     if (row.principalCommitteeId && !/^C\d{8}$/.test(row.principalCommitteeId)) missing.push(`${row.name}:committee_id`);
     if (row.cycle !== snapshot.cycle) violations.push(`${row.fecCandidateId} cycle ${row.cycle} != snapshot ${snapshot.cycle}.`);
     if (row.totals.coverageEndDate && !/^\d{4}-\d{2}-\d{2}$/.test(row.totals.coverageEndDate)) violations.push(`${row.fecCandidateId} has an invalid coverage_end_date.`);

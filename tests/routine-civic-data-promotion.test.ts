@@ -3,7 +3,8 @@ import test from "node:test";
 
 import { processRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { censusGeographyCandidate, failedAcquisitionCandidate, officialStateRollCallsCandidate } from "../lib/civic-data/candidate-builders.ts";
+import { censusGeographyCandidate, failedAcquisitionCandidate, fecFundingCandidate, officialStateRollCallsCandidate } from "../lib/civic-data/candidate-builders.ts";
+import type { FundingSnapshot } from "../lib/funding/types.ts";
 import type { Division } from "../lib/registry/types.ts";
 import type { RoutineCandidate, RoutineRecordClass } from "../lib/civic-data/types.ts";
 import { VALIDATION_CHECKS } from "../lib/civic-data/types.ts";
@@ -99,6 +100,42 @@ async function expectHeld(
 test("GOOD is the only path that reaches PROMOTED", async () => {
   const store = new MemoryRoutineDataStore();
   await seed(store);
+});
+
+test("FEC candidate identity accepts the official nine-character office forms and rejects a numeric congressional impostor", () => {
+  const snapshot = (fecCandidateId: string, office: "H" | "S" | "P"): FundingSnapshot => ({
+    formatVersion: 1,
+    fetchedAt: NOW,
+    cycle: 2026,
+    matchReport: { rosterMatched: 1, rosterTotal: 1, ballotMatched: 0, ballotTotal: 0 },
+    candidates: [{
+      dataClass: "FEC_COMMITTEE",
+      fecCandidateId,
+      name: "Official identifier control",
+      state: office === "P" ? "US" : "VA",
+      office: office as "H" | "S",
+      district: office === "H" ? "01" : null,
+      targetKeys: ["control:official-id"],
+      matchRoutes: ["bioguide-bridge"],
+      principalCommitteeId: "C00999999",
+      cycle: 2026,
+      totals: { receipts: 1, disbursements: 0, cashOnHand: 1, individualItemized: 1, individualUnitemized: 0, smallDonorShare: 0, coverageEndDate: "2026-06-30" },
+      topContributions: [],
+      provenance: { sourceUrl: "https://www.fec.gov/", sourceOrg: "Federal Election Commission", collectedAt: NOW, verifiedAt: NOW },
+    }],
+    absences: [],
+  });
+  const build = (fecCandidateId: string, office: "H" | "S" | "P") => fecFundingCandidate({
+    snapshot: snapshot(fecCandidateId, office),
+    rawBodies: ["official FEC response"],
+    finalUrl: "https://api.open.fec.gov/v1/candidates/search/",
+    retrievedAt: NOW,
+    excludedFacts: [],
+  });
+  assert.deepEqual(build("H8VA01233", "H").normalization.missingRequiredFields, []);
+  assert.deepEqual(build("S0NH00219", "S").normalization.missingRequiredFields, []);
+  assert.deepEqual(build("P80001571", "P").normalization.missingRequiredFields, []);
+  assert.deepEqual(build("H12345678", "H").normalization.missingRequiredFields, ["Official identifier control:candidate_id"]);
 });
 
 test("official state roll identity, term, event and stage can promote directly", async () => {

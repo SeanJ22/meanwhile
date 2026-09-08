@@ -12,6 +12,10 @@ horizontal clipping, duplicate Vote control, or phone/tablet command-order
 regression was observed. The screenshots are review evidence, not an owner
 selection among A/B/C.
 
+Measured before/after load and fly-in evidence, including the exact revisions,
+ABBA protocol, pooled results, budgets, and limitations, is in
+[PERFORMANCE.md](./PERFORMANCE.md).
+
 ## Three-candidate ballot review
 
 Natural fixture: `85701`, Secretary of State — Adrian Fontes, Alexander

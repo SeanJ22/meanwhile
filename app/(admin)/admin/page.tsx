@@ -186,6 +186,8 @@ function waitingView(card: OwnerDecisionCard): WaitingCardView {
     type: ownerTypeOf(card),
     blocker: kind === "BLOCKED_WHILE" ? (card.blocker ?? card.whatIsNeeded) : null,
     checkedThisRun: card.checkedThisRun ?? null,
+    // ADM-50: on the card since it shipped, never rendered.
+    lastVerified: card.lastVerified ?? null,
     ownWords: kind === "DECISION",
   };
 }

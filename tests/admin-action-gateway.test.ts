@@ -112,12 +112,17 @@ function ask(over: Partial<ActionRequest> = {}): ActionRequest {
 test("ADM-C6: the registry is closed and every entry carries a full definition", () => {
   const definitions = actionDefinitions();
   /*
-   * THE DENOMINATOR. Eleven actions are registered today. Pinning the count is
+   * THE DENOMINATOR. Twelve actions are registered today. Pinning the count is
    * what makes the loop below a sweep rather than a coincidence: an entry
    * silently dropped in a refactor would otherwise leave every assertion
    * passing over a smaller population.
+   *
+   * Was eleven until ADM-50 (9.7.26) added `wall.recheck` — the owner's
+   * "I did this — recheck now" control, for a machine-checked wall he had
+   * already cleared in the world and could not clear on the page. Raised
+   * deliberately, in the same commit as the action.
    */
-  assert.equal(definitions.length, 11, "the registry no longer holds the eleven actions this pass declared");
+  assert.equal(definitions.length, 12, "the registry no longer holds the twelve actions this pass declared");
   assert.deepEqual(
     [...ACTION_TYPES],
     [
@@ -127,6 +132,8 @@ test("ADM-C6: the registry is closed and every entry carries a full definition",
       "runner.resume",
       "runner.runCycleNow",
       "fleet.deployHere",
+      // ADM-50 (9.7.26): "I did this — recheck now" on a machine-checked wall.
+      "wall.recheck",
       "fleet.retryWorkItem",
       "fleet.requestReadback",
       "config.setApiFallback",

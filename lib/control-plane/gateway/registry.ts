@@ -165,6 +165,18 @@ export interface RegisteredAction {
 const text = (value: unknown): string => (typeof value === "string" ? value.trim() : "");
 const collapse = (value: unknown): string => text(value).replace(/\s+/g, " ");
 const bad = (why: string): Validation => ({ ok: false, why });
+
+/**
+ * What the decision log records when the owner says a machine-checked wall is
+ * already done (ADM-50).
+ *
+ * Declared here rather than beside `ANSWERED_IN_OWN_WORDS` in
+ * `owner-surface.ts` for one reason and it is not a design one: that file is
+ * currently reserved by the concurrent civic-data-plane worktree, and this lane
+ * may not edit a reserved file. It belongs next to its sibling and should move
+ * there when that lane lands.
+ */
+export const WALL_ASSERTED_DONE = "I have done this — recheck it";
 const refuse = (refusal: RefusalCode, says: string): ActionRefusal => ({ ok: false, refusal, says });
 
 /**
@@ -456,6 +468,98 @@ const REGISTRY: readonly RegisteredAction[] = [
         says: "The fleet has been told where to go. The next cycle puts what matches first and records what it matched — including nothing, by name, if nothing is registered there.",
         undo: "Send it somewhere else; the later instruction is the one the next cycle reads.",
       });
+    },
+  },
+
+  /* ------------------------------------------------------- wall.recheck */
+  {
+    definition: {
+      type: "wall.recheck",
+      label: "I did this — recheck now",
+      does: "Records that you say the blocker is gone, and reports what the wall's own check last read and last found.",
+      doesNot:
+        "Does not clear the wall and does not re-run the check. Nothing reachable from this console can run it — see the receipt for what does.",
+      authority: "REVERSIBLE_NONPRODUCTION",
+      subjectKind: "a machine-checked wall in the Needs-you queue",
+      requiresStateVersion: true,
+      refusals: ["INVALID_INPUT", "STALE_STATE", "DOWNSTREAM_REFUSED", "NOT_SUPPORTED_YET"],
+    },
+    validate(input) {
+      const rowId = text(input.rowId);
+      if (rowId === "") return bad("name the wall you are saying is done");
+      return { ok: true, value: { rowId } };
+    },
+    async execute(deps, context, input) {
+      /*
+       * **ADM-50 — AND THE REASON THIS BUTTON DOES NOT DO WHAT ITS NAME SAYS.**
+       *
+       * The owner: *"I actually already rotated these keys, this is completely
+       * done and resolved, but there's no way for me to click anything to say
+       * hey, this is actually good now."*
+       *
+       * The row asks for a control that RE-RUNS the machine check, and is
+       * explicit that the machine must actually rerun it — *"Do not trust the
+       * button blindly."* So the first question was whether anything reachable
+       * from a deployed console can. It cannot, and the chain is worth writing
+       * down because it is not obvious and it looked wired:
+       *
+       * ```
+       *   scripts/tracker.mjs views     RE-EVALUATES the predicate and writes
+       *                                 docs/tracker-reconciliation.json
+       *   publish-owner-snapshot.mts    READS that file (:262-268) and builds
+       *                                 the cards from it — it re-evaluates
+       *                                 nothing
+       *   pilot-runner.mts              runs the console publishers each cycle
+       *                                 (:540-550) and does NOT run tracker views
+       * ```
+       *
+       * So `runner.runCycleNow` would republish cards from a STALE
+       * reconciliation and the wall would come back unchanged — a button that
+       * appears to work and does not, which is the precise failure ADM-50 is
+       * about. Wiring this to a cycle would have been worse than leaving it
+       * unwired.
+       *
+       * What this does instead is the honest remainder: it records the owner's
+       * assertion durably, through the SAME append-only decision path every
+       * other answer uses (RULING 103 — no second store for one kind of
+       * record), and the receipt says what the check reads, what it last found,
+       * and what has to run for it to change its mind. The wall stays up,
+       * because nothing has yet disproved the blocker — and a wall that came
+       * down on the owner's say-so would be the blind trust the row forbids.
+       */
+      const rowId = String(input.rowId) || context.request.subject.trim();
+      if (rowId === "") return refuse("INVALID_INPUT", "Nothing was recorded — the request did not say which wall.");
+      /*
+       * The SAME append-only path every other owner answer takes. An assertion
+       * about a wall is an owner statement about a row, which is what this log
+       * is; a second store for one kind of statement would be the duplicate
+       * RULING 103 exists to prevent.
+       */
+      const intent = decisionIntent({
+        subjectId: rowId,
+        chosenOption: WALL_ASSERTED_DONE,
+        consequenceShown:
+          "Records that you say this blocker is gone. It does not clear the wall: the check that would " +
+          "clear it re-reads the evidence, and it runs from the repository rather than from this console.",
+        ownerAnswer: null,
+        decidedAt: context.at,
+        actorRef: context.request.actorRef,
+      });
+      const wrote = await appendDecisionIntent(deps.repos, intent, context.at);
+      if (!wrote.ok) return refuse("DOWNSTREAM_REFUSED", `Nothing was recorded — ${wrote.detail}.`);
+      return {
+        ok: true,
+        outcome: "DONE",
+        subject: rowId,
+        says:
+          "Recorded that you say this is done. The wall stays up until the check itself agrees: it re-reads " +
+          "the evidence named on the card, and it runs from the repository (pnpm tracker:views), not from " +
+          "this console — nothing in the runner's cycle runs it today. Your note is on the record for the " +
+          "session that does.",
+        openedWork: [],
+        readBackAt: "/admin",
+        undo: "Say it again; the later record is the one that counts, and the earlier one stays on the log.",
+      };
     },
   },
 

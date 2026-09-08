@@ -73,6 +73,14 @@ export interface WaitingCardView {
   /** BLOCKED_WHILE cards carry a blocker and no options. */
   readonly blocker: string | null;
   readonly checkedThisRun: string | null;
+  /**
+   * The tracker row's own "Last verified" stamp (ADM-50).
+   *
+   * It has been on `OwnerDecisionCard` all along and was never rendered, so a
+   * wall could show a blocker with no indication of when anything had last
+   * looked at it.
+   */
+  readonly lastVerified: string | null;
   /** True when the owner may answer in his own words. */
   readonly ownWords: boolean;
 }
@@ -171,6 +179,9 @@ export function DecisionQueue({
   const [decided, setDecided] = useState<readonly JustDecided[]>([]);
   const [openCard, setOpenCard] = useState<string | null>(null);
   const [answers, setAnswers] = useState<Readonly<Record<string, string>>>({});
+  /** ADM-50: which wall is being asserted, and what the server said about each. */
+  const [asserting, setAsserting] = useState<string | null>(null);
+  const [assertSays, setAssertSays] = useState<Readonly<Record<string, string>>>({});
 
   const goneRows = useMemo(
     () => new Set(decided.filter((d) => d.state !== "FAILED" && d.state !== "UNDONE").map((d) => d.rowId)),
@@ -279,6 +290,58 @@ export function DecisionQueue({
               : d,
           ),
         );
+      }
+    },
+    [actionRoute, returnTo, router, stateVersion],
+  );
+
+  /**
+   * ADM-50 — "I did this — recheck now".
+   *
+   * It records the owner's assertion and says what will and will not follow.
+   * Deliberately NOT optimistic: the other controls on this page move the card
+   * before the network answers because the write was always fine and only the
+   * silence was wrong. Here the card genuinely must not move — the wall stays
+   * up until the check itself disagrees — so showing it leave would be the
+   * blind trust the row forbids.
+   */
+  const assertDone = useCallback(
+    async (card: WaitingCardView) => {
+      setAsserting(card.rowId);
+      setAssertSays((was) => ({ ...was, [card.rowId]: "Recording…" }));
+      try {
+        const res = await fetch(actionRoute, {
+          method: "POST",
+          headers: { "content-type": "application/json", accept: "application/json" },
+          body: JSON.stringify({
+            type: "wall.recheck",
+            subject: card.rowId,
+            input: { rowId: card.rowId },
+            idempotencyKey: `${card.rowId}:wall-recheck`,
+            stateVersion,
+            returnTo,
+          }),
+        });
+        const contentType = res.headers.get("content-type");
+        const body: unknown = await res.json().catch(() => null);
+        const receipt = (body as { receipt?: { says?: string } } | null)?.receipt;
+        if (!res.ok) {
+          const refusal = readRefusal({ status: res.status, body, contentType });
+          setAssertSays((was) => ({
+            ...was,
+            [card.rowId]: refusal.whatToDo === null ? refusal.says : `${refusal.says} ${refusal.whatToDo}`,
+          }));
+          return;
+        }
+        setAssertSays((was) => ({ ...was, [card.rowId]: receipt?.says ?? "Recorded." }));
+        router.refresh();
+      } catch (e) {
+        setAssertSays((was) => ({
+          ...was,
+          [card.rowId]: `Nothing was recorded — the console could not reach the server${e instanceof Error ? ` (${e.message})` : ""}.`,
+        }));
+      } finally {
+        setAsserting(null);
       }
     },
     [actionRoute, returnTo, router, stateVersion],
@@ -438,10 +501,48 @@ export function DecisionQueue({
                                   </p>
                                   <p className="note">
                                     {card.checkedThisRun
-                                      ? `Rechecked on the last tracker generation: ${card.checkedThisRun}.`
-                                      : "No recheck was recorded on the last tracker generation."}{" "}
-                                    This clears itself the moment the blocker stops being true; it is not a decision.
+                                      ? `What the check last found: ${card.checkedThisRun}.`
+                                      : "No recheck is recorded against this wall."}
+                                    {card.lastVerified ? ` Last verified ${card.lastVerified}.` : ""}
                                   </p>
+                                  {/*
+                                    ADM-50. The owner: *"I actually already
+                                    rotated these keys, this is completely done
+                                    and resolved, but there's no way for me to
+                                    click anything to say hey, this is actually
+                                    good now."*
+
+                                    The old copy said this "clears itself the
+                                    moment the blocker stops being true", which
+                                    is true of the PREDICATE and false about
+                                    when anyone would find out. The check is
+                                    re-evaluated by `scripts/tracker.mjs views`,
+                                    which writes docs/tracker-reconciliation.json;
+                                    the owner snapshot publisher only READS that
+                                    file, and the runner's cycle does not run
+                                    the re-evaluation at all. So a wall can stay
+                                    up long after its blocker is gone, and
+                                    nothing on this page was admitting it.
+                                  */}
+                                  <p className="note">
+                                    This clears when the check re-reads its evidence and disagrees with the wall — not
+                                    when the blocker stops being true. That re-read happens when the tracker views are
+                                    regenerated from the repository, and nothing in the runner&rsquo;s cycle does it
+                                    today, so it waits for a work session.
+                                  </p>
+                                  <div className="dq-fix">
+                                    <button
+                                      type="button"
+                                      className="primary"
+                                      disabled={asserting === card.rowId}
+                                      onClick={() => void assertDone(card)}
+                                    >
+                                      {asserting === card.rowId ? "Recording…" : "I did this — recheck now"}
+                                    </button>
+                                  </div>
+                                  {assertSays[card.rowId] && (
+                                    <p className="note">{assertSays[card.rowId]}</p>
+                                  )}
                                 </>
                               ) : (
                                 <>

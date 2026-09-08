@@ -220,6 +220,12 @@ try {
       await offices.locator("[data-directory-office]").first().waitFor({ state: "visible" });
       const votingRecord = await openSection(official, "Voting Record");
       await votingRecord.locator("[data-recent-vote-count]").waitFor({ state: "visible" });
+      const componentReadback = {
+        contacts: await official.locator(".contact-pill").count(),
+        committees: await committees.locator("[data-committee-seat]").count(),
+        offices: await offices.locator("[data-directory-office]").count(),
+        recentVoteCount: await votingRecord.locator("[data-recent-vote-count]").getAttribute("data-recent-vote-count"),
+      };
       const map = await openSection(official, "Campaign money");
       await map.getByText(api.data.sentences[0], { exact: true }).waitFor({ state: "visible" });
       const mapText = normalize(await map.innerText());
@@ -230,7 +236,7 @@ try {
       await ballot.getByText(api.data.sentences[0], { exact: true }).waitFor({ state: "visible" });
       const ballotText = normalize(await ballot.innerText());
       assert.ok(mapText.includes(api.data.sentences[0]) && ballotText.includes(api.data.sentences[0]));
-      results.push({ id: "federal-finance-parity", result: "PASS", officialId: "congress:C001133", candidateId: await candidate.locator("[data-candidate-subject]").getAttribute("data-candidate-subject"), api, mapText, ballotText, componentReadback: { contacts: await official.locator(".contact-pill").count(), committees: await committees.locator("[data-committee-seat]").count(), offices: await offices.locator("[data-directory-office]").count(), recentVoteCount: await votingRecord.locator("[data-recent-vote-count]").getAttribute("data-recent-vote-count") } });
+      results.push({ id: "federal-finance-parity", result: "PASS", officialId: "congress:C001133", candidateId: await candidate.locator("[data-candidate-subject]").getAttribute("data-candidate-subject"), api, mapText, ballotText, componentReadback });
     } finally { await context.close(); }
   }
   {

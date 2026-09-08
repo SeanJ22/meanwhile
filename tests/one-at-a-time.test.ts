@@ -134,6 +134,18 @@ test("MTG-11: the voting control dismisses BEFORE it opens", () => {
   );
 });
 
+test("LAY-16: every desktop placement reuses one voting control", () => {
+  const src = entry();
+  assert.equal(
+    (src.match(/data-reader-vote-control="true"/g) ?? []).length,
+    1,
+    "the review placements must move one control, not mount copies",
+  );
+  assert.equal((src.match(/<VotingSitesPanel\b/g) ?? []).length, 1);
+  assert.match(src, /reviewTrailingControl=\{voteInCluster \? voteControl : null\}/);
+  assert.match(src, /\{!voteInCluster && voteControl\}/);
+});
+
 /* -------------------------------------------------------------------------- */
 /* MAP-3 — the deliberate exception, asserted rather than assumed              */
 /* -------------------------------------------------------------------------- */

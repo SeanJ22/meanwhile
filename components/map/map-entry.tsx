@@ -39,6 +39,7 @@ import {
   useTabletMap,
 } from "@/hooks/use-compact-map";
 import { useRaisedStateVariant } from "@/hooks/use-raised-state-variant";
+import { useDesktopVotePlacementVariant } from "@/hooks/use-desktop-vote-placement-variant";
 import { UiProvider, useUi, useUiDispatch } from "@/lib/state/provider";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
 import type { SnapshotStatus } from "@/lib/meetings/freshness";
@@ -289,6 +290,10 @@ function MapEntryInner() {
   const tabletMap = useTabletMap();
   const responsiveMap = phoneMap || tabletMap;
   const raisedStateVariant = useRaisedStateVariant();
+  const desktopVotePlacementCandidate = useDesktopVotePlacementVariant();
+  const desktopVotePlacement = responsiveMap
+    ? null
+    : desktopVotePlacementCandidate;
   const [districtExpanded, setDistrictExpanded] = useState(false);
   const compactBoundary = compactMap && Boolean(ui.selectedDistrictOcdId);
 
@@ -1712,6 +1717,43 @@ function MapEntryInner() {
     [clusterCoverage?.bodies],
   );
   const compactMeetingsLabel = meetingAreaLabel(clusterCoverage, clusterZip);
+  const clusterCanHostReviewControl = Boolean(
+    clusterZip && /^\d{5}$/.test(clusterZip),
+  );
+  const voteInCluster = Boolean(
+    clusterCanHostReviewControl &&
+      (desktopVotePlacement === "B_CLUSTER_SEGMENT" ||
+        desktopVotePlacement === "C_CLUSTER_ROW"),
+  );
+  const voteControl = (
+    <div
+      className={`${styles.voteSlot} pointer-events-auto`}
+      data-open={votingOpen ? "true" : undefined}
+      data-reader-vote-control="true"
+    >
+      {votingOpen ? (
+        <VotingSitesPanel
+          onSites={setVotingPins}
+          onAddressPoint={setVotingAddressPoint}
+          selectedSiteId={selectedVotingSiteId}
+          onSelectSite={setSelectedVotingSiteId}
+          onClose={closeVoting}
+        />
+      ) : (
+        <button
+          type="button"
+          className="voting-open-button"
+          onClick={() => {
+            takeForeground(); // MTG-11
+            setVotingOpen(true);
+          }}
+        >
+          <span className={styles.voteFull}>Where can I vote?</span>
+          <span className={styles.voteShort}>Vote</span>
+        </button>
+      )}
+    </div>
+  );
   const cluster = (
     <PillCluster
       placement={clusterAt}
@@ -1757,6 +1799,14 @@ function MapEntryInner() {
       }
       onOpenPerson={(holder) => openOfficial(holder, null, "local", null)}
       zipFirst={phoneMap}
+      reviewTrailingControl={voteInCluster ? voteControl : null}
+      reviewTrailingPlacement={
+        desktopVotePlacement === "B_CLUSTER_SEGMENT"
+          ? "segment"
+          : desktopVotePlacement === "C_CLUSTER_ROW"
+            ? "row"
+            : null
+      }
     />
   );
   /*
@@ -1917,6 +1967,7 @@ function MapEntryInner() {
         data-compact-boundary={compactBoundary ? "true" : undefined}
         data-responsive-map={phoneMap ? "phone" : tabletMap ? "tablet" : undefined}
         data-raised-state={raisedStateVariant ?? undefined}
+        data-desktop-vote-placement={desktopVotePlacement ?? undefined}
       >
         {/*
           **LAY-4 / LAY-3 — the rail and its floaters are ONE fixed column.**
@@ -2137,32 +2188,7 @@ function MapEntryInner() {
                 reader friction and friction is a defect. Playful register on
                 the button, because it is an INTERACTION surface; every word
                 inside the panel it opens is level. */}
-            <div
-              className={`${styles.voteSlot} pointer-events-auto`}
-              data-open={votingOpen ? "true" : undefined}
-            >
-              {votingOpen ? (
-                <VotingSitesPanel
-                  onSites={setVotingPins}
-                  onAddressPoint={setVotingAddressPoint}
-                  selectedSiteId={selectedVotingSiteId}
-                  onSelectSite={setSelectedVotingSiteId}
-                  onClose={closeVoting}
-                />
-              ) : (
-                <button
-                  type="button"
-                  className="voting-open-button"
-                  onClick={() => {
-                    takeForeground(); // MTG-11
-                    setVotingOpen(true);
-                  }}
-                >
-                  <span className={styles.voteFull}>Where can I vote?</span>
-                  <span className={styles.voteShort}>Vote</span>
-                </button>
-              )}
-            </div>
+            {!voteInCluster && voteControl}
             {tabletMap && (
               <nav className={styles.tabletQuickNav} aria-label="Map shortcuts">
                 <button type="button" onClick={() => openSurface("wgh")}>People</button>

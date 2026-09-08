@@ -1,7 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import {
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 
@@ -71,6 +78,8 @@ export function PillCluster({
   onOpenBody,
   onOpenPerson,
   zipFirst = false,
+  reviewTrailingControl = null,
+  reviewTrailingPlacement = null,
 }: {
   placement: AskPillPlacement;
   /** The zip the viewport currently resolves to. Null hides the pills. */
@@ -90,6 +99,9 @@ export function PillCluster({
   onOpenPerson?: (holder: SeatHolder) => void;
   /** LAY-14: phone presents ZIP before Ballot, so DOM and focus follow it. */
   zipFirst?: boolean;
+  /** Local-review-only desktop placement candidate; never populated in production. */
+  reviewTrailingControl?: ReactNode;
+  reviewTrailingPlacement?: "segment" | "row" | null;
 }) {
   const [switching, setSwitching] = useState(false);
 
@@ -202,7 +214,14 @@ export function PillCluster({
   );
 
   return (
-    <div className="map-floaters" data-pill-cluster={placement} data-ask-open={askOpen || undefined} ref={rootRef} style={{ "--ask-expansion-top": `${expansionTop}px` } as CSSProperties}>
+    <div
+      className="map-floaters"
+      data-pill-cluster={placement}
+      data-ask-open={askOpen || undefined}
+      data-reader-review-trailing={reviewTrailingPlacement ?? undefined}
+      ref={rootRef}
+      style={{ "--ask-expansion-top": `${expansionTop}px` } as CSSProperties}
+    >
       <div className="map-floaters-row" ref={rowRef}>
         <div className="ballot-pill">
           {zipFirst && zipButton}
@@ -234,7 +253,12 @@ export function PillCluster({
           <span>{pill.label}</span>
         </button>
         {placement === "wgh" && zipButton}
+        {reviewTrailingPlacement === "segment" && reviewTrailingControl}
       </div>
+
+      {reviewTrailingPlacement === "row" && (
+        <div className="map-floaters-review-row">{reviewTrailingControl}</div>
+      )}
 
       {switching && (
         <ZipSwitcher

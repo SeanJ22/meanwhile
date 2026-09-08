@@ -10,6 +10,10 @@ import {
   raisedStateVariantFromSearch,
 } from "../lib/map/raised-state-variants.ts";
 import { meetingAreaLabel } from "../lib/map/meeting-area-label.ts";
+import {
+  desktopVotePlacementVariantFrom,
+  desktopVotePlacementVariantFromSearch,
+} from "../lib/map/reader-review-variants.ts";
 import type { CoverageSummary, CoveredBody } from "../lib/registry/coverage.ts";
 import {
   RELIEF_EDGE_SEAL_LAYER,
@@ -50,6 +54,39 @@ test("MAP-8: A/B/C are deterministic, local-review-only treatments", () => {
       "surfaceScale",
     ]);
   }
+});
+
+test("LAY-16: desktop Vote A/B/C stay local-review-only with no selected default", () => {
+  assert.equal(desktopVotePlacementVariantFrom(null), null);
+  assert.equal(desktopVotePlacementVariantFrom("not-a-placement"), null);
+  assert.equal(
+    desktopVotePlacementVariantFromSearch("?desktopVote=B_CLUSTER_SEGMENT"),
+    null,
+  );
+  for (const variant of [
+    "A_STANDALONE",
+    "B_CLUSTER_SEGMENT",
+    "C_CLUSTER_ROW",
+  ] as const) {
+    assert.equal(
+      desktopVotePlacementVariantFromSearch(
+        `?desktopVote=${variant}`,
+        true,
+      ),
+      variant,
+    );
+  }
+
+  const entry = source("components/map/map-entry.tsx");
+  const hook = source("hooks/use-desktop-vote-placement-variant.ts");
+  assert.equal((entry.match(/data-reader-vote-control="true"/g) ?? []).length, 1);
+  assert.equal((entry.match(/<VotingSitesPanel\b/g) ?? []).length, 1);
+  assert.equal((entry.match(/>Where can I vote\?<\/span>/g) ?? []).length, 1);
+  assert.match(entry, /const voteInCluster = Boolean/);
+  assert.match(entry, /\{!voteInCluster && voteControl\}/);
+  assert.match(entry, /reviewTrailingControl=\{voteInCluster \? voteControl : null\}/);
+  assert.match(hook, /process\.env\.NODE_ENV !== "production"/);
+  assert.match(hook, /serverSnapshot = \(\) => null/);
 });
 
 test("MAP-7/MAP-8: navigation chrome is gone and canonical edges stay sharp", () => {

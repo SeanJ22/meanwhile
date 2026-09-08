@@ -263,6 +263,90 @@
   pointer-events: auto;
 }
 
+/* LAY-16 review fixtures. These selectors can only match the development-only
+   slots supplied by map-entry; the production/no-query composition remains the
+   established standalone control. */
+@media (min-width: 1200px) {
+  .readerMap :global([data-reader-review-trailing="segment"] .map-floaters-row) {
+    display: grid;
+    width: 100%;
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, 0.8fr)
+      minmax(0, 0.72fr)
+      minmax(0, 1.12fr);
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .readerMap :global([data-reader-review-trailing="segment"] .ballot-pill) {
+    display: contents;
+  }
+
+  .readerMap :global([data-reader-review-trailing="segment"] .ballot-pill-main) {
+    grid-column: 1;
+    justify-content: center;
+    border-radius: 999px 0 0 999px;
+  }
+
+  .readerMap :global([data-reader-review-trailing="segment"] .ballot-pill-zip) {
+    grid-column: 2;
+    justify-content: center;
+    border-radius: 0;
+  }
+
+  .readerMap :global([data-reader-review-trailing="segment"] .ask-pill) {
+    grid-column: 3;
+    min-width: 0;
+    justify-content: center;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .readerMap :global([data-reader-review-trailing="segment"] .ask-pill span) {
+    overflow: hidden;
+    font-size: 0;
+  }
+
+  .readerMap :global([data-reader-review-trailing="segment"] .ask-pill span::after) {
+    content: "Ask";
+    font-size: 0.875rem;
+  }
+
+  .readerMap :global([data-reader-review-trailing="segment"] [data-reader-vote-control]) {
+    grid-column: 4;
+    min-width: 0;
+  }
+
+  .readerMap :global([data-reader-review-trailing="segment"] [data-reader-vote-control] .voting-open-button) {
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    border-radius: 0 999px 999px 0;
+    box-shadow: none;
+  }
+
+  .readerMap :global([data-reader-review-trailing="segment"] [data-reader-vote-control][data-open="true"]) {
+    grid-column: 1 / -1;
+    margin-top: 0.5rem;
+  }
+
+  .readerMap :global(.map-floaters-review-row) {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .readerMap :global(.map-floaters-review-row > [data-reader-vote-control]) {
+    width: 100%;
+  }
+
+  .readerMap :global(.map-floaters-review-row .voting-open-button) {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 @media (max-width: 1199px) {
   .readerMap {
     --responsive-segment: color-mix(in srgb, var(--action) 84%, var(--panel));

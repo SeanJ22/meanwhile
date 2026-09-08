@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
-  "runDate": "2026-09-07",
-  "startedAt": "2026-09-07T15:02:22.225Z",
-  "finishedAt": "2026-09-07T15:30:08.689Z",
+  "runDate": "2026-09-08",
+  "startedAt": "2026-09-08T13:35:04.668Z",
+  "finishedAt": "2026-09-08T14:09:25.768Z",
   "mode": "CADENCE",
   "exitCode": 0,
   "sources": [
@@ -11,7 +11,7 @@
       "due": true,
       "ran": true,
       "outcome": "ROUTE_UNREAD",
-      "reason": "the Reader proof renewal could not prove this source's change to data/meetings-snapshot.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1:   name: 'TimeoutError' |   log: [ |     \"  - waiting for locator('.door-panel button').filter({ hasText: 'Katie Hobbs' }).first() to be visible\" |   ], | } | Node.js v24.20.0 — its governed paths are back at HEAD and it is owed until it lands",
+      "reason": "the gate refused this source's data: tests/reader-agenda-representation.test.ts — its governed paths are back at HEAD and it is owed until it lands",
       "commands": [
         "ingest composite"
       ],
@@ -22,11 +22,11 @@
       ],
       "changedPaths": [],
       "recoveredFrom": [],
-      "nextDueAt": "2026-09-08",
+      "nextDueAt": "2026-09-09",
       "observations": [
         {
           "path": "data/meetings-snapshot.json",
-          "observedAt": "2026-09-07T15:02:54.585Z",
+          "observedAt": "2026-09-08T13:35:46.927Z",
           "verdict": "FACTS_CHANGED",
           "written": true,
           "stampKeys": [
@@ -40,7 +40,7 @@
             "counts",
             "sources"
           ],
-          "factsSha256": "15aa9689dfda203db1bc6cc1ce94108d581a4649db8fe60fed3cfc8b5e7b2ef6"
+          "factsSha256": "d246c6494f6f9abe7929544d1d6336f96d46a47179ee767c5056d0feea682f6b"
         }
       ]
     },
@@ -49,7 +49,7 @@
       "due": true,
       "ran": true,
       "outcome": "ROUTE_UNREAD",
-      "reason": "the Reader proof renewal could not prove this source's change to data/states/nj/ballot/nj-morris-2026.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1:   name: 'TimeoutError' |   log: [ |     \"  - waiting for locator('.door-panel button').filter({ hasText: 'Katie Hobbs' }).first() to be visible\" |   ], | } | Node.js v24.20.0 — its governed paths are back at HEAD and it is owed until it lands",
+      "reason": "the gate refused this source's data: tests/readiness-reader-delivery.test.ts — its governed paths are back at HEAD and it is owed until it lands",
       "commands": [
         "nj:ballot --write",
         "nj:filing:check",
@@ -63,11 +63,11 @@
       ],
       "changedPaths": [],
       "recoveredFrom": [],
-      "nextDueAt": "2026-09-08",
+      "nextDueAt": "2026-09-09",
       "observations": [
         {
           "path": "data/states/nj/ballot/nj-morris-2026.json",
-          "observedAt": "2026-09-07T15:02:57.462Z",
+          "observedAt": "2026-09-08T13:35:49.925Z",
           "verdict": "FACTS_CHANGED",
           "written": true,
           "stampKeys": [
@@ -76,11 +76,11 @@
             "curatedAt"
           ],
           "ignoredTopLevel": [],
-          "factsSha256": "1ddf69e0a156f99418e25d79e1253e485374e570fb2a4c1bc4d21aa85a34b351"
+          "factsSha256": "96252c05ae694b8cabdca815885f5c921d29aefdc7dd628b5ca677398ef71148"
         },
         {
           "path": "data/states/nj/ballot/nj-morris-2026-contacts.json",
-          "observedAt": "2026-09-07T15:02:57.470Z",
+          "observedAt": "2026-09-08T13:35:49.933Z",
           "verdict": "FACTS_UNCHANGED",
           "written": false,
           "stampKeys": [
@@ -94,76 +94,11 @@
       ]
     },
     {
-      "id": "fec",
-      "due": true,
-      "ran": true,
-      "outcome": "ROUTE_UNREAD",
-      "reason": "the Reader proof renewal could not prove this source's change to data/fec/fec-2026.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1:   name: 'TimeoutError' |   log: [ |     \"  - waiting for locator('.door-panel button').filter({ hasText: 'Katie Hobbs' }).first() to be visible\" |   ], | } | Node.js v24.20.0 — its governed paths are back at HEAD and it is owed until it lands",
-      "commands": [
-        "fec:fetch"
-      ],
-      "failedCommand": null,
-      "exitCode": 0,
-      "governs": [
-        "data/fec/fec-2026.json"
-      ],
-      "changedPaths": [],
-      "recoveredFrom": [],
-      "nextDueAt": "2026-09-08",
-      "observations": [
-        {
-          "path": "data/fec/fec-2026.json",
-          "observedAt": "2026-09-07T15:08:18.511Z",
-          "verdict": "FACTS_CHANGED",
-          "written": true,
-          "stampKeys": [
-            "fetchedAt",
-            "checkedAt"
-          ],
-          "ignoredTopLevel": [],
-          "factsSha256": "721ad09db90287407025d33cfa25b3f9f0393d8623bb17f70885b35f09fc5be4"
-        }
-      ]
-    },
-    {
-      "id": "legiscan",
-      "due": true,
-      "ran": true,
-      "outcome": "ROUTE_UNREAD",
-      "reason": "the Reader proof renewal could not prove this source's change to data/votes/state-votes-snapshot.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1:   name: 'TimeoutError' |   log: [ |     \"  - waiting for locator('.door-panel button').filter({ hasText: 'Katie Hobbs' }).first() to be visible\" |   ], | } | Node.js v24.20.0 — its governed paths are back at HEAD and it is owed until it lands",
-      "commands": [
-        "legiscan:fetch"
-      ],
-      "failedCommand": null,
-      "exitCode": 0,
-      "governs": [
-        "data/votes/state-votes-snapshot.json"
-      ],
-      "changedPaths": [],
-      "recoveredFrom": [],
-      "nextDueAt": "2026-09-08",
-      "observations": [
-        {
-          "path": "data/votes/state-votes-snapshot.json",
-          "observedAt": "2026-09-07T15:08:25.062Z",
-          "verdict": "FACTS_CHANGED",
-          "written": true,
-          "stampKeys": [
-            "generatedAt",
-            "downloadedAt",
-            "retrievedAt"
-          ],
-          "ignoredTopLevel": [],
-          "factsSha256": "3f67ea64cf4c335e777ec46b5486256cf39018dad27d88abe8638f1cc9320ceb"
-        }
-      ]
-    },
-    {
       "id": "dotgov",
       "due": false,
       "ran": false,
       "outcome": "NOT_DUE",
-      "reason": "monthly, not due on 2026-09-07 or on any uncovered day since the last landed refresh, and carrying no debt",
+      "reason": "monthly, not due on 2026-09-08 or on any uncovered day since the last landed refresh, and carrying no debt",
       "commands": [
         "dotgov:fetch"
       ],
@@ -179,66 +114,78 @@
     }
   ],
   "catchUp": {
-    "lastLanded": "docs/refresh-run.md, run date 2026-09-06",
+    "lastLanded": "docs/refresh-run.md, run date 2026-09-07",
     "days": [
-      "2026-09-07"
+      "2026-09-08"
     ],
     "cap": 8,
     "off": false
   },
   "gate": {
-    "verdict": "GREEN",
-    "ranAt": "2026-09-07T15:30:08.687Z",
-    "failingFiles": [],
-    "attribution": [],
-    "note": "The full suite passed over every changed source's data together. Everything that changed commits. The Reader proof renewal refused 4 source(s) before the suite ran; see the renewal section."
+    "verdict": "REFUSED",
+    "ranAt": "2026-09-08T13:59:41.590Z",
+    "failingFiles": [
+      "tests/reader-agenda-representation.test.ts",
+      "tests/readiness-reader-delivery.test.ts"
+    ],
+    "attribution": [
+      {
+        "file": "tests/reader-agenda-representation.test.ts",
+        "sourceId": "meetings",
+        "basis": "passes with meetings's governed paths at HEAD"
+      },
+      {
+        "file": "tests/readiness-reader-delivery.test.ts",
+        "sourceId": "nj-filing",
+        "basis": "passes with nj-filing's governed paths at HEAD"
+      }
+    ],
+    "note": "The suite refused 2 source(s): meetings, nj-filing. Their governed paths are back at HEAD and they are owed (data/ops/refresh-debt.json). 0 survivor(s) commit: none."
   },
   "renewal": {
-    "verdict": "FAILED",
-    "ranAt": "2026-09-07T15:11:30.236Z",
-    "exactHead": "2ef37fdb8509a1dbafc089d56433062c7efd317c",
+    "verdict": "RENEWED",
+    "ranAt": "2026-09-08T13:39:06.766Z",
+    "exactHead": "87f79722ac627839330b2fe9c0485c83339a10f9",
     "changedHoldings": [
-      "data/fec/fec-2026.json",
       "data/meetings-snapshot.json",
-      "data/states/nj/ballot/nj-morris-2026.json",
-      "data/votes/state-votes-snapshot.json"
+      "data/states/nj/ballot/nj-morris-2026.json"
     ],
     "prefix": "docs/evidence/reader-last-mile-refresh",
     "steps": [
       {
         "name": "regenerate stale PURE dependents",
         "ok": true,
-        "secs": 79,
+        "secs": 84,
         "detail": "0 regenerated"
       },
       {
         "name": "exact-head production build",
         "ok": true,
-        "secs": 69,
+        "secs": 71,
         "detail": "build log recorded"
       },
       {
         "name": "serve the build on localhost",
         "ok": true,
         "secs": 1,
-        "detail": "serving 2ef37fdb"
+        "detail": "serving 87f79722"
       },
       {
         "name": "prepare the census",
         "ok": true,
-        "secs": 68,
+        "secs": 70,
         "detail": null
       },
       {
         "name": "active portrait inventory",
         "ok": true,
-        "secs": 67,
+        "secs": 72,
         "detail": null
       },
       {
         "name": "build receipt",
         "ok": true,
-        "secs": 1,
+        "secs": 2,
         "detail": null
       },
       {
@@ -248,9 +195,27 @@
         "detail": null
       },
       {
+        "name": "exhaustive routes",
+        "ok": true,
+        "secs": 49,
+        "detail": null
+      },
+      {
+        "name": "exhaustive ask",
+        "ok": true,
+        "secs": 11,
+        "detail": null
+      },
+      {
+        "name": "key-votes ask",
+        "ok": true,
+        "secs": 10,
+        "detail": null
+      },
+      {
         "name": "delta routes",
         "ok": true,
-        "secs": 2,
+        "secs": 3,
         "detail": null
       },
       {
@@ -309,147 +274,31 @@
       },
       {
         "name": "final render and witnesses",
-        "ok": false,
-        "secs": 25,
-        "detail": "final render and witnesses exited 1:   name: 'TimeoutError' |   log: [ |     \"  - waiting for locator('.door-panel button').filter({ hasText: 'Katie Hobbs' }).first() to be visible\" |   ], | } | Node.js v24.20.0"
+        "ok": true,
+        "secs": 42,
+        "detail": null
+      },
+      {
+        "name": "finalize --renew-holdings",
+        "ok": true,
+        "secs": 95,
+        "detail": null
+      },
+      {
+        "name": "pack the executed evidence losslessly",
+        "ok": true,
+        "secs": 4,
+        "detail": "18 file(s) packed"
+      },
+      {
+        "name": "validate the renewed receipt",
+        "ok": true,
+        "secs": 40,
+        "detail": "holdings digest 25e73a2d, 463 sources bound"
       }
     ],
-    "refusedSources": [
-      {
-        "id": "meetings",
-        "paths": [
-          "data/meetings-snapshot.json"
-        ],
-        "why": "the Reader proof renewal could not prove this source's change to data/meetings-snapshot.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1:   name: 'TimeoutError' |   log: [ |     \"  - waiting for locator('.door-panel button').filter({ hasText: 'Katie Hobbs' }).first() to be visible\" |   ], | } | Node.js v24.20.0 — its governed paths are back at HEAD and it is owed until it lands"
-      },
-      {
-        "id": "nj-filing",
-        "paths": [
-          "data/states/nj/ballot/nj-morris-2026.json"
-        ],
-        "why": "the Reader proof renewal could not prove this source's change to data/states/nj/ballot/nj-morris-2026.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1:   name: 'TimeoutError' |   log: [ |     \"  - waiting for locator('.door-panel button').filter({ hasText: 'Katie Hobbs' }).first() to be visible\" |   ], | } | Node.js v24.20.0 — its governed paths are back at HEAD and it is owed until it lands"
-      },
-      {
-        "id": "fec",
-        "paths": [
-          "data/fec/fec-2026.json"
-        ],
-        "why": "the Reader proof renewal could not prove this source's change to data/fec/fec-2026.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1:   name: 'TimeoutError' |   log: [ |     \"  - waiting for locator('.door-panel button').filter({ hasText: 'Katie Hobbs' }).first() to be visible\" |   ], | } | Node.js v24.20.0 — its governed paths are back at HEAD and it is owed until it lands"
-      },
-      {
-        "id": "legiscan",
-        "paths": [
-          "data/votes/state-votes-snapshot.json"
-        ],
-        "why": "the Reader proof renewal could not prove this source's change to data/votes/state-votes-snapshot.json at final render and witnesses: final render and witnesses: final render and witnesses exited 1:   name: 'TimeoutError' |   log: [ |     \"  - waiting for locator('.door-panel button').filter({ hasText: 'Katie Hobbs' }).first() to be visible\" |   ], | } | Node.js v24.20.0 — its governed paths are back at HEAD and it is owed until it lands"
-      }
-    ],
-    "failure": "final render and witnesses: final render and witnesses exited 1:   name: 'TimeoutError' |   log: [ |     \"  - waiting for locator('.door-panel button').filter({ hasText: 'Katie Hobbs' }).first() to be visible\" |   ], | } | Node.js v24.20.0",
-    "restore": {
-      "restored": [
-        {
-          "id": "committed Reader evidence",
-          "paths": [
-            "docs/evidence/reader-last-mile-active-portraits.json",
-            "docs/evidence/reader-last-mile-final-agenda.json",
-            "docs/evidence/reader-last-mile-final-ballot-ask.json",
-            "docs/evidence/reader-last-mile-final-ballot.json",
-            "docs/evidence/reader-last-mile-final-build-receipt.json",
-            "docs/evidence/reader-last-mile-final-candidate-profiles-ask.json",
-            "docs/evidence/reader-last-mile-final-delta-routes.json",
-            "docs/evidence/reader-last-mile-final-federal-money-ask.json",
-            "docs/evidence/reader-last-mile-final-meeting-knowledge-ask.json",
-            "docs/evidence/reader-last-mile-final-meeting-routes.json",
-            "docs/evidence/reader-last-mile-final-meetings-ask.json",
-            "docs/evidence/reader-last-mile-final-money-ask.json",
-            "docs/evidence/reader-last-mile-final-portraits.json"
-          ]
-        },
-        {
-          "id": "meetings",
-          "paths": [
-            "data/meetings-snapshot.json"
-          ]
-        },
-        {
-          "id": "nj-filing",
-          "paths": [
-            "data/states/nj/ballot/nj-morris-2026.json"
-          ]
-        },
-        {
-          "id": "fec",
-          "paths": [
-            "data/fec/fec-2026.json"
-          ]
-        },
-        {
-          "id": "legiscan",
-          "paths": [
-            "data/votes/state-votes-snapshot.json"
-          ]
-        }
-      ],
-      "regenerated": [
-        "lib/funding/official-candidacies.json",
-        "docs/states/ak.md",
-        "docs/states/al.md",
-        "docs/states/ar.md",
-        "docs/states/as.md",
-        "docs/states/az.md",
-        "docs/states/ca.md",
-        "docs/states/co.md",
-        "docs/states/ct.md",
-        "docs/states/dc.md",
-        "docs/states/de.md",
-        "docs/states/fl.md",
-        "docs/states/ga.md",
-        "docs/states/gu.md",
-        "docs/states/hi.md",
-        "docs/states/ia.md",
-        "docs/states/id.md",
-        "docs/states/il.md",
-        "docs/states/in.md",
-        "docs/states/ks.md",
-        "docs/states/ky.md",
-        "docs/states/la.md",
-        "docs/states/ma.md",
-        "docs/states/md.md",
-        "docs/states/me.md",
-        "docs/states/mi.md",
-        "docs/states/mn.md",
-        "docs/states/mo.md",
-        "docs/states/mp.md",
-        "docs/states/ms.md",
-        "docs/states/mt.md",
-        "docs/states/nc.md",
-        "docs/states/nd.md",
-        "docs/states/ne.md",
-        "docs/states/nh.md",
-        "docs/states/nj.md",
-        "docs/states/nm.md",
-        "docs/states/nv.md",
-        "docs/states/ny.md",
-        "docs/states/oh.md",
-        "docs/states/ok.md",
-        "docs/states/or.md",
-        "docs/states/pa.md",
-        "docs/states/pr.md",
-        "docs/states/ri.md",
-        "docs/states/sc.md",
-        "docs/states/sd.md",
-        "docs/states/tn.md",
-        "docs/states/tx.md",
-        "docs/states/ut.md",
-        "docs/states/va.md",
-        "docs/states/vi.md",
-        "docs/states/vt.md",
-        "docs/states/wa.md",
-        "docs/states/wi.md",
-        "docs/states/wv.md",
-        "docs/states/wy.md"
-      ],
-      "regenerationFailed": []
-    }
+    "refusedSources": [],
+    "failure": null,
+    "restore": null
   }
 }

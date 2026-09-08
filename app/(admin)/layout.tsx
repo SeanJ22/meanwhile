@@ -629,6 +629,8 @@ body:has(main.admin) { background: #1b1c22; }
 .admin .runner-when { margin: .2rem 0; }
 .admin .runner-did { margin: .2rem 0; font-weight: 600; }
 .admin .runner-stopped { margin: .2rem 0; }
+/* ADM-66: idle with work owed. Amber — it is a fact to understand, not a fault. */
+.admin .runner-idle { margin: .5rem 0; padding: .55rem .8rem; border-radius: var(--ce-radius-md); background: var(--ce-panel); box-shadow: inset 0 0 0 1px var(--ce-text-warn); }
 .admin .runner-circuits { margin: .5rem 0 .2rem; color: var(--ce-fg-66); font-size: .9rem; }
 .admin .runner-deferred { font-size: .85rem; }
 .admin .runner-deferred > summary { cursor: pointer; }

@@ -38,15 +38,53 @@ export function DecidedSection({ decided }: { readonly decided: readonly Decided
           <h2>
             Decided <span className="dq-count">{count(counts.decided)}</span>
           </h2>
+          {/*
+            ADM-56 — A SENTENCE THAT COULD NOT SAY ANYTHING ELSE.
+
+            This read "N still waiting on the work they set off", and N was
+            arithmetically identical to the total: every branch of `lifecycleOf`
+            returns DECIDED or QUEUED, and `awaitingImplementation` counts
+            exactly that union. It could never report anything but the whole
+            list, and it implied a thing that had not happened — that recording
+            an answer had SET WORK OFF.
+
+            Nothing in the scheduler, the workers or the agents reads the
+            tracker stores, so a recorded decision terminates as a durable row
+            waiting for a session to pick it up. That is a real and defensible
+            design; presenting it as work already in motion is not.
+
+            So the sentence says what is true, and the count that carries no
+            information is gone rather than dressed up.
+          */}
           <span className="dq-summary">
             {counts.decided === 0
               ? "Nothing decided yet. The first answer you record appears here at once."
-              : `${count(counts.awaitingImplementation)} still waiting on the work they set off.`}
+              : `${count(counts.decided)} recorded and durable. None of them starts work by itself.`}
           </span>
         </summary>
         <p className="note" id="recorded">
           What became of each answer you recorded. A card stays here after its row has left the queue, so the receipt outlives the card.{" "}
           {SYNC_CADENCE[0].toUpperCase() + SYNC_CADENCE.slice(1)}.
+        </p>
+        {/*
+          ADM-56. The owner, having ruled that a photograph was approved:
+          *"That needs to be resolved, right? You need to then go grab that
+          picture, put it on Dr. Trujillo."*
+
+          It does need to be, and it is not what happens today. The chain that
+          exists is intent, pull, tracker close, decided row, receipt — a
+          RECORDING chain, complete and durable. The chain the owner is
+          describing continues into execution, and nothing reads the tracker
+          stores to start it.
+
+          Saying so is the whole of the fix in this pass. The alternative was a
+          page that implies the work is moving, which is the failure he has now
+          hit three times: a surface that looks like it did something.
+        */}
+        <p className="note">
+          Recording an answer closes the row in your name and makes the decision durable. It does not carry
+          the work out: nothing here dispatches a worker, and the work an answer implies is picked up by a
+          later session rather than by the runner. When that changes, this line changes with it.
         </p>
         {counts.furtherUnknown > 0 && <p className="note">{LATER_STAGES_UNKNOWN}</p>}
         {decided.map((entry) => {

@@ -96,6 +96,33 @@ export function RunnerSection(props: RunnerSectionProps) {
         {/* 3 — what it did */}
         <p className="runner-did">{face.did}</p>
 
+        {/*
+          ADM-66 — THE ANSWER TO "WHY IS NOTHING HAPPENING", WHERE HE IS LOOKING.
+
+          The owner, of the Hunters: *"these are good explanations, a really
+          solid breakdown — but why are they not doing anything, especially if
+          we have 2,300 of them?"*
+
+          The Hunters panel on Research detail already held the answer. He was
+          on the runner block, which said only that a limit was reached. So the
+          two facts that make sense of each other — nothing started, and a great
+          deal is waiting — are put in one sentence here, with the cap that
+          explains the gap between them.
+
+          It fires only when BOTH are true. An idle cycle with nothing owed is a
+          finished cycle, not a stalled one, and saying "idle" about it would be
+          the kind of false alarm that teaches an owner to ignore the line.
+        */}
+        {safety !== null && safety.cycle.dispatches === 0 && (face.deferred?.total ?? 0) > 0 && (
+          <p className="runner-idle">
+            <strong>Nothing ran, and {count(face.deferred?.total ?? 0)} item(s) are waiting.</strong> At most{" "}
+            {RESEARCH_BOUNDS.maxScoutDispatchesPerCycle} paid-model hunt(s) start in a cycle and{" "}
+            {RESEARCH_BOUNDS.maxConcurrentScouts} run at once, so a backlog this size cannot clear in one
+            cycle however many are owed. That is a cap on how fast work runs — never a statement that the work
+            is not owed.
+          </p>
+        )}
+
         {/* 4 — why work stopped, and when it resumes */}
         {face.stopped && (
           <p className="runner-stopped">

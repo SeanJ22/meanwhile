@@ -34,6 +34,7 @@ import { directoryFor } from "../lib/officials/directory.ts";
 import { keyVotesForMember } from "../lib/votes/key-votes-reader.ts";
 
 const base = process.env.SHOOT_BASE_URL ?? "http://localhost:3210";
+const outputPath = process.env.READER_PROOF_OUTPUT ?? "docs/evidence/reader-last-mile-routes.json";
 assert.match(new URL(base).hostname, /^(localhost|127\.0\.0\.1)$/,
   "Local production proof only; production readback is a separate bounded walk.");
 const head = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
@@ -191,5 +192,5 @@ await each([...positionQueries.values()], async ({ subject, topic, expectedRecor
 });
 evidence.push({ surface: "positions", dispositions: positionDispositions });
 const output = { exactHead: head, buildId, base, sourceHashes: readerProofSources(), execution: "HTTP requests to the integrated local Next production server, compared to canonical committed selectors. No model or acquired autonomous evidence supplies answers.", records: evidence };
-writeFileSync("docs/evidence/reader-last-mile-routes.json", JSON.stringify(output, null, 2) + "\n");
+writeFileSync(outputPath, JSON.stringify(output, null, 2) + "\n");
 console.log(JSON.stringify({ exactHead: head, buildId, controls: evidence.length, representationDivisions: provedDivisions.size, moneyTargets: moneyTargets.length, voteMembers: memberIds.length, outcomeSittings: getOutcomeSnapshot().sittings.length, prlProfiles: profiles.profiles.length, positionQueries: positionQueries.size, positionDispositions: positionDispositions.length }));

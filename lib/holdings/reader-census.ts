@@ -691,25 +691,25 @@ const readerLastMileInvalidatedFamilies = new Map<string, { acceptance: string; 
   ["registry", { acceptance: "LM-F10", reason: "The canonical officeholder registry and promoted Census/legislative read boundary changed; every registry-backed Reader route is re-proved." }],
   ["votes", { acceptance: "LM-F10", reason: "The official federal vote window, key-vote semantics and promoted state-vote read boundary changed; vote and grounded Ask routes are re-proved." }],
 ]);
-const routineCivicDataReaderSources = new Set([
-  "app/api/ask/grounded/route.ts",
-  "app/api/funding/[target]/route.ts",
-  "app/api/reactions/route.ts",
-  "app/api/votes/route.ts",
-  "app/ballot/page.tsx",
-  "data/votes/bill-summaries.json",
-  "lib/ask/votes.ts",
-  "lib/civic-data/read-model.ts",
-  "lib/civic-data/store.ts",
-  "lib/db/schema.ts",
-  "lib/db/write-guard.ts",
-  "lib/funding/snapshot.ts",
-  "lib/officials/directory-source.ts",
-  "lib/registry/representation.ts",
-  "lib/registry/server.ts",
-  "lib/sources/legiscan/snapshot.ts",
-  "lib/sources/legiscan/types.ts",
-  "lib/votes/key-votes.ts",
+const routineCivicDataReaderSources = new Map<string, ReadonlySet<string>>([
+  ["app/api/ask/grounded/route.ts", new Set(["federal-finance", "votes"])],
+  ["app/api/funding/[target]/route.ts", new Set(["federal-finance"])],
+  ["app/api/reactions/route.ts", new Set(["federal-finance"])],
+  ["app/api/votes/route.ts", new Set(["votes"])],
+  ["app/ballot/page.tsx", new Set(["federal-finance"])],
+  ["data/votes/bill-summaries.json", new Set(["votes"])],
+  ["lib/ask/votes.ts", new Set(["votes"])],
+  ["lib/civic-data/read-model.ts", new Set(["federal-finance", "registry", "votes"])],
+  ["lib/civic-data/store.ts", new Set(["federal-finance", "registry", "votes"])],
+  ["lib/db/schema.ts", new Set(["federal-finance", "registry", "votes"])],
+  ["lib/db/write-guard.ts", new Set(["federal-finance", "registry", "votes"])],
+  ["lib/funding/snapshot.ts", new Set(["federal-finance"])],
+  ["lib/officials/directory-source.ts", new Set(["congress"])],
+  ["lib/registry/representation.ts", new Set(["congress", "registry"])],
+  ["lib/registry/server.ts", new Set(["congress", "registry"])],
+  ["lib/sources/legiscan/snapshot.ts", new Set(["votes"])],
+  ["lib/sources/legiscan/types.ts", new Set(["votes"])],
+  ["lib/votes/key-votes.ts", new Set(["votes"])],
 ]);
 const readerDeliveryFields = new Set([
   "actualIdentityUsed", "provedHead", "observedExpectedRecordIds", "observedRenderedRecordIds", "bundleProvedRecordIds",
@@ -740,7 +740,7 @@ function readerSourceImpact(path: string): { acceptance: string; reason: string 
   return null;
 }
 function readerSourceInvalidatesFamily(path: string, family: string): boolean {
-  if (routineCivicDataReaderSources.has(path)) return readerLastMileInvalidatedFamilies.has(family);
+  if (routineCivicDataReaderSources.has(path)) return routineCivicDataReaderSources.get(path)!.has(family);
   if (path === "lib/funding/official-candidacies.json") return family === "state-money";
   if (path.startsWith("data/fec/")) return family === "federal-finance";
   if (/^data\/states\/nj\/ballot\//.test(path)) return family === "ballot";

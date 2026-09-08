@@ -262,6 +262,9 @@ await step("active portrait inventory", () => {
 const executors: { name: string; script: string; output: string; env?: Record<string, string> }[] = [
   { name: "build receipt", script: "scripts/reader-last-mile-build-receipt.mts", output: "docs/evidence/reader-last-mile-final-build-receipt.json", env: { READER_BUILD_LOG: buildLog } },
   { name: "portraits", script: "scripts/reader-last-mile-portraits.mts", output: "docs/evidence/reader-last-mile-final-portraits.json" },
+  { name: "exhaustive routes", script: "scripts/reader-last-mile-routes.mts", output: "docs/evidence/reader-last-mile-final-routes.json" },
+  { name: "exhaustive ask", script: "docs/evidence/reader-last-mile-ask-exhaustive.mts", output: "docs/evidence/reader-last-mile-final-ask-exhaustive.json" },
+  { name: "key-votes ask", script: "docs/evidence/reader-last-mile-key-votes-ask.mts", output: "docs/evidence/reader-last-mile-final-key-votes-ask.json" },
   { name: "delta routes", script: "scripts/reader-last-mile-final-delta-routes.mts", output: "docs/evidence/reader-last-mile-final-delta-routes.json" },
   { name: "ballot", script: "scripts/reader-last-mile-ballot.mts", output: "docs/evidence/reader-last-mile-final-ballot.json", env: { READER_BALLOT_PLAN_OUTPUT: join(workDir, "ballot-plan.json") } },
   { name: "ballot ask", script: "docs/evidence/reader-last-mile-ballot-ask.mts", output: "docs/evidence/reader-last-mile-final-ballot-ask.json" },

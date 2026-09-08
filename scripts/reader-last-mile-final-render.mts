@@ -213,6 +213,13 @@ try {
       const api = await (await context.request.get(`${base}/api/funding/${encodeURIComponent("congress:C001133")}`)).json();
       assert.equal(api.kind, "funding");
       const official = await openOfficial(page, "Juan Ciscomani");
+      assert.ok(await official.locator(".contact-pill").count(), "federal map card must render its canonical contact leaf");
+      const committees = await openSection(official, "Committees");
+      await committees.locator("[data-committee-seat]").first().waitFor({ state: "visible" });
+      const offices = await openSection(official, "Offices near you");
+      await offices.locator("[data-directory-office]").first().waitFor({ state: "visible" });
+      const votingRecord = await openSection(official, "Voting Record");
+      await votingRecord.locator("[data-recent-vote-count]").waitFor({ state: "visible" });
       const map = await openSection(official, "Campaign money");
       await map.getByText(api.data.sentences[0], { exact: true }).waitFor({ state: "visible" });
       const mapText = normalize(await map.innerText());
@@ -223,7 +230,7 @@ try {
       await ballot.getByText(api.data.sentences[0], { exact: true }).waitFor({ state: "visible" });
       const ballotText = normalize(await ballot.innerText());
       assert.ok(mapText.includes(api.data.sentences[0]) && ballotText.includes(api.data.sentences[0]));
-      results.push({ id: "federal-finance-parity", result: "PASS", officialId: "congress:C001133", candidateId: await candidate.locator("[data-candidate-subject]").getAttribute("data-candidate-subject"), api, mapText, ballotText });
+      results.push({ id: "federal-finance-parity", result: "PASS", officialId: "congress:C001133", candidateId: await candidate.locator("[data-candidate-subject]").getAttribute("data-candidate-subject"), api, mapText, ballotText, componentReadback: { contacts: await official.locator(".contact-pill").count(), committees: await committees.locator("[data-committee-seat]").count(), offices: await offices.locator("[data-directory-office]").count(), recentVoteCount: await votingRecord.locator("[data-recent-vote-count]").getAttribute("data-recent-vote-count") } });
     } finally { await context.close(); }
   }
   {
@@ -337,6 +344,18 @@ const witnesses = refreshBaseline ? [
   witness("state-money", "components/funding/state-money-section.tsx", outputPath, reportSha256, screenshots.slice(0, 2)),
   witness("map", "components/funding/funding-section.tsx", outputPath, reportSha256, []),
   witness("ballot", "components/funding/funding-section.tsx", outputPath, reportSha256, []),
+  witness("map", "components/officials/person-identity.tsx", outputPath, reportSha256, []),
+  witness("map", "components/officials/contact-pills.tsx", outputPath, reportSha256, []),
+  witness("map", "components/officials/member-directory.tsx", outputPath, reportSha256, []),
+  witness("map", "components/map/popup/entity-modal.tsx", outputPath, reportSha256, []),
+  witness("map", "components/map/popup/district-popup.tsx", outputPath, reportSha256, []),
+  witness("map", "components/map/popup/official-popup.tsx", outputPath, reportSha256, []),
+  witness("map", "components/officials/key-votes-section.tsx", outputPath, reportSha256, []),
+  witness("ballot", "components/officials/person-identity.tsx", outputPath, reportSha256, []),
+  witness("ballot", "components/officials/contact-pills.tsx", outputPath, reportSha256, []),
+  witness("ballot", "components/officials/member-directory.tsx", outputPath, reportSha256, []),
+  witness("ballot", "components/map/popup/official-popup.tsx", outputPath, reportSha256, []),
+  witness("ballot", "components/officials/key-votes-section.tsx", outputPath, reportSha256, []),
   witness("ballot", "components/ballot/candidate-card.tsx", ballotEvidencePath, ballotSha256, []),
   witness("ballot", "components/ballot/candidate-contact.tsx", outputPath, reportSha256, screenshots.slice(2, 3)),
   witness("map", "components/map/popup/meeting-popup.tsx", outputPath, reportSha256, screenshots.slice(3, 4)),

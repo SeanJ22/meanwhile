@@ -67,8 +67,59 @@ function candidate(id: string, over: Partial<RoutineCandidate> = {}): RoutineCan
   };
 }
 
-async function seed(store: MemoryRoutineDataStore): Promise<RoutineCandidate> {
-  const good = candidate("fec-good-1");
+function stateMemberCandidate(id: string): RoutineCandidate {
+  return candidate(id, {
+    sourceId: "nh-general-court",
+    recordClass: "STATE_LEGISLATOR",
+    scope: "US-NH",
+    retrieval: {
+      succeeded: true,
+      requestedUrl: "https://gc.nh.gov/downloads/Members.txt",
+      finalUrl: "https://gc.nh.gov/downloads/Members.txt",
+      httpStatus: 200,
+      retrievedAt: NOW,
+      rawHash: HASH,
+    },
+    normalization: { succeeded: true, parserVersion: "nh-general-court/2", schemaVersion: "Members.txt:2025-2026", normalizedHash: HASH, inputRecords: 1, outputRecords: 1, droppedRecords: 0, missingRequiredFields: [] },
+    identities: [{ subjectId: "nh-house-seat-001", jurisdiction: "US-NH", identifiers: { seatNo: "001", chamber: "H", district: "Merrimack 1" }, matchBasis: "OFFICIAL_ID", ambiguous: false, chamber: "H", office: "Representative", term: "2025-2026", district: "Merrimack 1" }],
+    temporal: { version: "2025-2026", expectedVersion: "2025-2026", sourceThrough: NOW, staleAtRetrieval: false },
+    semantics: { factKind: "current legislative membership", violations: [] },
+    horizon: { kind: "BOUNDED", query: "complete Members.txt", returnedRecords: 1, declaredTotal: 1, paginationComplete: true, claimsComplete: true },
+    readModel: { formatVersion: 1, jurisdiction: "US-NH", term: "2025-2026", members: [{ seatNo: "001", chamber: "H" }] },
+  });
+}
+
+function stateRollCandidate(id: string): RoutineCandidate {
+  return candidate(id, {
+    sourceId: "nh-general-court",
+    recordClass: "STATE_ROLL_CALL",
+    scope: "US-NH:2025-2026:house",
+    retrieval: { succeeded: true, requestedUrl: "https://gc.nh.gov/nhgcrollcalls/", finalUrl: "https://gc.nh.gov/nhgcrollcalls/", httpStatus: 200, retrievedAt: NOW, rawHash: HASH },
+    normalization: { succeeded: true, parserVersion: "nh-general-court/2", schemaVersion: "official-rolls:2025-2026", normalizedHash: HASH, inputRecords: 1, outputRecords: 1, droppedRecords: 0, missingRequiredFields: [] },
+    identities: [{ subjectId: "2026-H-295", jurisdiction: "US-NH", identifiers: { rollCallId: "295", eventId: "HB1-enactment" }, matchBasis: "OFFICIAL_ID", ambiguous: false, chamber: "House", term: "2025-2026", session: "2026" }],
+    temporal: { version: "2025-2026", expectedVersion: "2025-2026", sourceThrough: NOW, staleAtRetrieval: false },
+    semantics: { factKind: "official roll-call decision", actionStage: "enactment vote", expectedActionStage: "enactment vote", violations: [] },
+    horizon: { kind: "BOUNDED", query: "official House roll 295", returnedRecords: 1, declaredTotal: 1, paginationComplete: true, claimsComplete: true },
+    readModel: { formatVersion: 1, jurisdiction: "US-NH", term: "2025-2026", session: "2026", rolls: [{ id: "2026-H-295" }], positions: [] },
+  });
+}
+
+function censusReferenceCandidate(id: string): RoutineCandidate {
+  return candidate(id, {
+    sourceId: "census-data-api",
+    recordClass: "CENSUS_REFERENCE",
+    scope: "acs-population",
+    retrieval: { succeeded: true, requestedUrl: "https://api.census.gov/data/2024/acs/acs5", finalUrl: "https://api.census.gov/data/2024/acs/acs5?get=NAME,B01003_001E", httpStatus: 200, retrievedAt: NOW, rawHash: HASH },
+    normalization: { succeeded: true, parserVersion: "census-data-api/2", schemaVersion: "ACSDT5Y2024:B01003", normalizedHash: HASH, inputRecords: 1, outputRecords: 1, droppedRecords: 0, missingRequiredFields: [] },
+    identities: [{ subjectId: "04000US04", jurisdiction: "US", identifiers: { product: "acs5", vintage: "2024", geography: "state:04" }, matchBasis: "OFFICIAL_ID", ambiguous: false }],
+    temporal: { version: "2024", expectedVersion: "2024", sourceThrough: "2024", staleAtRetrieval: false },
+    semantics: { factKind: "ACS 5-year population estimate", violations: [] },
+    horizon: { kind: "BOUNDED", query: "state:04", returnedRecords: 1, declaredTotal: 1, paginationComplete: true, claimsComplete: true },
+    readModel: { formatVersion: 1, vintage: 2024, zcta: [], state: [{ code: "04", population: 1, marginOfError: null }] },
+  });
+}
+
+async function seed(store: MemoryRoutineDataStore, good: RoutineCandidate = candidate("fec-good-1")): Promise<RoutineCandidate> {
   const outcome = await processRoutineCandidate(store, good, NOW);
   assert.equal(outcome.candidate.state, "PROMOTED");
   assert.equal(outcome.candidate.acquisitionSucceeded, true);
@@ -83,10 +134,11 @@ async function expectHeld(
   mutate: (base: RoutineCandidate) => RoutineCandidate,
   state: string,
   code: string,
+  good: RoutineCandidate = candidate("fec-good-1"),
 ): Promise<void> {
   const store = new MemoryRoutineDataStore();
-  const good = await seed(store);
-  const bad = mutate(candidate(`bad-${code.toLowerCase()}`));
+  await seed(store, good);
+  const bad = mutate({ ...structuredClone(good), id: `bad-${code.toLowerCase()}` });
   const outcome = await processRoutineCandidate(store, bad, NOW);
   assert.equal(outcome.candidate.state, state);
   assert.equal(outcome.candidate.acquisitionSucceeded, bad.retrieval.succeeded);
@@ -241,82 +293,62 @@ test("freshly fetched stale FEC facts are refused", async () => {
   }), "TEMPORAL_INVALID", "FRESH_FETCH_STALE_FACTS");
 });
 
-test("wrong state chamber/term identity is refused", async () => {
+test("a FEC period that regresses behind the class LKG is refused", async () => {
   await expectHeld((base) => ({
     ...base,
-    sourceId: "nh-general-court",
-    recordClass: "STATE_LEGISLATOR",
-    scope: "US-NH:2025-2026",
-    retrieval: { ...base.retrieval, finalUrl: "https://gc.nh.gov/downloads/Members.txt" },
-    normalization: { ...base.normalization, parserVersion: "nh-general-court/2" },
+    temporal: { ...base.temporal, sourceThrough: "2026-09-05T00:00:00.000Z" },
+  }), "TEMPORAL_INVALID", "SOURCE_THROUGH_REGRESSION");
+});
+
+test("an incomplete state chamber/term identity is refused and holds the state LKG", async () => {
+  await expectHeld((base) => ({
+    ...base,
     identities: [{
-      subjectId: "nh-house-seat-001",
-      jurisdiction: "US-NH",
-      identifiers: { seatNo: "001" },
-      matchBasis: "EXACT_SCOPED_ID",
-      ambiguous: false,
-      chamber: "House",
-      office: "State Representative",
+      ...base.identities[0],
       // A term is deliberately absent: a fresh roster cannot inherit it.
+      term: undefined,
     }],
-  }), "IDENTITY_UNRESOLVED", "STATE_MEMBER_SEAT_IDENTITY_INCOMPLETE");
+  }), "IDENTITY_UNRESOLVED", "STATE_MEMBER_SEAT_IDENTITY_INCOMPLETE", stateMemberCandidate("state-member-good-1"));
+});
+
+test("a state member whose chamber and term contradict the normalized seat is refused", async () => {
+  await expectHeld((base) => ({
+    ...base,
+    identities: [{
+      ...base.identities[0],
+      chamber: "S",
+      term: "2023-2024",
+    }],
+  }), "IDENTITY_UNRESOLVED", "STATE_MEMBER_CHAMBER_TERM_MISMATCH", stateMemberCandidate("state-member-good-2"));
 });
 
 test("wrong roll-call event/stage is refused without weakening exact roll identity", async () => {
   await expectHeld((base) => ({
     ...base,
-    sourceId: "nh-general-court",
-    recordClass: "STATE_ROLL_CALL",
-    scope: "US-NH:2025-2026:house",
-    retrieval: { ...base.retrieval, finalUrl: "https://gc.nh.gov/nhgcrollcalls/" },
-    normalization: { ...base.normalization, parserVersion: "nh-general-court/2" },
-    identities: [{
-      subjectId: "2026-H-295",
-      jurisdiction: "US-NH",
-      identifiers: { rollCallId: "295", eventId: "HB1-enactment" },
-      matchBasis: "OFFICIAL_ID",
-      ambiguous: false,
-      chamber: "House",
-      term: "2025-2026",
-      session: "2026",
-    }],
     semantics: {
-      factKind: "official roll-call decision",
+      ...base.semantics,
       actionStage: "agenda publication",
       expectedActionStage: "enactment vote",
-      violations: [],
     },
-  }), "SEMANTIC_INVALID", "WRONG_ACTION_STAGE");
+  }), "SEMANTIC_INVALID", "WRONG_ACTION_STAGE", stateRollCandidate("state-roll-good-1"));
 });
 
 test("wrong Census vintage is refused", async () => {
   await expectHeld((base) => ({
     ...base,
-    sourceId: "census-data-api",
-    recordClass: "CENSUS_REFERENCE",
-    scope: "acs-population:2024",
-    retrieval: { ...base.retrieval, finalUrl: "https://api.census.gov/data/2024/acs/acs5?get=NAME,B01003_001E" },
-    normalization: { ...base.normalization, parserVersion: "census-data-api/2" },
     identities: [{
-      subjectId: "04000US04",
-      jurisdiction: "US",
-      identifiers: { product: "acs5", vintage: "2023", geography: "state:04" },
-      matchBasis: "OFFICIAL_ID",
-      ambiguous: false,
+      ...base.identities[0],
+      identifiers: { ...base.identities[0].identifiers, vintage: "2023" },
     }],
     temporal: { ...base.temporal, version: "2023", expectedVersion: "2024" },
-  }), "TEMPORAL_INVALID", "WRONG_PERIOD_OR_VINTAGE");
+  }), "TEMPORAL_INVALID", "WRONG_PERIOD_OR_VINTAGE", censusReferenceCandidate("census-good-1"));
 });
 
 test("wrong Census schema is refused", async () => {
   await expectHeld((base) => ({
     ...base,
-    sourceId: "census-data-api",
-    recordClass: "CENSUS_REFERENCE",
-    scope: "acs-population:2024",
-    retrieval: { ...base.retrieval, finalUrl: "https://api.census.gov/data/2024/acs/acs5?get=NAME,B01003_001E" },
     normalization: { ...base.normalization, parserVersion: "census-data-api/1" },
-  }), "PARSE_INVALID", "PARSER_VERSION_UNREGISTERED");
+  }), "PARSE_INVALID", "PARSER_VERSION_UNREGISTERED", censusReferenceCandidate("census-good-2"));
 });
 
 test("blocked route is evidence of acquisition failure, never absence", async () => {

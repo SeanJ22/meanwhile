@@ -94,6 +94,11 @@ export function validateRoutineCandidate(
     checks.push(result("IDENTITY_JURISDICTION_VALIDITY", "FAIL", "REGISTERED_IDENTIFIER_MISSING", `${identifierContractFailure.subjectId} carries none of the registered keys: ${registered!.expectedIdentifierKeys.join(", ")}.`));
   } else if (candidate.recordClass === "STATE_LEGISLATOR" && candidate.identities.some((identity) => !identity.chamber || !identity.term || !identity.office)) {
     checks.push(result("IDENTITY_JURISDICTION_VALIDITY", "FAIL", "STATE_MEMBER_SEAT_IDENTITY_INCOMPLETE", "Every state member requires exact office, chamber, and term."));
+  } else if (candidate.recordClass === "STATE_LEGISLATOR" && candidate.identities.some((identity) =>
+    identity.term !== candidate.temporal.version ||
+    (candidate.sourceId === "nh-general-court" && identity.identifiers.chamber !== identity.chamber)
+  )) {
+    checks.push(result("IDENTITY_JURISDICTION_VALIDITY", "FAIL", "STATE_MEMBER_CHAMBER_TERM_MISMATCH", "Every state member's chamber identifier and term must agree with the normalized seat and candidate period."));
   } else if (candidate.recordClass === "STATE_ROLL_CALL" && candidate.identities.some((identity) => !identity.chamber || !identity.term || !identity.session || !identity.identifiers.rollCallId || !identity.identifiers.eventId)) {
     checks.push(result("IDENTITY_JURISDICTION_VALIDITY", "FAIL", "STATE_ROLL_IDENTITY_INCOMPLETE", "Every state roll call requires exact roll, event, chamber, term, and session identifiers."));
   } else {

@@ -452,6 +452,31 @@ export function DecisionQueue({
                                     <summary>Why no machine can decide it</summary>
                                     <p>{card.whyNoMachineCanDecide}</p>
                                   </details>
+                                  {/*
+                                    ADM-55. The owner, on NH274: *"if I click
+                                    'Supply it / rule on it', does it go install
+                                    Tesseract, or do I need to install
+                                    something? I don't really know what it's
+                                    asking for."*
+
+                                    That question has one answer and it is the
+                                    same for every option on every card, so it
+                                    is stated once here rather than guessed at
+                                    per row: recording an answer RECORDS A
+                                    RULING and runs nothing. It is not authored
+                                    copy — it is what the code does. The write
+                                    path appends an intent and stops, and the
+                                    work it implies is opened by a later runner
+                                    cycle. Saying it plainly is the difference
+                                    between an owner who knows he still has to
+                                    install Tesseract and one who thinks the
+                                    button did it.
+                                  */}
+                                  <p className="dq-what-click">
+                                    Choosing an option records your ruling. It does not carry the work out by itself: what
+                                    it does is close this row in your name and let the next runner cycle open the work your
+                                    answer implies. If something has to be done on a machine first, it still has to be done.
+                                  </p>
                                   <div className="dq-options">
                                     {card.options.map((o) => (
                                       <button

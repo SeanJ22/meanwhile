@@ -209,8 +209,23 @@ body:has(main.admin) { background: #1b1c22; }
 .admin button[disabled] { opacity: .45; cursor: not-allowed; transform: none; }
 .admin button.primary { color: var(--ce-fg); font-weight: 600; }
 /* The recipe at other sizes: a decision option, and the queue button a gap carries. */
-.admin .queue-card .options button.option { display: flex; flex-direction: column; align-items: flex-start; width: 100%; text-align: left; margin: .3rem 0; padding: .5rem .7rem; background: var(--ce-panel); color: var(--ce-fg); }
-.admin .queue-card .options button.option:hover { background: var(--ce-panel-raised); }
+/*
+ * ADM-55 — THE OPTION PILL, TARGETED AT THE DOM THAT ACTUALLY EXISTS.
+ *
+ * These two rules were scoped .queue-card .options and matched NOTHING. The
+ * decision queue became a client island (ADM-32) that renders
+ * div.dq-options > button.option with no .queue-card ancestor, and the only
+ * surviving .queue-card in the app is the Decided card, which has no options
+ * at all. So the option buttons fell back to the generic .admin button
+ * recipe — inline-flex, centred — and .consequence stayed an inline span.
+ * That is the whole of "the layout is atrocious": a label crammed left with the
+ * consequence running off to the right.
+ *
+ * Full width, column, left aligned, real padding.
+ */
+.admin .dq-options button.option { display: flex; flex-direction: column; align-items: flex-start; gap: .25rem; width: 100%; text-align: left; margin: 0; padding: .7rem .9rem; background: var(--ce-panel); color: var(--ce-fg); justify-content: flex-start; }
+.admin .dq-options button.option:hover { background: var(--ce-panel-raised); }
+.admin .dq-options button.option .consequence { display: block; font-size: .82rem; line-height: 1.45; color: var(--ce-muted); font-weight: 400; white-space: normal; }
 .admin button.queue-add { margin: 0 0 0 .5rem; vertical-align: baseline; }
 .admin button.queue-add.compact { padding: .1rem .5rem; font-size: .72rem; min-width: 0; color: var(--ce-muted); background: var(--ce-panel); }
 .admin button.queue-add.compact:hover { color: var(--ce-fg); transform: translateY(-1px); }
@@ -397,12 +412,16 @@ body:has(main.admin) { background: #1b1c22; }
 .admin .chip.receipt-waiting { color: var(--ce-lumen); }
 .admin .chip.receipt-refused { color: var(--ce-text-bad); }
 .admin .queue-card p { margin: .3rem 0; }
-.admin .queue-card .options form { margin: .35rem 0 0; }
-/* button.option itself is the button recipe at another size — declared in the recipe layer. */
-.admin .queue-card .options button .consequence { display: block; font-size: .8rem; color: var(--ce-muted); font-weight: 400; }
-.admin .queue-card .own-words label { font-size: .85rem; color: var(--ce-muted); margin: .5rem 0 0; }
-.admin .queue-card .own-words textarea { display: block; margin-top: .3rem; width: 100%; max-width: 40rem; min-height: 3.5rem; }
-.admin .queue-card .own-words button { width: auto; display: inline-flex; margin: .35rem 0 0; }
+/*
+ * ADM-55 — the own-words box, likewise retargeted from a .queue-card
+ * ancestor that no longer exists. It was rendering as a UA-default textarea
+ * ("a small square") with Record my answer floating beside it, because none of
+ * these rules matched. Full width, and the button BENEATH it.
+ */
+.admin .dq-body .own-words { display: block; margin-top: .2rem; }
+.admin .dq-body .own-words label { display: block; font-size: .85rem; color: var(--ce-muted); margin: .5rem 0 .3rem; }
+.admin .dq-body .own-words textarea { display: block; width: 100%; max-width: none; min-height: 5rem; resize: vertical; }
+.admin .dq-body .own-words button { display: inline-flex; width: auto; margin: .5rem 0 0; }
 .admin .queue-card.acknowledge { opacity: .92; }
 .admin .queue-card.blocked { background-image: none; box-shadow: inset 0 0 0 1px var(--ce-alpha-hairline-strong); }
 .admin .queue-card details summary { font-size: .82rem; }
@@ -642,7 +661,22 @@ body:has(main.admin) { background: #1b1c22; }
 
 /* ============================================================ Admin C — the decision queue (ADM-31, ADM-32) */
 .admin .dq { margin: 1.5rem 0; }
-.admin .dq-header { display: flex; flex-wrap: wrap; align-items: baseline; gap: .6rem; width: 100%; text-align: left; font: inherit; color: inherit; background: none; border: 0; padding: .4rem 0; cursor: pointer; }
+/*
+ * ADM-53 — THE HEADER IS A PILL, NOT A BAR.
+ *
+ * The owner: *"This click thing is just ugly. I guess it's super wide … I feel
+ * like we have some good examples of pills throughout the system."*
+ *
+ * It was a text button that stripped its background but not the recipe's rim,
+ * radius, lit base line or scale-on-hover — so it kept a pill's outline at full
+ * page width with no surface inside it, which is exactly what a "super-wide
+ * ugly bar" is. It is a control, so it keeps the recipe's surface and becomes
+ * the pill it was already shaped like: left aligned, real padding, and a
+ * hover/expanded state that reads as pressable.
+ */
+.admin .dq-header { display: flex; flex-wrap: wrap; align-items: baseline; gap: .6rem; width: 100%; text-align: left; font: inherit; color: var(--ce-fg); padding: .7rem 1rem; cursor: pointer; justify-content: flex-start; border-radius: var(--ce-radius-lg); }
+.admin .dq-header:hover { box-shadow: var(--ce-rim-strong); }
+.admin .dq-header[aria-expanded="true"] { background: var(--ce-panel-raised); }
 .admin .dq-header h2 { margin: 0; }
 .admin .dq-caret { color: var(--ce-muted); }
 .admin .dq-count { font-variant-numeric: tabular-nums; color: var(--ce-lumen); font-weight: 700; }
@@ -666,14 +700,38 @@ body:has(main.admin) { background: #1b1c22; }
 .admin .dq-type { margin: .5rem 0 .5rem 1rem; }
 .admin .dq-type > h4 { margin: .35rem 0; font-size: .9rem; display: flex; flex-wrap: wrap; gap: .5rem; align-items: baseline; }
 .admin .dq-type-means { font-weight: 400; color: var(--ce-fg-66); font-size: .8rem; }
-.admin .dq-cards { list-style: none; margin: 0; padding: 0; display: grid; gap: .25rem; }
-.admin .dq-card { border-bottom: 1px solid var(--ce-hairline); }
-.admin .dq-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: .6rem; width: 100%; text-align: left; font: inherit; color: inherit; background: none; border: 0; padding: .45rem 0; cursor: pointer; }
+/*
+ * ADM-54 — ROWS BECOME CARDS WITH REAL PADDING.
+ *
+ * The owner: *"the ID flush left, the priority and age flush right, text
+ * touching both edges … It needs a little more space to be visually pleasing."*
+ *
+ * They were bare rows separated by a hairline, and the title button had
+ * padding of .45rem 0 — no horizontal padding at all, which is what put the
+ * text on both edges. Each row is now a card in the console's own idiom.
+ */
+.admin .dq-cards { list-style: none; margin: 0; padding: 0; display: grid; gap: .4rem; }
+.admin .dq-card { background: var(--ce-panel); border-radius: var(--ce-radius-md); box-shadow: var(--ce-rim); overflow: hidden; transition: box-shadow var(--ce-motion-slow); }
+.admin .dq-card:hover { box-shadow: var(--ce-rim-strong); }
+/*
+ * A text button INSIDE a card, so it opts out of the recipe properly rather
+ * than half-way — surface, rim, radius, the lit base line and the hover
+ * transform all come off together, and it carries its own focus ring. This is
+ * the pattern readiness/[state]/styles.ts already established for the same
+ * situation; doing it by halves is what left the old controls with a rim and
+ * no surface.
+ */
+.admin .dq-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: .6rem; width: 100%; text-align: left; font: inherit; color: inherit; background: none; box-shadow: none; border: 0; border-radius: 0; padding: .65rem .9rem; cursor: pointer; justify-content: flex-start; }
+.admin .dq-title::before { display: none; }
+.admin .dq-title:hover { transform: none; background: var(--ce-panel-raised); }
+.admin .dq-title:focus-visible { outline: 2px solid var(--ce-lumen); outline-offset: -2px; }
 .admin .dq-rowid { font-size: .75rem; letter-spacing: .06em; color: var(--ce-muted); min-width: 3.5rem; }
 .admin .dq-card-title { flex: 1 1 16rem; }
 .admin .dq-meta { font-size: .78rem; color: var(--ce-muted); }
-.admin .dq-body { padding: .35rem 0 .75rem 4.1rem; display: grid; gap: .5rem; }
-.admin .dq-options { display: grid; gap: .4rem; }
+.admin .dq-body { padding: .2rem .9rem 1rem; display: grid; gap: .6rem; }
+.admin .dq-options { display: grid; gap: .45rem; }
+/* ADM-55: the standing truth about what a click does, above the options. */
+.admin .dq-what-click { font-size: .82rem; color: var(--ce-muted); margin: 0; }
 .admin .dq-card-open { background: var(--ce-panel-raised); }
 
 /* the decided list and its lifecycle chips (§9A.18) */

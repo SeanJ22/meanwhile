@@ -17,5 +17,5 @@ const key = process.env[KEY_VAR];
 const [zcta, state] = await Promise.all([acsFetch("zcta", key), acsFetch("state", key)]);
 const candidate = censusAcsCandidate(zcta, state);
 const outcome = await processRoutineCandidate(new PostgresRoutineDataStore(), candidate, candidate.retrieval.retrievedAt);
-console.log("RCD_RECEIPT=" + JSON.stringify({ source: "Census ACS", candidateId: candidate.id, acquisitionSucceeded: outcome.candidate.acquisitionSucceeded, state: outcome.candidate.state, decision: outcome.candidate.receipt?.decision ?? null, promotedVersion: outcome.promoted?.versionId ?? null, lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion, releaseEvents: ZERO_RELEASE_EVENTS }));
+console.log("RCD_RECEIPT=" + JSON.stringify({ source: "Census ACS", candidateId: candidate.id, acquisitionSucceeded: outcome.candidate.acquisitionSucceeded, state: outcome.candidate.state, decision: outcome.candidate.receipt?.decision ?? null, promotedVersion: outcome.promoted?.versionId ?? null, lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
 if (!outcome.promoted) process.exitCode = 2;

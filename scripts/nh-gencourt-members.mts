@@ -240,7 +240,7 @@ if (invokedDirectly) {
     assertWriteAllowed("a routine civic data candidate/version promotion");
     const candidate = nhMembersCandidate({ rawText: text, finalUrl, httpStatus, retrievedAt, extraction });
     const outcome = await processRoutineCandidate(new PostgresRoutineDataStore(), candidate, retrievedAt);
-    console.log("RCD_RECEIPT=" + JSON.stringify({ source: "NH General Court members", candidateId: candidate.id, acquisitionSucceeded: outcome.candidate.acquisitionSucceeded, state: outcome.candidate.state, decision: outcome.candidate.receipt?.decision ?? null, promotedVersion: outcome.promoted?.versionId ?? null, lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion, releaseEvents: ZERO_RELEASE_EVENTS }));
+    console.log("RCD_RECEIPT=" + JSON.stringify({ source: "NH General Court members", candidateId: candidate.id, acquisitionSucceeded: outcome.candidate.acquisitionSucceeded, state: outcome.candidate.state, decision: outcome.candidate.receipt?.decision ?? null, promotedVersion: outcome.promoted?.versionId ?? null, lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
     if (!outcome.promoted) process.exitCode = 2;
   }
 

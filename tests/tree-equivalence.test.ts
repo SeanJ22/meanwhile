@@ -66,6 +66,7 @@ function git(...args: string[]): string | null {
 const objectsPresent =
   git("cat-file", "-e", `${INCIDENT.merge}^{commit}`) !== null &&
   git("cat-file", "-e", `${INCIDENT.candidate}^{commit}`) !== null;
+const shallowRepository = git("rev-parse", "--is-shallow-repository") !== "false";
 
 const green = (contexts: readonly string[] = REQUIRED_CONTEXTS) =>
   contexts.map((context) => ({ context, conclusion: "success" }));
@@ -132,6 +133,10 @@ test("main's tip was an ancestor of the candidate, which is what collapses the t
     isAncestor = true;
   } catch {
     isAncestor = false;
+  }
+  if (!isAncestor && shallowRepository) {
+    t.skip("the clone is shallow and git did not find the ancestry path, so it cannot prove a negative");
+    return;
   }
   assert.equal(
     isAncestor,

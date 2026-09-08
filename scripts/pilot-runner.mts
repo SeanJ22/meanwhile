@@ -10,9 +10,12 @@
  * records the lifecycle, runs RULING 224's promotion tail to a STAGED state,
  * and writes ONE DIGEST PER CYCLE to a place the owner reads WITHOUT the repo.
  *
- * **Promotion stays OFF.** Nothing this process does changes what a reader is
- * told; `runCycle` has no parameter that could, and the tail writes only under
- * `data/control-plane/staging/`.
+ * **Shadow research promotion stays OFF.** `runCycle` has no parameter that
+ * could change what a reader is told, and its tail writes only under
+ * `data/control-plane/staging/`. Separately, after that shadow cycle, the
+ * routine civic-data child may validate and promote its supported T1 sources
+ * directly through the production data plane; that path does not promote the
+ * shadow research output.
  *
  * ## The digest, and where it lands
  *

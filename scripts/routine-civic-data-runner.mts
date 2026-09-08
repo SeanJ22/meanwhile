@@ -87,7 +87,7 @@ async function persistPreCandidateFailure(task: (typeof ROUTINE_SOURCE_TASKS)[nu
     decision: outcome.candidate.receipt?.decision ?? null,
     promotedVersion: null,
     lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion,
-    releaseEvents: ZERO_RELEASE_EVENTS,
+    structuralReleaseContract: ZERO_RELEASE_EVENTS,
   }));
   return outcome.candidate.state;
 }
@@ -149,6 +149,6 @@ console.log("RCD_RUN=" + JSON.stringify({
   denominator: attemptedCount.denominator,
   failed,
   skipped: attemptedCount.denominator - attemptedCount.matched,
-  releaseEvents: ZERO_RELEASE_EVENTS,
+  structuralReleaseContract: ZERO_RELEASE_EVENTS,
 }));
 if (failed > 0) process.exitCode = 2;

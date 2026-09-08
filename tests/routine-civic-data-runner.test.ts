@@ -50,7 +50,7 @@ test("one canonical registry owns every supported authority and refuses arbitrar
   if (!intermediary.ok) assert.equal(intermediary.code, "SOURCE_NOT_AUTO_PROMOTABLE");
 });
 
-test("routine release-event receipt is the exact seven-zero contract", () => {
+test("routine release output labels the seven-zero constant as structural, never observed", () => {
   assert.deepEqual(ZERO_RELEASE_EVENTS, {
     testSitePromotions: 0,
     gitDataCommits: 0,
@@ -60,6 +60,23 @@ test("routine release-event receipt is the exact seven-zero contract", () => {
     nextBuilds: 0,
     fullSiteBrowserWalks: 0,
   });
+  for (const path of [
+    "scripts/fetch-fec.mts",
+    "scripts/nh-gencourt-members.mts",
+    "scripts/acs-population-promote.mts",
+    "scripts/routine-civic-data-runner.mts",
+    "scripts/routine-civic-data-live-acceptance.mts",
+  ]) {
+    const source = readFileSync(path, "utf8");
+    assert.match(source, /structuralReleaseContract:\s*ZERO_RELEASE_EVENTS/, `${path} must label the constant as structural`);
+    assert.doesNotMatch(source, /\breleaseEvents:\s*ZERO_RELEASE_EVENTS/, `${path} must not report a constant as observed release events`);
+  }
+  const canary = readFileSync("scripts/routine-civic-data-live-acceptance.mts", "utf8");
+  for (const flag of ["fec-prior", "fec-good", "state-prior", "state-good", "census-prior", "census-good"]) {
+    assert.match(canary, new RegExp(`requiredVersionFlag\\(\\"${flag}\\"\\)`), `RCD-10 canary must require --${flag}`);
+  }
+  assert.match(canary, /observedReleaseEvents:\s*"REQUIRED_SEPARATELY"/);
+  assert.match(canary, /rcd10Complete:\s*false/);
 });
 
 test("cadence and retry are source-local", () => {

@@ -687,6 +687,29 @@ const readerLastMileInvalidatedFamilies = new Map<string, { acceptance: string; 
   ["notice-summaries", { acceptance: "LM-F8", reason: "Agenda publication and shared meeting popup/Ask knowledge behavior changed." }],
   ["comment-access", { acceptance: "LM-F8", reason: "The meeting panel and shared Ask meeting-knowledge path changed." }],
   ["outcomes", { acceptance: "LM-F8", reason: "Agenda/meeting identity context changed around the existing outcome reader payload." }],
+  ["congress", { acceptance: "LM-F10", reason: "The current official Congress roster and its canonical identity projection changed; every Congress Reader route is re-proved at the exact implementation head." }],
+  ["registry", { acceptance: "LM-F10", reason: "The canonical officeholder registry and promoted Census/legislative read boundary changed; every registry-backed Reader route is re-proved." }],
+  ["votes", { acceptance: "LM-F10", reason: "The official federal vote window, key-vote semantics and promoted state-vote read boundary changed; vote and grounded Ask routes are re-proved." }],
+]);
+const routineCivicDataReaderSources = new Set([
+  "app/api/ask/grounded/route.ts",
+  "app/api/funding/[target]/route.ts",
+  "app/api/reactions/route.ts",
+  "app/api/votes/route.ts",
+  "app/ballot/page.tsx",
+  "data/votes/bill-summaries.json",
+  "lib/ask/votes.ts",
+  "lib/civic-data/read-model.ts",
+  "lib/civic-data/store.ts",
+  "lib/db/schema.ts",
+  "lib/db/write-guard.ts",
+  "lib/funding/snapshot.ts",
+  "lib/officials/directory-source.ts",
+  "lib/registry/representation.ts",
+  "lib/registry/server.ts",
+  "lib/sources/legiscan/snapshot.ts",
+  "lib/sources/legiscan/types.ts",
+  "lib/votes/key-votes.ts",
 ]);
 const readerDeliveryFields = new Set([
   "actualIdentityUsed", "provedHead", "observedExpectedRecordIds", "observedRenderedRecordIds", "bundleProvedRecordIds",
@@ -706,6 +729,7 @@ export function readerRowStructuralSha256(row: CensusRow): string {
   return sha256(JSON.stringify(structural));
 }
 function readerSourceImpact(path: string): { acceptance: string; reason: string } | null {
+  if (routineCivicDataReaderSources.has(path)) return { acceptance: "LM-F10", reason: "Routine civic-data runtime projection, refreshed official holding, or one of its Reader/Ask consumers." };
   if (path === "lib/funding/official-candidacies.json") return { acceptance: "LM-F4", reason: "Controlled official/candidacy state-money bridge." };
   if (path.startsWith("data/fec/")) return { acceptance: "LM-F2/LM-F5", reason: "Canonical federal-finance holding." };
   if (/^data\/states\/nj\/ballot\//.test(path)) return { acceptance: "LM-F2/LM-F5", reason: "Canonical NJ ballot/contact holding." };
@@ -716,6 +740,7 @@ function readerSourceImpact(path: string): { acceptance: string; reason: string 
   return null;
 }
 function readerSourceInvalidatesFamily(path: string, family: string): boolean {
+  if (routineCivicDataReaderSources.has(path)) return readerLastMileInvalidatedFamilies.has(family);
   if (path === "lib/funding/official-candidacies.json") return family === "state-money";
   if (path.startsWith("data/fec/")) return family === "federal-finance";
   if (/^data\/states\/nj\/ballot\//.test(path)) return family === "ballot";

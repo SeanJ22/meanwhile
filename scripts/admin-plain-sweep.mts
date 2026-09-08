@@ -78,6 +78,12 @@ export const SWEPT_PATHS: readonly string[] = [
    * a new admin page belongs on it the day it ships; this is that debt paid.
    */
   "admin/release-review",
+  /*
+   * ADM-59, the day it shipped — the debt above was paid once and the rule that
+   * created it ("a new admin page belongs on this list the day it ships") only
+   * works if the next page actually obeys it.
+   */
+  "admin/progression",
 ];
 
 /** One kind of thing that must not reach the face, with how to find it. */

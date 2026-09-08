@@ -24,57 +24,32 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
+import { CONSOLE_VIEW_TABLE, type ConsoleView } from "@/lib/control-plane/console-paths.ts";
 
-export type ConsoleView =
-  | "pilot-health"
-  | "readiness"
-  | "research"
-  | "release-review"
-  | "steward"
-  | "sources"
-  | "reader"
-  | "feedback"
-  | "agents"
-  | "chat";
+/*
+ * ADM-59. The union, the path lookup and the labels are all DERIVED from
+ * `CONSOLE_VIEW_TABLE` now. They used to be three hand-kept lists beside the
+ * `<option>` list and `CONSOLE_VIEWS`, and the omission that produced six
+ * unreachable admin views was invisible precisely because nothing compared
+ * them. See the table's own header for what went wrong.
+ */
+export type { ConsoleView } from "@/lib/control-plane/console-paths.ts";
 
 /** The path each view lives at. The readiness view is per state. */
 function pathFor(view: ConsoleView, state: string): string {
-  switch (view) {
-    case "readiness":
-      return `/readiness/${state}`;
-    case "research":
-      return "/admin/research";
-    case "release-review":
-      return "/admin/release-review";
-    case "steward":
-      return "/admin/steward";
-    case "sources":
-      return "/admin/sources";
-    case "reader":
-      return "/admin/reader";
-    case "feedback":
-      return "/admin/feedback";
-    case "agents":
-      return "/admin/agents";
-    case "chat":
-      return "/admin/chat";
-    default:
-      return "/admin";
-  }
+  const row = CONSOLE_VIEW_TABLE.find((v) => v.view === view);
+  /*
+   * A null path is the per-state readiness view; an unknown view cannot occur,
+   * because the type is derived from this same table. There is deliberately no
+   * `default:` arm returning "/admin" any more — that arm was what silently
+   * served every view somebody forgot to wire.
+   */
+  return row?.path ?? `/readiness/${state}`;
 }
 
-const VIEW_LABEL: Record<ConsoleView, string> = {
-  "pilot-health": "Pilot health",
-  readiness: "State readiness",
-  research: "Research detail",
-  "release-review": "Software release review",
-  steward: "Shipping and integration",
-  sources: "Sources and APIs",
-  reader: "What readers are doing",
-  feedback: "Feedback",
-  agents: "Delegated work",
-  chat: "Ask the console",
-};
+const VIEW_LABEL: Record<ConsoleView, string> = Object.fromEntries(
+  CONSOLE_VIEW_TABLE.map((v) => [v.view, v.label]),
+) as Record<ConsoleView, string>;
 
 export function ConsoleNav(props: {
   view: ConsoleView;
@@ -132,10 +107,19 @@ export function ConsoleNav(props: {
             go(next, next === "readiness" ? stateForReadiness : null);
           }}
         >
-          <option value="pilot-health">{VIEW_LABEL["pilot-health"]}</option>
-          <option value="readiness">{VIEW_LABEL.readiness}</option>
-          <option value="research">{VIEW_LABEL.research}</option>
-          <option value="release-review">{VIEW_LABEL["release-review"]}</option>
+          {/*
+            ADM-59: rendered FROM the table, so a view can never again exist in
+            the union and the router and not here. A flat list on purpose —
+            there is no optgroup anywhere in this product, and the admin
+            select-contrast guard pins only `select` and `select option` to
+            Canvas/CanvasText, so an optgroup label would reopen the exact
+            light-on-dark defect that guard exists to prevent.
+          */}
+          {CONSOLE_VIEW_TABLE.map((v) => (
+            <option key={v.view} value={v.view}>
+              {v.label}
+            </option>
+          ))}
         </select>
       </label>
 

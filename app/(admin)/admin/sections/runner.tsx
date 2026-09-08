@@ -14,6 +14,7 @@ import type { FleetSafetySnapshot } from "@/lib/control-plane/fleet-safety.ts";
 import type { RunnerHeartbeat } from "@/lib/control-plane/owner-surface.ts";
 import { count, plainCode, usdCents } from "@/lib/control-plane/plain-words.ts";
 import { runnerFace, stopMomentIn } from "@/lib/control-plane/runner-plain.ts";
+import { RESEARCH_BOUNDS } from "@/lib/control-plane/scheduler/research-policy.ts";
 import type { RunnerStanding } from "@/lib/control-plane/runner-standing.ts";
 
 import { formatEastern } from "@/lib/control-plane/eastern-time.ts";
@@ -101,6 +102,71 @@ export function RunnerSection(props: RunnerSectionProps) {
             <strong>Why work stopped:</strong> {face.stopped}
           </p>
         )}
+
+        {/*
+          ADM-51 and ADM-66 — THE LIMITS, WITH THEIR CURRENT VALUES.
+
+          The owner: *"We need to figure out where budget is coming from or just
+          simply raise the budgets. I'm not sure. Either way I need some
+          clarification."* And, of the Hunters: *"why are they not doing
+          anything, especially if we have 2,300 of them?"*
+
+          The answer to both was on a different page. The Hunters panel on
+          Research detail already showed "Started this cycle 0 of 3 · Held back
+          by the per-cycle job limit 2,333 of 2,333" — the runner block, where
+          he was actually looking, showed only the word "budget". So the caps
+          that decide how much can run are stated here, beside the spend they
+          are constantly mistaken for.
+
+          The two research caps are the ones that bind a hunt. They are NOT
+          dollars, and the four dollar ceilings are in the table below this —
+          keeping them apart is the whole of ADM-51.
+        */}
+        <table className="spend-table">
+          <caption>The limits it runs under</caption>
+          <thead>
+            <tr>
+              <th scope="col">Limit</th>
+              <th scope="col" className="n">Value</th>
+              <th scope="col">What it caps</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Hunts started per cycle</th>
+              <td className="n">{RESEARCH_BOUNDS.maxScoutDispatchesPerCycle}</td>
+              <td className="note">
+                How many paid-model hunts a single cycle may START. A job count, never a dollar — this is the
+                one most often mistaken for a budget.
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Hunts running at once</th>
+              <td className="n">{RESEARCH_BOUNDS.maxConcurrentScouts}</td>
+              <td className="note">How many may be out on a job at the same moment.</td>
+            </tr>
+            {safety && (
+              <>
+                <tr>
+                  <th scope="row">Jobs started per cycle, whole fleet</th>
+                  <td className="n">{safety.bounds.maxDispatchesPerCycle}</td>
+                  <td className="note">Every lane together, not just the paid-model hunts.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Cycle length</th>
+                  <td className="n">{durationText(safety.bounds.maxWallMsPerCycle)}</td>
+                  <td className="note">
+                    A cycle stops starting new work before this, so it can finish what it began.
+                  </td>
+                </tr>
+              </>
+            )}
+          </tbody>
+        </table>
+        <p className="note">
+          Changing any of these is a code change on the machine that runs the fleet, and it does not take
+          effect until that runner is restarted. Nothing on this page can raise them.
+        </p>
 
         <NeedsYouLine needs={{ needed: face.needs.needed, action: face.needs.action ?? undefined }} />
 

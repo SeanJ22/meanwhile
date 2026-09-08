@@ -79,8 +79,22 @@ export const WHAT_A_RUNNER_IS =
 
 /**
  * The stop-reason codes the fleet emits, in the order they should be reported.
- * A budget ceiling is the one the owner asked to see first; the wall-clock and
- * dispatch ceilings are the same class of fact and read as noise beside it.
+ *
+ * ## Why CYCLE_DEFERRED moved to the bottom (ADM-51, the 9.7.26 feedback)
+ *
+ * The owner read *"Why work stopped: Budget reached at 11:20 PM ET"* beside a
+ * spend table reading `$0.00` on every row, and asked the obvious question.
+ *
+ * `CYCLE_DEFERRED` is not a code the safety controller emits. It is the
+ * FALLBACK the shadow loop applies to any deferral whose reason text does not
+ * begin with a SCREAMING_SNAKE code, and at least three lower-case reasons fall
+ * into it — the cycle's wall clock, a stated deterministic ceiling, and the
+ * debt backoff. None of them is a dollar.
+ *
+ * Ranking that residual ABOVE `DISPATCH_CEILING` and `WALL_CLOCK_CEILING` meant
+ * the catch-all outranked the two specific codes it was standing in for: when a
+ * cycle emitted both, the owner was shown the vaguest one. A residual must
+ * report LAST, so that any code that names itself wins.
  */
 const STOP_PRIORITY: readonly string[] = [
   "PROVIDER_CIRCUIT_BROKEN",
@@ -89,11 +103,16 @@ const STOP_PRIORITY: readonly string[] = [
   "ROLLING_24_HOUR_MODEL_SPEND_CEILING",
   "OPERATIONAL_NIGHT_MODEL_SPEND_CEILING",
   "CYCLE_MODEL_SPEND_CEILING",
-  "CYCLE_DEFERRED",
   "DISPATCH_CEILING",
   "PROVIDER_REQUEST_CEILING",
   "PAYLOAD_BYTE_CEILING",
   "WALL_CLOCK_CEILING",
+  // ADM-51: the admission window closing. It used to have no code and fall
+  // into the residual below, where it was rendered as "Budget reached".
+  "CYCLE_TIME_EXHAUSTED",
+  // The residual, last: it means "something deferred this and did not name
+  // itself", which is the least useful thing that can be said about a cycle.
+  "CYCLE_DEFERRED",
 ];
 
 /**

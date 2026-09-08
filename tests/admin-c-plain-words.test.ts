@@ -94,14 +94,37 @@ test("ADM-25 · text that is not a machine constant is left alone", () => {
 });
 
 test("ADM-25 · POSITIVE CONTROL — the runner's own stop sentence loses every code", () => {
-  // Verbatim from the 18-38-03 screenshot.
+  /*
+   * Verbatim from the 18-38-03 screenshot, and kept verbatim ON PURPOSE: this
+   * is a POSITIVE CONTROL over historical text. Records written before ADM-51
+   * still carry this exact sentence, so the translator has to keep stripping
+   * codes out of it forever. What changed is the WORDS it is translated into —
+   * see the assertions below.
+   */
   const asPhotographed =
     "CYCLE_DEFERRED: the cycle's dispatch budget was spent at September 6, 2026, 9:10 PM ET " +
     "before this item was reached. It keeps its next-due and is dispatched by a later cycle; " +
     "WALL_CLOCK_CEILING: insufficient cycle wall time remained; work remains owed.";
   const plain = plainText(asPhotographed);
   assert.ok(!/[A-Z][A-Z0-9]*_[A-Z0-9]/.test(plain), `a screaming-snake code survived: ${plain}`);
-  assert.ok(plain.includes("Budget reached".toLowerCase()), plain);
+  /*
+   * ADM-51 (9.7.26). This pinned "budget reached", and that word was the
+   * defect: the owner read it beside a spend table of $0.00 on every row.
+   * CYCLE_DEFERRED is not a ceiling — it is the fallback for a deferral whose
+   * reason did not name itself, and the wall clock and the debt backoff both
+   * land in it. The sentence must still lose every code; what it must NOT do
+   * is put a money word on a clock.
+   */
+  assert.ok(plain.includes("ran out of room this cycle"), plain);
+  /*
+   * The historical PROSE still contains "dispatch budget", because that is what
+   * was written into records that already exist and this test feeds one in
+   * verbatim. What must never happen again is the LABEL — the word the console
+   * puts at the head of the sentence — being a money word for a clock. A
+   * cycle deferring for time now writes CYCLE_TIME_EXHAUSTED and says so.
+   */
+  assert.ok(!/budget reached/i.test(plain), `the money label survived: ${plain}`);
+  assert.equal(plainCode("CYCLE_TIME_EXHAUSTED"), "Ran out of time to start it");
 });
 
 test("ADM-25 · an environment variable never renders its own name", () => {
@@ -281,10 +304,23 @@ test("ADM-24 · the runner card says what a runner IS", () => {
   assert.ok(!/[A-Z][A-Z0-9]*_[A-Z0-9]/.test(WHAT_A_RUNNER_IS));
 });
 
-test("ADM-24 · the stop reason leads with budget, and the time comes out of the prose", () => {
+test("ADM-51 · the stop reason leads with the limiter that named itself, not the residual", () => {
+  /*
+   * SUPERSEDES "ADM-24 · the stop reason leads with budget" (9.7.26).
+   *
+   * That test pinned CYCLE_DEFERRED first and rendered it "Budget reached".
+   * Both halves were wrong for the same reason: CYCLE_DEFERRED is the FALLBACK
+   * applied when a deferral's reason does not begin with a code, so ranking it
+   * above WALL_CLOCK_CEILING meant the catch-all outranked the specific code it
+   * was standing in for. This cycle stopped on the wall clock and said so, and
+   * the owner was shown "Budget reached" beside $0.00 spent.
+   *
+   * A residual reports last. Any code that names itself wins.
+   */
   const codes = stopCodesIn(SAFETY.stoppedBecause);
-  assert.deepEqual(codes, ["CYCLE_DEFERRED", "WALL_CLOCK_CEILING"]);
-  assert.equal(plainCode(codes[0]), "Budget reached");
+  assert.deepEqual(codes, ["WALL_CLOCK_CEILING", "CYCLE_DEFERRED"]);
+  assert.equal(plainCode(codes[0]), "Time limit reached");
+  assert.doesNotMatch(plainCode(codes[1]), /budget/i, "the residual may not wear a money word");
   assert.equal(stopMomentIn(SAFETY.stoppedBecause), "2026-09-07T04:31:00.000Z");
 });
 

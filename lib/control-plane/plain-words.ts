@@ -51,13 +51,46 @@ export interface PlainWord {
  */
 export const PLAIN_WORDS: Readonly<Record<string, PlainWord>> = {
   /* --------------------------------- fleet safety: why a cycle stopped */
+  /*
+   * ADM-51 — THIS WAS THE WORD THAT UNDID THE WHOLE RUNNER BLOCK.
+   *
+   * The owner read "Why work stopped: Budget reached at 11:20 PM ET" with every
+   * spend row showing $0.00 of $2.00 / $10.00 / $25.00, and could not reconcile
+   * the two. He was right not to: no money had been spent, and no dollar
+   * ceiling had been reached.
+   *
+   * CYCLE_DEFERRED is not a ceiling at all. It is the FALLBACK the shadow loop
+   * applies to any deferral whose reason text does not start with a
+   * SCREAMING_SNAKE code — the cycle's wall clock, a stated deterministic
+   * ceiling and the debt backoff all land in it. Calling that "Budget reached"
+   * put a money word on a clock and a job counter, and then the sentence
+   * doubled down with "spent its budget".
+   *
+   * The honest words say what is actually known, which is less than the old
+   * ones claimed: the cycle stopped before reaching this item, and the reason
+   * did not name itself. When a cycle DOES name its limiter, the specific code
+   * now outranks this one (see STOP_PRIORITY in runner-plain.ts).
+   */
   CYCLE_DEFERRED: {
-    words: "Budget reached",
-    means: "The cycle spent its budget before it reached this item. The item keeps its place in line and a later cycle picks it up.",
+    words: "Ran out of room this cycle",
+    means:
+      "The cycle stopped before it reached this item and did not record which of its limits stopped it — it may have been the job count, the clock or a stated ceiling, but it was not a dollar. The item keeps its place in line and a later cycle picks it up.",
   },
   WALL_CLOCK_CEILING: {
     words: "Time limit reached",
     means: "The cycle ran for as long as it is allowed to. The rest of the work is still owed and runs next cycle.",
+  },
+  /*
+   * ADM-51: the deferral that used to have no code at all and therefore became
+   * "Budget reached". It is a clock — the cycle stops STARTING work a few
+   * minutes before its hard wall so it can finish what it began and write its
+   * state cleanly. Distinct from WALL_CLOCK_CEILING, which is the hard wall
+   * itself; this one is the admission window closing.
+   */
+  CYCLE_TIME_EXHAUSTED: {
+    words: "Ran out of time to start it",
+    means:
+      "The cycle stops starting new work a few minutes before its time is up, so it can finish what it already began. This item was still waiting when that moment came. It keeps its place and a later cycle starts it.",
   },
   DISPATCH_CEILING: {
     words: "Job limit reached",

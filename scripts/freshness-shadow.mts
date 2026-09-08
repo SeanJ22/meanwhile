@@ -1356,7 +1356,14 @@ for (const row of cycle.deferred) {
   fleetSafety.defer(row.obligationId, code, row.why);
 }
 
-const budgetDeferred = cycle.deferred.filter((d) => d.why.includes("dispatch budget was spent")).length;
+/*
+ * ADM-51: the sentence this matched used to read "the cycle's dispatch budget
+ * was spent". It now names itself CYCLE_TIME_EXHAUSTED, because it is a clock
+ * rather than a budget and because an unnamed deferral fell into the
+ * CYCLE_DEFERRED residual and was rendered to the owner as "Budget reached"
+ * beside a spend table of $0.00.
+ */
+const budgetDeferred = cycle.deferred.filter((d) => d.why.includes("CYCLE_TIME_EXHAUSTED")).length;
 console.log(
   `\n  dispatch budget: ${Math.max(0, BUDGET_MIN - FINALIZATION_RESERVE_MS / 60_000)} min; hard cycle wall ${BUDGET_MIN} min` +
     (budgetDeferred > 0

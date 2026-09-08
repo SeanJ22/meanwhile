@@ -147,7 +147,27 @@ export function DeployFleet(props: {
           >
             {props.label ?? "Deploy fleet"}
           </button>
-          <span className="note">Tell the fleet where to go next. It reorders the work it already has; it never invents work.</span>
+          {/*
+            ADM-62. The owner: *"I don't know what specifically is going to
+            happen when I hit deploy fleet here."*
+
+            The confirm step he asked for ALREADY EXISTS — this button opens a
+            preview that names what will be prioritised, how many items are
+            owed, what deploying does NOT mean, and when the next cycle runs.
+            He never reached it, because nothing on the closed control said the
+            button opens anything. A control whose next step is invisible reads
+            as a control that fires immediately, and that is the difference
+            between a preview and a trigger.
+
+            So this says so. It is not a second explanation of the action —
+            this module's own header forbids a confirmation panel that
+            describes a different action from the one the button performs — it
+            is the one sentence that was missing: nothing happens yet.
+          */}
+          <span className="note">
+            Shows you what this would do before anything is sent. It reorders the work the fleet already has;
+            it never invents work, and it never changes what is owed.
+          </span>
         </div>
       </div>
     );

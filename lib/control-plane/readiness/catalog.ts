@@ -102,7 +102,15 @@ export interface TaxonomyRow {
  */
 export const CAPABILITY_TAXONOMY: readonly TaxonomyRow[] = [
   // Districts and geography
-  { capabilityId: "districts.congressional", domain: "Districts and geography", label: "Congressional · legislative", level: "federal" },
+  /*
+   * ADM-60: labelled "Congressional · legislative", which the owner read as the
+   * congressional DATA — the FEC, Census and congress.gov material the product
+   * actually serves. It is neither: this row is in the Districts and geography
+   * domain and it tracks the district BOUNDARIES. Two different things were
+   * wearing one name, which is most of why the row's Verified cell read as an
+   * alarming claim about live data rather than a true claim about map shapes.
+   */
+  { capabilityId: "districts.congressional", domain: "Districts and geography", label: "Congressional district boundaries", level: "federal" },
   { capabilityId: "districts.state-legislative", domain: "Districts and geography", label: "State legislative", level: "state" },
   { capabilityId: "districts.county-precinct", domain: "Districts and geography", label: "County and precinct", level: "county" },
   { capabilityId: "districts.municipal-wards", domain: "Districts and geography", label: "Municipal wards", level: "municipal" },

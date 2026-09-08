@@ -16,6 +16,8 @@ import {
   type Gate,
   type GateEvidence,
   type MonotonicityViolation,
+  type UnreconciledDelivery,
+  unreconciledDeliveries,
   coverageCell,
   deriveGateCells,
   worstOf,
@@ -190,8 +192,19 @@ function rankOf(state: CellState): number {
 export function computeCapabilityRow(
   input: CapabilityInput,
   nowIso: string,
-): { readonly row: CapabilityRow; readonly violations: readonly MonotonicityViolation[] } {
+): {
+  readonly row: CapabilityRow;
+  readonly violations: readonly MonotonicityViolation[];
+  readonly unreconciled: readonly UnreconciledDelivery[];
+} {
   const { gates, violations } = deriveGateCells(input.capabilityId, input.gates, nowIso);
+  /*
+   * ADM-60: a second finding, derived from the SAME cells the monotonicity
+   * pass just produced. It is computed here rather than in the panel because a
+   * surface that derived its own findings could disagree with the snapshot it
+   * is rendering.
+   */
+  const unreconciled = unreconciledDeliveries(input.capabilityId, gates);
   const coverage = coverageCell({
     covered: input.coverage.covered,
     total: input.coverage.total,
@@ -210,7 +223,7 @@ export function computeCapabilityRow(
     coverageSays: input.coverage.says,
     asOf: input.coverage.asOf,
   };
-  return { row, violations };
+  return { row, violations, unreconciled };
 }
 
 /* ------------------------------------------------------------------ the snapshot */
@@ -227,10 +240,12 @@ export function computeReadinessSnapshot(
 ): ReadinessStateSnapshot {
   const rows: CapabilityRow[] = [];
   const violations: MonotonicityViolation[] = [];
+  const unreconciled: UnreconciledDelivery[] = [];
   for (const cap of inputs.capabilities) {
     const built = computeCapabilityRow(cap, nowIso);
     rows.push(built.row);
     violations.push(...built.violations);
+    unreconciled.push(...built.unreconciled);
   }
 
   const zips = inputs.zips.map(computeZipRow);
@@ -258,6 +273,7 @@ export function computeReadinessSnapshot(
     evidenceWalks: inputs.evidenceWalks ?? [],
     delivery: inputs.delivery ?? [],
     monotonicityViolations: violations,
+    unreconciledDeliveries: unreconciled,
   };
 }
 

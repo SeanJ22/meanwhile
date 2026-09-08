@@ -96,7 +96,24 @@ export interface DeployPreviewInput {
   readonly obligations: readonly { readonly id: string; readonly subjectId: string }[];
   readonly obligationsRead: boolean;
   /** The runner's own ceilings, so the preview quotes the real numbers. */
-  readonly ceilings: { readonly cycleModelUsd: number; readonly rolling24HourModelUsd: number; readonly maxDispatchesPerCycle: number };
+  /**
+   * The runner's own ceilings, so the preview quotes the real numbers.
+   *
+   * ADM-62: `maxDispatchesPerCycle` is the FLEET-WIDE dispatch ceiling (10) and
+   * it is not what binds this work. The research lane starts at most
+   * `researchPerCycle` Scouts a cycle and runs at most `researchConcurrent` at
+   * once, and those are the numbers that decide how fast a deployment here
+   * actually moves. Quoting the looser ceiling overstated it by more than
+   * threefold — the same class of defect as calling a job cap a budget
+   * (ADM-51): a real number that is not the binding one.
+   */
+  readonly ceilings: {
+    readonly cycleModelUsd: number;
+    readonly rolling24HourModelUsd: number;
+    readonly maxDispatchesPerCycle: number;
+    readonly researchPerCycle: number;
+    readonly researchConcurrent: number;
+  };
 }
 
 export function deployPreview(input: DeployPreviewInput): DeployPreview {
@@ -128,7 +145,10 @@ export function deployPreview(input: DeployPreviewInput): DeployPreview {
       measured: true,
     });
     creates.push({
-      says: `The runner starts at most ${count(input.ceilings.maxDispatchesPerCycle)} of them per cycle, so this is an ordering instruction rather than a batch — the rest keep their place behind them.`,
+      says:
+        `The runner starts at most ${count(input.ceilings.researchPerCycle)} of them per cycle and runs ` +
+        `${count(input.ceilings.researchConcurrent)} at a time, so this is an ordering instruction rather ` +
+        `than a batch — the rest keep their place behind them.`,
       measured: true,
     });
   }

@@ -382,6 +382,94 @@ export interface MonotonicityViolation {
 }
 
 /**
+ * **SERVING READERS FROM SOMETHING NOTHING HAS RECONCILED.** (ADM-60, the
+ * 9.7.26 admin feedback. Critical.)
+ *
+ * The owner, on the Congressional row:
+ *
+ * > *"Source known — Current; Acquired — Current; Verified — Not checked yet;
+ * > Shown on the Reader — yes … I'm very, very, very concerned. It's live, it's
+ * > serving readers … How can it be unverified and also pushing?"*
+ *
+ * ## Why the grid said nothing
+ *
+ * It is not that VERIFIED is wrong. It is literally true: no `districts.*`
+ * capability supplies any VERIFIED evidence, so `deriveGateCell` reads
+ * `NO_EVIDENCE` and returns NOT_WALKED — *"Nobody has looked at this yet."*
+ *
+ * And it is not that monotonicity is broken. {@link enforceMonotonicity}
+ * downgrades a cell whose RAW state is CURRENT past an unmet gate to its left.
+ * The delivery cells here never compute CURRENT — they are PARTIAL_OR_STALE by
+ * construction, because they are satisfied by a standing declaration
+ * (`pendingProof`) and a declaration may never climb to CURRENT. So no cell
+ * broke a rule, no violation was recorded, and no band rendered.
+ *
+ * **The contradiction was real and there was simply no rule that named it.**
+ * Being live to readers on a holding nothing has reconciled is not a
+ * monotonicity breach; it is its own finding, and it needs its own words.
+ *
+ * ## What this does NOT do
+ *
+ * It does not turn VERIFIED green, and it does not invent a "the source is the
+ * authority" shortcut. The owner ruled that out in as many words, and the
+ * VERIFIED contract already forbids the tempting version of it: *no
+ * reconciliation may compare a parser to itself.* For the congressional row in
+ * particular that bar is not passable by re-reading our own inputs — the
+ * registry divisions and the district file descend from the SAME acquisition,
+ * so comparing them would be exactly the self-comparison the contract bans.
+ *
+ * So the cell keeps saying what is true, and the grid gains the sentence it was
+ * missing: this is live, and nothing outside us has checked it.
+ */
+export interface UnreconciledDelivery {
+  readonly capabilityId: string;
+  /** The delivery gate that is live — SHOWN_TO_READER or ASK_ANSWERS. */
+  readonly gate: Gate;
+  /** What the delivery cell says about itself. */
+  readonly deliverySays: string;
+  /** Plain language, for the band. */
+  readonly detail: string;
+}
+
+/** The two gates that mean "a reader can get this". */
+const DELIVERY_GATES: readonly Gate[] = ["SHOWN_TO_READER", "ASK_ANSWERS"];
+
+/**
+ * Find every capability that is delivering to readers while VERIFIED has not
+ * been walked.
+ *
+ * Deliberately narrow: it fires only when the delivery cell carries POSITIVE
+ * evidence (it is not NOT_WALKED and not ARGUED_ABSENT) while VERIFIED is
+ * exactly NOT_WALKED. A stale verification is a different and lesser problem —
+ * somebody looked — and conflating the two would make the band routine, which
+ * is how a real finding stops being read.
+ */
+export function unreconciledDeliveries(
+  capabilityId: string,
+  cells: readonly GateCell[],
+): readonly UnreconciledDelivery[] {
+  const verified = cells.find((c) => c.gate === "VERIFIED");
+  if (verified === undefined || verified.state !== "NOT_WALKED") return [];
+
+  const found: UnreconciledDelivery[] = [];
+  for (const cell of cells) {
+    if (!DELIVERY_GATES.includes(cell.gate)) continue;
+    if (cell.state === "NOT_WALKED" || cell.state === "ARGUED_ABSENT") continue;
+    found.push({
+      capabilityId,
+      gate: cell.gate,
+      deliverySays: cell.says,
+      detail:
+        `${GATE_LABEL[cell.gate]} has evidence — ${cell.says} — while ${GATE_LABEL.VERIFIED} has not been ` +
+        "walked at all. Readers are being served this, and nothing outside us has checked it against an " +
+        "independent authority. That is not a claim that anything here is wrong; it is a claim that nobody " +
+        "has looked.",
+    });
+  }
+  return found;
+}
+
+/**
  * Apply monotonicity to a capability's five gate cells, left to right, deriving
  * a TRUTHFUL EFFECTIVE STATE.
  *

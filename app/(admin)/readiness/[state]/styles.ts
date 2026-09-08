@@ -83,6 +83,10 @@ export const READINESS_STYLES = `
 
 .readiness .rq-violations { box-shadow: inset 0 0 0 1px #cc4b4b; border-radius: var(--ce-radius-md); padding: .5rem .75rem; margin: 1rem 0; }
 .readiness .rq-violations h3 { margin: 0 0 .35rem; color: var(--ce-text-bad); }
+/* ADM-60: nobody has looked is not the same alarm as a broken sequence, so it
+   does not borrow the red one. Amber, and its own heading colour. */
+.readiness .rq-unreconciled { box-shadow: inset 0 0 0 1px var(--ce-text-warn); }
+.readiness .rq-unreconciled h3 { color: var(--ce-text-warn); }
 
 .readiness .rq-drawer-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: flex; justify-content: flex-end; z-index: 50; }
 .readiness .rq-drawer { background: var(--ce-panel); background-image: var(--ce-surface-panel-gradient); color: var(--ce-fg); width: min(38rem, 100%); height: 100%; overflow-y: auto; padding: 1.25rem 1.5rem; box-shadow: var(--ce-rim), -8px 0 24px rgba(0,0,0,.3); }

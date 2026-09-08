@@ -251,6 +251,51 @@ export function ReadinessPanel(props: {
         stateName={snapshot.stateName}
       />
 
+      {/*
+        ADM-60 — SERVING READERS FROM SOMETHING NOTHING HAS RECONCILED.
+
+        The owner, on the Congressional row: *"Verified — Not checked yet …
+        Shown on the Reader — yes. I'm very, very, very concerned. How can it be
+        unverified and also pushing?"*
+
+        Both cells were telling the truth and the grid never put them in one
+        sentence. VERIFIED is NOT_WALKED because no instrument supplies it; the
+        delivery cell is PARTIAL_OR_STALE because it rests on a standing
+        declaration. Neither breaks monotonicity, so no band rendered and the
+        contradiction sat there unremarked.
+
+        The cell still says NOT_WALKED — that is literally true, and turning it
+        green on the strength of the source being official is the shortcut the
+        owner ruled out by name. What changes is that the page now says the
+        thing out loud.
+      */}
+      {(snapshot.unreconciledDeliveries ?? []).length > 0 && (
+        <div className="rq-violations rq-unreconciled">
+          <h3>
+            {(snapshot.unreconciledDeliveries ?? []).length === 1
+              ? "One holding is live to readers with nothing reconciling it"
+              : `${(snapshot.unreconciledDeliveries ?? []).length} holdings are live to readers with nothing reconciling them`}
+          </h3>
+          <p className="note">
+            These are being served to readers, and no reconciliation against an outside authority has been
+            recorded for them. That is not a finding that anything is wrong — it is a finding that nobody has
+            checked. <strong>Needs you: No.</strong> Closing one means running a reconciliation walk against an
+            authority that is genuinely independent of the source we parsed; comparing a holding to itself is
+            what the Verified contract refuses.
+          </p>
+          <ul>
+            {(snapshot.unreconciledDeliveries ?? []).map((u, i) => (
+              <li key={`${u.capabilityId}:${u.gate}:${i}`}>
+                <span title={u.capabilityId}>
+                  {snapshot.capabilities.find((c) => c.capabilityId === u.capabilityId)?.label ?? u.capabilityId}
+                </span>{" "}
+                — {u.detail}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {snapshot.monotonicityViolations.length > 0 && (
         <div className="rq-violations">
           <h3>

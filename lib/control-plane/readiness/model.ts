@@ -15,7 +15,13 @@
  * stated Ns against its rendered rows before it shows anything (R-K).
  */
 import type { Held, Measured } from "../owner-surface.ts";
-import { type CellState, type GateCell, type MonotonicityViolation, worstOf } from "./gates.ts";
+import {
+  type CellState,
+  type GateCell,
+  type MonotonicityViolation,
+  type UnreconciledDelivery,
+  worstOf,
+} from "./gates.ts";
 
 export const READINESS_SNAPSHOT_FORMAT_VERSION = 1;
 
@@ -282,6 +288,18 @@ export interface ReadinessStateSnapshot {
   readonly delivery: readonly ReaderDelivery[];
   /** Every place the underlying data violates gate monotonicity (R-B), surfaced. */
   readonly monotonicityViolations: readonly MonotonicityViolation[];
+  /**
+   * Every holding that is live to readers while nothing has reconciled it
+   * against an outside authority (ADM-60).
+   *
+   * OPTIONAL, deliberately. A snapshot published before this field existed is a
+   * real snapshot and must keep rendering — the console reads a published
+   * record on a poll, and a required new field would blank the whole readiness
+   * page for anyone on the previous publish until the runner republished. An
+   * absent array reads as "this snapshot predates the check", which the panel
+   * says, rather than as "nothing was found".
+   */
+  readonly unreconciledDeliveries?: readonly UnreconciledDelivery[];
 }
 
 /**
@@ -306,6 +324,17 @@ export function readinessCountClaims(
       label: "monotonicity violations",
       stated: snapshot.monotonicityViolations.length,
       rendered: snapshot.monotonicityViolations.length,
+    },
+    /*
+     * ADM-60. The band states a count and the list beneath it renders one line
+     * each, so the two must agree like every other pair on this page. An older
+     * snapshot with no array at all states zero and renders zero, which is
+     * true of that snapshot.
+     */
+    {
+      label: "unreconciled deliveries",
+      stated: (snapshot.unreconciledDeliveries ?? []).length,
+      rendered: (snapshot.unreconciledDeliveries ?? []).length,
     },
     // The summary tile states how many capability rows the Reader is served
     // from; the block beneath the grid renders one line per delivered holding.

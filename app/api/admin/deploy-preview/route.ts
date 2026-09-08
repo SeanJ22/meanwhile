@@ -19,6 +19,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
 import { deployPreview } from "@/lib/control-plane/deploy-preview.ts";
 import { FLEET_SAFETY_BOUNDS } from "@/lib/control-plane/fleet-safety.ts";
+import { RESEARCH_BOUNDS } from "@/lib/control-plane/scheduler/research-policy.ts";
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
 import { adminRefusalBody } from "@/lib/control-plane/admin-refusal.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
@@ -80,6 +81,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         cycleModelUsd: FLEET_SAFETY_BOUNDS.cycleModelUsd,
         rolling24HourModelUsd: FLEET_SAFETY_BOUNDS.rolling24HourModelUsd,
         maxDispatchesPerCycle: FLEET_SAFETY_BOUNDS.maxDispatchesPerCycle,
+        // ADM-62: the caps that actually bind this work, not the fleet-wide one.
+        researchPerCycle: RESEARCH_BOUNDS.maxScoutDispatchesPerCycle,
+        researchConcurrent: RESEARCH_BOUNDS.maxConcurrentScouts,
       },
     }),
     { headers: { "cache-control": "no-store" } },

@@ -1,8 +1,8 @@
 /**
  * The three reviewable raised-state treatments from the 2026-09-07 visual
- * pass. The identifier is shared with the Admin review links, but this leaf
- * module has no Admin dependency: a Reader URL can select a treatment with
- * `?raisedState=A_SOFT_LIFT` (or B/C) on its own.
+ * pass. These values are review fixtures, not production preferences. A local
+ * development build can select one with `?raisedState=A_SOFT_LIFT` (or B/C),
+ * while a production build always keeps the established Reader treatment.
  *
  * Geometry is intentionally absent from this type. Every field is a paint
  * parameter measured in viewport pixels or an opacity multiplier, so changing
@@ -29,9 +29,6 @@ export interface RaisedStatePresentation {
   /** Scales only the crisp directional edge width. */
   edgeWidthScale: number;
 }
-
-export const DEFAULT_RAISED_STATE_VARIANT: RaisedStateVariant =
-  "B_MATERIAL_LIFT";
 
 /**
  * Neumorphism.io's supplied reference uses opposed 12px offsets and 24px
@@ -80,12 +77,18 @@ const VARIANTS = new Set<RaisedStateVariant>([
   "C_DEEP_LIFT",
 ]);
 
-export function raisedStateVariantFrom(value: string | null | undefined): RaisedStateVariant {
+export function raisedStateVariantFrom(
+  value: string | null | undefined,
+): RaisedStateVariant | null {
   return value && VARIANTS.has(value as RaisedStateVariant)
     ? (value as RaisedStateVariant)
-    : DEFAULT_RAISED_STATE_VARIANT;
+    : null;
 }
 
-export function raisedStateVariantFromSearch(search: string): RaisedStateVariant {
+export function raisedStateVariantFromSearch(
+  search: string,
+  reviewMode = false,
+): RaisedStateVariant | null {
+  if (!reviewMode) return null;
   return raisedStateVariantFrom(new URLSearchParams(search).get("raisedState"));
 }

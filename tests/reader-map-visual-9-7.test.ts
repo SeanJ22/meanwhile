@@ -5,7 +5,6 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
-  DEFAULT_RAISED_STATE_VARIANT,
   RAISED_STATE_PRESENTATIONS,
   raisedStateVariantFrom,
   raisedStateVariantFromSearch,
@@ -21,16 +20,23 @@ import type { Map as MapLibreMap } from "maplibre-gl";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const source = (path: string) => readFileSync(join(ROOT, path), "utf8");
 
-test("MAP-8: A/B/C are total, deterministic presentation-only treatments", () => {
+test("MAP-8: A/B/C are deterministic, local-review-only treatments", () => {
   assert.deepEqual(Object.keys(RAISED_STATE_PRESENTATIONS), [
     "A_SOFT_LIFT",
     "B_MATERIAL_LIFT",
     "C_DEEP_LIFT",
   ]);
-  assert.equal(raisedStateVariantFrom(null), DEFAULT_RAISED_STATE_VARIANT);
-  assert.equal(raisedStateVariantFrom("not-a-variant"), DEFAULT_RAISED_STATE_VARIANT);
-  assert.equal(raisedStateVariantFromSearch("?raisedState=A_SOFT_LIFT"), "A_SOFT_LIFT");
-  assert.equal(raisedStateVariantFromSearch("?raisedState=C_DEEP_LIFT"), "C_DEEP_LIFT");
+  assert.equal(raisedStateVariantFrom(null), null);
+  assert.equal(raisedStateVariantFrom("not-a-variant"), null);
+  assert.equal(raisedStateVariantFromSearch("?raisedState=A_SOFT_LIFT"), null);
+  assert.equal(
+    raisedStateVariantFromSearch("?raisedState=A_SOFT_LIFT", true),
+    "A_SOFT_LIFT",
+  );
+  assert.equal(
+    raisedStateVariantFromSearch("?raisedState=C_DEEP_LIFT", true),
+    "C_DEEP_LIFT",
+  );
   assert.equal(RAISED_STATE_PRESENTATIONS.C_DEEP_LIFT.shadowOffsetPx, 12);
   assert.equal(RAISED_STATE_PRESENTATIONS.C_DEEP_LIFT.shadowBlurPx, 24);
   for (const presentation of Object.values(RAISED_STATE_PRESENTATIONS)) {
@@ -54,7 +60,10 @@ test("MAP-7/MAP-8: navigation chrome is gone and canonical edges stay sharp", ()
   assert.match(relief, /tolerance: 0/g);
   assert.match(relief, /state-relief-edge-seal/);
   assert.match(relief, /"line-blur": 0/);
+  assert.match(relief, /variant \? RAISED_STATE_PRESENTATIONS\[variant\] : null/);
   assert.match(source("components/map/map-entry.tsx"), /raisedStateVariant=\{raisedStateVariant\}/);
+  assert.match(source("hooks/use-raised-state-variant.ts"), /process\.env\.NODE_ENV !== "production"/);
+  assert.match(source("hooks/use-raised-state-variant.ts"), /serverSnapshot = \(\) => null/);
 });
 
 test("MAP-8: every asynchronously-added district paint layer stays below the state seal", () => {

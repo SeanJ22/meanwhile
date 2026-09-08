@@ -221,8 +221,8 @@ interface MapCanvasProps {
    * name string.
    */
   focusStateOcdId?: string | null;
-  /** Presentation-only review treatment for the raised state. */
-  raisedStateVariant: RaisedStateVariant;
+  /** Local-review-only treatment for the raised state; null is production. */
+  raisedStateVariant: RaisedStateVariant | null;
   /**
    * Voting locations (B19), drawn as their OWN pin class.
    *

@@ -81,12 +81,12 @@ export function ensureStateRelief(
   map: MapLibreMap,
   outline: StateOutlineFeature | null,
   theme: "light" | "dark",
-  variant: RaisedStateVariant,
+  variant: RaisedStateVariant | null,
 ): void {
   if (!outline) { removeStateRelief(map); return; }
   if (!map.getStyle()?.layers?.length) return;
   const tone = RELIEF_THEME[theme];
-  const presentation = RAISED_STATE_PRESENTATIONS[variant];
+  const presentation = variant ? RAISED_STATE_PRESENTATIONS[variant] : null;
   const source = map.getSource(RELIEF_SOURCE) as GeoJSONSource | undefined;
   if (source) source.setData(outline);
   else map.addSource(RELIEF_SOURCE, { type: "geojson", data: outline, tolerance: 0 });
@@ -101,20 +101,24 @@ export function ensureStateRelief(
     ["linear"],
     ["zoom"],
     3,
-    1.1 * presentation.edgeWidthScale,
+    1.1 * (presentation?.edgeWidthScale ?? 1),
     7,
-    2.3 * presentation.edgeWidthScale,
+    2.3 * (presentation?.edgeWidthScale ?? 1),
     12,
-    3.2 * presentation.edgeWidthScale,
+    3.2 * (presentation?.edgeWidthScale ?? 1),
   ];
-  const offset = presentation.shadowOffsetPx;
+  const offset = presentation?.shadowOffsetPx ?? 0;
   const layers: Parameters<MapLibreMap["addLayer"]>[0][] = [
-    /* The same canonical polygon casts both opposed shadows. These are lines,
-       not translated fills: the map inside the state remains the map, which
-       removes the grey slab seen in the rejected pass. */
-    { id: RELIEF_LAYERS[0], type: "line", source: RELIEF_SOURCE, layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": tone.shade, "line-opacity": tone.shadow * presentation.darkShadowScale, "line-width": presentation.shadowWidthPx, "line-blur": presentation.shadowBlurPx, "line-translate": [offset, offset], "line-translate-anchor": "viewport" } },
-    { id: RELIEF_LAYERS[1], type: "line", source: RELIEF_SOURCE, layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": tone.light, "line-opacity": tone.shadow * presentation.lightShadowScale, "line-width": presentation.shadowWidthPx, "line-blur": presentation.shadowBlurPx, "line-translate": [-offset, -offset], "line-translate-anchor": "viewport" } },
-    { id: RELIEF_LAYERS[2], type: "fill", source: RELIEF_SOURCE, paint: { "fill-color": tone.surface, "fill-opacity": tone.surfaceOpacity * presentation.surfaceScale } },
+    /* Review candidates use two opposed line shadows. Null deliberately keeps
+       the established production fill/line treatment instead of choosing a
+       candidate by accident. Every branch uses the same canonical polygon. */
+    presentation
+      ? { id: RELIEF_LAYERS[0], type: "line", source: RELIEF_SOURCE, layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": tone.shade, "line-opacity": tone.shadow * presentation.darkShadowScale, "line-width": presentation.shadowWidthPx, "line-blur": presentation.shadowBlurPx, "line-translate": [offset, offset], "line-translate-anchor": "viewport" } }
+      : { id: RELIEF_LAYERS[0], type: "fill", source: RELIEF_SOURCE, paint: { "fill-color": tone.shade, "fill-opacity": tone.shadow, "fill-translate": [4, 6], "fill-translate-anchor": "viewport" } },
+    presentation
+      ? { id: RELIEF_LAYERS[1], type: "line", source: RELIEF_SOURCE, layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": tone.light, "line-opacity": tone.shadow * presentation.lightShadowScale, "line-width": presentation.shadowWidthPx, "line-blur": presentation.shadowBlurPx, "line-translate": [-offset, -offset], "line-translate-anchor": "viewport" } }
+      : { id: RELIEF_LAYERS[1], type: "line", source: RELIEF_SOURCE, paint: { "line-color": tone.shade, "line-opacity": tone.shadow, "line-width": 14, "line-blur": 12, "line-translate": [4, 6], "line-translate-anchor": "viewport" } },
+    { id: RELIEF_LAYERS[2], type: "fill", source: RELIEF_SOURCE, paint: { "fill-color": tone.surface, "fill-opacity": tone.surfaceOpacity * (presentation?.surfaceScale ?? 1) } },
     /* The unsegmented canonical seal covers district strokes that otherwise
        protrude into the Colorado River because their source vertices are
        rounded differently. It changes no district or state coordinate. */
@@ -126,6 +130,8 @@ export function ensureStateRelief(
   ];
   for (const [index, layer] of layers.entries()) {
     const before = index < RELIEF_LOW_LAYER_COUNT ? lowBefore : edgeBefore;
+    const existing = map.getLayer(layer.id);
+    if (existing && existing.type !== layer.type) map.removeLayer(layer.id);
     if (!map.getLayer(layer.id)) map.addLayer(layer, before);
     else {
       if ("paint" in layer) for (const [property, value] of Object.entries(layer.paint ?? {})) map.setPaintProperty(layer.id, property as Parameters<MapLibreMap["setPaintProperty"]>[1], value);

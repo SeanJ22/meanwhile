@@ -1916,7 +1916,7 @@ function MapEntryInner() {
         data-sidebar={effectiveSidebarState}
         data-compact-boundary={compactBoundary ? "true" : undefined}
         data-responsive-map={phoneMap ? "phone" : tabletMap ? "tablet" : undefined}
-        data-raised-state={raisedStateVariant}
+        data-raised-state={raisedStateVariant ?? undefined}
       >
         {/*
           **LAY-4 / LAY-3 — the rail and its floaters are ONE fixed column.**

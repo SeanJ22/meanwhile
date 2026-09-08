@@ -32,6 +32,35 @@
   padding-top: 0.75rem;
 }
 
+/* BAL-50 owner-review candidates. These rules are attached only when the
+   server recognizes ?threeCandidateLayout=A, B, or C outside production and
+   only when a contest has exactly three candidates. Every card keeps the same
+   width and row height inside each option; source/DOM order never changes. */
+@media (min-width: 1024px) {
+  :global(.ballot-candidate-grid).threeCandidateAcross {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-auto-rows: 1fr;
+  }
+
+  :global(.ballot-candidate-grid).threeCandidateCenteredThird {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: 1fr;
+  }
+
+  :global(.ballot-candidate-grid).threeCandidateCenteredThird > * {
+    grid-column: span 2;
+  }
+
+  :global(.ballot-candidate-grid).threeCandidateCenteredThird > :last-child {
+    grid-column: 2 / span 2;
+  }
+
+  :global(.ballot-candidate-grid).threeCandidateSingleColumn {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: 1fr;
+  }
+}
+
 /* BAL-50: the existing battlecard component remains the one behavior owner;
    this locally-scoped slot gives its ballot-page trigger the supplied pearl
    face without changing the shared battlecard modal. */

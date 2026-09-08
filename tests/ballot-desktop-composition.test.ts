@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { threeCandidateReviewVariantFrom } from "../lib/ballot/three-candidate-review.ts";
 
 /**
  * **BAL-25 (2026-08-28) — THE BALLOT HAD NO BREAKPOINT AT ALL.**
@@ -23,6 +24,10 @@ const ROOT = process.cwd();
 const PAGE = readFileSync(join(ROOT, "app", "ballot", "page.tsx"), "utf8");
 const LOADING = readFileSync(join(ROOT, "app", "ballot", "loading.tsx"), "utf8");
 const CSS = readFileSync(join(ROOT, "app", "globals.css"), "utf8");
+const CARD_CSS = readFileSync(
+  join(ROOT, "components", "ballot", "candidate-card.module.css"),
+  "utf8",
+);
 
 function code(src: string): string {
   return src
@@ -90,8 +95,8 @@ test("BAL-25: the loading skeleton hands over without moving the heading", () =>
 test("BAL-43: offices read top to bottom; both candidate paths share the desktop columns", () => {
   const src = code(PAGE);
   assert.equal(src.split('className="ballot-office-list"').length - 1, 1);
-  assert.equal(src.split('className="ballot-candidate-grid mt-3.5"').length - 1, 2,
-    "certified nominees and filed candidacies use the same layout");
+  assert.equal(src.split("className={candidateGridClassName(").length - 1, 2,
+    "certified nominees and filed candidacies use the same layout resolver");
   assert.match(src, /className="ballot-office-list">\s*\{candidacyContests\.map\(/,
     "office order remains the existing contest order");
   assert.match(CSS, /\.ballot-office-list \{[^}]*grid-template-columns:\s*minmax\(0, 1fr\)[^}]*gap:\s*var\(--space-3\)/);
@@ -113,8 +118,41 @@ test("BAL-43: offices read top to bottom; both candidate paths share the desktop
     2,
     "both candidate branches need the same equal-height cell",
   );
-  const cardCss = readFileSync(join(ROOT, "components", "ballot", "candidate-card.module.css"), "utf8");
-  assert.match(cardCss, /\.card\s*\{[\s\S]*?flex:\s*1 1 auto/);
+  assert.match(CARD_CSS, /\.card\s*\{[\s\S]*?flex:\s*1 1 auto/);
+});
+
+test("BAL-50: all three exactly-three-candidate review layouts are explicit and opt-in", () => {
+  assert.equal(threeCandidateReviewVariantFrom("A", true), "A_THREE_ACROSS");
+  assert.equal(threeCandidateReviewVariantFrom("B", true), "B_CENTERED_THIRD");
+  assert.equal(threeCandidateReviewVariantFrom("C", true), "C_SINGLE_COLUMN");
+
+  // There is no experimental fallback. Missing/invalid queries, and every
+  // query in production, preserve the ordinary two-column production grid.
+  assert.equal(threeCandidateReviewVariantFrom(undefined, true), null);
+  assert.equal(threeCandidateReviewVariantFrom("", true), null);
+  assert.equal(threeCandidateReviewVariantFrom("D", true), null);
+  for (const query of ["A", "B", "C"]) {
+    assert.equal(threeCandidateReviewVariantFrom(query, false), null);
+  }
+
+  const src = code(PAGE);
+  assert.match(src, /threeCandidateLayout\?: string/);
+  assert.match(src, /process\.env\.NODE_ENV !== "production"/);
+  assert.match(src, /candidateCount !== 3 \|\| variant === null/,
+    "review classes must be refused unless the contest has exactly three candidates");
+  assert.equal(src.split("data-three-candidate-review={").length - 1, 2,
+    "both candidate sources expose the active review option for rendered evidence");
+
+  // A: three equal columns. B: a four-track grid where every card spans two
+  // tracks and the third is centered. C: three equal full-width rows. Equal
+  // implicit row sizing keeps differing content amounts from changing area.
+  assert.match(CARD_CSS, /\.threeCandidateAcross\s*\{[^}]*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\)[^}]*grid-auto-rows:\s*1fr/);
+  assert.match(CARD_CSS, /\.threeCandidateCenteredThird\s*\{[^}]*grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\)[^}]*grid-auto-rows:\s*1fr/);
+  assert.match(CARD_CSS, /\.threeCandidateCenteredThird > \*\s*\{[^}]*grid-column:\s*span 2/);
+  assert.match(CARD_CSS, /\.threeCandidateCenteredThird > :last-child\s*\{[^}]*grid-column:\s*2 \/ span 2/);
+  assert.match(CARD_CSS, /\.threeCandidateSingleColumn\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\)[^}]*grid-auto-rows:\s*1fr/);
+  assert.doesNotMatch(code(CARD_CSS), /\border\s*:/,
+    "layout review may place cards, but it may not change candidate DOM order");
 });
 
 test("BAL-43: measure cards keep their prior independent two-column flow", () => {

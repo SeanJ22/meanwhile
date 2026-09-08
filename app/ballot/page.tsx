@@ -47,6 +47,11 @@ import { hasVoteRecord } from "@/lib/officials/vote-record";
 import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { CandidateCard } from "@/components/ballot/candidate-card";
+import candidateCardStyles from "@/components/ballot/candidate-card.module.css";
+import {
+  threeCandidateReviewVariantFrom,
+  type ThreeCandidateReviewVariant,
+} from "@/lib/ballot/three-candidate-review";
 import {
   CandidatePositions,
 } from "@/components/ballot/candidate-positions";
@@ -726,15 +731,50 @@ function CandidateSources({ holder }: { holder: SeatHolder }) {
   return <CardSourcesList sources={sources} />;
 }
 
+const THREE_CANDIDATE_REVIEW_CLASS: Record<
+  ThreeCandidateReviewVariant,
+  string
+> = {
+  A_THREE_ACROSS: candidateCardStyles.threeCandidateAcross,
+  B_CENTERED_THIRD: candidateCardStyles.threeCandidateCenteredThird,
+  C_SINGLE_COLUMN: candidateCardStyles.threeCandidateSingleColumn,
+};
+
+/**
+ * BAL-50 owner review: only an exactly-three-candidate grid may receive an
+ * experimental composition. The ordinary class string is returned byte for
+ * byte when review mode is absent, invalid, disabled, or the count is not 3.
+ */
+function candidateGridClassName(
+  candidateCount: number,
+  variant: ThreeCandidateReviewVariant | null,
+): string {
+  if (candidateCount !== 3 || variant === null) {
+    return "ballot-candidate-grid mt-3.5";
+  }
+  return `ballot-candidate-grid mt-3.5 ${THREE_CANDIDATE_REVIEW_CLASS[variant]}`;
+}
+
+function candidateGridReviewLabel(
+  candidateCount: number,
+  variant: ThreeCandidateReviewVariant | null,
+): ThreeCandidateReviewVariant | undefined {
+  return candidateCount === 3 && variant !== null ? variant : undefined;
+}
+
 
 export default async function BallotPage({
   searchParams,
 }: {
-  searchParams: Promise<{ zip?: string }>;
+  searchParams: Promise<{ zip?: string; threeCandidateLayout?: string }>;
 }) {
   await refreshFundingFromPromoted();
-  const { zip: zipParam } = await searchParams;
+  const { zip: zipParam, threeCandidateLayout } = await searchParams;
   const zip = zipParam && /^\d{5}$/.test(zipParam) ? zipParam : null;
+  const threeCandidateReviewVariant = threeCandidateReviewVariantFrom(
+    threeCandidateLayout,
+    process.env.NODE_ENV !== "production",
+  );
 
   const resolution = zip ? resolveZip(zip) : null;
   const centroid = resolution?.ok ? resolution.centroid : null;
@@ -1816,7 +1856,16 @@ export default async function BallotPage({
                   what a November voter actually chooses among. */}
               {lineup ? (
                 <>
-                <ul className="ballot-candidate-grid mt-3.5">
+                <ul
+                  className={candidateGridClassName(
+                    lineup.nominees.length,
+                    threeCandidateReviewVariant,
+                  )}
+                  data-three-candidate-review={candidateGridReviewLabel(
+                    lineup.nominees.length,
+                    threeCandidateReviewVariant,
+                  )}
+                >
                   {photosFirst(lineup.nominees, (n) => Boolean(cardForNominee(contest.id, n.name)?.photoUrl)).map((nominee) => (
                     <li
                       key={nominee.name}
@@ -1974,7 +2023,16 @@ export default async function BallotPage({
                         {readerScopeNotes.get(contest.id)}
                       </p>
                     ))}
-                  <ul className="ballot-candidate-grid mt-3.5">
+                  <ul
+                    className={candidateGridClassName(
+                      candidatesOf(set, contest).length,
+                      threeCandidateReviewVariant,
+                    )}
+                    data-three-candidate-review={candidateGridReviewLabel(
+                      candidatesOf(set, contest).length,
+                      threeCandidateReviewVariant,
+                    )}
+                  >
                     {photosFirst(candidatesOf(set, contest), (x) => Boolean(cardForCandidacy(x.id)?.photoUrl)).map((cand) => (
                       <li
                         key={cand.id}

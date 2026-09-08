@@ -58,8 +58,28 @@ export interface CommandCentreInput {
   readonly staging: { readonly sha: string | null; readonly reviewState: string | null; readonly decision: string | null } | null;
   /** The Steward's queue depth and current item. */
   readonly steward: { readonly depth: number; readonly current: string | null; readonly paused: boolean } | null;
-  /** Promotion to readers. This is a law, not a reading: it is OFF unless a governed activation turned it on. */
-  readonly promotionOn: boolean;
+  /**
+   * Promotion to readers — TRUE, FALSE, or **NULL for "this page has not read
+   * it"**. (ADM-64 / ADM-70, the 9.7.26 feedback.)
+   *
+   * This was a `boolean` documented as "a law, not a reading: it is OFF unless
+   * a governed activation turned it on", and the home page hard-coded `false`
+   * on the strength of that law. The law was real and it governed the LEGACY
+   * nightly-window pipeline through `ACTIVATION_GATE.promotionEnabled`.
+   *
+   * The routine civic data plane that landed in PR #301 does not import that
+   * gate. It promotes through the production data plane from the standing
+   * runner, and reader surfaces consume the promoted projection. So the console
+   * was answering "Is anything being published to readers?" with a confident
+   * **"No"**, in GREEN, about a pipeline that is no longer the only one — and a
+   * false statement about the product is the one failure this whole surface
+   * exists to prevent.
+   *
+   * A boolean cannot express "nobody asked", which is why it has to become
+   * three-state rather than flip. Asserting YES without reading the plane would
+   * be the same error pointing the other way.
+   */
+  readonly promotionOn: boolean | null;
   readonly openRecordClasses: number | null;
   /** How many decisions are waiting on the owner. */
   readonly decisionsWaiting: number;
@@ -157,11 +177,22 @@ export function commandCentre(input: CommandCentreInput): readonly Answer[] {
      * record classes beside it so the owner can see both.
      */
     question: "Is anything being published to readers?",
-    says: input.promotionOn
-      ? "Yes — promotion to readers is ON"
-      : `No. Promotion to readers is off${input.openRecordClasses === null ? "" : `, and ${input.openRecordClasses} record class${input.openRecordClasses === 1 ? " is" : "es are"} open`}.`,
-    gap: null,
-    level: input.promotionOn ? "AMBER" : "GREEN",
+    says:
+      input.promotionOn === null
+        ? null
+        : input.promotionOn
+          ? "Yes — promotion to readers is ON"
+          : `No. Promotion to readers is off${input.openRecordClasses === null ? "" : `, and ${input.openRecordClasses} record class${input.openRecordClasses === 1 ? " is" : "es are"} open`}.`,
+    /*
+     * The gap names WHICH pipeline the old answer was about, because "off" was
+     * not a lie about the legacy one — it was a true statement that stopped
+     * being the whole answer when a second promotion path shipped.
+     */
+    gap:
+      input.promotionOn === null
+        ? "This page has not read the promotion state. There are two paths — the legacy nightly window, which is off by law until a governed activation turns it on, and the routine civic data plane, which promotes from the standing runner. Answering for one of them would be answering the wrong question."
+        : null,
+    level: input.promotionOn === null ? "UNKNOWN" : input.promotionOn ? "AMBER" : "GREEN",
     needsYou: false,
     action: null,
     where: "/admin/research",

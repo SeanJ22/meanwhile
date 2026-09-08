@@ -431,12 +431,23 @@ export default async function AdminPage() {
     staging: null,
     steward: null,
     /*
-     * NOT a reading: promotion to readers is OFF by law until a governed
-     * activation session turns it on, and no such session has run (PR #293
-     * built the readiness machinery and deliberately left promotion off).
+     * ADM-64 / ADM-70: this was `false`, on the strength of a law that governs
+     * ONE of the two promotion paths.
+     *
+     * The law is real — the legacy nightly window is off until a governed
+     * activation turns it on, and PR #293 deliberately left it off. But the
+     * routine civic data plane from PR #301 does not import that gate: it
+     * promotes through the production data plane from the standing runner, and
+     * reader surfaces consume the promoted projection. So the console was
+     * telling the owner "No. Promotion to readers is off" — in GREEN — about a
+     * pipeline that had stopped being the only one.
+     *
+     * This page reads neither plane, so it says so. Null is the honest value
+     * and the one the law actually supports: a hard-coded answer of either kind
+     * would be a claim nothing on this render checked.
      */
-    promotionOn: false,
-    openRecordClasses: 0,
+    promotionOn: null,
+    openRecordClasses: null,
     decisionsWaiting: waiting.length,
     stuckIncidents,
     latestReceipt: null,

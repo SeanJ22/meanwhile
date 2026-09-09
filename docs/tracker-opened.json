@@ -2426,5 +2426,15 @@
       "JOB64",
       "JOB65"
     ]
+  },
+  {
+    "session": "job-watch",
+    "opened": "2026-09-09",
+    "ids": [
+      "JOB66",
+      "JOB67",
+      "JOB68",
+      "JOB69"
+    ]
   }
 ]

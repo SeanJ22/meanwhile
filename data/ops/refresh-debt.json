@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "updatedOn": "2026-09-08",
+  "updatedOn": "2026-09-09",
   "debts": [
     {
       "sourceId": "fec",
@@ -21,18 +21,18 @@
     {
       "sourceId": "meetings",
       "firstFailedOn": "2026-09-07",
-      "lastFailedOn": "2026-09-08",
-      "consecutiveFailures": 2,
-      "reason": "the gate refused this source's data: tests/reader-agenda-representation.test.ts — its governed paths are back at HEAD and it is owed until it lands",
-      "nextDueAt": "2026-09-09"
+      "lastFailedOn": "2026-09-09",
+      "consecutiveFailures": 3,
+      "reason": "the suite is red independent of any source's data (tests/ask-exact-body-identity.test.ts, tests/ask-grounded-route.test.ts) — nothing commits under a red the refresh did not cause; its governed paths are back at HEAD and it is owed until it lands",
+      "nextDueAt": "2026-09-10"
     },
     {
       "sourceId": "nj-filing",
       "firstFailedOn": "2026-09-07",
-      "lastFailedOn": "2026-09-08",
-      "consecutiveFailures": 2,
-      "reason": "the gate refused this source's data: tests/readiness-reader-delivery.test.ts — its governed paths are back at HEAD and it is owed until it lands",
-      "nextDueAt": "2026-09-09"
+      "lastFailedOn": "2026-09-09",
+      "consecutiveFailures": 3,
+      "reason": "the suite is red independent of any source's data (tests/ask-exact-body-identity.test.ts, tests/ask-grounded-route.test.ts) — nothing commits under a red the refresh did not cause; its governed paths are back at HEAD and it is owed until it lands",
+      "nextDueAt": "2026-09-10"
     }
   ]
 }

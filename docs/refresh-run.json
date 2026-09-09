@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
-  "runDate": "2026-09-08",
-  "startedAt": "2026-09-08T13:35:04.668Z",
-  "finishedAt": "2026-09-08T14:09:25.768Z",
+  "runDate": "2026-09-09",
+  "startedAt": "2026-09-09T13:41:44.358Z",
+  "finishedAt": "2026-09-09T14:17:01.684Z",
   "mode": "CADENCE",
   "exitCode": 0,
   "sources": [
@@ -11,7 +11,7 @@
       "due": true,
       "ran": true,
       "outcome": "ROUTE_UNREAD",
-      "reason": "the gate refused this source's data: tests/reader-agenda-representation.test.ts — its governed paths are back at HEAD and it is owed until it lands",
+      "reason": "the suite is red independent of any source's data (tests/ask-exact-body-identity.test.ts, tests/ask-grounded-route.test.ts) — nothing commits under a red the refresh did not cause; its governed paths are back at HEAD and it is owed until it lands",
       "commands": [
         "ingest composite"
       ],
@@ -22,11 +22,11 @@
       ],
       "changedPaths": [],
       "recoveredFrom": [],
-      "nextDueAt": "2026-09-09",
+      "nextDueAt": "2026-09-10",
       "observations": [
         {
           "path": "data/meetings-snapshot.json",
-          "observedAt": "2026-09-08T13:35:46.927Z",
+          "observedAt": "2026-09-09T13:42:32.554Z",
           "verdict": "FACTS_CHANGED",
           "written": true,
           "stampKeys": [
@@ -40,7 +40,7 @@
             "counts",
             "sources"
           ],
-          "factsSha256": "d246c6494f6f9abe7929544d1d6336f96d46a47179ee767c5056d0feea682f6b"
+          "factsSha256": "1312ea54042f128d72609ce7a4f4554bd693ac581c43a746278bf9759d4d1d12"
         }
       ]
     },
@@ -49,7 +49,7 @@
       "due": true,
       "ran": true,
       "outcome": "ROUTE_UNREAD",
-      "reason": "the gate refused this source's data: tests/readiness-reader-delivery.test.ts — its governed paths are back at HEAD and it is owed until it lands",
+      "reason": "the suite is red independent of any source's data (tests/ask-exact-body-identity.test.ts, tests/ask-grounded-route.test.ts) — nothing commits under a red the refresh did not cause; its governed paths are back at HEAD and it is owed until it lands",
       "commands": [
         "nj:ballot --write",
         "nj:filing:check",
@@ -63,11 +63,11 @@
       ],
       "changedPaths": [],
       "recoveredFrom": [],
-      "nextDueAt": "2026-09-09",
+      "nextDueAt": "2026-09-10",
       "observations": [
         {
           "path": "data/states/nj/ballot/nj-morris-2026.json",
-          "observedAt": "2026-09-08T13:35:49.925Z",
+          "observedAt": "2026-09-09T13:42:35.946Z",
           "verdict": "FACTS_CHANGED",
           "written": true,
           "stampKeys": [
@@ -76,11 +76,11 @@
             "curatedAt"
           ],
           "ignoredTopLevel": [],
-          "factsSha256": "96252c05ae694b8cabdca815885f5c921d29aefdc7dd628b5ca677398ef71148"
+          "factsSha256": "86a49ac430b47135858779f6fa5901a9e9b7b0cdf7364d99141ceac472cdc0f6"
         },
         {
           "path": "data/states/nj/ballot/nj-morris-2026-contacts.json",
-          "observedAt": "2026-09-08T13:35:49.933Z",
+          "observedAt": "2026-09-09T13:42:35.956Z",
           "verdict": "FACTS_UNCHANGED",
           "written": false,
           "stampKeys": [
@@ -98,7 +98,7 @@
       "due": false,
       "ran": false,
       "outcome": "NOT_DUE",
-      "reason": "monthly, not due on 2026-09-08 or on any uncovered day since the last landed refresh, and carrying no debt",
+      "reason": "monthly, not due on 2026-09-09 or on any uncovered day since the last landed refresh, and carrying no debt",
       "commands": [
         "dotgov:fetch"
       ],
@@ -114,23 +114,53 @@
     }
   ],
   "catchUp": {
-    "lastLanded": "docs/refresh-run.md, run date 2026-09-07",
+    "lastLanded": "docs/refresh-run.md, run date 2026-09-08",
     "days": [
-      "2026-09-08"
+      "2026-09-09"
     ],
     "cap": 8,
     "off": false
   },
   "gate": {
     "verdict": "REFUSED",
-    "ranAt": "2026-09-08T13:59:41.590Z",
+    "ranAt": "2026-09-09T14:06:48.711Z",
     "failingFiles": [
+      "tests/ask-exact-body-identity.test.ts",
+      "tests/ask-grounded-route.test.ts",
+      "tests/day-precision.test.ts",
+      "tests/meeting-card-title.test.ts",
       "tests/reader-agenda-representation.test.ts",
+      "tests/reader-last-mile-ask-listing-identity.test.ts",
       "tests/readiness-reader-delivery.test.ts"
     ],
     "attribution": [
       {
+        "file": "tests/ask-exact-body-identity.test.ts",
+        "sourceId": null,
+        "basis": "fails with every changed source's governed paths at HEAD — the tree's, not any source's data"
+      },
+      {
+        "file": "tests/ask-grounded-route.test.ts",
+        "sourceId": null,
+        "basis": "fails with every changed source's governed paths at HEAD — the tree's, not any source's data"
+      },
+      {
+        "file": "tests/day-precision.test.ts",
+        "sourceId": "meetings",
+        "basis": "passes with meetings's governed paths at HEAD"
+      },
+      {
+        "file": "tests/meeting-card-title.test.ts",
+        "sourceId": "meetings",
+        "basis": "passes with meetings's governed paths at HEAD"
+      },
+      {
         "file": "tests/reader-agenda-representation.test.ts",
+        "sourceId": "meetings",
+        "basis": "passes with meetings's governed paths at HEAD"
+      },
+      {
+        "file": "tests/reader-last-mile-ask-listing-identity.test.ts",
         "sourceId": "meetings",
         "basis": "passes with meetings's governed paths at HEAD"
       },
@@ -140,12 +170,12 @@
         "basis": "passes with nj-filing's governed paths at HEAD"
       }
     ],
-    "note": "The suite refused 2 source(s): meetings, nj-filing. Their governed paths are back at HEAD and they are owed (data/ops/refresh-debt.json). 0 survivor(s) commit: none."
+    "note": "The suite is red independent of the refreshed data — tests/ask-exact-body-identity.test.ts, tests/ask-grounded-route.test.ts fail with every changed source at HEAD. That is a defect on main, not a source's; nothing commits under it, and every changed source is owed until the tree is green."
   },
   "renewal": {
     "verdict": "RENEWED",
-    "ranAt": "2026-09-08T13:39:06.766Z",
-    "exactHead": "87f79722ac627839330b2fe9c0485c83339a10f9",
+    "ranAt": "2026-09-09T13:45:56.496Z",
+    "exactHead": "673f1ddc63fbc5f513a89034d65990ff9849b99b",
     "changedHoldings": [
       "data/meetings-snapshot.json",
       "data/states/nj/ballot/nj-morris-2026.json"
@@ -161,25 +191,25 @@
       {
         "name": "exact-head production build",
         "ok": true,
-        "secs": 71,
+        "secs": 73,
         "detail": "build log recorded"
       },
       {
         "name": "serve the build on localhost",
         "ok": true,
         "secs": 1,
-        "detail": "serving 87f79722"
+        "detail": "serving 673f1ddc"
       },
       {
         "name": "prepare the census",
         "ok": true,
-        "secs": 70,
+        "secs": 71,
         "detail": null
       },
       {
         "name": "active portrait inventory",
         "ok": true,
-        "secs": 72,
+        "secs": 73,
         "detail": null
       },
       {
@@ -197,13 +227,13 @@
       {
         "name": "exhaustive routes",
         "ok": true,
-        "secs": 49,
+        "secs": 48,
         "detail": null
       },
       {
         "name": "exhaustive ask",
         "ok": true,
-        "secs": 11,
+        "secs": 12,
         "detail": null
       },
       {
@@ -221,7 +251,7 @@
       {
         "name": "ballot",
         "ok": true,
-        "secs": 31,
+        "secs": 32,
         "detail": null
       },
       {
@@ -275,7 +305,7 @@
       {
         "name": "final render and witnesses",
         "ok": true,
-        "secs": 42,
+        "secs": 41,
         "detail": null
       },
       {
@@ -293,8 +323,8 @@
       {
         "name": "validate the renewed receipt",
         "ok": true,
-        "secs": 40,
-        "detail": "holdings digest 25e73a2d, 463 sources bound"
+        "secs": 41,
+        "detail": "holdings digest b5e1d135, 463 sources bound"
       }
     ],
     "refusedSources": [],

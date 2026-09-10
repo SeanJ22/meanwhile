@@ -1,0 +1,130 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { spawnSync } from "node:child_process";
+import test from "node:test";
+import { fileURLToPath, pathToFileURL } from "node:url";
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const REGISTER = join(ROOT, "tests", "fixtures", "apply-migrations-neon-register.mjs");
+const SCRIPT = join(ROOT, "scripts", "apply-migrations.mts");
+const SQL_PREFIX = "APPLY_MIGRATIONS_FAKE_SQL ";
+const EVENT_PREFIX = "APPLY_MIGRATIONS_FAKE_EVENT ";
+
+interface RunResult {
+  status: number | null;
+  output: string;
+  statements: string[];
+  events: unknown[];
+}
+
+function run(args: string[], env: Record<string, string> = {}): RunResult {
+  const child = spawnSync(
+    process.execPath,
+    [
+      "--no-warnings",
+      "--experimental-strip-types",
+      "--import",
+      pathToFileURL(REGISTER).href,
+      SCRIPT,
+      ...args,
+    ],
+    {
+      cwd: ROOT,
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        DATABASE_URL: "postgresql://local_writer:secret@example.invalid/wtp_test",
+        WTP_DB_ROLE: "local",
+        ...env,
+      },
+      maxBuffer: 16 * 1024 * 1024,
+    },
+  );
+  const output = `${child.stdout}${child.stderr}`;
+  const lines = output.split(/\r?\n/);
+  return {
+    status: child.status,
+    output,
+    statements: lines
+      .filter((line) => line.startsWith(SQL_PREFIX))
+      .map((line) => JSON.parse(line.slice(SQL_PREFIX.length)) as string),
+    events: lines
+      .filter((line) => line.startsWith(EVENT_PREFIX))
+      .map((line) => JSON.parse(line.slice(EVENT_PREFIX.length)) as unknown),
+  };
+}
+
+function journal() {
+  return JSON.parse(
+    readFileSync(join(ROOT, "lib", "db", "migrations", "meta", "_journal.json"), "utf8"),
+  ) as { entries: { tag: string; when: number }[] };
+}
+
+test("db:apply --dry plans against an absent journal using SELECT only", () => {
+  const committed = journal().entries;
+  const result = run(["--dry"], { APPLY_MIGRATIONS_FAKE_JOURNAL_EXISTS: "0" });
+
+  assert.equal(result.status, 0, result.output);
+  assert.equal(result.statements.length, 1, result.output);
+  assert.match(result.statements[0], /^SELECT\s+to_regclass\b/i);
+  assert.ok(
+    result.statements.every((statement) => /^SELECT\b/i.test(statement)),
+    `dry mode issued a non-read statement: ${JSON.stringify(result.statements)}`,
+  );
+  assert.deepEqual(result.events, [], "dry mode opened a transaction");
+  assert.match(
+    result.output,
+    new RegExp(`${committed.length} migration\\(s\\) committed · 0 already applied here · ${committed.length} pending`),
+  );
+  assert.match(result.output, /DRY RUN — nothing applied\./);
+});
+
+test("db:apply --dry preserves applied/pending planning without issuing DDL", () => {
+  const committed = journal().entries;
+  assert.ok(committed.length >= 3, "fixture needs at least three committed migrations");
+  const alreadyApplied = committed.slice(0, 2);
+  const result = run(["--dry"], {
+    APPLY_MIGRATIONS_FAKE_JOURNAL_EXISTS: "1",
+    APPLY_MIGRATIONS_FAKE_APPLIED_WHEN: alreadyApplied.map((entry) => entry.when).join(","),
+  });
+
+  assert.equal(result.status, 0, result.output);
+  assert.equal(result.statements.length, 2, result.output);
+  assert.ok(
+    result.statements.every((statement) => /^SELECT\b/i.test(statement)),
+    `dry mode issued a non-read statement: ${JSON.stringify(result.statements)}`,
+  );
+  assert.doesNotMatch(result.output, /\bCREATE\s+(?:SCHEMA|TABLE)\b/i);
+  assert.deepEqual(result.events, [], "dry mode opened a transaction");
+  assert.match(
+    result.output,
+    new RegExp(
+      `${committed.length} migration\\(s\\) committed · 2 already applied here · ${committed.length - 2} pending`,
+    ),
+  );
+  for (const entry of alreadyApplied) {
+    assert.doesNotMatch(result.output, new RegExp(`pending: ${entry.tag}(?:\\r?\\n|$)`));
+  }
+  assert.match(result.output, new RegExp(`pending: ${committed[2].tag}(?:\\r?\\n|$)`));
+});
+
+test("non-dry db:apply keeps setup and migration journalling fail-closed", () => {
+  const result = run([], { APPLY_MIGRATIONS_FAKE_TRANSACTION_FAIL: "1" });
+
+  assert.equal(result.status, 1, result.output);
+  assert.ok(
+    result.statements.some((statement) => /^CREATE\s+SCHEMA\b/i.test(statement)),
+    `non-dry setup did not create the Drizzle schema: ${JSON.stringify(result.statements)}`,
+  );
+  assert.ok(
+    result.statements.some((statement) => /^CREATE\s+TABLE\b/i.test(statement)),
+    `non-dry setup did not create the Drizzle journal: ${JSON.stringify(result.statements)}`,
+  );
+  assert.ok(result.events.length > 0, "the planted failure never reached a migration transaction");
+  assert.match(result.output, /FAIL\s+transaction rolled back before the journal row was written/);
+  assert.match(result.output, /applied no durable statements in this run/);
+  assert.match(result.output, /planted transaction failure/);
+  assert.doesNotMatch(result.output, /journalled\s+hash=/);
+  assert.doesNotMatch(result.output, /Applied \d+ migration/);
+});

@@ -104,18 +104,39 @@ const journal = JSON.parse(
   readFileSync(join(process.cwd(), "lib/db/migrations/meta/_journal.json"), "utf8"),
 ) as { entries: JournalEntry[] };
 
-await sql`CREATE SCHEMA IF NOT EXISTS drizzle`;
-await sql`
-  CREATE TABLE IF NOT EXISTS drizzle.__drizzle_migrations (
-    id SERIAL PRIMARY KEY,
-    hash text NOT NULL,
-    created_at bigint
-  )
-`;
+type AppliedMigration = { hash: string; created_at: string | number };
 
-const applied = (await sql`
-  SELECT hash, created_at FROM drizzle.__drizzle_migrations ORDER BY created_at
-`) as { hash: string; created_at: string | number }[];
+let applied: AppliedMigration[];
+if (DRY) {
+  /*
+   * Planning is a read path. In particular, the first dry run against an
+   * empty database must not create Drizzle's schema merely so it can report
+   * that every committed migration is pending. `to_regclass` lets that first
+   * observation stay a SELECT; an absent journal is the same planning state
+   * as an existing journal with zero rows.
+   */
+  const journalState = (await sql`
+    SELECT to_regclass('drizzle.__drizzle_migrations') IS NOT NULL AS exists
+  `) as { exists: boolean }[];
+  applied = journalState[0]?.exists
+    ? ((await sql`
+        SELECT hash, created_at FROM drizzle.__drizzle_migrations ORDER BY created_at
+      `) as AppliedMigration[])
+    : [];
+} else {
+  await sql`CREATE SCHEMA IF NOT EXISTS drizzle`;
+  await sql`
+    CREATE TABLE IF NOT EXISTS drizzle.__drizzle_migrations (
+      id SERIAL PRIMARY KEY,
+      hash text NOT NULL,
+      created_at bigint
+    )
+  `;
+
+  applied = (await sql`
+    SELECT hash, created_at FROM drizzle.__drizzle_migrations ORDER BY created_at
+  `) as AppliedMigration[];
+}
 const appliedWhen = new Set(applied.map((r) => Number(r.created_at)));
 
 /*

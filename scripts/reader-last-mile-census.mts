@@ -2,7 +2,9 @@ import { existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { applyReaderApplicability, buildReaderCensus, censusClosureFailures, composeCanonicalRouteProofs, composeReaderComponentProofs, packReaderEvidence, readerBundleEvidence, readerCensusSummary, readerProofInventory, readReaderEvidence, projectCanonicalReaderRecords, reconcileDelivery, renderCanonicalReaderComponents, renderCensusMarkdown, sha256, type ReaderDeliveryProof, type ReaderProjectionReport, type ReaderSurfaceClassWitness } from "../lib/holdings/reader-census.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
-import { readerSourceFingerprint, readerNestedFieldInventory, validateReaderClosureReceipt, type ReaderClosureReceipt } from "../lib/holdings/reader-census.ts";
+import { readerSourceFingerprint, readerNestedFieldInventory, readerClosureExecutionAuthorityAdmission, readerClosureExecutionAuthorityProblems, validateReaderClosureReceipt, validateReaderProductionClosureReceipt, type ReaderClosureExecutionAuthorityEvidence, type ReaderClosureExecutionAuthorityReference, type ReaderClosureReceipt, type ReaderSourceHash } from "../lib/holdings/reader-census.ts";
+import { readerExecutionAuthorityLiveProblems } from "../lib/holdings/reader-execution-authority.ts";
+import { createNeonReaderAuthoritySql } from "./reader-execution-authority-evidence.mts";
 import { activePortraitInventory } from "../lib/holdings/reader-census.ts";
 
 const args = process.argv.slice(2);
@@ -10,8 +12,31 @@ const option = (name: string) => { const i = args.indexOf(name); return i < 0 ? 
 const root = option("--root") ?? process.cwd();
 const receiptToValidate = option("--validate-closure");
 if (receiptToValidate) {
-  const failures = validateReaderClosureReceipt(root, JSON.parse(readReaderEvidence(root, receiptToValidate).toString("utf8")) as ReaderClosureReceipt);
-  console.log(JSON.stringify({ receiptToValidate, failures },null,2));
+  const receipt = JSON.parse(readReaderEvidence(root, receiptToValidate).toString("utf8")) as ReaderClosureReceipt;
+  const requiredAuthorityPhase = option("--require-authority-phase");
+  if (requiredAuthorityPhase && requiredAuthorityPhase !== "PRODUCTION") throw new Error("Only the terminal PRODUCTION authority phase can be required");
+  const productionReadConnection = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY?.trim() ?? "";
+  const failures = requiredAuthorityPhase === "PRODUCTION"
+    ? validateReaderProductionClosureReceipt(root, receipt, productionReadConnection, receiptToValidate)
+    : validateReaderClosureReceipt(root, receipt, { receiptPath: receiptToValidate });
+  if (requiredAuthorityPhase === "PRODUCTION" && failures.length === 0 && receipt.executionAuthority) {
+    try {
+      const evidence = JSON.parse(
+        readReaderEvidence(root, receipt.executionAuthority.evidencePath).toString("utf8"),
+      ) as ReaderClosureExecutionAuthorityEvidence;
+      failures.push(...await readerExecutionAuthorityLiveProblems(evidence, {
+        connection: productionReadConnection,
+        providerMetadataPath: evidence.store.providerMetadataPath,
+        providerMetadataBytes: readReaderEvidence(root, evidence.store.providerMetadataPath),
+        importReceiptPath: evidence.import.receiptPath,
+        importReceiptBytes: readReaderEvidence(root, evidence.import.receiptPath),
+        sql: createNeonReaderAuthoritySql(productionReadConnection),
+      }));
+    } catch {
+      failures.push("Reader production closure live authority readback could not be executed");
+    }
+  }
+  console.log(JSON.stringify({ receiptToValidate, requiredAuthorityPhase: requiredAuthorityPhase ?? "ANY_EXPLICIT_PHASE_OR_LEGACY_INHERITED", failures },null,2));
   process.exit(failures.length ? 1 : 0);
 }
 const packPath = option("--pack");
@@ -108,13 +133,42 @@ if (args.includes("--check")) {
   writeFileSync(join(root, markdownPath), markdown);
   writeFileSync(join(root, output.replace(/\.json$/, "-summary.json")), `${JSON.stringify(readerCensusSummary(census), null, 2)}\n`);
 }
-if (args.includes("--closure")) problems.push(...censusClosureFailures(census));
+let closureAuthority: ReaderClosureExecutionAuthorityReference | undefined;
+let closureEvidenceHashes: readonly ReaderSourceHash[] = [];
+if (args.includes("--closure")) {
+  problems.push(...censusClosureFailures(census));
+  const authorityEvidencePath = option("--authority-evidence");
+  const witnessManifest = option("--component-witnesses");
+  let authoritySupportPaths: readonly string[] = [];
+  if (!authorityEvidencePath) {
+    problems.push("Fresh Reader closure requires --authority-evidence");
+  } else {
+    try {
+      const admission = readerClosureExecutionAuthorityAdmission(root, authorityEvidencePath);
+      closureAuthority = admission.reference;
+      authoritySupportPaths = admission.supportPaths;
+    } catch (error) {
+      problems.push(error instanceof Error ? error.message : "Reader closure authority evidence is missing or unreadable");
+    }
+  }
+  const evidencePaths = [...new Set([
+    ...census.rows.flatMap((row)=>row.evidencePaths),
+    ...(witnessManifest ? [witnessManifest] : []),
+    ...(authorityEvidencePath ? [authorityEvidencePath] : []),
+    ...authoritySupportPaths,
+  ])].sort();
+  closureEvidenceHashes = evidencePaths.flatMap((path) => {
+    try { return [{ path, sha256: sha256(readReaderEvidence(root, path)) }]; }
+    catch { problems.push(`Reader closure evidence is missing or unreadable: ${path}`); return []; }
+  });
+  problems.push(...readerClosureExecutionAuthorityProblems(root, census, closureAuthority, closureEvidenceHashes));
+}
 if (args.includes("--closure") && problems.length === 0) {
   // RULING 20 keeps screenshot bytes outside git. Validate their hashes during
   // composition, then retain the exact reviewed-image manifest as durable proof.
-  const witnessManifest = option("--component-witnesses");
-  const evidenceHashes = [...new Set([...census.rows.flatMap((row)=>row.evidencePaths), ...(witnessManifest ? [witnessManifest] : [])])].sort().map((path)=>({path,sha256:sha256(readReaderEvidence(root,path))}));
-  const receipt: ReaderClosureReceipt = { formatVersion: 1, censusPath: output, censusSha256: sha256(json), holdingsDigest: census.holdingsDigest, registrySha256: census.registrySha256, sourceHashes: readerSourceFingerprint(root), evidenceHashes };
+  // The separately hashed authority artifact contains sanitized environment,
+  // read-only, import and pointer-set identities; no credential enters Git.
+  const receipt: ReaderClosureReceipt = { formatVersion: 1, censusPath: output, censusSha256: sha256(json), holdingsDigest: census.holdingsDigest, registrySha256: census.registrySha256, sourceHashes: readerSourceFingerprint(root), evidenceHashes: closureEvidenceHashes, executionAuthority: closureAuthority };
   writeFileSync(join(root, output.replace(/\.json$/, "-receipt.json")), `${JSON.stringify(receipt,null,2)}\n`);
 }
 console.log(JSON.stringify({ output, denominator: census.denominator, delivery: Object.fromEntries([...new Set(census.rows.map((r) => r.deliveryState))].map((state) => [state, census.rows.filter((r) => r.deliveryState === state).length])), stagedAutonomous: census.autonomous.length, closureObligations: censusClosureFailures(census).length, problemCount: problems.length, firstProblems: problems.slice(0, 20) }, null, 2));

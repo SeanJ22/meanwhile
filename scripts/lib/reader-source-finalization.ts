@@ -4,6 +4,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import {
   readReaderEvidence, readerSourceFingerprint, readerRowStructuralSha256,
   readerProofInheritanceProblems, censusClosureFailures, packReaderEvidence, sha256,
+  readerClosureExecutionAuthorityAdmission, readerClosureExecutionAuthorityProblems,
   type ReaderCensus, type ReaderClosureReceipt, type ReaderProofInvalidationReport,
   type ReaderSourceRevalidation, type ReaderComponentCase,
 } from "../../lib/holdings/reader-census.ts";
@@ -12,7 +13,7 @@ import {
  * identities or applicability: every prepared row must match the closed row. */
 export function finalizeReaderSources(root: string, prepared: ReaderCensus, options: {
   receiptPath: string; reportPath: string; baselineCommit: string;
-  executionPath: string; outputPrefix: string;
+  executionPath: string; outputPrefix: string; authorityEvidencePath: string;
 }) {
   const priorReceiptBytes = readReaderEvidence(root, options.receiptPath);
   const prior = JSON.parse(priorReceiptBytes.toString("utf8")) as ReaderClosureReceipt;
@@ -46,6 +47,9 @@ export function finalizeReaderSources(root: string, prepared: ReaderCensus, opti
   const execution = JSON.parse(executionBytes.toString("utf8")) as { exactHead: string; cases: ReaderComponentCase[]; failures: string[] };
   assert.deepEqual(execution.failures, []);
   assert.ok(execution.cases.length);
+  const currentHead = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
+  assert.equal(execution.exactHead, currentHead, "Source renewal execution authority must bind the current finalizer HEAD");
+  const authority = readerClosureExecutionAuthorityAdmission(root, options.authorityEvidencePath);
   const sourceHashes = readerSourceFingerprint(root);
   const oldSources = new Map(prior.sourceHashes.map(source => [source.path, source.sha256]));
   for (const equivalent of prior.sourceEolEquivalences ?? []) oldSources.set(equivalent.path, equivalent.canonicalLfSha256);
@@ -82,11 +86,19 @@ export function finalizeReaderSources(root: string, prepared: ReaderCensus, opti
   assert.deepEqual(readerProofInheritanceProblems(root, census, report), [], "Executed renewal and inherited classifications must satisfy the receipt validator before publication");
   writeFileSync(options.reportPath, `${JSON.stringify(report, null, 2)}\n`);
   packReaderEvidence(root, options.reportPath);
-  const evidencePaths = [...new Set([...prior.evidenceHashes.map(entry => entry.path), priorReceiptPath, priorReportPath, proofPath, options.executionPath])].sort();
+  const evidencePaths = [...new Set([
+    ...prior.evidenceHashes.map(entry => entry.path), priorReceiptPath, priorReportPath,
+    proofPath, options.executionPath, authority.reference.evidencePath, ...authority.supportPaths,
+  ])].sort();
+  const evidenceHashes = evidencePaths.map(path => ({ path, sha256: sha256(readReaderEvidence(root, path)) }));
+  assert.deepEqual(readerClosureExecutionAuthorityProblems(
+    root, census, authority.reference, evidenceHashes, { provedHead: currentHead },
+  ), [], "Source renewal requires fresh current-head execution authority");
   const receipt: ReaderClosureReceipt = {
     formatVersion: 1, censusPath: prior.censusPath, censusSha256: prior.censusSha256,
     holdingsDigest: prior.holdingsDigest, registrySha256: prior.registrySha256, sourceHashes,
-    evidenceHashes: evidencePaths.map(path => ({ path, sha256: sha256(readReaderEvidence(root, path)) })),
+    evidenceHashes,
+    executionAuthority: authority.reference,
     inheritance: { reportPath: options.reportPath, reportSha256: sha256(readReaderEvidence(root, options.reportPath)) },
   };
   writeFileSync(options.receiptPath, `${JSON.stringify(receipt, null, 2)}\n`);

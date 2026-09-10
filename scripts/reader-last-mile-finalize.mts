@@ -12,6 +12,8 @@ import {
   projectCanonicalReaderRecords,
   readerBundleEvidence,
   readerCensusSummary,
+  readerClosureExecutionAuthorityAdmission,
+  readerClosureExecutionAuthorityProblems,
   readerSourceFingerprint,
   readReaderEvidence,
   reconcileDelivery,
@@ -57,6 +59,12 @@ const routePaths = [
 ];
 const preparedCensusPath = process.env.READER_FINAL_PREPARED_CENSUS ?? "../reader-last-mile-final-prepared-census.json";
 const proofSourcesPath = process.env.READER_PROOF_SOURCES ?? "../reader-last-mile-final-proof-sources.json";
+const authorityEvidencePath = () => {
+  const path = process.env.READER_EXECUTION_AUTHORITY_EVIDENCE?.trim();
+  assert.ok(path, "Final Reader closure requires READER_EXECUTION_AUTHORITY_EVIDENCE");
+  assert.match(path, /^docs\/evidence\/reader-last-mile-[a-z0-9-]+\.json$/);
+  return path;
+};
 
 // A later canonical holding refresh starts from the latest committed closure,
 // not from the historical first closure. Archive those exact committed bytes
@@ -103,7 +111,10 @@ if (process.argv.includes("--revalidate-source")) {
   const executionPath = process.env.READER_RENEWAL_EXECUTION;
   const outputPrefix = process.env.READER_RENEWAL_PREFIX;
   assert.ok(baselineCommit && executionPath && outputPrefix, "Source renewal requires a committed baseline, executed proof and evidence prefix");
-  console.log(JSON.stringify(finalizeReaderSources(root, census, { receiptPath, reportPath: invalidationPath, baselineCommit, executionPath, outputPrefix }), null, 2));
+  console.log(JSON.stringify(finalizeReaderSources(root, census, {
+    receiptPath, reportPath: invalidationPath, baselineCommit, executionPath, outputPrefix,
+    authorityEvidencePath: authorityEvidencePath(),
+  }), null, 2));
   process.exit(0);
 }
 const inherited = inheritReaderProofs(root, census, {
@@ -185,6 +196,7 @@ writeFileSync("docs/evidence/reader-last-mile-final-delta-summary.json", `${JSON
 // stable because readReaderEvidence transparently verifies the gzip bytes.
 packReaderEvidence(root, componentPath);
 packReaderEvidence(root, censusPath);
+const authority = readerClosureExecutionAuthorityAdmission(root, authorityEvidencePath());
 const evidencePaths = [...new Set([
   ...census.rows.flatMap((row) => row.evidencePaths),
   invalidationPath,
@@ -193,7 +205,13 @@ const evidencePaths = [...new Set([
   buildReceiptPath,
   portraitProofPath,
   ...routePaths,
+  authority.reference.evidencePath,
+  ...authority.supportPaths,
 ])].sort();
+const evidenceHashes = evidencePaths.map((path) => ({ path, sha256: sha256(readReaderEvidence(root, path)) }));
+assert.deepEqual(readerClosureExecutionAuthorityProblems(
+  root, census, authority.reference, evidenceHashes, { provedHead: codeHead },
+), [], "Final Reader closure requires fresh current-head execution authority");
 const receipt: ReaderClosureReceipt = {
   formatVersion: 1,
   censusPath,
@@ -201,7 +219,8 @@ const receipt: ReaderClosureReceipt = {
   holdingsDigest: census.holdingsDigest,
   registrySha256: census.registrySha256,
   sourceHashes: readerSourceFingerprint(root),
-  evidenceHashes: evidencePaths.map((path) => ({ path, sha256: sha256(readReaderEvidence(root, path)) })),
+  evidenceHashes,
+  executionAuthority: authority.reference,
   inheritance: { reportPath: invalidationPath, reportSha256: sha256(readReaderEvidence(root, invalidationPath)) },
 };
 writeFileSync(receiptPath, `${JSON.stringify(receipt, null, 2)}\n`);

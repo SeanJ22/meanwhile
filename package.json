@@ -257,6 +257,7 @@
     "queue:homes": "tsx scripts/queue-homes.mts",
     "readback:artifact": "tsx scripts/readback-artifact.mts",
     "readback:control-plane": "node --env-file=.env.local --experimental-strip-types scripts/lane-c-readback.mts",
+    "reader:production-closure": "node --env-file=.env.local --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/reader-last-mile-census.mts --validate-closure docs/evidence/reader-last-mile-final-closure-receipt.json --require-authority-phase PRODUCTION",
     "reader:suite": "tsx scripts/reader-suite.mts",
     "reference:verify": "tsx scripts/reference-verify.mts",
     "regen": "tsx scripts/regen-check.mts",

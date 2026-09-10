@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 617,
-    "named": 6435,
+    "files": 624,
+    "named": 6481,
     "dynamic": 27
   },
   "files": {
@@ -792,6 +792,14 @@
       ],
       "dynamic": 0
     },
+    "tests/apply-migrations-dry.test.ts": {
+      "names": [
+        "db:apply --dry plans against an absent journal using SELECT only",
+        "db:apply --dry preserves applied/pending planning without issuing DDL",
+        "non-dry db:apply keeps setup and migration journalling fail-closed"
+      ],
+      "dynamic": 0
+    },
     "tests/area-facts.test.ts": {
       "names": [
         "all three covered states answer all seven mover questions",
@@ -1452,6 +1460,12 @@
         "BAL-30: a school-district override no longer files under 'Statewide measures'",
         "BAL-30: the ballot page renders the question and the statement it holds",
         "BAL-30: the local measure text is committed, and it is not thin"
+      ],
+      "dynamic": 0
+    },
+    "tests/ballot-nh-roster-preload.test.ts": {
+      "names": [
+        "a fresh ballot process preloads the permanent NH roster and fails closed on unavailable or absent authority"
       ],
       "dynamic": 0
     },
@@ -2245,6 +2259,7 @@
     },
     "tests/civic-data-store-integrity.test.ts": {
       "names": [
+        "Postgres routine-data timestamps have one fail-closed canonical evidence boundary",
         "Reader proof cannot be appended after the canonical pointer leaves that version",
         "a candidate cannot overwrite a pointer that moved after its LKG validation",
         "a contract-A runtime envelope cannot mutate contract B through the public store API",
@@ -6018,6 +6033,7 @@
     "tests/pdc-v2-trusted-lkg-importer.test.ts": {
       "names": [
         "exact fc67 fixtures deterministically build and seed only the 95 absent trusted-LKG pointers",
+        "the Postgres retirement lock binds the exact pre-read replacement promotion clock",
         "the browser-safe venue content key is an exact UTF-16 encoding",
         "the exact venue identity is browser-safe across every alias-aware Next client reachability path",
         "the importer consumes one fresh parent-bound quiescence lease before opening writes",
@@ -6691,6 +6707,26 @@
       ],
       "dynamic": 0
     },
+    "tests/reader-execution-authority-evidence.test.ts": {
+      "names": [
+        "a source-native skipped pointer needs promotion/readback proof but no bootstrap envelope",
+        "authority output is atomic, exclusive, and identical support recovery is bounded",
+        "diagnostics redact URL and credential material",
+        "forged durable candidate and event receipts fail independently of pointer counts",
+        "forged receipts and pointer sets cannot become authority evidence",
+        "missing, forged, stale, extra, and secret-bearing provider metadata fail closed",
+        "phase relabeling cannot turn a rehearsal child into production evidence",
+        "production authority binds the pinned standing branch and no clone claim",
+        "re-attested authority binds the exact predecessor row, receipt, pointer, and contiguous events",
+        "the CLI surface never accepts a database URL and derives phase-specific paths",
+        "the Neon adapter submits the write probe only as an explicit read-only transaction",
+        "the fake transport produces only sanitized, hash-bound rehearsal authority",
+        "the publication-boundary repository proof rejects clean-head races",
+        "the terminal comparator re-reads live authority and emits no driver secret",
+        "writable, non-refusing, and database-mismatched handles fail closed"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-finance-delivery.test.ts": {
       "names": [
         "Katie Hobbs ballot, official API, and shared Ask selector use one canonical record",
@@ -6812,8 +6848,18 @@
       ],
       "dynamic": 0
     },
+    "tests/reader-last-mile-census-outputs.test.ts": {
+      "names": [
+        "Reader census output redirection fails closed on partial, unused, unsafe, duplicate, or colliding destinations",
+        "Reader census preserves its historical side-output defaults",
+        "Reader census redirects every side output through explicit bounded paths",
+        "fresh Reader closure serialization cannot acquire an inheritance seam"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-last-mile-census.test.ts": {
       "names": [
+        "Reader execution authority labels an isolated child rehearsal without letting it masquerade as terminal production",
         "applicability keeps source inputs distinct without erasing direct reader obligations",
         "ballot scope cannot hide an eligible incumbent when the consumer join returns null",
         "committed autonomous negative controls preserve the exact AZ, NJ and NH lifecycle burdens",
@@ -6825,7 +6871,9 @@
         "every declared canonical dataset/surface edge has an executable consumer path",
         "every held voting jurisdiction and site survives the real route into the actual panel leaf",
         "evidence packaging preserves the exact baseline JSON and deterministic archive",
+        "fresh Reader closure admission requires authority while inherited historical receipts retain compatibility",
         "graph control crosses actual API fetches and fails when the reader import is removed",
+        "legacy execution-authority compatibility is pinned to exact pre-seam path and bytes",
         "reader readback counts missing rows and refuses wrong-candidate identities, false counts, and unchecked evidence",
         "receipt EOL equivalence accepts only archived executed bytes and their exact Git LF form",
         "render instrument rejects a vanished eligible fact, an inherited identity and a false row count",
@@ -6845,6 +6893,16 @@
       "names": [
         "every canonical state-finance target survives the real route, including long school-seat IDs",
         "funding route refuses malformed or excessive identifiers without guessing another person"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-last-mile-generator-paths.test.ts": {
+      "names": [
+        "Reader final packaging is lossless and does not rewrite an inherited closure receipt",
+        "Reader final packaging preflights every source before mutating any source",
+        "Reader final packaging requires a complete explicit deterministic target denominator",
+        "Reader proof generators retain production defaults and accept explicit rehearsal paths",
+        "Reader proof path overrides fail closed when blank, duplicate, or outside the evidence namespace"
       ],
       "dynamic": 0
     },
@@ -6921,6 +6979,13 @@
       ],
       "dynamic": 0
     },
+    "tests/reader-last-mile-surface-witnesses.test.ts": {
+      "names": [
+        "surface witness composition is an exact-head, hash-bound deterministic union",
+        "surface witness composition refuses duplicate, stale, changed, or incomplete proof"
+      ],
+      "dynamic": 0
+    },
     "tests/reader-last-mile-trace.test.ts": {
       "names": [
         "Next deployment tracing includes static geography and excludes every migrated runtime first seed",
@@ -6971,6 +7036,21 @@
       "names": [
         "PRDY-4: a moved sitting is a REPLACE naming the changed fields; an online sitting renders its label and never a pin; a missing agenda is OUR gap unless the publisher's slot was observed empty",
         "PRDY-4: over the real committed snapshot, the 17 held Pima sittings project UNCHANGED (fact equals the Reader's own row) and the 18th is ADDED through validateSnapshot"
+      ],
+      "dynamic": 0
+    },
+    "tests/reader-proof-history.test.ts": {
+      "names": [
+        "a fresh Reader receipt derives one exact head from every applicable census row",
+        "a fresh Reader receipt rejects an applicable row with no exact proof head",
+        "a fresh Reader receipt rejects applicable rows proved at mixed heads",
+        "an inherited Reader receipt keeps the invalidation report as its proof-head authority but legacy authority is exact-byte bounded",
+        "archived controller support binds exact result and disposition membership digests",
+        "archived support rejects recursive schema additions and secret-bearing keys regardless of value type",
+        "fresh Reader history re-parses exact archived provider and controller support instead of trusting matching hashes",
+        "fresh Reader history requires a hash-bound execution authority at the exact proved head",
+        "production Reader history accepts only controller import commit A bound beneath distinct authority commit B",
+        "terminal Reader history cannot accept a valid child rehearsal or a relabeled clone"
       ],
       "dynamic": 0
     },
@@ -7458,7 +7538,8 @@
         "PDC-12 uses one canonical, non-future deployment boundary for the whole denominator",
         "PDC-12 verifies every typed Reader family and explicitly treats dotgov as non-Reader",
         "a held or unavailable live attempt must be a canonical post-deploy event",
-        "promotable state rosters and bounded NH/NJ rolls require GOOD live proof while unavailable AZ rolls remain fail closed"
+        "promotable state rosters and bounded NH/NJ rolls require GOOD live proof while unavailable AZ rolls remain fail closed",
+        "terminal Reader production authority is a post-evidence gate, not a circular dependency inside the clean detached live harness"
       ],
       "dynamic": 0
     },

@@ -13,17 +13,189 @@ import { proveVotingSites } from "../scripts/reader-last-mile-voting-sites.mts";
 import { registerReaderRenderHooks } from "../lib/holdings/reader-census.ts";
 import { readerSourceFingerprint, readerSourceHashProblems } from "../lib/holdings/reader-census.ts";
 import { ballotHolderObligationFailures } from "../lib/holdings/reader-census.ts";
-import { validateReaderClosureReceipt, type ReaderClosureReceipt } from "../lib/holdings/reader-census.ts";
+import { isKnownLegacyReaderClosureReceipt, readerClosureExecutionAuthorityEvidenceProblems, readerClosureExecutionAuthorityProblems, readerClosureReadConnectionIdentity, validateReaderClosureReceipt, type ReaderClosureExecutionAuthorityEvidence, type ReaderClosureReceipt } from "../lib/holdings/reader-census.ts";
 import { readerAcquisitionBoundaryProblems } from "../lib/holdings/reader-census.ts";
 import { ballotQualificationFailures, type BallotQualificationObligation } from "../lib/holdings/reader-census.ts";
 import { sourceEolEquivalenceProblems, type ReaderSourceEolEquivalence } from "../lib/holdings/reader-census.ts";
 import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 import ts from "typescript";
+import { PDC_NEON_PROJECT_ID, PDC_PRODUCTION_BRANCH_ID, readerAuthorityIdentityHash } from "../lib/holdings/reader-execution-authority.ts";
 
 await installRegistryRuntimeFirstSeeds();
 
 const canonical: EligibilityFacts = { held: true, source: "CANONICAL_READER_SNAPSHOT", relationship: "CANONICAL_READER_RECORD", identity: "RESOLVED" };
 const staged: EligibilityFacts = { ...canonical, source: "AUTONOMOUS_STAGING", relationship: "ACQUISITION_INPUT" };
+
+const authorityHash = (character: string) => character.repeat(64);
+const authorityHead = "a".repeat(40);
+const authorityProductionHead = "b".repeat(40);
+function authorityEvidence(phase: "REHEARSAL" | "PRODUCTION"): ReaderClosureExecutionAuthorityEvidence {
+  const slug = phase.toLowerCase();
+  return {
+    formatVersion: 1,
+    phase,
+    exactHead: phase === "PRODUCTION" ? authorityProductionHead : authorityHead,
+    store: {
+      kind: "NEON_POSTGRES",
+      authority: phase === "REHEARSAL" ? "ISOLATED_PRODUCTION_CLONE" : "STANDING_PRODUCTION",
+      projectIdentitySha256: readerAuthorityIdentityHash("project", PDC_NEON_PROJECT_ID),
+      branchIdentitySha256: phase === "PRODUCTION" ? readerAuthorityIdentityHash("branch", PDC_PRODUCTION_BRANCH_ID) : authorityHash("2"),
+      endpointIdentitySha256: authorityHash("3"),
+      databaseIdentitySha256: authorityHash("4"),
+      schemaIdentitySha256: authorityHash("5"),
+      providerMetadataPath: `docs/evidence/reader-last-mile-${slug}-provider-metadata.json`,
+      providerMetadataSha256: authorityHash("c"),
+    },
+    readOnly: {
+      roleIdentitySha256: authorityHash("6"),
+      roleWritePrivilegesRefused: true,
+      attemptedWriteRefused: true,
+      roleSuperuser: false,
+      roleCreateRole: false,
+      roleCreateDatabase: false,
+      roleReplication: false,
+      roleBypassRls: false,
+      databaseCreate: false,
+      schemaCreate: false,
+      relationOwnershipCount: 0,
+      columnWritePrivilegeCount: 0,
+      sequenceWritePrivilegeCount: 0,
+      writeCapableMemberRoleCount: 0,
+      executableSecurityDefinerFunctionCount: 0,
+      relations: [
+        { relation: "public.civic_data_candidate_events", select: true, insert: false, update: false, delete: false, truncate: false, references: false, trigger: false },
+        { relation: "public.civic_data_candidates", select: true, insert: false, update: false, delete: false, truncate: false, references: false, trigger: false },
+        { relation: "public.civic_data_promotions", select: true, insert: false, update: false, delete: false, truncate: false, references: false, trigger: false },
+      ],
+    },
+    import: {
+      importerCodeSha: authorityHead,
+      receiptPath: `docs/evidence/reader-last-mile-${slug}-import-receipt.json`,
+      receiptSha256: authorityHash("7"),
+      resultSha256: authorityHash("f"),
+      dispositionSetSha256: authorityHash("1"),
+      canonicalPointerSetSha256: authorityHash("8"),
+      canonicalPointerCount: 157,
+      durableImport: {
+        authorization: "PDC_V2_FROZEN_LKG_CUTOVER",
+        candidateCount: 95,
+        currentPointerLinkCount: 95,
+        promotedDispositionCount: 91,
+        reattestedDispositionCount: 7,
+        skippedDispositionCount: 4,
+        candidateSetSha256: authorityHash("d"),
+        eventCandidateCount: 95,
+        eventCount: 475,
+        terminalPromotedEventCount: 95,
+        eventSetSha256: authorityHash("e"),
+        predecessorCandidateCount: 7,
+        predecessorEventCount: 35,
+        predecessorEventSetSha256: authorityHash("9"),
+        importerCodeShas: [authorityHead],
+      },
+    },
+    clone: phase === "REHEARSAL" ? {
+      parentProductionBranchIdentitySha256: readerAuthorityIdentityHash("branch", PDC_PRODUCTION_BRANCH_ID),
+      sourceSnapshotSha256: authorityHash("a"),
+      controlPlaneReceiptSha256: authorityHash("b"),
+    } : null,
+  };
+}
+
+test("Reader execution authority labels an isolated child rehearsal without letting it masquerade as terminal production", () => {
+  const rehearsal = authorityEvidence("REHEARSAL");
+  assert.deepEqual(readerClosureExecutionAuthorityEvidenceProblems(rehearsal, {
+    phase: "REHEARSAL",
+    provedHead: authorityHead,
+    importerIsAncestor: true,
+  }), []);
+  assert.ok(readerClosureExecutionAuthorityEvidenceProblems(rehearsal, {
+    phase: "REHEARSAL",
+    provedHead: authorityHead,
+    importerIsAncestor: true,
+    requiredPhase: "PRODUCTION",
+  }).some((failure) => failure.includes("requires PRODUCTION")));
+
+  const relabeled = { ...rehearsal, phase: "PRODUCTION" as const };
+  const relabeledProblems = readerClosureExecutionAuthorityEvidenceProblems(relabeled, {
+    phase: "PRODUCTION",
+    provedHead: authorityHead,
+    importerIsAncestor: true,
+    requiredPhase: "PRODUCTION",
+  });
+  assert.ok(relabeledProblems.some((failure) => failure.includes("standing production store")));
+  assert.ok(relabeledProblems.some((failure) => failure.includes("rehearsal clone claim")));
+
+  const production = authorityEvidence("PRODUCTION");
+  assert.deepEqual(readerClosureExecutionAuthorityEvidenceProblems(production, {
+    phase: "PRODUCTION",
+    provedHead: authorityProductionHead,
+    importerIsAncestor: true,
+    requiredPhase: "PRODUCTION",
+  }), []);
+
+  assert.ok(readerClosureExecutionAuthorityEvidenceProblems({ ...production, plantedSecret: "postgresql://owner:password@db.example/civic" }, {
+    phase: "PRODUCTION", provedHead: authorityProductionHead, importerIsAncestor: true,
+  }).some((failure) => failure.includes("credential-bearing") || failure.includes("fields differ")), "a planted connection secret cannot enter committed authority evidence");
+  assert.ok(readerClosureExecutionAuthorityEvidenceProblems({
+    ...production,
+    import: { ...production.import, durableImport: { ...production.import.durableImport, skippedDispositionCount: 5 } },
+  }, {
+    phase: "PRODUCTION", provedHead: authorityProductionHead, importerIsAncestor: true,
+  }).some((failure) => failure.includes("pointer/event/disposition denominator")), "durable disposition counts cannot drift from the exact candidate set");
+
+  const activeProduction = readerClosureReadConnectionIdentity("postgresql://readonly_reader:never-serialized@production.example.test/civic");
+  assert.throws(() => readerClosureReadConnectionIdentity("postgresql://owner:secret@production.example.test/civic"), /read-only role/);
+  assert.deepEqual(
+    readerClosureReadConnectionIdentity("postgresql://readonly_reader:one@ep-example.us-east-2.aws.neon.tech/civic"),
+    readerClosureReadConnectionIdentity("postgresql://readonly_reader:two@ep-example-pooler.us-east-2.aws.neon.tech/civic"),
+    "the provider's direct and pooled hosts identify the same Neon endpoint/role/database",
+  );
+  const boundProduction: ReaderClosureExecutionAuthorityEvidence = {
+    ...production,
+    store: {
+      ...production.store,
+      endpointIdentitySha256: activeProduction.endpointIdentitySha256,
+      databaseIdentitySha256: activeProduction.databaseIdentitySha256,
+      schemaIdentitySha256: activeProduction.schemaIdentitySha256,
+    },
+    readOnly: { ...production.readOnly, roleIdentitySha256: activeProduction.roleIdentitySha256 },
+  };
+  assert.deepEqual(readerClosureExecutionAuthorityEvidenceProblems(boundProduction, {
+    phase: "PRODUCTION",
+    provedHead: authorityProductionHead,
+    importerIsAncestor: true,
+    requiredPhase: "PRODUCTION",
+    requiredReadConnectionIdentity: activeProduction,
+  }), []);
+  const fullyRelabeledChild: ReaderClosureExecutionAuthorityEvidence = {
+    ...rehearsal,
+    phase: "PRODUCTION",
+    store: { ...rehearsal.store, authority: "STANDING_PRODUCTION" },
+    clone: null,
+  };
+  assert.ok(readerClosureExecutionAuthorityEvidenceProblems(fullyRelabeledChild, {
+    phase: "PRODUCTION",
+    provedHead: authorityHead,
+    importerIsAncestor: true,
+    requiredPhase: "PRODUCTION",
+    requiredReadConnectionIdentity: activeProduction,
+  }).some((failure) => failure.includes("active production read handle")), "a child endpoint cannot become production by relabeling every phase field");
+});
+
+test("fresh Reader closure admission requires authority while inherited historical receipts retain compatibility", () => {
+  const census = { rows: [] } as unknown as ReaderCensus;
+  assert.deepEqual(readerClosureExecutionAuthorityProblems(process.cwd(), census, undefined, []), ["Fresh Reader closure requires exact execution-authority evidence"]);
+});
+
+test("legacy execution-authority compatibility is pinned to exact pre-seam path and bytes", () => {
+  const root = process.cwd();
+  const path = "docs/evidence/reader-last-mile-final-closure-receipt.json";
+  const receipt = JSON.parse(readReaderEvidence(root, path).toString("utf8")) as ReaderClosureReceipt;
+  assert.equal(isKnownLegacyReaderClosureReceipt(root, path, receipt), true);
+  assert.equal(isKnownLegacyReaderClosureReceipt(root, "docs/evidence/reader-last-mile-forged-receipt.json", receipt), false);
+  assert.equal(isKnownLegacyReaderClosureReceipt(root, path, { ...receipt, holdingsDigest: "0".repeat(64) }), false);
+});
 
 test("receipt EOL equivalence accepts only archived executed bytes and their exact Git LF form",()=>{
  const path="app/api/ask/grounded/route.ts" as const;
@@ -50,7 +222,7 @@ test("the committed complete reader graph still matches its proved holdings, loa
   // skipped check. Documentation-only commits need no new reader proof; changed
   // holdings, identity joins, reader code or CSS invalidate this receipt.
   const receipt = JSON.parse(readReaderEvidence(root, "docs/evidence/reader-last-mile-final-closure-receipt.json").toString("utf8")) as ReaderClosureReceipt;
-  assert.deepEqual(validateReaderClosureReceipt(root, receipt), []);
+  assert.deepEqual(validateReaderClosureReceipt(root, receipt, { receiptPath: "docs/evidence/reader-last-mile-final-closure-receipt.json" }), []);
 });
 
 test("ballot scope cannot hide an eligible incumbent when the consumer join returns null", () => {

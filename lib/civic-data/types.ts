@@ -322,6 +322,42 @@ export interface TrustedLkgFixtureEvidence {
 }
 
 /**
+ * Exact durable authority from which one meeting partition was split during
+ * the bounded PDC-v2 cutover.  The obsolete aggregate candidate and its event
+ * history remain immutable after its pointer is retired, so every successor
+ * can be audited back to the precise authority that was serving immediately
+ * before transfer without pretending that the split was a new publisher read.
+ */
+export interface TrustedLkgLegacyMeetingsPartitionEvidence {
+  readonly contractVersion: 1;
+  readonly kind: "DURABLE_LEGACY_MEETINGS_PARTITION";
+  readonly legacyKey: "MEETING:supported-bodies";
+  readonly legacySourceId: "meetings-public-bodies";
+  readonly legacyRecordClass: "MEETING";
+  readonly legacyScope: "supported-bodies";
+  readonly legacyVersionId: string;
+  readonly legacyPromotedAt: string;
+  readonly legacyPointerSha256: string;
+  readonly legacyCandidateRecordSha256: string;
+  readonly legacyCandidateSha256: string;
+  readonly legacyReceiptSha256: string;
+  readonly legacyPayloadSha256: string;
+  readonly legacyReadModelSha256: string;
+  readonly legacyNormalizedPayloadSha256: string;
+  readonly legacyHistorySha256: string;
+  readonly legacyHistoryEventCount: number;
+  readonly legacyHistoryLastSequence: number;
+  readonly legacyMeetingFactSha256: string;
+  readonly legacyMeetingRowCount: number;
+  readonly legacyAgendaDocumentRowCount: number;
+  readonly partitionSourceName: string;
+  readonly partitionBodyId: string;
+  readonly partitionFactSha256: string;
+  readonly partitionMeetingRowCount: number;
+  readonly partitionAgendaDocumentRowCount: number;
+}
+
+/**
  * Explicit provenance for the one-time PDC-v2 transfer of an already-serving
  * tracked LKG into the permanent store. This is not a publisher acquisition
  * and must never be rendered or counted as one.
@@ -345,6 +381,12 @@ export interface TrustedLkgImportEvidence {
   /** SHA-256 of the canonical, path-sorted `fixtures` manifest. */
   readonly fixtureSetSha256: string;
   readonly fixtures: readonly TrustedLkgFixtureEvidence[];
+  /**
+   * Present only when the meeting payload came from the exact durable legacy
+   * aggregate rather than frozen fixture bytes.  In that case `fixtures` is
+   * deliberately empty and this witness is the complete transfer provenance.
+   */
+  readonly legacyMeetingsPartition?: TrustedLkgLegacyMeetingsPartitionEvidence;
   /** Bind the exact normalized and Reader projections to this import receipt. */
   readonly normalizedPayloadSha256: string;
   readonly readModelSha256: string;

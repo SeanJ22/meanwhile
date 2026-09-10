@@ -31,10 +31,19 @@ import {
 import {
   MemoryRoutineDataStore,
   PDC_V2_LEGACY_MEETINGS_RETIREMENT_PREFIX,
+  pdcV2CanonicalMeetingFactEvidence,
   type PdcV2LegacyMeetingsRetirementInput,
   type RoutineDataStore,
 } from "../lib/civic-data/store.ts";
-import { PDC_V2_FROZEN_BASE_SHA } from "../lib/civic-data/trusted-lkg-import.ts";
+import {
+  parseReaderProjectionReadback,
+  serializeReaderProjectionReadback,
+} from "../lib/civic-data/reader-readback.ts";
+import {
+  PDC_V2_FROZEN_BASE_SHA,
+  trustedLkgPredecessorRecordSha256,
+  trustedLkgImportEvidenceIssue,
+} from "../lib/civic-data/trusted-lkg-import.ts";
 import {
   sourceProjectionEvidence,
   type CandidateEvent,
@@ -50,7 +59,7 @@ import {
 } from "../lib/meetings/venue-cache.ts";
 import { canonicalAgendaDocument } from "../lib/meetings/agenda-documents.ts";
 import { exactVenueMatchContentKey } from "../lib/meetings/venue-record-identity.ts";
-import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
+import { validateSnapshot, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import { officeholderIdentityMayEnterReader } from "../lib/officials/roster-authority.ts";
 import type { SourceSnapshot } from "../lib/corpus/types.ts";
 import { readOfficeholderStatementsProjection } from "../lib/corpus/data-plane.ts";
@@ -198,6 +207,7 @@ class CountingMemoryRoutineDataStore extends MemoryRoutineDataStore {
   readonly terminalOrder: string[] = [];
   prospectiveReattestationSets: readonly string[][] = [];
   lastRetirementInput: PdcV2LegacyMeetingsRetirementInput | null = null;
+  assertRetirementProofReadOnly = false;
 
   override async assertPdcV2PreContractMigrationState(): Promise<void> {
     this.preContractGateCalls += 1;
@@ -236,17 +246,115 @@ class CountingMemoryRoutineDataStore extends MemoryRoutineDataStore {
   ): Promise<Awaited<ReturnType<MemoryRoutineDataStore["retirePdcV2LegacyMeetingsAggregate"]>>> {
     this.lastRetirementInput = structuredClone(args[0]);
     this.terminalOrder.push("RETIRE_LEGACY_AGGREGATE");
-    return super.retirePdcV2LegacyMeetingsAggregate(...args);
+    if (!this.assertRetirementProofReadOnly) {
+      return super.retirePdcV2LegacyMeetingsAggregate(...args);
+    }
+    const internals = this as unknown as {
+      candidates: Map<string, CandidateVersionRecord>;
+      history: Map<string, CandidateEvent[]>;
+      promotions: Map<string, PromotedProjection>;
+    };
+    const mapSnapshot = <T>(map: ReadonlyMap<string, T>): string => canonicalCivicDataJson(
+      [...map.entries()]
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([key, value]) => [key, structuredClone(value)]),
+    );
+    const before = {
+      candidates: mapSnapshot(internals.candidates),
+      history: mapSnapshot(internals.history),
+      promotions: mapSnapshot(internals.promotions),
+      replacement: canonicalCivicDataJson(args[0].replacementPointers.map(({ scope, versionId }) => ({
+        scope,
+        versionId,
+        pointer: structuredClone(internals.promotions.get(`MEETING:${scope}`)),
+        candidate: structuredClone(internals.candidates.get(versionId)),
+        events: structuredClone(internals.history.get(versionId) ?? []),
+      }))),
+    };
+    let result: Awaited<ReturnType<MemoryRoutineDataStore["retirePdcV2LegacyMeetingsAggregate"]>>;
+    try {
+      result = await super.retirePdcV2LegacyMeetingsAggregate(...args);
+    } catch (error) {
+      assert.equal(mapSnapshot(internals.candidates), before.candidates);
+      assert.equal(mapSnapshot(internals.history), before.history);
+      assert.equal(mapSnapshot(internals.promotions), before.promotions);
+      throw error;
+    }
+    assert.equal(
+      canonicalCivicDataJson(args[0].replacementPointers.map(({ scope, versionId }) => ({
+        scope,
+        versionId,
+        pointer: structuredClone(internals.promotions.get(`MEETING:${scope}`)),
+        candidate: structuredClone(internals.candidates.get(versionId)),
+        events: structuredClone(internals.history.get(versionId) ?? []),
+      }))),
+      before.replacement,
+      "the retirement proof is read-only for every replacement authority row",
+    );
+    assert.equal(mapSnapshot(internals.candidates), before.candidates);
+    if (result.disposition === "ALREADY_RETIRED_PROVEN") {
+      assert.equal(mapSnapshot(internals.history), before.history);
+      assert.equal(mapSnapshot(internals.promotions), before.promotions);
+    } else {
+      const legacyHistory = structuredClone(internals.history.get(result.legacyVersionId) ?? []);
+      const terminalEvent = legacyHistory.pop();
+      assert.deepEqual(terminalEvent, {
+        candidateId: result.legacyVersionId,
+        sequence: legacyHistory.length + 1,
+        state: "PROMOTED",
+        at: result.retiredAt,
+        detail: result.detail,
+      });
+      const expectedHistory = new Map(internals.history);
+      expectedHistory.set(result.legacyVersionId, legacyHistory);
+      assert.equal(mapSnapshot(expectedHistory), before.history);
+      const expectedPromotions = new Map(internals.promotions);
+      const admittedLegacyPointer = args[0].observedLegacyVersionId === result.legacyVersionId
+        ? {
+            key: "MEETING:supported-bodies",
+            sourceId: "meetings-public-bodies",
+            recordClass: "MEETING" as const,
+            scope: "supported-bodies",
+            versionId: result.legacyVersionId,
+            lastKnownGoodVersionId: result.legacyVersionId,
+            promotedAt: (args[0].observedLegacyEvents ?? [])[3]!.at,
+            payload: args[0].observedLegacyPayload,
+            receipt: args[0].observedLegacyCandidateRecord!.receipt!,
+          }
+        : null;
+      assert.ok(admittedLegacyPointer);
+      expectedPromotions.set(admittedLegacyPointer.key, admittedLegacyPointer);
+      assert.equal(mapSnapshot(expectedPromotions), before.promotions);
+    }
+    return result;
   }
+}
+
+function releaseMemoryRoutineDataStore(store: MemoryRoutineDataStore): void {
+  const retained = store as unknown as {
+    candidates: Map<string, CandidateVersionRecord>;
+    history: Map<string, CandidateEvent[]>;
+    promotions: Map<string, PromotedProjection>;
+    lastRetirementInput?: PdcV2LegacyMeetingsRetirementInput | null;
+    legacyBaseVersionId?: string | null;
+    legacySuccessor?: RoutineCandidate | null;
+  };
+  retained.candidates.clear();
+  retained.history.clear();
+  retained.promotions.clear();
+  if ("lastRetirementInput" in retained) retained.lastRetirementInput = null;
+  if ("legacyBaseVersionId" in retained) retained.legacyBaseVersionId = null;
+  if ("legacySuccessor" in retained) retained.legacySuccessor = null;
 }
 
 async function seedLegacyMeetingsAggregate(
   store: MemoryRoutineDataStore,
   plan: PdcV2TrustedLkgImportPlan,
+  transform: (snapshot: MeetingsSnapshot) => MeetingsSnapshot = (snapshot) => snapshot,
 ): Promise<string> {
   const meetingPlans = plan.candidates.filter(({ door }) => door === "MEETING_PARTITION");
   const snapshots = meetingPlans.map(({ candidate }) => candidate.readModel as MeetingsSnapshot);
-  const snapshot: MeetingsSnapshot = {
+  const frozenSnapshot: MeetingsSnapshot = {
     formatVersion: 1,
     generatedAt: snapshots.map(({ generatedAt }) => generatedAt).sort().at(-1)!,
     counts: {
@@ -262,6 +370,7 @@ async function seedLegacyMeetingsAggregate(
     meetings: snapshots.flatMap(({ meetings }) => meetings),
     agendaDocuments: snapshots.flatMap(({ agendaDocuments }) => agendaDocuments),
   };
+  const snapshot = transform(structuredClone(frozenSnapshot));
   const template = meetingPlans[0]!.candidate;
   const legacyAt = "2026-09-09T11:00:00.000Z";
   const payloadHash = sha256(canonicalCivicDataJson(snapshot));
@@ -294,7 +403,13 @@ async function seedLegacyMeetingsAggregate(
       droppedRecords: 0,
       missingRequiredFields: [],
     },
-    identities: meetingPlans.flatMap(({ candidate: value }) => value.identities),
+    identities: snapshot.meetings.map((meeting) => {
+      const identity = meetingPlans
+        .flatMap(({ candidate: value }) => value.identities)
+        .find(({ subjectId }) => subjectId === meeting.id);
+      assert.ok(identity, `legacy aggregate meeting ${meeting.id} has frozen identity evidence`);
+      return identity;
+    }),
     temporal: {
       version: snapshot.generatedAt,
       expectedVersion: snapshot.generatedAt,
@@ -320,10 +435,56 @@ async function seedLegacyMeetingsAggregate(
     civicRecords: civicRecordsFor("MEETING", snapshot),
     excludedFacts: meetingPlans.flatMap(({ candidate: value }) => value.excludedFacts ?? []),
   };
-  const outcome = await processRoutineCandidate(store, candidate, legacyAt, null);
+  // Production legacy rows are JSONB-backed; mirror that exact durable shape
+  // instead of leaving JavaScript-only undefined properties in the memory store.
+  const durableCandidate = JSON.parse(JSON.stringify(candidate)) as RoutineCandidate;
+  const outcome = await processRoutineCandidate(store, durableCandidate, legacyAt, null);
   assert.equal(outcome.candidate.state, "PROMOTED");
   assert.equal(outcome.promoted?.versionId, candidate.id);
   return candidate.id;
+}
+
+function legacySnapshotWithoutMeeting(
+  snapshot: MeetingsSnapshot,
+  meetingId: string,
+): MeetingsSnapshot {
+  const meeting = snapshot.meetings.find(({ id }) => id === meetingId);
+  assert.ok(meeting, `legacy aggregate contains meeting ${meetingId}`);
+  const sourceName = meeting.id.slice(0, meeting.id.indexOf(":"));
+  const sources = structuredClone(snapshot.sources);
+  if (meeting.carried) {
+    const source = sources.find((row) =>
+      row.source === sourceName && (row.carriedForward ?? 0) > 0 &&
+      (meeting.carried?.reason !== "UNEXPLAINED_DISAPPEARANCE" ||
+        (row.ok && (row.unreachableOcdIds?.length ?? 0) === 0))
+    );
+    assert.ok(source, `${sourceName} carries the removed meeting`);
+    source.carriedForward = (source.carriedForward ?? 0) - 1;
+  } else {
+    const source = sources.find((row) =>
+      row.source === sourceName && row.normalized > 0
+    );
+    assert.ok(source, `${sourceName} reports the removed fresh meeting`);
+    source.normalized -= 1;
+    if (source.fetched > 0) source.fetched -= 1;
+  }
+  const meetings = snapshot.meetings.filter(({ id }) => id !== meetingId);
+  const carried = meetings.filter((row) => row.carried).length;
+  const next: MeetingsSnapshot = {
+    ...structuredClone(snapshot),
+    counts: {
+      ...snapshot.counts,
+      fresh: meetings.length - carried,
+      carried,
+      total: meetings.length,
+    },
+    sources,
+    meetings,
+    agendaDocuments: snapshot.agendaDocuments.filter((document) =>
+      document.meetingId !== meetingId
+    ),
+  };
+  return next;
 }
 
 class InterruptAfterCreateStore extends CountingMemoryRoutineDataStore {
@@ -369,6 +530,57 @@ class RefusePreImportIntegrityStore extends CountingMemoryRoutineDataStore {
   }
 }
 
+class DriftLegacyBeforeFirstWriteStore extends CountingMemoryRoutineDataStore {
+  override async assertPdcV2PreImportDataIntegrity(
+    ...args: Parameters<MemoryRoutineDataStore["assertPdcV2PreImportDataIntegrity"]>
+  ): Promise<void> {
+    await super.assertPdcV2PreImportDataIntegrity(...args);
+    const promotions = (this as unknown as {
+      promotions: Map<string, PromotedProjection>;
+    }).promotions;
+    const key = "MEETING:supported-bodies";
+    const original = promotions.get(key);
+    assert.ok(original);
+    promotions.set(key, {
+      ...original,
+      payload: {
+        ...(original.payload as MeetingsSnapshot),
+        generatedAt: "2026-09-09T11:00:00.001Z",
+      },
+    });
+  }
+}
+
+class SwapLegacyVersionAfterFirstWriteStore extends CountingMemoryRoutineDataStore {
+  private legacyBaseVersionId: string | null = null;
+  private legacySuccessor: RoutineCandidate | null = null;
+  private swapped = false;
+
+  configureLegacySuccessor(baseVersionId: string, successor: RoutineCandidate): void {
+    this.legacyBaseVersionId = baseVersionId;
+    this.legacySuccessor = successor;
+  }
+
+  override async create(
+    ...args: Parameters<MemoryRoutineDataStore["create"]>
+  ): Promise<void> {
+    await super.create(...args);
+    if (
+      !this.swapped && this.legacyBaseVersionId && this.legacySuccessor &&
+      args[0].candidate.scope !== "supported-bodies"
+    ) {
+      this.swapped = true;
+      const successor = this.legacySuccessor;
+      await processRoutineCandidate(
+        this,
+        successor,
+        successor.retrieval.retrievedAt,
+        this.legacyBaseVersionId,
+      );
+    }
+  }
+}
+
 class DriftLegacyPayloadAtRetirementStore extends CountingMemoryRoutineDataStore {
   override async retirePdcV2LegacyMeetingsAggregate(
     ...args: Parameters<MemoryRoutineDataStore["retirePdcV2LegacyMeetingsAggregate"]>
@@ -384,6 +596,35 @@ class DriftLegacyPayloadAtRetirementStore extends CountingMemoryRoutineDataStore
       return await super.retirePdcV2LegacyMeetingsAggregate(...args);
     } finally {
       promotions.set(key, original);
+    }
+  }
+}
+
+class DriftLegacyCandidateAtRetirementStore extends CountingMemoryRoutineDataStore {
+  override async retirePdcV2LegacyMeetingsAggregate(
+    ...args: Parameters<MemoryRoutineDataStore["retirePdcV2LegacyMeetingsAggregate"]>
+  ): Promise<Awaited<ReturnType<MemoryRoutineDataStore["retirePdcV2LegacyMeetingsAggregate"]>>> {
+    const candidates = (this as unknown as {
+      candidates: Map<string, CandidateVersionRecord>;
+    }).candidates;
+    const versionId = args[0].observedLegacyVersionId;
+    assert.ok(versionId);
+    const original = candidates.get(versionId);
+    assert.ok(original);
+    candidates.set(versionId, {
+      ...original,
+      candidate: {
+        ...original.candidate,
+        normalizedPayload: {
+          ...(original.candidate.normalizedPayload as MeetingsSnapshot),
+          generatedAt: "2026-09-09T11:00:00.001Z",
+        },
+      },
+    });
+    try {
+      return await super.retirePdcV2LegacyMeetingsAggregate(...args);
+    } finally {
+      candidates.set(versionId, original);
     }
   }
 }
@@ -525,6 +766,20 @@ test("the temporary importer CLI requires its exact explicit production invocati
   assert.match(safe, /\[REDACTED_DATABASE_URL\]/);
   assert.match(source, /console\.error\(redactPdcV2TrustedLkgImporterError\(error\)\)/);
   assert.doesNotMatch(source, /console\.error\(error\)/);
+});
+
+test("the Postgres retirement lock binds the exact pre-read replacement promotion clock", () => {
+  const storeSource = readFileSync(join(process.cwd(), "lib", "civic-data", "store.ts"), "utf8");
+  assert.match(
+    storeSource,
+    /replacement\."promoted_at" = \(expected#>>'\{pointer,promotedAt\}'\)::timestamptz/,
+    "a promotedAt-only pointer race must falsify the locked replacement proof",
+  );
+  assert.match(
+    storeSource,
+    /pointer: fullPointer,[\s\S]*events: replacementHistories\.get\(pointer\.versionId\)/,
+    "the SQL witness must serialize the same full pointer and history read before the lock",
+  );
 });
 
 test("the importer consumes one fresh parent-bound quiescence lease before opening writes", async () => {
@@ -1288,6 +1543,7 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
       null,
       "the exact pre-field legacy aggregate can be proved and retired without weakening permanent candidates",
     );
+    releaseMemoryRoutineDataStore(legacyNormalizationStore);
 
     const forgedLegacyNormalizationStore = new CountingMemoryRoutineDataStore();
     const forgedLegacyNormalizationId = await seedLegacyMeetingsAggregate(forgedLegacyNormalizationStore, plan);
@@ -1328,6 +1584,7 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
       0,
       "the forged old-schema legacy row refuses before the first import write",
     );
+    releaseMemoryRoutineDataStore(forgedLegacyNormalizationStore);
 
     const truncatedTerminalPlan = { ...plan, candidates: plan.candidates.slice(1) };
     assert.match(pdcV2PermanentCutoverPlanIssue(truncatedTerminalPlan) ?? "", /denominator/);
@@ -1342,6 +1599,7 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
     );
     assert.equal(truncatedStore.preContractGateCalls, 0, "the full denominator is checked before opening admission");
     assert.equal(truncatedStore.createCalls, 0);
+    releaseMemoryRoutineDataStore(truncatedStore);
 
     const preContractRefusal = new RefusePreContractStore();
     await seedLegacyMeetingsAggregate(preContractRefusal, plan);
@@ -1356,6 +1614,7 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
     );
     assert.equal(preContractRefusal.createCalls, 0, "0026 presence/partial-DDL refuses before import writes");
     assert.ok(await preContractRefusal.readPromotion("MEETING", "supported-bodies"));
+    releaseMemoryRoutineDataStore(preContractRefusal);
 
     const preImportRefusal = new RefusePreImportIntegrityStore();
     await seedLegacyMeetingsAggregate(preImportRefusal, plan);
@@ -1370,6 +1629,7 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
     );
     assert.equal(preImportRefusal.createCalls, 0, "global 0026 compatibility is proved before first import write");
     assert.ok(await preImportRefusal.readPromotion("MEETING", "supported-bodies"));
+    releaseMemoryRoutineDataStore(preImportRefusal);
 
     const weakenedMigrationStore = new CountingMemoryRoutineDataStore();
     await seedLegacyMeetingsAggregate(weakenedMigrationStore, plan);
@@ -1384,6 +1644,7 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
     );
     assert.equal(weakenedMigrationStore.createCalls, 0, "a weakened migration preflight cannot precede a partial import");
     assert.ok(await weakenedMigrationStore.readPromotion("MEETING", "supported-bodies"));
+    releaseMemoryRoutineDataStore(weakenedMigrationStore);
 
     const payloadDriftStore = new DriftLegacyPayloadAtRetirementStore();
     await seedLegacyMeetingsAggregate(payloadDriftStore, plan);
@@ -1418,17 +1679,395 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
       "a rogue-key row claiming the legacy class/scope blocks first retirement",
     );
     payloadDriftPromotions.delete("MEETING:planted-rogue-legacy-key");
+    releaseMemoryRoutineDataStore(payloadDriftStore);
+
+    const candidateDriftStore = new DriftLegacyCandidateAtRetirementStore();
+    await seedLegacyMeetingsAggregate(candidateDriftStore, plan);
+    candidateDriftStore.createCalls = 0;
+    await assert.rejects(
+      executePdcV2PermanentCutoverImportPlan(
+        candidateDriftStore,
+        plan,
+        CONTRACT_MIGRATION_SQL,
+      ),
+      /PDC_V2_LEGACY_MEETINGS_PAYLOAD_CHANGED_BEFORE_RETIREMENT:live legacy pointer is not the exact retained candidate/,
+      "retirement binds the full admitted legacy candidate row, not only its unchanged Reader facts",
+    );
+    assert.ok(await candidateDriftStore.readPromotion("MEETING", "supported-bodies"));
+    releaseMemoryRoutineDataStore(candidateDriftStore);
+
+    const meetingPlansForDrift = plan.candidates.filter(({ door }) =>
+      door === "MEETING_PARTITION"
+    );
+    const divergentPlan = meetingPlansForDrift.find(({ candidate }) => {
+      const snapshot = candidate.readModel as MeetingsSnapshot;
+      return snapshot.meetings.length > 1 && snapshot.meetings.some((meeting) =>
+        !meeting.carried && snapshot.agendaDocuments.some(({ meetingId }) => meetingId === meeting.id)
+      );
+    });
+    assert.ok(divergentPlan, "the frozen denominator has a multi-row partition with a documented fresh meeting");
+    const divergentPlanSnapshot = divergentPlan.candidate.readModel as MeetingsSnapshot;
+    const divergentMeeting = divergentPlanSnapshot.meetings.find((meeting) =>
+      !meeting.carried && divergentPlanSnapshot.agendaDocuments.some(({ meetingId }) => meetingId === meeting.id)
+    );
+    assert.ok(divergentMeeting);
+    const removedDocumentCount = divergentPlanSnapshot.agendaDocuments.filter(
+      ({ meetingId }) => meetingId === divergentMeeting.id,
+    ).length;
+    const divergentStore = new CountingMemoryRoutineDataStore();
+    await seedLegacyMeetingsAggregate(
+      divergentStore,
+      plan,
+      (snapshot) => legacySnapshotWithoutMeeting(snapshot, divergentMeeting.id),
+    );
+    const divergentLegacy = await divergentStore.readPromotion<MeetingsSnapshot>(
+      "MEETING",
+      "supported-bodies",
+    );
+    assert.ok(divergentLegacy);
+    const divergentLegacyFacts = pdcV2CanonicalMeetingFactEvidence([divergentLegacy.payload]);
+    assert.equal(divergentLegacyFacts.meetingRowCount, plan.meetingRows - 1);
+    assert.equal(
+      divergentLegacyFacts.agendaDocumentRowCount,
+      plan.agendaDocumentRows - removedDocumentCount,
+    );
+    divergentStore.createCalls = 0;
+    const divergentImport = await executePdcV2PermanentCutoverImportPlan(
+      divergentStore,
+      plan,
+      CONTRACT_MIGRATION_SQL,
+    );
+    assert.equal(divergentImport.promoted, PDC_V2_TRUSTED_LKG_EXPECTED_COUNTS.totalCandidates);
+    assert.equal(
+      divergentImport.legacyMeetingsAggregateRetirement.legacyMeetingFactSha256,
+      divergentLegacyFacts.sha256,
+      "retirement binds the exact live aggregate instead of the stale fc67 meeting fact set",
+    );
+    assert.equal(
+      divergentImport.legacyMeetingsAggregateRetirement.meetingRowCount,
+      divergentLegacyFacts.meetingRowCount,
+    );
+    assert.equal(
+      divergentImport.legacyMeetingsAggregateRetirement.agendaDocumentRowCount,
+      divergentLegacyFacts.agendaDocumentRowCount,
+    );
+    assert.ok(divergentStore.lastRetirementInput);
+    const divergentReplacementFacts = pdcV2CanonicalMeetingFactEvidence(
+      divergentStore.lastRetirementInput.replacementPointers.map(({ payload }) => payload),
+    );
+    assert.deepEqual(divergentReplacementFacts, divergentLegacyFacts);
+    const divergentRows = await Promise.all(
+      divergentStore.lastRetirementInput.replacementPointers.map(({ versionId }) =>
+        divergentStore.readCandidate(versionId)
+      ),
+    );
+    const divergentOrigins = divergentRows.map((row) => {
+      assert.ok(row);
+      const evidence = firstSeedEvidence(row.candidate);
+      assert.ok(evidence.legacyMeetingsPartition);
+      assert.deepEqual(evidence.fixtures, []);
+      return evidence.legacyMeetingsPartition;
+    });
+    assert.equal(divergentOrigins.length, PDC_V2_TRUSTED_LKG_EXPECTED_COUNTS.meetingPartitionsWithLkg);
+    assert.ok(divergentOrigins.every((origin) =>
+      origin.legacyMeetingFactSha256 === divergentLegacyFacts.sha256 &&
+      origin.legacyMeetingRowCount === divergentLegacyFacts.meetingRowCount &&
+      origin.legacyAgendaDocumentRowCount === divergentLegacyFacts.agendaDocumentRowCount &&
+      origin.legacyHistoryEventCount === origin.legacyHistoryLastSequence
+    ));
+    const provenanceCandidate = divergentRows[0]!.candidate;
+    const provenanceEvidence = firstSeedEvidence(provenanceCandidate);
+    const forgedProvenanceCandidate: RoutineCandidate = {
+      ...provenanceCandidate,
+      bootstrapImport: {
+        ...provenanceEvidence,
+        legacyMeetingsPartition: {
+          ...provenanceEvidence.legacyMeetingsPartition!,
+          partitionFactSha256: "0".repeat(64),
+        },
+      },
+    };
+    assert.match(
+      trustedLkgImportEvidenceIssue(forgedProvenanceCandidate) ?? "",
+      /partition fact digest is invalid/,
+      "a syntactically valid but false durable-origin partition digest is refused",
+    );
+    releaseMemoryRoutineDataStore(divergentStore);
+
+    const toctouStore = new DriftLegacyBeforeFirstWriteStore();
+    await seedLegacyMeetingsAggregate(toctouStore, plan);
+    toctouStore.createCalls = 0;
+    await assert.rejects(
+      executePdcV2PermanentCutoverImportPlan(toctouStore, plan, CONTRACT_MIGRATION_SQL),
+      /TRUSTED_LKG_LEGACY_MEETINGS_CHANGED_BEFORE_FIRST_WRITE/,
+      "the exact legacy witness is re-proved after the global gate and before the first create",
+    );
+    assert.equal(toctouStore.createCalls, 0);
+    assert.ok(await toctouStore.readPromotion("MEETING", "supported-bodies"));
+    releaseMemoryRoutineDataStore(toctouStore);
+
+    const sameFactSwapStore = new SwapLegacyVersionAfterFirstWriteStore();
+    const admittedLegacyVersionId = await seedLegacyMeetingsAggregate(sameFactSwapStore, plan);
+    const admittedLegacyRow = await sameFactSwapStore.readCandidate(admittedLegacyVersionId);
+    assert.ok(admittedLegacyRow);
+    const {
+      changeSet: _legacyChangeSet,
+      ...legacySuccessorBase
+    } = admittedLegacyRow.candidate;
+    const sameFactLegacySuccessor: RoutineCandidate = {
+      ...legacySuccessorBase,
+      id: "cv-pdc-v2-legacy-meetings-same-fact-successor",
+      retrieval: {
+        ...legacySuccessorBase.retrieval,
+        retrievedAt: "2026-09-09T11:30:00.000Z",
+      },
+    };
+    sameFactSwapStore.configureLegacySuccessor(
+      admittedLegacyVersionId,
+      sameFactLegacySuccessor,
+    );
+    sameFactSwapStore.createCalls = 0;
+    await assert.rejects(
+      executePdcV2PermanentCutoverImportPlan(
+        sameFactSwapStore,
+        plan,
+        CONTRACT_MIGRATION_SQL,
+      ),
+      /TRUSTED_LKG_LEGACY_MEETINGS_CHANGED_BEFORE_RETIREMENT/,
+      "a same-fact legacy successor after the last prewrite witness cannot be retired as the admitted version",
+    );
+    assert.equal(
+      (await sameFactSwapStore.readPromotion("MEETING", "supported-bodies"))?.versionId,
+      sameFactLegacySuccessor.id,
+      "the non-admitted successor remains authoritative after retirement refusal",
+    );
+    const createsAfterSameFactRefusal = sameFactSwapStore.createCalls;
+    await assert.rejects(
+      executePdcV2PermanentCutoverImportPlan(
+        sameFactSwapStore,
+        plan,
+        CONTRACT_MIGRATION_SQL,
+      ),
+      /TRUSTED_LKG_EXISTING_MEETING_LEGACY_ORIGIN_MISMATCH:/,
+      "retry cannot mix already-promoted A-origin partitions with the current B-origin overlay",
+    );
+    assert.equal(
+      sameFactSwapStore.createCalls,
+      createsAfterSameFactRefusal,
+      "mixed-origin retry refuses before creating another candidate or retiring B",
+    );
+    assert.equal(
+      (await sameFactSwapStore.readPromotion("MEETING", "supported-bodies"))?.versionId,
+      sameFactLegacySuccessor.id,
+    );
+
+    let dynamicContract: (typeof MEETING_PARTITION_CONTRACTS)[number] | null = null;
+    let dynamicPointer: PromotedProjection | null = null;
+    let dynamicPredecessor: CandidateVersionRecord | null = null;
+    for (const contract of MEETING_PARTITION_CONTRACTS) {
+      const pointer = await sameFactSwapStore.readPromotion("MEETING", contract.scope);
+      const predecessor = pointer
+        ? await sameFactSwapStore.readCandidate(pointer.versionId)
+        : null;
+      const evidence = predecessor?.candidate.bootstrapImport;
+      if (evidence?.kind === "TRUSTED_LKG_IMPORT" && evidence.legacyMeetingsPartition) {
+        dynamicContract = contract;
+        dynamicPointer = pointer;
+        dynamicPredecessor = predecessor;
+        break;
+      }
+    }
+    assert.ok(dynamicContract && dynamicPointer && dynamicPredecessor);
+    const dynamicImportEvidence = dynamicPredecessor.candidate.bootstrapImport;
+    assert.equal(dynamicImportEvidence?.kind, "TRUSTED_LKG_IMPORT");
+    if (dynamicImportEvidence?.kind !== "TRUSTED_LKG_IMPORT") {
+      assert.fail("the one-level origin test requires a dynamic import predecessor");
+    }
+    const dynamicReattestationId = "meetings-public-bodies:planted-one-level-reattestation";
+    const dynamicReattestationEvidence = {
+      contractVersion: 1 as const,
+      kind: "TRUSTED_LKG_REATTESTATION" as const,
+      authorization: "PDC_V2_FROZEN_LKG_CUTOVER" as const,
+      purpose: "RE_ATTEST_EXISTING_DURABLE_LKG_TO_PERMANENT_INTEGRITY_CONTRACT" as const,
+      sourceAuthenticated: false as const,
+      contractId: dynamicContract.id,
+      sourceId: dynamicContract.sourceId,
+      recordClass: "MEETING" as const,
+      scope: dynamicContract.scope,
+      parserVersion: dynamicContract.parserNormalizerVersion,
+      sourceVersion: dynamicPredecessor.candidate.temporal.version,
+      sourceThrough: dynamicPredecessor.candidate.temporal.sourceThrough,
+      sourceRetrievedAt: dynamicPredecessor.candidate.retrieval.retrievedAt,
+      reattestedAt: LATER,
+      importerCodeSha: IMPORTER_SHA,
+      predecessorVersionId: dynamicPredecessor.candidate.id,
+      predecessorPromotedAt: dynamicPointer.promotedAt,
+      predecessorPointerSha256: sha256(canonicalCivicDataJson(dynamicPointer)),
+      predecessorCandidateRecordSha256: trustedLkgPredecessorRecordSha256(dynamicPredecessor),
+      predecessorCandidateSha256: sha256(canonicalCivicDataJson(dynamicPredecessor.candidate)),
+      predecessorReceiptSha256: sha256(canonicalCivicDataJson(dynamicPredecessor.receipt)),
+      predecessorPayloadSha256: sha256(canonicalCivicDataJson(dynamicPointer.payload)),
+      predecessorReadModelSha256: dynamicImportEvidence.readModelSha256,
+      predecessorNormalizedPayloadSha256: dynamicImportEvidence.normalizedPayloadSha256,
+      predecessorLegacyNormalizedHash: dynamicPredecessor.candidate.normalization.normalizedHash!,
+      normalizedPayloadSha256: dynamicImportEvidence.normalizedPayloadSha256,
+      readModelSha256: dynamicImportEvidence.readModelSha256,
+      candidateEnvelopeSha256: "0".repeat(64),
+      validatorIds: dynamicImportEvidence.validatorIds,
+    };
+    assert.equal(
+      dynamicReattestationEvidence.predecessorCandidateRecordSha256,
+      trustedLkgPredecessorRecordSha256(dynamicPredecessor),
+      "the one-level lookup is bound to the exact claimed predecessor record",
+    );
+    const dynamicReattestationReceipt = {
+      ...dynamicPredecessor.receipt!,
+      candidateId: dynamicReattestationId,
+    };
+    const dynamicInternals = sameFactSwapStore as unknown as {
+      candidates: Map<string, CandidateVersionRecord>;
+      history: Map<string, CandidateEvent[]>;
+      promotions: Map<string, PromotedProjection>;
+    };
+    dynamicInternals.candidates.set(dynamicReattestationId, {
+      ...structuredClone(dynamicPredecessor),
+      candidate: {
+        ...structuredClone(dynamicPredecessor.candidate),
+        id: dynamicReattestationId,
+        bootstrapImport: dynamicReattestationEvidence,
+      },
+      receipt: dynamicReattestationReceipt,
+      promotedVersion: dynamicReattestationId,
+      lastKnownGoodVersion: dynamicReattestationId,
+    });
+    dynamicInternals.history.set(dynamicReattestationId, []);
+    dynamicInternals.promotions.set(dynamicPointer.key, {
+      ...structuredClone(dynamicPointer),
+      versionId: dynamicReattestationId,
+      lastKnownGoodVersionId: dynamicReattestationId,
+      receipt: dynamicReattestationReceipt,
+    });
+    const createsBeforeOneLevelRetry = sameFactSwapStore.createCalls;
+    await assert.rejects(
+      executePdcV2PermanentCutoverImportPlan(
+        sameFactSwapStore,
+        plan,
+        CONTRACT_MIGRATION_SQL,
+      ),
+      (error: unknown) => error instanceof Error &&
+        error.message === `TRUSTED_LKG_EXISTING_MEETING_LEGACY_ORIGIN_MISMATCH:${dynamicContract.id}`,
+      "a hash-proved one-level re-attestation predecessor cannot hide its mismatched A origin",
+    );
+    assert.equal(
+      sameFactSwapStore.createCalls,
+      createsBeforeOneLevelRetry,
+      "one-level mixed-origin refusal happens before another import write",
+    );
+    assert.equal(
+      (await sameFactSwapStore.readPromotion("MEETING", dynamicContract.scope))?.versionId,
+      dynamicReattestationId,
+    );
+    assert.equal(
+      (await sameFactSwapStore.readPromotion("MEETING", "supported-bodies"))?.versionId,
+      sameFactLegacySuccessor.id,
+    );
+    releaseMemoryRoutineDataStore(sameFactSwapStore);
+
+    const allFailedFresh = {
+      ...structuredClone(divergentPlanSnapshot),
+      sources: divergentPlanSnapshot.sources.map((source) => ({
+        ...structuredClone(source),
+        ok: false,
+        error: source.error ?? "planted all-failed source",
+      })),
+    };
+    assert.throws(
+      () => validateSnapshot(allFailedFresh, {
+        allowAllSourcesFailedForDurableTransfer: true,
+      }),
+      /every source failed.*all-carried durable LKG/,
+      "the transfer exception never admits fresh rows under an all-failed source envelope",
+    );
+    const carriedBySource = new Map<string, number>();
+    const honestlyCarriedMeetings = divergentPlanSnapshot.meetings.map((meeting) => {
+      const source = meeting.id.slice(0, meeting.id.indexOf(":"));
+      carriedBySource.set(source, (carriedBySource.get(source) ?? 0) + 1);
+      return {
+        ...structuredClone(meeting),
+        carried: {
+          source,
+          lastFreshAt: meeting.provenance?.collectedAt ?? divergentPlanSnapshot.generatedAt,
+          reason: "SOURCE_UNAVAILABLE" as const,
+        },
+      };
+    });
+    const accountedCarriedSources = new Set<string>();
+    const honestlyCarriedPartition: MeetingsSnapshot = {
+      ...structuredClone(divergentPlanSnapshot),
+      counts: {
+        fresh: 0,
+        carried: honestlyCarriedMeetings.length,
+        total: honestlyCarriedMeetings.length,
+        duplicatesCollapsed: 0,
+      },
+      sources: divergentPlanSnapshot.sources.map((source) => {
+        const firstReport = !accountedCarriedSources.has(source.source);
+        accountedCarriedSources.add(source.source);
+        return {
+          ...structuredClone(source),
+          ok: false,
+          error: source.error ?? "planted durable source outage",
+          fetched: 0,
+          normalized: 0,
+          carriedForward: firstReport ? (carriedBySource.get(source.source) ?? 0) : 0,
+        };
+      }),
+      meetings: honestlyCarriedMeetings,
+    };
+    assert.doesNotThrow(
+      () => validateSnapshot(honestlyCarriedPartition, {
+        allowAllSourcesFailedForDurableTransfer: true,
+      }),
+      "a nonempty failed-source/all-carried durable LKG retains its outage evidence",
+    );
+
+    const singletonPlan = meetingPlansForDrift.find(({ candidate }) =>
+      (candidate.readModel as MeetingsSnapshot).meetings.length === 1
+    );
+    assert.ok(singletonPlan, "the frozen denominator has a singleton meeting partition");
+    const singletonMeetingId = (singletonPlan.candidate.readModel as MeetingsSnapshot).meetings[0]!.id;
+    const invalidMembershipStore = new CountingMemoryRoutineDataStore();
+    await seedLegacyMeetingsAggregate(
+      invalidMembershipStore,
+      plan,
+      (snapshot) => legacySnapshotWithoutMeeting(snapshot, singletonMeetingId),
+    );
+    invalidMembershipStore.createCalls = 0;
+    await assert.rejects(
+      executePdcV2PermanentCutoverImportPlan(
+        invalidMembershipStore,
+        plan,
+        CONTRACT_MIGRATION_SQL,
+      ),
+      /TRUSTED_LKG_CURRENT_MEETING_PARTITION_DENOMINATOR_MISMATCH:82\/42/,
+      "current facts may vary, but the admitted 83/41 partition membership may not",
+    );
+    assert.equal(invalidMembershipStore.createCalls, 0);
+    assert.ok(await invalidMembershipStore.readPromotion("MEETING", "supported-bodies"));
+    releaseMemoryRoutineDataStore(invalidMembershipStore);
 
     const store = new CountingMemoryRoutineDataStore();
     const legacyVersionId = await seedLegacyMeetingsAggregate(store, plan);
     store.createCalls = 0;
     store.terminalOrder.length = 0;
+    store.assertRetirementProofReadOnly = true;
     assert.equal(pdcV2PermanentCutoverPlanIssue(plan), null);
     const first = await executePdcV2PermanentCutoverImportPlan(
       store,
       plan,
       CONTRACT_MIGRATION_SQL,
     );
+    store.assertRetirementProofReadOnly = false;
     assert.equal(first.promoted, PDC_V2_TRUSTED_LKG_EXPECTED_COUNTS.totalCandidates);
     assert.equal(first.skippedExisting, 0);
     assert.equal(first.zeroMeetingPartitionsRefused, PDC_V2_TRUSTED_LKG_EXPECTED_COUNTS.meetingPartitionsWithoutLkg);
@@ -1450,6 +2089,18 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
     );
     assert.equal(first.legacyMeetingsAggregateRetirement.disposition, "RETIRED");
     assert.equal(first.legacyMeetingsAggregateRetirement.legacyVersionId, legacyVersionId);
+    const retirementEvidence = JSON.parse(
+      first.legacyMeetingsAggregateRetirement.detail.slice(
+        PDC_V2_LEGACY_MEETINGS_RETIREMENT_PREFIX.length,
+      ),
+    ) as { readonly replacementHistoryWitnesses?: readonly {
+      readonly historyEventCount?: number;
+      readonly historyLastSequence?: number;
+    }[] };
+    assert.equal(retirementEvidence.replacementHistoryWitnesses?.length, 83);
+    assert.ok(retirementEvidence.replacementHistoryWitnesses?.every((witness) =>
+      witness.historyEventCount === 5 && witness.historyLastSequence === 5
+    ));
     assert.equal(
       await store.readPromotion("MEETING", "supported-bodies"),
       null,
@@ -1458,6 +2109,14 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
     assert.ok(first.dispositions.every(({ disposition, readerReadback }) =>
       disposition === "PROMOTED_ABSENT_POINTER" && readerReadback === "PASS"
     ));
+    assert.ok(store.lastRetirementInput);
+    const replacementHistoryLengthsAtRetirement = new Map(
+      await Promise.all(store.lastRetirementInput.replacementPointers.map(async ({ versionId }) => [
+        versionId,
+        (await store.events(versionId)).length,
+      ] as const)),
+    );
+    assert.ok([...replacementHistoryLengthsAtRetirement.values()].every((count) => count === 5));
     const registryRead = await readRegistryRuntimeProjection({ store, bypassCache: true, now: IMPORTED_AT });
     const statementRead = await readOfficeholderStatementsProjection({ store, bypassCache: true, now: IMPORTED_AT });
     assert.equal(registryRead.kind, "PROMOTED");
@@ -1480,12 +2139,27 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
     );
     assert.equal(second.promoted, 0);
     assert.equal(second.skippedExisting, PDC_V2_TRUSTED_LKG_EXPECTED_COUNTS.totalCandidates);
-    assert.equal(store.createCalls, PDC_V2_TRUSTED_LKG_EXPECTED_COUNTS.totalCandidates, "a repeated run writes nothing");
+    assert.equal(
+      store.createCalls,
+      PDC_V2_TRUSTED_LKG_EXPECTED_COUNTS.totalCandidates,
+      "a repeated run creates no new candidates while repairing Reader proof",
+    );
     assert.equal(second.legacyMeetingsAggregateRetirement.disposition, "ALREADY_RETIRED_PROVEN");
     assert.equal(store.preContractGateCalls, 2);
     assert.equal(store.preImportIntegrityGateCalls, 2);
     assert.equal(store.finalMigrationPreflightCalls, 2);
     assert.ok(second.dispositions.every(({ disposition }) => disposition === "SKIPPED_EXISTING_PROVEN_AUTHORITY"));
+    for (const { versionId } of store.lastRetirementInput!.replacementPointers) {
+      const history = await store.events(versionId);
+      assert.equal(
+        history.length,
+        replacementHistoryLengthsAtRetirement.get(versionId)! + 1,
+        "replay may append one attested Reader PASS after the exact retirement prefix",
+      );
+      const suffix = parseReaderProjectionReadback(history.at(-1)!.detail);
+      assert.equal(suffix?.status, "PASS");
+      assert.equal(suffix?.verifierCodeSha, IMPORTER_SHA);
+    }
 
     const provenRetirementInput = store.lastRetirementInput;
     assert.ok(provenRetirementInput);
@@ -1497,6 +2171,23 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
       /PDC_V2_LEGACY_MEETINGS_RETIREMENT_INPUT_INVALID/,
       "a caller-supplied subset cannot redefine the permanent meeting denominator",
     );
+    const eightyTwoReplacementPointers = provenRetirementInput.replacementPointers.slice(1);
+    await assert.rejects(
+      store.retirePdcV2LegacyMeetingsAggregate({
+        ...provenRetirementInput,
+        expected: {
+          ...provenRetirementInput.expected,
+          replacementPointerSha256: createHash("sha256")
+            .update(canonicalCivicDataJson(eightyTwoReplacementPointers))
+            .digest("hex"),
+          replacementPartitionCount: 82,
+          absentPartitionCount: 42,
+        },
+        replacementPointers: eightyTwoReplacementPointers,
+      }),
+      /PDC_V2_LEGACY_MEETINGS_RETIREMENT_INPUT_INVALID/,
+      "the destructive door itself refuses an internally consistent 82/42 denominator",
+    );
 
     const retirementTarget = provenRetirementInput.replacementPointers[0]!;
     const internalStore = store as unknown as {
@@ -1504,6 +2195,25 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
       history: Map<string, CandidateEvent[]>;
       promotions: Map<string, PromotedProjection>;
     };
+    const postBoundaryHistory = await store.events(retirementTarget.versionId);
+    const postBoundaryTemplate = parseReaderProjectionReadback(postBoundaryHistory.at(-1)!.detail);
+    assert.ok(postBoundaryTemplate);
+    await store.appendEvidence(
+      retirementTarget.versionId,
+      "PROMOTED",
+      LATER,
+      serializeReaderProjectionReadback({
+        ...postBoundaryTemplate,
+        observedAt: LATER,
+        detail: "Attested Reader PASS appended after the persisted retirement boundary.",
+      }),
+    );
+    const laterReplay = await store.retirePdcV2LegacyMeetingsAggregate({
+      ...provenRetirementInput,
+      retiredAt: "2026-09-09T14:00:00.000Z",
+    });
+    assert.equal(laterReplay.disposition, "ALREADY_RETIRED_PROVEN");
+
     const exactCandidate = structuredClone(internalStore.candidates.get(retirementTarget.versionId)!);
     assert.ok(exactCandidate.receipt);
     internalStore.candidates.set(retirementTarget.versionId, {
@@ -1526,6 +2236,79 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
       store.retirePdcV2LegacyMeetingsAggregate(provenRetirementInput),
       /PDC_V2_LEGACY_MEETINGS_REPLACEMENT_DENOMINATOR_INVALID:candidate/,
       "post-retirement replay must re-prove contiguous VALIDATED-to-PROMOTED history",
+    );
+    internalStore.history.set(retirementTarget.versionId, exactHistory);
+
+    const replacementHistoryDetailDrift = structuredClone(exactHistory);
+    replacementHistoryDetailDrift[0] = {
+      ...replacementHistoryDetailDrift[0]!,
+      detail: `${replacementHistoryDetailDrift[0]!.detail} planted replay drift`,
+    };
+    internalStore.history.set(retirementTarget.versionId, replacementHistoryDetailDrift);
+    await assert.rejects(
+      store.retirePdcV2LegacyMeetingsAggregate(provenRetirementInput),
+      /PDC_V2_LEGACY_MEETINGS_REPLACEMENT_DENOMINATOR_INVALID:replacement durable history prefix differs from retirement receipt/,
+      "post-retirement replay binds every replacement's exact pre-retirement event details",
+    );
+    internalStore.history.set(retirementTarget.versionId, exactHistory);
+
+    const exactSuffixEvent = exactHistory.at(-1)!;
+    const exactSuffixReceipt = parseReaderProjectionReadback(exactSuffixEvent.detail);
+    assert.ok(exactSuffixReceipt);
+    const wrongImporterSuffix = structuredClone(exactHistory);
+    wrongImporterSuffix[wrongImporterSuffix.length - 1] = {
+      ...exactSuffixEvent,
+      detail: serializeReaderProjectionReadback({
+        ...exactSuffixReceipt,
+        verifierCodeSha: "b".repeat(40),
+      }),
+    };
+    internalStore.history.set(retirementTarget.versionId, wrongImporterSuffix);
+    await assert.rejects(
+      store.retirePdcV2LegacyMeetingsAggregate(provenRetirementInput),
+      /PDC_V2_LEGACY_MEETINGS_REPLACEMENT_DENOMINATOR_INVALID:replacement post-retirement history is not an exact importer Reader PASS/,
+      "post-retirement Reader evidence must name the attested importer code",
+    );
+
+    const failedThenPassingSuffix = structuredClone(exactHistory);
+    failedThenPassingSuffix[failedThenPassingSuffix.length - 1] = {
+      ...exactSuffixEvent,
+      detail: serializeReaderProjectionReadback({
+        ...exactSuffixReceipt,
+        status: "FAIL",
+        detail: "planted failed post-retirement observation",
+      }),
+    };
+    failedThenPassingSuffix.push({
+      ...exactSuffixEvent,
+      sequence: exactSuffixEvent.sequence + 1,
+      detail: serializeReaderProjectionReadback({
+        ...exactSuffixReceipt,
+        detail: "planted later passing observation",
+      }),
+    });
+    internalStore.history.set(retirementTarget.versionId, failedThenPassingSuffix);
+    await assert.rejects(
+      store.retirePdcV2LegacyMeetingsAggregate(provenRetirementInput),
+      /PDC_V2_LEGACY_MEETINGS_REPLACEMENT_DENOMINATOR_INVALID:replacement post-retirement history is not an exact importer Reader PASS/,
+      "a later PASS cannot hide a failed event in the post-retirement suffix",
+    );
+
+    const backdatedSuffix = structuredClone(exactHistory);
+    const backdatedAt = new Date(Date.parse(provenRetirementInput.retiredAt) - 1).toISOString();
+    backdatedSuffix[backdatedSuffix.length - 1] = {
+      ...exactSuffixEvent,
+      at: backdatedAt,
+      detail: serializeReaderProjectionReadback({
+        ...exactSuffixReceipt,
+        observedAt: backdatedAt,
+      }),
+    };
+    internalStore.history.set(retirementTarget.versionId, backdatedSuffix);
+    await assert.rejects(
+      store.retirePdcV2LegacyMeetingsAggregate(provenRetirementInput),
+      /PDC_V2_LEGACY_MEETINGS_REPLACEMENT_DENOMINATOR_INVALID:candidate .* non-contiguous or invalid durable history/,
+      "post-retirement Reader evidence cannot be backdated into the admitted prefix",
     );
     internalStore.history.set(retirementTarget.versionId, exactHistory);
 
@@ -1595,6 +2378,19 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
     internalStore.candidates.set(legacyVersionId, exactLegacyCandidate);
 
     const exactLegacyHistory = structuredClone(internalStore.history.get(legacyVersionId)!);
+    const legacyHistoryDetailDrift = structuredClone(exactLegacyHistory);
+    legacyHistoryDetailDrift[0] = {
+      ...legacyHistoryDetailDrift[0]!,
+      detail: `${legacyHistoryDetailDrift[0]!.detail} planted replay drift`,
+    };
+    internalStore.history.set(legacyVersionId, legacyHistoryDetailDrift);
+    await assert.rejects(
+      store.retirePdcV2LegacyMeetingsAggregate(provenRetirementInput),
+      /PDC_V2_LEGACY_MEETINGS_RETAINED_EVIDENCE_INVALID:retained legacy authority differs from the exact pre-retirement witness/,
+      "post-retirement replay binds the exact admitted legacy history rather than same-fact structure",
+    );
+    internalStore.history.set(legacyVersionId, exactLegacyHistory);
+
     internalStore.history.set(
       legacyVersionId,
       exactLegacyHistory.filter(({ state }) => state !== "VALIDATED"),
@@ -1660,6 +2456,25 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
 
     const laterPlan = await buildPdcV2TrustedLkgImportPlan({ ...options, importedAt: LATER });
 
+    // Simulate a pointer appearing after the importer's absent-pointer scan.
+    // The registered meeting door's expected-null compare refuses overwrite.
+    const laterMeeting = laterPlan.candidates.find(({ door }) => door === "MEETING_PARTITION")!;
+    const originalPointer = await store.readPromotion(laterMeeting.candidate.recordClass, laterMeeting.candidate.scope);
+    const raced = await processRegisteredMeetingPartitionCandidate(
+      store,
+      laterMeeting.contractId,
+      laterMeeting.candidate,
+      LATER,
+      null,
+    );
+    assert.equal(raced.promoted, null);
+    assert.equal(raced.candidate.failureCode, "PROMOTION_BASE_CHANGED");
+    assert.equal(
+      (await store.readPromotion(laterMeeting.candidate.recordClass, laterMeeting.candidate.scope))?.versionId,
+      originalPointer?.versionId,
+    );
+    releaseMemoryRoutineDataStore(store);
+
     // A process can die after some old-invocation pointers are durable. A
     // later invocation has different content-addressed candidate IDs; the
     // terminal receipt must bind the actual mixed pointer set, retain the
@@ -1684,16 +2499,19 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
       plan.candidates.some(({ contractId }) => contractId === id)
     );
     assert.ok(firstCompletedContract);
-    const firstCompleted = plan.candidates.find(({ contractId }) =>
-      contractId === firstCompletedContract.id
+    const firstCompletedPointer = await terminalInterruptedStore.readPromotion(
+      firstCompletedContract.recordClass,
+      firstCompletedContract.scope,
     );
-    assert.ok(firstCompleted);
-    assert.equal(
-      (await terminalInterruptedStore.readPromotion(
-        firstCompleted.candidate.recordClass,
-        firstCompleted.candidate.scope,
-      ))?.versionId,
-      firstCompleted.candidate.id,
+    assert.ok(firstCompletedPointer);
+    const firstCompletedRow = await terminalInterruptedStore.readCandidate(
+      firstCompletedPointer.versionId,
+    );
+    assert.ok(firstCompletedRow);
+    assert.ok(
+      firstCompletedRow.candidate.bootstrapImport?.kind === "TRUSTED_LKG_IMPORT" &&
+      firstCompletedRow.candidate.bootstrapImport.legacyMeetingsPartition,
+      "the interrupted pointer is the exact current-legacy overlay, not the stale frozen candidate",
     );
     const mixedCompletion = await executePdcV2PermanentCutoverImportPlan(
       terminalInterruptedStore,
@@ -1711,9 +2529,18 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
       "MEETING",
       laterPlan.meetingPartitionIdsWithLkg.map((id) => requiredMeetingPartitionContract(id).scope),
     );
-    assert.ok(permanentMeetingPointers.some(({ versionId }) => versionId === firstCompleted.candidate.id));
     assert.ok(permanentMeetingPointers.some(({ versionId }) =>
-      laterPlan.candidates.some(({ candidate }) => candidate.id === versionId)
+      versionId === firstCompletedPointer.versionId
+    ));
+    const laterOverlayPointers = await Promise.all(
+      permanentMeetingPointers
+        .filter(({ versionId }) => versionId !== firstCompletedPointer.versionId)
+        .map(({ versionId }) => terminalInterruptedStore.readCandidate(versionId)),
+    );
+    assert.ok(laterOverlayPointers.some((row) =>
+      row?.candidate.bootstrapImport?.kind === "TRUSTED_LKG_IMPORT" &&
+      row.candidate.bootstrapImport.importedAt === LATER &&
+      row.candidate.bootstrapImport.legacyMeetingsPartition !== undefined
     ));
     const mixedReplay = await executePdcV2PermanentCutoverImportPlan(
       terminalInterruptedStore,
@@ -1725,6 +2552,7 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
       terminalInterruptedStore.createCalls,
       PDC_V2_TRUSTED_LKG_EXPECTED_COUNTS.totalCandidates + 1,
     );
+    releaseMemoryRoutineDataStore(terminalInterruptedStore);
 
     const partialContractIds = plan.candidates.slice(0, 3).map(({ contractId }) => contractId);
     const interruptedPlan: PdcV2TrustedLkgImportPlan = { ...plan, candidates: plan.candidates.slice(0, 3) };
@@ -1760,6 +2588,7 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
     assert.equal(resumedReplay.promoted, 0);
     assert.equal(resumedReplay.skippedExisting, 3);
     assert.equal(interruptedStore.createCalls, 4);
+    releaseMemoryRoutineDataStore(interruptedStore);
 
     // Candidate + pointer promotion is atomic, but the typed Reader receipt is
     // necessarily appended next. A process death in that seam leaves valid
@@ -1787,6 +2616,7 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
     assert.equal(repairedReplay.skippedExisting, 1);
     assert.equal(readbackInterruptedStore.createCalls, 1);
     assert.equal(readbackInterruptedStore.successfulReaderReadbacks, 1, "a current exact-code PASS receipt is idempotent");
+    releaseMemoryRoutineDataStore(readbackInterruptedStore);
 
     // A source-authenticated registered promotion has the same atomic-pointer /
     // appended-Reader-receipt seam. The importer must not label that existing
@@ -1845,24 +2675,8 @@ test("exact fc67 fixtures deterministically build and seed only the 95 absent tr
       (await runtimeReadbackInterruptedStore.readPromotion(runtimeCandidate.recordClass, runtimeCandidate.scope))?.versionId,
       runtimeCandidate.id,
     );
+    releaseMemoryRoutineDataStore(runtimeReadbackInterruptedStore);
 
-    // Simulate a pointer appearing after the importer's absent-pointer scan.
-    // The registered meeting door's expected-null compare refuses overwrite.
-    const laterMeeting = laterPlan.candidates.find(({ door }) => door === "MEETING_PARTITION")!;
-    const originalPointer = await store.readPromotion(laterMeeting.candidate.recordClass, laterMeeting.candidate.scope);
-    const raced = await processRegisteredMeetingPartitionCandidate(
-      store,
-      laterMeeting.contractId,
-      laterMeeting.candidate,
-      LATER,
-      null,
-    );
-    assert.equal(raced.promoted, null);
-    assert.equal(raced.candidate.failureCode, "PROMOTION_BASE_CHANGED");
-    assert.equal(
-      (await store.readPromotion(laterMeeting.candidate.recordClass, laterMeeting.candidate.scope))?.versionId,
-      originalPointer?.versionId,
-    );
   });
 });
 

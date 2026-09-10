@@ -122,9 +122,11 @@ import {
   type ManualSourceClass,
   type ManualSourceReview,
   type ManualSourceSetReceipt,
+  type PromotedProjection,
   type RoutineCandidate,
   type TrustedLkgFixtureEvidence,
   type TrustedLkgImportEvidence,
+  type TrustedLkgLegacyMeetingsPartitionEvidence,
   type TrustedLkgReattestationEvidence,
 } from "./types.ts";
 import { validateRoutineCandidate } from "./validate.ts";
@@ -424,13 +426,24 @@ function latestInstant(value: unknown): string {
   return values.sort((left, right) => Date.parse(left) - Date.parse(right)).at(-1)!;
 }
 
-function assertBuilderCandidate(candidate: RoutineCandidate, contractId: string): void {
-  if (!candidate.retrieval.succeeded) throw new Error(`TRUSTED_LKG_BUILDER_RETRIEVAL_FAILED:${contractId}`);
+function assertBuilderCandidate(
+  candidate: RoutineCandidate,
+  contractId: string,
+  durableLegacyMeetingsTransfer: boolean = false,
+): void {
+  if (!candidate.retrieval.succeeded && !durableLegacyMeetingsTransfer) {
+    throw new Error(`TRUSTED_LKG_BUILDER_RETRIEVAL_FAILED:${contractId}`);
+  }
   if (!candidate.normalization.succeeded || candidate.normalization.missingRequiredFields.length > 0) {
     throw new Error(`TRUSTED_LKG_BUILDER_PARSE_FAILED:${contractId}:${candidate.normalization.missingRequiredFields.join(",")}`);
   }
-  if (candidate.semantics.violations.length > 0) {
-    throw new Error(`TRUSTED_LKG_BUILDER_SEMANTICS_FAILED:${contractId}:${candidate.semantics.violations.join(";")}`);
+  const semanticViolations = durableLegacyMeetingsTransfer
+    ? candidate.semantics.violations.filter((violation) =>
+        violation !== "No configured meeting source succeeded."
+      )
+    : candidate.semantics.violations;
+  if (semanticViolations.length > 0) {
+    throw new Error(`TRUSTED_LKG_BUILDER_SEMANTICS_FAILED:${contractId}:${semanticViolations.join(";")}`);
   }
   const failed = candidate.dependentChecks.filter((check) => !check.passed);
   if (candidate.dependentChecks.length === 0 || failed.length > 0) {
@@ -444,15 +457,16 @@ function trustedCandidate(
   fixtures: readonly TrustedLkgFixtureEvidence[],
   importedAt: string,
   importerCodeSha: string,
+  legacyMeetingsPartition?: TrustedLkgLegacyMeetingsPartitionEvidence,
 ): RoutineCandidate {
-  assertBuilderCandidate(base, contractId);
+  assertBuilderCandidate(base, contractId, legacyMeetingsPartition !== undefined);
   const readModel = structuredClone(base.readModel);
   const civicRecords = civicRecordsFor(base.recordClass, readModel);
   // Manual builders may report transient per-source holds while retaining the
   // same-value synthetic prior used only to exercise their ordinary parser.
   // Those are not frozen-record dispositions. The statement transfer is the
   // one plan that supplies deliberate, exact held originals.
-  const excludedFacts = contractId === "officeholder-statements"
+  const excludedFacts = contractId === "officeholder-statements" || legacyMeetingsPartition
     ? structuredClone(base.excludedFacts ?? [])
     : [];
   if (civicRecords.length === 0) throw new Error(`TRUSTED_LKG_ZERO_RECORD_CANDIDATE_REFUSED:${contractId}`);
@@ -471,7 +485,7 @@ function trustedCandidate(
       finalUrl: null,
       httpStatus: null,
       retrievedAt: importedAt,
-      rawHash: fixtureSetSha256,
+      rawHash: legacyMeetingsPartition?.legacyPointerSha256 ?? fixtureSetSha256,
     },
     normalization: {
       ...base.normalization,
@@ -489,9 +503,19 @@ function trustedCandidate(
       expectedVersion: base.temporal.version,
       staleAtRetrieval: true,
     },
+    semantics: legacyMeetingsPartition
+      ? {
+          ...base.semantics,
+          violations: base.semantics.violations.filter((violation) =>
+            violation !== "No configured meeting source succeeded."
+          ),
+        }
+      : base.semantics,
     horizon: {
       kind: "OPEN_FACT_SET",
-      query: "Exact frozen-base LKG members only; this non-source-authenticated transfer makes no current publisher-universe claim.",
+      query: legacyMeetingsPartition
+        ? "Exact durable legacy aggregate partition; this split makes no new publisher-universe claim."
+        : "Exact frozen-base LKG members only; this non-source-authenticated transfer makes no current publisher-universe claim.",
       returnedRecords: civicRecords.length,
       declaredTotal: null,
       paginationComplete: false,
@@ -527,6 +551,7 @@ function trustedCandidate(
     importerCodeSha,
     fixtureSetSha256,
     fixtures,
+    ...(legacyMeetingsPartition ? { legacyMeetingsPartition } : {}),
     normalizedPayloadSha256,
     readModelSha256: sha256(canonicalCivicDataJson(readModel)),
     candidateEnvelopeSha256: trustedLkgCandidateEnvelopeSha256(partial),
@@ -679,6 +704,7 @@ function manualCandidateFromPayload(
 function partitionSnapshot(
   frozen: MeetingsSnapshot,
   partition: MeetingPartitionContract,
+  durableLegacyMeetingsTransfer: boolean = false,
 ): MeetingsSnapshot {
   const meetings = frozen.meetings.filter((meeting) =>
     meeting.bodyId === partition.bodyId && meeting.id.startsWith(`${partition.meetingSource}:`)
@@ -687,9 +713,26 @@ function partitionSnapshot(
   const agendaDocuments = frozen.agendaDocuments.filter((document) => meetingIds.has(document.meetingId));
   const carried = meetings.filter((meeting) => meeting.carried).length;
   const fresh = meetings.length - carried;
-  const frozenReport = frozen.sources.find(({ source }) => source === partition.meetingSource);
+  const sourceReports = frozen.sources.filter(({ source }) => source === partition.meetingSource);
+  const hasUnexplainedCarry = meetings.some(({ carried }) =>
+    carried?.reason === "UNEXPLAINED_DISAPPEARANCE"
+  );
+  const frozenReport = sourceReports.find((report) =>
+    hasUnexplainedCarry && report.ok && (report.unreachableOcdIds?.length ?? 0) === 0
+  ) ?? sourceReports.find((report) =>
+    fresh > 0 && report.ok && carried > 0 && partition.ocdId !== null &&
+    report.unreachableOcdIds?.includes(partition.ocdId)
+  ) ?? sourceReports.find((report) =>
+    fresh > 0 && report.ok
+  ) ?? sourceReports.find((report) =>
+    carried > 0 && (
+      !report.ok ||
+      (partition.ocdId !== null && report.unreachableOcdIds?.includes(partition.ocdId))
+    )
+  ) ?? sourceReports[0];
   if (!frozenReport) throw new Error(`TRUSTED_LKG_MEETING_SOURCE_REPORT_MISSING:${partition.id}`);
-  const relevantUnreachable = carried > 0 && partition.ocdId && frozenReport.unreachableOcdIds?.includes(partition.ocdId)
+  const relevantUnreachable = carried > 0 && !hasUnexplainedCarry && partition.ocdId &&
+      frozenReport.unreachableOcdIds?.includes(partition.ocdId)
     ? [partition.ocdId]
     : undefined;
   const source: SnapshotSourceReport = {
@@ -713,7 +756,11 @@ function partitionSnapshot(
     meetings,
     agendaDocuments,
   };
-  if (meetings.length > 0) validateSnapshot(value);
+  if (meetings.length > 0) {
+    validateSnapshot(value, {
+      allowAllSourcesFailedForDurableTransfer: durableLegacyMeetingsTransfer,
+    });
+  }
   return value;
 }
 
@@ -1457,6 +1504,32 @@ function sameSortedStrings(left: readonly string[], right: readonly string[]): b
   return canonicalCivicDataJson([...left].sort()) === canonicalCivicDataJson([...right].sort());
 }
 
+function trustedLkgLegacyMeetingsCommonOrigin(
+  origin: TrustedLkgLegacyMeetingsPartitionEvidence,
+): Readonly<Record<string, unknown>> {
+  return {
+    legacyKey: origin.legacyKey,
+    legacySourceId: origin.legacySourceId,
+    legacyRecordClass: origin.legacyRecordClass,
+    legacyScope: origin.legacyScope,
+    legacyVersionId: origin.legacyVersionId,
+    legacyPromotedAt: origin.legacyPromotedAt,
+    legacyPointerSha256: origin.legacyPointerSha256,
+    legacyCandidateRecordSha256: origin.legacyCandidateRecordSha256,
+    legacyCandidateSha256: origin.legacyCandidateSha256,
+    legacyReceiptSha256: origin.legacyReceiptSha256,
+    legacyPayloadSha256: origin.legacyPayloadSha256,
+    legacyReadModelSha256: origin.legacyReadModelSha256,
+    legacyNormalizedPayloadSha256: origin.legacyNormalizedPayloadSha256,
+    legacyHistorySha256: origin.legacyHistorySha256,
+    legacyHistoryEventCount: origin.legacyHistoryEventCount,
+    legacyHistoryLastSequence: origin.legacyHistoryLastSequence,
+    legacyMeetingFactSha256: origin.legacyMeetingFactSha256,
+    legacyMeetingRowCount: origin.legacyMeetingRowCount,
+    legacyAgendaDocumentRowCount: origin.legacyAgendaDocumentRowCount,
+  };
+}
+
 /**
  * Re-prove the complete frozen transfer denominator at the executable edge.
  * The generic executor intentionally supports focused tests; production may
@@ -1480,8 +1553,6 @@ export function pdcV2PermanentCutoverPlanIssue(
     plan.candidates.length !== expected.totalCandidates ||
     plan.meetingPartitionIdsWithLkg.length !== expected.meetingPartitionsWithLkg ||
     plan.meetingPartitionIdsWithoutLkg.length !== expected.meetingPartitionsWithoutLkg ||
-    plan.meetingRows !== expected.meetingRows ||
-    plan.agendaDocumentRows !== expected.meetingAgendaDocumentRows ||
     plan.manualContractIds.length !== expected.manualContracts
   ) return "plan denominator counts differ from the frozen transfer contract";
   if (!sameSortedStrings(plan.manualContractIds, PDC_V2_TRUSTED_LKG_MANUAL_CONTRACT_IDS)) {
@@ -1523,6 +1594,8 @@ export function pdcV2PermanentCutoverPlanIssue(
 
   let meetingRows = 0;
   let agendaDocumentRows = 0;
+  const legacyMeetingOrigins: TrustedLkgLegacyMeetingsPartitionEvidence[] = [];
+  const meetingPayloads: MeetingsSnapshot[] = [];
   for (const planned of plan.candidates) {
     const contract = registeredContractFor(planned);
     const candidate = planned.candidate;
@@ -1551,22 +1624,62 @@ export function pdcV2PermanentCutoverPlanIssue(
     if (planned.door === "MEETING_PARTITION") {
       const snapshot = candidate.readModel as MeetingsSnapshot;
       try {
-        validateSnapshot(snapshot);
+        validateSnapshot(snapshot, {
+          allowAllSourcesFailedForDurableTransfer: evidence.legacyMeetingsPartition !== undefined,
+        });
       } catch {
         return `meeting candidate ${planned.contractId} snapshot is invalid`;
       }
       if (snapshot.meetings.length === 0) {
         return `meeting candidate ${planned.contractId} has no LKG rows`;
       }
+      meetingPayloads.push(snapshot);
       meetingRows += snapshot.meetings.length;
       agendaDocumentRows += snapshot.agendaDocuments.length;
+      const origin = evidence.legacyMeetingsPartition;
+      if (origin) {
+        if (
+          origin.partitionSourceName !== (contract as MeetingPartitionContract).meetingSource ||
+          origin.partitionBodyId !== (contract as MeetingPartitionContract).bodyId
+        ) return `meeting candidate ${planned.contractId} names another durable partition origin`;
+        const facts = pdcV2CanonicalMeetingFactEvidence([snapshot]);
+        if (
+          origin.partitionFactSha256 !== facts.sha256 ||
+          origin.partitionMeetingRowCount !== facts.meetingRowCount ||
+          origin.partitionAgendaDocumentRowCount !== facts.agendaDocumentRowCount
+        ) return `meeting candidate ${planned.contractId} durable partition fact witness differs`;
+        legacyMeetingOrigins.push(origin);
+      }
     } else if (planned.contractId === "everyday-routing") {
       const issue = everydayFrozenTransferIssue(candidate.readModel as EverydayRoutingProjection);
       if (issue !== null) return `planned everyday routing payload differs from the frozen denominator: ${issue}`;
     }
   }
   if (meetingRows !== plan.meetingRows || agendaDocumentRows !== plan.agendaDocumentRows) {
-    return "planned meeting payload rows differ from the frozen denominator";
+    return "planned meeting payload rows differ from the transfer denominator";
+  }
+  if (legacyMeetingOrigins.length === 0) {
+    if (
+      plan.meetingRows !== expected.meetingRows ||
+      plan.agendaDocumentRows !== expected.meetingAgendaDocumentRows
+    ) return "frozen planned meeting payload rows differ from the frozen denominator";
+  } else {
+    if (legacyMeetingOrigins.length !== meetingPlans.length) {
+      return "meeting plan mixes frozen and durable-aggregate transfer origins";
+    }
+    const first = legacyMeetingOrigins[0]!;
+    if (legacyMeetingOrigins.some((origin) =>
+      canonicalCivicDataJson(trustedLkgLegacyMeetingsCommonOrigin(origin)) !==
+        canonicalCivicDataJson(trustedLkgLegacyMeetingsCommonOrigin(first))
+    )) return "durable meeting partitions do not share one exact legacy aggregate origin";
+    const facts = pdcV2CanonicalMeetingFactEvidence(meetingPayloads);
+    if (
+      first.legacyMeetingFactSha256 !== facts.sha256 ||
+      first.legacyMeetingRowCount !== facts.meetingRowCount ||
+      first.legacyAgendaDocumentRowCount !== facts.agendaDocumentRowCount ||
+      plan.meetingRows !== facts.meetingRowCount ||
+      plan.agendaDocumentRows !== facts.agendaDocumentRowCount
+    ) return "durable meeting partition union differs from its exact legacy aggregate witness";
   }
   return null;
 }
@@ -1925,37 +2038,173 @@ function canonicalMeetingFactSha256(snapshot: MeetingsSnapshot): string {
   return pdcV2CanonicalMeetingFactEvidence([snapshot]).sha256;
 }
 
-function pdcV2ExpectedMeetingsSnapshot(plan: PdcV2TrustedLkgImportPlan): MeetingsSnapshot {
-  const partitions = plan.candidates.filter(({ door }) => door === "MEETING_PARTITION");
-  const snapshots = partitions.map(({ candidate }) => candidate.readModel as MeetingsSnapshot);
-  const snapshot: MeetingsSnapshot = {
-    formatVersion: 1,
-    generatedAt: snapshots.map(({ generatedAt }) => generatedAt).sort().at(-1) ?? plan.importedAt,
-    counts: {
-      fresh: snapshots.reduce((count, item) => count + item.counts.fresh, 0),
-      carried: snapshots.reduce((count, item) => count + item.counts.carried, 0),
-      total: snapshots.reduce((count, item) => count + item.counts.total, 0),
-      duplicatesCollapsed: snapshots.reduce(
-        (count, item) => count + (item.counts.duplicatesCollapsed ?? 0),
-        0,
-      ),
-    },
-    sources: snapshots.flatMap(({ sources }) => sources),
-    meetings: snapshots.flatMap(({ meetings }) => meetings),
-    agendaDocuments: snapshots.flatMap(({ agendaDocuments }) => agendaDocuments),
-  };
-  validateSnapshot(snapshot);
+interface PdcV2ProvenLegacyMeetingsAuthority {
+  readonly pointer: PromotedProjection<MeetingsSnapshot>;
+  readonly candidate: CandidateVersionRecord;
+  readonly events: readonly CandidateEvent[];
+}
+
+/**
+ * Preserve the exact meeting authority serving at the bounded switch.  The
+ * fc67 plan remains the required lineage and supplies every manual candidate;
+ * only its now-stale meeting payloads are replaced by a deterministic split of
+ * the fully proved durable aggregate.
+ */
+function pdcV2CurrentLegacyMeetingsOverlayPlan(
+  plan: PdcV2TrustedLkgImportPlan,
+  authority: PdcV2ProvenLegacyMeetingsAuthority,
+): PdcV2TrustedLkgImportPlan {
+  const legacyReceipt = authority.candidate.receipt;
+  if (!legacyReceipt) throw new Error("TRUSTED_LKG_LEGACY_MEETINGS_RECEIPT_MISSING");
+  const legacyHistory = [...authority.events].sort((left, right) => left.sequence - right.sequence);
   if (
-    partitions.length !== PDC_V2_TRUSTED_LKG_EXPECTED_COUNTS.meetingPartitionsWithLkg ||
-    snapshot.meetings.length !== plan.meetingRows ||
-    snapshot.agendaDocuments.length !== plan.agendaDocumentRows
-  ) throw new Error("TRUSTED_LKG_MEETING_REPLACEMENT_DENOMINATOR_INVALID");
-  return snapshot;
+    legacyHistory.length < 4 ||
+    legacyHistory.some((event, index) => event.sequence !== index + 1)
+  ) throw new Error("TRUSTED_LKG_LEGACY_MEETINGS_HISTORY_SEQUENCE_INVALID");
+  const current: MeetingsSnapshot = {
+    ...structuredClone(authority.pointer.payload),
+    agendaDocuments: authority.pointer.payload.agendaDocuments.map(canonicalAgendaDocument),
+  };
+  validateSnapshot(current);
+  const aggregateFacts = pdcV2CanonicalMeetingFactEvidence([current]);
+  const legacyPayloadSha256 = trustedLkgEvidenceSha256(authority.pointer.payload);
+  const legacyReadModelSha256 = trustedLkgEvidenceSha256(authority.candidate.candidate.readModel);
+  const legacyNormalizedPayloadSha256 = trustedLkgEvidenceSha256(
+    authority.candidate.candidate.normalizedPayload,
+  );
+  if (
+    legacyPayloadSha256 !== legacyReadModelSha256 ||
+    legacyPayloadSha256 !== legacyNormalizedPayloadSha256
+  ) throw new Error("TRUSTED_LKG_LEGACY_MEETINGS_DURABLE_PAYLOAD_DIVERGED");
+
+  const commonOrigin = {
+    contractVersion: 1 as const,
+    kind: "DURABLE_LEGACY_MEETINGS_PARTITION" as const,
+    legacyKey: "MEETING:supported-bodies" as const,
+    legacySourceId: "meetings-public-bodies" as const,
+    legacyRecordClass: "MEETING" as const,
+    legacyScope: "supported-bodies" as const,
+    legacyVersionId: authority.pointer.versionId,
+    legacyPromotedAt: authority.pointer.promotedAt,
+    legacyPointerSha256: trustedLkgPredecessorPointerSha256(authority.pointer),
+    legacyCandidateRecordSha256: trustedLkgPredecessorRecordSha256(authority.candidate),
+    legacyCandidateSha256: trustedLkgEvidenceSha256(authority.candidate.candidate),
+    legacyReceiptSha256: trustedLkgEvidenceSha256(legacyReceipt),
+    legacyPayloadSha256,
+    legacyReadModelSha256,
+    legacyNormalizedPayloadSha256,
+    legacyHistorySha256: trustedLkgEvidenceSha256(legacyHistory),
+    legacyHistoryEventCount: legacyHistory.length,
+    legacyHistoryLastSequence: legacyHistory.at(-1)!.sequence,
+    legacyMeetingFactSha256: aggregateFacts.sha256,
+    legacyMeetingRowCount: aggregateFacts.meetingRowCount,
+    legacyAgendaDocumentRowCount: aggregateFacts.agendaDocumentRowCount,
+  };
+  const meetingCandidates: PdcV2TrustedLkgPlannedCandidate[] = [];
+  const withoutLkg: string[] = [];
+  const ownedMeetingIds = new Set<string>();
+  let agendaDocumentRows = 0;
+  for (const partition of MEETING_PARTITION_CONTRACTS) {
+    const snapshot = partitionSnapshot(current, partition, true);
+    if (snapshot.meetings.length === 0) {
+      withoutLkg.push(partition.id);
+      continue;
+    }
+    for (const row of snapshot.meetings) {
+      if (ownedMeetingIds.has(row.id)) {
+        throw new Error(`TRUSTED_LKG_CURRENT_MEETING_DUAL_PARTITION:${row.id}`);
+      }
+      ownedMeetingIds.add(row.id);
+    }
+    agendaDocumentRows += snapshot.agendaDocuments.length;
+    const requestedUrl = snapshot.meetings[0]?.provenance?.sourceUrl;
+    if (!requestedUrl) throw new Error(`TRUSTED_LKG_CURRENT_MEETING_SOURCE_URL_MISSING:${partition.id}`);
+    const base = meetingsCandidate({
+      snapshot: {
+        ...snapshot,
+        sources: snapshot.sources.map(({ error, ...source }) => ({
+          ...source,
+          ...(error ? { error } : {}),
+        })),
+      },
+      partition: {
+        sourceName: partition.meetingSource,
+        bodyId: partition.bodyId,
+        scope: partition.scope,
+      },
+      requestedUrl,
+      finalUrl: requestedUrl,
+      retrievedAt: plan.importedAt,
+      acquisitionRawHash: trustedLkgPredecessorPointerSha256(authority.pointer),
+    });
+    const partitionFacts = pdcV2CanonicalMeetingFactEvidence([snapshot]);
+    const origin: TrustedLkgLegacyMeetingsPartitionEvidence = {
+      ...commonOrigin,
+      partitionSourceName: partition.meetingSource,
+      partitionBodyId: partition.bodyId,
+      partitionFactSha256: partitionFacts.sha256,
+      partitionMeetingRowCount: partitionFacts.meetingRowCount,
+      partitionAgendaDocumentRowCount: partitionFacts.agendaDocumentRowCount,
+    };
+    meetingCandidates.push({
+      contractId: partition.id,
+      door: "MEETING_PARTITION",
+      candidate: trustedCandidate(
+        partition.id,
+        base,
+        [],
+        plan.importedAt,
+        plan.importerCodeSha,
+        origin,
+      ),
+    });
+  }
+  const unowned = current.meetings.filter(({ id }) => !ownedMeetingIds.has(id));
+  if (unowned.length > 0) {
+    throw new Error(
+      `TRUSTED_LKG_CURRENT_MEETINGS_OUTSIDE_REGISTERED_PARTITION:` +
+      unowned.slice(0, 5).map(({ id }) => id).join(","),
+    );
+  }
+  const withLkg = meetingCandidates.map(({ contractId }) => contractId).sort();
+  withoutLkg.sort();
+  if (
+    withLkg.length !== PDC_V2_TRUSTED_LKG_EXPECTED_COUNTS.meetingPartitionsWithLkg ||
+    withoutLkg.length !== PDC_V2_TRUSTED_LKG_EXPECTED_COUNTS.meetingPartitionsWithoutLkg
+  ) {
+    throw new Error(
+      `TRUSTED_LKG_CURRENT_MEETING_PARTITION_DENOMINATOR_MISMATCH:` +
+      `${withLkg.length}/${withoutLkg.length}`,
+    );
+  }
+  const replacementFacts = pdcV2CanonicalMeetingFactEvidence(
+    meetingCandidates.map(({ candidate }) => candidate.readModel),
+  );
+  if (
+    replacementFacts.sha256 !== aggregateFacts.sha256 ||
+    replacementFacts.meetingRowCount !== aggregateFacts.meetingRowCount ||
+    replacementFacts.agendaDocumentRowCount !== aggregateFacts.agendaDocumentRowCount ||
+    agendaDocumentRows !== aggregateFacts.agendaDocumentRowCount
+  ) throw new Error("TRUSTED_LKG_CURRENT_MEETINGS_PARTITION_FACT_SET_MISMATCH");
+  const manualCandidates = plan.candidates.filter(({ door }) => door === "MANUAL");
+  const overlay: PdcV2TrustedLkgImportPlan = {
+    ...plan,
+    candidates: [...meetingCandidates, ...manualCandidates]
+      .sort((left, right) => left.contractId.localeCompare(right.contractId)),
+    meetingPartitionIdsWithLkg: withLkg,
+    meetingPartitionIdsWithoutLkg: withoutLkg,
+    meetingRows: replacementFacts.meetingRowCount,
+    agendaDocumentRows: replacementFacts.agendaDocumentRowCount,
+  };
+  const issue = pdcV2PermanentCutoverPlanIssue(overlay);
+  if (issue !== null) throw new Error(`TRUSTED_LKG_CURRENT_MEETINGS_OVERLAY_REFUSED:${issue}`);
+  return overlay;
 }
 
 async function pdcV2LegacyMeetingsRetirementInput(
   store: RoutineDataStore,
   plan: PdcV2TrustedLkgImportPlan,
+  admittedLegacyAuthority: PdcV2ProvenLegacyMeetingsAuthority | null = null,
 ): Promise<PdcV2LegacyMeetingsRetirementInput> {
   const allPermanentPartitionScopes = MEETING_PARTITION_CONTRACTS
     .map(({ scope }) => scope)
@@ -1987,14 +2236,27 @@ async function pdcV2LegacyMeetingsRetirementInput(
       `${replacementPointers.length}/${allPermanentPartitionScopes.length}`,
     );
   }
-  const expectedSnapshot = pdcV2ExpectedMeetingsSnapshot(plan);
+  const replacementFacts = pdcV2CanonicalMeetingFactEvidence(
+    replacementPointers.map(({ payload }) => payload),
+  );
   const legacyPointer = await store.readPromotion<MeetingsSnapshot>(
     "MEETING",
     PDC_V2_LEGACY_MEETINGS_SCOPE,
   );
   if (
+    admittedLegacyAuthority !== null &&
+    (
+      legacyPointer === null ||
+      trustedLkgPredecessorPointerSha256(legacyPointer) !==
+        trustedLkgPredecessorPointerSha256(admittedLegacyAuthority.pointer)
+    )
+  ) throw new Error("TRUSTED_LKG_LEGACY_MEETINGS_CHANGED_BEFORE_RETIREMENT");
+  if (admittedLegacyAuthority === null && legacyPointer !== null) {
+    throw new Error("TRUSTED_LKG_LEGACY_MEETINGS_UNADMITTED_AT_RETIREMENT");
+  }
+  if (
     legacyPointer &&
-    canonicalMeetingFactSha256(legacyPointer.payload) !== canonicalMeetingFactSha256(expectedSnapshot)
+    canonicalMeetingFactSha256(legacyPointer.payload) !== replacementFacts.sha256
   ) {
     throw new Error("TRUSTED_LKG_LEGACY_MEETINGS_CHANGED_BEFORE_RETIREMENT");
   }
@@ -2013,31 +2275,43 @@ async function pdcV2LegacyMeetingsRetirementInput(
       contractVersion: 1,
       frozenBaseSha: plan.frozenBaseSha,
       importerCodeSha: plan.importerCodeSha,
-      legacyMeetingFactSha256: canonicalMeetingFactSha256(expectedSnapshot),
+      legacyMeetingFactSha256: replacementFacts.sha256,
       replacementPointerSha256: sha256(canonicalCivicDataJson(replacementPointers)),
       replacementPartitionCount: replacementPointers.length,
       absentPartitionCount: allPermanentPartitionScopes.length - replacementPointers.length,
-      meetingRowCount: plan.meetingRows,
-      agendaDocumentRowCount: plan.agendaDocumentRows,
+      meetingRowCount: replacementFacts.meetingRowCount,
+      agendaDocumentRowCount: replacementFacts.agendaDocumentRowCount,
     },
-    observedLegacyPayload: legacyPointer ? structuredClone(legacyPointer.payload) : null,
+    observedLegacyPayload: admittedLegacyAuthority
+      ? structuredClone(admittedLegacyAuthority.pointer.payload)
+      : null,
+    observedLegacyVersionId: admittedLegacyAuthority?.pointer.versionId ?? null,
+    observedLegacyPointerSha256: admittedLegacyAuthority
+      ? trustedLkgPredecessorPointerSha256(admittedLegacyAuthority.pointer)
+      : null,
+    observedLegacyCandidateRecord: admittedLegacyAuthority
+      ? structuredClone(admittedLegacyAuthority.candidate)
+      : null,
+    observedLegacyCandidateRecordSha256: admittedLegacyAuthority
+      ? trustedLkgPredecessorRecordSha256(admittedLegacyAuthority.candidate)
+      : null,
+    observedLegacyEvents: admittedLegacyAuthority
+      ? structuredClone(admittedLegacyAuthority.events)
+      : null,
+    observedLegacyHistorySha256: admittedLegacyAuthority
+      ? trustedLkgEvidenceSha256(admittedLegacyAuthority.events)
+      : null,
     replacementPointers,
     allPermanentPartitionScopes,
   };
 }
 
-async function preflightPdcV2LegacyMeetingsAuthority(
+async function readAndProvePdcV2LegacyMeetingsAuthority(
   store: RoutineDataStore,
   plan: PdcV2TrustedLkgImportPlan,
-): Promise<void> {
+): Promise<PdcV2ProvenLegacyMeetingsAuthority | null> {
   const pointer = await store.readPromotion<MeetingsSnapshot>("MEETING", PDC_V2_LEGACY_MEETINGS_SCOPE);
-  if (pointer === null) {
-    // A replay after the exact end-of-import retirement is valid only when its
-    // durable receipt and every exact replacement pointer are still present.
-    const retirementInput = await pdcV2LegacyMeetingsRetirementInput(store, plan);
-    await store.retirePdcV2LegacyMeetingsAggregate(retirementInput);
-    return;
-  }
+  if (pointer === null) return null;
   if (
     pointer.key !== `MEETING:${PDC_V2_LEGACY_MEETINGS_SCOPE}` ||
     pointer.sourceId !== PDC_V2_LEGACY_MEETINGS_SOURCE_ID ||
@@ -2049,23 +2323,143 @@ async function preflightPdcV2LegacyMeetingsAuthority(
   if (!candidate) {
     throw new Error(`TRUSTED_LKG_LEGACY_MEETINGS_CANDIDATE_MISSING:${pointer.versionId}`);
   }
+  if (candidate.candidate.bootstrapImport !== undefined) {
+    throw new Error("TRUSTED_LKG_LEGACY_MEETINGS_TRANSFER_MARKER_INVALID");
+  }
   const proofIssue = pdcV2LegacyMeetingsPromotionProofIssue(pointer, candidate);
   if (proofIssue !== null) {
     throw new Error(`TRUSTED_LKG_LEGACY_MEETINGS_PROOF_INVALID:${proofIssue}`);
   }
+  const events = [...await store.events(pointer.versionId)]
+    .sort((left, right) => left.sequence - right.sequence);
   const historyIssue = durablePointerHistoryIssue(
     candidate,
     pointer,
-    await store.events(pointer.versionId),
+    events,
     plan.importedAt,
   );
   if (historyIssue !== null) {
     throw new Error(`TRUSTED_LKG_LEGACY_MEETINGS_HISTORY_INVALID:${historyIssue}`);
   }
-  const expectedSnapshot = pdcV2ExpectedMeetingsSnapshot(plan);
-  if (canonicalMeetingFactSha256(pointer.payload) !== canonicalMeetingFactSha256(expectedSnapshot)) {
-    throw new Error("TRUSTED_LKG_LEGACY_MEETINGS_REPLACEMENT_FACT_SET_MISMATCH");
+  return {
+    pointer: structuredClone(pointer),
+    candidate: structuredClone(candidate),
+    events: structuredClone(events),
+  };
+}
+
+function pdcV2LegacyMeetingsAuthorityWitnessSha256(
+  authority: PdcV2ProvenLegacyMeetingsAuthority,
+): string {
+  const events = [...authority.events].sort((left, right) => left.sequence - right.sequence);
+  return trustedLkgEvidenceSha256({
+    pointerSha256: trustedLkgPredecessorPointerSha256(authority.pointer),
+    candidateRecordSha256: trustedLkgPredecessorRecordSha256(authority.candidate),
+    historySha256: trustedLkgEvidenceSha256(events),
+    historyEventCount: events.length,
+    historyLastSequence: events.at(-1)?.sequence ?? 0,
+  });
+}
+
+async function assertPdcV2LegacyMeetingsAuthorityUnchanged(
+  store: RoutineDataStore,
+  plan: PdcV2TrustedLkgImportPlan,
+  expected: PdcV2ProvenLegacyMeetingsAuthority,
+): Promise<void> {
+  let observed: PdcV2ProvenLegacyMeetingsAuthority | null;
+  try {
+    observed = await readAndProvePdcV2LegacyMeetingsAuthority(store, plan);
+  } catch {
+    throw new Error("TRUSTED_LKG_LEGACY_MEETINGS_CHANGED_BEFORE_FIRST_WRITE");
   }
+  if (
+    observed === null ||
+    pdcV2LegacyMeetingsAuthorityWitnessSha256(observed) !==
+      pdcV2LegacyMeetingsAuthorityWitnessSha256(expected)
+  ) throw new Error("TRUSTED_LKG_LEGACY_MEETINGS_CHANGED_BEFORE_FIRST_WRITE");
+}
+
+async function pdcV2RetiredMeetingsOverlayPlan(
+  store: RoutineDataStore,
+  plan: PdcV2TrustedLkgImportPlan,
+  retirement: PdcV2LegacyMeetingsRetirementResult,
+): Promise<PdcV2TrustedLkgImportPlan> {
+  const allScopes = MEETING_PARTITION_CONTRACTS.map(({ scope }) => scope).sort();
+  const pointers = [...await store.readPromotions<MeetingsSnapshot>("MEETING", allScopes)]
+    .sort((left, right) => left.scope.localeCompare(right.scope));
+  if (
+    pointers.length !== PDC_V2_TRUSTED_LKG_EXPECTED_COUNTS.meetingPartitionsWithLkg ||
+    allScopes.length - pointers.length !== PDC_V2_TRUSTED_LKG_EXPECTED_COUNTS.meetingPartitionsWithoutLkg
+  ) throw new Error("TRUSTED_LKG_RETIRED_MEETING_REPLAY_DENOMINATOR_INVALID");
+  for (const pointer of pointers) {
+    const contract = MEETING_PARTITION_CONTRACTS.find(({ scope }) => scope === pointer.scope);
+    const row = await store.readCandidate(pointer.versionId);
+    const candidate = row?.candidate;
+    if (
+      !contract || !row || !candidate ||
+      pointer.key !== projectionKey("MEETING", pointer.scope) ||
+      pointer.sourceId !== PDC_V2_LEGACY_MEETINGS_SOURCE_ID ||
+      pointer.recordClass !== "MEETING" ||
+      pointer.versionId !== pointer.lastKnownGoodVersionId ||
+      candidate.scope !== pointer.scope ||
+      canonicalCivicDataJson(candidate.readModel) !== canonicalCivicDataJson(pointer.payload)
+    ) throw new Error(`TRUSTED_LKG_RETIRED_MEETING_REPLAY_ORIGIN_INVALID:${pointer.scope}`);
+  }
+  const legacyCandidate = await store.readCandidate(retirement.legacyVersionId);
+  const legacyReceipt = legacyCandidate?.receipt;
+  const allLegacyEvents = legacyCandidate
+    ? [...await store.events(retirement.legacyVersionId)].sort((left, right) => left.sequence - right.sequence)
+    : [];
+  const retirementEvents = allLegacyEvents.filter((event) =>
+    event.detail === retirement.detail &&
+    event.at === retirement.retiredAt &&
+    event.candidateId === retirement.legacyVersionId
+  );
+  const legacyEvents = allLegacyEvents.filter((event) => event.detail !== retirement.detail);
+  const firstPromotion = legacyEvents.find(({ state }) => state === "PROMOTED");
+  if (
+    !legacyCandidate || !legacyReceipt || legacyCandidate.candidate.bootstrapImport !== undefined ||
+    retirementEvents.length !== 1 || !firstPromotion
+  ) {
+    throw new Error("TRUSTED_LKG_RETIRED_MEETING_REPLAY_LEGACY_EVIDENCE_MISSING");
+  }
+  const reconstructedPointer: PromotedProjection<MeetingsSnapshot> = {
+    key: `MEETING:${PDC_V2_LEGACY_MEETINGS_SCOPE}`,
+    sourceId: PDC_V2_LEGACY_MEETINGS_SOURCE_ID,
+    recordClass: "MEETING",
+    scope: PDC_V2_LEGACY_MEETINGS_SCOPE,
+    versionId: retirement.legacyVersionId,
+    lastKnownGoodVersionId: retirement.legacyVersionId,
+    promotedAt: firstPromotion.at,
+    payload: structuredClone(legacyCandidate.candidate.readModel as MeetingsSnapshot),
+    receipt: structuredClone(legacyReceipt),
+  };
+  const aggregateFacts = pdcV2CanonicalMeetingFactEvidence(
+    pointers.map(({ payload }) => payload),
+  );
+  if (
+    pdcV2LegacyMeetingsPromotionProofIssue(reconstructedPointer, legacyCandidate) !== null ||
+    durablePointerHistoryIssue(
+      legacyCandidate,
+      reconstructedPointer,
+      legacyEvents,
+      retirement.retiredAt,
+    ) !== null ||
+    aggregateFacts.sha256 !== canonicalMeetingFactSha256(reconstructedPointer.payload)
+  ) throw new Error("TRUSTED_LKG_RETIRED_MEETING_REPLAY_DURABLE_ORIGIN_INVALID");
+  const overlay = pdcV2CurrentLegacyMeetingsOverlayPlan(plan, {
+    pointer: reconstructedPointer,
+    candidate: legacyCandidate,
+    events: legacyEvents,
+  });
+  const overlayScopes = new Set(
+    overlay.meetingPartitionIdsWithLkg.map((id) => requiredMeetingPartitionContract(id).scope),
+  );
+  if (
+    pointers.some(({ scope }) => !overlayScopes.has(scope)) ||
+    overlayScopes.size !== pointers.length
+  ) throw new Error("TRUSTED_LKG_RETIRED_MEETING_REPLAY_PARTITION_MEMBERSHIP_INVALID");
+  return overlay;
 }
 
 async function provePdcV2PermanentMeetingsReplacement(
@@ -2099,7 +2493,8 @@ async function provePdcV2PermanentMeetingsReplacement(
   if (
     read.partitions.length !== MEETING_PARTITION_CONTRACTS.length ||
     invalid.length > 0 ||
-    canonicalMeetingFactSha256(read.value) !== canonicalMeetingFactSha256(pdcV2ExpectedMeetingsSnapshot(plan))
+    pdcV2CanonicalMeetingFactEvidence([read.value]).sha256 !==
+      retirementInput.expected.legacyMeetingFactSha256
   ) {
     throw new Error(
       `TRUSTED_LKG_MEETING_REPLACEMENT_READER_MISMATCH:${read.partitions.length}:` +
@@ -2257,6 +2652,42 @@ export async function executePdcV2TrustedLkgImportPlan(
         `TRUSTED_LKG_EXISTING_CANDIDATE_SOURCE_MISMATCH:${target.contractId}:` +
         `${predecessor.candidate.sourceId}:${target.contract.sourceId}`,
       );
+    }
+    const plannedImport = target.planned?.candidate.bootstrapImport;
+    const existingImport = predecessor.candidate.bootstrapImport;
+    const plannedLegacyOrigin = plannedImport?.kind === "TRUSTED_LKG_IMPORT"
+      ? plannedImport.legacyMeetingsPartition
+      : undefined;
+    let existingLegacyOrigin = existingImport?.kind === "TRUSTED_LKG_IMPORT"
+      ? existingImport.legacyMeetingsPartition
+      : undefined;
+    if (
+      plannedLegacyOrigin &&
+      existingImport?.kind === "TRUSTED_LKG_REATTESTATION"
+    ) {
+      const namedPredecessor = await store.readCandidate(existingImport.predecessorVersionId);
+      if (
+        namedPredecessor === null ||
+        namedPredecessor.candidate.id !== existingImport.predecessorVersionId ||
+        trustedLkgPredecessorRecordSha256(namedPredecessor) !==
+          existingImport.predecessorCandidateRecordSha256
+      ) {
+        throw new Error(
+          `TRUSTED_LKG_EXISTING_MEETING_LEGACY_ORIGIN_PREDECESSOR_INVALID:` +
+          target.contractId,
+        );
+      }
+      const predecessorImport = namedPredecessor?.candidate.bootstrapImport;
+      existingLegacyOrigin = predecessorImport?.kind === "TRUSTED_LKG_IMPORT"
+        ? predecessorImport.legacyMeetingsPartition
+        : undefined;
+    }
+    if (
+      plannedLegacyOrigin && existingLegacyOrigin &&
+      canonicalCivicDataJson(trustedLkgLegacyMeetingsCommonOrigin(existingLegacyOrigin)) !==
+        canonicalCivicDataJson(trustedLkgLegacyMeetingsCommonOrigin(plannedLegacyOrigin))
+    ) {
+      throw new Error(`TRUSTED_LKG_EXISTING_MEETING_LEGACY_ORIGIN_MISMATCH:${target.contractId}`);
     }
     try {
       await proveRegisteredContractVersion(
@@ -2476,27 +2907,49 @@ export async function executePdcV2PermanentCutoverImportPlan(
     throw new Error(`TRUSTED_LKG_PERMANENT_CUTOVER_PLAN_REFUSED:${planIssue}`);
   }
   await store.assertPdcV2PreContractMigrationState();
-  await preflightPdcV2LegacyMeetingsAuthority(store, plan);
-  const result = await executePdcV2TrustedLkgImportPlan(store, plan, {
-    beforeFirstWrite: (prospectiveReattestationPredecessorIds) =>
-      store.assertPdcV2PreImportDataIntegrity(
+  const legacyAuthority = await readAndProvePdcV2LegacyMeetingsAuthority(store, plan);
+  let effectivePlan: PdcV2TrustedLkgImportPlan;
+  if (legacyAuthority) {
+    effectivePlan = pdcV2CurrentLegacyMeetingsOverlayPlan(plan, legacyAuthority);
+  } else {
+    // A replay after the exact end-of-import retirement is valid only when its
+    // durable receipt and every exact replacement pointer are still present.
+    const retirement = await store.retirePdcV2LegacyMeetingsAggregate(
+      await pdcV2LegacyMeetingsRetirementInput(store, plan),
+    );
+    effectivePlan = await pdcV2RetiredMeetingsOverlayPlan(store, plan, retirement);
+  }
+  const result = await executePdcV2TrustedLkgImportPlan(store, effectivePlan, {
+    beforeFirstWrite: async (prospectiveReattestationPredecessorIds) => {
+      await store.assertPdcV2PreImportDataIntegrity(
         contractMigrationSql,
         prospectiveReattestationPredecessorIds,
-      ),
+      );
+      // This is deliberately the last read before the generic executor's
+      // first create: the overlay may never describe an aggregate which moved
+      // after it was partitioned and admitted.
+      if (legacyAuthority) {
+        await assertPdcV2LegacyMeetingsAuthorityUnchanged(store, plan, legacyAuthority);
+      }
+    },
   });
   // Re-run the same global predicates without prospective exemptions. Every
   // successor and readback event now exists, so this proves the import itself
   // is 0026-compatible before the obsolete LKG is deleted.
   await store.assertPdcV2ContractMigrationPreflight(contractMigrationSql);
-  const retirementInput = await pdcV2LegacyMeetingsRetirementInput(store, plan);
-  await provePdcV2PermanentMeetingsReplacement(store, plan, retirementInput);
+  const retirementInput = await pdcV2LegacyMeetingsRetirementInput(
+    store,
+    effectivePlan,
+    legacyAuthority,
+  );
+  await provePdcV2PermanentMeetingsReplacement(store, effectivePlan, retirementInput);
   const retirement = await store.retirePdcV2LegacyMeetingsAggregate(retirementInput);
   if (await store.readPromotion("MEETING", PDC_V2_LEGACY_MEETINGS_SCOPE)) {
     throw new Error("TRUSTED_LKG_LEGACY_MEETINGS_POINTER_SURVIVED_RETIREMENT");
   }
   // The old authority is gone; prove the same exact permanent composition a
   // second time so deleting the aggregate cannot itself erase Reader facts.
-  await provePdcV2PermanentMeetingsReplacement(store, plan, retirementInput);
+  await provePdcV2PermanentMeetingsReplacement(store, effectivePlan, retirementInput);
   return {
     ...result,
     legacyMeetingsAggregateRetirement: {

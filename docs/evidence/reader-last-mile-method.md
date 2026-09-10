@@ -38,10 +38,12 @@ The JSX proof loader compiles actual product TSX in memory with the repository's
 To reconcile a previously executed projection and reader proofs:
 
 ```text
-node --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/reader-last-mile-census.mts --projection docs/evidence/reader-last-mile-current-projection.json.gz --proof docs/evidence/reader-last-mile-delivery-proofs.json.gz --closure
+node --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/reader-last-mile-census.mts --projection docs/evidence/reader-last-mile-current-projection.json.gz --proof docs/evidence/reader-last-mile-delivery-proofs.json.gz --closure --authority-evidence docs/evidence/reader-last-mile-rehearsal-authority.json
 ```
 
 `--executed-proofs path1.json,path2.json` reads the actual route/browser instruments and correlates their native IDs to canonical audit records. `--components path1.json.gz,path2.json` composes actual HTML cases with `--component-witnesses` and `--bundle-proof`. Without a bundle descriptor, executed route composition reports only the observed delivery and cannot pass closure. `--build-receipt` plus `--portrait-proof` generates the checked bundle evidence and its descriptor from a completed exact-head production build.
+
+Every new fresh closure also requires a hash-bound execution-authority artifact. It labels the run `REHEARSAL` (an isolated production clone) or `PRODUCTION` (the standing production store), binds the one exact proved code head, sanitized Neon project/branch/endpoint/database/schema identities, the separately identified read-only role and refused-write proof, the importer code/receipt, and the exact canonical pointer-set hash/count. Ordinary certification accepts either honest phase; `pnpm reader:production-closure` is the separate post-evidence terminal gate and accepts only `PRODUCTION` whose endpoint, database, schema and read-only role hashes match the active `WTP_PRODUCTION_DATABASE_URL_READONLY` handle. A rehearsal receipt therefore remains useful pre-production evidence but cannot be relabeled into terminal proof.
 
 `--pack docs/evidence/reader-last-mile-current.json` losslessly packages one generated JSON artifact. `readReaderEvidence` and the script accept packed evidence; `--check` also reads a packed output if its plain JSON was removed. Baseline creation refuses an existing plain or packed baseline.
 

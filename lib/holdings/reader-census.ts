@@ -25,6 +25,13 @@ import { MEASURE_PROVISIONS, provisionsForContest } from "../ballot/measure-prov
 import { rosterMemberReaderDisposition, rosterGapForBody } from "../registry/body-rosters.ts";
 import { agendaDocumentRepresentation, classifyAgendaPublication } from "../ask/agenda-publication.ts";
 import type { AgendaDocumentLike } from "../routing/agenda-search.ts";
+import {
+  PDC_NEON_PROJECT_ID,
+  PDC_PRODUCTION_BRANCH_ID,
+  canonicalNeonEndpointHost,
+  readerAuthorityIdentityHash,
+  readerExecutionAuthorityArchivedSupportProblems,
+} from "./reader-execution-authority.ts";
 
 type ObjectRow = Record<string, unknown>;
 const object = (value: unknown): ObjectRow => value !== null && typeof value === "object" && !Array.isArray(value) ? value as ObjectRow : {};
@@ -506,12 +513,453 @@ export interface ReaderClosureReceipt {
   readonly sourceHashes: readonly ReaderSourceHash[];
   readonly evidenceHashes: readonly ReaderSourceHash[];
   readonly sourceEolEquivalences?: readonly ReaderSourceEolEquivalence[];
+  /**
+   * Fresh closures bind the exact execution environment separately from the
+   * route/component bytes. Historical inherited receipts predate this seam
+   * and remain readable, but cannot satisfy the production terminal gate.
+   */
+  readonly executionAuthority?: ReaderClosureExecutionAuthorityReference;
   /** A later documentary receipt may inherit rows from a proved reader head
    * only through this hash-bound, mechanically checked invalidation report. */
   readonly inheritance?: {
     readonly reportPath: string;
     readonly reportSha256: string;
   };
+}
+
+/** Exact committed pre-seam artifacts; no newly serialized receipt can enter this set. */
+export const LEGACY_READER_CLOSURE_RECEIPT_SHA256 = Object.freeze({
+  "docs/evidence/reader-last-mile-closure-receipt.json": "3aa9b15510ef18786b67e8b0781151caac6432fd2d963f4fba741195681f6f51",
+  "docs/evidence/reader-last-mile-disclosure-contract-prior-receipt.json": "8d73e15dd2717aa2215203b011a9ce852209b9ba56ede9133387c7b8e6b242b6",
+  "docs/evidence/reader-last-mile-final-closure-receipt.json": "303744f5f0e2dfb21947ddce9b1260a161791e3d9ce916077011605a02838dfb",
+  "docs/evidence/reader-last-mile-prompt-caching-prior-receipt.json": "c38bf3b2c5e0152417c5d0367d48837f26334d7a24bd57c9a666d31926bbe796",
+  "docs/evidence/reader-last-mile-refresh-baseline-prior-receipt.json": "476cea8d71aa198f5e80ec6037e15c848cc8b1869160b95a29ceb177c83ac0a7",
+  "docs/evidence/reader-last-mile-refresh-prior-receipt.json": "8df8a8f1aab56c5c6ecda700d6289c7942a24fb2beaa288908e5f0ec53878744",
+  "docs/evidence/reader-last-mile-routine-civic-data-prior-receipt.json": "e697669fe13ac75c176250e1f7edd2764157c7bf55185148841d700b62ecee40",
+  "docs/evidence/reader-last-mile-tester-9-4-prior-receipt.json": "95770b41a973cd57cad55f72d5f1d61fb03bd919597686260f112721cefca5af",
+  "docs/evidence/reader-last-mile-visual-prior-receipt.json": "1afa1d8448dc31f6c3a01c6f2a612a0b1bdde5e77b8501fa980557892f080a7a",
+} as const);
+
+export type ReaderClosureExecutionPhase = "REHEARSAL" | "PRODUCTION";
+
+export interface ReaderClosureExecutionAuthorityReference {
+  readonly phase: ReaderClosureExecutionPhase;
+  readonly evidencePath: string;
+  readonly evidenceSha256: string;
+}
+
+export interface ReaderClosureExecutionAuthorityEvidence {
+  readonly formatVersion: 1;
+  readonly phase: ReaderClosureExecutionPhase;
+  /** Exact committed code/build head exercised by every applicable census row. */
+  readonly exactHead: string;
+  /** Sanitized identities only: raw URLs, host names and credentials are forbidden. */
+  readonly store: {
+    readonly kind: "NEON_POSTGRES";
+    readonly authority: "ISOLATED_PRODUCTION_CLONE" | "STANDING_PRODUCTION";
+    readonly projectIdentitySha256: string;
+    readonly branchIdentitySha256: string;
+    readonly endpointIdentitySha256: string;
+    readonly databaseIdentitySha256: string;
+    readonly schemaIdentitySha256: string;
+    /** Exact sanitized provider readback archived with the authority artifact. */
+    readonly providerMetadataPath: string;
+    readonly providerMetadataSha256: string;
+  };
+  /** Proof that the closure used a separately identified read-only principal. */
+  readonly readOnly: {
+    readonly roleIdentitySha256: string;
+    /** Catalog-derived denial of durable table/schema/database/function writes. */
+    readonly roleWritePrivilegesRefused: true;
+    readonly attemptedWriteRefused: true;
+    readonly roleSuperuser: false;
+    readonly roleCreateRole: false;
+    readonly roleCreateDatabase: false;
+    readonly roleReplication: false;
+    readonly roleBypassRls: false;
+    readonly databaseCreate: false;
+    readonly schemaCreate: false;
+    readonly relationOwnershipCount: 0;
+    readonly columnWritePrivilegeCount: 0;
+    readonly sequenceWritePrivilegeCount: 0;
+    readonly writeCapableMemberRoleCount: 0;
+    readonly executableSecurityDefinerFunctionCount: 0;
+    readonly relations: readonly {
+      readonly relation: string;
+      readonly select: true;
+      readonly insert: false;
+      readonly update: false;
+      readonly delete: false;
+      readonly truncate: false;
+      readonly references: false;
+      readonly trigger: false;
+    }[];
+  };
+  /** Exact importer implementation, durable import receipt and resulting pointers. */
+  readonly import: {
+    readonly importerCodeSha: string;
+    /** Exact durable controller receipt archived with the authority artifact. */
+    readonly receiptPath: string;
+    readonly receiptSha256: string;
+    /** Complete controller result and exact 95-row disposition membership. */
+    readonly resultSha256: string;
+    readonly dispositionSetSha256: string;
+    readonly canonicalPointerSetSha256: string;
+    readonly canonicalPointerCount: number;
+    /** Live readback of the imported candidate envelopes and append-only events. */
+    readonly durableImport: {
+      readonly authorization: "PDC_V2_FROZEN_LKG_CUTOVER";
+      readonly candidateCount: number;
+      readonly currentPointerLinkCount: number;
+      readonly promotedDispositionCount: number;
+      readonly reattestedDispositionCount: number;
+      readonly skippedDispositionCount: number;
+      readonly candidateSetSha256: string;
+      readonly eventCandidateCount: number;
+      readonly eventCount: number;
+      readonly terminalPromotedEventCount: number;
+      readonly eventSetSha256: string;
+      readonly predecessorCandidateCount: number;
+      readonly predecessorEventCount: number;
+      readonly predecessorEventSetSha256: string;
+      readonly importerCodeShas: readonly string[];
+    };
+  };
+  /** Present only for a production-clone rehearsal; production has no clone claim. */
+  readonly clone: null | {
+    readonly parentProductionBranchIdentitySha256: string;
+    readonly sourceSnapshotSha256: string;
+    readonly controlPlaneReceiptSha256: string;
+  };
+}
+
+export interface ReaderClosureReadConnectionIdentity {
+  readonly endpointIdentitySha256: string;
+  readonly databaseIdentitySha256: string;
+  readonly schemaIdentitySha256: string;
+  readonly roleIdentitySha256: string;
+}
+
+export interface ReaderClosureExecutionAuthorityPaths {
+  readonly authority: string;
+  readonly providerMetadata: string;
+  readonly importReceipt: string;
+}
+
+/** Fixed names prevent a hand-selected support file from being relabeled across phases. */
+export function readerClosureExecutionAuthorityPaths(
+  phase: ReaderClosureExecutionPhase,
+): ReaderClosureExecutionAuthorityPaths {
+  const slug = phase.toLowerCase();
+  return {
+    authority: `docs/evidence/reader-last-mile-${slug}-authority.json`,
+    providerMetadata: `docs/evidence/reader-last-mile-${slug}-provider-metadata.json`,
+    importReceipt: `docs/evidence/reader-last-mile-${slug}-import-receipt.json`,
+  };
+}
+
+export function readerClosureExecutionAuthorityAdmission(
+  root: string,
+  evidencePath: string,
+): {
+  readonly evidence: ReaderClosureExecutionAuthorityEvidence;
+  readonly reference: ReaderClosureExecutionAuthorityReference;
+  readonly supportPaths: readonly string[];
+} {
+  if (!READER_CLOSURE_AUTHORITY_PATH.test(evidencePath)) {
+    throw new Error("Reader execution authority evidence path is outside the immutable last-mile evidence namespace");
+  }
+  const bytes = readReaderEvidence(root, evidencePath);
+  let evidence: ReaderClosureExecutionAuthorityEvidence;
+  try { evidence = JSON.parse(bytes.toString("utf8")) as ReaderClosureExecutionAuthorityEvidence; }
+  catch { throw new Error("Reader execution authority evidence is unreadable"); }
+  if (evidence.phase !== "REHEARSAL" && evidence.phase !== "PRODUCTION") {
+    throw new Error("Reader execution authority evidence has no valid phase");
+  }
+  const expectedPaths = readerClosureExecutionAuthorityPaths(evidence.phase);
+  if (evidencePath !== expectedPaths.authority) {
+    throw new Error("Reader execution authority evidence path does not match its exact phase-specific path");
+  }
+  const supportPaths = [string(object(evidence.store).providerMetadataPath), string(object(evidence.import).receiptPath)];
+  if (
+    supportPaths[0] !== expectedPaths.providerMetadata ||
+    supportPaths[1] !== expectedPaths.importReceipt ||
+    new Set([evidencePath, ...supportPaths]).size !== 3
+  ) {
+    throw new Error("Reader execution authority does not name its two distinct exact phase-specific support artifacts");
+  }
+  return {
+    evidence,
+    reference: { phase: evidence.phase, evidencePath, evidenceSha256: sha256(bytes) },
+    supportPaths,
+  };
+}
+
+const READER_CLOSURE_AUTHORITY_PATH = /^docs\/evidence\/reader-last-mile-[a-z0-9-]+\.json$/;
+const EXACT_GIT_HEAD = /^[0-9a-f]{40}$/;
+const EXACT_SHA256 = /^[0-9a-f]{64}$/;
+const READER_CLOSURE_READ_RELATIONS = [
+  "public.civic_data_candidate_events",
+  "public.civic_data_candidates",
+  "public.civic_data_promotions",
+] as const;
+
+/**
+ * Produce only non-reversible identities from the actual read handle. The
+ * terminal gate can therefore bind the attestation to the current production
+ * endpoint without ever serializing a host, role, database name or credential.
+ */
+export function readerClosureReadConnectionIdentity(connection: string): ReaderClosureReadConnectionIdentity {
+  let parsed: URL;
+  try { parsed = new URL(connection); }
+  catch { throw new Error("Reader closure production read handle is missing or invalid"); }
+  if (parsed.protocol !== "postgres:" && parsed.protocol !== "postgresql:") throw new Error("Reader closure read handle is not PostgreSQL");
+  const role = decodeURIComponent(parsed.username);
+  if (role !== "readonly" && !role.startsWith("readonly_")) throw new Error("Reader closure production handle does not name a read-only role");
+  const database = decodeURIComponent(parsed.pathname.replace(/^\//, ""));
+  if (!parsed.hostname || !database) throw new Error("Reader closure read handle has no endpoint or database identity");
+  const endpoint = canonicalNeonEndpointHost(parsed);
+  return {
+    endpointIdentitySha256: readerAuthorityIdentityHash("endpoint", endpoint),
+    databaseIdentitySha256: readerAuthorityIdentityHash("database", database),
+    schemaIdentitySha256: readerAuthorityIdentityHash("schema", "public"),
+    roleIdentitySha256: readerAuthorityIdentityHash("role", role),
+  };
+}
+
+function exactObjectKeysProblems(value: unknown, expected: readonly string[], label: string): string[] {
+  const actual = Object.keys(object(value)).sort();
+  const wanted = [...expected].sort();
+  return JSON.stringify(actual) === JSON.stringify(wanted)
+    ? []
+    : [`${label} fields differ from the sanitized authority schema`];
+}
+
+const READER_AUTHORITY_SECRET_KEY = /(?:password|passwd|secret|token|api[_-]?key|credential|private[_-]?key|database[_-]?url|connection[_-]?string|dsn|cookie|authorization[_-]?header)/i;
+function readerAuthoritySecretProblems(value: unknown, path = "Reader execution authority"): string[] {
+  if (typeof value === "string") {
+    return /\bpostgres(?:ql)?:\/\//i.test(value) || /(?:https?:\/\/)[^\s/@]+:[^\s/@]+@/i.test(value)
+      ? [`${path} contains a credential-bearing URL`]
+      : [];
+  }
+  if (Array.isArray(value)) return value.flatMap((entry, index) => readerAuthoritySecretProblems(entry, `${path}[${index}]`));
+  if (value === null || typeof value !== "object") return [];
+  return Object.entries(value as ObjectRow).flatMap(([key, entry]) => [
+    ...(READER_AUTHORITY_SECRET_KEY.test(key) && !(key === "legacyRuntimeSecrets" && entry === 0) ? [`${path}.${key} is a forbidden secret-bearing field`] : []),
+    ...readerAuthoritySecretProblems(entry, `${path}.${key}`),
+  ]);
+}
+
+/**
+ * Pure semantic half of execution-authority validation. Keeping it separate
+ * makes the rehearsal/production boundary deterministically testable without
+ * touching any database or control plane.
+ */
+export function readerClosureExecutionAuthorityEvidenceProblems(
+  evidence: unknown,
+  expected: {
+    readonly phase: ReaderClosureExecutionPhase;
+    readonly provedHead: string;
+    readonly importerIsAncestor: boolean;
+    readonly requiredPhase?: ReaderClosureExecutionPhase;
+    readonly requiredReadConnectionIdentity?: ReaderClosureReadConnectionIdentity;
+  },
+): string[] {
+  const failures: string[] = [];
+  const row = object(evidence);
+  failures.push(...readerAuthoritySecretProblems(evidence));
+  failures.push(...exactObjectKeysProblems(row, ["formatVersion", "phase", "exactHead", "store", "readOnly", "import", "clone"], "Reader execution authority"));
+  if (row.formatVersion !== 1) failures.push("Reader execution authority format is not version 1");
+  if (row.phase !== "REHEARSAL" && row.phase !== "PRODUCTION") failures.push("Reader execution authority phase is invalid");
+  if (row.phase !== expected.phase) failures.push("Reader closure authority reference phase differs from its evidence");
+  if (expected.requiredPhase && row.phase !== expected.requiredPhase) failures.push(`Reader closure requires ${expected.requiredPhase} execution authority`);
+  if (!EXACT_GIT_HEAD.test(string(row.exactHead)) || row.exactHead !== expected.provedHead) failures.push("Reader execution authority does not bind the exact proved code head");
+
+  const store = object(row.store);
+  const expectedPaths = row.phase === "REHEARSAL" || row.phase === "PRODUCTION"
+    ? readerClosureExecutionAuthorityPaths(row.phase)
+    : null;
+  failures.push(...exactObjectKeysProblems(store, ["kind", "authority", "projectIdentitySha256", "branchIdentitySha256", "endpointIdentitySha256", "databaseIdentitySha256", "schemaIdentitySha256", "providerMetadataPath", "providerMetadataSha256"], "Reader execution authority store"));
+  if (store.kind !== "NEON_POSTGRES") failures.push("Reader execution authority store is not the canonical Neon Postgres plane");
+  for (const field of ["projectIdentitySha256", "branchIdentitySha256", "endpointIdentitySha256", "databaseIdentitySha256", "schemaIdentitySha256", "providerMetadataSha256"] as const) {
+    if (!EXACT_SHA256.test(string(store[field]))) failures.push(`Reader execution authority store ${field} is not a sanitized SHA-256 identity`);
+  }
+  if (!expectedPaths || store.providerMetadataPath !== expectedPaths.providerMetadata) failures.push("Reader execution authority provider metadata path does not match its exact phase-specific support path");
+  if (store.projectIdentitySha256 !== readerAuthorityIdentityHash("project", PDC_NEON_PROJECT_ID)) failures.push("Reader execution authority does not bind the pinned PDC Neon project");
+  const productionBranchIdentity = readerAuthorityIdentityHash("branch", PDC_PRODUCTION_BRANCH_ID);
+  if (row.phase === "PRODUCTION" && store.branchIdentitySha256 !== productionBranchIdentity) failures.push("Reader production execution authority does not bind the pinned production branch");
+
+  const readOnly = object(row.readOnly);
+  failures.push(...exactObjectKeysProblems(readOnly, ["roleIdentitySha256", "roleWritePrivilegesRefused", "attemptedWriteRefused", "roleSuperuser", "roleCreateRole", "roleCreateDatabase", "roleReplication", "roleBypassRls", "databaseCreate", "schemaCreate", "relationOwnershipCount", "columnWritePrivilegeCount", "sequenceWritePrivilegeCount", "writeCapableMemberRoleCount", "executableSecurityDefinerFunctionCount", "relations"], "Reader execution authority read-only proof"));
+  if (!EXACT_SHA256.test(string(readOnly.roleIdentitySha256))) failures.push("Reader execution authority read-only role is not a sanitized SHA-256 identity");
+  if (readOnly.attemptedWriteRefused !== true) failures.push("Reader execution authority did not prove a refused write through the read-only principal");
+  if (
+    readOnly.roleWritePrivilegesRefused !== true || readOnly.roleSuperuser !== false ||
+    readOnly.roleCreateRole !== false || readOnly.roleCreateDatabase !== false ||
+    readOnly.roleReplication !== false || readOnly.roleBypassRls !== false ||
+    readOnly.databaseCreate !== false ||
+    readOnly.schemaCreate !== false || readOnly.relationOwnershipCount !== 0 ||
+    readOnly.columnWritePrivilegeCount !== 0 || readOnly.sequenceWritePrivilegeCount !== 0 ||
+    readOnly.writeCapableMemberRoleCount !== 0 || readOnly.executableSecurityDefinerFunctionCount !== 0
+  ) failures.push("Reader execution authority principal retains a durable write or escalation capability");
+  if (expected.requiredReadConnectionIdentity) {
+    if (store.endpointIdentitySha256 !== expected.requiredReadConnectionIdentity.endpointIdentitySha256) failures.push("Reader execution authority endpoint differs from the active production read handle");
+    if (store.databaseIdentitySha256 !== expected.requiredReadConnectionIdentity.databaseIdentitySha256) failures.push("Reader execution authority database differs from the active production read handle");
+    if (store.schemaIdentitySha256 !== expected.requiredReadConnectionIdentity.schemaIdentitySha256) failures.push("Reader execution authority schema differs from the canonical production Reader schema");
+    if (readOnly.roleIdentitySha256 !== expected.requiredReadConnectionIdentity.roleIdentitySha256) failures.push("Reader execution authority role differs from the active production read-only principal");
+  }
+  const relations = Array.isArray(readOnly.relations) ? readOnly.relations : [];
+  if (!Array.isArray(readOnly.relations)) failures.push("Reader execution authority read-only relation proof is missing");
+  const relationNames: string[] = [];
+  for (const relationValue of relations) {
+    const relation = object(relationValue);
+    failures.push(...exactObjectKeysProblems(relation, ["relation", "select", "insert", "update", "delete", "truncate", "references", "trigger"], "Reader execution authority relation"));
+    relationNames.push(string(relation.relation));
+    if (relation.select !== true || relation.insert !== false || relation.update !== false || relation.delete !== false || relation.truncate !== false || relation.references !== false || relation.trigger !== false) {
+      failures.push(`${string(relation.relation) || "Unknown relation"}: Reader closure principal is not strictly read-only`);
+    }
+  }
+  if (JSON.stringify([...relationNames].sort()) !== JSON.stringify([...READER_CLOSURE_READ_RELATIONS])) {
+    failures.push("Reader execution authority does not prove the exact canonical civic-data relation set");
+  }
+
+  const imported = object(row.import);
+  failures.push(...exactObjectKeysProblems(imported, ["importerCodeSha", "receiptPath", "receiptSha256", "resultSha256", "dispositionSetSha256", "canonicalPointerSetSha256", "canonicalPointerCount", "durableImport"], "Reader execution authority import"));
+  if (!EXACT_GIT_HEAD.test(string(imported.importerCodeSha))) failures.push("Reader execution authority importer code identity is not an exact Git head");
+  if (!expected.importerIsAncestor) failures.push("Reader execution authority importer code is not an ancestor of the proved code head");
+  if (row.phase === "PRODUCTION" && imported.importerCodeSha === row.exactHead) failures.push("Reader production execution authority was generated before the importer was deleted in child commit B");
+  if (row.phase === "REHEARSAL" && imported.importerCodeSha !== row.exactHead) failures.push("Reader rehearsal execution authority does not bind its exact isolated import head");
+  for (const field of ["receiptSha256", "resultSha256", "dispositionSetSha256", "canonicalPointerSetSha256"] as const) {
+    if (!EXACT_SHA256.test(string(imported[field]))) failures.push(`Reader execution authority import ${field} is not an exact SHA-256 identity`);
+  }
+  if (!expectedPaths || imported.receiptPath !== expectedPaths.importReceipt) failures.push("Reader execution authority import receipt path does not match its exact phase-specific support path");
+  if (!Number.isSafeInteger(imported.canonicalPointerCount) || Number(imported.canonicalPointerCount) <= 0) failures.push("Reader execution authority canonical pointer set is empty or uncounted");
+
+  const durable = object(imported.durableImport);
+  failures.push(...exactObjectKeysProblems(durable, [
+    "authorization", "candidateCount", "currentPointerLinkCount", "promotedDispositionCount",
+    "reattestedDispositionCount", "skippedDispositionCount", "candidateSetSha256",
+    "eventCandidateCount", "eventCount", "terminalPromotedEventCount", "eventSetSha256",
+    "predecessorCandidateCount", "predecessorEventCount", "predecessorEventSetSha256",
+    "importerCodeShas",
+  ], "Reader execution authority durable import"));
+  if (durable.authorization !== "PDC_V2_FROZEN_LKG_CUTOVER") failures.push("Reader execution authority durable import lacks the frozen cutover authorization");
+  for (const field of ["candidateSetSha256", "eventSetSha256", "predecessorEventSetSha256"] as const) {
+    if (!EXACT_SHA256.test(string(durable[field]))) failures.push(`Reader execution authority durable import ${field} is not an exact SHA-256 identity`);
+  }
+  const candidateCount = Number(durable.candidateCount);
+  const promotedCount = Number(durable.promotedDispositionCount);
+  const reattestedCount = Number(durable.reattestedDispositionCount);
+  const skippedCount = Number(durable.skippedDispositionCount);
+  if (
+    !Number.isSafeInteger(candidateCount) || candidateCount <= 0 ||
+    durable.currentPointerLinkCount !== candidateCount || durable.eventCandidateCount !== candidateCount ||
+    durable.terminalPromotedEventCount !== candidateCount ||
+    !Number.isSafeInteger(durable.predecessorCandidateCount) || Number(durable.predecessorCandidateCount) < 0 ||
+    !Number.isSafeInteger(durable.predecessorEventCount) || Number(durable.predecessorEventCount) < Number(durable.predecessorCandidateCount) ||
+    Number(durable.predecessorCandidateCount) !== reattestedCount ||
+    !Number.isSafeInteger(durable.eventCount) || Number(durable.eventCount) < candidateCount ||
+    !Number.isSafeInteger(promotedCount) || !Number.isSafeInteger(reattestedCount) || !Number.isSafeInteger(skippedCount) ||
+    promotedCount < 0 || reattestedCount < 0 || skippedCount < 0 ||
+    promotedCount + skippedCount !== candidateCount || reattestedCount > promotedCount
+  ) failures.push("Reader execution authority durable import counts do not form one exact pointer/event/disposition denominator");
+  if (
+    !Array.isArray(durable.importerCodeShas) || durable.importerCodeShas.length !== 1 ||
+    durable.importerCodeShas[0] !== imported.importerCodeSha
+  ) failures.push("Reader execution authority durable import is not bound solely to the controller importer code");
+
+  if (row.phase === "REHEARSAL") {
+    if (store.authority !== "ISOLATED_PRODUCTION_CLONE") failures.push("REHEARSAL Reader closure is not bound to an isolated production clone");
+    const clone = object(row.clone);
+    failures.push(...exactObjectKeysProblems(clone, ["parentProductionBranchIdentitySha256", "sourceSnapshotSha256", "controlPlaneReceiptSha256"], "Reader rehearsal clone"));
+    for (const field of ["parentProductionBranchIdentitySha256", "sourceSnapshotSha256", "controlPlaneReceiptSha256"] as const) {
+      if (!EXACT_SHA256.test(string(clone[field]))) failures.push(`Reader rehearsal clone ${field} is not an exact SHA-256 identity`);
+    }
+    if (clone.parentProductionBranchIdentitySha256 !== productionBranchIdentity) failures.push("Reader rehearsal clone parent is not the pinned production branch");
+    if (store.branchIdentitySha256 === clone.parentProductionBranchIdentitySha256) failures.push("Reader rehearsal branch identity equals the standing production branch identity");
+  } else if (row.phase === "PRODUCTION") {
+    if (store.authority !== "STANDING_PRODUCTION") failures.push("PRODUCTION Reader closure is not bound to the standing production store");
+    if (row.clone !== null) failures.push("PRODUCTION Reader closure carries a rehearsal clone claim");
+  }
+  return unique(failures);
+}
+
+export function readerClosureExecutionAuthorityProblems(
+  root: string,
+  census: ReaderCensus,
+  reference: ReaderClosureExecutionAuthorityReference | undefined,
+  evidenceHashes: readonly ReaderSourceHash[],
+  options: {
+    readonly provedHead?: string | null;
+    readonly requiredPhase?: ReaderClosureExecutionPhase;
+    readonly requiredReadConnectionIdentity?: ReaderClosureReadConnectionIdentity;
+  } = {},
+): string[] {
+  if (!reference) return ["Fresh Reader closure requires exact execution-authority evidence"];
+  const failures: string[] = [];
+  failures.push(...readerAuthoritySecretProblems(reference, "Reader execution authority reference"));
+  failures.push(...exactObjectKeysProblems(reference, ["phase", "evidencePath", "evidenceSha256"], "Reader execution authority reference"));
+  if (reference.phase !== "REHEARSAL" && reference.phase !== "PRODUCTION") failures.push("Reader execution authority reference phase is invalid");
+  const expectedReferencePaths = reference.phase === "REHEARSAL" || reference.phase === "PRODUCTION"
+    ? readerClosureExecutionAuthorityPaths(reference.phase)
+    : null;
+  if (!expectedReferencePaths || reference.evidencePath !== expectedReferencePaths.authority) failures.push("Reader execution authority evidence path does not match its exact phase-specific path");
+  if (!EXACT_SHA256.test(reference.evidenceSha256)) failures.push("Reader execution authority reference lacks an exact SHA-256 hash");
+  const manifested = evidenceHashes.filter((entry) => entry.path === reference.evidencePath && entry.sha256 === reference.evidenceSha256);
+  if (manifested.length !== 1) failures.push("Reader execution authority is not included exactly once in the closure evidence manifest");
+
+  let bytes: Buffer;
+  let evidence: ReaderClosureExecutionAuthorityEvidence;
+  try {
+    bytes = readReaderEvidence(root, reference.evidencePath);
+    if (sha256(bytes) !== reference.evidenceSha256) failures.push("Reader execution authority evidence bytes changed");
+    evidence = JSON.parse(bytes.toString("utf8")) as ReaderClosureExecutionAuthorityEvidence;
+  } catch {
+    failures.push("Reader execution authority evidence is missing or unreadable");
+    return unique(failures);
+  }
+
+  const applicable = census.rows.filter((row) => (row.applicableEligibleRecordIds ?? row.eligibleRecordIds).length > 0);
+  const heads = unique(applicable.map((row) => row.provedHead ?? ""));
+  const provedHead = options.provedHead ?? (heads.length === 1 ? heads[0]! : null);
+  if (!provedHead || !EXACT_GIT_HEAD.test(provedHead)) failures.push("Fresh Reader closure does not have one exact proved head across every applicable census row");
+  let importerIsAncestor = false;
+  const importerCodeSha = string(object(evidence.import).importerCodeSha);
+  if (EXACT_GIT_HEAD.test(importerCodeSha) && provedHead && EXACT_GIT_HEAD.test(provedHead)) {
+    try {
+      execFileSync("git", ["merge-base", "--is-ancestor", importerCodeSha, provedHead], { cwd: root, stdio: "ignore" });
+      importerIsAncestor = true;
+    } catch { /* reported by the semantic validator */ }
+  }
+  failures.push(...readerClosureExecutionAuthorityEvidenceProblems(evidence, {
+    phase: reference.phase,
+    provedHead: provedHead ?? "",
+    importerIsAncestor,
+    requiredPhase: options.requiredPhase,
+    requiredReadConnectionIdentity: options.requiredReadConnectionIdentity,
+  }));
+  const support = [
+    { path: string(object(evidence.store).providerMetadataPath), sha256: string(object(evidence.store).providerMetadataSha256), label: "provider metadata" },
+    { path: string(object(evidence.import).receiptPath), sha256: string(object(evidence.import).receiptSha256), label: "durable import receipt" },
+  ];
+  if (new Set([reference.evidencePath, ...support.map((item) => item.path)]).size !== 3) {
+    failures.push("Reader execution authority and its support artifacts are not three distinct paths");
+  }
+  for (const item of support) {
+    const supportManifestEntries = evidenceHashes.filter((entry) => entry.path === item.path && entry.sha256 === item.sha256);
+    if (supportManifestEntries.length !== 1) failures.push(`Reader execution authority ${item.label} is not included exactly once in the closure evidence manifest`);
+    if (!readerEvidenceHashMatches(root, item.path, item.sha256)) failures.push(`Reader execution authority ${item.label} bytes changed`);
+  }
+  try {
+    failures.push(...readerExecutionAuthorityArchivedSupportProblems(
+      evidence,
+      readReaderEvidence(root, support[0]!.path),
+      readReaderEvidence(root, support[1]!.path),
+    ));
+  } catch {
+    failures.push("Reader execution authority support evidence is missing or unreadable");
+  }
+  return unique(failures);
 }
 
 export type ReaderProofDisposition = "INHERITED" | "INVALIDATED" | "RECOMPUTED";
@@ -921,8 +1369,71 @@ export function readerProofInheritanceProblems(root: string, census: ReaderCensu
   return unique(failures);
 }
 
-export function validateReaderClosureReceipt(root: string, receipt: ReaderClosureReceipt): string[] {
+function readerClosureReceiptShapeProblems(receipt: unknown): string[] {
+  const failures = readerAuthoritySecretProblems(receipt, "Reader closure receipt");
+  const row = object(receipt);
+  const keys = [
+    "formatVersion", "censusPath", "censusSha256", "holdingsDigest", "registrySha256",
+    "sourceHashes", "evidenceHashes",
+    ...(Object.hasOwn(row, "sourceEolEquivalences") ? ["sourceEolEquivalences"] : []),
+    ...(Object.hasOwn(row, "executionAuthority") ? ["executionAuthority"] : []),
+    ...(Object.hasOwn(row, "inheritance") ? ["inheritance"] : []),
+  ];
+  failures.push(...exactObjectKeysProblems(row, keys, "Reader closure receipt"));
+  if (row.formatVersion !== 1) failures.push("Reader closure receipt format is not version 1");
+  if (!READER_CLOSURE_AUTHORITY_PATH.test(string(row.censusPath))) failures.push("Reader closure census path is outside the immutable last-mile evidence namespace");
+  for (const field of ["censusSha256", "holdingsDigest", "registrySha256"] as const) {
+    if (!EXACT_SHA256.test(string(row[field]))) failures.push(`Reader closure receipt ${field} is not an exact SHA-256 identity`);
+  }
+  for (const [label, values] of [["source", row.sourceHashes], ["evidence", row.evidenceHashes]] as const) {
+    if (!Array.isArray(values)) { failures.push(`Reader closure ${label} hash manifest is missing`); continue; }
+    for (const value of values) {
+      failures.push(...exactObjectKeysProblems(value, ["path", "sha256"], `Reader closure ${label} hash`));
+      const hash = object(value);
+      if (!string(hash.path) || !EXACT_SHA256.test(string(hash.sha256))) failures.push(`Reader closure ${label} hash is invalid`);
+    }
+    const paths = values.map((value) => string(object(value).path));
+    if (new Set(paths).size !== paths.length) failures.push(`Reader closure ${label} hash manifest contains a duplicate path`);
+  }
+  if (row.executionAuthority !== undefined) {
+    failures.push(...exactObjectKeysProblems(row.executionAuthority, ["phase", "evidencePath", "evidenceSha256"], "Reader execution authority reference"));
+  }
+  if (row.inheritance !== undefined) {
+    failures.push(...exactObjectKeysProblems(row.inheritance, ["reportPath", "reportSha256"], "Reader closure inheritance"));
+    const inheritance = object(row.inheritance);
+    if (!READER_CLOSURE_AUTHORITY_PATH.test(string(inheritance.reportPath)) || !EXACT_SHA256.test(string(inheritance.reportSha256))) failures.push("Reader closure inheritance reference is invalid");
+  }
+  if (row.sourceEolEquivalences !== undefined) {
+    if (!Array.isArray(row.sourceEolEquivalences)) failures.push("Reader closure source EOL equivalences are invalid");
+    else for (const value of row.sourceEolEquivalences) failures.push(...exactObjectKeysProblems(value, [
+      "path", "recordedSha256", "canonicalLfSha256", "archivePath", "archiveSha256",
+      "gitEol", "typescriptVersion", "emittedJsSha256",
+    ], "Reader closure source EOL equivalence"));
+  }
+  return unique(failures);
+}
+
+export function isKnownLegacyReaderClosureReceipt(
+  root: string,
+  receiptPath: string | undefined,
+  receipt?: ReaderClosureReceipt,
+): boolean {
+  if (!receiptPath || !Object.hasOwn(LEGACY_READER_CLOSURE_RECEIPT_SHA256, receiptPath)) return false;
+  try {
+    const bytes = readReaderEvidence(root, receiptPath);
+    const expected = LEGACY_READER_CLOSURE_RECEIPT_SHA256[receiptPath as keyof typeof LEGACY_READER_CLOSURE_RECEIPT_SHA256];
+    if (sha256(bytes) !== expected) return false;
+    return receipt === undefined || JSON.stringify(JSON.parse(bytes.toString("utf8"))) === JSON.stringify(receipt);
+  } catch { return false; }
+}
+
+export function validateReaderClosureReceipt(
+  root: string,
+  receipt: ReaderClosureReceipt,
+  options: { readonly receiptPath?: string } = {},
+): string[] {
   const failures: string[] = [];
+  failures.push(...readerClosureReceiptShapeProblems(receipt));
   const equivalentPaths = new Set<string>();
   for (const equivalence of receipt.sourceEolEquivalences ?? []) {
     try {
@@ -941,10 +1452,15 @@ export function validateReaderClosureReceipt(root: string, receipt: ReaderClosur
   if (sha256(bytes) !== receipt.censusSha256) failures.push("Committed closure census bytes changed");
   const proved = JSON.parse(bytes.toString("utf8")) as ReaderCensus;
   failures.push(...censusClosureFailures(proved));
+  let inheritedReaderHead: string | null = null;
   if (receipt.inheritance) {
     const reportBytes = readReaderEvidence(root, receipt.inheritance.reportPath);
     if (sha256(reportBytes) !== receipt.inheritance.reportSha256) failures.push("Reader proof invalidation report bytes changed");
-    else failures.push(...readerProofInheritanceProblems(root, proved, JSON.parse(reportBytes.toString("utf8")) as ReaderProofInvalidationReport));
+    else {
+      const report = JSON.parse(reportBytes.toString("utf8")) as ReaderProofInvalidationReport;
+      inheritedReaderHead = report.currentReaderHead;
+      failures.push(...readerProofInheritanceProblems(root, proved, report));
+    }
   }
   const requiredEvidence = unique(proved.rows.flatMap((row)=>row.evidencePaths));
   for (const evidence of receipt.evidenceHashes ?? []) if (!readerEvidenceHashMatches(root, evidence.path, evidence.sha256)) failures.push(`Committed reader witness manifest or execution evidence changed: ${evidence.path}`);
@@ -952,10 +1468,57 @@ export function validateReaderClosureReceipt(root: string, receipt: ReaderClosur
     const expected = receipt.evidenceHashes?.find((entry)=>entry.path===path);
     if (!expected || !readerEvidenceHashMatches(root,path,expected.sha256)) failures.push(`Committed reader execution evidence missing or changed: ${path}`);
   }
+  if (receipt.executionAuthority) {
+    failures.push(...readerClosureExecutionAuthorityProblems(
+      root, proved, receipt.executionAuthority, receipt.evidenceHashes ?? [],
+      { provedHead: inheritedReaderHead },
+    ));
+  } else if (!isKnownLegacyReaderClosureReceipt(root, options.receiptPath, receipt)) {
+    failures.push("Fresh Reader closure requires exact execution-authority evidence");
+  }
   const current = buildReaderCensus(root);
   if (current.holdingsDigest !== receipt.holdingsDigest) failures.push("Canonical holding inventory changed after closure proof");
   if (current.registrySha256 !== receipt.registrySha256) failures.push("Declared dataset/surface registry changed after closure proof");
   failures.push(...datasetSurfaceCoverageProblems(root));
+  return unique(failures);
+}
+
+/**
+ * Terminal post-evidence gate. A rehearsal may pass ordinary deterministic CI,
+ * but it can never close the standing-production Reader acceptance boundary.
+ */
+export function validateReaderProductionClosureReceipt(root: string, receipt: ReaderClosureReceipt, productionReadConnection: string, receiptPath?: string): string[] {
+  const failures = validateReaderClosureReceipt(root, receipt, { receiptPath });
+  let requiredReadConnectionIdentity: ReaderClosureReadConnectionIdentity | undefined;
+  try {
+    requiredReadConnectionIdentity = readerClosureReadConnectionIdentity(productionReadConnection);
+  } catch (error) {
+    failures.push(error instanceof Error ? error.message : "Reader production closure read handle identity is unavailable");
+  }
+  if (!receipt.executionAuthority) {
+    failures.push("Reader production closure requires hash-bound PRODUCTION execution authority");
+    return unique(failures);
+  }
+  let census: ReaderCensus;
+  try {
+    census = JSON.parse(readReaderEvidence(root, receipt.censusPath).toString("utf8")) as ReaderCensus;
+  } catch {
+    return unique([...failures, "Reader production closure census is missing or unreadable"]);
+  }
+  let inheritedReaderHead: string | null = null;
+  if (receipt.inheritance) {
+    try {
+      const report = JSON.parse(readReaderEvidence(root, receipt.inheritance.reportPath).toString("utf8")) as ReaderProofInvalidationReport;
+      inheritedReaderHead = report.currentReaderHead;
+    } catch { /* the ordinary validator reports the unreadable inheritance */ }
+  }
+  failures.push(...readerClosureExecutionAuthorityProblems(
+    root,
+    census,
+    receipt.executionAuthority,
+    receipt.evidenceHashes ?? [],
+    { provedHead: inheritedReaderHead, requiredPhase: "PRODUCTION", requiredReadConnectionIdentity },
+  ));
   return unique(failures);
 }
 

@@ -1,24 +1,49 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { processRoutineCandidate } from "../lib/civic-data/promotion.ts";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { censusGeographyCandidate, failedAcquisitionCandidate, fecFundingCandidate, officialStateRollCallsCandidate } from "../lib/civic-data/candidate-builders.ts";
+import {
+  processRegisteredRoutineCandidate,
+  processRoutineCandidate,
+  promotionReaderReadbackObservedAt,
+  routineCandidateContractIssue,
+} from "../lib/civic-data/promotion.ts";
+import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
+import { ROUTINE_SOURCE_TASKS } from "../lib/civic-data/runner.ts";
+import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { failedAcquisitionCandidate, fecFundingCandidate, normalizedHash, officialStateRollCallsCandidate } from "../lib/civic-data/candidate-builders.ts";
 import type { FundingSnapshot } from "../lib/funding/types.ts";
-import type { Division } from "../lib/registry/types.ts";
-import type { RoutineCandidate, RoutineRecordClass } from "../lib/civic-data/types.ts";
+import { sourceProjectionEvidence, type CandidateVersionRecord, type RoutineCandidate, type RoutineRecordClass } from "../lib/civic-data/types.ts";
 import { VALIDATION_CHECKS } from "../lib/civic-data/types.ts";
 import { stateRollAttribution, stateRollPublisher } from "../lib/sources/legiscan/types.ts";
+import { parseReaderProjectionReadback } from "../lib/civic-data/reader-readback.ts";
+import {
+  READER_READBACK_RETRY_MS,
+  recordRoutineReaderProjectionReadback,
+  repairRoutineReaderProjectionReadback,
+} from "../lib/civic-data/reader-verification.ts";
 
 const HASH = "a".repeat(64);
 const NOW = "2026-09-07T12:00:00.000Z";
+const READER_CODE_SHA_A = "c".repeat(40);
+const READER_CODE_SHA_B = "d".repeat(40);
+
+test("the generic transition driver cannot write a production store outside an exact registered contract door", async () => {
+  // Avoid opening a database connection: the authority refusal must happen
+  // before the generic driver can perform even its first store read.
+  const productionStore = Object.create(PostgresRoutineDataStore.prototype) as PostgresRoutineDataStore;
+  await assert.rejects(
+    processRoutineCandidate(productionStore, candidate("unregistered-production-candidate"), NOW),
+    /PRODUCTION_PROMOTION_REQUIRES_REGISTERED_CONTRACT_DOOR/,
+  );
+});
 
 function candidate(id: string, over: Partial<RoutineCandidate> = {}): RoutineCandidate {
-  return {
+  const built: RoutineCandidate = {
     id,
     sourceId: "fec-open-api",
     recordClass: "FEC_FUNDING",
     scope: "federal-candidates:2026",
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-candidates:2026"),
     retrieval: {
       succeeded: true,
       requestedUrl: "https://api.open.fec.gov/v1/candidates/search/?election_year=2026",
@@ -65,6 +90,15 @@ function candidate(id: string, over: Partial<RoutineCandidate> = {}): RoutineCan
     readModel: { version: id, rows: [{ candidateId: "H6AZ01001", amount: 10 }] },
     ...over,
   };
+  if (!built.normalization.succeeded) return built;
+  return {
+    ...built,
+    normalization: {
+      ...built.normalization,
+      normalizedHash: normalizedHash(built.readModel),
+      normalizedPayloadHash: normalizedHash(built.normalizedPayload),
+    },
+  };
 }
 
 function stateMemberCandidate(id: string): RoutineCandidate {
@@ -72,6 +106,7 @@ function stateMemberCandidate(id: string): RoutineCandidate {
     sourceId: "nh-general-court",
     recordClass: "STATE_LEGISLATOR",
     scope: "US-NH",
+    sourceProjectionEvidence: sourceProjectionEvidence("nh-general-court", "STATE_LEGISLATOR", "US-NH"),
     retrieval: {
       succeeded: true,
       requestedUrl: "https://gc.nh.gov/downloads/Members.txt",
@@ -80,7 +115,7 @@ function stateMemberCandidate(id: string): RoutineCandidate {
       retrievedAt: NOW,
       rawHash: HASH,
     },
-    normalization: { succeeded: true, parserVersion: "nh-general-court/2", schemaVersion: "Members.txt:2025-2026", normalizedHash: HASH, inputRecords: 1, outputRecords: 1, droppedRecords: 0, missingRequiredFields: [] },
+    normalization: { succeeded: true, parserVersion: "nh-general-court/3", schemaVersion: "Members.txt:2025-2026", normalizedHash: HASH, inputRecords: 1, outputRecords: 1, droppedRecords: 0, missingRequiredFields: [] },
     identities: [{ subjectId: "nh-house-seat-001", jurisdiction: "US-NH", identifiers: { seatNo: "001", chamber: "H", district: "Merrimack 1" }, matchBasis: "OFFICIAL_ID", ambiguous: false, chamber: "H", office: "Representative", term: "2025-2026", district: "Merrimack 1" }],
     temporal: { version: "2025-2026", expectedVersion: "2025-2026", sourceThrough: NOW, staleAtRetrieval: false },
     semantics: { factKind: "current legislative membership", violations: [] },
@@ -94,8 +129,9 @@ function stateRollCandidate(id: string): RoutineCandidate {
     sourceId: "nh-general-court",
     recordClass: "STATE_ROLL_CALL",
     scope: "US-NH:2025-2026:house",
+    sourceProjectionEvidence: sourceProjectionEvidence("nh-general-court", "STATE_ROLL_CALL", "US-NH:2025-2026:house"),
     retrieval: { succeeded: true, requestedUrl: "https://gc.nh.gov/nhgcrollcalls/", finalUrl: "https://gc.nh.gov/nhgcrollcalls/", httpStatus: 200, retrievedAt: NOW, rawHash: HASH },
-    normalization: { succeeded: true, parserVersion: "nh-general-court/2", schemaVersion: "official-rolls:2025-2026", normalizedHash: HASH, inputRecords: 1, outputRecords: 1, droppedRecords: 0, missingRequiredFields: [] },
+    normalization: { succeeded: true, parserVersion: "nh-general-court/3", schemaVersion: "official-rolls:2025-2026", normalizedHash: HASH, inputRecords: 1, outputRecords: 1, droppedRecords: 0, missingRequiredFields: [] },
     identities: [{ subjectId: "2026-H-295", jurisdiction: "US-NH", identifiers: { rollCallId: "295", eventId: "HB1-enactment" }, matchBasis: "OFFICIAL_ID", ambiguous: false, chamber: "House", term: "2025-2026", session: "2026" }],
     temporal: { version: "2025-2026", expectedVersion: "2025-2026", sourceThrough: NOW, staleAtRetrieval: false },
     semantics: { factKind: "official roll-call decision", actionStage: "enactment vote", expectedActionStage: "enactment vote", violations: [] },
@@ -109,6 +145,7 @@ function censusReferenceCandidate(id: string): RoutineCandidate {
     sourceId: "census-data-api",
     recordClass: "CENSUS_REFERENCE",
     scope: "acs-population",
+    sourceProjectionEvidence: sourceProjectionEvidence("census-data-api", "CENSUS_REFERENCE", "acs-population"),
     retrieval: { succeeded: true, requestedUrl: "https://api.census.gov/data/2024/acs/acs5", finalUrl: "https://api.census.gov/data/2024/acs/acs5?get=NAME,B01003_001E", httpStatus: 200, retrievedAt: NOW, rawHash: HASH },
     normalization: { succeeded: true, parserVersion: "census-data-api/2", schemaVersion: "ACSDT5Y2024:B01003", normalizedHash: HASH, inputRecords: 1, outputRecords: 1, droppedRecords: 0, missingRequiredFields: [] },
     identities: [{ subjectId: "04000US04", jurisdiction: "US", identifiers: { product: "acs5", vintage: "2024", geography: "state:04" }, matchBasis: "OFFICIAL_ID", ambiguous: false }],
@@ -152,6 +189,373 @@ async function expectHeld(
 test("GOOD is the only path that reaches PROMOTED", async () => {
   const store = new MemoryRoutineDataStore();
   await seed(store);
+});
+
+test("duplicate civic member keys are refused before a delta or pointer can collapse facts", async () => {
+  await expectHeld(
+    (base) => ({
+      ...base,
+      civicRecords: [
+        { key: "candidate:H6AZ01001", record: { amount: 10 } },
+        { key: "candidate:H6AZ01001", record: { amount: 20 } },
+      ],
+    }),
+    "PARSE_INVALID",
+    "CIVIC_RECORD_KEYS_DUPLICATED",
+  );
+});
+
+test("a normalized payload whose declared digest names different bytes is refused before LKG moves", async () => {
+  await expectHeld((base) => ({
+    ...base,
+    normalizedPayload: { amount: 11 },
+  }), "PARSE_INVALID", "NORMALIZED_PAYLOAD_HASH_MISMATCH");
+});
+
+test("a Reader projection whose declared digest names different bytes is refused before LKG moves", async () => {
+  await expectHeld((base) => ({
+    ...base,
+    readModel: { version: "tampered", rows: [{ candidateId: "H6AZ01001", amount: 99 }] },
+  }), "PARSE_INVALID", "NORMALIZED_READ_MODEL_HASH_MISMATCH");
+});
+
+test("a registered production candidate must bind its normalized evidence, not only its Reader payload", async () => {
+  const store = new MemoryRoutineDataStore();
+  const exact = candidate("registered-evidence-hash-missing", {
+    scope: "federal-supported",
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
+    readModel: { formatVersion: 1, candidates: [], absences: [] },
+  });
+  const withoutEvidenceDigest: RoutineCandidate = {
+    ...exact,
+    normalization: { ...exact.normalization, normalizedPayloadHash: undefined },
+  };
+  const outcome = await processRegisteredRoutineCandidate(store, "fec-funding", withoutEvidenceDigest, NOW);
+  assert.equal(outcome.promoted, null);
+  assert.equal(outcome.candidate.state, "PARSE_INVALID");
+  assert.equal(outcome.candidate.failureCode, "NORMALIZED_PAYLOAD_HASH_MISSING");
+  assert.equal(await store.readPromotion("FEC_FUNDING", "federal-supported"), null);
+});
+
+test("a supplied civic-member projection cannot hide or replace the members derived from Reader", async () => {
+  await expectHeld((base) => ({
+    ...base,
+    civicRecords: [{ key: "candidate:forged", record: { amount: 999 } }],
+  }), "PARSE_INVALID", "CIVIC_RECORD_PROJECTION_MISMATCH");
+});
+
+test("an unexplained removal from any OPEN/incomplete horizon is refused generically", async () => {
+  const firstIdentity = candidate("shape").identities[0]!;
+  const good = candidate("open-horizon-two-records", {
+    normalization: { ...candidate("shape").normalization, inputRecords: 2, outputRecords: 2 },
+    horizon: { ...candidate("shape").horizon, returnedRecords: 2 },
+    identities: [firstIdentity, { ...firstIdentity, subjectId: "H6AZ01002", identifiers: { candidate_id: "H6AZ01002" } }],
+    readModel: { candidates: [
+      { fecCandidateId: "H6AZ01001", amount: 10 },
+      { fecCandidateId: "H6AZ01002", amount: 20 },
+    ] },
+  });
+  await expectHeld((base) => {
+    const readModel = { candidates: [{ fecCandidateId: "H6AZ01001", amount: 10 }] };
+    return {
+      ...base,
+      normalization: {
+        ...base.normalization,
+        normalizedHash: normalizedHash(readModel),
+        inputRecords: 1,
+        outputRecords: 1,
+      },
+      horizon: { ...base.horizon, returnedRecords: 1 },
+      identities: base.identities.slice(0, 1),
+      readModel,
+    };
+  }, "HORIZON_UNRESOLVED", "INCOMPLETE_HORIZON_REMOVAL_UNEXPLAINED", good);
+});
+
+test("the standing promotion door binds adapter output to its exact registered contract", () => {
+  const exact = candidate("registered-fec", { scope: "federal-supported" });
+  assert.equal(routineCandidateContractIssue("fec-funding", exact), null);
+  assert.match(routineCandidateContractIssue("fec-funding", { ...exact, scope: "other" }) ?? "", /scope/);
+  assert.match(routineCandidateContractIssue("fec-funding", { ...exact, sourceId: "census-data-api" }) ?? "", /source/);
+  assert.match(routineCandidateContractIssue("fec-funding", { ...exact, recordClass: "CENSUS_REFERENCE" }) ?? "", /record class/);
+  assert.match(routineCandidateContractIssue("fec-funding", { ...exact, normalization: { ...exact.normalization, parserVersion: "fec-funding\/1" } }) ?? "", /parser/);
+  assert.match(routineCandidateContractIssue("fec-funding", { ...exact, retrieval: { ...exact.retrieval, requestedUrl: "https://example.gov/" } }) ?? "", /requested route/);
+});
+
+test("registered promotion durably reads back the exact Reader projection instead of inferring delivery", async () => {
+  const store = new MemoryRoutineDataStore();
+  const exact = candidate("registered-reader-readback", {
+    scope: "federal-supported",
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
+    readModel: { formatVersion: 1, candidates: [], absences: [] },
+  });
+  const outcome = await processRegisteredRoutineCandidate(store, "fec-funding", exact, NOW);
+  assert.equal(outcome.promoted?.versionId, exact.id);
+  assert.equal(outcome.readerReadback?.versionId, exact.id);
+  assert.equal(outcome.readerReadback?.projectionId, "funding-snapshot");
+  assert.equal(outcome.readerReadback?.status, "PASS");
+  assert.equal(outcome.readerReadback?.evidenceKind, "TYPED_READER_READ_MODEL");
+  assert.equal(outcome.readerReadback?.verifierId, "lib/funding/snapshot.ts#readFundingSnapshot");
+  const events = await store.events(exact.id);
+  assert.deepEqual(events.map((event) => event.state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED", "PROMOTED"]);
+  const receipt = parseReaderProjectionReadback(events.at(-1)?.detail ?? "");
+  assert.equal(receipt?.contractId, "fec-funding");
+  assert.equal(receipt?.pointerKey, "FEC_FUNDING:federal-supported");
+  assert.equal(receipt?.status, "PASS");
+  assert.match(receipt?.verifierCodeSha ?? "", /^[0-9a-f]{40}$/);
+});
+
+test("production Reader readback re-observes after promotion and cannot move event chronology backwards", () => {
+  const productionStore = Object.create(PostgresRoutineDataStore.prototype) as PostgresRoutineDataStore;
+  const staleImportPlanAt = "2026-09-07T11:00:00.000Z";
+  const promotedAt = "2026-09-07T12:00:00.010Z";
+
+  const clockShiftedBack = promotionReaderReadbackObservedAt(
+    productionStore,
+    staleImportPlanAt,
+    promotedAt,
+    () => "2026-09-07T12:00:00.009Z",
+  );
+  assert.equal(clockShiftedBack, promotedAt, "a backwards wall-clock step must clamp to actual promotion");
+  assert.ok(Date.parse(clockShiftedBack) >= Date.parse(promotedAt));
+
+  const observedAfterPromotion = promotionReaderReadbackObservedAt(
+    productionStore,
+    staleImportPlanAt,
+    promotedAt,
+    () => "2026-09-07T12:00:00.011Z",
+  );
+  assert.equal(observedAfterPromotion, "2026-09-07T12:00:00.011Z");
+  assert.ok(Date.parse(observedAfterPromotion) >= Date.parse(promotedAt));
+
+  let memoryClockCalls = 0;
+  assert.equal(
+    promotionReaderReadbackObservedAt(
+      new MemoryRoutineDataStore(),
+      staleImportPlanAt,
+      promotedAt,
+      () => {
+        memoryClockCalls += 1;
+        return "2026-09-07T12:00:00.011Z";
+      },
+    ),
+    staleImportPlanAt,
+    "Memory keeps its deterministic caller-controlled timeline",
+  );
+  assert.equal(memoryClockCalls, 0);
+});
+
+test("registered promotion snapshots one durable candidate before any async store step", async () => {
+  class MutatingStore extends MemoryRoutineDataStore {
+    target: RoutineCandidate | null = null;
+    mutated = false;
+
+    override async readPromotion<T>(recordClass: RoutineRecordClass, scope: string) {
+      if (!this.mutated && this.target !== null) {
+        this.mutated = true;
+        const tampered = { formatVersion: 1, candidates: "not-an-array", absences: [] };
+        Object.assign(this.target, { readModel: tampered });
+        Object.assign(this.target.normalization, { normalizedHash: normalizedHash(tampered) });
+      }
+      return super.readPromotion<T>(recordClass, scope);
+    }
+  }
+
+  const store = new MutatingStore();
+  const exact = candidate("registered-durable-snapshot", {
+    scope: "federal-supported",
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
+    readModel: { formatVersion: 1, candidates: [{ fecCandidateId: "H6AZ01001" }], absences: [] },
+  });
+  store.target = exact;
+  const outcome = await processRegisteredRoutineCandidate(store, "fec-funding", exact, NOW);
+
+  assert.equal(store.mutated, true);
+  assert.equal(outcome.candidate.state, "PROMOTED");
+  assert.ok(Array.isArray((outcome.promoted?.payload as { candidates?: unknown }).candidates));
+  assert.equal(typeof (exact.readModel as { candidates?: unknown }).candidates, "string");
+});
+
+test("a malformed typed Reader projection is refused before it can replace LKG", async () => {
+  const store = new MemoryRoutineDataStore();
+  const exact = candidate("registered-reader-rejected", {
+    scope: "federal-supported",
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
+    readModel: { version: "pointer-readable-but-not-a-funding-snapshot" },
+  });
+  const outcome = await processRegisteredRoutineCandidate(store, "fec-funding", exact, NOW);
+
+  assert.equal(outcome.promoted, null);
+  assert.equal(outcome.readerReadback, null);
+  assert.equal(outcome.candidate.state, "DEPENDENT_CONSUMER_INVALID");
+  assert.equal(outcome.candidate.failureCode, "DEPENDENT_CONSUMER_REJECTED");
+  assert.match(outcome.candidate.failureDetail ?? "", /does not satisfy FundingSnapshot/);
+  assert.equal(await store.readPromotion("FEC_FUNDING", "federal-supported"), null);
+});
+
+test("a nested Reader row without a stable civic identity is refused even when its digests match", async () => {
+  const store = new MemoryRoutineDataStore();
+  const exact = candidate("registered-reader-row-without-identity", {
+    scope: "federal-supported",
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
+    readModel: { formatVersion: 1, candidates: [{}], absences: [] },
+  });
+  const outcome = await processRegisteredRoutineCandidate(store, "fec-funding", exact, NOW);
+
+  assert.equal(outcome.promoted, null);
+  assert.equal(outcome.readerReadback, null);
+  assert.equal(outcome.candidate.state, "PARSE_INVALID");
+  assert.equal(outcome.candidate.failureCode, "CIVIC_RECORD_KEY_INVALID");
+  assert.equal(await store.readPromotion("FEC_FUNDING", "federal-supported"), null);
+});
+
+test("a transient Reader readback failure self-heals on the same version without reacquisition or LKG mutation", async () => {
+  class TransientReadStore extends MemoryRoutineDataStore {
+    hidePromotion = false;
+
+    override async readPromotion<T>(recordClass: RoutineRecordClass, scope: string) {
+      if (this.hidePromotion) return null;
+      return super.readPromotion<T>(recordClass, scope);
+    }
+  }
+  const store = new TransientReadStore();
+  const exact = candidate("reader-retry-same-version", {
+    scope: "federal-supported",
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
+    readModel: { formatVersion: 1, candidates: [], absences: [] },
+  });
+  const promotedOutcome = await processRoutineCandidate(store, exact, NOW);
+  const promoted = promotedOutcome.promoted!;
+  const before = await store.readCandidate(exact.id);
+
+  store.hidePromotion = true;
+  const failed = await recordRoutineReaderProjectionReadback(store, ROUTINE_SOURCE_CONTRACTS[0], promoted, NOW);
+  assert.equal(failed?.status, "FAIL");
+  store.hidePromotion = false;
+
+  const backedOff = await repairRoutineReaderProjectionReadback(
+    store,
+    ROUTINE_SOURCE_CONTRACTS[0],
+    new Date(Date.parse(NOW) + READER_READBACK_RETRY_MS - 1).toISOString(),
+  );
+  assert.equal(backedOff.kind, "FAILED_BACKOFF");
+  assert.equal(backedOff.receipt?.status, "FAIL");
+  assert.equal(backedOff.receipt?.versionId, exact.id);
+  const repairedAt = new Date(Date.parse(NOW) + READER_READBACK_RETRY_MS).toISOString();
+  const repaired = await repairRoutineReaderProjectionReadback(store, ROUTINE_SOURCE_CONTRACTS[0], repairedAt);
+  assert.equal(repaired.kind, "RECORDED");
+  assert.equal(repaired.receipt.status, "PASS");
+  assert.equal(repaired.receipt.versionId, exact.id);
+  const current = await repairRoutineReaderProjectionReadback(
+    store,
+    ROUTINE_SOURCE_CONTRACTS[0],
+    new Date(Date.parse(repairedAt) + 1).toISOString(),
+  );
+  assert.equal(current.kind, "CURRENT");
+  assert.equal(current.receipt.status, "PASS");
+  assert.equal(current.receipt.versionId, exact.id, "CURRENT must name the exact durable PASS, not an aggregate count");
+
+  const after = await store.readCandidate(exact.id);
+  assert.deepEqual(after, before, "Reader retry must not rewrite the source candidate or disposition");
+  assert.equal((await store.readPromotion("FEC_FUNDING", "federal-supported"))?.versionId, exact.id);
+  assert.equal((await store.readPromotion("FEC_FUNDING", "federal-supported"))?.lastKnownGoodVersionId, exact.id);
+  const receipts = (await store.events(exact.id)).flatMap((event) => {
+    const receipt = parseReaderProjectionReadback(event.detail);
+    return receipt ? [receipt] : [];
+  });
+  assert.deepEqual(receipts.map((receipt) => receipt.status), ["FAIL", "PASS"]);
+});
+
+test("a Reader code-version change re-verifies the same LKG immediately without source reacquisition", async () => {
+  const store = new MemoryRoutineDataStore();
+  const exact = candidate("reader-code-change-same-version", {
+    scope: "federal-supported",
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
+    readModel: { formatVersion: 1, candidates: [], absences: [] },
+  });
+  const outcome = await processRoutineCandidate(store, exact, NOW);
+  const promoted = outcome.promoted!;
+  const before = await store.readCandidate(exact.id);
+  const firstAt = new Date(Date.parse(NOW) + 1).toISOString();
+  const first = await recordRoutineReaderProjectionReadback(
+    store,
+    ROUTINE_SOURCE_CONTRACTS[0],
+    promoted,
+    firstAt,
+    READER_CODE_SHA_A,
+  );
+  assert.equal(first?.status, "PASS");
+
+  const repaired = await repairRoutineReaderProjectionReadback(
+    store,
+    ROUTINE_SOURCE_CONTRACTS[0],
+    new Date(Date.parse(firstAt) + 1).toISOString(),
+    READER_CODE_SHA_B,
+  );
+  assert.equal(repaired.kind, "RECORDED", "stale-code proof must not inherit the transient-failure backoff");
+  assert.equal(repaired.receipt.status, "PASS");
+  assert.equal(repaired.receipt.verifierCodeSha, READER_CODE_SHA_B);
+  assert.deepEqual(await store.readCandidate(exact.id), before, "Reader re-verification must not reacquire or rewrite source state");
+  assert.equal((await store.readPromotion("FEC_FUNDING", "federal-supported"))?.lastKnownGoodVersionId, exact.id);
+});
+
+test("dependent evidence can affect only its exact source, record class, and scope", async () => {
+  await expectHeld((base) => ({
+    ...base,
+    sourceProjectionEvidence: sourceProjectionEvidence("meetings-public-bodies", "MEETING", "supported-bodies"),
+  }), "DEPENDENT_CONSUMER_INVALID", "DEPENDENT_EVIDENCE_SCOPE_MISMATCH");
+});
+
+test("a pointer whose LKG candidate is missing cannot bless a replacement", async () => {
+  class MissingLkgStore extends MemoryRoutineDataStore {
+    hiddenCandidateId: string | null = null;
+
+    override async readCandidate(candidateId: string) {
+      if (candidateId === this.hiddenCandidateId) return null;
+      return super.readCandidate(candidateId);
+    }
+  }
+
+  const store = new MissingLkgStore();
+  const good = candidate("fec-good-before-missing-lkg");
+  await seed(store, good);
+  store.hiddenCandidateId = good.id;
+  const replacement = candidate("fec-replacement-after-missing-lkg");
+  const outcome = await processRoutineCandidate(store, replacement, NOW);
+  assert.equal(outcome.promoted, null);
+  assert.equal(outcome.candidate.state, "CANNOT_TELL");
+  assert.equal(outcome.candidate.receipt?.decision, "CANNOT_TELL");
+  assert.equal(outcome.candidate.failureCode, "LKG_CANDIDATE_MISSING");
+  assert.equal(outcome.candidate.receipt?.checks.find((check) => check.check === "TEMPORAL_VALIDITY")?.code, "LKG_CANDIDATE_MISSING");
+  assert.equal((await store.readPromotion("FEC_FUNDING", "federal-candidates:2026"))?.versionId, good.id);
+});
+
+test("a non-null but invalid LKG row cannot bless a replacement", async () => {
+  const mutations: Array<[string, (row: CandidateVersionRecord) => CandidateVersionRecord]> = [
+    ["wrong state", (row) => ({ ...row, state: "VALIDATED" })],
+    ["wrong scope", (row) => ({ ...row, candidate: { ...row.candidate, scope: "other-scope" } })],
+    ["mismatched receipt", (row) => ({ ...row, receipt: row.receipt ? { ...row.receipt, validatedAt: "2026-09-07T12:00:01.000Z" } : null })],
+    ["divergent LKG field", (row) => ({ ...row, lastKnownGoodVersion: "other-version" })],
+  ];
+  for (const [label, mutate] of mutations) {
+    class TamperedLkgStore extends MemoryRoutineDataStore {
+      tamperId: string | null = null;
+
+      override async readCandidate(candidateId: string) {
+        const row = await super.readCandidate(candidateId);
+        return row && candidateId === this.tamperId ? mutate(row) : row;
+      }
+    }
+    const store = new TamperedLkgStore();
+    const good = candidate(`good-before-${label.replace(/\s/g, "-")}`);
+    await seed(store, good);
+    store.tamperId = good.id;
+    const outcome = await processRoutineCandidate(store, candidate(`replacement-after-${label.replace(/\s/g, "-")}`), NOW);
+    assert.equal(outcome.promoted, null, label);
+    assert.equal(outcome.candidate.state, "CANNOT_TELL", label);
+    assert.equal(outcome.candidate.failureCode, "LKG_PROMOTION_PROOF_INVALID", label);
+    assert.equal((await store.readPromotion(good.recordClass, good.scope))?.versionId, good.id, label);
+  }
 });
 
 test("FEC candidate identity accepts the official nine-character office forms and rejects a numeric congressional impostor", () => {
@@ -198,11 +602,19 @@ test("official state roll identity, term, event and stage can promote directly",
     rawBodies: ["official roll bytes"],
     requestedUrl: "https://apps.azleg.gov/BillStatus/BillOverview/84058",
     finalUrl: "https://apps.azleg.gov/BillStatus/BillOverview/84058",
+    httpStatus: 200,
     retrievedAt: NOW,
     term: "57th Legislature",
     expectedTerm: "57th Legislature",
     session: "2nd Regular Session",
     declaredRollTotal: 1,
+    identityAuthority: {
+      contractId: "az-state-legislators",
+      versionId: "az-roster-good-v1",
+      currentOfficeholderIds: ["az-legislature:2295"],
+      sessionParticipantIds: ["az-legislature:2295"],
+      sessionParticipantSourceVersion: "az-official-participants-v1",
+    },
     rolls: [{
       id: "azleg:57:2R:HB2321:third-reading",
       sourceId: "az-legislature",
@@ -228,7 +640,7 @@ test("official state roll identity, term, event and stage can promote directly",
       rollCallUrl: "https://apps.azleg.gov/BillStatus/BillOverview/84058",
       retrievedAt: NOW,
     }],
-    positions: [{ officeholderId: "azleg:member:2295", officialPersonId: "2295", rollCallId: "azleg:57:2R:HB2321:third-reading", position: "YES" }],
+    positions: [{ officeholderId: "az-legislature:2295", officialPersonId: "2295", rollCallId: "azleg:57:2R:HB2321:third-reading", position: "YES", publisherPosition: "Yea" }],
   });
   const outcome = await processRoutineCandidate(store, official, NOW);
   assert.equal(outcome.candidate.state, "PROMOTED");
@@ -236,32 +648,6 @@ test("official state roll identity, term, event and stage can promote directly",
   const promotedRolls = (outcome.promoted?.payload as { rollCalls: { sourceId?: "az-legislature" }[] }).rollCalls;
   assert.equal(stateRollAttribution(promotedRolls), null, "official rows must not be mislabeled as LegiScan data");
   assert.equal(stateRollPublisher(promotedRolls[0]), "Arizona State Legislature");
-});
-
-test("Census product/vintage/GEOID/cardinality can atomically replace resolver geography", async () => {
-  const store = new MemoryRoutineDataStore();
-  const division = {
-    ocdId: "ocd-division/country:us/state:az/county:pima",
-    geoid: "04019",
-    sourceDataset: "TIGER_GENZ2025",
-    canonicalGap: undefined,
-    canonicalOcdId: "ocd-division/country:us/state:az/county:pima",
-  } as unknown as Division;
-  const geography = censusGeographyCandidate({
-    rawBodies: ["official TIGER archive member"],
-    requestedUrl: "https://www2.census.gov/geo/tiger/GENZ2025/",
-    finalUrl: "https://www2.census.gov/geo/tiger/GENZ2025/",
-    retrievedAt: NOW,
-    product: "TIGER_GENZ",
-    vintage: "2025",
-    expectedVintage: "2025",
-    features: [{ properties: { ocdId: division.ocdId, label: "Pima County" }, geometry: { type: "Polygon", coordinates: [[[-112, 32], [-111, 32], [-111, 33], [-112, 32]]] } }],
-    divisions: [division],
-    declaredFeatureTotal: 1,
-  });
-  const outcome = await processRoutineCandidate(store, geography, NOW);
-  assert.equal(outcome.candidate.state, "PROMOTED");
-  assert.equal(outcome.promoted?.recordClass, "CENSUS_GEOGRAPHY");
 });
 
 test("malformed FEC payload is persisted as PARSE_INVALID and holds LKG", async () => {
@@ -291,6 +677,20 @@ test("freshly fetched stale FEC facts are refused", async () => {
     ...base,
     temporal: { ...base.temporal, staleAtRetrieval: true },
   }), "TEMPORAL_INVALID", "FRESH_FETCH_STALE_FACTS");
+});
+
+test("a future-dated acquisition cannot replace LKG with a pointer the Reader will refuse", async () => {
+  await expectHeld((base) => ({
+    ...base,
+    retrieval: { ...base.retrieval, retrievedAt: "2026-09-07T12:00:00.001Z" },
+  }), "TEMPORAL_INVALID", "ACQUISITION_TIME_AFTER_VALIDATION");
+});
+
+test("a delayed older acquisition cannot overwrite a newer source-scoped LKG", async () => {
+  await expectHeld((base) => ({
+    ...base,
+    retrieval: { ...base.retrieval, retrievedAt: "2026-09-07T11:59:59.999Z" },
+  }), "TEMPORAL_INVALID", "ACQUISITION_TIME_REGRESSION");
 });
 
 test("a FEC period that regresses behind the class LKG is refused", async () => {
@@ -388,6 +788,7 @@ test("explicit bounded authoritative absence can promote", async () => {
   const store = new MemoryRoutineDataStore();
   const empty = candidate("fec-explicit-absence", {
     scope: "federal-candidate:H6AZ00000:2026",
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-candidate:H6AZ00000:2026"),
     normalization: {
       succeeded: true,
       parserVersion: "fec-funding/2",
@@ -439,9 +840,11 @@ test("T4 intermediary bytes remain research-only and cannot auto-promote", async
   }), "SOURCE_BLOCKED", "SOURCE_NOT_AUTO_PROMOTABLE");
 });
 
-test("all destructive classes are enumerated by the contract", () => {
+test("all standing routine-source destructive classes are enumerated by the contract", () => {
   const covered = new Set<RoutineRecordClass>([
-    "FEC_FUNDING", "STATE_LEGISLATOR", "STATE_ROLL_CALL", "CENSUS_REFERENCE", "CENSUS_GEOGRAPHY",
+    "FEC_FUNDING", "STATE_LEGISLATOR", "CENSUS_REFERENCE",
+    "MEETING", "BALLOT_FILING", "DOTGOV_REFERENCE", "STATE_ROLL_CALL",
   ]);
-  assert.equal(covered.size, 5);
+  const standingClasses = new Set(ROUTINE_SOURCE_TASKS.map((task) => task.recordClass));
+  assert.deepEqual([...covered].sort(), [...standingClasses].sort());
 });

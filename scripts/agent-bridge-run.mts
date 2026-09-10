@@ -53,6 +53,7 @@ import { runIndependentReview } from "../lib/control-plane/agents/review.ts";
 import { isAdminConfig, ADMIN_CONFIG_ID, type AdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { CONTROL_PLANE_URL_VAR, controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import { RESEARCH_BOUNDS } from "../lib/control-plane/scheduler/research-policy.ts";
+import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
 
 const ROOT = process.cwd();
 
@@ -278,7 +279,9 @@ const mode = process.argv.includes("--probe")
 if (mode === "probe") {
   reportProbe();
 } else if (mode === "job") {
+  assertRuntimeAuthority({ capabilities: ["AGENT_BRIDGE"] });
   await runOneJob(arg("provider") ?? "codex");
 } else {
+  assertRuntimeAuthority({ capabilities: ["AGENT_BRIDGE"] });
   await runReview();
 }

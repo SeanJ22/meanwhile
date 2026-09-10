@@ -1,5 +1,7 @@
 import { CURATED_PREFIX } from "../ocd/curated.ts";
 import type { OcdId } from "../sources/types.ts";
+import { currentCuratedReaderRecords } from "../civic-data/curated-reader-read-model.ts";
+import { exactVenueMatchContentKey } from "./venue-record-identity.ts";
 
 /**
  * Venue resolutions for sources that publish a location string (or nothing)
@@ -83,12 +85,71 @@ export function venueKey(value: string): string {
   return value.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
+/**
+ * Durable identity for one exact reviewed venue spelling.
+ *
+ * Lookup deliberately uses `venueKey()` so punctuation/whitespace variants
+ * resolve to the same place. Storage identity must be stricter: two exact
+ * publisher spellings may coexist as evidence and must not collapse into one
+ * manual-projection member merely because lookup normalizes them alike.
+ */
+export function venueResolutionRecordId(
+  value: Pick<VenueEntry, "sourceId" | "bodyOcdId" | "tenant" | "match">,
+): string {
+  return `venue:${value.sourceId}:${venueScope(value.bodyOcdId, value.tenant ?? null)}:${venueKey(value.match)}:${exactVenueMatchContentKey(value.match)}`;
+}
+
 export function isPlacelessLocation(raw: string): boolean {
   const key = venueKey(raw);
   return PLACELESS_LOCATIONS.some((p) => venueKey(p) === key);
 }
 
+/** Initial adoption/node:test evidence; production reads `venue-resolutions`. */
 export const VENUE_CACHE: VenueEntry[] = [
+  // ── Legistar/InSite adoption seed ────────────────────────────────────────
+  // These three rows preserve the historical adapter fixtures for node:test.
+  // Production cannot reach them: currentVenueCache() serves this array only
+  // in the explicit test seam and otherwise requires the promoted projection.
+  {
+    sourceId: "legistar",
+    bodyOcdId: "ocd-division/country:us/state:az/county:pima",
+    match: "Board of Supervisors Hearing Room",
+    name: "Pima County Administration Building, Board of Supervisors Hearing Room",
+    address: "130 W. Congress St. 1st Floor, Tucson, AZ 85701",
+    lat: 32.221618,
+    lng: -110.974036,
+    addressSourceUrl: "https://www.pima.gov/government/board_of_supervisors/",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=130+W+Congress+St%2C+Tucson%2C+AZ+85701&benchmark=Public_AR_Current&format=json",
+    verifiedAt: null,
+  },
+  {
+    sourceId: "legistar",
+    bodyOcdId: "ocd-division/country:us/state:az/county:pima",
+    match: "1 E. Broadway, 4th Floor",
+    name: "1 E. Broadway Blvd, 4th Floor",
+    address: "1 E. Broadway Blvd, Tucson, AZ 85701",
+    lat: 32.221075,
+    lng: -110.971059,
+    addressSourceUrl: "https://pima.legistar.com/Calendar.aspx",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=1+E+Broadway+Blvd%2C+Tucson%2C+AZ+85701&benchmark=Public_AR_Current&format=json",
+    verifiedAt: null,
+  },
+  {
+    sourceId: "legistar-insite",
+    bodyOcdId: "ocd-division/country:us/state:az/place:mesa",
+    match: "Council Chambers",
+    name: "Mesa City Hall, Council Chambers",
+    address: "20 E. Main Street, Mesa, AZ 85201",
+    lat: 33.415155,
+    lng: -111.830942,
+    addressSourceUrl: "https://www.mesaaz.gov/Government/City-Council-Meetings",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=20+E+Main+St%2C+Mesa%2C+AZ+85201&benchmark=Public_AR_Current&format=json",
+    verifiedAt: null,
+  },
+
   // ── OnBase: Tucson Public Housing Authority ─────────────────────────────
   // The PHA's own published agenda (2026-08-18) states the Mayor and Council
   // sit as the PHA Board of Commissioners in the Mayor and Council Chambers.
@@ -1327,6 +1388,41 @@ export const VENUE_CACHE: VenueEntry[] = [
   },
 ];
 
+/** The exact currently promoted venue-resolution projection. */
+export function currentVenueCache(): readonly VenueEntry[] {
+  const seed = VENUE_CACHE.map((value) => ({
+    id: venueResolutionRecordId(value),
+    ...value,
+  }));
+  return currentCuratedReaderRecords("venue-resolutions", seed).map(({ id: _id, ...value }) => value as unknown as VenueEntry);
+}
+
+/**
+ * Resolve the full venue set an adapter scope is authorized to use.
+ *
+ * The default projection is deliberately evaluated at property-access time:
+ * production boot first reads the promoted pointer, while node:test may use
+ * the explicit adoption seed above. An absent scope is a configuration/data
+ * failure, not an empty venue table that may silently suppress every meeting.
+ */
+export function requiredVenueEntries(
+  sourceId: string,
+  bodyOcdId: OcdId | null,
+  tenant: string | null = null,
+  projection: readonly VenueEntry[] = currentVenueCache(),
+): VenueEntry[] {
+  const scope = venueScope(bodyOcdId, tenant);
+  const matches = projection.filter(
+    (venue) =>
+      venue.sourceId === sourceId &&
+      venueScope(venue.bodyOcdId, venue.tenant ?? null) === scope,
+  );
+  if (matches.length === 0) {
+    throw new Error(`VENUE_RESOLUTIONS_MISSING:${sourceId}:${scope}`);
+  }
+  return matches;
+}
+
 /**
  * The second key segment, which must never be a value two different bodies
  * can share (D31, g10).
@@ -1359,10 +1455,11 @@ export function resolveVenue(
    * adapters that serve a division-less body pass it.
    */
   tenant: string | null = null,
+  projection?: readonly VenueEntry[],
 ): VenueEntry | undefined {
   const key = venueKey(rawLocation);
   const scope = venueScope(bodyOcdId, tenant);
-  return VENUE_CACHE.find(
+  return (projection ?? currentVenueCache()).find(
     (v) =>
       v.sourceId === sourceId &&
       venueScope(v.bodyOcdId, v.tenant ?? null) === scope &&
@@ -1384,8 +1481,9 @@ export function resolveVenue(
 export function soleVenueForBody(
   sourceId: string,
   bodyOcdId: OcdId | null,
+  projection?: readonly VenueEntry[],
 ): VenueEntry | undefined {
-  const matches = VENUE_CACHE.filter(
+  const matches = (projection ?? currentVenueCache()).filter(
     (v) => v.sourceId === sourceId && v.bodyOcdId === bodyOcdId,
   );
   return matches.length === 1 ? matches[0] : undefined;

@@ -29,45 +29,37 @@
  * rather than about them.
  */
 
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
 import type { SeatHolderRef } from "./incumbency.ts";
+import type { NhMemberReadModel } from "../civic-data/candidate-builders.ts";
+import { readNhMembers } from "../civic-data/state-members.ts";
+import {
+  civicDataReadNotInitialized,
+  type CivicDataReadResult,
+  type PromotedCivicDataReadOptions,
+} from "../civic-data/read-model.ts";
 
-interface CorpusMember {
-  chamber: string;
-  familyName: string;
-  givenName: string;
-  middleName: string | null;
-  seatNo: string;
-  county: string;
-  district: string;
-  electedStatus: "INCUMBENT" | "NEW" | "FORMER" | "UNSTATED";
-  party: string | null;
-  title: string | null;
-  phone: string | null;
-  email: string | null;
+type CorpusMember = NhMemberReadModel["members"][number];
+
+let readState: CivicDataReadResult<NhMemberReadModel> = civicDataReadNotInitialized(
+  "STATE_LEGISLATOR",
+  "US-NH",
+  "The NH seat-holder projection has not been preloaded for this process.",
+);
+
+/** Load the promoted roster (or the explicit bootstrap state after an absent pointer). */
+export async function refreshNhSeatHolders(
+  options: PromotedCivicDataReadOptions = {},
+): Promise<CivicDataReadResult<NhMemberReadModel>> {
+  readState = await readNhMembers(options);
+  return readState;
 }
 
-interface Corpus {
-  source: { url: string; org: string; collectedAt: string };
-  members: CorpusMember[];
+export function nhSeatHolderReadState(): CivicDataReadResult<NhMemberReadModel> {
+  return readState;
 }
 
-let cache: Corpus | null | undefined;
-
-function corpus(): Corpus | null {
-  if (cache !== undefined) return cache;
-  try {
-    cache = JSON.parse(
-      readFileSync(join(process.cwd(), "data/states/nh/hunt/nh-gencourt-members.json"), "utf8"),
-    ) as Corpus;
-  } catch {
-    // No corpus, no holders — and that reads as UNKNOWN downstream, never as
-    // "everybody is a challenger". A missing file may not become a claim.
-    cache = null;
-  }
-  return cache;
+function heldRoster(): NhMemberReadModel | null {
+  return readState.kind === "PROMOTED" || readState.kind === "BOOTSTRAP" ? readState.value : null;
 }
 
 /** Does this row describe somebody currently in office? See the header. */
@@ -101,11 +93,21 @@ export function nhSeatKeyFromTitle(title: string): { chamber: "H" | "S"; county:
 }
 
 /**
+ * Whether the General Court's complete membership projection is competent for
+ * this exact contest. Keep the state/division gate beside the strict office
+ * parser so the production preload and the later universe decision cannot
+ * drift into opening or applying this authority to different seats.
+ */
+export function nhLegislativeRosterAppliesTo(contest: { readonly title: string; readonly ocdId: string }): boolean {
+  return contest.ocdId.includes("/state:nh/") && nhSeatKeyFromTitle(contest.title) !== null;
+}
+
+/**
  * Everyone currently sitting in the seat a New Hampshire legislative contest
  * is for, or an empty list when we cannot say.
  */
 export function nhLegislativeHolders(contestTitle: string): SeatHolderRef[] {
-  const c = corpus();
+  const c = heldRoster();
   if (c === null) return [];
   const key = nhSeatKeyFromTitle(contestTitle);
   if (key === null) return [];
@@ -127,17 +129,17 @@ export function nhLegislativeHolders(contestTitle: string): SeatHolderRef[] {
       // It is carried so a future ballot corpus that records it can join on an
       // identifier instead of a name, per RULING 111.
       personKey: m.seatNo || null,
-      source: `${c.source.org} — Members.txt, read ${c.source.collectedAt}`,
+      source: `New Hampshire General Court — ${readState.kind.toLowerCase()} Members.txt, source through ${readState.metadata.sourceThrough ?? "not recorded"}; version ${readState.metadata.version ?? readState.metadata.versionId ?? "not recorded"}; ${readState.metadata.stale.toLowerCase()}`,
     }));
 }
 
 /** Every seat this corpus can answer for, for reporting a denominator. */
 export function nhCorpusStanding(): { members: number; sitting: number; collectedAt: string } | null {
-  const c = corpus();
+  const c = heldRoster();
   if (c === null) return null;
   return {
     members: c.members.length,
     sitting: c.members.filter((m) => sits(m.electedStatus)).length,
-    collectedAt: c.source.collectedAt,
+    collectedAt: readState.metadata.sourceThrough ?? readState.metadata.retrievedAt ?? "not recorded",
   };
 }

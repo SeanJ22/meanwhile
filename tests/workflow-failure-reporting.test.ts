@@ -54,53 +54,13 @@ function stepsOf(doc: Record<string, unknown>): { job: string; step: Step }[] {
   return Object.entries(jobs).flatMap(([job, body]) => (body?.steps ?? []).map((step) => ({ job, step })));
 }
 
-/** A guard that keeps running after an earlier step failed. */
-function survivesFailure(cond: string | boolean | undefined): boolean {
-  if (typeof cond !== "string") return false;
-  return /always\s*\(\s*\)/.test(cond) || /!\s*cancelled\s*\(\s*\)/.test(cond);
-}
-
 /* ---- 1. the named independent steps ---------------------------------------- */
 
-test("RULING 164: intake-tripwire asks all three of its independent questions", () => {
-  const wf = workflows().find((w) => w.file === "intake-tripwire.yml")!;
-  const steps = stepsOf(wf.doc).map((s) => s.step);
-
-  // The schema gate runs first and needs no guard — nothing precedes it that
-  // could suppress it. The two AFTER it must survive its failure.
-  for (const id of ["alarms", "tripwire"]) {
-    const step = steps.find((s) => s.id === id);
-    assert.ok(step, `intake-tripwire must keep a step with id "${id}"`);
-    assert.ok(
-      survivesFailure(step.if),
-      `"${id}" must run even when an earlier independent check failed — otherwise the ` +
-        "first failure hides it, which is the defect this ruling was adopted over",
-    );
-  }
-
-  const summary = steps.find((s) => s.name === "What every check said");
-  assert.ok(summary, "a step must state every check's outcome together");
-  for (const id of ["schema", "alarms", "tripwire"]) {
-    assert.match(String(summary.run ?? ""), new RegExp(`steps\\.${id}\\.outcome`), `the summary must name ${id}`);
-  }
-});
-
-test("RULING 164: a failed SOURCE is reported even when validation also fails", () => {
-  // refresh-daily's go-red step had no `always()`, so a failure in the
-  // validate-or-commit chain skipped it and the failed sources went unnamed.
-  // Its sibling in refresh-meetings-snapshot already carried the guard — an
-  // independent case, and the one that proves the correct form (RULING 157).
-  for (const file of ["refresh-daily.yml", "refresh-meetings-snapshot.yml"]) {
-    const wf = workflows().find((w) => w.file === file)!;
-    const goRed = stepsOf(wf.doc)
-      .map((s) => s.step)
-      .find((s) => /this run is red|Go red/i.test(s.name ?? ""));
-    assert.ok(goRed, `${file} must keep the step that goes red for a failed source`);
-    assert.ok(
-      survivesFailure(goRed.if),
-      `${file}: a source failure must be reported even when a later step also failed`,
-    );
-  }
+test("PDC terminal boundary: the retired intake workflow cannot swallow or report runtime checks", () => {
+  assert.equal(
+    workflows().find((workflow) => workflow.file === "intake-tripwire.yml"),
+    undefined,
+  );
 });
 
 /* ---- 2. the class-wide rule ------------------------------------------------ */
@@ -125,14 +85,7 @@ test("RULING 164: a continue-on-error step must have its outcome READ somewhere"
     }
   }
 
-  // The floor: this reader must actually have found the flag somewhere, or it
-  // is reporting green about nothing (RULING 159).
-  assert.ok(
-    swallowable >= 1,
-    "no continue-on-error step was found in any workflow. Either they are all gone — " +
-      "in which case move this floor in the same diff — or this reader is matching nothing.",
-  );
-
+  assert.equal(swallowable, 0, "no retained workflow currently needs continue-on-error; a new use must be reviewed with its outcome reader");
   assert.deepEqual(offenders, [], "every continue-on-error failure must be reported by something downstream");
 });
 

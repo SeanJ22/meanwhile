@@ -17,6 +17,7 @@ import { selectSitting } from "../lib/ask/select.ts";
 import { snapshotEntities } from "../lib/ask/inventory.ts";
 import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
 import { bindNamedEntity } from "../lib/routing/named-entity.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 
 /**
  * **ASK-07 — OUR EMPTY HANDS ARE NOT THEIR SILENCE.** (2026-08-29.)
@@ -55,6 +56,8 @@ import { bindNamedEntity } from "../lib/routing/named-entity.ts";
 
 delete process.env.ANTHROPIC_API_KEY;
 
+await installRegistryRuntimeFirstSeeds();
+
 const { POST, resetGroundedState } = await import("@/app/api/ask/grounded/route");
 
 interface Snapshot {
@@ -73,6 +76,7 @@ interface Snapshot {
 const snapshot = JSON.parse(
   readFileSync(join(process.cwd(), "data", "meetings-snapshot.json"), "utf8"),
 ) as Snapshot;
+const ROUTE_NOW = Date.parse("2026-08-29T12:00:00.000Z");
 
 /**
  * **A REAL BODY WITH A REAL FUTURE SITTING AND NOT ONE DOCUMENT.**
@@ -112,7 +116,7 @@ const { bodyId: emptyHandedBodyId, name: emptyHandedName, ocdId: emptyHandedOcdI
     };
     row.total += 1;
     if (withDocument.has(m.id)) row.documented += 1;
-    if (Date.parse(m.startsAt) >= Date.now()) row.future += 1;
+    if (Date.parse(m.startsAt) >= ROUTE_NOW) row.future += 1;
     byBody.set(m.bodyId, row);
   }
   for (const [bodyId, row] of byBody) {
@@ -133,7 +137,7 @@ const { bodyId: emptyHandedBodyId, name: emptyHandedName, ocdId: emptyHandedOcdI
 const emptyHandedSitting = selectSitting(
   "NEXT",
   snapshot.meetings.filter((m) => m.bodyId === emptyHandedBodyId),
-  Date.now(),
+  ROUTE_NOW,
 )!;
 
 interface GroundedBody {
@@ -242,7 +246,7 @@ const firstParty = (over: Partial<PublisherAgendaObservation> = {}): PublisherAg
   meetingId: emptyHandedSitting.id,
   provenance: "FIRST_PARTY_PUBLISHER",
   report: "NOT_AVAILABLE",
-  observedAt: new Date(Date.now() - 2 * 3_600_000).toISOString(),
+  observedAt: new Date(ROUTE_NOW - 2 * 3_600_000).toISOString(),
   observedUrl: "https://example.gov/boards/calendar",
   sourceOrg: emptyHandedName,
   evidenceQuote: "Agenda: not yet posted",
@@ -307,7 +311,7 @@ test("GREEN: only FIRST-PARTY provenance can reach the THEIRS branch", () => {
       documentsForMeeting: [],
       documentsAcrossCorpus: [],
       observations: [firstParty({ meetingId: "m1", provenance })],
-      now: Date.now(),
+      now: ROUTE_NOW,
     });
     assert.equal(reading.publication, "UNKNOWN", provenance);
     assert.equal(reading.gap?.whose, "OURS", provenance);
@@ -323,7 +327,7 @@ test("GREEN: an observation of a DIFFERENT sitting never speaks for this one", (
     documentsForMeeting: [],
     documentsAcrossCorpus: [],
     observations: [firstParty({ meetingId: "m2" })],
-    now: Date.now(),
+    now: ROUTE_NOW,
   });
   assert.equal(reading.publication, "UNKNOWN");
   assert.equal(reading.gap?.whose, "OURS");
@@ -343,9 +347,9 @@ test("RED: a publisher negative past its freshness window stops being renderable
    * at a claim about a government.
    */
   const stale = firstParty({
-    observedAt: new Date(Date.now() - 8 * 24 * 3_600_000).toISOString(),
+    observedAt: new Date(ROUTE_NOW - 8 * 24 * 3_600_000).toISOString(),
   });
-  assert.equal(observationIsFresh(stale, Date.now()), false);
+  assert.equal(observationIsFresh(stale, ROUTE_NOW), false);
 
   resetPublisherAgendaObservations();
   recordPublisherAgendaObservation(stale);
@@ -371,7 +375,7 @@ test("RED: a publisher negative past its freshness window stops being renderable
     documentsForMeeting: [],
     documentsAcrossCorpus: [],
     observations: [{ ...stale, meetingId: "m1" }],
-    now: Date.now(),
+    now: ROUTE_NOW,
   });
   assert.equal(reading.publication, "STALE_OBSERVATION");
   assert.equal(reading.obligationOpen, true);
@@ -382,13 +386,13 @@ test("RED: a publisher negative past its freshness window stops being renderable
 test("RED: a reading stamped in the future is not fresh either", () => {
   /* A broken clock must never be the thing that authorises a sentence about a
      government, so this fails closed rather than open. */
-  const ahead = firstParty({ observedAt: new Date(Date.now() + 3_600_000).toISOString() });
-  assert.equal(observationIsFresh(ahead, Date.now()), false);
-  assert.equal(observationIsFresh(firstParty({ observedAt: "not-a-date" }), Date.now()), false);
+  const ahead = firstParty({ observedAt: new Date(ROUTE_NOW + 3_600_000).toISOString() });
+  assert.equal(observationIsFresh(ahead, ROUTE_NOW), false);
+  assert.equal(observationIsFresh(firstParty({ observedAt: "not-a-date" }), ROUTE_NOW), false);
 });
 
 test("the freshness window is bounded at both ends", () => {
-  const now = Date.now();
+  const now = ROUTE_NOW;
   const justInside = firstParty({
     observedAt: new Date(now - (DEFAULT_PUBLISHER_OBSERVATION_HOURS - 1) * 3_600_000).toISOString(),
   });
@@ -446,7 +450,7 @@ test("GREEN: every honest empty is a DIFFERENT state with a DIFFERENT sentence",
         meetingId: "m1",
         documentsForMeeting: [],
         documentsAcrossCorpus: [],
-        now: Date.now(),
+        now: ROUTE_NOW,
       }),
     ],
     [
@@ -456,7 +460,7 @@ test("GREEN: every honest empty is a DIFFERENT state with a DIFFERENT sentence",
         meetingId: "m1",
         documentsForMeeting: [doc({ text: null, extraction: "failed" })],
         documentsAcrossCorpus: [doc({ text: null, extraction: "failed" })],
-        now: Date.now(),
+        now: ROUTE_NOW,
       }),
     ],
     [
@@ -466,7 +470,7 @@ test("GREEN: every honest empty is a DIFFERENT state with a DIFFERENT sentence",
         meetingId: "m1",
         documentsForMeeting: [portal],
         documentsAcrossCorpus: [portal, { ...portal, meetingId: "m2" }],
-        now: Date.now(),
+        now: ROUTE_NOW,
       }),
     ],
     [
@@ -476,7 +480,7 @@ test("GREEN: every honest empty is a DIFFERENT state with a DIFFERENT sentence",
         meetingId: "m1",
         documentsForMeeting: [doc({ text: "The board will discuss the published budget proposal." })],
         documentsAcrossCorpus: [doc({ text: "The board will discuss the published budget proposal." })],
-        now: Date.now(),
+        now: ROUTE_NOW,
       }),
     ],
   ];
@@ -500,7 +504,7 @@ test("GREEN: every honest empty is a DIFFERENT state with a DIFFERENT sentence",
     meetingId: "m1",
     documentsForMeeting: [doc()],
     documentsAcrossCorpus: [doc()],
-    now: Date.now(),
+    now: ROUTE_NOW,
   });
   assert.equal(ready.acquisition, "ITEMS_READER_READY");
   assert.equal(ready.gap, null);
@@ -520,7 +524,7 @@ test("a discovered link and a blocked route are their own states, and neither is
     documentsForMeeting: [],
     documentsAcrossCorpus: [],
     discoveredDocumentUrl: "https://example.gov/agenda.pdf",
-    now: Date.now(),
+    now: ROUTE_NOW,
   });
   assert.equal(discovered.acquisition, "REPRESENTATION_DISCOVERED");
   assert.equal(discovered.gap?.whose, "OURS");
@@ -540,7 +544,7 @@ test("a discovered link and a blocked route are their own states, and neither is
         note: "CAPTCHA",
       },
     ],
-    now: Date.now(),
+    now: ROUTE_NOW,
   });
   assert.equal(blocked.acquisition, "ROUTE_BLOCKED");
   assert.equal(blocked.gap?.whose, "OURS");
@@ -562,7 +566,7 @@ test("an amended agenda is CURRENT plus SUPERSEDED, never one flat document", ()
     meetingId: "m1",
     documentsForMeeting: [first, amended],
     documentsAcrossCorpus: [first, amended],
-    now: Date.now(),
+    now: ROUTE_NOW,
   });
   assert.equal(reading.currentDocumentUrl, amended.documentUrl, "the CURRENT version is the newest");
   assert.deepEqual(reading.supersededDocumentUrls, [first.documentUrl]);
@@ -582,7 +586,7 @@ test("a publisher that says the agenda IS up, while we hold nothing, is still OU
     documentsForMeeting: [],
     documentsAcrossCorpus: [],
     observations: [firstParty({ meetingId: "m1", report: "AVAILABLE" })],
-    now: Date.now(),
+    now: ROUTE_NOW,
   });
   assert.equal(reading.publication, "REPORTS_AVAILABLE");
   assert.equal(reading.gap?.whose, "OURS");

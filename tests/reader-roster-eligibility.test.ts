@@ -1,5 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
+
 import { BODY_ROSTERS, HELD_BODY_ROSTERS, ROSTER_READER_DISPOSITIONS, projectReaderRoster, rosterHoldersForBody, rosterGapForBody, rosterGapsForDivision } from "../lib/registry/body-rosters.ts";
 import { readerPersonKeys } from "../lib/identity/reader-person.ts";
 import { allSeatHolders, seatHolderById } from "../lib/registry/server.ts";

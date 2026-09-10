@@ -1,7 +1,8 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-import { stateForBallotFile } from "../holdings/runtime-paths.ts";
-
+import {
+  BALLOT_SOURCES,
+  ballotSourceForTargetId,
+  type RegisteredBallotSource,
+} from "./registry.ts";
 import { getGeneralLineup } from "./general-lineup.ts";
 
 /**
@@ -15,7 +16,7 @@ import { getGeneralLineup } from "./general-lineup.ts";
  * call: an uncontested race gets a fourth answer, **"Someone else"**, and it
  * is the only honest sentiment measure such a race has.
  *
- * The set is derived from the committed ballot data, never from a flag on a
+ * The set is derived from the canonical promoted ballot data, never from a flag on a
  * contest — a contest becomes uncontested by having one candidate, and it
  * stops being uncontested the moment a second files. Counting the data keeps
  * that automatic.
@@ -25,18 +26,10 @@ import { getGeneralLineup } from "./general-lineup.ts";
  * be meaningless and the aggregate would be polluted by it.
  */
 
-const BALLOT_FILES = [
-  "nj-morris-2026.json",
-  "az-pima-2026.json",
-  "nh-merrimack-2026.json",
-];
-
 interface Candidacy {
   id: string;
   contestId: string;
 }
-
-let cache: Set<string> | null = null;
 
 /**
  * Every CANDIDATE target id whose contest carries exactly one candidate.
@@ -45,34 +38,39 @@ let cache: Set<string> | null = null;
  * candidacy id from a ballot file, and a `<contestId>|<name>` nominee key
  * from the certified general lineup.
  */
-export function getSingleCandidateTargetIds(): Set<string> {
-  if (cache) return cache;
-
-  const ids = new Set<string>();
-
-  for (const file of BALLOT_FILES) {
-    const state = stateForBallotFile(file);
-    if (!state) throw new Error(`State ballot filename required: ${file}`);
-    const data = JSON.parse(
-      readFileSync(join(process.cwd(), "data", "states", state, "ballot", file), "utf8"),
-    ) as { candidacies?: Candidacy[] };
-    const byContest = new Map<string, Candidacy[]>();
-    for (const c of data.candidacies ?? []) {
-      const list = byContest.get(c.contestId) ?? [];
-      list.push(c);
-      byContest.set(c.contestId, list);
-    }
-    for (const [, list] of byContest) {
-      if (list.length === 1) ids.add(list[0].id);
-    }
+async function addSingleCandidateTargets(
+  ids: Set<string>,
+  { state, source }: RegisteredBallotSource,
+): Promise<void> {
+  const data = source.normalize(await source.fetch());
+  const byContest = new Map<string, Candidacy[]>();
+  for (const candidate of data.candidacies ?? []) {
+    const list = byContest.get(candidate.contestId) ?? [];
+    list.push(candidate);
+    byContest.set(candidate.contestId, list);
+  }
+  for (const list of byContest.values()) {
+    if (list.length === 1) ids.add(list[0]!.id);
   }
 
-  const lineup = getGeneralLineup();
-  for (const contest of lineup?.contests ?? []) {
+  if (state !== "az") return;
+  for (const contest of getGeneralLineup()?.contests ?? []) {
     if (contest.nominees.length === 1) {
-      ids.add(`${contest.contestId}|${contest.nominees[0].name}`);
+      ids.add(`${contest.contestId}|${contest.nominees[0]!.name}`);
     }
   }
+}
+
+/**
+ * Single-candidate targets from either the bounded all-source census or the
+ * one authority named by an exact submitted target. Runtime validation uses
+ * the latter and therefore keeps authority failures state-scoped.
+ */
+export async function getSingleCandidateTargetIds(targetId?: string): Promise<Set<string>> {
+  const ids = new Set<string>();
+  const exact = targetId === undefined ? null : ballotSourceForTargetId(targetId);
+  const sources = targetId === undefined ? BALLOT_SOURCES : exact ? [exact] : [];
+  for (const source of sources) await addSingleCandidateTargets(ids, source);
 
   // Deliberately NOT throwing on an empty set, unlike the candidate target
   // set: "no uncontested races on any committed ballot" is a possible and
@@ -80,11 +78,5 @@ export function getSingleCandidateTargetIds(): Set<string> {
   // be treating a fact as a failure. An empty set simply refuses every
   // SOMEONE_ELSE write, which is the correct behaviour when no race
   // qualifies.
-  cache = ids;
   return ids;
-}
-
-/** Test seam: the sets are read once per process and cached. */
-export function resetUncontestedCache(): void {
-  cache = null;
 }

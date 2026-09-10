@@ -1,5 +1,8 @@
 /**
  * **ARIZONA STATE CAMPAIGN MONEY — THE STATEWIDE 2026 CORPUS.**
+ *
+ * @freshness-reads-here — the candidate clock follows all official reads;
+ * the catch-path clock is durable evidence of the failed acquisition attempt.
  * (Session C2, 2026-08-31. Decoupled from the pilot ballot Session C3,
  * 2026-09-01. RULING 126, RULING 205, RULING 207, RULING 224, RULING 229.)
  *
@@ -115,7 +118,6 @@
  * DISCARDED. Nothing below persists a transaction, and the corpus file holds
  * aggregates, counts and provenance only.
  */
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import net from "node:net";
 
@@ -142,7 +144,6 @@ import {
   reconcileEntity,
   summaryQuery,
   universeQueries,
-  upsertAz,
   type DetailAggregate,
   type EntityTotals,
   type RegisterRow,
@@ -150,21 +151,30 @@ import {
   type SummaryRow,
 } from "../lib/sources/az-seethemoney/index.ts";
 import { computeSplit, type StateMoneySnapshot } from "../lib/funding/state-money.ts";
-import type { AzIdentityRegistry } from "../lib/identity/types.ts";
 import { OUTBOUND_CONTACT } from "../lib/geo/outbound-agent.ts";
 import { today } from "./doc-dates.mjs";
+import { stateCampaignFinanceCandidate } from "../lib/funding/data-plane.ts";
+import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
+import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
+import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { readAzBallotProjection } from "../lib/civic-data/manual-read-models.ts";
 
 const ROOT = process.cwd();
 const AS_OF = today();
 const YEAR = CYCLE_2026.cycle;
-const DRY = process.argv.includes("--dry");
+if (!process.argv.includes("--promote")) {
+  throw new Error("REFUSING_TRACKED_STATE_MONEY_WRITE: invoke this owner-only acquisition with --promote.");
+}
+prepareProductionCivicDataWrite();
 const BUDGET_ARG = process.argv.find((a) => a.startsWith("--ledger-budget="));
 const LEDGER_BUDGET = BUDGET_ARG ? Number(BUDGET_ARG.split("=")[1]) : Number.POSITIVE_INFINITY;
 const SPACING_MS = 250;
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+const officialRawBodies: string[] = [];
+let candidateSubmitted = false;
 
 const CORPUS_PATH = join(ROOT, "data", "states", "az", "campaign-finance", "az-2026-statewide-corpus.json");
-const REGISTRY_PATH = join(ROOT, "data", "states", "az", "identity", "az-2026-candidate-registry.json");
 const SNAPSHOT_PATH = join(ROOT, "data", "states", "az", "funding", "state-money-az-2026.json");
 const RECONCILIATION_PATH = join(
   ROOT,
@@ -184,7 +194,9 @@ async function postTable(path: string, query: string, body: string): Promise<str
       await sleep(SPACING_MS);
       const res = await fetch(url, { method: "POST", headers: { ...HEADERS }, body });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return await res.text();
+      const text = await res.text();
+      officialRawBodies.push(text);
+      return text;
     } catch (e) {
       lastError = e;
       await sleep(1500 * (attempt + 1));
@@ -265,7 +277,8 @@ function ftpGet(path: string): Promise<string> {
  * LAYER 1 — ACQUISITION. STATEWIDE. NO BALLOT, NO ZIP, NO PILOT.
  * ========================================================================= */
 
-console.log(`Arizona state campaign money — ${AS_OF}${DRY ? " (dry run)" : ""}`);
+async function main(): Promise<void> {
+console.log(`Arizona state campaign money — ${AS_OF} (promotion-only)`);
 console.log(`  agency: ${AGENCY}`);
 console.log(`  acquisition denominator: the complete Arizona ${YEAR} cycle universe (no ZIP, no ballot)`);
 
@@ -292,8 +305,11 @@ const entities = aggregateEntities(summaryRows);
 console.log(`  union: ${summaryRows.length} rows in ${entities.size} entities`);
 
 /* RUNG 1 — the register and the calendar, over a different protocol. */
-const register: Map<string, RegisterRow> = parseCommitteeRegister(await ftpGet(`${FTP_DIR}/Committees.txt`));
-const reportingPeriods: ReportingPeriod[] = parseReportingPeriods(await ftpGet(`${FTP_DIR}/ReportingPeriods.txt`));
+const registerRaw = await ftpGet(`${FTP_DIR}/Committees.txt`);
+const periodsRaw = await ftpGet(`${FTP_DIR}/ReportingPeriods.txt`);
+officialRawBodies.push(registerRaw, periodsRaw);
+const register: Map<string, RegisterRow> = parseCommitteeRegister(registerRaw);
+const reportingPeriods: ReportingPeriod[] = parseReportingPeriods(periodsRaw);
 const nextDue = nextFilingDue(reportingPeriods, AS_OF);
 console.log(`  register: ${register.size} committees   calendar: ${reportingPeriods.length} reporting periods`);
 console.log(`  next filing deadline after ${AS_OF}: ${nextDue ? `${nextDue.reportName} (${nextDue.filingPeriodEndDate})` : "NONE STATED in the published calendar"}`);
@@ -344,29 +360,9 @@ interface StatewideCorpusFile {
   reconciliations?: HeldReconciliation[];
 }
 
+// Every production run acquires its own official evidence. Tracked corpus and
+// reconciliation JSON are historical/test first seeds, never mutable LKG.
 const held = new Map<number, HeldReconciliation>();
-if (existsSync(CORPUS_PATH)) {
-  const prior = JSON.parse(readFileSync(CORPUS_PATH, "utf8")) as StatewideCorpusFile;
-  for (const r of prior.reconciliations ?? []) held.set(r.entityId, r);
-}
-/*
- * SEEDED FROM THE PRIOR PILOT-SCOPED RECONCILIATION, ONCE.
- *
- * The 2026-08-31 walk proved 58 committees against the publisher's own itemised
- * ledger. That is finished work about the RECORDS, not about the ballot it was
- * scoped by, and re-reading those ledgers would cost a hundred thousand
- * contributor rows to learn something already known.
- */
-if (existsSync(RECONCILIATION_PATH)) {
-  const prior = JSON.parse(readFileSync(RECONCILIATION_PATH, "utf8")) as {
-    collectedAt?: string;
-    reconciliation?: { rows?: (HeldReconciliation & { walkedAt?: string })[] };
-  };
-  for (const row of prior.reconciliation?.rows ?? []) {
-    if (held.has(row.entityId)) continue;
-    held.set(row.entityId, { ...row, walkedAt: row.walkedAt ?? prior.collectedAt ?? AS_OF });
-  }
-}
 
 /**
  * A held reconciliation may be reused only while the committee's SUMMARY
@@ -396,14 +392,14 @@ interface ProjectionContest {
   title: string;
 }
 
-if (!existsSync(REGISTRY_PATH)) {
+const identityProjection = await readAzBallotProjection({ bypassCache: true });
+if (identityProjection.kind !== "PROMOTED") {
   throw new Error(
-    `${REGISTRY_PATH} is absent. The identity layer is what says who exists; without it this ` +
-      "script would have to derive its candidate list from a ballot page, which RULING 229 forbids. " +
-      "Run `pnpm identity:az` first.",
+    `AZ_BALLOT_IDENTITY_AUTHORITY_UNAVAILABLE:${identityProjection.kind}: campaign-finance acquisition ` +
+      "requires the canonical promoted Arizona ballot/identity projection and never reads its tracked bootstrap.",
   );
 }
-const registry = JSON.parse(readFileSync(REGISTRY_PATH, "utf8")) as AzIdentityRegistry;
+const registry = identityProjection.value.identityRegistry;
 const contestTitleByIdentity = new Map(registry.contests.map((c) => [c.identityId, c.office]));
 const contestById = new Map<string, ProjectionContest>();
 for (const contest of registry.contests) {
@@ -601,11 +597,11 @@ const snapshot: StateMoneySnapshot = {
   records,
 };
 
-if (DRY) {
+if (false) {
   console.log("\n  --dry: nothing written.");
   for (const s of states) console.log(`    ${s.state.padEnd(22)} ${s.ballotName.padEnd(28)} ${s.contestTitle}`);
 } else {
-  upsertAz(snapshot, (json) => writeFileSync(SNAPSHOT_PATH, json));
+  void snapshot;
 
   /*
    * THE STATEWIDE CORPUS. This is the artifact that makes the RULING 229
@@ -616,7 +612,7 @@ if (DRY) {
    * employer, city and zip (RULING 167) were streamed to compute a sum and were
    * discarded; what is kept is aggregates, counts and provenance.
    */
-  writeFileSync(
+  void ([
     CORPUS_PATH,
     JSON.stringify(
       {
@@ -675,10 +671,10 @@ if (DRY) {
       null,
       1,
     ) + "\n",
-    "utf8",
-  );
+    "utf8"
+  ]);
 
-  writeFileSync(
+  void ([
     RECONCILIATION_PATH,
     JSON.stringify(
       {
@@ -736,9 +732,54 @@ if (DRY) {
       null,
       1,
     ) + "\n",
-    "utf8",
-  );
-  console.log("\n  wrote data/states/az/funding/state-money-az-2026.json");
-  console.log("  wrote data/states/az/campaign-finance/az-2026-statewide-corpus.json");
-  console.log("  wrote data/states/az/campaign-finance/az-seethemoney-2026-reconciliation.json");
+    "utf8"
+  ]);
+  console.log("\n  normalized the Arizona projection and acquisition evidence in memory");
+}
+
+const candidate = stateCampaignFinanceCandidate({
+  jurisdiction: "AZ",
+  snapshot,
+  rawBodies: officialRawBodies,
+  requestedUrl: `${BASE}${SUMMARY_PATH}`,
+  finalUrl: `${BASE}${SUMMARY_PATH}`,
+  retrievedAt: new Date().toISOString(),
+  query: `Union of the official 2025-2026 active, less-active, and officeholder filters; ${summaryRows.length} summary rows in ${entities.size} entities`,
+  paginationComplete: perQuery.every((query) => query.rows >= 0),
+  declaredTotal: null,
+  excludedFacts: routeGaps.map((gap) => ({
+    key: `committee:${gap.entityId}`,
+    code: "ITEMIZED_RECONCILIATION_HELD",
+    detail: `${gap.committeeName}: ${gap.reason}`,
+    record: gap,
+  })),
+});
+candidateSubmitted = true;
+const outcome = await processRegisteredManualCandidate(
+  new PostgresRoutineDataStore(),
+  "az-sos-campaign-finance",
+  candidate,
+  candidate.retrieval.retrievedAt,
+);
+if (!outcome.promoted) throw new Error(`AZ campaign-finance promotion refused: ${outcome.candidate.failureCode}`);
+console.log(`promoted ${outcome.promoted.versionId}; no tracked runtime artifact was written`);
+}
+
+try {
+  await main();
+} catch (error) {
+  if (!candidateSubmitted) {
+    const attemptedAt = new Date().toISOString();
+    const failed = failedAcquisitionCandidate({
+      sourceId: "az-sos-campaign-finance",
+      recordClass: "STATE_CAMPAIGN_FINANCE",
+      scope: "US-AZ:campaign-finance:2026",
+      requestedUrl: `${BASE}${SUMMARY_PATH}`,
+      attemptedAt,
+      failureDetail: error instanceof Error ? error.message : String(error),
+      parserVersion: "az-campaign-finance/2",
+    });
+    await processRegisteredManualCandidate(new PostgresRoutineDataStore(), "az-sos-campaign-finance", failed, attemptedAt);
+  }
+  throw error;
 }

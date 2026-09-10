@@ -1,6 +1,4 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-import { validateBallotFile } from "../sources/ballot-nj-morris/index.ts";
+import { currentNjMorrisReadModel, validateBallotFile } from "../sources/ballot-nj-morris/index.ts";
 
 /** Published filing contacts, attached only to an exact current candidacy ID. */
 export interface CandidateContact {
@@ -17,20 +15,21 @@ export interface CandidateContactCensus {
   withheld: { candidacyId: string; reason: string }[];
 }
 
+let cachedModel: object | null = null;
 let cache: CandidateContactCensus | null = null;
 
 /**
- * This explicit reader contract admits the current clerk's normalized contact
- * snapshot. A new acquisition file, Parser output, or directory listing cannot
- * become reader truth by appearing in a directory. R256 permits the address a
- * candidate published on the filing; the older snapshot note is not current law.
+ * This explicit reader contract admits contacts only from the same promoted
+ * BALLOT_FILING projection as the ballot. A new acquisition file, parser output,
+ * or directory listing cannot become Reader truth by appearing in a directory.
  */
 export function candidateContactCensus(): CandidateContactCensus {
-  if (cache) return cache;
-  const ballot: unknown = JSON.parse(readFileSync(join(process.cwd(), "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8"));
+  const projection = currentNjMorrisReadModel();
+  if (cache && cachedModel === projection) return cache;
+  const ballot: unknown = projection.ballot;
   validateBallotFile(ballot);
   const current = new Set(ballot.candidacies.map((candidate) => candidate.id));
-  const source = JSON.parse(readFileSync(join(process.cwd(), "data", "states", "nj", "ballot", "nj-morris-2026-contacts.json"), "utf8")) as { contacts: CandidateContact[] };
+  const source = projection.contacts;
   const contacts: CandidateContact[] = [];
   const withheld: CandidateContactCensus["withheld"] = [];
   const counts = new Map<string, number>();
@@ -45,6 +44,7 @@ export function candidateContactCensus(): CandidateContactCensus {
       filedAddress: row.filedAddress?.trim() || null, sourceUrl: row.sourceUrl,
       sourceOrg: row.sourceOrg, collectedAt: row.collectedAt });
   }
+  cachedModel = projection;
   cache = { contacts, withheld };
   return cache;
 }

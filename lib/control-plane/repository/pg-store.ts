@@ -70,6 +70,7 @@ import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
+import type { CandidateStore } from "../../method/candidate.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
@@ -548,6 +549,7 @@ export async function createPgRepositories(
     ownerDecisions: pgAppendOnlyRepository<OwnerDecisionIntent>(sql, "owner_decisions"),
     /* Level 1 — Research (schema v4). */
     researchState: pgAggregateRepository<ResearchState>(sql, "ResearchState", "cp_research_state"),
+    methodCandidates: pgAggregateRepository<CandidateStore>(sql, "MethodCandidateStore", "cp_method_candidates"),
     researchIntents: pgAppendOnlyRepository<ResearchIntent>(sql, "research_intents"),
     scoutResults: pgAppendOnlyRepository<ScoutResult>(sql, "scout_results"),
     workerResults: pgAppendOnlyRepository<WorkerResultRecord>(sql, "worker_results"),

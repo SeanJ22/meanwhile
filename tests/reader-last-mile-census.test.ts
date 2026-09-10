@@ -17,7 +17,10 @@ import { validateReaderClosureReceipt, type ReaderClosureReceipt } from "../lib/
 import { readerAcquisitionBoundaryProblems } from "../lib/holdings/reader-census.ts";
 import { ballotQualificationFailures, type BallotQualificationObligation } from "../lib/holdings/reader-census.ts";
 import { sourceEolEquivalenceProblems, type ReaderSourceEolEquivalence } from "../lib/holdings/reader-census.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 import ts from "typescript";
+
+await installRegistryRuntimeFirstSeeds();
 
 const canonical: EligibilityFacts = { held: true, source: "CANONICAL_READER_SNAPSHOT", relationship: "CANONICAL_READER_RECORD", identity: "RESOLVED" };
 const staged: EligibilityFacts = { ...canonical, source: "AUTONOMOUS_STAGING", relationship: "ACQUISITION_INPUT" };

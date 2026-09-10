@@ -576,7 +576,7 @@ export function makeIcalSource(
   return {
     name: SOURCE_NAME,
 
-    async fetch(_query: MeetingQuery): Promise<IcalRaw[]> {
+    async fetch(query: MeetingQuery): Promise<IcalRaw[]> {
       const collected: IcalRaw[] = [];
       /*
        * **ONE FEED IS FETCHED ONCE, HOWEVER MANY BODIES IT SERVES.**
@@ -625,6 +625,7 @@ export function makeIcalSource(
             fetchImpl,
             accept: "text/calendar,text/plain;q=0.9,*/*;q=0.8",
             profile: wiring.config.profile === "browser" ? "browser" : undefined,
+            signal: query.signal,
             // A 200 with no VCALENDAR in it is not this town's empty calendar;
             // it is a retrieval that failed while looking like a success. See
             // `expect` in lib/sources/http.ts — this is the case that put
@@ -655,6 +656,7 @@ export function makeIcalSource(
                 accept: "text/calendar,text/plain;q=0.9,*/*;q=0.8",
                 profile:
                   wiring.config.profile === "browser" ? "browser" : undefined,
+                signal: query.signal,
                 expect: { label: "a calendar feed", marker: "BEGIN:VCALENDAR" },
               });
               ics += past.text;

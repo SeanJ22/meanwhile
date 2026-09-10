@@ -3,6 +3,9 @@ import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 import type { EvidencePack } from "../lib/ask/evidence.ts";
 import { packHasEvidence, packSourceUrls } from "../lib/ask/evidence.ts";

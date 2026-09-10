@@ -4,7 +4,8 @@ import { createHash } from "node:crypto";
 import { allSeatHolders, chamberForOfficeholder } from "../../lib/registry/server.ts";
 import { getKeyVotesSnapshot } from "../../lib/votes/key-votes-rows.ts";
 import { keyVotePositionKey } from "../../lib/votes/key-vote-positions.ts";
-import { getVotesSnapshot } from "../../lib/votes/snapshot.ts";
+import { getVotesSnapshot, readFederalRollCallsProjection } from "../../lib/votes/snapshot.ts";
+import { getFederalKeyVotesReadModel, readFederalKeyVotesProjection } from "../../lib/votes/key-votes-projection.ts";
 import { allBillSummaries } from "../../lib/votes/bill-summaries.ts";
 import { synthesisContextPayload } from "../../lib/ask/synthesize.ts";
 import type { AskAnswerPayload } from "../../lib/ask/answer.ts";
@@ -13,9 +14,15 @@ import type { EvidencePack } from "../../lib/ask/evidence.ts";
 export async function keyVotesAskProof() {
   delete process.env.ANTHROPIC_API_KEY;
   process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
+  const [federalProjection, keyVoteProjection] = await Promise.all([
+    readFederalRollCallsProjection(),
+    readFederalKeyVotesProjection(),
+  ]);
+  if (federalProjection.kind !== "PROMOTED" && federalProjection.kind !== "BOOTSTRAP") throw new Error(federalProjection.detail);
+  if (keyVoteProjection.kind !== "PROMOTED" && keyVoteProjection.kind !== "BOOTSTRAP") throw new Error(keyVoteProjection.detail);
   const { POST, resetGroundedState } = await import("../../app/api/ask/grounded/route.ts");
   const hash = (value: string | Buffer) => createHash("sha256").update(value).digest("hex");
-  const held = JSON.parse(readFileSync("data/votes/key-vote-positions.json", "utf8")) as { fetchedAt: string; positions: Record<string, Record<string, string>> };
+  const held = getFederalKeyVotesReadModel().positions;
   const keyVotes = getKeyVotesSnapshot();
   const recent = getVotesSnapshot();
   const summaries = allBillSummaries().summaries;
@@ -45,6 +52,6 @@ export async function keyVotesAskProof() {
     const synthesisReceivesEveryRecord = JSON.stringify(JSON.parse(synthesisContextPayload(pack)).records) === JSON.stringify(payload.records);
     proofs.push({ executionLevel: "REAL_ROUTE_HANDLER", family: "key-votes", subjectId: holder.id, request, httpStatus: response.status, resolvedSubjectId: payload.subject?.id ?? null, expectedNativePositionKeys: expected.map((entry) => entry.key), expectedEntryIds: keyVotes.entries.map((entry) => entry.id), expectedBillUrls: expectedBills, expectedRecordIds: [...expected.map((entry) => `${holder.id}#${entry.key}`), ...keyVotes.entries.map((entry) => entry.id), ...expectedBills], returnedRecordIds: returned.map((record) => record.id), returnedRecords: returned, gaps: payload.gaps, denominators: payload.denominators, payloadSha256: hash(raw), countAgrees, synthesisReceivesEveryRecord, modelAnswer: payload.answer, missing, missingEntries: missingEntries.map((entry) => entry.id), missingBills, unexpectedKeys, status: response.status === 200 && payload.answer === null && countAgrees && synthesisReceivesEveryRecord && !missing.length && !missingEntries.length && !missingBills.length && !unexpectedKeys.length ? "PROVEN" : "ELIGIBLE_NOT_FULLY_DELIVERED" });
   }
-  const paths = ["app/api/ask/grounded/route.ts", "lib/ask/key-votes.ts", "lib/votes/key-votes-reader.ts", "lib/votes/key-votes-rows.ts", "lib/votes/key-vote-positions.ts", "data/votes/key-votes-snapshot.json", "data/votes/key-vote-positions.json", "data/votes/bill-summaries.json", "data/votes/votes-snapshot.json"];
-  return { exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), executionLevel: "REAL_ROUTE_HANDLER", sourceHashScope: "Working-tree actual route and canonical held inputs; not deployed-build proof.", sourceHashes: paths.map((path) => ({ path, sha256: hash(readFileSync(path)) })), modelDisabled: true, keyEntryCount: keyVotes.entries.length, nativePositionMapCount: Object.keys(held.positions).length, billSummaryCount: Object.keys(summaries).length, proofs };
+  const paths = ["app/api/ask/grounded/route.ts", "lib/ask/key-votes.ts", "lib/votes/key-votes-reader.ts", "lib/votes/key-votes-rows.ts", "lib/votes/key-vote-positions.ts", "lib/votes/key-votes-projection.ts", "lib/votes/snapshot.ts", "lib/votes/bill-summaries.ts"];
+  return { exactHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(), executionLevel: "REAL_ROUTE_HANDLER", sourceHashScope: "Working-tree actual route and canonical promoted-projection readers; not deployed-build proof.", sourceHashes: paths.map((path) => ({ path, sha256: hash(readFileSync(path)) })), modelDisabled: true, keyEntryCount: keyVotes.entries.length, nativePositionMapCount: Object.keys(held.positions).length, billSummaryCount: Object.keys(summaries).length, proofs };
 }

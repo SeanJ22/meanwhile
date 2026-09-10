@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import type { CampaignMoneyApiAnswer } from "@/lib/funding/campaign-money";
+import type { CampaignMoneyApiResponse } from "@/lib/funding/campaign-money";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 
@@ -46,7 +46,7 @@ function FundingBlockInner({
   bare?: boolean;
 }) {
   const isFederal = holder.id.startsWith("congress:");
-  const [answer, setAnswer] = useState<CampaignMoneyApiAnswer | null>(null);
+  const [answer, setAnswer] = useState<CampaignMoneyApiResponse | null>(null);
   const [loadFailed, setLoadFailed] = useState(false);
 
   useEffect(() => {
@@ -61,7 +61,7 @@ function FundingBlockInner({
           { signal: controller.signal },
         );
         if (!response.ok) throw new Error(String(response.status));
-        setAnswer((await response.json()) as CampaignMoneyApiAnswer);
+        setAnswer((await response.json()) as CampaignMoneyApiResponse);
       } catch {
         if (!controller.signal.aborted) setLoadFailed(true);
       }
@@ -71,17 +71,30 @@ function FundingBlockInner({
 
   if (loadFailed) return <StateFundingNote note="We couldn’t load our campaign-finance records just now." />;
   if (!answer) return null;
-  if (answer.kind === "combined") return <>
+  const freshness = answer.holdingStatus === "PARTIAL"
+    ? `Some independent campaign-finance holdings are unavailable (${(answer.unavailableAuthorities ?? []).join(", ")}). The records below remain source-linked; they are not a complete cross-authority answer.`
+    : answer.dataState === "BOOTSTRAP"
+    ? "Campaign-finance records are using the bundled bootstrap because no canonical production version is recorded."
+    : answer.dataMetadata?.stale === "STALE"
+      ? `Campaign-finance records are serving the last known good version; its source data is stale${answer.dataMetadata.sourceThrough ? ` (source through ${answer.dataMetadata.sourceThrough})` : ""}.`
+      : answer.dataMetadata?.stale === "UNKNOWN"
+        ? "Campaign-finance record freshness could not be established."
+        : null;
+  let content: React.ReactNode = null;
+  if (answer.kind === "combined") content = <>
     {answer.federal.kind === "funding"
       ? <FundingDisplay data={answer.federal.data} context={reactionContext} bare={bare} />
       : <FundingAbsence data={answer.federal.data} />}
     <StateMoneySection records={answer.state.records} bare={bare} />
   </>;
-  if (answer.kind === "state") return <StateMoneySection records={answer.data.records} bare={bare} />;
-  if (answer.kind === "identity-unresolved") return <StateFundingNote note={answer.statement} />;
-  if (answer.kind === "none") return isFederal ? null : <StateFundingNote note={STATE_OFFICIAL_NOTE} />;
-  if (answer.kind === "absence") return <FundingAbsence data={answer.data} />;
-  return (
-    <FundingDisplay data={answer.data} context={reactionContext} bare={bare} />
-  );
+  else if (answer.kind === "state") content = <StateMoneySection records={answer.data.records} bare={bare} />;
+  else if (answer.kind === "identity-unresolved") content = <StateFundingNote note={answer.statement} />;
+  else if (answer.kind === "none") content = isFederal ? null : <StateFundingNote note={STATE_OFFICIAL_NOTE} />;
+  else if (answer.kind === "absence") content = <FundingAbsence data={answer.data} />;
+  else content = <FundingDisplay data={answer.data} context={reactionContext} bare={bare} />;
+  if (!freshness && content === null) return null;
+  return <>
+    {freshness && <p className="funding-data-freshness">{freshness}</p>}
+    {content}
+  </>;
 }

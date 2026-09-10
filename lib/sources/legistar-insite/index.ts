@@ -67,7 +67,7 @@ import {
 import { InSiteSession } from "./http.ts";
 import {
   INSITE_TENANTS,
-  findTenant,
+  inSiteTenantsFromWiring,
   findTenantVenue,
   isWiredBody,
   type InSiteTenant,
@@ -428,6 +428,7 @@ export interface InSiteNormalizeResult {
 export function normalizeWithDrops(
   raw: LegistarInSiteRaw[],
   now: Date = new Date(),
+  tenants: readonly InSiteTenant[] = INSITE_TENANTS,
 ): Accounted<InSiteNormalizeResult> {
   const meetings: Meeting[] = [];
   const provenance: SittingFieldProvenance[] = [];
@@ -475,7 +476,7 @@ export function normalizeWithDrops(
   const servingEdge = now.getTime() + SERVING_HORIZON_DAYS * 86_400_000;
 
   for (const reading of raw) {
-    const tenant = findTenant(reading.slug);
+    const tenant = tenants.find((candidate) => candidate.slug === reading.slug);
     if (!tenant) {
       // The tenant list is this adapter's own registry, so a raw row naming a
       // slug it does not hold is a configuration fact, counted as one.
@@ -1358,7 +1359,10 @@ function withinRadius(tenant: InSiteTenant, query: MeetingQuery): boolean {
 export function makeLegistarInSiteSource(
   options: { fetchImpl?: typeof fetch; tenants?: InSiteTenant[] } = {},
 ): ReportingMeetingSource<LegistarInSiteRaw> {
-  const tenants = options.tenants ?? INSITE_TENANTS;
+  // Test callers may inject an explicit fixture list. Production membership
+  // is always derived from SOURCE_WIRING; INSITE_TENANTS is historical test
+  // data and is not an autonomous production registry.
+  const tenants = options.tenants ?? inSiteTenantsFromWiring();
 
   return {
     name: SOURCE_NAME,
@@ -1372,7 +1376,10 @@ export function makeLegistarInSiteSource(
       for (const tenant of tenants) {
         if (!withinRadius(tenant, query)) continue;
 
-        const session = new InSiteSession({ fetchImpl: options.fetchImpl });
+        const session = new InSiteSession({
+          fetchImpl: options.fetchImpl,
+          signal: query.signal,
+        });
         const calendarUrl = `https://${tenant.host}/Calendar.aspx`;
 
         const first = await session.get(calendarUrl, "text/html,application/xhtml+xml");
@@ -1499,6 +1506,7 @@ export function makeLegistarInSiteSource(
             const clerk = await new InSiteSession({
               fetchImpl: options.fetchImpl,
               spacingMs: 0,
+              signal: query.signal,
             }).get(tenant.clerkScheduleUrl, "text/html,application/xhtml+xml");
             clerkScheduleHtml = clerk.text;
           } catch (error) {
@@ -1526,10 +1534,12 @@ export function makeLegistarInSiteSource(
     },
 
     normalize(raw, now: Date = new Date()): Meeting[] {
-      return normalizeWithDrops(raw, now).meetings;
+      return normalizeWithDrops(raw, now, tenants).meetings;
     },
 
-    normalizeWithDrops,
+    normalizeWithDrops(raw, now) {
+      return normalizeWithDrops(raw, now, tenants);
+    },
 
     async upsert(meetings: Meeting[]) {
       // Same honest lie the other adapters tell until the Phase 5 schema lands.

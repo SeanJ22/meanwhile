@@ -46,6 +46,7 @@ import {
 } from "./types.ts";
 
 export const MAPTILER_ANALYTICS_BASE = "https://service.maptiler.com/v1/analytics/api_usage";
+export const MAPTILER_ANALYTICS_TIMEOUT_MS = 30_000;
 
 /** The provider's timeline response, as much of it as we depend on. */
 export interface MapTilerTimeline {
@@ -115,7 +116,7 @@ export function scrubToken(text: string, token: string | null): string {
 
 export type Fetcher = (
   url: string,
-  init: { readonly headers: Record<string, string> },
+  init: { readonly headers: Record<string, string>; readonly signal?: AbortSignal },
 ) => Promise<{ readonly status: number; text: () => Promise<string> }>;
 
 /**
@@ -137,7 +138,11 @@ export async function fetchTimeline(input: {
   const fetcher: Fetcher =
     input.fetcher ??
     (async (u, init) => {
-      const response = await fetch(u, { headers: init.headers, method: "GET" });
+      const response = await fetch(u, {
+        headers: init.headers,
+        method: "GET",
+        signal: AbortSignal.timeout(MAPTILER_ANALYTICS_TIMEOUT_MS),
+      });
       return { status: response.status, text: () => response.text() };
     });
 
@@ -221,8 +226,26 @@ export async function fetchTimeline(input: {
     };
   }
 
-  const datasets = timeline.datasets?.length ?? 0;
-  const points = (timeline.datasets ?? []).reduce((n, d) => n + (d.data?.length ?? 0), 0);
+  const datasetRows = Array.isArray(timeline.datasets) ? timeline.datasets : [];
+  const datasets = datasetRows.length;
+  const points = datasetRows.reduce((n, d) => n + (Array.isArray(d.data) ? d.data.length : 0), 0);
+  if (datasets === 0 || points === 0) {
+    return {
+      ok: false,
+      timeline: null,
+      provenance: {
+        ...base,
+        status,
+        responseBytes,
+        responseSha256,
+        datasets,
+        points,
+        error:
+          "MapTiler answered 200 without a non-empty measured timeline. A zero-row extraction " +
+          "is a failed extraction, never a reading of zero.",
+      },
+    };
+  }
   return {
     ok: true,
     timeline,

@@ -687,3 +687,52 @@ export function newestFilingPdfs(html: string, origin: string): string[] {
   }
   return [...byStem.values()].map((v) => v.url);
 }
+
+export interface MorrisCurrentFilingDocumentSet {
+  readonly generalCandidatesUrl: string;
+  readonly schoolCandidatesUrl: string;
+}
+
+/**
+ * Resolve the clerk page's two-document 2026 general-election filing horizon.
+ *
+ * The source itself splits this horizon between a general candidate document
+ * and a school candidate document. Seeing either one alone is therefore a
+ * partial acquisition, not a smaller complete ballot. The names below are the
+ * clerk's own stable document stems; revision/version path segments remain
+ * intentionally unconstrained and are still selected by `newestFilingPdfs`.
+ */
+export function morrisCurrentFilingDocumentSet(
+  discoveredUrls: readonly string[],
+): MorrisCurrentFilingDocumentSet {
+  const eligible = discoveredUrls.filter((url) => {
+    if (/candidate-order/i.test(url)) return false;
+    try {
+      const parsed = new URL(url);
+      return parsed.protocol === "https:" && parsed.hostname.toLowerCase() === "www.morriscountyclerk.org";
+    } catch {
+      return false;
+    }
+  });
+  const general = eligible.filter((url) =>
+    /(?:^|\/)2026-general(?:-election)?-candidates-(?!.*school)[^/]*\.pdf(?:$|[?#])/i.test(url) &&
+    !/general-school-candidates/i.test(url),
+  );
+  const school = eligible.filter((url) =>
+    /(?:^|\/)2026-general-school-candidates-[^/]*\.pdf(?:$|[?#])/i.test(url),
+  );
+  if (general.length !== 1 || school.length !== 1) {
+    throw new Error(
+      "MORRIS_CURRENT_FILING_DOCUMENT_SET_INCOMPLETE: " +
+        `expected exactly one current general-candidate PDF and one current school-candidate PDF; ` +
+        `found general=${general.length}, school=${school.length}.`,
+    );
+  }
+  if (general[0] === school[0]) {
+    throw new Error("MORRIS_CURRENT_FILING_DOCUMENT_SET_INCOMPLETE: the two required document classes resolved to one URL.");
+  }
+  return {
+    generalCandidatesUrl: general[0]!,
+    schoolCandidatesUrl: school[0]!,
+  };
+}

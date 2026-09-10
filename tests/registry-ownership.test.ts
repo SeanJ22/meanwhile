@@ -215,7 +215,7 @@ test("NH232: every promoted body is reconciled to a workstream promotion or a ce
 
 /* ---------------------------------------------------------------ownership */
 
-test("NH232: exactly one path writes the generated registry", () => {
+test("NH232/PDC: no path writes the retired tracked registry authority", () => {
   /*
    * **The ownership rule, enforced mechanically rather than documented.**
    *
@@ -228,14 +228,13 @@ test("NH232: exactly one path writes the generated registry", () => {
    * pass this guard while breaking the build for everyone else. Staging first
    * is the discipline; this comment is why.
    */
-  const OWNER = "scripts/build-registry.ts";
   const WRITE = String.raw`(?:writeFileSync|writeFile|appendFileSync|appendFile|createWriteStream|copyFileSync|renameSync)`;
   /* `"registry.json"` reached through join(...) or as one path string. */
   const NAMES_REGISTRY = /["'`][^"'`]*registry\.json["'`]|["'`]registry["'`]\s*,\s*["'`]registry\.json["'`]/;
 
   const violations: string[] = [];
   for (const file of repoFiles()) {
-    if (file === OWNER) continue;
+    if (file.startsWith("tests/")) continue;
     if (!/\.(ts|mts|mjs|js|tsx)$/.test(file)) continue;
     let text: string;
     try {
@@ -293,29 +292,26 @@ test("NH232: exactly one path writes the generated registry", () => {
   assert.deepEqual(
     violations,
     [],
-    `${violations.length} path(s) other than ${OWNER} appear to write ${REGISTRY_FILE}.\n  ` +
+    `${violations.length} path(s) appear able to write retired first-seed ${REGISTRY_FILE}.\n  ` +
       violations.join("\n  ") +
-      `\n\nA generated artifact has one owner. Promoted bodies go to ${PROMOTED_BODIES_FILE} ` +
-      `via appendPromotedBodies(); the generator merges them. See lib/registry/promoted-bodies.ts.`,
+      "\n\nCurrent bindings promote through the registry-runtime-bindings candidate/event/pointer plane.",
   );
 });
 
-test("NH232: the registry is registered as a generated artifact", () => {
+test("PDC: the tracked registry is first-seed evidence, not a generated runtime artifact", () => {
   const entry = GENERATED.find((a) => a.path === REGISTRY_FILE);
-  assert.ok(
-    entry,
-    `${REGISTRY_FILE} is not in the GENERATED register. It was generated for its whole life and ` +
-      `unregistered for its whole life, and that is how three other scripts came to write it.`,
-  );
-  assert.match(entry.command, /registry:build/, "the registered command must be the generator");
+  assert.equal(entry, undefined);
+  const fixtureBuilder = readFileSync(join(ROOT, "scripts/build-registry.ts"), "utf8");
+  assert.match(fixtureBuilder, /TRACKED_REGISTRY_WRITE_FORBIDDEN/);
+  assert.match(fixtureBuilder, /--fixture-output=/);
+  assert.match(fixtureBuilder, /output must be outside the repository or under its ignored \.scratch directory/);
 });
 
-test("NH232: the promoted store is an INPUT, and is not registered as generated", () => {
+test("PDC: the tracked promoted-body overlay is first-seed evidence, not generated runtime truth", () => {
   assert.equal(
     GENERATED.find((a) => a.path === PROMOTED_BODIES_FILE),
     undefined,
-    `${PROMOTED_BODIES_FILE} is a canonical INPUT. Registering it as generated would say some ` +
-      `command reproduces it, and nothing does — its rows exist because sessions fetched pages.`,
+    `${PROMOTED_BODIES_FILE} is immutable bootstrap/test evidence; current bodies live behind the GOOD projection.`,
   );
 });
 

@@ -7,9 +7,9 @@ import type {
 import { accountedNormalize } from "../normalize-account.ts";
 
 /**
- * The snapshot-backed meeting source — what production serves.
+ * The promoted-projection-backed meeting source — what production serves.
  *
- * Reads the committed snapshot instead of fanning out to vendor portals per
+ * Reads the durable promoted projection instead of fanning out to vendor portals per
  * request (see `lib/meetings/snapshot.ts` for why the fan-out cannot ship).
  * Everything above `lib/meetings/registry.ts` sees the same `Meeting` records
  * it would have seen live; the only observable difference is `generatedAt`,
@@ -29,20 +29,23 @@ const ZERO_DROPS: NormalizeDropCounts = {
 };
 
 export interface SnapshotSourceOptions {
-  /** Injectable for tests; defaults to the committed file. */
+  /** Injectable for tests; production defaults to the canonical data plane. */
   load?: () => MeetingsSnapshot | null | Promise<MeetingsSnapshot | null>;
 }
 
 export function makeSnapshotSource(
   options: SnapshotSourceOptions = {},
 ): ReportingMeetingSource<Meeting> {
-  // The file reader is imported inside fetch(), not at module top: this
+  // The server reader is imported inside fetch(), not at module top: this
   // module sits on the client-reachable graph (client components import
   // RADIUS_LADDER_KM from query.ts, which imports the registry, which builds
   // this source), and a static `node:fs` import here breaks the client build.
   const load =
     options.load ??
-    (async () => (await import("../../meetings/snapshot.ts")).readSnapshot());
+    (async () => {
+      const reader = await import("../../meetings/snapshot.ts");
+      return reader.requireMeetingsProjection(await reader.readMeetingsProjection());
+    });
 
   const normalize = (raw: Meeting[], now: Date = new Date()): Meeting[] =>
     raw.map((meeting) => {
@@ -60,10 +63,10 @@ export function makeSnapshotSource(
     async fetch(): Promise<Meeting[]> {
       const snapshot = await load();
       if (!snapshot) {
-        // A missing snapshot is a broken deploy, not an empty calendar — say
+        // A missing projection is a broken serving path, not an empty calendar — say
         // so instead of serving a plausible-looking empty map.
         throw new Error(
-          "no meetings snapshot found — run `pnpm ingest composite` to generate data/meetings-snapshot.json",
+          "no meetings snapshot found in the promoted projection — run the standing routine civic-data runner",
         );
       }
       return snapshot.meetings;

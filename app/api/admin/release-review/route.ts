@@ -16,7 +16,11 @@ import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_ORIGIN } from "@/lib/ops/origins.ts";
 import { ADMIN_SESSION_COOKIE, ADMIN_SESSION_KEY_VAR, isAdminHostRequest, originAllowed, verifySession } from "@/lib/control-plane/admin-auth.ts";
 import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
-import type { SoftwareReleaseReviewRecord } from "@/lib/control-plane/software-release-review.ts";
+import {
+  isOwnerReleaseReviewRecord,
+  type SoftwareReleaseReviewRecord,
+} from "@/lib/control-plane/software-release-review.ts";
+import { productionIntegrityHistory } from "@/lib/ops/production-integrity-data-plane.ts";
 
 import { HERE } from "../../../(admin)/admin/release-review/contract.ts";
 import { readManifest, readProductionIdentity, refreshManifest } from "../../../(admin)/admin/release-review/manifest-source.ts";
@@ -49,8 +53,19 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       store = { ok: false, detail: error instanceof Error ? error.message : String(error) };
     }
   }
-  const model = buildReviewModel({ reading, production, rows, store });
-  return NextResponse.json(model, { headers: { "cache-control": "no-store, max-age=0" } });
+  const model = buildReviewModel({ reading, production, rows: rows.filter(isOwnerReleaseReviewRecord), store });
+  const integrity = productionIntegrityHistory(rows);
+  return NextResponse.json(
+    {
+      ...model,
+      productionIntegrity: {
+        authority: "cp_log_software_release_reviews/production-integrity",
+        latest: integrity[0] ?? null,
+        history: integrity,
+      },
+    },
+    { headers: { "cache-control": "no-store, max-age=0" } },
+  );
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {

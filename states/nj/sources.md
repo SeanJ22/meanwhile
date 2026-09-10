@@ -114,7 +114,7 @@ and false of the fact.
 | **Access** | 403s a general-purpose fetcher; **admits this project's identified User-Agent** |
 | **Carries** | Candidate filings, certified results with a Party column |
 | **Coverage** | Morris County |
-| **Freshness** | Rebuilt daily by `refresh-nj-filing.yml`; run 32996817397 on 2026-08-26 read the clerk's published count and found the artifact **unchanged** |
+| **Freshness** | The standing production data-plane runner evaluates the NJ filing contract daily through the 2026 general election, then weekly; canonical candidate, validation, promotion, and LKG receipts are visible in Admin. The retired GitHub refresh workflow is not a clock. |
 | **Do we use it** | **YES — WIRED** |
 
 ---
@@ -177,4 +177,3 @@ number as *bodies discovered* would be a claim about coverage this product does 
 
 **Freshness: last walked 2026-08-26.** RULING 96 — a source past expiry is re-walked or
 reported STALE with its date. Bodies and rosters carry a 14-day clock (RULING 53).
-

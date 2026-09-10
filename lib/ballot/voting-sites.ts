@@ -183,6 +183,10 @@ export interface VotingSitesAnswer {
    * a fact about our coverage, not about the reader's county.
    */
   outsideCoverage: boolean;
+  /** Canonical official handoff routes, returned by the server data plane. */
+  pollingPlaceLinks: readonly import("./polling-place-links.ts").PollingPlaceLink[];
+  /** Whether that independent optional link family reached this answer. */
+  ballotNavigationDataState?: "PROMOTED" | "FIRST_SEED" | "STORE_UNREACHABLE";
 }
 
 /**

@@ -59,18 +59,20 @@
  *
  * ## Shape
  *
- * `fetch()` reads the API, `normalize()` turns rows into typed records and
- * refuses a non-numeric or negative ESTIMATE, `upsert()` writes the two
- * committed reference tables `data/reference/acs5_2024_b01003_zcta.csv` and
- * `…_state.csv` (the repository's reference-data convention: a CSV plus a
- * source note, inventoried by `lib/reference/index.ts`). The readiness
- * publisher reads those tables; nothing at request time touches the API.
+ * `fetch()` reads the API and `normalize()` turns rows into typed records while
+ * refusing a non-numeric or negative ESTIMATE. `toCsv()` is a pure serializer
+ * retained for deterministic evidence/tests. Production acquisition promotes
+ * the normalized candidate through the permanent data plane; this module has
+ * no filesystem writer and cannot restore the historical Git-backed tables.
  *
  * @freshness-reads-here — `fetchedAt` is stamped by the call that reads the
  * source, and never restamped from a clock afterwards (RULING 107).
  */
-import { mkdirSync, writeFileSync } from "node:fs";
-import { dirname } from "node:path";
+import {
+  readPublisherBody,
+  requestPublisher,
+  sourceAcquisitionFailure,
+} from "../../civic-data/source-acquisition-error.ts";
 
 export const AGENCY = "U.S. Census Bureau — American Community Survey";
 /** The vintage year in the request path. Changing this is a source change. */
@@ -133,19 +135,44 @@ export function describeUrl(scope: AcsScope): string {
  * an empty dataset); a non-200 is thrown with the status and the first bytes
  * of the body, never swallowed.
  */
-export async function fetch(scope: AcsScope, key: string | undefined, fetcher: typeof globalThis.fetch = globalThis.fetch): Promise<AcsFetch> {
+export async function fetch(
+  scope: AcsScope,
+  key: string | undefined,
+  fetcher: typeof globalThis.fetch = globalThis.fetch,
+  signal?: AbortSignal,
+): Promise<AcsFetch> {
   const trimmed = (key ?? "").trim();
   if (trimmed === "") throw new Error(`${KEY_VAR} is not set; the Census Data API redirects a keyless call to missing_key.html, so nothing can be acquired without it`);
   const url = `${BASE}?get=NAME,${VARIABLE},${MARGIN_VARIABLE}&for=${encodeURIComponent(geography(scope))}&key=${encodeURIComponent(trimmed)}`;
   const fetchedAt = new Date().toISOString();
-  const response = await fetcher(url, { redirect: "manual", headers: { accept: "application/json" } });
-  const text = await response.text();
+  const response = await requestPublisher(`Census ACS ${scope}`, () =>
+    fetcher(url, {
+      redirect: "manual",
+      headers: { accept: "application/json" },
+      signal,
+    }));
+  const text = await readPublisherBody(`Census ACS ${scope}`, () => response.text());
+  signal?.throwIfAborted();
   if (response.status !== 200) {
-    throw new Error(`Census ACS ${scope} answered HTTP ${response.status} (${describeUrl(scope)}): ${text.slice(0, 200)}`);
+    throw sourceAcquisitionFailure(
+      "PUBLISHER_RESPONSE_REFUSED",
+      `Census ACS ${scope} answered HTTP ${response.status} (${describeUrl(scope)}): ${text.slice(0, 200)}`,
+    );
   }
-  const parsed = JSON.parse(text) as unknown;
-  if (!Array.isArray(parsed) || parsed.length < 2 || !Array.isArray(parsed[0])) {
-    throw new Error(`Census ACS ${scope} answered 200 with a body that is not the API's row array: ${text.slice(0, 200)}`);
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text) as unknown;
+  } catch {
+    throw sourceAcquisitionFailure(
+      "PUBLISHER_DOCUMENT_INVALID",
+      `Census ACS ${scope} answered 200 with invalid JSON.`,
+    );
+  }
+  if (!Array.isArray(parsed) || parsed.length < 2 || !parsed.every(Array.isArray)) {
+    throw sourceAcquisitionFailure(
+      "PUBLISHER_DOCUMENT_INVALID",
+      `Census ACS ${scope} answered 200 with a body that is not the API's row array: ${text.slice(0, 200)}`,
+    );
   }
   const final = new URL(response.url || BASE);
   final.searchParams.delete("key");
@@ -172,6 +199,12 @@ export function marginOf(raw: string | null | undefined): number | null {
 /** Typed rows, refusing what a population cannot be. Sorted by code. */
 export function normalize(fetched: AcsFetch): AcsPopulationRow[] {
   const header = fetched.rows[0] as readonly (string | null)[];
+  if (!Array.isArray(header)) {
+    throw sourceAcquisitionFailure(
+      "PUBLISHER_DOCUMENT_INVALID",
+      `Census ACS ${fetched.scope}: the first row is not a header array`,
+    );
+  }
   const nameAt = header.indexOf("NAME");
   const popAt = header.indexOf(VARIABLE);
   // The margin is optional in the header so a recorded fixture from before it
@@ -179,16 +212,33 @@ export function normalize(fetched: AcsFetch): AcsPopulationRow[] {
   const moeAt = header.indexOf(MARGIN_VARIABLE);
   const codeAt = header.length - 1;
   if (nameAt < 0 || popAt < 0) {
-    throw new Error(`Census ACS ${fetched.scope}: the header row ${JSON.stringify(header)} does not carry NAME and ${VARIABLE}`);
+    throw sourceAcquisitionFailure(
+      "PUBLISHER_DOCUMENT_INVALID",
+      `Census ACS ${fetched.scope}: the header row ${JSON.stringify(header)} does not carry NAME and ${VARIABLE}`,
+    );
   }
   const out: AcsPopulationRow[] = [];
   for (const row of fetched.rows.slice(1)) {
+    if (!Array.isArray(row)) {
+      throw sourceAcquisitionFailure(
+        "PUBLISHER_DOCUMENT_INVALID",
+        `Census ACS ${fetched.scope}: a data row is not an array`,
+      );
+    }
     const code = String(row[codeAt] ?? "").trim();
     const raw = row[popAt];
     const population = raw === null || raw === undefined || String(raw).trim() === "" ? Number.NaN : Number(raw);
-    if (code === "") throw new Error(`Census ACS ${fetched.scope}: a row carries no geography code: ${JSON.stringify(row)}`);
+    if (code === "") {
+      throw sourceAcquisitionFailure(
+        "PUBLISHER_DOCUMENT_INVALID",
+        `Census ACS ${fetched.scope}: a row carries no geography code: ${JSON.stringify(row)}`,
+      );
+    }
     if (!Number.isInteger(population) || population < 0) {
-      throw new Error(`Census ACS ${fetched.scope}: ${code} carries a population of ${JSON.stringify(raw)}, which is not a count`);
+      throw sourceAcquisitionFailure(
+        "PUBLISHER_DOCUMENT_INVALID",
+        `Census ACS ${fetched.scope}: ${code} carries a population of ${JSON.stringify(raw)}, which is not a count`,
+      );
     }
     out.push({
       code,
@@ -204,7 +254,7 @@ function csvCell(value: string): string {
   return /[",\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
 }
 
-/** The committed CSV text for a scope: one header, one row per geography. */
+/** Deterministic CSV evidence for a scope; this serializer performs no write. */
 export function toCsv(rows: readonly AcsPopulationRow[], scope: AcsScope): string {
   const codeHeader = scope === "zcta" ? "zcta" : "state_fips";
   const lines = [`${codeHeader},name,population,margin_of_error`];
@@ -212,12 +262,4 @@ export function toCsv(rows: readonly AcsPopulationRow[], scope: AcsScope): strin
     lines.push(`${csvCell(r.code)},${csvCell(r.name)},${r.population},${r.marginOfError === null ? "" : r.marginOfError}`);
   }
   return `${lines.join("\n")}\n`;
-}
-
-/** Write the table. Returns the byte count written. The caller commits it. */
-export function upsert(rows: readonly AcsPopulationRow[], scope: AcsScope, path: string): number {
-  const text = toCsv(rows, scope);
-  mkdirSync(dirname(path), { recursive: true });
-  writeFileSync(path, text, "utf8");
-  return Buffer.byteLength(text, "utf8");
 }

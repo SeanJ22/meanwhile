@@ -1,37 +1,24 @@
 /**
  * **THE BRIDGE FROM CANONICAL STATE TO THE OWNER'S PAGE.**
- * (Session C final, ITEM H, 2026-09-01. `pnpm owner:publish`.)
+ * (Session C final, ITEM H, 2026-09-01; now an admitted standing-runtime child.)
  *
  * ## The problem this solves, stated exactly
  *
- * Six of the seven panels the owner wants are produced today by scripts that
- * write JSON into the working tree or markdown into a Google Drive folder:
- * pilot health prints and writes nothing at all, the digest lands in
- * `$WTP_MIRROR/pilot-digest.md`, the Needs-Sean queue is CSV plus decision-card
- * text living in `lib/tracker/registry.mjs`, the reader grid is
- * `data/health/reader-suite-runs/*.json`, and the intake counts are
- * `data/feedback/sweeps/*.json`.
+ * The deployed Admin site cannot depend on the standing machine's filesystem,
+ * process table, or scratch output. This admitted standing-runtime child reads
+ * canonical control-plane state and explicitly classified, release-pinned
+ * software acceptance/governance inputs, then publishes one durable owner
+ * snapshot directly to that same control plane. Mutable civic and operational
+ * truth never arrives through a tracked file or a Git commit. Historical
+ * software run outputs and feedback sweeps are not projected as current. The
+ * page reads the one record this production writer wrote.
  *
- * **None of that exists inside a Netlify function bundle.** The admin site may
- * not depend on the always-on machine's filesystem, Drive mirror, process table
- * or agent scratch output — that is a structural requirement of ITEM H, and it
- * is also just true: `next.config.ts` documents at length what a `process.cwd()`
- * read does when nobody traced it, and the answer is that it returns nothing,
- * the catch returns null, and the surface renders a gap indistinguishable from
- * honest missing data.
+ * ## Why it uses the shared pure health-contract functions
  *
- * So this script runs WHERE THE STATE IS — on the runner's machine, in the
- * repository, with git available — and PUBLISHES the result into the durable
- * control plane. The page then reads records that a writer actually wrote.
- *
- * ## Why it reuses `pilot-health.mts`'s functions rather than its output
- *
- * The acceptance clause is that PILOT HEALTH on the page matches
- * `pnpm pilot:health` for the same SHA. Parsing that script's stdout would make
- * the match a coincidence maintained by two pieces of formatting code. Calling
- * `readerContract` / `truthContract` / `freshnessContract` / `pilotHealth` — the
- * same pure functions, on the same inputs, from the same run records — makes
- * the match STRUCTURAL. There is one computation, and RULING 103 is the reason.
+ * PILOT HEALTH on the page is computed by `readerContract` / `truthContract` /
+ * `freshnessContract` / `pilotHealth`, directly from its named inputs. The
+ * tracked-health CLI that once repeated this projection is retired: Admin and
+ * canonical runtime receipts are the owner-facing operational authority.
  *
  * ## Absence is never asserted
  *
@@ -39,7 +26,7 @@
  * is, not a zero. A zero is a measurement; a missing file is not.
  */
 
-import { readFileSync, readdirSync, existsSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
 import {
@@ -49,16 +36,14 @@ import {
   readerContract,
   truthContract,
 } from "../lib/health/contracts.ts";
-import { containsCommit, headSha } from "../lib/ops/git-facts.ts";
+import { headSha } from "../lib/ops/git-facts.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import { loadJsonArray } from "../lib/health/json-store.ts";
 import {
-  assessStaleness,
-  latestControlRun,
-  latestFreshnessCycle,
-  latestReaderRun,
-  DEFAULT_MAX_AGE_HOURS,
-} from "../lib/health/latest-runs.ts";
+  appendMapTilerUsageCollectionDigest,
+  mapTilerUsageCollectionOutcome,
+  readLatestFreshnessCycleOutcome,
+} from "../lib/control-plane/freshness-cycle-outcome.ts";
 import {
   controlPlaneUrlFromEnv,
   createPgRepositories,
@@ -66,14 +51,11 @@ import {
 } from "../lib/control-plane/repository/pg-store.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
-import {
-  MAPTILER_USAGE_FORMAT_VERSION,
-  type MapTilerUsageSnapshot,
-} from "../lib/control-plane/maptiler/types.ts";
+import { collectMapTilerUsage } from "../lib/control-plane/maptiler/collector.ts";
+import { retainMapTilerLastKnownGood } from "../lib/control-plane/maptiler/usage.ts";
 import {
   CACHE_OBSERVATION_ID,
   DECISION_LOG_KEY,
-  DIGEST_LOG_KEY,
   SNAPSHOT_ID,
 } from "../lib/control-plane/admin-data.ts";
 import {
@@ -85,7 +67,6 @@ import {
   type Held,
   type Measured,
   type OwnerDecisionCard,
-  type OwnerDigestRecord,
   type OwnerSnapshot,
   type OwnerZipRow,
 } from "../lib/control-plane/owner-surface.ts";
@@ -98,6 +79,7 @@ import { US_STATES } from "../lib/control-plane/readiness/catalog.ts";
 import { REGISTRY } from "../lib/tracker/registry.mjs";
 import { readStore, WORKING_CSV } from "./tracker-core.mjs";
 import { today } from "./doc-dates.mjs";
+import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
 
 const ROOT = process.cwd();
 const NOW = new Date();
@@ -111,17 +93,31 @@ const arg = (name: string): string | null => {
 const DRY_RUN = process.argv.includes("--dry-run");
 
 function log(line: string): void {
-  console.log(`owner:publish · ${line}`);
+  console.log(`owner-snapshot · ${line}`);
 }
 
 /* ------------------------------------------------------------------ *
- * PANEL 1 — PILOT HEALTH, through the same functions pilot:health uses
+ * PANEL 1 — PILOT HEALTH, through the shared pure health contracts
  * ------------------------------------------------------------------ */
 
 function countLoaded(path: string, what: string): number {
   return (loadJsonArray<unknown>(path, what) ?? []).length;
 }
 
+/*
+ * TRACKED-INPUT CLASSIFICATION (PDC terminal census, 2026-09-09).
+ *
+ * These two JSON files are release-pinned acceptance corpora: owner-authored
+ * software contract INPUTS, not observations written by a routine process.
+ * It is safe to count their denominator from the immutable installed release.
+ *
+ * The adjacent `reader-suite-runs/` and `control-set-runs/` directories are a
+ * different class: historical outputs of local software instruments. A
+ * standing publisher that selects the newest tracked output and republishes it
+ * as present health makes Git the live evidence store and can misattribute an
+ * unrelated software result to runtime civic data. Those directories are
+ * intentionally not read here; software certification remains in software CI.
+ */
 const questionsLoaded = countLoaded(
   join(ROOT, "data", "health", "reader-questions.json"),
   "question templates",
@@ -131,57 +127,40 @@ const controlsLoaded = countLoaded(
   "control facts",
 );
 
-const readerRun = latestReaderRun(ROOT);
-const readerStale =
-  readerRun === null
-    ? null
-    : assessStaleness(readerRun, NOW, HEAD, containsCommit, DEFAULT_MAX_AGE_HOURS);
-
 const reader = readerContract({
   questionsLoaded,
-  activeInstances: readerRun?.instancesActive ?? 0,
-  evaluatedGreen: readerRun?.evaluatedGreen ?? 0,
-  evaluatedRed: readerRun?.evaluatedRed ?? 0,
-  notEvaluable: readerRun?.notEvaluable ?? 0,
-  target: readerRun?.target ?? null,
+  activeInstances: 0,
+  evaluatedGreen: 0,
+  evaluatedRed: 0,
+  notEvaluable: 0,
+  target: null,
   establishedZeroDenominator: null,
   notCurrent:
-    readerRun === null
-      ? "no canonical reader-suite run record exists yet — run `pnpm reader:suite` against a " +
-        "local production build. An unmeasured contract is NOT_READY, never green."
-      : (readerStale?.current ?? false)
-        ? null
-        : `the newest reader-suite run cannot be read as current: ${readerStale?.why}`,
+    "Reader/UI certification is software evidence, not a routine data-plane observation. " +
+    "This runtime publisher does not read tracked local suite outputs; the software CI/release " +
+    "surface must supply a canonical release receipt before this contract can be current here.",
 });
-
-const controlRun = latestControlRun(ROOT);
-const controlStale =
-  controlRun === null
-    ? null
-    : assessStaleness(controlRun, NOW, HEAD, containsCommit, DEFAULT_MAX_AGE_HOURS);
 
 const truth = truthContract({
   controlsLoaded,
-  score: controlRun?.score ?? null,
-  notCurrent:
-    controlsLoaded === 0
-      ? null
-      : controlRun === null
-        ? "no canonical control-set run record exists yet — run `pnpm control:set` against a " +
-          "local production build. An unmeasured contract is NOT_READY, never green."
-        : (controlStale?.current ?? false)
-          ? null
-          : `the newest control-set run cannot be read as current: ${controlStale?.why}`,
+  score: null,
+  notCurrent: controlsLoaded === 0
+    ? null
+    : "Truth/control-set certification is software evidence, not a routine data-plane " +
+      "observation. This runtime publisher does not read tracked local run outputs; an " +
+      "unmeasured software contract is NOT_READY, never green.",
 });
 
 /*
- * FRESHNESS reads the newest cycle's MEASURED risk (9.4.26). Both this
- * publisher and `scripts/pilot-health.mts` call the contract the same way, so
- * the page and `pnpm pilot:health` keep matching for the same SHA — that
- * acceptance clause is structural, and it is why the risk projection below
- * is `freshnessRiskOf` in one shared module rather than typed twice.
+ * FRESHNESS reads the newest canonical cycle's MEASURED risk (9.4.26). The
+ * projection below stays in the shared `freshnessRiskOf` module so the page
+ * cannot grow a second interpretation of the durable runtime receipt.
  */
-const newestCycle = latestCycle();
+const publisherRepos = await repositories();
+const canonicalCycle = publisherRepos === null ? null : await readLatestFreshnessCycleOutcome(publisherRepos);
+const newestCycle: { record: CycleRecord; file: string } | null = canonicalCycle
+  ? { record: canonicalCycle.outcome as unknown as CycleRecord, file: canonicalCycle.digest.digestId }
+  : null;
 const freshness = freshnessContract(freshnessRiskOf(newestCycle?.record ?? null));
 const rollup = pilotHealth(reader, truth, freshness);
 
@@ -193,21 +172,10 @@ const rollup = pilotHealth(reader, truth, freshness);
  * wrong is how a suite reports green over the questions it happened to answer.
  */
 function readerDenominator(): Held<Measured> {
-  if (!readerRun) {
-    return gap(
-      "OURS",
-      "No reader-suite run record exists yet, so there is no denominator to read against. " +
-        "We have not measured this — it is not that we measured zero.",
-    );
-  }
-  return held(
-    measured(
-      readerRun.evaluatedGreen,
-      readerRun.instancesActive,
-      "reader questions answered correctly, out of the ACTIVE instances generated from the " +
-        "owner corpus — never out of the subset that happened to be evaluable",
-      `reader-suite run ${readerRun.runId}`,
-    ),
+  return gap(
+    "OURS",
+    "Reader certification belongs to the exact software release receipt. The standing " +
+      "data-plane publisher refuses to promote a tracked local suite output into live health.",
   );
 }
 
@@ -219,21 +187,10 @@ function truthDenominator(): Held<Measured> {
         "against. This is awaiting owner data, not a failing measurement.",
     );
   }
-  if (!controlRun) {
-    return gap("OURS", "No control-set run record exists yet.");
-  }
-  const score = controlRun.score;
-  const known = (score?.knownPresentCount ?? 0) + (score?.knownAbsenceCount ?? 0);
-  const wrong = (score?.falseAbsences ?? 0) + (score?.falsePresences ?? 0);
-  return held(
-    measured(
-      Math.max(0, known - wrong),
-      Math.max(known, known - wrong),
-      "control facts the product got right, out of the known-present and known-absent facts " +
-        "the control set asserts — both directions, because only checking presence would score " +
-        "a product that says yes to everything as perfect",
-      `control-set run ${controlRun.runId}`,
-    ),
+  return gap(
+    "OURS",
+    "Control-set certification belongs to the exact software release receipt. The standing " +
+      "data-plane publisher refuses to promote a tracked local run output into live health.",
   );
 }
 
@@ -249,6 +206,13 @@ function truthDenominator(): Held<Measured> {
  * `docs/tracker-owner-view.md` makes. Before this the publisher read the
  * reconciliation file alone, which carries none of those fields, and every
  * card rendered its unrecorded fallback with no buttons.
+ *
+ * PDC classification: `docs/tracker-working.csv`, the generated reconciliation
+ * and `lib/tracker/registry.mjs` are release-pinned SOFTWARE GOVERNANCE inputs.
+ * They may change only through a reviewed software/governance commit and do
+ * not claim that a civic source ran, changed, promoted, failed, or stayed
+ * fresh. They therefore remain distinct from mutable routine operational
+ * truth. No standing child writes them.
  */
 function decisionCards(): OwnerDecisionCard[] {
   let rows: Readonly<Record<string, string>>[];
@@ -282,87 +246,12 @@ function decisionCards(): OwnerDecisionCard[] {
  * **A CANDIDATE IS NAMED FROM THE RECORD, NEVER FROM A SLUG.** (ADM-12, the
  * 9.4.26 evening feedback.)
  *
- * The console renders candidacy keys (`…:anderson-jackie-o-donnell`) as the
- * office in words plus the person — and the person's name comes from the
- * committed candidate cards, keyed by the slug the key ends in. A slug cannot
- * give back "O'Donnell", so the page never tries; a slug not in this map
- * renders as the slug, honestly. The map is bounded to the hunts the cards
- * file records (a few hundred rows) and travels on the snapshot.
+ * Candidate display names are civic data. The legacy snapshot copy is retired:
+ * current names belong to the canonical candidate-profile projection and may
+ * not be republished into this operational snapshot as a second ledger.
  */
 function candidateNames(): Record<string, string> {
-  const path = join(ROOT, "data", "ballot", "candidate-cards-2026.json");
-  if (!existsSync(path)) return {};
-  try {
-    const parsed = JSON.parse(readFileSync(path, "utf8")) as {
-      hunts?: { key?: string; name?: string }[];
-      cards?: Record<string, { name?: string }>;
-    };
-    const names: Record<string, string> = {};
-    const take = (key: string | undefined, name: string | undefined) => {
-      if (typeof key !== "string" || typeof name !== "string" || name.trim() === "") return;
-      const slug = key.split(":").at(-1)?.trim().toLowerCase();
-      if (slug && !(slug in names)) names[slug] = name.trim();
-    };
-    for (const h of parsed.hunts ?? []) take(h.key, h.name);
-    for (const [key, card] of Object.entries(parsed.cards ?? {})) take(key, card?.name);
-    return names;
-  } catch (error) {
-    log(`could not read the candidate cards (${(error as Error).message}) — candidacy keys render by office and slug`);
-    return {};
-  }
-}
-
-/**
- * **THE MAP PROVIDER'S BILL, AS THE CONSOLE WILL SEE IT** (MAPQ-6, 2026-09-07).
- *
- * `pnpm maptiler:usage` asks MapTiler's analytics API with a server-side
- * service credential and writes the reading to `data/ops/maptiler-usage.json`.
- * This folds it onto the snapshot, exactly as the reader-suite runs and the
- * intake sweeps are folded on: a deployed Netlify bundle has no working tree,
- * so anything the console renders has to be published by a machine that does.
- *
- * A missing or unreadable file is NOT CONNECTED with the reason named — never
- * a zero, which on a quota panel would read as headroom.
- */
-function maptilerUsage(): OwnerSnapshot["maptiler"] {
-  const path = join(ROOT, "data", "ops", "maptiler-usage.json");
-  const notConnected = (says: string): OwnerSnapshot["maptiler"] => ({
-    formatVersion: MAPTILER_USAGE_FORMAT_VERSION,
-    collectedAt: NOW_ISO,
-    publisher: "pnpm owner:publish",
-    connection: "NOT_CONNECTED",
-    detail: says,
-    period: "current_billing_period",
-    since: null,
-    until: null,
-    allowance: null,
-    allowanceIsAssumed: true,
-    days: [],
-    provenance: [],
-    actors: null,
-  });
-
-  if (!existsSync(path)) {
-    return notConnected(
-      "NOT CONNECTED — no MapTiler usage reading has been taken on this machine. Run " +
-        "`pnpm maptiler:usage` with MAPTILER_SERVICE_TOKEN set. This is not a reading of zero.",
-    );
-  }
-  try {
-    const parsed = JSON.parse(readFileSync(path, "utf8")) as MapTilerUsageSnapshot;
-    if (typeof parsed?.connection !== "string" || !Array.isArray(parsed?.days)) {
-      return notConnected(
-        "NOT CONNECTED — data/ops/maptiler-usage.json is not a usage reading. A file we cannot " +
-          "read is a failed read, never an empty one.",
-      );
-    }
-    return parsed;
-  } catch (error) {
-    return notConnected(
-      `NOT CONNECTED — data/ops/maptiler-usage.json could not be read ` +
-        `(${(error as Error)?.name ?? "error"}). This is not a reading of zero.`,
-    );
-  }
+  return {};
 }
 
 /** Measured spend per Eastern calendar day over the trailing fortnight (ADM-17). */
@@ -426,12 +315,6 @@ interface CycleRecord {
   };
 }
 
-/** The newest cycle record, through the shared reader `pnpm pilot:health` also uses. */
-function latestCycle(): { record: CycleRecord; file: string } | null {
-  const newest = latestFreshnessCycle(ROOT);
-  return newest ? { record: newest.record as CycleRecord, file: newest.file } : null;
-}
-
 /**
  * The per-ZIP grid, or the named gap where it would be.
  *
@@ -448,52 +331,12 @@ function latestCycle(): { record: CycleRecord; file: string } | null {
  * measurement, which is the failure this whole module is built to refuse.
  */
 function zipRows(): Held<readonly OwnerZipRow[]> {
-  if (!readerRun) {
-    return gap("OURS", "No reader-suite run record exists yet, so there is no grid to show.");
-  }
-  const results = (readerRun as unknown as { results?: Array<Record<string, unknown>> }).results;
-  if (!Array.isArray(results)) {
-    return gap("OURS", "The newest reader-suite run record carries no results array.");
-  }
-  const zipOf = (r: Record<string, unknown>): string | null => {
-    const hit = String(r.instanceId ?? "").match(/\b(\d{5})\b/);
-    return hit ? hit[1] : null;
-  };
-  const attributed = results.filter((r) => zipOf(r) !== null);
-  if (attributed.length === 0) {
-    return gap(
-      "OURS",
-      `The newest reader-suite run, finished ${readerRun.finishedAt ?? "at an unrecorded time"}, records ${results.length} result(s) and ` +
-        "attributes none of them to a ZIP: instance ids are hashes, and the run record does not " +
-        "store the instances that carry the ZIP. We cannot break these results down by ZIP yet — " +
-        "that is a gap in what the suite RECORDS, not a finding about any ZIP.",
-    );
-  }
-  const byZip = new Map<string, OwnerZipRow>();
-  for (const r of attributed) {
-    const zip = zipOf(r) as string;
-    const verdict = (r.verdict ?? {}) as { kind?: string };
-    const row = byZip.get(zip) ?? {
-      zip,
-      green: 0,
-      red: 0,
-      notEvaluable: 0,
-      failureClasses: [] as string[],
-    };
-    const classes = new Set(row.failureClasses);
-    if (typeof r.failureClass === "string" && r.failureClass) classes.add(r.failureClass);
-    // Rebuilt rather than mutated: `OwnerZipRow`'s fields are `readonly`
-    // because a published snapshot is a reading taken at an instant, and a
-    // type that permits `row.green += 1` permits it after publication too.
-    byZip.set(zip, {
-      zip,
-      green: row.green + (verdict.kind === "GREEN" ? 1 : 0),
-      red: row.red + (verdict.kind === "RED" ? 1 : 0),
-      notEvaluable: row.notEvaluable + (verdict.kind === "GREEN" || verdict.kind === "RED" ? 0 : 1),
-      failureClasses: [...classes],
-    });
-  }
-  return held([...byZip.values()].sort((a, b) => (a.zip < b.zip ? -1 : 1)));
+  return gap(
+    "OURS",
+    "The ZIP-by-ZIP reader check is software certification. Its historical tracked run " +
+      "records are not live operational truth and this standing publisher will not read or " +
+      "republish them. A canonical exact-release certification projection is not wired here.",
+  );
 }
 
 /* ------------------------------------------------------------------ *
@@ -506,77 +349,25 @@ function intake(): {
   processed: Held<Measured>;
   unidentifiable: Held<Measured>;
 } {
-  const dir = join(ROOT, "data", "feedback", "sweeps");
-  const missing = gap<Measured>(
-    "OURS",
-    "No owner-intake sweep record has been committed, so nothing has been counted. The Drive " +
-      "folder may hold items we have not swept — that is a gap in our sweeping, not evidence " +
-      "that the folder is empty.",
-  );
-  if (!existsSync(dir)) {
-    return {
-      folder: gap("OURS", "No sweep record committed."),
-      found: missing,
-      processed: missing,
-      unidentifiable: missing,
-    };
-  }
-  const files = readdirSync(dir).filter((f) => f.endsWith(".json")).sort();
-  const newest = files.at(-1);
-  if (!newest) {
-    return {
-      folder: gap("OURS", "No sweep record committed."),
-      found: missing,
-      processed: missing,
-      unidentifiable: missing,
-    };
-  }
-  try {
-    const sweep = JSON.parse(readFileSync(join(dir, newest), "utf8")) as {
-      folder?: string;
-      items?: Array<{ disposition?: string }>;
-      filesInventoried?: unknown[];
-    };
-    const items = Array.isArray(sweep.items) ? sweep.items : [];
-    const total = items.length;
-    const unid = items.filter((i) => i.disposition === "UNIDENTIFIABLE").length;
-    const processed = items.filter((i) => i.disposition && i.disposition !== "UNIDENTIFIABLE").length;
-    const inventoried = Array.isArray(sweep.filesInventoried) ? sweep.filesInventoried.length : total;
-    return {
-      folder: held(String(sweep.folder ?? newest.replace(/\.json$/, ""))),
-      found: held(
-        measured(
-          total,
-          Math.max(total, inventoried),
-          "items identified in the sweep, out of the files inventoried in the folder",
-          `sweep record ${newest}`,
-        ),
-      ),
-      processed: held(
-        measured(
-          processed,
-          Math.max(total, processed),
-          "items given a disposition other than UNIDENTIFIABLE, out of the items found",
-          `sweep record ${newest}`,
-        ),
-      ),
-      unidentifiable: held(
-        measured(
-          unid,
-          Math.max(total, unid),
-          "items the sweep could not identify — a first-class disposition, never a skip",
-          `sweep record ${newest}`,
-        ),
-      ),
-    };
-  } catch {
-    return {
-      folder: gap("OURS", "The newest sweep record could not be read."),
-      found: missing,
-      processed: missing,
-      unidentifiable: missing,
-    };
-  }
+  /*
+   * `data/feedback/sweeps/*` is immutable engineering evidence of completed
+   * feedback audits. Selecting its lexically newest file and calling that the
+   * current intake state made a historical Git artifact look like a live
+   * operational reading. The permanent intake observer already appends exact
+   * production outcomes to ownerDigests and `/admin/feedback` consumes them;
+   * this legacy duplicate projection is therefore an explicit gap, not a
+   * second ledger and not a synthetic zero.
+   */
+  const says =
+    "Historical feedback-sweep files are engineering evidence, not the live intake authority. " +
+    "Current intake observations and history are read from the canonical control plane on the " +
+    "Admin feedback page.";
+  return {
+    folder: gap("OURS", says),
+    found: gap("OURS", says),
+    processed: gap("OURS", says),
+    unidentifiable: gap("OURS", says),
+  };
 }
 
 /* ------------------------------------------------------------------ *
@@ -668,7 +459,10 @@ function obligationsByState(reads: ControlPlaneReads | null): OwnerSnapshot["obl
     }));
 }
 
-function buildSnapshot(reads: ControlPlaneReads | null): OwnerSnapshot {
+function buildSnapshot(
+  reads: ControlPlaneReads | null,
+  maptiler: OwnerSnapshot["maptiler"],
+): OwnerSnapshot {
   const risk = cycle?.record.risk ?? {};
   const debtRows = typeof risk.debtRows === "number" ? risk.debtRows : null;
   const cost = reads
@@ -694,7 +488,7 @@ function buildSnapshot(reads: ControlPlaneReads | null): OwnerSnapshot {
     formatVersion: OWNER_SURFACE_FORMAT_VERSION,
     publishedAt: NOW_ISO,
     publishedFromSha: HEAD,
-    publisher: "pnpm owner:publish",
+    publisher: "pilot-runner/console-publisher",
 
     pilotGreen: rollup.green,
     contracts: rollup.readings.map((r) => ({
@@ -709,30 +503,20 @@ function buildSnapshot(reads: ControlPlaneReads | null): OwnerSnapshot {
             : gap<Measured>(
                 "OURS",
                 "The freshness contract is NOT_READY by construction while the scheduler is in " +
-                  "shadow: it has a risk reading, not a denominator it can be scored against.",
+                "shadow: it has a risk reading, not a denominator it can be scored against.",
               ),
       proofClass:
-        r.contract === "READER" && readerRun
-          ? String((readerRun as unknown as { proofClass?: string }).proofClass ?? "SESSION_MEASURED")
-          : "SESSION_MEASURED",
-      runSha:
-        r.contract === "READER"
-          ? (readerRun?.testedSha ?? null)
-          : r.contract === "TRUTH"
-            ? (controlRun?.testedSha ?? null)
-            : (cycle?.record.testedSha ?? null),
-      runAt:
-        r.contract === "READER"
-          ? (readerRun?.finishedAt ?? null)
-          : r.contract === "TRUTH"
-            ? (controlRun?.finishedAt ?? null)
-            : (cycle?.record.finishedAt ?? null),
+        r.contract === "FRESHNESS"
+          ? "CANONICAL_RUNTIME_RECEIPT"
+          : "NOT_PROJECTED_FROM_TRACKED_SOFTWARE_RUN",
+      runSha: r.contract === "FRESHNESS" ? (cycle?.record.testedSha ?? null) : null,
+      runAt: r.contract === "FRESHNESS" ? (cycle?.record.finishedAt ?? null) : null,
     })),
 
     decisionCards: cards,
     candidateNames: candidateNames(),
     spendByDay: spendByDay(reads),
-    maptiler: maptilerUsage(),
+    maptiler,
 
     obligationsByState: obligationsByState(reads),
 
@@ -799,22 +583,10 @@ function buildSnapshot(reads: ControlPlaneReads | null): OwnerSnapshot {
 /*
  * THE HEARTBEAT IS THE RUNNER'S TO WRITE, AND ONLY THE RUNNER'S (ADM-5,
  * 9.4.26). This publisher used to overwrite `pilot-runner` with beatAt = the
- * publish moment, so a hand-run `pnpm owner:publish` made a stopped runner
+ * publish moment, so the former hand-run publisher made a stopped runner
  * read ALIVE for ninety minutes. Liveness is derived from the beat; a beat
  * the runner did not write is a false liveness. It is not written here.
  */
-
-const digest: OwnerDigestRecord | null = cycle
-  ? {
-      formatVersion: OWNER_SURFACE_FORMAT_VERSION,
-      digestId: cycle.file.replace(/\.json$/, ""),
-      writtenAt: cycle.record.finishedAt ?? NOW_ISO,
-      headline: (cycle.record.digest ?? [])[0] ?? "no headline in this cycle record",
-      lines: cycle.record.digest ?? [],
-      cycleOk: true,
-      testedSha: cycle.record.testedSha ?? null,
-    }
-  : null;
 
 async function repositories(): Promise<ControlPlaneRepositories | null> {
   const override = arg("file-store");
@@ -833,6 +605,7 @@ async function repositories(): Promise<ControlPlaneRepositories | null> {
         "evidence about a different store than the claim is about. Refusing.",
     );
   }
+  if (!DRY_RUN) assertRuntimeAuthority({ capabilities: ["CONSOLE_PUBLISHER"] });
   return createPgRepositories(url, NOW_ISO);
 }
 
@@ -842,14 +615,39 @@ async function main(): Promise<void> {
 
   // Opened FIRST so the cost panel and the by-state deployment read the same
   // instant the snapshot is stamped with.
-  const repos = await repositories();
+  const repos = publisherRepos;
   if (repos) log(repos.describe());
   const reads = repos ? await readControlPlane(repos) : null;
-  const snapshot = buildSnapshot(reads);
+  const existing = repos ? await repos.ownerSnapshots.read(SNAPSHOT_ID) : null;
+  const maptilerCandidate = await collectMapTilerUsage({ nowIso: NOW_ISO });
+  const maptiler = retainMapTilerLastKnownGood({
+    candidate: maptilerCandidate,
+    previous: existing?.value.maptiler,
+  });
+  if (repos !== null && !DRY_RUN) {
+    const outcome = mapTilerUsageCollectionOutcome({
+      candidate: maptilerCandidate,
+      visible: maptiler,
+      finishedAt: new Date().toISOString(),
+      testedSha: HEAD,
+      host: process.env.COMPUTERNAME ?? process.env.HOSTNAME ?? "standing-runner",
+      provider: repos.describe(),
+      durable: repos.durable,
+    });
+    await appendMapTilerUsageCollectionDigest(repos, {
+      outcome,
+      lines: [
+        `Map provider automatic collection: ${outcome.disposition}.`,
+        `Provider attempt ${outcome.attempt.connection}; ${outcome.candidate.rows} candidate row(s); ` +
+          `visible measurement ${outcome.visibleMeasurement?.collectedAt ?? "UNKNOWN"}.`,
+        "The attempt is in the canonical append-only owner history; the current/LKG projection is the owner snapshot.",
+      ],
+    });
+  }
+  const snapshot = buildSnapshot(reads, maptiler);
 
   /* The cheapest place to catch an aggregate-only violation is before it is durable. */
   assertAggregateOnly(snapshot, "owner snapshot");
-  if (digest) assertAggregateOnly(digest, "owner digest");
 
   /*
    * RULING 159. Every count printed here carries its population, and a ZERO is
@@ -922,15 +720,10 @@ async function main(): Promise<void> {
 
   // The snapshot is a SINGLE aggregate that moves, so a put on an existing id
   // is a no-op — compare-and-set is the write that actually replaces it.
-  const existing = await repos.ownerSnapshots.read(SNAPSHOT_ID);
   if (existing === null) {
     await repos.ownerSnapshots.put(SNAPSHOT_ID, snapshot, NOW_ISO);
   } else {
     await repos.ownerSnapshots.compareAndSet(SNAPSHOT_ID, existing.revision, snapshot, NOW_ISO);
-  }
-
-  if (digest) {
-    await repos.ownerDigests.append(DIGEST_LOG_KEY, digest.digestId, digest, NOW_ISO);
   }
 
   /*
@@ -957,7 +750,7 @@ async function main(): Promise<void> {
 
   const decisions = await repos.ownerDecisions.read(DECISION_LOG_KEY);
   log(
-    `published: snapshot${digest ? ", digest" : " (no cycle record — no digest)"}; the heartbeat is the runner's own; ` +
+    `published: snapshot; ${canonicalCycle ? `canonical cycle ${canonicalCycle.outcome.cycleId}` : "no canonical cycle recorded"}; the heartbeat is the runner's own; ` +
       `${decisions.length} owner decision intent(s) on record`,
   );
 }

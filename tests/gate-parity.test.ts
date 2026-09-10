@@ -76,10 +76,12 @@ const NOT_A_GATE = [
    * The preflight itself is deliberately NOT here — it is a real check, and it
    * is declared in `PRECONDITIONS` so parity holds rather than being waived.
    */
-  'if [ "${{ steps.cost.outputs.cost }}" = "CHEAP" ]; then',
-  'echo "expensive=no-cheap" >> "$GITHUB_OUTPUT"',
+  'if [ -n "${{ steps.pr_tier.outputs.tier }}" ] && [ "${{ steps.preflight.outcome }}" != "success" ]; then',
   'elif [ "${{ steps.preflight.outcome }}" != "success" ]; then',
   'echo "expensive=no-preflight" >> "$GITHUB_OUTPUT"',
+  'elif [ "${{ steps.pr_tier.outputs.tier }}" = "draft" ]; then',
+  'echo "expensive=draft" >> "$GITHUB_OUTPUT"',
+  'elif [ "${{ steps.pr_tier.outputs.tier }}" = "full" ]; then',
   "else",
   'echo "expensive=yes" >> "$GITHUB_OUTPUT"',
   "fi",
@@ -90,29 +92,18 @@ const NOT_A_GATE = [
   'echo "    node scripts/preflight.mjs" >&2',
   "exit 1",
   /*
-   * RULING 278 — THE CLASSIFIER IS NOT A GATE, AND THE CHEAP PROOF IS NOT ONE
-   * EITHER. Both are named here rather than pattern-matched away, and both have
-   * a reason a reader can disagree with.
-   *
-   * `ci-cost.mjs` with no flag DECIDES WHAT RUNS. It never fails a commit — its
-   * every failure path answers FULL — so there is nothing for a local door to
-   * pre-run. `--attest` prints the receipt of what was skipped.
-   *
-   * `--prove` DOES run guards and DOES fail the job, and it is still not a
-   * local gate: it refuses outright on any commit classified FULL, and a
-   * session's own head is a pull request, which is always FULL. Putting it in
-   * `GATES` would make `pnpm gates` invoke a command that exits 1 by design on
-   * every tree a session ever has. What it runs is `CHEAP_PATH_PROOFS` — four
-   * of this repository's own test files, every one of which `pnpm test` (which
-   * IS a gate) already runs in full.
+   * Draft/full selection is workflow routing, not a gate. Its pure predicate is
+   * covered by tests/draft-pr-ci.test.ts and every unreadable input answers full.
    */
-  "node scripts/ci-cost.mjs",
-  "node scripts/ci-cost.mjs --attest=build",
-  "node scripts/ci-cost.mjs --attest=gates",
-  "node scripts/ci-cost.mjs --prove",
+  "node scripts/pr-ci-tier.mjs",
+  'echo "Draft preflight passed. This required build context still reports, while"',
+  'echo "the two production builds wait for the ready_for_review certification run."',
+  'echo "Draft certification completed preflight, install, lint, types, governance,"',
+  'echo "generated-state and state-holdings integrity. Browser and full-suite proof"',
+  'echo "run when this exact head receives ready_for_review."',
   /*
    * RULING 281 — THE TREE-EQUIVALENCE ADAPTER IS NOT A GATE EITHER, and it is
-   * here for exactly the reason `ci-cost.mjs` above is.
+   * here because workflow routing is not a local tree gate.
    *
    * `certified-tree.mjs` answers ONE question — is the tree on `main` the tree
    * that already passed? — and every path through it exits 0. It cannot fail a

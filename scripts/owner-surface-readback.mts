@@ -6,7 +6,7 @@
  * because what they assert is about a LIVE durable store:
  *
  *   - the runner's heartbeat and digest SHOWN equal its latest durable records
- *   - PILOT HEALTH on the page matches `pnpm pilot:health` for the same SHA
+ *   - PILOT HEALTH on the page matches the canonical published snapshot
  *
  * ## Why this reads through the PAGE's functions, not its own queries
  *
@@ -26,9 +26,11 @@ import {
   readDecisions,
   readDigests,
   readHeartbeat,
+  readMapTilerUsageDigests,
   readSnapshot,
 } from "../lib/control-plane/admin-data.ts";
 import { livenessOf, renderCacheObservation } from "../lib/control-plane/owner-surface.ts";
+import { projectMapTilerAttemptHistory, projectPanel } from "../lib/control-plane/maptiler/usage.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 
@@ -45,10 +47,11 @@ if (!opened.ok) {
 log(opened.repos.describe());
 log(`local HEAD ${headSha()?.slice(0, 8) ?? "unknown"}`);
 
-const [snapshot, heartbeat, digests, decisions, cache] = await Promise.all([
+const [snapshot, heartbeat, digests, maptilerDigests, decisions, cache] = await Promise.all([
   readSnapshot(opened.repos),
   readHeartbeat(opened.repos),
   readDigests(opened.repos),
+  readMapTilerUsageDigests(opened.repos),
   readDecisions(opened.repos),
   readCacheObservation(opened.repos),
 ]);
@@ -88,6 +91,46 @@ if (snapshot.kind !== "HELD") {
     ...s.obligationsByProvider.map((r) => r.count),
   ].filter((m) => typeof m.denominator !== "number" || m.contract.trim() === "");
   require_(bare.length === 0, `no number lost its denominator in the round trip (${bare.length} bare)`);
+
+  log("  MAP PROVIDER:");
+  if (!s.maptiler) {
+    require_(false, "the canonical snapshot carries no MapTiler collection outcome");
+  } else {
+    const map = projectPanel({ snapshot: s.maptiler });
+    log(`    ${map.readingState} · ${map.says}`);
+    if (map.latestAttemptSays) log(`    latest attempt: ${map.latestAttemptSays}`);
+    log(`    Reader-event comparison: ${map.actors?.state ?? "UNKNOWN"} · ${map.actors?.says ?? "not recorded"}`);
+    require_(
+      map.readingState !== "MEASURED_LKG" || map.latestAttemptSays !== null,
+      "a retained MapTiler LKG names the failed automatic attempt and retry",
+    );
+    require_(
+      map.readingState !== "UNKNOWN" || map.used === null,
+      "an unknown MapTiler reading cannot render a measured zero",
+    );
+    require_(map.actors !== null, "the Reader-event comparison is measured or explicitly UNKNOWN");
+  }
+}
+
+log("");
+log("MAP PROVIDER append-only attempt history as Admin reads it:");
+if (maptilerDigests.kind !== "HELD") {
+  require_(false, `no map-provider history: ${maptilerDigests.detail}`);
+} else {
+  const history = projectMapTilerAttemptHistory(maptilerDigests.value, new Date().toISOString());
+  for (const window of history.windows) {
+    log(
+      `  ${window.label}: ${window.attempts} attempt(s); ${window.promotedCurrent} promoted; ` +
+        `${window.retainedLkg} retained LKG; ${window.unknownNoLkg} unknown without LKG; ` +
+        `${window.inconsistent} inconsistent`,
+    );
+  }
+  const thirtyDays = history.windows.find((window) => window.id === "30d");
+  require_(
+    (thirtyDays?.attempts ?? 0) === history.attempts.length,
+    "Admin's exact map-provider rows equal its append-only 30-day attempt count",
+  );
+  require_(history.unplaced.length === 0, "every map-provider receipt has a usable non-future finish time");
 }
 
 /* ----------------------------------------------------------------- HEARTBEAT */

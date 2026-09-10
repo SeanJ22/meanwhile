@@ -19,7 +19,7 @@
  * ## Why a committed snapshot rather than a table
  *
  * It is the pattern this repository already serves vote-class records through.
- * `data/votes/votes-snapshot.json` holds 40 federal roll calls and 10,674
+ * The promoted federal vote projection holds the bounded roll-call window and
  * recorded positions; `lib/votes/snapshot.ts` reads it once per process and
  * `lib/ask/votes.ts` answers `HOW_DID_THEY_VOTE` out of it. The `meetings` table
  * in `lib/db/schema.ts` says so in its own doc block — *"the snapshot file

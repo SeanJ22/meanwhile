@@ -22,7 +22,7 @@ import { knownBodySubjectIds } from "@/lib/registry/server";
  *
  * ```
  *   subjectType   BODY | CANDIDATE          the two cards the pill appears on
- *   subjectId     must exist in committed data for its type
+ *   subjectId     must exist in its canonical production authority
  *   signal        WANT_THIS_SOONER          a fixed enum of one
  *   lat / lng     optional, for approximate location only
  * ```
@@ -112,7 +112,7 @@ export async function POST(request: Request) {
   }
 
   /*
-   * The subject must exist in committed data for its type. A missing store
+   * The subject must exist in its canonical production authority. A missing store
    * fails CLOSED — better to refuse a signal than to store one against a
    * subject nothing can render, which is a row no operational reader can act
    * on and therefore a row that is worse than absent.
@@ -121,7 +121,7 @@ export async function POST(request: Request) {
   try {
     known =
       submission.subjectType === "CANDIDATE"
-        ? getCandidateTargetIds()
+        ? await getCandidateTargetIds(submission.subjectId)
         : await knownBodySubjectIds();
   } catch {
     return Response.json({ error: "subject data unavailable" }, { status: 503 });

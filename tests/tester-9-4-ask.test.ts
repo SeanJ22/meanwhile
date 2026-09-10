@@ -14,6 +14,7 @@ import { synthesisPrompt } from "../lib/ask/synthesize.ts";
 import { readSnapshot } from "../lib/meetings/snapshot.ts";
 import { classifyAgendaPublication } from "../lib/ask/agenda-publication.ts";
 import { nameAReaderCanSay } from "../lib/routing/named-entity.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 // The canonical native runner strips TypeScript but does not compile TSX.
 // Compile only these actual reader leaves through the existing tsx runtime.
 const { AskAnswerRecords } = await tsImport("../components/ask/answer-records.tsx", import.meta.url) as typeof import("../components/ask/answer-records.tsx");
@@ -21,6 +22,7 @@ const { AskBodyConfirmation } = await tsImport("../components/ask/body-confirmat
 
 // Offline actual handler, with no model, database, acquisition or signal writes.
 for (const key of ["ANTHROPIC_API_KEY", "DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL"]) delete process.env[key];
+await installRegistryRuntimeFirstSeeds();
 const { POST, resetGroundedState } = await import("../app/api/ask/grounded/route.ts");
 const { GET: agendaGET } = await import("../app/api/agenda/route.ts");
 const VAIL = "ocd-division/country:us/state:az/school_district:vail_unified_district#board";

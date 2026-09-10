@@ -19,7 +19,6 @@ import {
 import { runnerStanding } from "../lib/control-plane/runner-standing.ts";
 import { installNeonCircuitBreaker, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { ModelTransportError, type ModelRequest, type ModelResponse } from "../lib/control-plane/scheduler/scout-executor.ts";
-import { runPromotionStep } from "../lib/control-plane/promotion/window.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { registerRouteTask, registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
@@ -327,16 +326,4 @@ test("Admin standing projection exposes ACTIVE, PAUSED, SCHEDULED BLACKOUT, and 
   assert.equal(runnerStanding(beat, [], NIGHT, broken.snapshot(NIGHT)).state, "CIRCUIT BROKEN");
   const paused = new FleetSafetyController({ now: NIGHT, costs: [], paused: true, clock: () => Date.parse(NIGHT) });
   assert.equal(runnerStanding(beat, [], NIGHT, paused.snapshot(NIGHT)).state, "PAUSED");
-});
-
-test("promotion remains structurally off for the standing safety proof", async () => {
-  let promoted = 0;
-  const result = await runPromotionStep({
-    gate: { promotionEnabled: false },
-    verdicts: [{ itemId: "staged-only", recordClass: "meetings", stage: "APPROVED_FOR_PROMOTION", verdict: "PROMOTE_WOULD", reason: "fixture" }],
-    promote: async () => { promoted += 1; },
-  });
-  assert.equal(promoted, 0);
-  assert.deepEqual(result.promoted, []);
-  assert.match(result.reason, /promotion is OFF/);
 });

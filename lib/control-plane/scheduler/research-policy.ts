@@ -98,8 +98,9 @@ export interface RunningScout {
  *
  * The admin page reads only the control plane, and a Netlify function cannot
  * read this host's files — so the relaunch proof `scripts/pilot-task.ps1
- * -Action prove-relaunch` writes to `data/ops/runner-relaunch-proof.json`
- * must TRAVEL: the cycle script reads the proof from its checkout and the
+ * -Action prove-relaunch` writes to ignored host-local
+ * `.runtime/ops/runner-relaunch-proof.json` and never to tracked Git state.
+ * The proof must TRAVEL: the cycle script reads it from the installed runtime and the
  * live trigger presence from the scheduled task, and records both here.
  * A historical Scout success never makes the system ACTIVE; a proven parent
  * relaunch is what `deriveLevel1` asks for.

@@ -185,6 +185,61 @@ export async function readDigests(
 }
 
 /**
+ * Every append-only MapTiler collection receipt, newest first.
+ *
+ * This deliberately does not reuse the bounded general digest view above. A
+ * busy civic-data runner can write more than {@link DIGEST_HISTORY_LIMIT}
+ * unrelated outcomes between two map-provider attempts; taking the newest
+ * twenty and filtering afterward would silently erase the map-provider's 7d
+ * and 30d history from Admin while the canonical rows still existed.
+ */
+export async function readMapTilerUsageDigests(
+  repos: ControlPlaneRepositories,
+): Promise<ReadOutcome<readonly OwnerDigestRecord[]>> {
+  try {
+    const rows = await repos.ownerDigests.read(DIGEST_LOG_KEY);
+    const maptiler = rows.filter(
+      (row) => row.runtimeOutcome?.kind === "MAPTILER_USAGE_COLLECTION",
+    );
+    if (maptiler.length === 0) {
+      return {
+        kind: "NOT_RECORDED",
+        detail: "The control plane is reachable and holds no append-only map-provider attempt yet.",
+      };
+    }
+    return { kind: "HELD", value: [...maptiler].reverse() };
+  } catch (error) {
+    return {
+      kind: "STORE_UNREACHABLE",
+      detail: `Reading the map-provider outcome history failed (${(error as Error)?.name ?? "error"}). We could not ask.`,
+    };
+  }
+}
+
+/** Newest append-only intake observation, independent of the bounded digest-history view. */
+export async function readLatestIntakeRuntimeDigest(
+  repos: ControlPlaneRepositories,
+): Promise<ReadOutcome<OwnerDigestRecord>> {
+  try {
+    const rows = await repos.ownerDigests.read(DIGEST_LOG_KEY);
+    const latest = [...rows].reverse().find(
+      (row) => row.runtimeOutcome?.kind === "INTAKE_RUNTIME_OBSERVATION",
+    );
+    return latest
+      ? { kind: "HELD", value: latest }
+      : {
+          kind: "NOT_RECORDED",
+          detail: "The control plane is reachable and holds no append-only intake-runtime observation yet.",
+        };
+  } catch (error) {
+    return {
+      kind: "STORE_UNREACHABLE",
+      detail: `Reading the intake-runtime outcome history failed (${(error as Error)?.name ?? "error"}). We could not ask.`,
+    };
+  }
+}
+
+/**
  * The canonical records the fleet view is projected from (ADM-7, 9.4.26):
  * every Attempt, WorkItem and RouteTask. Read together so the three agree
  * about one instant; a failed read is STORE_UNREACHABLE, never a zero fleet.

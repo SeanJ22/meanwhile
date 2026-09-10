@@ -8,25 +8,26 @@ import { divisionIdsForZipArea } from "../lib/ballot/zip-divisions.ts";
 import { divisionsAt, seatHoldersForDivision } from "../lib/registry/server.ts";
 import { representationForDivision } from "../lib/registry/representation.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
-import { getVotesSnapshot } from "../lib/votes/snapshot.ts";
-import { getStateVotesSnapshot } from "../lib/sources/legiscan/snapshot.ts";
+import { getVotesSnapshot, readFederalRollCallsProjection } from "../lib/votes/snapshot.ts";
+import { getStateVotesSnapshot, OFFICIAL_STATE_VOTE_SCOPES } from "../lib/sources/legiscan/snapshot.ts";
 import { getOutcomeSnapshot } from "../lib/outcomes/store.ts";
 import { meetingReaderRecords } from "../lib/meetings/reader-records.ts";
-import registry from "../lib/registry/registry.json" with { type: "json" };
 import { campaignMoneyApiAnswer } from "../lib/funding/campaign-money.ts";
 import { stateMoneySources } from "../lib/funding/state-snapshot.ts";
 import type { StateMoneySnapshot } from "../lib/funding/state-money.ts";
-import officialBridge from "../lib/funding/official-candidacies.json" with { type: "json" };
-import { prlProfileForSubject } from "../lib/sources/prl/snapshot.ts";
+import { getRegistryRuntimeReadModel, refreshRegistryRuntimeFromPromoted } from "../lib/registry/runtime-read-model.ts";
+import {
+  prlProfileForSubject,
+  readPrlProjection,
+} from "../lib/sources/prl/snapshot.ts";
 import type { PrlSnapshot } from "../lib/sources/prl/types.ts";
 import { unifiedCorpus } from "../lib/corpus/unified.ts";
 import { positionsFor, searchTerms } from "../lib/corpus/positions.ts";
 import { readerPositionsFor } from "../lib/corpus/reader-positions.ts";
-import { getFundingSnapshot } from "../lib/funding/snapshot.ts";
+import { getFundingSnapshot, refreshFundingFromPromoted } from "../lib/funding/snapshot.ts";
 import { officialActionsForTarget } from "../lib/officials/reader-actions.ts";
 import { executiveActionStore } from "../lib/officials/executive-actions.ts";
-import { ROSTER_FILES } from "../lib/coverage/artifacts.ts";
-import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
+import { PRODUCTION_OFFICEHOLDER_ROSTER_FILES } from "../lib/officials/roster-authority.ts";
 import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
 import { BODY_ROSTERS, ROSTER_READER_DISPOSITIONS, rosterGapsForDivision } from "../lib/registry/body-rosters.ts";
 import type { OfficeholderSet } from "../lib/officials/types.ts";
@@ -40,6 +41,16 @@ assert.match(new URL(base).hostname, /^(localhost|127\.0\.0\.1)$/,
 const head = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
 const buildId = readFileSync(".next/BUILD_ID", "utf8").trim();
 const evidence: unknown[] = [];
+const [fundingVersion, federalProjection, prlProjection] = await Promise.all([
+  refreshFundingFromPromoted(),
+  readFederalRollCallsProjection(),
+  readPrlProjection(),
+  refreshRegistryRuntimeFromPromoted(),
+]);
+void fundingVersion;
+if (federalProjection.kind !== "PROMOTED" && federalProjection.kind !== "BOOTSTRAP") throw new Error(federalProjection.detail);
+if (prlProjection.kind !== "PROMOTED") throw new Error(prlProjection.detail);
+const { registry, officialCandidacies: officialBridge } = getRegistryRuntimeReadModel();
 const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 async function get(path: string): Promise<Record<string, unknown>> {
   const response = await fetch(`${base}${path}`, { headers: { "x-wtp-synthetic-run": "reader-last-mile-routes" } });
@@ -77,9 +88,8 @@ for (const zip of ["85701", "85641", "07866", "03255"]) {
     evidence.push(await representation(division, zip));
   }
 }
-const rosterDivisions = ROSTER_FILES.flatMap((name) => {
-  const fips = /^officeholders-(\d{2})\.json$/.exec(name)?.[1];
-  const path = name === "officeholders-us.json" ? `lib/registry/${name}` : `data/states/${FIPS_TO_STATE[fips!].postal.toLowerCase()}/officials/${name}`;
+const rosterDivisions = PRODUCTION_OFFICEHOLDER_ROSTER_FILES.flatMap((name) => {
+  const path = `lib/registry/${name}`;
   return (JSON.parse(readFileSync(path, "utf8")) as OfficeholderSet).divisions.map((division) => division.ocdId);
 });
 const allDivisions = [...new Set([
@@ -108,7 +118,11 @@ await each(moneyTargets, async (target) => {
   return { surface: "funding/state-money", target, payload: actual, payloadSha256: hash(actual) };
 });
 const federal = getVotesSnapshot();
-const state = getStateVotesSnapshot();
+const stateSnapshots = OFFICIAL_STATE_VOTE_SCOPES.map((scope) => getStateVotesSnapshot(scope));
+const state = {
+  rollCalls: stateSnapshots.flatMap((snapshot) => snapshot.rollCalls),
+  positions: stateSnapshots.flatMap((snapshot) => snapshot.positions),
+};
 const memberDirectory = JSON.parse(readFileSync("data/congress-legislators/directory.json", "utf8")) as { byMember: Record<string, unknown> };
 const memberIds = [...new Set([...federal.positions.map((position) => position.officeholderId), ...state.positions.map((position) => position.officeholderId), ...Object.keys(memberDirectory.byMember).map((id) => `congress:${id}`)])].sort();
 floored("vote member controls", "both canonical position snapshots", memberIds.length, memberIds.length);
@@ -137,7 +151,7 @@ for (const sitting of getOutcomeSnapshot().sittings) {
   assert.equal(result.documentCount, rows(result.documents).length);
   evidence.push({ surface: "agenda/map", meetingId: sitting.meetingId, bodyId: sitting.bodyId, expected: expected.counts, returned: (result.records as typeof expected).counts, status: expected.status, payloadSha256: hash(result) });
 }
-const profiles = JSON.parse(readFileSync("data/prl/prl-profiles.json", "utf8")) as PrlSnapshot;
+const profiles: PrlSnapshot = prlProjection.value;
 await each(Object.keys(memberDirectory.byMember).sort(), async (bioguide) => {
   const member = `congress:${bioguide}`;
   const found = directoryFor(member); assert.ok(found, member);

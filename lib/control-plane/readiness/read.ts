@@ -45,7 +45,7 @@ export type ReadinessReadOutcome =
        * This state used to render `detail` at the top — a sentence naming a
        * derivation contract by its identifier — over three tiles, one of which
        * was `readiness/instrument-derived@1`, above a paragraph telling the
-       * owner to run `pnpm readiness:publish`. Every one of those is a machine
+       * standing runtime to retry its admitted console publisher. Every one of those is a machine
        * fact, and the owner is not a coder: what he needed to know is that the
        * summary is being rebuilt and that it is not his to fix.
        *
@@ -91,7 +91,7 @@ export type ReadinessReadOutcome =
   | { readonly kind: "UNAVAILABLE"; readonly detail: string };
 
 /** How a quarantined readiness record is cleared. One place, quoted by the page. */
-export const READINESS_REPUBLISH_COMMAND = "pnpm readiness:publish";
+export const READINESS_REPUBLISH_COMMAND = "automatic standing-runtime console publisher";
 export const READINESS_REPUBLISH_UNATTENDED =
   "the standing runner republishes the console after every cycle while it is running";
 

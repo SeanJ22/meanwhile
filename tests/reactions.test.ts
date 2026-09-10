@@ -21,8 +21,11 @@ import {
 } from "../lib/signal/reactions.ts";
 import { hashReactionKey, writeReaction } from "../lib/db/reactions.ts";
 import { getVoteIds } from "../lib/votes/snapshot.ts";
+import { initializeFederalVoteFirstSeed } from "./helpers/federal-vote-first-seed.ts";
 
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
+
+await initializeFederalVoteFirstSeed();
 
 /**
  * Reaction capture (P03) — the first user-writable surface, tested at the
@@ -179,7 +182,7 @@ test("validation: enums are closed sets, keys are shaped, targets are capped", (
 
 test("CANDIDATE reactions validate against the ballot files, and nothing ranks from them", async () => {
   const { getCandidateTargetIds } = await import("../lib/ballot/candidate-targets.ts");
-  const ids = getCandidateTargetIds();
+  const ids = await getCandidateTargetIds();
   // Denominator: 15 NJ + 41+6 NH candidacies + 29 AZ lineup nominee keys.
   assert.ok(ids.size >= 85, `expected the full candidate universe, got ${ids.size}`);
   assert.ok(ids.has("ballot-nj-morris:us-senate:booker"));
@@ -472,8 +475,8 @@ test("M63: the value is in the enum, restricted, and derivable from the data", a
   const { getCandidateTargetIds } = await import(
     "../lib/ballot/candidate-targets.ts"
   );
-  const uncontested = getSingleCandidateTargetIds();
-  const all = getCandidateTargetIds();
+  const uncontested = await getSingleCandidateTargetIds();
+  const all = await getCandidateTargetIds();
 
   // Stated with its denominator: if the committed ballots ever hold no
   // uncontested race, this must read as a fact and not as a broken join.
@@ -504,8 +507,8 @@ test("M63: the write path refuses the answer outside a one-candidate race", asyn
     "../lib/ballot/candidate-targets.ts"
   );
 
-  const uncontested = getSingleCandidateTargetIds();
-  const contested = [...getCandidateTargetIds()].find((id) => !uncontested.has(id));
+  const uncontested = await getSingleCandidateTargetIds();
+  const contested = [...await getCandidateTargetIds()].find((id) => !uncontested.has(id));
   assert.ok(contested, "no contested target to test the refusal against");
 
   const post = (targetId: string, reaction: string, targetType = "CANDIDATE") =>
@@ -545,7 +548,7 @@ test("M63: the write path accepts the answer in a one-candidate race", async () 
   const { getSingleCandidateTargetIds } = await import(
     "../lib/ballot/uncontested.ts"
   );
-  const target = [...getSingleCandidateTargetIds()][0];
+  const target = [...await getSingleCandidateTargetIds()][0];
   assert.ok(target, "no uncontested target to accept");
 
   const response = await POST(

@@ -1,7 +1,19 @@
-import { readerPositionsFor } from "@/lib/corpus/reader-positions";
+import { readerPositionsForKeys, type ReaderPositionAnswer } from "@/lib/corpus/reader-positions";
 import { ReaderPersonIdentityError } from "@/lib/identity/reader-person";
-import { unifiedCorpus } from "@/lib/corpus/unified";
+import { verifiedReaderPersonKeys } from "@/lib/identity/reader-person";
+import { unifiedCorpusFromHoldings } from "@/lib/corpus/unified";
 import type { StatementCorpus } from "@/lib/corpus/types";
+import type { CandidateCorpus } from "@/lib/candidates/corpus";
+import { getCandidateCorpus } from "@/lib/candidates/positions";
+import {
+  refreshAzBallotFromPromoted,
+  refreshCandidateCorpusFromPromoted,
+} from "@/lib/civic-data/manual-read-models";
+import { refreshOfficeholderStatementsFromPromoted } from "@/lib/corpus/data-plane";
+import { currentOfficeholderStatements } from "@/lib/corpus/data-plane";
+import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
+import { refreshRegistryRuntimeFromPromoted } from "@/lib/registry/runtime-read-model";
+import { getRegistryRuntimeReadModel } from "@/lib/registry/runtime-read-model";
 
 /**
  * GET /api/positions/<subject>/<topic> — D35's three answers, served.
@@ -37,16 +49,88 @@ export const runtime = "nodejs";
 /** A topic longer than this is not a topic. The cap is stated, not implied. */
 const MAX_TOPIC_CHARS = 120;
 
-function corpus(): StatementCorpus {
-  // ITEM 13 (2026-08-19): the UNION of both statement stores.
-  //
-  // This route used to read  alone, which is
-  // keyed by OFFICEHOLDER id — so every candidate whose words live in the
-  // candidate corpus was absent from the index, and the search answered
-  // "we have not collected anything they have published" four inches below
-  // that candidate's published words.  carries the
-  // full diagnosis.
-  return unifiedCorpus();
+export interface PositionHoldingReaders {
+  readonly candidateCorpus: () => Promise<CandidateCorpus>;
+  readonly officeholderStatements: () => Promise<StatementCorpus>;
+  readonly identityKeys: (subject: string) => Promise<string[]>;
+}
+
+export type PositionHoldingSettlement =
+  | { readonly kind: "ANSWER"; readonly answer: ReaderPositionAnswer; readonly holdingStatus: "HELD" | "PARTIAL"; readonly unavailableAuthorities: string[] }
+  | { readonly kind: "IDENTITY_UNRESOLVED"; readonly error: ReaderPersonIdentityError }
+  | { readonly kind: "HOLDING_UNAVAILABLE"; readonly unavailableAuthorities: string[] };
+
+async function currentPositionIdentityKeys(subject: string): Promise<string[]> {
+  // The registry is the identity graph. Only after it is held do we inspect
+  // the exact requested relationship and open its supporting authority.
+  await refreshRegistryRuntimeFromPromoted();
+  const related = getRegistryRuntimeReadModel().officialCandidacies.rows.filter((row) =>
+    row.holder.id === subject || row.candidacy?.candidacyId === subject,
+  );
+  const needsFederal = subject.startsWith("congress:")
+    || related.some((row) => row.holder.authority === "FEDERAL_DIRECTORY");
+  const needsAz = subject.startsWith("ballot-az-")
+    || subject.startsWith("statewide:az/")
+    || related.some((row) => row.candidacy?.candidacyId.startsWith("ballot-az-"));
+  if (needsFederal) await refreshFederalDirectoryFromPromoted();
+  if (needsAz) await refreshAzBallotFromPromoted();
+  return verifiedReaderPersonKeys(subject);
+}
+
+const defaultReaders: PositionHoldingReaders = {
+  candidateCorpus: async () => {
+    await refreshCandidateCorpusFromPromoted();
+    return getCandidateCorpus();
+  },
+  officeholderStatements: async () => {
+    await refreshOfficeholderStatementsFromPromoted();
+    return currentOfficeholderStatements();
+  },
+  identityKeys: currentPositionIdentityKeys,
+};
+
+/** Settle independent corpora and exact-target identity without false absence. */
+export async function settlePositionHoldingAnswer(
+  subject: string,
+  topic: string,
+  readers: PositionHoldingReaders = defaultReaders,
+): Promise<PositionHoldingSettlement> {
+  const [candidateResult, statementResult, identityResult] = await Promise.allSettled([
+    Promise.resolve().then(() => readers.candidateCorpus()),
+    Promise.resolve().then(() => readers.officeholderStatements()),
+    Promise.resolve().then(() => readers.identityKeys(subject)),
+  ]);
+  if (identityResult.status === "rejected" && identityResult.reason instanceof ReaderPersonIdentityError) {
+    return { kind: "IDENTITY_UNRESOLVED", error: identityResult.reason };
+  }
+  const unavailableAuthorities: string[] = [];
+  if (candidateResult.status === "rejected") unavailableAuthorities.push("CANDIDATE_PUBLICATION");
+  if (statementResult.status === "rejected") unavailableAuthorities.push("OFFICEHOLDER_STATEMENT");
+  if (identityResult.status === "rejected") unavailableAuthorities.push("PERSON_IDENTITY");
+  if (candidateResult.status === "rejected" && statementResult.status === "rejected") {
+    return { kind: "HOLDING_UNAVAILABLE", unavailableAuthorities };
+  }
+  const corpus = unifiedCorpusFromHoldings({
+    candidateCorpus: candidateResult.status === "fulfilled" ? candidateResult.value : undefined,
+    officeholderStatements: statementResult.status === "fulfilled" ? statementResult.value : undefined,
+  });
+  const answer = readerPositionsForKeys(
+    subject,
+    topic,
+    corpus,
+    identityResult.status === "fulfilled" ? identityResult.value : [subject],
+  );
+  // A partial index can prove a passage it actually holds, but it cannot prove
+  // that nothing matched or that nothing has been collected.
+  if (unavailableAuthorities.length > 0 && answer.kind !== "MATCHED") {
+    return { kind: "HOLDING_UNAVAILABLE", unavailableAuthorities };
+  }
+  return {
+    kind: "ANSWER",
+    answer,
+    holdingStatus: unavailableAuthorities.length ? "PARTIAL" : "HELD",
+    unavailableAuthorities,
+  };
 }
 
 export async function GET(
@@ -61,23 +145,20 @@ export async function GET(
     return Response.json({ error: "subject and topic are required" }, { status: 400 });
   }
 
-  let answer;
-  try {
-    answer = readerPositionsFor(subject, topic, corpus());
-  } catch (error) {
-    if (error instanceof ReaderPersonIdentityError) return Response.json({ error: error.message, holdingStatus: "IDENTITY_UNRESOLVED" }, { status: 409 });
-    // A failed read is reported as a failed read. It is never rendered as an
-    // absence — "we have not collected this" would be a claim about a person
-    // made because a file would not open.
-    return Response.json(
-      { error: "the statement corpus could not be read" },
-      { status: 503 },
-    );
+  const settled = await settlePositionHoldingAnswer(subject, topic);
+  if (settled.kind === "IDENTITY_UNRESOLVED") {
+    return Response.json({ error: settled.error.message, holdingStatus: "IDENTITY_UNRESOLVED" }, { status: 409 });
   }
+  if (settled.kind === "HOLDING_UNAVAILABLE") {
+    return Response.json({ error: "the statement corpus could not be read", holdingStatus: "HOLDING_UNAVAILABLE", unavailableAuthorities: settled.unavailableAuthorities }, { status: 503 });
+  }
+  const { answer } = settled;
 
   return Response.json(
     {
       ...answer,
+      holdingStatus: settled.holdingStatus,
+      unavailableAuthorities: settled.unavailableAuthorities,
       // Stated N equals rendered rows, and the denominator rides with it.
       totalMatches: answer.passages.length,
     },

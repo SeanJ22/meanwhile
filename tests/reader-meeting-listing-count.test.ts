@@ -10,6 +10,9 @@ import { groupByVenue } from "../lib/meetings/venues.ts";
 import { renderedSignature, updateMarkerIcon } from "../lib/map/marker-pool.ts";
 import { applyFilters } from "../lib/state/derive.ts";
 import { INITIAL_STATE } from "../lib/state/defaults.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 test("all current ambiguous listing pairs survive scope filtering without becoming distinct-event counts", () => {
   const snapshot = readSnapshot(); assert.ok(snapshot);
@@ -59,8 +62,10 @@ test("actual badge, stats, overlay and venue panel render every ambiguous listin
     import { MeetingListingNotice } from './components/map/meeting-listing-notice.tsx';
     import { readSnapshot } from './lib/meetings/snapshot.ts';
     import { canonicalBodyIdentity } from './lib/ask/body-identity.ts';
+    import { installRegistryRuntimeFirstSeeds } from './tests/helpers/registry-runtime-first-seed.ts';
     import { meetingListingIdentity } from './lib/meetings/listing-identity.ts';
     import { groupByVenue } from './lib/meetings/venues.ts';
+    await installRegistryRuntimeFirstSeeds();
     const snapshot=readSnapshot(), identity=meetingListingIdentity(snapshot.meetings,canonicalBodyIdentity), results=[];
     for(const group of identity.groups){
       const meetings=snapshot.meetings.filter(row=>group.sourceIds.includes(row.id)),venues=groupByVenue(meetings,identity);

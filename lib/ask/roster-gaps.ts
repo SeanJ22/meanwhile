@@ -1,4 +1,4 @@
-import { BODY_ROSTERS, rosterGapForBody } from "../registry/body-rosters.ts";
+import { currentBodyRosters, rosterGapForBody } from "../registry/body-rosters.ts";
 import type { AskContact } from "./contacts.ts";
 import type { EvidenceGap, EvidenceRecord, EvidenceSubject } from "./evidence.ts";
 
@@ -10,7 +10,7 @@ export function rosterGapEvidenceFor(subject: EvidenceSubject | null, contacts: 
   if (!subject) return { records, gaps, denominators };
   const ids = new Set([...canonicalOfficialIds, ...contacts.filter((contact) => contact.basis !== "READER_REPRESENTATIVE").map((contact) => contact.id.startsWith("office:") ? contact.id.slice(7) : contact.id)]);
   const bodies = new Set(subject.kind === "BODY" ? [subject.id] : []);
-  for (const roster of BODY_ROSTERS) if (roster.members.some((member) => ids.has(member.id))) bodies.add(roster.bodyId);
+  for (const roster of currentBodyRosters()) if (roster.members.some((member) => ids.has(member.id))) bodies.add(roster.bodyId);
   for (const bodyId of bodies) {
     const gap = rosterGapForBody(bodyId);
     if (!gap) continue;

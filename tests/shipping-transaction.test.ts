@@ -22,7 +22,7 @@ import {
   openTransaction,
   recordCertification,
   recordMerge,
-  recordObservation,
+  recordReleaseObservation,
   reopenFrozen,
   stageAtLeast,
   type CertificationRecord,
@@ -36,6 +36,7 @@ import {
 } from "../lib/control-plane/shipping/amplification.ts";
 
 const NOW = "2026-09-07T18:00:00.000Z";
+const MERGED_SHA = "dddddddddddddddddddddddddddddddddddddddd";
 
 const GREEN_LOCAL = { green: true, named: ["test", "lint", "tsc", "governance:check"] };
 
@@ -246,15 +247,6 @@ function incidentTransaction(): ShippingTransaction {
       endedAt: "2026-09-07T16:42:00.000Z",
       runnerMinutes: 12,
     }),
-    /* #808 — the observer's own commit, cheap by RULING 278. */
-    cert({
-      runId: "808",
-      kind: "CHEAP_ATTESTATION",
-      sha: INCIDENT_2026_09_07.observerSha,
-      startedAt: "2026-09-07T18:15:00.000Z",
-      endedAt: "2026-09-07T18:17:00.000Z",
-      runnerMinutes: 2,
-    }),
   ];
   for (const record of runs) txn = recordCertification(txn, record);
   /*
@@ -266,11 +258,11 @@ function incidentTransaction(): ShippingTransaction {
   return txn;
 }
 
-test("the 2026-09-07 incident scores FOUR full certifications and is over budget", () => {
+test("the 2026-09-07 software incident scores three completed full certifications and is over budget", () => {
   const reading = readAmplification(incidentTransaction());
   assert.equal(reading.fullCertifications, 3, "three FULL runs completed (#805, #806, #807)");
   assert.equal(reading.supersededCertifications, 1, "#804 was cancelled mid-flight");
-  assert.equal(reading.cheapAttestations, 1, "#808 took the RULING 278 cheap path");
+  assert.equal(reading.cheapAttestations, 0, "the retired #808 runtime Git hop is not a software attestation");
   assert.equal(reading.withinBudget, false, "the incident must not read as within budget");
   assert.ok(
     reading.fullCertifications > FULL_CERTIFICATION_BUDGET,
@@ -294,7 +286,7 @@ test("owner wait is measured from the first certification start to merge-ready",
   const reading = readAmplification(incidentTransaction());
   /* 15:45 (#804 starts) -> 16:05 (#805, the first green FULL, ends) = 20 min. */
   assert.equal(reading.ownerWaitMinutes, 20);
-  assert.equal(reading.runnerMinutes, 47);
+  assert.equal(reading.runnerMinutes, 45);
 });
 
 test("a certification beyond the first with a REASON is not a defect", () => {
@@ -332,43 +324,82 @@ test("the repaired transaction: one full certification, one attestation, no defe
     cert({
       runId: "807",
       kind: "TREE_EQUIVALENCE_ATTESTATION",
-      sha: "mmmm333",
+      sha: MERGED_SHA,
       tree: "tree-aaaa",
       runnerMinutes: 1,
     }),
   );
-  const next = recordMerge(txn, { sha: "mmmm333", tree: "tree-aaaa" });
+  const next = recordMerge(txn, { sha: MERGED_SHA, tree: "tree-aaaa" });
   assert.equal(isRefusal(next), false);
   txn = next as ShippingTransaction;
 
-  /* The observer's bookkeeping commit, cheap by RULING 278. */
-  txn = recordCertification(
-    txn,
-    cert({ runId: "808", kind: "CHEAP_ATTESTATION", sha: "oooo444", runnerMinutes: 2 }),
-  );
-  txn = recordObservation(txn, {
+  /* The observer appends a canonical receipt and creates no Git commit/run. */
+  const observed = recordReleaseObservation(txn, {
     producer: "post-deploy-integrity",
-    sha: "oooo444",
+    subjectSha: MERGED_SHA,
+    receiptId: "cp-release-receipt-1",
     now: "2026-09-07T19:00:00.000Z",
   });
+  assert.equal(isRefusal(observed), false);
+  txn = observed as ShippingTransaction;
 
   const reading = readAmplification(txn);
   assert.equal(reading.fullCertifications, 1, "FCP-9F's closure target: one full certification");
-  assert.equal(reading.cheapAttestations, 2, "the tree-equivalence attestation and the observer's");
+  assert.equal(reading.cheapAttestations, 1, "only the tree-equivalence attestation remains");
   assert.equal(reading.supersededCertifications, 0);
   assert.deepEqual(reading.defects, []);
   assert.equal(reading.withinBudget, true);
-  assert.equal(reading.postShipCommits, 1);
+  assert.equal(reading.releaseObservations, 1);
   assert.equal(txn.stage, "OBSERVED");
 });
 
+test("a release observation requires the merged exact head and a new durable receipt", () => {
+  const beforeMerge = recordReleaseObservation(frozen(), {
+    producer: "post-deploy-integrity",
+    subjectSha: MERGED_SHA,
+    receiptId: "receipt-before-merge",
+    now: NOW,
+  });
+  assert.equal(isRefusal(beforeMerge), true);
+
+  let txn = recordCertification(frozen(), cert());
+  const merged = recordMerge(txn, { sha: MERGED_SHA, tree: "tree-aaaa" });
+  assert.equal(isRefusal(merged), false);
+  txn = merged as ShippingTransaction;
+
+  for (const input of [
+    { producer: "post-deploy-integrity", subjectSha: "e".repeat(40), receiptId: "r1", now: NOW },
+    { producer: "post-deploy-integrity", subjectSha: "short", receiptId: "r2", now: NOW },
+    { producer: "", subjectSha: MERGED_SHA, receiptId: "r3", now: NOW },
+    { producer: "post-deploy-integrity", subjectSha: MERGED_SHA, receiptId: "", now: NOW },
+  ]) {
+    assert.equal(isRefusal(recordReleaseObservation(txn, input)), true);
+  }
+
+  const first = recordReleaseObservation(txn, {
+    producer: "post-deploy-integrity",
+    subjectSha: MERGED_SHA,
+    receiptId: "receipt-1",
+    now: NOW,
+  });
+  assert.equal(isRefusal(first), false);
+  assert.equal(isRefusal(recordReleaseObservation(first as ShippingTransaction, {
+    producer: "post-deploy-integrity",
+    subjectSha: MERGED_SHA,
+    receiptId: "receipt-1",
+    now: NOW,
+  })), true, "a duplicate receipt cannot masquerade as a second observation");
+});
+
 test("the incident's own repair table names what each fix removes, and what survives", () => {
-  assert.deepEqual([...INCIDENT_2026_09_07.irreducible], ["806", "808"]);
+  assert.deepEqual([...INCIDENT_2026_09_07.irreducible], ["806"]);
+  assert.deepEqual([...INCIDENT_2026_09_07.retiredRuntimeFeedback], ["808"]);
   assert.equal(Object.keys(INCIDENT_2026_09_07.repairs).length, 2);
   assert.equal(
     INCIDENT_2026_09_07.runs.length -
       Object.keys(INCIDENT_2026_09_07.repairs).length -
-      INCIDENT_2026_09_07.irreducible.length,
+      INCIDENT_2026_09_07.irreducible.length -
+      INCIDENT_2026_09_07.retiredRuntimeFeedback.length,
     1,
     "#804 is the cancelled run: the freeze removes the push that superseded it",
   );

@@ -1,4 +1,4 @@
-import { BODY_ROSTERS } from "../registry/body-rosters.ts";
+import { currentBodyRosters } from "../registry/body-rosters.ts";
 import { normalizeName } from "../routing/exact-name.ts";
 import { formatDateLong } from "../text/format-date.ts";
 import {
@@ -454,7 +454,7 @@ export function localFinanceEvidenceFor(subject: EvidenceSubject, canonicalOffic
     const coveredBodyIds = new Set(Object.values(REGISTER_OFFICE_TO_BODY_ID));
     const officialIds = new Set(canonicalOfficialIds);
     const seats = new Map<string, { bodyId: string; bodyName: string }>();
-    for (const roster of BODY_ROSTERS) {
+    for (const roster of currentBodyRosters()) {
       if (!coveredBodyIds.has(roster.bodyId)) continue;
       for (const member of roster.members) {
         if (officialIds.has(member.id)) {

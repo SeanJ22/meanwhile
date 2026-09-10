@@ -17,7 +17,7 @@ delete process.env.ANTHROPIC_API_KEY;
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
 const { POST, resetGroundedState } = await import("../../app/api/ask/grounded/route.ts");
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
-const sourcePaths = ["app/api/ask/grounded/route.ts", "lib/ask/statements.ts", "lib/ask/synthesize.ts", "lib/ask/subject.ts", "lib/ask/resolve.ts", "lib/ask/ballot-inventory.ts", "lib/ask/server-sources.ts", "lib/funding/campaign-money.ts", "lib/funding/official-candidacies.json", "lib/corpus/unified.ts", "lib/corpus/positions.ts", "lib/corpus/reader-positions.ts", "lib/identity/reader-person.ts", "data/corpus/statements.json", "data/candidates/corpus-2026.json"];
+const sourcePaths = ["app/api/ask/grounded/route.ts", "lib/ask/statements.ts", "lib/ask/synthesize.ts", "lib/ask/subject.ts", "lib/ask/resolve.ts", "lib/ask/ballot-inventory.ts", "lib/ask/server-sources.ts", "lib/funding/campaign-money.ts", "lib/registry/runtime-data-plane.ts", "lib/registry/runtime-read-model.ts", "lib/corpus/data-plane.ts", "lib/corpus/statement-identity-transfer.ts", "lib/corpus/fixtures/statement-identity-first-seed-v1.json", "lib/corpus/unified.ts", "lib/corpus/positions.ts", "lib/corpus/reader-positions.ts", "lib/identity/reader-person.ts", "data/corpus/statements.json", "data/candidates/corpus-2026.json"];
 const sourceHashes = sourcePaths.map((path) => ({ path, sha256: hash(readFileSync(path, "utf8")) }));
 const canonicalBallot = new Map<string, BallotSubjectRecord>();
 for (const { source } of BALLOT_SOURCES) {

@@ -31,7 +31,6 @@ import type {
 
 import { fetchEvents, fetchEventItems } from "./client.ts";
 import {
-  findClient,
   findVenue,
   isPlaceless,
   LEGISTAR_CLIENTS,
@@ -275,6 +274,7 @@ export interface NormalizeDrops {
 export function normalizeWithDrops(
   raw: LegistarEventWithClient[],
   now: Date = new Date(),
+  clients: readonly LegistarClient[] = LEGISTAR_CLIENTS,
 ): Accounted<{
   meetings: Meeting[];
   drops: NormalizeDrops;
@@ -302,7 +302,7 @@ export function normalizeWithDrops(
   let keptButPlaceless = 0;
 
   for (const { event, slug, collectedAt, items } of raw) {
-    const client = findClient(slug);
+    const client = clients.find((candidate) => candidate.slug === slug);
     if (!client) {
       drops.notConfigured++;
       continue;
@@ -507,10 +507,13 @@ export function toAgendaItems(items: LegistarEventItem[]): AgendaItem[] {
   }));
 }
 
-export const legistarSource: MeetingSource<LegistarEventWithClient> = {
-  name: SOURCE_NAME,
+export function makeLegistarSource(
+  clients: readonly LegistarClient[] = LEGISTAR_CLIENTS,
+): MeetingSource<LegistarEventWithClient> {
+  return {
+    name: SOURCE_NAME,
 
-  async fetch(query: MeetingQuery): Promise<LegistarEventWithClient[]> {
+    async fetch(query: MeetingQuery): Promise<LegistarEventWithClient[]> {
     const now = new Date();
     const from = isoDate(new Date(now.getTime() - WINDOW_BACK_DAYS * 86_400_000));
     const to = isoDate(new Date(now.getTime() + WINDOW_FORWARD_DAYS * 86_400_000));
@@ -519,13 +522,15 @@ export const legistarSource: MeetingSource<LegistarEventWithClient> = {
 
     // Serialized across clients as well as within one. This loop is the whole
     // reason the adapter is polite: nothing here runs concurrently.
-    for (const client of LEGISTAR_CLIENTS) {
+    for (const client of clients) {
       // Skip a client with no venue inside the query radius before spending a
       // request on it. Venue coordinates are the only geography the adapter
       // has, and they are known locally.
       if (!withinRadius(client, query)) continue;
 
-      const events = await fetchEvents<LegistarEvent>(client.slug, { from, to });
+      const events = await fetchEvents<LegistarEvent>(client.slug, { from, to }, {
+        signal: query.signal,
+      });
       const collectedAt = new Date().toISOString();
 
       for (const event of events) {
@@ -533,7 +538,7 @@ export const legistarSource: MeetingSource<LegistarEventWithClient> = {
           event,
           slug: client.slug,
           collectedAt,
-          items: await readAgendaItems(client.slug, event.EventId),
+          items: await readAgendaItems(client.slug, event.EventId, query.signal),
         });
       }
     }
@@ -541,17 +546,21 @@ export const legistarSource: MeetingSource<LegistarEventWithClient> = {
     return collected;
   },
 
-  normalize(raw, now: Date = new Date()): Meeting[] {
-    return normalizeWithDrops(raw, now).meetings;
-  },
+    normalize(raw, now: Date = new Date()): Meeting[] {
+      return normalizeWithDrops(raw, now, clients).meetings;
+    },
 
-  async upsert(meetings: Meeting[]) {
+    async upsert(meetings: Meeting[]) {
     // Still no tables — lib/db/schema.ts is `export {}`. Reporting these as
     // updated rather than inserted keeps the same honest lie the mock tells,
     // and persistence lands with the Phase 5 schema.
-    return { inserted: 0, updated: meetings.length };
-  },
-};
+      return { inserted: 0, updated: meetings.length };
+    },
+  };
+}
+
+/** Compatibility default; its membership is itself derived from SOURCE_WIRING. */
+export const legistarSource: MeetingSource<LegistarEventWithClient> = makeLegistarSource();
 
 /**
  * Read one event's agenda items, or say honestly that we did not (D19, g10).
@@ -571,9 +580,10 @@ export const legistarSource: MeetingSource<LegistarEventWithClient> = {
 async function readAgendaItems(
   slug: string,
   eventId: number,
+  signal?: AbortSignal,
 ): Promise<LegistarEventItem[] | null> {
   try {
-    return await fetchEventItems<LegistarEventItem>(slug, eventId);
+    return await fetchEventItems<LegistarEventItem>(slug, eventId, { signal });
   } catch (error) {
     console.warn(
       `  legistar: agenda items unavailable for ${slug}/${eventId} — ${error}; ` +

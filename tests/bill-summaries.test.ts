@@ -4,6 +4,9 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { allBillSummaries } from "../lib/votes/bill-summaries.ts";
+import { initializeFederalVoteFirstSeed } from "./helpers/federal-vote-first-seed.ts";
+
+await initializeFederalVoteFirstSeed();
 
 /**
  * The curated bill summaries (item 4, 2026-08-16) — the measure-summaries

@@ -1,45 +1,30 @@
 import { existsSync, readFileSync } from "node:fs";
-import * as fs from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
-import { ROSTER_FILES } from "../coverage/artifacts.ts";
-import { rosterPath } from "./runtime-paths.ts";
 
 export interface ReaderTraceRequirement { route: string; loader: string; files: string[] }
 /** Input contracts, independently checked against Next's emitted deployment manifests. */
 export function readerTraceRequirements(root: string): ReaderTraceRequirement[] {
-  const { globSync } = fs as typeof fs & { globSync(pattern: string, options: { cwd: string }): string[] };
-  const paths = (pattern: string) => [...globSync(pattern, { cwd: root })].map((p) => p.replaceAll("\\", "/")).sort();
   const resolver = "data/derived/resolver-geometry.json";
   const geometry = JSON.parse(readFileSync(join(root, resolver), "utf8")) as { files: string[] };
-  const registry = [resolver, ...geometry.files, ...ROSTER_FILES.map(rosterPath), "lib/registry/registry.json", "lib/registry/official-photos.json", "data/states/az/geo/body-territories.geojson"];
-  const money = paths("data/states/*/funding/state-money-??-????.json");
-  if (money.length === 0 || geometry.files.length === 0) throw new Error("Reader trace denominator is empty");
-  const ballot = ["data/states/az/ballot/az-pima-2026.json", "data/states/nj/ballot/nj-morris-2026.json", "data/states/nh/ballot/nh-merrimack-2026.json", "data/states/az/ballot/az-general-lineup-2026.json", "data/ballot/candidate-cards-2026.json", "data/ballot/candidate-links-2026.json"];
-  const identity = ["data/states/az/identity/az-2026-candidate-registry.json", "data/states/az/identity/az-2026-certified-lineup-reconciliation.json"];
-  const corpus = ["data/candidates/corpus-2026.json", "data/corpus/statements.json"];
-  const votes = ["data/votes/votes-snapshot.json", "data/votes/state-votes-snapshot.json", "data/votes/key-votes-snapshot.json", "data/votes/key-vote-positions.json"];
-  const outcome = ["data/states/az/outcomes/legistar-outcomes.json"];
+  const staticGeography = [...new Set([
+    resolver,
+    ...geometry.files,
+    "data/states/az/geo/body-territories.geojson",
+  ])];
+  if (geometry.files.length === 0) throw new Error("Reader trace denominator is empty");
+  const zipArea = [
+    "data/derived/zip-coverage-tiers-runtime.json",
+    "data/derived/zip-division-ids.json",
+  ];
   return [
-    ...["api/meetings/route", "api/representation/[...division]/route", "api/votes/route", "api/voting-sites/route", "api/ask/grounded/route", "ballot/page", "about-area/page"].map((route) => ({ route, loader: "lib/registry/server.ts", files: registry })),
-    ...["ballot/page", "api/funding/[target]/route", "api/ask/grounded/route"].map((route) => ({ route, loader: "lib/funding/campaign-money.ts", files: [...money, ...identity, ...ROSTER_FILES.map(rosterPath), "data/fec/fec-2026.json"] })),
-    ...["ballot/page", "api/ask/grounded/route"].map((route) => ({ route, loader: "lib/ballot/registry.ts", files: [...ballot, "data/derived/zip-division-ids.json"] })),
-    ...["ballot/page", "api/ask/grounded/route"].map((route) => ({ route, loader: "lib/ballot/analyses.ts", files: ["data/states/az/ballot/az-analyses-2026.json"] })),
-    ...["api/meetings/route", "api/agenda/route", "api/ask/grounded/route", "api/ask/agenda/route"].map((route) => ({ route, loader: "lib/meetings/snapshot.ts", files: ["data/meetings-snapshot.json"] })),
-    ...["api/agenda/route", "api/ask/grounded/route"].map((route) => ({ route, loader: "lib/outcomes/store.ts", files: outcome })),
-    ...["api/positions/[subject]/[topic]/route", "api/ask/grounded/route"].map((route) => ({ route, loader: "lib/corpus/unified.ts", files: corpus })),
-    { route: "api/positions/[subject]/[topic]/route", loader: "lib/identity/reader-person.ts", files: [...identity, ...ROSTER_FILES.map(rosterPath)] },
-    { route: "api/votes/route", loader: "lib/votes/snapshot.ts", files: votes },
-    { route: "api/ask/grounded/route", loader: "lib/ask/votes.ts", files: votes },
-    // Both cards fetch this route through useMemberDirectory; the ballot
-    // server component never opens the file itself.
-    { route: "api/directory/route", loader: "lib/officials/directory.ts", files: ["data/congress-legislators/directory.json"] },
-    { route: "api/voting-sites/route", loader: "lib/ballot/voting-sites-server.ts", files: ["data/voting-sites.json"] },
-    { route: "ballot/page", loader: "lib/ballot/seat-holders.ts", files: ["data/states/nh/hunt/nh-gencourt-members.json"] },
-    { route: "api/profile/[subject]/route", loader: "lib/sources/prl/snapshot.ts", files: ["data/prl/prl-profiles.json"] },
-    ...["api/official-actions/[subject]/route", "api/ask/grounded/route"].map((route) => ({ route, loader: "lib/officials/executive-actions.ts", files: ["data/states/az/officials/az-governor-actions.json", ...identity, ...ROSTER_FILES.map(rosterPath)] })),
-    ...["ballot/page", "api/ask/grounded/route"].map((route) => ({ route, loader: "lib/ballot/candidate-contacts.ts", files: ["data/states/nj/ballot/nj-morris-2026-contacts.json"] })),
-    { route: "api/ask/grounded/route", loader: "lib/ask/candidate-profile.ts", files: ["data/ballot/candidate-cards-2026.json", "data/ballot/candidate-links-2026.json"] },
-    { route: "api/ask/grounded/route", loader: "lib/ask/local-finance.ts", files: ["data/states/az/campaign-finance/az-pima-2026-held.json", "data/states/az/campaign-finance/az-pima-2026-transactions.json"] },
+    ...["api/meetings/route", "api/representation/[...division]/route", "api/votes/route", "api/voting-sites/route", "api/ask/grounded/route", "ballot/page", "about-area/page"].map((route) => ({ route, loader: "lib/registry/server.ts", files: staticGeography })),
+    { route: "api/meetings/route", loader: "lib/coverage/zip-tier.ts + lib/registry/server.ts", files: zipArea },
+    { route: "ballot/page", loader: "lib/coverage/zip-tier.ts + lib/registry/server.ts", files: zipArea },
+    { route: "api/ask/grounded/route", loader: "lib/coverage/zip-tier.ts + lib/registry/server.ts", files: zipArea },
+    { route: "about-area/page", loader: "lib/coverage/zip-tier.ts", files: [zipArea[0]] },
+    { route: "api/reactions/route", loader: "lib/coverage/zip-tier.ts", files: [zipArea[0]] },
+    { route: "api/log/route", loader: "lib/coverage/zip-tier.ts", files: [zipArea[0]] },
+    { route: "api/schema/route", loader: "lib/db/migrations/journal.ts", files: ["lib/db/migrations/meta/_journal.json"] },
   ];
 }
 

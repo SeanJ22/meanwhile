@@ -2,6 +2,15 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { incumbentHolderFor } from "../lib/ballot/incumbent-record.ts";
+import {
+  installFundingFirstSeed,
+  installRegistryRuntimeFirstSeeds,
+} from "./helpers/registry-runtime-first-seed.ts";
+
+await Promise.all([
+  installFundingFirstSeed(),
+  installRegistryRuntimeFirstSeeds(),
+]);
 
 /**
  * The incumbent-record join (4, 2026-08-19): ballot key → roster official

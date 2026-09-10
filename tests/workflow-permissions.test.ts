@@ -28,7 +28,7 @@
  */
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 const ROOT = process.cwd();
@@ -56,25 +56,51 @@ function declaresWrite(text: string): boolean {
   return /^\s*contents:\s*write\s*$/m.test(text);
 }
 
-test("every workflow that pushes main declares contents: write", () => {
+const SOFTWARE_WORKFLOW_SECRET_ALLOWLIST = [
+  "GITHUB_TOKEN",
+  "WTP_CONTROL_PLANE_DATABASE_URL_READONLY",
+  "WTP_CONTROL_PLANE_POST_DEPLOY_DATABASE_URL",
+  "WTP_PRODUCTION_DATABASE_URL_READONLY",
+] as const;
+
+/** Secret names consumed by executable workflow expressions, never their values. */
+function workflowSecretReferences(text: string): string[] {
+  return [...text.matchAll(/\$\{\{\s*secrets\.([A-Z0-9_]+)\s*\}\}/g)]
+    .map((match) => match[1])
+    .filter((name): name is string => Boolean(name));
+}
+
+function assertSoftwareOnlyWorkflowSecrets(all: { name: string; text: string }[]): void {
+  const actual = [...new Set(all.flatMap((workflow) => workflowSecretReferences(workflow.text)))].sort();
+  assert.deepEqual(
+    actual,
+    [...SOFTWARE_WORKFLOW_SECRET_ALLOWLIST].sort(),
+    "surviving Actions secrets must equal the closed software-CI/release allowlist; routine publisher credentials cannot return",
+  );
+}
+
+test("no workflow pushes main or declares contents: write", () => {
   const all = workflows();
 
   // The floor (RULING 159). An empty directory, or a rename of the push
   // script, would leave this asserting nothing and reading green.
-  assert.ok(all.length >= 5, `only ${all.length} workflow file(s) found — the sweep did not reach them`);
+  assert.equal(all.length, 2, `expected the two release/CI workflow files, found ${all.map((workflow) => workflow.name).join(", ")}`);
 
   const pushers = all.filter((w) => pushesMain(w.text));
-  assert.ok(
-    pushers.length >= 5,
-    `only ${pushers.length} workflow(s) invoke push-main.mjs — either the script was renamed, ` +
-      "in which case `pushesMain` is now blind, or the pushers are gone",
-  );
+  assert.equal(pushers.length, 0, `no workflow may push mutable runtime truth to main; found ${pushers.map((w) => w.name).join(", ")}`);
 
   const missing = pushers.filter((w) => !declaresWrite(w.text)).map((w) => w.name);
   assert.deepEqual(
     missing,
     [],
     `these workflows push main with a read-only token and will 403 at the Commit step: ${missing.join(", ")}`,
+  );
+
+  const writers = all.filter((w) => declaresWrite(w.text));
+  assert.deepEqual(
+    writers.map((w) => w.name).sort(),
+    pushers.map((w) => w.name).sort(),
+    "a contents:write workflow without the guarded push door is an unaccounted routine Git writer",
   );
 });
 
@@ -103,15 +129,49 @@ test("THE PLANT: the guard catches a pusher whose permissions block is gone", ()
   assert.equal(declaresWrite(fixed), true);
 });
 
-test("refresh-daily is the consolidated pusher and carries the declaration", () => {
-  /*
-   * Named directly, because it is the one that was broken and RULING 157 asks
-   * the verification to exercise the derived case as well as the class. The
-   * class assertion above is the independent half — it covers the four
-   * workflows that never lost it.
-   */
-  const daily = workflows().find((w) => w.name === "refresh-daily.yml");
-  assert.ok(daily, "refresh-daily.yml is gone");
-  assert.equal(pushesMain(daily.text), true, "refresh-daily no longer pushes main");
-  assert.equal(declaresWrite(daily.text), true, "refresh-daily lost contents: write again");
+test("PDC terminal boundary: GITHUB_ROUTINE_OPS_CRONS=0 and ROUTINE_OPS_GIT_WRITERS=0", () => {
+  const all = workflows();
+  const scheduled = all.filter((workflow) => /^\s*schedule:/m.test(workflow.text));
+  assert.deepEqual(
+    scheduled.map((workflow) => workflow.name),
+    [],
+    `GITHUB_ROUTINE_OPS_CRONS=${scheduled.length}; the standing production runner is the only routine clock`,
+  );
+  assert.deepEqual(all.filter((workflow) => /^refresh-.*\.ya?ml$/.test(workflow.name)), []);
+  assert.deepEqual(
+    all.filter((workflow) => pushesMain(workflow.text)).map((workflow) => workflow.name).sort(),
+    [],
+  );
+  const routineGitWriters = all.filter((workflow) => declaresWrite(workflow.text));
+  assert.deepEqual(
+    routineGitWriters.map((workflow) => workflow.name),
+    [],
+    `ROUTINE_OPS_GIT_WRITERS=${routineGitWriters.length}; runtime state belongs in canonical stores, not Git`,
+  );
+  for (const retired of ["job-watch.yml", "intake-tripwire.yml"]) {
+    assert.equal(existsSync(join(DIR, retired)), false, `${retired} is still dispatchable`);
+  }
+});
+
+test("surviving workflows reference exactly the software-CI/release secret allowlist", () => {
+  assertSoftwareOnlyWorkflowSecrets(workflows());
+});
+
+test("THE PLANT: a routine publisher credential cannot return to Actions", () => {
+  const planted = [
+    ...workflows(),
+    {
+      name: "refresh-fec-snapshot.yml",
+      text: "env:\n  FEC_API_KEY: ${{ secrets.FEC_API_KEY }}\n",
+    },
+  ];
+  assert.throws(
+    () => assertSoftwareOnlyWorkflowSecrets(planted),
+    /routine publisher credentials cannot return/,
+  );
+  assert.deepEqual(
+    workflowSecretReferences("env:\n  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n"),
+    ["GITHUB_TOKEN"],
+    "the guard must permit the automatic software-CI token",
+  );
 });

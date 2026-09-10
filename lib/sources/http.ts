@@ -7,6 +7,12 @@
  * Engineering manners, not hedging — see `CLAUDE.md` on public records.
  */
 
+import { recordAcquiredResponse } from "./acquisition-trace.ts";
+import {
+  sourceAcquisitionSecondsRemaining,
+  sourceAcquisitionSleep,
+} from "./acquisition-deadline.ts";
+
 const REQUEST_SPACING_MS = 400;
 const MAX_RETRIES = 2;
 
@@ -23,8 +29,6 @@ export function sourceUserAgent(): string {
     : "https://github.com/SeanJ22/we-the-people";
   return `we-the-people civic meeting index (${suffix})`;
 }
-
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export class SourceHttpError extends Error {
   readonly status: number;
@@ -151,7 +155,15 @@ export interface HttpOptions {
     curl?: (
       url: string,
       headers: Record<string, string>,
-    ) => Promise<{ status: number; contentType: string; text: string }>;
+      signal?: AbortSignal,
+    ) => Promise<{
+      status: number;
+      contentType: string;
+      text: string;
+      /** Exact entity bytes and redirect destination, when the transport exposes them. */
+      bytes?: Uint8Array;
+      finalUrl?: string;
+    }>;
   };
 }
 
@@ -273,28 +285,61 @@ export function browserProfileHeaders(): Record<string, string> {
  * `User-Agent`, no retry storm. `child_process` is imported dynamically so
  * this module stays safe to reach from a client chunk.
  */
-async function curlGetText(
+export type CurlProcessRunner = (
+  args: readonly string[],
+  options: { readonly signal?: AbortSignal; readonly maxBuffer: number },
+) => Promise<Buffer>;
+
+async function nativeCurlProcess(
+  args: readonly string[],
+  options: { readonly signal?: AbortSignal; readonly maxBuffer: number },
+): Promise<Buffer> {
+  const { execFile } = await import("node:child_process");
+  return new Promise<Buffer>((resolve, reject) => {
+    execFile(
+      "curl",
+      [...args],
+      {
+        maxBuffer: options.maxBuffer,
+        encoding: "buffer",
+        signal: options.signal,
+      },
+      (error, out) => (error ? reject(error) : resolve(out as Buffer)),
+    );
+  });
+}
+
+export async function curlGetText(
   url: string,
   headers: Record<string, string>,
-): Promise<{ status: number; contentType: string; text: string }> {
-  const { execFile } = await import("node:child_process");
-  const args = ["-s", "-S", "--compressed", "-w", "\n%{http_code} %{content_type}"];
+  signal?: AbortSignal,
+  runProcess: CurlProcessRunner = nativeCurlProcess,
+): Promise<{
+  status: number;
+  contentType: string;
+  text: string;
+  bytes: Uint8Array;
+  finalUrl: string;
+}> {
+  const args = ["-s", "-S", "-L", "--compressed", "-w", "\n%{http_code}\t%{content_type}\t%{url_effective}"];
+  const remainingSeconds = sourceAcquisitionSecondsRemaining(signal);
+  if (remainingSeconds !== null) args.push("--max-time", String(remainingSeconds));
   for (const [key, value] of Object.entries(headers)) {
     args.push("-H", `${key}: ${value}`);
   }
   args.push(url);
 
-  const stdout = await new Promise<string>((resolve, reject) => {
-    execFile(
-      "curl",
-      args,
-      { maxBuffer: 32 * 1024 * 1024, encoding: "utf8" },
-      (error, out) => (error ? reject(error) : resolve(out)),
-    );
+  const stdout = await runProcess(args, {
+    maxBuffer: 32 * 1024 * 1024,
+    signal,
   });
+  signal?.throwIfAborted();
 
-  const cut = stdout.lastIndexOf("\n");
-  const [code, contentType = ""] = stdout.slice(cut + 1).split(" ");
+  const cut = stdout.lastIndexOf(0x0a);
+  if (cut < 0) {
+    throw new SourceHttpError(`curl returned no response trailer for ${url}`, 0, url, 4);
+  }
+  const [code, contentType = "", finalUrl = url] = stdout.subarray(cut + 1).toString("utf8").split("\t");
   const status = Number(code);
   if (!Number.isFinite(status)) {
     throw new SourceHttpError(`curl returned no status for ${url}`, 0, url, 4);
@@ -302,7 +347,14 @@ async function curlGetText(
   if (status < 200 || status >= 300) {
     throw new SourceHttpError(`HTTP ${status} for ${url}`, status, url);
   }
-  return { status, contentType, text: stdout.slice(0, cut) };
+  const body = stdout.subarray(0, cut);
+  return {
+    status,
+    contentType,
+    text: body.toString("utf8"),
+    bytes: new Uint8Array(body),
+    finalUrl,
+  };
 }
 
 /**
@@ -432,7 +484,13 @@ export function challengeIn(text: string): string | null {
 export function readValidatedResponse(
   url: string,
   rung: number,
-  response: { status: number; contentType: string; text: string },
+  response: {
+    status: number;
+    contentType: string;
+    text: string;
+    bytes?: Uint8Array;
+    finalUrl?: string;
+  },
   expect?: HttpOptions["expect"],
 ): { status: number; contentType: string; text: string } {
   const wall = challengeIn(response.text);
@@ -455,7 +513,19 @@ export function readValidatedResponse(
       rung,
     );
   }
-  return response;
+  if (response.bytes) {
+    recordAcquiredResponse({
+      requestedUrl: url,
+      finalUrl: response.finalUrl || url,
+      httpStatus: response.status,
+      bytes: response.bytes,
+    });
+  }
+  return {
+    status: response.status,
+    contentType: response.contentType,
+    text: response.text,
+  };
 }
 
 /**
@@ -493,6 +563,7 @@ export async function politeGetText(
 
     if (response.ok) {
       const text = await response.text();
+      options.signal?.throwIfAborted();
       const here = {
         status: response.status,
         contentType: response.headers.get("content-type") ?? "",
@@ -511,7 +582,12 @@ export async function politeGetText(
         // it, by the same function. A document check that only guarded one of
         // two return paths would be a guard with a door beside it — which is
         // exactly what A-003 found on the 403 path below.
-        return readValidatedResponse(url, 4, await curl(url, headers), options.expect);
+        return readValidatedResponse(
+          url,
+          4,
+          await curl(url, headers, options.signal),
+          options.expect,
+        );
       }
       throw new SourceHttpError(
         `${wall} at ${url} — HTTP 200 carrying a challenge page rather than the ` +
@@ -554,6 +630,7 @@ export async function politeGetText(
         });
         if (withBrowserHeaders.ok) {
           const text = await withBrowserHeaders.text();
+          options.signal?.throwIfAborted();
           /*
            * A-003 · THIS RETURN WAS THE DEFECT.
            *
@@ -611,6 +688,7 @@ export async function politeGetText(
       });
       if (identified.ok) {
         const text = await identified.text();
+        options.signal?.throwIfAborted();
         if (challengeIn(text) === null) {
           return readValidatedResponse(
             url,
@@ -631,7 +709,11 @@ export async function politeGetText(
       return readValidatedResponse(
         url,
         4,
-        await curl(url, browser ? headers : browserProfileHeaders()),
+        await curl(
+          url,
+          browser ? headers : browserProfileHeaders(),
+          options.signal,
+        ),
         options.expect,
       );
     }
@@ -651,7 +733,7 @@ export async function politeGetText(
       Number.isFinite(retryAfter) && retryAfter > 0
         ? retryAfter * 1000
         : REQUEST_SPACING_MS * 2 ** attempt;
-    await sleep(waitMs);
+    await sourceAcquisitionSleep(waitMs, options.signal);
   }
 
   throw new SourceHttpError(`HTTP ${lastStatus} for ${url}`, lastStatus, url, browser ? 3 : 2);
@@ -704,6 +786,7 @@ export async function politeGetBytes(
     lastStatus = response.status;
     if (!response.ok) continue;
     const bytes = new Uint8Array(await response.arrayBuffer());
+    options.signal?.throwIfAborted();
     /*
      * A ZERO-BYTE 200 IS A FAILED RETRIEVAL, NOT AN EMPTY DOCUMENT.
      * The same rule `readValidatedResponse` applies to text, and the same

@@ -4,6 +4,24 @@ import type { EngineeringTaskSpec } from "./engineering-types.ts";
 import { scheduleObligation, type FreshnessObligation } from "../scheduler/obligation.ts";
 import type { AcquirerResult } from "./research-types.ts";
 
+/**
+ * These legacy worker contracts acquire the same meeting event feeds now
+ * owned by permanent SOURCE_WIRING-derived meeting-partition contracts. They
+ * remain readable as immutable engineering evidence, but the standing runtime
+ * may never schedule or dispatch another acquisition for them.
+ */
+export const RETIRED_ROUTINE_MEETING_ACQUISITION_CLASSES = [
+  "LEGISTAR_EVENTS",
+  "CIVICCLERK_EVENTS",
+] as const;
+
+export function isRetiredRoutineMeetingAcquisition(
+  contract: CivicExtractionContract,
+): boolean {
+  return contract.schemaVersion === 1 &&
+    (RETIRED_ROUTINE_MEETING_ACQUISITION_CLASSES as readonly string[]).includes(contract.recordClass);
+}
+
 /** Work instructions, never evidence or a readiness label. Stored with the owed WorkItem. */
 export interface AutonomousWorkPlan {
   readonly freshness?: Pick<FreshnessObligation,"readerImpactAt"|"observedChangeRateHours"|"declaredCycleHours">;

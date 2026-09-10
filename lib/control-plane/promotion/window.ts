@@ -1,18 +1,17 @@
 /**
- * THE NIGHTLY WINDOW'S DECISIONS — pure, and the one lock. (RULING 242.)
+ * THE RESEARCH WINDOW'S DECISIONS — pure, and one host-global lock.
  *
- *   ONE DOOR             reader-facing civic truth changes only here, at
- *                        04:00 America/New_York on the standing runner's clock
- *   SHADOW UNTIL OPEN    the window computes what it WOULD promote and refuse
- *                        and promotes nothing; `runPromotionStep` never calls
- *                        the promoter while the gate is closed
+ *   RESEARCH ONLY        this module evaluates research pipeline state; it is
+ *                        not a civic-data acquisition or promotion clock
+ *   NO READER DOOR       the standing routine-data runner owns validated
+ *                        candidate/version promotion independently
  *   ONE WINDOW AT A TIME the lock is a CAS lease in the `leases` aggregate,
  *                        never `repos.locks`: the Postgres provider's advisory
  *                        lock is released by the HTTP driver before the guarded
  *                        section runs (measured 2026-09-02: unlock answered
  *                        false on the same backend pid)
  *   A MISSED WINDOW      is caught up by name, never silently skipped
- *   A FAILED STAGE       opens an incident; the next window catches up what
+ *   A FAILED STAGE       opens an incident; the next research window catches up what
  *                        the incident names
  *
  * Nothing here reads a clock, a disk or the network.
@@ -33,7 +32,6 @@ import type {
   WindowTrigger,
 } from "./types.ts";
 import { WINDOW_FORMAT_VERSION } from "./types.ts";
-import { legacyRefreshLines } from "./legacy-refresh.ts";
 import { scheduledBlackoutAt } from "../fleet-safety.ts";
 
 export const WINDOW_ZONE = "America/New_York";
@@ -292,106 +290,6 @@ export function evaluateItems(
   };
 }
 
-/* --------------------------------------------------------- the promotion */
-
-export interface PromotionStepOutcome {
-  readonly promoted: readonly string[];
-  readonly refused: readonly ItemVerdict[];
-  readonly deferred: readonly ItemVerdict[];
-  readonly reason: string;
-}
-
-/**
- * The step that would change reader truth. With the gate closed the promoter
- * is never called; with it open only PROMOTE_WOULD verdicts reach it.
- */
-export async function runPromotionStep(input: {
-  readonly gate: { readonly promotionEnabled: boolean };
-  readonly verdicts: readonly ItemVerdict[];
-  readonly promote: (verdict: ItemVerdict) => Promise<void>;
-}): Promise<PromotionStepOutcome> {
-  const refused = input.verdicts.filter((v) => v.verdict === "REFUSE_WOULD");
-  const deferred = input.verdicts.filter((v) => v.verdict === "DEFER");
-  const eligible = input.verdicts.filter((v) => v.verdict === "PROMOTE_WOULD");
-  if (!input.gate.promotionEnabled) {
-    return {
-      promoted: [],
-      refused,
-      deferred,
-      reason: `promotion is OFF: ${eligible.length} item(s) would have promoted; the promoter was not called`,
-    };
-  }
-  const promoted: string[] = [];
-  for (const v of eligible) {
-    await input.promote(v);
-    promoted.push(v.itemId);
-  }
-  return { promoted, refused, deferred, reason: `promotion is ON: ${promoted.length} of ${eligible.length} eligible item(s) promoted` };
-}
-
-/* --------------------------------------------------------- the regression */
-
-export interface VerificationVerdict {
-  readonly instrument: string;
-  readonly exitCode: number | null;
-  /** Null when the instrument could not tell. Not a pass. */
-  readonly passed: boolean | null;
-  readonly detail: string;
-}
-
-export type RegressionAction = "NONE" | "REVERT_AND_INCIDENT" | "INCIDENT_WITHOUT_REVERT";
-
-export function decideRegression(input: {
-  readonly promotedCount: number;
-  readonly verifications: readonly VerificationVerdict[];
-}): { readonly action: RegressionAction; readonly reason: string } {
-  if (input.promotedCount === 0) {
-    return { action: "NONE", reason: "nothing was promoted, so there is nothing to revert" };
-  }
-  const failed = input.verifications.filter((v) => v.passed === false);
-  if (failed.length > 0) {
-    return {
-      action: "REVERT_AND_INCIDENT",
-      reason: `${failed.length} of ${input.verifications.length} verification(s) FAILED on the served surface: ${failed.map((f) => f.instrument).join(", ")}`,
-    };
-  }
-  const unknown = input.verifications.filter((v) => v.passed === null);
-  if (unknown.length > 0 || input.verifications.length === 0) {
-    return {
-      action: "INCIDENT_WITHOUT_REVERT",
-      reason:
-        input.verifications.length === 0
-          ? "no verification ran after a promotion; an incident is opened and nothing further promotes until one does"
-          : `${unknown.length} of ${input.verifications.length} verification(s) could not tell; a revert on a guess would be a second unverified change`,
-    };
-  }
-  return { action: "NONE", reason: `${input.verifications.length} of ${input.verifications.length} verification(s) passed` };
-}
-
-export interface RevertPlan {
-  readonly batchCommitSha: string;
-  readonly incidentId: string;
-  /** Through the existing shipping door, in order. Never executed here. */
-  readonly steps: readonly string[];
-}
-
-export function planRevert(batchCommitSha: string, incidentId: string): RevertPlan {
-  return {
-    batchCommitSha,
-    incidentId,
-    steps: [
-      `git revert --no-edit ${batchCommitSha}`,
-      "pnpm handoff --ship",
-      `append incident ${incidentId} to window_incidents`,
-    ],
-  };
-}
-
-/** The dry-run executor: records what it WOULD do and runs nothing. */
-export function dryRunRevert(plan: RevertPlan): { readonly executed: false; readonly wouldRun: readonly string[] } {
-  return { executed: false, wouldRun: plan.steps };
-}
-
 /* --------------------------------------------------------- record guards */
 
 /** A window record this module wrote, as opposed to a foreign row under the same log. */
@@ -423,7 +321,7 @@ export function lastWindowLocalDate(records: readonly unknown[]): string | null 
 
 export function openIncident(input: {
   readonly windowId: string;
-  readonly stage: WindowStageName | "LOCK" | "PROMOTION";
+  readonly stage: WindowStageName | "LOCK";
   readonly code: string;
   readonly detail: string;
   readonly openedAt: string;
@@ -469,7 +367,7 @@ export function buildWindowDigest(run: WindowRunRecord): string {
   out.push("");
   out.push(
     `Written by \`pnpm window:run\` on the \`${run.provider}\` control plane, host ${run.host}, SHA ${run.testedSha ?? "unrecorded"}. ` +
-      "**Mode SHADOW: nothing here changed what a reader is told.** RULING 242 — reader-facing civic truth changes through exactly one door, and this window is that door, run dark.",
+      "**Research-only:** this window has no civic-data acquisition, promotion, Git, build, deploy, or Reader-materialization door.",
   );
   out.push("");
   out.push("## THE WINDOW");
@@ -481,7 +379,7 @@ export function buildWindowDigest(run: WindowRunRecord): string {
       ? `- CATCH-UP: ${run.caughtUp.length} earlier local date(s) no window answered for — ${run.caughtUp.join(", ")} — are answered by this one, by name`
       : "- no earlier local date was owed by this window",
   );
-  out.push("- the GitHub scheduled workflow is a BACKUP WAKEUP only; it is not this clock and it is not this door");
+  out.push("- GitHub Actions is not a wakeup, clock, or promotion surface for routine civic data");
   out.push("");
   out.push("## ACTIVATION GATE");
   out.push("");
@@ -495,11 +393,7 @@ export function buildWindowDigest(run: WindowRunRecord): string {
     out.push(`- **${s.stage} — ${s.outcome}** (${s.startedAt} → ${s.finishedAt})${s.reason ? `: ${s.reason}` : ""}`);
   }
   out.push("");
-  out.push("## STAGE 1 — LEGACY REFRESH, IN SHADOW");
-  out.push("");
-  out.push(...legacyRefreshLines(run.legacyRefresh));
-  out.push("");
-  out.push("## STAGE 2 — PIPELINE EVALUATION");
+  out.push("## RESEARCH PIPELINE EVALUATION");
   out.push("");
   out.push(`- ${p.items} pipeline item(s); ${p.refused} of ${p.items} carry at least one refused offer (a refused offer never closes an item)`);
   out.push(
@@ -515,17 +409,6 @@ export function buildWindowDigest(run: WindowRunRecord): string {
   const reasons = new Map<string, number>();
   for (const v of p.verdicts) reasons.set(`${v.verdict} — ${v.reason}`, (reasons.get(`${v.verdict} — ${v.reason}`) ?? 0) + 1);
   for (const [reason, n] of [...reasons.entries()].sort((a, b) => b[1] - a[1])) out.push(`  - ${n} of ${p.items}: ${reason}`);
-  out.push("");
-  out.push("## STAGE 3 — POST-PROMOTION VERIFICATION, AS IF PROMOTED");
-  out.push("");
-  if (run.postPromotionVerification === null) {
-    out.push("- not run; see the stage record");
-  } else {
-    const v = run.postPromotionVerification;
-    out.push(`- instrument \`${v.instrument}\`; exit ${v.exitCode ?? "none"}; verdict ${v.verdict}`);
-    out.push(`- ${v.detail}`);
-  }
-  out.push("- the real path once open: promotion is one commit through the existing shipping door; verification is the production observer, the reader suite and the relevant visual checks; a regression reverts the batch commit through the same door and opens an incident");
   out.push("");
   out.push("## CONTROL SCORES");
   out.push("");

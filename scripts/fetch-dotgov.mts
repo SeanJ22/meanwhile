@@ -38,11 +38,11 @@
  * types and counts. It answers "where might this government publish", never
  * "how many governments are there".
  *
- * ## SHA-pinned, never `main`
+ * ## SHA-resolved then pinned, never an unrecorded `main`
  *
- * The repository commits a new zone file most days. Fetching `main` means
- * the same command returns different data on different days and nothing
- * records which. The pin is bumped deliberately, with a diff.
+ * The operation first asks the repository API for the current commit touching
+ * `current-full.csv`, then reads that exact SHA and records it in the durable
+ * candidate. The moving name is never used to fetch the civic payload.
  *
  * ## Thin-guard
  *
@@ -56,22 +56,32 @@
  *
  * US Government work, public domain. Cited; nothing else is owed.
  *
- *   pnpm dotgov:fetch
+ * Production cadence and owner-initiated promotion enter through the installed
+ * runtime dispatcher; this file is the internal `dotgov` acquisition adapter.
+ *
+ * @freshness-reads-here — the read stamp is minted only after the pinned CSV
+ * body has been read and its complete structural denominator has validated.
  */
-
-import { mkdirSync } from "node:fs";
-import { join } from "node:path";
 
 import { stamp } from "./stamp.mts";
+import { dotGovCandidate } from "../lib/civic-data/candidate-builders.ts";
+import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
+import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import {
+  isSourceAcquisitionFailure,
+  readPublisherBody,
+  recordRegisteredSourceAcquisitionFailure,
+  requestPublisher,
+  sourceAcquisitionFailure,
+  withPublisherAcquisitionDeadline,
+} from "../lib/civic-data/source-acquisition-failure.ts";
+import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisition-deadline.ts";
+import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
+import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { assertWriteAllowed } from "../lib/db/write-guard.ts";
+import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 
-import { writeStampStable } from "../lib/ops/stamp-stable.ts";
-/**
- * The pin. Read from the GitHub commits API on 2026-08-16; the commit itself
- * is the zone-file update dated 2026-08-16T07:38:32Z.
- */
-const SHA = "47f9693e15cf8927aebefabc05d8c34e184080b1";
-
-const CSV_URL = `https://raw.githubusercontent.com/cisagov/dotgov-data/${SHA}/current-full.csv`;
+const COMMITS_URL = "https://api.github.com/repos/cisagov/dotgov-data/commits?path=current-full.csv&per_page=1";
 
 const UA = "we-the-people/1.0 (civic data; contact seanj22@gmail.com)";
 
@@ -152,16 +162,64 @@ function value(raw: string | undefined): string | null {
   return trimmed;
 }
 
-export async function fetchDotGov(): Promise<DotGovSnapshot> {
-  const response = await fetch(CSV_URL, { headers: { "user-agent": UA } });
+export interface DotGovAcquisition {
+  readonly snapshot: DotGovSnapshot;
+  readonly rawText: string;
+  readonly finalUrl: string;
+  readonly retrievedAt: string;
+}
+
+async function currentSourceSha(signal?: AbortSignal): Promise<string> {
+  const response = await requestPublisher("CISA dotgov revision", () =>
+    fetch(COMMITS_URL, {
+      headers: { "user-agent": UA, accept: "application/vnd.github+json" },
+      signal,
+    }));
   if (!response.ok) {
-    throw new Error(`dotgov: ${CSV_URL} answered ${response.status}`);
+    throw sourceAcquisitionFailure(
+      "PUBLISHER_RESPONSE_REFUSED",
+      `dotgov: source revision lookup answered ${response.status}`,
+    );
   }
-  const csv = await response.text();
+  const text = await readPublisherBody("CISA dotgov revision", () => response.text());
+  signal?.throwIfAborted();
+  let rows: readonly { readonly sha?: string }[];
+  try {
+    rows = JSON.parse(text) as readonly { readonly sha?: string }[];
+  } catch {
+    throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "dotgov: source revision lookup returned invalid JSON");
+  }
+  if (!Array.isArray(rows)) {
+    throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "dotgov: source revision lookup did not return an array");
+  }
+  const sha = rows[0]?.sha;
+  if (!sha || !/^[a-f0-9]{40}$/i.test(sha)) {
+    throw sourceAcquisitionFailure(
+      "PUBLISHER_DOCUMENT_INVALID",
+      "dotgov: current-full.csv source revision was not a full Git commit SHA",
+    );
+  }
+  return sha.toLowerCase();
+}
+
+export async function acquireDotGov(signal?: AbortSignal): Promise<DotGovAcquisition> {
+  const sha = await currentSourceSha(signal);
+  const csvUrl = `https://raw.githubusercontent.com/cisagov/dotgov-data/${sha}/current-full.csv`;
+  const response = await requestPublisher("CISA dotgov registry", () =>
+    fetch(csvUrl, { headers: { "user-agent": UA }, signal }));
+  if (!response.ok) {
+    throw sourceAcquisitionFailure(
+      "PUBLISHER_RESPONSE_REFUSED",
+      `dotgov: ${csvUrl} answered ${response.status}`,
+    );
+  }
+  const csv = await readPublisherBody("CISA dotgov registry", () => response.text());
+  signal?.throwIfAborted();
   const lines = csv.split(/\r?\n/).filter((line) => line.trim().length > 0);
   const header = cells(lines[0] ?? "");
   if (header[0] !== "Domain name" || header[1] !== "Domain type") {
-    throw new Error(
+    throw sourceAcquisitionFailure(
+      "PUBLISHER_DOCUMENT_INVALID",
       `dotgov: the columns are not what this parser was written against — got ${header.join(", ")}`,
     );
   }
@@ -170,6 +228,12 @@ export async function fetchDotGov(): Promise<DotGovSnapshot> {
   const byType: Record<string, number> = {};
   const electionDomains: DotGovDomain[] = [];
   for (const row of rows) {
+    if ((row[0] ?? "").trim() === "" || (row[1] ?? "").trim() === "") {
+      throw sourceAcquisitionFailure(
+        "PUBLISHER_DOCUMENT_INVALID",
+        "dotgov: a registry row omitted its domain name or CISA domain type",
+      );
+    }
     const type = row[1]?.trim() ?? "";
     byType[type] = (byType[type] ?? 0) + 1;
     // CISA's OWN type is the filter. Not a name match on "vote" or
@@ -177,7 +241,7 @@ export async function fetchDotGov(): Promise<DotGovSnapshot> {
     // a city called Election. The registry classified these; we read it.
     if (!/election/i.test(type)) continue;
     electionDomains.push({
-      domain: row[0].trim(),
+      domain: row[0]!.trim(),
       type,
       organization: value(row[2]) ?? "",
       suborganization: value(row[3]),
@@ -187,23 +251,26 @@ export async function fetchDotGov(): Promise<DotGovSnapshot> {
   }
 
   if (rows.length < MIN_DOMAINS) {
-    throw new Error(
+    throw sourceAcquisitionFailure(
+      "PUBLISHER_DOCUMENT_INVALID",
       `dotgov: ${rows.length} domains is below the floor of ${MIN_DOMAINS} — refusing to write a thin snapshot`,
     );
   }
   if (electionDomains.length < MIN_ELECTION_DOMAINS) {
-    throw new Error(
+    throw sourceAcquisitionFailure(
+      "PUBLISHER_DOCUMENT_INVALID",
       `dotgov: ${electionDomains.length} election-typed domains is below the floor of ${MIN_ELECTION_DOMAINS} — refusing to write a thin snapshot`,
     );
   }
 
   electionDomains.sort((a, b) => a.domain.localeCompare(b.domain));
+  const retrievedAt = new Date().toISOString();
 
-  return {
+  const snapshot: DotGovSnapshot = {
     source: {
       name: "cisagov/dotgov-data",
-      url: `https://github.com/cisagov/dotgov-data/blob/${SHA}/current-full.csv`,
-      sha: SHA,
+      url: `https://github.com/cisagov/dotgov-data/blob/${sha}/current-full.csv`,
+      sha,
       file: "current-full.csv",
       licence: "US Government work, public domain",
       readAt: stamp(),
@@ -216,24 +283,51 @@ export async function fetchDotGov(): Promise<DotGovSnapshot> {
     electionDomains,
     boundary: BOUNDARY,
   };
+  return { snapshot, rawText: csv, finalUrl: response.url || csvUrl, retrievedAt };
+}
+
+export async function fetchDotGov(): Promise<DotGovSnapshot> {
+  return (await acquireDotGov()).snapshot;
 }
 
 async function main() {
-  const snapshot = await fetchDotGov();
-  const dir = join(process.cwd(), "data", "dotgov");
-  mkdirSync(dir, { recursive: true });
-  // RL-1 (NH326/NH327): the registry is SHA-pinned, so a re-read that found
-  // the same domains leaves the bytes alone; the read time is operational history.
-  writeStampStable({
-    absolutePath: join(dir, "snapshot.json"),
-    path: "data/dotgov/snapshot.json",
-    next: snapshot,
-    serialize: (value) => `${JSON.stringify(value, null, 2)}\n`,
-    stampKeys: ["readAt"],
-  });
+  installNeonRequestDeadline();
+  if (!process.argv.includes("--promote")) {
+    throw new Error(
+      "The tracked dotgov snapshot writer is retired. Run the registered dotgov contract " +
+        "through the installed runtime dispatcher; direct production execution is refused.",
+    );
+  }
+  const handle = resolveProductionWriteHandle();
+  process.env.DATABASE_URL = handle.connection;
+  process.env.WTP_DB_ROLE = "production";
+  process.env.WTP_SANCTIONED_WRITE = "routine-civic-data-promotion";
+  assertWriteAllowed("a routine civic data candidate/version promotion");
+  const store = new PostgresRoutineDataStore();
+  let acquisition: DotGovAcquisition;
+  try {
+    acquisition = await withPublisherAcquisitionDeadline(
+      "CISA dotgov",
+      ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,
+      acquireDotGov,
+    );
+  } catch (error) {
+    if (!isSourceAcquisitionFailure(error)) throw error;
+    const failed = await recordRegisteredSourceAcquisitionFailure({
+      store,
+      contractId: "dotgov",
+      failure: error,
+    });
+    console.log(failed.line);
+    process.exitCode = 2;
+    return;
+  }
+  const snapshot = acquisition.snapshot;
+  const candidate = dotGovCandidate(acquisition);
+  const outcome = await processRegisteredRoutineCandidate(store, "dotgov", candidate, acquisition.retrievedAt);
   // Every count, stated. A run that says nothing about what it fetched is
   // indistinguishable from one that fetched nothing.
-  console.log(`dotgov: ${snapshot.counts.domains} domains at ${SHA}`);
+  console.log(`dotgov: ${snapshot.counts.domains} domains at ${snapshot.source.sha}`);
   console.log(
     `dotgov: ${snapshot.counts.electionDomains} typed as election offices — the named rung list`,
   );
@@ -241,8 +335,9 @@ async function main() {
     .filter(([type]) => /election/i.test(type))
     .sort((a, b) => b[1] - a[1]);
   for (const [type, n] of types) console.log(`  ${String(n).padStart(5)}  ${type}`);
-  console.log(`dotgov: written to data/dotgov/snapshot.json`);
+  console.log("RCD_RECEIPT=" + JSON.stringify({ source: "dotgov", candidateId: candidate.id, acquisitionSucceeded: outcome.candidate.acquisitionSucceeded, state: outcome.candidate.state, decision: outcome.candidate.receipt?.decision ?? null, outcome: outcome.candidate.candidate.changeSet?.outcome ?? null, promotedVersion: outcome.promoted?.versionId ?? null, lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
   console.log(`dotgov: ${BOUNDARY}`);
+  if (!outcome.promoted) process.exitCode = 2;
 }
 
 if (process.argv[1]?.endsWith("fetch-dotgov.mts")) {

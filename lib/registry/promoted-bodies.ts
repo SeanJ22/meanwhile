@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -182,28 +182,10 @@ export function validatePromotedBodies(
  * addition into a diff nobody can review.
  */
 export function appendPromotedBodies(
-  rows: readonly Body[],
-  path: string = PROMOTED_BODIES_PATH,
+  _rows: readonly Body[],
+  _path: string = PROMOTED_BODIES_PATH,
 ): { added: number; skipped: string[] } {
-  const store = loadPromotedBodies(path);
-  const held = new Set(store.bodies.map((b) => b.id));
-  const skipped: string[] = [];
-  const fresh: Body[] = [];
-  for (const r of rows) {
-    if (held.has(r.id)) {
-      skipped.push(r.id);
-      continue;
-    }
-    held.add(r.id);
-    fresh.push(r);
-  }
-
-  const problems = validatePromotedBodies([...store.bodies, ...fresh]);
-  if (problems.length > 0) {
-    throw new Error(`refusing to write ${path}:\n  ${problems.join("\n  ")}`);
-  }
-
-  store.bodies.push(...fresh);
-  writeFileSync(path, `${JSON.stringify(store, null, 1)}\n`, "utf8");
-  return { added: fresh.length, skipped };
+  throw new Error(
+    "TRACKED_REGISTRY_WRITER_RETIRED: promote a complete reviewed registry-runtime-bindings package with scripts/promote-registry-runtime.mts --promote.",
+  );
 }

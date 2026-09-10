@@ -10,6 +10,10 @@ import { adaptedSplit, sourcesOf, type JurisdictionRegistry } from "../hunt/juri
 import { READER_SURFACES, datasetFamily, validateDatasetMapping } from "./datasets.ts";
 import { moduleDatasetInputPaths, readModuleDataset } from "./module-datasets.ts";
 import { sourceClosure } from "../ops/generator-digest.ts";
+import {
+  MANUAL_PRODUCTION_SOURCE_CONTRACTS,
+  type ManualProductionSourceContract,
+} from "../civic-data/manual-contracts.ts";
 
 export const INPUT_PATH = "data/state-holdings/manifest-inputs.json";
 export const CONTROL_PATH = "data/state-holdings/control-plane-readback.json";
@@ -30,9 +34,41 @@ export interface FrozenInputs {
   baseSha: string;
   discoveredStates: string[];
   files: { path: string; basePath: string; sha256: string; source: "SESSION_BASE" | "EXTERNAL_READBACK" }[];
+  /**
+   * Append-only present-authority classifications for a frozen holding whose
+   * tracked path was retired after its exact base bytes were inventoried.
+   * The original file/hash row remains immutable historical evidence.
+   */
+  authorityCutovers?: RuntimeAuthorityCutover[];
   rule: string;
 }
-interface MoveEntry { oldPath: string; newPath?: string; state?: string; disposition?: string; classification?: string; reason?: string; sha256?: string }
+export interface RuntimeAuthorityCutover {
+  formerPath: string;
+  frozenSha256: string;
+  disposition: "RETIRED_TO_PRODUCTION_DATA_PLANE";
+  formerContentDisposition: "NON_SERVING_ACQUISITION_SURPLUS";
+  contractId: string;
+  recordClass: string;
+  scope: string;
+  servingSeedPaths: string[];
+  readerImplementation: `${string}#${string}`;
+  reason: string;
+}
+export interface ValidatedRuntimeAuthorityCutover {
+  classification: RuntimeAuthorityCutover;
+  contract: ManualProductionSourceContract;
+}
+interface MoveEntry {
+  oldPath: string;
+  newPath?: string | null;
+  state?: string | null;
+  disposition?: string;
+  classification?: string;
+  reason?: string;
+  sha256?: string;
+  referenceCount?: number;
+  references?: { path: string; count: number }[];
+}
 interface Plan { baseSha?: string; baseSHA?: string; rows?: MoveEntry[]; files?: MoveEntry[]; candidates?: MoveEntry[]; moves?: MoveEntry[]; exemptions?: MoveEntry[]; classified?: MoveEntry[]; excluded?: MoveEntry[] }
 export interface Dataset {
   path: string;
@@ -55,6 +91,8 @@ export interface ManifestContext {
   frozen: FrozenInputs | null;
   inputDigest: string;
   inputs: { path: string; sha256: string }[];
+  authorityCutovers: ValidatedRuntimeAuthorityCutover[];
+  bootstrapFixtureContracts: Map<string, ManualProductionSourceContract[]>;
   obligationStates: Map<string, string[]>;
   workItemStates: Map<string, string[]>;
   vaultStates: Map<string, string[]>;
@@ -101,6 +139,86 @@ function tracked(root: string, ref?: string): string[] {
 function readJson<T>(root: string, path: string): T { return JSON.parse(readFileSync(join(root, path), "utf8")) as T; }
 function entries(plan: Plan): MoveEntry[] { return [...(plan.rows ?? plan.files ?? plan.candidates ?? plan.classified ?? []), ...(plan.moves ?? []), ...(plan.exemptions ?? [])]; }
 
+/**
+ * A frozen holding can leave Git only through an exact, fail-closed authority
+ * transfer. Its original hash remains in manifest-inputs and the move plan;
+ * this classification says why the path is no longer a current dataset and
+ * binds the replacement to the executable production contract.
+ */
+export function validateRuntimeAuthorityCutovers(
+  root: string,
+  plan: Plan,
+  frozen: FrozenInputs | null,
+): ValidatedRuntimeAuthorityCutover[] {
+  const classifications = frozen?.authorityCutovers ?? [];
+  const seen = new Set<string>();
+  const planByCurrentPath = new Map(entries(plan).map((entry) => [entry.newPath ?? entry.oldPath, entry]));
+  const frozenByPath = new Map((frozen?.files ?? []).map((entry) => [entry.path, entry]));
+  return classifications.map((classification) => {
+    if (seen.has(classification.formerPath)) throw new Error(`${classification.formerPath}: duplicate runtime-authority cutover classification`);
+    seen.add(classification.formerPath);
+    if (classification.disposition !== "RETIRED_TO_PRODUCTION_DATA_PLANE") {
+      throw new Error(`${classification.formerPath}: unknown runtime-authority cutover disposition`);
+    }
+    if (classification.formerContentDisposition !== "NON_SERVING_ACQUISITION_SURPLUS") {
+      throw new Error(`${classification.formerPath}: former content lacks an explicit non-serving disposition`);
+    }
+    if (!classification.reason.trim()) throw new Error(`${classification.formerPath}: authority cutover has no reason`);
+    const frozenEntry = frozenByPath.get(classification.formerPath);
+    if (!frozenEntry || frozenEntry.sha256 !== classification.frozenSha256) {
+      throw new Error(`${classification.formerPath}: authority cutover does not bind the exact frozen manifest input`);
+    }
+    const planEntry = planByCurrentPath.get(classification.formerPath);
+    if (!planEntry || planEntry.sha256 !== classification.frozenSha256 || !/exempt/i.test(planEntry.disposition ?? planEntry.classification ?? "")) {
+      throw new Error(`${classification.formerPath}: authority cutover does not bind an exact frozen in-place holding`);
+    }
+    const recordedReferences = planEntry.references ?? [];
+    const executableReference = recordedReferences.find(({ path }) => /^(?:app|components|hooks|lib|netlify|scripts)\//.test(path) || /^(?:middleware|next\.config|package)\./.test(path));
+    if (
+      recordedReferences.reduce((sum, reference) => sum + reference.count, 0) !== planEntry.referenceCount ||
+      executableReference
+    ) {
+      throw new Error(`${classification.formerPath}: non-serving surplus classification conflicts with its frozen consumer census`);
+    }
+    if (existsSync(join(root, classification.formerPath))) {
+      throw new Error(`${classification.formerPath}: retired tracked authority still exists`);
+    }
+    const contract = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find((candidate) => candidate.id === classification.contractId);
+    if (
+      !contract ||
+      contract.recordClass !== classification.recordClass ||
+      contract.scope !== classification.scope ||
+      contract.classification !== "RUNTIME_CIVIC_DATA" ||
+      contract.canonicalProductionStore !== "civic_data_candidates+civic_data_candidate_events+civic_data_promotions" ||
+      contract.execution !== "EXPLICIT_OWNER_INVOCATION_ONLY" ||
+      !contract.command.some((argument) => argument === "--promote") ||
+      contract.bootstrapFixturePaths.some((path) => path === classification.formerPath)
+    ) {
+      throw new Error(`${classification.formerPath}: permanent production contract does not match the authority cutover`);
+    }
+    const servingSeedPaths = unique(classification.servingSeedPaths);
+    if (
+      JSON.stringify(servingSeedPaths) !== JSON.stringify(unique(contract.bootstrapFixturePaths)) ||
+      servingSeedPaths.some((path) => !existsSync(join(root, path)))
+    ) {
+      throw new Error(`${classification.formerPath}: serving first-seed evidence does not match the permanent contract`);
+    }
+    const [readerPath, readerExport] = classification.readerImplementation.split("#");
+    if (!readerPath || !readerExport || !existsSync(join(root, readerPath))) {
+      throw new Error(`${classification.formerPath}: permanent Reader implementation does not exist`);
+    }
+    const readerSource = readFileSync(join(root, readerPath), "utf8");
+    const exportPattern = new RegExp(`\\bexport\\s+(?:async\\s+)?function\\s+${readerExport.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`);
+    if (!exportPattern.test(readerSource)) {
+      throw new Error(`${classification.formerPath}: permanent Reader export is not present`);
+    }
+    if (servingSeedPaths.some((path) => !readerSource.includes(path.split("/").at(-1)!))) {
+      throw new Error(`${classification.formerPath}: serving first-seed evidence is not consumed by the permanent Reader bootstrap`);
+    }
+    return { classification, contract };
+  });
+}
+
 /** Snapshot the base, before the atomic sweep; it does not depend on current moved paths. */
 export function snapshotManifestInputs(root: string, baseSha: string): FrozenInputs {
   if (!/^[0-9a-f]{40}$/.test(baseSha)) throw new Error("snapshot requires an exact 40-character base SHA");
@@ -135,13 +253,19 @@ export function snapshotManifestInputs(root: string, baseSha: string): FrozenInp
 /** Domain-level national holdings are retained; operational records and reference prose are not data holdings. */
 export function canonicalDatasetPaths(root: string): string[] {
   const plan = existsSync(join(root, PLAN_PATH)) ? readJson<Plan>(root, PLAN_PATH) : {};
+  const frozen = existsSync(join(root, INPUT_PATH)) ? readJson<FrozenInputs>(root, INPUT_PATH) : null;
+  const retiredPaths = new Set(validateRuntimeAuthorityCutovers(root, plan, frozen).map(({ classification }) => classification.formerPath));
   const planned = entries(plan).filter((e) => e.newPath || /exempt/i.test(e.disposition ?? e.classification ?? ""));
   const repositoryFiles = tracked(root);
   const base = repositoryFiles.filter((path) =>
     /^data\/(?:ballot|campaign-finance|candidates|congress-legislators|corpus|derived|dotgov|fec|outcomes|prl|reference|votes|zcta)\//.test(path) && /\.(json|csv|geojson)$/.test(path) ||
     /^data\/(meetings-snapshot|voting-sites)\.json$/.test(path) || /^lib\/registry\/[^/]+\.json$/.test(path) || /^public\/geo\/[^/]+\.geojson$/.test(path));
   const oldPaths = new Set([...entries(plan).filter((e) => e.newPath && e.newPath !== e.oldPath).map((e) => e.oldPath), ...(plan.excluded ?? []).map((e) => e.oldPath)]);
-  return unique([...base.filter((p) => !oldPaths.has(p)), ...planned.map((e) => e.newPath ?? e.oldPath), ...repositoryFiles.filter((path) => path.startsWith("data/states/"))]);
+  return unique([
+    ...base.filter((path) => !oldPaths.has(path) && !retiredPaths.has(path)),
+    ...planned.map((entry) => entry.newPath ?? entry.oldPath).filter((path) => !retiredPaths.has(path)),
+    ...repositoryFiles.filter((path) => path.startsWith("data/states/")),
+  ]);
 }
 
 function dataRows(value: unknown, path: string): { rows: Row[]; unit: string } {
@@ -222,6 +346,13 @@ function validateReadback(value: ReadbackBase, path: string): void {
 export function loadManifestContext(root: string): ManifestContext {
   const control = readJson<ControlReadback>(root, CONTROL_PATH);
   const vault = readJson<VaultReadback>(root, VAULT_PATH);
+  const plan = readJson<Plan>(root, PLAN_PATH);
+  const frozen = existsSync(join(root, INPUT_PATH)) ? readJson<FrozenInputs>(root, INPUT_PATH) : null;
+  const authorityCutovers = validateRuntimeAuthorityCutovers(root, plan, frozen);
+  const bootstrapFixtureContracts = new Map<string, ManualProductionSourceContract[]>();
+  for (const contract of MANUAL_PRODUCTION_SOURCE_CONTRACTS) for (const path of contract.bootstrapFixturePaths) {
+    bootstrapFixtureContracts.set(path, [...(bootstrapFixtureContracts.get(path) ?? []), contract]);
+  }
   validateReadback(control, CONTROL_PATH); validateReadback(vault, VAULT_PATH);
   for (const key of ["obligations", "occurrences", "routeTasks", "dispositions", "artifacts"] as const) if (!Array.isArray(control[key])) throw new Error(`${CONTROL_PATH}: missing ${key} rows`);
   if (!Array.isArray(vault.objects)) throw new Error(`${VAULT_PATH}: missing objects rows`);
@@ -263,7 +394,6 @@ export function loadManifestContext(root: string): ManifestContext {
   const obligationStates = new Map(control.obligations.map((o) => [string(o.id), taggedStates(o)]));
   const workItemStates = new Map((control.workItems ?? []).map((o) => [string(o.id), taggedStates(o)]));
   for (const occurrence of control.occurrences) workItemStates.set(string(occurrence.workItemId), unique([...(workItemStates.get(string(occurrence.workItemId)) ?? []), ...(obligationStates.get(string(occurrence.obligationId)) ?? [])]));
-  const plan = readJson<Plan>(root, PLAN_PATH);
   const movedStates = new Map(entries(plan).filter((e) => e.state).flatMap((e) => [[e.oldPath, e.state!] as const, [e.newPath ?? e.oldPath, e.state!] as const]));
   const portraitStates = new Map<string, string[]>();
   const officialStates = new Map<string, string[]>();
@@ -291,7 +421,7 @@ export function loadManifestContext(root: string): ManifestContext {
   const engineInputs = sourceClosure(root, join(root, "scripts/state-manifest.mts"));
   const inputPaths = unique([...paths, ...moduleDatasetInputPaths(paths), ...engineInputs, CONTROL_PATH, VAULT_PATH, PLAN_PATH, INPUT_PATH, "lib/holdings/manifest.ts", "lib/holdings/datasets.ts", "lib/holdings/module-datasets.ts", "lib/ops/generator-digest.ts", "lib/reference/index.ts", "lib/hunt/jurisdiction-universe.ts", "lib/candidates/population-label.ts", "lib/ocd/fips.ts"]);
   const inputs = inputPaths.filter((p) => existsSync(join(root, p))).map((path) => ({ path, sha256: hash(readFileSync(join(root, path))) }));
-  return { root, datasets, control, vault, discoveredStates, frozen: existsSync(join(root, INPUT_PATH)) ? readJson<FrozenInputs>(root, INPUT_PATH) : null, inputDigest: hash(JSON.stringify(inputs)), inputs, obligationStates, workItemStates, vaultStates, assetObjects };
+  return { root, datasets, control, vault, discoveredStates, frozen, inputDigest: hash(JSON.stringify(inputs)), inputs, authorityCutovers, bootstrapFixtureContracts, obligationStates, workItemStates, vaultStates, assetObjects };
 }
 
 /** Explicit bootstrap only. Later discoveries never rewrite the session's completion denominator. */
@@ -317,12 +447,14 @@ export function freezeManifestInputs(context: ManifestContext, baseSha: string):
 
 const cell = (x: unknown): string => String(x ?? "not recorded").replace(/\|/g, "\\|").replace(/\r?\n/g, " ").trim();
 const link = (path: string): string => `[${path}](../../${path})`;
+export const TRACKED_FIRST_SEED_AUTHORITY_BOUNDARY = "Immutable tracked first-seed/test evidence only — not current mutable authority and not a direct production Reader authority. Production delivery requires the canonical promoted pointer; these bytes can enter that store only through the explicit trusted first-seed adoption path.";
 // R16 annotations distinguish cited source clocks/deadlines from authorship stamps.
 // These reasons are emitted without consulting today's clock, keeping output stable.
 const SOURCE_DATE_REASONS: Readonly<Record<string, string>> = {
   "External observations": "observed_at is copied exactly from the linked readback in UTC; its calendar day can lead America/Phoenix",
   "External asset-store observation": "the linked vault readback supplies the exact UTC observation and asset index date",
   "Canonical datasets and feeds": "recorded observations and source dates are copied from the linked canonical holdings, never stamped by generation",
+  "Immutable tracked first-seed/test evidence tagged to this state": "source URL query bounds and civic calendar dates are preserved from immutable first-seed evidence, not asserted as completed work or generation dates",
   "Curated holding records": "record dates and civic calendar dates are preserved from the linked canonical holding",
   "Open route gaps and next_due": "next_due is a future scheduling obligation recorded by the canonical control-plane readback, not a claim of completed work",
   "Control-plane rows without a state identity": "next_due is the scheduling deadline preserved from the canonical control-plane readback",
@@ -384,15 +516,40 @@ function currentDisposition(context: ManifestContext, obligation: Row): { verdic
 export function renderStateManifest(context: ManifestContext, state: string): string {
   if (!context.frozen) throw new Error("manifest inputs are not frozen; bootstrap with --snapshot --base <SHA>");
   const data = context.datasets.filter((d) => d.states.includes(state));
+  const currentData = data.filter((dataset) => !context.bootstrapFixtureContracts.has(dataset.path));
+  const bootstrapData = data.filter((dataset) => context.bootstrapFixtureContracts.has(dataset.path));
+  const bootstrapAuthority = (dataset: Dataset): string => {
+    const contracts = context.bootstrapFixtureContracts.get(dataset.path) ?? [];
+    return contracts.map((contract) => `${contract.id}: ${contract.recordClass} / ${contract.scope}; ${contract.canonicalProductionStore}; Reader ${contract.readerProjection.id}`).join("; ");
+  };
   const obligations = context.control.obligations.filter((o) => context.obligationStates.get(string(o.id))?.includes(state));
   const vault = [...context.vault.objects, ...context.assetObjects].filter((o) => context.vaultStates.get(o.key)?.includes(state));
   const out = ["<!-- GENERATED by pnpm state-manifest (scripts/state-manifest.mts). DO NOT HAND EDIT. -->", `# ${state.toUpperCase()} — canonical holdings manifest`, "", "The generated answer to “what do we hold for this state?” Registries, acquisitions, snapshots, databases and vaults remain authoritative. This page is a deterministic view of the inputs below, never a second source of truth.", "", `Session base: \`${context.frozen.baseSha}\`. Current input digest: \`${context.inputDigest}\`.`, `Manifest obligation: ${context.frozen.discoveredStates.includes(state) ? "within the frozen session denominator" : "NEW AFTER SNAPSHOT — durable next obligation, generated automatically"}.`, "Byte-current means current against committed inputs. External observations keep their own observed_at stamps; generation never refreshes them.", ""];
   out.push(...table("External observations", ["Readback", "observed_at", "Source/store identity", "Schema/version", "Read-only instrument"], [[link(CONTROL_PATH), context.control.observed_at, `${context.control.source.store} — ${context.control.source.identity}`, context.control.source.schemaVersion, context.control.source.instrument], [link(VAULT_PATH), context.vault.observed_at, `${context.vault.source.store} — ${context.vault.source.identity}`, context.vault.source.schemaVersion, context.vault.source.instrument]], "external readback artifacts"));
   if (context.vault.assetSource) out.push(...table("External asset-store observation", ["Readback", "observed_at", "Source/store identity", "Schema/version", "Index observation"], [[link(VAULT_PATH), context.vault.assetSource.observed_at, context.vault.assetSource.identity, context.vault.assetSource.schemaVersion, `${context.vault.assetSource.index} recorded ${context.vault.assetSource.index_written_at}`]], "asset-store observations within the vault readback"));
-  out.push(...table("Canonical datasets and feeds", ["Dataset", "Domain", "Rows held / file denominator", "Recorded observation", "Reader surfaces", "Provenance / limits"], data.map((d) => { const f = datasetFamily(d.path)!; const n = d.rowsByState.get(state); return [link(d.path), d.domain, n !== undefined ? count(n, d.totalRows, d.unit) : `state is tagged in this holding; row partition not declared (${d.totalRows} ${d.unit} in file)`, datasetObserved(d), f.surfaces.map((id) => { const s = READER_SURFACES.find((r) => r.id === id)!; return `[${s.label}](../../${s.path})`; }).join("; ") || "Acquisition inventory — no direct reader surface", `${f.relationship} ${citations(d.value, state, d.path)}`]; }), "canonical dataset files tagged to this state"));
-  const sharedUnpartitioned = context.datasets.filter((d) => !d.states.length);
+  out.push(...table("Canonical datasets and feeds", ["Dataset", "Domain", "Rows held / file denominator", "Recorded observation", "Reader surfaces", "Provenance / limits"], currentData.map((d) => { const f = datasetFamily(d.path)!; const n = d.rowsByState.get(state); return [link(d.path), d.domain, n !== undefined ? count(n, d.totalRows, d.unit) : `state is tagged in this holding; row partition not declared (${d.totalRows} ${d.unit} in file)`, datasetObserved(d), f.surfaces.map((id) => { const s = READER_SURFACES.find((r) => r.id === id)!; return `[${s.label}](../../${s.path})`; }).join("; ") || "Acquisition inventory — no direct reader surface", `${f.relationship} ${citations(d.value, state, d.path)}`]; }), "current repository dataset files tagged to this state"));
+  out.push(...table("Immutable tracked first-seed/test evidence tagged to this state", ["Evidence", "Held row / file denominator", "Permanent production authority", "Authority boundary"], bootstrapData.map((d) => [link(d.path), count(d.rowsByState.get(state) ?? d.totalRows, d.totalRows, d.unit), bootstrapAuthority(d), `${TRACKED_FIRST_SEED_AUTHORITY_BOUNDARY} ${citations(d.value, state, d.path)}`]), "state-tagged tracked first-seed/test evidence files"));
+  const sharedUnpartitioned = context.datasets.filter((d) => !d.states.length && !context.bootstrapFixtureContracts.has(d.path));
   out.push(...table("Shared holdings without a state partition", ["Holding", "Held file denominator", "Reader relationship / attribution owed"], sharedUnpartitioned.map((d) => [link(d.path), count(d.totalRows, d.totalRows, d.unit), `${datasetFamily(d.path)!.relationship} This input has no state identity partition; no share is assigned to ${state.toUpperCase()} by inference.`]), "canonical shared inputs without a state partition"));
-  const curatedDatasets = context.datasets.filter((d) => d.path.endsWith(".ts") || asRow(d.value).schemaVersion === 1 && asRow(d.value).records && !Array.isArray(asRow(d.value).records));
+  const sharedBootstrap = context.datasets.filter((d) => !d.states.length && context.bootstrapFixtureContracts.has(d.path));
+  out.push(...table("Shared immutable first-seed/test evidence without a state partition", ["Evidence", "Held file denominator", "Permanent production authority", "Authority / attribution boundary"], sharedBootstrap.map((d) => [link(d.path), count(d.totalRows, d.totalRows, d.unit), bootstrapAuthority(d), `${TRACKED_FIRST_SEED_AUTHORITY_BOUNDARY} This evidence has no state identity partition; no share is assigned to ${state.toUpperCase()} by inference.`]), "shared tracked first-seed/test evidence files without a state partition"));
+  out.push(...table(
+    "Tracked authorities retired to the production data plane",
+    ["Former tracked authority", "Content disposition", "Permanent serving authority", "Only writer", "Reader / serving seed", "LKG / reason"],
+    context.authorityCutovers.map(({ classification, contract }) => {
+      const [readerPath, readerExport] = classification.readerImplementation.split("#");
+      return [
+        `\`${classification.formerPath}\` (frozen SHA-256 \`${classification.frozenSha256}\`)`,
+        `${classification.disposition}; ${classification.formerContentDisposition}`,
+        `${contract.id}: ${contract.recordClass} / ${contract.scope}; ${contract.canonicalProductionStore}`,
+        `${contract.execution}: \`${contract.command.join(" ")}\``,
+        `${link(readerPath)}#${readerExport}; immutable first-seed/test evidence: ${classification.servingSeedPaths.map(link).join(", ")}; consumers: ${contract.readerProjection.consumers.join(", ")}`,
+        `${classification.reason} ${contract.lkgBehavior}`,
+      ];
+    }),
+    "retired tracked authorities with exact permanent data-plane replacements",
+  ));
+  const curatedDatasets = context.datasets.filter((d) => !context.bootstrapFixtureContracts.has(d.path) && (d.path.endsWith(".ts") || asRow(d.value).schemaVersion === 1 && asRow(d.value).records && !Array.isArray(asRow(d.value).records)));
   const curatedRecords = curatedDatasets.flatMap((d) => dataRows(d.value, d.path).rows.map((row, index) => ({ d, row, index })).filter(({ row }) => taggedStates(row).includes(state) || /^data\/states\/([^/]+)\//.exec(d.path)?.[1] === state));
   const recordName = (row: Row, index: number): string => string(row.bodyId ?? row.id ?? row.meetingId ?? row.formKey ?? row.classKey ?? row.topicId ?? row.officeType ?? row.name ?? row.state) || `${string(row.recordExport) || "record"} #${index + 1}`;
   out.push(...table("Curated holding records", ["Dataset", "Record identity", "Held record denominator", "Membership / detail", "Source / recorded date"], curatedRecords.map(({ d, row, index }) => [link(d.path), recordName(row, index), count(1, d.totalRows, d.unit), Array.isArray(row.members) ? count(row.members.length, row.members.length, "members in this roster; listed below") : Array.isArray(row.steps) ? count(row.steps.length, row.steps.length, "calendar steps in the linked record") : row.holdingStatus ?? row.recordExport ?? d.unit, `${citations({ records: [row] }, state)}; ${observed(row)}`]), "state-attributed curated records"));
@@ -400,13 +557,13 @@ export function renderStateManifest(context: ManifestContext, state: string): st
   out.push(...table("Curated records with national scope or attribution owed", ["Dataset", "Record identity", "Held denominator", "Scope / source"], unpartitionedRecords.map(({ d, row, index }) => [link(d.path), recordName(row, index), count(1, d.totalRows, d.unit), `No state partition is assigned by inference. ${citations({ records: [row] })}`]), "unpartitioned curated records, including national definitions"));
   const rosterMembers = curatedRecords.flatMap(({ d, row }) => array(row.members).map((member) => ({ d, roster: row, member })));
   out.push(...table("Curated roster members", ["Dataset / roster", "Member identity", "Name / role", "Roster denominator", "Source / acquired date"], rosterMembers.map(({ d, roster, member }) => [`${link(d.path)} / ${roster.bodyId}`, member.id, `${member.name} / ${member.officeTitle}`, count(1, array(roster.members).length, "members in this roster"), `${citations({ records: [roster] })}; ${observed(roster)}`]), "held roster member records (assembled rosters and acquired inputs may represent the same person)"));
-  const identities = data.filter((d) => d.family === "identity" && (Array.isArray(asRow(d.value).candidates) || Array.isArray(asRow(d.value).contests)) || /candidate-universe-/.test(d.path) || d.family === "candidate-acquisitions" || d.family === "ballot" && Array.isArray(asRow(d.value).candidacies));
+  const identities = currentData.filter((d) => d.family === "identity" && (Array.isArray(asRow(d.value).candidates) || Array.isArray(asRow(d.value).contests)) || /candidate-universe-/.test(d.path) || d.family === "candidate-acquisitions" || d.family === "ballot" && Array.isArray(asRow(d.value).candidacies));
   out.push(...table("Candidate and contest identity registries", ["Registry / corpus", "Candidate rows / registry denominator", "Contest rows / registry denominator", "Corpus citations"], identities.map((d) => { const v = asRow(d.value); const candidates = array(v.candidates ?? v.candidacies); const contests = Array.isArray(v.contests) ? array(v.contests).length : new Set(candidates.map((c) => string(c.canonicalContestId ?? c.contestIdentityId ?? c.contestId)).filter(Boolean)).size; return [link(d.path), count(candidates.length, candidates.length, "held candidate identities"), count(contests, contests, "held contest identities"), citations(v)]; }), "identity/corpus datasets"));
-  const snapshots = data.filter((d) => ["state-money", "meetings", "ballot", "federal-finance"].includes(d.family) && (Array.isArray(asRow(d.value).records) || Array.isArray(asRow(d.value).meetings) || Array.isArray(asRow(d.value).candidacies) || d.family === "federal-finance"));
+  const snapshots = currentData.filter((d) => ["state-money", "meetings", "ballot", "federal-finance"].includes(d.family) && (Array.isArray(asRow(d.value).records) || Array.isArray(asRow(d.value).meetings) || Array.isArray(asRow(d.value).candidacies) || d.family === "federal-finance"));
   out.push(...table("Normalized funding, meetings and ballot snapshots", ["Snapshot", "Held state rows / snapshot rows", "Recorded source denominator and limits"], snapshots.map((d) => { const v = asRow(d.value); const split = asRow(v.split); const scope = split.candidaciesInScope ?? "not recorded"; const note = d.family === "state-money" ? `Candidacies in scope: ${scope} of ${scope}; filed ${split.filed ?? "not recorded"} of ${scope}; registered/no activity ${split.registeredNoActivityReported ?? "not recorded"} of ${scope}; no reports ${split.noReportsOnFile ?? "not recorded"} of ${scope}; unresolved ${split.unresolved ?? "not recorded"} of ${scope}. Records and candidacies are different denominators.` : d.family === "meetings" ? `${array(v.agendaDocuments).filter((x) => taggedStates(x).includes(state)).length} of ${array(v.agendaDocuments).length} held agenda documents; configured-source pilot snapshot, not all state meetings.` : "Held reader projection only; every included source/candidate remains cited in the snapshot."; return [link(d.path), count(d.rowsByState.get(state) ?? d.totalRows, d.totalRows, d.unit), note]; }), "normalized snapshot datasets"));
-  out.push(...table("Coverage by domain (R-C9)", ["Domain", "Dataset", "Population label", "Denominator / basis"], data.map((d) => { const c = coverage(d); return [d.domain, link(d.path), c.label, c.basis]; }), "dataset coverage statements"));
+  out.push(...table("Coverage by domain (R-C9)", ["Domain", "Dataset", "Population label", "Denominator / basis"], currentData.map((d) => { const c = coverage(d); return [d.domain, link(d.path), c.label, c.basis]; }), "current repository dataset coverage statements"));
   const jurisdictionRows: unknown[][] = [];
-  for (const d of data.filter((d) => d.family === "jurisdictions")) {
+  for (const d of currentData.filter((d) => d.family === "jurisdictions")) {
     const registry = d.value as JurisdictionRegistry; if (!Array.isArray(registry.jurisdictions)) continue;
     const split = adaptedSplit(registry);
     const owed = registry.jurisdictions.filter((j) => sourcesOf(registry, j).some((s) => s.state === "DISCOVERY_OWED")).length;
@@ -428,6 +585,7 @@ export function renderStateManifest(context: ManifestContext, state: string): st
   const acquired = context.control.artifacts.filter((a) => (context.workItemStates.get(string(a.workItemId)) ?? taggedStates(a)).includes(state));
   out.push(`Control-plane artifact records: ${count(acquired.length, context.control.artifacts.length, "observed artifact metadata rows")}; vault objects above prove inventory in the observed store. Artifact metadata alone is not proof that bytes are held.`, "");
   out.push(`Unattributed external asset inventory: ${count(context.assetObjects.filter((o) => !context.vaultStates.get(o.key)?.length).length, context.assetObjects.length, "asset-index entries without a state identity join")}. Their verified bytes remain inventoried in ${link(VAULT_PATH)}; assigning these historical assets to a state is a future attribution obligation.`, "");
+  out.push("A frozen file remains historical evidence after an authority transfer, but a path classified RETIRED_TO_PRODUCTION_DATA_PLANE is not a current repository holding. That classification is accepted only when its original hash, frozen plan entry, absent tracked path, permanent production contract, promotion-only writer, and Reader export all agree.", "");
   out.push("## Inputs and next obligations", "", `Frozen session denominator: ${link(INPUT_PATH)}. Atomic classification/move plan: ${link(PLAN_PATH)}. Typed reader mapping: ${link("lib/holdings/datasets.ts")}.`, "", "Every future canonical holding under data/states/<st>/ is discovered automatically. A new state's first registry, snapshot, vault artifact or obligation makes its manifest required; --check fails until the generated answer exists. Undeclared dataset-to-surface mappings fail generation and must be classified. External readbacks are refreshed only by their explicit acquisition command, never by generation, handoff --check or CI.", "", `Current discovered manifest universe: ${count(context.discoveredStates.length, context.discoveredStates.length, "states/territories")}: ${context.discoveredStates.map((s) => s.toUpperCase()).join(", ")}.`, `Unattributed vault inventory: ${count(context.vault.objects.filter((o) => !(context.vaultStates.get(o.key)?.length)).length, context.vault.objects.length, "objects without a state join")}. They are retained in ${link(VAULT_PATH)} and never assigned a state by guessing.`, "", "No source-universe completion is claimed for a missing registry, snapshot or route. Open rows above, unprojected acquisitions and absent domain inventories remain owed under the acquisition law.", "");
   return out.join("\n");
 }

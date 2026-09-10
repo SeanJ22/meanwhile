@@ -3,6 +3,7 @@ import { test } from "node:test";
 
 import {
   AgendaDocumentStore,
+  canonicalAgendaDocument,
   contentHashOf,
   extractHtmlText,
   retrieveAgendaDocument,
@@ -138,4 +139,25 @@ test("a PDF that cannot be parsed records the failure and keeps the link", async
   assert.equal(doc.text, null, "no partial text presented as complete");
   assert.ok(doc.extractionNote, "the failure is recorded on the row");
   assert.equal(doc.documentUrl, "https://example.gov/broken.pdf");
+});
+
+test("binary Office bytes retain their URL/hash but never become Reader text or JSONB NULs", async () => {
+  const binary = new Uint8Array([0x50, 0x4b, 0x03, 0x04, 0x14, 0x00, 0x06, 0x00]);
+  const doc = await retrieveAgendaDocument(meetingWithAgenda, {
+    fetchImpl: (async () => new Response(binary, {
+      status: 200,
+      headers: { "content-type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
+    })) as typeof fetch,
+  });
+
+  assert.ok(doc);
+  assert.equal(doc.extraction, "failed");
+  assert.equal(doc.text, null);
+  assert.match(doc.extractionNote ?? "", /binary document bytes/i);
+  assert.equal(doc.contentHash, contentHashOf(binary));
+
+  const legacy = canonicalAgendaDocument(docOf("legacy", "abc", "PK\u0003\u0004\u0000binary"));
+  assert.equal(legacy.text, null);
+  assert.equal(legacy.extraction, "failed");
+  assert.doesNotMatch(JSON.stringify(legacy), /\\u0000/);
 });

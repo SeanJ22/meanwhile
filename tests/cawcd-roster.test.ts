@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 import { AZ_CAWCD_ROSTERS } from "../lib/registry/cawcd-rosters.ts";
 import { BODY_ROSTERS, rosterHoldersForBody } from "../lib/registry/body-rosters.ts";

@@ -11,7 +11,6 @@ import {
   personCardSources,
   sourceCountLabel,
 } from "@/lib/officials/card-sources";
-import { CONGRESS_DIRECTORY_SOURCE } from "@/lib/officials/directory-source";
 
 import { FundingBlock } from "@/components/funding/funding-block";
 import { PublicStatementsProfile } from "@/components/officials/public-statements-profile";
@@ -77,11 +76,11 @@ export function OfficialModal({
    */
   const sources = personCardSources(
     holder,
-    holder.id.startsWith("congress:")
+    holder.id.startsWith("congress:") && holder.provenance
       ? [
           {
             what: "Their official accounts, committee seats and district offices",
-            provenance: CONGRESS_DIRECTORY_SOURCE,
+            provenance: holder.provenance,
           },
         ]
       : [],

@@ -1,6 +1,6 @@
 import type { AgendaSourceType } from "../../registry/types.ts";
 import {
-  wiringForTypes,
+  wiringForMeetingSource,
   type BodySourceWiring,
 } from "../../registry/source-wiring.ts";
 import { makeApptegySource } from "../apptegy/index.ts";
@@ -14,11 +14,13 @@ import { makeIqm2Source } from "../iqm2/index.ts";
 import { makeRevizeSource } from "../revize/index.ts";
 import { makeSchedulePageSource } from "../schedulepage/index.ts";
 import {
-  legistarSource,
+  makeLegistarSource,
   normalizeWithDrops as legistarNormalizeWithDrops,
   type LegistarEventWithClient,
 } from "../legistar/index.ts";
+import { legistarClientsFromWiring } from "../legistar/client-registry.ts";
 import { makeLegistarInSiteSource } from "../legistar-insite/index.ts";
+import { inSiteTenantsFromWiring } from "../legistar-insite/tenant-registry.ts";
 import { makeOnBaseSource } from "../onbase/index.ts";
 import type { ReportingMeetingSource } from "../types.ts";
 
@@ -41,9 +43,11 @@ import { CompositeSource } from "./index.ts";
  */
 type ChildFactory = (rows: BodySourceWiring[]) => ReportingMeetingSource<unknown>;
 
-/** Legistar keeps its own client registry; wrap it with the reporting shape. */
-const legistarReporting: ReportingMeetingSource<LegistarEventWithClient> = {
-  ...legistarSource,
+/** Add the composite accounting shape without adding a membership registry. */
+function legistarReporting(rows: BodySourceWiring[]): ReportingMeetingSource<LegistarEventWithClient> {
+  const clients = legistarClientsFromWiring(rows);
+  return {
+  ...makeLegistarSource(clients),
   /**
    * `@accounting-delegated-to lib/sources/legistar/index.ts`
    *
@@ -88,9 +92,10 @@ const legistarReporting: ReportingMeetingSource<LegistarEventWithClient> = {
      * nothing left to translate. Two accountings of one pass is the thing that
      * can disagree; one cannot.
      */
-    return legistarNormalizeWithDrops(raw, now ?? new Date());
+    return legistarNormalizeWithDrops(raw, now ?? new Date(), clients);
   },
-};
+  };
+}
 
 export const CAPABILITIES: Array<{
   /** Must equal the built child's `name` — asserted in buildCompositeSource. */
@@ -101,11 +106,11 @@ export const CAPABILITIES: Array<{
   {
     name: "legistar",
     types: ["LEGISTAR"],
-    make: () => legistarReporting as ReportingMeetingSource<unknown>,
+    make: (rows) => legistarReporting(rows) as ReportingMeetingSource<unknown>,
   },
   {
     /**
-     * **THE SAME BODIES, THE OTHER ROUTE.** (2026-08-28.)
+     * **THE SAME PRODUCT, AN INDEPENDENT ROUTE.** (2026-08-28.)
      *
      * `legistar` above reads `webapi.legistar.com`, which returns only the
      * sittings whose InSite meeting-detail page is publicly viewable. This
@@ -114,21 +119,22 @@ export const CAPABILITIES: Array<{
      * not viewable / exactly the 3 viewable from the API, Phoenix 8 / 8 / 0,
      * Pima 3 / 3 / 0.
      *
-     * It is registered on the SAME `LEGISTAR` type on purpose — it serves the
-     * same wired bodies, so a failure here attributes to the same bodies a
-     * `legistar` failure does, and `wiringForSourceName` resolves both.
+     * It is registered on the same `LEGISTAR` product type on purpose, but
+     * SOURCE_WIRING explicitly selects its body membership. Pima currently
+     * declares both independent routes; Mesa declares only InSite. Each
+     * selected route/body pair owns a different contract, pointer, and clock.
      *
      * **Registration order is load-bearing.** `collapseDuplicateSittings`
      * breaks a tie in informativeness by keeping the row it saw first, and
      * first is source-registration order. `legistar` sits above this entry so
-     * that when the same sitting reaches both routes — which it does the moment
-     * the clerk publishes the agenda — the WebAPI record wins even before it
-     * has an agenda file to win on. The portal supplies the rows `/events` does
-     * not have; it does not supersede the ones it does.
+     * that when an explicitly dual-routed body publishes the same sitting on
+     * both routes, the WebAPI record wins the presentation-only duplicate
+     * collapse. This ordering never changes either route/body authority
+     * partition or its durable receipt.
      */
     name: "legistar-insite",
     types: ["LEGISTAR"],
-    make: () => makeLegistarInSiteSource() as ReportingMeetingSource<unknown>,
+    make: (rows) => makeLegistarInSiteSource({ tenants: inSiteTenantsFromWiring(rows) }) as ReportingMeetingSource<unknown>,
   },
   {
     name: "civicplus",
@@ -199,8 +205,9 @@ export const CAPABILITIES: Array<{
  * snapshot can legitimately name a source this build no longer has.
  */
 export function wiringForSourceName(name: string): BodySourceWiring[] {
-  const capability = CAPABILITIES.find((c) => c.name === name);
-  return capability ? wiringForTypes(capability.types) : [];
+  return CAPABILITIES.some((capability) => capability.name === name)
+    ? wiringForMeetingSource(name)
+    : [];
 }
 
 /**
@@ -210,34 +217,64 @@ export function wiringForSourceName(name: string): BodySourceWiring[] {
  * it does not invent them.
  */
 /**
- * The per-source budget a SCHEDULED refresh gets (F22, 2026-08-20).
+ * The per-source/body budget a standing-runner child gets (F22, 2026-08-20).
  *
- * `CompositeSource` defaults to 20s, which is right for the live map: a
- * reader is waiting, and a source that has not answered in twenty seconds is
- * better reported as unreachable than left spinning. A four-times-a-day batch
- * job has nobody waiting, and on 2026-08-20 that borrowed default is what
- * walled civicplus — it serializes an iCal GET and an AgendaCenter GET per
- * wired body, at the polite spacing every adapter honours, and ran past
- * twenty seconds. Nothing was refusing us; we hung up.
+ * `CompositeSource` defaults to 20s, which was written for an interactive
+ * diagnostic. A standing acquisition has nobody waiting, and on 2026-08-20
+ * that borrowed default walled civicplus while its polite serial requests
+ * were still making progress.
  *
- * The cost of that hang-up was not one source: carry-forward clipped 23 of
- * Rockaway Township's archived sittings (F23), the gate's floor caught the
- * shortfall, and the whole refresh went red with ten healthy sources' fresh
- * data uncommitted.
+ * The historical aggregate writer amplified that timeout across unrelated
+ * sources. The permanent runner instead gives each exact route/body child
+ * this budget and records only that partition's outcome.
  *
  * This changes no request rate and no politeness: adapters still serialize,
  * still identify themselves, still honour `Retry-After`. It only stops the
  * batch job from abandoning a source the reader's own timeout was written
  * for.
  */
-export const SCHEDULED_REFRESH_TIMEOUT_MS = 120_000;
+export const STANDING_PARTITION_ACQUISITION_TIMEOUT_MS = 120_000;
+
+export interface MeetingPartitionSelection {
+  readonly sourceName: string;
+  readonly bodyId: string;
+}
+
+export function wiringForSelectedMeetingSource(
+  sourceName: string,
+  selections?: readonly MeetingPartitionSelection[],
+): BodySourceWiring[] {
+  const wired = wiringForMeetingSource(sourceName);
+  if (selections === undefined) return wired;
+  const requested = selections.filter((selection) => selection.sourceName === sourceName);
+  for (const selection of requested) {
+    if (!wired.some((row) => row.bodyId === selection.bodyId)) {
+      throw new Error(`MEETING_PARTITION_SELECTION_NOT_WIRED:${selection.sourceName}:${selection.bodyId}`);
+    }
+  }
+  const selectedBodies = new Set(requested.map((selection) => selection.bodyId));
+  return wired.filter((row) => selectedBodies.has(row.bodyId));
+}
 
 export function buildCompositeSource(
-  options: { timeoutMs?: number } = {},
+  options: {
+    timeoutMs?: number;
+    captureAcquisitionEvidence?: boolean;
+    sourceNames?: readonly string[];
+    meetingPartitions?: readonly MeetingPartitionSelection[];
+  } = {},
 ): CompositeSource {
+  if (options.meetingPartitions) {
+    for (const selection of options.meetingPartitions) {
+      if (!wiringForMeetingSource(selection.sourceName).some((row) => row.bodyId === selection.bodyId)) {
+        throw new Error(`MEETING_PARTITION_SELECTION_NOT_WIRED:${selection.sourceName}:${selection.bodyId}`);
+      }
+    }
+  }
   const children: ReportingMeetingSource<unknown>[] = [];
   for (const capability of CAPABILITIES) {
-    const rows = wiringForTypes(capability.types);
+    if (options.sourceNames && !options.sourceNames.includes(capability.name)) continue;
+    const rows = wiringForSelectedMeetingSource(capability.name, options.meetingPartitions);
     // No wired body, no child — including Legistar, whose own client list is
     // only consulted once a wiring row routes a body to it.
     if (rows.length === 0) continue;

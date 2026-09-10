@@ -1,3 +1,5 @@
+import { mayUseTestFixture } from "../civic-data/fixture-policy.ts";
+
 /**
  * The everyday-topics contact map (session brief 3, wall clock 2026-08-14):
  * the pothole standard. For each everyday topic × zip, the office that
@@ -52,8 +54,60 @@ export interface EverydayContact {
 export interface EverydayMiss {
   topicId: string;
   zip: string;
+  /** A gap is an explicit owner obligation, not an inferred absence. */
+  disposition: "UNKNOWN";
+  holdingStatus: "CONTACT_OWED";
+  /** Exact official page reviewed at the last unsuccessful contact hunt. */
+  evidenceSourceUrl: string;
+  reviewedAt: string;
   /** Why there is no contact — the recorded rung, never silence. */
   reason: string;
+}
+
+export interface EverydayRoutingContactRecord {
+  readonly [key: string]: unknown;
+  readonly id: string;
+  readonly kind: "CONTACT";
+  readonly topicId: string;
+  readonly zip: string;
+  /** One source-scoped contact at one exact denominator cell. */
+  readonly contact: EverydayContact;
+}
+
+export interface EverydayRoutingContactOwedRecord {
+  readonly [key: string]: unknown;
+  readonly id: string;
+  readonly kind: "CONTACT_OWED";
+  readonly topicId: string;
+  readonly zip: string;
+  readonly disposition: "UNKNOWN";
+  readonly holdingStatus: "CONTACT_OWED";
+  readonly evidenceSourceUrl: string;
+  readonly reviewedAt: string;
+  readonly reason: string;
+}
+
+export type EverydayRoutingRecord =
+  | EverydayRoutingContactRecord
+  | EverydayRoutingContactOwedRecord;
+
+export interface EverydayRoutingDenominator {
+  readonly [key: string]: number;
+  readonly topics: number;
+  readonly zips: number;
+  readonly cells: number;
+  readonly contactAvailableCells: number;
+  readonly unknownContactOwedCells: number;
+  readonly contactRecords: number;
+  readonly contactSources: number;
+}
+
+/** Canonical Reader projection promoted under the manual everyday contract. */
+export interface EverydayRoutingProjection {
+  readonly kind: "everyday-routing";
+  readonly formatVersion: 1;
+  readonly denominator: EverydayRoutingDenominator;
+  readonly records: readonly EverydayRoutingRecord[];
 }
 
 /** The everyday topic set, stated so the denominator is checkable:
@@ -590,48 +644,248 @@ export const EVERYDAY_MISSES: readonly EverydayMiss[] = [
   {
     topicId: "snow-removal",
     zip: "85701",
+    disposition: "UNKNOWN",
+    holdingStatus: "CONTACT_OWED",
+    evidenceSourceUrl:
+      "https://www.tucsonaz.gov/Departments/Transportation-Mobility/Street-Maintenance",
+    reviewedAt: "2026-08-14",
     reason:
       "No dedicated snow-removal service exists to name — measurable snow in Tucson is rare enough that the city meets it through street maintenance, not a standing plow operation. Road problems route to roads-local.",
   },
   {
     topicId: "snow-removal",
     zip: "85641",
+    disposition: "UNKNOWN",
+    holdingStatus: "CONTACT_OWED",
+    evidenceSourceUrl: "https://www.pima.gov/1012/Service-Request",
+    reviewedAt: "2026-08-14",
     reason:
       "Same as 85701 — no standing snow operation in the Sonoran Desert lowlands; county road problems route to roads-local.",
   },
   {
     topicId: "trash-recycling",
     zip: "85641",
+    disposition: "UNKNOWN",
+    holdingStatus: "CONTACT_OWED",
+    evidenceSourceUrl: "https://www.pima.gov/1012/Service-Request",
+    reviewedAt: "2026-08-14",
     reason:
       "No public collection owner found: unincorporated Pima County appears to rely on private subscription haulers, and no county page naming a collection service was found this session. Rungs: pima.gov searched (no residential-collection page); the claim of private-only service is NOT asserted to readers — the cell is a recorded gap.",
   },
   {
     topicId: "parks",
     zip: "85641",
+    disposition: "UNKNOWN",
+    holdingStatus: "CONTACT_OWED",
+    evidenceSourceUrl: "https://www.pima.gov/1193/",
+    reviewedAt: "2026-08-14",
     reason:
       "Pima County Natural Resources, Parks & Recreation is the owner, but its phone number conflicts between secondary sources (520-877-6000 vs 520-724-5000) and the county page fetched this session carried no number. Refusing to publish a number two sources disagree on — rung recorded, browser phase may resolve.",
   },
   {
     topicId: "water-sewer",
     zip: "03255",
+    disposition: "UNKNOWN",
+    holdingStatus: "CONTACT_OWED",
+    evidenceSourceUrl: "https://www.newbury.nh.gov/departments",
+    reviewedAt: "2026-08-14",
     reason:
       "The town's own department directory (read in a real browser 2026-08-14) lists no water or sewer department — consistent with private wells and septic. Whether the Blodgett Landing sewer district serves any of 03255 remains unverified; recorded as a gap rather than asserted either way.",
   },
   {
     topicId: "animals",
     zip: "03255",
+    disposition: "UNKNOWN",
+    holdingStatus: "CONTACT_OWED",
+    evidenceSourceUrl: "https://www.newbury.nh.gov/departments",
+    reviewedAt: "2026-08-14",
     reason:
       "The town's own department directory (read in a real browser 2026-08-14) lists no animal control; NH towns typically run it through the police and license dogs at the town clerk, but publishing that pattern as Newbury's answer without the town saying so is a guess. The police row under 'noise' is the practical fallback.",
   },
 ];
 
+function everydayCellId(topicId: string, zip: string): string {
+  return `${topicId}|${zip}`;
+}
+
+function everydayContactRecordId(topicId: string, zip: string, sourceUrl: string): string {
+  return `everyday-contact:${topicId}:${zip}:${sourceUrl}`;
+}
+
+function everydayContactOwedRecordId(topicId: string, zip: string): string {
+  return `everyday-contact-owed:${topicId}:${zip}`;
+}
+
+/**
+ * Convert the tracked adoption evidence into the exact first import package.
+ * Production never reads these arrays directly: it reads this shape only
+ * after the package has passed source receipts and canonical promotion.
+ */
+export function buildEverydayRoutingProjection(
+  contacts: readonly EverydayContact[] = EVERYDAY_CONTACTS,
+  misses: readonly EverydayMiss[] = EVERYDAY_MISSES,
+): EverydayRoutingProjection {
+  const contactRecords = contacts.flatMap((contact) =>
+    contact.zips.map((zip): EverydayRoutingContactRecord => ({
+      id: everydayContactRecordId(contact.topicId, zip, contact.sourceUrl),
+      kind: "CONTACT",
+      topicId: contact.topicId,
+      zip,
+      contact: { ...contact, zips: [zip] },
+    }))
+  );
+  const owedRecords = misses.map((miss): EverydayRoutingContactOwedRecord => ({
+    id: everydayContactOwedRecordId(miss.topicId, miss.zip),
+    kind: "CONTACT_OWED",
+    topicId: miss.topicId,
+    zip: miss.zip,
+    disposition: miss.disposition,
+    holdingStatus: miss.holdingStatus,
+    evidenceSourceUrl: miss.evidenceSourceUrl,
+    reviewedAt: miss.reviewedAt,
+    reason: miss.reason,
+  }));
+  const projection = everydayRoutingProjectionFromRecords([...contactRecords, ...owedRecords]);
+  const problems = everydayRoutingProjectionProblems(projection);
+  if (problems.length > 0) {
+    throw new Error(`EVERYDAY_ROUTING_FIRST_SEED_INVALID:${problems.join(" | ")}`);
+  }
+  return projection;
+}
+
+/** Recompute, never trust, the accounting carried by a promoted projection. */
+export function everydayRoutingProjectionFromRecords(
+  records: readonly EverydayRoutingRecord[],
+): EverydayRoutingProjection {
+  const contacts = records.filter(
+    (record): record is EverydayRoutingContactRecord => record.kind === "CONTACT",
+  );
+  const owed = records.filter(
+    (record): record is EverydayRoutingContactOwedRecord => record.kind === "CONTACT_OWED",
+  );
+  const covered = new Set(contacts.map((record) => everydayCellId(record.topicId, record.zip)));
+  return {
+    kind: "everyday-routing",
+    formatVersion: 1,
+    denominator: {
+      topics: EVERYDAY_TOPIC_IDS.length,
+      zips: EVERYDAY_ZIPS.length,
+      cells: EVERYDAY_TOPIC_IDS.length * EVERYDAY_ZIPS.length,
+      contactAvailableCells: covered.size,
+      unknownContactOwedCells: new Set(owed.map((record) => everydayCellId(record.topicId, record.zip))).size,
+      contactRecords: contacts.length,
+      contactSources: new Set(contacts.map((record) => record.contact.sourceUrl)).size,
+    },
+    records: [...records].sort((left, right) => left.id.localeCompare(right.id)),
+  };
+}
+
+/** Fail-closed structural/semantic checks with no Reader/UI/software-suite input. */
+export function everydayRoutingProjectionProblems(value: unknown): string[] {
+  const problems: string[] = [];
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return ["The everyday routing projection is not an object."];
+  }
+  const projection = value as Partial<EverydayRoutingProjection>;
+  if (projection.kind !== "everyday-routing" || projection.formatVersion !== 1) {
+    problems.push("The everyday routing projection has the wrong family or format version.");
+  }
+  const records = Array.isArray(projection.records) ? projection.records : [];
+  const ids = new Set<string>();
+  const contacts: EverydayRoutingContactRecord[] = [];
+  const owed: EverydayRoutingContactOwedRecord[] = [];
+  const topicIds = new Set<string>(EVERYDAY_TOPIC_IDS);
+  const zips = new Set<string>(EVERYDAY_ZIPS);
+  for (const record of records) {
+    if (!record || typeof record !== "object" || Array.isArray(record)) {
+      problems.push("An everyday routing record is not an object.");
+      continue;
+    }
+    const row = record as EverydayRoutingRecord;
+    if (!row.id || ids.has(row.id)) problems.push("Everyday routing record ids are empty or duplicated.");
+    ids.add(row.id);
+    if (!topicIds.has(row.topicId) || !zips.has(row.zip)) {
+      problems.push(`${row.id || "An unnamed record"} is outside the exact topic/zip denominator.`);
+    }
+    if (row.kind === "CONTACT") {
+      contacts.push(row);
+      const contact = row.contact;
+      const zips = Array.isArray(contact?.zips) ? contact.zips : [];
+      if (row.id !== everydayContactRecordId(row.topicId, row.zip, contact?.sourceUrl ?? "") ||
+          !contact || contact.topicId !== row.topicId || zips.length !== 1 || zips[0] !== row.zip ||
+          contact.verification !== "PAGE_FETCHED" || !/^https:\/\//.test(contact.sourceUrl) ||
+          !Number.isFinite(Date.parse(contact.collectedAt)) ||
+          !(contact.phone || contact.email || contact.requestUrl) ||
+          (contact.requestUrl !== null && !/^https:\/\//.test(contact.requestUrl))) {
+        problems.push(`${row.id} lacks its canonical source-scoped id, verified contact, exact cell, or usable contact channel.`);
+      }
+    } else if (row.kind === "CONTACT_OWED") {
+      owed.push(row);
+      if (row.id !== everydayContactOwedRecordId(row.topicId, row.zip) ||
+          row.disposition !== "UNKNOWN" || row.holdingStatus !== "CONTACT_OWED" ||
+          !row.reason?.trim() || !/^https:\/\//.test(row.evidenceSourceUrl) ||
+          !Number.isFinite(Date.parse(row.reviewedAt))) {
+        problems.push(`${row.id} is not a canonically keyed explicit UNKNOWN/CONTACT_OWED record with reviewed official evidence.`);
+      }
+    } else {
+      problems.push(`${(row as { id?: string }).id ?? "An unnamed record"} has an unknown everyday record kind.`);
+    }
+  }
+
+  const expectedCells = new Set(
+    EVERYDAY_TOPIC_IDS.flatMap((topicId) => EVERYDAY_ZIPS.map((zip) => everydayCellId(topicId, zip))),
+  );
+  const contactCells = new Set(contacts.map((record) => everydayCellId(record.topicId, record.zip)));
+  const owedCells = owed.map((record) => everydayCellId(record.topicId, record.zip));
+  const owedCellSet = new Set(owedCells);
+  for (const cell of expectedCells) {
+    const contactAvailable = contactCells.has(cell);
+    const contactOwed = owedCellSet.has(cell);
+    if (contactAvailable === contactOwed) {
+      problems.push(`${cell} must have contacts or one CONTACT_OWED record, never both or neither.`);
+    }
+  }
+  if (owedCellSet.size !== owedCells.length) problems.push("A denominator cell has more than one CONTACT_OWED record.");
+
+  const sourceCount = new Set(contacts.map((record) => record.contact.sourceUrl)).size;
+  const expectedDenominator: EverydayRoutingDenominator = {
+    topics: EVERYDAY_TOPIC_IDS.length,
+    zips: EVERYDAY_ZIPS.length,
+    cells: expectedCells.size,
+    contactAvailableCells: contactCells.size,
+    unknownContactOwedCells: owedCellSet.size,
+    contactRecords: contacts.length,
+    contactSources: sourceCount,
+  };
+  for (const [key, expected] of Object.entries(expectedDenominator)) {
+    if (projection.denominator?.[key as keyof EverydayRoutingDenominator] !== expected) {
+      problems.push(`The everyday routing denominator reports ${key} incorrectly; expected ${expected}.`);
+    }
+  }
+  return [...new Set(problems)].sort();
+}
+
+export function everydayContactsFromProjection(
+  projection: EverydayRoutingProjection,
+): EverydayContact[] {
+  return projection.records
+    .filter((record): record is EverydayRoutingContactRecord => record.kind === "CONTACT")
+    .map((record) => record.contact);
+}
+
 /** Contacts for a topic at a zip — the everyday answer, or nothing. */
 export function everydayContactsFor(
   topicId: string,
   zip: string | null,
+  projection?: EverydayRoutingProjection | null,
 ): EverydayContact[] {
   if (!zip) return [];
-  return EVERYDAY_CONTACTS.filter(
+  const contacts = projection
+    ? everydayContactsFromProjection(projection)
+    : mayUseTestFixture()
+      ? EVERYDAY_CONTACTS
+      : [];
+  return contacts.filter(
     (c) => readerEligibleEverydayContact(c) && c.topicId === topicId && c.zips.includes(zip),
   );
 }
@@ -648,6 +902,8 @@ export function everydayCoverageReport(): {
   cells: number;
   covered: number;
   missed: number;
+  contactRecords: number;
+  contactSources: number;
 } {
   const covered = new Set<string>();
   for (const c of EVERYDAY_CONTACTS) {
@@ -659,5 +915,7 @@ export function everydayCoverageReport(): {
     cells: EVERYDAY_TOPIC_IDS.length * EVERYDAY_ZIPS.length,
     covered: covered.size,
     missed: EVERYDAY_MISSES.length,
+    contactRecords: EVERYDAY_CONTACTS.reduce((count, contact) => count + contact.zips.length, 0),
+    contactSources: new Set(EVERYDAY_CONTACTS.map((contact) => contact.sourceUrl)).size,
   };
 }

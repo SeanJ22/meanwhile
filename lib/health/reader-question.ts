@@ -54,6 +54,7 @@ import { createWorkItem, type WorkItem } from "../control-plane/work-item.ts";
 import type { ProofClass } from "../ops/run-provenance.ts";
 import type { ReaderExpectation } from "./ask-evaluation.ts";
 import type { Body, Registry } from "../registry/types.ts";
+import { readRegistryRuntimeProjection } from "../registry/runtime-read-model.ts";
 
 /* ---------------------------------------------------------------- classes */
 
@@ -269,15 +270,13 @@ export async function loadZipBodyUniverses(
   zips: readonly string[],
   root: string = process.cwd(),
 ): Promise<ZipBodyUniverse[]> {
-  const registryPath = join(root, "lib", "registry", "registry.json");
   const indexPath = join(root, "data", "derived", "zip-division-ids.json");
 
-  let registry: Registry;
-  try {
-    registry = JSON.parse(await readFile(registryPath, "utf8")) as Registry;
-  } catch (error) {
-    throw new Error(`the registry at ${registryPath} could not be read: ${String(error)}`);
+  const registryRead = await readRegistryRuntimeProjection();
+  if (registryRead.kind !== "PROMOTED" && registryRead.kind !== "BOOTSTRAP") {
+    throw new Error(`the canonical registry projection is ${registryRead.kind}`);
   }
+  const registry = registryRead.value.registry as Registry;
   let index: { zips: Record<string, string[]> };
   try {
     index = JSON.parse(await readFile(indexPath, "utf8")) as { zips: Record<string, string[]> };

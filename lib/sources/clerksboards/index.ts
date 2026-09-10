@@ -19,6 +19,7 @@ import { toZonedIso } from "../../time/zoned.ts";
 import { decodeEntities, politeGetText } from "../http.ts";
 import type {
   Meeting,
+  MeetingQuery,
   MeetingStatus,
   NormalizeDropCounts,
   ReportingMeetingSource,
@@ -651,13 +652,14 @@ export function makeClerksBoardsSource(
   return {
     name: SOURCE_NAME,
 
-    async fetch(): Promise<ClerksBoardsRaw[]> {
+    async fetch(query?: MeetingQuery): Promise<ClerksBoardsRaw[]> {
       const collected: ClerksBoardsRaw[] = [];
       for (const wiring of wiringRows) {
         const url = `https://clerksboards.tucsonaz.gov/boards/?board=${wiring.config.boardId}`;
         const { text } = await politeGetText(url, {
           fetchImpl,
           accept: "text/html",
+          signal: query?.signal,
         });
         collected.push({
           wiring,

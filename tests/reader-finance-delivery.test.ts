@@ -4,23 +4,31 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "nod
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import bridge from "../lib/funding/official-candidacies.json" with { type: "json" };
-import reviewedPersonLinks from "../lib/funding/official-person-candidacy-links.json" with { type: "json" };
-import { buildFinanceIdentityBridge } from "../scripts/reader-finance-identity.mts";
+import reviewedPersonLinks from "../lib/registry/fixtures/official-person-candidacy-links-v1.json" with { type: "json" };
 import { campaignMoneyApiAnswer, campaignMoneyForTarget, currentOfficialIdentity, currentOfficialIdentityStatus, resolvedCandidacyForOfficial, officialFinanceIdentityMatches } from "../lib/funding/campaign-money.ts";
 import { ROSTER_READER_DISPOSITIONS } from "../lib/registry/body-rosters.ts";
 import { stateMoneyForCard } from "../lib/funding/nominee-money.ts";
 import { fundingAnswerForTarget } from "../lib/funding/display.ts";
-import { getFundingSnapshot } from "../lib/funding/snapshot.ts";
+import { getFundingSnapshot, refreshFundingFromPromoted } from "../lib/funding/snapshot.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { type StateMoneyRecord } from "../lib/funding/state-money.ts";
 import { resetStateMoneyCache, stateMoneyForTarget } from "../lib/funding/state-snapshot.ts";
 import { resetAzIdentityCache } from "../lib/identity/az-2026.ts";
+import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
+await refreshFundingFromPromoted({ store: new MemoryRoutineDataStore() });
+const bridge = getRegistryRuntimeReadModel().officialCandidacies;
 
 const hobbsKey = "ballot-az-pima:governor:hobbs-katie";
 const hobbs = stateMoneyForTarget(hobbsKey)[0];
 
-test("official finance identity bridge reproduces current canonical sources", () => {
-  assert.deepEqual(buildFinanceIdentityBridge(), bridge);
+test("official finance identity bridge is carried by the canonical registry projection", () => {
+  assert.equal(bridge.formatVersion, 1);
+  assert.equal(bridge.rule, "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE");
+  assert.ok(bridge.rows.length > 800);
+  assert.ok(bridge.rows.every((row) => !row.holder.id.startsWith("plural:") && !('sourcePath' in row.holder)));
 });
 
 test("exact duplicate roster aliases preserve the canonical finance answer and requested identity", () => {
@@ -91,15 +99,16 @@ test("a candidacy for another office stays explicitly identified as that candida
   assert.ok(yee.state.records.every(r => /Superintendent/i.test(r.match.officeOnBallot ?? "")));
 });
 
-test("an unmapped roster division cannot erase an explicitly resolved person's held candidacy", () => {
+test("a retired Plural officeholder cannot resolve through the finance identity bridge", () => {
   const id = "plural:66e496a4-a407-4af1-add3-ef6899b89807";
-  const row = bridge.rows.find(row => row.holder.id === id)!;
-  assert.deepEqual(row.holder.divisions, [], "the known geographic gap remains a gap");
+  assert.equal(bridge.rows.some(row => row.holder.id === id), false);
   const answer = campaignMoneyForTarget(id);
-  assert.equal(answer.officialIdentity, "RESOLVED");
-  assert.equal(answer.state.resolvedTargetKey, "ballot-az-pima:attorney-general:petersen-warren");
-  assert.ok(answer.state.records.every(r => /Attorney General/.test(r.match.officeOnBallot ?? "")));
-  assert.equal(officialFinanceIdentityMatches(row, { ...row.holder, name: "Another Petersen" }), false);
+  assert.equal(answer.officialIdentity, "NOT_OFFICIAL");
+  assert.equal(answer.state.resolvedTargetKey, id);
+  assert.notEqual(answer.state.resolvedTargetKey, "ballot-az-pima:attorney-general:petersen-warren");
+  assert.deepEqual(answer.state.records, []);
+  assert.equal(currentOfficialIdentityStatus(id), "NOT_OFFICIAL");
+  assert.equal(resolvedCandidacyForOfficial(id), null);
 });
 
 test("federal officeholders' held state candidacies project without inventing federal records", () => {
@@ -165,12 +174,14 @@ test("the canonical federal contest cannot manufacture an Arizona state-finance 
   assert.deepEqual(money.state.records, []);
 });
 
-test("accent-equivalent current person identity never joins a different Hernandez", () => {
-  const alma = campaignMoneyForTarget("plural:6dba6afa-b274-4273-b8c6-270d27214eee");
-  assert.equal(alma.state.resolvedTargetKey, "ballot-az-pima:state-senate-20:hernandez-alma");
-  for (const row of bridge.rows.filter(row => /Hern[aá]ndez/.test(row.holder.name) && !row.holder.name.startsWith("Alma "))) {
-    assert.notEqual(campaignMoneyForTarget(row.holder.id).state.resolvedTargetKey, alma.state.resolvedTargetKey);
-  }
+test("retired intermediary name reconciliation cannot attach Alma Hernandez's candidacy", () => {
+  const retired = campaignMoneyForTarget("plural:6dba6afa-b274-4273-b8c6-270d27214eee");
+  assert.equal(retired.officialIdentity, "NOT_OFFICIAL");
+  assert.equal(retired.state.resolvedTargetKey, "plural:6dba6afa-b274-4273-b8c6-270d27214eee");
+  assert.notEqual(retired.state.resolvedTargetKey, "ballot-az-pima:state-senate-20:hernandez-alma");
+  assert.deepEqual(retired.state.records, []);
+  assert.ok(stateMoneyForTarget("ballot-az-pima:state-senate-20:hernandez-alma").length > 0,
+    "the candidacy's own held finance remains readable without inventing an officeholder relationship");
 });
 
 test("a missing deployed normalized holding raises a failed read even if staged evidence exists", () => {
@@ -189,13 +200,16 @@ test("a missing deployed normalized holding raises a failed read even if staged 
   }
 });
 
-test("a missing certified identity bridge cannot become a display-key funding absence", () => {
+test("a missing canonical ballot identity projection cannot become a display-key funding absence", () => {
   const root = process.cwd();
   const isolated = mkdtempSync(join(tmpdir(), "reader-finance-identity-"));
   try {
     process.chdir(isolated);
     resetAzIdentityCache();
-    assert.throws(() => stateMoneyForCard("ballot-az-pima:governor|Katie Hobbs", "ballot-az-pima:governor"), /identity holding unavailable/);
+    assert.throws(
+      () => stateMoneyForCard("ballot-az-pima:governor|Katie Hobbs", "ballot-az-pima:governor"),
+      /ENOENT.*az-pima-2026\.json|identity holding unavailable/,
+    );
   } finally {
     process.chdir(root);
     resetAzIdentityCache();

@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
 import { today } from "../scripts/doc-dates.mjs";
+import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 
 /**
  * F01-continued session 2, item 0B (2026-08-19) — a document that dates
@@ -31,14 +31,7 @@ const ROOT = join(import.meta.dirname, "..");
 
 /** Every script that writes or appends a file. */
 function documentWritingScripts(): string[] {
-  return execFileSync("git", ["ls-files", "--cached", "--others", "--exclude-standard", "scripts"], {
-    cwd: ROOT,
-    encoding: "utf8",
-    maxBuffer: 64e6,
-  })
-    .split("\n")
-    .map((f) => f.trim())
-    .filter(Boolean)
+  return filesThatWouldBeCommitted({ cwd: ROOT, paths: ["scripts"] })
     .filter((f) => /\.(mts|mjs|ts)$/.test(f))
     .filter((f) => {
       const s = readFileSync(join(ROOT, f), "utf8");
@@ -102,14 +95,7 @@ test("0B: no script keeps its own private copy of the Phoenix formatter", () => 
   // `today()`. All four were correct on the day they were written, which is
   // the point: N copies of a rule is N places for it to drift, and the copy
   // that drifts is the one that stops disagreeing with anything.
-  const scripts = execFileSync(
-    "git",
-    ["ls-files", "--cached", "--others", "--exclude-standard", "scripts"],
-    { cwd: ROOT, encoding: "utf8", maxBuffer: 64e6 },
-  )
-    .split("\n")
-    .map((f) => f.trim())
-    .filter(Boolean)
+  const scripts = filesThatWouldBeCommitted({ cwd: ROOT, paths: ["scripts"] })
     .filter((f) => /\.(mts|mjs|ts)$/.test(f));
 
   const offenders: string[] = [];

@@ -12,7 +12,7 @@ import {
 } from "@/lib/map/districts";
 import { districtDoorRows, governingDoorRows, type DistrictDoorRow } from "@/lib/state/derive";
 import { representationForDivision } from "@/lib/registry/representation";
-import { rosterGapsForDivision } from "@/lib/registry/body-rosters";
+import { projectedRosterGapsForDivision } from "@/lib/registry/body-roster-client";
 import { RosterCompletenessGaps } from "@/components/officials/roster-completeness-gap";
 import {
   groupOfficials,
@@ -373,7 +373,7 @@ function DistrictsDoor({
             <p className="mt-2 text-[0.8125rem] text-muted">
               Every district your address sits inside.
             </p>
-            <DistrictRows rows={governingRows} onOpenOfficial={onOpenOfficial} />
+            <DistrictRows rows={governingRows} coverage={coverage} onOpenOfficial={onOpenOfficial} />
           </>
         ) : (
           // The named gap, in the gap's own register: a fact about the limits
@@ -392,7 +392,7 @@ function DistrictsDoor({
       <DoorSection heading="Districts in view" count={drawnRows?.length ?? null}>
         {drawnRows ? (
           // 3g: EXACTLY one row per drawn district — the count stated above.
-          <DistrictRows rows={drawnRows} onOpenOfficial={onOpenOfficial} />
+          <DistrictRows rows={drawnRows} coverage={coverage} onOpenOfficial={onOpenOfficial} />
         ) : districtsSwitchedOffAndEmpty(drawnDistricts.length, districtOverlayOn) ? (
           // M57: the switch is here, not somewhere the reader has to go find.
           // MAP-5: and this branch is reached only when the layer is off AND
@@ -457,9 +457,11 @@ function DoorSection({
 /** One row per district, shared by both modes so they cannot drift apart. */
 function DistrictRows({
   rows,
+  coverage,
   onOpenOfficial,
 }: {
   rows: DistrictDoorRow[];
+  coverage: CoverageSummary | null;
   onOpenOfficial: (
     holder: SeatHolder,
     seatLabel: string | null,
@@ -495,7 +497,7 @@ function DistrictRows({
               {holder.name} →
             </button>
           ))}
-          <RosterCompletenessGaps gaps={rosterGapsForDivision(row.ocdId)} />
+          <RosterCompletenessGaps gaps={projectedRosterGapsForDivision(coverage, row.ocdId)} />
         </li>
       ))}
     </ul>

@@ -49,6 +49,9 @@ import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 import { duplicates, groupId } from "../lib/ops/duplicate-implementations.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import { BASELINE_FILE, census } from "./duplicate-implementations.mts";
+import { observableRoutineContracts } from "../lib/civic-data/meeting-partitions.ts";
+import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
+import { civicDataFirewall } from "../lib/civic-data/firewall.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -68,7 +71,37 @@ export const PREFLIGHT_CHECKS = [
     what: "no duplicate implementation exists that the baseline does not record (RULING 103)",
     run: duplicateImplementations,
   },
+  {
+    id: "civic-data-release-firewall",
+    what: "routine civic data cannot enter Git, Actions, build, browser, or deploy machinery",
+    run: civicDataReleaseFirewall,
+  },
 ];
+
+export function civicDataReleaseFirewall({ cwd = ROOT } = {}) {
+  try {
+    const paths = filesThatWouldBeCommitted({ cwd });
+    const files = Object.fromEntries(paths.map((path) => [path, readFileSync(join(cwd, path), "utf8")]));
+    const inventory = JSON.parse(files["docs/permanent-civic-data-plane-cutover-v2-inventory.json"] ?? "null");
+    const routineContracts = observableRoutineContracts();
+    const findings = civicDataFirewall({
+      files,
+      contracts: routineContracts,
+      manualContracts: MANUAL_PRODUCTION_SOURCE_CONTRACTS,
+      inventory,
+    });
+    return findings.length === 0
+      ? {
+          ok: true,
+          says:
+            `0 findings across ${routineContracts.length} routine and ` +
+            `${MANUAL_PRODUCTION_SOURCE_CONTRACTS.length} explicit-owner source contract(s).`,
+        }
+      : { ok: false, says: `${findings.length} release-coupling finding(s).`, detail: findings.map((finding) => `    ${finding.code} · ${finding.path} · ${finding.detail}`).join("\n") };
+  } catch (error) {
+    return { ok: false, says: `the civic-data firewall could not read its denominator (${error?.message ?? "error"}).` };
+  }
+}
 
 /* ------------------------------------------------------------ visible tree */
 

@@ -25,6 +25,7 @@ import { officialActionsForTarget, type ReaderOfficialActions } from "../lib/off
 import { directoryFor } from "../lib/officials/directory.ts";
 import { keyVotesForMember } from "../lib/votes/key-votes-reader.ts";
 import { summaryForBill } from "../lib/votes/bill-summaries.ts";
+import { readFederalRollCallsProjection } from "../lib/votes/snapshot.ts";
 import { pollingLookupFallbacks } from "../lib/ballot/polling-lookup-fallback.ts";
 import { unifiedCorpus } from "../lib/corpus/unified.ts";
 import { positionsFor, type PositionAnswer } from "../lib/corpus/positions.ts";
@@ -45,6 +46,8 @@ const pilots = [
 ];
 const results: Record<string, unknown>[] = [];
 const screenshots: string[] = [];
+const federalProjection = await readFederalRollCallsProjection();
+if (federalProjection.kind !== "PROMOTED" && federalProjection.kind !== "BOOTSTRAP") throw new Error(federalProjection.detail);
 const heldMeetings = (JSON.parse(readFileSync(join(process.cwd(), "data/meetings-snapshot.json"), "utf8")) as { meetings: Meeting[] }).meetings;
 const browser = await launchGuarded({ label: "reader-last-mile-render" });
 

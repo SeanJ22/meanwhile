@@ -1,6 +1,15 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
+import {
+  installOutcomeFirstSeed,
+  installRegistryRuntimeFirstSeeds,
+} from "./helpers/registry-runtime-first-seed.ts";
+
+await Promise.all([
+  installRegistryRuntimeFirstSeeds(),
+  installOutcomeFirstSeed(),
+]);
 
 /**
  * **THE PIMA RED CONTROL — a division is not a body, through the handler the
@@ -123,6 +132,10 @@ async function ask(question: string, over: Record<string, unknown> = {}): Promis
     body: JSON.stringify({
       question,
       ocdIds: [AZ, PIMA_DIVISION, SLDU, SLDL],
+      /* The outcome first seed is a dated acceptance fixture. Pin the query
+         date so a future clock cannot silently select a newer meeting whose
+         outcome was never part of this fixture's denominator. */
+      today: "2026-08-29",
       ...over,
     }),
   });

@@ -4,10 +4,9 @@
  * (FCP-9C, 2026-09-07.)
  *
  * The adapter between GitHub Actions' environment and
- * `lib/control-plane/shipping/tree-equivalence.ts`, exactly as
- * `scripts/ci-cost.mjs` is the adapter for RULING 278's predicate and
- * `scripts/netlify-ignore.mjs` is the adapter for Netlify's. **The judgement
- * is not here.** This file gathers facts and prints what the predicate said.
+ * `lib/control-plane/shipping/tree-equivalence.ts`, alongside the distinct
+ * `scripts/netlify-ignore.mjs` adapter for Netlify. **The judgement is not
+ * here.** This file gathers facts and prints what the predicate said.
  *
  * ## What it is for
  *

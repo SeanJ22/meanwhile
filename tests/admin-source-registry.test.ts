@@ -8,12 +8,11 @@
  * ```
  *   1  a credential VALUE or a variable NAME reaching a built row, and from
  *      there the browser
- *   2  a key that lives in the nightly job's secrets being reported as "not
+ *   2  a key that lives with an off-host acquisition process being reported as "not
  *      configured" because this process cannot see that store — a falsehood
  *      with a tick beside it
- *   3  a retired per-source cron coming back and the page going on describing
- *      one scheduled run (§7: the old schedules must not be shown as though
- *      they were re-enabled)
+ *   3  a routine-data GitHub clock coming back while the page reports the
+ *      terminal software-CI-only boundary
  *   4  a disposition vocabulary the owner cannot tell apart, because a member
  *      is unreachable or two members mean the same thing
  *   5  a NOT_APPLICABLE with no justification behind it
@@ -28,7 +27,7 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
@@ -40,9 +39,9 @@ import {
   DISPOSITION_TONE,
   HEALTH_WORDS,
   HOLDER_SAYS,
-  LEGACY_REFRESH_WORKFLOWS,
+  GITHUB_ROUTINE_DATA_ROUTE_IDS,
+  PRODUCTION_EXECUTION_BOUNDARY,
   ROUTE_CREDENTIAL_VARS,
-  SCHEDULER_TRUTH,
   buildSourceRegistry,
   readCredentialPresence,
   registerDisagreements,
@@ -50,6 +49,11 @@ import {
   sourceRegistryRenderedNumbers,
   type SourceRegistryInput,
 } from "@/lib/control-plane/source-registry.ts";
+import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "@/lib/civic-data/manual-contracts.ts";
+import {
+  meetingPartitionsForSource,
+  observableRoutineContracts,
+} from "@/lib/civic-data/meeting-partitions.ts";
 import { UNHANDLED_PLATFORMS } from "@/lib/hunt/platform-tenancy.ts";
 import {
   CREDENTIAL_STORES,
@@ -57,7 +61,6 @@ import {
   checkCredentialReport,
   readCredentialStores,
 } from "@/lib/ops/credential-report.ts";
-import type { RefreshRun, RefreshSourceRun, SourceOutcome } from "@/lib/ops/refresh-report.ts";
 import { SOURCE_WIRING } from "@/lib/registry/source-wiring.ts";
 import { CAPABILITIES } from "@/lib/sources/composite/wiring.ts";
 
@@ -66,54 +69,6 @@ const PAGE = join(ROOT, "app", "(admin)", "admin", "sources", "page.tsx");
 const MODULE = join(ROOT, "lib", "control-plane", "source-registry.ts");
 const WORKFLOWS = join(ROOT, ".github", "workflows");
 
-/* ------------------------------------------------------------------ *
- * FIXTURES — a run record and a debt file, typed as the orchestrator
- * writes them. No file is read for these: a guard that depended on
- * today's committed run record would go red on a quiet day.
- * ------------------------------------------------------------------ */
-
-const RUN: RefreshRun = {
-  formatVersion: 1,
-  runDate: "2026-09-06",
-  startedAt: "2026-09-06T12:52:32.806Z",
-  finishedAt: "2026-09-06T13:14:36.754Z",
-  mode: "CADENCE",
-  exitCode: 0,
-  sources: [
-    src("meetings", true, true, "INGESTED", "ran clean; 1 governed path changed", "2026-09-07"),
-    src("nj-filing", true, true, "UNCHANGED", "ran clean; nothing moved", "2026-09-07"),
-    src("fec", false, false, "NOT_DUE", "weekly, and today is not Monday", "2026-09-07"),
-    src("legiscan", false, false, "NOT_DUE", "weekly, and today is not Monday", "2026-09-07"),
-    src("dotgov", false, false, "NOT_DUE", "monthly, and today is not the first", "2026-10-01"),
-  ],
-  catchUp: { lastLanded: "2026-09-05", days: ["2026-09-06"], cap: 8, off: false },
-  gate: { verdict: "GREEN", ranAt: "2026-09-06T13:10:00.000Z", failingFiles: [], attribution: [], note: "" },
-};
-
-function src(
-  id: string,
-  due: boolean,
-  ran: boolean,
-  outcome: SourceOutcome,
-  reason: string,
-  nextDueAt: string,
-): RefreshSourceRun {
-  return {
-    id,
-    due,
-    ran,
-    outcome,
-    reason,
-    commands: [],
-    failedCommand: null,
-    exitCode: ran ? 0 : null,
-    governs: [],
-    changedPaths: [],
-    recoveredFrom: [],
-    nextDueAt,
-  };
-}
-
 const EVERY_VAR: Record<string, string> = {};
 for (const names of Object.values(ROUTE_CREDENTIAL_VARS)) {
   for (const name of names) EVERY_VAR[name] = "a value this test never looks at";
@@ -121,13 +76,9 @@ for (const names of Object.values(ROUTE_CREDENTIAL_VARS)) {
 
 function input(overrides: Partial<SourceRegistryInput> = {}): SourceRegistryInput {
   return {
-    today: "2026-09-06",
     nowIso: "2026-09-06T18:00:00.000Z",
     credentialPresence: readCredentialPresence({}),
     credentialReadIn: "this website's own server settings",
-    lastRun: RUN,
-    lastRunProvenance: "Read from the run record in the code this site was built from.",
-    openDebt: [],
     ...overrides,
   };
 }
@@ -258,79 +209,62 @@ test("§6: a route that needs no key never claims a reading of one", () => {
 });
 
 /* ================================================================== *
- * 3. §7 — THE RETIRED SCHEDULES STAY RETIRED
+ * 3. §7 — THE RETIRED EXECUTABLES STAY DELETED
  * ================================================================== */
 
-/** A workflow's `name:` and whether it declares a cron. Comments do not count. */
-function workflowFacts(file: string): { name: string; scheduled: boolean; dispatchable: boolean } {
-  const text = readFileSync(file, "utf8");
+/** Whether workflow text declares a cron. Comments do not count. */
+function workflowHasSchedule(text: string): boolean {
   const lines = text.split(/\r?\n/).filter((l) => !/^\s*#/.test(l));
   const body = lines.join("\n");
-  return {
-    name: /^name:\s*(.+)$/m.exec(body)?.[1].trim() ?? "",
-    scheduled: /^\s{2}schedule:/m.test(body) && /cron:/.test(body),
-    dispatchable: /^\s{2}workflow_dispatch:/m.test(body),
-  };
+  return /^\s{2}schedule:/m.test(body) && /cron:/.test(body);
 }
 
-test("§7: the five per-source refreshes are press-only, and none has grown a schedule back", () => {
-  assert.equal(
-    LEGACY_REFRESH_WORKFLOWS.length,
-    5,
-    "RULING 124 retired five per-source schedules; the registry must still name all five",
-  );
-  for (const legacy of LEGACY_REFRESH_WORKFLOWS) {
-    const file = join(ROOT, legacy.file);
-    assert.ok(existsSync(file), `${legacy.file} is named by the registry and does not exist`);
-    const facts = workflowFacts(file);
-    assert.equal(facts.name, legacy.name, `${legacy.file}: the registry calls it "${legacy.name}" and it calls itself "${facts.name}"`);
-    assert.equal(
-      facts.scheduled,
-      false,
-      `${legacy.file} has a schedule again. The page says the old schedules are retired; fix one of the two before shipping.`,
-    );
-    assert.equal(facts.dispatchable, true, `${legacy.file} lost its manual trigger, so the registry's description of it is wrong`);
+test("§7: every obsolete refresh workflow definition is deleted", () => {
+  const refreshFiles = readdirSync(WORKFLOWS).filter((file) => /^refresh-.*\.ya?ml$/.test(file));
+  assert.deepEqual(refreshFiles, []);
+});
+
+test("§7: GitHub carries no routine data or operations clock", () => {
+  const workflows = readdirSync(WORKFLOWS).filter((file) => /\.ya?ml$/.test(file));
+  const scheduled = workflows.filter((file) => workflowHasSchedule(readFileSync(join(WORKFLOWS, file), "utf8")));
+  assert.deepEqual(scheduled, [], `scheduled GitHub workflow(s) survived PDC: ${scheduled.join(", ")}`);
+});
+
+test("§7: the terminal-zero workflow detector catches a planted cron", () => {
+  assert.equal(workflowHasSchedule("name: planted\non:\n  schedule:\n    - cron: '0 0 * * *'\n"), true);
+  assert.equal(workflowHasSchedule("#   schedule:\n#     - cron: '0 0 * * *'\non:\n  push:\n"), false);
+});
+
+test("§7: the wider capability registry never reconstructs a second routine clock", () => {
+  assert.deepEqual(GITHUB_ROUTINE_DATA_ROUTE_IDS, []);
+  assert.equal(PRODUCTION_EXECUTION_BOUNDARY.state, "SOFTWARE_CI_ONLY");
+  assert.deepEqual(PRODUCTION_EXECUTION_BOUNDARY.githubRoutineDataRouteIds, []);
+  assert.equal(VIEW.githubRoutineDataRoutes.value, 0);
+  for (const row of VIEW.rows) {
+    assert.ok(row.operation.says.trim() !== "", `${row.id}: production-operation disposition is silent`);
   }
 });
 
-test("§7: exactly one refresh workflow runs on a clock, and it is the one the page names", () => {
-  const files = readdirSync(WORKFLOWS).filter((f) => f.startsWith("refresh-") && f.endsWith(".yml"));
-  assert.ok(files.length >= 6, `only ${files.length} refresh workflows found; the sweep did not reach the directory`);
-
-  const scheduled = files
-    .map((f) => ({ file: f, ...workflowFacts(join(WORKFLOWS, f)) }))
-    .filter((w) => w.scheduled);
-  assert.equal(
-    scheduled.length,
-    1,
-    `${scheduled.length} refresh workflows run on a clock: ${scheduled.map((s) => s.file).join(", ")}`,
-  );
-  assert.equal(
-    scheduled[0].name,
-    SCHEDULER_TRUTH.theOneRun,
-    `the page names "${SCHEDULER_TRUTH.theOneRun}" as the one scheduled run and the clock is on "${scheduled[0].name}"`,
-  );
-});
-
-test("§7: the cron detector catches a schedule when there is one", () => {
-  // Positive control: without it, a parser that never matched would report
-  // every workflow unscheduled and this section would go green about nothing.
-  const daily = workflowFacts(join(WORKFLOWS, "refresh-daily.yml"));
-  assert.equal(daily.scheduled, true, "the detector cannot see the one cron that does exist");
-  assert.equal(daily.name, SCHEDULER_TRUTH.theOneRun);
-});
-
-test("§7: every route that says it rides the nightly run names a real refresh source", () => {
-  const riding = VIEW.rows.filter((r) => r.refresh.onNightlyRefresh);
-  assert.ok(riding.length > 0, "no route rides the nightly run, which cannot be true");
-  for (const row of riding) {
-    assert.notEqual(row.refresh.cadence, null, `${row.id}: a route on the run has a cadence in force`);
-    assert.match(row.refresh.says, new RegExp(SCHEDULER_TRUTH.theOneRun.replace(/[()]/g, "\\$&")), `${row.id}`);
+test("§7: every capability-to-production-contract join names a permanent contract", () => {
+  const known = new Set([
+    ...observableRoutineContracts().map((contract) => contract.id),
+    ...MANUAL_PRODUCTION_SOURCE_CONTRACTS.map((contract) => contract.id),
+  ]);
+  for (const row of VIEW.rows) {
+    for (const contractId of row.operation.contractIds) {
+      assert.ok(known.has(contractId), `${row.id}: ${contractId} is not a permanent production contract`);
+    }
   }
-  for (const row of VIEW.rows.filter((r) => !r.refresh.onNightlyRefresh)) {
-    assert.equal(row.refresh.cadence, null, `${row.id}: a route off the run has no cadence`);
-    assert.ok(row.refresh.says.trim() !== "", `${row.id}: a route off the run still says what happens to it`);
-  }
+  assert.deepEqual(rowOf(VIEW, "fec-api").operation.contractIds, ["fec-funding"]);
+  assert.deepEqual(rowOf(VIEW, "census-acs-api").operation.contractIds, ["census-acs-population"]);
+  assert.deepEqual(rowOf(VIEW, "congress-api").operation.contractIds, ["congress-rollcalls", "federal-key-votes"]);
+  assert.deepEqual(rowOf(VIEW, "congress-bulk").operation.contractIds, ["congress-bulk-roster"]);
+  assert.deepEqual(rowOf(VIEW, "nj-morris-clerk").operation.contractIds, ["nj-morris-filing"]);
+  assert.deepEqual(rowOf(VIEW, "dotgov").operation.contractIds, ["dotgov"]);
+  assert.deepEqual(
+    rowOf(VIEW, "meeting-ical").operation.contractIds,
+    meetingPartitionsForSource("ical").map((contract) => contract.id),
+  );
 });
 
 /* ================================================================== *
@@ -405,50 +339,21 @@ test("ADM-C11: a route nothing calls is never graded green, and never graded red
  * 5. LAST READ AND NEXT DUE — a run record is not a history
  * ================================================================== */
 
-test("§6: a route the last run did not read has no last-read date, and says whose gap that is", () => {
-  const notDue = rowOf(VIEW, "fec-api");
-  assert.equal(notDue.lastSuccess.held, false, "the nightly fixture does not observe the standing FEC runner, so there is no date to show");
-  if (!notDue.lastSuccess.held) assert.equal(notDue.lastSuccess.gap.whose, "OURS");
-  assert.equal(notDue.refresh.onNightlyRefresh, false, "FEC routine promotion must not ride the GitHub nightly software/data-file run");
-  assert.equal(notDue.health, "UNKNOWN", "an unrelated run receipt cannot grade the standing production data-plane runner");
-  assert.match(notDue.refresh.says, /standing local civic-data runner/);
-
-  const read = rowOf(VIEW, "nj-morris-clerk");
-  assert.equal(read.lastSuccess.held, true, "the fixture run read this one clean");
-  if (read.lastSuccess.held) assert.equal(read.lastSuccess.value, RUN.finishedAt);
-  assert.equal(read.health, "GREEN");
-  assert.match(read.healthWhy, /2026-09-06/, "a green grade names the run that earned it");
-});
-
-test("§6: an open debt turns the grade red and says since when", () => {
-  const inDebt = buildSourceRegistry(
-    input({
-      openDebt: [
-        {
-          sourceId: "meetings",
-          firstFailedOn: "2026-09-02",
-          lastFailedOn: "2026-09-06",
-          consecutiveFailures: 4,
-          reason: "the source refused the request",
-          nextDueAt: "2026-09-07",
-        },
-      ],
-    }),
-  );
-  const row = rowOf(inDebt, "meeting-ical");
-  assert.equal(row.health, "RED", "a source carrying debt is failing, whatever the last run said");
-  assert.match(row.healthWhy, /2026-09-02/, "the red grade names the day it started");
-  assert.match(row.healthWhy, /refused/, "the red grade quotes the recorded reason");
-});
-
-test("§6: no run record at all is a gap, never a zero and never a green", () => {
-  const blind = buildSourceRegistry(input({ lastRun: null }));
-  for (const row of blind.rows.filter((r) => r.refresh.onNightlyRefresh)) {
-    assert.equal(row.lastSuccess.held, false, `${row.id}: nothing recorded a read, so no date is shown`);
-    assert.equal(row.health, "UNKNOWN", `${row.id}: no record is a fact about this page, not about the source`);
-    assert.equal(row.nextDue.held, true, `${row.id}: the cadence still says when it is next owed`);
+test("§6: routine route health and dates appear only in the canonical panel", () => {
+  for (const id of ["fec-api", "census-acs-api", "nj-morris-clerk", "dotgov", "meeting-ical"]) {
+    const row = rowOf(VIEW, id);
+    assert.equal(row.lastSuccess.held, false, id);
+    assert.equal(row.nextDue.held, false, id);
+    assert.equal(row.health, "UNKNOWN", id);
+    assert.ok(row.operation.contractIds.length > 0, `${id}: no canonical contract join`);
   }
-  assert.match(blind.refreshProvenance, /No run record reached this page/);
+});
+
+test("§6: the capability registry has no tracked runtime-state input or fallback", () => {
+  const source = readFileSync(MODULE, "utf8");
+  assert.doesNotMatch(source, /HistoricalRefresh|lastRun|openDebt|refresh-run|refresh-debt/);
+  assert.match(VIEW.productionOutcomeAuthority, /canonical candidates, events, and promotion pointers/);
+  assert.match(VIEW.productionOutcomeAuthority, /accepts no run record or mutable operations file/);
 });
 
 /* ================================================================== *
@@ -639,7 +544,7 @@ test("ADM-C11: every row answers the owner's four questions", () => {
     assert.ok(row.dispositionWhy.length > 20, `${row.id}: a row says why it has its standing`);
     assert.ok(row.spendConcern.trim() !== "", `${row.id}: a row says what calling it costs`);
     assert.ok(row.evidence.length > 0, `${row.id}: a row names where its claim can be checked`);
-    assert.ok(row.refresh.says.trim() !== "", `${row.id}: a row says what happens to it next`);
+    assert.ok(row.operation.says.trim() !== "", `${row.id}: a row says what happens to it next`);
     if (row.blocker !== null) {
       assert.ok(row.blocker.what.length > 20, `${row.id}: a blocker says what is blocked`);
       assert.ok(["OURS", "THEIRS", "UNKNOWABLE_NOW"].includes(row.blocker.whose), `${row.id}: a blocker says whose it is`);
@@ -680,9 +585,9 @@ test("ADM-C11: a credential event may say which store it landed in, and a store 
   const complete = {
     kind: "CREATED",
     reportedAt: "2026-09-06",
-    name: "the nightly refresh's state-vote key",
+    name: "the standing data runner's state-vote key",
     provider: "LegiScan",
-    context: "the daily refresh",
+    context: "standing production acquisition",
     scope: "read the published dataset",
     actor: "the owner",
     ownerCopyLocation: "the private settings file, under the key's own name",
@@ -710,7 +615,7 @@ test("ADM-C11: a credential event may say which store it landed in, and a store 
 
 test("ADM-C11: the page renders every field the brief asks for", () => {
   const page = readFileSync(PAGE, "utf8");
-  const columns = ["Source", "Standing", "Key", "Adapter", "Refresh", "Last read", "Next due", "Health", "Coverage", "Needs you"];
+  const columns = ["Source", "Standing", "Key", "Adapter", "Production operation", "Last read", "Next due", "Health", "Coverage", "Needs you"];
   for (const column of columns) {
     assert.ok(page.includes(`<th scope="col">${column}</th>`), `the table has no ${column} column`);
   }

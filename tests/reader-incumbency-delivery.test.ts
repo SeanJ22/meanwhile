@@ -2,7 +2,11 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { committedIncumbentHolderFor, contestIncumbency, sameSeatDiscriminators } from "../lib/ballot/incumbency-resolve.ts";
 import { readerIncumbencyProof } from "../scripts/lib/reader-incumbency-proof.ts";
-import bridge from "../lib/funding/official-candidacies.json" with { type: "json" };
+import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
+const bridge = getRegistryRuntimeReadModel().officialCandidacies;
 
 const county = { ocdId: "ocd-division/country:us/state:nj/county:morris", title: "Member of the Board of County Commissioners" };
 const selen = "ballot-nj-morris:county-commissioner:selen";
@@ -10,7 +14,8 @@ test("all current committed candidacy relations retain exact same-office incumbe
   const proof = await readerIncumbencyProof();
   assert.equal(proof.failed, 0, JSON.stringify(proof.rows.filter(row => row.status === "ELIGIBLE_NOT_DELIVERED" || row.status === "WRONG_OFFICE_ATTACHMENT")));
   assert.ok(proof.rows.some(row => row.target === selen && row.status === "PROVEN" && row.actualHolderId === "roster:morris#6"));
-  for (const name of ["Andy Biggs", "David Schweikert", "Chris Pappas", "Gail Griffin"]) {
+  assert.ok(bridge.rows.every(row => !row.holder.id.startsWith("plural:")), "retired intermediary identities remain in the incumbency bridge");
+  for (const name of ["Andy Biggs", "David Schweikert", "Chris Pappas"]) {
     const row = bridge.rows.find(row => row.holder.name === name)!;
     assert.ok(row.candidacy);
     assert.equal(await committedIncumbentHolderFor({ ocdId: row.candidacy.divisionId, title: row.candidacy.contestTitle }, row.candidacy.candidacyId), null, name);

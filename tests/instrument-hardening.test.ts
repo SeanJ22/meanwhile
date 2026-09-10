@@ -30,8 +30,6 @@ import {
 import { observeControl } from "../lib/health/control-observation.ts";
 import { scoreControls, type ControlFact } from "../lib/health/control-fact.ts";
 import { proofClassOf, proofClassReason } from "../lib/ops/run-provenance.ts";
-import { resolveCapability, type RunRecordSet } from "../lib/ops/status-result.ts";
-import type { CapabilityEntry } from "../lib/ops/capability-registry.ts";
 import { coverageInstanceId } from "../lib/health/reader-question.ts";
 import { isQuestionShaped, loadKeptQuestions } from "../lib/health/owner-corpus.ts";
 import { groundedAnswer as answer } from "./rendered-answer-fixture.ts";
@@ -391,70 +389,6 @@ test("WI1.4: isQuestionShaped requires an ENDING question mark or an opening int
   assert.equal(isQuestionShaped("As long as they are clickable"), false);
   assert.equal(isQuestionShaped('Add a pill saying "sooner?" so we can prioritize.'), false);
   assert.equal(isQuestionShaped(""), false);
-});
-
-/* ==========================================================================
- * WI1.5 — the production observer's ACTUAL schema
- * ======================================================================= */
-
-const HELD_RECORD = {
-  formatVersion: 1,
-  deployedSha: "f762a72eeeb6cfecfe9112d6036c25562bfcf52d",
-  mainSha: "f762a72eeeb6cfecfe9112d6036c25562bfcf52d",
-  observed: "HELD",
-  failureClass: null,
-  detail: "HOLDS — 23 of 23 committed migration(s) applied",
-  observedAt: "2026-08-31T01:43:17.124Z",
-  moment: "post-deploy",
-  gateExit: 0,
-};
-
-const OBSERVER_ENTRY: CapabilityEntry = {
-  id: "shipping-invariant",
-  claim: "the shipping invariant holds at post-deploy",
-  provenBy: { kind: "OBSERVER", claim: "shipping-invariant" },
-  neededCheck: null,
-} as unknown as CapabilityEntry;
-
-test("SEEDED WI1.5: the committed HELD observer record renders PROVEN and names its SHA", () => {
-  /*
-   * The hole: the adapter expected `sha` and `verdict: HEALTHY|OK`; the
-   * observer writes `deployedSha`, `mainSha` and `observed: "HELD"`. Every
-   * field read came back undefined and the result was STALE — and the A.1
-   * report explained the STALE by saying the observer record "names no SHA".
-   * That was a claim about the DATA that was really a fact about the READER.
-   * The record names f762a72e in two fields.
-   */
-  const records: RunRecordSet = {
-    gates: null,
-    walk: null,
-    observer: { path: "data/ops/production-integrity.json", raw: HELD_RECORD },
-  };
-  const result = resolveCapability(
-    OBSERVER_ENTRY,
-    records,
-    HELD_RECORD.deployedSha,
-    () => true,
-  );
-  assert.equal(result.state, "PROVEN");
-  assert.equal(result.testedSha, HELD_RECORD.deployedSha);
-  assert.match(result.detail, /HELD/);
-});
-
-test("WI1.5: an unrecognised observer verdict still fails closed", () => {
-  /* Failing closed was right and is kept. What changed is that the real shape
-     is now recognised, not that unknown shapes became acceptable. */
-  const records: RunRecordSet = {
-    gates: null,
-    walk: null,
-    observer: {
-      path: "p",
-      raw: { ...HELD_RECORD, observed: "DRIFTED", failureClass: "migration-drift" },
-    },
-  };
-  const result = resolveCapability(OBSERVER_ENTRY, records, HELD_RECORD.deployedSha, () => true);
-  assert.equal(result.state, "FAILING");
-  assert.match(result.detail, /DRIFTED/);
 });
 
 /* ==========================================================================

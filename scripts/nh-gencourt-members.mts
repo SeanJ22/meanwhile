@@ -29,24 +29,44 @@
  *
  * Usage:
  *   pnpm nh:members            # fetch, parse, report; writes nothing
- *   pnpm nh:members --write    # write data/states/nh/hunt/nh-gencourt-members.json
  *   pnpm nh:members --from <path>   # parse a local copy instead of fetching
+ * Production cadence and owner-initiated promotion enter through the installed
+ * runtime dispatcher; this file is the internal `nh-members` adapter.
  */
 
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync } from "node:fs";
 
 import { runStamp } from "../lib/ops/freshness.ts";
-import { dirname, join } from "node:path";
 import { nhMembersCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
-import { processRoutineCandidate } from "../lib/civic-data/promotion.ts";
+import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { assertWriteAllowed } from "../lib/db/write-guard.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import {
+  isSourceAcquisitionFailure,
+  readPublisherBody,
+  recordRegisteredSourceAcquisitionFailure,
+  requestPublisher,
+  sourceAcquisitionFailure,
+  withPublisherAcquisitionDeadline,
+} from "../lib/civic-data/source-acquisition-failure.ts";
+import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisition-deadline.ts";
+import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
+import {
+  decodeNhPublisherBytes,
+  joinNhCurrentMemberIdentities,
+  NH_LEGISLATORS_URL,
+  NH_MEMBERS_URL,
+  NH_ROLL_HISTORY_URL,
+  parseNhLegislators,
+  parseNhRollCallHistory,
+  readNhOfficialDocumentsSerially,
+  type NhCurrentMemberIdentityCrosswalk,
+  type NhOfficialDocument,
+} from "../lib/sources/nh-general-court/official-data.ts";
 
-const ROOT = process.cwd();
-const SOURCE_URL = "https://gc.nh.gov/downloads/Members.txt";
-const OUT = "data/states/nh/hunt/nh-gencourt-members.json";
+const SOURCE_URL = NH_MEMBERS_URL;
 const UA = "we-the-people/1.0 (civic data; +mailto:seanj22@gmail.com)";
 
 export type ElectedStatus = "INCUMBENT" | "NEW" | "FORMER" | "UNSTATED";
@@ -96,7 +116,8 @@ export function readElectedStatus(raw: string): ElectedStatus {
 export function parseMembers(text: string): MembersExtraction {
   const lines = text.split(/\r?\n/).filter((l) => l.trim().length > 0);
   if (lines.length < 2) {
-    throw new Error(
+    throw sourceAcquisitionFailure(
+      "PUBLISHER_DOCUMENT_INVALID",
       `nh:members: the file carries ${lines.length} non-empty line(s). A roster of the New Hampshire ` +
         "General Court is 400-odd rows, so this is a failed retrieval, not an empty legislature " +
         "(RULING 43).",
@@ -108,7 +129,8 @@ export function parseMembers(text: string): MembersExtraction {
   const required = ["LastName", "FirstName", "LegislativeBody", "District", "electedStatus"];
   const missing = required.filter((r) => col(r) < 0);
   if (missing.length > 0) {
-    throw new Error(
+    throw sourceAcquisitionFailure(
+      "PUBLISHER_DOCUMENT_INVALID",
       `nh:members: the file's header does not carry ${missing.join(", ")}. The columns present are: ` +
         `${header.join(", ")}. A parser that guessed positions here would silently mis-read every row.`,
     );
@@ -157,7 +179,8 @@ export function parseMembers(text: string): MembersExtraction {
 
   // RULING 128 — every logical record has one disposition, and the sum is exact.
   if (members.length + dropped !== body.length) {
-    throw new Error(
+    throw sourceAcquisitionFailure(
+      "PUBLISHER_DOCUMENT_INVALID",
       `nh:members: ${members.length} produced + ${dropped} dropped does not equal ${body.length} input ` +
         "rows. A record with no disposition vanished.",
     );
@@ -184,42 +207,129 @@ function arg(name: string): string | undefined {
 
 const invokedDirectly = (process.argv[1] ?? "").replace(/\\/g, "/").endsWith("scripts/nh-gencourt-members.mts");
 
-if (invokedDirectly) {
+async function main(): Promise<void> {
+  installNeonRequestDeadline();
+  if (process.argv.includes("--write")) {
+    throw new Error(
+      "The tracked NH members writer is retired. Run the registered nh-members contract " +
+        "through the installed runtime dispatcher; direct tracked output is refused.",
+    );
+  }
   const local = arg("from");
+  const promote = process.argv.includes("--promote");
+  if (promote && local) {
+    throw new Error(
+      "The registered nh-members production contract refuses local --from input: a local " +
+        "copy is not a live authoritative retrieval.",
+    );
+  }
+  let store: PostgresRoutineDataStore | null = null;
+  if (promote) {
+    const handle = resolveProductionWriteHandle();
+    process.env.DATABASE_URL = handle.connection;
+    process.env.WTP_DB_ROLE = "production";
+    process.env.WTP_SANCTIONED_WRITE = "routine-civic-data-promotion";
+    assertWriteAllowed("a routine civic data candidate/version promotion");
+    store = new PostgresRoutineDataStore();
+  }
+
   let text: string;
   let readOn: string;
   let retrievedAt = new Date().toISOString();
   let finalUrl = SOURCE_URL;
   let httpStatus = 200;
-
-  if (local) {
-    text = readFileSync(local, "utf8");
-    // RULING 107 — a local copy carries no evidence of WHEN it was read, so the
-    // read stamp is UNKNOWN rather than today's date. A clock call here would be
-    // a run stamp wearing a freshness field.
-    readOn = "UNKNOWN";
-  } else {
-    const res = await fetch(SOURCE_URL, {
-      headers: { "user-agent": UA, accept: "text/plain,*/*" },
-      redirect: "follow",
-      signal: AbortSignal.timeout(60_000),
-    });
-    if (!res.ok) {
-      throw new Error(
-        `nh:members: ${SOURCE_URL} answered HTTP ${res.status}. That is a WALL with a date, not a ` +
-          "legislature with no members.",
+  let identityText: string | null = null;
+  let identityHistoryText: string | null = null;
+  let identityFinalUrl: string | null = null;
+  let identityHttpStatus: number | null = null;
+  let identityCrosswalk: NhCurrentMemberIdentityCrosswalk | null = null;
+  let extraction: MembersExtraction;
+  try {
+    if (local) {
+      text = readFileSync(local, "utf8");
+      // RULING 107 — a local copy carries no evidence of WHEN it was read, so the
+      // read stamp is UNKNOWN rather than today's date. A clock call here would be
+      // a run stamp wearing a freshness field.
+      readOn = "UNKNOWN";
+    } else {
+      const acquired = await withPublisherAcquisitionDeadline(
+        "NH General Court members",
+        ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,
+        async (signal) => {
+          return readNhOfficialDocumentsSerially(
+            promote ? [SOURCE_URL, NH_LEGISLATORS_URL, NH_ROLL_HISTORY_URL] : [SOURCE_URL],
+            async (url): Promise<NhOfficialDocument> => {
+              const requestSignal = AbortSignal.any([signal, AbortSignal.timeout(60_000)]);
+              const res = await requestPublisher("NH General Court members", () => fetch(url, {
+                headers: { "user-agent": UA, accept: "text/plain,*/*" },
+                redirect: "follow",
+                signal: requestSignal,
+              }));
+              if (!res.ok) {
+                throw sourceAcquisitionFailure(
+                  "PUBLISHER_RESPONSE_REFUSED",
+                  `nh:members: ${url} answered HTTP ${res.status}. That is a WALL with a date, not a ` +
+                    "legislature with no members.",
+                );
+              }
+              const bytes = await readPublisherBody("NH General Court members", () => res.arrayBuffer());
+              requestSignal.throwIfAborted();
+              return {
+                requestedUrl: url,
+                finalUrl: res.url || url,
+                httpStatus: res.status,
+                body: decodeNhPublisherBytes(bytes),
+              };
+            },
+            { signal },
+          );
+        },
+      );
+      const memberDocument = acquired[0]!;
+      text = memberDocument.body;
+      retrievedAt = new Date().toISOString();
+      finalUrl = memberDocument.finalUrl;
+      httpStatus = memberDocument.httpStatus;
+      const identityDocument = acquired[1];
+      if (identityDocument) {
+        identityText = identityDocument.body;
+        identityFinalUrl = identityDocument.finalUrl;
+        identityHttpStatus = identityDocument.httpStatus;
+      }
+      identityHistoryText = acquired[2]?.body ?? null;
+      // @freshness-reads-here — this clock call sits in the reading path, so the
+      // stamp it produces names the day somebody actually looked (RULING 107).
+      readOn = runStamp();
+    }
+    extraction = parseMembers(text);
+    if (promote) {
+      if (identityText === null || identityHistoryText === null || identityFinalUrl === null || identityHttpStatus === null) {
+        throw sourceAcquisitionFailure(
+          "PUBLISHER_DOCUMENT_INVALID",
+          "nh:members: the canonical promotion did not acquire legislators.txt for official PersonID identity.",
+        );
+      }
+      const identityRows = parseNhLegislators(identityText);
+      const historyRows = parseNhRollCallHistory(identityHistoryText);
+      identityCrosswalk = joinNhCurrentMemberIdentities(
+        extraction,
+        identityRows,
+        identityText,
+        historyRows,
+        identityHistoryText,
       );
     }
-    text = await res.text();
-    retrievedAt = new Date().toISOString();
-    finalUrl = res.url || SOURCE_URL;
-    httpStatus = res.status;
-    // @freshness-reads-here — this clock call sits in the reading path, so the
-    // stamp it produces names the day somebody actually looked (RULING 107).
-    readOn = runStamp();
+  } catch (error) {
+    if (!promote || store === null || !isSourceAcquisitionFailure(error)) throw error;
+    const failed = await recordRegisteredSourceAcquisitionFailure({
+      store,
+      contractId: "nh-members",
+      failure: error,
+    });
+    console.log(failed.line);
+    process.exitCode = 2;
+    return;
   }
-
-  const extraction = parseMembers(text);
   console.log(`nh:members · ${SOURCE_URL}`);
   console.log(`  read on              ${readOn}`);
   console.log(`  logical input rows   ${extraction.counts.logicalInput}`);
@@ -231,44 +341,26 @@ if (invokedDirectly) {
   console.log(`  with an email        ${extraction.members.filter((m) => m.email).length}`);
   console.log(`  with a phone         ${extraction.members.filter((m) => m.phone).length}`);
 
-  if (process.argv.includes("--promote")) {
-    if (local) throw new Error("nh:members --promote refuses --from: a local copy is not a live authoritative retrieval.");
-    const handle = resolveProductionWriteHandle();
-    process.env.DATABASE_URL = handle.connection;
-    process.env.WTP_DB_ROLE = "production";
-    process.env.WTP_SANCTIONED_WRITE = "routine-civic-data-promotion";
-    assertWriteAllowed("a routine civic data candidate/version promotion");
-    const candidate = nhMembersCandidate({ rawText: text, finalUrl, httpStatus, retrievedAt, extraction });
-    const outcome = await processRoutineCandidate(new PostgresRoutineDataStore(), candidate, retrievedAt);
-    console.log("RCD_RECEIPT=" + JSON.stringify({ source: "NH General Court members", candidateId: candidate.id, acquisitionSucceeded: outcome.candidate.acquisitionSucceeded, state: outcome.candidate.state, decision: outcome.candidate.receipt?.decision ?? null, promotedVersion: outcome.promoted?.versionId ?? null, lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+  if (promote) {
+    if (store === null) throw new Error("NH_PRODUCTION_STORE_NOT_INITIALIZED");
+    if (identityText === null || identityHistoryText === null || identityFinalUrl === null || identityHttpStatus === null || identityCrosswalk === null) {
+      throw new Error("NH_OFFICIAL_PERSON_ID_CROSSWALK_NOT_INITIALIZED");
+    }
+    const candidate = nhMembersCandidate({
+      rawText: text,
+      rawIdentityText: `${identityText}\n${identityHistoryText}`,
+      finalUrl,
+      identityFinalUrl,
+      httpStatus,
+      identityHttpStatus,
+      retrievedAt,
+      extraction,
+      identityCrosswalk,
+    });
+    const outcome = await processRegisteredRoutineCandidate(store, "nh-members", candidate, retrievedAt);
+    console.log("RCD_RECEIPT=" + JSON.stringify({ source: "nh-members", candidateId: candidate.id, acquisitionSucceeded: outcome.candidate.acquisitionSucceeded, state: outcome.candidate.state, decision: outcome.candidate.receipt?.decision ?? null, promotedVersion: outcome.promoted?.versionId ?? null, lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
     if (!outcome.promoted) process.exitCode = 2;
   }
-
-  if (process.argv.includes("--write")) {
-    const path = join(ROOT, OUT);
-    mkdirSync(dirname(path), { recursive: true });
-    writeFileSync(
-      path,
-      `${JSON.stringify(
-        {
-          source: {
-            url: SOURCE_URL,
-            org: "New Hampshire General Court",
-            collectedAt: readOn,
-            note:
-              "Taken at rung zero under RULING 166 — the body's own bulk download, before any " +
-              "aggregator. electedStatus is the body's own statement of who currently sits.",
-          },
-          counts: extraction.counts,
-          byStatus: extraction.byStatus,
-          byChamber: extraction.byChamber,
-          members: extraction.members,
-        },
-        null,
-        2,
-      )}\n`,
-      "utf8",
-    );
-    console.log(`  written              ${OUT}`);
-  }
 }
+
+if (invokedDirectly) await main();

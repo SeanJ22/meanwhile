@@ -5,8 +5,6 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 import {
-  FAILURE_CLASSES,
-  INTEGRITY_STATES,
   MAX_READING_AGE_HOURS,
   NEVER_CHECKED,
   assessIntegrity,
@@ -18,6 +16,7 @@ import {
   type IntegrityRecord,
   type ProductionObservation,
 } from "../lib/ops/production-integrity.ts";
+import { validIntegrityRecord } from "../lib/ops/production-integrity-data-plane.ts";
 import { GATES } from "../scripts/gates.mjs";
 
 /**
@@ -473,27 +472,16 @@ test("the freeze gate runs in build-check.yml's gates job and is bounded", () =>
   assert.match(step, /timeout-minutes:\s*\d+/, "the step must bound itself");
 });
 
-test("the committed record parses, declares its version, and is not vacuous", () => {
-  const record = JSON.parse(
-    readFileSync(join(ROOT, "data", "ops", "production-integrity.json"), "utf8"),
-  ) as IntegrityRecord;
-
-  assert.equal(record.formatVersion, 1);
-  assert.ok(INTEGRITY_STATES.length === 5);
-  assert.ok(["HELD", "REFUSED", "COULD_NOT_TELL"].includes(record.observed));
-  if (record.failureClass !== null) {
-    assert.ok(FAILURE_CLASSES.includes(record.failureClass), `unknown failure class ${record.failureClass}`);
-  }
-  assert.ok(record.observedAt, "a reading with no time cannot be aged");
-  assert.equal(record.moment, "post-deploy", "the recorded reading must be the one where both phases are owed");
+test("the canonical durable record validator accepts exact readings and rejects vacuous ones", () => {
+  assert.equal(validIntegrityRecord(HELD), true);
+  assert.equal(validIntegrityRecord(REFUSED), true);
+  assert.equal(validIntegrityRecord({ ...HELD, deployedSha: "not-a-sha" }), false);
+  assert.equal(validIntegrityRecord({ ...HELD, observedAt: null }), true, "NEVER_CHECKED remains a valid in-memory state");
 });
 
 test("an unparseable or future-shaped record reads as UNKNOWN rather than throwing or passing", () => {
-  // The reader is exercised through the same code path the gate uses.
   const future = { ...HELD, formatVersion: 99 } as unknown as IntegrityRecord;
-  // assessIntegrity itself is version-agnostic; the guard lives in readRecord,
-  // so what is asserted here is the SHAPE contract the reader depends on.
-  assert.notEqual(future.formatVersion, 1);
+  assert.equal(validIntegrityRecord(future), false);
   assert.equal(assessIntegrity(NEVER_CHECKED, SHA_A).state, "UNKNOWN");
 });
 

@@ -27,6 +27,16 @@ export interface SeatHolder {
   id: string;
   name: string;
   officeTitle: string;
+  /**
+   * The jurisdiction that owns this office when the holder came from a
+   * body-scoped roster. This is presentation context, not a replacement for
+   * the many-to-many officeholder/division join.
+   *
+   * Projected on the server so client components never need to import the
+   * canonical registry read model merely to choose jurisdiction-specific
+   * explanatory copy.
+   */
+  officeJurisdictionOcdId?: string | null;
   /** Display only. Never used to infer a position or a vote. */
   partyLabel: string | null;
   /**

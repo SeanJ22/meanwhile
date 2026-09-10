@@ -107,6 +107,7 @@ import type { ReadinessStateSnapshot } from "../readiness/model.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
+import type { CandidateStore } from "../../method/candidate.ts";
 
 /** ------------------------------------------------------------- envelopes */
 
@@ -589,6 +590,8 @@ export interface ControlPlaneRepositories {
    *                     page can list what the Scouts actually did
    */
   readonly researchState: AggregateRepository<ResearchState>;
+  /** Canonical live method-candidate lifecycle. Git holds historical evidence only. */
+  readonly methodCandidates: AggregateRepository<CandidateStore>;
   readonly researchIntents: AppendOnlyRepository<ResearchIntent>;
   readonly scoutResults: AppendOnlyRepository<ScoutResult>;
   readonly workerResults: AppendOnlyRepository<WorkerResultRecord>;
@@ -599,7 +602,7 @@ export interface ControlPlaneRepositories {
    *                      the only path a finding may travel toward promotion
    *   windowRuns         one record per nightly window, keyed by local date
    *   windowIncidents    a stage failure, typed, keyed by window id
-   *   windowIntents      the backup wakeup's RUN_WINDOW_NOW and the runner's
+   *   windowIntents      explicit owner RUN_WINDOW_NOW requests and the runner's
    *                      HONORED record beside it
    */
   readonly promotionPipeline: AppendOnlyRepository<PromotionPipelineRecord>;

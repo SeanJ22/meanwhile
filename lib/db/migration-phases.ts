@@ -370,6 +370,13 @@ export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
       "their indexes. The migration is purely additive, so it is safe before the build that " +
       "first reads or writes those tables.",
   },
+  "0026_lame_sunset_bain": {
+    phase: "contract",
+    why:
+      "Adds fail-closed civic-data identity, state, pointer/LKG and append-only event constraints. " +
+      "Existing rows are scanned and nonconforming writes begin failing, so the conforming PDC " +
+      "store code must be serving and the read-only integrity census must pass before application.",
+  },
 };
 
 /** The declaration for a tag, or null when there is none. Never a default. */

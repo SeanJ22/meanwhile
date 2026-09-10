@@ -1,8 +1,8 @@
 {
-  "generated": "2026-09-06",
+  "generated": "2026-09-09",
   "ruling": "RULING 227",
   "openedDateProvenance": {
-    "opened-ledger": 457,
+    "opened-ledger": 462,
     "session-label": 243,
     "unrecoverable": 225
   },
@@ -32,14 +32,12 @@
       "NH194",
       "NH200",
       "NH208",
-      "NH212",
       "NH225",
       "NH246",
       "NH274",
       "NH275",
       "NH276",
       "NH277",
-      "NH282",
       "NH283",
       "NH287",
       "NH299",
@@ -48,7 +46,6 @@
       "NH306",
       "NH310",
       "NH325",
-      "NH326",
       "NH43",
       "NS01",
       "NS10",
@@ -90,10 +87,10 @@
     ],
     "uncovered": [],
     "orphaned": [
-      "NH272",
-      "NH281",
+      "NH212",
+      "NH282",
       "NH300",
-      "NH305",
+      "NH326",
       "NS12",
       "OWN03",
       "WF01"
@@ -101,7 +98,7 @@
   },
   "summary": {
     "predicates": 2,
-    "notMachineVerifiable": 77,
+    "notMachineVerifiable": 74,
     "holds": 1,
     "resolved": 0,
     "cannotTell": 1
@@ -125,14 +122,6 @@
       "read": [
         "data/ops/admin-login-readback.json"
       ],
-      "evidence": []
-    },
-    {
-      "rowId": "NH326",
-      "kind": "NOT_MACHINE_VERIFIABLE",
-      "verdict": "HOLDS",
-      "why": "NH326 is marked NOT_MACHINE_VERIFIABLE and carries a decision card. It waits on the author's judgement, which no artifact can supply.",
-      "read": [],
       "evidence": []
     },
     {
@@ -656,14 +645,6 @@
       "evidence": []
     },
     {
-      "rowId": "NH212",
-      "kind": "NOT_MACHINE_VERIFIABLE",
-      "verdict": "HOLDS",
-      "why": "NH212 is marked NOT_MACHINE_VERIFIABLE and carries a decision card. It waits on the author's judgement, which no artifact can supply.",
-      "read": [],
-      "evidence": []
-    },
-    {
       "rowId": "NH225",
       "kind": "NOT_MACHINE_VERIFIABLE",
       "verdict": "HOLDS",
@@ -700,14 +681,6 @@
       "kind": "NOT_MACHINE_VERIFIABLE",
       "verdict": "HOLDS",
       "why": "NH277 is marked NOT_MACHINE_VERIFIABLE and carries a decision card. It waits on the author's judgement, which no artifact can supply.",
-      "read": [],
-      "evidence": []
-    },
-    {
-      "rowId": "NH282",
-      "kind": "NOT_MACHINE_VERIFIABLE",
-      "verdict": "HOLDS",
-      "why": "NH282 is marked NOT_MACHINE_VERIFIABLE and carries a decision card. It waits on the author's judgement, which no artifact can supply.",
       "read": [],
       "evidence": []
     },

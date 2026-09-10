@@ -4,7 +4,6 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
-import { classifyDeploy } from "../lib/ops/deploy-paths.ts";
 import {
   OBSERVER_OUTCOMES,
   POLL_BOUND,
@@ -222,21 +221,17 @@ test("OB4c: every probe declares itself synthetic", async () => {
 
 /** ---------------------- 5. it cannot start a deploy loop ---------------- */
 
-test("OB5: the record the observer commits cannot trigger a deploy", () => {
-  /*
-   * Asserted through `classifyDeploy` — the same predicate
-   * `scripts/netlify-ignore.mjs` gives Netlify — rather than by trusting the
-   * comment in the workflow. `data/ops/` was added to NON_SHIPPING_PREFIXES in
-   * commit `6e591077` for exactly this: without it, every integrity reading
-   * would cost a production build to publish a file no reader can see, and an
-   * observer triggering the deploy it observes is an unbounded loop.
-   */
-  const d = classifyDeploy(["data/ops/production-integrity.json"]);
-  assert.equal(d.verdict, "cancel", "an ops record must not cost a build");
-  assert.deepEqual(d.shipping, []);
-
-  // Positive control: the classifier is not simply cancelling everything.
-  assert.equal(classifyDeploy(["app/page.tsx"]).verdict, "build");
+test("OB5: a deploy observation has no Git feedback hop", () => {
+  const workflow = readFileSync(join(ROOT, ".github", "workflows", "post-deploy-integrity.yml"), "utf8")
+    .replace(/^\s*#.*$/gm, "");
+  const script = readFileSync(join(ROOT, "scripts", "production-integrity.mts"), "utf8")
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^\s*\/\/.*$/gm, "");
+  assert.doesNotMatch(workflow, /git\s+(?:add|commit|push)|push-main\.mjs|status:ledger/);
+  assert.doesNotMatch(workflow, /^\s*contents:\s*write\s*$/m);
+  assert.doesNotMatch(script, /git\s+(?:add|commit|push)|push-main\.mjs/);
+  assert.match(script, /appendProductionIntegrity/);
+  assert.match(script, /readLatestProductionIntegrity/);
 });
 
 /** ---------------------- 6. no rollback, still ---------------------------- */
@@ -278,7 +273,7 @@ test("OB7: the observer spawns the existing reading rather than asking the datab
 
 /** ---------------------- 8. the workflow is wired as described ----------- */
 
-test("OB8: the workflow triggers on a push to main, is bounded, and commits through push-main", () => {
+test("OB8: the workflow is bounded, exact-head, read-only in Git, and appends canonical outcome", () => {
   const raw = readFileSync(join(ROOT, ".github", "workflows", "post-deploy-integrity.yml"), "utf8");
   /*
    * COMMENTS STRIPPED FOR THE NEGATIVE ASSERTIONS. The workflow's header
@@ -296,19 +291,32 @@ test("OB8: the workflow triggers on a push to main, is bounded, and commits thro
     /deployment_status/,
     "gh api repos/:owner/:repo/deployments returns 0 here — a deployment_status trigger would never fire",
   );
-  assert.match(w, /^\s*contents: write\s*$/m, "it commits the record");
+  assert.match(w, /^\s*contents: read\s*$/m, "software-release integrity needs only Git read access");
+  assert.doesNotMatch(w, /^\s*contents: write\s*$/m, "it may not mutate the repository");
   assert.match(w, /concurrency:/, "two deploys are two observations, and neither may cancel the other");
   assert.match(w, /cancel-in-progress: false/);
   assert.match(w, /^ {4}timeout-minutes:\s*\d+/m, "the job bounds itself well under the platform's six hours");
+  assert.doesNotMatch(w, /push-main\.mjs|git\s+(?:add|commit|push)/, "the retired Git feedback hop cannot return");
+  assert.match(w, /--expect=\$\{\{ inputs\.sha \|\| github\.sha \}\}/, "the observer remains exact-head bound");
   assert.match(
     w,
-    /node scripts\/push-main\.mjs --workflow post-deploy-integrity/,
-    "the record goes through the ONE protected push every scheduled pusher uses (R48, RULING 165)",
+    /ref:\s*\$\{\{ inputs\.sha \|\| github\.sha \}\}/,
+    "the observer must execute the exact requested release, not a later moving main checkout",
+  );
+  assert.doesNotMatch(
+    w,
+    /^\s*ref:\s*main\s*$/m,
+    "a moving main checkout can mix a later release's code/schema with this release receipt",
   );
   assert.match(
     w,
     /WTP_PRODUCTION_DATABASE_URL_READONLY: \$\{\{ secrets\./,
     "the reading needs the read-only credential, which IS a repository secret",
+  );
+  assert.match(
+    w,
+    /WTP_CONTROL_PLANE_POST_DEPLOY_DATABASE_URL: \$\{\{ secrets\./,
+    "the exact outcome is appended to the existing Admin-consumed control-plane log",
   );
   assert.doesNotMatch(
     w,

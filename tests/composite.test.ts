@@ -52,13 +52,25 @@ function stubChild(
     rows?: unknown[];
     failFetch?: boolean;
     hangFetch?: boolean;
+    onAbort?: () => void;
     meetings?: (raw: unknown[]) => Meeting[];
   },
 ): ReportingMeetingSource<unknown> {
   return {
     name,
-    async fetch() {
-      if (behave.hangFetch) return new Promise(() => {});
+    async fetch(query) {
+      if (behave.hangFetch) {
+        return new Promise((_resolve, reject) => {
+          const signal = query.signal;
+          assert.ok(signal, "a composite child must receive its exact cancellation domain");
+          const abort = () => {
+            behave.onAbort?.();
+            reject(signal.reason ?? new Error("source aborted"));
+          };
+          if (signal.aborted) abort();
+          else signal.addEventListener("abort", abort, { once: true });
+        });
+      }
       if (behave.failFetch) throw new Error(`${name} upstream broke`);
       return behave.rows ?? [];
     },
@@ -103,9 +115,10 @@ test("one child failing never blanks the map, and the failure is reported", asyn
 });
 
 test("a hung child times out and the others still return", async () => {
+  let activeHung = 1;
   const composite = new CompositeSource(
     [
-      stubChild("hung", { hangFetch: true }),
+      stubChild("hung", { hangFetch: true, onAbort: () => { activeHung -= 1; } }),
       stubChild("fast", {
         rows: [1],
         meetings: () => [meetingOf("fast:m0")],
@@ -120,7 +133,8 @@ test("a hung child times out and the others still return", async () => {
   assert.equal(meetings.length, 1);
   const hung = composite.lastReport?.children.find((c) => c.source === "hung");
   assert.equal(hung?.ok, false);
-  assert.match(hung?.error ?? "", /timed out/);
+  assert.match(hung?.error ?? "", /acquisition deadline/);
+  assert.equal(activeHung, 0, "the report waits for the timed-out child to abort; no orphan remains");
 });
 
 test("a child violating the namespacing contract is excluded and reported", async () => {

@@ -38,7 +38,7 @@ the 169/170 mismatch was one visible instance of it.
 
 ```
 CLAUDE.md                              ROOT CONSTITUTION — current cross-cutting law only
-docs/governance/ledger.jsonl           CANONICAL. Append-only, one typed record per line.
+docs/governance/ledger.jsonl           CANONICAL. One typed record per line; new records append.
 docs/governance/policies/*.md          GENERATED. Current law, per domain.
 docs/governance/current-decisions.md   GENERATED. Active non-law decisions, by domain.
 docs/governance/history.md             GENERATED. The full narrative. Not startup context.
@@ -50,10 +50,14 @@ docs/governance/session-efficiency.md  OWNER DIRECTIVE, committed VERBATIM (RULI
                                        not generated, not a compiler input; changes only by a later ruling.
 ```
 
-**Only `ledger.jsonl` and `lib/governance/adoptions.ts` are inputs.** Everything
-else in that list is output and is never hand-edited (RULING 92). Editing a
-generated view fails `pnpm governance:check`, and there is a test that proves it
-by doing exactly that.
+**Only `ledger.jsonl` is an input to the governance compiler.** The former
+adoption/classification overlays were folded into it at the 2026-09-03
+consolidation and are not compiler inputs. `CLAUDE.md`, the pinned legacy
+sources, the preservation receipt and the verbatim owner directive have the
+separate roles named above; the generated views are output and are never
+hand-edited (RULING 92). Editing a generated view fails
+`pnpm governance:check`, and there is a test that proves it by doing exactly
+that.
 
 ---
 
@@ -76,15 +80,17 @@ by doing exactly that.
 **A governance change is ATOMIC** (RULING 176). All of this lands together or
 the change has not happened:
 
-1. The canonical event — a record in `ledger.jsonl`, or an entry in
-   `lib/governance/adoptions.ts`.
+1. The canonical event — a later-dated record appended to `ledger.jsonl`. When
+   it supersedes a current record, that predecessor's lifecycle `status` changes
+   in the same transaction; its id, aliases, provenance, adopted text and date do not.
 2. `pnpm governance:compile`.
 3. `pnpm governance:check` passing.
 4. The regenerated views committed.
 
-**An adopted id is immutable** (RULING 99, RULING 176). Never reused, never
-renumbered, never edited in place. A rule is changed only by a later dated
-record that names what it supersedes — and a PARTIAL amendment must name **what
+**An adopted id and its adopted text are immutable** (RULING 99, RULING 176).
+They are never reused, renumbered or rewritten. Lifecycle status may move only
+as part of the atomic adoption of the later record that names what it
+supersedes. A PARTIAL amendment must name **what
 changed and what survives**, because a boolean `superseded` destroys exactly the
 information the next reader needs.
 

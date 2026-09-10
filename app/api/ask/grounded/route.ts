@@ -1,4 +1,7 @@
-import { readSnapshot } from "@/lib/meetings/snapshot";
+import {
+  readMeetingsProjection,
+  type MeetingsSnapshot,
+} from "@/lib/meetings/snapshot";
 import type { Meeting } from "@/lib/sources/types";
 import type { AskSitting } from "@/lib/ask/answer";
 import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
@@ -10,6 +13,7 @@ import {
   actionText,
   executiveActionStore,
   monthsBefore,
+  refreshExecutiveActionsFromPromoted,
   undatedFor,
 } from "@/lib/officials/executive-actions";
 import type { BindableEntity } from "@/lib/routing/named-entity";
@@ -59,7 +63,27 @@ import {
 import { contactForCandidate } from "@/lib/ask/candidate-contact";
 import { keyVoteEvidenceFor } from "@/lib/ask/key-votes";
 import { refreshFundingFromPromoted } from "@/lib/funding/snapshot";
+import { refreshStateMoneyFromPromoted } from "@/lib/funding/state-snapshot";
+import { refreshAzPimaFinanceFromPromoted } from "@/lib/control-plane/campaign-finance/held-records";
 import { refreshStateVotesFromPromoted } from "@/lib/sources/legiscan/snapshot";
+import {
+  officialStateRollCallTargetByScope,
+  officialStateVoteScopeForOfficeholderId,
+  type OfficialStateVoteScope,
+} from "@/lib/state-rollcalls/authority";
+import { refreshFederalVotesFromPromoted } from "@/lib/votes/snapshot";
+import { refreshFederalKeyVotesFromPromoted } from "@/lib/votes/key-votes-projection";
+import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
+import { refreshRegistryRuntimeFromPromoted } from "@/lib/registry/runtime-read-model";
+import {
+  refreshAzBallotFromPromoted,
+  refreshCandidateCorpusFromPromoted,
+  refreshCandidateProfilesFromPromoted,
+} from "@/lib/civic-data/manual-read-models";
+import {
+  refreshCommentAccessFromPromoted,
+} from "@/lib/civic-data/curated-reader-read-model";
+import { refreshOfficeholderStatementsFromPromoted } from "@/lib/corpus/data-plane";
 import {
   absencesForDivisions,
   absencesWithoutRemovals,
@@ -83,6 +107,7 @@ import {
 } from "@/lib/ask/agenda-publication";
 import {
   publicationObservationsFor,
+  refreshOutcomeSnapshotFromPromoted,
 } from "@/lib/outcomes/store";
 import { emptyTrace, type AnswerMode, type AskTrace } from "@/lib/ask/trace";
 import { validateAnswer } from "@/lib/ask/validate";
@@ -209,6 +234,13 @@ function allowCall(): boolean {
 export function resetGroundedState(): void {
   spentOn = "";
   spent = 0;
+}
+
+/** Run unrelated canonical Reader preloads as independent failure domains. */
+export async function settleGroundedSourcePreloads(
+  preloads: readonly (() => Promise<unknown>)[],
+): Promise<PromiseSettledResult<unknown>[]> {
+  return Promise.allSettled(preloads.map((preload) => Promise.resolve().then(preload)));
 }
 
 interface MeetingLike {
@@ -539,7 +571,6 @@ function personEntities(seats: readonly SeatHolder[]): BindableEntity[] {
 }
 
 export async function POST(request: Request) {
-  await Promise.all([refreshFundingFromPromoted(), refreshStateVotesFromPromoted()]);
   const started = Date.now();
   const trace: AskTrace = emptyTrace();
 
@@ -594,14 +625,71 @@ export async function POST(request: Request) {
     return Response.json({ error: "question is required" }, { status: 400 });
   }
   const question = body.question.slice(0, MAX_QUESTION_CHARS);
-
-  const snapshot = readSnapshot();
-  // A failed meeting read must not withhold an unrelated eligible ballot or money record.
-  const meetings = (snapshot?.meetings ?? []) as MeetingLike[];
-  const documents = (snapshot?.agendaDocuments ?? []) as AgendaDocumentLike[];
   const ocdIds = Array.isArray(body.ocdIds)
     ? body.ocdIds.filter((v): v is string => typeof v === "string").slice(0, 40)
     : [];
+
+  // State-roll identity is established before any state pointer opens. Only
+  // the state(s) named by the reader's divisions or exact source-namespaced
+  // subject ids are eligible for this request; unrelated states are not
+  // touched and therefore cannot suppress or delay the answer.
+  const stateVoteScopes = new Set<OfficialStateVoteScope>();
+  for (const state of statesOf(ocdIds)) {
+    const target = officialStateRollCallTargetByScope(`US-${state.toUpperCase()}`);
+    if (target) stateVoteScopes.add(target.jurisdiction);
+  }
+  for (const ref of [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)]) {
+    if (!ref.id) continue;
+    const scope = officialStateVoteScopeForOfficeholderId(ref.id);
+    if (scope) stateVoteScopes.add(scope);
+  }
+
+  // Each authority owns its own read state and failure gap. A missing or
+  // invalid pointer must fail that source closed without rejecting the whole
+  // Ask request or relabelling every unrelated source as unavailable.
+  await settleGroundedSourcePreloads([
+    refreshFundingFromPromoted,
+    refreshStateMoneyFromPromoted,
+    refreshAzPimaFinanceFromPromoted,
+    ...[...stateVoteScopes].map((scope) => () => refreshStateVotesFromPromoted(scope)),
+    refreshFederalVotesFromPromoted,
+    refreshFederalKeyVotesFromPromoted,
+    refreshFederalDirectoryFromPromoted,
+    refreshRegistryRuntimeFromPromoted,
+    refreshAzBallotFromPromoted,
+    refreshCandidateProfilesFromPromoted,
+    refreshCandidateCorpusFromPromoted,
+    refreshOfficeholderStatementsFromPromoted,
+    refreshExecutiveActionsFromPromoted,
+    refreshOutcomeSnapshotFromPromoted,
+  ]);
+  if (process.env.NODE_ENV === "production") {
+    // Public-comment rules are an independent optional family. Initialize its
+    // pointer, but do not let a store outage suppress meetings, ballots,
+    // officials, or any other source's answer.
+    await refreshCommentAccessFromPromoted().catch(() => undefined);
+  }
+
+  let snapshot: MeetingsSnapshot | null = null;
+  let meetingDataState: "PROMOTED" | "BOOTSTRAP" | "STORE_UNREACHABLE" =
+    "STORE_UNREACHABLE";
+  let meetingDataDetail = "The meetings projection was not initialized.";
+  try {
+    const read = await readMeetingsProjection();
+    meetingDataState = read.kind === "NOT_RECORDED" ? "STORE_UNREACHABLE" : read.kind;
+    meetingDataDetail = read.kind === "PROMOTED"
+      ? `Canonical meetings projection ${read.metadata.versionId ?? "unknown"} was read.`
+      : read.detail;
+    if (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP") {
+      snapshot = read.value;
+    }
+  } catch (error) {
+    meetingDataDetail =
+      error instanceof Error ? error.message : "The meetings projection could not be validated.";
+  }
+  // A failed meeting read must not withhold an unrelated eligible ballot or money record.
+  const meetings = (snapshot?.meetings ?? []) as MeetingLike[];
+  const documents = (snapshot?.agendaDocuments ?? []) as AgendaDocumentLike[];
   const surface: "MAP" | "BALLOT" | "UNKNOWN" =
     body.surface === "BALLOT" || body.surface === "MAP" ? body.surface : "UNKNOWN";
 
@@ -640,7 +728,12 @@ export async function POST(request: Request) {
    */
   const ballot = await loadBallotForDivisions(ocdIds);
   const ballotLoadGaps: EvidenceGap[] = ballot.loaderFailures.length ? [{ whose: "OURS", statement: "The canonical ballot records for this area could not be read for this answer. That is a failure of our holding, not a statement that no candidates or ballot items exist." }] : [];
-  const holdingLoadGaps: EvidenceGap[] = [...ballotLoadGaps, ...(officeholders.loaderFailures ? [{ whose: "OURS" as const, statement: "Our canonical officeholder records could not be read for this answer. This is a holding failure, not a finding that there are no officials for this place or person." }] : [])];
+  const meetingLoadGaps: EvidenceGap[] = meetingDataState === "STORE_UNREACHABLE"
+    ? [{ whose: "OURS", statement: `Our canonical meeting records could not be read for this answer. This holding failure does not mean no meetings or agendas exist. ${meetingDataDetail}` }]
+    : meetingDataState === "BOOTSTRAP"
+      ? [{ whose: "OURS", statement: "No canonical meetings pointer has been recorded yet, so this answer is explicitly using the bundled first-bootstrap projection." }]
+      : [];
+  const holdingLoadGaps: EvidenceGap[] = [...ballotLoadGaps, ...meetingLoadGaps, ...(officeholders.loaderFailures ? [{ whose: "OURS" as const, statement: "Our canonical officeholder records could not be read for this answer. This is a holding failure, not a finding that there are no officials for this place or person." }] : [])];
   const ballotInventory = ballotAskInventory(ballot.set, ballot.contests, ballot.nominees,
     [...preferredOfficialIds, ...namedSourceFilingIds(question, ballot.set)]);
 
@@ -682,10 +775,18 @@ export async function POST(request: Request) {
    * read from the server's clock here because this is a server; what matters
    * is that neither model rung invents it, and both are told.
    */
-  const today =
-    typeof body.today === "string" && /^\d{4}-\d{2}-\d{2}$/.test(body.today)
-      ? body.today
-      : new Date().toISOString().slice(0, 10);
+  const suppliedToday =
+    typeof body.today === "string" && /^\d{4}-\d{2}-\d{2}$/.test(body.today);
+  const today = suppliedToday
+    ? body.today as string
+    : new Date().toISOString().slice(0, 10);
+  /* A supplied date is the route's deterministic test/acceptance clock, not
+     prompt decoration. Noon UTC keeps the requested civil day stable across
+     every supported U.S. zone; ordinary production requests retain the exact
+     server instant so same-day past/future selection remains truthful. */
+  const selectionNow = suppliedToday
+    ? Date.parse(`${today}T12:00:00.000Z`)
+    : Date.now();
 
   /*
    * What the reader has in front of them, as REFERENCES rather than display
@@ -901,7 +1002,12 @@ export async function POST(request: Request) {
   /** The sittings this request resolved, for the structured half of the payload. */
   const resolvedSittings: AskSitting[] = [];
   const gaps: EvidenceGap[] = [...holdingLoadGaps];
-  const denominators: Record<string, number> = { ballotLoaderFailures: ballot.loaderFailures.length };
+  const denominators: Record<string, number> = {
+    ballotLoaderFailures: ballot.loaderFailures.length,
+    meetingCanonicalProjectionReads: meetingDataState === "PROMOTED" ? 1 : 0,
+    meetingBootstrapProjectionReads: meetingDataState === "BOOTSTRAP" ? 1 : 0,
+    meetingStoreUnavailableReads: meetingDataState === "STORE_UNREACHABLE" ? 1 : 0,
+  };
   const contacts: AskContact[] = [];
   const canonicalSubjectKeys = new Set<string>(subject ? [subject.id] : []);
   if (subject?.kind === "PERSON") for (const [id, canonicalId] of officialAliases) {
@@ -1066,7 +1172,7 @@ export async function POST(request: Request) {
     /* The SAME selection the deterministic agenda route uses — one rule, two
        callers, so the two surfaces can never disagree about which meeting a
        tensed question meant. */
-    const chosen = selectSitting(selection, forBody, Date.now(), requestedMeetingDate?.date);
+    const chosen = selectSitting(selection, forBody, selectionNow, requestedMeetingDate?.date);
     const calendarIds = new Set(forBody.map((meeting) => meeting.id));
     const archivedOutcomes = requestedMeetingDate?.date && meetingRecordQuestionClass(question)
       ? outcomeSittingsOnDate(subject.id, requestedMeetingDate.date).filter((sitting) => !calendarIds.has(sitting.meetingId)) : [];
@@ -1276,13 +1382,13 @@ export async function POST(request: Request) {
         meetingsAcrossCorpus: meetings,
         discoveredDocumentUrl: chosen.agendaUrl ?? null,
         observations: publisherObservations,
-        now: Date.now(),
+        now: selectionNow,
       });
       denominators.publisherPublicationObservationsForThatMeeting =
         (denominators.publisherPublicationObservationsForThatMeeting ?? 0) + publisherObservations.length;
       const outcome = meetingOutcomeEvidenceFor({ bodyId: subject.id, meetingId: chosen.id, startsAt: chosen.startsAt, question });
-      const minutes = minutesSummaryEvidenceFor(subject.id, chosen.id, question);
-      const notice = noticeSummaryEvidenceFor(subject.id, chosen.id, question);
+      const minutes = minutesSummaryEvidenceFor(subject.id, chosen.id, question, () => snapshot);
+      const notice = noticeSummaryEvidenceFor(subject.id, chosen.id, question, () => snapshot);
       // A document extraction gap is not an absence of the separately held
       // structured agenda for this exact sitting.
       if (publication.gap && !outcome.records.some((record) => record.kind === "AGENDA_ITEM")) gaps.push(publication.gap);

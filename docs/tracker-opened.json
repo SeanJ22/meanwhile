@@ -2418,23 +2418,10 @@
     ]
   },
   {
-    "session": "job-watch",
-    "opened": "2026-09-08",
-    "ids": [
-      "JOB62",
-      "JOB63",
-      "JOB64",
-      "JOB65"
-    ]
-  },
-  {
-    "session": "job-watch",
+    "session": "pdc-v2-terminal-cutover",
     "opened": "2026-09-09",
     "ids": [
-      "JOB66",
-      "JOB67",
-      "JOB68",
-      "JOB69"
+      "NH328"
     ]
   }
 ]

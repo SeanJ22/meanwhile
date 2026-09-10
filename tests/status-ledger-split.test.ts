@@ -25,7 +25,7 @@ const HEAD = "cccccccccccccccccccccccccccccccccccccccc";
 const OTHER = "dddddddddddddddddddddddddddddddddddddddd";
 
 function noRecords(): RunRecordSet {
-  return { gates: null, walk: null, observer: null };
+  return { gates: null, walk: null };
 }
 
 function gateRecords(
@@ -48,7 +48,6 @@ function gateRecords(
       provenance,
     } as never,
     walk: null,
-    observer: null,
   };
 }
 

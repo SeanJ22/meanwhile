@@ -3,7 +3,11 @@ import type { CoverageSummary } from "../registry/coverage.ts";
 
 import { matchDestination, type DestinationMatch } from "./destinations.ts";
 import { matchDigest, type DigestMatch } from "./digest.ts";
-import { everydayContactsFor, type EverydayContact } from "./everyday.ts";
+import {
+  everydayContactsFor,
+  type EverydayContact,
+  type EverydayRoutingProjection,
+} from "./everyday.ts";
 import {
   matchExactName,
   normalizeName,
@@ -115,6 +119,8 @@ export interface AskOptions {
    * simply finds nothing, and the question falls to the layers below.
    */
   entities?: readonly NameableEntity[];
+  /** Server-preloaded canonical routing authority; absent means no contacts. */
+  everydayRouting?: EverydayRoutingProjection | null;
 }
 
 export function answerQuestion(
@@ -178,7 +184,9 @@ export function answerQuestion(
         (b) => b.bodyId === binding.entity.id || b.ocdId === binding.entity.id,
       ));
   const contacts =
-    match && bindingAllowsLocalContacts ? everydayContactsFor(match.topicId, zip) : [];
+    match && bindingAllowsLocalContacts
+      ? everydayContactsFor(match.topicId, zip, options.everydayRouting)
+      : [];
   /*
    * G05 rule 4d: an in-app destination, matched independently of the topic.
    *

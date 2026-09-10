@@ -55,11 +55,13 @@ export interface CoveredState {
  * and no manifest can generate them. The tests that hold those tables against
  * this array are the list of what onboarding still owes.
  */
-export const COVERED_STATES: readonly CoveredState[] = [
+export const COVERED_STATES = [
   { fips: "04", usps: "AZ", slug: "az" },
   { fips: "33", usps: "NH", slug: "nh" },
   { fips: "34", usps: "NJ", slug: "nj" },
-];
+] as const satisfies readonly CoveredState[];
+
+export type CoveredUsps = (typeof COVERED_STATES)[number]["usps"];
 
 /**
  * Every client-side list that used to be maintained by hand, as a function of

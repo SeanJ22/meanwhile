@@ -14,8 +14,8 @@
  * WHY THIS ASKS GITHUB RATHER THAN RUNNING THE GATE LOCALLY. Every local gate
  * this repo has answers a question about the WORKING TREE. The question that
  * went unasked is about the REMOTE BRANCH: whatever door a commit came through
- * — `--ship`, `pnpm closeout`, a bare `git push`, a scheduled refresh workflow
- * pushing through `scripts/push-main.mjs` — the tip of `main` is where it lands,
+ * — a pull request merge, release tooling, or a bare `git push` — the tip of
+ * `main` is where it lands,
  * and only the server knows what happened to it there. A local check cannot see
  * a commit somebody else pushed, and cannot see a build that failed for a reason
  * the local tree does not reproduce. So this reads the verdict rather than

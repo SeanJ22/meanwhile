@@ -1,5 +1,9 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
+
 import { GET } from "../app/api/representation/[...division]/route.ts";
 import { STATEWIDE_EXECUTIVES, statewideExecutivesFor } from "../lib/officials/statewide-executives.ts";
 import { BODY_ROSTERS, governingRosterHoldersForDivision } from "../lib/registry/body-rosters.ts";

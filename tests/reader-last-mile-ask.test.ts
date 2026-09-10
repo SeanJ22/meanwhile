@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
+
 import { campaignMoneyForTarget } from "../lib/funding/campaign-money.ts";
 import { canonicalOfficialAliases } from "../lib/ask/official-identity.ts";
 import { BALLOT_SOURCES } from "../lib/ballot/registry.ts";
@@ -11,6 +15,9 @@ import { statementEvidenceFor } from "../lib/ask/statements.ts";
 import { unifiedCorpus } from "../lib/corpus/unified.ts";
 import { positionsFor } from "../lib/corpus/positions.ts";
 import { voteEvidenceFor } from "../lib/ask/votes.ts";
+import { initializeFederalVoteFirstSeed } from "./helpers/federal-vote-first-seed.ts";
+
+await initializeFederalVoteFirstSeed();
 import { bodyIdentityIndex } from "../lib/ask/body-identity.ts";
 import { contactsForBody, contactRecord } from "../lib/ask/contacts.ts";
 import { contactForCandidate } from "../lib/ask/candidate-contact.ts";
@@ -21,9 +28,10 @@ import type { AskAnswerPayload } from "../lib/ask/answer.ts";
 import type { StateMoneyRecord } from "../lib/funding/state-money.ts";
 import { resolveSubjectRef } from "../lib/ask/subject.ts";
 import { readerPersonKeys } from "../lib/identity/reader-person.ts";
+import type { SourceSnapshot, StatementCorpus } from "../lib/corpus/types.ts";
 
 delete process.env.ANTHROPIC_API_KEY;
-const { POST, resetGroundedState } = await import("../app/api/ask/grounded/route.ts");
+const { POST, resetGroundedState, settleGroundedSourcePreloads } = await import("../app/api/ask/grounded/route.ts");
 const AZ = "ocd-division/country:us/state:az";
 const NJ = "ocd-division/country:us/state:nj";
 const NH = "ocd-division/country:us/state:nh";
@@ -32,6 +40,10 @@ const divisions = {
   NJ: [NJ, `${NJ}/county:morris`, `${NJ}/county:morris/place:rockaway_township`, `${NJ}/cd:11`],
   NH: [NH, `${NH}/county:merrimack`, `${NH}/county:merrimack/place:newbury_town`, `${NH}/cd:2`, `${NH}/sldu:7`],
 };
+
+const KAREN_RETIRED_ID = "plural:947e2e2b-04eb-4f92-9f83-aef8760517e0";
+const KAREN_ROLE_ID = "roster:merrimack-delegation#5";
+const KAREN_CANDIDACY_ID = "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth";
 
 test("an unresolved supplied canonical ID never becomes a same-name candidate through surface or prior context", async () => {
   const canonical = { id: "ballot-az-pima:governor:hobbs-katie", name: "Katie Hobbs", nameClass: "person" as const };
@@ -172,14 +184,35 @@ test("direct official vote IDs never fall through to another same-name person", 
 });
 
 test("multiple verified roles share an Ask subject only through the committed person bridge", async () => {
-  const officialId = "plural:947e2e2b-04eb-4f92-9f83-aef8760517e0";
-  const roleId = "roster:merrimack-delegation#5";
-  const aliases = canonicalOfficialAliases([officialId, roleId, "unresolved:Karen Ebel"], [officialId]);
-  assert.equal(aliases.get(roleId), officialId);
+  const aliases = canonicalOfficialAliases([KAREN_RETIRED_ID, KAREN_ROLE_ID, "unresolved:Karen Ebel"], [KAREN_ROLE_ID]);
+  assert.equal(aliases.get(KAREN_ROLE_ID), KAREN_ROLE_ID);
+  assert.equal(aliases.has(KAREN_RETIRED_ID), false, "the retired intermediary identity cannot win the Reader subject");
   assert.equal(aliases.has("unresolved:Karen Ebel"), false);
-  const body = await ask("What does Karen Ebel say about Hampshire?", "AZ", { surface: "MAP", activeSubjects: [{ id: officialId, name: "Karen Ebel", kind: "PERSON", focused: true }] });
-  assert.equal(body.subject?.id, officialId);
-  assert.ok(body.records.some((record) => record.kind === "POSITION" && record.canonicalSubjectId === officialId));
+  const recorded = JSON.parse(readFileSync("data/corpus/statements.json", "utf8")) as StatementCorpus;
+  const frozenKaren = recorded.snapshots.find(({ subjectId }) => subjectId === KAREN_RETIRED_ID);
+  assert.ok(frozenKaren);
+  const canonicalKaren: SourceSnapshot = {
+    ...frozenKaren,
+    subjectId: KAREN_CANDIDACY_ID,
+    id: `${KAREN_CANDIDACY_ID}|${frozenKaren.url}|${frozenKaren.contentHash}`,
+  };
+  const statement = statementEvidenceFor(
+    { id: KAREN_ROLE_ID, name: "Karen Ebel", kind: "PERSON" },
+    "What does Karen Ebel say about Hampshire?",
+    [KAREN_ROLE_ID, KAREN_CANDIDACY_ID],
+    () => ({ snapshots: [canonicalKaren] }),
+  );
+  assert.ok(statement.records.some((record) =>
+    record.kind === "POSITION" && record.canonicalSubjectId === KAREN_CANDIDACY_ID
+  ));
+  const body = await ask("What does Karen Ebel say about Hampshire?", "AZ", {
+    surface: "MAP",
+    activeSubjects: [{ id: KAREN_ROLE_ID, name: "Karen Ebel", kind: "PERSON", focused: true }],
+  });
+  assert.equal(body.subject?.id, KAREN_ROLE_ID);
+  assert.ok(body.records.every((record) =>
+    record.canonicalSubjectId !== KAREN_RETIRED_ID && !record.id.includes(KAREN_RETIRED_ID)
+  ));
   assert.ok(body.gaps.every((gap) => !/bills she signed|letters about individual bills/.test(gap.statement)));
 });
 
@@ -203,6 +236,17 @@ test("a failed corpus read has its own state, distinct from no held statement", 
   assert.equal(result.records.length, 0);
   assert.equal(result.denominators.statementLoaderFailures, 1);
   assert.match(result.gaps[0].statement, /could not be read/);
+});
+
+test("one canonical Reader preload failure cannot reject or suppress an unrelated preload", async () => {
+  let unaffectedRan = false;
+  const outcomes = await settleGroundedSourcePreloads([
+    async () => { throw new Error("planted statement authority failure"); },
+    async () => { unaffectedRan = true; return "unrelated ballot authority remains readable"; },
+  ]);
+  assert.equal(unaffectedRan, true);
+  assert.deepEqual(outcomes.map(({ status }) => status), ["rejected", "fulfilled"]);
+  assert.equal(outcomes[1]?.status === "fulfilled" ? outcomes[1].value : null, "unrelated ballot authority remains readable");
 });
 
 test("an unreadable applicable ballot is a failed holding, never an empty civic population", async () => {

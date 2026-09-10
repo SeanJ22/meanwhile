@@ -23,7 +23,6 @@
  *   parent 2                the certified candidate
  *   runs at parent 2        the pre-merge certifications
  *   runs at the merge       the post-merge ones
- *   runs at the commits after it, until the next merge   the observer's
  * ```
  *
  * **A run's KIND is measured, not inferred from its duration.** The jobs API is
@@ -55,7 +54,6 @@ import {
   openTransaction,
   recordCertification,
   recordMerge,
-  recordObservation,
   isRefusal,
   type CertificationKind,
   type CertificationOutcome,
@@ -95,8 +93,6 @@ const EXPENSIVE_STEPS = [
 /** Steps whose presence names the run's cheap kind, in precedence order. */
 const ATTESTATION_STEPS: ReadonlyArray<{ step: string; kind: CertificationKind }> = [
   { step: "Certified tree reused — this tree already passed", kind: "TREE_EQUIVALENCE_ATTESTATION" },
-  { step: "Cheap attestation — nothing here could differ", kind: "CHEAP_ATTESTATION" },
-  { step: "Cheap attestation — nothing else could differ", kind: "CHEAP_ATTESTATION" },
   { step: "Preflight was red — nothing expensive was bought", kind: "PREFLIGHT_REFUSED" },
 ];
 
@@ -288,20 +284,6 @@ function reconstruct(mergeSha: string): Reconstructed | { readonly problem: stri
   if (mergeTree !== null) {
     const merged = recordMerge(txn, { sha: mergeSha, tree: mergeTree });
     if (!isRefusal(merged)) txn = merged;
-  }
-
-  /* Bookkeeping commits after the merge, until the next merge. */
-  const after = git("rev-list", "--no-merges", `${mergeSha}..main`, "--reverse") ?? "";
-  for (const sha of after.split("\n").filter(Boolean).slice(0, 5)) {
-    const s = git("log", "-1", "--format=%s", sha) ?? "";
-    if (!/^(Post-deploy integrity reading|Intake tripwire report|Daily refresh|Gate record)/.test(s)) {
-      break;
-    }
-    txn = recordObservation(txn, {
-      producer: s.split(":")[0],
-      sha,
-      now: git("log", "-1", "--format=%cI", sha) ?? "",
-    });
   }
 
   return {

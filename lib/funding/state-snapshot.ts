@@ -1,120 +1,221 @@
-import { isRenderable } from "./state-money-reader.ts";
-/**
- * READING THE STATE-MONEY CORPUS — the reader-facing half of RULING 126.
- *
- * The committed snapshot is loaded once and answered by target key, exactly as
- * `lib/funding/snapshot.ts` does for the FEC corpus. **It is deliberately the
- * same shape**: one loader, one lookup, one render path (RULING 103), and the
- * firewall asserted in one place rather than in two.
- *
- * Snapshots live in `data/states/<st>/funding/`, a committed reader-content
- * path. It is never in Postgres — that is wall 1 of the firewall, and
- * `tests/campaign-finance-firewall.test.ts` fails if it moves.
- */
-
 import { readFileSync } from "node:fs";
-import * as fs from "node:fs";
 import { join } from "node:path";
-import { FIPS_TO_STATE } from "../ocd/fips.ts";
-import identityBridge from "./official-candidacies.json" with { type: "json" };
 
 import {
-  type StateMoneyRecord,
-  type StateMoneySnapshot,
-} from "./state-money.ts";
+  civicDataReadNotInitialized,
+  mayUseTestFixture,
+  readPromotedCivicData,
+  type CivicDataReadMetadata,
+  type CivicDataReadResult,
+  type PromotedCivicDataReadOptions,
+} from "../civic-data/read-model.ts";
+import {
+  STATE_CAMPAIGN_FINANCE_SOURCES,
+  type StateCampaignFinanceJurisdiction,
+} from "./data-plane.ts";
+import { isRenderable } from "./state-money-reader.ts";
+import type { StateMoneyRecord, StateMoneySnapshot } from "./state-money.ts";
 
 /**
- * Discover normalized state snapshots independently of reader coverage. Each
- * agency's file remains isolated, so an unreadable state's corpus cannot empty
- * the other states' rows.
+ * State campaign money is canonical only after a GOOD promotion. The bundled
+ * JSON files are deterministic first-seed/test fixtures; production never
+ * opens them and a store error can never select them as an implicit LKG.
  */
-function snapshotFiles(root: string): { state: string; file: string }[] {
-  const knownStates = new Set(Object.values(FIPS_TO_STATE).map((state) => state.postal.toLowerCase()));
-  // Node 24 is the deployed runtime; the repo's Node 20 typings predate this
-  // stable API. A bounded glob avoids tracing every unrelated state holding.
-  const { globSync } = fs as typeof fs & {
-    globSync(pattern: string, options: { cwd: string }): string[];
-  };
-  const paths = [...new Set([
-    ...globSync("data/states/*/funding/state-money-??-????.json", { cwd: root }).map(p => p.replaceAll("\\", "/")),
-    // The committed bridge inventories required snapshots independently of a
-    // deploy's directory listing. A missing bundled file stays a failed read.
-    ...identityBridge.sources.map(s => s.path).filter(p => /^data\/states\/[a-z]{2}\/funding\/state-money-[a-z]{2}-\d{4}\.json$/.test(p)),
-  ])];
-  const files: { state: string; file: string }[] = [];
-  for (const path of paths) {
-    const match = /^data\/states\/([a-z]{2})\/funding\/(state-money-([a-z]{2})-\d{4}\.json)$/.exec(path.replaceAll("\\", "/"));
-    if (match && knownStates.has(match[1]) && match[1] === match[3]) files.push({ state: match[1], file: match[2] });
+export type StateCampaignFinanceRead = CivicDataReadResult<StateMoneySnapshot> | {
+  readonly kind: "PROJECTION_INVALID";
+  readonly value: null;
+  readonly metadata: CivicDataReadMetadata;
+  readonly code: "SOURCE_ID_MISMATCH" | "PROJECTION_CONTRACT_INVALID";
+  readonly detail: string;
+};
+
+type StateRead = StateCampaignFinanceRead;
+
+let cache = new Map<StateCampaignFinanceJurisdiction, StateMoneySnapshot>();
+let readStates = new Map<StateCampaignFinanceJurisdiction, StateRead>(
+  (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]).map((state) => [
+    state,
+    civicDataReadNotInitialized(
+      "STATE_CAMPAIGN_FINANCE",
+      STATE_CAMPAIGN_FINANCE_SOURCES[state].scope,
+      `The ${state} campaign-finance canonical pointer has not been read for this process.`,
+    ),
+  ]),
+);
+
+function validateSnapshot(value: StateMoneySnapshot, state: StateCampaignFinanceJurisdiction, version: string): void {
+  if (value.formatVersion !== 1 || value.cycle !== 2026 || !Array.isArray(value.records)) {
+    throw new Error(`${state} campaign-finance projection ${version} does not satisfy StateMoneySnapshot.`);
   }
-  return files.sort((a, b) => a.state.localeCompare(b.state) || a.file.localeCompare(b.file));
+  if (value.records.some((record) => record.jurisdiction !== state)) {
+    throw new Error(`${state} campaign-finance projection ${version} crosses its jurisdiction scope.`);
+  }
 }
 
-let cache: StateMoneyRecord[] | null = null;
-let loadedFrom: string[] = [];
-let failedReads: { state: string; file: string }[] = [];
+function testFixture(state: StateCampaignFinanceJurisdiction): StateMoneySnapshot {
+  if (!mayUseTestFixture()) throw new Error("Bundled state-money fixtures are available only to deterministic tests.");
+  const path = join(process.cwd(), "data", "states", state.toLowerCase(), "funding", `state-money-${state.toLowerCase()}-2026.json`);
+  const value = JSON.parse(readFileSync(path, "utf8")) as StateMoneySnapshot;
+  validateSnapshot(value, state, "bundled test fixture");
+  return value;
+}
 
-function load(): StateMoneyRecord[] {
-  if (cache) return cache;
-  const records: StateMoneyRecord[] = [];
-  const from: string[] = [];
-  const failures: { state: string; file: string }[] = [];
-  for (const { state, file } of snapshotFiles(process.cwd())) {
-    // Read through `process.cwd()`, so `next.config.ts` must name the path in
-    // `outputFileTracingIncludes` or the file is simply absent from the deploy
-    // and every card silently loses its money. That failure renders as honest
-    // missing data, which is why it is called out here rather than assumed.
-    const path = join(process.cwd(), "data", "states", state, "funding", file);
-    try {
-      const snapshot = JSON.parse(readFileSync(path, "utf8")) as StateMoneySnapshot;
-      if (snapshot.formatVersion !== 1 || !Array.isArray(snapshot.records)) throw new Error("Invalid normalized state-money snapshot");
-      records.push(...snapshot.records);
-      from.push(file);
-    } catch {
-      // A file that cannot be parsed is a FAILURE of that file, and it may not
-      // empty the others. The affected state's selector reports a failed read.
-      failures.push({ state, file });
+/**
+ * Read and validate exactly one state authority. A corrupt payload is an
+ * explicit failure of that state projection; it is never allowed to reject a
+ * grouped Promise and suppress the other independent state Readers.
+ */
+export async function readStateMoneyProjection(
+  state: StateCampaignFinanceJurisdiction,
+  options: PromotedCivicDataReadOptions = {},
+): Promise<StateRead> {
+  const contract = STATE_CAMPAIGN_FINANCE_SOURCES[state];
+  const result = await readPromotedCivicData<StateMoneySnapshot>("STATE_CAMPAIGN_FINANCE", contract.scope, options);
+  if (result.kind !== "PROMOTED") return result;
+  if (result.metadata.sourceId !== contract.sourceId) {
+    return {
+      kind: "PROJECTION_INVALID",
+      value: null,
+      metadata: result.metadata,
+      code: "SOURCE_ID_MISMATCH",
+      detail: `${state} campaign-finance pointer names ${result.metadata.sourceId}, not ${contract.sourceId}.`,
+    };
+  }
+  try {
+    validateSnapshot(result.value, state, result.metadata.versionId ?? "unknown");
+    return result;
+  } catch (error) {
+    return {
+      kind: "PROJECTION_INVALID",
+      value: null,
+      metadata: result.metadata,
+      code: "PROJECTION_CONTRACT_INVALID",
+      detail: error instanceof Error ? error.message : `${state} campaign-finance projection validation failed.`,
+    };
+  }
+}
+
+/**
+ * Refresh one exact state Reader without opening or replacing any sibling
+ * state's authority. A failed requested state is removed from the serving
+ * cache and retained as its own explicit read state; every unrelated state
+ * keeps the exact projection it already held.
+ */
+export async function refreshStateMoneyProjectionFromPromoted(
+  state: StateCampaignFinanceJurisdiction,
+  options: PromotedCivicDataReadOptions = {},
+): Promise<StateRead> {
+  const result = await readStateMoneyProjection(state, options);
+  const nextCache = new Map(cache);
+  const nextStates = new Map(readStates);
+  nextStates.set(state, result);
+  nextCache.delete(state);
+  if (result.kind === "PROMOTED") nextCache.set(state, result.value);
+  else if (mayUseTestFixture() && (
+    result.kind === "NOT_RECORDED" ||
+    (result.kind === "STORE_UNREACHABLE" && result.code === "STORE_NOT_CONFIGURED")
+  )) {
+    nextCache.set(state, testFixture(state));
+  }
+  cache = nextCache;
+  readStates = nextStates;
+  return result;
+}
+
+/** Read all independent state pointers; one unavailable state cannot erase another. */
+export async function readStateMoneyProjections(
+  options: PromotedCivicDataReadOptions = {},
+): Promise<ReadonlyMap<StateCampaignFinanceJurisdiction, StateRead>> {
+  const entries = await Promise.all(
+    (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]).map(async (state) => [
+      state,
+      await readStateMoneyProjection(state, options),
+    ] as const),
+  );
+
+  const nextCache = new Map<StateCampaignFinanceJurisdiction, StateMoneySnapshot>();
+  const nextStates = new Map<StateCampaignFinanceJurisdiction, StateRead>();
+  for (const [state, result] of entries) {
+    nextStates.set(state, result);
+    if (result.kind === "PROMOTED") nextCache.set(state, result.value);
+    else if (mayUseTestFixture() && (
+      result.kind === "NOT_RECORDED" ||
+      (result.kind === "STORE_UNREACHABLE" && result.code === "STORE_NOT_CONFIGURED")
+    )) {
+      nextCache.set(state, testFixture(state));
     }
   }
-  cache = records;
-  loadedFrom = from;
-  failedReads = failures;
-  return records;
-}
-
-/** Which snapshot files were actually read. Stated, never assumed. */
-export function stateMoneySources(): string[] {
-  load();
-  return [...loadedFrom];
+  cache = nextCache;
+  readStates = nextStates;
+  return new Map(nextStates);
 }
 
 /**
- * The renderable state-money records for one candidate.
- *
- * A `LEAD` is filtered here, by `isRenderable`, so no calling surface can
- * decide otherwise — the same once-and-only-once shape RULING 118 uses for the
- * govern verb. Several records for one person is CORRECT and they all render:
- * a candidate may file a primary committee and a general one, and showing one
- * while hiding the other would understate their campaign.
+ * Request preload for the independent state projections. Failures stay in the
+ * exact state's read state, so an NH publisher or projection defect cannot
+ * take an AZ Reader down (and vice versa). The affected state's synchronous
+ * selector still fails closed instead of manufacturing an empty answer.
  */
-export function stateMoneyForTarget(targetKey: string): StateMoneyRecord[] {
-  const records = load();
-  const state = /^ballot-([a-z]{2})-/.exec(targetKey)?.[1];
-  if (state && failedReads.some(f => f.state === state)) throw new Error(`Canonical state-money holding unavailable for ${state}`);
-  return records.filter((r) => r.targetKeys.includes(targetKey) && isRenderable(r));
+export async function refreshStateMoneyFromPromoted(
+  options: PromotedCivicDataReadOptions = {},
+): Promise<string | null> {
+  const states = await readStateMoneyProjections(options);
+  const versions = [...states.values()]
+    .filter((state): state is Extract<StateRead, { kind: "PROMOTED" }> => state.kind === "PROMOTED")
+    .map((state) => state.metadata.versionId)
+    .filter((version): version is string => version !== null);
+  return versions.length ? versions.join(",") : null;
 }
 
-/** Has this product asked a state agency about this candidate at all? */
+function ensureTestFixtures(): void {
+  if (!mayUseTestFixture()) return;
+  for (const state of Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]) {
+    if (cache.has(state)) continue;
+    const outcome = readStates.get(state);
+    const maySeed = outcome?.kind === "NOT_RECORDED" || (
+      outcome?.kind === "STORE_UNREACHABLE" &&
+      (outcome.code === "STORE_NOT_CONFIGURED" || outcome.code === "READ_NOT_INITIALIZED")
+    );
+    if (!maySeed) continue;
+    try { cache.set(state, testFixture(state)); } catch { /* an absent fixture stays unavailable */ }
+  }
+}
+
+export function stateMoneyReadState(state: StateCampaignFinanceJurisdiction): StateRead {
+  return readStates.get(state)!;
+}
+
+/** Compatibility inventory: canonical scopes in production, fixture names in tests. */
+export function stateMoneySources(): string[] {
+  ensureTestFixtures();
+  return [...cache.keys()].sort().map((state) =>
+    mayUseTestFixture() ? `state-money-${state.toLowerCase()}-2026.json` : STATE_CAMPAIGN_FINANCE_SOURCES[state].scope,
+  );
+}
+
+function snapshotForTarget(targetKey: string): StateMoneySnapshot | null {
+  ensureTestFixtures();
+  const state = /^ballot-([a-z]{2})-/.exec(targetKey)?.[1]?.toUpperCase() as StateCampaignFinanceJurisdiction | undefined;
+  if (!state || !Object.hasOwn(STATE_CAMPAIGN_FINANCE_SOURCES, state)) return null;
+  const snapshot = cache.get(state);
+  if (snapshot) return snapshot;
+  const read = readStates.get(state);
+  throw new Error(
+    `Canonical state-money holding unavailable for ${state} (${read?.kind ?? "READ_NOT_INITIALIZED"}); ` +
+    "call refreshStateMoneyFromPromoted before reading the projection.",
+  );
+}
+
+export function stateMoneyForTarget(targetKey: string): StateMoneyRecord[] {
+  const snapshot = snapshotForTarget(targetKey);
+  if (!snapshot) return [];
+  return snapshot.records.filter((record) => record.targetKeys.includes(targetKey) && isRenderable(record));
+}
+
 export function stateMoneyWasAsked(targetKey: string): boolean {
   return stateMoneyForTarget(targetKey).length > 0;
 }
 
-/**
- * The three-way split across everything loaded, recomputed from the records the
- * surfaces actually render.
- *
- * **Stated N equals rendered rows.** A second query is free to disagree with
- * what is on screen; this counts the same array.
- */
 export function stateMoneySplit(): {
   candidaciesWithFilings: number;
   candidaciesWithRegisteredNoActivity: number;
@@ -123,39 +224,39 @@ export function stateMoneySplit(): {
   leadsWithheld: number;
   routesUnread: number;
 } {
-  const all = load();
+  ensureTestFixtures();
+  const all = [...cache.values()].flatMap((snapshot) => snapshot.records);
   const filed = new Set<string>();
   const registered = new Set<string>();
   const absent = new Set<string>();
-  for (const r of all) {
-    if (r.filingState === "FILED") for (const k of r.targetKeys) filed.add(k);
-    else if (r.filingState === "REGISTERED_NO_ACTIVITY_REPORTED")
-      for (const k of r.targetKeys) registered.add(k);
-    else if (r.filingState === "NO_REPORTS_ON_FILE") for (const k of r.targetKeys) absent.add(k);
+  for (const record of all) {
+    if (record.filingState === "FILED") for (const key of record.targetKeys) filed.add(key);
+    else if (record.filingState === "REGISTERED_NO_ACTIVITY_REPORTED") for (const key of record.targetKeys) registered.add(key);
+    else if (record.filingState === "NO_REPORTS_ON_FILE") for (const key of record.targetKeys) absent.add(key);
   }
-  for (const k of filed) {
-    registered.delete(k);
-    absent.delete(k);
-  }
-  for (const k of registered) absent.delete(k);
+  for (const key of filed) { registered.delete(key); absent.delete(key); }
+  for (const key of registered) absent.delete(key);
   return {
     candidaciesWithFilings: filed.size,
     candidaciesWithRegisteredNoActivity: registered.size,
     candidaciesWithSourcedAbsence: absent.size,
     renderableRecords: all.filter(isRenderable).length,
-    leadsWithheld: all.filter((r) => r.filingState === "LEAD").length,
-    /*
-     * A route this product could not read. Counted so the number is STATED
-     * rather than hidden inside a residual — but never rendered: it is a fact
-     * about us, and it is not an answer to anything a reader asked.
-     */
-    routesUnread: all.filter((r) => r.filingState === "ROUTE_UNREAD").length,
+    leadsWithheld: all.filter((record) => record.filingState === "LEAD").length,
+    routesUnread: all.filter((record) => record.filingState === "ROUTE_UNREAD").length,
   };
 }
 
 /** Test seam. Never called by a render path. */
 export function resetStateMoneyCache(): void {
-  cache = null;
-  loadedFrom = [];
-  failedReads = [];
+  cache = new Map();
+  readStates = new Map(
+    (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]).map((state) => [
+      state,
+      civicDataReadNotInitialized(
+        "STATE_CAMPAIGN_FINANCE",
+        STATE_CAMPAIGN_FINANCE_SOURCES[state].scope,
+        `The ${state} campaign-finance canonical pointer has not been read for this process.`,
+      ),
+    ]),
+  );
 }

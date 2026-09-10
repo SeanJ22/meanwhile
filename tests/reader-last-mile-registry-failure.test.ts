@@ -17,10 +17,20 @@ test("a removed required roster or territory cannot turn a held population into 
   mkdirSync(join(directory, "data", "derived"), { recursive: true });
   writeFileSync(join(directory, "data", "derived", "resolver-geometry.json"), JSON.stringify({ files: [] }));
   copy("lib/registry/registry.json");
+  for (const path of [
+    "lib/registry/promoted-bodies.json",
+    "lib/registry/official-photos.json",
+    "lib/registry/roster-photos.json",
+    "lib/registry/fixtures/official-candidacies-first-seed.json",
+    "data/congress-legislators/directory.json",
+  ]) copy(path);
   const rosterPaths = ROSTER_FILES.map((file) => rosterPath(file));
   try {
     process.chdir(directory);
-    await assert.rejects(allSeatHolders(), (error: unknown) => error instanceof RegistryHoldingReadError && error.holdingPath === "lib/registry/officeholders-us.json");
+    await assert.rejects(allSeatHolders(), (error: unknown) => {
+      const missing = error as NodeJS.ErrnoException & { readonly path?: string };
+      return missing.code === "ENOENT" && missing.path?.replaceAll("\\", "/").endsWith("/lib/registry/officeholders-us.json") === true;
+    }, "a missing immutable first-seed roster must fail before any empty official population can be returned");
     process.chdir(root);
     for (const path of rosterPaths) copy(path);
     process.chdir(directory);

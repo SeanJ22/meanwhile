@@ -7,14 +7,15 @@
  * 2026-08-23 by reading each stamp site against the retrieval it sits in.
  */
 /**
- * Fetch FEC campaign-finance data into the committed funding snapshot (D34).
+ * Fetch FEC campaign-finance data into the canonical routine civic-data store.
  *
- * `pnpm fec:fetch [--match-only]`
+ * The standing routine runner invokes this internal `fec-funding` adapter with
+ * `--promote`; owner-initiated production work enters through the installed
+ * runtime dispatcher. `--match-only` remains an explicit read-only diagnostic.
  *
- * The snapshot pattern: committed artifact, refreshed by re-running this
- * script, no live FEC calls per page load. The FEC key is read from
- * `.env.local` into THIS script's environment only — it is never wired into
- * the deploy environment and never reaches the client
+ * Reader consumes only a promoted projection; this acquisition script never
+ * rewrites the bundled first-bootstrap fixture. The FEC key is read from
+ * `.env.local` into THIS script's environment only and never reaches the client
  * (tests/funding.test.ts asserts no runtime file reads FEC_API_KEY).
  *
  * Identifier rule (the standing rule, and D34's spec verbatim): the run
@@ -41,9 +42,7 @@
  * honoured, ~4 requests per candidate over ~40 candidates.
  */
 import { config as loadEnv } from "dotenv";
-import { mkdir } from "node:fs/promises";
 import { readFileSync } from "node:fs";
-import { ballotPath } from "../lib/holdings/files.ts";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -54,34 +53,84 @@ import type {
   ContributionRow,
   SecondHopCommittee,
 } from "../lib/funding/types.ts";
-import { findShrinkRegressions } from "../lib/funding/guard.ts";
 import { stamp } from "./stamp.mts";
 
-import { writeStampStable } from "../lib/ops/stamp-stable.ts";
 import { fecFundingCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
-import { processRoutineCandidate } from "../lib/civic-data/promotion.ts";
+import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { assertWriteAllowed } from "../lib/db/write-guard.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import type { NjMorrisReadModel } from "../lib/sources/ballot-nj-morris/index.ts";
+import {
+  isSourceAcquisitionFailure,
+  publisherDeadlineFailure,
+  readPublisherBody,
+  recordRegisteredSourceAcquisitionFailure,
+  requestPublisher,
+  sourceAcquisitionFailure,
+  type SourceAcquisitionFailure,
+} from "../lib/civic-data/source-acquisition-failure.ts";
+import { writeRoutineReceiptLine } from "../lib/civic-data/receipt-output.ts";
+import {
+  openSourceAcquisitionDomain,
+  ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,
+  sourceAcquisitionSleep,
+} from "../lib/sources/acquisition-deadline.ts";
+import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 loadEnv({ path: join(ROOT, ".env.local") });
 
-const OUT = join(ROOT, "data", "fec", "fec-2026.json");
 const API = "https://api.open.fec.gov/v1";
 const CYCLE = 2026;
 const UA = "we-the-people-civic-app/0.1 (contact: seanj22@gmail.com)";
 const MATCH_ONLY = process.argv.includes("--match-only");
 const PROMOTE = process.argv.includes("--promote");
-// The human override for a LEGITIMATE shrink (a committee amendment, a
-// candidate withdrawal). Using it is a recorded decision: rerun by hand,
-// note it in the tracker. The unattended weekly refresh never passes it.
-const ALLOW_SHRINK = process.argv.includes("--allow-shrink");
-
+installNeonRequestDeadline();
 const apiKey = process.env.FEC_API_KEY;
+if (!PROMOTE && !MATCH_ONLY) {
+  throw new Error(
+    "The tracked FEC snapshot writer is retired. Run the registered fec-funding contract " +
+      "through the installed runtime dispatcher; direct production execution is refused.",
+  );
+}
 if (!apiKey && !MATCH_ONLY) {
   console.error("FEC_API_KEY missing from .env.local — cannot fetch");
   process.exit(1);
+}
+
+/*
+ * The FEC adapter used to enumerate its targets from mutable tracked rosters,
+ * three tracked ballot files, and the AZ lineup. That made a routine FEC
+ * acquisition depend on Git changing first. The permanent target floor is the
+ * last promoted FEC projection (or the explicit bundled first-seed fixture),
+ * augmented only by a canonical promoted ballot projection. A missing NJ
+ * pointer therefore holds FEC rather than silently reopening the tracked file.
+ */
+let store: PostgresRoutineDataStore | null = null;
+if (PROMOTE) {
+  const handle = resolveProductionWriteHandle();
+  process.env.DATABASE_URL = handle.connection;
+  process.env.WTP_DB_ROLE = "production";
+  process.env.WTP_SANCTIONED_WRITE = "routine-civic-data-promotion";
+  assertWriteAllowed("a routine civic data candidate/version promotion");
+  store = new PostgresRoutineDataStore();
+}
+
+const bundledFec = JSON.parse(
+  readFileSync(join(ROOT, "data", "fec", "fec-2026.json"), "utf8"),
+) as FundingSnapshot;
+const currentFec = store
+  ? await store.readPromotion<FundingSnapshot>("FEC_FUNDING", "federal-supported")
+  : null;
+const targetFloor = currentFec?.payload ?? bundledFec;
+const canonicalNj = store
+  ? await store.readPromotion<NjMorrisReadModel>("BALLOT_FILING", "US-NJ:county:morris:2026-general")
+  : null;
+if (PROMOTE && !canonicalNj) {
+  throw new Error(
+    "FEC_TARGET_UNIVERSE_HELD:NJ_MORRIS_CANONICAL_BALLOT_NOT_PROMOTED — refusing to read the retired tracked ballot authority.",
+  );
 }
 
 // The slices of the FEC API's response shapes this script actually reads.
@@ -161,13 +210,6 @@ function isContributionLine(lineNumber: string | null): boolean {
   return lineNumber.startsWith("11") || lineNumber === "12" || lineNumber === "13A";
 }
 
-/** Dropped rows, counted by line number, so a clip never reads as a clean run. */
-const droppedByLine = new Map<string, number>();
-function noteDrop(lineNumber: string | null): void {
-  const key = lineNumber ?? "(no line filed)";
-  droppedByLine.set(key, (droppedByLine.get(key) ?? 0) + 1);
-}
-
 /** How many top rows either hop keeps after filtering. */
 const TOP_N = 5;
 /** How many are FETCHED, so filtering does not silently shorten a list. */
@@ -177,6 +219,25 @@ let requestCount = 0;
 /** Exact FEC response bodies. Only their aggregate hashes are persisted. */
 const rawFecBodies: string[] = [];
 let lastFecFinalUrl = API + "/";
+// The aggregate contract cannot promote around one failed endpoint. Preserve
+// the first exact publisher cause so later abort fallout cannot misattribute
+// the attempt, and refuse the whole FEC candidate while its LKG stays live.
+let fecAcquisitionFailure: SourceAcquisitionFailure | null = null;
+function rememberFecSourceFailure(failure: SourceAcquisitionFailure): void {
+  fecAcquisitionFailure ??= failure;
+}
+const fecAcquisitionDomain = openSourceAcquisitionDomain({
+  sourceLabel: "FEC OpenFEC",
+  timeoutMs: ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,
+});
+function fecSourceFailure(
+  code: SourceAcquisitionFailure["code"],
+  detail: string,
+): SourceAcquisitionFailure {
+  const failure = sourceAcquisitionFailure(code, detail);
+  rememberFecSourceFailure(failure);
+  return failure;
+}
 async function fecGet<T>(
   path: string,
   params: Record<string, string | number | boolean>,
@@ -186,11 +247,21 @@ async function fecGet<T>(
   url.searchParams.set("api_key", apiKey ?? "");
   for (let attempt = 0; attempt < 4; attempt++) {
     requestCount += 1;
-    const response = await fetch(url, { headers: { "user-agent": UA } });
+    let response: Response;
+    try {
+      response = await requestPublisher("FEC OpenFEC", () =>
+        fetch(url, {
+          headers: { "user-agent": UA },
+          signal: fecAcquisitionDomain.signal,
+        }));
+    } catch (error) {
+      if (isSourceAcquisitionFailure(error)) rememberFecSourceFailure(error);
+      throw error;
+    }
     if (response.status === 429) {
       const wait = Number(response.headers.get("retry-after") ?? "30") * 1000;
       console.warn(`  429 — honouring Retry-After ${wait / 1000}s`);
-      await new Promise((r) => setTimeout(r, wait));
+      await sourceAcquisitionSleep(wait, fecAcquisitionDomain.signal);
       continue;
     }
     // A 5xx is the FEC timing out under its own load, not an answer.
@@ -202,19 +273,48 @@ async function fecGet<T>(
     if (response.status >= 500) {
       const wait = 2000 * (attempt + 1);
       console.warn(`  ${response.status} on ${path} — backing off ${wait / 1000}s and retrying`);
-      await new Promise((r) => setTimeout(r, wait));
+      await sourceAcquisitionSleep(wait, fecAcquisitionDomain.signal);
       continue;
     }
-    if (!response.ok) throw new Error(`${path} -> HTTP ${response.status}`);
-    const text = await response.text();
-    rawFecBodies.push(text);
+    if (!response.ok) {
+      throw fecSourceFailure("PUBLISHER_RESPONSE_REFUSED", `${path} -> HTTP ${response.status}`);
+    }
+    let text: string;
+    try {
+      text = await readPublisherBody("FEC OpenFEC", () => response.text());
+      fecAcquisitionDomain.assertActive();
+    } catch (error) {
+      if (isSourceAcquisitionFailure(error)) rememberFecSourceFailure(error);
+      throw error;
+    }
     const credentialFree = new URL(response.url || url);
     credentialFree.searchParams.delete("api_key");
     lastFecFinalUrl = credentialFree.toString();
-    await new Promise((r) => setTimeout(r, 250)); // serialize politely
-    return JSON.parse(text) as { results?: T[] };
+    await sourceAcquisitionSleep(250, fecAcquisitionDomain.signal); // serialize politely
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(text) as unknown;
+    } catch {
+      throw fecSourceFailure(
+        "PUBLISHER_DOCUMENT_INVALID",
+        `${path} -> OpenFEC answered with invalid JSON`,
+      );
+    }
+    if (
+      parsed === null ||
+      typeof parsed !== "object" ||
+      !("results" in parsed) ||
+      !Array.isArray(parsed.results)
+    ) {
+      throw fecSourceFailure(
+        "PUBLISHER_DOCUMENT_INVALID",
+        `${path} -> OpenFEC response did not carry a results array`,
+      );
+    }
+    rawFecBodies.push(text);
+    return parsed as { results?: T[] };
   }
-  throw new Error(`${path} -> rate-limited after retries`);
+  throw fecSourceFailure("PUBLISHER_UNAVAILABLE", `${path} -> rate-limited after retries`);
 }
 
 // ---- 1. Enumerate the app-side federal targets -----------------------------
@@ -231,143 +331,67 @@ interface Target {
   district: string | null; // zero-padded 2-digit for House
   route: "roster" | "ballot";
   bioguide: string | null;
+  /** Existing canonical FEC identity; avoids rematching an LKG target by name. */
+  knownFecCandidateId: string | null;
+  knownPrincipalCommitteeId: string | null;
 }
 
 const targets: Target[] = [];
 
-// Roster officials — senators of the coverage states + the reps for the
-// districts the ballot files name (the districts the four zips sit in).
-const roster = JSON.parse(
-  readFileSync(join(ROOT, "lib", "registry", "officeholders-us.json"), "utf8"),
-) as {
-  officeholders: {
-    id: string;
-    name: string;
-    officeTitle: string;
-    level: string;
-  }[];
-  divisions: { officeholderId: string; ocdId: string }[];
-};
-
-const divisionByHolder = new Map<string, string[]>();
-for (const d of roster.divisions) {
-  const list = divisionByHolder.get(d.officeholderId) ?? [];
-  list.push(d.ocdId);
-  divisionByHolder.set(d.officeholderId, list);
-}
-
-const HOUSE_DISTRICTS = new Set(["az/cd:6", "az/cd:7", "nj/cd:11", "nh/cd:2"]);
-
-for (const holder of roster.officeholders) {
-  const divisions = divisionByHolder.get(holder.id) ?? [];
-  for (const ocdId of divisions) {
-    const senateMatch = /^ocd-division\/country:us\/state:(az|nj|nh)$/.exec(ocdId);
-    const houseMatch = /^ocd-division\/country:us\/state:(az|nj|nh)\/cd:(\d+|at-large)$/.exec(ocdId);
-    const isSenate = senateMatch !== null;
-    const isCoveredHouse =
-      houseMatch !== null && HOUSE_DISTRICTS.has(`${houseMatch[1]}/cd:${houseMatch[2]}`);
-    if (!isSenate && !isCoveredHouse) continue;
-    const state = (senateMatch?.[1] ?? houseMatch![1]).toUpperCase();
+// Durable LKG is the non-regressing target floor. The bundled snapshot may
+// supply it only before the first canonical FEC pointer exists.
+for (const held of targetFloor.candidates) {
+  for (const targetKey of held.targetKeys) {
+    const roster = targetKey.startsWith("congress:");
+    const words = held.name.trim().split(/\s+/).filter(Boolean);
     targets.push({
-      targetKey: holder.id,
-      displayName: holder.name,
-      familyName: null,
-      givenName: null,
-      state,
-      office: isSenate ? "S" : "H",
-      district: isSenate ? null : houseMatch![2].padStart(2, "0"),
-      route: "roster",
-      bioguide: holder.id.replace(/^congress:/, ""),
+      targetKey,
+      displayName: held.name,
+      familyName: roster ? null : (words.at(-1) ?? held.name),
+      givenName: roster ? null : (words[0] ?? held.name),
+      state: held.state,
+      office: held.office,
+      district: held.district,
+      route: roster ? "roster" : "ballot",
+      bioguide: roster ? targetKey.replace(/^congress:/, "") : null,
+      knownFecCandidateId: held.fecCandidateId,
+      knownPrincipalCommitteeId: held.principalCommitteeId,
     });
   }
 }
 
-// Ballot candidates — federal contests in the three committed ballot files
-// plus the AZ certified-lineup nominees (the surface's own target keys).
-const BALLOT_FILES = ["nj-morris-2026.json", "az-pima-2026.json", "nh-merrimack-2026.json"];
-for (const file of BALLOT_FILES) {
-  const data = JSON.parse(readFileSync(join(ROOT, ballotPath(file)), "utf8")) as {
-    contests: { id: string; ocdId: string; type: string }[];
-    candidacies: {
-      id: string;
-      contestId: string;
-      familyName: string;
-      givenName: string;
-    }[];
-  };
-  for (const contest of data.contests) {
-    if (contest.type !== "CANDIDACY") continue;
-    // Federal is decided by the CONTEST, never by division shape — a
-    // governor's division is the state root exactly like a US Senate
-    // seat's, and the first match-only run leaked 30 state candidates
-    // into the federal denominator that way. State/local candidates get
-    // the state-systems note on the surface, not an FEC search.
-    const isSenate = /:us-senate$/.test(contest.id);
-    const houseId = /:us-house-(\d+)$/.exec(contest.id);
-    if (!isSenate && !houseId) continue;
-    const stateMatch = /state:(\w\w)/.exec(contest.ocdId);
-    if (!stateMatch) continue;
-    const state = stateMatch[1].toUpperCase();
-    const houseMatch = houseId;
-    for (const cand of data.candidacies.filter((c) => c.contestId === contest.id)) {
-      targets.push({
-        targetKey: cand.id,
-        displayName: `${cand.givenName} ${cand.familyName}`,
-        familyName: cand.familyName,
-        givenName: cand.givenName,
-        state,
-        office: isSenate ? "S" : "H",
-        district: isSenate ? null : houseMatch![1].padStart(2, "0"),
-        route: "ballot",
-        bioguide: null,
-      });
-    }
-  }
-}
-
-const lineup = JSON.parse(
-  readFileSync(join(ROOT, "data", "states", "az", "ballot", "az-general-lineup-2026.json"), "utf8"),
-) as { contests: { contestId: string; nominees: { name: string }[] }[] };
-for (const contest of lineup.contests) {
-  const houseMatch = /us-house-(\d+)$/.exec(contest.contestId);
-  if (!houseMatch) continue; // AZ has no federal senate contest in 2026
-  for (const nominee of contest.nominees) {
-    // Suffixes (Sr., Jr., II…) are not surnames — "Butierez Sr." searched
-    // as q=Sr. is how the first run got an HTTP 422 and a false miss.
-    const words = nominee.name
-      .trim()
-      .split(/\s+/)
-      .filter((w) => !/^(SR|JR|II|III|IV|V)\.?$/i.test(w));
+// New Morris County federal candidacies enter from the promoted ballot
+// projection. No tracked ballot is opened in a routine FEC run.
+const knownTargetKeys = new Set(targets.map((target) => target.targetKey));
+for (const contest of canonicalNj?.payload.ballot.contests ?? []) {
+  if (contest.type !== "CANDIDACY") continue;
+  const isSenate = /:us-senate$/.test(contest.id);
+  const houseMatch = /:us-house-(\d+)$/.exec(contest.id);
+  if (!isSenate && !houseMatch) continue;
+  const stateMatch = /state:(\w\w)/.exec(contest.ocdId);
+  if (!stateMatch) continue;
+  for (const candidacy of canonicalNj!.payload.ballot.candidacies.filter((row) => row.contestId === contest.id)) {
+    if (knownTargetKeys.has(candidacy.id)) continue;
     targets.push({
-      targetKey: `${contest.contestId}|${nominee.name}`,
-      displayName: nominee.name,
-      familyName: words[words.length - 1].replace(/\.$/, ""),
-      givenName: words[0],
-      state: "AZ",
-      office: "H",
-      district: houseMatch[1].padStart(2, "0"),
+      targetKey: candidacy.id,
+      displayName: `${candidacy.givenName} ${candidacy.familyName}`,
+      familyName: candidacy.familyName,
+      givenName: candidacy.givenName,
+      state: stateMatch[1].toUpperCase(),
+      office: isSenate ? "S" : "H",
+      district: isSenate ? null : houseMatch![1].padStart(2, "0"),
       route: "ballot",
       bioguide: null,
+      knownFecCandidateId: null,
+      knownPrincipalCommitteeId: null,
     });
+    knownTargetKeys.add(candidacy.id);
   }
 }
 
 console.log(`targets enumerated: ${targets.length} (${targets.filter((t) => t.route === "roster").length} roster officials, ${targets.filter((t) => t.route === "ballot").length} ballot candidacies)`);
 
 // ---- 2. The match phase — printed before anything else is fetched ----------
-
-// Roster route: the public-domain bridge file, one request, exact keys.
-const legislators = JSON.parse(
-  await (
-    await fetch("https://unitedstates.github.io/congress-legislators/legislators-current.json", {
-      headers: { "user-agent": UA },
-    })
-  ).text(),
-) as { id: { bioguide: string; fec?: string[] } }[];
-const fecByBioguide = new Map<string, string[]>();
-for (const person of legislators) {
-  if (person.id.fec) fecByBioguide.set(person.id.bioguide, person.id.fec);
-}
 
 interface Match {
   target: Target;
@@ -388,25 +412,15 @@ const misses: FundingAbsence[] = [];
 // a script finds out what day it is.
 const today = stamp();
 
-for (const target of targets.filter((t) => t.route === "roster")) {
-  const ids = fecByBioguide.get(target.bioguide!) ?? [];
-  // A person carries one FEC id per office sought; the chamber prefix
-  // (H/S) picks the one for the office they hold. Presidential ids (P)
-  // never match a congressional target.
-  const id = ids.find((i) => i.startsWith(target.office));
-  if (id) {
-    matches.push({ target, fecCandidateId: id, matchRoute: "bioguide-bridge" });
-  } else {
-    misses.push({
-      targetKey: target.targetKey,
-      displayName: target.displayName,
-      reason: ids.length
-        ? `bridge file lists FEC ids (${ids.join(", ")}) but none for office ${target.office}`
-        : "bridge file lists no FEC id for this member",
-      checkedAt: today,
-      searchUrl: "https://unitedstates.github.io/congress-legislators/legislators-current.json",
-    });
-  }
+for (const target of targets.filter((row) => row.knownFecCandidateId !== null)) {
+  matches.push({
+    target,
+    fecCandidateId: target.knownFecCandidateId!,
+    matchRoute: "canonical-fec-lkg",
+    principalCommittees: target.knownPrincipalCommitteeId
+      ? [{ committee_id: target.knownPrincipalCommitteeId }]
+      : [],
+  });
 }
 
 // Ballot route: scoped FEC candidate search, name-checked, misses recorded.
@@ -431,7 +445,7 @@ for (const m of matches) {
   );
 }
 
-for (const target of targets.filter((t) => t.route === "ballot")) {
+for (const target of targets.filter((row) => row.route === "ballot" && row.knownFecCandidateId === null)) {
   const personKey = `${normalizeName(target.displayName)}|${target.state}|${target.office}`;
   const viaRoster = rosterMatchByPerson.get(personKey);
   if (viaRoster) {
@@ -530,7 +544,7 @@ const rosterMatched = matches.filter((m) => m.target.route === "roster").length;
 const ballotMatched = matches.filter((m) => m.target.route === "ballot").length;
 console.log("");
 console.log("=== FEC identifier match report ===");
-console.log(`roster officials: ${rosterMatched}/${rosterTargets} matched (bioguide bridge)`);
+console.log(`roster officials: ${rosterMatched}/${rosterTargets} matched (canonical FEC LKG identities)`);
 console.log(`ballot candidacies: ${ballotMatched}/${ballotTargets} matched (roster reuse + scoped search)`);
 for (const miss of misses) {
   console.log(`  MISS ${miss.targetKey} (${miss.displayName}): ${miss.reason}`);
@@ -555,8 +569,7 @@ for (const m of matches) {
 }
 
 const candidates: FundingCandidate[] = [];
-let totalsHits = 0;
-let totalsEmpty = 0;
+let totalsAcquisitionCount = 0;
 
 for (const [fecId, entry] of byFecId) {
   const name = entry.matches[0].target.displayName;
@@ -572,13 +585,13 @@ for (const [fecId, entry] of byFecId) {
     totalsRows =
       (await fecGet<FecTotalsRow>(`/candidate/${fecId}/totals/`, { per_page: 20, sort: "-cycle" }))
         .results ?? [];
+    totalsAcquisitionCount += 1;
   } catch (error) {
     console.log(`totals fetch failed: ${(error as Error).message}`);
   }
   const totals = totalsRows.find((r) => r.cycle === CYCLE) ?? null;
 
   if (!totals) {
-    totalsEmpty += 1;
     const staleCoverage = totalsRows[0]?.coverage_end_date
       ? ` (last report covered through ${String(totalsRows[0].coverage_end_date).slice(0, 10)})`
       : "";
@@ -594,8 +607,6 @@ for (const [fecId, entry] of byFecId) {
     }
     continue;
   }
-  totalsHits += 1;
-
   // Principal committee id — off the search result when we have it, else
   // one lookup. Needed only for the Schedule A (contributor) queries.
   let pccId: string | null = entry.principalCommittees?.[0]?.committee_id ?? null;
@@ -634,7 +645,6 @@ for (const [fecId, entry] of byFecId) {
           const line = row.line_number ? String(row.line_number) : null;
           const amount = Number(row.contribution_receipt_amount ?? 0);
           if (!isContributionLine(line) || amount <= 0) {
-            noteDrop(line);
             continue;
           }
           kept.push({
@@ -741,7 +751,8 @@ for (const [fecId, entry] of byFecId) {
 // committee this person's cheque passed through" is a different question
 // from the one the tea button asks. Fetching them anyway keeps the run's
 // denominator equal to the ids the data actually contains, which is what
-// the thin guard compares against run to run.
+// the acquisition denominator equal to the ids the data actually contains;
+// the promotion path reconciles it with the durable per-record LKG.
 
 const hopIds = new Set<string>();
 for (const candidate of candidates) {
@@ -751,7 +762,6 @@ for (const candidate of candidates) {
 }
 
 const secondHop: SecondHopCommittee[] = [];
-let hopEmpty = 0;
 console.log("");
 console.log(`=== second hop: ${hopIds.size} distinct contributing committees ===`);
 
@@ -803,7 +813,6 @@ for (const committeeId of hopIds) {
       // ActBlue's escrow interest (line 17, filed under "FIDELITY") would
       // render as its three biggest donors.
       if (!isContributionLine(line) || amount <= 0) {
-        noteDrop(line);
         continue;
       }
       hopRows.push({
@@ -834,7 +843,6 @@ for (const committeeId of hopIds) {
     console.log(`schedule_a failed: ${(error as Error).message}`);
   }
 
-  if (hopRows.length === 0) hopEmpty += 1;
   secondHop.push({
     dataClass: "FEC_CONTRIBUTOR",
     committeeId,
@@ -854,7 +862,13 @@ for (const committeeId of hopIds) {
   console.log(`${detail.name ?? "(unnamed)"} — ${hopRows.length} top receipts`);
 }
 
-// ---- 4. Write the snapshot, counts stated --------------------------------
+// ---- 4. Build the candidate projection ------------------------------------
+
+// Close the publisher domain before any candidate/pointer/LKG write. Even an
+// optional FEC route that swallowed its request error cannot turn an elapsed
+// acquisition deadline into a partial successful promotion.
+const fecDeadlineFailure = publisherDeadlineFailure("FEC OpenFEC", fecAcquisitionDomain);
+fecAcquisitionDomain.dispose();
 
 const snapshot: FundingSnapshot = {
   formatVersion: 1,
@@ -871,55 +885,39 @@ const snapshot: FundingSnapshot = {
   secondHop,
 };
 
-// ---- The thin-snapshot guard (session brief 2, wall clock 2026-08-14) ----
-// Compare against the last committed snapshot BEFORE writing. A shrink —
-// fewer candidates, a vanished candidate, a retained candidate with fewer
-// contributor rows (the Kelly-504 shape) — fails the run and keeps the old
-// snapshot, loudly. The weekly workflow surfaces the nonzero exit; a human
-// reruns with --allow-shrink only after confirming the FEC-side reason,
-// and records the decision in the tracker.
-let prior: FundingSnapshot | null = null;
-try {
-  prior = JSON.parse(readFileSync(OUT, "utf8")) as FundingSnapshot;
-} catch {
-  prior = null; // First run ever — nothing to shrink from.
-}
-if (prior && !PROMOTE) {
-  const regressions = findShrinkRegressions(prior, snapshot);
-  if (regressions.length > 0) {
-    console.error("");
-    console.error("=== THIN SNAPSHOT — the guard refuses to ship it ===");
-    for (const r of regressions) console.error(`  [${r.kind}] ${r.detail}`);
-    if (!ALLOW_SHRINK) {
-      console.error("");
-      console.error(
-        `keeping the prior snapshot (${prior.candidates.length} candidates, ` +
-          `${prior.candidates.reduce((n, c) => n + c.topContributions.length, 0)} contributor rows). ` +
-          "If the shrink is real (amendment, withdrawal), a human reruns with " +
-          "--allow-shrink and records the decision in docs/tracker.csv.",
-      );
-      process.exit(1);
-    }
-    console.error("");
-    console.error(
-      "--allow-shrink passed: shipping the smaller snapshot on human authority. Record it in the tracker.",
-    );
-  }
-}
-
 if (PROMOTE) {
-  const handle = resolveProductionWriteHandle();
-  process.env.DATABASE_URL = handle.connection;
-  process.env.WTP_DB_ROLE = "production";
-  process.env.WTP_SANCTIONED_WRITE = "routine-civic-data-promotion";
-  assertWriteAllowed("a routine civic data candidate/version promotion");
-  const store = new PostgresRoutineDataStore();
-  const current = await store.readPromotion<FundingSnapshot>("FEC_FUNDING", "federal-supported");
+  if (!store) throw new Error("FEC_PRODUCTION_STORE_NOT_INITIALIZED");
+  if (
+    fecDeadlineFailure !== null ||
+    fecAcquisitionFailure !== null ||
+    rawFecBodies.length === 0 ||
+    (byFecId.size > 0 && totalsAcquisitionCount === 0)
+  ) {
+    if (requestCount === 0) {
+      throw new Error("FEC_ACQUISITION_NOT_ATTEMPTED: the adapter had no registered target request to make.");
+    }
+    const failed = await recordRegisteredSourceAcquisitionFailure({
+      store,
+      contractId: "fec-funding",
+      failure: fecDeadlineFailure ?? fecAcquisitionFailure ?? sourceAcquisitionFailure(
+        "PUBLISHER_UNAVAILABLE",
+        "No OpenFEC request produced a usable authoritative candidate-totals response.",
+      ),
+      attemptedAt: snapshot.fetchedAt,
+    });
+    console.log("");
+    console.log("=== routine production-data result ===");
+    await writeRoutineReceiptLine(failed.line);
+    process.exitCode = 2;
+    process.exit();
+  }
+  const current = currentFec;
   const excludedFacts = misses.map((miss) => ({ code: "UNRESOLVED_FEC_FACT_EXCLUDED", detail: `${miss.targetKey}: ${miss.reason}` }));
   let operational = { ...snapshot, absences: [] } satisfies FundingSnapshot;
-  if (current) {
+  const lkgFloor = current?.payload ?? bundledFec;
+  {
     const incoming = new Map(operational.candidates.map((row) => [row.fecCandidateId, row]));
-    for (const held of current.payload.candidates) {
+    for (const held of lkgFloor.candidates) {
       const next = incoming.get(held.fecCandidateId);
       const heldThrough = held.totals.coverageEndDate ?? "";
       const nextThrough = next?.totals.coverageEndDate ?? "";
@@ -927,56 +925,22 @@ if (PROMOTE) {
       if (!next || next.topContributions.length < held.topContributions.length || regressedCoverage) {
         incoming.set(held.fecCandidateId, held);
         excludedFacts.push({
-          code: "LKG_FEC_RECORD_RETAINED",
+          code: current ? "LKG_FEC_RECORD_RETAINED" : "BOOTSTRAP_FEC_RECORD_RETAINED",
           detail: `${held.fecCandidateId}: the new candidate was absent, thinner, or regressed from coverage ${heldThrough || "unstated"} to ${nextThrough || "unstated"} without bounded replacement/deletion evidence.`,
         });
       }
     }
     const hops = new Map((operational.secondHop ?? []).map((row) => [row.committeeId, row]));
-    for (const held of current.payload.secondHop ?? []) {
+    for (const held of lkgFloor.secondHop ?? []) {
       const next = hops.get(held.committeeId);
       if (!next || next.topContributions.length < held.topContributions.length) hops.set(held.committeeId, held);
     }
     operational = { ...operational, candidates: [...incoming.values()], secondHop: [...hops.values()] };
   }
   const candidate = fecFundingCandidate({ snapshot: operational, rawBodies: rawFecBodies, finalUrl: lastFecFinalUrl, retrievedAt: snapshot.fetchedAt, excludedFacts });
-  const outcome = await processRoutineCandidate(store, candidate, snapshot.fetchedAt);
+  const outcome = await processRegisteredRoutineCandidate(store, "fec-funding", candidate, snapshot.fetchedAt);
   console.log("");
   console.log("=== routine production-data result ===");
-  console.log("RCD_RECEIPT=" + JSON.stringify({ source: "FEC OpenFEC", candidateId: candidate.id, acquisitionSucceeded: outcome.candidate.acquisitionSucceeded, state: outcome.candidate.state, decision: outcome.candidate.receipt?.decision ?? null, promotedVersion: outcome.promoted?.versionId ?? null, lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+  console.log("RCD_RECEIPT=" + JSON.stringify({ source: "fec-funding", candidateId: candidate.id, acquisitionSucceeded: outcome.candidate.acquisitionSucceeded, state: outcome.candidate.state, decision: outcome.candidate.receipt?.decision ?? null, promotedVersion: outcome.promoted?.versionId ?? null, lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
   if (!outcome.promoted) process.exitCode = 2;
-  process.exit();
 }
-
-await mkdir(dirname(OUT), { recursive: true });
-// RL-1 (NH326/NH327): a re-read that changed no filing, receipt or absence
-// leaves the reader-bound bytes alone; when the FEC was asked is operational history.
-const stampWrite = writeStampStable({
-  absolutePath: OUT,
-  path: "data/fec/fec-2026.json",
-  next: snapshot,
-  serialize: (value) => `${JSON.stringify(value, null, 1)}\n`,
-  stampKeys: ["fetchedAt", "checkedAt"],
-});
-
-console.log("");
-console.log(stampWrite.written ? "=== snapshot written ===" : "=== snapshot facts unchanged; file left untouched ===");
-console.log(`candidates with totals: ${totalsHits}/${byFecId.size} matched FEC ids (${totalsEmpty} registered-but-no-filings)`);
-console.log(`contributor rows: ${candidates.reduce((n, c) => n + c.topContributions.length, 0)} across ${candidates.filter((c) => c.topContributions.length > 0).length} candidates`);
-console.log(
-  `second hop: ${secondHop.length}/${hopIds.size} committees fetched, ` +
-    `${secondHop.reduce((n, c) => n + c.topContributions.length, 0)} rows, ` +
-    `${hopEmpty} committee(s) returned no itemized receipts (recorded, not rendered)`,
-);
-// A deliberate clip must not read as a failure, and a real failure must not
-// read as a clip (CLAUDE.md): every dropped row is counted by the line
-// number it was dropped for.
-const droppedTotal = [...droppedByLine.values()].reduce((n, v) => n + v, 0);
-console.log(
-  `non-contribution receipts dropped: ${droppedTotal} ` +
-    `(${[...droppedByLine.entries()].sort().map(([line, n]) => `line ${line}: ${n}`).join(", ") || "none"}) ` +
-    `— loan repayments, vendor offsets and investment income are not gifts`,
-);
-console.log(`absences recorded: ${misses.length}`);
-console.log(`total FEC requests: ${requestCount}`);
-console.log(OUT);

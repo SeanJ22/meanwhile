@@ -178,7 +178,7 @@ one deploy context. The smoke additionally **refuses to run** if the value in
 
 Create a **service credential** (Credentials page, not the Keys page) and
 install it as `MAPTILER_SERVICE_TOKEN` **on the runner only**. It is read
-server-side by `pnpm maptiler:usage`.
+server-side by the standing owner-snapshot publisher.
 
 It must never be a `NEXT_PUBLIC_*` variable, never reach client code, a log, a
 committed file, or a screenshot. A browser cannot reach `service.maptiler.com`
@@ -196,7 +196,7 @@ MapTiler's analytics API does not return the plan ceiling, so the console shows
 §0 is the live measurement: the production key is refused from its own
 production origin. Only the account can say why. The account's Statistics page
 answers it directly, and the service token in §3.2 makes the same answer
-readable from `pnpm maptiler:usage` afterwards.
+visible in Admin after the standing runner's next automatic collection.
 
 What to do about it — a plan change, a new key, waiting for the period to roll —
 is not a repository decision and is deliberately not made here. The console
@@ -234,23 +234,23 @@ count is not a session count and the panel says so.
 
 ---
 
-## 5. Commands
+## 5. Runtime path and read-only diagnostics
+
+The standing runner asks both MapTiler classifiers during its canonical owner-
+snapshot publication. A complete reading is published directly to the
+production control plane. A failed or partial collection is recorded as the
+latest attempt, the prior good measurement remains live as LKG, and Admin says
+that it is showing LKG while the runner retries. No usage reading is written to
+Git and no manual publish step exists.
 
 ```bash
 pnpm maptiler:usage
 ```
 
-Reads MapTiler's analytics API by `api_keys` and by `services`, writes
-`data/ops/maptiler-usage.json`, and prints the reading. With no
-`MAPTILER_SERVICE_TOKEN` it records **NOT CONNECTED** — never a zero, because a
-zero on a quota panel reads as headroom.
-
-```bash
-pnpm owner:publish
-```
-
-Folds that file onto the owner snapshot, which is how it reaches the admin
-console at `/admin`.
+This optional terminal command is **read-only and non-authoritative**. It asks
+MapTiler by `api_keys` and `services`, prints the result, writes nothing, and
+cannot publish or change Admin. With no service credential it prints **NOT
+CONNECTED** — never a zero, because a zero on a quota panel reads as headroom.
 
 ```bash
 WTP_PROVIDER_ACCESS=maptiler pnpm provider:smoke

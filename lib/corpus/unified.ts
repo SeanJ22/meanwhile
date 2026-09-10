@@ -1,8 +1,7 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
 import { currentExtraction } from "../candidates/corpus.ts";
 import type { CandidateCorpus, CandidateDocument } from "../candidates/corpus.ts";
+import { getCandidateCorpus } from "../candidates/positions.ts";
+import { currentOfficeholderStatements } from "./data-plane.ts";
 import type { SourceSnapshot, StatementCorpus } from "./types.ts";
 
 /**
@@ -20,7 +19,7 @@ import type { SourceSnapshot, StatementCorpus } from "./types.ts";
  * is worth being precise because the other three would each have had a
  * different fix.
  *
- * This product holds **two** statement corpora, keyed in two spaces:
+ * The historical bootstrap held **two** statement corpora, keyed in two spaces:
  *
  * | File | Rows | Keyed by | Read by |
  * |---|---|---|---|
@@ -32,23 +31,22 @@ import type { SourceSnapshot, StatementCorpus } from "./types.ts";
  * the index the search reads**, and the search answers honestly for the
  * corpus it was given — `NOT_YET_COLLECTED`, "we haven't collected anything
  * they've published" — four inches below that candidate's published words.
+ * The table records that historical bootstrap as it existed. Production now
+ * reads a proof-validated statement projection, and retired intermediary-only
+ * (`plural:`) identities from the old seed are deliberately ineligible.
  *
  * Nothing was broken. Two stores drifted apart and one surface only knew
  * about one of them. The type in `./types.ts` had said all along that
  * `subjectId` is a *"roster officeholder id **or ballot candidacy id**"* —
  * the candidate corpus simply was never brought into it.
  *
- * ## The fix, and why it is a union rather than a migration
+ * ## The permanent fix
  *
- * The two files stay as they are. They are append-only evidence stores with
- * different collectors, different provenance and different retrieval
- * histories, and rewriting either to key like the other would destroy the
- * append-only guarantee that makes them worth anything.
- *
- * Instead this module builds the SEARCH INDEX as a union: every candidate
- * document normalised into the snapshot shape the search already speaks,
- * beside every statement snapshot. One index, both key spaces, and a subject
- * id or a candidate key resolves the same way.
+ * Both append-only histories now enter through explicit owner-reviewed
+ * candidate/event/promotion contracts. The tracked files are immutable first
+ * seeds only. This module builds the SEARCH INDEX as a union of the two
+ * promoted projections: every candidate document normalised into the snapshot
+ * shape the search already speaks, beside every officeholder snapshot.
  *
  * **`currentExtraction` is applied to the candidate half** and that is not an
  * optimisation. Session 1 gave the candidate corpus an `extractorVersion` so
@@ -64,20 +62,14 @@ import type { SourceSnapshot, StatementCorpus } from "./types.ts";
  * still the subject's own text, with the page and the read date attached.
  */
 
-let cached: StatementCorpus | null = null;
-
-/** The officeholder-keyed store, as committed. */
-function statements(): StatementCorpus {
-  return JSON.parse(
-    readFileSync(join(process.cwd(), "data", "corpus", "statements.json"), "utf8"),
-  ) as StatementCorpus;
+/** The candidate-keyed canonical promoted projection. */
+function candidates(): CandidateCorpus {
+  return getCandidateCorpus();
 }
 
-/** The candidate-keyed store, as committed. */
-function candidates(): CandidateCorpus {
-  return JSON.parse(
-    readFileSync(join(process.cwd(), "data", "candidates", "corpus-2026.json"), "utf8"),
-  ) as CandidateCorpus;
+/** The officeholder-keyed canonical promoted projection. */
+function readerStatementSnapshots(): readonly SourceSnapshot[] {
+  return currentOfficeholderStatements().snapshots;
 }
 
 /**
@@ -113,25 +105,29 @@ export function snapshotFromCandidateDocument(doc: CandidateDocument): SourceSna
   };
 }
 
+/** Build the shared shape from whichever independently held corpora succeeded. */
+export function unifiedCorpusFromHoldings(input: {
+  readonly candidateCorpus?: CandidateCorpus;
+  readonly officeholderStatements?: StatementCorpus;
+}): StatementCorpus {
+  const fromStatements = input.officeholderStatements?.snapshots ?? [];
+  const fromCandidates = currentExtraction(input.candidateCorpus?.documents ?? [])
+    .map(snapshotFromCandidateDocument);
+  return { snapshots: [...fromStatements, ...fromCandidates] };
+}
+
 /**
  * The search index: both corpora, one snapshot list.
  *
- * Cached like the two readers it wraps — the files are committed data and
- * nothing fetches per page load.
+ * The candidate half is process-loaded by the canonical Reader preload; the
+ * officeholder corpus is process-loaded from its proof-validated canonical
+ * pointer; neither half can silently reopen a tracked file on store failure.
  */
 export function unifiedCorpus(): StatementCorpus {
-  if (cached) return cached;
-
-  const fromStatements = statements().snapshots;
-
-  // `currentExtraction` collapses the append-only candidate corpus to the
-  // newest extraction per (candidate, url) — see the header.
-  const docs = candidates().documents;
-  const current = currentExtraction(docs);
-  const fromCandidates = current.map(snapshotFromCandidateDocument);
-
-  cached = { snapshots: [...fromStatements, ...fromCandidates] };
-  return cached;
+  return unifiedCorpusFromHoldings({
+    candidateCorpus: candidates(),
+    officeholderStatements: { snapshots: [...readerStatementSnapshots()] },
+  });
 }
 
 /**
@@ -143,7 +139,7 @@ export function unifiedCorpus(): StatementCorpus {
  * an error. `tests/positions-search.test.ts` asserts these against floors.
  */
 export function unifiedCorpusCounts() {
-  const fromStatements = statements().snapshots;
+  const fromStatements = readerStatementSnapshots();
   const current = currentExtraction(candidates().documents);
   const all = unifiedCorpus().snapshots;
   return {

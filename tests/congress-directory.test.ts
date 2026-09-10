@@ -6,6 +6,9 @@ import test from "node:test";
 import { directoryFor, directorySource } from "../lib/officials/directory.ts";
 import { identityChipsFor } from "../lib/officials/identity-chips.ts";
 import type { SeatHolder } from "../lib/officials/lookup.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 /**
  * The congress-legislators adoption — item 7, 2026-08-16.

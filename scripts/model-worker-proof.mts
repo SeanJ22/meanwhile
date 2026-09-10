@@ -5,8 +5,9 @@
  * ## What was already proven, and what was not
  *
  * The cost ledger's DETERMINISTIC half is exercised: an HTTP walk records
- * bytes, requests and duration on its Attempt, and `pnpm control-plane:proof`
- * holds that. Its MODEL half had never run at all. Every
+ * bytes, requests and duration on its Attempt, and the immutable control-plane
+ * cutover proof holds that. Its destructive proof executable is now retired.
+ * Its MODEL half had never run at all. Every
  * `BOUNDED_MODEL_WORKER` Attempt in this repository's history was a lane label
  * over work no model did — W3.E's own finding, ten of them on 2026-08-31 —
  * so the three fields that only a model call can fill had never been filled by

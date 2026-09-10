@@ -209,10 +209,30 @@ test("RULING 14: no file URL is used as a path without fileURLToPath", () => {
    */
   const BANNED = new RegExp(String.raw`new URL\([^)]*\)\.` + "pathname");
 
+  /*
+   * This one expression parses the final path segment of an acquired HTTPS
+   * URL and never supplies that URL component to a filesystem API. Keep the
+   * exception expression-exact: exempting the file would also hide a later
+   * import.meta.url pathname defect in the same acquisition module.
+   */
+  const URL_COMPONENT_ONLY = new Map<string, string>([
+    ["lib/officials/federal-directory-data-plane.ts", ["new URL(row.finalUrl)", "pathname"].join(".")],
+  ]);
+
   const offenders: string[] = [];
   for (const abs of sourceFiles()) {
     const rel = posixRelative(ROOT, abs);
-    const code = codeOnly(readFileSync(abs, "utf8"));
+    let code = codeOnly(readFileSync(abs, "utf8"));
+    const urlComponentOnly = URL_COMPONENT_ONLY.get(rel);
+    if (urlComponentOnly !== undefined) {
+      const occurrences = code.split(urlComponentOnly).length - 1;
+      assert.equal(
+        occurrences,
+        1,
+        `${rel} must carry exactly one reviewed URL-component-only expression; saw ${occurrences}`,
+      );
+      code = code.replace(urlComponentOnly, "");
+    }
     if (BANNED.test(code)) {
       offenders.push(`${rel}: a file URL component used as a filesystem path`);
     }

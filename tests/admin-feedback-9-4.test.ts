@@ -400,14 +400,13 @@ test("ADM-3: a stale reader check reads as one plain sentence, and the scale nam
   assert.doesNotMatch(codeOf("app/(admin)/admin/sections/health.tsx"), /pnpm [a-z:]+/, "ADM-37: no CLI command reaches the face of the health card");
 });
 
-test("ADM-3: FRESHNESS reads the measured shadow risk through one shared projection in both scripts", () => {
+test("ADM-3: FRESHNESS reads measured canonical-cycle risk through the owner publisher", () => {
   const risk = freshnessRiskOf({ risk: { obligationsScheduled: 3, obligationsUnscheduled: 0, obligationsOverdue: 2, debtRows: 180, incidents: 29, oldestDebtHours: 1, activation: "SHADOW_NOT_ACTIVATED" } });
   assert.ok(risk);
   assert.match(freshnessContract(risk).reason, /measured staleness risk: 3 obligation/);
   assert.equal(freshnessRiskOf({ risk: { activation: "OTHER" } }), undefined);
   assert.equal(freshnessRiskOf(null), undefined);
   assert.match(src("scripts/publish-owner-snapshot.mts"), /freshnessContract\(freshnessRiskOf\(/);
-  assert.match(src("scripts/pilot-health.mts"), /freshnessContract\(freshnessRiskOf\(/);
 });
 
 /* ================================================================== *

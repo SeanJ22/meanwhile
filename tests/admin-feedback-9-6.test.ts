@@ -305,7 +305,9 @@ test("a superseded readiness snapshot says what happened in owner language, and 
   assert.equal(out.currentContract, READINESS_DERIVATION_CONTRACT);
   assert.equal(out.legacy.revision, 25);
   assert.match(out.detail, /superseded/);
-  assert.match(out.clearedBy.command, /readiness:publish/);
+  assert.equal(out.clearedBy.command, "automatic standing-runtime console publisher");
+  assert.doesNotMatch(out.clearedBy.command, /readiness:publish|\bpnpm\b/,
+    "the recovery identity must not restore a retired owner-run command");
 });
 
 test("the readiness page puts the machine facts one disclosure down, and keeps them", () => {
@@ -318,7 +320,7 @@ test("the readiness page puts the machine facts one disclosure down, and keeps t
   assert.ok(disclosureAt > 0, "there is no Technical details disclosure");
   assert.ok(block.indexOf("{outcome.says}") < disclosureAt, "the machine facts still come first");
   const disclosure = block.slice(disclosureAt);
-  assert.match(disclosure, /clearedBy\.command/, "the recovery command was deleted rather than demoted");
+  assert.match(disclosure, /clearedBy\.command/, "the standing publisher identity was deleted from the technical disclosure");
   assert.match(disclosure, /snapshotContract/, "the contract identifier was deleted rather than demoted");
   assert.match(disclosure, /outcome\.detail/);
 });

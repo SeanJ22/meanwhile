@@ -22,6 +22,9 @@ import { looksLikeFurniture, pickPortrait, pickPortraits } from "../lib/hunt/por
 import { officeIdentity } from "../lib/officials/office-identity.ts";
 import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
 import type { SeatHolder } from "../lib/officials/lookup.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 /* ------------------------------------------------------------------ office */
 

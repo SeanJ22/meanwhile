@@ -7,8 +7,9 @@
  * This repository already asked the question in three places, all of them the
  * same `compareSchemaState`:
  *
- *   - `pnpm db:check`, daily, in `intake-tripwire.yml`. It is what caught the
- *     incident — run 33211710028, the morning AFTER the deploy.
+ *   - At the time of the incident, `pnpm db:check` ran daily in
+ *     `intake-tripwire.yml`. It caught run 33211710028 the morning AFTER the
+ *     deploy. PDC V2 later retired that GitHub runtime/operations clock.
  *   - `scripts/walk-all.mts`'s `[promptD]` check, through `/api/schema`. It
  *     also caught it, as a named regression. But RULING 125 points every walk
  *     at a LOCAL production build, so it asks `DATABASE_URL` — the development
@@ -41,14 +42,14 @@
  *   3. **It reads the change**, so it can tell a migration this change
  *      introduces from one that was already owed.
  *
- * ## THE TRIPWIRE STAYS
+ * ## THE GITHUB RUNTIME TRIPWIRE IS RETIRED
  *
- * This does not replace the daily gate and must never be allowed to. This one
- * only sees changes that arrive through a pull request or a push; drift that
- * arises any other way — a rollback, a second branch writing to the same
- * database, a hand-applied statement — is invisible to it and visible to the
- * daily sweep. Defence in depth, and `tests/migration-shipping-invariant.test.ts`
- * asserts the tripwire still runs `db:check` as its own independent step.
+ * PDC V2 removed `intake-tripwire.yml`: GitHub Actions is software CI/release
+ * infrastructure, not a routine operations clock. Defence in depth now sits
+ * on the two software lifecycle boundaries that can prevent or expose this
+ * class: this fail-closed pre-merge/push gate and the automatic
+ * `post-deploy-integrity.yml` reading after a shipping main push. `pnpm
+ * db:check` remains an explicit diagnostic; it is not a scheduled Git writer.
  *
  * ## IT NEVER APPLIES ANYTHING
  *
@@ -71,13 +72,13 @@
  *
  * `--smoke` (or `WTP_SCHEMA_GATE_SMOKE=true`) forces the gate to contact
  * production on a commit that changed nothing, and prints the role, the host
- * and the row count it got back. It exists because
- * `WTP_PRODUCTION_DATABASE_URL_READONLY` is not yet a repository secret: the
- * moment it is added, one `workflow_dispatch` proves it READS production
- * without waiting for the next schema change and without faking one. It issues
- * the same single SELECT and nothing else, and it never applies anything.
+ * and the row count it got back. The read-only credential is present in the
+ * software CI/release environment; an explicit smoke run proves it can READ
+ * production without waiting for the next schema change or faking one. It
+ * issues the same single SELECT and nothing else, and it never applies
+ * anything.
  *
- * ## THE DEPLOY HALF, AND WHAT IS HONESTLY STILL MISSING
+ * ## THE DEPLOY HALF
  *
  * A pre-merge reading is true about the moment it was taken. It does not stay
  * true: a merge is not a deploy in this repository — `netlify.toml` filters
@@ -87,16 +88,12 @@
  *
  * `--moment=post-deploy` (or `WTP_SCHEMA_GATE_MOMENT=post-deploy`) is that
  * second reading, and it is the one that fails on an unapplied CONTRACT
- * migration, which pre-deploy deliberately allows. **What does not exist yet is
- * anything that RUNS it on a deploy.** Two routes, both outside this file:
- *
- *   - a step in `netlify.toml`'s build — REJECTED here, because the deploy has
- *     no database credential and a build step that failed without one would
- *     turn an absent secret into a broken site;
- *   - a workflow on `deployment_status`, which can degrade to a named gap
- *     without touching the deploy at all. That is the recommendation, and it is
- *     a new workflow file plus a decision about what a red post-deploy check
- *     does — neither of which a gate script may take on its own.
+ * migration, which pre-deploy deliberately allows. The software-only
+ * `post-deploy-integrity.yml` workflow now runs it automatically after a
+ * shipping push to main: Netlify does not emit GitHub deployment-status events
+ * for this repository, so the workflow observes the served SHA under a bound
+ * and then takes this exact read-only post-deploy measurement. It creates no
+ * Git commit and is not a routine data or operations clock.
  *
  * ## Exit codes, matching `db:check`
  *
@@ -207,7 +204,7 @@ function git(args: string[]): { ok: boolean; out: string } {
  * The changed paths, or `null` when they genuinely could not be read.
  *
  * **THE METHOD USED IS PRINTED, never inferred from the result** — the same
- * discipline `scripts/push-main.mjs` applies to its own path guard. Each rung
+ * discipline every fail-closed shipping adapter applies to its path guard. Each rung
  * says what it read, so a run that decided NOT APPLICABLE can be checked
  * against the reason it decided that.
  *

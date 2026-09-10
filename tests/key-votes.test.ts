@@ -14,6 +14,9 @@ import {
   getKeyVotesSnapshot,
   keyVoteRowsFor,
 } from "../lib/votes/key-votes-rows.ts";
+import { initializeFederalVoteFirstSeed } from "./helpers/federal-vote-first-seed.ts";
+
+await initializeFederalVoteFirstSeed();
 
 /**
  * B15 — the key votes tracker.
@@ -35,10 +38,11 @@ test("the list is the author's: 20 law rows (April 2024 as four siblings) and 16
   // separate bills and a member could vote differently on each.
   const april = KEY_VOTES_LAWS.filter((e) => e.siblingGroup === "april-2024");
   assert.equal(april.length, 4);
-  // Exactly one entry is marked as not yet law.
-  const pending = KEY_VOTES.filter((e) => e.pending);
-  assert.equal(pending.length, 1);
-  assert.equal(pending[0].id, "stock-trading-ban");
+  // Current law/chamber status is mutable official truth, not reviewed
+  // question input. It may appear only after an official status acquisition
+  // is represented in the canonical data-plane receipt.
+  assert.ok(KEY_VOTES.every((entry) => entry.pending === undefined));
+  assert.equal(KEY_VOTES.find((entry) => entry.id === "stock-trading-ban")?.senateNote, undefined);
   // Ids are unique — they key the render and the snapshot join.
   assert.equal(new Set(KEY_VOTES.map((e) => e.id)).size, KEY_VOTES.length);
 });
@@ -46,7 +50,7 @@ test("the list is the author's: 20 law rows (April 2024 as four siblings) and 16
 test("the criteria sentence is verbatim and renders ON the surface", () => {
   assert.equal(
     KEY_VOTES_CRITERIA,
-    "Major legislation that became law (plus one pending measure, marked), and consequential Senate confirmations, since 2020 — chosen before looking at how anyone voted.",
+    "Major legislation that became law (plus one additional selected proposal), and consequential Senate confirmations, since 2020 — chosen before looking at how anyone voted.",
   );
   const surface = readFileSync(
     join(ROOT, "components", "officials", "key-votes-section.tsx"),
@@ -133,10 +137,12 @@ test("the chamber rule: a House card never shows a Senate-only entry as a vote",
   assert.ok(senateNomination.refs.length > 0, "the Senate roll call is missing");
   assert.equal(senateNomination.note, null);
 
-  // The pending measure: the Senate hasn't acted, and says so.
+  // A current Senate-status sentence cannot come from reviewed software.
+  // Until an official status acquisition joins the projection, the row is
+  // an honest held gap rather than a stale claim that the chamber has not acted.
   const senatePending = senateRows.find((r) => r.entry.id === "stock-trading-ban")!;
   assert.equal(senatePending.refs.length, 0);
-  assert.match(senatePending.note ?? "", /hasn't voted on this/);
+  assert.equal(senatePending.note, null);
 });
 
 test("all sixteen nominations are verified against the Senate's own record, name AND tally", () => {
@@ -585,23 +591,17 @@ test("B15 g20 / F01 5.6: the park MECHANISM still holds, with the map now empty"
     assert.equal(entry.senate.length, 0, `${id}: parked and yet resolved`);
   }
 
-  /*
-   * THE DOOR THE LAST FIX LEFT OPEN. D68's mitigation is fill-only, which
-   * protects a chamber that ALREADY has a roll call. A parked entry has
-   * none, so fill-only would let the next run write one in — the exact
-   * failure the park exists to prevent. The resolver has to skip parked ids
-   * before it reaches the fill-only rule, and it has to say so.
-   */
-  const script = readFileSync(join(ROOT, "scripts", "fetch-law-votes.mts"), "utf8");
-  assert.match(script, /PARKED_KEY_VOTES\[entry\.id\]/);
-  assert.match(script, /PARKED \$\{entry\.id\}/);
-  assert.match(script, /author has PARKED and this run did not touch/);
-  const skipAt = script.indexOf("PARKED_KEY_VOTES[entry.id]");
-  const fillAt = script.indexOf("const house = fillOnly(");
-  assert.ok(
-    skipAt > 0 && skipAt < fillAt,
-    "the park is checked after fill-only — fill-only cannot protect an empty chamber",
-  );
+  // The old mutable tracked-file resolver is gone. The reviewed v1 input
+  // itself refuses a parked question that still names a roll, before an
+  // official acquisition can begin.
+  assert.throws(() => readFileSync(join(ROOT, "scripts", "fetch-law-votes.mts"), "utf8"), /ENOENT/);
+  const selection = readFileSync(join(ROOT, "lib", "votes", "key-vote-selection-v1.ts"), "utf8");
+  assert.match(selection, /PARKED_KEY_VOTES\[entry\.id\]/);
+  assert.match(selection, /FEDERAL_KEY_VOTE_SELECTION_V1_PARKED_WITH_ROLL/);
+  const command = readFileSync(join(ROOT, "scripts", "fetch-key-vote-positions.mts"), "utf8");
+  assert.match(command, /federalKeyVoteSelectionV1Snapshot/);
+  assert.match(command, /processRegisteredManualCandidate/);
+  assert.doesNotMatch(command, /(?:writeFile|appendFile|createWriteStream)\s*\(|(?:spawnSync|execFileSync|execSync)\s*\([^\n]*(?:git|netlify|deploy)/);
 });
 
 /**

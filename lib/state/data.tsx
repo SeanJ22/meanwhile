@@ -9,6 +9,8 @@ import type { Meeting } from "@/lib/sources/types";
 import type { StoredLocation } from "@/hooks/use-stored-zip";
 import type { DrawnDistrict } from "@/lib/map/districts";
 import type { JurisdictionBasis } from "@/lib/meetings/jurisdiction-badge";
+import type { CommentAccess } from "@/lib/registry/comment-access-client";
+import type { EverydayRoutingProjection } from "@/lib/routing/everyday";
 
 /**
  * The server's answer, plus everything derived from it once.
@@ -21,6 +23,10 @@ import type { JurisdictionBasis } from "@/lib/meetings/jurisdiction-badge";
 export interface ShellData {
   /** Everything the cascade returned, before UI filters. */
   allMeetings: Meeting[];
+  /** Owner-reviewed canonical rules returned with the meeting projection. */
+  commentAccess?: readonly CommentAccess[];
+  /** Direct-owner routing projection returned by the server data plane. */
+  everydayRouting?: EverydayRoutingProjection | null;
   /** After the active tier, scope, chips, date window and radius. */
   meetings: Meeting[];
   /** Identity diagnostic belonging to these rows, including same-area carry-forward. */

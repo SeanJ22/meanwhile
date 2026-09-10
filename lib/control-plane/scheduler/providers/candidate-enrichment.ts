@@ -14,9 +14,9 @@
  * where we happened to look first.
  *
  * This provider makes the enrichment fields STANDING OBLIGATIONS against each
- * state's canonical candidate ACQUISITION DENOMINATOR
- * (`data/states/<state>/hunt/<state>-candidate-universe-<cycle>.json`), so the work is owed
- * before a reader arrives rather than triggered by one.
+ * state's canonical promoted ballot/profile projection, so the work is owed
+ * before a reader arrives rather than triggered by one. The former generated
+ * hunt files are retained only as research evidence and are never opened here.
  *
  * **The denominator is labelled, not assumed "statewide" (R-C9).** Only a
  * population acquired from an authority's complete applicable universe earns
@@ -88,16 +88,27 @@
  * corpus, which is the exact opposite of RULING 229's invariant.
  */
 
-import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
-
 import { WIKI_API_DISALLOWED } from "../../../hunt/wikipedia.ts";
+import { currentExtraction, type CandidateCorpus } from "../../../candidates/corpus.ts";
 import {
   ENRICHMENT_FIELDS,
+  deriveCandidateUniverse,
+  type BallotDocument,
   type CandidateUniverse,
   type CanonicalCandidacy,
+  type EnrichmentStores,
   type EnrichmentField,
 } from "../../../hunt/candidate-universe.ts";
+import type { BallotSet } from "../../../ballot/types.ts";
+import type {
+  AzBallotProjection,
+  CandidateProfilesProjection,
+  NhBallotProjection,
+} from "../../../civic-data/manual-projections.ts";
+import { requiredManualProductionContract } from "../../../civic-data/manual-contracts.ts";
+import { requiredRoutineContract } from "../../../civic-data/contracts.ts";
+import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../../../civic-data/read-model.ts";
+import type { NjMorrisReadModel } from "../../../sources/ballot-nj-morris/index.ts";
 import type {
   ObligationProvider,
   ProvidedObligation,
@@ -146,8 +157,7 @@ function siteRoute(c: CanonicalCandidacy, url: string): RouteDescriptor {
       "wrote down is spending tokens on a known answer",
     open: { kind: "HTTP_GET", url, headers: identifiedHeaders() },
     citation:
-      "data/states/<state>/hunt/<state>-candidate-universe-2026.json — the recorded campaign site for this canonical " +
-      "candidacy, carried forward from data/ballot/candidate-links-2026.json",
+      "canonical CANDIDATE_PROFILE promotion receipt — the recorded campaign site for this exact candidacy",
   };
 }
 
@@ -352,10 +362,188 @@ function routesForCandidacy(
   return out;
 }
 
-function readUniverse(root: string, stateCode: string): CandidateUniverse | null {
-  const path = join(root, "data", "states", stateCode, "hunt", `${stateCode}-candidate-universe-${CYCLE}.json`);
-  if (!existsSync(path)) return null;
-  return JSON.parse(readFileSync(path, "utf8")) as CandidateUniverse;
+export interface CandidateEnrichmentAuthorities {
+  readonly az: AzBallotProjection;
+  readonly nh: NhBallotProjection;
+  readonly nj: NjMorrisReadModel;
+  readonly profiles: CandidateProfilesProjection;
+  readonly corpus: CandidateCorpus;
+}
+
+export interface CandidateEnrichmentAuthorityHoldings {
+  readonly az: AzBallotProjection | null;
+  readonly nh: NhBallotProjection | null;
+  readonly nj: NjMorrisReadModel | null;
+  readonly profiles: CandidateProfilesProjection | null;
+  readonly corpus: CandidateCorpus | null;
+  readonly failures: readonly string[];
+}
+
+let loadedAuthorities: CandidateEnrichmentAuthorityHoldings | null = null;
+const AZ_BALLOT = requiredManualProductionContract("az-sos-ballot");
+const NH_BALLOT = requiredManualProductionContract("nh-curated-ballot");
+const PROFILES = requiredManualProductionContract("candidate-profiles");
+const PUBLICATIONS = requiredManualProductionContract("candidate-corpus");
+const NJ_BALLOT = requiredRoutineContract("nj-morris-filing");
+
+function requiredValue<T>(
+  result: { readonly kind: string; readonly value: T | null },
+  name: string,
+): T {
+  if (result.kind === "PROMOTED" && result.value !== null) {
+    return result.value;
+  }
+  throw new Error(`${name} canonical projection is ${result.kind}.`);
+}
+
+/**
+ * Load every authority before the synchronous obligation registry is built.
+ * This standing path deliberately bypasses every bundled first-seed helper:
+ * only proof-validated promoted pointers may create a production clock.
+ */
+export async function preloadCandidateEnrichmentAuthorities(
+  options: PromotedCivicDataReadOptions = {},
+): Promise<void> {
+  const results = await Promise.allSettled([
+    readPromotedCivicData<AzBallotProjection>(AZ_BALLOT.recordClass, AZ_BALLOT.scope, options),
+    readPromotedCivicData<NhBallotProjection>(NH_BALLOT.recordClass, NH_BALLOT.scope, options),
+    readPromotedCivicData<NjMorrisReadModel>(NJ_BALLOT.recordClass, NJ_BALLOT.scope, options),
+    readPromotedCivicData<CandidateProfilesProjection>(PROFILES.recordClass, PROFILES.scope, options),
+    readPromotedCivicData<CandidateCorpus>(PUBLICATIONS.recordClass, PUBLICATIONS.scope, options),
+  ]);
+  const failures: string[] = [];
+  const held = <T>(result: PromiseSettledResult<{ readonly kind: string; readonly value: T | null }>, name: string): T | null => {
+    if (result.status === "rejected") {
+      failures.push(`${name} canonical projection read rejected (${result.reason instanceof Error ? result.reason.message : String(result.reason)}).`);
+      return null;
+    }
+    try { return requiredValue(result.value, name); }
+    catch (error) {
+      failures.push(error instanceof Error ? error.message : `${name} canonical projection is unavailable.`);
+      return null;
+    }
+  };
+  loadedAuthorities = {
+    az: held(results[0]!, "Arizona ballot"),
+    nh: held(results[1]!, "New Hampshire ballot"),
+    nj: held(results[2]!, "New Jersey ballot"),
+    profiles: held(results[3]!, "Candidate profile"),
+    corpus: held(results[4]!, "Candidate publication"),
+    failures,
+  };
+}
+
+function ballotDocument(path: string, ballot: BallotSet): BallotDocument {
+  return { path, contests: ballot.contests, candidacies: ballot.candidacies };
+}
+
+function profileStores(
+  profiles: CandidateProfilesProjection,
+  corpus: CandidateCorpus,
+): EnrichmentStores {
+  const huntState: EnrichmentStores["huntState"] = {};
+  for (const document of currentExtraction(corpus.documents)) {
+    if (document.extraction !== "html" || !document.text) continue;
+    huntState[document.candidateKey] = {
+      ...(huntState[document.candidateKey] ?? {}),
+      blurb: { state: "FOUND", checkedAt: document.retrievedAt },
+    };
+  }
+  return {
+    huntState,
+    cards: profiles.cards.cards as unknown as Record<string, Record<string, unknown>>,
+    links: Object.fromEntries(Object.entries(profiles.links.links).map(([key, links]) => [
+      key,
+      links.campaign?.url ?? null,
+    ])),
+    linkHunts: profiles.links.hunts,
+  };
+}
+
+/** Pure derivation used by the provider and the permanent no-second-ZIP proof. */
+export function candidateUniversesFromPromoted(
+  authorities: CandidateEnrichmentAuthorities,
+  nowIso: string,
+): Readonly<Record<(typeof ENRICHED_STATES)[number], CandidateUniverse>> {
+  const stores = profileStores(authorities.profiles, authorities.corpus);
+  const azDocuments: BallotDocument[] = [
+    ballotDocument("civic-data:BALLOT_CANDIDACY:US-AZ:2026-general:supported-ballot", authorities.az.ballot),
+  ];
+  const filings = authorities.az.candidateFilings as Partial<BallotDocument> | null;
+  if (filings && Array.isArray(filings.contests) && Array.isArray(filings.candidacies)) {
+    azDocuments.push({
+      path: "civic-data:BALLOT_CANDIDACY:US-AZ:2026-general:official-filing-corpus",
+      contests: filings.contests,
+      candidacies: filings.candidacies,
+    });
+  }
+  const derive = (stateCode: "az" | "nh" | "nj", documents: readonly BallotDocument[]) =>
+    deriveCandidateUniverse({
+      stateCode: stateCode.toUpperCase(),
+      cycle: CYCLE,
+      generatedBy: "canonical civic-data ballot/profile projections",
+      generatedOn: nowIso.slice(0, 10),
+      documents,
+      stores,
+    });
+  return {
+    az: derive("az", azDocuments),
+    nh: derive("nh", [ballotDocument("civic-data:BALLOT_CANDIDACY:US-NH:merrimack:2026-general", authorities.nh.ballot)]),
+    nj: derive("nj", [ballotDocument("civic-data:BALLOT_FILING:US-NJ:morris:2026", authorities.nj.ballot)]),
+  };
+}
+
+/** Derive one state's universe without acquiring either sibling ballot. */
+export function candidateUniverseFromPromoted(
+  stateCode: (typeof ENRICHED_STATES)[number],
+  ballot: AzBallotProjection | NhBallotProjection | NjMorrisReadModel,
+  profiles: CandidateProfilesProjection,
+  corpus: CandidateCorpus,
+  nowIso: string,
+): CandidateUniverse {
+  const stores = profileStores(profiles, corpus);
+  const derive = (documents: readonly BallotDocument[]) => deriveCandidateUniverse({
+    stateCode: stateCode.toUpperCase(),
+    cycle: CYCLE,
+    generatedBy: "canonical civic-data ballot/profile projections",
+    generatedOn: nowIso.slice(0, 10),
+    documents,
+    stores,
+  });
+  if (stateCode === "az") {
+    const authority = ballot as AzBallotProjection;
+    const documents: BallotDocument[] = [
+      ballotDocument("civic-data:BALLOT_CANDIDACY:US-AZ:2026-general:supported-ballot", authority.ballot),
+    ];
+    const filings = authority.candidateFilings as Partial<BallotDocument> | null;
+    if (filings && Array.isArray(filings.contests) && Array.isArray(filings.candidacies)) {
+      documents.push({ path: "civic-data:BALLOT_CANDIDACY:US-AZ:2026-general:official-filing-corpus", contests: filings.contests, candidacies: filings.candidacies });
+    }
+    return derive(documents);
+  }
+  if (stateCode === "nh") {
+    return derive([ballotDocument("civic-data:BALLOT_CANDIDACY:US-NH:merrimack:2026-general", (ballot as NhBallotProjection).ballot)]);
+  }
+  return derive([ballotDocument("civic-data:BALLOT_FILING:US-NJ:morris:2026", (ballot as NjMorrisReadModel).ballot)]);
+}
+
+export function candidateEnrichmentUniversesFromHoldings(
+  holdings: CandidateEnrichmentAuthorityHoldings,
+  nowIso: string,
+): { readonly universes: Partial<Record<(typeof ENRICHED_STATES)[number], CandidateUniverse>>; readonly failures: string[] } {
+  const universes: Partial<Record<(typeof ENRICHED_STATES)[number], CandidateUniverse>> = {};
+  const failures = [...holdings.failures];
+  if (!holdings.profiles || !holdings.corpus) return { universes, failures };
+  for (const stateCode of ENRICHED_STATES) {
+    const ballot = holdings[stateCode];
+    if (!ballot) continue;
+    try {
+      universes[stateCode] = candidateUniverseFromPromoted(stateCode, ballot, holdings.profiles, holdings.corpus, nowIso);
+    } catch (error) {
+      failures.push(`${stateCode.toUpperCase()} candidate enrichment derivation failed (${error instanceof Error ? error.message : String(error)})`);
+    }
+  }
+  return { universes, failures };
 }
 
 export function candidateEnrichmentProvider(): ObligationProvider {
@@ -363,8 +551,8 @@ export function candidateEnrichmentProvider(): ObligationProvider {
     id: CANDIDATE_ENRICHMENT_PROVIDER_ID,
     describe:
       "campaign sites, candidate-authored positions, bios, photos and published contact as STANDING " +
-      "obligations against each state's canonical candidate ACQUISITION DENOMINATOR, labelled by " +
-      "lib/candidates/population-label.ts — never against the ZIPs that happen to be enabled",
+      "obligations against each state's canonical promoted ballot/profile denominator — never a " +
+      "tracked hunt artifact and never the ZIPs that happen to be enabled",
 
     /*
      * THE IDENTITY SCHEME IS THE FIX. `freshness:candidate-enrichment:` then a
@@ -380,29 +568,17 @@ export function candidateEnrichmentProvider(): ObligationProvider {
       const records: ProvidedObligation[] = [];
       const failures: string[] = [];
 
+      const settled = loadedAuthorities
+        ? candidateEnrichmentUniversesFromHoldings(loadedAuthorities, ctx.nowIso)
+        : { universes: {}, failures: ["canonical ballot/profile projections were not preloaded"] };
+      failures.push(...settled.failures);
+
       for (const stateCode of ENRICHED_STATES) {
-        let universe: CandidateUniverse | null;
-        try {
-          universe = readUniverse(ctx.root, stateCode);
-        } catch (error) {
-          failures.push(
-            `data/states/${stateCode}/hunt/${stateCode}-candidate-universe-${CYCLE}.json did not parse ` +
-              `(${error instanceof Error ? error.message : String(error)})`,
-          );
-          continue;
-        }
-        if (universe === null) {
-          failures.push(
-            `data/states/${stateCode}/hunt/${stateCode}-candidate-universe-${CYCLE}.json is ABSENT. Regenerate with ` +
-              "`pnpm candidates:universe`. A missing denominator is a missing file, never a state " +
-              "with no candidates.",
-          );
-          continue;
-        }
+        const universe = settled.universes[stateCode] ?? null;
+        if (universe === null) continue;
         if (universe.candidacies.length === 0) {
           failures.push(
-            `data/states/${stateCode}/hunt/${stateCode}-candidate-universe-${CYCLE}.json parsed and holds ZERO candidacies ` +
-              "— a FAILED read, never an election with no candidates",
+            `${stateCode.toUpperCase()} canonical ballot/profile projection produced ZERO candidacies — a FAILED read, never an election with no candidates`,
           );
           continue;
         }
@@ -470,8 +646,7 @@ export function candidateEnrichmentProvider(): ObligationProvider {
           records.length === 0 && failures.length === 0
             ? "every canonical candidate universe was read and every enrichment field on every " +
               "candidacy is already FOUND. That would be a real and remarkable result; treat a zero " +
-              "here as a defect in this provider until the split is checked against " +
-              "`pnpm candidates:universe`."
+              "here as a defect in this provider until the promoted ballot/profile projections are inspected."
             : null,
       };
     },

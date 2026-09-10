@@ -24,6 +24,9 @@ import {
 import { RIPCORDS } from "../lib/ripcords.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 /**
  * **THE PR #212 FOLLOW-UP — the integration that was missing, planted.**

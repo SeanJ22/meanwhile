@@ -31,7 +31,12 @@
  * All CSS lives in the admin layout; this file writes none.
  */
 
-import { openControlPlane, readDecisions } from "@/lib/control-plane/admin-data.ts";
+import {
+  openControlPlane,
+  readDecisions,
+  readHeartbeat,
+  readLatestIntakeRuntimeDigest,
+} from "@/lib/control-plane/admin-data.ts";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
 import { ConsoleNav } from "../../console-nav.tsx";
 import {
@@ -52,9 +57,14 @@ import {
   type TriageState,
 } from "@/lib/control-plane/feedback-inbox.ts";
 import {
+  parseIntakeRuntimeObservation,
+  type IntakeRuntimeObservation,
+} from "@/lib/ops/intake-runtime.ts";
+import {
   OWNER_ANSWER_MAX_CHARS,
   auditRenderedNumbers,
   checkStatedEqualsRendered,
+  intakeRuntimeObservationOutcomeIssue,
   type OwnerDecisionIntent,
 } from "@/lib/control-plane/owner-surface.ts";
 import { count } from "@/lib/control-plane/plain-words.ts";
@@ -232,6 +242,82 @@ function EnvironmentCard({ env }: { env: EnvironmentView }) {
   );
 }
 
+function IntakeRuntimePanel({
+  observation,
+  nextDueAt,
+  gap,
+  projectionIssue,
+}: {
+  readonly observation: IntakeRuntimeObservation | null;
+  readonly nextDueAt: string | null;
+  readonly gap: string | null;
+  readonly projectionIssue: string | null;
+}) {
+  if (observation === null) {
+    return (
+      <section className="card" aria-labelledby="intake-runtime-heading">
+        <h2 id="intake-runtime-heading">Intake operations</h2>
+        <StatusBlock
+          what="The standing production runner's aggregate reading of intake volume, quarantines, write alarms, and limiter housekeeping."
+          happened={gap ?? "The intake-runtime reading is unavailable, and this page did not carry a reason."}
+          next="The standing runner records this without GitHub Actions, a tracked report, a deploy, or a software Build check."
+          needsYou={{ needed: true, action: "restore or update the standing runner so it can publish the intake receipt" }}
+        />
+      </section>
+    );
+  }
+  const attention = observation.outcome !== "HEALTHY" || projectionIssue !== null;
+  return (
+    <section className="card" aria-labelledby="intake-runtime-heading">
+      <h2 id="intake-runtime-heading">Intake operations</h2>
+      <StatusBlock
+        what="Production intake activity and maintenance, read from the live stores by the standing runner."
+        happened={
+          <>
+            <strong>{observation.outcome}</strong> at <When iso={observation.observedAt} />. {observation.detail}
+            {projectionIssue === null ? null : <> <strong>Latest-projection gap:</strong> {projectionIssue}</>}
+          </>
+        }
+        next={
+          nextDueAt
+            ? <>The next standing cycle is due <When iso={nextDueAt} />.</>
+            : "The runner did not record its next-cycle time, so this page will not guess."
+        }
+        needsYou={attention
+          ? { needed: true, action: projectionIssue !== null
+              ? "restore the heartbeat's exact projection of the append-only intake outcome"
+              : observation.outcome === "UNREADABLE"
+                ? "restore the production intake read"
+                : "inspect the exact flags and write-alarm counts below" }
+          : { needed: false }}
+        detail={
+          <>
+            <p>
+              Write alarms in the last 24 hours: {observation.writeAlarmsInWindow ?? "not read"}, out of {observation.writeAlarmsEver ?? "an unread total"} ever recorded.
+              {observation.writeAlarmsByStore.length > 0
+                ? ` By store: ${observation.writeAlarmsByStore.map((row) => `${row.store} ${row.count}`).join(", ")}.`
+                : ""}
+            </p>
+            <p>
+              Limiter housekeeping: {observation.limiterRowsPurged ?? "not read"} expired row(s) purged; {observation.limiterRowsRemaining ?? "not read"} remain.
+            </p>
+            <details>
+              <summary>Exact 30-day aggregate history and flags</summary>
+              {observation.flags.length === 0
+                ? <p>No flag is recorded in this reading.</p>
+                : <ul>{observation.flags.map((flag) => <li key={`${flag.store}:${flag.day}:${flag.kind}`}><code>{flag.day}</code> {flag.store} {flag.kind}: {flag.detail}</li>)}</ul>}
+              <h3>Reaction rows by UTC day</h3>
+              <ul>{observation.reactionDays.map((day) => <li key={day.day}><code>{day.day}</code>: {day.total} total; {day.suspect} quarantined</li>)}</ul>
+              <h3>Organic search-log rows by UTC day</h3>
+              <ul>{observation.searchLogDays.map((day) => <li key={day.day}><code>{day.day}</code>: {day.total}</li>)}</ul>
+            </details>
+          </>
+        }
+      />
+    </section>
+  );
+}
+
 function Item({ item }: { item: InboxItem }) {
   const row = item.row;
   const words = TRIAGE_WORDS[item.state];
@@ -365,6 +451,10 @@ export default async function FeedbackInboxPage() {
   ]);
 
   let decisions: readonly OwnerDecisionIntent[] = [];
+  let intakeRuntime: IntakeRuntimeObservation | null = null;
+  let intakeRuntimeNextDueAt: string | null = null;
+  let intakeRuntimeGap: string | null = null;
+  let intakeRuntimeProjectionIssue: string | null = null;
   let decisionsSays =
     "Your recorded statuses were read from the console's own store, where they are kept " +
     "permanently and in order.";
@@ -372,8 +462,13 @@ export default async function FeedbackInboxPage() {
   if (!opened.ok) {
     decisionsReadable = false;
     decisionsSays = opened.detail;
+    intakeRuntimeGap = opened.detail;
   } else {
-    const outcome = await readDecisions(opened.repos);
+    const [outcome, heartbeatOutcome, intakeOutcome] = await Promise.all([
+      readDecisions(opened.repos),
+      readHeartbeat(opened.repos),
+      readLatestIntakeRuntimeDigest(opened.repos),
+    ]);
     if (outcome.kind === "HELD") {
       decisions = outcome.value;
     } else if (outcome.kind === "NOT_RECORDED") {
@@ -383,6 +478,37 @@ export default async function FeedbackInboxPage() {
     } else {
       decisionsReadable = false;
       decisionsSays = outcome.detail;
+    }
+    if (intakeOutcome.kind === "HELD") {
+      const runtimeOutcome = intakeOutcome.value.runtimeOutcome;
+      if (runtimeOutcome?.kind !== "INTAKE_RUNTIME_OBSERVATION") {
+        intakeRuntimeGap = "The newest intake history row did not carry its structured intake-runtime outcome.";
+      } else {
+        const issue = intakeRuntimeObservationOutcomeIssue(runtimeOutcome);
+        intakeRuntime = issue === null ? parseIntakeRuntimeObservation(runtimeOutcome.observation) : null;
+        if (issue !== null || intakeRuntime === null) {
+          intakeRuntimeGap = issue ?? "The append-only intake observation could not be read safely.";
+        }
+      }
+    } else {
+      intakeRuntimeGap = intakeOutcome.detail;
+    }
+    if (heartbeatOutcome.kind === "HELD") {
+      intakeRuntimeNextDueAt = heartbeatOutcome.value.nextCycleDueAt;
+      const projected = heartbeatOutcome.value.intakeRuntime === undefined || heartbeatOutcome.value.intakeRuntime === null
+        ? null
+        : parseIntakeRuntimeObservation(heartbeatOutcome.value.intakeRuntime);
+      if (intakeRuntime !== null && projected === null) {
+        intakeRuntimeProjectionIssue = "The heartbeat has no readable latest intake projection.";
+      } else if (
+        intakeRuntime !== null && projected !== null &&
+        JSON.stringify(projected) !== JSON.stringify(intakeRuntime)
+      ) {
+        intakeRuntimeProjectionIssue =
+          `The heartbeat projects ${projected.observedAt}, but append-only history says the latest exact observation is ${intakeRuntime.observedAt}.`;
+      }
+    } else if (intakeRuntime !== null) {
+      intakeRuntimeProjectionIssue = heartbeatOutcome.detail;
     }
   }
 
@@ -457,6 +583,13 @@ export default async function FeedbackInboxPage() {
         This page knows <strong>that</strong> someone asked to hear back. It never reads who they
         are, and it never lines a message up against anything else the site records.
       </p>
+
+      <IntakeRuntimePanel
+        observation={intakeRuntime}
+        nextDueAt={intakeRuntimeNextDueAt}
+        gap={intakeRuntimeGap}
+        projectionIssue={intakeRuntimeProjectionIssue}
+      />
 
       <section className="fi-tiles">
         <DefinedTile

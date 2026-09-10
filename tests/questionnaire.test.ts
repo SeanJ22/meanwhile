@@ -30,6 +30,7 @@ import {
   symmetryBreaches,
   type Invitation,
 } from "../lib/questionnaire/invitations.ts";
+import { buildQuestionnaireInvitationPlan } from "../lib/questionnaire/invitation-plan.ts";
 import { officeClassFor } from "../lib/questionnaire/office-class.ts";
 import {
   UNESTABLISHED,
@@ -604,30 +605,29 @@ test("questionnaire: the symmetry check catches an asymmetric contest", () => {
 /* The generated artifact and the generated document                           */
 /* ========================================================================== */
 
-test("questionnaire: every NJ candidacy has an invitation, and none claims a send", () => {
-  const artifact = JSON.parse(
-    readFileSync(join(ROOT, "data", "questionnaire", "invitations-nj-morris-2026.json"), "utf8"),
-  ) as {
-    statedCandidacies: number;
-    invitations: Invitation[];
-    uninvitable: unknown[];
-  };
+test("questionnaire: the canonical NJ filing derives a complete unsent plan without a tracked output", () => {
   const ballot = JSON.parse(
     readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8"),
-  ) as { candidacies: unknown[] };
+  ) as { contests: { id: string; ocdId: string; title: string }[]; candidacies: { id: string; contestId: string }[] };
+  const contacts = JSON.parse(
+    readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026-contacts.json"), "utf8"),
+  ) as { contacts: { candidacyId: string; email: string | null; sourceUrl: string; sourceOrg: string; collectedAt: string }[] };
+  const plan = buildQuestionnaireInvitationPlan({
+    ballot,
+    contacts,
+    plannedInvitedOn: "2026-09-08",
+    plannedRemindersOn: ["2026-09-22", "2026-10-06"],
+    deadline: "2026-10-13",
+  });
 
+  assert.equal(plan.statedCandidacies, ballot.candidacies.length);
   assert.equal(
-    artifact.statedCandidacies,
-    ballot.candidacies.length,
-    "the artifact's stated total disagrees with the ballot file's",
-  );
-  assert.equal(
-    artifact.invitations.length + artifact.uninvitable.length,
+    plan.invitations.length + plan.uninvitable.length,
     ballot.candidacies.length,
     "RULING 100: a partial that reconciles is still a failure — account for every candidacy",
   );
-  assert.deepEqual(symmetryBreaches(artifact.invitations), []);
-  for (const invitation of artifact.invitations) {
+  assert.deepEqual(plan.symmetryBreaches, []);
+  for (const invitation of plan.invitations) {
     assert.equal(invitation.invitedOn, null, `${invitation.candidacyId} claims a send`);
     assert.deepEqual(invitation.remindedOn, []);
     assert.ok(invitation.email.includes("@"), `${invitation.candidacyId} has no usable email`);

@@ -69,7 +69,20 @@
 import type { CodeIdentity } from "./code-identity.ts";
 import type { CacheCallerHealth, MeteringCounts, MonthlySpendView } from "./cost-panel.ts";
 import type { ScoutCapacity } from "./research-metrics.ts";
-import type { MapTilerUsageSnapshot } from "./maptiler/types.ts";
+import type { MapTilerUsageAttempt, MapTilerUsageSnapshot } from "./maptiler/types.ts";
+import {
+  intakeRuntimeObservationCycleId,
+  parseIntakeRuntimeObservation,
+  type IntakeRuntimeObservation,
+  type IntakeRuntimeOutcome,
+} from "../ops/intake-runtime.ts";
+import {
+  READER_PROJECTION_READBACK_PREFIX,
+  parseReaderProjectionReadback,
+  type ReaderProjectionReadbackReceipt,
+} from "../civic-data/reader-readback.ts";
+import type { RoutineRunnerReceipt } from "../civic-data/runner-receipt.ts";
+import { ROUTINE_RECORD_CLASSES, type RoutineRecordClass } from "../civic-data/types.ts";
 
 export interface Measured {
   readonly value: number;
@@ -390,6 +403,13 @@ export interface RunnerHeartbeat {
    * could not read git.
    */
   readonly codeIdentity?: CodeIdentity | null;
+  /**
+   * Aggregate production-intake observation taken by this same standing
+   * runner. Optional only for records written before the permanent cutover.
+   * Its underlying history remains in the application store; this is the
+   * current durable owner-facing receipt and never came through Git.
+   */
+  readonly intakeRuntime?: IntakeRuntimeObservation | null;
 }
 
 /**
@@ -453,6 +473,688 @@ export interface OwnerDigestRecord {
   readonly lines: readonly string[];
   readonly cycleOk: boolean | null;
   readonly testedSha: string | null;
+  /**
+   * Structured runtime outcome carried beside the exact human digest. Optional
+   * only for historical rows written before PDC. Distinct kinds keep a civic
+   * data supervisor fault from replacing the latest standing freshness cycle.
+   * The canonical copy lives in the same append-only owner log Admin already
+   * consumes; a worktree JSON file is never an authority or an input.
+   */
+  readonly runtimeOutcome?:
+    | FreshnessCycleOutcome
+    | RoutineCivicDataSupervisorOutcome
+    | IntakeRuntimeObservationOutcome
+    | MapTilerUsageCollectionOutcome
+    | MethodCandidateAuthorityAdoptionOutcome;
+}
+
+/** One append-only receipt from the standing MapTiler observer. */
+export interface MapTilerUsageCollectionOutcome {
+  readonly kind: "MAPTILER_USAGE_COLLECTION";
+  readonly state: "SUCCEEDED" | "FAILED";
+  readonly cycleId: string;
+  readonly startedAt: string;
+  readonly finishedAt: string;
+  readonly testedSha: string | null;
+  readonly host: string;
+  readonly provider: string;
+  readonly durable: boolean;
+  /** Exact provider-attempt provenance; a failed classifier remains visible. */
+  readonly attempt: MapTilerUsageAttempt;
+  readonly candidate: {
+    readonly canonicalSha256: string;
+    readonly connection: MapTilerUsageSnapshot["connection"];
+    readonly since: string | null;
+    readonly until: string | null;
+    readonly rows: number;
+  };
+  readonly disposition: "PROMOTED_CURRENT" | "RETAINED_LKG" | "UNKNOWN_NO_LKG";
+  readonly visibleMeasurement: {
+    readonly collectedAt: string;
+    readonly publisher: string;
+  } | null;
+  readonly authorityBoundary: {
+    readonly canonicalOutcomeHistory: "OWNER_DIGESTS_APPEND_ONLY";
+    readonly currentProjection: "OWNER_SNAPSHOT_MAPTILER";
+    readonly trackedRuntimeReads: 0;
+    readonly trackedRuntimeWrites: 0;
+    readonly gitWrites: 0;
+    readonly softwareReleaseEvents: 0;
+  };
+}
+
+/**
+ * The one-time, clean-code adoption of the method-candidate aggregate that was
+ * imported during PDC.  The seven candidate rows are not repeated here: the
+ * receipt binds their canonical aggregate hash, the immutable Git seed
+ * evidence, and the exact clean verifier commit.  It lives in the owner digest
+ * log Admin already reads, not in a second migration ledger.
+ */
+export interface MethodCandidateAuthorityAdoptionOutcome {
+  readonly kind: "METHOD_CANDIDATE_AUTHORITY_ADOPTION";
+  readonly state: "ADOPTED";
+  readonly receiptId: string;
+  readonly startedAt: string;
+  readonly finishedAt: string;
+  readonly testedSha: string;
+  readonly authority: {
+    readonly repository: "cp_method_candidates";
+    readonly aggregateId: "live";
+    readonly aggregateRevision: 1;
+    readonly aggregateUpdatedAt: string;
+    readonly canonicalSha256: string;
+  };
+  readonly seedEvidence: {
+    readonly frozenBaseSha: string;
+    readonly trackedSourcePath: "data/method/candidates.json";
+    readonly sourceGitBlobSha1: string;
+    readonly sourceRawSha256: string;
+    readonly canonicalSha256: string;
+    readonly candidateCount: 7;
+    readonly lifecycleCounts: {
+      readonly PROPOSED: 0;
+      readonly VALIDATED: 7;
+      readonly ADMITTED: 0;
+      readonly REJECTED: 0;
+    };
+  };
+  readonly verifier: {
+    readonly codeSha: string;
+    readonly headEqualsCodeSha: true;
+    readonly cleanTree: true;
+    readonly detachedHead: true;
+    readonly originMainContainsHead: true;
+  };
+  readonly authorityBoundary: {
+    readonly canonicalAuthority: "CONTROL_PLANE_CP_METHOD_CANDIDATES";
+    readonly gitRole: "HISTORICAL_SEED_EVIDENCE_ONLY";
+    readonly trackedRuntimeReads: 0;
+    readonly trackedRuntimeWrites: 0;
+  };
+}
+
+/**
+ * One append-only observation from the retired intake-tripwire role. The
+ * heartbeat may project this latest observation for liveness, but it is never
+ * the history or outcome authority: a later healthy beat cannot erase an
+ * earlier ATTENTION/UNREADABLE record from this log.
+ */
+export interface IntakeRuntimeObservationOutcome {
+  readonly kind: "INTAKE_RUNTIME_OBSERVATION";
+  readonly state: IntakeRuntimeOutcome;
+  readonly cycleId: string;
+  readonly startedAt: string;
+  readonly finishedAt: string;
+  readonly testedSha: string | null;
+  readonly host: string;
+  readonly provider: string;
+  readonly durable: boolean;
+  readonly observation: IntakeRuntimeObservation;
+  readonly authorityBoundary: {
+    readonly canonicalOutcomeHistory: "OWNER_DIGESTS_APPEND_ONLY";
+    readonly heartbeatRole: "LATEST_PROJECTION_ONLY";
+    readonly gitWrites: 0;
+    readonly softwareReleaseEvents: 0;
+  };
+}
+
+/**
+ * A child-process/protocol failure for which the supervisor has no valid,
+ * source-authored durable receipt. This is an operations fact, not a source
+ * observation: it therefore records the attribution boundary explicitly and
+ * can never be interpreted as a candidate disposition.
+ */
+export interface RoutineCivicDataTaskReceiptReference {
+  readonly taskId: string;
+  readonly sourceId: string;
+  readonly recordClass: RoutineRecordClass;
+  readonly scope: string;
+  readonly classification: "VERIFIED_SOURCE_SUCCESS" | "VERIFIED_SOURCE_FAILURE";
+  /** Exact child receipt already checked against the durable candidate and pointer. */
+  readonly receipt: RoutineRunnerReceipt;
+}
+
+export type RoutineCivicDataReaderReadbackDisposition =
+  | "NOT_APPLICABLE"
+  | "NO_PROMOTION"
+  | "CURRENT"
+  | "BACKOFF"
+  | "FAILED_BACKOFF"
+  | "RECORDED"
+  | "REPAIR_FAILED";
+
+/** Exact per-contract result from the Reader-only repair/verification pass. */
+export interface RoutineCivicDataReaderReadbackReference {
+  readonly contractId: string;
+  readonly sourceId: string;
+  readonly recordClass: RoutineRecordClass;
+  readonly scope: string;
+  readonly projectionId: string | null;
+  readonly disposition: RoutineCivicDataReaderReadbackDisposition;
+  /** Present for CURRENT, FAILED_BACKOFF and RECORDED; absent by contract otherwise. */
+  readonly receipt: ReaderProjectionReadbackReceipt | null;
+}
+
+export interface RoutineCivicDataSupervisorOutcome {
+  readonly kind: "ROUTINE_CIVIC_DATA_SUPERVISOR";
+  /** Source holds are contained data-plane outcomes; only supervisor faults make this FAILED. */
+  readonly state: "SUCCEEDED" | "FAILED";
+  readonly cycleId: string;
+  readonly startedAt: string;
+  readonly finishedAt: string;
+  readonly testedSha: string | null;
+  readonly host: string;
+  readonly provider: string;
+  readonly durable: boolean;
+  readonly attemptedTasks: number;
+  readonly verifiedSourceSuccesses: number;
+  readonly verifiedSourceFailures: number;
+  readonly taskReceiptEvidence: "EXACT" | "UNAVAILABLE_OUTER_SUPERVISOR";
+  readonly taskReceipts: readonly RoutineCivicDataTaskReceiptReference[];
+  readonly readerReadbackEvidence: "EXACT" | "UNAVAILABLE_OUTER_SUPERVISOR";
+  readonly readerReadbackDenominator: number;
+  readonly readerReadbacksRecordedPass: number;
+  readonly readerReadbacksRecordedFail: number;
+  readonly readerReadbacksCurrentFail: number;
+  readonly readerReadbackNoops: number;
+  readonly readerReadbackRepairFailures: number;
+  readonly readerReadbacks: readonly RoutineCivicDataReaderReadbackReference[];
+  readonly failures: readonly {
+    readonly taskId: string;
+    readonly code: string;
+    readonly detail: string;
+  }[];
+  readonly attributionBoundary: {
+    readonly sourceReceiptAuthority: "SOURCE_ACQUISITION_CHILD_ONLY";
+    readonly supervisorCandidateWrites: 0;
+    readonly supervisorPointerWrites: 0;
+    readonly supervisorLkgChanges: 0;
+  };
+}
+
+export interface OwnerDigestAttention {
+  readonly level: "GREEN" | "AMBER" | "RED" | "UNKNOWN";
+  readonly headline: string;
+  readonly happened: string;
+  readonly needsYou: boolean;
+  readonly action: string | null;
+}
+
+/** Validate an intake log row before Admin treats it as a health observation. */
+export function intakeRuntimeObservationOutcomeIssue(
+  outcome: IntakeRuntimeObservationOutcome,
+): string | null {
+  const observation = parseIntakeRuntimeObservation(outcome.observation);
+  if (observation === null) return "The intake observation payload is malformed or internally contradictory.";
+  let expectedCycleId: string;
+  try {
+    expectedCycleId = intakeRuntimeObservationCycleId(outcome.host, observation.observedAt);
+  } catch {
+    return "The intake observation host or timestamp is not a canonical durable identity.";
+  }
+  if (outcome.cycleId !== expectedCycleId) return "The intake observation does not match its append-only cycle identity.";
+  if (outcome.state !== observation.outcome) return "The intake outcome state contradicts its exact observation.";
+  const startedMs = Date.parse(outcome.startedAt);
+  const observedMs = Date.parse(observation.observedAt);
+  const finishedMs = Date.parse(outcome.finishedAt);
+  if (
+    !Number.isFinite(startedMs) || new Date(startedMs).toISOString() !== outcome.startedAt ||
+    !Number.isFinite(finishedMs) || new Date(finishedMs).toISOString() !== outcome.finishedAt ||
+    observedMs < startedMs || observedMs > finishedMs
+  ) return "The intake observation clock falls outside its canonical runner cycle.";
+  if (outcome.host.trim() === "" || outcome.provider.trim() === "" || outcome.durable !== true) {
+    return "The intake observation is missing its durable host/provider authority.";
+  }
+  if (outcome.testedSha !== null && !/^[0-9a-f]{40}$/.test(outcome.testedSha)) {
+    return "The intake observation carries a malformed runner code identity.";
+  }
+  if (
+    outcome.authorityBoundary?.canonicalOutcomeHistory !== "OWNER_DIGESTS_APPEND_ONLY" ||
+    outcome.authorityBoundary?.heartbeatRole !== "LATEST_PROJECTION_ONLY" ||
+    outcome.authorityBoundary?.gitWrites !== 0 ||
+    outcome.authorityBoundary?.softwareReleaseEvents !== 0
+  ) return "The intake observation does not preserve the permanent runtime-authority boundary.";
+  return null;
+}
+
+function parsedReaderReadbackReceipt(value: unknown): ReaderProjectionReadbackReceipt | null {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) return null;
+  try {
+    return parseReaderProjectionReadback(READER_PROJECTION_READBACK_PREFIX + JSON.stringify(value));
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Reconcile the Reader repair pass from exact per-contract evidence. Returning
+ * an issue is an UNKNOWN/actionable Admin state; aggregate counts cannot prove
+ * Reader delivery on their own.
+ */
+export function routineReaderReadbackEvidenceIssue(
+  outcome: RoutineCivicDataSupervisorOutcome,
+): string | null {
+  if (outcome.readerReadbackEvidence !== "EXACT") {
+    return "Exact per-contract Reader readback references are unavailable.";
+  }
+  if (
+    !Number.isInteger(outcome.readerReadbackDenominator) ||
+    outcome.readerReadbackDenominator <= 0 ||
+    !Array.isArray(outcome.readerReadbacks) ||
+    outcome.readerReadbacks.length !== outcome.readerReadbackDenominator
+  ) return "Exact Reader readback references do not reconcile to a non-empty contract denominator.";
+
+  const allowedDispositions: readonly RoutineCivicDataReaderReadbackDisposition[] = [
+    "NOT_APPLICABLE",
+    "NO_PROMOTION",
+    "CURRENT",
+    "BACKOFF",
+    "FAILED_BACKOFF",
+    "RECORDED",
+    "REPAIR_FAILED",
+  ];
+  const contractIds: string[] = [];
+  for (const reference of outcome.readerReadbacks) {
+    if (
+      reference === null || typeof reference !== "object" ||
+      typeof reference.contractId !== "string" || reference.contractId.trim() === "" ||
+      typeof reference.sourceId !== "string" || reference.sourceId.trim() === "" ||
+      !(ROUTINE_RECORD_CLASSES as readonly string[]).includes(reference.recordClass) ||
+      typeof reference.scope !== "string" || reference.scope.trim() === "" ||
+      !allowedDispositions.includes(reference.disposition)
+    ) return "A Reader readback reference has a malformed contract identity or disposition.";
+    contractIds.push(reference.contractId);
+    if (reference.disposition === "NOT_APPLICABLE") {
+      if (reference.projectionId !== null || reference.receipt !== null) {
+        return "A non-applicable Reader contract fabricated projection/readback evidence.";
+      }
+      continue;
+    }
+    if (typeof reference.projectionId !== "string" || reference.projectionId.trim() === "") {
+      return "A Reader-bearing contract is missing its exact projection identity.";
+    }
+    const receiptRequired = reference.disposition === "CURRENT" ||
+      reference.disposition === "FAILED_BACKOFF" ||
+      reference.disposition === "RECORDED";
+    if (!receiptRequired) {
+      if (reference.receipt !== null) return "A Reader disposition carries a receipt it cannot justify.";
+      continue;
+    }
+    const receipt = parsedReaderReadbackReceipt(reference.receipt);
+    if (receipt === null) return "A Reader disposition is missing a valid exact readback receipt.";
+    if (
+      receipt.contractId !== reference.contractId ||
+      receipt.sourceId !== reference.sourceId ||
+      receipt.recordClass !== reference.recordClass ||
+      receipt.scope !== reference.scope ||
+      receipt.projectionId !== reference.projectionId
+    ) return "A Reader readback receipt contradicts its contract reference.";
+    if (Date.parse(receipt.observedAt) > Date.parse(outcome.finishedAt)) {
+      return "A Reader readback receipt is dated after the supervisor outcome that cites it.";
+    }
+    if (receipt.status === "PASS" && receipt.verifierCodeSha === null) {
+      return "A Reader PASS lacks the exact verifier code identity required to certify it.";
+    }
+    if (reference.disposition === "CURRENT" && receipt.status !== "PASS") {
+      return "A CURRENT Reader disposition does not carry an exact PASS receipt.";
+    }
+    if (reference.disposition === "FAILED_BACKOFF" && receipt.status !== "FAIL") {
+      return "A failed Reader backoff does not carry its exact FAIL receipt.";
+    }
+  }
+  if (new Set(contractIds).size !== contractIds.length) return "Reader contract receipt identities are duplicated.";
+
+  const recordedPass = outcome.readerReadbacks.filter((row) =>
+    row.disposition === "RECORDED" && row.receipt?.status === "PASS").length;
+  const recordedFail = outcome.readerReadbacks.filter((row) =>
+    row.disposition === "RECORDED" && row.receipt?.status === "FAIL").length;
+  const currentFail = outcome.readerReadbacks.filter((row) => row.disposition === "FAILED_BACKOFF").length;
+  const repairFailures = outcome.readerReadbacks.filter((row) => row.disposition === "REPAIR_FAILED").length;
+  const noops = outcome.readerReadbacks.length - recordedPass - recordedFail - currentFail - repairFailures;
+  const counts = [
+    outcome.readerReadbacksRecordedPass,
+    outcome.readerReadbacksRecordedFail,
+    outcome.readerReadbacksCurrentFail,
+    outcome.readerReadbackNoops,
+    outcome.readerReadbackRepairFailures,
+  ];
+  if (counts.some((count) => !Number.isInteger(count) || count < 0)) {
+    return "Reader readback aggregate counts are malformed.";
+  }
+  if (
+    outcome.readerReadbacksRecordedPass !== recordedPass ||
+    outcome.readerReadbacksRecordedFail !== recordedFail ||
+    outcome.readerReadbacksCurrentFail !== currentFail ||
+    outcome.readerReadbackNoops !== noops ||
+    outcome.readerReadbackRepairFailures !== repairFailures
+  ) return "Reader readback aggregate counts contradict the exact contract references.";
+
+  const repairFailureContracts = new Set(
+    outcome.readerReadbacks
+      .filter((row) => row.disposition === "REPAIR_FAILED")
+      .map((row) => `reader-readback:${row.contractId}`),
+  );
+  const repairFailureRows = outcome.failures.filter((failure) => failure.code === "READER_READBACK_REPAIR_FAILED");
+  if (
+    repairFailureRows.length !== repairFailureContracts.size ||
+    repairFailureRows.some((failure) => !repairFailureContracts.has(failure.taskId))
+  ) return "Reader repair failures do not reconcile to their exact supervisor incidents.";
+  return null;
+}
+
+/**
+ * The latest owner digest must never become green from an absent or
+ * contradictory structured outcome. Routine source holds are distinguished
+ * from supervisor/infrastructure failures because their owner actions differ.
+ */
+export function ownerDigestAttention(digest: OwnerDigestRecord): OwnerDigestAttention {
+  const outcome = digest.runtimeOutcome;
+  if (outcome === undefined) {
+    return {
+      level: "UNKNOWN",
+      headline: "Latest runner report cannot be classified",
+      happened: "The durable report has no structured runtime outcome, so Admin cannot call it healthy.",
+      needsYou: true,
+      action: "inspect the unclassified runner report",
+    };
+  }
+  if (digest.cycleOk === null) {
+    return {
+      level: "UNKNOWN",
+      headline: "Latest runner report has no success verdict",
+      happened: "The structured outcome exists, but the durable report did not state whether its cycle succeeded.",
+      needsYou: true,
+      action: "inspect the runner verdict",
+    };
+  }
+  if (outcome.kind === "INTAKE_RUNTIME_OBSERVATION") {
+    const issue = intakeRuntimeObservationOutcomeIssue(outcome);
+    const verdictAgrees = digest.cycleOk === (outcome.state === "HEALTHY");
+    if (issue !== null || !verdictAgrees) {
+      return {
+        level: "UNKNOWN",
+        headline: "Intake runtime evidence is inconsistent",
+        happened: issue ?? "The intake observation and durable success verdict do not agree.",
+        needsYou: true,
+        action: "inspect the malformed intake-runtime receipt",
+      };
+    }
+    if (outcome.state !== "HEALTHY") {
+      return {
+        level: "RED",
+        headline: "Production intake needs attention",
+        happened: outcome.observation.detail,
+        needsYou: true,
+        action: outcome.state === "UNREADABLE"
+          ? "restore the production intake observation path"
+          : "inspect the exact intake flags and write-alarm counts",
+      };
+    }
+    return {
+      level: "GREEN",
+      headline: "Production intake observation is healthy",
+      happened: outcome.observation.detail,
+      needsYou: false,
+      action: null,
+    };
+  }
+  if (outcome.kind === "ROUTINE_CIVIC_DATA_SUPERVISOR") {
+    const supervisorFailed = outcome.state === "FAILED" || outcome.failures.length > 0 || digest.cycleOk === false;
+    if (supervisorFailed) {
+      return {
+        level: "RED",
+        headline: "Routine civic-data supervision needs attention",
+        happened:
+          `${outcome.failures.length} supervisor or infrastructure failure(s) were recorded. ` +
+          "Exact source receipts remain authoritative; no source was blamed from this supervisor failure.",
+        needsYou: true,
+        action: "inspect and restore the failed routine-data supervisor path",
+      };
+    }
+    const taskIds = outcome.taskReceipts.map(({ taskId }) => taskId);
+    const candidateIds = outcome.taskReceipts.map(({ receipt }) => receipt.candidateId);
+    const exactSuccesses = outcome.taskReceipts.filter(({ classification }) => classification === "VERIFIED_SOURCE_SUCCESS");
+    const exactFailures = outcome.taskReceipts.filter(({ classification }) => classification === "VERIFIED_SOURCE_FAILURE");
+    const exactEvidenceIssue = outcome.taskReceiptEvidence !== "EXACT"
+      ? "Exact task/candidate receipt references are unavailable."
+      : outcome.taskReceipts.length !== outcome.attemptedTasks
+        ? `${outcome.taskReceipts.length} exact task receipts do not reconcile to ${outcome.attemptedTasks} attempted tasks.`
+        : exactSuccesses.length !== outcome.verifiedSourceSuccesses || exactFailures.length !== outcome.verifiedSourceFailures
+          ? "Exact task receipt classifications do not reconcile to the recorded success/failure counts."
+          : new Set(taskIds).size !== taskIds.length || new Set(candidateIds).size !== candidateIds.length
+            ? "Exact task or candidate receipt identities are duplicated."
+            : outcome.taskReceipts.some(({ taskId, receipt }) => taskId !== receipt.source)
+              ? "An exact task receipt does not name the task that produced it."
+              : exactSuccesses.some(({ receipt }) =>
+                  !receipt.acquisitionSucceeded ||
+                  receipt.state !== "PROMOTED" ||
+                  receipt.decision !== "GOOD" ||
+                  receipt.promotedVersion !== receipt.candidateId)
+                ? "A task classified as a verified source success lacks a matching promoted GOOD receipt."
+                : exactFailures.some(({ receipt }) =>
+                    receipt.state === "PROMOTED" ||
+                    receipt.decision === "GOOD" ||
+                    receipt.promotedVersion !== null)
+                  ? "A task classified as a verified source failure carries contradictory promotion evidence."
+                  : null;
+    if (exactEvidenceIssue !== null || digest.cycleOk !== true) {
+      return {
+        level: "UNKNOWN",
+        headline: "Routine cycle lacks consistent exact task evidence",
+        happened: exactEvidenceIssue ?? "The routine outcome and durable cycle verdict do not agree.",
+        needsYou: true,
+        action: "inspect the incomplete routine-cycle evidence",
+      };
+    }
+    const readerEvidenceIssue = routineReaderReadbackEvidenceIssue(outcome);
+    if (readerEvidenceIssue !== null) {
+      return {
+        level: "UNKNOWN",
+        headline: "Routine cycle lacks consistent exact Reader evidence",
+        happened: readerEvidenceIssue,
+        needsYou: true,
+        action: "inspect the incomplete Reader-delivery evidence",
+      };
+    }
+    const readerFailures = outcome.readerReadbacks.filter((reference) =>
+      (reference.disposition === "RECORDED" && reference.receipt?.status === "FAIL") ||
+      reference.disposition === "FAILED_BACKOFF");
+    if (readerFailures.length > 0) {
+      return {
+        level: "RED",
+        headline: "Canonical Reader delivery needs attention",
+        happened:
+          `${readerFailures.length} exact Reader readback failure(s) were recorded. ` +
+          "Source dispositions, promoted pointers, and LKG remain unchanged.",
+        needsYou: true,
+        action: "inspect and restore the failed typed Reader projection",
+      };
+    }
+    const unprovenReader = outcome.readerReadbacks.filter((reference) =>
+      reference.disposition === "NO_PROMOTION" || reference.disposition === "BACKOFF");
+    if (unprovenReader.length > 0) {
+      return {
+        level: "UNKNOWN",
+        headline: "Canonical Reader delivery is not yet proven",
+        happened:
+          `${unprovenReader.length} Reader-bearing contract(s) have no exact current delivery PASS. ` +
+          "No source failure or healthy Reader state was inferred.",
+        needsYou: true,
+        action: "inspect the unproven Reader contracts",
+      };
+    }
+    const contained = outcome.taskReceipts.filter(({ classification }) => classification === "VERIFIED_SOURCE_FAILURE");
+    if (contained.length > 0) {
+      return {
+        level: "AMBER",
+        headline: "Routine source failure was contained",
+        happened:
+          `${contained.length} exact source receipt(s) held their own LKG while ` +
+          `${outcome.verifiedSourceSuccesses} unaffected task(s) completed successfully. Retry remains data-plane work.`,
+        needsYou: false,
+        action: null,
+      };
+    }
+    return {
+      level: "GREEN",
+      headline: "Routine civic-data cycle completed",
+      happened: `${outcome.taskReceipts.length} exact task receipt(s) were recorded with no source hold or supervisor failure.`,
+      needsYou: false,
+      action: null,
+    };
+  }
+  if (outcome.kind === "MAPTILER_USAGE_COLLECTION") {
+    const promoted = outcome.disposition === "PROMOTED_CURRENT";
+    const retained = outcome.disposition === "RETAINED_LKG";
+    const boundary = outcome.authorityBoundary;
+    const issue =
+      !outcome.cycleId.startsWith("maptiler-usage:") ||
+      !/^[0-9a-f]{64}$/.test(outcome.candidate.canonicalSha256) ||
+      outcome.candidate.rows < 0 || !Number.isInteger(outcome.candidate.rows) ||
+      digest.cycleOk !== (outcome.state === "SUCCEEDED") ||
+      promoted !== (outcome.state === "SUCCEEDED") ||
+      (promoted && (outcome.attempt.connection !== "CONNECTED" || outcome.visibleMeasurement === null)) ||
+      (retained && (outcome.attempt.connection === "CONNECTED" || outcome.visibleMeasurement === null)) ||
+      (outcome.disposition === "UNKNOWN_NO_LKG" && outcome.visibleMeasurement !== null) ||
+      boundary?.canonicalOutcomeHistory !== "OWNER_DIGESTS_APPEND_ONLY" ||
+      boundary?.currentProjection !== "OWNER_SNAPSHOT_MAPTILER" ||
+      boundary?.trackedRuntimeReads !== 0 || boundary?.trackedRuntimeWrites !== 0 ||
+      boundary?.gitWrites !== 0 || boundary?.softwareReleaseEvents !== 0;
+    if (issue) {
+      return {
+        level: "UNKNOWN",
+        headline: "Map-provider outcome evidence is inconsistent",
+        happened: "The append-only attempt receipt contradicts its current/LKG disposition.",
+        needsYou: true,
+        action: "inspect the malformed map-provider receipt",
+      };
+    }
+    if (promoted) {
+      return {
+        level: "GREEN",
+        headline: "Map-provider usage was measured",
+        happened: "Both provider classifiers produced one complete reading and the current projection advanced.",
+        needsYou: false,
+        action: null,
+      };
+    }
+    if (retained) {
+      return {
+        level: "AMBER",
+        headline: "Map-provider refresh failed; LKG is serving",
+        happened: outcome.attempt.detail ?? "The newest automatic provider attempt failed and the prior measurement remains live.",
+        needsYou: false,
+        action: null,
+      };
+    }
+    return {
+      level: "RED",
+      headline: "Map-provider usage is unknown",
+      happened: outcome.attempt.detail ?? "The automatic provider attempt failed and no prior measurement is available.",
+      needsYou: true,
+      action: "restore the map-provider observation path",
+    };
+  }
+  if (outcome.kind === "FRESHNESS_CYCLE") {
+    if (outcome.state !== "SUCCEEDED" || digest.cycleOk !== true) {
+      return {
+        level: "RED",
+        headline: "Standing freshness cycle needs attention",
+        happened: outcome.failure?.detail ?? "The latest standing freshness cycle failed.",
+        needsYou: true,
+        action: "inspect the failed standing freshness cycle",
+      };
+    }
+    return {
+      level: "GREEN",
+      headline: "Standing freshness cycle completed",
+      happened: "The latest structured standing freshness cycle succeeded.",
+      needsYou: false,
+      action: null,
+    };
+  }
+  if (digest.cycleOk !== true || outcome.state !== "ADOPTED") {
+    return {
+      level: "RED",
+      headline: "Authority adoption report is inconsistent",
+      happened: "The durable adoption outcome and cycle verdict do not agree.",
+      needsYou: true,
+      action: "inspect the authority-adoption receipt",
+    };
+  }
+  return {
+    level: "GREEN",
+    headline: "Method authority adoption completed",
+    happened: "The latest structured authority-adoption receipt is consistent.",
+    needsYou: false,
+    action: null,
+  };
+}
+
+/** Canonical operational outcome for one standing-runner cycle. */
+export interface FreshnessCycleOutcome {
+  readonly kind: "FRESHNESS_CYCLE";
+  readonly state: "SUCCEEDED" | "FAILED";
+  readonly cycleId: string;
+  readonly startedAt: string;
+  readonly finishedAt: string;
+  readonly testedSha: string | null;
+  readonly host: string;
+  readonly provider: string | null;
+  readonly durable: boolean | null;
+  readonly executor: string | null;
+  readonly registry: {
+    readonly providers: readonly {
+      readonly providerId?: string;
+      readonly records?: number;
+      readonly units?: number;
+      readonly readFailure?: string | null;
+      readonly emptyReason?: string | null;
+    }[];
+    readonly registeredUnits: number;
+    readonly workedUnits: number;
+    readonly only: string | null;
+  } | null;
+  readonly obligations: number | null;
+  readonly occurrencesOpened: number | null;
+  readonly debtInherited: number | null;
+  readonly debtPersisted: number | null;
+  readonly debtCleared: number | readonly string[] | null;
+  readonly scheduled: number | null;
+  readonly unscheduled: readonly { readonly id?: string; readonly reason?: string }[];
+  readonly dueCount: number | null;
+  readonly dispatched: number | null;
+  readonly worked: readonly string[];
+  readonly dispositions: readonly {
+    readonly obligationId: string;
+    readonly disposition: string | null;
+    readonly artifacts: number;
+  }[];
+  readonly dispatchDetails: readonly {
+    readonly obligationId: string;
+    readonly attemptId: string | null;
+    readonly outcome: string | null;
+    readonly disposition: string | null;
+    readonly detail: string;
+  }[];
+  readonly research: {
+    readonly lanes: {
+      readonly deterministic?: { readonly due?: number; readonly dispatched?: number };
+      readonly model?: { readonly due?: number; readonly dispatched?: number; readonly deferred?: number };
+    } | null;
+  } | null;
+  readonly deferred: number | null;
+  readonly debts: number | null;
+  readonly incidents: readonly {
+    readonly cause: string;
+    readonly target: string;
+    readonly obligationsAffected: number;
+    readonly nextRetryAt?: string;
+  }[];
+  readonly risk: Readonly<Record<string, unknown>> | null;
+  readonly health: Readonly<Record<string, unknown>> | null;
+  readonly promotedToReaderTruth: boolean | null;
+  readonly failure: { readonly code: string; readonly detail: string } | null;
 }
 
 /**
@@ -815,14 +1517,14 @@ export interface OwnerSnapshot {
    * 100,000-request free allowance while public readership was tiny, and
    * nothing in this system could say which requests were readers and which were
    * ours. This is the provider's own analytics, read with a server-side service
-   * credential by `pnpm maptiler:usage`, folded onto the snapshot so the
-   * console shows one instant rather than seven.
+   * credential by the standing snapshot publisher so the console shows one
+   * instant rather than seven.
    *
    * It rides on this snapshot rather than in an aggregate of its own on
    * purpose: the console already reads exactly one record for exactly this
    * reason, and a second aggregate would need a DDL change and a
-   * `BOOTSTRAP_VERSION` bump to add a panel that is a projection of a file the
-   * runner already writes.
+   * `BOOTSTRAP_VERSION` bump for an observation already published by the
+   * standing runtime.
    *
    * **Absent means the publisher never had a reading**, which is a fact about
    * our configuration. `null` and a `NOT_CONNECTED` record both render as NOT

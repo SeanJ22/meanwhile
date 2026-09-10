@@ -2,9 +2,9 @@
  * **RULING 56's decision, separated from its plumbing.** (NH Hunt 3,
  * 2026-08-21.)
  *
- * `scripts/watch-workflows.mts` talks to the GitHub Actions API, reads the
- * tracker store and shells out to the tracker writer. None of that is the rule.
- * The rule is one function over a list of runs, and it lives here so
+ * The retired watcher talked to the GitHub Actions API and the tracker writer;
+ * both executable doors are now gone. None of that was the rule. The historical
+ * rule is one pure function over a list of runs, retained only so
  * `tests/watch-workflows.test.ts` can hold it against fixed lists without a
  * network — a watcher whose own logic is only exercised in production is the
  * shape it exists to catch.

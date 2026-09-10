@@ -107,7 +107,13 @@ import {
   type IsolationVerdict,
 } from "../lib/ops/staging-isolation.ts";
 import { fetchServedCommit, POLL_BOUND, isRelease, pollUntilServed } from "./post-deploy-observer.mts";
-import { RECORD_PATH, git, readRecord, writeRecord } from "./production-integrity.mts";
+import {
+  RETIRED_PRODUCTION_RECORD_PATH,
+  STAGING_INTEGRITY_RECORD_PATH,
+  git,
+  readRecord,
+  writeRecord,
+} from "./production-integrity.mts";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -119,7 +125,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
  * deploy this observer exists to observe — the same property the production
  * record already relies on.
  */
-export const STAGING_RECORD_PATH = join(ROOT, "data", "ops", "staging-integrity.json");
+export const STAGING_RECORD_PATH = STAGING_INTEGRITY_RECORD_PATH;
 
 /** The variable holding a READ-ONLY connection to the staging database. */
 export const STAGING_URL_VARIABLE = "WTP_STAGING_DATABASE_URL_READONLY";
@@ -188,23 +194,22 @@ async function main(): Promise<void> {
   console.log("STAGING OBSERVER");
   console.log(`  asking         ${STAGING_RENDER_ORIGIN}/api/build`);
   console.log(`  recording      ${STAGING_RECORD_PATH}`);
-  console.log(`  never writes   ${RECORD_PATH}`);
+  console.log(`  never writes   ${RETIRED_PRODUCTION_RECORD_PATH}`);
   console.log("  values printed NONE — connection strings are classified, never shown");
   console.log("");
 
   /*
    * **THE STRUCTURAL REFUSAL, FIRST, BEFORE ANYTHING ELSE HAPPENS.**
    *
-   * `data/ops/production-integrity.json` is what `scripts/release-freeze-gate.mts`
-   * reads to decide whether the next production-changing release may ship. A
-   * staging reading landing in it would be a fact about a host no reader visits
-   * deciding what production is allowed to do — a green one blessing a release
-   * on evidence about the wrong site, a red one freezing the repository over a
-   * branch deploy. Both constants are compile-time, so this can only fire if
-   * somebody edits one, and firing at the top means it fires before a single
-   * measurement has been taken.
+   * `data/ops/production-integrity.json` is the retired historical production
+   * record. Release certification now reads the canonical control-plane log,
+   * never this file. The staging observer still cannot overwrite the historical
+   * artifact: doing so would erase its provenance and make staging evidence look
+   * like an archived production observation. Both constants are compile-time,
+   * so this can only fire if somebody edits one, and firing at the top means it
+   * fires before a single measurement has been taken.
    */
-  if (recordPathCollides(STAGING_RECORD_PATH, RECORD_PATH)) {
+  if (recordPathCollides(STAGING_RECORD_PATH, RETIRED_PRODUCTION_RECORD_PATH)) {
     console.error(
       "REFUSED — the staging record path resolves to the PRODUCTION integrity record.\n" +
         "Nothing was read and nothing was written. The staging observer may not write the\n" +

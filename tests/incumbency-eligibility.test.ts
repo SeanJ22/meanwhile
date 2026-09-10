@@ -38,10 +38,21 @@ import { contestIncumbency, shapeOfRegistryHolders } from "../lib/ballot/incumbe
 import { incumbencyLabel, type Incumbency, type IncumbencyDecision } from "../lib/ballot/incumbency.ts";
 import { incumbentHolderFor } from "../lib/ballot/incumbent-record.ts";
 import { lineupForContest } from "../lib/ballot/general-lineup.ts";
+import { refreshNhSeatHolders } from "../lib/ballot/seat-holders.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { claimsInText } from "../lib/text/absence-claims.ts";
 import type { SeatHolder } from "../lib/officials/lookup.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
 
 const ROOT = join(import.meta.dirname, "..");
+
+await installRegistryRuntimeFirstSeeds();
+const nhSeatHolderAuthority = await refreshNhSeatHolders({ store: new MemoryRoutineDataStore() });
+assert.equal(
+  nhSeatHolderAuthority.kind,
+  "BOOTSTRAP",
+  "the deterministic test reads NH membership through the permanent promoted-or-first-seed authority",
+);
 
 /* -------------------------------------------------------------------------- */
 /* THE FIXTURE — three candidates, one of them the sitting Mayor               */
@@ -685,7 +696,7 @@ test("the ballot page renders the GATED map, never the raw resolution", () => {
     .split(/\r?\n/)
     .filter((l) => !l.trim().startsWith("//"))
     .join("\n");
-  assert.ok(src.includes("incumbency.decisions.get(targetKey)"), "the chip reads the gated decisions");
-  assert.ok(!src.includes("incumbency.resolved"), "and never reaches around the gate for the raw answer");
+  assert.ok(src.includes("resolvedStanding?.decisions.get(targetKey)"), "the chip reads the gated decisions");
+  assert.ok(!src.includes("resolvedStanding?.resolved"), "and never reaches around the gate for the raw answer");
   assert.ok(src.includes("voteFor: contestVoteFor"), "the seat count reaches the reconciliation");
 });

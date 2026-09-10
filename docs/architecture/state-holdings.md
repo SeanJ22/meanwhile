@@ -24,6 +24,13 @@ classified holdings = moved holdings + explicitly exempted holdings.
 `manifest-inputs.json` freezes the discovered-state universe and exact input
 hashes used at bootstrap, including the two external observations. These are
 historical baselines, never a fixed list that limits future acquisitions.
+Its append-only `authorityCutovers` classifications preserve an original
+file/hash row while recording that the tracked file is no longer a current
+holding after an exact transfer to a named production data-plane contract.
+Generation accepts such a transfer only when the frozen hash and move-plan row
+match, the old path is absent, and the promotion-only writer and Reader export
+exist and agree with the permanent contract. A cutover therefore cannot hide a
+missing file without proving its replacement.
 The recorded A1 correction adds the canonical records originally embedded in
 TypeScript at the same base SHA. It preserves the original snapshot hash and
 records the added input denominator; no later acquisition enlarges this session.
@@ -52,6 +59,11 @@ open routes with due dates, and the reader surfaces that consume each dataset.
 Counts state their denominators, and rendered tables carry their row counts.
 The typed contract in `lib/holdings/datasets.ts` declares dataset families,
 reader surfaces and consumers; existence tests reject broken references.
+Any path named by a permanent production contract as `bootstrapFixturePaths`
+is rendered in a separate immutable first-seed/test-evidence table, never as a
+current repository authority. Production delivery requires the canonical
+promotion pointer; tracked seed bytes may enter it only through the explicit
+trusted first-seed adoption path and cannot update themselves.
 
 ## External observations and freshness
 

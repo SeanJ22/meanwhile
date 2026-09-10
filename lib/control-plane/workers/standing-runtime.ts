@@ -13,10 +13,12 @@ import { readCompletedWorkerResult } from "../repository/worker-completion.ts";
 import { proposeScoutCandidates } from "../scheduler/scout-candidates.ts";
 import { durableResearchTools, researchRoleExecutor, type ResearchRuntimeTools } from "./research-runtime.ts";
 import type { AutonomousCoordinatorRuntime } from "./coordinator.ts";
+import { refreshRegistryRuntimeFromPromoted } from "../../registry/runtime-read-model.ts";
 
 /** One runtime over the same stores and bounded Scout infrastructure used by the standing runner. */
 export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:string;repos:ControlPlaneRepositories;transport?:ModelTransport;
   now?:()=>string;spaceOut?:ScoutToolContext["spaceOut"];browse?:ScoutToolContext["browse"];openBytes?:ScoutToolContext["openBytes"]}):Promise<AutonomousCoordinatorRuntime> {
+  await refreshRegistryRuntimeFromPromoted();
   const now=input.now??(()=>new Date().toISOString());
   const tools:ResearchRuntimeTools={repos:input.repos,store:new DurableEvidenceStore(input.vaultRoot??join(input.root,...VAULT_DIR)),now,
     spaceOut:input.spaceOut??hostSpacer(),...(input.browse?{browse:input.browse}:{}),...(input.openBytes?{openBytes:input.openBytes}:{})};
@@ -27,7 +29,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     catch { /* Uncommitted results do not become inherited investigation evidence. */ }
   }
   const knowledge=readMethodStore(join(input.root,"data","method","knowledge.json"));
-  const runtime:AutonomousCoordinatorRuntime={...standingFleetRuntime(input),roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder),
+  const runtime:AutonomousCoordinatorRuntime={...standingFleetRuntime(input),routineMeetingsAuthority:"PERMANENT_CIVIC_DATA_PLANE",roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder),
     ...(input.transport?{scoutFor:(item,task,currentHistory)=>scoutExecutor({transport:input.transport!,now,
       toolkitFor:ctx=>buildScoutToolkit({...ctx,...durableResearchTools(tools,{project:item.project,attemptId:ctx.attemptId,workItemId:item.id,routeTaskId:task.id})}),
       contextFor:()=>{
@@ -57,9 +59,21 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
             nextRungs:[...new Set([...(history.at(-1)?.nextRungs??[]),...walks.flatMap(w=>w.nextRouteIds)])]},
           tools:{spaceOut:tools.spaceOut,vault:async()=>{throw new Error("UNBOUND_SCOUT_VAULT_REFUSED");}},decision:"BOUNDED_MODEL_WORKER" as const};
       },onResult:async (result,artifacts)=>{
-        const proposal=proposeScoutCandidates({root:input.root,result,artifacts,stamp:result.recordedAt.slice(0,10)});
-        const recorded={...result,methodCandidateIds:proposal.proposed.map(p=>p.candidateId),
-          unverified:[...result.unverified,...proposal.notProposed.map(p=>`Method candidate ${p.routeId} not admitted: ${p.why}`)]};
+        let recorded=result;
+        try {
+          const proposal=await proposeScoutCandidates({repos:input.repos,root:input.root,result,artifacts,stamp:result.recordedAt.slice(0,10)});
+          recorded={...result,methodCandidateIds:proposal.proposed.map(p=>p.candidateId),
+            unverified:[...result.unverified,...proposal.notProposed.map(p=>`Method candidate ${p.routeId} not admitted: ${p.why}`)]};
+        } catch(error) {
+          /*
+           * Candidate promotion and the Scout observation are different
+           * facts. A missing or unavailable canonical candidate aggregate
+           * still refuses the proposal, but must not erase the typed Scout
+           * result (especially a transport failure) that was already learned.
+           */
+          recorded={...result,unverified:[...result.unverified,
+            `Method candidates were not proposed: ${error instanceof Error?error.message:String(error)}`]};
+        }
         await input.repos.scoutResults.append(recorded.obligationId,recorded.attemptId,recorded,recorded.recordedAt);
         return recorded;
       }

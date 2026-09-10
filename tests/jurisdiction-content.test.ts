@@ -16,6 +16,9 @@ import {
   OFFICE_BLURBS,
   blurbForTitle,
 } from "../lib/officials/office-blurbs.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await installRegistryRuntimeFirstSeeds();
 
 /**
  * The cross-jurisdiction guard (session item 1, wall clock 2026-08-14

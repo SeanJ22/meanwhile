@@ -24,10 +24,9 @@
  * label, and the agenda state in the Reader's own honest vocabulary (a
  * missing link is OUR gap unless the publisher's slot was observed empty).
  */
-import { MEETINGS_SNAPSHOT_STAMPS } from "../../../scripts/lib/meetings-snapshot-write.ts";
 import { formatMeetingTime } from "../../map/format.ts";
 import type { AgendaDocument } from "../../meetings/agenda-documents.ts";
-import { snapshotCounts, validateSnapshot, type MeetingsSnapshot, type SnapshotSourceReport } from "../../meetings/snapshot.ts";
+import { MEETINGS_SNAPSHOT_STAMPS, snapshotCounts, validateSnapshot, type MeetingsSnapshot, type SnapshotSourceReport } from "../../meetings/snapshot.ts";
 import { factsOf } from "../../ops/stamp-stable.ts";
 import type { Meeting } from "../../sources/types.ts";
 import { canonicalJson } from "../repository/types.ts";

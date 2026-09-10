@@ -1,6 +1,6 @@
 {
-  "curatedAt": "2026-08-25",
-  "note": "Hunted-and-verified links for every rendered ballot candidate (session 2026-08-13, item 2b). Every URL in `links` was fetched this session and the page read to confirm it names the person and the race or office; the `verification` sentence records what was seen. Official pages read from a legislature's server-rendered member roster carry that chain in the sentence. `hunts` records every candidate for whom no link ships: MISS means a search was run and nothing verifiable was found; NOT_ATTEMPTED means the hunt is queued and no claim of absence is made. CORRECTED 2026-08-21 under RULING 52: this note used to say 'gc.nh.gov member pages cannot be verified from this pipeline (TLS wall, docs/source-ladder.md) and are recorded in hunts rather than shipped unverified.' That was a measurement taken 2026-08-17 written as a standing property. Re-walked 2026-08-21: gc.nh.gov answers rung 2 at HTTP 200 and member pages verify from this pipeline. Rows still sitting in `hunts` on the strength of that wall are owed a re-walk, not treated as settled.",
+  "curatedAt": "2026-09-08",
+  "note": "Hunted-and-verified links for every rendered ballot candidate (session 2026-08-13, item 2b). Every URL in `links` was fetched this session and the page read to confirm it names the person and the race or office; the `verification` sentence records what was seen. Official pages read from a legislature's server-rendered member roster carry that chain in the sentence. `hunts` records every candidate for whom no link ships: MISS means a search was run and nothing verifiable was found; NOT_ATTEMPTED means the hunt is queued and no claim of absence is made. CORRECTED 2026-08-21 under RULING 52: this note used to say 'gc.nh.gov member pages cannot be verified from this pipeline (TLS wall, docs/source-ladder.md) and are recorded in hunts rather than shipped unverified.' That was a measurement taken 2026-08-17 written as a standing property. Re-walked 2026-08-21: gc.nh.gov answers rung 2 at HTTP 200 and member pages verify from this pipeline. Rows still sitting in `hunts` on the strength of that wall are owed a re-walk, not treated as settled. PDC-7 cutover 2026-09-08 removed the Plural/OpenStates exact-name join and all misses produced by that invalid intermediary rung; only separately fetch-verified links remain.",
   "links": {
     "ballot-az-pima:governor|Katie Hobbs": {
       "official": {
@@ -425,55 +425,49 @@
     },
     "ballot-az-pima:attorney-general:petersen-warren": {
       "official": {
-        "url": "https://www.azleg.gov/senate-member/?legislature=55&legislator=1966",
-        "label": "State Senator — official page",
-        "verification": "Joined on an exact name match to this state's sitting-officeholder registry, built from Plural Open States (CC-0) and collected 2026-08-16T05:18:56.258Z; the URL is the one the legislature publishes for this member.",
-        "attemptedAt": "2026-08-19"
+        "url": "https://www.azleg.gov/Senate/Senate-member/?legislature=57&session=130&legislator=2393",
+        "verification": "Read from the Legislature's server-rendered member roster (fetched 2026-08-13), which names Warren Petersen beside this link.",
+        "attemptedAt": "2026-08-13"
       },
       "campaign": null
     },
     "ballot-az-pima:state-senate-19:griffin-gail": {
       "official": {
-        "url": "https://www.azleg.gov/house-member/?legislature=55&legislator=2053",
-        "label": "State Representative — official page",
-        "verification": "Joined on an exact name match to this state's sitting-officeholder registry, built from Plural Open States (CC-0) and collected 2026-08-16T05:18:56.258Z; the URL is the one the legislature publishes for this member.",
-        "attemptedAt": "2026-08-19"
+        "url": "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2309",
+        "verification": "Read from the Legislature's server-rendered member roster (fetched 2026-08-13), which names Gail Griffin beside this link (her current House seat).",
+        "attemptedAt": "2026-08-13"
       },
       "campaign": null
     },
     "ballot-az-pima:state-senate-20:hernandez-alma": {
       "official": {
-        "url": "https://www.azleg.gov/house-member/?legislature=55&legislator=2033",
-        "label": "State Representative — official page",
-        "verification": "Joined on an exact name match to this state's sitting-officeholder registry, built from Plural Open States (CC-0) and collected 2026-08-16T05:18:56.258Z; the URL is the one the legislature publishes for this member.",
-        "attemptedAt": "2026-08-19"
+        "url": "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2312",
+        "verification": "Read from the Legislature's server-rendered member roster (fetched 2026-08-13), which names Alma Hernandez beside this link (her current House seat).",
+        "attemptedAt": "2026-08-13"
       },
       "campaign": null
     },
     "ballot-az-pima:state-house-19:diaz-lupe": {
       "official": {
-        "url": "https://www.azleg.gov/house-member/?legislature=55&session=123&legislator=2100",
-        "label": "State Representative — official page",
-        "verification": "Joined on an exact name match to this state's sitting-officeholder registry, built from Plural Open States (CC-0) and collected 2026-08-16T05:18:56.258Z; the URL is the one the legislature publishes for this member.",
-        "attemptedAt": "2026-08-19"
+        "url": "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2304",
+        "verification": "Fetched 2026-08-13: member page names Lupe Diaz with his phone; also on the Legislature's roster.",
+        "attemptedAt": "2026-08-13"
       },
       "campaign": null
     },
     "ballot-az-pima:state-house-19:gowan-david": {
       "official": {
-        "url": "https://www.azleg.gov/senate-member/?legislature=55&legislator=1968",
-        "label": "State Senator — official page",
-        "verification": "Joined on an exact name match to this state's sitting-officeholder registry, built from Plural Open States (CC-0) and collected 2026-08-16T05:18:56.258Z; the URL is the one the legislature publishes for this member.",
-        "attemptedAt": "2026-08-19"
+        "url": "https://www.azleg.gov/Senate/Senate-member/?legislature=57&session=130&legislator=2382",
+        "verification": "Read from the Legislature's server-rendered member roster (fetched 2026-08-13), which names David Gowan beside this link (his current Senate seat).",
+        "attemptedAt": "2026-08-13"
       },
       "campaign": null
     },
     "ballot-az-pima:state-house-20:villegas-betty": {
       "official": {
-        "url": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2274",
-        "label": "State Representative — official page",
-        "verification": "Joined on an exact name match to this state's sitting-officeholder registry, built from Plural Open States (CC-0) and collected 2026-08-16T05:18:56.258Z; the URL is the one the legislature publishes for this member.",
-        "attemptedAt": "2026-08-19"
+        "url": "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2346",
+        "verification": "Read from the Legislature's server-rendered member roster (fetched 2026-08-13), which names Betty J Villegas beside this link.",
+        "attemptedAt": "2026-08-13"
       },
       "campaign": null
     },
@@ -1174,530 +1168,8 @@
       "name": "Sheriff, County Attorney, Treasurer, Register of Deeds, Register of Probate candidates",
       "note": "NOT_ATTEMPTED — hunts queued; no individual searches run yet. No claim of absence is made.",
       "attemptedAt": "2026-08-13"
-    },
-    {
-      "key": "ballot-az-pima:governor:hobbs-katie",
-      "name": "Katie Hobbs",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:governor:hourihan-teri-ann",
-      "name": "Teri Ann Hourihan",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:governor:lombardo-risa",
-      "name": "Risa Lombardo",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:governor:lytle-hugh",
-      "name": "Hugh Lytle",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:governor:biggs-andy",
-      "name": "Andy Biggs",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:governor:miceli-ken",
-      "name": "Ken Miceli",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:governor:neely-scott",
-      "name": "Scott Neely",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:governor:schweikert-david",
-      "name": "David Schweikert",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:secretary-of-state:fontes-adrian",
-      "name": "Adrian Fontes",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:secretary-of-state:collier-duwayne",
-      "name": "Duwayne Collier",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:secretary-of-state:kolodin-alexander",
-      "name": "Alexander Kolodin",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:secretary-of-state:swoboda-gina",
-      "name": "Gina Swoboda",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:attorney-general:mayes-kris",
-      "name": "Kris Mayes",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:attorney-general:glassman-rodney",
-      "name": "Rodney Glassman",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:state-treasurer:mansour-nick",
-      "name": "Nick Mansour",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:state-treasurer:zepeda-michael",
-      "name": "Michael Zepeda",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:state-treasurer:haley-katherine",
-      "name": "Katherine Haley",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:state-treasurer:norton-elijah",
-      "name": "Elijah Norton",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:superintendent:butts-michael-d-",
-      "name": "Michael D. Butts",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:superintendent:leyba-ruiz-teresa",
-      "name": "Teresa Leyba Ruiz",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:superintendent:newby-brett-matthew",
-      "name": "Brett Matthew Newby",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:superintendent:horne-tom",
-      "name": "Tom Horne",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:superintendent:yee-kimberly",
-      "name": "Kimberly Yee",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:mine-inspector:matlock-brian",
-      "name": "Brian Matlock",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:us-house-6:mendoza-joanna",
-      "name": "JoAnna Mendoza",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:us-house-6:bah-iman",
-      "name": "Iman Bah",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:us-house-6:peters-jereme-lance",
-      "name": "Jereme Lance Peters",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:us-house-6:ciscomani-juan",
-      "name": "Juan Ciscomani",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:us-house-7:grijalva-adelita",
-      "name": "Adelita Grijalva",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:us-house-7:butierez-sr--daniel-francis",
-      "name": "Daniel Francis Butierez Sr.",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:state-senate-19:slawson-ryan",
-      "name": "Ryan Slawson",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:state-senate-20:perez-rocque",
-      "name": "Rocque Perez",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:state-house-19:anderson-jackie-o-donnell",
-      "name": "Jackie O'Donnell Anderson",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:state-house-19:swallow-aiden-nicholette",
-      "name": "Aiden Nicholette Swallow",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:state-house-19:caswell-cheryl",
-      "name": "Cheryl Caswell",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:state-house-20:diaz-genoveva",
-      "name": "Genoveva Diaz",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:state-house-20:gonzales-sally-ann",
-      "name": "Sally Ann Gonzales",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:state-house-20:koehler-ben",
-      "name": "Ben Koehler",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:governor:fife-shaun",
-      "name": "Shaun Fife",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:governor:mcclory-bob-wayne",
-      "name": "Bob Wayne McClory",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:us-senate:jarvis-david",
-      "name": "David Jarvis",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:us-senate:manzur-karishma",
-      "name": "Karishma Manzur",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:us-senate:saal-maxwell-l-",
-      "name": "Maxwell L. Saal",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:us-senate:vail-john",
-      "name": "John Vail",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:us-senate:alciere-tom",
-      "name": "Tom Alciere",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:us-senate:danley-sky",
-      "name": "Sky Danley",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:us-senate:martin-andy",
-      "name": "Andy Martin",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:us-senate:maxwell-mary",
-      "name": "Mary Maxwell",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:us-senate:mcmenamon-ii-richard-a-",
-      "name": "Richard A. McMenamon II",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:us-senate:smith-sabrina-ann",
-      "name": "Sabrina Ann Smith",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:us-house-2:callis-michael-anthony",
-      "name": "Michael Anthony Callis",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:us-house-2:nicholson-dan",
-      "name": "Dan Nicholson",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:us-house-2:orlando-victor",
-      "name": "Victor Orlando",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:state-senate-7:innis-daniel-e-",
-      "name": "Daniel E. Innis",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth",
-      "name": "Karen Elizabeth Ebel",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:state-house-merrimack-7:rusis-cynthia",
-      "name": "Cynthia Rusis",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:executive-council-2:menard-tobin",
-      "name": "Tobin Menard",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:executive-council-2:strathdee-kim",
-      "name": "Kim Strathdee",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:county-commissioner-2:ribas-vincent-s-",
-      "name": "Vincent S. Ribas",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:county-commissioner-2:bilodeau-richard",
-      "name": "Richard Bilodeau",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:county-commissioner-2:french-harold-f-",
-      "name": "Harold F. French",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:county-sheriff:shephard-peter",
-      "name": "Peter Shephard",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:county-sheriff:cassidy-frank-t-",
-      "name": "Frank T. Cassidy",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:county-sheriff:gerhard-jason",
-      "name": "Jason Gerhard",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:county-sheriff:weir-ben",
-      "name": "Ben Weir",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:county-attorney:endres-steven",
-      "name": "Steven Endres",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:county-attorney:hagaman-meg",
-      "name": "Meg Hagaman",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:county-attorney:raiche-jon",
-      "name": "Jon Raiche",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:county-attorney:rogers-sarah",
-      "name": "Sarah Rogers",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:county-treasurer:donnelly-kathleen",
-      "name": "Kathleen Donnelly",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:county-treasurer:schuett-dianne-e-",
-      "name": "Dianne E. Schuett",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:register-of-deeds:davis-erica-s-",
-      "name": "Erica S. Davis",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:register-of-deeds:morse-samantha",
-      "name": "Samantha Morse",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nh-merrimack:register-of-probate:bradstreet-jane",
-      "name": "Jane Bradstreet",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nj-morris:us-senate:kuniansky",
-      "name": "Joanne KUNIANSKY",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nj-morris:us-house-11:bond",
-      "name": "Alan B. BOND",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nj-morris:county-commissioner:russo",
-      "name": "Christopher (Chris) RUSSO",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nj-morris:rockaway-twp-boe:mamoun",
-      "name": "Munir \"Monir\" MAMOUN",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nj-morris:rockaway-twp-boe:mezik",
-      "name": "Lisa MEZIK",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nj-morris:rockaway-twp-boe:nydegger",
-      "name": "Russell G. NYDEGGER",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nj-morris:rockaway-twp-boe-unexpired:borno",
-      "name": "Olivier BORNO",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nj-morris:morris-hills-regional-boe-rockaway-twp:roach",
-      "name": "Brian ROACH",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-nj-morris:morris-hills-regional-boe-rockaway-twp:serafin",
-      "name": "William SERAFIN",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:secretary-of-state|Duwayne Collier",
-      "name": "Duwayne Collier",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:mine-inspector|Brian Matlock",
-      "name": "Brian Matlock",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:us-house-6|Jereme Lance Peters",
-      "name": "Jereme Lance Peters",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
-      "key": "ballot-az-pima:state-house-19|Jackie O'Donnell Anderson",
-      "name": "Jackie O'Donnell Anderson",
-      "note": "MISS — B14 official-page rung, 2026-08-19: OUR GAP, not theirs. No sitting officeholder in this state's registry matches this name exactly, so this rung could not resolve a page. That is a fact about our registry and is NOT evidence that no official page exists — CORRECTED 2026-08-21 under RULING 52, after 10 of 10 records sampled from this class were re-walked and found wrong at rung 2, among them the sitting Governor of Arizona, three other sitting Arizona statewide officers, three sitting members of Congress and two sitting members of the New Hampshire General Court. NEXT RUNG: the campaign's own site, or the social page CLAUDE.md's campaign-lives-on-Facebook rule allows when authenticity is establishable.",
-      "attemptedAt": "2026-08-19"
-    },
-    {
+   },
+   {
       "key": "ballot-nh-merrimack:register-of-probate:bradstreet-jane",
       "name": "Jane Bradstreet",
       "note": "MISS — CONTEST 1 of 12, worked as a unit (one candidate; unopposed — the Secretary of State's cumulative filing shows the Republican Register of Probate line with no name under it). IDENTITY AND INCUMBENCY: Secretary of State County Roster 2025-2026 (roster-county-offices-2024.pdf), read 2026-08-21 at rung 11 via the Internet Archive capture of 2025-06-06 because sos.nh.gov 403s this egress at rungs 2, 3, 4 and 6 — 'Register of Probate Jane Bradstreet HOPKINTON PO BOX 149 HOPKINTON, NH 03229 DEM'. She is the sitting Register. FILED CONTACT: PO Box 149, Hopkinton NH 03229-0149, from the same roster and from the 2026 primary filing list. SPECIFIC VERIFIED PAGE: found, hopkinton-nh.gov/people/jane-bradstreet. PHOTO: MISS. Rungs walked — 2, 3, 4 on her town person page (read at 200, no image on it); 4 on hopkinton-nh.gov/planningbuilding (read at 200, staff contacts only, no board-member portraits); 2 on merrimackcounty.net/departments (the county publishes no Register of Probate page at all); 10 (search index) returns only LinkedIn, and social-media images are prohibited at every door of the photo rule; 11 (Internet Archive) has no capture of her town page. Rungs still owed: 9 (Hopkinton's annual town reports) and 13 (a records request). NOT VERIFIED_ABSENT — the ladder is not exhausted. CAMPAIGN SITE: MISS, searched 2026-08-21; no domain and no self-identified social page found. IN THEIR OWN WORDS: MISS, nothing published found. PHONE: MISS — the county has no Register of Probate line, and her town board seat has no per-member number.",

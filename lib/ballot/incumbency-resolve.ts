@@ -49,7 +49,7 @@ import {
   type IncumbencyDecision,
   type SeatHolderRef,
 } from "./incumbency.ts";
-import { nhLegislativeHolders } from "./seat-holders.ts";
+import { nhLegislativeHolders, nhLegislativeRosterAppliesTo } from "./seat-holders.ts";
 
 /**
  * One person on this ballot, as the two ballot branches each know them.
@@ -224,7 +224,7 @@ export type FederalHolderLookup = (targetKey: string) => Promise<SeatHolder | nu
  * answers an Arizona contest with New Hampshire members.
  */
 export function enumeratedSeatHolders(contest: { title: string; ocdId: string }): SeatHolderRef[] {
-  if (!contest.ocdId.includes("/state:nh/")) return [];
+  if (!nhLegislativeRosterAppliesTo(contest)) return [];
   return nhLegislativeHolders(contest.title);
 }
 

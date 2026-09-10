@@ -187,7 +187,7 @@ export interface PrlMemberProfile {
   measuredAt: string;
 }
 
-/** The committed snapshot. Refreshed on a schedule, never per page load. */
+/** The canonical promoted snapshot. The tracked copy is bootstrap/test evidence only. */
 export interface PrlSnapshot {
   formatVersion: 1;
   fetchedAt: string;
@@ -198,9 +198,9 @@ export interface PrlSnapshot {
   rowsInFile: number;
   /** Rows carrying at least one classified statement. */
   rowsWithStatements: number;
-  /** What we kept: profiles for members our roster actually holds. */
+  /** Every exact Bioguide profile with a positive PRL statement count. */
   profiles: PrlMemberProfile[];
-  /** Roster members with no PRL row, by bioguide. Named, never implied. */
+  /** Exact source Bioguide rows with no positive measurement. Named, never implied. */
   rosterMisses: string[];
   attribution: typeof PRL_RHETORIC_ATTRIBUTION;
 }

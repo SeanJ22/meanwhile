@@ -1,6 +1,7 @@
 import { chamberForOfficeholder } from "../registry/server.ts";
 import { keyVoteRowsFor, type KeyVoteRowData } from "./key-votes-rows.ts";
 import { keyVotePositionFor, keyVotePositionKey, keyVotePositionsReadAt, keyVoteRollCallHeld } from "./key-vote-positions.ts";
+import { readFederalKeyVotesProjection } from "./key-votes-projection.ts";
 
 export interface MemberKeyVotes {
   member: string;
@@ -12,6 +13,8 @@ export interface MemberKeyVotes {
 /** Current member/chamber and exact held position — shared by visuals and Ask. */
 export async function keyVotesForMember(member: string): Promise<MemberKeyVotes> {
   if (!/^congress:[A-Z]\d{6}$/.test(member)) return { member, chamber: null, rows: [], positionsReadAt: null };
+  const read = await readFederalKeyVotesProjection();
+  if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(read.detail);
   const chamber = await chamberForOfficeholder(member);
   if (!chamber) return { member, chamber, rows: [], positionsReadAt: null };
   const rows = keyVoteRowsFor(chamber, ref => {

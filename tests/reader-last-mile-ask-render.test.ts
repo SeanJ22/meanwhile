@@ -10,9 +10,11 @@ test("map and ballot Ask share every held contact channel, exact rows and per-pe
     import { AskAnswerContacts } from './components/ask/answer-contacts.tsx';
     import { contactsForBody } from './lib/ask/contacts.ts';
     import { bodyIdentityIndex } from './lib/ask/body-identity.ts';
+    import { installNjMorrisFilingFirstSeed, installRegistryRuntimeFirstSeeds } from './tests/helpers/registry-runtime-first-seed.ts';
     import { readFileSync } from 'node:fs';
     import { candidateContactCensus } from './lib/ballot/candidate-contacts.ts';
     import { contactForCandidate } from './lib/ask/candidate-contact.ts';
+    await Promise.all([installRegistryRuntimeFirstSeeds(), installNjMorrisFilingFirstSeed()]);
     const candidates = new Map(JSON.parse(readFileSync('data/states/nj/ballot/nj-morris-2026.json','utf8')).candidacies.map(candidate=>[candidate.id,candidate]));
     const filed = candidateContactCensus().contacts.map(contact=>{const candidate=candidates.get(contact.candidacyId);return contactForCandidate(contact.candidacyId,candidate.givenName+' '+candidate.familyName,candidate.contestId)});
     const contacts = [...bodyIdentityIndex().values()].flatMap(body => contactsForBody(body, body.name)).concat(filed);

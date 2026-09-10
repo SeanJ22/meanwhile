@@ -19,6 +19,7 @@ import { toZonedIso } from "../../time/zoned.ts";
 import { politeGetJson } from "../http.ts";
 import type {
   Meeting,
+  MeetingQuery,
   MeetingStatus,
   NormalizeDropCounts,
   ReportingMeetingSource,
@@ -229,7 +230,7 @@ export function makeDiligentSource(
   return {
     name: SOURCE_NAME,
 
-    async fetch(): Promise<DiligentRaw[]> {
+    async fetch(query?: MeetingQuery): Promise<DiligentRaw[]> {
       const now = Date.now();
       const from = isoDate(new Date(now - WINDOW_BACK_DAYS * 86_400_000));
       const to = isoDate(new Date(now + WINDOW_FORWARD_DAYS * 86_400_000));
@@ -239,7 +240,10 @@ export function makeDiligentSource(
         const url =
           `${wiring.config.serviceBase}/Services/MeetingsService.svc/meetings` +
           `?from=${from}&to=${to}${wiring.config.extraQuery ?? ""}`;
-        const rows = await politeGetJson<DiligentMeeting[]>(url, { fetchImpl });
+        const rows = await politeGetJson<DiligentMeeting[]>(url, {
+          fetchImpl,
+          signal: query?.signal,
+        });
         collected.push({
           wiring,
           meetings: Array.isArray(rows) ? rows : [],

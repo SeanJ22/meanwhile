@@ -13,6 +13,10 @@
  * right about every precinct in three states before it could ship, and a
  * polling place that is wrong by one street is worse than a link.
  */
+import {
+  currentCuratedReaderRecords,
+  type BallotNavigationProjectionRecord,
+} from "../civic-data/curated-reader-read-model.ts";
 
 export interface PollingPlaceLink {
   state: string;
@@ -26,6 +30,7 @@ export interface PollingPlaceLink {
   verifiedAt: string;
 }
 
+/** Initial adoption/node:test evidence; production reads `ballot-navigation`. */
 export const POLLING_PLACE_LINKS: PollingPlaceLink[] = [
   {
     state: "AZ",
@@ -59,6 +64,17 @@ export const POLLING_PLACE_LINKS: PollingPlaceLink[] = [
   },
 ];
 
-export function pollingPlaceLinkFor(state: string): PollingPlaceLink | null {
-  return POLLING_PLACE_LINKS.find((l) => l.state === state) ?? null;
+export function currentPollingPlaceLinks(): readonly PollingPlaceLink[] {
+  const seed: BallotNavigationProjectionRecord[] = POLLING_PLACE_LINKS.map((value) => ({
+    id: `polling-place:${value.state}`,
+    kind: "POLLING_PLACE_LINK",
+    value: value as unknown as Readonly<Record<string, unknown>>,
+  }));
+  return currentCuratedReaderRecords("ballot-navigation", seed)
+    .filter((record): record is BallotNavigationProjectionRecord => record.kind === "POLLING_PLACE_LINK")
+    .map((record) => record.value as unknown as PollingPlaceLink);
+}
+
+export function pollingPlaceLinkFor(state: string, projection?: readonly PollingPlaceLink[]): PollingPlaceLink | null {
+  return (projection ?? currentPollingPlaceLinks()).find((l) => l.state === state) ?? null;
 }

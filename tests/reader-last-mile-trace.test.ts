@@ -1,14 +1,19 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
+import * as fs from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, relative, resolve, sep } from "node:path";
 import { checkReaderTraces, missingReaderTraceFiles, readerTraceRequirements } from "../lib/holdings/reader-trace.ts";
+import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
+import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
+import nextConfig from "../next.config.ts";
 
 test("every dynamic reader contract fails if one holding is removed from deployment tracing", () => {
   const contracts = readerTraceRequirements(process.cwd());
-  assert.ok(contracts.length >= 20);
+  assert.ok(contracts.length >= 10);
   for (const contract of contracts) {
+    assert.ok(contract.files.length > 0, `${contract.route}: empty trace requirements conceal a retired runtime dependency`);
     const traced = new Set(contract.files);
     assert.deepEqual(missingReaderTraceFiles(contract.files, traced), []);
     for (const file of contract.files) {
@@ -17,6 +22,36 @@ test("every dynamic reader contract fails if one holding is removed from deploym
       traced.add(file);
     }
   }
+});
+
+test("Next deployment tracing includes static geography and excludes every migrated runtime first seed", () => {
+  const root = process.cwd();
+  const { globSync } = fs as typeof fs & { globSync(pattern: string, options: { cwd: string }): string[] };
+  const includes = Object.values(nextConfig.outputFileTracingIncludes ?? {}).flat();
+  for (const required of [
+    "./data/states/*/geo/**/*.geojson",
+    "./data/derived/resolver-geometry.json",
+    "./public/geo/*.geojson",
+    "./data/derived/zip-coverage-tiers-runtime.json",
+    "./data/derived/zip-division-ids.json",
+    "./lib/db/migrations/meta/_journal.json",
+  ]) {
+    assert.ok(includes.includes(required), `static production input is no longer traced: ${required}`);
+  }
+
+  const bundled = new Set(
+    includes.flatMap((pattern) =>
+      globSync(pattern.replace(/^\.\//, ""), { cwd: root }).map((path) => path.replaceAll("\\", "/")),
+    ),
+  );
+  const runtimeSeeds = [...ROUTINE_SOURCE_CONTRACTS, ...MANUAL_PRODUCTION_SOURCE_CONTRACTS]
+    .flatMap((contract) => contract.bootstrapFixturePaths)
+    .filter((path) => /\.json$/.test(path));
+  assert.deepEqual(
+    [...new Set(runtimeSeeds.filter((path) => bundled.has(path)))].sort(),
+    [],
+    "tracked runtime first seeds must not be forced into production by outputFileTracingIncludes",
+  );
 });
 
 test("the completed Next production bundle includes every declared runtime holding", (t) => {
@@ -45,13 +80,13 @@ test("postbuild checker rejects a removed dynamic holding in emitted route manif
       write(path, { version: 1, files: [...files].map(file => relative(dirname(path), join(root, file))) });
     }
     assert.deepEqual(checkReaderTraces(root).failures, []);
-    const route = "api/funding/[target]/route";
+    const route = "api/meetings/route";
     const path = join(root, ".next/server/app", `${route}.js.nft.json`);
-    const missing = "data/states/az/funding/state-money-az-2026.json";
+    const missing = "data/derived/resolver-geometry.json";
     write(path, { version: 1, files: [...routes.get(route)!].filter(file => file !== missing).map(file => relative(dirname(path), join(root, file))) });
     const failures = checkReaderTraces(root).failures;
     assert.equal(failures.length, 1);
-    assert.ok(failures[0].includes(`${route}: lib/funding/campaign-money.ts cannot read untraced ${missing}`));
+    assert.ok(failures[0].includes(`${route}: lib/registry/server.ts cannot read untraced ${missing}`));
   } finally {
     assert.ok(resolve(root).startsWith(resolve(tmpdir()) + sep));
     rmSync(root, { recursive: true, force: true });

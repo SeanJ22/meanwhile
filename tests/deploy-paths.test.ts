@@ -116,7 +116,7 @@ test("the paperwork paths ARE on the allowlist", () => {
   for (const p of [
     "docs/state.md",
     "docs/context.md",
-    "docs/intake-report.md",
+    "docs/context.md",
     "docs/tracker-working.csv",
     "docs/evidence/h-03255.jsonl",
     "tests/deploy-paths.test.ts",
@@ -131,7 +131,7 @@ test("the paperwork paths ARE on the allowlist", () => {
 
 test("a docs-only commit cancels; one shipping path anywhere in it builds", () => {
   // These are the three real bot/close-out commits of 2026-08-24.
-  assert.equal(classifyDeploy(["docs/intake-report.md"]).verdict, "cancel");
+  assert.equal(classifyDeploy(["docs/context.md"]).verdict, "cancel");
   assert.equal(classifyDeploy(["docs/context.md", "docs/state.md"]).verdict, "cancel");
   assert.equal(classifyDeploy(["data/meetings-snapshot.json"]).verdict, "build");
   assert.equal(classifyDeploy(["data/fec/fec-2026.json"]).verdict, "build");

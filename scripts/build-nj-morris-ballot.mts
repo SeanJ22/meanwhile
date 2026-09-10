@@ -2,7 +2,8 @@
  * **THE MORRIS COUNTY BALLOT, GENERATED FROM THE FILING** (NJ Hunt 2,
  * 2026-08-22 — `NJ01`, and items 4 and 5).
  *
- *   corepack pnpm nj:ballot [--write]
+ *   corepack pnpm nj:ballot             # acquire and validate without writing
+ *   corepack pnpm nj:ballot -- --promote # atomically promote to the production data plane
  *
  * ## Why this replaces a hand transcription
  *
@@ -18,9 +19,10 @@
  * revised on the authority's own schedule goes stale silently, and the only
  * evidence of the staleness is a contest that does not render.
  *
- * So the file is GENERATED from `pnpm nj:filing`'s parse of the CURRENT
- * documents, discovered from the clerk's own page hrefs. Re-running it is how
- * this ballot stays current.
+ * The permanent adapter parses the CURRENT documents discovered from the
+ * clerk's own page hrefs and promotes the resulting version through the
+ * canonical candidate/validation/pointer door. It never rewrites this bundled
+ * bootstrap fixture.
  *
  * ## What it refuses to do
  *
@@ -49,6 +51,7 @@ import type { CandidacyRemoval } from "../lib/ballot/types.ts";
 import { extractTextLayer } from "../lib/extract/text-layer.ts";
 import {
   NJ_FILING_SOURCES,
+  morrisCurrentFilingDocumentSet,
   newestFilingPdfs,
   parseNjFiling,
   type FiledCandidate,
@@ -56,11 +59,33 @@ import {
   type FiledUnfilledSeat,
 } from "../lib/hunt/nj-filing.ts";
 import { today } from "./doc-dates.mjs";
+import { njMorrisFilingCandidate, sha256 } from "../lib/civic-data/candidate-builders.ts";
+import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
+import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { assertWriteAllowed } from "../lib/db/write-guard.ts";
+import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
+import {
+  isSourceAcquisitionFailure,
+  readPublisherBody,
+  recordRegisteredSourceAcquisitionFailure,
+  requestPublisher,
+  sourceAcquisitionFailure,
+  type SourceAcquisitionFailure,
+  withPublisherAcquisitionDeadline,
+} from "../lib/civic-data/source-acquisition-failure.ts";
+import { writeRoutineReceiptLine } from "../lib/civic-data/receipt-output.ts";
+import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisition-deadline.ts";
+import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 
-import { writeStampStable } from "../lib/ops/stamp-stable.ts";
-const WRITE = process.argv.includes("--write");
+const PROMOTE = process.argv.includes("--promote");
+installNeonRequestDeadline();
+if (process.argv.includes("--write")) {
+  throw new Error("nj:ballot --write was retired; use the registered --promote data operation.");
+}
 const ROOT = process.cwd();
 const STAMP = today();
+const RETRIEVED_AT = new Date().toISOString();
 const ELECTION = { id: "nj-2026-11-03", date: "2026-11-03", name: "2026 General Election", state: "NJ" };
 const VINTAGE = "TIGER_GENZ2025";
 const UA = "we-the-people/1.0 (civic data; seanj22@gmail.com)";
@@ -194,12 +219,25 @@ type PriorFile = {
   removals?: CandidacyRemoval[];
 };
 let prior: PriorFile = { contests: [], candidacies: [] };
-try {
-  prior = JSON.parse(
-    readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8"),
-  ) as PriorFile;
-} catch {
-  /* No previous file is a first run, not an error. Stated in the counts below. */
+let productionStore: PostgresRoutineDataStore | null = null;
+if (PROMOTE) {
+  const handle = resolveProductionWriteHandle();
+  process.env.DATABASE_URL = handle.connection;
+  process.env.WTP_DB_ROLE = "production";
+  process.env.WTP_SANCTIONED_WRITE = "routine-civic-data-promotion";
+  assertWriteAllowed("a routine civic data candidate/version promotion");
+  productionStore = new PostgresRoutineDataStore();
+  const promoted = await productionStore.readPromotion<{ ballot: PriorFile }>("BALLOT_FILING", "US-NJ:county:morris:2026-general");
+  if (promoted) prior = promoted.payload.ballot;
+}
+if (!PROMOTE || prior.candidacies.length === 0) {
+  try {
+    prior = JSON.parse(
+      readFileSync(join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"), "utf8"),
+    ) as PriorFile;
+  } catch {
+    /* An absent fixture is a first bootstrap, not a store-error fallback. */
+  }
 }
 
 const officeKey = (title: string) =>
@@ -274,52 +312,131 @@ let idsMinted = 0;
 /* Read the documents                                                         */
 /* -------------------------------------------------------------------------- */
 
-async function readPdf(url: string) {
-  const res = await fetch(url, { headers: { "user-agent": UA } });
-  if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
-  const bytes = new Uint8Array(await res.arrayBuffer());
+async function readPdf(url: string, signal: AbortSignal) {
+  const res = await requestPublisher("Morris County Clerk filing PDF", () =>
+    fetch(url, { headers: { "user-agent": UA }, signal }));
+  if (!res.ok) {
+    throw sourceAcquisitionFailure(
+      "PUBLISHER_RESPONSE_REFUSED",
+      `${url}: HTTP ${res.status}`,
+    );
+  }
+  const body = await readPublisherBody("Morris County Clerk filing PDF", () => res.arrayBuffer());
+  signal.throwIfAborted();
+  const bytes = new Uint8Array(body);
   const byteCount = bytes.length;
   const text = await extractTextLayer(bytes, url);
-  if (text.outcome !== "EXTRACTED") throw new Error(`${url}: text layer ${text.outcome}`);
+  signal.throwIfAborted();
+  if (text.outcome !== "EXTRACTED") {
+    throw sourceAcquisitionFailure(
+      "PUBLISHER_DOCUMENT_INVALID",
+      `${url}: text layer ${text.outcome}`,
+    );
+  }
   const parsed = parseNjFiling(
     (text.items as { text: string }[]).map((p) => p.text).join("\n"),
     url,
   );
-  if (parsed.outcome !== "EXTRACTED") throw new Error(`${url}: parse ${parsed.outcome} — ${parsed.reason}`);
+  if (parsed.outcome !== "EXTRACTED") {
+    throw sourceAcquisitionFailure(
+      "PUBLISHER_DOCUMENT_INVALID",
+      `${url}: parse ${parsed.outcome} — ${parsed.reason}`,
+    );
+  }
   const items = parsed.items as Array<FiledCandidate | FiledNoElection | FiledUnfilledSeat>;
   return {
     url,
     bytes: byteCount,
+    rawHash: sha256(bytes),
     candidates: items.filter((r): r is FiledCandidate => "familyName" in r),
     noElection: items.filter((r): r is FiledNoElection => !("familyName" in r) && !("office" in r)),
     unfilled: items.filter((r): r is FiledUnfilledSeat => !("familyName" in r) && "office" in r),
   };
 }
 
-const clerkPage = await fetch(NJ_FILING_SOURCES.morrisClerkCandidates, {
-  headers: { "user-agent": UA },
-}).then((r) => r.text());
-const pdfs = newestFilingPdfs(clerkPage, NJ_FILING_SOURCES.morrisClerkCandidates).filter(
-  (u) => !/candidate-order/.test(u),
-);
-console.log(`clerk page → ${pdfs.length} filed-candidate PDF(s)`);
-
-const docs: Awaited<ReturnType<typeof readPdf>>[] = [];
-for (const url of pdfs) {
-  const d = await readPdf(url);
-  console.log(
-    `  ${url.split("/").pop()} — ${d.bytes} bytes · ${d.candidates.length} candidates · ` +
-      `${d.noElection.length} NO LOCAL ELECTION · ${d.unfilled.length} unfilled seat(s)`,
-  );
-  docs.push(d);
+async function recordSourceFailureAndExit(failure: SourceAcquisitionFailure): Promise<never> {
+  if (!PROMOTE || productionStore === null || !isSourceAcquisitionFailure(failure)) throw failure;
+  const failed = await recordRegisteredSourceAcquisitionFailure({
+    store: productionStore,
+    contractId: "nj-morris-filing",
+    failure,
+  });
+  await writeRoutineReceiptLine(failed.line);
+  process.exit(2);
 }
+
+async function acquireFilingDocuments(signal: AbortSignal) {
+  const clerkResponse = await requestPublisher("Morris County Clerk filing page", () =>
+    fetch(NJ_FILING_SOURCES.morrisClerkCandidates, {
+      headers: { "user-agent": UA },
+      signal,
+    }));
+  if (!clerkResponse.ok) {
+    throw sourceAcquisitionFailure(
+      "PUBLISHER_RESPONSE_REFUSED",
+      `${NJ_FILING_SOURCES.morrisClerkCandidates}: HTTP ${clerkResponse.status}`,
+    );
+  }
+  const clerkPage = await readPublisherBody("Morris County Clerk filing page", () => clerkResponse.text());
+  signal.throwIfAborted();
+  let currentDocumentSet: ReturnType<typeof morrisCurrentFilingDocumentSet>;
+  try {
+    currentDocumentSet = morrisCurrentFilingDocumentSet(
+      newestFilingPdfs(clerkPage, NJ_FILING_SOURCES.morrisClerkCandidates),
+    );
+  } catch (error) {
+    if (!(error instanceof Error) || !error.message.startsWith("MORRIS_CURRENT_FILING_DOCUMENT_SET_INCOMPLETE:")) {
+      throw error;
+    }
+    throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", error.message);
+  }
+  const pdfs = [
+    currentDocumentSet.generalCandidatesUrl,
+    currentDocumentSet.schoolCandidatesUrl,
+  ];
+  console.log(`clerk page → ${pdfs.length} filed-candidate PDF(s)`);
+
+  const docs: Awaited<ReturnType<typeof readPdf>>[] = [];
+  for (const url of pdfs) {
+    const d = await readPdf(url, signal);
+    const logicalRows = d.candidates.length + d.noElection.length + d.unfilled.length;
+    if (logicalRows === 0) {
+      throw sourceAcquisitionFailure(
+        "PUBLISHER_DOCUMENT_INVALID",
+        `${url}: current filing document produced zero accounted filing rows.`,
+      );
+    }
+    console.log(
+      `  ${url.split("/").pop()} — ${d.bytes} bytes · ${d.candidates.length} candidates · ` +
+        `${d.noElection.length} NO LOCAL ELECTION · ${d.unfilled.length} unfilled seat(s)`,
+    );
+    docs.push(d);
+  }
+  return { clerkResponse, clerkPage, currentDocumentSet, pdfs, docs };
+}
+
+const acquisition = await (async () => {
+  try {
+    return await withPublisherAcquisitionDeadline(
+      "Morris County Clerk filing",
+      ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,
+      acquireFilingDocuments,
+    );
+  } catch (error) {
+    if (!isSourceAcquisitionFailure(error)) throw error;
+    return recordSourceFailureAndExit(error);
+  }
+})();
+const { clerkResponse, clerkPage, currentDocumentSet, pdfs, docs } = acquisition;
 
 const filed = docs.flatMap((d) => d.candidates.map((c) => ({ ...c, sourceUrl: d.url })));
 const noElection = docs.flatMap((d) => d.noElection.map((n) => ({ ...n, sourceUrl: d.url })));
 const unfilled = docs.flatMap((d) => d.unfilled.map((u) => ({ ...u, sourceUrl: d.url })));
 if (filed.length === 0) {
-  console.error("ZERO candidates read — a failed extraction, not an empty filing.");
-  process.exit(1);
+  await recordSourceFailureAndExit(sourceAcquisitionFailure(
+    "PUBLISHER_DOCUMENT_INVALID",
+    "ZERO candidates read — a failed extraction, not an empty filing.",
+  ));
 }
 
 /* -------------------------------------------------------------------------- */
@@ -605,15 +722,14 @@ const out = {
   formatVersion: 1,
   curatedAt: STAMP,
   curatorNote:
-    `Generated by \`corepack pnpm nj:ballot --write\` from the Morris County Clerk's CURRENT filed-candidate ` +
+    `Produced by the registered Morris County Clerk ballot adapter from the authority's CURRENT filed-candidate ` +
     `PDFs, discovered from the clerk's own page hrefs on ${STAMP} — the clerk republishes at a new version ` +
     `path on every revision, and a hardcoded URL reads a superseded filing as current. ` +
     `${filed.length} candidates read across ${pdfs.length} document(s). ` +
     `The clerk's ballot-position drawing PDF is a scan with no text layer, so ballot order is not ` +
     `machine-readable and candidates render alphabetically by surname. The filings carry party, slogan, ` +
     `term and seats; they state neither incumbency nor websites, so those fields are null throughout. ` +
-    `Filed emails and street addresses are contact data and are written to ` +
-    `data/states/nj/ballot/nj-morris-2026-contacts.json rather than into this file.`,
+    `Filed emails and street addresses are contact data and remain in the canonical scoped projection rather than this bootstrap fixture.`,
   election: ELECTION,
   contests: [...contests.values()].map((b) => ({
     id: b.contestId,
@@ -650,8 +766,10 @@ console.log(`  REFUSED rows (no division)     ${refusedRows}, across ${refused.s
 for (const [what, r] of refused) console.log(`      ${what} — ${r.rows} row(s) — ${r.why}`);
 
 if (contests.size === 0) {
-  console.error("\nZERO contests built — a failed generation, not an election with no contests.");
-  process.exit(1);
+  await recordSourceFailureAndExit(sourceAcquisitionFailure(
+    "PUBLISHER_DOCUMENT_INVALID",
+    "ZERO contests built — the filing parser produced no promotable election contests.",
+  ));
 }
 
 const reconciles = candidacies.length + refusedRows === filed.length;
@@ -660,37 +778,40 @@ console.log(
     (reconciles ? "  (accounted)" : "  *** ROWS VANISHED ***"),
 );
 
-if (WRITE) {
-  // RL-1 (NH326/NH327): the clerk's document re-read with the same candidates
-  // on it leaves both reader-bound files byte-identical; the read date is
-  // operational history, not a new civic fact.
-  const ballotWrite = writeStampStable({
-    absolutePath: join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026.json"),
-    path: "data/states/nj/ballot/nj-morris-2026.json",
-    next: out,
-    serialize: (value) => `${JSON.stringify(value, null, 2)}\n`,
-    stampKeys: ["collectedAt", "verifiedAt", "curatedAt"],
+const contactsDocument = {
+  generatedAt: STAMP,
+  route: "filing-county",
+  note:
+    "Filed contact for Morris County candidates, from the county clerk's own filed-candidate PDFs. " +
+    "A filed STREET ADDRESS is a home address in most of these rows and is held for hunt use, never rendered.",
+  contacts,
+};
+
+if (PROMOTE) {
+  if (!productionStore) throw new Error("NJ production store was not opened.");
+  const candidate = njMorrisFilingCandidate({
+    ballot: out,
+    contacts: contactsDocument,
+    rawBodies: [clerkPage, ...docs.map((doc) => doc.rawHash)],
+    currentDocumentSet,
+    finalUrl: clerkResponse.url || NJ_FILING_SOURCES.morrisClerkCandidates,
+    retrievedAt: RETRIEVED_AT,
+    inputRecords: filed.length,
+    refused: [...refused.entries()].map(([key, value]) => ({ key, detail: value.why, record: { rows: value.rows } })),
   });
-  const contactsDocument = {
-    generatedAt: STAMP,
-    route: "filing-county",
-    note:
-      "Filed contact for Morris County candidates, from the county clerk's own filed-candidate PDFs. " +
-      "A filed STREET ADDRESS is a home address in most of these rows and is held for hunt use, never " +
-      "rendered.",
-    contacts,
-  };
-  const contactsWrite = writeStampStable({
-    absolutePath: join(ROOT, "data", "states", "nj", "ballot", "nj-morris-2026-contacts.json"),
-    path: "data/states/nj/ballot/nj-morris-2026-contacts.json",
-    next: contactsDocument,
-    serialize: (value) => `${JSON.stringify(value, null, 2)}\n`,
-    stampKeys: ["generatedAt", "collectedAt", "verifiedAt"],
-  });
-  console.log(
-    `\n  ${ballotWrite.written ? "written" : "facts unchanged, left untouched:"} data/states/nj/ballot/nj-morris-2026.json; ` +
-      `${contactsWrite.written ? "written" : "facts unchanged, left untouched:"} nj-morris-2026-contacts.json`,
-  );
+  const outcome = await processRegisteredRoutineCandidate(productionStore, "nj-morris-filing", candidate, RETRIEVED_AT);
+  console.log("RCD_RECEIPT=" + JSON.stringify({
+    source: "nj-morris-filing",
+    candidateId: candidate.id,
+    acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
+    state: outcome.candidate.state,
+    decision: outcome.candidate.receipt?.decision ?? null,
+    outcome: outcome.candidate.candidate.changeSet?.outcome ?? null,
+    promotedVersion: outcome.promoted?.versionId ?? null,
+    lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion,
+    structuralReleaseContract: ZERO_RELEASE_EVENTS,
+  }));
+  if (!outcome.promoted) process.exitCode = 2;
 } else {
-  console.log("\n  dry run — pass --write to update the committed files");
+  console.log("\n  dry run — pass --promote to validate and atomically promote; repository writes are retired");
 }

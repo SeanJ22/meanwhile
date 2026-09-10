@@ -13,6 +13,7 @@ import { readPipelineStates } from "../lib/control-plane/promotion/pipeline.ts";
 import { readWorkerFleet } from "../lib/control-plane/workers/readback.ts";
 import { today } from "./doc-dates.mjs";
 import { findSecrets, loadSecrets } from "../lib/ops/secret-redaction.ts";
+import { preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
 
 const started = performance.now();
 const root = resolve(import.meta.dirname, "..");
@@ -20,6 +21,7 @@ const now = () => new Date().toISOString();
 const beganAt = now();
 const connection = controlPlaneUrlFromEnv();
 if (!connection) throw new Error("WORKER_PROOF_NOT_CONFIGURED: WTP_CONTROL_PLANE_DATABASE_URL");
+await preloadOperationalReferenceBundle({ bypassCache: true });
 const repos = await createPgRepositories(connection);
 assertDurableRepositories(repos, "worker fleet real proof");
 const artifact = (await repos.artifacts.readAll()).find(a => a.artifactId === "ar-076cafa324f9aefa9dd5096f");

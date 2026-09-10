@@ -47,7 +47,11 @@ export function PositionsSection({
 }) {
   const [topic, setTopic] = useState("");
   const [answer, setAnswer] = useState<
-    (PositionAnswer & { totalMatches: number }) | null
+    (PositionAnswer & {
+      totalMatches: number;
+      holdingStatus?: "HELD" | "PARTIAL";
+      unavailableAuthorities?: string[];
+    }) | null
   >(null);
   const [asking, setAsking] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -79,6 +83,8 @@ export function PositionsSection({
       if (!response.ok) throw new Error(String(response.status));
       const body = (await response.json()) as PositionAnswer & {
         totalMatches: number;
+        holdingStatus?: "HELD" | "PARTIAL";
+        unavailableAuthorities?: string[];
       };
       // The card may have moved on. A late answer for an old query is a wrong
       // answer, and the keyed-result rule says so in as many words.
@@ -145,6 +151,16 @@ export function PositionsSection({
 
         {answer && !asking && (
           <div className="mt-2.5">
+            {answer.holdingStatus === "PARTIAL" && (
+              <p
+                className="mb-2 text-[0.6875rem] leading-relaxed text-signal"
+                data-positions-holding-status="PARTIAL"
+              >
+                These passages are held and source-linked, but an independent
+                statement or identity holding is unavailable. This is not a
+                complete count; unavailable: {(answer.unavailableAuthorities ?? []).join(", ")}.
+              </p>
+            )}
             {answer.kind === "MATCHED" && (
               <div data-positions-answer="MATCHED">
                 {answer.passages.map((p) => (
@@ -200,7 +216,7 @@ export function PositionsSection({
                   there.
                 */}
                 <p className="mt-2 text-[0.625rem] leading-relaxed text-muted">
-                  Showing {answer.passages.length} of {answer.totalMatches}{" "}
+                  {answer.holdingStatus === "PARTIAL" ? "Showing" : `Showing ${answer.passages.length} of`} {answer.totalMatches}{" "}
                   passage{answer.totalMatches === 1 ? "" : "s"} that{" "}
                   {answer.totalMatches === 1 ? "mentions" : "mention"} &ldquo;
                   {answer.topic}&rdquo;, across {answer.searched.pages} page

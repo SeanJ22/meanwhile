@@ -15,12 +15,13 @@
  * measures. The colors on the surface state the member's vote, never
  * approval.
  *
- * Snapshot-architecture, like meetings: a committed artifact refreshed on a
- * schedule, never fetched live per page load.
+ * Runtime facts are read from a proof-validated promoted projection. The
+ * bundled snapshot is first-seed material only; it is never a store-error
+ * fallback and no request fetches a publisher live.
  */
 
-/** The four states the chambers record. Nothing in between is invented. */
-export type VotePosition = "YES" | "NO" | "PRESENT" | "NOT_VOTING";
+/** Normalized Reader states; UNKNOWN preserves an unclassified publisher row. */
+export type VotePosition = "YES" | "NO" | "ABSTAIN" | "PRESENT" | "NOT_VOTING" | "UNKNOWN";
 
 export interface RollCallVote {
   /** `house:119-2:283` / `senate:119-2:231`. */

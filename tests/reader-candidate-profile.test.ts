@@ -4,6 +4,17 @@ import { allCandidateCards } from "../lib/ballot/candidate-cards.ts";
 import { allCandidateLinks } from "../lib/ballot/candidate-sites.ts";
 import { candidateProfileEvidenceFor, projectCandidateProfile } from "../lib/ask/candidate-profile.ts";
 import { readerPersonKeys } from "../lib/identity/reader-person.ts";
+import {
+  installCandidateCorpusFirstSeed,
+  installNjMorrisFilingFirstSeed,
+  installRegistryRuntimeFirstSeeds,
+} from "./helpers/registry-runtime-first-seed.ts";
+
+await Promise.all([
+  installCandidateCorpusFirstSeed(),
+  installNjMorrisFilingFirstSeed(),
+  installRegistryRuntimeFirstSeeds(),
+]);
 
 test("every current native candidate bio and verified link reaches grounded profile records with exact provenance", () => {
   const cards = allCandidateCards().cards;

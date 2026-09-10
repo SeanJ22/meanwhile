@@ -1,39 +1,36 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
 import type { BallotSet, BallotSource } from "../../ballot/types.ts";
 import { validateBallotFile } from "../ballot-nj-morris/index.ts";
+import { CivicDataStoreUnavailableError, type CivicDataReadResult } from "../../civic-data/read-model.ts";
+import {
+  azBallotReadState,
+  nhBallotReadState,
+  readAzBallotProjection,
+  readNhBallotProjection,
+} from "../../civic-data/manual-read-models.ts";
+import type { AzBallotProjection, NhBallotProjection } from "../../civic-data/manual-projections.ts";
 
 /**
- * Every curated ballot file, as an EXPLICIT NAMED READ — R23's fix.
- *
- * This used to be one `readFileSync(join(process.cwd(), file))` over a
- * function parameter, and a path a bundler cannot see is a path a bundler
- * must assume could be anything: Turbopack answered it by tracing the WHOLE
- * PROJECT into the two bundles that reach here. Measured 2026-08-17, before
- * this change: `/api/ballot/scope` traced 2554 files and `/ballot` traced
- * 2567, against 104-195 for every other route, and 122 of each were files
- * from `tests/`. That is how planted credential fixtures reached a deployed
- * artifact and failed Netlify's secrets scan on `main@a8f7ff2`.
- *
- * So each path is a literal at its own call site. Adding a state means adding
- * a line here as well as one in `lib/ballot/registry.ts`; that is the cost of
- * being traceable, and it is a line of typing against a whole-project trace.
- * `scripts/check-build-output.mjs` fails the build if tracing regresses.
+ * The two manually curated ballots now read their exact promoted projections.
+ * Bundled files are named only as first-seed/test fixtures inside the canonical
+ * read-model adapter; a store error can never reopen them.
  */
-const CURATED_FILES: Record<string, { file: string; read: () => string }> = {
+type CuratedProjection = AzBallotProjection | NhBallotProjection;
+type CuratedEntry = {
+  readonly bootstrapFile: string;
+  readonly read: () => Promise<CivicDataReadResult<CuratedProjection>>;
+  readonly state: () => CivicDataReadResult<CuratedProjection>;
+};
+
+const CURATED_FILES: Record<string, CuratedEntry> = {
   "ballot-az-pima": {
-    file: "data/states/az/ballot/az-pima-2026.json",
-    read: () =>
-      readFileSync(join(process.cwd(), "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8"),
+    bootstrapFile: "data/states/az/ballot/az-pima-2026.json",
+    read: readAzBallotProjection,
+    state: azBallotReadState,
   },
   "ballot-nh-merrimack": {
-    file: "data/states/nh/ballot/nh-merrimack-2026.json",
-    read: () =>
-      readFileSync(
-        join(process.cwd(), "data", "states", "nh", "ballot", "nh-merrimack-2026.json"),
-        "utf8",
-      ),
+    bootstrapFile: "data/states/nh/ballot/nh-merrimack-2026.json",
+    read: readNhBallotProjection,
+    state: nhBallotReadState,
   },
 };
 
@@ -42,15 +39,13 @@ export const CURATED_BALLOT_NAMES = Object.keys(CURATED_FILES);
 
 /** The file a curated source reads, for provenance and for the tests. */
 export function curatedBallotFile(name: string): string | undefined {
-  return CURATED_FILES[name]?.file;
+  return CURATED_FILES[name]?.bootstrapFile;
 }
 
 /**
- * A curated ballot source over a committed file — the factory form of what
- * `ballot-nj-morris` pioneered, so AZ and NH are a data file plus one line
- * in `lib/ballot/registry.ts` rather than a copied module. The validator is
- * shared: the count invariant, the citation requirement, and the
- * no-empty-candidacy-contest rule hold identically for every state.
+ * A curated ballot source over one canonical production pointer. The validator
+ * remains shared: count, citation, and no-empty-contest invariants are applied
+ * after the durable promotion proof has been verified.
  */
 export function curatedBallotSource(name: string): BallotSource {
   const entry = CURATED_FILES[name];
@@ -64,21 +59,29 @@ export function curatedBallotSource(name: string): BallotSource {
     name,
 
     async fetch(): Promise<unknown[]> {
-      const parsed: unknown = JSON.parse(entry.read());
-      return [parsed];
+      const result = await entry.read();
+      if (result.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(result);
+      if (result.kind === "NOT_RECORDED") throw new Error(`${name} has no canonical projection or bootstrap seed.`);
+      return [result.value.ballot];
     },
 
     normalize(raw: unknown[]): BallotSet {
       const [parsed] = raw;
       validateBallotFile(parsed);
       const withNotes = parsed as { coverageNotes?: string[] };
+      const state = entry.state();
+      const authorityNote = state.kind === "BOOTSTRAP"
+        ? "This ballot is using its bundled first-bootstrap seed because the canonical store answered with no promoted pointer."
+        : state.kind === "PROMOTED" && state.metadata.stale === "STALE"
+          ? "This ballot is serving its last known good manual projection; its source-through receipt is stale."
+          : null;
       return {
         election: parsed.election,
         contests: parsed.contests,
         candidacies: parsed.candidacies,
         measures: parsed.measures,
         absences: parsed.absences,
-        coverageNotes: withNotes.coverageNotes ?? [],
+        coverageNotes: [...(withNotes.coverageNotes ?? []), ...(authorityNote ? [authorityNote] : [])],
       };
     },
 

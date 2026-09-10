@@ -1,0 +1,83 @@
+/** Terminal PDC boundary: GitHub Actions certifies software, not runtime events. */
+
+import assert from "node:assert/strict";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+import test from "node:test";
+
+import { parse } from "yaml";
+
+const ROOT = join(import.meta.dirname, "..");
+const BUILD_PATH = join(ROOT, ".github", "workflows", "build-check.yml");
+const POST_DEPLOY_PATH = join(ROOT, ".github", "workflows", "post-deploy-integrity.yml");
+
+interface Step {
+  readonly name?: string;
+  readonly id?: string;
+  readonly if?: string;
+  readonly run?: string;
+}
+
+interface Workflow {
+  readonly on: Record<string, unknown>;
+  readonly jobs: Record<string, { readonly name: string; readonly steps: readonly Step[] }>;
+}
+
+const workflow = (path: string): Workflow => parse(readFileSync(path, "utf8")) as Workflow;
+
+test("Build Check has no transitional path-cost or OPS_ONLY tier", () => {
+  const source = readFileSync(BUILD_PATH, "utf8");
+  assert.doesNotMatch(source, /ci-cost|classifyCommitCost|OPS_ONLY|CHEAP_PATH_PROOFS|no-cheap|Cheap attestation/);
+  assert.equal(existsSync(join(ROOT, "scripts", "ci-cost.mjs")), false);
+  assert.doesNotMatch(readFileSync(join(ROOT, "lib", "ops", "deploy-paths.ts"), "utf8"), /classifyCommitCost|OPS_ONLY_ARTIFACTS|CHEAP_PATH_PROOFS/);
+});
+
+test("every Build Check job defaults non-draft, non-reused work to full certification", () => {
+  for (const [jobId, job] of Object.entries(workflow(BUILD_PATH).jobs)) {
+    const tier = job.steps.find((step) => step.id === "tier");
+    const certified = job.steps.find((step) => step.id === "certified");
+    const preflight = job.steps.find((step) => step.id === "preflight");
+    assert.ok(tier && certified && preflight, `${jobId} lost the tier, exact-tree, or preflight step`);
+    assert.equal(certified.if, undefined, `${jobId} conditionally suppresses the fail-closed exact-tree answer`);
+    assert.match(preflight.if ?? "", /steps\.certified\.outputs\.certified != 'yes'/);
+    assert.match(tier.run ?? "", /steps\.pr_tier\.outputs\.tier.*full/);
+    assert.match(tier.run ?? "", /steps\.certified\.outputs\.certified.*yes/);
+    assert.match(tier.run ?? "", /else[\s\S]+echo "expensive=yes"/, `${jobId} does not default to the full tier`);
+    assert.doesNotMatch(tier.run ?? "", /path|cost|cheap/i, `${jobId} retained a path-cost decision`);
+  }
+});
+
+test("push/main/manual triggers remain and no workflow hides behind a path filter", () => {
+  const build = workflow(BUILD_PATH);
+  assert.deepEqual(build.on.push, { branches: ["main"] });
+  assert.ok("workflow_dispatch" in build.on);
+  for (const path of [BUILD_PATH, POST_DEPLOY_PATH]) {
+    const source = readFileSync(path, "utf8");
+    assert.doesNotMatch(source, /^\s*paths(?:-ignore)?:/m);
+  }
+});
+
+test("post-deploy classifies only deploy possibility, before installing", () => {
+  const source = readFileSync(POST_DEPLOY_PATH, "utf8");
+  const classifyAt = source.indexOf("node scripts/deploy-classify.mjs");
+  const installAt = source.indexOf("corepack pnpm install --frozen-lockfile");
+  assert.ok(classifyAt > 0 && installAt > classifyAt);
+  assert.doesNotMatch(source, /scripts\/ci-cost|classifyCommitCost|OPS_ONLY/);
+  assert.match(source, /steps\.deploy\.outputs\.deploy != 'cancel'/);
+  assert.match(source, /contents:\s*read/);
+  assert.doesNotMatch(source.replace(/^\s*#.*$/gm, ""), /contents:\s*write|git\s+(?:add|commit|push)|push-main\.mjs/);
+});
+
+test("the repository inventory does not project current operational health from retired Git state", () => {
+  const source = readFileSync(join(ROOT, "scripts", "repo-map.mts"), "utf8");
+  assert.doesNotMatch(source, /data\/ops\/production-integrity\.json|Production drift status/);
+  assert.doesNotMatch(source, /scheduler is GitHub Actions/);
+  assert.match(source, /Live production health and[\s\S]+canonical operations data plane and Admin/);
+  assert.match(source, /GitHub Actions is not a[\s\S]+routine civic-data or operational scheduler/);
+});
+
+test("the surviving software-staging promoter cannot advertise the retired runtime bypass", () => {
+  const source = readFileSync(join(ROOT, "scripts", "promote-staging.mts"), "utf8");
+  assert.match(source, /The bypass list is empty and write-enabled deploy keys are forbidden/);
+  assert.doesNotMatch(source, /bypass actor is a DeployKey|deploy key granted for scheduled data pushers|deploy-key bypass is never used here/);
+});

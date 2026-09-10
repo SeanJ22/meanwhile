@@ -55,7 +55,7 @@ export async function GET(
     // Not an OCD-ID. An empty answer in the same shape, and the client
     // renders its named gap — never a failure dressed as an absence.
     return Response.json(
-      { ocdId: null, label: null, divisionType: null, tier: null, holders: [] },
+      { ocdId: null, label: null, divisionType: null, tier: null, holderStatus: "HOLDING_UNAVAILABLE", holders: [] },
       { status: 400, headers: { "Cache-Control": "no-store" } },
     );
   }
@@ -76,6 +76,11 @@ export async function GET(
       label: known?.label ?? null,
       divisionType: known?.divisionType ?? null,
       tier: known?.tier ?? null,
+      holderStatus: /\/(?:sldu|sldl):/.test(ocdId)
+        ? holders.length > 0 ? "HELD" : "HOLDING_UNAVAILABLE"
+        : holders.length > 0
+          ? "HELD"
+          : "NOT_RECORDED",
       holders,
       rosterGaps: rosterGapsForDivision(ocdId),
     },

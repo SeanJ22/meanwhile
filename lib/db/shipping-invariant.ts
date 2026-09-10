@@ -13,10 +13,12 @@
  * `drizzle-kit migrate` or `apply-migrations` in CI or in the deploy. Applying
  * has always been a person, at a terminal, remembering.
  *
- * The daily schema gate in `intake-tripwire.yml` caught it the next morning and
- * caught it correctly. **That is discovery after the fact.** It stays — it is
- * the only thing that can catch drift arising from outside a pull request — but
- * a defect found the morning after a deploy is a defect that shipped.
+ * The then-daily schema gate in `intake-tripwire.yml` caught it the next morning
+ * and caught it correctly. **That was discovery after the fact.** PDC V2
+ * retired that GitHub runtime clock; the permanent boundary is this software
+ * pre-merge/push gate plus the automatic, read-only post-deploy integrity
+ * observation. A defect found only the morning after a deploy is a defect that
+ * shipped.
  *
  * ## What this module is
  *

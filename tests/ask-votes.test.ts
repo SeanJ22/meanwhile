@@ -10,6 +10,10 @@ import {
   statesOf,
   voteEvidenceFor,
 } from "../lib/ask/votes.ts";
+import { initializeFederalVoteFirstSeed } from "./helpers/federal-vote-first-seed.ts";
+import { installRegistryRuntimeFirstSeeds } from "./helpers/registry-runtime-first-seed.ts";
+
+await Promise.all([initializeFederalVoteFirstSeed(), installRegistryRuntimeFirstSeeds()]);
 
 /**
  * **ASK-06 — CANDIDATE VOTES REACH ASK.** (2026-08-28.)

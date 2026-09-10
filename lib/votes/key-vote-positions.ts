@@ -1,11 +1,10 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
 import type { VotePosition } from "./types.ts";
+import { getFederalKeyVotesReadModel } from "./key-votes-projection.ts";
 
 /**
  * How each sitting member voted on each key-vote roll call (item 6b,
- * 2026-08-15). Written by `pnpm key-votes:positions`, committed, read here.
+ * 2026-08-15). `pnpm key-votes:positions` writes these facts to
+ * the canonical data plane; this module reads the initialized projection.
  *
  * **A member absent from a roll call's map means WE HOLD NO POSITION for
  * them — never that they did not vote.** The distinction is the whole point
@@ -17,24 +16,14 @@ import type { VotePosition } from "./types.ts";
  * which is "did not vote", and both of which a card must be able to say.
  */
 
-interface PositionsFile {
+export interface PositionsFile {
   formatVersion: 1;
   fetchedAt: string;
   positions: Record<string, Record<string, VotePosition>>;
 }
 
-let cache: PositionsFile | null = null;
-
 function load(): PositionsFile {
-  if (!cache) {
-    cache = JSON.parse(
-      readFileSync(
-        join(process.cwd(), "data", "votes", "key-vote-positions.json"),
-        "utf8",
-      ),
-    ) as PositionsFile;
-  }
-  return cache;
+  return getFederalKeyVotesReadModel().positions;
 }
 
 /** The actual acquisition timestamp of the committed position map. */

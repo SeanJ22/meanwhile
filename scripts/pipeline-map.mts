@@ -27,7 +27,7 @@ const useFile = argv.includes("--provider=file");
 
 let repos: ControlPlaneRepositories;
 if (useFile) {
-  const root = join(ROOT, "data", "control-plane", "freshness-shadow");
+  const root = join(ROOT, ".runtime", "control-plane", "freshness-shadow");
   mkdirSync(root, { recursive: true });
   repos = await createFileRepositories(root);
 } else {

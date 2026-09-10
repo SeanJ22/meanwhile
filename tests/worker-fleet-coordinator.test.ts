@@ -9,6 +9,7 @@ import { researchVaultResolver } from "../lib/control-plane/workers/vault-object
 import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import { scheduleAutonomousAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
 import { FIRST_BACKOFF_MINUTES } from "../lib/control-plane/scheduler/debt.ts";
+import type { LegacyCivicExtractionContract } from "../lib/control-plane/workers/types.ts";
 
 async function acceptRecordedScout(h:Awaited<ReturnType<typeof autonomousHarness>>) {
   const metadata=(await h.repos.artifacts.readAll())[0]; const held=await researchVaultResolver(h.repos,h.store,h.item.project)(metadata.artifactId);
@@ -20,6 +21,43 @@ async function acceptRecordedScout(h:Awaited<ReturnType<typeof autonomousHarness
   const result:ScoutResult={formatVersion:1,attemptId:attempt.id,obligationId:attempt.routeTaskId,routeTaskId:attempt.routeTaskId,workItemId:h.item.id,subjectId:h.item.subject,routeId:"source-observation",recordClass:"OFFICIAL_ROSTER",providerId:null,reason:"Recorded fixture source discovery",outcome:"ROUTE_CANDIDATE",stoppedBy:"MODEL",rungs,distinctEvidenceRungs:1,candidates:accepted.candidates,findings:[],nextRungs:[],unverified:[],narrative:finish.narrative,worker:{provider:"recorded-fixture",model:"none",modelReported:null},usage:{inputTokens:0,outputTokens:0,cacheReadInputTokens:0,cacheCreationInputTokens:0,turns:0,toolCalls:1},usd:0,elapsedMs:0,artifactIds:[metadata.artifactId],methodCandidateIds:[],refusal:null,startedAt:attempt.startedAt,recordedAt:attempt.endedAt!};
   await h.repos.scoutResults.append(result.obligationId,result.attemptId,result,h.now());
 }
+
+test("PDC: the production standing runtime refuses queued or newly due legacy meeting acquisitions without opening the source", async () => {
+  const h = await autonomousHarness({
+    plan: (plan) => {
+      const contract: LegacyCivicExtractionContract = {
+        schemaVersion: 1,
+        recordClass: "LEGISTAR_EVENTS",
+        subjectId: plan.contract.subjectId,
+        sourceBodyId: null,
+        sourceBodyName: null,
+        publisherSlug: "fixture-legacy-meetings",
+        requiredFields: ["EventId"],
+        completenessScope: "Historical fixture only; the permanent data plane owns live acquisition.",
+        expectedSourceDate: null,
+      };
+      return { ...plan, contract };
+    },
+  });
+  const productionRuntime = {
+    ...h.runtime,
+    routineMeetingsAuthority: "PERMANENT_CIVIC_DATA_PLANE" as const,
+  };
+  const beforeTasks = (await h.repos.routeTasks.list()).length;
+  const blocked = await nextAutonomousOperation(productionRuntime, h.item.id);
+  assert.equal(blocked.action, "BLOCKED");
+  assert.match(blocked.reason, /PDC_ROUTINE_MEETINGS_ACQUISITION_RETIRED/);
+  assert.equal((await h.repos.routeTasks.list()).length, beforeTasks, "the standing path creates no replacement acquisition task");
+  assert.deepEqual(h.calls, []);
+
+  const historicalTestTask = await nextAutonomousOperation(h.runtime, h.item.id);
+  assert.equal(historicalTestTask.task?.workerTask?.role, "ACQUIRER", "isolated test setup proves the positive control is actually an acquisition");
+  await assert.rejects(
+    dispatchWorkerTask(productionRuntime, historicalTestTask.task!),
+    /PDC_ROUTINE_MEETINGS_ACQUISITION_RETIRED/,
+  );
+  assert.deepEqual(h.calls, [], "even an already queued legacy task cannot cross the production dispatch boundary");
+});
 
 test("unknown source routes to existing Scout and restart deduplicates the durable task without asserting absence", async () => {
   const h=await autonomousHarness({plan:plan=>({...plan,sources:[],acquisition:[]})});

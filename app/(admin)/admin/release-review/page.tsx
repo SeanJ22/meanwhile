@@ -31,7 +31,13 @@ import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
 import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
 import { plainCode, plainMeaning } from "@/lib/control-plane/plain-words.ts";
 import { US_STATES } from "@/lib/control-plane/readiness/catalog.ts";
-import { RAISED_STATE_CHOICES, type SoftwareReleaseReviewRecord } from "@/lib/control-plane/software-release-review.ts";
+import {
+  RAISED_STATE_CHOICES,
+  isOwnerReleaseReviewRecord,
+  type ProductionIntegrityLogRecord,
+  type SoftwareReleaseReviewRecord,
+} from "@/lib/control-plane/software-release-review.ts";
+import { productionIntegrityHistory } from "@/lib/ops/production-integrity-data-plane.ts";
 
 import { ConsoleNav } from "../../console-nav.tsx";
 import { When } from "../../console-ui.tsx";
@@ -245,6 +251,56 @@ function ProductionCardLoading() {
   );
 }
 
+function ProductionIntegrityCard({
+  history,
+  store,
+}: {
+  readonly history: readonly ProductionIntegrityLogRecord[];
+  readonly store: ReviewModel["store"];
+}) {
+  const latest = history[0] ?? null;
+  return (
+    <section className="card" aria-labelledby="production-integrity-heading">
+      <h3 id="production-integrity-heading">Post-deploy integrity</h3>
+      {!store.ok ? (
+        <p className="gap">STORE_UNREACHABLE — {store.detail}. No production-integrity claim is made.</p>
+      ) : latest === null ? (
+        <p className="gap">NOT_RECORDED — the canonical software-release log answered and holds no post-deploy reading yet.</p>
+      ) : (
+        <>
+          <p>
+            <strong>{plainCode(latest.productionIntegrity.observed)}</strong>
+            {latest.productionIntegrity.failureClass ? ` · ${latest.productionIntegrity.failureClass}` : ""} · commit{" "}
+            <code>{latest.productionIntegrity.deployedSha ?? "not recorded"}</code>
+          </p>
+          <p className="note">
+            Observed <When iso={latest.productionIntegrity.observedAt} year /> · gate exit{" "}
+            {latest.productionIntegrity.gateExit ?? "not recorded"} · durable receipt <code>{latest.id}</code>
+            {latest.sourceRunId ? <> · run <code>{latest.sourceRunId}</code></> : null}
+          </p>
+          <p className="note">{latest.productionIntegrity.detail}</p>
+        </>
+      )}
+      <details>
+        <summary>Durable history — {history.length} reading(s)</summary>
+        {history.length === 0 ? (
+          <p className="note">No reading has been appended.</p>
+        ) : (
+          <ul>
+            {history.map((row) => (
+              <li key={row.id}>
+                <When iso={row.createdAt} year /> · <strong>{plainCode(row.productionIntegrity.observed)}</strong> ·{" "}
+                <code>{row.productionIntegrity.deployedSha ?? "no SHA"}</code> — {row.productionIntegrity.detail}
+              </li>
+            ))}
+          </ul>
+        )}
+      </details>
+      <p className="note">Authority: the existing append-only software-release log in the production control plane. No Git file is read.</p>
+    </section>
+  );
+}
+
 export default async function ReleaseReviewPage({ searchParams }: { searchParams: Promise<{ notice?: string; detail?: string }> }) {
   const { notice, detail } = await searchParams;
   const jar = await cookies();
@@ -287,7 +343,9 @@ export default async function ReleaseReviewPage({ searchParams }: { searchParams
     }
   }
 
-  const model = buildReviewModel({ reading, production, rows, store });
+  const reviewRows = rows.filter(isOwnerReleaseReviewRecord);
+  const integrityHistory = productionIntegrityHistory(rows);
+  const model = buildReviewModel({ reading, production, rows: reviewRows, store });
   const manifest = reading.kind === "OBSERVED" ? reading.manifest : null;
   // The status word the manifest carried, or a named gap when it carried neither field.
   const statusWord = model.status.prompt3Status ?? model.status.reviewState;
@@ -385,6 +443,7 @@ export default async function ReleaseReviewPage({ searchParams }: { searchParams
         Every decision is keyed to the build shown at the moment you click; a new build starts with no decisions,
         and a later decision replaces an earlier one without deleting it.
       </p>
+      <ProductionIntegrityCard history={integrityHistory} store={store} />
       {notice && (
         <p className={`note ${notice === "RECORDED" || notice === "REFRESHED" ? "state-green" : "state-amber"}`} role="status">
           {NOTICE[notice] ?? "Done."}

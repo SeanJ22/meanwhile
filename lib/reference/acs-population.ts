@@ -38,7 +38,15 @@ import { readFileSync } from "node:fs";
 
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import { dataPath, parseCsv } from "./index.ts";
-import { promotedReadModel } from "../civic-data/read-model.ts";
+import {
+  civicDataReadNotInitialized,
+  promotedVersionOrThrow,
+  readPromotedOrBootstrap,
+  type CivicDataBootstrap,
+  type CivicDataReadResult,
+  type PromotedCivicDataReadOptions,
+} from "../civic-data/read-model.ts";
+import { requiredRoutineContract, routineFreshnessMs } from "../civic-data/contracts.ts";
 import type { AcsPopulationRow } from "../sources/census-acs-population/index.ts";
 
 export const ACS_ZCTA_DATASET = "acs5_2024_b01003_zcta" as const;
@@ -46,6 +54,7 @@ export const ACS_STATE_DATASET = "acs5_2024_b01003_state" as const;
 export const ACS_VINTAGE = "ACS 5-Year 2024 (B01003_001E, total population)";
 
 export interface PopulationRow {
+  readonly name: string;
   readonly population: number;
   /** The Bureau's 90% margin of error, or null where it published none. */
   readonly marginOfError: number | null;
@@ -60,6 +69,7 @@ function readTable(dataset: typeof ACS_ZCTA_DATASET | typeof ACS_STATE_DATASET):
   const rows = parseCsv(readFileSync(dataPath(dataset), "utf8"));
   const header = rows[0] ?? [];
   const codeAt = 0;
+  const nameAt = header.indexOf("name");
   const popAt = header.indexOf("population");
   const moeAt = header.indexOf("margin_of_error");
   if (popAt < 0) throw new Error(`${dataset}.csv carries no population column; header ${JSON.stringify(header)}`);
@@ -75,6 +85,7 @@ function readTable(dataset: typeof ACS_ZCTA_DATASET | typeof ACS_STATE_DATASET):
     const rawMargin = moeAt < 0 ? "" : (row[moeAt] ?? "").trim();
     const margin = rawMargin === "" ? null : Number(rawMargin);
     byCode.set(code, {
+      name: nameAt < 0 ? code : (row[nameAt] ?? code).trim(),
       population,
       marginOfError: margin !== null && Number.isInteger(margin) && margin >= 0 ? margin : null,
     });
@@ -84,6 +95,8 @@ function readTable(dataset: typeof ACS_ZCTA_DATASET | typeof ACS_STATE_DATASET):
 
 let zctaCache: PopulationTable | null = null;
 let stateCache: PopulationTable | null = null;
+const ACS_CONTRACT = requiredRoutineContract("census-acs-population");
+const ACS_SCOPE = ACS_CONTRACT.scope;
 
 export interface PromotedAcsPopulation {
   readonly formatVersion: 1;
@@ -92,38 +105,94 @@ export interface PromotedAcsPopulation {
   readonly state: readonly AcsPopulationRow[];
 }
 
+let readState: CivicDataReadResult<PromotedAcsPopulation> = civicDataReadNotInitialized(
+  "CENSUS_REFERENCE",
+  ACS_SCOPE,
+  "The ACS canonical pointer has not been read for this process.",
+);
+
 function populationTable(rows: readonly AcsPopulationRow[]): PopulationTable {
   return {
     rows: rows.length,
-    byCode: new Map(rows.map((row) => [row.code, { population: row.population, marginOfError: row.marginOfError }])),
+    byCode: new Map(rows.map((row) => [row.code, { name: row.name, population: row.population, marginOfError: row.marginOfError }])),
   };
 }
 
-/**
- * Runtime preload of the single promoted ACS projection. The committed CSV is
- * the bootstrap LKG until the one-time migration is seeded.
- */
-export async function refreshPopulationFromPromoted(): Promise<string | null> {
-  const promoted = await promotedReadModel<PromotedAcsPopulation>("CENSUS_REFERENCE", "acs-population");
-  if (!promoted) return null;
-  const payload = promoted.payload;
+function validatePopulation(payload: PromotedAcsPopulation, versionId: string): void {
   if (payload.formatVersion !== 1 || payload.vintage !== 2024 || !Array.isArray(payload.zcta) || !Array.isArray(payload.state)) {
-    throw new Error(`Promoted ACS projection ${promoted.versionId} does not satisfy the supported Reader contract.`);
+    throw new Error(`ACS projection ${versionId} does not satisfy the supported Reader contract.`);
   }
-  zctaCache = populationTable(payload.zcta);
-  stateCache = populationTable(payload.state);
-  return promoted.versionId;
+}
+
+function tableRows(table: PopulationTable): AcsPopulationRow[] {
+  return [...table.byCode].map(([code, row]) => ({ code, ...row }));
+}
+
+function populationBootstrap(): CivicDataBootstrap<PromotedAcsPopulation> {
+  const zcta = readTable(ACS_ZCTA_DATASET);
+  const state = readTable(ACS_STATE_DATASET);
+  return {
+    value: { formatVersion: 1, vintage: 2024, zcta: tableRows(zcta), state: tableRows(state) },
+    sourceId: ACS_CONTRACT.sourceId,
+    version: "2024",
+    versionId: "bootstrap:acs-population:2024",
+    sourceThrough: "2024",
+    retrievedAt: null,
+    stale: "UNKNOWN",
+    detail: "Bundled ACS 2024 bootstrap selected only because the canonical store answered with no promoted pointer.",
+  };
+}
+
+/** Typed ACS read outcome; a store failure never opens either committed CSV. */
+export async function readPopulationProjection(
+  options: PromotedCivicDataReadOptions = {},
+): Promise<CivicDataReadResult<PromotedAcsPopulation>> {
+  const now = options.now ?? new Date().toISOString();
+  const result = await readPromotedOrBootstrap({
+    ...options,
+    now,
+    recordClass: "CENSUS_REFERENCE",
+    scope: ACS_SCOPE,
+    maxAgeMs: options.maxAgeMs ?? routineFreshnessMs(ACS_CONTRACT.id, now),
+    bootstrap: populationBootstrap,
+    allowUnconfiguredBootstrap: process.env.NODE_ENV !== "production",
+  });
+  readState = result;
+  if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") {
+    validatePopulation(result.value, result.metadata.versionId ?? result.kind);
+    zctaCache = populationTable(result.value.zcta);
+    stateCache = populationTable(result.value.state);
+  } else {
+    zctaCache = null;
+    stateCache = null;
+  }
+  return result;
+}
+
+/** Compatibility return for the readiness publisher and live acceptance. */
+export async function refreshPopulationFromPromoted(
+  options: PromotedCivicDataReadOptions = {},
+): Promise<string | null> {
+  return promotedVersionOrThrow(await readPopulationProjection(options));
+}
+
+export function populationReadState(): CivicDataReadResult<PromotedAcsPopulation> {
+  return readState;
 }
 
 /** Population by five-digit ZCTA. Cached per process. */
 export function populationByZcta(): PopulationTable {
-  zctaCache ??= readTable(ACS_ZCTA_DATASET);
+  if (zctaCache === null) {
+    throw new Error(`ACS population is ${readState.kind}; call refreshPopulationFromPromoted before using the synchronous projection.`);
+  }
   return zctaCache;
 }
 
 /** Population by two-digit state FIPS. Cached per process. */
 export function populationByStateFips(): PopulationTable {
-  stateCache ??= readTable(ACS_STATE_DATASET);
+  if (stateCache === null) {
+    throw new Error(`ACS population is ${readState.kind}; call refreshPopulationFromPromoted before using the synchronous projection.`);
+  }
   return stateCache;
 }
 

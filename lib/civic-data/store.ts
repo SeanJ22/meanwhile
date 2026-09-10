@@ -1307,6 +1307,23 @@ function isoTime(value: string): string | null {
   return Number.isFinite(parsed) ? new Date(parsed).toISOString() : null;
 }
 
+/**
+ * Drizzle's timestamptz string mode exposes PostgreSQL's lexical spelling,
+ * which is semantically exact but not the canonical UTC text used by civic
+ * evidence hashes. Normalize at the Postgres adapter boundary and fail closed
+ * rather than allowing driver formatting to change durable authority proofs.
+ */
+export function canonicalPostgresRoutineTimestamp(value: unknown, field: string): string {
+  if (typeof value !== "string") {
+    throw new Error(`CIVIC_DATA_POSTGRES_TIMESTAMP_INVALID:${field}`);
+  }
+  const canonical = isoTime(value);
+  if (canonical === null) {
+    throw new Error(`CIVIC_DATA_POSTGRES_TIMESTAMP_INVALID:${field}`);
+  }
+  return canonical;
+}
+
 interface PromotionPointerProof {
   readonly sourceId: string;
   readonly recordClass: RoutineRecordClass;
@@ -1679,6 +1696,37 @@ function rowToCandidate(row: typeof civicDataCandidates.$inferSelect): Candidate
   };
 }
 
+function postgresPromotionRowToProjection<T = unknown>(
+  row: typeof civicDataPromotions.$inferSelect,
+): PromotedProjection<T> {
+  return {
+    key: row.key,
+    sourceId: row.sourceId,
+    recordClass: row.recordClass as RoutineRecordClass,
+    scope: row.scope,
+    versionId: row.currentVersionId,
+    lastKnownGoodVersionId: row.lastKnownGoodVersionId,
+    promotedAt: canonicalPostgresRoutineTimestamp(row.promotedAt, "promotion.promotedAt"),
+    payload: row.payload as T,
+    receipt: row.validationReceipt as ValidationReceipt,
+  };
+}
+
+type PostgresCandidateEventRow = Pick<
+  typeof civicDataCandidateEvents.$inferSelect,
+  "candidateId" | "sequence" | "state" | "at" | "detail"
+>;
+
+function postgresCandidateEventRowToEvent(row: PostgresCandidateEventRow): CandidateEvent {
+  return {
+    candidateId: row.candidateId,
+    sequence: row.sequence,
+    state: row.state as CandidateState,
+    at: canonicalPostgresRoutineTimestamp(row.at, "candidateEvent.at"),
+    detail: row.detail,
+  };
+}
+
 /** Production store: append-only events plus one atomic canonical projection. */
 export class PostgresRoutineDataStore implements RoutineDataStore {
   private readonly db = getDb();
@@ -1958,18 +2006,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {
     const [row] = await this.db.select().from(civicDataPromotions).where(and(eq(civicDataPromotions.recordClass, recordClass), eq(civicDataPromotions.scope, scope))).limit(1);
-    if (!row) return null;
-    return {
-      key: row.key,
-      sourceId: row.sourceId,
-      recordClass: row.recordClass as RoutineRecordClass,
-      scope: row.scope,
-      versionId: row.currentVersionId,
-      lastKnownGoodVersionId: row.lastKnownGoodVersionId,
-      promotedAt: row.promotedAt,
-      payload: row.payload as T,
-      receipt: row.validationReceipt as ValidationReceipt,
-    };
+    return row ? postgresPromotionRowToProjection<T>(row) : null;
   }
 
   async readPromotions<T = unknown>(
@@ -1981,17 +2018,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       eq(civicDataPromotions.recordClass, recordClass),
       inArray(civicDataPromotions.scope, [...scopes]),
     ));
-    return rows.map((row) => ({
-      key: row.key,
-      sourceId: row.sourceId,
-      recordClass: row.recordClass as RoutineRecordClass,
-      scope: row.scope,
-      versionId: row.currentVersionId,
-      lastKnownGoodVersionId: row.lastKnownGoodVersionId,
-      promotedAt: row.promotedAt,
-      payload: row.payload as T,
-      receipt: row.validationReceipt as ValidationReceipt,
-    }));
+    return rows.map((row) => postgresPromotionRowToProjection<T>(row));
   }
 
   async readCandidates(candidateIds: readonly string[]): Promise<readonly CandidateVersionReadback[]> {
@@ -2037,7 +2064,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       }
       throw new Error(`CANDIDATE_EVIDENCE_STATE_MISMATCH:${candidateId}:${prior.state}:${state}`);
     }
-    return { candidateId: event.candidateId, sequence: event.sequence, state: event.state as CandidateState, at: event.at, detail: event.detail };
+    return postgresCandidateEventRowToEvent(event);
   }
 
   async retirePdcV2LegacyMeetingsAggregate(
@@ -2075,17 +2102,9 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         inArray(civicDataCandidateEvents.candidateId, replacementVersionIds),
       ),
     ]);
-    const permanentPointers: PromotedProjection[] = permanentPointerRows.map((row) => ({
-      key: row.key,
-      sourceId: row.sourceId,
-      recordClass: row.recordClass as RoutineRecordClass,
-      scope: row.scope,
-      versionId: row.currentVersionId,
-      lastKnownGoodVersionId: row.lastKnownGoodVersionId,
-      promotedAt: row.promotedAt,
-      payload: row.payload,
-      receipt: row.validationReceipt as ValidationReceipt,
-    }));
+    const permanentPointers: PromotedProjection[] = permanentPointerRows.map((row) =>
+      postgresPromotionRowToProjection(row)
+    );
     const replacementCandidates: CandidateVersionReadback[] = replacementCandidateRows.map((row) => ({
       candidateId: row.id,
       record: rowToCandidate(row),
@@ -2094,13 +2113,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       replacementVersionIds.map((versionId) => [versionId, []]),
     );
     for (const row of replacementEventRows) {
-      replacementHistories.get(row.candidateId)?.push({
-        candidateId: row.candidateId,
-        sequence: row.sequence,
-        state: row.state as CandidateState,
-        at: row.at,
-        detail: row.detail,
-      });
+      replacementHistories.get(row.candidateId)?.push(postgresCandidateEventRowToEvent(row));
     }
     for (const events of replacementHistories.values()) {
       events.sort((left, right) => left.sequence - right.sequence);
@@ -2360,13 +2373,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
           ${PDC_V2_LEGACY_MEETINGS_RETIREMENT_PREFIX}
       `);
       const matches = rows.flatMap((row) => {
-        const event: CandidateEvent = {
-          candidateId: row.candidateId,
-          sequence: row.sequence,
-          state: row.state as CandidateState,
-          at: row.at,
-          detail: row.detail,
-        };
+        const event = postgresCandidateEventRowToEvent(row);
         const evidence = pdcV2LegacyMeetingsRetirementMatches(event, input.expected);
         return evidence ? [{ event, evidence }] : [];
       });
@@ -2388,13 +2395,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       ]);
       return {
         record: candidateRows.length === 1 ? rowToCandidate(candidateRows[0]!) : null,
-        events: eventRows.map((row) => ({
-          candidateId: row.candidateId,
-          sequence: row.sequence,
-          state: row.state as CandidateState,
-          at: row.at,
-          detail: row.detail,
-        })).sort((left, right) => left.sequence - right.sequence),
+        events: eventRows.map(postgresCandidateEventRowToEvent)
+          .sort((left, right) => left.sequence - right.sequence),
       };
     };
 
@@ -2491,17 +2493,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       };
     }
     const legacy = await legacyCandidateEvidence(pointerRow.currentVersionId);
-    const legacyPointer: PromotedProjection = {
-      key: pointerRow.key,
-      sourceId: pointerRow.sourceId,
-      recordClass: pointerRow.recordClass as RoutineRecordClass,
-      scope: pointerRow.scope,
-      versionId: pointerRow.currentVersionId,
-      lastKnownGoodVersionId: pointerRow.lastKnownGoodVersionId,
-      promotedAt: pointerRow.promotedAt,
-      payload: pointerRow.payload,
-      receipt: pointerRow.validationReceipt as ValidationReceipt,
-    };
+    const legacyPointer = postgresPromotionRowToProjection(pointerRow);
     const legacyIssue = pdcV2LegacyMeetingsCandidateIssue(
       input,
       pointerRow.currentVersionId,
@@ -2780,22 +2772,12 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       }
       throw new Error(`CANDIDATE_NOT_PROMOTABLE:${candidateId}`);
     }
-    return {
-      key,
-      sourceId: candidate.sourceId,
-      recordClass: candidate.recordClass,
-      scope: candidate.scope,
-      versionId: candidateId,
-      lastKnownGoodVersionId: candidateId,
-      promotedAt: at,
-      payload: candidate.readModel,
-      receipt: persistedReceipt,
-    };
+    return postgresPromotionRowToProjection(promotedRows[0]);
   }
 
   async events(candidateId: string): Promise<readonly CandidateEvent[]> {
     const rows = await this.db.select().from(civicDataCandidateEvents).where(eq(civicDataCandidateEvents.candidateId, candidateId));
-    return rows.sort((a, b) => a.sequence - b.sequence).map((row) => ({ candidateId: row.candidateId, sequence: row.sequence, state: row.state as CandidateState, at: row.at, detail: row.detail }));
+    return rows.sort((a, b) => a.sequence - b.sequence).map(postgresCandidateEventRowToEvent);
   }
 
   async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string): Promise<{ lastAttemptedAt?: string; lastSucceededAt?: string }> {
@@ -2825,7 +2807,9 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const [rows, pointerRows] = await this.db.batch([attemptQuery, pointerQuery]);
     // The first event is the store-observed attempt clock. A refused
     // candidate's claimed retrievedAt is evidence, never scheduler authority.
-    const lastAttemptedAt = rows[0]?.attemptedAt;
+    const lastAttemptedAt = rows[0]?.attemptedAt === undefined
+      ? undefined
+      : canonicalPostgresRoutineTimestamp(rows[0].attemptedAt, "clock.lastAttemptedAt");
     const pointer = pointerRows[0];
     const [pointedRow] = pointer && pointer.sourceId === sourceId
       ? await this.db.select().from(civicDataCandidates).where(eq(civicDataCandidates.id, pointer.currentVersionId)).limit(1)
@@ -2843,9 +2827,12 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         receipt: pointer.validationReceipt as ValidationReceipt,
       } : null,
     );
+    const canonicalLastSucceededAt = lastSucceededAt === undefined
+      ? undefined
+      : canonicalPostgresRoutineTimestamp(lastSucceededAt, "clock.lastSucceededAt");
     return {
       ...(lastAttemptedAt ? { lastAttemptedAt } : {}),
-      ...(lastSucceededAt ? { lastSucceededAt } : {}),
+      ...(canonicalLastSucceededAt ? { lastSucceededAt: canonicalLastSucceededAt } : {}),
     };
   }
 }

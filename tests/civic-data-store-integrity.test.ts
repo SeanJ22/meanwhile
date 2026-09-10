@@ -6,6 +6,7 @@ import test from "node:test";
 import { processRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import {
   assertRoutineDataStoreMutationAuthority,
+  canonicalPostgresRoutineTimestamp,
   MemoryRoutineDataStore,
   routineDataStoreCandidateAuthorityIssue,
 } from "../lib/civic-data/store.ts";
@@ -21,6 +22,49 @@ import {
 
 const HASH = "a".repeat(64);
 const ROOT = resolve(import.meta.dirname, "..");
+
+test("Postgres routine-data timestamps have one fail-closed canonical evidence boundary", () => {
+  const postgres = "2026-09-08 21:41:13.689+00";
+  const canonical = "2026-09-08T21:41:13.689Z";
+  assert.equal(canonicalPostgresRoutineTimestamp(postgres, "promotion.promotedAt"), canonical);
+  assert.equal(canonicalPostgresRoutineTimestamp(canonical, "candidateEvent.at"), canonical);
+  assert.equal(
+    canonicalPostgresRoutineTimestamp("2026-09-08 14:41:13.689-07", "candidateEvent.at"),
+    canonical,
+  );
+  assert.throws(
+    () => canonicalPostgresRoutineTimestamp("not-an-instant", "candidateEvent.at"),
+    /CIVIC_DATA_POSTGRES_TIMESTAMP_INVALID:candidateEvent\.at/,
+  );
+  assert.throws(
+    () => canonicalPostgresRoutineTimestamp(null, "promotion.promotedAt"),
+    /CIVIC_DATA_POSTGRES_TIMESTAMP_INVALID:promotion\.promotedAt/,
+  );
+
+  const canonicalPointer = { promotedAt: canonical, payload: { exact: true } };
+  const postgresPointer = {
+    ...canonicalPointer,
+    promotedAt: canonicalPostgresRoutineTimestamp(postgres, "promotion.promotedAt"),
+  };
+  const canonicalHistory = [{ sequence: 1, at: canonical, detail: "exact" }];
+  const postgresHistory = [{
+    ...canonicalHistory[0]!,
+    at: canonicalPostgresRoutineTimestamp(postgres, "candidateEvent.at"),
+  }];
+  assert.deepEqual(postgresPointer, canonicalPointer);
+  assert.deepEqual(postgresHistory, canonicalHistory);
+
+  const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
+  const adapter = source.slice(source.indexOf("export class PostgresRoutineDataStore"));
+  assert.doesNotMatch(adapter, /promotedAt:\s*(?:row|pointerRow)\.promotedAt/);
+  assert.doesNotMatch(adapter, /promotedAt:\s*at,/);
+  assert.doesNotMatch(adapter, /\bat:\s*(?:row|event)\.at/);
+  assert.doesNotMatch(adapter, /const lastAttemptedAt = rows\[0\]\?\.attemptedAt;/);
+  assert.match(adapter, /postgresPromotionRowToProjection/);
+  assert.match(adapter, /postgresCandidateEventRowToEvent/);
+  assert.match(adapter, /canonicalPostgresRoutineTimestamp\(rows\[0\]\.attemptedAt/);
+  assert.match(adapter, /canonicalPostgresRoutineTimestamp\(lastSucceededAt/);
+});
 
 function candidate(id: string, retrievedAt = "2026-09-08T12:00:00.000Z", sourceId = "fec-open-api"): RoutineCandidate {
   const normalizedPayload = { rows: [{ id }] };

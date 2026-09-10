@@ -23,10 +23,23 @@ import {
 
 const source = readFileSync("scripts/routine-civic-data-live-acceptance.mts", "utf8");
 const childSource = readFileSync("scripts/routine-civic-data-live-canary-child.mts", "utf8");
+const readerClosureSource = readFileSync("scripts/reader-last-mile-census.mts", "utf8");
+const packageScripts = (JSON.parse(readFileSync("package.json", "utf8")) as { scripts: Record<string, string> }).scripts;
 const targets = source.slice(
   source.indexOf("const targets:"),
   source.indexOf("const results:"),
 );
+
+test("terminal Reader production authority is a post-evidence gate, not a circular dependency inside the clean detached live harness", () => {
+  assert.doesNotMatch(source, /reader-last-mile-final-closure-receipt/);
+  assert.match(readerClosureSource, /Fresh Reader closure requires --authority-evidence/);
+  assert.match(readerClosureSource, /--require-authority-phase/);
+  assert.match(readerClosureSource, /validateReaderProductionClosureReceipt/);
+  assert.match(readerClosureSource, /readerExecutionAuthorityLiveProblems/);
+  assert.match(readerClosureSource, /createNeonReaderAuthoritySql\(productionReadConnection\)/);
+  assert.match(packageScripts["reader:production-closure"], /--require-authority-phase PRODUCTION/);
+  assert.match(packageScripts["reader:production-closure"], /reader-last-mile-final-closure-receipt\.json/);
+});
 
 test("PDC-12 acceptance covers each non-meeting contract and enumerates every exact meeting partition", () => {
   const expected = [
